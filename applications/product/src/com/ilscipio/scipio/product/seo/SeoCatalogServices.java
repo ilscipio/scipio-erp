@@ -528,7 +528,7 @@ public abstract class SeoCatalogServices {
                         return ServiceUtil.returnError("missing webSiteId, productStoreId or prodCatalogId");
                     }
                     GenericValue webSite = delegator.findOne("WebSite", UtilMisc.toMap("webSiteId", webSiteId), useCache);
-                    if (webSiteId == null) return ServiceUtil.returnError("web site not found: " + webSiteId);
+                    if (webSite == null) return ServiceUtil.returnError("web site not found: " + webSiteId);
                     productStoreId = webSite.getString("productStoreId");
                     if (UtilValidate.isEmpty(productStoreId)) return ServiceUtil.returnError("web site has no product store: " + webSiteId);
     

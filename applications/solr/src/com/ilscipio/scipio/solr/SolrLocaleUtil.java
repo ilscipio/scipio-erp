@@ -131,6 +131,14 @@ public abstract class SolrLocaleUtil {
     }
     
     /**
+     * Gets the global force default content locale (only).
+     * WARN: Avoid using in client code.
+     */
+    public static Locale getConfiguredForceDefaultLocale(Delegator delegator) {
+        return configuredForceDefaultLocale; 
+    }
+    
+    /**
      * Gets the force default content locale (only).
      * WARN: Avoid using in client code.
      */

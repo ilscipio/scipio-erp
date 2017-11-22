@@ -47,6 +47,7 @@ import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.category.CatalogUrlFilter;
 import org.ofbiz.product.category.CategoryWorker;
 import org.ofbiz.webapp.control.ContextFilter;
+import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.control.RequestLinkUtil;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
@@ -84,6 +85,8 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
 
     // NOTE: this must not be static anymore (2017-11-18)
     protected SeoCatalogUrlWorker urlWorker = null;
+    
+    protected boolean rewriteOutboundUrls = false;
 
     @Override
     public void init(FilterConfig config) throws ServletException {
@@ -102,6 +105,8 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
 
             urlWorker = SeoCatalogUrlWorker.getInstance(null, config.getServletContext().getInitParameter("webSiteId"));
         }
+        
+        rewriteOutboundUrls = Boolean.TRUE.equals(UtilMisc.booleanValueVersatile(config.getInitParameter("rewriteOutboundUrls")));
     }
 
     @Override
@@ -284,18 +289,6 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
         return true;
     }
 
-    /**
-     * Checks an outbound URL for /control/product, /control/category or other
-     * such request and tries to extract the IDs.
-     * TODO: required to intercept various kinds of redirect notably from controller/requesthandler.
-     */
-    public SeoCatalogUrlInfo matchOutboundSeoTranslatableUrl(Delegator delegator, String url) {
-
-        // TODO
-
-        return null;
-    }
-
     private String rebuildCatalogLink(HttpServletRequest request, Delegator delegator, SeoCatalogUrlInfo urlInfo) {
         Locale locale = UtilHttp.getLocale(request);
         return urlWorker.makeCatalogLink(delegator, urlInfo, locale);
@@ -306,43 +299,61 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
     }
 
     protected ServletResponse getResponseWrapper(HttpServletRequest req, HttpServletResponse res, Delegator delegator) {
-        return new SeoCatalogUrlResponseWrapper(req, res, delegator);
+        if (rewriteOutboundUrls) {
+            return new SeoCatalogUrlResponseWrapper(req, res, delegator);
+        } else {
+            return res;
+        }
     }
 
     protected class SeoCatalogUrlResponseWrapper extends HttpServletResponseWrapper {
         private final HttpServletRequest request;
         private final Delegator delegator;
+        private final String productReqPath;
+        private final String categoryReqPath;
 
         public SeoCatalogUrlResponseWrapper(HttpServletRequest request, HttpServletResponse response, Delegator delegator) {
             super(response);
             this.request = request;
             this.delegator = delegator;
+            String controlServletPath = RequestHandler.getControlServletPath(request);
+            if (controlServletPath == null) controlServletPath = "";
+            this.productReqPath = controlServletPath + "/" + PRODUCT_REQUEST;
+            this.categoryReqPath = controlServletPath + "/" + CATEGORY_REQUEST;
         }
 
         @Override
         public String encodeURL(String url) {
-            url = super.encodeURL(url);
-            SeoCatalogUrlInfo urlInfo = matchOutboundSeoTranslatableUrl(delegator, url);
-            if (urlInfo != null) {
-                url = rebuildCatalogLink(request, delegator, urlInfo);
+            String rewrittenUrl = urlWorker.matchReplaceOutboundSeoTranslatableUrl(request, delegator, url, 
+                    productReqPath, categoryReqPath, request.getContextPath());
+            if (rewrittenUrl != null) {
+                return super.encodeURL(rewrittenUrl);
+            } else {
+                return super.encodeURL(url);
             }
-            return url;
         }
 
         @Override
         public String encodeRedirectURL(String url) {
-            url = super.encodeRedirectURL(url);
-            SeoCatalogUrlInfo urlInfo = matchOutboundSeoTranslatableUrl(delegator, url);
-            if (urlInfo != null) {
-                url = rebuildCatalogLink(request, delegator, urlInfo);
+            String rewrittenUrl = urlWorker.matchReplaceOutboundSeoTranslatableUrl(request, delegator, url, 
+                    productReqPath, categoryReqPath, request.getContextPath());
+            if (rewrittenUrl != null) {
+                return super.encodeRedirectURL(rewrittenUrl);
+            } else {
+                return super.encodeRedirectURL(url);
             }
-            return url;
         }
 
-//        @Override
-//        public void sendRedirect(String location) throws IOException {
-//            super.sendRedirect(location);
-//        }
+        @Override
+        public void sendRedirect(String location) throws IOException {
+            String rewrittenLocation = urlWorker.matchReplaceOutboundSeoTranslatableUrl(request, delegator, location, 
+                    productReqPath, categoryReqPath, request.getContextPath());
+            if (rewrittenLocation != null) {
+                super.sendRedirect(rewrittenLocation);
+            } else {
+                super.sendRedirect(location);
+            }
+        }
     }
 
     /**

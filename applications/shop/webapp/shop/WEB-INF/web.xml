@@ -94,6 +94,10 @@ under the License.
         <init-param><param-name>defaultLocaleString</param-name><param-value>en_US</param-value></init-param>
         <!-- SCIPIO: Set this to true to enable advanced SEO URLs; if false, delegates to the regular CatalogUrlFilter. -->
         <init-param><param-name>seoUrlEnabled</param-name><param-value>false</param-value></init-param>
+        <!-- SCIPIO: Set this param to true to try to rewrite outbound /control/product and /control/category requests to SEO urls 
+            in other words, <@ofbizUrl>product?productId=FA-001</@ofbizUrl> appears as if had written <@ofbizCatalogAltUrl productId="FA-001"/>
+            WARN: 2017-11-21: this currently best-effort -->
+        <init-param><param-name>rewriteOutboundUrls</param-name><param-value>true</param-value></init-param>
     </filter>
     <!-- SCIPIO: the stock CatalogUrlFilter will be contained in the SeoCatalogUrlFilter.
     <filter>

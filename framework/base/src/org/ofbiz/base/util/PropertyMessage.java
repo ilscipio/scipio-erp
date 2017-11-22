@@ -14,16 +14,62 @@ public abstract class PropertyMessage implements Serializable {
 
     protected abstract String getMessageImpl(Locale locale);
     
+    /**
+     * Gets message in the specified locale, or the default sys locale if null.
+     */
     public String getMessage(Locale locale) {
         return getMessageImpl(locale != null ? locale : Locale.getDefault());
     }
+
+    /**
+     * Gets message in the locale of the named locale field, or the default sys locale if null.
+     */
+    public String getMessage(Map<String, ?> context, String localeFieldName) {
+        return getMessage((Locale) context.get(localeFieldName));
+    }
     
-    public String getMessage() {
+    /**
+     * Gets message in the locale of the "locale" field, or the default sys locale if null.
+     */
+    public String getMessage(Map<String, ?> context) {
+        return getMessage(context, "locale");
+    }
+    
+    /**
+     * Gets message in default sys locale. 
+     */
+    public String getDefaultLocaleMessage() {
         return getMessage(Locale.getDefault());
     }
     
-    public String getMessage(Map<String, ?> context) {
-        return getMessage((Locale) context.get("locale"));
+    /**
+     * Gets message in the log language (always english in scipio/ofbiz).
+     */
+    public String getLogMessage() { // logs always in english
+        return getMessage(Locale.ENGLISH);
+    }
+    
+    /**
+     * Gets message in the <code>Locale.ENGLISH</code> locale (convenience method).
+     */
+    public String getEnMessage() {
+        return getMessage(Locale.ENGLISH);
+    }
+    
+    /**
+     * Gets message in the <code>Locale.GERMAN</code> locale (convenience method).
+     */
+    public String getDeMessage() {
+        return getMessage(Locale.GERMAN);
+    }
+    
+    /**
+     * Gets message in default sys locale.
+     * @deprecated 2017-11: ambiguous; use {@link #getDefaultLocaleMessage} or {@link #getLogMessage} instead.
+     */
+    @Deprecated
+    public String getMessage() {
+        return getMessage(Locale.getDefault());
     }
     
     public static PropertyMessage make(String resource, String propertyName, Map<String, ?> propArgs, String prefix, String suffix) {

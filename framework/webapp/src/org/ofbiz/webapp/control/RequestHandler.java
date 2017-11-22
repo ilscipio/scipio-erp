@@ -1458,12 +1458,15 @@ public class RequestHandler {
      * Builds links with added query string.
      * <p>
      * SCIPIO: Modified overload to allow boolean flags.
+     * SCIPIO: Modified to include query string in makeLink call.
      */
     public String makeLinkWithQueryString(HttpServletRequest request, HttpServletResponse response, String url, Boolean fullPath, Boolean secure, Boolean encode, 
             ConfigXMLReader.RequestResponse requestResponse) {
-        String initialLink = this.makeLink(request, response, url, fullPath, secure, encode);
-        String queryString = this.makeQueryString(request, requestResponse);
-        return initialLink + queryString;
+        // SCIPIO: 2017-11-21: include the query string inside the makeLink call
+        //String initialLink = this.makeLink(request, response, url, fullPath, secure, encode);
+        //String queryString = this.makeQueryString(request, requestResponse);
+        //return initialLink + queryString;
+        return this.makeLink(request, response, url + this.makeQueryString(request, requestResponse), fullPath, secure, encode);
     }
     
     /**

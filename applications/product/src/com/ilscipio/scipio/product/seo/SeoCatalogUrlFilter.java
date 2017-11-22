@@ -124,11 +124,12 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
                 urlWorker = SeoCatalogUrlWorker.createInstanceDeep(delegator, config.getServletContext().getInitParameter("webSiteId"));
             }
             
+            Delegator delegator = getDelegatorForControl(request, request.getServletContext());
+            
             // TODO: REVIEW: it's possible some of the "always-run" calls below (such as prepareRequestAlways)
             // should actually run again even after forward...
             if (!Boolean.TRUE.equals(request.getAttribute(FORWARDED_ATTR))) {
-                Delegator delegator = getDelegatorForControl(request, request.getServletContext());
-            
+
                 CatalogUrlFilter.prepareRequestAlways(request, response, delegator);
                 
                 String path = getMatchablePath(request); 
@@ -149,18 +150,19 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
                     //UrlServletHelper.checkPathAlias(request, response, delegator, pathInfo);
                 }
             
-                // NOTE: For this filter, we must wrap the request/response even if we don't forward!
-                // TODO/FIXME: REVIEW: even if disabled for this webapp, may need to wrap responses
-                // to process inter-webapp links... so this might need to go outside the (enabled) block...
-                // or need 2 disable flags for debugging...
-                if (!Boolean.TRUE.equals(request.getAttribute(REQWRAPPED_ATTR))) {
-                    request.setAttribute(REQWRAPPED_ATTR, Boolean.TRUE);
-                    chain.doFilter(getRequestWrapper(request, delegator), getResponseWrapper(request, response, delegator));
-                    return;
-                }
+                // must do at every forward - see below
+//                if (!Boolean.TRUE.equals(request.getAttribute(REQWRAPPED_ATTR))) {
+//                    request.setAttribute(REQWRAPPED_ATTR, Boolean.TRUE);
+//                    chain.doFilter(request, getResponseWrapper(request, response, delegator));
+//                    return;
+//                }
             }
 
-            chain.doFilter(request, response);
+            // NOTE: 2017-11-21: we MUST rewrap the response every time we are visited!
+            // otherwise it causes problems with the filter order.
+            // hopefully this doesn't cause any issues.
+            request.setAttribute(REQWRAPPED_ATTR, Boolean.TRUE);
+            chain.doFilter(request, getResponseWrapper(request, response, delegator));
         } else {
             // currently delegates to CatalogUrlFilter.
             // TODO: compose them differently in the future
@@ -285,17 +287,13 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
         request.setAttribute(SEOURLINFO_ATTR, urlInfo);
         request.setAttribute(FORWARDED_ATTR, Boolean.TRUE);
         request.setAttribute(REQWRAPPED_ATTR, Boolean.TRUE);
-        rd.forward(getRequestWrapper(request, delegator), getResponseWrapper(request, response, delegator));
+        rd.forward(request, getResponseWrapper(request, response, delegator));
         return true;
     }
 
     private String rebuildCatalogLink(HttpServletRequest request, Delegator delegator, SeoCatalogUrlInfo urlInfo) {
         Locale locale = UtilHttp.getLocale(request);
         return urlWorker.makeCatalogLink(delegator, urlInfo, locale);
-    }
-
-    protected ServletRequest getRequestWrapper(HttpServletRequest req, Delegator delegator) {
-        return req;
     }
 
     protected ServletResponse getResponseWrapper(HttpServletRequest req, HttpServletResponse res, Delegator delegator) {

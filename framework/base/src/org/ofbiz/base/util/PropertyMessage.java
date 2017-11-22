@@ -15,49 +15,56 @@ public abstract class PropertyMessage implements Serializable {
     protected abstract String getMessageImpl(Locale locale);
     
     /**
-     * Gets message in the specified locale, or the default sys locale if null.
+     * Gets message in the specified locale, or in the default/fallback property locale if null ({@link UtilProperties#getFallbackLocale()}).
      */
     public String getMessage(Locale locale) {
-        return getMessageImpl(locale != null ? locale : Locale.getDefault());
+        return getMessageImpl(locale != null ? locale : UtilProperties.getFallbackLocale());
     }
 
     /**
-     * Gets message in the locale of the named locale field, or the default sys locale if null.
+     * Gets message in the locale of the named locale field of context, or in the default/fallback property locale if null ({@link UtilProperties#getFallbackLocale()}).
      */
     public String getMessage(Map<String, ?> context, String localeFieldName) {
         return getMessage((Locale) context.get(localeFieldName));
     }
     
     /**
-     * Gets message in the locale of the "locale" field, or the default sys locale if null.
+     * Gets message in the locale of the common "locale" field of context, or in the default/fallback property locale if null ({@link UtilProperties#getFallbackLocale()}).
      */
     public String getMessage(Map<String, ?> context) {
         return getMessage(context, "locale");
     }
     
     /**
-     * Gets message in default sys locale. 
+     * Gets message in default/fallback locale specified by locale.properties.fallback in general.properties ({@link UtilProperties#getFallbackLocale()}).
      */
-    public String getDefaultLocaleMessage() {
+    public String getDefPropLocaleMessage() {
+        return getMessage(UtilProperties.getFallbackLocale());
+    }
+    
+    /**
+     * Gets message in default system locale ({@link Locale#getDefault()}).
+     */
+    public String getDefSysLocaleMessage() {
         return getMessage(Locale.getDefault());
     }
     
     /**
-     * Gets message in the log language (always english in scipio/ofbiz).
+     * Gets message in the log language (always {@link Locale#ENGLISH} in scipio/ofbiz).
      */
     public String getLogMessage() { // logs always in english
         return getMessage(Locale.ENGLISH);
     }
     
     /**
-     * Gets message in the <code>Locale.ENGLISH</code> locale (convenience method).
+     * Gets message in the {@link Locale#ENGLISH} locale (convenience method).
      */
     public String getEnMessage() {
         return getMessage(Locale.ENGLISH);
     }
     
     /**
-     * Gets message in the <code>Locale.GERMAN</code> locale (convenience method).
+     * Gets message in the {@link Locale#GERMAN} locale (convenience method).
      */
     public String getDeMessage() {
         return getMessage(Locale.GERMAN);
@@ -65,7 +72,7 @@ public abstract class PropertyMessage implements Serializable {
     
     /**
      * Gets message in default sys locale.
-     * @deprecated 2017-11: ambiguous; use {@link #getDefaultLocaleMessage} or {@link #getLogMessage} instead.
+     * @deprecated 2017-11: ambiguous; use {@link #getDefaultSystemLocaleMessage} or {@link #getLogMessage} instead.
      */
     @Deprecated
     public String getMessage() {

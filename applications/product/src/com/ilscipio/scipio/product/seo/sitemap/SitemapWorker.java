@@ -102,12 +102,12 @@ public class SitemapWorker {
         // TODO: LOCALIZE WITH PROP MESSAGE EXCEPTIONS
         
         GenericValue webSite = delegator.findOne("WebSite", UtilMisc.toMap("webSiteId", webSiteId), useCache);
-        if (webSiteId == null) throw new IllegalArgumentException("website not found: " + webSiteId);
+        if (webSite == null) throw new GeneralException("website not found: " + webSiteId);
         String productStoreId = webSite.getString("productStoreId");
-        if (UtilValidate.isEmpty(productStoreId)) throw new IllegalArgumentException("website has no product store: " + webSiteId);
+        if (UtilValidate.isEmpty(productStoreId)) throw new GeneralException("website has no product store: " + webSiteId);
 
         GenericValue productStore = delegator.findOne("ProductStore", UtilMisc.toMap("productStoreId", productStoreId), useCache);
-        if (productStore == null) throw new IllegalArgumentException("store not found: " + productStoreId);
+        if (productStore == null) throw new GeneralException("store not found: " + productStoreId);
 
         SitemapConfig config = SitemapConfig.getSitemapConfigForWebsite(delegator, dispatcher, webSiteId);
         

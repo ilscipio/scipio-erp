@@ -128,6 +128,14 @@ public abstract class SolrProductUtil {
         return getConfiguredDefaultCurrency(null, productStore);
     }
     
+    public static String getConfiguredForceDefaultCurrency(GenericValue productStore) {
+        return configuredForceDefaultCurrency;
+    }
+    
+    public static String getConfiguredForceDefaultCurrency(Delegator delegator) {
+        return configuredForceDefaultCurrency;
+    }
+    
     /**
      * NOTE: Locales must already be normalized ({@link SolrLocaleUtil#getCompatibleLocaleValid}).
      */
@@ -448,9 +456,10 @@ public abstract class SolrProductUtil {
             dispatchContext.put("productStore", SolrCategoryUtil.getStringFieldList(productStores, "productStoreId"));
             
             // MAIN STORE SELECTION AND LOCALE LOOKUP
-            // NOTE: we skip the isContentReference warning if there's a forced locale.
+            // NOTE: we skip the isContentReference warning if there's both a forced locale and forced currency.
             GenericValue productStore = ProductStoreWorker.getContentReferenceStoreOrFirst(productStores, 
-                    (SolrLocaleUtil.getConfiguredForceDefaultLocale(delegator) == null) ? ("product '" + productId + "'") : null);
+                    (SolrLocaleUtil.getConfiguredForceDefaultLocale(delegator) == null || SolrProductUtil.getConfiguredForceDefaultCurrency(delegator) == null) 
+                        ? ("product '" + productId + "'") : null);
             List<Locale> locales = SolrLocaleUtil.getConfiguredLocales(productStore);
             Locale defaultProductLocale = SolrLocaleUtil.getConfiguredDefaultLocale(productStore);
             

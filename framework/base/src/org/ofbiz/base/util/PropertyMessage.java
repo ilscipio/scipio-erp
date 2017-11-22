@@ -1,5 +1,6 @@
 package org.ofbiz.base.util;
 
+import java.io.Serializable;
 import java.util.Locale;
 import java.util.Map;
 
@@ -8,7 +9,8 @@ import java.util.Map;
  * <p>
  * New class (moved to org.ofbiz.base.util 2017-02-08).
  */
-public abstract class PropertyMessage {
+@SuppressWarnings("serial")
+public abstract class PropertyMessage implements Serializable {
 
     protected abstract String getMessageImpl(Locale locale);
     

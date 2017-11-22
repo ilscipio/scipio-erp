@@ -566,8 +566,12 @@ public class SitemapWorker {
         Debug.logInfo(getLogMsgPrefix()+"Done writing index '" + config.getSitemapIndexFile() + "'", module);
     }
     
-    protected String getSitemapFileLink(String filename) {
+    public String getSitemapFileLink(String filename) {
         return SitemapConfig.concatPaths(getBaseUrl(), getSitemapContextPath(), config.getSitemapDirPath(), filename);
+    }
+    
+    public String getSitemapIndexFileLink() {
+        return getSitemapFileLink(config.getSitemapIndexFile());
     }
 
     /**

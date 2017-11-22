@@ -85,12 +85,27 @@ public abstract class PropertyMessage implements Serializable {
     }
     
     /**
+     * Gets english message.
+     */
+    public String getEnMessage() {
+        return getMessage(Locale.ENGLISH);
+    }
+    
+    /**
      * Gets message in default sys locale.
-     * @deprecated 2017-11: ambiguous; use {@link #getDefaultSystemLocaleMessage} or {@link #getLogMessage} instead.
+     * @deprecated 2017-11: ambiguous; use appropriate method above instead ({@link #getDefaultSystemLocaleMessage}, {@link #getLogMessage}, etc.).
      */
     @Deprecated
     public String getMessage() {
         return getMessage(Locale.getDefault());
+    }
+    
+    /**
+     * Gets English message for debugging purposes - AVOID this method - use {@link #getMessage} or others above.
+     */
+    @Override
+    public String toString() {
+        return getEnMessage();
     }
     
     public static List<String> getMessages(Collection<PropertyMessage> propMsgs, Locale locale) {
@@ -179,7 +194,7 @@ public abstract class PropertyMessage implements Serializable {
     public static List<PropertyMessage> makeAutoFromList(Collection<?> messages, boolean strict) {
         if (messages == null) return null;
         List<PropertyMessage> propMsgs = new ArrayList<>(messages.size());
-        for(Object msg : propMsgs) {
+        for(Object msg : messages) {
             if (msg == null) {
                 if (strict) {
                     throw new NullPointerException("PropertyMessage.makeAutoFromList: encountered null message in list");

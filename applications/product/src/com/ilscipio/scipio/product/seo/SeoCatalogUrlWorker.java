@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ListIterator;
@@ -32,12 +33,15 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
@@ -60,6 +64,7 @@ import org.ofbiz.webapp.website.WebSiteWorker;
 
 import com.ilscipio.scipio.product.category.CatalogAltUrlSanitizer;
 import com.ilscipio.scipio.product.category.CatalogUrlType;
+import com.ilscipio.scipio.product.seo.SeoCatalogUrlWorker.SeoCatalogUrlInfo;
 import com.ilscipio.scipio.util.SeoStringUtil;
 
 /**
@@ -1748,6 +1753,145 @@ public class SeoCatalogUrlWorker implements Serializable {
             }
         }
         return null;
+    }
+    
+    /*
+     * *****************************************************
+     * Outbound matching
+     * *****************************************************
+     */
+    
+    private static final Pattern absUrlPat = Pattern.compile("(((.*?):)?//([^/]*))?(.*)");
+    
+    /**
+     * Checks an outbound URL for /control/product, /control/category or other
+     * such request and tries to extract the IDs.
+     * FIXME: does not preserve trail, uses default always. Also didn't fully abstract this yet.
+     * FIXME: cannot handle jsessionid
+     */
+    public String matchReplaceOutboundSeoTranslatableUrl(HttpServletRequest request, Delegator delegator, String url, String productReqPath, String categoryReqPath, String contextRoot) {
+        if (url == null) return null;
+        // pre-filters for speed
+        if (url.contains(productReqPath) || url.contains(categoryReqPath)) {
+            // Extract the relative URL from absolute
+            Matcher mrel = absUrlPat.matcher(url);
+            if (mrel.matches()) {
+                
+                String absPrefix = mrel.group(1);
+                if (absPrefix == null) {
+                    absPrefix = "";
+                }
+                String relUrl = mrel.group(5);
+                
+                // Check if within same webapp
+                // (Note: in Ofbiz the encoded URLs contain the webapp context root in relative URLs)
+                if (relUrl.startsWith((contextRoot.length() > 1) ? contextRoot + "/" : contextRoot)) {
+                    String pathInfo = relUrl.substring(contextRoot.length());
+                    if (pathInfo.startsWith(productReqPath)) {
+                        if (pathInfo.length() > productReqPath.length()) {
+                            Map<String, String> params = extractParamsFromRest(pathInfo, productReqPath.length());
+                            String productId = params.remove("product_id");
+                            if (productId == null) {
+                                params.remove("productId");
+                            }
+                            if (productId != null) {
+                                String colonString = params.remove("colonString");
+                                if (colonString == null) colonString = "";
+                                
+                                Locale locale = UtilHttp.getLocale(request); // FIXME?: sub-ideal
+                                String newUrl = makeProductUrl(request, locale, null, null, productId);
+                                if (newUrl == null) return null;
+
+                                String remainingParams = makeRemainingParamsStr(params, pathInfo.contains("&amp;"), !newUrl.contains("?"));
+ 
+                                return absPrefix + newUrl + colonString + remainingParams;
+                            }
+                        }
+                    } else if (pathInfo.startsWith(categoryReqPath)) {
+                        if (pathInfo.length() > categoryReqPath.length()) {
+                            Map<String, String> params = extractParamsFromRest(pathInfo, categoryReqPath.length());
+                            String categoryId = params.remove("category_id");
+                            if (categoryId == null) {
+                                params.remove("productCategoryId");
+                            }
+                            if (categoryId != null) {
+                                String colonString = params.remove("colonString");
+                                if (colonString == null) colonString = "";
+                                
+                                Locale locale = UtilHttp.getLocale(request); // FIXME?: sub-ideal
+                                // FIXME miss view size
+                                String newUrl = makeCategoryUrl(request, locale, null, categoryId, null, null, null, null, null);
+                                if (newUrl == null) return null;
+                                
+                                String remainingParams = makeRemainingParamsStr(params, pathInfo.contains("&amp;"), !newUrl.contains("?"));
+                                
+                                return absPrefix + newUrl + colonString + remainingParams;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private static final Pattern paramPat = Pattern.compile("&amp;|&");
+    
+    private static Map<String, String> extractParamsFromRest(String pathInfo, int index) {
+        char nextChar = pathInfo.charAt(index);
+        String queryString;
+        String colonString;
+        if (nextChar == '?') {
+            // FIXME: can't handle colon parameters
+            colonString = null;
+            queryString = pathInfo.substring(index + 1);
+//            int colonIndex = pathInfo.indexOf(';', index + 1);
+//            if (colonIndex >= 0) {
+//                colonString = pathInfo.substring(colonIndex);
+//                queryString = pathInfo.substring(index + 1, colonIndex);
+//            } else {
+//                queryString = pathInfo.substring(index + 1);
+//                colonString = null;
+//            }
+//        } else if (nextChar == ';') {
+//            int colonIndex = nextChar;
+//            index = pathInfo.indexOf('?', index+1);
+//            if (index < 0) return new HashMap<>();
+//            colonString = pathInfo.substring(colonIndex, index);
+//            queryString = pathInfo.substring(index + 1);
+        } else {
+            return new HashMap<>();
+        }
+        Map<String, String> params = extractParamsFromQueryString(queryString);
+        if (colonString != null) params.put("colonString", colonString);
+        return params;
+    }
+    
+    private static Map<String, String> extractParamsFromQueryString(String queryString) {
+        String[] parts = paramPat.split(queryString);
+        Map<String, String> params = new LinkedHashMap<>();
+        for(String part : parts) {
+            if (part.length() == 0) continue;
+            int equalsIndex = part.indexOf('=');
+            if (equalsIndex <= 0 || equalsIndex >= (part.length() - 1)) continue;
+            params.put(part.substring(0, equalsIndex), part.substring(equalsIndex + 1));
+        }
+        return params;
+    }
+
+    private static String makeRemainingParamsStr(Map<String, String> params, boolean useEncoded, boolean firstParams) {
+        StringBuilder sb = new StringBuilder();
+        for(Map.Entry<String, String> entry : params.entrySet()) {
+            if (sb.length() == 0 && firstParams) {
+                sb.append("?");
+            } else {
+                sb.append(useEncoded ? "&amp;" : "&");
+            }
+            sb.append(entry.getKey());
+            sb.append("=");
+            sb.append(entry.getValue());
+        }
+        return sb.toString();
     }
     
     /*

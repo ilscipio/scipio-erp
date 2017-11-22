@@ -757,19 +757,10 @@ public class ProductStoreWorker {
         }
         GenericValue productStore = productStores.get(0);
         if (productStores.size() > 1 && multiWarningInfo != null) {
-            // if all stores have same defaultLocaleString, no need to warn
-            String defaultLocaleString = productStore.getString("defaultLocaleString");
-            for(GenericValue otherStore : productStores) {
-                String otherDefLocStr = otherStore.getString("defaultLocaleString");
-                if ((defaultLocaleString == null && otherDefLocStr != null) || 
-                        (defaultLocaleString != null && !defaultLocaleString.equals(otherDefLocStr))) {
-                    Debug.logWarning("Multiple stores with different defaultLocaleString found for " + multiWarningInfo + ", but none specify isContentReference=\"Y\"" 
-                            + "; defaultLocaleString may be ambiguous; selecting first store (" 
-                            + productStore.getString("productStoreId") + ", " + defaultLocaleString
-                            + ") as content reference", module);
-                    break;
-                }
-            }
+            Debug.logWarning("Multiple stores found for " + multiWarningInfo + ", but none specify isContentReference=\"Y\"" 
+                    + "; defaultLocaleString and other content settings may be ambiguous; selecting first store (" 
+                    + productStore.getString("productStoreId") + ", defaultLocaleString: " + productStore.getString("defaultLocaleString")
+                    + ") as content reference", module);
         }
         return productStore;
     }

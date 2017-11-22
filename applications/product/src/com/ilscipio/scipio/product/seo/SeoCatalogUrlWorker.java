@@ -1792,7 +1792,7 @@ public class SeoCatalogUrlWorker implements Serializable {
                             Map<String, String> params = extractParamsFromRest(pathInfo, productReqPath.length());
                             String productId = params.remove("product_id");
                             if (productId == null) {
-                                params.remove("productId");
+                                productId = params.remove("productId");
                             }
                             if (productId != null) {
                                 String colonString = params.remove("colonString");
@@ -1812,7 +1812,7 @@ public class SeoCatalogUrlWorker implements Serializable {
                             Map<String, String> params = extractParamsFromRest(pathInfo, categoryReqPath.length());
                             String categoryId = params.remove("category_id");
                             if (categoryId == null) {
-                                params.remove("productCategoryId");
+                                categoryId = params.remove("productCategoryId");
                             }
                             if (categoryId != null) {
                                 String colonString = params.remove("colonString");

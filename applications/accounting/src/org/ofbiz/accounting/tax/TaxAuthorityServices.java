@@ -464,7 +464,10 @@ public class TaxAuthorityServices {
 
                     // the amount will be different because we want to figure out how much of the price was tax, and not how much tax needs to be added
                     // the formula is: taxAmount = priceWithTax - (priceWithTax/(1+taxPercentage/100))
-                    BigDecimal taxAmountIncluded = itemAmount.subtract(itemAmount.divide(BigDecimal.ONE.add(taxRate.divide(PERCENT_SCALE, 4, BigDecimal.ROUND_HALF_UP)), 3, BigDecimal.ROUND_HALF_UP));
+					BigDecimal taxAmountIncluded = itemAmount.subtract(itemAmount.divide(
+							BigDecimal.ONE.add(
+									taxRate.divide(PERCENT_SCALE, salestaxFinalDecimals, BigDecimal.ROUND_HALF_UP)),
+							salestaxFinalDecimals, BigDecimal.ROUND_HALF_UP));
                     taxAdjValue.set("amountAlreadyIncluded", taxAmountIncluded);
                     taxAdjValue.set("amount", BigDecimal.ZERO);
                 } else {

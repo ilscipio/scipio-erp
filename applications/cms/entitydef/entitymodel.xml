@@ -1,0 +1,757 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entitymodel.xsd">
+
+    <!-- ========================================================= -->
+    <!-- ====================== Scipio CMS ======================= -->
+    <!-- ========================================================= -->
+
+    <title>Entity of CMS Component</title>
+    <description>Page templates, assets, content and version entities concerning the creation and administration of content on pages.</description>
+    <copyright>Ilscipio GmbH</copyright>
+    <version>1.0</version>
+    <default-resource-name>CMSEntityLabels</default-resource-name>
+    <!-- DEV NOTE: PLEASE MAKE SURE PACKAGE NAMES ARE VALID; THEY ARE USED IN QUERIES -->
+    
+    <!-- 
+    NOTES:
+    * All webSiteId fields omit foreign key, to allow relaxed use of webSiteId (decision delegated to UI).
+    -->
+
+    <!-- ========================================================= -->
+    <!-- Generic entities -->
+    <!-- ========================================================= -->
+
+    <!-- 2016: TODO?: this doesn't appear to be in use. if it is needed, it does not
+        belong in cms component, and in itself extending this entity is questionable...
+    <extend-entity entity-name="RoleType">
+      <field name="sequenceNum" type="numeric"></field>
+    </extend-entity>-->
+
+    <!-- ========================================================= -->
+    <!-- Page and content entities -->
+    <!-- ========================================================= -->
+
+    <entity entity-name="CmsPage" package-name="com.ilscipio.scipio.cms.content"
+        title="Page" author="Ilscipio GmbH" version="1.0">
+      <field name="pageId" type="id-ne"></field>
+      <!-- NOTE: 2016: CmsPage.webSiteId is now mainly used organizationally and as a filter.
+        It should always be set so the page always has a "default" webSiteId for filtering and organization reasons,
+        but the new schema technically will allow a page to map to several websites in the future through
+        its primary process mappings, and those are used in rendering, while this webSiteId is generally not. -->
+      <field name="webSiteId" type="id-ne"><description>Organizational and editing page default webSiteId</description></field>
+      <field name="pageTemplateId" type="id"></field>
+      <!-- 2016: pagePath is obsoleted by the primary CmsProcessMapping, which can be found by querying CmsProcessMapping.primaryForPageId (see its description).
+      <field name="pagePath" type="long-varchar"></field>-->
+      <field name="pageName" type="name"></field>
+      <field name="description" type="very-long"></field>
+      
+      <prim-key field="pageId" />
+
+      <relation type="one" fk-name="CMSPAGE_TMPL" rel-entity-name="CmsPageTemplate">
+        <key-map field-name="pageTemplateId"/>
+      </relation>
+    </entity>
+    
+    <entity entity-name="CmsPageVersion" package-name="com.ilscipio.scipio.cms.content"
+        title="Page Version" author="Ilscipio GmbH" version="1.0">
+      <field name="versionId" type="id-ne"></field>
+      <field name="pageId" type="id-ne" not-null="true"></field>
+      <field name="contentId" type="id-ne"></field>
+      <field name="createdBy" type="id"></field>
+
+      <prim-key field="versionId" />
+
+      <relation type="one" fk-name="CMSPAGEVER_PAGE" rel-entity-name="CmsPage">
+        <key-map field-name="pageId"/>
+      </relation>
+      <relation type="one" fk-name="CMSPAGEVER_CNTNTID" rel-entity-name="Content">
+        <key-map field-name="contentId"/>
+      </relation>
+    </entity>
+
+    <!-- Guarantees at most one active page version through DB constraints (and could support flags other than ACTIVE) -->
+    <entity entity-name="CmsPageVersionState" package-name="com.ilscipio.scipio.cms.content"
+        title="Page Version State" author="Ilscipio GmbH" version="1.0">
+      <field name="pageId" type="id-ne"></field>
+      <field name="versionStateId" type="id-ne"><description>One of: CMS_VER_ACTIVE, or other CMS_VER_STATE enumeration type</description></field>
+      <field name="versionId" type="id-ne" not-null="true"></field><!-- NOTE: although not part of PK, this should not be left null (rather delete record) -->
+      
+      <prim-key field="pageId" />
+      <prim-key field="versionStateId" />
+
+      <relation type="one" fk-name="CMSPGVST_PAGE" rel-entity-name="CmsPage">
+        <key-map field-name="pageId"/>
+      </relation>
+      <relation type="one" fk-name="CMSPGVST_VERSTATE" title="VersionState" rel-entity-name="Enumeration">
+        <key-map field-name="versionStateId" rel-field-name="enumId"/>
+      </relation>
+      <relation type="one" fk-name="CMSPGVST_PAGEVER" rel-entity-name="CmsPageVersion">
+        <key-map field-name="versionId" rel-field-name="versionId"/>
+      </relation>
+    </entity>
+
+    <entity entity-name="CmsPageAuthorization" package-name="com.ilscipio.scipio.cms.content"
+        title="Page Authorization" author="Ilscipio GmbH" version="1.0">
+      <field name="pageAuthId" type="id-ne"></field>
+      <field name="pageId" type="id-ne" not-null="true"></field>
+      <field name="userId" type="id-vlong"></field>
+      <field name="roleTypeId" type="id"></field>
+      <field name="groupId" type="id">
+        <description>Can be used as an alternate to userId to specify a security group of users to which to
+          assign the given role type. Only one of the two may be set.</description>
+      </field>
+
+      <prim-key field="pageAuthId" />
+
+      <relation type="one" fk-name="CMSPAGEAUTH_PAGE" rel-entity-name="CmsPage">
+        <key-map field-name="pageId"/>
+      </relation>
+      <relation type="one" fk-name="CMSPAGEAUTH_USERL" rel-entity-name="UserLogin">
+        <key-map field-name="userId" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one" fk-name="CMSPAGEAUTH_ROLTYP" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="CMSPAGEAUTH_SECGRP" rel-entity-name="SecurityGroup">
+        <key-map field-name="groupId" rel-field-name="groupId"/>
+      </relation>
+    </entity>
+
+    <view-entity entity-name="CmsPageUserAuth" package-name="com.ilscipio.scipio.cms.content">
+      <member-entity entity-alias="PPA" entity-name="CmsPageAuthorization" />
+
+      <alias-all entity-alias="PPA" />
+
+      <entity-condition>
+        <condition-list>
+          <condition-expr entity-alias="PPA" field-name="userId" operator="not-equals" value=""/>
+          <condition-expr entity-alias="PPA" field-name="groupId" operator="equals" value=""/>
+        </condition-list>
+      </entity-condition>
+    </view-entity>
+
+    <view-entity entity-name="CmsPageGroupAuth" package-name="com.ilscipio.scipio.cms.content">
+      <member-entity entity-alias="PPA" entity-name="CmsPageAuthorization" />
+
+      <alias-all entity-alias="PPA" />
+
+      <entity-condition>
+        <condition-list>
+          <condition-expr entity-alias="PPA" field-name="groupId" operator="not-equals" value=""/>
+          <condition-expr entity-alias="PPA" field-name="userId" operator="equals" value=""/>
+        </condition-list>
+      </entity-condition>
+    </view-entity>
+
+    <view-entity entity-name="CmsPageGroupAuthAndSecurityGroup" package-name="com.ilscipio.scipio.cms.content">
+      <member-entity entity-alias="PPGA" entity-name="CmsPageGroupAuth" />
+      <member-entity entity-alias="SG" entity-name="SecurityGroup" />
+
+      <alias-all entity-alias="PPGA" />
+      <alias entity-alias="SG" field="description" name="groupDesc"/>
+
+      <view-link entity-alias="PPGA" rel-entity-alias="SG">
+        <key-map field-name="groupId" rel-field-name="groupId" />
+      </view-link>
+    </view-entity>
+
+    <entity entity-name="CmsPageProductAssoc" package-name="com.ilscipio.scipio.cms.content"
+        title="Page Product Association" author="Ilscipio GmbH" version="1.0">
+      <field name="pageProductAssocId" type="id-ne"></field>
+      <field name="pageId" type="id-ne" not-null="true"></field>
+      <field name="productId" type="id-ne" not-null="true"></field>
+      <field name="importName" type="name" not-null="true"></field>
+      
+      <prim-key field="pageProductAssocId" />
+      
+      <relation type="one" fk-name="CMSPGPRASS_PAGE" rel-entity-name="CmsPage">
+        <key-map field-name="pageId"/>
+      </relation>
+      <relation type="one" fk-name="CMSPGPRASS_PROD" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+    </entity>
+    
+    <!-- 2017: new page-to-script association; helps avoid needless intermediate templates and duplication; analogous to patterns in screen widgets -->
+    <entity entity-name="CmsPageScriptAssoc" table-name="CMS_PAGE_SCRIPTASSOC" package-name="com.ilscipio.scipio.cms.content"
+        title="Script To Page Association" author="Ilscipio GmbH" version="1.0">
+      <field name="scriptAssocId" type="id-ne"></field>
+      <field name="scriptTemplateId" type="id-ne" not-null="true"></field>
+      <field name="pageId" type="id-ne" not-null="true"></field>
+      
+      <field name="inputPosition" type="numeric"></field>
+      <field name="invokeName" type="name">
+        <description>Method or function to invoke within the script template at execution time</description>
+      </field>
+      <field name="lastUpdatedBy" type="id"></field>
+      
+      <prim-key field="scriptAssocId" />
+      
+      <relation type="one" fk-name="CMSPGSCRASS_PGTMP" rel-entity-name="CmsPage">
+        <key-map field-name="pageId"/>
+      </relation>
+      <relation type="one" fk-name="CMSPGSCRASS_SCTMP" rel-entity-name="CmsScriptTemplate">
+        <key-map field-name="scriptTemplateId"/>
+      </relation>
+    </entity>
+
+    <!-- ========================================================= -->
+    <!-- Template entities -->
+    <!-- ========================================================= -->
+
+    <entity entity-name="CmsPageTemplate" package-name="com.ilscipio.scipio.cms.template"
+        title="Page Template" author="Ilscipio GmbH" version="1.0">
+      <field name="pageTemplateId" type="id-ne"></field>
+      <!-- 2016: NOTE: Unlike CmsPage.webSiteId, this field is not mandatory and basically not used. -->
+      <field name="webSiteId" type="id"><description>Organizational and editing page webSiteId (not used in rendering)</description></field>
+      <field name="templateName" type="name"></field>
+      <field name="description" type="very-long"></field>
+      <field name="createdBy" type="id"></field>
+      <field name="lastUpdatedBy" type="id"></field>
+      
+      <field name="activeContentId" type="id"><description>Optimization: Direct reference to the active template contentId; if null, forces regular full version lookup.</description></field>
+
+      <prim-key field="pageTemplateId" />
+      
+      <relation type="one" fk-name="CMSPTMP_ACNTNTID" rel-entity-name="Content">
+        <key-map field-name="activeContentId" rel-field-name="contentId"/>
+      </relation>
+    </entity>
+    
+    <entity entity-name="CmsPageTemplateVersion" package-name="com.ilscipio.scipio.cms.template"
+        title="Page Template Version" author="Ilscipio GmbH" version="1.0">
+      <field name="versionId" type="id-ne"></field>
+      <field name="pageTemplateId" type="id-ne" not-null="true"></field>
+      <!--<field name="versionComment" type="long-varchar"></field> via contentId description -->
+      <field name="contentId" type="id-ne"></field><!-- replaces old templateBody, implicit support for templateLocation -->
+      <field name="createdBy" type="id"></field>
+      <field name="origVersionDate" type="date-time">
+        <description>This field is used if the default timestamp fields don't reflect the logical version date.</description>
+      </field>
+
+      <prim-key field="versionId" />
+
+      <relation type="one" fk-name="CMSPTMPV_PAGETMP" rel-entity-name="CmsPageTemplate">
+        <key-map field-name="pageTemplateId"/>
+      </relation>
+      <relation type="one" fk-name="CMSPTMPV_CNTNTID" rel-entity-name="Content">
+        <key-map field-name="contentId"/>
+      </relation>
+    </entity>
+    
+    <!-- NOTE: 2016: custom table-name required otherwise the entity engine fails to create unique index names -->
+    <entity entity-name="CmsPageTemplateVersionState" table-name="CMS_PAGE_TEMPLATE_VERSTATE" package-name="com.ilscipio.scipio.cms.template"
+        title="Page Template Version State" author="Ilscipio GmbH" version="1.0">
+      <field name="pageTemplateId" type="id-ne"></field>
+      <field name="versionStateId" type="id-ne"><description>One of: CMS_VER_ACTIVE, or other CMS_VER_STATE enumeration type</description></field>
+      <field name="versionId" type="id-ne" not-null="true"></field><!-- NOTE: although not part of PK, this should not be left null (rather delete record) -->
+
+      <prim-key field="pageTemplateId" />
+      <prim-key field="versionStateId" />
+
+      <relation type="one" fk-name="CMSPGTVST_PGTMP" rel-entity-name="CmsPageTemplate">
+        <key-map field-name="pageTemplateId"/>
+      </relation>
+      <relation type="one" fk-name="CMSPGTVST_VERSTATE" title="VersionState" rel-entity-name="Enumeration">
+        <key-map field-name="versionStateId" rel-field-name="enumId"/>
+      </relation>
+      <relation type="one" fk-name="CMSPGTVST_PGTMPVER" rel-entity-name="CmsPageTemplateVersion">
+        <key-map field-name="versionId"/>
+      </relation>
+    </entity>
+
+    <!-- NOTE: 2016: custom table-name required otherwise the entity engine fails to create unique index names -->
+    <entity entity-name="CmsPageTemplateAssetAssoc" table-name="CMS_PAGE_TEMPLATE_ASSETASSOC" package-name="com.ilscipio.scipio.cms.template"
+        title="Asset To Page Template Association" author="Ilscipio GmbH" version="1.0">
+      <field name="pageAssetTemplateAssocId" type="id-ne"></field>
+      <field name="assetTemplateId" type="id-ne" not-null="true"></field>
+      <field name="pageTemplateId" type="id-ne" not-null="true"></field>
+      
+      <field name="importName" type="name" not-null="true"></field>
+      <field name="displayName" type="name"><description>Display name. If omitted, falls back on asset display name.</description></field>
+      <field name="inputPosition" type="numeric"></field>
+
+      <prim-key field="pageAssetTemplateAssocId" />
+
+      <relation type="one" fk-name="CMSPGASSTASS_PGTMP" rel-entity-name="CmsPageTemplate">
+        <key-map field-name="pageTemplateId"/>
+      </relation>
+      <relation type="one" fk-name="CMSPGASSTASS_ASTMP" rel-entity-name="CmsAssetTemplate">
+        <key-map field-name="assetTemplateId"/>
+      </relation>
+    </entity>
+
+    <!-- NOTE: 2016: custom table-name required otherwise the entity engine fails to create unique index names -->
+    <entity entity-name="CmsPageTemplateScriptAssoc" table-name="CMS_PAGE_TEMPLATE_SCRIPTASSOC" package-name="com.ilscipio.scipio.cms.template"
+        title="Script To Page Template Association" author="Ilscipio GmbH" version="1.0">
+      <field name="scriptAssocId" type="id-ne"></field>
+      <field name="scriptTemplateId" type="id-ne" not-null="true"></field>
+      <field name="pageTemplateId" type="id-ne" not-null="true"></field>
+      
+      <field name="inputPosition" type="numeric"></field>
+      <field name="invokeName" type="name">
+        <description>Method or function to invoke within the script template at execution time</description>
+      </field>
+      <field name="lastUpdatedBy" type="id"></field>
+      
+      <prim-key field="scriptAssocId" />
+      
+      <relation type="one" fk-name="CMSPGTSCRASS_PGTMP" rel-entity-name="CmsPageTemplate">
+        <key-map field-name="pageTemplateId"/>
+      </relation>
+      <relation type="one" fk-name="CMSPGTSCRASS_SCTMP" rel-entity-name="CmsScriptTemplate">
+        <key-map field-name="scriptTemplateId"/>
+      </relation>
+    </entity>
+
+    <entity entity-name="CmsAssetTemplate" package-name="com.ilscipio.scipio.cms.template"
+        title="Asset Template" author="Ilscipio GmbH" version="1.0">
+      <field name="assetTemplateId" type="id-ne"></field>
+      <!-- 2016: NOTE: Unlike CmsPage.webSiteId, this field is not mandatory and basically not used. -->
+      <field name="webSiteId" type="id"><description>Organizational and editing page webSiteId (not used in rendering)</description></field>
+      <field name="templateName" type="name"></field>
+      <field name="description" type="very-long"></field>
+      <field name="contentTypeId" type="id"><description>Points to a ContentType having parentTypeId SCP_TEMPLATE_PART</description></field>
+      <field name="createdBy" type="id"></field>
+      <field name="lastUpdatedBy" type="id"></field>
+      
+      <field name="activeContentId" type="id"><description>Optimization: Direct reference to the active template contentId; if null, forces regular full version lookup.</description></field>
+
+      <prim-key field="assetTemplateId" />
+      
+      <relation type="one" fk-name="CMSASTMP_ACNTNTID" rel-entity-name="Content">
+        <key-map field-name="activeContentId" rel-field-name="contentId"/>
+      </relation>
+    </entity>
+    
+    <!-- NOTE: 2016: assets now have explicit version records like page templates -->
+    <entity entity-name="CmsAssetTemplateVersion" package-name="com.ilscipio.scipio.cms.template"
+        title="Asset Template Version" author="Ilscipio GmbH" version="1.0">
+      <field name="versionId" type="id-ne"></field>
+      <field name="assetTemplateId" type="id-ne" not-null="true"></field>
+      <field name="contentId" type="id-ne"></field><!-- replaces old templateBody, implicit support for templateLocation -->
+      <field name="createdBy" type="id"></field>
+      <field name="origVersionDate" type="date-time">
+        <description>This field is used if the default timestamp fields don't reflect the logical version date.</description>
+      </field>
+
+      <prim-key field="versionId" />
+
+      <relation type="one" fk-name="CMSASTMPV_ASSTMP" rel-entity-name="CmsAssetTemplate">
+        <key-map field-name="assetTemplateId"/>
+      </relation>
+      <relation type="one" fk-name="CMSASTMPV_CNTNTID" rel-entity-name="Content">
+        <key-map field-name="contentId"/>
+      </relation>
+    </entity>
+    
+    <!-- NOTE: 2016: custom table-name required otherwise the entity engine fails to create unique index names -->
+    <entity entity-name="CmsAssetTemplateVersionState" table-name="CMS_ASSET_TEMPLATE_VERSTATE" package-name="com.ilscipio.scipio.cms.template"
+        title="Asset Template Version State" author="Ilscipio GmbH" version="1.0">
+      <field name="assetTemplateId" type="id-ne"></field>
+      <field name="versionStateId" type="id-ne"><description>One of: CMS_VER_ACTIVE, or other CMS_VER_STATE enumeration type</description></field>
+      <field name="versionId" type="id-ne" not-null="true"></field><!-- NOTE: although not part of PK, this should not be left null (rather delete record) -->
+      
+      <prim-key field="assetTemplateId" />
+      <prim-key field="versionStateId" />
+
+      <relation type="one" fk-name="CMSASTVST_PGTMP" rel-entity-name="CmsAssetTemplate">
+        <key-map field-name="assetTemplateId"/>
+      </relation>
+      <relation type="one" fk-name="CMSASTVST_VERSTATE" title="VersionState" rel-entity-name="Enumeration">
+        <key-map field-name="versionStateId" rel-field-name="enumId"/>
+      </relation>
+      <relation type="one" fk-name="CMSASTVST_PGTMPVER" rel-entity-name="CmsAssetTemplateVersion">
+        <key-map field-name="versionId"/>
+      </relation>
+    </entity>
+
+    <!-- NOTE: 2016: custom table-name required otherwise the entity engine fails to create unique index names -->
+    <entity entity-name="CmsAssetTemplateScriptAssoc" table-name="CMS_ASSET_TEMPLATE_SCRIPTASSOC" package-name="com.ilscipio.scipio.cms.template"
+        title="Script To Asset Template Association" author="Ilscipio GmbH" version="1.0">
+      <field name="scriptAssocId" type="id-ne"></field>
+      
+      <field name="scriptTemplateId" type="id-ne" not-null="true"></field>
+      <field name="assetTemplateId" type="id-ne" not-null="true"></field>
+      
+      <field name="inputPosition" type="numeric"></field>
+      <field name="invokeName" type="name">
+        <description>Method or function to invoke within the script template at execution time</description>
+      </field>
+      <field name="lastUpdatedBy" type="id"></field>
+      
+      <prim-key field="scriptAssocId" />
+
+      <relation type="one" fk-name="CMSASTSCRASS_ASTMP" rel-entity-name="CmsAssetTemplate">
+        <key-map field-name="assetTemplateId"/>
+      </relation>
+      <relation type="one" fk-name="CMSASTSCRASS_SCTMP" rel-entity-name="CmsScriptTemplate">
+        <key-map field-name="scriptTemplateId"/>
+      </relation>
+    </entity>
+
+    <entity entity-name="CmsAttributeTemplate" package-name="com.ilscipio.scipio.cms.template"
+        title="Attribute Template Entity" author="Ilscipio GmbH" version="1.0">
+      <field name="attributeTemplateId" type="id-ne"></field>
+      <!-- Either assetTemplateId or pageTemplateId should be not-null -->
+      <field name="assetTemplateId" type="id"></field>
+      <field name="pageTemplateId" type="id"></field>
+
+      <field name="attributeName" type="name"></field>
+      <field name="displayName" type="name"></field>
+      <field name="defaultValue" type="long-varchar"></field>
+      <field name="inputHelp" type="long-varchar"></field>
+      <!-- TODO?: check if want description field, or maybe replace inputHelp with description to standardize like others
+      <field name="description" type="very-long"></field>
+       -->
+      <field name="inputType" type="id"></field>
+      <field name="permission" type="id"></field>
+      <field name="maxLength" type="numeric"></field>
+      <field name="regularExpression" type="long-varchar"></field>
+      <field name="required" type="indicator"></field>
+      <!-- DEV NOTE: expangLang=FTL could also have been (and still be) implemented or marked 
+        using a dedicated inputType - this would be required if needed to support one of the other languages on
+        top of freemarker itself. for now, this should be sufficient... later could end up needed both, for versatility. -->
+      <field name="expandLang" type="id"><description>The expansion language. 
+        Possible values (2017-02-20): NONE (default), FLEXIBLE (${map1.field1}), SIMPLE ({{map1.field1}}), FTL.</description></field>
+      <field name="expandPosition" type="numeric"><description>The moment of expansion, relative to CmsAsset/PageTemplateScriptAssoc.inputPosition (for the same value, attributes always run first).
+        Default: 0 (runs before all scripts). NOTE: For expandLang=FTL, this has no real effect, because the ftl code will only evaluate once included by the template.</description></field>
+      <field name="inputPosition" type="numeric"><description>Order of evaluation of attributes with respect to other attributes (only).
+        NOTE: This is slave to expandPosition, and has no influence on order relative to scripts.</description></field>
+      <field name="targetType" type="name"><description>A Java class indicating the target type: String, Integer, java.util.String, ... uses the standard Ofbiz conversion utilities.</description></field>
+      
+      <prim-key field="attributeTemplateId" />
+
+      <relation type="one" fk-name="CMSATTRTMP_ASTMP" rel-entity-name="CmsAssetTemplate">
+        <key-map field-name="assetTemplateId"/>
+      </relation>
+
+      <relation type="one" fk-name="CMSATTRTMP_PGTMP" rel-entity-name="CmsPageTemplate">
+        <key-map field-name="pageTemplateId"/>
+      </relation>
+    </entity>
+
+    <entity entity-name="CmsScriptTemplate" package-name="com.ilscipio.scipio.cms.template"
+        title="Script Template Entity" author="Ilscipio GmbH" version="1.0">
+      <field name="scriptTemplateId" type="id-ne"></field>
+      
+      <field name="templateName" type="name"></field>
+      <field name="description" type="very-long"></field>
+      <field name="scriptLang" type="id">
+        <description>Explicit script language - required if no location, frequently inferred from location.
+            Possible values (non-exhaustive): groovy, screen-actions, simple-method, auto, none. Default: auto.
+            See also: com.ilscipio.scipio.cms.template.CmsScriptTemplate.ScriptLang</description>
+      </field>
+      <!--<field name="templateLocation" type="name"></field> via contentId -->
+      <!--<field name="templateBody" type="very-long"></field> via contentId -->
+      <field name="contentId" type="id-ne"></field><!-- replaces old templateBody/templateLocation -->
+      <field name="createdBy" type="id"></field>
+      <field name="standalone" type="indicator"><description>If set to N, the record is deleted once it becomes orphan (not associated to any page or asset template)</description></field>
+      
+      <prim-key field="scriptTemplateId" />
+
+      <relation type="one" fk-name="CMSSCRTMP_CNTNTID" rel-entity-name="Content">
+        <key-map field-name="contentId"/>
+      </relation>
+    </entity>
+
+    <!-- ========================================================= -->
+    <!-- Control/request entities -->
+    <!-- ========================================================= -->
+
+    <entity entity-name="CmsViewMapping" package-name="com.ilscipio.scipio.cms.control"
+        title="View to Page Mapping Entity" author="Ilscipio GmbH" version="1.0">
+      <field name="viewMappingId" type="id-ne"></field>
+      
+      <!-- webSiteId+targetServletPath+targetViewName is the main candidate key -->
+      <field name="webSiteId" type="id-ne" not-null="true"><description>Mapping webSiteId (matched and used in rendering)</description></field>
+      <field name="targetServletPath" type="long-varchar" not-null="true"><description>Servlet path, from webapp root, for target view matching;
+          CANNOT BE EMPTY; if set to special value "DEFAULT", defaults to ControlServlet mapping path or value of cmsDefaultTargetServletPath web.xml context-param.
+          This ensures the correct servlet is being hooked into (for correctness and exotic configurations).</description></field>
+      <field name="targetViewName" type="name" not-null="true"></field>
+
+      <!-- 2016: targetPath matching is REMOVED for CmsViewMapping because it was conceptually poor, almost never used and very limited in what it could do (e.g. only one match supported),
+          and made main lookup query less efficient
+      <field name="targetPath" type="long-varchar"></field> -->
+      <field name="pageId" type="id-ne" not-null="true"><description>The page this view mapping maps to</description></field>
+      <field name="active" type="indicator"><description>Indicates whether this mapping is active/enabled</description></field>
+
+      <prim-key field="viewMappingId" />
+      
+      <relation type="one" fk-name="CMSVWMAP_PAGEID" rel-entity-name="CmsPage">
+        <key-map field-name="pageId"/>
+      </relation>
+
+      <!-- Index for primary rendering findByView operation, and enforces main candidate key (if supported by DB)  -->
+      <index name="CMS_VWMAP_VIEWKEY" unique="true">
+        <index-field name="webSiteId"/>
+        <index-field name="targetServletPath"/>
+        <index-field name="targetViewName"/>
+      </index>
+
+      <!-- Website index -->
+      <index name="CMS_VWMAP_WEBSITE">
+        <index-field name="webSiteId"/>
+      </index>
+    </entity>
+
+    <entity entity-name="CmsProcessMapping" package-name="com.ilscipio.scipio.cms.control"
+        title="Process to Page Mapping Entity" author="Ilscipio GmbH" version="1.0">
+      <field name="processMappingId" type="id-ne"></field>
+      
+      <!-- 2016: NOTE: as per index below, sourceWebSiteId+sourcePath+sourceFromContextRoot is a candidate key and must be unique and non-null -->
+      <field name="sourceWebSiteId" type="id-ne" not-null="true"><description>Mapping source webSiteId (matched and used in rendering)</description></field>
+      <field name="sourcePath" type="long-varchar" not-null="true"><description>Entry path, from webapp (servlet context) root</description></field>
+      <field name="sourceFromContextRoot" type="indicator" not-null="true"><description>Ternary non-null indicator ("Y", "N", "D"); 
+            indicates if the source path should match from webapp (servlet context) root ("Y");
+            if false ("N"), instead matches from servlet root of /control or cmsDefaultSourceServletPath web.xml context-param;
+            CANNOT BE EMPTY - special value "D" indicates default for website, controlled by cmsDefaultSourceFromContextRoot web.xml context-param</description></field>
+
+      <!-- NOTE re: forwardPath vs targetPath
+           forwardPath is what the dispatcher forwards to. targetPath is actually merely the default
+           path used when view mappings are matched; each view can further override its own targetPath.
+           On this entity in principle it should be forwardPath which is always required and targetPath optional/slave.
+           But the two paths are a little different and can't really extract targetPath from forwardPath,
+           whereas you can get forwardPath from targetPath, so we kind of flip the defaults-lookup behavior to fit this.
+           In addition, we're usually more interested in targetPath if it's specified, over forwardPath.
+           forwardPath becomes required if user omits targetPath and sets only the targetPaths on the view mappings. -->
+      <field name="forwardPath" type="long-varchar"><description>Path, by default from webapp (servlet context) root,
+          to forward to when source path encountered; if forwardFromContextRoot is set, this path is appended to the
+          cmsDefaultForwardServletPath web.xml context-param value before forwarding.
+          default used:
+           - if alwaysUseForwardServletPath (process filter init param) is not set (default): targetServletPath+targetPath
+           - if alwaysUseForwardServletPath is set: defaultForwardServletPath+targetPath</description></field>
+      <field name="forwardFromContextRoot" type="indicator"><description>Indicates if the forward path should be from webapp (servlet context) root;
+          if false, instead forwards from servlet root of /control or cmsDefaultForwardServletPath web.xml context-param; defaults (if empty) to Y;
+          only takes effect if forwardPath non-empty.</description></field>
+      <field name="forwardExtraPathInfo" type="indicator"><description>If Y, any extra path info found in the request path after
+          matching with the source path is appended to the forwarded path (e.g. sourcePath /hello, forward path /toYou, request path /hello/fromMe,
+          forwarded path will be /toYou/fromMe); if N, extra path info is discarded;
+          if the process mapping is intended as a wildcard process mapping, this should be set to N;
+          default is Y (in Ofbiz fashion) or the corresponding boolean set in process filter cmsDefaultForwardExtraPathInfo web.xml context-param</description></field>
+
+      <field name="targetServletPath" type="long-varchar"><description>Default servlet path, from webapp root, for target view matching;
+          defaults to /control or value of cmsDefaultTargetServletPath web.xml context-param</description></field>
+      <field name="targetPath" type="long-varchar"><description>Default request path, from (control) servlet root, for target view matching.
+          This is not strictly required but will generally be present.</description></field>
+      <field name="matchAnyTargetPath" type="indicator"><description>Match any target path; defaults (if empty) to N</description></field>
+
+      <field name="pageId" type="id"><description>Default page for all target views</description></field>
+      <field name="active" type="indicator"><description>Indicates whether this mapping is active/enabled</description></field>
+      <!-- CMS: 2016: not applicable for local renders
+      <field name="pageFromPathWildcard" type="indicator"></field>-->
+      <field name="requireExtraPathInfo" type="indicator"><description>If Y, this process mapping will only take effect and forward
+          if there is extra directory/path info after the matching source path; if N, will forward regardless of whether extra path info or not;
+          can be set to Y to prevent forwarding to the base CMS pages in wildcard mappings;
+          note this flag does not factor into source path matching semantics (only cancels after matching done);
+          default is N</description></field>
+      <!-- NOTE: 2016: this is brand new for local CMS; supplants the old CmsPage.pagePath field -->
+      <field name="primaryForPageId" type="id"><description>A page ID for which this mapping
+          record is considered a "primary" process mapping or primary path, for the given webSiteId.
+          The meaning of this is intentionally generic, but currently (2016-11-23) it means
+          this record contains and implements a simple direct path as sourcePath through which to view
+          the page, and the targetPath will be one of the special cmsPageXxx controller requests.
+          Currently (2016-11-23) each page will only have one of these (constrained by both
+          the single webSiteId currently permitted by the UI per page, and
+          then each website having only one of these per page).
+          This field is an optimization for CmsPageSpecialMapping entity and helps in code and query simplification.</description></field>
+
+      <prim-key field="processMappingId" />
+      
+      <relation type="one" fk-name="CMSPRMAP_PAGEID" rel-entity-name="CmsPage">
+        <key-map field-name="pageId"/>
+      </relation>
+      <relation type="one" fk-name="CMSPRMAP_PRPAGEID" title="Primary" rel-entity-name="CmsPage">
+        <key-map field-name="primaryForPageId" rel-field-name="pageId"/>
+      </relation>
+      
+      <!-- Main source path lookup, and enforces main candidate key (if supported by DB) -->
+      <index name="CMS_PRMAP_SRCKEY" unique="true">
+        <index-field name="sourceWebSiteId"/>
+        <index-field name="sourcePath"/>
+        <index-field name="sourceFromContextRoot"/>
+      </index>
+      
+      <!-- Website index -->
+      <index name="CMS_PRMAP_WEBSITE">
+        <index-field name="sourceWebSiteId"/>
+      </index>
+    </entity>
+    
+    <view-entity entity-name="CmsPageAndPrimaryProcessMapping" package-name="com.ilscipio.scipio.cms.control"
+        title="Page and Primary Process Mapping" author="Ilscipio GmbH" version="1.0">
+        <member-entity entity-alias="PG" entity-name="CmsPage"/>
+        <member-entity entity-alias="PPM" entity-name="CmsProcessMapping"/>
+        <alias-all entity-alias="PG"/>
+        <alias-all entity-alias="PPM"/>
+        <view-link entity-alias="PG" rel-entity-alias="PPM">
+            <key-map field-name="pageId" rel-field-name="primaryForPageId"/>
+        </view-link>
+    </view-entity>
+
+    <entity entity-name="CmsProcessViewMapping" package-name="com.ilscipio.scipio.cms.control"
+        title="Process View Mapping Entity" author="Ilscipio GmbH" version="1.0">
+      <field name="processViewMappingId" type="id-ne"></field>
+      
+      <field name="processMappingId" type="id-ne" not-null="true"><description>Parent process mapping</description></field>
+      <field name="targetServletPath" type="long-varchar"><description>Target servlet path; defaults (if empty) to value of parent process's field</description></field>
+      <field name="targetPath" type="long-varchar"><description>Target request path; defaults (if empty) to value of parent process's field</description></field>
+      <field name="matchAnyTargetPath" type="indicator"><description>Match any target path; defaults (if empty) to value of parent process's field</description></field>
+      <field name="targetViewName" type="name" not-null="true"></field>
+      <field name="pageId" type="id"><description>Target page; defaults (if empty) to value of parent process's field</description></field>
+      <field name="active" type="indicator"><description>Indicates whether this mapping is active/enabled</description></field>
+      <!-- CMS: 2016: not applicable for local renders
+      <field name="pageFromPathWildcard" type="indicator"></field>-->
+
+      <prim-key field="processViewMappingId" />
+      
+      <relation type="one" fk-name="CMSPRVWMP_PRMPID" rel-entity-name="CmsProcessMapping">
+        <key-map field-name="processMappingId"/>
+      </relation>
+      <relation type="one" fk-name="CMSPRVWMP_PAGEID" rel-entity-name="CmsPage">
+        <key-map field-name="pageId"/>
+      </relation>
+      
+      <!-- Parent process mapping index -->
+      <index name="CMS_PRMAP_PARENTPR">
+        <index-field name="processMappingId"/>
+      </index>
+      <!-- NOTE: most other lookups for CmsProcessViewMapping are complex and done in memory -->
+    </entity>
+
+    <view-entity entity-name="CmsProcessAndViewMapping" package-name="com.ilscipio.scipio.cms.control">
+      <member-entity entity-alias="PRM" entity-name="CmsProcessMapping" />
+      <member-entity entity-alias="PRVM" entity-name="CmsProcessViewMapping" />
+
+      <alias-all entity-alias="PRM">
+          <exclude field="targetServletPath" />
+          <exclude field="targetPath" />
+          <exclude field="matchAnyTargetPath" />
+          <exclude field="pageId" />
+          <exclude field="active" />
+          <!-- CMS: 2016: not applicable for local renders
+          <exclude field="pageFromPathWildcard" />-->
+          <exclude field="createdStamp" />
+          <exclude field="lastUpdatedStamp" />
+      </alias-all>
+      <alias-all entity-alias="PRVM">
+          <exclude field="processMappingId" />
+      </alias-all>
+
+      <alias name="createdStamp" field="createdStamp" entity-alias="PRVM" />
+      <alias name="lastUpdatedStamp" field="lastUpdatedStamp" entity-alias="PRVM" />
+      <alias name="processTargetServletPath" field="targetServletPath" entity-alias="PRM" />
+      <alias name="processTargetPath" field="targetPath" entity-alias="PRM" />
+      <alias name="processMatchAnyTargetPath" field="matchAnyTargetPath" entity-alias="PRM" />
+      <alias name="processPageId" field="pageId" entity-alias="PRM" />
+      <alias name="processPrimaryForPageId" field="primaryForPageId" entity-alias="PRM" />
+      <alias name="processActive" field="active" entity-alias="PRM" />
+      <!-- CMS: 2016: not applicable for local renders
+      <alias name="processPageFromPathWildcard" field="pageFromPathWildcard" entity-alias="PRM" />-->
+
+      <view-link entity-alias="PRM" rel-entity-alias="PRVM">
+        <key-map field-name="processMappingId" />
+      </view-link>
+    </view-entity>
+
+    <!-- Guarantees that a page can have at most one primary mapping per website, per primary mapping type
+        NOTE: In live renders, CmsProcessMapping.primaryForPageId is used instead (optimization) -->
+    <entity entity-name="CmsPageSpecialMapping" package-name="com.ilscipio.scipio.cms.control"
+        title="Page Special Mapping" author="Ilscipio GmbH" version="1.0">        
+      <field name="pageId" type="id-ne"></field>
+      <field name="webSiteId" type="id-ne"></field>
+      <field name="mappingTypeId" type="id-ne"><description>Enumeration of type CMS_PAGE_SPCMAP_TYPE</description></field>
+      
+      <field name="processMappingId" type="id-ne" not-null="true"></field><!-- not-null: record should be removed if primary mapping removed -->
+      
+      <prim-key field="pageId"/>
+      <prim-key field="webSiteId"/>
+      <prim-key field="mappingTypeId"/>
+      
+      <relation type="one" fk-name="CMSPGPRMP_PAGE" rel-entity-name="CmsPage">
+        <key-map field-name="pageId"/>
+      </relation>
+      <relation type="one" fk-name="CMSPGPRMP_PRMAP" rel-entity-name="CmsProcessMapping">
+        <key-map field-name="processMappingId"/>
+      </relation>
+      <relation type="one" fk-name="CMSPGPRMP_PRMTYP" rel-entity-name="Enumeration">
+        <key-map field-name="mappingTypeId" rel-field-name="enumId"/>
+      </relation>
+    </entity>
+
+    <!-- ========================================================= -->
+    <!--  Media entities -->
+    <!-- ========================================================= -->
+
+    <!-- NOTE: DataResourceFileView currently relies on the datastructure outlined by the content component. As the rest of the content component
+        is rather superfluous by now, it is possible that the datamodel may be migrated to this component in future releases. -->
+    <view-entity entity-name="DataResourceMediaFileView" title="DataResource View Entity"
+        package-name="com.ilscipio.scipio.cms.media">
+      <member-entity entity-alias="DR" entity-name="DataResource"/>
+      <member-entity entity-alias="CNT" entity-name="Content"/>
+      <member-entity entity-alias="VDR" entity-name="VideoDataResource" />
+      <member-entity entity-alias="IDR" entity-name="ImageDataResource"/>
+      <member-entity entity-alias="ADR" entity-name="AudioDataResource"/>
+      <member-entity entity-alias="DDR" entity-name="DocumentDataResource"/>
+      <member-entity entity-alias="ODR" entity-name="OtherDataResource"/>
+
+      <alias-all entity-alias="DR">
+            <exclude field="surveyId"/>
+            <exclude field="surveyResponseId"/>
+            <exclude field="surveyId"/>
+      </alias-all>
+      <alias-all entity-alias="VDR"><exclude field="videoData"/></alias-all>
+      <alias-all entity-alias="IDR"><exclude field="imageData"/></alias-all>
+      <alias-all entity-alias="ADR"><exclude field="audioData"/></alias-all>
+      <alias-all entity-alias="DDR"><exclude field="documentData"/></alias-all>
+      <alias-all entity-alias="ODR"><exclude field="dataResourceContent"/></alias-all>
+      <alias-all entity-alias="CNT" prefix="co">
+        <exclude field="contentId"/>
+        <exclude field="contentName"/>
+        <exclude field="contentTypeId"/>
+      </alias-all>
+      <alias entity-alias="CNT" name="contentId"/>
+      <alias entity-alias="CNT" name="contentName"/>
+      <alias entity-alias="CNT" name="contentTypeId"/>
+
+      <view-link entity-alias="CNT" rel-entity-alias="DR" rel-optional="false"><!-- NOTE: 2017-07-31: the Content is now REQUIRED -->
+          <key-map field-name="dataResourceId"/>
+      </view-link>
+      <view-link entity-alias="DR" rel-entity-alias="VDR" rel-optional="true">
+          <key-map field-name="dataResourceId"/>
+      </view-link>
+      <view-link entity-alias="DR" rel-entity-alias="IDR" rel-optional="true">
+          <key-map field-name="dataResourceId"/>
+      </view-link>
+      <view-link entity-alias="DR" rel-entity-alias="ADR" rel-optional="true">
+          <key-map field-name="dataResourceId"/>
+      </view-link>
+      <view-link entity-alias="DR" rel-entity-alias="DDR" rel-optional="true">
+          <key-map field-name="dataResourceId"/>
+      </view-link>
+      <view-link entity-alias="DR" rel-entity-alias="ODR" rel-optional="true">
+          <key-map field-name="dataResourceId"/>
+      </view-link>
+
+      <relation type="one-nofk" rel-entity-name="Content">
+        <!--<key-map field-name="contentId"/>-->
+        <key-map field-name="dataResourceId"/>
+      </relation>
+
+      <relation type="many" rel-entity-name="DataResourceAttribute">
+        <key-map field-name="dataResourceId"/>
+      </relation>
+
+      <entity-condition>
+        <condition-list combine="or">
+            <condition-expr field-name="dataResourceId" operator="not-equals" value="" entity-alias="VDR" />
+            <condition-expr field-name="dataResourceId" operator="not-equals" value="" entity-alias="IDR" />
+            <condition-expr field-name="dataResourceId" operator="not-equals" value="" entity-alias="ADR" />
+            <condition-expr field-name="dataResourceId" operator="not-equals" value="" entity-alias="DDR" />
+            <condition-expr field-name="dataResourceId" operator="not-equals" value="" entity-alias="ODR" />
+        </condition-list>
+      </entity-condition>
+    </view-entity>
+
+</entitymodel>

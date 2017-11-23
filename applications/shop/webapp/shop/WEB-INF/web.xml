@@ -68,6 +68,25 @@ under the License.
     </context-param>
     -->
 
+    <!-- SCIPIO: CMS parameters (see website webapp web.xml for descriptions) -->
+    <context-param>
+        <param-name>cmsSetResponseBrowserNoCacheCmsPage</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <param-name>cmsSetResponseBrowserNoCacheScreen</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <param-name>cmsSetResponseBrowserNoCache</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <param-name>cmsAllowPreviewMode</param-name>
+        <!-- for live production store, preview should be set to false for security at current time (2017-11) -->
+        <param-value>false</param-value>
+    </context-param>
+
     <!-- SCIPIO: UrlRewriteFilter - processes urlrewrite.xml
         NOTE: 2017-11-01: SimpleRedirectFilter is replaced by UrlRewriteFilter. -->
     <filter>
@@ -116,6 +135,12 @@ under the License.
         </init-param>
         <init-param><param-name>viewRequest</param-name><param-value>ViewBlogArticle</param-value></init-param>
     </filter>
+    <!-- SCIPIO: CMS Process filter -->
+    <filter>
+        <display-name>CmsProcessFilter</display-name>
+        <filter-name>CmsProcessFilter</filter-name>
+        <filter-class>com.ilscipio.scipio.cms.control.CmsProcessFilter</filter-class>         
+    </filter>
     <filter>
         <display-name>ContextFilter</display-name>
         <filter-name>ContextFilter</filter-name>
@@ -126,7 +151,7 @@ under the License.
         </init-param>
         <init-param>
             <param-name>allowedPaths</param-name>
-            <param-value>/error:/control:/products:/select:/index.html:/index.jsp:/robots.txt:/default.html:/default.jsp:/images:/sitemaps</param-value>
+            <param-value>/error:/control:/products:/select:/index.html:/index.jsp:/robots.txt:/default.html:/default.jsp:/images:/sitemaps:/media</param-value>
         </init-param>
         <init-param>
             <!-- SCIPIO: Set this to Y to automatically forward root requests that match controller URIs to
@@ -160,6 +185,13 @@ under the License.
     <filter-mapping>
         <filter-name>ContentUrlFilter</filter-name>
         <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
+    <!-- SCIPIO: CMS Process filter mapping -->
+    <filter-mapping>
+        <filter-name>CmsProcessFilter</filter-name>
+        <url-pattern>/*</url-pattern>   
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>FORWARD</dispatcher>
     </filter-mapping>
@@ -203,6 +235,15 @@ under the License.
         <load-on-startup>1</load-on-startup>
     </servlet>
 
+    <!-- SCIPIO: CMS media servlet -->
+    <servlet>
+        <servlet-name>CmsMediaServlet</servlet-name>
+        <display-name>CmsMediaServlet</display-name>
+        <description>Cms Media Servlet</description>
+        <servlet-class>com.ilscipio.scipio.cms.media.CmsMediaServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>     
+
     <!-- SCIPIO: NOTE: It is possible to map ControlServlet to root here (/*), but is problematic -
         alternatively can enable forwardRootControllerUris in ContextFilter above and uncomment the outbound-rules in rewrite.xml. -->
     <servlet-mapping>
@@ -219,6 +260,12 @@ under the License.
     <servlet-mapping>
         <servlet-name>CatalogUrlServlet</servlet-name>
         <url-pattern>/products/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- SCIPIO: CMS media servlet -->
+    <servlet-mapping>
+        <servlet-name>CmsMediaServlet</servlet-name>
+        <url-pattern>/media/*</url-pattern>
     </servlet-mapping>
 
     <session-config>

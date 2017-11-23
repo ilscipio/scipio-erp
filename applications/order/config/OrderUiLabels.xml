@@ -13135,7 +13135,7 @@
     </property>
     <property key="OrderSplittingPreference">
         <value xml:lang="cs">Preference rozdělení</value>
-        <value xml:lang="de">Aufteilungspräferenz</value>
+        <value xml:lang="de">Bevorzugte Aufteilung</value>
         <value xml:lang="en">Splitting Preference</value>
         <value xml:lang="es">Preferencia de división</value>
         <value xml:lang="fr">Préférence de fractionnement</value>

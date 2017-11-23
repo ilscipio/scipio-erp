@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
+    <menu name="MainAppBar" items-sort-mode="off" title="${uiLabelMap.CMSApplication}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="pages" title="${uiLabelMap.CommonPages}">
+            <link target="pages"/>
+        </menu-item>
+        <menu-item name="templates" title="${uiLabelMap.CmsTemplates}">
+            <link target="templates"/>
+        </menu-item>
+        <menu-item name="media" title="${uiLabelMap.CmsMedia}">
+            <link target="media"/>
+        </menu-item>
+        <menu-item name="importExport" title="${uiLabelMap.WebtoolsImportExport}">
+            <link target="CmsDataExport"/>
+        </menu-item>
+        <!--<menu-item name="settings" title="${uiLabelMap.CommonSettings}">
+            <link target="editSettings"/>
+        </menu-item>-->
+    </menu>
+    <menu name="MainAppSideBar" items-sort-mode="off" title="${uiLabelMap.CMSApplication}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
+         always-expand-selected-or-ancestor="true">
+        <!-- NOTE: when sort is off, the order of appear is controller by the included elements from MainAppBar above.
+            to change this for MainAppSideBar only (but not MainAppBar), you must either remove the include-elements and redefine them all, or play with the override-mode="" attrib 
+            easier just let MainAppBar define the order. -->
+        <include-elements menu-name="MainAppBar" recursive="includes-only" />
+        <menu-item name="pages" >
+            <sub-menu name="Pages" include="PageSideBar"/>
+        </menu-item>
+        <menu-item name="templates">
+            <sub-menu name="Templates" include="TemplateSideBar"/>
+        </menu-item>
+        <menu-item name="media">
+            <sub-menu name="Media" include="MediaSideBar"/>
+        </menu-item>
+        <menu-item name="importExport">
+            <sub-menu name="ImportExport" include="ImportExportSideBar"/>
+        </menu-item>
+    </menu>
+    
+    <!-- SCIPIO: new Sidebar menus  -->
+    <menu name="PageTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="listPages" title="${uiLabelMap.CmsListPages}">
+            <link target="pages"/>
+        </menu-item>
+        <menu-item name="editPage" title="${uiLabelMap.CmsEditPage}" always-expand-selected-or-ancestor="false">
+            <condition>
+                <or>
+                    <and>
+                        <not>
+                            <if-empty field="parameters.path"/>
+                        </not>
+                        <not>
+                            <if-empty field="parameters.webSiteId"/>
+                        </not>
+                    </and>
+                    <not>
+                        <if-empty field="parameters.pageId"/>
+                    </not>
+                </or>
+            </condition>
+            <link target="editPage">
+                <parameter param-name="pageId" from-field="parameters.pageId"/>
+                <parameter param-name="path" from-field="parameters.path"/>
+                <parameter param-name="webSiteId" from-field="parameters.webSiteId"/>
+            </link>
+        </menu-item>
+    </menu>
+        
+    <menu name="PageSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
+        <include-elements menu-name="PageTabBar" recursive="includes-only" />
+    </menu>
+    
+    <menu name="TemplateTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="templates" title="${uiLabelMap.CmsListTemplates}">
+            <link target="templates"/>
+        </menu-item>
+        <menu-item name="editTemplate" title="${uiLabelMap.CmsEditTemplate}" always-expand-selected-or-ancestor="false">
+            <condition>
+                <not>
+                    <if-empty field="parameters.pageTemplateId"/>
+                </not>
+            </condition>
+            <link target="editTemplate">
+                <parameter param-name="pageTemplateId" from-field="parameters.pageTemplateId"/>
+            </link>
+        </menu-item>
+        <menu-item name="assets" title="${uiLabelMap.CmsListAssets}">
+            <link target="assets"/>
+        </menu-item>
+        <menu-item name="editAsset" title="${uiLabelMap.CmsEditAsset}" always-expand-selected-or-ancestor="false">
+            <condition>
+                <not>
+                    <if-empty field="parameters.assetTemplateId"/>
+                </not>
+            </condition>
+            <link target="editAsset">
+                <parameter param-name="assetTemplateId" from-field="parameters.assetTemplateId"/>
+            </link>
+        </menu-item>
+        <menu-item name="scripts" title="${uiLabelMap.CmsListScripts}">
+            <link target="scripts"/>
+        </menu-item>
+        <menu-item name="editScript" title="${uiLabelMap.CmsEditScript}" always-expand-selected-or-ancestor="false">
+            <condition>
+                <not>
+                    <if-empty field="parameters.scriptTemplateId"/>
+                </not>
+            </condition>
+            <link target="editScript">
+                <parameter param-name="scriptTemplateId" from-field="parameters.scriptTemplateId"/>
+            </link>
+        </menu-item>
+    </menu>
+        
+    <menu name="TemplateSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
+        <include-elements menu-name="TemplateTabBar" recursive="includes-only" />
+    </menu>
+    
+    <menu name="MediaTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="media" title="${uiLabelMap.CmsListMedia}">
+            <link target="media"/>
+        </menu-item>
+    </menu>
+        
+    <menu name="MediaSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
+        <include-elements menu-name="MediaTabBar" recursive="includes-only" />
+    </menu>
+     
+    <menu name="ImportExportSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
+        <menu-item name="dataExport" title="${uiLabelMap.WebtoolsDataExport}">
+            <link target="CmsDataExport"/>
+        </menu-item>
+        <menu-item name="dataImport" title="${uiLabelMap.WebtoolsDataImport}">
+            <link target="CmsDataImport"/>
+        </menu-item>
+    </menu>
+</menus>

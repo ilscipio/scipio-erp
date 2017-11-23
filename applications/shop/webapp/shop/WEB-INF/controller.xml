@@ -22,6 +22,9 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
     <!-- SCIPIO: Factored out framework-level core definitions into common-store-controller, analogous to common-controller for backend -->
     <include location="component://common/webcommon/WEB-INF/common-store-controller.xml"/>
+    <!-- 2016: new common cms client controller -->
+    <include location="component://cms/webcommon/WEB-INF/cms-client-controller.xml"/>
+    
     <description>SCIPIO Shop Controller Configuration File</description>
 
     <!-- Events run from here for the first hit in a visit -->

@@ -58,7 +58,9 @@ under the License.
                             <#assign paymentMethodType = orderPaymentPreference.getRelatedOne("PaymentMethodType", false)!>
                             <#if (orderPaymentPreference?? && (orderPaymentPreference.getString("paymentMethodTypeId") == "CREDIT_CARD") && (orderPaymentPreference.getString("paymentMethodId")?has_content))>
                                 <#assign creditCard = orderPaymentPreference.getRelatedOne("PaymentMethod", false).getRelatedOne("CreditCard", false)>
-                                ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
+                                <#list Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)?split(" ") as sValue>
+                                  ${sValue}&#x2028;
+                                </#list>
                             <#else>
                                 ${paymentMethodType.get("description",locale)!}
                             </#if>

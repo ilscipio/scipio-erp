@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+
+    <!-- ========================================================= -->
+    <!-- Generic -->
+    <!-- ========================================================= -->
+
+    <!-- (none) -->
+    
+    <!-- ========================================================= -->
+    <!-- Templates -->
+    <!-- ========================================================= -->
+    
+    <!-- DEV NOTE: Most demo data template bodies are defined here as file references, in order to facilitate maintenance, development and updates.
+        All Content records can be stored as either file pointers (dataResourceTypeId="URL_RESOURCE", DataResource.objectInfo)
+        or directly as text in database (dataResourceTypeId="ELECTRONIC_TEXT", ElectronicText),
+        as per the standard ofbiz schema and in the same way as the other non-cms demo data.
+        When a template is modified through the user interface (new version submitted), the system will automatically copy
+        the template body to a new ElectronicText record, with no user intervention required, in copy-on-write fashion. -->
+    
+    <!-- Global Common Screens Actions Resource -->
+    <DataResource dataResourceId="CMSSCR_GLBCMNACT" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://common/widget/CommonScreens.xml"/>
+    <Content contentId="CMSSCR_GLBCMNACT" dataResourceId="CMSSCR_GLBCMNACT" contentTypeId="DOCUMENT" />
+    <CmsScriptTemplate scriptTemplateId="GLOBALCMNSCRN" contentId="CMSSCR_GLBCMNACT" templateName="GlobalCommonScreensActions" standalone="Y"
+        description="The common component CommonScreens.xml file"/>
+
+    <!-- Shop Common Screens Actions Resource -->
+    <DataResource dataResourceId="CMSSCR_SHOPCMNACT" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://shop/widget/CommonScreens.xml"/>
+    <Content contentId="CMSSCR_SHOPCMNACT" dataResourceId="CMSSCR_SHOPCMNACT" contentTypeId="DOCUMENT" />
+    <CmsScriptTemplate scriptTemplateId="SHOPCMNSCRN" contentId="CMSSCR_SHOPCMNACT" templateName="ShopCommonScreensActions" standalone="Y"
+        description="The shop component CommonScreens.xml file"/>
+
+    <!-- Info Script -->
+    <DataResource dataResourceId="CMSSCR_SYSINFO" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://cms/cms-templates/actions/GetSystemInfo.groovy"/>
+    <Content contentId="CMSSCR_SYSINFO" dataResourceId="CMSSCR_SYSINFO" contentTypeId="DOCUMENT" />
+    <CmsScriptTemplate scriptTemplateId="SYSINFO" contentId="CMSSCR_SYSINFO" templateName="SystemInfo" standalone="Y" 
+        description="Prints system information to log"/>
+
+    <!-- Common Template Parts library for global reuse -->
+    <DataResource dataResourceId="CMSAS_CMNTMPLPARTS" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://cms/cms-templates/assets/commonTemplateParts.ftl"/>
+    <Content contentId="CMSAS_CMNTMPLPARTS" dataResourceId="CMSAS_CMNTMPLPARTS" contentTypeId="DOCUMENT" />
+    <CmsAssetTemplate assetTemplateId="CMNTMPLPARTS" webSiteId="" templateName="CommonTemplateParts" contentTypeId="TMPLPART_LIBRARY"
+        description="Common Template Parts"/>
+    <CmsAssetTemplateVersion versionId="CMNTMPLPARTS" assetTemplateId="CMNTMPLPARTS" contentId="CMSAS_CMNTMPLPARTS"/>
+    <CmsAssetTemplateVersionState assetTemplateId="CMNTMPLPARTS" versionStateId="CMS_VER_ACTIVE" versionId="CMNTMPLPARTS" />
+
+    <!-- Trivial Content Asset Template - simply provides a content attribute with no extra markup (unless modified) -->
+    <DataResource dataResourceId="CMSAS_CTNASSET" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://cms/cms-templates/assets/contentAsset.ftl"/>
+    <Content contentId="CMSAS_CTNASSET" dataResourceId="CMSAS_CTNASSET" contentTypeId="DOCUMENT" />
+    <CmsAssetTemplate assetTemplateId="CTNASSET" webSiteId="" templateName="Content" contentTypeId="TMPLPART_BODY"
+        description="Content (trivial)" /> <!-- NOTE: activeContentId="" is an optimization (can be omitted, and omitted here for testing purposes) -->
+    <CmsAssetTemplateVersion versionId="CTNASSET" assetTemplateId="CTNASSET" contentId="CMSAS_CTNASSET"/>
+    <CmsAssetTemplateVersionState assetTemplateId="CTNASSET" versionStateId="CMS_VER_ACTIVE" versionId="CTNASSET" />
+    <CmsAttributeTemplate attributeTemplateId="CTNASSET_CONTENT" assetTemplateId="CTNASSET" attributeName="content" displayName="Content" defaultValue="" inputHelp="Insert content here" inputType="LONG_TEXT" expandLang="FTL" inputPosition="20" required="N" />
+
+    <!-- Section Asset Template -->
+    <DataResource dataResourceId="CMSAS_SCTNASSET" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://cms/cms-templates/assets/sectionAsset.ftl"/>
+    <Content contentId="CMSAS_SCTNASSET" dataResourceId="CMSAS_SCTNASSET" contentTypeId="DOCUMENT" />
+    <CmsAssetTemplate assetTemplateId="SCTNASSET" webSiteId="" templateName="SectionContent" contentTypeId="TMPLPART_BODY"
+        description="Section content" /> <!-- NOTE: activeContentId="" is an optimization (can be omitted, and omitted here for testing purposes) -->
+    <CmsAssetTemplateVersion versionId="SCTNASSET" assetTemplateId="SCTNASSET" contentId="CMSAS_SCTNASSET"/>
+    <CmsAssetTemplateVersionState assetTemplateId="SCTNASSET" versionStateId="CMS_VER_ACTIVE" versionId="SCTNASSET" />
+    <CmsAttributeTemplate attributeTemplateId="SCTNASSET_TITLE" assetTemplateId="SCTNASSET" attributeName="title" displayName="Title" defaultValue="" inputHelp="Insert a section title here." inputType="SHORT_TEXT" inputPosition="10" required="N" />
+    <CmsAttributeTemplate attributeTemplateId="SCTNASSET_CONTENT" assetTemplateId="SCTNASSET" attributeName="content" displayName="Content" defaultValue="" inputHelp="Insert section content here" inputType="LONG_TEXT" expandLang="FTL" inputPosition="20" required="N" />
+
+    <!-- Basic Template Actions - Dedicated self-titled script (also provides test for multiple script includes) -->
+    <DataResource dataResourceId="CMSPGSCR_BASICTMPL" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://cms/cms-templates/actions/BasicTemplate.groovy"/>
+    <Content contentId="CMSPGSCR_BASICTMPL" dataResourceId="CMSPGSCR_BASICTMPL" contentTypeId="DOCUMENT" />
+    <CmsScriptTemplate scriptTemplateId="BASICTMPL" contentId="CMSPGSCR_BASICTMPL" templateName="BasicTemplateActions" standalone="N"/>
+
+    <!-- Basic Template -->
+    <DataResource dataResourceId="CMSPG_BASICTMPL" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://cms/cms-templates/basicTemplate.ftl"/>
+    <Content contentId="CMSPG_BASICTMPL" dataResourceId="CMSPG_BASICTMPL" contentTypeId="DOCUMENT" description="Initial Template Version."/>
+    <CmsPageTemplate pageTemplateId="BASICTMPL" webSiteId="cmsSite" templateName="BasicTemplate" description="Basic template outline, based on a bare-bones decorator"/> <!-- NOTE: activeContentId="" is an optimization (can be omitted, and omitted here for testing purposes) -->
+    <CmsPageTemplateVersion versionId="BASICTMPL" pageTemplateId="BASICTMPL" createdBy="admin" contentId="CMSPG_BASICTMPL" origVersionDate="2016-09-05 00:00:00" createdStamp="2016-09-05 00:00:00"/>
+    <CmsPageTemplateVersionState pageTemplateId="BASICTMPL" versionId="BASICTMPL" versionStateId="CMS_VER_ACTIVE"/>
+    <CmsAttributeTemplate attributeTemplateId="BASICTMPL_PGTITLE" pageTemplateId="BASICTMPL" attributeName="title" displayName="Page Title" defaultValue="" inputHelp="" inputType="SHORT_TEXT" inputPosition="10" required="Y" />
+    <CmsAttributeTemplate attributeTemplateId="BASICTMPL_CSSFILE" pageTemplateId="BASICTMPL" attributeName="customCssFile" displayName="Custom CSS" defaultValue="data/page.css" inputHelp="" inputType="SHORT_TEXT" inputPosition="20" required="N" />
+    <CmsAttributeTemplate attributeTemplateId="BASICTMPL_JSFILE" pageTemplateId="BASICTMPL" attributeName="customJsFile" displayName="Custom JavaScript" defaultValue="data/page.js" inputHelp="" inputType="SHORT_TEXT" inputPosition="30" required="N" />
+    <CmsPageTemplateAssetAssoc pageAssetTemplateAssocId="BASICTMPL_SCTNASSET" assetTemplateId="SCTNASSET" pageTemplateId="BASICTMPL" importName="mainContent" displayName="Main Content" inputPosition="10" />
+    <CmsPageTemplateScriptAssoc scriptAssocId="BASICTMPL_SYSINFO" pageTemplateId="BASICTMPL" scriptTemplateId="SYSINFO" inputPosition="10" />
+    <CmsPageTemplateScriptAssoc scriptAssocId="BASICTMPL_MAIN" pageTemplateId="BASICTMPL" scriptTemplateId="BASICTMPL" inputPosition="90" />
+
+    <!-- Advance Template Global (Backend) Actions - Dedicated self-titled script  -->
+    <DataResource dataResourceId="CMSPGSCR_ADVTMPLGLBL" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://cms/cms-templates/actions/AdvancedTemplateGlobal.groovy"/>
+    <Content contentId="CMSPGSCR_ADVTMPLGLBL" dataResourceId="CMSPGSCR_ADVTMPLGLBL" contentTypeId="DOCUMENT" />
+    <CmsScriptTemplate scriptTemplateId="ADVTMPLGLBL" contentId="CMSPGSCR_ADVTMPLGLBL" templateName="AdvancedGlobalTemplateActions" standalone="N" />
+
+    <!-- Advanced Template Global (Backend), based on and reflects component://common/widget/CommonScreens.xml#GlobalDecorator 
+        Implements and reflects the same responsibilities as GlobalDecorator and its actions;
+        that is, when used directly its logic may only suffice for backend app logic as was written principally for them,
+        but is reusable as a base.
+        [For shop and frontend apps, typically their decorator has to extend GlobalDecorator with
+        custom actions to set up anything from themes to js libraries and override behavior.
+        Templates must mimic this one way or another.] -->
+    <DataResource dataResourceId="CMSPG_ADVTMPLGLBL" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://cms/cms-templates/advancedTemplateGlobal.ftl"/>
+    <Content contentId="CMSPG_ADVTMPLGLBL" dataResourceId="CMSPG_ADVTMPLGLBL" contentTypeId="DOCUMENT" description="Initial Template Version."/>
+    <CmsPageTemplate pageTemplateId="ADVTMPLGLBL" webSiteId="" templateName="AdvancedTemplateGlobal" description="Advanced global/backend template, based on GlobalDecorator logic; by default, primarily targets backend support"
+        activeContentId="CMSPG_ADVTMPLGLBL" /> <!-- NOTE: activeContentId="" is an optimization (can be omitted, but specified here for testing purposes and because this likely to be used in real cases) -->
+    <CmsPageTemplateVersion versionId="ADVTMPLGLBL" pageTemplateId="ADVTMPLGLBL" createdBy="admin" contentId="CMSPG_ADVTMPLGLBL" origVersionDate="2016-09-05 00:00:00" createdStamp="2016-09-05 00:00:00" />
+    <CmsPageTemplateVersionState pageTemplateId="ADVTMPLGLBL" versionId="ADVTMPLGLBL" versionStateId="CMS_VER_ACTIVE"/>
+    <CmsAttributeTemplate attributeTemplateId="ADVTMPLGLBL_PGTITLE" pageTemplateId="ADVTMPLGLBL" attributeName="title" displayName="Page Title" defaultValue="" inputHelp="" inputType="SHORT_TEXT" inputPosition="10" required="N" />
+    <CmsAttributeTemplate attributeTemplateId="ADVTMPLGLBL_CSSFILE" pageTemplateId="ADVTMPLGLBL" attributeName="customCssFile" displayName="Custom CSS" defaultValue="" inputHelp="" inputType="SHORT_TEXT" inputPosition="20" required="N" />
+    <CmsAttributeTemplate attributeTemplateId="ADVTMPLGLBL_JSFILE" pageTemplateId="ADVTMPLGLBL" attributeName="customJsFile" displayName="Custom JavaScript" defaultValue="" inputHelp="" inputType="SHORT_TEXT" inputPosition="30" required="N" />
+    <!-- FIXME: the true default values for showLeft/RightContent booleans are not quite correct, but we have to set them due to current UI limitations -->
+    <CmsAttributeTemplate attributeTemplateId="ADVTMPLGLBL_SHLFTCNT" pageTemplateId="ADVTMPLGLBL" attributeName="showLeftContent" displayName="Show Left Column" defaultValue="true" inputHelp="" inputType="BOOLEAN" expandLang="" inputPosition="95" required="N" />
+    <CmsAttributeTemplate attributeTemplateId="ADVTMPLGLBL_LEFTCNT" pageTemplateId="ADVTMPLGLBL" attributeName="leftContent" displayName="Left Column Content (override)" defaultValue="" inputHelp="" inputType="LONG_TEXT" expandLang="FTL" inputPosition="100" required="N" />
+    <CmsAttributeTemplate attributeTemplateId="ADVTMPLGLBL_SHRGTCNT" pageTemplateId="ADVTMPLGLBL" attributeName="showRightContent" displayName="Show Right Column" defaultValue="true" inputHelp="" inputType="BOOLEAN" expandLang="" inputPosition="105" required="N" />
+    <CmsAttributeTemplate attributeTemplateId="ADVTMPLGLBL_RIGHTCNT" pageTemplateId="ADVTMPLGLBL" attributeName="rightContent" displayName="Right Column Content (override)" defaultValue="" inputHelp="" inputType="LONG_TEXT" expandLang="FTL" inputPosition="110" required="N" />
+    <CmsAttributeTemplate attributeTemplateId="ADVTMPLGLBL_PRECNT" pageTemplateId="ADVTMPLGLBL" attributeName="preContent" displayName="Pre-Content (override)" defaultValue="" inputHelp="" inputType="LONG_TEXT" expandLang="FTL" inputPosition="120" required="N" />
+    <!-- now included within the main self-titled script:
+    <CmsPageTemplateScriptAssoc scriptAssocId="ADVTMPLGLBL_GLBCMNSC" pageTemplateId="ADVTMPLGLBL" scriptTemplateId="GLOBALCMNSCRN" invokeName="AllGlobalActions" inputPosition="10" />-->
+    <CmsPageTemplateScriptAssoc scriptAssocId="ADVTMPLGLBL_MAIN" pageTemplateId="ADVTMPLGLBL" scriptTemplateId="ADVTMPLGLBL" inputPosition="90" />
+    <CmsPageTemplateAssetAssoc pageAssetTemplateAssocId="ADVTMPLGLBL" assetTemplateId="SCTNASSET" pageTemplateId="ADVTMPLGLBL" importName="mainContent" displayName="Main Content" inputPosition="10" />
+    
+    <!-- Shop Category Script, standalone for multi-page reuse -->
+    <DataResource dataResourceId="CMSSCR_SHOPCATEG" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://shop/webapp/shop/WEB-INF/actions/shop/Category.groovy"/>
+    <Content contentId="CMSSCR_SHOPCATEG" dataResourceId="CMSSCR_SHOPCATEG" contentTypeId="DOCUMENT" />
+    <CmsScriptTemplate scriptTemplateId="SHOPCATEG" contentId="CMSSCR_SHOPCATEG" templateName="ShopCategory" standalone="Y" 
+        description="Shop Category Script"/>    
+    
+
+    <!-- Shop sidebar category menu asset (use global, association not needed) 
+        DEV NOTE: to make everyone's lives easier, we link directly to the original sidedeepcategory. the UI will automatically create a copy on the first change. everybody wins. -->
+    <DataResource dataResourceId="CMSAS_CATMENU" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://shop/webapp/shop/catalog/sidedeepcategory.ftl"/>
+    <Content contentId="CMSAS_CATMENU" dataResourceId="CMSAS_CATMENU" contentTypeId="DOCUMENT" />
+    <CmsAssetTemplate assetTemplateId="CATMENU" webSiteId="ScipioWebStore" templateName="CategoryMenu" contentTypeId="TMPLPART_MENU"
+        description="Category Menu"/>
+    <CmsAssetTemplateVersion versionId="CATMENU" assetTemplateId="CATMENU" contentId="CMSAS_CATMENU"/>
+    <CmsAssetTemplateVersionState assetTemplateId="CATMENU" versionStateId="CMS_VER_ACTIVE" versionId="CATMENU" />
+    <CmsAttributeTemplate attributeTemplateId="CATMENU_TYPE" assetTemplateId="CATMENU" attributeName="type" displayName="Type" defaultValue="sidebar" inputHelp="Menu type (button, sidebar, section, generic, ...)" inputType="SHORT_TEXT" inputPosition="10" required="N" /> 
+    <!-- Category Menu Script + assoc -->
+    <DataResource dataResourceId="CMSSCR_CATMENU" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://shop/webapp/shop/WEB-INF/actions/shop/SideDeepCategory.groovy"/>
+    <Content contentId="CMSSCR_CATMENU" dataResourceId="CMSSCR_CATMENU" contentTypeId="DOCUMENT" />
+    <CmsScriptTemplate scriptTemplateId="CATMENU" contentId="CMSSCR_CATMENU" templateName="CategoryMenu" standalone="N" 
+        description="Category menu script"/>
+    <CmsAssetTemplateScriptAssoc scriptAssocId="CATMENU_MAIN" assetTemplateId="CATMENU" scriptTemplateId="CATMENU" inputPosition="10" />
+    
+    <!-- Shop Product Slider - Asset-based recreation of component://shop/widget/CommonScreens.xml#ScipioDashboardProductSlider with partial automatic duplication.
+        Can work as import or as global definition.
+        DEV NOTE: to make everyone's lives easier, we link directly to the original productSlider.ftl. the UI will automatically create a copy on first change. -->
+    <DataResource dataResourceId="CMSAS_SHOPPRSLID" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://shop/webapp/shop/dashboard/productSlider.ftl"/>
+    <Content contentId="CMSAS_SHOPPRSLID" dataResourceId="CMSAS_SHOPPRSLID" contentTypeId="DOCUMENT" />
+    <CmsAssetTemplate assetTemplateId="SHOPPRSLID" webSiteId="ScipioWebStore" templateName="ShopProductSlider" contentTypeId="TMPLPART_CONTENT"
+        description="Shop Product Slider"/>
+    <CmsAssetTemplateVersion versionId="SHOPPRSLID" assetTemplateId="SHOPPRSLID" contentId="CMSAS_SHOPPRSLID"/>
+    <CmsAssetTemplateVersionState assetTemplateId="SHOPPRSLID" versionStateId="CMS_VER_ACTIVE" versionId="SHOPPRSLID" />
+    <!-- NOTE: for the actions, we simply invoke the original's screen actions, possible thanks to 2016 changes and include-screen-actions. We could rewrite as a new groovy script, but it's full of deeper includes so it gets too ugly. -->
+    <CmsAssetTemplateScriptAssoc scriptAssocId="SHOPPRSLID_MAIN" assetTemplateId="SHOPPRSLID" scriptTemplateId="SHOPCMNSCRN" invokeName="ScipioDashboardProductSlider" inputPosition="10" />
+    <!-- Slider attributes -->
+    <CmsAttributeTemplate attributeTemplateId="SHOPPRSLID_PRODCATID" assetTemplateId="SHOPPRSLID" attributeName="productCategoryId" displayName="productCategoryId" defaultValue="CATALOG1" inputHelp="" inputType="SHORT_TEXT" expandLang="FLEXIBLE" inputPosition="10" required="N" /> 
+    <CmsAttributeTemplate attributeTemplateId="SHOPPRSLID_VIEWSIZE" assetTemplateId="SHOPPRSLID" attributeName="viewSize" displayName="viewSize" defaultValue="12" inputHelp="" inputType="SHORT_TEXT" expandLang="FLEXIBLE" inputPosition="20" required="N" /> 
+    <CmsAttributeTemplate attributeTemplateId="SHOPPRSLID_VIEWINDEX" assetTemplateId="SHOPPRSLID" attributeName="viewIndex" displayName="viewIndex" defaultValue="0" inputHelp="" inputType="SHORT_TEXT" expandLang="FLEXIBLE" inputPosition="30" required="N" /> 
+    <CmsAttributeTemplate attributeTemplateId="SHOPPRSLID_VIEWCLUST" assetTemplateId="SHOPPRSLID" attributeName="viewCluster" displayName="viewCluster" defaultValue="4" inputHelp="" inputType="SHORT_TEXT" expandLang="FLEXIBLE" inputPosition="40" required="N" /> 
+    <CmsAttributeTemplate attributeTemplateId="SHOPPRSLID_VIEWSCROL" assetTemplateId="SHOPPRSLID" attributeName="viewScrollCluster" displayName="viewScrollCluster" defaultValue="4" inputHelp="" inputType="SHORT_TEXT" expandLang="FLEXIBLE" inputPosition="50" required="N" /> 
+
+    <!-- Advanced Template Shop (Frontend) Actions - Dedicated self-titled script (also provides test for multiple script includes) -->
+    <DataResource dataResourceId="CMSPGSCR_ADVTMPLSHOP" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://cms/cms-templates/actions/AdvancedTemplateShop.groovy"/>
+    <Content contentId="CMSPGSCR_ADVTMPLSHOP" dataResourceId="CMSPGSCR_ADVTMPLSHOP" contentTypeId="DOCUMENT" />
+    <CmsScriptTemplate scriptTemplateId="ADVTMPLSHOP" contentId="CMSPGSCR_ADVTMPLSHOP" templateName="AdvancedTemplateShopActions" standalone="N" />
+
+    <!-- Advanced Template Shop (Frontend), based on and reflects component://shop/widget/CommonScreens.xml#ShopDecorator 
+        Indirectly derives from ADVTMPLGLBL and overrides some of its behavior (as ShopDecorator derives from and overrides GlobalDecorator). -->
+    <DataResource dataResourceId="CMSPG_ADVTMPLSHOP" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://cms/cms-templates/advancedTemplateShop.ftl"/>
+    <Content contentId="CMSPG_ADVTMPLSHOP" dataResourceId="CMSPG_ADVTMPLSHOP" contentTypeId="DOCUMENT" description="Initial Template Version."/>
+    <CmsPageTemplate pageTemplateId="ADVTMPLSHOP" webSiteId="ScipioWebStore" templateName="AdvancedTemplateShop" description="Advanced shop/frontend template, based on ShopDecorator logic"
+        activeContentId="CMSPG_ADVTMPLSHOP" /> <!-- NOTE: activeContentId="" is an optimization (can be omitted, but specified here for testing purposes and because this likely to be used in real cases) -->
+    <CmsPageTemplateVersion versionId="ADVTMPLSHOP" pageTemplateId="ADVTMPLSHOP" createdBy="admin" contentId="CMSPG_ADVTMPLSHOP" origVersionDate="2016-09-05 00:00:00" createdStamp="2016-09-05 00:00:00" />
+    <CmsPageTemplateVersionState pageTemplateId="ADVTMPLSHOP" versionId="ADVTMPLSHOP" versionStateId="CMS_VER_ACTIVE"/>
+    <CmsAttributeTemplate attributeTemplateId="ADVTMPLSHOP_PGTITLE" pageTemplateId="ADVTMPLSHOP" attributeName="title" displayName="Page Title" defaultValue="" inputHelp="" inputType="SHORT_TEXT" inputPosition="10" required="N" />
+    <CmsAttributeTemplate attributeTemplateId="ADVTMPLSHOP_CSSFILE" pageTemplateId="ADVTMPLSHOP" attributeName="customCssFile" displayName="Custom CSS" defaultValue="" inputHelp="" inputType="SHORT_TEXT" inputPosition="20" required="N" />
+    <CmsAttributeTemplate attributeTemplateId="ADVTMPLSHOP_JSFILE" pageTemplateId="ADVTMPLSHOP" attributeName="customJsFile" displayName="Custom JavaScript" defaultValue="" inputHelp="" inputType="SHORT_TEXT" inputPosition="30" required="N" />
+    <!-- FIXME: the true default values for showLeft/RightContent booleans are not quite correct, but we have to set them due to current UI limitations -->
+    <CmsAttributeTemplate attributeTemplateId="ADVTMPLSHOP_SHLFTCNT" pageTemplateId="ADVTMPLSHOP" attributeName="showLeftContent" displayName="Show Left Column" defaultValue="true" inputHelp="" inputType="BOOLEAN" expandLang="" inputPosition="95" required="N" />
+    <CmsAttributeTemplate attributeTemplateId="ADVTMPLSHOP_LEFTCNT" pageTemplateId="ADVTMPLSHOP" attributeName="leftContent" displayName="Left Column Content (override)" defaultValue="" inputHelp="" inputType="LONG_TEXT" expandLang="FTL" inputPosition="100" required="N" />
+    <CmsAttributeTemplate attributeTemplateId="ADVTMPLSHOP_SHRGTCNT" pageTemplateId="ADVTMPLSHOP" attributeName="showRightContent" displayName="Show Right Column" defaultValue="true" inputHelp="" inputType="BOOLEAN" expandLang="" inputPosition="105" required="N" />
+    <CmsAttributeTemplate attributeTemplateId="ADVTMPLSHOP_RIGHTCNT" pageTemplateId="ADVTMPLSHOP" attributeName="rightContent" displayName="Right Column Content (override)" defaultValue="" inputHelp="" inputType="LONG_TEXT" expandLang="FTL" inputPosition="110" required="N" />
+    <CmsAttributeTemplate attributeTemplateId="ADVTMPLSHOP_PRECNT" pageTemplateId="ADVTMPLSHOP" attributeName="preContent" displayName="Pre-Content (override)" defaultValue="" inputHelp="" inputType="LONG_TEXT" expandLang="FTL" inputPosition="120" required="N" />
+    <CmsPageTemplateScriptAssoc scriptAssocId="ADVTMPLSHOP_MAIN" pageTemplateId="ADVTMPLSHOP" scriptTemplateId="ADVTMPLSHOP" inputPosition="90" />
+    <CmsPageTemplateAssetAssoc pageAssetTemplateAssocId="ADVTMPLSHOP" assetTemplateId="SCTNASSET" pageTemplateId="ADVTMPLSHOP" importName="mainContent" displayName="Main Content" inputPosition="10" />
+
+    <!-- Demo Menu Asset Template -->
+    <DataResource dataResourceId="CMSAS_DEMOMENU" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://cms/cms-templates/assets/demo/demoMenuAsset.ftl"/>
+    <Content contentId="CMSAS_DEMOMENU" dataResourceId="CMSAS_DEMOMENU" contentTypeId="DOCUMENT" />
+    <CmsAssetTemplate assetTemplateId="DEMOMENU" webSiteId="cmsSite" templateName="DemoMenu" contentTypeId="TMPLPART_MENU"
+        description="Demo Menu"/>
+    <CmsAssetTemplateVersion versionId="DEMOMENU" assetTemplateId="DEMOMENU" contentId="CMSAS_DEMOMENU"/>
+    <CmsAssetTemplateVersionState assetTemplateId="DEMOMENU" versionStateId="CMS_VER_ACTIVE" versionId="DEMOMENU" />
+    <CmsAttributeTemplate attributeTemplateId="DEMOMENU_TYPE" assetTemplateId="DEMOMENU" attributeName="type" displayName="Type" defaultValue="button" inputHelp="Menu type (button, sidebar, section, generic, ...)" inputType="SHORT_TEXT" inputPosition="10" required="N" />
+    <!-- TODO?
+    <CmsAttributeTemplate attributeTemplateId="DEMOMENU_ITEMS" assetTemplateId="DEMOMENU" attributeName="items" displayName="Items" defaultValue="" inputHelp="List of menu items" inputType="COMPLEX_LIST" inputPosition="20" required="N" />
+    <CmsAttributeTemplate attributeTemplateId="DEMOMENU_MENUARGS" assetTemplateId="DEMOMENU" attributeName="menuArgs" displayName="Extra Menu Args" defaultValue="" inputHelp="Extra @menu arguments" inputType="COMPLEX_MAP" inputPosition="30" required="N" />
+    -->
+
+    <!-- Demo Library Asset Template for global reuse (NOTE: should not have any attributes or scripts; they will be ignored by the include directive) -->
+    <DataResource dataResourceId="CMSAS_DEMOLIBASSET" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://cms/cms-templates/assets/demo/demoLibAsset.ftl"/>
+    <Content contentId="CMSAS_DEMOLIBASSET" dataResourceId="CMSAS_DEMOLIBASSET" contentTypeId="DOCUMENT" />
+    <CmsAssetTemplate assetTemplateId="DEMOLIBASSET" webSiteId="cmsSite" templateName="DemoLibAsset" contentTypeId="TMPLPART_LIBRARY"
+        description="Demo Library Asset"/>
+    <CmsAssetTemplateVersion versionId="DEMOLIBASSET" assetTemplateId="DEMOLIBASSET" contentId="CMSAS_DEMOLIBASSET"/>
+    <CmsAssetTemplateVersionState assetTemplateId="DEMOLIBASSET" versionStateId="CMS_VER_ACTIVE" versionId="DEMOLIBASSET" />
+
+    <!-- Demo Asset Template Actions - Dedicated self-titled script -->
+    <DataResource dataResourceId="CMSASSCR_DEMOASSET" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://cms/cms-templates/actions/assets/demo/DemoAsset.groovy"/>
+    <Content contentId="CMSASSCR_DEMOASSET" dataResourceId="CMSASSCR_DEMOASSET" contentTypeId="DOCUMENT" />
+    <CmsScriptTemplate scriptTemplateId="DEMOASSET" contentId="CMSASSCR_DEMOASSET" templateName="DemoAssetActions" standalone="N"
+        description="Main actions script for DemoAsset"/>
+
+    <!-- Demo Asset Template for global reuse (NOTE: no attributes, no explicit includes needed) -->
+    <DataResource dataResourceId="CMSAS_DEMOASSET" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://cms/cms-templates/assets/demo/demoAsset.ftl"/>
+    <Content contentId="CMSAS_DEMOASSET" dataResourceId="CMSAS_DEMOASSET" contentTypeId="DOCUMENT" />
+    <CmsAssetTemplate assetTemplateId="DEMOASSET" webSiteId="cmsSite" templateName="DemoAsset" description="Demo Asset Template for global reuse (NOTE: no attributes, no explicit includes needed)"/>
+    <CmsAssetTemplateVersion versionId="DEMOASSET" assetTemplateId="DEMOASSET" contentId="CMSAS_DEMOASSET"/>
+    <CmsAssetTemplateVersionState assetTemplateId="DEMOASSET" versionStateId="CMS_VER_ACTIVE" versionId="DEMOASSET" />
+    <CmsAssetTemplateScriptAssoc scriptAssocId="DEMOASSET_MAIN" assetTemplateId="DEMOASSET" scriptTemplateId="DEMOASSET" inputPosition="90" />
+
+    <!-- Demo Asset Template 2 Actions - Dedicated self-titled script -->
+    <DataResource dataResourceId="CMSASSCR_DEMOASSET2" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://cms/cms-templates/actions/assets/demo/DemoAsset2.groovy"/>
+    <Content contentId="CMSASSCR_DEMOASSET2" dataResourceId="CMSASSCR_DEMOASSET2" contentTypeId="DOCUMENT" />
+    <CmsScriptTemplate scriptTemplateId="DEMOASSET2" contentId="CMSASSCR_DEMOASSET2" templateName="DemoAsset2Actions" standalone="N"
+        description="Main actions script for DemoAsset2"/>
+    
+    <!-- Demo Asset Template 2, for import -->
+    <DataResource dataResourceId="CMSAS_DEMOASSET2" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://cms/cms-templates/assets/demo/demoAsset2.ftl"/>
+    <Content contentId="CMSAS_DEMOASSET2" dataResourceId="CMSAS_DEMOASSET2" contentTypeId="DOCUMENT" />
+    <CmsAssetTemplate assetTemplateId="DEMOASSET2" webSiteId="cmsSite" templateName="DemoAsset2" description="Demo Asset Template 2, for import" />
+    <CmsAssetTemplateVersion versionId="DEMOASSET2" assetTemplateId="DEMOASSET2" contentId="CMSAS_DEMOASSET2"/>
+    <CmsAssetTemplateVersionState assetTemplateId="DEMOASSET2" versionStateId="CMS_VER_ACTIVE" versionId="DEMOASSET2" />
+    <CmsAttributeTemplate attributeTemplateId="DEMOASSET2_CONTENT" assetTemplateId="DEMOASSET2" attributeName="testContent" displayName="TestContent" defaultValue="Bla Bla Bla" inputHelp="Insert test content here" inputType="SHORT_TEXT" expandLang="FLEXIBLE" inputPosition="20" required="N" />
+    <CmsAttributeTemplate attributeTemplateId="DEMOASSET2_DEMOBOOL1" assetTemplateId="DEMOASSET2" attributeName="demo_bool_1" displayName="Demo Boolean 1" defaultValue="true" inputHelp="This is a demo boolean." inputType="BOOLEAN" inputPosition="40" required="N" />
+    <CmsAttributeTemplate attributeTemplateId="DEMOASSET2_DEMOBOOL2" assetTemplateId="DEMOASSET2" attributeName="demo_bool_2" displayName="Demo Boolean 2" expandLang="FLEXIBLE" expandPosition="1000" inputHelp="This is a demo boolean with script support." inputType="BOOLEAN" inputPosition="41" required="N" />
+    <CmsAttributeTemplate attributeTemplateId="DEMOASSET2_DEMOINT1" assetTemplateId="DEMOASSET2" attributeName="demo_integer_1" displayName="Demo Integer 1" expandLang="FLEXIBLE" expandPosition="1000" inputHelp="This is a demo integer with script support." inputType="INTEGER" inputPosition="42" required="N" />
+    <CmsAttributeTemplate attributeTemplateId="DEMOASSET2_DEMODBL1" assetTemplateId="DEMOASSET2" attributeName="demo_double_1" displayName="Demo Double 1" expandLang="FLEXIBLE" expandPosition="1000" inputHelp="This is a demo text with script support, manually cast to Double." inputType="SHORT_TEXT" targetType="Double" inputPosition="43" required="N" />
+    <CmsAssetTemplateScriptAssoc scriptAssocId="DEMOASSET2_SYSINFO" assetTemplateId="DEMOASSET2" scriptTemplateId="SYSINFO" inputPosition="10" />
+    <CmsAssetTemplateScriptAssoc scriptAssocId="DEMOASSET2_MAIN" assetTemplateId="DEMOASSET2" scriptTemplateId="DEMOASSET2" inputPosition="90" />
+
+    <!-- Demo Asset Template 3 for global reuse (ElectronicText example) -->
+    <DataResource dataResourceId="CMSAS_DEMOASSET3" dataResourceTypeId="ELECTRONIC_TEXT" mimeTypeId="text/plain" dataTemplateTypeId="NONE"/>
+    <ElectronicText dataResourceId="CMSAS_DEMOASSET3">
+        <textData><![CDATA[
+<@row>
+  <@cell>
+    <@alert type="info"><em>Hello from DemoAsset3!</em></@alert>
+  </@cell>
+</@row>
+        ]]></textData>
+    </ElectronicText>
+    <Content contentId="CMSAS_DEMOASSET3" dataResourceId="CMSAS_DEMOASSET3" contentTypeId="DOCUMENT" />
+    <CmsAssetTemplate assetTemplateId="DEMOASSET3" webSiteId="cmsSite" templateName="DemoAsset3" description="Demo asset template 3, for global reuse (ElectronicText example)"/>
+    <CmsAssetTemplateVersion versionId="DEMOASSET3" assetTemplateId="DEMOASSET3" contentId="CMSAS_DEMOASSET3"/>
+    <CmsAssetTemplateVersionState assetTemplateId="DEMOASSET3" versionStateId="CMS_VER_ACTIVE" versionId="DEMOASSET3" />
+
+    <!-- Demo Template Actions - Part of screen actions script inclusion test -->
+    <DataResource dataResourceId="CMSPGSCR_DEMOMISC" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://webtools/widget/MiscScreens.xml"/>
+    <Content contentId="CMSPGSCR_DEMOMISC" dataResourceId="CMSPGSCR_DEMOMISC" contentTypeId="DOCUMENT" />
+    <CmsScriptTemplate scriptTemplateId="DEMOMISC" contentId="CMSPGSCR_DEMOMISC" templateName="DemoTemplateActions" standalone="N"/>
+    
+    <!-- Demo Template Actions - Dedicated self-titled script -->
+    <DataResource dataResourceId="CMSPGSCR_DEMOTMPL" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://cms/cms-templates/actions/DemoTemplate.groovy"/>
+    <Content contentId="CMSPGSCR_DEMOTMPL" dataResourceId="CMSPGSCR_DEMOTMPL" contentTypeId="DOCUMENT" />
+    <CmsScriptTemplate scriptTemplateId="DEMOTMPL" contentId="CMSPGSCR_DEMOTMPL" templateName="DemoTemplateActions" standalone="N"/>
+    
+    <!-- Demo Template (Analogous to LayoutDemo, based on Basic Template) -->
+    <DataResource dataResourceId="CMSPG_DEMOTMPL" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://cms/cms-templates/demoTemplate.ftl"/>
+    <Content contentId="CMSPG_DEMOTMPL" dataResourceId="CMSPG_DEMOTMPL" contentTypeId="DOCUMENT" description="Initial Demo Template Version."/>
+    <CmsPageTemplate pageTemplateId="DEMOTMPL" webSiteId="cmsSite" templateName="DemoTemplate" description="Demo template for CMS, analogous to Admin LayoutDemo screen"
+        /> <!-- NOTE: activeContentId="" is an optimization (can be omitted, and omitted here for testing purposes) -->
+    <CmsPageTemplateVersion versionId="DEMOTMPL" pageTemplateId="DEMOTMPL" createdBy="admin" contentId="CMSPG_DEMOTMPL" origVersionDate="2016-09-05 00:00:00" createdStamp="2016-09-05 00:00:00"/>
+    <CmsPageTemplateVersionState pageTemplateId="DEMOTMPL" versionId="DEMOTMPL" versionStateId="CMS_VER_ACTIVE"/>
+    <CmsAttributeTemplate attributeTemplateId="DEMOTMPL_PGTITLE" pageTemplateId="DEMOTMPL" attributeName="title" displayName="Page Title" defaultValue="" inputHelp="" inputType="SHORT_TEXT" inputPosition="10" required="Y" />
+    <CmsAttributeTemplate attributeTemplateId="DEMOTMPL_CSSFILE" pageTemplateId="DEMOTMPL" attributeName="customCssFile" displayName="Custom CSS" defaultValue="" inputHelp="" inputType="SHORT_TEXT" inputPosition="20" required="N" />
+    <CmsAttributeTemplate attributeTemplateId="DEMOTMPL_JSFILE" pageTemplateId="DEMOTMPL" attributeName="customJsFile" displayName="Custom JavaScript" defaultValue="" inputHelp="" inputType="SHORT_TEXT" inputPosition="30" required="N" />
+    <CmsAttributeTemplate attributeTemplateId="DEMOTMPL_DEMOBOOL1" pageTemplateId="DEMOTMPL" attributeName="demo_bool_1" displayName="Demo Boolean 1" defaultValue="true" inputHelp="This is a demo boolean." inputType="BOOLEAN" inputPosition="40" required="N" />
+    <CmsAttributeTemplate attributeTemplateId="DEMOTMPL_DEMOBOOL2" pageTemplateId="DEMOTMPL" attributeName="demo_bool_2" displayName="Demo Boolean 2" expandLang="FLEXIBLE" expandPosition="1000" inputHelp="This is a demo boolean with script support." inputType="BOOLEAN" inputPosition="41" required="N" />
+    <CmsAttributeTemplate attributeTemplateId="DEMOTMPL_DEMOINT1" pageTemplateId="DEMOTMPL" attributeName="demo_integer_1" displayName="Demo Integer 1" expandLang="FLEXIBLE" expandPosition="1000" inputHelp="This is a demo integer with script support." inputType="INTEGER" inputPosition="42" required="N" />
+    <CmsAttributeTemplate attributeTemplateId="DEMOTMPL_DEMOLONG1" pageTemplateId="DEMOTMPL" attributeName="demo_long_1" displayName="Demo Long 1" expandLang="FLEXIBLE" expandPosition="1000" inputHelp="This is a demo text with script support, manually cast to Long." inputType="SHORT_TEXT" targetType="Long" inputPosition="43" required="N" />
+    <!-- FIXME: the true default values for showLeft/RightContent booleans are an issue (empty should be an option), but we have to set them due to current UI limitations -->
+    <CmsAttributeTemplate attributeTemplateId="DEMOTMPL_SHLFTCNT" pageTemplateId="DEMOTMPL" attributeName="showLeftContent" displayName="Show Left Column" defaultValue="true" inputHelp="" inputType="BOOLEAN" expandLang="" inputPosition="95" required="N" />
+    <CmsAttributeTemplate attributeTemplateId="DEMOTMPL_LEFTCNT" pageTemplateId="DEMOTMPL" attributeName="leftContent" displayName="Left Column Content (override)" defaultValue="" inputHelp="" inputType="LONG_TEXT" expandLang="FTL" inputPosition="100" required="N" />
+    <CmsAttributeTemplate attributeTemplateId="DEMOTMPL_SHRGTCNT" pageTemplateId="DEMOTMPL" attributeName="showRightContent" displayName="Show Right Column" defaultValue="true" inputHelp="" inputType="BOOLEAN" expandLang="" inputPosition="105" required="N" />
+    <CmsAttributeTemplate attributeTemplateId="DEMOTMPL_RIGHTCNT" pageTemplateId="DEMOTMPL" attributeName="rightContent" displayName="Right Column Content (override)" defaultValue="" inputHelp="" inputType="LONG_TEXT" expandLang="FTL" inputPosition="110" required="N" />
+    <CmsAttributeTemplate attributeTemplateId="DEMOTMPL_PRECNT" pageTemplateId="DEMOTMPL" attributeName="preContent" displayName="Pre-Content (override)" defaultValue="" inputHelp="" inputType="LONG_TEXT" expandLang="FTL" inputPosition="120" required="N" />
+    <CmsPageTemplateAssetAssoc pageAssetTemplateAssocId="DEMOTMPL_SCTNASSET" assetTemplateId="SCTNASSET" pageTemplateId="DEMOTMPL" importName="mainContent" displayName="Main Content" inputPosition="10" />
+    <CmsPageTemplateAssetAssoc pageAssetTemplateAssocId="DEMOTMPL_DEMOASSET2" assetTemplateId="DEMOASSET2" pageTemplateId="DEMOTMPL" importName="demoAsset2" inputPosition="20" />
+    <!-- DEV NOTE: this is important to test having two associations to the same asset -->
+    <CmsPageTemplateAssetAssoc pageAssetTemplateAssocId="DEMOTMPL_SCTNASSET2" assetTemplateId="SCTNASSET" pageTemplateId="DEMOTMPL" importName="secondaryContent" displayName="Secondary Content (section asset 2)" inputPosition="30" />
+    <CmsPageTemplateAssetAssoc pageAssetTemplateAssocId="DEMOTMPL_CTNASSET" assetTemplateId="CTNASSET" pageTemplateId="DEMOTMPL" importName="trivialContent" displayName="Trivial Content (no markup)" inputPosition="40" />
+    <CmsPageTemplateScriptAssoc scriptAssocId="DEMOTMPL_SYSINFO" pageTemplateId="DEMOTMPL" scriptTemplateId="SYSINFO" inputPosition="10" />
+    <CmsPageTemplateScriptAssoc scriptAssocId="DEMOTMPL_MISC" pageTemplateId="DEMOTMPL" scriptTemplateId="DEMOMISC" invokeName="WebtoolsLayoutDemoOfbizWidgetActions" inputPosition="20" />
+    <CmsPageTemplateScriptAssoc scriptAssocId="DEMOTMPL_MAIN" pageTemplateId="DEMOTMPL" scriptTemplateId="DEMOTMPL" inputPosition="90" />
+    
+    <!-- ========================================================= -->
+    <!-- Pages -->
+    <!-- ========================================================= -->
+    
+    <!-- Basic example page, using Basic Template -->
+    <CmsPage pageId="BASICTESTPAGE" webSiteId="cmsSite" pageTemplateId="BASICTMPL" pageName="BasicTemplateExample" description="Basic bare-bones page example demonstrating Basic Template"/>
+    <DataResource dataResourceId="CMSPGV_BASICTESTPG" dataResourceTypeId="ELECTRONIC_TEXT" mimeTypeId="text/plain" dataTemplateTypeId="NONE"/>
+    <ElectronicText dataResourceId="CMSPGV_BASICTESTPG">
+        <textData><![CDATA[
+                {"title":"Basic Template Example Page","customCssFile":"/website/data/example.css","customJsFile":"/website/data/example.js","mainContent":{"title":"Test Page","content":"Test Content"}}</content>
+        ]]></textData>
+    </ElectronicText>
+    <Content contentId="CMSPGV_BASICTESTPG" dataResourceId="CMSPGV_BASICTESTPG" contentTypeId="DOCUMENT"/>
+    <CmsPageVersion versionId="BASICTESTPAGE" pageId="BASICTESTPAGE" contentId="CMSPGV_BASICTESTPG"/>
+    <CmsPageVersionState pageId="BASICTESTPAGE" versionId="BASICTESTPAGE" versionStateId="CMS_VER_ACTIVE"/>
+    
+    <!-- Advanced example page, using Advanced Template Global -->
+    <CmsPage pageId="ADVGLBLTESTPAGE" webSiteId="cmsBackendSite" pageTemplateId="ADVTMPLGLBL" pageName="AdvancedTemplateGlobalExample" 
+        description="Advanced page example demonstrating Advanced Template Global (Backend). Note: This page only runs global/backend decorator logic, not shop/frontend decorator logic"/>
+    <DataResource dataResourceId="CMSPGV_ADVGLBLTESTPG" dataResourceTypeId="ELECTRONIC_TEXT" mimeTypeId="text/plain" dataTemplateTypeId="NONE"/>
+    <ElectronicText dataResourceId="CMSPGV_ADVGLBLTESTPG">
+        <textData><![CDATA[
+            {"title":"Advanced Template Global Example Page","customCssFile":"","customJsFile":"","mainContent":{"title":"Test","content":"<h1>h1. heading</h1>\r\n<h2>h2. heading</h2>\r\n<h3>h3. heading</h3>\r\n<h4>h4. heading</h4>\r\n<h5>h5. heading</h5>\r\n<h6>h6. heading</h6>\r\n\r\n<h2>Content</h2>\r\n<p><strong>\r\nShields up</strong>. I recommend we transfer power to phasers and arm the photon torpedoes.<em> Something strange on the detector circuit</em>. The weapons must have disrupted our communicators. You saw something as tasty as meat, but inorganically <strike>materialized</strike> out of patterns used by our transporters. Captain, the most elementary and valuable statement in science, the beginning of wisdom, is 'I do not know.' All transporters off.\r\n</p><p>This is a link to <a href=\"/website/test2\" title=\"Test 2\" target=\"_blank\">nowhere</a>!</p>\r\n\r\n<p>\r\nUnidentified vessel travelling at sub warp speed, bearing 235.7. Fluctuations in energy readings from it, Captain. All transporters off. A strange set-up, but I'd say the graviton generator is depolarized. The dark colourings of the scrapes are the leavings of natural rubber, a type of non-conductive sole used by researchers experimenting with electricity. The molecules must have been partly de-phased by the anyon beam.\r\n</p><br>\r\n\r\n<h2>Special elements</h2>\r\n<blockquote>This is a quote!</blockquote><br><p>More content and an hr element</p>\r\n\r\n\r\n<h2><hr></h2><br><h2>Tables &amp; List-Elements</h2>\r\n<table><tbody><tr><td>Header Cell</td><td>Header Cell</td></tr><tr><td>Content</td><td>Content</td></tr></tbody></table><ul><li><span style=\"font-size: 12.96px;\">Uno</span></li><li><span style=\"font-size: 12.96px;\">Dos&nbsp;</span></li><li><span style=\"font-size: 12.96px;\">Tré Cool</span></li></ul><ol><li><span style=\"font-size: 12.96px;\">Yes</span></li><li><span style=\"font-size: 12.96px;\">No</span></li><li><span style=\"font-size: 12.96px;\">Maybe</span></li></ol>\r\n\r\n"}}
+        ]]></textData>
+    </ElectronicText>
+    <Content contentId="CMSPGV_ADVGLBLTESTPG" dataResourceId="CMSPGV_ADVGLBLTESTPG" contentTypeId="DOCUMENT" />
+    <CmsPageVersion versionId="ADVGLBLTESTPAGE" pageId="ADVGLBLTESTPAGE" contentId="CMSPGV_ADVGLBLTESTPG"/>
+    <CmsPageVersionState pageId="ADVGLBLTESTPAGE" versionId="ADVGLBLTESTPAGE" versionStateId="CMS_VER_ACTIVE"/>
+   
+    <!-- Advanced example page, using Advanced Template Shop -->
+    <CmsPage pageId="ADVSHOPTESTPAGE" webSiteId="cmsSite" pageTemplateId="ADVTMPLSHOP" pageName="AdvancedTemplateShopExample" description="Advanced page example demonstrating Advanced Template Shop (Frontend)"/>
+    <DataResource dataResourceId="CMSPGV_ADVSHOPTESTPG" dataResourceTypeId="ELECTRONIC_TEXT" mimeTypeId="text/plain" dataTemplateTypeId="NONE"/>
+    <ElectronicText dataResourceId="CMSPGV_ADVSHOPTESTPG">
+        <textData><![CDATA[
+            {"title":"Advanced Template Shop Example Page","customCssFile":"","customJsFile":"","mainContent":{"title":"Test","content":"<h1>h1. heading</h1>\r\n<h2>h2. heading</h2>\r\n<h3>h3. heading</h3>\r\n<h4>h4. heading</h4>\r\n<h5>h5. heading</h5>\r\n<h6>h6. heading</h6>\r\n\r\n<h2>Content</h2>\r\n<p><strong>\r\nShields up</strong>. I recommend we transfer power to phasers and arm the photon torpedoes.<em> Something strange on the detector circuit</em>. The weapons must have disrupted our communicators. You saw something as tasty as meat, but inorganically <strike>materialized</strike> out of patterns used by our transporters. Captain, the most elementary and valuable statement in science, the beginning of wisdom, is 'I do not know.' All transporters off.\r\n</p><p>This is a link to <a href=\"/website/test2\" title=\"Test 2\" target=\"_blank\">nowhere</a>!</p>\r\n\r\n<p>\r\nUnidentified vessel travelling at sub warp speed, bearing 235.7. Fluctuations in energy readings from it, Captain. All transporters off. A strange set-up, but I'd say the graviton generator is depolarized. The dark colourings of the scrapes are the leavings of natural rubber, a type of non-conductive sole used by researchers experimenting with electricity. The molecules must have been partly de-phased by the anyon beam.\r\n</p><br>\r\n\r\n<h2>Special elements</h2>\r\n<blockquote>This is a quote!</blockquote><br><p>More content and an hr element</p>\r\n\r\n\r\n<h2><hr></h2><br><h2>Tables &amp; List-Elements</h2>\r\n<table><tbody><tr><td>Header Cell</td><td>Header Cell</td></tr><tr><td>Content</td><td>Content</td></tr></tbody></table><ul><li><span style=\"font-size: 12.96px;\">Uno</span></li><li><span style=\"font-size: 12.96px;\">Dos&nbsp;</span></li><li><span style=\"font-size: 12.96px;\">Tré Cool</span></li></ul><ol><li><span style=\"font-size: 12.96px;\">Yes</span></li><li><span style=\"font-size: 12.96px;\">No</span></li><li><span style=\"font-size: 12.96px;\">Maybe</span></li></ol>\r\n\r\n"}}
+        ]]></textData>
+    </ElectronicText>
+    <Content contentId="CMSPGV_ADVSHOPTESTPG" dataResourceId="CMSPGV_ADVSHOPTESTPG" contentTypeId="DOCUMENT"/>
+    <CmsPageVersion versionId="ADVSHOPTESTPAGE" pageId="ADVSHOPTESTPAGE" contentId="CMSPGV_ADVSHOPTESTPG"/>
+    <CmsPageVersionState pageId="ADVSHOPTESTPAGE" versionId="ADVSHOPTESTPAGE" versionStateId="CMS_VER_ACTIVE"/>
+   
+    <!-- Shop index advanced example page, using Advanced Template Shop 
+        NOTE: The Category script was made standalones because there would be other pages using it. Main is not standalone because only used by index. -->
+    <CmsPage pageId="ADVSHOPINDEX" webSiteId="cmsSite" pageTemplateId="ADVTMPLSHOP" pageName="ShopIndex" />
+    <DataResource dataResourceId="CMSPGV_ADVSHOPINDEX" dataResourceTypeId="ELECTRONIC_TEXT" mimeTypeId="text/plain" dataTemplateTypeId="NONE"/>
+    <ElectronicText dataResourceId="CMSPGV_ADVSHOPINDEX">
+        <textData><![CDATA[
+            {"title":"","customCssFile":"","customJsFile":"","showLeftContent":"true","showLeftContent_visible":"true","showRightContent":"true","showRightContent_visible":"true","leftContent":"","rightContent":"","preContent":"[@section]\r\n    [#-- Based on: component://shop/webapp/shop/dashboard/dashboardImage.ftl --]\r\n    [#assign hero_content_wrap_style]\r\n        position:absolute;\r\n        top:200px;\r\n        display:block;\r\n        width:100%;\r\n        [/#assign]\r\n        [#assign hero_content_style]\r\n        max-width: 85em;\r\n        margin-left: auto;\r\n        margin-right: auto;\r\n    [/#assign]\r\n    [#assign hero_title_style]\r\n        display:inline-block;\r\n        font-size: 34px;\r\n        padding: 5px 10px;\r\n        letter-spacing: 1px;\r\n        background-color: #d30422;\r\n        margin:10px;\r\n        border-color: #de2d0f;\r\n        color: white;\r\n        float:left;\r\n        clear: left;\r\n    [/#assign]\r\n    [#assign hero_text_style]\r\n        display:inline-block;\r\n        font-size: 24px;\r\n        padding: 5px 6px;\r\n        margin:10px;\r\n        letter-spacing: 1px;\r\n        background-color: #e7e7e7;\r\n        border-color: #c7c7c7;\r\n        color: #4f4f4f;\r\n        float:left;\r\n        clear: left;\r\n    [/#assign]\r\n    [@img src='https://source.unsplash.com/random/1400x480' width='100%' height='480px' type='bgcover']\r\n    [#-- Some advertising statement - custom format to serve as an eyecatcher --]\r\n    <div style=\"${hero_content_wrap_style!}\">\r\n        <div style=\"${hero_content_style}\">\r\n            <div style=\"${hero_title_style!}\">SALE!</div>\r\n            <div style=\"${hero_text_style!}\">10% off your entire purchase</div>\r\n        </div>\r\n    </div>\r\n    [/@img]\r\n[/@section]\r\n","mainContent":{"title":"","content":"[@cmsAsset def='global' name='ShopProductSlider' attribs={'productCategoryId':'PROMOTIONS', 'viewSize':'12', 'viewIndex':'0', 'viewCluster':'4', 'viewScrollCluster':'4'}/] \r\n\r\n[@section]\r\n    [#-- This slider based on: component://shop/webapp/shop/dashboard/slider.ftl --]\r\n    [@slider id='' controls=true indicator=true]\r\n        [@slide link='#' image='https://source.unsplash.com/random/1330x480']What is the strength of the ship's deflector shields at maximum output? The wormhole's size and short period would make this a local phenomenon.[/@slide]\r\n        [@slide link='#' image='https://source.unsplash.com/category/nature/1330x480']According to coordinates, we have travelled 7,000 light years and are located near the system J-25.[/@slide]\r\n    [/@slider]\r\n[/@section]\r\n\r\n[@render resource='component://shop/widget/CommonScreens.xml#ScipioDashboardMiniProductSlider' ctxVars={'productCategoryId':'ELTRN-100', 'viewSize':'6', 'viewIndex':'0', 'viewCluster':'5', 'viewScrollCluster':'1'}/]\r\n"}}
+        ]]></textData>
+    </ElectronicText>
+    <Content contentId="CMSPGV_ADVSHOPINDEX" dataResourceId="CMSPGV_ADVSHOPINDEX" contentTypeId="DOCUMENT" />
+    <!-- NOTE: description is localized in CMSEntityLabels.xml, commented here so as to not override the localizations. It only matters for the first few viewings, after which user may likely override it, but that's okay.
+        description="Shop Index example demonstrating Advanced Template Shop (Frontend). To enable this page in live Shop, use the View Mappings tree on the page editor and tick the ScipioWebStore 'main' view to enable the live mapping (there is no need to change the primary WebSite)." -->
+    <CmsPageVersion versionId="ADVSHOPINDEX" pageId="ADVSHOPINDEX" contentId="CMSPGV_ADVSHOPINDEX"/>
+    <CmsPageVersionState pageId="ADVSHOPINDEX" versionId="ADVSHOPINDEX" versionStateId="CMS_VER_ACTIVE"/>
+    <DataResource dataResourceId="CMSSCR_SHOPMAIN" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://shop/webapp/shop/WEB-INF/actions/Main.groovy"/>
+    <Content contentId="CMSSCR_SHOPMAIN" dataResourceId="CMSSCR_SHOPMAIN" contentTypeId="DOCUMENT"/>
+    <CmsScriptTemplate scriptTemplateId="SHOPMAIN" contentId="CMSSCR_SHOPMAIN" templateName="ShopMain" standalone="N" 
+        description="Shop Main Script"/>
+    <CmsPageScriptAssoc scriptAssocId="ADVSHOPINDEX_MAIN" pageId="ADVSHOPINDEX" scriptTemplateId="SHOPMAIN" invokeName="" inputPosition="10" />
+    <CmsPageScriptAssoc scriptAssocId="ADVSHOPINDEX_CATEG" pageId="ADVSHOPINDEX" scriptTemplateId="SHOPCATEG" invokeName="" inputPosition="20" />
+   
+    <!-- Demo page (example), using Demo Template, analogous to layoutdemo (with test script associated to page) -->
+    <CmsPage pageId="DEMOPAGE" webSiteId="cmsSite" pageTemplateId="DEMOTMPL" pageName="DemoPage" description="Demo page for CMS, analogous to Admin LayoutDemo request/view" />
+    <DataResource dataResourceId="CMSPGV_DEMOPAGE" dataResourceTypeId="ELECTRONIC_TEXT" mimeTypeId="text/plain" dataTemplateTypeId="NONE"/>
+    <ElectronicText dataResourceId="CMSPGV_DEMOPAGE">
+        <textData><![CDATA[
+            {"title":"Demo Page","customCssFile":"/website/data/example.css","customJsFile":"/website/data/example.js","demo_bool_1":"false","demo_bool_2":"${parameters.demo_bool_2 == 'true'}","demo_integer_1":"1234","demo_long_1":"${groovy:(demo_integer_1 + 1234)}","leftContent":"[@asset name='DemoMenu' webSite='cmsSite' def='global' attribs={'type':'sidebar'}/]","mainContent":{"title":"Demo Page","content":"<p>Demo Content. <a href=\"[@pageUrl id='DEMOPAGE'/]\">Demo page URL</a>.</p>"},"demoAsset2":{"testContent":"current webapp name: ${webappName}","demo_bool_1":"false","demo_bool_2":"${not empty parameters.demo_bool_2}"},"demo_integer_1":"1234","demo_double_1":"${groovy:(demo_integer_1 + 1234.12)}","secondaryContent":{"title":"Hello 2","content":"<p>Demo content for secondary instance of section asset.</p>"},"trivialContent":{"content":"<p>Trivial content asset with no markup.</p>"}}
+        ]]></textData>
+    </ElectronicText>
+    <Content contentId="CMSPGV_DEMOPAGE" dataResourceId="CMSPGV_DEMOPAGE" contentTypeId="DOCUMENT"/>
+    <CmsPageVersion versionId="DEMOPAGE" pageId="DEMOPAGE" contentId="CMSPGV_DEMOPAGE"/>
+    <CmsPageVersionState pageId="DEMOPAGE" versionId="DEMOPAGE" versionStateId="CMS_VER_ACTIVE"/>
+    <DataResource dataResourceId="CMSASSCR_DEMOSCRIPT3" dataResourceTypeId="URL_RESOURCE" mimeTypeId="text/plain" dataTemplateTypeId="NONE" objectInfo="component://cms/cms-templates/actions/assets/demo/DemoScript3.groovy"/>
+    <Content contentId="CMSASSCR_DEMOSCRIPT3" dataResourceId="CMSASSCR_DEMOSCRIPT3" contentTypeId="DOCUMENT" />
+    <CmsScriptTemplate scriptTemplateId="DEMOSCRIPT3" contentId="CMSASSCR_DEMOSCRIPT3" templateName="DemoScript3" standalone="N"
+        description="Demo Script 3 (helps test Page Scripts)"/>
+    <CmsPageScriptAssoc scriptAssocId="DEMOPAGE_SCRPT3" pageId="DEMOPAGE" scriptTemplateId="DEMOSCRIPT3" invokeName="" inputPosition="10" />
+    
+    <!-- ========================================================= -->
+    <!-- Control mappings -->
+    <!-- ========================================================= -->
+    
+    <!-- Primary process mappings (primaryForPageId non-null) for example pages
+        By convention (and when created through simple UI) these implement a simple path mapping, from webapp context root, 
+        to one of the /cmsPageXxx requests. 
+        NOTE: the CmsPageSpecialMapping is used to guarantee no more than one primary mapping per website per page, but primaryForPageId is used in the live lookups (performance) -->
+    <CmsProcessMapping processMappingId="BASICTESTPAGE" primaryForPageId="BASICTESTPAGE" sourceWebSiteId="cmsSite" sourcePath="/testbasic" sourceFromContextRoot="Y" targetPath="/cmsPagePlainNoAuth" active="Y" />
+    <CmsProcessViewMapping processViewMappingId="BASICTESTPAGE" processMappingId="BASICTESTPAGE" targetViewName="CmsPage" pageId="BASICTESTPAGE" active="Y" />
+    <CmsPageSpecialMapping processMappingId="BASICTESTPAGE" pageId="BASICTESTPAGE" webSiteId="cmsSite" mappingTypeId="CMS_PGSPCMAP_PRIMARY"/>
+    
+    <CmsProcessMapping processMappingId="ADVGLBLTESTPAGE" primaryForPageId="ADVGLBLTESTPAGE" sourceWebSiteId="cmsBackendSite" sourcePath="/testglobal" sourceFromContextRoot="Y" targetPath="/cmsPageSecureAuth" active="Y" />
+    <CmsProcessViewMapping processViewMappingId="ADVGLBLTESTPAGE" processMappingId="ADVGLBLTESTPAGE" targetViewName="CmsPage" pageId="ADVGLBLTESTPAGE" active="Y" />
+    <CmsPageSpecialMapping processMappingId="ADVGLBLTESTPAGE" pageId="ADVGLBLTESTPAGE" webSiteId="cmsBackendSite" mappingTypeId="CMS_PGSPCMAP_PRIMARY"/>
+
+    <CmsProcessMapping processMappingId="ADVSHOPTESTPAGE" primaryForPageId="ADVSHOPTESTPAGE" sourceWebSiteId="cmsSite" sourcePath="/testshop" sourceFromContextRoot="Y" targetPath="/cmsPageSecureNoAuth" active="Y" />
+    <CmsProcessViewMapping processViewMappingId="ADVSHOPTESTPAGE" processMappingId="ADVSHOPTESTPAGE" targetViewName="CmsPage" pageId="ADVSHOPTESTPAGE" active="Y" />
+    <CmsPageSpecialMapping processMappingId="ADVSHOPTESTPAGE" pageId="ADVSHOPTESTPAGE" webSiteId="cmsSite" mappingTypeId="CMS_PGSPCMAP_PRIMARY"/>
+
+    <CmsProcessMapping processMappingId="ADVSHOPINDEX" primaryForPageId="ADVSHOPINDEX" sourceWebSiteId="cmsSite" sourcePath="/shopindex" sourceFromContextRoot="Y" targetPath="/cmsPagePlainNoAuth" active="Y" />
+    <CmsProcessViewMapping processViewMappingId="ADVSHOPINDEX" processMappingId="ADVSHOPINDEX" targetViewName="CmsPage" pageId="ADVSHOPINDEX" active="Y" />
+    <CmsPageSpecialMapping processMappingId="ADVSHOPINDEX" pageId="ADVSHOPINDEX" webSiteId="cmsSite" mappingTypeId="CMS_PGSPCMAP_PRIMARY"/>
+
+    <CmsProcessMapping processMappingId="DEMOPAGE" primaryForPageId="DEMOPAGE" sourceWebSiteId="cmsSite" sourcePath="/demopage" sourceFromContextRoot="Y" targetPath="/cmsPagePlainNoAuth" active="Y" />
+    <CmsProcessViewMapping processViewMappingId="DEMOPAGE" processMappingId="DEMOPAGE" targetViewName="CmsPage" pageId="DEMOPAGE" active="Y" />
+    <CmsPageSpecialMapping processMappingId="DEMOPAGE" pageId="DEMOPAGE" webSiteId="cmsSite" mappingTypeId="CMS_PGSPCMAP_PRIMARY"/>
+
+    <!-- Dummy website (frontend) Simple View Mappings -->
+    <CmsViewMapping viewMappingId="CMSSITE_MAIN" webSiteId="cmsSite" targetServletPath="DEFAULT" targetViewName="main" pageId="ADVSHOPINDEX" active="Y" />
+    <!-- Test view mappings (NOTE: 2016: targetServletPath cannot be null on this entity - use DEFAULT for default) -->
+    <CmsViewMapping viewMappingId="CMSSITE_TESTVIEW1" webSiteId="cmsSite" targetServletPath="DEFAULT" targetViewName="testView1" pageId="BASICTESTPAGE" active="Y" />
+    <CmsViewMapping viewMappingId="CMSSITE_TESTVIEW2" webSiteId="cmsSite" targetServletPath="DEFAULT" targetViewName="testView2" pageId="BASICTESTPAGE" active="Y" />
+    <CmsViewMapping viewMappingId="CMSSITE_TESTVIEW3" webSiteId="cmsSite" targetServletPath="DEFAULT" targetViewName="testView3" pageId="ADVSHOPTESTPAGE" active="Y" />
+
+    <!-- Dummy backendsite Simple View Mappings -->
+    <CmsViewMapping viewMappingId="CMSBKSITE_MAIN" webSiteId="cmsBackendSite" targetServletPath="DEFAULT" targetViewName="main" pageId="ADVGLBLTESTPAGE" active="Y" />
+    <CmsViewMapping viewMappingId="CMSBKSITE_TESTVIEW3" webSiteId="cmsBackendSite" targetServletPath="DEFAULT" targetViewName="testView1" pageId="ADVGLBLTESTPAGE" active="Y" />
+
+    <!-- Live Shop Simple View Mappings - uncomment these or tick them in the UI to enable (using the View Mappings tree found on /cms/control/editPage, for each page)
+    <CmsViewMapping viewMappingId="SHOP_MAIN" webSiteId="ScipioWebStore" targetServletPath="DEFAULT" targetViewName="main" pageId="ADVSHOPINDEX" active="Y" />
+    -->
+
+    <!-- TODO?: Non-primary process mappings - the UI does not yet support creating any -->
+
+</entity-engine-xml>

@@ -293,7 +293,7 @@ $transition-duration: 150ms !default;
     transform: translateX(-50%);
     max-width: 520px;
     width: 100%;
-    height: 500px;
+    height: 500px !important;
     z-index: 11;
     overflow: hidden;
     backface-visibility: hidden;

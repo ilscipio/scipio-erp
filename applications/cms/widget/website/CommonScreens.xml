@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <!-- SCIPIO: Common settings for other *Screens.xml files in this app that primarily use decorators referenced using parameters.mainDecoratorLocation -->
+    <screen-settings name="common-settings"><!-- all settings are currently valid/needed for this file as well, so omit: active="false" -->
+        <decorator-screen-settings default-fallback-location="component://cms/widget/website/CommonScreens.xml"/>
+        <render-init><local><actions><include-screen-actions name="static-common-actions" location="component://cms/widget/website/CommonScreens.xml"/></actions></local></render-init>
+    </screen-settings>
+        
+    <!-- SCIPIO: The settings for this file (active) -->
+    <screen-settings name="local-settings">
+        <!-- These settings are automatically included in all *Screens.xml files in the same folder as this CommonScreens.xml file or any subfolder without its own CommonScreens.xml -->
+        <auto-include-settings>
+            <include-settings as-name="local-settings" name="common-settings" location="component://cms/widget/website/CommonScreens.xml"/>
+        </auto-include-settings>
+    </screen-settings>
+
+    <!-- SCIPIO: Actions automatically included at beginning of every render request, for our webapp (discovered via web.xml, mainDecoratorLocation) -->
+    <screen name="webapp-common-actions">
+        <actions>
+        </actions>
+    </screen>
+
+    <!-- Automatically included at beginning of every cms backend app screen render (statically - even if were included through another webapp). -->
+    <screen name="static-common-actions">
+        <actions>
+        </actions>
+    </screen>
+
+    <screen name="main-decorator">
+        <section>
+            <actions>
+                <!-- TODO?: right this is fallback for 404 pages and the like - be as minimal as possible otherwise it goes awry... 
+                    current missing a control to prevent showing sidebar area (can't disable in metro - doing content-full-screen is not enough?!)
+                    and maybe omit the top header (?) -->
+            
+                <property-map resource="CMSUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                
+                <set field="layoutSettings.companyName" from-field="uiLabelMap.CMSCompanyName" global="true"/>
+                <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.CMSCompanySubtitle" global="true"/>
+
+                <set field="activeApp" value="cms" global="true"/>
+                <set field="applicationMenuName" value="MainAppBar" global="true"/>
+                <set field="applicationMenuLocation" value="component://cms/widget/website/WebsiteMenus.xml" global="true"/>
+                <set field="applicationTitle" value="${uiLabelMap.CMSApplication}" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="content-full-screen">
+                        <include-screen name="column-main" location="component://common/widget/CommonScreens.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+</screens>

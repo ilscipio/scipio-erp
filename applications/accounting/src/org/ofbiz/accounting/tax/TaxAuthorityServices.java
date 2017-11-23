@@ -172,7 +172,7 @@ public class TaxAuthorityServices {
         if (productStore == null && payToPartyId == null) {
             throw new IllegalArgumentException("Could not find payToPartyId [" + payToPartyId + "] or ProductStore [" + productStoreId + "] for tax calculation");
         }
-        
+
         if (shippingAddress == null && facility != null) {
             // if there is no shippingAddress and there is a facility it means it is a face-to-face sale so get facility's address
             try {
@@ -440,8 +440,8 @@ public class TaxAuthorityServices {
                                     "taxAuthPartyId", taxAuthPartyId, "taxAuthGeoId", taxAuthGeoId,
                                     "productPricePurposeId", "PURCHASE")
                             .orderBy("-fromDate").filterByDate().queryFirst();
-                    
-                    
+
+
                     if (productPrice == null) {
                         GenericValue virtualProduct = ProductWorker.getParentProduct(product.getString("productId"), delegator);
                         if (virtualProduct != null) {
@@ -464,17 +464,17 @@ public class TaxAuthorityServices {
 
                     // the amount will be different because we want to figure out how much of the price was tax, and not how much tax needs to be added
                     // the formula is: taxAmount = priceWithTax - (priceWithTax/(1+taxPercentage/100))
-					BigDecimal taxAmountIncluded = itemAmount.subtract(itemAmount.divide(
-							BigDecimal.ONE.add(
-									taxRate.divide(PERCENT_SCALE, salestaxFinalDecimals, BigDecimal.ROUND_HALF_UP)),
-							salestaxFinalDecimals, BigDecimal.ROUND_HALF_UP));
+                    BigDecimal taxAmountIncluded = itemAmount.subtract(itemAmount.divide(
+                            BigDecimal.ONE.add(
+                                    taxRate.divide(PERCENT_SCALE, salestaxFinalDecimals, BigDecimal.ROUND_HALF_UP)),
+                            salestaxFinalDecimals, BigDecimal.ROUND_HALF_UP));
                     taxAdjValue.set("amountAlreadyIncluded", taxAmountIncluded);
                     taxAdjValue.set("amount", BigDecimal.ZERO);
                 } else {
                     taxAdjValue.set("orderAdjustmentTypeId", "SALES_TAX");
                     taxAdjValue.set("amount", taxAmount);
                 }
-                
+
                 taxAdjValue.set("sourcePercentage", taxRate);
                 taxAdjValue.set("taxAuthorityRateSeqId", taxAuthorityRateProduct.getString("taxAuthorityRateSeqId"));
                 // the primary Geo should be the main jurisdiction that the tax is for, and the secondary would just be to define a parent or wrapping jurisdiction of the primary
@@ -514,7 +514,7 @@ public class TaxAuthorityServices {
                     //Debug.logInfo("=================== priceWithTax=" + priceWithTax, module);
                     //Debug.logInfo("=================== enteredTotalPriceWithTax=" + enteredTotalPriceWithTax, module);
                     //Debug.logInfo("=================== calcedTotalPriceWithTax=" + calcedTotalPriceWithTax, module);
-                    
+
                     // tax is not already in price so we want to add it in, but this is a VAT situation so adjust to make it as accurate as possible
 
                     // for VAT taxes if the calculated total item price plus calculated taxes is different from what would be
@@ -522,10 +522,10 @@ public class TaxAuthorityServices {
                     // an adjustment that corrects for the difference, and this correction will be effectively subtracted from the
                     // price and not from the tax (the tax is meant to be calculated based on Tax Authority rules and so should
                     // not be shorted)
-                    
+
                     // TODO (don't think this is needed, but just to keep it in mind): get this to work with multiple VAT tax authorities instead of just one (right now will get incorrect totals if there are multiple taxes included in the price)
                     // TODO add constraint to ProductPrice lookup by any productStoreGroupId associated with the current productStore
-                    
+
                     BigDecimal enteredTotalPriceWithTax = priceWithTax.multiply(itemQuantity);
                     BigDecimal calcedTotalPriceWithTax = (baseSubtotal).add(baseTaxAmount);
                     if (!enteredTotalPriceWithTax.equals(calcedTotalPriceWithTax)) {
@@ -534,7 +534,7 @@ public class TaxAuthorityServices {
                         // so, subtract the calculated amount from the entered amount (ie: correction = entered - calculated)
                         BigDecimal correctionAmount = enteredTotalPriceWithTax.subtract(calcedTotalPriceWithTax);
                         //Debug.logInfo("=================== correctionAmount=" + correctionAmount, module);
-                        
+
                         GenericValue correctionAdjValue = delegator.makeValue("OrderAdjustment");
                         correctionAdjValue.set("taxAuthorityRateSeqId", taxAuthorityRateProduct.getString("taxAuthorityRateSeqId"));
                         correctionAdjValue.set("amount", correctionAmount);
@@ -640,11 +640,11 @@ public class TaxAuthorityServices {
             GenericValue taxAuthorityRateProduct = EntityQuery.use(delegator).from("TaxAuthorityRateProduct")
             .where("taxAuthorityRateSeqId", taxAuthorityRateSeqId).queryOne();
             Debug.logInfo("taxAuthorityRateProduct for shipping: " + taxAuthorityRateProduct, module);
-            
+
             // Create Tax Adjustment
             BigDecimal taxRate = taxAuthorityRateProduct.get("taxPercentage") != null ? taxAuthorityRateProduct.getBigDecimal("taxPercentage") : ZERO_BASE;
             // taxRate is in percentage, so needs to be divided by 100
-            
+
             BigDecimal taxAmount = (orderShippingAmount.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
 
             String taxAuthGeoId = taxAuthorityRateProduct.getString("taxAuthGeoId");
@@ -665,7 +665,7 @@ public class TaxAuthorityServices {
                 taxAdjValue.set("orderAdjustmentTypeId", "SALES_TAX");
                 taxAdjValue.set("amount", taxAmount);
             }
-            
+
             taxAdjValue.set("sourcePercentage", taxRate);
             taxAdjValue.set("taxAuthorityRateSeqId", taxAuthorityRateProduct.getString("taxAuthorityRateSeqId"));
             // the primary Geo should be the main jurisdiction that the tax is for, and the secondary would just be to define a parent or wrapping jurisdiction of the primary
@@ -694,12 +694,12 @@ public class TaxAuthorityServices {
             Debug.logInfo("Shipping Tax Adjustment: " + taxAdjValue, module);
 
             adjustments.add(taxAdjValue);
-            
+
         } catch (GenericEntityException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
+
         return adjustments;
     }
 

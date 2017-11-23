@@ -86,7 +86,7 @@ under the License.
           <fo:block font-weight="bold" text-align="right">${uiLabelMap.AccountingUnitPrice}</fo:block>
         </fo:table-cell>
         <fo:table-cell>
-          <fo:block font-weight="bold" text-align="right">${uiLabelMap.CommonAmount}</fo:block>
+          <fo:block font-weight="bold" text-align="right"></fo:block>
         </fo:table-cell>
       </fo:table-row>
     </fo:table-header>

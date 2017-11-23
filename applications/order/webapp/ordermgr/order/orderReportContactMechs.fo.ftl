@@ -17,14 +17,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#escape x as x?xml>
-<fo:block content-width="85mm" font-size="10pt" margin-top="45mm">
+<fo:block content-width="85mm" font-size="10pt" margin-top="45mm" margin-bottom="5mm">
     <fo:block-container height="5mm" font-size="6pt">
         <fo:block>
             <#-- Return Address -->
             ${companyName!""}
         </fo:block>
     </fo:block-container>
-    <fo:block>
+    <fo:block margin-bottom="2mm">
         <#-- Contact Information -->
         <#if orderHeader.getString("orderTypeId") == "PURCHASE_ORDER">
             <#if supplierGeneralContactMechValueMap??>
@@ -57,7 +57,7 @@ under the License.
         </#if>
         <#-- list all postal addresses of the order.  there should be just a billing and a shipping here. -->
         <#list orderContactMechValueMaps as orderContactMechValueMap>
-            <fo:block>
+            <fo:block margin-bottom="2mm">
             <#assign contactMech = orderContactMechValueMap.contactMech>
             <#assign contactMechPurpose = orderContactMechValueMap.contactMechPurposeType>
             <#if contactMech.contactMechTypeId == "POSTAL_ADDRESS">

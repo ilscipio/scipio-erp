@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <property key="CmsUnsupportedFileType">
+        <value xml:lang="en">Unsupported file type for selected media type category</value>
+        <value xml:lang="de">Nicht unterstützter Dateityp für ausgewählte Medientypen</value>
+    </property>
+    <property key="CmsInvalidFileTypeForMediaCat">
+        <value xml:lang="en">Invalid file type (${mediaType}) for media type category (${providedType})</value>
+        <value xml:lang="de">Ungültiger Dateityp (${mediaType}) für Medientyp-Kategorie (${providedType})</value>
+    </property>
+    <property key="CmsErrorDuringExport">
+        <value xml:lang="en">Error during data export (output mode: ${outputMode}): ${errMsg}</value>
+        <value xml:lang="de">Fehler beim Datenexport (Ausgabemodus: ${outputMode}): ${errMsg}</value>
+    </property>
+    <property key="CmsInvalidParameter">
+        <value xml:lang="en">Invalid parameter: ${paramName} </value>
+        <value xml:lang="de">Ungültiger Parameter: ${paramName} </value>
+    </property>
+    <property key="CmsMissingParameter">
+        <value xml:lang="en">Missing parameter: ${paramName}</value>
+        <value xml:lang="de">Fehlender Parameter: ${paramName}</value>
+    </property>
+</resource>

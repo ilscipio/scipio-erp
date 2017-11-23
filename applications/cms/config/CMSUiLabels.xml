@@ -1,0 +1,819 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <property key="CMSApplication">
+        <value xml:lang="en">CMS</value>
+        <value xml:lang="zh">CMS</value>
+        <value xml:lang="zh-TW">CMS</value>
+    </property>
+    <property key="CMSCompanyName">
+        <value xml:lang="en">SCIPIO - CMS</value>
+        <value xml:lang="zh-TW">SCIPIO - CMS</value>
+    </property>
+    <property key="CMSCompanySubtitle">
+        <value xml:lang="en">Part of the SCIPIO Family of Open Source Software</value>
+        <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO</value>
+        <value xml:lang="zh">开源软件SCIPIO -的组成部分</value>
+        <value xml:lang="zh-TW">開源軟體SCIPIO -的組成部分</value>
+    </property>
+    <property key="CMSViewPermissionError">
+        <value xml:lang="en">You are not allowed to view this page.</value>
+        <value xml:lang="zh">不允许你浏览这个页面。</value>
+        <value xml:lang="zh-TW">不允許您檢視這個頁面.</value>
+    </property>
+    <property key="CommonPages">
+        <value xml:lang="en">Pages</value>
+        <value xml:lang="de">Seiten</value>
+    </property>
+    <property key="CommonPage">
+        <value xml:lang="en">Page</value>
+        <value xml:lang="de">Seite</value>
+    </property>
+    <property key="CommonEditor">
+        <value xml:lang="en">Editor</value>
+        <value xml:lang="de">Editor</value>
+    </property>
+    <property key="CommonVersion">
+        <value xml:lang="en">Version</value>
+        <value xml:lang="de">Version</value>
+    </property>
+    <property key="CommonAuthor">
+        <value xml:lang="en">Author</value>
+        <value xml:lang="de">Autor</value>
+    </property>
+    <property key="CommonActive">
+        <value xml:lang="en">Active</value>
+        <value xml:lang="de">Aktiv</value>
+    </property>
+    <property key="CommonVisibility">
+        <value xml:lang="en">Visibility</value>
+        <value xml:lang="de">Sichtbarkeit</value>
+    </property>
+    <property key="CommonRevisions">
+        <value xml:lang="en">Revisions</value>
+        <value xml:lang="de">Revisionen</value>
+    </property>
+    <property key="CommonVersions">
+        <value xml:lang="en">Versions</value>
+        <value xml:lang="de">Versionen</value>
+    </property>
+    <property key="CommonPath">
+        <value xml:lang="en">Path</value>
+        <value xml:lang="de">Pfad</value>
+    </property>
+    <property key="CommonImportName">
+        <value xml:lang="en">Import Name</value>
+        <value xml:lang="de">Import Name</value>
+    </property>
+    <!-- CMS Specific -->
+    <property key="CmsPageMeta">
+        <value xml:lang="en">Meta Information</value>
+        <value xml:lang="de">Meta Information</value>
+    </property>
+    <property key="CmsTemplateName">
+        <value xml:lang="en">Template Name</value>
+        <value xml:lang="de">Template Name</value>
+    </property>
+    <property key="CmsMediaFiles">
+        <value xml:lang="en">Media Files</value>
+        <value xml:lang="de">Medien Files</value>
+    </property>
+    <property key="CmsContent">
+        <value xml:lang="en">Content</value>
+        <value xml:lang="de">Inhalte</value>
+    </property>
+    <property key="CmsOverride">
+        <value xml:lang="en">Override</value>
+        <value xml:lang="de">Überschreiben</value>
+    </property>
+    <property key="CmsWebSite">
+        <value xml:lang="ar">موقع الويب</value>
+        <value xml:lang="da">Webside</value>
+        <value xml:lang="de">Webseite</value>
+        <value xml:lang="en">WebSite</value>
+        <value xml:lang="fr">Site Web</value>
+        <value xml:lang="it">Sito Web</value>
+        <value xml:lang="ja">Webサイト</value>
+        <value xml:lang="nl">Website</value>
+        <value xml:lang="pt">Site</value>
+        <value xml:lang="ro">Sit Web</value>
+        <value xml:lang="th">เว็บไซต์</value>
+        <value xml:lang="vi">Trang thông tin</value>
+        <value xml:lang="zh">网站</value>
+        <value xml:lang="zh_TW">網站</value>
+    </property>
+    <property key="CmsWebSiteAddMenu">
+        <value xml:lang="da">Opret menu</value>
+        <value xml:lang="de">Menü hinzufügen</value>
+        <value xml:lang="en">Add Menu</value>
+        <value xml:lang="fr">Ajouter un menu</value>
+        <value xml:lang="it">Aggiungi Menu</value>
+        <value xml:lang="ja">メニューを追加</value>
+        <value xml:lang="pt">Adicionar Menu</value>
+        <value xml:lang="th">เพิ่มเมนู</value>
+        <value xml:lang="vi">Thêm thực đơn</value>
+        <value xml:lang="zh">添加菜单</value>
+        <value xml:lang="zh_TW">增加選單</value>
+    </property>
+    <property key="CmsMenus">
+        <value xml:lang="da">Menuer</value>
+        <value xml:lang="de">Menüs</value>
+        <value xml:lang="en">Menus</value>
+        <value xml:lang="fr">Menus</value>
+        <value xml:lang="it">Menu</value>
+    </property>
+    <property key="CmsStatusPublished">
+        <value xml:lang="de">Publiziert</value>
+        <value xml:lang="en">Published</value>
+    </property>
+    <property key="CmsStatusUnpublished">
+        <value xml:lang="de">Unpubliziert</value>
+        <value xml:lang="en">Unpublished</value>
+    </property>
+    <property key="CmsTemplates">
+        <value xml:lang="en">Templates</value>
+    </property>
+    <property key="CmsTemplate">
+        <value xml:lang="en">Template</value>
+    </property>
+    <property key="CmsTemplateAssets">
+        <value xml:lang="en">Assets</value>
+    </property>
+    <property key="CmsMenu">
+        <value xml:lang="da">Menu</value>
+        <value xml:lang="de">Menü</value>
+        <value xml:lang="en">Menu</value>
+        <value xml:lang="fr">Menu</value>
+        <value xml:lang="it">Menu</value>
+    </property>
+    <property key="CmsListPages">
+        <value xml:lang="en">All Pages</value>
+        <value xml:lang="de">Alle Seiten</value>
+    </property>
+    <property key="CmsCreatePage">
+        <value xml:lang="en">New Page</value>
+        <value xml:lang="de">Neue Seite</value>
+    </property>
+    <property key="CmsEditPage">
+        <value xml:lang="en">Edit Page</value>
+        <value xml:lang="de">Seite Editieren</value>
+    </property>
+    <property key="CmsCreatePage">
+        <value xml:lang="en">Create Page</value>
+        <value xml:lang="de">Seite Erstellen</value>
+    </property>
+    <property key="CmsSaveAndPublish">
+        <value xml:lang="en">Save &amp; Publish</value>
+        <value xml:lang="de">Speichern &amp; Publizieren</value>
+    </property>
+    <property key="CmsPublish">
+        <value xml:lang="en">Publish</value>
+        <value xml:lang="de">Publizieren</value>
+    </property>
+    <property key="CmsPreview">
+        <value xml:lang="en">Preview</value>
+        <value xml:lang="de">Vorschau</value>
+    </property>
+    <property key="CmsViewLive">
+        <value xml:lang="en">View Live</value>
+        <value xml:lang="de">Live ansehen</value>
+    </property>
+    <property key="CmsRevisions">
+        <value xml:lang="de">Revisionen</value>
+        <value xml:lang="en">Revisions</value>
+    </property>
+    <property key="CmsSelectTemplate">
+        <value xml:lang="en">Select Template</value>
+        <value xml:lang="de">Template Auswählen</value>
+    </property>
+    <property key="CmsListTemplates">
+        <value xml:lang="en">All Templates</value>
+        <value xml:lang="de">Alle Templates</value>
+    </property>
+    <property key="CmsCreateTemplate">
+        <value xml:lang="en">New Template</value>
+        <value xml:lang="de">Neues Template</value>
+    </property>
+    <property key="CmsEditTemplate">
+        <value xml:lang="en">Edit Template</value>
+        <value xml:lang="de">Template Editieren</value>
+    </property>
+    <property key="CmsTemplateBody">
+        <value xml:lang="en">Template Body</value>
+        <value xml:lang="de">Template Body</value>
+    </property>
+    <property key="CmsTemplateLocation">
+        <value xml:lang="en">Template Location</value>
+        <value xml:lang="de">Template Location</value>
+    </property>
+    <property key="CmsScriptBody">
+        <value xml:lang="en">Script Body</value>
+        <value xml:lang="de">Script Body</value>
+    </property>
+    <property key="CmsScriptLocation">
+        <value xml:lang="en">Script Location</value>
+        <value xml:lang="de">Script Location</value>
+    </property>
+    <property key="CmsTemplateAttributes">
+        <value xml:lang="en">Attributes</value>
+        <value xml:lang="de">Attribute</value>
+    </property>
+    <property key="CmsAddAttribute">
+        <value xml:lang="en">Add Attribute</value>
+        <value xml:lang="de">Attribut hinzufügen</value>
+    </property>
+    <property key="CmsEditAttribute">
+        <value xml:lang="en">Edit Attribute</value>
+        <value xml:lang="de">Attribut bearbeiten</value>
+    </property>
+    <property key="CmsAssets">
+        <value xml:lang="en">Assets</value>
+        <value xml:lang="de">Assets</value>
+    </property>
+    <property key="CmsAsset">
+        <value xml:lang="en">Asset</value>
+        <value xml:lang="de">Asset</value>
+    </property>
+    <property key="CmsAddAsset">
+        <value xml:lang="en">Add Asset</value>
+        <value xml:lang="de">Asset hinzufügen</value>
+    </property>
+    <property key="CmsListAssets">
+        <value xml:lang="en">All Assets</value>
+        <value xml:lang="de">Alle Assets</value>
+    </property>
+    <property key="CmsCreateAsset">
+        <value xml:lang="en">New Asset</value>
+        <value xml:lang="de">Neues Asset</value>
+    </property>
+    <property key="CmsEditAsset">
+        <value xml:lang="en">Edit Asset</value>
+        <value xml:lang="de">Asset Editieren</value>
+    </property>
+    <property key="CmsListMedia">
+        <value xml:lang="en">All Media</value>
+        <value xml:lang="de">Alle Medien</value>
+    </property>
+    <property key="CmsCreateMedia">
+        <value xml:lang="en">New Media</value>
+        <value xml:lang="de">Neues Medium</value>
+    </property>
+    <property key="CmsEditMedia">
+        <value xml:lang="en">Edit Media</value>
+        <value xml:lang="de">Medium Editieren</value>
+    </property>
+    <property key="CmsConfirmDeleteAction"><!-- FIXME: replace by CommonConfirmDeleteRecordPermanent -->
+        <value xml:lang="en">You are about to delete the record permanently. Do you want to continue?</value>
+        <value xml:lang="de">Sie sind dabei den Eintrag dauerhaft zu löschen. Wollen Sie fortfahren?</value>
+    </property>
+    <property key="CmsMedia">
+        <value xml:lang="en">Media</value>
+    </property>
+    <property key="CmsMediaImages">
+        <value xml:lang="en">Images</value>
+    </property>
+    <property key="CmsMediaVideos">
+        <value xml:lang="en">Videos</value>
+    </property>
+    <property key="CmsMediaAudios">
+        <value xml:lang="en">Audios</value>
+    </property>
+    <property key="CmsMediaDocuments">
+        <value xml:lang="en">Documents</value>
+    </property>
+    <property key="CmsMediaPreview">
+        <value xml:lang="en">Media Preview</value>
+    </property>
+    <property key="CmsMediaType">
+        <value xml:lang="en">Type</value>
+    </property>
+    <property key="CmsMediaTypes">
+        <value xml:lang="en">Media Types</value>
+    </property>
+    <property key="CmsMediaOriginalName">
+        <value xml:lang="en">Original Name</value>
+    </property>
+    <property key="CmsOnlyHookedWebSitesListed">
+        <value xml:lang="en">Note that only websites hooked with the CMS Process Filter and/or Screen View Handler will appear in this list.</value>
+        <value xml:lang="de">Beachten Sie, dass nur Websites, die mit dem CMS-Prozessfilter und / oder dem Screen-View-Handler verbunden sind, in dieser Liste angezeigt werden.</value>
+    </property>
+    <property key="CmsSettingNotUsedInRenderingNote">
+        <value xml:lang="en">NOTE: This setting is not used during live rendering, except as a name filter.</value>
+        <value xml:lang="de">HINWEIS: Diese Einstellung wird beim Live-Rendering nicht verwendet, außer als Namensfilter.</value>
+    </property>
+    <property key="CmsPrimary">
+        <value xml:lang="en">Primary</value>
+        <value xml:lang="de">Primär</value>
+    </property>
+    <property key="CmsPageId">
+        <value xml:lang="en">Page ID</value>
+        <value xml:lang="de">Page ID</value>
+    </property>
+    <property key="CmsMyTemplateName">
+        <value xml:lang="en">My Template Name</value>
+        <value xml:lang="de">Mein Vorlagenname</value>
+    </property>
+    <property key="CmsViewMapping">
+        <value xml:lang="en">View Mapping</value>
+        <value xml:lang="de">View Mapping</value>
+    </property>
+    <property key="CmsViewMappings">
+        <value xml:lang="en">View Mappings</value>
+        <value xml:lang="de">View Mappings</value>
+    </property>
+    <property key="CmsProcessMapping">
+        <value xml:lang="en">Process Mapping</value>
+        <value xml:lang="de">Process Mapping</value>
+    </property>
+    <property key="CmsProcessMappings">
+        <value xml:lang="en">Process Mappings</value>
+        <value xml:lang="de">Process Mappings</value>
+    </property>
+    <property key="CmsProcessViewMapping">
+        <value xml:lang="en">Process View Mapping</value>
+        <value xml:lang="de">Process View Mapping</value>
+    </property>
+    <property key="CmsProcessViewMappings">
+        <value xml:lang="en">Process View Mappings</value>
+        <value xml:lang="de">Process View Mappings</value>
+    </property>
+    <property key="CmsSaveViewMappings">
+        <value xml:lang="en">Save View Mappings</value>
+        <value xml:lang="de">View Mappings speichern</value>
+    </property>
+    <property key="CmsSimpleViewMappingsExplanation">
+        <value xml:lang="en">Creates simple, conditionless associations of controller.xml view-maps to CMS page (view-map name to CMS page ID), and hooks into the controller so that, when such view is selected for rendering by controller, the CMS page is rendered instead of the screen specified in the controller.</value>
+        <value xml:lang="de">Erstellt einfache, bedingungslose Zuordnungen von controller.xml view-maps zur CMS-Seite. Die Hooks können verwendet werden, um eine CMS-Seite Anstelle des in der Steuerung angegebenen view-maps anzuzeigen.</value>
+    </property>
+    <property key="CmsUse">
+        <value xml:lang="en">Use</value>
+        <value xml:lang="de">Nutze</value>
+    </property>
+    <property key="CmsNoChangesMade">
+        <value xml:lang="en">No changes made.</value>
+        <value xml:lang="de">Es wurden keine Änderungen vorgenommen.</value>
+    </property>
+    <property key="CmsScripts">
+        <value xml:lang="en">Scripts</value>
+        <value xml:lang="de">Scripts</value>
+    </property>
+    <property key="CmsCreateScript">
+        <value xml:lang="en">Create Script</value>
+        <value xml:lang="de">Create Script</value>
+    </property>
+    <property key="CmsEditScript">
+        <value xml:lang="en">Edit Script</value>
+        <value xml:lang="de">Edit Script</value>
+    </property>
+    <property key="CmsListScripts">
+        <value xml:lang="en">All Scripts</value>
+        <value xml:lang="de">All Scripts</value>
+    </property>
+    <property key="CmsAddScript">
+        <value xml:lang="en">Add Script</value>
+        <value xml:lang="de">Script hinzufügen</value>
+    </property>
+    <property key="CmsScriptTemplate">
+        <value xml:lang="en">Script Template</value>
+        <value xml:lang="de">Script Template</value>
+    </property>
+    <property key="CmsScriptName">
+        <value xml:lang="en">Script Name</value>
+        <value xml:lang="de">Script Name</value>
+    </property>
+    <property key="CmsScriptNameDescription">
+        <value xml:lang="en">A short human-readable name, stored in the script record (not in the association record)</value>
+        <value xml:lang="de">Ein kurzer, von Menschen lesbarer Name, der im Skriptdatensatz gespeichert ist (nicht im Assoziationsdatensatz)</value>
+    </property>
+    <property key="CmsQualifiedName">
+        <value xml:lang="en">Qualified Name</value>
+        <value xml:lang="de">Qualified Name</value>
+    </property>
+    <property key="CmsInvokeName">
+        <value xml:lang="en">Invoke Name</value>
+        <value xml:lang="de">Invoke Name</value>
+    </property>
+    <property key="CmsScriptInvokeNameDescription">
+        <value xml:lang="en">Name of method, function or other code element to invoke when executing the script.</value>
+        <value xml:lang="de">Name der Methode, Funktion oder anderem Codeelement, das beim Ausführen des Skripts aufgerufen wird.</value>
+    </property>
+    <property key="Cms404">
+        <value xml:lang="en">404</value>
+        <value xml:lang="de">404</value>
+    </property>
+    <property key="CmsPageMultipleWebsitesInfo">
+        <value xml:lang="en">A page may be associated to multiple websites when it has view mappings in multiple websites or when its view mappings are in a different website than its primary website.</value>
+        <value xml:lang="de">Eine Seite kann mehreren Websites zugeordnet werden, indem Sie entweder über "View Mappings" in mehreren Websites verfügt oder aber wenn eine einzelne "View Mapping" in einer anderen als der primären Website existiert.</value>
+    </property>
+    <property key="CmsStandalone">
+        <value xml:lang="en">Standalone</value>
+        <value xml:lang="de">Standalone</value>
+    </property>
+    <property key="CmsStandaloneDescription">
+        <value xml:lang="en">A standalone (Y) script is never deleted unless it is manually deleted using the script delete function. A non-standalone (N) script may be automatically deleted when all its associated page(s) or asset(s) are deleted (orphaned). Scripts may be born as non-standalone (N) when they were created as location associations to a page or asset template; they are switched to standalone (Y) as soon as a modification is made to the script template using the script editor, to conservatively safeguard changes.</value>
+        <value xml:lang="de">Ein eigenständiges (Y) Skript wird nie gelöscht, es sei denn, es wird manuell mit der Skript-Löschfunktion gelöscht. Ein Nicht-Standalone-Skript (N) kann automatisch gelöscht werden, wenn alle zugehörigen Seiten oder Assets gelöscht (verwaist) werden. Skripts können als Nicht-Standalone (N) geboren werden, wenn sie als Standortverknüpfungen zu einer Seite oder einer Assetvorlage erstellt wurden; Werden sie auf Standalone (Y) umgeschaltet, sobald eine Änderung an der Scriptvorlage mit dem Scripteditor vorgenommen wird, um Änderungen konservativ zu sichern.</value>
+    </property>
+    <property key="CmsAuto">
+        <value xml:lang="en">Auto</value>
+        <value xml:lang="de">Auto</value>
+    </property>    
+    <property key="CmsExistingScriptTemplate">
+        <value xml:lang="en">Existing Script Template (Standalone)</value>
+        <value xml:lang="de">Existing Script Template (Standalone)</value>
+    </property>  
+    <property key="CmsExistingScriptTemplateDescription">
+        <value xml:lang="en">Associate an existing, standalone script template to the current render template.</value>
+        <value xml:lang="de">Ordnen Sie eine vorhandene, eigenständige Skriptvorlage der aktuellen Rendervorlage zu.</value>
+    </property>  
+    <property key="CmsNewScriptLocation">
+        <value xml:lang="en">New Script Location</value>
+        <value xml:lang="de">New Script Location</value>
+    </property>  
+    <property key="CmsNewScriptLocationDescription">
+        <value xml:lang="en">Create a new script template record from a script location, and associate it as a dependent (non-standalone) script to the current render template.</value>
+        <value xml:lang="de">Erstellen Sie einen neuen Skriptvorlagendatensatz aus einem Skriptort und ordnen Sie ihn als abhängiges Skript (nicht eigenständiges Skript) der aktuellen Rendervorlage zu.</value>
+    </property>  
+    <property key="CmsSystemDoesNotSupportLanguageData">
+        <value xml:lang="en">The system does not support running scripts of this language from stored records (file locations only).</value>
+        <value xml:lang="de">Das System unterstützt laufende Skripts dieser Sprache nicht aus gespeicherten Datensätzen (nur Dateispeicherorte).</value>
+    </property>
+    <property key="CmsReadOnly">
+        <value xml:lang="en">Read-Only</value>
+        <value xml:lang="de">Read-Only</value>
+    </property>
+    <property key="CmsMimeTypeIdNotSupported">
+        <value xml:lang="en">Mime-Type not supported</value>
+        <value xml:lang="de">Mime-Type wird nicht unterstützt</value>
+    </property> 
+    <property key="CmsInputPositionDescription">
+        <value xml:lang="en">Local position / order of this attribute relative to other attributes (only). NOTE: When determining expansion and evaluation order during rendering, inputPosition is secondary to expandPosition, which determines the "global" order, relative to scripts.</value>
+        <value xml:lang="de">Lokale Position / Reihenfolge dieses Attributs relativ zu anderen Attributen (nur). HINWEIS: Beim Ermitteln der Ausdehnungs- und Auswertungsreihenfolge während des Renderings ist inputPosition sekundär zu expandPosition, was die "globale" Reihenfolge relativ zu Scripts bestimmt.</value>
+    </property>
+    <property key="CmsExpandLangDescription">
+        <value xml:lang="en">Variable expansion code language</value>
+        <value xml:lang="de">Variable Erweiterungscode-Sprache</value>
+    </property>
+    <property key="CmsSupportedCodeLanguage">
+        <value xml:lang="en">Supported code language</value>
+        <value xml:lang="de">Unterstützte Code-Sprache</value>
+    </property>
+    <property key="CmsSupportedLang">
+        <value xml:lang="en">Supported lang</value>
+        <value xml:lang="de">Unterstützte Sprache</value>
+    </property>
+    <property key="CmsExpandPositionDescription">
+        <value xml:lang="en">Position / Order / Moment of variable expansion and insertion into context, relative to the inputPosition of Scripts on this template. NOTE: When they have same numeric value, attributes (expandPosition) always expand before scripts (script inputPosition).</value>
+        <value xml:lang="de">Position / Reihenfolge / Moment der variablen Erweiterung und Insertion in Kontext, bezogen auf die inputPosition von Scripts auf dieser Vorlage. HINWEIS: Wenn sie denselben numerischen Wert haben, werden die Attribute (expandPosition) immer vor Skripten (Skript inputPosition) erweitert.</value>
+    </property>
+    <property key="CmsExpandBeforeScripts">
+        <value xml:lang="en">Expand before all scripts</value>
+        <value xml:lang="de">Erweitern Sie vor allen Skripts</value>
+    </property>
+    <property key="CmsExpandAfterScripts">
+        <value xml:lang="en">Expand after most scripts, except those &gt; 1000</value>
+        <value xml:lang="de">Erweitern nach den meisten Skripts, außer denen &gt; 1000</value>
+    </property>
+    <property key="CmsExpandLang.description.NONE">
+        <value xml:lang="en"></value>
+        <value xml:lang="de"></value>
+    </property>
+    <property key="CmsExpandLang.description.FTL">
+        <!-- SCIPIO: NOTE: the "no double quotes" part is specifically a current UI limitation -->
+        <value xml:lang="en">Freemarker w/bracket syntax, no double quotes</value>
+        <value xml:lang="de">Freemarker mit Klammer-Syntax, Keine doppelten zitate</value>
+    </property>
+    <property key="CmsExpandLang.description.FLEXIBLE">
+        <value xml:lang="en">Flexible expression / EL</value>
+        <value xml:lang="de">Flexible Expression / EL</value>
+    </property>
+    <property key="CmsExpandLang.description.SIMPLE">
+        <value xml:lang="en">Simple context field lookup</value>
+        <value xml:lang="de">Einfache Kontextfeldsuche</value>
+    </property>
+    <property key="CmsDisplayName">
+        <value xml:lang="en">Display Name</value>
+        <value xml:lang="de">Anzeigename</value>
+    </property>
+    <property key="CmsUnsavedTemplateChangesMayBeLost">
+        <value xml:lang="en">By submitting this form, any unsaved template body and other form changes may be lost.</value>
+        <value xml:lang="de">Durch das Absenden dieses Formulars können alle nicht gespeicherten Vorlagenkörper und andere Formularänderungen verloren gehen.</value>
+    </property>
+    <property key="CmsShowStandaloneOnly">
+        <value xml:lang="en">Show Standalone Only</value>
+        <value xml:lang="de">Nur Standalone anzeigen</value>
+    </property>
+    <property key="CmsAttributeTargetTypeDesc">
+        <value xml:lang="en">Name of a Java type to cast/convert the attribute to, either short name or in fully-qualified form</value>
+        <value xml:lang="de">Name eines Java-Typs zum Darstellen / Konvertieren des Attributs in Kurzname oder in vollqualifiziertem Formular</value>
+    </property>
+    <property key="CmsExportFuncInfo">
+        <value xml:lang="en">This page can be used to export CMS data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</value>
+        <value xml:lang="de">Diese Seite kann zum Export von CMS-Daten aus der Datenbank verwendet werden. Die exportierten Dokumente haben ein Wurzel-Tag von "&lt;entity-engine-xml&gt;".</value>
+    </property>
+    <property key="CmsExportFuncMultiFileInfo">
+        <value xml:lang="de">Es wird für jede Entität in dem für diese webapp konfigurierten Delegator eine eigene Datei erstellt.</value>
+        <value xml:lang="en">There will be one file for each Entity in the configured delegator for this webapp.</value>
+        <value xml:lang="fr">Il y aura un dossier pour chaque entité dans le delegator configuré pour cette webapp.</value>
+        <value xml:lang="it">C'è un file per ogni Entità nel delegator configurato per questa applicazione web.</value>
+        <value xml:lang="ja">Webアプリケーションに設定されたデリゲータの中のそれぞれのエンティティに対して１つのファイルが作成されます。</value>
+        <value xml:lang="pt">HaverÃ¡ um arquivo para cada entidade do delegator configurado para essa webapp.</value>
+        <value xml:lang="ro">Exista un file pentru orice Entitate din delegatorul configurat pentru aceasta aplicatie web.</value>
+        <value xml:lang="th">มี 1 ไฟล์สำหรับตัวอย่าง Entity ในการสร้างตัวแทนสำหรับโปรแกรมประยุกต์นี้</value>
+        <value xml:lang="vi">có 01 Tập tin với mỗi Thực thể của Ứng dụng này</value>
+    </property>
+    <property key="CmsExportFilesAsTextData">
+        <value xml:lang="en">Convert template files to entity data</value>
+        <value xml:lang="de">Konvertieren von Vorlagendateien in Entitätsdaten</value>
+    </property>
+    <property key="CmsExportFilesAsTextDataDesc">
+        <value xml:lang="en">Forces export and conversion of template files (component://**.ftl) to entity data (ElectronicText).</value>
+        <value xml:lang="de">Erzwingt das Exportieren und Konvertieren von Vorlagendateien (component://**.ftl) zu Entitätsdaten (ElectronicText)</value>
+    </property>
+    <property key="CmsSingleFile">
+        <value xml:lang="en">Single-File</value>
+        <value xml:lang="de">Einzelne-Datei</value>
+    </property>
+    <property key="CmsSingleFileDownload">
+        <value xml:lang="en">Single-File - Download</value>
+        <value xml:lang="de">Einzelne-Datei - Herunterladen</value>
+    </property>
+    <property key="CmsSingleFileInline">
+        <value xml:lang="en">Single-File - Inline (textarea)</value>
+        <value xml:lang="de">Einzelne-Datei - In der Reihe (textarea)</value>
+    </property>
+    <property key="CmsSingleFileServerFile">
+        <value xml:lang="en">Single-File - Server File</value>
+        <value xml:lang="de">Einzelne-Datei - Serverdatei</value>
+    </property>
+    <property key="CmsMultiFileServerDirectory">
+        <value xml:lang="en">Multi-File - Server Directory</value>
+        <value xml:lang="de">Multi-Datei - Serververzeichnis</value>
+    </property>
+    <property key="CmsSingleFileInlineDesc">
+        <value xml:lang="en">Output directly on page (textarea). Warning: Large results may cause extreme slowness in browser.</value>
+        <value xml:lang="de">Ausgabe direkt auf Seite (textarea). Warnung: Große Ergebnisse können extreme Langsamkeit im Browser verursachen.</value>
+    </property>
+    <property key="CmsLargeResultsSlowBrowser">
+        <value xml:lang="en">Warning: Large results may cause extreme slowness in browser.</value>
+        <value xml:lang="de">Warnung: Große Ergebnisse können extreme Langsamkeit im Browser verursachen.</value>
+    </property>
+    <property key="CmsRecordGrouping">
+        <value xml:lang="en">Record Grouping</value>
+        <value xml:lang="de">Datensatzgruppierung</value>
+    </property>
+    <property key="CmsRecordGroupingDesc">
+        <value xml:lang="en">Controls the order in which records are printed. Note: Group by Major Object may behave differently with respect to selected entities and options. NOTE: This is ignored for CMS Media.</value>
+        <value xml:lang="de">Steuert die Reihenfolge, in der die Datensätze gedruckt werden. Hinweis: Gruppe nach Hauptobjekt kann sich in Bezug auf ausgewählte Entitäten und Optionen unterschiedlich verhalten. HINWEIS: Dies wird für CMS Media ignoriert.</value>
+    </property>
+    <property key="CmsRecordGroupingNoGrouping">
+        <value xml:lang="en">No Grouping</value>
+        <value xml:lang="de">Keine Gruppierung</value>
+    </property>
+    <property key="CmsRecordGroupingNoGroupingHint">
+        <value xml:lang="en">fastest export</value>
+        <value xml:lang="de">schnellster Export</value>
+    </property>
+    <property key="CmsRecordGroupingGroupByEntityType">
+        <value xml:lang="en">Group by Entity Type</value>
+        <value xml:lang="de">Gruppe nach Entitätstyp</value>
+    </property>
+    <property key="CmsRecordGroupingGroupByEntityTypeHint">
+        <value xml:lang="en">fastest import</value>
+        <value xml:lang="de">schnellster Import</value>
+    </property>
+    <property key="CmsRecordGroupingGroupByMajorObject">
+        <value xml:lang="en">Group by Major Object</value>
+        <value xml:lang="de">Gruppe nach Hauptobjekt</value>
+    </property>
+    <property key="CmsRecordGroupingGroupByMajorObjectHint">
+        <value xml:lang="en">most readable</value>
+        <value xml:lang="de">am meisten lesbar</value>
+    </property>
+    <property key="CmsOutput">
+        <value xml:lang="en">Output</value>
+        <value xml:lang="de">Ausgabe</value>
+    </property>
+    <property key="CmsClickHereToGetData">
+        <value xml:lang="en">Click Here to Get Data (or save to file)</value>
+        <value xml:lang="de">Klicken Sie hier, um Daten zu erhalten (oder in Datei speichern)</value>
+    </property>
+    <property key="CmsFeatureWorkInProgress">
+        <value xml:lang="en">This feature is Work-In-Progress; may only be partially functional.</value>
+        <value xml:lang="de">Diese Funktion ist Work-In-Progress; Darf nur teilweise funktionieren.</value>
+    </property>
+    <property key="CmsDataImportAdminLinkDesc">
+        <value xml:lang="en">The generic Admin application entity import functions can also be used to import CMS data exported by the CMS Data Export function.</value>
+        <value xml:lang="de">Die generischen Admin-Applikationsentitätsimportfunktionen können auch zum Importieren verwendet werden CMS-Daten, die von der CMS-Datenexport-Funktion exportiert wurden.</value>
+    </property>
+    <property key="CmsSpecialFilters">
+        <value xml:lang="en">Special Filters</value>
+        <value xml:lang="de">Spezielle Filter</value>
+    </property>
+    <property key="CmsIncludeContentRecords">
+        <value xml:lang="en">Include Content entities</value>
+        <value xml:lang="de">Inhalte einschließen</value>
+    </property>
+    <property key="CmsIncludeContentRecordsDesc">
+        <value xml:lang="en">Filter: Includes related Content entities as part of the export (Content, DataResource, EletronicText, ...). These contain the stored template bodies as well as page data.</value>
+        <value xml:lang="de">Filter: Enthält verwandte Content Entities als Teil des Exports (Content, DataResource, EletronicText, ...). Diese enthalten sowohl die gespeicherten Vorlagenkörper als auch die Seitendaten.</value>
+    </property>
+    <property key="CmsProcessMappingPageSpecialMappingType">
+        <value xml:lang="en">Process Mapping Type</value>
+        <value xml:lang="de">Process Mapping Typ</value>
+    </property>
+    <property key="CmsProcessMappingPageSpecialMappingTypeDesc">
+        <value xml:lang="en">Filter: Include only specific Process Mapping types. For pages, it is important to export the Primary mappings to preserve the page path.</value>
+        <value xml:lang="de">Filter: Nur bestimmte Methoden der Prozesszuordnung einbeziehen. Für Seiten ist es wichtig, die Primärzuordnungen zu exportieren, um den Seitenpfad zu bewahren.</value>
+    </property>
+    <property key="CmsAttributeTemplateAssocType">
+        <value xml:lang="en">Attr. Template Assoc</value>
+        <value xml:lang="de">Attr. Template Assoc</value>
+    </property>
+    <property key="CmsAttributeTemplateAssocTypeDesc">
+        <value xml:lang="en">Filter: Include only Attribute Templates associated to either asset or page templates.</value>
+        <value xml:lang="de">Filter: Nur Attributvorlagen einschließen, die entweder Asset- oder Seitenvorlagen zugeordnet sind.</value>
+    </property>
+    <property key="CmsStandard">
+        <value xml:lang="en">Standard</value>
+        <value xml:lang="de">Standard</value>
+    </property>
+    <property key="CmsNoEntityNamesSpecified">
+        <value xml:lang="de">Keine Entitätennamen angegeben</value>
+        <value xml:lang="en">No entity names specified, doing nothing.</value>
+        <value xml:lang="fr">Aucun nom d'entité spécifié, rien ne se passera</value>
+    </property>
+    <property key="CmsEntityPresetLabel_CmsAllEntities">
+        <value xml:lang="en">All CMS Entities (with media, but no media variants) (WARNING: Large)</value>
+        <value xml:lang="de">Alle CMS Entities (mit Medien, aber ohne Medienvarianten) (WARNUNG: Groß)</value>
+    </property>
+    <property key="CmsEntityPresetLabel_CmsAllEntitiesNoMedia">
+        <value xml:lang="en">All CMS Entities (no media)</value>
+        <value xml:lang="de">Alle CMS Entities (keine Medien)</value>
+    </property>
+    <property key="CmsEntityPresetLabel_CmsPages">
+        <value xml:lang="en">CMS Pages with Primary Paths (Only)</value>
+        <value xml:lang="de">CMS Pages mit Primary Paths (Nur)</value>
+    </property>
+    <property key="CmsEntityPresetLabel_CmsPagesStrict">
+        <value xml:lang="en">CMS Pages without Paths</value>
+        <value xml:lang="de">CMS Pages ohne Paths</value>
+    </property>
+    <property key="CmsEntityPresetLabel_CmsMappings">
+        <value xml:lang="en">CMS Control Mappings (Process + View), except Primary Page Paths</value>
+        <value xml:lang="de">CMS Control Mappings (Process + View), außer Primary Page Paths</value>
+    </property>
+    <property key="CmsEntityPresetLabel_CmsMappingsStrict">
+        <value xml:lang="en">CMS Control Mappings (Process + View), including Primary Page Paths</value>
+        <value xml:lang="de">CMS Control Mappings (Process + View), einschließlich Primary Page Paths</value>
+    </property>
+    <property key="CmsEntityPresetLabel_CmsPagesMappings">
+        <value xml:lang="en">CMS Pages and All Control Mappings (Process + View)</value>
+        <value xml:lang="de">CMS Pages und Alle Control Mappings (Process + View)</value>
+    </property>
+    <property key="CmsEntityPresetLabel_CmsTemplates">
+        <value xml:lang="en">All CMS Templates (Page, Asset, Script)</value>
+        <value xml:lang="de">Alle CMS Templates (Page, Asset, Script)</value>
+    </property>
+    <property key="CmsEntityPresetLabel_CmsPageTemplates">
+        <value xml:lang="en">CMS Page Templates Only</value>
+        <value xml:lang="de">CMS Page Templates Nur</value>
+    </property>
+    <property key="CmsEntityPresetLabel_CmsAssetTemplates">
+        <value xml:lang="en">CMS Asset Templates Only</value>
+        <value xml:lang="de">CMS Asset Templates Nur</value>
+    </property>
+    <property key="CmsEntityPresetLabel_CmsScriptTemplates">
+        <value xml:lang="en">CMS Script Templates Only</value>
+        <value xml:lang="de">CMS Script Templates Nur</value>
+    </property>
+    <property key="CmsEntityPresetLabel_CmsMedia">
+        <value xml:lang="en">CMS Media (no variants) (WARNING: Large)</value>
+        <value xml:lang="de">CMS Media (Keine Varianten) (WARNUNG: Groß)</value>
+    </property>
+    <property key="CmsEntityPresetLabel_CmsMediaWithVariants">
+        <value xml:lang="en">CMS Media (with variants) (WARNING: Large)</value>
+        <value xml:lang="de">CMS Media (Mit varianten) (WARNUNG: Groß)</value>
+    </property>
+    <property key="CmsEntityEntryLabel_CmsMedia">
+        <value xml:lang="en">Main Media Entities</value>
+        <value xml:lang="de">Hauptmedien Entitäten</value>
+    </property>
+    <property key="CmsEntityEntryLabel_CmsMediaVariants">
+        <value xml:lang="en">Media Variants (Resized Images)</value>
+        <value xml:lang="de">Medienvarianten (Verkleinerte Bilder)</value>
+    </property>
+    <property key="CmsMajorEntityInfo">
+        <value xml:lang="en">This is a Major Object entity.</value>
+        <value xml:lang="de">Dies ist ein wichtiges Objekt.</value>
+    </property>
+    <property key="CmsIncludeDependencies">
+        <value xml:lang="en">Include Dependencies</value>
+        <value xml:lang="de">Abhängigkeiten einbeziehen</value>
+    </property>
+    <property key="CmsReorderByDependencies">
+        <value xml:lang="en">Include/Reorder Dependencies</value>
+        <value xml:lang="de">Nachfolge nachordnen</value>
+    </property>
+    <property key="CmsReorderByDependenciesDesc">
+        <value xml:lang="en">Follows dependencies first when exporting. Causes a different export order that may be needed when writing demo data, and may add extra entities to those selected to fulfill dependencies.</value>
+        <value xml:lang="de">Entspricht Abhängigkeiten beim Exportieren. Verursacht eine andere Exportreihenfolge, die beim Schreiben von Demodaten benötigt wird, und kann zusätzliche Entitäten hinzufügen, die ausgewählt wurden, um Abhängigkeiten zu erfüllen.</value>
+    </property>
+    <property key="CmsForceIncludeDependencies">
+        <value xml:lang="en">Force Include Dependencies</value>
+        <value xml:lang="de">Force Enthält Abhängigkeiten</value>
+    </property>
+    <property key="CmsForceIncludeDeps">
+        <value xml:lang="en">Force Include Deps</value>
+        <value xml:lang="de">Force Enthält Deps</value>
+    </property>
+    <property key="CmsNotRecommended">
+        <value xml:lang="en">Not recommended</value>
+        <value xml:lang="de">Nicht empfohlen</value>
+    </property>
+    <property key="CmsNotRecommendedForThisPage">
+        <value xml:lang="en">Not recommended for this page</value>
+        <value xml:lang="de">Nicht für diese Seite empfohlen</value>
+    </property>
+    <property key="CmsSelectionsAndFilters">
+        <value xml:lang="en">Selections &amp; Filters</value>
+        <value xml:lang="de">Auswahl &amp; Filter</value>
+    </property>
+    <property key="CmsIncludePageControlMappingsOnly">
+        <value xml:lang="en">Include Control Mappings for Page (Only)</value>
+        <value xml:lang="de">Steuerungsmappen für Seite einfügen (nur)</value>
+    </property>
+    <property key="CmsObjectGroupingSelectionsNote">
+        <value xml:lang="en">Note: In Major Object record grouping, the Major CMS entities (highlighted or bold) are most important to the query; the minor related entities selections may be ignored. At least one Major entity must be selected.</value>
+        <value xml:lang="de">Hinweis: In der Hauptobjektaufzeichnungsgruppe sind die Haupt-CMS-Entitäten (hervorgehoben oder fett) für die Abfrage am wichtigsten; Die sekundären verwandten Entitäten können ignoriert werden. Mindestens eine Major Entity muss ausgewählt werden.</value>
+    </property>
+    <property key="CmsWroteNRecords">
+        <value xml:lang="de">Es wurden ${numberWritten} Datensätze.</value>
+        <value xml:lang="en">Wrote ${numberWritten} records.</value>
+        <value xml:lang="fr">Ecrire ${numberWritten} les enregistrements.</value>
+        <value xml:lang="it">Scritti ${numberWritten} records.</value>
+        <value xml:lang="pt">Escreveu  ${numberWritten} registros.</value>
+    </property>
+    <property key="CmsPleaseSelectPresetOrEntity">
+        <value xml:lang="en">Please select a preset or at least one entity name.</value>
+        <value xml:lang="de">Bitte wählen Sie einen Preset oder mindestens einen Entity Name.</value>
+    </property>
+    <property key="CmsPleaseSelectPresetOrMajorEntity">
+        <value xml:lang="en">Please select a preset or at least one Major entity name (for Major Object grouping mode).</value>
+        <value xml:lang="de">Bitte wählen Sie einen Preset oder mindestens einen Major Entity Name (für Major Object Gruppierungsmodus).</value>
+    </property>
+    <property key="CmsMediaAutoResize">
+        <value xml:lang="en">Auto Resize</value>
+        <value xml:lang="de">Automatische Größenänderung</value>
+    </property>
+    <property key="CmsMediaCreateAutoResizedImageVariants">
+        <value xml:lang="en">Create Auto-Resized Image Variants</value>
+        <value xml:lang="de">Bildvarianten erzeugen</value>
+    </property>
+    <property key="CmsMediaAutoResizeDesc">
+        <value xml:lang="en">Automatically creates resized copies of the media, for optimization.</value>
+        <value xml:lang="de">Generiert optimierte Varianten der Media-Datei.</value>
+    </property>
+    <property key="CmsMediaHasResizedVariants">
+        <value xml:lang="en">Has resized variants?</value>
+        <value xml:lang="de">Optimierte Varianten verfügbar?</value>
+    </property>
+    <property key="CmsMediaResizedVariants">
+        <value xml:lang="en">Resized Variants</value>
+        <value xml:lang="de">Optimierte Varianten</value>
+    </property>
+    <property key="CmsMediaVariants">
+        <value xml:lang="en">Variants</value>
+        <value xml:lang="de">Variationen</value>
+    </property>
+    <property key="CmsMediaRecreateImageVariants">
+        <value xml:lang="en">Recreate Image Variants</value>
+        <value xml:lang="de">Bildvarianten neu erstellen</value>
+    </property>
+    <property key="CmsMediaRecreateImageVariantsDesc">
+        <value xml:lang="en">This function recreates the image variants (auto-resized images) for all applicable images.</value>
+        <value xml:lang="de">Diese Funktion erzeugt Bildvarianten (automatisch verkleinerte Bilder) für alle zutreffenden Bilder.</value>
+    </property>
+    <property key="CmsFunctionAsyncBackground">
+        <value xml:lang="en">This function is triggered asynchronously and will run in the background (slow); check logs for progress.</value>
+        <value xml:lang="de">Diese Funktion wird asynchron ausgelöst und läuft im Hintergrund ab (langsam); Weitere Informationen zum Fortschritt sind im Log verfügbar.</value>
+    </property>
+    <property key="CmsMediaRecreateOnlyImagesWithExistingVariants">
+        <value xml:lang="en">Only images already having variants</value>
+        <value xml:lang="de">Nur Bilder mit Varianten</value>
+    </property>
+    <property key="CmsMediaRecreateAllImagesForce">
+        <value xml:lang="en">All images</value>
+        <value xml:lang="de">Alle Bilder</value>
+    </property>
+    <property key="CmsTargetImages">
+        <value xml:lang="en">Target images</value>
+        <value xml:lang="de">Zielbilder</value>
+    </property>
+    <property key="CmsWebSitePreviewDisabledDesc">
+        <value xml:lang="en">This page's website has Preview mode disabled. Only websites with web.xml context-param cmsAllowPreviewMode set to true can show preview (insecure). Use live view, edit the web.xml configuration (if safe for you to do so), or change the website for the page.</value>
+        <value xml:lang="de">Die zugehörige Website dieser Seite ist deaktiviert. Nur Webseiten, die den web.xml context-paramater ""cmsAllowPreviewMode"" auf true gesetzt haben, können eine Vorschau anzeigen (unsicher). Verwenden Sie die Live-Ansicht, bearbeiten Sie die web.xml-Konfiguration, oder ändern Sie die "Website" Konfiguration für diese Seite.</value>
+    </property>
+    <property key="CmsSaveSettings">
+        <value xml:lang="en">Save Settings</value>
+        <value xml:lang="de">Einstellungen speichern</value>
+    </property>
+</resource>

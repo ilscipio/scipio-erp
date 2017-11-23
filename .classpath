@@ -155,6 +155,7 @@
     <classpathentry kind="src" path="specialpurpose/assetmaint/src"/>
     <classpathentry kind="src" path="specialpurpose/demosuite/src"/>
     <classpathentry kind="src" path="applications/solr/src"/>
+    <classpathentry kind="src" path="applications/cms/src"/>
     <classpathentry kind="src" path="applications/shop/src"/>
     <classpathentry kind="src" path="applications/setup/src"/>
     <classpathentry exported="true" kind="con" path="GROOVY_SUPPORT"/>

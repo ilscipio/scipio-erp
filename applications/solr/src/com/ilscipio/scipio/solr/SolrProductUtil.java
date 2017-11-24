@@ -706,8 +706,7 @@ public abstract class SolrProductUtil {
             if (targetLocaleString.equalsIgnoreCase(thisLocaleString)) {
                 targetContent = content;
             } else {
-                // FIXME: useCache can't propagate here!
-                GenericValue altContent = ContentWorker.findAlternateLocaleContent(delegator, content, locale);
+                GenericValue altContent = ContentWorker.findAlternateLocaleContent(delegator, content, locale, null, useCache);
                 if (altContent != null && !contentId.equals(altContent.getString("contentId"))) {
                     targetContent = altContent;
                 }

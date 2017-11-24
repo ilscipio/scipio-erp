@@ -40,6 +40,7 @@ import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.content.ContentManagementWorker;
@@ -401,9 +402,9 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
     }
 
     public static GenericValue findAlternateLocaleContent(Delegator delegator, GenericValue view, Locale locale) {
-        GenericValue contentAssocDataResourceViewFrom = view;
+        GenericValue contentAssocDataResourceViewFrom = null;
         if (locale == null) {
-            return contentAssocDataResourceViewFrom;
+            return view;
         }
 
         String localeStr = locale.toString();
@@ -414,10 +415,15 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
             alternateViews = view.getRelated("ContentAssocDataResourceViewTo", UtilMisc.toMap("caContentAssocTypeId", "ALTERNATE_LOCALE"), UtilMisc.toList("-caFromDate"), true);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error finding alternate locale content: " + e.toString(), module);
-            return contentAssocDataResourceViewFrom;
+            return view;
         }
 
         alternateViews = EntityUtil.filterByDate(alternateViews, UtilDateTime.nowTimestamp(), "caFromDate", "caThruDate", true);
+        // also check the given view for a matching locale
+        // SCIPIO: NOTE: 2017-11-24: This .add was part of patch OFBIZ-9445 / r1800854 / https://svn.apache.org/repos/asf/ofbiz/branches/release16.11
+        // and it fixes the original concern I had with this method - not checking the source view first's localeString - so this part is good.
+        alternateViews.add(0, view);
+
         for (GenericValue thisView : alternateViews) {
             String currentLocaleString = thisView.getString("localeString");
             if (UtilValidate.isEmpty(currentLocaleString)) {
@@ -454,6 +460,18 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
                     }
                 }
             }
+        }
+
+        if (contentAssocDataResourceViewFrom == null) {
+            // SCIPIO: NOTE: 2017-11-24: This check was part of patch OFBIZ-9445 / r1800854 / https://svn.apache.org/repos/asf/ofbiz/branches/release16.11
+            // TODO: REVIEW: I'm not sure we truly want the commented code below, 
+            // because nothing else in ContentWorker ever uses the property fallback locale.
+            //// no content matching the given locale found.
+            //Locale fallbackLocale = UtilProperties.getFallbackLocale();
+            //contentAssocDataResourceViewFrom = locale.equals(fallbackLocale) ? view
+            //        // only search for a content with the fallbackLocale if it is different to the given locale
+            //        : findAlternateLocaleContent(delegator, view, fallbackLocale);
+            contentAssocDataResourceViewFrom = view; // SCIPIO: TODO: REVIEW: always fall back on the original for now...
         }
 
         return contentAssocDataResourceViewFrom;

@@ -21,12 +21,11 @@ package org.ofbiz.order.order;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-
-import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -115,10 +114,14 @@ public class OrderContentWrapper implements ContentWrapper {
             }
 
             Writer outWriter = new StringWriter();
-            getOrderContentAsText(null, null, order, orderContentTypeId, locale, mimeTypeId, delegator, dispatcher, outWriter);
+            getOrderContentAsText(null, null, order, orderContentTypeId, locale, mimeTypeId, delegator, dispatcher, outWriter, false);
             String outString = outWriter.toString();
-            if (outString.length() > 0) {
-                outString = orderContentCache.putIfAbsentAndGet(cacheKey, encoder.encode(outString));
+            if (UtilValidate.isEmpty(outString)) {
+                outString = outString == null? "" : outString;
+            }
+            outString = encoder.encode(outString);
+            if (orderContentCache != null) {
+                orderContentCache.put(cacheKey, outString);
             }
             return outString;
 
@@ -132,6 +135,10 @@ public class OrderContentWrapper implements ContentWrapper {
     }
 
     public static void getOrderContentAsText(String orderId, String orderItemSeqId, GenericValue order, String orderContentTypeId, Locale locale, String mimeTypeId, Delegator delegator, LocalDispatcher dispatcher, Writer outWriter) throws GeneralException, IOException {
+        getOrderContentAsText(orderId, orderItemSeqId, order, orderContentTypeId, locale, mimeTypeId, delegator, dispatcher, outWriter, true);
+    }
+
+    public static void getOrderContentAsText(String orderId, String orderItemSeqId, GenericValue order, String orderContentTypeId, Locale locale, String mimeTypeId, Delegator delegator, LocalDispatcher dispatcher, Writer outWriter, boolean cache) throws GeneralException, IOException {
         if (orderId == null && order != null) {
             orderId = order.getString("orderId");
         }
@@ -152,13 +159,14 @@ public class OrderContentWrapper implements ContentWrapper {
                         "orderItemSeqId", orderItemSeqId,
                         "orderContentTypeId", orderContentTypeId)
                 .orderBy("-fromDate")
-                .cache().filterByDate().queryFirst();
+                .cache(cache).filterByDate().queryFirst();
         if (orderContent != null) {
             // when rendering the order content, always include the OrderHeader/OrderItem and OrderContent records that this comes from
-            Map<String, Object> inContext = FastMap.newInstance();
+            Map<String, Object> inContext = new HashMap<>();
             inContext.put("order", order);
             inContext.put("orderContent", orderContent);
-            ContentWorker.renderContentAsText(dispatcher, delegator, orderContent.getString("contentId"), outWriter, inContext, locale, mimeTypeId, null, null, false);
+            ContentWorker.renderContentAsText(dispatcher, delegator, orderContent.getString("contentId"), outWriter, inContext, locale, mimeTypeId, null, null, cache);
+            return;
         }
     }
 }

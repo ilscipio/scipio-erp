@@ -21,13 +21,12 @@ package org.ofbiz.product.category;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-
-import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -144,7 +143,7 @@ public class CategoryContentWrapper implements ContentWrapper {
     public static void getProductCategoryContentAsText(String productCategoryId, GenericValue productCategory, String prodCatContentTypeId, Locale locale, String mimeTypeId, Delegator delegator, LocalDispatcher dispatcher, Writer outWriter) throws GeneralException, IOException {
         getProductCategoryContentAsText(null, productCategory, prodCatContentTypeId, locale, mimeTypeId, delegator, dispatcher, outWriter, true);
     }
-    
+
     public static void getProductCategoryContentAsText(String productCategoryId, GenericValue productCategory, String prodCatContentTypeId, Locale locale, String mimeTypeId, Delegator delegator, LocalDispatcher dispatcher, Writer outWriter, boolean cache) throws GeneralException, IOException {
         if (productCategoryId == null && productCategory != null) {
             productCategoryId = productCategory.getString("productCategoryId");
@@ -160,21 +159,6 @@ public class CategoryContentWrapper implements ContentWrapper {
 
         if (delegator == null) {
             throw new GeneralRuntimeException("Unable to find a delegator to use!");
-        }
-
-        String candidateFieldName = ModelUtil.dbNameToVarName(prodCatContentTypeId);
-        ModelEntity categoryModel = delegator.getModelEntity("ProductCategory");
-        if (categoryModel.isField(candidateFieldName)) {
-            if (productCategory == null) {
-                productCategory = EntityQuery.use(delegator).from("ProductCategory").where("productCategoryId", productCategoryId).cache(cache).queryOne();
-            }
-            if (productCategory != null) {
-                String candidateValue = productCategory.getString(candidateFieldName);
-                if (UtilValidate.isNotEmpty(candidateValue)) {
-                    outWriter.write(candidateValue);
-                    return;
-                }
-            }
         }
 
         List<GenericValue> categoryContentList = EntityQuery.use(delegator).from("ProductCategoryContent").where("productCategoryId", productCategoryId, "prodCatContentTypeId", prodCatContentTypeId).orderBy("-fromDate").cache(cache).queryList();
@@ -198,10 +182,26 @@ public class CategoryContentWrapper implements ContentWrapper {
         }
         if (categoryContent != null) {
             // when rendering the category content, always include the Product Category and ProductCategoryContent records that this comes from
-            Map<String, Object> inContext = FastMap.newInstance();
+            Map<String, Object> inContext = new HashMap<>();
             inContext.put("productCategory", productCategory);
             inContext.put("categoryContent", categoryContent);
             ContentWorker.renderContentAsText(dispatcher, delegator, categoryContent.getString("contentId"), outWriter, inContext, locale, mimeTypeId, null, null, cache);
+            return;
+        }
+        
+        String candidateFieldName = ModelUtil.dbNameToVarName(prodCatContentTypeId);
+        ModelEntity categoryModel = delegator.getModelEntity("ProductCategory");
+        if (categoryModel.isField(candidateFieldName)) {
+            if (productCategory == null) {
+                productCategory = EntityQuery.use(delegator).from("ProductCategory").where("productCategoryId", productCategoryId).cache(cache).queryOne();
+            }
+            if (productCategory != null) {
+                String candidateValue = productCategory.getString(candidateFieldName);
+                if (UtilValidate.isNotEmpty(candidateValue)) {
+                    outWriter.write(candidateValue);
+                    return;
+                }
+            }
         }
     }
     

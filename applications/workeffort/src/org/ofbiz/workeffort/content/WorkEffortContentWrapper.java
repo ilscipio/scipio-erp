@@ -48,8 +48,6 @@ import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelUtil;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.LocalDispatcher;
-import javolution.util.FastMap;
-import javolution.util.FastList;
 
 /**
  * WorkEffortContentWrapper; gets work effort content for display
@@ -107,7 +105,7 @@ public class WorkEffortContentWrapper implements ContentWrapper {
      * @return String containing the contentId
      */
     public String getContentId(String contentTypeId) {
-        GenericValue workEffortContent = getFirstWorkEffortContentByType(null, workEffort, contentTypeId, workEffort.getDelegator());
+        GenericValue workEffortContent = getFirstWorkEffortContentByType(null, workEffort, contentTypeId, workEffort.getDelegator(), true);
         if (workEffortContent != null) {
             return workEffortContent.getString("contentId");
         } else {
@@ -121,7 +119,7 @@ public class WorkEffortContentWrapper implements ContentWrapper {
      * @return String containing the name of the content record
      */
     public String getContentName(String contentTypeId) {
-        GenericValue workEffortContent = getFirstWorkEffortContentByType(null, workEffort, contentTypeId, workEffort.getDelegator());
+        GenericValue workEffortContent = getFirstWorkEffortContentByType(null, workEffort, contentTypeId, workEffort.getDelegator(), true);
         if (workEffortContent != null) {
             GenericValue content;
             try {
@@ -145,7 +143,7 @@ public class WorkEffortContentWrapper implements ContentWrapper {
      * @return Timestamp of the fromDate field for this content type
      */
     public Timestamp getFromDate(String contentTypeId) {
-        GenericValue workEffortContent = getFirstWorkEffortContentByType(null, workEffort, contentTypeId, workEffort.getDelegator());
+        GenericValue workEffortContent = getFirstWorkEffortContentByType(null, workEffort, contentTypeId, workEffort.getDelegator(), true);
         if (workEffortContent != null) {
             return workEffortContent.getTimestamp("fromDate");
         } else {
@@ -154,7 +152,7 @@ public class WorkEffortContentWrapper implements ContentWrapper {
     }
 
     public String getDataResourceId(String contentTypeId) {
-        GenericValue workEffortContent = getFirstWorkEffortContentByType(null, workEffort, contentTypeId, workEffort.getDelegator());
+        GenericValue workEffortContent = getFirstWorkEffortContentByType(null, workEffort, contentTypeId, workEffort.getDelegator(), true);
         if (workEffortContent != null) {
             GenericValue content;
             try {
@@ -260,14 +258,17 @@ public class WorkEffortContentWrapper implements ContentWrapper {
             }
 
             Writer outWriter = new StringWriter();
-            getWorkEffortContentAsText(contentId, null, workEffort, workEffortContentTypeId, locale, mimeTypeId, delegator, dispatcher, outWriter);
+            getWorkEffortContentAsText(contentId, null, workEffort, workEffortContentTypeId, locale, mimeTypeId, delegator, dispatcher, outWriter, false);
             String outString = outWriter.toString();
-            if (outString.length() > 0) {
-                return workEffortContentCache.putIfAbsentAndGet(cacheKey, encoder.encode(outString));
-            } else {
-                String candidateOut = workEffort.getModelEntity().isField(candidateFieldName) ? workEffort.getString(candidateFieldName): "";
-                return candidateOut == null? "" : encoder.encode(candidateOut);
+            if (UtilValidate.isEmpty(outString)) {
+                outString = workEffort.getModelEntity().isField(candidateFieldName) ? workEffort.getString(candidateFieldName): "";
+                outString = outString == null? "" : outString;
             }
+            outString = encoder.encode(outString);
+            if (workEffortContentCache != null) {
+                workEffortContentCache.put(cacheKey, outString);
+            }
+            return outString;
         } catch (GeneralException e) {
             Debug.logError(e, "Error rendering WorkEffortContent, inserting empty String", module);
             String candidateOut = workEffort.getModelEntity().isField(candidateFieldName) ? workEffort.getString(candidateFieldName): "";
@@ -280,6 +281,10 @@ public class WorkEffortContentWrapper implements ContentWrapper {
     }
 
     public static void getWorkEffortContentAsText(String contentId, String workEffortId, GenericValue workEffort, String workEffortContentTypeId, Locale locale, String mimeTypeId, Delegator delegator, LocalDispatcher dispatcher, Writer outWriter) throws GeneralException, IOException {
+        getWorkEffortContentAsText(contentId, null, workEffort, workEffortContentTypeId, locale, mimeTypeId, delegator, dispatcher, outWriter, true);
+    }
+
+    public static void getWorkEffortContentAsText(String contentId, String workEffortId, GenericValue workEffort, String workEffortContentTypeId, Locale locale, String mimeTypeId, Delegator delegator, LocalDispatcher dispatcher, Writer outWriter, boolean cache) throws GeneralException, IOException {
         if (workEffortId == null && workEffort != null) {
             workEffortId = workEffort.getString("workEffortId");
         }
@@ -296,12 +301,28 @@ public class WorkEffortContentWrapper implements ContentWrapper {
             throw new GeneralRuntimeException("Unable to find a delegator to use!");
         }
 
+        // Honor work effort content over WorkEffort entity fields.
+        GenericValue workEffortContent;
+        if (contentId != null) {
+            workEffortContent = EntityQuery.use(delegator).from("WorkEffortContent").where("workEffortId", workEffortId, "contentId", contentId).cache(cache).queryOne();
+        } else {
+            workEffortContent = getFirstWorkEffortContentByType(workEffortId, workEffort, workEffortContentTypeId, delegator, cache);
+        }
+        if (workEffortContent != null) {
+            // when rendering the product content, always include the Product and ProductContent records that this comes from
+            Map<String, Object> inContext = new HashMap<>();
+            inContext.put("workEffort", workEffort);
+            inContext.put("workEffortContent", workEffortContent);
+            ContentWorker.renderContentAsText(dispatcher, delegator, workEffortContent.getString("contentId"), outWriter, inContext, locale, mimeTypeId, null, null, cache);
+            return;
+        }
+        
         // check for workeffort field
         String candidateFieldName = ModelUtil.dbNameToVarName(workEffortContentTypeId);
         ModelEntity workEffortModel = delegator.getModelEntity("WorkEffort");
         if (workEffortModel != null && workEffortModel.isField(candidateFieldName)) {
             if (workEffort == null) {
-                workEffort = EntityQuery.use(delegator).from("WorkEffort").where("workEffortId", workEffortId).cache().queryOne();
+                workEffort = EntityQuery.use(delegator).from("WorkEffort").where("workEffortId", workEffortId).cache(cache).queryOne();
             }
             if (workEffort != null) {
                 String candidateValue = workEffort.getString(candidateFieldName);
@@ -310,21 +331,6 @@ public class WorkEffortContentWrapper implements ContentWrapper {
                     return;
                 }
             }
-        }
-
-        // otherwise check content record
-        GenericValue workEffortContent;
-        if (contentId != null) {
-            workEffortContent = EntityQuery.use(delegator).from("WorkEffortContent").where("workEffortId", workEffortId, "contentId", contentId).cache().queryOne();
-        } else {
-            workEffortContent = getFirstWorkEffortContentByType(workEffortId, workEffort, workEffortContentTypeId, delegator);
-        }
-        if (workEffortContent != null) {
-            // when rendering the product content, always include the Product and ProductContent records that this comes from
-            Map<String, Object> inContext = FastMap.newInstance();
-            inContext.put("workEffort", workEffort);
-            inContext.put("workEffortContent", workEffortContent);
-            ContentWorker.renderContentAsText(dispatcher, delegator, workEffortContent.getString("contentId"), outWriter, inContext, locale, mimeTypeId, null, null, false);
         }
     }
 
@@ -336,11 +342,11 @@ public class WorkEffortContentWrapper implements ContentWrapper {
                 .filterByDate()
                 .queryList();
 
-        List<String> contentList = FastList.newInstance();
+        List<String> contentList = new LinkedList<>();
         if (partyContentList != null) {
             for (GenericValue workEffortContent: partyContentList) {
                 StringWriter outWriter = new StringWriter();
-                Map<String, Object> inContext = FastMap.newInstance();
+                Map<String, Object> inContext = new HashMap<>();
                 inContext.put("workEffort", workEffort);
                 inContext.put("workEffortContent", workEffortContent);
                 ContentWorker.renderContentAsText(dispatcher, delegator, workEffortContent.getString("contentId"), outWriter, inContext, locale, mimeTypeId, null, null, false);
@@ -351,7 +357,7 @@ public class WorkEffortContentWrapper implements ContentWrapper {
         return contentList;
     }
 
-    public static GenericValue getFirstWorkEffortContentByType(String workEffortId, GenericValue workEffort, String workEffortContentTypeId, Delegator delegator) {
+    public static GenericValue getFirstWorkEffortContentByType(String workEffortId, GenericValue workEffort, String workEffortContentTypeId, Delegator delegator, boolean cache) {
         if (workEffortId == null && workEffort != null) {
             workEffortId = workEffort.getString("workEffortId");
         }
@@ -370,12 +376,17 @@ public class WorkEffortContentWrapper implements ContentWrapper {
                                     .where("workEffortId", workEffortId, "workEffortContentTypeId", workEffortContentTypeId)
                                     .orderBy("-fromDate")
                                     .filterByDate()
-                                    .cache(true)
+                                    .cache(cache)
                                     .queryFirst();
         } catch (GeneralException e) {
             Debug.logError(e, module);
         }
         return workEffortContent;
+    }
+    
+    // SCIPIO: backward-compat
+    public static GenericValue getFirstWorkEffortContentByType(String workEffortId, GenericValue workEffort, String workEffortContentTypeId, Delegator delegator) {
+        return getFirstWorkEffortContentByType(workEffortId, workEffort, workEffortContentTypeId, delegator, true);
     }
 
     public static WorkEffortContentWrapper makeWorkEffortContentWrapper(GenericValue workEffort, HttpServletRequest request) {

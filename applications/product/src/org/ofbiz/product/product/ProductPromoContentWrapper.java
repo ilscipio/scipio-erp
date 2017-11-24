@@ -22,13 +22,12 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-
-import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -136,12 +135,15 @@ public class ProductPromoContentWrapper implements ContentWrapper {
             Writer outWriter = new StringWriter();
             getProductPromoContentAsText(null, productPromo, productPromoContentTypeId, locale, mimeTypeId, partyId, roleTypeId, delegator, dispatcher, outWriter);
             String outString = outWriter.toString();
-            if (outString.length() > 0) {
-                return productPromoContentCache.putIfAbsentAndGet(cacheKey, encoder.encode(outString));
-            } else {
-                String candidateOut = productPromo.getModelEntity().isField(candidateFieldName) ? productPromo.getString(candidateFieldName): "";
-                return candidateOut == null? "" : encoder.encode(candidateOut);
+            if (UtilValidate.isEmpty(outString)) {
+                outString = productPromo.getModelEntity().isField(candidateFieldName) ? productPromo.getString(candidateFieldName): "";
+                outString = outString == null? "" : outString;
             }
+            outString = encoder.encode(outString);
+            if (productPromoContentCache != null) {
+                productPromoContentCache.put(cacheKey, outString);
+            }
+            return outString;
         } catch (GeneralException e) {
             Debug.logError(e, "Error rendering ProductPromoContent, inserting empty String", module);
             String candidateOut = productPromo.getModelEntity().isField(candidateFieldName) ? productPromo.getString(candidateFieldName): "";
@@ -154,11 +156,15 @@ public class ProductPromoContentWrapper implements ContentWrapper {
     }
 
     public static void getProductPromoContentAsText(String productPromoId, GenericValue productPromo, String productPromoContentTypeId, Locale locale, String mimeTypeId, String partyId, String roleTypeId, Delegator delegator, LocalDispatcher dispatcher, Writer outWriter) throws GeneralException, IOException {
-        if (UtilValidate.isEmpty(productPromoId) && UtilValidate.isNotEmpty(productPromo)) {
+        getProductPromoContentAsText(productPromoId, productPromo, productPromoContentTypeId, locale, mimeTypeId, partyId, roleTypeId, delegator, dispatcher, outWriter, true);
+    }
+
+    public static void getProductPromoContentAsText(String productPromoId, GenericValue productPromo, String productPromoContentTypeId, Locale locale, String mimeTypeId, String partyId, String roleTypeId, Delegator delegator, LocalDispatcher dispatcher, Writer outWriter, boolean cache) throws GeneralException, IOException {
+        if (UtilValidate.isEmpty(productPromoId) && productPromo != null) {
             productPromoId = productPromo.getString("productPromoId");
         }
 
-        if (UtilValidate.isEmpty(delegator) && UtilValidate.isNotEmpty(productPromo)) {
+        if (UtilValidate.isEmpty(delegator) && productPromo != null) {
             delegator = productPromo.getDelegator();
         }
 
@@ -170,37 +176,38 @@ public class ProductPromoContentWrapper implements ContentWrapper {
             throw new GeneralRuntimeException("Unable to find a delegator to use!");
         }
 
+        List<EntityExpr> exprs = new ArrayList<EntityExpr>();
+        exprs.add(EntityCondition.makeCondition("productPromoId", EntityOperator.EQUALS, productPromoId));
+        exprs.add(EntityCondition.makeCondition("productPromoContentTypeId", EntityOperator.EQUALS, productPromoContentTypeId));
+
+        List<GenericValue> productPromoContentList = EntityQuery.use(delegator).from("ProductPromoContent").where(EntityCondition.makeCondition(exprs, EntityOperator.AND)).orderBy("-fromDate").cache(cache).queryList();
+        GenericValue productPromoContent = null;
+        if (UtilValidate.isNotEmpty(productPromoContentList)) {
+            productPromoContent = EntityUtil.getFirst(EntityUtil.filterByDate(productPromoContentList));
+        }
+
+        if (productPromoContent != null) {
+            // when rendering the product promo content, always include the ProductPromo and ProductPromoContent records that this comes from
+            Map<String, Object> inContext = new HashMap<>();
+            inContext.put("productPromo", productPromo);
+            inContext.put("productPromoContent", productPromoContent);
+            ContentWorker.renderContentAsText(dispatcher, delegator, productPromoContent.getString("contentId"), outWriter, inContext, locale, mimeTypeId, partyId, roleTypeId, cache);
+            return;
+        }
+        
         String candidateFieldName = ModelUtil.dbNameToVarName(productPromoContentTypeId);
         ModelEntity productModel = delegator.getModelEntity("ProductPromo");
         if (productModel.isField(candidateFieldName)) {
-            if (UtilValidate.isEmpty(productPromo)) {
-                productPromo = EntityQuery.use(delegator).from("ProductPromo").where("productPromoId", productPromoId).cache().queryOne();
+            if (productPromo == null) {
+                productPromo = EntityQuery.use(delegator).from("ProductPromo").where("productPromoId", productPromoId).cache(cache).queryOne();
             }
-            if (UtilValidate.isNotEmpty(productPromo)) {
+            if (productPromo != null) {
                 String candidateValue = productPromo.getString(candidateFieldName);
                 if (UtilValidate.isNotEmpty(candidateValue)) {
                     outWriter.write(candidateValue);
                     return;
                 } 
             }
-        }
-
-        List<EntityExpr> exprs = new ArrayList<EntityExpr>();
-        exprs.add(EntityCondition.makeCondition("productPromoId", EntityOperator.EQUALS, productPromoId));
-        exprs.add(EntityCondition.makeCondition("productPromoContentTypeId", EntityOperator.EQUALS, productPromoContentTypeId));
-
-        List<GenericValue> productPromoContentList = EntityQuery.use(delegator).from("ProductPromoContent").where(EntityCondition.makeCondition(exprs, EntityOperator.AND)).orderBy("-fromDate").cache(true).queryList();
-        GenericValue productPromoContent = null;
-        if (UtilValidate.isNotEmpty(productPromoContentList)) {
-            productPromoContent = EntityUtil.getFirst(EntityUtil.filterByDate(productPromoContentList));
-        }
-
-        if (UtilValidate.isNotEmpty(productPromoContent)) {
-            // when rendering the product promo content, always include the ProductPromo and ProductPromoContent records that this comes from
-            Map<String, Object> inContext = FastMap.newInstance();
-            inContext.put("productPromo", productPromo);
-            inContext.put("productPromoContent", productPromoContent);
-            ContentWorker.renderContentAsText(dispatcher, delegator, productPromoContent.getString("contentId"), outWriter, inContext, locale, mimeTypeId, partyId, roleTypeId, true);
         }
     }
 }

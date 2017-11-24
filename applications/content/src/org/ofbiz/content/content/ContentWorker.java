@@ -401,7 +401,20 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
         }
     }
 
-    public static GenericValue findAlternateLocaleContent(Delegator delegator, GenericValue view, Locale locale) {
+    /**
+     * Finds alternate locale content (as ContentAssocDataResourceViewTo) for the given content, or returns the passed content view if none.
+     * <p>
+     * SCIPIO: Modified for cache=true and OPTIONAL useFallbackLocale flag, and currently uses PARTIAL ofbiz 16 patch to make sure the original
+     * view's locale is included in the checks.
+     * TODO: REVIEW: unlike ofbiz 16, useFallbackLocale (fallback on properties fallback locale) is currently left DISABLED BY DEFAULT, 
+     * because changing this here could drastically affect existing code (such as solr) and not clear even
+     * wanted in most cases.
+     * WARN: If you need to guarantee a specific behavior, simply pass explicit true or false to useFallbackLocale.
+     * @param useFallbackLocale if TRUE, prefer properties fallback locale over passed view as fallback;
+     *                          if FALSE, don't check properties fallback locale;
+     *                          if null, currently same as FALSE (WARN: could change in future)
+     */
+    public static GenericValue findAlternateLocaleContent(Delegator delegator, GenericValue view, Locale locale, Boolean useFallbackLocale, boolean cache) { // SCIPIO: 2017-11-24: added cache
         GenericValue contentAssocDataResourceViewFrom = null;
         if (locale == null) {
             return view;
@@ -412,13 +425,13 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
 
         List<GenericValue> alternateViews = null;
         try {
-            alternateViews = view.getRelated("ContentAssocDataResourceViewTo", UtilMisc.toMap("caContentAssocTypeId", "ALTERNATE_LOCALE"), UtilMisc.toList("-caFromDate"), true);
+            alternateViews = view.getRelated("ContentAssocDataResourceViewTo", UtilMisc.toMap("caContentAssocTypeId", "ALTERNATE_LOCALE"), UtilMisc.toList("-caFromDate"), cache);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error finding alternate locale content: " + e.toString(), module);
             return view;
         }
 
-        alternateViews = EntityUtil.filterByDate(alternateViews, UtilDateTime.nowTimestamp(), "caFromDate", "caThruDate", true);
+        alternateViews = EntityUtil.filterByDate(alternateViews, UtilDateTime.nowTimestamp(), "caFromDate", "caThruDate", cache);
         // also check the given view for a matching locale
         // SCIPIO: NOTE: 2017-11-24: This .add was part of patch OFBIZ-9445 / r1800854 / https://svn.apache.org/repos/asf/ofbiz/branches/release16.11
         // and it fixes the original concern I had with this method - not checking the source view first's localeString - so this part is good.
@@ -463,20 +476,32 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
         }
 
         if (contentAssocDataResourceViewFrom == null) {
-            // SCIPIO: NOTE: 2017-11-24: This check was part of patch OFBIZ-9445 / r1800854 / https://svn.apache.org/repos/asf/ofbiz/branches/release16.11
-            // TODO: REVIEW: I'm not sure we truly want the commented code below, 
-            // because nothing else in ContentWorker ever uses the property fallback locale.
-            //// no content matching the given locale found.
-            //Locale fallbackLocale = UtilProperties.getFallbackLocale();
-            //contentAssocDataResourceViewFrom = locale.equals(fallbackLocale) ? view
-            //        // only search for a content with the fallbackLocale if it is different to the given locale
-            //        : findAlternateLocaleContent(delegator, view, fallbackLocale);
-            contentAssocDataResourceViewFrom = view; // SCIPIO: TODO: REVIEW: always fall back on the original for now...
+            // SCIPIO: NOTE: 2017-11-24: The fallback locale support was part of patch OFBIZ-9445 / r1800854 / https://svn.apache.org/repos/asf/ofbiz/branches/release16.11
+            // TODO: REVIEW: Unlike ofbiz 16, I am leaving fallback locale fallback usage DISABLED BY DEFAULT,
+            // because nothing else in ContentWorker ever uses the property fallback locale and possible impacts.
+            if (Boolean.TRUE.equals(useFallbackLocale)) {
+                // no content matching the given locale found.
+                Locale fallbackLocale = UtilProperties.getFallbackLocale();
+                contentAssocDataResourceViewFrom = locale.equals(fallbackLocale) ? view
+                        // only search for a content with the fallbackLocale if it is different to the given locale
+                        : findAlternateLocaleContent(delegator, view, fallbackLocale);
+            } else {
+                contentAssocDataResourceViewFrom = view;
+            }
         }
 
         return contentAssocDataResourceViewFrom;
     }
 
+    /**
+     * Finds alternate locale content (as ContentAssocDataResourceViewTo) for the given content, or returns the passed content view if none.
+     * Uses cache=true by default.
+     * SCIPIO: NOTE: cache=true was the stock default (good).
+     */
+    public static GenericValue findAlternateLocaleContent(Delegator delegator, GenericValue view, Locale locale) {
+        return findAlternateLocaleContent(delegator, view, locale, null, true);
+    }
+    
     public static void traverse(Delegator delegator, GenericValue content, Timestamp fromDate, Timestamp thruDate, Map<String, Object> whenMap, int depthIdx, Map<String, Object> masterNode, String contentAssocTypeId, List<GenericValue> pickList, String direction) {
         //String startContentAssocTypeId = null;
         String contentTypeId = null;

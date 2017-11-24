@@ -152,7 +152,7 @@ $(document).ready(function() {
 } + toSimpleMap(egltTreeSettings!{})>
 
 <#-- Content -->
-<@fieldset collapsed=false collapsible=true title="Configure GL Accounts">
+
 <@row>
     <#-- JSTree displaying all content nodes -->
     <@cell medium=9 large=9>
@@ -202,6 +202,3 @@ $(document).ready(function() {
       <@egltMarkupOut dir=egltExtrasArea!/>      
 	</@cell>
 </@row>
-</@fieldset>
-
-

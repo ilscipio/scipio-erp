@@ -13,29 +13,22 @@
 <#assign params = paramMaps.values>
 <#assign fixedParams = paramMaps.fixedValues>
 
-
-<#-- CORE INCLUDE -->
-<@fieldset collapsed=true collapsible=true title="Configure Fiscal Periods">
-<@row>
-    <@cell medium=12 large=12>
-		<@section title=uiLabelMap.AccountingTimePeriod>		
-			<@form method="get" action=makeOfbizUrl("setupAccounting") id="setupAccounting-selectTimePeriod-form">
-			    <#-- TODO: REVIEW: may make a difference later -->
-			    <@defaultWizardFormFields exclude=["topGlAccountId"]/>
-			    <#--<@field type="hidden" name="setupContinue" value="N"/> not needed yet-->
-			    
-			    <@field type="general" label=uiLabelMap.SetupAccountingSelectTimePeriod>
-			       <@field type="select" name="customTimePeriodId" id="setupAccounting-selectTimePeriod-select" class="+setupAccounting-selectTimePeriod-select" inline=true style="display:inline-block;">
-			            <option value="">[${uiLabelMap.SetupAccountingCreateNewTimePeriod}]</option>
-			            <option value="" disabled="disabled"></option>
-			              <#list timePeriods as timePeriod>
-			              	<#assign selected = (rawString(timePeriod.customTimePeriodId) == rawString(params.customTimePeriod!))>
-			                <option value="${timePeriod.customTimePeriodId!}"<#if selected> selected="selected"</#if>>${timePeriod.periodName!} [${timePeriod.customTimePeriodId!}]</option>
-			              </#list>
-			        </@field>
-			    </@field>
-			</@form>
-		</@section>
-	</@cell>
-</@row>
-</@fieldset>
+	
+	<@section title=uiLabelMap.AccountingTimePeriod>		
+		<@form method="get" action=makeOfbizUrl("setupAccounting") id="setupAccounting-selectTimePeriod-form">
+		    <#-- TODO: REVIEW: may make a difference later -->
+		    <@defaultWizardFormFields exclude=["topGlAccountId"]/>
+		    <#--<@field type="hidden" name="setupContinue" value="N"/> not needed yet-->
+		    
+		    <@field type="general" label=uiLabelMap.SetupAccountingSelectTimePeriod>
+		       <@field type="select" name="customTimePeriodId" id="setupAccounting-selectTimePeriod-select" class="+setupAccounting-selectTimePeriod-select" inline=true style="display:inline-block;">
+		            <option value="">[${uiLabelMap.SetupAccountingCreateNewTimePeriod}]</option>
+		            <option value="" disabled="disabled"></option>
+		              <#list timePeriods as timePeriod>
+		              	<#assign selected = (rawString(timePeriod.customTimePeriodId) == rawString(params.customTimePeriod!))>
+		                <option value="${timePeriod.customTimePeriodId!}"<#if selected> selected="selected"</#if>>${timePeriod.periodName!} [${timePeriod.customTimePeriodId!}]</option>
+		              </#list>
+		        </@field>
+		    </@field>
+		</@form>
+	</@section>		

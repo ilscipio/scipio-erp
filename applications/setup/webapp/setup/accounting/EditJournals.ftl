@@ -14,19 +14,35 @@
 <#assign fixedParams = paramMaps.fixedValues>
 
 
-<#-- CORE INCLUDE -->
-<@fieldset collapsed=true collapsible=true title="Configure Journal">
-	<@row>
-	    <@cell medium=12 large=12>
-			<@section title=uiLabelMap.AccountingJournalEntries>		
-				<@form method="get" action=makeOfbizUrl("setupAccounting") id="setupAccounting-selectJournalEntry-form">
-				    <#-- TODO: REVIEW: may make a difference later -->
-				    <@defaultWizardFormFields exclude=["topGlAccountId"]/>
-				    <#--<@field type="hidden" name="setupContinue" value="N"/> not needed yet-->
-				    
-				    
-				</@form>
-			</@section>
-		</@cell>
-	</@row>
-</@fieldset>
+<@section title=uiLabelMap.SetupAccountingTransactions>		
+	<@form method="get" action=makeOfbizUrl("setupAccounting") id="setupAccounting-selectJournalEntry-form">
+	    <#-- TODO: REVIEW: may make a difference later -->
+	    <@defaultWizardFormFields exclude=["topGlAccountId"]/>
+	    <#--<@field type="hidden" name="setupContinue" value="N"/> not needed yet-->
+		<@row>
+		    <@cell medium=9 large=9>
+		        <@section title="Journals">
+		        	<@table>
+		        		<@tr>
+		        			<#list glJournals as glJournal>
+			        			<@td>${glJournal.glJournalId!}</@td>
+			        			<@td>${glJournal.glJournalName!}</@td>
+		        			</#list>
+		        		</@tr>
+		        	</@table>
+		        </@section>  
+		    </@cell>
+		    <@cell medium=3 large=3>    
+		      <#-- ACTIONS MENU -->
+		      <@section title=uiLabelMap.CommonActions>	        
+		        <#-- MENU -->
+		        <ul class="side-nav">		       	
+		        	<li>
+		       			<@menuitem type="link" href="javascript:void(0);" text=uiLabelMap.CommonImport />
+		       		</li>
+		       	</ul>
+		      </@section>
+			</@cell>
+		</@row>
+	</@form>
+</@section>

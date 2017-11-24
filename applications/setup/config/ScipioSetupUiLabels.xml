@@ -132,6 +132,9 @@
     <property key="SetupSelectUserForSetup">
         <value xml:lang="en">Select User for Setup</value>
     </property>
+    <property key="SetupAccountingCreateNewModule">
+    	<value xml:lang="en">Configure a new accounting module</value>
+    </property>    
     <property key="SetupUseEmailAddress">
         <value xml:lang="en">Use email address</value>
     </property>
@@ -167,7 +170,18 @@
     	<value xml:lang="en">Quotes</value>
     </property>
     <property key="SetupAccountingCreateNewTimePeriod">
-    	<value xml:lang="en">CreateNewTimePeriod</value>
+    	<value xml:lang="en">Create new time period</value>
     </property>
+    <property key="SetupAccountingSelectTimePeriod">
+    	<value xml:lang="en">Select time period</value>
+    </property>
+    
+    <property key="SetupAccountingJournalEntries">
+    	<value xml:lang="en">Journal Entries</value>
+    </property>
+    <property key="SetupAccountingTransactions">
+    	<value xml:lang="en">Accounting Transactions</value>
+    </property>
+    
     
 </resource>

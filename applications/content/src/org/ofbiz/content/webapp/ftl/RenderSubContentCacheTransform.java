@@ -103,7 +103,7 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
         }
         // This order is taken so that the dataResourceType can be overridden in the transform arguments.
         String subDataResourceTypeId = (String)templateRoot.get("subDataResourceTypeId");
-        if (UtilValidate.isEmpty(subDataResourceTypeId)) {
+        if (UtilValidate.isEmpty(subDataResourceTypeId) && view != null ) {
             try {
                 subDataResourceTypeId = (String) view.get("drDataResourceTypeId");
             } catch (Exception e) {

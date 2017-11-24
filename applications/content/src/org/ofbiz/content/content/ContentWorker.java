@@ -484,7 +484,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
                 Locale fallbackLocale = UtilProperties.getFallbackLocale();
                 contentAssocDataResourceViewFrom = locale.equals(fallbackLocale) ? view
                         // only search for a content with the fallbackLocale if it is different to the given locale
-                        : findAlternateLocaleContent(delegator, view, fallbackLocale);
+                        : findAlternateLocaleContent(delegator, view, fallbackLocale, useFallbackLocale, cache);
             } else {
                 contentAssocDataResourceViewFrom = view;
             }

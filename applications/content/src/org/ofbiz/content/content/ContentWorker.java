@@ -119,7 +119,21 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
     // -------------------------------------
     // Content rendering methods
     // -------------------------------------
-    public static GenericValue findContentForRendering(Delegator delegator, String contentId, Locale locale, String partyId, String roleTypeId, boolean cache) throws GeneralException, IOException {
+    
+    /**
+     * Finds best content for rendering for the given locale.
+     * <p>
+     * SCIPIO: Added useFallbackLocale flag, deepCache flag.
+     * See {@link #findAlternateLocaleContent(Delegator, GenericValue, Locale, Boolean, boolean)} for
+     * description of useFallbackLocale flag.
+     * SCIPIO: 2017-11-24: TENTATIVE HONOR CACHE FLAG FIX: now honored in all queries, not just the first
+     * Content entity lookup.
+     * @param useFallbackLocale see {@link #findAlternateLocaleContent} for details
+     * @param cache whether to cache the basic entity lookups
+     * @param deepCache whether to cache the complex association lookups (NOTE: in stock ofbiz, this was always true)
+     *        currently, if null, defaults to TRUE, and NOT the value of cache flag (TODO: REVIEW)
+     */
+    public static GenericValue findContentForRendering(Delegator delegator, String contentId, Locale locale, String partyId, String roleTypeId, Boolean useFallbackLocale, boolean cache, Boolean deepCache) throws GeneralException, IOException {
         if (UtilValidate.isEmpty(contentId)) {
             Debug.logError("No content ID found.", module);
             return null;
@@ -128,7 +142,12 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
         if (content == null) {
             throw new GeneralException("No content found for content ID [" + contentId + "]");
         }
-
+        
+        // SCIPIO: TODO: REVIEW: changing this to value of cache has too large implications at current time;
+        // stock behavior was to use deepCache=true always; this could have led to bad calling code in turn...
+        //if (deepCache == null) deepCache = cache;
+        if (deepCache == null) deepCache = Boolean.TRUE; 
+        
         // if the content is a PUBLISH_POINT and the data resource is not defined; get the related content
         if ("WEB_SITE_PUB_PT".equals(content.get("contentTypeId")) && content.get("dataResourceId") == null) {
             GenericValue relContent = EntityQuery.use(delegator)
@@ -138,7 +157,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
                             "caContentAssocTypeId", "PUBLISH_LINK")
                     .orderBy("caFromDate")
                     .filterByDate("caFromDate", "caThruDate")
-                    .cache().queryFirst();
+                    .cache(deepCache).queryFirst(); // SCIPIO: honor cache flag
 
             if (relContent != null) {
                 content = relContent;
@@ -156,7 +175,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
 
             thisLocaleString = (thisLocaleString != null) ? thisLocaleString : "";
             if (targetLocaleString != null && !targetLocaleString.equalsIgnoreCase(thisLocaleString)) {
-                GenericValue altContent = ContentWorker.findAlternateLocaleContent(delegator, content, locale);
+                GenericValue altContent = ContentWorker.findAlternateLocaleContent(delegator, content, locale, useFallbackLocale, deepCache); // SCIPIO: useFallbackLocale, cache flag propagate
                 if (altContent != null) {
                     content = altContent;
                 }
@@ -167,17 +186,17 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
         if (partyId != null && roleTypeId != null) {
             List<GenericValue> alternateViews = null;
             try {
-                alternateViews = content.getRelated("ContentAssocDataResourceViewTo", UtilMisc.toMap("caContentAssocTypeId", "ALTERNATE_ROLE"), UtilMisc.toList("-caFromDate"), true);
+                alternateViews = content.getRelated("ContentAssocDataResourceViewTo", UtilMisc.toMap("caContentAssocTypeId", "ALTERNATE_ROLE"), UtilMisc.toList("-caFromDate"), deepCache); // SCIPIO: honor cache flag
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Error finding alternate content: " + e.toString(), module);
             }
 
-            alternateViews = EntityUtil.filterByDate(alternateViews, UtilDateTime.nowTimestamp(), "caFromDate", "caThruDate", true);
+            alternateViews = EntityUtil.filterByDate(alternateViews, UtilDateTime.nowTimestamp(), "caFromDate", "caThruDate", deepCache); // SCIPIO: honor cache flag
             for (GenericValue thisView : alternateViews) {
-                GenericValue altContentRole = EntityUtil.getFirst(EntityUtil.filterByDate(thisView.getRelated("ContentRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", roleTypeId), null, true)));
+                GenericValue altContentRole = EntityUtil.getFirst(EntityUtil.filterByDate(thisView.getRelated("ContentRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", roleTypeId), null, deepCache))); // SCIPIO: honor cache flag
                 GenericValue altContent = null;
                 if (UtilValidate.isNotEmpty(altContentRole)) {
-                    altContent = altContentRole.getRelatedOne("Content", true);
+                    altContent = altContentRole.getRelatedOne("Content", deepCache); // SCIPIO: honor cache flag
                     if (altContent != null) {
                         content = altContent;
                     }
@@ -187,8 +206,25 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
         return content;
     }
 
+    /**
+     * Finds best content for rendering for the given locale.
+     * <p>
+     * SCIPIO: useFallbackLocale null (default from {@link #findAlternateLocaleContent}).
+     * TODO: REVIEW: For stock ofbiz compatibility, this currently always passes deepCache=true.
+     * All original Ofbiz client code was written with this caching always enabled, so
+     * it is too drastic to simply change all code to honor original cache flag alone.
+     */
+    public static GenericValue findContentForRendering(Delegator delegator, String contentId, Locale locale, String partyId, String roleTypeId, boolean cache) throws GeneralException, IOException {
+        return findContentForRendering(delegator, contentId, locale, partyId, roleTypeId, null, cache, null);
+    }
+    
+    /**
+     * Renders context as text (core).
+     * <p>
+     * SCIPIO: 2017-11-24: Modified for deepCache and useFallbackLocale (see {@link #findContentForRendering}).
+     */
     public static void renderContentAsText(LocalDispatcher dispatcher, Delegator delegator, GenericValue content, Appendable out,
-            Map<String,Object>templateContext, Locale locale, String mimeTypeId, boolean cache, List<GenericValue> webAnalytics) throws GeneralException, IOException {
+            Map<String,Object>templateContext, Locale locale, String mimeTypeId, Boolean useFallbackLocale, boolean cache, Boolean deepCache, List<GenericValue> webAnalytics) throws GeneralException, IOException {
         // if the content has a service attached run the service
 
         String serviceName = content.getString("serviceName"); //Kept for backward compatibility
@@ -258,7 +294,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
             facade.setIsDecorated(true);
             templateContext.put("decoratedContent", facade); // decorated content
             templateContext.put("thisContent", decFacade); // decorator content
-            ContentWorker.renderContentAsText(dispatcher, delegator, contentDecoratorId, out, templateContext, locale, mimeTypeId, null, null, cache);
+            ContentWorker.renderContentAsText(dispatcher, delegator, contentDecoratorId, out, templateContext, locale, mimeTypeId, null, null, useFallbackLocale, cache, deepCache); // SCIPIO: new flags
         } else {
             // get the data resource info
             String templateDataResourceId = content.getString("templateDataResourceId");
@@ -335,6 +371,12 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
         }
     }
 
+    public static void renderContentAsText(LocalDispatcher dispatcher, Delegator delegator, GenericValue content, Appendable out,
+            Map<String,Object>templateContext, Locale locale, String mimeTypeId, boolean cache, List<GenericValue> webAnalytics) throws GeneralException, IOException {
+        // SCIPIO: now delegating
+        renderContentAsText(dispatcher, delegator, content, out, templateContext, locale, mimeTypeId, null, cache, null, webAnalytics);
+    }
+    
     public static String renderContentAsText(LocalDispatcher dispatcher, Delegator delegator, String contentId, Map<String, Object> templateContext,
             Locale locale, String mimeTypeId, boolean cache) throws GeneralException, IOException {
         Writer writer = new StringWriter();
@@ -369,6 +411,19 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
             Map<String, Object> templateContext, Locale locale, String mimeTypeId, String partyId, String roleTypeId, boolean cache) throws GeneralException, IOException {
         GenericValue content = ContentWorker.findContentForRendering(delegator, contentId, locale, partyId, roleTypeId, cache);
         ContentWorker.renderContentAsText(dispatcher, delegator, content, out, templateContext, locale, mimeTypeId, cache, null);
+    }
+    
+    /**
+     * Renders content as text.
+     * <p>
+     * SCIPIO: 2017-11-24: new overload with support for explicit deepCache flag and useFallbackLocale.
+     * See {@link #findAlternateLocaleContent} and other overloads for details.
+     * The other methods were all written with implicit deepCache=true even when cache=false was passed.
+     */
+    public static void renderContentAsText(LocalDispatcher dispatcher, Delegator delegator, String contentId, Appendable out,
+            Map<String, Object> templateContext, Locale locale, String mimeTypeId, String partyId, String roleTypeId, Boolean useFallbackLocale, boolean cache, Boolean deepCache) throws GeneralException, IOException {
+        GenericValue content = ContentWorker.findContentForRendering(delegator, contentId, locale, partyId, roleTypeId, useFallbackLocale, cache, deepCache);
+        ContentWorker.renderContentAsText(dispatcher, delegator, content, out, templateContext, locale, mimeTypeId, useFallbackLocale, cache, deepCache, null);
     }
 
     public static String renderSubContentAsText(LocalDispatcher dispatcher, Delegator delegator, String contentId, String mapKey, Map<String, Object> templateContext,

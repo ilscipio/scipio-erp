@@ -61,6 +61,7 @@ function getDependentDropdownValues(request, paramKey, paramField, targetField, 
                 jQuery.each(list, function(key, value){
                     if (typeof value == 'string') {
                         values = value.split(': ');
+                        // SCIPIO: TODO: REVIEW: should this be equality check? (selected == values[1]) see OFBIZ-7275 / r1802692 / https://svn.apache.org/repos/asf/ofbiz/branches/release16.11
                         if (selected && values[1].indexOf(selected) >= 0) { // Scipio: check fixed
                             optionList += '<option selected="selected" value="' + values[1] + '">' + values[0] + '</option>';
                         } else {

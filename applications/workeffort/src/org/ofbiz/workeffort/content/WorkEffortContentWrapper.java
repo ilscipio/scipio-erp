@@ -242,15 +242,17 @@ public class WorkEffortContentWrapper implements ContentWrapper {
 
         ContentSanitizer encoder = ContentLangUtil.getContentWrapperSanitizer(encoderType);
         String candidateFieldName = ModelUtil.dbNameToVarName(workEffortContentTypeId);
-        String cacheKey;
-        if (contentId != null) {
-            cacheKey = contentId + CACHE_KEY_SEPARATOR + locale + CACHE_KEY_SEPARATOR + mimeTypeId +
-                    CACHE_KEY_SEPARATOR + workEffort.get("workEffortId") + CACHE_KEY_SEPARATOR + encoder.getLang(); // SCIPIO: added encoder
-        } else {
-            cacheKey = workEffortContentTypeId + CACHE_KEY_SEPARATOR + locale + CACHE_KEY_SEPARATOR + mimeTypeId +
-                    CACHE_KEY_SEPARATOR + workEffort.get("workEffortId") + CACHE_KEY_SEPARATOR + encoder.getLang(); // SCIPIO: added encoder
+        String cacheKey = null;
+        if (useCache) { // SCIPIO: don't build cache key if disabled
+            if (contentId != null) {
+                cacheKey = contentId + CACHE_KEY_SEPARATOR + locale + CACHE_KEY_SEPARATOR + mimeTypeId +
+                        CACHE_KEY_SEPARATOR + workEffort.get("workEffortId") + CACHE_KEY_SEPARATOR + encoder.getLang(); // SCIPIO: added encoder
+            } else {
+                cacheKey = workEffortContentTypeId + CACHE_KEY_SEPARATOR + locale + CACHE_KEY_SEPARATOR + mimeTypeId +
+                        CACHE_KEY_SEPARATOR + workEffort.get("workEffortId") + CACHE_KEY_SEPARATOR + encoder.getLang(); // SCIPIO: added encoder
+            }
         }
-
+        
         try {
             if (useCache) {
                 String cachedValue = workEffortContentCache.get(cacheKey);
@@ -267,7 +269,7 @@ public class WorkEffortContentWrapper implements ContentWrapper {
                 outString = outString == null? "" : outString;
             }
             outString = encoder.encode(outString);
-            if (workEffortContentCache != null) {
+            if (useCache && workEffortContentCache != null) { // SCIPIO: CHANGED: useCache=false now prevents storage (stock code only prevented read)
                 workEffortContentCache.put(cacheKey, outString);
             }
             return outString;

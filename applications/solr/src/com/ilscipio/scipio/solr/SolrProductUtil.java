@@ -673,7 +673,7 @@ public abstract class SolrProductUtil {
         
         List<GenericValue> productContentList = EntityQuery.use(delegator).from("ProductContent").where("productId", productId, "productContentTypeId", productContentTypeId).orderBy("-fromDate").cache(useCache).filterByDate().queryList();
         if (UtilValidate.isEmpty(productContentList) && ("Y".equals(product.getString("isVariant")))) {
-            GenericValue parent = ProductWorker.getParentProduct(productId, delegator);
+            GenericValue parent = ProductWorker.getParentProduct(productId, delegator, useCache);
             if (UtilValidate.isNotEmpty(parent)) {
                 productContentList = EntityQuery.use(delegator).from("ProductContent").where("productId", parent.get("productId"), "productContentTypeId", productContentTypeId).orderBy("-fromDate").cache(useCache).filterByDate().queryList();
             }

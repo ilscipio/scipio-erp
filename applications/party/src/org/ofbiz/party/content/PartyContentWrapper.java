@@ -147,13 +147,15 @@ public class PartyContentWrapper implements ContentWrapper {
         
         ContentSanitizer encoder = ContentLangUtil.getContentWrapperSanitizer(encoderType);
         String candidateFieldName = ModelUtil.dbNameToVarName(partyContentTypeId);
-        String cacheKey;
-        if (contentId != null) {
-            cacheKey = contentId + CACHE_KEY_SEPARATOR + locale + CACHE_KEY_SEPARATOR + mimeTypeId +
-                    CACHE_KEY_SEPARATOR + party.get("partyId") + CACHE_KEY_SEPARATOR + encoder.getLang(); // SCIPIO: added encoder
-        } else {
-            cacheKey = partyContentTypeId + CACHE_KEY_SEPARATOR + locale + CACHE_KEY_SEPARATOR + mimeTypeId +
-                    CACHE_KEY_SEPARATOR + party.get("partyId") + CACHE_KEY_SEPARATOR + encoder.getLang(); // SCIPIO: added encoder
+        String cacheKey = null;
+        if (useCache) { // SCIPIO: don't build cache key if disabled
+            if (contentId != null) {
+                cacheKey = contentId + CACHE_KEY_SEPARATOR + locale + CACHE_KEY_SEPARATOR + mimeTypeId +
+                        CACHE_KEY_SEPARATOR + party.get("partyId") + CACHE_KEY_SEPARATOR + encoder.getLang(); // SCIPIO: added encoder
+            } else {
+                cacheKey = partyContentTypeId + CACHE_KEY_SEPARATOR + locale + CACHE_KEY_SEPARATOR + mimeTypeId +
+                        CACHE_KEY_SEPARATOR + party.get("partyId") + CACHE_KEY_SEPARATOR + encoder.getLang(); // SCIPIO: added encoder
+            }
         }
 
         try {
@@ -173,7 +175,7 @@ public class PartyContentWrapper implements ContentWrapper {
                 outString = outString == null? "" : outString;
             }
             outString = encoder.encode(outString);
-            if (partyContentCache != null) {
+            if (useCache && partyContentCache != null) { // SCIPIO: CHANGED: useCache=false now prevents storage (stock code only prevented read)
                 partyContentCache.put(cacheKey, outString);
             }
             return outString;

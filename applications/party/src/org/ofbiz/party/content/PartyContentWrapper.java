@@ -310,17 +310,20 @@ public class PartyContentWrapper implements ContentWrapper {
                     .where("partyId", partyId, "partyContentTypeId", partyContentTypeId)
                     .orderBy("-fromDate")
                     .cache(cache)
+                    .filterByDate() // SCIPIO: added
                     .queryList();
         } catch (GeneralException e) {
             Debug.logError(e, module);
         }
 
-        if (partyContentList != null) {
-            partyContentList = EntityUtil.filterByDate(partyContentList);
-            return EntityUtil.getFirst(partyContentList);
-        } else {
-            return null;
-        }
+        // SCIPIO: covered above
+        //if (partyContentList != null) {
+        //    partyContentList = EntityUtil.filterByDate(partyContentList);
+        //    return EntityUtil.getFirst(partyContentList);
+        //} else {
+        //    return null;
+        //}
+        return EntityUtil.getFirst(partyContentList); 
     }
 
     public static PartyContentWrapper makePartyContentWrapper(GenericValue party, HttpServletRequest request) {

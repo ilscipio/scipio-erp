@@ -180,11 +180,13 @@ public class ProductPromoContentWrapper implements ContentWrapper {
         exprs.add(EntityCondition.makeCondition("productPromoId", EntityOperator.EQUALS, productPromoId));
         exprs.add(EntityCondition.makeCondition("productPromoContentTypeId", EntityOperator.EQUALS, productPromoContentTypeId));
 
-        List<GenericValue> productPromoContentList = EntityQuery.use(delegator).from("ProductPromoContent").where(EntityCondition.makeCondition(exprs, EntityOperator.AND)).orderBy("-fromDate").cache(cache).queryList();
-        GenericValue productPromoContent = null;
-        if (UtilValidate.isNotEmpty(productPromoContentList)) {
-            productPromoContent = EntityUtil.getFirst(EntityUtil.filterByDate(productPromoContentList));
-        }
+        List<GenericValue> productPromoContentList = EntityQuery.use(delegator).from("ProductPromoContent").where(EntityCondition.makeCondition(exprs, EntityOperator.AND)).orderBy("-fromDate").cache(cache).filterByDate().queryList(); // SCIPIO: added filterByDate
+        // SCIPIO: covered by query and EntityUtil
+        //GenericValue productPromoContent = null;
+        //if (UtilValidate.isNotEmpty(productPromoContentList)) {
+        //    productPromoContent = EntityUtil.getFirst(EntityUtil.filterByDate(productPromoContentList));
+        //}
+        GenericValue productPromoContent = EntityUtil.getFirst(productPromoContentList);
 
         if (productPromoContent != null) {
             // when rendering the product promo content, always include the ProductPromo and ProductPromoContent records that this comes from

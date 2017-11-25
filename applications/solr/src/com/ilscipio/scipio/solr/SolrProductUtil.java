@@ -689,15 +689,24 @@ public abstract class SolrProductUtil {
             return;
         }
         
+        //boolean deepCache = useCache; // SCIPIO: SPECIAL: only way to prevent all caching
+        
         String thisLocaleString = (String) content.get("localeString");
         thisLocaleString = (thisLocaleString != null) ? thisLocaleString : "";
         // special case: no locale string: treat as general
-        if (thisLocaleString.isEmpty() && UtilValidate.isEmpty((String) contentMap.get(SolrLocaleUtil.I18N_GENERAL))) {
+        if (thisLocaleString.isEmpty()) { // 2017-11-24: this would actually have priority over entity field now:  && UtilValidate.isEmpty((String) contentMap.get(SolrLocaleUtil.I18N_GENERAL))
+            // NOTE: 2017-11-24: due to ContentWrapper changes, this case now has priority over the entity field for 
+            // the value of I18N_GENERAL
             GenericValue targetContent = content;
             Locale locale = defaultProductLocale;
             String res = getContentText(delegator, dispatcher, targetContent, product, productContent, locale, useCache);
             if (res.length() > 0) {
-                contentMap.put(SolrLocaleUtil.getLangCode(locale), res);
+                contentMap.put(SolrLocaleUtil.I18N_GENERAL, res);
+                // not needed anymore, because of ContentWrapper prio change and because
+                // refineLocalizedContentValues will copy it over anyway
+//                if (locale != null) {
+//                    contentMap.put(SolrLocaleUtil.getLangCode(locale), res);
+//                }
             }
         }
         for(Locale locale : locales) {
@@ -726,7 +735,8 @@ public abstract class SolrProductUtil {
         Map<String, Object> inContext = new HashMap<>();
         inContext.put("product", product);
         inContext.put("productContent", productContent);
-        ContentWorker.renderContentAsText(dispatcher, delegator, targetContent, out, inContext, locale, "text/plain", useCache, null);
+        boolean deepCache = useCache; // SCIPIO: SPECIAL: only way to prevent all caching
+        ContentWorker.renderContentAsText(dispatcher, delegator, targetContent, out, inContext, locale, "text/plain", null, useCache, deepCache, null);
         return out.toString();
     }
     

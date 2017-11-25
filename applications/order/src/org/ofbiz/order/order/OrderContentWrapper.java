@@ -63,6 +63,7 @@ public class OrderContentWrapper implements ContentWrapper {
     protected GenericValue order;
     protected Locale locale;
     protected String mimeTypeId;
+    protected boolean useCache = true; // SCIPIO
 
     public OrderContentWrapper(LocalDispatcher dispatcher, GenericValue order, Locale locale, String mimeTypeId) {
         this.dispatcher = dispatcher;
@@ -78,16 +79,25 @@ public class OrderContentWrapper implements ContentWrapper {
         this.mimeTypeId = "text/html";
     }
 
+    /**
+     * SCIPIO: Allows to disable the wrapper UtilCache for this wrapper.
+     * By default, wrapper cache is enabled for new instances.
+     */
+    public OrderContentWrapper setUseCache(boolean useCache) {
+        this.useCache = useCache;
+        return this;
+    }
+    
     // SCIPIO: changed return type, parameter, and encoding largely removed
     public String get(String orderContentTypeId, String encoderType) {
-        return getOrderContentAsText(order, orderContentTypeId, locale, mimeTypeId, order.getDelegator(), dispatcher, encoderType);
+        return getOrderContentAsText(order, orderContentTypeId, locale, mimeTypeId, order.getDelegator(), dispatcher, useCache, encoderType);
     }
 
     /**
      * SCIPIO: Version of overload that performs NO encoding. In most cases templates should do the encoding.
      */
     public String get(String orderContentTypeId) {
-        return getOrderContentAsText(order, orderContentTypeId, locale, mimeTypeId, order.getDelegator(), dispatcher, "raw");
+        return getOrderContentAsText(order, orderContentTypeId, locale, mimeTypeId, order.getDelegator(), dispatcher, useCache, "raw");
     }
     
     public static String getOrderContentAsText(GenericValue order, String orderContentTypeId, HttpServletRequest request, String encoderType) {
@@ -98,8 +108,26 @@ public class OrderContentWrapper implements ContentWrapper {
     public static String getOrderContentAsText(GenericValue order, String orderContentTypeId, Locale locale, LocalDispatcher dispatcher, String encoderType) {
         return getOrderContentAsText(order, orderContentTypeId, locale, null, null, dispatcher, encoderType);
     }
+    
+    /**
+     * SCIPIO: Gets content as text, with option to bypass wrapper cache.
+     */
+    public static String getOrderContentAsText(GenericValue order, String orderContentTypeId, Locale locale, LocalDispatcher dispatcher, boolean useCache, String encoderType) {
+        return getOrderContentAsText(order, orderContentTypeId, locale, null, null, dispatcher, useCache, encoderType);
+    }
 
+    /**
+     * Gets content as text, with wrapper cache enabled.
+     * SCIPIO: delegating.
+     */
     public static String getOrderContentAsText(GenericValue order, String orderContentTypeId, Locale locale, String mimeTypeId, Delegator delegator, LocalDispatcher dispatcher, String encoderType) {
+        return getOrderContentAsText(order, orderContentTypeId, locale, mimeTypeId, delegator, dispatcher, true, encoderType);
+    }
+
+    /**
+     * SCIPIO: Gets content as text, with option to bypass wrapper cache.
+     */
+    public static String getOrderContentAsText(GenericValue order, String orderContentTypeId, Locale locale, String mimeTypeId, Delegator delegator, LocalDispatcher dispatcher, boolean useCache, String encoderType) {
         /* caching: there is one cache created, "order.content"  Each order's content is cached with a key of
          * contentTypeId::locale::mimeType::orderId::orderItemSeqId, or whatever the SEPARATOR is defined above to be.
          */
@@ -107,11 +135,13 @@ public class OrderContentWrapper implements ContentWrapper {
 
         String orderItemSeqId = (order.getEntityName().equals("OrderItem")? order.getString("orderItemSeqId"): "_NA_");
 
-        String cacheKey = orderContentTypeId + SEPARATOR + locale + SEPARATOR + mimeTypeId + SEPARATOR + order.get("orderId") + SEPARATOR + orderItemSeqId + SEPARATOR + encoder.getLang() + SEPARATOR + delegator;
+        String cacheKey = (useCache) ? orderContentTypeId + SEPARATOR + locale + SEPARATOR + mimeTypeId + SEPARATOR + order.get("orderId") + SEPARATOR + orderItemSeqId + SEPARATOR + encoder.getLang() + SEPARATOR + delegator : null;
         try {
-            String cachedValue = orderContentCache.get(cacheKey);
-            if (cachedValue != null) {
-                return cachedValue;
+            if (useCache) {
+                String cachedValue = orderContentCache.get(cacheKey);
+                if (cachedValue != null) {
+                    return cachedValue;
+                }
             }
 
             Writer outWriter = new StringWriter();
@@ -121,11 +151,10 @@ public class OrderContentWrapper implements ContentWrapper {
                 outString = outString == null? "" : outString;
             }
             outString = encoder.encode(outString);
-            if (orderContentCache != null) {
+            if (useCache && orderContentCache != null) {
                 orderContentCache.put(cacheKey, outString);
             }
             return outString;
-
         } catch (GeneralException e) {
             Debug.logError(e, "Error rendering OrderContent, inserting empty String", module);
             return "";

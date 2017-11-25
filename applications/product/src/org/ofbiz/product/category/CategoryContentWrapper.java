@@ -64,6 +64,7 @@ public class CategoryContentWrapper implements ContentWrapper {
     protected GenericValue productCategory;
     protected Locale locale;
     protected String mimeTypeId;
+    protected boolean useCache = true; // SCIPIO
 
     public static CategoryContentWrapper makeCategoryContentWrapper(GenericValue productCategory, HttpServletRequest request) {
         return new CategoryContentWrapper(productCategory, request);
@@ -83,16 +84,25 @@ public class CategoryContentWrapper implements ContentWrapper {
         this.mimeTypeId = "text/html";
     }
 
+    /**
+     * SCIPIO: Allows to disable the wrapper UtilCache for this wrapper.
+     * By default, wrapper cache is enabled for new instances.
+     */
+    public CategoryContentWrapper setUseCache(boolean useCache) {
+        this.useCache = useCache;
+        return this;
+    }
+
     // SCIPIO: changed return type, parameter, and encoding largely removed
     public String get(String prodCatContentTypeId, String encoderType) {
-        return getProductCategoryContentAsText(productCategory, prodCatContentTypeId, locale, mimeTypeId, productCategory.getDelegator(), dispatcher, encoderType);
+        return getProductCategoryContentAsText(productCategory, prodCatContentTypeId, locale, mimeTypeId, productCategory.getDelegator(), dispatcher, useCache, encoderType);
     }
     
     /**
      * SCIPIO: Version of overload that performs NO encoding. In most cases templates should do the encoding.
      */
     public String get(String prodCatContentTypeId) {
-        return getProductCategoryContentAsText(productCategory, prodCatContentTypeId, locale, mimeTypeId, productCategory.getDelegator(), dispatcher, "raw");
+        return getProductCategoryContentAsText(productCategory, prodCatContentTypeId, locale, mimeTypeId, productCategory.getDelegator(), dispatcher, useCache, "raw");
     }
 
     public static String getProductCategoryContentAsText(GenericValue productCategory, String prodCatContentTypeId, HttpServletRequest request, String encoderType) {
@@ -103,16 +113,36 @@ public class CategoryContentWrapper implements ContentWrapper {
     public static String getProductCategoryContentAsText(GenericValue productCategory, String prodCatContentTypeId, Locale locale, LocalDispatcher dispatcher, String encoderType) {
         return getProductCategoryContentAsText(productCategory, prodCatContentTypeId, locale, null, null, dispatcher, encoderType);
     }
+    
+    /**
+     * SCIPIO: Gets content as text, with option to bypass wrapper cache.
+     */
+    public static String getProductCategoryContentAsText(GenericValue productCategory, String prodCatContentTypeId, Locale locale, LocalDispatcher dispatcher, boolean useCache, String encoderType) {
+        return getProductCategoryContentAsText(productCategory, prodCatContentTypeId, locale, null, null, dispatcher, useCache, encoderType);
+    }
 
+    /**
+     * Gets content as text, with wrapper cache enabled.
+     * SCIPIO: delegating.
+     */
     public static String getProductCategoryContentAsText(GenericValue productCategory, String prodCatContentTypeId, Locale locale, String mimeTypeId, Delegator delegator, LocalDispatcher dispatcher, String encoderType) {
+        return getProductCategoryContentAsText(productCategory, prodCatContentTypeId, locale, dispatcher, true, encoderType);
+    }
+
+    /**
+     * SCIPIO: Gets content as text, with option to bypass wrapper cache.
+     */
+    public static String getProductCategoryContentAsText(GenericValue productCategory, String prodCatContentTypeId, Locale locale, String mimeTypeId, Delegator delegator, LocalDispatcher dispatcher, boolean useCache, String encoderType) {
         String candidateFieldName = ModelUtil.dbNameToVarName(prodCatContentTypeId);
         
         ContentSanitizer encoder = ContentLangUtil.getContentWrapperSanitizer(encoderType);
-        String cacheKey = prodCatContentTypeId + SEPARATOR + locale + SEPARATOR + mimeTypeId + SEPARATOR + productCategory.get("productCategoryId") + SEPARATOR + encoder.getLang() + SEPARATOR + delegator;
+        String cacheKey = (useCache) ? prodCatContentTypeId + SEPARATOR + locale + SEPARATOR + mimeTypeId + SEPARATOR + productCategory.get("productCategoryId") + SEPARATOR + encoder.getLang() + SEPARATOR + delegator : null;
         try {
-            String cachedValue = categoryContentCache.get(cacheKey);
-            if (cachedValue != null) {
-                return cachedValue;
+            if (useCache) {
+                String cachedValue = categoryContentCache.get(cacheKey);
+                if (cachedValue != null) {
+                    return cachedValue;
+                }
             }
             Writer outWriter = new StringWriter();
             getProductCategoryContentAsText(null, productCategory, prodCatContentTypeId, locale, mimeTypeId, delegator, dispatcher, outWriter, false);
@@ -122,7 +152,7 @@ public class CategoryContentWrapper implements ContentWrapper {
                 outString = outString == null? "" : outString;
             }
             outString = encoder.encode(outString);
-            if (categoryContentCache != null) {
+            if (useCache && categoryContentCache != null) {
                 categoryContentCache.put(cacheKey, outString);
             }
             return outString;

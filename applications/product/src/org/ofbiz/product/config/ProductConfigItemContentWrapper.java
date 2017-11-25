@@ -70,7 +70,7 @@ public class ProductConfigItemContentWrapper implements ContentWrapper, Serializ
     protected GenericValue productConfigItem;
     protected Locale locale;
     protected String mimeTypeId;
-
+    protected boolean useCache = true; // SCIPIO
 
     public static ProductConfigItemContentWrapper makeProductConfigItemContentWrapper(GenericValue productConfigItem, HttpServletRequest request) {
         return new ProductConfigItemContentWrapper(productConfigItem, request);
@@ -96,16 +96,25 @@ public class ProductConfigItemContentWrapper implements ContentWrapper, Serializ
         this.mimeTypeId = "text/html";
     }
 
+    /**
+     * SCIPIO: Allows to disable the wrapper UtilCache for this wrapper.
+     * By default, wrapper cache is enabled for new instances.
+     */
+    public ProductConfigItemContentWrapper setUseCache(boolean useCache) {
+        this.useCache = useCache;
+        return this;
+    }
+    
     // SCIPIO: changed return type, parameter, and encoding largely removed
     public String get(String confItemContentTypeId, String encoderType) {
-        return getProductConfigItemContentAsText(productConfigItem, confItemContentTypeId, locale, mimeTypeId, getDelegator(), getDispatcher(), encoderType);
+        return getProductConfigItemContentAsText(productConfigItem, confItemContentTypeId, locale, mimeTypeId, getDelegator(), getDispatcher(), useCache, encoderType);
     }
 
     /**
      * SCIPIO: Version of overload that performs NO encoding. In most cases templates should do the encoding.
      */
     public String get(String confItemContentTypeId) {
-        return getProductConfigItemContentAsText(productConfigItem, confItemContentTypeId, locale, mimeTypeId, getDelegator(), getDispatcher(), "raw");
+        return getProductConfigItemContentAsText(productConfigItem, confItemContentTypeId, locale, mimeTypeId, getDelegator(), getDispatcher(), useCache, "raw");
     }
     
     public Delegator getDelegator() {
@@ -130,15 +139,35 @@ public class ProductConfigItemContentWrapper implements ContentWrapper, Serializ
     public static String getProductConfigItemContentAsText(GenericValue productConfigItem, String confItemContentTypeId, Locale locale, LocalDispatcher dispatcher, String encoderType) {
         return getProductConfigItemContentAsText(productConfigItem, confItemContentTypeId, locale, null, null, dispatcher, encoderType);
     }
+    
+    /**
+     * SCIPIO: Gets content as text, with option to bypass wrapper cache.
+     */
+    public static String getProductConfigItemContentAsText(GenericValue productConfigItem, String confItemContentTypeId, Locale locale, LocalDispatcher dispatcher, boolean useCache, String encoderType) {
+        return getProductConfigItemContentAsText(productConfigItem, confItemContentTypeId, locale, null, null, dispatcher, useCache, encoderType);
+    }
 
+    /**
+     * Gets content as text, with wrapper cache enabled.
+     * SCIPIO: delegating.
+     */
     public static String getProductConfigItemContentAsText(GenericValue productConfigItem, String confItemContentTypeId, Locale locale, String mimeTypeId, Delegator delegator, LocalDispatcher dispatcher, String encoderType) {
+        return getProductConfigItemContentAsText(productConfigItem, confItemContentTypeId, locale, mimeTypeId, delegator, dispatcher, true, encoderType);
+    }
+    
+    /**
+     * SCIPIO: Gets content as text, with option to bypass wrapper cache.
+     */
+    public static String getProductConfigItemContentAsText(GenericValue productConfigItem, String confItemContentTypeId, Locale locale, String mimeTypeId, Delegator delegator, LocalDispatcher dispatcher, boolean useCache, String encoderType) {
         ContentSanitizer encoder = ContentLangUtil.getContentWrapperSanitizer(encoderType);
         String candidateFieldName = ModelUtil.dbNameToVarName(confItemContentTypeId);
-        String cacheKey = confItemContentTypeId + SEPARATOR + locale + SEPARATOR + mimeTypeId + SEPARATOR + productConfigItem.get("configItemId") + SEPARATOR + encoder.getLang() + SEPARATOR + delegator;
+        String cacheKey = (useCache) ? confItemContentTypeId + SEPARATOR + locale + SEPARATOR + mimeTypeId + SEPARATOR + productConfigItem.get("configItemId") + SEPARATOR + encoder.getLang() + SEPARATOR + delegator : null;
         try {
-            String cachedValue = configItemContentCache.get(cacheKey);
-            if (cachedValue != null) {
-                return cachedValue;
+            if (useCache) {
+                String cachedValue = configItemContentCache.get(cacheKey);
+                if (cachedValue != null) {
+                    return cachedValue;
+                }
             }
             Writer outWriter = new StringWriter();
             getProductConfigItemContentAsText(null, productConfigItem, confItemContentTypeId, locale, mimeTypeId, delegator, dispatcher, outWriter, false);
@@ -148,7 +177,7 @@ public class ProductConfigItemContentWrapper implements ContentWrapper, Serializ
                 outString = outString == null? "" : outString;
             }
             outString = encoder.encode(outString);
-            if (configItemContentCache != null) {
+            if (useCache && configItemContentCache != null) {
                 configItemContentCache.put(cacheKey, outString);
             }
             return outString;

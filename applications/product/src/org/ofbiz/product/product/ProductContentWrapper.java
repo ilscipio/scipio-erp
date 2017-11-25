@@ -64,11 +64,12 @@ public class ProductContentWrapper implements ContentWrapper {
         return new ProductContentWrapper(product, request);
     }
 
-    LocalDispatcher dispatcher;
+    protected LocalDispatcher dispatcher;
     protected GenericValue product;
     protected Locale locale;
     protected String mimeTypeId;
-
+    protected boolean useCache = true; // SCIPIO
+    
     public ProductContentWrapper(LocalDispatcher dispatcher, GenericValue product, Locale locale, String mimeTypeId) {
         this.dispatcher = dispatcher;
         this.product = product;
@@ -83,13 +84,22 @@ public class ProductContentWrapper implements ContentWrapper {
         this.mimeTypeId = "text/html";
     }
 
+    /**
+     * SCIPIO: Allows to disable the wrapper UtilCache for this wrapper.
+     * By default, wrapper cache is enabled for new instances.
+     */
+    public ProductContentWrapper setUseCache(boolean useCache) {
+        this.useCache = useCache;
+        return this;
+    }
+    
     // SCIPIO: changed return type, parameter, and encoding largely removed
     public String get(String productContentTypeId, String encoderType) {
         if (this.product == null) {
             Debug.logWarning("Tried to get ProductContent for type [" + productContentTypeId + "] but the product field in the ProductContentWrapper is null", module);
             return null;
         }
-        return getProductContentAsText(this.product, productContentTypeId, locale, mimeTypeId, null, null, this.product.getDelegator(), dispatcher, encoderType);
+        return getProductContentAsText(this.product, productContentTypeId, locale, mimeTypeId, null, null, this.product.getDelegator(), dispatcher, useCache, encoderType);
     }
     
     /**
@@ -100,7 +110,7 @@ public class ProductContentWrapper implements ContentWrapper {
             Debug.logWarning("Tried to get ProductContent for type [" + productContentTypeId + "] but the product field in the ProductContentWrapper is null", module);
             return null;
         }
-        return getProductContentAsText(this.product, productContentTypeId, locale, mimeTypeId, null, null, this.product.getDelegator(), dispatcher, "raw");
+        return getProductContentAsText(this.product, productContentTypeId, locale, mimeTypeId, null, null, this.product.getDelegator(), dispatcher, useCache, "raw");
     }
 
     public static String getProductContentAsText(GenericValue product, String productContentTypeId, HttpServletRequest request, String encoderType) {
@@ -111,9 +121,28 @@ public class ProductContentWrapper implements ContentWrapper {
     public static String getProductContentAsText(GenericValue product, String productContentTypeId, Locale locale, LocalDispatcher dispatcher, String encoderType) {
         return getProductContentAsText(product, productContentTypeId, locale, null, null, null, null, dispatcher, encoderType);
     }
+    
+    /**
+     * SCIPIO: Gets content as text, with option to bypass wrapper cache.
+     */
+    public static String getProductContentAsText(GenericValue product, String productContentTypeId, Locale locale, LocalDispatcher dispatcher, boolean useCache, String encoderType) {
+        return getProductContentAsText(product, productContentTypeId, locale, null, null, null, null, dispatcher, useCache, encoderType);
+    }
 
+    /**
+     * Gets content as text, with wrapper cache enabled.
+     * SCIPIO: delegating.
+     */
     public static String getProductContentAsText(GenericValue product, String productContentTypeId, Locale locale, String mimeTypeId, String partyId, 
             String roleTypeId, Delegator delegator, LocalDispatcher dispatcher, String encoderType) {
+        return getProductContentAsText(product, productContentTypeId, locale, mimeTypeId, partyId, roleTypeId, delegator, dispatcher, true, encoderType);
+    }
+    
+    /**
+     * SCIPIO: Gets content as text, with option to bypass wrapper cache.
+     */
+    public static String getProductContentAsText(GenericValue product, String productContentTypeId, Locale locale, String mimeTypeId, String partyId, 
+            String roleTypeId, Delegator delegator, LocalDispatcher dispatcher, boolean useCache, String encoderType) {
         if (product == null) {
             return null;
         }
@@ -123,11 +152,13 @@ public class ProductContentWrapper implements ContentWrapper {
         /* caching: there is one cache created, "product.content"  Each product's content is cached with a key of
          * contentTypeId::locale::mimeType::productId, or whatever the SEPARATOR is defined above to be.
          */
-        String cacheKey = productContentTypeId + SEPARATOR + locale + SEPARATOR + mimeTypeId + SEPARATOR + product.get("productId") + SEPARATOR + encoder.getLang() + SEPARATOR + delegator;
+        String cacheKey = (useCache) ? productContentTypeId + SEPARATOR + locale + SEPARATOR + mimeTypeId + SEPARATOR + product.get("productId") + SEPARATOR + encoder.getLang() + SEPARATOR + delegator : "";
         try {
-            String cachedValue = productContentCache.get(cacheKey);
-            if (cachedValue != null) {
-                return cachedValue;
+            if (useCache) {
+                String cachedValue = productContentCache.get(cacheKey);
+                if (cachedValue != null) {
+                    return cachedValue;
+                }
             }
 
             Writer outWriter = new StringWriter();
@@ -138,7 +169,7 @@ public class ProductContentWrapper implements ContentWrapper {
                 outString = outString == null? "" : outString;
             }
             outString = encoder.encode(outString);
-            if (productContentCache != null) {
+            if (useCache && productContentCache != null) {
                 productContentCache.put(cacheKey, outString);
             }
             return outString;

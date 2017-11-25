@@ -66,6 +66,7 @@ public class PartyContentWrapper implements ContentWrapper {
     protected GenericValue party;
     protected Locale locale;
     protected String mimeTypeId;
+    protected boolean useCache = true; // SCIPIO
 
     public PartyContentWrapper(LocalDispatcher dispatcher, GenericValue party, Locale locale, String mimeTypeId) {
         this.dispatcher = dispatcher;
@@ -81,6 +82,15 @@ public class PartyContentWrapper implements ContentWrapper {
         this.mimeTypeId = "text/html";
     }
 
+    /**
+     * SCIPIO: Allows to disable the wrapper UtilCache for this wrapper.
+     * By default, wrapper cache is enabled for new instances.
+     */
+    public PartyContentWrapper setUseCache(boolean useCache) {
+        this.useCache = useCache;
+        return this;
+    }
+    
     // interface implementation
     public String get(String contentTypeId, boolean useCache, String encoderType) {
         return getPartyContentAsText(party, contentTypeId, locale, mimeTypeId, party.getDelegator(), dispatcher, useCache, encoderType);
@@ -88,14 +98,14 @@ public class PartyContentWrapper implements ContentWrapper {
 
     // SCIPIO: changed return type, parameter, and encoding largely removed
     public String get(String contentTypeId, String encoderType) {
-        return get(contentTypeId, true, encoderType);
+        return get(contentTypeId, useCache, encoderType);
     }
     
     /**
      * SCIPIO: Version of overload that performs NO encoding. In most cases templates should do the encoding.
      */
     public String get(String contentTypeId) {
-        return get(contentTypeId, true, "raw");
+        return get(contentTypeId, useCache, "raw");
     }
 
     public String getId(String contentTypeId) {
@@ -132,6 +142,13 @@ public class PartyContentWrapper implements ContentWrapper {
 
     public static String getPartyContentAsText(GenericValue party, String partyContentId, Locale locale, LocalDispatcher dispatcher, String encoderType) {
         return getPartyContentAsText(party, partyContentId, null, locale, null, null, dispatcher, true, encoderType);
+    }
+    
+    /**
+     * SCIPIO: Gets content as text, with option to bypass wrapper cache.
+     */
+    public static String getPartyContentAsText(GenericValue party, String partyContentId, Locale locale, LocalDispatcher dispatcher, boolean useCache, String encoderType) {
+        return getPartyContentAsText(party, partyContentId, null, locale, null, null, dispatcher, useCache, encoderType);
     }
 
     public static String getPartyContentAsText(GenericValue party, String partyContentTypeId,

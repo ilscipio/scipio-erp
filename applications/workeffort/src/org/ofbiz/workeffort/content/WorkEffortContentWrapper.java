@@ -65,7 +65,8 @@ public class WorkEffortContentWrapper implements ContentWrapper {
     protected GenericValue workEffort;
     protected Locale locale;
     protected String mimeTypeId;
-
+    protected boolean useCache = true; // SCIPIO
+    
     public WorkEffortContentWrapper(LocalDispatcher dispatcher, GenericValue workEffort, Locale locale, String mimeTypeId) {
         this.dispatcher = dispatcher;
         this.workEffort = workEffort;
@@ -79,6 +80,15 @@ public class WorkEffortContentWrapper implements ContentWrapper {
         this.mimeTypeId = "text/html";
     }
 
+    /**
+     * SCIPIO: Allows to disable the wrapper UtilCache for this wrapper.
+     * By default, wrapper cache is enabled for new instances.
+     */
+    public WorkEffortContentWrapper setUseCache(boolean useCache) {
+        this.useCache = useCache;
+        return this;
+    }
+    
     // interface implementation(s)
     public String get(String workEffortContentId, boolean useCache, String encoderType) {
         return getWorkEffortContentAsText(workEffort, workEffortContentId, locale, mimeTypeId, workEffort.getDelegator(), dispatcher, useCache, encoderType);
@@ -91,14 +101,14 @@ public class WorkEffortContentWrapper implements ContentWrapper {
      */
     // SCIPIO: changed return type, parameter, and encoding largely removed
     public String get(String contentTypeId, String encoderType) {
-        return get(contentTypeId, true, encoderType);
+        return get(contentTypeId, useCache, encoderType);
     }
 
     /**
      * SCIPIO: Version of overload that performs NO encoding. In most cases templates should do the encoding.
      */
     public String get(String contentTypeId) {
-        return get(contentTypeId, true, "raw");
+        return get(contentTypeId, useCache, "raw");
     }
     
     /**

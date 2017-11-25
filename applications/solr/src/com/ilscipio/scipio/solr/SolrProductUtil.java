@@ -467,7 +467,7 @@ public abstract class SolrProductUtil {
             Map<String, ProductContentWrapper> pcwMap = new HashMap<>();
             List<ProductContentWrapper> pcwList = new ArrayList<>(locales.size());
             for(Locale locale : locales) {
-                ProductContentWrapper pcw = new ProductContentWrapper(dispatcher, product, locale, null);
+                ProductContentWrapper pcw = new ProductContentWrapper(dispatcher, product, locale, null, useCache);
                 pcwMap.put(SolrLocaleUtil.getLangCode(locale), pcw);
                 pcwList.add(pcw);
             }

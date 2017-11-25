@@ -212,7 +212,7 @@ public class PartyContentWrapper implements ContentWrapper {
         if (contentId != null) {
             partyContent = EntityQuery.use(delegator).from("PartyContent").where("partyId", partyId, "contentId", contentId).cache(cache).queryOne();
         } else {
-            partyContent = getFirstPartyContentByType(partyId, party, partyContentTypeId, delegator);
+            partyContent = getFirstPartyContentByType(partyId, party, partyContentTypeId, delegator, cache);
         }
         if (partyContent != null) {
             // when rendering the product content, always include the Product and ProductContent records that this comes from
@@ -258,11 +258,16 @@ public class PartyContentWrapper implements ContentWrapper {
         }
     }
 
-    public static List<String> getPartyContentTextList(GenericValue party, String partyContentTypeId, Locale locale, String mimeTypeId, Delegator delegator, LocalDispatcher dispatcher) throws GeneralException, IOException {
+    public static List<String> getPartyContentTextList(GenericValue party, String partyContentTypeId, Locale locale, String mimeTypeId, Delegator delegator, LocalDispatcher dispatcher) throws GeneralException, IOException { // SCIPIO: added cache flag
+        // SCIPIO: delegating
+        return getPartyContentTextList(party, partyContentTypeId, locale, mimeTypeId, delegator, dispatcher, true);
+    }
+
+    public static List<String> getPartyContentTextList(GenericValue party, String partyContentTypeId, Locale locale, String mimeTypeId, Delegator delegator, LocalDispatcher dispatcher, boolean cache) throws GeneralException, IOException { // SCIPIO: added cache flag
         List<GenericValue> partyContentList = EntityQuery.use(delegator).from("PartyContent")
                 .where("partyId", party.getString("partyId"), "partyContentTypeId", partyContentTypeId)
                 .orderBy("-fromDate")
-                .cache(true)
+                .cache(cache) // SCIPIO: cache flag
                 .filterByDate()
                 .queryList();
 
@@ -273,7 +278,7 @@ public class PartyContentWrapper implements ContentWrapper {
                 Map<String, Object> inContext = new HashMap<>();
                 inContext.put("party", party);
                 inContext.put("partyContent", partyContent);
-                ContentWorker.renderContentAsText(dispatcher, delegator, partyContent.getString("contentId"), outWriter, inContext, locale, mimeTypeId, null, null, false);
+                ContentWorker.renderContentAsText(dispatcher, delegator, partyContent.getString("contentId"), outWriter, inContext, locale, mimeTypeId, null, null, cache); // SCIPIO: cache flag
                 contentList.add(outWriter.toString());
             }
         }
@@ -282,6 +287,11 @@ public class PartyContentWrapper implements ContentWrapper {
     }
 
     public static GenericValue getFirstPartyContentByType(String partyId, GenericValue party, String partyContentTypeId, Delegator delegator) {
+        // SCIPIO: delegating
+        return getFirstPartyContentByType(partyId, party, partyContentTypeId, delegator, true);
+    }
+
+    public static GenericValue getFirstPartyContentByType(String partyId, GenericValue party, String partyContentTypeId, Delegator delegator, boolean cache) { // SCIPIO: added cache flag
         if (partyId == null && party != null) {
             partyId = party.getString("partyId");
         }
@@ -299,7 +309,7 @@ public class PartyContentWrapper implements ContentWrapper {
             partyContentList = EntityQuery.use(delegator).from("PartyContent")
                     .where("partyId", partyId, "partyContentTypeId", partyContentTypeId)
                     .orderBy("-fromDate")
-                    .cache(true)
+                    .cache(cache)
                     .queryList();
         } catch (GeneralException e) {
             Debug.logError(e, module);

@@ -50,6 +50,8 @@ import org.ofbiz.service.LocalDispatcher;
 
 /**
  * Product Content Worker: gets product content to display
+ * <p>
+ * SCIPIO: NOTE: 2017: This ContentWrapper is heavily updated from stock for localization behavior, caching, and other fixes.
  */
 public class ProductContentWrapper implements ContentWrapper {
 

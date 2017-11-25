@@ -45,7 +45,8 @@ import org.ofbiz.service.LocalDispatcher;
 
 /**
  * Order Content Worker: gets order content to display
- *
+ * <p>
+ * SCIPIO: NOTE: 2017: This ContentWrapper is heavily updated from stock for localization behavior, caching, and other fixes.
  */
 public class OrderContentWrapper implements ContentWrapper {
 

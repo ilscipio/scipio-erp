@@ -53,6 +53,8 @@ import org.ofbiz.service.ServiceContainer;
 
 /**
  * Product Config Item Content Worker: gets product content to display
+ * <p>
+ * SCIPIO: NOTE: 2017: This ContentWrapper is heavily updated from stock for localization behavior, caching, and other fixes.
  */
 @SuppressWarnings("serial")
 public class ProductConfigItemContentWrapper implements ContentWrapper, Serializable { // SCIPIO: Added Serializable

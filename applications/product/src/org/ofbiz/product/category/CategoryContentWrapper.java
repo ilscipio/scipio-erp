@@ -52,12 +52,7 @@ import org.ofbiz.service.LocalDispatcher;
 /**
  * Category Content Worker: gets category content to display
  * <p>
- * SCIPIO: Notable changes:
- * <ul>
- * <li>backported category.content cache due to heavy reliance on this wrapper (2017-11-17)</li>
- * <li>backported second fallback on entity fields due to consistency issues with other wrappers (2017-11-17)</li>
- * <li>getProductCategoryContentAsText no longer returns null due to consistency issues with other wrappers (2017-11-17)</li>
- * </ul>
+ * SCIPIO: NOTE: 2017: This ContentWrapper is heavily updated from stock for localization behavior, caching, and other fixes.
  */
 public class CategoryContentWrapper implements ContentWrapper {
 

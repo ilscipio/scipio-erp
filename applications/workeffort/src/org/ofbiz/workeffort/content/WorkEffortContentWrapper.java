@@ -51,6 +51,8 @@ import org.ofbiz.service.LocalDispatcher;
 
 /**
  * WorkEffortContentWrapper; gets work effort content for display
+ * <p>
+ * SCIPIO: NOTE: 2017: This ContentWrapper is heavily updated from stock for localization behavior, caching, and other fixes.
  */
 public class WorkEffortContentWrapper implements ContentWrapper {
 

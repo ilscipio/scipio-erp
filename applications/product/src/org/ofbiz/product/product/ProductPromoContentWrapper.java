@@ -55,6 +55,8 @@ import org.ofbiz.service.LocalDispatcher;
 
 /**
  * Product Promo Content Worker: gets product promo content to display
+ * <p>
+ * SCIPIO: NOTE: 2017: This ContentWrapper is heavily updated from stock for localization behavior, caching, and other fixes.
  */
 public class ProductPromoContentWrapper implements ContentWrapper {
 

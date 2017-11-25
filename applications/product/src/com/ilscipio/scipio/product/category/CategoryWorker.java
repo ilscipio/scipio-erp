@@ -93,8 +93,7 @@ public abstract class CategoryWorker {
                 }
     
                 String categoryName = null;
-                // FIXME: doesn't respect useCategoryCache
-                CategoryContentWrapper wrapper = new CategoryContentWrapper(dispatcher, category, locale, null);
+                CategoryContentWrapper wrapper = new CategoryContentWrapper(dispatcher, category, locale, null, useCategoryCache);
                 categoryName = wrapper.get("CATEGORY_NAME");
                 if (UtilValidate.isEmpty(categoryName)) {
                     // 2016-03-22: Some categories don't have a name but have description
@@ -149,8 +148,7 @@ public abstract class CategoryWorker {
                 String productName = product.getString("productName");
                 if (UtilValidate.isEmpty(productName)) {
                     productName = productId;
-                    // FIXME: doesn't respect useCache
-                    ProductContentWrapper wrapper = new ProductContentWrapper(dispatcher, product, locale, null);
+                    ProductContentWrapper wrapper = new ProductContentWrapper(dispatcher, product, locale, null, useCache);
                     if (UtilValidate.isNotEmpty(wrapper.get("PRODUCT_NAME")))
                         productName = wrapper.get("PRODUCT_NAME");
                 }

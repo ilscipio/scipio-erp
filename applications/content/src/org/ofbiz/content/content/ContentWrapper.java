@@ -20,8 +20,9 @@ package org.ofbiz.content.content;
 
 /**
  * ContentWrapper Interface
+ * <p>
+ * SCIPIO: NOTE: 2017: All ContentWrappers are heavily updated from stock for localization behavior, caching, and other fixes.
  */
-
 public interface ContentWrapper {
 
     /**

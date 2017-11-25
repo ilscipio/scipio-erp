@@ -90,12 +90,11 @@ public class SolrValueWorker {
     /**
      * Abstracted helper method to return the default field value or if not set its <code>*_i18n_*</code> version.
      * THIS EMULATES THE {@link org.ofbiz.product.product.ProductContentWrapper} BEHAVIOR!
-     * This behavior is currently the same as: {@link #getFieldValueDefaultOrI18n}
-     * So the fields specified directly on Product entity take priority over the localized versions!
-     * Yes, this is weird! It means the general value should be omitted if you want the localized content to work.
+     * This behavior is currently the same as: {@link #getFieldValueI18nOrGeneral}
+     * 2017-11-24: This now follows CORRECTED ContentWrapper behavior, with I18n field having priority over general.
      */
     public Object getFieldValueI18nForDisplay(String name) {
-        return getFieldValueGeneralOrI18n(name);
+        return getFieldValueI18nOrGeneral(name);
     }
     
     /**
@@ -133,19 +132,6 @@ public class SolrValueWorker {
         if (value != null) return value;
         return getFieldValueGeneral(name);
     }
-    
-    /**
-     * Abstracted method to return the general field value or if not set its <code>*_i18n_*</code> version.
-     * NOTE: at time of writing, this 
-     * name is the first part of the field name without underscores, 
-     * e.g. "title", "description", "longdescription".
-     */
-    public Object getFieldValueGeneralOrI18n(String name) {
-        Object value = getFieldValueGeneral(name);
-        if (value != null) return value;
-        return getFieldValueI18nStrict(name);
-    }
-
 
     /* 
      ******************************************

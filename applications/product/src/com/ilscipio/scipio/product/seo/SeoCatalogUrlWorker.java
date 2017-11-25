@@ -499,8 +499,7 @@ public class SeoCatalogUrlWorker implements Serializable {
         String catName = null;
         String productCategoryId = productCategory.getString("productCategoryId");
         try {
-            // FIXME: ContentWrapper does not respect useCache flag!
-            String altUrl = CategoryContentWrapper.getProductCategoryContentAsText(productCategory, "ALTERNATIVE_URL", locale, dispatcher, "raw");
+            String altUrl = CategoryContentWrapper.getProductCategoryContentAsText(productCategory, "ALTERNATIVE_URL", locale, dispatcher, useCache, "raw");
             if (UtilValidate.isNotEmpty(altUrl)) {
                 // FIXME: effective locale might not be same as "locale" variable!
                 altUrl = getCatalogAltUrlSanitizer().sanitizeAltUrlFromDb(altUrl, locale, CatalogUrlType.CATEGORY);
@@ -817,8 +816,7 @@ public class SeoCatalogUrlWorker implements Serializable {
             
             // append product name
             String productId = product.getString("productId");
-            // FIXME: ContentWrapper does not respect useCache flag!
-            String alternativeUrl = ProductContentWrapper.getProductContentAsText(product, "ALTERNATIVE_URL", locale, dispatcher, "raw");
+            String alternativeUrl = ProductContentWrapper.getProductContentAsText(product, "ALTERNATIVE_URL", locale, dispatcher, useCache, "raw");
             // FIXME: effective locale might not be same as "locale" variable!
             alternativeUrl = getCatalogAltUrlSanitizer().sanitizeAltUrlFromDb(alternativeUrl, locale, CatalogUrlType.PRODUCT);
             if (UtilValidate.isNotEmpty(alternativeUrl)) {

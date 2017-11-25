@@ -45,7 +45,7 @@
     
     <@field type="general" label=uiLabelMap.SetupAccountingSelectModuleForSetup>
        <@field type="select" name="topGlAccountId" id="setupAccounting-selectGL-select" class="+setupAccounting-selectGL-select" inline=true style="display:inline-block;">
-            <option value="">[${uiLabelMap.SetupAccountingCreateNewGL}]</option>
+            <option value="">[${uiLabelMap.SetupAccountingCreateNewModule}]</option>
             <option value="" disabled="disabled"></option>
             <#if accountingGLs?has_content>
               <#list accountingGLs as accountingGL>

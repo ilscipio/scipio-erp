@@ -80,9 +80,9 @@
       </#if>
 
       <#if formActionType != "add">
-        <@field type="input" name="productName" value=(params.productName!) label=uiLabelMap.ProductProductName class="+ect-inputfield" tooltip=uiLabelMap.ProductNonLocalizedContentFieldInfo/><#--  not strictly: required=true -->
-        <@field type="input" name="description" value=(params.description!) label=uiLabelMap.FormFieldTitle_description class="+ect-inputfield" tooltip=uiLabelMap.ProductNonLocalizedContentFieldInfo/>
-        <@field type="input" name="longDescription" value=(params.longDescription!) label=uiLabelMap.FormFieldTitle_longDescription class="+ect-inputfield" tooltip=uiLabelMap.ProductNonLocalizedContentFieldInfo/>
+        <@field type="input" name="productName" value=(params.productName!) label=uiLabelMap.ProductProductName class="+ect-inputfield"/><#--  not strictly: required=true -->
+        <@field type="input" name="description" value=(params.description!) label=uiLabelMap.FormFieldTitle_description class="+ect-inputfield"/>
+        <@field type="input" name="longDescription" value=(params.longDescription!) label=uiLabelMap.FormFieldTitle_longDescription class="+ect-inputfield"/>
 
         <@fieldset title=uiLabelMap.CommonLocalizedFields collapsed=true class="+ect-locfields-cnt">
             <@ectLocalizedFields objectType="product" params=params/>

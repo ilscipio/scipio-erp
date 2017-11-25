@@ -596,12 +596,18 @@
                                         <!-- don't show tree until at least one topGlAccountId created -->
                                         <not><if-empty field="topGlAccountId"/></not>
                                     </condition>
-                                    <widgets>
+                                    <widgets>                                    	
                                         <screenlet>
-                                        	<include-screen name="EditAcctgPreferences"/>
-                                            <include-screen name="EditGLAccountTree"/>
-                                            <include-screen name="EditFiscalPeriods"/>
-                                            <include-screen name="EditJournals"/>
+                                        	<platform-specific><html><html-template><![CDATA[
+	                                        	<@tabs>
+	                                        		<@tab title="Preferences"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditAcctgPreferences"/></@tab>
+	                                        		<@tab title="Configure GL Accounts">
+	                                        			<@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditGLAccountTree" />
+	                                        		</@tab>
+	                                        		<@tab title="Configure Fiscal Periods"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditFiscalPeriods"/></@tab>
+	                                        		<@tab title="Configure Journal"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditJournals"/></@tab>
+	                                        	</@tabs>
+                                        	]]></html-template></html></platform-specific>
                                         </screenlet>
                                     </widgets>
                                     <fail-widgets>
@@ -640,13 +646,9 @@
                 <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditAcctgPreferences.groovy"/>                
             </actions>
             <widgets>
-            	<section>
-		            <widgets>
-						<screenlet>
-							<platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditAcctgPreferences.ftl"/></html></platform-specific>
-						</screenlet>
-		            </widgets>
-            	</section>
+				<screenlet>
+					<platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditAcctgPreferences.ftl"/></html></platform-specific>
+				</screenlet>		          
             </widgets>           
         </section>
     </screen>
@@ -655,7 +657,7 @@
             <actions>
                 <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditGLAccountTree.groovy"/>                
             </actions>
-            <widgets>
+            <widgets>            
             	<section>
             		 <condition>
 		                <and>
@@ -667,7 +669,7 @@
 						<screenlet>
 							<platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditGLAccountTree.ftl"/></html></platform-specific>
 						</screenlet>
-		            </widgets>
+					</widgets>						
             	</section>
             </widgets>           
         </section>
@@ -678,9 +680,7 @@
             </actions>
             <widgets>
                 <!--<include-form name="EditProdCatalog" location="component://setup/widget/SetupForms.xml"/>-->
-                <platform-specific>
-                    <html><html-template location="component://setup/webapp/setup/accounting/EditGLAccount.ftl"/></html>
-                </platform-specific>
+                <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditGLAccount.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>
@@ -690,13 +690,7 @@
                 <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditFiscalPeriods.groovy"/>                
             </actions>
             <widgets>
-            	<section>
-		            <widgets>
-						<screenlet>
-							<platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditFiscalPeriods.ftl"/></html></platform-specific>
-						</screenlet>
-		            </widgets>
-            	</section>
+            	<platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditFiscalPeriods.ftl"/></html></platform-specific>
             </widgets>           
         </section>
     </screen>

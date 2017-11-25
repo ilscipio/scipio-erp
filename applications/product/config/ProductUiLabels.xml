@@ -32161,12 +32161,6 @@
         <value xml:lang="de">Produkt verwalten</value>
         <value xml:lang="fr">Gérer le produit</value>
     </property>
-    <property key="ProductNonLocalizedContentFieldInfo">
-        <!-- SCIPIO: TODO?: REVIEW: in future this message may need to be changed if we decide to change content wrapper behavior... -->
-        <value xml:lang="en">Note: This is a non-localized field. If you use localized versions of this field, you may need to leave this field empty in order for the localized versions to take effect.</value>
-        <value xml:lang="de">Hinweis: Dies ist ein nicht lokalisiertes Feld. Wenn Sie lokalisierte Versionen dieses Feldes verwenden, müssen Sie dieses Feld möglicherweise leer lassen, damit die lokalisierten Versionen wirksam werden.</value>
-        <value xml:lang="fr">Remarque: Ceci est un champ non localisé. Si vous utilisez des versions localisées de ce champ, vous devrez peut-être laisser ce champ vide pour que les versions localisées prennent effet.</value>
-    </property>
     <property key="ProductConfirmDeleteCatalogPermanentParam">
         <value xml:lang="en">You are about to delete ${recordName} permanently, along with several associated records. Do you want to continue?</value>
         <value xml:lang="de">Sie sind dabei, ${recordName} zusammen mit einigen zugehörigen Datensätzen dauerhaft zu löschen. Möchtest du fortfahren?</value>

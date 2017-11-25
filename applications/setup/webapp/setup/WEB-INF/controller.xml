@@ -189,6 +189,12 @@
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupAccounting"/>
     </request-map>
+    <request-map uri="setupImportJournalEntries">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="importJournalEntries"/>
+        <response name="success" type="view" value="SetupAccounting"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
     
     <!-- Facility step -->
     <request-map uri="setupFacility">

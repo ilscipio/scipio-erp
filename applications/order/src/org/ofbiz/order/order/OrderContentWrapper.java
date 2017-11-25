@@ -34,6 +34,7 @@ import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.content.content.CommonContentWrapper;
 import org.ofbiz.content.content.ContentLangUtil;
 import org.ofbiz.content.content.ContentLangUtil.ContentSanitizer;
 import org.ofbiz.content.content.ContentWorker;
@@ -48,7 +49,8 @@ import org.ofbiz.service.LocalDispatcher;
  * <p>
  * SCIPIO: NOTE: 2017: This ContentWrapper is heavily updated from stock for localization behavior, caching, and other fixes.
  */
-public class OrderContentWrapper implements ContentWrapper {
+@SuppressWarnings("serial")
+public class OrderContentWrapper extends CommonContentWrapper {
 
     public static final String module = OrderContentWrapper.class.getName();
     public static final String SEPARATOR = "::";    // cache key separator
@@ -59,47 +61,28 @@ public class OrderContentWrapper implements ContentWrapper {
         return new OrderContentWrapper(order, request);
     }
 
-    protected LocalDispatcher dispatcher;
-    protected GenericValue order;
-    protected Locale locale;
-    protected String mimeTypeId;
-    protected boolean useCache = true; // SCIPIO
-
-    public OrderContentWrapper(LocalDispatcher dispatcher, GenericValue order, Locale locale, String mimeTypeId) {
-        this.dispatcher = dispatcher;
-        this.order = order;
-        this.locale = locale;
-        this.mimeTypeId = mimeTypeId;
+    public OrderContentWrapper(GenericValue entityValue, HttpServletRequest request, boolean useCache) {
+        super(entityValue, request, useCache);
     }
 
-    public OrderContentWrapper(GenericValue order, HttpServletRequest request) {
-        this.dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        this.order = order;
-        this.locale = UtilHttp.getLocale(request);
-        this.mimeTypeId = "text/html";
-    }
-
-    /**
-     * SCIPIO: Allows to disable the wrapper UtilCache for this wrapper.
-     * By default, wrapper cache is enabled for new instances.
-     */
-    public OrderContentWrapper setUseCache(boolean useCache) {
-        this.useCache = useCache;
-        return this;
+    public OrderContentWrapper(GenericValue entityValue, HttpServletRequest request) {
+        super(entityValue, request);
     }
     
-    // SCIPIO: changed return type, parameter, and encoding largely removed
-    public String get(String orderContentTypeId, String encoderType) {
-        return getOrderContentAsText(order, orderContentTypeId, locale, mimeTypeId, order.getDelegator(), dispatcher, useCache, encoderType);
+    public OrderContentWrapper(LocalDispatcher dispatcher, GenericValue entityValue, Locale locale, String mimeTypeId,
+            boolean useCache) {
+        super(dispatcher, entityValue, locale, mimeTypeId, useCache);
     }
 
-    /**
-     * SCIPIO: Version of overload that performs NO encoding. In most cases templates should do the encoding.
-     */
-    public String get(String orderContentTypeId) {
-        return getOrderContentAsText(order, orderContentTypeId, locale, mimeTypeId, order.getDelegator(), dispatcher, useCache, "raw");
+    public OrderContentWrapper(LocalDispatcher dispatcher, GenericValue entityValue, Locale locale, String mimeTypeId) {
+        super(dispatcher, entityValue, locale, mimeTypeId);
     }
-    
+
+    @Override
+    protected String getImpl(String contentTypeId, boolean useCache, String contentLang) {
+        return getOrderContentAsText(getEntityValue(), contentTypeId, getLocale(), getMimeTypeId(), getDelegator(), getDispatcher(), useCache, contentLang);
+    }
+
     public static String getOrderContentAsText(GenericValue order, String orderContentTypeId, HttpServletRequest request, String encoderType) {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         return getOrderContentAsText(order, orderContentTypeId, UtilHttp.getLocale(request), "text/html", order.getDelegator(), dispatcher, encoderType);

@@ -38,6 +38,7 @@ import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.content.content.CommonContentWrapper;
 import org.ofbiz.content.content.ContentLangUtil;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.content.content.ContentWrapper;
@@ -55,61 +56,38 @@ import org.ofbiz.service.LocalDispatcher;
  * <p>
  * SCIPIO: NOTE: 2017: This ContentWrapper is heavily updated from stock for localization behavior, caching, and other fixes.
  */
-public class PartyContentWrapper implements ContentWrapper {
+@SuppressWarnings("serial")
+public class PartyContentWrapper extends CommonContentWrapper {
 
     public static final String module = PartyContentWrapper.class.getName();
     public static final String CACHE_KEY_SEPARATOR = "::";
 
     private static final UtilCache<String, String> partyContentCache = UtilCache.createUtilCache("party.content.rendered", true);
 
-    protected LocalDispatcher dispatcher;
-    protected GenericValue party;
-    protected Locale locale;
-    protected String mimeTypeId;
-    protected boolean useCache = true; // SCIPIO
-
-    public PartyContentWrapper(LocalDispatcher dispatcher, GenericValue party, Locale locale, String mimeTypeId) {
-        this.dispatcher = dispatcher;
-        this.party = party;
-        this.locale = locale;
-        this.mimeTypeId = mimeTypeId;
+    public PartyContentWrapper(GenericValue entityValue, HttpServletRequest request, boolean useCache) {
+        super(entityValue, request, useCache);
     }
 
-    public PartyContentWrapper(GenericValue party, HttpServletRequest request) {
-        this.dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        this.party = party;
-        this.locale = UtilHttp.getLocale(request);
-        this.mimeTypeId = "text/html";
+    public PartyContentWrapper(GenericValue entityValue, HttpServletRequest request) {
+        super(entityValue, request);
     }
 
-    /**
-     * SCIPIO: Allows to disable the wrapper UtilCache for this wrapper.
-     * By default, wrapper cache is enabled for new instances.
-     */
-    public PartyContentWrapper setUseCache(boolean useCache) {
-        this.useCache = useCache;
-        return this;
-    }
-    
-    // interface implementation
-    public String get(String contentTypeId, boolean useCache, String encoderType) {
-        return getPartyContentAsText(party, contentTypeId, locale, mimeTypeId, party.getDelegator(), dispatcher, useCache, encoderType);
+    public PartyContentWrapper(LocalDispatcher dispatcher, GenericValue entityValue, Locale locale, String mimeTypeId,
+            boolean useCache) {
+        super(dispatcher, entityValue, locale, mimeTypeId, useCache);
     }
 
-    // SCIPIO: changed return type, parameter, and encoding largely removed
-    public String get(String contentTypeId, String encoderType) {
-        return get(contentTypeId, useCache, encoderType);
+    public PartyContentWrapper(LocalDispatcher dispatcher, GenericValue entityValue, Locale locale, String mimeTypeId) {
+        super(dispatcher, entityValue, locale, mimeTypeId);
     }
-    
-    /**
-     * SCIPIO: Version of overload that performs NO encoding. In most cases templates should do the encoding.
-     */
-    public String get(String contentTypeId) {
-        return get(contentTypeId, useCache, "raw");
+
+    @Override
+    protected String getImpl(String contentTypeId, boolean useCache, String contentLang) {
+        return getPartyContentAsText(getEntityValue(), contentTypeId, getLocale(), getMimeTypeId(), getDelegator(), getDispatcher(), useCache, contentLang);
     }
 
     public String getId(String contentTypeId) {
-        GenericValue partyContent = getFirstPartyContentByType(null, party, contentTypeId, party.getDelegator());
+        GenericValue partyContent = getFirstPartyContentByType(null, getEntityValue(), contentTypeId, getDelegator());
         if (partyContent != null) {
             return partyContent.getString("contentId");
         } else {
@@ -119,7 +97,7 @@ public class PartyContentWrapper implements ContentWrapper {
 
     public List<String> getList(String contentTypeId) {
         try {
-            return getPartyContentTextList(party, contentTypeId, locale, mimeTypeId, party.getDelegator(), dispatcher);
+            return getPartyContentTextList(getEntityValue(), contentTypeId, getLocale(), getMimeTypeId(), getDelegator(), getDispatcher());
         } catch (Exception e) {
             Debug.logError(e, module);
             return null;
@@ -127,17 +105,17 @@ public class PartyContentWrapper implements ContentWrapper {
     }
 
     public String getContent(String contentId, boolean useCache, String encoderType) {
-        return getPartyContentAsText(party, contentId, null, locale, mimeTypeId, party.getDelegator(), dispatcher, useCache, encoderType);
+        return getPartyContentAsText(getEntityValue(), contentId, null, getLocale(), getMimeTypeId(), getDelegator(), getDispatcher(), useCache, encoderType);
     }
 
     public String getContent(String contentId, String encoderType) {
-        return getContent(contentId, true, encoderType);
+        return getContent(contentId, isUseCache(), encoderType);
     }
 
     // static methods
     public static String getPartyContentAsText(GenericValue party, String partyContentId, HttpServletRequest request, String encoderType) {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        return getPartyContentAsText(party, partyContentId, null, UtilHttp.getLocale(request), "text/html", party.getDelegator(), dispatcher, true,encoderType);
+        return getPartyContentAsText(party, partyContentId, null, UtilHttp.getLocale(request), "text/html", party.getDelegator(), dispatcher, true, encoderType);
     }
 
     public static String getPartyContentAsText(GenericValue party, String partyContentId, Locale locale, LocalDispatcher dispatcher, String encoderType) {

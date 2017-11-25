@@ -38,6 +38,7 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.content.content.CommonContentWrapper;
 import org.ofbiz.content.content.ContentLangUtil;
 import org.ofbiz.content.content.ContentLangUtil.ContentSanitizer;
 import org.ofbiz.content.content.ContentWorker;
@@ -58,7 +59,8 @@ import org.ofbiz.service.LocalDispatcher;
  * <p>
  * SCIPIO: NOTE: 2017: This ContentWrapper is heavily updated from stock for localization behavior, caching, and other fixes.
  */
-public class ProductPromoContentWrapper implements ContentWrapper {
+@SuppressWarnings("serial")
+public class ProductPromoContentWrapper extends CommonContentWrapper {
 
     public static final String module = ProductPromoContentWrapper.class.getName();
     public static final String SEPARATOR = "::";    // cache key separator
@@ -69,53 +71,27 @@ public class ProductPromoContentWrapper implements ContentWrapper {
         return new ProductPromoContentWrapper(productPromo, request);
     }
 
-    protected LocalDispatcher dispatcher;
-    protected GenericValue productPromo;
-    protected Locale locale;
-    protected String mimeTypeId;
-    protected boolean useCache = true; // SCIPIO
-    
-    public ProductPromoContentWrapper(LocalDispatcher dispatcher, GenericValue productPromo, Locale locale, String mimeTypeId) {
-        this.dispatcher = dispatcher;
-        this.productPromo = productPromo;
-        this.locale = locale;
-        this.mimeTypeId = mimeTypeId;
+    public ProductPromoContentWrapper(GenericValue entityValue, HttpServletRequest request, boolean useCache) {
+        super(entityValue, request, useCache);
     }
 
-    public ProductPromoContentWrapper(GenericValue productPromo, HttpServletRequest request) {
-        this.dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        this.productPromo = productPromo;
-        this.locale = UtilHttp.getLocale(request);
-        this.mimeTypeId = "text/html";
+    public ProductPromoContentWrapper(GenericValue entityValue, HttpServletRequest request) {
+        super(entityValue, request);
     }
 
-    /**
-     * SCIPIO: Allows to disable the wrapper UtilCache for this wrapper.
-     * By default, wrapper cache is enabled for new instances.
-     */
-    public ProductPromoContentWrapper setUseCache(boolean useCache) {
-        this.useCache = useCache;
-        return this;
+    public ProductPromoContentWrapper(LocalDispatcher dispatcher, GenericValue entityValue, Locale locale,
+            String mimeTypeId, boolean useCache) {
+        super(dispatcher, entityValue, locale, mimeTypeId, useCache);
     }
-    
-    // SCIPIO: changed return type, parameter, and encoding largely removed
-    public String get(String productPromoContentTypeId, String encoderType) {
-        if (UtilValidate.isEmpty(this.productPromo)) {
-            Debug.logWarning("Tried to get ProductPromoContent for type [" + productPromoContentTypeId + "] but the productPromo field in the ProductPromoContentWrapper is null", module);
-            return null;
-        }
-        return getProductPromoContentAsText(this.productPromo, productPromoContentTypeId, locale, mimeTypeId, null, null, this.productPromo.getDelegator(), dispatcher, useCache, encoderType);
+
+    public ProductPromoContentWrapper(LocalDispatcher dispatcher, GenericValue entityValue, Locale locale,
+            String mimeTypeId) {
+        super(dispatcher, entityValue, locale, mimeTypeId);
     }
-    
-    /**
-     * SCIPIO: Version of overload that performs NO encoding. In most cases templates should do the encoding.
-     */
-    public String get(String productPromoContentTypeId) {
-        if (UtilValidate.isEmpty(this.productPromo)) {
-            Debug.logWarning("Tried to get ProductPromoContent for type [" + productPromoContentTypeId + "] but the productPromo field in the ProductPromoContentWrapper is null", module);
-            return null;
-        }
-        return getProductPromoContentAsText(this.productPromo, productPromoContentTypeId, locale, mimeTypeId, null, null, this.productPromo.getDelegator(), dispatcher, useCache, "raw");
+
+    @Override
+    protected String getImpl(String contentTypeId, boolean useCache, String contentLang) {
+        return getProductPromoContentAsText(getEntityValue(), contentTypeId, getLocale(), getMimeTypeId(), null, null, getDelegator(), getDispatcher(), useCache, contentLang);
     }
 
     public static String getProductPromoContentAsText(GenericValue productPromo, String productPromoContentTypeId, HttpServletRequest request, String encoderType) {

@@ -37,6 +37,7 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.content.content.CommonContentWrapper;
 import org.ofbiz.content.content.ContentLangUtil;
 import org.ofbiz.content.content.ContentLangUtil.ContentSanitizer;
 import org.ofbiz.content.content.ContentWorker;
@@ -54,55 +55,38 @@ import org.ofbiz.service.LocalDispatcher;
  * <p>
  * SCIPIO: NOTE: 2017: This ContentWrapper is heavily updated from stock for localization behavior, caching, and other fixes.
  */
-public class CategoryContentWrapper implements ContentWrapper {
+@SuppressWarnings("serial")
+public class CategoryContentWrapper extends CommonContentWrapper {
 
     public static final String module = CategoryContentWrapper.class.getName();
     public static final String SEPARATOR = "::";    // cache key separator
     private static final UtilCache<String, String> categoryContentCache = UtilCache.createUtilCache("category.content", true); // use soft reference to free up memory if needed
 
-    protected LocalDispatcher dispatcher;
-    protected GenericValue productCategory;
-    protected Locale locale;
-    protected String mimeTypeId;
-    protected boolean useCache = true; // SCIPIO
-
     public static CategoryContentWrapper makeCategoryContentWrapper(GenericValue productCategory, HttpServletRequest request) {
         return new CategoryContentWrapper(productCategory, request);
     }
 
-    public CategoryContentWrapper(LocalDispatcher dispatcher, GenericValue productCategory, Locale locale, String mimeTypeId) {
-        this.dispatcher = dispatcher;
-        this.productCategory = productCategory;
-        this.locale = locale;
-        this.mimeTypeId = mimeTypeId;
+    public CategoryContentWrapper(GenericValue entityValue, HttpServletRequest request, boolean useCache) {
+        super(entityValue, request, useCache);
     }
 
-    public CategoryContentWrapper(GenericValue productCategory, HttpServletRequest request) {
-        this.dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        this.productCategory = productCategory;
-        this.locale = UtilHttp.getLocale(request);
-        this.mimeTypeId = "text/html";
+    public CategoryContentWrapper(GenericValue entityValue, HttpServletRequest request) {
+        super(entityValue, request);
     }
 
-    /**
-     * SCIPIO: Allows to disable the wrapper UtilCache for this wrapper.
-     * By default, wrapper cache is enabled for new instances.
-     */
-    public CategoryContentWrapper setUseCache(boolean useCache) {
-        this.useCache = useCache;
-        return this;
+    public CategoryContentWrapper(LocalDispatcher dispatcher, GenericValue entityValue, Locale locale,
+            String mimeTypeId, boolean useCache) {
+        super(dispatcher, entityValue, locale, mimeTypeId, useCache);
     }
 
-    // SCIPIO: changed return type, parameter, and encoding largely removed
-    public String get(String prodCatContentTypeId, String encoderType) {
-        return getProductCategoryContentAsText(productCategory, prodCatContentTypeId, locale, mimeTypeId, productCategory.getDelegator(), dispatcher, useCache, encoderType);
+    public CategoryContentWrapper(LocalDispatcher dispatcher, GenericValue entityValue, Locale locale,
+            String mimeTypeId) {
+        super(dispatcher, entityValue, locale, mimeTypeId);
     }
-    
-    /**
-     * SCIPIO: Version of overload that performs NO encoding. In most cases templates should do the encoding.
-     */
-    public String get(String prodCatContentTypeId) {
-        return getProductCategoryContentAsText(productCategory, prodCatContentTypeId, locale, mimeTypeId, productCategory.getDelegator(), dispatcher, useCache, "raw");
+
+    @Override
+    protected String getImpl(String contentTypeId, boolean useCache, String contentLang) {
+        return getProductCategoryContentAsText(getEntityValue(), contentTypeId, getLocale(), getMimeTypeId(), getDelegator(), getDispatcher(), useCache, contentLang);
     }
 
     public static String getProductCategoryContentAsText(GenericValue productCategory, String prodCatContentTypeId, HttpServletRequest request, String encoderType) {

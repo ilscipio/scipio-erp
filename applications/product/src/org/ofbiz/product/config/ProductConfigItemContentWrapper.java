@@ -37,6 +37,7 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.content.content.CommonContentWrapper;
 import org.ofbiz.content.content.ContentLangUtil;
 import org.ofbiz.content.content.ContentLangUtil.ContentSanitizer;
 import org.ofbiz.content.content.ContentWorker;
@@ -57,78 +58,37 @@ import org.ofbiz.service.ServiceContainer;
  * SCIPIO: NOTE: 2017: This ContentWrapper is heavily updated from stock for localization behavior, caching, and other fixes.
  */
 @SuppressWarnings("serial")
-public class ProductConfigItemContentWrapper implements ContentWrapper, Serializable { // SCIPIO: Added Serializable
+public class ProductConfigItemContentWrapper extends CommonContentWrapper {
 
     public static final String module = ProductConfigItemContentWrapper.class.getName();
     public static final String SEPARATOR = "::";    // cache key separator
     private static final UtilCache<String, String> configItemContentCache = UtilCache.createUtilCache("configItem.content", true); // use soft reference to free up memory if needed
 
-    protected transient LocalDispatcher dispatcher;
-    protected String dispatcherName;
-    protected transient Delegator delegator;
-    protected String delegatorName;
-    protected GenericValue productConfigItem;
-    protected Locale locale;
-    protected String mimeTypeId;
-    protected boolean useCache = true; // SCIPIO
-
     public static ProductConfigItemContentWrapper makeProductConfigItemContentWrapper(GenericValue productConfigItem, HttpServletRequest request) {
         return new ProductConfigItemContentWrapper(productConfigItem, request);
     }
 
-    public ProductConfigItemContentWrapper(LocalDispatcher dispatcher, GenericValue productConfigItem, Locale locale, String mimeTypeId) {
-        this.dispatcher = dispatcher;
-        this.dispatcherName = dispatcher.getName();
-        this.delegator = productConfigItem.getDelegator();
-        this.delegatorName = delegator.getDelegatorName();
-        this.productConfigItem = productConfigItem;
-        this.locale = locale;
-        this.mimeTypeId = mimeTypeId;
+    public ProductConfigItemContentWrapper(GenericValue entityValue, HttpServletRequest request, boolean useCache) {
+        super(entityValue, request, useCache);
     }
 
-    public ProductConfigItemContentWrapper(GenericValue productConfigItem, HttpServletRequest request) {
-        this.dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        this.dispatcherName = dispatcher.getName();
-        this.delegator = (Delegator) request.getAttribute("delegator");
-        this.delegatorName = delegator.getDelegatorName();
-        this.productConfigItem = productConfigItem;
-        this.locale = UtilHttp.getLocale(request);
-        this.mimeTypeId = "text/html";
+    public ProductConfigItemContentWrapper(GenericValue entityValue, HttpServletRequest request) {
+        super(entityValue, request);
     }
 
-    /**
-     * SCIPIO: Allows to disable the wrapper UtilCache for this wrapper.
-     * By default, wrapper cache is enabled for new instances.
-     */
-    public ProductConfigItemContentWrapper setUseCache(boolean useCache) {
-        this.useCache = useCache;
-        return this;
-    }
-    
-    // SCIPIO: changed return type, parameter, and encoding largely removed
-    public String get(String confItemContentTypeId, String encoderType) {
-        return getProductConfigItemContentAsText(productConfigItem, confItemContentTypeId, locale, mimeTypeId, getDelegator(), getDispatcher(), useCache, encoderType);
+    public ProductConfigItemContentWrapper(LocalDispatcher dispatcher, GenericValue entityValue, Locale locale,
+            String mimeTypeId, boolean useCache) {
+        super(dispatcher, entityValue, locale, mimeTypeId, useCache);
     }
 
-    /**
-     * SCIPIO: Version of overload that performs NO encoding. In most cases templates should do the encoding.
-     */
-    public String get(String confItemContentTypeId) {
-        return getProductConfigItemContentAsText(productConfigItem, confItemContentTypeId, locale, mimeTypeId, getDelegator(), getDispatcher(), useCache, "raw");
-    }
-    
-    public Delegator getDelegator() {
-        if (delegator == null) {
-            delegator = DelegatorFactory.getDelegator(delegatorName);
-        }
-        return delegator;
+    public ProductConfigItemContentWrapper(LocalDispatcher dispatcher, GenericValue entityValue, Locale locale,
+            String mimeTypeId) {
+        super(dispatcher, entityValue, locale, mimeTypeId);
     }
 
-    public LocalDispatcher getDispatcher() {
-        if (dispatcher == null) {
-            dispatcher = ServiceContainer.getLocalDispatcher(dispatcherName, this.getDelegator());
-        }
-        return dispatcher;
+    @Override
+    protected String getImpl(String contentTypeId, boolean useCache, String contentLang) {
+        return getProductConfigItemContentAsText(getEntityValue(), contentTypeId, getLocale(), getMimeTypeId(), getDelegator(), getDispatcher(), useCache, contentLang);
     }
 
     public static String getProductConfigItemContentAsText(GenericValue productConfigItem, String confItemContentTypeId, HttpServletRequest request, String encoderType) {

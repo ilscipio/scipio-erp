@@ -36,6 +36,7 @@ import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.content.content.CommonContentWrapper;
 import org.ofbiz.content.content.ContentLangUtil;
 import org.ofbiz.content.content.ContentLangUtil.ContentSanitizer;
 import org.ofbiz.content.content.ContentWorker;
@@ -53,7 +54,8 @@ import org.ofbiz.service.LocalDispatcher;
  * <p>
  * SCIPIO: NOTE: 2017: This ContentWrapper is heavily updated from stock for localization behavior, caching, and other fixes.
  */
-public class ProductContentWrapper implements ContentWrapper {
+@SuppressWarnings("serial")
+public class ProductContentWrapper extends CommonContentWrapper {
 
     public static final String module = ProductContentWrapper.class.getName();
     public static final String SEPARATOR = "::";    // cache key separator
@@ -64,53 +66,27 @@ public class ProductContentWrapper implements ContentWrapper {
         return new ProductContentWrapper(product, request);
     }
 
-    protected LocalDispatcher dispatcher;
-    protected GenericValue product;
-    protected Locale locale;
-    protected String mimeTypeId;
-    protected boolean useCache = true; // SCIPIO
-    
-    public ProductContentWrapper(LocalDispatcher dispatcher, GenericValue product, Locale locale, String mimeTypeId) {
-        this.dispatcher = dispatcher;
-        this.product = product;
-        this.locale = locale;
-        this.mimeTypeId = mimeTypeId;
+    public ProductContentWrapper(GenericValue entityValue, HttpServletRequest request, boolean useCache) {
+        super(entityValue, request, useCache);
     }
 
-    public ProductContentWrapper(GenericValue product, HttpServletRequest request) {
-        this.dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        this.product = product;
-        this.locale = UtilHttp.getLocale(request);
-        this.mimeTypeId = "text/html";
+    public ProductContentWrapper(GenericValue entityValue, HttpServletRequest request) {
+        super(entityValue, request);
+    }
+    
+    public ProductContentWrapper(LocalDispatcher dispatcher, GenericValue entityValue, Locale locale, String mimeTypeId,
+            boolean useCache) {
+        super(dispatcher, entityValue, locale, mimeTypeId, useCache);
     }
 
-    /**
-     * SCIPIO: Allows to disable the wrapper UtilCache for this wrapper.
-     * By default, wrapper cache is enabled for new instances.
-     */
-    public ProductContentWrapper setUseCache(boolean useCache) {
-        this.useCache = useCache;
-        return this;
+    public ProductContentWrapper(LocalDispatcher dispatcher, GenericValue entityValue, Locale locale,
+            String mimeTypeId) {
+        super(dispatcher, entityValue, locale, mimeTypeId);
     }
-    
-    // SCIPIO: changed return type, parameter, and encoding largely removed
-    public String get(String productContentTypeId, String encoderType) {
-        if (this.product == null) {
-            Debug.logWarning("Tried to get ProductContent for type [" + productContentTypeId + "] but the product field in the ProductContentWrapper is null", module);
-            return null;
-        }
-        return getProductContentAsText(this.product, productContentTypeId, locale, mimeTypeId, null, null, this.product.getDelegator(), dispatcher, useCache, encoderType);
-    }
-    
-    /**
-     * SCIPIO: get overload that does no encoding. The templates should do the encoding, and screens have auto-escaping.
-     */
-    public String get(String productContentTypeId) {
-        if (this.product == null) {
-            Debug.logWarning("Tried to get ProductContent for type [" + productContentTypeId + "] but the product field in the ProductContentWrapper is null", module);
-            return null;
-        }
-        return getProductContentAsText(this.product, productContentTypeId, locale, mimeTypeId, null, null, this.product.getDelegator(), dispatcher, useCache, "raw");
+
+    @Override
+    protected String getImpl(String contentTypeId, boolean useCache, String contentLang) {
+        return getProductContentAsText(getEntityValue(), contentTypeId, getLocale(), getMimeTypeId(), null, null, getDelegator(), getDispatcher(), useCache, contentLang);
     }
 
     public static String getProductContentAsText(GenericValue product, String productContentTypeId, HttpServletRequest request, String encoderType) {
@@ -288,14 +264,6 @@ public class ProductContentWrapper implements ContentWrapper {
                 }
         }
         return null;
-    }
-    
-    /**
-     * SCIPIO: Returns the locale this product content wrapper was initialized and intended for.
-     * Added 2017-08-21.
-     */
-    public Locale getLocale() {
-        return locale;
     }
 
 }

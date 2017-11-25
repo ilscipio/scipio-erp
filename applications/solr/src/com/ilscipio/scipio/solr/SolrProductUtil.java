@@ -691,7 +691,7 @@ public abstract class SolrProductUtil {
         
         String thisLocaleString = (String) content.get("localeString");
         thisLocaleString = (thisLocaleString != null) ? thisLocaleString : "";
-        // special case: no locale string: treat as general (NOTE: here give the EntityFieldValue prio like orig ProductContentWrapper)
+        // special case: no locale string: treat as general
         if (thisLocaleString.isEmpty() && UtilValidate.isEmpty((String) contentMap.get(SolrLocaleUtil.I18N_GENERAL))) {
             GenericValue targetContent = content;
             Locale locale = defaultProductLocale;

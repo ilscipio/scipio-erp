@@ -57,7 +57,8 @@ under the License.
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogConfigurationData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogI18nData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogAdditionalViewData.xml"/>
-    
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogAltUrlData.xml"/>
+
     <!-- demo data: content - extended -->
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoTreeContentData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoContentAltUrlData.xml"/>
@@ -77,6 +78,9 @@ under the License.
     <!-- auxiliary catalog data -->
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogTransientData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogImageData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogAltUrlData.xml"/>
+    <!-- SCIPIO: 2017-11-25: TODO: comment out "data/DemoCatalogAltUrlLegacyData.xml" once Generated are exported to "data/DemoCatalogAltUrlData.xml" -->
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogAltUrlLegacyData.xml"/>
     
     <!-- demo data: example/test records and history -->
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoOrderTestData.xml"/>

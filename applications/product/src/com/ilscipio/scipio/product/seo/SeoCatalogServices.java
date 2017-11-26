@@ -657,25 +657,25 @@ public abstract class SeoCatalogServices {
                 generateCategoryAltUrls(dctx, context, category, stats, useCache);
             }
             
-            // child cats (recursive)
-            List<GenericValue> childProductCategoryRollups = EntityQuery.use(dctx.getDelegator()).from("ProductCategoryRollup")
-                    .where("parentProductCategoryId", category.getString("productCategoryId")).filterByDate().cache(useCache).queryList(); // not need: .orderBy("sequenceNum")
-            if (UtilValidate.isNotEmpty(childProductCategoryRollups)) {
-                generateCategoryAltUrlsDeep(dctx, context, stats, 
-                        childProductCategoryRollups, doProduct, doCategory, useCache);
-            }
-
             // products
             if (doProduct) {
                 List<GenericValue> productCategoryMembers = EntityQuery.use(dctx.getDelegator()).from("ProductCategoryMember")
                         .where("productCategoryId", category.getString("productCategoryId")).filterByDate()
-                        .cache(useCache).queryList(); // not need: .orderBy("sequenceNum")
+                        .orderBy("sequenceNum").cache(useCache).queryList();
                 if (UtilValidate.isNotEmpty(productCategoryMembers)) {
                     for (GenericValue productCategoryMember : productCategoryMembers) {
                         GenericValue product = productCategoryMember.getRelatedOne("Product", useCache);
                         generateProductAltUrls(dctx, context, product, stats, true, useCache);
                     }
                 }
+            }
+            
+            // child cats (recursive)
+            List<GenericValue> childProductCategoryRollups = EntityQuery.use(dctx.getDelegator()).from("ProductCategoryRollup")
+                    .where("parentProductCategoryId", category.getString("productCategoryId")).filterByDate().orderBy("sequenceNum").cache(useCache).queryList();
+            if (UtilValidate.isNotEmpty(childProductCategoryRollups)) {
+                generateCategoryAltUrlsDeep(dctx, context, stats, 
+                        childProductCategoryRollups, doProduct, doCategory, useCache);
             }
         }
     }

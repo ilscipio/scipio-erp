@@ -331,24 +331,24 @@ public class SitemapWorker {
                 trailNames.get(locale).add(trailName); // no need copy, just remove after
             }
             try {
-                // child cats (recursive)
-                List<GenericValue> childProductCategoryRollups = EntityQuery.use(delegator).from("ProductCategoryRollup")
-                        .where("parentProductCategoryId", category.getString("productCategoryId")).filterByDate().cache(useCache).queryList(); // not need: .orderBy("sequenceNum")
-                if (UtilValidate.isNotEmpty(childProductCategoryRollups)) {
-                    buildSitemapDeepForProductCategoriesInternal(childProductCategoryRollups, trailNames);
-                }
-    
                 // products
                 if (config.isDoProduct()) {
                     List<GenericValue> productCategoryMembers = EntityQuery.use(delegator).from("ProductCategoryMember")
                             .where("productCategoryId", category.getString("productCategoryId")).filterByDate()
-                            .cache(useCache).queryList(); // not need: .orderBy("sequenceNum")
+                            .orderBy("sequenceNum").cache(useCache).queryList();
                     if (UtilValidate.isNotEmpty(productCategoryMembers)) {
                         for (GenericValue productCategoryMember : productCategoryMembers) {
                             GenericValue product = productCategoryMember.getRelatedOne("Product", useCache);
                             buildSitemapProduct(product, trailNames);
                         }
                     }
+                }
+                
+                // child cats (recursive)
+                List<GenericValue> childProductCategoryRollups = EntityQuery.use(delegator).from("ProductCategoryRollup")
+                        .where("parentProductCategoryId", category.getString("productCategoryId")).filterByDate().orderBy("sequenceNum").cache(useCache).queryList();
+                if (UtilValidate.isNotEmpty(childProductCategoryRollups)) {
+                    buildSitemapDeepForProductCategoriesInternal(childProductCategoryRollups, trailNames);
                 }
             } finally {
                 for(Locale locale : locales) {

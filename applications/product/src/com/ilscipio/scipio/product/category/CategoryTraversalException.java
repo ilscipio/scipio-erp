@@ -16,7 +16,7 @@ public class CategoryTraversalException extends GeneralException {
     public CategoryTraversalException(Throwable nested) { super(nested); }
     
     /**
-     * Visitor or Traverser may call this to request a clean stop to traversal; not an error; not logged.
+     * CLEAN STOP - Visitor or Traverser may call this to request a clean stop to traversal; not an error; not logged.
      */
     public static class StopCategoryTraversalException extends CategoryTraversalException {
         public StopCategoryTraversalException() { super(); }

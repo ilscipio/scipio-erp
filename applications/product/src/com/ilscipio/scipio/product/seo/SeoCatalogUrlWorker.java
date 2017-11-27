@@ -64,7 +64,6 @@ import org.ofbiz.webapp.website.WebSiteWorker;
 
 import com.ilscipio.scipio.product.category.CatalogAltUrlSanitizer;
 import com.ilscipio.scipio.product.category.CatalogUrlType;
-import com.ilscipio.scipio.product.seo.SeoCatalogUrlWorker.SeoCatalogUrlInfo;
 import com.ilscipio.scipio.util.SeoStringUtil;
 
 /**

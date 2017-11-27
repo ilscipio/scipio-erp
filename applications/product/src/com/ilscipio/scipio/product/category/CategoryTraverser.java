@@ -1,5 +1,6 @@
 package com.ilscipio.scipio.product.category;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,24 +16,32 @@ import org.ofbiz.service.LocalDispatcher;
 
 import com.ilscipio.scipio.product.category.CategoryTraversalException.StopCategoryTraversalException;
 import com.ilscipio.scipio.product.category.CategoryVisitor.CommonCategoryVisitor;
+import com.ilscipio.scipio.product.seo.SeoCategoryTraverser;
 
 /**
  * SCIPIO: Factors out the boilerplate code for traversing catalog categories.
  * Everything is overridable, plus supports a separate CategoryVisitor for the 
  * very core calls only.
  * <p>
- * TODO: I had this idea too late, so should go back on SEO URL/sitemap generation
- * and refactor them to use this (allows more options).
+ * This base class is STATELESS - subclasses should decide if/how to manage state.
+ * <p>
+ * DEV NOTE: do not put specific or stateful functionality in this class.
+ * I made a special {@link SeoCategoryTraverser} subclass for that, 
+ * because this one is may be used in many places (not just SEO).
+ * <p>
+ * TODO: missing filterByDate options and moment to use.
  */
 public class CategoryTraverser extends CommonCategoryVisitor {
 
     public static final String module = CategoryTraverser.class.getName();
     
-    protected static final String logPrefix = ""; // "CategoryTraverser: "
     /**
-     * Expected max depth (optimization), grossly exaggerated.
+     * Expected max category depth (optimization), intentionally exaggerated (probably no one has categories
+     * deeper than a dozen or so).
      */
-    public static final int MAX_DEPTH_PERF = 256;
+    public static final int MAX_CATEGORY_DEPTH_PERF = 128;
+    
+    protected static final String logPrefix = ""; // "CategoryTraverser: "
     
     private final CategoryVisitor visitor;
     private final Delegator delegator;
@@ -41,63 +50,51 @@ public class CategoryTraverser extends CommonCategoryVisitor {
     
     private final boolean doCategory;
     private final boolean doProduct;
+    private final boolean filterByDate;
+    private final Timestamp moment;
 
     /**
      * Composed visitor constructor, with explicit visitor.
      */
     public CategoryTraverser(CategoryVisitor visitor, Delegator delegator, LocalDispatcher dispatcher,
-            boolean useCache, boolean doCategory, boolean doProduct) {
-        this.visitor = visitor;
+            boolean useCache, boolean doCategory, boolean doProduct, boolean filterByDate, Timestamp moment) {
+        this.visitor = (visitor != null) ? visitor : this;
         this.delegator = delegator;
         this.dispatcher = dispatcher;
         this.useCache = useCache;
         this.doCategory = doCategory;
         this.doProduct = doProduct;
+        this.filterByDate = filterByDate;
+        this.moment = moment;
     }
     
     public CategoryTraverser(CategoryVisitor visitor, Delegator delegator, LocalDispatcher dispatcher,
             boolean useCache) {
-        this(visitor, delegator, dispatcher, useCache, true, true);
+        this(visitor, delegator, dispatcher, useCache, true, true, true, null);
     }
     
     /**
      * Abstract instance constructor, with the traverser itself as the visitor.
      */
     public CategoryTraverser(Delegator delegator, LocalDispatcher dispatcher,
-            boolean useCache, boolean doCategory, boolean doProduct) {
-        this.visitor = this;
-        this.delegator = delegator;
-        this.dispatcher = dispatcher;
-        this.useCache = useCache;
-        this.doCategory = doCategory;
-        this.doProduct = doProduct;
+            boolean useCache, boolean doCategory, boolean doProduct, boolean filterByDate, Timestamp moment) {
+        this(null, delegator, dispatcher, useCache, doCategory, doProduct, filterByDate, moment);
     }
     
     public CategoryTraverser(Delegator delegator, LocalDispatcher dispatcher,
             boolean useCache) {
-        this(delegator, dispatcher, useCache, true, true);
+        this(null, delegator, dispatcher, useCache, true, true, true, null);
     }
-    
-    protected <T> List<T> newCategoryTrailList() {
-        return new ArrayList<T>(MAX_DEPTH_PERF);
-    }
-    
+
     /**
      * Traverse ProductStore categories depth-first.
      * Usually categoryAssocList should be ProdCatalogCategory, but supports starting in middle
      */
-    public boolean traverseProductStoreCategoriesDepthFirst(GenericValue productStore) throws GeneralException {
-        List<GenericValue> prodCatalogList = EntityQuery.use(delegator).from("ProductStoreCatalog")
-                .where(makeProductStoreCatalogCond(productStore.getString("productStoreId")))
-                .filterByDate().orderBy("sequenceNum").cache(isUseCache()).queryList();
-        prodCatalogList = reorderProductStoreCatalogs(prodCatalogList);
-        
+    public boolean traverseProductStoreDepthFirst(GenericValue productStore) throws GeneralException {
+        List<GenericValue> prodCatalogList = queryProductStoreCatalogList(productStore);
         try {
             for(GenericValue prodCatalog : prodCatalogList) {
-                List<GenericValue> prodCatalogCategoryList = EntityQuery.use(delegator).from("ProdCatalogCategory")
-                        .where(makeProdCatalogCategoryCond(prodCatalog.getString("prodCatalogId")))
-                        .filterByDate().orderBy("sequenceNum").cache(isUseCache()).queryList();
-                prodCatalogCategoryList = reorderProdCatalogCategories(prodCatalogCategoryList);
+                List<GenericValue> prodCatalogCategoryList = queryProdCatalogCategoryList(prodCatalog);
                 List<GenericValue> trailCategories = newCategoryTrailList();
                 traverseCategoriesDepthFirstImpl(prodCatalogCategoryList, CategoryRefType.CATALOG_ASSOC.getResolver(), trailCategories, 0);
             }
@@ -108,41 +105,26 @@ public class CategoryTraverser extends CommonCategoryVisitor {
         }
     }
     
-    protected EntityCondition makeProductStoreCatalogCond(String productStoreId) {
-        return EntityCondition.makeCondition("productStoreId", productStoreId);
-    }
-    
-    protected EntityCondition makeProdCatalogCategoryCond(String prodCatalogId) {
-        return EntityCondition.makeCondition("prodCatalogId", prodCatalogId);
-    }
-    
     /**
-     * Let's use makeXxxCond methods instead of this.
+     * Traverse ProdCatalog categories depth-first.
      */
-    @Deprecated
-    protected boolean isApplicableProdCatalogCategory(GenericValue prodCatalogCategory) {
-        return true;
-    }
-    
-    /**
-     * If applicable, reorder by the prodCatalogIds in the config, so that order won't change randomly.
-     */
-    protected List<GenericValue> reorderProductStoreCatalogs(List<GenericValue> productStoreCatalogList) {
-        return productStoreCatalogList;
-    }
-    
-    /**
-     * If applicable, reorder by the prodCatalogCategoryTypeIds in the config, so that order won't change randomly.
-     */
-    protected List<GenericValue> reorderProdCatalogCategories(List<GenericValue> prodCatalogCategoryList) {
-        return prodCatalogCategoryList;
+    public boolean traverseCatalogsDepthFirst(List<GenericValue> prodCatalogList) throws GeneralException {
+        try {
+            for(GenericValue prodCatalog : prodCatalogList) {
+                List<GenericValue> prodCatalogCategoryList = queryProdCatalogCategoryList(prodCatalog);
+                List<GenericValue> trailCategories = newCategoryTrailList();
+                traverseCategoriesDepthFirstImpl(prodCatalogCategoryList, CategoryRefType.CATALOG_ASSOC.getResolver(), trailCategories, 0);
+            }
+            return true;
+        } catch(StopCategoryTraversalException e) {
+            ; // not an error - just stop
+            return false;
+        }
     }
     
     /**
      * Traverse categories depth-first.
-     * Usually categoryAssocList should be ProdCatalogCategory, but supports starting in middle
-     * using ProductCategoryRollup.
-     * @param categoryAssocList
+     * @param categoryAssocList list of ProdCatalogCategory, ProductCategoryRollup, ProductCategory, or a view-entity derived from these
      * @return true if went through entire category tree; false if stopped prematurely at some point.
      */
     public boolean traverseCategoriesDepthFirst(List<GenericValue> categoryOrAssocList) throws GeneralException {
@@ -151,9 +133,7 @@ public class CategoryTraverser extends CommonCategoryVisitor {
     
     /**
      * Traverse categories depth-first.
-     * Usually categoryAssocList should be ProdCatalogCategory, but supports starting in middle
-     * using ProductCategoryRollup, in which case physicalDepth may be set to 
-     * @param categoryAssocList
+     * @param categoryAssocList list of ProdCatalogCategory, ProductCategoryRollup, ProductCategory, or a view-entity derived from these
      * @param categoryDepth if non-null, overrides the physical category depth the algorithm should assume; 
      *                      [TODO: NOT IMPLEMENTED] if null, determines the depth automatically (extra step);
      *                      if -1, don't calculate or use physicalDepth at all (optimize out)
@@ -185,6 +165,9 @@ public class CategoryTraverser extends CommonCategoryVisitor {
     
     protected void traverseCategoriesDepthFirstImpl(List<GenericValue> categoryAssocList, CategoryRefType.Resolver listEntryResolver, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException {
         for (GenericValue categoryAssoc : categoryAssocList) {
+            if (!isApplicableCategoryAssoc(categoryAssoc)) {
+                continue;
+            }
             GenericValue productCategory = listEntryResolver.getProductCategoryStrict(categoryAssoc, isUseCache());
             if (productCategory == null) {
                 Debug.logError(getLogMsgPrefix()+"Error: Could not get related ProductCategory for: " + categoryAssoc, module);
@@ -197,7 +180,7 @@ public class CategoryTraverser extends CommonCategoryVisitor {
             visitProductsLocal(productCategory, trailCategories, physicalDepth);
             
             // child cats (recursive)
-            List<GenericValue> childProductCategoryRollups = querySubCategories(productCategory);
+            List<GenericValue> childProductCategoryRollups = queryCategorySubCategoryList(productCategory);
             if (UtilValidate.isNotEmpty(childProductCategoryRollups)) {
                 traverseCategoriesDepthFirstImpl(childProductCategoryRollups, CategoryRefType.CATEGORY_ASSOC.getResolver(), trailCategories, physicalDepth + 1);
             }
@@ -207,17 +190,17 @@ public class CategoryTraverser extends CommonCategoryVisitor {
         }
     }
 
-    protected void visitCategoryLocal(GenericValue productCategory, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException {
+    protected final void visitCategoryLocal(GenericValue productCategory, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException {
         // self
         if (isDoCategory(productCategory)) {
             visitor.visitCategory(productCategory, trailCategories, physicalDepth);
         }
     }
     
-    protected void visitProductsLocal(GenericValue productCategory, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException {
+    protected final void visitProductsLocal(GenericValue productCategory, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException {
         // products
         if (isDoProduct(productCategory)) {
-            List<GenericValue> productCategoryMembers = queryCategoryProducts(productCategory);
+            List<GenericValue> productCategoryMembers = queryCategoryProductList(productCategory);
             if (UtilValidate.isNotEmpty(productCategoryMembers)) {
                 for (GenericValue productCategoryMember : productCategoryMembers) {
                     GenericValue product = productCategoryMember.getRelatedOne("Product", isUseCache());
@@ -228,12 +211,12 @@ public class CategoryTraverser extends CommonCategoryVisitor {
         }
     }
     
-    protected void pushCategoryLocal(GenericValue productCategory, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException {
+    protected final void pushCategoryLocal(GenericValue productCategory, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException {
         visitor.pushCategory(productCategory, trailCategories, physicalDepth);
         trailCategories.add(productCategory);
     }
 
-    protected void popCategoryLocal(GenericValue productCategory, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException {
+    protected final void popCategoryLocal(GenericValue productCategory, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException {
         trailCategories.remove(trailCategories.size() - 1);
         visitor.popCategory(productCategory, trailCategories, physicalDepth);
     }
@@ -246,18 +229,67 @@ public class CategoryTraverser extends CommonCategoryVisitor {
         return isDoProduct();
     }
     
-    protected List<GenericValue> querySubCategories(GenericValue productCategory) throws GenericEntityException {
+    // GENERAL QUERIES (overridable)
+
+    protected List<GenericValue> queryProductStoreCatalogList(GenericValue productStore) throws GenericEntityException {
+        return filterProductStoreCatalogList(EntityQuery.use(delegator).from("ProductStoreCatalog")
+                .where(makeProductStoreCatalogCond(productStore.getString("productStoreId")))
+                .filterByDate(isFilterByDate(), getMoment()).orderBy("sequenceNum").cache(isUseCache()).queryList());
+    }
+    
+    
+    protected EntityCondition makeProductStoreCatalogCond(String productStoreId) {
+        return EntityCondition.makeCondition("productStoreId", productStoreId);
+    }
+
+    /**
+     * Can be overridden to filter ProductStoreCatalogs after store query.
+     */
+    protected List<GenericValue> filterProductStoreCatalogList(List<GenericValue> productStoreCatalogList) {
+        return productStoreCatalogList;
+    }
+
+    protected List<GenericValue> queryProdCatalogCategoryList(GenericValue prodCatalog) throws GenericEntityException {
+        return filterProdCatalogCategoryList(EntityQuery.use(delegator).from("ProdCatalogCategory")
+                .where(makeProdCatalogCategoryCond(prodCatalog.getString("prodCatalogId")))
+                .filterByDate(isFilterByDate(), getMoment()).orderBy("sequenceNum").cache(isUseCache()).queryList());
+    }
+    
+    
+    protected EntityCondition makeProdCatalogCategoryCond(String prodCatalogId) {
+        return EntityCondition.makeCondition("prodCatalogId", prodCatalogId);
+    }
+    
+    /**
+     * Can be overridden to filter ProdCatalogCategory after store query.
+     */
+    protected List<GenericValue> filterProdCatalogCategoryList(List<GenericValue> prodCatalogCategoryList) {
+        return prodCatalogCategoryList;
+    }
+    
+    /**
+     * Can be used to filter ProdCatalogCategory and ProductCategoryRollup during iteration.
+     */
+    protected boolean isApplicableCategoryAssoc(GenericValue categoryOrAssoc) {
+        return true;
+    }
+
+    protected List<GenericValue> queryCategorySubCategoryList(GenericValue productCategory) throws GenericEntityException {
         return EntityQuery.use(getDelegator()).from("ProductCategoryRollup")
-                .where("parentProductCategoryId", productCategory.getString("productCategoryId")).filterByDate()
+                .where("parentProductCategoryId", productCategory.getString("productCategoryId")).filterByDate(isFilterByDate(), getMoment())
                 .orderBy("sequenceNum").cache(isUseCache()).queryList();
     }
     
-    protected List<GenericValue> queryCategoryProducts(GenericValue productCategory) throws GenericEntityException {
+    protected List<GenericValue> queryCategoryProductList(GenericValue productCategory) throws GenericEntityException {
         return EntityQuery.use(getDelegator()).from("ProductCategoryMember")
-                .where("productCategoryId", productCategory.getString("productCategoryId")).filterByDate()
+                .where("productCategoryId", productCategory.getString("productCategoryId")).filterByDate(isFilterByDate(), getMoment())
                 .orderBy("sequenceNum").cache(isUseCache()).queryList();
     }
 
+    protected <T> List<T> newCategoryTrailList() {
+        return new ArrayList<T>(MAX_CATEGORY_DEPTH_PERF);
+    }
+    
     public CategoryVisitor getVisitor() {
         return visitor;
     }
@@ -282,6 +314,17 @@ public class CategoryTraverser extends CommonCategoryVisitor {
         return doProduct;
     }
 
+    public boolean isFilterByDate() {
+        return filterByDate;
+    }
+    
+    /**
+     * NOTE: if null and {@link #isFilterByDate} is true, this means "use now timestamp".
+     */
+    public Timestamp getMoment() {
+        return moment;
+    }
+    
     protected String getLogMsgPrefix() {
         return logPrefix;
     }

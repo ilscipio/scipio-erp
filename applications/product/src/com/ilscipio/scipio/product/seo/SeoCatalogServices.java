@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -27,12 +26,10 @@ import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 
 import com.ilscipio.scipio.product.category.CatalogAltUrlSanitizer;
 import com.ilscipio.scipio.product.category.CatalogUrlType;
-import com.ilscipio.scipio.util.SeoStringUtil;
 
 /**
  * SCIPIO: SEO catalog services.
@@ -514,7 +511,14 @@ public abstract class SeoCatalogServices {
         
         boolean useCache = Boolean.TRUE.equals(context.get("useCache")); // FALSE default
         
-        UrlGenStats stats = new UrlGenStats(doProduct, doCategory);
+        SeoCatalogUrlGenerator traverser;
+        try {
+            traverser = new SeoCatalogUrlGenerator(dctx, context, useCache, doCategory, doProduct);
+        } catch (Exception e) {
+            String message = "Error preparing to generate alternative links: " + e.getMessage();
+            Debug.logError(e, logPrefix+"generateWebsiteAlternativeUrls: "+message, module);
+            return ServiceUtil.returnError(message);
+        }
         
         List<GenericValue> prodCatalogList;
         try {
@@ -540,21 +544,16 @@ public abstract class SeoCatalogServices {
                         .filterByDate().orderBy("sequenceNum").cache(useCache).queryList();
             }
             
-            for(GenericValue prodCatalog : prodCatalogList) {
-                List<GenericValue> catalogCategories = EntityQuery.use(delegator).from("ProdCatalogCategory")
-                        .where("prodCatalogId", prodCatalog.getString("prodCatalogId")).filterByDate()
-                        .orderBy("sequenceNum").cache(useCache).queryList();
-                generateCategoryAltUrlsDeep(dctx, context, stats, catalogCategories, doProduct, doCategory, useCache);
-            }
+            traverser.traverseCatalogsDepthFirst(prodCatalogList);
         } catch(Exception e) {
             String message = "Error while generating alternative links: " + e.getMessage();
-            Debug.logError(e, logPrefix+message, module);
+            Debug.logError(e, logPrefix+"generateWebsiteAlternativeUrls: "+message, module);
             return ServiceUtil.returnError(message);
         }
         
-        String resultMsg = stats.toMsg(locale);
-        Debug.logInfo(logPrefix+"Generated alternative links: " + resultMsg, module);
-        return stats.toServiceResultSuccessFailure(resultMsg);
+        String resultMsg = traverser.getStats().toMsg(locale);
+        Debug.logInfo(logPrefix+"generateWebsiteAlternativeUrls: Generated alternative links: " + resultMsg, module);
+        return traverser.getStats().toServiceResultSuccessFailure(resultMsg);
     }
     
     /**
@@ -579,8 +578,15 @@ public abstract class SeoCatalogServices {
         // TODO: REVIEW: currently avoids store lookup overhead but may not last,
         // we may be forced to lookup stores here due to defaultLocaleString and other setting...
         
-        UrlGenStats stats = new UrlGenStats(doProduct, doCategory);
-        
+        SeoCatalogUrlGenerator traverser;
+        try {
+            traverser = new SeoCatalogUrlGenerator(dctx, context, useCache, doCategory, doProduct);
+        } catch (Exception e) {
+            String message = "Error preparing to generate alternative links: " + e.getMessage();
+            Debug.logError(e, logPrefix+"generateAllAlternativeUrls: "+message, module);
+            return ServiceUtil.returnError(message);
+        }
+
         if (doProduct) {
             EntityListIterator productIt = null;
             try {
@@ -588,11 +594,11 @@ public abstract class SeoCatalogServices {
                 GenericValue product;
                 while ((product = productIt.next()) != null) {
                     // NOTE: doChildProducts = false, because already counted in our global query here
-                    generateProductAltUrls(dctx, context, product, stats, false, useCache);
+                    traverser.generateProductAltUrls(product, false);
                 }
             } catch (Exception e) {
                 String message = "Error while generating alternative links: " + e.getMessage();
-                Debug.logError(e, logPrefix+message, module);
+                Debug.logError(e, logPrefix+"generateAllAlternativeUrls: " + message, module);
                 return ServiceUtil.returnError(message);
             } finally {
                 if (productIt != null) {
@@ -611,11 +617,11 @@ public abstract class SeoCatalogServices {
                 productCategoryIt = EntityQuery.use(delegator).from("ProductCategory").cache(useCache).queryIterator();
                 GenericValue productCategory;
                 while ((productCategory = productCategoryIt.next()) != null) {
-                    generateCategoryAltUrls(dctx, context, productCategory, stats, useCache);
+                    traverser.generateCategoryAltUrls(productCategory);
                 }
             } catch (Exception e) {
                 String message = "Error while generating alternative links: " + e.getMessage();
-                Debug.logError(e, logPrefix+message, module);
+                Debug.logError(e, logPrefix+"generateAllAlternativeUrls: " + message, module);
                 return ServiceUtil.returnError(message);
             } finally {
                 if (productCategoryIt != null) {
@@ -632,198 +638,9 @@ public abstract class SeoCatalogServices {
         //if (doContent) {
         //}
         
-        String resultMsg = stats.toMsg(locale);
-        Debug.logInfo(logPrefix+"Generated alternative links: " + resultMsg, module);
-        return stats.toServiceResultSuccessFailure(resultMsg);
+        String resultMsg = traverser.getStats().toMsg(locale);
+        Debug.logInfo(logPrefix+"generateAllAlternativeUrls: Generated alternative links: " + resultMsg, module);
+        return traverser.getStats().toServiceResultSuccessFailure(resultMsg);
     }
-    
-    // recursive helper, rewritten from getTreeCategories
-    private static void generateCategoryAltUrlsDeep(DispatchContext dctx, Map<String, ?> context, UrlGenStats stats,
-            List<GenericValue> categoryAssocList, boolean doProduct, boolean doCategory, boolean useCache) throws GeneralException {
-        for (GenericValue categoryAssoc : categoryAssocList) {
-            GenericValue category = null;
-            if ("ProductCategoryRollup".equals(categoryAssoc.getEntityName())) {
-                category = categoryAssoc.getRelatedOne("CurrentProductCategory", useCache);
-            } else if ("ProdCatalogCategory".equals(categoryAssoc.getEntityName())) {
-                category = categoryAssoc.getRelatedOne("ProductCategory", useCache);
-            }
-            if (category == null) {
-                Debug.logError(logPrefix+"Schema error: Could not get related ProductCategory for: " + categoryAssoc, module);
-                continue;
-            }
-            
-            // self
-            if (doCategory) {
-                generateCategoryAltUrls(dctx, context, category, stats, useCache);
-            }
-            
-            // products
-            if (doProduct) {
-                List<GenericValue> productCategoryMembers = EntityQuery.use(dctx.getDelegator()).from("ProductCategoryMember")
-                        .where("productCategoryId", category.getString("productCategoryId")).filterByDate()
-                        .orderBy("sequenceNum").cache(useCache).queryList();
-                if (UtilValidate.isNotEmpty(productCategoryMembers)) {
-                    for (GenericValue productCategoryMember : productCategoryMembers) {
-                        GenericValue product = productCategoryMember.getRelatedOne("Product", useCache);
-                        generateProductAltUrls(dctx, context, product, stats, true, useCache);
-                    }
-                }
-            }
-            
-            // child cats (recursive)
-            List<GenericValue> childProductCategoryRollups = EntityQuery.use(dctx.getDelegator()).from("ProductCategoryRollup")
-                    .where("parentProductCategoryId", category.getString("productCategoryId")).filterByDate().orderBy("sequenceNum").cache(useCache).queryList();
-            if (UtilValidate.isNotEmpty(childProductCategoryRollups)) {
-                generateCategoryAltUrlsDeep(dctx, context, stats, 
-                        childProductCategoryRollups, doProduct, doCategory, useCache);
-            }
-        }
-    }
-    
-    // helper wrapper
-    private static void generateCategoryAltUrls(DispatchContext dctx, Map<String, ? extends Object> context, GenericValue productCategory, UrlGenStats stats, boolean useCache) throws GeneralException {
-        String productCategoryId = productCategory.getString("productCategoryId");
-        Map<String, Object> servCtx = dctx.makeValidContext("generateProductCategoryAlternativeUrlsCore", ModelService.IN_PARAM, context);
-        servCtx.put("productCategory", productCategory);
-        servCtx.put("productCategoryId", productCategoryId);
-        // service call for separate transaction
-        Map<String, Object> recordResult = dctx.getDispatcher().runSync("generateProductCategoryAlternativeUrlsCore", servCtx, -1, true);
-        if (ServiceUtil.isSuccess(recordResult)) {
-            if (Boolean.TRUE.equals(recordResult.get("categoryUpdated"))) {
-                stats.categorySuccess++;
-            } else {
-                stats.categorySkipped++;
-            }
-        } else {
-            Debug.logError(logPrefix+"Error generating alternative links for category '" 
-                    + productCategoryId + "': " + ServiceUtil.getErrorMessage(recordResult), module);
-            stats.categoryError++;
-        }
-    }
-    
-    // helper wrapper
-    private static void generateProductAltUrls(DispatchContext dctx, Map<String, ? extends Object> context, GenericValue product, UrlGenStats stats, boolean doChildProducts, boolean useCache) throws GeneralException {
-        boolean includeVariant = Boolean.TRUE.equals(context.get("includeVariant"));
-        if (!includeVariant && "Y".equals(product.getString("isVariant"))) {
-            return;
-        }
-        
-        String productId = product.getString("productId");
-        
-        Map<String, Object> servCtx = dctx.makeValidContext("generateProductAlternativeUrlsCore", ModelService.IN_PARAM, context);
-        servCtx.put("product", product);
-        servCtx.put("productId", productId);
-        servCtx.put("doChildProducts", doChildProducts);
-        servCtx.put("includeVariant", includeVariant);
-        // service call for separate transaction
-        Map<String, Object> recordResult = dctx.getDispatcher().runSync("generateProductAlternativeUrlsCore", servCtx, -1, true);
-        //Map<String, Object> recordResult = generateProductAlternativeUrls(delegator, dispatcher, 
-        //        context, product, replaceExisting, moment);
-        Integer numUpdated = (Integer) recordResult.get("numUpdated");
-        Integer numSkipped = (Integer) recordResult.get("numSkipped");
-        Integer numError = (Integer) recordResult.get("numError");
-        if (numUpdated != null) stats.productSuccess += numUpdated;
-        if (numSkipped != null) stats.productSkipped += numSkipped;
-        if (ServiceUtil.isSuccess(recordResult)) {
-            if (numError != null) stats.productError += numError;
-        } else {
-            if (numError != null) stats.productError += numError;
-            else stats.productError++; // couldn't return count
-            Debug.logError(logPrefix+"Error generating alternative links for product '" 
-                    + productId + "': " + ServiceUtil.getErrorMessage(recordResult), module);
-        }
-    }
-    
-    /**
-     * SCIPIO: SEO Service to generate an alternative product URL; relies on a common SEO ruleset
-     * @deprecated not usable, for reference only
-     * */
-    @Deprecated
-    static Map<String, Object> generateAlternativeURL(DispatchContext dctx, Map<String, ? extends Object> context) throws GenericEntityException {
-        Delegator delegator = dctx.getDelegator();
-        
-        List<GenericValue> products = null;
-        try {
-            String productId = (String) context.get("product");
-            if(UtilValidate.isNotEmpty(productId)){
-                products = delegator.findByAnd("Product", UtilMisc.toMap("productId",productId),null,false);
-            }else{
-                products = delegator.findAll("Product", true);  
-            }
-        }
-        catch (Exception ex) {
-            String message = "Cannot determine products.";
-            Debug.logError(ex, logPrefix+message, module);
-            return ServiceUtil.returnError(message);
-        }
 
-        if (UtilValidate.isEmpty(products)) {
-            return ServiceUtil.returnError("No products found.");
-        }
-
-
-        Map<String, String> seoNames;
-        for (GenericValue product : products) {
-            seoNames = new HashMap<String, String>();
-
-            String productId = product.getString("productId");
-            String productName = product.getString("productName");
-            String seoName = SeoStringUtil.constructSeoName(productName);
-
-            if (seoName.lastIndexOf("-") >= 100) {
-                seoName = seoName.substring(0, seoName.lastIndexOf("-"));
-            }
-
-            seoNames.put("productId", productId);
-            seoNames.put("seoLink", seoName);
-            
-            try {
-                String contentId = productId + "_AU";
-
-                // create dataResource
-                GenericValue dataResource = delegator.makeValue("DataResource");
-                dataResource.put("dataResourceId", contentId);
-                dataResource.put("dataResourceTypeId", "ELECTRONIC_TEXT");
-                dataResource.put("dataTemplateTypeId", "FTL");
-                dataResource.put("statusId", "CTNT_PUBLISHED");
-                // delegator.create(dataResource, false);
-                dataResource.create();
-
-                // create electronicText
-                GenericValue electronicText = delegator.makeValue("ElectronicText");
-                electronicText.put("dataResourceId", contentId);
-
-                electronicText.put("textData", seoName);
-                // delegator.create(electronicText, false);
-                electronicText.create();
-
-                // create content
-                GenericValue content = delegator.makeValue("Content");
-                content.put("contentId", contentId);
-
-                content.put("dataResourceId", contentId);
-                content.put("contentTypeId", "DOCUMENT");
-                content.put("description", "Alternative URL");
-                //content.put("localeString", "de"); // no
-                // delegator.create(content, false);
-                content.create();
-
-                GenericValue productContent = null;
-                productContent = delegator.makeValue("ProductContent");
-                productContent.put("productId", productId);
-                productContent.put("contentId", contentId);
-                productContent.put("productContentTypeId", "ALTERNATIVE_URL");
-                productContent.put("fromDate", UtilDateTime.nowTimestamp());
-                productContent.put("sequenceNum", new Long(1));
-                // delegator.create(productContent, false);
-                productContent.create();
-            } catch (Exception e) {
-                String message = "Error while generating alternative links.";
-                Debug.logError(e, logPrefix+message, module);
-                return ServiceUtil.returnError(message);
-            }
-        }
-
-        return ServiceUtil.returnSuccess();
-    }
 }

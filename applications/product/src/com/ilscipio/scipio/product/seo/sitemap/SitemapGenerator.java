@@ -31,9 +31,8 @@ import org.xml.sax.SAXException;
 
 import com.ilscipio.scipio.ce.webapp.filter.UrlRewriteConf;
 import com.ilscipio.scipio.product.category.CatalogUrlType;
-import com.ilscipio.scipio.product.category.CategoryTraverser;
 import com.ilscipio.scipio.product.seo.SeoCatalogUrlWorker;
-import com.ilscipio.scipio.product.seo.UrlGenStats;
+import com.ilscipio.scipio.product.seo.SeoCategoryTraverser;
 import com.redfin.sitemapgenerator.SitemapIndexGenerator;
 import com.redfin.sitemapgenerator.WebSitemapGenerator;
 import com.redfin.sitemapgenerator.WebSitemapUrl;
@@ -46,7 +45,7 @@ import com.redfin.sitemapgenerator.WebSitemapUrl;
  * TODO: missing multi-locale link support - unclear if library supports - may need to do one-locale-per-index
  * TODO: does not delete old files (minor issue - spiders will simply ignore them in theory)
  */
-public class SitemapGenerator extends CategoryTraverser {
+public class SitemapGenerator extends SeoCategoryTraverser {
 
     public static final String module = SitemapGenerator.class.getName();
     
@@ -66,7 +65,6 @@ public class SitemapGenerator extends CategoryTraverser {
     protected final GenericValue webSite;
     protected final GenericValue productStore;
     
-    protected UrlGenStats stats = null;
     protected final String fullSitemapDir;
     
     protected Map<CatalogUrlType, EntityHandler> entityHandlers = null;
@@ -141,16 +139,13 @@ public class SitemapGenerator extends CategoryTraverser {
         return config;
     }
     
-    public void reset() throws IOException, URISyntaxException {
-        resetStats();
+    @Override
+    public void reset() throws GeneralException {
+        super.reset();
         resetEntityHandlers();
         resetTrailNames();
     }
-    
-    protected void resetStats() {
-        this.stats = createStats();
-    }
-    
+
     /**
      * NOTE: because the way this is edited in-place during iteration by push/pop,
      * the only time this will still contain entries at the end is if an error happened.
@@ -160,17 +155,10 @@ public class SitemapGenerator extends CategoryTraverser {
     protected void resetTrailNames() {
         Map<Locale, List<String>> trailNames = new HashMap<>();
         for(Locale locale : getLocales()) {
-            trailNames.put(locale, new ArrayList<String>());
+            List<String> trailList = newCategoryTrailList();
+            trailNames.put(locale, trailList);
         }
         this.trailNames = trailNames;
-    }
-    
-    protected UrlGenStats createStats() {
-        return new UrlGenStats(config.isDoProduct(), config.isDoCategory(), false);
-    }
-    
-    public UrlGenStats getStats() {
-        return stats;
     }
     
     protected String getSitemapContextPath() {
@@ -226,7 +214,7 @@ public class SitemapGenerator extends CategoryTraverser {
      * The main iteration call - wrapper around {@link #traverseCategoriesDepthFirst(List)}.
      */
     public void buildSitemapDeepForProductStore() throws GeneralException {
-        traverseProductStoreCategoriesDepthFirst(productStore);
+        traverseProductStoreDepthFirst(productStore);
     }
     
     @Override
@@ -253,7 +241,7 @@ public class SitemapGenerator extends CategoryTraverser {
      * If applicable, reorder by the prodCatalogIds in the config, so that order won't change randomly.
      */
     @Override
-    protected List<GenericValue> reorderProductStoreCatalogs(List<GenericValue> productStoreCatalogList) {
+    protected List<GenericValue> filterProductStoreCatalogList(List<GenericValue> productStoreCatalogList) {
         if (config.getProdCatalogIds() == null || config.getProdCatalogIds().size() <= 1) {
             return productStoreCatalogList;
         } else {
@@ -266,7 +254,7 @@ public class SitemapGenerator extends CategoryTraverser {
      * If applicable, reorder by the prodCatalogCategoryTypeIds in the config, so that order won't change randomly.
      */
     @Override
-    protected List<GenericValue> reorderProdCatalogCategories(List<GenericValue> prodCatalogCategoryList) {
+    protected List<GenericValue> filterProdCatalogCategoryList(List<GenericValue> prodCatalogCategoryList) {
         if (config.getProdCatalogCategoryTypeIds() == null || config.getProdCatalogCategoryTypeIds().size() <= 1) {
             return prodCatalogCategoryList;
         } else {
@@ -280,14 +268,15 @@ public class SitemapGenerator extends CategoryTraverser {
      * NOTE: use EntityConditions instead of this.
      */
     @Override
-    @Deprecated
-    public boolean isApplicableProdCatalogCategory(GenericValue prodCatalogCategory) {
-        if (config.getProdCatalogIds() != null && !config.getProdCatalogIds().contains(prodCatalogCategory.getString("prodCatalogId"))) {
-            return false;
-        }
-        if (config.getProdCatalogCategoryTypeIds() != null && !config.getProdCatalogCategoryTypeIds().contains(prodCatalogCategory.getString("prodCatalogCategoryTypeId"))) {
-            return false;
-        }
+    public boolean isApplicableCategoryAssoc(GenericValue prodCatalogCategory) {
+        // This is covered (faster) in the condition filters.
+//        if (!prodCatalogCategory.getModelEntity().isField("prodCatalogId")) return true;
+//        if (config.getProdCatalogIds() != null && !config.getProdCatalogIds().contains(prodCatalogCategory.getString("prodCatalogId"))) {
+//            return false;
+//        }
+//        if (config.getProdCatalogCategoryTypeIds() != null && !config.getProdCatalogCategoryTypeIds().contains(prodCatalogCategory.getString("prodCatalogCategoryTypeId"))) {
+//            return false;
+//        }
         return true;
     }
 
@@ -334,7 +323,7 @@ public class SitemapGenerator extends CategoryTraverser {
             
             WebSitemapUrl libUrl = buildSitemapLibUrl(url, null);
             getCategoryHandler().addUrl(libUrl);
-            stats.categorySuccess++;
+            getStats().categorySuccess++;
         } catch(Exception e) {
             stats.categoryError++;
             Debug.logError(getLogErrorPrefix() + "Cannot build URL for category '" + productCategoryId + "': " + e.getMessage(), module);

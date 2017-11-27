@@ -20,9 +20,7 @@ package com.ilscipio.scipio.product.seo;
 
 import java.util.Map;
 
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.common.UrlServletHelper;
 
 /**
  * SCIPIO: SEO Catalog URL util

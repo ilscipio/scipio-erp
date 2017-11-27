@@ -826,30 +826,4 @@ public abstract class SeoCatalogServices {
 
         return ServiceUtil.returnSuccess();
     }
-    
-    
-    @SuppressWarnings("serial")
-    public static class SeoCatalogException extends Exception {
-
-        protected SeoCatalogException() {
-            super();
-        }
-
-        protected SeoCatalogException(String message, Throwable cause, boolean enableSuppression,
-                boolean writableStackTrace) {
-            super(message, cause, enableSuppression, writableStackTrace);
-        }
-
-        protected SeoCatalogException(String message, Throwable cause) {
-            super(message, cause);
-        }
-
-        protected SeoCatalogException(String message) {
-            super(message);
-        }
-
-        protected SeoCatalogException(Throwable cause) {
-            super(cause);
-        }
-    }
 }

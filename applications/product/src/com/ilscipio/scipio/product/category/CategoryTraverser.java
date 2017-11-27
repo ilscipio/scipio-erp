@@ -199,7 +199,7 @@ public class CategoryTraverser extends CommonCategoryVisitor {
             // child cats (recursive)
             List<GenericValue> childProductCategoryRollups = querySubCategories(productCategory);
             if (UtilValidate.isNotEmpty(childProductCategoryRollups)) {
-                traverseCategoriesDepthFirstImpl(categoryAssocList, CategoryRefType.CATEGORY_ASSOC.getResolver(), trailCategories, physicalDepth + 1);
+                traverseCategoriesDepthFirstImpl(childProductCategoryRollups, CategoryRefType.CATEGORY_ASSOC.getResolver(), trailCategories, physicalDepth + 1);
             }
             
             // pop

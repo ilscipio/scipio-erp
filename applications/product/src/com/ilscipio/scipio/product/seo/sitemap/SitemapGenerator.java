@@ -43,9 +43,8 @@ import com.redfin.sitemapgenerator.WebSitemapUrl;
  * <p>
  * NOT thread-safe.
  * <p>
- * TODO: missing multi-locale link support - unclear if library supports
- * TODO: does not delete old files (minor)
- * FIXME: Content wrappers do not respect the useCache flag
+ * TODO: missing multi-locale link support - unclear if library supports - may need to do one-locale-per-index
+ * TODO: does not delete old files (minor issue - spiders will simply ignore them in theory)
  */
 public class SitemapGenerator extends CategoryTraverser {
 

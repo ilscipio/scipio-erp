@@ -47,9 +47,9 @@ import com.redfin.sitemapgenerator.WebSitemapUrl;
  * TODO: does not delete old files (minor)
  * FIXME: Content wrappers do not respect the useCache flag
  */
-public class SitemapWorker extends CategoryTraverser {
+public class SitemapGenerator extends CategoryTraverser {
 
-    public static final String module = SitemapWorker.class.getName();
+    public static final String module = SitemapGenerator.class.getName();
     
     protected final List<Locale> locales;
     protected final String webSiteId;
@@ -75,7 +75,7 @@ public class SitemapWorker extends CategoryTraverser {
     protected EntityHandler categoryEntityHandler = null; // opt
     protected Map<Locale, List<String>> trailNames = null; // reset for every new ProdCatalogCategory
 
-    protected SitemapWorker(Delegator delegator, LocalDispatcher dispatcher, List<Locale> locales, String webSiteId, GenericValue webSite, GenericValue productStore, String baseUrl, String sitemapContextPath, String contextPath, SitemapConfig config,
+    protected SitemapGenerator(Delegator delegator, LocalDispatcher dispatcher, List<Locale> locales, String webSiteId, GenericValue webSite, GenericValue productStore, String baseUrl, String sitemapContextPath, String contextPath, SitemapConfig config,
             SeoCatalogUrlWorker urlWorker, UrlRewriteConf urlRewriteConf, boolean useCache) throws GeneralException, IOException, URISyntaxException, SAXException {
         super(delegator, dispatcher, useCache, config.isDoCategory(), config.isDoProduct());
         this.locales = locales;
@@ -94,7 +94,7 @@ public class SitemapWorker extends CategoryTraverser {
         reset();
     }
 
-    public static SitemapWorker getWorkerForWebsite(Delegator delegator, LocalDispatcher dispatcher, String webSiteId, boolean useCache) throws GeneralException, IOException, URISyntaxException, SAXException, IllegalArgumentException {
+    public static SitemapGenerator getWorkerForWebsite(Delegator delegator, LocalDispatcher dispatcher, String webSiteId, boolean useCache) throws GeneralException, IOException, URISyntaxException, SAXException, IllegalArgumentException {
         // TODO: LOCALIZE WITH PROP MESSAGE EXCEPTIONS
         
         GenericValue webSite = delegator.findOne("WebSite", UtilMisc.toMap("webSiteId", webSiteId), useCache);
@@ -110,7 +110,7 @@ public class SitemapWorker extends CategoryTraverser {
         return getWorkerForWebsite(delegator, dispatcher, webSite, productStore, config, useCache);
     }
     
-    public static SitemapWorker getWorkerForWebsite(Delegator delegator, LocalDispatcher dispatcher, GenericValue webSite, GenericValue productStore, SitemapConfig config, boolean useCache) throws GeneralException, IOException, URISyntaxException, SAXException {
+    public static SitemapGenerator getWorkerForWebsite(Delegator delegator, LocalDispatcher dispatcher, GenericValue webSite, GenericValue productStore, SitemapConfig config, boolean useCache) throws GeneralException, IOException, URISyntaxException, SAXException {
         String webSiteId = webSite.getString("webSiteId");
         if (config == null) throw new IOException("no valid sitemap config for website '" + webSiteId + "'");
         String sitemapContextPath = config.getSitemapContextPath();
@@ -129,7 +129,7 @@ public class SitemapWorker extends CategoryTraverser {
         if (config.getUrlConfPath() != null) {
             urlRewriteConf = UrlRewriteConf.loadConf(config.getUrlConfPath());
         }
-        return new SitemapWorker(delegator, dispatcher, 
+        return new SitemapGenerator(delegator, dispatcher, 
                 config.getLocalesOrDefault(webSite, productStore), 
                 webSiteId, webSite, productStore,
                 baseUrl, sitemapContextPath, contextPath, config,

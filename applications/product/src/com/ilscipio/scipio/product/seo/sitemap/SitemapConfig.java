@@ -43,7 +43,7 @@ public class SitemapConfig implements Serializable {
     public static final int DEFAULT_SITEMAP_SIZE = UtilProperties.getPropertyAsInteger(SITEMAPCOMMON_RESOURCE, "sitemap.default.sitemapsize", 50000);
     public static final int DEFAULT_INDEX_SIZE = UtilProperties.getPropertyAsInteger(SITEMAPCOMMON_RESOURCE, "sitemap.default.indexsize", 50000);
     
-    private static final String logPrefix = SitemapWorker.logPrefix;
+    private static final String logPrefix = SitemapGenerator.logPrefix;
     
     private static class StaticConfigHolder {
         // TODO?: in future could have DB config

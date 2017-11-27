@@ -285,5 +285,12 @@ public class CategoryTraverser extends CommonCategoryVisitor {
     protected String getLogMsgPrefix() {
         return logPrefix;
     }
-
+    
+    protected String getLogErrorPrefix() {
+        return logPrefix+"Error traversing categories: ";
+    }
+    
+    protected String getLogErrorMsg(Throwable t) {
+        return getLogErrorPrefix() + t.getMessage();
+    }
 }

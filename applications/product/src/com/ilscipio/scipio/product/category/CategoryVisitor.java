@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.entity.GenericValue;
 
 /**
@@ -13,19 +14,19 @@ import org.ofbiz.entity.GenericValue;
  */
 public interface CategoryVisitor {
 
-    void pushCategory(GenericValue productCategory, List<GenericValue> trailCategories, int physicalDepth) throws CategoryTraversalException;
+    void pushCategory(GenericValue productCategory, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException;
     
-    void popCategory(GenericValue productCategory, List<GenericValue> trailCategories, int physicalDepth) throws CategoryTraversalException;
+    void popCategory(GenericValue productCategory, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException;
     
-    void visitCategory(GenericValue productCategory, List<GenericValue> trailCategories, int physicalDepth) throws CategoryTraversalException;
+    void visitCategory(GenericValue productCategory, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException;
 
-    void visitProduct(GenericValue product, List<GenericValue> trailCategories, int physicalDepth) throws CategoryTraversalException;
+    void visitProduct(GenericValue product, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException;
 
     public static abstract class CommonCategoryVisitor implements CategoryVisitor {
-        @Override public void pushCategory(GenericValue productCategory, List<GenericValue> trailCategories, int physicalDepth) { ; }
-        @Override public void popCategory(GenericValue productCategory, List<GenericValue> trailCategories, int physicalDepth) { ; }
-        @Override public void visitCategory(GenericValue productCategory, List<GenericValue> trailCategories, int physicalDepth) { ; }
-        @Override public void visitProduct(GenericValue product, List<GenericValue> trailCategories, int physicalDepth) { ; }
+        @Override public void pushCategory(GenericValue productCategory, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException { ; }
+        @Override public void popCategory(GenericValue productCategory, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException { ; }
+        @Override public void visitCategory(GenericValue productCategory, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException { ; }
+        @Override public void visitProduct(GenericValue product, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException { ; }
     }
 
     public static class LoggingCategoryVisitor extends CommonCategoryVisitor {

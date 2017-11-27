@@ -9,10 +9,10 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.entity.GenericValue;
 
 /**
- * Versatile visitor interface for {@link CategoryTraverser}.
- * @see CategoryTraverser
+ * Versatile visitor interface for {@link CatalogTraverser}.
+ * @see CatalogTraverser
  */
-public interface CategoryVisitor {
+public interface CatalogVisitor {
 
     void pushCategory(GenericValue productCategory, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException;
     
@@ -22,15 +22,15 @@ public interface CategoryVisitor {
 
     void visitProduct(GenericValue product, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException;
 
-    public static abstract class CommonCategoryVisitor implements CategoryVisitor {
+    public static abstract class AbstractCatalogVisitor implements CatalogVisitor {
         @Override public void pushCategory(GenericValue productCategory, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException { ; }
         @Override public void popCategory(GenericValue productCategory, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException { ; }
         @Override public void visitCategory(GenericValue productCategory, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException { ; }
         @Override public void visitProduct(GenericValue product, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException { ; }
     }
 
-    public static class LoggingCategoryVisitor extends CommonCategoryVisitor {
-        public static final String module = LoggingCategoryVisitor.class.getName();
+    public static class LoggingCatalogVisitor extends AbstractCatalogVisitor {
+        public static final String module = LoggingCatalogVisitor.class.getName();
                 
         protected List<String> trailIds = new ArrayList<>();
         protected String lastId = null;

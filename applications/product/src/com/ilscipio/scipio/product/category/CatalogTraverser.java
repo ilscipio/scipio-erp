@@ -14,9 +14,9 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.LocalDispatcher;
 
-import com.ilscipio.scipio.product.category.CategoryTraversalException.StopCategoryTraversalException;
-import com.ilscipio.scipio.product.category.CategoryVisitor.CommonCategoryVisitor;
-import com.ilscipio.scipio.product.seo.SeoCategoryTraverser;
+import com.ilscipio.scipio.product.category.CatalogTraversalException.StopCatalogTraversalException;
+import com.ilscipio.scipio.product.category.CatalogVisitor.AbstractCatalogVisitor;
+import com.ilscipio.scipio.product.seo.SeoCatalogTraverser;
 
 /**
  * SCIPIO: Factors out the boilerplate code for traversing catalog categories.
@@ -26,14 +26,14 @@ import com.ilscipio.scipio.product.seo.SeoCategoryTraverser;
  * This base class is STATELESS - subclasses should decide if/how to manage state.
  * <p>
  * DEV NOTE: do not put specific or stateful functionality in this class.
- * I made a special {@link SeoCategoryTraverser} subclass for that, 
+ * I made a special {@link SeoCatalogTraverser} subclass for that, 
  * because this one is may be used in many places (not just SEO).
  * <p>
  * TODO: missing filterByDate options and moment to use.
  */
-public class CategoryTraverser extends CommonCategoryVisitor {
+public class CatalogTraverser extends AbstractCatalogVisitor {
 
-    public static final String module = CategoryTraverser.class.getName();
+    public static final String module = CatalogTraverser.class.getName();
     
     /**
      * Expected max category depth (optimization), intentionally exaggerated (probably no one has categories
@@ -43,7 +43,7 @@ public class CategoryTraverser extends CommonCategoryVisitor {
     
     protected static final String logPrefix = ""; // "CategoryTraverser: "
     
-    private final CategoryVisitor visitor;
+    private final CatalogVisitor visitor;
     private final Delegator delegator;
     private final LocalDispatcher dispatcher;
     private final boolean useCache;
@@ -56,7 +56,7 @@ public class CategoryTraverser extends CommonCategoryVisitor {
     /**
      * Composed visitor constructor, with explicit visitor.
      */
-    public CategoryTraverser(CategoryVisitor visitor, Delegator delegator, LocalDispatcher dispatcher,
+    public CatalogTraverser(CatalogVisitor visitor, Delegator delegator, LocalDispatcher dispatcher,
             boolean useCache, boolean doCategory, boolean doProduct, boolean filterByDate, Timestamp moment) {
         this.visitor = (visitor != null) ? visitor : this;
         this.delegator = delegator;
@@ -68,7 +68,7 @@ public class CategoryTraverser extends CommonCategoryVisitor {
         this.moment = moment;
     }
     
-    public CategoryTraverser(CategoryVisitor visitor, Delegator delegator, LocalDispatcher dispatcher,
+    public CatalogTraverser(CatalogVisitor visitor, Delegator delegator, LocalDispatcher dispatcher,
             boolean useCache) {
         this(visitor, delegator, dispatcher, useCache, true, true, true, null);
     }
@@ -76,12 +76,12 @@ public class CategoryTraverser extends CommonCategoryVisitor {
     /**
      * Abstract instance constructor, with the traverser itself as the visitor.
      */
-    public CategoryTraverser(Delegator delegator, LocalDispatcher dispatcher,
+    public CatalogTraverser(Delegator delegator, LocalDispatcher dispatcher,
             boolean useCache, boolean doCategory, boolean doProduct, boolean filterByDate, Timestamp moment) {
         this(null, delegator, dispatcher, useCache, doCategory, doProduct, filterByDate, moment);
     }
     
-    public CategoryTraverser(Delegator delegator, LocalDispatcher dispatcher,
+    public CatalogTraverser(Delegator delegator, LocalDispatcher dispatcher,
             boolean useCache) {
         this(null, delegator, dispatcher, useCache, true, true, true, null);
     }
@@ -99,7 +99,7 @@ public class CategoryTraverser extends CommonCategoryVisitor {
                 traverseCategoriesDepthFirstImpl(prodCatalogCategoryList, CategoryRefType.CATALOG_ASSOC.getResolver(), trailCategories, 0);
             }
             return true;
-        } catch(StopCategoryTraversalException e) {
+        } catch(StopCatalogTraversalException e) {
             ; // not an error - just stop
             return false;
         }
@@ -116,7 +116,7 @@ public class CategoryTraverser extends CommonCategoryVisitor {
                 traverseCategoriesDepthFirstImpl(prodCatalogCategoryList, CategoryRefType.CATALOG_ASSOC.getResolver(), trailCategories, 0);
             }
             return true;
-        } catch(StopCategoryTraversalException e) {
+        } catch(StopCatalogTraversalException e) {
             ; // not an error - just stop
             return false;
         }
@@ -157,7 +157,7 @@ public class CategoryTraverser extends CommonCategoryVisitor {
             List<GenericValue> trailCategories = newCategoryTrailList();
             traverseCategoriesDepthFirstImpl(categoryOrAssocList, categoryRefType.getResolver(), trailCategories, physicalDepth);
             return true;
-        } catch(StopCategoryTraversalException e) {
+        } catch(StopCatalogTraversalException e) {
             ; // not an error - just stop
             return false;
         }
@@ -290,7 +290,7 @@ public class CategoryTraverser extends CommonCategoryVisitor {
         return new ArrayList<T>(MAX_CATEGORY_DEPTH_PERF);
     }
     
-    public CategoryVisitor getVisitor() {
+    public CatalogVisitor getVisitor() {
         return visitor;
     }
     

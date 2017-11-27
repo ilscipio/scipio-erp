@@ -19,7 +19,7 @@ import org.ofbiz.service.ServiceUtil;
  * <li>generateProductAlternativeUrlsCore</li>
  * </ul>
  */
-class SeoCatalogUrlGenerator extends SeoCategoryTraverser {
+class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
 
     protected final Map<String, ?> servCtxOpts;
     

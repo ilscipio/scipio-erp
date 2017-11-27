@@ -4,16 +4,16 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.service.LocalDispatcher;
 
-import com.ilscipio.scipio.product.category.CategoryTraverser;
+import com.ilscipio.scipio.product.category.CatalogTraverser;
 
 /**
  * CategoryTraverser that adds UrlGenStats and stateful utils for SEO URL ops.
  */
-public abstract class SeoCategoryTraverser extends CategoryTraverser {
+public abstract class SeoCatalogTraverser extends CatalogTraverser {
 
     protected UrlGenStats stats = null;
 
-    public SeoCategoryTraverser(Delegator delegator, LocalDispatcher dispatcher, boolean useCache,
+    public SeoCatalogTraverser(Delegator delegator, LocalDispatcher dispatcher, boolean useCache,
             boolean doCategory, boolean doProduct) {
         super(delegator, dispatcher, useCache, doCategory, doProduct, true, null);
     }

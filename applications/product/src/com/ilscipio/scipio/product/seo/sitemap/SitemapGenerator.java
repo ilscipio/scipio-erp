@@ -32,7 +32,7 @@ import org.xml.sax.SAXException;
 import com.ilscipio.scipio.ce.webapp.filter.UrlRewriteConf;
 import com.ilscipio.scipio.product.category.CatalogUrlType;
 import com.ilscipio.scipio.product.seo.SeoCatalogUrlWorker;
-import com.ilscipio.scipio.product.seo.SeoCategoryTraverser;
+import com.ilscipio.scipio.product.seo.SeoCatalogTraverser;
 import com.redfin.sitemapgenerator.SitemapIndexGenerator;
 import com.redfin.sitemapgenerator.WebSitemapGenerator;
 import com.redfin.sitemapgenerator.WebSitemapUrl;
@@ -45,7 +45,7 @@ import com.redfin.sitemapgenerator.WebSitemapUrl;
  * TODO: missing multi-locale link support - unclear if library supports - may need to do one-locale-per-index
  * TODO: does not delete old files (minor issue - spiders will simply ignore them in theory)
  */
-public class SitemapGenerator extends SeoCategoryTraverser {
+public class SitemapGenerator extends SeoCatalogTraverser {
 
     public static final String module = SitemapGenerator.class.getName();
     

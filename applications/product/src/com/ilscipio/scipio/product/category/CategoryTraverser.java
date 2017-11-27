@@ -34,13 +34,13 @@ public class CategoryTraverser extends CommonCategoryVisitor {
      */
     public static final int MAX_DEPTH_PERF = 256;
     
-    protected final CategoryVisitor visitor;
-    protected final Delegator delegator;
-    protected final LocalDispatcher dispatcher;
-    protected final boolean useCache;
+    private final CategoryVisitor visitor;
+    private final Delegator delegator;
+    private final LocalDispatcher dispatcher;
+    private final boolean useCache;
     
-    protected final boolean doCategory;
-    protected final boolean doProduct;
+    private final boolean doCategory;
+    private final boolean doProduct;
 
     /**
      * Composed visitor constructor, with explicit visitor.
@@ -185,7 +185,7 @@ public class CategoryTraverser extends CommonCategoryVisitor {
     
     protected void traverseCategoriesDepthFirstImpl(List<GenericValue> categoryAssocList, CategoryRefType.Resolver listEntryResolver, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException {
         for (GenericValue categoryAssoc : categoryAssocList) {
-            GenericValue productCategory = listEntryResolver.getProductCategoryStrict(categoryAssoc, useCache);
+            GenericValue productCategory = listEntryResolver.getProductCategoryStrict(categoryAssoc, isUseCache());
             if (productCategory == null) {
                 Debug.logError(getLogMsgPrefix()+"Error: Could not get related ProductCategory for: " + categoryAssoc, module);
                 continue;
@@ -239,23 +239,23 @@ public class CategoryTraverser extends CommonCategoryVisitor {
     }
 
     protected boolean isDoCategory(GenericValue productCategory) {
-        return doCategory;
+        return isDoCategory();
     }
 
     protected boolean isDoProduct(GenericValue productCategory) {
-        return doProduct;
+        return isDoProduct();
     }
     
     protected List<GenericValue> querySubCategories(GenericValue productCategory) throws GenericEntityException {
         return EntityQuery.use(getDelegator()).from("ProductCategoryRollup")
                 .where("parentProductCategoryId", productCategory.getString("productCategoryId")).filterByDate()
-                .orderBy("sequenceNum").cache(useCache).queryList();
+                .orderBy("sequenceNum").cache(isUseCache()).queryList();
     }
     
     protected List<GenericValue> queryCategoryProducts(GenericValue productCategory) throws GenericEntityException {
         return EntityQuery.use(getDelegator()).from("ProductCategoryMember")
                 .where("productCategoryId", productCategory.getString("productCategoryId")).filterByDate()
-                .orderBy("sequenceNum").cache(useCache).queryList();
+                .orderBy("sequenceNum").cache(isUseCache()).queryList();
     }
 
     public CategoryVisitor getVisitor() {

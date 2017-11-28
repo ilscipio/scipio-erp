@@ -204,7 +204,7 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
         return new TraversalState(trailCategories, physicalDepth);
     }
     
-    protected <T> List<T> newCategoryTrailList(Collection<? extends T> initialValues) {
+    public <T> List<T> newCategoryTrailList(Collection<? extends T> initialValues) {
         // NOTE: don't want to use new ArrayList<>(initialValues) constructor because loses the capacity
         List<T> list = newCategoryTrailList();
         if (initialValues != null && initialValues.size() > 0) {
@@ -213,7 +213,7 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
         return list;
     }
     
-    protected <T> List<T> newCategoryTrailList() {
+    public <T> List<T> newCategoryTrailList() {
         return new ArrayList<T>(MAX_CATEGORY_DEPTH_PERF);
     }
     
@@ -340,66 +340,59 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
         }
     }
     
-    protected boolean isDoCategory(GenericValue productCategory) {
-        return isDoCategory();
-    }
-
-    protected boolean isDoProduct(GenericValue productCategory) {
-        return isDoProduct();
-    }
     
     // GENERAL QUERIES (overridable)
 
-    protected List<GenericValue> queryProductStoreCatalogList(GenericValue productStore) throws GenericEntityException {
+    public List<GenericValue> queryProductStoreCatalogList(GenericValue productStore) throws GenericEntityException {
         return filterProductStoreCatalogList(EntityQuery.use(delegator).from("ProductStoreCatalog")
                 .where(makeProductStoreCatalogCond(productStore.getString("productStoreId")))
                 .filterByDate(isFilterByDate(), getMoment()).orderBy("sequenceNum").cache(isUseCache()).queryList());
     }
     
     
-    protected EntityCondition makeProductStoreCatalogCond(String productStoreId) {
+    public EntityCondition makeProductStoreCatalogCond(String productStoreId) {
         return EntityCondition.makeCondition("productStoreId", productStoreId);
     }
 
     /**
      * Can be overridden to filter ProductStoreCatalogs after store query.
      */
-    protected List<GenericValue> filterProductStoreCatalogList(List<GenericValue> productStoreCatalogList) {
+    public List<GenericValue> filterProductStoreCatalogList(List<GenericValue> productStoreCatalogList) {
         return productStoreCatalogList;
     }
 
-    protected List<GenericValue> queryProdCatalogCategoryList(GenericValue prodCatalog) throws GenericEntityException {
+    public List<GenericValue> queryProdCatalogCategoryList(GenericValue prodCatalog) throws GenericEntityException {
         return filterProdCatalogCategoryList(EntityQuery.use(delegator).from("ProdCatalogCategory")
                 .where(makeProdCatalogCategoryCond(prodCatalog.getString("prodCatalogId")))
                 .filterByDate(isFilterByDate(), getMoment()).orderBy("sequenceNum").cache(isUseCache()).queryList());
     }
     
     
-    protected EntityCondition makeProdCatalogCategoryCond(String prodCatalogId) {
+    public EntityCondition makeProdCatalogCategoryCond(String prodCatalogId) {
         return EntityCondition.makeCondition("prodCatalogId", prodCatalogId);
     }
     
     /**
      * Can be overridden to filter ProdCatalogCategory after store query.
      */
-    protected List<GenericValue> filterProdCatalogCategoryList(List<GenericValue> prodCatalogCategoryList) {
+    public List<GenericValue> filterProdCatalogCategoryList(List<GenericValue> prodCatalogCategoryList) {
         return prodCatalogCategoryList;
     }
     
     /**
      * Can be used to filter ProdCatalogCategory and ProductCategoryRollup during iteration.
      */
-    protected boolean isApplicableCategoryAssoc(GenericValue categoryOrAssoc) {
+    public boolean isApplicableCategoryAssoc(GenericValue categoryOrAssoc) {
         return true;
     }
 
-    protected List<GenericValue> queryCategorySubCategoryList(GenericValue productCategory) throws GenericEntityException {
+    public List<GenericValue> queryCategorySubCategoryList(GenericValue productCategory) throws GenericEntityException {
         return EntityQuery.use(getDelegator()).from("ProductCategoryRollup")
                 .where("parentProductCategoryId", productCategory.getString("productCategoryId")).filterByDate(isFilterByDate(), getMoment())
                 .orderBy("sequenceNum").cache(isUseCache()).queryList();
     }
     
-    protected List<GenericValue> queryCategoryProductList(GenericValue productCategory) throws GenericEntityException {
+    public List<GenericValue> queryCategoryProductList(GenericValue productCategory) throws GenericEntityException {
         return EntityQuery.use(getDelegator()).from("ProductCategoryMember")
                 .where("productCategoryId", productCategory.getString("productCategoryId")).filterByDate(isFilterByDate(), getMoment())
                 .orderBy("sequenceNum").cache(isUseCache()).queryList();
@@ -421,10 +414,18 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
         return useCache;
     }
 
+    protected boolean isDoCategory(GenericValue productCategory) {
+        return isDoCategory();
+    }
+    
     public boolean isDoCategory() {
         return doCategory;
     }
 
+    protected boolean isDoProduct(GenericValue productCategory) {
+        return isDoProduct();
+    }
+    
     public boolean isDoProduct() {
         return doProduct;
     }

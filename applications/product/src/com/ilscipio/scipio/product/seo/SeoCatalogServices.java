@@ -136,14 +136,16 @@ public abstract class SeoCatalogServices {
         
         GenericValue mainContent = null;
         
-        // get names by locale and default name
-        String defaultLocaleString = null;
+        // get names by locale, and the main content record info
+        String mainLocaleString = null;
         GenericValue nameMainContent = null;
         Map<String, String> localeTextMap = null;
+        
         GenericValue nameProductContent = EntityQuery.use(delegator).from("ProductContent")
                 .where("productId", productId, "productContentTypeId", productNameField).filterByDate(moment).cache(useCache).queryFirst();
         if (nameProductContent == null) {
-            // CHECK VIRTUAL PRODUCT for source texts - see product content wrapper
+            // CHECK VIRTUAL PRODUCT for source texts - see ProductContentWrapper (emulation)
+            // TODO: REVIEW: like ProductContentWrapper, this only checks one virtual level up
             if ("Y".equals(product.getString("isVariant"))) {
                 GenericValue parent = ProductWorker.getParentProduct(productId, delegator, useCache);
                 if (parent != null) {
@@ -156,23 +158,24 @@ public abstract class SeoCatalogServices {
             nameMainContent = nameProductContent.getRelatedOne("Content", useCache);
             localeTextMap = getSimpleTextsByLocaleString(delegator, dispatcher, 
                     nameMainContent, moment, useCache);
-            defaultLocaleString = nameMainContent.getString("localeString"); // TODO: REVIEW: setting this to the main name record localeString, or null if none
+            mainLocaleString = nameMainContent.getString("localeString");
         }
-        String defaultName = determineDefaultName(delegator, dispatcher, productId, 
-                ProductContentWrapper.getEntityFieldValue(product, productNameField, delegator, dispatcher, useCache),
-                defaultLocaleString, nameMainContent, localeTextMap); 
         
-        // make seo names
+        // make seo names for assoc records
         CatalogAltUrlSanitizer sanitizer = getCatalogAltUrlSanitizer(dctx, context);
-        Map<String, String> localeUrlMap = localeTextMap != null ? sanitizer.convertNamesToDbAltUrls(localeTextMap, CatalogUrlType.PRODUCT) : Collections.<String, String>emptyMap();
-        String defaultLocaleUrl = sanitizer.convertNameToDbAltUrl(defaultName, sanitizer.parseLocale(defaultLocaleString), CatalogUrlType.PRODUCT);
+        Map<String, String> localeUrlMap = (localeTextMap != null) ? sanitizer.convertNamesToDbAltUrls(localeTextMap, CatalogUrlType.PRODUCT) : Collections.<String, String>emptyMap();
+        
+        // make seo name for main record (may or may not already be in localeUrlMap)
+        String mainUrl = determineMainRecordUrl(delegator, dispatcher, sanitizer, CatalogUrlType.PRODUCT,
+                nameMainContent, mainLocaleString, localeUrlMap, product, productNameField, useCache);
         
         // store 
         if (productContent != null) {
             mainContent = productContent.getRelatedOne("Content", useCache);
         }
-        mainContent = replaceAltUrlContentLocalized(delegator, dispatcher, context, mainContent, defaultLocaleString, 
-                defaultLocaleUrl, localeUrlMap, removeOldLocales, moment);
+        mainContent = replaceAltUrlContentLocalized(delegator, dispatcher, context, 
+                mainContent, mainLocaleString, mainUrl, localeUrlMap, removeOldLocales, moment);
+        
         if (productContent == null) {
             productContent = delegator.makeValue("ProductContent");
             productContent.put("productId", productId);
@@ -281,41 +284,34 @@ public abstract class SeoCatalogServices {
         
         GenericValue mainContent = null;
         
-        // get names by locale and default name
-        String defaultLocaleString = null;
+        // get names by locale, and the main content record info
+        String mainLocaleString = null;
         GenericValue nameMainContent = null;
         Map<String, String> localeTextMap = null;
+        
         GenericValue nameProductCategoryContent = EntityQuery.use(delegator).from("ProductCategoryContent")
                 .where("productCategoryId", productCategoryId, "prodCatContentTypeId", categoryNameField).filterByDate(moment).cache(useCache).queryFirst();
         if (nameProductCategoryContent != null) {
             nameMainContent = nameProductCategoryContent.getRelatedOne("Content", useCache);
             localeTextMap = getSimpleTextsByLocaleString(delegator, dispatcher, 
                     nameMainContent, moment, useCache);
-            
-            // IMPORTANT: Currently we are setting "default" localeString to the main name record localeString, 
-            // OR null if none (may be null - valid setup).
-            // TODO: REVIEW: this is not actually the real "default" store locale, but we have to use
-            // this by convention to keep this manageable and more independent of the
-            // ProductStore settings.
-            // We effectively usurp the term "defaultLocaleString" to simply mean the locale
-            // specified in the main Content (non-alternate-locale) record.
-            defaultLocaleString = nameMainContent.getString("localeString"); 
+            mainLocaleString = nameMainContent.getString("localeString"); 
         }
-        String defaultName = determineDefaultName(delegator, dispatcher, productCategoryId, 
-                CategoryContentWrapper.getEntityFieldValue(productCategory, categoryNameField, delegator, dispatcher, useCache),
-                defaultLocaleString, nameMainContent, localeTextMap); 
         
-        // make seo names
+        // make seo names for assoc records
         CatalogAltUrlSanitizer sanitizer = getCatalogAltUrlSanitizer(dctx, context);
-        Map<String, String> localeUrlMap = localeTextMap != null ? sanitizer.convertNamesToDbAltUrls(localeTextMap, CatalogUrlType.CATEGORY) : Collections.<String, String>emptyMap();
-        String defaultLocaleUrl = sanitizer.convertNameToDbAltUrl(defaultName, sanitizer.parseLocale(defaultLocaleString), CatalogUrlType.CATEGORY);
+        Map<String, String> localeUrlMap = (localeTextMap != null) ? sanitizer.convertNamesToDbAltUrls(localeTextMap, CatalogUrlType.CATEGORY) : Collections.<String, String>emptyMap();
         
+        // make seo name for main record (may or may not already be in localeUrlMap)
+        String mainUrl = determineMainRecordUrl(delegator, dispatcher, sanitizer, CatalogUrlType.CATEGORY,
+                nameMainContent, mainLocaleString, localeUrlMap, productCategory, categoryNameField, useCache);
+
         // store
         if (productCategoryContent != null) {
             mainContent = productCategoryContent.getRelatedOne("Content", useCache);
         }
-        mainContent = replaceAltUrlContentLocalized(delegator, dispatcher, context, mainContent, defaultLocaleString, 
-                defaultLocaleUrl, localeUrlMap, removeOldLocales, moment);
+        mainContent = replaceAltUrlContentLocalized(delegator, dispatcher, context, 
+                mainContent, mainLocaleString, mainUrl, localeUrlMap, removeOldLocales, moment);
     
         if (productCategoryContent == null) {
             productCategoryContent = delegator.makeValue("ProductCategoryContent");
@@ -334,25 +330,60 @@ public abstract class SeoCatalogServices {
     }
     
     /**
-     * This uses the content wrapper-like behavior to get a default name.
+     * Determines an alt URL value to use for the main ALTERNATIVE_URL Content record (to which
+     * ALTERNATE_LOCALE Content records are associated).
+     * It may have an explicit localeString or be null, in which case handling possibilities are different.
+     * The localeString is copied directly from the source nameMainContent
      */
-    private static String determineDefaultName(Delegator delegator, LocalDispatcher dispatcher, String id, String entityFieldValue, 
-            String defaultLocaleString, GenericValue nameMainContent, Map<String, String> localeTextMap) throws GenericEntityException {
-        String defaultName = entityFieldValue;
+    private static String determineMainRecordUrl(Delegator delegator, LocalDispatcher dispatcher, CatalogAltUrlSanitizer sanitizer, CatalogUrlType urlType,
+            GenericValue nameMainContent, String mainLocaleString, Map<String, String> localeUrlMap, 
+            GenericValue prodOrCatEntity, String entityNameField, boolean useCache) throws GeneralException, IOException {
         
-        // default lang name fallbacks
-        if (UtilValidate.isEmpty(defaultName)) {
-            if (defaultLocaleString != null && localeTextMap != null) {
-                defaultName = localeTextMap.get(defaultLocaleString);
-            }
-            if (UtilValidate.isEmpty(defaultName) && nameMainContent != null) {
-                defaultName = getContentElectronicText(delegator, dispatcher, nameMainContent).getString("textData");
+        if (UtilValidate.isNotEmpty(mainLocaleString)) {
+            String mainUrl = localeUrlMap.get(mainLocaleString);
+            // NOTE: HERE, MUST RETURN EVEN IF EMPTY: 
+            // it is feasible that we could end up with mainUrl here if the source nameMainContent
+            // was not filled in properly - but we CANNOT set anything else, because we have no way
+            // to know if the non-localized fields are really in the locale of mainLocaleString.
+            // So, this is a case where user will simply have to fix his error (an empty ElectronicText).
+            //if (UtilValidate.isNotEmpty(mainUrl)) {
+            //    return mainUrl;
+            //}
+            return mainUrl;
+        } 
+            
+        // Here, there is no locale specified, so we can use any text that has no locale associated.
+        String mainText;
+        
+        // try CATEGORY_NAME/PRODUCT_NAME main ALTERNATIVE_URL Content record textData,
+        // where localeString was null
+        if (nameMainContent != null) {
+            mainText = getContentElectronicText(delegator, dispatcher, nameMainContent).getString("textData");
+            if (UtilValidate.isNotEmpty(mainText)) {
+                return sanitizer.convertNameToDbAltUrl(mainText, null, urlType);
             }
         }
-        if (UtilValidate.isEmpty(defaultName)) {
-            defaultName = id;
+      
+        // try ProductCategory.categoryName/Product.productName non-localized field
+        if (urlType == CatalogUrlType.CATEGORY) {
+            mainText = CategoryContentWrapper.getEntityFieldValue(prodOrCatEntity, categoryNameField, delegator, dispatcher, useCache);
+        } else {
+            mainText = ProductContentWrapper.getEntityFieldValue(prodOrCatEntity, productNameField, delegator, dispatcher, useCache);
         }
-        return defaultName;
+        if (UtilValidate.isNotEmpty(mainText)) {
+            return sanitizer.convertNameToDbAltUrl(mainText, null, urlType);
+        }
+        
+        // NOTE: will not fallback on productCategoryId/productId here - this empty textData
+        // should get detected by the link generation code in SeoCatalogUrlWorker and
+        // it will append an ID as a fallback - it is probably better to do that
+        // because setting ID here could be masking the issue at the same time as
+        // causing potiential double IDs in URL parts...
+        Debug.logWarning(logPrefix+"Could not determine a SEO alternative URL value for ALTERNATIVE_URL primary Content record "
+                + " for " + prodOrCatEntity.getEntityName() + " '" + prodOrCatEntity.getPkShortValueString() + "'"
+                + "; no valid XXX_NAME Content records or xxxName entity fields are available; record's textData will be empty", module);
+        
+        return null;
     }
 
     /**
@@ -361,55 +392,69 @@ public abstract class SeoCatalogServices {
     private static Map<String, String> getSimpleTextsByLocaleString(Delegator delegator, LocalDispatcher dispatcher,
             GenericValue mainContent, Timestamp moment, boolean useCache) throws GenericEntityException {
         Map<String, String> localeTextMap = new HashMap<>();
-        if (UtilValidate.isNotEmpty(mainContent.getString("localeString"))) {
-            GenericValue elecText = getContentElectronicText(delegator, dispatcher, mainContent);
-            if (UtilValidate.isNotEmpty(elecText.getString("textData"))) {
-                localeTextMap.put(mainContent.getString("localeString"), elecText.getString("textData"));
-            }
-        }
+        
         List<GenericValue> assocViewList = EntityQuery.use(delegator).from("ContentAssocToElectronicText")
                 .where("contentIdStart", mainContent.getString("contentId"), 
                         "contentAssocTypeId", "ALTERNATE_LOCALE").filterByDate(moment).cache(useCache).queryList();
         for(GenericValue assocView : assocViewList) {
-            if (UtilValidate.isNotEmpty(assocView.getString("localeString"))) {
-                localeTextMap.put(assocView.getString("localeString"), assocView.getString("textData"));
+            String assocLocaleString = assocView.getString("localeString");
+            if (UtilValidate.isNotEmpty(assocLocaleString)) {
+                localeTextMap.put(assocLocaleString, assocView.getString("textData"));
             }
         }
+        
+        String mainLocaleString = mainContent.getString("localeString");
+        if (UtilValidate.isNotEmpty(mainLocaleString)) {
+            GenericValue elecText = getContentElectronicText(delegator, dispatcher, mainContent);
+            String mainTextData = elecText.getString("textData");
+            if (UtilValidate.isNotEmpty(mainTextData)) {
+                localeTextMap.put(mainLocaleString, mainTextData);
+            }
+        }
+        
         return localeTextMap;
     }
     
     /**
-     * TODO: move elsewhere, will need to reuse...
+     * Replaces the textData of the the ALTERNATIVE_URL Content and its associated ALTERNATE_LOCALE Contents
+     * using mapping by following the localeString mappings of the source CATEGORY_NAME/PRODUCT_NAME
+     * Content records and trying to maintain a similar layout.
+     * Relies on a 1-to-1 mapping of CATEGORY_NAME/PRODUCT_NAME-to-ALTERNATIVE_URL Content records;
+     * the only thing that may be different is the order of the associated records, while the main
+     * (non-assoc) record must correspond to the source if one exists.
+     * <p>
+     * NOTE: The main Content record's localeString is ALWAYS set to the localeString of the
+     * CATEGORY_NAME/PRODUCT_NAME main Content record - this is the only way to keep a consistent
+     * pattern and allows to avoid dependency on an external defaultLocaleString (in other
+     * words don't need to try to determine ProductStore.defaultLocaleString).
+     * <p>
+     * TODO?: move elsewhere, may need to reuse...
      */
     private static GenericValue replaceAltUrlContentLocalized(Delegator delegator, LocalDispatcher dispatcher, Map<String, ?> context,
-            GenericValue mainContent, String defaultLocaleString, String defaultLocaleUrl, Map<String, String> localeUrlMap,
+            GenericValue mainContent, String mainLocaleString, String mainUrl, Map<String, String> localeUrlMap,
             boolean removeOldLocales, Timestamp moment) throws Exception {
-        Set<String> remainingLocales = new HashSet<>(localeUrlMap.keySet());
+        // DEV NOTE: to simplify, I am setting removeDupLocales to same as removeOldLocales...
+        // as long as removal is understood, there is really no reason to keep duplicates because
+        // the prior code was setting them all to the exact same value, so in other words,
+        // having removeDupLocales false was completely pointless...
+        final boolean removeDupLocales = removeOldLocales;
         
-        // update the main content record
-        String mainLocaleString;
-        String mainTextData;
-        if (mainContent != null) {
-            // TODO: REVIEW: for now ALWAYS change the main record locale to the defaultLocaleString
-            // because the only way this is manageable is if it follows the source localized texts setup
-            mainLocaleString = defaultLocaleString;
+        Set<String> remainingLocales = new HashSet<>(localeUrlMap.keySet());
 
-            // SPECIAL CASE: lang override for main content in the map
-            mainTextData = localeUrlMap.get(mainLocaleString);
-            if (UtilValidate.isNotEmpty(mainTextData)) {
-                remainingLocales.remove(mainLocaleString);
-            } else {
-                mainTextData = defaultLocaleUrl;
-            }
-        } else {
-            mainLocaleString = defaultLocaleString;
-            mainTextData = defaultLocaleUrl;
-        }
         // update main content
         if (mainContent == null) {
-            mainContent = createAltUrlSimpleTextContent(delegator, dispatcher, mainLocaleString, mainTextData);
+            mainContent = createAltUrlSimpleTextContent(delegator, dispatcher, mainLocaleString, mainUrl);
         } else {
-            updateAltUrlSimpleTextContent(delegator, dispatcher, mainContent, mainLocaleString, mainTextData);
+            updateAltUrlSimpleTextContent(delegator, dispatcher, mainContent, mainLocaleString, mainUrl);
+        }
+        
+        // SPECIAL: 2017-11-28: we must remove the mainLocaleString from remainingLocales because
+        // 1) when creating brand new records, don't want the second loop to create new ALTERNATE_LOCALEs
+        //    for locale already covered in the main record, and
+        // 2) if we remove mainLocaleString from remainingLocales BEFORE the next "update in-place or remove" loop,
+        //    it will allow the loop to correct past mistakes and remove duplicates that were previously created
+        if (UtilValidate.isNotEmpty(mainLocaleString)) {
+            remainingLocales.remove(mainLocaleString);
         }
         
         List<GenericValue> contentAssocList = EntityQuery.use(delegator).from("ContentAssoc")
@@ -420,25 +465,31 @@ public abstract class SeoCatalogServices {
         for(GenericValue contentAssoc : contentAssocList) {
             GenericValue content = contentAssoc.getRelatedOne("ToContent", false);
             String localeString = content.getString("localeString");
+
+            // Removal logic:
+            // * The localeString was "old" if it's not in localeUrlMap at all.
+            //   * We also "treat" localeString also as "old" if it's in localeUrlMap but empty value.
+            // * The localeString was a "duplicate" if it's in localeUrlMap but was removed from remainingLocales.
             
             String textData = localeUrlMap.get(localeString);
             if (UtilValidate.isNotEmpty(textData)) {
-                updateAltUrlSimpleTextContent(delegator, dispatcher, content, textData);
-                remainingLocales.remove(localeString);
+                if (!removeDupLocales || remainingLocales.contains(localeString)) {
+                    updateAltUrlSimpleTextContent(delegator, dispatcher, content, textData);
+                    remainingLocales.remove(localeString);
+                } else {
+                    removeContentAndRelated(delegator, dispatcher, context, content);
+                }
             } else {
                 if (removeOldLocales) {
-                    Map<String, Object> servCtx = new HashMap<>();
-                    servCtx.put("userLogin", context.get("userLogin"));
-                    servCtx.put("locale", context.get("locale"));
-                    servCtx.put("contentId", content.get("contentId"));
-                    Map<String, Object> servResult = dispatcher.runSync("removeContentAndRelated", servCtx);
-                    if (ServiceUtil.isError(servResult)) {
-                        throw new SeoCatalogException("Cannot remove ALTERNATE_LOCALE record contentId '" 
-                                + content.get("contentId") + "': " + ServiceUtil.getErrorMessage(servResult));
-                    }
+                    removeContentAndRelated(delegator, dispatcher, context, content);
                 }
             }
         }
+        
+        // see above comment - could have done this code here, but think it works better if earlier
+        //if (UtilValidate.isNotEmpty(mainLocaleString)) {
+        //    remainingLocales.remove(mainLocaleString);
+        //}
         
         // create new assoc records
         for(String localeString : remainingLocales) {
@@ -455,6 +506,18 @@ public abstract class SeoCatalogServices {
         }
 
         return mainContent;
+    }
+    
+    private static void removeContentAndRelated(Delegator delegator, LocalDispatcher dispatcher, Map<String, ?> context, GenericValue content) throws GeneralException {
+        Map<String, Object> servCtx = new HashMap<>();
+        servCtx.put("userLogin", context.get("userLogin"));
+        servCtx.put("locale", context.get("locale"));
+        servCtx.put("contentId", content.get("contentId"));
+        Map<String, Object> servResult = dispatcher.runSync("removeContentAndRelated", servCtx);
+        if (ServiceUtil.isError(servResult)) {
+            throw new SeoCatalogException("Cannot remove ALTERNATE_LOCALE record contentId '" 
+                    + content.get("contentId") + "': " + ServiceUtil.getErrorMessage(servResult));
+        }
     }
     
     private static GenericValue createAltUrlSimpleTextContent(Delegator delegator, LocalDispatcher dispatcher, String localeString, String textData) throws GenericEntityException {

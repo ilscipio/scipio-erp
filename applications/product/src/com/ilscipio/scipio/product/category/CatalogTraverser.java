@@ -2,6 +2,7 @@ package com.ilscipio.scipio.product.category;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.ofbiz.base.util.Debug;
@@ -20,10 +21,12 @@ import com.ilscipio.scipio.product.seo.SeoCatalogTraverser;
 
 /**
  * SCIPIO: Factors out the boilerplate code for traversing catalog categories.
- * Everything is overridable, plus supports a separate CategoryVisitor for the 
+ * Everything is overridable, plus supports a separate CatalogVisitor for the 
  * very core calls only.
  * <p>
- * This base class is STATELESS - subclasses should decide if/how to manage state.
+ * This base class is stateless - subclasses should decide if/how to manage state.
+ * <p>
+ * Class is NOT thread-safe or serializable - keep out of session attributes.
  * <p>
  * DEV NOTE: do not put specific or stateful functionality in this class.
  * I made a special {@link SeoCatalogTraverser} subclass for that, 
@@ -68,6 +71,9 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
         this.moment = moment;
     }
     
+    /**
+     * Composed visitor constructor, with explicit visitor.
+     */
     public CatalogTraverser(CatalogVisitor visitor, Delegator delegator, LocalDispatcher dispatcher,
             boolean useCache) {
         this(visitor, delegator, dispatcher, useCache, true, true, true, null);
@@ -81,11 +87,136 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
         this(null, delegator, dispatcher, useCache, doCategory, doProduct, filterByDate, moment);
     }
     
+    /**
+     * Abstract instance constructor, with the traverser itself as the visitor.
+     */
     public CatalogTraverser(Delegator delegator, LocalDispatcher dispatcher,
             boolean useCache) {
         this(null, delegator, dispatcher, useCache, true, true, true, null);
     }
 
+    
+    /**
+     * Gives additional info about the category, product, and traversal to the catalog visitor.
+     * <p>
+     * WARN: This are edited in-place by the traverser, so if the visitor needs to store these
+     * values, it must create copies for itself, before returning from the visiting methods
+     * ({@link CatalogVisitor#visitCategory} and others).
+     */
+    public class TraversalState {
+        protected List<GenericValue> trailCategories;
+        protected int physicalDepth;
+        
+        /**
+         * Main constructor.
+         * See {@link CatalogTraverser#newTraversalState} methods for initial values given.
+         */
+        public TraversalState(List<GenericValue> trailCategories, int physicalDepth) {
+            this.trailCategories = trailCategories;
+            this.physicalDepth = physicalDepth;
+        }
+        
+        /**
+         * Copy constructor.
+         */
+        public TraversalState(TraversalState other, boolean deepCopy) {
+            if (deepCopy) {
+                // NOTE: don't deep-copy the GenericValue
+                this.trailCategories = other.getTrailCategoriesCopyForTraversal(); 
+            } else {
+                this.trailCategories = other.trailCategories;
+            }
+            this.physicalDepth = other.physicalDepth;
+        }
+
+        /**
+         * Copy/clone method. 
+         * Child classes must override.
+         */
+        public TraversalState copy(boolean deepCopy) {
+            return new TraversalState(this, deepCopy);
+        }
+        
+        /**
+         * List of ProductCategory values indicating the current category path being visited, 
+         * not including the visited category (or product - obviously) itself.
+         * WARN: after 
+         */
+        public List<GenericValue> getTrailCategories() {
+            return trailCategories;
+        }
+        
+        /**
+         * Same as {@link #getTrailCategories()} but returns a list copy optimized for traversal.
+         */
+        public List<GenericValue> getTrailCategoriesCopyForTraversal() {
+            return newCategoryTrailList(trailCategories);
+        }
+
+        /**
+         * Same as {@link #getTrailCategories()} but returns a list copy for general purposes.
+         */
+        public List<GenericValue> getTrailCategoriesCopy() {
+            return new ArrayList<>(trailCategories);
+        }
+
+        public int getPhysicalDepth() {
+            return physicalDepth;
+        }
+        
+        /**
+         * Increase depth by the given category, in-place.
+         */
+        protected void pushCategory(GenericValue productCategory) {
+            getTrailCategories().add(productCategory);
+            physicalDepth++;
+        }
+        
+        /**
+         * Decrease depth by the given category, in-place.
+         */
+        protected void popCategory(GenericValue productCategory) {
+            getTrailCategories().remove(getTrailCategories().size() - 1);
+            physicalDepth--;
+        }
+        
+        protected void setTrailCategories(List<GenericValue> trailCategories) {
+            this.trailCategories = trailCategories;
+        }
+
+        protected void setPhysicalDepth(int physicalDepth) {
+            this.physicalDepth = physicalDepth;
+        }
+    }
+    
+    protected final TraversalState newTraversalState(int physicalDepth) {
+        return newTraversalState(this.<GenericValue>newCategoryTrailList(), physicalDepth);
+    }
+    
+    protected final TraversalState newTraversalState() {
+        return newTraversalState(this.<GenericValue>newCategoryTrailList(), 0);
+    }
+    
+    /**
+     * Primary TraversalState factory method - may be overridden to return subclass instance.
+     */
+    protected TraversalState newTraversalState(List<GenericValue> trailCategories, int physicalDepth) {
+        return new TraversalState(trailCategories, physicalDepth);
+    }
+    
+    protected <T> List<T> newCategoryTrailList(Collection<? extends T> initialValues) {
+        // NOTE: don't want to use new ArrayList<>(initialValues) constructor because loses the capacity
+        List<T> list = newCategoryTrailList();
+        if (initialValues != null && initialValues.size() > 0) {
+            list.addAll(initialValues);
+        }
+        return list;
+    }
+    
+    protected <T> List<T> newCategoryTrailList() {
+        return new ArrayList<T>(MAX_CATEGORY_DEPTH_PERF);
+    }
+    
     /**
      * Traverse ProductStore categories depth-first.
      * Usually categoryAssocList should be ProdCatalogCategory, but supports starting in middle
@@ -95,8 +226,7 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
         try {
             for(GenericValue prodCatalog : prodCatalogList) {
                 List<GenericValue> prodCatalogCategoryList = queryProdCatalogCategoryList(prodCatalog);
-                List<GenericValue> trailCategories = newCategoryTrailList();
-                traverseCategoriesDepthFirstImpl(prodCatalogCategoryList, CategoryRefType.CATALOG_ASSOC.getResolver(), trailCategories, 0);
+                traverseCategoriesDepthFirstImpl(prodCatalogCategoryList, CategoryRefType.CATALOG_ASSOC.getResolver(), newTraversalState());
             }
             return true;
         } catch(StopCatalogTraversalException e) {
@@ -112,8 +242,7 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
         try {
             for(GenericValue prodCatalog : prodCatalogList) {
                 List<GenericValue> prodCatalogCategoryList = queryProdCatalogCategoryList(prodCatalog);
-                List<GenericValue> trailCategories = newCategoryTrailList();
-                traverseCategoriesDepthFirstImpl(prodCatalogCategoryList, CategoryRefType.CATALOG_ASSOC.getResolver(), trailCategories, 0);
+                traverseCategoriesDepthFirstImpl(prodCatalogCategoryList, CategoryRefType.CATALOG_ASSOC.getResolver(), newTraversalState());
             }
             return true;
         } catch(StopCatalogTraversalException e) {
@@ -154,8 +283,7 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
             }
         }
         try {
-            List<GenericValue> trailCategories = newCategoryTrailList();
-            traverseCategoriesDepthFirstImpl(categoryOrAssocList, categoryRefType.getResolver(), trailCategories, physicalDepth);
+            traverseCategoriesDepthFirstImpl(categoryOrAssocList, categoryRefType.getResolver(), newTraversalState());
             return true;
         } catch(StopCatalogTraversalException e) {
             ; // not an error - just stop
@@ -163,7 +291,7 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
         }
     }
     
-    protected void traverseCategoriesDepthFirstImpl(List<GenericValue> categoryAssocList, CategoryRefType.Resolver listEntryResolver, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException {
+    protected void traverseCategoriesDepthFirstImpl(List<GenericValue> categoryAssocList, CategoryRefType.Resolver listEntryResolver, TraversalState state) throws GeneralException {
         for (GenericValue categoryAssoc : categoryAssocList) {
             if (!isApplicableCategoryAssoc(categoryAssoc)) {
                 continue;
@@ -174,30 +302,31 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
                 continue;
             }
             
-            // self + push + products
-            visitCategoryLocal(productCategory, trailCategories, physicalDepth);
-            pushCategoryLocal(productCategory, trailCategories, physicalDepth);
-            visitProductsLocal(productCategory, trailCategories, physicalDepth);
-            
-            // child cats (recursive)
-            List<GenericValue> childProductCategoryRollups = queryCategorySubCategoryList(productCategory);
-            if (UtilValidate.isNotEmpty(childProductCategoryRollups)) {
-                traverseCategoriesDepthFirstImpl(childProductCategoryRollups, CategoryRefType.CATEGORY_ASSOC.getResolver(), trailCategories, physicalDepth + 1);
+            // visit category itself (before recursive call)
+            if (isDoCategory(productCategory)) {
+                visitor.visitCategory(productCategory, state);
             }
             
-            // pop
-            popCategoryLocal(productCategory, trailCategories, physicalDepth);
-        }
-    }
-
-    protected final void visitCategoryLocal(GenericValue productCategory, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException {
-        // self
-        if (isDoCategory(productCategory)) {
-            visitor.visitCategory(productCategory, trailCategories, physicalDepth);
+            // push category
+            visitor.pushCategory(productCategory, state);
+            state.pushCategory(productCategory);
+            
+            // visit products (before recursive call)
+            queryAndVisitCategoryProducts(productCategory, state);
+            
+            // recurse into sub categories
+            List<GenericValue> childProductCategoryRollups = queryCategorySubCategoryList(productCategory);
+            if (childProductCategoryRollups.size() > 0) {
+                traverseCategoriesDepthFirstImpl(childProductCategoryRollups, CategoryRefType.CATEGORY_ASSOC.getResolver(), state);
+            }
+            
+            // pop category
+            state.popCategory(productCategory);
+            visitor.popCategory(productCategory, state);
         }
     }
     
-    protected final void visitProductsLocal(GenericValue productCategory, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException {
+    protected void queryAndVisitCategoryProducts(GenericValue productCategory, TraversalState state) throws GeneralException {
         // products
         if (isDoProduct(productCategory)) {
             List<GenericValue> productCategoryMembers = queryCategoryProductList(productCategory);
@@ -205,22 +334,12 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
                 for (GenericValue productCategoryMember : productCategoryMembers) {
                     GenericValue product = productCategoryMember.getRelatedOne("Product", isUseCache());
                     // product is always one level down
-                    visitor.visitProduct(product, trailCategories, physicalDepth + 1);
+                    visitor.visitProduct(product, state);
                 }
             }
         }
     }
     
-    protected final void pushCategoryLocal(GenericValue productCategory, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException {
-        visitor.pushCategory(productCategory, trailCategories, physicalDepth);
-        trailCategories.add(productCategory);
-    }
-
-    protected final void popCategoryLocal(GenericValue productCategory, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException {
-        trailCategories.remove(trailCategories.size() - 1);
-        visitor.popCategory(productCategory, trailCategories, physicalDepth);
-    }
-
     protected boolean isDoCategory(GenericValue productCategory) {
         return isDoCategory();
     }
@@ -284,10 +403,6 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
         return EntityQuery.use(getDelegator()).from("ProductCategoryMember")
                 .where("productCategoryId", productCategory.getString("productCategoryId")).filterByDate(isFilterByDate(), getMoment())
                 .orderBy("sequenceNum").cache(isUseCache()).queryList();
-    }
-
-    protected <T> List<T> newCategoryTrailList() {
-        return new ArrayList<T>(MAX_CATEGORY_DEPTH_PERF);
     }
     
     public CatalogVisitor getVisitor() {

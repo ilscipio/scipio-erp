@@ -1,6 +1,5 @@
 package com.ilscipio.scipio.product.seo;
 
-import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
@@ -44,13 +43,13 @@ class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
     }
 
     @Override
-    public void visitCategory(GenericValue productCategory, List<GenericValue> trailCategories, int physicalDepth)
+    public void visitCategory(GenericValue productCategory, TraversalState state)
             throws GeneralException {
         generateCategoryAltUrls(productCategory);
     }
 
     @Override
-    public void visitProduct(GenericValue product, List<GenericValue> trailCategories, int physicalDepth)
+    public void visitProduct(GenericValue product, TraversalState state)
             throws GeneralException {
         generateProductAltUrls(product, true);
     }

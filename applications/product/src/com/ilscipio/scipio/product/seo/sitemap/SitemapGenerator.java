@@ -31,7 +31,9 @@ import org.xml.sax.SAXException;
 
 import com.ilscipio.scipio.ce.webapp.filter.UrlRewriteConf;
 import com.ilscipio.scipio.product.category.CatalogUrlType;
+import com.ilscipio.scipio.product.category.CatalogTraverser.TraversalState;
 import com.ilscipio.scipio.product.seo.SeoCatalogUrlWorker;
+import com.ilscipio.scipio.product.seo.SeoCatalogTraverser.SeoTraversalState;
 import com.ilscipio.scipio.product.seo.SeoCatalogTraverser;
 import com.redfin.sitemapgenerator.SitemapIndexGenerator;
 import com.redfin.sitemapgenerator.WebSitemapGenerator;
@@ -70,7 +72,6 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     protected Map<CatalogUrlType, EntityHandler> entityHandlers = null;
     protected EntityHandler productEntityHandler = null; // opt
     protected EntityHandler categoryEntityHandler = null; // opt
-    protected Map<Locale, List<String>> trailNames = null; // reset for every new ProdCatalogCategory
 
     protected SitemapGenerator(Delegator delegator, LocalDispatcher dispatcher, List<Locale> locales, String webSiteId, GenericValue webSite, GenericValue productStore, String baseUrl, String sitemapContextPath, String contextPath, SitemapConfig config,
             SeoCatalogUrlWorker urlWorker, UrlRewriteConf urlRewriteConf, boolean useCache) throws GeneralException, IOException, URISyntaxException, SAXException {
@@ -135,6 +136,38 @@ public class SitemapGenerator extends SeoCatalogTraverser {
                 useCache);
     }
 
+    public class SitemapTraversalState extends SeoTraversalState {
+        Map<Locale, List<String>> trailNames; // reset for every new ProdCatalogCategory
+        
+        public SitemapTraversalState(List<GenericValue> trailCategories, int physicalDepth, Map<Locale, List<String>> trailNames) {
+            super(trailCategories, physicalDepth);
+            this.trailNames = trailNames;
+        }
+
+        public SitemapTraversalState(SitemapTraversalState other, boolean deepCopy) {
+            super(other, deepCopy);
+            if (deepCopy) {
+                
+            } else {
+                this.trailNames = other.trailNames;
+            }
+        }
+
+        @Override
+        public SeoTraversalState copy(boolean deepCopy) {
+            return new SitemapTraversalState(this, deepCopy);
+        }
+
+        public Map<Locale, List<String>> getTrailNames() {
+            return trailNames;
+        }
+    }
+    
+    @Override
+    protected TraversalState newTraversalState(List<GenericValue> trailCategories, int physicalDepth) {
+        return new SitemapTraversalState(trailCategories, physicalDepth, newTrailNames());
+    }
+    
     public SitemapConfig getConfig() {
         return config;
     }
@@ -143,22 +176,31 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     public void reset() throws GeneralException {
         super.reset();
         resetEntityHandlers();
-        resetTrailNames();
+        //resetTrailNames(); // moved to TraversalState
     }
 
-    /**
-     * NOTE: because the way this is edited in-place during iteration by push/pop,
-     * the only time this will still contain entries at the end is if an error happened.
-     * So we don't need to reset this often, only during reset() (e.g. there is no need
-     * to reset at every new ProdCatalogCategory, it arranges itself).
-     */
-    protected void resetTrailNames() {
+    // moved to TraversalState
+//    /**
+//     * NOTE: because the way this is edited in-place during iteration by push/pop,
+//     * the only time this will still contain entries at the end is if an error happened.
+//     * So we don't need to reset this often, only during reset() (e.g. there is no need
+//     * to reset at every new ProdCatalogCategory, it arranges itself).
+//     */
+//    protected void resetTrailNames() {
+//        this.trailNames = newTrailNames();
+//    }
+    
+    protected Map<Locale, List<String>> newTrailNames() {
         Map<Locale, List<String>> trailNames = new HashMap<>();
         for(Locale locale : getLocales()) {
             List<String> trailList = newCategoryTrailList();
             trailNames.put(locale, trailList);
         }
-        this.trailNames = trailNames;
+        return trailNames;
+    }
+    
+    protected Map<Locale, List<String>> getTrailNames(TraversalState state) {
+        return ((SitemapTraversalState) state).trailNames;
     }
     
     protected String getSitemapContextPath() {
@@ -281,7 +323,8 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     }
 
     @Override
-    public void pushCategory(GenericValue productCategory, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException {
+    public void pushCategory(GenericValue productCategory, TraversalState state) throws GeneralException {
+        Map<Locale, List<String>> trailNames = getTrailNames(state);
         for(Locale locale : locales) {
             // NOTE: this is non-last - cannot reuse the one determined in previous call
             String trailName = urlWorker.getCategoryUrlTrailName(getDelegator(), getDispatcher(), locale, productCategory, false, isUseCache());       
@@ -290,7 +333,8 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     }
 
     @Override
-    public void popCategory(GenericValue productCategory, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException {
+    public void popCategory(GenericValue productCategory, TraversalState state) throws GeneralException {
+        Map<Locale, List<String>> trailNames = getTrailNames(state);
         for(Locale locale : locales) {
             List<String> trail = trailNames.get(locale);
             trail.remove(trail.size() - 1);
@@ -298,13 +342,13 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     }
 
     @Override
-    public void visitCategory(GenericValue productCategory, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException {
-        buildSitemapCategory(productCategory, trailNames);
+    public void visitCategory(GenericValue productCategory, TraversalState state) throws GeneralException {
+        buildSitemapCategory(productCategory, getTrailNames(state));
     }
 
     @Override
-    public void visitProduct(GenericValue product, List<GenericValue> trailCategories, int physicalDepth) throws GeneralException {
-        buildSitemapProduct(product, trailNames);
+    public void visitProduct(GenericValue product, TraversalState state) throws GeneralException {
+        buildSitemapProduct(product, getTrailNames(state));
     }
 
     protected void buildSitemapCategory(GenericValue productCategory, Map<Locale, List<String>> trailNames) throws GeneralException {

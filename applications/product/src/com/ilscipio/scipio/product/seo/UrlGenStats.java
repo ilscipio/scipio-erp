@@ -7,7 +7,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.service.ServiceUtil;
 
 /**
@@ -60,18 +59,14 @@ public class UrlGenStats {
         if (doProducts) {
             msgList.add("Products updated: " + productSuccess);
             if (productSkipped > 0) msgList.add("Products skipped: " + productSkipped);
-            if (Debug.verboseOn()) {
-                if (productDupSkip > 0) msgList.add("Duplicate Product ops prevented: " + productDupSkip);
-            }
+            if (productDupSkip > 0) msgList.add("Product duplicates prevented: " + productDupSkip);
             if (productError > 0) errMsgList.add("Products failed: " + productError);
         }
         
         if (doCategory) {
             msgList.add("Categories updated: " + categorySuccess);
             if (categorySkipped > 0) msgList.add("Categories skipped: " + categorySkipped);
-            if (Debug.verboseOn()) {
-                if (categoryDupSkip > 0) msgList.add("Duplicate Category ops prevented: " + categoryDupSkip);
-            }
+            if (categoryDupSkip > 0) msgList.add("Category duplicates prevented: " + categoryDupSkip);
             if (categoryError > 0) errMsgList.add("Categories failed: " + categoryError);
         }
     }

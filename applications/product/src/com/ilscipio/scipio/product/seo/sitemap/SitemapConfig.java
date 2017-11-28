@@ -184,7 +184,7 @@ public class SitemapConfig implements Serializable {
                 Debug.logInfo(logPrefix+"Found sitemap config for website: " + entry.getKey(), module);
             }
         } catch (Exception e) {
-            Debug.logError(e, logPrefix+"Could not load list of sitemap.properties", module);
+            Debug.logError(e, logPrefix+"Could not load list of " + SITEMAPCONFIGS_RESOURCE + ".properties", module);
         }
         return configs;
     }

@@ -4303,4 +4303,22 @@ under the License.
             <key-map field-name="fixedAssetId"/>
         </relation>
     </extend-entity>
+    
+    
+    <!-- SCIPIO -->
+    <entity entity-name="DatevBookingStackFieldDefinition"
+            package-name="com.ilscipio.scipio.accounting.datev"
+            title="DATEV - Field description for booking stacks (http://www.datev.de/dnlexom/client/app/index.html#/document/1036228/D72057595488525963)">
+      <field name="fieldId" type="id-ne"></field>
+      <field name="fieldName" type="short-varchar"></field>
+      <field name="type" type="short-varchar"></field>
+      <field name="length" type="numeric"></field>      
+      <field name="maxLength" type="numeric"></field>
+      <field name="scale" type="numeric"></field>
+      <field name="format" type="short-varchar"></field>
+      <field name="required" type="indicator"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <prim-key field="fieldId"/>
+  	</entity>
+    
 </entitymodel>

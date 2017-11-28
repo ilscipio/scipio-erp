@@ -25,6 +25,15 @@ public class SpecDataResEntityInfo {
     }
     
     private static final List<SpecDataResEntityInfo> entityInfoList = Collections.unmodifiableList(populateEntityInfoList(new ArrayList<SpecDataResEntityInfo>()));
+    private static final List<String> entityNameList;
+    static {
+        ArrayList<String> nameList = new ArrayList<>(entityInfoList.size());
+        for(SpecDataResEntityInfo entityInfo : entityInfoList) {
+            nameList.add(entityInfo.getEntityName());
+        }
+        nameList.trimToSize();
+        entityNameList = Collections.unmodifiableList(nameList);
+    }
     private static final Map<String, SpecDataResEntityInfo> dataResourceTypeIdMap = Collections.unmodifiableMap(populateEntityInfoMap(new HashMap<String, SpecDataResEntityInfo>(), "dataResourceTypeId", entityInfoList));
     private static final Map<String, SpecDataResEntityInfo> entityNameMap = Collections.unmodifiableMap(populateEntityInfoMap(new HashMap<String, SpecDataResEntityInfo>(), "entityName", entityInfoList));
     private static final Map<String, SpecDataResEntityInfo> dataFieldNameMap = Collections.unmodifiableMap(populateEntityInfoMap(new HashMap<String, SpecDataResEntityInfo>(), "dataFieldName", entityInfoList));
@@ -54,6 +63,10 @@ public class SpecDataResEntityInfo {
     
     public static List<SpecDataResEntityInfo> getEntityInfoList() {
         return entityInfoList;
+    }
+    
+    public static List<String> getEntityNameList() {
+        return entityNameList;
     }
 
     public static Map<String, SpecDataResEntityInfo> getDataResourceTypeIdMap() {

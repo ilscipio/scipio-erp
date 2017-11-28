@@ -765,13 +765,12 @@
         </call-map-processor>        
     </simple-method>
     
-    <simple-method method-name="importGlAccounts" short-description="Import GL Accounts from xls" login-required="true" >
+    <simple-method method-name="importGlAccounts" short-description="Import GL Accounts from xls" login-required="true">
     	<!-- TODO -->
     </simple-method>
     
-    <simple-method method-name="importJournalEntries" short-description="Import Journal Entries" login-required="true" >
-    	
-
+    <simple-method method-name="importCsvDatev" short-description="Import CSV Datev" login-required="true">
+    	<!-- TODO -->
     </simple-method>
     
 </simple-methods>

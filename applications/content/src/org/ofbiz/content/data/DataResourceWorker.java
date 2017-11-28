@@ -1104,4 +1104,13 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
             Locale locale, String targetMimeTypeId, boolean cache) throws GeneralException, IOException {
         renderDataResourceAsText(delegator, dataResourceId, out, templateContext, locale, targetMimeTypeId, cache);
     }
+    
+    /**
+     * SCIPIO: Gets ImageDataResource, VideoDataResource, etc. media resource for the DataResource value,
+     * or null if none.
+     */
+    public static GenericValue getMediaDataResourceFromDataResource(GenericValue dataResource, boolean useCache) throws GenericEntityException {
+        if (dataResource == null) return null;
+        return SpecDataResEntityInfo.getMediaDataResourceFromDataResourceStatic(dataResource, useCache);
+    }
 }

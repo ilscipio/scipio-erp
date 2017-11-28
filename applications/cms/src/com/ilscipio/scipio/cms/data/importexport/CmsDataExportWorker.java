@@ -1392,7 +1392,7 @@ public abstract class CmsDataExportWorker implements Serializable {
         
         SpecDataResEntityInfo specDataResInfo = SpecDataResEntityInfo.fromDataResource(dataRes);
         if (specDataResInfo != null) {
-            GenericValue specDataRes = specDataResInfo.getSpecValuefromDataResource(dataRes, false);
+            GenericValue specDataRes = specDataResInfo.getMediaDataResourceFromDataResource(dataRes, false);
             if (specDataRes != null) {
                 writeOut(specDataRes);
                 numberWritten++;

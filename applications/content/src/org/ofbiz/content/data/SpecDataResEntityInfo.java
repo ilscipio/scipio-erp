@@ -86,8 +86,24 @@ public class SpecDataResEntityInfo {
         return map;
     }
     
+    /**
+     * @deprecated too confusing; use {@link #getMediaResourceValuefromDataResource} instead.
+     */
+    @Deprecated
     public GenericValue getSpecValuefromDataResource(GenericValue dataResource, boolean useCache) throws GenericEntityException {
         return dataResource.getRelatedOne(getEntityName(), useCache);
+    }
+    
+    public GenericValue getMediaDataResourceFromDataResource(GenericValue dataResource, boolean useCache) throws GenericEntityException {
+        return dataResource.getRelatedOne(getEntityName(), useCache);
+    }
+    
+    public static GenericValue getMediaDataResourceFromDataResourceStatic(GenericValue dataResource, boolean useCache) throws GenericEntityException {
+        SpecDataResEntityInfo specDataResInfo = SpecDataResEntityInfo.fromDataResource(dataResource);
+        if (specDataResInfo != null) {
+            return specDataResInfo.getMediaDataResourceFromDataResource(dataResource, useCache);
+        }
+        return null;
     }
     
     public static Map<String, SpecDataResEntityInfo> populateEntityInfoMap(Map<String, SpecDataResEntityInfo> map, String key, List<SpecDataResEntityInfo> list) {

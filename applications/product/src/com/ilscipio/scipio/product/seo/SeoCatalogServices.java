@@ -1,6 +1,11 @@
 package com.ilscipio.scipio.product.seo;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -11,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -25,10 +31,12 @@ import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 
 import com.ilscipio.scipio.product.category.CatalogAltUrlSanitizer;
 import com.ilscipio.scipio.product.category.CatalogUrlType;
+import com.ilscipio.scipio.product.seo.SeoCatalogUrlExporter.ExportDataFileConfig;
 import com.ilscipio.scipio.product.seo.SeoCatalogUrlExporter.ExportTraversalConfig;
 import com.ilscipio.scipio.product.seo.SeoCatalogUrlGenerator.GenTraversalConfig;
 
@@ -283,7 +291,15 @@ public abstract class SeoCatalogServices {
             nameMainContent = nameProductCategoryContent.getRelatedOne("Content", useCache);
             localeTextMap = getSimpleTextsByLocaleString(delegator, dispatcher, 
                     nameMainContent, moment, useCache);
-            defaultLocaleString = nameMainContent.getString("localeString"); // TODO: REVIEW: setting this to the main name record localeString, or null if none
+            
+            // IMPORTANT: Currently we are setting "default" localeString to the main name record localeString, 
+            // OR null if none (may be null - valid setup).
+            // TODO: REVIEW: this is not actually the real "default" store locale, but we have to use
+            // this by convention to keep this manageable and more independent of the
+            // ProductStore settings.
+            // We effectively usurp the term "defaultLocaleString" to simply mean the locale
+            // specified in the main Content (non-alternate-locale) record.
+            defaultLocaleString = nameMainContent.getString("localeString"); 
         }
         String defaultName = determineDefaultName(delegator, dispatcher, productCategoryId, 
                 CategoryContentWrapper.getEntityFieldValue(productCategory, categoryNameField, delegator, dispatcher, useCache),
@@ -502,7 +518,6 @@ public abstract class SeoCatalogServices {
         boolean doAll = typeGenerate.contains("all");
         boolean doProduct = doAll || typeGenerate.contains("product");
         boolean doCategory = doAll || typeGenerate.contains("category");
-        
         // NOTE: we must enable search for child product in this case, because they are not automatically
         // covered by ProductCategoryMember in the iteration
         final boolean doChildProducts = true;
@@ -540,8 +555,8 @@ public abstract class SeoCatalogServices {
             return ServiceUtil.returnError(message);
         }
         
-        String resultMsg = traverser.getStats().toMsg(locale);
-        Debug.logInfo(logPrefix+"generateWebsiteAlternativeUrls: Generated alternative links: " + resultMsg, module);
+        String resultMsg = "Alternative URL generation for website '" + webSiteId + "' finished. " + traverser.getStats().toMsg(locale);
+        Debug.logInfo(logPrefix+"generateWebsiteAlternativeUrls: " + resultMsg, module);
         return traverser.getStats().toServiceResultSuccessFailure(resultMsg);
     }
     
@@ -558,7 +573,6 @@ public abstract class SeoCatalogServices {
         boolean doAll = typeGenerate.contains("all");
         boolean doProduct = doAll || typeGenerate.contains("product");
         boolean doCategory = doAll || typeGenerate.contains("category");
-        
         // NOTE: don't search for child product in this case, because using massive all-products query
         final boolean doChildProducts = false;
         
@@ -591,9 +605,336 @@ public abstract class SeoCatalogServices {
         //if (doContent) {
         //}
         
-        String resultMsg = traverser.getStats().toMsg(locale);
-        Debug.logInfo(logPrefix+"generateAllAlternativeUrls: Generated alternative links: " + resultMsg, module);
+        String resultMsg = "System-wide alternative URL generation finished. " + traverser.getStats().toMsg(locale);
+        Debug.logInfo(logPrefix+"generateAllAlternativeUrls: " + resultMsg, module);
         return traverser.getStats().toServiceResultSuccessFailure(resultMsg);
+    }
+    
+    /**
+     * Exports alternative urls for given website.
+     */
+    public static Map<String, Object> exportWebsiteAlternativeUrlsEntityXml(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Locale locale = (Locale) context.get("locale");
+       
+        Collection<String> typeExport = UtilGenerics.checkCollection(context.get("typeExport"));
+        if (typeExport == null) typeExport = Collections.emptyList();
+        boolean doAll = typeExport.contains("all");
+        boolean doProduct = doAll || typeExport.contains("product");
+        boolean doCategory = doAll || typeExport.contains("category");
+        // NOTE: we must enable search for child product in this case, because they are not automatically
+        // covered by ProductCategoryMember in the iteration
+        final boolean doChildProducts = true;
+        
+        String webSiteId = (String) context.get("webSiteId");
+        String productStoreId = (String) context.get("productStoreId");
+        String prodCatalogId = (String) context.get("prodCatalogId");
+        if ("all".equals(prodCatalogId)) prodCatalogId = null; // legacy compat
+        Collection<String> prodCatalogIdList = UtilGenerics.checkCollection(context.get("prodCatalogIdList"));
+        String recordGrouping = (String) context.get("recordGrouping");
+        
+        boolean useCache = Boolean.TRUE.equals(context.get("useCache")); // FALSE default
+        boolean preventDuplicates = !Boolean.FALSE.equals(context.get("preventDuplicates"));
+        ExportOutput out = new ExportOutput(context);
+
+        SeoCatalogUrlExporter exporter;
+        try {
+            ExportTraversalConfig travConfig = (ExportTraversalConfig) new ExportTraversalConfig()
+                    .setServCtxOpts(context).setDoChildProducts(doChildProducts).setLinePrefix(out.getLinePrefix())
+                    .setRecordGrouping(recordGrouping)
+                    .setUseCache(useCache).setDoCategory(doCategory).setDoProduct(doProduct)
+                    .setPreventDupAll(preventDuplicates);
+            exporter = new SeoCatalogUrlExporter(dctx.getDelegator(), dctx.getDispatcher(), 
+                    travConfig, out.getEffWriter());
+        } catch (Exception e) {
+            String message = "Error preparing to export alternative URLs: " + e.getMessage();
+            Debug.logError(e, logPrefix+"exportWebsiteAlternativeUrlsEntityXml: "+message, module);
+            return ServiceUtil.returnError(message);
+        }
+        
+        try {
+            List<GenericValue> prodCatalogList = exporter.getTargetCatalogList(prodCatalogId, prodCatalogIdList, 
+                    productStoreId, webSiteId, false);
+            exporter.traverseCatalogsDepthFirst(prodCatalogList);
+            out.processOutput(exporter);
+        } catch(Exception e) {
+            String message = "Error while exporting alternative URLs: " + e.getMessage();
+            Debug.logError(e, logPrefix+"exportWebsiteAlternativeUrlsEntityXml: "+message, module);
+            return ServiceUtil.returnError(message);
+        }
+        
+        String resultMsg = exporter.getStats().toMsg(locale);
+        Map<String, Object> result = exporter.getStats().toServiceResultSuccessFailure(resultMsg);
+        out.populateServiceResult(result);
+        Debug.logInfo(logPrefix+"exportWebsiteAlternativeUrlsEntityXml: Exported alternative URLs: " + resultMsg, module);        
+        return result;
+    }
+    
+    public static Map<String, Object> exportAllAlternativeUrlsEntityXml(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Locale locale = (Locale) context.get("locale");
+        
+        Collection<String> typeGenerate = UtilGenerics.checkCollection(context.get("typeExport"));
+        if (typeGenerate == null) typeGenerate = Collections.emptyList();
+        boolean doAll = typeGenerate.contains("all");
+        boolean doProduct = doAll || typeGenerate.contains("product");
+        boolean doCategory = doAll || typeGenerate.contains("category");
+        // NOTE: don't search for child product in this case, because using massive all-products query
+        final boolean doChildProducts = false;
+        String recordGrouping = (String) context.get("recordGrouping");
+        
+        boolean useCache = Boolean.TRUE.equals(context.get("useCache")); // FALSE default
+        ExportOutput out = new ExportOutput(context);
+
+        SeoCatalogUrlExporter exporter;
+        try {
+            ExportTraversalConfig travConfig = (ExportTraversalConfig) new ExportTraversalConfig()
+                    .setServCtxOpts(context).setDoChildProducts(doChildProducts).setLinePrefix(out.getLinePrefix())
+                    .setRecordGrouping(recordGrouping)
+                    .setUseCache(useCache).setDoCategory(doCategory).setDoProduct(doProduct);
+            exporter = new SeoCatalogUrlExporter(dctx.getDelegator(), dctx.getDispatcher(), 
+                    travConfig, out.getEffWriter());
+        } catch (Exception e) {
+            String message = "Error preparing to export alternative URLs: " + e.getMessage();
+            Debug.logError(e, logPrefix+"exportAllAlternativeUrlsEntityXml: "+message, module);
+            return ServiceUtil.returnError(message);
+        }
+
+        try {
+            exporter.traverseAllInSystem();
+            out.processOutput(exporter);
+        } catch (Exception e) {
+            String message = "Error while exporting alternative URLs: " + e.getMessage();
+            Debug.logError(e, logPrefix+"exportAllAlternativeUrlsEntityXml: " + message, module);
+            return ServiceUtil.returnError(message);
+        }
+        
+        // TODO?: FUTURE
+        //if (doContent) {
+        //}
+        
+        String resultMsg = exporter.getStats().toMsg(locale);
+        Map<String, Object> result = exporter.getStats().toServiceResultSuccessFailure(resultMsg);
+        out.populateServiceResult(result);
+        Debug.logInfo(logPrefix+"exportAllAlternativeUrlsEntityXml: exported alternative URLs: " + resultMsg, module);
+        return result;
+    }
+    
+    private static class ExportOutput {
+        // in
+        Writer origWriter;
+        Writer effWriter;
+        boolean asString;
+        boolean outFlush;
+        String linePrefix;
+        
+        // out
+        String outString = null;
+        
+        public ExportOutput(Map<String, ?> context) {
+            origWriter = (Writer) context.get("outWriter");
+            effWriter = origWriter;
+            asString = Boolean.TRUE.equals(context.get("asString"));
+            if (effWriter == null || (asString && !(effWriter instanceof StringWriter))) {
+                effWriter = new StringWriter();
+            }
+            outFlush = !Boolean.FALSE.equals(context.get("outFlush"));
+            linePrefix = (String) context.get("linePrefix");
+        }
+        
+        public Writer getEffWriter() {
+            return effWriter;
+        }
+       
+        public String getLinePrefix() {
+            return linePrefix;
+        }
+
+        public boolean isIntermediateWriter() {
+            return (origWriter != effWriter);
+        }
+        
+        public void processOutput(SeoCatalogUrlExporter exporter) throws GeneralException {
+            flushExporter(exporter);
+            
+            if (isIntermediateWriter()) {
+                StringWriter sw = (StringWriter) effWriter;
+                outString = sw.toString();
+                
+                if (origWriter != null) {
+                    try {
+                        origWriter.write(outString);
+                        origWriter.flush();
+                    } catch (IOException e) {
+                        throw new GeneralException("Error writing intermediate StringWriter result"
+                                + " back to original writer following data export", e);
+                    }
+                }
+            }
+        }
+        
+        /**
+         * Flushes the exporter if needed.
+         * Generally the exporter must be flushed because it may have wrapped the effWriter
+         * in a PrintWriter. We can only avoid flush if origWriter was a PrintWriter because then service caller is responsible.
+         * Option conflict is possible.
+         */
+        private void flushExporter(SeoCatalogUrlExporter exporter) throws GeneralException {
+            boolean flushWriter = false;
+            if (isIntermediateWriter()) {
+                // no risk flushing the StringWriter
+                flushWriter = true;
+            } else {
+                if (origWriter instanceof PrintWriter) {
+                    // here, we can respect the flush flag, because the caller is responsible
+                    // for the entire PrintWriter wrapper flushing (not just its wrapped instance)
+                    if (outFlush) {
+                        flushWriter = true;
+                    }
+                } else {
+                    // here, we are forced to flush, but caller may not like...
+                    if (!outFlush) {
+                        Debug.logWarning(logPrefix+"SEO catalog URL export: "
+                                + "forced to flush the writer; caller requested no flushing (outFlush=false), "
+                                + "but this flag can only be honored if caller passed a PrintWriter"
+                                + " (caller passed a: " + origWriter.getClass().getName() 
+                                + ")", module);
+                    }
+                    flushWriter = true;
+                }
+            }
+            exporter.flush(flushWriter);
+        }
+
+        public void populateServiceResult(Map<String, Object> result) {
+            if (origWriter != null) {
+                result.put("outWriter", origWriter);
+            } else {
+                result.put("outWriter", effWriter);
+            }
+  
+            if (asString) {
+                result.put("outString", outString);
+            }
+        }
+    }
+    
+    public static Map<String, Object> exportWebsiteAlternativeUrlsEntityXmlFile(DispatchContext dctx, Map<String, ? extends Object> context) {
+        String outFile = (String) context.get("outFile");
+        String templateType = (String) context.get("templateType");
+        String dataBeginMarker = (String) context.get("dataBeginMarker");
+        String templateFile = (String) context.get("templateFile");
+        
+        boolean commentDelimTmpl = "comment-delimited".equals(templateType);
+        if (commentDelimTmpl && dataBeginMarker == null) dataBeginMarker = "<!--DATA-BEGIN-->";
+        
+        PrintWriter outWriter = null;
+        try {
+            String header = null;
+            if (commentDelimTmpl) {                
+                StringBuilder headerSb = ExportDataFileConfig.readCommentDelimitedTemplateHeader(templateFile, dataBeginMarker);
+                if (headerSb == null) {
+                    Debug.logWarning(logPrefix+"Data export: could not find the data-begin markup (" + dataBeginMarker 
+                        + ") in the template file '" + templateFile + "'; there will be no header in the output file (" + outFile + ")", module);
+                } else {
+                    header = headerSb.toString();
+                }
+            }
+
+            // will use a PrintWriter right away to avoid possible issues
+            outWriter = new PrintWriter(ExportDataFileConfig.getOutFileWriter(outFile));
+            
+            // print header
+            outWriter.print((header != null) ? header : ExportDataFileConfig.getDefaultHeader());
+            
+            // print body
+            Map<String, Object> servCtx = dctx.makeValidContext("exportWebsiteAlternativeUrlsEntityXml", ModelService.IN_PARAM, context);
+            servCtx.put("outWriter", outWriter);
+            Map<String, Object> servResult = dctx.getDispatcher().runSync("exportWebsiteAlternativeUrlsEntityXml", servCtx);
+            if (ServiceUtil.isError(servResult)) {
+                String message = "Error exporting alternative URLs: " + ServiceUtil.getErrorMessage(servResult);
+                Debug.logError(logPrefix+"exportWebsiteAlternativeUrlsEntityXmlFile: "+message, module);
+                return ServiceUtil.returnError(message);
+            }
+            Map<String, Object> result = ServiceUtil.getSysResponseFields(servResult); // preserves success vs failure
+            
+            // print footer and flush
+            outWriter.print(ExportDataFileConfig.getDefaultFooter());
+            outWriter.flush();
+            
+            Debug.logInfo(logPrefix+"exportWebsiteAlternativeUrlsEntityXmlFile: exported file: " + outFile, module);
+            
+            return result;
+        } catch (Exception e) {
+            String message = "Error exporting alternative URLs: " + e.getMessage();
+            Debug.logError(e, logPrefix+"exportWebsiteAlternativeUrlsEntityXmlFile: "+message, module);
+            return ServiceUtil.returnError(message);
+        } finally {
+            if (outWriter != null) {
+                try {
+                    outWriter.close();
+                } catch(Exception e) {
+                    Debug.logError(e, module);
+                }
+            }
+        }
+    }
+    
+    public static Map<String, Object> exportAlternativeUrlsEntityXmlFileFromConfig(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Collection<String> configNameList = combineNameAndNameList((String) context.get("configName"),
+                UtilGenerics.<String>checkCollection(context.get("configNameList")));
+        if (UtilValidate.isEmpty(configNameList)) {
+            configNameList = ExportDataFileConfig.getAllConfigNames();
+            Debug.logInfo(logPrefix+"exportAlternativeUrlsEntityXmlFileFromConfig: no config names specified: running for all configs: " + configNameList, module);
+        }
+        
+        int configSuccess = 0;
+        int configFailure = 0;
+        
+        try {
+            for(String configName : configNameList) {
+                Map<String, Object> config = ExportDataFileConfig.getConfigByName(configName);
+                if (config == null) {
+                    return ServiceUtil.returnError("could not read datafile export config for config name '" + configName + "'");
+                }
+                try {
+                    Map<String, Object> servCtx = dctx.makeValidContext("exportWebsiteAlternativeUrlsEntityXmlFile", ModelService.IN_PARAM, context);
+                    Map<String, Object> servConfig = dctx.makeValidContext("exportWebsiteAlternativeUrlsEntityXmlFile", ModelService.IN_PARAM, config);
+                    servCtx.putAll(servConfig);
+                    Map<String, Object> servResult = dctx.getDispatcher().runSync("exportWebsiteAlternativeUrlsEntityXmlFile", servCtx);
+                    if (ServiceUtil.isError(servResult)) {
+                        String message = "Error exporting alternative URLs for config '" + configName + "': " + ServiceUtil.getErrorMessage(servResult);
+                        Debug.logError(logPrefix+"exportAlternativeUrlsEntityXmlFileFromConfig: "+message, module);
+                        return ServiceUtil.returnError(message);
+                    } else if (ServiceUtil.isFailure(servResult)) {
+                        configFailure++;
+                    } else {
+                        configSuccess++;
+                    }
+                } catch(Exception e) {
+                    String message = "Error exporting alternative URLs for config '" + configName + "': " + e.getMessage();
+                    Debug.logError(e, logPrefix+"exportAlternativeUrlsEntityXmlFileFromConfig: "+message, module);
+                    return ServiceUtil.returnError(message);
+                }
+            }
+        } catch(Exception e) {
+            String message = "Error exporting alternative URLs: " + e.getMessage();
+            Debug.logError(e, logPrefix+"exportAlternativeUrlsEntityXmlFileFromConfig: "+message, module);
+            return ServiceUtil.returnError(message);
+        }
+        String msg = "Export configs succeeded: " + configSuccess + "; failed: " + configFailure;
+        return (configFailure > 0) ? ServiceUtil.returnFailure(msg) : ServiceUtil.returnSuccess(msg);
+    }
+    
+    static Collection<String> combineNameAndNameList(String name, Collection<String> nameList) {
+        if (UtilValidate.isEmpty(name)) return nameList;
+        
+        if (UtilValidate.isEmpty(nameList)) {
+            return UtilMisc.toList(name);
+        } else {
+            Collection<String> newNameList = new ArrayList<>(nameList.size() + 1);
+            newNameList.add(name);
+            newNameList.addAll(nameList);
+            return newNameList;
+        }
     }
     
 }

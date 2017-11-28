@@ -2338,13 +2338,8 @@ under the License.
         <attribute name="mainContentId" mode="OUT" type="String" optional="true"/>
     </service>
     -->
-    
-    <!-- SCIPIO: replacement for generateMissingSeoUrlForWebsite -->
-    <service name="generateWebsiteAlternativeUrls" engine="java" auth="true"
-        location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="generateWebsiteAlternativeUrls" transaction-timeout="72000">
-        <description>Re-generates alternative urls for store/website based on ruleset outlined in SeoConfig.xml
-            FIXME?: this can include variant products, but does not yet recognize other ProductAssoc types</description>
-        <permission-service service-name="productGenericPermission" main-action="UPDATE"/>
+
+    <service name="websiteAlternativeUrlsCatalogInterface" engine="interface">
         <attribute name="webSiteId" type="String" mode="IN" optional="true">
             <description>May pass webSiteId OR productStoreId</description>
         </attribute>
@@ -2357,6 +2352,13 @@ under the License.
         <attribute name="prodCatalogIdList" type="List" mode="IN" optional="true">
             <description>Limits to specific catalogs</description>
         </attribute>
+    </service>
+    <service name="generateWebsiteAlternativeUrls" engine="java" auth="true"
+        location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="generateWebsiteAlternativeUrls" transaction-timeout="72000">
+        <description>Re-generates alternative urls for store/website based on ruleset outlined in SeoConfig.xml - replaces old generateMissingSeoUrlForWebsite service
+            FIXME?: this can include variant products, but does not yet recognize other ProductAssoc types</description>
+        <permission-service service-name="productGenericPermission" main-action="UPDATE"/>
+        <implements service="websiteAlternativeUrlsCatalogInterface"/>
         <attribute name="typeGenerate" type="List" mode="IN" optional="true" default-value="[all]">
             <description>Currently supports: product, category, all.</description>
         </attribute>
@@ -2370,7 +2372,6 @@ under the License.
             <description>May be slightly faster iterating if true, but not recommended</description>
         </attribute>
     </service>
-    
     <service name="generateAllAlternativeUrls" engine="java" auth="true"
         location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="generateAllAlternativeUrls" transaction-timeout="72000">
         <description>SCIPIO: Re-generates alternative urls for ALL stores/websites based on ruleset outlined in SeoConfig.xml</description>
@@ -2396,7 +2397,6 @@ under the License.
             <description>May be slightly faster iterating if true, but not recommended</description>
         </attribute>
     </service>
-    
     <service name="generateAllAlternativeUrlSitemapFiles" engine="java" 
         location="com.ilscipio.scipio.product.seo.sitemap.SitemapServices" invoke="generateAllAlternativeUrlSitemapFiles" 
         transaction-timeout="72000">
@@ -2404,6 +2404,90 @@ under the License.
         <permission-service service-name="productGenericPermission" main-action="UPDATE"/>
         <attribute name="useCache" type="Boolean" mode="IN" optional="true" default-value="false">
             <description>May be slightly faster iterating if true, but not recommended</description>
+        </attribute>
+    </service>
+
+    <service name="exportAlternativeUrlsEntityXmlOptionsInterface" engine="interface">
+        <description>Traversal options for alt URL entity XML services</description>
+        <attribute name="typeExport" type="List" mode="IN" optional="true" default-value="[all]">
+            <description>Currently supports: product, category, all.</description>
+        </attribute>
+        <attribute name="includeVariant" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="preventDuplicates" type="Boolean" mode="IN" optional="true" default-value="true">
+            <description>Tries to prevent regenerating the same URLs for the same categories and products more than one</description>
+        </attribute>
+        <attribute name="useCache" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>May be slightly faster iterating if true, but not recommended</description>
+        </attribute>
+        <attribute name="linePrefix" type="String" mode="IN" optional="true">
+            <description>String prefix for each line, typically an indent</description>
+        </attribute>
+        <attribute name="recordGrouping" type="String" mode="IN" optional="true">
+            <description>Supported values: NONE/MAJOR_OBJECT (default), ENTITY_TYPE</description>
+        </attribute>
+    </service>
+    <service name="exportAlternativeUrlsEntityXmlWriterInterface" engine="interface">
+        <description>Output options for alt URL entity XML services</description>
+        <attribute name="asString" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>If true, will return result as a string in outString in addition
+                to outputting to the passed outWriter if any was passed (if none, also returns a new StringWriter)</description>
+        </attribute>
+        <attribute name="outFlush" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="outWriter" type="java.io.Writer" mode="INOUT" optional="true">
+            <description>Writer to output the formatted XML records to</description>
+        </attribute>
+        <attribute name="outString" type="String" mode="OUT" optional="true" allow-html="any">
+            <description>If this is set to "Y" or "true" on input and the outWriter is either
+                not set or a StringWriter, this will contain the output as a string upon success.</description>
+        </attribute>
+    </service>
+    <service name="exportWebsiteAlternativeUrlsEntityXml" engine="java" auth="true"
+        location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="exportWebsiteAlternativeUrlsEntityXml" transaction-timeout="72000">
+        <description>Exports alternative urls for given website to entity XML data out writer</description>
+        <permission-service service-name="productGenericPermission" main-action="VIEW"/>
+        <implements service="exportAlternativeUrlsEntityXmlOptionsInterface"/>
+        <implements service="exportAlternativeUrlsEntityXmlWriterInterface"/>
+        <implements service="websiteAlternativeUrlsCatalogInterface"/>
+    </service>
+    <service name="exportAllAlternativeUrlsEntityXml" engine="java" 
+        location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="exportAllAlternativeUrlsEntityXml" 
+        transaction-timeout="72000">
+        <description>Export all alternative URLs into a single output to entity XML data out writer</description>
+        <permission-service service-name="productGenericPermission" main-action="VIEW"/>
+        <implements service="exportAlternativeUrlsEntityXmlOptionsInterface"/>
+        <implements service="exportAlternativeUrlsEntityXmlWriterInterface"/>
+    </service>
+    <service name="exportWebsiteAlternativeUrlsEntityXmlFile" engine="java" 
+        location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="exportWebsiteAlternativeUrlsEntityXmlFile" 
+        transaction-timeout="72000">
+        <description>Exports alternative urls for given website or all websites to entity XML data file</description>
+        <permission-service service-name="productGenericPermission" main-action="VIEW"/>
+        <implements service="exportAlternativeUrlsEntityXmlOptionsInterface"/>
+        <implements service="websiteAlternativeUrlsCatalogInterface"/>
+        <attribute name="outFile" type="String" mode="IN" optional="false">
+            <description>Should begin with component://</description>
+        </attribute>
+        <attribute name="templateType" type="String" mode="IN" optional="false">
+            <description>Supported: comment-delimited (TODO: ftl)</description>
+        </attribute>
+        <attribute name="dataBeginMarker" type="String" mode="IN" optional="true" allow-html="any">
+            <description>All file contents before this marker is copied from the template to the outFile</description>
+        </attribute>
+        <attribute name="templateFile" type="String" mode="IN" optional="true">
+            <description>Should begin with component://</description>
+        </attribute>
+    </service>
+    <service name="exportAlternativeUrlsEntityXmlFileFromConfig" engine="java" 
+        location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="exportAlternativeUrlsEntityXmlFileFromConfig" 
+        transaction-timeout="72000">
+        <description>Exports alternative urls for given website or all websites to entity XML data file,
+            from config in seo-urls.properties files</description>
+        <permission-service service-name="productGenericPermission" main-action="VIEW"/>
+        <attribute name="configName" type="String" mode="IN" optional="true">
+            <description>Name of config in seo-urls.properties, in format: seourl.datafile.[configName].[params]</description>
+        </attribute>
+        <attribute name="configNameList" type="List" mode="IN" optional="true">
+            <description>List of config names in seo-urls.properties, in format: seourl.datafile.[configName].[params]</description>
         </attribute>
     </service>
     

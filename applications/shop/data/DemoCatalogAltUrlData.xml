@@ -31,8 +31,9 @@ under the License.
         which should no longer be included in ofbiz_component.xml.
         
         NOTE: Any conflicting names as a result of the generation should be fixed by modifying the source data 
-            (product/category names and SeoConfig.xml settings) rather than creating any manual fixup records. -->
-
-    <!-- TODO -->
+            (product/category names and SeoConfig.xml settings) rather than creating any manual fixup records. 
+        NOTE: The "generated-data" comment on the next line must not be modified! It is used as a template marker. -->
+   
+    <!--DATA-BEGIN-->
     
 </entity-engine-xml>

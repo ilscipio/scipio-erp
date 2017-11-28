@@ -780,4 +780,21 @@ public class ServiceUtil {
 
         return outMap;
     }
+    
+    /**
+     * SCIPIO: Returns a new map containing only the common system service response fields from the
+     * given service results.
+     * This can be used to copy a success/failure/error message but excluding all the service-specific return values.
+     * In other words, returning this from a service can never trigger an out parameter service validation exception.
+     * Added 2017-11-28.
+     */
+    public static Map<String, Object> getSysResponseFields(Map<String, ?> results) {
+        Map<String, Object> outMap = new HashMap<>();
+        for(String name : ModelService.SYS_RESPONSE_FIELDS) {
+            if (results.containsKey(name)) {
+                outMap.put(name, results.get(name));
+            }
+        }
+        return outMap;
+    }
 }

@@ -2390,8 +2390,7 @@ under the License.
         <permission-service service-name="productGenericPermission" main-action="UPDATE"/>
         <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
         <attribute name="useCache" type="Boolean" mode="IN" optional="true" default-value="false">
-            <description>May be slightly faster iterating if true, but not recommended
-                WARN/FIXME: 2017-11-17: value of this flag is not fully honored at this time</description>
+            <description>May be slightly faster iterating if true, but not recommended</description>
         </attribute>
     </service>
     
@@ -2401,8 +2400,7 @@ under the License.
         <description>Creates sitemaps in filesystem using product/category alternative URLs, for all WebSites that have it enabled, using configurations from sitemaps.properties</description>
         <permission-service service-name="productGenericPermission" main-action="UPDATE"/>
         <attribute name="useCache" type="Boolean" mode="IN" optional="true" default-value="false">
-            <description>May be slightly faster iterating if true, but not recommended
-                WARN/FIXME: 2017-11-17: value of this flag is not fully honored at this time</description>
+            <description>May be slightly faster iterating if true, but not recommended</description>
         </attribute>
     </service>
     

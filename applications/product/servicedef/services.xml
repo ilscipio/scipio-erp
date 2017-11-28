@@ -2354,6 +2354,9 @@ under the License.
         <attribute name="prodCatalogId" type="String" mode="IN" optional="true">
             <description>Limits to a specific catalog</description>
         </attribute>
+        <attribute name="prodCatalogIdList" type="List" mode="IN" optional="true">
+            <description>Limits to specific catalogs</description>
+        </attribute>
         <attribute name="typeGenerate" type="List" mode="IN" optional="true" default-value="[all]">
             <description>Currently supports: product, category, all.</description>
         </attribute>
@@ -2382,8 +2385,9 @@ under the License.
     
     <service name="generateWebsiteAlternativeUrlSitemapFiles" engine="java" 
         location="com.ilscipio.scipio.product.seo.sitemap.SitemapServices" invoke="generateWebsiteAlternativeUrlSitemapFiles" 
-        transaction-timeout="72000" max-retry="1">
+        transaction-timeout="72000">
         <description>Creates sitemaps in filesystem using product/category alternative URLs, for WebSite, using configurations from sitemaps.properties</description>
+        <permission-service service-name="productGenericPermission" main-action="UPDATE"/>
         <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
         <attribute name="useCache" type="Boolean" mode="IN" optional="true" default-value="false">
             <description>May be slightly faster iterating if true, but not recommended
@@ -2393,8 +2397,9 @@ under the License.
     
     <service name="generateAllAlternativeUrlSitemapFiles" engine="java" 
         location="com.ilscipio.scipio.product.seo.sitemap.SitemapServices" invoke="generateAllAlternativeUrlSitemapFiles" 
-        transaction-timeout="72000" max-retry="1">
+        transaction-timeout="72000">
         <description>Creates sitemaps in filesystem using product/category alternative URLs, for all WebSites that have it enabled, using configurations from sitemaps.properties</description>
+        <permission-service service-name="productGenericPermission" main-action="UPDATE"/>
         <attribute name="useCache" type="Boolean" mode="IN" optional="true" default-value="false">
             <description>May be slightly faster iterating if true, but not recommended
                 WARN/FIXME: 2017-11-17: value of this flag is not fully honored at this time</description>

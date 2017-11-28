@@ -70,6 +70,7 @@
         <remove-value value-field="content"/>
     </simple-method>
     <simple-method method-name="removeContentAndRelated" short-description="Remove a Content Record, related resource(s) and assocs.">
+        <!-- SCIPIO: NOTE: Please refer to the class org.ofbiz.content.content.ContentTraverser for extensions of this logic -->
         <entity-one entity-name="Content" value-field="content"/> 
         <remove-related value-field="content" relation-name="ContentRole"/>
         <remove-related value-field="content" relation-name="ContentKeyword"/>

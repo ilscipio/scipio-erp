@@ -7,33 +7,31 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.service.ServiceUtil;
 
 /**
  * Stats for product/category iterating services.
+ * TODO: formalize this better, got annoyed with it.
  * TODO: LOCALIZE MESSAGES
  */
 public class UrlGenStats {
     public final boolean doProducts;
     public final boolean doCategory;
-    public final boolean useSkipped;
     
     public int productSuccess = 0;
-    public int productSkipped = 0;
     public int productError = 0;
+    public int productSkipped = 0;
+    public int productDupSkip = 0;
     
     public int categorySuccess = 0;
     public int categoryError = 0;
     public int categorySkipped = 0;
+    public int categoryDupSkip = 0;
 
-    public UrlGenStats(boolean doProducts, boolean doCategory, boolean useSkipped) {
+    public UrlGenStats(boolean doProducts, boolean doCategory) {
         this.doProducts = doProducts;
         this.doCategory = doCategory;
-        this.useSkipped = useSkipped;
-    }
-    
-    public UrlGenStats(boolean doProducts, boolean doCategory) {
-        this(doProducts, doCategory, true);
     }
 
     public boolean hasError() {
@@ -43,7 +41,6 @@ public class UrlGenStats {
     public Map<String, Object> toMap(Map<String, Object> map) {
         map.put("doProducts", doProducts);
         map.put("doCategory", doCategory);
-        map.put("useSkipped", useSkipped);
         
         map.put("productSuccess", productSuccess);
         map.put("productSkipped", productSkipped);
@@ -62,13 +59,19 @@ public class UrlGenStats {
     public void toMsgLists(Locale locale, List<String> msgList, List<String> errMsgList) {
         if (doProducts) {
             msgList.add("Products updated: " + productSuccess);
-            if (useSkipped) msgList.add("Products skipped: " + productSkipped);
+            if (productSkipped > 0) msgList.add("Products skipped: " + productSkipped);
+            if (Debug.verboseOn()) {
+                if (productDupSkip > 0) msgList.add("Duplicate Product ops prevented: " + productDupSkip);
+            }
             if (productError > 0) errMsgList.add("Products failed: " + productError);
         }
         
         if (doCategory) {
             msgList.add("Categories updated: " + categorySuccess);
-            if (useSkipped) msgList.add("Categories skipped: " + categorySkipped);
+            if (categorySkipped > 0) msgList.add("Categories skipped: " + categorySkipped);
+            if (Debug.verboseOn()) {
+                if (categoryDupSkip > 0) msgList.add("Duplicate Category ops prevented: " + categoryDupSkip);
+            }
             if (categoryError > 0) errMsgList.add("Categories failed: " + categoryError);
         }
     }

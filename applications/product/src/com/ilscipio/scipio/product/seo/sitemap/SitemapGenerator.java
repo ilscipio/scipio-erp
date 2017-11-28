@@ -31,10 +31,8 @@ import org.xml.sax.SAXException;
 
 import com.ilscipio.scipio.ce.webapp.filter.UrlRewriteConf;
 import com.ilscipio.scipio.product.category.CatalogUrlType;
-import com.ilscipio.scipio.product.category.CatalogTraverser.TraversalState;
-import com.ilscipio.scipio.product.seo.SeoCatalogUrlWorker;
-import com.ilscipio.scipio.product.seo.SeoCatalogTraverser.SeoTraversalState;
 import com.ilscipio.scipio.product.seo.SeoCatalogTraverser;
+import com.ilscipio.scipio.product.seo.SeoCatalogUrlWorker;
 import com.redfin.sitemapgenerator.SitemapIndexGenerator;
 import com.redfin.sitemapgenerator.WebSitemapGenerator;
 import com.redfin.sitemapgenerator.WebSitemapUrl;
@@ -51,6 +49,8 @@ public class SitemapGenerator extends SeoCatalogTraverser {
 
     public static final String module = SitemapGenerator.class.getName();
     
+    static final String logPrefix = "Seo: Sitemap: ";
+    
     protected final List<Locale> locales;
     protected final String webSiteId;
     protected final String baseUrl;
@@ -58,8 +58,6 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     protected final String contextPath;
     protected final SitemapConfig config;
     protected final SeoCatalogUrlWorker urlWorker;
-    
-    static final String logPrefix = "Seo: Sitemap: ";
     
     protected UrlRewriteConf urlRewriteConf;
     protected final WebappInfo webappInfo;
@@ -74,8 +72,8 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     protected EntityHandler categoryEntityHandler = null; // opt
 
     protected SitemapGenerator(Delegator delegator, LocalDispatcher dispatcher, List<Locale> locales, String webSiteId, GenericValue webSite, GenericValue productStore, String baseUrl, String sitemapContextPath, String contextPath, SitemapConfig config,
-            SeoCatalogUrlWorker urlWorker, UrlRewriteConf urlRewriteConf, boolean useCache) throws GeneralException, IOException, URISyntaxException, SAXException {
-        super(delegator, dispatcher, useCache, config.isDoCategory(), config.isDoProduct());
+            SeoCatalogUrlWorker urlWorker, UrlRewriteConf urlRewriteConf, SitemapTraversalConfig travConfig) throws GeneralException, IOException, URISyntaxException, SAXException {
+        super(delegator, dispatcher, travConfig);
         this.locales = locales;
         this.webSiteId = webSiteId;
         this.webSite = webSite;
@@ -127,15 +125,34 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         if (config.getUrlConfPath() != null) {
             urlRewriteConf = UrlRewriteConf.loadConf(config.getUrlConfPath());
         }
+        
+        SitemapTraversalConfig travConfig = (SitemapTraversalConfig) new SitemapTraversalConfig(config).setUseCache(useCache);
         return new SitemapGenerator(delegator, dispatcher, 
                 config.getLocalesOrDefault(webSite, productStore), 
                 webSiteId, webSite, productStore,
                 baseUrl, sitemapContextPath, contextPath, config,
                 SeoCatalogUrlWorker.getInstance(delegator, webSiteId),
                 urlRewriteConf,
-                useCache);
+                travConfig);
     }
 
+    public static class SitemapTraversalConfig extends SeoTraversalConfig {
+        public SitemapTraversalConfig(SitemapConfig sitemapConfig) {
+            setDoCategory(sitemapConfig.isDoCategory());
+            setDoProduct(sitemapConfig.isDoProduct());
+        }
+    }
+    
+    @Override
+    public SitemapTraversalConfig newTravConfig() {
+        return new SitemapTraversalConfig(config);
+    }
+
+    @Override
+    public SitemapTraversalConfig getTravConfig() {
+        return (SitemapTraversalConfig) travConfig;
+    }
+    
     public class SitemapTraversalState extends SeoTraversalState {
         Map<Locale, List<String>> trailNames; // reset for every new ProdCatalogCategory
         
@@ -256,11 +273,11 @@ public class SitemapGenerator extends SeoCatalogTraverser {
      * The main iteration call - wrapper around {@link #traverseCategoriesDepthFirst(List)}.
      */
     public void buildSitemapDeepForProductStore() throws GeneralException {
-        traverseProductStoreDepthFirst(productStore);
+        traverseProductStoreDfs(productStore);
     }
     
     @Override
-    protected EntityCondition makeProductStoreCatalogCond(String productStoreId) {
+    public EntityCondition makeProductStoreCatalogCond(String productStoreId) {
         EntityCondition cond = EntityCondition.makeCondition("productStoreId", productStoreId);
         if (config.getProdCatalogIds() != null) {
             cond = EntityCondition.makeCondition(cond, EntityOperator.AND, 
@@ -270,7 +287,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     }
     
     @Override
-    protected EntityCondition makeProdCatalogCategoryCond(String prodCatalogId) {
+    public EntityCondition makeProdCatalogCategoryCond(String prodCatalogId) {
         EntityCondition cond = EntityCondition.makeCondition("prodCatalogId", prodCatalogId);
         if (config.getProdCatalogCategoryTypeIds() != null) {
             cond = EntityCondition.makeCondition(cond, EntityOperator.AND, 
@@ -283,7 +300,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
      * If applicable, reorder by the prodCatalogIds in the config, so that order won't change randomly.
      */
     @Override
-    protected List<GenericValue> filterProductStoreCatalogList(List<GenericValue> productStoreCatalogList) {
+    public List<GenericValue> filterProductStoreCatalogList(List<GenericValue> productStoreCatalogList) {
         if (config.getProdCatalogIds() == null || config.getProdCatalogIds().size() <= 1) {
             return productStoreCatalogList;
         } else {
@@ -296,7 +313,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
      * If applicable, reorder by the prodCatalogCategoryTypeIds in the config, so that order won't change randomly.
      */
     @Override
-    protected List<GenericValue> filterProdCatalogCategoryList(List<GenericValue> prodCatalogCategoryList) {
+    public List<GenericValue> filterProdCatalogCategoryList(List<GenericValue> prodCatalogCategoryList) {
         if (config.getProdCatalogCategoryTypeIds() == null || config.getProdCatalogCategoryTypeIds().size() <= 1) {
             return prodCatalogCategoryList;
         } else {

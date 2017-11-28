@@ -1,6 +1,6 @@
 package com.ilscipio.scipio.product.seo;
 
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
@@ -26,30 +26,54 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
     
     static final String logPrefix = "Seo: Alt URLs: ";
     
-    protected final Map<String, ?> servCtxOpts;
-    protected final boolean doChildProducts;
-    
-    public SeoCatalogUrlGenerator(Delegator delegator, LocalDispatcher dispatcher, Map<String, ?> servCtxOpts, boolean useCache, boolean doCategory,
-            boolean doProduct, boolean doChildProducts) throws GeneralException {
-        super(delegator, dispatcher, useCache, doCategory, doProduct);
-        this.servCtxOpts = (servCtxOpts != null) ? servCtxOpts : Collections.<String, Object>emptyMap();
+    public SeoCatalogUrlGenerator(Delegator delegator, LocalDispatcher dispatcher, GenTraversalConfig travConfig) throws GeneralException {
+        super(delegator, dispatcher, travConfig);
         this.reset();
-        this.doChildProducts = doChildProducts;
+    }
+
+    public static class GenTraversalConfig extends SeoTraversalConfig {
+        protected Map<String, ?> servCtxOpts = new HashMap<>();
+        protected boolean doChildProducts = true;
+
+        /**
+         * The options used for nested service calls - contains locale, user auth and various flags -
+         * in some cases can simply be set to the caller's service context (not modified).
+         * NOTE: If this was passed empty to constructor, any errors from sub-services 
+         * are guaranteed to not be localized.
+         */
+        public Map<String, ?> getServCtxOpts() {
+            return servCtxOpts;
+        }
+
+        public GenTraversalConfig setServCtxOpts(Map<String, ?> servCtxOpts) {
+            this.servCtxOpts = servCtxOpts;
+            return this;
+        }
+
+        public boolean isDoChildProducts() {
+            return doChildProducts;
+        }
+
+        public GenTraversalConfig setDoChildProducts(boolean doChildProducts) {
+            this.doChildProducts = doChildProducts;
+            return this;
+        }
+    }
+    
+    @Override
+    public GenTraversalConfig newTravConfig() {
+        return new GenTraversalConfig();
     }
 
     @Override
-    public void reset() throws GeneralException {
-        super.reset();
+    public GenTraversalConfig getTravConfig() {
+        return (GenTraversalConfig) travConfig;
     }
     
-    /**
-     * The options used for nested service calls - contains locale and various flag -
-     * in some cases can simply be set to the caller's service context (not modified).
-     * NOTE: If this was passed empty to constructor, any errors from sub-services 
-     * are guaranteed to not be localized.
-     */
-    public Map<String, ?> getContext() {
-        return servCtxOpts;
+    
+    @Override
+    public void reset() throws GeneralException {
+        super.reset();
     }
 
     @Override
@@ -65,6 +89,7 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
     }
 
     public void generateCategoryAltUrls(GenericValue productCategory) throws GeneralException {
+        Map<String, ?> servCtxOpts = getTravConfig().getServCtxOpts();
         String productCategoryId = productCategory.getString("productCategoryId");
         Map<String, Object> servCtx = getDispatcher().getDispatchContext().makeValidContext("generateProductCategoryAlternativeUrlsCore", ModelService.IN_PARAM, servCtxOpts);
         servCtx.put("productCategory", productCategory);
@@ -86,6 +111,8 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
     }
     
     public void generateProductAltUrls(GenericValue product) throws GeneralException {
+        Map<String, ?> servCtxOpts = getTravConfig().getServCtxOpts();
+
         // NOTE: must check product itself here because generateProductAlternativeUrlsCore will only do it for its children
         boolean includeVariant = Boolean.TRUE.equals(servCtxOpts.get("includeVariant"));
         if (!includeVariant && "Y".equals(product.getString("isVariant"))) {
@@ -97,7 +124,7 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
         Map<String, Object> servCtx = getDispatcher().getDispatchContext().makeValidContext("generateProductAlternativeUrlsCore", ModelService.IN_PARAM, servCtxOpts);
         servCtx.put("product", product);
         servCtx.put("productId", productId);
-        servCtx.put("doChildProducts", doChildProducts);
+        servCtx.put("doChildProducts", getTravConfig().isDoChildProducts());
         servCtx.put("includeVariant", includeVariant);
         // service call for separate transaction
         Map<String, Object> recordResult = getDispatcher().runSync("generateProductAlternativeUrlsCore", servCtx, -1, true);

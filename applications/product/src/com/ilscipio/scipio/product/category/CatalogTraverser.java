@@ -3,15 +3,20 @@ package com.ilscipio.scipio.product.category;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.LocalDispatcher;
 
@@ -24,15 +29,13 @@ import com.ilscipio.scipio.product.seo.SeoCatalogTraverser;
  * Everything is overridable, plus supports a separate CatalogVisitor for the 
  * very core calls only.
  * <p>
- * This base class is stateless - subclasses should decide if/how to manage state.
- * <p>
  * Class is NOT thread-safe or serializable - keep out of session attributes.
  * <p>
  * DEV NOTE: do not put specific or stateful functionality in this class.
  * I made a special {@link SeoCatalogTraverser} subclass for that, 
  * because this one is may be used in many places (not just SEO).
  * <p>
- * TODO: missing filterByDate options and moment to use.
+ * TODO: LOCALIZE thrown errors
  */
 public class CatalogTraverser extends AbstractCatalogVisitor {
 
@@ -49,53 +52,234 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
     private final CatalogVisitor visitor;
     private final Delegator delegator;
     private final LocalDispatcher dispatcher;
-    private final boolean useCache;
+    /**
+     * Basic traversal config options, prevents constructor overload. Always non-null.
+     */
+    protected TraversalConfig travConfig;
     
-    private final boolean doCategory;
-    private final boolean doProduct;
-    private final boolean filterByDate;
-    private final Timestamp moment;
+    protected Set<String> seenCategoryIds = null;
+    protected Set<String> seenProductIds = null;
 
     /**
      * Composed visitor constructor, with explicit visitor.
      */
-    public CatalogTraverser(CatalogVisitor visitor, Delegator delegator, LocalDispatcher dispatcher,
-            boolean useCache, boolean doCategory, boolean doProduct, boolean filterByDate, Timestamp moment) {
+    public CatalogTraverser(CatalogVisitor visitor, Delegator delegator, LocalDispatcher dispatcher, TraversalConfig travConfig) {
         this.visitor = (visitor != null) ? visitor : this;
         this.delegator = delegator;
         this.dispatcher = dispatcher;
-        this.useCache = useCache;
-        this.doCategory = doCategory;
-        this.doProduct = doProduct;
-        this.filterByDate = filterByDate;
-        this.moment = moment;
-    }
-    
-    /**
-     * Composed visitor constructor, with explicit visitor.
-     */
-    public CatalogTraverser(CatalogVisitor visitor, Delegator delegator, LocalDispatcher dispatcher,
-            boolean useCache) {
-        this(visitor, delegator, dispatcher, useCache, true, true, true, null);
+        this.travConfig = (travConfig != null) ? travConfig : newTravConfig();
     }
     
     /**
      * Abstract instance constructor, with the traverser itself as the visitor.
      */
-    public CatalogTraverser(Delegator delegator, LocalDispatcher dispatcher,
-            boolean useCache, boolean doCategory, boolean doProduct, boolean filterByDate, Timestamp moment) {
-        this(null, delegator, dispatcher, useCache, doCategory, doProduct, filterByDate, moment);
-    }
-    
-    /**
-     * Abstract instance constructor, with the traverser itself as the visitor.
-     */
-    public CatalogTraverser(Delegator delegator, LocalDispatcher dispatcher,
-            boolean useCache) {
-        this(null, delegator, dispatcher, useCache, true, true, true, null);
+    public CatalogTraverser(Delegator delegator, LocalDispatcher dispatcher, TraversalConfig travConfig) {
+        this(null, delegator, dispatcher, travConfig);
     }
 
+    public static class TraversalConfig {
+        private boolean useCache = false;
+        
+        private boolean doCategory = true;
+        private boolean doProduct = true;
+        private boolean filterByDate = true;
+        private Timestamp moment = null;
+        
+        private boolean preventDupCategoryAny = false;
+        private boolean preventDupCategoryVisit = false;
+        private boolean preventDupCategoryTraversal = false;
+        private boolean preventDupProductVisit = false;
+        
+        public boolean isUseCache() {
+            return useCache;
+        }
+        
+        public TraversalConfig setUseCache(boolean useCache) {
+            this.useCache = useCache;
+            return this;
+        }
+        
+        public boolean isDoCategory() {
+            return doCategory;
+        }
+        
+        public TraversalConfig setDoCategory(boolean doCategory) {
+            this.doCategory = doCategory;
+            return this;
+        }
+        
+        public boolean isDoProduct() {
+            return doProduct;
+        }
+        
+        public TraversalConfig setDoProduct(boolean doProduct) {
+            this.doProduct = doProduct;
+            return this;
+        }
+        
+        /**
+         * If true, all association queries filter by date to exclude expired.
+         * Default for this class is true.
+         * @see #getMoment
+         */
+        public boolean isFilterByDate() {
+            return filterByDate;
+        }
+        
+        public TraversalConfig setFilterByDate(boolean filterByDate) {
+            this.filterByDate = filterByDate;
+            return this;
+        }
+        
+        /**
+         * The moment used for queries that use filter-by-date.
+         * Default for this class is null.
+         * <p>
+         * NOTE: When null and {@link #isFilterByDate} is true, means "use now timestamp"; in this case
+         * each query gets its own timestamp, whereas when moment set, all queries get the same timestamp.
+         * @see #isFilterByDate
+         */
+        public Timestamp getMoment() {
+            return moment;
+        }
+        
+        public TraversalConfig setMoment(Timestamp moment) {
+            this.moment = moment;
+            return this;
+        }
+        
+        /**
+         * Uses an in-memory category and product list to try to prevent duplicate visit calls.
+         * WARN: should not be enabled when traversing huge numbers of products.
+         */
+        public boolean isPreventDupCategoryVisit() {
+            return preventDupCategoryVisit;
+        }
+        
+        public TraversalConfig setPreventDupCategoryVisit(boolean preventDupCategoryVisit) {
+            this.preventDupCategoryVisit = preventDupCategoryVisit;
+            this.preventDupCategoryAny = (this.preventDupCategoryVisit || this.preventDupCategoryTraversal);
+            return this;
+        }
+        
+        /**
+         * Uses an in-memory category and product list to try to prevent duplicate traversal calls.
+         * WARN: should not be enabled when traversing huge numbers of products.
+         */
+        public boolean isPreventDupCategoryTraversal() {
+            return preventDupCategoryTraversal;
+        }
+        
+        public TraversalConfig setPreventDupCategoryTraversal(boolean preventDupCategoryTraversal) {
+            this.preventDupCategoryTraversal = preventDupCategoryTraversal;
+            this.preventDupCategoryAny = (this.preventDupCategoryVisit || this.preventDupCategoryTraversal);
+            return this;
+        }
+        
+        /**
+         * Uses an in-memory category and product list to try to prevent duplicate visit calls.
+         * WARN: should not be enabled when traversing huge numbers of products.
+         */
+        public boolean isPreventDupProductVisit() {
+            return preventDupProductVisit;
+        }
+        
+        public TraversalConfig setPreventDupProductVisit(boolean preventDupProductVisit) {
+            this.preventDupProductVisit = preventDupProductVisit;
+            return this;
+        }
+        
+        
+        /**
+         * Convenience method that sets all the other preventDup* booleans to true or false;
+         * if true, attempt to prevent all category and product duplicates.
+         */
+        public TraversalConfig setPreventDupAll(boolean preventDupAll) {
+            setPreventDupCategoryVisit(preventDupAll);
+            setPreventDupCategoryTraversal(preventDupAll);
+            setPreventDupProductVisit(preventDupAll);
+            return this;
+        }
+
+        /**
+         * Returns true if any of the following are set: 
+         * isPreventDupCategoryVisit, isPreventDupCategoryTraversal.
+         */
+        public boolean isPreventDupCategoryAny() {
+            return preventDupCategoryAny;
+        }
+        
+        /**
+         * Returns true if any of the following are set: 
+         * isPreventDupProductVisit.
+         */
+        public boolean isPreventDupProductAny() {
+            return preventDupProductVisit;
+        }
+    }
     
+    /**
+     * Factory method, subclasses must override if they extend TraversalConfig.
+     */
+    public TraversalConfig newTravConfig() {
+        return new TraversalConfig();
+    }
+    
+    /**
+     * Gets traversal config.
+     * NOTE: subclass can override for return type.
+     */
+    public TraversalConfig getTravConfig() {
+        return travConfig;
+    }
+
+    public void setTravConfig(TraversalConfig travConfig) {
+        // hackish type check, but didn't want massive generics for now
+        if (!this.travConfig.getClass().isAssignableFrom(travConfig.getClass())) {
+            throw new IllegalArgumentException("tried to assign traversal config of wrong" 
+                    +" instance type; must be " + this.travConfig.getClass().getName() + " or subtype");
+        }
+        this.travConfig = travConfig;
+    }
+
+    /**
+     * Resets all stateful fields for a new iteration.
+     * <p>
+     * NOTE: it is the subclasses and client code that decides when this gets called.
+     */
+    public void reset() throws GeneralException {
+        resetDupVisitRecords();
+    }
+    
+    public void resetDupVisitRecords() {
+        this.seenCategoryIds = (travConfig.isPreventDupCategoryAny()) ? new HashSet<String>() : null;
+        this.seenProductIds = (travConfig.isPreventDupProductAny()) ? new HashSet<String>() : null;
+    }
+    
+    public CatalogVisitor getVisitor() {
+        return visitor;
+    }
+    
+    public Delegator getDelegator() {
+        return delegator;
+    }
+    
+    public LocalDispatcher getDispatcher() {
+        return dispatcher;
+    }
+    
+    public boolean isUseCache() {
+        return travConfig.isUseCache();
+    }
+    
+    protected boolean isDoCategory(GenericValue productCategory) {
+        return travConfig.isDoCategory();
+    }
+    
+    protected boolean isDoProducts(GenericValue productCategory) {
+        return travConfig.isDoProduct();
+    }
+ 
     /**
      * Gives additional info about the category, product, and traversal to the catalog visitor.
      * <p>
@@ -218,10 +402,83 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
     }
     
     /**
-     * Traverse ProductStore categories depth-first.
+     * Simply calls the {@link CatalogVisitor#visitCategory} and {@link CatalogVisitor#visitProduct} method for every single
+     * product in the system, bypassing catalog/category rollup, for simplistic operations only.
+     */
+    public boolean traverseAllInSystem() throws GeneralException {
+        if (travConfig.isDoCategory()) {
+            boolean cnt = traverseAllCategoriesInSystem();
+            if (!cnt) return cnt;
+        }
+        if (travConfig.isDoProduct()) {
+            boolean cnt = traverseAllProductsInSystem();
+            if (!cnt) return cnt;
+        }
+        return true;
+    }
+    
+    /**
+     * Simply calls the {@link CatalogVisitor#visitCategory} method for every single
+     * product in the system, bypassing catalog/category rollup, for simplistic operations only.
+     */
+    public boolean traverseAllCategoriesInSystem() throws GeneralException {
+        TraversalState state = newTraversalState();
+        EntityListIterator productCategoryIt = null;
+        try {
+            productCategoryIt = EntityQuery.use(delegator).from("ProductCategory").cache(isUseCache()).queryIterator();
+            GenericValue productCategory;
+            while ((productCategory = productCategoryIt.next()) != null) {
+                visitor.visitCategory(productCategory, state);
+            }
+            return true;
+        } catch(StopCatalogTraversalException e) {
+            ; // not an error - just stop
+            return false;
+        } finally {
+            if (productCategoryIt != null) {
+                try {
+                    productCategoryIt.close();
+                } catch(Throwable t) {
+                    Debug.logError(t, module);
+                }
+            }
+        }
+    }
+
+    /**
+     * Simply calls the {@link CatalogVisitor#visitProduct} method for every single
+     * product in the system, bypassing catalog/category rollup, for simplistic operations only.
+     */
+    public boolean traverseAllProductsInSystem() throws GeneralException {
+        TraversalState state = newTraversalState();
+        EntityListIterator productIt = null;
+        try {
+            productIt = EntityQuery.use(delegator).from("Product").cache(isUseCache()).queryIterator();
+            GenericValue product;
+            while ((product = productIt.next()) != null) {
+                // NOTE: doChildProducts = false, because already counted in our global query here
+                visitor.visitProduct(product, state);
+            }
+            return true;
+        } catch(StopCatalogTraversalException e) {
+            ; // not an error - just stop
+            return false;
+        } finally {
+            if (productIt != null) {
+                try {
+                    productIt.close();
+                } catch(Throwable t) {
+                    Debug.logError(t, module);
+                }
+            }
+        }
+    }
+    
+    /**
+     * Traverse ProductStore categories using depth-first search algorithm.
      * Usually categoryAssocList should be ProdCatalogCategory, but supports starting in middle
      */
-    public boolean traverseProductStoreDepthFirst(GenericValue productStore) throws GeneralException {
+    public boolean traverseProductStoreDfs(GenericValue productStore) throws GeneralException {
         List<GenericValue> prodCatalogList = queryProductStoreCatalogList(productStore);
         try {
             for(GenericValue prodCatalog : prodCatalogList) {
@@ -236,7 +493,7 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
     }
     
     /**
-     * Traverse ProdCatalog categories depth-first.
+     * Traverse ProdCatalog categories using depth-first search algorithm.
      */
     public boolean traverseCatalogsDepthFirst(List<GenericValue> prodCatalogList) throws GeneralException {
         try {
@@ -252,7 +509,7 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
     }
     
     /**
-     * Traverse categories depth-first.
+     * Traverse categories using depth-first search algorithm.
      * @param categoryAssocList list of ProdCatalogCategory, ProductCategoryRollup, ProductCategory, or a view-entity derived from these
      * @return true if went through entire category tree; false if stopped prematurely at some point.
      */
@@ -261,7 +518,7 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
     }
     
     /**
-     * Traverse categories depth-first.
+     * Traverse categories using depth-first search algorithm.
      * @param categoryAssocList list of ProdCatalogCategory, ProductCategoryRollup, ProductCategory, or a view-entity derived from these
      * @param categoryDepth if non-null, overrides the physical category depth the algorithm should assume; 
      *                      [TODO: NOT IMPLEMENTED] if null, determines the depth automatically (extra step);
@@ -291,19 +548,33 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
         }
     }
     
-    protected void traverseCategoriesDepthFirstImpl(List<GenericValue> categoryAssocList, CategoryRefType.Resolver listEntryResolver, TraversalState state) throws GeneralException {
+    /**
+     * Core DFS category traversal algorithm.
+     * <p>
+     * DEV NOTE: The entries in categoryAssocList must all already be in the entity type matching
+     * the listEntryResolver, done by caller, for optimization.
+     */
+    protected void traverseCategoriesDepthFirstImpl(List<GenericValue> categoryAssocList, CategoryRefType.Resolver categoryAssocResolver, TraversalState state) throws GeneralException {
         for (GenericValue categoryAssoc : categoryAssocList) {
-            if (!isApplicableCategoryAssoc(categoryAssoc)) {
+            // duplicate category traversal and/or visit prevention, if enabled
+            boolean categorySeen = false;
+            if (travConfig.isPreventDupCategoryAny()) {
+                // NOTE: productCategoryId is practically always this field name no matter the entity
+                categorySeen = checkUpdateCategoryDuplicates(categoryAssoc.getString("productCategoryId"));
+            }
+
+            if ((travConfig.isPreventDupCategoryTraversal() && categorySeen) || !isApplicableCategoryAssoc(categoryAssoc)) {
                 continue;
             }
-            GenericValue productCategory = listEntryResolver.getProductCategoryStrict(categoryAssoc, isUseCache());
+            
+            GenericValue productCategory = categoryAssocResolver.getProductCategoryStrict(categoryAssoc, isUseCache());
             if (productCategory == null) {
                 Debug.logError(getLogMsgPrefix()+"Error: Could not get related ProductCategory for: " + categoryAssoc, module);
                 continue;
             }
             
             // visit category itself (before recursive call)
-            if (isDoCategory(productCategory)) {
+            if (isDoCategory(productCategory) && !(travConfig.isPreventDupCategoryVisit() && categorySeen)) {
                 visitor.visitCategory(productCategory, state);
             }
             
@@ -326,12 +597,43 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
         }
     }
     
+    /**
+     * Returns true if ID already seen, false if not; updates at same time.
+     */
+    protected boolean checkUpdateCategoryDuplicates(String productCategoryId) {
+        if (this.seenCategoryIds.contains(productCategoryId)) {
+            return true;
+        } else {
+            this.seenCategoryIds.add(productCategoryId);
+            return false;
+        }
+    }
+    
+    /**
+     * Returns true if ID already seen, false if not; updates at same time.
+     */
+    protected boolean checkUpdateProductDuplicates(String productId) {
+        if (this.seenProductIds.contains(productId)) {
+            return true;
+        } else {
+            this.seenProductIds.add(productId);
+            return false;
+        }
+    }
+    
     protected void queryAndVisitCategoryProducts(GenericValue productCategory, TraversalState state) throws GeneralException {
         // products
-        if (isDoProduct(productCategory)) {
+        if (isDoProducts(productCategory)) {
             List<GenericValue> productCategoryMembers = queryCategoryProductList(productCategory);
             if (UtilValidate.isNotEmpty(productCategoryMembers)) {
                 for (GenericValue productCategoryMember : productCategoryMembers) {
+                    // duplicate product visit prevention, if enabled
+                    if (travConfig.isPreventDupProductVisit()) {
+                        if (checkUpdateProductDuplicates(productCategoryMember.getString("productId"))) {
+                            continue;
+                        }
+                    }
+                    
                     GenericValue product = productCategoryMember.getRelatedOne("Product", isUseCache());
                     // product is always one level down
                     visitor.visitProduct(product, state);
@@ -346,7 +648,7 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
     public List<GenericValue> queryProductStoreCatalogList(GenericValue productStore) throws GenericEntityException {
         return filterProductStoreCatalogList(EntityQuery.use(delegator).from("ProductStoreCatalog")
                 .where(makeProductStoreCatalogCond(productStore.getString("productStoreId")))
-                .filterByDate(isFilterByDate(), getMoment()).orderBy("sequenceNum").cache(isUseCache()).queryList());
+                .filterByDate(travConfig.isFilterByDate(), travConfig.getMoment()).orderBy("sequenceNum").cache(isUseCache()).queryList());
     }
     
     
@@ -361,10 +663,13 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
         return productStoreCatalogList;
     }
 
+    /**
+     * NOTE: prodCatalog may be ProdCatalog or ProductStoreCatalog (just read prodCatalogId).
+     */
     public List<GenericValue> queryProdCatalogCategoryList(GenericValue prodCatalog) throws GenericEntityException {
         return filterProdCatalogCategoryList(EntityQuery.use(delegator).from("ProdCatalogCategory")
                 .where(makeProdCatalogCategoryCond(prodCatalog.getString("prodCatalogId")))
-                .filterByDate(isFilterByDate(), getMoment()).orderBy("sequenceNum").cache(isUseCache()).queryList());
+                .filterByDate(travConfig.isFilterByDate(), travConfig.getMoment()).orderBy("sequenceNum").cache(isUseCache()).queryList());
     }
     
     
@@ -388,59 +693,74 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
 
     public List<GenericValue> queryCategorySubCategoryList(GenericValue productCategory) throws GenericEntityException {
         return EntityQuery.use(getDelegator()).from("ProductCategoryRollup")
-                .where("parentProductCategoryId", productCategory.getString("productCategoryId")).filterByDate(isFilterByDate(), getMoment())
+                .where("parentProductCategoryId", productCategory.getString("productCategoryId")).filterByDate(travConfig.isFilterByDate(), travConfig.getMoment())
                 .orderBy("sequenceNum").cache(isUseCache()).queryList();
     }
     
     public List<GenericValue> queryCategoryProductList(GenericValue productCategory) throws GenericEntityException {
         return EntityQuery.use(getDelegator()).from("ProductCategoryMember")
-                .where("productCategoryId", productCategory.getString("productCategoryId")).filterByDate(isFilterByDate(), getMoment())
+                .where("productCategoryId", productCategory.getString("productCategoryId")).filterByDate(travConfig.isFilterByDate(), travConfig.getMoment())
                 .orderBy("sequenceNum").cache(isUseCache()).queryList();
     }
     
-    public CatalogVisitor getVisitor() {
-        return visitor;
-    }
-    
-    public Delegator getDelegator() {
-        return delegator;
-    }
-    
-    public LocalDispatcher getDispatcher() {
-        return dispatcher;
-    }
-    
-    public boolean isUseCache() {
-        return useCache;
-    }
-
-    protected boolean isDoCategory(GenericValue productCategory) {
-        return isDoCategory();
-    }
-    
-    public boolean isDoCategory() {
-        return doCategory;
-    }
-
-    protected boolean isDoProduct(GenericValue productCategory) {
-        return isDoProduct();
-    }
-    
-    public boolean isDoProduct() {
-        return doProduct;
-    }
-
-    public boolean isFilterByDate() {
-        return filterByDate;
-    }
     
     /**
-     * NOTE: if null and {@link #isFilterByDate} is true, this means "use now timestamp".
+     * A simple helper that gets a list of either ProdCatalog or ProductStoreCatalog based on which
+     * method arguments are empty or not.
+     * <p>
+     * Explicit prodCatalogId[List] gets priority over all.
+     * <p>
+     * Result can be passed to {@link #traverseCatalogsDepthFirst(List)}.
+     * <p>
+     * @param returnProdCatalogEntityOnly if false, may return ProductStoreCatalog instead of ProdCatalog
      */
-    public Timestamp getMoment() {
-        return moment;
+    public List<GenericValue> getTargetCatalogList(String prodCatalogId, Collection<String> prodCatalogIdList, 
+            String productStoreId, String webSiteId, boolean returnProdCatalogEntityOnly) throws GeneralException {
+        if (UtilValidate.isNotEmpty(prodCatalogId) || UtilValidate.isNotEmpty(prodCatalogIdList)) {
+            List<GenericValue> prodCatalogList = new LinkedList<>();
+            if (UtilValidate.isNotEmpty(prodCatalogId)) {
+                GenericValue prodCatalog = delegator.findOne("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId), isUseCache());
+                if (prodCatalog == null) throw new GeneralException("catalog '" + prodCatalogId + " not found");
+                prodCatalogList.add(prodCatalog);
+            }
+            if (UtilValidate.isNotEmpty(prodCatalogIdList)) {
+                for(String catId : prodCatalogIdList) {
+                    GenericValue prodCatalog = delegator.findOne("ProdCatalog", UtilMisc.toMap("prodCatalogId", catId), isUseCache());
+                    if (prodCatalog == null) throw new GeneralException("catalog '" + catId + " not found");
+                    prodCatalogList.add(prodCatalog);
+                }
+            }
+            return prodCatalogList;
+        } else {
+            if (UtilValidate.isEmpty(productStoreId)) {
+                if (UtilValidate.isEmpty(webSiteId)) {
+                    throw new GeneralException("missing webSiteId, productStoreId or prodCatalogId");
+                }
+                GenericValue webSite = delegator.findOne("WebSite", UtilMisc.toMap("webSiteId", webSiteId), isUseCache());
+                if (webSite == null) throw new GeneralException("website '" + webSiteId + "' not found");
+                productStoreId = webSite.getString("productStoreId");
+                if (UtilValidate.isEmpty(productStoreId)) throw new GeneralException("website '" + webSiteId + "' has no product store");
+            }
+            GenericValue productStore = delegator.findOne("ProductStore", UtilMisc.toMap("productStoreId", productStoreId), isUseCache());
+            if (productStore == null) throw new GeneralException("product store '" + productStoreId + " not found");
+            
+            List<GenericValue> productStoreCatalogList = EntityQuery.use(delegator).from("ProductStoreCatalog").where("productStoreId", productStoreId)
+                    .filterByDate().orderBy("sequenceNum").cache(isUseCache()).queryList();
+            
+            if (returnProdCatalogEntityOnly && productStoreCatalogList.size() > 0) {
+                List<GenericValue> prodCatalogList = new LinkedList<>();
+                for(GenericValue productStoreCatalog : productStoreCatalogList) {
+                    GenericValue prodCatalog = delegator.findOne("ProdCatalog", UtilMisc.toMap("prodCatalogId", productStoreCatalog.get("prodCatalogId")), isUseCache());
+                    if (prodCatalog == null) throw new GenericEntityException("schema error: catalog '" + productStoreCatalog.get("prodCatalogId") + " not found");
+                    prodCatalogList.add(prodCatalog);
+                }
+                return prodCatalogList;
+            } else {
+                return productStoreCatalogList;
+            }
+        }
     }
-    
+
     protected String getLogMsgPrefix() {
         return logPrefix;
     }

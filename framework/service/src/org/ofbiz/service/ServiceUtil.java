@@ -331,6 +331,31 @@ public class ServiceUtil {
         }
     }
 
+    /**
+     * SCIPIO: Gets concatenated success message from single message and message list.
+     * Analogous to {@link #getErrorMessage(Map)}, success message version.
+     * Added 2017-11-28.
+     */
+    public static String getSuccessMessage(Map<String, ? extends Object> result) {
+        StringBuilder successMessage = new StringBuilder();
+
+        if (result.get(ModelService.SUCCESS_MESSAGE) != null) successMessage.append((String) result.get(ModelService.SUCCESS_MESSAGE));
+
+        if (result.get(ModelService.SUCCESS_MESSAGE_LIST) != null) {
+            List<? extends Object> errors = UtilGenerics.checkList(result.get(ModelService.SUCCESS_MESSAGE_LIST));
+            for (Object message: errors) {
+                // NOTE: this MUST use toString and not cast to String because it may be a MessageString object
+                String curMessage = message.toString();
+                if (successMessage.length() > 0) {
+                    successMessage.append(", ");
+                }
+                successMessage.append(curMessage);
+            }
+        }
+
+        return successMessage.toString();
+    }
+    
     public static String makeSuccessMessage(Map<String, ? extends Object> result, String msgPrefix, String msgSuffix, String successPrefix, String successSuffix) {
         if (result == null) {
             return "";

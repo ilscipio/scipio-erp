@@ -383,6 +383,38 @@ public class ServiceUtil {
         }
     }
 
+    /**
+     * SCIPIO: Concatenation of {@link #getErrorMessage(Map)} followed by {@link #getSuccessMessage(Map)}.
+     * Intentionally avoids checking responseMessage.
+     * Added 2017-11-28.
+     */
+    public static String getErrorAndSuccessMessage(Map<String, ? extends Object> result, String joinStr, String errorPrefix, String successPrefix) {
+        StringBuilder fullMessage = new StringBuilder();
+        
+        String errorMessage = getErrorMessage(result);
+        if (errorMessage.length() > 0) {
+            if (errorPrefix != null) fullMessage.append(errorPrefix);
+            fullMessage.append(errorMessage);
+        }
+        
+        String successMessage = getSuccessMessage(result);
+        if (successMessage.length() > 0) {
+            if (fullMessage.length() > 0) fullMessage.append((joinStr != null) ? joinStr : "; ");
+            if (successPrefix != null) fullMessage.append(successPrefix);
+            fullMessage.append(successMessage);
+        }
+        
+        return fullMessage.toString();
+    }
+    
+    /**
+     * SCIPIO: Concatenation of {@link #getErrorMessage(Map)} followed by {@link #getSuccessMessage(Map)}.
+     * Intentionally does not check responseMessage.
+     * Added 2017-11-28.
+     */
+    public static String getErrorAndSuccessMessage(Map<String, ? extends Object> result) {
+        return getErrorAndSuccessMessage(result, "; ", null, null);
+    }
     
     /**
      * SCIPIO: The default message prefix. 

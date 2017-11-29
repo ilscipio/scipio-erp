@@ -4302,13 +4302,12 @@ under the License.
         <relation type="one" fk-name="IYIM_FAST" title="FixedAsset" rel-entity-name="FixedAsset">
             <key-map field-name="fixedAssetId"/>
         </relation>
-    </extend-entity>
+    </extend-entity>    
     
-    
-    <!-- SCIPIO -->
-    <entity entity-name="DatevBookingStackFieldDefinition"
+    <!-- SCIPIO: Datev (https://www.datev.de/dnlexom/client/app/index.html#/search) -->
+    <entity entity-name="DatevTransactionEntryDefinition"
             package-name="com.ilscipio.scipio.accounting.datev"
-            title="DATEV - Field description for booking stacks (http://www.datev.de/dnlexom/client/app/index.html#/document/1036228/D72057595488525963)">
+            title="DATEV - Field description for transaction entries (http://www.datev.de/dnlexom/client/app/index.html#/document/1036228/D72057595488525963)">
       <field name="fieldId" type="id-ne"></field>
       <field name="fieldName" type="short-varchar"></field>
       <field name="type" type="short-varchar"></field>

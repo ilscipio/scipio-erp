@@ -23,19 +23,20 @@ under the License.
     <description>Accounting Services - Datev</description>
     <vendor>Scipio</vendor>
     <version>1.0</version>
-    <service name="importDatevTransactionEntries" default-entity-name="DatevTransactionEntryDefinition" engine="java"
+    <service name="importDatevTransactionEntries" engine="java"
         location="com.ilscipio.scipio.accounting.datev.DatevServices" invoke="importDatevTransactionEntries" auth="true">
         <description>Imports transactions entries in Datev format from a csv</description>
         <permission-service service-name="acctgTransactionPermissionCheck" main-action="CREATE"/>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute mode="IN" name="organizationPartyId" type="String" optional="false"/>
+        <attribute mode="IN" name="uploadedFile" type="java.nio.ByteBuffer" optional="false" />
+        <attribute mode="OUT" name="transactionEntriesImported" type="List" optional="false" />
     </service>
-    <service name="exportDatevTransactionEntries" default-entity-name="DatevTransactionEntryDefinition" engine="java"
+    <service name="exportDatevTransactionEntries" engine="java"
         location="com.ilscipio.scipio.accounting.datev.DatevServices" invoke="exportDatevTransactionEntries" auth="true">
         <description>Exports transactions entries in Datev format to a csv</description>
         <permission-service service-name="acctgTransactionPermissionCheck" main-action="CREATE"/>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true" />
+        <attribute mode="IN" name="organizationPartyId" type="String" optional="false"/>
+        <attribute mode="OUT" name="transactionEntries" type="java.nio.ByteBuffer" optional="false" />
     </service>
     
 </services>

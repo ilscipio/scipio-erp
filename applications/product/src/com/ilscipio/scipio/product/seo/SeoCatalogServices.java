@@ -132,8 +132,7 @@ public abstract class SeoCatalogServices {
     
     static Map<String, Object> generateProductAlternativeUrls(DispatchContext dctx, Map<String, ?> context,
             GenericValue product, List<GenProdAltUrlParentEntry> parentProducts, boolean replaceExisting, boolean removeOldLocales, Timestamp moment, 
-            boolean doChildProducts, boolean includeVariant, 
-            boolean useCache) throws Exception {
+            boolean doChildProducts, boolean includeVariant, boolean useCache) throws Exception {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String productId = product.getString("productId");

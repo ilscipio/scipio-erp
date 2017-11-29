@@ -125,6 +125,7 @@ public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
         protected String linePrefix = "";
         protected RecordGrouping recordGrouping = RecordGrouping.DEFAULT;
         protected List<String> exportEntityNames = EXPORT_ENTITY_NAMES;
+        private boolean includeVariant = true;
         
         public Map<String, ?> getServCtxOpts() {
             return servCtxOpts;
@@ -132,6 +133,7 @@ public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
 
         public ExportTraversalConfig setServCtxOpts(Map<String, ?> servCtxOpts) {
             this.servCtxOpts = servCtxOpts;
+            this.includeVariant = !Boolean.FALSE.equals(servCtxOpts.get("includeVariant"));
             return this;
         }
         
@@ -144,6 +146,10 @@ public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
             return this;
         }
 
+        public boolean isIncludeVariant() {
+            return includeVariant;
+        }
+        
         public String getLinePrefix() {
             return linePrefix;
         }
@@ -272,6 +278,12 @@ public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
     }
     
     public void exportProductAltUrls(GenericValue product) throws GeneralException {
+        // NOTE: must check product itself here first
+        boolean includeVariant = getTravConfig().isIncludeVariant();
+        if (!includeVariant && "Y".equals(product.getString("isVariant"))) {
+            return;
+        }
+        
         String productId = product.getString("productId");
         List<GenericValue> productContentList = EntityQuery.use(getDelegator()).from("ProductContent")
                 .where("productId", productId, "productContentTypeId", "ALTERNATIVE_URL")
@@ -283,6 +295,17 @@ public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
                 registerEntityValue(productContent);
             }
             getStats().productSuccess++;
+        }
+        
+        if (getTravConfig().isDoChildProducts()) {
+            if (includeVariant && "Y".equals(product.getString("isVirtual"))) {
+                List<GenericValue> variantAssocList = EntityQuery.use(getDelegator()).from("ProductAssoc")
+                        .where("productId", productId, "productAssocTypeId", "PRODUCT_VARIANT").filterByDate().cache(isUseCache()).queryList();
+                for(GenericValue variantAssoc : variantAssocList) {
+                    GenericValue variantProduct = variantAssoc.getRelatedOne("AssocProduct", isUseCache());
+                    exportProductAltUrls(variantProduct);
+                }
+            }
         }
     }
     

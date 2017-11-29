@@ -34,7 +34,8 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
     public static class GenTraversalConfig extends SeoTraversalConfig {
         protected Map<String, ?> servCtxOpts = new HashMap<>();
         protected boolean doChildProducts = true;
-
+        private boolean includeVariant = true;
+        
         /**
          * The options used for nested service calls - contains locale, user auth and various flags -
          * in some cases can simply be set to the caller's service context (not modified).
@@ -47,6 +48,7 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
 
         public GenTraversalConfig setServCtxOpts(Map<String, ?> servCtxOpts) {
             this.servCtxOpts = servCtxOpts;
+            this.includeVariant = !Boolean.FALSE.equals(servCtxOpts.get("includeVariant"));
             return this;
         }
 
@@ -57,6 +59,10 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
         public GenTraversalConfig setDoChildProducts(boolean doChildProducts) {
             this.doChildProducts = doChildProducts;
             return this;
+        }
+        
+        public boolean isIncludeVariant() {
+            return includeVariant;
         }
     }
     
@@ -114,7 +120,7 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
         Map<String, ?> servCtxOpts = getTravConfig().getServCtxOpts();
 
         // NOTE: must check product itself here because generateProductAlternativeUrlsCore will only do it for its children
-        boolean includeVariant = Boolean.TRUE.equals(servCtxOpts.get("includeVariant"));
+        boolean includeVariant = getTravConfig().isIncludeVariant();
         if (!includeVariant && "Y".equals(product.getString("isVariant"))) {
             return;
         }

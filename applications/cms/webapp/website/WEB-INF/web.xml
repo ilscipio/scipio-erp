@@ -150,16 +150,6 @@
         <param-name>cmsDefaultForwardFromContextRoot</param-name>
         <param-value>true</param-value>
     </context-param>
-    <context-param>
-        <description>When true, provides a hint to CMS to indicate that the controller URIs under the (non-root)
-            ControlServlet path (usually /control) are being aliases/forwarded/rewritten to also appear
-            as root requests to the webapp context. Currently (2017-11) this is mainly used as a UI hint.
-            If the value is left empty, CMS will try to figure it out on its own from ContextFilter forwardRootControllerUris init-param.
-            NOTE: The actual implementation of this aliasing may be done using ContextFilter forwardRootControllerUris init-param
-                combined with urlrewrite.xml outbound-rules (see Scipio Shop web.xml/urlrewrite.xml).</description>
-        <param-name>cmsControlRootAlias</param-name>
-        <param-value></param-value>
-    </context-param>
 
     <!-- simple filter to redirect top address to /control/main -->
     <filter>

@@ -23,7 +23,6 @@
         <fileset dir="../../framework/base/lib/j2eespecs" includes="*.jar"/>
         <fileset dir="../../framework/base/lib/scripting" includes="*.jar"/>
         <fileset dir="../../framework/base/build/lib" includes="*.jar"/>
-        <fileset dir="../../framework/catalina/lib" includes="*.jar"/>
         <fileset dir="../../framework/entity/lib" includes="*.jar"/>
         <fileset dir="../../framework/entity/build/lib" includes="*.jar"/>
         <fileset dir="../../framework/datafile/build/lib" includes="*.jar"/>

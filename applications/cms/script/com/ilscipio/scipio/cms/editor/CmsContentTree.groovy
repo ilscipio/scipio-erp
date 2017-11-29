@@ -82,5 +82,3 @@ if (ServiceUtil.isSuccess(pagesResult)) {
     context.cmsErrorHandler.addContextReadErrorFromServiceResult(context, pagesResult);
 }
 
-cmsCtrlRootAliasMsgs = context.cmsWebSiteHelper.getWebSitesControlRootAliasMsgs(context);
-context.cmsCtrlRootAliasMsgs = cmsCtrlRootAliasMsgs;

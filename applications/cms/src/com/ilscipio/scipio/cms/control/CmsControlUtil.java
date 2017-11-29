@@ -2,8 +2,6 @@ package com.ilscipio.scipio.cms.control;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -11,12 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.tomcat.util.descriptor.web.FilterDef;
-import org.apache.tomcat.util.descriptor.web.WebXml;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
@@ -473,42 +468,4 @@ public abstract class CmsControlUtil {
         }
         return cmsPageVersionId;
     }
-    
-    /**
-     * If web.xml cmsControlRootAlias is set to true or false, take it at face
-     * value and return it.
-     * Otherwise, try to infer if can return true from ContextFilter cmsControlRootAlias.
-     * However, if can't guarantee aliasing is not happening, return null instead of false. 
-     */
-    static Boolean readWebSiteControlRootAliasLogical(ExtWebSiteInfo webSiteInfo) {
-        Boolean alias = null;
-        try {
-            Map<String, String> contextParams = webSiteInfo.getContextParams();
-            if (contextParams != null) {
-                // if this boolean set, we take it at face value, true or false
-                alias = UtilMisc.booleanValueVersatile(contextParams.get("cmsControlRootAlias"));
-            }
-            if (alias != null) {
-                Debug.logInfo("Cms: Website '" + webSiteInfo.getWebSiteId() 
-                        + "': Resolved web.xml valid context-param cmsControlRootAlias boolean value: " + alias, module);
-            } else {
-                if (contextParams.containsKey("cmsControlRootAlias")) {
-                    if (UtilValidate.isNotEmpty((String) contextParams.get("cmsControlRootAlias"))) {
-                        Debug.logError("Cms: Website '" + webSiteInfo.getWebSiteId()  
-                                + "': web.xml context-param cmsControlRootAlias has invalid boolean value: " + contextParams.get("cmsControlRootAlias"), module);
-                    } else {
-                        Debug.logInfo("Cms: Website '" + webSiteInfo.getWebSiteId()  
-                                + "': Found web.xml context-param cmsControlRootAlias, but was empty (valid)", module);
-                    }
-                }
-                alias = webSiteInfo.readVerifyForwardRootControllerUrisSetting(true);
-            }
-        } catch (Exception e) {
-            Debug.logError(e, "Cms: could not read web.xml for webSiteId '" + webSiteInfo.getWebSiteId() + "' to determine cmsControlRootAlias", module);
-        }
-        return alias;
-    }
-
-
-    
 }

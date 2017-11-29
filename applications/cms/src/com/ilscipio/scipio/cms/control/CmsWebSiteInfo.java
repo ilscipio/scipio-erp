@@ -1,7 +1,9 @@
 package com.ilscipio.scipio.cms.control;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,7 +29,8 @@ import com.ilscipio.scipio.cms.webapp.InvalidWebappException;
  * <p>
  * DEV NOTE: 2016: methods still useful to build request tree?
  */
-public class CmsWebSiteInfo {
+@SuppressWarnings("serial")
+public class CmsWebSiteInfo implements Serializable {
 
     /*
      * Note: For future code: Probably shouldn't keep references to any ServletContexts anywhere in this class
@@ -39,7 +42,7 @@ public class CmsWebSiteInfo {
     // Use Ofbiz logging carefully only...
     public static final String module = CmsWebSiteInfo.class.getName();
 
-    private static volatile Map<String, CmsWebSiteInfo> cmsRegisteredWebSites = new HashMap<String, CmsWebSiteInfo>();
+    private static volatile Map<String, CmsWebSiteInfo> cmsRegisteredWebSites = Collections.emptyMap();
 
     private final String webSiteId;
     private final boolean hasController;
@@ -47,8 +50,10 @@ public class CmsWebSiteInfo {
     
     private final boolean cmsRegistered = true; // Always true at the moment
     
+    private transient ExtWebSiteInfo extWebSiteInfo = null;
+    private transient Boolean controlRootAlias = null;
+    
     private CmsWebSiteInfo(String webSiteId, boolean hasController, URL controllerConfigUrl) {
-        super();
         this.webSiteId = webSiteId;
         this.hasController = hasController;
         this.controllerConfigUrl = controllerConfigUrl;
@@ -102,9 +107,17 @@ public class CmsWebSiteInfo {
     public static Map<String, CmsWebSiteInfo> getAllCmsRegWebSitesInfo() {
         return cmsRegisteredWebSites;
     }
+    
+    public static Collection<CmsWebSiteInfo> getAllCmsRegWebSitesInfoList() {
+        return cmsRegisteredWebSites.values();
+    }
 
     public static CmsWebSiteInfo getCmsRegWebSiteInfo(String webSiteId) {
         return cmsRegisteredWebSites.get(webSiteId);
+    }
+    
+    public static Set<String> getAllCmsRegWebSiteIds() {
+        return Collections.unmodifiableSet(cmsRegisteredWebSites.keySet());
     }
 
     /**
@@ -143,18 +156,16 @@ public class CmsWebSiteInfo {
                 if (newRegs != null) {
                     if (regInfo.hasController()) {
                         Debug.logInfo("Cms: Registered web site with webSiteId '" + webSiteId + "'; has controller config", module);
-                    }
-                    else {
+                    } else {
                         Debug.logWarning("Cms: Registered web site with webSiteId '" + webSiteId + "', but has no detected controller config!", module);
                     }
                     cmsRegisteredWebSites = Collections.unmodifiableMap(newRegs);
                 }
             }
         } catch (InvalidWebappException e) {
-            // We can log the Ofbiz way here because this should only be called
-            // from Ofbiz context
-            Debug.logError("Cms: Tried to register a web site invalid for Cms use (servlet context path: " + context.getContextPath() + "): " + e.getMessage() + "; ignoring",
-                    module);
+            // We can log the Ofbiz way here because this should only be called from Ofbiz context
+            Debug.logError("Cms: Tried to register a web site invalid for Cms use (servlet context path: " 
+                    + context.getContextPath() + "): " + e.getMessage() + "; ignoring", module);
         }
     }
 
@@ -211,9 +222,42 @@ public class CmsWebSiteInfo {
     }
     
     public Map<String, String> getContextParams() {
-        return WebAppUtil.getWebappContextParamsSafe(getWebSiteId());
+        ExtWebSiteInfo extInfo = this.extWebSiteInfo; // not using getExtInfo(); don't trigger init from this, may be too early...
+        if (extInfo != null) { 
+            return extInfo.getContextParams();
+        } else {
+            return WebAppUtil.getWebappContextParamsSafe(getWebSiteId());
+        }
     }
     
+
+    public ExtWebSiteInfo getExtWebSiteInfo() {
+        ExtWebSiteInfo extWebSiteInfo = this.extWebSiteInfo;
+        if (extWebSiteInfo == null) {
+            try {
+                extWebSiteInfo = ExtWebSiteInfo.fromWebSiteId(webSiteId);
+            } catch(Exception e) {
+                Debug.logError(e, "Cms: Error: Cannot read website '" + webSiteId + "' configurations: " + e.getMessage(), module);
+            }
+            this.extWebSiteInfo = extWebSiteInfo;
+        }
+        return extWebSiteInfo;
+    }
+
+
+    public boolean isControlRootAlias() {
+        Boolean controlRootAlias = this.controlRootAlias;
+        if (controlRootAlias == null) {
+            ExtWebSiteInfo extWebSiteInfo = getExtWebSiteInfo();
+            if (extWebSiteInfo != null) {
+                controlRootAlias = CmsControlUtil.readWebSiteControlRootAliasLogical(extWebSiteInfo);
+            }
+            if (controlRootAlias == null) controlRootAlias = false;
+            this.controlRootAlias = controlRootAlias;
+        }
+        return controlRootAlias;
+    }
+
     /**
      * Helper method. 
      * 
@@ -263,8 +307,7 @@ public class CmsWebSiteInfo {
          * I made this method for testing purposes and to output in Freemarker.
          * Probably you should use the Ofbiz classes above.
          */
-        
-        
+
         Map<String, Object> simpleTree = new HashMap<String, Object>();
         Map<String, RequestMap> reqMapMap = getRequestMapMap();
         if (maxDepth == null || maxDepth != 0) {

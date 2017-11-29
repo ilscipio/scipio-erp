@@ -117,3 +117,6 @@ webSiteAllowPreview = com.ilscipio.scipio.cms.control.CmsControlUtil.getCmsBoolI
 context.webSiteInfo;
 context.webSiteContextParams;
 context.webSiteAllowPreview = webSiteAllowPreview;
+
+cmsCtrlRootAliasMsgs = context.cmsWebSiteHelper.getWebSitesControlRootAliasMsgs(context);
+context.cmsCtrlRootAliasMsgs = cmsCtrlRootAliasMsgs;

@@ -25,15 +25,14 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
-import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.WebAppUtil;
 import org.xml.sax.SAXException;
 
 import com.ilscipio.scipio.ce.webapp.filter.UrlRewriteConf;
 import com.ilscipio.scipio.product.category.CatalogUrlType;
+import com.ilscipio.scipio.product.seo.SeoCatalogTraverser;
 import com.ilscipio.scipio.product.seo.SeoCatalogUrlWorker;
-import com.ilscipio.scipio.product.seo.UrlGenStats;
 import com.redfin.sitemapgenerator.SitemapIndexGenerator;
 import com.redfin.sitemapgenerator.WebSitemapGenerator;
 import com.redfin.sitemapgenerator.WebSitemapUrl;
@@ -43,16 +42,15 @@ import com.redfin.sitemapgenerator.WebSitemapUrl;
  * <p>
  * NOT thread-safe.
  * <p>
- * TODO: missing multi-locale link support - unclear if library supports
- * TODO: does not delete old files (minor)
- * FIXME: Content wrappers do not respect the useCache flag
+ * TODO: missing multi-locale link support - unclear if library supports - may need to do one-locale-per-index
+ * TODO: does not delete old files (minor issue - spiders will simply ignore them in theory)
  */
-public class SitemapWorker {
+public class SitemapGenerator extends SeoCatalogTraverser {
 
-    public static final String module = SitemapWorker.class.getName();
+    public static final String module = SitemapGenerator.class.getName();
     
-    protected final Delegator delegator;
-    protected final LocalDispatcher dispatcher;
+    static final String logPrefix = "Seo: Sitemap: ";
+    
     protected final List<Locale> locales;
     protected final String webSiteId;
     protected final String baseUrl;
@@ -60,27 +58,22 @@ public class SitemapWorker {
     protected final String contextPath;
     protected final SitemapConfig config;
     protected final SeoCatalogUrlWorker urlWorker;
-    protected final boolean useCache;
-    
-    static final String logPrefix = "Seo: Sitemap: ";
     
     protected UrlRewriteConf urlRewriteConf;
     protected final WebappInfo webappInfo;
     
-    protected UrlGenStats stats = null;
+    protected final GenericValue webSite;
+    protected final GenericValue productStore;
+    
     protected final String fullSitemapDir;
     
     protected Map<CatalogUrlType, EntityHandler> entityHandlers = null;
     protected EntityHandler productEntityHandler = null; // opt
     protected EntityHandler categoryEntityHandler = null; // opt
-    
-    protected final GenericValue webSite;
-    protected final GenericValue productStore;
 
-    protected SitemapWorker(Delegator delegator, LocalDispatcher dispatcher, List<Locale> locales, String webSiteId, GenericValue webSite, GenericValue productStore, String baseUrl, String sitemapContextPath, String contextPath, SitemapConfig config,
-            SeoCatalogUrlWorker urlWorker, UrlRewriteConf urlRewriteConf, boolean useCache) throws GeneralException, IOException, URISyntaxException, SAXException {
-        this.delegator = delegator;
-        this.dispatcher = dispatcher;
+    protected SitemapGenerator(Delegator delegator, LocalDispatcher dispatcher, List<Locale> locales, String webSiteId, GenericValue webSite, GenericValue productStore, String baseUrl, String sitemapContextPath, String contextPath, SitemapConfig config,
+            SeoCatalogUrlWorker urlWorker, UrlRewriteConf urlRewriteConf, SitemapTraversalConfig travConfig) throws GeneralException, IOException, URISyntaxException, SAXException {
+        super(delegator, dispatcher, travConfig);
         this.locales = locales;
         this.webSiteId = webSiteId;
         this.webSite = webSite;
@@ -92,13 +85,12 @@ public class SitemapWorker {
         this.urlWorker = urlWorker;
         this.urlRewriteConf = urlRewriteConf;
         this.webappInfo = WebAppUtil.getWebappInfoFromWebsiteId(webSiteId);
-        this.useCache = useCache;
         this.fullSitemapDir = config.getSitemapDirUrlLocation(webappInfo.getLocation());
         getSitemapDirFile(); // test this for exception
         reset();
     }
 
-    public static SitemapWorker getWorkerForWebsite(Delegator delegator, LocalDispatcher dispatcher, String webSiteId, boolean useCache) throws GeneralException, IOException, URISyntaxException, SAXException, IllegalArgumentException {
+    public static SitemapGenerator getWorkerForWebsite(Delegator delegator, LocalDispatcher dispatcher, String webSiteId, boolean useCache) throws GeneralException, IOException, URISyntaxException, SAXException, IllegalArgumentException {
         // TODO: LOCALIZE WITH PROP MESSAGE EXCEPTIONS
         
         GenericValue webSite = delegator.findOne("WebSite", UtilMisc.toMap("webSiteId", webSiteId), useCache);
@@ -114,7 +106,7 @@ public class SitemapWorker {
         return getWorkerForWebsite(delegator, dispatcher, webSite, productStore, config, useCache);
     }
     
-    public static SitemapWorker getWorkerForWebsite(Delegator delegator, LocalDispatcher dispatcher, GenericValue webSite, GenericValue productStore, SitemapConfig config, boolean useCache) throws GeneralException, IOException, URISyntaxException, SAXException {
+    public static SitemapGenerator getWorkerForWebsite(Delegator delegator, LocalDispatcher dispatcher, GenericValue webSite, GenericValue productStore, SitemapConfig config, boolean useCache) throws GeneralException, IOException, URISyntaxException, SAXException {
         String webSiteId = webSite.getString("webSiteId");
         if (config == null) throw new IOException("no valid sitemap config for website '" + webSiteId + "'");
         String sitemapContextPath = config.getSitemapContextPath();
@@ -133,34 +125,99 @@ public class SitemapWorker {
         if (config.getUrlConfPath() != null) {
             urlRewriteConf = UrlRewriteConf.loadConf(config.getUrlConfPath());
         }
-        return new SitemapWorker(delegator, dispatcher, 
+        
+        SitemapTraversalConfig travConfig = (SitemapTraversalConfig) new SitemapTraversalConfig(config).setUseCache(useCache);
+        return new SitemapGenerator(delegator, dispatcher, 
                 config.getLocalesOrDefault(webSite, productStore), 
                 webSiteId, webSite, productStore,
                 baseUrl, sitemapContextPath, contextPath, config,
                 SeoCatalogUrlWorker.getInstance(delegator, webSiteId),
                 urlRewriteConf,
-                useCache);
+                travConfig);
     }
 
+    public static class SitemapTraversalConfig extends SeoTraversalConfig {
+        public SitemapTraversalConfig(SitemapConfig sitemapConfig) {
+            setDoCategory(sitemapConfig.isDoCategory());
+            setDoProduct(sitemapConfig.isDoProduct());
+        }
+    }
+    
+    @Override
+    public SitemapTraversalConfig newTravConfig() {
+        return new SitemapTraversalConfig(config);
+    }
+
+    @Override
+    public SitemapTraversalConfig getTravConfig() {
+        return (SitemapTraversalConfig) travConfig;
+    }
+    
+    public class SitemapTraversalState extends SeoTraversalState {
+        Map<Locale, List<String>> trailNames; // reset for every new ProdCatalogCategory
+        
+        public SitemapTraversalState(List<GenericValue> trailCategories, int physicalDepth, Map<Locale, List<String>> trailNames) {
+            super(trailCategories, physicalDepth);
+            this.trailNames = trailNames;
+        }
+
+        public SitemapTraversalState(SitemapTraversalState other, boolean deepCopy) {
+            super(other, deepCopy);
+            if (deepCopy) {
+                
+            } else {
+                this.trailNames = other.trailNames;
+            }
+        }
+
+        @Override
+        public SeoTraversalState copy(boolean deepCopy) {
+            return new SitemapTraversalState(this, deepCopy);
+        }
+
+        public Map<Locale, List<String>> getTrailNames() {
+            return trailNames;
+        }
+    }
+    
+    @Override
+    protected TraversalState newTraversalState(List<GenericValue> trailCategories, int physicalDepth) {
+        return new SitemapTraversalState(trailCategories, physicalDepth, newTrailNames());
+    }
+    
     public SitemapConfig getConfig() {
         return config;
     }
     
-    public void reset() throws IOException, URISyntaxException {
-        resetStats();
+    @Override
+    public void reset() throws GeneralException {
+        super.reset();
         resetEntityHandlers();
+        //resetTrailNames(); // moved to TraversalState
+    }
+
+    // moved to TraversalState
+//    /**
+//     * NOTE: because the way this is edited in-place during iteration by push/pop,
+//     * the only time this will still contain entries at the end is if an error happened.
+//     * So we don't need to reset this often, only during reset() (e.g. there is no need
+//     * to reset at every new ProdCatalogCategory, it arranges itself).
+//     */
+//    protected void resetTrailNames() {
+//        this.trailNames = newTrailNames();
+//    }
+    
+    protected Map<Locale, List<String>> newTrailNames() {
+        Map<Locale, List<String>> trailNames = new HashMap<>();
+        for(Locale locale : getLocales()) {
+            List<String> trailList = newCategoryTrailList();
+            trailNames.put(locale, trailList);
+        }
+        return trailNames;
     }
     
-    protected void resetStats() {
-        this.stats = createStats();
-    }
-    
-    protected UrlGenStats createStats() {
-        return new UrlGenStats(config.isDoProduct(), config.isDoCategory(), false);
-    }
-    
-    public UrlGenStats getStats() {
-        return stats;
+    protected Map<Locale, List<String>> getTrailNames(TraversalState state) {
+        return ((SitemapTraversalState) state).trailNames;
     }
     
     protected String getSitemapContextPath() {
@@ -213,32 +270,13 @@ public class SitemapWorker {
     }
     
     /**
-     * Wrapper around {@link #buildSitemapDeepForProductCategories} that automatically applies
-     * filters.
+     * The main iteration call - wrapper around {@link #traverseCategoriesDepthFirst(List)}.
      */
-    public void buildSitemapDeepForProductStore() throws GeneralException, IOException, URISyntaxException {
-        buildSitemapDeepForProductStore(this.productStore);
+    public void buildSitemapDeepForProductStore() throws GeneralException {
+        traverseProductStoreDfs(productStore);
     }
     
-    /**
-     * Wrapper around {@link #buildSitemapDeepForProductCategories} that automatically applies
-     * filters.
-     */
-    public void buildSitemapDeepForProductStore(GenericValue productStore) throws GeneralException, IOException, URISyntaxException {
-        List<GenericValue> prodCatalogList = EntityQuery.use(delegator).from("ProductStoreCatalog")
-                .where(makeProductStoreCatalogCond(productStore.getString("productStoreId")))
-                .filterByDate().orderBy("sequenceNum").cache(useCache).queryList();
-        prodCatalogList = reorderProductStoreCatalogs(prodCatalogList);
-        
-        for(GenericValue prodCatalog : prodCatalogList) {
-            List<GenericValue> prodCatalogCategoryList = EntityQuery.use(delegator).from("ProdCatalogCategory")
-                    .where(makeProdCatalogCategoryCond(prodCatalog.getString("prodCatalogId")))
-                    .filterByDate().orderBy("sequenceNum").cache(useCache).queryList();
-            prodCatalogCategoryList = reorderProdCatalogCategories(prodCatalogCategoryList);
-            buildSitemapDeepForProductCategories(prodCatalogCategoryList);
-        }
-    }
-    
+    @Override
     public EntityCondition makeProductStoreCatalogCond(String productStoreId) {
         EntityCondition cond = EntityCondition.makeCondition("productStoreId", productStoreId);
         if (config.getProdCatalogIds() != null) {
@@ -248,6 +286,7 @@ public class SitemapWorker {
         return cond;
     }
     
+    @Override
     public EntityCondition makeProdCatalogCategoryCond(String prodCatalogId) {
         EntityCondition cond = EntityCondition.makeCondition("prodCatalogId", prodCatalogId);
         if (config.getProdCatalogCategoryTypeIds() != null) {
@@ -260,7 +299,8 @@ public class SitemapWorker {
     /**
      * If applicable, reorder by the prodCatalogIds in the config, so that order won't change randomly.
      */
-    public List<GenericValue> reorderProductStoreCatalogs(List<GenericValue> productStoreCatalogList) {
+    @Override
+    public List<GenericValue> filterProductStoreCatalogList(List<GenericValue> productStoreCatalogList) {
         if (config.getProdCatalogIds() == null || config.getProdCatalogIds().size() <= 1) {
             return productStoreCatalogList;
         } else {
@@ -272,7 +312,8 @@ public class SitemapWorker {
     /**
      * If applicable, reorder by the prodCatalogCategoryTypeIds in the config, so that order won't change randomly.
      */
-    public List<GenericValue> reorderProdCatalogCategories(List<GenericValue> prodCatalogCategoryList) {
+    @Override
+    public List<GenericValue> filterProdCatalogCategoryList(List<GenericValue> prodCatalogCategoryList) {
         if (config.getProdCatalogCategoryTypeIds() == null || config.getProdCatalogCategoryTypeIds().size() <= 1) {
             return prodCatalogCategoryList;
         } else {
@@ -285,81 +326,49 @@ public class SitemapWorker {
      * Applies ProdCatalogCategory filters, post-query.
      * NOTE: use EntityConditions instead of this.
      */
-    public boolean isApplicableProdCatalogCategory(GenericValue prodCatalogCategory) {
-        if (config.getProdCatalogIds() != null && !config.getProdCatalogIds().contains(prodCatalogCategory.getString("prodCatalogId"))) {
-            return false;
-        }
-        if (config.getProdCatalogCategoryTypeIds() != null && !config.getProdCatalogCategoryTypeIds().contains(prodCatalogCategory.getString("prodCatalogCategoryTypeId"))) {
-            return false;
-        }
+    @Override
+    public boolean isApplicableCategoryAssoc(GenericValue prodCatalogCategory) {
+        // This is covered (faster) in the condition filters.
+//        if (!prodCatalogCategory.getModelEntity().isField("prodCatalogId")) return true;
+//        if (config.getProdCatalogIds() != null && !config.getProdCatalogIds().contains(prodCatalogCategory.getString("prodCatalogId"))) {
+//            return false;
+//        }
+//        if (config.getProdCatalogCategoryTypeIds() != null && !config.getProdCatalogCategoryTypeIds().contains(prodCatalogCategory.getString("prodCatalogCategoryTypeId"))) {
+//            return false;
+//        }
         return true;
     }
-    
-    public void buildSitemapDeepForProductCategories(List<GenericValue> productCategories) throws GeneralException, IOException, URISyntaxException {
-        Map<Locale, List<String>> trailNames = new HashMap<>();
-        for(Locale locale : getLocales()) {
-            trailNames.put(locale, new ArrayList<String>());
-        }
-        buildSitemapDeepForProductCategoriesInternal(productCategories, trailNames);
-    }
-    
-    protected void buildSitemapDeepForProductCategoriesInternal(List<GenericValue> categoryAssocList, Map<Locale, List<String>> trailNames) throws GeneralException, IOException {
-        for (GenericValue categoryAssoc : categoryAssocList) {
-            GenericValue category = null;
-            if ("ProductCategoryRollup".equals(categoryAssoc.getEntityName())) {
-                category = categoryAssoc.getRelatedOne("CurrentProductCategory", useCache);
-            } else if ("ProdCatalogCategory".equals(categoryAssoc.getEntityName())) {
-                // REMOVED - faster if done by buildSitemapDeep
-                //if (!isApplicableProdCatalogCategory(categoryAssoc)) {
-                //    continue;
-                //}
-                category = categoryAssoc.getRelatedOne("ProductCategory", useCache);
-            }
-            if (category == null) {
-                Debug.logError(getLogMsgPrefix()+"Schema error: Could not get related ProductCategory for: " + categoryAssoc, module);
-                continue;
-            }
-            
-            // self
-            if (config.isDoCategory()) {
-                buildSitemapCategory(category, trailNames);
-            }
-            
-            for(Locale locale : locales) {
-                // NOTE: this is non-last - cannot reuse the one determined in previous call
-                String trailName = urlWorker.getCategoryUrlTrailName(delegator, dispatcher, locale, category, false, useCache);       
-                trailNames.get(locale).add(trailName); // no need copy, just remove after
-            }
-            try {
-                // child cats (recursive)
-                List<GenericValue> childProductCategoryRollups = EntityQuery.use(delegator).from("ProductCategoryRollup")
-                        .where("parentProductCategoryId", category.getString("productCategoryId")).filterByDate().cache(useCache).queryList(); // not need: .orderBy("sequenceNum")
-                if (UtilValidate.isNotEmpty(childProductCategoryRollups)) {
-                    buildSitemapDeepForProductCategoriesInternal(childProductCategoryRollups, trailNames);
-                }
-    
-                // products
-                if (config.isDoProduct()) {
-                    List<GenericValue> productCategoryMembers = EntityQuery.use(delegator).from("ProductCategoryMember")
-                            .where("productCategoryId", category.getString("productCategoryId")).filterByDate()
-                            .cache(useCache).queryList(); // not need: .orderBy("sequenceNum")
-                    if (UtilValidate.isNotEmpty(productCategoryMembers)) {
-                        for (GenericValue productCategoryMember : productCategoryMembers) {
-                            GenericValue product = productCategoryMember.getRelatedOne("Product", useCache);
-                            buildSitemapProduct(product, trailNames);
-                        }
-                    }
-                }
-            } finally {
-                for(Locale locale : locales) {
-                    List<String> trail = trailNames.get(locale);
-                    trail.remove(trail.size() - 1);
-                }
-            }
+
+    @Override
+    public void pushCategory(GenericValue productCategory, TraversalState state) throws GeneralException {
+        Map<Locale, List<String>> trailNames = getTrailNames(state);
+        for(Locale locale : locales) {
+            // NOTE: this is non-last - cannot reuse the one determined in previous call
+            String trailName = urlWorker.getCategoryUrlTrailName(getDelegator(), getDispatcher(), locale, productCategory, false, isUseCache());       
+            trailNames.get(locale).add(trailName); // no need copy, just remove after
         }
     }
-    
-    protected void buildSitemapCategory(GenericValue productCategory, Map<Locale, List<String>> trailNames) throws GeneralException, IOException {
+
+    @Override
+    public void popCategory(GenericValue productCategory, TraversalState state) throws GeneralException {
+        Map<Locale, List<String>> trailNames = getTrailNames(state);
+        for(Locale locale : locales) {
+            List<String> trail = trailNames.get(locale);
+            trail.remove(trail.size() - 1);
+        }
+    }
+
+    @Override
+    public void visitCategory(GenericValue productCategory, TraversalState state) throws GeneralException {
+        buildSitemapCategory(productCategory, getTrailNames(state));
+    }
+
+    @Override
+    public void visitProduct(GenericValue product, TraversalState state) throws GeneralException {
+        buildSitemapProduct(product, getTrailNames(state));
+    }
+
+    protected void buildSitemapCategory(GenericValue productCategory, Map<Locale, List<String>> trailNames) throws GeneralException {
         String productCategoryId = productCategory.getString("productCategoryId");
         try {
             
@@ -368,21 +377,21 @@ public class SitemapWorker {
             Locale locale = getDefaultLocale();
             List<String> trail = trailNames.get(locale);
 
-            String url = urlWorker.makeCategoryUrlPath(delegator, dispatcher, locale, productCategory, trail, getContextPath(), useCache).toString();
+            String url = urlWorker.makeCategoryUrlPath(getDelegator(), getDispatcher(), locale, productCategory, trail, getContextPath(), isUseCache()).toString();
             url = SitemapConfig.concatPaths(getBaseUrl(), applyUrlRewriteRules(url));
             
             if (Debug.verboseOn()) Debug.logVerbose(getLogMsgPrefix()+"Processing category url: " + url, module);
             
             WebSitemapUrl libUrl = buildSitemapLibUrl(url, null);
             getCategoryHandler().addUrl(libUrl);
-            stats.categorySuccess++;
+            getStats().categorySuccess++;
         } catch(Exception e) {
             stats.categoryError++;
             Debug.logError(getLogErrorPrefix() + "Cannot build URL for category '" + productCategoryId + "': " + e.getMessage(), module);
         }
     }
     
-    protected void buildSitemapProduct(GenericValue product, Map<Locale, List<String>> trailNames) throws GeneralException, IOException {
+    protected void buildSitemapProduct(GenericValue product, Map<Locale, List<String>> trailNames) throws GeneralException {
         if (!config.isIncludeVariant() && "Y".equals(product.getString("isVariant"))) {
             stats.productSkipped++;
             return;
@@ -396,7 +405,7 @@ public class SitemapWorker {
             Locale locale = getDefaultLocale();
             List<String> trail = trailNames.get(locale);
             
-            String url = urlWorker.makeProductUrlPath(delegator, dispatcher, locale, product, trail, getContextPath(), useCache).toString();
+            String url = urlWorker.makeProductUrlPath(getDelegator(), getDispatcher(), locale, product, trail, getContextPath(), isUseCache()).toString();
             url = postprocessUrl(url);
 
             if (Debug.verboseOn()) Debug.logVerbose(getLogMsgPrefix()+"Processing product url: " + url, module);
@@ -532,13 +541,14 @@ public class SitemapWorker {
         generateSitemapIndex(getAllSitemapFilenames());
     }
     
-    protected void writeSitemap(List<WebSitemapUrl> urlList, String filePrefix) throws IOException, URISyntaxException {
-        WebSitemapGenerator wsg = getSitemapGenerator(filePrefix);
-        for(WebSitemapUrl url : urlList){
-            wsg.addUrl(url);
-        }
-        wsg.write();
-    }
+    // old, unused
+//    protected void writeSitemap(List<WebSitemapUrl> urlList, String filePrefix) throws IOException, URISyntaxException {
+//        WebSitemapGenerator wsg = getSitemapGenerator(filePrefix);
+//        for(WebSitemapUrl url : urlList){
+//            wsg.addUrl(url);
+//        }
+//        wsg.write();
+//    }
 
     public void generateSitemapIndex(List<String> sitemapFilenames) throws IOException, URISyntaxException {
         Debug.logInfo(getLogMsgPrefix()+"Writing index '" + config.getSitemapIndexFile(), module);
@@ -578,7 +588,7 @@ public class SitemapWorker {
      * Use urlrewritefilter rules to convert urls - emulates urlrewritefilter - just like the original url would be
      * WARN: emulation only - see UrlRewriteConf for issues.
      */
-    public String applyUrlRewriteRules(String url) {
+    protected String applyUrlRewriteRules(String url) {
         if (url == null) return "";
         if (getUrlRewriteConf() == null) return url;
         return getUrlRewriteConf().processOutboundUrl(url);
@@ -587,22 +597,20 @@ public class SitemapWorker {
     /**
      * Applies URL rewrite rules and appends baseUrl, as applicable.
      */
-    public String postprocessUrl(String url) {
+    protected String postprocessUrl(String url) {
         return SitemapConfig.concatPaths(getBaseUrl(), applyUrlRewriteRules(url));
     }
     
+    @Override
     protected String getLogMsgPrefix() {
         return logPrefix+"Website '" + webSiteId + "': ";
     }
     
+    @Override
     protected String getLogErrorPrefix() {
         return logPrefix+"Error generating sitemap for website '" + webSiteId + "': ";
     }
-    
-    protected String getLogErrorMsg(Throwable t) {
-        return getLogErrorPrefix() + t.getMessage();
-    }
-    
+
     // TODO: move (generic)
     static EntityCondition makeFieldPossibleValuesCond(String fieldName, Collection<?> values) {
         //if (values == null || values.isEmpty()) return null;

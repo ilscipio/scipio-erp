@@ -4302,5 +4302,22 @@ under the License.
         <relation type="one" fk-name="IYIM_FAST" title="FixedAsset" rel-entity-name="FixedAsset">
             <key-map field-name="fixedAssetId"/>
         </relation>
-    </extend-entity>
+    </extend-entity>    
+    
+    <!-- SCIPIO: Datev (https://www.datev.de/dnlexom/client/app/index.html#/search) -->
+    <entity entity-name="DatevTransactionEntryDefinition"
+            package-name="com.ilscipio.scipio.accounting.datev"
+            title="DATEV - Field description for transaction entries (http://www.datev.de/dnlexom/client/app/index.html#/document/1036228/D72057595488525963)">
+      <field name="fieldId" type="id-ne"></field>
+      <field name="fieldName" type="short-varchar"></field>
+      <field name="type" type="short-varchar"></field>
+      <field name="length" type="numeric"></field>      
+      <field name="maxLength" type="numeric"></field>
+      <field name="scale" type="numeric"></field>
+      <field name="format" type="short-varchar"></field>
+      <field name="required" type="indicator"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <prim-key field="fieldId"/>
+  	</entity>
+    
 </entitymodel>

@@ -1,19 +1,16 @@
 package com.ilscipio.scipio.product.category;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
-import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.category.CategoryContentWrapper;
 import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.service.GenericServiceException;

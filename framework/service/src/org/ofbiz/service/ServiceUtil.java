@@ -331,6 +331,31 @@ public class ServiceUtil {
         }
     }
 
+    /**
+     * SCIPIO: Gets concatenated success message from single message and message list.
+     * Analogous to {@link #getErrorMessage(Map)}, success message version.
+     * Added 2017-11-28.
+     */
+    public static String getSuccessMessage(Map<String, ? extends Object> result) {
+        StringBuilder successMessage = new StringBuilder();
+
+        if (result.get(ModelService.SUCCESS_MESSAGE) != null) successMessage.append((String) result.get(ModelService.SUCCESS_MESSAGE));
+
+        if (result.get(ModelService.SUCCESS_MESSAGE_LIST) != null) {
+            List<? extends Object> errors = UtilGenerics.checkList(result.get(ModelService.SUCCESS_MESSAGE_LIST));
+            for (Object message: errors) {
+                // NOTE: this MUST use toString and not cast to String because it may be a MessageString object
+                String curMessage = message.toString();
+                if (successMessage.length() > 0) {
+                    successMessage.append(", ");
+                }
+                successMessage.append(curMessage);
+            }
+        }
+
+        return successMessage.toString();
+    }
+    
     public static String makeSuccessMessage(Map<String, ? extends Object> result, String msgPrefix, String msgSuffix, String successPrefix, String successSuffix) {
         if (result == null) {
             return "";
@@ -358,6 +383,38 @@ public class ServiceUtil {
         }
     }
 
+    /**
+     * SCIPIO: Concatenation of {@link #getErrorMessage(Map)} followed by {@link #getSuccessMessage(Map)}.
+     * Intentionally avoids checking responseMessage.
+     * Added 2017-11-28.
+     */
+    public static String getErrorAndSuccessMessage(Map<String, ? extends Object> result, String joinStr, String errorPrefix, String successPrefix) {
+        StringBuilder fullMessage = new StringBuilder();
+        
+        String errorMessage = getErrorMessage(result);
+        if (errorMessage.length() > 0) {
+            if (errorPrefix != null) fullMessage.append(errorPrefix);
+            fullMessage.append(errorMessage);
+        }
+        
+        String successMessage = getSuccessMessage(result);
+        if (successMessage.length() > 0) {
+            if (fullMessage.length() > 0) fullMessage.append((joinStr != null) ? joinStr : "; ");
+            if (successPrefix != null) fullMessage.append(successPrefix);
+            fullMessage.append(successMessage);
+        }
+        
+        return fullMessage.toString();
+    }
+    
+    /**
+     * SCIPIO: Concatenation of {@link #getErrorMessage(Map)} followed by {@link #getSuccessMessage(Map)}.
+     * Intentionally does not check responseMessage.
+     * Added 2017-11-28.
+     */
+    public static String getErrorAndSuccessMessage(Map<String, ? extends Object> result) {
+        return getErrorAndSuccessMessage(result, "; ", null, null);
+    }
     
     /**
      * SCIPIO: The default message prefix. 
@@ -778,6 +835,23 @@ public class ServiceUtil {
             outMap.put("userLogin", userLogin);
         }
 
+        return outMap;
+    }
+    
+    /**
+     * SCIPIO: Returns a new map containing only the common system service response fields from the
+     * given service results.
+     * This can be used to copy a success/failure/error message but excluding all the service-specific return values.
+     * In other words, returning this from a service can never trigger an out parameter service validation exception.
+     * Added 2017-11-28.
+     */
+    public static Map<String, Object> getSysResponseFields(Map<String, ?> results) {
+        Map<String, Object> outMap = new HashMap<>();
+        for(String name : ModelService.SYS_RESPONSE_FIELDS) {
+            if (results.containsKey(name)) {
+                outMap.put(name, results.get(name));
+            }
+        }
         return outMap;
     }
 }

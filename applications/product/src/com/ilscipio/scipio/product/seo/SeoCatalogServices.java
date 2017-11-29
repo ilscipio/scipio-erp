@@ -1,6 +1,11 @@
 package com.ilscipio.scipio.product.seo;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -20,7 +25,6 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.product.category.CategoryContentWrapper;
 import org.ofbiz.product.product.ProductContentWrapper;
@@ -32,7 +36,9 @@ import org.ofbiz.service.ServiceUtil;
 
 import com.ilscipio.scipio.product.category.CatalogAltUrlSanitizer;
 import com.ilscipio.scipio.product.category.CatalogUrlType;
-import com.ilscipio.scipio.util.SeoStringUtil;
+import com.ilscipio.scipio.product.seo.SeoCatalogUrlExporter.ExportDataFileConfig;
+import com.ilscipio.scipio.product.seo.SeoCatalogUrlExporter.ExportTraversalConfig;
+import com.ilscipio.scipio.product.seo.SeoCatalogUrlGenerator.GenTraversalConfig;
 
 /**
  * SCIPIO: SEO catalog services.
@@ -90,7 +96,7 @@ public abstract class SeoCatalogServices {
                     return ServiceUtil.returnError("product not found for ID: " + productId);
                 }
             }
-            return generateProductAlternativeUrls(dctx, context, product, 
+            return generateProductAlternativeUrls(dctx, context, product, new ArrayList<GenProdAltUrlParentEntry>(),
                     replaceExisting, removeOldLocales, moment, doChildProducts, includeVariant, useCache);
         } catch (Exception e) {
             String message = "Error while generating alternative links: " + e.getMessage();
@@ -104,13 +110,31 @@ public abstract class SeoCatalogServices {
         }
     }
 
+    static class GenProdAltUrlParentEntry {
+        public GenericValue product;
+        public GenericValue nameProductContent;
+        public String productAssocTypeId;
+        boolean virtualVariant;
+        
+        public GenProdAltUrlParentEntry(GenericValue product, GenericValue nameProductContent, boolean virtualVariant) {
+            this.product = product;
+            this.nameProductContent = nameProductContent;
+            if (virtualVariant) {
+                this.productAssocTypeId = "PRODUCT_VARIANT"; 
+            }
+            this.virtualVariant = virtualVariant;
+        }
+        
+        public boolean isVirtualVariant() {
+            return virtualVariant;
+        }
+    }
+    
     static Map<String, Object> generateProductAlternativeUrls(DispatchContext dctx, Map<String, ?> context,
-            GenericValue product, boolean replaceExisting, boolean removeOldLocales, Timestamp moment, boolean doChildProducts, boolean includeVariant, boolean useCache) throws Exception {
+            GenericValue product, List<GenProdAltUrlParentEntry> parentProducts, boolean replaceExisting, boolean removeOldLocales, Timestamp moment, 
+            boolean doChildProducts, boolean includeVariant, boolean useCache) throws Exception {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        
-        // WARN/TODO?: this service does not run for variant or other child products
-        
         String productId = product.getString("productId");
         
         // lookup existing alternative url
@@ -130,19 +154,35 @@ public abstract class SeoCatalogServices {
         
         GenericValue mainContent = null;
         
-        // get names by locale and default name
-        String defaultLocaleString = null;
+        // get names by locale, and the main content record info
+        String mainLocaleString = null;
         GenericValue nameMainContent = null;
         Map<String, String> localeTextMap = null;
+        
         GenericValue nameProductContent = EntityQuery.use(delegator).from("ProductContent")
                 .where("productId", productId, "productContentTypeId", productNameField).filterByDate(moment).cache(useCache).queryFirst();
         if (nameProductContent == null) {
-            // CHECK VIRTUAL PRODUCT for source texts - see product content wrapper
+            // CHECK VIRTUAL PRODUCT for source texts - see ProductContentWrapper (emulation)
+            // TODO: REVIEW: like ProductContentWrapper, this only checks one virtual level up
             if ("Y".equals(product.getString("isVariant"))) {
-                GenericValue parent = ProductWorker.getParentProduct(productId, delegator, useCache);
-                if (parent != null) {
-                    nameProductContent = EntityQuery.use(delegator).from("ProductContent")
-                            .where("productId", parent.getString("productId"), "productContentTypeId", productNameField).filterByDate(moment).cache(useCache).queryFirst();
+                // NEW OPTIMIZATION: can check the passed parent, LAST ONLY to follow ProductContentWrapper
+                GenProdAltUrlParentEntry parentProductEntry = UtilValidate.isNotEmpty(parentProducts) ? parentProducts.get(parentProducts.size() - 1) : null;
+                if (parentProductEntry != null && parentProductEntry.isVirtualVariant()) {
+                    // TODO?: future?: deep support would need to be implemented everywhere
+                    //ListIterator<GenProdAltUrlParentEntry> it = parentProducts.listIterator(parentProducts.size());
+                    //while(it.hasPrevious() && nameProductContent == null) {
+                    //    GenProdAltUrlParentEntry parentProductEntry = it.previous();
+                    //    if (parentProductEntry != null) {
+                    //        nameProductContent = parentProductEntry.nameProductContent;
+                    //    }
+                    //}
+                    nameProductContent = parentProductEntry.nameProductContent;
+                } else {
+                    GenericValue parentProduct = ProductWorker.getParentProduct(productId, delegator, useCache);
+                    if (parentProduct != null) {
+                        nameProductContent = EntityQuery.use(delegator).from("ProductContent")
+                                .where("productId", parentProduct.getString("productId"), "productContentTypeId", productNameField).filterByDate(moment).cache(useCache).queryFirst();
+                    }
                 }
             }
         }
@@ -150,23 +190,24 @@ public abstract class SeoCatalogServices {
             nameMainContent = nameProductContent.getRelatedOne("Content", useCache);
             localeTextMap = getSimpleTextsByLocaleString(delegator, dispatcher, 
                     nameMainContent, moment, useCache);
-            defaultLocaleString = nameMainContent.getString("localeString"); // TODO: REVIEW: setting this to the main name record localeString, or null if none
+            mainLocaleString = nameMainContent.getString("localeString");
         }
-        String defaultName = determineDefaultName(delegator, dispatcher, productId, 
-                ProductContentWrapper.getEntityFieldValue(product, productNameField, delegator, dispatcher, useCache),
-                defaultLocaleString, nameMainContent, localeTextMap); 
         
-        // make seo names
+        // make seo names for assoc records
         CatalogAltUrlSanitizer sanitizer = getCatalogAltUrlSanitizer(dctx, context);
-        Map<String, String> localeUrlMap = localeTextMap != null ? sanitizer.convertNamesToDbAltUrls(localeTextMap, CatalogUrlType.PRODUCT) : Collections.<String, String>emptyMap();
-        String defaultLocaleUrl = sanitizer.convertNameToDbAltUrl(defaultName, sanitizer.parseLocale(defaultLocaleString), CatalogUrlType.PRODUCT);
+        Map<String, String> localeUrlMap = (localeTextMap != null) ? sanitizer.convertNamesToDbAltUrls(localeTextMap, CatalogUrlType.PRODUCT) : Collections.<String, String>emptyMap();
+        
+        // make seo name for main record (may or may not already be in localeUrlMap)
+        String mainUrl = determineMainRecordUrl(delegator, dispatcher, sanitizer, CatalogUrlType.PRODUCT,
+                nameMainContent, mainLocaleString, localeUrlMap, product, productNameField, useCache);
         
         // store 
         if (productContent != null) {
             mainContent = productContent.getRelatedOne("Content", useCache);
         }
-        mainContent = replaceAltUrlContentLocalized(delegator, dispatcher, context, mainContent, defaultLocaleString, 
-                defaultLocaleUrl, localeUrlMap, removeOldLocales, moment);
+        mainContent = replaceAltUrlContentLocalized(delegator, dispatcher, context, 
+                mainContent, mainLocaleString, mainUrl, localeUrlMap, removeOldLocales, moment);
+        
         if (productContent == null) {
             productContent = delegator.makeValue("ProductContent");
             productContent.put("productId", productId);
@@ -183,34 +224,44 @@ public abstract class SeoCatalogServices {
         
         if (doChildProducts) {
             if (includeVariant && "Y".equals(product.getString("isVirtual"))) {
-                List<GenericValue> variantAssocList = EntityQuery.use(dctx.getDelegator()).from("ProductAssoc")
-                        .where("productId", productId, "productAssocTypeId", "PRODUCT_VARIANT").filterByDate().cache(useCache).queryList();
-                if (variantAssocList.size() > 0) {
-                    if (Debug.infoOn()) Debug.logInfo(logPrefix+"generateProductAlternativeUrls: virtual product '" + productId 
-                            + "' has " + variantAssocList.size() + " variants for alternative URL generation", module);
-                                        
-                    for(GenericValue variantAssoc : variantAssocList) {
-                        GenericValue variantProduct = variantAssoc.getRelatedOne("AssocProduct", useCache);
+                // we can pass ourselves as the parent to the variant, allows to skip some lookups
+                parentProducts.add(new GenProdAltUrlParentEntry(product, nameProductContent, true));
+                try {
+                    List<GenericValue> variantAssocList = EntityQuery.use(dctx.getDelegator()).from("ProductAssoc")
+                            .where("productId", productId, "productAssocTypeId", "PRODUCT_VARIANT").filterByDate().cache(useCache).queryList();
+                    if (variantAssocList.size() > 0) {
+                        if (Debug.infoOn()) Debug.logInfo(logPrefix+"generateProductAlternativeUrls: virtual product '" + productId 
+                                + "' has " + variantAssocList.size() + " variants for alternative URL generation", module);
                         
-                        Map<String, Object> childResult = generateProductAlternativeUrls(dctx, context, variantProduct, replaceExisting, removeOldLocales, 
-                                moment, doChildProducts, includeVariant, useCache);
-                        
-                        // NOTE: most of this
-                        Integer childrenUpdated = (Integer) childResult.get("numUpdated");
-                        Integer childrenSkipped = (Integer) childResult.get("numSkipped");
-                        Integer childrenError = (Integer) childResult.get("numError");
-                        if (childrenUpdated != null) numUpdated += childrenUpdated;
-                        if (childrenSkipped != null) numSkipped += childrenSkipped;
-                        if (ServiceUtil.isSuccess(childResult)) {
-                            if (childrenError != null) numError += childrenError;
-                        } else {
-                            if (childrenError != null) numError += childrenError;
-                            else numError++; // count could be missing in error case
+                        for(GenericValue variantAssoc : variantAssocList) {
+                            GenericValue variantProduct = variantAssoc.getRelatedOne("AssocProduct", useCache);
+                            
+                            Map<String, Object> childResult = generateProductAlternativeUrls(dctx, context, 
+                                    variantProduct, parentProducts, replaceExisting, removeOldLocales, 
+                                    moment, doChildProducts, includeVariant, useCache);
+                            
+                            // NOTE: most of this
+                            Integer childrenUpdated = (Integer) childResult.get("numUpdated");
+                            Integer childrenSkipped = (Integer) childResult.get("numSkipped");
+                            Integer childrenError = (Integer) childResult.get("numError");
+                            if (childrenUpdated != null) numUpdated += childrenUpdated;
+                            if (childrenSkipped != null) numSkipped += childrenSkipped;
+                            if (ServiceUtil.isSuccess(childResult)) {
+                                if (childrenError != null) numError += childrenError;
+                            } else {
+                                if (childrenError != null) numError += childrenError;
+                                else numError++; // count could be missing in error case
+                            }
                         }
                     }
+                } finally {
+                    parentProducts.remove(parentProducts.size() - 1);
                 }
             }
+            
             // TODO?: handle other child product associations here? (non-virtual/variant)
+            // NOTE: the only other one handled by ProductContentWrapper is UNIQUE_ITEM,
+            // and practically nothing appears to use it
         }
         
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -275,33 +326,34 @@ public abstract class SeoCatalogServices {
         
         GenericValue mainContent = null;
         
-        // get names by locale and default name
-        String defaultLocaleString = null;
+        // get names by locale, and the main content record info
+        String mainLocaleString = null;
         GenericValue nameMainContent = null;
         Map<String, String> localeTextMap = null;
+        
         GenericValue nameProductCategoryContent = EntityQuery.use(delegator).from("ProductCategoryContent")
                 .where("productCategoryId", productCategoryId, "prodCatContentTypeId", categoryNameField).filterByDate(moment).cache(useCache).queryFirst();
         if (nameProductCategoryContent != null) {
             nameMainContent = nameProductCategoryContent.getRelatedOne("Content", useCache);
             localeTextMap = getSimpleTextsByLocaleString(delegator, dispatcher, 
                     nameMainContent, moment, useCache);
-            defaultLocaleString = nameMainContent.getString("localeString"); // TODO: REVIEW: setting this to the main name record localeString, or null if none
+            mainLocaleString = nameMainContent.getString("localeString"); 
         }
-        String defaultName = determineDefaultName(delegator, dispatcher, productCategoryId, 
-                CategoryContentWrapper.getEntityFieldValue(productCategory, categoryNameField, delegator, dispatcher, useCache),
-                defaultLocaleString, nameMainContent, localeTextMap); 
         
-        // make seo names
+        // make seo names for assoc records
         CatalogAltUrlSanitizer sanitizer = getCatalogAltUrlSanitizer(dctx, context);
-        Map<String, String> localeUrlMap = localeTextMap != null ? sanitizer.convertNamesToDbAltUrls(localeTextMap, CatalogUrlType.CATEGORY) : Collections.<String, String>emptyMap();
-        String defaultLocaleUrl = sanitizer.convertNameToDbAltUrl(defaultName, sanitizer.parseLocale(defaultLocaleString), CatalogUrlType.CATEGORY);
+        Map<String, String> localeUrlMap = (localeTextMap != null) ? sanitizer.convertNamesToDbAltUrls(localeTextMap, CatalogUrlType.CATEGORY) : Collections.<String, String>emptyMap();
         
+        // make seo name for main record (may or may not already be in localeUrlMap)
+        String mainUrl = determineMainRecordUrl(delegator, dispatcher, sanitizer, CatalogUrlType.CATEGORY,
+                nameMainContent, mainLocaleString, localeUrlMap, productCategory, categoryNameField, useCache);
+
         // store
         if (productCategoryContent != null) {
             mainContent = productCategoryContent.getRelatedOne("Content", useCache);
         }
-        mainContent = replaceAltUrlContentLocalized(delegator, dispatcher, context, mainContent, defaultLocaleString, 
-                defaultLocaleUrl, localeUrlMap, removeOldLocales, moment);
+        mainContent = replaceAltUrlContentLocalized(delegator, dispatcher, context, 
+                mainContent, mainLocaleString, mainUrl, localeUrlMap, removeOldLocales, moment);
     
         if (productCategoryContent == null) {
             productCategoryContent = delegator.makeValue("ProductCategoryContent");
@@ -320,25 +372,60 @@ public abstract class SeoCatalogServices {
     }
     
     /**
-     * This uses the content wrapper-like behavior to get a default name.
+     * Determines an alt URL value to use for the main ALTERNATIVE_URL Content record (to which
+     * ALTERNATE_LOCALE Content records are associated).
+     * It may have an explicit localeString or be null, in which case handling possibilities are different.
+     * The localeString is copied directly from the source nameMainContent
      */
-    private static String determineDefaultName(Delegator delegator, LocalDispatcher dispatcher, String id, String entityFieldValue, 
-            String defaultLocaleString, GenericValue nameMainContent, Map<String, String> localeTextMap) throws GenericEntityException {
-        String defaultName = entityFieldValue;
+    private static String determineMainRecordUrl(Delegator delegator, LocalDispatcher dispatcher, CatalogAltUrlSanitizer sanitizer, CatalogUrlType urlType,
+            GenericValue nameMainContent, String mainLocaleString, Map<String, String> localeUrlMap, 
+            GenericValue prodOrCatEntity, String entityNameField, boolean useCache) throws GeneralException, IOException {
         
-        // default lang name fallbacks
-        if (UtilValidate.isEmpty(defaultName)) {
-            if (defaultLocaleString != null && localeTextMap != null) {
-                defaultName = localeTextMap.get(defaultLocaleString);
-            }
-            if (UtilValidate.isEmpty(defaultName) && nameMainContent != null) {
-                defaultName = getContentElectronicText(delegator, dispatcher, nameMainContent).getString("textData");
+        if (UtilValidate.isNotEmpty(mainLocaleString)) {
+            String mainUrl = localeUrlMap.get(mainLocaleString);
+            // NOTE: HERE, MUST RETURN EVEN IF EMPTY: 
+            // it is feasible that we could end up with mainUrl here if the source nameMainContent
+            // was not filled in properly - but we CANNOT set anything else, because we have no way
+            // to know if the non-localized fields are really in the locale of mainLocaleString.
+            // So, this is a case where user will simply have to fix his error (an empty ElectronicText).
+            //if (UtilValidate.isNotEmpty(mainUrl)) {
+            //    return mainUrl;
+            //}
+            return mainUrl;
+        } 
+            
+        // Here, there is no locale specified, so we can use any text that has no locale associated.
+        String mainText;
+        
+        // try CATEGORY_NAME/PRODUCT_NAME main ALTERNATIVE_URL Content record textData,
+        // where localeString was null
+        if (nameMainContent != null) {
+            mainText = getContentElectronicText(delegator, dispatcher, nameMainContent).getString("textData");
+            if (UtilValidate.isNotEmpty(mainText)) {
+                return sanitizer.convertNameToDbAltUrl(mainText, null, urlType);
             }
         }
-        if (UtilValidate.isEmpty(defaultName)) {
-            defaultName = id;
+      
+        // try ProductCategory.categoryName/Product.productName non-localized field
+        if (urlType == CatalogUrlType.CATEGORY) {
+            mainText = CategoryContentWrapper.getEntityFieldValue(prodOrCatEntity, categoryNameField, delegator, dispatcher, useCache);
+        } else {
+            mainText = ProductContentWrapper.getEntityFieldValue(prodOrCatEntity, productNameField, delegator, dispatcher, useCache);
         }
-        return defaultName;
+        if (UtilValidate.isNotEmpty(mainText)) {
+            return sanitizer.convertNameToDbAltUrl(mainText, null, urlType);
+        }
+        
+        // NOTE: will not fallback on productCategoryId/productId here - this empty textData
+        // should get detected by the link generation code in SeoCatalogUrlWorker and
+        // it will append an ID as a fallback - it is probably better to do that
+        // because setting ID here could be masking the issue at the same time as
+        // causing potiential double IDs in URL parts...
+        Debug.logWarning(logPrefix+"Could not determine a SEO alternative URL value for ALTERNATIVE_URL primary Content record "
+                + " for " + prodOrCatEntity.getEntityName() + " '" + prodOrCatEntity.getPkShortValueString() + "'"
+                + "; no valid XXX_NAME Content records or xxxName entity fields are available; record's textData will be empty", module);
+        
+        return null;
     }
 
     /**
@@ -347,55 +434,69 @@ public abstract class SeoCatalogServices {
     private static Map<String, String> getSimpleTextsByLocaleString(Delegator delegator, LocalDispatcher dispatcher,
             GenericValue mainContent, Timestamp moment, boolean useCache) throws GenericEntityException {
         Map<String, String> localeTextMap = new HashMap<>();
-        if (UtilValidate.isNotEmpty(mainContent.getString("localeString"))) {
-            GenericValue elecText = getContentElectronicText(delegator, dispatcher, mainContent);
-            if (UtilValidate.isNotEmpty(elecText.getString("textData"))) {
-                localeTextMap.put(mainContent.getString("localeString"), elecText.getString("textData"));
-            }
-        }
+        
         List<GenericValue> assocViewList = EntityQuery.use(delegator).from("ContentAssocToElectronicText")
                 .where("contentIdStart", mainContent.getString("contentId"), 
                         "contentAssocTypeId", "ALTERNATE_LOCALE").filterByDate(moment).cache(useCache).queryList();
         for(GenericValue assocView : assocViewList) {
-            if (UtilValidate.isNotEmpty(assocView.getString("localeString"))) {
-                localeTextMap.put(assocView.getString("localeString"), assocView.getString("textData"));
+            String assocLocaleString = assocView.getString("localeString");
+            if (UtilValidate.isNotEmpty(assocLocaleString)) {
+                localeTextMap.put(assocLocaleString, assocView.getString("textData"));
             }
         }
+        
+        String mainLocaleString = mainContent.getString("localeString");
+        if (UtilValidate.isNotEmpty(mainLocaleString)) {
+            GenericValue elecText = getContentElectronicText(delegator, dispatcher, mainContent);
+            String mainTextData = elecText.getString("textData");
+            if (UtilValidate.isNotEmpty(mainTextData)) {
+                localeTextMap.put(mainLocaleString, mainTextData);
+            }
+        }
+        
         return localeTextMap;
     }
     
     /**
-     * TODO: move elsewhere, will need to reuse...
+     * Replaces the textData of the the ALTERNATIVE_URL Content and its associated ALTERNATE_LOCALE Contents
+     * using mapping by following the localeString mappings of the source CATEGORY_NAME/PRODUCT_NAME
+     * Content records and trying to maintain a similar layout.
+     * Relies on a 1-to-1 mapping of CATEGORY_NAME/PRODUCT_NAME-to-ALTERNATIVE_URL Content records;
+     * the only thing that may be different is the order of the associated records, while the main
+     * (non-assoc) record must correspond to the source if one exists.
+     * <p>
+     * NOTE: The main Content record's localeString is ALWAYS set to the localeString of the
+     * CATEGORY_NAME/PRODUCT_NAME main Content record - this is the only way to keep a consistent
+     * pattern and allows to avoid dependency on an external defaultLocaleString (in other
+     * words don't need to try to determine ProductStore.defaultLocaleString).
+     * <p>
+     * TODO?: move elsewhere, may need to reuse...
      */
     private static GenericValue replaceAltUrlContentLocalized(Delegator delegator, LocalDispatcher dispatcher, Map<String, ?> context,
-            GenericValue mainContent, String defaultLocaleString, String defaultLocaleUrl, Map<String, String> localeUrlMap,
+            GenericValue mainContent, String mainLocaleString, String mainUrl, Map<String, String> localeUrlMap,
             boolean removeOldLocales, Timestamp moment) throws Exception {
-        Set<String> remainingLocales = new HashSet<>(localeUrlMap.keySet());
+        // DEV NOTE: to simplify, I am setting removeDupLocales to same as removeOldLocales...
+        // as long as removal is understood, there is really no reason to keep duplicates because
+        // the prior code was setting them all to the exact same value, so in other words,
+        // having removeDupLocales false was completely pointless...
+        final boolean removeDupLocales = removeOldLocales;
         
-        // update the main content record
-        String mainLocaleString;
-        String mainTextData;
-        if (mainContent != null) {
-            // TODO: REVIEW: for now ALWAYS change the main record locale to the defaultLocaleString
-            // because the only way this is manageable is if it follows the source localized texts setup
-            mainLocaleString = defaultLocaleString;
+        Set<String> remainingLocales = new HashSet<>(localeUrlMap.keySet());
 
-            // SPECIAL CASE: lang override for main content in the map
-            mainTextData = localeUrlMap.get(mainLocaleString);
-            if (UtilValidate.isNotEmpty(mainTextData)) {
-                remainingLocales.remove(mainLocaleString);
-            } else {
-                mainTextData = defaultLocaleUrl;
-            }
-        } else {
-            mainLocaleString = defaultLocaleString;
-            mainTextData = defaultLocaleUrl;
-        }
         // update main content
         if (mainContent == null) {
-            mainContent = createAltUrlSimpleTextContent(delegator, dispatcher, mainLocaleString, mainTextData);
+            mainContent = createAltUrlSimpleTextContent(delegator, dispatcher, mainLocaleString, mainUrl);
         } else {
-            updateAltUrlSimpleTextContent(delegator, dispatcher, mainContent, mainLocaleString, mainTextData);
+            updateAltUrlSimpleTextContent(delegator, dispatcher, mainContent, mainLocaleString, mainUrl);
+        }
+        
+        // SPECIAL: 2017-11-28: we must remove the mainLocaleString from remainingLocales because
+        // 1) when creating brand new records, don't want the second loop to create new ALTERNATE_LOCALEs
+        //    for locale already covered in the main record, and
+        // 2) if we remove mainLocaleString from remainingLocales BEFORE the next "update in-place or remove" loop,
+        //    it will allow the loop to correct past mistakes and remove duplicates that were previously created
+        if (UtilValidate.isNotEmpty(mainLocaleString)) {
+            remainingLocales.remove(mainLocaleString);
         }
         
         List<GenericValue> contentAssocList = EntityQuery.use(delegator).from("ContentAssoc")
@@ -406,25 +507,31 @@ public abstract class SeoCatalogServices {
         for(GenericValue contentAssoc : contentAssocList) {
             GenericValue content = contentAssoc.getRelatedOne("ToContent", false);
             String localeString = content.getString("localeString");
+
+            // Removal logic:
+            // * The localeString was "old" if it's not in localeUrlMap at all.
+            //   * We also "treat" localeString also as "old" if it's in localeUrlMap but empty value.
+            // * The localeString was a "duplicate" if it's in localeUrlMap but was removed from remainingLocales.
             
             String textData = localeUrlMap.get(localeString);
             if (UtilValidate.isNotEmpty(textData)) {
-                updateAltUrlSimpleTextContent(delegator, dispatcher, content, textData);
-                remainingLocales.remove(localeString);
+                if (!removeDupLocales || remainingLocales.contains(localeString)) {
+                    updateAltUrlSimpleTextContent(delegator, dispatcher, content, textData);
+                    remainingLocales.remove(localeString);
+                } else {
+                    removeContentAndRelated(delegator, dispatcher, context, content);
+                }
             } else {
                 if (removeOldLocales) {
-                    Map<String, Object> servCtx = new HashMap<>();
-                    servCtx.put("userLogin", context.get("userLogin"));
-                    servCtx.put("locale", context.get("locale"));
-                    servCtx.put("contentId", content.get("contentId"));
-                    Map<String, Object> servResult = dispatcher.runSync("removeContentAndRelated", servCtx);
-                    if (ServiceUtil.isError(servResult)) {
-                        throw new SeoCatalogException("Cannot remove ALTERNATE_LOCALE record contentId '" 
-                                + content.get("contentId") + "': " + ServiceUtil.getErrorMessage(servResult));
-                    }
+                    removeContentAndRelated(delegator, dispatcher, context, content);
                 }
             }
         }
+        
+        // see above comment - could have done this code here, but think it works better if earlier
+        //if (UtilValidate.isNotEmpty(mainLocaleString)) {
+        //    remainingLocales.remove(mainLocaleString);
+        //}
         
         // create new assoc records
         for(String localeString : remainingLocales) {
@@ -441,6 +548,18 @@ public abstract class SeoCatalogServices {
         }
 
         return mainContent;
+    }
+    
+    private static void removeContentAndRelated(Delegator delegator, LocalDispatcher dispatcher, Map<String, ?> context, GenericValue content) throws GeneralException {
+        Map<String, Object> servCtx = new HashMap<>();
+        servCtx.put("userLogin", context.get("userLogin"));
+        servCtx.put("locale", context.get("locale"));
+        servCtx.put("contentId", content.get("contentId"));
+        Map<String, Object> servResult = dispatcher.runSync("removeContentAndRelated", servCtx);
+        if (ServiceUtil.isError(servResult)) {
+            throw new SeoCatalogException("Cannot remove ALTERNATE_LOCALE record contentId '" 
+                    + content.get("contentId") + "': " + ServiceUtil.getErrorMessage(servResult));
+        }
     }
     
     private static GenericValue createAltUrlSimpleTextContent(Delegator delegator, LocalDispatcher dispatcher, String localeString, String textData) throws GenericEntityException {
@@ -495,7 +614,7 @@ public abstract class SeoCatalogServices {
      * Re-generates alternative urls for store/website based on ruleset outlined in SeoConfig.xml.
      */
     public static Map<String, Object> generateWebsiteAlternativeUrls(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Delegator delegator = dctx.getDelegator();
+        //Delegator delegator = dctx.getDelegator();
         //LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
        
@@ -504,64 +623,53 @@ public abstract class SeoCatalogServices {
         boolean doAll = typeGenerate.contains("all");
         boolean doProduct = doAll || typeGenerate.contains("product");
         boolean doCategory = doAll || typeGenerate.contains("category");
+        // NOTE: we must enable search for child product in this case, because they are not automatically
+        // covered by ProductCategoryMember in the iteration
+        final boolean doChildProducts = true;
         
         String webSiteId = (String) context.get("webSiteId");
         String productStoreId = (String) context.get("productStoreId");
         String prodCatalogId = (String) context.get("prodCatalogId");
-        if ("all".equals(prodCatalogId)) {
-            prodCatalogId = null; // legacy compat
-        }
+        if ("all".equals(prodCatalogId)) prodCatalogId = null; // legacy compat
+        Collection<String> prodCatalogIdList = UtilGenerics.checkCollection(context.get("prodCatalogIdList"));
         
         boolean useCache = Boolean.TRUE.equals(context.get("useCache")); // FALSE default
+        boolean preventDuplicates = !Boolean.FALSE.equals(context.get("preventDuplicates"));
         
-        UrlGenStats stats = new UrlGenStats(doProduct, doCategory);
-        
-        List<GenericValue> prodCatalogList;
+        SeoCatalogUrlGenerator traverser;
         try {
-            if (UtilValidate.isNotEmpty(prodCatalogId)) {
-                GenericValue prodCatalog = delegator.findOne("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId), useCache);
-                if (prodCatalog == null) return ServiceUtil.returnError("catalog not found: " + prodCatalogId);
-                prodCatalogList = UtilMisc.toList(prodCatalog);
-            } else {
-                if (UtilValidate.isEmpty(productStoreId)) {
-                    if (UtilValidate.isEmpty(webSiteId)) {
-                        return ServiceUtil.returnError("missing webSiteId, productStoreId or prodCatalogId");
-                    }
-                    GenericValue webSite = delegator.findOne("WebSite", UtilMisc.toMap("webSiteId", webSiteId), useCache);
-                    if (webSite == null) return ServiceUtil.returnError("website not found: " + webSiteId);
-                    productStoreId = webSite.getString("productStoreId");
-                    if (UtilValidate.isEmpty(productStoreId)) return ServiceUtil.returnError("web site has no product store: " + webSiteId);
-    
-                }
-                GenericValue productStore = delegator.findOne("ProductStore", UtilMisc.toMap("productStoreId", productStoreId), useCache);
-                if (productStore == null) return ServiceUtil.returnError("store not found: " + productStoreId);
-                
-                prodCatalogList = EntityQuery.use(delegator).from("ProductStoreCatalog").where("productStoreId", productStoreId)
-                        .filterByDate().orderBy("sequenceNum").cache(useCache).queryList();
-            }
-            
-            for(GenericValue prodCatalog : prodCatalogList) {
-                List<GenericValue> catalogCategories = EntityQuery.use(delegator).from("ProdCatalogCategory")
-                        .where("prodCatalogId", prodCatalog.getString("prodCatalogId")).filterByDate()
-                        .orderBy("sequenceNum").cache(useCache).queryList();
-                generateCategoryAltUrlsDeep(dctx, context, stats, catalogCategories, doProduct, doCategory, useCache);
-            }
-        } catch(Exception e) {
-            String message = "Error while generating alternative links: " + e.getMessage();
-            Debug.logError(e, logPrefix+message, module);
+            GenTraversalConfig travConfig = (GenTraversalConfig) new GenTraversalConfig()
+                    .setServCtxOpts(context)
+                    .setDoChildProducts(doChildProducts)
+                    .setUseCache(useCache).setDoCategory(doCategory).setDoProduct(doProduct)
+                    .setPreventDupAll(preventDuplicates);
+            traverser = new SeoCatalogUrlGenerator(dctx.getDelegator(), dctx.getDispatcher(), travConfig);
+        } catch (Exception e) {
+            String message = "Error preparing to generate alternative links: " + e.getMessage();
+            Debug.logError(e, logPrefix+"generateWebsiteAlternativeUrls: "+message, module);
             return ServiceUtil.returnError(message);
         }
         
-        String resultMsg = stats.toMsg(locale);
-        Debug.logInfo(logPrefix+"Generated alternative links: " + resultMsg, module);
-        return stats.toServiceResultSuccessFailure(resultMsg);
+        try {
+            List<GenericValue> prodCatalogList = traverser.getTargetCatalogList(prodCatalogId, prodCatalogIdList, 
+                    productStoreId, webSiteId, false);
+            traverser.traverseCatalogsDepthFirst(prodCatalogList);
+        } catch(Exception e) {
+            String message = "Error while generating alternative links: " + e.getMessage();
+            Debug.logError(e, logPrefix+"generateWebsiteAlternativeUrls: "+message, module);
+            return ServiceUtil.returnError(message);
+        }
+        
+        String resultMsg = "Alternative URL generation for website '" + webSiteId + "' finished. " + traverser.getStats().toMsg(locale);
+        Debug.logInfo(logPrefix+"generateWebsiteAlternativeUrls: " + resultMsg, module);
+        return traverser.getStats().toServiceResultSuccessFailure(resultMsg);
     }
     
     /**
      * Re-generates alternative urls for all stores/websites based on ruleset outlined in SeoConfig.xml.
      */
     public static Map<String, Object> generateAllAlternativeUrls(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Delegator delegator = dctx.getDelegator();
+        //Delegator delegator = dctx.getDelegator();
         //LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
         
@@ -570,286 +678,378 @@ public abstract class SeoCatalogServices {
         boolean doAll = typeGenerate.contains("all");
         boolean doProduct = doAll || typeGenerate.contains("product");
         boolean doCategory = doAll || typeGenerate.contains("category");
+        // NOTE: don't search for child product in this case, because using massive all-products query
+        final boolean doChildProducts = false;
         
         boolean useCache = Boolean.TRUE.equals(context.get("useCache")); // FALSE default
         
         //boolean replaceExisting = !Boolean.FALSE.equals(context.get("replaceExisting")); // makeValidContext transfers
-        
-        // IMPORTANT: USE LIST ITERATOR
-        // TODO: REVIEW: currently avoids store lookup overhead but may not last,
-        // we may be forced to lookup stores here due to defaultLocaleString and other setting...
-        
-        UrlGenStats stats = new UrlGenStats(doProduct, doCategory);
-        
-        if (doProduct) {
-            EntityListIterator productIt = null;
-            try {
-                productIt = EntityQuery.use(delegator).from("Product").cache(useCache).queryIterator();
-                GenericValue product;
-                while ((product = productIt.next()) != null) {
-                    // NOTE: doChildProducts = false, because already counted in our global query here
-                    generateProductAltUrls(dctx, context, product, stats, false, useCache);
-                }
-            } catch (Exception e) {
-                String message = "Error while generating alternative links: " + e.getMessage();
-                Debug.logError(e, logPrefix+message, module);
-                return ServiceUtil.returnError(message);
-            } finally {
-                if (productIt != null) {
-                    try {
-                        productIt.close();
-                    } catch(Throwable t) {
-                        Debug.logError(t, module);
-                    }
-                }
-            }
+
+        SeoCatalogUrlGenerator traverser;
+        try {
+            GenTraversalConfig travConfig = (GenTraversalConfig) new GenTraversalConfig()
+                    .setServCtxOpts(context)
+                    .setDoChildProducts(doChildProducts)
+                    .setUseCache(useCache).setDoCategory(doCategory).setDoProduct(doProduct);
+            traverser = new SeoCatalogUrlGenerator(dctx.getDelegator(), dctx.getDispatcher(), travConfig);
+        } catch (Exception e) {
+            String message = "Error preparing to generate alternative links: " + e.getMessage();
+            Debug.logError(e, logPrefix+"generateAllAlternativeUrls: "+message, module);
+            return ServiceUtil.returnError(message);
         }
-        
-        if (doCategory) {
-            EntityListIterator productCategoryIt = null;
-            try {
-                productCategoryIt = EntityQuery.use(delegator).from("ProductCategory").cache(useCache).queryIterator();
-                GenericValue productCategory;
-                while ((productCategory = productCategoryIt.next()) != null) {
-                    generateCategoryAltUrls(dctx, context, productCategory, stats, useCache);
-                }
-            } catch (Exception e) {
-                String message = "Error while generating alternative links: " + e.getMessage();
-                Debug.logError(e, logPrefix+message, module);
-                return ServiceUtil.returnError(message);
-            } finally {
-                if (productCategoryIt != null) {
-                    try {
-                        productCategoryIt.close();
-                    } catch(Throwable t) {
-                        Debug.logError(t, module);
-                    }
-                }
-            }
+
+        try {
+            traverser.traverseAllInSystem();
+        } catch (Exception e) {
+            String message = "Error while generating alternative links: " + e.getMessage();
+            Debug.logError(e, logPrefix+"generateAllAlternativeUrls: " + message, module);
+            return ServiceUtil.returnError(message);
         }
         
         // TODO?: FUTURE
         //if (doContent) {
         //}
         
-        String resultMsg = stats.toMsg(locale);
-        Debug.logInfo(logPrefix+"Generated alternative links: " + resultMsg, module);
-        return stats.toServiceResultSuccessFailure(resultMsg);
+        String resultMsg = "System-wide alternative URL generation finished. " + traverser.getStats().toMsg(locale);
+        Debug.logInfo(logPrefix+"generateAllAlternativeUrls: " + resultMsg, module);
+        return traverser.getStats().toServiceResultSuccessFailure(resultMsg);
     }
     
-    // recursive helper, rewritten from getTreeCategories
-    private static void generateCategoryAltUrlsDeep(DispatchContext dctx, Map<String, ?> context, UrlGenStats stats,
-            List<GenericValue> categoryAssocList, boolean doProduct, boolean doCategory, boolean useCache) throws GeneralException {
-        for (GenericValue categoryAssoc : categoryAssocList) {
-            GenericValue category = null;
-            if ("ProductCategoryRollup".equals(categoryAssoc.getEntityName())) {
-                category = categoryAssoc.getRelatedOne("CurrentProductCategory", useCache);
-            } else if ("ProdCatalogCategory".equals(categoryAssoc.getEntityName())) {
-                category = categoryAssoc.getRelatedOne("ProductCategory", useCache);
+    /**
+     * Exports alternative urls for given website.
+     */
+    public static Map<String, Object> exportWebsiteAlternativeUrlsEntityXml(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Locale locale = (Locale) context.get("locale");
+       
+        Collection<String> typeExport = UtilGenerics.checkCollection(context.get("typeExport"));
+        if (typeExport == null) typeExport = Collections.emptyList();
+        boolean doAll = typeExport.contains("all");
+        boolean doProduct = doAll || typeExport.contains("product");
+        boolean doCategory = doAll || typeExport.contains("category");
+        // NOTE: we must enable search for child product in this case, because they are not automatically
+        // covered by ProductCategoryMember in the iteration
+        final boolean doChildProducts = true;
+        
+        String webSiteId = (String) context.get("webSiteId");
+        String productStoreId = (String) context.get("productStoreId");
+        String prodCatalogId = (String) context.get("prodCatalogId");
+        if ("all".equals(prodCatalogId)) prodCatalogId = null; // legacy compat
+        Collection<String> prodCatalogIdList = UtilGenerics.checkCollection(context.get("prodCatalogIdList"));
+        String recordGrouping = (String) context.get("recordGrouping");
+        
+        boolean useCache = Boolean.TRUE.equals(context.get("useCache")); // FALSE default
+        boolean preventDuplicates = !Boolean.FALSE.equals(context.get("preventDuplicates"));
+        ExportOutput out = new ExportOutput(context);
+
+        SeoCatalogUrlExporter exporter;
+        try {
+            ExportTraversalConfig travConfig = (ExportTraversalConfig) new ExportTraversalConfig()
+                    .setServCtxOpts(context).setDoChildProducts(doChildProducts).setLinePrefix(out.getLinePrefix())
+                    .setRecordGrouping(recordGrouping)
+                    .setUseCache(useCache).setDoCategory(doCategory).setDoProduct(doProduct)
+                    .setPreventDupAll(preventDuplicates);
+            exporter = new SeoCatalogUrlExporter(dctx.getDelegator(), dctx.getDispatcher(), 
+                    travConfig, out.getEffWriter());
+        } catch (Exception e) {
+            String message = "Error preparing to export alternative URLs: " + e.getMessage();
+            Debug.logError(e, logPrefix+"exportWebsiteAlternativeUrlsEntityXml: "+message, module);
+            return ServiceUtil.returnError(message);
+        }
+        
+        try {
+            List<GenericValue> prodCatalogList = exporter.getTargetCatalogList(prodCatalogId, prodCatalogIdList, 
+                    productStoreId, webSiteId, false);
+            exporter.traverseCatalogsDepthFirst(prodCatalogList);
+            out.processOutput(exporter);
+        } catch(Exception e) {
+            String message = "Error while exporting alternative URLs: " + e.getMessage();
+            Debug.logError(e, logPrefix+"exportWebsiteAlternativeUrlsEntityXml: "+message, module);
+            return ServiceUtil.returnError(message);
+        }
+        
+        String resultMsg = exporter.getStats().toMsg(locale);
+        Map<String, Object> result = exporter.getStats().toServiceResultSuccessFailure(resultMsg);
+        out.populateServiceResult(result);
+        Debug.logInfo(logPrefix+"exportWebsiteAlternativeUrlsEntityXml: Exported alternative URLs: " + resultMsg, module);        
+        return result;
+    }
+    
+    public static Map<String, Object> exportAllAlternativeUrlsEntityXml(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Locale locale = (Locale) context.get("locale");
+        
+        Collection<String> typeGenerate = UtilGenerics.checkCollection(context.get("typeExport"));
+        if (typeGenerate == null) typeGenerate = Collections.emptyList();
+        boolean doAll = typeGenerate.contains("all");
+        boolean doProduct = doAll || typeGenerate.contains("product");
+        boolean doCategory = doAll || typeGenerate.contains("category");
+        // NOTE: don't search for child product in this case, because using massive all-products query
+        final boolean doChildProducts = false;
+        String recordGrouping = (String) context.get("recordGrouping");
+        
+        boolean useCache = Boolean.TRUE.equals(context.get("useCache")); // FALSE default
+        ExportOutput out = new ExportOutput(context);
+
+        SeoCatalogUrlExporter exporter;
+        try {
+            ExportTraversalConfig travConfig = (ExportTraversalConfig) new ExportTraversalConfig()
+                    .setServCtxOpts(context).setDoChildProducts(doChildProducts).setLinePrefix(out.getLinePrefix())
+                    .setRecordGrouping(recordGrouping)
+                    .setUseCache(useCache).setDoCategory(doCategory).setDoProduct(doProduct);
+            exporter = new SeoCatalogUrlExporter(dctx.getDelegator(), dctx.getDispatcher(), 
+                    travConfig, out.getEffWriter());
+        } catch (Exception e) {
+            String message = "Error preparing to export alternative URLs: " + e.getMessage();
+            Debug.logError(e, logPrefix+"exportAllAlternativeUrlsEntityXml: "+message, module);
+            return ServiceUtil.returnError(message);
+        }
+
+        try {
+            exporter.traverseAllInSystem();
+            out.processOutput(exporter);
+        } catch (Exception e) {
+            String message = "Error while exporting alternative URLs: " + e.getMessage();
+            Debug.logError(e, logPrefix+"exportAllAlternativeUrlsEntityXml: " + message, module);
+            return ServiceUtil.returnError(message);
+        }
+        
+        // TODO?: FUTURE
+        //if (doContent) {
+        //}
+        
+        String resultMsg = exporter.getStats().toMsg(locale);
+        Map<String, Object> result = exporter.getStats().toServiceResultSuccessFailure(resultMsg);
+        out.populateServiceResult(result);
+        Debug.logInfo(logPrefix+"exportAllAlternativeUrlsEntityXml: exported alternative URLs: " + resultMsg, module);
+        return result;
+    }
+    
+    private static class ExportOutput {
+        // in
+        Writer origWriter;
+        Writer effWriter;
+        boolean asString;
+        boolean outFlush;
+        String linePrefix;
+        
+        // out
+        String outString = null;
+        
+        public ExportOutput(Map<String, ?> context) {
+            origWriter = (Writer) context.get("outWriter");
+            effWriter = origWriter;
+            asString = Boolean.TRUE.equals(context.get("asString"));
+            if (effWriter == null || (asString && !(effWriter instanceof StringWriter))) {
+                effWriter = new StringWriter();
             }
-            if (category == null) {
-                Debug.logError(logPrefix+"Schema error: Could not get related ProductCategory for: " + categoryAssoc, module);
-                continue;
-            }
+            outFlush = !Boolean.FALSE.equals(context.get("outFlush"));
+            linePrefix = (String) context.get("linePrefix");
+        }
+        
+        public Writer getEffWriter() {
+            return effWriter;
+        }
+       
+        public String getLinePrefix() {
+            return linePrefix;
+        }
+
+        public boolean isIntermediateWriter() {
+            return (origWriter != effWriter);
+        }
+        
+        public void processOutput(SeoCatalogUrlExporter exporter) throws GeneralException {
+            flushExporter(exporter);
             
-            // self
-            if (doCategory) {
-                generateCategoryAltUrls(dctx, context, category, stats, useCache);
+            if (isIntermediateWriter()) {
+                StringWriter sw = (StringWriter) effWriter;
+                outString = sw.toString();
+                
+                if (origWriter != null) {
+                    try {
+                        origWriter.write(outString);
+                        origWriter.flush();
+                    } catch (IOException e) {
+                        throw new GeneralException("Error writing intermediate StringWriter result"
+                                + " back to original writer following data export", e);
+                    }
+                }
             }
-            
-            // child cats (recursive)
-            List<GenericValue> childProductCategoryRollups = EntityQuery.use(dctx.getDelegator()).from("ProductCategoryRollup")
-                    .where("parentProductCategoryId", category.getString("productCategoryId")).filterByDate().cache(useCache).queryList(); // not need: .orderBy("sequenceNum")
-            if (UtilValidate.isNotEmpty(childProductCategoryRollups)) {
-                generateCategoryAltUrlsDeep(dctx, context, stats, 
-                        childProductCategoryRollups, doProduct, doCategory, useCache);
+        }
+        
+        /**
+         * Flushes the exporter if needed.
+         * Generally the exporter must be flushed because it may have wrapped the effWriter
+         * in a PrintWriter. We can only avoid flush if origWriter was a PrintWriter because then service caller is responsible.
+         * Option conflict is possible.
+         */
+        private void flushExporter(SeoCatalogUrlExporter exporter) throws GeneralException {
+            boolean flushWriter = false;
+            if (isIntermediateWriter()) {
+                // no risk flushing the StringWriter
+                flushWriter = true;
+            } else {
+                if (origWriter instanceof PrintWriter) {
+                    // here, we can respect the flush flag, because the caller is responsible
+                    // for the entire PrintWriter wrapper flushing (not just its wrapped instance)
+                    if (outFlush) {
+                        flushWriter = true;
+                    }
+                } else {
+                    // here, we are forced to flush, but caller may not like...
+                    if (!outFlush) {
+                        Debug.logWarning(logPrefix+"SEO catalog URL export: "
+                                + "forced to flush the writer; caller requested no flushing (outFlush=false), "
+                                + "but this flag can only be honored if caller passed a PrintWriter"
+                                + " (caller passed a: " + origWriter.getClass().getName() 
+                                + ")", module);
+                    }
+                    flushWriter = true;
+                }
+            }
+            exporter.flush(flushWriter);
+        }
+
+        public void populateServiceResult(Map<String, Object> result) {
+            if (origWriter != null) {
+                result.put("outWriter", origWriter);
+            } else {
+                result.put("outWriter", effWriter);
+            }
+  
+            if (asString) {
+                result.put("outString", outString);
+            }
+        }
+    }
+    
+    public static Map<String, Object> exportWebsiteAlternativeUrlsEntityXmlFile(DispatchContext dctx, Map<String, ? extends Object> context) {
+        String outFile = (String) context.get("outFile");
+        String templateType = (String) context.get("templateType");
+        String dataBeginMarker = (String) context.get("dataBeginMarker");
+        String templateFile = (String) context.get("templateFile");
+        
+        boolean commentDelimTmpl = "comment-delimited".equals(templateType);
+        if (commentDelimTmpl && dataBeginMarker == null) dataBeginMarker = "<!--DATA-BEGIN-->";
+        
+        PrintWriter outWriter = null;
+        try {
+            String header = null;
+            if (commentDelimTmpl) {                
+                StringBuilder headerSb = ExportDataFileConfig.readCommentDelimitedTemplateHeader(templateFile, dataBeginMarker);
+                if (headerSb == null) {
+                    Debug.logWarning(logPrefix+"Data export: could not find the data-begin markup (" + dataBeginMarker 
+                        + ") in the template file '" + templateFile + "'; there will be no header in the output file (" + outFile + ")", module);
+                } else {
+                    header = headerSb.toString();
+                }
             }
 
-            // products
-            if (doProduct) {
-                List<GenericValue> productCategoryMembers = EntityQuery.use(dctx.getDelegator()).from("ProductCategoryMember")
-                        .where("productCategoryId", category.getString("productCategoryId")).filterByDate()
-                        .cache(useCache).queryList(); // not need: .orderBy("sequenceNum")
-                if (UtilValidate.isNotEmpty(productCategoryMembers)) {
-                    for (GenericValue productCategoryMember : productCategoryMembers) {
-                        GenericValue product = productCategoryMember.getRelatedOne("Product", useCache);
-                        generateProductAltUrls(dctx, context, product, stats, true, useCache);
-                    }
+            // will use a PrintWriter right away to avoid possible issues
+            outWriter = new PrintWriter(ExportDataFileConfig.getOutFileWriter(outFile));
+            
+            // print header
+            outWriter.print((header != null) ? header : ExportDataFileConfig.getDefaultHeader());
+            
+            // print body
+            Map<String, Object> servCtx = dctx.makeValidContext("exportWebsiteAlternativeUrlsEntityXml", ModelService.IN_PARAM, context);
+            servCtx.put("outWriter", outWriter);
+            Map<String, Object> servResult = dctx.getDispatcher().runSync("exportWebsiteAlternativeUrlsEntityXml", servCtx);
+            if (ServiceUtil.isError(servResult)) {
+                String message = "Error exporting alternative URLs: " + ServiceUtil.getErrorMessage(servResult);
+                Debug.logError(logPrefix+"exportWebsiteAlternativeUrlsEntityXmlFile: "+message, module);
+                return ServiceUtil.returnError(message);
+            }
+            
+            // print footer and flush
+            outWriter.print(ExportDataFileConfig.getDefaultFooter());
+            outWriter.flush();
+            
+            String msg = "Exported alternative URL entity XML for website '" + context.get("webSiteId") + "' to file '" + outFile 
+                    + "': " + ServiceUtil.getErrorAndSuccessMessage(servResult);
+            Debug.logInfo(logPrefix+"exportWebsiteAlternativeUrlsEntityXmlFile: " + msg, module);
+            return (ServiceUtil.isSuccess(servResult)) ? ServiceUtil.returnSuccess(msg) : ServiceUtil.returnFailure(msg);
+        } catch (Exception e) {
+            String message = "Error exporting alternative URLs: " + e.getMessage();
+            Debug.logError(e, logPrefix+"exportWebsiteAlternativeUrlsEntityXmlFile: "+message, module);
+            return ServiceUtil.returnError(message);
+        } finally {
+            if (outWriter != null) {
+                try {
+                    outWriter.close();
+                } catch(Exception e) {
+                    Debug.logError(e, module);
                 }
             }
         }
     }
     
-    // helper wrapper
-    private static void generateCategoryAltUrls(DispatchContext dctx, Map<String, ? extends Object> context, GenericValue productCategory, UrlGenStats stats, boolean useCache) throws GeneralException {
-        String productCategoryId = productCategory.getString("productCategoryId");
-        Map<String, Object> servCtx = dctx.makeValidContext("generateProductCategoryAlternativeUrlsCore", ModelService.IN_PARAM, context);
-        servCtx.put("productCategory", productCategory);
-        servCtx.put("productCategoryId", productCategoryId);
-        // service call for separate transaction
-        Map<String, Object> recordResult = dctx.getDispatcher().runSync("generateProductCategoryAlternativeUrlsCore", servCtx, -1, true);
-        if (ServiceUtil.isSuccess(recordResult)) {
-            if (Boolean.TRUE.equals(recordResult.get("categoryUpdated"))) {
-                stats.categorySuccess++;
-            } else {
-                stats.categorySkipped++;
-            }
-        } else {
-            Debug.logError(logPrefix+"Error generating alternative links for category '" 
-                    + productCategoryId + "': " + ServiceUtil.getErrorMessage(recordResult), module);
-            stats.categoryError++;
-        }
-    }
-    
-    // helper wrapper
-    private static void generateProductAltUrls(DispatchContext dctx, Map<String, ? extends Object> context, GenericValue product, UrlGenStats stats, boolean doChildProducts, boolean useCache) throws GeneralException {
-        boolean includeVariant = Boolean.TRUE.equals(context.get("includeVariant"));
-        if (!includeVariant && "Y".equals(product.getString("isVariant"))) {
-            return;
+    public static Map<String, Object> exportAlternativeUrlsEntityXmlFileFromConfig(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Collection<String> configNameList = combineNameAndNameList((String) context.get("configName"),
+                UtilGenerics.<String>checkCollection(context.get("configNameList")));
+        if (UtilValidate.isEmpty(configNameList)) {
+            configNameList = ExportDataFileConfig.getAllConfigNames();
+            Debug.logInfo(logPrefix+"exportAlternativeUrlsEntityXmlFileFromConfig: no config names specified: running for all configs: " + configNameList, module);
         }
         
-        String productId = product.getString("productId");
+        int configSuccess = 0;
+        int configFailure = 0;
+        Map<String, Object> lastResult = null;
         
-        Map<String, Object> servCtx = dctx.makeValidContext("generateProductAlternativeUrlsCore", ModelService.IN_PARAM, context);
-        servCtx.put("product", product);
-        servCtx.put("productId", productId);
-        servCtx.put("doChildProducts", doChildProducts);
-        servCtx.put("includeVariant", includeVariant);
-        // service call for separate transaction
-        Map<String, Object> recordResult = dctx.getDispatcher().runSync("generateProductAlternativeUrlsCore", servCtx, -1, true);
-        //Map<String, Object> recordResult = generateProductAlternativeUrls(delegator, dispatcher, 
-        //        context, product, replaceExisting, moment);
-        Integer numUpdated = (Integer) recordResult.get("numUpdated");
-        Integer numSkipped = (Integer) recordResult.get("numSkipped");
-        Integer numError = (Integer) recordResult.get("numError");
-        if (numUpdated != null) stats.productSuccess += numUpdated;
-        if (numSkipped != null) stats.productSkipped += numSkipped;
-        if (ServiceUtil.isSuccess(recordResult)) {
-            if (numError != null) stats.productError += numError;
-        } else {
-            if (numError != null) stats.productError += numError;
-            else stats.productError++; // couldn't return count
-            Debug.logError(logPrefix+"Error generating alternative links for product '" 
-                    + productId + "': " + ServiceUtil.getErrorMessage(recordResult), module);
-        }
-    }
-    
-    /**
-     * SCIPIO: SEO Service to generate an alternative product URL; relies on a common SEO ruleset
-     * @deprecated not usable, for reference only
-     * */
-    @Deprecated
-    static Map<String, Object> generateAlternativeURL(DispatchContext dctx, Map<String, ? extends Object> context) throws GenericEntityException {
-        Delegator delegator = dctx.getDelegator();
-        
-        List<GenericValue> products = null;
         try {
-            String productId = (String) context.get("product");
-            if(UtilValidate.isNotEmpty(productId)){
-                products = delegator.findByAnd("Product", UtilMisc.toMap("productId",productId),null,false);
-            }else{
-                products = delegator.findAll("Product", true);  
+            for(String configName : configNameList) {
+                Map<String, Object> config = ExportDataFileConfig.getConfigByName(configName);
+                if (config == null) {
+                    return ServiceUtil.returnError("could not read datafile export config for config name '" + configName + "'");
+                }
+                try {
+                    Map<String, Object> servCtx = dctx.makeValidContext("exportWebsiteAlternativeUrlsEntityXmlFile", ModelService.IN_PARAM, context);
+                    Map<String, Object> servConfig = dctx.makeValidContext("exportWebsiteAlternativeUrlsEntityXmlFile", ModelService.IN_PARAM, config);
+                    servCtx.putAll(servConfig);
+                    Map<String, Object> servResult = dctx.getDispatcher().runSync("exportWebsiteAlternativeUrlsEntityXmlFile", servCtx);
+                    lastResult = servResult;
+                    if (ServiceUtil.isError(servResult)) {
+                        String message = "Error exporting alternative URLs for config '" + configName + "': " + ServiceUtil.getErrorMessage(servResult);
+                        Debug.logError(logPrefix+"exportAlternativeUrlsEntityXmlFileFromConfig: "+message, module);
+                        return ServiceUtil.returnError(message);
+                    } else if (ServiceUtil.isFailure(servResult)) {
+                        configFailure++;
+                    } else {
+                        configSuccess++;
+                    }
+                } catch(Exception e) {
+                    String message = "Error exporting alternative URLs for config '" + configName + "': " + e.getMessage();
+                    Debug.logError(e, logPrefix+"exportAlternativeUrlsEntityXmlFileFromConfig: "+message, module);
+                    return ServiceUtil.returnError(message);
+                }
             }
-        }
-        catch (Exception ex) {
-            String message = "Cannot determine products.";
-            Debug.logError(ex, logPrefix+message, module);
+        } catch(Exception e) {
+            String message = "Error exporting alternative URLs: " + e.getMessage();
+            Debug.logError(e, logPrefix+"exportAlternativeUrlsEntityXmlFileFromConfig: "+message, module);
             return ServiceUtil.returnError(message);
         }
-
-        if (UtilValidate.isEmpty(products)) {
-            return ServiceUtil.returnError("No products found.");
-        }
-
-
-        Map<String, String> seoNames;
-        for (GenericValue product : products) {
-            seoNames = new HashMap<String, String>();
-
-            String productId = product.getString("productId");
-            String productName = product.getString("productName");
-            String seoName = SeoStringUtil.constructSeoName(productName);
-
-            if (seoName.lastIndexOf("-") >= 100) {
-                seoName = seoName.substring(0, seoName.lastIndexOf("-"));
-            }
-
-            seoNames.put("productId", productId);
-            seoNames.put("seoLink", seoName);
-            
-            try {
-                String contentId = productId + "_AU";
-
-                // create dataResource
-                GenericValue dataResource = delegator.makeValue("DataResource");
-                dataResource.put("dataResourceId", contentId);
-                dataResource.put("dataResourceTypeId", "ELECTRONIC_TEXT");
-                dataResource.put("dataTemplateTypeId", "FTL");
-                dataResource.put("statusId", "CTNT_PUBLISHED");
-                // delegator.create(dataResource, false);
-                dataResource.create();
-
-                // create electronicText
-                GenericValue electronicText = delegator.makeValue("ElectronicText");
-                electronicText.put("dataResourceId", contentId);
-
-                electronicText.put("textData", seoName);
-                // delegator.create(electronicText, false);
-                electronicText.create();
-
-                // create content
-                GenericValue content = delegator.makeValue("Content");
-                content.put("contentId", contentId);
-
-                content.put("dataResourceId", contentId);
-                content.put("contentTypeId", "DOCUMENT");
-                content.put("description", "Alternative URL");
-                //content.put("localeString", "de"); // no
-                // delegator.create(content, false);
-                content.create();
-
-                GenericValue productContent = null;
-                productContent = delegator.makeValue("ProductContent");
-                productContent.put("productId", productId);
-                productContent.put("contentId", contentId);
-                productContent.put("productContentTypeId", "ALTERNATIVE_URL");
-                productContent.put("fromDate", UtilDateTime.nowTimestamp());
-                productContent.put("sequenceNum", new Long(1));
-                // delegator.create(productContent, false);
-                productContent.create();
-            } catch (Exception e) {
-                String message = "Error while generating alternative links.";
-                Debug.logError(e, logPrefix+message, module);
-                return ServiceUtil.returnError(message);
-            }
-        }
-
-        return ServiceUtil.returnSuccess();
-    }
-    
-    
-    @SuppressWarnings("serial")
-    public static class SeoCatalogException extends Exception {
-
-        protected SeoCatalogException() {
-            super();
-        }
-
-        protected SeoCatalogException(String message, Throwable cause, boolean enableSuppression,
-                boolean writableStackTrace) {
-            super(message, cause, enableSuppression, writableStackTrace);
-        }
-
-        protected SeoCatalogException(String message, Throwable cause) {
-            super(message, cause);
-        }
-
-        protected SeoCatalogException(String message) {
-            super(message);
-        }
-
-        protected SeoCatalogException(Throwable cause) {
-            super(cause);
+        
+        // special case, helps debug
+        if (configNameList.size() == 1) {
+            String msg = "Export config '" + configNameList.iterator().next() 
+                    + "' " + ((configFailure > 0) ? "failed" : "succeeded") + ": " + ServiceUtil.getErrorAndSuccessMessage(lastResult);
+            return (configFailure > 0) ? ServiceUtil.returnFailure(msg) : ServiceUtil.returnSuccess(msg);
+        } else {
+            String msg = "Export configs succeeded: " + configSuccess + "; failed: " + configFailure;
+            return (configFailure > 0) ? ServiceUtil.returnFailure(msg) : ServiceUtil.returnSuccess(msg);
         }
     }
+    
+    static Collection<String> combineNameAndNameList(String name, Collection<String> nameList) {
+        if (UtilValidate.isEmpty(name)) return nameList;
+        
+        if (UtilValidate.isEmpty(nameList)) {
+            return UtilMisc.toList(name);
+        } else {
+            Collection<String> newNameList = new ArrayList<>(nameList.size() + 1);
+            newNameList.add(name);
+            newNameList.addAll(nameList);
+            return newNameList;
+        }
+    }
+    
 }

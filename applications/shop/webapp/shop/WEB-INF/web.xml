@@ -110,15 +110,35 @@ under the License.
         <display-name>SeoCatalogUrlFilter</display-name>
         <filter-name>SeoCatalogUrlFilter</filter-name>
         <filter-class>com.ilscipio.scipio.product.seo.SeoCatalogUrlFilter</filter-class>
-        <init-param><param-name>defaultLocaleString</param-name><param-value>en_US</param-value></init-param>
-        <!-- SCIPIO: Set this to true to enable advanced SEO URLs; if false, delegates to the regular CatalogUrlFilter. -->
-        <init-param><param-name>seoUrlEnabled</param-name><param-value>false</param-value></init-param>
-        <!-- SCIPIO: Set this param to true to try to rewrite outbound /control/product and /control/category requests to SEO urls 
-            in other words, <@ofbizUrl>product?productId=FA-001</@ofbizUrl> appears as if had written <@ofbizCatalogAltUrl productId="FA-001"/>
-            WARN: 2017-11-21: this currently best-effort -->
-        <init-param><param-name>rewriteOutboundUrls</param-name><param-value>true</param-value></init-param>
+        <init-param>
+            <description>If true, enables advanced SEO URL handling+generation following SEO configuration in SeoConfig.xml* (/applications/product/config/SeoConfig.xml),
+                intercepting both old-style (@ofbizCatalogUrl) and alternative URLs (@ofbizCatalogAltUrl) and generating a single format; 
+                if false, delegates to the regular CatalogUrlFilter implementation. 
+                NOTE: 2017-11-26: Now enabled by default in Scipio (master). 
+                NOTE(*): The default Scipio SeoConfig.xml allows handling incoming stock CatalogUrlFilter-generated ALT URLs (*-c, *-p);
+                    meanwhile, by default the old-style (non-alt) CatalogUrlServlet mapping is left in place (see NOTE further below for production servers);
+                    as such, with default settings, seoUrlEnabled true retains compatibility with non-SEO-generated URLs.</description>
+            <param-name>seoUrlEnabled</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <description>If true, attempts to rewrite outbound /control/product and /control/category requests to SEO URLs.
+                In other words, [@ofbizUrl]product?productId=FA-001[/@ofbizUrl] appears as if had written [@ofbizCatalogAltUrl productId="FA-001"/].
+                Notably, this applies to controller redirects that follow a compatible URL generation pattern (only some special cases may not cover).
+                WARN: 2017-11-21: This is currently best-effort; reliability is about on par as the outbound-rules in urlrewrite.xml.</description>
+            <param-name>rewriteOutboundUrls</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <description>The legacy defaultLocaleString parameter from CatalogUrlFilter.
+                NOTE: This is ignored by the filter when seoUrlEnabled true; only used for the legacy
+                    CatalogUrlFilter implementation, when seoUrlEnabled false.</description>
+            <param-name>defaultLocaleString</param-name>
+            <param-value>en_US</param-value>
+        </init-param>
     </filter>
-    <!-- SCIPIO: the stock CatalogUrlFilter will be contained in the SeoCatalogUrlFilter.
+    <!-- SCIPIO: 2017-11: The stock CatalogUrlFilter is fully contained in the SeoCatalogUrlFilter implementation.
+        NOTE: Setting seoUrlEnabled false above is practically the same as commenting SeoCatalogUrlFilter and uncommenting this filter.
     <filter>
         <display-name>CatalogUrlFilter</display-name>
         <filter-name>CatalogUrlFilter</filter-name>
@@ -133,6 +153,7 @@ under the License.
             <param-name>defaultLocaleString</param-name>
             <param-value>en_US</param-value>
         </init-param>
+        <!-- SCIPIO: TODO: REVIEW: This should probably be changed -->
         <init-param><param-name>viewRequest</param-name><param-value>ViewBlogArticle</param-value></init-param>
     </filter>
     <!-- SCIPIO: CMS Process filter -->
@@ -154,11 +175,13 @@ under the License.
             <param-value>/error:/control:/products:/select:/index.html:/index.jsp:/robots.txt:/default.html:/default.jsp:/images:/sitemaps:/media</param-value>
         </init-param>
         <init-param>
-            <!-- SCIPIO: Set this to Y to automatically forward root requests that match controller URIs to
-                the controller, e.g. "/main" -> "/control/main".
-                NOTE: If enabled you likely want to uncomment the CONTROL-SERVLET-STRIPPING RULES in urlrewrite.xml.
-                Together these emulate having root control URI without changing the ControlServlet mapping (problematic).
-                FIXME: 2017-11: This setting currently can't auto-detect if a request URI is already in use by a servlet mapping -->
+            <description>SCIPIO: Set this to Y to automatically forward root requests that match controller URIs 
+                to the controller - e.g. "/main" -> "/control/main".
+                NOTE: If enabled you likely want to uncomment the CONTROL-SERVLET-STRIPPING RULES in urlrewrite.xml;
+                    together these emulate having root control URIs, but without changing the ControlServlet mapping (problematic).
+                FIXME: 2017-11: This setting currently cannot auto-detect if a request URI is already in use by a servlet mapping
+                    (unintentionally gives the controller URIs mapping priority) -
+                    WARNING: Avoid having a controller request URI with name matching a servlet mappings below!</description>
             <param-name>forwardRootControllerUris</param-name>
             <param-value>N</param-value>
         </init-param>
@@ -175,7 +198,7 @@ under the License.
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>FORWARD</dispatcher>
     </filter-mapping>
-    <!-- SCIPIO: the stock CatalogUrlFilter is contained in the SeoCatalogUrlFilter.
+    <!-- SCIPIO: the stock CatalogUrlFilter is now contained in the SeoCatalogUrlFilter - see comments above.
     <filter-mapping>
         <filter-name>CatalogUrlFilter</filter-name>
         <url-pattern>/*</url-pattern>
@@ -256,7 +279,9 @@ under the License.
         <url-pattern>/select/*</url-pattern>
     </servlet-mapping>
     -->
-    <!-- SCIPIO: NOTE: If you enable seoUrlEnabled, it's recommended to comment this mapping out, but not obligatory -->
+    <!-- SCIPIO: NOTE: When seoUrlEnabled is enabled and planned for usage in production, 
+        it's recommended to comment this mapping out (and the servlet), but it is not obligatory;
+        it is left here by default only to maintain ability to handle incoming legacy-style non-SEO links. -->
     <servlet-mapping>
         <servlet-name>CatalogUrlServlet</servlet-name>
         <url-pattern>/products/*</url-pattern>

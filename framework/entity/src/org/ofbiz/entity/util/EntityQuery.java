@@ -368,6 +368,66 @@ public class EntityQuery {
         return this;
     }
 
+    /** SCIPIO: Specifies whether the query should return only values that are active during the specified moment using from/thruDate fields,
+     * using the specified moment if non-null OR, if null, using the "now" timestamp (current time), 
+     * with explicit boolean toggle.
+     * Added 2017-11-27.
+     * 
+     * @param moment - Timestamp representing the moment in time that the values should be active during
+     * @return this EntityQuery object, to enable chaining
+     */
+    public EntityQuery filterByDate(boolean enable, Timestamp moment) {
+        this.filterByDate = enable;
+        this.filterByDateMoment = (enable) ? moment : null;
+        this.filterByFieldNames = null;
+        return this;
+    }
+
+    /** SCIPIO: Specifies whether the query should return only values that are active during the specified moment using from/thruDate fields,
+     * using the specified moment if non-null OR, if null, using the "now" timestamp (current time), 
+     * with explicit boolean toggle.
+     * Added 2017-11-27.
+     * 
+     * @param moment - Date representing the moment in time that the values should be active during
+     * @return this EntityQuery object, to enable chaining
+     */
+    public EntityQuery filterByDate(boolean enable, Date moment) {
+        return this.filterByDate(enable, new java.sql.Timestamp(moment.getTime()));
+    }
+    
+    /** SCIPIO: Specifies whether the query should return only values that are currently active using the specified from/thru field name pairs,
+     * using the specified moment if non-null OR, if null, using the "now" timestamp (current time), 
+     * with explicit boolean toggle.
+     * Added 2017-11-27.
+     * 
+     * @param fromThruFieldName - String pairs representing the from/thru date field names e.g. "fromDate", "thruDate", "contactFromDate", "contactThruDate"
+     * @return this EntityQuery object, to enable chaining
+     */
+    public EntityQuery filterByDate(boolean enable, String... filterByFieldName) {
+        return this.filterByDate(enable, (Timestamp) null, filterByFieldName);
+    }
+    
+    /** SCIPIO: Specifies whether the query should return only values that are active during the specified moment using the specified from/thru field name pairs,
+     * using the specified moment if non-null OR, if null, using the "now" timestamp (current time), 
+     * with explicit boolean toggle.
+     * Added 2017-11-27.
+     * 
+     * @param moment - Timestamp representing the moment in time that the values should be active during
+     * @param fromThruFieldName - String pairs representing the from/thru date field names e.g. "fromDate", "thruDate", "contactFromDate", "contactThruDate"
+     * @return this EntityQuery object, to enable chaining
+     */
+    public EntityQuery filterByDate(boolean enable, Timestamp moment, String... filterByFieldName) {
+        if (enable) {
+            // SCIPIO: NOTE: this stock method interprets null as "now".
+            this.filterByDate(moment, filterByFieldName);
+        } else {
+            this.filterByDate = false;
+            this.filterByDateMoment = null;
+            this.filterByFieldNames = null;
+        }
+        return this;
+    }
+    
     /** Executes the EntityQuery and returns a list of results
      * 
      * @return Returns a List of GenericValues representing the results of the query

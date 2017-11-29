@@ -1,0 +1,1087 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<entity-engine-xml>
+    <DatevTransactionEntryDefinition fieldId="1" fieldName="Umsatz (ohne Soll/Haben-Kz)" type="decimal" length="12" scale="2" required="Y">
+    <description><![CDATA[
+        # Beispiel: 1234567890,12
+        # Muss immer ein positiver Wert sein
+    ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="2" fieldName="Soll/Haben-Kennzeichen" type="string" maxLength="1" required="Y">
+        <description><![CDATA[
+            # Die Soll-/Haben-Kennzeichnung des Umsatzes bezieht sich auf das Konto, das im Feld Konto angegeben wird:
+            # S = Soll
+            # H = Haben
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="3" fieldName="WKZ Umsatz" type="string" maxLength="3">
+        <description><![CDATA[
+            # Dreistelliger ISO-Code der Währung (Dok.-Nr. 1080170); gibt an, welche Währung dem Betrag zugrunde liegt.
+            # Wenn kein Wert angegeben ist, wird das WKZ aus dem Header übernommen.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="4" fieldName="Kurs" type="decimal" length="10" scale="6">
+        <description><![CDATA[
+            # Der Fremdwährungskurs bestimmt, wie der angegebene Umsatz, der in Fremdwährung übergeben wird, in die Basiswährung umzurechnen ist, wenn es sich um ein Nicht-EWU-Land handelt.
+            # Beispiel: 1123,123456
+            # Achtung: Der Wert 0 ist unzulässig.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="5" fieldName="Basisumsatz" type="decimal" length="12" scale="2">
+        <description><![CDATA[
+            # Wenn das Feld Basisumsatz verwendet wird, muss auch das Feld WKZ Basisumsatz gefüllt werden.
+            # Beispiel: 1123123123,12
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="6" fieldName="WKZ Basisumsatz" type="string" maxLength="3">
+        <description><![CDATA[
+            # Währungskennzeichen der hinterlegten Basiswährung. Wenn das Feld WKZ Basisumsatz verwendet wird, muss auch das Feld Basisumsatz verwendet werden.
+            # ISO-Code beachten (siehe Dok.-Nr.1080170)
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="7" fieldName="Konto" type="integer" maxLength="9" required="Y">
+        <description><![CDATA[
+            # Sach- oder Personen-Kontonummer
+            # Darf max. 8- bzw. max. 9-stellig sein (abhängig von der Information im Header)
+            # Die Personenkontenlänge darf nur 1 Stelle länger sein als die definierte Sachkontennummernlänge.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="8" fieldName="Gegenkonto (ohne BU-Schlüssel)" type="integer" maxLength="9" required="Y">
+        <description><![CDATA[
+            # Sach- oder Personen-Kontonummer
+            # Darf max. 8- bzw. max. 9-stellig sein (abhängig von der Information im Header)
+            # Die Personenkontenlänge darf nur 1 Stelle länger sein als die definierte Sachkontennummernlänge.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="9" fieldName="BU-Schlüssel" type="string" maxLength="2">
+        <description><![CDATA[
+            # Steuerschlüssel und/oder Berichtigungsschlüssel
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="10" fieldName="Belegdatum" type="date" format="%d%m" required="Y">
+        <description><![CDATA[
+            # Achtung: Auch bei individueller Feldformatierung mit vierstelliger Jahreszahl wird immer in das aktuelle Wirtschaftsjahr importiert, wenn Tag und Monat des Datums im bebuchbaren Zeitraum liegen, da die Jahreszahl nicht berücksichtigt wird.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="11" fieldName="Belegfeld 1" type="string" maxLength="12">
+        <description><![CDATA[
+            # Rechnungs-/Belegnummer
+            # Das Belegfeld 1 ist der "Schlüssel" für die Verwaltung von Offenen Posten.
+            # Bei einer Zahlung oder Gutschrift erfolgt nur dann ein OP-Ausgleich, wenn die Belegnummer mit dem Belegfeld 1 identisch ist.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="12" fieldName="Belegfeld 2" type="string" maxLength="12">
+        <description><![CDATA[
+            # Belegnummer oder OPOS-Verarbeitungsinformationen
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="13" fieldName="Skonto" type="decimal" length="10" scale="2">
+        <description><![CDATA[
+            # Skonto-Betrag/-Abzug
+            # Nur bei Zahlungen zulässig.
+            # Beispiel 12123123,12
+            # Achtung: Der Wert 0 ist unzulässig.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="14" fieldName="Buchungstext" type="string" maxLength="60">
+        <description><![CDATA[
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    
+    <DatevTransactionEntryDefinition fieldId="15" fieldName="Postensperre" type="boolean">
+        <description><![CDATA[
+            # Mahn-/Zahl-Sperre
+            # Die Rechnung kann aus dem Mahnwesen / Zahlungsvorschlag ausgeschlossen werden.
+            # Y = Postensperre
+            # false/keine Angabe = keine Sperre
+            # Nur in Verbindung mit einer Rechnungsbuchung und Personenkonto (OPOS) relevant.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="16" fieldName="Diverse Adressnummer" type="string" maxLength="9">
+        <description><![CDATA[
+            # Adressnummer einer diversen Adresse
+            # Nur in Verbindung mit OPOS relevant.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="17" fieldName="Geschäftspartnerbank" type="integer" maxLength="3">
+        <description><![CDATA[
+            # Wenn für eine Lastschrift oder Überweisung eine bestimmte Bank des Geschäftspartners genutzt werden soll.
+            # Nur in Verbindung mit OPOS relevant.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="18" fieldName="Sachverhalt" type="integer" maxLength="2">
+        <description><![CDATA[
+            # Der Sachverhalt wird in Rechnungswesen pro verwendet, um Buchungen/Posten als Mahnzins/Mahngebühr zu identifizieren.
+            # Für diese Posten werden z. B. beim Erstellen von Mahnungen keine Mahnzinsen berechnet.
+            # 31 = Mahnzins
+            # 40 = Mahngebühr
+            # Nur in Verbindung mit OPOS relevant.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="19" fieldName="Zinssperre" type="boolean">
+        <description><![CDATA[
+            # Hier kann eine Zinssperre übergeben werden; dadurch werden für diesen Posten bei Erstellung einer Mahnung keine Mahnzinsen ermittelt.
+            # Nur in Verbindung mit OPOS relevant.
+            # keine Angabe und 0 = keine Sperre
+            # 1 = Zinssperre
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="20" fieldName="Beleglink" type="string" maxLength="210">
+        <description><![CDATA[
+            # Link auf den Buchungsbeleg, der digital in einem Dokumenten-Management-System (z. B. DATEV Dokumentenablage, DATEV DMS classic) abgelegt wurde.
+            # Beispiel für eine Beleg-ID eines Belegs aus DATEV Unternehmen online:
+            # CB6A8F8F-099A-B3A9-2BAA-0CB64E299BA
+            # (32 von 36 möglichen Zeichen)
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="21" fieldName="Beleginfo – Art 1" type="string" maxLength="20">
+        <description><![CDATA[
+            # Bei einem ASCII-Format, das aus einem DATEV pro-Rechnungswesen-Programm erstellt wurde, können diese Felder Informationen aus einem Beleg (z. B. einem elektronischen Kontoumsatz) enthalten.
+            # Wenn die Feldlänge eines Beleginfo-Inhalts-Felds überschritten wird, wird die Information im nächsten Beleginfo-Feld weitergeführt.
+            # Wichtiger Hinweis
+            # Eine Beleginfo besteht immer aus den Bestandteilen Beleginfo-Art und Beleginfo-Inhalt. Wenn Sie die Beleginfo nutzen möchten, befüllen Sie immer beide Felder.
+            # Beispiel:
+            # Beleginfo-Art:
+            # Kontoumsätze der jeweiligen Bank
+            # Beleginfo-Inhalt:
+            # Buchungsspezifische Inhalte zu den oben genannten Informationsarten
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="22" fieldName="Beleginfo – Inhalt 1" type="string" maxLength="210">
+        <description><![CDATA[
+            # Bei einem ASCII-Format, das aus einem DATEV pro-Rechnungswesen-Programm erstellt wurde, können diese Felder Informationen aus einem Beleg (z. B. einem elektronischen Kontoumsatz) enthalten.
+            # Wenn die Feldlänge eines Beleginfo-Inhalts-Felds überschritten wird, wird die Information im nächsten Beleginfo-Feld weitergeführt.
+            # Wichtiger Hinweis
+            # Eine Beleginfo besteht immer aus den Bestandteilen Beleginfo-Art und Beleginfo-Inhalt. Wenn Sie die Beleginfo nutzen möchten, befüllen Sie immer beide Felder.
+            # Beispiel:
+            # Beleginfo-Art:
+            # Kontoumsätze der jeweiligen Bank
+            # Beleginfo-Inhalt:
+            # Buchungsspezifische Inhalte zu den oben genannten Informationsarten
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="23" fieldName="Beleginfo – Art 2" type="string" maxLength="20">
+        <description><![CDATA[
+            # Bei einem ASCII-Format, das aus einem DATEV pro-Rechnungswesen-Programm erstellt wurde, können diese Felder Informationen aus einem Beleg (z. B. einem elektronischen Kontoumsatz) enthalten.
+            # Wenn die Feldlänge eines Beleginfo-Inhalts-Felds überschritten wird, wird die Information im nächsten Beleginfo-Feld weitergeführt.
+            # Wichtiger Hinweis
+            # Eine Beleginfo besteht immer aus den Bestandteilen Beleginfo-Art und Beleginfo-Inhalt. Wenn Sie die Beleginfo nutzen möchten, befüllen Sie immer beide Felder.
+            # Beispiel:
+            # Beleginfo-Art:
+            # Kontoumsätze der jeweiligen Bank
+            # Beleginfo-Inhalt:
+            # Buchungsspezifische Inhalte zu den oben genannten Informationsarten
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="24" fieldName="Beleginfo – Inhalt 2" type="string" maxLength="210">
+        <description><![CDATA[
+            # Bei einem ASCII-Format, das aus einem DATEV pro-Rechnungswesen-Programm erstellt wurde, können diese Felder Informationen aus einem Beleg (z. B. einem elektronischen Kontoumsatz) enthalten.
+            # Wenn die Feldlänge eines Beleginfo-Inhalts-Felds überschritten wird, wird die Information im nächsten Beleginfo-Feld weitergeführt.
+            # Wichtiger Hinweis
+            # Eine Beleginfo besteht immer aus den Bestandteilen Beleginfo-Art und Beleginfo-Inhalt. Wenn Sie die Beleginfo nutzen möchten, befüllen Sie immer beide Felder.
+            # Beispiel:
+            # Beleginfo-Art:
+            # Kontoumsätze der jeweiligen Bank
+            # Beleginfo-Inhalt:
+            # Buchungsspezifische Inhalte zu den oben genannten Informationsarten
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="25" fieldName="Beleginfo – Art 3" type="string" maxLength="20">
+        <description><![CDATA[
+            # Bei einem ASCII-Format, das aus einem DATEV pro-Rechnungswesen-Programm erstellt wurde, können diese Felder Informationen aus einem Beleg (z. B. einem elektronischen Kontoumsatz) enthalten.
+            # Wenn die Feldlänge eines Beleginfo-Inhalts-Felds überschritten wird, wird die Information im nächsten Beleginfo-Feld weitergeführt.
+            # Wichtiger Hinweis
+            # Eine Beleginfo besteht immer aus den Bestandteilen Beleginfo-Art und Beleginfo-Inhalt. Wenn Sie die Beleginfo nutzen möchten, befüllen Sie immer beide Felder.
+            # Beispiel:
+            # Beleginfo-Art:
+            # Kontoumsätze der jeweiligen Bank
+            # Beleginfo-Inhalt:
+            # Buchungsspezifische Inhalte zu den oben genannten Informationsarten
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="26" fieldName="Beleginfo – Inhalt 3" type="string" maxLength="210">
+        <description><![CDATA[
+            # Bei einem ASCII-Format, das aus einem DATEV pro-Rechnungswesen-Programm erstellt wurde, können diese Felder Informationen aus einem Beleg (z. B. einem elektronischen Kontoumsatz) enthalten.
+            # Wenn die Feldlänge eines Beleginfo-Inhalts-Felds überschritten wird, wird die Information im nächsten Beleginfo-Feld weitergeführt.
+            # Wichtiger Hinweis
+            # Eine Beleginfo besteht immer aus den Bestandteilen Beleginfo-Art und Beleginfo-Inhalt. Wenn Sie die Beleginfo nutzen möchten, befüllen Sie immer beide Felder.
+            # Beispiel:
+            # Beleginfo-Art:
+            # Kontoumsätze der jeweiligen Bank
+            # Beleginfo-Inhalt:
+            # Buchungsspezifische Inhalte zu den oben genannten Informationsarten
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="27" fieldName="Beleginfo – Art 4" type="string" maxLength="20">
+        <description><![CDATA[
+            # Bei einem ASCII-Format, das aus einem DATEV pro-Rechnungswesen-Programm erstellt wurde, können diese Felder Informationen aus einem Beleg (z. B. einem elektronischen Kontoumsatz) enthalten.
+            # Wenn die Feldlänge eines Beleginfo-Inhalts-Felds überschritten wird, wird die Information im nächsten Beleginfo-Feld weitergeführt.
+            # Wichtiger Hinweis
+            # Eine Beleginfo besteht immer aus den Bestandteilen Beleginfo-Art und Beleginfo-Inhalt. Wenn Sie die Beleginfo nutzen möchten, befüllen Sie immer beide Felder.
+            # Beispiel:
+            # Beleginfo-Art:
+            # Kontoumsätze der jeweiligen Bank
+            # Beleginfo-Inhalt:
+            # Buchungsspezifische Inhalte zu den oben genannten Informationsarten
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="28" fieldName="Beleginfo – Inhalt 4" type="string" maxLength="210">
+        <description><![CDATA[
+            # Bei einem ASCII-Format, das aus einem DATEV pro-Rechnungswesen-Programm erstellt wurde, können diese Felder Informationen aus einem Beleg (z. B. einem elektronischen Kontoumsatz) enthalten.
+            # Wenn die Feldlänge eines Beleginfo-Inhalts-Felds überschritten wird, wird die Information im nächsten Beleginfo-Feld weitergeführt.
+            # Wichtiger Hinweis
+            # Eine Beleginfo besteht immer aus den Bestandteilen Beleginfo-Art und Beleginfo-Inhalt. Wenn Sie die Beleginfo nutzen möchten, befüllen Sie immer beide Felder.
+            # Beispiel:
+            # Beleginfo-Art:
+            # Kontoumsätze der jeweiligen Bank
+            # Beleginfo-Inhalt:
+            # Buchungsspezifische Inhalte zu den oben genannten Informationsarten
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="29" fieldName="Beleginfo – Art 5" type="string" maxLength="20">
+        <description><![CDATA[
+            # Bei einem ASCII-Format, das aus einem DATEV pro-Rechnungswesen-Programm erstellt wurde, können diese Felder Informationen aus einem Beleg (z. B. einem elektronischen Kontoumsatz) enthalten.
+            # Wenn die Feldlänge eines Beleginfo-Inhalts-Felds überschritten wird, wird die Information im nächsten Beleginfo-Feld weitergeführt.
+            # Wichtiger Hinweis
+            # Eine Beleginfo besteht immer aus den Bestandteilen Beleginfo-Art und Beleginfo-Inhalt. Wenn Sie die Beleginfo nutzen möchten, befüllen Sie immer beide Felder.
+            # Beispiel:
+            # Beleginfo-Art:
+            # Kontoumsätze der jeweiligen Bank
+            # Beleginfo-Inhalt:
+            # Buchungsspezifische Inhalte zu den oben genannten Informationsarten
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="30" fieldName="Beleginfo – Inhalt 5" type="string" maxLength="210">
+        <description><![CDATA[
+            # Bei einem ASCII-Format, das aus einem DATEV pro-Rechnungswesen-Programm erstellt wurde, können diese Felder Informationen aus einem Beleg (z. B. einem elektronischen Kontoumsatz) enthalten.
+            # Wenn die Feldlänge eines Beleginfo-Inhalts-Felds überschritten wird, wird die Information im nächsten Beleginfo-Feld weitergeführt.
+            # Wichtiger Hinweis
+            # Eine Beleginfo besteht immer aus den Bestandteilen Beleginfo-Art und Beleginfo-Inhalt. Wenn Sie die Beleginfo nutzen möchten, befüllen Sie immer beide Felder.
+            # Beispiel:
+            # Beleginfo-Art:
+            # Kontoumsätze der jeweiligen Bank
+            # Beleginfo-Inhalt:
+            # Buchungsspezifische Inhalte zu den oben genannten Informationsarten
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="31" fieldName="Beleginfo – Art 6" type="string" maxLength="20">
+        <description><![CDATA[
+            # Bei einem ASCII-Format, das aus einem DATEV pro-Rechnungswesen-Programm erstellt wurde, können diese Felder Informationen aus einem Beleg (z. B. einem elektronischen Kontoumsatz) enthalten.
+            # Wenn die Feldlänge eines Beleginfo-Inhalts-Felds überschritten wird, wird die Information im nächsten Beleginfo-Feld weitergeführt.
+            # Wichtiger Hinweis
+            # Eine Beleginfo besteht immer aus den Bestandteilen Beleginfo-Art und Beleginfo-Inhalt. Wenn Sie die Beleginfo nutzen möchten, befüllen Sie immer beide Felder.
+            # Beispiel:
+            # Beleginfo-Art:
+            # Kontoumsätze der jeweiligen Bank
+            # Beleginfo-Inhalt:
+            # Buchungsspezifische Inhalte zu den oben genannten Informationsarten
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="32" fieldName="Beleginfo – Inhalt 6" type="string" maxLength="210">
+        <description><![CDATA[
+            # Bei einem ASCII-Format, das aus einem DATEV pro-Rechnungswesen-Programm erstellt wurde, können diese Felder Informationen aus einem Beleg (z. B. einem elektronischen Kontoumsatz) enthalten.
+            # Wenn die Feldlänge eines Beleginfo-Inhalts-Felds überschritten wird, wird die Information im nächsten Beleginfo-Feld weitergeführt.
+            # Wichtiger Hinweis
+            # Eine Beleginfo besteht immer aus den Bestandteilen Beleginfo-Art und Beleginfo-Inhalt. Wenn Sie die Beleginfo nutzen möchten, befüllen Sie immer beide Felder.
+            # Beispiel:
+            # Beleginfo-Art:
+            # Kontoumsätze der jeweiligen Bank
+            # Beleginfo-Inhalt:
+            # Buchungsspezifische Inhalte zu den oben genannten Informationsarten
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="33" fieldName="Beleginfo – Art 7" type="string" maxLength="20">
+        <description><![CDATA[
+            # Bei einem ASCII-Format, das aus einem DATEV pro-Rechnungswesen-Programm erstellt wurde, können diese Felder Informationen aus einem Beleg (z. B. einem elektronischen Kontoumsatz) enthalten.
+            # Wenn die Feldlänge eines Beleginfo-Inhalts-Felds überschritten wird, wird die Information im nächsten Beleginfo-Feld weitergeführt.
+            # Wichtiger Hinweis
+            # Eine Beleginfo besteht immer aus den Bestandteilen Beleginfo-Art und Beleginfo-Inhalt. Wenn Sie die Beleginfo nutzen möchten, befüllen Sie immer beide Felder.
+            # Beispiel:
+            # Beleginfo-Art:
+            # Kontoumsätze der jeweiligen Bank
+            # Beleginfo-Inhalt:
+            # Buchungsspezifische Inhalte zu den oben genannten Informationsarten
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="34" fieldName="Beleginfo – Inhalt 7" type="string" maxLength="210">
+        <description><![CDATA[
+            # Bei einem ASCII-Format, das aus einem DATEV pro-Rechnungswesen-Programm erstellt wurde, können diese Felder Informationen aus einem Beleg (z. B. einem elektronischen Kontoumsatz) enthalten.
+            # Wenn die Feldlänge eines Beleginfo-Inhalts-Felds überschritten wird, wird die Information im nächsten Beleginfo-Feld weitergeführt.
+            # Wichtiger Hinweis
+            # Eine Beleginfo besteht immer aus den Bestandteilen Beleginfo-Art und Beleginfo-Inhalt. Wenn Sie die Beleginfo nutzen möchten, befüllen Sie immer beide Felder.
+            # Beispiel:
+            # Beleginfo-Art:
+            # Kontoumsätze der jeweiligen Bank
+            # Beleginfo-Inhalt:
+            # Buchungsspezifische Inhalte zu den oben genannten Informationsarten
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="35" fieldName="Beleginfo – Art 8" type="string" maxLength="20">
+        <description><![CDATA[
+            # Bei einem ASCII-Format, das aus einem DATEV pro-Rechnungswesen-Programm erstellt wurde, können diese Felder Informationen aus einem Beleg (z. B. einem elektronischen Kontoumsatz) enthalten.
+            # Wenn die Feldlänge eines Beleginfo-Inhalts-Felds überschritten wird, wird die Information im nächsten Beleginfo-Feld weitergeführt.
+            # Wichtiger Hinweis
+            # Eine Beleginfo besteht immer aus den Bestandteilen Beleginfo-Art und Beleginfo-Inhalt. Wenn Sie die Beleginfo nutzen möchten, befüllen Sie immer beide Felder.
+            # Beispiel:
+            # Beleginfo-Art:
+            # Kontoumsätze der jeweiligen Bank
+            # Beleginfo-Inhalt:
+            # Buchungsspezifische Inhalte zu den oben genannten Informationsarten
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="36" fieldName="Beleginfo – Inhalt 8" type="string" maxLength="210">
+        <description><![CDATA[
+            # Bei einem ASCII-Format, das aus einem DATEV pro-Rechnungswesen-Programm erstellt wurde, können diese Felder Informationen aus einem Beleg (z. B. einem elektronischen Kontoumsatz) enthalten.
+            # Wenn die Feldlänge eines Beleginfo-Inhalts-Felds überschritten wird, wird die Information im nächsten Beleginfo-Feld weitergeführt.
+            # Wichtiger Hinweis
+            # Eine Beleginfo besteht immer aus den Bestandteilen Beleginfo-Art und Beleginfo-Inhalt. Wenn Sie die Beleginfo nutzen möchten, befüllen Sie immer beide Felder.
+            # Beispiel:
+            # Beleginfo-Art:
+            # Kontoumsätze der jeweiligen Bank
+            # Beleginfo-Inhalt:
+            # Buchungsspezifische Inhalte zu den oben genannten Informationsarten
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="37" fieldName="KOST1 – Kostenstelle" type="string" maxLength="8">
+        <description><![CDATA[
+            # Über KOST1 erfolgt die Zuordnung des Geschäftsvorfalls für die anschließende Kostenrechnung.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="38" fieldName="KOST2 – Kostenstelle" type="string" maxLength="8">
+        <description><![CDATA[
+            # Über KOST2 erfolgt die Zuordnung des Geschäftsvorfalls für die anschließende Kostenrechnung.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="39" fieldName="Kost Menge" type="decimal" length="11" scale="2">
+        <description><![CDATA[
+            # Im KOST-Mengenfeld wird die Wertgabe zu einer bestimmten Bezugsgröße für eine Kostenstelle erfasst. Diese Bezugsgröße kann z. B. kg, g, cm, m, % sein. Die Bezugsgröße ist definiert in den Kostenrechnungs-Stammdaten.
+            # Beispiel: 123123123,12
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="40" fieldName="EU-Land u. USt-IdNr." type="string" maxLength="15">
+        <description><![CDATA[
+            # Die USt-IdNr. besteht aus:
+            # 2-stelligen Länderkürzel (siehe Dok.-Nr. 1080169; Ausnahme Griechenland: Das Länderkürzel lautet EL)
+            # 13-stelliger USt-IdNr.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="41" fieldName="EU-Steuersatz" type="decimal" length="4"  scale="2">
+        <description><![CDATA[
+            # Nur für entsprechende EU-Buchungen:
+            # Der im EU-Bestimmungsland gültige Steuersatz.
+            # Beispiel: 12,12
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="42" fieldName="Abw. Versteuerungsart" type="string" maxLength="1">
+        <description><![CDATA[
+            # Für Buchungen, die in einer von der Mandantenstammdaten-Schlüsselung abweichenden Umsatzsteuerart verarbeitet werden sollen, kann die abweichende Versteuerungsart im Buchungssatz übergeben werden:
+            # I = Ist-Versteuerung
+            # K = keine Umsatzsteuerrechnung
+            # P = Pauschalierung (z. B. für Land- und Forstwirtschaft)
+            # S = Soll-Versteuerung
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="43" fieldName="Sachverhalt L+L" type="integer" maxLength="3">
+        <description><![CDATA[
+            # Sachverhalte gem. § 13b Abs. 1 Satz 1 Nrn. 1.ff UStG
+            # Achtung: Der Wert 0 ist unzulässig.
+            # (siehe Dok.-Nr. 1034915)
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="44" fieldName="Funktionsergänzung L+L" type="integer" maxLength="3">
+        <description><![CDATA[
+            # Steuersatz/Funktion zum L+L-Sachverhalt
+            # Achtung: Der Wert 0 ist unzulässig.
+            # (siehe Dok.-Nr. 1034915)
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="45" fieldName="BU 49 Hauptfunktionstyp" type="integer" maxLength="1">
+        <description><![CDATA[
+            # Bei Verwendung des BU-Schlüssels 49 für "andere Steuersätze" muss der steuerliche Sachverhalt mitgegeben werden.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="46" fieldName="BU 49 Hauptfunktionsnummer" type="integer" maxLength="2">
+        <description><![CDATA[
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="47" fieldName="BU 49 Funktionsergänzung" type="integer" maxLength="3">
+        <description><![CDATA[
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="48" fieldName="Zusatzinformation – Inhalt 1" type="string"  maxLength="210">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="49" fieldName="Zusatzinformation – Art 1" type="string"  maxLength="20">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="50" fieldName="Zusatzinformation – Inhalt 2" type="string"  maxLength="210">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="51" fieldName="Zusatzinformation – Art 2" type="string"  maxLength="20">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="52" fieldName="Zusatzinformation – Inhalt 3" type="string"  maxLength="210">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="53" fieldName="Zusatzinformation – Art 3" type="string"  maxLength="20">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="54" fieldName="Zusatzinformation – Inhalt 4" type="string"  maxLength="210">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="55" fieldName="Zusatzinformation – Art 4" type="string"  maxLength="20">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="56" fieldName="Zusatzinformation – Inhalt 5" type="string"  maxLength="210">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="57" fieldName="Zusatzinformation – Art 5" type="string"  maxLength="20">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="58" fieldName="Zusatzinformation – Inhalt 6" type="string"  maxLength="210">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="59" fieldName="Zusatzinformation – Art 6" type="string"  maxLength="20">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="60" fieldName="Zusatzinformation – Inhalt 7" type="string"  maxLength="210">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="61" fieldName="Zusatzinformation – Art 7" type="string"  maxLength="20">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="62" fieldName="Zusatzinformation – Inhalt 8" type="string"  maxLength="210">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="63" fieldName="Zusatzinformation – Art 8" type="string"  maxLength="20">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="64" fieldName="Zusatzinformation – Inhalt 9" type="string"  maxLength="210">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="65" fieldName="Zusatzinformation – Art 9" type="string"  maxLength="20">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="66" fieldName="Zusatzinformation – Inhalt 10" type="string"  maxLength="210">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="67" fieldName="Zusatzinformation – Art 10" type="string"  maxLength="20">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="68" fieldName="Zusatzinformation – Inhalt 11" type="string"  maxLength="210">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="69" fieldName="Zusatzinformation – Art 11" type="string"  maxLength="20">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="70" fieldName="Zusatzinformation – Inhalt 12" type="string"  maxLength="210">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="71" fieldName="Zusatzinformation – Art 12" type="string"  maxLength="20">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="72" fieldName="Zusatzinformation – Inhalt 13" type="string"  maxLength="210">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="73" fieldName="Zusatzinformation – Art 13" type="string"  maxLength="20">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="74" fieldName="Zusatzinformation – Inhalt 14" type="string"  maxLength="210">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="75" fieldName="Zusatzinformation – Art 14" type="string"  maxLength="20">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="76" fieldName="Zusatzinformation – Inhalt 15" type="string"  maxLength="210">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="77" fieldName="Zusatzinformation – Art 15" type="string"  maxLength="20">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="78" fieldName="Zusatzinformation – Inhalt 16" type="string"  maxLength="210">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="79" fieldName="Zusatzinformation – Art 16" type="string"  maxLength="20">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="80" fieldName="Zusatzinformation – Inhalt 17" type="string"  maxLength="210">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="81" fieldName="Zusatzinformation – Art 17" type="string"  maxLength="20">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="82" fieldName="Zusatzinformation – Inhalt 18" type="string"  maxLength="210">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="83" fieldName="Zusatzinformation – Art 18" type="string"  maxLength="20">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="84" fieldName="Zusatzinformation – Inhalt 19" type="string"  maxLength="210">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="85" fieldName="Zusatzinformation – Art 19" type="string"  maxLength="20">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="86" fieldName="Zusatzinformation – Inhalt 20" type="string"  maxLength="210">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    <DatevTransactionEntryDefinition fieldId="87" fieldName="Zusatzinformation – Art 20" type="string"  maxLength="20">
+        <description><![CDATA[
+            # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
+            # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
+            # Wichtiger Hinweis
+            # Eine Zusatzinformation besteht immer aus den Bestandteilen Informationsart und Informationsinhalt. Wenn Sie die Zusatzinformation nutzen möchten, füllen Sie immer beide Felder.
+            # Beispiel:
+            # Informationsart, z. B. Filiale oder Mengengrößen (qm)
+            # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="88" fieldName="Stück" type="integer" maxLength="8">
+        <description><![CDATA[
+            # Wirkt sich nur bei Sachverhalt mit SKR14 Land- und Forstwirtschaft aus, für andere SKR werden die Felder beim Import/Export überlesen bzw. leer exportiert.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="89" fieldName="Gewicht" type="decimal" maxLength="10" scale="2">
+        <description><![CDATA[
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="90" fieldName="Zahlweise" type="integer" maxLength="2">
+        <description><![CDATA[
+            # OPOS-Informationen kommunal
+            # 1 = Lastschrift
+            # 2 = Mahnung
+            # 3 = Zahlung
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="91" fieldName="Forderungsart" type="string" maxLength="10">
+        <description><![CDATA[
+            # OPOS-Informationen kommunal
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="92" fieldName="Veranlagungsjahr" type="date" format="%Y">
+        <description><![CDATA[
+            # OPOS-Informationen kommunal
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="93" fieldName="Zugeordnete Fälligkeit" type="date" format="%d%m%Y">
+        <description><![CDATA[
+            # OPOS-Informationen kommunal
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="94" fieldName="Skontotyp" type="integer" maxLength="1">
+        <description><![CDATA[
+            # 1 = Einkauf von Waren
+            # 2 = Erwerb von Roh-Hilfs- und Betriebsstoffen
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="95" fieldName="Auftragsnummer" type="string" maxLength="30">
+        <description><![CDATA[
+            # Allgemeine Bezeichnung, des Auftrags/Projekts
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="96" fieldName="Buchungstyp" type="string" maxLength="2">
+        <description><![CDATA[
+            # AA = Angeforderte Anzahlung/Abschlagsrechnung
+            # AG = Erhaltene Anzahlung (Geldeingang)
+            # AV = Erhaltene Anzahlung (Verbindlichkeit)
+            # SR = Schlussrechnung
+            # SU = Schlussrechnung (Umbuchung)
+            # SG = Schlussrechnung (Geldeingang)
+            # SO = Sonstige
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="97" fieldName="USt-Schlüssel (Anzahlungen)" type="integer" maxLength="2">
+        <description><![CDATA[
+            # USt-Schlüssel der späteren Schlussrechnung
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="98" fieldName="EU-Mitgliedstaat (Anzahlungen)" type="string" maxLength="2">
+        <description><![CDATA[
+            # EU-Mitgliedstaat der späteren Schlussrechnung
+            # (siehe Dok.-Nr. 1080169)
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="99" fieldName="Sachverhalt L+L (Anzahlungen)" type="integer" maxLength="3">
+        <description><![CDATA[
+            # L+L-Sachverhalt der späteren Schlussrechnung
+            # Sachverhalte gem. § 13b Abs. 1 Satz 1 Nrn. 1.-5. UStG
+            # Achtung: Der Wert 0 ist unzulässig.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="100" fieldName="EU-Steuersatz (Anzahlungen)" type="decimal" length="4" scale="2">
+        <description><![CDATA[
+            # EU-Steuersatz der späteren Schlussrechnung
+            # Nur für entsprechende EU-Buchungen: Der im EU-Bestimmungsland gültige Steuersatz.
+            # Beispiel: 12,12
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="101" fieldName="Erlöskonto (Anzahlungen)" type="integer" maxLength="9">
+        <description><![CDATA[
+            # Erlöskonto der späteren Schlussrechnung
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="102" fieldName="Herkunft-Kz" type="string" maxLength="2">
+        <description><![CDATA[
+            # Wird beim Import durch SV (Stapelverarbeitung) ersetzt.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="103" fieldName="Leerfeld" type="string" maxLength="36">
+        <description><![CDATA[
+            # Wird von DATEV verwendet.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="104" fieldName="KOST-Datum" type="date" format="%d%m%Y">
+        <description><![CDATA[
+            # Format TTMMJJJJ
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="105" fieldName="SEPA-Mandatsreferenz" type="string" maxLength="35">
+        <description><![CDATA[
+            # Vom Zahlungsempfänger individuell vergebenes Kennzeichen eines Mandats (z. B. Rechnungs- oder Kundennummer).
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+
+    <DatevTransactionEntryDefinition fieldId="106" fieldName="Skontosperre" type="boolean">
+        <description><![CDATA[
+            # 0 = keine Skontosperre
+            # 1 = Skontosperre
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="107" fieldName="Gesellschaftername" type="string" maxLength="76">
+        <description><![CDATA[
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="108" fieldName="Beteiligtennummer" type="integer" maxLength="4">
+        <description><![CDATA[
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="109" fieldName="Identifikationsnummer" type="string" maxLength="11">
+        <description><![CDATA[
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="110" fieldName="Zeichnernummer" type="string" maxLength="20">
+        <description><![CDATA[
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="111" fieldName="Postensperre bis" type="date" format="%d%m%Y">
+        <description><![CDATA[
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="112" fieldName="Bezeichnung" type="string" maxLength="30">
+        <description><![CDATA[
+            # SoBil-Sachverhalt
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="113" fieldName="Kennzeichen" type="integer" maxLength="2">
+        <description><![CDATA[
+            # SoBil-Buchung
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="114" fieldName="Festschreibung" type="boolean">
+        <description><![CDATA[
+            # leer = nicht definiert; wird ab Jahreswechselversion 2016/2017 automatisch festgeschrieben
+            # 0 = keine Festschreibung
+            # 1 = Festschreibung
+            # Hat ein Buchungssatz in diesem Feld den Inhalt 1, so wird der gesamte Stapel nach dem Import festgeschrieben.
+            # Ab Jahreswechselversion 2016/2017 gilt das auch bei Inhalt = leer.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="115" fieldName="Leistungsdatum" type="date" format="%d%m%Y">
+        <description><![CDATA[
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="116" fieldName="Datum Zuord." type="date" format="%d%m%Y">
+        <description><![CDATA[
+            # Steuerperiode
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+</entity-engine-xml>

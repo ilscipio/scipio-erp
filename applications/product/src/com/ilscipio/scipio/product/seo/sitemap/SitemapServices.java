@@ -19,7 +19,7 @@ public abstract class SitemapServices {
 
     public static final String module = SitemapServices.class.getName();
     
-    private static final String logPrefix = SitemapWorker.logPrefix;
+    private static final String logPrefix = SitemapGenerator.logPrefix;
     
     protected SitemapServices() {
     }
@@ -31,11 +31,11 @@ public abstract class SitemapServices {
         Locale locale = (Locale) context.get("locale");
         boolean useCache = Boolean.TRUE.equals(context.get("useCache"));
 
-        SitemapWorker sitemapWorker = null;
+        SitemapGenerator sitemapWorker = null;
         try {
             // TODO: LOCALIZE
             
-            sitemapWorker = SitemapWorker.getWorkerForWebsite(delegator, dispatcher, webSiteId, useCache);
+            sitemapWorker = SitemapGenerator.getWorkerForWebsite(delegator, dispatcher, webSiteId, useCache);
             sitemapWorker.buildSitemapDeepForProductStore();
             sitemapWorker.commitSitemapsAndIndex();
             

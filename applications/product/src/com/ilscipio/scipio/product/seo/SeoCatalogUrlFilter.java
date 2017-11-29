@@ -76,8 +76,6 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
         SeoCatalogUrlWorker.registerUrlBuilder();
     }
 
-    protected String defaultLocaleString = null;
-    protected String redirectUrl = null;
     protected String productRequestPath = "/" + PRODUCT_REQUEST;
     protected String categoryRequestPath = "/" + CATEGORY_REQUEST;
     protected boolean seoUrlEnabled = true;
@@ -96,11 +94,6 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
 
         seoUrlEnabled = !Boolean.FALSE.equals(UtilMisc.booleanValueVersatile(config.getInitParameter("seoUrlEnabled")));
         if (seoUrlEnabled) {
-            String initDefaultLocalesString = config.getInitParameter("defaultLocaleString");
-            String initRedirectUrl = config.getInitParameter("redirectUrl");
-            defaultLocaleString = UtilValidate.isNotEmpty(initDefaultLocalesString) ? initDefaultLocalesString : "";
-            redirectUrl = UtilValidate.isNotEmpty(initRedirectUrl) ? initRedirectUrl : "";
-
             WebsiteSeoConfig.registerWebsiteForSeo(WebsiteSeoConfig.makeConfig(config.getServletContext(), true));
 
             urlWorker = SeoCatalogUrlWorker.getInstance(null, config.getServletContext().getInitParameter("webSiteId"));

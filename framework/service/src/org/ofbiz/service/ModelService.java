@@ -23,6 +23,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -108,6 +109,16 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     public static final String SUCCESS_MESSAGE = "successMessage";
     public static final String SUCCESS_MESSAGE_LIST = "successMessageList";
 
+    /**
+     * SCIPIO: List of the common system response field keys returnable in service results.
+     * Added 2017-11-28.
+     */
+    public static final List<String> SYS_RESPONSE_FIELDS = UtilMisc.unmodifiableArrayList(
+            RESPONSE_MESSAGE, 
+            ERROR_MESSAGE, ERROR_MESSAGE_LIST, ERROR_MESSAGE_MAP, 
+            SUCCESS_MESSAGE, SUCCESS_MESSAGE_LIST
+    );
+    
     public static final String resource = "ServiceErrorUiLabels";
 
     // SCIPIO: new 2017-09-13

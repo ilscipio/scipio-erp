@@ -605,6 +605,7 @@
 	                                        			<@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditGLAccountTree" />
 	                                        		</@tab>
 	                                        		<@tab title="Configure Fiscal Periods"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditFiscalPeriods"/></@tab>
+	                                        		<@tab title="Configure Accounting Transactions"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditAccountingTransactions"/></@tab>
 	                                        		<@tab title="Configure Journal"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditJournals"/></@tab>
 	                                        	</@tabs>
                                         	]]></html-template></html></platform-specific>
@@ -710,7 +711,22 @@
             </widgets>           
         </section>
     </screen>
-    
+    <screen name="EditAccountingTransactions">
+        <section>
+            <actions>
+                <!-- <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditJournals.groovy"/>      -->           
+            </actions>
+            <widgets>
+            	<section>
+		            <widgets>
+						<screenlet>
+							<platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditAccountingTransactions.ftl"/></html></platform-specific>
+						</screenlet>
+		            </widgets>
+            	</section>
+            </widgets>           
+        </section>
+    </screen>
     
     <screen name="SetupFacility">
         <section>

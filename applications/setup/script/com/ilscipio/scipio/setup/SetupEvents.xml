@@ -769,8 +769,18 @@
     	<!-- TODO -->
     </simple-method>
     
-    <simple-method method-name="importCsvDatev" short-description="Import CSV Datev" login-required="true">
-    	<!-- TODO -->
+    <simple-method method-name="importDatevTransactionEntries" short-description="Import Datev Transaction Entries" login-required="true">    
+        <set field="importDatevTransactionEntriesCtx.organizationPartyId" from-field="parameters.organizationPartyId" />
+        <set field="importDatevTransactionEntriesCtx.datevCSV" from-field="parameters.datevCSV" />
+        <call-service service-name="importDatevTransactionEntriesCtx" in-map-name="importDatevTransactionEntriesCtx">
+            <result-to-field field="transactionEntriesImported" result-name="transactionEntries"/>
+        </call-service>    	
     </simple-method>
+    
+    
+    <simple-method method-name="exportDatevTransactionEntries" short-description="Exportport Datev Transaction Entries" login-required="true">
+        
+    </simple-method>
+    
     
 </simple-methods>

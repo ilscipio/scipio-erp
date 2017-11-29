@@ -58,15 +58,16 @@ public class UrlGenStats {
     public void toMsgLists(Locale locale, List<String> msgList, List<String> errMsgList) {
         if (doProducts) {
             msgList.add("Products updated: " + productSuccess);
-            if (productSkipped > 0) msgList.add("Products skipped: " + productSkipped);
-            if (productDupSkip > 0) msgList.add("Product duplicates prevented: " + productDupSkip);
+            // I think these are mainly useful for debugging after all...
+            //if (productSkipped > 0) msgList.add("Products skipped: " + productSkipped);
+            //if (productDupSkip > 0) msgList.add("Product duplicates prevented: " + productDupSkip);
             if (productError > 0) errMsgList.add("Products failed: " + productError);
         }
         
         if (doCategory) {
             msgList.add("Categories updated: " + categorySuccess);
-            if (categorySkipped > 0) msgList.add("Categories skipped: " + categorySkipped);
-            if (categoryDupSkip > 0) msgList.add("Category duplicates prevented: " + categoryDupSkip);
+            //if (categorySkipped > 0) msgList.add("Categories skipped: " + categorySkipped);
+            //if (categoryDupSkip > 0) msgList.add("Category duplicates prevented: " + categoryDupSkip);
             if (categoryError > 0) errMsgList.add("Categories failed: " + categoryError);
         }
     }

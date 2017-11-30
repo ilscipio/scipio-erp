@@ -170,12 +170,13 @@ public final class WebAppUtil {
     }
 
     /**
-     * SCIPIO: Gets the control servlet mapping for given webappInfo, WITHOUT the
+     * SCIPIO: Strips the result of a {@link #getControlServletPath} call to
+     * get the control servlet mapping for given webappInfo, WITHOUT the
      * webapp context root. There is never a terminating slash, except if root,
      * where it will be "/".
+     * Added 2017-11-30.
      */
-    public static String getControlServletOnlyPath(WebappInfo webAppInfo) throws IOException, SAXException {
-        String controlPath = WebAppUtil.getControlServletPath(webAppInfo);
+    public static String getControlServletOnlyPathFromFull(WebappInfo webAppInfo, String controlPath) {
         if (controlPath != null) {
             if (webAppInfo.contextRoot != null && !webAppInfo.contextRoot.isEmpty() && !"/".equals(webAppInfo.contextRoot)) {
                 controlPath = controlPath.substring(webAppInfo.contextRoot.length());
@@ -190,6 +191,16 @@ public final class WebAppUtil {
         } else {
             return null;
         }
+    }
+    
+    /**
+     * SCIPIO: Gets the control servlet mapping for given webappInfo, WITHOUT the
+     * webapp context root. There is never a terminating slash, except if root,
+     * where it will be "/".
+     */
+    public static String getControlServletOnlyPath(WebappInfo webAppInfo) throws IOException, SAXException {
+        String controlPath = WebAppUtil.getControlServletPath(webAppInfo);
+        return getControlServletOnlyPathFromFull(webAppInfo, controlPath);
     }
     
     /**

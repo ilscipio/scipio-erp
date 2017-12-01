@@ -51,7 +51,6 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.security.Security;
@@ -112,7 +111,7 @@ public class ContextFilter implements Filter {
         this.allowedPaths = (allowList != null) ? new HashSet<>(allowList) : null;
         
         // SCIPIO: new
-        this.forwardRootControllerUris = UtilMisc.booleanValueVersatile(config.getInitParameter("forwardRootControllerUris"), false);
+        this.forwardRootControllerUris = getForwardRootControllerUrisSetting(FilterUtil.getInitParamsMapAdapter(config), false);
     }
 
     /**
@@ -531,5 +530,9 @@ public class ContextFilter implements Filter {
             Debug.logError(e, "Error reading request names from controller.xml: " + e.getMessage(), module);
             throw new ServletException(e);
         }
+    }
+    
+    public static Boolean getForwardRootControllerUrisSetting(Map<String, ?> initParams, Boolean defaultValue) {
+        return UtilMisc.booleanValueVersatile(initParams.get("forwardRootControllerUris"), defaultValue);
     }
 }

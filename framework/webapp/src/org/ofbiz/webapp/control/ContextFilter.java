@@ -40,6 +40,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.tomcat.util.descriptor.web.FilterDef;
+import org.apache.tomcat.util.descriptor.web.WebXml;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilGenerics;
@@ -67,6 +69,7 @@ import org.ofbiz.webapp.website.WebSiteWorker;
 public class ContextFilter implements Filter {
 
     public static final String module = ContextFilter.class.getName();
+    private static final String contextFilterClassName = ContextFilter.class.getSimpleName();
     public static final String FORWARDED_FROM_SERVLET = "_FORWARDED_FROM_SERVLET_";
 
     protected FilterConfig config = null;
@@ -532,7 +535,112 @@ public class ContextFilter implements Filter {
         }
     }
     
+    /**
+     * SCIPIO: Reads the forwardRootControllerUris init-param as Boolean.
+     */
     public static Boolean getForwardRootControllerUrisSetting(Map<String, ?> initParams, Boolean defaultValue) {
         return UtilMisc.booleanValueVersatile(initParams.get("forwardRootControllerUris"), defaultValue);
+    }
+    
+    /**
+     * SCIPIO: Reads the forwardRootControllerUris value from ContextFilter init-params from webXml,
+     * trying to find the most appropriate setting.
+     */
+    public static Boolean readForwardRootControllerUrisSetting(WebXml webXml, String logPrefix) {
+        // HEURISTIC: we return the value of the highest-rated ContextFilter that
+        // has forwardRootControllerUris present in its init-params (even if empty)
+        
+        int bestRating = 0;
+        String aliasStr = null;
+        String filterName = null;
+        for(FilterDef filter : webXml.getFilters().values()) {
+            int currentRating = rateContextFilterCandidate(filter);
+            if (currentRating > 0) {
+                Map<String, String> initParams = filter.getParameterMap();
+                if (initParams != null && initParams.containsKey("forwardRootControllerUris")) {
+                    if (currentRating > bestRating) {
+                        bestRating = currentRating;
+                        aliasStr = initParams.get("forwardRootControllerUris");
+                        filterName = filter.getFilterName();
+                    }
+                }
+            }
+        }
+        if (bestRating > 0) {
+            Boolean alias = UtilMisc.booleanValueVersatile(aliasStr);
+            if (alias != null) {
+                if (logPrefix != null) Debug.logInfo(logPrefix+"Found web.xml ContextFilter (filter name '" + filterName + "') init-param forwardRootControllerUris boolean value: " + alias, module);
+                return alias;
+            } else {
+                if (UtilValidate.isNotEmpty(aliasStr)) {
+                    if (logPrefix != null) Debug.logError(logPrefix+"web.xml ContextFilter (filter name '" + filterName + "') init-param forwardRootControllerUris has invalid boolean value: " + aliasStr, module);
+                } else {
+                    if (logPrefix != null) Debug.logInfo(logPrefix+"Found web.xml ContextFilter (filter name '" + filterName + "') init-param forwardRootControllerUris, was empty; returning as unset", module);
+                    return null;
+                }
+            }
+        } else {
+            if (logPrefix != null) Debug.logInfo(logPrefix+"web.xml ContextFilter init-param forwardRootControllerUris setting not found", module);
+        }
+        return null;
+    }
+ 
+    /**
+     * SCIPIO: Verifies if the setting returned by {@link #readForwardRootControllerUrisSetting} is
+     * sane for the given controlServletMapping (also works for controlServletPath).
+     */
+    public static Boolean verifyForwardRootControllerUrisSetting(Boolean hasContextFilterFlag, String controlServletMapping, String logPrefix) {
+        if (hasContextFilterFlag != null) {
+            if (hasContextFilterFlag) {
+                if (controlServletMapping != null && controlServletMapping.startsWith("/") && controlServletMapping.length() > 1) {
+                    // aliasing is enabled and controlPath is not the root, so pass
+                    if (logPrefix != null) Debug.logInfo(logPrefix+"web.xml appears to have ContextFilter init-param forwardRootControllerUris enabled"
+                            + " and a non-root control servlet mapping (" + controlServletMapping 
+                            + "); now treating website as having enabled root aliasing/forwarding/rewriting of controller URIs", module);
+                    return true;
+                } else {
+                    if (logPrefix != null) Debug.logWarning(logPrefix+"web.xml invalid configuration: ContextFilter init-param forwardRootControllerUris is enabled"
+                            + ", but control servlet mapping (" + controlServletMapping 
+                            + ") appears it may be mapped to root - invalid configuration", module);
+                }
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Heuristic for finding the most probable real ContextFilter.
+     * NOTE: This is a problem because OFbiz frustratingly made a bunch of other classes
+     * extend ContextFilter, and even scipio is forced to compound the problem as a result
+     * of lack of good base classes.
+     * @return a value between 0-5, 5 being best candidate
+     */
+    public static int rateContextFilterCandidate(FilterDef filter) {
+        String filterClass = filter.getFilterClass();
+        if (filterClass == null || filterClass.isEmpty()) return 0;
+        
+        // NOTE: this exact-class check is what stock code does for some other classes, so we have to follow suit
+        if (ContextFilter.class.getName().equals(filterClass)) return 5;
+        
+        try {
+            Class<?> filterCls = Thread.currentThread().getContextClassLoader().loadClass(filterClass);
+            if (!ContextFilter.class.isAssignableFrom(filterCls)) return 0;
+        } catch(Exception e) {
+            Debug.logWarning("Could not load or test filter class (" + filterClass + "); may be invalid or a classloader issue: " 
+                    + e.getMessage(), module);
+            return 0;
+        }
+        
+        String filterName = filter.getFilterName();
+        
+        if (contextFilterClassName.equals(filterName)) return 4;
+        
+        if (filterName != null && filterName.contains(contextFilterClassName)) {
+            if (filterClass.contains(contextFilterClassName)) return 3;
+        } else {
+            if (filterClass.contains(contextFilterClassName)) return 2;
+        }
+        // 1: at least is subclass, but lowest because stock Ofbiz overextended ContextFilter everywhere
+        return 1;
     }
 }

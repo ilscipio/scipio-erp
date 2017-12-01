@@ -6,12 +6,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.tomcat.util.descriptor.web.FilterDef;
 import org.apache.tomcat.util.descriptor.web.WebXml;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.webapp.control.ContextFilter;
 import org.xml.sax.SAXException;
 
@@ -20,6 +17,7 @@ import com.ilscipio.scipio.ce.util.Optional;
 /**
  * SCIPIO: Extended webapp info class, which contains both component WebappInfo
  * and WebXml info in a single class linked to the webSiteId in a global cache.
+ * Should only be used for webapps that have a defined webSiteId (in web.xml).
  * <p>
  * It will cache several settings to avoid constantly re-traversing the WebXml
  * and preload a bunch of calls from {@link WebAppUtil}.
@@ -35,8 +33,6 @@ import com.ilscipio.scipio.ce.util.Optional;
 public class ExtWebappInfo implements Serializable {
     
     public static final String module = ExtWebappInfo.class.getName();
-    private static final String contextFilterClassName = ContextFilter.class.getSimpleName();
-    private static final boolean LOGGING = Debug.infoOn();
     
     private static final Object webSiteIdCacheLock = new Object();
     private static Map<String, ExtWebappInfo> webSiteIdCache = Collections.emptyMap();
@@ -131,7 +127,7 @@ public class ExtWebappInfo implements Serializable {
             fullControlPath = WebAppUtil.getControlServletPath(webappInfo);
         } catch (IllegalArgumentException e) {
             // DO NOT fail - usually will be an error, but not necessarily is.
-            Debug.logWarning("Cannot get control servlet path for website '" + webSiteId + "': " + e.getMessage(), module);
+            Debug.logWarning(getLogMsgPrefix(webSiteId)+"Cannot get control servlet path: " + e.getMessage(), module);
         } catch (SAXException e) {
             throw new IOException(e);
         }
@@ -192,7 +188,15 @@ public class ExtWebappInfo implements Serializable {
     public Boolean getForwardRootControllerUris() {
         Optional<Boolean> forwardRootControllerUris = this.forwardRootControllerUris;
         if (forwardRootControllerUris == null) {
-            forwardRootControllerUris = Optional.ofNullable(readForwardRootControllerUrisSetting(LOGGING));
+            Boolean setting;
+            try {
+                setting = ContextFilter.readForwardRootControllerUrisSetting(getWebXml(), getLogMsgPrefix());
+            } catch(Exception e) {
+                Debug.logError(e, getLogMsgPrefix()+"Error while trying to determine forwardRootControllerUris ContextFilter setting: " 
+                        + e.getMessage(), module);
+                setting = null;
+            }
+            forwardRootControllerUris = Optional.ofNullable(setting);
             this.forwardRootControllerUris = forwardRootControllerUris;
         }
         return forwardRootControllerUris.orElse(null);
@@ -206,125 +210,25 @@ public class ExtWebappInfo implements Serializable {
     public Boolean getForwardRootControllerUrisValidated() {
         Optional<Boolean> forwardRootControllerUrisValid = this.forwardRootControllerUrisValid;
         if (forwardRootControllerUrisValid == null) {
-            forwardRootControllerUrisValid = Optional.ofNullable(verifyForwardRootControllerUrisSetting(getForwardRootControllerUris(), LOGGING));
+            Boolean setting;
+            try {
+                setting = ContextFilter.verifyForwardRootControllerUrisSetting(getForwardRootControllerUris(), getControlServletMapping(), getLogMsgPrefix());
+            } catch(Exception e) {
+                Debug.logError(e, getLogMsgPrefix()+"Error while trying to determine forwardRootControllerUris ContextFilter setting: " 
+                        + e.getMessage(), module);
+                setting = null;
+            }
+            forwardRootControllerUrisValid = Optional.ofNullable(setting);
             this.forwardRootControllerUrisValid = forwardRootControllerUrisValid;
         }
         return forwardRootControllerUrisValid.orElse(null);
     }
-
-    /**
-     * Reads the forwardRootControllerUris value from ContextFilter init-params and
-     * extra checks. Does not cache.
-     */
-    Boolean readVerifyForwardRootControllerUrisSetting(boolean log) {
-        // NOTE: in this case, we can never know for sure that alias should be false,
-        // so we leave null if not found (more info to caller)
-        Boolean hasContextFilterFlag = readForwardRootControllerUrisSetting(log);
-        return verifyForwardRootControllerUrisSetting(hasContextFilterFlag, log);
+    
+    private static String getLogMsgPrefix(String webSiteId) {
+        return "Website '" + webSiteId + "': ";
     }
     
-    Boolean verifyForwardRootControllerUrisSetting(Boolean hasContextFilterFlag, boolean log) {
-        if (hasContextFilterFlag != null) {
-            if (hasContextFilterFlag) {
-                String controlPath = getControlServletMapping();
-                if (controlPath != null && controlPath.startsWith("/") && controlPath.length() >= 2) {
-                    // aliasing is enabled and controlPath is not the root, so pass
-                    if (log) Debug.logInfo("Website '" + webSiteId 
-                            + "': web.xml appears to have ContextFilter init-param forwardRootControllerUris enabled"
-                            + " and a non-root control servlet mapping (" + controlPath 
-                            + "); now treating website as having enabled root aliasing/forwarding/rewriting of controller URIs", module);
-                    return true;
-                } else {
-                    Debug.logWarning("Website '" + webSiteId 
-                            + "': web.xml invalid configuration: ContextFilter init-param forwardRootControllerUris is enabled"
-                            + ", but control servlet mapping (" + controlPath 
-                            + ") appears it may be mapped to root - invalid configuration", module);
-                }
-            }
-        }
-        return null;
+    private String getLogMsgPrefix() {
+        return "Website '" + webSiteId + "': ";
     }
-    
-    /**
-     * Reads the forwardRootControllerUris value from ContextFilter init-params.
-     * Does not verify if the setting appears valid in context. Does not cache.
-     */
-    Boolean readForwardRootControllerUrisSetting(boolean log) {
-        // HEURISTIC: we return the value of the highest-rated ContextFilter that
-        // has forwardRootControllerUris present in its init-params (even if empty)
-        
-        int bestRating = 0;
-        String aliasStr = null;
-        String filterName = null;
-        for(FilterDef filter : webXml.getFilters().values()) {
-            int currentRating = rateContextFilterCandidate(filter);
-            if (currentRating > 0) {
-                Map<String, String> initParams = filter.getParameterMap();
-                if (initParams != null && initParams.containsKey("forwardRootControllerUris")) {
-                    if (currentRating > bestRating) {
-                        bestRating = currentRating;
-                        aliasStr = initParams.get("forwardRootControllerUris");
-                        filterName = filter.getFilterName();
-                    }
-                }
-            }
-        }
-        if (bestRating > 0) {
-            Boolean alias = UtilMisc.booleanValueVersatile(aliasStr);
-            if (alias != null) {
-                if (log) Debug.logInfo("Website '" + webSiteId 
-                        + "': Found web.xml ContextFilter (filter name '" + filterName + "') init-param forwardRootControllerUris boolean value: " + alias, module);
-                return alias;
-            } else {
-                if (UtilValidate.isNotEmpty(aliasStr)) {
-                    Debug.logError("Website '" + webSiteId 
-                            + "': web.xml ContextFilter (filter name '" + filterName + "') init-param forwardRootControllerUris has invalid boolean value: " + aliasStr, module);
-                } else {
-                    if (log) Debug.logInfo("Website '" + webSiteId 
-                            + "': Found web.xml ContextFilter (filter name '" + filterName + "') init-param forwardRootControllerUris, was empty; returning as unset", module);
-                    return null;
-                }
-            }
-        } else {
-            if (log) Debug.logInfo("Website '" + webSiteId 
-                        + "': web.xml ContextFilter init-param forwardRootControllerUris setting not found", module);
-        }
-        return null;
-    }
- 
-    /**
-     * Heuristic for finding the most probable real ContextFilter.
-     * NOTE: This is a problem because OFbiz frustratingly made a bunch of other classes
-     * extend ContextFilter, and even scipio is forced to compound the problem as a result
-     * of lack of good base classes.
-     */
-    private int rateContextFilterCandidate(FilterDef filter) {
-        String filterClass = filter.getFilterClass();
-        if (filterClass == null || filterClass.isEmpty()) return 0;
-        
-        // NOTE: this exact-class check is what stock code does for some other classes, so we have to follow suit
-        if (ContextFilter.class.getName().equals(filterClass)) return 5;
-        
-        try {
-            Class<?> filterCls = Thread.currentThread().getContextClassLoader().loadClass(filterClass);
-            if (!ContextFilter.class.isAssignableFrom(filterCls)) return 0;
-        } catch(Exception e) {
-            Debug.logWarning("Could not loadClass filter; may be invalid or classloader issue: " 
-                    + filterClass + ": " + e.getMessage(), module);
-            return 0;
-        }
-        
-        String filterName = filter.getFilterName();
-        
-        if (contextFilterClassName.equals(filterName)) return 4;
-        
-        if (filterName != null && filterName.contains(contextFilterClassName)) {
-            if (filterClass.contains(contextFilterClassName)) return 3;
-        } else {
-            if (filterClass.contains(contextFilterClassName)) return 2;
-        }
-        // 1: at least is subclass, but lowest because stock Ofbiz overextended ContextFilter everywhere
-        return 1;
-    }
-
 }

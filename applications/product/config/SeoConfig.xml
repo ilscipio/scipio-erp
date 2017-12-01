@@ -116,7 +116,7 @@
             processing upon lookup must be avoided entirely to allow sane DB queries. -->
     <url-processors type="alt-url-gen">
         <!-- static-method processor: defines a static method that takes a String and returns a String -->
-        <processor type="static-method">com.ilscipio.scipio.util.SeoStringUtil#constructSeoName</processor>
+        <processor type="static-method">com.ilscipio.scipio.ce.util.SeoStringUtil#constructSeoName</processor>
         <!-- char-filters processor: references a <char-filters name="..."> element by name -->
         <processor type="char-filters">default</processor>
         <!-- The legacy CatalogUrlFilter post-filter - may be good to leave for compatibility and extra safety -->

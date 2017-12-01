@@ -50,14 +50,14 @@ public class ExtWebappInfo implements Serializable {
     private Optional<Boolean> forwardRootControllerUris;
     private Optional<Boolean> forwardRootControllerUrisValid;
     
-    /**
-     * Basic constructor.
-     */
-    public ExtWebappInfo(String webSiteId, WebappInfo webappInfo, WebXml webXml) {
-        this.webSiteId = webSiteId;
-        this.webappInfo = webappInfo;
-        this.webXml = webXml;
-    }
+//    /**
+//     * Basic constructor.
+//     */
+//    public ExtWebappInfo(String webSiteId, WebappInfo webappInfo, WebXml webXml) {
+//        this.webSiteId = webSiteId;
+//        this.webappInfo = webappInfo;
+//        this.webXml = webXml;
+//    }
     
     /**
      * Full constructor.

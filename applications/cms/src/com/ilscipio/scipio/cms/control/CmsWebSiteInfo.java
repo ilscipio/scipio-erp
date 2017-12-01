@@ -1,7 +1,9 @@
 package com.ilscipio.scipio.cms.control;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,6 +14,9 @@ import java.util.Set;
 import javax.servlet.ServletContext;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.webapp.ExtWebappInfo;
 import org.ofbiz.webapp.WebAppUtil;
 import org.ofbiz.webapp.control.ConfigXMLReader;
 import org.ofbiz.webapp.control.ConfigXMLReader.ControllerConfig;
@@ -27,7 +32,8 @@ import com.ilscipio.scipio.cms.webapp.InvalidWebappException;
  * <p>
  * DEV NOTE: 2016: methods still useful to build request tree?
  */
-public class CmsWebSiteInfo {
+@SuppressWarnings("serial")
+public class CmsWebSiteInfo implements Serializable {
 
     /*
      * Note: For future code: Probably shouldn't keep references to any ServletContexts anywhere in this class
@@ -39,7 +45,7 @@ public class CmsWebSiteInfo {
     // Use Ofbiz logging carefully only...
     public static final String module = CmsWebSiteInfo.class.getName();
 
-    private static volatile Map<String, CmsWebSiteInfo> cmsRegisteredWebSites = new HashMap<String, CmsWebSiteInfo>();
+    private static volatile Map<String, CmsWebSiteInfo> cmsRegisteredWebSites = Collections.emptyMap();
 
     private final String webSiteId;
     private final boolean hasController;
@@ -47,8 +53,10 @@ public class CmsWebSiteInfo {
     
     private final boolean cmsRegistered = true; // Always true at the moment
     
+    private transient ExtWebappInfo extWebappInfo = null;
+    private transient Boolean controlRootAlias = null;
+    
     private CmsWebSiteInfo(String webSiteId, boolean hasController, URL controllerConfigUrl) {
-        super();
         this.webSiteId = webSiteId;
         this.hasController = hasController;
         this.controllerConfigUrl = controllerConfigUrl;
@@ -64,16 +72,24 @@ public class CmsWebSiteInfo {
     static CmsWebSiteInfo makeForWebSiteContext(String webSiteId, ServletContext context, boolean hasControllerHint) throws InvalidWebappException {
         URL controllerConfigURL = ConfigXMLReader.getControllerConfigURL(context);
         
-        // TODO: has controller logic...
-        boolean hasController;
+        boolean hasController = false;
         if (hasControllerHint) {
             hasController = true;
-        }
-        else {
-            // FIXME: This doesn't work.
-            // Right now there isn't really a way to detect whether controller or its servlets exist for a webapp; 
-            // made worse because this code might be called even before ControlServlet is initialized.
-            hasController = (controllerConfigURL != null);
+        } else {
+            if (controllerConfigURL != null) {
+                // BEST-EFFORT: this code may be called even before ControlServlet is initialized.
+                // we have to read the whole WebXml manual.
+                // NOTE: DO NOT cache the extWebappInfo here; ditch it
+                try {
+                    ExtWebappInfo extWebappInfo = ExtWebappInfo.fromWebSiteIdNew(webSiteId);
+                    if (extWebappInfo.getFullControlPath() != null) {
+                        hasController = true;
+                    }
+                } catch(Exception e) {
+                    Debug.logError(e, "Cms: Website '" + webSiteId 
+                            + "': Could not determine if website has controller or not: " + e.getMessage(), module);
+                }
+            }
         }
         
         return new CmsWebSiteInfo(webSiteId, hasController, controllerConfigURL);
@@ -102,9 +118,17 @@ public class CmsWebSiteInfo {
     public static Map<String, CmsWebSiteInfo> getAllCmsRegWebSitesInfo() {
         return cmsRegisteredWebSites;
     }
+    
+    public static Collection<CmsWebSiteInfo> getAllCmsRegWebSitesInfoList() {
+        return cmsRegisteredWebSites.values();
+    }
 
     public static CmsWebSiteInfo getCmsRegWebSiteInfo(String webSiteId) {
         return cmsRegisteredWebSites.get(webSiteId);
+    }
+    
+    public static Set<String> getAllCmsRegWebSiteIds() {
+        return Collections.unmodifiableSet(cmsRegisteredWebSites.keySet());
     }
 
     /**
@@ -143,18 +167,16 @@ public class CmsWebSiteInfo {
                 if (newRegs != null) {
                     if (regInfo.hasController()) {
                         Debug.logInfo("Cms: Registered web site with webSiteId '" + webSiteId + "'; has controller config", module);
-                    }
-                    else {
+                    } else {
                         Debug.logWarning("Cms: Registered web site with webSiteId '" + webSiteId + "', but has no detected controller config!", module);
                     }
                     cmsRegisteredWebSites = Collections.unmodifiableMap(newRegs);
                 }
             }
         } catch (InvalidWebappException e) {
-            // We can log the Ofbiz way here because this should only be called
-            // from Ofbiz context
-            Debug.logError("Cms: Tried to register a web site invalid for Cms use (servlet context path: " + context.getContextPath() + "): " + e.getMessage() + "; ignoring",
-                    module);
+            // We can log the Ofbiz way here because this should only be called from Ofbiz context
+            Debug.logError("Cms: Tried to register a web site invalid for Cms use (servlet context path: " 
+                    + context.getContextPath() + "): " + e.getMessage() + "; ignoring", module);
         }
     }
 
@@ -162,9 +184,6 @@ public class CmsWebSiteInfo {
         return context.getInitParameter("webSiteId");
     }
 
-    
-    
-    
     public String getWebSiteId() {
         return webSiteId;
     }
@@ -211,9 +230,84 @@ public class CmsWebSiteInfo {
     }
     
     public Map<String, String> getContextParams() {
-        return WebAppUtil.getWebappContextParamsSafe(getWebSiteId());
+        ExtWebappInfo extInfo = this.extWebappInfo; // not using getExtInfo(); don't trigger init from this, may be too early...
+        if (extInfo != null) { 
+            return extInfo.getContextParams();
+        } else {
+            return WebAppUtil.getWebappContextParamsSafe(getWebSiteId());
+        }
     }
     
+    /**
+     * Gets the new extended webapp info.
+     * NOTE: this is done on first access.
+     * DEV NOTE: IMPORTANT: THIS CANNOT BE DONE IN CONSTRUCTOR.
+     */
+    public ExtWebappInfo getExtWebappInfo() {
+        ExtWebappInfo extWebappInfo = this.extWebappInfo;
+        if (extWebappInfo == null) {
+            try {
+                extWebappInfo = ExtWebappInfo.fromWebSiteId(webSiteId);
+            } catch(Exception e) {
+                Debug.logError(e, "Cms: Error: Cannot read website '" + webSiteId + "' configurations: " + e.getMessage(), module);
+            }
+            this.extWebappInfo = extWebappInfo;
+        }
+        return extWebappInfo;
+    }
+
+
+    public boolean isControlRootAlias() {
+        Boolean controlRootAlias = this.controlRootAlias;
+        if (controlRootAlias == null) {
+            ExtWebappInfo extWebappInfo = getExtWebappInfo();
+            if (extWebappInfo != null) {
+                controlRootAlias = readWebSiteControlRootAliasLogical(extWebappInfo);
+            }
+            if (controlRootAlias == null) controlRootAlias = false;
+            this.controlRootAlias = controlRootAlias;
+        }
+        return controlRootAlias;
+    }
+    
+    
+    /**
+     * If web.xml cmsControlRootAlias is set to true or false, take it at face
+     * value and return it.
+     * Otherwise, try to infer if can return true from ContextFilter cmsControlRootAlias.
+     * However, if can't guarantee aliasing is not happening, return null instead of false. 
+     */
+    static Boolean readWebSiteControlRootAliasLogical(ExtWebappInfo extWebappInfo) {
+        Boolean alias = null;
+        try {
+            Map<String, String> contextParams = extWebappInfo.getContextParams();
+            if (contextParams != null) {
+                // if this boolean set, we take it at face value, true or false
+                alias = UtilMisc.booleanValueVersatile(contextParams.get("cmsControlRootAlias"));
+            }
+            if (alias != null) {
+                Debug.logInfo("Cms: Website '" + extWebappInfo.getWebSiteId() 
+                        + "': Found web.xml context-param cmsControlRootAlias valid value: " + alias, module);
+            } else {
+                if (contextParams.containsKey("cmsControlRootAlias")) {
+                    if (UtilValidate.isNotEmpty((String) contextParams.get("cmsControlRootAlias"))) {
+                        Debug.logError("Cms: Website '" + extWebappInfo.getWebSiteId()  
+                                + "': web.xml context-param cmsControlRootAlias has invalid boolean value: " + contextParams.get("cmsControlRootAlias"), module);
+                    } else {
+                        Debug.logInfo("Cms: Website '" + extWebappInfo.getWebSiteId()  
+                                + "': Found web.xml context-param cmsControlRootAlias, but was empty (valid)", module);
+                    }
+                }
+                Debug.logInfo("Cms: Website '" + extWebappInfo.getWebSiteId()  
+                    + "': Trying to infer cmsControlRootAlias setting from forwardRootControllerUris ContextFilter init-param", module);
+                alias = extWebappInfo.getForwardRootControllerUrisValidated();
+            }
+        } catch (Exception e) {
+            Debug.logError(e, "Cms: Could not read web.xml for webSiteId '" + extWebappInfo.getWebSiteId() + "' to determine cmsControlRootAlias", module);
+        }
+        return alias;
+    }
+
     /**
      * Helper method. 
      * 
@@ -263,8 +357,7 @@ public class CmsWebSiteInfo {
          * I made this method for testing purposes and to output in Freemarker.
          * Probably you should use the Ofbiz classes above.
          */
-        
-        
+
         Map<String, Object> simpleTree = new HashMap<String, Object>();
         Map<String, RequestMap> reqMapMap = getRequestMapMap();
         if (maxDepth == null || maxDepth != 0) {

@@ -14,10 +14,12 @@ import java.util.HashMap;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+import org.apache.juli.ClassLoaderLogManager.ClassLoaderLogInfo
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.webapp.WebAppUtil;
 import com.ilscipio.scipio.cms.control.CmsWebSiteInfo;
 import com.ilscipio.scipio.cms.control.CmsControlUtil;
 import com.ilscipio.scipio.cms.webapp.CmsWebappUtil;
@@ -73,6 +75,7 @@ public class CmsErrorHandler {
 }
 
 public class CmsContentTreeUtil {
+    private static final String module = CmsContentTreeUtil.class.getName();
     
     def addWebSiteSettingsToMap(targetMap, webSiteId) {
         // NEW: store website configs
@@ -101,7 +104,41 @@ public class CmsContentTreeUtil {
         
         targetMap.put("editorRequestPathPrefix", editorRequestPathPrefix);
     }
+
+}
+
+public class CmsWebSiteHelper {
+    private static final String module = CmsWebSiteHelper.class.getName();
     
+    /**
+     * Find out which webapps have control URIs root-aliased
+     * can be manually indicated using web.xml cmsControlUrisRootAlias flag
+     */
+    def getWebSitesControlRootAliasMsgs(context) {
+        def msgMap = new HashMap();
+        CmsWebSiteInfo.getAllCmsRegWebSitesInfoList().each{ webSiteInfo ->
+            def webSiteId = webSiteInfo.getWebSiteId();
+            if (!webSiteInfo.isControlRootAlias()) return;
+            def extInfo = webSiteInfo.getExtWebappInfo();
+            if (extInfo == null) return;
+            Debug.logInfo("Cms: Website '" + webSiteId + "' is control root alias enabled", module);
+            try {
+                def controlMapping = extInfo.getControlServletMapping();
+                def srcPath = extInfo.getFullControlPath() ?: "";
+                srcPath += (srcPath.endsWith("/") ? "..." : "/...");
+                def destPath = extInfo.getContextRoot() ?: "";
+                destPath += (destPath.endsWith("/") ? "..." : "/...");
+                
+                def msgArgs = [webSiteId:webSiteId, controlMapping:controlMapping,
+                    srcPath:srcPath, destPath:destPath];
+                def msg = UtilProperties.getMessage("CMSUiLabels", "CmsWebSiteConfiguredControlRootAlias", msgArgs, context.locale);
+                msgMap[webSiteId] = msg;
+            } catch(Exception e) {
+                Debug.logError("Cms: Error looking up webapp info for website '" + webSiteId + "': " + e.getMessage(), module)
+            }
+        };
+        return msgMap;
+    }
 }
 
 public class CmsScriptUtil {
@@ -122,6 +159,7 @@ if (!context.cmsEditorCommonIncluded) { // include guard
     context.cmsErrorHandler = new CmsErrorHandler();
     context.cmsContentTreeUtil = new CmsContentTreeUtil();
     context.cmsScriptUtil = new CmsScriptUtil();
+    context.cmsWebSiteHelper = new CmsWebSiteHelper();
 
     final validMediaDataResourceTypeIdList = [
         "AUDIO_OBJECT",

@@ -124,10 +124,11 @@ public class ExtWebappInfo implements Serializable {
         }
         
         try {
-            fullControlPath = WebAppUtil.getControlServletPath(webappInfo);
-        } catch (IllegalArgumentException e) {
-            // DO NOT fail - usually will be an error, but not necessarily is.
-            Debug.logWarning(getLogMsgPrefix(webSiteId)+"Cannot get control servlet path: " + e.getMessage(), module);
+            fullControlPath = WebAppUtil.getControlServletPath(webappInfo, true);
+            if (fullControlPath == null) {
+                Debug.logWarning(getLogMsgPrefix(webSiteId)+"Cannot get ControlServlet mapping for website."
+                        + " This is only acceptable if the webapp did not intend to have a controller.", module);
+            }
         } catch (SAXException e) {
             throw new IOException(e);
         }

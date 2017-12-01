@@ -78,6 +78,8 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
         ensureIndicator(fromContextRoot, "Y");
         primaryPathFromContextRootDefault = fromContextRoot;
     }
+    // NOTE: I'm leaving this to "Y" for the general case even though "createPage" will
+    // specify "N" for this (and override this)
     static final String primaryActiveDefault = "Y"; // currently must be hardcoded to "Y", otherwise nothing would work
 
     // Cached process view mappings.
@@ -246,11 +248,17 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
         Map<String, Object> setFields = getPrimaryProcessMappingFields(delegator, fields, true);
         CmsProcessMapping processMapping = new CmsProcessMapping(delegator, setFields);
 
+        // 2017-11-30: We should be OK setting this to true. I don't see a reason why
+        // this will ever needs N for primary process mapping. The 
+        // CmsProcessMapping.active should be enough.
+        //Boolean viewMappingActive = processMapping.getActive();
+        Boolean viewMappingActive = Boolean.TRUE;
+        
         // create single view mapping
         // processMappingId="10000" targetViewName="CmsPage" pageId="10000" active="Y"
         CmsProcessViewMapping processViewMapping = new CmsProcessViewMapping(delegator,
                 UtilMisc.toMap("targetViewName", "CmsPage", "pageId", processMapping.getPrimaryForPageId(),
-                        "active", processMapping.getActive()), processMapping);
+                        "active", viewMappingActive), processMapping);
         processMapping.addProcessViewMapping(processViewMapping);
         return processMapping;
     }

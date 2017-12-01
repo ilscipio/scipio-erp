@@ -31,6 +31,7 @@ import org.ofbiz.service.LocalDispatcher;
 
 import com.ilscipio.scipio.ce.util.Optional;
 import com.ilscipio.scipio.cms.CmsException;
+import com.ilscipio.scipio.cms.CmsInputException;
 import com.ilscipio.scipio.cms.CmsUtil;
 import com.ilscipio.scipio.cms.control.CmsControlUtil;
 import com.ilscipio.scipio.cms.control.CmsProcessMapping;
@@ -85,6 +86,12 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
     private Set<String> candidateWebSiteIds = null; // NOTE: NOT cached when live.
     
     /**
+     * 2017-11-29: new pages will have their primary process mapping set active false,
+     * then first publish operation will then toggle it to true.
+     */
+    static final String newPagePrimaryProcessMappingActive = "N";
+    
+    /**
      * 2016: new backpointers to process mappings that act as "primary" ones for this page.
      * NOTE: 2016-11: currently there should usually be only one per webSiteId (sourceWebSiteId).
      * <p>
@@ -125,7 +132,9 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
     */
     public CmsPage(Delegator delegator, Map<String, ?> fields) {
         super(delegator, fields);
-        this.setPrimaryProcessMappingFields(fields); 
+        // TODO: REVIEW: 2017-11-29: this was in duplicate with createAndStoreWithPrimaryProcessMapping,
+        // I don't think it should be here and hopefully nothing was relying on this
+        //this.setPrimaryProcessMappingFields(fields); 
     } 
     
     public static CmsPage createAndStore(Delegator delegator, Map<String, ?> fields) {
@@ -135,7 +144,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
     }
     
     public static CmsPage createAndStoreWithPrimaryProcessMapping(Delegator delegator, Map<String, ?> fields) {
-        CmsPage page = new CmsPage(delegator, fields);
+        CmsPage page = new CmsPage(delegator, fields);  
         page.setPrimaryProcessMappingFields(fields); 
         page.store();
         return page;
@@ -942,12 +951,11 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
      * @param path
      */
     public void setPrimaryProcessMappingFields(Map<String, ?> fields) {
-        String primaryPath = (String) fields.get("primaryPath");
         String webSiteId = (String) fields.get("webSiteId");
   
         // bare minimum fields needed
         // NOTE: for simplicity we require webSiteId in all update cases even if changing only path.
-        if (UtilValidate.isNotEmpty(primaryPath) && UtilValidate.isNotEmpty(webSiteId)) { 
+        if (UtilValidate.isNotEmpty(webSiteId)) { 
             CmsProcessMapping primaryProcessMapping = getPrimaryProcessMapping(webSiteId);
             
             // 2016: FIXME?: this next check was not in original code I wrote.
@@ -975,7 +983,14 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
             
             Map<String, Object> processFields = new HashMap<>();
             if (fields.containsKey("primaryPath")) {
-                processFields.put("sourcePath", fields.get("primaryPath"));
+                // we can't allow setting an empty primaryPath during updates
+                if (UtilValidate.isNotEmpty((String) fields.get("primaryPath"))) {
+                    processFields.put("sourcePath", fields.get("primaryPath"));
+                } else {
+                    Debug.logWarning("Cms: Attempted setPrimaryProcessMappingFields for page '" + getLogIdRepr() 
+                        + "' with explicitly empty primaryPath (sourcePath) - not allowed - calling code should be fixed"
+                        + " to either not set primaryPath or to re-send its previous value (or a different value)", module);
+                }
             }
             if (fields.containsKey("primaryPathFromContextRoot")) {
                 processFields.put("sourceFromContextRoot", fields.get("primaryPathFromContextRoot"));
@@ -990,12 +1005,27 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
                 processFields.put("sourceWebSiteId", fields.get("webSiteId"));
             }
             if (primaryProcessMapping == null) {
-                if (getId() != null) {
-                    Debug.logInfo("Cms: Page " + getId() + " does not have a primary process mapping; creating a new one to "
-                            + "store primary path " + primaryPath, module);
+                String primaryPath = (String) processFields.get("sourcePath");
+                if (UtilValidate.isNotEmpty(primaryPath)) {
+                    if (getId() != null) {
+                        Debug.logInfo("Cms: Page '" + getId() + "' does not have a primary process mapping; creating a new one to "
+                                + "store primary path " + primaryPath, module);
+                    }
+                    primaryProcessMapping = CmsProcessMapping.createPrimaryProcessMapping(getDelegator(), processFields);
+                    this.addPrimaryProcessMapping(primaryProcessMapping);
+                } else {
+                    // TODO: REVIEW: should this throw an exception instead of warning?
+                    // This situation is supported by the schema, just not the UI, so maybe
+                    // it makes sense if the UI enforces alone, as this could return in the future...
+                    // (it could also be enforced by the service)
+                    if (getId() != null) {
+                        Debug.logWarning("Cms: Invoked add new primary process mapping for page '" + getId() 
+                            + "' but primaryPath field was empty - skipping primary process mapping creation (primaryPath/sourcePath cannot be empty)", module);
+                    } else {
+                        Debug.logWarning("Cms: Creating a new page with empty primaryPath field"
+                                + " - skipping primary process mapping creation (primaryPath/sourcePath cannot be empty)", module);
+                    }
                 }
-                primaryProcessMapping = CmsProcessMapping.createPrimaryProcessMapping(getDelegator(), processFields);
-                this.addPrimaryProcessMapping(primaryProcessMapping);
             } else {
                 primaryProcessMapping.setPrimaryProcessMappingFields(processFields, false);
             }

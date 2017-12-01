@@ -1,6 +1,7 @@
 package com.ilscipio.scipio.cms.content;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -257,6 +258,15 @@ public abstract class CmsPageServices {
                     UtilGenerics.<String, Object> checkMap(context), userLogin, null, null);
             fields.put("primaryPath", primaryPath);
             fields.put("primaryTargetPath", primaryTargetPath);
+            
+            // 2017-11-29: new pages will have their primary process mapping set active false,
+            // then first publish operation will then toggle it to true.
+            // see activePageVersion service below
+            Object initialActive = fields.get("active");
+            if (CmsPage.newPagePrimaryProcessMappingActive != null && (initialActive == null || (initialActive instanceof String && ((String) initialActive).isEmpty()))) {
+                fields.put("active", CmsPage.newPagePrimaryProcessMappingActive);
+            }
+            
             CmsPage page = CmsPage.createAndStoreWithPrimaryProcessMapping(delegator, fields);
 
             // Add Base user authorization
@@ -317,6 +327,24 @@ public abstract class CmsPageServices {
             String versionId = (String) context.get("versionId");
             CmsPage page = CmsPage.getWorker().findByIdAlways(delegator, pageId, false);
             page.setActiveVersion(versionId);
+            
+            // 2017-11-29: new pages will have their primary process mapping set active false,
+            // then first publish operation will then toggle it to true.
+            // see createPage service above
+            Map<String, Object> fields = new HashMap<>();
+            fields.put("active", "Y");
+            Collection<String> webSiteIds = page.getPrimaryProcessMappingsWebSiteIds();
+            if (webSiteIds!= null && webSiteIds.size() > 0) {
+                for(String webSiteId : webSiteIds) {
+                    fields.put("webSiteId", webSiteId);
+                    page.setPrimaryProcessMappingFields(fields);
+                }
+            } else {
+                Debug.logWarning("Cms: activatePageVersion: Page '" + pageId 
+                        + "' appears to have no primary process mapping webSiteIds"
+                        + " - cannot activate primary process mapping - activation may be incomplete", module);
+            }
+            
             page.store();
             result.put("pageId", pageId);
             result.put("versionId", versionId);

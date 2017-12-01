@@ -18,8 +18,8 @@ import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.webapp.WebAppUtil;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
+import com.ilscipio.scipio.ce.util.PathUtil;
 import com.ilscipio.scipio.cms.control.cmscall.CmsCallType;
-import com.ilscipio.scipio.cms.util.PathUtil;
 import com.ilscipio.scipio.cms.webapp.CmsWebappUtil;
 
 /**
@@ -468,4 +468,5 @@ public abstract class CmsControlUtil {
         }
         return cmsPageVersionId;
     }
+
 }

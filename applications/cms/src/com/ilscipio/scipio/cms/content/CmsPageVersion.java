@@ -17,6 +17,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityFindOptions;
 
+import com.ilscipio.scipio.ce.util.Optional;
 import com.ilscipio.scipio.cms.CmsException;
 import com.ilscipio.scipio.cms.CmsUtil;
 import com.ilscipio.scipio.cms.data.CmsDataObject;
@@ -24,7 +25,6 @@ import com.ilscipio.scipio.cms.template.CmsComplexTemplate;
 import com.ilscipio.scipio.cms.template.CmsTemplate;
 import com.ilscipio.scipio.cms.template.CmsTemplate.TemplateBodySource;
 import com.ilscipio.scipio.cms.template.CmsTemplateVersion;
-import com.ilscipio.scipio.cms.util.Optional;
 
 public class CmsPageVersion extends CmsDataObject {
     

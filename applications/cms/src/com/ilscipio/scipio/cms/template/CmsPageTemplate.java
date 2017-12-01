@@ -19,6 +19,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 
+import com.ilscipio.scipio.ce.util.Optional;
 import com.ilscipio.scipio.cms.CmsException;
 import com.ilscipio.scipio.cms.CmsInputException;
 import com.ilscipio.scipio.cms.content.CmsPage;
@@ -30,7 +31,6 @@ import com.ilscipio.scipio.cms.data.CmsEntityVisit.VisitRelation;
 import com.ilscipio.scipio.cms.data.CmsEntityVisit.VisitRelations;
 import com.ilscipio.scipio.cms.data.CmsMajorObject;
 import com.ilscipio.scipio.cms.template.CmsTemplateVersion.ActiveVersionWorker;
-import com.ilscipio.scipio.cms.util.Optional;
 
 import freemarker.core.Environment;
 

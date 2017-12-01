@@ -57,13 +57,13 @@ import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.ofbiz.widget.renderer.macro.MacroScreenRenderer;
 import org.ofbiz.widget.renderer.macro.MacroScreenViewHandler;
 
+import com.ilscipio.scipio.ce.util.Optional;
 import com.ilscipio.scipio.cms.CmsException;
 import com.ilscipio.scipio.cms.content.CmsPage;
 import com.ilscipio.scipio.cms.content.CmsPageContent;
 import com.ilscipio.scipio.cms.content.CmsPageContext;
 import com.ilscipio.scipio.cms.data.Preloadable;
 import com.ilscipio.scipio.cms.data.Preloadable.AbstractPreloadable;
-import com.ilscipio.scipio.cms.util.Optional;
 
 import freemarker.core.Environment;
 import freemarker.core.Environment.Namespace;

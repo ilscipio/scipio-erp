@@ -1,9 +1,7 @@
 package com.ilscipio.scipio.cms.control;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,17 +20,15 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.webapp.control.RequestHandler;
-import org.ofbiz.webapp.control.RequestLinkUtil;
 
+import com.ilscipio.scipio.ce.util.PathUtil;
 import com.ilscipio.scipio.cms.CmsUtil;
 import com.ilscipio.scipio.cms.control.CmsProcessMapping.ProcessMappingWorker.FindByRequestResult;
 import com.ilscipio.scipio.cms.control.cmscall.CmsCallType;
 import com.ilscipio.scipio.cms.data.CmsDataObject;
-import com.ilscipio.scipio.cms.util.PathUtil;
 import com.ilscipio.scipio.cms.webapp.CmsWebappUtil;
 
 /**

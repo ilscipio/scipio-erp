@@ -14,8 +14,8 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 
+import com.ilscipio.scipio.ce.util.Optional;
 import com.ilscipio.scipio.cms.CmsException;
-import com.ilscipio.scipio.cms.util.Optional;
 
 /**
  * Versioned complex template.

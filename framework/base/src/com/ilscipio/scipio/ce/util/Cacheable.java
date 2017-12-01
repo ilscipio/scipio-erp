@@ -1,4 +1,4 @@
-package com.ilscipio.scipio.cms.util;
+package com.ilscipio.scipio.ce.util;
 
 
 /**

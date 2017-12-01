@@ -8,8 +8,8 @@ import java.util.Map;
 
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilRender.RenderExceptionMode;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.entity.Delegator;
 
@@ -21,7 +21,6 @@ import com.ilscipio.scipio.cms.content.CmsPageContext;
 import com.ilscipio.scipio.cms.template.CmsAssetTemplate;
 import com.ilscipio.scipio.cms.template.CmsAssetTemplate.AssetTemplateRenderer.AtRenderArgs;
 import com.ilscipio.scipio.cms.template.CmsPageTemplate;
-import com.ilscipio.scipio.cms.template.CmsRenderTemplate.TemplateRenderer.RenderArgs;
 import com.ilscipio.scipio.cms.template.CmsRenderUtil;
 
 import freemarker.core.Environment;

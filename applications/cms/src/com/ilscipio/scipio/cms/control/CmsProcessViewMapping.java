@@ -13,9 +13,9 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 
+import com.ilscipio.scipio.ce.util.Optional;
 import com.ilscipio.scipio.cms.CmsException;
 import com.ilscipio.scipio.cms.content.CmsPage;
-import com.ilscipio.scipio.cms.util.Optional;
 
 /**
  * Wraps and represents a CmsProcessViewMapping entity value.

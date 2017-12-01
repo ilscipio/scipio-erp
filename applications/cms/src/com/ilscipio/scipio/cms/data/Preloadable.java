@@ -8,7 +8,7 @@ import java.util.Set;
 
 import org.ofbiz.entity.GenericValue;
 
-import com.ilscipio.scipio.cms.util.Optional;
+import com.ilscipio.scipio.ce.util.Optional;
 
 public interface Preloadable {
 

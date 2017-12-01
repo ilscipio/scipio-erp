@@ -27,27 +27,24 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
-import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.webapp.WebAppUtil;
 import org.ofbiz.webapp.control.RequestLinkUtil;
 
+import com.ilscipio.scipio.ce.util.Optional;
+import com.ilscipio.scipio.ce.util.PathUtil;
 import com.ilscipio.scipio.cms.CmsException;
 import com.ilscipio.scipio.cms.CmsUtil;
 import com.ilscipio.scipio.cms.content.CmsPage;
 import com.ilscipio.scipio.cms.data.CmsDataException;
-import com.ilscipio.scipio.cms.data.CmsDataObject;
 import com.ilscipio.scipio.cms.data.CmsDataException.CmsUniqueDataException;
 import com.ilscipio.scipio.cms.data.CmsEntityVisit;
 import com.ilscipio.scipio.cms.data.CmsEntityVisit.CmsEntityVisitor;
 import com.ilscipio.scipio.cms.data.CmsEntityVisit.VisitRelation;
 import com.ilscipio.scipio.cms.data.CmsEntityVisit.VisitRelations;
 import com.ilscipio.scipio.cms.data.CmsMajorObject;
-import com.ilscipio.scipio.cms.data.CmsObject;
 import com.ilscipio.scipio.cms.data.CmsObjectCache;
 import com.ilscipio.scipio.cms.data.CmsObjectCache.CacheEntry;
 import com.ilscipio.scipio.cms.data.CmsObjectCache.SimpleCacheEntry;
-import com.ilscipio.scipio.cms.util.Optional;
-import com.ilscipio.scipio.cms.util.PathUtil;
 
 /**
  * Wraps and represents a CmsProcessMapping entity value.

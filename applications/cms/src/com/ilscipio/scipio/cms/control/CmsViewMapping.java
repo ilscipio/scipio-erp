@@ -17,6 +17,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 
+import com.ilscipio.scipio.ce.util.Optional;
 import com.ilscipio.scipio.cms.CmsException;
 import com.ilscipio.scipio.cms.CmsUtil;
 import com.ilscipio.scipio.cms.content.CmsPage;
@@ -28,7 +29,6 @@ import com.ilscipio.scipio.cms.data.CmsEntityVisit.VisitRelations;
 import com.ilscipio.scipio.cms.data.CmsMajorObject;
 import com.ilscipio.scipio.cms.data.CmsObjectCache;
 import com.ilscipio.scipio.cms.data.CmsObjectCache.CacheEntry;
-import com.ilscipio.scipio.cms.util.Optional;
 
 /**
  * Wraps and represents a CmsViewMapping entity value.

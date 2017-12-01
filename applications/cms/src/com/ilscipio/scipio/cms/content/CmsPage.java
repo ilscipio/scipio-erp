@@ -29,6 +29,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.service.LocalDispatcher;
 
+import com.ilscipio.scipio.ce.util.Optional;
 import com.ilscipio.scipio.cms.CmsException;
 import com.ilscipio.scipio.cms.CmsUtil;
 import com.ilscipio.scipio.cms.control.CmsControlUtil;
@@ -50,7 +51,6 @@ import com.ilscipio.scipio.cms.template.CmsMasterComplexTemplate.CmsTemplateScri
 import com.ilscipio.scipio.cms.template.CmsPageTemplate;
 import com.ilscipio.scipio.cms.template.CmsPageTemplate.PageTemplateRenderer.PtRenderArgs;
 import com.ilscipio.scipio.cms.template.CmsScriptTemplate;
-import com.ilscipio.scipio.cms.util.Optional;
 
 /**
  * Represents a CMS page.

@@ -168,8 +168,7 @@ public abstract class CmsAssetTemplateServices {
             } else {
                 return ServiceUtil.returnError("Asset template version '" + version + "' not found"); // TODO: Localize
             }
-        } 
-        catch (Exception e) {
+        } catch(Exception e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         }
@@ -204,8 +203,7 @@ public abstract class CmsAssetTemplateServices {
                 result = ServiceUtil.returnFailure("Could not find active template version for webSiteId '" +
                         webSiteId + "' and templateName '" + templateName + "'"); // TODO: Localize
             }
-        } 
-        catch (Exception e) {
+        } catch(Exception e) {
             Debug.logError(e, module);
             return ServiceUtil.returnFailure(e.getMessage()); // FIXME: Shouldn't be failure here or anywhere else!
         }
@@ -314,8 +312,7 @@ public abstract class CmsAssetTemplateServices {
             result.put("assetTemplateModel", assetTemplate);
             result.put("assetTemplateVersion", assetTemplate.getActiveVersion() != null ? assetTemplate.getActiveVersion().getEntity() : null);
             result.put("assetTemplateVersionModel", assetTemplate.getActiveVersion());
-        } 
-        catch (Exception e) {
+        } catch(Exception e) {
             Debug.logError(e, module);
             return ServiceUtil.returnFailure(e.getMessage());
         }
@@ -338,8 +335,7 @@ public abstract class CmsAssetTemplateServices {
             String pageTemplateId = (String) context.get("pageTemplateId");
             CmsPageTemplate pageTmp = CmsPageTemplate.getWorker().findByIdAlways(delegator, pageTemplateId, false);
             pageTmp.addUpdateAssetTemplate(context);
-        } 
-        catch (Exception e) {
+        } catch(Exception e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         }

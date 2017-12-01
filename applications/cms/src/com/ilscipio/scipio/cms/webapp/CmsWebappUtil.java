@@ -92,8 +92,7 @@ public abstract class CmsWebappUtil {
         for(String part : parts) {
             try {
                 out.add(UtilCodec.getUrlEncoder().encode(part));
-            } 
-            catch (Exception e) {
+            } catch(Exception e) {
                 // Probably a bad argument
                 throw new IllegalArgumentException("Error URL-encoding string: " + part, e);
             }
@@ -104,8 +103,7 @@ public abstract class CmsWebappUtil {
     public static String urlEncode(String urlPart) throws IllegalArgumentException {
         try {
             return UtilCodec.getUrlEncoder().encode(urlPart);
-        } 
-        catch (Exception e) {
+        } catch(Exception e) {
             // Probably a bad argument
             throw new IllegalArgumentException("Error URL-encoding string: " + urlPart, e);
         }
@@ -114,8 +112,7 @@ public abstract class CmsWebappUtil {
     public static String urlDecode(String urlPart) throws IllegalArgumentException {
         try {
             return UtilCodec.getUrlDecoder().decode(urlPart);
-        } 
-        catch (Exception e) {
+        } catch(Exception e) {
             // Probably a bad argument
             throw new IllegalArgumentException("Error URL-decoding string: " + urlPart, e);
         }

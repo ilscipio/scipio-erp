@@ -152,8 +152,7 @@ public abstract class CmsPageTemplateServices {
                 result = ServiceUtil.returnFailure("Could not find page template version '" + versionId + "' for page template '" +
                         pageTemplateId + "'"); // TODO: Localize
             }
-        } 
-        catch (Exception e) {
+        } catch(Exception e) {
             Debug.logError(e, module);
             return ServiceUtil.returnFailure(e.getMessage());
         }
@@ -198,8 +197,7 @@ public abstract class CmsPageTemplateServices {
             }
             
             result.put("versions", allVersionsList);   
-        } 
-        catch (Exception e) {
+        } catch(Exception e) {
             Debug.logError(e, module);
             return ServiceUtil.returnFailure(e.getMessage());
         }
@@ -310,8 +308,7 @@ public abstract class CmsPageTemplateServices {
             pageTmpVersions.put("all", allVersions);
             pageTmpAndVersions.put("pageTmpVersions", pageTmpVersions);
             result.put("pageTmpAndVersions", pageTmpAndVersions); 
-        } 
-        catch (Exception e) {
+        } catch(Exception e) {
             Debug.logError(e, module);
             return ServiceUtil.returnFailure(e.getMessage());
         }

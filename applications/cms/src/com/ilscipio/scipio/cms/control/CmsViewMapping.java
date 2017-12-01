@@ -213,8 +213,7 @@ public class CmsViewMapping extends CmsControlDataObject implements CmsMajorObje
             String pageId = getPageId();
             if (UtilValidate.isNotEmpty(pageId)) {
                 page = Optional.ofNullable(CmsPage.getWorker().findById(getDelegator(), pageId, useCache));
-            }
-            else {
+            } else {
                 page = Optional.empty();
             }
             this.page = page;
@@ -269,8 +268,7 @@ public class CmsViewMapping extends CmsControlDataObject implements CmsMajorObje
                         EntityOperator.OR,
                         EntityCondition.makeCondition("targetServletPath", TARGET_SERVLET_PATH_DEFAULT)
                         ));
-            }
-            else {
+            } else {
                 // Default didn't match; must match exact
                 condList.add(EntityCondition.makeCondition("targetServletPath", requestServletPath));
             }

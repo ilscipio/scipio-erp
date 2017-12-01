@@ -39,13 +39,11 @@ public abstract class CmsWebappUtil {
     public static String replaceHttpContentTypeCharset(String prevContentType, String newCharset) {
         if (prevContentType == null || prevContentType.trim().length() == 0) {
             return "charset=" + newCharset;
-        }
-        else {
+        } else {
             if (prevContentType.toLowerCase().contains("charset=")) {
                 Matcher m = charsetPat.matcher(prevContentType);
                 return m.replaceFirst("$1" + newCharset + "$3");
-            }
-            else {
+            } else {
                 return prevContentType + "; charset=" + newCharset;
             }
         }
@@ -160,12 +158,10 @@ public abstract class CmsWebappUtil {
         if (startsWithDelim) {
             if (newQuery.length() > 0) {
                 newQuery.setCharAt(0, queryString.charAt(0));
-            }
-            else {
+            } else {
                 newQuery.append(queryString.charAt(0));
             }
-        }
-        else {
+        } else {
             if (newQuery.length() > 0) {
                 newQuery.deleteCharAt(0);
             }

@@ -95,7 +95,7 @@ public abstract class CmsPageServices {
                     webSiteId = page.getWebSiteId();
                     if (UtilValidate.isEmpty(webSiteId) && candidateWebSiteIds.size() > 0) {
                         webSiteId = candidateWebSiteIds.iterator().next();
-                    }    
+                    }
                     if (UtilValidate.isEmpty(webSiteId)) {
                         return ServiceUtil.returnFailure("Could not fetch data for pageId '" + pageId + "' "
                                 + "because no webSiteId passed and no static placeholder found associated to page to use");

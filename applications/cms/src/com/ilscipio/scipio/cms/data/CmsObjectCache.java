@@ -102,8 +102,7 @@ public abstract class CmsObjectCache<T extends CmsObject> {
         CacheEntry<T> entry = getEntry(key);
         if (entry != null && entry.hasValue()) {
             return entry.getValue(); 
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -211,8 +210,7 @@ public abstract class CmsObjectCache<T extends CmsObject> {
             CacheEntry<T> entry = getEntry(key);
             if (entry != null && entry.hasValue()) {
                 return entry.getValue(); 
-            }
-            else {
+            } else {
                 return null;
             }
         }

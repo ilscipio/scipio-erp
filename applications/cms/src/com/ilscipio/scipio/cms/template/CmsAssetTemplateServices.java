@@ -165,8 +165,7 @@ public abstract class CmsAssetTemplateServices {
             if (version != null) {
                 version.setAsActiveVersion();
                 version.store();
-            }
-            else {
+            } else {
                 return ServiceUtil.returnError("Asset template version '" + version + "' not found"); // TODO: Localize
             }
         } 

@@ -259,8 +259,7 @@ public abstract class CmsControlUtil {
     public static String toCmsInitParamName(String paramName) {
         if (paramName.startsWith("cms")) {
             return paramName;
-        }
-        else {
+        } else {
             return "cms" + paramName.substring(0, 1).toUpperCase() + paramName.substring(1);
         }
     }
@@ -271,8 +270,7 @@ public abstract class CmsControlUtil {
         if (UtilValidate.isNotEmpty(val)) {
             if ("true".equalsIgnoreCase(val)) {
                 return true;
-            }
-            else if ("false".equalsIgnoreCase(val)) {
+            } else if ("false".equalsIgnoreCase(val)) {
                 return false;
             }
         }
@@ -286,8 +284,7 @@ public abstract class CmsControlUtil {
         if (UtilValidate.isNotEmpty(val)) {
             if ("true".equalsIgnoreCase(val)) {
                 return true;
-            }
-            else if ("false".equalsIgnoreCase(val)) {
+            } else if ("false".equalsIgnoreCase(val)) {
                 return false;
             }
         }

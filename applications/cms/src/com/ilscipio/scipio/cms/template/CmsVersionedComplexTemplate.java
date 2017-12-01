@@ -485,8 +485,7 @@ public abstract class CmsVersionedComplexTemplate<T extends CmsVersionedComplexT
             List<V> allVersions = findAllTemplateVersions(delegator, templateId, template);
             if (UtilValidate.isNotEmpty(allVersions)) {
                 return allVersions.get(0);
-            }
-            else {
+            } else {
                 return null;
             }
         }
@@ -504,8 +503,7 @@ public abstract class CmsVersionedComplexTemplate<T extends CmsVersionedComplexT
             List<V> allVersions = findAllTemplateVersions(delegator, templateId, template);
             if (UtilValidate.isNotEmpty(allVersions)) {
                 return allVersions.get(allVersions.size() - 1);
-            }
-            else {
+            } else {
                 return null;
             }
         }

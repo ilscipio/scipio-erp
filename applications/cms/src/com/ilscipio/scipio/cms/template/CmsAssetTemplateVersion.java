@@ -79,8 +79,7 @@ public class CmsAssetTemplateVersion extends CmsTemplateVersion {
     public CmsAssetTemplate getAssetTemplate() {
         if (assetTemplate != null) {
             return assetTemplate;
-        }
-        else {
+        } else {
             assetTemplate = CmsAssetTemplate.getWorker().findByIdAlways(getDelegator(), getAssetTemplateId(), false);
             return assetTemplate;
         }

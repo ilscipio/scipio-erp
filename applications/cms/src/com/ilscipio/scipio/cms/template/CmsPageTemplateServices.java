@@ -148,8 +148,7 @@ public abstract class CmsPageTemplateServices {
                 Map<String, Object> version = new HashMap<>();
                 tmpVer.putIntoMap(version, minimalInfoOnly, null);
                 result.put("version", version);
-            }
-            else {
+            } else {
                 result = ServiceUtil.returnFailure("Could not find page template version '" + versionId + "' for page template '" +
                         pageTemplateId + "'"); // TODO: Localize
             }

@@ -329,14 +329,12 @@ public class CmsProcessViewMapping extends CmsControlDataObject {
                             if (CmsProcessMapping.targetMatchesRequestPath(explTargetPath, requestPath)) {
                                 explPathMappings.add(currMapping);
                             }
-                        }
-                        else {
+                        } else {
                             if (parentOrDefMatchAnyTargetPath) {
                                 // Note: Explicit target above overrides matchAnyTargetPath set in parent,
                                 // but matchAnyTargetPath in child overrides all
                                 matchAnyMappings.add(currMapping); 
-                            }
-                            else if (processMappingMatchesReq) { // Default parent target
+                            } else if (processMappingMatchesReq) { // Default parent target
                                 parentPathMappings.add(currMapping);
                             }
                         }
@@ -352,11 +350,9 @@ public class CmsProcessViewMapping extends CmsControlDataObject {
             // Return the first mapping found, most specific type first w.r.t. targetPath
             if (explPathMappings.size() > 0) {
                 viewMapping = explPathMappings.get(0);
-            }
-            else if (parentPathMappings.size() > 0) {
+            } else if (parentPathMappings.size() > 0) {
                 viewMapping = parentPathMappings.get(0);
-            }
-            else if (matchAnyMappings.size() > 0) {
+            } else if (matchAnyMappings.size() > 0) {
                 viewMapping = matchAnyMappings.get(0);
             }
         }

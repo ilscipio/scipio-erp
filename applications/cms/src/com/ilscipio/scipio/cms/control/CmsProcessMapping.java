@@ -500,8 +500,7 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
     public String getSourcePathExpanded(String defaultSourceServletPath, boolean defaultSourceFromContextRoot) {
         if (isSourceFromContextRootLogical(defaultSourceFromContextRoot)) {
             return PathUtil.concatPaths(defaultSourceServletPath, getSourcePath());
-        }
-        else {
+        } else {
             return getSourcePath();
         }
     }
@@ -561,13 +560,11 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
                 forwardPath = PathUtil.concatPaths(defaultForwardServletPath, forwardPath);
             }
             return CmsControlUtil.normalizeContextRootRequestPath(forwardPath);
-        }
-        else {
+        } else {
             String targetPath = getTargetPath();
             if (UtilValidate.isNotEmpty(targetPath)) {
                 return CmsControlUtil.normalizeContextRootRequestPath(PathUtil.concatPaths(defaultTargetServletPath, targetPath));
-            }
-            else {
+            } else {
             
                 return null;
             }
@@ -651,8 +648,7 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
                     EntityOperator.OR,
                     EntityCondition.makeCondition("sourceFromContextRoot", "Y")
                     );
-        }
-        else {
+        } else {
             return EntityCondition.makeCondition("sourceFromContextRoot", "Y");
         }
     }
@@ -660,8 +656,7 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
     public static EntityCondition makeNotSourceFromContextRootCondition(boolean defaultSourceFromContextRoot) {
         if (defaultSourceFromContextRoot) {
             return EntityCondition.makeCondition("sourceFromContextRoot", "N");
-        }
-        else {
+        } else {
             return EntityCondition.makeCondition(EntityCondition.makeCondition("sourceFromContextRoot", SOURCE_FROM_CONTEXT_ROOT_DEFAULT),
                     EntityOperator.OR,
                     EntityCondition.makeCondition("sourceFromContextRoot", "N")
@@ -800,8 +795,7 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
     public static String getExtraPathInfo(String requestPath, String sourcePath) {
         if (requestPath.startsWith(sourcePath)) {
             return requestPath.substring(sourcePath.length());
-        }
-        else {
+        } else {
             return null;
         } 
     }
@@ -927,8 +921,7 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
             if (useLocalCache) {
                 cache.put(key, new SimpleCacheEntry<CmsProcessViewMapping>(viewMapping));
             }
-        }
-        else {
+        } else {
             if (cacheEntry.hasValue()) {
                 viewMapping = cacheEntry.getValue();
             }
@@ -1180,8 +1173,7 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
                     condList.add(EntityCondition.makeCondition(contextSourcePathCond,
                             EntityOperator.OR,
                             servletSourcePathCond));
-                }
-                else {
+                } else {
                     condList.add(contextSourcePathCond);
                 }
 
@@ -1220,8 +1212,7 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
                         if (mappings.size() == 1) {
                             Debug.logInfo("Cms: Found single process mapping matching request: " + 
                                     mapping.getLogIdRepr() + CmsControlUtil.getReqLogIdDelimStr(request), module);
-                        }
-                        else {
+                        } else {
                             Debug.logInfo("Cms: Found " + mappings.size() + " process mappings matching request; using most specific: " + 
                                     mapping.getLogIdRepr() + CmsControlUtil.getReqLogIdDelimStr(request), module);
                         }

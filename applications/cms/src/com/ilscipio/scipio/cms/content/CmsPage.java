@@ -1537,8 +1537,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
             EntityCondition userOrGroupsCond;
             if (userSecGroupsCond != null) {
                 userOrGroupsCond = EntityCondition.makeCondition(userSecGroupsCond, EntityOperator.OR, userCond);
-            }
-            else {
+            } else {
                 userOrGroupsCond = userCond;
             }
             
@@ -1629,8 +1628,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
         public boolean isMoreSeniorThan(UserRole other) {
             if (other == null) {
                 return true;
-            }
-            else {
+            } else {
                 return this.seniorityRank > other.seniorityRank;
             }
         }

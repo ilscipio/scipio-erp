@@ -20,8 +20,7 @@ public enum CmsCallType {
     public boolean representCaller() {
         if (this == OFBIZ_RENDER || this == OFBIZ_PREVIEW) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -29,8 +28,7 @@ public enum CmsCallType {
     public boolean requiresServerRequest() {
         if (this == OFBIZ_RENDER || this == OFBIZ_PREVIEW || this == CMS_STATIC_RENDER) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -38,8 +36,7 @@ public enum CmsCallType {
     public boolean supportsServerRequest() {
         if (this == OFBIZ_RENDER || this == OFBIZ_PREVIEW || this == CMS_STATIC_RENDER) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -47,8 +44,7 @@ public enum CmsCallType {
     public boolean requiresCallParams() {
         if (this == OFBIZ_RENDER || this == OFBIZ_PREVIEW) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }

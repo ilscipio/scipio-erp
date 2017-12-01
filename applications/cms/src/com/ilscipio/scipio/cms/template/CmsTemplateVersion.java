@@ -125,12 +125,10 @@ public abstract class CmsTemplateVersion extends CmsTemplate {
             String firstVersionId = first.getVersionId();
             if (firstVersionId != null)  {
                 return firstVersionId.equals(second.getVersionId());
-            }
-            else {
+            } else {
                 return false;
             }
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -151,8 +149,7 @@ public abstract class CmsTemplateVersion extends CmsTemplate {
     public boolean isActiveVersion(ExtendedInfo knownInfo) {
         if (knownInfo != null && knownInfo.getActiveVersionId() != null) {
             return knownInfo.getActiveVersionId().equals(getVersionId());
-        }
-        else {
+        } else {
             return isSameVersion(getTemplate().getActiveVersion());
         }
     }  
@@ -164,8 +161,7 @@ public abstract class CmsTemplateVersion extends CmsTemplate {
     public boolean isLastVersion(ExtendedInfo knownInfo) {
         if (knownInfo != null && knownInfo.getLastVersionId() != null) {
             return knownInfo.getLastVersionId().equals(getVersionId());
-        }
-        else {
+        } else {
             return isSameVersion(getTemplate().getLastVersion());
         }
     }
@@ -177,8 +173,7 @@ public abstract class CmsTemplateVersion extends CmsTemplate {
     public boolean isFirstVersion(ExtendedInfo knownInfo) {
         if (knownInfo != null && knownInfo.getFirstVersionId() != null) {
             return knownInfo.getFirstVersionId().equals(getVersionId());
-        }
-        else {
+        } else {
             return isSameVersion(getTemplate().getFirstVersion());
         }
     }
@@ -341,8 +336,7 @@ public abstract class CmsTemplateVersion extends CmsTemplate {
             GenericValue activeRecord = getRecord(delegator, templateId);
             if (activeRecord == null) {
                 activeRecord = makeRecord(delegator, templateId, versionId);
-            }
-            else {
+            } else {
                 updateRecord(delegator, activeRecord, versionId);
             }
             try {

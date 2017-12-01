@@ -86,8 +86,7 @@ public class CmsPageTemplateVersion extends CmsTemplateVersion {
     public CmsPageTemplate getPageTemplate() {
         if (pageTemplate != null) {
             return pageTemplate;
-        }
-        else {
+        } else {
             pageTemplate = CmsPageTemplate.getWorker().findByIdAlways(getDelegator(), getPageTemplateId(), false);
             return pageTemplate;
         }

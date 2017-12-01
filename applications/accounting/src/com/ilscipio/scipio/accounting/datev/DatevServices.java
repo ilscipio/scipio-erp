@@ -28,7 +28,11 @@ public class DatevServices {
         String orgPartyId = (String) context.get("organizationPartyId");
         ByteBuffer fileBytes = (ByteBuffer) context.get("uploadedFile");
         
+//        context.get(fieldName, ByteBuffer.wrap(item.get()));
+//        context.get("_" + fieldName + "_contentType"):
+        
         String encoding = System.getProperty("file.encoding");
+        Debug.log("encoding ======> " + encoding);
         String csvString = Charset.forName(encoding).decode(fileBytes).toString();
         final BufferedReader csvReader = new BufferedReader(new StringReader(csvString));
         CSVFormat fmt = CSVFormat.DEFAULT.withHeader();

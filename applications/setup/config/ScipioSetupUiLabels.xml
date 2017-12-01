@@ -183,5 +183,10 @@
     	<value xml:lang="en">Accounting Transactions</value>
     </property>
     
-    
+    <property key="SetupAccountingImportDatev">
+        <value xml:lang="en">Import Datev</value>
+    </property>
+    <property key="SetupAccountingImportElster">
+        <value xml:lang="en">Import Elster</value>
+    </property>
 </resource>

@@ -102,6 +102,11 @@ public class ServiceUtil {
     public static Map<String, Object> returnFailure(String errorMessage) {
         return returnProblem(ModelService.RESPOND_FAIL, errorMessage, null, null, null);
     }
+    
+    /** Returns fail service message. SCIPIO: added missing service overload, 2017-11-01. */
+    public static Map<String, Object> returnFailure(String errorMessage, List<? extends Object> errorMessageList) {
+        return returnProblem(ModelService.RESPOND_FAIL, errorMessage, errorMessageList, null, null);
+    }
 
     public static Map<String, Object> returnFailure(List<? extends Object> errorMessageList) {
         return returnProblem(ModelService.RESPOND_FAIL, null, errorMessageList, null, null);

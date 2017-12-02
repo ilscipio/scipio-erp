@@ -16,7 +16,7 @@ import java.util.Map;
 public abstract class PropertyMessage implements Serializable {
 
     public static final String module = PropertyMessage.class.getName();
-    
+
     protected abstract String getMessageImpl(Locale locale);
     
     public static Locale getDefPropLocale() {
@@ -160,6 +160,50 @@ public abstract class PropertyMessage implements Serializable {
     }
     
     /**
+     * Gets the null-returning instance, can be used to both return null values and as a special
+     * token value.
+     */
+    public static PropertyMessage getNull() {
+        return NullPropertyMessage.INSTANCE;
+    }
+    
+    /**
+     * Gets the empty-string-returning instance, can be used to return empty values,
+     * but shouldn't be relied on as a token value.
+     */
+    public static PropertyMessage getEmpty() {
+        return EmptyPropertyMessage.INSTANCE;
+    }
+    
+    /**
+     * Tests if this is the special null instance, {@link NullPropertyMessage}.
+     */
+    public final boolean isNullInst() {
+        return this == NullPropertyMessage.INSTANCE;
+    }
+
+    /**
+     * Tests if this is specifically the empty instance, {@link EmptyPropertyMessage}.
+     */
+    public final boolean isEmptyInst() {
+        return this == EmptyPropertyMessage.INSTANCE;
+    }
+    
+    /**
+     * Tests if this is an always-null returning instance, best-effort.
+     */
+    public boolean isAlwaysNull() {
+        return false;
+    }
+    
+    /**
+     * Tests if this is an always-empty or always-null returning instance, best-effort.
+     */
+    public boolean isAlwaysEmpty() {
+        return false;
+    }
+    
+    /**
      * Makes an appropriate PropertyMessage instance for the object instance type.
      * @param message the source message object
      * @param strict if true and not a String, Throwable or PropertyMessage, throws IllegalArgumentException; 
@@ -211,6 +255,48 @@ public abstract class PropertyMessage implements Serializable {
         return propMsgs;
     }
     
+    public static class NullPropertyMessage extends PropertyMessage {
+        private static final NullPropertyMessage INSTANCE = new NullPropertyMessage();
+        private NullPropertyMessage() {}
+        
+        @Override
+        protected String getMessageImpl(Locale locale) {
+            return null;
+        }
+        
+        @Override
+        public boolean isAlwaysNull() {
+            return true;
+        }
+        
+        @Override
+        public boolean isAlwaysEmpty() {
+            return true;
+        }
+    }
+    
+    public static class EmptyPropertyMessage extends PropertyMessage {
+        private static final String EMPTY_STRING = "";
+        private static final EmptyPropertyMessage INSTANCE = new EmptyPropertyMessage();
+        
+        private EmptyPropertyMessage() {}
+        
+        @Override
+        protected String getMessageImpl(Locale locale) {
+            return EMPTY_STRING;
+        }
+        
+        @Override
+        public boolean isAlwaysNull() {
+            return false;
+        }
+        
+        @Override
+        public boolean isAlwaysEmpty() {
+            return true;
+        }
+    }
+    
     public static class StaticPropertyMessage extends PropertyMessage {
         private final String message;
 
@@ -221,6 +307,16 @@ public abstract class PropertyMessage implements Serializable {
         @Override
         protected String getMessageImpl(Locale locale) {
             return message;
+        }
+
+        @Override
+        public boolean isAlwaysNull() {
+            return (message == null);
+        }
+
+        @Override
+        public boolean isAlwaysEmpty() {
+            return (message == null || message.isEmpty());
         }
     }
     

@@ -13,14 +13,18 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
 import com.ilscipio.scipio.cms.CmsServiceUtil;
+import com.ilscipio.scipio.cms.ServiceErrorFormatter;
+import com.ilscipio.scipio.cms.ServiceErrorFormatter.FormattedError;
 
 public abstract class CmsScriptTemplateServices {
     
     public static final String module = CmsScriptTemplateServices.class.getName();
-
+    private static final ServiceErrorFormatter errorFmt = 
+            CmsServiceUtil.getErrorFormatter().specialize().setDefaultLogMsgGeneral("Script Template Error").build();
+    
     protected CmsScriptTemplateServices() {
     }
-
+    
     public static Map<String, Object> createUpdateScriptTemplate(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Delegator delegator = dctx.getDelegator();
@@ -56,8 +60,9 @@ public abstract class CmsScriptTemplateServices {
             scriptTmpl.store();
             result.put("scriptTemplateId", scriptTmpl.getId());
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
@@ -79,8 +84,9 @@ public abstract class CmsScriptTemplateServices {
             result.put("scriptTemplateId", scriptTmpl.getId());
             return result;
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
     }
     
@@ -93,8 +99,9 @@ public abstract class CmsScriptTemplateServices {
             scriptTmp.update(context);
             scriptTmp.store();
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
@@ -112,8 +119,9 @@ public abstract class CmsScriptTemplateServices {
             result.put("scriptTemplateValue", scriptTemplate.getEntity());
             result.put("scriptTemplate", scriptTemplate);
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnFailure(e.getMessage()); // FIXME: Shouldn't be failure here or anywhere else!
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnFailure();
         }
         return result;
     }
@@ -126,8 +134,9 @@ public abstract class CmsScriptTemplateServices {
             CmsScriptTemplate template = CmsScriptTemplate.getWorker().findByIdAlways(delegator, scriptTemplateId, false);
             template.remove();
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
@@ -140,8 +149,9 @@ public abstract class CmsScriptTemplateServices {
             CmsScriptTemplate template = CmsScriptTemplate.getWorker().findByIdAlways(delegator, scriptTemplateId, false);
             template.removeIfOrphan();
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }

@@ -19,6 +19,8 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
 import com.ilscipio.scipio.cms.CmsServiceUtil;
+import com.ilscipio.scipio.cms.ServiceErrorFormatter;
+import com.ilscipio.scipio.cms.ServiceErrorFormatter.FormattedError;
 import com.ilscipio.scipio.cms.template.CmsPageTemplate.CmsPageTemplateAssetAssoc;
 import com.ilscipio.scipio.cms.template.CmsPageTemplate.CmsPageTemplateScriptAssoc;
 import com.ilscipio.scipio.cms.template.CmsTemplate.TemplateBodySource;
@@ -30,10 +32,12 @@ import com.ilscipio.scipio.cms.template.CmsTemplate.TemplateBodySource;
 public abstract class CmsPageTemplateServices {
     
     public static final String module = CmsPageTemplateServices.class.getName();
-    
+    private static final ServiceErrorFormatter errorFmt = 
+            CmsServiceUtil.getErrorFormatter().specialize().setDefaultLogMsgGeneral("Page Template Error").build();
+
     protected CmsPageTemplateServices() {
     }
-
+    
     /**
      * Creates a new template in the repository.
      */
@@ -52,8 +56,9 @@ public abstract class CmsPageTemplateServices {
 
             result.put("pageTemplateId", pageTmp.getId());
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
@@ -69,7 +74,7 @@ public abstract class CmsPageTemplateServices {
         try {
             String srcPageTemplateId = (String) context.get("srcPageTemplateId");
             CmsPageTemplate srcPageTemplate = CmsPageTemplate.getWorker().findByIdAlways(delegator, srcPageTemplateId, false);
-            CmsPageTemplate pageTemplate = srcPageTemplate.copyWithVersion(copyArgs);
+            CmsPageTemplate pageTemplate = srcPageTemplate.copy(copyArgs);
             pageTemplate.update(context, false); // update templateName, description IF not empty
             // NOTE: store() now updates the version automatically using pageTemplate.lastVersion
             pageTemplate.store();
@@ -77,8 +82,9 @@ public abstract class CmsPageTemplateServices {
             result.put("pageTemplateId", pageTemplate.getId());
             return result;
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
     }
     
@@ -95,8 +101,9 @@ public abstract class CmsPageTemplateServices {
             pageTmp.update(context);
             pageTmp.store();
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
@@ -119,7 +126,6 @@ public abstract class CmsPageTemplateServices {
                 result = ServiceUtil.returnFailure("Page template '" + pageTemplateId + "' not found"); // TODO: Localize
             }
         } catch (Exception e) {
-            Debug.logError(e, module);
             // Note: Why is our 'convention' to return failure here? Must be because
             // we throw exceptions from constructors that look DB values up by ID when they find nothing.
             // TODO: Change this behavior to use factory methods that return null so can differentiate
@@ -128,7 +134,9 @@ public abstract class CmsPageTemplateServices {
             // DEV NOTE: 2016: returning failure is needed to prevent transaction aborts during
             // screen renders (a.k.a render crash) when this is called from scripts.
             // only the getXxx reader services should return failure; update services must return error.
-            return ServiceUtil.returnFailure(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnFailure();
         }
         return result;
     }
@@ -155,8 +163,9 @@ public abstract class CmsPageTemplateServices {
                         pageTemplateId + "'"); // TODO: Localize
             }
         } catch(Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnFailure(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnFailure();
         }
         return result;
     }
@@ -194,8 +203,9 @@ public abstract class CmsPageTemplateServices {
             
             result.put("versions", allVersionsList);   
         } catch(Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnFailure(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnFailure();
         }
         return result;
     }
@@ -299,8 +309,9 @@ public abstract class CmsPageTemplateServices {
             pageTmpAndVersions.put("pageTmpVersions", pageTmpVersions);
             result.put("pageTmpAndVersions", pageTmpAndVersions); 
         } catch(Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnFailure(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnFailure();
         }
         return result;
     }
@@ -332,8 +343,9 @@ public abstract class CmsPageTemplateServices {
             }
             result.put("pageTemplates", allTemplatesList);   
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnFailure(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnFailure();
         }
         return result;
     }
@@ -368,8 +380,9 @@ public abstract class CmsPageTemplateServices {
             
             result.put("versionId", tmpVer.getId());
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
@@ -398,8 +411,9 @@ public abstract class CmsPageTemplateServices {
                 result = ServiceUtil.returnError("Page template version '" + versionId + "' not found"); // TODO: Localize
             }
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
@@ -414,8 +428,9 @@ public abstract class CmsPageTemplateServices {
         try {
             CmsPageTemplateScriptAssoc.getWorker().createUpdateScriptTemplateAndAssoc(delegator, context, userLogin);
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError("Error while updating Script Template Assoc: " + e.getMessage()); // TODO?: Localize
+            FormattedError err = errorFmt.format(e, "Error while updating Script Template Assoc", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
@@ -428,8 +443,9 @@ public abstract class CmsPageTemplateServices {
             CmsPageTemplate template = CmsPageTemplate.getWorker().findByIdAlways(delegator, pageTemplateId, false);
             template.remove();
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
@@ -446,8 +462,9 @@ public abstract class CmsPageTemplateServices {
             //CmsPageTemplate pageTmp = CmsPageTemplate.getWorker().findByIdAlways(delegator, pageTemplateId, false);
             CmsPageTemplateAssetAssoc.getWorker().createUpdatePageTemplateAssetAssoc(delegator, context);
         } catch(Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
@@ -473,8 +490,9 @@ public abstract class CmsPageTemplateServices {
             attr.store();
             result.put("attributeTemplateId", attr.getId());
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }

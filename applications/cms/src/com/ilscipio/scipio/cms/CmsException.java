@@ -1,8 +1,10 @@
 package com.ilscipio.scipio.cms;
 
+import java.util.List;
 import java.util.Locale;
 
 import org.ofbiz.base.util.PropertyMessage;
+import org.ofbiz.base.util.PropertyMessageEx;
 
 /**
  * Base CMS exception.
@@ -12,7 +14,7 @@ import org.ofbiz.base.util.PropertyMessage;
  * pass it a locale to localize the message.
  */
 @SuppressWarnings("serial")
-public class CmsException extends RuntimeException {
+public class CmsException extends RuntimeException implements PropertyMessageEx {
 
     protected final PropertyMessage propMsg;
     
@@ -61,6 +63,12 @@ public class CmsException extends RuntimeException {
     
     public String getFormattedPropertyMessage(Locale locale) {
         return propMsg.getMessage(locale);
+    }
+
+    @Override
+    public List<PropertyMessage> getPropertyMessageList() {
+        // TODO
+        return null;
     }
 
 }

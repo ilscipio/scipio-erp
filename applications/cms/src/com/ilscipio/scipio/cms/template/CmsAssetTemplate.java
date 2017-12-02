@@ -89,13 +89,11 @@ public class CmsAssetTemplate extends CmsMasterComplexTemplate<CmsAssetTemplate,
     
     @Override
     public CmsAssetTemplate copy(Map<String, Object> copyArgs) throws CmsException {
-        return new CmsAssetTemplate(this, copyArgs);
+        CmsAssetTemplate newTemplate = new CmsAssetTemplate(this, copyArgs);
+        copyInitialVersionToTemplateCopy(newTemplate, copyArgs);
+        return newTemplate;
     }
-    
-    @Override
-    public CmsAssetTemplate copyWithVersion(Map<String, Object> copyArgs) throws CmsException {
-        return (CmsAssetTemplate) super.copyWithVersion(copyArgs);
-    }
+
 
     @Override
     public CmsAssetTemplateVersion createNewVersion(Map<String, ?> fields) {

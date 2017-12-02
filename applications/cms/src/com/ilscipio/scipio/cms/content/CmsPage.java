@@ -139,6 +139,12 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
     protected CmsPage(CmsPage other, Map<String, Object> copyArgs) {
         super(other, copyArgs);
         this.sortedScriptTemplates = CmsMasterComplexTemplate.copyScriptTemplateAssocs(other.getSortedScriptTemplates(), copyArgs);
+        // future? current code for this is invalid (must not store)
+//        Map<String, Map<String, ?>> productEntries = other.getProducts();
+//        for (String name : productEntries.keySet()) {
+//            Map<String, ?> product = productEntries.get(name);
+//            this.addProduct((String) product.get("productId"), name);
+//        }
     }
     
     public static CmsPage createAndStore(Delegator delegator, Map<String, ?> fields) {
@@ -153,7 +159,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
         page.store();
         return page;
     }
-
+    
     @Override    
     public void update(Map<String, ?> fields, boolean setIfEmpty) {
         super.update(fields);
@@ -161,41 +167,52 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
     }
     
     /**
-     * Copies this page including all linked products and the latest version.
+     * Copies this page including all linked products and the latest or requested version.
+     * Caller must call store().
+     * <p>
+     * NOTE: the page is not published immediately - so both the active flag
+     * on primary process mapping is N and there is no active version decided.
      */
     @Override
     public CmsPage copy(Map<String, Object> copyArgs) {
-        return new CmsPage(this, copyArgs);
-//        preventIfImmutable();
-//        
-//        // copy the page itself
-//        CmsPage pageCopy = (CmsPage) super.copy(copyArgs);
-//        // copy products
-//        Map<String, Map<String, ?>> productEntries = getProducts();
-//        for (String name : productEntries.keySet()) {
-//            Map<String, ?> product = productEntries.get(name);
-//            pageCopy.addProduct((String) product.get("productId"), name);
-//        }
-//        
-//        // copy latest version
-//        CmsPageVersion lastVersion = getLastVersionOrNewVersion();
-//        
-//        try {
-//            if (lastVersion != null) {
-//                CmsPageVersion newVer = pageCopy.addVersion(lastVersion.getContent());
-//                newVer.store();
-//            } else {
-//                CmsPageVersion newVer = pageCopy.addVersion(pageCopy.getContent());
-//                newVer.store();
-//            }
-//        } catch (IOException e) {
-//            throw new CmsException(e);
-//        }
-//
-//        // TODO: 2016: INVESTIGATE: PRIMARY PROCESS MAPPINGS:
-//        // primary process mapping can't be copied as-is since the path would conflict, but maybe some part of them...
-//        
-//        return pageCopy;
+        CmsPage newPage = new CmsPage(this, copyArgs);
+        // NOTE: the service puts primaryPath and webSiteId in the copyArgs
+        newPage.setPrimaryProcessMappingFields(copyArgs, true);
+        copyInitialVersionToPageCopy(newPage, copyArgs);
+        return newPage;
+    }
+
+    /**
+     * Copies the version specified in copyArgs from <code>this</code> to newPage and assigns it
+     * as its lastVersion member (which will get picked up by {@link #store()} later).
+     */
+    protected void copyInitialVersionToPageCopy(CmsPage newPage, Map<String, Object> copyArgs) {
+        // NOTE: here <code>this</code> is page we're copying from
+        CmsPageVersion newVersion = newPage.copyOtherVersion(this, copyArgs);
+        // NOTE: for new pages we do NOT set active version, user must verify
+        // operation is good before publishing
+        //newVersion.setActive...
+        newPage.setLastVersion(newVersion);
+    }
+    
+    /**
+     * Creates an in-memory copy of the specified (in copyArgs) or last version 
+     * from the <code>other</code> instance, the result then associated to <code>this</code> instance, 
+     * using any config in copyArgs.
+     * NOTE: this swaps <code>this</code> (because it was originally in the copy constructor).
+     */
+    protected CmsPageVersion copyOtherVersion(CmsPage other, Map<String, Object> copyArgs) {
+        return copyOtherVersion(other.getVersionForCopyAndVerify(copyArgs), copyArgs);
+    }
+    
+    protected CmsPageVersion copyOtherVersion(CmsPageVersion otherVersion, Map<String, Object> copyArgs) {
+        CmsPageVersion newVersion = otherVersion.copy(copyArgs, this);
+        
+        // redundant?
+        //// Copy the original version date from the last template
+        //newVersion.setOriginalVersionDate(otherVersion.getVersionDate());
+        
+        return newVersion;
     }
     
     /**
@@ -230,6 +247,16 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
     public void store() throws CmsException {
         preventIfImmutable();
         super.store();
+
+        if (lastVersion != null && lastVersion.isPresent()) {
+            CmsPageVersion lastVer = lastVersion.get();
+            // TODO: REVIEW: could remove this condition, and also store activeVersion?
+            // unclear if will cause problems anywhere.
+            // For now this detects copy and change only.
+            if (lastVer.hasChangedOrNoId() || lastVer.getEntityPageId() == null) { 
+                lastVer.store();
+            }
+        }
         
         // update active version record
         if (this.activeVersionId != null) {
@@ -254,10 +281,30 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
                 }
             }
         }
+        
         // needed for copy operation
         CmsMasterComplexTemplate.checkStoreScriptTemplateAssocs(this, this.sortedScriptTemplates);
     }
 
+    /**
+     * Gets version indicated in the copy args and verifies OK for copy.
+     * Does NOT creates any copies.
+     */
+    public CmsPageVersion getVersionForCopyAndVerify(Map<String, Object> copyArgs) {
+        String versionId = (String) copyArgs.get("copyVersionId");
+        CmsPageVersion version;
+        if ("ACTIVE".equals(versionId)) {
+            version = getActiveVersion();
+            if (version == null) throw new CmsDataException("Source page '" + getId() + "' has no active page version - cannot create copy");
+        } else if ("LATEST".equals(versionId) || UtilValidate.isEmpty(versionId)) {
+            version = getLastVersion();
+            if (version == null) throw new CmsDataException("Source page '" + getId() + "' has no last page version - cannot create copy");
+        } else {
+            version = getVersion(versionId);
+            if (version == null) throw new CmsDataException("Cannot find template version '" + versionId + "' in page '" + getId() + "' - cannot create copy");
+        }
+        return version;
+    }
     
     /**
      * Adds the product to this page. It will be available in templates under
@@ -285,6 +332,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
         try {
             GenericValue productAssoc = entity.getDelegator().makeValue("CmsPageProductAssoc", "pageId", this.getId(),
                     "productId", productId, "importName", importName);
+            // FIXME: this is bad
             productAssoc.setNextSeqId();
             entity.getDelegator().create(productAssoc);
 
@@ -589,6 +637,12 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
             this.lastVersion = lastVersion;
         }
         return lastVersion.orElse(null);
+    }
+    
+    void setLastVersion(CmsPageVersion version) {
+        preventIfImmutable();
+        
+        this.lastVersion = Optional.ofNullable(version);
     }
     
     /**

@@ -53,6 +53,9 @@ public class CmsPageTemplateVersion extends CmsTemplateVersion {
         if (pageTemplate != null) { // if null, we must be keeping the same parent template
             this.pageTemplate = pageTemplate;
             this.setPageTemplateId(pageTemplate.getId());
+        } else if (other.pageTemplate != null) {
+            this.pageTemplate = other.pageTemplate;
+            this.setPageTemplateId(other.pageTemplate.getId());
         }
     }
     

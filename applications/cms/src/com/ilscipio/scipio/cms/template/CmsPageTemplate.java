@@ -23,7 +23,6 @@ import org.ofbiz.entity.GenericValue;
 
 import com.ilscipio.scipio.ce.util.Optional;
 import com.ilscipio.scipio.cms.CmsException;
-import com.ilscipio.scipio.cms.CmsInputException;
 import com.ilscipio.scipio.cms.content.CmsPage;
 import com.ilscipio.scipio.cms.content.CmsPageContent;
 import com.ilscipio.scipio.cms.content.CmsPageContext;
@@ -98,12 +97,9 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
      */
     @Override
     public CmsPageTemplate copy(Map<String, Object> copyArgs) {
-        return new CmsPageTemplate(this, copyArgs);
-    }
-    
-    @Override
-    public CmsPageTemplate copyWithVersion(Map<String, Object> copyArgs) throws CmsException {
-        return (CmsPageTemplate) super.copyWithVersion(copyArgs);
+        CmsPageTemplate newTemplate = new CmsPageTemplate(this, copyArgs);
+        copyInitialVersionToTemplateCopy(newTemplate, copyArgs);
+        return newTemplate;
     }
     
     protected static Map<String, CmsAssetTemplate> copyAssetTemplates(Map<String, CmsAssetTemplate> srcAssetTemplates, Map<String, Object> copyArgs, CmsPageTemplate other) {

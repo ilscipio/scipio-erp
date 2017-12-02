@@ -13,16 +13,20 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 
+import com.ilscipio.scipio.cms.CmsServiceUtil;
+import com.ilscipio.scipio.cms.ServiceErrorFormatter;
+import com.ilscipio.scipio.cms.ServiceErrorFormatter.FormattedError;
 import com.ilscipio.scipio.cms.content.CmsPage;
 
 /**
  * Cms control data-related Ofbiz services.
  */
-public final class CmsControlDataServices {
+public abstract class CmsControlDataServices {
     
     public static final String module = CmsControlDataServices.class.getName();
-    
-    private CmsControlDataServices() {}
+    private static final ServiceErrorFormatter errorFmt = CmsServiceUtil.getErrorFormatter();
+
+    protected CmsControlDataServices() {}
 
     public static Map<String, Object> createUpdateProcessMapping(DispatchContext dctx, Map<String, Object> context) {
         Delegator delegator = dctx.getDelegator();
@@ -35,8 +39,9 @@ public final class CmsControlDataServices {
                     .createOrUpdateControlDataObject(delegator, sourceWebSiteId, processMappingId, context);
             processMappingId = cmsProcessMapping.getId();
         } catch (Exception e) {
-            Debug.logError(e, "Cms: " + e.getMessage(), module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, "Error creating or updating process mapping", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
     
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -52,8 +57,9 @@ public final class CmsControlDataServices {
         try {
             CmsProcessMapping.getWorker().deleteDataObject(delegator, processMappingId);
         } catch (Exception e) {
-            Debug.logError(e, "Cms: " + e.getMessage(), module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, "Error deleting process mapping", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
     
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -71,8 +77,9 @@ public final class CmsControlDataServices {
                     .createOrUpdateControlDataObject(delegator, webSiteId, processViewMappingId, context);
             processViewMappingId = processViewMapping.getId();
         } catch (Exception e) {
-            Debug.logError(e, "Cms: " + e.getMessage(), module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, "Error creating or updating process view mapping", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
     
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -88,8 +95,9 @@ public final class CmsControlDataServices {
         try {
             CmsProcessViewMapping.getWorker().deleteDataObject(delegator, processViewMappingId);
         } catch (Exception e) {
-            Debug.logError(e, "Cms: " + e.getMessage(), module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, "Error deleting process view mapping", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
     
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -107,8 +115,9 @@ public final class CmsControlDataServices {
                     .createOrUpdateControlDataObject(delegator, webSiteId, viewMappingId, context);
             viewMappingId = viewMapping.getId();
         } catch (Exception e) {
-            Debug.logError(e, "Cms: " + e.getMessage(), module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, "Error creating or updating view mapping", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
     
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -125,8 +134,9 @@ public final class CmsControlDataServices {
         try {
             CmsViewMapping.getWorker().deleteDataObject(delegator, viewMappingId);
         } catch (Exception e) {
-            Debug.logError(e, "Cms: " + e.getMessage(), module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, "Error deleting view mapping", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
     
         Map<String, Object> result = ServiceUtil.returnSuccess();

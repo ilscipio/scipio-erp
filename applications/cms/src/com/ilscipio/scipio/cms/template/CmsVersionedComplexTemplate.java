@@ -54,33 +54,7 @@ public abstract class CmsVersionedComplexTemplate<T extends CmsVersionedComplexT
     public void update(Map<String, ?> fields, boolean setIfEmpty) {
         super.update(fields, setIfEmpty);
     }
-    
-    /** 
-     * Creates in-memory copy of the parent template WITHOUT any versions.
-     * Caller must create or copy a version.
-     *
-     * @see com.ilscipio.scipio.cms.data.CmsDataObject#copy(java.util.Map)
-     */
-    @SuppressWarnings("unchecked")
-    @Override
-    public CmsVersionedComplexTemplate<T, V> copy(Map<String, Object> copyArgs) throws CmsException {
-        return (CmsVersionedComplexTemplate<T, V>) super.copy(copyArgs);
-    }
-    
-    /**
-     * Same as {@link #copy(Map)}, but also creates an in-memory copy of the requested
-     * or last version and sets it as instance field, which can be gotten 
-     * from the returned template using {@link #getLastVersion()}.
-     * Caller must store.
-     */
-    @SuppressWarnings("unchecked")
-    public CmsVersionedComplexTemplate<T, V> copyWithVersion(Map<String, Object> copyArgs) throws CmsException {
-        CmsVersionedComplexTemplate<T, V> newTemplate = (CmsVersionedComplexTemplate<T, V>) super.copy(copyArgs);
-        V newVersion = copyOtherVersion((T) this, copyArgs);
-        newTemplate.setLastVersion(newVersion);
-        return newTemplate;
-    }
-    
+
     /**
      * Override: Versioned templates must do nothing for this, we copy an explicit versionId instead.
      */
@@ -108,12 +82,28 @@ public abstract class CmsVersionedComplexTemplate<T extends CmsVersionedComplexT
     }
 
     /**
+     * Copies the version specified in copyArgs from <code>this</code> to newTemplate and assigns it
+     * as its lastVersion member (which will get picked up by {@link #store()} later).
+     */
+    @SuppressWarnings("unchecked")
+    protected void copyInitialVersionToTemplateCopy(T newTemplate, Map<String, Object> copyArgs) {
+        // NOTE: here <code>this</code> is template we're copying from
+        V newVersion = newTemplate.copyOtherVersion((T) this, copyArgs);
+        if (getVerComTemplateWorkerInst().isFirstVersionActive()) {
+            newVersion.setAsActiveVersion();
+        }
+        newTemplate.setLastVersion(newVersion);
+    }
+    
+    /**
      * Creates an in-memory copy of the specified (in copyArgs) or last version 
      * from the <code>other</code> instance, the result then associated to <code>this</code> instance, 
      * using any config in copyArgs.
+     * NOTE: this swaps <code>this</code> (because it was originally in the copy constructor).
      */
     protected V copyOtherVersion(T other, Map<String, Object> copyArgs) {
-        return copyOtherVersion(getVersionForCopyAndVerify(copyArgs), copyArgs);
+        // NOTE: here <code>this</code> is the newTemplate
+        return copyOtherVersion(other.getVersionForCopyAndVerify(copyArgs), copyArgs);
     }
     
     @SuppressWarnings("unchecked")
@@ -156,12 +146,9 @@ public abstract class CmsVersionedComplexTemplate<T extends CmsVersionedComplexT
     
     /**
      * Stores the template record itself (and active version if any was set).
+     * <p>
      * NOTE: 2017-11: this also stores <code>this.lastVersion</code>, for the copy case,
-     * but ONLY if it was not already fully persisted.
-     * TODO: REVIEW: could this always call store on this.lastVersion and this.activeVersion?
-     *  
-     *  (non-Javadoc)
-     * @see org.CmsDataObject.cms.data.CmsDataObject#store()
+     * but ONLY if it was not already fully persisted. See {@link #copyVersionToNewTemplate}.
      */
     @Override
     public void store() throws CmsException {
@@ -188,13 +175,12 @@ public abstract class CmsVersionedComplexTemplate<T extends CmsVersionedComplexT
             this.tmplBodySrc = null;
         }
         
-        
         if (lastVersion != null && lastVersion.isPresent()) {
             V lastVer = lastVersion.get();
             // TODO: REVIEW: could remove this condition, and also store activeVersion?
             // unclear if will cause problems anywhere.
-            // For now this detects copy only.
-            if (lastVer.getId() == null || lastVer.getTemplateId() == null) { 
+            // For now this detects copy and change only.
+            if (lastVer.hasChangedOrNoId() || lastVer.getTemplateId() == null) { 
                 lastVer.store();
             }
         }
@@ -275,6 +261,8 @@ public abstract class CmsVersionedComplexTemplate<T extends CmsVersionedComplexT
     }
     
     void setLastVersion(V version) {
+        preventIfImmutable();
+        
         this.lastVersion = Optional.ofNullable(version);
     }
     
@@ -313,12 +301,15 @@ public abstract class CmsVersionedComplexTemplate<T extends CmsVersionedComplexT
     public V getVersionForCopyAndVerify(Map<String, Object> copyArgs) {
         String versionId = (String) copyArgs.get("copyVersionId");
         V version;
-        if (UtilValidate.isNotEmpty(versionId)) {
-            version = getVersion(versionId);
-            if (version == null) throw new CmsDataException("cannot find template version '" + versionId + "' in template '" + getId() + "' for copy");
-        } else {
+        if ("ACTIVE".equals(versionId)) {
+            version = getActiveVersion();
+            if (version == null) throw new CmsDataException("Source template '" + getId() + "' has no active template version - cannot create copy");
+        } else if ("LATEST".equals(versionId) || UtilValidate.isEmpty(versionId)) {
             version = getLastVersion();
-            if (version == null) throw new CmsDataException("source template '" + getId() + "' has no last template version - cannot create copy");
+            if (version == null) throw new CmsDataException("Source template '" + getId() + "' has no last template version - cannot create copy");
+        } else {
+            version = getVersion(versionId);
+            if (version == null) throw new CmsDataException("Cannot find template version '" + versionId + "' in template '" + getId() + "' - cannot create copy");
         }
         return version;
     }

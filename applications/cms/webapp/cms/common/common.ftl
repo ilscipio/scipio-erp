@@ -657,5 +657,15 @@ Common CMS editor macros and utilities
   </@menuitem>
 </#macro>
 
+<#macro cmsCopyVersionSelect versionId args...>
+    <@field type="select" name="srcVersionId" label=uiLabelMap.CommonVersion>
+        <@field type="option" value="LATEST">${uiLabelMap.ContentLatest}</@field>
+      <#if versionId?has_content>
+        <@field type="option" value=versionId>${uiLabelMap.CommonSelected} (${versionId})</@field>
+      </#if>
+        <@field type="option" value="ACTIVE">${uiLabelMap.CommonActive}</@field>
+    </@field>
+</#macro>
+
 
 

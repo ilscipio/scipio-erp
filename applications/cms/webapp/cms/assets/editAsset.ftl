@@ -75,6 +75,8 @@
         <@menu args=menuArgs>
             <@menuitem type="link" href=makeOfbizUrl("editAsset") class="+${styles.action_run_sys!} ${styles.action_create!}" text=uiLabelMap.CmsCreateAsset/>
             <@cmsCopyMenuItem target="copyAsset" title=uiLabelMap.CmsCopyAsset>
+                <@field type="hidden" name="assetTemplateId" value=(assetTemplateModel.id!)/><#-- for browsing, on error -->
+                <@field type="hidden" name="srcAssetTemplateId" value=(assetTemplateModel.id!)/>
                 <@field type="input" name="templateName" value="" required=true label=uiLabelMap.CommonName/>
                 <@field type="textarea" name="description" value="" required=false label=uiLabelMap.CommonDescription/>
             </@cmsCopyMenuItem>

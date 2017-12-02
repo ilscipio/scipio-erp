@@ -49,6 +49,9 @@ public class CmsAssetTemplateVersion extends CmsTemplateVersion {
         if (assetTemplate != null) { // if null, we must be keeping the same parent template
             this.assetTemplate = assetTemplate;
             this.setAssetTemplateId(assetTemplate.getId());
+        } else if (other.assetTemplate != null) {
+            this.assetTemplate = other.assetTemplate;
+            this.setAssetTemplateId(other.assetTemplate.getId());
         }
     }
     

@@ -355,7 +355,11 @@
         <@menu args=menuArgs>
             <@menuitem type="link" href=makeOfbizUrl("editPage") class="+${styles.action_run_sys!} ${styles.action_create!}" text=uiLabelMap.CmsCreatePage/>
             <@cmsCopyMenuItem target="copyPage" title=uiLabelMap.CmsCopyPage>
+                 <@field type="hidden" name="pageId" value=(pageId!)/><#-- for browsing, on error -->
+                 <@field type="hidden" name="versionId" value=(versionId!)/><#-- for browsing, on error -->
                  <@field type="hidden" name="webSiteId" value=((meta.webSiteId)!)/>
+                 <@field type="hidden" name="srcPageId" value=(pageId!)/>
+                 <@cmsCopyVersionSelect versionId=(versionId!)/>
                  <@field type="input" name="primaryPath" value="" label=uiLabelMap.CommonPath placeholder="/myUrl" required=true/>
                  <#-- NOTE: the select below is currently for debugging only - not sure if want to expose
                     to users here yet (though should be working) -->

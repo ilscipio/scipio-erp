@@ -53,8 +53,12 @@ public class CmsPageVersion extends CmsDataObject {
         setVersionCommentFromFields(fields, true);
     }
     
-    protected CmsPageVersion(CmsPageVersion other, Map<String, Object> copyArgs) {
+    protected CmsPageVersion(CmsPageVersion other, Map<String, Object> copyArgs, CmsPage page) {
         super(other, copyArgs);
+        this.page = (page != null) ? page : other.page;
+        if (this.page != null) {
+            this.entity.put("pageId", this.page.getId());
+        }
     }
     
     @Override    
@@ -66,7 +70,11 @@ public class CmsPageVersion extends CmsDataObject {
     
     @Override
     public CmsPageVersion copy(Map<String, Object> copyArgs) throws CmsException {
-        return new CmsPageVersion(this, copyArgs);
+        return new CmsPageVersion(this, copyArgs, null);
+    }
+    
+    public CmsPageVersion copy(Map<String, Object> copyArgs, CmsPage page) throws CmsException {
+        return new CmsPageVersion(this, copyArgs, page);
     }
     
     /**
@@ -211,6 +219,10 @@ public class CmsPageVersion extends CmsDataObject {
         this.entity.put("pageId", page.getId());
     }
 
+    public String getEntityPageId() {
+        return this.entity.getString("pageId");
+    }
+    
     @Override
     public void store() throws CmsException {
         Map<String, Object> contentFields = new HashMap<>();

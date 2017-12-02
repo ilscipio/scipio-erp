@@ -19,6 +19,8 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
 import com.ilscipio.scipio.cms.CmsServiceUtil;
+import com.ilscipio.scipio.cms.ServiceErrorFormatter;
+import com.ilscipio.scipio.cms.ServiceErrorFormatter.FormattedError;
 import com.ilscipio.scipio.cms.data.CmsDataObject;
 import com.ilscipio.scipio.cms.data.CmsDataUtil;
 import com.ilscipio.scipio.cms.template.CmsAssetTemplate.CmsAssetTemplateScriptAssoc;
@@ -30,6 +32,8 @@ import com.ilscipio.scipio.cms.template.CmsAssetTemplate.CmsAssetTemplateScriptA
 public abstract class CmsAssetTemplateServices {
     
     public static final String module = CmsAssetTemplateServices.class.getName();
+    private static final ServiceErrorFormatter errorFmt = 
+            CmsServiceUtil.getErrorFormatter().specialize().setDefaultLogMsgGeneral("Asset Template Error").build();
 
     protected CmsAssetTemplateServices() {
     }
@@ -63,8 +67,9 @@ public abstract class CmsAssetTemplateServices {
             assetTmp.store();
             result.put("assetTemplateId", assetTmp.getId());
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
@@ -80,7 +85,7 @@ public abstract class CmsAssetTemplateServices {
         try {
             String srcAssetTemplateId = (String) context.get("srcAssetTemplateId");
             CmsAssetTemplate srcAssetTemplate = CmsAssetTemplate.getWorker().findByIdAlways(delegator, srcAssetTemplateId, false);
-            CmsAssetTemplate assetTemplate = srcAssetTemplate.copyWithVersion(copyArgs);
+            CmsAssetTemplate assetTemplate = srcAssetTemplate.copy(copyArgs);
             assetTemplate.update(context, false); // update templateName, description IF not empty
             // NOTE: store() now updates the version automatically using assetTemplate.lastVersion
             assetTemplate.store();
@@ -88,8 +93,9 @@ public abstract class CmsAssetTemplateServices {
             result.put("assetTemplateId", assetTemplate.getId());
             return result;
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
     }
     
@@ -102,8 +108,9 @@ public abstract class CmsAssetTemplateServices {
             assetTmp.update(context);
             assetTmp.store();
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
@@ -156,8 +163,9 @@ public abstract class CmsAssetTemplateServices {
                 //CmsAssetTemplate newTemplate = new CmsAssetTemplate(gv);
             }
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError("Error while updating Script Template Assoc"); // FIXME: ??
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
@@ -181,8 +189,9 @@ public abstract class CmsAssetTemplateServices {
                 return ServiceUtil.returnError("Asset template version '" + version + "' not found"); // TODO: Localize
             }
         } catch(Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
@@ -210,8 +219,9 @@ public abstract class CmsAssetTemplateServices {
                         webSiteId + "' and templateName '" + templateName + "'"); // TODO: Localize
             }
         } catch(Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnFailure(e.getMessage()); // FIXME: Shouldn't be failure here or anywhere else!
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnFailure();
         }
         return result;
     }
@@ -242,8 +252,9 @@ public abstract class CmsAssetTemplateServices {
             result.put("assetTemplateValue", assetTemplate.getEntity());
             result.put("assetTemplate", assetTemplate);
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnFailure(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnFailure();
         }
         return result;
     }
@@ -256,8 +267,9 @@ public abstract class CmsAssetTemplateServices {
         try {
             CmsAssetTemplateScriptAssoc.getWorker().createUpdateScriptTemplateAndAssoc(delegator, context, userLogin);
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError("Error while updating Script Template Assoc: " + e.getMessage()); // TODO?: Localize
+            FormattedError err = errorFmt.format(e, "Error while updating Script Template Assoc", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
@@ -270,8 +282,9 @@ public abstract class CmsAssetTemplateServices {
             CmsAssetTemplate template = CmsAssetTemplate.getWorker().findByIdAlways(delegator, assetTemplateId, false);
             template.remove();
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
@@ -307,8 +320,9 @@ public abstract class CmsAssetTemplateServices {
             result.put("assetTemplateVersion", assetTemplate.getActiveVersion() != null ? assetTemplate.getActiveVersion().getEntity() : null);
             result.put("assetTemplateVersionModel", assetTemplate.getActiveVersion());
         } catch(Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnFailure(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnFailure();
         }
         return result;
     }    
@@ -322,8 +336,9 @@ public abstract class CmsAssetTemplateServices {
             CmsDataUtil.getContentTypes(delegator, "SCP_TEMPLATE_PART", deep, types);
             result.put("contentTypeValues", types);
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnFailure(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnFailure();
         }
         return result;
     }
@@ -361,8 +376,9 @@ public abstract class CmsAssetTemplateServices {
                     null, UtilMisc.toList("templateName"), null, false);
             result.put("assetTemplateValues", values);
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnFailure(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnFailure();
         }
         return result;
     }
@@ -375,8 +391,9 @@ public abstract class CmsAssetTemplateServices {
             CmsAssetTemplate assetTmpl = CmsAssetTemplate.getWorker().findByIdAlways(delegator, assetTemplateId, false);
             result.put("attributeValues", CmsDataObject.getEntityValues(assetTmpl.getAttributeTemplates()));
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnFailure(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnFailure();
         }
         return result;
     }

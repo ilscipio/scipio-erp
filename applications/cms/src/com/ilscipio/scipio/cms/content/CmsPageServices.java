@@ -25,6 +25,8 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
 import com.ilscipio.scipio.cms.CmsServiceUtil;
+import com.ilscipio.scipio.cms.ServiceErrorFormatter;
+import com.ilscipio.scipio.cms.ServiceErrorFormatter.FormattedError;
 import com.ilscipio.scipio.cms.content.CmsPage.CmsPageScriptAssoc;
 import com.ilscipio.scipio.cms.content.CmsPage.UserRole;
 import com.ilscipio.scipio.cms.template.CmsPageTemplate;
@@ -33,16 +35,13 @@ import com.ilscipio.scipio.cms.template.RendererType;
 public abstract class CmsPageServices {
 
     public static final String module = CmsPageServices.class.getName();
+    private static final ServiceErrorFormatter errorFmt = CmsServiceUtil.getErrorFormatter();
 
     protected CmsPageServices() {
     }
     
     /**
      * Returns the page content, template and information of a page.
-     * 
-     * @param dctx
-     * @param context
-     * @return
      */
     public static Map<String, Object> getPage(DispatchContext dctx, Map<String, ?> context) {
         Delegator delegator = dctx.getDelegator();
@@ -156,13 +155,13 @@ public abstract class CmsPageServices {
             result.put("webSiteId", webSiteId);
             result.put("scriptTemplates", page.getSortedScriptTemplates());
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnFailure("Error while querying for page (pageId: " + pageId + ")");
+            FormattedError err = errorFmt.format(e, "Error while querying for page (pageId: " + pageId + ")", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnFailure();
         }
 
         return result;
     }
-
 
     public static List<Map<String, ?>> getPageVariablesDescriptor(Map<String, Object> root) {
         List<Map<String, ?>> children = new ArrayList<>();
@@ -212,8 +211,9 @@ public abstract class CmsPageServices {
             version.store();
             result.put("versionId", version.getId());
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, "Error adding page version (pageId: " + context.get("pageId") + ")", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
@@ -271,8 +271,9 @@ public abstract class CmsPageServices {
             result.put("path", primaryPath); // DEPRECATED: TODO: REMOVE
             result.put("webSiteId", context.get("webSiteId"));
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, "Error creating page", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
@@ -298,8 +299,9 @@ public abstract class CmsPageServices {
             result.put("pageId", page.getId());
             return result;
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, "Error copy page (pageId: " + context.get("srcPageId") + ")", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
     }
     
@@ -317,8 +319,9 @@ public abstract class CmsPageServices {
             page.update(fields);
             page.store();
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, "Error updating page settings (pageId: " + context.get("pageId") + ")", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
@@ -357,8 +360,9 @@ public abstract class CmsPageServices {
             result.put("pageId", pageId);
             result.put("versionId", versionId);
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, "Error activating page version (pageId: " + context.get("pageId") + ")", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
@@ -371,8 +375,9 @@ public abstract class CmsPageServices {
         try {
             CmsPageScriptAssoc.getWorker().createUpdateScriptTemplateAndAssoc(delegator, context, userLogin);
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError("Error while updating Script Template Assoc: " + e.getMessage()); // TODO?: Localize
+            FormattedError err = errorFmt.format(e, "Error updating Script Template Association for page (pageId: " + context.get("pageId") + ")", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
@@ -385,8 +390,9 @@ public abstract class CmsPageServices {
             CmsPage page = CmsPage.getWorker().findByIdAlways(delegator, pageId, false);
             page.remove();
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, "Error deleting page (pageId: " + context.get("pageId") + ")", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
@@ -407,47 +413,52 @@ public abstract class CmsPageServices {
         boolean shortDesc = !Boolean.FALSE.equals(context.get("short"));
         boolean editable = Boolean.TRUE.equals(context.get("editable"));
         
-        // NOTE: if webSiteId set we'll manually filter in loop for now... (TODO: optimize later) 
-        List<CmsPage> pages = CmsPage.getWorker().findAll(delegator, false); // findAllWithWebsite(delegator, false)
-        
         List<Map<String, ?>> pagesList = new ArrayList<>();
-
-        for (CmsPage page : pages) {
-            String pageWebSiteId;
-            if (webSiteId != null) {
-                // CHECK to make sure this page is linked against the specified webSiteId.
-                // TODO: turn this into faster query later.
-                if (!page.isLinkedToWebSiteId(webSiteId)) {
-                    continue;
+        try {
+            // NOTE: if webSiteId set we'll manually filter in loop for now... (TODO: optimize later) 
+            List<CmsPage> pages = CmsPage.getWorker().findAll(delegator, false); // findAllWithWebsite(delegator, false)
+    
+            for (CmsPage page : pages) {
+                String pageWebSiteId;
+                if (webSiteId != null) {
+                    // CHECK to make sure this page is linked against the specified webSiteId.
+                    // TODO: turn this into faster query later.
+                    if (!page.isLinkedToWebSiteId(webSiteId)) {
+                        continue;
+                    }
+    
+                    pageWebSiteId = webSiteId;
+                } else {
+                    // For organization purposes in this method (ONLY), prefer the CmsPage.webSiteId; if empty get from primary mapping
+                    pageWebSiteId = page.getWebSiteId();
+                    if (UtilValidate.isEmpty(pageWebSiteId)) {
+                        pageWebSiteId = page.getPrimaryWebSiteId();
+                    }
                 }
-
-                pageWebSiteId = webSiteId;
-            } else {
-                // For organization purposes in this method (ONLY), prefer the CmsPage.webSiteId; if empty get from primary mapping
-                pageWebSiteId = page.getWebSiteId();
-                if (UtilValidate.isEmpty(pageWebSiteId)) {
-                    pageWebSiteId = page.getPrimaryWebSiteId();
+    
+                Map<String, Object> pageMap;
+                if (shortDesc) {
+                    pageMap = page.getShortDescriptor(pageWebSiteId, locale);
+                } else {
+                    pageMap = page.getDescriptor(pageWebSiteId, locale);
                 }
-            }
-
-            Map<String, Object> pageMap;
-            if (shortDesc) {
-                pageMap = page.getShortDescriptor(pageWebSiteId, locale);
-            } else {
-                pageMap = page.getDescriptor(pageWebSiteId, locale);
-            }
-
-            if (editable) {
-                String userId = CmsServiceUtil.getUserId(context);
-                UserRole userRole = page.getUserAuthorization(userId, delegator, dispatcher);
-                if (userRole != UserRole.CMS_VISITOR) {
-                    pageMap.put("permission", userRole.toString());
+    
+                if (editable) {
+                    String userId = CmsServiceUtil.getUserId(context);
+                    UserRole userRole = page.getUserAuthorization(userId, delegator, dispatcher);
+                    if (userRole != UserRole.CMS_VISITOR) {
+                        pageMap.put("permission", userRole.toString());
+                        pagesList.add(pageMap);
+                    }
+    
+                } else {
                     pagesList.add(pageMap);
                 }
-
-            } else {
-                pagesList.add(pageMap);
             }
+        } catch(Exception e) {
+            FormattedError err = errorFmt.format(e, "Error getting pages", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnFailure();
         }
         result.put("pages", pagesList);
         return result;

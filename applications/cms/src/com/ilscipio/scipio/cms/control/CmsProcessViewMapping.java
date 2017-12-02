@@ -44,9 +44,18 @@ public class CmsProcessViewMapping extends CmsControlDataObject {
         }
     }
     
+    protected CmsProcessViewMapping(CmsProcessViewMapping other, Map<String, Object> copyArgs) {
+        super(other, copyArgs);
+    }
+    
     @Override    
-    public void update(Map<String, ?> fields) {
-        super.update(fields);
+    public void update(Map<String, ?> fields, boolean setIfEmpty) {
+        super.update(fields, setIfEmpty);
+    }
+    
+    @Override
+    public CmsProcessViewMapping copy(Map<String, Object> copyArgs) throws CmsException {
+        return new CmsProcessViewMapping(this, copyArgs);
     }
     
     /**
@@ -474,8 +483,6 @@ public class CmsProcessViewMapping extends CmsControlDataObject {
         public CmsProcessViewMapping makeFromFields(Delegator delegator, Map<String, ?> fields) throws CmsException {
             return new CmsProcessViewMapping(delegator, fields, null);
         }
-
-        
         
         public List<CmsProcessViewMapping> findByProcess(Delegator delegator, String processMappingId, boolean useCache) throws CmsException {
             return findAll(delegator, UtilMisc.toMap("processMappingId", processMappingId), 

@@ -54,6 +54,13 @@
         <response name="error" type="view" value="editPage" />
     </request-map>
     
+    <request-map uri="copyPage">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsCopyPage" />
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/> 
+    </request-map>
+    
     <request-map uri="addScriptToPage">
         <security auth="true" https="true"/>
         <event type="service" invoke="cmsUpdatePageScript"/>
@@ -133,6 +140,13 @@
     <request-map uri="createTemplate">
         <security https="true" auth="true"/>
         <event type="service" invoke="cmsCreatePageTemplate"/>
+        <response name="success" type="view" value="editTemplate"/>
+        <response name="error" type="view" value="editTemplate"/>
+    </request-map>
+    
+    <request-map uri="copyTemplate">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsCopyPageTemplate"/>
         <response name="success" type="view" value="editTemplate"/>
         <response name="error" type="view" value="editTemplate"/>
     </request-map>
@@ -251,6 +265,13 @@
         <response name="success" type="view" value="editAsset" />
         <response name="error" type="view" value="editAsset" />
     </request-map>
+    
+    <request-map uri="copyAsset">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsCopyAsset"/>
+        <response name="success" type="view" value="editAsset" />
+        <response name="error" type="view" value="editAsset" />
+    </request-map>
 
     <request-map uri="addAttributeToAsset">
         <security auth="true" https="true"/>
@@ -344,6 +365,13 @@
     <request-map uri="createUpdateScript">
         <security https="true" auth="true"/>
         <event type="service" invoke="cmsCreateUpdateScriptTemplate"/>
+        <response name="success" type="view" value="editScript" />
+        <response name="error" type="view" value="editScript" />
+    </request-map>
+    
+    <request-map uri="copyScript">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsCopyTemplate"/>
         <response name="success" type="view" value="editScript" />
         <response name="error" type="view" value="editScript" />
     </request-map>

@@ -19,6 +19,7 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
 import com.ilscipio.scipio.cms.CmsServiceUtil;
+import com.ilscipio.scipio.cms.template.CmsPageTemplate.CmsPageTemplateAssetAssoc;
 import com.ilscipio.scipio.cms.template.CmsPageTemplate.CmsPageTemplateScriptAssoc;
 import com.ilscipio.scipio.cms.template.CmsTemplate.TemplateBodySource;
 
@@ -35,12 +36,6 @@ public abstract class CmsPageTemplateServices {
 
     /**
      * Creates a new template in the repository.
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> createPageTemplate(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -63,18 +58,37 @@ public abstract class CmsPageTemplateServices {
         return result;
     }
     
+    public static Map<String, Object> copyPageTemplate(DispatchContext dctx, Map<String, ?> context) {
+        Delegator delegator = dctx.getDelegator();
+        Map<String, Object> copyArgs = new HashMap<>();
+        copyArgs.put("copyVersionId", context.get("srcVersionId"));
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        if (userLogin != null) {
+            copyArgs.put("copyCreatorId", userLogin.get("partyId"));
+        }
+        try {
+            String srcPageTemplateId = (String) context.get("srcPageTemplateId");
+            CmsPageTemplate srcPageTemplate = CmsPageTemplate.getWorker().findByIdAlways(delegator, srcPageTemplateId, false);
+            CmsPageTemplate pageTemplate = srcPageTemplate.copyWithVersion(copyArgs);
+            pageTemplate.update(context, false); // update templateName, description IF not empty
+            // NOTE: store() now updates the version automatically using pageTemplate.lastVersion
+            pageTemplate.store();
+            Map<String, Object> result = ServiceUtil.returnSuccess();
+            result.put("pageTemplateId", pageTemplate.getId());
+            return result;
+        } catch (Exception e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+    }
+    
     /**
      * Updates basic page template info.
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> updatePageTemplateInfo(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Delegator delegator = dctx.getDelegator();
+        
         try {
             String pageTemplateId = (String) context.get("pageTemplateId");
             CmsPageTemplate pageTmp = CmsPageTemplate.getWorker().findByIdAlways(delegator, pageTemplateId, false);
@@ -89,12 +103,6 @@ public abstract class CmsPageTemplateServices {
     
     /**
      * Gets a page template.
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> getPageTemplate(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -127,12 +135,6 @@ public abstract class CmsPageTemplateServices {
     
     /**
      * Gets a page template version.
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> getPageTemplateVersion(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -161,12 +163,6 @@ public abstract class CmsPageTemplateServices {
     
     /**
      * Gets all page template versions. Currently returns in the order in which created.
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> getPageTemplateVersions(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -206,12 +202,6 @@ public abstract class CmsPageTemplateServices {
     
     /**
      * Returns a map of a page template and all its versions, as well as extra helpful fields.
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> getPageTemplateAndVersions(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -314,15 +304,21 @@ public abstract class CmsPageTemplateServices {
         }
         return result;
     }
+
+    private static boolean isVersionBoolSet(Map<String, Object> version, String propName) {
+        Boolean val = (Boolean) version.get(propName);
+        return (val != null && val == true);
+    }
+    
+    private static void checkVersionBoolPropertyAndRecord(Map<String, Object> version, String propName, 
+            Map<String, Object> resultMap, String resultKey) {
+        if (isVersionBoolSet(version, propName)) {
+            resultMap.put(resultKey, version);
+        }
+    }
     
     /**
      * Gets all available page templates. Currently returns in the order in which created.
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> getAvailablePageTemplates(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -342,26 +338,8 @@ public abstract class CmsPageTemplateServices {
         return result;
     }
     
-    private static boolean isVersionBoolSet(Map<String, Object> version, String propName) {
-        Boolean val = (Boolean) version.get(propName);
-        return (val != null && val == true);
-    }
-    
-    private static void checkVersionBoolPropertyAndRecord(Map<String, Object> version, String propName, 
-            Map<String, Object> resultMap, String resultKey) {
-        if (isVersionBoolSet(version, propName)) {
-            resultMap.put(resultKey, version);
-        }
-    }
-    
     /**
      * Creates a new page template version in the repository.
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> addPageTemplateVersion(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -399,12 +377,6 @@ public abstract class CmsPageTemplateServices {
     /**
      * Sets a page template version as live version. The live version is the content that
      * will be displayed to regular page visitors.
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> activatePageTemplateVersion(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -433,23 +405,12 @@ public abstract class CmsPageTemplateServices {
     }
 
     /**
-     * Service to update and add a new script file to a page template
-     * 
-     * @param scriptAssocId
-     * @param inputPosition
-     * @param pageTemplateId
-     * @param isActive
-     *
-     * @param templateName
-     * @param templateLocation
-     * @param createdBy
-     * @param lastUpdatedBy
+     * Service to update and add a new script file to a page template.
      */
     public static Map<String, Object> updatePageTemplateScript(DispatchContext dctx, Map<String, ? extends Object> context) {
         GenericDelegator delegator = (GenericDelegator) dctx.getDelegator();
         Map<String, Object> result = ServiceUtil.returnSuccess();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        
         try {
             CmsPageTemplateScriptAssoc.getWorker().createUpdateScriptTemplateAndAssoc(delegator, context, userLogin);
         } catch (Exception e) {
@@ -474,30 +435,37 @@ public abstract class CmsPageTemplateServices {
     }
     
     /**
-     * Creates or updates an attribute for a given template (page or asset)
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
+     * Adds an available asset to a page template.
+     */
+    public static Map<String, Object> createUpdateAssetAssoc(DispatchContext dctx, Map<String, ?> context) {
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        Delegator delegator = dctx.getDelegator();
+        try {
+            // not needed
+            //String pageTemplateId = (String) context.get("pageTemplateId");
+            //CmsPageTemplate pageTmp = CmsPageTemplate.getWorker().findByIdAlways(delegator, pageTemplateId, false);
+            CmsPageTemplateAssetAssoc.getWorker().createUpdatePageTemplateAssetAssoc(delegator, context);
+        } catch(Exception e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        return result;
+    }
+    
+    /**
+     * Creates or updates an attribute for a given template (page or asset).
      */
     public static Map<String, Object> createUpdateAttribute(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Delegator delegator = dctx.getDelegator();
         try {
-            // 2016: FIXME: I don't know why, but this was commented for page templates,
-            // and it seems you can't update page attributes properly
-            
-            //String pageTemplateId = (String) context.get("pageTemplateId");
-            //String assetTemplateId = (String) context.get("assetTemplateId");
             String attributeTemplateId = (String) context.get("attributeTemplateId");
 
             CmsAttributeTemplate attr = null;
 
             if (UtilValidate.isNotEmpty(attributeTemplateId)) {
                 attr = CmsAttributeTemplate.getWorker().findByIdAlways(delegator, attributeTemplateId, false);
-                attr.update(context);
+                attr.update(context, true);
             } else {
                 attr = new CmsAttributeTemplate(delegator, context);
             }

@@ -110,9 +110,22 @@ public class CmsAttributeTemplate extends CmsDataObject {
         super(delegator, fields);
     }
     
+    protected CmsAttributeTemplate(CmsAttributeTemplate other, Map<String, Object> copyArgs) {
+        super(other, copyArgs);
+        // we don't have to the IDs here, this is not stored until later so caller can update them
+        //if (Boolean.TRUE.equals(copyArgs.get("clearIds")) {
+        //    this.
+        //}
+    }
+
     @Override    
-    public void update(Map<String, ?> fields) {
-        super.update(fields);
+    public void update(Map<String, ?> fields, boolean setIfEmpty) {
+        super.update(fields, setIfEmpty);
+    }
+
+    @Override
+    public CmsAttributeTemplate copy(Map<String, Object> copyArgs) throws CmsException {
+        return new CmsAttributeTemplate(this, copyArgs);
     }
     
     /**
@@ -328,19 +341,33 @@ public class CmsAttributeTemplate extends CmsDataObject {
     public void setTemplate(CmsComplexTemplate t) {
         if (t instanceof CmsPageTemplate) {
             entity.setString("pageTemplateId", t.getId());
+            entity.setString("assetTemplateId", null);
         } else if (t instanceof CmsAssetTemplate) {
+            entity.setString("pageTemplateId", null);
             entity.setString("assetTemplateId", t.getId());
         } else {
             throw new IllegalArgumentException("Attribute templates can only be linked to page "
                     + "or asset templates.");
         }
     }
-
-    public void setTemplate(CmsAssetTemplate at) {
-        entity.setString("assetTemplateId", at.getId());
+    
+    /**
+     * WARN: this is a temporary operation; if caller forgets to update the template,
+     * result will be dangling attributes in the system.
+     */
+    public void clearTemplate() {
+        entity.setString("pageTemplateId", null);
+        entity.setString("assetTemplateId", null);
     }
     
-    public void updateTemplateFields(Map<String, ?> fields) {
+    public boolean hasTemplate() {
+        return entity.get("pageTemplateId") != null || entity.get("assetTemplateId") != null;
+    }
+    
+    /**
+     * TODO: REVIEW: What is this again?
+     */
+    void updateTemplateFields(Map<String, ?> fields) {
         entity.setAllFields(fields, false, null, false);
     }
 

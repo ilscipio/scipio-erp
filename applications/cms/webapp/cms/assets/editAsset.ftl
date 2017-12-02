@@ -74,6 +74,10 @@
     <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>
             <@menuitem type="link" href=makeOfbizUrl("editAsset") class="+${styles.action_run_sys!} ${styles.action_create!}" text=uiLabelMap.CmsCreateAsset/>
+            <@cmsCopyMenuItem target="copyAsset" title=uiLabelMap.CmsCopyAsset>
+                <@field type="input" name="templateName" value="" required=true label=uiLabelMap.CommonName/>
+                <@field type="textarea" name="description" value="" required=false label=uiLabelMap.CommonDescription/>
+            </@cmsCopyMenuItem>
             <@menuitem type="generic">
                 <@modal id="modal_new_attr" label=uiLabelMap.CmsAddAttribute class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                     <@heading>${uiLabelMap.CmsAddAttribute}</@heading>

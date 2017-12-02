@@ -29,9 +29,13 @@ public abstract class CmsControlDataObject extends CmsDataObject {
         super(delegator, fields);
     }
     
+    protected CmsControlDataObject(CmsControlDataObject other, Map<String, Object> copyArgs) {
+        super(other, copyArgs);
+    }
+    
     @Override    
-    public void update(Map<String, ?> fields) {
-        super.update(fields);
+    public void update(Map<String, ?> fields, boolean setIfEmpty) {
+        super.update(fields, setIfEmpty);
     }
     
     /**

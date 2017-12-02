@@ -31,7 +31,6 @@ import org.ofbiz.service.LocalDispatcher;
 
 import com.ilscipio.scipio.ce.util.Optional;
 import com.ilscipio.scipio.cms.CmsException;
-import com.ilscipio.scipio.cms.CmsInputException;
 import com.ilscipio.scipio.cms.CmsUtil;
 import com.ilscipio.scipio.cms.control.CmsControlUtil;
 import com.ilscipio.scipio.cms.control.CmsProcessMapping;
@@ -137,6 +136,11 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
         //this.setPrimaryProcessMappingFields(fields); 
     } 
     
+    protected CmsPage(CmsPage other, Map<String, Object> copyArgs) {
+        super(other, copyArgs);
+        this.sortedScriptTemplates = CmsMasterComplexTemplate.copyScriptTemplateAssocs(other.getSortedScriptTemplates(), copyArgs);
+    }
+    
     public static CmsPage createAndStore(Delegator delegator, Map<String, ?> fields) {
         CmsPage page = new CmsPage(delegator, fields);
         page.store();
@@ -145,15 +149,53 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
     
     public static CmsPage createAndStoreWithPrimaryProcessMapping(Delegator delegator, Map<String, ?> fields) {
         CmsPage page = new CmsPage(delegator, fields);  
-        page.setPrimaryProcessMappingFields(fields); 
+        page.setPrimaryProcessMappingFields(fields, true); 
         page.store();
         return page;
     }
-    
+
     @Override    
-    public void update(Map<String, ?> fields) {
+    public void update(Map<String, ?> fields, boolean setIfEmpty) {
         super.update(fields);
-        this.setPrimaryProcessMappingFields(fields); 
+        this.setPrimaryProcessMappingFields(fields, setIfEmpty); 
+    }
+    
+    /**
+     * Copies this page including all linked products and the latest version.
+     */
+    @Override
+    public CmsPage copy(Map<String, Object> copyArgs) {
+        return new CmsPage(this, copyArgs);
+//        preventIfImmutable();
+//        
+//        // copy the page itself
+//        CmsPage pageCopy = (CmsPage) super.copy(copyArgs);
+//        // copy products
+//        Map<String, Map<String, ?>> productEntries = getProducts();
+//        for (String name : productEntries.keySet()) {
+//            Map<String, ?> product = productEntries.get(name);
+//            pageCopy.addProduct((String) product.get("productId"), name);
+//        }
+//        
+//        // copy latest version
+//        CmsPageVersion lastVersion = getLastVersionOrNewVersion();
+//        
+//        try {
+//            if (lastVersion != null) {
+//                CmsPageVersion newVer = pageCopy.addVersion(lastVersion.getContent());
+//                newVer.store();
+//            } else {
+//                CmsPageVersion newVer = pageCopy.addVersion(pageCopy.getContent());
+//                newVer.store();
+//            }
+//        } catch (IOException e) {
+//            throw new CmsException(e);
+//        }
+//
+//        // TODO: 2016: INVESTIGATE: PRIMARY PROCESS MAPPINGS:
+//        // primary process mapping can't be copied as-is since the path would conflict, but maybe some part of them...
+//        
+//        return pageCopy;
     }
     
     /**
@@ -212,6 +254,8 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
                 }
             }
         }
+        // needed for copy operation
+        CmsMasterComplexTemplate.checkStoreScriptTemplateAssocs(this, this.sortedScriptTemplates);
     }
 
     
@@ -275,43 +319,6 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
         if (CmsUtil.verboseOn())
             Debug.logInfo("addVersion : " + jsonContent, module);
         return new CmsPageVersion(getDelegator(), UtilMisc.toMap("pageId", this.getId(), "content", jsonContent), this);
-    }
-
-    /**
-     * Copies this page including all linked products and the latest version.
-     */
-    @Override
-    public CmsPage copy() {
-        preventIfImmutable();
-        
-        // copy the page itself
-        CmsPage pageCopy = (CmsPage) super.copy();
-        // copy products
-        Map<String, Map<String, ?>> productEntries = getProducts();
-        for (String name : productEntries.keySet()) {
-            Map<String, ?> product = productEntries.get(name);
-            pageCopy.addProduct((String) product.get("productId"), name);
-        }
-        
-        // copy latest version
-        CmsPageVersion lastVersion = getLastVersionOrNewVersion();
-        
-        try {
-            if (lastVersion != null) {
-                CmsPageVersion newVer = pageCopy.addVersion(lastVersion.getContent());
-                newVer.store();
-            } else {
-                CmsPageVersion newVer = pageCopy.addVersion(pageCopy.getContent());
-                newVer.store();
-            }
-        } catch (IOException e) {
-            throw new CmsException(e);
-        }
-
-        // TODO: 2016: INVESTIGATE: PRIMARY PROCESS MAPPINGS:
-        // primary process mapping can't be copied as-is since the path would conflict, but maybe some part of them...
-        
-        return pageCopy;
     }
 
     public boolean isActive() {
@@ -947,10 +954,12 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
     /**
      * 2016: Sets the primary page path on this page's associated CmsProcessMapping record. 
      * The path is normalized and any trailing slashs are removed.
+     * <p>
+     * FIXME: setIfEmpty IS NOT CURRENTLY HONORED HERE
      * 
      * @param path
      */
-    public void setPrimaryProcessMappingFields(Map<String, ?> fields) {
+    public void setPrimaryProcessMappingFields(Map<String, ?> fields, boolean setIfEmpty) {
         String webSiteId = (String) fields.get("webSiteId");
   
         // bare minimum fields needed
@@ -1727,10 +1736,20 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
         public CmsPageScriptAssoc(Delegator delegator, Map<String, ?> fields, CmsScriptTemplate scriptTemplate) {
             super(delegator, fields, scriptTemplate);
         }
+        
+        protected CmsPageScriptAssoc(CmsPageScriptAssoc other, Map<String, Object> copyArgs) {
+            super(other, copyArgs);
+            // NOTE: don't bother clearing out the ID fields here, caller should handle
+        }
 
         @Override    
-        public void update(Map<String, ?> fields) {
-            super.update(fields);
+        public void update(Map<String, ?> fields, boolean setIfEmpty) {
+            super.update(fields, setIfEmpty);
+        }
+        
+        @Override
+        public CmsPageScriptAssoc copy(Map<String, Object> copyArgs) throws CmsException {
+            return new CmsPageScriptAssoc(this, copyArgs);
         }
         
         /**
@@ -1743,6 +1762,23 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
         @Override
         public void preload(PreloadWorker preloadWorker) {
             super.preload(preloadWorker);
+        }
+        
+        @Override
+        protected void clearTemplate() {
+            entity.set("pageId", null);
+        }
+
+        @Override
+        protected void setTemplate(CmsDataObject template) {
+            if (!(template instanceof CmsPage)) throw new CmsException("CmsPageScriptAssoc requires a CmsPage, got: " 
+                    + (template != null ? template.getClass().getName() : null));
+            entity.set("pageId", template.getId());
+        }
+
+        @Override
+        protected boolean hasTemplate() {
+            return (entity.get("pageId") != null);
         }
         
         @Override
@@ -1972,7 +2008,6 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
         public void clearMemoryCaches() {
             idCache.clear();
         }
-
     }
 
     @Override

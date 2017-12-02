@@ -55,10 +55,20 @@ public class CmsViewMapping extends CmsControlDataObject implements CmsMajorObje
         super(delegator, checkFields(fields, true));
     }
     
-    @Override    
-    public void update(Map<String, ?> fields) {
-        super.update(checkFields(fields, false));
+    protected CmsViewMapping(CmsViewMapping other, Map<String, Object> copyArgs) {
+        super(other, copyArgs);
     }
+    
+    @Override    
+    public void update(Map<String, ?> fields, boolean setIfEmpty) {
+        super.update(checkFields(fields, false), setIfEmpty);
+    }
+    
+    @Override
+    public CmsViewMapping copy(Map<String, Object> copyArgs) throws CmsException {
+        return new CmsViewMapping(this, copyArgs);
+    }   
+
     
     protected static <T> Map<String, T> checkFields(Map<String, T> fields, boolean isNew) {
         if (isNew || fields.containsKey("targetServletPath")) {
@@ -495,8 +505,7 @@ public class CmsViewMapping extends CmsControlDataObject implements CmsMajorObje
         @Override
         public void clearMemoryCaches() {
             getNameCache().clear();
-        }     
- 
+        }
     }
     
     @Override

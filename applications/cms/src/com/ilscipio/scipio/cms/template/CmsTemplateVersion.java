@@ -38,10 +38,23 @@ public abstract class CmsTemplateVersion extends CmsTemplate {
         super(delegator, fields);
     }
     
-    @Override    
-    public void update(Map<String, ?> fields) {
-        super.update(fields);
+    protected CmsTemplateVersion(CmsTemplateVersion other, Map<String, Object> copyArgs) {
+        super(other, copyArgs);
     }
+    
+    @Override    
+    public void update(Map<String, ?> fields, boolean setIfEmpty) {
+        super.update(fields, setIfEmpty);
+    }
+    
+    @Override
+    public abstract CmsTemplateVersion copy(Map<String, Object> copyArgs) throws CmsException;
+
+    /**
+     * Special copy overload that immediately asssociates the newly created copy with the
+     * specified template.
+     */
+    public abstract CmsTemplateVersion copy(Map<String, Object> copyArgs, CmsVersionedComplexTemplate<?, ?> template) throws CmsException;
     
     /**
      * 2016: Loads ALL this object's content into the current instance.
@@ -82,8 +95,22 @@ public abstract class CmsTemplateVersion extends CmsTemplate {
      */
     @Override
     public void store() throws CmsException {
+        ensureTemplateId();
         super.store();
         storeVersionStatus();
+    }
+    
+    /**
+     * SPECIAL: it's possible we have memory instance of template that wasn't stored when
+     * this instance was created; if so this synchs the ID.
+     */
+    public void ensureTemplateId() {
+        if (getTemplateId() == null) {
+            CmsTemplate template = getTemplate();
+            if (template != null) {
+                setTemplateId(template.getId());
+            }
+        }
     }
 
     protected void storeVersionStatus() {
@@ -105,10 +132,15 @@ public abstract class CmsTemplateVersion extends CmsTemplate {
     
     protected abstract ActiveVersionWorker<?, ?> getActiveVersionWorkerInst();
     
-    protected abstract String getTemplateId();
+    public abstract String getTemplateId();
     
     public abstract CmsVersionedComplexTemplate<?, ?> getTemplate();
+    
+    protected abstract void setTemplate(CmsVersionedComplexTemplate<?, ?> template);
 
+    protected abstract void setTemplateId(String templateId);
+
+    
     public String getVersionId() {
         return getId();
     }
@@ -184,6 +216,10 @@ public abstract class CmsTemplateVersion extends CmsTemplate {
     
     Date getOriginalVersionDate() {
         return (Date) entity.get("origVersionDate");
+    }
+    
+    void setOriginalVersionDate(Date date) {
+        entity.set("origVersionDate", date);
     }
     
     public Date getVersionDate() {

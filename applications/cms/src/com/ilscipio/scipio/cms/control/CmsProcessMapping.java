@@ -119,9 +119,18 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
         super(delegator, checkFields(fields, true));
     }
     
+    protected CmsProcessMapping(CmsProcessMapping other, Map<String, Object> copyArgs) {
+        super(other, copyArgs);
+    }
+    
     @Override    
-    public void update(Map<String, ?> fields) {
-        super.update(checkFields(fields, false));
+    public void update(Map<String, ?> fields, boolean setIfEmpty) {
+        super.update(checkFields(fields, false), setIfEmpty);
+    }
+    
+    @Override
+    public CmsProcessMapping copy(Map<String, Object> copyArgs) throws CmsException {
+        return new CmsProcessMapping(this, copyArgs);
     }
     
     protected static <T> Map<String, T> checkFields(Map<String, T> fields, boolean isNew) {
@@ -1099,7 +1108,7 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
         public CmsProcessMapping makeFromFields(Delegator delegator, Map<String, ?> fields) throws CmsException {
             return new CmsProcessMapping(delegator, fields);
         }
-
+        
         public List<CmsProcessMapping> findByWebSiteId(Delegator delegator, String webSiteId, boolean useCache) throws CmsException {
             return findAll(delegator, UtilMisc.toMap("sourceWebSiteId", webSiteId), 
                     UtilMisc.toList("sourcePath ASC"), isUseDbCacheStatic(useCache));

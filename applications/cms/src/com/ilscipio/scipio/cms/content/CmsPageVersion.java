@@ -49,15 +49,24 @@ public class CmsPageVersion extends CmsDataObject {
         if (!fields.containsKey("pageId")) {
             this.entity.put("pageId", page.getId());
         }
-        setContentFromFields(fields);
-        setVersionCommentFromFields(fields);
+        setContentFromFields(fields, true);
+        setVersionCommentFromFields(fields, true);
+    }
+    
+    protected CmsPageVersion(CmsPageVersion other, Map<String, Object> copyArgs) {
+        super(other, copyArgs);
     }
     
     @Override    
-    public void update(Map<String, ?> fields) {
-        super.update(fields);
-        setContentFromFields(fields);
-        setVersionCommentFromFields(fields);
+    public void update(Map<String, ?> fields, boolean setIfEmpty) {
+        super.update(fields, setIfEmpty);
+        setContentFromFields(fields, setIfEmpty);
+        setVersionCommentFromFields(fields, setIfEmpty);
+    }
+    
+    @Override
+    public CmsPageVersion copy(Map<String, Object> copyArgs) throws CmsException {
+        return new CmsPageVersion(this, copyArgs);
     }
     
     /**
@@ -82,9 +91,15 @@ public class CmsPageVersion extends CmsDataObject {
         entity.setString("contentId", contentId);
     }
     
-    protected void setContentFromFields(Map<String, ?> fields) {
-        if (fields.containsKey("content")) {
-            contentString = Optional.ofNullable((String) fields.get("content"));
+    protected void setContentFromFields(Map<String, ?> fields, boolean setIfEmpty) {
+        if (setIfEmpty) {
+            if (fields.containsKey("content")) {
+                contentString = Optional.ofNullable((String) fields.get("content"));
+            }
+        } else {
+            if (UtilValidate.isNotEmpty((String) fields.get("content"))) {
+                contentString = Optional.ofNullable((String) fields.get("content"));
+            }
         }
     }
     
@@ -158,9 +173,15 @@ public class CmsPageVersion extends CmsDataObject {
         this.versionComment = versionComment; // defer to store()
     }
     
-    protected void setVersionCommentFromFields(Map<String, ?> fields) {
-        if (fields.containsKey("versionComment")) {
-            this.versionComment = (String) fields.get("versionComment");
+    protected void setVersionCommentFromFields(Map<String, ?> fields, boolean setIfEmpty) {
+        if (setIfEmpty) {
+            if (fields.containsKey("versionComment")) {
+                this.versionComment = (String) fields.get("versionComment");
+            }
+        } else {
+            if (UtilValidate.isNotEmpty((String) fields.get("versionComment"))) {
+                this.versionComment = (String) fields.get("versionComment");
+            }
         }
     }
     
@@ -253,8 +274,7 @@ public class CmsPageVersion extends CmsDataObject {
         public CmsPageVersion makeFromFields(Delegator delegator, Map<String, ?> fields) throws CmsException {
             return new CmsPageVersion(delegator, fields, null);
         }
-        
-        
+
         /**
          * Returns the most current page version.
          * 

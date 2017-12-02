@@ -56,13 +56,7 @@ public abstract class CmsMediaServices {
     
     /**
      * Generates a list of all available media files. Can be filtered by
-     * DataResourceType (TODO)
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
+     * DataResourceType (TODO).
      */
     public static Map<String, Object> getMediaFiles(DispatchContext dctx, Map<String, ?> context) {
         Delegator delegator = dctx.getDelegator();

@@ -45,7 +45,15 @@ public class CmsPageTemplateVersion extends CmsTemplateVersion {
         super(delegator, checkPageTemplateId(delegator, fields, pageTemplate, false));
         this.pageTemplate = pageTemplate;
         this.setPageTemplateId(pageTemplate.getId());
-        setVersionCommentFromFields(fields);
+        setVersionCommentFromFields(fields, true);
+    }
+    
+    protected CmsPageTemplateVersion(CmsPageTemplateVersion other, Map<String, Object> copyArgs, CmsPageTemplate pageTemplate) {
+        super(other, copyArgs);
+        if (pageTemplate != null) { // if null, we must be keeping the same parent template
+            this.pageTemplate = pageTemplate;
+            this.setPageTemplateId(pageTemplate.getId());
+        }
     }
     
     private static Map<String, ?> checkPageTemplateId(Delegator delegator, Map<String, ?> fields, CmsPageTemplate pageTemplate,
@@ -62,10 +70,21 @@ public class CmsPageTemplateVersion extends CmsTemplateVersion {
     }
     
     @Override    
-    public void update(Map<String, ?> fields) {
-        super.update(fields);
-        setVersionCommentFromFields(fields);
+    public void update(Map<String, ?> fields, boolean setIfEmpty) {
+        super.update(fields, setIfEmpty);
+        setVersionCommentFromFields(fields, setIfEmpty);
     }
+    
+    @Override
+    public CmsPageTemplateVersion copy(Map<String, Object> copyArgs) throws CmsException {
+        return new CmsPageTemplateVersion(this, copyArgs, null);
+    }
+    
+    @Override
+    public CmsPageTemplateVersion copy(Map<String, Object> copyArgs, CmsVersionedComplexTemplate<?, ?> template) throws CmsException {
+        return new CmsPageTemplateVersion(this, copyArgs, (CmsPageTemplate) template);
+    }
+    
     
     
     /**
@@ -91,7 +110,7 @@ public class CmsPageTemplateVersion extends CmsTemplateVersion {
             return pageTemplate;
         }
     }
-    
+
     public String getPageTemplateId() {
         return entity.getString("pageTemplateId");
     }
@@ -100,7 +119,7 @@ public class CmsPageTemplateVersion extends CmsTemplateVersion {
         return (String) fields.get("pageTemplateId");
     }
     
-    private void setPageTemplateId(String pageTemplateId) {
+    void setPageTemplateId(String pageTemplateId) {
         entity.set("pageTemplateId", pageTemplateId);
     }
     
@@ -139,9 +158,15 @@ public class CmsPageTemplateVersion extends CmsTemplateVersion {
         this.versionComment = versionComment; // defer to store()
     }
     
-    protected void setVersionCommentFromFields(Map<String, ?> fields) {
-        if (fields.containsKey("versionComment")) {
-            this.versionComment = (String) fields.get("versionComment");
+    protected void setVersionCommentFromFields(Map<String, ?> fields, boolean setIfEmpty) {
+        if (setIfEmpty) {
+            if (fields.containsKey("versionComment")) {
+                this.versionComment = (String) fields.get("versionComment");
+            }
+        } else {
+            if (UtilValidate.isNotEmpty((String) fields.get("versionComment"))) {
+                this.versionComment = (String) fields.get("versionComment");
+            }
         }
     }
     
@@ -172,13 +197,30 @@ public class CmsPageTemplateVersion extends CmsTemplateVersion {
     // Helpers
 
     @Override
-    protected String getTemplateId() {
+    public String getTemplateId() {
         return getPageTemplateId();
     }
 
     @Override
     public CmsVersionedComplexTemplate<?, ?> getTemplate() {
         return getPageTemplate();
+    }
+    
+    @Override
+    protected void setTemplate(CmsVersionedComplexTemplate<?, ?> template) {
+        if (template == null) {
+            setPageTemplateId(null);
+            this.pageTemplate = null;
+        } else {
+            if (!(template instanceof CmsPageTemplate)) throw new CmsException("tried to assign a non-CmsPageTemplate to CmsPageTemplateVersion: " + template.getClass().getName());
+            setPageTemplateId(template.getId());
+            this.pageTemplate = (CmsPageTemplate) template;
+        }
+    }
+
+    @Override
+    protected void setTemplateId(String templateId) {
+        setPageTemplateId(templateId);
     }
 
     @Override

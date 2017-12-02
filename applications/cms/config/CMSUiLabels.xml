@@ -153,6 +153,10 @@
         <value xml:lang="en">New Page</value>
         <value xml:lang="de">Neue Seite</value>
     </property>
+    <property key="CmsCopyPage">
+        <value xml:lang="en">Copy Page</value>
+        <value xml:lang="de">Seite kopieren</value>
+    </property>
     <property key="CmsEditPage">
         <value xml:lang="en">Edit Page</value>
         <value xml:lang="de">Seite Editieren</value>
@@ -192,6 +196,10 @@
     <property key="CmsCreateTemplate">
         <value xml:lang="en">New Template</value>
         <value xml:lang="de">Neues Template</value>
+    </property>
+    <property key="CmsCopyTemplate">
+        <value xml:lang="en">Copy Template</value>
+        <value xml:lang="de">Template kopieren</value>
     </property>
     <property key="CmsEditTemplate">
         <value xml:lang="en">Edit Template</value>
@@ -236,6 +244,10 @@
     <property key="CmsAddAsset">
         <value xml:lang="en">Add Asset</value>
         <value xml:lang="de">Asset hinzufügen</value>
+    </property>
+    <property key="CmsCopyAsset">
+        <value xml:lang="en">Copy Asset</value>
+        <value xml:lang="de">Asset kopieren</value>
     </property>
     <property key="CmsListAssets">
         <value xml:lang="en">All Assets</value>
@@ -375,6 +387,10 @@
     <property key="CmsScriptTemplate">
         <value xml:lang="en">Script Template</value>
         <value xml:lang="de">Script Template</value>
+    </property>
+    <property key="CmsCopyScript">
+        <value xml:lang="en">Copy Script</value>
+        <value xml:lang="de">Script kopieren</value>
     </property>
     <property key="CmsScriptName">
         <value xml:lang="en">Script Name</value>

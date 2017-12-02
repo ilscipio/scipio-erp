@@ -1,5 +1,6 @@
 package com.ilscipio.scipio.cms.template;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
@@ -33,9 +34,9 @@ public abstract class CmsScriptTemplateServices {
             Map<String, Object> fields = ServiceUtil.setServiceFields(dispatcher, "cmsCreateUpdateScriptTemplate", 
                     UtilGenerics.<String, Object> checkMap(context), userLogin, null, null);
             
-            CmsScriptTemplate scriptTmp = null;
+            CmsScriptTemplate scriptTmpl = null;
             if (UtilValidate.isNotEmpty(scriptTemplateId)) {
-                scriptTmp = CmsScriptTemplate.getWorker().findByIdAlways(delegator, scriptTemplateId, false);
+                scriptTmpl = CmsScriptTemplate.getWorker().findByIdAlways(delegator, scriptTemplateId, false);
                 
                 fields.put("createdBy", (String) userLogin.get("userLoginId"));
                 
@@ -46,19 +47,41 @@ public abstract class CmsScriptTemplateServices {
                     fields.put("standalone", "Y");
                 }
                 
-                scriptTmp.update(fields);
+                scriptTmpl.update(fields);
             } else {
                 fields.put("lastUpdatedBy", (String) userLogin.get("userLoginId"));
-                scriptTmp = new CmsScriptTemplate(delegator, fields);
+                scriptTmpl = new CmsScriptTemplate(delegator, fields);
             }
             
-            scriptTmp.store();
-            result.put("scriptTemplateId", scriptTmp.getId());
+            scriptTmpl.store();
+            result.put("scriptTemplateId", scriptTmpl.getId());
         } catch (Exception e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         }
         return result;
+    }
+    
+    public static Map<String, Object> copyScriptTemplate(DispatchContext dctx, Map<String, ?> context) {
+        Delegator delegator = dctx.getDelegator();
+        Map<String, Object> copyArgs = new HashMap<>();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        if (userLogin != null) {
+            copyArgs.put("copyCreatorId", userLogin.get("partyId"));
+        }
+        try {
+            String srcScriptTemplateId = (String) context.get("srcScriptTemplateId");
+            CmsScriptTemplate srcScriptTmpl = CmsScriptTemplate.getWorker().findByIdAlways(delegator, srcScriptTemplateId, false);
+            CmsScriptTemplate scriptTmpl = srcScriptTmpl.copy(copyArgs);
+            scriptTmpl.update(context, false); // update templateName, description IF not empty
+            scriptTmpl.store();
+            Map<String, Object> result = ServiceUtil.returnSuccess();
+            result.put("scriptTemplateId", scriptTmpl.getId());
+            return result;
+        } catch (Exception e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
     }
     
     public static Map<String, Object> updateScriptTemplateInfo(DispatchContext dctx, Map<String, ?> context) {

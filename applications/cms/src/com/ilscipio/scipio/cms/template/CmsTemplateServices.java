@@ -20,13 +20,7 @@ public abstract class CmsTemplateServices {
     }
     
     /**
-     * Creates or updates an attribute for a given template (page or asset)
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
+     * Creates or updates an attribute for a given template (page or asset).
      */
     public static Map<String, Object> createUpdateAttribute(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();

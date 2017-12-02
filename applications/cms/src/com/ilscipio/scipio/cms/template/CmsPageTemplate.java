@@ -12,8 +12,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -25,6 +27,7 @@ import com.ilscipio.scipio.cms.CmsInputException;
 import com.ilscipio.scipio.cms.content.CmsPage;
 import com.ilscipio.scipio.cms.content.CmsPageContent;
 import com.ilscipio.scipio.cms.content.CmsPageContext;
+import com.ilscipio.scipio.cms.data.CmsDataObject;
 import com.ilscipio.scipio.cms.data.CmsEntityVisit;
 import com.ilscipio.scipio.cms.data.CmsEntityVisit.CmsEntityVisitor;
 import com.ilscipio.scipio.cms.data.CmsEntityVisit.VisitRelation;
@@ -78,11 +81,46 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
         super(delegator, fields);
     }
     
+    protected CmsPageTemplate(CmsPageTemplate other, Map<String, Object> copyArgs) {
+        super(other, copyArgs); // NOTE: super invokes getInitialVersionCopy
+        
+        // copy asset templates - this stores them in-memory, they will get committed during store()
+        this.assetTemplatesByImportName = copyAssetTemplates(getAssetTemplatesByImportName(), copyArgs, other);
+    }
+
     @Override    
-    public void update(Map<String, ?> fields) {
-        super.update(fields);
+    public void update(Map<String, ?> fields, boolean setIfEmpty) {
+        super.update(fields, setIfEmpty);
     }
     
+    /**
+     * Copies this page template and the lates version.
+     */
+    @Override
+    public CmsPageTemplate copy(Map<String, Object> copyArgs) {
+        return new CmsPageTemplate(this, copyArgs);
+    }
+    
+    @Override
+    public CmsPageTemplate copyWithVersion(Map<String, Object> copyArgs) throws CmsException {
+        return (CmsPageTemplate) super.copyWithVersion(copyArgs);
+    }
+    
+    protected static Map<String, CmsAssetTemplate> copyAssetTemplates(Map<String, CmsAssetTemplate> srcAssetTemplates, Map<String, Object> copyArgs, CmsPageTemplate other) {
+        Map<String, CmsAssetTemplate> assetTemplates = new LinkedHashMap<>();
+        for (Map.Entry<String, CmsAssetTemplate> entry : srcAssetTemplates.entrySet()) {
+            CmsPageTemplateAssetAssoc assoc = (CmsPageTemplateAssetAssoc) entry.getValue().getAssoc();
+            if (assoc == null) {
+                Debug.logError("internal error: unexpected null CmsPageTemplateAssetAssoc in-memory for page template '" + other.getId() + "'", module);
+            } else {
+                assoc = assoc.copy(copyArgs);
+                assoc.clearTemplate(); // pageTemplateId will be fixed-up on store()
+                assetTemplates.put(entry.getKey(), new CmsAssetTemplate(entry.getValue().getEntity(), assoc));
+            }
+        }
+        return assetTemplates;
+    }
+
     /**
      * 2016: Loads ALL this object's content into the current instance.
      * <p>
@@ -112,126 +150,7 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
         // NOTE: in theory, could want groupingNullSignificant=false here because it makes the duplicate name check more aggressive...
         verifyUniqueName(delegator, fields, isNew, "templateName", false, "webSiteId", true, true);
     }
-    
-    /**
-     * Adds a link to an asset template to this page template.
-     */
-    public void addAssetTemplate(CmsAssetTemplate assetTemplate, String importName) {
-        addAssetTemplate(assetTemplate.getId(), importName, 0L);
-    }
 
-    /**
-     * Adds a link to an asset template to this page template.
-     */
-    public void addAssetTemplate(CmsAssetTemplate assetTemplate, String importName, Long inputPosition) {
-        addAssetTemplate(assetTemplate.getId(), importName, inputPosition);
-    }
-
-    /**
-     * Adds a link to an asset template to this page template.
-     */
-    public void addAssetTemplate(String assetTemplateId, String importName) {
-        addAssetTemplate(assetTemplateId, importName, 0L);
-    }
-
-    /**
-     * Adds a link to an asset template to this page template.
-     */
-    public void addAssetTemplate(String assetTemplateId, String importName, Long inputPosition) {
-        addAssetTemplate(UtilMisc.toMap("assetTemplateId", assetTemplateId, "importName", importName, "inputPosition", inputPosition));
-    }
-    
-    /**
-     * Adds a link to an asset template to this page template. Fields will be filtered.
-     */
-    public void addAssetTemplate(Map<String, ?> fields) {
-        if (fields.containsKey("pageAssetTemplateAssocId")) {
-            throw new IllegalArgumentException("addAssetTemplate should not get pageAssetTemplateAssocId");
-        }
-        addUpdateAssetTemplate(fields);
-    }
-    
-    /**
-     * Adds or updates a link to an asset template to this page template. Fields will be filtered.
-     */
-    public void addUpdateAssetTemplate(Map<String, ?> fields) {
-        try {
-            if (fields.containsKey("pageAssetTemplateAssocId")) {
-                String pageAssetTemplateAssocId = (String) fields.get("pageAssetTemplateAssocId");
-                GenericValue assetAssoc = getDelegator().findOne("CmsPageTemplateAssetAssoc", 
-                        UtilMisc.toMap("pageAssetTemplateAssocId", pageAssetTemplateAssocId), false);
-                if (assetAssoc == null) {
-                    throw new CmsInputException("CmsPageTemplateAssetAssoc not found for pageAssetTemplateAssocId: " + pageAssetTemplateAssocId);
-                }
-                assetAssoc.setNonPKFields(fields, false);
-                assetAssoc.store();
-            } else {
-                Map<String, Object> flds = new HashMap<>(fields);
-
-                flds.put("pageTemplateId", this.getId());
-                if (flds.get("inputPosition") == null) {
-                    flds.put("inputPosition", 0L);
-                }
-                GenericValue assetAssoc = getDelegator().makeValidValue("CmsPageTemplateAssetAssoc", flds);
-                getDelegator().createSetNextSeqId(assetAssoc);
-            }
-
-            // reset assets
-            assetTemplatesByImportName = null;
-        } catch (GenericEntityException e) {
-            throw new CmsException(String.format(
-                    "Could not add or update asset template to page template. Page Template: %s Asset Template: %s: ", this.getName(),
-                    fields.get("assetTemplateId")) + e.getMessage(), e);
-        }
-    }
-
-    /**
-     * Copies this page template including all linked products and the latest
-     * version.
-     */
-    @Override
-    public CmsPageTemplate copy() {
-        return copy(null);
-    }
-    
-    /**
-     * Copies this page template including all linked products and the latest
-     * version.
-     */
-    public CmsPageTemplate copy(String copyCreatorId) {
-        // copy the template itself
-        CmsPageTemplate templateCopy = (CmsPageTemplate) super.copy();
-        // copy asset templates
-        Map<String, CmsAssetTemplate> assetTemplateEntries = getAssetTemplatesByImportName();
-        for (String name : assetTemplateEntries.keySet()) {
-            CmsAssetTemplate assetTemplate = assetTemplateEntries.get(name);
-            templateCopy.addAssetTemplate(assetTemplate, name, assetTemplate.getInputPosition());
-        }
-        
-        // This happens because of a weird constructor invocation in the base classes that bypasses this class's constructor logic        
-        CmsPageTemplateVersion lastVer = getLastVersion();
-        
-        if (lastVer != null) {
-            Map<String, Object> fields = lastVer.getRawDataAsMap();
-            fields.put("pageTemplateId", templateCopy.getId());
-            fields.put("versionId", null);
-            // Copy the original version date from the last template
-            fields.put("origVersionDate", lastVer.getVersionDate());
-            templateCopy.createAndStoreNewVersion(fields, firstVersionActive);
-        }
-
-        
-        // Store the name of the person who created the copy (which is NOT the same as the person who
-        // created the original version)
-        if (copyCreatorId != null) {
-            templateCopy.setCreatedBy(copyCreatorId);
-        }
-        
-        // Do a store because in most cases something will have changed after the self-copy
-        templateCopy.store();
-        
-        return templateCopy;
-    }
 
     @Override
     public Map<String, Object> getDescriptor(Locale locale) {
@@ -303,8 +222,13 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
         return getAssetTemplatesByImportName().get(importName);
     }
     
+    /**
+     * Gets local asset by ID.
+     * NOTE: This uses a slow iteration to lookup by ID, and is used live.
+     * However, referencing assets by ID is discouraged in template anyways, because
+     * IDs are generated and unreadable.
+     */
     public CmsAssetTemplate getAssetTemplateById(String id) {
-        // FIXME: slow!
         for(CmsAssetTemplate assetTemplate : getAssetTemplatesByImportName().values()) {
             if (id.equals(assetTemplate.getId())) {
                 return assetTemplate; 
@@ -326,6 +250,29 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
     
     public List<CmsAssetTemplate> getAssetTemplates() {
         return new ArrayList<>(getAssetTemplatesByImportName().values());
+    }
+
+    public void store(boolean forceStoreAssetAssoc) throws CmsException {
+        super.store();
+        
+        // 2017-11: we'll now store the linked asset template associations IF they were not
+        // yet persisted OR entity has changed OR if forceStoreAssetAssoc (off by default)
+        if (this.assetTemplatesByImportName != null) {
+            for(CmsAssetTemplate asset : this.assetTemplatesByImportName.values()) {
+                CmsPageTemplateAssetAssoc assoc = (CmsPageTemplateAssetAssoc) asset.getAssoc();
+                if (assoc != null) {
+                    if (forceStoreAssetAssoc || assoc.hasChangedOrNoId()) {
+                        assoc.ensureTemplate(this);
+                        assoc.store();
+                    }
+                }
+            }
+        }
+    }
+    
+    @Override
+    public void store() throws CmsException {
+        store(false);
     }
 
     /**
@@ -375,16 +322,25 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
         private static final long serialVersionUID = 5839674451619496850L;
 
         public CmsPageTemplateAssetAssoc(Delegator delegator, Map<String, ?> fields, CmsAssetTemplate assetTemplate) {
-            super(delegator, fields, assetTemplate);
+            super(delegator, checkFields(fields, true), assetTemplate);
         }
 
         protected CmsPageTemplateAssetAssoc(GenericValue entity) {
             super(entity);
         }
 
+        protected CmsPageTemplateAssetAssoc(CmsPageTemplateAssetAssoc other, Map<String, Object> copyArgs) {
+            super(other, copyArgs);
+        }
+        
         @Override    
-        public void update(Map<String, ?> fields) {
-            super.update(fields);
+        public void update(Map<String, ?> fields, boolean setIfEmpty) {
+            super.update(fields, setIfEmpty);
+        }
+        
+        @Override
+        public CmsPageTemplateAssetAssoc copy(Map<String, Object> copyArgs) throws CmsException {
+            return new CmsPageTemplateAssetAssoc(this, copyArgs);
         }
         
         /**
@@ -397,6 +353,47 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
         @Override
         public void preload(PreloadWorker preloadWorker) {
             super.preload(preloadWorker);
+        }
+        
+        protected static <T> Map<String, T> checkFields(Map<String, T> fields, boolean isNew) throws CmsException {
+            if (isNew || fields.containsKey("inputPosition")) {
+                if (UtilValidate.isEmpty((Long) fields.get("inputPosition"))) {
+                    UtilGenerics.<String, Object> checkMap(fields).put("inputPosition", 0L);
+                }
+            }
+            return fields;
+        }
+        
+        @Override
+        protected void clearTemplate() {
+            this.entity.set("pageTemplateId", null);
+        }
+        
+        @Override
+        protected void setTemplate(CmsDataObject template) {
+            if (!(template instanceof CmsPageTemplate)) throw new CmsException("CmsPageTemplateAssocAssoc requires a CmsPageTemplate, got: " 
+                    + (template != null ? template.getClass().getName() : null));
+            entity.set("pageTemplateId", template.getId());
+        }
+        
+        @Override
+        protected boolean hasTemplate() {
+            return (this.entity.getString("pageTemplateId") != null);
+        }
+        
+        
+        protected void ensureTemplate(CmsPageTemplate template) {
+            String curTemplateId = this.entity.getString("pageTemplateId");
+            if (curTemplateId == null) {
+                this.entity.set("pageTemplateId", template.getId());
+            } else {
+                if (!curTemplateId.equals(template.getId())) {
+                    Debug.logWarning("Cms: Page template '" + template.getId()
+                            + "' had in-memory CmsPageTemplateAssetAssoc association"
+                            + " pointing to another template ('" + curTemplateId + "'); correcting", module);
+                    this.entity.set("pageTemplateId", template.getId());
+                }
+            }
         }
         
         @Override
@@ -424,6 +421,27 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
             public CmsPageTemplateAssetAssoc makeFromFields(Delegator delegator, Map<String, ?> fields) throws CmsException {
                 return new CmsPageTemplateAssetAssoc(delegator, fields, null);
             }
+            
+            /**
+             * Adds or updates a link to an asset template to this page template. Fields will be filtered.
+             */
+            public void createUpdatePageTemplateAssetAssoc(Delegator delegator, Map<String, ?> fields) throws CmsException {
+                try {
+                    String pageAssetTemplateAssocId = (String) fields.get("pageAssetTemplateAssocId");
+                    if (UtilValidate.isNotEmpty(pageAssetTemplateAssocId)) {
+                        CmsPageTemplateAssetAssoc assoc = this.findByIdAlways(delegator, pageAssetTemplateAssocId, false);
+                        assoc.update(fields);
+                        assoc.store();
+                    } else {
+                        CmsPageTemplateAssetAssoc assoc = makeFromFields(delegator, fields);
+                        assoc.store();
+                    }
+                } catch (Exception e) {
+                    throw new CmsException(String.format(
+                            "Could not add or update asset template to page template. Page Template: %s Asset Template: %s: ", fields.get("pageTemplateId"),
+                            fields.get("assetTemplateId")) + e.getMessage(), e);
+                }
+            }
         }
     }
     
@@ -445,9 +463,19 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
             super(delegator, fields, scriptTemplate);
         }
 
+        protected CmsPageTemplateScriptAssoc(CmsPageTemplateScriptAssoc other, Map<String, Object> copyArgs) {
+            super(other, copyArgs);
+            // NOTE: don't bother clearing out the ID fields here, caller should handle
+        }
+        
         @Override    
-        public void update(Map<String, ?> fields) {
-            super.update(fields);
+        public void update(Map<String, ?> fields, boolean setIfEmpty) {
+            super.update(fields, setIfEmpty);
+        }
+        
+        @Override
+        public CmsPageTemplateScriptAssoc copy(Map<String, Object> copyArgs) throws CmsException {
+            return new CmsPageTemplateScriptAssoc(this, copyArgs);
         }
         
         /**
@@ -460,6 +488,23 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
         @Override
         public void preload(PreloadWorker preloadWorker) {
             super.preload(preloadWorker);
+        }
+
+        @Override
+        protected void clearTemplate() {
+            entity.set("pageTemplateId", null);
+        }
+        
+        @Override
+        protected void setTemplate(CmsDataObject template) {
+            if (!(template instanceof CmsPageTemplate)) throw new CmsException("CmsPageTemplateScriptAssoc requires a CmsPageTemplate, got: " 
+                    + (template != null ? template.getClass().getName() : null));
+            entity.set("pageTemplateId", template.getId());
+        }
+        
+        @Override
+        protected boolean hasTemplate() {
+            return (entity.get("pageTemplateId") != null);
         }
         
         @Override
@@ -509,6 +554,8 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
      * Dedicated page renderer object.
      */
     public static class PageTemplateRenderer extends CmsRenderTemplate.TemplateRenderer<CmsPageTemplate> {
+
+        private static final long serialVersionUID = 1761709448851808935L;
 
         public PageTemplateRenderer(CmsPageTemplate template) {
             super(template);

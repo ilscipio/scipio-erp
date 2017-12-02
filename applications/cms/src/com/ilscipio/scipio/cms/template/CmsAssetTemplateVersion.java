@@ -44,6 +44,14 @@ public class CmsAssetTemplateVersion extends CmsTemplateVersion {
         this.setAssetTemplateId(assetTemplate.getId());
     }
     
+    protected CmsAssetTemplateVersion(CmsAssetTemplateVersion other, Map<String, Object> copyArgs, CmsAssetTemplate assetTemplate) {
+        super(other, copyArgs);
+        if (assetTemplate != null) { // if null, we must be keeping the same parent template
+            this.assetTemplate = assetTemplate;
+            this.setAssetTemplateId(assetTemplate.getId());
+        }
+    }
+    
     private static Map<String, ?> checkAssetTemplateId(Delegator delegator, Map<String, ?> fields, CmsAssetTemplate assetTemplate,
             boolean useCache) {
         String fieldsTmpId = getAssetTemplateId(fields);
@@ -58,8 +66,18 @@ public class CmsAssetTemplateVersion extends CmsTemplateVersion {
     }
     
     @Override    
-    public void update(Map<String, ?> fields) {
-        super.update(fields);
+    public void update(Map<String, ?> fields, boolean setIfEmpty) {
+        super.update(fields, setIfEmpty);
+    }
+    
+    @Override
+    public CmsAssetTemplateVersion copy(Map<String, Object> copyArgs) throws CmsException {
+        return new CmsAssetTemplateVersion(this, copyArgs, null);
+    }
+    
+    @Override
+    public CmsAssetTemplateVersion copy(Map<String, Object> copyArgs, CmsVersionedComplexTemplate<?, ?> template) throws CmsException {
+        return new CmsAssetTemplateVersion(this, copyArgs, (CmsAssetTemplate) template);
     }
     
     /**
@@ -107,13 +125,30 @@ public class CmsAssetTemplateVersion extends CmsTemplateVersion {
     // Helpers
 
     @Override
-    protected String getTemplateId() {
+    public String getTemplateId() {
         return getAssetTemplateId();
     }
 
     @Override
     public CmsAssetTemplate getTemplate() {
         return getAssetTemplate();
+    }
+    
+    @Override
+    protected void setTemplate(CmsVersionedComplexTemplate<?, ?> template) {
+        if (template == null) {
+            setAssetTemplateId(null);
+            this.assetTemplate = null;
+        } else {
+            if (!(template instanceof CmsAssetTemplate)) throw new CmsException("tried to assign a non-CmsAssetTemplate to CmsAssetTemplateVersion: " + template.getClass().getName());
+            setAssetTemplateId(template.getId());
+            this.assetTemplate = (CmsAssetTemplate) template;
+        }
+    }
+    
+    @Override
+    protected void setTemplateId(String templateId) {
+        setAssetTemplateId(templateId);
     }
 
     @Override

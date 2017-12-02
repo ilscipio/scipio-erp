@@ -194,6 +194,20 @@
         <attribute name="pageId" type="String" mode="OUT" optional="false"/>
     </service>
     
+    <service name="cmsCopyPage" engine="java"
+                location="com.ilscipio.scipio.cms.content.CmsPageServices" invoke="copyPage" auth="true">
+        <description>Copies a page</description>
+        <permission-service service-name="cmsGenericPermission" main-action="CREATE"/>
+        <attribute name="srcPageId" type="String" mode="IN" optional="false"/>
+        <attribute name="srcVersionId" type="String" mode="IN" optional="true"/>
+        <attribute name="webSiteId" type="String" mode="INOUT" optional="false" />
+        <attribute name="primaryPath" type="String" mode="INOUT" optional="true"/>
+        <attribute name="primaryPathFromContextRoot" type="String" mode="IN" optional="true"/><!-- indicator Y/N -->
+        <attribute name="pageName" type="String" mode="IN" optional="true"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="pageId" type="String" mode="OUT" optional="false"/>
+    </service>
+    
     <service name="cmsUpdatePageInfo" engine="java" auth="true" 
         location="com.ilscipio.scipio.cms.content.CmsPageServices" invoke="updatePageInfo">
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
@@ -341,6 +355,17 @@
         <attribute name="templateSource" type="String" mode="IN" optional="true" /><!-- NOTE: can be omitted, but better to specify explicit, "Body" or "Location" -->
     </service>
     
+    <service name="cmsCopyPageTemplate" engine="java" auth="true" 
+                location="com.ilscipio.scipio.cms.template.CmsPageTemplateServices" invoke="copyPageTemplate">
+        <description>Copies a PageTemplate</description>
+        <permission-service service-name="cmsGenericPermission" main-action="CREATE"/>
+        <attribute name="srcPageTemplateId" type="String" mode="IN" optional="false"/>
+        <attribute name="srcVersionId" type="String" mode="IN" optional="true"/>
+        <attribute name="templateName" type="String" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="pageTemplateId" type="String" mode="OUT" optional="false"/>
+    </service>
+    
     <service name="cmsUpdatePageTemplateInfo" engine="java" 
                 location="com.ilscipio.scipio.cms.template.CmsPageTemplateServices" invoke="updatePageTemplateInfo" auth="true">
         <description>Updates basic page template info (only that can be changed).</description>
@@ -440,7 +465,7 @@
     </service>
     
     <service name="cmsCreateUpdateAssetAssoc" engine="java"
-                location="com.ilscipio.scipio.cms.template.CmsAssetTemplateServices" invoke="createUpdateAssetAssoc" auth="true">
+                location="com.ilscipio.scipio.cms.template.CmsPageTemplateServices" invoke="createUpdateAssetAssoc" auth="true">
         <description>Update or add an asset to a page template</description>
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
         <attribute name="pageAssetTemplateAssocId" type="String" mode="IN" optional="true"/>
@@ -497,6 +522,17 @@
         <attribute name="templateLocation" type="String" mode="IN" optional="true" />
         <attribute name="templateSource" type="String" mode="IN" optional="true" /><!-- NOTE: can be omitted, but better to specify explicit, "Body" or "Location" -->
         <attribute name="active" type="Boolean" mode="IN" optional="true"/>
+    </service>
+    
+    <service name="cmsCopyAsset" engine="java"
+                location="com.ilscipio.scipio.cms.template.CmsAssetTemplateServices" invoke="copyAsset" auth="true">
+        <description>Creates a new asset</description>
+        <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
+        <attribute name="srcAssetTemplateId" type="String" mode="IN" optional="false"/>
+        <attribute name="srcVersionId" type="String" mode="IN" optional="true"/>
+        <attribute name="templateName" type="String" mode="IN" optional="true"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="assetTemplateId" type="String" mode="OUT" optional="false"/>   
     </service>
 
     <service name="cmsUpdateAssetTemplateInfo" engine="java" auth="true" 
@@ -618,6 +654,20 @@
         <attribute name="templateSource" type="String" mode="IN" optional="true" /><!-- NOTE: can be omitted, but better to specify explicit, "Body" or "Location" -->
         <attribute name="standalone" type="String" mode="IN" optional="true" />
         <attribute name="active" type="Boolean" mode="IN" optional="true"/>
+    </service>
+    
+    <!-- Script Templates -->
+    
+    <service name="cmsCopyScriptTemplate" engine="java"
+                location="com.ilscipio.scipio.cms.template.CmsScriptTemplateServices" invoke="copyScriptTemplate" auth="true">
+        <description>Creates a new asset</description>
+        <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
+        <attribute name="srcScriptTemplateId" type="String" mode="IN" optional="false"/>
+        <!-- future
+        <attribute name="srcVersionId" type="String" mode="IN" optional="true"/>-->
+        <attribute name="templateName" type="String" mode="IN" optional="true"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="scriptTemplateId" type="String" mode="IN" optional="false"/>
     </service>
     
     <service name="cmsUpdateScriptTemplateInfo" engine="java" auth="true" 

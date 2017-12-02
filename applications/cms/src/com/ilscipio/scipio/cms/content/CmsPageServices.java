@@ -195,12 +195,6 @@ public abstract class CmsPageServices {
     /**
      * Creates a new page version in the repository. The content is not live
      * until it is approved.
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> addPageVersion(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -227,12 +221,6 @@ public abstract class CmsPageServices {
     /**
      * Creates a new page in the repository. Adds an empty version to it
      * afterwards.
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> createPage(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -289,6 +277,32 @@ public abstract class CmsPageServices {
         return result;
     }
 
+    public static Map<String, Object> copyPage(DispatchContext dctx, Map<String, ?> context) {
+        Delegator delegator = dctx.getDelegator();
+        Map<String, Object> copyArgs = new HashMap<>();
+        copyArgs.put("webSiteId", context.get("webSiteId"));
+        copyArgs.put("primaryPath", context.get("primaryPath"));
+        copyArgs.put("primaryPathFromContextRoot", context.get("primaryPathFromContextRoot"));
+        copyArgs.put("copyVersionId", context.get("srcVersionId"));
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        if (userLogin != null) {
+            copyArgs.put("copyCreatorId", userLogin.get("partyId"));
+        }
+        try {
+            String srcPageId = (String) context.get("srcPageId");
+            CmsPage srcPage = CmsPage.getWorker().findByIdAlways(delegator, srcPageId, false);
+            CmsPage page = srcPage.copy(copyArgs);
+            page.update(context, false); // update pageName, description IF not empty
+            page.store();
+            Map<String, Object> result = ServiceUtil.returnSuccess();
+            result.put("pageId", page.getId());
+            return result;
+        } catch (Exception e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+    }
+    
     public static Map<String, Object> updatePageInfo(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Delegator delegator = dctx.getDelegator();
@@ -312,12 +326,6 @@ public abstract class CmsPageServices {
     /**
      * Sets a page version as live version. The live version is the content that
      * will be displayed to regular page visitors.
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> activatePageVersion(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -337,7 +345,7 @@ public abstract class CmsPageServices {
             if (webSiteIds!= null && webSiteIds.size() > 0) {
                 for(String webSiteId : webSiteIds) {
                     fields.put("webSiteId", webSiteId);
-                    page.setPrimaryProcessMappingFields(fields);
+                    page.setPrimaryProcessMappingFields(fields, true);
                 }
             } else {
                 Debug.logWarning("Cms: activatePageVersion: Page '" + pageId 
@@ -384,13 +392,7 @@ public abstract class CmsPageServices {
     }
     
     /**
-     * Returns all pages for the current user
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
+     * Returns all pages for the current user.
      */
     public static Map<String, Object> getPages(DispatchContext dctx, Map<String, ?> context) {
         Delegator delegator = dctx.getDelegator();

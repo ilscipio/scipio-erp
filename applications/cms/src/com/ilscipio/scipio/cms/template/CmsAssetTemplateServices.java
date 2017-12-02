@@ -1,6 +1,7 @@
 package com.ilscipio.scipio.cms.template;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,15 +34,8 @@ public abstract class CmsAssetTemplateServices {
     protected CmsAssetTemplateServices() {
     }
     
-    
     /**
-     * Creates or updates an Asset
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
+     * Creates or updates an Asset.
      */
     public static Map<String, Object> createUpdateAsset(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -75,6 +69,30 @@ public abstract class CmsAssetTemplateServices {
         return result;
     }
     
+    public static Map<String, Object> copyAsset(DispatchContext dctx, Map<String, ?> context) {
+        Delegator delegator = dctx.getDelegator();
+        Map<String, Object> copyArgs = new HashMap<>();
+        copyArgs.put("copyVersionId", context.get("srcVersionId"));
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        if (userLogin != null) {
+            copyArgs.put("copyCreatorId", userLogin.get("partyId"));
+        }
+        try {
+            String srcAssetTemplateId = (String) context.get("srcAssetTemplateId");
+            CmsAssetTemplate srcAssetTemplate = CmsAssetTemplate.getWorker().findByIdAlways(delegator, srcAssetTemplateId, false);
+            CmsAssetTemplate assetTemplate = srcAssetTemplate.copyWithVersion(copyArgs);
+            assetTemplate.update(context, false); // update templateName, description IF not empty
+            // NOTE: store() now updates the version automatically using assetTemplate.lastVersion
+            assetTemplate.store();
+            Map<String, Object> result = ServiceUtil.returnSuccess();
+            result.put("assetTemplateId", assetTemplate.getId());
+            return result;
+        } catch (Exception e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+    }
+    
     public static Map<String, Object> updateAssetTemplateInfo(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Delegator delegator = dctx.getDelegator();
@@ -94,10 +112,10 @@ public abstract class CmsAssetTemplateServices {
     /**
      * NOTE: 2016: TODO?: I moved this here because it's where it belongs, but there
      * is no service def for this and the description that was here was wrong.
-     * @deprecated this looks liek the old versioning code; will be supplanted by CmsAssetTemplateVersion now already in place.
+     * @deprecated this looks like the old versioning code; will be supplanted by CmsAssetTemplateVersion now already in place.
      */
     @Deprecated
-    public static Map<String, Object> updateAssetTemplate(DispatchContext dctx, Map<String, ? extends Object> origContext) {
+    static Map<String, Object> updateAssetTemplate(DispatchContext dctx, Map<String, ? extends Object> origContext) {
         // create copy of map, so we can add items without creating side effects
         Map<String, Object> context = UtilMisc.makeMapWritable(origContext);
         Delegator delegator = (GenericDelegator) dctx.getDelegator();
@@ -116,7 +134,7 @@ public abstract class CmsAssetTemplateServices {
                 // originalTemplate.store();
                 // Paritas dos tacos: Update original template and set to
                 // inactive (assetTemplateId)
-                CmsAssetTemplate newTemplate = (CmsAssetTemplate) originalTemplate.copy();
+                CmsAssetTemplate newTemplate = (CmsAssetTemplate) originalTemplate.copy(new HashMap<String, Object>());
                 if (context.get("templateName") != null) {
                     newTemplate.setName((String) context.get("templateName"));
                 }
@@ -147,12 +165,6 @@ public abstract class CmsAssetTemplateServices {
     /**
      * Sets an asset template version as live version. The live version is the content that
      * will be displayed to regular page visitors.
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> activateAssetTemplateVersion(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -177,12 +189,6 @@ public abstract class CmsAssetTemplateServices {
     
     /**
      * Gets the active/default asset template version of the given asset template.
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> getActiveAssetTemplateVersion(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -212,12 +218,6 @@ public abstract class CmsAssetTemplateServices {
     
     /**
      * Gets all asset information
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> getAssetTemplate(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -278,12 +278,6 @@ public abstract class CmsAssetTemplateServices {
     
     /**
      * Gets the active/default asset template version of the given asset template.
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> getRelatedActiveAssetTemplateVersion(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -318,30 +312,6 @@ public abstract class CmsAssetTemplateServices {
         }
         return result;
     }    
-    
-    /**
-     * Adds an available asset to a page template
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
-     */
-    public static Map<String, Object> createUpdateAssetAssoc(DispatchContext dctx, Map<String, ?> context) {
-        Map<String, Object> result = ServiceUtil.returnSuccess();
-        Delegator delegator = dctx.getDelegator();
-        try {
-            String pageTemplateId = (String) context.get("pageTemplateId");
-            CmsPageTemplate pageTmp = CmsPageTemplate.getWorker().findByIdAlways(delegator, pageTemplateId, false);
-            pageTmp.addUpdateAssetTemplate(context);
-        } catch(Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
-        }
-        return result;
-    }
-    
 
     public static Map<String, Object> getAssetTemplateTypes(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();

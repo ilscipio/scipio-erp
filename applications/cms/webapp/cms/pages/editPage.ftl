@@ -354,7 +354,25 @@
     <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>
             <@menuitem type="link" href=makeOfbizUrl("editPage") class="+${styles.action_run_sys!} ${styles.action_create!}" text=uiLabelMap.CmsCreatePage/>
-            
+            <@cmsCopyMenuItem target="copyPage" title=uiLabelMap.CmsCopyPage>
+                 <@field type="hidden" name="webSiteId" value=((meta.webSiteId)!)/>
+                 <@field type="input" name="primaryPath" value="" label=uiLabelMap.CommonPath placeholder="/myUrl" required=true/>
+                 <#-- NOTE: the select below is currently for debugging only - not sure if want to expose
+                    to users here yet (though should be working) -->
+                 <#if debugMode>
+                   <@field type="select" name="primaryPathFromContextRoot" label="primaryPathFromContextRoot" required=true>
+                      <option value="" selected="selected"></option>
+                      <option value="Y">Y</option>
+                      <option value="N">N</option>
+                   </@field>
+                 <#else>
+                   <#-- NOTE: do not use primaryPathFromContextRootDefault here; leave this empty (the default setting 
+                       is for each webapp, target service must look it up) -->
+                   <input type="hidden" name="primaryPathFromContextRoot" value=""/>
+                 </#if>
+                 <@field type="input" name="pageName" value="" label=uiLabelMap.CommonName required=false/>
+                 <@field type="textarea" name="description" value="" label=uiLabelMap.CommonDescription required=false/>
+            </@cmsCopyMenuItem>
             <@menuitem type="generic">
                 <@modal id="modal_new_script" label=uiLabelMap.CmsAddScript class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                     <@heading>${uiLabelMap.CmsAddScript}</@heading>

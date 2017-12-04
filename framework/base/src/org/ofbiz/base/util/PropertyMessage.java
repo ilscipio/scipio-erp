@@ -156,7 +156,11 @@ public abstract class PropertyMessage implements Serializable {
     }
     
     public static PropertyMessage makeFromException(Throwable t) {
-        return new ExceptionPropertyMessage(t);
+        if (t instanceof PropertyMessageEx) {
+            return new PropertyExceptionPropertyMessage((PropertyMessageEx) t, true);
+        } else {
+            return new StandardExceptionPropertyMessage(t);
+        }
     }
     
     /**
@@ -212,8 +216,8 @@ public abstract class PropertyMessage implements Serializable {
     public static PropertyMessage makeAuto(Object message, boolean strict) {
         if (message == null) return null;
         else if (message instanceof PropertyMessage) return (PropertyMessage) message;
-        else if (message instanceof String) return new StaticPropertyMessage((String) message);
-        else if (message instanceof Throwable) return new ExceptionPropertyMessage((Throwable) message);
+        else if (message instanceof String) return makeFromStatic((String) message);
+        else if (message instanceof Throwable) return makeFromException((Throwable) message);
         else {
             if (strict) throw new IllegalArgumentException("cannot convert object to PropertyMessage, unknown type: " + message.getClass().getName());
             else {
@@ -229,13 +233,22 @@ public abstract class PropertyMessage implements Serializable {
     }
     
     /**
+     * Makes an appropriate PropertyMessage instance for the object instance type.
+     * Does not throw exceptions.
+     * @param message the source message object
+     */
+    public static PropertyMessage makeAutoSafe(Object message) {
+        return makeAuto(message, false);
+    }
+    
+    /**
      * SCIPIO: Returns a new list where each given message is converted to a PropertyMessage instance
      * if it is not already one.
      * @param messages the source messages objects
      * @param strict if true and not a String, Throwable or PropertyMessage, throws IllegalArgumentException; 
      *               if false, safe mode, unknown type gets toString() and wrapped in StaticPropertyMessage, and no exceptions are thrown (logged instead)
      */
-    public static List<PropertyMessage> makeAutoFromList(Collection<?> messages, boolean strict) {
+    public static List<PropertyMessage> makeListAuto(Collection<?> messages, boolean strict) {
         if (messages == null) return null;
         List<PropertyMessage> propMsgs = new ArrayList<>(messages.size());
         for(Object msg : messages) {
@@ -255,6 +268,41 @@ public abstract class PropertyMessage implements Serializable {
         return propMsgs;
     }
     
+    /**
+     * SCIPIO: Returns a new list where each given message is converted to a PropertyMessage instance
+     * if it is not already one.
+     * Does not throw exceptions.
+     * @param messages the source messages objects
+     */
+    public static List<PropertyMessage> makeListAutoSafe(Collection<?> messages) {
+        return makeListAuto(messages, false);
+    }
+    
+    /**
+     * Makes a property message list from either a single message or list.
+     * If messageOrList is null, this will return null (not an empty list). 
+     */
+    public static List<PropertyMessage> makeListAuto(Object messageOrList, boolean strict) {
+        if (messageOrList instanceof Collection) {
+            return makeListAuto((Collection<?>) messageOrList, strict);
+        } else {
+            PropertyMessage msg = makeAuto(messageOrList, strict);
+            if (msg == null) return null;
+            List<PropertyMessage> list = new ArrayList<>();
+            list.add(msg);
+            return list;
+        }
+    }
+
+    /**
+     * Makes a property message list from either a single message or list.
+     * If messageOrList is null, this will return null (not an empty list).
+     * Does not throw exceptions.
+     */
+    public static List<PropertyMessage> makeListAutoSafe(Object messageOrList) {
+        return makeListAuto(messageOrList, false);
+    }
+
     public static class NullPropertyMessage extends PropertyMessage {
         private static final NullPropertyMessage INSTANCE = new NullPropertyMessage();
         private NullPropertyMessage() {}
@@ -320,16 +368,58 @@ public abstract class PropertyMessage implements Serializable {
         }
     }
     
-    public static class ExceptionPropertyMessage extends PropertyMessage {
+    public abstract static class ExceptionPropertyMessage extends PropertyMessage {
+        public abstract Throwable getException();
+    }
+    
+    /**
+     * Wraps an exception and returns its non-localized {@link Exception#getMessage()} value.
+     */
+    public static class StandardExceptionPropertyMessage extends ExceptionPropertyMessage {
         private final Throwable t;
 
-        protected ExceptionPropertyMessage(Throwable t) {
+        protected StandardExceptionPropertyMessage(Throwable t) {
             this.t = t;
         }
 
         @Override
         protected String getMessageImpl(Locale locale) {
-            return t.getMessage();
+            return getException().getMessage();
+        }
+
+        @Override
+        public Throwable getException() {
+            return t;
+        }
+    }
+    
+    /**
+     * Wraps a {@link PropertyMessageEx}-implementing exception and delegates to its 
+     * localized PropertyMessage message via {@link PropertyMessageEx#getPropertyMessage()}.
+     * NOTE: if useFallback true, it will use {@link Exception#getMessage()} if property message
+     * gives null.
+     */
+    public static class PropertyExceptionPropertyMessage extends ExceptionPropertyMessage {
+        private final PropertyMessageEx propMsgEx;
+        private final boolean useFallback;
+
+        protected PropertyExceptionPropertyMessage(PropertyMessageEx propMsgEx, boolean useFallback) {
+            this.propMsgEx = propMsgEx;
+            this.useFallback = useFallback;
+        }
+
+        @Override
+        protected String getMessageImpl(Locale locale) {
+            String msg = propMsgEx.getPropertyMessage().getMessage(locale);
+            if (msg == null && useFallback) {
+                msg = getException().getMessage();
+            }
+            return msg;
+        }
+
+        @Override
+        public Throwable getException() {
+            return (Throwable) propMsgEx;
         }
     }
     

@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -14,6 +15,7 @@ import java.util.TreeSet;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.tika.detect.Detector;
+import org.apache.tika.detect.EncodingDetector;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.mime.MediaType;
 import org.apache.tika.mime.MediaTypeRegistry;
@@ -21,6 +23,7 @@ import org.apache.tika.mime.MimeType;
 import org.apache.tika.mime.MimeTypeException;
 import org.apache.tika.mime.MimeTypes;
 import org.apache.tika.parser.AutoDetectParser;
+import org.apache.tika.parser.txt.UniversalEncodingDetector;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
@@ -248,6 +251,20 @@ public abstract class TikaUtil {
      */
     public static MimeType getMimeTypeForMediaTypeSafe(MediaType mediaType, MimeTypes mimeTypes, boolean exact) {
         return getMimeTypeForMediaTypeSafe(mediaType.toString(), mimeTypes, exact);
+    }
+    
+    /**
+     * 
+     * @param is
+     * @param fileName
+     * @return
+     * @throws IOException
+     */
+    public static Charset findCharset(InputStream is, String fileName) throws IOException  {
+        EncodingDetector detector = new UniversalEncodingDetector();
+        Metadata md = new Metadata();
+        md.add(Metadata.RESOURCE_NAME_KEY, fileName);
+        return detector.detect(is, md);
     }
     
     

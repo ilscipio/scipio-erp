@@ -57,7 +57,7 @@ public abstract class CmsAssetTemplateServices {
             CmsAssetTemplate assetTmp = null;
             if (UtilValidate.isNotEmpty(assetTemplateId)) {
                 assetTmp = CmsAssetTemplate.getWorker().findByIdAlways(delegator, assetTemplateId, false);
-                fields.put("createdBy", (String) userLogin.get("userLoginId"));
+                fields.put("createdBy", userLogin.getString("userLoginId"));
                 assetTmp.update(fields);
             } else {
                 fields.put("lastUpdatedBy", (String) userLogin.get("userLoginId"));

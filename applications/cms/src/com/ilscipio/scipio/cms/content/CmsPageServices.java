@@ -299,7 +299,7 @@ public abstract class CmsPageServices {
             result.put("pageId", page.getId());
             return result;
         } catch (Exception e) {
-            FormattedError err = errorFmt.format(e, "Error copy page (pageId: " + context.get("srcPageId") + ")", context);
+            FormattedError err = errorFmt.format(e, "Error copying page (pageId: " + context.get("srcPageId") + ")", context);
             Debug.logError(err.getEx(), err.getLogMsg(), module);
             return err.returnError();
         }

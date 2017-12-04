@@ -162,7 +162,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
     
     @Override    
     public void update(Map<String, ?> fields, boolean setIfEmpty) {
-        super.update(fields);
+        super.update(fields, setIfEmpty);
         this.setPrimaryProcessMappingFields(fields, setIfEmpty); 
     }
     

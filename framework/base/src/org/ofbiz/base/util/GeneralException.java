@@ -20,8 +20,11 @@ package org.ofbiz.base.util;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+
+import org.ofbiz.base.util.PropertyMessageEx.SettablePropertyMessageEx;
 
 /**
  * Base OFBiz Exception, provides nested exceptions, etc
@@ -31,7 +34,7 @@ import java.util.Locale;
  * This allows localization to be done by callers, at the correct place and time, and where otherwise impossible.
  */
 @SuppressWarnings("serial")
-public class GeneralException extends Exception implements PropertyMessageEx {
+public class GeneralException extends Exception implements SettablePropertyMessageEx {
 
     public static <T> T checkException(Throwable t) throws GeneralException {
         return GeneralException.<T>checkException(t.getMessage(), t);
@@ -97,7 +100,7 @@ public class GeneralException extends Exception implements PropertyMessageEx {
      */
     public GeneralException(String msg, List<?> messages) {
         super(msg);
-        this.messages = makePropMsgList(messages); // SCIPIO: make property messages
+        this.messages = PropertyMessageExUtil.makePropertyMessageList(messages); // SCIPIO: make property messages
     }
 
     /**
@@ -109,7 +112,7 @@ public class GeneralException extends Exception implements PropertyMessageEx {
      */
     public GeneralException(String msg, List<?> messages, Throwable nested) {
         super(msg, nested);
-        this.messages = makePropMsgList(messages); // SCIPIO: make property messages
+        this.messages = PropertyMessageExUtil.makePropertyMessageList(messages); // SCIPIO: make property messages
     }
 
     /**
@@ -120,7 +123,7 @@ public class GeneralException extends Exception implements PropertyMessageEx {
      */
     public GeneralException(List<?> messages, Throwable nested) {
         super(nested);
-        this.messages = makePropMsgList(messages); // SCIPIO: make property messages
+        this.messages = PropertyMessageExUtil.makePropertyMessageList(messages); // SCIPIO: make property messages
     }
 
     /**
@@ -130,7 +133,7 @@ public class GeneralException extends Exception implements PropertyMessageEx {
      */
     public GeneralException(List<?> messages) {
         super();
-        this.messages = makePropMsgList(messages); // SCIPIO: make property messages
+        this.messages = PropertyMessageExUtil.makePropertyMessageList(messages); // SCIPIO: make property messages
     }
     
     /**
@@ -138,18 +141,20 @@ public class GeneralException extends Exception implements PropertyMessageEx {
      * Workaround for massive constructor inheritance.
      * Returns GeneralException so that can be easily chained in a throw statement.
      */
+    @Override
     public GeneralException setPropertyMessage(PropertyMessage propertyMessage) {
         this.propertyMessage = propertyMessage;
         return this;
     }
-    
+
     /**
      * SCIPIO: Setter for message list including property messages.
      * Workaround for massive constructor inheritance.
      * Returns GeneralException so that can be easily chained in a throw statement.
      */
-    public GeneralException setMessageList(List<?> messages) {
-        this.messages = makePropMsgList(messages); // SCIPIO: make property messages
+    @Override
+    public GeneralException setPropertyMessageList(Collection<?> messageList) {
+        this.messages = PropertyMessageExUtil.makePropertyMessageList(messageList); // SCIPIO: make property messages
         return this;
     }
     
@@ -196,6 +201,16 @@ public class GeneralException extends Exception implements PropertyMessageEx {
      */
     public List<String> getMessageList() {
         return PropertyMessage.getDefPropLocaleMessages(this.messages); // SCIPIO: property messages
+    }
+    
+    /**
+     * SCIPIO: Returns the list of attached messages as PropertyMessage instances.
+     * May be null.
+     * This can be passed to {@link PropertyMessage} helper methods to get localized messages.
+     */
+    @Override
+    public List<PropertyMessage> getPropertyMessageList() {
+        return messages;
     }
 
     /** Returns the detail message, NOT including the message from the nested exception. */
@@ -250,31 +265,6 @@ public class GeneralException extends Exception implements PropertyMessageEx {
     protected String getDefExLocalePropertyOrDetailMessage() {
         if (propertyMessage != null) return propertyMessage.getDefExLocaleMessage();
         else return super.getMessage();
-    }
-    
-    /**
-     * SCIPIO: Returns the list of attached messages as PropertyMessage instances.
-     * May be null.
-     * This can be passed to {@link PropertyMessage} helper methods to get localized messages.
-     */
-    @Override
-    public List<PropertyMessage> getPropertyMessageList() {
-        return messages;
-    }
-    
-    /**
-     * SCIPIO: Shortcut for: <code>PropertyMessage.getMessages(e.getPropertyMessageList(), locale)</code>.
-     */
-    public List<String> getMessageList(Locale locale) {
-        return PropertyMessage.getMessages(this.messages, locale); // SCIPIO: property messages
-    }
-    
-    /**
-     * SCIPIO: safely makes a PropertyMessage list for internal store.
-     */
-    protected static List<PropertyMessage> makePropMsgList(List<?> messages) {
-        // NOTE: strict false, we don't want exceptions in exceptions
-        return PropertyMessage.makeAutoFromList(messages, false);
     }
 }
 

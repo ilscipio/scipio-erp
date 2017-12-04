@@ -438,22 +438,27 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
      * For us, just avoid setNextSeqId entirely - the value it creates may already be out of date anyway.
      */
     protected void createWithNewIdIfNoneOrStore() throws CmsException {
-        try {
-            GenericValue value;
-            Delegator d = getDelegator();
-            
-            if (entity.containsPrimaryKey()) {
-                value = d.createOrStore(entity); 
-            } else {
+        GenericValue value;
+        Delegator d = getDelegator();
+        
+        if (entity.containsPrimaryKey()) {
+            try {
+                value = d.createOrStore(entity);
+            } catch(GenericEntityException e) {
+                throw new CmsDataException("Entity " + entity.getEntityName() 
+                    + " could not be stored (ID: " + entity.getPkShortValueString() + "): " + e.getMessage(), e);
+            }
+        } else {
+            try {
                 value = d.createSetNextSeqId(entity);
-            }
-    
-            if (value != null) {
-                this.entity = value;
-            }
+            } catch(GenericEntityException e) {
+                throw new CmsDataException("Entity " + entity.getEntityName() 
+                    + " could not be created (with new ID): " + e.getMessage(), e);
+            }    
         }
-        catch(GenericEntityException e) {
-            throw new CmsException("Entity " + entity.getEntityName() + " could not be stored", e);
+
+        if (value != null) {
+            this.entity = value;
         }
     }
 

@@ -88,7 +88,9 @@
         <dependency org="org.apache.ws.commons.util" name="ws-commons-util" rev="1.0.2" transitive="false" conf="base->default"/>
         <dependency org="joda-time" name="joda-time" rev="2.9.9" transitive="false" conf="base->default" />
         <dependency org="org.apache.avalon.framework" name="avalon-framework-impl" rev="4.3.1" transitive="false" conf="base->default"/>
-        <dependency org="org.apache.avalon.framework" name="avalon-framework-api" rev="4.3.1" transitive="false" conf="base->default"/>
+        <dependency org="org.apache.avalon.framework" name="avalon-framework-api" rev="4.3.1" transitive="false" conf="base->default"/>        
+        <dependency org="org.apache.tika" name="tika-core" rev="1.14" transitive="false" conf="base->default"/>
+        <dependency org="org.apache.tika" name="tika-parsers" rev="1.14" transitive="false" conf="base->default"/>
         <!-- FIXME: ivy fails to download this one due to a maven repo problem (missing parent pom) even though it exists
         <dependency org="org.apache.xmlgraphics" name="batik-all" rev="1.9" transitive="false" conf="base->default"/>-->
         <!-- FIXME: this version is older than the 1.0-SNAPSHOT provided by ofbiz

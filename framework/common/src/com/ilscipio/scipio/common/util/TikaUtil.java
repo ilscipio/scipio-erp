@@ -1,4 +1,4 @@
-package com.ilscipio.scipio.cms.util.fileType;
+package com.ilscipio.scipio.common.util;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;

@@ -6,14 +6,14 @@
     <classpathentry kind="lib" path="applications/content/lib/pdfbox-2.0.3.jar"/>
     <classpathentry kind="lib" path="applications/content/lib/dom4j-1.6.1.jar"/>
     <classpathentry kind="lib" path="applications/content/lib/poi-3.15.jar"/>
-    <classpathentry kind="lib" path="applications/content/lib/tika-core-1.14.jar"/>
-    <classpathentry kind="lib" path="applications/content/lib/tika-parsers-1.14.jar"/>
     <classpathentry kind="lib" path="applications/product/lib/watermarker-0.0.4.jar"/>
     <classpathentry kind="lib" path="applications/product/lib/dozer-4.2.1.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/ant/ant-1.9.0-ant-junit.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/ant/ant-1.9.0-ant-launcher.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/ant/ant-1.9.0-ant.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/ant/ant-contrib-1.0b3.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/tika-core-1.14.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/tika-parsers-1.14.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/avalon-framework-api-4.3.1.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/barcode4j-2.1.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/barcode4j-fop-ext-2.1.jar"/>

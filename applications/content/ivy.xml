@@ -36,7 +36,6 @@
         <dependency org="org.apache.pdfbox" name="pdfbox" rev="2.0.3" transitive="false" conf="application->default"/>
         
         <dependency org="org.apache.poi" name="poi" rev="3.15" transitive="false" conf="application->default"/>
-        <dependency org="org.apache.tika" name="tika-core" rev="1.14" transitive="false" conf="application->default"/>
-        <dependency org="org.apache.tika" name="tika-parsers" rev="1.14" transitive="false" conf="application->default"/>
+
     </dependencies>
 </ivy-module>

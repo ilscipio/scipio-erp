@@ -23,6 +23,7 @@ import com.ilscipio.scipio.cms.util.fileType.audio.AudioFileTypeResolver;
 import com.ilscipio.scipio.cms.util.fileType.document.DocumentFileTypeResolver;
 import com.ilscipio.scipio.cms.util.fileType.image.ImageFileTypeResolver;
 import com.ilscipio.scipio.cms.util.fileType.video.VideoFileTypeResolver;
+import com.ilscipio.scipio.common.util.TikaUtil;
 
 /**
  * File type resolver. Currently supports both manual file type detection and detection through

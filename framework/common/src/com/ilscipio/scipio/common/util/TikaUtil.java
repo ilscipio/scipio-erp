@@ -33,8 +33,6 @@ import org.ofbiz.entity.GenericValue;
  * <p>
  * NOTE: distinction between entity MimeType and tika's MimeType class.
  * <p>
- * TODO?: move to another component?
- * <p>
  * FIXME: a number of these methods may not handle mime types with parameters (;) properly.
  */
 public abstract class TikaUtil {

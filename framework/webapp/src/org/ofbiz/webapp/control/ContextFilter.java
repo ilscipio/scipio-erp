@@ -114,7 +114,7 @@ public class ContextFilter implements Filter {
         this.allowedPaths = (allowList != null) ? new HashSet<>(allowList) : null;
         
         // SCIPIO: new
-        this.forwardRootControllerUris = getForwardRootControllerUrisSetting(FilterUtil.getInitParamsMapAdapter(config), false);
+        this.forwardRootControllerUris = getForwardRootControllerUrisSetting(ServletUtil.getInitParamsMapAdapter(config), false);
     }
 
     /**

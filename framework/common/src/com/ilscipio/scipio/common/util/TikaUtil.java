@@ -23,6 +23,8 @@ import org.apache.tika.mime.MimeType;
 import org.apache.tika.mime.MimeTypeException;
 import org.apache.tika.mime.MimeTypes;
 import org.apache.tika.parser.AutoDetectParser;
+import org.apache.tika.parser.html.HtmlEncodingDetector;
+import org.apache.tika.parser.txt.Icu4jEncodingDetector;
 import org.apache.tika.parser.txt.UniversalEncodingDetector;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
@@ -254,17 +256,88 @@ public abstract class TikaUtil {
     }
     
     /**
+     * Finds charset (through Apache Tika library), based on filename, using default encoding detector class.
+     * 
+     * @param byteBuffer
+     * @param fileName
+     * @return
+     * @throws IOException
+     */
+    public static Charset findCharset(ByteBuffer byteBuffer, String fileName) throws IOException {
+        return findCharset(byteBuffer, fileName, UniversalEncodingDetector.class);
+    }
+
+    /**
+     * Finds charset (through Apache Tika library), based on filename, using default encoding detector class.
      * 
      * @param is
      * @param fileName
      * @return
      * @throws IOException
      */
-    public static Charset findCharset(InputStream is, String fileName) throws IOException  {
-        EncodingDetector detector = new UniversalEncodingDetector();
-        Metadata md = new Metadata();
-        md.add(Metadata.RESOURCE_NAME_KEY, fileName);
-        return detector.detect(is, md);
+    public static Charset findCharset(InputStream is, String fileName) throws IOException {
+        return findCharset(is, fileName, UniversalEncodingDetector.class);
+    }
+
+    /**
+     * Finds charset (through Apache Tika library), based on filename.
+     * @throws IOException 
+     */
+    public static Charset findCharset(ByteBuffer byteBuffer, String fileName, Class<? extends EncodingDetector> encodingDetectorClass) throws IOException {
+        InputStream is = new ByteBufferInputStream(byteBuffer);
+        try {
+            return findCharset(is, fileName);
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                ;
+            }
+        }
+    }
+    
+    public static Charset findCharsetSafe(InputStream is, String fileName) {
+        try {
+            return findCharset(is, fileName);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+    
+    public static Charset findCharsetSafe(ByteBuffer byteBuffer, String fileName) {
+        try {
+            return findCharset(byteBuffer, fileName);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+    
+    /**
+     * Finds charset (through Apache Tika library), based on filename.
+     * @throws IOException
+     */
+    public static Charset findCharset(InputStream is, String fileName,  Class<? extends EncodingDetector> encodingDetectorClass) throws IOException  {
+        if (encodingDetectorClass == null)
+            return null;
+        BufferedInputStream bis = new BufferedInputStream(is);
+        try {
+            EncodingDetector detector = encodingDetectorClass.newInstance();
+            Metadata md = new Metadata();
+            md.add(Metadata.RESOURCE_NAME_KEY, fileName);
+            return detector.detect(is, md);
+        } catch (InstantiationException e) {
+            Debug.logError(e.getMessage(), module);
+            return null;
+        } catch (IllegalAccessException e) {
+            Debug.logError(e.getMessage(), module);
+            return null;
+        } finally {
+            try {
+                bis.close();
+            } catch (IOException e) {
+                ;
+            }
+        }
     }
     
     

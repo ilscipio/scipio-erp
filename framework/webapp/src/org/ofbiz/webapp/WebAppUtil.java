@@ -43,6 +43,8 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilXml.LocalErrorHandler;
 import org.ofbiz.base.util.UtilXml.LocalResolver;
 import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.webapp.control.ControlServlet;
+import org.ofbiz.webapp.control.ServletUtil;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -80,6 +82,9 @@ public final class WebAppUtil {
      * Returns the control servlet path. The path consists of the web application's mount-point
      * specified in the <code>ofbiz-component.xml</code> file and the servlet mapping specified
      * in the web application's <code>web.xml</code> file.
+     * <p>
+     * SCIPIO: NOTE: This stock method always returns with a trailing slash (unless null).
+     * 
      * 
      * @param webAppInfo
      * @param optional SCIPIO: if true, return null if not found; otherwise throw IllegalArgumentException (added 2017-11-18)
@@ -103,18 +108,9 @@ public final class WebAppUtil {
         else {
             String servletMapping = null;
             WebXml webXml = getWebXml(webAppInfo);
-            for (ServletDef servletDef : webXml.getServlets().values()) {
-                if ("org.ofbiz.webapp.control.ControlServlet".equals(servletDef.getServletClass())) {
-                    String servletName = servletDef.getServletName();
-                    // Catalina servlet mappings: key = url-pattern, value = servlet-name.
-                    for (Entry<String, String> entry : webXml.getServletMappings().entrySet()) {
-                        if (servletName.equals(entry.getValue())) {
-                            servletMapping = entry.getKey();
-                            break;
-                        }
-                    }
-                    break;
-                }
+            ServletDef controlServletDef = ControlServlet.getControlServletDefFromWebXml(webXml); // SCIPIO: 2017-12-05: factored out and fixed logic
+            if (controlServletDef != null) {
+                servletMapping = ServletUtil.getServletMapping(webXml, controlServletDef.getServletName()); // SCIPIO: 2017-12-05: delegated
             }
             if (servletMapping == null) {
                 // SCIPIO: empty string means we did lookup and failed
@@ -123,6 +119,9 @@ public final class WebAppUtil {
                 else throw new IllegalArgumentException("org.ofbiz.webapp.control.ControlServlet mapping not found in " + webAppInfo.getLocation() + webAppFileName);
             }
             servletMapping = servletMapping.replace("*", "");
+            if (!servletMapping.endsWith("/")) { // SCIPIO: 2017-12-05: extra guarantee the path ends with trailing slash
+                servletMapping += "/"; 
+            }
             String servletPath = webAppInfo.contextRoot.concat(servletMapping);
             // SCIPIO: save result
             controlServletPathWebappInfoCache.put(webAppInfo.getContextRoot(), servletPath);
@@ -153,18 +152,36 @@ public final class WebAppUtil {
      * @throws IOException
      * @throws SAXException
      */
-    public static String getControlServletPathSafeSlash(WebappInfo webAppInfo) {
+    public static String getControlServletPathSafe(WebappInfo webAppInfo) {
         String controlPath = null;
         try {
             controlPath = WebAppUtil.getControlServletPath(webAppInfo);
         } catch (Exception e) {
             ; // Control servlet may not exist; don't treat as error
         }
-        
-        if (controlPath != null && controlPath.startsWith("/")) {
-            if (!controlPath.endsWith("/")) {
-                controlPath += "/"; // Important
-            }
+        return controlPath;
+    }
+    
+    /**
+     * SCIPIO: Returns the control servlet path with no exceptions generated and with a terminating slash,
+     * or null. The path consists of the web application's mount-point
+     * specified in the <code>ofbiz-component.xml</code> file and the servlet mapping specified
+     * in the web application's <code>web.xml</code> file.
+     * @deprecated 2017-12-05: call {@link #getControlServletPathSafe(WebappInfo)} instead;
+     * the central {@link #getControlServletPath} method already ensured a trailing slash,
+     * so this one actually becomes misleading. 
+     * 
+     * @param webAppInfo
+     * @throws IOException
+     * @throws SAXException
+     */
+    @Deprecated
+    public static String getControlServletPathSafeSlash(WebappInfo webAppInfo) {
+        String controlPath = null;
+        try {
+            controlPath = WebAppUtil.getControlServletPath(webAppInfo);
+        } catch (Exception e) {
+            ; // Control servlet may not exist; don't treat as error
         }
         return controlPath;
     }
@@ -217,7 +234,7 @@ public final class WebAppUtil {
         }
         return controlPath;
     }
-
+    
     /**
      * Returns the <code>WebappInfo</code> instance associated to the specified web site ID.
      * Throws <code>IllegalArgumentException</code> if the web site ID was not found.

@@ -243,9 +243,9 @@ public final class WebAppUtil {
         }
         // SCIPIO: much clearer message
         //throw new IllegalArgumentException("Web site ID '" + webSiteId + "' not found.");
-        throw new IllegalArgumentException("Can't get webapp info for website ID '" + webSiteId 
-                + "'; the website may not exist, or may not have a webapp (web.xml),"
-                + " or its webapp it may be shadowed in the system (ofbiz_component.xml)");
+        throw new IllegalArgumentException("Could not get webapp info for website ID '" + webSiteId 
+                + "'; the website may not exist, or may not have a webapp (web.xml)"
+                + ", or its webapp may be shadowed/overridden in the system (ofbiz_component.xml)");
     }
     
     /**

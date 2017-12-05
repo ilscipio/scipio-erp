@@ -33,6 +33,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -1087,5 +1088,135 @@ public class UtilMisc {
             outMap.put(entry.getValue(), entry.getKey());
         }
         return outMap;
+    }
+    
+    /**
+     * SCIPIO: Transfers the specified keys from inMap to outMap.
+     * Added 2017-12-04.
+     */
+    public static <K, V> void putKeys(Map<K, V> outMap, Map<? extends K, ? extends V> inMap, Collection<K> keys) {
+        for(K key : keys) { outMap.put(key, inMap.get(key)); }
+    }
+    
+    /**
+     * SCIPIO: Transfers the specified keys from inMap to outMap.
+     * Added 2017-12-04.
+     */
+    @SafeVarargs
+    public static <K, V> void putKeys(Map<K, V> outMap, Map<? extends K, ? extends V> inMap, K... keys) {
+        for(K key : keys) { outMap.put(key, inMap.get(key)); }
+    }
+    
+    /**
+     * SCIPIO: Creates a hash map copy with specified keys.
+     * Added 2017-12-04.
+     */
+    public static <K, V> Map<K, V> toHashMapWithKeys(Map<? extends K, ? extends V> inMap, Collection<K> keys) {
+        Map<K, V> outMap = new HashMap<>();
+        for(K key : keys) { outMap.put(key, inMap.get(key)); }
+        return outMap;
+    }
+    
+    /**
+     * SCIPIO: Creates a hash map copy including specified keys.
+     * Added 2017-12-04.
+     */
+    @SafeVarargs
+    public static <K, V> Map<K, V> toHashMapWithKeys(Map<? extends K, ? extends V> inMap, K... keys) {
+        Map<K, V> outMap = new HashMap<>();
+        for(K key : keys) { outMap.put(key, inMap.get(key)); }
+        return outMap;
+    }
+    
+    /**
+     * SCIPIO: Creates a hash map copy excluding specified keys.
+     * Added 2017-12-04.
+     */
+    public static <K, V> Map<K, V> toHashMapWithoutKeys(Map<? extends K, ? extends V> inMap, Collection<K> keys) {
+        Map<K, V> outMap = new HashMap<>();
+        for(Map.Entry<? extends K, ? extends V> entry : inMap.entrySet()) {
+            if (!keys.contains(entry.getKey())) { outMap.put(entry.getKey(), entry.getValue()); }
+        }
+        return outMap;
+    }
+    
+    /**
+     * SCIPIO: Creates a hash map copy excluding specified keys.
+     * Added 2017-12-04.
+     */
+    @SafeVarargs
+    public static <K, V> Map<K, V> toHashMapWithoutKeys(Map<? extends K, ? extends V> inMap, K... keys) {
+        return toHashMapWithoutKeys(inMap, new HashSet<>(Arrays.asList(keys)));
+    }
+    
+    /**
+     * SCIPIO: Creates a linked (ordered) hash map copy with specified keys, preserving
+     * the original insertion order.
+     * NOTE: this is slower than {@link #toLinkedHashMapWithKeysNewOrder}.
+     * Added 2017-12-04.
+     */
+    public static <K, V> Map<K, V> toLinkedHashMapWithKeysOrigOrder(Map<? extends K, ? extends V> inMap, Collection<K> keys) {
+        Map<K, V> outMap = new LinkedHashMap<>();
+        for(Map.Entry<? extends K, ? extends V> entry : inMap.entrySet()) {
+            if (keys.contains(entry.getKey())) { outMap.put(entry.getKey(), entry.getValue()); }
+        }
+        return outMap;
+    }
+    
+    /**
+     * SCIPIO: Creates a linked (ordered) hash map copy with specified keys, preserving
+     * the original insertion order.
+     * NOTE: this is slower than {@link #toLinkedHashMapWithKeysNewOrder}.
+     * Added 2017-12-04.
+     */
+    @SafeVarargs
+    public static <K, V> Map<K, V> toLinkedHashMapWithKeysOrigOrder(Map<? extends K, ? extends V> inMap, K... keys) {
+        return toLinkedHashMapWithKeysOrigOrder(inMap, new HashSet<>(Arrays.asList(keys)));
+    }
+    
+    /**
+     * SCIPIO: Creates a linked (ordered) hash map copy including specified keys, with the
+     * key order determined by the order of the passed keys collection parameter.
+     * Added 2017-12-04.
+     */
+    public static <K, V> Map<K, V> toLinkedHashMapWithKeysNewOrder(Map<? extends K, ? extends V> inMap, Collection<K> keys) {
+        Map<K, V> outMap = new HashMap<>();
+        for(K key : keys) { outMap.put(key, inMap.get(key)); }
+        return outMap;
+    }
+    
+    /**
+     * SCIPIO: Creates a linked (ordered) hash map copy including specified keys, with the
+     * key order determined by the order of the passed keys collection parameter.
+     * Added 2017-12-04.
+     */
+    @SafeVarargs
+    public static <K, V> Map<K, V> toLinkedHashMapWithKeysNewOrder(Map<? extends K, ? extends V> inMap, K... keys) {
+        Map<K, V> outMap = new HashMap<>();
+        for(K key : keys) { outMap.put(key, inMap.get(key)); }
+        return outMap;
+    }
+    
+    /**
+     * SCIPIO: Creates a linked (ordered) hash map copy excluding specified keys.
+     * The original key order is preserved.
+     * Added 2017-12-04.
+     */
+    public static <K, V> Map<K, V> toLinkedHashMapWithoutKeys(Map<? extends K, ? extends V> inMap, Collection<K> keys) {
+        Map<K, V> outMap = new LinkedHashMap<>();
+        for(Map.Entry<? extends K, ? extends V> entry : inMap.entrySet()) {
+            if (!keys.contains(entry.getKey())) { outMap.put(entry.getKey(), entry.getValue()); }
+        }
+        return outMap;
+    }
+    
+    /**
+     * SCIPIO: Creates a linked (ordered) hash map copy excluding specified keys.
+     * The original key order is preserved.
+     * Added 2017-12-04.
+     */
+    @SafeVarargs
+    public static <K, V> Map<K, V> toLinkedHashMapWithoutKeys(Map<? extends K, ? extends V> inMap, K... keys) {
+        return toLinkedHashMapWithoutKeys(inMap, new HashSet<>(Arrays.asList(keys)));
     }
 }

@@ -557,6 +557,9 @@
           then each website having only one of these per page).
           This field is an optimization for CmsPageSpecialMapping entity and helps in code and query simplification.</description></field>
 
+      <field name="indexable" type="indicator"><description>If Y (or not set and website default is Y),
+          the sourcePath will be indexed in sitemap generation. N prevents.</description></field>
+
       <prim-key field="processMappingId" />
       
       <relation type="one" fk-name="CMSPRMAP_PAGEID" rel-entity-name="CmsPage">

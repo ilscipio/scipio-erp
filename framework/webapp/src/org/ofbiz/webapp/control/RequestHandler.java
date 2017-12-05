@@ -22,7 +22,6 @@ import static org.ofbiz.base.util.UtilGenerics.checkMap;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.MalformedURLException;
@@ -2131,7 +2130,7 @@ public class RequestHandler {
         if (controller == null) {
             // in some cases we need to infer this...
             if (absPath) {
-                controlPath = WebAppUtil.getControlServletPathSafeSlash(webappInfo);
+                controlPath = WebAppUtil.getControlServletPathSafe(webappInfo);
                 controller = (controlPath != null && url.startsWith(controlPath));
                 absControlPathChecked = true;
             }
@@ -2143,7 +2142,7 @@ public class RequestHandler {
         }
         if (controller && controlPath == null) {
             // In some cases need to get controlPath AND this provides a sanity check
-            controlPath = WebAppUtil.getControlServletPathSafeSlash(webappInfo);
+            controlPath = WebAppUtil.getControlServletPathSafe(webappInfo);
             if (controlPath == null) {
                 Debug.logError("Scipio: In makeLinkAuto, trying to make a controller "
                         + "link for a webapp that has no valid controller (" + webappInfo.getName() + ")", module);

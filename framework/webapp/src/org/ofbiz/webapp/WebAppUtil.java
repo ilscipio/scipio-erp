@@ -177,13 +177,7 @@ public final class WebAppUtil {
      */
     @Deprecated
     public static String getControlServletPathSafeSlash(WebappInfo webAppInfo) {
-        String controlPath = null;
-        try {
-            controlPath = WebAppUtil.getControlServletPath(webAppInfo);
-        } catch (Exception e) {
-            ; // Control servlet may not exist; don't treat as error
-        }
-        return controlPath;
+        return getControlServletPathSafe(webAppInfo);
     }
 
     /**

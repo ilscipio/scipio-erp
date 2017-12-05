@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -14,9 +15,15 @@ import org.ofbiz.entity.GenericValue;
 
 import com.ilscipio.scipio.cms.CmsException;
 import com.ilscipio.scipio.cms.CmsUtil;
+import com.ilscipio.scipio.cms.data.CmsDataException;
 import com.ilscipio.scipio.cms.data.CmsDataObject;
+import com.ilscipio.scipio.cms.data.CmsDataObjectVersion;
 
-public abstract class CmsTemplateVersion extends CmsTemplate {
+/**
+ * Template version, containing actual content for a versioned template.
+ * @see CmsVersionedComplexTemplate
+ */
+public abstract class CmsTemplateVersion extends CmsTemplate implements CmsDataObjectVersion {
 
     private static final long serialVersionUID = 2461746703166121074L;
 
@@ -107,8 +114,15 @@ public abstract class CmsTemplateVersion extends CmsTemplate {
     public void ensureTemplateId() {
         if (getTemplateId() == null) {
             CmsTemplate template = getTemplate();
+            String templateId = null;
             if (template != null) {
-                setTemplateId(template.getId());
+                templateId = template.getId();
+            } 
+            if (templateId != null) {
+                setTemplateId(templateId);
+            } else {
+                throw new CmsException("internal or schema error: " + this.getClass().getSimpleName() + " '" + getId() 
+                    + "' has no template association (template ID null) and unable to determine one");
             }
         }
     }

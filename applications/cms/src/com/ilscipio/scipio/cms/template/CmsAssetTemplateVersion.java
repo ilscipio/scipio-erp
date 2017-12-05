@@ -48,10 +48,10 @@ public class CmsAssetTemplateVersion extends CmsTemplateVersion {
         super(other, copyArgs);
         if (assetTemplate != null) { // if null, we must be keeping the same parent template
             this.assetTemplate = assetTemplate;
-            this.setAssetTemplateId(assetTemplate.getId());
-        } else if (other.assetTemplate != null) {
-            this.assetTemplate = other.assetTemplate;
-            this.setAssetTemplateId(other.assetTemplate.getId());
+            this.setAssetTemplateId(this.assetTemplate.getId());
+        } else if (other.getAssetTemplate() != null) {
+            this.assetTemplate = other.getAssetTemplate();
+            this.setAssetTemplateId(this.assetTemplate.getId());
         }
     }
     
@@ -98,12 +98,12 @@ public class CmsAssetTemplateVersion extends CmsTemplateVersion {
     
     // Getters and operational methods    
     public CmsAssetTemplate getAssetTemplate() {
-        if (assetTemplate != null) {
-            return assetTemplate;
-        } else {
+        CmsAssetTemplate assetTemplate = this.assetTemplate;
+        if (assetTemplate == null) {
             assetTemplate = CmsAssetTemplate.getWorker().findByIdAlways(getDelegator(), getAssetTemplateId(), false);
-            return assetTemplate;
+            this.assetTemplate = assetTemplate;
         }
+        return assetTemplate;
     }
     
     public String getAssetTemplateId() {

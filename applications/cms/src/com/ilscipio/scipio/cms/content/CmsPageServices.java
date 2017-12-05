@@ -282,8 +282,16 @@ public abstract class CmsPageServices {
         Delegator delegator = dctx.getDelegator();
         Map<String, Object> copyArgs = new HashMap<>();
         copyArgs.put("webSiteId", context.get("webSiteId"));
-        copyArgs.put("primaryPath", context.get("primaryPath"));
-        copyArgs.put("primaryPathFromContextRoot", context.get("primaryPathFromContextRoot"));
+        
+        Map<String, Object> primaryProcessMappingCopyArgs = new HashMap<>();
+        primaryProcessMappingCopyArgs.put("webSiteId", context.get("webSiteId"));
+        primaryProcessMappingCopyArgs.put("primaryPath", context.get("primaryPath"));
+        primaryProcessMappingCopyArgs.put("primaryPathFromContextRoot", context.get("primaryPathFromContextRoot"));
+        if (CmsPage.newPagePrimaryProcessMappingActive != null) {
+            primaryProcessMappingCopyArgs.put("active", CmsPage.newPagePrimaryProcessMappingActive);
+        }
+        copyArgs.put("primaryProcessMapping", primaryProcessMappingCopyArgs);
+        
         copyArgs.put("copyVersionId", context.get("srcVersionId"));
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         if (userLogin != null) {
@@ -293,10 +301,13 @@ public abstract class CmsPageServices {
             String srcPageId = (String) context.get("srcPageId");
             CmsPage srcPage = CmsPage.getWorker().findByIdAlways(delegator, srcPageId, false);
             CmsPage page = srcPage.copy(copyArgs);
-            page.update(context, false); // update pageName, description IF not empty
+            
+            page.update(UtilMisc.toHashMapWithKeys(context, "pageName", "description"));
+            
             page.store();
             Map<String, Object> result = ServiceUtil.returnSuccess();
             result.put("pageId", page.getId());
+            result.put("webSiteId", context.get("webSiteId"));
             return result;
         } catch (Exception e) {
             FormattedError err = errorFmt.format(e, "Error copying page (pageId: " + context.get("srcPageId") + ")", context);

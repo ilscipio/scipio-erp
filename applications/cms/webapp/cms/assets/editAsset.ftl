@@ -78,7 +78,7 @@
                 <@field type="hidden" name="assetTemplateId" value=(assetTemplateModel.id!)/><#-- for browsing, on error -->
                 <@field type="hidden" name="srcAssetTemplateId" value=(assetTemplateModel.id!)/>
                 <@field type="input" name="templateName" value="" required=true label=uiLabelMap.CommonName/>
-                <@field type="textarea" name="description" value="" required=false label=uiLabelMap.CommonDescription/>
+                <@field type="textarea" name="description" value=(assetTemplateModel.getDescription(locale)!) required=false label=uiLabelMap.CommonDescription/>
             </@cmsCopyMenuItem>
             <@menuitem type="generic">
                 <@modal id="modal_new_attr" label=uiLabelMap.CmsAddAttribute class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">

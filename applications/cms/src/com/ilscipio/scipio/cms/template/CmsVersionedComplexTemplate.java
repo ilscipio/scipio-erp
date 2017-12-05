@@ -17,13 +17,15 @@ import org.ofbiz.entity.condition.EntityOperator;
 import com.ilscipio.scipio.ce.util.Optional;
 import com.ilscipio.scipio.cms.CmsException;
 import com.ilscipio.scipio.cms.data.CmsDataException;
+import com.ilscipio.scipio.cms.data.CmsVersionedDataObject;
 
 /**
  * Versioned complex template.
  * <p>
  * This is the COMMON CODE shared between Page and Asset Templates (new 2016).
+ * @see CmsTemplateVersion
  */
-public abstract class CmsVersionedComplexTemplate<T extends CmsVersionedComplexTemplate<T, V>, V extends CmsTemplateVersion> extends CmsComplexTemplate {
+public abstract class CmsVersionedComplexTemplate<T extends CmsVersionedComplexTemplate<T, V>, V extends CmsTemplateVersion> extends CmsComplexTemplate implements CmsVersionedDataObject {
 
     private static final long serialVersionUID = 1294180234678880297L;
 

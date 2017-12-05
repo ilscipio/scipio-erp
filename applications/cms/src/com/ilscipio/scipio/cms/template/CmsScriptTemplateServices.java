@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
@@ -78,7 +79,9 @@ public abstract class CmsScriptTemplateServices {
             String srcScriptTemplateId = (String) context.get("srcScriptTemplateId");
             CmsScriptTemplate srcScriptTmpl = CmsScriptTemplate.getWorker().findByIdAlways(delegator, srcScriptTemplateId, false);
             CmsScriptTemplate scriptTmpl = srcScriptTmpl.copy(copyArgs);
-            scriptTmpl.update(context, false); // update templateName, description IF not empty
+            
+            scriptTmpl.update(UtilMisc.toHashMapWithKeys(context, "templateName", "description"));
+            
             scriptTmpl.store();
             Map<String, Object> result = ServiceUtil.returnSuccess();
             result.put("scriptTemplateId", scriptTmpl.getId());

@@ -173,7 +173,7 @@ NOTES: 2016-12:
                 <@field type="hidden" name="scriptTemplateId" value=(scriptTemplateModel.id!)/><#-- for browsing, on error -->
                 <@field type="hidden" name="srcScriptTemplateId" value=(scriptTemplateModel.id!)/>
                 <@field type="input" name="templateName" value="" required=true label=uiLabelMap.CommonName/>
-                <@field type="textarea" name="description" value="" required=false label=uiLabelMap.CommonDescription/>
+                <@field type="textarea" name="description" value=(scriptTemplateModel.getDescription(locale)!) required=false label=uiLabelMap.CommonDescription/>
             </@cmsCopyMenuItem>
             <@menuitem type="link" href="javascript:$('form#editorForm').submit(); void(0);" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave/>
             <@menuitem type="link" href="javascript:deleteScript(); void(0);" class="+${styles.action_run_sys!} ${styles.action_remove!} action_delete" text=uiLabelMap.CommonDelete/>

@@ -143,7 +143,7 @@
                 <@field type="hidden" name="srcPageTemplateId" value=(pageTemplate.pageTemplateId!)/>
                 <@cmsCopyVersionSelect versionId=(versionId!)/>
                 <@field type="input" name="templateName" value="" required=true label=uiLabelMap.CommonName />
-                <@field type="textarea" name="description" value="" required=false label=uiLabelMap.CommonDescription />
+                <@field type="textarea" name="description" value=(pageTemplate.description!) required=false label=uiLabelMap.CommonDescription />
             </@cmsCopyMenuItem>
             <@menuitem type="generic">
                 <@modal id="modal_new_attr" label=uiLabelMap.CmsAddAttribute class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">

@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.lang.JSON;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.MapStack;
@@ -44,6 +45,7 @@ import com.ilscipio.scipio.cms.data.CmsEntityVisit.VisitRelation;
 import com.ilscipio.scipio.cms.data.CmsEntityVisit.VisitRelations;
 import com.ilscipio.scipio.cms.data.CmsMajorObject;
 import com.ilscipio.scipio.cms.data.CmsObjectCache;
+import com.ilscipio.scipio.cms.data.CmsVersionedDataObject;
 import com.ilscipio.scipio.cms.data.CmsObjectCache.CacheEntry;
 import com.ilscipio.scipio.cms.template.CmsComplexTemplate;
 import com.ilscipio.scipio.cms.template.CmsMasterComplexTemplate;
@@ -56,8 +58,12 @@ import com.ilscipio.scipio.cms.template.CmsScriptTemplate;
  * Represents a CMS page.
  * <p>
  * 2016: IMPORTANT: If you add any cached fields, you MUST update the {@link #preloadContent} method.
+ * <p>
+ * FIXME: 2017: there is significant duplication of the CmsPage<->CmsPageVersion logic
+ * because this is unable to extend CmsVersionedComplexTemplate<->CmsTemplateVerison that
+ * are used by the template, and is recurring source of errors.
  */
-public class CmsPage extends CmsDataObject implements CmsMajorObject {
+public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersionedDataObject {
     
     private static final long serialVersionUID = -6442528536238200118L;
 
@@ -176,8 +182,10 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
     @Override
     public CmsPage copy(Map<String, Object> copyArgs) {
         CmsPage newPage = new CmsPage(this, copyArgs);
-        // NOTE: the service puts primaryPath and webSiteId in the copyArgs
-        newPage.setPrimaryProcessMappingFields(copyArgs, true);
+        Map<String, Object> primaryProcessMapping = UtilGenerics.checkMap(copyArgs.get("primaryProcessMapping"));
+        if (primaryProcessMapping != null) {
+            newPage.setPrimaryProcessMappingFields(primaryProcessMapping, true);
+        }
         copyInitialVersionToPageCopy(newPage, copyArgs);
         return newPage;
     }

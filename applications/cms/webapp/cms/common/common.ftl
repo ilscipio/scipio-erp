@@ -646,7 +646,7 @@ Common CMS editor macros and utilities
   <@menuitem type="generic">
     <@modal id="modal_copy_object" label=uiLabelMap.CommonCopy class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_copy!}">
         <@heading>${escapeVal(title, 'htmlmarkup')}</@heading>
-        <@alert type="error">WORK-IN-PROGRESS (2017-11) - COPY FUNCTION DOES NOT YET WORK</@alert>
+        <@alert type="warning">${uiLabelMap.CommonFunctionalityWorkInProgressWarning} [2017-12-04]</@alert>
         <@fields type="default-compact">
             <form action="<@ofbizUrl uri=target/>" method="post" id="cms-copy-object-form">
                 <#nested/>

@@ -74,18 +74,12 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
     
     /**
      * Copy constructor.
+     * NOTE: This automatically tries to clear a few fields common to various subclasses
+     * so the subclasses don't have to. May need review, but I think it will be less error-prone this way.
+     * @see #copyEntityForCopy
      */
     public CmsDataObject(CmsDataObject other, Map<String, Object> copyArgs) {
-        this.entity = copyValue(other.getEntity());
-        
-        if (this.entity.getModelEntity().isField("createdBy")) {
-            // Store the name of the person who created the copy (which is NOT the same as the person who
-            // created the original version)
-            String copyCreatorId = (String) copyArgs.get("copyCreatorId");
-            if (UtilValidate.isNotEmpty(copyCreatorId)) {
-                this.entity.set("createdBy", copyCreatorId);
-            }
-        }
+        this.copyEntityForCopy(other, copyArgs);
     }
     
     /**
@@ -210,6 +204,18 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
     
     public boolean hasId() {
         return getId() != null;
+    }
+    
+    /**
+     * Checks if the entity contains the named field.
+     * TODO: OPTIMIZE: the ofbiz function relies on a synchronization lock
+     */
+    public boolean isField(String fieldName) {
+        return getModelEntity().isField(fieldName);
+    }
+    
+    public ModelEntity getModelEntity() {
+        return entity.getModelEntity();
     }
     
     /**
@@ -395,7 +401,7 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
     }
     
 //    public String getUuid() {
-//        if (this.entity != null && this.entity.getModelEntity().isField("uuid")) {
+//        if (this.entity != null && this.isField("uuid")) {
 //          return this.entity.getString("uuid");
 //        } else {
 //          return null;  
@@ -543,6 +549,44 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
         GenericValue gv = otherEntity.getDelegator().makeValue(otherEntity.getEntityName());
         gv.setNonPKFields(otherEntity);
         return gv;
+    }
+    
+    /**
+     * Core common CmsDataObject copy constructor code.
+     * (there are no final fields, so kept informal)
+     */
+    protected void copyEntityForCopy(CmsDataObject other, Map<String, Object> copyArgs) {
+        this.entity = copyValue(other.getEntity());
+        this.checkCommonEntityFieldsForCopy(other, copyArgs);
+    }
+    
+    protected void checkCommonEntityFieldsForCopy(CmsDataObject other, Map<String, Object> copyArgs) {
+        checkSetCreatedByForCopy(other, copyArgs);
+        checkClearContentIdForCopy(other, copyArgs);
+        checkClearActiveContentIdForCopy(other, copyArgs);
+    }
+    
+    protected void checkSetCreatedByForCopy(CmsDataObject other, Map<String, Object> copyArgs) {
+        if (isField("createdBy")) {
+            // Store the name of the person who created the copy (which is NOT the same as the person who
+            // created the original version)
+            String copyCreatorId = (String) copyArgs.get("copyCreatorId");
+            if (UtilValidate.isNotEmpty(copyCreatorId)) {
+                this.entity.set("createdBy", copyCreatorId);
+            }
+        }
+    }
+    
+    protected void checkClearContentIdForCopy(CmsDataObject other, Map<String, Object> copyArgs) {
+        if (isField("contentId")) {
+            this.entity.set("contentId", null);
+        }
+    }
+    
+    protected void checkClearActiveContentIdForCopy(CmsDataObject other, Map<String, Object> copyArgs) {
+        if (isField("activeContentId")) {
+            this.entity.set("activeContentId", null);
+        }
     }
 
     public void fieldsToMap(Map<String, Object> out) {

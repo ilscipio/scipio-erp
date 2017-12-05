@@ -52,10 +52,10 @@ public class CmsPageTemplateVersion extends CmsTemplateVersion {
         super(other, copyArgs);
         if (pageTemplate != null) { // if null, we must be keeping the same parent template
             this.pageTemplate = pageTemplate;
-            this.setPageTemplateId(pageTemplate.getId());
-        } else if (other.pageTemplate != null) {
-            this.pageTemplate = other.pageTemplate;
-            this.setPageTemplateId(other.pageTemplate.getId());
+            this.setPageTemplateId(this.pageTemplate.getId());
+        } else if (other.getPageTemplate() != null) {
+            this.pageTemplate = other.getPageTemplate();
+            this.setPageTemplateId(this.pageTemplate.getId());
         }
     }
     
@@ -106,12 +106,12 @@ public class CmsPageTemplateVersion extends CmsTemplateVersion {
  
     // Getters and operational methods    
     public CmsPageTemplate getPageTemplate() {
-        if (pageTemplate != null) {
-            return pageTemplate;
-        } else {
+        CmsPageTemplate pageTemplate = this.pageTemplate;
+        if (pageTemplate == null) {
             pageTemplate = CmsPageTemplate.getWorker().findByIdAlways(getDelegator(), getPageTemplateId(), false);
-            return pageTemplate;
+            this.pageTemplate = pageTemplate;
         }
+        return pageTemplate;
     }
 
     public String getPageTemplateId() {

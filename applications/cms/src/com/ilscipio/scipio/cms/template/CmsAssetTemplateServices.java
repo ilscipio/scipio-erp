@@ -86,7 +86,9 @@ public abstract class CmsAssetTemplateServices {
             String srcAssetTemplateId = (String) context.get("srcAssetTemplateId");
             CmsAssetTemplate srcAssetTemplate = CmsAssetTemplate.getWorker().findByIdAlways(delegator, srcAssetTemplateId, false);
             CmsAssetTemplate assetTemplate = srcAssetTemplate.copy(copyArgs);
-            assetTemplate.update(context, false); // update templateName, description IF not empty
+            
+            assetTemplate.update(UtilMisc.toHashMapWithKeys(context, "templateName", "description"));
+
             // NOTE: store() now updates the version automatically using assetTemplate.lastVersion
             assetTemplate.store();
             Map<String, Object> result = ServiceUtil.returnSuccess();

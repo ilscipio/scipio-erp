@@ -5,6 +5,7 @@
 <#if !content??>
   <#assign content = {}>
 </#if>
+<#assign pathPlaceholder = "/myUrl">
 
 <#-- NOTE: don't use container=false anymore, use @fields type="default-compact" -->
 <#macro pageAttrField fieldObj value="" id="" namePrefix="" expandLangVisible=true>
@@ -360,7 +361,7 @@
                  <@field type="hidden" name="webSiteId" value=((meta.webSiteId)!)/>
                  <@field type="hidden" name="srcPageId" value=(pageId!)/>
                  <@cmsCopyVersionSelect versionId=(versionId!)/>
-                 <@field type="input" name="primaryPath" value="" label=uiLabelMap.CommonPath placeholder="/myUrl" required=true/>
+                 <@field type="input" name="primaryPath" value="" label=uiLabelMap.CommonPath placeholder=((meta.primaryPath!pathPlaceholder)) required=true/>
                  <#-- NOTE: the select below is currently for debugging only - not sure if want to expose
                     to users here yet (though should be working) -->
                  <#if debugMode>
@@ -375,7 +376,7 @@
                    <input type="hidden" name="primaryPathFromContextRoot" value=""/>
                  </#if>
                  <@field type="input" name="pageName" value="" label=uiLabelMap.CommonName required=false/>
-                 <@field type="textarea" name="description" value="" label=uiLabelMap.CommonDescription required=false/>
+                 <@field type="textarea" name="description" value=(meta.description!"") label=uiLabelMap.CommonDescription required=false/>
             </@cmsCopyMenuItem>
             <@menuitem type="generic">
                 <@modal id="modal_new_script" label=uiLabelMap.CmsAddScript class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
@@ -637,7 +638,7 @@
                          <@webSiteSelectField name="webSiteId" value=(parameters.webSiteId!) valueUnsafe=true required=true 
                             tooltip="${rawLabel('CmsOnlyHookedWebSitesListed')}"/>
                          
-                         <@field type="input" name="path" value=(parameters.path!) id="path" label=uiLabelMap.CommonPath placeholder="/myUrl" required=true/><#-- TODO: rename to primaryPath -->
+                         <@field type="input" name="path" value=(parameters.path!) id="path" label=uiLabelMap.CommonPath placeholder=pathPlaceholder required=true/><#-- TODO: rename to primaryPath -->
 
                          <@field type="select" name="primaryTargetPath" id="primaryTargetPath" items=primaryTargetPathOptions defaultValue="/cmsPagePlainNoAuth" label="${rawLabel('CommonPath')} ${rawLabel('CommonSettings')}" required=false />
 

@@ -75,7 +75,9 @@ public abstract class CmsPageTemplateServices {
             String srcPageTemplateId = (String) context.get("srcPageTemplateId");
             CmsPageTemplate srcPageTemplate = CmsPageTemplate.getWorker().findByIdAlways(delegator, srcPageTemplateId, false);
             CmsPageTemplate pageTemplate = srcPageTemplate.copy(copyArgs);
-            pageTemplate.update(context, false); // update templateName, description IF not empty
+            
+            pageTemplate.update(UtilMisc.toHashMapWithKeys(context, "templateName", "description"));
+            
             // NOTE: store() now updates the version automatically using pageTemplate.lastVersion
             pageTemplate.store();
             Map<String, Object> result = ServiceUtil.returnSuccess();

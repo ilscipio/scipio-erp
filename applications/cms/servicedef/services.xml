@@ -663,7 +663,7 @@
         <description>Creates a new asset</description>
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
         <attribute name="srcScriptTemplateId" type="String" mode="IN" optional="false"/>
-        <!-- future
+        <!-- future - scripts don't currently exploit versioning
         <attribute name="srcVersionId" type="String" mode="IN" optional="true"/>-->
         <attribute name="templateName" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>

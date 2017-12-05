@@ -71,7 +71,9 @@ public abstract class CmsTemplate extends CmsDataObject {
     
     /**
      * Copy constructor.
-     * TODO: misses an option to copy the body into a new stored object.
+     * <p>
+     * TODO?: misses an option to copy the body into a new stored object, but
+     * it's mostly an efficiency thing.
      */
     protected CmsTemplate(CmsTemplate other, Map<String, Object> copyArgs) {
         super(other, copyArgs);

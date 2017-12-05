@@ -24,12 +24,9 @@ under the License.
     <simple-method method-name="importDatevTransactionEntries" short-description="Import Datev Transaction Entries" login-required="true">    
         <script location="component://accounting/script/com/ilscipio/scipio/accounting/datev/DatevUtil.groovy"></script>
         
-        <log level="always" message="uploadedFile ======> ${uploadedFile}" />
-        
-        <set field="importDatevTransactionEntriesCtx" from-field="passedParams" />
-        <set field="importDatevTransactionEntriesCtx.uploadedFile" from-field="uploadedFile" />
+        <!-- <set field="importDatevTransactionEntriesCtx" from-field="passedParams" /> -->
+        <set field="importDatevTransactionEntriesCtx" from-field="multiPartMap" />
                 
-        <log message="importDatevTransactionEntriesCtx ====> ${importDatevTransactionEntriesCtx}" level="always"/>
         <call-service service-name="importDatevTransactionEntries" in-map-name="importDatevTransactionEntriesCtx">
             <result-to-field field="transactionEntriesImported" result-name="transactionEntries"/>
         </call-service>    	

@@ -10,7 +10,6 @@ import org.apache.tomcat.util.descriptor.web.WebXml;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.webapp.control.ContextFilter;
-import org.xml.sax.SAXException;
 
 import com.ilscipio.scipio.ce.util.Optional;
 
@@ -43,35 +42,36 @@ public class ExtWebappInfo implements Serializable {
     private final WebXml webXml;
     
     // OPTIONAL FIELDS (instance may be created/cached even if lookup fails for these)
-    private String controlServletPath;
-    private String controlServletMapping; // /control (servlet)
-    private String fullControlPath;
+    private final String controlServletPath; // empty string for root
+    private final String controlServletMapping; // single slash for root
+    private final String fullControlPath; // with context root and trailing slash
     
     private Optional<Boolean> forwardRootControllerUris;
     private Optional<Boolean> forwardRootControllerUrisValid;
     
-//    /**
-//     * Basic constructor.
-//     */
-//    public ExtWebappInfo(String webSiteId, WebappInfo webappInfo, WebXml webXml) {
-//        this.webSiteId = webSiteId;
-//        this.webappInfo = webappInfo;
-//        this.webXml = webXml;
-//    }
-    
     /**
-     * Full constructor.
-     * WARN: subject to change frequently.
+     * Main constructor.
      */
-    protected ExtWebappInfo(String webSiteId, WebappInfo webappInfo, WebXml webXml, String controlServletPath, String controlServletMapping,
-            String fullControlPath) {
+    protected ExtWebappInfo(String webSiteId, WebappInfo webappInfo, WebXml webXml) throws IOException {
+        // sanity check
+        if (webappInfo == null) throw new IllegalArgumentException("Missing ofbiz webapp info (WebappInfo) for website ID '" + webSiteId + "' - required to instantiate ExtWebappInfo");
+        if (webXml == null) throw new IllegalArgumentException("Missing webapp container info (web.xml) for website ID '" + webSiteId + "' (mount-point '" + webappInfo.getContextRoot() + "')");
+            
         this.webSiteId = webSiteId;
         this.webappInfo = webappInfo;
         this.webXml = webXml;
-        if (controlServletMapping == null )
-        this.controlServletPath = controlServletPath;
-        this.controlServletMapping = controlServletMapping;
-        this.fullControlPath = fullControlPath;
+        try {
+            this.fullControlPath = WebAppUtil.getControlServletPath(webappInfo, true);
+            if (this.fullControlPath == null) {
+                Debug.logWarning(getLogMsgPrefix(webSiteId)+"Cannot find ControlServlet mapping for website"
+                        + " (this is an error if the website was meant to have a controller)", module);
+            }
+            
+            this.controlServletMapping = WebAppUtil.getControlServletOnlyPathFromFull(webappInfo, fullControlPath);
+            this.controlServletPath = ("/".equals(this.controlServletMapping)) ? "" : this.controlServletMapping;
+        } catch (Exception e) {
+            throw new IOException("Could not determine ControlServlet mapping for website ID '" + webSiteId + "': " + e.getMessage(), e);
+        }
     }
 
     /**
@@ -87,7 +87,8 @@ public class ExtWebappInfo implements Serializable {
      * Gets from webSiteId, with caching.
      * Cache only allows websites with registered WebappInfo and WebXml.
      * NOTE: If accessing from early loading process, do not call this, instead call
-     * {@link #fromWebSiteIdNew(String)}.
+     * {@link #fromWebSiteIdNew(String)}, otherwise there is a risk of caching
+     * incomplete instances.
      */
     public static ExtWebappInfo fromWebSiteId(String webSiteId) throws IOException {
         ExtWebappInfo info = webSiteIdCache.get(webSiteId);
@@ -108,35 +109,13 @@ public class ExtWebappInfo implements Serializable {
     
     /**
      * Gets from webSiteId, no caching.
+     * NOTE: This is the factory method that should be used during loading.
+     * @see #fromWebSiteId(String)
      */
     public static ExtWebappInfo fromWebSiteIdNew(String webSiteId) throws IOException {
-        String controlServletPath = null;
-        String controlServletMapping = null;
-        String fullControlPath = null;
-        
-        WebappInfo webappInfo;
-        WebXml webXml;
-        try {
-            webappInfo = WebAppUtil.getWebappInfoFromWebsiteId(webSiteId);
-            webXml = WebAppUtil.getWebXml(webappInfo);
-        } catch (SAXException e) {
-            throw new IOException(e);
-        }
-        
-        try {
-            fullControlPath = WebAppUtil.getControlServletPath(webappInfo, true);
-            if (fullControlPath == null) {
-                Debug.logWarning(getLogMsgPrefix(webSiteId)+"Cannot get ControlServlet mapping for website."
-                        + " This is only acceptable if the webapp did not intend to have a controller.", module);
-            }
-        } catch (SAXException e) {
-            throw new IOException(e);
-        }
-        controlServletMapping = WebAppUtil.getControlServletOnlyPathFromFull(webappInfo, fullControlPath);
-        controlServletPath = controlServletMapping;
-        if ("/".equals(controlServletPath)) controlServletPath = "";
-        
-        return new ExtWebappInfo(webSiteId, webappInfo, webXml, controlServletPath, controlServletMapping, fullControlPath);
+        WebappInfo webappInfo = getWebappInfoAlways(webSiteId);
+        WebXml webXml = getWebXmlAlways(webSiteId, webappInfo);
+        return new ExtWebappInfo(webSiteId, webappInfo, webXml);
     }
 
     public String getWebSiteId() {
@@ -156,23 +135,36 @@ public class ExtWebappInfo implements Serializable {
     }
     
     /**
-     * The control servlet mapping or empty string "" if set as root.
-     * This is same as {@link #getControlServletMapping()} except the empty string,
-     * menat for easy prepending.
+     * The control servlet mapping, or empty string "" if it is the root mapping.
+     * No trailing slash.
+     * <p>
+     * This is same as {@link #getControlServletMapping()} except it uses empty string
+     * instead of single slash for the root mapping, meant for easy prepending.
      */
     public String getControlServletPath() {
         return controlServletPath;
     }
 
     /**
-     * The control servlet mapping or "/" if set as root.
+     * The control servlet mapping, or "/" if it is the root mapping.
+     * No trailing slash unless it's the root mapping.
+     * <p>
+     * This is same as {@link #getControlServletPath()} except it uses single slash
+     * instead of empty string for the root mapping, meant for easy prepending.
      */
     public String getControlServletMapping() {
         return controlServletMapping;
     }
     
     /**
-     * Essentially {@link #getContextRoot()} + {@link #getControlServletMapping()}.
+     * Returns the control path prefixed with the webapp context root and 
+     * suffixed with trailing slash.
+     * <p>
+     * Essentially {@link #getContextRoot()} + {@link #getControlServletMapping()} + "/".
+     * Includes a trailing slash.
+     * <p>
+     * NOTE: The trailing slash inconsistency is due to this coming from the stock ofbiz
+     * {@link WebAppUtil#getControlServletPath(WebappInfo)}.
      */
     public String getFullControlPath() {
         return fullControlPath;
@@ -231,5 +223,31 @@ public class ExtWebappInfo implements Serializable {
     
     private String getLogMsgPrefix() {
         return "Website '" + webSiteId + "': ";
+    }
+    
+    
+    /**
+     * Helper wrapper to read WebappInfo reliably.
+     */
+    public static WebappInfo getWebappInfoAlways(String webSiteId) throws IOException {
+        try {
+            return WebAppUtil.getWebappInfoFromWebsiteId(webSiteId);
+        } catch(IllegalArgumentException e) {
+            throw new IOException(e); // exception message already good
+        } catch (Exception e) {
+            throw new IOException("Could not read or find ofbiz webapp info (WebappInfo) for website ID '" + webSiteId + "': " + e.getMessage(), e);
+        }
+    }
+    
+    /**
+     * Helper wrapper to read WebXml reliably.
+     */
+    public static WebXml getWebXmlAlways(String webSiteId, WebappInfo webappInfo) throws IOException {
+        try {
+            return WebAppUtil.getWebXml(webappInfo);
+        } catch(Exception e) {
+            throw new IOException("Could not read or find webapp container info (web.xml) for website ID '" + webSiteId 
+                        + "' (mount-point '" + webappInfo.getContextRoot() + "'): " + e.getMessage(), e);
+        }
     }
 }

@@ -1,16 +1,21 @@
 package org.ofbiz.webapp.control;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRegistration;
 
+import org.apache.tomcat.util.descriptor.web.ServletDef;
+import org.apache.tomcat.util.descriptor.web.WebXml;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.webapp.control.FilterUtil.FilterConfigInitParamsMapAdapter;
 
@@ -26,10 +31,28 @@ public abstract class ServletUtil {
     protected ServletUtil() {
     }
 
+    /**
+     * Returns all servlet mappings for the given servlet name.
+     */
     public static Collection<String> getServletMappings(ServletContext servletContext, String servletName) {
         ServletRegistration reg = servletContext.getServletRegistration(servletName);
         if (reg == null) return null;
         return reg.getMappings();
+    }
+    
+    /**
+     * Returns all servlet mappings for the given servlet name.
+     */
+    public static Collection<String> getServletMappings(WebXml webXml, String servletName) {
+        if (servletName == null || servletName.isEmpty()) return Collections.emptyList();
+        List<String> servletMappings = new ArrayList<>(webXml.getServletMappings().size());
+        // Catalina servlet mappings: key = url-pattern, value = servlet-name.
+        for (Entry<String, String> entry : webXml.getServletMappings().entrySet()) {
+            if (servletName.equals(entry.getValue())) {
+                servletMappings.add(entry.getKey());
+            }
+        }
+        return servletMappings;
     }
     
     /**
@@ -45,10 +68,31 @@ public abstract class ServletUtil {
     }
     
     /**
+     * Returns the first mapping for the given servlet name, or null or none or not found.
+     */
+    public static String getServletMapping(WebXml webXml, String servletName) {
+        if (servletName == null || servletName.isEmpty()) return null;
+        // Catalina servlet mappings: key = url-pattern, value = servlet-name.
+        for (Entry<String, String> entry : webXml.getServletMappings().entrySet()) {
+            if (servletName.equals(entry.getValue())) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+    
+    /**
      * Returns the first mapping for the given servlet name with wildcard removed, or null or none or not found.
      */
     public static String getBaseServletMapping(ServletContext servletContext, String servletName) {
         return getBaseServletMapping(getServletMapping(servletContext, servletName));
+    }
+    
+    /**
+     * Returns the first mapping for the given servlet name with wildcard removed, or null or none or not found.
+     */
+    public static String getBaseServletMapping(WebXml webXml, String servletName) {
+        return getBaseServletMapping(getServletMapping(webXml, servletName));
     }
     
     /**

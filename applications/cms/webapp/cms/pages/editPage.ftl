@@ -572,9 +572,19 @@
                                  <@field label=uiLabelMap.CommonName type="input" name="pageName" value=(meta.name!"") required=false/>
                                  <@field label=uiLabelMap.CommonDescription type="textarea" name="description_visible" value=(meta.description!"") required=false/>
 
+                                 <@field label=uiLabelMap.CommonIndexable type="select" name="primaryPathIndexable" value=(meta.primaryPathIndexable!"") required=false tooltip=uiLabelMap.CmsMappingIndexableDesc>
+                                    <#assign indexable = meta.primaryPathIndexable!"">
+                                    <#assign indexableDefault = (webSiteConfig.getMappingsIndexableDefault())!true>
+                                    <#-- NOTE: this indicator is ternary, when empty it defaults to cmsDefaultIsIndexable in web.xml.
+                                        it must not be forced to Y or N (e.g., do NOT make this a checkbox). -->
+                                    <@field type="option" value="" selected=(!indexable?is_boolean)>(${indexableDefault?string("Y", "N")})</@field>
+                                    <@field type="option" value="Y" selected=(indexable?is_boolean && indexable)>Y</@field>
+                                    <@field type="option" value="N" selected=(indexable?is_boolean && !indexable)>N</@field>
+                                 </@field>
+
                                  <@menu type="button">
                                     <@menuitem type="link" href="javascript:updatePageInfo(); void(0);" class="+${styles.action_run_sys!} ${styles.action_update!}" text="${rawLabel('CmsSaveSettings')}" />
-                                </@menu> 
+                                 </@menu> 
                             </@section>
                             
                             <@section title=uiLabelMap.CommonStatus>

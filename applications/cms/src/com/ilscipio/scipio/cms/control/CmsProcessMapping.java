@@ -198,8 +198,15 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
         if (fields.containsKey("sourceFromContextRoot") || useDefaults) {
             String sourceFromContextRoot = (String) fields.get("sourceFromContextRoot");
             if (UtilValidate.isEmpty(fields.get("sourceFromContextRoot"))) {
-                CmsWebSiteConfig webSiteConfig = CmsWebSiteInfo.getWebSiteInfo(webSiteId).getWebSiteConfig();
-                sourceFromContextRoot = webSiteConfig.getPrimaryPathFromContextRootDefaultIndicator();
+                // NOTE: 2017-12-05: it's very unclear whether this flag is a good idea,
+                // so we leave it configurable.
+                CmsWebSiteConfig webSiteConfig = CmsWebSiteInfo.getWebSiteConfigOrDefault(webSiteId);
+                if (webSiteConfig.isApplyPrimaryPathFromContextRootDefaultAtStorage()) {
+                    sourceFromContextRoot = webSiteConfig.getPrimaryPathFromContextRootDefault() ? "Y" : "N";
+                // already done afterward
+                //} else {
+                //    sourceFromContextRoot = SOURCE_FROM_CONTEXT_ROOT_DEFAULT;
+                }
             }
             setFields.put("sourceFromContextRoot", sourceFromContextRoot);
         }
@@ -296,7 +303,7 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
         String primaryForPageId = getPrimaryForPageId();
         
         // 2016: this field cannot be null anymore
-        if (UtilValidate.isEmpty(getSourceFromContextRoot())) {
+        if (UtilValidate.isEmpty(getSourceFromContextRootStr())) { // use string method here, not the other one! other returns null for D.
             throw new CmsDataException("Trying to " + "create or update CmsProcessMapping" + (id != null ? " '" + id + "'" : "") + " but"
                     + " sourceFromContextRoot field is empty - required (for default, use special value " + SOURCE_FROM_CONTEXT_ROOT_DEFAULT + ")");
         }

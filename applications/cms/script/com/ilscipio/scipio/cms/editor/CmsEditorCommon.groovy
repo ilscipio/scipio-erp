@@ -89,7 +89,7 @@ public class CmsContentTreeUtil {
             
             requestServletPath = webSiteConfig.getRequestServletPath();
             realControlPath = webSiteInfo.getControlServletMapping();
-            primaryPathFromContextRootDefault = webSiteConfig.getPrimaryPathFromContextRootDefaultIndicator();
+            primaryPathFromContextRootDefault = webSiteConfig.getPrimaryPathFromContextRootDefault() ? "Y" : "N";
         }
     
         targetMap.put("requestServletPath", requestServletPath);

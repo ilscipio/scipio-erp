@@ -92,8 +92,17 @@
     </context-param>
     <context-param><!-- 2016: new -->
         <description>Boolean (true/false) value used to control whether primary paths for this webapp
-            are from context root by default or not (default: global from cms.properties, or true)</description>
+            are from context root by default or not (default: true)</description>
         <param-name>cmsPrimaryPathFromContextRootDefault</param-name>
+        <param-value></param-value>
+    </context-param>
+    <context-param><!-- 2016: new -->
+        <description>If set to true, the value of cmsPrimaryPathFromContextRootDefault (above) is applied
+            to entities before they are stored, such that each newly-created 
+            page's primary mapping gets "hardcoded" with sourceFromContextRoot=Y/N, instead of leaving
+            the default marker (sourceFromContextRoot=D) and consulting the website default in realtime. (default: true)
+            TODO: REVIEW: still unclear which should be the default for Scipio</description>
+        <param-name>cmsApplyPrimaryPathFromContextRootDefaultAtStorage</param-name>
         <param-value></param-value>
     </context-param>
     <context-param>

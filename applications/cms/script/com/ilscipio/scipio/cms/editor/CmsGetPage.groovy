@@ -102,8 +102,8 @@ if ((pageId || primaryPath) && !isNewPage) { // edit mode requires either pageId
 }
 
 if (webSiteId) {
-    webSiteConfig = CmsWebSiteInfo.getWebSiteConfig(webSiteId);
-    context.primaryPathFromContextRootDefault = webSiteConfig?.getPrimaryPathFromContextRootDefaultIndicator();
+    webSiteConfig = CmsWebSiteInfo.getWebSiteConfigOrDefault(webSiteId);
+    context.primaryPathFromContextRootDefault = webSiteConfig?.getPrimaryPathFromContextRootDefault() ? "Y" : "N";
 }
 
 tmplResult = dispatcher.runSync("cmsGetAvailablePageTemplates", ["userLogin": context.userLogin]);

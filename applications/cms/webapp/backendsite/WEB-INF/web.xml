@@ -96,6 +96,15 @@
         <param-name>cmsPrimaryPathFromContextRootDefault</param-name>
         <param-value></param-value>
     </context-param>
+    <context-param><!-- 2016: new -->
+        <description>If set to true, the value of cmsPrimaryPathFromContextRootDefault (above) is applied
+            to entities before they are stored, such that each newly-created 
+            page's primary mapping gets "hardcoded" with sourceFromContextRoot=Y/N, instead of leaving
+            the default marker (sourceFromContextRoot=D) and consulting the website default in realtime. (default: true)
+            TODO: REVIEW: still unclear which should be the default for Scipio</description>
+        <param-name>cmsApplyPrimaryPathFromContextRootDefaultAtStorage</param-name>
+        <param-value></param-value>
+    </context-param>
     <context-param>
         <description>Default (control) servlet path for any situation where one is implied (default: the ControlServlet mapping is used)</description>
         <param-name>cmsDefaultServletPath</param-name>

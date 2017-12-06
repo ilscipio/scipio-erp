@@ -1001,7 +1001,30 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
         return PathUtil.ensureNoDelims(targetPath);
     }
     
-
+    /**
+     * Returns active URIs normalized from webapp context root.
+     * TODO?: locale is currently ignored. might be involved in future.
+     */
+    public static List<String> getWebsiteActiveIndexableUris(Delegator delegator, String webSiteId, Locale contentLocale, boolean useCache) {
+        List<CmsProcessMapping> mappingList = CmsProcessMapping.getWorker().findByWebSiteId(delegator, webSiteId, useCache);
+        List<String> uriList = new ArrayList<>(mappingList.size());
+        
+        CmsWebSiteConfig webSiteConfig = CmsWebSiteInfo.getWebSiteConfigOrDefault(webSiteId);
+        
+        boolean defaultSourceFromContextRoot = webSiteConfig.getDefaultSourceFromContextRoot();
+        String defaultSourceServletPath = webSiteConfig.getDefaultSourceServletPath();
+        boolean defaultIsIndexable = webSiteConfig.getDefaultIsIndexable();
+        
+        for(CmsProcessMapping mapping : mappingList) {
+            if (!mapping.isActiveLogical()) continue;
+            if (!mapping.isIndexableLogical(defaultIsIndexable)) continue;
+            String uri = mapping.getSourcePathExpanded(defaultSourceServletPath, defaultSourceFromContextRoot);
+            if (uri != null) {
+                uriList.add(uri);
+            }
+        }
+        return uriList;
+    }
 
     public static List<CmsProcessMapping> sortProcessMappingsByActive(List<CmsProcessMapping> mappings) {
         List<CmsProcessMapping> activeMappings = new ArrayList<>();

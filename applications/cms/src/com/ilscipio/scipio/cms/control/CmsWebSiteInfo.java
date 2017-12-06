@@ -129,6 +129,19 @@ public class CmsWebSiteInfo implements Serializable {
     }
     
     /**
+     * Convenience method to get website config from webSiteId.
+     * Returns the default config ({@link CmsWebSiteConfig#getDefault}) if not found 
+     * or not CMS-valid.
+     * <p>
+     * NOTE: This is only useful if you don't already have a CmsWebSiteInfo instead,
+     * because the instance method {@link #getWebSiteConfig()} always returns an instance.
+     */
+    public static CmsWebSiteConfig getWebSiteConfigOrDefault(String webSiteId) {
+        CmsWebSiteInfo webSiteInfo = cmsRegisteredWebSites.get(webSiteId);
+        return (webSiteInfo != null) ? webSiteInfo.getWebSiteConfig() : CmsWebSiteConfig.getDefault();
+    }
+    
+    /**
      * Gets the web site info for all websites registered to function with Cms (through filters, view handler, etc.).
      */
     public static Map<String, CmsWebSiteInfo> getAllCmsRegWebSitesInfo() {

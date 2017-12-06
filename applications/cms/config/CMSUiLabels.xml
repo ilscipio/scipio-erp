@@ -836,4 +836,8 @@
         <value xml:lang="en">Note: This website (${webSiteId}) is configured to alias the path names under its controller path (${controlMapping}) to its website context root. If you create any CMS Pages under the controller path, they will also be aliased to the website context root: ${srcPath} -> ${destPath}.</value>
         <value xml:lang="de">Hinweis: Diese Website (${webSiteId}) ist so konfiguriert, dass sie die Pfadnamen unter ihrem Controller-Pfad (${controlMapping}) mit ihrem Website-Kontextstammverzeichnis verknüpft. Wenn Sie CMS-Seiten unter dem Controller-Pfad erstellen, werden diese ebenfalls mit dem Website-Kontextstammverzeichnis verknüpft: ${srcPath} -> ${destPath}.</value>
     </property>
+    <property key="CmsMappingIndexableDesc">
+        <value xml:lang="en">If enabled (Y), this page's path may be included as indexed URL in sitemap generation for stores; if disabled (N), this is prevented. If left empty, this defaults to the web.xml cmsMappingsIndexableDefault setting for the webapp.</value>
+        <value xml:lang="de">Wenn aktiviert (Y), kann der Pfad dieser Seite als indizierte URL in der Sitemap-Generierung für Stores enthalten sein. Wenn deaktiviert (N), wird dies verhindert. Wenn diese Option leer bleibt, wird standardmäßig die Einstellung web.xml cmsMappingsIndexableDefault für die Webanwendung verwendet.</value>
+    </property>
 </resource>

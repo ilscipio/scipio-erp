@@ -1019,6 +1019,62 @@ public class UtilMisc {
     }
 
     /**
+     * SCIPIO: Returns "Y" if value is Boolean.TRUE or "Y", or
+     * "N" if value is Boolean.FALSE or "N", or null if
+     * anything else.
+     * <p>
+     * NOTE: case-sensitive.
+     */
+    public static String indicatorValue(Object value) {
+        if (value instanceof Boolean) {
+            return ((Boolean) value) ? "Y" : "N";
+        } else if ("Y".equals(value) || "N".equals(value)) {
+            return (String) value;
+        } else {
+            return null;
+        }
+    }
+    
+    /**
+     * SCIPIO: Returns "Y" if value is Boolean.TRUE or "Y", or
+     * "N" if value is Boolean.FALSE or "N", or defaultValue if
+     * anything else.
+     */
+    public static String indicatorValue(Object value, String defaultValue) {
+        String res = indicatorValue(value);
+        return (res != null) ? res : defaultValue;
+    }
+    
+    /**
+     * SCIPIO: Returns "Y" if value is Boolean.TRUE, "true" or "Y", or
+     * "N" if value is Boolean.FALSE, "false" or "N", or null if
+     * anything else.
+     * <p>
+     * NOTE: case-sensitive.
+     */
+    public static String indicatorValueVersatile(Object value) {
+        if (value instanceof Boolean) {
+            return ((Boolean) value) ? "Y" : "N";
+        } else if ("true".equals(value) || "Y".equals(value)) {
+            return "Y";
+        } else if ("false".equals(value) || "N".equals(value)) {
+            return "N";
+        } else {
+            return null;
+        }
+    }
+    
+    /**
+     * SCIPIO: Returns "Y" if value is Boolean.TRUE, "true" or "Y", or
+     * "N" if value is Boolean.FALSE, "false" or "N", or defaultValue if
+     * anything else.
+     */
+    public static String indicatorValueVersatile(Object value, String defaultValue) {
+        String res = indicatorValueVersatile(value);
+        return (res != null) ? res : defaultValue;
+    }
+
+    /**
      * SCIPIO: Returns an unmodifiable hash set.
      * (We use this pattern constantly.)
      */

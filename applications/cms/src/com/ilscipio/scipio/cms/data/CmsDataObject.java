@@ -97,7 +97,7 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
      *                   if false, key must be present and value non-empty for update (isNotEmpty)
      */
     public void update(Map<String, ?> fields, boolean setIfEmpty) {
-     // 2017-04-11: ALWAYS copy the fields so the verification can now modify them in-place
+        // 2017-04-11: ALWAYS copy the fields so the verification can now modify them in-place
         Map<String, Object> flds = new HashMap<>(fields);
         verifyNewFields(getDelegator(), flds, false);
         entity.setNonPKFields(flds, setIfEmpty); // NOTE: setIfEmpty must be TRUE

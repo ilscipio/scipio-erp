@@ -821,8 +821,7 @@
     </service>
 
     <service name="cmsCreateUpdateProcessMapping" engine="java"
-            location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="createUpdateProcessMapping" 
-            auth="true">
+            location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="createUpdateProcessMapping" auth="true">
         <description>Create or update a process mapping</description>
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
         <implements service="cmsCmsPageInfoInterface" />
@@ -831,16 +830,14 @@
     </service>
     
     <service name="cmsDeleteProcessMapping" engine="java"
-            location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="deleteProcessMapping" 
-            auth="true">
+            location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="deleteProcessMapping" auth="true">
         <description>Delete a process mapping</description>
         <permission-service service-name="cmsGenericPermission" main-action="DELETE"/>
         <auto-attributes entity-name="CmsProcessMapping" include="pk" mode="IN" optional="false"/>
     </service>
     
     <service name="cmsCreateUpdateProcessViewMapping" engine="java"
-            location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="createUpdateProcessViewMapping" 
-            auth="true">
+            location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="createUpdateProcessViewMapping" auth="true">
         <description>Create or update a process view mapping, along with page info (if applicable); page relation is abstracted</description>
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
         <implements service="cmsCmsPageInfoInterface" />
@@ -852,16 +849,14 @@
     </service>
     
     <service name="cmsDeleteProcessViewMapping" engine="java"
-            location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="deleteProcessViewMapping" 
-            auth="true">
+            location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="deleteProcessViewMapping" auth="true">
         <description>Delete a process view mapping, along with page info (if applicable)</description>
         <permission-service service-name="cmsGenericPermission" main-action="DELETE"/>
         <auto-attributes entity-name="CmsProcessViewMapping" include="pk" mode="IN" optional="false"/>
     </service>
     
     <service name="cmsCreateUpdateViewMapping" engine="java"
-            location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="createUpdateViewMapping" 
-            auth="true">
+            location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="createUpdateViewMapping" auth="true">
         <description>Create or update a (simple) view mapping, along with page info (if applicable); page relation is abstracted</description>
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
         <implements service="cmsCmsPageInfoInterface" />
@@ -872,16 +867,14 @@
     </service>
     
     <service name="cmsDeleteViewMapping" engine="java"
-            location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="deleteViewMapping" 
-            auth="true">
+            location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="deleteViewMapping" auth="true">
         <description>Delete a (simple) view mapping, along with page info (if applicable)</description>
         <permission-service service-name="cmsGenericPermission" main-action="DELETE"/>
         <auto-attributes entity-name="CmsViewMapping" include="pk" mode="IN" optional="false"/>
     </service>
 
     <service name="cmsClearMappingCaches" engine="java"
-            location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="clearMappingCaches" 
-            auth="true">
+            location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="clearMappingCaches" auth="true">
         <description>Clear front-end mapping caches</description>
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
         <attribute name="clearMemoryCaches" type="Boolean" mode="IN" optional="true" /> <!-- default-value="true" -->
@@ -889,16 +882,14 @@
     </service>
     
     <service name="cmsDeleteAllMappingRecords" engine="java"
-            location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="deleteAllMappingRecords" 
-            auth="true">
+            location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="deleteAllMappingRecords" auth="true">
         <description>Delete all Cms view, process, etc. mapping and related entity records from the system</description>
         <permission-service service-name="cmsGenericPermission" main-action="DELETE"/>
         <attribute name="includePrimary" type="Boolean" mode="IN" optional="true" /><!-- default: false -->
     </service>
     
     <service name="cmsDeleteWebSiteMappingRecords" engine="java"
-            location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="deleteWebSiteMappingRecords" 
-            auth="true">
+            location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="deleteWebSiteMappingRecords" auth="true">
         <description>Delete all Cms view, process, etc. mapping and related entity records from the system for a specific web site</description>
         <permission-service service-name="cmsGenericPermission" main-action="DELETE"/>
         <attribute name="webSiteId" type="String" mode="IN" optional="false" />
@@ -906,8 +897,7 @@
     </service>
     
     <service name="cmsAddRemovePageViewMappings" engine="java"
-            location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="addRemovePageViewMappings" 
-            auth="true">
+            location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="addRemovePageViewMappings" auth="true">
         <description>Adds and/or removes view mappings for a page. 
             Mappings are identified by webSiteId::viewName (if contains '::') or viewMappingId (otherwise).</description>
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>    
@@ -916,6 +906,16 @@
         <attribute name="addViewNameList" type="List" mode="IN" optional="true" /><!-- List of strings, format: ''webSiteId::viewName' OR 'viewName' (if webSiteId param specified) -->
         <attribute name="removeViewNameList" type="List" mode="IN" optional="true" /><!-- List of strings, format: 'webSiteId::viewName' OR 'viewName' (if webSiteId param specified) -->
         <attribute name="removeIdList" type="List" mode="IN" optional="true" /><!-- List of viewMappingIds -->
+    </service>
+    
+    <service name="cmsGetWebsiteIndexablePageUris" engine="java"
+            location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="getWebsiteIndexablePageUris" auth="true">
+        <description>Returns a list of active page URIs for the website, normalized from the webapp context root (not including the webapp context root)</description>
+        <permission-service service-name="cmsGenericPermission" main-action="VIEW"/>
+        <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
+        <attribute name="contentLocale" type="Locale" mode="IN" optional="true"/>
+        <attribute name="useCache" type="Boolean" mode="IN" optional="true" default-value="false"/>
+        <attribute name="uriList" type="List" mode="OUT" optional="true" />
     </service>
     
 </services>

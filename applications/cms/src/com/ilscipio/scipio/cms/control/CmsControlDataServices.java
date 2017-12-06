@@ -355,4 +355,21 @@ public abstract class CmsControlDataServices {
             return localizedMsg;
         } 
     }
+    
+    public static Map<String, Object> getWebsiteIndexablePageUris(DispatchContext dctx, Map<String, Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        String webSiteId = (String) context.get("webSiteId");
+        Locale contentLocale = (Locale) context.get("contentLocale");
+        boolean useCache = Boolean.TRUE.equals(context.get("useCache"));
+
+        try {
+            List<String> uriList = CmsProcessMapping.getWebsiteActiveIndexableUris(delegator, webSiteId, contentLocale, useCache);
+            Map<String, Object> result = ServiceUtil.returnSuccess();
+            result.put("uriList", uriList);
+            return result;
+        } catch (Exception e) {
+            Debug.logError(e, "Cms: " + e.getMessage(), module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+    }
 }

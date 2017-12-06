@@ -114,7 +114,7 @@ if (ServiceUtil.isSuccess(tmplResult)) {
 }
 
 webSiteInfo = (webSiteId) ? CmsWebSiteInfo.getWebSiteInfo(webSiteId) : null;
-webSiteConfig = webSiteInfo?.getWebSiteConfig();
+webSiteConfig = CmsWebSiteInfo.getWebSiteConfigOrDefault(webSiteId);
 webSiteContextParams = webSiteInfo?.getContextParams();
 webSiteAllowPreview = webSiteConfig?.isAllowPreviewMode();
 context.webSiteInfo = webSiteInfo;

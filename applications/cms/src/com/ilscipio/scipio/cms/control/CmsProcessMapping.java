@@ -19,7 +19,6 @@ import org.apache.commons.lang.StringUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.entity.Delegator;
@@ -27,7 +26,6 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
-import org.ofbiz.webapp.WebAppUtil;
 import org.ofbiz.webapp.control.RequestLinkUtil;
 
 import com.ilscipio.scipio.ce.util.Optional;
@@ -71,13 +69,7 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
     
     // global defaults for "primary" process mappings
     static final String primaryTargetPathDefault = "/cmsPagePlainNoAuth"; // NOTE: this is relative! /control may get prefixed, depended on webapp config (web.xml)
-    // NOTE: global default is "Y" because this closest matches original code
-    static final String primaryPathFromContextRootDefault;
-    static {
-        String fromContextRoot = UtilProperties.getPropertyValue("cms.properties", "cms.primaryPathFromContextRoot.default", "Y");
-        ensureIndicator(fromContextRoot, "Y");
-        primaryPathFromContextRootDefault = fromContextRoot;
-    }
+    
     // NOTE: I'm leaving this to "Y" for the general case even though "createPage" will
     // specify "N" for this (and override this)
     static final String primaryActiveDefault = "Y"; // currently must be hardcoded to "Y", otherwise nothing would work
@@ -163,30 +155,6 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
         // NOTE: here can't make viewsPathAndNameCache immutable
     }
     
-    /**
-     * Returns "Y"/"N" and never null.
-     */
-    public static String getPrimaryPathFromContextRootDefault(String webSiteId) {
-        String fromContextRoot = null;
-        if (UtilValidate.isNotEmpty(webSiteId)) {
-            fromContextRoot = WebAppUtil.getWebappContextParamsSafe(webSiteId).get("cmsPrimaryPathFromContextRootDefault");
-            fromContextRoot = ensureIndicator(fromContextRoot, null);
-        }
-        return UtilValidate.isNotEmpty(fromContextRoot) ? fromContextRoot : primaryPathFromContextRootDefault;
-    }    
-    
-    private static String ensureIndicator(String indicator, String defaultVal) {
-        if ("true".equals(indicator)) {
-            indicator = "Y";
-        } else if ("false".equals(indicator)) {
-            indicator = "N";
-        }
-        if (!"Y".equals(indicator) && !"N".equals(indicator)) {
-            indicator = defaultVal;
-        }
-        return indicator;
-    }
-    
     public void setPrimaryProcessMappingFields(Map<String, ?> fields, boolean useDefaults) {
         //entity.setString("pagePath", normalizePath(path));
         Map<String, Object> setFields = getPrimaryProcessMappingFields(getDelegator(), fields, useDefaults);
@@ -230,7 +198,8 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
         if (fields.containsKey("sourceFromContextRoot") || useDefaults) {
             String sourceFromContextRoot = (String) fields.get("sourceFromContextRoot");
             if (UtilValidate.isEmpty(fields.get("sourceFromContextRoot"))) {
-                sourceFromContextRoot = getPrimaryPathFromContextRootDefault(webSiteId);
+                CmsWebSiteConfig webSiteConfig = CmsWebSiteInfo.getWebSiteInfo(webSiteId).getWebSiteConfig();
+                sourceFromContextRoot = webSiteConfig.getPrimaryPathFromContextRootDefaultIndicator();
             }
             setFields.put("sourceFromContextRoot", sourceFromContextRoot);
         }
@@ -516,9 +485,9 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
     
     public String getSourcePathExpanded(String defaultSourceServletPath, boolean defaultSourceFromContextRoot) {
         if (isSourceFromContextRootLogical(defaultSourceFromContextRoot)) {
-            return PathUtil.concatPaths(defaultSourceServletPath, getSourcePath());
-        } else {
             return getSourcePath();
+        } else {
+            return PathUtil.concatPaths(defaultSourceServletPath, getSourcePath());
         }
     }
     
@@ -531,14 +500,22 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
         String webSiteId = getSourceWebSiteId();
         String sourcePath = getSourcePath();
         if (UtilValidate.isEmpty(webSiteId)) {
-            Debug.logWarning("Cms: sourceWebSiteId is null on CmsProcessMapping " + getId() + "; can't determine expanded path", module);
+            Debug.logWarning("Cms: sourceWebSiteId is null on CmsProcessMapping " + getId() + "; cannot determine expanded path", module);
             return sourcePath;
         }
-        if (Boolean.TRUE.equals(getSourceFromContextRoot())) {
+        Boolean sourceFromContextRoot = getSourceFromContextRoot();
+        if (Boolean.TRUE.equals(sourceFromContextRoot)) {
+            return sourcePath;
+        }
+        CmsWebSiteConfig webSiteConfig = CmsWebSiteInfo.getWebSiteInfo(webSiteId).getWebSiteConfig();
+        if (sourceFromContextRoot == null) {
+            sourceFromContextRoot = webSiteConfig.getDefaultSourceFromContextRoot();
+        }
+        if (Boolean.TRUE.equals(sourceFromContextRoot)) {
             return sourcePath;
         } else {
             try {
-                String prefix = CmsControlUtil.getDefaultSpecificServletPath(webSiteId, "cmsDefaultSourceServletPath");
+                String prefix = webSiteConfig.getDefaultSourceServletPath();
                 if (UtilValidate.isEmpty(prefix) || "/".equals(prefix)) {
                     return sourcePath;
                 } else {
@@ -649,7 +626,6 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
     public String getSourceFromContextRootStr() {
         return entity.getString("sourceFromContextRoot");
     }
-
     
     public boolean isSourceFromContextRootLogical(boolean defaultSourceFromContextRoot) {
         return isSourceFromContextRootLogical(getSourceFromContextRoot(), defaultSourceFromContextRoot);
@@ -798,10 +774,18 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
         return page.orElse(null); 
     }
 
-
+    public Boolean getIndexable() {
+        return entity.getBoolean("indexable");
+    }
     
-    
+    public boolean isIndexableLogical(boolean defaultIndexable) {
+        Boolean indexable = getIndexable();
+        return (indexable != null) ? indexable : defaultIndexable;
+    }
 
+    public void setIndexable(Boolean indexable) {
+        entity.set("indexable", indexable);
+    }
 
     
     private static CmsObjectCache<CmsProcessMapping> getPathCache() {

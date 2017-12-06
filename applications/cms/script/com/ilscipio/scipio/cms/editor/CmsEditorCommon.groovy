@@ -21,7 +21,7 @@ import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.WebAppUtil;
 import com.ilscipio.scipio.cms.control.CmsWebSiteInfo;
-import com.ilscipio.scipio.cms.control.CmsControlUtil;
+import com.ilscipio.scipio.cms.control.CmsWebSiteConfig;
 import com.ilscipio.scipio.cms.webapp.CmsWebappUtil;
 
 public class CmsErrorHandler {
@@ -84,9 +84,12 @@ public class CmsContentTreeUtil {
         String primaryPathFromContextRootDefault = null;
         
         if (webSiteId) {
-            requestServletPath = CmsControlUtil.getDefaultSpecificServletPath(webSiteId, "cmsRequestServletPath"); 
-            realControlPath = CmsControlUtil.getControlServletPath(webSiteId); 
-            primaryPathFromContextRootDefault = CmsControlUtil.getPrimaryPathFromContextRootDefault(webSiteId);
+            CmsWebSiteInfo webSiteInfo = CmsWebSiteInfo.getWebSiteInfo(webSiteId);
+            CmsWebSiteConfig webSiteConfig = webSiteInfo.getWebSiteConfig();
+            
+            requestServletPath = webSiteConfig.getRequestServletPath();
+            realControlPath = webSiteInfo.getControlServletMapping();
+            primaryPathFromContextRootDefault = webSiteConfig.getPrimaryPathFromContextRootDefaultIndicator();
         }
     
         targetMap.put("requestServletPath", requestServletPath);

@@ -69,7 +69,6 @@ public class CmsViewMapping extends CmsControlDataObject implements CmsMajorObje
         return new CmsViewMapping(this, copyArgs);
     }   
 
-    
     protected static <T> Map<String, T> checkFields(Map<String, T> fields, boolean isNew) {
         if (isNew || fields.containsKey("targetServletPath")) {
             ensureTargetServletPath(fields);

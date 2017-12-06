@@ -17,7 +17,8 @@ import org.ofbiz.base.util.*
 import org.ofbiz.entity.*
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.LocalDispatcher
-import com.ilscipio.scipio.cms.control.CmsControlUtil;
+import com.ilscipio.scipio.cms.control.CmsWebSiteConfig;
+import com.ilscipio.scipio.cms.control.CmsWebSiteInfo;
 
 final String module = "CmsGetPage.groovy";
 
@@ -101,7 +102,8 @@ if ((pageId || primaryPath) && !isNewPage) { // edit mode requires either pageId
 }
 
 if (webSiteId) {
-    context.primaryPathFromContextRootDefault = CmsControlUtil.getPrimaryPathFromContextRootDefault(webSiteId);
+    webSiteConfig = CmsWebSiteInfo.getWebSiteConfig(webSiteId);
+    context.primaryPathFromContextRootDefault = webSiteConfig?.getPrimaryPathFromContextRootDefaultIndicator();
 }
 
 tmplResult = dispatcher.runSync("cmsGetAvailablePageTemplates", ["userLogin": context.userLogin]);
@@ -111,11 +113,13 @@ if (ServiceUtil.isSuccess(tmplResult)) {
     context.cmsErrorHandler.addContextReadErrorFromServiceResult(context, tmplResult);
 }
 
-webSiteInfo = webSiteId ? com.ilscipio.scipio.cms.control.CmsWebSiteInfo.getCmsRegWebSiteInfo(webSiteId) : null;
+webSiteInfo = (webSiteId) ? CmsWebSiteInfo.getWebSiteInfo(webSiteId) : null;
+webSiteConfig = webSiteInfo?.getWebSiteConfig();
 webSiteContextParams = webSiteInfo?.getContextParams();
-webSiteAllowPreview = com.ilscipio.scipio.cms.control.CmsControlUtil.getCmsBoolInitParam(webSiteContextParams as Map<String, String>, "cmsAllowPreviewMode", false);
-context.webSiteInfo;
-context.webSiteContextParams;
+webSiteAllowPreview = webSiteConfig?.isAllowPreviewMode();
+context.webSiteInfo = webSiteInfo;
+context.webSiteConfig = webSiteConfig;
+context.webSiteContextParams = webSiteContextParams;
 context.webSiteAllowPreview = webSiteAllowPreview;
 
 cmsCtrlRootAliasMsgs = context.cmsWebSiteHelper.getWebSitesControlRootAliasMsgs(context);

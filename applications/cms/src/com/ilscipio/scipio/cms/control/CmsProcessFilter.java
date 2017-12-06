@@ -92,20 +92,8 @@ public class CmsProcessFilter implements Filter {
     public static final String module = CmsProcessFilter.class.getName();
 
     //private FilterConfig config = null;
-    private boolean allowPreviewMode = false;
-    private String previewModeParamName;
-    
     private ServletContext servletContext;
-    private String defaultSourceServletPath;
-    private String defaultForwardServletPath;
-    private String defaultTargetServletPath;
-    
-    protected boolean setResponseBrowserNoCache = CmsControlUtil.setResponseBrowserNoCacheDefault;
-    
-    private boolean alwaysUseDefaultForwardServletPath = CmsControlUtil.alwaysUseDefaultForwardServletPathDefault;
-    private boolean defaultForwardExtraPathInfo = CmsControlUtil.defaultForwardExtraPathInfoDefault; 
-    private boolean defaultSourceFromContextRoot = CmsControlUtil.defaultSourceFromContextRootDefault;
-    private boolean defaultForwardFromContextRoot = CmsControlUtil.defaultForwardFromContextRootDefault;
+    private CmsWebSiteConfig webSiteConfig = CmsWebSiteConfig.getDefault();
     
     /* Dev note: To disable the process rewriting, set the two following booleans to false: */
     private boolean forwardSourcePathParam = true;
@@ -122,28 +110,10 @@ public class CmsProcessFilter implements Filter {
     public void init(FilterConfig config) throws ServletException {
         //this.config = config;
         this.servletContext = config.getServletContext();
-        
-        this.allowPreviewMode = CmsControlUtil.getCmsBoolInitParam(servletContext, "cmsAllowPreviewMode", false); // 2016: new
-        this.previewModeParamName = CmsControlUtil.getPreviewModeDefaultParamName(servletContext);
-        
-        this.defaultSourceServletPath = CmsControlUtil.getDefaultSpecificServletPath(this.servletContext, "cmsDefaultSourceServletPath");
-        this.defaultForwardServletPath = CmsControlUtil.getDefaultSpecificServletPath(this.servletContext, "cmsDefaultForwardServletPath");
-        this.defaultTargetServletPath = CmsControlUtil.getDefaultSpecificServletPath(this.servletContext, "cmsDefaultTargetServletPath");
-        
-        this.setResponseBrowserNoCache = CmsControlUtil.getCmsBoolInitParam(this.servletContext, 
-                "setResponseBrowserNoCache", this.setResponseBrowserNoCache);
-        
-        this.alwaysUseDefaultForwardServletPath = CmsControlUtil.getCmsBoolInitParam(this.servletContext, 
-                "alwaysUseDefaultForwardServletPath", this.alwaysUseDefaultForwardServletPath);
-        this.defaultForwardExtraPathInfo = CmsControlUtil.getCmsBoolInitParam(this.servletContext, 
-                "defaultForwardExtraPathInfo", this.defaultForwardExtraPathInfo);
-        this.defaultSourceFromContextRoot = CmsControlUtil.getCmsBoolInitParam(this.servletContext, 
-                "defaultSourceFromContextRoot", this.defaultSourceFromContextRoot);
-        this.defaultForwardFromContextRoot = CmsControlUtil.getCmsBoolInitParam(this.servletContext, 
-                "defaultForwardFromContextRoot", this.defaultForwardFromContextRoot);
-        
+
         // hasControllerHint false because process filter being present doesn't really guarantee a controller is there
-        CmsWebSiteInfo.registerCmsWebSite(this.servletContext, false);
+        CmsWebSiteInfo webSiteInfo = CmsWebSiteInfo.registerCmsWebSite(this.servletContext, false);
+        this.webSiteConfig = CmsWebSiteInfo.getWebSiteConfigOrDefaults(webSiteInfo, servletContext);
     }
 
     @Override
@@ -193,7 +163,7 @@ public class CmsProcessFilter implements Filter {
             request.setAttribute("cmsOrigRequestSourcePath", origSourcePath);
             request.setAttribute("cmsOrigRequestQueryString", request.getQueryString());
             
-            if (setResponseBrowserNoCache) {
+            if (webSiteConfig.isSetResponseBrowserNoCache()) {
                 if (CmsUtil.verboseOn()) {
                     Debug.logInfo("Cms: Setting browser no-proxy no-cache response" + CmsControlUtil.getReqLogIdDelimStr(request), module);
                 }
@@ -230,14 +200,14 @@ public class CmsProcessFilter implements Filter {
         Delegator delegator = CmsControlUtil.getDelegatorForControl(request, servletContext);
         String webSiteId = CmsControlUtil.getWebSiteIdForControl(request, servletContext);
         // 2016: check render mode
-        CmsCallType renderMode = CmsControlUtil.checkRenderMode(request, previewModeParamName, allowPreviewMode);
+        CmsCallType renderMode = CmsControlUtil.checkRenderMode(request, webSiteConfig.getPreviewModeParamName(), webSiteConfig.isAllowPreviewMode());
         
         // 2017-11: _SCP_FWDROOTURIS_ instructs ContextFilter (Scipio feature) to forward these root request URIs,
         // if configured to do so using forwardRootControllerUris.
         // This allows CMS mappings to follow the controller URI config.
         if (request.getAttribute("cmsControlUris") == null) {
             Set<String> cmsControlUris = CmsProcessMapping.getWorker().getRequestUrisUnderControl(delegator, webSiteId, RequestHandler.getControlServletPath(request), 
-                    defaultSourceServletPath, defaultSourceFromContextRoot, renderMode.cachingAllowed());
+                    webSiteConfig.getDefaultSourceServletPath(), webSiteConfig.getDefaultSourceFromContextRoot(), renderMode.cachingAllowed());
             request.setAttribute("cmsControlUris", cmsControlUris);
             if (request.getAttribute("_SCP_FWDROOTURIS_") == null) {
                 request.setAttribute("_SCP_FWDROOTURIS_", cmsControlUris);
@@ -254,7 +224,7 @@ public class CmsProcessFilter implements Filter {
             requestPath = CmsProcessMapping.getRequestPath(request);
 
             FindByRequestResult findRes = CmsProcessMapping.getWorker().findByRequestPath(delegator, requestPath, webSiteId, 
-                    defaultSourceServletPath, defaultSourceFromContextRoot,
+                    webSiteConfig.getDefaultSourceServletPath(), webSiteConfig.getDefaultSourceFromContextRoot(),
                     renderMode.isPreview(), renderMode.cachingAllowed(),
                     request);
             mapping = findRes.mapping;
@@ -311,14 +281,14 @@ public class CmsProcessFilter implements Filter {
             }
         } else {
             String effectiveTargetServletPath;
-            if (this.alwaysUseDefaultForwardServletPath) {
-                effectiveTargetServletPath = this.defaultForwardServletPath;
+            if (webSiteConfig.isAlwaysUseDefaultForwardServletPath()) {
+                effectiveTargetServletPath = webSiteConfig.getDefaultForwardServletPath();
             } else {
-                effectiveTargetServletPath = CmsDataObject.nonEmptyOrDefault(mapping.getTargetServletPath(), defaultTargetServletPath);
+                effectiveTargetServletPath = CmsDataObject.nonEmptyOrDefault(mapping.getTargetServletPath(), webSiteConfig.getDefaultTargetServletPath());
             }
             
             String forwardPathRequestUri = mapping.getForwardPathRequestUri(request, 
-                    this.defaultForwardServletPath, effectiveTargetServletPath, defaultForwardFromContextRoot);
+                    webSiteConfig.getDefaultForwardServletPath(), effectiveTargetServletPath, webSiteConfig.getDefaultForwardFromContextRoot());
             
             if (UtilValidate.isNotEmpty(forwardPathRequestUri)) {
                 if (CmsUtil.verboseOn()) {
@@ -340,7 +310,7 @@ public class CmsProcessFilter implements Filter {
                 //request.setAttribute("cmsRequestServletPath", CmsControlUtil.normalizeServletPathNoNull(request.getServletPath()));
                 //request.setAttribute("cmsRequestPath", CmsControlUtil.normalizeServletRootRequestPathNoNull(request.getPathInfo()));
                 
-                boolean forwardExtraPathInfo = mapping.isForwardExtraPathInfoLogical(defaultForwardExtraPathInfo);
+                boolean forwardExtraPathInfo = mapping.isForwardExtraPathInfoLogical(webSiteConfig.getDefaultForwardExtraPathInfo());
                 
                 String fullForwardPath;
                 if (forwardExtraPathInfo && UtilValidate.isNotEmpty(extraPathInfo)) {

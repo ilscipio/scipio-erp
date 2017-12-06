@@ -19,6 +19,7 @@ import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -26,13 +27,16 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.webapp.WebAppUtil;
 import org.xml.sax.SAXException;
 
+import com.ilscipio.scipio.ce.util.PathUtil;
 import com.ilscipio.scipio.ce.webapp.filter.UrlRewriteConf;
-import com.ilscipio.scipio.product.category.CatalogUrlType;
 import com.ilscipio.scipio.product.seo.SeoCatalogTraverser;
 import com.ilscipio.scipio.product.seo.SeoCatalogUrlWorker;
+import com.ilscipio.scipio.product.seo.UrlGenStats;
 import com.redfin.sitemapgenerator.SitemapIndexGenerator;
 import com.redfin.sitemapgenerator.WebSitemapGenerator;
 import com.redfin.sitemapgenerator.WebSitemapUrl;
@@ -67,12 +71,17 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     
     protected final String fullSitemapDir;
     
-    protected Map<CatalogUrlType, EntityHandler> entityHandlers = null;
-    protected EntityHandler productEntityHandler = null; // opt
-    protected EntityHandler categoryEntityHandler = null; // opt
+    public enum ElemType { CATEGORY, PRODUCT, CONTENT }
+    
+    protected Map<ElemType, ElemHandler> elemHandlers = null;
+    protected ElemHandler categoryElemHandler = null; // optimization
+    protected ElemHandler productElemHandler = null; // optimization
+    protected ElemHandler contentElemHandler = null; // optimization
+
+    protected final Map<String, ?> servCtxOpts;
 
     protected SitemapGenerator(Delegator delegator, LocalDispatcher dispatcher, List<Locale> locales, String webSiteId, GenericValue webSite, GenericValue productStore, String baseUrl, String sitemapContextPath, String contextPath, SitemapConfig config,
-            SeoCatalogUrlWorker urlWorker, UrlRewriteConf urlRewriteConf, SitemapTraversalConfig travConfig) throws GeneralException, IOException, URISyntaxException, SAXException {
+            SeoCatalogUrlWorker urlWorker, UrlRewriteConf urlRewriteConf, SitemapTraversalConfig travConfig, Map<String, ?> servCtxOpts) throws GeneralException, IOException, URISyntaxException, SAXException {
         super(delegator, dispatcher, travConfig);
         this.locales = locales;
         this.webSiteId = webSiteId;
@@ -86,11 +95,12 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         this.urlRewriteConf = urlRewriteConf;
         this.webappInfo = WebAppUtil.getWebappInfoFromWebsiteId(webSiteId);
         this.fullSitemapDir = config.getSitemapDirUrlLocation(webappInfo.getLocation());
+        this.servCtxOpts = servCtxOpts;
         getSitemapDirFile(); // test this for exception
         reset();
     }
 
-    public static SitemapGenerator getWorkerForWebsite(Delegator delegator, LocalDispatcher dispatcher, String webSiteId, boolean useCache) throws GeneralException, IOException, URISyntaxException, SAXException, IllegalArgumentException {
+    public static SitemapGenerator getWorkerForWebsite(Delegator delegator, LocalDispatcher dispatcher, String webSiteId, Map<String, ?> servCtxOpts, boolean useCache) throws GeneralException, IOException, URISyntaxException, SAXException, IllegalArgumentException {
         // TODO: LOCALIZE WITH PROP MESSAGE EXCEPTIONS
         
         GenericValue webSite = delegator.findOne("WebSite", UtilMisc.toMap("webSiteId", webSiteId), useCache);
@@ -103,10 +113,10 @@ public class SitemapGenerator extends SeoCatalogTraverser {
 
         SitemapConfig config = SitemapConfig.getSitemapConfigForWebsite(delegator, dispatcher, webSiteId);
         
-        return getWorkerForWebsite(delegator, dispatcher, webSite, productStore, config, useCache);
+        return getWorkerForWebsite(delegator, dispatcher, webSite, productStore, config, servCtxOpts, useCache);
     }
     
-    public static SitemapGenerator getWorkerForWebsite(Delegator delegator, LocalDispatcher dispatcher, GenericValue webSite, GenericValue productStore, SitemapConfig config, boolean useCache) throws GeneralException, IOException, URISyntaxException, SAXException {
+    public static SitemapGenerator getWorkerForWebsite(Delegator delegator, LocalDispatcher dispatcher, GenericValue webSite, GenericValue productStore, SitemapConfig config, Map<String, ?> servCtxOpts, boolean useCache) throws GeneralException, IOException, URISyntaxException, SAXException {
         String webSiteId = webSite.getString("webSiteId");
         if (config == null) throw new IOException("no valid sitemap config for website '" + webSiteId + "'");
         String sitemapContextPath = config.getSitemapContextPath();
@@ -126,14 +136,15 @@ public class SitemapGenerator extends SeoCatalogTraverser {
             urlRewriteConf = UrlRewriteConf.loadConf(config.getUrlConfPath());
         }
         
-        SitemapTraversalConfig travConfig = (SitemapTraversalConfig) new SitemapTraversalConfig(config).setUseCache(useCache);
+        SitemapTraversalConfig travConfig = (SitemapTraversalConfig) new SitemapTraversalConfig(config).setDoContent(config.isDoContent()).setUseCache(useCache);
         return new SitemapGenerator(delegator, dispatcher, 
                 config.getLocalesOrDefault(webSite, productStore), 
                 webSiteId, webSite, productStore,
                 baseUrl, sitemapContextPath, contextPath, config,
                 SeoCatalogUrlWorker.getInstance(delegator, webSiteId),
                 urlRewriteConf,
-                travConfig);
+                travConfig,
+                servCtxOpts);
     }
 
     public static class SitemapTraversalConfig extends SeoTraversalConfig {
@@ -152,7 +163,11 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     public SitemapTraversalConfig getTravConfig() {
         return (SitemapTraversalConfig) travConfig;
     }
-    
+
+    protected Map<String, ?> getServCtxOpts() {
+        return servCtxOpts;
+    }
+
     public class SitemapTraversalState extends SeoTraversalState {
         Map<Locale, List<String>> trailNames; // reset for every new ProdCatalogCategory
         
@@ -192,7 +207,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     @Override
     public void reset() throws GeneralException {
         super.reset();
-        resetEntityHandlers();
+        resetElemHandlers();
         //resetTrailNames(); // moved to TraversalState
     }
 
@@ -270,10 +285,36 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     }
     
     /**
-     * The main iteration call - wrapper around {@link #traverseCategoriesDepthFirst(List)}.
+     * The main iteration call for product/category sitemap generation - wrapper 
+     * around {@link #traverseCategoriesDepthFirst(List)}, plus content.
      */
-    public void buildSitemapDeepForProductStore() throws GeneralException {
+    public void buildSitemapDeepForWebsite() throws GeneralException {
         traverseProductStoreDfs(productStore);
+        buildSitemapForContent();
+    }
+ 
+    /**
+     * Content link generation.
+     */
+    public void buildSitemapForContent() throws GeneralException {
+        if (!config.isDoContent()) return;
+        buildSitemapForCmsPage();
+    }
+    
+    /**
+     * CMS link generation.
+     */
+    public void buildSitemapForCmsPage() throws GeneralException {
+        if (!config.isDoCmsPage()) return;
+        
+        // TODO: REVIEW: locale handling
+        Locale contentLocale = getDefaultLocale();
+        List<String> uriList = getCmsUriList(contentLocale);
+        if (uriList == null || uriList.size() == 0) return;
+        
+        for(String uri : uriList) {
+            buildSitemapCmsPageLink(uri, contentLocale);
+        }
     }
     
     @Override
@@ -360,15 +401,15 @@ public class SitemapGenerator extends SeoCatalogTraverser {
 
     @Override
     public void visitCategory(GenericValue productCategory, TraversalState state) throws GeneralException {
-        buildSitemapCategory(productCategory, getTrailNames(state));
+        buildSitemapCategoryLink(productCategory, getTrailNames(state));
     }
 
     @Override
     public void visitProduct(GenericValue product, TraversalState state) throws GeneralException {
-        buildSitemapProduct(product, getTrailNames(state));
+        buildSitemapProductLink(product, getTrailNames(state));
     }
 
-    protected void buildSitemapCategory(GenericValue productCategory, Map<Locale, List<String>> trailNames) throws GeneralException {
+    protected void buildSitemapCategoryLink(GenericValue productCategory, Map<Locale, List<String>> trailNames) throws GeneralException {
         String productCategoryId = productCategory.getString("productCategoryId");
         try {
             
@@ -383,7 +424,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
             if (Debug.verboseOn()) Debug.logVerbose(getLogMsgPrefix()+"Processing category url: " + url, module);
             
             WebSitemapUrl libUrl = buildSitemapLibUrl(url, null);
-            getCategoryHandler().addUrl(libUrl);
+            getCategoryElemHandler().addUrl(libUrl);
             getStats().categorySuccess++;
         } catch(Exception e) {
             stats.categoryError++;
@@ -391,7 +432,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         }
     }
     
-    protected void buildSitemapProduct(GenericValue product, Map<Locale, List<String>> trailNames) throws GeneralException {
+    protected void buildSitemapProductLink(GenericValue product, Map<Locale, List<String>> trailNames) throws GeneralException {
         if (!config.isIncludeVariant() && "Y".equals(product.getString("isVariant"))) {
             stats.productSkipped++;
             return;
@@ -411,7 +452,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
             if (Debug.verboseOn()) Debug.logVerbose(getLogMsgPrefix()+"Processing product url: " + url, module);
 
             WebSitemapUrl libUrl = buildSitemapLibUrl(url, config.isUseProductLastModDate() ? product.getTimestamp("lastModifiedDate") : null);
-            getProductHandler().addUrl(libUrl);
+            getProductElemHandler().addUrl(libUrl);
             stats.productSuccess++;
             
             // TODO?: is there need to do variants (not explicitly associated to category)? 
@@ -424,32 +465,57 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         } 
     }
 
-    protected void resetEntityHandlers() {
-        this.entityHandlers = createEntityHandlers();
-        this.productEntityHandler = entityHandlers.get(CatalogUrlType.PRODUCT);
-        this.categoryEntityHandler = entityHandlers.get(CatalogUrlType.CATEGORY);
+    protected void buildSitemapCmsPageLink(String uri, Locale locale) {
+        try {
+            uri = PathUtil.concatPaths(getContextPath(), uri);
+            String url = postprocessUrl(uri);
+            
+            if (Debug.verboseOn()) Debug.logVerbose(getLogMsgPrefix()+"Processing CMS page url: " + url, module);
+
+            WebSitemapUrl libUrl = buildSitemapLibUrl(url, null);
+            getContentElemHandler().addUrl(libUrl);
+            
+            stats.contentSuccess++;
+        } catch(Exception e) {
+            stats.contentError++;
+            Debug.logError(getLogErrorPrefix()+"Error processing cms page URI: " + uri + ": " + e.getMessage(), module);
+        }
+    }
+
+    protected void resetElemHandlers() {
+        this.elemHandlers = createElemHandlers();
+        this.categoryElemHandler = elemHandlers.get(ElemType.CATEGORY);
+        this.productElemHandler = elemHandlers.get(ElemType.PRODUCT);
+        this.contentElemHandler = elemHandlers.get(ElemType.CONTENT);
     }
     
-    protected Map<CatalogUrlType, EntityHandler> createEntityHandlers() {
-        Map<CatalogUrlType, EntityHandler> entityHandlers = new EnumMap<CatalogUrlType, EntityHandler>(CatalogUrlType.class);
-        if (config.isDoProduct()) {
-            entityHandlers.put(CatalogUrlType.PRODUCT, new ProductEntityHandler());
-        }
+    protected Map<ElemType, ElemHandler> createElemHandlers() {
+        Map<ElemType, ElemHandler> elemHandlers = new EnumMap<>(ElemType.class);
         if (config.isDoCategory()) {
-            entityHandlers.put(CatalogUrlType.CATEGORY, new CategoryEntityHandler());
+            elemHandlers.put(ElemType.CATEGORY, new CategoryElemHandler());
         }
-        return entityHandlers;
+        if (config.isDoProduct()) {
+            elemHandlers.put(ElemType.PRODUCT, new ProductElemHandler());
+        }
+        if (config.isDoContent()) {
+            elemHandlers.put(ElemType.CONTENT, new ContentElemHandler());
+        }
+        return elemHandlers;
     }
     
-    protected EntityHandler getProductHandler() {
-        return productEntityHandler;
+    protected ElemHandler getCategoryElemHandler() {
+        return categoryElemHandler;
     }
     
-    protected EntityHandler getCategoryHandler() {
-        return categoryEntityHandler;
+    protected ElemHandler getProductElemHandler() {
+        return productElemHandler;
     }
     
-    protected abstract class EntityHandler {
+    protected ElemHandler getContentElemHandler() {
+        return contentElemHandler;
+    }
+    
+    protected abstract class ElemHandler {
         private WebSitemapGenerator wsg = null;
         private List<String> sitemapFiles = new ArrayList<>();
         private long urlCount = 0;
@@ -497,21 +563,22 @@ public class SitemapGenerator extends SeoCatalogTraverser {
             wsg = null;
         }
         
-        protected abstract CatalogUrlType getType();
+        protected abstract ElemType getType();
     }
 
-    protected class ProductEntityHandler extends EntityHandler {
-        @Override
-        protected CatalogUrlType getType() { return CatalogUrlType.PRODUCT; }
-        @Override
-        public String getTypeFilenamePrefix() { return config.getProductFilePrefix(); }
+    protected class CategoryElemHandler extends ElemHandler {
+        @Override protected ElemType getType() { return ElemType.CATEGORY; }
+        @Override public String getTypeFilenamePrefix() { return config.getCategoryFilePrefix(); }
     }
     
-    protected class CategoryEntityHandler extends EntityHandler {
-        @Override
-        protected CatalogUrlType getType() { return CatalogUrlType.CATEGORY; }
-        @Override
-        public String getTypeFilenamePrefix() { return config.getCategoryFilePrefix(); }
+    protected class ProductElemHandler extends ElemHandler {
+        @Override protected ElemType getType() { return ElemType.PRODUCT; }
+        @Override public String getTypeFilenamePrefix() { return config.getProductFilePrefix(); }
+    }
+    
+    protected class ContentElemHandler extends ElemHandler {
+        @Override protected ElemType getType() { return ElemType.CONTENT; }
+        @Override public String getTypeFilenamePrefix() { return config.getContentFilePrefix(); }
     }
     
     protected WebSitemapUrl buildSitemapLibUrl(String url, Timestamp lastModDate) throws MalformedURLException {
@@ -524,15 +591,15 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     
     protected List<String> getAllSitemapFilenames() {
         List<String> sitemapFiles = new ArrayList<>();
-        for(EntityHandler handler : entityHandlers.values()) {
-            sitemapFiles.addAll(handler.getSitemapFiles());
+        for(ElemType elemType : ElemType.values()) { // always same order
+            sitemapFiles.addAll(elemHandlers.get(elemType).getSitemapFiles());
         }
         return sitemapFiles;
     }
     
     public void commitSitemaps() {
-        for(EntityHandler handler : entityHandlers.values()) {
-            handler.commitSitemapFile();
+        for(ElemType elemType : ElemType.values()) { // always same order
+            elemHandlers.get(elemType).commitSitemapFile();
         }
     }
     
@@ -611,6 +678,21 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         return logPrefix+"Error generating sitemap for website '" + webSiteId + "': ";
     }
 
+    protected List<String> getCmsUriList(Locale contentLocale) throws GeneralException {
+        Map<String, Object> servCtx = getDispatcher().getDispatchContext()
+                .makeValidContext("cmsGetWebsiteContentUris", ModelService.IN_PARAM, getServCtxOpts());
+        servCtx.put("webSiteId", config.getWebSiteId());
+        servCtx.put("useCache", isUseCache());
+        // TODO: REVIEW: locale handling is loosely defined at the moment
+        servCtx.put("contentLocale", contentLocale);
+        Map<String, Object> servResult = getDispatcher().runSync("cmsGetWebsiteContentUris", servCtx);
+        if (ServiceUtil.isSuccess(servResult)) {
+            return UtilGenerics.checkList(servResult.get("uriList"));
+        } else {
+            throw new GeneralException("Could not get website cms URIs: " + ServiceUtil.getErrorMessage(servResult));
+        }
+    }
+    
     // TODO: move (generic)
     static EntityCondition makeFieldPossibleValuesCond(String fieldName, Collection<?> values) {
         //if (values == null || values.isEmpty()) return null;

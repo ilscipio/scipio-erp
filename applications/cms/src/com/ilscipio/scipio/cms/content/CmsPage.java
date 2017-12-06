@@ -610,6 +610,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
                 "primaryPath", getPrimaryPath(webSiteId), 
                 "primaryPathExpanded", getPrimaryPathExpanded(webSiteId),
                 "primaryTargetPath", getPrimaryTargetPath(webSiteId),
+                "primaryPathIndexable", getPrimaryPathIndexable(webSiteId),
                 "path", getPrimaryPath(webSiteId), // TODO: DEPRECATED: REMOVE
                 "webSiteId", webSiteId,
                 "defaultWebSiteId", getWebSiteId(),
@@ -724,6 +725,15 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         CmsProcessMapping primaryProcessMapping = getPrimaryProcessMapping(webSiteId);
         if (primaryProcessMapping != null) {
             return primaryProcessMapping.getTargetPath();
+        } else {
+            return null;
+        }
+    }
+    
+    public Boolean getPrimaryPathIndexable(String webSiteId) {
+        CmsProcessMapping primaryProcessMapping = getPrimaryProcessMapping(webSiteId);
+        if (primaryProcessMapping != null) {
+            return primaryProcessMapping.getIndexable();
         } else {
             return null;
         }
@@ -1071,6 +1081,11 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
             }
             if (fields.containsKey("active")) {
                 processFields.put("active", fields.get("active"));
+            }
+            if (fields.containsKey("primaryPathIndexable")) {
+                processFields.put("indexable", fields.get("primaryPathIndexable"));
+            } else if (fields.containsKey("indexable")) {
+                processFields.put("indexable", fields.get("indexable"));
             }
             if (fields.containsKey("webSiteId")) {
                 processFields.put("sourceWebSiteId", fields.get("webSiteId"));

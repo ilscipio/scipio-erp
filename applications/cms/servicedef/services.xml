@@ -4,7 +4,7 @@
     <description>CMS Services</description>
     <vendor></vendor>
     <version>1.0</version>
-    
+
     <!-- ========================================================= -->
     <!-- Generic services -->
     <!-- ========================================================= -->
@@ -15,21 +15,21 @@
         <implements service="permissionInterface"/>
     </service>
 
-    <service name="cmsGetAdminDescriptors" engine="java" auth="true" 
+    <service name="cmsGetAdminDescriptors" engine="java" auth="true"
         location="com.ilscipio.scipio.cms.CmsServices" invoke="getAdminDescriptors">
         <permission-service service-name="cmsGenericPermission" main-action="VIEW"/>
-        <attribute name="pageTemplates" mode="OUT" type="Array" optional="false" />
-        <attribute name="assetTemplates" mode="OUT" type="Array" optional="false" />        
-        <attribute name="pages" mode="OUT" type="Array" optional="false" />
-    </service> 
-    
+        <attribute name="pageTemplates" mode="OUT" type="Array" optional="false"/>
+        <attribute name="assetTemplates" mode="OUT" type="Array" optional="false"/>
+        <attribute name="pages" mode="OUT" type="Array" optional="false"/>
+    </service>
+
     <service name="cmsExportDataFormatInterface" engine="interface">
         <description>CMS data export functionality formatting options</description>
         <!-- TODO: NOT YET IMPLEMENTED - may change - see cmsExportDataAsXml -->
-        
+
         <!-- INPUT -->
         <attribute name="outputMode" mode="IN" type="String" optional="false">
-            <description>Output mode - one of: SF_IL (inline result as resultText), 
+            <description>Output mode - one of: SF_IL (inline result as resultText),
                 SF_FS (single file on server), MF_FS (multi file on server),
                 SF_DL (no result; causes executeExport=false and caller must use worker)</description>
         </attribute>
@@ -44,21 +44,21 @@
         <attribute name="maxRecordsPerFile" mode="IN" type="Integer" optional="true">
             <description>For multi-file output: max records per file (default: 0 - unlimited)</description>
         </attribute>
-        
+
         <!-- OUTPUT -->
         <attribute name="resultText" mode="OUT" type="String" optional="true">
             <description>Inline output for SF_DL mode</description>
         </attribute>
-        <attribute name="numberOfEntities" mode="OUT" type="Integer" optional="true" />
-        <attribute name="numberWritten" mode="OUT" type="Integer" optional="true" />
+        <attribute name="numberOfEntities" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="numberWritten" mode="OUT" type="Integer" optional="true"/>
         <attribute name="dataExportWorker" mode="OUT" type="com.ilscipio.scipio.cms.data.importexport.CmsDataExportWorker" optional="true">
             <description>Returns the data export worker instance used to generate the query</description>
         </attribute>
     </service>
-    
+
     <service name="cmsExportDataOptionsInterface" engine="interface">
         <description>CMS data export functionality processing options</description>
-        
+
         <!-- GENERAL OPTIONS -->
         <attribute name="presetConfigName" mode="IN" type="String" optional="true">
             <description>Name of a preset config that will be used to pre-fill other values such as targetEntityNames and influence behaviors</description>
@@ -70,11 +70,11 @@
             <description>The entity names to query as part of the main query; NOTE: For MAJOR_OBJECT grouping only Major entities from this list are used, while non-major ones listed have no effect</description>
         </attribute>
         <attribute name="exportFilesAsTextData" mode="IN" type="Boolean" optional="true">
-            <description>If true, all template files (DataResouce.objectInfo component://) will be read and output as 
+            <description>If true, all template files (DataResouce.objectInfo component://) will be read and output as
                 ElectronicText records (default: false)</description>
         </attribute>
         <attribute name="includeContentRefs" mode="IN" type="Boolean" optional="true">
-            <description>If true, Content/DataResource/Electronic records are output; if false, they are omitted 
+            <description>If true, Content/DataResource/Electronic records are output; if false, they are omitted
                 entirely (default: true)</description>
         </attribute>
         <attribute name="transTimeout" mode="IN" type="Integer" optional="true">
@@ -83,15 +83,15 @@
 
         <!-- GENERAL QUERY/FILTER OPTIONS -->
         <attribute name="entityCond" mode="IN" type="org.ofbiz.entity.condition.EntityCondition" optional="true">
-            <description>Condition applied to every entity in the main query; 
+            <description>Condition applied to every entity in the main query;
                 NOTE: For MAJOR_OBJECT grouping, this is only applied to the main query entities and not the lateral-visiting related entities</description>
         </attribute>
         <attribute name="entityDateCond" mode="IN" type="org.ofbiz.entity.condition.EntityCondition" optional="true">
-            <description>Date condition applied to every entity in the main query that supports timestamps; 
+            <description>Date condition applied to every entity in the main query that supports timestamps;
                 NOTE: For MAJOR_OBJECT grouping, this is only applied to the main query entities and not the lateral-visiting related entities</description>
         </attribute>
         <attribute name="entityCondMap" mode="IN" type="Map" optional="true">
-            <description>Map of entity name to conditions to apply to it, for entities in the main query; 
+            <description>Map of entity name to conditions to apply to it, for entities in the main query;
                 NOTE: For MAJOR_OBJECT grouping, this is only applied to the main query entities and not the lateral-visiting related entities</description>
         </attribute>
         <attribute name="mainEfo" mode="IN" type="org.ofbiz.entity.util.EntityFindOptions" optional="true">
@@ -100,24 +100,24 @@
         <attribute name="useCommonEfo" mode="IN" type="Boolean" optional="true">
             <description>If true, applies a common set of EntityFindOptions to the query; if false, does not apply any common find settings (default: false)</description>
         </attribute>
-        
+
         <!-- PK FILTER OPTIONS -->
         <attribute name="entityPkMap" mode="IN" type="Map" optional="true">
             <description>Map of entity names to single-field PK values to target; WARN: only supports entities with single-field PK</description>
         </attribute>
         <attribute name="entityNoPkFindAll" mode="IN" type="Boolean" optional="true">
             <description>If true, entities part of targetEntityNames having no entries in entityPkMap or singlePkfEntityName
-                simply do a find-all operation (no PK filter); if false, entities not named are excluded from 
+                simply do a find-all operation (no PK filter); if false, entities not named are excluded from
                 the main query; WARN: entityNoPkFindAll=false only works properly for recordGrouping==MAJOR_OBJECT (default: true)</description>
         </attribute>
         <attribute name="singlePkfEntityName" mode="IN" type="String" optional="true">
-            <description>Same as entityPkMap, but designates a single entity name whose PK values should be 
+            <description>Same as entityPkMap, but designates a single entity name whose PK values should be
                 listed in singlePkfIdList</description>
         </attribute>
         <attribute name="singlePkfIdList" mode="IN" type="List" optional="true">
             <description>Single-field PK values to target for the entity named by singlePkfEntityName; WARN: only supports entities with single-field PK</description>
         </attribute>
-        
+
         <!-- SPECIALIZED FILTER OPTIONS -->
         <attribute name="attribTmplAssocType" mode="IN" type="String" optional="true">
             <description>For CmsAttributeTemplate main query, PAGE_TEMPLATE returns only page template attributes while
@@ -127,48 +127,48 @@
             <description>For CmsProcessMapping/CmsPageSpecialMapping main query, controls whether to include
                 only special page mappings (), </description>
         </attribute>
-        
+
         <!-- MAJOR_OBJECT GROUPING OPTIONS (recordGrouping==MAJOR_OBJECT) -->
         <attribute name="includeMajorDeps" mode="IN" type="Boolean" optional="true">
-            <description>For MAJOR_OBJECT grouping: If true, during lateral traversal (through entity relations) we will 
-                include dependencies from Major entities other than the main queried one; if false, we 
+            <description>For MAJOR_OBJECT grouping: If true, during lateral traversal (through entity relations) we will
+                include dependencies from Major entities other than the main queried one; if false, we
                 only query the main major entity and its non-major related entities (default: false)</description>
         </attribute>
         <attribute name="enterPresetConfigName" mode="IN" type="String" optional="true">
-            <description>For MAJOR_OBJECT grouping: Name of a preset config whose entity names will be used to pre-fill 
+            <description>For MAJOR_OBJECT grouping: Name of a preset config whose entity names will be used to pre-fill
                 the enterEntityNames parameter specifically</description>
         </attribute>
         <attribute name="enterEntityNames" mode="IN" type="List" optional="true">
-            <description>For MAJOR_OBJECT grouping: Limits which generic (non-major) entities we visit 
+            <description>For MAJOR_OBJECT grouping: Limits which generic (non-major) entities we visit
                 laterally (through entity relations) to the specified entities</description>
         </attribute>
         <attribute name="enterMajorPresetConfigName" mode="IN" type="String" optional="true">
-            <description>For MAJOR_OBJECT grouping: Name of a preset config whose entity names will be used to pre-fill 
+            <description>For MAJOR_OBJECT grouping: Name of a preset config whose entity names will be used to pre-fill
                 the enterMajorEntityNames parameter specifically</description>
         </attribute>
         <attribute name="enterMajorEntityNames" mode="IN" type="List" optional="true">
-            <description>For MAJOR_OBJECT grouping: When includeMajorDeps==true, limits which Major entities we visit 
+            <description>For MAJOR_OBJECT grouping: When includeMajorDeps==true, limits which Major entities we visit
                 laterally (through entity relations) to the specified entities</description>
         </attribute>
     </service>
-    
-    <service name="cmsExportDataAsXml" engine="java" auth="true" 
+
+    <service name="cmsExportDataAsXml" engine="java" auth="true"
         location="com.ilscipio.scipio.cms.data.importexport.CmsImportExportServices" invoke="exportDataAsXml">
         <description>TODO: NOT IMPLEMENTED - CMS versatile data export service - supports inline, single file and multi-file</description>
         <permission-service service-name="cmsGenericPermission" main-action="VIEW"/>
         <implements service="cmsExportDataFormatInterface"/>
         <implements service="cmsExportDataOptionsInterface"/>
     </service>
-    
-    <service name="cmsExportDataAsXmlInline" engine="java" auth="true" 
+
+    <service name="cmsExportDataAsXmlInline" engine="java" auth="true"
         location="com.ilscipio.scipio.cms.data.importexport.CmsImportExportServices" invoke="exportDataAsXmlInline">
         <description>CMS data export service - returns the XML inline as output string</description>
         <permission-service service-name="cmsGenericPermission" main-action="VIEW"/>
         <implements service="cmsExportDataOptionsInterface"/>
-        <attribute name="resultText" mode="OUT" type="String" optional="true" />
+        <attribute name="resultText" mode="OUT" type="String" optional="true"/>
     </service>
-    
-    <service name="cmsImportXmlData" engine="java" auth="true" 
+
+    <service name="cmsImportXmlData" engine="java" auth="true"
         location="com.ilscipio.scipio.cms.data.importexport.CmsImportExportServices" invoke="importXmlData">
         <description>Imports CMS data</description>
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
@@ -187,162 +187,165 @@
         <attribute name="primaryPathFromContextRoot" type="String" mode="IN" optional="true"/><!-- indicator Y/N -->
         <attribute name="primaryTargetPath" type="String" mode="IN" optional="true"/>
         <attribute name="path" type="String" mode="INOUT" optional="true"><description>DEPRECATED - use primaryPath</description></attribute><!-- TODO: REMOVE -->
-        <attribute name="webSiteId" type="String" mode="INOUT" optional="false" />
+        <attribute name="webSiteId" type="String" mode="INOUT" optional="false"/>
         <attribute name="pageTemplateId" type="String" mode="IN" optional="false"/>
         <attribute name="pageName" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
         <attribute name="pageId" type="String" mode="OUT" optional="false"/>
     </service>
-    
+
     <service name="cmsCopyPage" engine="java"
                 location="com.ilscipio.scipio.cms.content.CmsPageServices" invoke="copyPage" auth="true">
         <description>Copies a page</description>
         <permission-service service-name="cmsGenericPermission" main-action="CREATE"/>
         <attribute name="srcPageId" type="String" mode="IN" optional="false"/>
         <attribute name="srcVersionId" type="String" mode="IN" optional="true"/>
-        <attribute name="webSiteId" type="String" mode="INOUT" optional="false" />
+        <attribute name="webSiteId" type="String" mode="INOUT" optional="false"/>
         <attribute name="primaryPath" type="String" mode="INOUT" optional="true"/>
         <attribute name="primaryPathFromContextRoot" type="String" mode="IN" optional="true"/><!-- indicator Y/N -->
         <attribute name="pageName" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
         <attribute name="pageId" type="String" mode="OUT" optional="false"/>
     </service>
-    
-    <service name="cmsUpdatePageInfo" engine="java" auth="true" 
+
+    <service name="cmsUpdatePageInfo" engine="java" auth="true"
         location="com.ilscipio.scipio.cms.content.CmsPageServices" invoke="updatePageInfo">
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
-        <attribute name="pageId" mode="IN" type="String" optional="false" />
-        <attribute name="webSiteId" mode="IN" type="String" optional="true" />
-        <attribute name="primaryPath" mode="IN" type="String" optional="true" />
-        <attribute name="primaryPathFromContextRoot" mode="IN" type="String" optional="true" />
-        <attribute name="primaryTargetPath" mode="IN" type="String" optional="true" />
+        <attribute name="pageId" mode="IN" type="String" optional="false"/>
+        <attribute name="webSiteId" mode="IN" type="String" optional="true"/>
+        <attribute name="primaryPath" mode="IN" type="String" optional="true"/>
+        <attribute name="primaryPathFromContextRoot" mode="IN" type="String" optional="true"/>
+        <attribute name="primaryTargetPath" mode="IN" type="String" optional="true"/>
+        <attribute name="primaryPathIndexable" mode="IN" type="String" optional="true">
+            <description>The sitemap-indexable override indicator flag, for the page's primary process mapping</description>
+        </attribute>
         <attribute name="pageTemplateId" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
         <attribute name="pageName" type="String" mode="IN" optional="true"/>
     </service>
-    
-    <service name="cmsGetPage" engine="java" auth="true" 
+
+    <service name="cmsGetPage" engine="java" auth="true"
         location="com.ilscipio.scipio.cms.content.CmsPageServices" invoke="getPage">
         <description>Gets a page from the server. Either requires pageId or primaryPath+websiteId to be specified.</description>
         <permission-service service-name="cmsGenericPermission" main-action="VIEW"/>
-        <attribute name="request" mode="IN" type="javax.servlet.http.HttpServletRequest" optional="false" />
-        <attribute name="response" mode="IN" type="javax.servlet.http.HttpServletResponse" optional="false" />
-        <attribute name="pageId" mode="IN" type="String" optional="true" />
+        <attribute name="request" mode="IN" type="javax.servlet.http.HttpServletRequest" optional="false"/>
+        <attribute name="response" mode="IN" type="javax.servlet.http.HttpServletResponse" optional="false"/>
+        <attribute name="pageId" mode="IN" type="String" optional="true"/>
         <attribute name="primaryPath" mode="IN" type="String" optional="true"/>
-        <attribute name="webSiteId" mode="INOUT" type="String" optional="true" />
-        <attribute name="verifyWebSite" mode="IN" type="Boolean" optional="true" /><!-- default: false -->
-        <attribute name="useStaticWebSite" mode="IN" type="Boolean" optional="true" /><!-- default: false -->
-        <attribute name="versionId" mode="IN" type="String" optional="true" />
-        <attribute name="pageId" mode="OUT" type="String" optional="true" />
-        <attribute name="pageModel" mode="OUT" type="com.ilscipio.scipio.cms.content.CmsPage" optional="true" />
-        <attribute name="permission" mode="OUT" type="String" optional="true" />        
-        <attribute name="content" mode="OUT" type="Map" optional="true" />
-        <attribute name="meta" mode="OUT" type="Map" optional="true" />
-        <attribute name="variables" mode="OUT" type="List" optional="true" />
-        <attribute name="visitors" mode="OUT" type="String[]" optional="true" />    
-        <attribute name="template" mode="OUT" type="Map" optional="true" />
-        <attribute name="versionId" mode="OUT" type="String" optional="true" />
-        <attribute name="scriptTemplates" mode="OUT" type="List" optional="true" />
+        <attribute name="webSiteId" mode="INOUT" type="String" optional="true"/>
+        <attribute name="verifyWebSite" mode="IN" type="Boolean" optional="true"/><!-- default: false -->
+        <attribute name="useStaticWebSite" mode="IN" type="Boolean" optional="true"/><!-- default: false -->
+        <attribute name="versionId" mode="IN" type="String" optional="true"/>
+        <attribute name="pageId" mode="OUT" type="String" optional="true"/>
+        <attribute name="pageModel" mode="OUT" type="com.ilscipio.scipio.cms.content.CmsPage" optional="true"/>
+        <attribute name="permission" mode="OUT" type="String" optional="true"/>
+        <attribute name="content" mode="OUT" type="Map" optional="true"/>
+        <attribute name="meta" mode="OUT" type="Map" optional="true"/>
+        <attribute name="variables" mode="OUT" type="List" optional="true"/>
+        <attribute name="visitors" mode="OUT" type="String[]" optional="true"/>
+        <attribute name="template" mode="OUT" type="Map" optional="true"/>
+        <attribute name="versionId" mode="OUT" type="String" optional="true"/>
+        <attribute name="scriptTemplates" mode="OUT" type="List" optional="true"/>
     </service>
-    
-    <service name="cmsGetPages" engine="java" auth="true" 
+
+    <service name="cmsGetPages" engine="java" auth="true"
         location="com.ilscipio.scipio.cms.content.CmsPageServices" invoke="getPages">
         <description>Returns a list of available pages, including their description.</description>
         <permission-service service-name="cmsGenericPermission" main-action="VIEW"/>
-        <attribute name="request" mode="IN" type="javax.servlet.http.HttpServletRequest" optional="true" />
-        <attribute name="response" mode="IN" type="javax.servlet.http.HttpServletResponse" optional="true" />
-        <attribute name="webSiteId" mode="IN" type="String" optional="true" /><!-- NOTE: If omitted, returns its page with its primary process mapping webSiteId -->
-        <attribute name="short" mode="IN" type="Boolean" optional="true" />
-        <attribute name="editable" mode="IN" type="Boolean" optional="true" />        
-        <attribute name="pages" mode="OUT" type="List" optional="true" />        
+        <attribute name="request" mode="IN" type="javax.servlet.http.HttpServletRequest" optional="true"/>
+        <attribute name="response" mode="IN" type="javax.servlet.http.HttpServletResponse" optional="true"/>
+        <attribute name="webSiteId" mode="IN" type="String" optional="true"/><!-- NOTE: If omitted, returns its page with its primary process mapping webSiteId -->
+        <attribute name="short" mode="IN" type="Boolean" optional="true"/>
+        <attribute name="editable" mode="IN" type="Boolean" optional="true"/>
+        <attribute name="pages" mode="OUT" type="List" optional="true"/>
     </service>
-    
-    <service name="cmsGetCmsWebSites" engine="java" auth="true" 
+
+    <service name="cmsGetCmsWebSites" engine="java" auth="true"
         location="com.ilscipio.scipio.cms.CmsServices" invoke="getCmsWebSites">
         <description>Returns a list of WebSites that are hooked into CMS system.</description>
-        <permission-service service-name="cmsGenericPermission" main-action="VIEW"/>     
-        <attribute name="webSiteList" mode="OUT" type="List" optional="true" />   
-        <attribute name="webSiteIdSet" mode="OUT" type="Set" optional="true" />        
+        <permission-service service-name="cmsGenericPermission" main-action="VIEW"/>
+        <attribute name="webSiteList" mode="OUT" type="List" optional="true"/>
+        <attribute name="webSiteIdSet" mode="OUT" type="Set" optional="true"/>
     </service>
-    
-    <service name="cmsActivatePageVersion" engine="java" auth="true" 
+
+    <service name="cmsActivatePageVersion" engine="java" auth="true"
         location="com.ilscipio.scipio.cms.content.CmsPageServices" invoke="activatePageVersion">
         <description>Sets a specific version of the page as live version.</description>
-        <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>      
-        <attribute name="pageId" mode="IN" type="String" optional="false" />
-        <attribute name="versionId" mode="IN" type="String" optional="false" />
-        <attribute name="pageId" mode="OUT" type="String" optional="false" />
-        <attribute name="versionId" mode="OUT" type="String" optional="false" />        
+        <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
+        <attribute name="pageId" mode="IN" type="String" optional="false"/>
+        <attribute name="versionId" mode="IN" type="String" optional="false"/>
+        <attribute name="pageId" mode="OUT" type="String" optional="false"/>
+        <attribute name="versionId" mode="OUT" type="String" optional="false"/>
     </service>
-    
-    <service name="cmsAddPageVersion" engine="java" auth="true" 
+
+    <service name="cmsAddPageVersion" engine="java" auth="true"
         location="com.ilscipio.scipio.cms.content.CmsPageServices" invoke="addPageVersion">
         <description>Adds a new version of a page.</description>
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
-        <attribute name="request" mode="IN" type="javax.servlet.http.HttpServletRequest" optional="true" />        
-        <attribute name="pageId" mode="IN" type="String" optional="false" />
-        <attribute name="content" mode="IN" type="String" optional="false" allow-html="any" />
-        <attribute name="comment" mode="IN" type="String" optional="true"/>                
-        <attribute name="versionId" mode="OUT" type="String" optional="false" />        
+        <attribute name="request" mode="IN" type="javax.servlet.http.HttpServletRequest" optional="true"/>
+        <attribute name="pageId" mode="IN" type="String" optional="false"/>
+        <attribute name="content" mode="IN" type="String" optional="false" allow-html="any"/>
+        <attribute name="comment" mode="IN" type="String" optional="true"/>
+        <attribute name="versionId" mode="OUT" type="String" optional="false"/>
     </service>
-    
-    <service name="cmsDeletePage" engine="java" auth="true" 
+
+    <service name="cmsDeletePage" engine="java" auth="true"
         location="com.ilscipio.scipio.cms.content.CmsPageServices" invoke="deletePage">
         <permission-service service-name="cmsGenericPermission" main-action="DELETE"/>
-        <attribute name="pageId" mode="IN" type="String" optional="false" />
+        <attribute name="pageId" mode="IN" type="String" optional="false"/>
     </service>
-    
+
     <!-- FIXME: DUPLICATE SERVICE NAME WITH ONE BELOW - what is this?
-    <service name="cmsCreateUpdateAsset" engine="java" auth="true" 
+    <service name="cmsCreateUpdateAsset" engine="java" auth="true"
         location="com.ilscipio.scipio.cms.CmsServices" invoke="createUpdateAsset">
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
-        <attribute name="request" mode="IN" type="javax.servlet.http.HttpServletRequest" optional="false" />
-        <attribute name="assetId" mode="IN" type="String" optional="false" />
-        <attribute name="id" mode="IN" type="String" optional="true" />
-        <attribute name="permission" mode="OUT" type="String" optional="false" />
-        <attribute name="value" mode="IN" type="String" optional="false" />
-        <attribute name="list" mode="OUT" type="Map" optional="false" />
+        <attribute name="request" mode="IN" type="javax.servlet.http.HttpServletRequest" optional="false"/>
+        <attribute name="assetId" mode="IN" type="String" optional="false"/>
+        <attribute name="id" mode="IN" type="String" optional="true"/>
+        <attribute name="permission" mode="OUT" type="String" optional="false"/>
+        <attribute name="value" mode="IN" type="String" optional="false"/>
+        <attribute name="list" mode="OUT" type="Map" optional="false"/>
     </service>-->
-    
+
     <service name="cmsUpdateScriptAssocInterface" engine="interface">
         <attribute name="scriptAssocId" type="String" mode="IN" optional="true"/>
         <attribute name="scriptTemplateId" type="String" mode="IN" optional="true"/><!-- always optional and should not be passed if scriptAssocId is passed -->
         <attribute name="inputPosition" type="Long" mode="IN" optional="true"/>
         <attribute name="templateName" type="String" mode="IN" optional="true"/>
         <attribute name="scriptLang" type="String" mode="IN" optional="true"/>
-        <attribute name="templateLocation" type="String" mode="IN" optional="true"/> 
-        <attribute name="standalone" type="String" mode="IN" optional="true"/> 
+        <attribute name="templateLocation" type="String" mode="IN" optional="true"/>
+        <attribute name="standalone" type="String" mode="IN" optional="true"/>
         <attribute name="templateBody" type="String" mode="IN" optional="true"/>
         <attribute name="templateSource" type="String" mode="IN" optional="true"/>
-        <attribute name="invokeName" type="String" mode="IN" optional="true"/>  
+        <attribute name="invokeName" type="String" mode="IN" optional="true"/>
     </service>
-    
+
     <service name="cmsUpdatePageScript" engine="java" auth="true"
              location="com.ilscipio.scipio.cms.content.CmsPageServices" invoke="updatePageScript">
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
         <implements service="cmsUpdateScriptAssocInterface"/>
         <attribute name="pageId" type="String" mode="IN" optional="false"/>
     </service>
-    
+
     <service name="cmsDeletePageScriptAssoc" default-entity-name="CmsPageScriptAssoc" engine="entity-auto" invoke="delete" auth="true">
         <permission-service service-name="cmsGenericPermission" main-action="DELETE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    
+
     <service name="cmsDeleteScriptAndPageAssoc" engine="group" auth="true">
         <group>
             <invoke name="cmsDeletePageScriptAssoc"/>
             <invoke name="cmsDeleteScriptTemplateIfOrphan"/>
         </group>
     </service>
-    
+
     <!-- ========================================================= -->
     <!-- Template services -->
     <!-- ========================================================= -->
-    
+
     <!-- Page Templates -->
-    
-    <service name="cmsCreatePageTemplate" engine="java" auth="true" 
+
+    <service name="cmsCreatePageTemplate" engine="java" auth="true"
                 location="com.ilscipio.scipio.cms.template.CmsPageTemplateServices" invoke="createPageTemplate">
         <description>Creates a new PageTemplate</description>
         <permission-service service-name="cmsGenericPermission" main-action="CREATE"/>
@@ -351,11 +354,11 @@
         <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
         <attribute name="templateBody" type="String" mode="IN" optional="true" allow-html="any"/>
-        <attribute name="templateLocation" type="String" mode="IN" optional="true" />
-        <attribute name="templateSource" type="String" mode="IN" optional="true" /><!-- NOTE: can be omitted, but better to specify explicit, "Body" or "Location" -->
+        <attribute name="templateLocation" type="String" mode="IN" optional="true"/>
+        <attribute name="templateSource" type="String" mode="IN" optional="true"/><!-- NOTE: can be omitted, but better to specify explicit, "Body" or "Location" -->
     </service>
-    
-    <service name="cmsCopyPageTemplate" engine="java" auth="true" 
+
+    <service name="cmsCopyPageTemplate" engine="java" auth="true"
                 location="com.ilscipio.scipio.cms.template.CmsPageTemplateServices" invoke="copyPageTemplate">
         <description>Copies a PageTemplate</description>
         <permission-service service-name="cmsGenericPermission" main-action="CREATE"/>
@@ -365,62 +368,62 @@
         <attribute name="description" type="String" mode="IN" optional="true"/>
         <attribute name="pageTemplateId" type="String" mode="OUT" optional="false"/>
     </service>
-    
-    <service name="cmsUpdatePageTemplateInfo" engine="java" 
+
+    <service name="cmsUpdatePageTemplateInfo" engine="java"
                 location="com.ilscipio.scipio.cms.template.CmsPageTemplateServices" invoke="updatePageTemplateInfo" auth="true">
         <description>Updates basic page template info (only that can be changed).</description>
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
         <attribute name="pageTemplateId" type="String" mode="IN" optional="false"/>
         <attribute name="templateName" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
-        <attribute name="webSiteId" mode="IN" type="String" optional="true" />
+        <attribute name="webSiteId" mode="IN" type="String" optional="true"/>
     </service>
-    
+
     <service name="cmsGetPageTemplate" engine="java"
                 location="com.ilscipio.scipio.cms.template.CmsPageTemplateServices" invoke="getPageTemplate" auth="true">
         <description>Gets a page template</description>
         <permission-service service-name="cmsGenericPermission" main-action="VIEW"/>
-        <attribute name="pageTemplateId" type="String" mode="IN" optional="false" />
+        <attribute name="pageTemplateId" type="String" mode="IN" optional="false"/>
         <attribute name="pageTemplate" type="Map" mode="OUT" optional="true"/>
-    </service>    
-    
-    <service name="cmsGetPageTemplateVersion" engine="java" 
+    </service>
+
+    <service name="cmsGetPageTemplateVersion" engine="java"
                 location="com.ilscipio.scipio.cms.template.CmsPageTemplateServices" invoke="getPageTemplateVersion" auth="true">
         <description>Gets a page template version.</description>
         <permission-service service-name="cmsGenericPermission" main-action="VIEW"/>
-        <attribute name="versionId" type="String" mode="IN" optional="false" />
-        <attribute name="pageTemplateId" type="String" mode="IN" optional="false" />
+        <attribute name="versionId" type="String" mode="IN" optional="false"/>
+        <attribute name="pageTemplateId" type="String" mode="IN" optional="false"/>
         <attribute name="minimalInfoOnly" type="String" mode="IN" optional="true" default-value="N">
           <description>If true, only gets basic info and template body of version (optimization hint)</description>
         </attribute>
-        
+
         <attribute name="version" type="Map" mode="OUT" optional="true">
           <description>Map representing the template version. For available fields,
             refer to com.ilscipio.scipio.cms.template.CmsPageTemplateVersion.putVersionFieldsIntoMap.</description>
         </attribute>
     </service>
-    
-    <service name="cmsGetPageTemplateVersions" engine="java" 
+
+    <service name="cmsGetPageTemplateVersions" engine="java"
                 location="com.ilscipio.scipio.cms.template.CmsPageTemplateServices" invoke="getPageTemplateVersions" auth="true">
         <description>Gets all page template versions.</description>
         <permission-service service-name="cmsGenericPermission" main-action="VIEW"/>
-        <attribute name="pageTemplateId" type="String" mode="IN" optional="false" />
+        <attribute name="pageTemplateId" type="String" mode="IN" optional="false"/>
         <attribute name="minimalInfoOnly" type="String" mode="IN" optional="true" default-value="N">
           <description>If true, only gets basic info and template body of version (optimization hint)</description>
         </attribute>
-        
+
         <attribute name="versions" type="List" mode="OUT" optional="true">
           <description>A list of maps, one per page template version. For available fields,
             refer to com.ilscipio.scipio.cms.template.CmsPageTemplateVersion.putVersionFieldsIntoMap.</description>
         </attribute>
     </service>
-    
-    <service name="cmsGetPageTemplateAndVersions" engine="java" 
+
+    <service name="cmsGetPageTemplateAndVersions" engine="java"
                 location="com.ilscipio.scipio.cms.template.CmsPageTemplateServices" invoke="getPageTemplateAndVersions" auth="true">
         <description>Gets a structure containing the page template and all its versions.</description>
         <permission-service service-name="cmsGenericPermission" main-action="VIEW"/>
-        <attribute name="pageTemplateId" type="String" mode="IN" optional="false" />
-        <attribute name="versionId" type="String" mode="IN" optional="true" />
+        <attribute name="pageTemplateId" type="String" mode="IN" optional="false"/>
+        <attribute name="versionId" type="String" mode="IN" optional="true"/>
         <attribute name="currentVersionId" type="String" mode="IN" optional="true">
           <description>Optional ID of a version to mark as 'isCurrent' in the returned structured. The
             the significance of 'current' is up to the caller.</description>
@@ -429,14 +432,14 @@
           <description>If set and currentVersionId is not found or not specified, will mark as 'current' the
             version that satisfies the mark specified in this parameter (one of isActive, isLast, isFirst, etc.)</description>
         </attribute>
-        
+
         <attribute name="pageTmpAndVersions" type="Map" mode="OUT" optional="true">
-          <description>A map representing the template, a field named 'pageTmpVersions' containing a map with versions current, 
+          <description>A map representing the template, a field named 'pageTmpVersions' containing a map with versions current,
             active, last, first, and all (list - ordered last to first), and more</description>
         </attribute>
     </service>
-    
-    <service name="cmsAddPageTemplateVersion" engine="java" 
+
+    <service name="cmsAddPageTemplateVersion" engine="java"
                 location="com.ilscipio.scipio.cms.template.CmsPageTemplateServices" invoke="addPageTemplateVersion" auth="true">
         <description>Creates a new page template version in the repository.</description>
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
@@ -444,10 +447,10 @@
         <attribute name="versionComment" type="String" mode="IN" optional="true"/>
         <attribute name="templateBody" type="String" mode="IN" optional="true" allow-html="any"/>
         <attribute name="templateLocation" type="String" mode="IN" optional="true"/>
-        <attribute name="templateSource" type="String" mode="IN" optional="true" /><!-- NOTE: can be omitted, but better to specify explicit, "Body" or "Location" -->
+        <attribute name="templateSource" type="String" mode="IN" optional="true"/><!-- NOTE: can be omitted, but better to specify explicit, "Body" or "Location" -->
         <attribute name="versionId" type="String" mode="OUT" optional="true"/>
     </service>
-    
+
     <service name="cmsGetAvailablePageTemplates" engine="java"
                 location="com.ilscipio.scipio.cms.template.CmsPageTemplateServices" invoke="getAvailablePageTemplates" auth="true">
         <description>Gets a page template</description>
@@ -455,15 +458,15 @@
         <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
         <attribute name="pageTemplates" type="List" mode="OUT" optional="true"/>
     </service>
-    
-    <service name="cmsActivatePageTemplateVersion" engine="java" 
+
+    <service name="cmsActivatePageTemplateVersion" engine="java"
                 location="com.ilscipio.scipio.cms.template.CmsPageTemplateServices" invoke="activatePageTemplateVersion" auth="true">
         <description>Sets a page template version as live version.</description>
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
         <attribute name="pageTemplateId" type="String" mode="INOUT" optional="false"/>
         <attribute name="versionId" type="String" mode="INOUT" optional="false"/>
     </service>
-    
+
     <service name="cmsCreateUpdateAssetAssoc" engine="java"
                 location="com.ilscipio.scipio.cms.template.CmsPageTemplateServices" invoke="createUpdateAssetAssoc" auth="true">
         <description>Update or add an asset to a page template</description>
@@ -475,7 +478,7 @@
         <attribute name="displayName" type="String" mode="IN" optional="true"/>
         <attribute name="inputPosition" type="Long" mode="IN" optional="true"/>
     </service>
-    
+
     <service name="cmsDeleteAssetAssoc" default-entity-name="CmsPageTemplateAssetAssoc" engine="entity-auto" invoke="delete" auth="true">
         <permission-service service-name="cmsGenericPermission" main-action="DELETE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
@@ -487,43 +490,43 @@
         <implements service="cmsUpdateScriptAssocInterface"/>
         <attribute name="pageTemplateId" type="String" mode="IN" optional="false"/>
     </service>
-    
+
     <service name="cmsDeletePageTemplateScriptAssoc" default-entity-name="CmsPageTemplateScriptAssoc" engine="entity-auto" invoke="delete" auth="true">
         <permission-service service-name="cmsGenericPermission" main-action="DELETE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    
+
     <service name="cmsDeleteScriptAndPageTemplateAssoc" engine="group" auth="true">
         <group>
             <invoke name="cmsDeletePageTemplateScriptAssoc"/>
             <invoke name="cmsDeleteScriptTemplateIfOrphan"/>
         </group>
     </service>
-    
-    <service name="cmsDeletePageTemplate" engine="java" auth="true" 
+
+    <service name="cmsDeletePageTemplate" engine="java" auth="true"
         location="com.ilscipio.scipio.cms.template.CmsPageTemplateServices" invoke="deletePageTemplate">
         <permission-service service-name="cmsGenericPermission" main-action="DELETE"/>
-        <attribute name="pageTemplateId" mode="IN" type="String" optional="false" />
+        <attribute name="pageTemplateId" mode="IN" type="String" optional="false"/>
     </service>
-    
-    
+
+
     <!-- Asset Templates -->
-    
+
     <service name="cmsCreateUpdateAsset" engine="java"
                 location="com.ilscipio.scipio.cms.template.CmsAssetTemplateServices" invoke="createUpdateAsset" auth="true">
         <description>Creates a new asset</description>
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
-        <attribute name="assetTemplateId" type="String" mode="INOUT" optional="true"/>   
-        <attribute name="webSiteId" type="String" mode="IN" optional="true" />
+        <attribute name="assetTemplateId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
         <attribute name="templateName" type="String" mode="IN" optional="true"/>
         <attribute name="contentTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
         <attribute name="templateBody" type="String" mode="IN" optional="true" allow-html="any"/>
-        <attribute name="templateLocation" type="String" mode="IN" optional="true" />
-        <attribute name="templateSource" type="String" mode="IN" optional="true" /><!-- NOTE: can be omitted, but better to specify explicit, "Body" or "Location" -->
+        <attribute name="templateLocation" type="String" mode="IN" optional="true"/>
+        <attribute name="templateSource" type="String" mode="IN" optional="true"/><!-- NOTE: can be omitted, but better to specify explicit, "Body" or "Location" -->
         <attribute name="active" type="Boolean" mode="IN" optional="true"/>
     </service>
-    
+
     <service name="cmsCopyAsset" engine="java"
                 location="com.ilscipio.scipio.cms.template.CmsAssetTemplateServices" invoke="copyAsset" auth="true">
         <description>Creates a new asset</description>
@@ -532,115 +535,115 @@
         <!-- future: <attribute name="srcVersionId" type="String" mode="IN" optional="true"/>-->
         <attribute name="templateName" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
-        <attribute name="assetTemplateId" type="String" mode="OUT" optional="false"/>   
+        <attribute name="assetTemplateId" type="String" mode="OUT" optional="false"/>
     </service>
 
-    <service name="cmsUpdateAssetTemplateInfo" engine="java" auth="true" 
+    <service name="cmsUpdateAssetTemplateInfo" engine="java" auth="true"
         location="com.ilscipio.scipio.cms.template.CmsAssetTemplateServices" invoke="updateAssetTemplateInfo">
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
-        <attribute name="assetTemplateId" mode="IN" type="String" optional="false" />
-        <attribute name="webSiteId" mode="IN" type="String" optional="true" />
+        <attribute name="assetTemplateId" mode="IN" type="String" optional="false"/>
+        <attribute name="webSiteId" mode="IN" type="String" optional="true"/>
         <attribute name="templateName" type="String" mode="IN" optional="true"/>
         <attribute name="contentTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
     </service>
-    
+
     <service name="cmsGetAssetTemplateTypes" engine="java"
                 location="com.ilscipio.scipio.cms.template.CmsAssetTemplateServices" invoke="getAssetTemplateTypes" auth="true">
         <description>Gets all asset template types (ContentType).</description>
         <permission-service service-name="cmsGenericPermission" main-action="VIEW"/>
-        <attribute name="deep" type="Boolean" mode="IN" optional="true" /><!-- default: true -->
-        <attribute name="contentTypeValues" type="List" mode="OUT" optional="true" /><!-- List of GenericValue (ContentType) -->
-    </service> 
-    
+        <attribute name="deep" type="Boolean" mode="IN" optional="true"/><!-- default: true -->
+        <attribute name="contentTypeValues" type="List" mode="OUT" optional="true"/><!-- List of GenericValue (ContentType) -->
+    </service>
+
     <service name="cmsGetAssetTemplates" engine="java"
                 location="com.ilscipio.scipio.cms.template.CmsAssetTemplateServices" invoke="getAssetTemplates" auth="true">
         <description>Gets all asset templates, or limited to a certain type and/or webSiteId.</description>
         <permission-service service-name="cmsGenericPermission" main-action="VIEW"/>
-        <attribute name="webSiteId" type="String" mode="IN" optional="true" /><!-- if empty passed, restricts to those with null webSiteId; to avoid filter, don't pass -->
-        <attribute name="webSiteOptional" type="Boolean" mode="IN" optional="true" /><!-- default: true -->
-        <attribute name="contentTypeId" type="String" mode="IN" optional="true" /><!-- if empty passed, restricts to those with null contentType; to avoid filter, don't pass -->
+        <attribute name="webSiteId" type="String" mode="IN" optional="true"/><!-- if empty passed, restricts to those with null webSiteId; to avoid filter, don't pass -->
+        <attribute name="webSiteOptional" type="Boolean" mode="IN" optional="true"/><!-- default: true -->
+        <attribute name="contentTypeId" type="String" mode="IN" optional="true"/><!-- if empty passed, restricts to those with null contentType; to avoid filter, don't pass -->
         <attribute name="assetTemplateValues" type="List" mode="OUT" optional="true"/><!-- List of GenericValue (CmsAssetTemplate) -->
-    </service> 
-    
+    </service>
+
     <service name="cmsGetAssetTemplateAttributes" engine="java"
                 location="com.ilscipio.scipio.cms.template.CmsAssetTemplateServices" invoke="getAssetTemplateAttributes" auth="true">
         <description>Gets all asset template attributes for an asset template.</description>
         <permission-service service-name="cmsGenericPermission" main-action="VIEW"/>
-        <attribute name="assetTemplateId" type="String" mode="IN" optional="false" />
+        <attribute name="assetTemplateId" type="String" mode="IN" optional="false"/>
         <attribute name="attributeValues" type="List" mode="OUT" optional="true"/><!-- List of GenericValue (CmsAttributeTemplate) -->
-    </service> 
-    
+    </service>
+
     <service name="cmsGetAssetTemplate" engine="java"
                 location="com.ilscipio.scipio.cms.template.CmsAssetTemplateServices" invoke="getAssetTemplate" auth="true">
         <description>Gets an asset template.</description>
         <permission-service service-name="cmsGenericPermission" main-action="VIEW"/>
-        <attribute name="assetTemplateId" type="String" mode="IN" optional="true" />
-        <attribute name="webSiteId" type="String" mode="IN" optional="true" />
-        <attribute name="templateName" type="String" mode="IN" optional="true" />
+        <attribute name="assetTemplateId" type="String" mode="IN" optional="true"/>
+        <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
+        <attribute name="templateName" type="String" mode="IN" optional="true"/>
         <attribute name="assetTemplate" type="com.ilscipio.scipio.cms.template.CmsAssetTemplate" mode="OUT" optional="true"/>
         <attribute name="assetTemplateValue" type="java.util.Map" mode="OUT" optional="true"/>
-    </service> 
-    
+    </service>
+
     <service name="cmsGetActiveAssetTemplateVersion" engine="java"
                 location="com.ilscipio.scipio.cms.template.CmsAssetTemplateServices" invoke="getActiveAssetTemplateVersion" auth="true">
         <description>Gets the active/default asset template version of the given asset template.</description>
         <permission-service service-name="cmsGenericPermission" main-action="VIEW"/>
-        <attribute name="webSiteId" type="String" mode="IN" optional="false" />
-        <attribute name="templateName" type="String" mode="IN" optional="false" />
-        <attribute name="assetTemplate" type="java.util.Map" mode="OUT" optional="true"/>
-        <attribute name="assetTemplateModel" type="com.ilscipio.scipio.cms.template.CmsAssetTemplate" mode="OUT" optional="true"/>
-        <attribute name="assetTemplateVersion" type="java.util.Map" mode="OUT" optional="true"/>
-        <attribute name="assetTemplateVersionModel" type="com.ilscipio.scipio.cms.template.CmsAssetTemplateVersion" mode="OUT" optional="true"/>
-    </service> 
-    
-    <service name="cmsGetRelatedActiveAssetTemplateVersion" engine="java"
-                location="com.ilscipio.scipio.cms.template.CmsAssetTemplateServices" invoke="getRelatedActiveAssetTemplateVersion" auth="true">
-        <description>Gets the active/default asset template version related to the given asset template version.</description>
-        <permission-service service-name="cmsGenericPermission" main-action="VIEW"/>
-        <attribute name="relatedVersionId" type="String" mode="IN" optional="true" />
-        <attribute name="assetTemplateId" type="String" mode="IN" optional="true" />
+        <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
+        <attribute name="templateName" type="String" mode="IN" optional="false"/>
         <attribute name="assetTemplate" type="java.util.Map" mode="OUT" optional="true"/>
         <attribute name="assetTemplateModel" type="com.ilscipio.scipio.cms.template.CmsAssetTemplate" mode="OUT" optional="true"/>
         <attribute name="assetTemplateVersion" type="java.util.Map" mode="OUT" optional="true"/>
         <attribute name="assetTemplateVersionModel" type="com.ilscipio.scipio.cms.template.CmsAssetTemplateVersion" mode="OUT" optional="true"/>
     </service>
-    
-    <service name="cmsActivateAssetTemplateVersion" engine="java" 
+
+    <service name="cmsGetRelatedActiveAssetTemplateVersion" engine="java"
+                location="com.ilscipio.scipio.cms.template.CmsAssetTemplateServices" invoke="getRelatedActiveAssetTemplateVersion" auth="true">
+        <description>Gets the active/default asset template version related to the given asset template version.</description>
+        <permission-service service-name="cmsGenericPermission" main-action="VIEW"/>
+        <attribute name="relatedVersionId" type="String" mode="IN" optional="true"/>
+        <attribute name="assetTemplateId" type="String" mode="IN" optional="true"/>
+        <attribute name="assetTemplate" type="java.util.Map" mode="OUT" optional="true"/>
+        <attribute name="assetTemplateModel" type="com.ilscipio.scipio.cms.template.CmsAssetTemplate" mode="OUT" optional="true"/>
+        <attribute name="assetTemplateVersion" type="java.util.Map" mode="OUT" optional="true"/>
+        <attribute name="assetTemplateVersionModel" type="com.ilscipio.scipio.cms.template.CmsAssetTemplateVersion" mode="OUT" optional="true"/>
+    </service>
+
+    <service name="cmsActivateAssetTemplateVersion" engine="java"
                 location="com.ilscipio.scipio.cms.template.CmsAssetTemplateServices" invoke="activateAssetTemplateVersion" auth="true">
         <description>Sets an asset template version as live version.</description>
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
         <attribute name="versionId" type="String" mode="IN" optional="false"/>
     </service>
-       
+
     <service name="cmsUpdateAssetTemplateScript" engine="java" auth="true"
              location="com.ilscipio.scipio.cms.template.CmsAssetTemplateServices" invoke="updateAssetTemplateScript">
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
         <implements service="cmsUpdateScriptAssocInterface"/>
         <attribute name="assetTemplateId" type="String" mode="IN" optional="false"/>
     </service>
-       
+
     <service name="cmsDeleteAssetTemplateScriptAssoc" default-entity-name="CmsAssetTemplateScriptAssoc" engine="entity-auto" invoke="delete" auth="true">
         <permission-service service-name="cmsGenericPermission" main-action="DELETE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    
+
     <service name="cmsDeleteScriptAndAssetTemplateAssoc" engine="group" auth="true">
         <group>
             <invoke name="cmsDeleteAssetTemplateScriptAssoc"/>
             <invoke name="cmsDeleteScriptTemplateIfOrphan"/>
         </group>
     </service>
-    
-    <service name="cmsDeleteAssetTemplate" engine="java" auth="true" 
+
+    <service name="cmsDeleteAssetTemplate" engine="java" auth="true"
         location="com.ilscipio.scipio.cms.template.CmsAssetTemplateServices" invoke="deleteAssetTemplate">
         <permission-service service-name="cmsGenericPermission" main-action="DELETE"/>
-        <attribute name="assetTemplateId" mode="IN" type="String" optional="false" />
+        <attribute name="assetTemplateId" mode="IN" type="String" optional="false"/>
     </service>
-    
-    
+
+
     <!-- Script Templates -->
-    
+
     <service name="cmsCreateUpdateScriptTemplate" engine="java"
                 location="com.ilscipio.scipio.cms.template.CmsScriptTemplateServices" invoke="createUpdateScriptTemplate" auth="true">
         <description>Creates a new asset</description>
@@ -650,14 +653,14 @@
         <attribute name="templateName" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
         <attribute name="templateBody" type="String" mode="IN" optional="true" allow-html="any"/>
-        <attribute name="templateLocation" type="String" mode="IN" optional="true" />
-        <attribute name="templateSource" type="String" mode="IN" optional="true" /><!-- NOTE: can be omitted, but better to specify explicit, "Body" or "Location" -->
-        <attribute name="standalone" type="String" mode="IN" optional="true" />
+        <attribute name="templateLocation" type="String" mode="IN" optional="true"/>
+        <attribute name="templateSource" type="String" mode="IN" optional="true"/><!-- NOTE: can be omitted, but better to specify explicit, "Body" or "Location" -->
+        <attribute name="standalone" type="String" mode="IN" optional="true"/>
         <attribute name="active" type="Boolean" mode="IN" optional="true"/>
     </service>
-    
+
     <!-- Script Templates -->
-    
+
     <service name="cmsCopyScriptTemplate" engine="java"
                 location="com.ilscipio.scipio.cms.template.CmsScriptTemplateServices" invoke="copyScriptTemplate" auth="true">
         <description>Creates a new asset</description>
@@ -669,75 +672,75 @@
         <attribute name="description" type="String" mode="IN" optional="true"/>
         <attribute name="scriptTemplateId" type="String" mode="IN" optional="false"/>
     </service>
-    
-    <service name="cmsUpdateScriptTemplateInfo" engine="java" auth="true" 
+
+    <service name="cmsUpdateScriptTemplateInfo" engine="java" auth="true"
         location="com.ilscipio.scipio.cms.template.CmsScriptTemplateServices" invoke="updateScriptTemplateInfo">
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
-        <attribute name="scriptTemplateId" mode="IN" type="String" optional="false" />
+        <attribute name="scriptTemplateId" mode="IN" type="String" optional="false"/>
         <attribute name="templateName" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
     </service>
-    
+
     <service name="cmsGetScriptTemplate" engine="java"
                 location="com.ilscipio.scipio.cms.template.CmsScriptTemplateServices" invoke="getScriptTemplate" auth="true">
         <permission-service service-name="cmsGenericPermission" main-action="VIEW"/>
-        <attribute name="scriptTemplateId" type="String" mode="IN" optional="true" />
+        <attribute name="scriptTemplateId" type="String" mode="IN" optional="true"/>
         <attribute name="scriptTemplate" type="com.ilscipio.scipio.cms.template.CmsScriptTemplate" mode="OUT" optional="true"/>
         <attribute name="scriptTemplateValue" type="java.util.Map" mode="OUT" optional="true"/>
-    </service> 
-    
+    </service>
+
     <service name="cmsDeleteScriptTemplate" engine="java"
                 location="com.ilscipio.scipio.cms.template.CmsScriptTemplateServices" invoke="deleteScriptTemplate" auth="true">
         <description>Deletes the CmsScriptTemplate record and any associations pointing to it.</description>
         <permission-service service-name="cmsGenericPermission" main-action="DELETE"/>
-        <attribute name="scriptTemplateId" type="String" mode="IN" optional="true" />
+        <attribute name="scriptTemplateId" type="String" mode="IN" optional="true"/>
     </service>
-    
+
     <service name="cmsDeleteScriptTemplateIfOrphan" engine="java"
                 location="com.ilscipio.scipio.cms.template.CmsScriptTemplateServices" invoke="deleteScriptTemplateIfOrphan" auth="true">
         <description>Deletes the CmsScriptTemplate record only if it is marked non-standalone and there are no more associations pointing to it.</description>
         <permission-service service-name="cmsGenericPermission" main-action="DELETE"/>
-        <attribute name="scriptTemplateId" type="String" mode="IN" optional="true" />
-    </service> 
-    
-    
+        <attribute name="scriptTemplateId" type="String" mode="IN" optional="true"/>
+    </service>
+
+
     <!-- Attribute Templates -->
-    
-    <service name="cmsCreateUpdateAttribute" engine="java" auth="true" 
+
+    <service name="cmsCreateUpdateAttribute" engine="java" auth="true"
         location="com.ilscipio.scipio.cms.template.CmsTemplateServices" invoke="createUpdateAttribute">
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
-        <attribute name="request" mode="IN" type="javax.servlet.http.HttpServletRequest" optional="true" />
-        <attribute name="attributeTemplateId" mode="INOUT" type="String" optional="true" />
-        <attribute name="assetTemplateId" mode="IN" type="String" optional="true" />
-        <attribute name="pageTemplateId" mode="IN" type="String" optional="true" />
-        <attribute name="attributeName" mode="IN" type="String" optional="true" />
-        <attribute name="displayName" mode="IN" type="String" optional="true" />
-        <attribute name="defaultValue" mode="IN" type="String" optional="true" />
-        <attribute name="inputHelp" mode="IN" type="String" optional="true" />
-        <attribute name="inputType" mode="IN" type="String" optional="true" />
+        <attribute name="request" mode="IN" type="javax.servlet.http.HttpServletRequest" optional="true"/>
+        <attribute name="attributeTemplateId" mode="INOUT" type="String" optional="true"/>
+        <attribute name="assetTemplateId" mode="IN" type="String" optional="true"/>
+        <attribute name="pageTemplateId" mode="IN" type="String" optional="true"/>
+        <attribute name="attributeName" mode="IN" type="String" optional="true"/>
+        <attribute name="displayName" mode="IN" type="String" optional="true"/>
+        <attribute name="defaultValue" mode="IN" type="String" optional="true"/>
+        <attribute name="inputHelp" mode="IN" type="String" optional="true"/>
+        <attribute name="inputType" mode="IN" type="String" optional="true"/>
         <attribute name="inputPosition" type="Long" mode="IN" optional="true"/>
         <attribute name="maxLength" type="Long" mode="IN" optional="true"/>
-        <attribute name="inputType" mode="IN" type="String" optional="true" />
-        <attribute name="required" mode="IN" type="String" optional="true" />
+        <attribute name="inputType" mode="IN" type="String" optional="true"/>
+        <attribute name="required" mode="IN" type="String" optional="true"/>
         <attribute name="expandLang" type="String" mode="IN" optional="true"/>
         <attribute name="expandPosition" type="Long" mode="IN" optional="true"/>
         <attribute name="targetType" type="String" mode="IN" optional="true"/>
     </service>
-    
+
     <service name="cmsDeleteAttribute" default-entity-name="CmsAttributeTemplate" engine="entity-auto" invoke="delete" auth="true">
         <permission-service service-name="cmsGenericPermission" main-action="DELETE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    
+
     <!-- ========================================================= -->
     <!-- Media services -->
     <!-- ========================================================= -->
-    
+
     <service name="cmsUploadMediaFile" engine="java"
         location="com.ilscipio.scipio.cms.media.CmsMediaServices" invoke="uploadMediaFile" auth="true" transaction-timeout="7200">
         <description>Imports and processes a media file and stores it in the database. Autodetects content-type, defaulting to Binary.</description>
         <permission-service service-name="cmsGenericPermission" main-action="CREATE"/>
-        <attribute mode="IN" name="uploadedFile" type="java.nio.ByteBuffer" optional="false" />
+        <attribute mode="IN" name="uploadedFile" type="java.nio.ByteBuffer" optional="false"/>
         <attribute mode="IN" name="contentName" type="String" optional="false"/>
         <attribute mode="IN" name="dataResourceTypeId" type="String" optional="false"/>
         <attribute mode="IN" name="_uploadedFile_size" type="String" optional="false"/>
@@ -748,7 +751,7 @@
         <attribute mode="IN" name="isPublic" type="Boolean" optional="true"/>
         <attribute mode="IN" name="autoVariants" type="Boolean" optional="true"/>
         <attribute mode="OUT" name="contentId" type="String" optional="true"/>
-        <attribute mode="OUT" name="dataResourceId" type="String" optional="true"/>        
+        <attribute mode="OUT" name="dataResourceId" type="String" optional="true"/>
         <attribute mode="OUT" name="dataResourceTypeId" type="String" optional="true"/>
       <!--   <attribute mode="OUT" name="organizationPartyId" type="String" optional="false"/> -->
     </service>
@@ -762,7 +765,7 @@
         <attribute mode="IN" name="statusId" type="String" optional="true"/>
         <attribute mode="IN" name="isPublic" type="Boolean" optional="true"/>
         <attribute mode="OUT" name="contentId" type="String" optional="true"/>
-        <attribute mode="OUT" name="dataResourceId" type="String" optional="true"/>        
+        <attribute mode="OUT" name="dataResourceId" type="String" optional="true"/>
         <attribute mode="OUT" name="dataResourceTypeId" type="String" optional="true"/>
     </service>
     <!-- TODO: should make a single cmsRebuildMediaVariantsSingle -->
@@ -799,7 +802,7 @@
         <attribute mode="IN" name="contentId" type="String" optional="true"/>
         <attribute mode="IN" name="dataResourceId" type="String" optional="true"/>
     </service>
-    
+
     <service name="cmsGetMediaFiles" engine="java"
         location="com.ilscipio.scipio.cms.media.CmsMediaServices" invoke="getMediaFiles" auth="true">
         <description>Creates a list of all available Media Files.</description>
@@ -811,11 +814,11 @@
         <attribute name="listSize" type="Integer" mode="INOUT" optional="true"/>
         <attribute name="mediaFiles" type="List" mode="OUT" optional="false"/>
     </service>
-    
+
     <!-- ========================================================= -->
     <!-- Control/request data services -->
     <!-- ========================================================= -->
-    
+
     <service name="cmsCmsPageInfoInterface" engine="interface">
         <attribute name="pageId" type="String" mode="IN" optional="true"/>
     </service>
@@ -824,48 +827,48 @@
             location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="createUpdateProcessMapping" auth="true">
         <description>Create or update a process mapping</description>
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
-        <implements service="cmsCmsPageInfoInterface" />
+        <implements service="cmsCmsPageInfoInterface"/>
         <auto-attributes entity-name="CmsProcessMapping" include="pk" mode="INOUT" optional="true"/>
         <auto-attributes entity-name="CmsProcessMapping" include="nonpk" mode="IN" optional="true"/>
     </service>
-    
+
     <service name="cmsDeleteProcessMapping" engine="java"
             location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="deleteProcessMapping" auth="true">
         <description>Delete a process mapping</description>
         <permission-service service-name="cmsGenericPermission" main-action="DELETE"/>
         <auto-attributes entity-name="CmsProcessMapping" include="pk" mode="IN" optional="false"/>
     </service>
-    
+
     <service name="cmsCreateUpdateProcessViewMapping" engine="java"
             location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="createUpdateProcessViewMapping" auth="true">
         <description>Create or update a process view mapping, along with page info (if applicable); page relation is abstracted</description>
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
-        <implements service="cmsCmsPageInfoInterface" />
+        <implements service="cmsCmsPageInfoInterface"/>
         <auto-attributes entity-name="CmsProcessViewMapping" include="pk" mode="INOUT" optional="true"/>
         <auto-attributes entity-name="CmsProcessViewMapping" include="nonpk" mode="IN" optional="true">
-            <exclude field-name="targetPageId" />
+            <exclude field-name="targetPageId"/>
         </auto-attributes>
         <attribute name="webSiteId" type="String" mode="IN" optional="false"/> <!-- Mostly an optimization; could look up again -->
     </service>
-    
+
     <service name="cmsDeleteProcessViewMapping" engine="java"
             location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="deleteProcessViewMapping" auth="true">
         <description>Delete a process view mapping, along with page info (if applicable)</description>
         <permission-service service-name="cmsGenericPermission" main-action="DELETE"/>
         <auto-attributes entity-name="CmsProcessViewMapping" include="pk" mode="IN" optional="false"/>
     </service>
-    
+
     <service name="cmsCreateUpdateViewMapping" engine="java"
             location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="createUpdateViewMapping" auth="true">
         <description>Create or update a (simple) view mapping, along with page info (if applicable); page relation is abstracted</description>
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
-        <implements service="cmsCmsPageInfoInterface" />
+        <implements service="cmsCmsPageInfoInterface"/>
         <auto-attributes entity-name="CmsViewMapping" include="pk" mode="INOUT" optional="true"/>
         <auto-attributes entity-name="CmsViewMapping" include="nonpk" mode="IN" optional="true">
-            <exclude field-name="pageId" />
+            <exclude field-name="pageId"/>
         </auto-attributes>
     </service>
-    
+
     <service name="cmsDeleteViewMapping" engine="java"
             location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="deleteViewMapping" auth="true">
         <description>Delete a (simple) view mapping, along with page info (if applicable)</description>
@@ -877,45 +880,45 @@
             location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="clearMappingCaches" auth="true">
         <description>Clear front-end mapping caches</description>
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
-        <attribute name="clearMemoryCaches" type="Boolean" mode="IN" optional="true" /> <!-- default-value="true" -->
-        <attribute name="clearEntityCaches" type="Boolean" mode="IN" optional="true" /> <!-- default-value="true" -->
+        <attribute name="clearMemoryCaches" type="Boolean" mode="IN" optional="true"/> <!-- default-value="true" -->
+        <attribute name="clearEntityCaches" type="Boolean" mode="IN" optional="true"/> <!-- default-value="true" -->
     </service>
-    
+
     <service name="cmsDeleteAllMappingRecords" engine="java"
             location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="deleteAllMappingRecords" auth="true">
         <description>Delete all Cms view, process, etc. mapping and related entity records from the system</description>
         <permission-service service-name="cmsGenericPermission" main-action="DELETE"/>
-        <attribute name="includePrimary" type="Boolean" mode="IN" optional="true" /><!-- default: false -->
+        <attribute name="includePrimary" type="Boolean" mode="IN" optional="true"/><!-- default: false -->
     </service>
-    
+
     <service name="cmsDeleteWebSiteMappingRecords" engine="java"
             location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="deleteWebSiteMappingRecords" auth="true">
         <description>Delete all Cms view, process, etc. mapping and related entity records from the system for a specific web site</description>
         <permission-service service-name="cmsGenericPermission" main-action="DELETE"/>
-        <attribute name="webSiteId" type="String" mode="IN" optional="false" />
-        <attribute name="includePrimary" type="Boolean" mode="IN" optional="true" /><!-- default: false -->
+        <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
+        <attribute name="includePrimary" type="Boolean" mode="IN" optional="true"/><!-- default: false -->
     </service>
-    
+
     <service name="cmsAddRemovePageViewMappings" engine="java"
             location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="addRemovePageViewMappings" auth="true">
-        <description>Adds and/or removes view mappings for a page. 
+        <description>Adds and/or removes view mappings for a page.
             Mappings are identified by webSiteId::viewName (if contains '::') or viewMappingId (otherwise).</description>
-        <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>    
-        <attribute name="pageId" type="String" mode="IN" optional="false" />
-        <attribute name="webSiteId" type="String" mode="IN" optional="true" />
-        <attribute name="addViewNameList" type="List" mode="IN" optional="true" /><!-- List of strings, format: ''webSiteId::viewName' OR 'viewName' (if webSiteId param specified) -->
-        <attribute name="removeViewNameList" type="List" mode="IN" optional="true" /><!-- List of strings, format: 'webSiteId::viewName' OR 'viewName' (if webSiteId param specified) -->
-        <attribute name="removeIdList" type="List" mode="IN" optional="true" /><!-- List of viewMappingIds -->
+        <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
+        <attribute name="pageId" type="String" mode="IN" optional="false"/>
+        <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
+        <attribute name="addViewNameList" type="List" mode="IN" optional="true"/><!-- List of strings, format: ''webSiteId::viewName' OR 'viewName' (if webSiteId param specified) -->
+        <attribute name="removeViewNameList" type="List" mode="IN" optional="true"/><!-- List of strings, format: 'webSiteId::viewName' OR 'viewName' (if webSiteId param specified) -->
+        <attribute name="removeIdList" type="List" mode="IN" optional="true"/><!-- List of viewMappingIds -->
     </service>
-    
-    <service name="cmsGetWebsiteIndexablePageUris" engine="java"
-            location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="getWebsiteIndexablePageUris" auth="true">
-        <description>Returns a list of active page URIs for the website, normalized from the webapp context root (not including the webapp context root)</description>
+
+    <service name="cmsGetWebsiteIndexableProcessMappingUris" engine="java"
+            location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="getWebsiteIndexableProcessMappingUris" auth="true">
+        <description>Returns a list of active indexable process mapping (page) URIs for the website, normalized from the webapp context root (not including the webapp context root)</description>
         <permission-service service-name="cmsGenericPermission" main-action="VIEW"/>
         <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
         <attribute name="contentLocale" type="Locale" mode="IN" optional="true"/>
         <attribute name="useCache" type="Boolean" mode="IN" optional="true" default-value="false"/>
-        <attribute name="uriList" type="List" mode="OUT" optional="true" />
+        <attribute name="uriList" type="List" mode="OUT" optional="true"/>
     </service>
-    
+
 </services>

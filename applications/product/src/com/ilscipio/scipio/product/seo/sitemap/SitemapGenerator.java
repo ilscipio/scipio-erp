@@ -680,12 +680,12 @@ public class SitemapGenerator extends SeoCatalogTraverser {
 
     protected List<String> getCmsUriList(Locale contentLocale) throws GeneralException {
         Map<String, Object> servCtx = getDispatcher().getDispatchContext()
-                .makeValidContext("cmsGetWebsiteContentUris", ModelService.IN_PARAM, getServCtxOpts());
+                .makeValidContext("cmsGetWebsiteIndexableProcessMappingUris", ModelService.IN_PARAM, getServCtxOpts());
         servCtx.put("webSiteId", config.getWebSiteId());
         servCtx.put("useCache", isUseCache());
         // TODO: REVIEW: locale handling is loosely defined at the moment
         servCtx.put("contentLocale", contentLocale);
-        Map<String, Object> servResult = getDispatcher().runSync("cmsGetWebsiteContentUris", servCtx);
+        Map<String, Object> servResult = getDispatcher().runSync("cmsGetWebsiteIndexableProcessMappingUris", servCtx);
         if (ServiceUtil.isSuccess(servResult)) {
             return UtilGenerics.checkList(servResult.get("uriList"));
         } else {

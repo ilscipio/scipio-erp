@@ -356,7 +356,7 @@ public abstract class CmsControlDataServices {
         } 
     }
     
-    public static Map<String, Object> getWebsiteIndexablePageUris(DispatchContext dctx, Map<String, Object> context) {
+    public static Map<String, Object> getWebsiteIndexableProcessMappingUris(DispatchContext dctx, Map<String, Object> context) {
         Delegator delegator = dctx.getDelegator();
         String webSiteId = (String) context.get("webSiteId");
         Locale contentLocale = (Locale) context.get("contentLocale");

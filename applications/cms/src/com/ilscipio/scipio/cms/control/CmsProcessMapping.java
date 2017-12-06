@@ -219,6 +219,14 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
             }
             setFields.put("active", active);
         }
+        
+        if (fields.containsKey("indexable") || useDefaults) {
+            Object indexable = fields.get("indexable");
+            if (UtilValidate.isEmpty(indexable)) {
+                indexable = null;
+            }
+            setFields.put("indexable", indexable);
+        }
         return setFields;
     }
     
@@ -778,9 +786,9 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
         return entity.getBoolean("indexable");
     }
     
-    public boolean isIndexableLogical(boolean defaultIndexable) {
+    public boolean isIndexableLogical(boolean mappingsIndexableDefault) {
         Boolean indexable = getIndexable();
-        return (indexable != null) ? indexable : defaultIndexable;
+        return (indexable != null) ? indexable : mappingsIndexableDefault;
     }
 
     public void setIndexable(Boolean indexable) {
@@ -1013,7 +1021,7 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
         
         boolean defaultSourceFromContextRoot = webSiteConfig.getDefaultSourceFromContextRoot();
         String defaultSourceServletPath = webSiteConfig.getDefaultSourceServletPath();
-        boolean defaultIsIndexable = webSiteConfig.getDefaultIsIndexable();
+        boolean defaultIsIndexable = webSiteConfig.getMappingsIndexableDefault();
         
         for(CmsProcessMapping mapping : mappingList) {
             if (!mapping.isActiveLogical()) continue;

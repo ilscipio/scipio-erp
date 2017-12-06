@@ -163,7 +163,7 @@
     <context-param>
         <description>If true, process mappings (pages) by default may be indexed in sitemap generation.
             If false, only indexed if CmsProcessMapping.indexable explicit set to Y.</description>
-        <param-name>cmsDefaultIsIndexable</param-name>
+        <param-name>cmsMappingsIndexableDefault</param-name>
         <param-value>true</param-value>
     </context-param>
 

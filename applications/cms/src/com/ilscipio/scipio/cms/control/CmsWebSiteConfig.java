@@ -90,7 +90,7 @@ public class CmsWebSiteConfig {
     
     private final boolean controlRootAlias;
     
-    private final boolean defaultIsIndexable;
+    private final boolean mappingsIndexableDefault;
     
     /**
      * Main constructor. Safe, does not throw exceptions.
@@ -155,7 +155,7 @@ public class CmsWebSiteConfig {
 
         this.controlRootAlias = getCmsBoolInitParam(contextParams, "cmsControlRootAlias", getDefault().isControlRootAlias());
         
-        this.defaultIsIndexable = getCmsBoolInitParam(contextParams, "cmsDefaultIsIndexable", getDefault().getDefaultIsIndexable());
+        this.mappingsIndexableDefault = getCmsBoolInitParam(contextParams, "cmsMappingsIndexableDefault", getDefault().getMappingsIndexableDefault());
     }
 
     /**
@@ -182,7 +182,7 @@ public class CmsWebSiteConfig {
         this.defaultSourceFromContextRoot = true;
         this.defaultForwardFromContextRoot = true;
         
-        this.defaultIsIndexable = true;
+        this.mappingsIndexableDefault = true;
         
         this.useDefaultCmsPage = false;
         this.defaultCmsPageId = null;
@@ -346,8 +346,8 @@ public class CmsWebSiteConfig {
         return controlRootAlias;
     }
 
-    public boolean getDefaultIsIndexable() {
-        return defaultIsIndexable;
+    public boolean getMappingsIndexableDefault() {
+        return mappingsIndexableDefault;
     }
     
     /**

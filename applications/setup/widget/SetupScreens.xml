@@ -803,7 +803,8 @@
                 <set field="setupCatalogForms.location" value="component://setup/widget/SetupScreens.xml"/>
                 <set field="setupCatalogForms.name" value="SetupCatalogForms"/>
                 
-                <set field="layoutSettings.javaScripts[]" value="/catalog/static/ScpEctCommon.js" global="true"/>
+                <set field="layoutSettings.javaScripts[]" value="/content/images/ScpContentCommon.js" global="true"/>
+                <set field="layoutSettings.javaScripts[]" value="/catalog/static/ScpCatalogCommon.js" global="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">

@@ -34,7 +34,8 @@
     at initial load (event error) and when js not available.
     See corresponding js in ScpCatalogCommon.js StcLocFieldHandler.rebuildLocalizedFieldEntries.
     DEV NOTE: PLEASE KEEP BOTH IMPL IN SYNC. -->
-<#macro ectLocalizedFields objectType params={} onAddClick="" parsedParamName="simpleTextViewsByType" paramNamePrefix="contentField_" stylePrefix="ect-" extraArgs...>
+<#macro ectLocalizedFields objectType params={} onAddClick="" parsedParamName="simpleTextViewsByType" 
+    paramNamePrefix="contentField_" stylePrefix="ect-" localeArgs={} extraArgs...>
     
     <#-- FIXME -->
     <@alert type="warning">WARNING: <strong>LOCALIZED FIELDS ARE NOT YET SAVED ON SUBMIT</strong> (2017-10-27)</@alert>
@@ -46,7 +47,7 @@
       <#local fieldName = fieldInfo.fieldNames[typeName?index]>
       <#-- @stcLocField from content common.ftl -->
       <@stcLocField typeName=typeName entityFieldName=fieldName paramNamePrefix="contentField_" params=params 
-        label=ectGetLocFieldLabel(fieldName, typeName) tooltip="" />
+        label=ectGetLocFieldLabel(fieldName, typeName) tooltip="" localeArgs=localeArgs/>
     </#list>
   </#if>
 </#macro>

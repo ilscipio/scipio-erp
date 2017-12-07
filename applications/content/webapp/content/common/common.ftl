@@ -28,7 +28,7 @@
     Includes a hidden entry markup template for javascript (there is some redundancy, but having it
     here simplifies code and is REQUIRED due to styling problems with @row/@cell when the template
     is stored elsewhere). -->
-<#macro stcLocFieldContainer containerClass="" onAddClick="" fieldArgs={} entryTmpl=false extraTmpl="" extraArgs...>
+<#macro stcLocFieldContainer containerClass="" onAddClick="" fieldArgs={} entryTmpl=false extraTmpl="" localeArgs={} extraArgs...>
     <#local containerClass = addClassArg(containerClass, "+stc-locfield")>
     <@field type="general" containerClass=containerClass args=fieldArgs><#t/>
       <div class="stc-locfield-entries"><#nested></div><#t/>
@@ -36,7 +36,7 @@
         <#if onAddClick?has_content> onClick="${onAddClick}"</#if>>[+]</a></div><#t/>
       <#if !entryTmpl?is_boolean>
         <div style="display:none;"><#t/>
-          <div class="stc-markup-locFieldEntry"><#if entryTmpl?is_directive><@entryTmpl/><#else>${entryTmpl}</#if></div><#t/>
+          <div class="stc-markup-locFieldEntry"><#if entryTmpl?is_directive><@entryTmpl localeArgs=localeArgs/><#else>${entryTmpl}</#if></div><#t/>
         </div><#t/>
       </#if>
       <#if extraTmpl?is_directive><@extraTmpl/><#else>${extraTmpl}</#if>
@@ -45,12 +45,13 @@
 
 <#-- Entry markup template for @stcLocField 
     This must support a no-argument invocation for the JS template. -->
-<#macro stcLocFieldEntry localeFieldName="" textFieldName="" entryData={} extraArgs...>
+<#macro stcLocFieldEntry localeFieldName="" textFieldName="" entryData={} localeArgs={} extraArgs...>
   <@row class="+stc-locfield-entry"><#t/>
     <@cell small=2><#t/>
       <@field type="select" name=localeFieldName class="+stc-locfield-locale"><#t/>
-        <@listLocaleMacros.availableLocalesOptions expandCountries=true allowExtra=true allowEmpty=true
-          currentLocale=(entryData.localeString!)/><#t/>
+        <@listLocaleMacros.availableLocalesOptions expandCountries=(localeArgs.expandCountries!true) 
+            allowExtra=(localeArgs.allowExtra!true) allowEmpty=(localeArgs.allowEmpty!true)
+            currentLocale=(entryData.localeString!)/><#t/>
       </@field><#t/>
     </@cell><#t/>
     <@cell small=10><#t/>
@@ -80,7 +81,7 @@
             paramNamePrefix="contentField_" params=parameters label=uiLabelMap.ProductProductName/>
     -->
 <#macro stcLocField typeName paramNamePrefix entityFieldName=true values=false params={} parsedParamName=""
-    label="" tooltip="" fieldArgs={} onAddClick="" 
+    label="" tooltip="" fieldArgs={} onAddClick="" localeArgs={} 
     containerMarkup=false entryMarkup=false namePrefixFunc=false extraArgs...>
   <#local typeName = rawString(typeName)>
   <#local paramNamePrefix = rawString(paramNamePrefix)>
@@ -114,21 +115,22 @@
     ></div><#t/>
   </#local>
   <@containerMarkup typeName=typeName fieldName=entityFieldName paramNamePrefix=paramNamePrefix
-      onAddClick=onAddClick entryTmpl=entryMarkup extraTmpl=dataElem fieldArgs=(fieldArgs+{"label":label, "tooltip":tooltip})>
+      onAddClick=onAddClick entryTmpl=entryMarkup extraTmpl=dataElem fieldArgs=(fieldArgs+{"label":label, "tooltip":tooltip})
+      localeArgs=localeArgs>
     <#if entryDataList?has_content>
       <#-- add the main/default entry (Product[Category]Content, index zero) + ContentAssoc entries -->
       <#list entryDataList as entryData>
         <#local namePrefix = namePrefixFunc(paramNamePrefix, typeName, entityFieldName, entryData?index)>
         <#local localeFieldName = namePrefix+"localeString">
         <#local textFieldName = namePrefix+"textData">
-        <@entryMarkup entryData=entryData localeFieldName=localeFieldName textFieldName=textFieldName/>
+        <@entryMarkup entryData=entryData localeFieldName=localeFieldName textFieldName=textFieldName localeArgs=localeArgs/>
       </#list>
     <#else>
       <#-- add empty main/default entry (Product[Category]Content) -->
       <#local namePrefix = namePrefixFunc(paramNamePrefix, typeName, entityFieldName, 0)>
       <#local localeFieldName = namePrefix+"localeString">
       <#local textFieldName = namePrefix+"textData">
-      <@entryMarkup entryData=entryData localeFieldName=localeFieldName textFieldName=textFieldName/>
+      <@entryMarkup entryData=entryData localeFieldName=localeFieldName textFieldName=textFieldName localeArgs=localeArgs/>
     </#if>
   </@containerMarkup>
 </#macro>

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.ofbiz.service.ServiceUtil;
+
 /**
  * SCIPIO: Utilities for implementing and using {@link PropertyMessageEx}.
  */
@@ -49,6 +51,24 @@ public abstract class PropertyMessageExUtil {
     }
     
     /**
+     * Returns the localized property exception message list, or null if none.
+     */
+    public static List<String> getExceptionMessageList(Throwable t, Locale locale) {
+        if (t instanceof PropertyMessageEx) {
+            PropertyMessageEx propEx = (PropertyMessageEx) t;
+            return PropertyMessage.getMessages(propEx.getPropertyMessageList(), locale);
+        }
+        return null;
+    }
+    
+    /**
+     * Returns the localized property exception message list, or null if none.
+     */
+    public static List<String> getExceptionMessageList(Throwable t, Map<String, ?> context) {
+        return getExceptionMessageList(t, (Locale) context.get("locale"));
+    }
+    
+    /**
      * Returns the property exception message in english, or fallback on non-localized detail message.
      * NOTE: Depending on the exception implementation, this may be redundant, and in some cases
      * it can be better to simply call {@code t.getMessage()} instead of this.
@@ -61,4 +81,49 @@ public abstract class PropertyMessageExUtil {
         }
         return t.getMessage();
     }
+    
+    /**
+     * Creates a service error result from the exception containing the main exception message
+     * and message list, taken from {@link PropertyMessageEx}, with optional intro message.
+     */
+    public static Map<String, Object> makeServiceErrorResult(PropertyMessage messageIntro, Throwable t, Locale locale) {
+        return ServiceUtil.returnError(makeServiceMessage(messageIntro, t, locale), getExceptionMessageList(t, locale));
+    }
+    
+    /**
+     * Creates a service error result from the exception containing the main exception message
+     * and message list, taken from {@link PropertyMessageEx}, with optional intro message.
+     */
+    public static Map<String, Object> makeServiceErrorResult(String messageIntro, Throwable t, Locale locale) {
+        return makeServiceErrorResult(PropertyMessage.makeFromStatic(messageIntro), t, locale);
+    }
+    
+    /**
+     * Creates a service failure result from the exception containing the main exception message
+     * and message list, taken from {@link PropertyMessageEx}.
+     */
+    public static Map<String, Object> makeServiceFailureResult(PropertyMessage messageIntro, Throwable t, Locale locale) {
+        return ServiceUtil.returnFailure(makeServiceMessage(messageIntro, t, locale), getExceptionMessageList(t, locale));
+    }
+    
+    /**
+     * Creates a service failure result from the exception containing the main exception message
+     * and message list, taken from {@link PropertyMessageEx}.
+     */
+    public static Map<String, Object> makeServiceFailureResult(String messageIntro, Throwable t, Locale locale) {
+        return makeServiceFailureResult(PropertyMessage.makeFromStatic(messageIntro), t, locale);
+    }
+    
+    public static String makeServiceMessage(PropertyMessage messageIntro, Throwable t, Locale locale) {
+        String msg = null;
+        if (messageIntro != null) msg = messageIntro.getMessage(locale);
+        String exMsg = getExceptionMessage(t, locale);
+        if (msg != null) {
+            if (exMsg != null) msg += ": " + exMsg;
+        } else {
+            msg = exMsg;
+        }
+        return msg;
+    }
+    
 }

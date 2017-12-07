@@ -7,8 +7,8 @@ import java.util.Locale;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.PropertyMessage;
 import org.ofbiz.base.util.PropertyMessageEx;
-import org.ofbiz.base.util.PropertyMessageEx.PropertyMessageExUtil;
 import org.ofbiz.base.util.PropertyMessageEx.SettablePropertyMessageEx;
+import org.ofbiz.base.util.PropertyMessageExUtil;
 
 /**
  * Base CMS exception.

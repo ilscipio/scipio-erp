@@ -55,30 +55,4 @@ public interface PropertyMessageEx {
          */
         public SettablePropertyMessageEx setPropertyMessageList(Collection<?> messageList);
     }
-    
-    /**
-     * SCIPIO: Utilities for implementing and using {@link PropertyMessageEx}.
-     *
-     */
-    public static abstract class PropertyMessageExUtil {
-        protected PropertyMessageExUtil() {
-        }
-        
-        /**
-         * SCIPIO: Safely makes a PropertyMessage list for storage in an exception.
-         * If null given, returns null.
-         */
-        public static List<PropertyMessage> makePropertyMessageList(Collection<?> messages) {
-            return PropertyMessage.makeListAutoSafe(messages);
-        }
-        
-        /**
-         * SCIPIO: Safely makes a PropertyMessage list for storage in an exception.
-         * The argument can be a single message or collection.
-         * If null given, returns null.
-         */
-        public static List<PropertyMessage> makePropertyMessageList(Object messageOrList) {
-            return PropertyMessage.makeListAutoSafe(messageOrList);
-        }
-    }
 }

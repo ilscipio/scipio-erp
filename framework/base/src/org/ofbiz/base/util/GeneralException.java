@@ -137,6 +137,27 @@ public class GeneralException extends Exception implements SettablePropertyMessa
     }
     
     /**
+     * SCIPIO: Constructs an <code>GeneralException</code> with the specified property message,
+     * also used as detail message.
+     * @param propMsg the property and detail message.
+     */
+    public GeneralException(PropertyMessage propMsg) {
+        super(propMsg.getDefExLocaleMessage());
+        this.propertyMessage = propMsg;
+    }
+    
+    /**
+     * SCIPIO: Constructs an <code>GeneralException</code> with the specified property message,
+     * also used as detail message, and nested Exception.
+     * @param propMsg the property and detail message.
+     * @param nested the nested exception.
+     */
+    public GeneralException(PropertyMessage propMsg, Throwable nested) {
+        super(propMsg.getDefExLocaleMessage(), nested);
+        this.propertyMessage = propMsg;
+    }
+    
+    /**
      * SCIPIO: Setter for property message.
      * Workaround for massive constructor inheritance.
      * Returns GeneralException so that can be easily chained in a throw statement.

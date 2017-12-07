@@ -593,3 +593,19 @@ input[type="radio"] + label, .checkbox-type-simple-standard input[type="checkbox
         margin-right:0px;
      }
 }
+
+/* stcLocField */
+.stc-locfield {
+    .stc-locfield-entries .stc-locfield-entry:last-child {
+        margin-bottom: 0;
+        select, input {
+            margin-bottom: 0; /* remove last entry's (on top of [+]) margin */
+        }
+    }
+    .stc-locfield-add-cnt {
+        @extend .text-right; /* align add [+] button right */
+        margin-bottom: 1rem; /* add margin after button */
+    }
+}
+
+

@@ -45,8 +45,13 @@
     <#local valueListsByType = getStcLocFieldParsedParams(params, parsedParamName, paramNamePrefix)>
     <#list fieldInfo.typeNames as typeName>
       <#local fieldName = fieldInfo.fieldNames[typeName?index]>
+      <#local typeInfo = (fieldInfo.typeInfo[rawString(typeName)])!{}>
+      <#local inputType = "input">
+      <#if (typeInfo.isLong)!false == true>
+        <#local inputType = "textarea">
+      </#if>
       <#-- @stcLocField from content common.ftl -->
-      <@stcLocField typeName=typeName entityFieldName=fieldName paramNamePrefix="contentField_" params=params 
+      <@stcLocField inputType=inputType typeName=typeName entityFieldName=fieldName paramNamePrefix="contentField_" params=params 
         label=ectGetLocFieldLabel(fieldName, typeName) tooltip="" localeArgs=localeArgs/>
     </#list>
   </#if>

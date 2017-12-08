@@ -135,7 +135,7 @@
         <@field type="textarea" name="longDescription" value=(params.longDescription!) label=uiLabelMap.FormFieldTitle_longDescription class="+ect-inputfield"/>
 
         <#local updateLocalizedTextsChecked = (params.updateLocalizedTexts!?string == "true")>
-        <@fieldset title=uiLabelMap.CommonLocalizedFields collapsed=(!updateLocalizedTextsChecked) class="+ect-locfields-cnt stc-locfields-cnt">
+        <@fieldset title=uiLabelMap.CommonLocalizedFields collapsed=false class="+ect-locfields-cnt stc-locfields-cnt"><#-- fieldset too limited for this to work: collapsed=(!updateLocalizedTextsChecked) -->
             <#-- auto-checks when user changes a field -->
             <@field type="generic">
                 <@field type="checkbox" checkboxType="simple" name="updateLocalizedTexts" label=uiLabelMap.CommonUpdateLocalizedFields value="true" checked=updateLocalizedTextsChecked/>

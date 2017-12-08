@@ -34,6 +34,7 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.content.content.LocalizedContentWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -47,6 +48,7 @@ import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 
 import javolution.util.FastList;
@@ -491,10 +493,84 @@ public class CategoryServices {
             result.put("viewsByType", viewsByType);
         }
         if (Boolean.TRUE.equals(context.get("getViewsByTypeAndLocale"))) {
-            result.put("viewsByTypeAndLocale", CategoryWorker.splitContentLocalizedSimpleTextContentAssocViewsByLocale(viewsByType));
+            result.put("viewsByTypeAndLocale", LocalizedContentWorker.splitContentLocalizedSimpleTextContentAssocViewsByLocale(viewsByType));
         }
         if (Boolean.TRUE.equals(context.get("getTextByTypeAndLocale"))) {
-            result.put("textByTypeAndLocale", CategoryWorker.extractContentLocalizedSimpleTextDataByLocale(viewsByType));
+            result.put("textByTypeAndLocale", LocalizedContentWorker.extractContentLocalizedSimpleTextDataByLocale(viewsByType));
         }
     }
+    
+    /**
+     * SCIPIO: replaceProductCategoryContentSimpleTextsForAlternateLocale.
+     * Added 2017-12-06.
+     */
+    public static Map<String, Object> replaceProductCategoryContentSimpleTextsForAlternateLocale(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Locale locale = (Locale) context.get("locale");
+        String productCategoryId = (String) context.get("productCategoryId");
+        
+        try {
+            GenericValue productCategory = delegator.findOne("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId), false);
+            if (productCategory == null) {
+                throw new IllegalArgumentException(UtilProperties.getMessage("ProductUiLabels", "ProductCategoryNotFoundForCategoryID", locale) + ": " + productCategoryId);
+            }
+            
+            Map<String, Object> contentFieldsUnparsed = UtilGenerics.checkMap(context.get("contentFields"));
+            Map<String, List<Map<String, Object>>> contentFields = LocalizedContentWorker.parseLocalizedSimpleTextContentFieldParams(contentFieldsUnparsed, null, true);
+        
+            for(Map.Entry<String, List<Map<String, Object>>> entry : contentFields.entrySet()) {
+                String prodCatContentTypeId = entry.getKey();
+                List<Map<String, Object>> entries = entry.getValue();
+            
+                List<GenericValue> productCategoryContentList = EntityQuery.use(delegator).from("ProductCategoryContent")
+                        .where("productCategoryId", productCategoryId, "prodCatContentTypeId", prodCatContentTypeId).filterByDate()
+                        .orderBy("-fromDate").queryList();
+                GenericValue productCategoryContent = EntityUtil.getFirst(productCategoryContentList);
+                if (productCategoryContentList.size() > 1) {
+                    Debug.logWarning("replaceProductCategoryContentSimpleTextsForAlternateLocale: Multiple active ProductCategoryContent found for prodCatContentTypeId '"
+                            + prodCatContentTypeId + "' for category '" + productCategoryId + "'; updating only latest (contentId: '" + productCategoryContent.getString("contentId") + "')", module);
+                }
+                
+                String mainContentId = null;
+                if (productCategoryContent != null) {
+                    mainContentId = productCategoryContent.getString("contentId");
+                }
+
+                Map<String, Object> servCtx = dctx.makeValidContext("replaceSimpleTextContentsAndMainContentForAlternateLocale", ModelService.IN_PARAM, context);
+                servCtx.put("mainContentId", mainContentId);
+                servCtx.put("entries", entries);
+                Map<String, Object> servResult = dispatcher.runSync("replaceSimpleTextContentsAndMainContentForAlternateLocale", servCtx);
+                if (!ServiceUtil.isSuccess(servResult)) {
+                    return ServiceUtil.returnError(getReplStcAltLocErrorPrefix(context, locale) + ": " + ServiceUtil.getErrorMessage(servResult));
+                }
+                if (mainContentId == null && servResult.get("mainContentId") != null) {
+                    // must create a new ProductContent record
+                    mainContentId = (String) servResult.get("mainContentId");
+                    
+                    productCategoryContent = delegator.makeValue("ProductCategoryContent");
+                    productCategoryContent.put("productCategoryId", productCategoryId);
+                    productCategoryContent.put("contentId", mainContentId);
+                    productCategoryContent.put("prodCatContentTypeId", prodCatContentTypeId);
+                    productCategoryContent.put("fromDate", UtilDateTime.nowTimestamp());
+                    productCategoryContent = delegator.create(productCategoryContent);
+                } else if (servResult.get("mainContentId") != null && Boolean.TRUE.equals(servResult.get("allContentEmpty"))) {
+                    mainContentId = (String) servResult.get("mainContentId");
+                    if (Boolean.TRUE.equals(context.get("mainContentDelete"))) {
+                        delegator.removeByAnd("ProductCategoryContent", UtilMisc.toMap("contentId", mainContentId));
+                        LocalizedContentWorker.removeContentAndRelated(delegator, dispatcher, context, mainContentId);
+                    }
+                }
+            }
+            return ServiceUtil.returnSuccess();
+        } catch(Exception e) {
+            Debug.logError(e, getReplStcAltLocErrorPrefix(context, Locale.ENGLISH) + ": " + e.getMessage(), module);
+            return ServiceUtil.returnError(getReplStcAltLocErrorPrefix(context, locale) + ": " + e.getMessage());
+        }
+    }
+    private static String getReplStcAltLocErrorPrefix(Map<String, ?> context, Locale locale) {
+        return UtilProperties.getMessage("ProductErrorUiLabels", "productservices.error_updating_ProductCategoryContent_simple_texts_for_alternate_locale_for_category", 
+                context, locale);
+    }
+    
 }

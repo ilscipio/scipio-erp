@@ -21,6 +21,7 @@ import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.content.content.LocalizedContentWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
@@ -188,7 +189,7 @@ public abstract class SeoCatalogServices {
         }
         if (nameProductContent != null) {
             nameMainContent = nameProductContent.getRelatedOne("Content", useCache);
-            localeTextMap = getSimpleTextsByLocaleString(delegator, dispatcher, 
+            localeTextMap = LocalizedContentWorker.getSimpleTextsByLocaleString(delegator, dispatcher, 
                     nameMainContent, moment, useCache);
             mainLocaleString = nameMainContent.getString("localeString");
         }
@@ -205,7 +206,7 @@ public abstract class SeoCatalogServices {
         if (productContent != null) {
             mainContent = productContent.getRelatedOne("Content", useCache);
         }
-        mainContent = replaceAltUrlContentLocalized(delegator, dispatcher, context, 
+        mainContent = replaceAltUrlLocalizedContent(delegator, dispatcher, context, 
                 mainContent, mainLocaleString, mainUrl, localeUrlMap, removeOldLocales, moment);
         
         if (productContent == null) {
@@ -335,7 +336,7 @@ public abstract class SeoCatalogServices {
                 .where("productCategoryId", productCategoryId, "prodCatContentTypeId", categoryNameField).filterByDate(moment).cache(useCache).queryFirst();
         if (nameProductCategoryContent != null) {
             nameMainContent = nameProductCategoryContent.getRelatedOne("Content", useCache);
-            localeTextMap = getSimpleTextsByLocaleString(delegator, dispatcher, 
+            localeTextMap = LocalizedContentWorker.getSimpleTextsByLocaleString(delegator, dispatcher, 
                     nameMainContent, moment, useCache);
             mainLocaleString = nameMainContent.getString("localeString"); 
         }
@@ -352,7 +353,7 @@ public abstract class SeoCatalogServices {
         if (productCategoryContent != null) {
             mainContent = productCategoryContent.getRelatedOne("Content", useCache);
         }
-        mainContent = replaceAltUrlContentLocalized(delegator, dispatcher, context, 
+        mainContent = replaceAltUrlLocalizedContent(delegator, dispatcher, context, 
                 mainContent, mainLocaleString, mainUrl, localeUrlMap, removeOldLocales, moment);
     
         if (productCategoryContent == null) {
@@ -400,7 +401,7 @@ public abstract class SeoCatalogServices {
         // try CATEGORY_NAME/PRODUCT_NAME main ALTERNATIVE_URL Content record textData,
         // where localeString was null
         if (nameMainContent != null) {
-            mainText = getContentElectronicText(delegator, dispatcher, nameMainContent).getString("textData");
+            mainText = LocalizedContentWorker.getSimpleTextContentElectronicText(delegator, dispatcher, nameMainContent).getString("textData");
             if (UtilValidate.isNotEmpty(mainText)) {
                 return sanitizer.convertNameToDbAltUrl(mainText, null, urlType);
             }
@@ -428,34 +429,7 @@ public abstract class SeoCatalogServices {
         return null;
     }
 
-    /**
-     * TODO: move this, I need it elsewhere too...
-     */
-    private static Map<String, String> getSimpleTextsByLocaleString(Delegator delegator, LocalDispatcher dispatcher,
-            GenericValue mainContent, Timestamp moment, boolean useCache) throws GenericEntityException {
-        Map<String, String> localeTextMap = new HashMap<>();
-        
-        List<GenericValue> assocViewList = EntityQuery.use(delegator).from("ContentAssocToElectronicText")
-                .where("contentIdStart", mainContent.getString("contentId"), 
-                        "contentAssocTypeId", "ALTERNATE_LOCALE").filterByDate(moment).cache(useCache).queryList();
-        for(GenericValue assocView : assocViewList) {
-            String assocLocaleString = assocView.getString("localeString");
-            if (UtilValidate.isNotEmpty(assocLocaleString)) {
-                localeTextMap.put(assocLocaleString, assocView.getString("textData"));
-            }
-        }
-        
-        String mainLocaleString = mainContent.getString("localeString");
-        if (UtilValidate.isNotEmpty(mainLocaleString)) {
-            GenericValue elecText = getContentElectronicText(delegator, dispatcher, mainContent);
-            String mainTextData = elecText.getString("textData");
-            if (UtilValidate.isNotEmpty(mainTextData)) {
-                localeTextMap.put(mainLocaleString, mainTextData);
-            }
-        }
-        
-        return localeTextMap;
-    }
+    
     
     /**
      * Replaces the textData of the the ALTERNATIVE_URL Content and its associated ALTERNATE_LOCALE Contents
@@ -472,143 +446,15 @@ public abstract class SeoCatalogServices {
      * <p>
      * TODO?: move elsewhere, may need to reuse...
      */
-    private static GenericValue replaceAltUrlContentLocalized(Delegator delegator, LocalDispatcher dispatcher, Map<String, ?> context,
-            GenericValue mainContent, String mainLocaleString, String mainUrl, Map<String, String> localeUrlMap,
+    private static GenericValue replaceAltUrlLocalizedContent(Delegator delegator, LocalDispatcher dispatcher, Map<String, ?> context,
+            GenericValue mainContent, String mainLocaleString, String mainTextData, Map<String, String> localeTextMap,
             boolean removeOldLocales, Timestamp moment) throws Exception {
-        // DEV NOTE: to simplify, I am setting removeDupLocales to same as removeOldLocales...
-        // as long as removal is understood, there is really no reason to keep duplicates because
-        // the prior code was setting them all to the exact same value, so in other words,
-        // having removeDupLocales false was completely pointless...
-        final boolean removeDupLocales = removeOldLocales;
-        
-        Set<String> remainingLocales = new HashSet<>(localeUrlMap.keySet());
-
-        // update main content
-        if (mainContent == null) {
-            mainContent = createAltUrlSimpleTextContent(delegator, dispatcher, mainLocaleString, mainUrl);
-        } else {
-            updateAltUrlSimpleTextContent(delegator, dispatcher, mainContent, mainLocaleString, mainUrl);
-        }
-        
-        // SPECIAL: 2017-11-28: we must remove the mainLocaleString from remainingLocales because
-        // 1) when creating brand new records, don't want the second loop to create new ALTERNATE_LOCALEs
-        //    for locale already covered in the main record, and
-        // 2) if we remove mainLocaleString from remainingLocales BEFORE the next "update in-place or remove" loop,
-        //    it will allow the loop to correct past mistakes and remove duplicates that were previously created
-        if (UtilValidate.isNotEmpty(mainLocaleString)) {
-            remainingLocales.remove(mainLocaleString);
-        }
-        
-        List<GenericValue> contentAssocList = EntityQuery.use(delegator).from("ContentAssoc")
-                .where("contentId", mainContent.getString("contentId"), "contentAssocTypeId", "ALTERNATE_LOCALE")
-                .filterByDate(moment).cache(false).queryList();
-        
-        // update in-place or remove existing assoc records
-        for(GenericValue contentAssoc : contentAssocList) {
-            GenericValue content = contentAssoc.getRelatedOne("ToContent", false);
-            String localeString = content.getString("localeString");
-
-            // Removal logic:
-            // * The localeString was "old" if it's not in localeUrlMap at all.
-            //   * We also "treat" localeString also as "old" if it's in localeUrlMap but empty value.
-            // * The localeString was a "duplicate" if it's in localeUrlMap but was removed from remainingLocales.
-            
-            String textData = localeUrlMap.get(localeString);
-            if (UtilValidate.isNotEmpty(textData)) {
-                if (!removeDupLocales || remainingLocales.contains(localeString)) {
-                    updateAltUrlSimpleTextContent(delegator, dispatcher, content, textData);
-                    remainingLocales.remove(localeString);
-                } else {
-                    removeContentAndRelated(delegator, dispatcher, context, content);
-                }
-            } else {
-                if (removeOldLocales) {
-                    removeContentAndRelated(delegator, dispatcher, context, content);
-                }
-            }
-        }
-        
-        // see above comment - could have done this code here, but think it works better if earlier
-        //if (UtilValidate.isNotEmpty(mainLocaleString)) {
-        //    remainingLocales.remove(mainLocaleString);
-        //}
-        
-        // create new assoc records
-        for(String localeString : remainingLocales) {
-            String textData = localeUrlMap.get(localeString);
-            if (UtilValidate.isNotEmpty(textData)) {
-                GenericValue content = createAltUrlSimpleTextContent(delegator, dispatcher, localeString, textData);
-                GenericValue contentAssoc = delegator.makeValue("ContentAssoc");
-                contentAssoc.put("contentId", mainContent.getString("contentId"));
-                contentAssoc.put("contentIdTo", content.getString("contentId"));
-                contentAssoc.put("fromDate", moment);
-                contentAssoc.put("contentAssocTypeId", "ALTERNATE_LOCALE");
-                contentAssoc = delegator.create(contentAssoc);
-            }
-        }
-
-        return mainContent;
+        return LocalizedContentWorker.replaceLocalizedContent(delegator, dispatcher, context, mainContent, mainLocaleString, mainTextData, localeTextMap, 
+                removeOldLocales, moment, newAltUrlContentFields, newAltUrlDataResourceFields);
     }
-    
-    private static void removeContentAndRelated(Delegator delegator, LocalDispatcher dispatcher, Map<String, ?> context, GenericValue content) throws GeneralException {
-        Map<String, Object> servCtx = new HashMap<>();
-        servCtx.put("userLogin", context.get("userLogin"));
-        servCtx.put("locale", context.get("locale"));
-        servCtx.put("contentId", content.get("contentId"));
-        Map<String, Object> servResult = dispatcher.runSync("removeContentAndRelated", servCtx);
-        if (ServiceUtil.isError(servResult)) {
-            throw new SeoCatalogException("Cannot remove ALTERNATE_LOCALE record contentId '" 
-                    + content.get("contentId") + "': " + ServiceUtil.getErrorMessage(servResult));
-        }
-    }
-    
-    private static GenericValue createAltUrlSimpleTextContent(Delegator delegator, LocalDispatcher dispatcher, String localeString, String textData) throws GenericEntityException {
-        // create dataResource
-        GenericValue dataResource = delegator.makeValue("DataResource");
-        dataResource.put("dataResourceTypeId", "ELECTRONIC_TEXT");
-        dataResource.put("statusId", "CTNT_PUBLISHED");
-        dataResource = delegator.createSetNextSeqId(dataResource);
-        String dataResourceId = dataResource.getString("dataResourceId");
 
-        // create electronicText
-        GenericValue electronicText = delegator.makeValue("ElectronicText");
-        electronicText.put("dataResourceId", dataResourceId);
-
-        electronicText.put("textData", textData);
-        electronicText = delegator.create(electronicText);
-
-        // create content
-        GenericValue content = delegator.makeValue("Content");
-        if (UtilValidate.isNotEmpty(localeString)) content.put("localeString", localeString);
-        content.put("dataResourceId", dataResourceId);
-        content.put("contentTypeId", "DOCUMENT");
-        content.put("description", "Alternative URL");
-        content = delegator.createSetNextSeqId(content);
-        
-        return content;
-    }
-    
-    private static void updateAltUrlSimpleTextContent(Delegator delegator, LocalDispatcher dispatcher, GenericValue content, String localeString, String textData) throws GenericEntityException {
-        updateAltUrlSimpleTextContent(delegator, dispatcher, content, textData);
-        content.put("localeString", localeString);
-        content.store();
-    }
-    
-    private static void updateAltUrlSimpleTextContent(Delegator delegator, LocalDispatcher dispatcher, GenericValue content, String textData) throws GenericEntityException {
-        GenericValue elecText = getContentElectronicText(delegator, dispatcher, content);
-        elecText.put("textData", textData);
-        elecText.store();
-    }
-    
-    private static GenericValue getContentElectronicText(Delegator delegator, LocalDispatcher dispatcher, GenericValue content) throws GenericEntityException {
-        GenericValue elecText = EntityQuery.use(delegator).from("ElectronicText")
-                .where("dataResourceId", content.getString("dataResourceId"))
-                .cache(false).queryOne();
-        if (elecText == null) {
-            throw new GenericEntityException("Simple text content '" + content.getString("contentId") + "' has no ElectronicText");
-        }
-        return elecText;
-    }
+    private static final Map<String, Object> newAltUrlContentFields = UtilMisc.toMap("description", "Alternative URL");
+    private static final Map<String, Object> newAltUrlDataResourceFields = UtilMisc.toMap("statusId", "CTNT_PUBLISHED");
     
     /**
      * Re-generates alternative urls for store/website based on ruleset outlined in SeoConfig.xml.

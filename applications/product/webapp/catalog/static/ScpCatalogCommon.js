@@ -30,7 +30,7 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
     scth.popupMsgModalId = data.popupMsgModalId;
     scth.confirmMsgModalId = data.confirmMsgModalId;
     scth.dialogIdPrefix = data.dialogIdPrefix;
-    scth.objectLocFields = data.objectLocFields || {};
+    scth.catalogLocFieldsInfo = data.catalogLocFieldsInfo || {};
     
     // workaround flags
     // FIXME: these are being used to prevent form changes on event error,
@@ -414,6 +414,14 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
         return resParams;
     };
     
+    var setCheckboxChecked = function(field, state) {
+        if (field.is("input[type=checkbox]")) {
+            field.prop('checked', state);
+        } else {
+            jQuery("input[type=checkbox]", field).prop('checked', state);
+        }
+    };
+    
     /**
      * By default, clears all fields/elems having "etc-xxxfield" classes.
      */
@@ -421,6 +429,14 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
         jQuery('.ect-inputfield', form).filter(':input').val('');
         jQuery('.ect-displayfield', form).html('');
         jQuery('.ect-managefield', form).html('');
+        jQuery('.ect-checkfield', form).each(function() {
+            var field = jQuery(this);
+            if (field.hasClass('ect-initial-checked')) {
+                setCheckboxChecked(field, true);
+            } else {
+                setCheckboxChecked(field, false);
+            }
+        });
         
         if (params.local) {
             var localizedFields = params.local.localizedFields;
@@ -489,6 +505,7 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
     /**
      * Default populate form implementation.
      * Each form field/elem with "ect-xxxclass" receives a param or empty value/html.
+     * TODO?: special handling for "ect-nonvaluefield" class, not yet established.
      */
     this.populateFormCommon = function(form, params, ai) {
         if (isObj(params)) {
@@ -796,6 +813,17 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
         return ai;
     };
     
+    var initLocFieldParams = function(params, objectType) {
+        var fieldInfo = scth.catalogLocFieldsInfo[objectType];
+        if (fieldInfo) {
+            params.local.localizedFields = {
+                typeNames: fieldInfo.typeNames,      
+                entryDataListsByType: {}
+            };
+        }
+        return fieldInfo;
+    };
+    
     this.execEditForNode = function($node) {
         var ai = getActionInfo($node, "edit");
         var params = makeParamsMap(ai);
@@ -808,50 +836,44 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
             
             var doExecEdit = true;
             if (specFlags.noShowFormPopulate !== true) {
-                
-                var fieldInfo = scth.objectLocFields[ai.objectType];
-                
-                if (ai.objectType === 'category') {
-                    if (scth.links.getProductCategoryExtendedData) {
-                        doExecEdit = false;
-                        runAjax(scth.links.getProductCategoryExtendedData, {
-                                productCategoryId: ai.objectId,
-                                prodCatContentTypeIdList: fieldInfo.typeNameListStr,
-                                getViewsByType: true,
-                                getTextByTypeAndLocale: false
-                            }, 
-                            function(data) {
-                                if (data.viewsByType) {
-                                    //alert('server result: ' + JSON.stringify(data.textByTypeAndLocale, null, 2));
-                                    params.local.localizedFields = {
-                                        typeNames: fieldInfo.typeNames,      
-                                        entryDataListsByType: slfh.parseViewsByType(data.viewsByType)
-                                    };
+                var fieldInfo = initLocFieldParams(params, ai.objectType);
+                if (fieldInfo) {
+                    if (ai.objectType === 'category') {
+                        if (scth.links.getProductCategoryExtendedData) {
+                            doExecEdit = false;
+                            runAjax(scth.links.getProductCategoryExtendedData, {
+                                    productCategoryId: ai.objectId,
+                                    prodCatContentTypeIdList: fieldInfo.typeNameListStr,
+                                    getViewsByType: true,
+                                    getTextByTypeAndLocale: false
+                                }, 
+                                function(data) {
+                                    if (data.viewsByType) {
+                                        //alert('server result: ' + JSON.stringify(data.textByTypeAndLocale, null, 2));
+                                        params.local.localizedFields.entryDataListsByType = slfh.parseViewsByType(data.viewsByType);
+                                    }
+                                    execEdit();
                                 }
-                                execEdit();
-                            }
-                        );
-                    }
-                } else if (ai.objectType === 'product') {
-                    if (scth.links.getProductExtendedData) {
-                        doExecEdit = false;
-                        runAjax(scth.links.getProductExtendedData, {
-                                productId: ai.objectId,
-                                productContentTypeIdList: fieldInfo.typeNameListStr,
-                                getViewsByType: true,
-                                getTextByTypeAndLocale: false
-                            }, 
-                            function(data) {
-                                if (data.viewsByType) {
-                                    //alert('server result: ' + JSON.stringify(data.textByTypeAndLocale, null, 2));
-                                    params.local.localizedFields = {
-                                        typeNames: fieldInfo.typeNames,      
-                                        entryDataListsByType: slfh.parseViewsByType(data.viewsByType)
-                                    };
+                            );
+                        }
+                    } else if (ai.objectType === 'product') {
+                        if (scth.links.getProductExtendedData) {
+                            doExecEdit = false;
+                            runAjax(scth.links.getProductExtendedData, {
+                                    productId: ai.objectId,
+                                    productContentTypeIdList: fieldInfo.typeNameListStr,
+                                    getViewsByType: true,
+                                    getTextByTypeAndLocale: false
+                                }, 
+                                function(data) {
+                                    if (data.viewsByType) {
+                                        //alert('server result: ' + JSON.stringify(data.textByTypeAndLocale, null, 2));
+                                        params.local.localizedFields.entryDataListsByType = slfh.parseViewsByType(data.viewsByType);
+                                    }
+                                    execEdit();
                                 }
-                                execEdit();
-                            }
-                        );
+                            );
+                        }
                     }
                 }
             }
@@ -1042,6 +1064,7 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
         }
         
         checkExecConfirm(ai, params, {}, function() {
+            initLocFieldParams(params, ai.objectType);
             execActionTarget(ai, params);
         });
     };
@@ -1058,6 +1081,7 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
         }
         
         checkExecConfirm(ai, params, {}, function() {
+            initLocFieldParams(params, ai.objectType);
             execActionTarget(ai, params);
         });
     };
@@ -1067,6 +1091,7 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
         var params = makeParamsMap(ai);
         // default params OK
         checkExecConfirm(ai, params, {}, function() {
+            initLocFieldParams(params, ai.objectType);
             execActionTarget(ai, params);
         });
     };

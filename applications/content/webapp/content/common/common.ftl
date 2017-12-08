@@ -4,24 +4,32 @@
     Intended for ProductContent/ProductCategoryContent fields with ALTERNATE_LOCALE support,
     but this should support anything fitting that entity pattern. -->
 
-<#-- Parses simple text content localized field initial value params for paramNamePrefix. -->
+<#-- Parses simple text content localized field initial value params for paramNamePrefix. 
+    Returns a map of typeNames to entryDataLists, where each entryDataList is a list of maps with keys: localeString, textData. -->
 <#function parseStcLocFieldParams params paramNamePrefix="" allowPreparsed=false>
-  <#return toSimpleMap(Static["org.ofbiz.product.category.CategoryWorker"].parseLocalizedSimpleTextContentFieldParams(params, paramNamePrefix, allowPreparsed)!{})>
+  <#return toSimpleMap(Static["org.ofbiz.content.content.LocalizedContentWorker"].parseLocalizedSimpleTextContentFieldParams(params, paramNamePrefix, allowPreparsed)!{})>
 </#function>
 
 <#-- Retrieves the incoming initial values for localized field from params[parsedParamName], 
     or if not set, parses them from params for paramNamePrefix.
-    This way, supports both pre-parse from groovy and standalone operation. -->
+    Returns a map of typeNames to entryDataLists, where each entryDataList is a list of maps with keys: localeString, textData.
+    Supports both pre-parse from groovy and standalone operation. 
+    DEV NOTE: there should be no correctness/security issues with having the parsedParamName map in the parameters
+    map, because user-supplied parameters are never stored there in Map form. -->
 <#function getStcLocFieldParsedParams params parsedParamName="" paramNamePrefix="" allowPreparsed=false>
-  <#if parsedParamName?has_content && params[parsedParamName]?? && params[parsedParamName]?is_hash>
-      <#return toSimpleMap(params.simpleTextViewsByType)>
-  <#elseif paramNamePrefix?has_content>
+  <#if parsedParamName?has_content>
+    <#local values = params[parsedParamName]!false>
+    <#if isObjectType("map", values)>
+      <#return toSimpleMap(values)>
+    </#if>
+  </#if>
+  <#if paramNamePrefix?has_content>
     <#return parseStcLocFieldParams(params, paramNamePrefix, allowPreparsed)>
   </#if>
 </#function>
 
 <#function makeStcLocFieldNamePrefix paramNamePrefix typeName entityFieldName index>
-    <#return rawString(Static["org.ofbiz.product.category.CategoryWorker"].makeLocalizedSimpleTextContentFieldStringParamPrefix(paramNamePrefix, typeName, index))>
+    <#return rawString(Static["org.ofbiz.content.content.LocalizedContentWorker"].makeLocalizedSimpleTextContentFieldStringParamPrefix(paramNamePrefix, typeName, index))>
 </#function>
 
 <#-- Outer container markup for @stcLocField
@@ -63,6 +71,13 @@
 </#macro>
 
 <#-- Simple text content localized field, a simple text input with separate entries for each locale.
+    
+    Originally written to produce submitted parameters compatible with the service interface:
+      replaceEntityContentSimpleTextsForAlternateLocaleInterface
+    notably these wrapper services:
+      replaceProductContentSimpleTextsForAlternateLocale
+      replaceProductCategoryContentSimpleTextsForAlternateLocale
+    Args may be tweaked to work with others.
 
     REQUIRES:
     * /content/images/ScpContentCommon.js (StcLocFieldHandler)
@@ -70,8 +85,13 @@
     Creates the initial localized fields for ProductContent/ProductCategoryContent ALTERNATE_LOCALE fields
     at initial load (event error), but also supports other types of localized fields.
     
-    values can be a hash of typeNames to entryDataLists, or a single entryDataLists,
-    or if not specified, it will be looked up in params using getStcLocFieldParsedParams.
+    values can be a single entryDataList, a hash of typeNames to entryDataLists,
+    or if not specified, it will be looked up in params using getStcLocFieldParsedParams, which
+    returns a hash of typeNames to entryDataLists.
+    entryDataList is a list of hashes containing the keys: localeString, textData (can pass a list of view-entities).
+    The FIRST entry in entryDataList is always assumed to be the main/original Content record linked by
+    ProductContent/ProductCategoryContent, whereas the others are the ALTERNATE_LOCALE Content records
+    in any order.
     
     The markup and especially name-building function can be overridden in the parameters 
     to suit the service/event.
@@ -80,24 +100,27 @@
     
     Example:
         <@stcLocField typeName="PRODUCT_NAME"
-            paramNamePrefix="contentField_" params=parameters label=uiLabelMap.ProductProductName
+            paramNamePrefix="contentFields_" params=parameters label=uiLabelMap.ProductProductName
             inputType="textarea"/>
-    -->
-<#macro stcLocField typeName paramNamePrefix entityFieldName=true values=false params={} parsedParamName=""
+            
+    TODO: currently this only support    
+-->
+<#macro stcLocField typeName paramNamePrefix="contentFields_" entityFieldName=true values=false params={} parsedParamName=""
     label="" tooltip="" inputType="input" wrapperArgs={} inputArgs={} localeOpts={} onAddClick="" 
     containerMarkup=false entryMarkup=false namePrefixFunc=false extraArgs...>
   <#local typeName = rawString(typeName)>
   <#local paramNamePrefix = rawString(paramNamePrefix)>
   <#if entityFieldName?is_boolean>
     <#local entityFieldName = rawString(Static["org.ofbiz.entity.model.ModelUtil"].dbNameToVarName(typeName))>
-  </#if>
-  <#t/>
-  <#if values?is_hash>
-    <#local entryDataList = (values[typeName]![])>
-  <#elseif values?is_sequence>
-    <#local entryDataList = values>
   <#else>
-    <#local values = getStcLocFieldParsedParams(params, parsedParamName, paramNamePrefix)>
+    <#local entityFieldName = rawString(entityFieldName)>
+  </#if>
+  <#if values?is_sequence>
+    <#local entryDataList = values>
+  <#elseif isObjectType("map", values)>
+    <#local entryDataList = (values[typeName]![])>
+  <#else>
+    <#local values = getStcLocFieldParsedParams(params, parsedParamName, paramNamePrefix)!{}>
     <#local entryDataList = (values[typeName]![])>
   </#if>
   <#t/>

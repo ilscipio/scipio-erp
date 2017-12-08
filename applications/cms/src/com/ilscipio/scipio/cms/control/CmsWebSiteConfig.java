@@ -136,10 +136,10 @@ public class CmsWebSiteConfig implements Serializable {
         if (webSiteId != null && webSiteId.isEmpty()) webSiteId = null;
         this.webSiteId = webSiteId;
         
-        this.allowPreviewMode = config.getBoolean("cmsAllowPreviewMode", defaultConfig.isAllowPreviewMode());
-        this.previewModeParamName = config.getString("cmsPreviewModeParamName", defaultConfig.getPreviewModeParamName());
+        this.allowPreviewMode = config.getBoolean("allowPreviewMode", defaultConfig.isAllowPreviewMode());
+        this.previewModeParamName = config.getString("previewModeParamName", defaultConfig.getPreviewModeParamName());
         
-        String defaultServletPath = config.getServletPath("cmsDefaultServletPath", null);
+        String defaultServletPath = config.getServletPath("defaultServletPath", null);
         if (UtilValidate.isEmpty(defaultServletPath)) {
             if (extWebappInfo != null) {
                 defaultServletPath = CmsControlUtil.normalizeServletPath(extWebappInfo.getControlServletMapping());
@@ -158,22 +158,22 @@ public class CmsWebSiteConfig implements Serializable {
             }
         }
         this.defaultServletPath = defaultServletPath;
-        this.defaultSourceServletPath = config.getServletPath("cmsDefaultSourceServletPath", defaultServletPath);
-        this.defaultForwardServletPath = config.getServletPath("cmsDefaultForwardServletPath", defaultServletPath);
-        this.defaultTargetServletPath = config.getServletPath("cmsDefaultTargetServletPath", defaultServletPath);
-        this.requestServletPath = config.getServletPath("cmsRequestServletPath", defaultServletPath);
+        this.defaultSourceServletPath = config.getServletPath("defaultSourceServletPath", defaultServletPath);
+        this.defaultForwardServletPath = config.getServletPath("defaultForwardServletPath", defaultServletPath);
+        this.defaultTargetServletPath = config.getServletPath("defaultTargetServletPath", defaultServletPath);
+        this.requestServletPath = config.getServletPath("requestServletPath", defaultServletPath);
 
-        this.setResponseBrowserNoCacheCmsPage = config.getBoolean("cmsSetResponseBrowserNoCacheCmsPage", defaultConfig.isSetResponseBrowserNoCacheCmsPage());
-        this.setResponseBrowserNoCacheScreen = config.getBoolean("cmsSetResponseBrowserNoCacheScreen", defaultConfig.isSetResponseBrowserNoCacheScreen());
-        this.setResponseBrowserNoCache = config.getBoolean("cmsSetResponseBrowserNoCache", defaultConfig.isSetResponseBrowserNoCache());
+        this.setResponseBrowserNoCacheCmsPage = config.getBoolean("setResponseBrowserNoCacheCmsPage", defaultConfig.isSetResponseBrowserNoCacheCmsPage());
+        this.setResponseBrowserNoCacheScreen = config.getBoolean("setResponseBrowserNoCacheScreen", defaultConfig.isSetResponseBrowserNoCacheScreen());
+        this.setResponseBrowserNoCache = config.getBoolean("setResponseBrowserNoCache", defaultConfig.isSetResponseBrowserNoCache());
         
-        this.alwaysUseDefaultForwardServletPath = config.getBoolean("cmsAlwaysUseDefaultForwardServletPath", defaultConfig.isAlwaysUseDefaultForwardServletPath());
-        this.defaultForwardExtraPathInfo = config.getBoolean("cmsDefaultForwardExtraPathInfo", defaultConfig.getDefaultForwardExtraPathInfo());
-        this.defaultSourceFromContextRoot = config.getBoolean("cmsDefaultSourceFromContextRoot", defaultConfig.getDefaultSourceFromContextRoot());
-        this.defaultForwardFromContextRoot = config.getBoolean("cmsDefaultForwardFromContextRoot", defaultConfig.getDefaultForwardFromContextRoot());
+        this.alwaysUseDefaultForwardServletPath = config.getBoolean("alwaysUseDefaultForwardServletPath", defaultConfig.isAlwaysUseDefaultForwardServletPath());
+        this.defaultForwardExtraPathInfo = config.getBoolean("defaultForwardExtraPathInfo", defaultConfig.getDefaultForwardExtraPathInfo());
+        this.defaultSourceFromContextRoot = config.getBoolean("defaultSourceFromContextRoot", defaultConfig.getDefaultSourceFromContextRoot());
+        this.defaultForwardFromContextRoot = config.getBoolean("defaultForwardFromContextRoot", defaultConfig.getDefaultForwardFromContextRoot());
         
-        boolean useDefaultCmsPage = config.getBoolean("cmsUseDefaultCmsPage", defaultConfig.isUseDefaultCmsPage());
-        String defaultCmsPageId = config.getString("cmsDefaultCmsPageId", defaultConfig.getDefaultCmsPageId());
+        boolean useDefaultCmsPage = config.getBoolean("useDefaultCmsPage", defaultConfig.isUseDefaultCmsPage());
+        String defaultCmsPageId = config.getString("defaultCmsPageId", defaultConfig.getDefaultCmsPageId());
         if (useDefaultCmsPage && UtilValidate.isEmpty(defaultCmsPageId)) {
             useDefaultCmsPage = false;
             defaultCmsPageId = null;
@@ -183,14 +183,13 @@ public class CmsWebSiteConfig implements Serializable {
         this.useDefaultCmsPage = useDefaultCmsPage;
         this.defaultCmsPageId = defaultCmsPageId;
 
-        this.primaryPathFromContextRootDefault = config.getBoolean("cmsPrimaryPathFromContextRootDefault", defaultConfig.getPrimaryPathFromContextRootDefault());
+        this.primaryPathFromContextRootDefault = config.getBoolean("primaryPathFromContextRootDefault", defaultConfig.getPrimaryPathFromContextRootDefault());
         this.applyPrimaryPathFromContextRootDefaultAtStorage = config.getBoolean("applyPrimaryPathFromContextRootDefaultAtStorage", defaultConfig.isApplyPrimaryPathFromContextRootDefaultAtStorage());
 
-        this.controlRootAlias = config.getBoolean("cmsControlRootAlias", defaultConfig.isControlRootAlias());
+        this.controlRootAlias = config.getBoolean("controlRootAlias", defaultConfig.isControlRootAlias());
         
-        this.mappingsIndexableDefault = config.getBoolean("cmsMappingsIndexableDefault", defaultConfig.getMappingsIndexableDefault());
+        this.mappingsIndexableDefault = config.getBoolean("mappingsIndexableDefault", defaultConfig.getMappingsIndexableDefault());
     }
-
 
     
     /*

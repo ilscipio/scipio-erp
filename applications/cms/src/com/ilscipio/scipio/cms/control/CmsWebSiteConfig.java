@@ -25,11 +25,11 @@ import org.ofbiz.webapp.control.ServletUtil;
  * to avoid the non-stop lookups in the legacy code and make this easier to follow.
  */
 @SuppressWarnings("serial")
-public class CmsWebSiteConfig implements Serializable {
+public abstract class CmsWebSiteConfig implements Serializable {
 
     public static final String module = CmsWebSiteConfig.class.getName();
     
-    private static final CmsWebSiteConfig HARD_DEFAULT = new CmsWebSiteConfig(null);
+    private static final CmsWebSiteConfig HARD_DEFAULT = new CmsWebSiteVirtualConfig();
     private static final CmsWebSiteConfig DEFAULT = readDefaultConfig("cms", "webSiteConfig.defaults.", HARD_DEFAULT);
 
     /**
@@ -52,8 +52,6 @@ public class CmsWebSiteConfig implements Serializable {
         configFields = Collections.unmodifiableList(fields);
         configOptionNames = Collections.unmodifiableSet(names);
     }
-    
-    private final String webSiteId;
     
     // DEV NOTE: these class member names must match the web.xml option names (except "cms" prefix and first char case)
     private final boolean allowPreviewMode;
@@ -87,9 +85,7 @@ public class CmsWebSiteConfig implements Serializable {
     /**
      * Hard defaults/fallbacks constructor.
      */
-    protected CmsWebSiteConfig(String webSiteId) {
-        this.webSiteId = webSiteId;
-        
+    protected CmsWebSiteConfig() {
         this.allowPreviewMode = false;
         this.previewModeParamName = "cmsPreviewMode";
         
@@ -97,6 +93,7 @@ public class CmsWebSiteConfig implements Serializable {
          * NOTE: /control here is an emergency fallback used when we FAIL to detect the controller.
          */
         this.defaultServletPath = "/control";
+        
         this.defaultSourceServletPath = this.defaultServletPath;
         this.defaultForwardServletPath = this.defaultServletPath;
         this.defaultTargetServletPath = this.defaultServletPath;
@@ -131,33 +128,13 @@ public class CmsWebSiteConfig implements Serializable {
      * At current time (2017-12-05), configuration can succeed without ExtWebappInfo as
      * long as <code>cmsDefaultServletPath</code> is set.
      */
-    protected CmsWebSiteConfig(ExtWebappInfo extWebappInfo, ConfigReader config, CmsWebSiteConfig defaultConfig) {
-        String webSiteId = (extWebappInfo != null) ? extWebappInfo.getWebSiteId() : (String) config.getRaw("webSiteId");
-        if (webSiteId != null && webSiteId.isEmpty()) webSiteId = null;
-        this.webSiteId = webSiteId;
-        
+    protected CmsWebSiteConfig(ConfigReaderBase config, CmsWebSiteConfig defaultConfig) {
         this.allowPreviewMode = config.getBoolean("allowPreviewMode", defaultConfig.isAllowPreviewMode());
         this.previewModeParamName = config.getString("previewModeParamName", defaultConfig.getPreviewModeParamName());
+
+        // NOTE: dedicated getDefaultServletPath call so child class can override
+        this.defaultServletPath = config.getDefaultServletPath("defaultServletPath", defaultConfig.getDefaultServletPath()); 
         
-        String defaultServletPath = config.getServletPath("defaultServletPath", null);
-        if (UtilValidate.isEmpty(defaultServletPath)) {
-            if (extWebappInfo != null) {
-                defaultServletPath = CmsControlUtil.normalizeServletPath(extWebappInfo.getControlServletMapping());
-                if (UtilValidate.isEmpty(defaultServletPath)) {
-                    Debug.logWarning("Cms: Website '" + getWebSiteId() + "': Could not determine a default value for cmsDefaultServletPath (web.xml)"
-                            + " - control servlet not found; using fallback '" + defaultConfig.getDefaultServletPath() 
-                            + "' as default - please configure cmsDefaultServletPath or check the webapp configuration and ensure the webapp is loaded"
-                            + " and ControlServlet is properly configured in web.xml", module);
-                    defaultServletPath = defaultConfig.getDefaultServletPath();
-                }
-            } else {
-                Debug.logWarning("Cms: Website '" + getWebSiteId() + "': Could not determine a default value for cmsDefaultServletPath (web.xml)"
-                        + " - webapp descriptors are missing (ExtWebappInfo - can't determine control servlet mapping as default); using fallback '" + defaultConfig.getDefaultServletPath() 
-                        + "' as default - please configure cmsDefaultServletPath or check the webapp configuration and ensure the webapp is loaded", module);
-                defaultServletPath = defaultConfig.getDefaultServletPath();
-            }
-        }
-        this.defaultServletPath = defaultServletPath;
         this.defaultSourceServletPath = config.getServletPath("defaultSourceServletPath", defaultServletPath);
         this.defaultForwardServletPath = config.getServletPath("defaultForwardServletPath", defaultServletPath);
         this.defaultTargetServletPath = config.getServletPath("defaultTargetServletPath", defaultServletPath);
@@ -177,8 +154,9 @@ public class CmsWebSiteConfig implements Serializable {
         if (useDefaultCmsPage && UtilValidate.isEmpty(defaultCmsPageId)) {
             useDefaultCmsPage = false;
             defaultCmsPageId = null;
-            Debug.logWarning("Cms: Website '" + getWebSiteId() + "': Default CMS page fallback was enabled in webapp config (cmsUseDefaultCmsPage), "
-                    + "but no default CMS page specified (cmsDefaultCmsPageId); will treat as disabled", module); 
+            // FIXME?: can't print webSiteId here (not yet set in subclass)
+            Debug.logWarning("Cms: Default CMS page fallback was enabled in config (useDefaultCmsPage/cmsUseDefaultCmsPage), "
+                    + "but no default CMS page specified (defaultCmsPageId/cmsDefaultCmsPageId); will treat as disabled", module); 
         }
         this.useDefaultCmsPage = useDefaultCmsPage;
         this.defaultCmsPageId = defaultCmsPageId;
@@ -191,13 +169,149 @@ public class CmsWebSiteConfig implements Serializable {
         this.mappingsIndexableDefault = config.getBoolean("mappingsIndexableDefault", defaultConfig.getMappingsIndexableDefault());
     }
 
+    protected abstract String getLogMsgPrefix();
+    
+    /**
+     * An abstract/reusable config.
+     */
+    public static class CmsWebSiteVirtualConfig extends CmsWebSiteConfig {
+        private CmsWebSiteVirtualConfig() {
+            super();
+        }
+        
+        private CmsWebSiteVirtualConfig(ConfigReaderBase config, CmsWebSiteConfig defaultConfig) {
+            super(config, defaultConfig);
+        }
+        
+        @Override
+        public String getWebSiteId() {
+            return null;
+        }
+
+        @Override
+        protected String getLogMsgPrefix() {
+            return "Cms: Virtual website config: ";
+        }
+    }
+    
+    /**
+     * Config for a real website.
+     * DEV NOTE (self-note): cannot be subclassed well due to factory method heavy reliance.
+     */
+    public static class CmsWebSiteInstanceConfig extends CmsWebSiteConfig {
+        private final String webSiteId;
+        
+        private CmsWebSiteInstanceConfig(String webSiteId) {
+            super();
+            this.webSiteId = webSiteId;
+        }
+        
+        private CmsWebSiteInstanceConfig(String webSiteId, ExtWebappInfo extWebappInfo, ConfigReaderBase config,
+                CmsWebSiteConfig defaultConfig) {
+            // wrap the config to override the getDefaultServletPath method
+            // if this pattern doesn't work later, just move it to a factory meth
+            super(config, defaultConfig);
+            this.webSiteId = webSiteId;
+        }
+        
+        static CmsWebSiteInstanceConfig fromConfigReader(ExtWebappInfo extWebappInfo, ConfigReaderBase config,
+                CmsWebSiteConfig defaultConfig) {
+            String webSiteId = getWebSiteId(extWebappInfo, config, defaultConfig);
+            if (webSiteId == null) {
+                // try to get a hint of which webapp this is
+                String localDispatcherName = config.getRawString("localDispatcherName");
+                String webappDetailStr = "";
+                if (localDispatcherName != null && localDispatcherName.length() > 0) {
+                    webappDetailStr += " [localDispatcherName: " + localDispatcherName + "]";
+                }
+                if (extWebappInfo != null) { // this is a long shot, almost surely will be missing...
+                    if (extWebappInfo.getWebappInfo() != null) {
+                        String contextRoot = extWebappInfo.getWebappInfo().getContextRoot();
+                        if (contextRoot != null && contextRoot.length() > 0) {
+                            webappDetailStr += " [contextRoot: " + contextRoot + "]";
+                        }
+                    }
+                }
+                Debug.logError("Cms: Tried to read CMS website configuration for webapp"+webappDetailStr+", but the webapp appears"
+                        + " to have no webSiteId - this webapp will not work with CMS (webSiteId required; must be set in web.xml)", module);
+            }
+            config = new WebSiteInstanceConfigReader(webSiteId, extWebappInfo, config, defaultConfig);
+            return new CmsWebSiteInstanceConfig(webSiteId, extWebappInfo, config, defaultConfig);
+        }
+        
+        private static String getWebSiteId(ExtWebappInfo extWebappInfo, ConfigReaderBase config, CmsWebSiteConfig defaultConfig) {
+            String webSiteId = null;
+            if (extWebappInfo != null) {
+                webSiteId = extWebappInfo.getWebSiteId();
+            }
+            if (webSiteId == null) {
+                webSiteId = config.getRawString("webSiteId");
+            }
+            if (webSiteId != null && webSiteId.isEmpty()) webSiteId = null;
+            return webSiteId;
+        }
+        
+        /**
+         * Wraps config reader and overrides the {@link #getDefaultServletPath} method
+         * to provide fallback on control servlet mapping.
+         */
+        private static class WebSiteInstanceConfigReader extends ConfigReaderWrapper {
+            private final String webSiteId;
+            private final ExtWebappInfo extWebappInfo;
+            private final CmsWebSiteConfig defaultConfig;
+            
+            WebSiteInstanceConfigReader(String webSiteId, ExtWebappInfo extWebappInfo, ConfigReaderBase config, CmsWebSiteConfig defaultConfig) {
+                super(config);
+                this.webSiteId = webSiteId;
+                this.extWebappInfo = extWebappInfo;
+                this.defaultConfig = defaultConfig;
+            }
+
+            @Override
+            public String getDefaultServletPath(String paramName, String defValue) {
+                // SPECIAL OVERRIDE FOR WEBSITE INSTANCES
+                String defaultServletPath = getServletPath(paramName, null);
+                if (UtilValidate.isEmpty(defaultServletPath)) {
+                    if (extWebappInfo != null) {
+                        defaultServletPath = CmsControlUtil.normalizeServletPath(extWebappInfo.getControlServletMapping());
+                        if (UtilValidate.isEmpty(defaultServletPath)) {
+                            Debug.logWarning("Cms: Website '" + webSiteId + "': Could not determine a default value for cmsDefaultServletPath (web.xml)"
+                                    + " - control servlet not found; using fallback '" + defaultConfig.getDefaultServletPath() 
+                                    + "' as default - please configure cmsDefaultServletPath or check the webapp configuration and ensure the webapp is loaded"
+                                    + " and ControlServlet is properly configured in web.xml", module);
+                            defaultServletPath = defaultConfig.getDefaultServletPath();
+                        } else {
+                            Debug.logInfo("Cms: Website '" + webSiteId + "': WebSite config: defaultServletPath not set; using control servlet mapping as defaultServletPath: " + defaultServletPath, module);
+                        }
+                    } else {
+                        Debug.logWarning("Cms: Website '" + webSiteId + "': Could not determine a default value for cmsDefaultServletPath (web.xml)"
+                                + " - webapp descriptors are missing (ExtWebappInfo - can't determine control servlet mapping as default); using fallback '" + defaultConfig.getDefaultServletPath() 
+                                + "' as default - please configure cmsDefaultServletPath or check the webapp configuration and ensure the webapp is loaded", module);
+                        defaultServletPath = defaultConfig.getDefaultServletPath();
+                    }
+                }
+                return defaultServletPath;
+            }
+        }
+        
+        @Override
+        public String getWebSiteId() {
+            return webSiteId;
+        }
+
+        @Override
+        protected String getLogMsgPrefix() {
+            return "Cms: Website '" + getWebSiteId() + "': ";
+        }
+    }
+    
     
     /*
      * Factory methods (safe, do not throw exceptions)
      */
     
     public static CmsWebSiteConfig fromContextParams(ExtWebappInfo extWebappInfo, Map<String, ?> contextParams) {
-        return new CmsWebSiteConfig(extWebappInfo, ConfigReader.fromContextParams(contextParams), getDefault());
+        return CmsWebSiteInstanceConfig.fromConfigReader(extWebappInfo, ConfigReader.fromContextParams(contextParams), getDefault());
     }
     
     public static CmsWebSiteConfig fromContextParams(ExtWebappInfo extWebappInfo) {
@@ -209,18 +323,18 @@ public class CmsWebSiteConfig implements Serializable {
         if (extWebappInfo == null) {
             Debug.logWarning("Cms: Website '" + webSiteId 
                     + "': no webapp context-params available (could not determine core webapp descriptors (ExtWebappInfo)), will use pure default config", module);
-            return new CmsWebSiteConfig(webSiteId);
+            return new CmsWebSiteInstanceConfig(webSiteId);
         } else {
             return fromContextParams(extWebappInfo, extWebappInfo.getContextParams());
         }
     }
     
     public static CmsWebSiteConfig fromServletContext(ExtWebappInfo extWebappInfo, ServletContext servletContext) {
-        return new CmsWebSiteConfig(extWebappInfo, ConfigReader.fromServletContext(servletContext), getDefault());
+        return CmsWebSiteInstanceConfig.fromConfigReader(extWebappInfo, ConfigReader.fromServletContext(servletContext), getDefault());
     }
     
     public static CmsWebSiteConfig fromServletContext(String webSiteId, ServletContext servletContext) {
-        return new CmsWebSiteConfig(readExtWebappInfoSafe(webSiteId), ConfigReader.fromServletContext(servletContext), getDefault());
+        return CmsWebSiteInstanceConfig.fromConfigReader(readExtWebappInfoSafe(webSiteId), ConfigReader.fromServletContext(servletContext), getDefault());
     }
 
     /**
@@ -235,7 +349,7 @@ public class CmsWebSiteConfig implements Serializable {
      * A copy of the default config ({@link #getDefault()}) but with the webSiteId inserted.
      */
     public static CmsWebSiteConfig fromDefaults(String webSiteId) {
-        return new CmsWebSiteConfig(webSiteId);
+        return new CmsWebSiteInstanceConfig(webSiteId);
     }
     
     private static ExtWebappInfo readExtWebappInfoSafe(String webSiteId) {
@@ -262,22 +376,20 @@ public class CmsWebSiteConfig implements Serializable {
     }
     
     protected static CmsWebSiteConfig readDefaultConfig(String resource, String propNamePrefix, CmsWebSiteConfig defaultConfig) {
-        ConfigReader src = ConfigReader.fromProperties(resource, propNamePrefix);
-        return new CmsWebSiteConfig(null, src, defaultConfig);
+        ConfigReaderBase src = ConfigReader.fromProperties(resource, propNamePrefix);
+        return new CmsWebSiteVirtualConfig(src, defaultConfig);
     }
     
     
     /*
      * Settings
      */
-
+ 
     /**
-     * The webSiteId, extracted from the web.xml context-params specifically.
+     * The webSiteId, if applicable, or null.
      */
-    public String getWebSiteId() {
-        return webSiteId;
-    }
-   
+    public abstract String getWebSiteId();
+
     public boolean isAllowPreviewMode() {
         return allowPreviewMode;
     }
@@ -383,13 +495,13 @@ public class CmsWebSiteConfig implements Serializable {
     }
     
     public Map<String, Object> toMap(Map<String, Object> map, boolean includeWebSiteId) {
-        if (includeWebSiteId) map.put("webSiteId", webSiteId);
+        if (includeWebSiteId) map.put("webSiteId", getWebSiteId());
         
         for(Field field : getConfigFields()) {
             try {
                 map.put(field.getName(), field.get(this));
             } catch (Exception e) {
-                Debug.logError(e, "Cms: Website '" + webSiteId 
+                Debug.logError(e, "Cms: Website '" + getWebSiteId() 
                         + "' CmsWebSiteConfig error reading own internal field '" 
                         + field.getName() + "': " + e.getMessage(), module);
             }
@@ -423,7 +535,7 @@ public class CmsWebSiteConfig implements Serializable {
                 sb.append(entryColon);
                 sb.append(field.get(this));
             } catch (Exception e) {
-                Debug.logError(e, "Cms: Website '" + webSiteId 
+                Debug.logError(e, "Cms: Website '" + getWebSiteId() 
                         + "' CmsWebSiteConfig error reading own internal field '" 
                         + field.getName() + "': " + e.getMessage(), module);
             }
@@ -440,22 +552,47 @@ public class CmsWebSiteConfig implements Serializable {
         return toStringDesc(includeIntro, "\n", "    ", ": ", "\n");
     }
 
+    public interface ConfigReaderBase {
+        Object get(String name);
+        Object getRaw(String name); // get with no prefix (bypass)
+        String getRawString(String name);
+        Boolean getBoolean(String paramName, Boolean defValue);
+        String getString(String paramName, String defValue);
+        String getServletPath(String paramName, String defValue);
+        /**
+         * Subclass may need to override this for special handling.
+         */
+        String getDefaultServletPath(String paramName, String defValue);
+    }
+    
+    public static abstract class ConfigReaderWrapper implements ConfigReaderBase {
+        protected final ConfigReaderBase config;
+        public ConfigReaderWrapper(ConfigReaderBase config) { this.config = config; }
+        @Override public Object get(String name) { return config.get(name); }
+        @Override public Object getRaw(String name) { return config.getRaw(name); }
+        @Override public String getRawString(String name) { return config.getRawString(name); }
+        @Override public Boolean getBoolean(String paramName, Boolean defValue) { return config.getBoolean(paramName, defValue); }
+        @Override public String getString(String paramName, String defValue) { return config.getString(paramName, defValue); }
+        @Override public String getServletPath(String paramName, String defValue) { return config.getServletPath(paramName, defValue); }
+        @Override public String getDefaultServletPath(String paramName, String defValue) { return config.getDefaultServletPath(paramName, defValue); }        
+    }
+
     /**
      * Config reader, for CmsWebSiteConfig constructor.
      */
-    public static abstract class ConfigReader implements Serializable {
+    public static abstract class ConfigReader implements Serializable, ConfigReaderBase {
         public static final String CONTEXT_PARAM_PREFIX = "cms";
 
         
-        public static ConfigReader fromContextParams(Map<String, ?> contextParams) {
+        public static ConfigReaderBase fromContextParams(Map<String, ?> contextParams) {
             return new PrefixMapConfigReader(contextParams, CONTEXT_PARAM_PREFIX);
         }
         
-        public static ConfigReader fromServletContext(ServletContext servletContext) {
+        public static ConfigReaderBase fromServletContext(ServletContext servletContext) {
             return new PrefixMapConfigReader(ServletUtil.getContextParamsMapAdapter(servletContext), CONTEXT_PARAM_PREFIX);
         }
         
-        public static ConfigReader fromProperties(String resource, String propNamePrefix) {
+        public static ConfigReaderBase fromProperties(String resource, String propNamePrefix) {
             Map<String, Object> params = new HashMap<>();
             UtilProperties.putPropertiesWithPrefixSuffix(params, UtilProperties.getProperties(resource), 
                     propNamePrefix, null, true, false, false);
@@ -498,14 +635,20 @@ public class CmsWebSiteConfig implements Serializable {
             }
         }
         
+        @Override
         public abstract Object get(String name);
+        @Override
         public abstract Object getRaw(String name); // get with no prefix (bypass)
-        
+        @Override
+        public String getRawString(String name) { return (String) getRaw(name); }
+
+        @Override
         public Boolean getBoolean(String paramName, Boolean defValue) {
             Object value = get(paramName);
             return UtilMisc.booleanValueVersatile(value, defValue);
         }
         
+        @Override
         public String getString(String paramName, String defValue) {
             Object value = get(paramName);
             String valueStr;
@@ -519,11 +662,19 @@ public class CmsWebSiteConfig implements Serializable {
             return UtilValidate.isNotEmpty(valueStr) ? valueStr : defValue;
         }
         
+        @Override
         public String getServletPath(String paramName, String defValue) {
             String value = (String) get(paramName); // must be string
             return CmsControlUtil.normalizeServletPath(UtilValidate.isNotEmpty(value) ? value : defValue);
         }
     
+        /**
+         * Subclass may need to override this for special handling.
+         */
+        @Override
+        public String getDefaultServletPath(String paramName, String defValue) {
+            return getServletPath(paramName, defValue);
+        }
     }
 
 }

@@ -12,6 +12,8 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 
+import com.ilscipio.scipio.common.util.TikaUtil;
+
 public class PreviewHelper {
 
     // these map mime-types AND implicitly their subtypes, to browser-recognized media types

@@ -434,6 +434,7 @@ under the License.
         <attribute name="text" type="String" mode="IN" optional="true" allow-html="any"/>
     </service>
 
+    <!-- SCIPIO: 2017-12-06: MOVED to component://content/servicedef/services.xml (did not belong here even remotely)
     <service name="createSimpleTextContentForAlternateLocale" engine="simple" location="component://product/script/org/ofbiz/product/product/ProductContentServices.xml" invoke="createSimpleTextContentForAlternateLocale">
         <auto-attributes mode="IN" entity-name="Content" optional="true"/>
         <attribute name="mainContentId" type="String" mode="IN" optional="false"/>
@@ -441,80 +442,7 @@ under the License.
         <override name="localeString" optional="false"/>
         <override name="contentId" mode="INOUT"/>
     </service>
-    <!-- SCIPIO: 2017-10-26: new service for update-only, requires exact contentId of the alt content -->
-    <service name="updateSimpleTextContentForAlternateLocale" engine="simple" location="component://product/script/org/ofbiz/product/product/ProductContentServices.xml" invoke="updateSimpleTextContentForAlternateLocale">
-        <auto-attributes mode="IN" entity-name="Content" include="pk" optional="false"/>
-        <auto-attributes mode="IN" entity-name="Content" include="nonpk" optional="true"/>
-        <attribute name="mainContentId" type="String" mode="IN" optional="false"/>
-        <attribute name="text" type="String" mode="IN" optional="false" allow-html="any"/>
-        <override name="localeString" optional="false"/>
-    </service>
-    <!-- SCIPIO: 2017-10-26: new service for delete, requi -->
-    <service name="deleteSimpleTextContentForAlternateLocale" engine="simple" location="component://product/script/org/ofbiz/product/product/ProductContentServices.xml" invoke="deleteSimpleTextContentForAlternateLocale">
-        <auto-attributes mode="IN" entity-name="Content" include="pk" optional="false"/>
-        <attribute name="mainContentId" type="String" mode="IN" optional="false"/>
-    </service>
-    
-    <!-- SCIPIO: 2017-10-26: new update service for alt locale - if contentId passed, updates it, otherwise
-        uses sane logic to create or update or otherwise "set" the locale to the given text -->
-    <service name="createUpdateSimpleTextContentForAlternateLocale" engine="simple" location="component://product/script/org/ofbiz/product/product/ProductContentServices.xml" invoke="createUpdateSimpleTextContentForAlternateLocale">
-        <description>SCIPIO: WARN: UNTESTED: Intelligently creates or updates simple text content for alternate locale</description>
-        <auto-attributes mode="IN" entity-name="Content" optional="true"/>
-        <attribute name="mainContentId" type="String" mode="IN" optional="false"/>
-        <attribute name="text" type="String" mode="IN" optional="false" allow-html="any"/>
-        <override name="localeString" optional="false"/>
-        <override name="contentId" mode="INOUT"/>
-    </service>
-    
-    <!-- SCIPIO: new -->
-    <service name="replaceSimpleTextContentsForAlternateLocale" engine="java" location="org.ofbiz.product.product.ProductServices" invoke="createUpdateSimpleTextContentForAlternateLocale">
-        <description>SCIPIO: Intelligently creates, updates and deletes simple text contents for alternate locale</description>
-        <attribute name="mainContentId" type="String" mode="IN" optional="false"/>
-        <attribute name="entries" type="List" mode="IN" optional="true">
-            <description>Lists of maps, each map supporting the keys: localeString, textData, and optional contentId.
-                If strictContent is false, when contentId is omitted, an associated alt locale content having the matching localeString is located and updated,
-                unless; if true, then entries with no contentId are assumed to be new records. 
-                The first entry of each list is assumed to be the main content record.</description>
-        </attribute>
-        <attribute name="strictContent" type="boolean" mode="IN" optional="true" default-value="false">
-            <description>If true, contentFields entries having no contentId are assumed to be new records; 
-                if false (default) they are matched by localeString and created, updated or removed as needed.</description>
-        </attribute>
-    </service>
-    
-    <!-- SCIPIO: new -->
-    <service name="replaceProductContentSimpleTextsForAlternateLocale" engine="java" location="org.ofbiz.product.product.ProductServices" invoke="replaceProductContentSimpleTextsForAlternateLocale">
-        <description>SCIPIO: Intelligently creates, updates and deletes ProductContent simple text contents for alternate locale</description>
-        <attribute name="productId" type="String" mode="IN" optional="false"/>
-        <attribute name="contentFields" type="Map" mode="IN" optional="true" string-map-prefix="contentFields_">
-            <description>Map of content type IDs to lists of maps, each map supporting the keys: localeString, textData, and optional contentId.
-                If strictContent is false, when contentId is omitted, an associated alt locale content having the matching localeString is located and updated,
-                unless; if true, then entries with no contentId are assumed to be new records. 
-                The first entry of each list is assumed to be the main content record (for ProductContent assoc).
-                The list-of-maps may also be represented by special strings to allow submit over request parameters.</description>
-        </attribute>
-        <attribute name="strictContent" type="boolean" mode="IN" optional="true" default-value="false">
-            <description>If true, contentFields entries having no contentId are assumed to be new records; 
-                if false (default) they are matched by localeString and created, updated or removed as needed.</description>
-        </attribute>
-    </service>
-    
-    <!-- SCIPIO: new -->
-    <service name="replaceProductCategoryContentSimpleTextsForAlternateLocale" engine="java" location="org.ofbiz.product.category.CategoryServices" invoke="replaceProductCategoryContentSimpleTextsForAlternateLocale">
-        <description>SCIPIO: Intelligently creates, updates and deletes ProductCategoryContent simple text contents for alternate locale</description>
-        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
-        <attribute name="contentFields" type="Map" mode="IN" optional="true" string-map-prefix="contentFields_">
-            <description>Map of content type IDs to lists of maps, each map supporting the keys: localeString, textData, and optional contentId.
-                If strictContent is false, when contentId is omitted, an associated alt locale content having the matching localeString is located and updated,
-                unless; if true, then entries with no contentId are assumed to be new records. 
-                The first entry of each list is assumed to be the main content record (for ProductCategoryContent assoc).
-                The list-of-maps may also be represented by special strings to allow submit over request parameters.</description>
-        </attribute>
-        <attribute name="strictContent" type="boolean" mode="IN" optional="true" default-value="false">
-            <description>If true, contentFields entries having no contentId are assumed to be new records; 
-                if false (default) they are matched by localeString and created, updated or removed as needed.</description>
-        </attribute>
-    </service>
+    -->
 
     <service name="addAdditionalViewForProduct" default-entity-name="ProductContent" engine="java"
         location="org.ofbiz.product.product.ProductServices" invoke="addAdditionalViewForProduct" auth="true">
@@ -1896,6 +1824,18 @@ under the License.
         <attribute name="viewsByTypeAndLocale" mode="OUT" type="Map" optional="true"/>
         <attribute name="textByTypeAndLocale" mode="OUT" type="Map" optional="true"/>
     </service>
+    
+    <service name="replaceProductCategoryContentLocalizedSimpleTexts" engine="java" location="org.ofbiz.product.category.CategoryServices" invoke="replaceProductCategoryContentLocalizedSimpleTexts">
+        <description>SCIPIO: Intelligently creates, updates and deletes ProductCategoryContent ALTERNATE_LOCALE simple text contents (wrapper around replaceContentLocalizedSimpleTexts)</description>
+        <implements service="replaceEntityContentLocalizedSimpleTextsInterface"/>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+    </service>
+    
+    <service name="replaceProductContentLocalizedSimpleTexts" engine="java" location="org.ofbiz.product.product.ProductServices" invoke="replaceProductContentLocalizedSimpleTexts">
+        <description>SCIPIO: Intelligently creates, updates and deletes ProductContent ALTERNATE_LOCALE simple text contents (wrapper around replaceContentLocalizedSimpleTexts)</description>
+        <implements service="replaceEntityContentLocalizedSimpleTextsInterface"/>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+    </service>
 
     <!-- ======================================== -->
     <!-- SCIPIO: New Versatile Services (stock-like) -->
@@ -1977,6 +1917,8 @@ under the License.
         <implements service="createProductCategory"/>
         <implements service="addProductCategoryToProdCatalog"/>
         <implements service="addProductCategoryToCategory"/>
+        <implements service="replaceProductCategoryContentLocalizedSimpleTexts"/>
+        <attribute name="updateLocalizedTexts" mode="IN" type="Boolean" optional="true" default-value="false"/>
         <!-- make all PK optional because it's one-interface-or-the-other (and fromDate auto-populated) -->
         <override name="productCategoryId" optional="true"/>
         <override name="fromDate" optional="true"/>
@@ -1992,6 +1934,8 @@ under the License.
         <implements service="updateProductCategory"/>
         <implements service="updateProductCategoryToProdCatalog"/>
         <implements service="updateProductCategoryToCategory"/>
+        <implements service="replaceProductCategoryContentLocalizedSimpleTexts"/>
+        <attribute name="updateLocalizedTexts" mode="IN" type="Boolean" optional="true" default-value="false"/>
         <override name="productCategoryId" mode="IN"/><!-- WORKAROUND: for some reason this is INOUT in the ofbiz interface, not needed... -->
         <override name="fromDate" optional="false"/>
         <!-- make PART of PK optional because it's one-interface-or-the-other -->
@@ -2126,6 +2070,8 @@ under the License.
         <description>SCIPIO: Create a Product and add to category (specialized variant of createProductInCategory) (versatile)</description>
         <implements service="createProduct"/>
         <implements service="addProductToCategory"/>
+        <implements service="replaceProductContentLocalizedSimpleTexts"/>
+        <attribute name="updateLocalizedTexts" mode="IN" type="Boolean" optional="true" default-value="false"/>
     </service>
     
     <service name="updateProductAndCatAssocVersatile" engine="simple"
@@ -2133,6 +2079,8 @@ under the License.
         <description>SCIPIO: Update a Product and category assoc (versatile)</description>
         <implements service="updateProduct"/>
         <implements service="updateProductToCategory"/>
+        <implements service="replaceProductContentLocalizedSimpleTexts"/>
+        <attribute name="updateLocalizedTexts" mode="IN" type="Boolean" optional="true" default-value="false"/>
     </service>
     
     <service name="deleteProductCatAssocVersatile" default-entity-name="Product" engine="simple"

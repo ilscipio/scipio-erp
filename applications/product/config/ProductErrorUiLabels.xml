@@ -1366,4 +1366,20 @@
         <value xml:lang="en">Could not create association to the target category for the product (association already exists).</value>
         <value xml:lang="fr">Impossible de créer une association avec la catégorie cible du produit (l'association existe déjà).</value>
     </property>
+    <property key="productservices.error_updating_ProductCategoryContent_simple_texts_for_alternate_locale_for_category">
+        <value xml:lang="en">Error updating ProductCategoryContent localized texts (category: ${productCategoryId})</value>
+        <value xml:lang="de">Fehler beim Aktualisieren der lokalisierten Texte von ProductCategoryContent (Kategorie: ${productCategoryId})</value>
+    </property>
+    <property key="productservices.error_updating_ProductContent_simple_texts_for_alternate_locale_for_product">
+        <value xml:lang="en">Error updating ProductContent localized texts (product: ${productId})</value>
+        <value xml:lang="de">Fehler beim Aktualisieren von lokalisierten ProductContent-Texten (Produkt: ${productId})</value>
+    </property>
+    <property key="productservices.error_reading_ProductCategoryContent_simple_texts_for_alternate_locale_for_category">
+        <value xml:lang="en">Error reading ProductCategoryContent localized texts (category: ${productCategoryId})</value>
+        <value xml:lang="de">Fehler beim Aktualisieren der gelöschten Texte von ProductCategoryContent (Kategorie: ${productCategoryId})</value>
+    </property>
+    <property key="productservices.error_reading_ProductContent_simple_texts_for_alternate_locale_for_product">
+        <value xml:lang="en">Error reading ProductContent localized texts (product: ${productId})</value>
+        <value xml:lang="de">Fehler beim Lesen von ProductContent lokalisierten Texten (Produkt: ${productId})</value>
+    </property>
 </resource>

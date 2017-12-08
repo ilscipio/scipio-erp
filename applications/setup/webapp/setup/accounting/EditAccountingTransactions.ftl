@@ -2,49 +2,53 @@
 
 <#include "component://setup/webapp/setup/common/common.ftl">
 
-<#-- ACTION PROPERTIES, links tree actions to setup forms -->
-<#macro setupImportAccountingEntriesForm id target>
-  <@form id=id action=makeOfbizUrl(target) method="post">	      
-      
-  </@form>
+<#macro eatMarkupOut dir args={}>
+  <#if dir?is_directive>
+    <@dir args=args/><#t/>
+  <#else>
+    ${dir}<#t/>
+  </#if>
 </#macro>
 
 <#macro eatImportDatevConfirmFields args={}>
-   <@field type="hidden" name="organizationPartyId" value="params.orgPartyId!"/>
+   <@field type="hidden" name="organizationPartyId" value=(params.orgPartyId)!/>
    <@field type="file" name="uploadedFile" label=uiLabelMap.SetupAccountingDatevImportCSV />
 </#macro>
 <#macro eatImportElsterConfirmFields args={}>
-   <@field type="hidden" name="organizationPartyId" value="params.orgPartyId!"/>
+   <@field type="hidden" name="organizationPartyId" value=(params.orgPartyId)!/>
    <@field type="file" name="uploadedFile" label=uiLabelMap.SetupAccountingElsterImportCSV />
 </#macro>
 
-<#assign eatActionProps = {
+<#assign eatObjectTypes = {
     "datev": {
-        "importdatev": {
+        "import": {
             "type": "form",
             "mode": "show",
-            "id": "eat-importdatev",
-            "confirmMsg": rawLabelNoSubst(''),
+            "id": "eat-datev",
+            "confirmMsg": 'SetupAccountingImportDatevCSVProceed',
             "confirmExtraMsg": rawLabelNoSubst(''),
             "confirmFields": eatImportDatevConfirmFields,
+            "formAction": makeOfbizUrl('setupImportDatevTransactionEntries'),
             "defaultParams": wrapRawScript("function() { return; }")
         }        
     },
     "elster": {
-    	"importelster": {
+    	"import": {
             "type": "form",
             "mode": "show",
-            "id": "eat-importdatev",
+            "id": "eat-elster",
             "confirmMsg": rawLabelNoSubst(''),
             "confirmExtraMsg": rawLabelNoSubst(''),
             "confirmFields": eatImportElsterConfirmFields,
+            "formAction": makeOfbizUrl('setupImportElsterTransactionEntries'),
             "defaultParams": wrapRawScript("function() { return; }")
         }      
     }
 }>
 
-<#assign eatActionProps = toSimpleMap(eatActionProps!{})>
-
+<#assign eatObjectTypes = toSimpleMap(eatObjectTypes!{})>
+<#assign eatDialogIdPrefix = eatDialogIdPrefix!"eat-dialog-">
+<#assign eatDialogIdModalPrefix = eatDialogIdModalPrefix!("modal_" + eatDialogIdPrefix)>
 
 <@script>
 	var actionProps = <@objectAsScript object=(ectActionProps!{}) lang='js'/>;
@@ -82,8 +86,7 @@
             openModal(modalElem);
         } else {
             return alert(msg);
-        }
-        
+        }        
     };    
     var showConfirmMsg = function(confirmMsgModalId, msg, extraMsg, modalElem, continueCallback) {
         if ((!modalElem || !modalElem.length) && confirmMsgModalId) {
@@ -105,19 +108,60 @@
             }
         }
     };
+    
+    var extractClassNameSuffix = function(elem, prefix) {
+	    var classes = elem.attr('class').split(/\s+/);
+	    var result = null;
+	    var startsWith = function(str, prefix) {
+	        return (str.lastIndexOf(prefix, 0) === 0);
+	    };
+	    jQuery.each(classes, function(i, e) {
+	        if (startsWith(e, prefix)) {
+	            result = e.substring(prefix.length);
+	            return false;
+	        }
+	    });
+	    return result;
+	};
 
 	jQuery(document).ready(function() {
-		jQuery('#eat-datev-link').click(function(){
+		jQuery('.eat-menu-action').click(function(){
+			var confirmMsg = "";
 			var confirmExtraMsg = "";
-            var modalElem = jQuery('#${eatDialogIdPrefix} + actionProps.objectType + '-' + actionProps.actionType);
-            showConfirmMsg('', confirmMsg, confirmExtraMsg, modalElem, function(subActionType) {
-            });
+			var typeAction = this.id.split('-');
+			if (typeAction && typeAction.length == 3) {			
+	            var modalElem = jQuery('#${eatDialogIdModalPrefix}' + typeAction[1] + '-' + typeAction[2]); 
+	            showConfirmMsg(null, confirmMsg, confirmExtraMsg, modalElem, function(subActionType) {
+	            	/*params.subActionType = subActionType;
+	                if (preParamNamesMap && preParamNamesMap.subActionType) {
+	                    if (typeof preParamNamesMap.subActionType === 'function') {
+	                        preParamNamesMap.subActionType(subActionType, params, ai); 
+	                    } else {
+	                        params[preParamNamesMap.subActionType] = subActionType;
+	                    }
+	                }*/
+	            
+	            	// check if the modal had any params, dump them into params
+	            	var containsFile = false;
+	                jQuery('form.eat-dialogopts-form :input', modalElem).each(function(i, input) {	                	
+	                    input = jQuery(input);
+	                    console.log("input type ===> " + input.attr('type'));
+	                    /*var name = input.prop('name');
+	                    if (name) params[name] = input.val();*/
+	                    if (!containsFile && input.attr('type') == "file") {
+	                    	containsFile = true;
+	                    }
+	                });
+	                if (containsFile) {
+	                	console.log("containsFile");
+	                	jQuery('form.eat-dialogopts-form', modalElem).attr('enctype', 'multipart/form-data');
+	                }
+	                jQuery('form.eat-dialogopts-form', modalElem).submit();
+	            });
+            }
 		});
 	});
 </@script>
-
-<#assign eatDialogIdPrefix = eatDialogIdPrefix!"eat-dialog-">
-<#assign eatDialogIdModalPrefix = eatDialogIdModalPrefix!("modal_" + eatDialogIdPrefix)>
 
 <#assign defaultParams = {	
 }>
@@ -141,11 +185,9 @@
 <#macro eatDefActionInnerContent props>
     <p class="eat-dialogmsg"></p>
       <#if props.confirmFields??>
-        <@form class="+eat-dialogopts-form">
-            <#-- TODO: REVIEW: unclear if the value should be "all" or "active" at current time or if should
-                be checked by default -->
+        <@form class="+eat-dialogopts-form" action="${props.formAction!}" method="POST">
           	<@fields type="default-compact">
-            	${props.confirmFields!}
+            	<@eatMarkupOut dir=props.confirmFields />
             </@fields>
         </@form>
       </#if>
@@ -153,47 +195,31 @@
 </#macro>
 
 <#macro eatDefActionMsgModals args={}>
-	<#list args.actionProps?keys as objectType>
-        <#local actionMap = toSimpleMap(args.actionProps[objectType])>
-        
-        <#local props = actionMap["importdatev"]!{}>
-        <#if props.confirmMsg?has_content>
-            <@modal id="${args.idPrefix}${rawString(objectType)}-" class="+eat-dialogmodal">
-                <@heading>${uiLabelMap.CommonWarning}</@heading>
-                <@eatDefActionInnerContent props=props/>
-                <div class="modal-footer ${styles.text_right!}">
-                   <#-- NOTE: the value "remove"/"expire" is extracted from the class and passed to the callback -->
-                   <a class="eat-dialogbtn eat-dialogbtn-remove ${styles.button!} btn-ok">${uiLabelMap.CommonRemove}</a>
-                   <a class="eat-dialogbtn eat-dialogbtn-expire ${styles.button!} btn-ok">${uiLabelMap.CommonExpire}</a>
-                </div>
-            </@modal>
-        </#if>
-        
-        <#local props = actionMap["importelster"]!{}>
-        <#if props.confirmMsg?has_content>
-            <@modal id="${args.idPrefix}${rawString(objectType)}-" class="+eat-dialogmodal">
-                <@heading>${uiLabelMap.CommonWarning}</@heading>
-                <@eatDefActionInnerContent props=props/>
-                <@eatDefActionConfirmMsgBtn/>
-            </@modal>
-        </#if>
+	<#list args.objectTypes?keys as objectType>
+        <#local actionMaps = toSimpleMap(args.objectTypes[objectType])>        
+        <#list actionMaps?keys as action>
+	        <#local props = toSimpleMap(actionMaps[action])>	        
+	        <#if props.confirmMsg?has_content>        	
+	            <@modal id="${args.idPrefix}${rawString(objectType)}-${rawString(action)}" class="+eat-dialogmodal">
+	                <@heading>${action} ${objectType}</@heading>
+	                <@eatDefActionInnerContent props=props/>
+	                <div class="modal-footer ${styles.text_right!}">	                   
+	                   <a class="eat-dialogbtn eat-dialogbtn-cancel ${styles.button!} btn-ok">${uiLabelMap.CommonCancel}</a>
+	                   <#if action == "import">
+	                   	<a class="eat-dialogbtn eat-dialogbtn-upload ${styles.button!} btn-ok">${uiLabelMap.CommonUpload}</a>
+	                   </#if>
+	                </div>
+	            </@modal>
+        	</#if>
+        </#list>        
     </#list>
 </#macro>
-
-<@eatDefActionMsgModals args={	
-	"actionProps": eatActionProps!{},
+<@eatMarkupOut dir=eatDefActionMsgModals args={	
+	"objectTypes": eatObjectTypes!{},
     "idPrefix": eatDialogIdPrefix,
     "idModalPrefix": eatDialogIdModalPrefix
 }/>
 
-<#-- OUTPUT MODALS (not in display:none;) -->
-<#-- 
-<@importMarkupOut dir=(eatDefActionMsgModals) args={
-    "actionProps": importActionProps!{},
-    "idPrefix": importDialogIdPrefix!,
-    "idModalPrefix": importDialogIdModalPrefix!
-}/>
--->
 
 <@section title=uiLabelMap.SetupAccountingTransactions>		
 	
@@ -213,7 +239,9 @@
 	        <#-- MENU -->
 	        <ul class="side-nav">		       	
 	        	<li>
-	       			<@menuitem id="import-datev-link" type="link" href="javascript:void(0);" text=uiLabelMap.CommonImportDatev />
+	       			<@menuitem id="eat-datev-import" class="+eat-menu-action" type="link" href="javascript:void(0);" text=uiLabelMap.SetupAccountingImportDatev />
+	       			<hr/>
+	       			<@menuitem id="eat-elster-import" class="+eat-menu-action" type="link" href="javascript:void(0);" text=uiLabelMap.SetupAccountingImportElster />
 	       		</li>
 	       	</ul>
 	      </@section>

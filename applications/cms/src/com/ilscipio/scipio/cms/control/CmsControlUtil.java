@@ -2,32 +2,26 @@ package com.ilscipio.scipio.cms.control;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
-import org.ofbiz.webapp.WebAppUtil;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
+import com.ilscipio.scipio.ce.util.PathUtil;
 import com.ilscipio.scipio.cms.control.cmscall.CmsCallType;
-import com.ilscipio.scipio.cms.util.PathUtil;
 import com.ilscipio.scipio.cms.webapp.CmsWebappUtil;
 
 /**
  * Cms control-related util methods; unlike WebappUtil this is Cms-specific control code
  * and factoring points.
- * <p>
- * 2016: FIXME: some generic methods belong in org.ofbiz.webapp package, and WebXml (tomcat class)
- * shouldn't be a dependency for this class.
  */
 public abstract class CmsControlUtil {
 
@@ -36,27 +30,6 @@ public abstract class CmsControlUtil {
     public static final String CMS_NOCACHERESPONSESET_REQATTRNAME = "_CMS_NOCACHERESPONSE_SET_";
     
     public static final String CMS_NOCACHECMSRENDER_REQATTRNAME = "cmsSetResponseBrowserNoCacheCmsPage";
-    
-    /**
-     * 2016: WARN: this is now absolute last resort only; always try to lookup the real one before this!
-     * @see #getControlServletPath
-     */
-    public static final String defaultServletPathDefault = "/control";
-    
-    public static final boolean setResponseBrowserNoCacheCmsPageDefault = false;
-    public static final boolean setResponseBrowserNoCacheScreenDefault = false;
-    public static final boolean setResponseBrowserNoCacheDefault = false;
-    
-    public static final boolean useDefaultCmsPageDefault = false;
-    
-    public static final String defaultCmsPageId = null;
-    
-    public static final boolean alwaysUseDefaultForwardServletPathDefault = false;
-    public static final boolean defaultForwardExtraPathInfoDefault = true;
-    public static final boolean defaultSourceFromContextRootDefault = true;
-    public static final boolean defaultForwardFromContextRootDefault = true;
-
-    public static final String previewModeDefaultParamName = "cmsPreviewMode";
     
     private CmsControlUtil() {
     }
@@ -69,6 +42,10 @@ public abstract class CmsControlUtil {
         return CmsWebappUtil.getCurrentRequestUniqueId(request);
     }
 
+    /**
+     * @deprecated WARN: I'm unsure what this is doing here.
+     */
+    @Deprecated
     public static String normalizePath(String path) {
         if (UtilValidate.isNotEmpty(path)) { 
             // Cms: Do we want this regexp here?
@@ -84,26 +61,6 @@ public abstract class CmsControlUtil {
         UtilHttp.setResponseBrowserProxyNoCache(response);
         request.setAttribute(CMS_NOCACHERESPONSESET_REQATTRNAME, Boolean.TRUE);
         //}
-    }
-    
-    public static String getDefaultCmsPageId(ServletContext servletContext) {
-        String pageId = defaultCmsPageId;
-        if (servletContext != null) {
-            final String paramName = "cmsDefaultCmsPageId";
-            String initPageId = servletContext.getInitParameter(paramName);
-            if (UtilValidate.isNotEmpty(initPageId)) {
-                pageId = initPageId;
-            }
-        }
-        return pageId;
-    }
-    
-    public static String getDefaultCmsPageId() {
-        return defaultCmsPageId;
-    }
-    
-    public static String getPreviewModeDefaultParamName(ServletContext servletContext) {
-        return previewModeDefaultParamName; // TODO?: web.xml context-param
     }
     
     public static boolean checkPreviewMode(HttpServletRequest request, String paramName) {
@@ -129,225 +86,43 @@ public abstract class CmsControlUtil {
         return renderMode;
     }
     
-    private static String getDefaultSpecificServletPath(ServletContext servletContext, String paramName, String defVal) {
-        String servletPath = defVal;
-        if (servletContext != null) {
-            String paramPath = null;
-            if (paramName != null) {
-                paramPath = servletContext.getInitParameter(paramName);
-                if (UtilValidate.isNotEmpty(paramPath)) {
-                    servletPath = CmsControlUtil.normalizeServletPath(paramPath);
-                }
-            }
-            paramPath = servletContext.getInitParameter("cmsDefaultServletPath");
-            if (UtilValidate.isNotEmpty(paramPath)) {
-                servletPath = CmsControlUtil.normalizeServletPath(paramPath);
-            }
-        }
-        return servletPath;
-    }
-    
-    private static String getDefaultSpecificServletPath(Map<String, String> contextParams, String paramName, String defVal) {
-        String servletPath = defVal;
-        if (contextParams != null) {
-            String paramPath = null;
-            if (paramName != null) {
-                paramPath = contextParams.get(paramName);
-                if (UtilValidate.isNotEmpty(paramPath)) {
-                    servletPath = CmsControlUtil.normalizeServletPath(paramPath);
-                }
-            }
-            paramPath = contextParams.get("cmsDefaultServletPath");
-            if (UtilValidate.isNotEmpty(paramPath)) {
-                servletPath = CmsControlUtil.normalizeServletPath(paramPath);
-            }
-        }
-        return servletPath;
-    }
-    
-    /**
-     * 2016: gets the control servlet mapping for given servlet context.
-     */
-    public static String getControlServletPath(ServletContext servletContext) {
-        return getControlServletPath(servletContext.getInitParameter("webSiteId"));
-    }
-    
-    /**
-     * 2016: gets the control servlet mapping for given webSiteId.
-     */
-    public static String getControlServletPath(String webSiteId) {
-        if (UtilValidate.isEmpty(webSiteId)) {
-            Debug.logWarning("Cms: could not get control servlet path from webSiteId; missing webSiteId", module);
-            return null;
-        }
-        try {
-            WebappInfo webappInfo = WebAppUtil.getWebappInfoFromWebsiteId(webSiteId);
-            return WebAppUtil.getControlServletOnlyPath(webappInfo);
-        } catch (Exception e) {
-            Debug.logError(e, "Cms: could not get control servlet path from webSiteId: " + e.getMessage() + " (webSiteId: " + webSiteId + ")", module);
-        }
-        return null;
-    }
-    
-    /**
-     * 2016: gets the control servlet mapping for given webappInfo.
-     */
-    private static String getControlServletPath(WebappInfo webappInfo) {
-        try {
-            return WebAppUtil.getControlServletOnlyPath(webappInfo);
-        } catch (Exception e) {
-            Debug.logError(e, "Cms: could not get control servlet path: " + e.getMessage() + " (context root: " + webappInfo.getContextRoot() + ")", module);
-        }
-        return null;
-    }
-    
-    public static String getDefaultServletPath(ServletContext servletContext) {
-        // 2016: do NOT use hardcoded defaultServletPathDefault here; instead look it up
-        String defaultServletPath = getControlServletPath(servletContext);
-        if (UtilValidate.isEmpty(defaultServletPath)) {
-            defaultServletPath = defaultServletPathDefault;
-            Debug.logWarning("Cms: default servlet path: encountered website with no valid control servlet mapping; using hardcoded default (" + defaultServletPath + ")", module);
-        }
-        return getDefaultSpecificServletPath(servletContext, null, defaultServletPath);
-    }
-    
-    public static String getDefaultServletPath(String webSiteId) {
-        WebappInfo webappInfo;
-        Map<String, String> contextParams;
-        try {
-            webappInfo = WebAppUtil.getWebappInfoFromWebsiteId(webSiteId);
-            contextParams = WebAppUtil.getWebappContextParams(webSiteId);
-        } catch (Exception e) {
-            Debug.logError(e, "Cms: could not get webapp description for webSiteId '" + webSiteId + "'", module);
-            return null;
-        }
-        return getDefaultServletPath(webSiteId, webappInfo, contextParams);
-    }
-    
-    private static String getDefaultServletPath(String webSiteId, WebappInfo webappInfo, Map<String, String> contextParams) {
-        // 2016: do NOT use hardcoded defaultServletPathDefault here; instead look it up
-        String defaultServletPath = getControlServletPath(webappInfo);
-        if (UtilValidate.isEmpty(defaultServletPath)) {
-            defaultServletPath = defaultServletPathDefault;
-            Debug.logWarning("Cms: default servlet path: encountered website with no valid control servlet mapping; using hardcoded default (" + defaultServletPath + ")", module);
-        }
-        return getDefaultSpecificServletPath(contextParams, null, defaultServletPath);
-    }
-    
-    public static String getDefaultSpecificServletPath(ServletContext servletContext, String paramName) {
-        return getDefaultSpecificServletPath(servletContext, paramName, getDefaultServletPath(servletContext));
-    }
-    
-    public static String getDefaultSpecificServletPath(String webSiteId, String paramName) {
-        WebappInfo webappInfo;
-        Map<String, String> contextParams;
-        try {
-            webappInfo = WebAppUtil.getWebappInfoFromWebsiteId(webSiteId);
-            contextParams = WebAppUtil.getWebappContextParams(webSiteId);
-        } catch (Exception e) {
-            Debug.logError(e, "Cms: could not get webapp description for webSiteId '" + webSiteId + "'", module);
-            return null;
-        }
-        return getDefaultSpecificServletPath(contextParams, paramName, getDefaultServletPath(webSiteId, webappInfo, contextParams));
-    }
-    
-
-    public static String getPrimaryPathFromContextRootDefault(String webSiteId) {
-        return CmsProcessMapping.getPrimaryPathFromContextRootDefault(webSiteId);
-    }
-    
-    public static String toCmsInitParamName(String paramName) {
-        if (paramName.startsWith("cms")) {
-            return paramName;
-        }
-        else {
-            return "cms" + paramName.substring(0, 1).toUpperCase() + paramName.substring(1);
-        }
-    }
-    
-    public static Boolean getCmsBoolInitParam(ServletContext servletContext, String paramName, Boolean defValue) {
-        if (servletContext == null) return defValue;
-        String val = servletContext.getInitParameter(toCmsInitParamName(paramName));
-        if (UtilValidate.isNotEmpty(val)) {
-            if ("true".equalsIgnoreCase(val)) {
-                return true;
-            }
-            else if ("false".equalsIgnoreCase(val)) {
-                return false;
-            }
-        }
-        return defValue;
-    }
-    
-    public static Boolean getCmsBoolInitParam(Map<String, ?> contextParams, String paramName, Boolean defValue) {
-        if (contextParams == null) return defValue;
-        Object obj = contextParams.get(toCmsInitParamName(paramName));
-        String val = obj != null ? obj.toString() : null;
-        if (UtilValidate.isNotEmpty(val)) {
-            if ("true".equalsIgnoreCase(val)) {
-                return true;
-            }
-            else if ("false".equalsIgnoreCase(val)) {
-                return false;
-            }
-        }
-        return defValue;
-    }
-    
-    
     public static String normalizeServletPath(String servletPath) { // Servlet path only
-        if (servletPath == null) {
-            return null;
-        }
+        if (servletPath == null) return null;
         return PathUtil.ensureStartAndNoTrailDelim(servletPath);
     }
     
     public static String normalizeServletPathNoNull(String servletPath) { // Servlet path only
-        if (servletPath == null) {
-            return "/";
-        }
+        if (servletPath == null) return "/";
         return PathUtil.ensureStartAndNoTrailDelim(servletPath);
     }
     
     public static String normalizeServerRootRequestPath(String requestPath) { // Path from server root to before query string
-        if (requestPath == null) {
-            return null;
-        }
+        if (requestPath == null) return null;
         return PathUtil.ensureStartAndNoTrailDelim(requestPath);
     }
     
     public static String normalizeServerRootRequestPathNoNull(String requestPath) { // Path from server root to before query string
-        if (requestPath == null) {
-            return "/";
-        }
+        if (requestPath == null) return "/";
         return PathUtil.ensureStartAndNoTrailDelim(requestPath);
     }
     
     public static String normalizeContextRootRequestPath(String requestPath) { // Path from servlet context (webapp) root to before query string
-        if (requestPath == null) {
-            return null;
-        }
+        if (requestPath == null) return null;
         return PathUtil.ensureStartAndNoTrailDelim(requestPath);
     }
     
     public static String normalizeContextRootRequestPathNoNull(String requestPath) { // Path from servlet context (webapp) root to before query string
-        if (requestPath == null) {
-            return "/";
-        }
+        if (requestPath == null) return "/";
         return PathUtil.ensureStartAndNoTrailDelim(requestPath);
     }
     
     public static String normalizeServletRootRequestPath(String requestPath) { // Path from servlet (controller) root to before query string
-        if (requestPath == null) {
-            return null;
-        }
+        if (requestPath == null) return null;
         return PathUtil.ensureStartAndNoTrailDelim(requestPath);
     }
     
     public static String normalizeServletRootRequestPathNoNull(String requestPath) { // Path from servlet (controller) root to before query string
-        if (requestPath == null) {
-            return "/";
-        }
+        if (requestPath == null) return "/";
         return PathUtil.ensureStartAndNoTrailDelim(requestPath);
     }
 
@@ -356,19 +131,17 @@ public abstract class CmsControlUtil {
      */
     @Deprecated
     public static String normalizeCmsReqPath(String cmsReqPath) {
-        if (cmsReqPath == null) {
-            return null;
-        }
+        if (cmsReqPath == null) return null;
         return PathUtil.ensureStartDelim(cmsReqPath);
     }
     
     public static String getReqLogIdStr(HttpServletRequest request) {
-        HttpSession session = request != null ? request.getSession(false) : null;
+        HttpSession session = (request != null) ? request.getSession(false) : null;
         return (request != null ? "sessionId: " + (session == null ? "unknown" : session.getId()) + "; " : "") + "threadId: " + Thread.currentThread().getId();
     }
     
     public static String getReqLogIdDelimStr(HttpServletRequest request) {
-        HttpSession session = request != null ? request.getSession(false) : null;
+        HttpSession session = (request != null) ? request.getSession(false) : null;
         return (request != null ? "; sessionId: " + (session == null ? "unknown" : session.getId()): "") + "; threadId: " + Thread.currentThread().getId();
     }
     
@@ -446,6 +219,10 @@ public abstract class CmsControlUtil {
         return delegator;
     }
     
+    /**
+     * Gets the response writer, in the same fashion as done by 
+     * {@link org.ofbiz.widget.renderer.macro.MacroScreenViewHandler}.
+     */
     public static Writer getResponseWriter(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // 2016: don't do this; do exact same as MacroScreenViewHandler
         //      Writer writer;
@@ -468,4 +245,5 @@ public abstract class CmsControlUtil {
         }
         return cmsPageVersionId;
     }
+
 }

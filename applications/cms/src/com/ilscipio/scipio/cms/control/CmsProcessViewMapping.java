@@ -13,9 +13,9 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 
+import com.ilscipio.scipio.ce.util.Optional;
 import com.ilscipio.scipio.cms.CmsException;
 import com.ilscipio.scipio.cms.content.CmsPage;
-import com.ilscipio.scipio.cms.util.Optional;
 
 /**
  * Wraps and represents a CmsProcessViewMapping entity value.
@@ -44,9 +44,18 @@ public class CmsProcessViewMapping extends CmsControlDataObject {
         }
     }
     
+    protected CmsProcessViewMapping(CmsProcessViewMapping other, Map<String, Object> copyArgs) {
+        super(other, copyArgs);
+    }
+    
     @Override    
-    public void update(Map<String, ?> fields) {
-        super.update(fields);
+    public void update(Map<String, ?> fields, boolean setIfEmpty) {
+        super.update(fields, setIfEmpty);
+    }
+    
+    @Override
+    public CmsProcessViewMapping copy(Map<String, Object> copyArgs) throws CmsException {
+        return new CmsProcessViewMapping(this, copyArgs);
     }
     
     /**
@@ -329,14 +338,12 @@ public class CmsProcessViewMapping extends CmsControlDataObject {
                             if (CmsProcessMapping.targetMatchesRequestPath(explTargetPath, requestPath)) {
                                 explPathMappings.add(currMapping);
                             }
-                        }
-                        else {
+                        } else {
                             if (parentOrDefMatchAnyTargetPath) {
                                 // Note: Explicit target above overrides matchAnyTargetPath set in parent,
                                 // but matchAnyTargetPath in child overrides all
                                 matchAnyMappings.add(currMapping); 
-                            }
-                            else if (processMappingMatchesReq) { // Default parent target
+                            } else if (processMappingMatchesReq) { // Default parent target
                                 parentPathMappings.add(currMapping);
                             }
                         }
@@ -352,11 +359,9 @@ public class CmsProcessViewMapping extends CmsControlDataObject {
             // Return the first mapping found, most specific type first w.r.t. targetPath
             if (explPathMappings.size() > 0) {
                 viewMapping = explPathMappings.get(0);
-            }
-            else if (parentPathMappings.size() > 0) {
+            } else if (parentPathMappings.size() > 0) {
                 viewMapping = parentPathMappings.get(0);
-            }
-            else if (matchAnyMappings.size() > 0) {
+            } else if (matchAnyMappings.size() > 0) {
                 viewMapping = matchAnyMappings.get(0);
             }
         }
@@ -478,8 +483,6 @@ public class CmsProcessViewMapping extends CmsControlDataObject {
         public CmsProcessViewMapping makeFromFields(Delegator delegator, Map<String, ?> fields) throws CmsException {
             return new CmsProcessViewMapping(delegator, fields, null);
         }
-
-        
         
         public List<CmsProcessViewMapping> findByProcess(Delegator delegator, String processMappingId, boolean useCache) throws CmsException {
             return findAll(delegator, UtilMisc.toMap("processMappingId", processMappingId), 

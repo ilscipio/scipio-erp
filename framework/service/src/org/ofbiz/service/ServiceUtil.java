@@ -33,6 +33,8 @@ import javax.transaction.Transaction;
 
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.PropertyMessage;
+import org.ofbiz.base.util.PropertyMessageExUtil;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -101,6 +103,11 @@ public class ServiceUtil {
 
     public static Map<String, Object> returnFailure(String errorMessage) {
         return returnProblem(ModelService.RESPOND_FAIL, errorMessage, null, null, null);
+    }
+    
+    /** Returns fail service message. SCIPIO: added missing service overload, 2017-11-01. */
+    public static Map<String, Object> returnFailure(String errorMessage, List<? extends Object> errorMessageList) {
+        return returnProblem(ModelService.RESPOND_FAIL, errorMessage, errorMessageList, null, null);
     }
 
     public static Map<String, Object> returnFailure(List<? extends Object> errorMessageList) {
@@ -180,6 +187,54 @@ public class ServiceUtil {
         if (code != null) result.put(ModelService.RESPONSE_MESSAGE, code);
         if (message != null) result.put(ModelService.SUCCESS_MESSAGE, message);
         return result;
+    }
+    
+    /** SCIPIO: Creates a service error result map from the given exception using the given localizable intro message
+     * combined with a suffix message taken from either a localizable property message via {@link org.ofbiz.base.util.PropertyMessageEx#getPropertyMessage()} 
+     * stored in the exception if it implements PropertyMessageEx or the exception detail message if any other exception type, 
+     * in addition to any message lists stored in the exception via {@link org.ofbiz.base.util.PropertyMessageEx#getPropertyMessageList()}.
+     * In other words this abstracts and automated the service result building from exception messages.
+     * Added 2017-12-07.
+     */
+    public static Map<String, Object> returnError(PropertyMessage messageIntro, Throwable t, Locale locale) {
+        return returnError(PropertyMessageExUtil.makeServiceMessage(messageIntro, t, locale), 
+                PropertyMessageExUtil.getExceptionMessageList(t, locale));
+    }
+    
+    /** SCIPIO: Creates a service error result map from the given exception using the given static intro message
+     * combined with a suffix message taken from either a localizable property message via {@link org.ofbiz.base.util.PropertyMessageEx#getPropertyMessage()} 
+     * stored in the exception if it implements PropertyMessageEx or the exception detail message if any other exception type, 
+     * in addition to any message lists stored in the exception via {@link org.ofbiz.base.util.PropertyMessageEx#getPropertyMessageList()}.
+     * In other words this abstracts and automated the service result building from exception messages.
+     * Added 2017-12-07.
+     */
+    public static Map<String, Object> returnError(String messageIntro, Throwable t, Locale locale) {
+        return returnError(PropertyMessageExUtil.makeServiceMessage(messageIntro, t, locale), 
+                PropertyMessageExUtil.getExceptionMessageList(t, locale));
+    }
+    
+    /** SCIPIO: Creates a service error result map from the given exception using the given localizable intro message
+     * combined with a suffix message taken from either a localizable property message via {@link org.ofbiz.base.util.PropertyMessageEx#getPropertyMessage()} 
+     * stored in the exception if it implements PropertyMessageEx or the exception detail message if any other exception type, 
+     * in addition to any message lists stored in the exception via {@link org.ofbiz.base.util.PropertyMessageEx#getPropertyMessageList()}.
+     * In other words this abstracts and automated the service result building from exception messages.
+     * Added 2017-12-07.
+     */
+    public static Map<String, Object> returnFailure(PropertyMessage messageIntro, Throwable t, Locale locale) {
+        return returnFailure(PropertyMessageExUtil.makeServiceMessage(messageIntro, t, locale), 
+                PropertyMessageExUtil.getExceptionMessageList(t, locale));
+    }
+    
+    /** SCIPIO: Creates a service error result map from the given exception using the given localizable intro message
+     * combined with a suffix message taken from either a localizable property message via {@link org.ofbiz.base.util.PropertyMessageEx#getPropertyMessage()} 
+     * stored in the exception if it implements PropertyMessageEx or the exception detail message if any other exception type, 
+     * in addition to any message lists stored in the exception via {@link org.ofbiz.base.util.PropertyMessageEx#getPropertyMessageList()}.
+     * In other words this abstracts and automated the service result building from exception messages.
+     * Added 2017-12-07.
+     */
+    public static Map<String, Object> returnFailure(String messageIntro, Throwable t, Locale locale) {
+        return returnFailure(PropertyMessageExUtil.makeServiceMessage(messageIntro, t, locale), 
+                PropertyMessageExUtil.getExceptionMessageList(t, locale));
     }
 
     /** A small routine used all over to improve code efficiency, get the partyId and does a security check

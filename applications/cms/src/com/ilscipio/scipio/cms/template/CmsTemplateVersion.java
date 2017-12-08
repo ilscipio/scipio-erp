@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -14,9 +15,15 @@ import org.ofbiz.entity.GenericValue;
 
 import com.ilscipio.scipio.cms.CmsException;
 import com.ilscipio.scipio.cms.CmsUtil;
+import com.ilscipio.scipio.cms.data.CmsDataException;
 import com.ilscipio.scipio.cms.data.CmsDataObject;
+import com.ilscipio.scipio.cms.data.CmsDataObjectVersion;
 
-public abstract class CmsTemplateVersion extends CmsTemplate {
+/**
+ * Template version, containing actual content for a versioned template.
+ * @see CmsVersionedComplexTemplate
+ */
+public abstract class CmsTemplateVersion extends CmsTemplate implements CmsDataObjectVersion {
 
     private static final long serialVersionUID = 2461746703166121074L;
 
@@ -38,10 +45,23 @@ public abstract class CmsTemplateVersion extends CmsTemplate {
         super(delegator, fields);
     }
     
-    @Override    
-    public void update(Map<String, ?> fields) {
-        super.update(fields);
+    protected CmsTemplateVersion(CmsTemplateVersion other, Map<String, Object> copyArgs) {
+        super(other, copyArgs);
     }
+    
+    @Override    
+    public void update(Map<String, ?> fields, boolean setIfEmpty) {
+        super.update(fields, setIfEmpty);
+    }
+    
+    @Override
+    public abstract CmsTemplateVersion copy(Map<String, Object> copyArgs) throws CmsException;
+
+    /**
+     * Special copy overload that immediately asssociates the newly created copy with the
+     * specified template.
+     */
+    public abstract CmsTemplateVersion copy(Map<String, Object> copyArgs, CmsVersionedComplexTemplate<?, ?> template) throws CmsException;
     
     /**
      * 2016: Loads ALL this object's content into the current instance.
@@ -82,8 +102,29 @@ public abstract class CmsTemplateVersion extends CmsTemplate {
      */
     @Override
     public void store() throws CmsException {
+        ensureTemplateId();
         super.store();
         storeVersionStatus();
+    }
+    
+    /**
+     * SPECIAL: it's possible we have memory instance of template that wasn't stored when
+     * this instance was created; if so this synchs the ID.
+     */
+    public void ensureTemplateId() {
+        if (getTemplateId() == null) {
+            CmsTemplate template = getTemplate();
+            String templateId = null;
+            if (template != null) {
+                templateId = template.getId();
+            } 
+            if (templateId != null) {
+                setTemplateId(templateId);
+            } else {
+                throw new CmsException("internal or schema error: " + this.getClass().getSimpleName() + " '" + getId() 
+                    + "' has no template association (template ID null) and unable to determine one");
+            }
+        }
     }
 
     protected void storeVersionStatus() {
@@ -105,10 +146,15 @@ public abstract class CmsTemplateVersion extends CmsTemplate {
     
     protected abstract ActiveVersionWorker<?, ?> getActiveVersionWorkerInst();
     
-    protected abstract String getTemplateId();
+    public abstract String getTemplateId();
     
     public abstract CmsVersionedComplexTemplate<?, ?> getTemplate();
+    
+    protected abstract void setTemplate(CmsVersionedComplexTemplate<?, ?> template);
 
+    protected abstract void setTemplateId(String templateId);
+
+    
     public String getVersionId() {
         return getId();
     }
@@ -125,12 +171,10 @@ public abstract class CmsTemplateVersion extends CmsTemplate {
             String firstVersionId = first.getVersionId();
             if (firstVersionId != null)  {
                 return firstVersionId.equals(second.getVersionId());
-            }
-            else {
+            } else {
                 return false;
             }
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -151,8 +195,7 @@ public abstract class CmsTemplateVersion extends CmsTemplate {
     public boolean isActiveVersion(ExtendedInfo knownInfo) {
         if (knownInfo != null && knownInfo.getActiveVersionId() != null) {
             return knownInfo.getActiveVersionId().equals(getVersionId());
-        }
-        else {
+        } else {
             return isSameVersion(getTemplate().getActiveVersion());
         }
     }  
@@ -164,8 +207,7 @@ public abstract class CmsTemplateVersion extends CmsTemplate {
     public boolean isLastVersion(ExtendedInfo knownInfo) {
         if (knownInfo != null && knownInfo.getLastVersionId() != null) {
             return knownInfo.getLastVersionId().equals(getVersionId());
-        }
-        else {
+        } else {
             return isSameVersion(getTemplate().getLastVersion());
         }
     }
@@ -177,8 +219,7 @@ public abstract class CmsTemplateVersion extends CmsTemplate {
     public boolean isFirstVersion(ExtendedInfo knownInfo) {
         if (knownInfo != null && knownInfo.getFirstVersionId() != null) {
             return knownInfo.getFirstVersionId().equals(getVersionId());
-        }
-        else {
+        } else {
             return isSameVersion(getTemplate().getFirstVersion());
         }
     }
@@ -189,6 +230,10 @@ public abstract class CmsTemplateVersion extends CmsTemplate {
     
     Date getOriginalVersionDate() {
         return (Date) entity.get("origVersionDate");
+    }
+    
+    void setOriginalVersionDate(Date date) {
+        entity.set("origVersionDate", date);
     }
     
     public Date getVersionDate() {
@@ -341,8 +386,7 @@ public abstract class CmsTemplateVersion extends CmsTemplate {
             GenericValue activeRecord = getRecord(delegator, templateId);
             if (activeRecord == null) {
                 activeRecord = makeRecord(delegator, templateId, versionId);
-            }
-            else {
+            } else {
                 updateRecord(delegator, activeRecord, versionId);
             }
             try {

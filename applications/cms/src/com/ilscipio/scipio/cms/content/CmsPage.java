@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.lang.JSON;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.MapStack;
@@ -29,6 +30,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.service.LocalDispatcher;
 
+import com.ilscipio.scipio.ce.util.Optional;
 import com.ilscipio.scipio.cms.CmsException;
 import com.ilscipio.scipio.cms.CmsUtil;
 import com.ilscipio.scipio.cms.control.CmsControlUtil;
@@ -43,6 +45,7 @@ import com.ilscipio.scipio.cms.data.CmsEntityVisit.VisitRelation;
 import com.ilscipio.scipio.cms.data.CmsEntityVisit.VisitRelations;
 import com.ilscipio.scipio.cms.data.CmsMajorObject;
 import com.ilscipio.scipio.cms.data.CmsObjectCache;
+import com.ilscipio.scipio.cms.data.CmsVersionedDataObject;
 import com.ilscipio.scipio.cms.data.CmsObjectCache.CacheEntry;
 import com.ilscipio.scipio.cms.template.CmsComplexTemplate;
 import com.ilscipio.scipio.cms.template.CmsMasterComplexTemplate;
@@ -50,14 +53,17 @@ import com.ilscipio.scipio.cms.template.CmsMasterComplexTemplate.CmsTemplateScri
 import com.ilscipio.scipio.cms.template.CmsPageTemplate;
 import com.ilscipio.scipio.cms.template.CmsPageTemplate.PageTemplateRenderer.PtRenderArgs;
 import com.ilscipio.scipio.cms.template.CmsScriptTemplate;
-import com.ilscipio.scipio.cms.util.Optional;
 
 /**
  * Represents a CMS page.
  * <p>
  * 2016: IMPORTANT: If you add any cached fields, you MUST update the {@link #preloadContent} method.
+ * <p>
+ * FIXME: 2017: there is significant duplication of the CmsPage<->CmsPageVersion logic
+ * because this is unable to extend CmsVersionedComplexTemplate<->CmsTemplateVerison that
+ * are used by the template, and is recurring source of errors.
  */
-public class CmsPage extends CmsDataObject implements CmsMajorObject {
+public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersionedDataObject {
     
     private static final long serialVersionUID = -6442528536238200118L;
 
@@ -83,6 +89,12 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
     private String activeVersionId = null; // NOTE: NOT cached when live. // 2016: this is no longer stored on CmsPage. NOTE: empty string "" means cache checked OR unset active upon store().
     
     private Set<String> candidateWebSiteIds = null; // NOTE: NOT cached when live.
+    
+    /**
+     * 2017-11-29: new pages will have their primary process mapping set active false,
+     * then first publish operation will then toggle it to true.
+     */
+    static final String newPagePrimaryProcessMappingActive = "N";
     
     /**
      * 2016: new backpointers to process mappings that act as "primary" ones for this page.
@@ -125,8 +137,21 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
     */
     public CmsPage(Delegator delegator, Map<String, ?> fields) {
         super(delegator, fields);
-        this.setPrimaryProcessMappingFields(fields); 
+        // TODO: REVIEW: 2017-11-29: this was in duplicate with createAndStoreWithPrimaryProcessMapping,
+        // I don't think it should be here and hopefully nothing was relying on this
+        //this.setPrimaryProcessMappingFields(fields); 
     } 
+    
+    protected CmsPage(CmsPage other, Map<String, Object> copyArgs) {
+        super(other, copyArgs);
+        this.sortedScriptTemplates = CmsMasterComplexTemplate.copyScriptTemplateAssocs(other.getSortedScriptTemplates(), copyArgs);
+        // future? current code for this is invalid (must not store)
+//        Map<String, Map<String, ?>> productEntries = other.getProducts();
+//        for (String name : productEntries.keySet()) {
+//            Map<String, ?> product = productEntries.get(name);
+//            this.addProduct((String) product.get("productId"), name);
+//        }
+    }
     
     public static CmsPage createAndStore(Delegator delegator, Map<String, ?> fields) {
         CmsPage page = new CmsPage(delegator, fields);
@@ -135,16 +160,67 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
     }
     
     public static CmsPage createAndStoreWithPrimaryProcessMapping(Delegator delegator, Map<String, ?> fields) {
-        CmsPage page = new CmsPage(delegator, fields);
-        page.setPrimaryProcessMappingFields(fields); 
+        CmsPage page = new CmsPage(delegator, fields);  
+        page.setPrimaryProcessMappingFields(fields, true); 
         page.store();
         return page;
     }
     
     @Override    
-    public void update(Map<String, ?> fields) {
-        super.update(fields);
-        this.setPrimaryProcessMappingFields(fields); 
+    public void update(Map<String, ?> fields, boolean setIfEmpty) {
+        super.update(fields, setIfEmpty);
+        this.setPrimaryProcessMappingFields(fields, setIfEmpty); 
+    }
+    
+    /**
+     * Copies this page including all linked products and the latest or requested version.
+     * Caller must call store().
+     * <p>
+     * NOTE: the page is not published immediately - so both the active flag
+     * on primary process mapping is N and there is no active version decided.
+     */
+    @Override
+    public CmsPage copy(Map<String, Object> copyArgs) {
+        CmsPage newPage = new CmsPage(this, copyArgs);
+        Map<String, Object> primaryProcessMapping = UtilGenerics.checkMap(copyArgs.get("primaryProcessMapping"));
+        if (primaryProcessMapping != null) {
+            newPage.setPrimaryProcessMappingFields(primaryProcessMapping, true);
+        }
+        copyInitialVersionToPageCopy(newPage, copyArgs);
+        return newPage;
+    }
+
+    /**
+     * Copies the version specified in copyArgs from <code>this</code> to newPage and assigns it
+     * as its lastVersion member (which will get picked up by {@link #store()} later).
+     */
+    protected void copyInitialVersionToPageCopy(CmsPage newPage, Map<String, Object> copyArgs) {
+        // NOTE: here <code>this</code> is page we're copying from
+        CmsPageVersion newVersion = newPage.copyOtherVersion(this, copyArgs);
+        // NOTE: for new pages we do NOT set active version, user must verify
+        // operation is good before publishing
+        //newVersion.setActive...
+        newPage.setLastVersion(newVersion);
+    }
+    
+    /**
+     * Creates an in-memory copy of the specified (in copyArgs) or last version 
+     * from the <code>other</code> instance, the result then associated to <code>this</code> instance, 
+     * using any config in copyArgs.
+     * NOTE: this swaps <code>this</code> (because it was originally in the copy constructor).
+     */
+    protected CmsPageVersion copyOtherVersion(CmsPage other, Map<String, Object> copyArgs) {
+        return copyOtherVersion(other.getVersionForCopyAndVerify(copyArgs), copyArgs);
+    }
+    
+    protected CmsPageVersion copyOtherVersion(CmsPageVersion otherVersion, Map<String, Object> copyArgs) {
+        CmsPageVersion newVersion = otherVersion.copy(copyArgs, this);
+        
+        // redundant?
+        //// Copy the original version date from the last template
+        //newVersion.setOriginalVersionDate(otherVersion.getVersionDate());
+        
+        return newVersion;
     }
     
     /**
@@ -179,6 +255,16 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
     public void store() throws CmsException {
         preventIfImmutable();
         super.store();
+
+        if (lastVersion != null && lastVersion.isPresent()) {
+            CmsPageVersion lastVer = lastVersion.get();
+            // TODO: REVIEW: could remove this condition, and also store activeVersion?
+            // unclear if will cause problems anywhere.
+            // For now this detects copy and change only.
+            if (lastVer.hasChangedOrNoId() || lastVer.getEntityPageId() == null) { 
+                lastVer.store();
+            }
+        }
         
         // update active version record
         if (this.activeVersionId != null) {
@@ -203,8 +289,30 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
                 }
             }
         }
+        
+        // needed for copy operation
+        CmsMasterComplexTemplate.checkStoreScriptTemplateAssocs(this, this.sortedScriptTemplates);
     }
 
+    /**
+     * Gets version indicated in the copy args and verifies OK for copy.
+     * Does NOT creates any copies.
+     */
+    public CmsPageVersion getVersionForCopyAndVerify(Map<String, Object> copyArgs) {
+        String versionId = (String) copyArgs.get("copyVersionId");
+        CmsPageVersion version;
+        if ("ACTIVE".equals(versionId)) {
+            version = getActiveVersion();
+            if (version == null) throw new CmsDataException("Source page '" + getId() + "' has no active page version - cannot create copy");
+        } else if ("LATEST".equals(versionId) || UtilValidate.isEmpty(versionId)) {
+            version = getLastVersion();
+            if (version == null) throw new CmsDataException("Source page '" + getId() + "' has no last page version - cannot create copy");
+        } else {
+            version = getVersion(versionId);
+            if (version == null) throw new CmsDataException("Cannot find template version '" + versionId + "' in page '" + getId() + "' - cannot create copy");
+        }
+        return version;
+    }
     
     /**
      * Adds the product to this page. It will be available in templates under
@@ -232,6 +340,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
         try {
             GenericValue productAssoc = entity.getDelegator().makeValue("CmsPageProductAssoc", "pageId", this.getId(),
                     "productId", productId, "importName", importName);
+            // FIXME: this is bad
             productAssoc.setNextSeqId();
             entity.getDelegator().create(productAssoc);
 
@@ -266,43 +375,6 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
         if (CmsUtil.verboseOn())
             Debug.logInfo("addVersion : " + jsonContent, module);
         return new CmsPageVersion(getDelegator(), UtilMisc.toMap("pageId", this.getId(), "content", jsonContent), this);
-    }
-
-    /**
-     * Copies this page including all linked products and the latest version.
-     */
-    @Override
-    public CmsPage copy() {
-        preventIfImmutable();
-        
-        // copy the page itself
-        CmsPage pageCopy = (CmsPage) super.copy();
-        // copy products
-        Map<String, Map<String, ?>> productEntries = getProducts();
-        for (String name : productEntries.keySet()) {
-            Map<String, ?> product = productEntries.get(name);
-            pageCopy.addProduct((String) product.get("productId"), name);
-        }
-        
-        // copy latest version
-        CmsPageVersion lastVersion = getLastVersionOrNewVersion();
-        
-        try {
-            if (lastVersion != null) {
-                CmsPageVersion newVer = pageCopy.addVersion(lastVersion.getContent());
-                newVer.store();
-            } else {
-                CmsPageVersion newVer = pageCopy.addVersion(pageCopy.getContent());
-                newVer.store();
-            }
-        } catch (IOException e) {
-            throw new CmsException(e);
-        }
-
-        // TODO: 2016: INVESTIGATE: PRIMARY PROCESS MAPPINGS:
-        // primary process mapping can't be copied as-is since the path would conflict, but maybe some part of them...
-        
-        return pageCopy;
     }
 
     public boolean isActive() {
@@ -538,6 +610,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
                 "primaryPath", getPrimaryPath(webSiteId), 
                 "primaryPathExpanded", getPrimaryPathExpanded(webSiteId),
                 "primaryTargetPath", getPrimaryTargetPath(webSiteId),
+                "primaryPathIndexable", getPrimaryPathIndexable(webSiteId),
                 "path", getPrimaryPath(webSiteId), // TODO: DEPRECATED: REMOVE
                 "webSiteId", webSiteId,
                 "defaultWebSiteId", getWebSiteId(),
@@ -573,6 +646,12 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
             this.lastVersion = lastVersion;
         }
         return lastVersion.orElse(null);
+    }
+    
+    void setLastVersion(CmsPageVersion version) {
+        preventIfImmutable();
+        
+        this.lastVersion = Optional.ofNullable(version);
     }
     
     /**
@@ -646,6 +725,15 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
         CmsProcessMapping primaryProcessMapping = getPrimaryProcessMapping(webSiteId);
         if (primaryProcessMapping != null) {
             return primaryProcessMapping.getTargetPath();
+        } else {
+            return null;
+        }
+    }
+    
+    public Boolean getPrimaryPathIndexable(String webSiteId) {
+        CmsProcessMapping primaryProcessMapping = getPrimaryProcessMapping(webSiteId);
+        if (primaryProcessMapping != null) {
+            return primaryProcessMapping.getIndexable();
         } else {
             return null;
         }
@@ -938,16 +1026,17 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
     /**
      * 2016: Sets the primary page path on this page's associated CmsProcessMapping record. 
      * The path is normalized and any trailing slashs are removed.
+     * <p>
+     * FIXME: setIfEmpty IS NOT CURRENTLY HONORED HERE
      * 
      * @param path
      */
-    public void setPrimaryProcessMappingFields(Map<String, ?> fields) {
-        String primaryPath = (String) fields.get("primaryPath");
+    public void setPrimaryProcessMappingFields(Map<String, ?> fields, boolean setIfEmpty) {
         String webSiteId = (String) fields.get("webSiteId");
   
         // bare minimum fields needed
         // NOTE: for simplicity we require webSiteId in all update cases even if changing only path.
-        if (UtilValidate.isNotEmpty(primaryPath) && UtilValidate.isNotEmpty(webSiteId)) { 
+        if (UtilValidate.isNotEmpty(webSiteId)) { 
             CmsProcessMapping primaryProcessMapping = getPrimaryProcessMapping(webSiteId);
             
             // 2016: FIXME?: this next check was not in original code I wrote.
@@ -975,7 +1064,14 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
             
             Map<String, Object> processFields = new HashMap<>();
             if (fields.containsKey("primaryPath")) {
-                processFields.put("sourcePath", fields.get("primaryPath"));
+                // we can't allow setting an empty primaryPath during updates
+                if (UtilValidate.isNotEmpty((String) fields.get("primaryPath"))) {
+                    processFields.put("sourcePath", fields.get("primaryPath"));
+                } else {
+                    Debug.logWarning("Cms: Attempted setPrimaryProcessMappingFields for page '" + getLogIdRepr() 
+                        + "' with explicitly empty primaryPath (sourcePath) - not allowed - calling code should be fixed"
+                        + " to either not set primaryPath or to re-send its previous value (or a different value)", module);
+                }
             }
             if (fields.containsKey("primaryPathFromContextRoot")) {
                 processFields.put("sourceFromContextRoot", fields.get("primaryPathFromContextRoot"));
@@ -986,16 +1082,36 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
             if (fields.containsKey("active")) {
                 processFields.put("active", fields.get("active"));
             }
+            if (fields.containsKey("primaryPathIndexable")) {
+                processFields.put("indexable", fields.get("primaryPathIndexable"));
+            } else if (fields.containsKey("indexable")) {
+                processFields.put("indexable", fields.get("indexable"));
+            }
             if (fields.containsKey("webSiteId")) {
                 processFields.put("sourceWebSiteId", fields.get("webSiteId"));
             }
             if (primaryProcessMapping == null) {
-                if (getId() != null) {
-                    Debug.logInfo("Cms: Page " + getId() + " does not have a primary process mapping; creating a new one to "
-                            + "store primary path " + primaryPath, module);
+                String primaryPath = (String) processFields.get("sourcePath");
+                if (UtilValidate.isNotEmpty(primaryPath)) {
+                    if (getId() != null) {
+                        Debug.logInfo("Cms: Page '" + getId() + "' does not have a primary process mapping; creating a new one to "
+                                + "store primary path " + primaryPath, module);
+                    }
+                    primaryProcessMapping = CmsProcessMapping.createPrimaryProcessMapping(getDelegator(), processFields);
+                    this.addPrimaryProcessMapping(primaryProcessMapping);
+                } else {
+                    // TODO: REVIEW: should this throw an exception instead of warning?
+                    // This situation is supported by the schema, just not the UI, so maybe
+                    // it makes sense if the UI enforces alone, as this could return in the future...
+                    // (it could also be enforced by the service)
+                    if (getId() != null) {
+                        Debug.logWarning("Cms: Invoked add new primary process mapping for page '" + getId() 
+                            + "' but primaryPath field was empty - skipping primary process mapping creation (primaryPath/sourcePath cannot be empty)", module);
+                    } else {
+                        Debug.logWarning("Cms: Creating a new page with empty primaryPath field"
+                                + " - skipping primary process mapping creation (primaryPath/sourcePath cannot be empty)", module);
+                    }
                 }
-                primaryProcessMapping = CmsProcessMapping.createPrimaryProcessMapping(getDelegator(), processFields);
-                this.addPrimaryProcessMapping(primaryProcessMapping);
             } else {
                 primaryProcessMapping.setPrimaryProcessMappingFields(processFields, false);
             }
@@ -1537,8 +1653,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
             EntityCondition userOrGroupsCond;
             if (userSecGroupsCond != null) {
                 userOrGroupsCond = EntityCondition.makeCondition(userSecGroupsCond, EntityOperator.OR, userCond);
-            }
-            else {
+            } else {
                 userOrGroupsCond = userCond;
             }
             
@@ -1629,8 +1744,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
         public boolean isMoreSeniorThan(UserRole other) {
             if (other == null) {
                 return true;
-            }
-            else {
+            } else {
                 return this.seniorityRank > other.seniorityRank;
             }
         }
@@ -1699,10 +1813,20 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
         public CmsPageScriptAssoc(Delegator delegator, Map<String, ?> fields, CmsScriptTemplate scriptTemplate) {
             super(delegator, fields, scriptTemplate);
         }
+        
+        protected CmsPageScriptAssoc(CmsPageScriptAssoc other, Map<String, Object> copyArgs) {
+            super(other, copyArgs);
+            // NOTE: don't bother clearing out the ID fields here, caller should handle
+        }
 
         @Override    
-        public void update(Map<String, ?> fields) {
-            super.update(fields);
+        public void update(Map<String, ?> fields, boolean setIfEmpty) {
+            super.update(fields, setIfEmpty);
+        }
+        
+        @Override
+        public CmsPageScriptAssoc copy(Map<String, Object> copyArgs) throws CmsException {
+            return new CmsPageScriptAssoc(this, copyArgs);
         }
         
         /**
@@ -1715,6 +1839,23 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
         @Override
         public void preload(PreloadWorker preloadWorker) {
             super.preload(preloadWorker);
+        }
+        
+        @Override
+        protected void clearTemplate() {
+            entity.set("pageId", null);
+        }
+
+        @Override
+        protected void setTemplate(CmsDataObject template) {
+            if (!(template instanceof CmsPage)) throw new CmsException("CmsPageScriptAssoc requires a CmsPage, got: " 
+                    + (template != null ? template.getClass().getName() : null));
+            entity.set("pageId", template.getId());
+        }
+
+        @Override
+        protected boolean hasTemplate() {
+            return (entity.get("pageId") != null);
         }
         
         @Override
@@ -1944,7 +2085,6 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject {
         public void clearMemoryCaches() {
             idCache.clear();
         }
-
     }
 
     @Override

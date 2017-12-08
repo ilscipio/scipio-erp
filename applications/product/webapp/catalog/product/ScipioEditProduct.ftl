@@ -108,7 +108,8 @@ under the License.
           <#else>
             <@field type="text" name="productId" label=uiLabelMap.ProductProductId value=(productParams.productId!) tooltip=uiLabelMap.CommonLeaveEmptyAutoValue />
           </#if>
-            <@field type="text" name="productName" label=uiLabelMap.ProductProductName value=(productParams.productName!product.productName!) maxlength="255" required=true/>
+            <#-- SCIPIO: TODO: REVIEW: 2017-12: this field should probably not be force-required for pre-existing products... -->
+            <@field type="text" name="productName" label=uiLabelMap.ProductProductName value=(productParams.productName!product.productName!) maxlength="255" required=true tooltip=uiLabelMap.ProductFieldNonLocalizedSeeContentPageForLocalizedFields/>
             <@field type="text" name="internalName" label=uiLabelMap.ProductInternalName value=(productParams.internalName!product.internalName!) maxlength="255" required=true />
             <@field type="text" name="brandName" label=uiLabelMap.ProductBrandName value=(productParams.brandName!product.brandName!) maxlength="60"/>
             <@field type="select" label=uiLabelMap.ProductProductType name="productTypeId" required=true>

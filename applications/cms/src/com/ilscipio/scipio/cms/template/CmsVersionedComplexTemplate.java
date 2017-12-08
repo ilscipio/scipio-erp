@@ -14,15 +14,18 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 
+import com.ilscipio.scipio.ce.util.Optional;
 import com.ilscipio.scipio.cms.CmsException;
-import com.ilscipio.scipio.cms.util.Optional;
+import com.ilscipio.scipio.cms.data.CmsDataException;
+import com.ilscipio.scipio.cms.data.CmsVersionedDataObject;
 
 /**
  * Versioned complex template.
  * <p>
  * This is the COMMON CODE shared between Page and Asset Templates (new 2016).
+ * @see CmsTemplateVersion
  */
-public abstract class CmsVersionedComplexTemplate<T extends CmsVersionedComplexTemplate<T, V>, V extends CmsTemplateVersion>  extends CmsComplexTemplate {
+public abstract class CmsVersionedComplexTemplate<T extends CmsVersionedComplexTemplate<T, V>, V extends CmsTemplateVersion> extends CmsComplexTemplate implements CmsVersionedDataObject {
 
     private static final long serialVersionUID = 1294180234678880297L;
 
@@ -43,11 +46,26 @@ public abstract class CmsVersionedComplexTemplate<T extends CmsVersionedComplexT
         super(delegator, fields);
     }
     
-    @Override    
-    public void update(Map<String, ?> fields) {
-        super.update(fields);
+    protected CmsVersionedComplexTemplate(CmsVersionedComplexTemplate<T, V> other, Map<String, Object> copyArgs) {
+        super(other, copyArgs);
+        // currently not calling anything here:
+        //getVersionCopy...
     }
     
+    @Override    
+    public void update(Map<String, ?> fields, boolean setIfEmpty) {
+        super.update(fields, setIfEmpty);
+    }
+
+    /**
+     * Override: Versioned templates must do nothing for this, we copy an explicit versionId instead.
+     */
+    @Override
+    protected TemplateBodySource getTemplateBodySourceCopy(CmsTemplate other, Map<String, Object> copyArgs) {
+        // DO NOTHING
+        return null;
+    }
+
     /**
      * Creates a new version for this page. Caller stores.
      * 
@@ -63,6 +81,42 @@ public abstract class CmsVersionedComplexTemplate<T extends CmsVersionedComplexT
         }
         newVer.store();
         return newVer;
+    }
+
+    /**
+     * Copies the version specified in copyArgs from <code>this</code> to newTemplate and assigns it
+     * as its lastVersion member (which will get picked up by {@link #store()} later).
+     */
+    @SuppressWarnings("unchecked")
+    protected void copyInitialVersionToTemplateCopy(T newTemplate, Map<String, Object> copyArgs) {
+        // NOTE: here <code>this</code> is template we're copying from
+        V newVersion = newTemplate.copyOtherVersion((T) this, copyArgs);
+        if (getVerComTemplateWorkerInst().isFirstVersionActive()) {
+            newVersion.setAsActiveVersion();
+        }
+        newTemplate.setLastVersion(newVersion);
+    }
+    
+    /**
+     * Creates an in-memory copy of the specified (in copyArgs) or last version 
+     * from the <code>other</code> instance, the result then associated to <code>this</code> instance, 
+     * using any config in copyArgs.
+     * NOTE: this swaps <code>this</code> (because it was originally in the copy constructor).
+     */
+    protected V copyOtherVersion(T other, Map<String, Object> copyArgs) {
+        // NOTE: here <code>this</code> is the newTemplate
+        return copyOtherVersion(other.getVersionForCopyAndVerify(copyArgs), copyArgs);
+    }
+    
+    @SuppressWarnings("unchecked")
+    protected V copyOtherVersion(V otherVersion, Map<String, Object> copyArgs) {
+        CmsTemplateVersion newVersion = otherVersion.copy(copyArgs, this);
+        
+        // redundant?
+        //// Copy the original version date from the last template
+        //newVersion.setOriginalVersionDate(otherVersion.getVersionDate());
+        
+        return (V) newVersion;
     }
     
     /**
@@ -93,11 +147,10 @@ public abstract class CmsVersionedComplexTemplate<T extends CmsVersionedComplexT
     }
     
     /**
-     * Stores the template record itself (and active version if any was set). For the time being, this does not store any
-     * related entities. 
-     *  
-     *  (non-Javadoc)
-     * @see org.CmsDataObject.cms.data.CmsDataObject#store()
+     * Stores the template record itself (and active version if any was set).
+     * <p>
+     * NOTE: 2017-11: this also stores <code>this.lastVersion</code>, for the copy case,
+     * but ONLY if it was not already fully persisted. See {@link #copyVersionToNewTemplate}.
      */
     @Override
     public void store() throws CmsException {
@@ -122,6 +175,16 @@ public abstract class CmsVersionedComplexTemplate<T extends CmsVersionedComplexT
                 }
             }
             this.tmplBodySrc = null;
+        }
+        
+        if (lastVersion != null && lastVersion.isPresent()) {
+            V lastVer = lastVersion.get();
+            // TODO: REVIEW: could remove this condition, and also store activeVersion?
+            // unclear if will cause problems anywhere.
+            // For now this detects copy and change only.
+            if (lastVer.hasChangedOrNoId() || lastVer.getTemplateId() == null) { 
+                lastVer.store();
+            }
         }
         
         // re-store ourselves with activeContentId if supported and changed 
@@ -199,6 +262,12 @@ public abstract class CmsVersionedComplexTemplate<T extends CmsVersionedComplexT
         return lastVersion.orElse(null);
     }
     
+    void setLastVersion(V version) {
+        preventIfImmutable();
+        
+        this.lastVersion = Optional.ofNullable(version);
+    }
+    
     public V getFirstVersion() {
         preventIfImmutable();
         return getVerComTemplateWorkerInst().findFirstTemplateVersion(entity.getDelegator(), getTemplate());
@@ -213,6 +282,10 @@ public abstract class CmsVersionedComplexTemplate<T extends CmsVersionedComplexT
         return activeVersion.orElse(null);
     }
     
+    void setActiveVersion(V version) {
+        this.activeVersion = Optional.ofNullable(version);
+    }
+    
     protected V readActiveVersion() { // skips cache
         return getVerComTemplateWorkerInst().findActiveTemplateVersion(entity.getDelegator(), getTemplate());
     }
@@ -221,6 +294,26 @@ public abstract class CmsVersionedComplexTemplate<T extends CmsVersionedComplexT
     public V getVersion(String versionId) {
         preventIfImmutable();
         return getVerComTemplateWorkerInst().findSpecificTemplateVersion(entity.getDelegator(), getTemplate(), versionId);
+    }
+    
+    /**
+     * Gets version indicated in the copy args and verifies OK for copy.
+     * Does NOT creates any copies.
+     */
+    public V getVersionForCopyAndVerify(Map<String, Object> copyArgs) {
+        String versionId = (String) copyArgs.get("copyVersionId");
+        V version;
+        if ("ACTIVE".equals(versionId)) {
+            version = getActiveVersion();
+            if (version == null) throw new CmsDataException("Source template '" + getId() + "' has no active template version - cannot create copy");
+        } else if ("LATEST".equals(versionId) || UtilValidate.isEmpty(versionId)) {
+            version = getLastVersion();
+            if (version == null) throw new CmsDataException("Source template '" + getId() + "' has no last template version - cannot create copy");
+        } else {
+            version = getVersion(versionId);
+            if (version == null) throw new CmsDataException("Cannot find template version '" + versionId + "' in template '" + getId() + "' - cannot create copy");
+        }
+        return version;
     }
     
     public List<V> getAllVersions() {
@@ -335,8 +428,7 @@ public abstract class CmsVersionedComplexTemplate<T extends CmsVersionedComplexT
 
             return newTmp;
         }
-        
-        
+
         /**
          * Returns the template with the given name within a website.
          * 
@@ -485,8 +577,7 @@ public abstract class CmsVersionedComplexTemplate<T extends CmsVersionedComplexT
             List<V> allVersions = findAllTemplateVersions(delegator, templateId, template);
             if (UtilValidate.isNotEmpty(allVersions)) {
                 return allVersions.get(0);
-            }
-            else {
+            } else {
                 return null;
             }
         }
@@ -504,8 +595,7 @@ public abstract class CmsVersionedComplexTemplate<T extends CmsVersionedComplexT
             List<V> allVersions = findAllTemplateVersions(delegator, templateId, template);
             if (UtilValidate.isNotEmpty(allVersions)) {
                 return allVersions.get(allVersions.size() - 1);
-            }
-            else {
+            } else {
                 return null;
             }
         }

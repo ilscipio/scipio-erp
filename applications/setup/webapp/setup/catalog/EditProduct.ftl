@@ -82,10 +82,26 @@
       <#if formActionType != "add">
         <@field type="input" name="productName" value=(params.productName!) label=uiLabelMap.ProductProductName class="+ect-inputfield"/><#--  not strictly: required=true -->
         <@field type="input" name="description" value=(params.description!) label=uiLabelMap.FormFieldTitle_description class="+ect-inputfield"/>
-        <@field type="input" name="longDescription" value=(params.longDescription!) label=uiLabelMap.FormFieldTitle_longDescription class="+ect-inputfield"/>
+        <@field type="textarea" name="longDescription" value=(params.longDescription!) label=uiLabelMap.FormFieldTitle_longDescription class="+ect-inputfield"/>
 
-        <@fieldset title=uiLabelMap.CommonLocalizedFields collapsed=true class="+ect-locfields-cnt">
-            <@ectLocalizedFields objectType="product" params=params/>
+        <#local updateLocalizedTextsChecked = (params.updateLocalizedTexts!?string == "true")>
+        <@fieldset title=uiLabelMap.CommonLocalizedFields collapsed=false class="+ect-locfields-cnt stc-locfields-cnt"><#-- fieldset too limited for this to work: collapsed=(!updateLocalizedTextsChecked) -->
+            <#-- auto-checks when user changes a field -->
+            <@field type="generic">
+                <@field type="checkbox" checkboxType="simple" name="updateLocalizedTexts" label=uiLabelMap.CommonUpdateLocalizedFields value="true" 
+                    checked=updateLocalizedTextsChecked class="+ect-nonvaluefield ect-checkfield ect-initial-unchecked"/>
+            </@field>
+            <@script>
+                jQuery(document).ready(function() {
+                    var form = jQuery('#${escapeVal(id, 'js')}');
+                    jQuery('.stc-locfields-cnt :input', form).change(function() {
+                        if (jQuery(this).prop('name') !== 'updateLocalizedTexts') {
+                            jQuery('input[name=updateLocalizedTexts]', form).prop('checked', true);
+                        }
+                    });
+                });
+            </@script>
+            <@catalogStcLocFields objectType="product" params=params/>
         </@fieldset>
       </#if>
     </@form>

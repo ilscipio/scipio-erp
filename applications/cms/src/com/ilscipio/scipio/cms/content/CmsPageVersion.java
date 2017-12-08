@@ -17,16 +17,25 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityFindOptions;
 
+import com.ilscipio.scipio.ce.util.Optional;
 import com.ilscipio.scipio.cms.CmsException;
 import com.ilscipio.scipio.cms.CmsUtil;
+import com.ilscipio.scipio.cms.data.CmsDataException;
 import com.ilscipio.scipio.cms.data.CmsDataObject;
+import com.ilscipio.scipio.cms.data.CmsDataObjectVersion;
 import com.ilscipio.scipio.cms.template.CmsComplexTemplate;
 import com.ilscipio.scipio.cms.template.CmsTemplate;
 import com.ilscipio.scipio.cms.template.CmsTemplate.TemplateBodySource;
 import com.ilscipio.scipio.cms.template.CmsTemplateVersion;
-import com.ilscipio.scipio.cms.util.Optional;
 
-public class CmsPageVersion extends CmsDataObject {
+/**
+ * CMS page version containing real content for the page.
+ * <p>
+ * FIXME: 2017: there is significant duplication of the CmsPage<->CmsPageVersion logic
+ * because this is unable to extend CmsVersionedComplexTemplate<->CmsTemplateVerison that
+ * are used by the template, and is recurring source of errors.
+ */
+public class CmsPageVersion extends CmsDataObject implements CmsDataObjectVersion {
     
     private static final long serialVersionUID = -714031134721469544L;
     
@@ -49,15 +58,40 @@ public class CmsPageVersion extends CmsDataObject {
         if (!fields.containsKey("pageId")) {
             this.entity.put("pageId", page.getId());
         }
-        setContentFromFields(fields);
-        setVersionCommentFromFields(fields);
+        setContentFromFields(fields, true);
+        setVersionCommentFromFields(fields, true);
+    }
+    
+    protected CmsPageVersion(CmsPageVersion other, Map<String, Object> copyArgs, CmsPage page) {
+        super(other, copyArgs);
+        if (page != null) {
+            this.page = page;
+            setEntityPageId(this.page.getId());
+        } else if (other.getPage() != null) {
+            this.page = other.getPage();
+            setEntityPageId(this.page.getId());
+        }
+        // copy the content to memory
+        this.contentString = Optional.ofNullable(other.getContentBody());
+        // not sure would want to preserve version comment
+        //this.versionComment = other.getVersionComment();
+        this.versionComment = null;
     }
     
     @Override    
-    public void update(Map<String, ?> fields) {
-        super.update(fields);
-        setContentFromFields(fields);
-        setVersionCommentFromFields(fields);
+    public void update(Map<String, ?> fields, boolean setIfEmpty) {
+        super.update(fields, setIfEmpty);
+        setContentFromFields(fields, setIfEmpty);
+        setVersionCommentFromFields(fields, setIfEmpty);
+    }
+    
+    @Override
+    public CmsPageVersion copy(Map<String, Object> copyArgs) throws CmsException {
+        return new CmsPageVersion(this, copyArgs, null);
+    }
+    
+    public CmsPageVersion copy(Map<String, Object> copyArgs, CmsPage page) throws CmsException {
+        return new CmsPageVersion(this, copyArgs, page);
     }
     
     /**
@@ -82,9 +116,15 @@ public class CmsPageVersion extends CmsDataObject {
         entity.setString("contentId", contentId);
     }
     
-    protected void setContentFromFields(Map<String, ?> fields) {
-        if (fields.containsKey("content")) {
-            contentString = Optional.ofNullable((String) fields.get("content"));
+    protected void setContentFromFields(Map<String, ?> fields, boolean setIfEmpty) {
+        if (setIfEmpty) {
+            if (fields.containsKey("content")) {
+                contentString = Optional.ofNullable((String) fields.get("content"));
+            }
+        } else {
+            if (UtilValidate.isNotEmpty((String) fields.get("content"))) {
+                contentString = Optional.ofNullable((String) fields.get("content"));
+            }
         }
     }
     
@@ -116,7 +156,8 @@ public class CmsPageVersion extends CmsDataObject {
                 try {
                     content = (Map<String, ?>) JSON.from(entityContent).toObject(Map.class);
                 } catch (IOException e) {
-                    Debug.logError(e, module);
+                    Debug.logError(e, "Cms: Error loading page version content (pageId: " 
+                            + getPageId() + ", versionId: " + getId() + ", contentId: " + getContentId() + "): " + e.getMessage(), module);
                 }
             }
             content = content != null ? content : new HashMap<String, Object>();
@@ -158,9 +199,15 @@ public class CmsPageVersion extends CmsDataObject {
         this.versionComment = versionComment; // defer to store()
     }
     
-    protected void setVersionCommentFromFields(Map<String, ?> fields) {
-        if (fields.containsKey("versionComment")) {
-            this.versionComment = (String) fields.get("versionComment");
+    protected void setVersionCommentFromFields(Map<String, ?> fields, boolean setIfEmpty) {
+        if (setIfEmpty) {
+            if (fields.containsKey("versionComment")) {
+                this.versionComment = (String) fields.get("versionComment");
+            }
+        } else {
+            if (UtilValidate.isNotEmpty((String) fields.get("versionComment"))) {
+                this.versionComment = (String) fields.get("versionComment");
+            }
         }
     }
     
@@ -168,7 +215,7 @@ public class CmsPageVersion extends CmsDataObject {
         return entity.getString("createdBy");
     }
     
-    public String getCreatedByName(){
+    public String getCreatedByName() {
         try {
             return CmsUtil.getPersonDisplayName(getDelegator(), entity.getString("createdBy"));
         } catch (GenericEntityException e) {
@@ -190,8 +237,21 @@ public class CmsPageVersion extends CmsDataObject {
         this.entity.put("pageId", page.getId());
     }
 
+    public String getPageId() {
+        return getEntityPageId();
+    }
+    
+    public String getEntityPageId() {
+        return this.entity.getString("pageId");
+    }
+    
+    void setEntityPageId(String pageId) {
+        this.entity.setString("pageId", pageId);
+    }
+    
     @Override
     public void store() throws CmsException {
+        ensurePageId();
         Map<String, Object> contentFields = new HashMap<>();
         String versionComment = this.versionComment;
         if (versionComment != null) {
@@ -204,6 +264,26 @@ public class CmsPageVersion extends CmsDataObject {
             setContentId(content.getString("contentId"));
         }
         super.store();
+    }
+    
+    /**
+     * SPECIAL: it's possible we have memory instance of template that wasn't stored when
+     * this instance was created; if so this synchs the ID.
+     */
+    public void ensurePageId() {
+        if (getEntityPageId() == null) {
+            CmsPage page = getPage();
+            String pageId = null;
+            if (page != null) {
+                pageId = page.getId();
+            } 
+            if (pageId != null) {
+                setEntityPageId(pageId);
+            } else {
+                throw new CmsDataException("internal or schema error: CmsPageVersion '" + getId() 
+                    + "' has no page association (pageId null) and unable to determine one");
+            }
+        }
     }
     
     @Override
@@ -253,8 +333,7 @@ public class CmsPageVersion extends CmsDataObject {
         public CmsPageVersion makeFromFields(Delegator delegator, Map<String, ?> fields) throws CmsException {
             return new CmsPageVersion(delegator, fields, null);
         }
-        
-        
+
         /**
          * Returns the most current page version.
          * 

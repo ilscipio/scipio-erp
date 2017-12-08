@@ -16,6 +16,7 @@ import java.util.TreeSet;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.content.data.SpecDataResEntityInfo;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.model.ModelEntity;
@@ -24,7 +25,6 @@ import org.ofbiz.entity.model.ModelRelation;
 import org.ofbiz.entity.model.ModelViewEntity;
 
 import com.ilscipio.scipio.cms.CmsUtil;
-import org.ofbiz.content.data.SpecDataResEntityInfo;
 
 /**
  * CMS entity meta info.

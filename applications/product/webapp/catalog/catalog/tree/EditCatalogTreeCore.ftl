@@ -1,5 +1,5 @@
 <#-- SCIPIO: Interactive catalog tree core include
-    NOTE: The main javascript is now in ScpEctCommon.js
+    NOTE: The main javascript is now in ScpCatalogCommon.js
 
     FIXME:
     * tree does not support multiple ProdCatalogCategory associations for same
@@ -219,7 +219,7 @@
         popupMsgModalId: "${escapeVal(ectPopupMsgModalId!(ectDialogIdModalPrefix+"generic-popupmsg"), 'js')}",
         confirmMsgModalId: "${escapeVal(ectConfirmMsgModalId!(ectDialogIdModalPrefix+"generic-confirmmsg"), 'js')}",
         dialogIdPrefix: "${escapeVal(ectDialogIdModalPrefix, 'js')}",
-        objectLocFields: <@objectAsScript object=(ectObjectLocalizedFields!{}) lang='js' />
+        catalogLocFieldsInfo: <@objectAsScript object=(catalogLocFieldsInfo!{}) lang='js' />
     });
     
     jQuery(document).ready(function() {

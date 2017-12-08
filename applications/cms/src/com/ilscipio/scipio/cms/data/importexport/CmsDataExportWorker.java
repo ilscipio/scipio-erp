@@ -51,6 +51,7 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.content.data.SpecDataResEntityInfo;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericEntityException;
@@ -77,7 +78,6 @@ import com.ilscipio.scipio.cms.data.CmsMajorObject;
 import com.ilscipio.scipio.cms.data.CmsObjectRegistry;
 import com.ilscipio.scipio.cms.data.EntityInfoUtil;
 import com.ilscipio.scipio.cms.media.CmsMediaWorker;
-import org.ofbiz.content.data.SpecDataResEntityInfo;
 import com.ilscipio.scipio.cms.template.CmsTemplate.TemplateBodySource;
 
 /**

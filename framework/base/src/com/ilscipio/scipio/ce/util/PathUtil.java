@@ -1,4 +1,4 @@
-package com.ilscipio.scipio.cms.util;
+package com.ilscipio.scipio.ce.util;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -6,9 +6,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
- * Path utility class. Provides helper methods for various 
+ * SCIPIO: Path utility class. Provides helper methods for various 
  * file system and URL path operations.
  */
 public class PathUtil {

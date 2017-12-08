@@ -17,6 +17,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 
+import com.ilscipio.scipio.ce.util.Optional;
 import com.ilscipio.scipio.cms.CmsException;
 import com.ilscipio.scipio.cms.CmsUtil;
 import com.ilscipio.scipio.cms.content.CmsPage;
@@ -31,8 +32,8 @@ import com.ilscipio.scipio.cms.data.CmsEntityVisit.VisitRelations;
 import com.ilscipio.scipio.cms.data.CmsMajorObject;
 import com.ilscipio.scipio.cms.data.CmsObjectCache;
 import com.ilscipio.scipio.cms.data.CmsObjectCache.CacheEntry;
+import com.ilscipio.scipio.cms.template.CmsScriptTemplate.CmsScriptTemplateAssoc;
 import com.ilscipio.scipio.cms.template.CmsTemplateVersion.ActiveVersionWorker;
-import com.ilscipio.scipio.cms.util.Optional;
 
 import freemarker.core.Environment;
 
@@ -75,13 +76,25 @@ public class CmsAssetTemplate extends CmsMasterComplexTemplate<CmsAssetTemplate,
         this.assoc = assoc;
     }
     
-    @Override    
-    public void update(Map<String, ?> fields) {
-        // this just updates the entity for now, plus saves tmplBodySrc...
-        // version to be handled separate? (like page?)
-        super.update(fields);
+    protected CmsAssetTemplate(CmsAssetTemplate other, Map<String, Object> copyArgs) {
+        super(other, copyArgs);
     }
     
+    @Override    
+    public void update(Map<String, ?> fields, boolean setIfEmpty) {
+        // this just updates the entity for now, plus saves tmplBodySrc...
+        // version to be handled separate? (like page?)
+        super.update(fields, setIfEmpty);
+    }
+    
+    @Override
+    public CmsAssetTemplate copy(Map<String, Object> copyArgs) throws CmsException {
+        CmsAssetTemplate newTemplate = new CmsAssetTemplate(this, copyArgs);
+        copyInitialVersionToTemplateCopy(newTemplate, copyArgs);
+        return newTemplate;
+    }
+
+
     @Override
     public CmsAssetTemplateVersion createNewVersion(Map<String, ?> fields) {
         return new CmsAssetTemplateVersion(getDelegator(), fields, this);
@@ -202,14 +215,18 @@ public class CmsAssetTemplate extends CmsMasterComplexTemplate<CmsAssetTemplate,
             super(entity);
         }
         
+        protected CmsAssetTemplateAssoc(CmsAssetTemplateAssoc other, Map<String, Object> copyArgs) {
+            super(other, copyArgs);
+        }
+        
         @Override    
-        public void update(Map<String, ?> fields) {
+        public void update(Map<String, ?> fields, boolean setIfEmpty) {
             // here, must ignore scriptTemplateId - set at creation and should never change
             if (fields.containsKey("scriptTemplateId") && UtilValidate.isNotEmpty(getAssetTemplateId())) {
                 fields = new HashMap<String, Object>(fields);
                 fields.remove("scriptTemplateId");
             }
-            super.update(fields);
+            super.update(fields, setIfEmpty);
         }
         
         /**
@@ -300,6 +317,12 @@ public class CmsAssetTemplate extends CmsMasterComplexTemplate<CmsAssetTemplate,
             descriptor.put("assetTemplateId", getAssetTemplateId());
             return descriptor;
         }
+
+        protected abstract void clearTemplate();
+        
+        protected abstract void setTemplate(CmsDataObject template);
+        
+        protected abstract boolean hasTemplate();
     }
 
     @Override
@@ -319,9 +342,19 @@ public class CmsAssetTemplate extends CmsMasterComplexTemplate<CmsAssetTemplate,
             super(delegator, fields, scriptTemplate);
         }
 
+        protected CmsAssetTemplateScriptAssoc(CmsAssetTemplateScriptAssoc other, Map<String, Object> copyArgs) {
+            super(other, copyArgs);
+            // NOTE: don't bother clearing out the ID fields here, caller should handle
+        }
+        
         @Override    
-        public void update(Map<String, ?> fields) {
-            super.update(fields);
+        public void update(Map<String, ?> fields, boolean setIfEmpty) {
+            super.update(fields, setIfEmpty);
+        }
+        
+        @Override
+        public CmsScriptTemplateAssoc copy(Map<String, Object> copyArgs) {
+            return new CmsAssetTemplateScriptAssoc(this, copyArgs);
         }
         
         /**
@@ -334,6 +367,23 @@ public class CmsAssetTemplate extends CmsMasterComplexTemplate<CmsAssetTemplate,
         @Override
         public void preload(PreloadWorker preloadWorker) {
             super.preload(preloadWorker);
+        }
+        
+        @Override
+        protected void clearTemplate() {
+            entity.set("assetTemplateId", null);
+        }
+        
+        @Override
+        protected void setTemplate(CmsDataObject template) {
+            if (!(template instanceof CmsAssetTemplate)) throw new CmsException("CmsAssetTemplateScriptAssoc requires a CmsAssetTemplate, got: " 
+                    + (template != null ? template.getClass().getName() : null));
+            entity.set("assetTemplateId", template.getId());
+        }
+        
+        @Override
+        protected boolean hasTemplate() {
+            return (entity.get("assetTemplateId") != null);
         }
 
         @Override
@@ -483,7 +533,7 @@ public class CmsAssetTemplate extends CmsMasterComplexTemplate<CmsAssetTemplate,
         public CmsAssetTemplate makeFromFields(Delegator delegator, Map<String, ?> fields) throws CmsException {
             return new CmsAssetTemplate(delegator, fields);
         }
-
+        
         @Override
         public CmsAssetTemplate findById(Delegator delegator, String id, boolean useCache) throws CmsException {
             return findById(delegator, id, useCache, null);

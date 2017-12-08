@@ -17,6 +17,7 @@ import org.ofbiz.service.ServiceUtil;
 public class UrlGenStats {
     public final boolean doProducts;
     public final boolean doCategory;
+    public final boolean doContent;
     
     public int productSuccess = 0;
     public int productError = 0;
@@ -27,27 +28,43 @@ public class UrlGenStats {
     public int categoryError = 0;
     public int categorySkipped = 0;
     public int categoryDupSkip = 0;
+    
+    public int contentSuccess = 0;
+    public int contentError = 0;
+    public int contentSkipped = 0;
+    public int contentDupSkip = 0;
 
-    public UrlGenStats(boolean doProducts, boolean doCategory) {
+
+    public UrlGenStats(boolean doProducts, boolean doCategory, boolean doContent) {
         this.doProducts = doProducts;
         this.doCategory = doCategory;
+        this.doContent = doContent;
     }
 
     public boolean hasError() {
-        return productError > 0 || categoryError > 0;
+        return productError > 0 || categoryError > 0 || contentError > 0;
     }
     
     public Map<String, Object> toMap(Map<String, Object> map) {
         map.put("doProducts", doProducts);
         map.put("doCategory", doCategory);
+        map.put("doContent", doContent);
         
         map.put("productSuccess", productSuccess);
         map.put("productSkipped", productSkipped);
         map.put("productError", productError);
-        
+        map.put("productDupSkip", productDupSkip);
+
         map.put("categorySuccess", categorySuccess);
         map.put("categoryError", categoryError);
         map.put("categorySkipped", categorySkipped);
+        map.put("categoryDupSkip", categoryDupSkip);
+
+        map.put("contentSuccess", contentSuccess);
+        map.put("contentError", contentError);
+        map.put("contentSkipped", contentSkipped);
+        map.put("contentDupSkip", contentDupSkip);
+
         return map;
     }
     
@@ -69,6 +86,13 @@ public class UrlGenStats {
             //if (categorySkipped > 0) msgList.add("Categories skipped: " + categorySkipped);
             //if (categoryDupSkip > 0) msgList.add("Category duplicates prevented: " + categoryDupSkip);
             if (categoryError > 0) errMsgList.add("Categories failed: " + categoryError);
+        }
+        
+        if (doContent) {
+            msgList.add("Content updated: " + contentSuccess);
+            //if (contentSkipped > 0) msgList.add("Content skipped: " + contentSkipped);
+            //if (contentDupSkip > 0) msgList.add("Content duplicates prevented: " + contentDupSkip);
+            if (contentError > 0) errMsgList.add("Content failed: " + contentError);
         }
     }
     

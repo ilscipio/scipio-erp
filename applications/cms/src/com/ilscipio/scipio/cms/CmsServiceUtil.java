@@ -15,7 +15,17 @@ public abstract class CmsServiceUtil {
     
     public static final String module = CmsServiceUtil.class.getName();
     
+    private static final ServiceErrorFormatter errorFmt = new ServiceErrorFormatter("Cms: ", ServiceErrorFormatter.Precision.DETAILED);
+    
     private CmsServiceUtil() {
+    }
+    
+    /**
+     * Generic error formatter for service exception handling.
+     * NOTE: each *Services class can derive its own for more precise messages.
+     */
+    public static ServiceErrorFormatter getErrorFormatter() {
+        return errorFmt;
     }
     
     /**

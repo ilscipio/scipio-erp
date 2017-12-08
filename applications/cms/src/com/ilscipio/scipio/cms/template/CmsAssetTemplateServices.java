@@ -1,6 +1,7 @@
 package com.ilscipio.scipio.cms.template;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +19,8 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
 import com.ilscipio.scipio.cms.CmsServiceUtil;
+import com.ilscipio.scipio.cms.ServiceErrorFormatter;
+import com.ilscipio.scipio.cms.ServiceErrorFormatter.FormattedError;
 import com.ilscipio.scipio.cms.data.CmsDataObject;
 import com.ilscipio.scipio.cms.data.CmsDataUtil;
 import com.ilscipio.scipio.cms.template.CmsAssetTemplate.CmsAssetTemplateScriptAssoc;
@@ -29,19 +32,14 @@ import com.ilscipio.scipio.cms.template.CmsAssetTemplate.CmsAssetTemplateScriptA
 public abstract class CmsAssetTemplateServices {
     
     public static final String module = CmsAssetTemplateServices.class.getName();
+    private static final ServiceErrorFormatter errorFmt = 
+            CmsServiceUtil.getErrorFormatter().specialize().setDefaultLogMsgGeneral("Asset Template Error").build();
 
     protected CmsAssetTemplateServices() {
     }
     
-    
     /**
-     * Creates or updates an Asset
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
+     * Creates or updates an Asset.
      */
     public static Map<String, Object> createUpdateAsset(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -59,7 +57,7 @@ public abstract class CmsAssetTemplateServices {
             CmsAssetTemplate assetTmp = null;
             if (UtilValidate.isNotEmpty(assetTemplateId)) {
                 assetTmp = CmsAssetTemplate.getWorker().findByIdAlways(delegator, assetTemplateId, false);
-                fields.put("createdBy", (String) userLogin.get("userLoginId"));
+                fields.put("createdBy", userLogin.getString("userLoginId"));
                 assetTmp.update(fields);
             } else {
                 fields.put("lastUpdatedBy", (String) userLogin.get("userLoginId"));
@@ -69,10 +67,38 @@ public abstract class CmsAssetTemplateServices {
             assetTmp.store();
             result.put("assetTemplateId", assetTmp.getId());
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
+    }
+    
+    public static Map<String, Object> copyAsset(DispatchContext dctx, Map<String, ?> context) {
+        Delegator delegator = dctx.getDelegator();
+        Map<String, Object> copyArgs = new HashMap<>();
+        copyArgs.put("copyVersionId", context.get("srcVersionId"));
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        if (userLogin != null) {
+            copyArgs.put("copyCreatorId", userLogin.get("partyId"));
+        }
+        try {
+            String srcAssetTemplateId = (String) context.get("srcAssetTemplateId");
+            CmsAssetTemplate srcAssetTemplate = CmsAssetTemplate.getWorker().findByIdAlways(delegator, srcAssetTemplateId, false);
+            CmsAssetTemplate assetTemplate = srcAssetTemplate.copy(copyArgs);
+            
+            assetTemplate.update(UtilMisc.toHashMapWithKeys(context, "templateName", "description"));
+
+            // NOTE: store() now updates the version automatically using assetTemplate.lastVersion
+            assetTemplate.store();
+            Map<String, Object> result = ServiceUtil.returnSuccess();
+            result.put("assetTemplateId", assetTemplate.getId());
+            return result;
+        } catch (Exception e) {
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
+        }
     }
     
     public static Map<String, Object> updateAssetTemplateInfo(DispatchContext dctx, Map<String, ?> context) {
@@ -84,8 +110,9 @@ public abstract class CmsAssetTemplateServices {
             assetTmp.update(context);
             assetTmp.store();
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
@@ -94,10 +121,10 @@ public abstract class CmsAssetTemplateServices {
     /**
      * NOTE: 2016: TODO?: I moved this here because it's where it belongs, but there
      * is no service def for this and the description that was here was wrong.
-     * @deprecated this looks liek the old versioning code; will be supplanted by CmsAssetTemplateVersion now already in place.
+     * @deprecated this looks like the old versioning code; will be supplanted by CmsAssetTemplateVersion now already in place.
      */
     @Deprecated
-    public static Map<String, Object> updateAssetTemplate(DispatchContext dctx, Map<String, ? extends Object> origContext) {
+    static Map<String, Object> updateAssetTemplate(DispatchContext dctx, Map<String, ? extends Object> origContext) {
         // create copy of map, so we can add items without creating side effects
         Map<String, Object> context = UtilMisc.makeMapWritable(origContext);
         Delegator delegator = (GenericDelegator) dctx.getDelegator();
@@ -116,7 +143,7 @@ public abstract class CmsAssetTemplateServices {
                 // originalTemplate.store();
                 // Paritas dos tacos: Update original template and set to
                 // inactive (assetTemplateId)
-                CmsAssetTemplate newTemplate = (CmsAssetTemplate) originalTemplate.copy();
+                CmsAssetTemplate newTemplate = (CmsAssetTemplate) originalTemplate.copy(new HashMap<String, Object>());
                 if (context.get("templateName") != null) {
                     newTemplate.setName((String) context.get("templateName"));
                 }
@@ -138,8 +165,9 @@ public abstract class CmsAssetTemplateServices {
                 //CmsAssetTemplate newTemplate = new CmsAssetTemplate(gv);
             }
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError("Error while updating Script Template Assoc"); // FIXME: ??
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
@@ -147,12 +175,6 @@ public abstract class CmsAssetTemplateServices {
     /**
      * Sets an asset template version as live version. The live version is the content that
      * will be displayed to regular page visitors.
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> activateAssetTemplateVersion(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -165,26 +187,19 @@ public abstract class CmsAssetTemplateServices {
             if (version != null) {
                 version.setAsActiveVersion();
                 version.store();
-            }
-            else {
+            } else {
                 return ServiceUtil.returnError("Asset template version '" + version + "' not found"); // TODO: Localize
             }
-        } 
-        catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+        } catch(Exception e) {
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
     
     /**
      * Gets the active/default asset template version of the given asset template.
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> getActiveAssetTemplateVersion(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -205,22 +220,16 @@ public abstract class CmsAssetTemplateServices {
                 result = ServiceUtil.returnFailure("Could not find active template version for webSiteId '" +
                         webSiteId + "' and templateName '" + templateName + "'"); // TODO: Localize
             }
-        } 
-        catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnFailure(e.getMessage()); // FIXME: Shouldn't be failure here or anywhere else!
+        } catch(Exception e) {
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnFailure();
         }
         return result;
     }
     
     /**
      * Gets all asset information
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> getAssetTemplate(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -245,8 +254,9 @@ public abstract class CmsAssetTemplateServices {
             result.put("assetTemplateValue", assetTemplate.getEntity());
             result.put("assetTemplate", assetTemplate);
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnFailure(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnFailure();
         }
         return result;
     }
@@ -259,8 +269,9 @@ public abstract class CmsAssetTemplateServices {
         try {
             CmsAssetTemplateScriptAssoc.getWorker().createUpdateScriptTemplateAndAssoc(delegator, context, userLogin);
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError("Error while updating Script Template Assoc: " + e.getMessage()); // TODO?: Localize
+            FormattedError err = errorFmt.format(e, "Error while updating Script Template Assoc", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
@@ -273,20 +284,15 @@ public abstract class CmsAssetTemplateServices {
             CmsAssetTemplate template = CmsAssetTemplate.getWorker().findByIdAlways(delegator, assetTemplateId, false);
             template.remove();
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
     
     /**
      * Gets the active/default asset template version of the given asset template.
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> getRelatedActiveAssetTemplateVersion(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -315,38 +321,13 @@ public abstract class CmsAssetTemplateServices {
             result.put("assetTemplateModel", assetTemplate);
             result.put("assetTemplateVersion", assetTemplate.getActiveVersion() != null ? assetTemplate.getActiveVersion().getEntity() : null);
             result.put("assetTemplateVersionModel", assetTemplate.getActiveVersion());
-        } 
-        catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnFailure(e.getMessage());
+        } catch(Exception e) {
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnFailure();
         }
         return result;
     }    
-    
-    /**
-     * Adds an available asset to a page template
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
-     */
-    public static Map<String, Object> createUpdateAssetAssoc(DispatchContext dctx, Map<String, ?> context) {
-        Map<String, Object> result = ServiceUtil.returnSuccess();
-        Delegator delegator = dctx.getDelegator();
-        try {
-            String pageTemplateId = (String) context.get("pageTemplateId");
-            CmsPageTemplate pageTmp = CmsPageTemplate.getWorker().findByIdAlways(delegator, pageTemplateId, false);
-            pageTmp.addUpdateAssetTemplate(context);
-        } 
-        catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
-        }
-        return result;
-    }
-    
 
     public static Map<String, Object> getAssetTemplateTypes(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -357,8 +338,9 @@ public abstract class CmsAssetTemplateServices {
             CmsDataUtil.getContentTypes(delegator, "SCP_TEMPLATE_PART", deep, types);
             result.put("contentTypeValues", types);
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnFailure(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnFailure();
         }
         return result;
     }
@@ -396,8 +378,9 @@ public abstract class CmsAssetTemplateServices {
                     null, UtilMisc.toList("templateName"), null, false);
             result.put("assetTemplateValues", values);
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnFailure(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnFailure();
         }
         return result;
     }
@@ -410,8 +393,9 @@ public abstract class CmsAssetTemplateServices {
             CmsAssetTemplate assetTmpl = CmsAssetTemplate.getWorker().findByIdAlways(delegator, assetTemplateId, false);
             result.put("attributeValues", CmsDataObject.getEntityValues(assetTmpl.getAttributeTemplates()));
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnFailure(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnFailure();
         }
         return result;
     }

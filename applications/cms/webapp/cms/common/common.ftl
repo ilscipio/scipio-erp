@@ -642,5 +642,30 @@ Common CMS editor macros and utilities
   </@menuitem>
 </#macro>
 
+<#macro cmsCopyMenuItem target title args...>
+  <@menuitem type="generic">
+    <@modal id="modal_copy_object" label=uiLabelMap.CommonCopy class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_copy!}">
+        <@heading>${escapeVal(title, 'htmlmarkup')}</@heading>
+        <@alert type="warning">${uiLabelMap.CommonFunctionalityWorkInProgressWarning} [2017-12-04]</@alert>
+        <@fields type="default-compact">
+            <form action="<@ofbizUrl uri=target/>" method="post" id="cms-copy-object-form">
+                <#nested/>
+                <@field type="submit" text=uiLabelMap.CommonSubmit class="${styles.link_run_sys!} ${styles.action_copy!}" />
+            </form>
+        </@fields>
+    </@modal>
+  </@menuitem>
+</#macro>
+
+<#macro cmsCopyVersionSelect versionId args...>
+    <@field type="select" name="srcVersionId" label=uiLabelMap.CommonVersion>
+        <@field type="option" value="LATEST">${uiLabelMap.ContentLatest}</@field>
+      <#if versionId?has_content>
+        <@field type="option" value=versionId>${uiLabelMap.CommonSelected} (${versionId})</@field>
+      </#if>
+        <@field type="option" value="ACTIVE">${uiLabelMap.CommonActive}</@field>
+    </@field>
+</#macro>
+
 
 

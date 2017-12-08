@@ -21,7 +21,16 @@ public abstract class SeoCatalogTraverser extends CatalogTraverser {
     }
 
     public static class SeoTraversalConfig extends TraversalConfig {
-        
+        private boolean doContent = false;
+
+        public boolean isDoContent() {
+            return doContent;
+        }
+
+        public SeoTraversalConfig setDoContent(boolean doContent) {
+            this.doContent = doContent;
+            return this;
+        }
     }
     
     @Override
@@ -64,7 +73,7 @@ public abstract class SeoCatalogTraverser extends CatalogTraverser {
     }
 
     protected UrlGenStats createStats() {
-        return new UrlGenStats(travConfig.isDoProduct(), travConfig.isDoCategory());
+        return new UrlGenStats(getTravConfig().isDoProduct(), getTravConfig().isDoCategory(), getTravConfig().isDoContent());
     }
     
     public UrlGenStats getStats() {

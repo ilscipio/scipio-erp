@@ -16467,4 +16467,20 @@
         <value xml:lang="en">Localized Fields</value>
         <value xml:lang="de">Lokalisierte Felder</value>
     </property>
+    <property key="CommonUpdateLocalizedFields">
+        <value xml:lang="en">Update Localized Fields</value>
+        <value xml:lang="de">Lokalisierte Felder aktualisieren</value>
+    </property>
+    <property key="CommonFunctionalityWorkInProgressWarning">
+        <value xml:lang="en">Warning: This functionality is a Work-In-Progress. Please backup any important data before attempting to use.</value>
+        <value xml:lang="de">Warnung: Diese Funktionalität ist ein Work-In-Progress. Bitte sichern Sie alle wichtigen Daten, bevor Sie sie verwenden.</value>
+    </property>
+    <property key="CommonFunctionalityInTestingWarning">
+        <value xml:lang="en">Warning: This functionality is currently in testing. Please backup any important data before attempting to use.</value>
+        <value xml:lang="de">Warnung: Diese Funktion wird gerade getestet. Bitte sichern Sie alle wichtigen Daten, bevor Sie sie verwenden.</value>
+    </property>
+    <property key="CommonIndexable">
+        <value xml:lang="en">Indexable</value>
+        <value xml:lang="de">Indexierbar</value>
+    </property>
 </resource>

@@ -18,6 +18,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 <entity-engine-xml>
+
+    <!-- DATEV FIELDS -->
     <DatevTransactionEntryDefinition fieldId="1" fieldName="Umsatz (ohne Soll/Haben-Kz)" type="decimal" length="12" scale="2" required="Y">
     <description><![CDATA[
         # Beispiel: 1234567890,12
@@ -1084,4 +1086,186 @@ under the License.
             # Steuerperiode
         ]]></description>
     </DatevTransactionEntryDefinition>
+    
+    <!-- DATEV METADATA FIELDS -->
+
+    <DatevTransactionEntryDefinition fieldId="117" fieldName="DATEV-Format-KZ" type="string" maxLength="4" metadata="Y">
+        <description><![CDATA[
+            # vom Datev angegeben
+            # EXTF = für Datei-Formate, die von externen Programmen erstellt wurden
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    
+    <DatevTransactionEntryDefinition fieldId="118" fieldName="Versionsnummer" type="integer" maxLength="3" metadata="Y">
+        <description><![CDATA[
+            # entspricht der zugrundeliegenden Versionsnummer des Scnittstellen-Entwicklungsleitfadens
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+   
+   <DatevTransactionEntryDefinition fieldId="119" fieldName="Datenkategorie" type="integer" maxLength="3" metadata="Y">
+        <description><![CDATA[
+            # vom Datev angegeben
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    
+    <DatevTransactionEntryDefinition fieldId="120" fieldName="Formatname" type="string" metadata="Y">
+        <description><![CDATA[
+            # vom Datev angegeben
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    
+    <DatevTransactionEntryDefinition fieldId="121" fieldName="Formatversion" type="integer" maxLength="3" metadata="Y">
+        <description><![CDATA[
+            # entspricht der zugrundeliegenden Versionsnummer des Scnittstellen-Entwicklungsleitfadens
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    
+    <DatevTransactionEntryDefinition fieldId="122" fieldName="Erzeugt am" type="date" format="%Y%m%d%H%M%S%L" metadata="Y">
+        <description><![CDATA[
+            # entspricht der zugrundeliegenden Versionsnummer des Scnittstellen-Entwicklungsleitfadens
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    
+    <DatevTransactionEntryDefinition fieldId="123" fieldName="Importiert" type="date" maxLength="3" metadata="Y">
+        <description><![CDATA[
+	       # Darf nicht gefüllt werden, durch Import gesetzt.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    
+    <DatevTransactionEntryDefinition fieldId="124" fieldName="Herkunft" type="string" maxLength="2" metadata="Y">
+        <description><![CDATA[
+            # Herkunfts-Kennzeichen
+            # Beim Import wird das Herkunfts-Kennzeichen durch „SV“ (= Stapelverarbeitung) ersetzt.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    
+     <DatevTransactionEntryDefinition fieldId="125" fieldName="Exportiert von" type="string" maxLength="25" metadata="Y">
+        <description><![CDATA[
+            # Benutzername
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    
+     <DatevTransactionEntryDefinition fieldId="126" fieldName="Importiert von" type="string" maxLength="10" metadata="Y">
+        <description><![CDATA[
+           # Darf nicht gefüllt werden, durch Import gesetzt.
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    
+     <DatevTransactionEntryDefinition fieldId="127" fieldName="Berater" type="integer" maxLength="7" metadata="Y">
+        <description><![CDATA[
+           # Beraternummer
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    
+     <DatevTransactionEntryDefinition fieldId="128" fieldName="Mandant" type="integer" maxLength="5" metadata="Y">
+        <description><![CDATA[
+           # Mandantennummer
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    
+     <DatevTransactionEntryDefinition fieldId="129" fieldName="WJ-Beginn" type="date" format="%Y%m%d" metadata="Y">
+        <description><![CDATA[
+           # Wirtschaftsjahresbeginn
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    
+     <DatevTransactionEntryDefinition fieldId="130" fieldName="Sachkontenlänge" type="integer" maxLength="1" metadata="Y">
+        <description><![CDATA[
+          # Kleinste Sachkontenlänge = 4, Grösste Sachkontenlänge = 8
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    
+    <DatevTransactionEntryDefinition fieldId="131" fieldName="Datum vom" type="date" format="%Y%m%d" metadata="Y">
+        <description><![CDATA[
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    
+    <DatevTransactionEntryDefinition fieldId="132" fieldName="Datum bis" type="date" format="%Y%m%d" metadata="Y">
+        <description><![CDATA[
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    
+    <DatevTransactionEntryDefinition fieldId="133" fieldName="Bezeichnung" type="string" maxLength="30" metadata="Y">
+        <description><![CDATA[
+            # Bezeichnung des Buchungsstapels
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    
+    <DatevTransactionEntryDefinition fieldId="134" fieldName="Diktatkürzel" type="string" maxLength="2" metadata="Y">
+        <description><![CDATA[
+            # Diktatkürzel Beispiel MM = Max Mustermann
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    
+    <DatevTransactionEntryDefinition fieldId="135" fieldName="Buchungstyp" type="integer" maxLength="1" metadata="Y">
+        <description><![CDATA[
+            # 1 = Finanzbuchhaltung, 2 = Jahresabschluss
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    
+    <DatevTransactionEntryDefinition fieldId="136" fieldName="Rechnungslegungszweck" type="integer" maxLength="2" metadata="Y">
+        <description><![CDATA[
+            # 0 oder leer = Rechnungslegungszweckunabhängig
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    
+    <DatevTransactionEntryDefinition fieldId="137" fieldName="Festschreibung" type="boolean" metadata="Y">
+        <description><![CDATA[
+            # leer = nicht definiert; wird ab Jahreswechselversion 2016/2017 automatisch festgeschrieben
+            # 0 = keine Festschreibung
+            # 1 = Festschreibung            
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    
+    <DatevTransactionEntryDefinition fieldId="138" fieldName="WKZ" type="string" maxLength="3" metadata="Y">
+        <description><![CDATA[
+            # Währungskennzeichen        
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    
+    <DatevTransactionEntryDefinition fieldId="139" fieldName="reserviert" type="string" metadata="Y">
+        <description><![CDATA[
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    
+    <DatevTransactionEntryDefinition fieldId="140" fieldName="Derivatskennzeichen" type="string" metadata="Y">
+        <description><![CDATA[
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    
+    <DatevTransactionEntryDefinition fieldId="141" fieldName="reserviert 2" type="string" metadata="Y">
+        <description><![CDATA[
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    
+    <DatevTransactionEntryDefinition fieldId="142" fieldName="reserviert 3" type="string" metadata="Y">
+        <description><![CDATA[
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    
+    <DatevTransactionEntryDefinition fieldId="143" fieldName="SKR" type="string" metadata="Y">
+        <description><![CDATA[
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    
+    <DatevTransactionEntryDefinition fieldId="144" fieldName="Branchenlösung-Id" type="integer" metadata="Y">
+        <description><![CDATA[
+        ]]></description>
+    </DatevTransactionEntryDefinition>  
+    
+    <DatevTransactionEntryDefinition fieldId="145" fieldName="reserviert 4" type="integer" metadata="Y">
+        <description><![CDATA[
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+    
+    <DatevTransactionEntryDefinition fieldId="146" fieldName="reserviert 5" type="string" metadata="Y">
+        <description><![CDATA[
+        ]]></description>
+    </DatevTransactionEntryDefinition>
+
+    <DatevTransactionEntryDefinition fieldId="147" fieldName="Anwendungsinformation" type="string" maxLength="16" metadata="Y">
+        <description><![CDATA[
+	       # Verarbeitungskennzeichen der abgebenden Anwendung => Bsp. '9/2016'
+        ]]></description>
+    </DatevTransactionEntryDefinition>    
 </entity-engine-xml>

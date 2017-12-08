@@ -31,25 +31,25 @@ public abstract class SitemapServices {
         Locale locale = (Locale) context.get("locale");
         boolean useCache = Boolean.TRUE.equals(context.get("useCache"));
 
-        SitemapGenerator sitemapWorker = null;
+        SitemapGenerator generator = null;
         try {
             // TODO: LOCALIZE
             
-            sitemapWorker = SitemapGenerator.getWorkerForWebsite(delegator, dispatcher, webSiteId, useCache);
-            sitemapWorker.buildSitemapDeepForProductStore();
-            sitemapWorker.commitSitemapsAndIndex();
+            generator = SitemapGenerator.getWorkerForWebsite(delegator, dispatcher, webSiteId, context, useCache);
+            generator.buildSitemapDeepForWebsite();
+            generator.commitSitemapsAndIndex();
             
-            UrlGenStats stats = sitemapWorker.getStats();
+            UrlGenStats stats = generator.getStats();
             String dirMsg = "";
-            if (sitemapWorker != null) {
+            if (generator != null) {
                 // just in case coding/other errors here, these don't need to cause service fail
                 try {
-                    dirMsg += " (directory: " + sitemapWorker.getFullSitemapDir() + ")";
+                    dirMsg += " (directory: " + generator.getFullSitemapDir() + ")";
                 } catch(Exception e) {
                     Debug.logError(e, logPrefix+"Error determining full sitemap file directory location: " + e.getMessage(), module);
                 }
                 try {
-                    dirMsg += " (index URL: " + sitemapWorker.getSitemapIndexFileLink() + ")";
+                    dirMsg += " (index URL: " + generator.getSitemapIndexFileLink() + ")";
                 } catch(Exception e) {
                     Debug.logError(e, logPrefix+"Error determining sitemap index link: " + e.getMessage(), module);
                 }
@@ -60,9 +60,9 @@ public abstract class SitemapServices {
             return stats.toServiceResultSuccessFailure(resultMsg);
         } catch (Exception e) {
             String dirMsg = "";
-            if (sitemapWorker != null) {
-                dirMsg = " (" + sitemapWorker.getFullSitemapDir() + " - "
-                        + sitemapWorker.getStats().toMsg(locale) + ")";
+            if (generator != null) {
+                dirMsg = " (" + generator.getFullSitemapDir() + " - "
+                        + generator.getStats().toMsg(locale) + ")";
             }
             // TODO: LOCALIZE
             String message = "Error generating sitemaps for web site '" + webSiteId + "'" + dirMsg + ": " + e.getMessage();

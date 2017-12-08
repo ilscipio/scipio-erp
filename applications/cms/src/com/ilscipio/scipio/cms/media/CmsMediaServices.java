@@ -42,7 +42,9 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 
-import com.ilscipio.scipio.cms.CmsException;
+import com.ilscipio.scipio.cms.CmsServiceUtil;
+import com.ilscipio.scipio.cms.ServiceErrorFormatter;
+import com.ilscipio.scipio.cms.ServiceErrorFormatter.FormattedError;
 import com.ilscipio.scipio.cms.util.fileType.FileTypeException;
 import com.ilscipio.scipio.cms.util.fileType.FileTypeResolver;
 import com.ilscipio.scipio.cms.util.fileType.FileTypeUtil;
@@ -50,19 +52,16 @@ import com.ilscipio.scipio.cms.util.fileType.FileTypeUtil;
 public abstract class CmsMediaServices {
 
     public static final String module = CmsMediaServices.class.getName();
-
+    static final String logPrefix = "Cms: Media: ";
+    private static final ServiceErrorFormatter errorFmt = 
+            CmsServiceUtil.getErrorFormatter().specialize().setDefaultLogMsgGeneral("Media Error").build();
+    
     protected CmsMediaServices() {
     }
     
     /**
      * Generates a list of all available media files. Can be filtered by
-     * DataResourceType (TODO)
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
+     * DataResourceType (TODO).
      */
     public static Map<String, Object> getMediaFiles(DispatchContext dctx, Map<String, ?> context) {
         Delegator delegator = dctx.getDelegator();
@@ -134,10 +133,10 @@ public abstract class CmsMediaServices {
             result.put("viewSize", viewSize);
             result.put("listSize", listSize);
             result.put("viewIndex", viewIndex);
-
         } catch (Exception e) {
-            Debug.logError(e, "Cms: Media: Error getting media files: " + e.getMessage(), module);
-            return ServiceUtil.returnFailure(e.getMessage());
+            FormattedError err = errorFmt.format(e, "Error getting media files", null, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnFailure();
         }
 
         return result;
@@ -175,10 +174,10 @@ public abstract class CmsMediaServices {
         try {
             fileSizeConverted = std.convert(fileSize, locale, timeZone);
         } catch (ConversionException e) {
-            Debug.logWarning("Cms: Media: Can't store file size: " + e.getMessage(), module);
+            Debug.logWarning(logPrefix+"Can't store file size: " + e.getMessage(), module);
         }
         if (fileSizeConverted != byteBuffer.limit()) {
-            Debug.logWarning("Cms: Media: request header file size ===> " + fileSizeConverted + " differs from received byte array size ==> " + byteBuffer.limit()
+            Debug.logWarning(logPrefix+"request header file size ===> " + fileSizeConverted + " differs from received byte array size ==> " + byteBuffer.limit()
                     + ". Byte array size prevails", module);
             fileSizeConverted = byteBuffer.limit();
         }
@@ -215,7 +214,7 @@ public abstract class CmsMediaServices {
                             mediaDataResource.put("documentData", byteBuffer.array());
                         } else {
                             // TODO: REVIEW: I'm not sure we should cover this case (2017-07-31: at least log it)
-                            Debug.logInfo("Cms: Media: Could not determine media category for dataResourceTypeId '" 
+                            Debug.logInfo(logPrefix+"Could not determine media category for dataResourceTypeId '" 
                                     + dataResourceTypeId + "' and mimeTypeId '" + mimeType.getString("mimeTypeId") 
                                     + "'; storing as OtherDataResource", module);
                             mediaDataResource = delegator.makeValue("OtherDataResource");
@@ -236,7 +235,7 @@ public abstract class CmsMediaServices {
                                 dataResource.put("scpWidth", (long) bugImg.getWidth());
                                 dataResource.put("scpHeight", (long) bugImg.getHeight());
                             } catch(Exception e) {
-                                Debug.logError(e, "Cms: Media: Error uploading media file: Could not read/parse image file: " + e.getMessage(), module);
+                                Debug.logError(e, logPrefix+"Error uploading media file: Could not read/parse image file: " + e.getMessage(), module);
                                 return ServiceUtil.returnError(UtilProperties.getMessage("ProductErrorUiLabels", "ScaleImage.unable_to_parse", locale) + ": " + e.getMessage());
                             }
                         }
@@ -274,8 +273,9 @@ public abstract class CmsMediaServices {
                                     return ServiceUtil.returnError("Error creating resized images: " + ServiceUtil.getErrorMessage(resizeResult));
                                 }
                             } catch (GenericServiceException e) {
-                                Debug.logError(e, "Cms: Media: Couldn't create resized images: " + e.getMessage(), module);
-                                return ServiceUtil.returnError(e.getMessage());
+                                FormattedError err = errorFmt.format(e, "Error creating resized images", null, context);
+                                Debug.logError(err.getEx(), err.getLogMsg(), module);
+                                return err.returnError();
                             }
                         }
                         
@@ -291,16 +291,12 @@ public abstract class CmsMediaServices {
                 // in here must have an associated entity
                 throw new FileTypeException(PropertyMessage.make("CMSErrorUiLabels", "CmsUnsupportedFileType"));
             }
-        } catch (FileTypeException e) {
-            // don't log, common user input error
-            //Debug.logError(e.getMessage(), module);
-            return ServiceUtil.returnError(e.getPropertyMessage().getMessage(context));
-        } catch (CmsException e) {
-            Debug.logError(e, "Cms: Media: Error uploading media file: " + e.getMessage(), module);
-            return ServiceUtil.returnError(e.getPropertyMessage().getMessage(context));
         } catch (Exception e) {
-            Debug.logError(e, "Cms: Media: Error uploading media file: " + e.getMessage(), module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, "Error getting media files", null, context);
+            if (!(e instanceof FileTypeException)) { // don't log, common user input error
+                Debug.logError(err.getEx(), err.getLogMsg(), module);
+            }
+            return err.returnError();
         }
 
         // result.put("organizationPartyId", null);
@@ -383,7 +379,7 @@ public abstract class CmsMediaServices {
                         return ServiceUtil.returnError("Bad media file - Content not found for variant contentId '" + varContentId + "'");
                     }
                     
-                 // TODO: REVIEW: here dataResourceName could be set to either contentName OR the filename...
+                    // TODO: REVIEW: here dataResourceName could be set to either contentName OR the filename...
                     
                     // FIXME: this emulates the DB image resize service... poorly
                     Map<String, Object> imageCtx = new HashMap<>();
@@ -422,8 +418,9 @@ public abstract class CmsMediaServices {
                 }
             }
         } catch (Exception e) {
-            Debug.logError(e, "Cms: Media: Error updating media file: " + e.getMessage(), module);
-            return ServiceUtil.returnError("Error updating CMS media file: " + e.getMessage());
+            FormattedError err = errorFmt.format(e, "Error updating media file", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
 
         result.put("contentId", contentId);
@@ -473,8 +470,9 @@ public abstract class CmsMediaServices {
                         return ServiceUtil.returnError("Error removing media file content: " + ServiceUtil.getErrorMessage(contentResult));
                     }
                 } catch (GenericServiceException e) {
-                    Debug.logError(e, "Cms: Media: Error removing media file: " + e.getMessage(), module);
-                    return ServiceUtil.returnError(e.getMessage());
+                    FormattedError err = errorFmt.format(e, "Error removing media file", context);
+                    Debug.logError(err.getEx(), err.getLogMsg(), module);
+                    return err.returnError();
                 }
             }
             
@@ -489,20 +487,19 @@ public abstract class CmsMediaServices {
                     return ServiceUtil.returnError("Error removing media file content: " + ServiceUtil.getErrorMessage(contentResult));
                 }
             } catch (GenericServiceException e) {
-                Debug.logError(e, "Cms: Media: Error removing media file: " + e.getMessage(), module);
-                return ServiceUtil.returnError(e.getMessage());
+                FormattedError err = errorFmt.format(e, "Error removing media file", context);
+                Debug.logError(err.getEx(), err.getLogMsg(), module);
+                return err.returnError();
             }
         } catch (Exception e) {
-            Debug.logError(e, "Cms: Media: Error removing media file: " + e.getMessage(), module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, "Error removing media file", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
 
         return result;
     }
     
-    /**
-     * FIXME: this should be changed to use EntityListIterator
-     */
     public static Map<String, Object> rebuildMediaVariants(DispatchContext dctx, Map<String, ?> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -537,14 +534,15 @@ public abstract class CmsMediaServices {
             
             imagePropXmlPath = CmsMediaWorker.getCmsImagePropertiesPath();
         } catch (Exception e) {
-            Debug.logError(e, "Cms: Media: Couldn't create resized images: " + e.getMessage(), module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, "Error creating resized images", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         
         if (contentDataResourceList != null) {
             try {
                 if (doLog) {
-                    Debug.logInfo("Cms: Media: Beginning rebuildMediaVariants for all images", module);
+                    Debug.logInfo(logPrefix+"Beginning rebuildMediaVariants for all images", module);
                 }
                 long imgCount = 0;
                 GenericValue contentDataResource;
@@ -553,7 +551,7 @@ public abstract class CmsMediaServices {
                     remainingContentIds.remove(contentId);
                     if (force || CmsMediaWorker.hasVariantContent(delegator, contentId)) {
                         if (doLog) {
-                            Debug.logInfo("Cms: Media: rebuildMediaVariants: Rebuilding variants for image [contentId: " + contentId + "] (" + (imgCount+1) + ")", module);
+                            Debug.logInfo(logPrefix+"rebuildMediaVariants: Rebuilding variants for image [contentId: " + contentId + "] (" + (imgCount+1) + ")", module);
                         }
                         
                         try {
@@ -588,23 +586,25 @@ public abstract class CmsMediaServices {
                                 return ServiceUtil.returnError("Error creating resized images: " + ServiceUtil.getErrorMessage(resizeResult));
                             }
                         } catch (GenericServiceException e) {
-                            Debug.logError(e, "Cms: Media: Couldn't create resized images: " + e.getMessage(), module);
-                            return ServiceUtil.returnError(e.getMessage());
+                            FormattedError err = errorFmt.format(e, "Error creating resized images", context);
+                            Debug.logError(err.getEx(), err.getLogMsg(), module);
+                            return err.returnError();
                         }
                         imgCount++;
                     }
                 }
                 if (remainingContentIds.size() > 0) {
                     String errMsg = "Could not find valid image media records for contentIds: " + remainingContentIds.toString();
-                    Debug.logError("Cms: Media: " + errMsg, module);
+                    Debug.logError(logPrefix + errMsg, module);
                     return ServiceUtil.returnError(errMsg);
                 }
                 if (doLog) {
-                    Debug.logInfo("Cms: Media: Finished rebuildMediaVariants for " + imgCount + " images (having variants or forced)", module);
+                    Debug.logInfo(logPrefix+"Finished rebuildMediaVariants for " + imgCount + " images (having variants or forced)", module);
                 }
             } catch (Exception e) {
-                Debug.logError(e, "Cms: Media: Couldn't create resized images: " + e.getMessage(), module);
-                return ServiceUtil.returnError(e.getMessage());
+                FormattedError err = errorFmt.format(e, "Error creating resized images", context);
+                Debug.logError(err.getEx(), err.getLogMsg(), module);
+                return err.returnError();
             } finally {
                 try {
                     contentDataResourceList.close();
@@ -641,14 +641,15 @@ public abstract class CmsMediaServices {
                 contentDataResourceList = CmsMediaWorker.getMediaContentDataResourceRequiredByContentId(delegator, "IMAGE_OBJECT", contentIdList, null);
             }
         } catch (Exception e) {
-            Debug.logError(e, "Cms: Media: Couldn't remove resized images: " + e.getMessage(), module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, "Error removing resized images", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         
         if (contentDataResourceList != null) {
             try {
                 if (doLog) {
-                    Debug.logInfo("Cms: Media: Beginning removeMediaVariants for all images", module);
+                    Debug.logInfo(logPrefix+"Beginning removeMediaVariants for all images", module);
                 }
                 long imgCount = 0;
                 GenericValue contentDataResource;
@@ -656,7 +657,7 @@ public abstract class CmsMediaServices {
                     String contentId = contentDataResource.getString("contentId");
                     remainingContentIds.remove(contentId);
                     if (doLog) {
-                        Debug.logInfo("Cms: Media: removeMediaVariants: Removing variants for image [contentId: " + contentId + "] (" + (imgCount+1) + ")", module);
+                        Debug.logInfo(logPrefix+"removeMediaVariants: Removing variants for image [contentId: " + contentId + "] (" + (imgCount+1) + ")", module);
                     }
                     
                     for(String contentIdTo : CmsMediaWorker.getVariantContentAssocContentIdTo(delegator, contentId)) {
@@ -672,8 +673,9 @@ public abstract class CmsMediaServices {
                                 return ServiceUtil.returnError("Error removing media file variant: " + ServiceUtil.getErrorMessage(contentResult));
                             }
                         } catch (GenericServiceException e) {
-                            Debug.logError(e, "Cms: Media: Error removing media file variant: " + e.getMessage(), module);
-                            return ServiceUtil.returnError(e.getMessage());
+                            FormattedError err = errorFmt.format(e, "Error removing media file variant", context);
+                            Debug.logError(err.getEx(), err.getLogMsg(), module);
+                            return err.returnError();
                         }
                     }
                     delegator.removeByAnd("ContentAttribute", UtilMisc.toMap("contentId", contentId, "attrName", ContentImageWorker.CONTENTATTR_VARIANTCFG));
@@ -682,15 +684,16 @@ public abstract class CmsMediaServices {
                 }
                 if (remainingContentIds.size() > 0) {
                     String errMsg = "Could not find valid image media records for contentIds: " + remainingContentIds.toString();
-                    Debug.logError("Cms: Media: " + errMsg, module);
+                    Debug.logError(logPrefix + errMsg, module);
                     return ServiceUtil.returnError(errMsg);
                 }
                 if (doLog) {
-                    Debug.logInfo("Cms: Media: Finished removeMediaVariants for " + imgCount + " images (note: this count includes images that had no variants)", module);
+                    Debug.logInfo(logPrefix+"Finished removeMediaVariants for " + imgCount + " images (note: this count includes images that had no variants)", module);
                 }
             } catch (Exception e) {
-                Debug.logError(e, "Cms: Media: Couldn't remove resized images: " + e.getMessage(), module);
-                return ServiceUtil.returnError(e.getMessage());
+                FormattedError err = errorFmt.format(e, "Error removing resized images", context);
+                Debug.logError(err.getEx(), err.getLogMsg(), module);
+                return err.returnError();
             } finally {
                 try {
                     contentDataResourceList.close();

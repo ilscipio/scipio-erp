@@ -53,6 +53,8 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
     
     <#-- Function to update the action menu. Will generate new menu items based on selected option -->
     function updateMenu($node){
+        updateCmsWebSiteInfoMsgs($node);
+    
         var $el = $("#action_menu");
 
         var newOptions;
@@ -106,6 +108,19 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
         }
         return createPathPrefix;
     }
+    
+    var cmsCtrlRootAliasMsgs = <@objectAsScript object=(cmsCtrlRootAliasMsgs!{}) lang='js'/>;
+    function updateCmsWebSiteInfoMsgs($node) {
+        var webSiteId = $node.data["websiteid"];
+        var msgarea = jQuery('#cms-ctrlrootalias-msgarea');
+        if (cmsCtrlRootAliasMsgs && cmsCtrlRootAliasMsgs[webSiteId]) {
+            jQuery('.cms-ctrlrootalias-msg', msgarea).text(cmsCtrlRootAliasMsgs[webSiteId]);
+            msgarea.fadeIn();
+        } else {
+            msgarea.fadeOut();
+        }
+    }
+
 </@script>
 <#-- 2017-10-11: there was a bug in this line PLUS jQuery no longer supports it:
   'dblclick.jstree':'openPageByNode(data.node);'
@@ -217,6 +232,11 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
                             <@menuitem type="link" href=makeOfbizUrl('editPage') text=uiLabelMap.CommonCreate/>
                         </ul>
                 </@section>
+                
+                <#-- special message for root-aliasing of controller URIs - loaded by JS -->
+                <div id="cms-ctrlrootalias-msgarea" class="cms-ctrlrootalias-msgarea" style="display:none;">
+                    <@alert type="info"><span class="cms-ctrlrootalias-msg"></span></@alert>
+                </div>
             </@cell>
             
             <@script>

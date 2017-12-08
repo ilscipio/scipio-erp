@@ -153,6 +153,10 @@
         <value xml:lang="en">New Page</value>
         <value xml:lang="de">Neue Seite</value>
     </property>
+    <property key="CmsCopyPage">
+        <value xml:lang="en">Copy Page</value>
+        <value xml:lang="de">Seite kopieren</value>
+    </property>
     <property key="CmsEditPage">
         <value xml:lang="en">Edit Page</value>
         <value xml:lang="de">Seite Editieren</value>
@@ -192,6 +196,10 @@
     <property key="CmsCreateTemplate">
         <value xml:lang="en">New Template</value>
         <value xml:lang="de">Neues Template</value>
+    </property>
+    <property key="CmsCopyTemplate">
+        <value xml:lang="en">Copy Template</value>
+        <value xml:lang="de">Template kopieren</value>
     </property>
     <property key="CmsEditTemplate">
         <value xml:lang="en">Edit Template</value>
@@ -236,6 +244,10 @@
     <property key="CmsAddAsset">
         <value xml:lang="en">Add Asset</value>
         <value xml:lang="de">Asset hinzufügen</value>
+    </property>
+    <property key="CmsCopyAsset">
+        <value xml:lang="en">Copy Asset</value>
+        <value xml:lang="de">Asset kopieren</value>
     </property>
     <property key="CmsListAssets">
         <value xml:lang="en">All Assets</value>
@@ -375,6 +387,10 @@
     <property key="CmsScriptTemplate">
         <value xml:lang="en">Script Template</value>
         <value xml:lang="de">Script Template</value>
+    </property>
+    <property key="CmsCopyScript">
+        <value xml:lang="en">Copy Script</value>
+        <value xml:lang="de">Script kopieren</value>
     </property>
     <property key="CmsScriptName">
         <value xml:lang="en">Script Name</value>
@@ -815,5 +831,13 @@
     <property key="CmsSaveSettings">
         <value xml:lang="en">Save Settings</value>
         <value xml:lang="de">Einstellungen speichern</value>
+    </property>
+    <property key="CmsWebSiteConfiguredControlRootAlias">
+        <value xml:lang="en">Note: This website (${webSiteId}) is configured to alias the path names under its controller path (${controlMapping}) to its website context root. If you create any CMS Pages under the controller path, they will also be aliased to the website context root: ${srcPath} -> ${destPath}.</value>
+        <value xml:lang="de">Hinweis: Diese Website (${webSiteId}) ist so konfiguriert, dass sie die Pfadnamen unter ihrem Controller-Pfad (${controlMapping}) mit ihrem Website-Kontextstammverzeichnis verknüpft. Wenn Sie CMS-Seiten unter dem Controller-Pfad erstellen, werden diese ebenfalls mit dem Website-Kontextstammverzeichnis verknüpft: ${srcPath} -> ${destPath}.</value>
+    </property>
+    <property key="CmsMappingIndexableDesc">
+        <value xml:lang="en">If enabled (Y), this page's path may be included as indexed URL in sitemap generation for stores; if disabled (N), this is prevented. If left empty, this defaults to the web.xml cmsMappingsIndexableDefault setting for the webapp.</value>
+        <value xml:lang="de">Wenn aktiviert (Y), kann der Pfad dieser Seite als indizierte URL in der Sitemap-Generierung für Stores enthalten sein. Wenn deaktiviert (N), wird dies verhindert. Wenn diese Option leer bleibt, wird standardmäßig die Einstellung web.xml cmsMappingsIndexableDefault für die Webanwendung verwendet.</value>
     </property>
 </resource>

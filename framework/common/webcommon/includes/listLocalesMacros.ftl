@@ -7,8 +7,25 @@
         UtilMisc and may be subject to user configuration restrictions (now or in the future).
         Country expansion implications are currently unclear and should only
         be used in backend, not public frontend, for the time being.
+        
+    2017-12-07: currentLocale now supports boolean, using currentLocale=false to distinguish no locale
+    from selected empty locale, in conjunction with new allowExtraEmpty option.
+    
     TODO: REVIEW: the country expansion implications are currently unclear (not supported in stock ofbiz)... -->
-<#macro availableLocalesOptions availableLocales=true expandCountries=false requireCountries=false currentLocale="" allowExtra=false allowEmpty=false>
+<#macro availableLocalesOptions availableLocales=true expandCountries=false requireCountries=false allowExtra=false allowEmpty=false allowExtraEmpty=false inlineArgs...>
+    <#local currentLocale = inlineArgs.currentLocale!false>
+    <#if currentLocale?is_boolean>
+      <#if currentLocale>
+        <#local currentLocale = "">
+      <#else>
+        <#local rawLocale = "false">
+      </#if>
+    <#else>
+      <#local rawLocale = rawString(currentLocale)>
+      <#if rawLocale == "true">
+        <#local currentLocale = "">
+      </#if>
+    </#if>
     <#if availableLocales?is_boolean>
       <#if expandCountries>
         <#if requireCountries>
@@ -28,7 +45,7 @@
         <#if "ar.iw"?contains(langAttr?substring(0, 2))>
             <#local langDir = "rtl">
         </#if>
-        <#local localeSelected = (rawString(currentLocale!) == rawString(availableLocale.toString()))>
+        <#local localeSelected = (rawLocale == rawString(availableLocale.toString()))>
         <#if localeSelected>
           <#local localeFound = true>
         </#if>
@@ -36,8 +53,8 @@
           <#lt/><#if localeSelected> selected="selected"</#if>>${availableLocale.getDisplayName(availableLocale)} &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp; [${availableLocale.toString()}]</option>
     </#list>
     </#local>
-    <#if allowExtra && !localeFound && currentLocale?has_content>
-        <#local availableLocale = Static["org.ofbiz.base.util.UtilMisc"].parseLocale(rawString(currentLocale!))!>
+    <#if allowExtra && !localeFound && rawLocale?has_content && rawLocale != "false">
+        <#local availableLocale = Static["org.ofbiz.base.util.UtilMisc"].parseLocale(rawLocale)!>
         <#local langAttr = availableLocale.toString()?replace("_", "-")>
         <#local langDir = "ltr">
         <#if "ar.iw"?contains(langAttr?substring(0, 2))>
@@ -47,7 +64,9 @@
           <#lt/> selected="selected">${availableLocale.getDisplayName(availableLocale)} &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp; [${availableLocale.toString()}]</option>
     </#if>
     <#if allowEmpty>
-      <option value=""></option>
+      <option value=""<#if rawLocale == ""> selected="selected"</#if>></option>
+    <#elseif allowExtraEmpty && rawLocale == "">
+      <option value="" selected="selected"></option>
     </#if>
     ${localeMarkup}
 </#macro>

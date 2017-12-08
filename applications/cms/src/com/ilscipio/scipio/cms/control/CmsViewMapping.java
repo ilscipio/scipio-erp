@@ -17,6 +17,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 
+import com.ilscipio.scipio.ce.util.Optional;
 import com.ilscipio.scipio.cms.CmsException;
 import com.ilscipio.scipio.cms.CmsUtil;
 import com.ilscipio.scipio.cms.content.CmsPage;
@@ -28,7 +29,6 @@ import com.ilscipio.scipio.cms.data.CmsEntityVisit.VisitRelations;
 import com.ilscipio.scipio.cms.data.CmsMajorObject;
 import com.ilscipio.scipio.cms.data.CmsObjectCache;
 import com.ilscipio.scipio.cms.data.CmsObjectCache.CacheEntry;
-import com.ilscipio.scipio.cms.util.Optional;
 
 /**
  * Wraps and represents a CmsViewMapping entity value.
@@ -55,11 +55,20 @@ public class CmsViewMapping extends CmsControlDataObject implements CmsMajorObje
         super(delegator, checkFields(fields, true));
     }
     
-    @Override    
-    public void update(Map<String, ?> fields) {
-        super.update(checkFields(fields, false));
+    protected CmsViewMapping(CmsViewMapping other, Map<String, Object> copyArgs) {
+        super(other, copyArgs);
     }
     
+    @Override    
+    public void update(Map<String, ?> fields, boolean setIfEmpty) {
+        super.update(checkFields(fields, false), setIfEmpty);
+    }
+    
+    @Override
+    public CmsViewMapping copy(Map<String, Object> copyArgs) throws CmsException {
+        return new CmsViewMapping(this, copyArgs);
+    }   
+
     protected static <T> Map<String, T> checkFields(Map<String, T> fields, boolean isNew) {
         if (isNew || fields.containsKey("targetServletPath")) {
             ensureTargetServletPath(fields);
@@ -213,8 +222,7 @@ public class CmsViewMapping extends CmsControlDataObject implements CmsMajorObje
             String pageId = getPageId();
             if (UtilValidate.isNotEmpty(pageId)) {
                 page = Optional.ofNullable(CmsPage.getWorker().findById(getDelegator(), pageId, useCache));
-            }
-            else {
+            } else {
                 page = Optional.empty();
             }
             this.page = page;
@@ -269,8 +277,7 @@ public class CmsViewMapping extends CmsControlDataObject implements CmsMajorObje
                         EntityOperator.OR,
                         EntityCondition.makeCondition("targetServletPath", TARGET_SERVLET_PATH_DEFAULT)
                         ));
-            }
-            else {
+            } else {
                 // Default didn't match; must match exact
                 condList.add(EntityCondition.makeCondition("targetServletPath", requestServletPath));
             }
@@ -497,8 +504,7 @@ public class CmsViewMapping extends CmsControlDataObject implements CmsMajorObje
         @Override
         public void clearMemoryCaches() {
             getNameCache().clear();
-        }     
- 
+        }
     }
     
     @Override

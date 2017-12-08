@@ -15,23 +15,12 @@ catalogData = context.catalogData ?: [:];
 eventFlags = setupWorker?.getRecordRequestStatesMap(["New", "Create", "Update", "Delete", "Copy", "Move", "Add"], true, ["Catalog", "Category", "Product"]);
 isEventError = context.isSetupEventError;
 
-// FIXME: copy-pasted
-objectLocalizedFields = context.ectObjectLocalizedFields;
-if (!objectLocalizedFields) {
-    objectLocalizedFields = [
-        category: [
-            fieldNames: ["categoryName", "description", "longDescription"],
-            typeNames: ["CATEGORY_NAME", "DESCRIPTION", "LONG_DESCRIPTION"],
-            typeNameListStr: '[CATEGORY_NAME, DESCRIPTION, LONG_DESCRIPTION]'
-        ],
-        product: [
-            fieldNames: ["productName", "description", "longDescription"],
-            typeNames: ["PRODUCT_NAME", "DESCRIPTION", "LONG_DESCRIPTION"],
-            typeNameListStr: '[PRODUCT_NAME, DESCRIPTION, LONG_DESCRIPTION]'
-        ]
-    ];
+catalogLocFieldsInfo = context.catalogLocFieldsInfo;
+if (!catalogLocFieldsInfo) {
+    GroovyUtil.runScriptAtLocation("component://product/webapp/catalog/WEB-INF/actions/catalog/GetCatalogLocFieldsInfo.groovy", null, context);
+    catalogLocFieldsInfo = context.catalogLocFieldsInfo;
+    context.catalogLocFieldsInfo = catalogLocFieldsInfo;
 }
-context.ectObjectLocalizedFields = objectLocalizedFields;
 
 /*
  * Catalog
@@ -106,11 +95,12 @@ if (prodCatalog && productCategoryId) {
         }
     }
     
+    /* 2017-12: this is now looked up using ajax due to data overload
     if (productCategoryAndAssoc) {
         // get localized fields
         try {
             servRes = dispatcher.runSync("getProductCategoryContentLocalizedSimpleTextViews", [
-                productCategoryId: productCategoryId, prodCatContentTypeIdList: objectLocalizedFields.category.typeNames,
+                productCategoryId: productCategoryId, prodCatContentTypeIdList: catalogLocFieldsInfo.category.typeNames,
                 userLogin:context.userLogin, locale:context.locale, timeZone:context.timeZone
             ], -1, true);
             productCategoryAndAssoc.simpleTextViewsByType = servRes.viewsByType;
@@ -118,6 +108,7 @@ if (prodCatalog && productCategoryId) {
             Debug.logError(e, "Setup: Catalog: " + e.getMessage(), module);
         }
     }
+    */
 }
 
 prodCatalogCategoryTypes = EntityQuery.use(delegator).from("ProdCatalogCategoryType").orderBy("description").queryList();
@@ -152,11 +143,12 @@ if (productCategory && productId) {
         productAndAssoc.putAll(productCategoryMember);
     }
     
+    /* 2017-12: this is now looked up using ajax due to data overload
     if (productAndAssoc) {
         // get localized fields
         try {
             servRes = dispatcher.runSync("getProductContentLocalizedSimpleTextViews", [
-                productId: productId, productContentTypeIdList: objectLocalizedFields.product.typeNames,
+                productId: productId, productContentTypeIdList: catalogLocFieldsInfo.product.typeNames,
                 userLogin:context.userLogin, locale:context.locale, timeZone:context.timeZone
             ], -1, true);
             productAndAssoc.simpleTextViewsByType = servRes.viewsByType;
@@ -164,6 +156,7 @@ if (productCategory && productId) {
             Debug.logError(e, "Setup: Catalog: " + e.getMessage(), module);
         }
     }
+    */
 }
 context.product = product;
 context.productCategoryMember = productCategoryMember;
@@ -212,10 +205,3 @@ for(prodCatalog in allProdCatalogList) {
 }
 context.availProdCatalogList = availProdCatalogList;
 context.allProdCatalogList = allProdCatalogList;
-
-// SPECIAL: method to convert the stringified localized field submitted parameters (contentField_),
-// so user input is not lost on event error
-// FIXME?: shouldn't run on every call, but doesn't matter yet
-if (parameters.simpleTextViewsByType == null) {
-    parameters.simpleTextViewsByType = org.ofbiz.product.category.CategoryWorker.parseLocalizedSimpleTextContentFieldParams(parameters, "contentField_", false);
-}

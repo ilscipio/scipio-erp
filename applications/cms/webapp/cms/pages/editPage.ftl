@@ -5,6 +5,7 @@
 <#if !content??>
   <#assign content = {}>
 </#if>
+<#assign pathPlaceholder = "/myUrl">
 
 <#-- NOTE: don't use container=false anymore, use @fields type="default-compact" -->
 <#macro pageAttrField fieldObj value="" id="" namePrefix="" expandLangVisible=true>
@@ -354,7 +355,29 @@
     <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>
             <@menuitem type="link" href=makeOfbizUrl("editPage") class="+${styles.action_run_sys!} ${styles.action_create!}" text=uiLabelMap.CmsCreatePage/>
-            
+            <@cmsCopyMenuItem target="copyPage" title=uiLabelMap.CmsCopyPage>
+                 <@field type="hidden" name="pageId" value=(pageId!)/><#-- for browsing, on error -->
+                 <@field type="hidden" name="versionId" value=(versionId!)/><#-- for browsing, on error -->
+                 <@field type="hidden" name="webSiteId" value=((meta.webSiteId)!)/>
+                 <@field type="hidden" name="srcPageId" value=(pageId!)/>
+                 <@cmsCopyVersionSelect versionId=(versionId!)/>
+                 <@field type="input" name="primaryPath" value="" label=uiLabelMap.CommonPath placeholder=((meta.primaryPath!pathPlaceholder)) required=true/>
+                 <#-- NOTE: the select below is currently for debugging only - not sure if want to expose
+                    to users here yet (though should be working) -->
+                 <#if debugMode>
+                   <@field type="select" name="primaryPathFromContextRoot" label="primaryPathFromContextRoot" required=true>
+                      <option value="" selected="selected"></option>
+                      <option value="Y">Y</option>
+                      <option value="N">N</option>
+                   </@field>
+                 <#else>
+                   <#-- NOTE: do not use primaryPathFromContextRootDefault here; leave this empty (the default setting 
+                       is for each webapp, target service must look it up) -->
+                   <input type="hidden" name="primaryPathFromContextRoot" value=""/>
+                 </#if>
+                 <@field type="input" name="pageName" value="" label=uiLabelMap.CommonName required=false/>
+                 <@field type="textarea" name="description" value=(meta.description!"") label=uiLabelMap.CommonDescription required=false/>
+            </@cmsCopyMenuItem>
             <@menuitem type="generic">
                 <@modal id="modal_new_script" label=uiLabelMap.CmsAddScript class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                     <@heading>${uiLabelMap.CmsAddScript}</@heading>
@@ -549,9 +572,19 @@
                                  <@field label=uiLabelMap.CommonName type="input" name="pageName" value=(meta.name!"") required=false/>
                                  <@field label=uiLabelMap.CommonDescription type="textarea" name="description_visible" value=(meta.description!"") required=false/>
 
+                                 <@field label=uiLabelMap.CommonIndexable type="select" name="primaryPathIndexable" value=(meta.primaryPathIndexable!"") required=false tooltip=uiLabelMap.CmsMappingIndexableDesc>
+                                    <#assign indexable = meta.primaryPathIndexable!"">
+                                    <#assign indexableDefault = (webSiteConfig.getMappingsIndexableDefault())!true>
+                                    <#-- NOTE: this indicator is ternary, when empty it defaults to cmsDefaultIsIndexable in web.xml.
+                                        it must not be forced to Y or N (e.g., do NOT make this a checkbox). -->
+                                    <@field type="option" value="" selected=(!indexable?is_boolean)>(${indexableDefault?string("Y", "N")})</@field>
+                                    <@field type="option" value="Y" selected=(indexable?is_boolean && indexable)>Y</@field>
+                                    <@field type="option" value="N" selected=(indexable?is_boolean && !indexable)>N</@field>
+                                 </@field>
+
                                  <@menu type="button">
                                     <@menuitem type="link" href="javascript:updatePageInfo(); void(0);" class="+${styles.action_run_sys!} ${styles.action_update!}" text="${rawLabel('CmsSaveSettings')}" />
-                                </@menu> 
+                                 </@menu> 
                             </@section>
                             
                             <@section title=uiLabelMap.CommonStatus>
@@ -615,7 +648,7 @@
                          <@webSiteSelectField name="webSiteId" value=(parameters.webSiteId!) valueUnsafe=true required=true 
                             tooltip="${rawLabel('CmsOnlyHookedWebSitesListed')}"/>
                          
-                         <@field type="input" name="path" value=(parameters.path!) id="path" label=uiLabelMap.CommonPath placeholder="/myUrl" required=true/><#-- TODO: rename to primaryPath -->
+                         <@field type="input" name="path" value=(parameters.path!) id="path" label=uiLabelMap.CommonPath placeholder=pathPlaceholder required=true/><#-- TODO: rename to primaryPath -->
 
                          <@field type="select" name="primaryTargetPath" id="primaryTargetPath" items=primaryTargetPathOptions defaultValue="/cmsPagePlainNoAuth" label="${rawLabel('CommonPath')} ${rawLabel('CommonSettings')}" required=false />
 

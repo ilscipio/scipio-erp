@@ -69,12 +69,29 @@ public abstract class CmsTemplate extends CmsDataObject {
         this.setTemplateBodySource(fields);
     }
     
+    /**
+     * Copy constructor.
+     * <p>
+     * TODO?: misses an option to copy the body into a new stored object, but
+     * it's mostly an efficiency thing.
+     */
+    protected CmsTemplate(CmsTemplate other, Map<String, Object> copyArgs) {
+        super(other, copyArgs);
+        this.setTemplateBodySource(getTemplateBodySourceCopy(other, copyArgs));
+    }
+    
     @Override
-    public void update(Map<String, ?> fields) {
-        super.update(fields);
+    public void update(Map<String, ?> fields, boolean setIfEmpty) {
+        super.update(fields, setIfEmpty);
         this.setTemplateBodySource(fields);
     }
     
+    /**
+     * Subclasses may need to override this - versioned templates should do nothing here.
+     */
+    protected TemplateBodySource getTemplateBodySourceCopy(CmsTemplate other, Map<String, Object> copyArgs) {
+        return TemplateBodySource.fromTemplateBodySource(other.getTemplateBodySource());
+    }
     
     /**
      * 2016: Loads ALL this object's content into the current instance.
@@ -637,6 +654,10 @@ public abstract class CmsTemplate extends CmsDataObject {
         
         public static TemplateBodySource fromBody(String templateBody) {
             return new TemplateBodySource(null, null, templateBody, null);
+        }
+        
+        public static TemplateBodySource fromTemplateBodySource(TemplateBodySource other) {
+            return new TemplateBodySource(null, null, other.storedBody, other.location);
         }
         
         /**

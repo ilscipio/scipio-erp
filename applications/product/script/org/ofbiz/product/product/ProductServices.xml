@@ -1045,6 +1045,11 @@ under the License.
             <result-to-result result-name="productCategoryId"/>
             <result-to-result result-name="fromDate"/>
         </call-service>
+        
+        <if-compare field="parameters.updateLocalizedTexts" type="Boolean" operator="equals" value="true">
+            <set-service-fields service-name="replaceProductContentLocalizedSimpleTexts" to-map="updateLocTextCtx" map="parameters"/>
+            <call-service service-name="replaceProductContentLocalizedSimpleTexts" in-map-name="updateLocTextCtx"/>
+        </if-compare>
     </simple-method>
     
     <simple-method method-name="updateProductAndCatAssocVersatile">
@@ -1053,6 +1058,11 @@ under the License.
         
         <set-service-fields service-name="updateProductToCategory" to-map="updateAssocCtx" map="parameters"/>
         <call-service service-name="updateProductToCategory" in-map-name="updateAssocCtx"/>
+        
+        <if-compare field="parameters.updateLocalizedTexts" type="Boolean" operator="equals" value="true">
+            <set-service-fields service-name="replaceProductContentLocalizedSimpleTexts" to-map="updateLocTextCtx" map="parameters"/>
+            <call-service service-name="replaceProductContentLocalizedSimpleTexts" in-map-name="updateLocTextCtx"/>
+        </if-compare>
     </simple-method>
     
     <simple-method method-name="deleteProductCatAssocVersatile">

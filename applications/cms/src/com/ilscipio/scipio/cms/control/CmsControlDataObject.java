@@ -29,9 +29,13 @@ public abstract class CmsControlDataObject extends CmsDataObject {
         super(delegator, fields);
     }
     
+    protected CmsControlDataObject(CmsControlDataObject other, Map<String, Object> copyArgs) {
+        super(other, copyArgs);
+    }
+    
     @Override    
-    public void update(Map<String, ?> fields) {
-        super.update(fields);
+    public void update(Map<String, ?> fields, boolean setIfEmpty) {
+        super.update(fields, setIfEmpty);
     }
     
     /**
@@ -110,8 +114,7 @@ public abstract class CmsControlDataObject extends CmsDataObject {
                 boolean changingLogicalPk;
                 if (isNew) {
                     changingLogicalPk = true;
-                }
-                else {
+                } else {
                     existingDataObj = findById(delegator, pkValue, false);
                     
                     changingLogicalPk = false;
@@ -130,8 +133,7 @@ public abstract class CmsControlDataObject extends CmsDataObject {
                                 changingLogicalPk = true;
                                 break; 
                             }
-                        }
-                        else {
+                        } else {
                             if (!passedVal.equals(entityVal)) {
                                 changingLogicalPk = true;
                                 break;
@@ -186,8 +188,7 @@ public abstract class CmsControlDataObject extends CmsDataObject {
                     GenericValue value = delegator.makeValue(getEntityName());
                     value.setNonPKFields(fields, true);
                     dataObj = makeFromValue(value);
-                }
-                else {
+                } else {
                     dataObj = existingDataObj;
                     
                     String oldPageId = null;

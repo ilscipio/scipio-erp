@@ -191,7 +191,8 @@
     </request-map>
     <request-map uri="setupImportDatevTransactionEntries">
         <security https="true" auth="true"/>
-        <event type="simple" path="component://accounting/script/com/ilscipio/scipio/accounting/datev/DatevEvents.xml" invoke="importDatevTransactionEntries"/>
+        <event type="simple" path="component://accounting/script/com/ilscipio/scipio/accounting/datev/DatevEvents.xml" invoke="importDatevTransactionEntries"/>                                              
+        <!-- <event type="service" invoke="importDatevTransactionEntries"/> -->
         <response name="success" type="view" value="SetupAccounting"/>
         <response name="error" type="request" value="setupAccounting"/>
     </request-map>

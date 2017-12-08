@@ -62,50 +62,22 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
     protected ServletContext servletContext = null;
     protected RenderInvoker renderInvoker = null;
     
-    protected boolean allowPreviewMode = false;
-    private String previewModeParamName;
+    protected CmsWebSiteConfig webSiteConfig = CmsWebSiteConfig.getDefault();
     
-    protected boolean setResponseBrowserNoCacheCmsPage = CmsControlUtil.setResponseBrowserNoCacheCmsPageDefault;
-    protected boolean setResponseBrowserNoCacheScreen = CmsControlUtil.setResponseBrowserNoCacheScreenDefault;
-    protected boolean setResponseBrowserNoCache = CmsControlUtil.setResponseBrowserNoCacheDefault;
-    
-    protected String defaultTargetServletPath;
-    protected boolean useDefaultCmsPage = CmsControlUtil.useDefaultCmsPageDefault;
-    protected String defaultCmsPageId = CmsControlUtil.getDefaultCmsPageId();
-    protected CmsPageInfo defaultCmsPage = new CmsPageInfo(defaultCmsPageId);
+    protected CmsPageInfo defaultCmsPage = new CmsPageInfo(webSiteConfig.getDefaultCmsPageId());
     
     @Override
     public void init(ServletContext context) throws ViewHandlerException {
         super.init(context);
         this.servletContext = context;
-        
-        this.allowPreviewMode = CmsControlUtil.getCmsBoolInitParam(servletContext, "cmsAllowPreviewMode", false); // 2016: new
-        this.previewModeParamName = CmsControlUtil.getPreviewModeDefaultParamName(servletContext);
 
-        this.setResponseBrowserNoCacheCmsPage = CmsControlUtil.getCmsBoolInitParam(this.servletContext, 
-                "setResponseBrowserNoCacheCmsPage", this.setResponseBrowserNoCacheCmsPage);
-        this.setResponseBrowserNoCacheScreen = CmsControlUtil.getCmsBoolInitParam(this.servletContext, 
-                "setResponseBrowserNoCacheScreen", this.setResponseBrowserNoCacheScreen);
-        this.setResponseBrowserNoCache = CmsControlUtil.getCmsBoolInitParam(this.servletContext, 
-                "setResponseBrowserNoCache", this.setResponseBrowserNoCache);
-
-        this.defaultTargetServletPath = CmsControlUtil.getDefaultSpecificServletPath(context, "cmsDefaultTargetServletPath");
-        
-        this.useDefaultCmsPage = CmsControlUtil.getCmsBoolInitParam(this.servletContext, 
-                "useDefaultCmsPage", this.useDefaultCmsPage);
-        this.defaultCmsPageId = CmsControlUtil.getDefaultCmsPageId(context);
-        this.defaultCmsPage = new CmsPageInfo(this.defaultCmsPageId);
-        
-        if (this.useDefaultCmsPage && UtilValidate.isEmpty(this.defaultCmsPageId)) {
-            this.defaultCmsPageId = null;
-            Debug.logWarning("Cms: default CMS page fallback was enabled in web config, "
-                    + "but no default CMS page specified; will treat as disabled", module); 
-        }
+        this.defaultCmsPage = new CmsPageInfo(this.webSiteConfig.getDefaultCmsPageId());
         
         this.renderInvoker = RenderInvoker.getRenderInvoker(context);
         
         // hasControllerHint true because if there's a view handler there has to be a controller...
-        CmsWebSiteInfo.registerCmsWebSite(context, true);
+        CmsWebSiteInfo webSiteInfo = CmsWebSiteInfo.registerCmsWebSite(context, true);
+        this.webSiteConfig = CmsWebSiteInfo.getWebSiteConfigOrDefaults(webSiteInfo, servletContext);
     }
 
     @Override
@@ -130,7 +102,7 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
         }
         
         // This will only run if filter didn't already do it
-        if (setResponseBrowserNoCache) {
+        if (webSiteConfig.isSetResponseBrowserNoCache()) {
             if (CmsUtil.verboseOn()) {
                 Debug.logInfo("Cms: Setting browser no-proxy no-cache response" + CmsControlUtil.getReqLogIdDelimStr(request), module);
             }
@@ -143,7 +115,7 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
         // 2016: check preview mode parameter
         // NOTE: this MAY have been done in process filter, but it possible to run without it, so do it again here
         if (renderMode == null) {
-            renderMode = CmsControlUtil.checkRenderMode(request, previewModeParamName, allowPreviewMode);
+            renderMode = CmsControlUtil.checkRenderMode(request, webSiteConfig.getPreviewModeParamName(), webSiteConfig.isAllowPreviewMode());
         }
         
         // 2016: MUST NOT CACHE PREVIEWS!
@@ -192,7 +164,7 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
                     }
                     
                     CmsProcessViewMapping procViewMapping = procMapping.getProcessViewMapping(requestServletPath, 
-                            requestPath, name, defaultTargetServletPath, CmsProcessMapping.defaultMatchAnyTargetPath);
+                            requestPath, name, webSiteConfig.getDefaultTargetServletPath(), CmsProcessMapping.defaultMatchAnyTargetPath);
                     if (procViewMapping != null) {
                         if (procViewMapping.isActiveLogical()) {
                             if (CmsUtil.verboseOn()) {
@@ -247,7 +219,7 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
                 }
                 
                 CmsViewMapping viewMapping = CmsViewMapping.findByView(delegator, webSiteId, requestServletPath, 
-                        name, defaultTargetServletPath, useDataObjectCache, request);
+                        name, webSiteConfig.getDefaultTargetServletPath(), useDataObjectCache, request);
                 if (viewMapping != null) {
                     if (viewMapping.isActiveLogical()) {
                         cmsPage = viewMapping.getPage();
@@ -320,14 +292,14 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
         }
         
         if (renderDefault) {
-            if (this.useDefaultCmsPage && UtilValidate.isNotEmpty(this.defaultCmsPageId)) {
+            if (webSiteConfig.isUseDefaultCmsPage() && UtilValidate.isNotEmpty(webSiteConfig.getDefaultCmsPageId())) {
                 try {
-                    cmsPage = CmsPage.getWorker().findById(delegator, this.defaultCmsPageId, true, request);
+                    cmsPage = CmsPage.getWorker().findById(delegator, webSiteConfig.getDefaultCmsPageId(), true, request);
                     if (cmsPage == null) {
-                        throw new CmsDataException("Unable to find CMS page with pageId: " + this.defaultCmsPageId);
+                        throw new CmsDataException("Unable to find CMS page with pageId: " + webSiteConfig.getDefaultCmsPageId());
                     }
                 } catch(Exception e) {
-                    Debug.logError(e, "Cms: Error retrieving default page from database. defaultCmsPageId: " + this.defaultCmsPageId
+                    Debug.logError(e, "Cms: Error retrieving default page from database. defaultCmsPageId: " + webSiteConfig.getDefaultCmsPageId()
                             + CmsControlUtil.getReqLogIdDelimStr(request), module);
                     handleException(request, response, e, renderMode);
                     return; // Nothing can be sent after this
@@ -339,8 +311,7 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
                 if (!continueOk) {
                     return;
                 }
-            }
-            else {
+            } else {
                 Debug.logInfo("Cms: No existing or active CMS page mapping found for view '" + name + "'; continuing with Ofbiz screen (" + page + ")"
                         + CmsControlUtil.getReqLogIdDelimStr(request), module);
                 renderScreen(name, page, info, contentType, encoding, request, response, writer); 
@@ -353,7 +324,7 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
             Debug.logInfo("Cms: Starting legacy screen widget render process" + CmsControlUtil.getReqLogIdDelimStr(request), module);
         }
         
-        if (setResponseBrowserNoCacheScreen) {
+        if (webSiteConfig.isSetResponseBrowserNoCacheScreen()) {
             if (CmsUtil.verboseOn()) {
                 Debug.logInfo("Cms: Setting browser no-proxy no-cache response" + CmsControlUtil.getReqLogIdDelimStr(request), module);
             }
@@ -384,7 +355,7 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
             Debug.logInfo("Cms: Starting CMS page render process" + CmsControlUtil.getReqLogIdDelimStr(request), module);
         }
         
-        if (setResponseBrowserNoCacheCmsPage) {
+        if (webSiteConfig.isSetResponseBrowserNoCacheCmsPage()) {
             if (CmsUtil.verboseOn()) {
                 Debug.logInfo("Cms: Setting browser no-proxy no-cache response" + CmsControlUtil.getReqLogIdDelimStr(request), module);
             }

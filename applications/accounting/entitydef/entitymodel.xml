@@ -4316,7 +4316,9 @@ under the License.
       <field name="scale" type="numeric"></field>
       <field name="format" type="short-varchar"></field>
       <field name="required" type="indicator"></field>
+      <field name="metadata" type="indicator"></field>
       <field name="sequenceNum" type="numeric"></field>
+      <field name="description" type="very-long"></field>
       <prim-key field="fieldId"/>
   	</entity>
     

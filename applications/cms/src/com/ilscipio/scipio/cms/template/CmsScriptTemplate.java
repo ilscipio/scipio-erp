@@ -108,11 +108,20 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
         this.assoc = assoc;
     }
     
-    @Override    
-    public void update(Map<String, ?> fields) {
-        super.update(checkFields(fields, false));
+    protected CmsScriptTemplate(CmsScriptTemplate other, Map<String, Object> copyArgs) {
+        super(other, copyArgs);
     }
     
+    @Override    
+    public void update(Map<String, ?> fields, boolean setIfEmpty) {
+        super.update(checkFields(fields, false), setIfEmpty);
+    }
+    
+    @Override
+    public CmsScriptTemplate copy(Map<String, Object> copyArgs) throws CmsException {
+        return new CmsScriptTemplate(this, copyArgs);
+    }
+
     public static CmsScriptTemplate createUpdateScriptTemplate(Delegator delegator, Map<String, ?> fields, 
             GenericValue userLogin, boolean store) {
         Map<String, Object> scriptMap = new HashMap<>(fields);
@@ -120,7 +129,7 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
         String scriptTemplateId = (String) fields.get("scriptTemplateId");
         if (UtilValidate.isNotEmpty(scriptTemplateId)) {
             scriptTemplate = CmsScriptTemplate.getWorker().findByIdAlways(delegator, scriptTemplateId, false);
-            scriptTemplate.update(scriptMap);
+            scriptTemplate.update(scriptMap, true);
         } else {
             scriptMap.put("createdBy", userLogin.get("userLoginId"));
             scriptTemplate = new CmsScriptTemplate(delegator, scriptMap);
@@ -351,15 +360,23 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
             this.scriptTemplate = scriptTemplate;
         }
 
+        protected CmsScriptTemplateAssoc(CmsScriptTemplateAssoc other, Map<String, Object> copyArgs) {
+            super(other, copyArgs);
+            // NOTE: don't bother clearing out the ID fields here, caller should handle
+        }
+
         @Override    
-        public void update(Map<String, ?> fields) {
+        public void update(Map<String, ?> fields, boolean setIfEmpty) {
             // here, must ignore scriptTemplateId - set at creation and should never change
             if (fields.containsKey("scriptTemplateId") && UtilValidate.isNotEmpty(getScriptTemplateId())) {
                 fields = new HashMap<String, Object>(fields);
                 fields.remove("scriptTemplateId");
             }
-            super.update(fields);
+            super.update(fields, setIfEmpty);
         }
+        
+        @Override
+        public abstract CmsScriptTemplateAssoc copy(Map<String, Object> copyArgs);
         
         /**
          * 2016: Loads ALL this object's content into the current instance.
@@ -374,6 +391,9 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
             // DO NOT do this way because the preload will (un-intuitively) come from CmsScriptTemplate to us
             //preloadWorker.preload(getScriptTemplate());
         }
+
+        @Override
+        public abstract ScriptTemplateAssocWorker<? extends CmsScriptTemplateAssoc> getWorkerInst();
 
         @Override
         public void store() throws CmsException {
@@ -424,6 +444,16 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
             return scriptTemplate;
         }
         
+        /**
+         * Temporary clearing method during copy operations, SHOULD be
+         * overridden by child classes to clear the other IDs.
+         */
+        protected abstract void clearTemplate();
+        
+        protected abstract void setTemplate(CmsDataObject template);
+        
+        protected abstract boolean hasTemplate();
+        
         public Long getInputPosition() {
             Long inputPosition = entity.getLong("inputPosition");
             return inputPosition != null ? inputPosition : 0L;
@@ -431,6 +461,12 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
 
         public String getInvokeName() {
             return entity.getString("invokeName");
+        }
+        
+        public static abstract class ScriptTemplateAssocWorker<T extends CmsScriptTemplateAssoc> extends DataObjectWorker<T> {
+            protected ScriptTemplateAssocWorker(Class<T> dataObjectClass) {
+                super(dataObjectClass);
+            }
         }
     }
     

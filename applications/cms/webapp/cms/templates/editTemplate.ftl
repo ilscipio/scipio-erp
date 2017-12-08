@@ -137,6 +137,14 @@
     <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>
             <@menuitem type="link" href=makeOfbizUrl("editTemplate") class="+${styles.action_run_sys!} ${styles.action_create!}" text=uiLabelMap.CmsCreateTemplate/>
+            <@cmsCopyMenuItem target="copyTemplate" title=uiLabelMap.CmsCopyTemplate>
+                <@field type="hidden" name="pageTemplateId" value=(pageTemplate.pageTemplateId!)/><#-- for browsing, on error -->
+                <@field type="hidden" name="versionId" value=(versionId!)/><#-- for browsing, on error -->
+                <@field type="hidden" name="srcPageTemplateId" value=(pageTemplate.pageTemplateId!)/>
+                <@cmsCopyVersionSelect versionId=(versionId!)/>
+                <@field type="input" name="templateName" value="" required=true label=uiLabelMap.CommonName />
+                <@field type="textarea" name="description" value=(pageTemplate.description!) required=false label=uiLabelMap.CommonDescription />
+            </@cmsCopyMenuItem>
             <@menuitem type="generic">
                 <@modal id="modal_new_attr" label=uiLabelMap.CmsAddAttribute class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                     <@heading>${uiLabelMap.CmsAddAttribute}</@heading>

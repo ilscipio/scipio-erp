@@ -31,11 +31,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.bsf.BSFManager;
+import org.apache.tomcat.util.descriptor.web.ServletDef;
+import org.apache.tomcat.util.descriptor.web.WebXml;
+import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilRender;
 import org.ofbiz.base.util.UtilTimer;
 import org.ofbiz.base.util.UtilValidate;
@@ -423,5 +424,38 @@ public class ControlServlet extends HttpServlet {
             Debug.logVerbose(attName + ":" + servletContext.getAttribute(attName), module);
         }
         Debug.logVerbose("--- End ServletContext Attributes ---", module);
+    }
+    
+    /**
+     * SCIPIO: Locates the ControlServlet servlet definition in the given WebXml, or null
+     * if does not appear to be present.
+     * Best-effort operation.
+     * <p>
+     * Factored out and modified from stock method {@link #getControlServletPath(WebappInfo, boolean)}.
+     * <p>
+     * SCIPIO: 2017-12-05: Adds subclass support, oddly missing from stock ofbiz code.
+     * <p>
+     * Added 2017-12.
+     */
+    public static ServletDef getControlServletDefFromWebXml(WebXml webXml) {
+        ServletDef bestServletDef = null;
+        for (ServletDef servletDef : webXml.getServlets().values()) {
+            String servletClassName = servletDef.getServletClass();
+            // exact name is the original Ofbiz solution, return exact if found
+            if (ControlServlet.class.getName().equals(servletClassName)) {
+                return servletDef;
+            }
+            // we must now also check for class that extends ControlServlet (this will return the last one)
+            if (servletClassName != null) {
+                try {
+                    Class<?> cls = Thread.currentThread().getContextClassLoader().loadClass(servletClassName);
+                    if (ControlServlet.class.isAssignableFrom(cls)) bestServletDef = servletDef;
+                } catch(Exception e) {
+                    Debug.logWarning("Could not load or test servlet class (" + servletClassName + "); may be invalid or a classloader issue: " 
+                            + e.getMessage(), module);
+                }
+            }
+        }
+        return bestServletDef;
     }
 }

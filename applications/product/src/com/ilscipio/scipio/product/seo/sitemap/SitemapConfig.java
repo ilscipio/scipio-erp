@@ -72,10 +72,12 @@ public class SitemapConfig implements Serializable {
     private final String sitemapIndexFile;
     private final String productFilePrefix;
     private final String categoryFilePrefix;
+    private final String contentFilePrefix;
     private final Integer sizemapSize;
     private final Integer indexSize;
     private final boolean doProduct;
     private final boolean doCategory;
+    private final boolean doCmsPage;
     // TODO?: REVIEW: I don't see a reason to implement this for sitemaps yet...
     // see SitemapWorker#buildSitemapProduct
     private final boolean doChildProduct = false;
@@ -108,6 +110,7 @@ public class SitemapConfig implements Serializable {
         this.sitemapIndexFile = asNormString(map.get("sitemapIndexFile"));
         this.productFilePrefix = asNormString(map.get("productFilePrefix"));
         this.categoryFilePrefix = asNormString(map.get("categoryFilePrefix"));
+        this.contentFilePrefix = asNormString(map.get("contentFilePrefix"));
         Integer sizemapSize = asInteger(map.get("sizemapSize"), DEFAULT_SITEMAP_SIZE);
         if (sizemapSize <= 0) sizemapSize = null; // explicit -1 means don't limit
         this.sizemapSize = sizemapSize;
@@ -116,6 +119,7 @@ public class SitemapConfig implements Serializable {
         this.indexSize = indexSize;
         this.doProduct = asBoolean(map.get("doProduct"), true);
         this.doCategory = asBoolean(map.get("doCategory"), true);
+        this.doCmsPage = asBoolean(map.get("doCmsPage"), true);
         
         this.useProductLastModDate = asBoolean(map.get("useProductLastModDate"), false);
         String dateFormatStr = asNormString(map.get("dateFormat"));
@@ -276,6 +280,10 @@ public class SitemapConfig implements Serializable {
         return categoryFilePrefix;
     }
 
+    public String getContentFilePrefix() {
+        return contentFilePrefix;
+    }
+
     public Integer getSizemapSize() {
         return sizemapSize;
     }
@@ -290,6 +298,14 @@ public class SitemapConfig implements Serializable {
 
     public boolean isDoCategory() {
         return doCategory;
+    }
+    
+    public boolean isDoContent() {
+        return isDoCmsPage(); // only one for now
+    }
+    
+    public boolean isDoCmsPage() {
+        return doCmsPage;
     }
 
     public boolean isUseProductLastModDate() {

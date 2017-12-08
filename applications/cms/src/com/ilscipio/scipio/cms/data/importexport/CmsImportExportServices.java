@@ -18,15 +18,20 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.webtools.WebToolsServices;
 
+import com.ilscipio.scipio.cms.CmsServiceUtil;
+import com.ilscipio.scipio.cms.ServiceErrorFormatter;
+import com.ilscipio.scipio.cms.ServiceErrorFormatter.FormattedError;
 import com.ilscipio.scipio.cms.data.CmsEntityInfo;
 import com.ilscipio.scipio.cms.data.importexport.CmsDataExportWorker.GenericWorkerArgs;
 
 public abstract class CmsImportExportServices {
-    public static final String module = CmsImportExportServices.class.getName();
     
+    public static final String module = CmsImportExportServices.class.getName();
+    private static final ServiceErrorFormatter errorFmt = CmsServiceUtil.getErrorFormatter();
+
     protected CmsImportExportServices() {
     }
-
+    
     public static Map<String, Object> exportDataAsXmlInline(DispatchContext dctx, Map<String, Object> context) {
         Delegator delegator = dctx.getDelegator();
         //GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -81,8 +86,9 @@ public abstract class CmsImportExportServices {
             result.put("resultText", writer.toString());
             return result;
         } catch (Exception e) {
-            Debug.logError(e, "Cms: Data Export: " + e.getMessage(), module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, "Data Export error", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
     }
     
@@ -113,8 +119,9 @@ public abstract class CmsImportExportServices {
             //result.put("resultText", writer.toString());
             return result;
         } catch (Exception e) {
-            Debug.logError(e, "Cms: Data Export: " + e.getMessage(), module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, "Data Export error", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
     }
     

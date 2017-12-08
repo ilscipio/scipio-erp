@@ -1,4 +1,4 @@
-package com.ilscipio.scipio.util;
+package com.ilscipio.scipio.ce.util;
 
 import java.io.UnsupportedEncodingException;
 import java.util.concurrent.TimeUnit;

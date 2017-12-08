@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.ofbiz.base.util.Debug;
@@ -70,20 +69,78 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
         // 2017-04-11: ALWAYS copy the fields so the verification can now modify them in-place
         Map<String, Object> flds = new HashMap<>(fields);
         verifyNewFields(delegator, flds, true);
-        entity = makeValue(delegator, this.getEntityName(), flds);
+        this.entity = makeValue(delegator, this.getEntityName(), flds);
     }
     
     /**
-     * UPDATES data object, NOT persisted.
+     * Copy constructor.
+     * NOTE: This automatically tries to clear a few fields common to various subclasses
+     * so the subclasses don't have to. May need review, but I think it will be less error-prone this way.
+     * @see #copyEntityForCopy
+     */
+    public CmsDataObject(CmsDataObject other, Map<String, Object> copyArgs) {
+        this.copyEntityForCopy(other, copyArgs);
+    }
+    
+    /**
+     * UPDATES data object, NOT persisted. setIfEmpty should usually be true.
+     * <p>
+     * DEV WARNING: 2017-11: ONLY setIfEmpty=true IS PROPERLY TESTED EVERYWHERE.
+     * setIfEmpty=false IS ONLY FOR SPECIAL CASES AND CONVENIENCE CASES!
+     * THE CORE LOGIC IS ALWAYS setIfEmpty=true.
+     * USING setIfEmpty=false IN WRONG PLACES CAN CAUSE EXTREMELY DIFFICULT
+     * ERRORS TO TRACK DOWN.
      * <p>
      * Analogous to the {@link #CmsTemplate(Delegator, Map)} constructor
      * that performs the create operation.
+     * @param setIfEmpty if true, updates field as long as the key is present (containsKey);
+     *                   if false, key must be present and value non-empty for update (isNotEmpty)
      */
-    public void update(Map<String, ?> fields) {
-     // 2017-04-11: ALWAYS copy the fields so the verification can now modify them in-place
+    public void update(Map<String, ?> fields, boolean setIfEmpty) {
+        // 2017-04-11: ALWAYS copy the fields so the verification can now modify them in-place
         Map<String, Object> flds = new HashMap<>(fields);
         verifyNewFields(getDelegator(), flds, false);
-        entity.setNonPKFields(flds, true); // NOTE: setIfEmpty must be TRUE
+        entity.setNonPKFields(flds, setIfEmpty); // NOTE: setIfEmpty must be TRUE
+    }
+    
+    /**
+     * UPDATES data object, NOT persisted. ALL fields present keys are overridden even 
+     * if null or empty.
+     */
+    public final void update(Map<String, ?> fields) {
+        update(fields, true);
+    }
+
+    /**
+     * Invokes the copy constructor to make an IN-MEMORY copy, not committed until
+     * {@link CmsDataObject#store} is called.
+     * <p>
+     * The copy options are not standardized, sometimes they are simple field names.
+     */
+    public CmsDataObject copy(Map<String, Object> copyArgs) throws CmsException {
+        throw new UnsupportedOperationException();
+        // old code (reflection removed):
+        //return getWorkerInst().makeCopy(this, copyArgs);
+//        GenericValue valueCopy = getDelegator().makeValue(
+//                entity.getEntityName());
+//        
+//        valueCopy.setNonPKFields(entity.getAllFields());
+//        // no such thing in current schema
+//        //if (valueCopy.getModelEntity().isField("uuid")) {
+//        //    valueCopy.set("uuid", UUID.randomUUID().toString());
+//        //} 
+//        
+//        CmsDataObject doCopy = null;        
+//        try {
+//            getDelegator().createSetNextSeqId(valueCopy);
+//            doCopy = this.getClass().getConstructor(GenericValue.class)
+//                    .newInstance(valueCopy);
+//        } catch (Exception e) {
+//            throw new CmsException(
+//                    "Could not create copy of data object. Entity name: "
+//                            + entity.getEntityName(), e);
+//        }
+//        return doCopy;
     }
     
     /**
@@ -143,6 +200,33 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
      */
     public GenericValue getEntity() {
         return entity;
+    }
+    
+    public boolean hasId() {
+        return getId() != null;
+    }
+    
+    /**
+     * Checks if the entity contains the named field.
+     * TODO: OPTIMIZE: the ofbiz function relies on a synchronization lock
+     */
+    public boolean isField(String fieldName) {
+        return getModelEntity().isField(fieldName);
+    }
+    
+    public ModelEntity getModelEntity() {
+        return entity.getModelEntity();
+    }
+    
+    /**
+     * Returns true if entity was modified.
+     */
+    public boolean hasChanged() {
+        return entity.hasChanged();
+    }
+    
+    public boolean hasChangedOrNoId() {
+        return hasChanged() || !hasId();
     }
     
     public boolean isEntityPersisted() {
@@ -317,7 +401,7 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
     }
     
 //    public String getUuid() {
-//        if (this.entity != null && this.entity.getModelEntity().isField("uuid")) {
+//        if (this.entity != null && this.isField("uuid")) {
 //          return this.entity.getString("uuid");
 //        } else {
 //          return null;  
@@ -360,22 +444,27 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
      * For us, just avoid setNextSeqId entirely - the value it creates may already be out of date anyway.
      */
     protected void createWithNewIdIfNoneOrStore() throws CmsException {
-        try {
-            GenericValue value;
-            Delegator d = getDelegator();
-            
-            if (entity.containsPrimaryKey()) {
-                value = d.createOrStore(entity); 
-            } else {
+        GenericValue value;
+        Delegator d = getDelegator();
+        
+        if (entity.containsPrimaryKey()) {
+            try {
+                value = d.createOrStore(entity);
+            } catch(GenericEntityException e) {
+                throw new CmsDataException("Entity " + entity.getEntityName() 
+                    + " could not be stored (ID: " + entity.getPkShortValueString() + "): " + e.getMessage(), e);
+            }
+        } else {
+            try {
                 value = d.createSetNextSeqId(entity);
-            }
-    
-            if (value != null) {
-                this.entity = value;
-            }
+            } catch(GenericEntityException e) {
+                throw new CmsDataException("Entity " + entity.getEntityName() 
+                    + " could not be created (with new ID): " + e.getMessage(), e);
+            }    
         }
-        catch(GenericEntityException e) {
-            throw new CmsException("Entity " + entity.getEntityName() + " could not be stored", e);
+
+        if (value != null) {
+            this.entity = value;
         }
     }
 
@@ -434,34 +523,6 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
         return entity.getTimestamp("createdStamp");
     }
 
-    /**
-     * Makes a copy of the data object.
-     * 
-     * @return copy, needs to cast
-     * @throws CmsException 
-     */
-    public CmsDataObject copy() throws CmsException {
-        GenericValue valueCopy = getDelegator().makeValue(
-                entity.getEntityName());
-        
-        valueCopy.setNonPKFields(entity.getAllFields());
-        if (valueCopy.getModelEntity().isField("uuid")) {
-            valueCopy.set("uuid", UUID.randomUUID().toString());
-        } 
-        
-        CmsDataObject doCopy = null;        
-        try {
-            getDelegator().createSetNextSeqId(valueCopy);
-            doCopy = this.getClass().getConstructor(GenericValue.class)
-                    .newInstance(valueCopy);
-        } catch (Exception e) {
-            throw new CmsException(
-                    "Could not create copy of data object. Entity name: "
-                            + entity.getEntityName(), e);
-        }
-        return doCopy;
-    }
-
     public void setFields(Map<String, ? extends Object> fields) {
         entity.setFields(fields);
     }
@@ -479,6 +540,53 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
         // NEVER do this - always use createSetNextSeqId
         //gv.setNextSeqId();
         return gv;
+    }
+    
+    /**
+     * Copy value, without PK.
+     */
+    protected static GenericValue copyValue(GenericValue otherEntity) {
+        GenericValue gv = otherEntity.getDelegator().makeValue(otherEntity.getEntityName());
+        gv.setNonPKFields(otherEntity);
+        return gv;
+    }
+    
+    /**
+     * Core common CmsDataObject copy constructor code.
+     * (there are no final fields, so kept informal)
+     */
+    protected void copyEntityForCopy(CmsDataObject other, Map<String, Object> copyArgs) {
+        this.entity = copyValue(other.getEntity());
+        this.checkCommonEntityFieldsForCopy(other, copyArgs);
+    }
+    
+    protected void checkCommonEntityFieldsForCopy(CmsDataObject other, Map<String, Object> copyArgs) {
+        checkSetCreatedByForCopy(other, copyArgs);
+        checkClearContentIdForCopy(other, copyArgs);
+        checkClearActiveContentIdForCopy(other, copyArgs);
+    }
+    
+    protected void checkSetCreatedByForCopy(CmsDataObject other, Map<String, Object> copyArgs) {
+        if (isField("createdBy")) {
+            // Store the name of the person who created the copy (which is NOT the same as the person who
+            // created the original version)
+            String copyCreatorId = (String) copyArgs.get("copyCreatorId");
+            if (UtilValidate.isNotEmpty(copyCreatorId)) {
+                this.entity.set("createdBy", copyCreatorId);
+            }
+        }
+    }
+    
+    protected void checkClearContentIdForCopy(CmsDataObject other, Map<String, Object> copyArgs) {
+        if (isField("contentId")) {
+            this.entity.set("contentId", null);
+        }
+    }
+    
+    protected void checkClearActiveContentIdForCopy(CmsDataObject other, Map<String, Object> copyArgs) {
+        if (isField("activeContentId")) {
+            this.entity.set("activeContentId", null);
+        }
     }
 
     public void fieldsToMap(Map<String, Object> out) {
@@ -629,6 +737,14 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
         
         public abstract T makeFromFields(Delegator delegator, Map<String, ?> fields) throws CmsException;
 
+        // this turns out to be inferior to simply having copy() on the instance due to typing.
+//        /**
+//         * Invokes the copy constructor to make an IN-MEMORY copy, not committed until
+//         * {@link CmsDataObject#store} is called.
+//         * <p>
+//         * The copy options are not standardized, sometimes they are simple field names.
+//         */
+//        public abstract T makeCopy(T other, Map<String, Object> copyArgs) throws CmsException;
         
         /*
          * Find operations.

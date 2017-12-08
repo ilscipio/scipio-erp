@@ -1,9 +1,11 @@
 package com.ilscipio.scipio.cms.template;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
@@ -12,14 +14,18 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
 import com.ilscipio.scipio.cms.CmsServiceUtil;
+import com.ilscipio.scipio.cms.ServiceErrorFormatter;
+import com.ilscipio.scipio.cms.ServiceErrorFormatter.FormattedError;
 
 public abstract class CmsScriptTemplateServices {
     
     public static final String module = CmsScriptTemplateServices.class.getName();
-
+    private static final ServiceErrorFormatter errorFmt = 
+            CmsServiceUtil.getErrorFormatter().specialize().setDefaultLogMsgGeneral("Script Template Error").build();
+    
     protected CmsScriptTemplateServices() {
     }
-
+    
     public static Map<String, Object> createUpdateScriptTemplate(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Delegator delegator = dctx.getDelegator();
@@ -33,9 +39,9 @@ public abstract class CmsScriptTemplateServices {
             Map<String, Object> fields = ServiceUtil.setServiceFields(dispatcher, "cmsCreateUpdateScriptTemplate", 
                     UtilGenerics.<String, Object> checkMap(context), userLogin, null, null);
             
-            CmsScriptTemplate scriptTmp = null;
+            CmsScriptTemplate scriptTmpl = null;
             if (UtilValidate.isNotEmpty(scriptTemplateId)) {
-                scriptTmp = CmsScriptTemplate.getWorker().findByIdAlways(delegator, scriptTemplateId, false);
+                scriptTmpl = CmsScriptTemplate.getWorker().findByIdAlways(delegator, scriptTemplateId, false);
                 
                 fields.put("createdBy", (String) userLogin.get("userLoginId"));
                 
@@ -46,19 +52,45 @@ public abstract class CmsScriptTemplateServices {
                     fields.put("standalone", "Y");
                 }
                 
-                scriptTmp.update(fields);
+                scriptTmpl.update(fields);
             } else {
                 fields.put("lastUpdatedBy", (String) userLogin.get("userLoginId"));
-                scriptTmp = new CmsScriptTemplate(delegator, fields);
+                scriptTmpl = new CmsScriptTemplate(delegator, fields);
             }
             
-            scriptTmp.store();
-            result.put("scriptTemplateId", scriptTmp.getId());
+            scriptTmpl.store();
+            result.put("scriptTemplateId", scriptTmpl.getId());
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
+    }
+    
+    public static Map<String, Object> copyScriptTemplate(DispatchContext dctx, Map<String, ?> context) {
+        Delegator delegator = dctx.getDelegator();
+        Map<String, Object> copyArgs = new HashMap<>();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        if (userLogin != null) {
+            copyArgs.put("copyCreatorId", userLogin.get("partyId"));
+        }
+        try {
+            String srcScriptTemplateId = (String) context.get("srcScriptTemplateId");
+            CmsScriptTemplate srcScriptTmpl = CmsScriptTemplate.getWorker().findByIdAlways(delegator, srcScriptTemplateId, false);
+            CmsScriptTemplate scriptTmpl = srcScriptTmpl.copy(copyArgs);
+            
+            scriptTmpl.update(UtilMisc.toHashMapWithKeys(context, "templateName", "description"));
+            
+            scriptTmpl.store();
+            Map<String, Object> result = ServiceUtil.returnSuccess();
+            result.put("scriptTemplateId", scriptTmpl.getId());
+            return result;
+        } catch (Exception e) {
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
+        }
     }
     
     public static Map<String, Object> updateScriptTemplateInfo(DispatchContext dctx, Map<String, ?> context) {
@@ -70,8 +102,9 @@ public abstract class CmsScriptTemplateServices {
             scriptTmp.update(context);
             scriptTmp.store();
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
@@ -89,8 +122,9 @@ public abstract class CmsScriptTemplateServices {
             result.put("scriptTemplateValue", scriptTemplate.getEntity());
             result.put("scriptTemplate", scriptTemplate);
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnFailure(e.getMessage()); // FIXME: Shouldn't be failure here or anywhere else!
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnFailure();
         }
         return result;
     }
@@ -103,8 +137,9 @@ public abstract class CmsScriptTemplateServices {
             CmsScriptTemplate template = CmsScriptTemplate.getWorker().findByIdAlways(delegator, scriptTemplateId, false);
             template.remove();
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
@@ -117,8 +152,9 @@ public abstract class CmsScriptTemplateServices {
             CmsScriptTemplate template = CmsScriptTemplate.getWorker().findByIdAlways(delegator, scriptTemplateId, false);
             template.removeIfOrphan();
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }

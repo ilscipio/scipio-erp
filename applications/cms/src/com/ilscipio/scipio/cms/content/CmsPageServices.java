@@ -1,6 +1,7 @@
 package com.ilscipio.scipio.cms.content;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -24,6 +25,8 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
 import com.ilscipio.scipio.cms.CmsServiceUtil;
+import com.ilscipio.scipio.cms.ServiceErrorFormatter;
+import com.ilscipio.scipio.cms.ServiceErrorFormatter.FormattedError;
 import com.ilscipio.scipio.cms.content.CmsPage.CmsPageScriptAssoc;
 import com.ilscipio.scipio.cms.content.CmsPage.UserRole;
 import com.ilscipio.scipio.cms.template.CmsPageTemplate;
@@ -32,16 +35,13 @@ import com.ilscipio.scipio.cms.template.RendererType;
 public abstract class CmsPageServices {
 
     public static final String module = CmsPageServices.class.getName();
+    private static final ServiceErrorFormatter errorFmt = CmsServiceUtil.getErrorFormatter();
 
     protected CmsPageServices() {
     }
     
     /**
      * Returns the page content, template and information of a page.
-     * 
-     * @param dctx
-     * @param context
-     * @return
      */
     public static Map<String, Object> getPage(DispatchContext dctx, Map<String, ?> context) {
         Delegator delegator = dctx.getDelegator();
@@ -95,7 +95,7 @@ public abstract class CmsPageServices {
                     webSiteId = page.getWebSiteId();
                     if (UtilValidate.isEmpty(webSiteId) && candidateWebSiteIds.size() > 0) {
                         webSiteId = candidateWebSiteIds.iterator().next();
-                    }    
+                    }
                     if (UtilValidate.isEmpty(webSiteId)) {
                         return ServiceUtil.returnFailure("Could not fetch data for pageId '" + pageId + "' "
                                 + "because no webSiteId passed and no static placeholder found associated to page to use");
@@ -155,13 +155,13 @@ public abstract class CmsPageServices {
             result.put("webSiteId", webSiteId);
             result.put("scriptTemplates", page.getSortedScriptTemplates());
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnFailure("Error while querying for page (pageId: " + pageId + ")");
+            FormattedError err = errorFmt.format(e, "Error while querying for page (pageId: " + pageId + ")", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnFailure();
         }
 
         return result;
     }
-
 
     public static List<Map<String, ?>> getPageVariablesDescriptor(Map<String, Object> root) {
         List<Map<String, ?>> children = new ArrayList<>();
@@ -194,12 +194,6 @@ public abstract class CmsPageServices {
     /**
      * Creates a new page version in the repository. The content is not live
      * until it is approved.
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> addPageVersion(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -217,8 +211,9 @@ public abstract class CmsPageServices {
             version.store();
             result.put("versionId", version.getId());
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, "Error adding page version (pageId: " + context.get("pageId") + ")", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
@@ -226,12 +221,6 @@ public abstract class CmsPageServices {
     /**
      * Creates a new page in the repository. Adds an empty version to it
      * afterwards.
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> createPage(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -257,6 +246,15 @@ public abstract class CmsPageServices {
                     UtilGenerics.<String, Object> checkMap(context), userLogin, null, null);
             fields.put("primaryPath", primaryPath);
             fields.put("primaryTargetPath", primaryTargetPath);
+            
+            // 2017-11-29: new pages will have their primary process mapping set active false,
+            // then first publish operation will then toggle it to true.
+            // see activePageVersion service below
+            Object initialActive = fields.get("active");
+            if (CmsPage.newPagePrimaryProcessMappingActive != null && (initialActive == null || (initialActive instanceof String && ((String) initialActive).isEmpty()))) {
+                fields.put("active", CmsPage.newPagePrimaryProcessMappingActive);
+            }
+            
             CmsPage page = CmsPage.createAndStoreWithPrimaryProcessMapping(delegator, fields);
 
             // Add Base user authorization
@@ -273,12 +271,51 @@ public abstract class CmsPageServices {
             result.put("path", primaryPath); // DEPRECATED: TODO: REMOVE
             result.put("webSiteId", context.get("webSiteId"));
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, "Error creating page", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
 
+    public static Map<String, Object> copyPage(DispatchContext dctx, Map<String, ?> context) {
+        Delegator delegator = dctx.getDelegator();
+        Map<String, Object> copyArgs = new HashMap<>();
+        copyArgs.put("webSiteId", context.get("webSiteId"));
+        
+        Map<String, Object> primaryProcessMappingCopyArgs = new HashMap<>();
+        primaryProcessMappingCopyArgs.put("webSiteId", context.get("webSiteId"));
+        primaryProcessMappingCopyArgs.put("primaryPath", context.get("primaryPath"));
+        primaryProcessMappingCopyArgs.put("primaryPathFromContextRoot", context.get("primaryPathFromContextRoot"));
+        if (CmsPage.newPagePrimaryProcessMappingActive != null) {
+            primaryProcessMappingCopyArgs.put("active", CmsPage.newPagePrimaryProcessMappingActive);
+        }
+        copyArgs.put("primaryProcessMapping", primaryProcessMappingCopyArgs);
+        
+        copyArgs.put("copyVersionId", context.get("srcVersionId"));
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        if (userLogin != null) {
+            copyArgs.put("copyCreatorId", userLogin.get("partyId"));
+        }
+        try {
+            String srcPageId = (String) context.get("srcPageId");
+            CmsPage srcPage = CmsPage.getWorker().findByIdAlways(delegator, srcPageId, false);
+            CmsPage page = srcPage.copy(copyArgs);
+            
+            page.update(UtilMisc.toHashMapWithKeys(context, "pageName", "description"));
+            
+            page.store();
+            Map<String, Object> result = ServiceUtil.returnSuccess();
+            result.put("pageId", page.getId());
+            result.put("webSiteId", context.get("webSiteId"));
+            return result;
+        } catch (Exception e) {
+            FormattedError err = errorFmt.format(e, "Error copying page (pageId: " + context.get("srcPageId") + ")", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
+        }
+    }
+    
     public static Map<String, Object> updatePageInfo(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Delegator delegator = dctx.getDelegator();
@@ -293,8 +330,9 @@ public abstract class CmsPageServices {
             page.update(fields);
             page.store();
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, "Error updating page settings (pageId: " + context.get("pageId") + ")", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
@@ -302,12 +340,6 @@ public abstract class CmsPageServices {
     /**
      * Sets a page version as live version. The live version is the content that
      * will be displayed to regular page visitors.
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> activatePageVersion(DispatchContext dctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
@@ -317,12 +349,31 @@ public abstract class CmsPageServices {
             String versionId = (String) context.get("versionId");
             CmsPage page = CmsPage.getWorker().findByIdAlways(delegator, pageId, false);
             page.setActiveVersion(versionId);
+            
+            // 2017-11-29: new pages will have their primary process mapping set active false,
+            // then first publish operation will then toggle it to true.
+            // see createPage service above
+            Map<String, Object> fields = new HashMap<>();
+            fields.put("active", "Y");
+            Collection<String> webSiteIds = page.getPrimaryProcessMappingsWebSiteIds();
+            if (webSiteIds!= null && webSiteIds.size() > 0) {
+                for(String webSiteId : webSiteIds) {
+                    fields.put("webSiteId", webSiteId);
+                    page.setPrimaryProcessMappingFields(fields, true);
+                }
+            } else {
+                Debug.logWarning("Cms: activatePageVersion: Page '" + pageId 
+                        + "' appears to have no primary process mapping webSiteIds"
+                        + " - cannot activate primary process mapping - activation may be incomplete", module);
+            }
+            
             page.store();
             result.put("pageId", pageId);
             result.put("versionId", versionId);
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, "Error activating page version (pageId: " + context.get("pageId") + ")", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
@@ -335,8 +386,9 @@ public abstract class CmsPageServices {
         try {
             CmsPageScriptAssoc.getWorker().createUpdateScriptTemplateAndAssoc(delegator, context, userLogin);
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError("Error while updating Script Template Assoc: " + e.getMessage()); // TODO?: Localize
+            FormattedError err = errorFmt.format(e, "Error updating Script Template Association for page (pageId: " + context.get("pageId") + ")", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
@@ -349,20 +401,15 @@ public abstract class CmsPageServices {
             CmsPage page = CmsPage.getWorker().findByIdAlways(delegator, pageId, false);
             page.remove();
         } catch (Exception e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            FormattedError err = errorFmt.format(e, "Error deleting page (pageId: " + context.get("pageId") + ")", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
         }
         return result;
     }
     
     /**
-     * Returns all pages for the current user
-     * 
-     * @param dctx
-     *            The DispatchContext that this service is operating in
-     * @param context
-     *            Map containing the input parameters
-     * @return Map with the result of the service, the output parameters
+     * Returns all pages for the current user.
      */
     public static Map<String, Object> getPages(DispatchContext dctx, Map<String, ?> context) {
         Delegator delegator = dctx.getDelegator();
@@ -377,47 +424,52 @@ public abstract class CmsPageServices {
         boolean shortDesc = !Boolean.FALSE.equals(context.get("short"));
         boolean editable = Boolean.TRUE.equals(context.get("editable"));
         
-        // NOTE: if webSiteId set we'll manually filter in loop for now... (TODO: optimize later) 
-        List<CmsPage> pages = CmsPage.getWorker().findAll(delegator, false); // findAllWithWebsite(delegator, false)
-        
         List<Map<String, ?>> pagesList = new ArrayList<>();
-
-        for (CmsPage page : pages) {
-            String pageWebSiteId;
-            if (webSiteId != null) {
-                // CHECK to make sure this page is linked against the specified webSiteId.
-                // TODO: turn this into faster query later.
-                if (!page.isLinkedToWebSiteId(webSiteId)) {
-                    continue;
+        try {
+            // NOTE: if webSiteId set we'll manually filter in loop for now... (TODO: optimize later) 
+            List<CmsPage> pages = CmsPage.getWorker().findAll(delegator, false); // findAllWithWebsite(delegator, false)
+    
+            for (CmsPage page : pages) {
+                String pageWebSiteId;
+                if (webSiteId != null) {
+                    // CHECK to make sure this page is linked against the specified webSiteId.
+                    // TODO: turn this into faster query later.
+                    if (!page.isLinkedToWebSiteId(webSiteId)) {
+                        continue;
+                    }
+    
+                    pageWebSiteId = webSiteId;
+                } else {
+                    // For organization purposes in this method (ONLY), prefer the CmsPage.webSiteId; if empty get from primary mapping
+                    pageWebSiteId = page.getWebSiteId();
+                    if (UtilValidate.isEmpty(pageWebSiteId)) {
+                        pageWebSiteId = page.getPrimaryWebSiteId();
+                    }
                 }
-
-                pageWebSiteId = webSiteId;
-            } else {
-                // For organization purposes in this method (ONLY), prefer the CmsPage.webSiteId; if empty get from primary mapping
-                pageWebSiteId = page.getWebSiteId();
-                if (UtilValidate.isEmpty(pageWebSiteId)) {
-                    pageWebSiteId = page.getPrimaryWebSiteId();
+    
+                Map<String, Object> pageMap;
+                if (shortDesc) {
+                    pageMap = page.getShortDescriptor(pageWebSiteId, locale);
+                } else {
+                    pageMap = page.getDescriptor(pageWebSiteId, locale);
                 }
-            }
-
-            Map<String, Object> pageMap;
-            if (shortDesc) {
-                pageMap = page.getShortDescriptor(pageWebSiteId, locale);
-            } else {
-                pageMap = page.getDescriptor(pageWebSiteId, locale);
-            }
-
-            if (editable) {
-                String userId = CmsServiceUtil.getUserId(context);
-                UserRole userRole = page.getUserAuthorization(userId, delegator, dispatcher);
-                if (userRole != UserRole.CMS_VISITOR) {
-                    pageMap.put("permission", userRole.toString());
+    
+                if (editable) {
+                    String userId = CmsServiceUtil.getUserId(context);
+                    UserRole userRole = page.getUserAuthorization(userId, delegator, dispatcher);
+                    if (userRole != UserRole.CMS_VISITOR) {
+                        pageMap.put("permission", userRole.toString());
+                        pagesList.add(pageMap);
+                    }
+    
+                } else {
                     pagesList.add(pageMap);
                 }
-
-            } else {
-                pagesList.add(pageMap);
             }
+        } catch(Exception e) {
+            FormattedError err = errorFmt.format(e, "Error getting pages", context);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnFailure();
         }
         result.put("pages", pagesList);
         return result;

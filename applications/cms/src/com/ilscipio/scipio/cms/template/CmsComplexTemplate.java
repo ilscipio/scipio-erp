@@ -33,9 +33,24 @@ public abstract class CmsComplexTemplate extends CmsTemplate {
         super(delegator, fields);
     }
     
+    protected CmsComplexTemplate(CmsComplexTemplate other, Map<String, Object> copyArgs) {
+        super(other, copyArgs);
+        this.attributeTemplates = copyAttributeTemplates(this, other.getAttributeTemplates(), copyArgs);
+    }
+    
+    public static List<CmsAttributeTemplate> copyAttributeTemplates(CmsComplexTemplate template, List<CmsAttributeTemplate> otherAttr, Map<String, Object> copyArgs) {
+        List<CmsAttributeTemplate> attrList = new ArrayList<>(otherAttr.size());
+        for(CmsAttributeTemplate attr : otherAttr) {
+            CmsAttributeTemplate attrCopy = attr.copy(copyArgs);
+            attrCopy.clearTemplate(); // these will be updated on store
+            attrList.add(attrCopy);
+        }
+        return attrList;
+    }
+    
     @Override    
-    public void update(Map<String, ?> fields) {
-        super.update(fields);
+    public void update(Map<String, ?> fields, boolean setIfEmpty) {
+        super.update(fields, setIfEmpty);
     }
     
     /**
@@ -180,7 +195,10 @@ public abstract class CmsComplexTemplate extends CmsTemplate {
         
         if (this.attributeTemplates != null) {
             for(CmsAttributeTemplate attributeTemplate : this.attributeTemplates) {
-                attributeTemplate.store();
+                if (!attributeTemplate.hasTemplate()) {
+                    attributeTemplate.setTemplate(this);
+                    attributeTemplate.store();
+                }
             }
         }
     }
@@ -202,23 +220,6 @@ public abstract class CmsComplexTemplate extends CmsTemplate {
             rowsAffected += removeAll(attributeTemplates);
         }
         return rowsAffected + super.remove();
-    }
-
-    public CmsComplexTemplate copy() {
-        // copy the template itself
-        CmsComplexTemplate templateCopy = (CmsComplexTemplate) super.copy();
-        
-        // copy attribute templates
-        List<CmsAttributeTemplate> attributeTemplates = getAttributeTemplates();
-        if (attributeTemplates != null) {
-            for (CmsAttributeTemplate attributeTemplate : getAttributeTemplates()) {
-                CmsAttributeTemplate attributeTemplateCopy = (CmsAttributeTemplate) attributeTemplate.copy();
-                attributeTemplateCopy.store();
-                templateCopy.addAttributeTemplate(attributeTemplateCopy);
-            }
-        }
-
-        return templateCopy;
     }
     
     @Override

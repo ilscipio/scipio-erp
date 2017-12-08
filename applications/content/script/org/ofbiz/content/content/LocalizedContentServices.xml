@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+  -->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
+
+    <!-- SCIPIO: 2017-12-06: New services file dedicated to localization services -->
+    
+    <!-- SCIPIO: 2017-12-06: MOVED here from component://product/script/org/ofbiz/product/product/ProductContentServices.xml,
+        because it did not belong there at all (DEV NOTE: this is a rare exception! and is very short) -->
+    <simple-method method-name="createSimpleTextContentForAlternateLocale" short-description="Create Simple Text Content For Alternate Locale">
+        <set-service-fields service-name="createSimpleTextContent" map="parameters" to-map="createSimpleTextMap"/>
+        <call-service service-name="createSimpleTextContent" in-map-name="createSimpleTextMap">
+            <result-to-field result-name="contentId" field="createContentAssocMap.contentIdTo"/>
+        </call-service>
+        <set field="createContentAssocMap.contentId" from-field="parameters.mainContentId"/>
+        <set field="createContentAssocMap.contentAssocTypeId" value="ALTERNATE_LOCALE"/>
+        <call-service service-name="createContentAssoc" in-map-name="createContentAssocMap"/>
+    </simple-method>
+    
+    <!-- SCIPIO: 2017-10-26: new update service to match the create -->
+    <simple-method method-name="updateSimpleTextContentForAlternateLocale" short-description="Update Simple Text Content For Alternate Locale (SCIPIO)">
+        <call-simple-method method-name="checkSimpleTextContentAssoc"/>
+        <check-errors/>
+ 
+        <!-- NOTE: this update is only to keep compat with createSimpleTextContentForAlternateLocale -->
+        <entity-one entity-name="Content" value-field="content" auto-field-map="false">
+            <field-map field-name="contentId" from-field="parameters.contentId"/>
+        </entity-one>
+        <set-nonpk-fields value-field="content" map="parameters"/>
+        <store-value value-field="content"/>
+ 
+        <set-service-fields service-name="updateSimpleTextContent" map="parameters" to-map="updateCtx"/>
+        <set field="updateCtx.textDataResourceId" from-field="content.dataResourceId"/>
+        <call-service service-name="updateSimpleTextContent" in-map-name="updateCtx"/>
+    </simple-method>
+    
+    <!-- SCIPIO: 2017-10-26: new delete service to match the create -->
+    <simple-method method-name="deleteSimpleTextContentForAlternateLocale" short-description="Delete Simple Text Content For Alternate Locale (SCIPIO)">
+        <call-simple-method method-name="checkSimpleTextContentAssoc"/>
+        <check-errors/>
+        
+        <set-service-fields service-name="removeContentAndRelated" map="parameters" to-map="removeCtx"/>
+        <call-service service-name="removeContentAndRelated" in-map-name="removeCtx"/>
+    </simple-method>
+    
+    <simple-method method-name="checkSimpleTextContentAssoc">
+        <entity-and entity-name="ContentAssoc" list="assocList" filter-by-date="true">
+            <field-map field-name="contentId" from-field="parameters.mainContentId"/>
+            <field-map field-name="contentAssocTypeId" value="ALTERNATE_LOCALE"/>
+            <field-map field-name="contentIdTo" from-field="parameters.contentId"/>
+        </entity-and>
+        <if-empty field="assocList">
+            <set field="contentId" from-field="parameters.contentId"/>
+            <!-- FIXME: poor error message -->
+            <property-to-field resource="ContentUiLabels" property="ContentNoContentFound" field="errMsg"/>
+            <add-error><fail-message message="${errMsg} (mainContentId: ${parameters.mainContentId})"/></add-error>
+            <check-errors/>
+        </if-empty>
+    </simple-method>
+    
+    <!-- SCIPIO: 2017-10-26: new service to create OR update the alt-locale content intelligently -->
+    <simple-method method-name="createUpdateSimpleTextContentForAlternateLocale" short-description="Create/Update Simple Text Content For Alternate Locale (SCIPIO)">
+        <if-not-empty field="parameters.contentId">
+            <set-service-fields service-name="updateSimpleTextContentForAlternateLocale" map="parameters" to-map="updateCtx"/>
+            <call-service service-name="updateSimpleTextContentForAlternateLocale" in-map-name="updateCtx"/>
+            <else>
+                <entity-one entity-name="Content" value-field="mainContent" auto-field-map="false">
+                    <field-map field-name="contentId" from-field="parameters.mainContentId"/>
+                </entity-one>
+                <if-empty field="mainContent">
+                    <set field="contentId" from-field="parameters.mainContentId"/>
+                    <add-error><fail-property resource="ContentUiLabels" property="ContentNoContentFound"/></add-error>
+                    <check-errors/>
+                </if-empty>
+                
+                <if-compare-field field="mainContent.localeString" operator="equals" to-field="parameters.localeString">
+                    <set field="updateCtx.textDataResourceId" from-field="mainContent.dataResourceId"/>
+                    <set field="updateCtx.text" from-field="parameters.text"/>
+                    <call-service service-name="updateSimpleTextContent" in-map-name="updateCtx"/>
+                    <else>
+                        <entity-and entity-name="ContentAssoc" list="assocList" filter-by-date="true">
+                            <field-map field-name="contentId" from-field="parameters.mainContentId"/>
+                            <field-map field-name="contentAssocTypeId" value="ALTERNATE_LOCALE"/>
+                        </entity-and>
+                        <set field="localeFound" type="Boolean" value="false"/>
+                        <iterate list="assocList" entry="contentAssoc">
+                            <get-related-one value-field="contentAssoc" relation-name="ToContent" to-value-field="content" />
+                            <if-compare-field field="content.localeString" operator="equals" to-field="parameters.localeString">
+                                <set field="localeFound" type="Boolean" value="true"/>
+                                
+                                <set field="updateCtx.textDataResourceId" from-field="content.dataResourceId"/>
+                                <set field="updateCtx.text" from-field="parameters.text"/>
+                                <call-service service-name="updateSimpleTextContent" in-map-name="updateCtx"/>
+                                <break/>
+                            </if-compare-field>
+                        </iterate>
+                        <if-compare field="localeFound" operator="equals" type="Boolean" value="false">
+                            <!-- create new -->
+                            <set-service-fields service-name="createSimpleTextContent" map="parameters" to-map="createCtx"/>
+                            <call-service service-name="createSimpleTextContent" in-map-name="createCtx">
+                                <result-to-result result-name="contentId"/>
+                            </call-service>
+                        </if-compare>
+                    </else>
+                </if-compare-field>
+            </else>
+        </if-not-empty>
+    </simple-method>
+</simple-methods>

@@ -7,8 +7,15 @@
         UtilMisc and may be subject to user configuration restrictions (now or in the future).
         Country expansion implications are currently unclear and should only
         be used in backend, not public frontend, for the time being.
+        
+    2017-12-07: New special no-locale value: noneKey="none". This can be used to signal
+    when explicitly a none/blank locale value was selected. Typically you can pass
+    this as fallback:
+      <@availableLocalesOptions currentLocale=myEntity.localeString!"none" .../>
+    This can be used with the new option allowExtraEmpty=true.
+    
     TODO: REVIEW: the country expansion implications are currently unclear (not supported in stock ofbiz)... -->
-<#macro availableLocalesOptions availableLocales=true expandCountries=false requireCountries=false currentLocale="" allowExtra=false allowEmpty=false>
+<#macro availableLocalesOptions availableLocales=true expandCountries=false requireCountries=false currentLocale="" noneKey="none" allowExtra=false allowEmpty=false allowExtraEmpty=false>
     <#if availableLocales?is_boolean>
       <#if expandCountries>
         <#if requireCountries>
@@ -36,7 +43,7 @@
           <#lt/><#if localeSelected> selected="selected"</#if>>${availableLocale.getDisplayName(availableLocale)} &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp; [${availableLocale.toString()}]</option>
     </#list>
     </#local>
-    <#if allowExtra && !localeFound && currentLocale?has_content>
+    <#if allowExtra && !localeFound && currentLocale?has_content && currentLocale != noneKey>
         <#local availableLocale = Static["org.ofbiz.base.util.UtilMisc"].parseLocale(rawString(currentLocale!))!>
         <#local langAttr = availableLocale.toString()?replace("_", "-")>
         <#local langDir = "ltr">
@@ -47,7 +54,9 @@
           <#lt/> selected="selected">${availableLocale.getDisplayName(availableLocale)} &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp; [${availableLocale.toString()}]</option>
     </#if>
     <#if allowEmpty>
-      <option value=""></option>
+      <option value=""<#if currentLocale == noneKey> selected="selected"</#if>></option>
+    <#elseif allowExtraEmpty && currentLocale == noneKey>
+      <option value="" selected="selected"></option>
     </#if>
     ${localeMarkup}
 </#macro>

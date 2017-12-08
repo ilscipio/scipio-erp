@@ -53,7 +53,7 @@ function StcLocFieldHandler(data) {
     var slfh = this;
  
     var reportInternalError = function(msg) {
-        alert("Internal error (ui): " + msg);
+        alert("Internal error: simple text content localized fields: " + msg);
     };
     
     this.makeLocFieldNamePrefix = function(paramNamePrefix, typeName, index) {
@@ -71,19 +71,16 @@ function StcLocFieldHandler(data) {
         return slfh.getLocFieldDataCntElem(fieldCnt).data(attrName);
     };
     
-    this.getLocFieldDataValueRequired = function(fieldCnt, attrName) {
-        var value = slfh.getLocFieldDataValue(fieldCnt, attrName);
-        if (!value) {
-            reportInternalError('missing data-'+attrName+' html custom attribute on localized field');
-            return null;
-        }
+    this.getLocFieldDataValueAlways = function(fieldCnt, attrName) {
+        var value = slfh.getLocFieldDataCntElem(fieldCnt).data(attrName);
+        if (!value) throw new Error('missing data-'+attrName+' html custom attribute on localized field');
         return value;
     };
     
     this.findFieldCntForTypeName = function(typeName, allFieldsCnt) {
         var dataCnt = jQuery('*[data-stclf-type-name="'+typeName+'"]', allFieldsCnt);
         if (!dataCnt.length) {
-            return null; // form doesn't support
+            return null; // form doesn't support - not an error
         }
         var fieldCnt;
         if (dataCnt.hasClass('stc-locfield')) {
@@ -91,56 +88,96 @@ function StcLocFieldHandler(data) {
         } else {
             fieldCnt = dataCnt.closest('.stc-locfield');
             if (!fieldCnt.length) {
-                reportInternalError('missing stc-locfield class on localized field');
-                return null;
+                throw new Error('missing stc-locfield class on localized field');
             }
         }
         return fieldCnt;
     };
     
     /**
+     * Constructor.
+     */
+    var LocalizedFieldProps = function(fieldCnt, typeName, allFieldsCnt) {
+        if (!fieldCnt) {
+            if (!typeName || !allFieldsCnt) {
+                throw new Error('invalid getLocalizedFieldProps call arguments');
+            }
+            fieldCnt = slfh.findFieldCntForTypeName(typeName, allFieldsCnt);
+            if (!fieldCnt) {
+                // if returned null, means form doesn't support the type - this is plausible (not error)
+                this.typeUnsupported = true
+                return;
+            }
+        } else if (!typeName) {
+            typeName = slfh.getLocFieldDataValueAlways(fieldCnt, 'stclfTypeName');
+        }
+        this.fieldCnt = fieldCnt;
+        this.typeName = typeName;
+
+        this.paramNamePrefix = slfh.getLocFieldDataValueAlways(fieldCnt, 'stclfParamNamePrefix');
+        
+        this.markup = {};
+        // NOTE: template markup is embedded in the html, now under the field itself (due to styling workaround)
+        this.markup.mainEntry = jQuery('.stc-locfield-markup-mainEntry:first', fieldCnt);
+        if (!this.markup.mainEntry.length) {
+            throw new Error('missing stc-locfield-markup-mainEntry html-embedded template');
+        }
+        
+        var altEntry = jQuery('.stc-locfield-markup-altEntry:first', fieldCnt);
+        if (!altEntry.length) {
+            altEntry = this.markup.mainEntry;
+        }
+        this.markup.altEntry = altEntry;
+
+        this.entries = jQuery('.stc-locfield-entries', fieldCnt);
+        if (!this.entries.length) {
+            throw new Error('missing stc-locfield-entries container');
+        }
+    };  
+    
+    /**
      * needs at least either: fieldCnt OR (typeName AND allFieldsCnt)
      */
     this.getLocalizedFieldProps = function(fieldCnt, typeName, allFieldsCnt) {
-        if (!fieldCnt) {
-            if (!typeName || !allFieldsCnt) {
-                reportInternalError('invalid getLocalizedFieldProps call');
-                return null;
-            }
-            fieldCnt = slfh.findFieldCntForTypeName(typeName, allFieldsCnt);
-            if (!fieldCnt) return null;
-        } else if (!typeName) {
-            typeName = slfh.getLocFieldDataValueRequired(fieldCnt, 'stclfTypeName');
-            if (!typeName) return null;
-        }
-
-        var paramNamePrefix = slfh.getLocFieldDataValueRequired(fieldCnt, 'stclfParamNamePrefix');
-        
-        // NOTE: template markup is embedded in the html, now under the field itself (due to styling workaround)
-        var entryMarkupTmpl = jQuery('.stc-markup-locFieldEntry:first', fieldCnt);
-        if (!entryMarkupTmpl.length) {
-            reportInternalError('missing stc-markup-locFieldEntry html-embedded template');
+        try {
+            var fieldProps = new LocalizedFieldProps(fieldCnt, typeName, allFieldsCnt);
+            if (fieldProps.typeUnsupported) return null;
+            return fieldProps;
+        } catch(e) {
+            reportInternalError("error initializing localized fields: " + e.message);
             return null;
-        }
-
-        var entries = jQuery('.stc-locfield-entries', fieldCnt);
-        if (!entries.length) {
-            reportInternalError('missing stc-locfield-entries container');
-            return null;
-        }
-        return { fieldCnt:fieldCnt, typeName:typeName, entryMarkupTmpl:entryMarkupTmpl, 
-            entries:entries, paramNamePrefix:paramNamePrefix };
+        } 
     };
     
-    this.buildLocalizedFieldEntry = function(fieldProps, index, entryData) {
-        var entryMarkupTmpl = fieldProps.entryMarkupTmpl,
-            paramNamePrefix = fieldProps.paramNamePrefix,
-            typeName = fieldProps.typeName;
-        
-        var entryMarkup = ScpCntFormMarkup.getCntMarkup(entryMarkupTmpl);
+    var optionsContainValue = function(options, value) {
+        var found = false;
+        jQuery.each(options, function(i, e) {
+            if(jQuery(e).val() === value) {
+                found = true;
+                return false;
+            }
+        });
+        return found;
+    };
+    
+    this.buildLocalizedFieldEntry = function(fieldProps, entryIndex, entryData, strictLocale) {
+        var entryMarkup = ScpCntFormMarkup.getCntMarkup((entryIndex == 0) ? fieldProps.markup.mainEntry : fieldProps.markup.altEntry);
         if (!entryMarkup || !entryMarkup.length) return null;
-        var namePrefix = slfh.makeLocFieldNamePrefix(paramNamePrefix, typeName, index);
-        jQuery('.stc-locfield-locale', entryMarkup).attr('name', namePrefix+'localeString').val(entryData.localeString || '');
+        var namePrefix = slfh.makeLocFieldNamePrefix(fieldProps.paramNamePrefix, fieldProps.typeName, entryIndex);
+        
+        var localeString = entryData.localeString || '';
+        var localeSelectElem = jQuery('.stc-locfield-locale', entryMarkup);
+        if (strictLocale !== true) {
+            // SPECIAL: Must check if locale already in list; if not we must add a new emergency
+            // entry, otherwise we misrepresent the system state and confuse the user.
+            // THIS INCLUDES BLANK - if DB contained a blank locale at a non-first entry, we must show that to user so
+            // he can fix it.
+            if (!optionsContainValue(jQuery('option', localeSelectElem), localeString)) {
+                // FIXME: we don't have the locale label in this case... but not a serious issue
+                localeSelectElem.prepend('<option value="'+localeString+'" selected="selected">'+localeString+'</option>');
+            }
+        }
+        localeSelectElem.attr('name', namePrefix+'localeString').val(localeString);
         jQuery('.stc-locfield-text', entryMarkup).attr('name', namePrefix+'textData').val(entryData.textData || '');
         return entryMarkup;
     };
@@ -153,7 +190,7 @@ function StcLocFieldHandler(data) {
         fieldProps.entries.empty();
         
         if (entryDataList && entryDataList.length) {
-            // add the main/default entry (Product[Category]Content, index zero) + ContentAssoc entries
+            // add the main/default entry (Product[Category]Content, index zero) + alt entries (ContentAssoc ALTERNATE_LOCALE)
             jQuery.each(entryDataList, function(index, entryData) {
                 var entryMarkup = slfh.buildLocalizedFieldEntry(fieldProps, index, entryData);
                 if (entryMarkup) {
@@ -170,6 +207,7 @@ function StcLocFieldHandler(data) {
     };
     
     this.removeAllLocalizedFieldEntries = function(allFieldsCnt, typeNames, entryDataListsByType) {
+        if (!entryDataListsByType) entryDataListsByType = {};
         jQuery.each(typeNames, function(index, typeName) {
             var fieldProps = slfh.getLocalizedFieldProps(null, typeName, allFieldsCnt);
             if (fieldProps) { // if null, either error or not supported by form
@@ -179,6 +217,7 @@ function StcLocFieldHandler(data) {
     };
     
     this.rebuildAllLocalizedFieldEntries = function(allFieldsCnt, typeNames, entryDataListsByType) {
+        if (!entryDataListsByType) entryDataListsByType = {};
         jQuery.each(typeNames, function(index, typeName) {
             var fieldProps = slfh.getLocalizedFieldProps(null, typeName, allFieldsCnt);
             if (fieldProps) { // if null, either error or not supported by form
@@ -187,12 +226,12 @@ function StcLocFieldHandler(data) {
         });
     };
 
-    this.addLocalizedFieldEntry = function(fieldProps, entryData) {
+    this.addLocalizedFieldEntry = function(fieldProps, entryData, strictLocale) {
         if (!entryData) entryData = {}; // adds empty
         
         var index = jQuery('.stc-locfield-entry', fieldProps.fieldCnt).length; // starts at zero
         
-        var entryMarkup = slfh.buildLocalizedFieldEntry(fieldProps, index, entryData);
+        var entryMarkup = slfh.buildLocalizedFieldEntry(fieldProps, index, entryData, strictLocale);
         if (entryMarkup) {
             fieldProps.entries.append(entryMarkup);
         }
@@ -204,7 +243,7 @@ function StcLocFieldHandler(data) {
         if (fieldCnt.length) {
             var fieldProps = slfh.getLocalizedFieldProps(fieldCnt);
             if (!fieldProps) return;
-            slfh.addLocalizedFieldEntry(fieldProps, {});
+            slfh.addLocalizedFieldEntry(fieldProps, null, true);
         } else {
             reportInternalError('missing stc-locfield class on localized field');
         }
@@ -216,23 +255,7 @@ function StcLocFieldHandler(data) {
      * this is better than texts silently disappearing.
      */
     this.parseViewsByType = function(viewsByType) {
-        /* don't have to do anything; names already match
-        var entryDataListsByType = {};
-        jQuery.each(viewsByType, function(typeName, viewList) {
-            var entryDataList = [];
-            if (viewList) {
-                for(var i=0; i < viewList.length; i++) {
-                    var view = viewList[i];
-                    entryDataList.push({
-                        localeString:view.localeString,
-                        textData:view.textData
-                    });
-                }
-            }
-            entryDataListsByType[typeName] = entryDataList;
-        });
-        return entryDataListsByType;
-        */
+        // currently nothing to do here; field names (localeString, textData) already match
         return viewsByType;
     };
 }

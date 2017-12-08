@@ -16467,6 +16467,10 @@
         <value xml:lang="en">Localized Fields</value>
         <value xml:lang="de">Lokalisierte Felder</value>
     </property>
+    <property key="CommonUpdateLocalizedFields">
+        <value xml:lang="en">Update localized fields</value>
+        <value xml:lang="de">Aktualisieren Sie lokalisierte Felder</value>
+    </property>
     <property key="CommonFunctionalityWorkInProgressWarning">
         <value xml:lang="en">Warning: This functionality is a Work-In-Progress. Please backup any important data before attempting to use.</value>
         <value xml:lang="de">Warnung: Diese Funktionalität ist ein Work-In-Progress. Bitte sichern Sie alle wichtigen Daten, bevor Sie sie verwenden.</value>

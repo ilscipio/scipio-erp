@@ -73,7 +73,7 @@ under the License.
         </@row>
         <@row>
             <@cell columns=12>
-              <@field type="input" label=uiLabelMap.CommonName value=((productCategory.categoryName)!) name="categoryName" size="60" maxlength="60"/>
+              <@field type="input" label=uiLabelMap.CommonName value=((productCategory.categoryName)!) name="categoryName" size="60" maxlength="60" tooltip=uiLabelMap.ProductFieldNonLocalizedSeeContentPageForLocalizedFields/>
             </@cell>
         </@row>
         <@row>
@@ -94,7 +94,7 @@ under the License.
         </@row>
         <@row>
             <@cell columns=12>
-              <@field type="textarea" label=uiLabelMap.CommonDescription name="description" cols="60" rows="2"><#if productCategory?has_content>${(productCategory.description)!}</#if></@field>
+              <@field type="textarea" label=uiLabelMap.CommonDescription name="description" cols="60" rows="2" tooltip=uiLabelMap.ProductFieldNonLocalizedSeeContentPageForLocalizedFields><#if productCategory?has_content>${(productCategory.description)!}</#if></@field>
             </@cell>
         </@row>
 

@@ -40,21 +40,8 @@ context.ectIsEventError = isEventError;
 
 objectLocalizedFields = context.ectObjectLocalizedFields;
 if (!objectLocalizedFields) {
-    // TODO: redo this whole map
-    objectLocalizedFields = [
-        category: [
-            fieldNames: ["categoryName", "description", "longDescription"],
-            typeNames: ["CATEGORY_NAME", "DESCRIPTION", "LONG_DESCRIPTION"],
-            typeNameListStr: '[CATEGORY_NAME, DESCRIPTION, LONG_DESCRIPTION]',
-            typeInfo: ["LONG_DESCRIPTION":["isLong":true]]
-        ],
-        product: [
-            fieldNames: ["productName", "description", "longDescription"],
-            typeNames: ["PRODUCT_NAME", "DESCRIPTION", "LONG_DESCRIPTION"],
-            typeNameListStr: '[PRODUCT_NAME, DESCRIPTION, LONG_DESCRIPTION]',
-            typeInfo: ["LONG_DESCRIPTION":["isLong":true]]
-        ] 
-    ];
+    GroovyUtil.runScriptAtLocation("component://product/webapp/catalog/WEB-INF/actions/catalog/GetCatalogLocFieldInfo.groovy", null, context);
+    objectLocalizedFields = context.catalogLocFieldInfo;
 }
 context.ectObjectLocalizedFields = objectLocalizedFields;
 

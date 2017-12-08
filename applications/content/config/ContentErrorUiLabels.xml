@@ -314,5 +314,12 @@
         <value xml:lang="en">No root dir provided, please fill path in the data resource objectInfo field</value>
         <value xml:lang="fr">Aucun répertoire racine fourni. Veuillez indiquer le chemin dans le champ objectInfo de la ressource de donnée</value>
     </property>
-
+    <property key="contentservices.localized_field_entry_missing_locale">
+        <value xml:lang="en">Localized field entry is missing locale - cannot update text data for alternate locale with blank locale (only the first entry is allowed to have empty locale, for the main Content record)</value>
+        <value xml:lang="de">Lokalisierter Feldeintrag fehlt Gebietsschema - Textdaten für alternatives Gebietsschema können nicht mit leerem Gebietsschema aktualisiert werden (nur der erste Eintrag darf ein leeres Gebietsschema für den Hauptinhaltsdatensatz haben)</value>
+    </property>
+    <property key="contentservices.localized_field_entry_duplicate_locale">
+        <value xml:lang="en">Duplicate locale specified in localized field entries</value>
+        <value xml:lang="de">Doppeltes Gebietsschema in lokalisierten Feldeinträgen angegeben</value>
+    </property>
 </resource>

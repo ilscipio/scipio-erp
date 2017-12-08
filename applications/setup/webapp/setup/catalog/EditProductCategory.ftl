@@ -138,7 +138,8 @@
         <@fieldset title=uiLabelMap.CommonLocalizedFields collapsed=false class="+ect-locfields-cnt stc-locfields-cnt"><#-- fieldset too limited for this to work: collapsed=(!updateLocalizedTextsChecked) -->
             <#-- auto-checks when user changes a field -->
             <@field type="generic">
-                <@field type="checkbox" checkboxType="simple" name="updateLocalizedTexts" label=uiLabelMap.CommonUpdateLocalizedFields value="true" checked=updateLocalizedTextsChecked/>
+                <@field type="checkbox" checkboxType="simple" name="updateLocalizedTexts" label=uiLabelMap.CommonUpdateLocalizedFields value="true" 
+                    checked=updateLocalizedTextsChecked class="+ect-nonvaluefield ect-checkfield ect-initial-unchecked"/>
             </@field>
             <@script>
                 jQuery(document).ready(function() {
@@ -150,7 +151,7 @@
                     });
                 });
             </@script>
-            <@ectLocalizedFields objectType="category" params=params/>
+            <@catalogStcLocFields objectType="category" params=params/>
         </@fieldset>
       </#if>
     </@form>

@@ -134,7 +134,22 @@
         <@field type="input" name="description" value=(params.description!) label=uiLabelMap.FormFieldTitle_description class="+ect-inputfield"/>
         <@field type="textarea" name="longDescription" value=(params.longDescription!) label=uiLabelMap.FormFieldTitle_longDescription class="+ect-inputfield"/>
 
-        <@fieldset title=uiLabelMap.CommonLocalizedFields collapsed=true class="+ect-locfields-cnt">
+        <#local updateLocalizedTextsChecked = (params.updateLocalizedTexts!?string == "true")>
+        <@fieldset title=uiLabelMap.CommonLocalizedFields collapsed=(!updateLocalizedTextsChecked) class="+ect-locfields-cnt stc-locfields-cnt">
+            <#-- auto-checks when user changes a field -->
+            <@field type="generic">
+                <@field type="checkbox" checkboxType="simple" name="updateLocalizedTexts" label=uiLabelMap.CommonUpdateLocalizedFields value="true" checked=updateLocalizedTextsChecked/>
+            </@field>
+            <@script>
+                jQuery(document).ready(function() {
+                    var form = jQuery('#${escapeVal(id, 'js')}');
+                    jQuery('.stc-locfields-cnt :input', form).change(function() {
+                        if (jQuery(this).prop('name') !== 'updateLocalizedTexts') {
+                            jQuery('input[name=updateLocalizedTexts]', form).prop('checked', true);
+                        }
+                    });
+                });
+            </@script>
             <@ectLocalizedFields objectType="category" params=params/>
         </@fieldset>
       </#if>

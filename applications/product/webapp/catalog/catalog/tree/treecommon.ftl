@@ -30,17 +30,14 @@
     <#return ectLocFieldLabelMap[fieldName]!uiLabelMap["FormFieldTitle_"+fieldName]>
 </#function>
 
-<#-- Creates the initial localized fields for ProductContent/ProductCategoryContent ALTERNATE_LOCALE fields
+<#-- Localized product/category fields
+    Creates the initial localized fields for ProductContent/ProductCategoryContent ALTERNATE_LOCALE fields
     at initial load (event error) and when js not available, and writes out the markup template used
     by the tree to load localized fields from tree data.
     See corresponding js in ScpCatalogCommon.js StcLocFieldHandler.rebuildLocalizedFieldEntries.
     DEV NOTE: PLEASE KEEP BOTH IMPL IN SYNC. -->
 <#macro ectLocalizedFields objectType params={} onAddClick="" parsedParamName="simpleTextViewsByType" 
     paramNamePrefix="contentFields_" localeArgs={} extraArgs...>
-    
-    <#-- FIXME -->
-    <@alert type="warning">WARNING: <strong>LOCALIZED FIELDS ARE NOT YET SAVED ON SUBMIT</strong> (2017-10-27)</@alert>
- 
   <#local fieldInfo = (ectObjectLocalizedFields[objectType])!>
   <#if fieldInfo?has_content>
     <#-- pre-read the params, otherwise @stcLocField will reparse them several times. -->
@@ -52,9 +49,13 @@
       <#if (typeInfo.isLong)!false == true>
         <#local inputType = "textarea">
       </#if>
+      <#local tooltip = "">
+      <#if fieldInfo.typeField?has_content>
+        <#local tooltip = fieldInfo.typeField + ": " + typeName>
+      </#if>
       <#-- @stcLocField from content common.ftl -->
       <@stcLocField values=valueListsByType inputType=inputType typeName=typeName entityFieldName=fieldName paramNamePrefix=paramNamePrefix params=params 
-        label=ectGetLocFieldLabel(fieldName, typeName) tooltip="" localeArgs=localeArgs/>
+        label=ectGetLocFieldLabel(fieldName, typeName) tooltip=tooltip localeArgs=localeArgs/>
     </#list>
   </#if>
 </#macro>

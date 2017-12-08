@@ -444,20 +444,6 @@ under the License.
     </service>
     -->
 
-    <!-- SCIPIO: NOTE: this is a simple wrapper around replaceSimpleTextContentsForAlternateLocale (see content services) -->
-    <service name="replaceProductContentSimpleTextsForAlternateLocale" engine="java" location="org.ofbiz.product.product.ProductServices" invoke="replaceProductContentSimpleTextsForAlternateLocale">
-        <description>SCIPIO: Intelligently creates, updates and deletes ProductContent simple text contents for alternate locale</description>
-        <implements service="replaceEntityContentSimpleTextsForAlternateLocaleInterface"/>
-        <attribute name="productId" type="String" mode="IN" optional="false"/>
-    </service>
-    
-    <!-- SCIPIO: NOTE: this is a simple wrapper around replaceSimpleTextContentsForAlternateLocale (see content services) -->
-    <service name="replaceProductCategoryContentSimpleTextsForAlternateLocale" engine="java" location="org.ofbiz.product.category.CategoryServices" invoke="replaceProductCategoryContentSimpleTextsForAlternateLocale">
-        <description>SCIPIO: Intelligently creates, updates and deletes ProductCategoryContent simple text contents for alternate locale</description>
-        <implements service="replaceEntityContentSimpleTextsForAlternateLocaleInterface"/>
-        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
-    </service>
-
     <service name="addAdditionalViewForProduct" default-entity-name="ProductContent" engine="java"
         location="org.ofbiz.product.product.ProductServices" invoke="addAdditionalViewForProduct" auth="true">
         <implements service="uploadFileInterface"/>
@@ -1837,6 +1823,20 @@ under the License.
         <attribute name="viewsByType" mode="OUT" type="Map" optional="true"/>
         <attribute name="viewsByTypeAndLocale" mode="OUT" type="Map" optional="true"/>
         <attribute name="textByTypeAndLocale" mode="OUT" type="Map" optional="true"/>
+    </service>
+    
+    <!-- SCIPIO: NOTE: this is a simple wrapper around replaceSimpleTextContentsForAlternateLocale (see content services) -->
+    <service name="replaceProductContentSimpleTextsForAlternateLocale" engine="java" location="org.ofbiz.product.product.ProductServices" invoke="replaceProductContentSimpleTextsForAlternateLocale">
+        <description>SCIPIO: Intelligently creates, updates and deletes ProductContent simple text contents for alternate locale</description>
+        <implements service="replaceEntityContentSimpleTextsForAlternateLocaleInterface"/>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+    </service>
+    
+    <!-- SCIPIO: NOTE: this is a simple wrapper around replaceSimpleTextContentsForAlternateLocale (see content services) -->
+    <service name="replaceProductCategoryContentSimpleTextsForAlternateLocale" engine="java" location="org.ofbiz.product.category.CategoryServices" invoke="replaceProductCategoryContentSimpleTextsForAlternateLocale">
+        <description>SCIPIO: Intelligently creates, updates and deletes ProductCategoryContent simple text contents for alternate locale</description>
+        <implements service="replaceEntityContentSimpleTextsForAlternateLocaleInterface"/>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
     </service>
 
     <!-- ======================================== -->

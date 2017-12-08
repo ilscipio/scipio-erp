@@ -185,25 +185,22 @@ public abstract class LocalizedContentWorker {
         
         protected final List<Map<String, Object>> entries;
         protected final boolean hasTextData;
-        protected final Map<String, Object> firstRecord;
-        protected final Map<String, Map<String, Object>> localeDataMap;
-        protected final Map<String, String> localeTextMap;
+        protected final Map<String, Object> mainEntry;
+        protected final Map<String, Map<String, Object>> localeEntryMap;
 
         public LocalizedSimpleTextInfo() {
             this.hasTextData = false;
             this.entries = Collections.emptyList();
-            this.firstRecord = null;
-            this.localeDataMap = Collections.emptyMap();
-            this.localeTextMap = Collections.emptyMap();
+            this.mainEntry = null;
+            this.localeEntryMap = Collections.emptyMap();
         }
         
         private LocalizedSimpleTextInfo(List<Map<String, Object>> entries, boolean hasTextData,
-                Map<String, Object> firstRecord, Map<String, Map<String, Object>> localeDataMap, Map<String, String> localeTextMap) {
+                Map<String, Object> mainEntry, Map<String, Map<String, Object>> localeEntryMap) {
             this.entries = entries;
             this.hasTextData = hasTextData;
-            this.firstRecord = firstRecord;
-            this.localeDataMap = localeDataMap;
-            this.localeTextMap = localeTextMap;
+            this.mainEntry = mainEntry;
+            this.localeEntryMap = localeEntryMap;
         }
 
         public List<Map<String, Object>> getEntries() {
@@ -214,68 +211,61 @@ public abstract class LocalizedContentWorker {
             return hasTextData;
         }
         
-        public Map<String, Object> getFirstRecord() {
-            return firstRecord;
+        public Map<String, Object> getMainEntry() {
+            return mainEntry;
         }
         
-        public String getFirstLocaleString() {
-            return (firstRecord != null) ? (String) firstRecord.get("localeString") : null;
+        public String getMainLocaleString() {
+            return (mainEntry != null) ? (String) mainEntry.get("localeString") : null;
         }
         
-        public String getFirstTextData() {
-            return (firstRecord != null) ? (String) firstRecord.get("textData") : null;
-        }
-        
-        /**
-         * Maps localeString to record entry, excluding the first record.
-         */
-        public Map<String, Map<String, Object>> getLocaleDataMap() {
-            throw new UnsupportedOperationException("NOT IMPLEMENTED: currently ignoring contentId");
-            //return localeDataMap;
+        public String getMainTextData() {
+            return (mainEntry != null) ? (String) mainEntry.get("textData") : null;
         }
         
         /**
-         * Maps localeString to textData, ignoring contentId.
+         * Maps localeString to record entry, excluding the main record (first records in entries).
          */
-        public Map<String, String> getLocaleTextMap() {
-            return localeTextMap;
+        public Map<String, Map<String, Object>> getLocaleEntryMap() {
+            return localeEntryMap;
         }
 
         /**
+         * Factory method.
          * Checks for duplicate locales (exception), text presence, etc.
          */
         public static LocalizedSimpleTextInfo fromEntries(List<Map<String, Object>> entries) throws GeneralException {
             if (UtilValidate.isEmpty(entries)) return new LocalizedSimpleTextInfo();
 
             boolean hasTextData = false;
-            Map<String, Object> firstRecord = entries.get(0);
-            if (entryHasTextData(firstRecord)) hasTextData = true;
+            Map<String, Object> mainEntry = entries.get(0);
+            if (entryHasTextData(mainEntry)) hasTextData = true;
+            String mainLocaleString = (String) mainEntry.get("localeString");
 
-            // not using this yet, we ignoring contentId
-            //Map<String, Map<String, Object>> localeDataMap = new LinkedHashMap<>();
-            Map<String, String> localeTextMap = new LinkedHashMap<>();
+            Map<String, Map<String, Object>> localeEntryMap = new LinkedHashMap<>();
             
             Iterator<Map<String, Object>> entryIt = entries.iterator();
             entryIt.next(); // skip first
             while(entryIt.hasNext()) {
-                Map<String, Object> record = entryIt.next();
-                String localeString = (String) record.get("localeString");
-                // only the first record is allowed to have empty localeString
-                if (UtilValidate.isEmpty(localeString)) {
-                    throw new GeneralException(PropertyMessage.make("ContentErrorUiLabels", "contentservices.localized_field_entry_missing_locale"));
-                }
-                boolean entryHasTextData = entryHasTextData(record);
+                Map<String, Object> entry = entryIt.next();
+                String localeString = (String) entry.get("localeString");
+                boolean entryHasTextData = entryHasTextData(entry);
                 // if no textData, will simply omit from the map, and it will be auto-deleted
                 // NOTE: if textData empty, we will forgive duplicate locales for now (maybe revisit later if need)
                 if (entryHasTextData) {
-                    hasTextData = true;
-                    if (localeTextMap.containsKey(localeTextMap)) {
-                        throw new GeneralException(PropertyMessage.make("ContentErrorUiLabels", "contentservices.localized_field_entry_duplicate_locale"));
+                    // only the first record is allowed to have empty localeString and non-empty textData
+                    if (UtilValidate.isEmpty(localeString)) {
+                        throw new GeneralException(PropertyMessage.make("ContentErrorUiLabels", "contentservices.localized_field_entry_missing_locale"));
                     }
-                    localeTextMap.put(localeString, (String) record.get("textData"));
+                    
+                    hasTextData = true;
+                    if (localeEntryMap.containsKey(localeString) || localeString.equals(mainLocaleString)) {
+                        throw new GeneralException(PropertyMessage.make("ContentErrorUiLabels", "contentservices.localized_field_entry_duplicate_locale", null, ": " + localeString));
+                    }
+                    localeEntryMap.put(localeString, entry);
                 }
             }
-            return new LocalizedSimpleTextInfo(entries, hasTextData, firstRecord, null, localeTextMap);
+            return new LocalizedSimpleTextInfo(entries, hasTextData, mainEntry, localeEntryMap);
         }
         
         public static boolean entryHasTextData(Map<String, ?> entry) {
@@ -284,6 +274,19 @@ public abstract class LocalizedContentWorker {
             else return textData.trim().length() > 0;
         }
 
+        /**
+         * Gets the textData key from a localeEntryMap entry, or if it's a localeString-to-textData map,
+         * simply returns the string (supports two map formats).
+         */
+        @SuppressWarnings("unchecked")
+        public static String getLocaleMapTextData(Object localeEntryMapEntry) {
+            if (localeEntryMapEntry instanceof Map) {
+                Map<String, ?> entryMap = (Map<String, ?>) localeEntryMapEntry;
+                return (String) entryMap.get("textData");
+            } else if (localeEntryMapEntry instanceof String) return (String) localeEntryMapEntry;
+            else if (localeEntryMapEntry == null) return null;
+            else throw new IllegalArgumentException("internal error: replaceLocalizedContent: localeEntryMap has invalid entry: " + localeEntryMapEntry);
+        }
     }
     
     public static Map<String, String> getSimpleTextsByLocaleString(Delegator delegator, LocalDispatcher dispatcher,
@@ -391,9 +394,11 @@ public abstract class LocalizedContentWorker {
      * NOTE: The first entry 
      * <p>
      * TODO?: move elsewhere, may need to reuse...
+     * @param localeEntryMap can be either a map of localeString to textData strings,
+     *                       or map of localeString to entry maps where a key is "textData"
      */
     public static GenericValue replaceLocalizedContent(Delegator delegator, LocalDispatcher dispatcher, Map<String, ?> context,
-            GenericValue mainContent, String mainLocaleString, String mainTextData, Map<String, String> localeTextMap,
+            GenericValue mainContent, String mainLocaleString, String mainTextData, Map<String, ?> localeEntryMap,
             boolean removeOldLocales, Timestamp moment, Map<String, Object> newRecordContentFields, Map<String, Object> newRecordDataResourceFields) throws Exception {
         // DEV NOTE: to simplify, I am setting removeDupLocales to same as removeOldLocales...
         // as long as removal is understood, there is really no reason to keep duplicates because
@@ -401,7 +406,7 @@ public abstract class LocalizedContentWorker {
         // having removeDupLocales false was completely pointless...
         final boolean removeDupLocales = removeOldLocales;
         
-        Set<String> remainingLocales = new HashSet<>(localeTextMap.keySet());
+        Set<String> remainingLocales = new HashSet<>(localeEntryMap.keySet());
 
         // update main content
         if (mainContent == null) {
@@ -433,7 +438,7 @@ public abstract class LocalizedContentWorker {
             //   * We also "treat" localeString also as "old" if it's in localeUrlMap but empty value.
             // * The localeString was a "duplicate" if it's in localeUrlMap but was removed from remainingLocales.
             
-            String textData = localeTextMap.get(localeString);
+            String textData = LocalizedSimpleTextInfo.getLocaleMapTextData(localeEntryMap.get(localeString));
             if (UtilValidate.isNotEmpty(textData)) {
                 if (!removeDupLocales || remainingLocales.contains(localeString)) {
                     LocalizedContentWorker.updateSimpleTextContent(delegator, dispatcher, content, textData);
@@ -455,7 +460,7 @@ public abstract class LocalizedContentWorker {
         
         // create new assoc records
         for(String localeString : remainingLocales) {
-            String textData = localeTextMap.get(localeString);
+            String textData = LocalizedSimpleTextInfo.getLocaleMapTextData(localeEntryMap.get(localeString));
             if (UtilValidate.isNotEmpty(textData)) {
                 GenericValue content = createSimpleTextContent(delegator, dispatcher, localeString, textData, newRecordContentFields, newRecordDataResourceFields);
                 GenericValue contentAssoc = delegator.makeValue("ContentAssoc");

@@ -1256,10 +1256,10 @@
             <description>If true, contentFields entries having no contentId are assumed to be new records; 
                 if false (default) they are matched by localeString and created, updated or removed as needed.</description>
         </attribute>-->
-        <attribute name="mainContentDelete" type="boolean" mode="IN" optional="true" default-value="true">
-            <description>If true, if no text content is passed at all, the main content record may be deleted.
-                NOTE: this will only delete the main record if its alt locale records also contain
-                    no text; otherwise it is essential to serve as the linking point.</description>
+        <attribute name="mainContentDelete" type="Boolean" mode="IN" optional="true" default-value="true">
+            <description>If true (default), if no text content is passed at all, the main content record may be deleted.
+                NOTE: This will only delete the main record if its alt locale records also contain
+                    no text; otherwise it is essential even if empty because the alt texts are linked to it.</description>
         </attribute>
     </service>
 </services>

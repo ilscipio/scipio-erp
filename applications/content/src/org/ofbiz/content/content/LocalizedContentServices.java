@@ -51,8 +51,8 @@ public abstract class LocalizedContentServices {
                             "ContentNoContentFound", UtilMisc.toMap("contentId", mainContentId), locale));
                 }
             }
-            String mainLocaleString = entriesInfo.getFirstLocaleString();
-            String mainTextData = entriesInfo.getFirstTextData();
+            String mainLocaleString = entriesInfo.getMainLocaleString();
+            String mainTextData = entriesInfo.getMainTextData();
             
             if (!entriesInfo.isHasTextData()) {
                 if (mainContent != null) {
@@ -70,7 +70,7 @@ public abstract class LocalizedContentServices {
                 return result;
             } else {
                 mainContent = LocalizedContentWorker.replaceLocalizedContent(delegator, dispatcher, context, mainContent, 
-                        mainLocaleString, mainTextData, entriesInfo.getLocaleTextMap(), true, UtilDateTime.nowTimestamp(), 
+                        mainLocaleString, mainTextData, entriesInfo.getLocaleEntryMap(), true, UtilDateTime.nowTimestamp(), 
                         newContentFields, newDataResourceFields);
                 mainContentId = mainContent.getString("contentId");
 

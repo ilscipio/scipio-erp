@@ -38,12 +38,12 @@ if (isEventError == null) isEventError = context.isError;
 if (isEventError == null) isEventError = false;
 context.ectIsEventError = isEventError;
 
-objectLocalizedFields = context.ectObjectLocalizedFields;
-if (!objectLocalizedFields) {
-    GroovyUtil.runScriptAtLocation("component://product/webapp/catalog/WEB-INF/actions/catalog/GetCatalogLocFieldInfo.groovy", null, context);
-    objectLocalizedFields = context.catalogLocFieldInfo;
+catalogLocFieldsInfo = context.catalogLocFieldsInfo;
+if (!catalogLocFieldsInfo) {
+    GroovyUtil.runScriptAtLocation("component://product/webapp/catalog/WEB-INF/actions/catalog/GetCatalogLocFieldsInfo.groovy", null, context);
+    catalogLocFieldsInfo = context.catalogLocFieldsInfo;
+    context.catalogLocFieldsInfo = catalogLocFieldsInfo;
 }
-context.ectObjectLocalizedFields = objectLocalizedFields;
 
 getSetStringParam = { paramName ->
     def value = context[paramName];

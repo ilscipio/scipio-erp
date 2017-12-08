@@ -537,10 +537,10 @@ public class CategoryServices {
                     mainContentId = productCategoryContent.getString("contentId");
                 }
 
-                Map<String, Object> servCtx = dctx.makeValidContext("replaceSimpleTextContentsAndMainContentForAlternateLocale", ModelService.IN_PARAM, context);
+                Map<String, Object> servCtx = dctx.makeValidContext("replaceContentLocalizedSimpleTexts", ModelService.IN_PARAM, context);
                 servCtx.put("mainContentId", mainContentId);
                 servCtx.put("entries", entries);
-                Map<String, Object> servResult = dispatcher.runSync("replaceSimpleTextContentsAndMainContentForAlternateLocale", servCtx);
+                Map<String, Object> servResult = dispatcher.runSync("replaceContentLocalizedSimpleTexts", servCtx);
                 if (!ServiceUtil.isSuccess(servResult)) {
                     return ServiceUtil.returnError(getReplStcAltLocErrorPrefix(context, locale) + ": " + ServiceUtil.getErrorMessage(servResult));
                 }

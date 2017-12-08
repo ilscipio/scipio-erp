@@ -1143,6 +1143,7 @@ under the License.
                 <result-to-result result-name="prodCatalogId"/>
                 <result-to-result result-name="prodCatalogCategoryTypeId"/>
                 <result-to-result result-name="fromDate"/>
+                <result-to-field result-name="productCategoryId" field="parameters.productCategoryId"/>
             </call-service>
             <else>
                 <set-service-fields service-name="createProductCategoryAndCategoryAssoc" to-map="createCtx" map="parameters"/>
@@ -1150,9 +1151,14 @@ under the License.
                     <result-to-result result-name="productCategoryId"/>
                     <result-to-result result-name="parentProductCategoryId"/>
                     <result-to-result result-name="fromDate"/>
+                    <result-to-field result-name="productCategoryId" field="parameters.productCategoryId"/>
                 </call-service>
             </else>
         </if-empty>
+        <if-compare field="parameters.updateLocalizedTexts" type="Boolean" operator="equals" value="true">
+            <set-service-fields service-name="replaceProductCategoryContentLocalizedSimpleTexts" to-map="updateLocTextCtx" map="parameters"/>
+            <call-service service-name="replaceProductCategoryContentLocalizedSimpleTexts" in-map-name="updateLocTextCtx"/>
+        </if-compare>
     </simple-method>
     
     <simple-method method-name="updateProductCategoryAndCatAssocVersatile">
@@ -1164,6 +1170,10 @@ under the License.
                 <call-service service-name="updateProductCategoryAndCategoryAssoc" in-map-name="updateCtx"/>
             </else>
         </if-empty>
+        <if-compare field="parameters.updateLocalizedTexts" type="Boolean" operator="equals" value="true">
+            <set-service-fields service-name="replaceProductCategoryContentLocalizedSimpleTexts" to-map="updateLocTextCtx" map="parameters"/>
+            <call-service service-name="replaceProductCategoryContentLocalizedSimpleTexts" in-map-name="updateLocTextCtx"/>
+        </if-compare>
     </simple-method>
     
     <simple-method method-name="deleteProductCategoryCatAssocVersatile">

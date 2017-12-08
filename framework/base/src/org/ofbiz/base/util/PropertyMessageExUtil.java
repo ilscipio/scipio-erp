@@ -99,8 +99,16 @@ public abstract class PropertyMessageExUtil {
     }
     
     /**
-     * Creates a service failure result from the exception containing the main exception message
+     * Creates a service error result from the exception containing the main exception message
      * and message list, taken from {@link PropertyMessageEx}.
+     */
+    public static Map<String, Object> makeServiceErrorResult(Throwable t, Locale locale) {
+        return makeServiceErrorResult((PropertyMessage) null, t, locale);
+    }
+    
+    /**
+     * Creates a service failure result from the exception containing the main exception message
+     * and message list, taken from {@link PropertyMessageEx}, with optional intro message.
      */
     public static Map<String, Object> makeServiceFailureResult(PropertyMessage messageIntro, Throwable t, Locale locale) {
         return ServiceUtil.returnFailure(makeServiceMessage(messageIntro, t, locale), getExceptionMessageList(t, locale));
@@ -108,18 +116,26 @@ public abstract class PropertyMessageExUtil {
     
     /**
      * Creates a service failure result from the exception containing the main exception message
-     * and message list, taken from {@link PropertyMessageEx}.
+     * and message list, taken from {@link PropertyMessageEx}, with optional intro message.
      */
     public static Map<String, Object> makeServiceFailureResult(String messageIntro, Throwable t, Locale locale) {
         return makeServiceFailureResult(PropertyMessage.makeFromStatic(messageIntro), t, locale);
+    }
+    
+    /**
+     * Creates a service failure result from the exception containing the main exception message
+     * and message list, taken from {@link PropertyMessageEx}.
+     */
+    public static Map<String, Object> makeServiceFailureResult(Throwable t, Locale locale) {
+        return makeServiceFailureResult((PropertyMessage) null, t, locale);
     }
     
     public static String makeServiceMessage(PropertyMessage messageIntro, Throwable t, Locale locale) {
         String msg = null;
         if (messageIntro != null) msg = messageIntro.getMessage(locale);
         String exMsg = getExceptionMessage(t, locale);
-        if (msg != null) {
-            if (exMsg != null) msg += ": " + exMsg;
+        if (UtilValidate.isNotEmpty(msg)) {
+            if (UtilValidate.isNotEmpty(exMsg)) msg += ": " + exMsg;
         } else {
             msg = exMsg;
         }

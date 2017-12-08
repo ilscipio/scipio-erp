@@ -7734,4 +7734,12 @@
         <value xml:lang="en">Note: This may change all category/product URLs in the store (turn off "Replace Existing" to generate missing only).</value>
         <value xml:lang="de">Hinweis: Dies kann alle Kategorie-/Produkt-URLs im Store ändern (deaktivieren Sie "Bestehende ersetzen", um nur fehlende zu generieren).</value>
     </property>
+    <property key="ContentMainStcLocFieldInfo">
+        <value xml:lang="en">This locale field entry (the first) corresponds to the main Content record for this field type (${typeField}: ${typeName}); the following entries (if any) will be linked to this one by contentAssocTypeId ALTERNATE_LOCALE content association.</value>
+        <value xml:lang="de">Dieser Gebietsschema-Feldeintrag (der erste) entspricht dem Hauptinhaltsdatensatz für diesen Feldtyp (${typeField}: ${typeName}); Die folgenden Einträge (falls vorhanden) werden durch die Inhaltsverknüpfung contentAssocTypeId ALTERNATE_LOCALE mit dieser verknüpft.</value>
+    </property>
+    <property key="ContentAltStcLocFieldInfo">
+        <value xml:lang="en">This locale field entry corresponds to an ALTERNATE_LOCALE Content record associated to the main Content record for this field type (${typeField}: ${typeName}), denoted by the first locale field entry above.</value>
+        <value xml:lang="de">Dieser Gebietsschema-Feldeintrag entspricht einem ALTERNATE_LOCALE-Inhaltsdatensatz, der dem Hauptinhaltsdatensatz für diesen Feldtyp (${typeField}: ${typeName}) zugeordnet ist und durch den ersten Gebietsschema-Eintrag oben angegeben wird.</value>
+    </property>
 </resource>

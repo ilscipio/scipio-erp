@@ -1374,4 +1374,12 @@
         <value xml:lang="en">Error updating ProductContent localized texts (product: ${productId})</value>
         <value xml:lang="de">Fehler beim Aktualisieren von lokalisierten ProductContent-Texten (Produkt: ${productId})</value>
     </property>
+    <property key="productservices.error_reading_ProductCategoryContent_simple_texts_for_alternate_locale_for_category">
+        <value xml:lang="en">Error reading ProductCategoryContent localized texts (category: ${productCategoryId})</value>
+        <value xml:lang="de">Fehler beim Aktualisieren der gelöschten Texte von ProductCategoryContent (Kategorie: ${productCategoryId})</value>
+    </property>
+    <property key="productservices.error_reading_ProductContent_simple_texts_for_alternate_locale_for_product">
+        <value xml:lang="en">Error reading ProductContent localized texts (product: ${productId})</value>
+        <value xml:lang="de">Fehler beim Lesen von ProductContent lokalisierten Texten (Produkt: ${productId})</value>
+    </property>
 </resource>

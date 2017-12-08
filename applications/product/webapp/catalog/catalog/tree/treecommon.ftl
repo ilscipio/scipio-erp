@@ -1,8 +1,6 @@
 <#-- SCIPIO: common macros for catalog tree and forms -->
 
-<#include "component://content/webapp/content/common/common.ftl"><#-- @stdLocField -->
 <#include "component://product/webapp/catalog/catalog/catalogcommon.ftl">
-<#import "component://common/webcommon/includes/listLocalesMacros.ftl" as listLocaleMacros>
 
 <#macro ectMarkupOut dir args={}>
   <#if dir?is_directive>
@@ -23,39 +21,3 @@
     <@field type="hidden" name="ectSubmittedFormId" value=(initialValues.ectSubmittedFormId!) class="+ect-inputfield"/>
 </#macro>
 
-<#assign ectLocFieldLabelMap = {
-    "productName":uiLabelMap.ProductProductName
-}>
-<#function ectGetLocFieldLabel fieldName typeName>
-    <#return ectLocFieldLabelMap[fieldName]!uiLabelMap["FormFieldTitle_"+fieldName]>
-</#function>
-
-<#-- Localized product/category fields
-    Creates the initial localized fields for ProductContent/ProductCategoryContent ALTERNATE_LOCALE fields
-    at initial load (event error) and when js not available, and writes out the markup template used
-    by the tree to load localized fields from tree data.
-    See corresponding js in ScpCatalogCommon.js StcLocFieldHandler.rebuildLocalizedFieldEntries.
-    DEV NOTE: PLEASE KEEP BOTH IMPL IN SYNC. -->
-<#macro ectLocalizedFields objectType params={} onAddClick="" parsedParamName="simpleTextViewsByType" 
-    paramNamePrefix="contentFields_" localeArgs={} extraArgs...>
-  <#local fieldInfo = (ectObjectLocalizedFields[objectType])!>
-  <#if fieldInfo?has_content>
-    <#-- pre-read the params, otherwise @stcLocField will reparse them several times. -->
-    <#local valueListsByType = getStcLocFieldParsedParams(params, parsedParamName, paramNamePrefix)!{}>
-    <#list fieldInfo.typeNames as typeName>
-      <#local fieldName = fieldInfo.fieldNames[typeName?index]>
-      <#local typeInfo = (fieldInfo.typeInfo[rawString(typeName)])!{}>
-      <#local inputType = "input">
-      <#if (typeInfo.isLong)!false == true>
-        <#local inputType = "textarea">
-      </#if>
-      <#local tooltip = "">
-      <#if fieldInfo.typeField?has_content>
-        <#local tooltip = fieldInfo.typeField + ": " + typeName>
-      </#if>
-      <#-- @stcLocField from content common.ftl -->
-      <@stcLocField values=valueListsByType inputType=inputType typeName=typeName entityFieldName=fieldName paramNamePrefix=paramNamePrefix params=params 
-        label=ectGetLocFieldLabel(fieldName, typeName) tooltip=tooltip localeArgs=localeArgs/>
-    </#list>
-  </#if>
-</#macro>

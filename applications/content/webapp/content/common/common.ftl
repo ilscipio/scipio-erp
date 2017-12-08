@@ -1,5 +1,7 @@
 <#-- SCIPIO: Common content macros and definitions -->
 
+<#import "component://common/webcommon/includes/listLocalesMacros.ftl" as listLocaleMacros>
+
 <#-- Special localized text field macros
     Intended for ProductContent/ProductCategoryContent fields with ALTERNATE_LOCALE support,
     but this should support anything fitting that entity pattern. -->
@@ -36,7 +38,7 @@
     Includes a hidden entry markup template for javascript (there is some redundancy, but having it
     here simplifies code and is REQUIRED due to styling problems with @row/@cell when the template
     is stored elsewhere). -->
-<#macro stcLocFieldContainer containerClass="" onAddClick="" wrapperArgs={} entryTmpl=false extraTmpl="" entryArgs={} extraArgs...>
+<#macro stcLocFieldContainer containerClass="" onAddClick="" wrapperArgs={} entryTmpl=false mainEntryArgs={} altEntryArgs={} footTmpl="" footArgs={} extraArgs...>
     <#local containerClass = addClassArg(containerClass, "+stc-locfield")>
     <@field type="general" containerClass=containerClass args=wrapperArgs><#t/>
       <div class="stc-locfield-entries"><#nested></div><#t/>
@@ -44,28 +46,29 @@
         <#if onAddClick?has_content> onClick="${onAddClick}"</#if>>[+]</a></div><#t/>
       <#if !entryTmpl?is_boolean>
         <div style="display:none;"><#t/>
-          <div class="stc-markup-locFieldEntry"><#if entryTmpl?is_directive><@entryTmpl args=entryArgs/><#else>${entryTmpl}</#if></div><#t/>
+          <div class="stc-locfield-markup-mainEntry"><@entryTmpl args=mainEntryArgs/></div><#t/>
+          <div class="stc-locfield-markup-altEntry"><@entryTmpl args=altEntryArgs/></div><#t/>
         </div><#t/>
       </#if>
-      <#if extraTmpl?is_directive><@extraTmpl/><#else>${extraTmpl}</#if>
+      <#if footTmpl?is_directive><@footTmpl args=footArgs/><#else>${footTmpl}</#if>
     </@field><#t/>
 </#macro>
 
 <#-- Entry markup template for @stcLocField 
     This must support a no-argument invocation for the JS template. -->
-<#macro stcLocFieldEntry args={} extraArgs...>
+<#macro stcLocFieldEntry args={}>
   <#local entryData = args.entryData!{}>
   <@row class="+stc-locfield-entry"><#t/>
     <@cell small=2><#t/>
       <@field type="select" name=(args.localeFieldName!"") class="+stc-locfield-locale"><#t/>
         <#local localeOpts = args.localeOpts!{}>
         <@listLocaleMacros.availableLocalesOptions expandCountries=(localeOpts.expandCountries!true) 
-            allowExtra=(localeOpts.allowExtra!true) allowEmpty=(localeOpts.allowEmpty!true)
-            currentLocale=(entryData.localeString!)/><#t/>
+            allowEmpty=(args.allowEmpty!localeOpts.allowEmpty!false) allowExtra=true allowExtraEmpty=true
+            currentLocale=(entryData.localeString!"")/><#t/>
       </@field><#t/>
     </@cell><#t/>
     <@cell small=10><#t/>
-      <@field type=(args.inputType!"input") args=(args.inputArgs!{}) name=(args.textFieldName!"") class="+stc-locfield-text" value=(entryData.textData!)/><#t/>
+      <@field type=(args.inputType!"input") tooltip=(args.tooltip!"") args=(args.inputArgs!{}) name=(args.textFieldName!"") class="+stc-locfield-text" value=(entryData.textData!)/><#t/>
     </@cell><#t/>
   </@row><#t/>
 </#macro>
@@ -106,7 +109,7 @@
     TODO: currently this only support    
 -->
 <#macro stcLocField typeName paramNamePrefix="contentFields_" entityFieldName=true values=false params={} parsedParamName=""
-    label="" tooltip="" inputType="input" wrapperArgs={} inputArgs={} localeOpts={} onAddClick="" 
+    label="" tooltip="" mainTooltip="" altTooltip="" inputType="input" wrapperArgs={} inputArgs={} localeOpts={} onAddClick="" 
     containerMarkup=false entryMarkup=false namePrefixFunc=false extraArgs...>
   <#local typeName = rawString(typeName)>
   <#local paramNamePrefix = rawString(paramNamePrefix)>
@@ -138,25 +141,30 @@
   </#if>
   <#-- FIXME: need a separate div for html data attributes due to missing @field support for this -->
   <#local dataElem><#t/>
-    <div style="display:none;" class="stc-locfield-data"<#t/>
-        <#t/> data-stclf-type-name="${escapeVal(typeName, 'html')}"
-        <#t/> data-stclf-param-name-prefix="${escapeVal(paramNamePrefix, 'html')}"
-    ></div><#t/>
+    <div style="display:none;" class="stc-locfield-data" data-stclf-type-name="${escapeVal(typeName, 'html')}"<#t/>
+        <#t/> data-stclf-param-name-prefix="${escapeVal(paramNamePrefix, 'html')}"></div><#t/>
   </#local>
-  <#local entryArgs = {"localeOpts":localeOpts, "inputArgs":inputArgs, "inputType":inputType}>
+  <#local cmnEntryArgs = {"inputArgs":inputArgs, "inputType":inputType, "localeOpts":localeOpts}>
   <@containerMarkup typeName=typeName fieldName=entityFieldName paramNamePrefix=paramNamePrefix
-      onAddClick=onAddClick entryTmpl=entryMarkup extraTmpl=dataElem wrapperArgs=(wrapperArgs+{"label":label, "tooltip":tooltip})
-      entryArgs=entryArgs>
+      onAddClick=onAddClick entryTmpl=entryMarkup footTmpl=dataElem wrapperArgs=(wrapperArgs+{"label":label, "tooltip":tooltip})
+      mainEntryArgs=(cmnEntryArgs+{"entryData":{"localeString":false}, "allowEmpty":true, "tooltip":mainTooltip})
+      altEntryArgs=(cmnEntryArgs+{"entryData":{"localeString":false}, "allowEmpty":false, "tooltip":altTooltip})>
+    <#-- NOTE: the first (index 0) must always allows empty locale, whereas the following entries
+        should only show empty locale if somehow they were empty in the system - 
+        user will have to correct these on update -->
     <#if entryDataList?has_content>
-      <#-- add the main/default entry (Product[Category]Content, index zero) + ContentAssoc entries -->
+      <#-- add the main/default entry (Product[Category]Content, index zero) + alt entries (ContentAssoc ALTERNATE_LOCALE) -->
       <#list entryDataList as entryData>
         <#local namePrefix = namePrefixFunc(paramNamePrefix, typeName, entityFieldName, entryData?index)>
-        <@entryMarkup args=(entryArgs+{"entryData":entryData, "localeFieldName":(namePrefix+"localeString"), "textFieldName":(namePrefix+"textData")})/>
+        <#local isMain = (entryData?index == 0)>
+        <@entryMarkup args=(cmnEntryArgs+{"entryData":entryData, "localeFieldName":namePrefix+"localeString", 
+            "textFieldName":namePrefix+"textData", "allowEmpty":isMain, "tooltip":isMain?then(mainTooltip, altTooltip)})/>
       </#list>
     <#else>
       <#-- add empty main/default entry (Product[Category]Content) -->
       <#local namePrefix = namePrefixFunc(paramNamePrefix, typeName, entityFieldName, 0)>
-       <@entryMarkup args=(entryArgs+{"entryData":{}, "localeFieldName":(namePrefix+"localeString"), "textFieldName":(namePrefix+"textData")})/>
+      <@entryMarkup args=(cmnEntryArgs+{"entryData":{}, "localeFieldName":namePrefix+"localeString", 
+          "textFieldName":namePrefix+"textData", "allowEmpty":true, "tooltip":mainTooltip})/>
     </#if>
   </@containerMarkup>
 </#macro>

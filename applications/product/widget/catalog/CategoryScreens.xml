@@ -157,6 +157,9 @@ under the License.
                 <set field="labelTitleProperty" value="ProductCategoryContent"/>
                 
                 <set field="TabBarName" value="CategoryContentSubTabBar" />
+                
+                <!-- SCIPIO: required for localized fields -->
+                <set field="layoutSettings.javaScripts[]" value="/content/images/ScpContentCommon.js" global="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCategoryDecorator" location="${parameters.mainDecoratorLocation}">
@@ -209,7 +212,8 @@ under the License.
                  </entity-condition>
                 
                 <script location="component://product/webapp/catalog/WEB-INF/actions/category/EditCategoryContentContent.groovy"/>
-                <script location="component://product/webapp/catalog/WEB-INF/actions/category/EditCategorySEO.groovy"/>            </actions>
+                <script location="component://product/webapp/catalog/WEB-INF/actions/category/EditCategorySEO.groovy"/>
+            </actions>
             <widgets>
                 <screenlet>
                     <!-- SCIPIO: Category content forms widgets have been replaced by a single ftl -->
@@ -241,6 +245,10 @@ under the License.
                 <screenlet title="${uiLabelMap.ProductCategoryContentList}">
                     <!-- <include-form name="UpdateCategoryContentAssoc" location="component://product/widget/catalog/CategoryForms.xml"/> -->
                     <include-screen name="ScipioCategoryContentList"/>
+                </screenlet>
+                
+                <screenlet title="${uiLabelMap.CommonUpdateLocalizedFields}"><!-- SCIPIO: added 2017-12 -->
+                    <include-screen name="EditCategoryStcLocFields"/>
                 </screenlet>
             </widgets>
         </section>
@@ -671,4 +679,24 @@ under the License.
             </widgets>
         </section>
     </screen> -->
+    
+    <!-- SCIPIO: New easy-to-use form for category simple text content localized fields -->
+    <screen name="EditCategoryStcLocFields">
+        <section>
+            <condition>
+                <and>
+                    <not><if-empty field="productCategory"/></not>
+                </and>
+            </condition>
+            <actions>
+                <set field="productCategoryId" from-field="productCategory.productCategoryId"/>
+                <script location="component://product/webapp/catalog/WEB-INF/actions/category/GetCategoryStcLocFields.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://product/webapp/catalog/category/EditCategoryStcLocFields.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
 </screens>

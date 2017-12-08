@@ -658,6 +658,19 @@ under the License.
         <response name="error" type="view" value="EditCategoryContent"/>
     </request-map>
 
+    <request-map uri="updateProductCategoryContentStcLocFields"><!-- SCIPIO: new request -->
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="replaceProductCategoryContentLocalizedSimpleTexts"/>
+        <response name="success" type="view" value="EditCategoryContent"/>
+        <response name="error" type="view" value="EditCategoryContent"/>
+    </request-map>
+    <request-map uri="updateProductContentStcLocFields"><!-- SCIPIO: new request -->
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="replaceProductContentLocalizedSimpleTexts"/>
+        <response name="success" type="view" value="EditProductContent"/>
+        <response name="error" type="view" value="EditProductContent"/>
+    </request-map>
+
     <!-- ================ Product Content Assoc Requests ================= -->
     <request-map uri="EditProductContentContent">
         <security https="true" auth="true"/>

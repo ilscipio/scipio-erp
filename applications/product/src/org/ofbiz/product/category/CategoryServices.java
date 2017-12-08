@@ -29,6 +29,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.PropertyMessage;
+import org.ofbiz.base.util.PropertyMessageExUtil;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -465,9 +467,10 @@ public class CategoryServices {
      * SCIPIO: getProductCategoryContentLocalizedSimpleTextViews.
      * Added 2017-10-27.
      */
-    public static Map<String, Object> getProductCategoryContentLocalizedSimpleTextViews(DispatchContext dctx, Map<String, ? extends Object> context) {
+    public static Map<String, Object> getProductCategoryContentLocalizedSimpleTextViews(DispatchContext dctx, Map<String, ?> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
+        Locale locale = (Locale) context.get("locale");
         
         String productCategoryId = (String) context.get("productCategoryId");
         Collection<String> prodCatContentTypeIdList = UtilGenerics.checkCollection(context.get("prodCatContentTypeIdList"));
@@ -478,16 +481,19 @@ public class CategoryServices {
         try {
             viewsByType = CategoryWorker.getProductCategoryContentLocalizedSimpleTextViews(delegator, dispatcher, 
                     productCategoryId, prodCatContentTypeIdList, filterByDate ? UtilDateTime.nowTimestamp() : null, useCache);
-        } catch (GenericEntityException e) {
-            Debug.logError(e.getMessage(), module);
-            return ServiceUtil.returnError(e.getMessage());
+            Map<String, Object> result = ServiceUtil.returnSuccess();
+            postprocessProductCategoryContentLocalizedSimpleTextContentAssocViews(dctx, context, viewsByType, result);
+            return result;
+        } catch (Exception e) {
+            PropertyMessage msgIntro = PropertyMessage.makeWithVars("ProductErrorUiLabels", 
+                    "productservices.error_reading_ProductCategoryContent_simple_texts_for_alternate_locale_for_category",
+                    "productCategoryId", productCategoryId);
+            Debug.logError(e, PropertyMessageExUtil.makeLogMessage(msgIntro, e), module);
+            return ServiceUtil.returnFailure(msgIntro, e, locale);
         }
-        Map<String, Object> result = ServiceUtil.returnSuccess();
-        postprocessProductCategoryContentLocalizedSimpleTextContentAssocViews(dctx, context, viewsByType, result);
-        return result;
     }
     
-    public static void postprocessProductCategoryContentLocalizedSimpleTextContentAssocViews(DispatchContext dctx, Map<String, ? extends Object> context, 
+    public static void postprocessProductCategoryContentLocalizedSimpleTextContentAssocViews(DispatchContext dctx, Map<String, ?> context, 
             Map<String, List<GenericValue>> viewsByType, Map<String, Object> result) {
         if (!Boolean.FALSE.equals(context.get("getViewsByType"))) {
             result.put("viewsByType", viewsByType);

@@ -43,6 +43,8 @@ import javolution.util.FastSet;
 
 import org.jdom.JDOMException;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.PropertyMessage;
+import org.ofbiz.base.util.PropertyMessageExUtil;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -1477,6 +1479,7 @@ public class ProductServices {
     public static Map<String, Object> getProductContentLocalizedSimpleTextViews(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
+        Locale locale = (Locale) context.get("locale");
         
         String productId = (String) context.get("productId");
         Collection<String> productContentTypeIdList = UtilGenerics.checkCollection(context.get("productContentTypeIdList"));
@@ -1487,13 +1490,16 @@ public class ProductServices {
         try {
             viewsByType = ProductWorker.getProductContentLocalizedSimpleTextViews(delegator, dispatcher, 
                     productId, productContentTypeIdList, filterByDate ? UtilDateTime.nowTimestamp() : null, useCache);
-        } catch (GenericEntityException e) {
-            Debug.logError(e.getMessage(), module);
-            return ServiceUtil.returnError(e.getMessage());
+            Map<String, Object> result = ServiceUtil.returnSuccess();
+            CategoryServices.postprocessProductCategoryContentLocalizedSimpleTextContentAssocViews(dctx, context, viewsByType, result);
+            return result;
+        } catch (Exception e) {
+            PropertyMessage msgIntro = PropertyMessage.makeWithVars("ProductErrorUiLabels", 
+                    "productservices.error_reading_ProductContent_simple_texts_for_alternate_locale_for_product",
+                    "productId", productId);
+            Debug.logError(e, PropertyMessageExUtil.makeLogMessage(msgIntro, e), module);
+            return ServiceUtil.returnFailure(msgIntro, e, locale);
         }
-        Map<String, Object> result = ServiceUtil.returnSuccess();
-        CategoryServices.postprocessProductCategoryContentLocalizedSimpleTextContentAssocViews(dctx, context, viewsByType, result);
-        return result;
     }
     
     /**

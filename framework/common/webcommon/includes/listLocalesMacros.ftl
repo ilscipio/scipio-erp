@@ -9,9 +9,7 @@
         be used in backend, not public frontend, for the time being.
         
     2017-12-07: New special no-locale value: noneKey="none". This can be used to signal
-    when explicitly a none/blank locale value was selected. Typically you can pass
-    this as fallback:
-      <@availableLocalesOptions currentLocale=myEntity.localeString!"none" .../>
+    when explicitly a none/blank locale value was selected.
     This can be used with the new option allowExtraEmpty=true.
     
     TODO: REVIEW: the country expansion implications are currently unclear (not supported in stock ofbiz)... -->

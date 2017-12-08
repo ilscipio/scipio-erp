@@ -33,7 +33,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.lang.StringUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
@@ -43,7 +42,6 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
-import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
@@ -866,137 +864,7 @@ public class CategoryWorker {
         
         return fieldMap;
     }
-    
-    /**
-     * SCIPIO: rearranges a viewsByType map into viewsByTypeAndLocale map.
-     * Logs warnings if multiple records for same locales.
-     * Added 2017-10-27.
-     */
-    public static Map<String, Map<String, GenericValue>> splitContentLocalizedSimpleTextContentAssocViewsByLocale(Map<String, List<GenericValue>> viewsByType) {
-        Map<String, Map<String, GenericValue>> viewsByTypeAndLocale = new HashMap<>();
-        
-        for(Map.Entry<String, List<GenericValue>> entry : viewsByType.entrySet()) {
-            Map<String, GenericValue> viewsByLocale = new HashMap<>();
-            for(GenericValue view : entry.getValue()) {
-                String localeString = view.getString("localeString");
-                if (viewsByLocale.containsKey(localeString)) {
-                    Debug.logWarning("splitContentLocalizedSimpleTextContentAssocViewsByLocale: multiple eligible records found"
-                            + " for localeString '" + localeString + "'; using first found only (this may cause unexpected texts to appear)."
-                            + " Offending value: " + view.toString(), module);
-                    continue;
-                }
-                viewsByLocale.put(localeString, view);
-            }
-            viewsByTypeAndLocale.put(entry.getKey(), viewsByLocale);
-        }
-        
-        return viewsByTypeAndLocale;
-    }
-    
-    /**
-     * SCIPIO: rearranges a viewsByType map into textByTypeAndLocale map.
-     * Logs warnings if multiple records for same locales.
-     * Added 2017-10-27.
-     */
-    public static Map<String, Map<String, String>> extractContentLocalizedSimpleTextDataByLocale(Map<String, List<GenericValue>> viewsByType) {
-        Map<String, Map<String, String>> textDataByTypeAndLocale = new HashMap<>();
-        
-        for(Map.Entry<String, List<GenericValue>> entry : viewsByType.entrySet()) {
-            Map<String, String> textDataByLocale = new HashMap<>();
-            for(GenericValue view : entry.getValue()) {
-                String localeString = view.getString("localeString");
-                if (textDataByLocale.containsKey(localeString)) {
-                    Debug.logWarning("splitContentLocalizedSimpleTextContentAssocViewsByLocale: multiple eligible records found"
-                            + " for localeString '" + localeString + "'; using first found only (this may cause unexpected texts to appear)."
-                            + " Offending value: " + view.toString(), module);
-                    continue;
-                }
-                textDataByLocale.put(localeString, view.getString("textData"));
-            }
-            textDataByTypeAndLocale.put(entry.getKey(), textDataByLocale);
-        }
-        
-        return textDataByTypeAndLocale;
-    }
-    
-    /**
-     * SCIPIO: Makes a request parameter name prefix for special simple-text content field handling services.
-     * (used by catalog tree)
-     */
-    public static String makeLocalizedSimpleTextContentFieldStringParamPrefix(String basePrefix, String typeId, int index) {
-        return basePrefix + typeId + "." + index + ".";
-    }
-    
-    /**
-     * SCIPIO: Parses request parameters whose names follow {@link #makeLocalizedSimpleTextContentFieldStringParamPrefix},
-     * If basePrefix null the entries are assumed to have been extracted such that they no longer have the basePrefix.
-     * If allowPreparsed true any non-param entries are found their lists crush the params with same type keys.
-     * @return map of type IDs to lists of maps
-     */
-    public static Map<String, List<Map<String, Object>>> parseLocalizedSimpleTextContentFieldParams(Map<String, Object> entries, String basePrefix, boolean allowPreparsed) {
-        Map<String, List<Map<String, Object>>> typeMap = new HashMap<>();
-        if (entries != null) {
-            Map<String, List<Map<String, Object>>> preparsedTypeMap = new HashMap<>();
-            // indexes will be out of order, so we have to use ugly map of integer and sort after
-            Map<String, Map<Integer, Map<String, Object>>> typeIndexMap = new HashMap<>();
-            
-            if (basePrefix != null && basePrefix.isEmpty()) basePrefix = null;
-            
-            for(Map.Entry<String, Object> entry : entries.entrySet()) {
-                String name = entry.getKey();
-                
-                if (basePrefix != null) {
-                    if (name.startsWith(basePrefix)) name = name.substring(basePrefix.length());
-                    else continue;
-                }
-                
-                Object value = entry.getValue();
-                if (name.contains(".")) {
-                    String[] parts = StringUtils.split(name, ".", 3);
-                    if (parts.length < 3 || parts[0].isEmpty() || parts[2].isEmpty()) throw new IllegalArgumentException("invalid composed content field key: " + name);
-                    
-                    String typeId = parts[0];
-                    int index = Integer.parseInt(parts[1]);
-                    String mapKey = parts[2];
-                    
-                    Map<Integer, Map<String, Object>> indexMap = typeIndexMap.get(typeId);
-                    if (indexMap == null) {
-                        indexMap = new HashMap<>();
-                        Map<String, Object> entryData = new HashMap<>();
-                        entryData.put(mapKey, value);
-                        indexMap.put(index, entryData);
-                        typeIndexMap.put(typeId, indexMap);
-                    } else {
-                        Map<String, Object> entryData = indexMap.get(index);
-                        if (entryData == null) {
-                            entryData = new HashMap<>();
-                            indexMap.put(index, entryData);
-                        } 
-                        entryData.put(mapKey, value);
-                    }
-                } else if (allowPreparsed) {
-                    preparsedTypeMap.put(name, UtilGenerics.<Map<String, Object>>checkList(value));
-                }
-            }
-            
-            // get as sorted lists
-            // TODO: optimize better
-            for(Map.Entry<String, Map<Integer, Map<String, Object>>> entry : typeIndexMap.entrySet()) {
-                List<Integer> indexes = new ArrayList<>(entry.getValue().keySet());
-                Collections.sort(indexes);
-                
-                List<Map<String, Object>> entryDataList = new ArrayList<>(indexes.size());
-                for(int index : indexes) {
-                    entryDataList.add(entry.getValue().get(index));
-                }
-                
-                typeMap.put(entry.getKey(), entryDataList);
-            }
-            
-            typeMap.putAll(preparsedTypeMap);
-        }
-        return typeMap;
-    }
+
     
     /**
      * SCIPIO: Returns all rollups for a category.

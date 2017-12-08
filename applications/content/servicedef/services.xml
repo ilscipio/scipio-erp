@@ -1194,34 +1194,32 @@
         <override name="localeString" optional="false"/>
         <override name="contentId" mode="INOUT"/>
     </service>
-    <!-- SCIPIO: 2017-10-26: new service for update-only, requires exact contentId of the alt content -->
     <service name="updateSimpleTextContentForAlternateLocale" engine="simple" location="component://content/script/org/ofbiz/content/content/LocalizedContentServices.xml" invoke="updateSimpleTextContentForAlternateLocale">
+        <description>SCIPIO: Updates ALTERNATE_LOCALE simple text content by contentId (added 2017-10-26)</description>
         <auto-attributes mode="IN" entity-name="Content" include="pk" optional="false"/>
         <auto-attributes mode="IN" entity-name="Content" include="nonpk" optional="true"/>
         <attribute name="mainContentId" type="String" mode="IN" optional="false"/>
         <attribute name="text" type="String" mode="IN" optional="false" allow-html="any"/>
         <override name="localeString" optional="false"/>
     </service>
-    <!-- SCIPIO: 2017-10-26: new service for delete, requi -->
     <service name="deleteSimpleTextContentForAlternateLocale" engine="simple" location="component://content/script/org/ofbiz/content/content/LocalizedContentServices.xml" invoke="deleteSimpleTextContentForAlternateLocale">
+        <description>SCIPIO: Deletes ALTERNATE_LOCALE simple text content by contentId (added 2017-10-26)</description>
         <auto-attributes mode="IN" entity-name="Content" include="pk" optional="false"/>
         <attribute name="mainContentId" type="String" mode="IN" optional="false"/>
     </service>
-    <!-- SCIPIO: 2017-10-26: new update service for alt locale - if contentId passed, updates it, otherwise
-        uses sane logic to create or update or otherwise "set" the locale to the given text -->
     <service name="createUpdateSimpleTextContentForAlternateLocale" engine="simple" location="component://content/script/org/ofbiz/content/content/LocalizedContentServices.xml" invoke="createUpdateSimpleTextContentForAlternateLocale">
-        <description>SCIPIO: WARN: UNTESTED: Intelligently creates or updates simple text content for alternate locale</description>
+        <description>SCIPIO: WARN: UNTESTED: Intelligently creates or updates simple text content for alternate locale
+            - supports either explicit contentId or relying on localeString to find record to update (added 2017-10-26)</description>
         <auto-attributes mode="IN" entity-name="Content" optional="true"/>
         <attribute name="mainContentId" type="String" mode="IN" optional="false"/>
         <attribute name="text" type="String" mode="IN" optional="false" allow-html="any"/>
         <override name="localeString" optional="false"/>
         <override name="contentId" mode="INOUT"/>
     </service>
-    <!-- SCIPIO: NOTE: 2017-12-06: Will be promoting this instead of createUpdateSimpleTextContentForAlternateLocale for now
-        (rewritten as java, as the other does not manage deletions easily) -->
-    <service name="replaceSimpleTextContentsForAlternateLocale" engine="java" location="org.ofbiz.content.content.LocalizedContentServices" invoke="replaceSimpleTextContentsForAlternateLocale">
+    
+    <service name="replaceContentLocalizedSimpleTexts" engine="java" location="org.ofbiz.content.content.LocalizedContentServices" invoke="replaceContentLocalizedSimpleTexts">
         <description>SCIPIO: Intelligently creates, updates and deletes simple text contents for alternate locale
-            NOTE: This service will create and update the Main Content record as needed, but it cannot delete the main Content record - consult allContentEmpty flag.</description>
+            NOTE: This service will create and update the Main Content record as needed, but it cannot delete the main Content record (see allContentEmpty flag).</description>
         <attribute name="mainContentId" type="String" mode="INOUT" optional="true"/>
         <attribute name="entries" type="List" mode="IN" optional="true">
             <description>Lists of maps, each map supporting the keys: localeString, textData, and optional contentId.
@@ -1243,7 +1241,7 @@
     
     <!-- SCIPIO: DEV NOTE: This is the target of the @stcLocField macro code.
         See org.ofbiz.content.content.LocalizedContentWorker for helper methods. -->
-    <service name="replaceEntityContentSimpleTextsForAlternateLocaleInterface" engine="interface">
+    <service name="replaceEntityContentLocalizedSimpleTextsInterface" engine="interface">
         <description>SCIPIO: Interface for simple text content for alternate locale intelligent create/update/delete services linked to a major entity (ProductContent, ProductCategoryContent, etc.)</description>
         <attribute name="contentFields" type="Map" mode="IN" optional="true" string-map-prefix="contentFields_">
             <description>Map of content type IDs to lists of maps, each map supporting the keys: localeString, textData, and optional contentId.

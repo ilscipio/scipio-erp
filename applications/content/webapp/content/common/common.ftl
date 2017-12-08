@@ -73,10 +73,10 @@
 <#-- Simple text content localized field, a simple text input with separate entries for each locale.
     
     Originally written to produce submitted parameters compatible with the service interface:
-      replaceEntityContentSimpleTextsForAlternateLocaleInterface
+      replaceEntityContentLocalizedSimpleTextsInterface
     notably these wrapper services:
-      replaceProductContentSimpleTextsForAlternateLocale
-      replaceProductCategoryContentSimpleTextsForAlternateLocale
+      replaceProductContentLocalizedSimpleTexts
+      replaceProductCategoryContentLocalizedSimpleTexts
     Args may be tweaked to work with others.
 
     REQUIRES:

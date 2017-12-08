@@ -501,10 +501,10 @@ public class CategoryServices {
     }
     
     /**
-     * SCIPIO: replaceProductCategoryContentSimpleTextsForAlternateLocale.
+     * SCIPIO: replaceProductCategoryContentLocalizedSimpleTexts.
      * Added 2017-12-06.
      */
-    public static Map<String, Object> replaceProductCategoryContentSimpleTextsForAlternateLocale(DispatchContext dctx, Map<String, ? extends Object> context) {
+    public static Map<String, Object> replaceProductCategoryContentLocalizedSimpleTexts(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
@@ -528,7 +528,7 @@ public class CategoryServices {
                         .orderBy("-fromDate").queryList();
                 GenericValue productCategoryContent = EntityUtil.getFirst(productCategoryContentList);
                 if (productCategoryContentList.size() > 1) {
-                    Debug.logWarning("replaceProductCategoryContentSimpleTextsForAlternateLocale: Multiple active ProductCategoryContent found for prodCatContentTypeId '"
+                    Debug.logWarning("replaceProductCategoryContentLocalizedSimpleTexts: Multiple active ProductCategoryContent found for prodCatContentTypeId '"
                             + prodCatContentTypeId + "' for category '" + productCategoryId + "'; updating only latest (contentId: '" + productCategoryContent.getString("contentId") + "')", module);
                 }
                 

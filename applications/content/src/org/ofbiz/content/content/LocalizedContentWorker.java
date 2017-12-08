@@ -30,8 +30,8 @@ import org.ofbiz.service.ServiceUtil;
  * help manage the parameters for the services that must update them.
  * <p>
  * May help implement services that implement/use:
- * replaceEntityContentSimpleTextsForAlternateLocaleInterface
- * replaceSimpleTextContentsForAlternateLocale
+ * replaceEntityContentLocalizedSimpleTextsInterface
+ * replaceContentLocalizedSimpleTexts
  * <p>
  * NOTE: part of this code may rely on the existence of these views:
  * ProductContentAndElectronicText, ProductCategoryContentAndElectronicText
@@ -107,7 +107,7 @@ public abstract class LocalizedContentWorker {
     
     /**
      * SCIPIO: Parses request parameters whose names follow {@link #makeLocalizedSimpleTextContentFieldStringParamPrefix},
-     * notably for use with services that implement replaceEntityContentSimpleTextsForAlternateLocaleInterface service.
+     * notably for use with services that implement replaceEntityContentLocalizedSimpleTextsInterface service.
      * <p>
      * If basePrefix null the entries are assumed to have been extracted such that they no longer have the basePrefix.
      * If allowPreparsed true any non-param entries are found their lists crush the params with same type keys.

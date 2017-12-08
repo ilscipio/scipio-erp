@@ -28,7 +28,7 @@ public abstract class LocalizedContentServices {
     protected LocalizedContentServices() {
     }
 
-    public static Map<String, Object> replaceSimpleTextContentsForAlternateLocale(DispatchContext dctx, Map<String, ? extends Object> context) {
+    public static Map<String, Object> replaceContentLocalizedSimpleTexts(DispatchContext dctx, Map<String, ? extends Object> context) {
         // NOTE: error messages kept brief, because caller provides prefix
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();

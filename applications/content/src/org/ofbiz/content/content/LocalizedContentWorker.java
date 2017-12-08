@@ -111,7 +111,8 @@ public abstract class LocalizedContentWorker {
      * <p>
      * If basePrefix null the entries are assumed to have been extracted such that they no longer have the basePrefix.
      * If allowPreparsed true any non-param entries are found their lists crush the params with same type keys.
-     * TODO: the algorithm could be optimized (non-trivial) - hard to parse all the parameter involved.
+     * <p>
+     * TODO: the algorithm could be optimized (non-trivial) - hard to parse all the parameters involved.
      * 
      * @return map of type IDs to lists of maps
      */

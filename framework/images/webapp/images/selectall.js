@@ -1021,7 +1021,7 @@ function showErrorAlertLoadUiLabel(errBoxTitleResource, errBoxTitleLabel, uiReso
             }
         });
     } else {
-      alert(labels[uiResource][0]);
+        alert(labels[uiResource][0]);
     }
 }
 
@@ -1039,7 +1039,7 @@ function showErrorAlert(errBoxTitle, errMessage) {
     // Scipio: FIXME: The code below this is currently not working, so just show an alert box for time being
     alert(errMessage);
     return;
-
+    /*
     
     var errMsgBox = jQuery("#contentarea").after(jQuery("<div id='errorAlertBox'>" + errMessage + "</div>"));
 
@@ -1055,6 +1055,7 @@ function showErrorAlert(errBoxTitle, errMessage) {
             }
         });
     }
+    */
 }
 
 /**

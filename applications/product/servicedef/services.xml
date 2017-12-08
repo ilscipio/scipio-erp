@@ -1825,16 +1825,14 @@ under the License.
         <attribute name="textByTypeAndLocale" mode="OUT" type="Map" optional="true"/>
     </service>
     
-    <!-- SCIPIO: NOTE: this is a simple wrapper around replaceContentLocalizedSimpleTexts (see content services) -->
     <service name="replaceProductContentLocalizedSimpleTexts" engine="java" location="org.ofbiz.product.product.ProductServices" invoke="replaceProductContentLocalizedSimpleTexts">
-        <description>SCIPIO: Intelligently creates, updates and deletes ProductContent simple text contents for alternate locale</description>
+        <description>SCIPIO: Intelligently creates, updates and deletes ProductContent ALTERNATE_LOCALE simple text contents (wrapper around replaceContentLocalizedSimpleTexts)</description>
         <implements service="replaceEntityContentLocalizedSimpleTextsInterface"/>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
     </service>
     
-    <!-- SCIPIO: NOTE: this is a simple wrapper around replaceContentLocalizedSimpleTexts (see content services) -->
     <service name="replaceProductCategoryContentLocalizedSimpleTexts" engine="java" location="org.ofbiz.product.category.CategoryServices" invoke="replaceProductCategoryContentLocalizedSimpleTexts">
-        <description>SCIPIO: Intelligently creates, updates and deletes ProductCategoryContent simple text contents for alternate locale</description>
+        <description>SCIPIO: Intelligently creates, updates and deletes ProductCategoryContent ALTERNATE_LOCALE simple text contents (wrapper around replaceContentLocalizedSimpleTexts)</description>
         <implements service="replaceEntityContentLocalizedSimpleTextsInterface"/>
         <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
     </service>

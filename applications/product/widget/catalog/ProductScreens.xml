@@ -926,6 +926,9 @@ under the License.
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one entity-name="Product" value-field="product"/>
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/EditProductContent.groovy"/>
+                
+                <!-- SCIPIO: required for localized fields -->
+                <set field="layoutSettings.javaScripts[]" value="/content/images/ScpContentCommon.js" global="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.mainDecoratorLocation}">
@@ -943,6 +946,9 @@ under the License.
                             <platform-specific>
                                 <html><html-template location="component://product/webapp/catalog/product/EditProductContent.ftl"/></html>
                             </platform-specific>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.CommonUpdateLocalizedFields}"><!-- SCIPIO: added 2017-12 -->
+                            <include-screen name="EditProductStcLocFields"/>
                         </screenlet>
                         <screenlet title="${uiLabelMap.ProductAddAdditionalImages}">
                             <platform-specific>
@@ -1831,6 +1837,26 @@ under the License.
                    </widgets>
                 </section>
            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: New easy-to-use form for product simple text content localized fields -->
+    <screen name="EditProductStcLocFields">
+        <section>
+            <condition>
+                <and>
+                    <not><if-empty field="product"/></not>
+                </and>
+            </condition>
+            <actions>
+                <set field="productId" from-field="product.productId"/>
+                <script location="component://product/webapp/catalog/WEB-INF/actions/product/GetProductStcLocFields.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://product/webapp/catalog/product/EditProductStcLocFields.ftl"/></html>
+                </platform-specific>
+            </widgets>
         </section>
     </screen>
 </screens>

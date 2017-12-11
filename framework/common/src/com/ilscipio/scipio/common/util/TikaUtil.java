@@ -23,8 +23,6 @@ import org.apache.tika.mime.MimeType;
 import org.apache.tika.mime.MimeTypeException;
 import org.apache.tika.mime.MimeTypes;
 import org.apache.tika.parser.AutoDetectParser;
-import org.apache.tika.parser.html.HtmlEncodingDetector;
-import org.apache.tika.parser.txt.Icu4jEncodingDetector;
 import org.apache.tika.parser.txt.UniversalEncodingDetector;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
@@ -32,6 +30,8 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+
+import sun.nio.ByteBuffered;
 
 /**
  * Apache Tika file detection utility.
@@ -256,7 +256,7 @@ public abstract class TikaUtil {
     }
     
     /**
-     * Finds charset (through Apache Tika library), based on filename, using default encoding detector class.
+     * Finds charset (through Apache Tika library), based on filename, using default encoding detector class without media type
      * 
      * @param byteBuffer
      * @param fileName
@@ -264,11 +264,11 @@ public abstract class TikaUtil {
      * @throws IOException
      */
     public static Charset findCharset(ByteBuffer byteBuffer, String fileName) throws IOException {
-        return findCharset(byteBuffer, fileName, UniversalEncodingDetector.class);
+        return findCharset(byteBuffer, fileName, UniversalEncodingDetector.class, null);
     }
 
     /**
-     * Finds charset (through Apache Tika library), based on filename, using default encoding detector class.
+     * Finds charset (through Apache Tika library), based on filename, using default encoding detector class without media type
      * 
      * @param is
      * @param fileName
@@ -276,47 +276,56 @@ public abstract class TikaUtil {
      * @throws IOException
      */
     public static Charset findCharset(InputStream is, String fileName) throws IOException {
-        return findCharset(is, fileName, UniversalEncodingDetector.class);
+        return findCharset(is, fileName, UniversalEncodingDetector.class, null);
     }
 
     /**
-     * Finds charset (through Apache Tika library), based on filename.
-     * @throws IOException 
+     * Finds charset (through Apache Tika library), based on filename, using custom encoding detector class without media type
+     * 
+     * @param byteBuffer
+     * @param fileName
+     * @param encodingDetectorClass
+     * @return
+     * @throws IOException
      */
     public static Charset findCharset(ByteBuffer byteBuffer, String fileName, Class<? extends EncodingDetector> encodingDetectorClass) throws IOException {
+        return findCharset(byteBuffer, fileName, encodingDetectorClass, null);
+    }
+    
+    /**
+     * Finds charset (through Apache Tika library) from a ByteBuffer, based on filename, using custom encoding detector and media type
+     * 
+     * @param byteBuffer
+     * @param fileName
+     * @param encodingDetectorClass
+     * @param mediaType
+     * @return
+     * @throws IOException
+     */
+    public static Charset findCharset(ByteBuffer byteBuffer, String fileName, Class<? extends EncodingDetector> encodingDetectorClass, MediaType mediaType) throws IOException {
         InputStream is = new ByteBufferInputStream(byteBuffer);
         try {
-            return findCharset(is, fileName);
+            return findCharset(is, fileName, encodingDetectorClass, mediaType);
         } finally {
             try {
                 is.close();
             } catch (IOException e) {
-                ;
+                throw e;
             }
         }
     }
-    
-    public static Charset findCharsetSafe(InputStream is, String fileName) {
-        try {
-            return findCharset(is, fileName);
-        } catch (IOException e) {
-            return null;
-        }
-    }
-    
-    public static Charset findCharsetSafe(ByteBuffer byteBuffer, String fileName) {
-        try {
-            return findCharset(byteBuffer, fileName);
-        } catch (IOException e) {
-            return null;
-        }
-    }
-    
+
     /**
-     * Finds charset (through Apache Tika library), based on filename.
+     * Finds charset (through Apache Tika library) from an InputStream, based on filename, using custom encoding detector and media type
+     * 
+     * @param is
+     * @param fileName
+     * @param encodingDetectorClass
+     * @param mediaType
+     * @return
      * @throws IOException
      */
-    public static Charset findCharset(InputStream is, String fileName,  Class<? extends EncodingDetector> encodingDetectorClass) throws IOException  {
+    public static Charset findCharset(InputStream is, String fileName,  Class<? extends EncodingDetector> encodingDetectorClass, MediaType mediaType) throws IOException  {
         if (encodingDetectorClass == null)
             return null;
         BufferedInputStream bis = new BufferedInputStream(is);
@@ -324,6 +333,9 @@ public abstract class TikaUtil {
             EncodingDetector detector = encodingDetectorClass.newInstance();
             Metadata md = new Metadata();
             md.add(Metadata.RESOURCE_NAME_KEY, fileName);
+            if (UtilValidate.isNotEmpty(mediaType)) {
+                md.add(Metadata.CONTENT_TYPE, mediaType.getType() + "/" + mediaType.getSubtype());
+            }
             return detector.detect(is, md);
         } catch (InstantiationException e) {
             Debug.logError(e.getMessage(), module);
@@ -340,6 +352,37 @@ public abstract class TikaUtil {
         }
     }
     
+    public static Charset findCharsetSafe(InputStream is, String fileName) {
+        return findCharsetSafe(is, fileName, null);
+    }
+
+    public static Charset findCharsetSafe(ByteBuffer byteBuffer, String fileName) {
+        return findCharsetSafe(byteBuffer, fileName, null);
+    }
+
+    public static Charset findCharsetSafe(InputStream is, String fileName, Class<? extends EncodingDetector> encodingDetectorClass) {
+        return findCharsetSafe(is, fileName, encodingDetectorClass, null);
+    }
+
+    public static Charset findCharsetSafe(ByteBuffer byteBuffer, String fileName, Class<? extends EncodingDetector> encodingDetectorClass) {
+        return findCharsetSafe(byteBuffer, fileName, encodingDetectorClass, null);
+    }
+
+    public static Charset findCharsetSafe(InputStream is, String fileName, Class<? extends EncodingDetector> encodingDetectorClass, MediaType mediaType) {
+        try {
+            return findCharset(is, fileName, encodingDetectorClass, mediaType);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    public static Charset findCharsetSafe(ByteBuffer byteBuffer, String fileName, Class<? extends EncodingDetector> encodingDetectorClass, MediaType mediaType) {
+        try {
+            return findCharset(byteBuffer, fileName, encodingDetectorClass, mediaType);
+        } catch (IOException e) {
+            return null;
+        }
+    }
     
     /* ******************************************************************** */
     /* Meta-Information and XML Data Utilities  */
@@ -458,7 +501,8 @@ public abstract class TikaUtil {
      * FIXME: use something better
      */
     private static class ByteBufferInputStream extends InputStream {
-        private ByteBuffer buf;
+        private ByteBuffer buf;        
+        private int mark;
         
         public ByteBufferInputStream(ByteBuffer buf) {
             this.buf = buf;
@@ -468,13 +512,79 @@ public abstract class TikaUtil {
             if (!buf.hasRemaining()) {
                 return -1;
             }
-            return buf.get();
+            return buf.get() & 0xFF;
         }
         
-        public int read(byte[] bytes, int off, int len) throws IOException { // not needed: synchronized (keyword)
-            len = Math.min(len, buf.remaining());
-            buf.get(bytes, off, len);
-            return len;
+        public final int read(byte[] bytes, int off, int len) throws IOException { // not needed: synchronized (keyword)
+            if (bytes == null) {
+                throw new NullPointerException();
+            } else if (off < 0 || len < 0 || off > bytes.length || off + len > bytes.length || off + len < 0) {
+                throw new IndexOutOfBoundsException("offset " + off + ", length " + len + ", b.length " + bytes.length);
+            } else if (0 == len) {
+                return 0;
+            }
+            final int totalRem = buf.remaining();
+            if (0 == totalRem) {
+                return -1;
+            }
+            final int maxLen = Math.min(totalRem, len);
+            if (buf.hasArray()) {
+                System.arraycopy(buf.array(), buf.arrayOffset() + buf.position(), bytes, off, maxLen);
+                buf.position(buf.position() + maxLen);
+            } else {
+                buf.get(bytes, off, maxLen);
+            }
+            return maxLen;
+        }
+
+        public final int read(final ByteBuffer b, final int len) {
+            if (b == null) {
+                throw new NullPointerException();
+            } else if (len < 0 || len > b.remaining()) {
+                throw new IndexOutOfBoundsException("length " + len + ", b " + b);
+            } else if (0 == len) {
+                return 0;
+            }
+            final int remaining = buf.remaining();
+            if (0 == remaining) {
+                return -1;
+            }
+            final int maxLen = Math.min(remaining, len);
+            if (buf.hasArray() && b.hasArray()) {
+                System.arraycopy(buf.array(), buf.arrayOffset() + buf.position(), b.array(), b.arrayOffset() + b.position(), maxLen);
+                buf.position(buf.position() + maxLen);
+                b.position(b.position() + maxLen);
+            } else if (maxLen == remaining) {
+                b.put(buf);
+            } else {
+                final int _limit = buf.limit();
+                buf.limit(maxLen);
+                try {
+                    b.put(buf);
+                } finally {
+                    buf.limit(_limit);
+                }
+            }
+            return maxLen;
+        }
+
+        
+        @Override
+        public final boolean markSupported() {
+            return true;
+        }
+
+        @Override
+        public final synchronized void mark(final int unused) {
+            mark = buf.position();
+        }
+
+        @Override
+        public final synchronized void reset() throws IOException {
+            if (mark == -1) {
+                throw new IOException();
+            }
+            buf.position(mark);
         }
     }
     

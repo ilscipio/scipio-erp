@@ -35,6 +35,7 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
         protected Map<String, ?> servCtxOpts = new HashMap<>();
         protected boolean doChildProducts = true;
         private boolean includeVariant = true;
+        private boolean generateFixedIds = true;
         
         /**
          * The options used for nested service calls - contains locale, user auth and various flags -
@@ -63,6 +64,19 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
         
         public boolean isIncludeVariant() {
             return includeVariant;
+        }
+
+        public boolean isGenerateFixedIds() {
+            return generateFixedIds;
+        }
+
+        public GenTraversalConfig setGenerateFixedIds(boolean generateFixedIds) {
+            this.generateFixedIds = generateFixedIds;
+            return this;
+        }
+
+        public void setIncludeVariant(boolean includeVariant) {
+            this.includeVariant = includeVariant;
         }
     }
     
@@ -100,6 +114,7 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
         Map<String, Object> servCtx = getDispatcher().getDispatchContext().makeValidContext("generateProductCategoryAlternativeUrlsCore", ModelService.IN_PARAM, servCtxOpts);
         servCtx.put("productCategory", productCategory);
         servCtx.put("productCategoryId", productCategoryId);
+        servCtx.put("generateFixedIds", getTravConfig().isGenerateFixedIds());
         // service call for separate transaction
         Map<String, Object> recordResult = getDispatcher().runSync("generateProductCategoryAlternativeUrlsCore", servCtx, -1, true);
         
@@ -132,6 +147,7 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
         servCtx.put("productId", productId);
         servCtx.put("doChildProducts", getTravConfig().isDoChildProducts());
         servCtx.put("includeVariant", includeVariant);
+        servCtx.put("generateFixedIds", getTravConfig().isGenerateFixedIds());
         // service call for separate transaction
         Map<String, Object> recordResult = getDispatcher().runSync("generateProductAlternativeUrlsCore", servCtx, -1, true);
 

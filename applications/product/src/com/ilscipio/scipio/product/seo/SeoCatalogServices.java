@@ -84,6 +84,7 @@ public abstract class SeoCatalogServices {
         final boolean useCache = false; // probably bad idea
         boolean doChildProducts = Boolean.TRUE.equals(context.get("doChildProducts"));
         boolean includeVariant = !Boolean.FALSE.equals(context.get("includeVariant"));
+        boolean generateFixedIds = Boolean.TRUE.equals(context.get("generateFixedIds"));
 
         GenericEntity productEntity = (GenericEntity) context.get("product");
         try {
@@ -98,7 +99,7 @@ public abstract class SeoCatalogServices {
                 }
             }
             return generateProductAlternativeUrls(dctx, context, product, new ArrayList<GenProdAltUrlParentEntry>(),
-                    replaceExisting, removeOldLocales, moment, doChildProducts, includeVariant, useCache);
+                    replaceExisting, removeOldLocales, moment, doChildProducts, includeVariant, generateFixedIds, useCache);
         } catch (Exception e) {
             String message = "Error while generating alternative links: " + e.getMessage();
             Debug.logError(e, logPrefix+message, module);
@@ -133,7 +134,7 @@ public abstract class SeoCatalogServices {
     
     static Map<String, Object> generateProductAlternativeUrls(DispatchContext dctx, Map<String, ?> context,
             GenericValue product, List<GenProdAltUrlParentEntry> parentProducts, boolean replaceExisting, boolean removeOldLocales, Timestamp moment, 
-            boolean doChildProducts, boolean includeVariant, boolean useCache) throws Exception {
+            boolean doChildProducts, boolean includeVariant, boolean generateFixedIds, boolean useCache) throws Exception {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String productId = product.getString("productId");
@@ -239,7 +240,7 @@ public abstract class SeoCatalogServices {
                             
                             Map<String, Object> childResult = generateProductAlternativeUrls(dctx, context, 
                                     variantProduct, parentProducts, replaceExisting, removeOldLocales, 
-                                    moment, doChildProducts, includeVariant, useCache);
+                                    moment, doChildProducts, includeVariant, generateFixedIds, useCache);
                             
                             // NOTE: most of this
                             Integer childrenUpdated = (Integer) childResult.get("numUpdated");
@@ -284,7 +285,8 @@ public abstract class SeoCatalogServices {
         boolean removeOldLocales = !Boolean.FALSE.equals(context.get("removeOldLocales"));
         Timestamp moment = UtilDateTime.nowTimestamp();
         final boolean useCache = false; // probably bad idea
-        
+        boolean generateFixedIds = Boolean.TRUE.equals(context.get("generateFixedIds"));
+
         GenericEntity productCategoryEntity = (GenericEntity) context.get("productCategory");
         try {
             GenericValue productCategory;
@@ -298,7 +300,7 @@ public abstract class SeoCatalogServices {
                 }
             }
             return generateProductCategoryAlternativeUrls(dctx, context, 
-                    productCategory, replaceExisting, removeOldLocales, moment, useCache);
+                    productCategory, replaceExisting, removeOldLocales, moment, generateFixedIds, useCache);
         } catch (Exception e) {
             String message = "Error while generating alternative links: " + e.getMessage();
             Debug.logError(e, logPrefix+message, module);
@@ -307,7 +309,7 @@ public abstract class SeoCatalogServices {
     }
     
     static Map<String, Object> generateProductCategoryAlternativeUrls(DispatchContext dctx, Map<String, ?> context,
-            GenericValue productCategory, boolean replaceExisting, boolean removeOldLocales, Timestamp moment, boolean useCache) throws Exception {
+            GenericValue productCategory, boolean replaceExisting, boolean removeOldLocales, Timestamp moment, boolean generateFixedIds, boolean useCache) throws Exception {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String productCategoryId = productCategory.getString("productCategoryId");
@@ -482,9 +484,12 @@ public abstract class SeoCatalogServices {
         boolean useCache = Boolean.TRUE.equals(context.get("useCache")); // FALSE default
         boolean preventDuplicates = !Boolean.FALSE.equals(context.get("preventDuplicates"));
         
+        boolean generateFixedIds = Boolean.TRUE.equals(context.get("generateFixedIds"));
+        
         SeoCatalogUrlGenerator traverser;
         try {
             GenTraversalConfig travConfig = (GenTraversalConfig) new GenTraversalConfig()
+                    .setGenerateFixedIds(generateFixedIds)
                     .setServCtxOpts(context)
                     .setDoChildProducts(doChildProducts)
                     .setUseCache(useCache).setDoCategory(doCategory).setDoProduct(doProduct)
@@ -531,9 +536,12 @@ public abstract class SeoCatalogServices {
         
         //boolean replaceExisting = !Boolean.FALSE.equals(context.get("replaceExisting")); // makeValidContext transfers
 
+        boolean generateFixedIds = Boolean.TRUE.equals(context.get("generateFixedIds"));
+        
         SeoCatalogUrlGenerator traverser;
         try {
             GenTraversalConfig travConfig = (GenTraversalConfig) new GenTraversalConfig()
+                    .setGenerateFixedIds(generateFixedIds)
                     .setServCtxOpts(context)
                     .setDoChildProducts(doChildProducts)
                     .setUseCache(useCache).setDoCategory(doCategory).setDoProduct(doProduct);

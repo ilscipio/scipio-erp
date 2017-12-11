@@ -13,6 +13,7 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.csv.QuoteMode;
 import org.apache.tika.mime.MediaType;
+import org.apache.tika.parser.txt.UniversalEncodingDetector;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -53,7 +54,7 @@ public class DatevServices {
             Debug.log("media type ====>" + mediaType.getType());
         }
 
-        Charset detectedCharset = TikaUtil.findCharsetSafe(fileBytes, fileName);
+        Charset detectedCharset = TikaUtil.findCharsetSafe(fileBytes, fileName, UniversalEncodingDetector.class, mediaType);
         if (UtilValidate.isEmpty(detectedCharset)) {
             String systemEncoding = System.getProperty("file.encoding");
             detectedCharset = Charset.forName(systemEncoding);

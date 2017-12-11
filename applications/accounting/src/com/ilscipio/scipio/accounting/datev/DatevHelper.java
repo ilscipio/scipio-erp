@@ -3,7 +3,6 @@ package com.ilscipio.scipio.accounting.datev;
 import java.util.List;
 import java.util.Map;
 
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -23,13 +22,11 @@ public class DatevHelper {
     private Map<String, Boolean> headerFieldsFound = FastMap.newInstance();
 
     public DatevHelper(Delegator delegator) throws GenericEntityException {
-        this.datevTransactionEntryDefinitions = EntityQuery.use(delegator)
-                .from("DatevTransactionEntryDefinition").where(EntityCondition.makeCondition(EntityOperator.OR, UtilMisc
-                        .toList(EntityCondition.makeCondition("metadata", EntityOperator.EQUALS, null), EntityCondition.makeCondition("metadata", EntityOperator.EQUALS, "N"))))
-                .queryList();
+        this.datevTransactionEntryDefinitions = EntityQuery.use(delegator).from("DatevTransactionEntryDefinition")
+                .where(EntityCondition.makeCondition("metadata", EntityOperator.EQUALS, "N")).queryList();
 
         this.datevMetadataTransactionEntryDefinitions = EntityQuery.use(delegator).from("DatevTransactionEntryDefinition")
-                .where(EntityCondition.makeCondition("metadata", EntityOperator.EQUALS, "Y"), EntityCondition.makeCondition("metadata", EntityOperator.EQUALS, "N")).queryList();
+                .where(EntityCondition.makeCondition("metadata", EntityOperator.EQUALS, "Y")).queryList();
 
     }
 

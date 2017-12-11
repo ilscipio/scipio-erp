@@ -506,16 +506,29 @@ public abstract class TikaUtil {
         
         public ByteBufferInputStream(ByteBuffer buf) {
             this.buf = buf;
+            this.mark = -1;
         }
         
-        public int read() throws IOException { // not needed: synchronized (keyword)
+        @Override
+        public final int available() {
+            return buf.remaining();
+        }
+        
+        @Override
+        public int read() throws IOException {
             if (!buf.hasRemaining()) {
                 return -1;
             }
             return buf.get() & 0xFF;
         }
         
-        public final int read(byte[] bytes, int off, int len) throws IOException { // not needed: synchronized (keyword)
+        @Override
+        public final int read(byte[] bytes) throws IOException {
+            return read(bytes, 0, bytes.length);
+        }
+        
+        @Override
+        public final int read(byte[] bytes, int off, int len) throws IOException {
             if (bytes == null) {
                 throw new NullPointerException();
             } else if (off < 0 || len < 0 || off > bytes.length || off + len > bytes.length || off + len < 0) {
@@ -567,7 +580,6 @@ public abstract class TikaUtil {
             }
             return maxLen;
         }
-
         
         @Override
         public final boolean markSupported() {
@@ -586,6 +598,18 @@ public abstract class TikaUtil {
             }
             buf.position(mark);
         }
+        
+        @Override
+        public final long skip(final long n) throws IOException {
+            if (0 > n) {
+                return 0;
+            }
+            final int s = (int) Math.min(buf.remaining(), n);
+            buf.position(buf.position() + s);
+            return s;
+        }
+        
+        public final ByteBuffer getBuffer() { return buf; }
     }
     
 }

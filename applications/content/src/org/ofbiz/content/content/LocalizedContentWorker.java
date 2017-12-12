@@ -347,22 +347,34 @@ public abstract class LocalizedContentWorker {
     
     public static void updateSimpleTextContent(Delegator delegator, LocalDispatcher dispatcher, GenericValue content, String localeString, String textData) throws GenericEntityException {
         updateSimpleTextContent(delegator, dispatcher, content, textData);
-        content.put("localeString", localeString);
-        content.store();
+        if (!sameLocale(localeString, content.getString("localeString"))) {
+            content.put("localeString", localeString);
+            content.store();
+        }
         GenericValue dataResource = content.getRelatedOne("DataResource", false);
         if (dataResource != null) {
-            // NOTE: dataResource.localeString is probably not necessary, but we should play it safe
-            dataResource.put("localeString", localeString);
-            dataResource.store();
+            if (!sameLocale(localeString, dataResource.getString("localeString"))) {
+                // NOTE: dataResource.localeString is probably not necessary in most cases, but we should play it safe
+                dataResource.put("localeString", localeString);
+                dataResource.store();
+            }
         } else {
-            Debug.logError("Missing DataResource for contentId '" + content.getString("contentId") + "'", module);
+            Debug.logError("Schema error: Missing DataResource for contentId '" + content.getString("contentId") + "'; cannot update simple text content", module);
         }
     }
-    
+
     public static void updateSimpleTextContent(Delegator delegator, LocalDispatcher dispatcher, GenericValue content, String textData) throws GenericEntityException {
         GenericValue elecText = getSimpleTextContentElectronicText(delegator, dispatcher, content);
         elecText.put("textData", textData);
         elecText.store();
+    }
+    
+    private static boolean sameLocale(String first, String second) {
+        if (UtilValidate.isNotEmpty(first)) {
+            return first.equals(second);
+        } else {
+            return UtilValidate.isEmpty(second);
+        }
     }
     
     public static GenericValue getSimpleTextContentElectronicText(Delegator delegator, LocalDispatcher dispatcher, GenericValue content) throws GenericEntityException {
@@ -452,7 +464,7 @@ public abstract class LocalizedContentWorker {
             String textData = LocalizedSimpleTextInfo.getLocaleMapTextData(localeEntryMap.get(localeString));
             if (UtilValidate.isNotEmpty(textData)) {
                 if (!removeDupLocales || remainingLocales.contains(localeString)) {
-                    LocalizedContentWorker.updateSimpleTextContent(delegator, dispatcher, content, textData);
+                    LocalizedContentWorker.updateSimpleTextContent(delegator, dispatcher, content, localeString, textData);
                     remainingLocales.remove(localeString);
                 } else {
                     removeContentAndRelated(delegator, dispatcher, context, content);

@@ -11,40 +11,63 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 
-import javolution.util.FastMap;
-
 public class DatevHelper {
+    private static final String module = DatevHelper.class.getName();
 
     private final List<GenericValue> datevTransactionEntryDefinitions;
     private final List<GenericValue> datevMetadataTransactionEntryDefinitions;
+    private final List<String> datevTransactionFieldNames;
+    private final List<String> datevMetadataTransactionFieldNames;
 
-    private Map<String, Boolean> metaHeaderFieldsFound = FastMap.newInstance();
-    private Map<String, Boolean> headerFieldsFound = FastMap.newInstance();
+    // private final ResultSet datevTransactionEntryDefinitionsResultSet;
+    // private final ResultSet
+    // datevMetadataTransactionEntryDefinitionsResultSet;
+
+    // private Map<String, Boolean> metaHeaderFieldsFound =
+    // FastMap.newInstance();
+    // private Map<String, Boolean> headerFieldsFound = FastMap.newInstance();
 
     public DatevHelper(Delegator delegator) throws GenericEntityException {
         this.datevTransactionEntryDefinitions = EntityQuery.use(delegator).from("DatevTransactionEntryDefinition")
-                .where(EntityCondition.makeCondition("metadata", EntityOperator.EQUALS, "N")).queryList();
+                .where(EntityCondition.makeConditionWhere("METADATA IS NULL OR METADATA = 'N'")).queryList();
+        this.datevTransactionFieldNames = EntityUtil.getFieldListFromEntityList(datevTransactionEntryDefinitions, "fieldName", true);
 
         this.datevMetadataTransactionEntryDefinitions = EntityQuery.use(delegator).from("DatevTransactionEntryDefinition")
                 .where(EntityCondition.makeCondition("metadata", EntityOperator.EQUALS, "Y")).queryList();
-
+        this.datevMetadataTransactionFieldNames = EntityUtil.getFieldListFromEntityList(datevMetadataTransactionEntryDefinitions, "fieldName", true);
     }
 
-    public void findMetaHeader(Map<String, String> record) {
-        List<String> datevMetadataTransactionFieldNames = EntityUtil.getFieldListFromEntityList(datevMetadataTransactionEntryDefinitions, "fieldName", true);
+    public boolean isHeader(Map<String, String> record) {
+        boolean isHeader = true;
 
         for (String field : datevMetadataTransactionFieldNames) {
-            metaHeaderFieldsFound.put(field, record.containsKey(field));
+            if (!datevMetadataTransactionEntryDefinitions.contains(field)) {
+                isHeader = false;
+                break;
+            }
         }
+
+        if (!isHeader)
+            isHeader = true;
+        else
+            return isHeader;
+
+        for (String field : datevTransactionFieldNames) {
+            if (!datevTransactionEntryDefinitions.contains(field)) {
+                isHeader = false;
+                break;
+            }
+        }
+
+        return isHeader;
     }
 
-    public void findHeader(Map<String, String> record) {
-        List<String> datevTransactionFieldNames = EntityUtil.getFieldListFromEntityList(datevTransactionEntryDefinitions, "fieldName", true);
+    public String[] getDatevTransactionFieldNames() {
+        return (String[]) datevTransactionFieldNames.toArray();
+    }
 
-        for (String metaField : datevTransactionFieldNames) {
-            headerFieldsFound.put(metaField, record.containsKey(metaField));
-        }
-
+    public Object[] getDatevMetadataTransactionFieldNames() {
+        return datevMetadataTransactionFieldNames.toArray();
     }
 
 }

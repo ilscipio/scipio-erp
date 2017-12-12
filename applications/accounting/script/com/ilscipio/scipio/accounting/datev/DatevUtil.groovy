@@ -16,7 +16,6 @@ import javolution.util.FastMap
 final String module = "DatevUtil.groovy";
 
 ServletFileUpload dfu = new ServletFileUpload(new DiskFileItemFactory(10240, FileUtil.getFile("runtime/tmp")));
-//dfu.setHeaderEncoding("ISO-8859-1")
 
 // SCIPIO: patch - from ServiceEventHandler: create the progress listener and add it to the session
 FileUploadProgressListener listener = new FileUploadProgressListener();
@@ -62,12 +61,17 @@ for (int i = 0; i < lst.size(); i++) {
                 fileName = fileName.substring(lastIndex + 1);
             }
         }
-        multiPartMap.put("uploadedFile", ByteBuffer.wrap(csvFileItem.get()));
+        ByteBuffer bf = ByteBuffer.wrap(csvFileItem.get());        
+        BufferedReader br = new BufferedReader(new InputStreamReader(csvFileItem.getInputStream()));        
+//        String temp = null;
+//        while((temp = br.readLine()) != null){            
+//            Debug.log("csv line =====> " + temp);
+//        }
+//        br.close();
+        multiPartMap.put("uploadedFile", bf);
         multiPartMap.put("_" + fieldName + "_size", Long.valueOf(csvFileItem.getSize()));
         multiPartMap.put("_" + fieldName + "_fileName", fileName);
         multiPartMap.put("_" + fieldName + "_contentType", csvFileItem.getContentType());
     }
 }
-
-//context.passedParams=passedParams;
 context.multiPartMap=multiPartMap;

@@ -321,6 +321,8 @@ public abstract class LocalizedContentWorker {
         // create dataResource
         GenericValue dataResource = delegator.makeValue("DataResource");
         dataResource.put("dataResourceTypeId", "ELECTRONIC_TEXT");
+        // NOTE: dataResource.localeString is probably not necessary, but we should play it safe
+        dataResource.put("localeString", localeString);
         dataResource.setNonPKFields(dataResourceFields);
         dataResource = delegator.createSetNextSeqId(dataResource);
         String dataResourceId = dataResource.getString("dataResourceId");
@@ -333,7 +335,7 @@ public abstract class LocalizedContentWorker {
 
         // create content
         GenericValue content = delegator.makeValue("Content");
-        if (UtilValidate.isNotEmpty(localeString)) content.put("localeString", localeString);
+        content.put("localeString", localeString);
         content.put("dataResourceId", dataResourceId);
         content.put("contentTypeId", "DOCUMENT");
         content.setNonPKFields(contentFields);
@@ -347,6 +349,14 @@ public abstract class LocalizedContentWorker {
         updateSimpleTextContent(delegator, dispatcher, content, textData);
         content.put("localeString", localeString);
         content.store();
+        GenericValue dataResource = content.getRelatedOne("DataResource", false);
+        if (dataResource != null) {
+            // NOTE: dataResource.localeString is probably not necessary, but we should play it safe
+            dataResource.put("localeString", localeString);
+            dataResource.store();
+        } else {
+            Debug.logError("Missing DataResource for contentId '" + content.getString("contentId") + "'", module);
+        }
     }
     
     public static void updateSimpleTextContent(Delegator delegator, LocalDispatcher dispatcher, GenericValue content, String textData) throws GenericEntityException {

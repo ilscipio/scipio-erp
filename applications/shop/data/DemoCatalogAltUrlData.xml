@@ -30,6 +30,9 @@ under the License.
         This will completely replace the legacy manually-written names from DemoCatalogAltUrlLegacyData.xml,
         which should no longer be included in ofbiz_component.xml.
         
+        SPECIFICS: The generation is configured in seo-urls.properties and the file regenerated
+            using the exportWebsiteAlternativeUrlsEntityXmlFileFromConfig service.
+        
         NOTE: Any conflicting names as a result of the generation should be fixed by modifying the source data 
             (product/category names and SeoConfig.xml settings) rather than creating any manual fixup records. 
         NOTE: The "generated-data" comment on the next line must not be modified! It is used as a template marker. -->

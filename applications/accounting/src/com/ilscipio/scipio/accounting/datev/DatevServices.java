@@ -19,17 +19,20 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
-import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 
+import com.ilscipio.scipio.accounting.datev.DatevException.DATEV_ERROR_TYPE;
 import com.ilscipio.scipio.common.util.TikaUtil;
 
 import javolution.util.FastList;
 
 public class DatevServices {
 
-    public static String module = DatevServices.class.getName();
+    public final static String module = DatevServices.class.getName();
+    public final static Character DEFAULT_DELIMITER = ';';
+    public final static Character DEFAULT_QUOTE = '\"';
 
     /**
      * 
@@ -40,12 +43,26 @@ public class DatevServices {
     public static Map<String, Object> importDatevTransactionEntries(DispatchContext dctx, Map<String, Object> context) {
         Delegator delegator = dctx.getDelegator();
 
-        String orgPartyId = (String) context.get("organizationPartyId");
+        // Prepare result objects
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        List<String> messages = FastList.newInstance();
+        List<GenericValue> transactionEntriesImported = FastList.newInstance();
 
+        // Get context params
+        String orgPartyId = (String) context.get("organizationPartyId");
         ByteBuffer fileBytes = (ByteBuffer) context.get("uploadedFile");
         String fileSize = (String) context.get("_uploadedFile_size");
         String fileName = (String) context.get("_uploadedFile_fileName");
         String contentType = (String) context.get("_uploadedFile_contentType");
+
+        Character delimiter = DEFAULT_DELIMITER;
+        if (context.containsKey("delimiter"))
+            delimiter = ((String) context.get("delimiter")).charAt(0);
+        Character quote = DEFAULT_QUOTE;
+        if (context.containsKey("quote"))
+            quote = ((String) context.get("quote")).charAt(0);
+        Boolean hasMetaHeader = (Boolean) context.get("hasMetaHeader");
+        Boolean hasHeader = (Boolean) context.get("hasHeader");
 
         if (Debug.isOn(Debug.VERBOSE)) {
             Debug.log("Content Type :" + contentType);
@@ -86,28 +103,46 @@ public class DatevServices {
         fileBytes.rewind();
 
         // Parse CSV
-        String csvString = detectedCharset.decode(fileBytes).toString();
-        final BufferedReader csvReader = new BufferedReader(new StringReader(csvString));
-        CSVFormat fmt = CSVFormat.DEFAULT.withDelimiter(';').withQuote('"').withQuoteMode(QuoteMode.NON_NUMERIC);
+        fileBytes.rewind();
+        final BufferedReader csvReader = new BufferedReader(new StringReader(detectedCharset.decode(fileBytes).toString()));
+
+        CSVFormat fmt = CSVFormat.newFormat(delimiter).withQuote(quote).withQuoteMode(QuoteMode.NON_NUMERIC);
 
         try {
-            DatevHelper datevHelper = new DatevHelper(delegator);
-            fmt.withHeaderComments(datevHelper.getDatevMetadataTransactionFieldNames()).withHeader(datevHelper.getDatevTransactionFieldNames());
-            // fmt.withHeader(datevHelper.getDatevTransactionFieldNames());
+            Debug.log("is csv reader ready??" + csvReader.ready());
+            DatevHelper datevHelper = null;
+            try {
+                datevHelper = new DatevHelper(delegator);
+            } catch (DatevException e) {
+                if (!e.getDatevErrorType().equals(DATEV_ERROR_TYPE.FATAL)) {
+                    messages.add(e.getMessage());
+                } else {
+                    throw new Exception(e);
+                }
+            }
+            fmt.withHeader(datevHelper.getDatevTransactionFieldNames()).withSkipHeaderRecord(true);
+
+            String metaHeader = csvReader.readLine();
+            Iterator<String> metaHeaderIter = CSVParser.parse(metaHeader, fmt).getRecords().get(0).iterator();
+            try {
+                datevHelper.isMetaHeader(metaHeaderIter);
+            } catch (DatevException e) {
+                if (!e.getDatevErrorType().equals(DATEV_ERROR_TYPE.FATAL)) {
+                    messages.add(e.getMessage());
+                }
+            }
+
             CSVParser parser = fmt.parse(csvReader);
+
+            List<CSVRecord> records = parser.getRecords();
             long recordsNumber = parser.getRecordNumber();
             if (recordsNumber < 2) {
                 return ServiceUtil.returnError("No records found.");
             } else {
-                List<CSVRecord> records = parser.getRecords();
+
                 List<CSVRecord> recordsWithoutHeaders = FastList.newInstance();
                 recordsWithoutHeaders.addAll(records);
-                for (int i = 0; i < 2; i++) {
-                    CSVRecord csvRecord = records.get(i);
-                    if (datevHelper.isHeader(csvRecord.toMap())) {
-                        recordsWithoutHeaders.remove(csvRecord);
-                    }
-                }
+
                 for (final CSVRecord rec : recordsWithoutHeaders) {
                     for (Iterator<String> iter = rec.iterator(); iter.hasNext();) {
                         String value = iter.next();
@@ -115,13 +150,11 @@ public class DatevServices {
                     }
                 }
             }
-        } catch (IOException e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
-        } catch (GenericEntityException e) {
+        } catch (Exception e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         } finally {
+            fileBytes.clear();
             try {
                 csvReader.close();
             } catch (IOException e) {
@@ -129,7 +162,10 @@ public class DatevServices {
             }
         }
 
-        return ServiceUtil.returnSuccess();
+        result.put("transactionEntriesImported", transactionEntriesImported);
+        result.put("messages", messages);
+
+        return result;
     }
 
     /**

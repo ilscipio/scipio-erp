@@ -54,8 +54,8 @@ public abstract class SeoCatalogServices {
     private static final String productNameField = "PRODUCT_NAME";
     private static final String categoryNameField = "CATEGORY_NAME";
     
-    private static final FlexibleStringExpander prodFixedIdPatDefault = FlexibleStringExpander.getInstance("${id}-ALT${localeStrUp}");
-    private static final FlexibleStringExpander catFixedIdPatDefault = FlexibleStringExpander.getInstance("${id}-ALT${localeStrUp}");
+    private static final FlexibleStringExpander prodFixedIdPatDefault = FlexibleStringExpander.getInstance("${idTrim}-ALT${localeStrUp}");
+    private static final FlexibleStringExpander catFixedIdPatDefault = FlexibleStringExpander.getInstance("${idTrim}-ALT${localeStrUp}");
 
     protected SeoCatalogServices() {
     }

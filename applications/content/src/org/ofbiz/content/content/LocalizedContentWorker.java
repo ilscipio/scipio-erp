@@ -43,6 +43,8 @@ public abstract class LocalizedContentWorker {
 
     public static final String module = LocalizedContentWorker.class.getName();
     
+    private static final int MAX_ID_FIELD_LENGTH = 20;
+    
     protected LocalizedContentWorker() {
     }
 
@@ -458,9 +460,7 @@ public abstract class LocalizedContentWorker {
         if (mainContent == null) {
             String newId = null;
             if (newIdPat != null) {
-                newIdPatCtx.put("localeStr", mainLocaleString != null ? mainLocaleString : "");
-                newIdPatCtx.put("localeStrUp", (mainLocaleString != null ? mainLocaleString.toUpperCase() : ""));
-                newId = newIdPat.expandString(newIdPatCtx);
+                newId = expandIdPat(newIdPat, newIdPatCtx, mainLocaleString);
             }
             mainContent = createSimpleTextContent(delegator, dispatcher, mainLocaleString, mainTextData, newRecordContentFields, newRecordDataResourceFields, newId, newId);
         } else {
@@ -516,9 +516,7 @@ public abstract class LocalizedContentWorker {
             if (UtilValidate.isNotEmpty(textData)) {
                 String newId = null;
                 if (newIdPat != null) {
-                    newIdPatCtx.put("localeStr", localeString != null ? localeString : "");
-                    newIdPatCtx.put("localeStrUp", (localeString != null ? localeString.toUpperCase() : ""));
-                    newId = newIdPat.expandString(newIdPatCtx);
+                    newId = expandIdPat(newIdPat, newIdPatCtx, localeString);
                 }
                 GenericValue content = createSimpleTextContent(delegator, dispatcher, localeString, textData, newRecordContentFields, newRecordDataResourceFields, newId, newId);
                 GenericValue contentAssoc = delegator.makeValue("ContentAssoc");
@@ -531,6 +529,20 @@ public abstract class LocalizedContentWorker {
         }
 
         return mainContent;
+    }
+    
+    private static String expandIdPat(FlexibleStringExpander newIdPat, Map<String, Object> newIdPatCtx, String localeString) {
+        newIdPatCtx.put("localeStr", localeString != null ? localeString : "");
+        newIdPatCtx.put("localeStrUp", (localeString != null ? localeString.toUpperCase() : ""));
+        String idTrim = (String) newIdPatCtx.get("id");
+        newIdPatCtx.put("idTrim", idTrim);
+        String res = newIdPat.expandString(newIdPatCtx);
+        if (res.length() > MAX_ID_FIELD_LENGTH) { 
+            // too long, try again (NOTE: if caller used id instead of idTrim, this is redundant for nothing, but performance not a serious concern here)
+            newIdPatCtx.put("idTrim", idTrim.substring(0, idTrim.length() - (res.length() - MAX_ID_FIELD_LENGTH)));
+            res = newIdPat.expandString(newIdPatCtx);
+        }
+        return res;
     }
 
 }

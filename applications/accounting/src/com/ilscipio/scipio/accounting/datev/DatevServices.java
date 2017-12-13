@@ -56,10 +56,10 @@ public class DatevServices {
         String contentType = (String) context.get("_uploadedFile_contentType");
 
         Character delimiter = DEFAULT_DELIMITER;
-        if (context.containsKey("delimiter"))
+        if (UtilValidate.isNotEmpty(context.get("delimiter")))
             delimiter = ((String) context.get("delimiter")).charAt(0);
         Character quote = DEFAULT_QUOTE;
-        if (context.containsKey("quote"))
+        if (UtilValidate.isNotEmpty(context.get("quote")))
             quote = ((String) context.get("quote")).charAt(0);
         Boolean hasMetaHeader = (Boolean) context.get("hasMetaHeader");
         Boolean hasHeader = (Boolean) context.get("hasHeader");
@@ -125,7 +125,9 @@ public class DatevServices {
             String metaHeader = csvReader.readLine();
             Iterator<String> metaHeaderIter = CSVParser.parse(metaHeader, fmt).getRecords().get(0).iterator();
             try {
-                datevHelper.isMetaHeader(metaHeaderIter);
+                if (!datevHelper.isMetaHeader(metaHeaderIter)) {
+                    csvReader.reset();
+                }
             } catch (DatevException e) {
                 if (!e.getDatevErrorType().equals(DATEV_ERROR_TYPE.FATAL)) {
                     messages.add(e.getMessage());
@@ -142,7 +144,7 @@ public class DatevServices {
 
                 List<CSVRecord> recordsWithoutHeaders = FastList.newInstance();
                 recordsWithoutHeaders.addAll(records);
-
+                Debug.log("CSV header ====> " + parser.getHeaderMap());
                 for (final CSVRecord rec : recordsWithoutHeaders) {
                     for (Iterator<String> iter = rec.iterator(); iter.hasNext();) {
                         String value = iter.next();

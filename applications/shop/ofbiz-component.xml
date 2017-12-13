@@ -78,8 +78,8 @@ under the License.
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogTransientData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogImageData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogAltUrlData.xml"/>
-    <!-- SCIPIO: 2017-11-25: TODO: comment out "data/DemoCatalogAltUrlLegacyData.xml" once Generated are exported to "data/DemoCatalogAltUrlData.xml" -->
-    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogAltUrlLegacyData.xml"/>
+    <!-- SCIPIO: 2017-12-12: replaced by re-exported auto-generated data
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoCatalogAltUrlLegacyData.xml"/>-->
     
     <!-- demo data: example/test records and history -->
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoOrderTestData.xml"/>

@@ -146,8 +146,9 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
                 getStats().categorySkipped++;
             }
         } else {
-            Debug.logError(getLogMsgPrefix()+"Error generating alternative links for category '" 
-                    + productCategoryId + "': " + ServiceUtil.getErrorMessage(recordResult), module);
+            // caller already logs
+            //Debug.logError(getLogMsgPrefix()+"Error generating alternative links for category '" 
+            //        + productCategoryId + "': " + ServiceUtil.getErrorMessage(recordResult), module);
             getStats().categoryError++;
         }
     }
@@ -183,8 +184,9 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
         } else {
             if (numError != null) getStats().productError += numError;
             else getStats().productError++; // couldn't return count
-            Debug.logError(getLogMsgPrefix()+"Error generating alternative links for product '" 
-                    + productId + "': " + ServiceUtil.getErrorMessage(recordResult), module);
+            // caller already logs
+            //Debug.logError(getLogMsgPrefix()+"Error generating alternative links for product '" 
+            //        + productId + "': " + ServiceUtil.getErrorMessage(recordResult), module);
         }
     }
 

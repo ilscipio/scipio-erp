@@ -139,7 +139,7 @@
         <dependency org="commons-net" name="commons-net" rev="3.3" transitive="false" conf="commons->default"/>
         <dependency org="org.apache.commons" name="commons-pool2" rev="2.3" transitive="false" conf="commons->default"/>
         <dependency org="commons-validator" name="commons-validator" rev="1.4.1" transitive="false" conf="commons->default"/>
-        <dependency org="org.apache.commons" name="commons-csv" rev="1.4" transitive="false" conf="commons->default"/>
+        <dependency org="org.apache.commons" name="commons-csv" rev="1.5" transitive="false" conf="commons->default"/>
 
         <!-- re j2eespecs -->
         <dependency org="org.apache.geronimo.specs" name="geronimo-activation_1.0.2_spec" rev="1.0" transitive="false" conf="j2eespecs->default"/>

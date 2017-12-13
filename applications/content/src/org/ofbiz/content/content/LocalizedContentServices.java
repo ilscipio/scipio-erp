@@ -71,7 +71,7 @@ public abstract class LocalizedContentServices {
             } else {
                 mainContent = LocalizedContentWorker.replaceLocalizedContent(delegator, dispatcher, context, mainContent, 
                         mainLocaleString, mainTextData, entriesInfo.getLocaleEntryMap(), true, UtilDateTime.nowTimestamp(), 
-                        newContentFields, newDataResourceFields);
+                        newContentFields, newDataResourceFields, null, null);
                 mainContentId = mainContent.getString("contentId");
 
                 Map<String, Object> result = ServiceUtil.returnSuccess();

@@ -18,6 +18,7 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.PropertyMessage;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -317,15 +318,25 @@ public abstract class LocalizedContentWorker {
     }
     
     public static GenericValue createSimpleTextContent(Delegator delegator, LocalDispatcher dispatcher, String localeString, String textData, 
-            Map<String, Object> contentFields, Map<String, Object> dataResourceFields) throws GenericEntityException {
+            Map<String, Object> contentFields, Map<String, Object> dataResourceFields, String newContentId, String newDataResourceId) throws GenericEntityException {
         // create dataResource
         GenericValue dataResource = delegator.makeValue("DataResource");
         dataResource.put("dataResourceTypeId", "ELECTRONIC_TEXT");
         // NOTE: dataResource.localeString is probably not necessary, but we should play it safe
         dataResource.put("localeString", localeString);
         dataResource.setNonPKFields(dataResourceFields);
-        dataResource = delegator.createSetNextSeqId(dataResource);
-        String dataResourceId = dataResource.getString("dataResourceId");
+        String dataResourceId;
+        if (newDataResourceId == null) {
+            newDataResourceId = (String) dataResourceFields.get("dataResourceId"); 
+        }
+        if (newDataResourceId != null) {
+            dataResource.put("dataResourceId", newDataResourceId);
+            dataResource = delegator.create(dataResource);
+            dataResourceId = newDataResourceId;
+        } else {
+            dataResource = delegator.createSetNextSeqId(dataResource);
+            dataResourceId = dataResource.getString("dataResourceId");
+        }
 
         // create electronicText
         GenericValue electronicText = delegator.makeValue("ElectronicText");
@@ -339,11 +350,22 @@ public abstract class LocalizedContentWorker {
         content.put("dataResourceId", dataResourceId);
         content.put("contentTypeId", "DOCUMENT");
         content.setNonPKFields(contentFields);
-        content = delegator.createSetNextSeqId(content);
-        
+        if (newContentId == null) {
+            newContentId = (String) contentFields.get("contentId");
+        }
+        if (newContentId != null) {
+            content.put("contentId", newContentId);
+            content = delegator.create(content);
+        } else {
+            content = delegator.createSetNextSeqId(content);
+        }
         return content;
     }
     
+    public static GenericValue createSimpleTextContent(Delegator delegator, LocalDispatcher dispatcher, String localeString, String textData, 
+            Map<String, Object> contentFields, Map<String, Object> dataResourceFields) throws GenericEntityException {
+        return createSimpleTextContent(delegator, dispatcher, localeString, textData, contentFields, dataResourceFields, null, null);
+    }
     
     public static void updateSimpleTextContent(Delegator delegator, LocalDispatcher dispatcher, GenericValue content, String localeString, String textData) throws GenericEntityException {
         updateSimpleTextContent(delegator, dispatcher, content, textData);
@@ -422,7 +444,8 @@ public abstract class LocalizedContentWorker {
      */
     public static GenericValue replaceLocalizedContent(Delegator delegator, LocalDispatcher dispatcher, Map<String, ?> context,
             GenericValue mainContent, String mainLocaleString, String mainTextData, Map<String, ?> localeEntryMap,
-            boolean removeOldLocales, Timestamp moment, Map<String, Object> newRecordContentFields, Map<String, Object> newRecordDataResourceFields) throws Exception {
+            boolean removeOldLocales, Timestamp moment, Map<String, Object> newRecordContentFields, Map<String, Object> newRecordDataResourceFields,
+            FlexibleStringExpander newIdPat, Map<String, Object> newIdPatCtx) throws Exception {
         // DEV NOTE: to simplify, I am setting removeDupLocales to same as removeOldLocales...
         // as long as removal is understood, there is really no reason to keep duplicates because
         // the prior code was setting them all to the exact same value, so in other words,
@@ -433,7 +456,13 @@ public abstract class LocalizedContentWorker {
 
         // update main content
         if (mainContent == null) {
-            mainContent = createSimpleTextContent(delegator, dispatcher, mainLocaleString, mainTextData, newRecordContentFields, newRecordDataResourceFields);
+            String newId = null;
+            if (newIdPat != null) {
+                newIdPatCtx.put("localeStr", mainLocaleString != null ? mainLocaleString : "");
+                newIdPatCtx.put("localeStrUp", (mainLocaleString != null ? mainLocaleString.toUpperCase() : ""));
+                newId = newIdPat.expandString(newIdPatCtx);
+            }
+            mainContent = createSimpleTextContent(delegator, dispatcher, mainLocaleString, mainTextData, newRecordContentFields, newRecordDataResourceFields, newId, newId);
         } else {
             LocalizedContentWorker.updateSimpleTextContent(delegator, dispatcher, mainContent, mainLocaleString, mainTextData);
         }
@@ -485,7 +514,13 @@ public abstract class LocalizedContentWorker {
         for(String localeString : remainingLocales) {
             String textData = LocalizedSimpleTextInfo.getLocaleMapTextData(localeEntryMap.get(localeString));
             if (UtilValidate.isNotEmpty(textData)) {
-                GenericValue content = createSimpleTextContent(delegator, dispatcher, localeString, textData, newRecordContentFields, newRecordDataResourceFields);
+                String newId = null;
+                if (newIdPat != null) {
+                    newIdPatCtx.put("localeStr", localeString != null ? localeString : "");
+                    newIdPatCtx.put("localeStrUp", (localeString != null ? localeString.toUpperCase() : ""));
+                    newId = newIdPat.expandString(newIdPatCtx);
+                }
+                GenericValue content = createSimpleTextContent(delegator, dispatcher, localeString, textData, newRecordContentFields, newRecordDataResourceFields, newId, newId);
                 GenericValue contentAssoc = delegator.makeValue("ContentAssoc");
                 contentAssoc.put("contentId", mainContent.getString("contentId"));
                 contentAssoc.put("contentIdTo", content.getString("contentId"));

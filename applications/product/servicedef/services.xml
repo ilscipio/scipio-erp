@@ -2240,9 +2240,10 @@ under the License.
         </attribute>
         <attribute name="replaceExisting" type="Boolean" mode="IN" optional="true" default-value="true"/>
         <attribute name="removeOldLocales" type="Boolean" mode="IN" optional="true" default-value="true"/>
-        <attribute name="generateFixedIds" type="Boolean" mode="IN" optional="true" default-value="false">
-            <description>mainly for demo data generation - may fail otherwise</description>
+        <attribute name="genFixedIds" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>Generate fixed IDs with pattern "${id}-ALT${localeStrUp}", mainly for demo data generation - high risk of failure if set to true in any other case</description>
         </attribute>
+        <attribute name="fixedIdPat" type="String" mode="IN" optional="true"/>
         <attribute name="mainContentId" mode="OUT" type="String" optional="true"/>
         <attribute name="numUpdated" mode="OUT" type="Integer" optional="true"/>
         <attribute name="numSkipped" mode="OUT" type="Integer" optional="true"/>
@@ -2267,9 +2268,10 @@ under the License.
         <attribute name="productCategory" mode="IN" type="GenericEntity" optional="true"/>
         <attribute name="replaceExisting" type="Boolean" mode="IN" optional="true" default-value="true"/>
         <attribute name="removeOldLocales" type="Boolean" mode="IN" optional="true" default-value="true"/>
-        <attribute name="generateFixedIds" type="Boolean" mode="IN" optional="true" default-value="false">
-            <description>mainly for demo data generation - may fail otherwise</description>
+        <attribute name="genFixedIds" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>Generate fixed IDs with pattern "${id}-ALT${localeStrUp}", mainly for demo data generation - high risk of failure if set to true in any other case</description>
         </attribute>
+        <attribute name="fixedIdPat" type="String" mode="IN" optional="true"/>
         <attribute name="mainContentId" mode="OUT" type="String" optional="true"/>
         <attribute name="categoryUpdated" mode="OUT" type="Boolean" optional="true"/>
     </service>
@@ -2325,9 +2327,11 @@ under the License.
         <attribute name="useCache" type="Boolean" mode="IN" optional="true" default-value="false">
             <description>May be slightly faster iterating if true, but not recommended</description>
         </attribute>
-        <attribute name="generateFixedIds" type="Boolean" mode="IN" optional="true" default-value="false">
-            <description>mainly for demo data generation - may fail otherwise</description>
+        <attribute name="genFixedIds" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>Generate fixed IDs with pattern "${id}-ALT", mainly for demo data generation - high risk of failure if set to true in any other case</description>
         </attribute>
+        <attribute name="prodFixedIdPat" type="String" mode="IN" optional="true"/>
+        <attribute name="catFixedIdPat" type="String" mode="IN" optional="true"/>
     </service>
     <service name="generateAllAlternativeUrls" engine="java" auth="true"
         location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="generateAllAlternativeUrls" transaction-timeout="72000">
@@ -2342,9 +2346,11 @@ under the License.
         <attribute name="useCache" type="Boolean" mode="IN" optional="true" default-value="false">
             <description>May be slightly faster iterating if true, but not recommended</description>
         </attribute>
-        <attribute name="generateFixedIds" type="Boolean" mode="IN" optional="true" default-value="false">
-            <description>mainly for demo data generation - may fail otherwise</description>
+        <attribute name="genFixedIds" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>Generate fixed IDs with pattern "${id}-ALT", mainly for demo data generation - high risk of failure if set to true in any other case</description>
         </attribute>
+        <attribute name="prodFixedIdPat" type="String" mode="IN" optional="true"/>
+        <attribute name="catFixedIdPat" type="String" mode="IN" optional="true"/>
     </service>
     
     <service name="generateWebsiteAlternativeUrlSitemapFiles" engine="java" 

@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -18,6 +19,7 @@ import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.content.content.LocalizedContentWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntity;
@@ -52,6 +54,9 @@ public abstract class SeoCatalogServices {
     private static final String productNameField = "PRODUCT_NAME";
     private static final String categoryNameField = "CATEGORY_NAME";
     
+    private static final FlexibleStringExpander prodFixedIdPatDefault = FlexibleStringExpander.getInstance("${id}-ALT${localeStrUp}");
+    private static final FlexibleStringExpander catFixedIdPatDefault = FlexibleStringExpander.getInstance("${id}-ALT${localeStrUp}");
+
     protected SeoCatalogServices() {
     }
 
@@ -80,8 +85,9 @@ public abstract class SeoCatalogServices {
         final boolean useCache = false; // probably bad idea
         boolean doChildProducts = Boolean.TRUE.equals(context.get("doChildProducts"));
         boolean includeVariant = !Boolean.FALSE.equals(context.get("includeVariant"));
-        boolean generateFixedIds = Boolean.TRUE.equals(context.get("generateFixedIds"));
-
+        boolean genFixedIds = Boolean.TRUE.equals(context.get("genFixedIds"));
+        String fixedIdPat = (String) context.get("fixedIdPat");
+        
         GenericEntity productEntity = (GenericEntity) context.get("product");
         try {
             GenericValue product;
@@ -95,7 +101,7 @@ public abstract class SeoCatalogServices {
                 }
             }
             return generateProductAlternativeUrls(dctx, context, product, new ArrayList<GenProdAltUrlParentEntry>(),
-                    replaceExisting, removeOldLocales, moment, doChildProducts, includeVariant, generateFixedIds, useCache);
+                    replaceExisting, removeOldLocales, moment, doChildProducts, includeVariant, genFixedIds, fixedIdPat, useCache);
         } catch (Exception e) {
             String message = "Error while generating alternative links: " + e.getMessage();
             Debug.logError(e, logPrefix+message, module);
@@ -130,7 +136,7 @@ public abstract class SeoCatalogServices {
     
     static Map<String, Object> generateProductAlternativeUrls(DispatchContext dctx, Map<String, ?> context,
             GenericValue product, List<GenProdAltUrlParentEntry> parentProducts, boolean replaceExisting, boolean removeOldLocales, Timestamp moment, 
-            boolean doChildProducts, boolean includeVariant, boolean generateFixedIds, boolean useCache) throws Exception {
+            boolean doChildProducts, boolean includeVariant, boolean genFixedIds, String fixedIdPat, boolean useCache) throws Exception {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String productId = product.getString("productId");
@@ -203,8 +209,15 @@ public abstract class SeoCatalogServices {
         if (productContent != null) {
             mainContent = productContent.getRelatedOne("Content", useCache);
         }
+        FlexibleStringExpander newIdPatExdr = null;
+        Map<String, Object> newIdPatCtx = null;
+        if (genFixedIds) {
+            newIdPatExdr = (fixedIdPat != null) ? FlexibleStringExpander.getInstance(fixedIdPat) : prodFixedIdPatDefault;
+            newIdPatCtx = new HashMap<>();
+            newIdPatCtx.put("id", productId);
+        }
         mainContent = replaceAltUrlLocalizedContent(delegator, dispatcher, context, 
-                mainContent, mainLocaleString, mainUrl, localeUrlMap, removeOldLocales, moment);
+                mainContent, mainLocaleString, mainUrl, localeUrlMap, removeOldLocales, moment, newIdPatExdr, newIdPatCtx);
         
         if (productContent == null) {
             productContent = delegator.makeValue("ProductContent");
@@ -236,7 +249,7 @@ public abstract class SeoCatalogServices {
                             
                             Map<String, Object> childResult = generateProductAlternativeUrls(dctx, context, 
                                     variantProduct, parentProducts, replaceExisting, removeOldLocales, 
-                                    moment, doChildProducts, includeVariant, generateFixedIds, useCache);
+                                    moment, doChildProducts, includeVariant, genFixedIds, fixedIdPat, useCache);
                             
                             // NOTE: most of this
                             Integer childrenUpdated = (Integer) childResult.get("numUpdated");
@@ -281,7 +294,8 @@ public abstract class SeoCatalogServices {
         boolean removeOldLocales = !Boolean.FALSE.equals(context.get("removeOldLocales"));
         Timestamp moment = UtilDateTime.nowTimestamp();
         final boolean useCache = false; // probably bad idea
-        boolean generateFixedIds = Boolean.TRUE.equals(context.get("generateFixedIds"));
+        boolean genFixedIds = Boolean.TRUE.equals(context.get("genFixedIds"));
+        String fixedIdPat = (String) context.get("fixedIdPat");
 
         GenericEntity productCategoryEntity = (GenericEntity) context.get("productCategory");
         try {
@@ -296,7 +310,7 @@ public abstract class SeoCatalogServices {
                 }
             }
             return generateProductCategoryAlternativeUrls(dctx, context, 
-                    productCategory, replaceExisting, removeOldLocales, moment, generateFixedIds, useCache);
+                    productCategory, replaceExisting, removeOldLocales, moment, genFixedIds, fixedIdPat, useCache);
         } catch (Exception e) {
             String message = "Error while generating alternative links: " + e.getMessage();
             Debug.logError(e, logPrefix+message, module);
@@ -305,7 +319,7 @@ public abstract class SeoCatalogServices {
     }
     
     static Map<String, Object> generateProductCategoryAlternativeUrls(DispatchContext dctx, Map<String, ?> context,
-            GenericValue productCategory, boolean replaceExisting, boolean removeOldLocales, Timestamp moment, boolean generateFixedIds, boolean useCache) throws Exception {
+            GenericValue productCategory, boolean replaceExisting, boolean removeOldLocales, Timestamp moment, boolean genFixedIds, String fixedIdPat, boolean useCache) throws Exception {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String productCategoryId = productCategory.getString("productCategoryId");
@@ -351,8 +365,15 @@ public abstract class SeoCatalogServices {
         if (productCategoryContent != null) {
             mainContent = productCategoryContent.getRelatedOne("Content", useCache);
         }
+        FlexibleStringExpander newIdPatExdr = null;
+        Map<String, Object> newIdPatCtx = null;
+        if (genFixedIds) {
+            newIdPatExdr = (fixedIdPat != null) ? FlexibleStringExpander.getInstance(fixedIdPat) : catFixedIdPatDefault;
+            newIdPatCtx = new HashMap<>();
+            newIdPatCtx.put("id", productCategoryId);
+        }
         mainContent = replaceAltUrlLocalizedContent(delegator, dispatcher, context, 
-                mainContent, mainLocaleString, mainUrl, localeUrlMap, removeOldLocales, moment);
+                mainContent, mainLocaleString, mainUrl, localeUrlMap, removeOldLocales, moment, newIdPatExdr, newIdPatCtx);
     
         if (productCategoryContent == null) {
             productCategoryContent = delegator.makeValue("ProductCategoryContent");
@@ -446,9 +467,9 @@ public abstract class SeoCatalogServices {
      */
     private static GenericValue replaceAltUrlLocalizedContent(Delegator delegator, LocalDispatcher dispatcher, Map<String, ?> context,
             GenericValue mainContent, String mainLocaleString, String mainTextData, Map<String, String> localeTextMap,
-            boolean removeOldLocales, Timestamp moment) throws Exception {
+            boolean removeOldLocales, Timestamp moment, FlexibleStringExpander newIdPat, Map<String, Object> newIdPatCtx) throws Exception {
         return LocalizedContentWorker.replaceLocalizedContent(delegator, dispatcher, context, mainContent, mainLocaleString, mainTextData, localeTextMap, 
-                removeOldLocales, moment, newAltUrlContentFields, newAltUrlDataResourceFields);
+                removeOldLocales, moment, newAltUrlContentFields, newAltUrlDataResourceFields, newIdPat, newIdPatCtx);
     }
 
     private static final Map<String, Object> newAltUrlContentFields = UtilMisc.toMap("description", "Alternative URL");
@@ -480,12 +501,14 @@ public abstract class SeoCatalogServices {
         boolean useCache = Boolean.TRUE.equals(context.get("useCache")); // FALSE default
         boolean preventDuplicates = !Boolean.FALSE.equals(context.get("preventDuplicates"));
         
-        boolean generateFixedIds = Boolean.TRUE.equals(context.get("generateFixedIds"));
+        boolean genFixedIds = Boolean.TRUE.equals(context.get("genFixedIds"));
+        String prodFixedIdPat = (String) context.get("prodFixedIdPat");
+        String catFixedIdPat = (String) context.get("catFixedIdPat");
         
         SeoCatalogUrlGenerator traverser;
         try {
             GenTraversalConfig travConfig = (GenTraversalConfig) new GenTraversalConfig()
-                    .setGenerateFixedIds(generateFixedIds)
+                    .setGenerateFixedIds(genFixedIds).setProdFixedIdPat(prodFixedIdPat).setCatFixedIdPat(catFixedIdPat)
                     .setServCtxOpts(context)
                     .setDoChildProducts(doChildProducts)
                     .setUseCache(useCache).setDoCategory(doCategory).setDoProduct(doProduct)
@@ -532,12 +555,14 @@ public abstract class SeoCatalogServices {
         
         //boolean replaceExisting = !Boolean.FALSE.equals(context.get("replaceExisting")); // makeValidContext transfers
 
-        boolean generateFixedIds = Boolean.TRUE.equals(context.get("generateFixedIds"));
-        
+        boolean genFixedIds = Boolean.TRUE.equals(context.get("genFixedIds"));
+        String prodFixedIdPat = (String) context.get("prodFixedIdPat");
+        String catFixedIdPat = (String) context.get("catFixedIdPat");
+
         SeoCatalogUrlGenerator traverser;
         try {
             GenTraversalConfig travConfig = (GenTraversalConfig) new GenTraversalConfig()
-                    .setGenerateFixedIds(generateFixedIds)
+                    .setGenerateFixedIds(genFixedIds).setProdFixedIdPat(prodFixedIdPat).setCatFixedIdPat(catFixedIdPat)
                     .setServCtxOpts(context)
                     .setDoChildProducts(doChildProducts)
                     .setUseCache(useCache).setDoCategory(doCategory).setDoProduct(doProduct);

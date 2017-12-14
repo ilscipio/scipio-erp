@@ -80,25 +80,27 @@ public abstract class SeoCatalogTraverser extends CatalogTraverser {
         return stats;
     }
     
-    // specialized override needed to update the stats
-    protected boolean checkUpdateCategoryDuplicates(String productCategoryId) {
-        if (this.seenCategoryIds.contains(productCategoryId)) {
-            stats.categoryDupSkip++;
-            return true;
-        } else {
-            this.seenCategoryIds.add(productCategoryId);
-            return false;
-        }
-    }
-    
-    // specialized override needed to update the stats
-    protected boolean checkUpdateProductDuplicates(String productId) {
-        if (this.seenProductIds.contains(productId)) {
-            stats.productDupSkip++;
-            return true;
-        } else {
-            this.seenProductIds.add(productId);
-            return false;
-        }
-    }
+    // TODO: REVIEW: this is unreliable, does not account for products with child products,
+    // so just forget these stats for the time being.
+//    // specialized override needed to update the stats
+//    protected boolean checkUpdateCategoryDuplicates(String productCategoryId) {
+//        if (this.seenCategoryIds.contains(productCategoryId)) {
+//            stats.categoryDupSkip++;
+//            return true;
+//        } else {
+//            this.seenCategoryIds.add(productCategoryId);
+//            return false;
+//        }
+//    }
+//    
+//    // specialized override needed to update the stats
+//    protected boolean checkUpdateProductDuplicates(String productId) {
+//        if (this.seenProductIds.contains(productId)) {
+//            stats.productDupSkip++;
+//            return true;
+//        } else {
+//            this.seenProductIds.add(productId);
+//            return false;
+//        }
+//    }
 }

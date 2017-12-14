@@ -30,10 +30,980 @@ under the License.
         This will completely replace the legacy manually-written names from DemoCatalogAltUrlLegacyData.xml,
         which should no longer be included in ofbiz_component.xml.
         
+        DEV NOTES:
+        * The export is configured in seo-urls.properties and the file regenerated
+          using the exportWebsiteAlternativeUrlsEntityXmlFileFromConfig service.
+        * Initial data create (should no longer be needed after this file is populated once): 
+          When no ALTERNATIVE_URLs in system, initial data can be generated using 
+          generateAllAlternativeUrls, with these parameters:
+          * genFixedIds = true
+          * catFixedIdPat = ${groovy:idTrim.startsWith("CATALOG1_")?"CAT1_"+idTrim.substring(9):idTrim}-ALT${localeStrUp}
+          * (rest: defaults)
+        
         NOTE: Any conflicting names as a result of the generation should be fixed by modifying the source data 
             (product/category names and SeoConfig.xml settings) rather than creating any manual fixup records. 
         NOTE: The "generated-data" comment on the next line must not be modified! It is used as a template marker. -->
    
     <!--DATA-BEGIN-->
-    
+    <DataResource dataResourceId="CATALOG1-ALTDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="de" lastUpdatedStamp="2017-12-12 22:27:15.449" lastUpdatedTxStamp="2017-12-12 22:27:15.431" createdStamp="2017-12-12 22:27:15.449" createdTxStamp="2017-12-12 22:27:15.431"/>
+    <DataResource dataResourceId="CATALOG1-ALTEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="en" lastUpdatedStamp="2017-12-12 22:27:15.434" lastUpdatedTxStamp="2017-12-12 22:27:15.431" createdStamp="2017-12-12 22:27:15.434" createdTxStamp="2017-12-12 22:27:15.431"/>
+    <DataResource dataResourceId="CLOTH-100-ALTDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="de" lastUpdatedStamp="2017-12-12 22:27:15.497" lastUpdatedTxStamp="2017-12-12 22:27:15.48" createdStamp="2017-12-12 22:27:15.497" createdTxStamp="2017-12-12 22:27:15.48"/>
+    <DataResource dataResourceId="CLOTH-100-ALTEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="en" lastUpdatedStamp="2017-12-12 22:27:15.484" lastUpdatedTxStamp="2017-12-12 22:27:15.48" createdStamp="2017-12-12 22:27:15.484" createdTxStamp="2017-12-12 22:27:15.48"/>
+    <DataResource dataResourceId="CL-5005-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:21.314" lastUpdatedTxStamp="2017-12-12 22:27:21.313" createdStamp="2017-12-12 22:27:21.314" createdTxStamp="2017-12-12 22:27:21.313"/>
+    <DataResource dataResourceId="CL-7000-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:21.487" lastUpdatedTxStamp="2017-12-12 22:27:21.486" createdStamp="2017-12-12 22:27:21.487" createdTxStamp="2017-12-12 22:27:21.486"/>
+    <DataResource dataResourceId="CL-1000-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:23.18" lastUpdatedTxStamp="2017-12-12 22:27:23.179" createdStamp="2017-12-12 22:27:23.18" createdTxStamp="2017-12-12 22:27:23.179"/>
+    <DataResource dataResourceId="CL-WMN-101-ALTDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="de" lastUpdatedStamp="2017-12-12 22:27:15.577" lastUpdatedTxStamp="2017-12-12 22:27:15.559" createdStamp="2017-12-12 22:27:15.577" createdTxStamp="2017-12-12 22:27:15.559"/>
+    <DataResource dataResourceId="CL-WMN-101-ALTEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="en" lastUpdatedStamp="2017-12-12 22:27:15.564" lastUpdatedTxStamp="2017-12-12 22:27:15.559" createdStamp="2017-12-12 22:27:15.564" createdTxStamp="2017-12-12 22:27:15.559"/>
+    <DataResource dataResourceId="CL-8544-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:21.672" lastUpdatedTxStamp="2017-12-12 22:27:21.67" createdStamp="2017-12-12 22:27:21.672" createdTxStamp="2017-12-12 22:27:21.67"/>
+    <DataResource dataResourceId="CL-MEN-101-ALTDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="de" lastUpdatedStamp="2017-12-12 22:27:15.542" lastUpdatedTxStamp="2017-12-12 22:27:15.526" createdStamp="2017-12-12 22:27:15.542" createdTxStamp="2017-12-12 22:27:15.526"/>
+    <DataResource dataResourceId="CL-MEN-101-ALTEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="en" lastUpdatedStamp="2017-12-12 22:27:15.532" lastUpdatedTxStamp="2017-12-12 22:27:15.526" createdStamp="2017-12-12 22:27:15.532" createdTxStamp="2017-12-12 22:27:15.526"/>
+    <DataResource dataResourceId="ELTRN-100-ALTDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="de" lastUpdatedStamp="2017-12-12 22:27:15.618" lastUpdatedTxStamp="2017-12-12 22:27:15.596" createdStamp="2017-12-12 22:27:15.618" createdTxStamp="2017-12-12 22:27:15.596"/>
+    <DataResource dataResourceId="ELTRN-100-ALTEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="en" lastUpdatedStamp="2017-12-12 22:27:15.599" lastUpdatedTxStamp="2017-12-12 22:27:15.596" createdStamp="2017-12-12 22:27:15.599" createdTxStamp="2017-12-12 22:27:15.596"/>
+    <DataResource dataResourceId="EL-BASKET-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:23.68" lastUpdatedTxStamp="2017-12-12 22:27:23.679" createdStamp="2017-12-12 22:27:23.68" createdTxStamp="2017-12-12 22:27:23.679"/>
+    <DataResource dataResourceId="EL-BASKET-PICK-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:23.843" lastUpdatedTxStamp="2017-12-12 22:27:23.842" createdStamp="2017-12-12 22:27:23.843" createdTxStamp="2017-12-12 22:27:23.842"/>
+    <DataResource dataResourceId="PH-1000-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:19.212" lastUpdatedTxStamp="2017-12-12 22:27:19.202" createdStamp="2017-12-12 22:27:19.212" createdTxStamp="2017-12-12 22:27:19.202"/>
+    <DataResource dataResourceId="PH-1001-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:19.473" lastUpdatedTxStamp="2017-12-12 22:27:19.471" createdStamp="2017-12-12 22:27:19.473" createdTxStamp="2017-12-12 22:27:19.471"/>
+    <DataResource dataResourceId="PH-1004-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:19.696" lastUpdatedTxStamp="2017-12-12 22:27:19.695" createdStamp="2017-12-12 22:27:19.696" createdTxStamp="2017-12-12 22:27:19.695"/>
+    <DataResource dataResourceId="PH-1005-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:19.89" lastUpdatedTxStamp="2017-12-12 22:27:19.889" createdStamp="2017-12-12 22:27:19.89" createdTxStamp="2017-12-12 22:27:19.889"/>
+    <DataResource dataResourceId="SW-1006-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:20.108" lastUpdatedTxStamp="2017-12-12 22:27:20.107" createdStamp="2017-12-12 22:27:20.108" createdTxStamp="2017-12-12 22:27:20.107"/>
+    <DataResource dataResourceId="SW-1006-1-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:20.331" lastUpdatedTxStamp="2017-12-12 22:27:20.329" createdStamp="2017-12-12 22:27:20.331" createdTxStamp="2017-12-12 22:27:20.329"/>
+    <DataResource dataResourceId="SW-1006-2-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:20.499" lastUpdatedTxStamp="2017-12-12 22:27:20.496" createdStamp="2017-12-12 22:27:20.499" createdTxStamp="2017-12-12 22:27:20.496"/>
+    <DataResource dataResourceId="SW-1006-3-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:20.67" lastUpdatedTxStamp="2017-12-12 22:27:20.668" createdStamp="2017-12-12 22:27:20.67" createdTxStamp="2017-12-12 22:27:20.668"/>
+    <DataResource dataResourceId="SW-1006-4-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:20.832" lastUpdatedTxStamp="2017-12-12 22:27:20.829" createdStamp="2017-12-12 22:27:20.832" createdTxStamp="2017-12-12 22:27:20.829"/>
+    <DataResource dataResourceId="SW-1006-5-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:20.976" lastUpdatedTxStamp="2017-12-12 22:27:20.973" createdStamp="2017-12-12 22:27:20.976" createdTxStamp="2017-12-12 22:27:20.973"/>
+    <DataResource dataResourceId="CAM-2644-ALTDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="de" lastUpdatedStamp="2017-12-12 22:27:18.265" lastUpdatedTxStamp="2017-12-12 22:27:18.235" createdStamp="2017-12-12 22:27:18.265" createdTxStamp="2017-12-12 22:27:18.235"/>
+    <DataResource dataResourceId="CAM-2644-ALTEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="en" lastUpdatedStamp="2017-12-12 22:27:18.241" lastUpdatedTxStamp="2017-12-12 22:27:18.235" createdStamp="2017-12-12 22:27:18.241" createdTxStamp="2017-12-12 22:27:18.235"/>
+    <DataResource dataResourceId="MPL-9290-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:21.875" lastUpdatedTxStamp="2017-12-12 22:27:21.873" createdStamp="2017-12-12 22:27:21.875" createdTxStamp="2017-12-12 22:27:21.873"/>
+    <DataResource dataResourceId="PR-1000-ALT" dataResourceTypeId="ELECTRONIC_TEXT" lastUpdatedStamp="2017-12-12 22:27:29.148" lastUpdatedTxStamp="2017-12-12 22:27:29.139" createdStamp="2017-12-12 22:25:11.391" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <DataResource dataResourceId="CAM-7000-ALT" dataResourceTypeId="ELECTRONIC_TEXT" lastUpdatedStamp="2017-12-12 22:27:26.503" lastUpdatedTxStamp="2017-12-12 22:27:26.432" createdStamp="2017-12-12 22:25:11.54" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <DataResource dataResourceId="EL-PHN-101-ALTDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="de" lastUpdatedStamp="2017-12-12 22:27:15.923" lastUpdatedTxStamp="2017-12-12 22:27:15.904" createdStamp="2017-12-12 22:27:15.923" createdTxStamp="2017-12-12 22:27:15.904"/>
+    <DataResource dataResourceId="EL-PHN-101-ALTEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="en" lastUpdatedStamp="2017-12-12 22:27:15.908" lastUpdatedTxStamp="2017-12-12 22:27:15.904" createdStamp="2017-12-12 22:27:15.908" createdTxStamp="2017-12-12 22:27:15.904"/>
+    <DataResource dataResourceId="EL-MP3-101-ALTDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="de" lastUpdatedStamp="2017-12-12 22:27:15.873" lastUpdatedTxStamp="2017-12-12 22:27:15.858" createdStamp="2017-12-12 22:27:15.873" createdTxStamp="2017-12-12 22:27:15.858"/>
+    <DataResource dataResourceId="EL-MP3-101-ALTEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="en" lastUpdatedStamp="2017-12-12 22:27:15.86" lastUpdatedTxStamp="2017-12-12 22:27:15.858" createdStamp="2017-12-12 22:27:15.86" createdTxStamp="2017-12-12 22:27:15.858"/>
+    <DataResource dataResourceId="PC-101-ALTDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="de" lastUpdatedStamp="2017-12-12 22:27:15.658" lastUpdatedTxStamp="2017-12-12 22:27:15.646" createdStamp="2017-12-12 22:27:15.658" createdTxStamp="2017-12-12 22:27:15.646"/>
+    <DataResource dataResourceId="PC-101-ALTEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="en" lastUpdatedStamp="2017-12-12 22:27:15.648" lastUpdatedTxStamp="2017-12-12 22:27:15.646" createdStamp="2017-12-12 22:27:15.648" createdTxStamp="2017-12-12 22:27:15.646"/>
+    <DataResource dataResourceId="PC-AC-101-ALTDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="de" lastUpdatedStamp="2017-12-12 22:27:15.832" lastUpdatedTxStamp="2017-12-12 22:27:15.814" createdStamp="2017-12-12 22:27:15.832" createdTxStamp="2017-12-12 22:27:15.814"/>
+    <DataResource dataResourceId="PC-AC-101-ALTEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="en" lastUpdatedStamp="2017-12-12 22:27:15.818" lastUpdatedTxStamp="2017-12-12 22:27:15.814" createdStamp="2017-12-12 22:27:15.818" createdTxStamp="2017-12-12 22:27:15.814"/>
+    <DataResource dataResourceId="CDR-1111-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:22.049" lastUpdatedTxStamp="2017-12-12 22:27:22.048" createdStamp="2017-12-12 22:27:22.049" createdTxStamp="2017-12-12 22:27:22.048"/>
+    <DataResource dataResourceId="PC-PR-101-ALTDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="de" lastUpdatedStamp="2017-12-12 22:27:15.35" lastUpdatedTxStamp="2017-12-12 22:27:15.031" createdStamp="2017-12-12 22:27:15.35" createdTxStamp="2017-12-12 22:27:15.031"/>
+    <DataResource dataResourceId="PC-PR-101-ALTEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="en" lastUpdatedStamp="2017-12-12 22:27:15.143" lastUpdatedTxStamp="2017-12-12 22:27:15.031" createdStamp="2017-12-12 22:27:15.143" createdTxStamp="2017-12-12 22:27:15.031"/>
+    <DataResource dataResourceId="KB-5569-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:22.204" lastUpdatedTxStamp="2017-12-12 22:27:22.202" createdStamp="2017-12-12 22:27:22.204" createdTxStamp="2017-12-12 22:27:22.202"/>
+    <DataResource dataResourceId="PC-SW-101-ALTDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="de" lastUpdatedStamp="2017-12-12 22:27:15.792" lastUpdatedTxStamp="2017-12-12 22:27:15.77" createdStamp="2017-12-12 22:27:15.792" createdTxStamp="2017-12-12 22:27:15.77"/>
+    <DataResource dataResourceId="PC-SW-101-ALTEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="en" lastUpdatedStamp="2017-12-12 22:27:15.773" lastUpdatedTxStamp="2017-12-12 22:27:15.77" createdStamp="2017-12-12 22:27:15.773" createdTxStamp="2017-12-12 22:27:15.77"/>
+    <DataResource dataResourceId="PC-SYS-101-ALTDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="de" lastUpdatedStamp="2017-12-12 22:27:15.71" lastUpdatedTxStamp="2017-12-12 22:27:15.686" createdStamp="2017-12-12 22:27:15.71" createdTxStamp="2017-12-12 22:27:15.686"/>
+    <DataResource dataResourceId="PC-SYS-101-ALTEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="en" lastUpdatedStamp="2017-12-12 22:27:15.69" lastUpdatedTxStamp="2017-12-12 22:27:15.686" createdStamp="2017-12-12 22:27:15.69" createdTxStamp="2017-12-12 22:27:15.686"/>
+    <DataResource dataResourceId="PC-1000-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:26.264" lastUpdatedTxStamp="2017-12-12 22:27:26.263" createdStamp="2017-12-12 22:27:26.264" createdTxStamp="2017-12-12 22:27:26.263"/>
+    <DataResource dataResourceId="SUBS-100-ALTDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.213" lastUpdatedTxStamp="2017-12-12 22:27:16.197" createdStamp="2017-12-12 22:27:16.213" createdTxStamp="2017-12-12 22:27:16.197"/>
+    <DataResource dataResourceId="SUBS-100-ALTEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.199" lastUpdatedTxStamp="2017-12-12 22:27:16.197" createdStamp="2017-12-12 22:27:16.199" createdTxStamp="2017-12-12 22:27:16.197"/>
+    <DataResource dataResourceId="NEWS-01-1MO-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:23.396" lastUpdatedTxStamp="2017-12-12 22:27:23.395" createdStamp="2017-12-12 22:27:23.396" createdTxStamp="2017-12-12 22:27:23.395"/>
+    <DataResource dataResourceId="FIN-100-ALTDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.242" lastUpdatedTxStamp="2017-12-12 22:27:16.23" createdStamp="2017-12-12 22:27:16.242" createdTxStamp="2017-12-12 22:27:16.23"/>
+    <DataResource dataResourceId="FIN-100-ALTEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.232" lastUpdatedTxStamp="2017-12-12 22:27:16.23" createdStamp="2017-12-12 22:27:16.232" createdTxStamp="2017-12-12 22:27:16.23"/>
+    <DataResource dataResourceId="FA-001-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:34.301" lastUpdatedTxStamp="2017-12-12 22:27:34.3" createdStamp="2017-12-12 22:27:34.301" createdTxStamp="2017-12-12 22:27:34.3"/>
+    <DataResource dataResourceId="FA-001-30-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:34.427" lastUpdatedTxStamp="2017-12-12 22:27:34.425" createdStamp="2017-12-12 22:27:34.427" createdTxStamp="2017-12-12 22:27:34.425"/>
+    <DataResource dataResourceId="FA-001-50-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:34.628" lastUpdatedTxStamp="2017-12-12 22:27:34.624" createdStamp="2017-12-12 22:27:34.628" createdTxStamp="2017-12-12 22:27:34.624"/>
+    <DataResource dataResourceId="FA-001-O-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:34.774" lastUpdatedTxStamp="2017-12-12 22:27:34.773" createdStamp="2017-12-12 22:27:34.774" createdTxStamp="2017-12-12 22:27:34.773"/>
+    <DataResource dataResourceId="FOOD-100-ALTDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.271" lastUpdatedTxStamp="2017-12-12 22:27:16.259" createdStamp="2017-12-12 22:27:16.271" createdTxStamp="2017-12-12 22:27:16.259"/>
+    <DataResource dataResourceId="FOOD-100-ALTEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.261" lastUpdatedTxStamp="2017-12-12 22:27:16.259" createdStamp="2017-12-12 22:27:16.261" createdTxStamp="2017-12-12 22:27:16.259"/>
+    <DataResource dataResourceId="FD-1066-ALT" dataResourceTypeId="ELECTRONIC_TEXT" lastUpdatedStamp="2017-12-12 22:27:29.056" lastUpdatedTxStamp="2017-12-12 22:27:29.047" createdStamp="2017-12-12 22:25:11.302" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <DataResource dataResourceId="FD-1065-ALT" dataResourceTypeId="ELECTRONIC_TEXT" lastUpdatedStamp="2017-12-12 22:27:28.973" lastUpdatedTxStamp="2017-12-12 22:27:28.964" createdStamp="2017-12-12 22:25:11.244" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <DataResource dataResourceId="FD-1064-ALT" dataResourceTypeId="ELECTRONIC_TEXT" lastUpdatedStamp="2017-12-12 22:27:28.885" lastUpdatedTxStamp="2017-12-12 22:27:28.876" createdStamp="2017-12-12 22:25:11.186" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <DataResource dataResourceId="FD-1063-ALT" dataResourceTypeId="ELECTRONIC_TEXT" lastUpdatedStamp="2017-12-12 22:27:28.8" lastUpdatedTxStamp="2017-12-12 22:27:28.791" createdStamp="2017-12-12 22:25:11.136" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <DataResource dataResourceId="FD-1062-ALT" dataResourceTypeId="ELECTRONIC_TEXT" lastUpdatedStamp="2017-12-12 22:27:28.715" lastUpdatedTxStamp="2017-12-12 22:27:28.706" createdStamp="2017-12-12 22:25:11.013" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <DataResource dataResourceId="FD-1061-ALT" dataResourceTypeId="ELECTRONIC_TEXT" lastUpdatedStamp="2017-12-12 22:27:28.624" lastUpdatedTxStamp="2017-12-12 22:27:28.617" createdStamp="2017-12-12 22:25:10.914" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <DataResource dataResourceId="FD-1060-ALT" dataResourceTypeId="ELECTRONIC_TEXT" lastUpdatedStamp="2017-12-12 22:27:28.549" lastUpdatedTxStamp="2017-12-12 22:27:28.544" createdStamp="2017-12-12 22:25:10.859" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <DataResource dataResourceId="FD-1050-ALT" dataResourceTypeId="ELECTRONIC_TEXT" lastUpdatedStamp="2017-12-12 22:27:28.456" lastUpdatedTxStamp="2017-12-12 22:27:28.446" createdStamp="2017-12-12 22:25:10.809" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <DataResource dataResourceId="FD-1017-ALT" dataResourceTypeId="ELECTRONIC_TEXT" lastUpdatedStamp="2017-12-12 22:27:28.361" lastUpdatedTxStamp="2017-12-12 22:27:28.351" createdStamp="2017-12-12 22:25:10.717" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <DataResource dataResourceId="FD-1016-ALT" dataResourceTypeId="ELECTRONIC_TEXT" lastUpdatedStamp="2017-12-12 22:27:28.285" lastUpdatedTxStamp="2017-12-12 22:27:28.264" createdStamp="2017-12-12 22:25:10.618" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <DataResource dataResourceId="FD-1015-ALT" dataResourceTypeId="ELECTRONIC_TEXT" lastUpdatedStamp="2017-12-12 22:27:28.185" lastUpdatedTxStamp="2017-12-12 22:27:28.172" createdStamp="2017-12-12 22:25:10.54" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <DataResource dataResourceId="FD-1014-ALT" dataResourceTypeId="ELECTRONIC_TEXT" lastUpdatedStamp="2017-12-12 22:27:28.104" lastUpdatedTxStamp="2017-12-12 22:27:28.094" createdStamp="2017-12-12 22:25:10.489" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <DataResource dataResourceId="FD-1013-ALT" dataResourceTypeId="ELECTRONIC_TEXT" lastUpdatedStamp="2017-12-12 22:27:28.034" lastUpdatedTxStamp="2017-12-12 22:27:28.026" createdStamp="2017-12-12 22:25:10.44" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <DataResource dataResourceId="FD-1012-ALT" dataResourceTypeId="ELECTRONIC_TEXT" lastUpdatedStamp="2017-12-12 22:27:27.952" lastUpdatedTxStamp="2017-12-12 22:27:27.945" createdStamp="2017-12-12 22:25:10.316" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <DataResource dataResourceId="FD-1011-ALT" dataResourceTypeId="ELECTRONIC_TEXT" lastUpdatedStamp="2017-12-12 22:27:27.882" lastUpdatedTxStamp="2017-12-12 22:27:27.875" createdStamp="2017-12-12 22:25:10.224" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <DataResource dataResourceId="FD-1010-ALT" dataResourceTypeId="ELECTRONIC_TEXT" lastUpdatedStamp="2017-12-12 22:27:27.811" lastUpdatedTxStamp="2017-12-12 22:27:27.804" createdStamp="2017-12-12 22:25:10.012" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <DataResource dataResourceId="FD-1009-ALT" dataResourceTypeId="ELECTRONIC_TEXT" lastUpdatedStamp="2017-12-12 22:27:27.728" lastUpdatedTxStamp="2017-12-12 22:27:27.717" createdStamp="2017-12-12 22:25:09.927" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <DataResource dataResourceId="FD-1008-ALT" dataResourceTypeId="ELECTRONIC_TEXT" lastUpdatedStamp="2017-12-12 22:27:27.634" lastUpdatedTxStamp="2017-12-12 22:27:27.626" createdStamp="2017-12-12 22:25:09.846" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <DataResource dataResourceId="FD-1007-ALT" dataResourceTypeId="ELECTRONIC_TEXT" lastUpdatedStamp="2017-12-12 22:27:27.564" lastUpdatedTxStamp="2017-12-12 22:27:27.549" createdStamp="2017-12-12 22:25:09.726" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <DataResource dataResourceId="FD-1006-ALT" dataResourceTypeId="ELECTRONIC_TEXT" lastUpdatedStamp="2017-12-12 22:27:27.483" lastUpdatedTxStamp="2017-12-12 22:27:27.473" createdStamp="2017-12-12 22:25:09.62" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <DataResource dataResourceId="FD-1005-ALT" dataResourceTypeId="ELECTRONIC_TEXT" lastUpdatedStamp="2017-12-12 22:27:27.401" lastUpdatedTxStamp="2017-12-12 22:27:27.394" createdStamp="2017-12-12 22:25:09.542" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <DataResource dataResourceId="FD-1004-ALT" dataResourceTypeId="ELECTRONIC_TEXT" lastUpdatedStamp="2017-12-12 22:27:27.324" lastUpdatedTxStamp="2017-12-12 22:27:27.315" createdStamp="2017-12-12 22:25:09.451" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <DataResource dataResourceId="FD-1003-ALT" dataResourceTypeId="ELECTRONIC_TEXT" lastUpdatedStamp="2017-12-12 22:27:27.228" lastUpdatedTxStamp="2017-12-12 22:27:27.218" createdStamp="2017-12-12 22:25:09.307" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <DataResource dataResourceId="FD-1002-ALT" dataResourceTypeId="ELECTRONIC_TEXT" lastUpdatedStamp="2017-12-12 22:27:27.112" lastUpdatedTxStamp="2017-12-12 22:27:27.102" createdStamp="2017-12-12 22:25:09.204" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <DataResource dataResourceId="PIZZA-01-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:31.962" lastUpdatedTxStamp="2017-12-12 22:27:31.961" createdStamp="2017-12-12 22:27:31.962" createdTxStamp="2017-12-12 22:27:31.961"/>
+    <DataResource dataResourceId="ENCHL-01-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:31.535" lastUpdatedTxStamp="2017-12-12 22:27:31.534" createdStamp="2017-12-12 22:27:31.535" createdTxStamp="2017-12-12 22:27:31.534"/>
+    <DataResource dataResourceId="FD-1001-ALT" dataResourceTypeId="ELECTRONIC_TEXT" lastUpdatedStamp="2017-12-12 22:27:27.012" lastUpdatedTxStamp="2017-12-12 22:27:27.004" createdStamp="2017-12-12 22:25:09.036" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <DataResource dataResourceId="FD-1000-ALT" dataResourceTypeId="ELECTRONIC_TEXT" lastUpdatedStamp="2017-12-12 22:27:26.907" lastUpdatedTxStamp="2017-12-12 22:27:26.889" createdStamp="2017-12-12 22:25:08.337" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <DataResource dataResourceId="SERV-100-ALTDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.301" lastUpdatedTxStamp="2017-12-12 22:27:16.287" createdStamp="2017-12-12 22:27:16.301" createdTxStamp="2017-12-12 22:27:16.287"/>
+    <DataResource dataResourceId="SERV-100-ALTEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.289" lastUpdatedTxStamp="2017-12-12 22:27:16.287" createdStamp="2017-12-12 22:27:16.289" createdTxStamp="2017-12-12 22:27:16.287"/>
+    <DataResource dataResourceId="CSV-1001-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:24.309" lastUpdatedTxStamp="2017-12-12 22:27:24.308" createdStamp="2017-12-12 22:27:24.309" createdTxStamp="2017-12-12 22:27:24.308"/>
+    <DataResource dataResourceId="SV-1001-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:24.172" lastUpdatedTxStamp="2017-12-12 22:27:24.172" createdStamp="2017-12-12 22:27:24.172" createdTxStamp="2017-12-12 22:27:24.172"/>
+    <DataResource dataResourceId="SV-1000-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:23.992" lastUpdatedTxStamp="2017-12-12 22:27:23.991" createdStamp="2017-12-12 22:27:23.992" createdTxStamp="2017-12-12 22:27:23.991"/>
+    <DataResource dataResourceId="DROP-100-ALTDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.467" lastUpdatedTxStamp="2017-12-12 22:27:16.45" createdStamp="2017-12-12 22:27:16.467" createdTxStamp="2017-12-12 22:27:16.45"/>
+    <DataResource dataResourceId="DROP-100-ALTEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.454" lastUpdatedTxStamp="2017-12-12 22:27:16.45" createdStamp="2017-12-12 22:27:16.454" createdTxStamp="2017-12-12 22:27:16.45"/>
+    <DataResource dataResourceId="orderWhenSold-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:33.848" lastUpdatedTxStamp="2017-12-12 22:27:33.847" createdStamp="2017-12-12 22:27:33.848" createdTxStamp="2017-12-12 22:27:33.847"/>
+    <DataResource dataResourceId="dropShip3-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:33.747" lastUpdatedTxStamp="2017-12-12 22:27:33.746" createdStamp="2017-12-12 22:27:33.747" createdTxStamp="2017-12-12 22:27:33.746"/>
+    <DataResource dataResourceId="dropShip2-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:33.631" lastUpdatedTxStamp="2017-12-12 22:27:33.63" createdStamp="2017-12-12 22:27:33.631" createdTxStamp="2017-12-12 22:27:33.63"/>
+    <DataResource dataResourceId="dropShip1-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:33.528" lastUpdatedTxStamp="2017-12-12 22:27:33.527" createdStamp="2017-12-12 22:27:33.528" createdTxStamp="2017-12-12 22:27:33.527"/>
+    <DataResource dataResourceId="MEDIA-100-ALTDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="de" lastUpdatedStamp="2017-12-12 22:27:15.96" lastUpdatedTxStamp="2017-12-12 22:27:15.944" createdStamp="2017-12-12 22:27:15.96" createdTxStamp="2017-12-12 22:27:15.944"/>
+    <DataResource dataResourceId="MEDIA-100-ALTEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="en" lastUpdatedStamp="2017-12-12 22:27:15.947" lastUpdatedTxStamp="2017-12-12 22:27:15.944" createdStamp="2017-12-12 22:27:15.947" createdTxStamp="2017-12-12 22:27:15.944"/>
+    <DataResource dataResourceId="MP3-1000-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:23.558" lastUpdatedTxStamp="2017-12-12 22:27:23.557" createdStamp="2017-12-12 22:27:23.558" createdTxStamp="2017-12-12 22:27:23.557"/>
+    <DataResource dataResourceId="CD-2002-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:21.122" lastUpdatedTxStamp="2017-12-12 22:27:21.121" createdStamp="2017-12-12 22:27:21.122" createdTxStamp="2017-12-12 22:27:21.121"/>
+    <DataResource dataResourceId="MUSIC-101-ALTDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="de" lastUpdatedStamp="2017-12-12 22:27:15.996" lastUpdatedTxStamp="2017-12-12 22:27:15.981" createdStamp="2017-12-12 22:27:15.996" createdTxStamp="2017-12-12 22:27:15.981"/>
+    <DataResource dataResourceId="MUSIC-101-ALTEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="en" lastUpdatedStamp="2017-12-12 22:27:15.983" lastUpdatedTxStamp="2017-12-12 22:27:15.981" createdStamp="2017-12-12 22:27:15.983" createdTxStamp="2017-12-12 22:27:15.981"/>
+    <DataResource dataResourceId="MU-DL-101-ALTDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.085" lastUpdatedTxStamp="2017-12-12 22:27:16.068" createdStamp="2017-12-12 22:27:16.085" createdTxStamp="2017-12-12 22:27:16.068"/>
+    <DataResource dataResourceId="MU-DL-101-ALTEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.072" lastUpdatedTxStamp="2017-12-12 22:27:16.068" createdStamp="2017-12-12 22:27:16.072" createdTxStamp="2017-12-12 22:27:16.068"/>
+    <DataResource dataResourceId="MU-CD-101-ALTDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.042" lastUpdatedTxStamp="2017-12-12 22:27:16.026" createdStamp="2017-12-12 22:27:16.042" createdTxStamp="2017-12-12 22:27:16.026"/>
+    <DataResource dataResourceId="MU-CD-101-ALTEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.029" lastUpdatedTxStamp="2017-12-12 22:27:16.026" createdStamp="2017-12-12 22:27:16.029" createdTxStamp="2017-12-12 22:27:16.026"/>
+    <DataResource dataResourceId="TRVL-100-ALTDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.129" lastUpdatedTxStamp="2017-12-12 22:27:16.114" createdStamp="2017-12-12 22:27:16.129" createdTxStamp="2017-12-12 22:27:16.114"/>
+    <DataResource dataResourceId="TRVL-100-ALTEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.117" lastUpdatedTxStamp="2017-12-12 22:27:16.114" createdStamp="2017-12-12 22:27:16.117" createdTxStamp="2017-12-12 22:27:16.114"/>
+    <DataResource dataResourceId="RT-1000-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:38.27" lastUpdatedTxStamp="2017-12-12 22:27:38.261" createdStamp="2017-12-12 22:27:38.27" createdTxStamp="2017-12-12 22:27:38.261"/>
+    <DataResource dataResourceId="AUTO-100-ALTDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.164" lastUpdatedTxStamp="2017-12-12 22:27:16.153" createdStamp="2017-12-12 22:27:16.164" createdTxStamp="2017-12-12 22:27:16.153"/>
+    <DataResource dataResourceId="AUTO-100-ALTEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.155" lastUpdatedTxStamp="2017-12-12 22:27:16.153" createdStamp="2017-12-12 22:27:16.155" createdTxStamp="2017-12-12 22:27:16.153"/>
+    <DataResource dataResourceId="VH-9944-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:22.997" lastUpdatedTxStamp="2017-12-12 22:27:22.995" createdStamp="2017-12-12 22:27:22.997" createdTxStamp="2017-12-12 22:27:22.995"/>
+    <DataResource dataResourceId="VH-9943-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:17.373" lastUpdatedTxStamp="2017-12-12 22:27:17.357" createdStamp="2017-12-12 22:27:17.373" createdTxStamp="2017-12-12 22:27:17.357"/>
+    <DataResource dataResourceId="VH-9943-B3-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:17.974" lastUpdatedTxStamp="2017-12-12 22:27:17.953" createdStamp="2017-12-12 22:27:17.974" createdTxStamp="2017-12-12 22:27:17.953"/>
+    <DataResource dataResourceId="VH-9943-B4-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:22.363" lastUpdatedTxStamp="2017-12-12 22:27:22.361" createdStamp="2017-12-12 22:27:22.363" createdTxStamp="2017-12-12 22:27:22.361"/>
+    <DataResource dataResourceId="VH-9943-S3-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:22.527" lastUpdatedTxStamp="2017-12-12 22:27:22.524" createdStamp="2017-12-12 22:27:22.527" createdTxStamp="2017-12-12 22:27:22.524"/>
+    <DataResource dataResourceId="VH-9943-S4-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:22.701" lastUpdatedTxStamp="2017-12-12 22:27:22.698" createdStamp="2017-12-12 22:27:22.701" createdTxStamp="2017-12-12 22:27:22.698"/>
+    <DataResource dataResourceId="GFTC-100-ALTDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.337" lastUpdatedTxStamp="2017-12-12 22:27:16.321" createdStamp="2017-12-12 22:27:16.337" createdTxStamp="2017-12-12 22:27:16.321"/>
+    <DataResource dataResourceId="GFTC-100-ALTEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.326" lastUpdatedTxStamp="2017-12-12 22:27:16.321" createdStamp="2017-12-12 22:27:16.326" createdTxStamp="2017-12-12 22:27:16.321"/>
+    <DataResource dataResourceId="GC-002-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:34.889" lastUpdatedTxStamp="2017-12-12 22:27:34.888" createdStamp="2017-12-12 22:27:34.889" createdTxStamp="2017-12-12 22:27:34.888"/>
+    <DataResource dataResourceId="GC-001-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:35.026" lastUpdatedTxStamp="2017-12-12 22:27:35.024" createdStamp="2017-12-12 22:27:35.026" createdTxStamp="2017-12-12 22:27:35.024"/>
+    <DataResource dataResourceId="GC-001-C10-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:35.187" lastUpdatedTxStamp="2017-12-12 22:27:35.185" createdStamp="2017-12-12 22:27:35.187" createdTxStamp="2017-12-12 22:27:35.185"/>
+    <DataResource dataResourceId="GC-001-C100-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:35.311" lastUpdatedTxStamp="2017-12-12 22:27:35.309" createdStamp="2017-12-12 22:27:35.311" createdTxStamp="2017-12-12 22:27:35.309"/>
+    <DataResource dataResourceId="GC-001-C25-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:35.488" lastUpdatedTxStamp="2017-12-12 22:27:35.483" createdStamp="2017-12-12 22:27:35.488" createdTxStamp="2017-12-12 22:27:35.483"/>
+    <DataResource dataResourceId="GC-001-C50-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:35.652" lastUpdatedTxStamp="2017-12-12 22:27:35.651" createdStamp="2017-12-12 22:27:35.652" createdTxStamp="2017-12-12 22:27:35.651"/>
+    <DataResource dataResourceId="GC-001-CO-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:35.789" lastUpdatedTxStamp="2017-12-12 22:27:35.788" createdStamp="2017-12-12 22:27:35.789" createdTxStamp="2017-12-12 22:27:35.788"/>
+    <DataResource dataResourceId="GC-001-H10-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:35.95" lastUpdatedTxStamp="2017-12-12 22:27:35.949" createdStamp="2017-12-12 22:27:35.95" createdTxStamp="2017-12-12 22:27:35.949"/>
+    <DataResource dataResourceId="GC-001-H100-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:36.06" lastUpdatedTxStamp="2017-12-12 22:27:36.059" createdStamp="2017-12-12 22:27:36.06" createdTxStamp="2017-12-12 22:27:36.059"/>
+    <DataResource dataResourceId="GC-001-H25-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:36.162" lastUpdatedTxStamp="2017-12-12 22:27:36.161" createdStamp="2017-12-12 22:27:36.162" createdTxStamp="2017-12-12 22:27:36.161"/>
+    <DataResource dataResourceId="GC-001-H50-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:36.284" lastUpdatedTxStamp="2017-12-12 22:27:36.283" createdStamp="2017-12-12 22:27:36.284" createdTxStamp="2017-12-12 22:27:36.283"/>
+    <DataResource dataResourceId="GC-001-HO-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:36.482" lastUpdatedTxStamp="2017-12-12 22:27:36.48" createdStamp="2017-12-12 22:27:36.482" createdTxStamp="2017-12-12 22:27:36.48"/>
+    <DataResource dataResourceId="GC-PR-101-ALTDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.368" lastUpdatedTxStamp="2017-12-12 22:27:16.354" createdStamp="2017-12-12 22:27:16.368" createdTxStamp="2017-12-12 22:27:16.354"/>
+    <DataResource dataResourceId="GC-PR-101-ALTEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.358" lastUpdatedTxStamp="2017-12-12 22:27:16.354" createdStamp="2017-12-12 22:27:16.358" createdTxStamp="2017-12-12 22:27:16.354"/>
+    <DataResource dataResourceId="GC-001-HO-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:36.482" lastUpdatedTxStamp="2017-12-12 22:27:36.48" createdStamp="2017-12-12 22:27:36.482" createdTxStamp="2017-12-12 22:27:36.48"/>
+    <DataResource dataResourceId="GC-001-H50-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:36.284" lastUpdatedTxStamp="2017-12-12 22:27:36.283" createdStamp="2017-12-12 22:27:36.284" createdTxStamp="2017-12-12 22:27:36.283"/>
+    <DataResource dataResourceId="GC-001-H25-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:36.162" lastUpdatedTxStamp="2017-12-12 22:27:36.161" createdStamp="2017-12-12 22:27:36.162" createdTxStamp="2017-12-12 22:27:36.161"/>
+    <DataResource dataResourceId="GC-001-H100-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:36.06" lastUpdatedTxStamp="2017-12-12 22:27:36.059" createdStamp="2017-12-12 22:27:36.06" createdTxStamp="2017-12-12 22:27:36.059"/>
+    <DataResource dataResourceId="GC-001-H10-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:35.95" lastUpdatedTxStamp="2017-12-12 22:27:35.949" createdStamp="2017-12-12 22:27:35.95" createdTxStamp="2017-12-12 22:27:35.949"/>
+    <DataResource dataResourceId="GC-001-CO-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:35.789" lastUpdatedTxStamp="2017-12-12 22:27:35.788" createdStamp="2017-12-12 22:27:35.789" createdTxStamp="2017-12-12 22:27:35.788"/>
+    <DataResource dataResourceId="GC-001-C50-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:35.652" lastUpdatedTxStamp="2017-12-12 22:27:35.651" createdStamp="2017-12-12 22:27:35.652" createdTxStamp="2017-12-12 22:27:35.651"/>
+    <DataResource dataResourceId="GC-001-C25-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:35.488" lastUpdatedTxStamp="2017-12-12 22:27:35.483" createdStamp="2017-12-12 22:27:35.488" createdTxStamp="2017-12-12 22:27:35.483"/>
+    <DataResource dataResourceId="GC-001-C100-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:35.311" lastUpdatedTxStamp="2017-12-12 22:27:35.309" createdStamp="2017-12-12 22:27:35.311" createdTxStamp="2017-12-12 22:27:35.309"/>
+    <DataResource dataResourceId="GC-001-C10-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:35.187" lastUpdatedTxStamp="2017-12-12 22:27:35.185" createdStamp="2017-12-12 22:27:35.187" createdTxStamp="2017-12-12 22:27:35.185"/>
+    <DataResource dataResourceId="GC-RL-101-ALTDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.398" lastUpdatedTxStamp="2017-12-12 22:27:16.384" createdStamp="2017-12-12 22:27:16.398" createdTxStamp="2017-12-12 22:27:16.384"/>
+    <DataResource dataResourceId="GC-RL-101-ALTEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.387" lastUpdatedTxStamp="2017-12-12 22:27:16.384" createdStamp="2017-12-12 22:27:16.387" createdTxStamp="2017-12-12 22:27:16.384"/>
+    <DataResource dataResourceId="PROMOTIONS-ALTDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.503" lastUpdatedTxStamp="2017-12-12 22:27:16.491" createdStamp="2017-12-12 22:27:16.503" createdTxStamp="2017-12-12 22:27:16.491"/>
+    <DataResource dataResourceId="PROMOTIONS-ALTEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.494" lastUpdatedTxStamp="2017-12-12 22:27:16.491" createdStamp="2017-12-12 22:27:16.494" createdTxStamp="2017-12-12 22:27:16.491"/>
+    <DataResource dataResourceId="CAT1_BEST_SELL-ALTDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.659" lastUpdatedTxStamp="2017-12-12 22:27:16.634" createdStamp="2017-12-12 22:27:16.659" createdTxStamp="2017-12-12 22:27:16.634"/>
+    <DataResource dataResourceId="CAT1_BEST_SELL-ALTEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.637" lastUpdatedTxStamp="2017-12-12 22:27:16.634" createdStamp="2017-12-12 22:27:16.637" createdTxStamp="2017-12-12 22:27:16.634"/>
+    <DataResource dataResourceId="BEST-SELL-1-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:17.154" lastUpdatedTxStamp="2017-12-12 22:27:17.153" createdStamp="2017-12-12 22:27:17.154" createdTxStamp="2017-12-12 22:27:17.153"/>
+    <DataResource dataResourceId="BEST-SELL-2-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:17.178" lastUpdatedTxStamp="2017-12-12 22:27:17.177" createdStamp="2017-12-12 22:27:17.178" createdTxStamp="2017-12-12 22:27:17.177"/>
+    <DataResource dataResourceId="CAT1_SEARCH-ALTDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.54" lastUpdatedTxStamp="2017-12-12 22:27:16.527" createdStamp="2017-12-12 22:27:16.54" createdTxStamp="2017-12-12 22:27:16.527"/>
+    <DataResource dataResourceId="CAT1_SEARCH-ALTEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.531" lastUpdatedTxStamp="2017-12-12 22:27:16.527" createdStamp="2017-12-12 22:27:16.531" createdTxStamp="2017-12-12 22:27:16.527"/>
+    <DataResource dataResourceId="CAT1_QUICKADD1-ALTDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.576" lastUpdatedTxStamp="2017-12-12 22:27:16.565" createdStamp="2017-12-12 22:27:16.576" createdTxStamp="2017-12-12 22:27:16.565"/>
+    <DataResource dataResourceId="CAT1_QUICKADD1-ALTEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.566" lastUpdatedTxStamp="2017-12-12 22:27:16.565" createdStamp="2017-12-12 22:27:16.566" createdTxStamp="2017-12-12 22:27:16.565"/>
+    <DataResource dataResourceId="CAT1_QUICKADD2-ALTDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.609" lastUpdatedTxStamp="2017-12-12 22:27:16.595" createdStamp="2017-12-12 22:27:16.609" createdTxStamp="2017-12-12 22:27:16.595"/>
+    <DataResource dataResourceId="CAT1_QUICKADD2-ALTEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.598" lastUpdatedTxStamp="2017-12-12 22:27:16.595" createdStamp="2017-12-12 22:27:16.598" createdTxStamp="2017-12-12 22:27:16.595"/>
+    <DataResource dataResourceId="TSTLTDADMIN-ALT" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_PUBLISHED" lastUpdatedStamp="2017-12-12 22:27:16.687" lastUpdatedTxStamp="2017-12-12 22:27:16.686" createdStamp="2017-12-12 22:27:16.687" createdTxStamp="2017-12-12 22:27:16.686"/>
+    <ElectronicText dataResourceId="CATALOG1-ALTDE" lastUpdatedStamp="2017-12-12 22:27:15.45" lastUpdatedTxStamp="2017-12-12 22:27:15.431" createdStamp="2017-12-12 22:27:15.45" createdTxStamp="2017-12-12 22:27:15.431">
+        <textData><![CDATA[demo-katalog]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="CATALOG1-ALTEN" lastUpdatedStamp="2017-12-12 22:27:15.436" lastUpdatedTxStamp="2017-12-12 22:27:15.431" createdStamp="2017-12-12 22:27:15.436" createdTxStamp="2017-12-12 22:27:15.431">
+        <textData><![CDATA[demo-catalog]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="CLOTH-100-ALTDE" lastUpdatedStamp="2017-12-12 22:27:15.5" lastUpdatedTxStamp="2017-12-12 22:27:15.48" createdStamp="2017-12-12 22:27:15.5" createdTxStamp="2017-12-12 22:27:15.48">
+        <textData><![CDATA[kleidung]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="CLOTH-100-ALTEN" lastUpdatedStamp="2017-12-12 22:27:15.485" lastUpdatedTxStamp="2017-12-12 22:27:15.48" createdStamp="2017-12-12 22:27:15.485" createdTxStamp="2017-12-12 22:27:15.48">
+        <textData><![CDATA[clothing]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="CL-5005-ALT" lastUpdatedStamp="2017-12-12 22:27:21.315" lastUpdatedTxStamp="2017-12-12 22:27:21.313" createdStamp="2017-12-12 22:27:21.315" createdTxStamp="2017-12-12 22:27:21.313">
+        <textData><![CDATA[mens-jacket]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="CL-7000-ALT" lastUpdatedStamp="2017-12-12 22:27:21.488" lastUpdatedTxStamp="2017-12-12 22:27:21.486" createdStamp="2017-12-12 22:27:21.488" createdTxStamp="2017-12-12 22:27:21.486">
+        <textData><![CDATA[blouse]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="CL-1000-ALT" lastUpdatedStamp="2017-12-12 22:27:23.181" lastUpdatedTxStamp="2017-12-12 22:27:23.179" createdStamp="2017-12-12 22:27:23.181" createdTxStamp="2017-12-12 22:27:23.179">
+        <textData><![CDATA[mens-t-shirt]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="CL-WMN-101-ALTDE" lastUpdatedStamp="2017-12-12 22:27:15.578" lastUpdatedTxStamp="2017-12-12 22:27:15.559" createdStamp="2017-12-12 22:27:15.578" createdTxStamp="2017-12-12 22:27:15.559">
+        <textData><![CDATA[damen]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="CL-WMN-101-ALTEN" lastUpdatedStamp="2017-12-12 22:27:15.565" lastUpdatedTxStamp="2017-12-12 22:27:15.559" createdStamp="2017-12-12 22:27:15.565" createdTxStamp="2017-12-12 22:27:15.559">
+        <textData><![CDATA[womenswear]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="CL-8544-ALT" lastUpdatedStamp="2017-12-12 22:27:21.673" lastUpdatedTxStamp="2017-12-12 22:27:21.67" createdStamp="2017-12-12 22:27:21.673" createdTxStamp="2017-12-12 22:27:21.67">
+        <textData><![CDATA[womens-socks]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="CL-MEN-101-ALTDE" lastUpdatedStamp="2017-12-12 22:27:15.543" lastUpdatedTxStamp="2017-12-12 22:27:15.526" createdStamp="2017-12-12 22:27:15.543" createdTxStamp="2017-12-12 22:27:15.526">
+        <textData><![CDATA[herrenbekleidung]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="CL-MEN-101-ALTEN" lastUpdatedStamp="2017-12-12 22:27:15.533" lastUpdatedTxStamp="2017-12-12 22:27:15.526" createdStamp="2017-12-12 22:27:15.533" createdTxStamp="2017-12-12 22:27:15.526">
+        <textData><![CDATA[menswear]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="ELTRN-100-ALTDE" lastUpdatedStamp="2017-12-12 22:27:15.619" lastUpdatedTxStamp="2017-12-12 22:27:15.596" createdStamp="2017-12-12 22:27:15.619" createdTxStamp="2017-12-12 22:27:15.596">
+        <textData><![CDATA[elektronik]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="ELTRN-100-ALTEN" lastUpdatedStamp="2017-12-12 22:27:15.6" lastUpdatedTxStamp="2017-12-12 22:27:15.596" createdStamp="2017-12-12 22:27:15.6" createdTxStamp="2017-12-12 22:27:15.596">
+        <textData><![CDATA[electronics]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="EL-BASKET-ALT" lastUpdatedStamp="2017-12-12 22:27:23.681" lastUpdatedTxStamp="2017-12-12 22:27:23.679" createdStamp="2017-12-12 22:27:23.681" createdTxStamp="2017-12-12 22:27:23.679">
+        <textData><![CDATA[eletronics-basket]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="EL-BASKET-PICK-ALT" lastUpdatedStamp="2017-12-12 22:27:23.844" lastUpdatedTxStamp="2017-12-12 22:27:23.842" createdStamp="2017-12-12 22:27:23.844" createdTxStamp="2017-12-12 22:27:23.842">
+        <textData><![CDATA[electronics-basket-assembly-pick]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="PH-1000-ALT" lastUpdatedStamp="2017-12-12 22:27:19.213" lastUpdatedTxStamp="2017-12-12 22:27:19.202" createdStamp="2017-12-12 22:27:19.213" createdTxStamp="2017-12-12 22:27:19.202">
+        <textData><![CDATA[iphone-5]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="PH-1001-ALT" lastUpdatedStamp="2017-12-12 22:27:19.474" lastUpdatedTxStamp="2017-12-12 22:27:19.471" createdStamp="2017-12-12 22:27:19.474" createdTxStamp="2017-12-12 22:27:19.471">
+        <textData><![CDATA[iphone-6]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="PH-1004-ALT" lastUpdatedStamp="2017-12-12 22:27:19.697" lastUpdatedTxStamp="2017-12-12 22:27:19.695" createdStamp="2017-12-12 22:27:19.697" createdTxStamp="2017-12-12 22:27:19.695">
+        <textData><![CDATA[iphone-7]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="PH-1005-ALT" lastUpdatedStamp="2017-12-12 22:27:19.891" lastUpdatedTxStamp="2017-12-12 22:27:19.889" createdStamp="2017-12-12 22:27:19.891" createdTxStamp="2017-12-12 22:27:19.889">
+        <textData><![CDATA[iphone-business]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="SW-1006-ALT" lastUpdatedStamp="2017-12-12 22:27:20.109" lastUpdatedTxStamp="2017-12-12 22:27:20.107" createdStamp="2017-12-12 22:27:20.109" createdTxStamp="2017-12-12 22:27:20.107">
+        <textData><![CDATA[licensetoolplus]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="SW-1006-1-ALT" lastUpdatedStamp="2017-12-12 22:27:20.332" lastUpdatedTxStamp="2017-12-12 22:27:20.329" createdStamp="2017-12-12 22:27:20.332" createdTxStamp="2017-12-12 22:27:20.329">
+        <textData><![CDATA[licensetoolplus-lgpl]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="SW-1006-2-ALT" lastUpdatedStamp="2017-12-12 22:27:20.5" lastUpdatedTxStamp="2017-12-12 22:27:20.496" createdStamp="2017-12-12 22:27:20.5" createdTxStamp="2017-12-12 22:27:20.496">
+        <textData><![CDATA[licensetoolplus-gpl]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="SW-1006-3-ALT" lastUpdatedStamp="2017-12-12 22:27:20.671" lastUpdatedTxStamp="2017-12-12 22:27:20.668" createdStamp="2017-12-12 22:27:20.671" createdTxStamp="2017-12-12 22:27:20.668">
+        <textData><![CDATA[licensetoolplus-bsd]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="SW-1006-4-ALT" lastUpdatedStamp="2017-12-12 22:27:20.833" lastUpdatedTxStamp="2017-12-12 22:27:20.829" createdStamp="2017-12-12 22:27:20.833" createdTxStamp="2017-12-12 22:27:20.829">
+        <textData><![CDATA[licensetoolplus-mit]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="SW-1006-5-ALT" lastUpdatedStamp="2017-12-12 22:27:20.977" lastUpdatedTxStamp="2017-12-12 22:27:20.973" createdStamp="2017-12-12 22:27:20.977" createdTxStamp="2017-12-12 22:27:20.973">
+        <textData><![CDATA[licensetoolplus-asl2]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="CAM-2644-ALTDE" lastUpdatedStamp="2017-12-12 22:27:18.266" lastUpdatedTxStamp="2017-12-12 22:27:18.235" createdStamp="2017-12-12 22:27:18.266" createdTxStamp="2017-12-12 22:27:18.235">
+        <textData><![CDATA[nikon-analogkamera]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="CAM-2644-ALTEN" lastUpdatedStamp="2017-12-12 22:27:18.247" lastUpdatedTxStamp="2017-12-12 22:27:18.235" createdStamp="2017-12-12 22:27:18.247" createdTxStamp="2017-12-12 22:27:18.235">
+        <textData><![CDATA[nikon-analog-camera]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="MPL-9290-ALT" lastUpdatedStamp="2017-12-12 22:27:21.876" lastUpdatedTxStamp="2017-12-12 22:27:21.873" createdStamp="2017-12-12 22:27:21.876" createdTxStamp="2017-12-12 22:27:21.873">
+        <textData><![CDATA[thumb-mp3-player]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="PR-1000-ALT" lastUpdatedStamp="2017-12-12 22:27:29.14" lastUpdatedTxStamp="2017-12-12 22:27:29.139" createdStamp="2017-12-12 22:25:11.395" createdTxStamp="2017-12-12 22:25:07.512">
+        <textData><![CDATA[usb-optical-mouse]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="CAM-7000-ALT" lastUpdatedStamp="2017-12-12 22:27:26.434" lastUpdatedTxStamp="2017-12-12 22:27:26.432" createdStamp="2017-12-12 22:25:11.545" createdTxStamp="2017-12-12 22:25:07.512">
+        <textData><![CDATA[nikon-fm2-film]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="EL-PHN-101-ALTDE" lastUpdatedStamp="2017-12-12 22:27:15.924" lastUpdatedTxStamp="2017-12-12 22:27:15.904" createdStamp="2017-12-12 22:27:15.924" createdTxStamp="2017-12-12 22:27:15.904">
+        <textData><![CDATA[handys]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="EL-PHN-101-ALTEN" lastUpdatedStamp="2017-12-12 22:27:15.91" lastUpdatedTxStamp="2017-12-12 22:27:15.904" createdStamp="2017-12-12 22:27:15.91" createdTxStamp="2017-12-12 22:27:15.904">
+        <textData><![CDATA[phones]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="EL-MP3-101-ALTDE" lastUpdatedStamp="2017-12-12 22:27:15.874" lastUpdatedTxStamp="2017-12-12 22:27:15.858" createdStamp="2017-12-12 22:27:15.874" createdTxStamp="2017-12-12 22:27:15.858">
+        <textData><![CDATA[mp3-player]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="EL-MP3-101-ALTEN" lastUpdatedStamp="2017-12-12 22:27:15.861" lastUpdatedTxStamp="2017-12-12 22:27:15.858" createdStamp="2017-12-12 22:27:15.861" createdTxStamp="2017-12-12 22:27:15.858">
+        <textData><![CDATA[mp3-players]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="PC-101-ALTDE" lastUpdatedStamp="2017-12-12 22:27:15.662" lastUpdatedTxStamp="2017-12-12 22:27:15.646" createdStamp="2017-12-12 22:27:15.662" createdTxStamp="2017-12-12 22:27:15.646">
+        <textData><![CDATA[computer]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="PC-101-ALTEN" lastUpdatedStamp="2017-12-12 22:27:15.649" lastUpdatedTxStamp="2017-12-12 22:27:15.646" createdStamp="2017-12-12 22:27:15.649" createdTxStamp="2017-12-12 22:27:15.646">
+        <textData><![CDATA[computer]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="PC-AC-101-ALTDE" lastUpdatedStamp="2017-12-12 22:27:15.833" lastUpdatedTxStamp="2017-12-12 22:27:15.814" createdStamp="2017-12-12 22:27:15.833" createdTxStamp="2017-12-12 22:27:15.814">
+        <textData><![CDATA[computerzubehoer]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="PC-AC-101-ALTEN" lastUpdatedStamp="2017-12-12 22:27:15.82" lastUpdatedTxStamp="2017-12-12 22:27:15.814" createdStamp="2017-12-12 22:27:15.82" createdTxStamp="2017-12-12 22:27:15.814">
+        <textData><![CDATA[computer-accessories]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="CDR-1111-ALT" lastUpdatedStamp="2017-12-12 22:27:22.05" lastUpdatedTxStamp="2017-12-12 22:27:22.048" createdStamp="2017-12-12 22:27:22.05" createdTxStamp="2017-12-12 22:27:22.048">
+        <textData><![CDATA[cd-r-writable-discs]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="PC-PR-101-ALTDE" lastUpdatedStamp="2017-12-12 22:27:15.352" lastUpdatedTxStamp="2017-12-12 22:27:15.031" createdStamp="2017-12-12 22:27:15.352" createdTxStamp="2017-12-12 22:27:15.031">
+        <textData><![CDATA[peripherals]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="PC-PR-101-ALTEN" lastUpdatedStamp="2017-12-12 22:27:15.166" lastUpdatedTxStamp="2017-12-12 22:27:15.031" createdStamp="2017-12-12 22:27:15.166" createdTxStamp="2017-12-12 22:27:15.031">
+        <textData><![CDATA[peripherals]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="KB-5569-ALT" lastUpdatedStamp="2017-12-12 22:27:22.205" lastUpdatedTxStamp="2017-12-12 22:27:22.202" createdStamp="2017-12-12 22:27:22.205" createdTxStamp="2017-12-12 22:27:22.202">
+        <textData><![CDATA[usb-keyboard]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="PC-SW-101-ALTDE" lastUpdatedStamp="2017-12-12 22:27:15.793" lastUpdatedTxStamp="2017-12-12 22:27:15.77" createdStamp="2017-12-12 22:27:15.793" createdTxStamp="2017-12-12 22:27:15.77">
+        <textData><![CDATA[software]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="PC-SW-101-ALTEN" lastUpdatedStamp="2017-12-12 22:27:15.774" lastUpdatedTxStamp="2017-12-12 22:27:15.77" createdStamp="2017-12-12 22:27:15.774" createdTxStamp="2017-12-12 22:27:15.77">
+        <textData><![CDATA[software]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="PC-SYS-101-ALTDE" lastUpdatedStamp="2017-12-12 22:27:15.712" lastUpdatedTxStamp="2017-12-12 22:27:15.686" createdStamp="2017-12-12 22:27:15.712" createdTxStamp="2017-12-12 22:27:15.686">
+        <textData><![CDATA[computersysteme]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="PC-SYS-101-ALTEN" lastUpdatedStamp="2017-12-12 22:27:15.692" lastUpdatedTxStamp="2017-12-12 22:27:15.686" createdStamp="2017-12-12 22:27:15.692" createdTxStamp="2017-12-12 22:27:15.686">
+        <textData><![CDATA[computer-systems]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="PC-1000-ALT" lastUpdatedStamp="2017-12-12 22:27:26.265" lastUpdatedTxStamp="2017-12-12 22:27:26.263" createdStamp="2017-12-12 22:27:26.265" createdTxStamp="2017-12-12 22:27:26.263">
+        <textData><![CDATA[configurable-pc]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="SUBS-100-ALTDE" lastUpdatedStamp="2017-12-12 22:27:16.214" lastUpdatedTxStamp="2017-12-12 22:27:16.197" createdStamp="2017-12-12 22:27:16.214" createdTxStamp="2017-12-12 22:27:16.197">
+        <textData><![CDATA[abonnements]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="SUBS-100-ALTEN" lastUpdatedStamp="2017-12-12 22:27:16.201" lastUpdatedTxStamp="2017-12-12 22:27:16.197" createdStamp="2017-12-12 22:27:16.201" createdTxStamp="2017-12-12 22:27:16.197">
+        <textData><![CDATA[subscriptions]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="NEWS-01-1MO-ALT" lastUpdatedStamp="2017-12-12 22:27:23.397" lastUpdatedTxStamp="2017-12-12 22:27:23.395" createdStamp="2017-12-12 22:27:23.397" createdTxStamp="2017-12-12 22:27:23.395">
+        <textData><![CDATA[scipio-newsletter-1-month]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FIN-100-ALTDE" lastUpdatedStamp="2017-12-12 22:27:16.243" lastUpdatedTxStamp="2017-12-12 22:27:16.23" createdStamp="2017-12-12 22:27:16.243" createdTxStamp="2017-12-12 22:27:16.23">
+        <textData><![CDATA[finanz]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FIN-100-ALTEN" lastUpdatedStamp="2017-12-12 22:27:16.233" lastUpdatedTxStamp="2017-12-12 22:27:16.23" createdStamp="2017-12-12 22:27:16.233" createdTxStamp="2017-12-12 22:27:16.23">
+        <textData><![CDATA[financial]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FA-001-ALT" lastUpdatedStamp="2017-12-12 22:27:34.302" lastUpdatedTxStamp="2017-12-12 22:27:34.3" createdStamp="2017-12-12 22:27:34.302" createdTxStamp="2017-12-12 22:27:34.3">
+        <textData><![CDATA[financial-account-activation]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FA-001-30-ALT" lastUpdatedStamp="2017-12-12 22:27:34.428" lastUpdatedTxStamp="2017-12-12 22:27:34.425" createdStamp="2017-12-12 22:27:34.428" createdTxStamp="2017-12-12 22:27:34.425">
+        <textData><![CDATA[financial-account-activation]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FA-001-50-ALT" lastUpdatedStamp="2017-12-12 22:27:34.629" lastUpdatedTxStamp="2017-12-12 22:27:34.624" createdStamp="2017-12-12 22:27:34.629" createdTxStamp="2017-12-12 22:27:34.624">
+        <textData><![CDATA[financial-account-activation]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FA-001-O-ALT" lastUpdatedStamp="2017-12-12 22:27:34.775" lastUpdatedTxStamp="2017-12-12 22:27:34.773" createdStamp="2017-12-12 22:27:34.775" createdTxStamp="2017-12-12 22:27:34.773">
+        <textData><![CDATA[financial-account-activation]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FOOD-100-ALTDE" lastUpdatedStamp="2017-12-12 22:27:16.272" lastUpdatedTxStamp="2017-12-12 22:27:16.259" createdStamp="2017-12-12 22:27:16.272" createdTxStamp="2017-12-12 22:27:16.259">
+        <textData><![CDATA[lebensmittel]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FOOD-100-ALTEN" lastUpdatedStamp="2017-12-12 22:27:16.262" lastUpdatedTxStamp="2017-12-12 22:27:16.259" createdStamp="2017-12-12 22:27:16.262" createdTxStamp="2017-12-12 22:27:16.259">
+        <textData><![CDATA[groceries]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FD-1066-ALT" lastUpdatedStamp="2017-12-12 22:27:29.048" lastUpdatedTxStamp="2017-12-12 22:27:29.047" createdStamp="2017-12-12 22:25:11.304" createdTxStamp="2017-12-12 22:25:07.512">
+        <textData><![CDATA[raw-shrimp-with-shell]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FD-1065-ALT" lastUpdatedStamp="2017-12-12 22:27:28.966" lastUpdatedTxStamp="2017-12-12 22:27:28.964" createdStamp="2017-12-12 22:25:11.246" createdTxStamp="2017-12-12 22:25:07.512">
+        <textData><![CDATA[catfish]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FD-1064-ALT" lastUpdatedStamp="2017-12-12 22:27:28.877" lastUpdatedTxStamp="2017-12-12 22:27:28.876" createdStamp="2017-12-12 22:25:11.188" createdTxStamp="2017-12-12 22:25:07.512">
+        <textData><![CDATA[atlantic-cod]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FD-1063-ALT" lastUpdatedStamp="2017-12-12 22:27:28.792" lastUpdatedTxStamp="2017-12-12 22:27:28.791" createdStamp="2017-12-12 22:25:11.148" createdTxStamp="2017-12-12 22:25:07.512">
+        <textData><![CDATA[wild-caught-tuna]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FD-1062-ALT" lastUpdatedStamp="2017-12-12 22:27:28.708" lastUpdatedTxStamp="2017-12-12 22:27:28.706" createdStamp="2017-12-12 22:25:11.016" createdTxStamp="2017-12-12 22:25:07.512">
+        <textData><![CDATA[salmon]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FD-1061-ALT" lastUpdatedStamp="2017-12-12 22:27:28.619" lastUpdatedTxStamp="2017-12-12 22:27:28.617" createdStamp="2017-12-12 22:25:10.937" createdTxStamp="2017-12-12 22:25:07.512">
+        <textData><![CDATA[sea-bass]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FD-1060-ALT" lastUpdatedStamp="2017-12-12 22:27:28.545" lastUpdatedTxStamp="2017-12-12 22:27:28.544" createdStamp="2017-12-12 22:25:10.861" createdTxStamp="2017-12-12 22:25:07.512">
+        <textData><![CDATA[pink-shrimp]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FD-1050-ALT" lastUpdatedStamp="2017-12-12 22:27:28.447" lastUpdatedTxStamp="2017-12-12 22:27:28.446" createdStamp="2017-12-12 22:25:10.811" createdTxStamp="2017-12-12 22:25:07.512">
+        <textData><![CDATA[strawberry-cream-cake]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FD-1017-ALT" lastUpdatedStamp="2017-12-12 22:27:28.353" lastUpdatedTxStamp="2017-12-12 22:27:28.351" createdStamp="2017-12-12 22:25:10.72" createdTxStamp="2017-12-12 22:25:07.512">
+        <textData><![CDATA[green-apples]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FD-1016-ALT" lastUpdatedStamp="2017-12-12 22:27:28.276" lastUpdatedTxStamp="2017-12-12 22:27:28.264" createdStamp="2017-12-12 22:25:10.62" createdTxStamp="2017-12-12 22:25:07.512">
+        <textData><![CDATA[spinach]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FD-1015-ALT" lastUpdatedStamp="2017-12-12 22:27:28.174" lastUpdatedTxStamp="2017-12-12 22:27:28.172" createdStamp="2017-12-12 22:25:10.556" createdTxStamp="2017-12-12 22:25:07.512">
+        <textData><![CDATA[romaine-lettuce]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FD-1014-ALT" lastUpdatedStamp="2017-12-12 22:27:28.096" lastUpdatedTxStamp="2017-12-12 22:27:28.094" createdStamp="2017-12-12 22:25:10.491" createdTxStamp="2017-12-12 22:25:07.512">
+        <textData><![CDATA[arugula]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FD-1013-ALT" lastUpdatedStamp="2017-12-12 22:27:28.027" lastUpdatedTxStamp="2017-12-12 22:27:28.026" createdStamp="2017-12-12 22:25:10.442" createdTxStamp="2017-12-12 22:25:07.512">
+        <textData><![CDATA[eggplant]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FD-1012-ALT" lastUpdatedStamp="2017-12-12 22:27:27.946" lastUpdatedTxStamp="2017-12-12 22:27:27.945" createdStamp="2017-12-12 22:25:10.319" createdTxStamp="2017-12-12 22:25:07.512">
+        <textData><![CDATA[tomatoes]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FD-1011-ALT" lastUpdatedStamp="2017-12-12 22:27:27.877" lastUpdatedTxStamp="2017-12-12 22:27:27.875" createdStamp="2017-12-12 22:25:10.226" createdTxStamp="2017-12-12 22:25:07.512">
+        <textData><![CDATA[pickles]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FD-1010-ALT" lastUpdatedStamp="2017-12-12 22:27:27.806" lastUpdatedTxStamp="2017-12-12 22:27:27.804" createdStamp="2017-12-12 22:25:10.015" createdTxStamp="2017-12-12 22:25:07.512">
+        <textData><![CDATA[celery]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FD-1009-ALT" lastUpdatedStamp="2017-12-12 22:27:27.719" lastUpdatedTxStamp="2017-12-12 22:27:27.717" createdStamp="2017-12-12 22:25:09.929" createdTxStamp="2017-12-12 22:25:07.512">
+        <textData><![CDATA[parsnips]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FD-1008-ALT" lastUpdatedStamp="2017-12-12 22:27:27.627" lastUpdatedTxStamp="2017-12-12 22:27:27.626" createdStamp="2017-12-12 22:25:09.848" createdTxStamp="2017-12-12 22:25:07.512">
+        <textData><![CDATA[onions]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FD-1007-ALT" lastUpdatedStamp="2017-12-12 22:27:27.551" lastUpdatedTxStamp="2017-12-12 22:27:27.549" createdStamp="2017-12-12 22:25:09.728" createdTxStamp="2017-12-12 22:25:07.512">
+        <textData><![CDATA[carrots]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FD-1006-ALT" lastUpdatedStamp="2017-12-12 22:27:27.475" lastUpdatedTxStamp="2017-12-12 22:27:27.473" createdStamp="2017-12-12 22:25:09.622" createdTxStamp="2017-12-12 22:25:07.512">
+        <textData><![CDATA[cucumbers]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FD-1005-ALT" lastUpdatedStamp="2017-12-12 22:27:27.396" lastUpdatedTxStamp="2017-12-12 22:27:27.394" createdStamp="2017-12-12 22:25:09.544" createdTxStamp="2017-12-12 22:25:07.512">
+        <textData><![CDATA[yellow-peppers]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FD-1004-ALT" lastUpdatedStamp="2017-12-12 22:27:27.317" lastUpdatedTxStamp="2017-12-12 22:27:27.315" createdStamp="2017-12-12 22:25:09.458" createdTxStamp="2017-12-12 22:25:07.512">
+        <textData><![CDATA[red-peppers]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FD-1003-ALT" lastUpdatedStamp="2017-12-12 22:27:27.22" lastUpdatedTxStamp="2017-12-12 22:27:27.218" createdStamp="2017-12-12 22:25:09.361" createdTxStamp="2017-12-12 22:25:07.512">
+        <textData><![CDATA[green-peppers]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FD-1002-ALT" lastUpdatedStamp="2017-12-12 22:27:27.104" lastUpdatedTxStamp="2017-12-12 22:27:27.102" createdStamp="2017-12-12 22:25:09.206" createdTxStamp="2017-12-12 22:25:07.512">
+        <textData><![CDATA[assorted-vegetables]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="PIZZA-01-ALT" lastUpdatedStamp="2017-12-12 22:27:31.963" lastUpdatedTxStamp="2017-12-12 22:27:31.961" createdStamp="2017-12-12 22:27:31.963" createdTxStamp="2017-12-12 22:27:31.961">
+        <textData><![CDATA[pizza]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="ENCHL-01-ALT" lastUpdatedStamp="2017-12-12 22:27:31.536" lastUpdatedTxStamp="2017-12-12 22:27:31.534" createdStamp="2017-12-12 22:27:31.536" createdTxStamp="2017-12-12 22:27:31.534">
+        <textData><![CDATA[enchiladas]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FD-1001-ALT" lastUpdatedStamp="2017-12-12 22:27:27.006" lastUpdatedTxStamp="2017-12-12 22:27:27.004" createdStamp="2017-12-12 22:25:09.038" createdTxStamp="2017-12-12 22:25:07.512">
+        <textData><![CDATA[oranges]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="FD-1000-ALT" lastUpdatedStamp="2017-12-12 22:27:26.891" lastUpdatedTxStamp="2017-12-12 22:27:26.889" createdStamp="2017-12-12 22:25:08.37" createdTxStamp="2017-12-12 22:25:07.512">
+        <textData><![CDATA[bananas]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="SERV-100-ALTDE" lastUpdatedStamp="2017-12-12 22:27:16.302" lastUpdatedTxStamp="2017-12-12 22:27:16.287" createdStamp="2017-12-12 22:27:16.302" createdTxStamp="2017-12-12 22:27:16.287">
+        <textData><![CDATA[dienstleistungen]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="SERV-100-ALTEN" lastUpdatedStamp="2017-12-12 22:27:16.29" lastUpdatedTxStamp="2017-12-12 22:27:16.287" createdStamp="2017-12-12 22:27:16.29" createdTxStamp="2017-12-12 22:27:16.287">
+        <textData><![CDATA[services]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="CSV-1001-ALT" lastUpdatedStamp="2017-12-12 22:27:24.31" lastUpdatedTxStamp="2017-12-12 22:27:24.308" createdStamp="2017-12-12 22:27:24.31" createdTxStamp="2017-12-12 22:27:24.308">
+        <textData><![CDATA[book-scanning-service]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="SV-1001-ALT" lastUpdatedStamp="2017-12-12 22:27:24.173" lastUpdatedTxStamp="2017-12-12 22:27:24.172" createdStamp="2017-12-12 22:27:24.173" createdTxStamp="2017-12-12 22:27:24.172">
+        <textData><![CDATA[laundry-service]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="SV-1000-ALT" lastUpdatedStamp="2017-12-12 22:27:23.993" lastUpdatedTxStamp="2017-12-12 22:27:23.991" createdStamp="2017-12-12 22:27:23.993" createdTxStamp="2017-12-12 22:27:23.991">
+        <textData><![CDATA[film-developing-service]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="DROP-100-ALTDE" lastUpdatedStamp="2017-12-12 22:27:16.468" lastUpdatedTxStamp="2017-12-12 22:27:16.45" createdStamp="2017-12-12 22:27:16.468" createdTxStamp="2017-12-12 22:27:16.45">
+        <textData><![CDATA[drop-ship]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="DROP-100-ALTEN" lastUpdatedStamp="2017-12-12 22:27:16.455" lastUpdatedTxStamp="2017-12-12 22:27:16.45" createdStamp="2017-12-12 22:27:16.455" createdTxStamp="2017-12-12 22:27:16.45">
+        <textData><![CDATA[drop-ship]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="orderWhenSold-ALT" lastUpdatedStamp="2017-12-12 22:27:33.849" lastUpdatedTxStamp="2017-12-12 22:27:33.847" createdStamp="2017-12-12 22:27:33.849" createdTxStamp="2017-12-12 22:27:33.847">
+        <textData><![CDATA[order-product-from-demosupplier-when-sol]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="dropShip3-ALT" lastUpdatedStamp="2017-12-12 22:27:33.748" lastUpdatedTxStamp="2017-12-12 22:27:33.746" createdStamp="2017-12-12 22:27:33.748" createdTxStamp="2017-12-12 22:27:33.746">
+        <textData><![CDATA[dropship-from-eurosupplier]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="dropShip2-ALT" lastUpdatedStamp="2017-12-12 22:27:33.632" lastUpdatedTxStamp="2017-12-12 22:27:33.63" createdStamp="2017-12-12 22:27:33.632" createdTxStamp="2017-12-12 22:27:33.63">
+        <textData><![CDATA[dropship-from-bigsupplier]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="dropShip1-ALT" lastUpdatedStamp="2017-12-12 22:27:33.529" lastUpdatedTxStamp="2017-12-12 22:27:33.527" createdStamp="2017-12-12 22:27:33.529" createdTxStamp="2017-12-12 22:27:33.527">
+        <textData><![CDATA[dropship-from-demosupplier]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="MEDIA-100-ALTDE" lastUpdatedStamp="2017-12-12 22:27:15.961" lastUpdatedTxStamp="2017-12-12 22:27:15.944" createdStamp="2017-12-12 22:27:15.961" createdTxStamp="2017-12-12 22:27:15.944">
+        <textData><![CDATA[medien]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="MEDIA-100-ALTEN" lastUpdatedStamp="2017-12-12 22:27:15.948" lastUpdatedTxStamp="2017-12-12 22:27:15.944" createdStamp="2017-12-12 22:27:15.948" createdTxStamp="2017-12-12 22:27:15.944">
+        <textData><![CDATA[media]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="MP3-1000-ALT" lastUpdatedStamp="2017-12-12 22:27:23.559" lastUpdatedTxStamp="2017-12-12 22:27:23.557" createdStamp="2017-12-12 22:27:23.559" createdTxStamp="2017-12-12 22:27:23.557">
+        <textData><![CDATA[u2-greatest-hits-mp3-download]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="CD-2002-ALT" lastUpdatedStamp="2017-12-12 22:27:21.127" lastUpdatedTxStamp="2017-12-12 22:27:21.121" createdStamp="2017-12-12 22:27:21.127" createdTxStamp="2017-12-12 22:27:21.121">
+        <textData><![CDATA[u2-greatest-hits-cd]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="MUSIC-101-ALTDE" lastUpdatedStamp="2017-12-12 22:27:15.997" lastUpdatedTxStamp="2017-12-12 22:27:15.981" createdStamp="2017-12-12 22:27:15.997" createdTxStamp="2017-12-12 22:27:15.981">
+        <textData><![CDATA[musik]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="MUSIC-101-ALTEN" lastUpdatedStamp="2017-12-12 22:27:15.984" lastUpdatedTxStamp="2017-12-12 22:27:15.981" createdStamp="2017-12-12 22:27:15.984" createdTxStamp="2017-12-12 22:27:15.981">
+        <textData><![CDATA[music]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="MU-DL-101-ALTDE" lastUpdatedStamp="2017-12-12 22:27:16.086" lastUpdatedTxStamp="2017-12-12 22:27:16.068" createdStamp="2017-12-12 22:27:16.086" createdTxStamp="2017-12-12 22:27:16.068">
+        <textData><![CDATA[musik-downloads]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="MU-DL-101-ALTEN" lastUpdatedStamp="2017-12-12 22:27:16.073" lastUpdatedTxStamp="2017-12-12 22:27:16.068" createdStamp="2017-12-12 22:27:16.073" createdTxStamp="2017-12-12 22:27:16.068">
+        <textData><![CDATA[music-downloads]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="MU-CD-101-ALTDE" lastUpdatedStamp="2017-12-12 22:27:16.043" lastUpdatedTxStamp="2017-12-12 22:27:16.026" createdStamp="2017-12-12 22:27:16.043" createdTxStamp="2017-12-12 22:27:16.026">
+        <textData><![CDATA[musik-cds]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="MU-CD-101-ALTEN" lastUpdatedStamp="2017-12-12 22:27:16.03" lastUpdatedTxStamp="2017-12-12 22:27:16.026" createdStamp="2017-12-12 22:27:16.03" createdTxStamp="2017-12-12 22:27:16.026">
+        <textData><![CDATA[music-cds]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="TRVL-100-ALTDE" lastUpdatedStamp="2017-12-12 22:27:16.13" lastUpdatedTxStamp="2017-12-12 22:27:16.114" createdStamp="2017-12-12 22:27:16.13" createdTxStamp="2017-12-12 22:27:16.114">
+        <textData><![CDATA[reise]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="TRVL-100-ALTEN" lastUpdatedStamp="2017-12-12 22:27:16.119" lastUpdatedTxStamp="2017-12-12 22:27:16.114" createdStamp="2017-12-12 22:27:16.119" createdTxStamp="2017-12-12 22:27:16.114">
+        <textData><![CDATA[travel]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="RT-1000-ALT" lastUpdatedStamp="2017-12-12 22:27:38.271" lastUpdatedTxStamp="2017-12-12 22:27:38.261" createdStamp="2017-12-12 22:27:38.271" createdTxStamp="2017-12-12 22:27:38.261">
+        <textData><![CDATA[canoe-rental]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="AUTO-100-ALTDE" lastUpdatedStamp="2017-12-12 22:27:16.171" lastUpdatedTxStamp="2017-12-12 22:27:16.153" createdStamp="2017-12-12 22:27:16.171" createdTxStamp="2017-12-12 22:27:16.153">
+        <textData><![CDATA[automotive]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="AUTO-100-ALTEN" lastUpdatedStamp="2017-12-12 22:27:16.156" lastUpdatedTxStamp="2017-12-12 22:27:16.153" createdStamp="2017-12-12 22:27:16.156" createdTxStamp="2017-12-12 22:27:16.153">
+        <textData><![CDATA[automotive]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="VH-9944-ALT" lastUpdatedStamp="2017-12-12 22:27:22.998" lastUpdatedTxStamp="2017-12-12 22:27:22.995" createdStamp="2017-12-12 22:27:22.998" createdTxStamp="2017-12-12 22:27:22.995">
+        <textData><![CDATA[mustang-sports-car]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="VH-9943-ALT" lastUpdatedStamp="2017-12-12 22:27:17.374" lastUpdatedTxStamp="2017-12-12 22:27:17.357" createdStamp="2017-12-12 22:27:17.374" createdTxStamp="2017-12-12 22:27:17.357">
+        <textData><![CDATA[a40f-utility-vehicle]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="VH-9943-B3-ALT" lastUpdatedStamp="2017-12-12 22:27:17.975" lastUpdatedTxStamp="2017-12-12 22:27:17.953" createdStamp="2017-12-12 22:27:17.975" createdTxStamp="2017-12-12 22:27:17.953">
+        <textData><![CDATA[a40f-b3-utility-vehicle]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="VH-9943-B4-ALT" lastUpdatedStamp="2017-12-12 22:27:22.366" lastUpdatedTxStamp="2017-12-12 22:27:22.361" createdStamp="2017-12-12 22:27:22.366" createdTxStamp="2017-12-12 22:27:22.361">
+        <textData><![CDATA[a40f-b4-utility-vehicle]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="VH-9943-S3-ALT" lastUpdatedStamp="2017-12-12 22:27:22.528" lastUpdatedTxStamp="2017-12-12 22:27:22.524" createdStamp="2017-12-12 22:27:22.528" createdTxStamp="2017-12-12 22:27:22.524">
+        <textData><![CDATA[a40f-s3-utility-vehicle]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="VH-9943-S4-ALT" lastUpdatedStamp="2017-12-12 22:27:22.702" lastUpdatedTxStamp="2017-12-12 22:27:22.698" createdStamp="2017-12-12 22:27:22.702" createdTxStamp="2017-12-12 22:27:22.698">
+        <textData><![CDATA[a40f-s4-utility-vehicle]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="GFTC-100-ALTDE" lastUpdatedStamp="2017-12-12 22:27:16.338" lastUpdatedTxStamp="2017-12-12 22:27:16.321" createdStamp="2017-12-12 22:27:16.338" createdTxStamp="2017-12-12 22:27:16.321">
+        <textData><![CDATA[geschenkkarten]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="GFTC-100-ALTEN" lastUpdatedStamp="2017-12-12 22:27:16.327" lastUpdatedTxStamp="2017-12-12 22:27:16.321" createdStamp="2017-12-12 22:27:16.327" createdTxStamp="2017-12-12 22:27:16.321">
+        <textData><![CDATA[gift-cards]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="GC-002-ALT" lastUpdatedStamp="2017-12-12 22:27:34.89" lastUpdatedTxStamp="2017-12-12 22:27:34.888" createdStamp="2017-12-12 22:27:34.89" createdTxStamp="2017-12-12 22:27:34.888">
+        <textData><![CDATA[gift-card-reload]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="GC-001-ALT" lastUpdatedStamp="2017-12-12 22:27:35.027" lastUpdatedTxStamp="2017-12-12 22:27:35.024" createdStamp="2017-12-12 22:27:35.027" createdTxStamp="2017-12-12 22:27:35.024">
+        <textData><![CDATA[gift-card-activation]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="GC-001-C10-ALT" lastUpdatedStamp="2017-12-12 22:27:35.188" lastUpdatedTxStamp="2017-12-12 22:27:35.185" createdStamp="2017-12-12 22:27:35.188" createdTxStamp="2017-12-12 22:27:35.185">
+        <textData><![CDATA[gift-card-activation]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="GC-001-C100-ALT" lastUpdatedStamp="2017-12-12 22:27:35.312" lastUpdatedTxStamp="2017-12-12 22:27:35.309" createdStamp="2017-12-12 22:27:35.312" createdTxStamp="2017-12-12 22:27:35.309">
+        <textData><![CDATA[gift-card-activation]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="GC-001-C25-ALT" lastUpdatedStamp="2017-12-12 22:27:35.489" lastUpdatedTxStamp="2017-12-12 22:27:35.483" createdStamp="2017-12-12 22:27:35.489" createdTxStamp="2017-12-12 22:27:35.483">
+        <textData><![CDATA[gift-card-activation]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="GC-001-C50-ALT" lastUpdatedStamp="2017-12-12 22:27:35.653" lastUpdatedTxStamp="2017-12-12 22:27:35.651" createdStamp="2017-12-12 22:27:35.653" createdTxStamp="2017-12-12 22:27:35.651">
+        <textData><![CDATA[gift-card-activation]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="GC-001-CO-ALT" lastUpdatedStamp="2017-12-12 22:27:35.79" lastUpdatedTxStamp="2017-12-12 22:27:35.788" createdStamp="2017-12-12 22:27:35.79" createdTxStamp="2017-12-12 22:27:35.788">
+        <textData><![CDATA[gift-card-activation]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="GC-001-H10-ALT" lastUpdatedStamp="2017-12-12 22:27:35.951" lastUpdatedTxStamp="2017-12-12 22:27:35.949" createdStamp="2017-12-12 22:27:35.951" createdTxStamp="2017-12-12 22:27:35.949">
+        <textData><![CDATA[gift-card-activation]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="GC-001-H100-ALT" lastUpdatedStamp="2017-12-12 22:27:36.061" lastUpdatedTxStamp="2017-12-12 22:27:36.059" createdStamp="2017-12-12 22:27:36.061" createdTxStamp="2017-12-12 22:27:36.059">
+        <textData><![CDATA[gift-card-activation]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="GC-001-H25-ALT" lastUpdatedStamp="2017-12-12 22:27:36.163" lastUpdatedTxStamp="2017-12-12 22:27:36.161" createdStamp="2017-12-12 22:27:36.163" createdTxStamp="2017-12-12 22:27:36.161">
+        <textData><![CDATA[gift-card-activation]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="GC-001-H50-ALT" lastUpdatedStamp="2017-12-12 22:27:36.285" lastUpdatedTxStamp="2017-12-12 22:27:36.283" createdStamp="2017-12-12 22:27:36.285" createdTxStamp="2017-12-12 22:27:36.283">
+        <textData><![CDATA[gift-card-activation]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="GC-001-HO-ALT" lastUpdatedStamp="2017-12-12 22:27:36.483" lastUpdatedTxStamp="2017-12-12 22:27:36.48" createdStamp="2017-12-12 22:27:36.483" createdTxStamp="2017-12-12 22:27:36.48">
+        <textData><![CDATA[gift-card-activation]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="GC-PR-101-ALTDE" lastUpdatedStamp="2017-12-12 22:27:16.369" lastUpdatedTxStamp="2017-12-12 22:27:16.354" createdStamp="2017-12-12 22:27:16.369" createdTxStamp="2017-12-12 22:27:16.354">
+        <textData><![CDATA[geschenkkarten-kaufen]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="GC-PR-101-ALTEN" lastUpdatedStamp="2017-12-12 22:27:16.359" lastUpdatedTxStamp="2017-12-12 22:27:16.354" createdStamp="2017-12-12 22:27:16.359" createdTxStamp="2017-12-12 22:27:16.354">
+        <textData><![CDATA[gift-card-purchase]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="GC-001-HO-ALT" lastUpdatedStamp="2017-12-12 22:27:36.483" lastUpdatedTxStamp="2017-12-12 22:27:36.48" createdStamp="2017-12-12 22:27:36.483" createdTxStamp="2017-12-12 22:27:36.48">
+        <textData><![CDATA[gift-card-activation]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="GC-001-H50-ALT" lastUpdatedStamp="2017-12-12 22:27:36.285" lastUpdatedTxStamp="2017-12-12 22:27:36.283" createdStamp="2017-12-12 22:27:36.285" createdTxStamp="2017-12-12 22:27:36.283">
+        <textData><![CDATA[gift-card-activation]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="GC-001-H25-ALT" lastUpdatedStamp="2017-12-12 22:27:36.163" lastUpdatedTxStamp="2017-12-12 22:27:36.161" createdStamp="2017-12-12 22:27:36.163" createdTxStamp="2017-12-12 22:27:36.161">
+        <textData><![CDATA[gift-card-activation]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="GC-001-H100-ALT" lastUpdatedStamp="2017-12-12 22:27:36.061" lastUpdatedTxStamp="2017-12-12 22:27:36.059" createdStamp="2017-12-12 22:27:36.061" createdTxStamp="2017-12-12 22:27:36.059">
+        <textData><![CDATA[gift-card-activation]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="GC-001-H10-ALT" lastUpdatedStamp="2017-12-12 22:27:35.951" lastUpdatedTxStamp="2017-12-12 22:27:35.949" createdStamp="2017-12-12 22:27:35.951" createdTxStamp="2017-12-12 22:27:35.949">
+        <textData><![CDATA[gift-card-activation]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="GC-001-CO-ALT" lastUpdatedStamp="2017-12-12 22:27:35.79" lastUpdatedTxStamp="2017-12-12 22:27:35.788" createdStamp="2017-12-12 22:27:35.79" createdTxStamp="2017-12-12 22:27:35.788">
+        <textData><![CDATA[gift-card-activation]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="GC-001-C50-ALT" lastUpdatedStamp="2017-12-12 22:27:35.653" lastUpdatedTxStamp="2017-12-12 22:27:35.651" createdStamp="2017-12-12 22:27:35.653" createdTxStamp="2017-12-12 22:27:35.651">
+        <textData><![CDATA[gift-card-activation]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="GC-001-C25-ALT" lastUpdatedStamp="2017-12-12 22:27:35.489" lastUpdatedTxStamp="2017-12-12 22:27:35.483" createdStamp="2017-12-12 22:27:35.489" createdTxStamp="2017-12-12 22:27:35.483">
+        <textData><![CDATA[gift-card-activation]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="GC-001-C100-ALT" lastUpdatedStamp="2017-12-12 22:27:35.312" lastUpdatedTxStamp="2017-12-12 22:27:35.309" createdStamp="2017-12-12 22:27:35.312" createdTxStamp="2017-12-12 22:27:35.309">
+        <textData><![CDATA[gift-card-activation]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="GC-001-C10-ALT" lastUpdatedStamp="2017-12-12 22:27:35.188" lastUpdatedTxStamp="2017-12-12 22:27:35.185" createdStamp="2017-12-12 22:27:35.188" createdTxStamp="2017-12-12 22:27:35.185">
+        <textData><![CDATA[gift-card-activation]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="GC-RL-101-ALTDE" lastUpdatedStamp="2017-12-12 22:27:16.399" lastUpdatedTxStamp="2017-12-12 22:27:16.384" createdStamp="2017-12-12 22:27:16.399" createdTxStamp="2017-12-12 22:27:16.384">
+        <textData><![CDATA[geschenkkarten-reload]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="GC-RL-101-ALTEN" lastUpdatedStamp="2017-12-12 22:27:16.388" lastUpdatedTxStamp="2017-12-12 22:27:16.384" createdStamp="2017-12-12 22:27:16.388" createdTxStamp="2017-12-12 22:27:16.384">
+        <textData><![CDATA[gift-card-reload]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="PROMOTIONS-ALTDE" lastUpdatedStamp="2017-12-12 22:27:16.504" lastUpdatedTxStamp="2017-12-12 22:27:16.491" createdStamp="2017-12-12 22:27:16.504" createdTxStamp="2017-12-12 22:27:16.491">
+        <textData><![CDATA[ausgewaehlte-artikel]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="PROMOTIONS-ALTEN" lastUpdatedStamp="2017-12-12 22:27:16.495" lastUpdatedTxStamp="2017-12-12 22:27:16.491" createdStamp="2017-12-12 22:27:16.495" createdTxStamp="2017-12-12 22:27:16.491">
+        <textData><![CDATA[featured-products]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="CAT1_BEST_SELL-ALTDE" lastUpdatedStamp="2017-12-12 22:27:16.66" lastUpdatedTxStamp="2017-12-12 22:27:16.634" createdStamp="2017-12-12 22:27:16.66" createdTxStamp="2017-12-12 22:27:16.634">
+        <textData><![CDATA[meistverkauft]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="CAT1_BEST_SELL-ALTEN" lastUpdatedStamp="2017-12-12 22:27:16.638" lastUpdatedTxStamp="2017-12-12 22:27:16.634" createdStamp="2017-12-12 22:27:16.638" createdTxStamp="2017-12-12 22:27:16.634">
+        <textData><![CDATA[best-selling]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="BEST-SELL-1-ALT" lastUpdatedStamp="2017-12-12 22:27:17.155" lastUpdatedTxStamp="2017-12-12 22:27:17.153" createdStamp="2017-12-12 22:27:17.155" createdTxStamp="2017-12-12 22:27:17.153">
+        <textData><![CDATA[electronics]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="BEST-SELL-2-ALT" lastUpdatedStamp="2017-12-12 22:27:17.179" lastUpdatedTxStamp="2017-12-12 22:27:17.177" createdStamp="2017-12-12 22:27:17.179" createdTxStamp="2017-12-12 22:27:17.177">
+        <textData><![CDATA[other]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="CAT1_SEARCH-ALTDE" lastUpdatedStamp="2017-12-12 22:27:16.541" lastUpdatedTxStamp="2017-12-12 22:27:16.527" createdStamp="2017-12-12 22:27:16.541" createdTxStamp="2017-12-12 22:27:16.527">
+        <textData><![CDATA[demo-standardsuche]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="CAT1_SEARCH-ALTEN" lastUpdatedStamp="2017-12-12 22:27:16.532" lastUpdatedTxStamp="2017-12-12 22:27:16.527" createdStamp="2017-12-12 22:27:16.532" createdTxStamp="2017-12-12 22:27:16.527">
+        <textData><![CDATA[demo-default-search]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="CAT1_QUICKADD1-ALTDE" lastUpdatedStamp="2017-12-12 22:27:16.577" lastUpdatedTxStamp="2017-12-12 22:27:16.565" createdStamp="2017-12-12 22:27:16.577" createdTxStamp="2017-12-12 22:27:16.565">
+        <textData><![CDATA[haupt-quick-add]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="CAT1_QUICKADD1-ALTEN" lastUpdatedStamp="2017-12-12 22:27:16.567" lastUpdatedTxStamp="2017-12-12 22:27:16.565" createdStamp="2017-12-12 22:27:16.567" createdTxStamp="2017-12-12 22:27:16.565">
+        <textData><![CDATA[main-quick-add]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="CAT1_QUICKADD2-ALTDE" lastUpdatedStamp="2017-12-12 22:27:16.61" lastUpdatedTxStamp="2017-12-12 22:27:16.595" createdStamp="2017-12-12 22:27:16.61" createdTxStamp="2017-12-12 22:27:16.595">
+        <textData><![CDATA[electronics-quick-add]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="CAT1_QUICKADD2-ALTEN" lastUpdatedStamp="2017-12-12 22:27:16.599" lastUpdatedTxStamp="2017-12-12 22:27:16.595" createdStamp="2017-12-12 22:27:16.599" createdTxStamp="2017-12-12 22:27:16.595">
+        <textData><![CDATA[electronics-quick-add]]></textData>
+    </ElectronicText>
+    <ElectronicText dataResourceId="TSTLTDADMIN-ALT" lastUpdatedStamp="2017-12-12 22:27:16.688" lastUpdatedTxStamp="2017-12-12 22:27:16.686" createdStamp="2017-12-12 22:27:16.688" createdTxStamp="2017-12-12 22:27:16.686">
+        <textData><![CDATA[test-limited-admin-categ]]></textData>
+    </ElectronicText>
+    <Content contentId="CATALOG1-ALTDE" contentTypeId="DOCUMENT" dataResourceId="CATALOG1-ALTDE" description="Alternative URL" localeString="de" lastUpdatedStamp="2017-12-12 22:27:15.451" lastUpdatedTxStamp="2017-12-12 22:27:15.431" createdStamp="2017-12-12 22:27:15.451" createdTxStamp="2017-12-12 22:27:15.431"/>
+    <Content contentId="CATALOG1-ALTEN" contentTypeId="DOCUMENT" dataResourceId="CATALOG1-ALTEN" description="Alternative URL" localeString="en" lastUpdatedStamp="2017-12-12 22:27:15.437" lastUpdatedTxStamp="2017-12-12 22:27:15.431" createdStamp="2017-12-12 22:27:15.437" createdTxStamp="2017-12-12 22:27:15.431"/>
+    <Content contentId="CLOTH-100-ALTDE" contentTypeId="DOCUMENT" dataResourceId="CLOTH-100-ALTDE" description="Alternative URL" localeString="de" lastUpdatedStamp="2017-12-12 22:27:15.501" lastUpdatedTxStamp="2017-12-12 22:27:15.48" createdStamp="2017-12-12 22:27:15.501" createdTxStamp="2017-12-12 22:27:15.48"/>
+    <Content contentId="CLOTH-100-ALTEN" contentTypeId="DOCUMENT" dataResourceId="CLOTH-100-ALTEN" description="Alternative URL" localeString="en" lastUpdatedStamp="2017-12-12 22:27:15.486" lastUpdatedTxStamp="2017-12-12 22:27:15.48" createdStamp="2017-12-12 22:27:15.486" createdTxStamp="2017-12-12 22:27:15.48"/>
+    <Content contentId="CL-5005-ALT" contentTypeId="DOCUMENT" dataResourceId="CL-5005-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:21.316" lastUpdatedTxStamp="2017-12-12 22:27:21.313" createdStamp="2017-12-12 22:27:21.316" createdTxStamp="2017-12-12 22:27:21.313"/>
+    <Content contentId="CL-7000-ALT" contentTypeId="DOCUMENT" dataResourceId="CL-7000-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:21.489" lastUpdatedTxStamp="2017-12-12 22:27:21.486" createdStamp="2017-12-12 22:27:21.489" createdTxStamp="2017-12-12 22:27:21.486"/>
+    <Content contentId="CL-1000-ALT" contentTypeId="DOCUMENT" dataResourceId="CL-1000-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:23.182" lastUpdatedTxStamp="2017-12-12 22:27:23.179" createdStamp="2017-12-12 22:27:23.182" createdTxStamp="2017-12-12 22:27:23.179"/>
+    <Content contentId="CL-WMN-101-ALTDE" contentTypeId="DOCUMENT" dataResourceId="CL-WMN-101-ALTDE" description="Alternative URL" localeString="de" lastUpdatedStamp="2017-12-12 22:27:15.579" lastUpdatedTxStamp="2017-12-12 22:27:15.559" createdStamp="2017-12-12 22:27:15.579" createdTxStamp="2017-12-12 22:27:15.559"/>
+    <Content contentId="CL-WMN-101-ALTEN" contentTypeId="DOCUMENT" dataResourceId="CL-WMN-101-ALTEN" description="Alternative URL" localeString="en" lastUpdatedStamp="2017-12-12 22:27:15.566" lastUpdatedTxStamp="2017-12-12 22:27:15.559" createdStamp="2017-12-12 22:27:15.566" createdTxStamp="2017-12-12 22:27:15.559"/>
+    <Content contentId="CL-8544-ALT" contentTypeId="DOCUMENT" dataResourceId="CL-8544-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:21.674" lastUpdatedTxStamp="2017-12-12 22:27:21.67" createdStamp="2017-12-12 22:27:21.674" createdTxStamp="2017-12-12 22:27:21.67"/>
+    <Content contentId="CL-MEN-101-ALTDE" contentTypeId="DOCUMENT" dataResourceId="CL-MEN-101-ALTDE" description="Alternative URL" localeString="de" lastUpdatedStamp="2017-12-12 22:27:15.544" lastUpdatedTxStamp="2017-12-12 22:27:15.526" createdStamp="2017-12-12 22:27:15.544" createdTxStamp="2017-12-12 22:27:15.526"/>
+    <Content contentId="CL-MEN-101-ALTEN" contentTypeId="DOCUMENT" dataResourceId="CL-MEN-101-ALTEN" description="Alternative URL" localeString="en" lastUpdatedStamp="2017-12-12 22:27:15.534" lastUpdatedTxStamp="2017-12-12 22:27:15.526" createdStamp="2017-12-12 22:27:15.534" createdTxStamp="2017-12-12 22:27:15.526"/>
+    <Content contentId="ELTRN-100-ALTDE" contentTypeId="DOCUMENT" dataResourceId="ELTRN-100-ALTDE" description="Alternative URL" localeString="de" lastUpdatedStamp="2017-12-12 22:27:15.62" lastUpdatedTxStamp="2017-12-12 22:27:15.596" createdStamp="2017-12-12 22:27:15.62" createdTxStamp="2017-12-12 22:27:15.596"/>
+    <Content contentId="ELTRN-100-ALTEN" contentTypeId="DOCUMENT" dataResourceId="ELTRN-100-ALTEN" description="Alternative URL" localeString="en" lastUpdatedStamp="2017-12-12 22:27:15.601" lastUpdatedTxStamp="2017-12-12 22:27:15.596" createdStamp="2017-12-12 22:27:15.601" createdTxStamp="2017-12-12 22:27:15.596"/>
+    <Content contentId="EL-BASKET-ALT" contentTypeId="DOCUMENT" dataResourceId="EL-BASKET-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:23.682" lastUpdatedTxStamp="2017-12-12 22:27:23.679" createdStamp="2017-12-12 22:27:23.682" createdTxStamp="2017-12-12 22:27:23.679"/>
+    <Content contentId="EL-BASKET-PICK-ALT" contentTypeId="DOCUMENT" dataResourceId="EL-BASKET-PICK-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:23.845" lastUpdatedTxStamp="2017-12-12 22:27:23.842" createdStamp="2017-12-12 22:27:23.845" createdTxStamp="2017-12-12 22:27:23.842"/>
+    <Content contentId="PH-1000-ALT" contentTypeId="DOCUMENT" dataResourceId="PH-1000-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:19.214" lastUpdatedTxStamp="2017-12-12 22:27:19.202" createdStamp="2017-12-12 22:27:19.214" createdTxStamp="2017-12-12 22:27:19.202"/>
+    <Content contentId="PH-1001-ALT" contentTypeId="DOCUMENT" dataResourceId="PH-1001-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:19.475" lastUpdatedTxStamp="2017-12-12 22:27:19.471" createdStamp="2017-12-12 22:27:19.475" createdTxStamp="2017-12-12 22:27:19.471"/>
+    <Content contentId="PH-1004-ALT" contentTypeId="DOCUMENT" dataResourceId="PH-1004-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:19.698" lastUpdatedTxStamp="2017-12-12 22:27:19.695" createdStamp="2017-12-12 22:27:19.698" createdTxStamp="2017-12-12 22:27:19.695"/>
+    <Content contentId="PH-1005-ALT" contentTypeId="DOCUMENT" dataResourceId="PH-1005-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:19.892" lastUpdatedTxStamp="2017-12-12 22:27:19.889" createdStamp="2017-12-12 22:27:19.892" createdTxStamp="2017-12-12 22:27:19.889"/>
+    <Content contentId="SW-1006-ALT" contentTypeId="DOCUMENT" dataResourceId="SW-1006-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:20.11" lastUpdatedTxStamp="2017-12-12 22:27:20.107" createdStamp="2017-12-12 22:27:20.11" createdTxStamp="2017-12-12 22:27:20.107"/>
+    <Content contentId="SW-1006-1-ALT" contentTypeId="DOCUMENT" dataResourceId="SW-1006-1-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:20.333" lastUpdatedTxStamp="2017-12-12 22:27:20.329" createdStamp="2017-12-12 22:27:20.333" createdTxStamp="2017-12-12 22:27:20.329"/>
+    <Content contentId="SW-1006-2-ALT" contentTypeId="DOCUMENT" dataResourceId="SW-1006-2-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:20.501" lastUpdatedTxStamp="2017-12-12 22:27:20.496" createdStamp="2017-12-12 22:27:20.501" createdTxStamp="2017-12-12 22:27:20.496"/>
+    <Content contentId="SW-1006-3-ALT" contentTypeId="DOCUMENT" dataResourceId="SW-1006-3-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:20.673" lastUpdatedTxStamp="2017-12-12 22:27:20.668" createdStamp="2017-12-12 22:27:20.673" createdTxStamp="2017-12-12 22:27:20.668"/>
+    <Content contentId="SW-1006-4-ALT" contentTypeId="DOCUMENT" dataResourceId="SW-1006-4-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:20.834" lastUpdatedTxStamp="2017-12-12 22:27:20.829" createdStamp="2017-12-12 22:27:20.834" createdTxStamp="2017-12-12 22:27:20.829"/>
+    <Content contentId="SW-1006-5-ALT" contentTypeId="DOCUMENT" dataResourceId="SW-1006-5-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:20.978" lastUpdatedTxStamp="2017-12-12 22:27:20.973" createdStamp="2017-12-12 22:27:20.978" createdTxStamp="2017-12-12 22:27:20.973"/>
+    <Content contentId="CAM-2644-ALTDE" contentTypeId="DOCUMENT" dataResourceId="CAM-2644-ALTDE" description="Alternative URL" localeString="de" lastUpdatedStamp="2017-12-12 22:27:18.267" lastUpdatedTxStamp="2017-12-12 22:27:18.235" createdStamp="2017-12-12 22:27:18.267" createdTxStamp="2017-12-12 22:27:18.235"/>
+    <Content contentId="CAM-2644-ALTEN" contentTypeId="DOCUMENT" dataResourceId="CAM-2644-ALTEN" description="Alternative URL" localeString="en" lastUpdatedStamp="2017-12-12 22:27:18.248" lastUpdatedTxStamp="2017-12-12 22:27:18.235" createdStamp="2017-12-12 22:27:18.248" createdTxStamp="2017-12-12 22:27:18.235"/>
+    <Content contentId="MPL-9290-ALT" contentTypeId="DOCUMENT" dataResourceId="MPL-9290-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:21.877" lastUpdatedTxStamp="2017-12-12 22:27:21.873" createdStamp="2017-12-12 22:27:21.877" createdTxStamp="2017-12-12 22:27:21.873"/>
+    <Content contentId="PR-1000-ALT" contentTypeId="DOCUMENT" dataResourceId="PR-1000-ALT" lastUpdatedStamp="2017-12-12 22:27:29.142" lastUpdatedTxStamp="2017-12-12 22:27:29.139" createdStamp="2017-12-12 22:25:11.397" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <Content contentId="CAM-7000-ALT" contentTypeId="DOCUMENT" dataResourceId="CAM-7000-ALT" lastUpdatedStamp="2017-12-12 22:27:26.451" lastUpdatedTxStamp="2017-12-12 22:27:26.432" createdStamp="2017-12-12 22:25:11.547" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <Content contentId="EL-PHN-101-ALTDE" contentTypeId="DOCUMENT" dataResourceId="EL-PHN-101-ALTDE" description="Alternative URL" localeString="de" lastUpdatedStamp="2017-12-12 22:27:15.925" lastUpdatedTxStamp="2017-12-12 22:27:15.904" createdStamp="2017-12-12 22:27:15.925" createdTxStamp="2017-12-12 22:27:15.904"/>
+    <Content contentId="EL-PHN-101-ALTEN" contentTypeId="DOCUMENT" dataResourceId="EL-PHN-101-ALTEN" description="Alternative URL" localeString="en" lastUpdatedStamp="2017-12-12 22:27:15.911" lastUpdatedTxStamp="2017-12-12 22:27:15.904" createdStamp="2017-12-12 22:27:15.911" createdTxStamp="2017-12-12 22:27:15.904"/>
+    <Content contentId="EL-MP3-101-ALTDE" contentTypeId="DOCUMENT" dataResourceId="EL-MP3-101-ALTDE" description="Alternative URL" localeString="de" lastUpdatedStamp="2017-12-12 22:27:15.875" lastUpdatedTxStamp="2017-12-12 22:27:15.858" createdStamp="2017-12-12 22:27:15.875" createdTxStamp="2017-12-12 22:27:15.858"/>
+    <Content contentId="EL-MP3-101-ALTEN" contentTypeId="DOCUMENT" dataResourceId="EL-MP3-101-ALTEN" description="Alternative URL" localeString="en" lastUpdatedStamp="2017-12-12 22:27:15.862" lastUpdatedTxStamp="2017-12-12 22:27:15.858" createdStamp="2017-12-12 22:27:15.862" createdTxStamp="2017-12-12 22:27:15.858"/>
+    <Content contentId="PC-101-ALTDE" contentTypeId="DOCUMENT" dataResourceId="PC-101-ALTDE" description="Alternative URL" localeString="de" lastUpdatedStamp="2017-12-12 22:27:15.663" lastUpdatedTxStamp="2017-12-12 22:27:15.646" createdStamp="2017-12-12 22:27:15.663" createdTxStamp="2017-12-12 22:27:15.646"/>
+    <Content contentId="PC-101-ALTEN" contentTypeId="DOCUMENT" dataResourceId="PC-101-ALTEN" description="Alternative URL" localeString="en" lastUpdatedStamp="2017-12-12 22:27:15.65" lastUpdatedTxStamp="2017-12-12 22:27:15.646" createdStamp="2017-12-12 22:27:15.65" createdTxStamp="2017-12-12 22:27:15.646"/>
+    <Content contentId="PC-AC-101-ALTDE" contentTypeId="DOCUMENT" dataResourceId="PC-AC-101-ALTDE" description="Alternative URL" localeString="de" lastUpdatedStamp="2017-12-12 22:27:15.834" lastUpdatedTxStamp="2017-12-12 22:27:15.814" createdStamp="2017-12-12 22:27:15.834" createdTxStamp="2017-12-12 22:27:15.814"/>
+    <Content contentId="PC-AC-101-ALTEN" contentTypeId="DOCUMENT" dataResourceId="PC-AC-101-ALTEN" description="Alternative URL" localeString="en" lastUpdatedStamp="2017-12-12 22:27:15.821" lastUpdatedTxStamp="2017-12-12 22:27:15.814" createdStamp="2017-12-12 22:27:15.821" createdTxStamp="2017-12-12 22:27:15.814"/>
+    <Content contentId="CDR-1111-ALT" contentTypeId="DOCUMENT" dataResourceId="CDR-1111-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:22.051" lastUpdatedTxStamp="2017-12-12 22:27:22.048" createdStamp="2017-12-12 22:27:22.051" createdTxStamp="2017-12-12 22:27:22.048"/>
+    <Content contentId="PC-PR-101-ALTDE" contentTypeId="DOCUMENT" dataResourceId="PC-PR-101-ALTDE" description="Alternative URL" localeString="de" lastUpdatedStamp="2017-12-12 22:27:15.353" lastUpdatedTxStamp="2017-12-12 22:27:15.031" createdStamp="2017-12-12 22:27:15.353" createdTxStamp="2017-12-12 22:27:15.031"/>
+    <Content contentId="PC-PR-101-ALTEN" contentTypeId="DOCUMENT" dataResourceId="PC-PR-101-ALTEN" description="Alternative URL" localeString="en" lastUpdatedStamp="2017-12-12 22:27:15.171" lastUpdatedTxStamp="2017-12-12 22:27:15.031" createdStamp="2017-12-12 22:27:15.171" createdTxStamp="2017-12-12 22:27:15.031"/>
+    <Content contentId="KB-5569-ALT" contentTypeId="DOCUMENT" dataResourceId="KB-5569-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:22.206" lastUpdatedTxStamp="2017-12-12 22:27:22.202" createdStamp="2017-12-12 22:27:22.206" createdTxStamp="2017-12-12 22:27:22.202"/>
+    <Content contentId="PC-SW-101-ALTDE" contentTypeId="DOCUMENT" dataResourceId="PC-SW-101-ALTDE" description="Alternative URL" localeString="de" lastUpdatedStamp="2017-12-12 22:27:15.794" lastUpdatedTxStamp="2017-12-12 22:27:15.77" createdStamp="2017-12-12 22:27:15.794" createdTxStamp="2017-12-12 22:27:15.77"/>
+    <Content contentId="PC-SW-101-ALTEN" contentTypeId="DOCUMENT" dataResourceId="PC-SW-101-ALTEN" description="Alternative URL" localeString="en" lastUpdatedStamp="2017-12-12 22:27:15.775" lastUpdatedTxStamp="2017-12-12 22:27:15.77" createdStamp="2017-12-12 22:27:15.775" createdTxStamp="2017-12-12 22:27:15.77"/>
+    <Content contentId="PC-SYS-101-ALTDE" contentTypeId="DOCUMENT" dataResourceId="PC-SYS-101-ALTDE" description="Alternative URL" localeString="de" lastUpdatedStamp="2017-12-12 22:27:15.715" lastUpdatedTxStamp="2017-12-12 22:27:15.686" createdStamp="2017-12-12 22:27:15.715" createdTxStamp="2017-12-12 22:27:15.686"/>
+    <Content contentId="PC-SYS-101-ALTEN" contentTypeId="DOCUMENT" dataResourceId="PC-SYS-101-ALTEN" description="Alternative URL" localeString="en" lastUpdatedStamp="2017-12-12 22:27:15.693" lastUpdatedTxStamp="2017-12-12 22:27:15.686" createdStamp="2017-12-12 22:27:15.693" createdTxStamp="2017-12-12 22:27:15.686"/>
+    <Content contentId="PC-1000-ALT" contentTypeId="DOCUMENT" dataResourceId="PC-1000-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:26.266" lastUpdatedTxStamp="2017-12-12 22:27:26.263" createdStamp="2017-12-12 22:27:26.266" createdTxStamp="2017-12-12 22:27:26.263"/>
+    <Content contentId="SUBS-100-ALTDE" contentTypeId="DOCUMENT" dataResourceId="SUBS-100-ALTDE" description="Alternative URL" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.215" lastUpdatedTxStamp="2017-12-12 22:27:16.197" createdStamp="2017-12-12 22:27:16.215" createdTxStamp="2017-12-12 22:27:16.197"/>
+    <Content contentId="SUBS-100-ALTEN" contentTypeId="DOCUMENT" dataResourceId="SUBS-100-ALTEN" description="Alternative URL" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.202" lastUpdatedTxStamp="2017-12-12 22:27:16.197" createdStamp="2017-12-12 22:27:16.202" createdTxStamp="2017-12-12 22:27:16.197"/>
+    <Content contentId="NEWS-01-1MO-ALT" contentTypeId="DOCUMENT" dataResourceId="NEWS-01-1MO-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:23.398" lastUpdatedTxStamp="2017-12-12 22:27:23.395" createdStamp="2017-12-12 22:27:23.398" createdTxStamp="2017-12-12 22:27:23.395"/>
+    <Content contentId="FIN-100-ALTDE" contentTypeId="DOCUMENT" dataResourceId="FIN-100-ALTDE" description="Alternative URL" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.244" lastUpdatedTxStamp="2017-12-12 22:27:16.23" createdStamp="2017-12-12 22:27:16.244" createdTxStamp="2017-12-12 22:27:16.23"/>
+    <Content contentId="FIN-100-ALTEN" contentTypeId="DOCUMENT" dataResourceId="FIN-100-ALTEN" description="Alternative URL" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.234" lastUpdatedTxStamp="2017-12-12 22:27:16.23" createdStamp="2017-12-12 22:27:16.234" createdTxStamp="2017-12-12 22:27:16.23"/>
+    <Content contentId="FA-001-ALT" contentTypeId="DOCUMENT" dataResourceId="FA-001-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:34.303" lastUpdatedTxStamp="2017-12-12 22:27:34.3" createdStamp="2017-12-12 22:27:34.303" createdTxStamp="2017-12-12 22:27:34.3"/>
+    <Content contentId="FA-001-30-ALT" contentTypeId="DOCUMENT" dataResourceId="FA-001-30-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:34.429" lastUpdatedTxStamp="2017-12-12 22:27:34.425" createdStamp="2017-12-12 22:27:34.429" createdTxStamp="2017-12-12 22:27:34.425"/>
+    <Content contentId="FA-001-50-ALT" contentTypeId="DOCUMENT" dataResourceId="FA-001-50-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:34.63" lastUpdatedTxStamp="2017-12-12 22:27:34.624" createdStamp="2017-12-12 22:27:34.63" createdTxStamp="2017-12-12 22:27:34.624"/>
+    <Content contentId="FA-001-O-ALT" contentTypeId="DOCUMENT" dataResourceId="FA-001-O-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:34.776" lastUpdatedTxStamp="2017-12-12 22:27:34.773" createdStamp="2017-12-12 22:27:34.776" createdTxStamp="2017-12-12 22:27:34.773"/>
+    <Content contentId="FOOD-100-ALTDE" contentTypeId="DOCUMENT" dataResourceId="FOOD-100-ALTDE" description="Alternative URL" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.273" lastUpdatedTxStamp="2017-12-12 22:27:16.259" createdStamp="2017-12-12 22:27:16.273" createdTxStamp="2017-12-12 22:27:16.259"/>
+    <Content contentId="FOOD-100-ALTEN" contentTypeId="DOCUMENT" dataResourceId="FOOD-100-ALTEN" description="Alternative URL" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.263" lastUpdatedTxStamp="2017-12-12 22:27:16.259" createdStamp="2017-12-12 22:27:16.263" createdTxStamp="2017-12-12 22:27:16.259"/>
+    <Content contentId="FD-1066-ALT" contentTypeId="DOCUMENT" dataResourceId="FD-1066-ALT" lastUpdatedStamp="2017-12-12 22:27:29.049" lastUpdatedTxStamp="2017-12-12 22:27:29.047" createdStamp="2017-12-12 22:25:11.306" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <Content contentId="FD-1065-ALT" contentTypeId="DOCUMENT" dataResourceId="FD-1065-ALT" lastUpdatedStamp="2017-12-12 22:27:28.967" lastUpdatedTxStamp="2017-12-12 22:27:28.964" createdStamp="2017-12-12 22:25:11.257" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <Content contentId="FD-1064-ALT" contentTypeId="DOCUMENT" dataResourceId="FD-1064-ALT" lastUpdatedStamp="2017-12-12 22:27:28.878" lastUpdatedTxStamp="2017-12-12 22:27:28.876" createdStamp="2017-12-12 22:25:11.19" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <Content contentId="FD-1063-ALT" contentTypeId="DOCUMENT" dataResourceId="FD-1063-ALT" lastUpdatedStamp="2017-12-12 22:27:28.794" lastUpdatedTxStamp="2017-12-12 22:27:28.791" createdStamp="2017-12-12 22:25:11.15" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <Content contentId="FD-1062-ALT" contentTypeId="DOCUMENT" dataResourceId="FD-1062-ALT" lastUpdatedStamp="2017-12-12 22:27:28.71" lastUpdatedTxStamp="2017-12-12 22:27:28.706" createdStamp="2017-12-12 22:25:11.018" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <Content contentId="FD-1061-ALT" contentTypeId="DOCUMENT" dataResourceId="FD-1061-ALT" lastUpdatedStamp="2017-12-12 22:27:28.621" lastUpdatedTxStamp="2017-12-12 22:27:28.617" createdStamp="2017-12-12 22:25:10.939" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <Content contentId="FD-1060-ALT" contentTypeId="DOCUMENT" dataResourceId="FD-1060-ALT" lastUpdatedStamp="2017-12-12 22:27:28.546" lastUpdatedTxStamp="2017-12-12 22:27:28.544" createdStamp="2017-12-12 22:25:10.863" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <Content contentId="FD-1050-ALT" contentTypeId="DOCUMENT" dataResourceId="FD-1050-ALT" lastUpdatedStamp="2017-12-12 22:27:28.448" lastUpdatedTxStamp="2017-12-12 22:27:28.446" createdStamp="2017-12-12 22:25:10.818" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <Content contentId="FD-1017-ALT" contentTypeId="DOCUMENT" dataResourceId="FD-1017-ALT" lastUpdatedStamp="2017-12-12 22:27:28.354" lastUpdatedTxStamp="2017-12-12 22:27:28.351" createdStamp="2017-12-12 22:25:10.722" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <Content contentId="FD-1016-ALT" contentTypeId="DOCUMENT" dataResourceId="FD-1016-ALT" lastUpdatedStamp="2017-12-12 22:27:28.278" lastUpdatedTxStamp="2017-12-12 22:27:28.264" createdStamp="2017-12-12 22:25:10.622" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <Content contentId="FD-1015-ALT" contentTypeId="DOCUMENT" dataResourceId="FD-1015-ALT" lastUpdatedStamp="2017-12-12 22:27:28.175" lastUpdatedTxStamp="2017-12-12 22:27:28.172" createdStamp="2017-12-12 22:25:10.558" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <Content contentId="FD-1014-ALT" contentTypeId="DOCUMENT" dataResourceId="FD-1014-ALT" lastUpdatedStamp="2017-12-12 22:27:28.097" lastUpdatedTxStamp="2017-12-12 22:27:28.094" createdStamp="2017-12-12 22:25:10.493" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <Content contentId="FD-1013-ALT" contentTypeId="DOCUMENT" dataResourceId="FD-1013-ALT" lastUpdatedStamp="2017-12-12 22:27:28.028" lastUpdatedTxStamp="2017-12-12 22:27:28.026" createdStamp="2017-12-12 22:25:10.444" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <Content contentId="FD-1012-ALT" contentTypeId="DOCUMENT" dataResourceId="FD-1012-ALT" lastUpdatedStamp="2017-12-12 22:27:27.947" lastUpdatedTxStamp="2017-12-12 22:27:27.945" createdStamp="2017-12-12 22:25:10.321" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <Content contentId="FD-1011-ALT" contentTypeId="DOCUMENT" dataResourceId="FD-1011-ALT" lastUpdatedStamp="2017-12-12 22:27:27.878" lastUpdatedTxStamp="2017-12-12 22:27:27.875" createdStamp="2017-12-12 22:25:10.228" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <Content contentId="FD-1010-ALT" contentTypeId="DOCUMENT" dataResourceId="FD-1010-ALT" lastUpdatedStamp="2017-12-12 22:27:27.807" lastUpdatedTxStamp="2017-12-12 22:27:27.804" createdStamp="2017-12-12 22:25:10.017" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <Content contentId="FD-1009-ALT" contentTypeId="DOCUMENT" dataResourceId="FD-1009-ALT" lastUpdatedStamp="2017-12-12 22:27:27.72" lastUpdatedTxStamp="2017-12-12 22:27:27.717" createdStamp="2017-12-12 22:25:09.931" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <Content contentId="FD-1008-ALT" contentTypeId="DOCUMENT" dataResourceId="FD-1008-ALT" lastUpdatedStamp="2017-12-12 22:27:27.628" lastUpdatedTxStamp="2017-12-12 22:27:27.626" createdStamp="2017-12-12 22:25:09.85" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <Content contentId="FD-1007-ALT" contentTypeId="DOCUMENT" dataResourceId="FD-1007-ALT" lastUpdatedStamp="2017-12-12 22:27:27.552" lastUpdatedTxStamp="2017-12-12 22:27:27.549" createdStamp="2017-12-12 22:25:09.73" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <Content contentId="FD-1006-ALT" contentTypeId="DOCUMENT" dataResourceId="FD-1006-ALT" lastUpdatedStamp="2017-12-12 22:27:27.477" lastUpdatedTxStamp="2017-12-12 22:27:27.473" createdStamp="2017-12-12 22:25:09.624" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <Content contentId="FD-1005-ALT" contentTypeId="DOCUMENT" dataResourceId="FD-1005-ALT" lastUpdatedStamp="2017-12-12 22:27:27.397" lastUpdatedTxStamp="2017-12-12 22:27:27.394" createdStamp="2017-12-12 22:25:09.546" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <Content contentId="FD-1004-ALT" contentTypeId="DOCUMENT" dataResourceId="FD-1004-ALT" lastUpdatedStamp="2017-12-12 22:27:27.318" lastUpdatedTxStamp="2017-12-12 22:27:27.315" createdStamp="2017-12-12 22:25:09.46" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <Content contentId="FD-1003-ALT" contentTypeId="DOCUMENT" dataResourceId="FD-1003-ALT" lastUpdatedStamp="2017-12-12 22:27:27.221" lastUpdatedTxStamp="2017-12-12 22:27:27.218" createdStamp="2017-12-12 22:25:09.364" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <Content contentId="FD-1002-ALT" contentTypeId="DOCUMENT" dataResourceId="FD-1002-ALT" lastUpdatedStamp="2017-12-12 22:27:27.105" lastUpdatedTxStamp="2017-12-12 22:27:27.102" createdStamp="2017-12-12 22:25:09.208" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <Content contentId="PIZZA-01-ALT" contentTypeId="DOCUMENT" dataResourceId="PIZZA-01-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:31.964" lastUpdatedTxStamp="2017-12-12 22:27:31.961" createdStamp="2017-12-12 22:27:31.964" createdTxStamp="2017-12-12 22:27:31.961"/>
+    <Content contentId="ENCHL-01-ALT" contentTypeId="DOCUMENT" dataResourceId="ENCHL-01-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:31.537" lastUpdatedTxStamp="2017-12-12 22:27:31.534" createdStamp="2017-12-12 22:27:31.537" createdTxStamp="2017-12-12 22:27:31.534"/>
+    <Content contentId="FD-1001-ALT" contentTypeId="DOCUMENT" dataResourceId="FD-1001-ALT" lastUpdatedStamp="2017-12-12 22:27:27.007" lastUpdatedTxStamp="2017-12-12 22:27:27.004" createdStamp="2017-12-12 22:25:09.04" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <Content contentId="FD-1000-ALT" contentTypeId="DOCUMENT" dataResourceId="FD-1000-ALT" lastUpdatedStamp="2017-12-12 22:27:26.894" lastUpdatedTxStamp="2017-12-12 22:27:26.889" createdStamp="2017-12-12 22:25:08.389" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <Content contentId="SERV-100-ALTDE" contentTypeId="DOCUMENT" dataResourceId="SERV-100-ALTDE" description="Alternative URL" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.303" lastUpdatedTxStamp="2017-12-12 22:27:16.287" createdStamp="2017-12-12 22:27:16.303" createdTxStamp="2017-12-12 22:27:16.287"/>
+    <Content contentId="SERV-100-ALTEN" contentTypeId="DOCUMENT" dataResourceId="SERV-100-ALTEN" description="Alternative URL" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.291" lastUpdatedTxStamp="2017-12-12 22:27:16.287" createdStamp="2017-12-12 22:27:16.291" createdTxStamp="2017-12-12 22:27:16.287"/>
+    <Content contentId="CSV-1001-ALT" contentTypeId="DOCUMENT" dataResourceId="CSV-1001-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:24.311" lastUpdatedTxStamp="2017-12-12 22:27:24.308" createdStamp="2017-12-12 22:27:24.311" createdTxStamp="2017-12-12 22:27:24.308"/>
+    <Content contentId="SV-1001-ALT" contentTypeId="DOCUMENT" dataResourceId="SV-1001-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:24.174" lastUpdatedTxStamp="2017-12-12 22:27:24.172" createdStamp="2017-12-12 22:27:24.174" createdTxStamp="2017-12-12 22:27:24.172"/>
+    <Content contentId="SV-1000-ALT" contentTypeId="DOCUMENT" dataResourceId="SV-1000-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:23.994" lastUpdatedTxStamp="2017-12-12 22:27:23.991" createdStamp="2017-12-12 22:27:23.994" createdTxStamp="2017-12-12 22:27:23.991"/>
+    <Content contentId="DROP-100-ALTDE" contentTypeId="DOCUMENT" dataResourceId="DROP-100-ALTDE" description="Alternative URL" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.469" lastUpdatedTxStamp="2017-12-12 22:27:16.45" createdStamp="2017-12-12 22:27:16.469" createdTxStamp="2017-12-12 22:27:16.45"/>
+    <Content contentId="DROP-100-ALTEN" contentTypeId="DOCUMENT" dataResourceId="DROP-100-ALTEN" description="Alternative URL" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.456" lastUpdatedTxStamp="2017-12-12 22:27:16.45" createdStamp="2017-12-12 22:27:16.456" createdTxStamp="2017-12-12 22:27:16.45"/>
+    <Content contentId="orderWhenSold-ALT" contentTypeId="DOCUMENT" dataResourceId="orderWhenSold-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:33.85" lastUpdatedTxStamp="2017-12-12 22:27:33.847" createdStamp="2017-12-12 22:27:33.85" createdTxStamp="2017-12-12 22:27:33.847"/>
+    <Content contentId="dropShip3-ALT" contentTypeId="DOCUMENT" dataResourceId="dropShip3-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:33.749" lastUpdatedTxStamp="2017-12-12 22:27:33.746" createdStamp="2017-12-12 22:27:33.749" createdTxStamp="2017-12-12 22:27:33.746"/>
+    <Content contentId="dropShip2-ALT" contentTypeId="DOCUMENT" dataResourceId="dropShip2-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:33.633" lastUpdatedTxStamp="2017-12-12 22:27:33.63" createdStamp="2017-12-12 22:27:33.633" createdTxStamp="2017-12-12 22:27:33.63"/>
+    <Content contentId="dropShip1-ALT" contentTypeId="DOCUMENT" dataResourceId="dropShip1-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:33.53" lastUpdatedTxStamp="2017-12-12 22:27:33.527" createdStamp="2017-12-12 22:27:33.53" createdTxStamp="2017-12-12 22:27:33.527"/>
+    <Content contentId="MEDIA-100-ALTDE" contentTypeId="DOCUMENT" dataResourceId="MEDIA-100-ALTDE" description="Alternative URL" localeString="de" lastUpdatedStamp="2017-12-12 22:27:15.962" lastUpdatedTxStamp="2017-12-12 22:27:15.944" createdStamp="2017-12-12 22:27:15.962" createdTxStamp="2017-12-12 22:27:15.944"/>
+    <Content contentId="MEDIA-100-ALTEN" contentTypeId="DOCUMENT" dataResourceId="MEDIA-100-ALTEN" description="Alternative URL" localeString="en" lastUpdatedStamp="2017-12-12 22:27:15.949" lastUpdatedTxStamp="2017-12-12 22:27:15.944" createdStamp="2017-12-12 22:27:15.949" createdTxStamp="2017-12-12 22:27:15.944"/>
+    <Content contentId="MP3-1000-ALT" contentTypeId="DOCUMENT" dataResourceId="MP3-1000-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:23.56" lastUpdatedTxStamp="2017-12-12 22:27:23.557" createdStamp="2017-12-12 22:27:23.56" createdTxStamp="2017-12-12 22:27:23.557"/>
+    <Content contentId="CD-2002-ALT" contentTypeId="DOCUMENT" dataResourceId="CD-2002-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:21.128" lastUpdatedTxStamp="2017-12-12 22:27:21.121" createdStamp="2017-12-12 22:27:21.128" createdTxStamp="2017-12-12 22:27:21.121"/>
+    <Content contentId="MUSIC-101-ALTDE" contentTypeId="DOCUMENT" dataResourceId="MUSIC-101-ALTDE" description="Alternative URL" localeString="de" lastUpdatedStamp="2017-12-12 22:27:15.998" lastUpdatedTxStamp="2017-12-12 22:27:15.981" createdStamp="2017-12-12 22:27:15.998" createdTxStamp="2017-12-12 22:27:15.981"/>
+    <Content contentId="MUSIC-101-ALTEN" contentTypeId="DOCUMENT" dataResourceId="MUSIC-101-ALTEN" description="Alternative URL" localeString="en" lastUpdatedStamp="2017-12-12 22:27:15.985" lastUpdatedTxStamp="2017-12-12 22:27:15.981" createdStamp="2017-12-12 22:27:15.985" createdTxStamp="2017-12-12 22:27:15.981"/>
+    <Content contentId="MU-DL-101-ALTDE" contentTypeId="DOCUMENT" dataResourceId="MU-DL-101-ALTDE" description="Alternative URL" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.087" lastUpdatedTxStamp="2017-12-12 22:27:16.068" createdStamp="2017-12-12 22:27:16.087" createdTxStamp="2017-12-12 22:27:16.068"/>
+    <Content contentId="MU-DL-101-ALTEN" contentTypeId="DOCUMENT" dataResourceId="MU-DL-101-ALTEN" description="Alternative URL" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.074" lastUpdatedTxStamp="2017-12-12 22:27:16.068" createdStamp="2017-12-12 22:27:16.074" createdTxStamp="2017-12-12 22:27:16.068"/>
+    <Content contentId="MU-CD-101-ALTDE" contentTypeId="DOCUMENT" dataResourceId="MU-CD-101-ALTDE" description="Alternative URL" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.044" lastUpdatedTxStamp="2017-12-12 22:27:16.026" createdStamp="2017-12-12 22:27:16.044" createdTxStamp="2017-12-12 22:27:16.026"/>
+    <Content contentId="MU-CD-101-ALTEN" contentTypeId="DOCUMENT" dataResourceId="MU-CD-101-ALTEN" description="Alternative URL" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.031" lastUpdatedTxStamp="2017-12-12 22:27:16.026" createdStamp="2017-12-12 22:27:16.031" createdTxStamp="2017-12-12 22:27:16.026"/>
+    <Content contentId="TRVL-100-ALTDE" contentTypeId="DOCUMENT" dataResourceId="TRVL-100-ALTDE" description="Alternative URL" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.131" lastUpdatedTxStamp="2017-12-12 22:27:16.114" createdStamp="2017-12-12 22:27:16.131" createdTxStamp="2017-12-12 22:27:16.114"/>
+    <Content contentId="TRVL-100-ALTEN" contentTypeId="DOCUMENT" dataResourceId="TRVL-100-ALTEN" description="Alternative URL" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.12" lastUpdatedTxStamp="2017-12-12 22:27:16.114" createdStamp="2017-12-12 22:27:16.12" createdTxStamp="2017-12-12 22:27:16.114"/>
+    <Content contentId="RT-1000-ALT" contentTypeId="DOCUMENT" dataResourceId="RT-1000-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:38.272" lastUpdatedTxStamp="2017-12-12 22:27:38.261" createdStamp="2017-12-12 22:27:38.272" createdTxStamp="2017-12-12 22:27:38.261"/>
+    <Content contentId="AUTO-100-ALTDE" contentTypeId="DOCUMENT" dataResourceId="AUTO-100-ALTDE" description="Alternative URL" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.172" lastUpdatedTxStamp="2017-12-12 22:27:16.153" createdStamp="2017-12-12 22:27:16.172" createdTxStamp="2017-12-12 22:27:16.153"/>
+    <Content contentId="AUTO-100-ALTEN" contentTypeId="DOCUMENT" dataResourceId="AUTO-100-ALTEN" description="Alternative URL" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.157" lastUpdatedTxStamp="2017-12-12 22:27:16.153" createdStamp="2017-12-12 22:27:16.157" createdTxStamp="2017-12-12 22:27:16.153"/>
+    <Content contentId="VH-9944-ALT" contentTypeId="DOCUMENT" dataResourceId="VH-9944-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:22.999" lastUpdatedTxStamp="2017-12-12 22:27:22.995" createdStamp="2017-12-12 22:27:22.999" createdTxStamp="2017-12-12 22:27:22.995"/>
+    <Content contentId="VH-9943-ALT" contentTypeId="DOCUMENT" dataResourceId="VH-9943-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:17.375" lastUpdatedTxStamp="2017-12-12 22:27:17.357" createdStamp="2017-12-12 22:27:17.375" createdTxStamp="2017-12-12 22:27:17.357"/>
+    <Content contentId="VH-9943-B3-ALT" contentTypeId="DOCUMENT" dataResourceId="VH-9943-B3-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:17.976" lastUpdatedTxStamp="2017-12-12 22:27:17.953" createdStamp="2017-12-12 22:27:17.976" createdTxStamp="2017-12-12 22:27:17.953"/>
+    <Content contentId="VH-9943-B4-ALT" contentTypeId="DOCUMENT" dataResourceId="VH-9943-B4-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:22.367" lastUpdatedTxStamp="2017-12-12 22:27:22.361" createdStamp="2017-12-12 22:27:22.367" createdTxStamp="2017-12-12 22:27:22.361"/>
+    <Content contentId="VH-9943-S3-ALT" contentTypeId="DOCUMENT" dataResourceId="VH-9943-S3-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:22.529" lastUpdatedTxStamp="2017-12-12 22:27:22.524" createdStamp="2017-12-12 22:27:22.529" createdTxStamp="2017-12-12 22:27:22.524"/>
+    <Content contentId="VH-9943-S4-ALT" contentTypeId="DOCUMENT" dataResourceId="VH-9943-S4-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:22.703" lastUpdatedTxStamp="2017-12-12 22:27:22.698" createdStamp="2017-12-12 22:27:22.703" createdTxStamp="2017-12-12 22:27:22.698"/>
+    <Content contentId="GFTC-100-ALTDE" contentTypeId="DOCUMENT" dataResourceId="GFTC-100-ALTDE" description="Alternative URL" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.339" lastUpdatedTxStamp="2017-12-12 22:27:16.321" createdStamp="2017-12-12 22:27:16.339" createdTxStamp="2017-12-12 22:27:16.321"/>
+    <Content contentId="GFTC-100-ALTEN" contentTypeId="DOCUMENT" dataResourceId="GFTC-100-ALTEN" description="Alternative URL" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.328" lastUpdatedTxStamp="2017-12-12 22:27:16.321" createdStamp="2017-12-12 22:27:16.328" createdTxStamp="2017-12-12 22:27:16.321"/>
+    <Content contentId="GC-002-ALT" contentTypeId="DOCUMENT" dataResourceId="GC-002-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:34.891" lastUpdatedTxStamp="2017-12-12 22:27:34.888" createdStamp="2017-12-12 22:27:34.891" createdTxStamp="2017-12-12 22:27:34.888"/>
+    <Content contentId="GC-001-ALT" contentTypeId="DOCUMENT" dataResourceId="GC-001-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:35.028" lastUpdatedTxStamp="2017-12-12 22:27:35.024" createdStamp="2017-12-12 22:27:35.028" createdTxStamp="2017-12-12 22:27:35.024"/>
+    <Content contentId="GC-001-C10-ALT" contentTypeId="DOCUMENT" dataResourceId="GC-001-C10-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:35.189" lastUpdatedTxStamp="2017-12-12 22:27:35.185" createdStamp="2017-12-12 22:27:35.189" createdTxStamp="2017-12-12 22:27:35.185"/>
+    <Content contentId="GC-001-C100-ALT" contentTypeId="DOCUMENT" dataResourceId="GC-001-C100-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:35.313" lastUpdatedTxStamp="2017-12-12 22:27:35.309" createdStamp="2017-12-12 22:27:35.313" createdTxStamp="2017-12-12 22:27:35.309"/>
+    <Content contentId="GC-001-C25-ALT" contentTypeId="DOCUMENT" dataResourceId="GC-001-C25-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:35.49" lastUpdatedTxStamp="2017-12-12 22:27:35.483" createdStamp="2017-12-12 22:27:35.49" createdTxStamp="2017-12-12 22:27:35.483"/>
+    <Content contentId="GC-001-C50-ALT" contentTypeId="DOCUMENT" dataResourceId="GC-001-C50-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:35.654" lastUpdatedTxStamp="2017-12-12 22:27:35.651" createdStamp="2017-12-12 22:27:35.654" createdTxStamp="2017-12-12 22:27:35.651"/>
+    <Content contentId="GC-001-CO-ALT" contentTypeId="DOCUMENT" dataResourceId="GC-001-CO-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:35.791" lastUpdatedTxStamp="2017-12-12 22:27:35.788" createdStamp="2017-12-12 22:27:35.791" createdTxStamp="2017-12-12 22:27:35.788"/>
+    <Content contentId="GC-001-H10-ALT" contentTypeId="DOCUMENT" dataResourceId="GC-001-H10-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:35.952" lastUpdatedTxStamp="2017-12-12 22:27:35.949" createdStamp="2017-12-12 22:27:35.952" createdTxStamp="2017-12-12 22:27:35.949"/>
+    <Content contentId="GC-001-H100-ALT" contentTypeId="DOCUMENT" dataResourceId="GC-001-H100-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:36.062" lastUpdatedTxStamp="2017-12-12 22:27:36.059" createdStamp="2017-12-12 22:27:36.062" createdTxStamp="2017-12-12 22:27:36.059"/>
+    <Content contentId="GC-001-H25-ALT" contentTypeId="DOCUMENT" dataResourceId="GC-001-H25-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:36.164" lastUpdatedTxStamp="2017-12-12 22:27:36.161" createdStamp="2017-12-12 22:27:36.164" createdTxStamp="2017-12-12 22:27:36.161"/>
+    <Content contentId="GC-001-H50-ALT" contentTypeId="DOCUMENT" dataResourceId="GC-001-H50-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:36.286" lastUpdatedTxStamp="2017-12-12 22:27:36.283" createdStamp="2017-12-12 22:27:36.286" createdTxStamp="2017-12-12 22:27:36.283"/>
+    <Content contentId="GC-001-HO-ALT" contentTypeId="DOCUMENT" dataResourceId="GC-001-HO-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:36.484" lastUpdatedTxStamp="2017-12-12 22:27:36.48" createdStamp="2017-12-12 22:27:36.484" createdTxStamp="2017-12-12 22:27:36.48"/>
+    <Content contentId="GC-PR-101-ALTDE" contentTypeId="DOCUMENT" dataResourceId="GC-PR-101-ALTDE" description="Alternative URL" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.37" lastUpdatedTxStamp="2017-12-12 22:27:16.354" createdStamp="2017-12-12 22:27:16.37" createdTxStamp="2017-12-12 22:27:16.354"/>
+    <Content contentId="GC-PR-101-ALTEN" contentTypeId="DOCUMENT" dataResourceId="GC-PR-101-ALTEN" description="Alternative URL" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.36" lastUpdatedTxStamp="2017-12-12 22:27:16.354" createdStamp="2017-12-12 22:27:16.36" createdTxStamp="2017-12-12 22:27:16.354"/>
+    <Content contentId="GC-001-HO-ALT" contentTypeId="DOCUMENT" dataResourceId="GC-001-HO-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:36.484" lastUpdatedTxStamp="2017-12-12 22:27:36.48" createdStamp="2017-12-12 22:27:36.484" createdTxStamp="2017-12-12 22:27:36.48"/>
+    <Content contentId="GC-001-H50-ALT" contentTypeId="DOCUMENT" dataResourceId="GC-001-H50-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:36.286" lastUpdatedTxStamp="2017-12-12 22:27:36.283" createdStamp="2017-12-12 22:27:36.286" createdTxStamp="2017-12-12 22:27:36.283"/>
+    <Content contentId="GC-001-H25-ALT" contentTypeId="DOCUMENT" dataResourceId="GC-001-H25-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:36.164" lastUpdatedTxStamp="2017-12-12 22:27:36.161" createdStamp="2017-12-12 22:27:36.164" createdTxStamp="2017-12-12 22:27:36.161"/>
+    <Content contentId="GC-001-H100-ALT" contentTypeId="DOCUMENT" dataResourceId="GC-001-H100-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:36.062" lastUpdatedTxStamp="2017-12-12 22:27:36.059" createdStamp="2017-12-12 22:27:36.062" createdTxStamp="2017-12-12 22:27:36.059"/>
+    <Content contentId="GC-001-H10-ALT" contentTypeId="DOCUMENT" dataResourceId="GC-001-H10-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:35.952" lastUpdatedTxStamp="2017-12-12 22:27:35.949" createdStamp="2017-12-12 22:27:35.952" createdTxStamp="2017-12-12 22:27:35.949"/>
+    <Content contentId="GC-001-CO-ALT" contentTypeId="DOCUMENT" dataResourceId="GC-001-CO-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:35.791" lastUpdatedTxStamp="2017-12-12 22:27:35.788" createdStamp="2017-12-12 22:27:35.791" createdTxStamp="2017-12-12 22:27:35.788"/>
+    <Content contentId="GC-001-C50-ALT" contentTypeId="DOCUMENT" dataResourceId="GC-001-C50-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:35.654" lastUpdatedTxStamp="2017-12-12 22:27:35.651" createdStamp="2017-12-12 22:27:35.654" createdTxStamp="2017-12-12 22:27:35.651"/>
+    <Content contentId="GC-001-C25-ALT" contentTypeId="DOCUMENT" dataResourceId="GC-001-C25-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:35.49" lastUpdatedTxStamp="2017-12-12 22:27:35.483" createdStamp="2017-12-12 22:27:35.49" createdTxStamp="2017-12-12 22:27:35.483"/>
+    <Content contentId="GC-001-C100-ALT" contentTypeId="DOCUMENT" dataResourceId="GC-001-C100-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:35.313" lastUpdatedTxStamp="2017-12-12 22:27:35.309" createdStamp="2017-12-12 22:27:35.313" createdTxStamp="2017-12-12 22:27:35.309"/>
+    <Content contentId="GC-001-C10-ALT" contentTypeId="DOCUMENT" dataResourceId="GC-001-C10-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:35.189" lastUpdatedTxStamp="2017-12-12 22:27:35.185" createdStamp="2017-12-12 22:27:35.189" createdTxStamp="2017-12-12 22:27:35.185"/>
+    <Content contentId="GC-RL-101-ALTDE" contentTypeId="DOCUMENT" dataResourceId="GC-RL-101-ALTDE" description="Alternative URL" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.4" lastUpdatedTxStamp="2017-12-12 22:27:16.384" createdStamp="2017-12-12 22:27:16.4" createdTxStamp="2017-12-12 22:27:16.384"/>
+    <Content contentId="GC-RL-101-ALTEN" contentTypeId="DOCUMENT" dataResourceId="GC-RL-101-ALTEN" description="Alternative URL" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.389" lastUpdatedTxStamp="2017-12-12 22:27:16.384" createdStamp="2017-12-12 22:27:16.389" createdTxStamp="2017-12-12 22:27:16.384"/>
+    <Content contentId="PROMOTIONS-ALTDE" contentTypeId="DOCUMENT" dataResourceId="PROMOTIONS-ALTDE" description="Alternative URL" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.505" lastUpdatedTxStamp="2017-12-12 22:27:16.491" createdStamp="2017-12-12 22:27:16.505" createdTxStamp="2017-12-12 22:27:16.491"/>
+    <Content contentId="PROMOTIONS-ALTEN" contentTypeId="DOCUMENT" dataResourceId="PROMOTIONS-ALTEN" description="Alternative URL" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.496" lastUpdatedTxStamp="2017-12-12 22:27:16.491" createdStamp="2017-12-12 22:27:16.496" createdTxStamp="2017-12-12 22:27:16.491"/>
+    <Content contentId="CAT1_BEST_SELL-ALTDE" contentTypeId="DOCUMENT" dataResourceId="CAT1_BEST_SELL-ALTDE" description="Alternative URL" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.661" lastUpdatedTxStamp="2017-12-12 22:27:16.634" createdStamp="2017-12-12 22:27:16.661" createdTxStamp="2017-12-12 22:27:16.634"/>
+    <Content contentId="CAT1_BEST_SELL-ALTEN" contentTypeId="DOCUMENT" dataResourceId="CAT1_BEST_SELL-ALTEN" description="Alternative URL" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.64" lastUpdatedTxStamp="2017-12-12 22:27:16.634" createdStamp="2017-12-12 22:27:16.64" createdTxStamp="2017-12-12 22:27:16.634"/>
+    <Content contentId="BEST-SELL-1-ALT" contentTypeId="DOCUMENT" dataResourceId="BEST-SELL-1-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:17.156" lastUpdatedTxStamp="2017-12-12 22:27:17.153" createdStamp="2017-12-12 22:27:17.156" createdTxStamp="2017-12-12 22:27:17.153"/>
+    <Content contentId="BEST-SELL-2-ALT" contentTypeId="DOCUMENT" dataResourceId="BEST-SELL-2-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:17.18" lastUpdatedTxStamp="2017-12-12 22:27:17.177" createdStamp="2017-12-12 22:27:17.18" createdTxStamp="2017-12-12 22:27:17.177"/>
+    <Content contentId="CAT1_SEARCH-ALTDE" contentTypeId="DOCUMENT" dataResourceId="CAT1_SEARCH-ALTDE" description="Alternative URL" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.542" lastUpdatedTxStamp="2017-12-12 22:27:16.527" createdStamp="2017-12-12 22:27:16.542" createdTxStamp="2017-12-12 22:27:16.527"/>
+    <Content contentId="CAT1_SEARCH-ALTEN" contentTypeId="DOCUMENT" dataResourceId="CAT1_SEARCH-ALTEN" description="Alternative URL" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.533" lastUpdatedTxStamp="2017-12-12 22:27:16.527" createdStamp="2017-12-12 22:27:16.533" createdTxStamp="2017-12-12 22:27:16.527"/>
+    <Content contentId="CAT1_QUICKADD1-ALTDE" contentTypeId="DOCUMENT" dataResourceId="CAT1_QUICKADD1-ALTDE" description="Alternative URL" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.578" lastUpdatedTxStamp="2017-12-12 22:27:16.565" createdStamp="2017-12-12 22:27:16.578" createdTxStamp="2017-12-12 22:27:16.565"/>
+    <Content contentId="CAT1_QUICKADD1-ALTEN" contentTypeId="DOCUMENT" dataResourceId="CAT1_QUICKADD1-ALTEN" description="Alternative URL" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.568" lastUpdatedTxStamp="2017-12-12 22:27:16.565" createdStamp="2017-12-12 22:27:16.568" createdTxStamp="2017-12-12 22:27:16.565"/>
+    <Content contentId="CAT1_QUICKADD2-ALTDE" contentTypeId="DOCUMENT" dataResourceId="CAT1_QUICKADD2-ALTDE" description="Alternative URL" localeString="de" lastUpdatedStamp="2017-12-12 22:27:16.611" lastUpdatedTxStamp="2017-12-12 22:27:16.595" createdStamp="2017-12-12 22:27:16.611" createdTxStamp="2017-12-12 22:27:16.595"/>
+    <Content contentId="CAT1_QUICKADD2-ALTEN" contentTypeId="DOCUMENT" dataResourceId="CAT1_QUICKADD2-ALTEN" description="Alternative URL" localeString="en" lastUpdatedStamp="2017-12-12 22:27:16.6" lastUpdatedTxStamp="2017-12-12 22:27:16.595" createdStamp="2017-12-12 22:27:16.6" createdTxStamp="2017-12-12 22:27:16.595"/>
+    <Content contentId="TSTLTDADMIN-ALT" contentTypeId="DOCUMENT" dataResourceId="TSTLTDADMIN-ALT" description="Alternative URL" lastUpdatedStamp="2017-12-12 22:27:16.689" lastUpdatedTxStamp="2017-12-12 22:27:16.686" createdStamp="2017-12-12 22:27:16.689" createdTxStamp="2017-12-12 22:27:16.686"/>
+    <ContentAssoc contentId="CATALOG1-ALTEN" contentIdTo="CATALOG1-ALTDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2017-12-12 22:27:15.431" lastUpdatedStamp="2017-12-12 22:27:15.459" lastUpdatedTxStamp="2017-12-12 22:27:15.431" createdStamp="2017-12-12 22:27:15.459" createdTxStamp="2017-12-12 22:27:15.431"/>
+    <ContentAssoc contentId="CLOTH-100-ALTEN" contentIdTo="CLOTH-100-ALTDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2017-12-12 22:27:15.481" lastUpdatedStamp="2017-12-12 22:27:15.514" lastUpdatedTxStamp="2017-12-12 22:27:15.48" createdStamp="2017-12-12 22:27:15.514" createdTxStamp="2017-12-12 22:27:15.48"/>
+    <ContentAssoc contentId="CL-WMN-101-ALTEN" contentIdTo="CL-WMN-101-ALTDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2017-12-12 22:27:15.56" lastUpdatedStamp="2017-12-12 22:27:15.588" lastUpdatedTxStamp="2017-12-12 22:27:15.559" createdStamp="2017-12-12 22:27:15.588" createdTxStamp="2017-12-12 22:27:15.559"/>
+    <ContentAssoc contentId="CL-MEN-101-ALTEN" contentIdTo="CL-MEN-101-ALTDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2017-12-12 22:27:15.526" lastUpdatedStamp="2017-12-12 22:27:15.551" lastUpdatedTxStamp="2017-12-12 22:27:15.526" createdStamp="2017-12-12 22:27:15.551" createdTxStamp="2017-12-12 22:27:15.526"/>
+    <ContentAssoc contentId="ELTRN-100-ALTEN" contentIdTo="ELTRN-100-ALTDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2017-12-12 22:27:15.597" lastUpdatedStamp="2017-12-12 22:27:15.638" lastUpdatedTxStamp="2017-12-12 22:27:15.596" createdStamp="2017-12-12 22:27:15.638" createdTxStamp="2017-12-12 22:27:15.596"/>
+    <ContentAssoc contentId="CAM-2644-ALTEN" contentIdTo="CAM-2644-ALTDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2017-12-12 22:27:18.236" lastUpdatedStamp="2017-12-12 22:27:18.276" lastUpdatedTxStamp="2017-12-12 22:27:18.235" createdStamp="2017-12-12 22:27:18.276" createdTxStamp="2017-12-12 22:27:18.235"/>
+    <ContentAssoc contentId="EL-PHN-101-ALTEN" contentIdTo="EL-PHN-101-ALTDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2017-12-12 22:27:15.905" lastUpdatedStamp="2017-12-12 22:27:15.933" lastUpdatedTxStamp="2017-12-12 22:27:15.904" createdStamp="2017-12-12 22:27:15.933" createdTxStamp="2017-12-12 22:27:15.904"/>
+    <ContentAssoc contentId="EL-MP3-101-ALTEN" contentIdTo="EL-MP3-101-ALTDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2017-12-12 22:27:15.858" lastUpdatedStamp="2017-12-12 22:27:15.885" lastUpdatedTxStamp="2017-12-12 22:27:15.858" createdStamp="2017-12-12 22:27:15.885" createdTxStamp="2017-12-12 22:27:15.858"/>
+    <ContentAssoc contentId="PC-101-ALTEN" contentIdTo="PC-101-ALTDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2017-12-12 22:27:15.646" lastUpdatedStamp="2017-12-12 22:27:15.672" lastUpdatedTxStamp="2017-12-12 22:27:15.646" createdStamp="2017-12-12 22:27:15.672" createdTxStamp="2017-12-12 22:27:15.646"/>
+    <ContentAssoc contentId="PC-AC-101-ALTEN" contentIdTo="PC-AC-101-ALTDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2017-12-12 22:27:15.814" lastUpdatedStamp="2017-12-12 22:27:15.845" lastUpdatedTxStamp="2017-12-12 22:27:15.814" createdStamp="2017-12-12 22:27:15.845" createdTxStamp="2017-12-12 22:27:15.814"/>
+    <ContentAssoc contentId="PC-PR-101-ALTEN" contentIdTo="PC-PR-101-ALTDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2017-12-12 22:27:15.031" lastUpdatedStamp="2017-12-12 22:27:15.368" lastUpdatedTxStamp="2017-12-12 22:27:15.031" createdStamp="2017-12-12 22:27:15.368" createdTxStamp="2017-12-12 22:27:15.031"/>
+    <ContentAssoc contentId="PC-SW-101-ALTEN" contentIdTo="PC-SW-101-ALTDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2017-12-12 22:27:15.771" lastUpdatedStamp="2017-12-12 22:27:15.804" lastUpdatedTxStamp="2017-12-12 22:27:15.77" createdStamp="2017-12-12 22:27:15.804" createdTxStamp="2017-12-12 22:27:15.77"/>
+    <ContentAssoc contentId="PC-SYS-101-ALTEN" contentIdTo="PC-SYS-101-ALTDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2017-12-12 22:27:15.687" lastUpdatedStamp="2017-12-12 22:27:15.733" lastUpdatedTxStamp="2017-12-12 22:27:15.686" createdStamp="2017-12-12 22:27:15.733" createdTxStamp="2017-12-12 22:27:15.686"/>
+    <ContentAssoc contentId="SUBS-100-ALTEN" contentIdTo="SUBS-100-ALTDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2017-12-12 22:27:16.197" lastUpdatedStamp="2017-12-12 22:27:16.222" lastUpdatedTxStamp="2017-12-12 22:27:16.197" createdStamp="2017-12-12 22:27:16.222" createdTxStamp="2017-12-12 22:27:16.197"/>
+    <ContentAssoc contentId="FIN-100-ALTEN" contentIdTo="FIN-100-ALTDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2017-12-12 22:27:16.23" lastUpdatedStamp="2017-12-12 22:27:16.251" lastUpdatedTxStamp="2017-12-12 22:27:16.23" createdStamp="2017-12-12 22:27:16.251" createdTxStamp="2017-12-12 22:27:16.23"/>
+    <ContentAssoc contentId="FOOD-100-ALTEN" contentIdTo="FOOD-100-ALTDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2017-12-12 22:27:16.259" lastUpdatedStamp="2017-12-12 22:27:16.28" lastUpdatedTxStamp="2017-12-12 22:27:16.259" createdStamp="2017-12-12 22:27:16.28" createdTxStamp="2017-12-12 22:27:16.259"/>
+    <ContentAssoc contentId="SERV-100-ALTEN" contentIdTo="SERV-100-ALTDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2017-12-12 22:27:16.287" lastUpdatedStamp="2017-12-12 22:27:16.311" lastUpdatedTxStamp="2017-12-12 22:27:16.287" createdStamp="2017-12-12 22:27:16.311" createdTxStamp="2017-12-12 22:27:16.287"/>
+    <ContentAssoc contentId="DROP-100-ALTEN" contentIdTo="DROP-100-ALTDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2017-12-12 22:27:16.451" lastUpdatedStamp="2017-12-12 22:27:16.483" lastUpdatedTxStamp="2017-12-12 22:27:16.45" createdStamp="2017-12-12 22:27:16.483" createdTxStamp="2017-12-12 22:27:16.45"/>
+    <ContentAssoc contentId="MEDIA-100-ALTEN" contentIdTo="MEDIA-100-ALTDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2017-12-12 22:27:15.944" lastUpdatedStamp="2017-12-12 22:27:15.97" lastUpdatedTxStamp="2017-12-12 22:27:15.944" createdStamp="2017-12-12 22:27:15.97" createdTxStamp="2017-12-12 22:27:15.944"/>
+    <ContentAssoc contentId="MUSIC-101-ALTEN" contentIdTo="MUSIC-101-ALTDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2017-12-12 22:27:15.981" lastUpdatedStamp="2017-12-12 22:27:16.015" lastUpdatedTxStamp="2017-12-12 22:27:15.981" createdStamp="2017-12-12 22:27:16.015" createdTxStamp="2017-12-12 22:27:15.981"/>
+    <ContentAssoc contentId="MU-DL-101-ALTEN" contentIdTo="MU-DL-101-ALTDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2017-12-12 22:27:16.069" lastUpdatedStamp="2017-12-12 22:27:16.097" lastUpdatedTxStamp="2017-12-12 22:27:16.068" createdStamp="2017-12-12 22:27:16.097" createdTxStamp="2017-12-12 22:27:16.068"/>
+    <ContentAssoc contentId="MU-CD-101-ALTEN" contentIdTo="MU-CD-101-ALTDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2017-12-12 22:27:16.026" lastUpdatedStamp="2017-12-12 22:27:16.056" lastUpdatedTxStamp="2017-12-12 22:27:16.026" createdStamp="2017-12-12 22:27:16.056" createdTxStamp="2017-12-12 22:27:16.026"/>
+    <ContentAssoc contentId="TRVL-100-ALTEN" contentIdTo="TRVL-100-ALTDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2017-12-12 22:27:16.115" lastUpdatedStamp="2017-12-12 22:27:16.141" lastUpdatedTxStamp="2017-12-12 22:27:16.114" createdStamp="2017-12-12 22:27:16.141" createdTxStamp="2017-12-12 22:27:16.114"/>
+    <ContentAssoc contentId="AUTO-100-ALTEN" contentIdTo="AUTO-100-ALTDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2017-12-12 22:27:16.153" lastUpdatedStamp="2017-12-12 22:27:16.186" lastUpdatedTxStamp="2017-12-12 22:27:16.153" createdStamp="2017-12-12 22:27:16.186" createdTxStamp="2017-12-12 22:27:16.153"/>
+    <ContentAssoc contentId="GFTC-100-ALTEN" contentIdTo="GFTC-100-ALTDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2017-12-12 22:27:16.324" lastUpdatedStamp="2017-12-12 22:27:16.347" lastUpdatedTxStamp="2017-12-12 22:27:16.321" createdStamp="2017-12-12 22:27:16.347" createdTxStamp="2017-12-12 22:27:16.321"/>
+    <ContentAssoc contentId="GC-PR-101-ALTEN" contentIdTo="GC-PR-101-ALTDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2017-12-12 22:27:16.355" lastUpdatedStamp="2017-12-12 22:27:16.378" lastUpdatedTxStamp="2017-12-12 22:27:16.354" createdStamp="2017-12-12 22:27:16.378" createdTxStamp="2017-12-12 22:27:16.354"/>
+    <ContentAssoc contentId="GC-RL-101-ALTEN" contentIdTo="GC-RL-101-ALTDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2017-12-12 22:27:16.385" lastUpdatedStamp="2017-12-12 22:27:16.414" lastUpdatedTxStamp="2017-12-12 22:27:16.384" createdStamp="2017-12-12 22:27:16.414" createdTxStamp="2017-12-12 22:27:16.384"/>
+    <ContentAssoc contentId="PROMOTIONS-ALTEN" contentIdTo="PROMOTIONS-ALTDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2017-12-12 22:27:16.492" lastUpdatedStamp="2017-12-12 22:27:16.517" lastUpdatedTxStamp="2017-12-12 22:27:16.491" createdStamp="2017-12-12 22:27:16.517" createdTxStamp="2017-12-12 22:27:16.491"/>
+    <ContentAssoc contentId="CAT1_BEST_SELL-ALTEN" contentIdTo="CAT1_BEST_SELL-ALTDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2017-12-12 22:27:16.634" lastUpdatedStamp="2017-12-12 22:27:16.671" lastUpdatedTxStamp="2017-12-12 22:27:16.634" createdStamp="2017-12-12 22:27:16.671" createdTxStamp="2017-12-12 22:27:16.634"/>
+    <ContentAssoc contentId="CAT1_SEARCH-ALTEN" contentIdTo="CAT1_SEARCH-ALTDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2017-12-12 22:27:16.527" lastUpdatedStamp="2017-12-12 22:27:16.548" lastUpdatedTxStamp="2017-12-12 22:27:16.527" createdStamp="2017-12-12 22:27:16.548" createdTxStamp="2017-12-12 22:27:16.527"/>
+    <ContentAssoc contentId="CAT1_QUICKADD1-ALTEN" contentIdTo="CAT1_QUICKADD1-ALTDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2017-12-12 22:27:16.565" lastUpdatedStamp="2017-12-12 22:27:16.585" lastUpdatedTxStamp="2017-12-12 22:27:16.565" createdStamp="2017-12-12 22:27:16.585" createdTxStamp="2017-12-12 22:27:16.565"/>
+    <ContentAssoc contentId="CAT1_QUICKADD2-ALTEN" contentIdTo="CAT1_QUICKADD2-ALTDE" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2017-12-12 22:27:16.596" lastUpdatedStamp="2017-12-12 22:27:16.618" lastUpdatedTxStamp="2017-12-12 22:27:16.595" createdStamp="2017-12-12 22:27:16.618" createdTxStamp="2017-12-12 22:27:16.595"/>
+    <ProductContent productId="CL-5005" contentId="CL-5005-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:21.325" lastUpdatedStamp="2017-12-12 22:27:21.326" lastUpdatedTxStamp="2017-12-12 22:27:21.313" createdStamp="2017-12-12 22:27:21.326" createdTxStamp="2017-12-12 22:27:21.313"/>
+    <ProductContent productId="CL-7000" contentId="CL-7000-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:21.495" lastUpdatedStamp="2017-12-12 22:27:21.496" lastUpdatedTxStamp="2017-12-12 22:27:21.486" createdStamp="2017-12-12 22:27:21.496" createdTxStamp="2017-12-12 22:27:21.486"/>
+    <ProductContent productId="CL-1000" contentId="CL-1000-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:23.204" lastUpdatedStamp="2017-12-12 22:27:23.204" lastUpdatedTxStamp="2017-12-12 22:27:23.179" createdStamp="2017-12-12 22:27:23.204" createdTxStamp="2017-12-12 22:27:23.179"/>
+    <ProductContent productId="CL-8544" contentId="CL-8544-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:21.685" lastUpdatedStamp="2017-12-12 22:27:21.686" lastUpdatedTxStamp="2017-12-12 22:27:21.67" createdStamp="2017-12-12 22:27:21.686" createdTxStamp="2017-12-12 22:27:21.67"/>
+    <ProductContent productId="EL-BASKET" contentId="EL-BASKET-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:23.692" lastUpdatedStamp="2017-12-12 22:27:23.692" lastUpdatedTxStamp="2017-12-12 22:27:23.679" createdStamp="2017-12-12 22:27:23.692" createdTxStamp="2017-12-12 22:27:23.679"/>
+    <ProductContent productId="EL-BASKET-PICK" contentId="EL-BASKET-PICK-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:23.856" lastUpdatedStamp="2017-12-12 22:27:23.857" lastUpdatedTxStamp="2017-12-12 22:27:23.842" createdStamp="2017-12-12 22:27:23.857" createdTxStamp="2017-12-12 22:27:23.842"/>
+    <ProductContent productId="PH-1000" contentId="PH-1000-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:19.219" lastUpdatedStamp="2017-12-12 22:27:19.221" lastUpdatedTxStamp="2017-12-12 22:27:19.202" createdStamp="2017-12-12 22:27:19.221" createdTxStamp="2017-12-12 22:27:19.202"/>
+    <ProductContent productId="PH-1001" contentId="PH-1001-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:19.487" lastUpdatedStamp="2017-12-12 22:27:19.487" lastUpdatedTxStamp="2017-12-12 22:27:19.471" createdStamp="2017-12-12 22:27:19.487" createdTxStamp="2017-12-12 22:27:19.471"/>
+    <ProductContent productId="PH-1004" contentId="PH-1004-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:19.704" lastUpdatedStamp="2017-12-12 22:27:19.705" lastUpdatedTxStamp="2017-12-12 22:27:19.695" createdStamp="2017-12-12 22:27:19.705" createdTxStamp="2017-12-12 22:27:19.695"/>
+    <ProductContent productId="PH-1005" contentId="PH-1005-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:19.904" lastUpdatedStamp="2017-12-12 22:27:19.904" lastUpdatedTxStamp="2017-12-12 22:27:19.889" createdStamp="2017-12-12 22:27:19.904" createdTxStamp="2017-12-12 22:27:19.889"/>
+    <ProductContent productId="SW-1006" contentId="SW-1006-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:20.116" lastUpdatedStamp="2017-12-12 22:27:20.117" lastUpdatedTxStamp="2017-12-12 22:27:20.107" createdStamp="2017-12-12 22:27:20.117" createdTxStamp="2017-12-12 22:27:20.107"/>
+    <ProductContent productId="SW-1006-1" contentId="SW-1006-1-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:20.339" lastUpdatedStamp="2017-12-12 22:27:20.341" lastUpdatedTxStamp="2017-12-12 22:27:20.329" createdStamp="2017-12-12 22:27:20.341" createdTxStamp="2017-12-12 22:27:20.329"/>
+    <ProductContent productId="SW-1006-2" contentId="SW-1006-2-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:20.51" lastUpdatedStamp="2017-12-12 22:27:20.51" lastUpdatedTxStamp="2017-12-12 22:27:20.496" createdStamp="2017-12-12 22:27:20.51" createdTxStamp="2017-12-12 22:27:20.496"/>
+    <ProductContent productId="SW-1006-3" contentId="SW-1006-3-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:20.681" lastUpdatedStamp="2017-12-12 22:27:20.682" lastUpdatedTxStamp="2017-12-12 22:27:20.668" createdStamp="2017-12-12 22:27:20.682" createdTxStamp="2017-12-12 22:27:20.668"/>
+    <ProductContent productId="SW-1006-4" contentId="SW-1006-4-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:20.843" lastUpdatedStamp="2017-12-12 22:27:20.845" lastUpdatedTxStamp="2017-12-12 22:27:20.829" createdStamp="2017-12-12 22:27:20.845" createdTxStamp="2017-12-12 22:27:20.829"/>
+    <ProductContent productId="SW-1006-5" contentId="SW-1006-5-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:20.986" lastUpdatedStamp="2017-12-12 22:27:20.986" lastUpdatedTxStamp="2017-12-12 22:27:20.973" createdStamp="2017-12-12 22:27:20.986" createdTxStamp="2017-12-12 22:27:20.973"/>
+    <ProductContent productId="CAM-2644" contentId="CAM-2644-ALTEN" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:18.275" lastUpdatedStamp="2017-12-12 22:27:18.277" lastUpdatedTxStamp="2017-12-12 22:27:18.235" createdStamp="2017-12-12 22:27:18.277" createdTxStamp="2017-12-12 22:27:18.235"/>
+    <ProductContent productId="MPL-9290" contentId="MPL-9290-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:21.887" lastUpdatedStamp="2017-12-12 22:27:21.887" lastUpdatedTxStamp="2017-12-12 22:27:21.873" createdStamp="2017-12-12 22:27:21.887" createdTxStamp="2017-12-12 22:27:21.873"/>
+    <ProductContent productId="PR-1000" contentId="PR-1000-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0" lastUpdatedStamp="2017-12-12 22:25:11.412" lastUpdatedTxStamp="2017-12-12 22:25:07.512" createdStamp="2017-12-12 22:25:11.412" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <ProductContent productId="CAM-7000" contentId="CAM-7000-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0" lastUpdatedStamp="2017-12-12 22:25:11.571" lastUpdatedTxStamp="2017-12-12 22:25:07.512" createdStamp="2017-12-12 22:25:11.571" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <ProductContent productId="CDR-1111" contentId="CDR-1111-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:22.059" lastUpdatedStamp="2017-12-12 22:27:22.061" lastUpdatedTxStamp="2017-12-12 22:27:22.048" createdStamp="2017-12-12 22:27:22.061" createdTxStamp="2017-12-12 22:27:22.048"/>
+    <ProductContent productId="KB-5569" contentId="KB-5569-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:22.211" lastUpdatedStamp="2017-12-12 22:27:22.213" lastUpdatedTxStamp="2017-12-12 22:27:22.202" createdStamp="2017-12-12 22:27:22.213" createdTxStamp="2017-12-12 22:27:22.202"/>
+    <ProductContent productId="PC-1000" contentId="PC-1000-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:26.273" lastUpdatedStamp="2017-12-12 22:27:26.273" lastUpdatedTxStamp="2017-12-12 22:27:26.263" createdStamp="2017-12-12 22:27:26.273" createdTxStamp="2017-12-12 22:27:26.263"/>
+    <ProductContent productId="NEWS-01-1MO" contentId="NEWS-01-1MO-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:23.405" lastUpdatedStamp="2017-12-12 22:27:23.406" lastUpdatedTxStamp="2017-12-12 22:27:23.395" createdStamp="2017-12-12 22:27:23.406" createdTxStamp="2017-12-12 22:27:23.395"/>
+    <ProductContent productId="FA-001" contentId="FA-001-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:34.314" lastUpdatedStamp="2017-12-12 22:27:34.314" lastUpdatedTxStamp="2017-12-12 22:27:34.3" createdStamp="2017-12-12 22:27:34.314" createdTxStamp="2017-12-12 22:27:34.3"/>
+    <ProductContent productId="FA-001-30" contentId="FA-001-30-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:34.431" lastUpdatedStamp="2017-12-12 22:27:34.437" lastUpdatedTxStamp="2017-12-12 22:27:34.425" createdStamp="2017-12-12 22:27:34.437" createdTxStamp="2017-12-12 22:27:34.425"/>
+    <ProductContent productId="FA-001-50" contentId="FA-001-50-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:34.647" lastUpdatedStamp="2017-12-12 22:27:34.647" lastUpdatedTxStamp="2017-12-12 22:27:34.624" createdStamp="2017-12-12 22:27:34.647" createdTxStamp="2017-12-12 22:27:34.624"/>
+    <ProductContent productId="FA-001-O" contentId="FA-001-O-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:34.782" lastUpdatedStamp="2017-12-12 22:27:34.784" lastUpdatedTxStamp="2017-12-12 22:27:34.773" createdStamp="2017-12-12 22:27:34.784" createdTxStamp="2017-12-12 22:27:34.773"/>
+    <ProductContent productId="FD-1066" contentId="FD-1066-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0" lastUpdatedStamp="2017-12-12 22:25:11.318" lastUpdatedTxStamp="2017-12-12 22:25:07.512" createdStamp="2017-12-12 22:25:11.318" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <ProductContent productId="FD-1065" contentId="FD-1065-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0" lastUpdatedStamp="2017-12-12 22:25:11.269" lastUpdatedTxStamp="2017-12-12 22:25:07.512" createdStamp="2017-12-12 22:25:11.269" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <ProductContent productId="FD-1064" contentId="FD-1064-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0" lastUpdatedStamp="2017-12-12 22:25:11.201" lastUpdatedTxStamp="2017-12-12 22:25:07.512" createdStamp="2017-12-12 22:25:11.201" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <ProductContent productId="FD-1063" contentId="FD-1063-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0" lastUpdatedStamp="2017-12-12 22:25:11.168" lastUpdatedTxStamp="2017-12-12 22:25:07.512" createdStamp="2017-12-12 22:25:11.168" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <ProductContent productId="FD-1062" contentId="FD-1062-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0" lastUpdatedStamp="2017-12-12 22:25:11.104" lastUpdatedTxStamp="2017-12-12 22:25:07.512" createdStamp="2017-12-12 22:25:11.104" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <ProductContent productId="FD-1061" contentId="FD-1061-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0" lastUpdatedStamp="2017-12-12 22:25:10.97" lastUpdatedTxStamp="2017-12-12 22:25:07.512" createdStamp="2017-12-12 22:25:10.97" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <ProductContent productId="FD-1060" contentId="FD-1060-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0" lastUpdatedStamp="2017-12-12 22:25:10.876" lastUpdatedTxStamp="2017-12-12 22:25:07.512" createdStamp="2017-12-12 22:25:10.876" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <ProductContent productId="FD-1050" contentId="FD-1050-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0" lastUpdatedStamp="2017-12-12 22:25:10.831" lastUpdatedTxStamp="2017-12-12 22:25:07.512" createdStamp="2017-12-12 22:25:10.831" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <ProductContent productId="FD-1017" contentId="FD-1017-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0" lastUpdatedStamp="2017-12-12 22:25:10.733" lastUpdatedTxStamp="2017-12-12 22:25:07.512" createdStamp="2017-12-12 22:25:10.733" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <ProductContent productId="FD-1016" contentId="FD-1016-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0" lastUpdatedStamp="2017-12-12 22:25:10.677" lastUpdatedTxStamp="2017-12-12 22:25:07.512" createdStamp="2017-12-12 22:25:10.677" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <ProductContent productId="FD-1015" contentId="FD-1015-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0" lastUpdatedStamp="2017-12-12 22:25:10.569" lastUpdatedTxStamp="2017-12-12 22:25:07.512" createdStamp="2017-12-12 22:25:10.569" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <ProductContent productId="FD-1014" contentId="FD-1014-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0" lastUpdatedStamp="2017-12-12 22:25:10.504" lastUpdatedTxStamp="2017-12-12 22:25:07.512" createdStamp="2017-12-12 22:25:10.504" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <ProductContent productId="FD-1013" contentId="FD-1013-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0" lastUpdatedStamp="2017-12-12 22:25:10.466" lastUpdatedTxStamp="2017-12-12 22:25:07.512" createdStamp="2017-12-12 22:25:10.466" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <ProductContent productId="FD-1012" contentId="FD-1012-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0" lastUpdatedStamp="2017-12-12 22:25:10.359" lastUpdatedTxStamp="2017-12-12 22:25:07.512" createdStamp="2017-12-12 22:25:10.359" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <ProductContent productId="FD-1011" contentId="FD-1011-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0" lastUpdatedStamp="2017-12-12 22:25:10.24" lastUpdatedTxStamp="2017-12-12 22:25:07.512" createdStamp="2017-12-12 22:25:10.24" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <ProductContent productId="FD-1010" contentId="FD-1010-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0" lastUpdatedStamp="2017-12-12 22:25:10.041" lastUpdatedTxStamp="2017-12-12 22:25:07.512" createdStamp="2017-12-12 22:25:10.041" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <ProductContent productId="FD-1009" contentId="FD-1009-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0" lastUpdatedStamp="2017-12-12 22:25:09.966" lastUpdatedTxStamp="2017-12-12 22:25:07.512" createdStamp="2017-12-12 22:25:09.966" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <ProductContent productId="FD-1008" contentId="FD-1008-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0" lastUpdatedStamp="2017-12-12 22:25:09.865" lastUpdatedTxStamp="2017-12-12 22:25:07.512" createdStamp="2017-12-12 22:25:09.865" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <ProductContent productId="FD-1007" contentId="FD-1007-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0" lastUpdatedStamp="2017-12-12 22:25:09.778" lastUpdatedTxStamp="2017-12-12 22:25:07.512" createdStamp="2017-12-12 22:25:09.778" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <ProductContent productId="FD-1006" contentId="FD-1006-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0" lastUpdatedStamp="2017-12-12 22:25:09.637" lastUpdatedTxStamp="2017-12-12 22:25:07.512" createdStamp="2017-12-12 22:25:09.637" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <ProductContent productId="FD-1005" contentId="FD-1005-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0" lastUpdatedStamp="2017-12-12 22:25:09.569" lastUpdatedTxStamp="2017-12-12 22:25:07.512" createdStamp="2017-12-12 22:25:09.569" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <ProductContent productId="FD-1004" contentId="FD-1004-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0" lastUpdatedStamp="2017-12-12 22:25:09.475" lastUpdatedTxStamp="2017-12-12 22:25:07.512" createdStamp="2017-12-12 22:25:09.475" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <ProductContent productId="FD-1003" contentId="FD-1003-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0" lastUpdatedStamp="2017-12-12 22:25:09.38" lastUpdatedTxStamp="2017-12-12 22:25:07.512" createdStamp="2017-12-12 22:25:09.38" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <ProductContent productId="FD-1002" contentId="FD-1002-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0" lastUpdatedStamp="2017-12-12 22:25:09.228" lastUpdatedTxStamp="2017-12-12 22:25:07.512" createdStamp="2017-12-12 22:25:09.228" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <ProductContent productId="PIZZA-01" contentId="PIZZA-01-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:31.97" lastUpdatedStamp="2017-12-12 22:27:31.971" lastUpdatedTxStamp="2017-12-12 22:27:31.961" createdStamp="2017-12-12 22:27:31.971" createdTxStamp="2017-12-12 22:27:31.961"/>
+    <ProductContent productId="ENCHL-01" contentId="ENCHL-01-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:31.541" lastUpdatedStamp="2017-12-12 22:27:31.544" lastUpdatedTxStamp="2017-12-12 22:27:31.534" createdStamp="2017-12-12 22:27:31.544" createdTxStamp="2017-12-12 22:27:31.534"/>
+    <ProductContent productId="FD-1001" contentId="FD-1001-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0" lastUpdatedStamp="2017-12-12 22:25:09.117" lastUpdatedTxStamp="2017-12-12 22:25:07.512" createdStamp="2017-12-12 22:25:09.117" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <ProductContent productId="FD-1000" contentId="FD-1000-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2001-05-13 12:00:00.0" lastUpdatedStamp="2017-12-12 22:25:08.816" lastUpdatedTxStamp="2017-12-12 22:25:07.512" createdStamp="2017-12-12 22:25:08.816" createdTxStamp="2017-12-12 22:25:07.512"/>
+    <ProductContent productId="CSV-1001" contentId="CSV-1001-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:24.317" lastUpdatedStamp="2017-12-12 22:27:24.319" lastUpdatedTxStamp="2017-12-12 22:27:24.308" createdStamp="2017-12-12 22:27:24.319" createdTxStamp="2017-12-12 22:27:24.308"/>
+    <ProductContent productId="SV-1001" contentId="SV-1001-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:24.179" lastUpdatedStamp="2017-12-12 22:27:24.182" lastUpdatedTxStamp="2017-12-12 22:27:24.172" createdStamp="2017-12-12 22:27:24.182" createdTxStamp="2017-12-12 22:27:24.172"/>
+    <ProductContent productId="SV-1000" contentId="SV-1000-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:24.001" lastUpdatedStamp="2017-12-12 22:27:24.003" lastUpdatedTxStamp="2017-12-12 22:27:23.991" createdStamp="2017-12-12 22:27:24.003" createdTxStamp="2017-12-12 22:27:23.991"/>
+    <ProductContent productId="orderWhenSold" contentId="orderWhenSold-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:33.853" lastUpdatedStamp="2017-12-12 22:27:33.855" lastUpdatedTxStamp="2017-12-12 22:27:33.847" createdStamp="2017-12-12 22:27:33.855" createdTxStamp="2017-12-12 22:27:33.847"/>
+    <ProductContent productId="dropShip3" contentId="dropShip3-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:33.753" lastUpdatedStamp="2017-12-12 22:27:33.755" lastUpdatedTxStamp="2017-12-12 22:27:33.746" createdStamp="2017-12-12 22:27:33.755" createdTxStamp="2017-12-12 22:27:33.746"/>
+    <ProductContent productId="dropShip2" contentId="dropShip2-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:33.637" lastUpdatedStamp="2017-12-12 22:27:33.639" lastUpdatedTxStamp="2017-12-12 22:27:33.63" createdStamp="2017-12-12 22:27:33.639" createdTxStamp="2017-12-12 22:27:33.63"/>
+    <ProductContent productId="dropShip1" contentId="dropShip1-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:33.535" lastUpdatedStamp="2017-12-12 22:27:33.537" lastUpdatedTxStamp="2017-12-12 22:27:33.527" createdStamp="2017-12-12 22:27:33.537" createdTxStamp="2017-12-12 22:27:33.527"/>
+    <ProductContent productId="MP3-1000" contentId="MP3-1000-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:23.569" lastUpdatedStamp="2017-12-12 22:27:23.57" lastUpdatedTxStamp="2017-12-12 22:27:23.557" createdStamp="2017-12-12 22:27:23.57" createdTxStamp="2017-12-12 22:27:23.557"/>
+    <ProductContent productId="CD-2002" contentId="CD-2002-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:21.145" lastUpdatedStamp="2017-12-12 22:27:21.145" lastUpdatedTxStamp="2017-12-12 22:27:21.121" createdStamp="2017-12-12 22:27:21.145" createdTxStamp="2017-12-12 22:27:21.121"/>
+    <ProductContent productId="RT-1000" contentId="RT-1000-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:38.276" lastUpdatedStamp="2017-12-12 22:27:38.279" lastUpdatedTxStamp="2017-12-12 22:27:38.261" createdStamp="2017-12-12 22:27:38.279" createdTxStamp="2017-12-12 22:27:38.261"/>
+    <ProductContent productId="VH-9944" contentId="VH-9944-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:23.009" lastUpdatedStamp="2017-12-12 22:27:23.01" lastUpdatedTxStamp="2017-12-12 22:27:22.995" createdStamp="2017-12-12 22:27:23.01" createdTxStamp="2017-12-12 22:27:22.995"/>
+    <ProductContent productId="VH-9943" contentId="VH-9943-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:17.385" lastUpdatedStamp="2017-12-12 22:27:17.386" lastUpdatedTxStamp="2017-12-12 22:27:17.357" createdStamp="2017-12-12 22:27:17.386" createdTxStamp="2017-12-12 22:27:17.357"/>
+    <ProductContent productId="VH-9943-B3" contentId="VH-9943-B3-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:17.987" lastUpdatedStamp="2017-12-12 22:27:17.989" lastUpdatedTxStamp="2017-12-12 22:27:17.953" createdStamp="2017-12-12 22:27:17.989" createdTxStamp="2017-12-12 22:27:17.953"/>
+    <ProductContent productId="VH-9943-B4" contentId="VH-9943-B4-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:22.374" lastUpdatedStamp="2017-12-12 22:27:22.376" lastUpdatedTxStamp="2017-12-12 22:27:22.361" createdStamp="2017-12-12 22:27:22.376" createdTxStamp="2017-12-12 22:27:22.361"/>
+    <ProductContent productId="VH-9943-S3" contentId="VH-9943-S3-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:22.536" lastUpdatedStamp="2017-12-12 22:27:22.538" lastUpdatedTxStamp="2017-12-12 22:27:22.524" createdStamp="2017-12-12 22:27:22.538" createdTxStamp="2017-12-12 22:27:22.524"/>
+    <ProductContent productId="VH-9943-S4" contentId="VH-9943-S4-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:22.71" lastUpdatedStamp="2017-12-12 22:27:22.711" lastUpdatedTxStamp="2017-12-12 22:27:22.698" createdStamp="2017-12-12 22:27:22.711" createdTxStamp="2017-12-12 22:27:22.698"/>
+    <ProductContent productId="GC-002" contentId="GC-002-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:34.894" lastUpdatedStamp="2017-12-12 22:27:34.898" lastUpdatedTxStamp="2017-12-12 22:27:34.888" createdStamp="2017-12-12 22:27:34.898" createdTxStamp="2017-12-12 22:27:34.888"/>
+    <ProductContent productId="GC-001" contentId="GC-001-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:35.038" lastUpdatedStamp="2017-12-12 22:27:35.038" lastUpdatedTxStamp="2017-12-12 22:27:35.024" createdStamp="2017-12-12 22:27:35.038" createdTxStamp="2017-12-12 22:27:35.024"/>
+    <ProductContent productId="GC-001-C10" contentId="GC-001-C10-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:35.194" lastUpdatedStamp="2017-12-12 22:27:35.198" lastUpdatedTxStamp="2017-12-12 22:27:35.185" createdStamp="2017-12-12 22:27:35.198" createdTxStamp="2017-12-12 22:27:35.185"/>
+    <ProductContent productId="GC-001-C100" contentId="GC-001-C100-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:35.34" lastUpdatedStamp="2017-12-12 22:27:35.344" lastUpdatedTxStamp="2017-12-12 22:27:35.309" createdStamp="2017-12-12 22:27:35.344" createdTxStamp="2017-12-12 22:27:35.309"/>
+    <ProductContent productId="GC-001-C25" contentId="GC-001-C25-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:35.519" lastUpdatedStamp="2017-12-12 22:27:35.519" lastUpdatedTxStamp="2017-12-12 22:27:35.483" createdStamp="2017-12-12 22:27:35.519" createdTxStamp="2017-12-12 22:27:35.483"/>
+    <ProductContent productId="GC-001-C50" contentId="GC-001-C50-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:35.666" lastUpdatedStamp="2017-12-12 22:27:35.667" lastUpdatedTxStamp="2017-12-12 22:27:35.651" createdStamp="2017-12-12 22:27:35.667" createdTxStamp="2017-12-12 22:27:35.651"/>
+    <ProductContent productId="GC-001-CO" contentId="GC-001-CO-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:35.795" lastUpdatedStamp="2017-12-12 22:27:35.799" lastUpdatedTxStamp="2017-12-12 22:27:35.788" createdStamp="2017-12-12 22:27:35.799" createdTxStamp="2017-12-12 22:27:35.788"/>
+    <ProductContent productId="GC-001-H10" contentId="GC-001-H10-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:35.956" lastUpdatedStamp="2017-12-12 22:27:35.96" lastUpdatedTxStamp="2017-12-12 22:27:35.949" createdStamp="2017-12-12 22:27:35.96" createdTxStamp="2017-12-12 22:27:35.949"/>
+    <ProductContent productId="GC-001-H100" contentId="GC-001-H100-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:36.065" lastUpdatedStamp="2017-12-12 22:27:36.07" lastUpdatedTxStamp="2017-12-12 22:27:36.059" createdStamp="2017-12-12 22:27:36.07" createdTxStamp="2017-12-12 22:27:36.059"/>
+    <ProductContent productId="GC-001-H25" contentId="GC-001-H25-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:36.166" lastUpdatedStamp="2017-12-12 22:27:36.172" lastUpdatedTxStamp="2017-12-12 22:27:36.161" createdStamp="2017-12-12 22:27:36.172" createdTxStamp="2017-12-12 22:27:36.161"/>
+    <ProductContent productId="GC-001-H50" contentId="GC-001-H50-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:36.289" lastUpdatedStamp="2017-12-12 22:27:36.294" lastUpdatedTxStamp="2017-12-12 22:27:36.283" createdStamp="2017-12-12 22:27:36.294" createdTxStamp="2017-12-12 22:27:36.283"/>
+    <ProductContent productId="GC-001-HO" contentId="GC-001-HO-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:36.487" lastUpdatedStamp="2017-12-12 22:27:36.492" lastUpdatedTxStamp="2017-12-12 22:27:36.48" createdStamp="2017-12-12 22:27:36.492" createdTxStamp="2017-12-12 22:27:36.48"/>
+    <ProductContent productId="GC-001-HO" contentId="GC-001-HO-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:36.487" lastUpdatedStamp="2017-12-12 22:27:36.492" lastUpdatedTxStamp="2017-12-12 22:27:36.48" createdStamp="2017-12-12 22:27:36.492" createdTxStamp="2017-12-12 22:27:36.48"/>
+    <ProductContent productId="GC-001-H50" contentId="GC-001-H50-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:36.289" lastUpdatedStamp="2017-12-12 22:27:36.294" lastUpdatedTxStamp="2017-12-12 22:27:36.283" createdStamp="2017-12-12 22:27:36.294" createdTxStamp="2017-12-12 22:27:36.283"/>
+    <ProductContent productId="GC-001-H25" contentId="GC-001-H25-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:36.166" lastUpdatedStamp="2017-12-12 22:27:36.172" lastUpdatedTxStamp="2017-12-12 22:27:36.161" createdStamp="2017-12-12 22:27:36.172" createdTxStamp="2017-12-12 22:27:36.161"/>
+    <ProductContent productId="GC-001-H100" contentId="GC-001-H100-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:36.065" lastUpdatedStamp="2017-12-12 22:27:36.07" lastUpdatedTxStamp="2017-12-12 22:27:36.059" createdStamp="2017-12-12 22:27:36.07" createdTxStamp="2017-12-12 22:27:36.059"/>
+    <ProductContent productId="GC-001-H10" contentId="GC-001-H10-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:35.956" lastUpdatedStamp="2017-12-12 22:27:35.96" lastUpdatedTxStamp="2017-12-12 22:27:35.949" createdStamp="2017-12-12 22:27:35.96" createdTxStamp="2017-12-12 22:27:35.949"/>
+    <ProductContent productId="GC-001-CO" contentId="GC-001-CO-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:35.795" lastUpdatedStamp="2017-12-12 22:27:35.799" lastUpdatedTxStamp="2017-12-12 22:27:35.788" createdStamp="2017-12-12 22:27:35.799" createdTxStamp="2017-12-12 22:27:35.788"/>
+    <ProductContent productId="GC-001-C50" contentId="GC-001-C50-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:35.666" lastUpdatedStamp="2017-12-12 22:27:35.667" lastUpdatedTxStamp="2017-12-12 22:27:35.651" createdStamp="2017-12-12 22:27:35.667" createdTxStamp="2017-12-12 22:27:35.651"/>
+    <ProductContent productId="GC-001-C25" contentId="GC-001-C25-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:35.519" lastUpdatedStamp="2017-12-12 22:27:35.519" lastUpdatedTxStamp="2017-12-12 22:27:35.483" createdStamp="2017-12-12 22:27:35.519" createdTxStamp="2017-12-12 22:27:35.483"/>
+    <ProductContent productId="GC-001-C100" contentId="GC-001-C100-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:35.34" lastUpdatedStamp="2017-12-12 22:27:35.344" lastUpdatedTxStamp="2017-12-12 22:27:35.309" createdStamp="2017-12-12 22:27:35.344" createdTxStamp="2017-12-12 22:27:35.309"/>
+    <ProductContent productId="GC-001-C10" contentId="GC-001-C10-ALT" productContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:35.194" lastUpdatedStamp="2017-12-12 22:27:35.198" lastUpdatedTxStamp="2017-12-12 22:27:35.185" createdStamp="2017-12-12 22:27:35.198" createdTxStamp="2017-12-12 22:27:35.185"/>
+    <ProductCategoryContent productCategoryId="CATALOG1" contentId="CATALOG1-ALTEN" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:15.462" lastUpdatedStamp="2017-12-12 22:27:15.462" lastUpdatedTxStamp="2017-12-12 22:27:15.431" createdStamp="2017-12-12 22:27:15.462" createdTxStamp="2017-12-12 22:27:15.431"/>
+    <ProductCategoryContent productCategoryId="CLOTH-100" contentId="CLOTH-100-ALTEN" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:15.515" lastUpdatedStamp="2017-12-12 22:27:15.515" lastUpdatedTxStamp="2017-12-12 22:27:15.48" createdStamp="2017-12-12 22:27:15.515" createdTxStamp="2017-12-12 22:27:15.48"/>
+    <ProductCategoryContent productCategoryId="CL-WMN-101" contentId="CL-WMN-101-ALTEN" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:15.589" lastUpdatedStamp="2017-12-12 22:27:15.589" lastUpdatedTxStamp="2017-12-12 22:27:15.559" createdStamp="2017-12-12 22:27:15.589" createdTxStamp="2017-12-12 22:27:15.559"/>
+    <ProductCategoryContent productCategoryId="CL-MEN-101" contentId="CL-MEN-101-ALTEN" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:15.551" lastUpdatedStamp="2017-12-12 22:27:15.552" lastUpdatedTxStamp="2017-12-12 22:27:15.526" createdStamp="2017-12-12 22:27:15.552" createdTxStamp="2017-12-12 22:27:15.526"/>
+    <ProductCategoryContent productCategoryId="ELTRN-100" contentId="ELTRN-100-ALTEN" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:15.638" lastUpdatedStamp="2017-12-12 22:27:15.639" lastUpdatedTxStamp="2017-12-12 22:27:15.596" createdStamp="2017-12-12 22:27:15.639" createdTxStamp="2017-12-12 22:27:15.596"/>
+    <ProductCategoryContent productCategoryId="EL-PHN-101" contentId="EL-PHN-101-ALTEN" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:15.934" lastUpdatedStamp="2017-12-12 22:27:15.934" lastUpdatedTxStamp="2017-12-12 22:27:15.904" createdStamp="2017-12-12 22:27:15.934" createdTxStamp="2017-12-12 22:27:15.904"/>
+    <ProductCategoryContent productCategoryId="EL-MP3-101" contentId="EL-MP3-101-ALTEN" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:15.885" lastUpdatedStamp="2017-12-12 22:27:15.886" lastUpdatedTxStamp="2017-12-12 22:27:15.858" createdStamp="2017-12-12 22:27:15.886" createdTxStamp="2017-12-12 22:27:15.858"/>
+    <ProductCategoryContent productCategoryId="PC-101" contentId="PC-101-ALTEN" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:15.674" lastUpdatedStamp="2017-12-12 22:27:15.674" lastUpdatedTxStamp="2017-12-12 22:27:15.646" createdStamp="2017-12-12 22:27:15.674" createdTxStamp="2017-12-12 22:27:15.646"/>
+    <ProductCategoryContent productCategoryId="PC-AC-101" contentId="PC-AC-101-ALTEN" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:15.847" lastUpdatedStamp="2017-12-12 22:27:15.847" lastUpdatedTxStamp="2017-12-12 22:27:15.814" createdStamp="2017-12-12 22:27:15.847" createdTxStamp="2017-12-12 22:27:15.814"/>
+    <ProductCategoryContent productCategoryId="PC-PR-101" contentId="PC-PR-101-ALTEN" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:15.392" lastUpdatedStamp="2017-12-12 22:27:15.393" lastUpdatedTxStamp="2017-12-12 22:27:15.031" createdStamp="2017-12-12 22:27:15.393" createdTxStamp="2017-12-12 22:27:15.031"/>
+    <ProductCategoryContent productCategoryId="PC-SW-101" contentId="PC-SW-101-ALTEN" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:15.805" lastUpdatedStamp="2017-12-12 22:27:15.805" lastUpdatedTxStamp="2017-12-12 22:27:15.77" createdStamp="2017-12-12 22:27:15.805" createdTxStamp="2017-12-12 22:27:15.77"/>
+    <ProductCategoryContent productCategoryId="PC-SYS-101" contentId="PC-SYS-101-ALTEN" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:15.737" lastUpdatedStamp="2017-12-12 22:27:15.737" lastUpdatedTxStamp="2017-12-12 22:27:15.686" createdStamp="2017-12-12 22:27:15.737" createdTxStamp="2017-12-12 22:27:15.686"/>
+    <ProductCategoryContent productCategoryId="SUBS-100" contentId="SUBS-100-ALTEN" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:16.221" lastUpdatedStamp="2017-12-12 22:27:16.223" lastUpdatedTxStamp="2017-12-12 22:27:16.197" createdStamp="2017-12-12 22:27:16.223" createdTxStamp="2017-12-12 22:27:16.197"/>
+    <ProductCategoryContent productCategoryId="FIN-100" contentId="FIN-100-ALTEN" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:16.249" lastUpdatedStamp="2017-12-12 22:27:16.252" lastUpdatedTxStamp="2017-12-12 22:27:16.23" createdStamp="2017-12-12 22:27:16.252" createdTxStamp="2017-12-12 22:27:16.23"/>
+    <ProductCategoryContent productCategoryId="FOOD-100" contentId="FOOD-100-ALTEN" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:16.279" lastUpdatedStamp="2017-12-12 22:27:16.281" lastUpdatedTxStamp="2017-12-12 22:27:16.259" createdStamp="2017-12-12 22:27:16.281" createdTxStamp="2017-12-12 22:27:16.259"/>
+    <ProductCategoryContent productCategoryId="SERV-100" contentId="SERV-100-ALTEN" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:16.311" lastUpdatedStamp="2017-12-12 22:27:16.312" lastUpdatedTxStamp="2017-12-12 22:27:16.287" createdStamp="2017-12-12 22:27:16.312" createdTxStamp="2017-12-12 22:27:16.287"/>
+    <ProductCategoryContent productCategoryId="DROP-100" contentId="DROP-100-ALTEN" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:16.483" lastUpdatedStamp="2017-12-12 22:27:16.484" lastUpdatedTxStamp="2017-12-12 22:27:16.45" createdStamp="2017-12-12 22:27:16.484" createdTxStamp="2017-12-12 22:27:16.45"/>
+    <ProductCategoryContent productCategoryId="MEDIA-100" contentId="MEDIA-100-ALTEN" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:15.971" lastUpdatedStamp="2017-12-12 22:27:15.971" lastUpdatedTxStamp="2017-12-12 22:27:15.944" createdStamp="2017-12-12 22:27:15.971" createdTxStamp="2017-12-12 22:27:15.944"/>
+    <ProductCategoryContent productCategoryId="MUSIC-101" contentId="MUSIC-101-ALTEN" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:16.016" lastUpdatedStamp="2017-12-12 22:27:16.016" lastUpdatedTxStamp="2017-12-12 22:27:15.981" createdStamp="2017-12-12 22:27:16.016" createdTxStamp="2017-12-12 22:27:15.981"/>
+    <ProductCategoryContent productCategoryId="MU-DL-101" contentId="MU-DL-101-ALTEN" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:16.097" lastUpdatedStamp="2017-12-12 22:27:16.098" lastUpdatedTxStamp="2017-12-12 22:27:16.068" createdStamp="2017-12-12 22:27:16.098" createdTxStamp="2017-12-12 22:27:16.068"/>
+    <ProductCategoryContent productCategoryId="MU-CD-101" contentId="MU-CD-101-ALTEN" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:16.056" lastUpdatedStamp="2017-12-12 22:27:16.057" lastUpdatedTxStamp="2017-12-12 22:27:16.026" createdStamp="2017-12-12 22:27:16.057" createdTxStamp="2017-12-12 22:27:16.026"/>
+    <ProductCategoryContent productCategoryId="TRVL-100" contentId="TRVL-100-ALTEN" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:16.14" lastUpdatedStamp="2017-12-12 22:27:16.142" lastUpdatedTxStamp="2017-12-12 22:27:16.114" createdStamp="2017-12-12 22:27:16.142" createdTxStamp="2017-12-12 22:27:16.114"/>
+    <ProductCategoryContent productCategoryId="AUTO-100" contentId="AUTO-100-ALTEN" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:16.186" lastUpdatedStamp="2017-12-12 22:27:16.187" lastUpdatedTxStamp="2017-12-12 22:27:16.153" createdStamp="2017-12-12 22:27:16.187" createdTxStamp="2017-12-12 22:27:16.153"/>
+    <ProductCategoryContent productCategoryId="GFTC-100" contentId="GFTC-100-ALTEN" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:16.346" lastUpdatedStamp="2017-12-12 22:27:16.348" lastUpdatedTxStamp="2017-12-12 22:27:16.321" createdStamp="2017-12-12 22:27:16.348" createdTxStamp="2017-12-12 22:27:16.321"/>
+    <ProductCategoryContent productCategoryId="GC-PR-101" contentId="GC-PR-101-ALTEN" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:16.374" lastUpdatedStamp="2017-12-12 22:27:16.379" lastUpdatedTxStamp="2017-12-12 22:27:16.354" createdStamp="2017-12-12 22:27:16.379" createdTxStamp="2017-12-12 22:27:16.354"/>
+    <ProductCategoryContent productCategoryId="GC-RL-101" contentId="GC-RL-101-ALTEN" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:16.415" lastUpdatedStamp="2017-12-12 22:27:16.415" lastUpdatedTxStamp="2017-12-12 22:27:16.384" createdStamp="2017-12-12 22:27:16.415" createdTxStamp="2017-12-12 22:27:16.384"/>
+    <ProductCategoryContent productCategoryId="PROMOTIONS" contentId="PROMOTIONS-ALTEN" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:16.519" lastUpdatedStamp="2017-12-12 22:27:16.519" lastUpdatedTxStamp="2017-12-12 22:27:16.491" createdStamp="2017-12-12 22:27:16.519" createdTxStamp="2017-12-12 22:27:16.491"/>
+    <ProductCategoryContent productCategoryId="CATALOG1_BEST_SELL" contentId="CAT1_BEST_SELL-ALTEN" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:16.672" lastUpdatedStamp="2017-12-12 22:27:16.672" lastUpdatedTxStamp="2017-12-12 22:27:16.634" createdStamp="2017-12-12 22:27:16.672" createdTxStamp="2017-12-12 22:27:16.634"/>
+    <ProductCategoryContent productCategoryId="BEST-SELL-1" contentId="BEST-SELL-1-ALT" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:17.163" lastUpdatedStamp="2017-12-12 22:27:17.165" lastUpdatedTxStamp="2017-12-12 22:27:17.153" createdStamp="2017-12-12 22:27:17.165" createdTxStamp="2017-12-12 22:27:17.153"/>
+    <ProductCategoryContent productCategoryId="BEST-SELL-2" contentId="BEST-SELL-2-ALT" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:17.196" lastUpdatedStamp="2017-12-12 22:27:17.196" lastUpdatedTxStamp="2017-12-12 22:27:17.177" createdStamp="2017-12-12 22:27:17.196" createdTxStamp="2017-12-12 22:27:17.177"/>
+    <ProductCategoryContent productCategoryId="CATALOG1_SEARCH" contentId="CAT1_SEARCH-ALTEN" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:16.548" lastUpdatedStamp="2017-12-12 22:27:16.549" lastUpdatedTxStamp="2017-12-12 22:27:16.527" createdStamp="2017-12-12 22:27:16.549" createdTxStamp="2017-12-12 22:27:16.527"/>
+    <ProductCategoryContent productCategoryId="CATALOG1_QUICKADD1" contentId="CAT1_QUICKADD1-ALTEN" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:16.584" lastUpdatedStamp="2017-12-12 22:27:16.586" lastUpdatedTxStamp="2017-12-12 22:27:16.565" createdStamp="2017-12-12 22:27:16.586" createdTxStamp="2017-12-12 22:27:16.565"/>
+    <ProductCategoryContent productCategoryId="CATALOG1_QUICKADD2" contentId="CAT1_QUICKADD2-ALTEN" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:16.618" lastUpdatedStamp="2017-12-12 22:27:16.619" lastUpdatedTxStamp="2017-12-12 22:27:16.595" createdStamp="2017-12-12 22:27:16.619" createdTxStamp="2017-12-12 22:27:16.595"/>
+    <ProductCategoryContent productCategoryId="TSTLTDADMIN" contentId="TSTLTDADMIN-ALT" prodCatContentTypeId="ALTERNATIVE_URL" fromDate="2017-12-12 22:27:16.697" lastUpdatedStamp="2017-12-12 22:27:16.698" lastUpdatedTxStamp="2017-12-12 22:27:16.686" createdStamp="2017-12-12 22:27:16.698" createdTxStamp="2017-12-12 22:27:16.686"/>
+
 </entity-engine-xml>

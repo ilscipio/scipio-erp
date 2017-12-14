@@ -28,10 +28,18 @@ under the License.
         <description>Imports transactions entries in Datev format from a csv</description>
         <permission-service service-name="acctgTransactionPermissionCheck" main-action="CREATE"/>
         <attribute mode="IN" name="organizationPartyId" type="String" optional="false"/>
+        
+        <attribute mode="IN" name="charset" type="String" optional="true" />
+        <attribute mode="IN" name="delimiter" type="String" optional="true" />
+        <attribute mode="IN" name="quote" type="String" optional="true" />
+        <attribute mode="IN" name="hasMetaHeader" type="Boolean" optional="true" default-value="true"/>
+        <attribute mode="IN" name="hasHeader" type="Boolean" optional="true" default-value="true" />
+        
         <attribute mode="IN" name="uploadedFile" type="java.nio.ByteBuffer" optional="false" />
         <attribute mode="IN" name="_uploadedFile_size" type="String" optional="false"/>
         <attribute mode="IN" name="_uploadedFile_fileName" type="String" optional="false"/>
         <attribute mode="IN" name="_uploadedFile_contentType" type="String" optional="false"/>
+        <attribute mode="OUT" name="messages" type="List" optional="true" />
         <attribute mode="OUT" name="transactionEntriesImported" type="List" optional="false" />
     </service>
     <service name="exportDatevTransactionEntries" engine="java"

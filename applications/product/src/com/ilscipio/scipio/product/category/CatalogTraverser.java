@@ -3,6 +3,7 @@ package com.ilscipio.scipio.product.category;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -96,6 +97,14 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
         
         public TraversalConfig setUseCache(boolean useCache) {
             this.useCache = useCache;
+            return this;
+        }
+        
+        public TraversalConfig setDoTypes(Collection<String> types) {
+            if (types == null) types = Collections.emptyList();
+            boolean doAll = types.contains("all");
+            this.doProduct = doAll || types.contains("product");
+            this.doCategory = doAll || types.contains("category");
             return this;
         }
         
@@ -556,11 +565,12 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
      */
     protected void traverseCategoriesDepthFirstImpl(List<GenericValue> categoryAssocList, CategoryRefType.Resolver categoryAssocResolver, TraversalState state) throws GeneralException {
         for (GenericValue categoryAssoc : categoryAssocList) {
+            String productCategoryId = categoryAssoc.getString("productCategoryId");
             // duplicate category traversal and/or visit prevention, if enabled
             boolean categorySeen = false;
             if (travConfig.isPreventDupCategoryAny()) {
                 // NOTE: productCategoryId is practically always this field name no matter the entity
-                categorySeen = checkUpdateCategoryDuplicates(categoryAssoc.getString("productCategoryId"));
+                categorySeen = this.seenCategoryIds.contains(productCategoryId);
             }
 
             if ((travConfig.isPreventDupCategoryTraversal() && categorySeen) || !isApplicableCategoryAssoc(categoryAssoc)) {
@@ -576,6 +586,9 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
             // visit category itself (before recursive call)
             if (isDoCategory(productCategory) && !(travConfig.isPreventDupCategoryVisit() && categorySeen)) {
                 visitor.visitCategory(productCategory, state);
+                if (travConfig.isPreventDupCategoryAny()) {
+                    this.seenCategoryIds.add(productCategoryId);
+                }
             }
             
             // push category
@@ -597,39 +610,44 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
         }
     }
     
-    /**
-     * Returns true if ID already seen, false if not; updates at same time.
-     */
-    protected boolean checkUpdateCategoryDuplicates(String productCategoryId) {
-        if (this.seenCategoryIds.contains(productCategoryId)) {
-            return true;
-        } else {
-            this.seenCategoryIds.add(productCategoryId);
-            return false;
-        }
+    protected void registerSeenCategoryIds(Collection<String> categoryIds) {
+        if (this.seenCategoryIds == null) return;
+        this.seenCategoryIds.addAll(categoryIds);
     }
     
-    /**
-     * Returns true if ID already seen, false if not; updates at same time.
-     */
-    protected boolean checkUpdateProductDuplicates(String productId) {
-        if (this.seenProductIds.contains(productId)) {
-            return true;
-        } else {
-            this.seenProductIds.add(productId);
-            return false;
-        }
+    protected void registerSeenCategoryId(String categoryId) {
+        if (this.seenCategoryIds == null) return;
+        this.seenCategoryIds.add(categoryId);
+    }
+
+    protected Set<String> getSeenCategoryIds() {
+        return seenCategoryIds;
     }
     
+    protected void registerSeenProductIds(Collection<String> productIds) {
+        if (this.seenProductIds == null) return;
+        this.seenProductIds.addAll(productIds);
+    }
+    
+    protected void registerSeenProductId(String productId) {
+        if (this.seenProductIds == null) return;
+        this.seenProductIds.add(productId);
+    }
+
+    protected Set<String> getSeenProductIds() {
+        return seenProductIds;
+    }
+
     protected void queryAndVisitCategoryProducts(GenericValue productCategory, TraversalState state) throws GeneralException {
         // products
         if (isDoProducts(productCategory)) {
             List<GenericValue> productCategoryMembers = queryCategoryProductList(productCategory);
             if (UtilValidate.isNotEmpty(productCategoryMembers)) {
                 for (GenericValue productCategoryMember : productCategoryMembers) {
+                    String productId = productCategoryMember.getString("productId");
                     // duplicate product visit prevention, if enabled
                     if (travConfig.isPreventDupProductVisit()) {
-                        if (checkUpdateProductDuplicates(productCategoryMember.getString("productId"))) {
+                        if (this.seenProductIds.contains(productId)) {
                             continue;
                         }
                     }
@@ -637,6 +655,10 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
                     GenericValue product = productCategoryMember.getRelatedOne("Product", isUseCache());
                     // product is always one level down
                     visitor.visitProduct(product, state);
+                    
+                    if (travConfig.isPreventDupProductVisit()) {
+                        this.seenProductIds.add(productId);
+                    }
                 }
             }
         }

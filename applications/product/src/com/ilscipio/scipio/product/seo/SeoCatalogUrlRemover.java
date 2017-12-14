@@ -21,18 +21,18 @@ import org.ofbiz.service.ServiceUtil;
  * <li>generateProductAlternativeUrlsCore</li>
  * </ul>
  */
-public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
+public class SeoCatalogUrlRemover extends SeoCatalogTraverser {
 
-    public static final String module = SeoCatalogUrlGenerator.class.getName();
+    public static final String module = SeoCatalogUrlRemover.class.getName();
     
     static final String logPrefix = "Seo: Alt URLs: ";
     
-    public SeoCatalogUrlGenerator(Delegator delegator, LocalDispatcher dispatcher, GenTraversalConfig travConfig) throws GeneralException {
+    public SeoCatalogUrlRemover(Delegator delegator, LocalDispatcher dispatcher, RemoveTraversalConfig travConfig) throws GeneralException {
         super(delegator, dispatcher, travConfig);
         this.reset();
     }
 
-    public static class GenTraversalConfig extends SeoTraversalConfig {
+    public static class RemoveTraversalConfig extends SeoTraversalConfig {
         protected Map<String, ?> servCtxOpts = new HashMap<>();
         protected boolean doChildProducts = true;
         private boolean includeVariant = true;
@@ -50,7 +50,7 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
             return servCtxOpts;
         }
 
-        public GenTraversalConfig setServCtxOpts(Map<String, ?> servCtxOpts) {
+        public RemoveTraversalConfig setServCtxOpts(Map<String, ?> servCtxOpts) {
             this.servCtxOpts = servCtxOpts;
             return this;
         }
@@ -59,7 +59,7 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
             return doChildProducts;
         }
 
-        public GenTraversalConfig setDoChildProducts(boolean doChildProducts) {
+        public RemoveTraversalConfig setDoChildProducts(boolean doChildProducts) {
             this.doChildProducts = doChildProducts;
             return this;
         }
@@ -68,7 +68,7 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
             return includeVariant;
         }
 
-        public GenTraversalConfig setIncludeVariant(boolean includeVariant) {
+        public RemoveTraversalConfig setIncludeVariant(boolean includeVariant) {
             this.includeVariant = includeVariant;
             return this;
         }
@@ -77,7 +77,7 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
             return generateFixedIds;
         }
 
-        public GenTraversalConfig setGenerateFixedIds(boolean generateFixedIds) {
+        public RemoveTraversalConfig setGenerateFixedIds(boolean generateFixedIds) {
             this.generateFixedIds = generateFixedIds;
             return this;
         }
@@ -86,7 +86,7 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
             return prodFixedIdPat;
         }
 
-        public GenTraversalConfig setProdFixedIdPat(String prodFixedIdPat) {
+        public RemoveTraversalConfig setProdFixedIdPat(String prodFixedIdPat) {
             this.prodFixedIdPat = prodFixedIdPat;
             return this;
         }
@@ -95,20 +95,20 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
             return catFixedIdPat;
         }
 
-        public GenTraversalConfig setCatFixedIdPat(String catFixedIdPat) {
+        public RemoveTraversalConfig setCatFixedIdPat(String catFixedIdPat) {
             this.catFixedIdPat = catFixedIdPat;
             return this;
         }
     }
     
     @Override
-    public GenTraversalConfig newTravConfig() {
-        return new GenTraversalConfig();
+    public RemoveTraversalConfig newTravConfig() {
+        return new RemoveTraversalConfig();
     }
 
     @Override
-    public GenTraversalConfig getTravConfig() {
-        return (GenTraversalConfig) travConfig;
+    public RemoveTraversalConfig getTravConfig() {
+        return (RemoveTraversalConfig) travConfig;
     }
     
     
@@ -120,25 +120,23 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
     @Override
     public void visitCategory(GenericValue productCategory, TraversalState state)
             throws GeneralException {
-        generateCategoryAltUrls(productCategory);
+        removeCategoryAltUrls(productCategory);
     }
 
     @Override
     public void visitProduct(GenericValue product, TraversalState state)
             throws GeneralException {
-        generateProductAltUrls(product);
+        removeProductAltUrls(product);
     }
 
-    public void generateCategoryAltUrls(GenericValue productCategory) throws GeneralException {
+    public void removeCategoryAltUrls(GenericValue productCategory) throws GeneralException {
         Map<String, ?> servCtxOpts = getTravConfig().getServCtxOpts();
         String productCategoryId = productCategory.getString("productCategoryId");
-        Map<String, Object> servCtx = getDispatcher().getDispatchContext().makeValidContext("generateProductCategoryAlternativeUrlsCore", ModelService.IN_PARAM, servCtxOpts);
+        Map<String, Object> servCtx = getDispatcher().getDispatchContext().makeValidContext("removeProductCategoryAlternativeUrlsCore", ModelService.IN_PARAM, servCtxOpts);
         servCtx.put("productCategory", productCategory);
         servCtx.put("productCategoryId", productCategoryId);
-        servCtx.put("genFixedIds", getTravConfig().isGenerateFixedIds());
-        servCtx.put("fixedIdPat", getTravConfig().getCatFixedIdPat());
         // service call for separate transaction
-        Map<String, Object> recordResult = getDispatcher().runSync("generateProductCategoryAlternativeUrlsCore", servCtx, -1, true);
+        Map<String, Object> recordResult = getDispatcher().runSync("removeProductCategoryAlternativeUrlsCore", servCtx, -1, true);
         
         if (ServiceUtil.isSuccess(recordResult)) {
             if (Boolean.TRUE.equals(recordResult.get("categoryUpdated"))) {
@@ -148,13 +146,13 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
             }
         } else {
             // caller already logs
-            //Debug.logError(getLogMsgPrefix()+"Error generating alternative links for category '" 
+            //Debug.logError(getLogMsgPrefix()+"Error removing alternative links for category '" 
             //        + productCategoryId + "': " + ServiceUtil.getErrorMessage(recordResult), module);
             getStats().categoryError++;
         }
     }
     
-    public void generateProductAltUrls(GenericValue product) throws GeneralException {
+    public void removeProductAltUrls(GenericValue product) throws GeneralException {
         Map<String, ?> servCtxOpts = getTravConfig().getServCtxOpts();
 
         // NOTE: must check product itself here because generateProductAlternativeUrlsCore will only do it for its children
@@ -165,16 +163,14 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
         
         String productId = product.getString("productId");
         
-        Map<String, Object> servCtx = getDispatcher().getDispatchContext().makeValidContext("generateProductAlternativeUrlsCore", ModelService.IN_PARAM, servCtxOpts);
+        Map<String, Object> servCtx = getDispatcher().getDispatchContext().makeValidContext("removeProductAlternativeUrlsCore", ModelService.IN_PARAM, servCtxOpts);
         servCtx.put("product", product);
         servCtx.put("productId", productId);
         servCtx.put("doChildProducts", getTravConfig().isDoChildProducts());
         servCtx.put("includeVariant", includeVariant);
-        servCtx.put("genFixedIds", getTravConfig().isGenerateFixedIds());
-        servCtx.put("fixedIdPat", getTravConfig().getProdFixedIdPat());
         servCtx.put("skipProductIds", getSeenProductIds());
         // service call for separate transaction
-        Map<String, Object> recordResult = getDispatcher().runSync("generateProductAlternativeUrlsCore", servCtx, -1, true);
+        Map<String, Object> recordResult = getDispatcher().runSync("removeProductAlternativeUrlsCore", servCtx, -1, true);
 
         Integer numUpdated = (Integer) recordResult.get("numUpdated");
         Integer numSkipped = (Integer) recordResult.get("numSkipped");
@@ -187,7 +183,7 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
             if (numError != null) getStats().productError += numError;
             else getStats().productError++; // couldn't return count
             // caller already logs
-            //Debug.logError(getLogMsgPrefix()+"Error generating alternative links for product '" 
+            //Debug.logError(getLogMsgPrefix()+"Error removing alternative links for product '" 
             //        + productId + "': " + ServiceUtil.getErrorMessage(recordResult), module);
         }
         Collection<String> visitedProductIds = UtilGenerics.checkCollection(recordResult.get("visitedProductIds"));

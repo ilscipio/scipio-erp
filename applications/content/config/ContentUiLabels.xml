@@ -7642,6 +7642,10 @@
         <value xml:lang="zh">生成缺失的搜索引擎优化的网址</value>
         <value xml:lang="zh_TW">產生缺失的搜尋引擎優化的網址</value>
     </property>
+    <property key="PageTitleRemoveWebSiteSEO"><!-- SCIPIO: new -->
+        <value xml:lang="en">Remove SEO URLs</value>
+        <value xml:lang="de">SEO-URLs entfernen</value>
+    </property>
     <property key="ContentNewWebSite">
         <value xml:lang="de">Neue Webseite</value>
         <value xml:lang="da">Opret ny Webside</value>
@@ -7729,6 +7733,10 @@
     <property key="ContentGenerateSeoUrlInfo">
         <value xml:lang="en">This automatically generates alternative URLs from product and category names using the SEO configuration specified in SeoConfig.xml (/applications/product/config/SeoConfig.xml).</value>
         <value xml:lang="de">Mit Hilfe dieses Service können die URLs für alle Produkt- und Kategorienamen mithilfe der in SeoConfig.xml (/applications/product/config/SeoConfig.xml) angegebenen SEO-Konfiguration neu generiert werden.</value>
+    </property>
+    <property key="ContentRemoveSeoUrlInfo">
+        <value xml:lang="en">This removes alternative URLs for the website. If you experience errors during generation and have no important data in these records, sometimes removing before generating again can solve issues with old or incompatible data.</value>
+        <value xml:lang="de">Dadurch werden alternative URLs für die Website entfernt. Wenn während der Generierung Fehler auftreten und keine wichtigen Daten in diesen Datensätzen vorhanden sind, können durch das Entfernen vor der erneuten Generierung Probleme mit alten oder inkompatiblen Daten behoben werden.</value>
     </property>
     <property key="ContentGenerateSeoUrlInfoMayChangeUrls">
         <value xml:lang="en">Note: This may change all category/product URLs in the store (turn off "Replace Existing" to generate missing only).</value>

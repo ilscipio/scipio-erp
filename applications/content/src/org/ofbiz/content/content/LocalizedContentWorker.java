@@ -18,6 +18,7 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.PropertyMessage;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -41,6 +42,8 @@ import org.ofbiz.service.ServiceUtil;
 public abstract class LocalizedContentWorker {
 
     public static final String module = LocalizedContentWorker.class.getName();
+    
+    private static final int MAX_ID_FIELD_LENGTH = 20;
     
     protected LocalizedContentWorker() {
     }
@@ -317,13 +320,25 @@ public abstract class LocalizedContentWorker {
     }
     
     public static GenericValue createSimpleTextContent(Delegator delegator, LocalDispatcher dispatcher, String localeString, String textData, 
-            Map<String, Object> contentFields, Map<String, Object> dataResourceFields) throws GenericEntityException {
+            Map<String, Object> contentFields, Map<String, Object> dataResourceFields, String newContentId, String newDataResourceId) throws GenericEntityException {
         // create dataResource
         GenericValue dataResource = delegator.makeValue("DataResource");
         dataResource.put("dataResourceTypeId", "ELECTRONIC_TEXT");
+        // NOTE: dataResource.localeString is probably not necessary, but we should play it safe
+        dataResource.put("localeString", localeString);
         dataResource.setNonPKFields(dataResourceFields);
-        dataResource = delegator.createSetNextSeqId(dataResource);
-        String dataResourceId = dataResource.getString("dataResourceId");
+        String dataResourceId;
+        if (newDataResourceId == null) {
+            newDataResourceId = (String) dataResourceFields.get("dataResourceId"); 
+        }
+        if (newDataResourceId != null) {
+            dataResource.put("dataResourceId", newDataResourceId);
+            dataResource = delegator.create(dataResource);
+            dataResourceId = newDataResourceId;
+        } else {
+            dataResource = delegator.createSetNextSeqId(dataResource);
+            dataResourceId = dataResource.getString("dataResourceId");
+        }
 
         // create electronicText
         GenericValue electronicText = delegator.makeValue("ElectronicText");
@@ -333,26 +348,57 @@ public abstract class LocalizedContentWorker {
 
         // create content
         GenericValue content = delegator.makeValue("Content");
-        if (UtilValidate.isNotEmpty(localeString)) content.put("localeString", localeString);
+        content.put("localeString", localeString);
         content.put("dataResourceId", dataResourceId);
         content.put("contentTypeId", "DOCUMENT");
         content.setNonPKFields(contentFields);
-        content = delegator.createSetNextSeqId(content);
-        
+        if (newContentId == null) {
+            newContentId = (String) contentFields.get("contentId");
+        }
+        if (newContentId != null) {
+            content.put("contentId", newContentId);
+            content = delegator.create(content);
+        } else {
+            content = delegator.createSetNextSeqId(content);
+        }
         return content;
     }
     
+    public static GenericValue createSimpleTextContent(Delegator delegator, LocalDispatcher dispatcher, String localeString, String textData, 
+            Map<String, Object> contentFields, Map<String, Object> dataResourceFields) throws GenericEntityException {
+        return createSimpleTextContent(delegator, dispatcher, localeString, textData, contentFields, dataResourceFields, null, null);
+    }
     
     public static void updateSimpleTextContent(Delegator delegator, LocalDispatcher dispatcher, GenericValue content, String localeString, String textData) throws GenericEntityException {
         updateSimpleTextContent(delegator, dispatcher, content, textData);
-        content.put("localeString", localeString);
-        content.store();
+        if (!sameLocale(localeString, content.getString("localeString"))) {
+            content.put("localeString", localeString);
+            content.store();
+        }
+        GenericValue dataResource = content.getRelatedOne("DataResource", false);
+        if (dataResource != null) {
+            if (!sameLocale(localeString, dataResource.getString("localeString"))) {
+                // NOTE: dataResource.localeString is probably not necessary in most cases, but we should play it safe
+                dataResource.put("localeString", localeString);
+                dataResource.store();
+            }
+        } else {
+            Debug.logError("Schema error: Missing DataResource for contentId '" + content.getString("contentId") + "'; cannot update simple text content", module);
+        }
     }
-    
+
     public static void updateSimpleTextContent(Delegator delegator, LocalDispatcher dispatcher, GenericValue content, String textData) throws GenericEntityException {
         GenericValue elecText = getSimpleTextContentElectronicText(delegator, dispatcher, content);
         elecText.put("textData", textData);
         elecText.store();
+    }
+    
+    private static boolean sameLocale(String first, String second) {
+        if (UtilValidate.isNotEmpty(first)) {
+            return first.equals(second);
+        } else {
+            return UtilValidate.isEmpty(second);
+        }
     }
     
     public static GenericValue getSimpleTextContentElectronicText(Delegator delegator, LocalDispatcher dispatcher, GenericValue content) throws GenericEntityException {
@@ -400,7 +446,8 @@ public abstract class LocalizedContentWorker {
      */
     public static GenericValue replaceLocalizedContent(Delegator delegator, LocalDispatcher dispatcher, Map<String, ?> context,
             GenericValue mainContent, String mainLocaleString, String mainTextData, Map<String, ?> localeEntryMap,
-            boolean removeOldLocales, Timestamp moment, Map<String, Object> newRecordContentFields, Map<String, Object> newRecordDataResourceFields) throws Exception {
+            boolean removeOldLocales, Timestamp moment, Map<String, Object> newRecordContentFields, Map<String, Object> newRecordDataResourceFields,
+            FlexibleStringExpander newIdPat, Map<String, Object> newIdPatCtx) throws Exception {
         // DEV NOTE: to simplify, I am setting removeDupLocales to same as removeOldLocales...
         // as long as removal is understood, there is really no reason to keep duplicates because
         // the prior code was setting them all to the exact same value, so in other words,
@@ -411,7 +458,11 @@ public abstract class LocalizedContentWorker {
 
         // update main content
         if (mainContent == null) {
-            mainContent = createSimpleTextContent(delegator, dispatcher, mainLocaleString, mainTextData, newRecordContentFields, newRecordDataResourceFields);
+            String newId = null;
+            if (newIdPat != null) {
+                newId = expandIdPat(newIdPat, newIdPatCtx, mainLocaleString);
+            }
+            mainContent = createSimpleTextContent(delegator, dispatcher, mainLocaleString, mainTextData, newRecordContentFields, newRecordDataResourceFields, newId, newId);
         } else {
             LocalizedContentWorker.updateSimpleTextContent(delegator, dispatcher, mainContent, mainLocaleString, mainTextData);
         }
@@ -442,7 +493,7 @@ public abstract class LocalizedContentWorker {
             String textData = LocalizedSimpleTextInfo.getLocaleMapTextData(localeEntryMap.get(localeString));
             if (UtilValidate.isNotEmpty(textData)) {
                 if (!removeDupLocales || remainingLocales.contains(localeString)) {
-                    LocalizedContentWorker.updateSimpleTextContent(delegator, dispatcher, content, textData);
+                    LocalizedContentWorker.updateSimpleTextContent(delegator, dispatcher, content, localeString, textData);
                     remainingLocales.remove(localeString);
                 } else {
                     removeContentAndRelated(delegator, dispatcher, context, content);
@@ -463,7 +514,11 @@ public abstract class LocalizedContentWorker {
         for(String localeString : remainingLocales) {
             String textData = LocalizedSimpleTextInfo.getLocaleMapTextData(localeEntryMap.get(localeString));
             if (UtilValidate.isNotEmpty(textData)) {
-                GenericValue content = createSimpleTextContent(delegator, dispatcher, localeString, textData, newRecordContentFields, newRecordDataResourceFields);
+                String newId = null;
+                if (newIdPat != null) {
+                    newId = expandIdPat(newIdPat, newIdPatCtx, localeString);
+                }
+                GenericValue content = createSimpleTextContent(delegator, dispatcher, localeString, textData, newRecordContentFields, newRecordDataResourceFields, newId, newId);
                 GenericValue contentAssoc = delegator.makeValue("ContentAssoc");
                 contentAssoc.put("contentId", mainContent.getString("contentId"));
                 contentAssoc.put("contentIdTo", content.getString("contentId"));
@@ -474,6 +529,20 @@ public abstract class LocalizedContentWorker {
         }
 
         return mainContent;
+    }
+    
+    private static String expandIdPat(FlexibleStringExpander newIdPat, Map<String, Object> newIdPatCtx, String localeString) {
+        newIdPatCtx.put("localeStr", localeString != null ? localeString : "");
+        newIdPatCtx.put("localeStrUp", (localeString != null ? localeString.toUpperCase() : ""));
+        String idTrim = (String) newIdPatCtx.get("id");
+        newIdPatCtx.put("idTrim", idTrim);
+        String res = newIdPat.expandString(newIdPatCtx);
+        if (res.length() > MAX_ID_FIELD_LENGTH) { 
+            // too long, try again (NOTE: if caller used id instead of idTrim, this is redundant for nothing, but performance not a serious concern here)
+            newIdPatCtx.put("idTrim", idTrim.substring(0, idTrim.length() - (res.length() - MAX_ID_FIELD_LENGTH)));
+            res = newIdPat.expandString(newIdPatCtx);
+        }
+        return res;
     }
 
 }

@@ -1,10 +1,11 @@
 package com.ilscipio.scipio.product.seo;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.LocalDispatcher;
@@ -171,6 +172,7 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
         servCtx.put("includeVariant", includeVariant);
         servCtx.put("genFixedIds", getTravConfig().isGenerateFixedIds());
         servCtx.put("fixedIdPat", getTravConfig().getProdFixedIdPat());
+        servCtx.put("skipProductIds", getSeenProductIds());
         // service call for separate transaction
         Map<String, Object> recordResult = getDispatcher().runSync("generateProductAlternativeUrlsCore", servCtx, -1, true);
 
@@ -188,6 +190,8 @@ public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
             //Debug.logError(getLogMsgPrefix()+"Error generating alternative links for product '" 
             //        + productId + "': " + ServiceUtil.getErrorMessage(recordResult), module);
         }
+        Collection<String> visitedProductIds = UtilGenerics.checkCollection(recordResult.get("visitedProductIds"));
+        if (visitedProductIds != null) this.registerSeenProductIds(visitedProductIds);
     }
 
     @Override

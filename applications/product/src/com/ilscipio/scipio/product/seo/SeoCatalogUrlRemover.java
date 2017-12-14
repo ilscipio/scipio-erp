@@ -1,10 +1,11 @@
 package com.ilscipio.scipio.product.seo;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.LocalDispatcher;
@@ -167,6 +168,7 @@ public class SeoCatalogUrlRemover extends SeoCatalogTraverser {
         servCtx.put("productId", productId);
         servCtx.put("doChildProducts", getTravConfig().isDoChildProducts());
         servCtx.put("includeVariant", includeVariant);
+        servCtx.put("skipProductIds", getSeenProductIds());
         // service call for separate transaction
         Map<String, Object> recordResult = getDispatcher().runSync("removeProductAlternativeUrlsCore", servCtx, -1, true);
 
@@ -184,6 +186,8 @@ public class SeoCatalogUrlRemover extends SeoCatalogTraverser {
             //Debug.logError(getLogMsgPrefix()+"Error removing alternative links for product '" 
             //        + productId + "': " + ServiceUtil.getErrorMessage(recordResult), module);
         }
+        Collection<String> visitedProductIds = UtilGenerics.checkCollection(recordResult.get("visitedProductIds"));
+        if (visitedProductIds != null) this.registerSeenProductIds(visitedProductIds);
     }
 
     @Override

@@ -9,9 +9,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -86,6 +88,7 @@ public abstract class SeoCatalogServices {
         final boolean useCache = false; // probably bad idea
         boolean doChildProducts = Boolean.TRUE.equals(context.get("doChildProducts"));
         boolean includeVariant = !Boolean.FALSE.equals(context.get("includeVariant"));
+        Collection<String> skipProductIds = UtilGenerics.checkCollection(context.get("skipProductIds"));
         boolean genFixedIds = Boolean.TRUE.equals(context.get("genFixedIds"));
         String fixedIdPat = (String) context.get("fixedIdPat");
         
@@ -102,7 +105,7 @@ public abstract class SeoCatalogServices {
                 }
             }
             return generateProductAlternativeUrls(dctx, context, product, new ArrayList<GenProdAltUrlParentEntry>(),
-                    replaceExisting, removeOldLocales, moment, doChildProducts, includeVariant, genFixedIds, fixedIdPat, useCache);
+                    replaceExisting, removeOldLocales, moment, skipProductIds, new HashSet<String>(), doChildProducts, includeVariant, genFixedIds, fixedIdPat, useCache);
         } catch (Exception e) {
             String productIdStr = "";
             if (product != null) {
@@ -143,10 +146,23 @@ public abstract class SeoCatalogServices {
     
     static Map<String, Object> generateProductAlternativeUrls(DispatchContext dctx, Map<String, ?> context,
             GenericValue product, List<GenProdAltUrlParentEntry> parentProducts, boolean replaceExisting, boolean removeOldLocales, Timestamp moment, 
-            boolean doChildProducts, boolean includeVariant, boolean genFixedIds, String fixedIdPat, boolean useCache) throws Exception {
+            Collection<String> skipProductIds, Set<String> visitedProductIds, boolean doChildProducts, boolean includeVariant, boolean genFixedIds, String fixedIdPat, boolean useCache) throws Exception {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String productId = product.getString("productId");
+        
+        if (skipProductIds != null && skipProductIds.contains(productId)) {
+            int numUpdated = 0;
+            int numSkipped = 1;
+            int numError = 0;
+            Map<String, Object> result = ServiceUtil.returnSuccess();
+            result.put("numUpdated", numUpdated);
+            result.put("numSkipped", numSkipped);
+            result.put("numError", numError);
+            result.put("visitedProductIds", visitedProductIds);
+            return result;
+        }
+        visitedProductIds.add(productId);
         
         // lookup existing alternative url
         GenericValue productContent = null;
@@ -264,7 +280,7 @@ public abstract class SeoCatalogServices {
                             
                             Map<String, Object> childResult = generateProductAlternativeUrls(dctx, context, 
                                     variantProduct, parentProducts, replaceExisting, removeOldLocales, 
-                                    moment, doChildProducts, includeVariant, genFixedIds, fixedIdPat, useCache);
+                                    moment, skipProductIds, visitedProductIds, doChildProducts, includeVariant, genFixedIds, fixedIdPat, useCache);
                             
                             // NOTE: most of this
                             Integer childrenUpdated = (Integer) childResult.get("numUpdated");
@@ -295,6 +311,7 @@ public abstract class SeoCatalogServices {
         result.put("numUpdated", numUpdated);
         result.put("numSkipped", numSkipped);
         result.put("numError", numError);
+        result.put("visitedProductIds", visitedProductIds);
         return result;
     }
     
@@ -623,6 +640,7 @@ public abstract class SeoCatalogServices {
         Timestamp moment = null; // null = remove everything (TODO?: parameter; probably won't be used much)
         boolean doChildProducts = Boolean.TRUE.equals(context.get("doChildProducts"));
         boolean includeVariant = !Boolean.FALSE.equals(context.get("includeVariant"));
+        Collection<String> skipProductIds = UtilGenerics.checkCollection(context.get("skipProductIds"));
 
         GenericEntity productEntity = (GenericEntity) context.get("product");
         GenericValue product = null;
@@ -636,7 +654,7 @@ public abstract class SeoCatalogServices {
                     return ServiceUtil.returnError("product not found for ID: " + productId);
                 }
             }
-            return removeProductAlternativeUrls(dctx, context, product, moment, doChildProducts, includeVariant);
+            return removeProductAlternativeUrls(dctx, context, product, moment, skipProductIds, new HashSet<String>(), doChildProducts, includeVariant);
         } catch (Exception e) {
             String productIdStr = "";
             if (product != null) {
@@ -654,12 +672,25 @@ public abstract class SeoCatalogServices {
     }
     
     static Map<String, Object> removeProductAlternativeUrls(DispatchContext dctx, Map<String, ?> context,
-            GenericValue product, Timestamp moment, 
+            GenericValue product, Timestamp moment, Collection<String> skipProductIds, Set<String> visitedProductIds,
             boolean doChildProducts, boolean includeVariant) throws Exception {
         final boolean useCache = false;
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String productId = product.getString("productId");
+        
+        if (skipProductIds != null && skipProductIds.contains(productId)) {
+            int numUpdated = 0;
+            int numSkipped = 1;
+            int numError = 0;
+            Map<String, Object> result = ServiceUtil.returnSuccess();
+            result.put("numUpdated", numUpdated);
+            result.put("numSkipped", numSkipped);
+            result.put("numError", numError);
+            result.put("visitedProductIds", visitedProductIds);
+            return result;
+        }
+        visitedProductIds.add(productId);
         
         // lookup existing alternative url
         List<GenericValue> altUrlContentList = EntityQuery.use(delegator).from("ProductContent")
@@ -691,7 +722,7 @@ public abstract class SeoCatalogServices {
                         GenericValue variantProduct = variantAssoc.getRelatedOne("AssocProduct", useCache);
                         
                         Map<String, Object> childResult = removeProductAlternativeUrls(dctx, context, 
-                                variantProduct, moment, doChildProducts, includeVariant);
+                                variantProduct, moment, skipProductIds, visitedProductIds, doChildProducts, includeVariant);
                         
                         // NOTE: most of this
                         Integer childrenUpdated = (Integer) childResult.get("numUpdated");
@@ -718,6 +749,7 @@ public abstract class SeoCatalogServices {
         result.put("numUpdated", numUpdated);
         result.put("numSkipped", numSkipped);
         result.put("numError", numError);
+        result.put("visitedProductIds", visitedProductIds);
         return result;
     }
     

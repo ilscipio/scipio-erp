@@ -2238,6 +2238,7 @@ under the License.
         <attribute name="includeVariant" mode="IN" type="Boolean" optional="true" default-value="true">
             <description>Does NOT apply self, only consulted if doChildProducts true (need mostly for consistency with callers)</description>
         </attribute>
+        <attribute name="skipProductIds" mode="IN" type="Collection" optional="true"/>
         <attribute name="replaceExisting" type="Boolean" mode="IN" optional="true" default-value="true"/>
         <attribute name="removeOldLocales" type="Boolean" mode="IN" optional="true" default-value="true"/>
         <attribute name="genFixedIds" type="Boolean" mode="IN" optional="true" default-value="false">
@@ -2248,6 +2249,7 @@ under the License.
         <attribute name="numUpdated" mode="OUT" type="Integer" optional="true"/>
         <attribute name="numSkipped" mode="OUT" type="Integer" optional="true"/>
         <attribute name="numError" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="visitedProductIds" mode="OUT" type="Set" optional="true"/>
     </service>
     <service name="generateProductAlternativeUrls" engine="java" auth="true"
         location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="generateProductAlternativeUrls">
@@ -2362,9 +2364,11 @@ under the License.
         <attribute name="includeVariant" mode="IN" type="Boolean" optional="true" default-value="true">
             <description>Does NOT apply self, only consulted if doChildProducts true (need mostly for consistency with callers)</description>
         </attribute>
+        <attribute name="skipProductIds" mode="IN" type="Collection" optional="true"/>
         <attribute name="numUpdated" mode="OUT" type="Integer" optional="true"/>
         <attribute name="numSkipped" mode="OUT" type="Integer" optional="true"/>
         <attribute name="numError" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="visitedProductIds" mode="OUT" type="Set" optional="true"/>
     </service>
     <service name="removeProductAlternativeUrls" engine="java" auth="true"
         location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="removeProductAlternativeUrls">

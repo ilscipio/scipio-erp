@@ -1,32 +1,38 @@
 package com.ilscipio.scipio.accounting.datev;
 
-public class DatevException extends Exception {
+import java.util.List;
 
+import com.ilscipio.scipio.accounting.datev.DatevNotificationMessage.NotificationMessageType;
+
+public class DatevException extends Exception {
     private static final long serialVersionUID = -5965872197826715315L;
 
-    final DATEV_ERROR_TYPE type;
+    private final DatevNotificationMessage datevNotificationMessage;
 
-    public enum DATEV_ERROR_TYPE {
-        FATAL, WARNING, SKIPPABLE
+    public boolean isFatal() {
+        if (datevNotificationMessage.getType().equals(NotificationMessageType.FATAL)) {
+            return true;
+        }
+        return false;
     }
 
-    public DatevException(DATEV_ERROR_TYPE type, String message) {
-        super(message);
-        this.type = type;
+    public DatevException(DatevNotificationMessage notificationMessage) {
+        super(notificationMessage.getNotificationMessage());
+        this.datevNotificationMessage = notificationMessage;
     }
 
-    public DatevException(DATEV_ERROR_TYPE type, Throwable t) {
+    public DatevException(DatevNotificationMessage notificationMessage, Throwable t) {
         super(t);
-        this.type = type;
+        this.datevNotificationMessage = notificationMessage;
     }
 
-    public DatevException(DATEV_ERROR_TYPE type, String message, Throwable t) {
+    public DatevException(DatevNotificationMessage notificationMessage, String message, Throwable t) {
         super(message, t);
-        this.type = type;
+        this.datevNotificationMessage = notificationMessage;
     }
 
-    public DATEV_ERROR_TYPE getDatevErrorType() {
-        return type;
+    public DatevNotificationMessage getNotificationMessage() {
+        return datevNotificationMessage;
     }
 
 }

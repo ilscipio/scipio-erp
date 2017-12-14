@@ -3,6 +3,7 @@ package com.ilscipio.scipio.product.category;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -96,6 +98,14 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
         
         public TraversalConfig setUseCache(boolean useCache) {
             this.useCache = useCache;
+            return this;
+        }
+        
+        public TraversalConfig setDoTypes(Collection<String> types) {
+            if (types == null) types = Collections.emptyList();
+            boolean doAll = types.contains("all");
+            this.doProduct = doAll || types.contains("product");
+            this.doCategory = doAll || types.contains("category");
             return this;
         }
         

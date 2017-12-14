@@ -311,4 +311,29 @@ under the License.
         <field name="webSiteId"><hidden/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
+    
+    <!-- SCIPIO: new -->
+    <form name="RemoveWebsiteSEO" type="single" target="removeSeoUrlForWebsite" title=""
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        <field name="webSiteId"><hidden/></field>
+        <field name="prodCatalogId" title="${uiLabelMap.Catalog}">
+            <drop-down>
+                <option key="all" description="All"/>
+                <entity-options description="${prodCatalogId}" entity-name="ProductStoreCatalog">
+                    <entity-constraint name="productStoreId" value="${webSite.productStoreId}"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="targetTypes" title="${uiLabelMap.CommonType}">
+            <check all-checked="true"><!-- SCIPIO: changed to true because only have two basic all-checked="false" -->
+                <option key="category" description="Category"/>
+                <option key="product" description="Product"/>
+                <!--<option key="content" description="Content"/> SCIPIO: TODO?: future -->
+            </check>
+        </field>
+        <field name="includeVariant" title="${uiLabelMap.ContentIncludeVariantProducts}">
+            <check key="true" alt-key="false" all-checked="true"/>
+        </field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
+    </form>
 </forms>

@@ -369,6 +369,11 @@ under the License.
                             <label style="common-msg-info" text="${uiLabelMap.ContentGenerateSeoUrlInfo} ${uiLabelMap.ContentGenerateSeoUrlInfoMayChangeUrls}"/>
                             <include-form name="CreateWebsiteSEO" location="component://content/widget/website/WebSiteForms.xml"/>
                         </screenlet>
+                        <!-- SCIPIO: new: remove SEO alt URLs, needed to rebuild when above fails -->
+                        <screenlet title="${uiLabelMap.PageTitleRemoveWebSiteSEO}">
+                            <label style="common-msg-info" text="${uiLabelMap.ContentRemoveSeoUrlInfo}"/>
+                            <include-form name="RemoveWebsiteSEO" location="component://content/widget/website/WebSiteForms.xml"/>
+                        </screenlet>
                         <!-- SCIPIO: new: sitemap generation -->
                         <screenlet title="${uiLabelMap.ContentGenerateSitemaps}">
                             <label style="common-msg-info" text="${uiLabelMap.ContentGenerateSitemapsInfo}"/>

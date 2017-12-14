@@ -175,6 +175,7 @@ public abstract class CategoryWorker {
     }
     
     public static void extractAllProductCategoryFromTreeItems(List<? extends Map<String, Object>> treeItems, List<GenericValue> outList) {
+        if (treeItems == null) return;
         for(Map<String, Object> item : treeItems) {
             String type = (String) item.get("type");
             if ("category".equals(type)) {

@@ -27,6 +27,7 @@ import com.ilscipio.scipio.accounting.datev.DatevNotificationMessage.Notificatio
 import com.ilscipio.scipio.common.util.TikaUtil;
 
 import javolution.util.FastList;
+import javolution.util.FastMap;
 
 public class DatevServices {
 
@@ -54,7 +55,7 @@ public class DatevServices {
         String fileSize = (String) context.get("_uploadedFile_size");
         String fileName = (String) context.get("_uploadedFile_fileName");
         String contentType = (String) context.get("_uploadedFile_contentType");
-        
+
         BufferedReader csvReader = null;
 
         Character delimiter = DEFAULT_DELIMITER;
@@ -69,12 +70,12 @@ public class DatevServices {
         if (Debug.isOn(Debug.VERBOSE)) {
             Debug.log("Content Type :" + contentType);
             Debug.log("File Name    :" + fileName);
-            Debug.log("File Size    :" + String.valueOf(fileSize));
+            Debug.log("File Size    :" + fileSize);
         }
         try {
             double fileSizeConverted = UtilMisc.toDouble(fileSize);
             if (fileSizeConverted <= 0 && !fileBytes.hasRemaining()) {
-                return ServiceUtil.returnError("Uploaded CSV file is empty");
+                throw new DatevException(new DatevNotificationMessage(NotificationMessageType.FATAL, "Uploaded CSV file is empty"));
             }
 
             // Find media type
@@ -107,33 +108,37 @@ public class DatevServices {
             }
             fileBytes.rewind();
 
-            // Parse CSV
+            // Initialize CSV format
             fileBytes.rewind();
             csvReader = new BufferedReader(new StringReader(detectedCharset.decode(fileBytes).toString()));
             CSVFormat fmt = CSVFormat.newFormat(delimiter).withQuote(quote).withQuoteMode(QuoteMode.NON_NUMERIC);
 
             // Initialize helper
             DatevHelper datevHelper = null;
-            try {
-                datevHelper = new DatevHelper(delegator, notificationMessages);
-            } catch (DatevException e) {
-                String notificationMessage = "Internal error. Cannot initialize helper";
-                notificationMessages.add(new DatevNotificationMessage(NotificationMessageType.FATAL, notificationMessage));
-                Debug.logError(notificationMessage, module);
-            }
+            datevHelper = new DatevHelper(delegator, orgPartyId, notificationMessages);
 
-            // Find out if CSV has a meta header so we can discard it
+            // Find out if CSV has a meta header so we can remove it and loop
+            // only real records
+            if (csvReader.markSupported())
+                csvReader.mark(fileBytes.limit());
             String metaHeader = csvReader.readLine();
             try {
                 Iterator<String> metaHeaderIter = CSVParser.parse(metaHeader, fmt).getRecords().get(0).iterator();
                 if (!datevHelper.isMetaHeader(metaHeaderIter)) {
-                    csvReader.reset();
+                    if (csvReader.markSupported()) {
+                        csvReader.reset();
+                    } else {
+                        csvReader.close();
+                        csvReader = new BufferedReader(new StringReader(detectedCharset.decode(fileBytes).toString()));
+                    }
                 }
-            } catch (DatevException e) {
-                notificationMessages.add(e.getNotificationMessage());
-                throw new Exception(e);
+            } catch (Exception e) {
+                notificationMessages.add(new DatevNotificationMessage(NotificationMessageType.IGNORE, "Failed parsing metadata header: " + e.getMessage()));
+                Debug.logWarning(e, module);
             }
 
+            // Find out if CSV has a header so we can remove it and loop only
+            // real records
             String[] datevTransactionsFieldNames = datevHelper.getDatevTransactionFieldNames();
             fmt = fmt.withHeader(datevTransactionsFieldNames);
             if (fmt.getHeader() != null && fmt.getHeader().length > 0) {
@@ -142,29 +147,50 @@ public class DatevServices {
                 notificationMessages.add(new DatevNotificationMessage(NotificationMessageType.WARNING,
                         "Header couldn't be found. CSV file parsed using column position according to DATEV specification."));
             }
+
+            // Parse CSV
             CSVParser parser = fmt.parse(csvReader);
             List<CSVRecord> records = parser.getRecords();
             if (parser.getRecordNumber() <= 0) {
-                return ServiceUtil.returnError("No records found.");
+                throw new DatevException(new DatevNotificationMessage(NotificationMessageType.FATAL, "No records found after CSV has been parsed."));
             } else {
                 for (final CSVRecord rec : records) {
                     if (Debug.isOn(Debug.VERBOSE)) {
                         Debug.logInfo(rec.toString(), module);
                     }
+                    boolean allFieldValid = true;
+                    Map<String, String> recordMap = FastMap.newInstance();
                     if (rec.isConsistent()) {
-                        Map<String, String> recordMap = rec.toMap();
+                        recordMap = rec.toMap();
                         for (String key : recordMap.keySet()) {
-                            datevHelper.validateField(key, recordMap.get(key));
+                            if (!datevHelper.validateField(key, recordMap.get(key))) {
+                                allFieldValid = false;
+                            }
                         }
                     } else {
+                        // Assuming here the fields (columns) are in the order
+                        // DATEV specification determines
                         Iterator<String> iter = rec.iterator();
                         for (int i = 0; iter.hasNext(); i++) {
                             String value = iter.next();
-                            datevHelper.validateField(i, value);
+                            if (!datevHelper.validateField(i, value)) {
+                                allFieldValid = false;
+                            }
+                            recordMap.put(datevTransactionsFieldNames[i], value);
                         }
+                    }
+                    if (allFieldValid) {
+                        datevHelper.processRecord(recordMap);
                     }
                 }
             }
+
+        } catch (DatevException e) {
+            if (!notificationMessages.contains(e.getNotificationMessage())) {
+                notificationMessages.add(e.getNotificationMessage());
+            }
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
         } catch (Exception e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());

@@ -3,6 +3,7 @@ package com.ilscipio.scipio.accounting.datev;
 import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -25,22 +26,17 @@ public class DatevHelper {
     private final List<GenericValue> datevTransactionEntryDefinitions;
     private final List<GenericValue> datevMetadataTransactionEntryDefinitions;
     private final List<String> datevTransactionFieldNames;
+    private final String orgPartyId;
 
     private List<DatevNotificationMessage> notificationMessages;
 
     static enum DatevFieldType {
-        STRING("string", String.class), INTEGER("integer", Integer.class), DECIMAL("decimal", BigDecimal.class), DATE("date", DateTime.class), BOOLEAN("boolean", Boolean.class);
+        TEXT(String.class), NUMBER(Number.class), AMOUNT(BigDecimal.class), DATE(DateTime.class), BOOLEAN(Boolean.class);
 
-        private final String fieldTypeName;
         private final Class<?> fieldTypeClass;
 
-        DatevFieldType(String fieldTypeName, Class<?> clazz) {
-            this.fieldTypeName = fieldTypeName;
+        DatevFieldType(Class<?> clazz) {
             this.fieldTypeClass = clazz;
-        }
-
-        public String getFieldTypeName() {
-            return fieldTypeName;
         }
 
         public Class<?> getFieldTypeClass() {
@@ -49,7 +45,7 @@ public class DatevHelper {
 
         @Override
         public String toString() {
-            return "FieldTypeName [" + fieldTypeName + "]: " + fieldTypeClass.getName();
+            return "FieldTypeName [" + this.name() + "]: " + fieldTypeClass.getName();
         }
 
     }
@@ -62,7 +58,7 @@ public class DatevHelper {
     // FastMap.newInstance();
     // private Map<String, Boolean> headerFieldsFound = FastMap.newInstance();
 
-    public DatevHelper(Delegator delegator, List<DatevNotificationMessage> notificationMessages) throws DatevException {
+    public DatevHelper(Delegator delegator, String orgPartyId, List<DatevNotificationMessage> notificationMessages) throws DatevException {
         try {
             this.datevTransactionEntryDefinitions = EntityQuery.use(delegator).from("DatevTransactionEntryDefinition")
                     .where(EntityCondition.makeConditionWhere("METADATA IS NULL OR METADATA = 'N'")).queryList();
@@ -72,8 +68,9 @@ public class DatevHelper {
             this.datevMetadataTransactionEntryDefinitions = EntityQuery.use(delegator).from("DatevTransactionEntryDefinition")
                     .where(EntityCondition.makeCondition("metadata", EntityOperator.EQUALS, "Y")).queryList();
             this.notificationMessages = notificationMessages;
+            this.orgPartyId = orgPartyId;
         } catch (GenericEntityException e) {
-            throw new DatevException(new DatevNotificationMessage(NotificationMessageType.FATAL, "Internal error. Can't parse DATEV CSV. Please contact a system admin."));
+            throw new DatevException(new DatevNotificationMessage(NotificationMessageType.FATAL, "Internal error. Cannot initialize DATEV helper."));
         }
     }
 
@@ -108,6 +105,10 @@ public class DatevHelper {
         return datevTransactionFieldNames.toArray(fieldNames);
     }
 
+    public void processRecord(Map<String, String> recordMap) throws DatevException {
+
+    }
+
     public boolean validateField(int position, String value) throws DatevException {
         return validateField(EntityUtil.getFirst(
                 EntityUtil.filterByCondition(datevTransactionEntryDefinitions, EntityCondition.makeCondition("sequenceNum", EntityJoinOperator.EQUALS, position))), value);
@@ -120,7 +121,7 @@ public class DatevHelper {
 
     public boolean validateField(GenericValue fieldDefinition, String value) throws DatevException {
         String fieldName = fieldDefinition.getString("fieldName");
-        String type = fieldDefinition.getString("type");
+        String type = fieldDefinition.getString("typeEnumId");
         try {
             long length = -1;
             if (UtilValidate.isNotEmpty(fieldDefinition.get("length"))) {
@@ -147,12 +148,13 @@ public class DatevHelper {
                 metadata = fieldDefinition.getBoolean("metadata");
             }
 
-            DatevFieldType datevFieldType = DatevFieldType.valueOf(type.toUpperCase());
+            GenericValue fieldTypeEnum = fieldDefinition.getRelatedOne("DatevFieldTypeEnumeration", true);
+            DatevFieldType datevFieldType = DatevFieldType.valueOf(fieldTypeEnum.getString("enumCode"));
             // Debug.log("datevFieldType ======> " + datevFieldType.toString());
 
             Object validatedValue = null;
             switch (datevFieldType) {
-            case STRING:
+            case TEXT:
                 validatedValue = value;
                 break;
             case BOOLEAN:
@@ -165,10 +167,10 @@ public class DatevHelper {
                 }
                 validatedValue = DateTime.parse(value, dtf);
                 break;
-            case INTEGER:
+            case NUMBER:
                 validatedValue = Integer.valueOf(value);
                 break;
-            case DECIMAL:
+            case AMOUNT:
                 validatedValue = BigDecimal.valueOf(Double.valueOf(value));
                 if (UtilValidate.isNotEmpty(validatedValue) && UtilValidate.isNotEmpty(scale)) {
                     validatedValue = ((BigDecimal) validatedValue).setScale(Math.toIntExact(scale));

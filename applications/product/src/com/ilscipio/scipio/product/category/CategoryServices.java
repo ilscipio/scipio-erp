@@ -17,6 +17,7 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
+import com.ilscipio.scipio.product.category.CategoryWorker.TreeBuildOptions;
 import com.ilscipio.scipio.treeMenu.TreeDataItem;
 import com.ilscipio.scipio.treeMenu.jsTree.JsTreeDataItem;
 import com.ilscipio.scipio.treeMenu.jsTree.JsTreeDataItem.JsTreeDataItemState;
@@ -49,15 +50,10 @@ public abstract class CategoryServices {
         String prodCatalogId = (String) context.get("prodCatalogId");
         
         Map<String, Object> state = UtilGenerics.checkMap(context.get("state"));
-        Map<String, Map<String, Object>> categoryStates = UtilGenerics.checkMap(context.get("categoryStates"));
-    
-        boolean includeCategoryData = Boolean.TRUE.equals(context.get("includeCategoryData"));
-        boolean includeProductData = Boolean.TRUE.equals(context.get("includeProductData"));
-        Integer maxProductsPerCat = (Integer) context.get("maxProductsPerCat");
-        if (maxProductsPerCat == null) maxProductsPerCat = -1;
-        boolean useCategoryCache = !Boolean.FALSE.equals(context.get("useCategoryCache"));
-        boolean useProductCache = !Boolean.FALSE.equals(context.get("useProductCache"));
         boolean includeEmptyTop = Boolean.TRUE.equals(context.get("includeEmptyTop"));
+        
+        TreeBuildOptions treeBuildOpts = new TreeBuildOptions(context);
+        Map<String, ? super GenericValue> categoryEntityOutMap = UtilGenerics.checkMap(context.get("categoryEntityOutMap"));
         
         List<TreeDataItem> resultList = new ArrayList<>();
         if (mode.equals("full")) {
@@ -74,8 +70,7 @@ public abstract class CategoryServices {
                     if (library.equals("jsTree")) {
                         String nodeId = "catalog_" + prodCatalogId;
                         if (hasCategories) {
-                            resultList.addAll(CategoryWorker.getTreeCategories(delegator, dispatcher, locale, 
-                                    prodCatalogCategories, library, nodeId, categoryStates, includeCategoryData, includeProductData, maxProductsPerCat, useCategoryCache, useProductCache));
+                            resultList.addAll(CategoryWorker.getTreeCategories(delegator, dispatcher, locale, prodCatalogCategories, nodeId, treeBuildOpts, categoryEntityOutMap));
                         }
                         Map<String, Object> effState = UtilMisc.toMap("opened", false, "selected", false);
                         if (state != null) {
@@ -84,10 +79,8 @@ public abstract class CategoryServices {
                         dataItem = new JsTreeDataItem(nodeId, prodCatalogId, catalog.getString("catalogName"), "jstree-folder", new JsTreeDataItemState(effState),
                                 null);
                         dataItem.setType("catalog");
-                        if (includeCategoryData) {
-                            dataItem.put("prodCatalogEntity", catalog);
-                            dataItem.put("productStoreCatalogEntity", productStoreCatalog);
-                        }
+                        treeBuildOpts.checkPutEntityDataField(dataItem, "prodCatalog", catalog);
+                        treeBuildOpts.checkPutEntityDataField(dataItem, "productStoreCatalog", productStoreCatalog);
                         dataItem.put("isParent", hasCategories);
                     }
     
@@ -111,6 +104,7 @@ public abstract class CategoryServices {
         }
     
         result.put("treeList", resultList);
+        result.put("categoryEntityOutMap", categoryEntityOutMap);
         return result;
     }
 }

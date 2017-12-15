@@ -19,12 +19,12 @@ under the License.
 -->
 <entity-engine-xml>
     <EnumerationType description="Datev field type" enumTypeId="DATEV_FIELD_TYPE" hasTable="N" parentTypeId=""/>
-    <Enumeration description="Amount" enumCode="AMOUNT" enumId="FIELD_TYPE_AMOUNT" sequenceId="01" enumTypeId="DATEV_FIELD_TYPE"/>
-    <Enumeration description="Text" enumCode="TEXT" enumId="FIELD_TYPE_TEXT" sequenceId="02" enumTypeId="DATEV_FIELD_TYPE"/>
-    <Enumeration description="Number" enumCode="NUMBER" enumId="FIELD_TYPE_NUMBER" sequenceId="03" enumTypeId="DATEV_FIELD_TYPE"/>
-    <Enumeration description="Account (according to DATEV spec it's a digit only)" enumCode="ACCOUNT" enumId="FIELD_TYPE_ACCOUNT" sequenceId="04" enumTypeId="DATEV_FIELD_TYPE"/>
-    <Enumeration description="FIELD_TYPE_DATE" enumCode="FIELD_TYPE_DATE" enumId="FIELD_TYPE_DATE" sequenceId="05" enumTypeId="DATEV_FIELD_TYPE"/>
-    <Enumeration description="FIELD_TYPE_BOOLEAN" enumCode="FIELD_TYPE_BOOLEAN" enumId="FIELD_TYPE_BOOLEAN" sequenceId="06" enumTypeId="DATEV_FIELD_TYPE"/>
+    <Enumeration description="Amount Type" enumCode="AMOUNT" enumId="FIELD_TYPE_AMOUNT" sequenceId="01" enumTypeId="DATEV_FIELD_TYPE"/>
+    <Enumeration description="Text Type" enumCode="TEXT" enumId="FIELD_TYPE_TEXT" sequenceId="02" enumTypeId="DATEV_FIELD_TYPE"/>
+    <Enumeration description="Number Type" enumCode="NUMBER" enumId="FIELD_TYPE_NUMBER" sequenceId="03" enumTypeId="DATEV_FIELD_TYPE"/>
+    <Enumeration description="Account Type (according to DATEV spec it's a digit only)" enumCode="ACCOUNT" enumId="FIELD_TYPE_ACCOUNT" sequenceId="04" enumTypeId="DATEV_FIELD_TYPE"/>
+    <Enumeration description="Date Type" enumCode="DATE" enumId="FIELD_TYPE_DATE" sequenceId="05" enumTypeId="DATEV_FIELD_TYPE"/>
+    <Enumeration description="Boolean Type" enumCode="BOOLEAN" enumId="FIELD_TYPE_BOOLEAN" sequenceId="06" enumTypeId="DATEV_FIELD_TYPE"/>
 
     <!-- DATEV FIELDS -->
     <DatevTransactionEntryDefinition fieldId="1" fieldName="Umsatz (ohne Soll/Haben-Kz)" typeEnumId="FIELD_TYPE_AMOUNT" length="10" scale="2" maxLength="13" required="Y" sequenceNum="1">

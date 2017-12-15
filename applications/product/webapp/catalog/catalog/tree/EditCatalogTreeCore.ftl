@@ -13,27 +13,6 @@
       the FTL code that builds the action props.
 -->
 
-<#-- TODO: theme styling -->
-<style type="text/css">
-    <#-- FIXME: theme doesn't show gray for disabled + priority problems -->
-    ul.side-nav.ect-action-menu li.disabled, ul.side-nav.ect-action-menu a.disabled {
-        color:gray;
-    }
- 
-    .ect-dialogmsg-recordname {
-        font-style:italic;
-    }
-    
-    <#-- FIXME: horrible, and doesn't work when tree not loaded... -->
-    div div div.ect-locfield-entry select, div div div.ect-locfield-entry input {
-        margin-bottom:0;
-    }
-    
-    div.ect-locfield-add-cnt {
-        text-align:right;
-    }
-</style>
-
 <#if !ectTreeId?has_content>
   <#assign ectTreeId = "ectTree_" + rawString(productStoreId!)>
 </#if>

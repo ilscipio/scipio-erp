@@ -23,6 +23,7 @@ import static org.ofbiz.base.util.UtilGenerics.checkMap;
 
 import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -761,5 +762,13 @@ public class FindServices {
             result.remove("listSize");
         }
         return result;
+    }
+    
+    /**
+     * SCIPIO: Returns the entity operator parameter names to EntityComparisonOperators used by find services.
+     * Added 2017-12-15.
+     */
+    public static Map<String, EntityComparisonOperator<?, ?>> getEntityOperatorsMap() {
+        return Collections.unmodifiableMap(entityOperators);
     }
 }

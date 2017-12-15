@@ -15,7 +15,7 @@ public class DatevNotificationMessage {
      *
      */
     public enum NotificationMessageType {
-        FATAL, WARNING, IGNORE
+        FATAL, RECORD_ERROR, WARNING, IGNORE
     }
 
     public DatevNotificationMessage(NotificationMessageType notificationMessageType, String message) {

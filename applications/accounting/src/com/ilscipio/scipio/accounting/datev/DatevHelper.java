@@ -8,6 +8,8 @@ import java.util.Map;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -20,13 +22,17 @@ import org.ofbiz.entity.util.EntityUtil;
 
 import com.ilscipio.scipio.accounting.datev.DatevNotificationMessage.NotificationMessageType;
 
+import javolution.util.FastMap;
+
 public class DatevHelper {
     private static final String module = DatevHelper.class.getName();
 
     private final List<GenericValue> datevTransactionEntryDefinitions;
-    private final List<GenericValue> datevMetadataTransactionEntryDefinitions;
+    private final List<GenericValue> datevMetadataTransactionEntryDefinitions;    
     private final List<String> datevTransactionFieldNames;
     private final String orgPartyId;
+    
+    private Map<String, Object> datevMetadataValues = FastMap.newInstance();
 
     private List<DatevNotificationMessage> notificationMessages;
 
@@ -64,7 +70,6 @@ public class DatevHelper {
                     .where(EntityCondition.makeConditionWhere("METADATA IS NULL OR METADATA = 'N'")).queryList();
 
             this.datevTransactionFieldNames = EntityUtil.getFieldListFromEntityList(datevTransactionEntryDefinitions, "fieldName", true);
-
             this.datevMetadataTransactionEntryDefinitions = EntityQuery.use(delegator).from("DatevTransactionEntryDefinition")
                     .where(EntityCondition.makeCondition("metadata", EntityOperator.EQUALS, "Y")).queryList();
             this.notificationMessages = notificationMessages;
@@ -75,29 +80,34 @@ public class DatevHelper {
     }
 
     public boolean isMetaHeader(Iterator<String> metaHeaderIter) throws DatevException {
-        boolean isMetaHeader = true;
-
+        boolean hasMetaHeader = true;
         for (int i = 0; metaHeaderIter.hasNext(); i++) {
             GenericValue fieldDefinition = null;
             try {
                 fieldDefinition = datevMetadataTransactionEntryDefinitions.get(i);
             } catch (IndexOutOfBoundsException e) {
-                // throw new DatevException(DATEV_ERROR_TYPE.WARNING,
-                // "Metadata header size doesn't match the expected size [" +
-                // datevMetadataTransactionEntryDefinitions.size() + "]");
-                isMetaHeader = false;
+                notificationMessages.add(new DatevNotificationMessage(NotificationMessageType.WARNING,
+                        "Metadata header size doesn't match the expected size [" + datevMetadataTransactionEntryDefinitions.size() + "]"));
+                hasMetaHeader = false;
+                break;
             }
             if (UtilValidate.isNotEmpty(fieldDefinition)) {
                 String metaHeaderValue = metaHeaderIter.next();
-                if (!validateField(fieldDefinition, metaHeaderValue)) {
-                    isMetaHeader = false;
-                    break;
+                boolean isMetadataFieldValid = validateField(fieldDefinition, metaHeaderValue);
+                if (!isMetadataFieldValid) {
+                    notificationMessages.add(new DatevNotificationMessage(NotificationMessageType.WARNING,
+                            "Metadata header field [" + fieldDefinition.getString("fieldName") + "] is not valid for value <" + metaHeaderValue + ">"));                    
                 }
-                ;
+                datevMetadataValues.put(fieldDefinition.getString("fieldName"), UtilMisc.toMap(metaHeaderValue, isMetadataFieldValid));
+            }
+            if (i > datevMetadataTransactionEntryDefinitions.size() - 1) {
+                notificationMessages.add(new DatevNotificationMessage(NotificationMessageType.WARNING,
+                        "Metadata header size doesn't match the expected size [" + datevMetadataTransactionEntryDefinitions.size() + "]"));
+                hasMetaHeader = false;
             }
         }
 
-        return isMetaHeader;
+        return hasMetaHeader;
     }
 
     public String[] getDatevTransactionFieldNames() {
@@ -119,7 +129,7 @@ public class DatevHelper {
                 .getFirst(EntityUtil.filterByCondition(datevTransactionEntryDefinitions, EntityCondition.makeCondition("fieldName", EntityJoinOperator.EQUALS, fieldName))), value);
     }
 
-    public boolean validateField(GenericValue fieldDefinition, String value) throws DatevException {
+    public boolean validateField(GenericValue fieldDefinition, String value) {
         String fieldName = fieldDefinition.getString("fieldName");
         String type = fieldDefinition.getString("typeEnumId");
         try {
@@ -150,7 +160,26 @@ public class DatevHelper {
 
             GenericValue fieldTypeEnum = fieldDefinition.getRelatedOne("DatevFieldTypeEnumeration", true);
             DatevFieldType datevFieldType = DatevFieldType.valueOf(fieldTypeEnum.getString("enumCode"));
-            // Debug.log("datevFieldType ======> " + datevFieldType.toString());
+
+            if (Debug.isOn(Debug.VERBOSE)) {
+                Debug.log("Validating datev field [" + fieldName + "]:" + "\r\n\t type: " + fieldTypeEnum.getString("enumCode") + "\r\n\t length: " + length + "\r\n\t scale: "
+                        + scale + "\r\n\t maxLength: " + maxLength + "\r\n\t format: " + format + "\r\n\t required: " + required + "\r\n\t metadata" + metadata);
+            }
+
+            if (UtilValidate.isEmpty(value)) {
+                if (required) {
+                    notificationMessages.add(new DatevNotificationMessage(NotificationMessageType.RECORD_ERROR, "Required field [" + fieldName + "] has no value"));
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+            if (value.length() > maxLength) {
+                notificationMessages.add(new DatevNotificationMessage(NotificationMessageType.RECORD_ERROR,
+                        "Field [" + fieldName + "] length <" + value.length() + "> is greater than the max value allowed for it <" + maxLength + ">"));
+                return false;
+            }
 
             Object validatedValue = null;
             switch (datevFieldType) {

@@ -23,7 +23,6 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 
-import com.ilscipio.scipio.accounting.datev.DatevException.NotificationMessage;
 import com.ilscipio.scipio.accounting.datev.DatevNotificationMessage.NotificationMessageType;
 import com.ilscipio.scipio.common.util.TikaUtil;
 

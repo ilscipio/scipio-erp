@@ -1,7 +1,5 @@
 package com.ilscipio.scipio.accounting.datev;
 
-import java.util.List;
-
 import com.ilscipio.scipio.accounting.datev.DatevNotificationMessage.NotificationMessageType;
 
 public class DatevException extends Exception {

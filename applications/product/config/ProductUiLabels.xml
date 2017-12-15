@@ -32197,4 +32197,8 @@
         <value xml:lang="en">Note: This field is non-localized - see the Content screen to set the localized field.</value>
         <value xml:lang="de">Hinweis: Dieses Feld ist nicht lokalisiert - siehe den Bildschirm Inhalt, um das lokalisierte Feld festzulegen.</value>
     </property>
+    <property key="ProductDeleteDangerousWarning">
+        <value xml:lang="en">Warning: This irreversibly deletes several records and may be DANGEROUS, depending on your specific usage of the entity schema. It is usually safe for building a new catalog from scratch and undoing errors. If unsure, please consult documentation before using (services 'deleteXxxAndRelatedVersatile').</value>
+        <value xml:lang="de">Warnung: Dies löscht unwiderruflich mehrere Datensätze und ist abhängig von Ihrer spezifischen Verwendung des Entitätsschemas GEFÄHRLICH. Es ist normalerweise sicher, einen neuen Katalog von Grund auf neu zu erstellen und Fehler rückgängig zu machen. Wenn Sie sich nicht sicher sind, konsultieren Sie bitte die Dokumentation vor der Verwendung (Dienste 'deleteXxxAndRelatedVersatile').</value>
+    </property>
 </resource>

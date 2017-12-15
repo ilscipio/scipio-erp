@@ -6,8 +6,6 @@
 <#include "component://setup/webapp/setup/common/common.ftl">
 <#include "component://product/webapp/catalog/catalog/tree/treecommon.ftl">
 
-<@alert type="warning">WARNING: WORK-IN-PROGRESS - <strong>SERVICES NOT FULLY TESTED 2017-10-27 - DELETION MAY BE DANGEROUS</strong></@alert>
-
 <@script>
     function setupShowFormActivatedCallback(form, ai) {
         <#-- special: if this is a category form (check for isCreateCategory hidden input present),
@@ -42,7 +40,15 @@
         checked=true/>
 </#macro>
 
+<#function ectGetActionMsgProp name>
+  <#-- WARNING: this html-escaping only works currently because the escapeVal implementation does not
+    escape the ${} characters 
+    IF THIS BREAKS IN FUTURE: code a workaround here later -->
+  <#return escapeVal(rawLabelNoSubst(name), 'htmlmarkup')>
+</#function>
+
 <#-- ACTION PROPERTIES, links tree actions to setup forms -->
+<#assign removeGenericWarning><p>${ectGetActionMsgProp('ProductDeleteDangerousWarning')}</p></#assign>
 <#assign ectActionProps = {
     "default": {
         "newcatalog": {
@@ -76,14 +82,16 @@
         "removeassoc": {
             "type": "form",
             "mode": "submit",
-            "confirmMsg": rawLabelNoSubst('CommonConfirmDeleteRecordAssocPermanentParam'),
+            <#-- WARNING: this html-escaping only works currently because the escapeVal implementation does not
+                escape the ${     -->
+            "confirmMsg": ectGetActionMsgProp('CommonConfirmDeleteRecordAssocPermanentParam'),
             "id": "ect-removecatalogassoc-form"
         },
         "remove": {
             "type": "form",
             "mode": "submit",
-            "confirmMsg": rawLabelNoSubst('ProductConfirmDeleteCatalogPermanentParam'),
-            "confirmExtraMsg": rawLabelNoSubst('ProductConfirmDeleteCatalogPermanentNote'),
+            "confirmMsg": ectGetActionMsgProp('ProductConfirmDeleteCatalogPermanentParam'),
+            "confirmExtraMsg": '<p>'+ectGetActionMsgProp('ProductConfirmDeleteCatalogPermanentNote')+'</p>'+removeGenericWarning,
             "id": "ect-removecatalog-form"
         },
         "newcategory": {
@@ -115,7 +123,7 @@
         "copymoveassoc": { <#-- NOTE: this is special copy/move combo for dnd, doesn't work like the others -->
             "type": "form",
             "mode": "submit",
-            "confirmMsg": rawLabelNoSubst('CommonConfirmCopyMoveRecordAssocParam')
+            "confirmMsg": ectGetActionMsgProp('CommonConfirmCopyMoveRecordAssocParam')
         },
         "copyassoc": {
             "type": "form",
@@ -130,14 +138,14 @@
         "removeassoc": {
             "type": "form",
             "mode": "submit",
-            "confirmMsg": rawLabelNoSubst('CommonConfirmDeleteRecordAssocPermanentParam'),
+            "confirmMsg": ectGetActionMsgProp('CommonConfirmDeleteRecordAssocPermanentParam'),
             "id": "ect-removecategoryassoc-form"
         },
         "remove": {
             "type": "form",
             "mode": "submit",
-            "confirmMsg": rawLabelNoSubst('ProductConfirmDeleteCategoryPermanentParam'),
-            "confirmExtraMsg": rawLabelNoSubst('ProductConfirmDeleteCategoryPermanentNote'),
+            "confirmMsg": ectGetActionMsgProp('ProductConfirmDeleteCategoryPermanentParam'),
+            "confirmExtraMsg": '<br/><p>'+ectGetActionMsgProp('ProductConfirmDeleteCategoryPermanentNote')+'</p>'+removeGenericWarning,
             "confirmFields": ectDeleteCategoryConfirmFields,
             "id": "ect-removecategory-form"
         },
@@ -182,7 +190,7 @@
         "copymoveassoc": {
             "type": "form",
             "mode": "submit",
-            "confirmMsg": rawLabelNoSubst('CommonConfirmCopyMoveRecordAssocParam')
+            "confirmMsg": ectGetActionMsgProp('CommonConfirmCopyMoveRecordAssocParam')
         },
         "copyassoc": {
             "type": "form",
@@ -197,14 +205,14 @@
         "removeassoc": {
             "type": "form",
             "mode": "submit",
-            "confirmMsg": rawLabelNoSubst('CommonConfirmDeleteRecordAssocPermanentParam'),
+            "confirmMsg": ectGetActionMsgProp('CommonConfirmDeleteRecordAssocPermanentParam'),
             "id": "ect-removeproductassoc-form"
         },
         "remove": {
             "type": "form",
             "mode": "submit",
-            "confirmMsg": rawLabelNoSubst('ProductConfirmDeleteProductPermanentParam'),
-            "confirmExtraMsg": rawLabelNoSubst('ProductConfirmDeleteProductPermanentNote'),
+            "confirmMsg": ectGetActionMsgProp('ProductConfirmDeleteProductPermanentParam'),
+            "confirmExtraMsg": '<br/><p>'+ectGetActionMsgProp('ProductConfirmDeleteProductPermanentNote')+'</p>'+removeGenericWarning,
             "confirmFields": ectDeleteProductConfirmFields,
             "id": "ect-removeproduct-form"
         },

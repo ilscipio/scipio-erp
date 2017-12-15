@@ -7,7 +7,10 @@
       The multiple assoc is permitted by schema because prodCatalogCategoryTypeId is part of PK.
       NOTE: The service addProductCategoryCatAssocVersatile tries to prevent this (even though it shouldn't), 
           but it cannot prevent other user-build cases.
-    * dialog messages and confirmMsg are not fully escaped (but unescaped parts are internal so not security issue)
+          
+    NOTES:
+    * dialog messages and confirmMsg are not HTML-escaped by the javascript - it must be done by
+      the FTL code that builds the action props.
 -->
 
 <#-- TODO: theme styling -->
@@ -96,7 +99,7 @@
           </@fields>
         </@form>
       </#if>
-        <p class="ect-dialogextramsg"></p>
+        <div class="ect-dialogextramsg"></div>
     </#macro>
     
     <#macro ectDefActionMsgModals args={}>

@@ -58,7 +58,7 @@
     <#assign productPrice>
         <#if product??>
             <#if totalPrice??>
-                <@ofbizCurrency amount=totalPrice isoCode=totalPrice.currencyUsed/>
+                <@ofbizCurrency amount=totalPrice isoCode=price.currencyUsed/>
             <#else>
                 <#if ((price.price!0) > 0) && ((product.requireAmount!"N") == "N")>
                     <@ofbizCurrency amount=price.price isoCode=price.currencyUsed/>

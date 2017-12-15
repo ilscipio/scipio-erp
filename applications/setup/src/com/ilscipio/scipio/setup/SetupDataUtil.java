@@ -613,10 +613,29 @@ public abstract class SetupDataUtil {
         GenericValue webSite = null;
         Map<String, Object> fields = UtilMisc.toMap("productStoreId", productStoreId);
         List<GenericValue> webSiteList = delegator.findByAnd("WebSite", fields, null, useCache);
-        webSite = getFirstMaxOneExpected(webSiteList, fields);
         if (!isNewOrFailedCreate) {
-            result.put("webSiteList", webSiteList);
+            String webSiteId = (String) params.get("webSiteId");
+            if (UtilValidate.isNotEmpty(webSiteId)) {
+                for(GenericValue ws : webSiteList) {
+                    if (webSiteId.equals(ws.getString("webSiteId"))) {
+                        webSite = ws;
+                        break;    
+                    }
+                }
+                if (webSite == null) {
+                    Debug.logError("Setup: Received webSiteId '" + webSiteId 
+                            + "' does not match any WebSite for productStoreId '" + productStoreId 
+                            + "' in system; ignoring and using default (if any)", module);
+                }
+            }
         }
+        // NOTE: this isn't fully accurate (for the bad webSiteId param case), but won't matter for now
+        if (webSite == null) webSite = getFirstMaxOneExpected(webSiteList, fields);
+        
+        // will need this always
+        //if (!isNewOrFailedCreate) {
+        result.put("webSiteList", webSiteList);
+        //}
         result.put("webSiteCount", webSiteList.size());
         
         if (webSite != null) {

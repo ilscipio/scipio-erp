@@ -18,16 +18,23 @@ specific language governing permissions and limitations
 under the License.
 -->
 <entity-engine-xml>
+    <EnumerationType description="Datev field type" enumTypeId="DATEV_FIELD_TYPE" hasTable="N" parentTypeId=""/>
+    <Enumeration description="Amount Type" enumCode="AMOUNT" enumId="FIELD_TYPE_AMOUNT" sequenceId="01" enumTypeId="DATEV_FIELD_TYPE"/>
+    <Enumeration description="Text Type" enumCode="TEXT" enumId="FIELD_TYPE_TEXT" sequenceId="02" enumTypeId="DATEV_FIELD_TYPE"/>
+    <Enumeration description="Number Type" enumCode="NUMBER" enumId="FIELD_TYPE_NUMBER" sequenceId="03" enumTypeId="DATEV_FIELD_TYPE"/>
+    <Enumeration description="Account Type (according to DATEV spec it's a digit only)" enumCode="ACCOUNT" enumId="FIELD_TYPE_ACCOUNT" sequenceId="04" enumTypeId="DATEV_FIELD_TYPE"/>
+    <Enumeration description="Date Type" enumCode="DATE" enumId="FIELD_TYPE_DATE" sequenceId="05" enumTypeId="DATEV_FIELD_TYPE"/>
+    <Enumeration description="Boolean Type" enumCode="BOOLEAN" enumId="FIELD_TYPE_BOOLEAN" sequenceId="06" enumTypeId="DATEV_FIELD_TYPE"/>
 
     <!-- DATEV FIELDS -->
-    <DatevTransactionEntryDefinition fieldId="1" fieldName="Umsatz (ohne Soll/Haben-Kz)" type="decimal" length="12" scale="2" required="Y">
+    <DatevTransactionEntryDefinition fieldId="1" fieldName="Umsatz (ohne Soll/Haben-Kz)" typeEnumId="FIELD_TYPE_AMOUNT" length="10" scale="2" maxLength="13" required="Y" sequenceNum="1">
     <description><![CDATA[
         # Beispiel: 1234567890,12
         # Muss immer ein positiver Wert sein
     ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="2" fieldName="Soll/Haben-Kennzeichen" type="string" maxLength="1" required="Y">
+    <DatevTransactionEntryDefinition fieldId="2" fieldName="Soll/Haben-Kennzeichen" typeEnumId="FIELD_TYPE_TEXT" maxLength="1" required="Y" sequenceNum="2">
         <description><![CDATA[
             # Die Soll-/Haben-Kennzeichnung des Umsatzes bezieht sich auf das Konto, das im Feld Konto angegeben wird:
             # S = Soll
@@ -35,14 +42,14 @@ under the License.
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="3" fieldName="WKZ Umsatz" type="string" maxLength="3">
+    <DatevTransactionEntryDefinition fieldId="3" fieldName="WKZ Umsatz" typeEnumId="FIELD_TYPE_TEXT" length="3" maxLength="3" sequenceNum="3">
         <description><![CDATA[
             # Dreistelliger ISO-Code der Währung (Dok.-Nr. 1080170); gibt an, welche Währung dem Betrag zugrunde liegt.
             # Wenn kein Wert angegeben ist, wird das WKZ aus dem Header übernommen.
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="4" fieldName="Kurs" type="decimal" length="10" scale="6">
+    <DatevTransactionEntryDefinition fieldId="4" fieldName="Kurs" typeEnumId="FIELD_TYPE_NUMBER" length="10" scale="6" maxLength="11" sequenceNum="4">
         <description><![CDATA[
             # Der Fremdwährungskurs bestimmt, wie der angegebene Umsatz, der in Fremdwährung übergeben wird, in die Basiswährung umzurechnen ist, wenn es sich um ein Nicht-EWU-Land handelt.
             # Beispiel: 1123,123456
@@ -50,21 +57,21 @@ under the License.
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="5" fieldName="Basisumsatz" type="decimal" length="12" scale="2">
+    <DatevTransactionEntryDefinition fieldId="5" fieldName="Basisumsatz" typeEnumId="FIELD_TYPE_AMOUNT" length="10" scale="2" maxLength="13" sequenceNum="5">
         <description><![CDATA[
             # Wenn das Feld Basisumsatz verwendet wird, muss auch das Feld WKZ Basisumsatz gefüllt werden.
             # Beispiel: 1123123123,12
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="6" fieldName="WKZ Basisumsatz" type="string" maxLength="3">
+    <DatevTransactionEntryDefinition fieldId="6" fieldName="WKZ Basisumsatz" typeEnumId="FIELD_TYPE_TEXT" length="3" maxLength="3" sequenceNum="6">
         <description><![CDATA[
             # Währungskennzeichen der hinterlegten Basiswährung. Wenn das Feld WKZ Basisumsatz verwendet wird, muss auch das Feld Basisumsatz verwendet werden.
             # ISO-Code beachten (siehe Dok.-Nr.1080170)
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="7" fieldName="Konto" type="integer" maxLength="9" required="Y">
+    <DatevTransactionEntryDefinition fieldId="7" fieldName="Konto" typeEnumId="FIELD_TYPE_ACCOUNT" length="9" maxLength="9" required="Y" sequenceNum="7">
         <description><![CDATA[
             # Sach- oder Personen-Kontonummer
             # Darf max. 8- bzw. max. 9-stellig sein (abhängig von der Information im Header)
@@ -72,7 +79,7 @@ under the License.
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="8" fieldName="Gegenkonto (ohne BU-Schlüssel)" type="integer" maxLength="9" required="Y">
+    <DatevTransactionEntryDefinition fieldId="8" fieldName="Gegenkonto (ohne BU-Schlüssel)" typeEnumId="FIELD_TYPE_ACCOUNT" length="9" maxLength="9" required="Y" sequenceNum="8">
         <description><![CDATA[
             # Sach- oder Personen-Kontonummer
             # Darf max. 8- bzw. max. 9-stellig sein (abhängig von der Information im Header)
@@ -80,19 +87,19 @@ under the License.
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="9" fieldName="BU-Schlüssel" type="string" maxLength="2">
+    <DatevTransactionEntryDefinition fieldId="9" fieldName="BU-Schlüssel" typeEnumId="FIELD_TYPE_TEXT" length="2" maxLength="2" sequenceNum="9">
         <description><![CDATA[
             # Steuerschlüssel und/oder Berichtigungsschlüssel
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="10" fieldName="Belegdatum" type="date" format="%d%m" required="Y">
+    <DatevTransactionEntryDefinition fieldId="10" fieldName="Belegdatum" typeEnumId="FIELD_TYPE_DATE" length="4" maxLength="4" format="ddMM" required="Y" sequenceNum="10">
         <description><![CDATA[
             # Achtung: Auch bei individueller Feldformatierung mit vierstelliger Jahreszahl wird immer in das aktuelle Wirtschaftsjahr importiert, wenn Tag und Monat des Datums im bebuchbaren Zeitraum liegen, da die Jahreszahl nicht berücksichtigt wird.
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="11" fieldName="Belegfeld 1" type="string" maxLength="12">
+    <DatevTransactionEntryDefinition fieldId="11" fieldName="Belegfeld 1" typeEnumId="FIELD_TYPE_TEXT" length="12" maxLength="12" sequenceNum="11">
         <description><![CDATA[
             # Rechnungs-/Belegnummer
             # Das Belegfeld 1 ist der "Schlüssel" für die Verwaltung von Offenen Posten.
@@ -100,13 +107,13 @@ under the License.
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="12" fieldName="Belegfeld 2" type="string" maxLength="12">
+    <DatevTransactionEntryDefinition fieldId="12" fieldName="Belegfeld 2" typeEnumId="FIELD_TYPE_TEXT" length="12" maxLength="12" sequenceNum="12">
         <description><![CDATA[
             # Belegnummer oder OPOS-Verarbeitungsinformationen
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="13" fieldName="Skonto" type="decimal" length="10" scale="2">
+    <DatevTransactionEntryDefinition fieldId="13" fieldName="Skonto" typeEnumId="FIELD_TYPE_AMOUNT" length="8" scale="2" maxLength="11" sequenceNum="13">
         <description><![CDATA[
             # Skonto-Betrag/-Abzug
             # Nur bei Zahlungen zulässig.
@@ -115,12 +122,12 @@ under the License.
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="14" fieldName="Buchungstext" type="string" maxLength="60">
+    <DatevTransactionEntryDefinition fieldId="14" fieldName="Buchungstext" typeEnumId="FIELD_TYPE_TEXT" length="60" maxLength="60" sequenceNum="14">
         <description><![CDATA[
         ]]></description>
     </DatevTransactionEntryDefinition>
     
-    <DatevTransactionEntryDefinition fieldId="15" fieldName="Postensperre" type="boolean">
+    <DatevTransactionEntryDefinition fieldId="15" fieldName="Postensperre" typeEnumId="FIELD_TYPE_BOOLEAN" length="1" maxLength="1" sequenceNum="15">
         <description><![CDATA[
             # Mahn-/Zahl-Sperre
             # Die Rechnung kann aus dem Mahnwesen / Zahlungsvorschlag ausgeschlossen werden.
@@ -130,21 +137,21 @@ under the License.
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="16" fieldName="Diverse Adressnummer" type="string" maxLength="9">
+    <DatevTransactionEntryDefinition fieldId="16" fieldName="Diverse Adressnummer" typeEnumId="FIELD_TYPE_TEXT" length="9" maxLength="9" sequenceNum="16">
         <description><![CDATA[
             # Adressnummer einer diversen Adresse
             # Nur in Verbindung mit OPOS relevant.
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="17" fieldName="Geschäftspartnerbank" type="integer" maxLength="3">
+    <DatevTransactionEntryDefinition fieldId="17" fieldName="Geschäftspartnerbank" typeEnumId="FIELD_TYPE_NUMBER" length="3" maxLength="3" sequenceNum="17">
         <description><![CDATA[
             # Wenn für eine Lastschrift oder Überweisung eine bestimmte Bank des Geschäftspartners genutzt werden soll.
             # Nur in Verbindung mit OPOS relevant.
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="18" fieldName="Sachverhalt" type="integer" maxLength="2">
+    <DatevTransactionEntryDefinition fieldId="18" fieldName="Sachverhalt" typeEnumId="FIELD_TYPE_NUMBER" length="2" maxLength="2" sequenceNum="18">
         <description><![CDATA[
             # Der Sachverhalt wird in Rechnungswesen pro verwendet, um Buchungen/Posten als Mahnzins/Mahngebühr zu identifizieren.
             # Für diese Posten werden z. B. beim Erstellen von Mahnungen keine Mahnzinsen berechnet.
@@ -154,7 +161,7 @@ under the License.
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="19" fieldName="Zinssperre" type="boolean">
+    <DatevTransactionEntryDefinition fieldId="19" fieldName="Zinssperre" typeEnumId="FIELD_TYPE_BOOLEAN" length="1" maxLength="1" sequenceNum="19">
         <description><![CDATA[
             # Hier kann eine Zinssperre übergeben werden; dadurch werden für diesen Posten bei Erstellung einer Mahnung keine Mahnzinsen ermittelt.
             # Nur in Verbindung mit OPOS relevant.
@@ -163,7 +170,7 @@ under the License.
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="20" fieldName="Beleglink" type="string" maxLength="210">
+    <DatevTransactionEntryDefinition fieldId="20" fieldName="Beleglink" typeEnumId="FIELD_TYPE_TEXT" length="210" maxLength="210" sequenceNum="20">
         <description><![CDATA[
             # Link auf den Buchungsbeleg, der digital in einem Dokumenten-Management-System (z. B. DATEV Dokumentenablage, DATEV DMS classic) abgelegt wurde.
             # Beispiel für eine Beleg-ID eines Belegs aus DATEV Unternehmen online:
@@ -172,7 +179,7 @@ under the License.
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="21" fieldName="Beleginfo – Art 1" type="string" maxLength="20">
+    <DatevTransactionEntryDefinition fieldId="21" fieldName="Beleginfo – Art 1" typeEnumId="FIELD_TYPE_TEXT" length="20" maxLength="20" sequenceNum="21">
         <description><![CDATA[
             # Bei einem ASCII-Format, das aus einem DATEV pro-Rechnungswesen-Programm erstellt wurde, können diese Felder Informationen aus einem Beleg (z. B. einem elektronischen Kontoumsatz) enthalten.
             # Wenn die Feldlänge eines Beleginfo-Inhalts-Felds überschritten wird, wird die Information im nächsten Beleginfo-Feld weitergeführt.
@@ -185,7 +192,7 @@ under the License.
             # Buchungsspezifische Inhalte zu den oben genannten Informationsarten
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="22" fieldName="Beleginfo – Inhalt 1" type="string" maxLength="210">
+    <DatevTransactionEntryDefinition fieldId="22" fieldName="Beleginfo – Inhalt 1" typeEnumId="FIELD_TYPE_TEXT" length="210" maxLength="210" sequenceNum="22">
         <description><![CDATA[
             # Bei einem ASCII-Format, das aus einem DATEV pro-Rechnungswesen-Programm erstellt wurde, können diese Felder Informationen aus einem Beleg (z. B. einem elektronischen Kontoumsatz) enthalten.
             # Wenn die Feldlänge eines Beleginfo-Inhalts-Felds überschritten wird, wird die Information im nächsten Beleginfo-Feld weitergeführt.
@@ -198,7 +205,7 @@ under the License.
             # Buchungsspezifische Inhalte zu den oben genannten Informationsarten
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="23" fieldName="Beleginfo – Art 2" type="string" maxLength="20">
+    <DatevTransactionEntryDefinition fieldId="23" fieldName="Beleginfo – Art 2" typeEnumId="FIELD_TYPE_TEXT" length="20" maxLength="20" sequenceNum="23">
         <description><![CDATA[
             # Bei einem ASCII-Format, das aus einem DATEV pro-Rechnungswesen-Programm erstellt wurde, können diese Felder Informationen aus einem Beleg (z. B. einem elektronischen Kontoumsatz) enthalten.
             # Wenn die Feldlänge eines Beleginfo-Inhalts-Felds überschritten wird, wird die Information im nächsten Beleginfo-Feld weitergeführt.
@@ -211,7 +218,7 @@ under the License.
             # Buchungsspezifische Inhalte zu den oben genannten Informationsarten
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="24" fieldName="Beleginfo – Inhalt 2" type="string" maxLength="210">
+    <DatevTransactionEntryDefinition fieldId="24" fieldName="Beleginfo – Inhalt 2" typeEnumId="FIELD_TYPE_TEXT" length="210" maxLength="210" sequenceNum="24">
         <description><![CDATA[
             # Bei einem ASCII-Format, das aus einem DATEV pro-Rechnungswesen-Programm erstellt wurde, können diese Felder Informationen aus einem Beleg (z. B. einem elektronischen Kontoumsatz) enthalten.
             # Wenn die Feldlänge eines Beleginfo-Inhalts-Felds überschritten wird, wird die Information im nächsten Beleginfo-Feld weitergeführt.
@@ -224,7 +231,7 @@ under the License.
             # Buchungsspezifische Inhalte zu den oben genannten Informationsarten
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="25" fieldName="Beleginfo – Art 3" type="string" maxLength="20">
+    <DatevTransactionEntryDefinition fieldId="25" fieldName="Beleginfo – Art 3" typeEnumId="FIELD_TYPE_TEXT" length="20" maxLength="20" sequenceNum="25">
         <description><![CDATA[
             # Bei einem ASCII-Format, das aus einem DATEV pro-Rechnungswesen-Programm erstellt wurde, können diese Felder Informationen aus einem Beleg (z. B. einem elektronischen Kontoumsatz) enthalten.
             # Wenn die Feldlänge eines Beleginfo-Inhalts-Felds überschritten wird, wird die Information im nächsten Beleginfo-Feld weitergeführt.
@@ -237,7 +244,7 @@ under the License.
             # Buchungsspezifische Inhalte zu den oben genannten Informationsarten
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="26" fieldName="Beleginfo – Inhalt 3" type="string" maxLength="210">
+    <DatevTransactionEntryDefinition fieldId="26" fieldName="Beleginfo – Inhalt 3" typeEnumId="FIELD_TYPE_TEXT" length="210" maxLength="210" sequenceNum="26">
         <description><![CDATA[
             # Bei einem ASCII-Format, das aus einem DATEV pro-Rechnungswesen-Programm erstellt wurde, können diese Felder Informationen aus einem Beleg (z. B. einem elektronischen Kontoumsatz) enthalten.
             # Wenn die Feldlänge eines Beleginfo-Inhalts-Felds überschritten wird, wird die Information im nächsten Beleginfo-Feld weitergeführt.
@@ -250,7 +257,7 @@ under the License.
             # Buchungsspezifische Inhalte zu den oben genannten Informationsarten
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="27" fieldName="Beleginfo – Art 4" type="string" maxLength="20">
+    <DatevTransactionEntryDefinition fieldId="27" fieldName="Beleginfo – Art 4" typeEnumId="FIELD_TYPE_TEXT" length="20" maxLength="20" sequenceNum="27">
         <description><![CDATA[
             # Bei einem ASCII-Format, das aus einem DATEV pro-Rechnungswesen-Programm erstellt wurde, können diese Felder Informationen aus einem Beleg (z. B. einem elektronischen Kontoumsatz) enthalten.
             # Wenn die Feldlänge eines Beleginfo-Inhalts-Felds überschritten wird, wird die Information im nächsten Beleginfo-Feld weitergeführt.
@@ -263,7 +270,7 @@ under the License.
             # Buchungsspezifische Inhalte zu den oben genannten Informationsarten
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="28" fieldName="Beleginfo – Inhalt 4" type="string" maxLength="210">
+    <DatevTransactionEntryDefinition fieldId="28" fieldName="Beleginfo – Inhalt 4" typeEnumId="FIELD_TYPE_TEXT" length="210" maxLength="210" sequenceNum="28">
         <description><![CDATA[
             # Bei einem ASCII-Format, das aus einem DATEV pro-Rechnungswesen-Programm erstellt wurde, können diese Felder Informationen aus einem Beleg (z. B. einem elektronischen Kontoumsatz) enthalten.
             # Wenn die Feldlänge eines Beleginfo-Inhalts-Felds überschritten wird, wird die Information im nächsten Beleginfo-Feld weitergeführt.
@@ -276,7 +283,7 @@ under the License.
             # Buchungsspezifische Inhalte zu den oben genannten Informationsarten
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="29" fieldName="Beleginfo – Art 5" type="string" maxLength="20">
+    <DatevTransactionEntryDefinition fieldId="29" fieldName="Beleginfo – Art 5" typeEnumId="FIELD_TYPE_TEXT" length="20" maxLength="20" sequenceNum="29">
         <description><![CDATA[
             # Bei einem ASCII-Format, das aus einem DATEV pro-Rechnungswesen-Programm erstellt wurde, können diese Felder Informationen aus einem Beleg (z. B. einem elektronischen Kontoumsatz) enthalten.
             # Wenn die Feldlänge eines Beleginfo-Inhalts-Felds überschritten wird, wird die Information im nächsten Beleginfo-Feld weitergeführt.
@@ -289,7 +296,7 @@ under the License.
             # Buchungsspezifische Inhalte zu den oben genannten Informationsarten
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="30" fieldName="Beleginfo – Inhalt 5" type="string" maxLength="210">
+    <DatevTransactionEntryDefinition fieldId="30" fieldName="Beleginfo – Inhalt 5" typeEnumId="FIELD_TYPE_TEXT" length="210" maxLength="210" sequenceNum="30">
         <description><![CDATA[
             # Bei einem ASCII-Format, das aus einem DATEV pro-Rechnungswesen-Programm erstellt wurde, können diese Felder Informationen aus einem Beleg (z. B. einem elektronischen Kontoumsatz) enthalten.
             # Wenn die Feldlänge eines Beleginfo-Inhalts-Felds überschritten wird, wird die Information im nächsten Beleginfo-Feld weitergeführt.
@@ -302,7 +309,7 @@ under the License.
             # Buchungsspezifische Inhalte zu den oben genannten Informationsarten
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="31" fieldName="Beleginfo – Art 6" type="string" maxLength="20">
+    <DatevTransactionEntryDefinition fieldId="31" fieldName="Beleginfo – Art 6" typeEnumId="FIELD_TYPE_TEXT" length="20" maxLength="20" sequenceNum="31">
         <description><![CDATA[
             # Bei einem ASCII-Format, das aus einem DATEV pro-Rechnungswesen-Programm erstellt wurde, können diese Felder Informationen aus einem Beleg (z. B. einem elektronischen Kontoumsatz) enthalten.
             # Wenn die Feldlänge eines Beleginfo-Inhalts-Felds überschritten wird, wird die Information im nächsten Beleginfo-Feld weitergeführt.
@@ -315,7 +322,7 @@ under the License.
             # Buchungsspezifische Inhalte zu den oben genannten Informationsarten
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="32" fieldName="Beleginfo – Inhalt 6" type="string" maxLength="210">
+    <DatevTransactionEntryDefinition fieldId="32" fieldName="Beleginfo – Inhalt 6" typeEnumId="FIELD_TYPE_TEXT" length="210" maxLength="210" sequenceNum="32">
         <description><![CDATA[
             # Bei einem ASCII-Format, das aus einem DATEV pro-Rechnungswesen-Programm erstellt wurde, können diese Felder Informationen aus einem Beleg (z. B. einem elektronischen Kontoumsatz) enthalten.
             # Wenn die Feldlänge eines Beleginfo-Inhalts-Felds überschritten wird, wird die Information im nächsten Beleginfo-Feld weitergeführt.
@@ -328,7 +335,7 @@ under the License.
             # Buchungsspezifische Inhalte zu den oben genannten Informationsarten
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="33" fieldName="Beleginfo – Art 7" type="string" maxLength="20">
+    <DatevTransactionEntryDefinition fieldId="33" fieldName="Beleginfo – Art 7" typeEnumId="FIELD_TYPE_TEXT" length="20" maxLength="20" sequenceNum="33">
         <description><![CDATA[
             # Bei einem ASCII-Format, das aus einem DATEV pro-Rechnungswesen-Programm erstellt wurde, können diese Felder Informationen aus einem Beleg (z. B. einem elektronischen Kontoumsatz) enthalten.
             # Wenn die Feldlänge eines Beleginfo-Inhalts-Felds überschritten wird, wird die Information im nächsten Beleginfo-Feld weitergeführt.
@@ -341,7 +348,7 @@ under the License.
             # Buchungsspezifische Inhalte zu den oben genannten Informationsarten
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="34" fieldName="Beleginfo – Inhalt 7" type="string" maxLength="210">
+    <DatevTransactionEntryDefinition fieldId="34" fieldName="Beleginfo – Inhalt 7" typeEnumId="FIELD_TYPE_TEXT" length="210" maxLength="210" sequenceNum="34">
         <description><![CDATA[
             # Bei einem ASCII-Format, das aus einem DATEV pro-Rechnungswesen-Programm erstellt wurde, können diese Felder Informationen aus einem Beleg (z. B. einem elektronischen Kontoumsatz) enthalten.
             # Wenn die Feldlänge eines Beleginfo-Inhalts-Felds überschritten wird, wird die Information im nächsten Beleginfo-Feld weitergeführt.
@@ -354,7 +361,7 @@ under the License.
             # Buchungsspezifische Inhalte zu den oben genannten Informationsarten
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="35" fieldName="Beleginfo – Art 8" type="string" maxLength="20">
+    <DatevTransactionEntryDefinition fieldId="35" fieldName="Beleginfo – Art 8" typeEnumId="FIELD_TYPE_TEXT" length="20" maxLength="20" sequenceNum="35">
         <description><![CDATA[
             # Bei einem ASCII-Format, das aus einem DATEV pro-Rechnungswesen-Programm erstellt wurde, können diese Felder Informationen aus einem Beleg (z. B. einem elektronischen Kontoumsatz) enthalten.
             # Wenn die Feldlänge eines Beleginfo-Inhalts-Felds überschritten wird, wird die Information im nächsten Beleginfo-Feld weitergeführt.
@@ -367,7 +374,7 @@ under the License.
             # Buchungsspezifische Inhalte zu den oben genannten Informationsarten
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="36" fieldName="Beleginfo – Inhalt 8" type="string" maxLength="210">
+    <DatevTransactionEntryDefinition fieldId="36" fieldName="Beleginfo – Inhalt 8" typeEnumId="FIELD_TYPE_TEXT" length="210" maxLength="210" sequenceNum="36">
         <description><![CDATA[
             # Bei einem ASCII-Format, das aus einem DATEV pro-Rechnungswesen-Programm erstellt wurde, können diese Felder Informationen aus einem Beleg (z. B. einem elektronischen Kontoumsatz) enthalten.
             # Wenn die Feldlänge eines Beleginfo-Inhalts-Felds überschritten wird, wird die Information im nächsten Beleginfo-Feld weitergeführt.
@@ -381,26 +388,26 @@ under the License.
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="37" fieldName="KOST1 – Kostenstelle" type="string" maxLength="8">
+    <DatevTransactionEntryDefinition fieldId="37" fieldName="KOST1 – Kostenstelle" typeEnumId="FIELD_TYPE_TEXT" length="8" maxLength="8" sequenceNum="37">
         <description><![CDATA[
             # Über KOST1 erfolgt die Zuordnung des Geschäftsvorfalls für die anschließende Kostenrechnung.
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="38" fieldName="KOST2 – Kostenstelle" type="string" maxLength="8">
+    <DatevTransactionEntryDefinition fieldId="38" fieldName="KOST2 – Kostenstelle" typeEnumId="FIELD_TYPE_TEXT" length="8" maxLength="8" sequenceNum="38">
         <description><![CDATA[
             # Über KOST2 erfolgt die Zuordnung des Geschäftsvorfalls für die anschließende Kostenrechnung.
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="39" fieldName="Kost Menge" type="decimal" length="11" scale="2">
+    <DatevTransactionEntryDefinition fieldId="39" fieldName="Kost Menge" typeEnumId="FIELD_TYPE_NUMBER" length="9" scale="2" maxLength="12" sequenceNum="39">
         <description><![CDATA[
             # Im KOST-Mengenfeld wird die Wertgabe zu einer bestimmten Bezugsgröße für eine Kostenstelle erfasst. Diese Bezugsgröße kann z. B. kg, g, cm, m, % sein. Die Bezugsgröße ist definiert in den Kostenrechnungs-Stammdaten.
             # Beispiel: 123123123,12
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="40" fieldName="EU-Land u. USt-IdNr." type="string" maxLength="15">
+    <DatevTransactionEntryDefinition fieldId="40" fieldName="EU-Land u. USt-IdNr." typeEnumId="FIELD_TYPE_TEXT" length="15" maxLength="15" sequenceNum="40">
         <description><![CDATA[
             # Die USt-IdNr. besteht aus:
             # 2-stelligen Länderkürzel (siehe Dok.-Nr. 1080169; Ausnahme Griechenland: Das Länderkürzel lautet EL)
@@ -408,7 +415,7 @@ under the License.
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="41" fieldName="EU-Steuersatz" type="decimal" length="4"  scale="2">
+    <DatevTransactionEntryDefinition fieldId="41" fieldName="EU-Steuersatz" typeEnumId="FIELD_TYPE_NUMBER" length="2"  scale="2" maxLength="5" sequenceNum="41">
         <description><![CDATA[
             # Nur für entsprechende EU-Buchungen:
             # Der im EU-Bestimmungsland gültige Steuersatz.
@@ -416,7 +423,7 @@ under the License.
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="42" fieldName="Abw. Versteuerungsart" type="string" maxLength="1">
+    <DatevTransactionEntryDefinition fieldId="42" fieldName="Abw. Versteuerungsart" typeEnumId="FIELD_TYPE_TEXT" length="1" maxLength="1" sequenceNum="42">
         <description><![CDATA[
             # Für Buchungen, die in einer von der Mandantenstammdaten-Schlüsselung abweichenden Umsatzsteuerart verarbeitet werden sollen, kann die abweichende Versteuerungsart im Buchungssatz übergeben werden:
             # I = Ist-Versteuerung
@@ -426,7 +433,7 @@ under the License.
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="43" fieldName="Sachverhalt L+L" type="integer" maxLength="3">
+    <DatevTransactionEntryDefinition fieldId="43" fieldName="Sachverhalt L+L" typeEnumId="FIELD_TYPE_NUMBER" length="3" maxLength="3" sequenceNum="43">
         <description><![CDATA[
             # Sachverhalte gem. § 13b Abs. 1 Satz 1 Nrn. 1.ff UStG
             # Achtung: Der Wert 0 ist unzulässig.
@@ -434,7 +441,7 @@ under the License.
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="44" fieldName="Funktionsergänzung L+L" type="integer" maxLength="3">
+    <DatevTransactionEntryDefinition fieldId="44" fieldName="Funktionsergänzung L+L" typeEnumId="FIELD_TYPE_NUMBER" length="3" maxLength="3" sequenceNum="44">
         <description><![CDATA[
             # Steuersatz/Funktion zum L+L-Sachverhalt
             # Achtung: Der Wert 0 ist unzulässig.
@@ -442,23 +449,23 @@ under the License.
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="45" fieldName="BU 49 Hauptfunktionstyp" type="integer" maxLength="1">
+    <DatevTransactionEntryDefinition fieldId="45" fieldName="BU 49 Hauptfunktionstyp" typeEnumId="FIELD_TYPE_NUMBER" length="1" maxLength="1" sequenceNum="45">
         <description><![CDATA[
             # Bei Verwendung des BU-Schlüssels 49 für "andere Steuersätze" muss der steuerliche Sachverhalt mitgegeben werden.
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="46" fieldName="BU 49 Hauptfunktionsnummer" type="integer" maxLength="2">
+    <DatevTransactionEntryDefinition fieldId="46" fieldName="BU 49 Hauptfunktionsnummer" typeEnumId="FIELD_TYPE_NUMBER" length="2" maxLength="2" sequenceNum="46">
         <description><![CDATA[
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="47" fieldName="BU 49 Funktionsergänzung" type="integer" maxLength="3">
+    <DatevTransactionEntryDefinition fieldId="47" fieldName="BU 49 Funktionsergänzung" typeEnumId="FIELD_TYPE_NUMBER" length="3" maxLength="3" sequenceNum="47">
         <description><![CDATA[
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="48" fieldName="Zusatzinformation – Inhalt 1" type="string"  maxLength="210">
+    <DatevTransactionEntryDefinition fieldId="48" fieldName="Zusatzinformation – Inhalt 1" typeEnumId="FIELD_TYPE_TEXT" length="210"  maxLength="210" sequenceNum="48">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -469,7 +476,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="49" fieldName="Zusatzinformation – Art 1" type="string"  maxLength="20">
+    <DatevTransactionEntryDefinition fieldId="49" fieldName="Zusatzinformation – Art 1" typeEnumId="FIELD_TYPE_TEXT" length="20" maxLength="20" sequenceNum="49">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -480,7 +487,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="50" fieldName="Zusatzinformation – Inhalt 2" type="string"  maxLength="210">
+    <DatevTransactionEntryDefinition fieldId="50" fieldName="Zusatzinformation – Inhalt 2" typeEnumId="FIELD_TYPE_TEXT" length="210" maxLength="210" sequenceNum="50">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -491,7 +498,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="51" fieldName="Zusatzinformation – Art 2" type="string"  maxLength="20">
+    <DatevTransactionEntryDefinition fieldId="51" fieldName="Zusatzinformation – Art 2" typeEnumId="FIELD_TYPE_TEXT" length="20" maxLength="20" sequenceNum="51">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -502,7 +509,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="52" fieldName="Zusatzinformation – Inhalt 3" type="string"  maxLength="210">
+    <DatevTransactionEntryDefinition fieldId="52" fieldName="Zusatzinformation – Inhalt 3" typeEnumId="FIELD_TYPE_TEXT" length="210" maxLength="210" sequenceNum="52">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -513,7 +520,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="53" fieldName="Zusatzinformation – Art 3" type="string"  maxLength="20">
+    <DatevTransactionEntryDefinition fieldId="53" fieldName="Zusatzinformation – Art 3" typeEnumId="FIELD_TYPE_TEXT" length="20" maxLength="20" sequenceNum="53">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -524,7 +531,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="54" fieldName="Zusatzinformation – Inhalt 4" type="string"  maxLength="210">
+    <DatevTransactionEntryDefinition fieldId="54" fieldName="Zusatzinformation – Inhalt 4" typeEnumId="FIELD_TYPE_TEXT" length="210" maxLength="210" sequenceNum="54">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -535,7 +542,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="55" fieldName="Zusatzinformation – Art 4" type="string"  maxLength="20">
+    <DatevTransactionEntryDefinition fieldId="55" fieldName="Zusatzinformation – Art 4" typeEnumId="FIELD_TYPE_TEXT" length="20"  maxLength="20" sequenceNum="55">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -546,7 +553,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="56" fieldName="Zusatzinformation – Inhalt 5" type="string"  maxLength="210">
+    <DatevTransactionEntryDefinition fieldId="56" fieldName="Zusatzinformation – Inhalt 5" typeEnumId="FIELD_TYPE_TEXT" length="210" maxLength="210" sequenceNum="56">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -557,7 +564,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="57" fieldName="Zusatzinformation – Art 5" type="string"  maxLength="20">
+    <DatevTransactionEntryDefinition fieldId="57" fieldName="Zusatzinformation – Art 5" typeEnumId="FIELD_TYPE_TEXT" length="20" maxLength="20" sequenceNum="57">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -568,7 +575,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="58" fieldName="Zusatzinformation – Inhalt 6" type="string"  maxLength="210">
+    <DatevTransactionEntryDefinition fieldId="58" fieldName="Zusatzinformation – Inhalt 6" typeEnumId="FIELD_TYPE_TEXT" length="210" maxLength="210" sequenceNum="58">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -579,7 +586,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="59" fieldName="Zusatzinformation – Art 6" type="string"  maxLength="20">
+    <DatevTransactionEntryDefinition fieldId="59" fieldName="Zusatzinformation – Art 6" typeEnumId="FIELD_TYPE_TEXT" length="20" maxLength="20" sequenceNum="59">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -590,7 +597,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="60" fieldName="Zusatzinformation – Inhalt 7" type="string"  maxLength="210">
+    <DatevTransactionEntryDefinition fieldId="60" fieldName="Zusatzinformation – Inhalt 7" typeEnumId="FIELD_TYPE_TEXT" length="210" maxLength="210" sequenceNum="60">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -601,7 +608,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="61" fieldName="Zusatzinformation – Art 7" type="string"  maxLength="20">
+    <DatevTransactionEntryDefinition fieldId="61" fieldName="Zusatzinformation – Art 7" typeEnumId="FIELD_TYPE_TEXT" length="20"  maxLength="20" sequenceNum="61">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -612,7 +619,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="62" fieldName="Zusatzinformation – Inhalt 8" type="string"  maxLength="210">
+    <DatevTransactionEntryDefinition fieldId="62" fieldName="Zusatzinformation – Inhalt 8" typeEnumId="FIELD_TYPE_TEXT" length="210"  maxLength="210" sequenceNum="62">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -623,7 +630,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="63" fieldName="Zusatzinformation – Art 8" type="string"  maxLength="20">
+    <DatevTransactionEntryDefinition fieldId="63" fieldName="Zusatzinformation – Art 8" typeEnumId="FIELD_TYPE_TEXT" length="20" maxLength="20" sequenceNum="63">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -634,7 +641,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="64" fieldName="Zusatzinformation – Inhalt 9" type="string"  maxLength="210">
+    <DatevTransactionEntryDefinition fieldId="64" fieldName="Zusatzinformation – Inhalt 9" typeEnumId="FIELD_TYPE_TEXT" length="210" maxLength="210" sequenceNum="64">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -645,7 +652,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="65" fieldName="Zusatzinformation – Art 9" type="string"  maxLength="20">
+    <DatevTransactionEntryDefinition fieldId="65" fieldName="Zusatzinformation – Art 9" typeEnumId="FIELD_TYPE_TEXT" length="20" maxLength="20" sequenceNum="65">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -656,7 +663,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="66" fieldName="Zusatzinformation – Inhalt 10" type="string"  maxLength="210">
+    <DatevTransactionEntryDefinition fieldId="66" fieldName="Zusatzinformation – Inhalt 10" typeEnumId="FIELD_TYPE_TEXT" length="210" maxLength="210" sequenceNum="66">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -667,7 +674,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="67" fieldName="Zusatzinformation – Art 10" type="string"  maxLength="20">
+    <DatevTransactionEntryDefinition fieldId="67" fieldName="Zusatzinformation – Art 10" typeEnumId="FIELD_TYPE_TEXT" length="20"  maxLength="20" sequenceNum="67">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -678,7 +685,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="68" fieldName="Zusatzinformation – Inhalt 11" type="string"  maxLength="210">
+    <DatevTransactionEntryDefinition fieldId="68" fieldName="Zusatzinformation – Inhalt 11" typeEnumId="FIELD_TYPE_TEXT" length="210" maxLength="210" sequenceNum="68">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -689,7 +696,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="69" fieldName="Zusatzinformation – Art 11" type="string"  maxLength="20">
+    <DatevTransactionEntryDefinition fieldId="69" fieldName="Zusatzinformation – Art 11" typeEnumId="FIELD_TYPE_TEXT" length="20" maxLength="20" sequenceNum="69">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -700,7 +707,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="70" fieldName="Zusatzinformation – Inhalt 12" type="string"  maxLength="210">
+    <DatevTransactionEntryDefinition fieldId="70" fieldName="Zusatzinformation – Inhalt 12" typeEnumId="FIELD_TYPE_TEXT" length="210" maxLength="210" sequenceNum="70">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -711,7 +718,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="71" fieldName="Zusatzinformation – Art 12" type="string"  maxLength="20">
+    <DatevTransactionEntryDefinition fieldId="71" fieldName="Zusatzinformation – Art 12" typeEnumId="FIELD_TYPE_TEXT" length="20" maxLength="20" sequenceNum="71">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -722,7 +729,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="72" fieldName="Zusatzinformation – Inhalt 13" type="string"  maxLength="210">
+    <DatevTransactionEntryDefinition fieldId="72" fieldName="Zusatzinformation – Inhalt 13" typeEnumId="FIELD_TYPE_TEXT" length="210"  maxLength="210" sequenceNum="72">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -733,7 +740,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="73" fieldName="Zusatzinformation – Art 13" type="string"  maxLength="20">
+    <DatevTransactionEntryDefinition fieldId="73" fieldName="Zusatzinformation – Art 13" typeEnumId="FIELD_TYPE_TEXT" length="20" maxLength="20" sequenceNum="73">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -744,7 +751,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="74" fieldName="Zusatzinformation – Inhalt 14" type="string"  maxLength="210">
+    <DatevTransactionEntryDefinition fieldId="74" fieldName="Zusatzinformation – Inhalt 14" typeEnumId="FIELD_TYPE_TEXT" length="210" maxLength="210" sequenceNum="74">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -755,7 +762,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="75" fieldName="Zusatzinformation – Art 14" type="string"  maxLength="20">
+    <DatevTransactionEntryDefinition fieldId="75" fieldName="Zusatzinformation – Art 14" typeEnumId="FIELD_TYPE_TEXT" length="20" maxLength="20" sequenceNum="75">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -766,7 +773,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="76" fieldName="Zusatzinformation – Inhalt 15" type="string"  maxLength="210">
+    <DatevTransactionEntryDefinition fieldId="76" fieldName="Zusatzinformation – Inhalt 15" typeEnumId="FIELD_TYPE_TEXT" length="210" maxLength="210" sequenceNum="76">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -777,7 +784,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="77" fieldName="Zusatzinformation – Art 15" type="string"  maxLength="20">
+    <DatevTransactionEntryDefinition fieldId="77" fieldName="Zusatzinformation – Art 15" typeEnumId="FIELD_TYPE_TEXT" length="20" maxLength="20" sequenceNum="77">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -788,7 +795,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="78" fieldName="Zusatzinformation – Inhalt 16" type="string"  maxLength="210">
+    <DatevTransactionEntryDefinition fieldId="78" fieldName="Zusatzinformation – Inhalt 16" typeEnumId="FIELD_TYPE_TEXT" length="210" maxLength="210" sequenceNum="78">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -799,7 +806,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="79" fieldName="Zusatzinformation – Art 16" type="string"  maxLength="20">
+    <DatevTransactionEntryDefinition fieldId="79" fieldName="Zusatzinformation – Art 16" typeEnumId="FIELD_TYPE_TEXT" length="20" maxLength="20" sequenceNum="79">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -810,7 +817,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="80" fieldName="Zusatzinformation – Inhalt 17" type="string"  maxLength="210">
+    <DatevTransactionEntryDefinition fieldId="80" fieldName="Zusatzinformation – Inhalt 17" typeEnumId="FIELD_TYPE_TEXT" length="210" maxLength="210" sequenceNum="80">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -821,7 +828,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="81" fieldName="Zusatzinformation – Art 17" type="string"  maxLength="20">
+    <DatevTransactionEntryDefinition fieldId="81" fieldName="Zusatzinformation – Art 17" typeEnumId="FIELD_TYPE_TEXT" length="20" maxLength="20" sequenceNum="81">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -832,7 +839,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="82" fieldName="Zusatzinformation – Inhalt 18" type="string"  maxLength="210">
+    <DatevTransactionEntryDefinition fieldId="82" fieldName="Zusatzinformation – Inhalt 18" typeEnumId="FIELD_TYPE_TEXT" length="210" maxLength="210" sequenceNum="82">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -843,7 +850,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="83" fieldName="Zusatzinformation – Art 18" type="string"  maxLength="20">
+    <DatevTransactionEntryDefinition fieldId="83" fieldName="Zusatzinformation – Art 18" typeEnumId="FIELD_TYPE_TEXT" length="20" maxLength="20" sequenceNum="83">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -854,7 +861,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="84" fieldName="Zusatzinformation – Inhalt 19" type="string"  maxLength="210">
+    <DatevTransactionEntryDefinition fieldId="84" fieldName="Zusatzinformation – Inhalt 19" typeEnumId="FIELD_TYPE_TEXT" length="210" maxLength="210" sequenceNum="84">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -865,7 +872,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="85" fieldName="Zusatzinformation – Art 19" type="string"  maxLength="20">
+    <DatevTransactionEntryDefinition fieldId="85" fieldName="Zusatzinformation – Art 19" typeEnumId="FIELD_TYPE_TEXT" length="20" maxLength="20" sequenceNum="85">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -876,7 +883,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="86" fieldName="Zusatzinformation – Inhalt 20" type="string"  maxLength="210">
+    <DatevTransactionEntryDefinition fieldId="86" fieldName="Zusatzinformation – Inhalt 20" typeEnumId="FIELD_TYPE_TEXT" length="210" maxLength="210" sequenceNum="86">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -887,7 +894,7 @@ under the License.
             # Informationsinhalt: Buchungsspezifische Inhalte zu den oben genannten Informationsarten.
         ]]></description>
     </DatevTransactionEntryDefinition>
-    <DatevTransactionEntryDefinition fieldId="87" fieldName="Zusatzinformation – Art 20" type="string"  maxLength="20">
+    <DatevTransactionEntryDefinition fieldId="87" fieldName="Zusatzinformation – Art 20" typeEnumId="FIELD_TYPE_TEXT" length="20" maxLength="20" sequenceNum="87">
         <description><![CDATA[
             # Zusatzinformationen, die zu Buchungssätzen erfasst werden können.
             # Diese Zusatzinformationen besitzen den Charakter eines Notizzettels und können frei erfasst werden.
@@ -899,18 +906,18 @@ under the License.
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="88" fieldName="Stück" type="integer" maxLength="8">
+    <DatevTransactionEntryDefinition fieldId="88" fieldName="Stück" typeEnumId="FIELD_TYPE_NUMBER" length="8" maxLength="8" sequenceNum="88">
         <description><![CDATA[
             # Wirkt sich nur bei Sachverhalt mit SKR14 Land- und Forstwirtschaft aus, für andere SKR werden die Felder beim Import/Export überlesen bzw. leer exportiert.
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="89" fieldName="Gewicht" type="decimal" maxLength="10" scale="2">
+    <DatevTransactionEntryDefinition fieldId="89" fieldName="Gewicht" typeEnumId="FIELD_TYPE_NUMBER" length="8" maxLength="10" scale="2" sequenceNum="89">
         <description><![CDATA[
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="90" fieldName="Zahlweise" type="integer" maxLength="2">
+    <DatevTransactionEntryDefinition fieldId="90" fieldName="Zahlweise" typeEnumId="FIELD_TYPE_NUMBER" length="2" maxLength="2" sequenceNum="90">
         <description><![CDATA[
             # OPOS-Informationen kommunal
             # 1 = Lastschrift
@@ -919,38 +926,38 @@ under the License.
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="91" fieldName="Forderungsart" type="string" maxLength="10">
+    <DatevTransactionEntryDefinition fieldId="91" fieldName="Forderungsart" typeEnumId="FIELD_TYPE_TEXT" length="10" maxLength="10" sequenceNum="91">
         <description><![CDATA[
             # OPOS-Informationen kommunal
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="92" fieldName="Veranlagungsjahr" type="date" format="%Y">
+    <DatevTransactionEntryDefinition fieldId="92" fieldName="Veranlagungsjahr" typeEnumId="FIELD_TYPE_DATE" format="yyyy" length="4" maxLength="4" sequenceNum="92">
         <description><![CDATA[
             # OPOS-Informationen kommunal
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="93" fieldName="Zugeordnete Fälligkeit" type="date" format="%d%m%Y">
+    <DatevTransactionEntryDefinition fieldId="93" fieldName="Zugeordnete Fälligkeit" typeEnumId="FIELD_TYPE_DATE" format="ddMMyyyy" length="8" maxLength="10" sequenceNum="93">
         <description><![CDATA[
             # OPOS-Informationen kommunal
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="94" fieldName="Skontotyp" type="integer" maxLength="1">
+    <DatevTransactionEntryDefinition fieldId="94" fieldName="Skontotyp" typeEnumId="FIELD_TYPE_NUMBER" length="1" maxLength="1" sequenceNum="94">
         <description><![CDATA[
             # 1 = Einkauf von Waren
             # 2 = Erwerb von Roh-Hilfs- und Betriebsstoffen
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="95" fieldName="Auftragsnummer" type="string" maxLength="30">
+    <DatevTransactionEntryDefinition fieldId="95" fieldName="Auftragsnummer" typeEnumId="FIELD_TYPE_TEXT" length="30" maxLength="30" sequenceNum="95">
         <description><![CDATA[
             # Allgemeine Bezeichnung, des Auftrags/Projekts
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="96" fieldName="Buchungstyp" type="string" maxLength="2">
+    <DatevTransactionEntryDefinition fieldId="96" fieldName="Buchungstyp" typeEnumId="FIELD_TYPE_TEXT" length="2" maxLength="2" sequenceNum="96">
         <description><![CDATA[
             # AA = Angeforderte Anzahlung/Abschlagsrechnung
             # AG = Erhaltene Anzahlung (Geldeingang)
@@ -962,20 +969,20 @@ under the License.
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="97" fieldName="USt-Schlüssel (Anzahlungen)" type="integer" maxLength="2">
+    <DatevTransactionEntryDefinition fieldId="97" fieldName="USt-Schlüssel (Anzahlungen)" typeEnumId="FIELD_TYPE_NUMBER" length="2" maxLength="2" sequenceNum="97">
         <description><![CDATA[
             # USt-Schlüssel der späteren Schlussrechnung
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="98" fieldName="EU-Mitgliedstaat (Anzahlungen)" type="string" maxLength="2">
+    <DatevTransactionEntryDefinition fieldId="98" fieldName="EU-Mitgliedstaat (Anzahlungen)" typeEnumId="FIELD_TYPE_TEXT" length="2" maxLength="2" sequenceNum="98">
         <description><![CDATA[
             # EU-Mitgliedstaat der späteren Schlussrechnung
             # (siehe Dok.-Nr. 1080169)
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="99" fieldName="Sachverhalt L+L (Anzahlungen)" type="integer" maxLength="3">
+    <DatevTransactionEntryDefinition fieldId="99" fieldName="Sachverhalt L+L (Anzahlungen)" typeEnumId="FIELD_TYPE_NUMBER" length="3" maxLength="3" sequenceNum="99">
         <description><![CDATA[
             # L+L-Sachverhalt der späteren Schlussrechnung
             # Sachverhalte gem. § 13b Abs. 1 Satz 1 Nrn. 1.-5. UStG
@@ -983,7 +990,7 @@ under the License.
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="100" fieldName="EU-Steuersatz (Anzahlungen)" type="decimal" length="4" scale="2">
+    <DatevTransactionEntryDefinition fieldId="100" fieldName="EU-Steuersatz (Anzahlungen)" typeEnumId="FIELD_TYPE_NUMBER" length="2" scale="2" maxLength="5" sequenceNum="100">
         <description><![CDATA[
             # EU-Steuersatz der späteren Schlussrechnung
             # Nur für entsprechende EU-Buchungen: Der im EU-Bestimmungsland gültige Steuersatz.
@@ -991,82 +998,82 @@ under the License.
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="101" fieldName="Erlöskonto (Anzahlungen)" type="integer" maxLength="9">
+    <DatevTransactionEntryDefinition fieldId="101" fieldName="Erlöskonto (Anzahlungen)" typeEnumId="FIELD_TYPE_ACCOUNT" length="9" maxLength="9" sequenceNum="101">
         <description><![CDATA[
             # Erlöskonto der späteren Schlussrechnung
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="102" fieldName="Herkunft-Kz" type="string" maxLength="2">
+    <DatevTransactionEntryDefinition fieldId="102" fieldName="Herkunft-Kz" typeEnumId="FIELD_TYPE_TEXT" length="2" maxLength="2" sequenceNum="102">
         <description><![CDATA[
             # Wird beim Import durch SV (Stapelverarbeitung) ersetzt.
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="103" fieldName="Leerfeld" type="string" maxLength="36">
+    <DatevTransactionEntryDefinition fieldId="103" fieldName="Leerfeld" typeEnumId="FIELD_TYPE_TEXT" length="36" maxLength="36" sequenceNum="103">
         <description><![CDATA[
             # Wird von DATEV verwendet.
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="104" fieldName="KOST-Datum" type="date" format="%d%m%Y">
+    <DatevTransactionEntryDefinition fieldId="104" fieldName="KOST-Datum" typeEnumId="FIELD_TYPE_DATE" format="ddMMyyyy" length="8" maxLength="8" sequenceNum="104">
         <description><![CDATA[
             # Format TTMMJJJJ
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="105" fieldName="SEPA-Mandatsreferenz" type="string" maxLength="35">
+    <DatevTransactionEntryDefinition fieldId="105" fieldName="SEPA-Mandatsreferenz" typeEnumId="FIELD_TYPE_TEXT" length="35" maxLength="35" sequenceNum="105">
         <description><![CDATA[
             # Vom Zahlungsempfänger individuell vergebenes Kennzeichen eines Mandats (z. B. Rechnungs- oder Kundennummer).
         ]]></description>
     </DatevTransactionEntryDefinition>
 
 
-    <DatevTransactionEntryDefinition fieldId="106" fieldName="Skontosperre" type="boolean">
+    <DatevTransactionEntryDefinition fieldId="106" fieldName="Skontosperre" typeEnumId="FIELD_TYPE_BOOLEAN" length="1" maxLength="1" sequenceNum="106">
         <description><![CDATA[
             # 0 = keine Skontosperre
             # 1 = Skontosperre
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="107" fieldName="Gesellschaftername" type="string" maxLength="76">
+    <DatevTransactionEntryDefinition fieldId="107" fieldName="Gesellschaftername" typeEnumId="FIELD_TYPE_TEXT" length="76" maxLength="76" sequenceNum="107">
         <description><![CDATA[
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="108" fieldName="Beteiligtennummer" type="integer" maxLength="4">
+    <DatevTransactionEntryDefinition fieldId="108" fieldName="Beteiligtennummer" typeEnumId="FIELD_TYPE_NUMBER" length="4" maxLength="4" sequenceNum="108">
         <description><![CDATA[
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="109" fieldName="Identifikationsnummer" type="string" maxLength="11">
+    <DatevTransactionEntryDefinition fieldId="109" fieldName="Identifikationsnummer" typeEnumId="FIELD_TYPE_TEXT" length="11" maxLength="11" sequenceNum="109">
         <description><![CDATA[
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="110" fieldName="Zeichnernummer" type="string" maxLength="20">
+    <DatevTransactionEntryDefinition fieldId="110" fieldName="Zeichnernummer" typeEnumId="FIELD_TYPE_TEXT" length="20" maxLength="20" sequenceNum="110">
         <description><![CDATA[
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="111" fieldName="Postensperre bis" type="date" format="%d%m%Y">
+    <DatevTransactionEntryDefinition fieldId="111" fieldName="Postensperre bis" typeEnumId="FIELD_TYPE_DATE" format="ddMMyyyy" length="8" maxLength="8" sequenceNum="111">
         <description><![CDATA[
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="112" fieldName="Bezeichnung" type="string" maxLength="30">
+    <DatevTransactionEntryDefinition fieldId="112" fieldName="Bezeichnung" typeEnumId="FIELD_TYPE_TEXT" length="30" maxLength="30" sequenceNum="112">
         <description><![CDATA[
             # SoBil-Sachverhalt
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="113" fieldName="Kennzeichen" type="integer" maxLength="2">
+    <DatevTransactionEntryDefinition fieldId="113" fieldName="Kennzeichen" typeEnumId="FIELD_TYPE_NUMBER" length="2" maxLength="2" sequenceNum="113">
         <description><![CDATA[
             # SoBil-Buchung
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="114" fieldName="Festschreibung" type="boolean">
+    <DatevTransactionEntryDefinition fieldId="114" fieldName="Festschreibung" typeEnumId="FIELD_TYPE_BOOLEAN" length="1" maxLength="1" sequenceNum="114">
         <description><![CDATA[
             # leer = nicht definiert; wird ab Jahreswechselversion 2016/2017 automatisch festgeschrieben
             # 0 = keine Festschreibung
@@ -1076,12 +1083,12 @@ under the License.
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="115" fieldName="Leistungsdatum" type="date" format="%d%m%Y">
+    <DatevTransactionEntryDefinition fieldId="115" fieldName="Leistungsdatum" typeEnumId="FIELD_TYPE_DATE" format="ddMMyyyy" sequenceNum="115">
         <description><![CDATA[
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="116" fieldName="Datum Zuord." type="date" format="%d%m%Y">
+    <DatevTransactionEntryDefinition fieldId="116" fieldName="Datum Zuord." typeEnumId="FIELD_TYPE_DATE" format="ddMMyyyy" sequenceNum="116">
         <description><![CDATA[
             # Steuerperiode
         ]]></description>
@@ -1089,127 +1096,127 @@ under the License.
     
     <!-- DATEV METADATA FIELDS -->
 
-    <DatevTransactionEntryDefinition fieldId="117" fieldName="DATEV-Format-KZ" type="string" maxLength="4" metadata="Y">
+    <DatevTransactionEntryDefinition fieldId="117" fieldName="DATEV-Format-KZ" typeEnumId="FIELD_TYPE_TEXT" maxLength="4" metadata="Y" sequenceNum="1">
         <description><![CDATA[
             # vom Datev angegeben
             # EXTF = für Datei-Formate, die von externen Programmen erstellt wurden
         ]]></description>
     </DatevTransactionEntryDefinition>
     
-    <DatevTransactionEntryDefinition fieldId="118" fieldName="Versionsnummer" type="integer" maxLength="3" metadata="Y">
+    <DatevTransactionEntryDefinition fieldId="118" fieldName="Versionsnummer" typeEnumId="FIELD_TYPE_NUMBER" maxLength="3" metadata="Y" sequenceNum="2">
         <description><![CDATA[
             # entspricht der zugrundeliegenden Versionsnummer des Scnittstellen-Entwicklungsleitfadens
         ]]></description>
     </DatevTransactionEntryDefinition>
    
-   <DatevTransactionEntryDefinition fieldId="119" fieldName="Datenkategorie" type="integer" maxLength="3" metadata="Y">
+   <DatevTransactionEntryDefinition fieldId="119" fieldName="Datenkategorie" typeEnumId="FIELD_TYPE_NUMBER" maxLength="3" metadata="Y" sequenceNum="3">
         <description><![CDATA[
             # vom Datev angegeben
         ]]></description>
     </DatevTransactionEntryDefinition>
     
-    <DatevTransactionEntryDefinition fieldId="120" fieldName="Formatname" type="string" metadata="Y">
+    <DatevTransactionEntryDefinition fieldId="120" fieldName="Formatname" typeEnumId="FIELD_TYPE_TEXT" metadata="Y" sequenceNum="4">
         <description><![CDATA[
             # vom Datev angegeben
         ]]></description>
     </DatevTransactionEntryDefinition>
     
-    <DatevTransactionEntryDefinition fieldId="121" fieldName="Formatversion" type="integer" maxLength="3" metadata="Y">
+    <DatevTransactionEntryDefinition fieldId="121" fieldName="Formatversion" typeEnumId="FIELD_TYPE_NUMBER" maxLength="3" metadata="Y" sequenceNum="5">
         <description><![CDATA[
             # entspricht der zugrundeliegenden Versionsnummer des Scnittstellen-Entwicklungsleitfadens
         ]]></description>
     </DatevTransactionEntryDefinition>
     
-    <DatevTransactionEntryDefinition fieldId="122" fieldName="Erzeugt am" type="date" format="%Y%m%d%H%M%S%L" metadata="Y">
+    <DatevTransactionEntryDefinition fieldId="122" fieldName="Erzeugt am" typeEnumId="FIELD_TYPE_DATE" format="yyyyMMddHHmmssSSS" metadata="Y" sequenceNum="6">
         <description><![CDATA[
             # entspricht der zugrundeliegenden Versionsnummer des Scnittstellen-Entwicklungsleitfadens
         ]]></description>
     </DatevTransactionEntryDefinition>
     
-    <DatevTransactionEntryDefinition fieldId="123" fieldName="Importiert" type="date" maxLength="3" metadata="Y">
+    <DatevTransactionEntryDefinition fieldId="123" fieldName="Importiert" typeEnumId="FIELD_TYPE_DATE" maxLength="3" metadata="Y" sequenceNum="7">
         <description><![CDATA[
 	       # Darf nicht gefüllt werden, durch Import gesetzt.
         ]]></description>
     </DatevTransactionEntryDefinition>
     
-    <DatevTransactionEntryDefinition fieldId="124" fieldName="Herkunft" type="string" maxLength="2" metadata="Y">
+    <DatevTransactionEntryDefinition fieldId="124" fieldName="Herkunft" typeEnumId="FIELD_TYPE_TEXT" maxLength="2" metadata="Y" sequenceNum="8">
         <description><![CDATA[
             # Herkunfts-Kennzeichen
             # Beim Import wird das Herkunfts-Kennzeichen durch „SV“ (= Stapelverarbeitung) ersetzt.
         ]]></description>
     </DatevTransactionEntryDefinition>
     
-     <DatevTransactionEntryDefinition fieldId="125" fieldName="Exportiert von" type="string" maxLength="25" metadata="Y">
+     <DatevTransactionEntryDefinition fieldId="125" fieldName="Exportiert von" typeEnumId="FIELD_TYPE_TEXT" maxLength="25" metadata="Y" sequenceNum="9">
         <description><![CDATA[
             # Benutzername
         ]]></description>
     </DatevTransactionEntryDefinition>
     
-     <DatevTransactionEntryDefinition fieldId="126" fieldName="Importiert von" type="string" maxLength="10" metadata="Y">
+     <DatevTransactionEntryDefinition fieldId="126" fieldName="Importiert von" typeEnumId="FIELD_TYPE_TEXT" maxLength="10" metadata="Y" sequenceNum="10">
         <description><![CDATA[
            # Darf nicht gefüllt werden, durch Import gesetzt.
         ]]></description>
     </DatevTransactionEntryDefinition>
     
-     <DatevTransactionEntryDefinition fieldId="127" fieldName="Berater" type="integer" maxLength="7" metadata="Y">
+     <DatevTransactionEntryDefinition fieldId="127" fieldName="Berater" typeEnumId="FIELD_TYPE_NUMBER" maxLength="7" metadata="Y" sequenceNum="11">
         <description><![CDATA[
            # Beraternummer
         ]]></description>
     </DatevTransactionEntryDefinition>
     
-     <DatevTransactionEntryDefinition fieldId="128" fieldName="Mandant" type="integer" maxLength="5" metadata="Y">
+     <DatevTransactionEntryDefinition fieldId="128" fieldName="Mandant" typeEnumId="FIELD_TYPE_NUMBER" maxLength="5" metadata="Y" sequenceNum="12">
         <description><![CDATA[
            # Mandantennummer
         ]]></description>
     </DatevTransactionEntryDefinition>
     
-     <DatevTransactionEntryDefinition fieldId="129" fieldName="WJ-Beginn" type="date" format="%Y%m%d" metadata="Y">
+     <DatevTransactionEntryDefinition fieldId="129" fieldName="WJ-Beginn" typeEnumId="FIELD_TYPE_DATE" format="yyyyMMdd" metadata="Y" sequenceNum="13">
         <description><![CDATA[
            # Wirtschaftsjahresbeginn
         ]]></description>
     </DatevTransactionEntryDefinition>
     
-     <DatevTransactionEntryDefinition fieldId="130" fieldName="Sachkontenlänge" type="integer" maxLength="1" metadata="Y">
+     <DatevTransactionEntryDefinition fieldId="130" fieldName="Sachkontenlänge" typeEnumId="FIELD_TYPE_NUMBER" maxLength="1" metadata="Y" sequenceNum="14">
         <description><![CDATA[
           # Kleinste Sachkontenlänge = 4, Grösste Sachkontenlänge = 8
         ]]></description>
     </DatevTransactionEntryDefinition>
     
-    <DatevTransactionEntryDefinition fieldId="131" fieldName="Datum vom" type="date" format="%Y%m%d" metadata="Y">
+    <DatevTransactionEntryDefinition fieldId="131" fieldName="Datum vom" typeEnumId="FIELD_TYPE_DATE" format="yyyyMMdd" metadata="Y" sequenceNum="15">
         <description><![CDATA[
         ]]></description>
     </DatevTransactionEntryDefinition>
     
-    <DatevTransactionEntryDefinition fieldId="132" fieldName="Datum bis" type="date" format="%Y%m%d" metadata="Y">
+    <DatevTransactionEntryDefinition fieldId="132" fieldName="Datum bis" typeEnumId="FIELD_TYPE_DATE" format="yyyyMMdd" metadata="Y" sequenceNum="16">
         <description><![CDATA[
         ]]></description>
     </DatevTransactionEntryDefinition>
     
-    <DatevTransactionEntryDefinition fieldId="133" fieldName="Bezeichnung" type="string" maxLength="30" metadata="Y">
+    <DatevTransactionEntryDefinition fieldId="133" fieldName="Bezeichnung" typeEnumId="FIELD_TYPE_TEXT" maxLength="30" metadata="Y" sequenceNum="17">
         <description><![CDATA[
             # Bezeichnung des Buchungsstapels
         ]]></description>
     </DatevTransactionEntryDefinition>
     
-    <DatevTransactionEntryDefinition fieldId="134" fieldName="Diktatkürzel" type="string" maxLength="2" metadata="Y">
+    <DatevTransactionEntryDefinition fieldId="134" fieldName="Diktatkürzel" typeEnumId="FIELD_TYPE_TEXT" maxLength="2" metadata="Y" sequenceNum="18">
         <description><![CDATA[
             # Diktatkürzel Beispiel MM = Max Mustermann
         ]]></description>
     </DatevTransactionEntryDefinition>
     
-    <DatevTransactionEntryDefinition fieldId="135" fieldName="Buchungstyp" type="integer" maxLength="1" metadata="Y">
+    <DatevTransactionEntryDefinition fieldId="135" fieldName="Buchungstyp" typeEnumId="FIELD_TYPE_NUMBER" maxLength="1" metadata="Y" sequenceNum="19">
         <description><![CDATA[
             # 1 = Finanzbuchhaltung, 2 = Jahresabschluss
         ]]></description>
     </DatevTransactionEntryDefinition>
     
-    <DatevTransactionEntryDefinition fieldId="136" fieldName="Rechnungslegungszweck" type="integer" maxLength="2" metadata="Y">
+    <DatevTransactionEntryDefinition fieldId="136" fieldName="Rechnungslegungszweck" typeEnumId="FIELD_TYPE_NUMBER" maxLength="2" metadata="Y" sequenceNum="20">
         <description><![CDATA[
             # 0 oder leer = Rechnungslegungszweckunabhängig
         ]]></description>
     </DatevTransactionEntryDefinition>
     
-    <DatevTransactionEntryDefinition fieldId="137" fieldName="Festschreibung" type="boolean" metadata="Y">
+    <DatevTransactionEntryDefinition fieldId="137" fieldName="Festschreibung" typeEnumId="FIELD_TYPE_BOOLEAN" metadata="Y" sequenceNum="21">
         <description><![CDATA[
             # leer = nicht definiert; wird ab Jahreswechselversion 2016/2017 automatisch festgeschrieben
             # 0 = keine Festschreibung
@@ -1217,53 +1224,53 @@ under the License.
         ]]></description>
     </DatevTransactionEntryDefinition>
     
-    <DatevTransactionEntryDefinition fieldId="138" fieldName="WKZ" type="string" maxLength="3" metadata="Y">
+    <DatevTransactionEntryDefinition fieldId="138" fieldName="WKZ" typeEnumId="FIELD_TYPE_TEXT" maxLength="3" metadata="Y" sequenceNum="22">
         <description><![CDATA[
             # Währungskennzeichen        
         ]]></description>
     </DatevTransactionEntryDefinition>
     
-    <DatevTransactionEntryDefinition fieldId="139" fieldName="reserviert" type="string" metadata="Y">
+    <DatevTransactionEntryDefinition fieldId="139" fieldName="reserviert" typeEnumId="FIELD_TYPE_TEXT" metadata="Y" sequenceNum="23">
         <description><![CDATA[
         ]]></description>
     </DatevTransactionEntryDefinition>
     
-    <DatevTransactionEntryDefinition fieldId="140" fieldName="Derivatskennzeichen" type="string" metadata="Y">
+    <DatevTransactionEntryDefinition fieldId="140" fieldName="Derivatskennzeichen" typeEnumId="FIELD_TYPE_TEXT" metadata="Y" sequenceNum="24">
         <description><![CDATA[
         ]]></description>
     </DatevTransactionEntryDefinition>
     
-    <DatevTransactionEntryDefinition fieldId="141" fieldName="reserviert 2" type="string" metadata="Y">
+    <DatevTransactionEntryDefinition fieldId="141" fieldName="reserviert 2" typeEnumId="FIELD_TYPE_TEXT" metadata="Y" sequenceNum="25">
         <description><![CDATA[
         ]]></description>
     </DatevTransactionEntryDefinition>
     
-    <DatevTransactionEntryDefinition fieldId="142" fieldName="reserviert 3" type="string" metadata="Y">
+    <DatevTransactionEntryDefinition fieldId="142" fieldName="reserviert 3" typeEnumId="FIELD_TYPE_TEXT" metadata="Y" sequenceNum="26">
         <description><![CDATA[
         ]]></description>
     </DatevTransactionEntryDefinition>
     
-    <DatevTransactionEntryDefinition fieldId="143" fieldName="SKR" type="string" metadata="Y">
+    <DatevTransactionEntryDefinition fieldId="143" fieldName="SKR" typeEnumId="FIELD_TYPE_TEXT" metadata="Y" sequenceNum="27">
         <description><![CDATA[
         ]]></description>
     </DatevTransactionEntryDefinition>
     
-    <DatevTransactionEntryDefinition fieldId="144" fieldName="Branchenlösung-Id" type="integer" metadata="Y">
+    <DatevTransactionEntryDefinition fieldId="144" fieldName="Branchenlösung-Id" typeEnumId="FIELD_TYPE_NUMBER" metadata="Y" sequenceNum="28">
         <description><![CDATA[
         ]]></description>
     </DatevTransactionEntryDefinition>  
     
-    <DatevTransactionEntryDefinition fieldId="145" fieldName="reserviert 4" type="integer" metadata="Y">
+    <DatevTransactionEntryDefinition fieldId="145" fieldName="reserviert 4" typeEnumId="FIELD_TYPE_NUMBER" metadata="Y" sequenceNum="29">
         <description><![CDATA[
         ]]></description>
     </DatevTransactionEntryDefinition>
     
-    <DatevTransactionEntryDefinition fieldId="146" fieldName="reserviert 5" type="string" metadata="Y">
+    <DatevTransactionEntryDefinition fieldId="146" fieldName="reserviert 5" typeEnumId="FIELD_TYPE_TEXT" metadata="Y" sequenceNum="30">
         <description><![CDATA[
         ]]></description>
     </DatevTransactionEntryDefinition>
 
-    <DatevTransactionEntryDefinition fieldId="147" fieldName="Anwendungsinformation" type="string" maxLength="16" metadata="Y">
+    <DatevTransactionEntryDefinition fieldId="147" fieldName="Anwendungsinformation" typeEnumId="FIELD_TYPE_TEXT" maxLength="16" metadata="Y" sequenceNum="31">
         <description><![CDATA[
 	       # Verarbeitungskennzeichen der abgebenden Anwendung => Bsp. '9/2016'
         ]]></description>

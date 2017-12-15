@@ -109,9 +109,9 @@
         <value xml:lang="fr">Sélectionnez l'organisation pour l'installation</value>
     </property>
     <property key="SetupMultipleWebSitesForProductStore">
-        <value xml:lang="en">Multiple WebSite records are associated to this ProductStore; this configuration cannot be fully managed using the setup wizard.</value>
-        <value xml:lang="de">Mehrere WebSite-Datensätze sind diesem ProductStore zugeordnet. Diese Konfiguration kann nicht mit dem Setup-Assistenten vollständig verwaltet werden.</value>
-        <value xml:lang="fr">Plusieurs enregistrements WebSite sont associés à ce ProductStore; Cette configuration ne peut pas être entièrement gérée à l'aide de l'assistant d'installation.</value>
+        <value xml:lang="en">Multiple WebSite records are associated to this ProductStore; this configuration cannot be fully managed using the setup wizard. Please follow the links below for advanced editing options.</value>
+        <value xml:lang="de">Mehrere WebSite-Datensätze sind diesem ProductStore zugeordnet. Diese Konfiguration kann nicht mit dem Setup-Assistenten vollständig verwaltet werden. Bitte folgen Sie den unten stehenden Links für erweiterte Bearbeitungsoptionen.</value>
+        <value xml:lang="fr">Plusieurs enregistrements WebSite sont associés à ce ProductStore; Cette configuration ne peut pas être entièrement gérée à l'aide de l'assistant d'installation. Veuillez suivre les liens ci-dessous pour les options d'édition avancées.</value>
     </property>
     <property key="SetupProductStoreVisualThemeIdInfo">
         <value xml:lang="en">Note: For legacy schema design reasons, the visualThemeId is usually specified on the ProductStore record rather than the WebSite record.</value>
@@ -128,7 +128,10 @@
         <value xml:lang="de">Warnung: Bei großen Geschäften kann das Auslassen dieses Werts oder das Festlegen eines großen Werts dazu führen, dass die Seite geladen wird und sehr langsam reagiert.</value>
         <value xml:lang="fr">Avertissement: Pour les grands magasins, si vous omettez cette valeur ou si vous définissez une valeur élevée, la page peut se charger et répondre très lentement.</value>
     </property>
-    
+    <property key="SetupProductEditNotice">
+        <value xml:lang="en">Note: This is an abridged Product form for quickly adding products; to edit all possible fields, please use the Catalog application.</value>
+        <value xml:lang="de">Hinweis: Dies ist ein gekürztes Produktformular zum schnellen Hinzufügen von Produkten. Um alle möglichen Felder zu bearbeiten, benutzen Sie bitte die Anwendung Katalog.</value>
+    </property>
     <property key="SetupSelectUserForSetup">
         <value xml:lang="en">Select User for Setup</value>
     </property>

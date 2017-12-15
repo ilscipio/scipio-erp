@@ -1,6 +1,7 @@
 package com.ilscipio.scipio.product.category;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -167,10 +168,23 @@ public abstract class CategoryWorker {
         return products;
     }
 
-    // TODO
-//  public static Map<String, Map<String, Object>> getLocalizedProductContentTextFields(Delegator delegator, LocalDispatcher dispatcher, 
-//      String productId, Collection<String> dataResourceTypeIdList, boolean useCache) {
-//
-//  }
+    public static List<GenericValue> extractAllProductCategoryFromTreeItems(List<? extends Map<String, Object>> treeItems) {
+        List<GenericValue> outList = new LinkedList<>();
+        extractAllProductCategoryFromTreeItems(treeItems, outList);
+        return outList;
+    }
+    
+    public static void extractAllProductCategoryFromTreeItems(List<? extends Map<String, Object>> treeItems, List<GenericValue> outList) {
+        if (treeItems == null) return;
+        for(Map<String, Object> item : treeItems) {
+            String type = (String) item.get("type");
+            if ("category".equals(type)) {
+                GenericValue productCategory = (GenericValue) item.get("productCategoryEntity");
+                if (productCategory != null) {
+                    outList.add(productCategory);
+                }
+            }
+        }
+    }
     
 }

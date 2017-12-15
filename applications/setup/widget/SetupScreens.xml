@@ -977,6 +977,19 @@
                                     <platform-specific>
                                         <html><html-template location="component://setup/webapp/setup/store/EditProductStore.ftl"/></html>
                                     </platform-specific>
+                                    <section>
+                                        <condition>
+                                            <and>
+                                                <not><if-empty field="webSiteCount"/></not>
+                                                <if-compare field="webSiteCount" operator="greater" value="1"/>
+                                            </and>
+                                        </condition>
+                                        <widgets>
+                                            <platform-specific>
+                                                <html><html-template location="component://setup/webapp/setup/store/ListWebSites.ftl"/></html>
+                                            </platform-specific>
+                                        </widgets>
+                                    </section>
                                 </screenlet>
                             </widgets>
                             <fail-widgets>

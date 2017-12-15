@@ -10,6 +10,7 @@ websiteData = context.websiteData ?: [:];
 
 context.webSite = websiteData.webSite;
 context.webSiteId = websiteData.webSiteId;
+context.webSiteList = websiteData.webSiteList;
 context.webSiteCount = websiteData.webSiteCount;
 
 defaultWebSiteId = null;

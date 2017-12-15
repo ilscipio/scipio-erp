@@ -23,10 +23,11 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 
-import com.ilscipio.scipio.accounting.datev.DatevException.DATEV_ERROR_TYPE;
+import com.ilscipio.scipio.accounting.datev.DatevNotificationMessage.NotificationMessageType;
 import com.ilscipio.scipio.common.util.TikaUtil;
 
 import javolution.util.FastList;
+import javolution.util.FastMap;
 
 public class DatevServices {
 
@@ -45,7 +46,7 @@ public class DatevServices {
 
         // Prepare result objects
         Map<String, Object> result = ServiceUtil.returnSuccess();
-        List<String> messages = FastList.newInstance();
+        List<DatevNotificationMessage> notificationMessages = FastList.newInstance();
         List<GenericValue> transactionEntriesImported = FastList.newInstance();
 
         // Get context params
@@ -54,6 +55,8 @@ public class DatevServices {
         String fileSize = (String) context.get("_uploadedFile_size");
         String fileName = (String) context.get("_uploadedFile_fileName");
         String contentType = (String) context.get("_uploadedFile_contentType");
+
+        BufferedReader csvReader = null;
 
         Character delimiter = DEFAULT_DELIMITER;
         if (UtilValidate.isNotEmpty(context.get("delimiter")))
@@ -67,91 +70,127 @@ public class DatevServices {
         if (Debug.isOn(Debug.VERBOSE)) {
             Debug.log("Content Type :" + contentType);
             Debug.log("File Name    :" + fileName);
-            Debug.log("File Size    :" + String.valueOf(fileSize));
+            Debug.log("File Size    :" + fileSize);
         }
-
-        double fileSizeConverted = UtilMisc.toDouble(fileSize);
-        if (fileSizeConverted <= 0 && !fileBytes.hasRemaining()) {
-            return ServiceUtil.returnError("Uploaded CSV file is empty");
-        }
-
-        // Find media type
-        MediaType mediaType = TikaUtil.findMediaTypeSafe(fileBytes, fileName);
-        if (mediaType != null) {
-            String[] splittedContentType = contentType.split("/");
-            if (splittedContentType.length != 2) {
-                Debug.logWarning("File content type [" + contentType + "] is invalid", module);
-            }
-
-            String mediaTypeStr = mediaType.getType().concat("/").concat(mediaType.getSubtype());
-            if (!contentType.equals("text/csv") && !mediaTypeStr.equals("text/csv")) {
-                ServiceUtil.returnError("File [" + fileName + "] is not a valid CSV file.");
-            } else if (!contentType.equals(mediaTypeStr)) {
-                Debug.logWarning(
-                        "File content type  [" + contentType + "] differs from the content type found by Tika [" + mediaType.getType() + "/" + mediaType.getSubtype() + "]",
-                        module);
-            }
-        }
-        fileBytes.rewind();
-
-        // Find charset
-        Charset detectedCharset = TikaUtil.findCharsetSafe(fileBytes, fileName, UniversalEncodingDetector.class, mediaType);
-        if (UtilValidate.isEmpty(detectedCharset)) {
-            String systemEncoding = System.getProperty("file.encoding");
-            detectedCharset = Charset.forName(systemEncoding);
-        }
-        fileBytes.rewind();
-
-        // Parse CSV
-        fileBytes.rewind();
-        final BufferedReader csvReader = new BufferedReader(new StringReader(detectedCharset.decode(fileBytes).toString()));
-
-        CSVFormat fmt = CSVFormat.newFormat(delimiter).withQuote(quote).withQuoteMode(QuoteMode.NON_NUMERIC);
-
         try {
-            Debug.log("is csv reader ready??" + csvReader.ready());
+            double fileSizeConverted = UtilMisc.toDouble(fileSize);
+            if (fileSizeConverted <= 0 && !fileBytes.hasRemaining()) {
+                throw new DatevException(new DatevNotificationMessage(NotificationMessageType.FATAL, "Uploaded CSV file is empty"));
+            }
+
+            // Find media type
+            MediaType mediaType = TikaUtil.findMediaTypeSafe(fileBytes, fileName);
+            if (mediaType != null) {
+                String[] splittedContentType = contentType.split("/");
+                if (splittedContentType.length != 2) {
+                    String notificationMessage = "File content type [" + contentType + "] is invalid";
+                    notificationMessages.add(new DatevNotificationMessage(NotificationMessageType.WARNING, notificationMessage));
+                    Debug.logWarning(notificationMessage, module);
+                }
+
+                String mediaTypeStr = mediaType.getType().concat("/").concat(mediaType.getSubtype());
+                if (!contentType.equals("text/csv") && !mediaTypeStr.equals("text/csv")) {
+                    ServiceUtil.returnError("File [" + fileName + "] is not a valid CSV file.");
+                } else if (!contentType.equals(mediaTypeStr)) {
+                    String notificationMessage = "File content type  [" + contentType + "] differs from the content type found by Tika [" + mediaType.getType() + "/"
+                            + mediaType.getSubtype() + "]";
+                    notificationMessages.add(new DatevNotificationMessage(NotificationMessageType.WARNING, notificationMessage));
+                    Debug.logWarning(notificationMessage, module);
+                }
+            }
+            fileBytes.rewind();
+
+            // Find charset
+            Charset detectedCharset = TikaUtil.findCharsetSafe(fileBytes, fileName, UniversalEncodingDetector.class, mediaType);
+            if (UtilValidate.isEmpty(detectedCharset)) {
+                String systemEncoding = System.getProperty("file.encoding");
+                detectedCharset = Charset.forName(systemEncoding);
+            }
+            fileBytes.rewind();
+
+            // Initialize CSV format
+            fileBytes.rewind();
+            csvReader = new BufferedReader(new StringReader(detectedCharset.decode(fileBytes).toString()));
+            CSVFormat fmt = CSVFormat.newFormat(delimiter).withQuote(quote).withQuoteMode(QuoteMode.NON_NUMERIC);
+
+            // Initialize helper
             DatevHelper datevHelper = null;
-            try {
-                datevHelper = new DatevHelper(delegator);
-            } catch (DatevException e) {
-                if (!e.getDatevErrorType().equals(DATEV_ERROR_TYPE.FATAL)) {
-                    messages.add(e.getMessage());
-                } else {
-                    throw new Exception(e);
-                }
-            }
-            fmt.withHeader(datevHelper.getDatevTransactionFieldNames()).withSkipHeaderRecord(true);
+            datevHelper = new DatevHelper(delegator, orgPartyId, notificationMessages);
 
+            // Find out if CSV has a meta header so we can remove it and loop
+            // only real records
+            if (csvReader.markSupported())
+                csvReader.mark(fileBytes.limit());
             String metaHeader = csvReader.readLine();
-            Iterator<String> metaHeaderIter = CSVParser.parse(metaHeader, fmt).getRecords().get(0).iterator();
             try {
+                Iterator<String> metaHeaderIter = CSVParser.parse(metaHeader, fmt).getRecords().get(0).iterator();
                 if (!datevHelper.isMetaHeader(metaHeaderIter)) {
-                    csvReader.reset();
+                    if (csvReader.markSupported()) {
+                        csvReader.reset();
+                    } else {
+                        csvReader.close();
+                        csvReader = new BufferedReader(new StringReader(detectedCharset.decode(fileBytes).toString()));
+                    }
                 }
-            } catch (DatevException e) {
-                if (!e.getDatevErrorType().equals(DATEV_ERROR_TYPE.FATAL)) {
-                    messages.add(e.getMessage());
-                }
+            } catch (Exception e) {
+                notificationMessages.add(new DatevNotificationMessage(NotificationMessageType.IGNORE, "Failed parsing metadata header: " + e.getMessage()));
+                Debug.logWarning(e, module);
             }
 
-            CSVParser parser = fmt.parse(csvReader);
-
-            List<CSVRecord> records = parser.getRecords();
-            long recordsNumber = parser.getRecordNumber();
-            if (recordsNumber < 2) {
-                return ServiceUtil.returnError("No records found.");
+            // Find out if CSV has a header so we can remove it and loop only
+            // real records
+            String[] datevTransactionsFieldNames = datevHelper.getDatevTransactionFieldNames();
+            fmt = fmt.withHeader(datevTransactionsFieldNames);
+            if (fmt.getHeader() != null && fmt.getHeader().length > 0) {
+                fmt = fmt.withSkipHeaderRecord(true);
             } else {
+                notificationMessages.add(new DatevNotificationMessage(NotificationMessageType.WARNING,
+                        "Header couldn't be found. CSV file parsed using column position according to DATEV specification."));
+            }
 
-                List<CSVRecord> recordsWithoutHeaders = FastList.newInstance();
-                recordsWithoutHeaders.addAll(records);
-                Debug.log("CSV header ====> " + parser.getHeaderMap());
-                for (final CSVRecord rec : recordsWithoutHeaders) {
-                    for (Iterator<String> iter = rec.iterator(); iter.hasNext();) {
-                        String value = iter.next();
-                        Debug.log("Record [" + rec.getRecordNumber() + "]: <" + value + ">");
+            // Parse CSV
+            CSVParser parser = fmt.parse(csvReader);
+            List<CSVRecord> records = parser.getRecords();
+            if (parser.getRecordNumber() <= 0) {
+                throw new DatevException(new DatevNotificationMessage(NotificationMessageType.FATAL, "No records found after CSV has been parsed."));
+            } else {
+                for (final CSVRecord rec : records) {
+                    if (Debug.isOn(Debug.VERBOSE)) {
+                        Debug.logInfo(rec.toString(), module);
+                    }
+                    boolean allFieldValid = true;
+                    Map<String, String> recordMap = FastMap.newInstance();
+                    if (rec.isConsistent()) {
+                        recordMap = rec.toMap();
+                        for (String key : recordMap.keySet()) {
+                            if (!datevHelper.validateField(key, recordMap.get(key))) {
+                                allFieldValid = false;
+                            }
+                        }
+                    } else {
+                        // Assuming here the fields (columns) are in the order
+                        // DATEV specification determines
+                        Iterator<String> iter = rec.iterator();
+                        for (int i = 0; iter.hasNext(); i++) {
+                            String value = iter.next();
+                            if (!datevHelper.validateField(i, value)) {
+                                allFieldValid = false;
+                            }
+                            recordMap.put(datevTransactionsFieldNames[i], value);
+                        }
+                    }
+                    if (allFieldValid) {
+                        datevHelper.processRecord(recordMap);
                     }
                 }
             }
+
+        } catch (DatevException e) {
+            if (!notificationMessages.contains(e.getNotificationMessage())) {
+                notificationMessages.add(e.getNotificationMessage());
+            }
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
         } catch (Exception e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
@@ -165,7 +204,7 @@ public class DatevServices {
         }
 
         result.put("transactionEntriesImported", transactionEntriesImported);
-        result.put("messages", messages);
+        result.put("notificationMessages", notificationMessages);
 
         return result;
     }

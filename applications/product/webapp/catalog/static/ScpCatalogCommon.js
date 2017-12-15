@@ -677,50 +677,50 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
         };
 
  
-        /**
+    /**
      * Merges the entity fields for the node together.
      */
     this.getNodeEntitiesMerged = function($node) {
         var params = {};
         jQuery.each($node.data || {}, function(k, v) {
             if (endsWith(k, 'Entity')) {
-                    jQuery.extend(params, v);
+                jQuery.extend(params, v);
+            }
+        });
+        return params;
+    };
+ 
+    var substituteMsg = function(msg, values, quoteChar, useHtml, htmlEscapeValues) {
+        if (msg && values) {
+            if (quoteChar === false) quoteChar = '';
+        else if (!quoteChar) quoteChar = "'";
+        
+        var spanOpen = '<span class="ect-dialogmsg-recordname">';
+        var spanClose = '</span>';
+        if (useHtml === false) {
+            spanOpen = '';
+            spanClose = '';
+        }
+
+        jQuery.each(values, function(k, value) {
+            if (value) {
+                value = quoteChar+value+quoteChar;
+                if (htmlEscapeValues !== false) {
+                    value = htmlMarkupEscape(value);
+                }
+                value = spanOpen+value+spanClose;
+                msg = msg.replace('${'+k+'}', value);
                 }
             });
-            return params;
-        };
+        }
+        return msg;
+    };
  
-        var substituteMsg = function(msg, values, quoteChar, useHtml, htmlEscapeValues) {
-            if (msg && values) {
-                if (quoteChar === false) quoteChar = '';
-            else if (!quoteChar) quoteChar = "'";
-            
-            var spanOpen = '<span class="ect-dialogmsg-recordname">';
-            var spanClose = '</span>';
-            if (useHtml === false) {
-                spanOpen = '';
-                spanClose = '';
-            }
-
-            jQuery.each(values, function(k, value) {
-                if (value) {
-                    value = quoteChar+value+quoteChar;
-                    if (htmlEscapeValues !== false) {
-                        value = htmlMarkupEscape(value);
-                    }
-                    value = spanOpen+value+spanClose;
-                    msg = msg.replace('${'+k+'}', value);
-                    }
-                });
-            }
-            return msg;
-        };
- 
-        var substituteConfirmMsg = function(ai, params, values, quoteChar, useHtml, htmlEscapeValues) {
-            var confirmMsg = params.local.confirmMsg || ai.actionProps.confirmMsg;
-            confirmMsg = substituteMsg(confirmMsg, values, quoteChar, useHtml, htmlEscapeValues);
-            params.local.confirmMsg = confirmMsg;
-        };
+    var substituteConfirmMsg = function(ai, params, values, quoteChar, useHtml, htmlEscapeValues) {
+        var confirmMsg = params.local.confirmMsg || ai.actionProps.confirmMsg;
+        confirmMsg = substituteMsg(confirmMsg, values, quoteChar, useHtml, htmlEscapeValues);
+        params.local.confirmMsg = confirmMsg;
+    };
  
     /**
      * Prepares params for the action, for links & form filling. 
@@ -1061,6 +1061,11 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
         var params = makeParamsMap(ai, false);
         if (ai.objectType == "category") {
             params.productCategoryId = ai.data.productCategoryEntity.productCategoryId;
+            // SPECIAL: we will set primaryProductCategoryId because it's the most common case,
+            // although not guaranteed always wanted
+            params.primaryProductCategoryId = params.productCategoryId;
+            params.isVirtual = "N";
+            params.isVariant = "N";
         }
         
         checkExecConfirm(ai, params, {}, function() {

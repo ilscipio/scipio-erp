@@ -608,4 +608,11 @@ input[type="radio"] + label, .checkbox-type-simple-standard input[type="checkbox
     }
 }
 
-
+/* catalog tree */
+/* FIXME?: theme doesn't show gray for disabled + priority problems */
+ul.side-nav.ect-action-menu li.disabled, ul.side-nav.ect-action-menu a.disabled {
+    color:gray;
+}
+.ect-dialogmsg-recordname {
+    font-style:italic;
+}

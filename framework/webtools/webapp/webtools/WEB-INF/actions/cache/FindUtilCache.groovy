@@ -23,10 +23,21 @@ import org.ofbiz.security.Security;
 
 context.hasUtilCacheEdit = security.hasEntityPermission("UTIL_CACHE", "_EDIT", session);
 
+// SCIPIO: 2017-12-15: small filter to help find caches (otherwise too painful)
+targetName = context.cacheName != null ? context.cacheName : parameters.cacheName?.toString();
+targetNamePat = null;
+if (targetName) {
+    targetNameOp = context.cacheName_op != null ? context.cacheName_op : (parameters.cacheName_op ?: "");
+    targetNameIc = context.cacheName_ic != null ? context.cacheName_ic : parameters.cacheName_ic;
+    targetNamePat = com.ilscipio.scipio.common.util.FindTextFieldPattern.fromFindOperatorSafe(targetName, targetNameOp, targetNameIc);
+}
+
 cacheList = [];
 totalCacheMemory = 0.0;
 names = new TreeSet(UtilCache.getUtilCacheTableKeySet());
 names.each { cacheName ->
+        if (targetNamePat != null && !targetNamePat.matchesSafe(cacheName)) return; // SCIPIO: filter
+
         utilCache = UtilCache.findCache(cacheName);
         cache = [:];
 

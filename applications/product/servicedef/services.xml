@@ -2056,11 +2056,11 @@ under the License.
         </attribute>     
     </service>
     
-    <service name="getProductCategoryExtendedDataVersatile" engine="group" auth="true">
+    <service name="getProductCategoryExtendedDataVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="getProductCategoryExtendedDataVersatile" auth="true">
         <description>SCIPIO: Gets extended ProductCategory data (originally written for catalog tree edit form) (versatile)</description>
-        <group>
-            <invoke name="getProductCategoryContentLocalizedSimpleTextViews"/>
-        </group>
+        <implements service="getProductCategoryContentLocalizedSimpleTextViews"/>
+        <attribute name="productCategory" mode="OUT" type="GenericValue" optional="false"/>
     </service>
     
     <!-- PRODUCT -->
@@ -2180,11 +2180,11 @@ under the License.
         </attribute>     
     </service>
     
-    <service name="getProductExtendedDataVersatile" engine="group" auth="true">
+    <service name="getProductExtendedDataVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/product/ProductServices.xml" invoke="getProductExtendedDataVersatile" auth="true">
         <description>SCIPIO: Gets extended Product data (originally written for catalog tree edit form) (versatile)</description>
-        <group>
-            <invoke name="getProductContentLocalizedSimpleTextViews"/>
-        </group>
+        <implements service="getProductContentLocalizedSimpleTextViews"/>
+        <attribute name="product" mode="OUT" type="GenericValue" optional="false"/>
     </service>
     
     <!-- ======================================== -->
@@ -2206,13 +2206,30 @@ under the License.
         </attribute>
         <attribute name="useCategoryCache" mode="IN" type="Boolean" optional="true"/>
         <attribute name="useProductCache" mode="IN" type="Boolean" optional="true"/>
-        <attribute name="includeCategoryData" mode="IN" type="Boolean" optional="true" default-value="false"/>
-        <attribute name="includeProductData" mode="IN" type="Boolean" optional="true" default-value="false"/>
+        <attribute name="includeEntityData" mode="IN" type="Map" optional="true">
+            <description>Map of names to entity-like field names to include in each tree item as "[name]Entity" entries (e.g. "productEntity").
+                Available names: prodCatalog, productStoreCatalog, productCategory, productCategoryRollup, prodCatalogCategory, product, productCategoryMember
+                Map values may be:
+                * Boolean or boolean as String - true means include all fields, false none
+                * Collection of field names to include
+                * Map of options. Supported keys:
+                  * use - boolean, whether to use
+                  * inclFields - Collection of field names to include
+                  * exclFields - Collection of field names to exclude
+            </description>
+        </attribute>
+        <attribute name="includeAllEntityData" mode="IN" type="Boolean" optional="true" default-value="false">
+            <description>If true, simply includes all available entity data; includeEntityData can still be set to specialize selection.</description>
+        </attribute>
         <attribute name="maxProductsPerCat" mode="IN" type="Integer" optional="true"/><!-- default: no limit (same as -1) -->
         <attribute name="includeEmptyTop" mode="IN" type="Boolean" optional="true" default-value="false">
             <description>If false (default), empty catalog or top node is omitted</description>
         </attribute>
         <attribute name="productStoreCatalog" mode="IN" type="GenericValue" optional="true"/>
+        <attribute name="categoryEntityOutMap" mode="INOUT" type="Map" optional="true">
+            <description>Map of categoryIds to ProductCategory GenericValues; if non-null, 
+                all categories found are added to this map (needed to avoid performing expensive traversal twice)</description>
+        </attribute>
         <attribute name="treeList" mode="OUT" type="List" optional="false" />
     </service>
     

@@ -1022,6 +1022,22 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
         return aMap;
     }
 
+    /** SCIPIO: Used by clients to specify exactly the fields they are NOT interested in
+     * Added 2017-12-15.
+     * @param excludeKeysofFields the name of the fields the client is NOT interested in
+     * @return java.util.Map
+     */
+    public Map<String, Object> getFieldsExclude(Collection<String> excludeKeysofFields) {
+        Map<String, Object> aMap = new HashMap<String, Object>();
+        if (excludeKeysofFields == null) excludeKeysofFields = Collections.emptySet();
+        for (String aKey: getAllKeys()) {
+            if (!excludeKeysofFields.contains(aKey)) {
+                aMap.put(aKey, this.fields.get(aKey));
+            }
+        }
+        return aMap;
+    }
+    
     /** Used by clients to update particular fields in the entity
      * @param keyValuePairs java.util.Map
      */

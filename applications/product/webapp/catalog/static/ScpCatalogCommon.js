@@ -769,16 +769,16 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
             success: function(data) {
                 if (data._ERROR_MESSAGE_ || data._ERROR_MESSAGE_LIST_) {
                     if (data._ERROR_MESSAGE_) {
-                        reportError(scth.labels.errorfromserver + ': ' + data._ERROR_MESSAGE_);
+                        reportError(scth.labels.errorfromserver + ': ' + data._ERROR_MESSAGE_ + ' (' + scth.labels.tryreloadhint + ')');
                     } else {
-                        reportError(scth.labels.errorfromserver + ': ' + data._ERROR_MESSAGE_LIST_[0]);
+                        reportError(scth.labels.errorfromserver + ': ' + data._ERROR_MESSAGE_LIST_[0] + ' (' + scth.labels.tryreloadhint + ')');
                     }
                 } else {
                     successCb(data);
                 }
             },
             error: function() {
-                reportError(scth.labels.servercommerror);
+                reportError(scth.labels.servercommerror + ' (' + scth.labels.tryreloadhint + ')');
             }
         });   
     };
@@ -827,8 +827,6 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
     this.execEditForNode = function($node) {
         var ai = getActionInfo($node, "edit");
         var params = makeParamsMap(ai);
-        // default params OK
-        
         checkExecConfirm(ai, params, {}, function() {
             var execEdit = function() {
                 execActionTarget(ai, params);
@@ -837,43 +835,53 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
             var doExecEdit = true;
             if (specFlags.noShowFormPopulate !== true) {
                 var fieldInfo = initLocFieldParams(params, ai.objectType);
-                if (fieldInfo) {
-                    if (ai.objectType === 'category') {
-                        if (scth.links.getProductCategoryExtendedData) {
-                            doExecEdit = false;
-                            runAjax(scth.links.getProductCategoryExtendedData, {
-                                    productCategoryId: ai.objectId,
-                                    prodCatContentTypeIdList: fieldInfo.typeNameListStr,
-                                    getViewsByType: true,
-                                    getTextByTypeAndLocale: false
-                                }, 
-                                function(data) {
+                if (ai.objectType === 'category') {
+                    if (scth.links.getProductCategoryExtendedData) {
+                        doExecEdit = false;
+                        runAjax(scth.links.getProductCategoryExtendedData, {
+                                productCategoryId: ai.objectId,
+                                prodCatContentTypeIdList: fieldInfo.typeNameListStr,
+                                getViewsByType: true,
+                                getTextByTypeAndLocale: false
+                            }, 
+                            function(data) {
+                                if (data.productCategory) {
+                                    jQuery.extend(params, data.productCategory);
+                                    
                                     if (data.viewsByType) {
                                         //alert('server result: ' + JSON.stringify(data.textByTypeAndLocale, null, 2));
                                         params.local.localizedFields.entryDataListsByType = slfh.parseViewsByType(data.viewsByType);
                                     }
                                     execEdit();
+                                } else {
+                                    
                                 }
-                            );
-                        }
-                    } else if (ai.objectType === 'product') {
-                        if (scth.links.getProductExtendedData) {
-                            doExecEdit = false;
-                            runAjax(scth.links.getProductExtendedData, {
-                                    productId: ai.objectId,
-                                    productContentTypeIdList: fieldInfo.typeNameListStr,
-                                    getViewsByType: true,
-                                    getTextByTypeAndLocale: false
-                                }, 
-                                function(data) {
+                            }
+                        );
+                    }
+                } else if (ai.objectType === 'product') {
+                    if (scth.links.getProductExtendedData) {
+                        doExecEdit = false;
+                        runAjax(scth.links.getProductExtendedData, {
+                                productId: ai.objectId,
+                                productContentTypeIdList: fieldInfo.typeNameListStr,
+                                getViewsByType: true,
+                                getTextByTypeAndLocale: false
+                            }, 
+                            function(data) {
+                                if (data.product) {
+                                    jQuery.extend(params, data.product);
+
                                     if (data.viewsByType) {
                                         //alert('server result: ' + JSON.stringify(data.textByTypeAndLocale, null, 2));
                                         params.local.localizedFields.entryDataListsByType = slfh.parseViewsByType(data.viewsByType);
                                     }
                                     execEdit();
+                                } else {
+                                    
                                 }
-                            );
-                        }
+                            }
+                        );
                     }
                 }
             }
@@ -1060,7 +1068,7 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
         // SPECIAL: the default entity merge doesn't work for this
         var params = makeParamsMap(ai, false);
         if (ai.objectType == "category") {
-            params.productCategoryId = ai.data.productCategoryEntity.productCategoryId;
+            params.productCategoryId = ai.objectId;
             // SPECIAL: we will set primaryProductCategoryId because it's the most common case,
             // although not guaranteed always wanted
             params.primaryProductCategoryId = params.productCategoryId;
@@ -1082,7 +1090,7 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
         if (ai.objectType == "catalog") {
             // prodCatalogId will be ok
         } else if (ai.objectType == "category") {
-            params.parentProductCategoryId = ai.data.productCategoryEntity.productCategoryId;
+            params.parentProductCategoryId = ai.objectId;
         }
         
         checkExecConfirm(ai, params, {}, function() {
@@ -1118,7 +1126,7 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
         if (ai.objectType == "catalog") {
             // prodCatalogId will be ok
         } else if (ai.objectType == "category") {
-            params.parentProductCategoryId = ai.data.productCategoryEntity.productCategoryId;
+            params.parentProductCategoryId = ai.objectId;
         }
         
         checkExecConfirm(ai, params, {}, function() {

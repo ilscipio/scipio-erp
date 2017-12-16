@@ -16483,4 +16483,8 @@
         <value xml:lang="en">Indexable</value>
         <value xml:lang="de">Indexierbar</value>
     </property>
+    <property key="CommonTryReloadingPage">
+        <value xml:lang="en">Try reloading the page</value>
+        <value xml:lang="de">Versuchen Sie, die Seite neu zu laden</value>
+    </property>
 </resource>

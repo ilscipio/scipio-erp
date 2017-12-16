@@ -1234,6 +1234,8 @@ under the License.
                 <set field="contentRemoveCtx" set-if-null="true" value=""/>
                 <set field="contentRemoveCtx.contentId" from-field="productContent.contentId"/>
                 <set field="contentRemoveCtx.recursiveTarget" from-field="parameters.deleteContentRecursive"/>
+                <remove-value value-field="productContent"/>
+                <check-errors/>
                 <call-service service-name="removeContentAndRelatedRecursiveTo" in-map-name="contentRemoveCtx"/>
             </iterate>
         </if-not-empty>
@@ -1336,5 +1338,22 @@ under the License.
         <!-- move is simply delete + copy for us -->
         <call-simple-method method-name="copyProductCatAssocVersatile"/>
         <check-errors/>
+    </simple-method>
+    
+    <simple-method method-name="getProductExtendedDataVersatile">
+        <entity-one entity-name="Product" value-field="product"/>
+        <field-to-result field="product"/>
+        <if-empty field="product">
+            <property-to-field resource="ProductUiLabels" property="ProductProductNotFound" field="errMsgStr" />
+            <add-error><fail-message message="${errMsgStr}: ${parameters.productId}"/></add-error>
+            <check-errors/>
+        </if-empty>
+        
+        <set-service-fields service-name="getProductContentLocalizedSimpleTextViews" to-map="locTextCtx" map="parameters"/>
+        <call-service service-name="getProductContentLocalizedSimpleTextViews" in-map-name="locTextCtx">
+            <result-to-result result-name="viewsByType"/>
+            <result-to-result result-name="viewsByTypeAndLocale"/>
+            <result-to-result result-name="textByTypeAndLocale"/>
+        </call-service>
     </simple-method>
 </simple-methods>

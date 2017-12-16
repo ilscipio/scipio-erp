@@ -158,6 +158,7 @@
             error: "${escapeVal(uiLabelMap.CommonError, 'js')}",
             errorfromserver: "${escapeVal(rawLabel('PartyServer'), 'js')}", <#-- FIXME -->
             servercommerror: "${escapeVal(uiLabelMap.CommonServerCommunicationError, 'js')}",
+            tryreloadhint: "${escapeVal(uiLabelMap.CommonTryReloadingPage, 'js')}",
             store: "${escapeVal(uiLabelMap.ProductStore, 'js')}",
             catalog: "${escapeVal(uiLabelMap.ProductCatalog, 'js')}",
             category: "${escapeVal(uiLabelMap.ProductCategory, 'js')}",

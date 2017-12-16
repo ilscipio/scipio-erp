@@ -30,11 +30,9 @@ context.ectIsEventError = context.isSetupEventError;
 // CORE DATA PREP
 GroovyUtil.runScriptAtLocation("component://product/webapp/catalog/WEB-INF/actions/catalog/tree/EditCatalogTreeCore.groovy", null, context);
 
-// SPECIAL: need to get all categories for primaryProductCategoryId (and/or other) fields,
-// but must avoid expensive re-query
-allStoreCategories = com.ilscipio.scipio.product.category.CategoryWorker.extractAllProductCategoryFromTreeItems(context.treeMenuData);
-allStoreCategories = EntityUtil.orderBy(allStoreCategories, ["categoryName", "productCategoryId"]);
-context.allStoreCategories = allStoreCategories;
+// SPECIAL: all categories list needed for dropdowns and such - primaryProductCategoryId (and/or other) fields,
+// here must sort it
+context.allStoreCategories = EntityUtil.orderBy(context.allStoreCategoriesMap?.values(), ["categoryName", "productCategoryId"]);
 
 
 

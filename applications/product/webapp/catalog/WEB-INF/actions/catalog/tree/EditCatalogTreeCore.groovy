@@ -199,7 +199,22 @@ if (!targetNodeInfo.defined && !(!isEventError && eventStates.isDeleteRecord)) {
 treeMenuHelper = new JsTreeHelper();
 treeMenuData = [];
 
+// partial preloaded, partial ajax
+includeEntityData = context.ectIncludeEntityData;
+if (includeEntityData == null) {
+    includeEntityData = [
+        "prodCatalog":true, // NOTE: this one is not ajaxed because not worth it
+        "productStoreCatalog":["prodCatalogId", "productStoreId", "fromDate", "sequenceNum", "thruDate"] as Set,
+        "productCategory":false, // 2017-12-15: now looked up via ajax
+        "productCategoryRollup":["productCategoryId", "parentProductCategoryId", "fromDate", "sequenceNum", "thruDate"] as Set,
+        "prodCatalogCategory":["productCategoryId", "prodCatalogId", "fromDate", "sequenceNum", "thruDate", "prodCatalogCategoryTypeId"] as Set,
+        "product":false, // 2017-12-15: now looked up via ajax
+        "productCategoryMember":["productId", "productCategoryId", "fromDate", "sequenceNum", "thruDate", "quantity"] as Set
+    ];
+}
+
 productStoreCatalogs = context.productStoreCatalogList ?: [];
+allStoreCategoriesMap = new HashMap();
 for (productStoreCatalog in productStoreCatalogs) {    
     prodCatalog = productStoreCatalog.getRelatedOne("ProdCatalog", false);
     if (prodCatalog) {
@@ -224,17 +239,22 @@ for (productStoreCatalog in productStoreCatalogs) {
             "prodCatalogId" : prodCatalog.prodCatalogId,
             "state": state,
             "categoryStates": categoryStates,
-            "includeCategoryData": true,
-            "includeProductData": true,
+            "includeEntityData": includeEntityData,
+            "includeAllEntityData": false,
             "maxProductsPerCat": maxProductsPerCat,
             "includeEmptyTop": true,
-            "productStoreCatalog": productStoreCatalog
+            "productStoreCatalog": productStoreCatalog,
+            "categoryEntityOutMap": allStoreCategoriesMap
         ]);
         if (result?.treeList) {
             treeMenuData = treeMenuData + result.treeList;
+        }
+        if (result?.categoryEntityOutMap != null) {
+            allStoreCategoriesMap = result.categoryEntityOutMap;
         }
     }
 }
 
 treeMenuHelper.addAll(treeMenuData)
 context.treeMenuData = treeMenuHelper;
+context.allStoreCategoriesMap = allStoreCategoriesMap;

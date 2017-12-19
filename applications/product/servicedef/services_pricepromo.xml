@@ -70,6 +70,9 @@ under the License.
             (variant) price for a type if true, otherwise it will return the first occurrence in the list.
          -->
         <attribute name="getMinimumVariantPrice" type="Boolean" mode="IN" optional="true" default-value="false" />
+        <attribute name="useCache" type="Boolean" mode="IN" optional="true" default-value="true">
+            <description>SCIPIO: useCache flag (default: true) - this should be set to false if called during updated services! (added 2017-12-19)</description>
+        </attribute>
     </service>
 
     <service name="createProductPriceRule" default-entity-name="ProductPriceRule" engine="simple"
@@ -344,7 +347,10 @@ under the License.
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="quantity" type="BigDecimal" mode="IN" optional="true"/>
         <attribute name="amount" type="BigDecimal" mode="IN" optional="true"/>
-
+        <attribute name="useCache" type="Boolean" mode="IN" optional="true" default-value="true">
+            <description>SCIPIO: useCache flag (default: true) - this should be set to false if called during updated services! (added 2017-12-19)</description>
+        </attribute>
+        
         <attribute name="price" type="BigDecimal" mode="OUT" optional="false"/>
         <attribute name="validPriceFound" type="Boolean" mode="OUT" optional="false"/>
         <attribute name="orderItemPriceInfos" type="java.util.List" mode="OUT" optional="false"/>

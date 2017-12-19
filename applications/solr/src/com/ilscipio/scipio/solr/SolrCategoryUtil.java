@@ -102,6 +102,10 @@ public abstract class SolrCategoryUtil {
         return CategoryWorker.getCategoryRollupTrails(dctx.getDelegator(), productCategoryId, true);
     }
     
+    public static List<List<String>> getCategoryTrail(String productCategoryId, DispatchContext dctx, boolean useCache) {
+        return CategoryWorker.getCategoryRollupTrails(dctx.getDelegator(), productCategoryId, useCache);
+    }
+    
     /**
      * Returns categoryName with trail.
      */

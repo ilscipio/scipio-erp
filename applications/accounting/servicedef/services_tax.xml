@@ -54,7 +54,7 @@ under the License.
         <attribute name="taxPercentage" type="BigDecimal" mode="OUT" optional="false"/>
         <attribute name="priceWithTax" type="BigDecimal" mode="OUT" optional="false"/>
         <attribute name="useCache" type="Boolean" mode="IN" optional="true">
-            <description>SCIPIO: useCache flag (default: USUALLY true) - this should be set to false if called during updated services! (added 2017-12-19)</description>
+            <description>SCIPIO: useCache flag (default: true) - this should be set to false if called during updated services! (added 2017-12-19)</description>
         </attribute>
     </service>
 

@@ -21,15 +21,27 @@ under the License.
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/simple-methods.xsd">
 
-    <simple-method method-name="importDatevTransactionEntries" short-description="Import Datev Transaction Entries" login-required="true">    
+    <simple-method method-name="importDatevDataCategory" short-description="Import Datev Data Category" login-required="true">    
         <script location="component://accounting/script/com/ilscipio/scipio/accounting/datev/DatevUtil.groovy"></script>
         
-        <!-- <set field="importDatevTransactionEntriesCtx" from-field="passedParams" /> -->
-        <set field="importDatevTransactionEntriesCtx" from-field="multiPartMap" />
-                
-        <call-service service-name="importDatevTransactionEntries" in-map-name="importDatevTransactionEntriesCtx">
-            <result-to-field field="transactionEntriesImported" result-name="transactionEntries"/>
-        </call-service>    	
+        <set field="datevImportDataCategory" from-field="multiPartMap.dataCategory" />
+        
+        <if-compare value="buchungsstapel" operator="equals" field="datevImportDataCategory">
+            <set field="importDatevTransactionEntriesCtx" from-field="multiPartMap" />                
+            <call-service service-name="importDatevTransactionEntries" in-map-name="importDatevTransactionEntriesCtx" break-on-error="false" >
+                <result-to-request result-name="transactionEntries" />
+                <result-to-request result-name="operationStats" />
+            </call-service>            
+            <log message="operationStats ==============> ${parameters.operationStats}" level="always"/>
+            <else>
+                <!-- TODO: Implement other service calls to Datev data categories -->
+                <add-error><fail-message message="Data category import not supported yet."/></add-error>
+            </else>
+        </if-compare>
+        
+        <field-to-request field="multiPartMap.orgPartyId" request-name="orgPartyId" />
+        <field-to-request field="multiPartMap.topGlAccountId" request-name="topGlAccountId" /> 
+        <field-to-request field="datevImportDataCategory" />        
     </simple-method>
     
     

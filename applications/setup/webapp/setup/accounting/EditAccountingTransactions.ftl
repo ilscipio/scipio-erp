@@ -11,15 +11,26 @@
 </#macro>
 
 <#macro eatImportDatevConfirmFields args={}>
-   <@field type="hidden" name="organizationPartyId" value=(params.orgPartyId)!/>
+   <@field type="hidden" name="orgPartyId" value=(params.orgPartyId)!/>
+   <@field type="hidden" name="topGlAccountId" value=(params.topGlAccountId)!/>
+   <@field type="select" name="dataCategory" label=uiLabelMap.SetupAccountingDatevDataCategory>
+	<option value="buchungsstapel">${uiLabelMap.SetupAccountingDatevDataCategoryBuchungsstapel}</option>
+	<option value="debitorenKreditorenStammdaten">${uiLabelMap.SetupAccountingDatevDataCategoryDebitorenKreditorenStammdaten}</option>
+	<option value="kontenbeschriftungen">${uiLabelMap.SetupAccountingDatevDataCategoryKontenbeschriftungen}</option>
+	<option value="textschlussel">${uiLabelMap.SetupAccountingDatevDataCategoryTextschlussel}</option>
+	<option value="diverseAdressen">${uiLabelMap.SetupAccountingDatevDataCategoryDiverseAdressen}</option>	
+   </@field>
+   <hr/>
    <@field type="input" name="delimiter" size="3" maxLength="1" label=uiLabelMap.SetupAccountingDatevCSVDelimiter />
    <@field type="input" name="quote" size="3" maxLength="1" label=uiLabelMap.SetupAccountingDatevCSVQuote />
    <@field type="checkbox" name="hasMetaHeader" label=uiLabelMap.SetupAccountingDatevCSVDelimiter />
    <@field type="checkbox" name="hasHeader" label=uiLabelMap.SetupAccountingDatevCSVDelimiter />
+   
    <@field type="file" name="uploadedFile" label=uiLabelMap.SetupAccountingDatevImportCSV />
 </#macro>
 <#macro eatImportElsterConfirmFields args={}>
    <@field type="hidden" name="organizationPartyId" value=(params.orgPartyId)!/>
+   <@field type="hidden" name="topGlAccountId" value=(params.topGlAccountId)!/>
    <@field type="file" name="uploadedFile" label=uiLabelMap.SetupAccountingElsterImportCSV />
 </#macro>
 
@@ -32,7 +43,7 @@
             "confirmMsg": 'SetupAccountingImportDatevCSVProceed',
             "confirmExtraMsg": rawLabelNoSubst(''),
             "confirmFields": eatImportDatevConfirmFields,
-            "formAction": makeOfbizUrl('setupImportDatevTransactionEntries'),
+            "formAction": makeOfbizUrl('setupImportDatevDataCategory'),
             "defaultParams": wrapRawScript("function() { return; }")
         }        
     },
@@ -44,7 +55,7 @@
             "confirmMsg": rawLabelNoSubst(''),
             "confirmExtraMsg": rawLabelNoSubst(''),
             "confirmFields": eatImportElsterConfirmFields,
-            "formAction": makeOfbizUrl('setupImportElsterTransactionEntries'),
+            "formAction": makeOfbizUrl('setupImportElsterDataCategory'),
             "defaultParams": wrapRawScript("function() { return; }")
         }      
     }

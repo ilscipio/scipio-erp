@@ -22,6 +22,8 @@ import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.LocalDispatcher;
 
+import com.ilscipio.scipio.accounting.external.OperationStats;
+import com.ilscipio.scipio.accounting.external.OperationStats.Stat;
 import com.ilscipio.scipio.setup.ContactMechPurposeInfo.FacilityContactMechPurposeInfo;
 import com.ilscipio.scipio.setup.ContactMechPurposeInfo.PartyContactMechPurposeInfo;
 
@@ -333,6 +335,18 @@ public abstract class SetupDataUtil {
                 
                 if (isAcctgPreferencesSet) {
                     result.put("complete", true);
+                }
+                
+                if (params.containsKey("datevImportDataCategory")) {
+                    String datevImportDataCategory = (String) params.get("datevImportDataCategory");
+                    if (UtilValidate.isNotEmpty(datevImportDataCategory)) {
+                        if (params.containsKey("operationStats")) {
+                            OperationStats operationStats = (OperationStats) params.get("operationStats");
+                            for (Stat stat : operationStats.getStats()) {
+                                Debug.log("[" + stat.getLevel().toString() + "]: " + stat.getMessage());
+                            }
+                        }
+                    }
                 }
                 
                 result.put("topGlAccountId", topGlAccountId);

@@ -74,4 +74,5 @@ for (int i = 0; i < lst.size(); i++) {
         multiPartMap.put("_" + fieldName + "_contentType", csvFileItem.getContentType());
     }
 }
+Debug.log("multipartMap ========> " + multiPartMap);
 context.multiPartMap=multiPartMap;

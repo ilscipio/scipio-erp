@@ -41,6 +41,9 @@ under the License.
         <attribute name="shippingAddress" type="org.ofbiz.entity.GenericValue" mode="IN" optional="true"/>
         <attribute name="orderAdjustments" type="java.util.List" mode="OUT" optional="false"><!-- List of GenericValues (OrderAdjustment) --></attribute>
         <attribute name="itemAdjustments" type="java.util.List" mode="OUT" optional="false"><!-- List of Lists of GenericValues (OrderAdjustment), one List of Adjustments per item --></attribute>
+        <attribute name="useCache" type="Boolean" mode="IN" optional="true">
+            <description>SCIPIO: useCache flag (default: true) - this should be set to false if called during updated services! (added 2017-12-19)</description>
+        </attribute>
     </service>
     <service name="calcTaxTotalForDisplayInterface" engine="interface" location="" invoke="">
         <description>Tax Calc Total For Display Service Interface</description>

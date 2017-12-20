@@ -9,9 +9,9 @@ import com.ilscipio.scipio.accounting.external.OperationStats;
 import com.ilscipio.scipio.accounting.external.datev.DatevException;
 import com.ilscipio.scipio.accounting.external.datev.DatevHelper;
 
-public class DebitorenKreditorenStammdaten extends AbstractDatevDataCategory {
+public class DatevTextschlussel extends AbstractDatevDataCategory {
 
-    public DebitorenKreditorenStammdaten(Delegator delegator, DatevHelper datevHelper) {
+    public DatevTextschlussel(Delegator delegator, DatevHelper datevHelper) {
         super(delegator, datevHelper);
         // TODO Auto-generated constructor stub
     }

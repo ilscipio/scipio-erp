@@ -29,7 +29,7 @@ import com.ilscipio.scipio.accounting.external.datev.stats.DatevBuchungsstapelSt
 
 import javolution.util.FastMap;
 
-public class Buchungsstapel extends AbstractDatevDataCategory {
+public class DatevBuchungsstapel extends AbstractDatevDataCategory {
 
     private final List<GenericValue> datevTransactionEntryDefinitions;
     private final List<GenericValue> datevMetadataTransactionEntryDefinitions;
@@ -57,7 +57,7 @@ public class Buchungsstapel extends AbstractDatevDataCategory {
 
     }
 
-    public Buchungsstapel(Delegator delegator, DatevHelper datevHelper) throws DatevException {
+    public DatevBuchungsstapel(Delegator delegator, DatevHelper datevHelper) throws DatevException {
         super(delegator, datevHelper);
         try {
             this.datevTransactionEntryDefinitions = EntityQuery.use(delegator).from("DatevTransactionEntryDefinition")

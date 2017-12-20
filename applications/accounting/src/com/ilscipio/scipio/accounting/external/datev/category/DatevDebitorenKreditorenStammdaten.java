@@ -9,9 +9,9 @@ import com.ilscipio.scipio.accounting.external.OperationStats;
 import com.ilscipio.scipio.accounting.external.datev.DatevException;
 import com.ilscipio.scipio.accounting.external.datev.DatevHelper;
 
-public class Kontenbeschriftungen extends AbstractDatevDataCategory {
+public class DatevDebitorenKreditorenStammdaten extends AbstractDatevDataCategory {
 
-    public Kontenbeschriftungen(Delegator delegator, DatevHelper datevHelper) {
+    public DatevDebitorenKreditorenStammdaten(Delegator delegator, DatevHelper datevHelper) {
         super(delegator, datevHelper);
         // TODO Auto-generated constructor stub
     }
@@ -19,7 +19,7 @@ public class Kontenbeschriftungen extends AbstractDatevDataCategory {
     @Override
     public void processRecord(Map<String, String> recordMap) throws DatevException {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override

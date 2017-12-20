@@ -9,9 +9,9 @@ import com.ilscipio.scipio.accounting.external.OperationStats;
 import com.ilscipio.scipio.accounting.external.datev.DatevException;
 import com.ilscipio.scipio.accounting.external.datev.DatevHelper;
 
-public class DiverseAdressen extends AbstractDatevDataCategory {
+public class DatevDiverseAdressen extends AbstractDatevDataCategory {
 
-    public DiverseAdressen(Delegator delegator, DatevHelper datevHelper) {
+    public DatevDiverseAdressen(Delegator delegator, DatevHelper datevHelper) {
         super(delegator, datevHelper);
         // TODO Auto-generated constructor stub
     }

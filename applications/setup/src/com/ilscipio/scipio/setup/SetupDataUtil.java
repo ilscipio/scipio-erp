@@ -265,6 +265,8 @@ public abstract class SetupDataUtil {
         String orgPartyId = (String) params.get("orgPartyId");
         String topGlAccountId = (String) params.get("topGlAccountId");
         
+        String tabId = (String) params.get("tabId");        
+        
         DynamicViewEntity dve = new DynamicViewEntity();
         dve.addMemberEntity("GAO", "GlAccountOrganization");
         dve.addMemberEntity("GA", "GlAccount");
@@ -343,7 +345,7 @@ public abstract class SetupDataUtil {
                         if (params.containsKey("operationStats")) {
                             OperationStats operationStats = (OperationStats) params.get("operationStats");
                             for (Stat stat : operationStats.getStats()) {
-                                Debug.log("[" + stat.getLevel().toString() + "]: " + stat.getMessage());
+                                Debug.log("[" + stat.getScope().toString() + "][" + stat.getLevel().toString() + "]: " + stat.getMessage());
                             }
                         }
                     }
@@ -351,6 +353,7 @@ public abstract class SetupDataUtil {
                 
                 result.put("topGlAccountId", topGlAccountId);
                 result.put("topGlAccount", topGlAccount);
+                result.put("tabId", tabId);
             }
         }
 

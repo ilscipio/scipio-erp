@@ -25,7 +25,7 @@ import org.ofbiz.service.ServiceUtil;
 
 import com.ilscipio.scipio.accounting.external.OperationStats.NotificationLevel;
 import com.ilscipio.scipio.accounting.external.OperationStats.NotificationScope;
-import com.ilscipio.scipio.accounting.external.datev.category.Buchungsstapel;
+import com.ilscipio.scipio.accounting.external.datev.category.DatevBuchungsstapel;
 import com.ilscipio.scipio.common.util.TikaUtil;
 
 import javolution.util.FastList;
@@ -63,7 +63,7 @@ public class DatevServices {
         String errorMessage = null;
         try {
             // Initialize helper
-            datevHelper = new DatevHelper(delegator, orgPartyId, Buchungsstapel.class);
+            datevHelper = new DatevHelper(delegator, orgPartyId, DatevBuchungsstapel.class);
 
             Character delimiter = DEFAULT_DELIMITER;
             if (UtilValidate.isNotEmpty(context.get("delimiter")))
@@ -187,7 +187,7 @@ public class DatevServices {
                     if (allFieldValid) {
                         datevHelper.processRecord(recordMap);
                     } else {
-                        datevHelper.addRecordStat("Error processing record [" + x + "]", NotificationLevel.ERROR, x, recordMap, false);
+                        datevHelper.addRecordStat("Record validation failed", NotificationLevel.ERROR, x, recordMap, false);
                     }
                 }
             }

@@ -4305,10 +4305,11 @@ under the License.
     </extend-entity>    
     
     <!-- SCIPIO: Datev (https://www.datev.de/dnlexom/client/app/index.html#/search) -->
-    <entity entity-name="DatevTransactionEntryDefinition"
-            package-name="com.ilscipio.scipio.accounting.datev"
+    <entity entity-name="DatevFieldDefinition"
+            package-name="com.ilscipio.scipio.accounting.external.datev"
             title="DATEV - Field definition for transaction entries (http://www.datev.de/dnlexom/client/app/index.html#/document/1036228/D72057595488525963)">
         <field name="fieldId" type="id-ne"></field>
+        <field name="dataCategoryId" type="short-varchar"></field>
         <field name="fieldName" type="short-varchar"></field>
         <field name="typeEnumId" type="short-varchar" not-null="true"></field>
         <field name="length" type="numeric"></field>      
@@ -4320,19 +4321,35 @@ under the License.
         <field name="sequenceNum" type="numeric"></field>
         <field name="description" type="very-long"></field>
         <prim-key field="fieldId"/>
+        <prim-key field="dataCategoryId"/>
         <relation type="one" fk-name="DATEV_TYPE_ENUM" title="DatevFieldType" rel-entity-name="Enumeration">
             <key-map field-name="typeEnumId" rel-field-name="enumId"/>
         </relation>
+        <relation rel-entity-name="DatevDataCategory" type="one">
+            <key-map field-name="dataCategoryId"/>
+        </relation>
   	</entity>
     
-    <entity entity-name="DatevTransactionEntryDefinitionVersion"
-            package-name="com.ilscipio.scipio.accounting.datev"
+    <entity entity-name="DatevDataCategory"
+            package-name="com.ilscipio.scipio.accounting.external.datev"
+            title="DATEV - Available Data Categories (http://www.datev.de/dnlexom/client/app/index.html#/document/1036228/D72057595488525963)">
+            <field name="dataCategoryId" type="id-ne"></field>
+            <field name="dataCategoryName" type="short-varchar"></field>
+            <field name="description" type="long-varchar"></field>
+            <prim-key field="dataCategoryId"/>
+            <relation rel-entity-name="DatevFieldDefinition" type="many">
+                <key-map field-name="dataCategoryId"/>
+            </relation>
+    </entity>
+    
+    <entity entity-name="DatevFieldDefinitionVersion"
+            package-name="com.ilscipio.scipio.accounting.external.datev"
             title="DATEV - Field definition version for transaction entries (http://www.datev.de/dnlexom/client/app/index.html#/document/1036228/D72057595488525963)">
         <field name="fieldId" type="id-ne"></field>
         <field name="version" type="short-varchar"></field>
         <prim-key field="fieldId"/>
         <prim-key field="version"/>
-        <relation rel-entity-name="DatevTransactionEntryDefinition" type="one">
+        <relation rel-entity-name="DatevFieldDefinition" type="one">
             <key-map field-name="fieldId"/>
         </relation>
     </entity>

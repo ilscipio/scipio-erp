@@ -65,21 +65,25 @@ public class SupplierProductServices {
         String currencyUomId = (String) context.get("currencyUomId");
         BigDecimal quantity =(BigDecimal) context.get("quantity");
         String canDropShip = (String) context.get("canDropShip");
+        
+        // SCIPIO: 2017-12-19: service now supports useCache=false (stock default is true), important for ECAs
+        boolean useCache = !Boolean.FALSE.equals(context.get("useCache"));
+        
         try {
-            product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache().queryOne();
+            product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache(useCache).queryOne();
             if (product == null) {
                 results = ServiceUtil.returnSuccess();
                 results.put("supplierProducts",null);
                 return results;
             }
-            List<GenericValue> supplierProducts = product.getRelated("SupplierProduct", null, null, true);
+            List<GenericValue> supplierProducts = product.getRelated("SupplierProduct", null, null, useCache);
 
             // if there were no related SupplierProduct entities and the item is a variant, then get the SupplierProducts of the virtual parent product
             if (supplierProducts.size() == 0 && product.getString("isVariant") != null && product.getString("isVariant").equals("Y")) {
-                String virtualProductId = ProductWorker.getVariantVirtualId(product);
-                GenericValue virtualProduct = EntityQuery.use(delegator).from("Product").where("productId", virtualProductId).cache().queryOne();
+                String virtualProductId = ProductWorker.getVariantVirtualId(product, useCache);
+                GenericValue virtualProduct = EntityQuery.use(delegator).from("Product").where("productId", virtualProductId).cache(useCache).queryOne();
                 if (virtualProduct != null) {
-                    supplierProducts = virtualProduct.getRelated("SupplierProduct", null, null, true);
+                    supplierProducts = virtualProduct.getRelated("SupplierProduct", null, null, useCache);
                 }
             }
 

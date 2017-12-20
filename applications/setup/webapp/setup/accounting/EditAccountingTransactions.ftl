@@ -11,15 +11,27 @@
 </#macro>
 
 <#macro eatImportDatevConfirmFields args={}>
-   <@field type="hidden" name="organizationPartyId" value=(params.orgPartyId)!/>
+   <@field type="hidden" name="orgPartyId" value=(params.orgPartyId)!/>
+   <@field type="hidden" name="topGlAccountId" value=(params.topGlAccountId)!/>
+   <@field type="hidden" name="tabId" value="accountingTransactionsTab" />
+   <@field type="select" name="dataCategory" label=uiLabelMap.SetupAccountingDatevDataCategory>
+	<option value="buchungsstapel">${uiLabelMap.SetupAccountingDatevDataCategoryBuchungsstapel}</option>
+	<option value="debitorenKreditorenStammdaten">${uiLabelMap.SetupAccountingDatevDataCategoryDebitorenKreditorenStammdaten}</option>
+	<option value="kontenbeschriftungen">${uiLabelMap.SetupAccountingDatevDataCategoryKontenbeschriftungen}</option>
+	<option value="textschlussel">${uiLabelMap.SetupAccountingDatevDataCategoryTextschlussel}</option>
+	<option value="diverseAdressen">${uiLabelMap.SetupAccountingDatevDataCategoryDiverseAdressen}</option>	
+   </@field>
+   <hr/>
    <@field type="input" name="delimiter" size="3" maxLength="1" label=uiLabelMap.SetupAccountingDatevCSVDelimiter />
    <@field type="input" name="quote" size="3" maxLength="1" label=uiLabelMap.SetupAccountingDatevCSVQuote />
    <@field type="checkbox" name="hasMetaHeader" label=uiLabelMap.SetupAccountingDatevCSVDelimiter />
    <@field type="checkbox" name="hasHeader" label=uiLabelMap.SetupAccountingDatevCSVDelimiter />
+   
    <@field type="file" name="uploadedFile" label=uiLabelMap.SetupAccountingDatevImportCSV />
 </#macro>
 <#macro eatImportElsterConfirmFields args={}>
    <@field type="hidden" name="organizationPartyId" value=(params.orgPartyId)!/>
+   <@field type="hidden" name="topGlAccountId" value=(params.topGlAccountId)!/>
    <@field type="file" name="uploadedFile" label=uiLabelMap.SetupAccountingElsterImportCSV />
 </#macro>
 
@@ -32,7 +44,7 @@
             "confirmMsg": 'SetupAccountingImportDatevCSVProceed',
             "confirmExtraMsg": rawLabelNoSubst(''),
             "confirmFields": eatImportDatevConfirmFields,
-            "formAction": makeOfbizUrl('setupImportDatevTransactionEntries'),
+            "formAction": makeOfbizUrl('setupImportDatevDataCategory'),
             "defaultParams": wrapRawScript("function() { return; }")
         }        
     },
@@ -44,7 +56,7 @@
             "confirmMsg": rawLabelNoSubst(''),
             "confirmExtraMsg": rawLabelNoSubst(''),
             "confirmFields": eatImportElsterConfirmFields,
-            "formAction": makeOfbizUrl('setupImportElsterTransactionEntries'),
+            "formAction": makeOfbizUrl('setupImportElsterDataCategory'),
             "defaultParams": wrapRawScript("function() { return; }")
         }      
     }
@@ -134,22 +146,15 @@
 			var confirmExtraMsg = "";
 			var typeAction = this.id.split('-');
 			if (typeAction && typeAction.length == 3) {			
-	            var modalElem = jQuery('#${eatDialogIdModalPrefix}' + typeAction[1] + '-' + typeAction[2]); 
-	            showConfirmMsg(null, confirmMsg, confirmExtraMsg, modalElem, function(subActionType) {
-	            	/*params.subActionType = subActionType;
-	                if (preParamNamesMap && preParamNamesMap.subActionType) {
-	                    if (typeof preParamNamesMap.subActionType === 'function') {
-	                        preParamNamesMap.subActionType(subActionType, params, ai); 
-	                    } else {
-	                        params[preParamNamesMap.subActionType] = subActionType;
-	                    }
-	                }*/
+	            var modalElem = jQuery('#${eatDialogIdModalPrefix}' + typeAction[1] + '-' + typeAction[2]);	             
+	            showConfirmMsg(null, confirmMsg, confirmExtraMsg, modalElem, function() {
+	            	
 	            
 	            	// check if the modal had any params, dump them into params
 	            	var containsFile = false;
 	                jQuery('form.eat-dialogopts-form :input', modalElem).each(function(i, input) {	                	
 	                    input = jQuery(input);
-	                    console.log("input type ===> " + input.attr('type'));
+	                    // console.log("input type ===> " + input.attr('type'));
 	                    /*var name = input.prop('name');
 	                    if (name) params[name] = input.val();*/
 	                    if (!containsFile && input.attr('type') == "file") {
@@ -157,9 +162,12 @@
 	                    }
 	                });
 	                if (containsFile) {
-	                	console.log("containsFile");
+	                	// console.log("containsFile");
 	                	jQuery('form.eat-dialogopts-form', modalElem).attr('enctype', 'multipart/form-data');
 	                }
+	                
+	                
+	                
 	                jQuery('form.eat-dialogopts-form', modalElem).submit();
 	            });
             }

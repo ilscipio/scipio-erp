@@ -1,4 +1,4 @@
-package com.ilscipio.scipio.accounting.datev;
+package com.ilscipio.scipio.accounting.external.datev.category;
 
 import java.math.BigDecimal;
 import java.util.Iterator;
@@ -20,24 +20,26 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 
-import com.ilscipio.scipio.accounting.datev.DatevNotificationMessage.NotificationMessageType;
+import com.ilscipio.scipio.accounting.external.OperationStats;
+import com.ilscipio.scipio.accounting.external.OperationStats.NotificationLevel;
+import com.ilscipio.scipio.accounting.external.OperationStats.NotificationScope;
+import com.ilscipio.scipio.accounting.external.datev.DatevException;
+import com.ilscipio.scipio.accounting.external.datev.DatevHelper;
+import com.ilscipio.scipio.accounting.external.datev.stats.DatevBuchungsstapelStats;
 
 import javolution.util.FastMap;
 
-public class DatevHelper {
-    private static final String module = DatevHelper.class.getName();
+public class DatevBuchungsstapel extends AbstractDatevDataCategory {
+    private static final String module = DatevBuchungsstapel.class.getName();
 
     private final List<GenericValue> datevTransactionEntryDefinitions;
-    private final List<GenericValue> datevMetadataTransactionEntryDefinitions;    
+    private final List<GenericValue> datevMetadataTransactionEntryDefinitions;
     private final List<String> datevTransactionFieldNames;
-    private final String orgPartyId;
-    
+
     private Map<String, Object> datevMetadataValues = FastMap.newInstance();
 
-    private List<DatevNotificationMessage> notificationMessages;
-
     static enum DatevFieldType {
-        TEXT(String.class), NUMBER(Number.class), AMOUNT(BigDecimal.class), DATE(DateTime.class), BOOLEAN(Boolean.class);
+        TEXT(String.class), NUMBER(Number.class), AMOUNT(BigDecimal.class), DATE(DateTime.class), BOOLEAN(Boolean.class), ACCOUNT(String.class);
 
         private final Class<?> fieldTypeClass;
 
@@ -56,29 +58,30 @@ public class DatevHelper {
 
     }
 
-    // private final ResultSet datevTransactionEntryDefinitionsResultSet;
-    // private final ResultSet
-    // datevMetadataTransactionEntryDefinitionsResultSet;
-
-    // private Map<String, Boolean> metaHeaderFieldsFound =
-    // FastMap.newInstance();
-    // private Map<String, Boolean> headerFieldsFound = FastMap.newInstance();
-
-    public DatevHelper(Delegator delegator, String orgPartyId, List<DatevNotificationMessage> notificationMessages) throws DatevException {
+    public DatevBuchungsstapel(Delegator delegator, DatevHelper datevHelper) throws DatevException {
+        super(delegator, datevHelper);
         try {
-            this.datevTransactionEntryDefinitions = EntityQuery.use(delegator).from("DatevTransactionEntryDefinition")
-                    .where(EntityCondition.makeConditionWhere("METADATA IS NULL OR METADATA = 'N'")).queryList();
+            EntityCondition datevFieldDefinitionsCond = EntityCondition.makeCondition("dataCategoryId", EntityJoinOperator.EQUALS, "BUCHUNGSSTAPEL");
 
+            this.datevTransactionEntryDefinitions = EntityQuery.use(delegator).from("DatevFieldDefinition").where(EntityCondition.makeCondition(datevFieldDefinitionsCond),
+                    EntityJoinOperator.AND, EntityCondition.makeConditionWhere("METADATA IS NULL OR METADATA = 'N'")).queryList();
             this.datevTransactionFieldNames = EntityUtil.getFieldListFromEntityList(datevTransactionEntryDefinitions, "fieldName", true);
-            this.datevMetadataTransactionEntryDefinitions = EntityQuery.use(delegator).from("DatevTransactionEntryDefinition")
-                    .where(EntityCondition.makeCondition("metadata", EntityOperator.EQUALS, "Y")).queryList();
-            this.notificationMessages = notificationMessages;
-            this.orgPartyId = orgPartyId;
+
+            this.datevMetadataTransactionEntryDefinitions = EntityQuery.use(delegator).from("DatevFieldDefinition")
+                    .where(EntityCondition.makeCondition(datevFieldDefinitionsCond), EntityJoinOperator.AND, EntityCondition.makeCondition("metadata", EntityOperator.EQUALS, "Y"))
+                    .queryList();
         } catch (GenericEntityException e) {
-            throw new DatevException(new DatevNotificationMessage(NotificationMessageType.FATAL, "Internal error. Cannot initialize DATEV helper."));
+            throw new DatevException("Internal error. Cannot initialize DATEV importer tool.");
         }
     }
 
+    @Override
+    public String[] getFieldNames() {
+        String[] fieldNames = new String[datevTransactionFieldNames.size()];
+        return datevTransactionFieldNames.toArray(fieldNames);
+    }
+
+    @Override
     public boolean isMetaHeader(Iterator<String> metaHeaderIter) throws DatevException {
         boolean hasMetaHeader = true;
         for (int i = 0; metaHeaderIter.hasNext(); i++) {
@@ -86,8 +89,8 @@ public class DatevHelper {
             try {
                 fieldDefinition = datevMetadataTransactionEntryDefinitions.get(i);
             } catch (IndexOutOfBoundsException e) {
-                notificationMessages.add(new DatevNotificationMessage(NotificationMessageType.WARNING,
-                        "Metadata header size doesn't match the expected size [" + datevMetadataTransactionEntryDefinitions.size() + "]"));
+                datevHelper.addStat("Metadata header size doesn't match the expected size [" + datevMetadataTransactionEntryDefinitions.size() + "]", NotificationScope.META_HEADER,
+                        NotificationLevel.WARNING);
                 hasMetaHeader = false;
                 break;
             }
@@ -95,14 +98,14 @@ public class DatevHelper {
                 String metaHeaderValue = metaHeaderIter.next();
                 boolean isMetadataFieldValid = validateField(fieldDefinition, metaHeaderValue);
                 if (!isMetadataFieldValid) {
-                    notificationMessages.add(new DatevNotificationMessage(NotificationMessageType.WARNING,
-                            "Metadata header field [" + fieldDefinition.getString("fieldName") + "] is not valid for value <" + metaHeaderValue + ">"));                    
+                    datevHelper.addStat("Metadata header field [" + fieldDefinition.getString("fieldName") + "] is not valid for value <" + metaHeaderValue + ">",
+                            NotificationScope.META_HEADER, NotificationLevel.WARNING);
                 }
                 datevMetadataValues.put(fieldDefinition.getString("fieldName"), UtilMisc.toMap(metaHeaderValue, isMetadataFieldValid));
             }
             if (i > datevMetadataTransactionEntryDefinitions.size() - 1) {
-                notificationMessages.add(new DatevNotificationMessage(NotificationMessageType.WARNING,
-                        "Metadata header size doesn't match the expected size [" + datevMetadataTransactionEntryDefinitions.size() + "]"));
+                datevHelper.addStat("Metadata header size doesn't match the expected size [" + datevMetadataTransactionEntryDefinitions.size() + "]", NotificationScope.META_HEADER,
+                        NotificationLevel.WARNING);
                 hasMetaHeader = false;
             }
         }
@@ -110,20 +113,24 @@ public class DatevHelper {
         return hasMetaHeader;
     }
 
-    public String[] getDatevTransactionFieldNames() {
-        String[] fieldNames = new String[datevTransactionFieldNames.size()];
-        return datevTransactionFieldNames.toArray(fieldNames);
+    @Override
+    public void processRecord(int index, Map<String, String> recordMap) throws DatevException {
+        for (String fieldName : datevTransactionFieldNames) {
+            String value = recordMap.get(fieldName);
+            if (Debug.isOn(Debug.VERBOSE)) {
+                Debug.logInfo("Processing record [" + index + "] field [" + fieldName + "]: " + value, module);
+            }
+
+        }
     }
 
-    public void processRecord(Map<String, String> recordMap) throws DatevException {
-
-    }
-
+    @Override
     public boolean validateField(int position, String value) throws DatevException {
         return validateField(EntityUtil.getFirst(
                 EntityUtil.filterByCondition(datevTransactionEntryDefinitions, EntityCondition.makeCondition("sequenceNum", EntityJoinOperator.EQUALS, position))), value);
     }
 
+    @Override
     public boolean validateField(String fieldName, String value) throws DatevException {
         return validateField(EntityUtil
                 .getFirst(EntityUtil.filterByCondition(datevTransactionEntryDefinitions, EntityCondition.makeCondition("fieldName", EntityJoinOperator.EQUALS, fieldName))), value);
@@ -138,7 +145,7 @@ public class DatevHelper {
                 length = fieldDefinition.getLong("length");
             }
             long scale = 0;
-            if (UtilValidate.isNotEmpty(fieldDefinition.get("length"))) {
+            if (UtilValidate.isNotEmpty(fieldDefinition.get("scale"))) {
                 scale = fieldDefinition.getLong("scale");
             }
             long maxLength = -1;
@@ -168,16 +175,16 @@ public class DatevHelper {
 
             if (UtilValidate.isEmpty(value)) {
                 if (required) {
-                    notificationMessages.add(new DatevNotificationMessage(NotificationMessageType.RECORD_ERROR, "Required field [" + fieldName + "] has no value"));
+                    datevHelper.addStat("Required field [" + fieldName + "] has no value", NotificationScope.RECORD, NotificationLevel.ERROR);
                     return false;
                 } else {
                     return true;
                 }
             }
 
-            if (value.length() > maxLength) {
-                notificationMessages.add(new DatevNotificationMessage(NotificationMessageType.RECORD_ERROR,
-                        "Field [" + fieldName + "] length <" + value.length() + "> is greater than the max value allowed for it <" + maxLength + ">"));
+            if (maxLength > 0 && value.length() > maxLength) {
+                datevHelper.addStat("Field [" + fieldName + "] length <" + value.length() + "> is greater than the max value allowed for it <" + maxLength + ">",
+                        NotificationScope.RECORD, NotificationLevel.ERROR);
                 return false;
             }
 
@@ -205,21 +212,26 @@ public class DatevHelper {
                     validatedValue = ((BigDecimal) validatedValue).setScale(Math.toIntExact(scale));
                 }
                 break;
+            case ACCOUNT:
+                // TODO: Review this
+                validatedValue = value;
+                break;
             default:
-                notificationMessages.add(new DatevNotificationMessage(NotificationMessageType.WARNING, "Type [" + type + "] is not supported for value: " + value));
+                datevHelper.addStat("Type [" + type + "] is not supported for value: " + value, NotificationScope.RECORD, NotificationLevel.WARNING);
                 return false;
             }
         } catch (Exception e) {
-            notificationMessages.add(new DatevNotificationMessage(NotificationMessageType.WARNING,
-                    "Can't convert [" + value + "] to type " + type + " for field <" + fieldDefinition.getString("fieldName") + ">"));
+            datevHelper.addStat("Can't convert [" + value + "] to type " + type + " for field <" + fieldDefinition.getString("fieldName") + ">", NotificationScope.RECORD,
+                    NotificationLevel.WARNING);
             return false;
         }
 
         return true;
     }
 
-    public List<DatevNotificationMessage> getNotificationMessages() {
-        return notificationMessages;
+    @Override
+    public Class<? extends OperationStats> getOperationStatsClass() throws DatevException {
+        return DatevBuchungsstapelStats.class;
     }
 
 }

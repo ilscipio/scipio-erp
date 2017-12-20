@@ -1,4 +1,4 @@
-package com.ilscipio.scipio.accounting.datev;
+package com.ilscipio.scipio.accounting.external.datev;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,7 +23,9 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 
-import com.ilscipio.scipio.accounting.datev.DatevNotificationMessage.NotificationMessageType;
+import com.ilscipio.scipio.accounting.external.OperationStats.NotificationLevel;
+import com.ilscipio.scipio.accounting.external.OperationStats.NotificationScope;
+import com.ilscipio.scipio.accounting.external.datev.category.DatevBuchungsstapel;
 import com.ilscipio.scipio.common.util.TikaUtil;
 
 import javolution.util.FastList;
@@ -46,36 +48,41 @@ public class DatevServices {
 
         // Prepare result objects
         Map<String, Object> result = ServiceUtil.returnSuccess();
-        List<DatevNotificationMessage> notificationMessages = FastList.newInstance();
-        List<GenericValue> transactionEntriesImported = FastList.newInstance();
+        List<GenericValue> transactionEntries = FastList.newInstance();
 
         // Get context params
-        String orgPartyId = (String) context.get("organizationPartyId");
+        String orgPartyId = (String) context.get("orgPartyId");
+        String topGlAccountId = (String) context.get("topGlAccountId");
         ByteBuffer fileBytes = (ByteBuffer) context.get("uploadedFile");
         String fileSize = (String) context.get("_uploadedFile_size");
         String fileName = (String) context.get("_uploadedFile_fileName");
         String contentType = (String) context.get("_uploadedFile_contentType");
 
         BufferedReader csvReader = null;
-
-        Character delimiter = DEFAULT_DELIMITER;
-        if (UtilValidate.isNotEmpty(context.get("delimiter")))
-            delimiter = ((String) context.get("delimiter")).charAt(0);
-        Character quote = DEFAULT_QUOTE;
-        if (UtilValidate.isNotEmpty(context.get("quote")))
-            quote = ((String) context.get("quote")).charAt(0);
-        Boolean hasMetaHeader = (Boolean) context.get("hasMetaHeader");
-        Boolean hasHeader = (Boolean) context.get("hasHeader");
-
-        if (Debug.isOn(Debug.VERBOSE)) {
-            Debug.log("Content Type :" + contentType);
-            Debug.log("File Name    :" + fileName);
-            Debug.log("File Size    :" + fileSize);
-        }
+        DatevHelper datevHelper = null;
+        String errorMessage = null;
         try {
+            // Initialize helper
+            datevHelper = new DatevHelper(delegator, orgPartyId, DatevBuchungsstapel.class);
+
+            Character delimiter = DEFAULT_DELIMITER;
+            if (UtilValidate.isNotEmpty(context.get("delimiter")))
+                delimiter = ((String) context.get("delimiter")).charAt(0);
+            Character quote = DEFAULT_QUOTE;
+            if (UtilValidate.isNotEmpty(context.get("quote")))
+                quote = ((String) context.get("quote")).charAt(0);
+            Boolean hasMetaHeader = (Boolean) context.get("hasMetaHeader");
+            Boolean hasHeader = (Boolean) context.get("hasHeader");
+
+            if (Debug.isOn(Debug.VERBOSE)) {
+                Debug.log("Content Type :" + contentType);
+                Debug.log("File Name    :" + fileName);
+                Debug.log("File Size    :" + fileSize);
+            }
+
             double fileSizeConverted = UtilMisc.toDouble(fileSize);
             if (fileSizeConverted <= 0 && !fileBytes.hasRemaining()) {
-                throw new DatevException(new DatevNotificationMessage(NotificationMessageType.FATAL, "Uploaded CSV file is empty"));
+                throw new DatevException("Uploaded CSV file is empty");
             }
 
             // Find media type
@@ -84,7 +91,7 @@ public class DatevServices {
                 String[] splittedContentType = contentType.split("/");
                 if (splittedContentType.length != 2) {
                     String notificationMessage = "File content type [" + contentType + "] is invalid";
-                    notificationMessages.add(new DatevNotificationMessage(NotificationMessageType.WARNING, notificationMessage));
+                    datevHelper.addStat(notificationMessage, NotificationScope.GLOBAL, NotificationLevel.WARNING);
                     Debug.logWarning(notificationMessage, module);
                 }
 
@@ -94,7 +101,7 @@ public class DatevServices {
                 } else if (!contentType.equals(mediaTypeStr)) {
                     String notificationMessage = "File content type  [" + contentType + "] differs from the content type found by Tika [" + mediaType.getType() + "/"
                             + mediaType.getSubtype() + "]";
-                    notificationMessages.add(new DatevNotificationMessage(NotificationMessageType.WARNING, notificationMessage));
+                    datevHelper.addStat(notificationMessage, NotificationScope.GLOBAL, NotificationLevel.WARNING);
                     Debug.logWarning(notificationMessage, module);
                 }
             }
@@ -113,10 +120,6 @@ public class DatevServices {
             csvReader = new BufferedReader(new StringReader(detectedCharset.decode(fileBytes).toString()));
             CSVFormat fmt = CSVFormat.newFormat(delimiter).withQuote(quote).withQuoteMode(QuoteMode.NON_NUMERIC);
 
-            // Initialize helper
-            DatevHelper datevHelper = null;
-            datevHelper = new DatevHelper(delegator, orgPartyId, notificationMessages);
-
             // Find out if CSV has a meta header so we can remove it and loop
             // only real records
             if (csvReader.markSupported())
@@ -133,28 +136,30 @@ public class DatevServices {
                     }
                 }
             } catch (Exception e) {
-                notificationMessages.add(new DatevNotificationMessage(NotificationMessageType.IGNORE, "Failed parsing metadata header: " + e.getMessage()));
+                datevHelper.addStat("Failed parsing metadata header: " + e.getMessage(), NotificationScope.META_HEADER, NotificationLevel.IGNORE);
                 Debug.logWarning(e, module);
             }
 
             // Find out if CSV has a header so we can remove it and loop only
             // real records
-            String[] datevTransactionsFieldNames = datevHelper.getDatevTransactionFieldNames();
+            String[] datevTransactionsFieldNames = datevHelper.getFieldNames();
             fmt = fmt.withHeader(datevTransactionsFieldNames);
             if (fmt.getHeader() != null && fmt.getHeader().length > 0) {
                 fmt = fmt.withSkipHeaderRecord(true);
             } else {
-                notificationMessages.add(new DatevNotificationMessage(NotificationMessageType.WARNING,
-                        "Header couldn't be found. CSV file parsed using column position according to DATEV specification."));
+                datevHelper.addStat("Header couldn't be found. CSV file parsed using column position according to DATEV specification.", NotificationScope.HEADER,
+                        NotificationLevel.WARNING);
             }
 
             // Parse CSV
             CSVParser parser = fmt.parse(csvReader);
             List<CSVRecord> records = parser.getRecords();
             if (parser.getRecordNumber() <= 0) {
-                throw new DatevException(new DatevNotificationMessage(NotificationMessageType.FATAL, "No records found after CSV has been parsed."));
+                throw new DatevException("No records found after CSV has been parsed.");
             } else {
-                for (final CSVRecord rec : records) {
+                Iterator<CSVRecord> recordIter = records.iterator();
+                for (int index = 0; recordIter.hasNext(); index++) {
+                    final CSVRecord rec = recordIter.next();
                     if (Debug.isOn(Debug.VERBOSE)) {
                         Debug.logInfo(rec.toString(), module);
                     }
@@ -180,21 +185,30 @@ public class DatevServices {
                         }
                     }
                     if (allFieldValid) {
-                        datevHelper.processRecord(recordMap);
+                        try {
+                            datevHelper.processRecord(index, recordMap);
+                        } catch (DatevException e) {
+
+                        }
+                    } else {
+                        datevHelper.addRecordStat("Record validation failed", NotificationLevel.ERROR, index, recordMap, false);
                     }
                 }
             }
 
         } catch (DatevException e) {
-            if (!notificationMessages.contains(e.getNotificationMessage())) {
-                notificationMessages.add(e.getNotificationMessage());
-            }
             Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+            errorMessage = e.getMessage();
         } catch (Exception e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
         } finally {
+            if (UtilValidate.isNotEmpty(datevHelper)) {
+                datevHelper.addStat(errorMessage, NotificationScope.GLOBAL, NotificationLevel.FATAL);
+                result.put("operationStats", datevHelper.getStats());
+            } else {
+                result = ServiceUtil.returnError(errorMessage);
+            }
+
             fileBytes.clear();
             try {
                 csvReader.close();
@@ -203,8 +217,9 @@ public class DatevServices {
             }
         }
 
-        result.put("transactionEntriesImported", transactionEntriesImported);
-        result.put("notificationMessages", notificationMessages);
+        result.put("orgPartyId", orgPartyId);
+        result.put("topGlAccountId", topGlAccountId);
+        result.put("transactionEntries", transactionEntries);
 
         return result;
     }

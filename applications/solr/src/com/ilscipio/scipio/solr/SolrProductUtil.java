@@ -419,7 +419,7 @@ public abstract class SolrProductUtil {
             // Trying to set a correctand trail
             Collection<String> trails = new LinkedHashSet<String>();
             for (String productCategoryId : productCategoryIds) {
-                List<List<String>> trailElements = SolrCategoryUtil.getCategoryTrail(productCategoryId, dctx);
+                List<List<String>> trailElements = SolrCategoryUtil.getCategoryTrail(productCategoryId, dctx, useCache);
                 for (List<String> trailElement : trailElements) {
                     StringBuilder catMember = new StringBuilder();
                     int i = 0;
@@ -562,6 +562,7 @@ public abstract class SolrProductUtil {
                 Map<String, Object> priceContext = UtilMisc.toMap("product", product);
                 priceContext.put("currencyUomId", currencyUomId);
                 SolrProductSearch.copyStdServiceFieldsNotSet(context, priceContext);
+                priceContext.put("useCache", useCache);
                 Map<String, Object> priceMap = dispatcher.runSync("calculateProductPrice", priceContext);
                 if (priceMap.get("listPrice") != null) {
                     String listPrice = ((BigDecimal) priceMap.get("listPrice")).setScale(2, BigDecimal.ROUND_HALF_DOWN).toString();

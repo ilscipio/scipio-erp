@@ -484,12 +484,14 @@ public class ContactMechWorker {
     }
 
     /** Returns the first valid FacilityContactMech found based on the given facilityId and a prioritized list of purposes
+     * SCIPIO: 2017-12-19: added useCache flag and overload.
      * @param delegator the delegator
      * @param facilityId the facility id
      * @param purposeTypes a List of ContactMechPurposeType ids which will be checked one at a time until a valid contact mech is found
+     * @param useCache whether to use entity cache (SCIPIO)
      * @return returns the first valid FacilityContactMech found based on the given facilityId and a prioritized list of purposes
      */
-    public static GenericValue getFacilityContactMechByPurpose(Delegator delegator, String facilityId, List<String> purposeTypes) {
+    public static GenericValue getFacilityContactMechByPurpose(Delegator delegator, String facilityId, List<String> purposeTypes, boolean useCache) {
         if (UtilValidate.isEmpty(facilityId)) return null;
         if (UtilValidate.isEmpty(purposeTypes)) return null;
 
@@ -503,7 +505,7 @@ public class ContactMechWorker {
                 facilityContactMechPurposes = EntityQuery.use(delegator).from("FacilityContactMechPurpose")
                         .where(entityCondition)
                         .orderBy("-fromDate")
-                        .cache(true)
+                        .cache(useCache)
                         .filterByDate()
                         .queryList();
             } catch (GenericEntityException e) {
@@ -521,7 +523,7 @@ public class ContactMechWorker {
                     facilityContactMechs = EntityQuery.use(delegator).from("FacilityContactMech")
                             .where(entityCondition)
                             .orderBy("-fromDate")
-                            .cache(true)
+                            .cache(useCache)
                             .filterByDate()
                             .queryList();
                 } catch (GenericEntityException e) {
@@ -535,7 +537,18 @@ public class ContactMechWorker {
         }
         return null;
     }
-
+    
+    /** Returns the first valid FacilityContactMech found based on the given facilityId and a prioritized list of purposes, using entity cache.
+     * SCIPIO: 2017-12-19: now delegating with useCache=true.
+     * @param delegator the delegator
+     * @param facilityId the facility id
+     * @param purposeTypes a List of ContactMechPurposeType ids which will be checked one at a time until a valid contact mech is found
+     * @return returns the first valid FacilityContactMech found based on the given facilityId and a prioritized list of purposes
+     */
+    public static GenericValue getFacilityContactMechByPurpose(Delegator delegator, String facilityId, List<String> purposeTypes) {
+        return getFacilityContactMechByPurpose(delegator, facilityId, purposeTypes, true);
+    }
+    
     public static void getFacilityContactMechAndRelated(ServletRequest request, String facilityId, Map<String, Object> target) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
 

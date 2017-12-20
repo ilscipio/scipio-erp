@@ -598,16 +598,36 @@
                                     </condition>
                                     <widgets>                                    	
                                         <screenlet>
-                                        	<platform-specific><html><html-template><![CDATA[
-	                                        	<@tabs>
-	                                        		<@tab title="Preferences"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditAcctgPreferences"/></@tab>
-	                                        		<@tab title="Configure GL Accounts">
+                                        	<platform-specific><html><html-template><![CDATA[                                                
+	                                        	<@tabs id="accountingTabs">
+	                                        		<@tab id="preferencesTab" title="Preferences"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditAcctgPreferences"/></@tab>
+	                                        		<@tab id="glAccountsTab" title="Configure GL Accounts">
 	                                        			<@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditGLAccountTree" />
 	                                        		</@tab>
-	                                        		<@tab title="Configure Fiscal Periods"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditFiscalPeriods"/></@tab>
-	                                        		<@tab title="Configure Accounting Transactions"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditAccountingTransactions"/></@tab>
-	                                        		<@tab title="Configure Journal"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditJournals"/></@tab>
+	                                        		<@tab id="fiscalPeriodsTab" title="Configure Fiscal Periods"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditFiscalPeriods"/></@tab>
+	                                        		<@tab id="accountingTransactionsTab" title="Configure Accounting Transactions"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditAccountingTransactions"/></@tab>
+	                                        		<@tab id="journalTab" title="Configure Journal"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditJournals"/></@tab>
 	                                        	</@tabs>
+                                                <#if accountingData.tabId?has_content>
+                                                    <@script>
+                                                    	jQuery(document).ready(function() {   
+                                                            console.log("TAB ID ====> ${accountingData.tabId}");                                                        
+                                                            try {
+                                                                jQuery("#${accountingData.tabId}").tab('show');
+                                                            } catch (err) {
+                                                                console.log("err 1 ===> " + err);
+                                                                try {
+                                                                    jQuery("#${accountingData.tabId}").on('toggled', function(event, tab) {
+                                                                        jQuery(tab).trigger('click');
+                                                                        console.log("tab =======> " + tab);
+                                                                    });
+                                                                } catch (err) {
+                                                                    console.log("err 2 ===> " + err);
+                                                                }
+                                                            }
+                                                        });
+                                                    </@script>
+                                                </#if>
                                         	]]></html-template></html></platform-specific>
                                         </screenlet>
                                     </widgets>

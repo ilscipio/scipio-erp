@@ -22,6 +22,8 @@ import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.LocalDispatcher;
 
+import com.ilscipio.scipio.accounting.external.OperationStats;
+import com.ilscipio.scipio.accounting.external.OperationStats.Stat;
 import com.ilscipio.scipio.setup.ContactMechPurposeInfo.FacilityContactMechPurposeInfo;
 import com.ilscipio.scipio.setup.ContactMechPurposeInfo.PartyContactMechPurposeInfo;
 
@@ -263,6 +265,8 @@ public abstract class SetupDataUtil {
         String orgPartyId = (String) params.get("orgPartyId");
         String topGlAccountId = (String) params.get("topGlAccountId");
         
+        String tabId = (String) params.get("tabId");        
+        
         DynamicViewEntity dve = new DynamicViewEntity();
         dve.addMemberEntity("GAO", "GlAccountOrganization");
         dve.addMemberEntity("GA", "GlAccount");
@@ -335,8 +339,21 @@ public abstract class SetupDataUtil {
                     result.put("complete", true);
                 }
                 
+                if (params.containsKey("datevImportDataCategory")) {
+                    String datevImportDataCategory = (String) params.get("datevImportDataCategory");
+                    if (UtilValidate.isNotEmpty(datevImportDataCategory)) {
+                        if (params.containsKey("operationStats")) {
+                            OperationStats operationStats = (OperationStats) params.get("operationStats");
+                            for (Stat stat : operationStats.getStats()) {
+                                Debug.log("[" + stat.getScope().toString() + "][" + stat.getLevel().toString() + "]: " + stat.getMessage());
+                            }
+                        }
+                    }
+                }
+                
                 result.put("topGlAccountId", topGlAccountId);
                 result.put("topGlAccount", topGlAccount);
+                result.put("tabId", tabId);
             }
         }
 

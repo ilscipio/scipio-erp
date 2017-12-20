@@ -198,8 +198,12 @@ public class ProductWorker {
         return null;
     }
 
-    public static String getVariantVirtualId(GenericValue variantProduct) throws GenericEntityException {
-        List<GenericValue> productAssocs = getVariantVirtualAssocs(variantProduct);
+    /**
+     * Get variant product's parent virtual product's id.
+     * SCIPIO: added useCache flag (2017-12-19).
+     */
+    public static String getVariantVirtualId(GenericValue variantProduct, boolean useCache) throws GenericEntityException {
+        List<GenericValue> productAssocs = getVariantVirtualAssocs(variantProduct, useCache); // SCIPIO: useCache
         if (productAssocs == null) {
             return null;
         }
@@ -209,6 +213,14 @@ public class ProductWorker {
         } else {
             return null;
         }
+    }
+    
+    /**
+     * Get variant product's parent virtual product's id, with caching enabled.
+     * SCIPIO: now delegating (2017-12-19).
+     */
+    public static String getVariantVirtualId(GenericValue variantProduct) throws GenericEntityException {
+        return getVariantVirtualId(variantProduct, true);
     }
 
     // SCIPIO: 2017-09-14: now support useCache

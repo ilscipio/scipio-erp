@@ -32,9 +32,190 @@ under the License.
     <DatevDataCategory dataCategoryId="KONTENBESCHRIFTUNGEN" dataCategoryName="Kontenbeschriftungen" description=""/>
     <DatevDataCategory dataCategoryId="TEXTSCHLUSSEL" dataCategoryName="Textschlussel" description=""/>
     <DatevDataCategory dataCategoryId="DIVERSEADRESSEN" dataCategoryName="DiverseAdressen" description=""/>
-
-    <!-- DATEV FIELDS -->
     
+    <!-- DATEV METADATA FIELDS -->
+    <DatevMetadata metadataId="DATEV-Format-KZ" typeEnumId="FIELD_TYPE_TEXT" maxLength="4" sequenceNum="1">
+        <description><![CDATA[
+            # vom Datev angegeben
+            # EXTF = für Datei-Formate, die von externen Programmen erstellt wurden
+        ]]></description>
+    </DatevMetadata>
+    
+    <DatevMetadata metadataId="Versionsnummer" typeEnumId="FIELD_TYPE_NUMBER" maxLength="3" sequenceNum="2">
+        <description><![CDATA[
+            # entspricht der zugrundeliegenden Versionsnummer des Scnittstellen-Entwicklungsleitfadens
+        ]]></description>
+    </DatevMetadata>
+   
+   <DatevMetadata metadataId="Datenkategorie" typeEnumId="FIELD_TYPE_NUMBER" maxLength="3" sequenceNum="3">
+        <description><![CDATA[
+            # vom Datev angegeben
+        ]]></description>
+    </DatevMetadata>
+    
+    <DatevMetadata metadataId="Formatname" typeEnumId="FIELD_TYPE_TEXT" sequenceNum="4">
+        <description><![CDATA[
+            # vom Datev angegeben
+        ]]></description>
+    </DatevMetadata>
+    
+    <DatevMetadata metadataId="Formatversion" typeEnumId="FIELD_TYPE_NUMBER" maxLength="3" sequenceNum="5">
+        <description><![CDATA[
+            # entspricht der zugrundeliegenden Versionsnummer des Scnittstellen-Entwicklungsleitfadens
+        ]]></description>
+    </DatevMetadata>
+    
+    <DatevMetadata metadataId="Erzeugt am" typeEnumId="FIELD_TYPE_DATE" format="yyyyMMddHHmmssSSS" sequenceNum="6">
+        <description><![CDATA[
+            # entspricht der zugrundeliegenden Versionsnummer des Scnittstellen-Entwicklungsleitfadens
+        ]]></description>
+    </DatevMetadata>
+    
+    <DatevMetadata metadataId="Importiert" typeEnumId="FIELD_TYPE_DATE" maxLength="3" sequenceNum="7">
+        <description><![CDATA[
+           # Darf nicht gefüllt werden, durch Import gesetzt.
+        ]]></description>
+    </DatevMetadata>
+    
+    <DatevMetadata metadataId="Herkunft" typeEnumId="FIELD_TYPE_TEXT" maxLength="2" sequenceNum="8">
+        <description><![CDATA[
+            # Herkunfts-Kennzeichen
+            # Beim Import wird das Herkunfts-Kennzeichen durch „SV“ (= Stapelverarbeitung) ersetzt.
+        ]]></description>
+    </DatevMetadata>
+    
+     <DatevMetadata metadataId="Exportiert von" typeEnumId="FIELD_TYPE_TEXT" maxLength="25" sequenceNum="9">
+        <description><![CDATA[
+            # Benutzername
+        ]]></description>
+    </DatevMetadata>
+    
+     <DatevMetadata metadataId="Importiert von" typeEnumId="FIELD_TYPE_TEXT" maxLength="10" sequenceNum="10">
+        <description><![CDATA[
+           # Darf nicht gefüllt werden, durch Import gesetzt.
+        ]]></description>
+    </DatevMetadata>
+    
+     <DatevMetadata metadataId="Berater" typeEnumId="FIELD_TYPE_NUMBER" maxLength="7" sequenceNum="11">
+        <description><![CDATA[
+           # Beraternummer
+        ]]></description>
+    </DatevMetadata>
+    
+     <DatevMetadata metadataId="Mandant" typeEnumId="FIELD_TYPE_NUMBER" maxLength="5" sequenceNum="12">
+        <description><![CDATA[
+           # Mandantennummer
+        ]]></description>
+    </DatevMetadata>
+    
+     <DatevMetadata metadataId="WJ-Beginn" typeEnumId="FIELD_TYPE_DATE" format="yyyyMMdd" sequenceNum="13">
+        <description><![CDATA[
+           # Wirtschaftsjahresbeginn
+        ]]></description>
+    </DatevMetadata>
+    
+     <DatevMetadata metadataId="Sachkontenlänge" typeEnumId="FIELD_TYPE_NUMBER" maxLength="1" sequenceNum="14">
+        <description><![CDATA[
+          # Kleinste Sachkontenlänge = 4, Grösste Sachkontenlänge = 8
+        ]]></description>
+    </DatevMetadata>
+    
+    <DatevMetadata metadataId="Datum vom" typeEnumId="FIELD_TYPE_DATE" format="yyyyMMdd" sequenceNum="15">
+        <description><![CDATA[
+        ]]></description>
+    </DatevMetadata>
+    
+    <DatevMetadata metadataId="Datum bis" typeEnumId="FIELD_TYPE_DATE" format="yyyyMMdd" sequenceNum="16">
+        <description><![CDATA[
+        ]]></description>
+    </DatevMetadata>
+    
+    <DatevMetadata metadataId="Bezeichnung" typeEnumId="FIELD_TYPE_TEXT" maxLength="30" sequenceNum="17">
+        <description><![CDATA[
+            # Bezeichnung des Buchungsstapels
+        ]]></description>
+    </DatevMetadata>
+    
+    <DatevMetadata metadataId="Diktatkürzel" typeEnumId="FIELD_TYPE_TEXT" maxLength="2" sequenceNum="18">
+        <description><![CDATA[
+            # Diktatkürzel Beispiel MM = Max Mustermann
+        ]]></description>
+    </DatevMetadata>
+    
+    <DatevMetadata metadataId="Buchungstyp" typeEnumId="FIELD_TYPE_NUMBER" maxLength="1" sequenceNum="19">
+        <description><![CDATA[
+            # 1 = Finanzbuchhaltung, 2 = Jahresabschluss
+        ]]></description>
+    </DatevMetadata>
+    
+    <DatevMetadata metadataId="Rechnungslegungszweck" typeEnumId="FIELD_TYPE_NUMBER" maxLength="2" sequenceNum="20">
+        <description><![CDATA[
+            # 0 oder leer = Rechnungslegungszweckunabhängig
+        ]]></description>
+    </DatevMetadata>
+    
+    <DatevMetadata metadataId="Festschreibung" typeEnumId="FIELD_TYPE_BOOLEAN" sequenceNum="21">
+        <description><![CDATA[
+            # leer = nicht definiert; wird ab Jahreswechselversion 2016/2017 automatisch festgeschrieben
+            # 0 = keine Festschreibung
+            # 1 = Festschreibung            
+        ]]></description>
+    </DatevMetadata>
+    
+    <DatevMetadata metadataId="WKZ" typeEnumId="FIELD_TYPE_TEXT" maxLength="3" sequenceNum="22">
+        <description><![CDATA[
+            # Währungskennzeichen        
+        ]]></description>
+    </DatevMetadata>
+    
+    <DatevMetadata metadataId="reserviert" typeEnumId="FIELD_TYPE_TEXT" sequenceNum="23">
+        <description><![CDATA[
+        ]]></description>
+    </DatevMetadata>
+    
+    <DatevMetadata metadataId="Derivatskennzeichen" typeEnumId="FIELD_TYPE_TEXT" sequenceNum="24">
+        <description><![CDATA[
+        ]]></description>
+    </DatevMetadata>
+    
+    <DatevMetadata metadataId="reserviert 2" typeEnumId="FIELD_TYPE_TEXT" sequenceNum="25">
+        <description><![CDATA[
+        ]]></description>
+    </DatevMetadata>
+    
+    <DatevMetadata metadataId="reserviert 3" typeEnumId="FIELD_TYPE_TEXT" sequenceNum="26">
+        <description><![CDATA[
+        ]]></description>
+    </DatevMetadata>
+    
+    <DatevMetadata metadataId="SKR" typeEnumId="FIELD_TYPE_TEXT" sequenceNum="27">
+        <description><![CDATA[
+        ]]></description>
+    </DatevMetadata>
+    
+    <DatevMetadata metadataId="Branchenlösung-Id" typeEnumId="FIELD_TYPE_NUMBER" sequenceNum="28">
+        <description><![CDATA[
+        ]]></description>
+    </DatevMetadata>  
+    
+    <DatevMetadata metadataId="reserviert 4" typeEnumId="FIELD_TYPE_NUMBER" sequenceNum="29">
+        <description><![CDATA[
+        ]]></description>
+    </DatevMetadata>
+    
+    <DatevMetadata metadataId="reserviert 5" typeEnumId="FIELD_TYPE_TEXT" sequenceNum="30">
+        <description><![CDATA[
+        ]]></description>
+    </DatevMetadata>
+
+    <DatevMetadata metadataId="Anwendungsinformation" typeEnumId="FIELD_TYPE_TEXT" maxLength="16" sequenceNum="31">
+        <description><![CDATA[
+           # Verarbeitungskennzeichen der abgebenden Anwendung => Bsp. '9/2016'
+        ]]></description>
+    </DatevMetadata>
+    
+
+    <!-- DATEV FIELDS -->    
     <!-- BUCHUNGSSTAPEL -->
     <DatevFieldDefinition fieldId="1" dataCategoryId="BUCHUNGSSTAPEL" fieldName="Umsatz (ohne Soll/Haben-Kz)" typeEnumId="FIELD_TYPE_AMOUNT" length="10" scale="2" maxLength="13" required="Y" sequenceNum="1">
     <description><![CDATA[
@@ -1102,189 +1283,913 @@ under the License.
             # Steuerperiode
         ]]></description>
     </DatevFieldDefinition>
-    
-    <!-- METADATA FIELDS -->
-    <DatevFieldDefinition fieldId="117" dataCategoryId="BUCHUNGSSTAPEL" fieldName="DATEV-Format-KZ" typeEnumId="FIELD_TYPE_TEXT" maxLength="4" metadata="Y" sequenceNum="1">
+       
+    <!-- DEBITOREN_KREDITOREN_STAMMDATEN -->
+    <DatevFieldDefinition fieldId="117" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Konto" typeEnumId="FIELD_TYPE_NUMBER" required="Y" maxLength="9" sequenceNum="1">
         <description><![CDATA[
-            # vom Datev angegeben
-            # EXTF = für Datei-Formate, die von externen Programmen erstellt wurden
+            # Personen-Kontonummer (abhängig von der Information im Header)
+            # Sachkontennummernlänge + 1 = Personenkontenlänge
         ]]></description>
     </DatevFieldDefinition>
-    
-    <DatevFieldDefinition fieldId="118" dataCategoryId="BUCHUNGSSTAPEL" fieldName="Versionsnummer" typeEnumId="FIELD_TYPE_NUMBER" maxLength="3" metadata="Y" sequenceNum="2">
+    <DatevFieldDefinition fieldId="118" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Name (Adressatentyp Unternehmen)" typeEnumId="FIELD_TYPE_TEXT" maxLength="50" sequenceNum="2">
         <description><![CDATA[
-            # entspricht der zugrundeliegenden Versionsnummer des Scnittstellen-Entwicklungsleitfadens
+            # Beim Import werden die Felder in der Datenbank gefüllt, auch wenn sie nicht dem Adressatentyp aus Feld 7 entsprechen. Das kann zu ungewollten Effekten im Programm führen. Bitte übergeben Sie nur die zum Adressatentyp passenden Felder.
         ]]></description>
     </DatevFieldDefinition>
-   
-   <DatevFieldDefinition fieldId="119" dataCategoryId="BUCHUNGSSTAPEL" fieldName="Datenkategorie" typeEnumId="FIELD_TYPE_NUMBER" maxLength="3" metadata="Y" sequenceNum="3">
-        <description><![CDATA[
-            # vom Datev angegeben
-        ]]></description>
-    </DatevFieldDefinition>
-    
-    <DatevFieldDefinition fieldId="120" dataCategoryId="BUCHUNGSSTAPEL" fieldName="Formatname" typeEnumId="FIELD_TYPE_TEXT" metadata="Y" sequenceNum="4">
-        <description><![CDATA[
-            # vom Datev angegeben
-        ]]></description>
-    </DatevFieldDefinition>
-    
-    <DatevFieldDefinition fieldId="121" dataCategoryId="BUCHUNGSSTAPEL" fieldName="Formatversion" typeEnumId="FIELD_TYPE_NUMBER" maxLength="3" metadata="Y" sequenceNum="5">
-        <description><![CDATA[
-            # entspricht der zugrundeliegenden Versionsnummer des Scnittstellen-Entwicklungsleitfadens
-        ]]></description>
-    </DatevFieldDefinition>
-    
-    <DatevFieldDefinition fieldId="122" dataCategoryId="BUCHUNGSSTAPEL" fieldName="Erzeugt am" typeEnumId="FIELD_TYPE_DATE" format="yyyyMMddHHmmssSSS" metadata="Y" sequenceNum="6">
-        <description><![CDATA[
-            # entspricht der zugrundeliegenden Versionsnummer des Scnittstellen-Entwicklungsleitfadens
-        ]]></description>
-    </DatevFieldDefinition>
-    
-    <DatevFieldDefinition fieldId="123" dataCategoryId="BUCHUNGSSTAPEL" fieldName="Importiert" typeEnumId="FIELD_TYPE_DATE" maxLength="3" metadata="Y" sequenceNum="7">
-        <description><![CDATA[
-	       # Darf nicht gefüllt werden, durch Import gesetzt.
-        ]]></description>
-    </DatevFieldDefinition>
-    
-    <DatevFieldDefinition fieldId="124" dataCategoryId="BUCHUNGSSTAPEL" fieldName="Herkunft" typeEnumId="FIELD_TYPE_TEXT" maxLength="2" metadata="Y" sequenceNum="8">
-        <description><![CDATA[
-            # Herkunfts-Kennzeichen
-            # Beim Import wird das Herkunfts-Kennzeichen durch „SV“ (= Stapelverarbeitung) ersetzt.
-        ]]></description>
-    </DatevFieldDefinition>
-    
-     <DatevFieldDefinition fieldId="125" dataCategoryId="BUCHUNGSSTAPEL" fieldName="Exportiert von" typeEnumId="FIELD_TYPE_TEXT" maxLength="25" metadata="Y" sequenceNum="9">
-        <description><![CDATA[
-            # Benutzername
-        ]]></description>
-    </DatevFieldDefinition>
-    
-     <DatevFieldDefinition fieldId="126" dataCategoryId="BUCHUNGSSTAPEL" fieldName="Importiert von" typeEnumId="FIELD_TYPE_TEXT" maxLength="10" metadata="Y" sequenceNum="10">
-        <description><![CDATA[
-           # Darf nicht gefüllt werden, durch Import gesetzt.
-        ]]></description>
-    </DatevFieldDefinition>
-    
-     <DatevFieldDefinition fieldId="127" dataCategoryId="BUCHUNGSSTAPEL" fieldName="Berater" typeEnumId="FIELD_TYPE_NUMBER" maxLength="7" metadata="Y" sequenceNum="11">
-        <description><![CDATA[
-           # Beraternummer
-        ]]></description>
-    </DatevFieldDefinition>
-    
-     <DatevFieldDefinition fieldId="128" dataCategoryId="BUCHUNGSSTAPEL" fieldName="Mandant" typeEnumId="FIELD_TYPE_NUMBER" maxLength="5" metadata="Y" sequenceNum="12">
-        <description><![CDATA[
-           # Mandantennummer
-        ]]></description>
-    </DatevFieldDefinition>
-    
-     <DatevFieldDefinition fieldId="129" dataCategoryId="BUCHUNGSSTAPEL" fieldName="WJ-Beginn" typeEnumId="FIELD_TYPE_DATE" format="yyyyMMdd" metadata="Y" sequenceNum="13">
-        <description><![CDATA[
-           # Wirtschaftsjahresbeginn
-        ]]></description>
-    </DatevFieldDefinition>
-    
-     <DatevFieldDefinition fieldId="130" dataCategoryId="BUCHUNGSSTAPEL" fieldName="Sachkontenlänge" typeEnumId="FIELD_TYPE_NUMBER" maxLength="1" metadata="Y" sequenceNum="14">
-        <description><![CDATA[
-          # Kleinste Sachkontenlänge = 4, Grösste Sachkontenlänge = 8
-        ]]></description>
-    </DatevFieldDefinition>
-    
-    <DatevFieldDefinition fieldId="131" dataCategoryId="BUCHUNGSSTAPEL" fieldName="Datum vom" typeEnumId="FIELD_TYPE_DATE" format="yyyyMMdd" metadata="Y" sequenceNum="15">
+    <DatevFieldDefinition fieldId="119" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Unternehmensgegenstand" typeEnumId="FIELD_TYPE_TEXT" maxLength="50" sequenceNum="3">
         <description><![CDATA[
         ]]></description>
     </DatevFieldDefinition>
-    
-    <DatevFieldDefinition fieldId="132" dataCategoryId="BUCHUNGSSTAPEL" fieldName="Datum bis" typeEnumId="FIELD_TYPE_DATE" format="yyyyMMdd" metadata="Y" sequenceNum="16">
+    <DatevFieldDefinition fieldId="120" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Name (Adressatentyp natürl. Person)" typeEnumId="FIELD_TYPE_TEXT" maxLength="30" sequenceNum="4">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="121" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Vorname (Adressatentyp natürl. Person)" typeEnumId="FIELD_TYPE_TEXT" maxLength="30" sequenceNum="5">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="122" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Name (Adressatentyp keine Angabe)" typeEnumId="FIELD_TYPE_TEXT" maxLength="50" sequenceNum="6">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="123" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Adressatentyp" typeEnumId="FIELD_TYPE_TEXT" maxLength="1" sequenceNum="7">
+        <description><![CDATA[
+            # 0 = keine Angabe
+            # 1 = natürliche Person
+            # 2 = Unternehmen
+            # Standardwert = Unternehmen
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="124" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Kurzbezeichnung" typeEnumId="FIELD_TYPE_TEXT" maxLength="15" sequenceNum="8">
+        <description><![CDATA[
+            # 0 = keine Angabe
+            # 1 = natürliche Person
+            # 2 = Unternehmen
+            # Standardwert = Unternehmen
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="125" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="EU-Land" typeEnumId="FIELD_TYPE_TEXT" maxLength="2" sequenceNum="9">
+        <description><![CDATA[
+            # Die USt-IdNr. besteht aus
+            # 2-stelligen Länderkürzel
+            # (siehe Dok.-Nr. 1080169; Ausnahme Griechenland: Das Länderkürzel lautet EL)
+            # 13-stelliger USt-IdNr.
+            # Beachten Sie bitte, dass kein Leerzeichen zwischen diesen beiden Eingabewerten sein darf.
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="126" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="EU-USt-IdNr." typeEnumId="FIELD_TYPE_TEXT" maxLength="13" sequenceNum="10">
+        <description><![CDATA[
+            # Die USt-IdNr. besteht aus
+            # 2-stelligen Länderkürzel
+            # (siehe Dok.-Nr. 1080169; Ausnahme Griechenland: Das Länderkürzel lautet EL)
+            # 13-stelliger USt-IdNr.
+            # Beachten Sie bitte, dass kein Leerzeichen zwischen diesen beiden Eingabewerten sein darf.
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="127" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Anrede" typeEnumId="FIELD_TYPE_TEXT" maxLength="30" sequenceNum="11">
+        <description><![CDATA[
+            # Die USt-IdNr. besteht aus
+            # 2-stelligen Länderkürzel
+            # (siehe Dok.-Nr. 1080169; Ausnahme Griechenland: Das Länderkürzel lautet EL)
+            # 13-stelliger USt-IdNr.
+            # Beachten Sie bitte, dass kein Leerzeichen zwischen diesen beiden Eingabewerten sein darf.
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="128" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Titel/Akad. Grad" typeEnumId="FIELD_TYPE_TEXT" maxLength="25" sequenceNum="12">
+        <description><![CDATA[
+            # Nur bei Adressatentyp "natürliche Person" relevant.
+            # Wird der Titel/Akad.Grad bei einem Adressatentyp "Unternehmen" übergeben, wird der Wert in den Datenbestand übernommen, ist aber an der Oberfläche nicht sichtbar.
+        ]]></description>
+    </DatevFieldDefinition>    
+    <DatevFieldDefinition fieldId="129" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Adelstitel" typeEnumId="FIELD_TYPE_TEXT" maxLength="15" sequenceNum="13">
+        <description><![CDATA[
+            # Nur bei Adressatentyp "natürliche Person" relevant.
+            # Wird der Adelstitel bei einem Adressatentyp "Unternehmen" übergeben, wird der Wert in den Datenbestand übernommen, ist aber an der Oberfläche nicht sichtbar.
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="130" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Namensvorsatz" typeEnumId="FIELD_TYPE_TEXT" maxLength="14" sequenceNum="14">
+        <description><![CDATA[
+            # Nur bei Adressatentyp "natürliche Person" relevant.
+            # Wird der Namensvorsatz bei einem Adressatentyp "Unternehmen" übergeben, wird der Wert in den Datenbestand übernommen, ist aber an der Oberfläche nicht sichtbar.
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="131" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Adressart" typeEnumId="FIELD_TYPE_TEXT" maxLength="3" sequenceNum="15">
+        <description><![CDATA[
+            # STR = Straße
+            # PF = Postfach
+            # GK = Großkunde
+            # Wird die Adressart nicht übergeben, wird sie automatisch in Abhängigkeit zu den übergebenen Feldern (Straße oder Postfach) gesetzt.
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="132" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Straße" typeEnumId="FIELD_TYPE_TEXT" maxLength="36" sequenceNum="16">
+        <description><![CDATA[
+            # Wird sowohl eine Straße als auch ein Postfach übergeben, werden beide Werte in den Datenbestand übernommen; auf der Visitenkarte in den Debitoren-/Kreditoren-Stammdaten wird die Postfachadresse angezeigt.
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="133" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Postfach" typeEnumId="FIELD_TYPE_TEXT" maxLength="10" sequenceNum="17">
+        <description><![CDATA[            
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="134" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Postleitzahl" typeEnumId="FIELD_TYPE_TEXT" maxLength="10" sequenceNum="18">
+        <description><![CDATA[            
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="135" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Ort" typeEnumId="FIELD_TYPE_TEXT" maxLength="30" sequenceNum="19">
+        <description><![CDATA[            
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="136" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Land" typeEnumId="FIELD_TYPE_TEXT" maxLength="2" sequenceNum="20">
+        <description><![CDATA[
+            # ISO-Code beachten! (Dok.-Nr. 1080169)            
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="137" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Versandzusatz" typeEnumId="FIELD_TYPE_TEXT" maxLength="50" sequenceNum="21">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="138" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Adresszusatz" typeEnumId="FIELD_TYPE_TEXT" maxLength="36" sequenceNum="22">
+        <description><![CDATA[
+            # Beispiel: z. Hd. Herrn Mustermann            
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="139" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Abweichende Anrede" typeEnumId="FIELD_TYPE_TEXT" maxLength="30" sequenceNum="23">
+        <description><![CDATA[
+            # Es kann ein beliebiger individueller Text verwendet werden.
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="140" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Abw. Zustellbezeichnung 1" typeEnumId="FIELD_TYPE_TEXT" maxLength="50" sequenceNum="24">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="141" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Abw. Zustellbezeichnung 2" typeEnumId="FIELD_TYPE_TEXT" maxLength="36" sequenceNum="25">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="142" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Kennz. Korrespondenzadresse" typeEnumId="FIELD_TYPE_BOOLEAN" sequenceNum="26">
+        <description><![CDATA[
+            # 1= Kennzeichnung Korrespondenzadresse
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="143" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Adresse Gültig von" typeEnumId="FIELD_TYPE_DATE" format="ddMMyyyy" sequenceNum="27">
+        <description><![CDATA[            
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="144" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Adresse Gültig bis" typeEnumId="FIELD_TYPE_DATE" format="ddMMyyyy" sequenceNum="28">
+        <description><![CDATA[            
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="145" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Telefon" typeEnumId="FIELD_TYPE_TEXT" maxLength="60" sequenceNum="29">
+        <description><![CDATA[
+            # Standard-Telefonnummer            
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="146" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Bemerkung (Telefon)" typeEnumId="FIELD_TYPE_TEXT" maxLength="40" sequenceNum="30">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="147" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Telefon Geschäftsleitung" typeEnumId="FIELD_TYPE_TEXT" maxLength="40" sequenceNum="31">
+        <description><![CDATA[
+            # Geschäftsleitungs-Telefonnummer
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="148" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Bemerkung (Telefon GL)" typeEnumId="FIELD_TYPE_TEXT" maxLength="40" sequenceNum="32">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="149" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="E-Mail" typeEnumId="FIELD_TYPE_TEXT" maxLength="60" sequenceNum="33">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="150" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Bemerkung (E-Mail)" typeEnumId="FIELD_TYPE_TEXT" maxLength="60" sequenceNum="34">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="151" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Internet" typeEnumId="FIELD_TYPE_TEXT" maxLength="60" sequenceNum="35">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="152" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Bemerkung (Internet)" typeEnumId="FIELD_TYPE_TEXT" maxLength="40" sequenceNum="36">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="153" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Fax" typeEnumId="FIELD_TYPE_TEXT" maxLength="60" sequenceNum="37">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="154" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Bemerkung (Fax)" typeEnumId="FIELD_TYPE_TEXT" maxLength="40" sequenceNum="38">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="155" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Sonstige" typeEnumId="FIELD_TYPE_TEXT" maxLength="60" sequenceNum="39">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="155" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Bemerkung (Sonstige)" typeEnumId="FIELD_TYPE_TEXT" maxLength="40" sequenceNum="40">
         <description><![CDATA[
         ]]></description>
     </DatevFieldDefinition>
     
-    <DatevFieldDefinition fieldId="133" dataCategoryId="BUCHUNGSSTAPEL" fieldName="Bezeichnung" typeEnumId="FIELD_TYPE_TEXT" maxLength="30" metadata="Y" sequenceNum="17">
-        <description><![CDATA[
-            # Bezeichnung des Buchungsstapels
-        ]]></description>
-    </DatevFieldDefinition>
-    
-    <DatevFieldDefinition fieldId="134" dataCategoryId="BUCHUNGSSTAPEL" fieldName="Diktatkürzel" typeEnumId="FIELD_TYPE_TEXT" maxLength="2" metadata="Y" sequenceNum="18">
-        <description><![CDATA[
-            # Diktatkürzel Beispiel MM = Max Mustermann
-        ]]></description>
-    </DatevFieldDefinition>
-    
-    <DatevFieldDefinition fieldId="135" dataCategoryId="BUCHUNGSSTAPEL" fieldName="Buchungstyp" typeEnumId="FIELD_TYPE_NUMBER" maxLength="1" metadata="Y" sequenceNum="19">
-        <description><![CDATA[
-            # 1 = Finanzbuchhaltung, 2 = Jahresabschluss
-        ]]></description>
-    </DatevFieldDefinition>
-    
-    <DatevFieldDefinition fieldId="136" dataCategoryId="BUCHUNGSSTAPEL" fieldName="Rechnungslegungszweck" typeEnumId="FIELD_TYPE_NUMBER" maxLength="2" metadata="Y" sequenceNum="20">
-        <description><![CDATA[
-            # 0 oder leer = Rechnungslegungszweckunabhängig
-        ]]></description>
-    </DatevFieldDefinition>
-    
-    <DatevFieldDefinition fieldId="137" dataCategoryId="BUCHUNGSSTAPEL" fieldName="Festschreibung" typeEnumId="FIELD_TYPE_BOOLEAN" metadata="Y" sequenceNum="21">
-        <description><![CDATA[
-            # leer = nicht definiert; wird ab Jahreswechselversion 2016/2017 automatisch festgeschrieben
-            # 0 = keine Festschreibung
-            # 1 = Festschreibung            
-        ]]></description>
-    </DatevFieldDefinition>
-    
-    <DatevFieldDefinition fieldId="138" dataCategoryId="BUCHUNGSSTAPEL" fieldName="WKZ" typeEnumId="FIELD_TYPE_TEXT" maxLength="3" metadata="Y" sequenceNum="22">
-        <description><![CDATA[
-            # Währungskennzeichen        
-        ]]></description>
-    </DatevFieldDefinition>
-    
-    <DatevFieldDefinition fieldId="139" dataCategoryId="BUCHUNGSSTAPEL" fieldName="reserviert" typeEnumId="FIELD_TYPE_TEXT" metadata="Y" sequenceNum="23">
+    <DatevFieldDefinition fieldId="156" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Bankleitzahl 1" typeEnumId="FIELD_TYPE_TEXT" maxLength="8" sequenceNum="41">
         <description><![CDATA[
         ]]></description>
     </DatevFieldDefinition>
-    
-    <DatevFieldDefinition fieldId="140" dataCategoryId="BUCHUNGSSTAPEL" fieldName="Derivatskennzeichen" typeEnumId="FIELD_TYPE_TEXT" metadata="Y" sequenceNum="24">
+    <DatevFieldDefinition fieldId="157" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Bankbezeichnung 1" typeEnumId="FIELD_TYPE_TEXT" maxLength="30" sequenceNum="42">
         <description><![CDATA[
         ]]></description>
     </DatevFieldDefinition>
-    
-    <DatevFieldDefinition fieldId="141" dataCategoryId="BUCHUNGSSTAPEL" fieldName="reserviert 2" typeEnumId="FIELD_TYPE_TEXT" metadata="Y" sequenceNum="25">
+    <DatevFieldDefinition fieldId="158" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Bankkonto-Nummer 1" typeEnumId="FIELD_TYPE_TEXT" maxLength="10" sequenceNum="43">
         <description><![CDATA[
         ]]></description>
     </DatevFieldDefinition>
-    
-    <DatevFieldDefinition fieldId="142" dataCategoryId="BUCHUNGSSTAPEL" fieldName="reserviert 3" typeEnumId="FIELD_TYPE_TEXT" metadata="Y" sequenceNum="26">
+    <DatevFieldDefinition fieldId="159" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Länderkennzeichen 1" typeEnumId="FIELD_TYPE_TEXT" maxLength="2" sequenceNum="44">
+        <description><![CDATA[
+            # ISO-Code beachten (siehe Dok.-Nr. 1080169)
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="160" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="IBAN 1" typeEnumId="FIELD_TYPE_TEXT" maxLength="34" sequenceNum="45">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="161" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Leerfeld 1" typeEnumId="FIELD_TYPE_TEXT" maxLength="1" sequenceNum="46">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="162" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="SWIFT-Code 1" typeEnumId="FIELD_TYPE_TEXT" maxLength="11" sequenceNum="47">
+        <description><![CDATA[
+            # Beachten Sie, dass für Zahlung und Lastschriften bis zur Installation der Programm-DVD DATEV pro 8.3 (Januar 2015) BLZ und/oder BIC noch erforderlich sind.
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="163" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Abw. Kontoinhaber 1" typeEnumId="FIELD_TYPE_TEXT" maxLength="70" sequenceNum="48">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="164" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Kennz. Haupt-Bankverb. 1" typeEnumId="FIELD_TYPE_BOOLEAN" sequenceNum="49">
+        <description><![CDATA[
+            # Kennzeichnung als Haupt-Bankverbindung
+            # 1 = Ja
+            # 0 = Nein
+            # Nur eine Bankverbindung eines Debitoren oder Kreditoren kann als Haupt-Bankverbindung gekennzeichnet werden.
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="165" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Bankverb. 1 Gültig von" typeEnumId="FIELD_TYPE_DATE" format="ddMMyyyy" sequenceNum="50">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="166" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Bankverb. 1 Gültig bis" typeEnumId="FIELD_TYPE_DATE" format="ddMMyyyy" sequenceNum="51">
         <description><![CDATA[
         ]]></description>
     </DatevFieldDefinition>
     
-    <DatevFieldDefinition fieldId="143" dataCategoryId="BUCHUNGSSTAPEL" fieldName="SKR" typeEnumId="FIELD_TYPE_TEXT" metadata="Y" sequenceNum="27">
+    <DatevFieldDefinition fieldId="167" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Bankleitzahl 2" typeEnumId="FIELD_TYPE_TEXT" maxLength="8" sequenceNum="53">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="168" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Bankbezeichnung 2" typeEnumId="FIELD_TYPE_TEXT" maxLength="30" sequenceNum="54">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="169" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Bankkonto-Nummer 2" typeEnumId="FIELD_TYPE_TEXT" maxLength="10" sequenceNum="55">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="170" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Länderkennzeichen 2" typeEnumId="FIELD_TYPE_TEXT" maxLength="2" sequenceNum="56">
+        <description><![CDATA[
+            # ISO-Code beachten (siehe Dok.-Nr. 1080169)
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="171" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="IBAN 2" typeEnumId="FIELD_TYPE_TEXT" maxLength="34" sequenceNum="57">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="172" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Leerfeld 2" typeEnumId="FIELD_TYPE_TEXT" maxLength="1" sequenceNum="58">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="173" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="SWIFT-Code 2" typeEnumId="FIELD_TYPE_TEXT" maxLength="11" sequenceNum="59">
+        <description><![CDATA[
+            # Beachten Sie, dass für Zahlung und Lastschriften bis zur Installation der Programm-DVD DATEV pro 8.3 (Januar 2015) BLZ und/oder BIC noch erforderlich sind.
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="174" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Abw. Kontoinhaber 2" typeEnumId="FIELD_TYPE_TEXT" maxLength="70" sequenceNum="60">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="175" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Kennz. Haupt-Bankverb. 2" typeEnumId="FIELD_TYPE_BOOLEAN" sequenceNum="60">
+        <description><![CDATA[
+            # Kennzeichnung als Haupt-Bankverbindung
+            # 1 = Ja
+            # 0 = Nein
+            # Nur eine Bankverbindung eines Debitoren oder Kreditoren kann als Haupt-Bankverbindung gekennzeichnet werden.
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="176" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Bankverb. 2 Gültig von" typeEnumId="FIELD_TYPE_DATE" format="ddMMyyyy" sequenceNum="61">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="177" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Bankverb. 2 Gültig bis" typeEnumId="FIELD_TYPE_DATE" format="ddMMyyyy" sequenceNum="62">
         <description><![CDATA[
         ]]></description>
     </DatevFieldDefinition>
     
-    <DatevFieldDefinition fieldId="144" dataCategoryId="BUCHUNGSSTAPEL" fieldName="Branchenlösung-Id" typeEnumId="FIELD_TYPE_NUMBER" metadata="Y" sequenceNum="28">
-        <description><![CDATA[
-        ]]></description>
-    </DatevFieldDefinition>  
-    
-    <DatevFieldDefinition fieldId="145" dataCategoryId="BUCHUNGSSTAPEL" fieldName="reserviert 4" typeEnumId="FIELD_TYPE_NUMBER" metadata="Y" sequenceNum="29">
+    <DatevFieldDefinition fieldId="178" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Bankleitzahl 3" typeEnumId="FIELD_TYPE_TEXT" maxLength="8" sequenceNum="63">
         <description><![CDATA[
         ]]></description>
     </DatevFieldDefinition>
-    
-    <DatevFieldDefinition fieldId="146" dataCategoryId="BUCHUNGSSTAPEL" fieldName="reserviert 5" typeEnumId="FIELD_TYPE_TEXT" metadata="Y" sequenceNum="30">
+    <DatevFieldDefinition fieldId="179" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Bankbezeichnung 3" typeEnumId="FIELD_TYPE_TEXT" maxLength="30" sequenceNum="64">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="180" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Bankkonto-Nummer 3" typeEnumId="FIELD_TYPE_TEXT" maxLength="10" sequenceNum="65">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="181" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Länderkennzeichen 3" typeEnumId="FIELD_TYPE_TEXT" maxLength="2" sequenceNum="66">
+        <description><![CDATA[
+            # ISO-Code beachten (siehe Dok.-Nr. 1080169)
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="182" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="IBAN 3" typeEnumId="FIELD_TYPE_TEXT" maxLength="34" sequenceNum="67">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="183" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Leerfeld 3" typeEnumId="FIELD_TYPE_TEXT" maxLength="1" sequenceNum="68">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="184" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="SWIFT-Code 3" typeEnumId="FIELD_TYPE_TEXT" maxLength="11" sequenceNum="69">
+        <description><![CDATA[
+            # Beachten Sie, dass für Zahlung und Lastschriften bis zur Installation der Programm-DVD DATEV pro 8.3 (Januar 2015) BLZ und/oder BIC noch erforderlich sind.
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="185" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Abw. Kontoinhaber 3" typeEnumId="FIELD_TYPE_TEXT" maxLength="70" sequenceNum="70">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="186" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Kennz. Haupt-Bankverb. 3" typeEnumId="FIELD_TYPE_BOOLEAN" sequenceNum="71">
+        <description><![CDATA[
+            # Kennzeichnung als Haupt-Bankverbindung
+            # 1 = Ja
+            # 0 = Nein
+            # Nur eine Bankverbindung eines Debitoren oder Kreditoren kann als Haupt-Bankverbindung gekennzeichnet werden.
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="187" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Bankverb. 3 Gültig von" typeEnumId="FIELD_TYPE_DATE" format="ddMMyyyy" sequenceNum="72">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="188" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Bankverb. 3 Gültig bis" typeEnumId="FIELD_TYPE_DATE" format="ddMMyyyy" sequenceNum="73">
         <description><![CDATA[
         ]]></description>
     </DatevFieldDefinition>
 
-    <DatevFieldDefinition fieldId="147" dataCategoryId="BUCHUNGSSTAPEL" fieldName="Anwendungsinformation" typeEnumId="FIELD_TYPE_TEXT" maxLength="16" metadata="Y" sequenceNum="31">
+    <DatevFieldDefinition fieldId="189" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Bankleitzahl 4" typeEnumId="FIELD_TYPE_TEXT" maxLength="8" sequenceNum="74">
         <description><![CDATA[
-	       # Verarbeitungskennzeichen der abgebenden Anwendung => Bsp. '9/2016'
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="190" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Bankbezeichnung 4" typeEnumId="FIELD_TYPE_TEXT" maxLength="30" sequenceNum="75">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="191" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Bankkonto-Nummer 4" typeEnumId="FIELD_TYPE_TEXT" maxLength="10" sequenceNum="76">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="192" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Länderkennzeichen 4" typeEnumId="FIELD_TYPE_TEXT" maxLength="2" sequenceNum="77">
+        <description><![CDATA[
+            # ISO-Code beachten (siehe Dok.-Nr. 1080169)
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="193" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="IBAN 4" typeEnumId="FIELD_TYPE_TEXT" maxLength="34" sequenceNum="78">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="194" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Leerfeld 4" typeEnumId="FIELD_TYPE_TEXT" maxLength="1" sequenceNum="79">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="195" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="SWIFT-Code 4" typeEnumId="FIELD_TYPE_TEXT" maxLength="11" sequenceNum="80">
+        <description><![CDATA[
+            # Beachten Sie, dass für Zahlung und Lastschriften bis zur Installation der Programm-DVD DATEV pro 8.3 (Januar 2015) BLZ und/oder BIC noch erforderlich sind.
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="196" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Abw. Kontoinhaber 4" typeEnumId="FIELD_TYPE_TEXT" maxLength="70" sequenceNum="81">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="197" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Kennz. Haupt-Bankverb. 4" typeEnumId="FIELD_TYPE_BOOLEAN" sequenceNum="82">
+        <description><![CDATA[
+            # Kennzeichnung als Haupt-Bankverbindung
+            # 1 = Ja
+            # 0 = Nein
+            # Nur eine Bankverbindung eines Debitoren oder Kreditoren kann als Haupt-Bankverbindung gekennzeichnet werden.
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="198" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Bankverb. 4 Gültig von" typeEnumId="FIELD_TYPE_DATE" format="ddMMyyyy" sequenceNum="83">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="199" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Bankverb. 4 Gültig bis" typeEnumId="FIELD_TYPE_DATE" format="ddMMyyyy" sequenceNum="84">
+        <description><![CDATA[
         ]]></description>
     </DatevFieldDefinition>
     
-    <!-- DEBITOREN_KREDITOREN_STAMMDATEN -->
+    <DatevFieldDefinition fieldId="200" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Bankleitzahl 5" typeEnumId="FIELD_TYPE_TEXT" maxLength="8" sequenceNum="85">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="201" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Bankbezeichnung 5" typeEnumId="FIELD_TYPE_TEXT" maxLength="30" sequenceNum="86">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="202" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Bankkonto-Nummer 5" typeEnumId="FIELD_TYPE_TEXT" maxLength="10" sequenceNum="87">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="203" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Länderkennzeichen 5" typeEnumId="FIELD_TYPE_TEXT" maxLength="2" sequenceNum="88">
+        <description><![CDATA[
+            # ISO-Code beachten (siehe Dok.-Nr. 1080169)
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="204" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="IBAN 5" typeEnumId="FIELD_TYPE_TEXT" maxLength="34" sequenceNum="89">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="205" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Leerfeld 5" typeEnumId="FIELD_TYPE_TEXT" maxLength="1" sequenceNum="90">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="206" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="SWIFT-Code 5" typeEnumId="FIELD_TYPE_TEXT" maxLength="11" sequenceNum="91">
+        <description><![CDATA[
+            # Beachten Sie, dass für Zahlung und Lastschriften bis zur Installation der Programm-DVD DATEV pro 8.3 (Januar 2015) BLZ und/oder BIC noch erforderlich sind.
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="207" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Abw. Kontoinhaber 5" typeEnumId="FIELD_TYPE_TEXT" maxLength="70" sequenceNum="92">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="208" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Kennz. Haupt-Bankverb. 5" typeEnumId="FIELD_TYPE_BOOLEAN" sequenceNum="93">
+        <description><![CDATA[
+            # Kennzeichnung als Haupt-Bankverbindung
+            # 1 = Ja
+            # 0 = Nein
+            # Nur eine Bankverbindung eines Debitoren oder Kreditoren kann als Haupt-Bankverbindung gekennzeichnet werden.
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="209" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Bankverb. 5 Gültig von" typeEnumId="FIELD_TYPE_DATE" format="ddMMyyyy" sequenceNum="94">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="210" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Bankverb. 5 Gültig bis" typeEnumId="FIELD_TYPE_DATE" format="ddMMyyyy" sequenceNum="95">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    
+    <DatevFieldDefinition fieldId="211" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Leerfeld 11" typeEnumId="FIELD_TYPE_NUMBER" maxLength="3" sequenceNum="96">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="212" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Briefanrede" typeEnumId="FIELD_TYPE_TEXT" maxLength="100" sequenceNum="97">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="213" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Grußformel" typeEnumId="FIELD_TYPE_TEXT" maxLength="50" sequenceNum="98">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="214" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Kundennummer" typeEnumId="FIELD_TYPE_TEXT" maxLength="15" sequenceNum="99">
+        <description><![CDATA[
+            # Kann nicht geändert werden, wenn zentralisierte Geschäftspartner verwendet werden.
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="215" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Steuernummer" typeEnumId="FIELD_TYPE_TEXT" maxLength="20" sequenceNum="100">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="216" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Sprache" typeEnumId="FIELD_TYPE_NUMBER" maxLength="2" sequenceNum="101">
+        <description><![CDATA[
+            # 1 = Deutsch
+            # 4 = Französisch
+            # 5 = Englisch
+            # 10 = Spanisch
+            # 19 = Italienisch
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="217" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Ansprechpartner" typeEnumId="FIELD_TYPE_TEXT" maxLength="40" sequenceNum="102">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="218" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Vertreter" typeEnumId="FIELD_TYPE_TEXT" maxLength="40" sequenceNum="103">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="219" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Sachbearbeiter" typeEnumId="FIELD_TYPE_TEXT" maxLength="40" sequenceNum="104">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="220" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Diverse-Konto" typeEnumId="FIELD_TYPE_BOOLEAN" maxLength="40" sequenceNum="105">
+        <description><![CDATA[
+            # 0 = Nein
+            # 1 = Ja
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="220" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Ausgabeziel" typeEnumId="FIELD_TYPE_NUMBER" maxLength="1" sequenceNum="106">
+        <description><![CDATA[
+            # 1 = Druck 
+            # 2 = Telefax
+            # 3 = E-Mail
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="220" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Währungssteuerung" typeEnumId="FIELD_TYPE_NUMBER" maxLength="1" sequenceNum="107">
+        <description><![CDATA[
+            # 0 = Zahlungen in Eingabewährung
+            # 2 = Ausgabe in EUR
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="221" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Kreditlimit (Debitor)" typeEnumId="FIELD_TYPE_AMOUNT" length="10" maxLength="13" sequenceNum="108">
+        <description><![CDATA[
+            # Nur für Debitoren gültig
+            # Beispiel: 1.123.123.123
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="222" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Zahlungsbedingung" typeEnumId="FIELD_TYPE_NUMBER" maxLength="3" sequenceNum="109">
+        <description><![CDATA[
+            # Eine gespeicherte Zahlungsbedingung kann hier einem Geschäftspartner zugeordnet werden.
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="223" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Fälligkeit in Tagen (Debitor)" typeEnumId="FIELD_TYPE_NUMBER" maxLength="3" sequenceNum="110">
+        <description><![CDATA[
+            # Nur für Debitoren gültig
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="224" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Skonto in Prozent (Debitor)" typeEnumId="FIELD_TYPE_NUMBER" length="2" scale="2" maxLength="5" sequenceNum="111">
+        <description><![CDATA[
+            # Nur für Debitoren gültig
+            # Beispiel: 12,12
+        ]]></description>
+    </DatevFieldDefinition>
+    
+    <DatevFieldDefinition fieldId="225" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Kreditoren-Ziel 1 (Tage)" typeEnumId="FIELD_TYPE_NUMBER" maxLength="3" sequenceNum="112">
+        <description><![CDATA[
+            # Nur für Kreditoren gültig
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="226" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Kreditoren-Skonto 1 (%)" typeEnumId="FIELD_TYPE_NUMBER" length="2" scale="2" maxLength="5" sequenceNum="113">
+        <description><![CDATA[
+            # Nur für Kreditoren gültig
+            # Beispiel: 12,12
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="226" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Kreditoren-Ziel 2 (Tage)" typeEnumId="FIELD_TYPE_NUMBER" maxLength="3" sequenceNum="114">
+        <description><![CDATA[
+            # Nur für Kreditoren gültig
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="227" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Kreditoren-Skonto 2 (%)" typeEnumId="FIELD_TYPE_NUMBER" length="2" scale="2" maxLength="5" sequenceNum="115">
+        <description><![CDATA[
+            # Nur für Kreditoren gültig
+            # Beispiel: 12,12
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="228" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Kreditoren-Ziel 3 Brutto (Tage)" typeEnumId="FIELD_TYPE_NUMBER" maxLength="3" sequenceNum="116">
+        <description><![CDATA[
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="229" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Kreditoren-Ziel 4 (Tage)" typeEnumId="FIELD_TYPE_NUMBER" maxLength="3" sequenceNum="117">
+        <description><![CDATA[
+            # Nur für Kreditoren gültig
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="230" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Kreditoren-Skonto 4 (%)" typeEnumId="FIELD_TYPE_NUMBER" length="2" scale="2" maxLength="5" sequenceNum="118">
+        <description><![CDATA[
+            # Nur für Kreditoren gültig
+            # Beispiel: 12,12
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="231" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Kreditoren-Ziel 5 (Tage)" typeEnumId="FIELD_TYPE_NUMBER" maxLength="3" sequenceNum="119">
+        <description><![CDATA[
+            # Nur für Kreditoren gültig
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="232" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Kreditoren-Skonto 5 (%)" typeEnumId="FIELD_TYPE_NUMBER" length="2" scale="2" maxLength="5" sequenceNum="120">
+        <description><![CDATA[
+            # Nur für Kreditoren gültig
+            # Beispiel: 12,12
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="233" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Mahnung" typeEnumId="FIELD_TYPE_NUMBER" maxLength="1" sequenceNum="121">
+        <description><![CDATA[
+            # 0 = Keine Angaben
+            # 1 = 1. Mahnung
+            # 2 = 2. Mahnung
+            # 3 = 1. + 2. Mahnung
+            # 4 = 3. Mahnung
+            # 5 = (nicht vergeben)
+            # 6 = 2. + 3. Mahnung
+            # 7 = 1., 2. + 3. Mahnung
+            # 9 = keine Mahnung
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="234" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Kontoauszug" typeEnumId="FIELD_TYPE_NUMBER" maxLength="1" sequenceNum="122">
+        <description><![CDATA[
+            # 1 = Kontoauszug für alle Posten
+            # 2 = Auszug nur dann, wenn ein Posten mahnfähig ist
+            # 3 = Auszug für alle mahnfälligen Posten
+            # 9 = kein Kontoauszug
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="235" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Mahntext" typeEnumId="FIELD_TYPE_NUMBER" maxLength="1" sequenceNum="123">
+        <description><![CDATA[
+            # Leer = keinen Mahntext ausgewählt
+            # 1 = Textgruppe 1
+            # ...
+            # 9 = Textgruppe 9
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="236" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Mahntext 2" typeEnumId="FIELD_TYPE_NUMBER" maxLength="1" sequenceNum="124">
+        <description><![CDATA[
+            # Leer = keinen Mahntext ausgewählt
+            # 1 = Textgruppe 1
+            # ...
+            # 9 = Textgruppe 9
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="237" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Mahntext 3" typeEnumId="FIELD_TYPE_NUMBER" maxLength="1" sequenceNum="125">
+        <description><![CDATA[
+            # Leer = keinen Mahntext ausgewählt
+            # 1 = Textgruppe 1
+            # ...
+            # 9 = Textgruppe 9
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="238" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Kontoauszugstext" typeEnumId="FIELD_TYPE_NUMBER" maxLength="1" sequenceNum="126">
+        <description><![CDATA[
+            # Leer = kein Kontoauszugstext ausgewählt
+            # 1 = Kontoauszugstext 1
+            # ...
+            # 8 = Kontoauszugstext 8
+            # 9 = Kein Kontoauszugstext
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="239" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Mahnlimit Betrag" typeEnumId="FIELD_TYPE_NUMBER" length="5" scale="2" maxLength="9" sequenceNum="127">
+        <description><![CDATA[
+           # Beispiel: 12.123,12
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="240" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Mahnlimit %" typeEnumId="FIELD_TYPE_NUMBER" length="2" scale="2" maxLength="5" sequenceNum="128">
+        <description><![CDATA[
+           # Beispiel: 12.123,12
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="241" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Zinsberechnung" typeEnumId="FIELD_TYPE_NUMBER" maxLength="1" sequenceNum="129">
+        <description><![CDATA[
+           # 0 = MPD-Schlüsselung gilt
+           # 1 = Fester Zinssatz
+           # 2 = Zinssatz über Staffel
+           # 9 = Keine Berechnung für diesen Debitor
+        ]]></description>
+    </DatevFieldDefinition>
+    
+    <DatevFieldDefinition fieldId="242" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Mahnzinssatz 1" typeEnumId="FIELD_TYPE_NUMBER" length="2" scale="2" maxLength="5" sequenceNum="130">
+        <description><![CDATA[
+           # Beispiel: 12,12
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="243" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Mahnzinssatz 2" typeEnumId="FIELD_TYPE_NUMBER" length="2" scale="2" maxLength="5" sequenceNum="131">
+        <description><![CDATA[
+           # Beispiel: 12,12
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="244" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Mahnzinssatz 1" typeEnumId="FIELD_TYPE_NUMBER" length="2" scale="2" maxLength="5" sequenceNum="132">
+        <description><![CDATA[
+           # Beispiel: 12,12
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="245" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Lastschrift" typeEnumId="FIELD_TYPE_TEXT" maxLength="1" sequenceNum="133">
+        <description><![CDATA[
+           # Leer bzw. 0 = keine Angaben, es gilt die MPD-Schlüsselung
+           # 1 = Einzellastschrift mit einer Rechnung
+           # 2 = Einzellastschrift mit mehreren Rechnungen
+           # 3 = Sammellastschrift mit einer Rechnung
+           # 4 = Sammellastschrift mit mehreren Rechnungen
+           # 5 = Datenträgeraustausch mit einer Rechnung
+           # 6 = Datenträgeraustausch mit mehreren Rechnungen
+           # 7 = SEPA-Lastschrift mit einer Rechnung
+           # 8 = SEPA-Lastschrift mit mehreren Rechnungen
+           # 9 = kein Lastschriftverfahren bei diesem Debitor
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="246" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Verfahren" typeEnumId="FIELD_TYPE_TEXT" maxLength="1" sequenceNum="134">
+        <description><![CDATA[
+           # 0 = Einzugsermächtigung
+           # 1 = Abbuchungsverfahren
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="247" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Mandantenbank" typeEnumId="FIELD_TYPE_NUMBER" maxLength="4" sequenceNum="135">
+        <description><![CDATA[
+           # Zuordnung der gespeicherten Mandantenbank, die für das Lastschriftverfahren verwendet werden soll.
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="248" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Zahlungsträger" typeEnumId="FIELD_TYPE_TEXT" maxLength="1" sequenceNum="136">
+        <description><![CDATA[
+            # Leer bzw. 0 = keine Angaben, es gilt die MPD-Schlüsselung
+            # 1 = Einzelüberweisung mit einer Rechnung
+            # 2 = Einzelüberweisung mit mehreren Rechnungen
+            # 3 = Sammelüberweisung mit einer Rechnung
+            # 4 = Sammelüberweisung mit mehreren Rechnungen
+            # 5 = Einzelscheck
+            # 6 = Sammelscheck
+            # 7 = SEPA-Überweisung mit einer Rechnung
+            # 8 = SEPA-Überweisung mit mehreren Rechnungen
+            # 9 = keine Überweisungen, Schecks
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="249" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Indiv. Feld 1" typeEnumId="FIELD_TYPE_TEXT" maxLength="40" sequenceNum="137">
+        <description><![CDATA[
+           # Wird derzeit nicht übernommen
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="250" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Indiv. Feld 2" typeEnumId="FIELD_TYPE_TEXT" maxLength="40" sequenceNum="138">
+        <description><![CDATA[
+           # Wird derzeit nicht übernommen
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="251" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Indiv. Feld 3" typeEnumId="FIELD_TYPE_TEXT" maxLength="40" sequenceNum="139">
+        <description><![CDATA[
+           # Wird derzeit nicht übernommen
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="252" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Indiv. Feld 4" typeEnumId="FIELD_TYPE_TEXT" maxLength="40" sequenceNum="140">
+        <description><![CDATA[
+           # Wird derzeit nicht übernommen
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="253" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Indiv. Feld 5" typeEnumId="FIELD_TYPE_TEXT" maxLength="40" sequenceNum="141">
+        <description><![CDATA[
+           # Wird derzeit nicht übernommen
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="254" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Indiv. Feld 6" typeEnumId="FIELD_TYPE_TEXT" maxLength="40" sequenceNum="142">
+        <description><![CDATA[
+           # Wird derzeit nicht übernommen
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="255" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Indiv. Feld 7" typeEnumId="FIELD_TYPE_TEXT" maxLength="40" sequenceNum="143">
+        <description><![CDATA[
+           # Wird derzeit nicht übernommen
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="256" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Indiv. Feld 8" typeEnumId="FIELD_TYPE_TEXT" maxLength="40" sequenceNum="144">
+        <description><![CDATA[
+           # Wird derzeit nicht übernommen
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="257" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Indiv. Feld 9" typeEnumId="FIELD_TYPE_TEXT" maxLength="40" sequenceNum="145">
+        <description><![CDATA[
+           # Wird derzeit nicht übernommen
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="258" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Indiv. Feld 10" typeEnumId="FIELD_TYPE_TEXT" maxLength="40" sequenceNum="146">
+        <description><![CDATA[
+           # Wird derzeit nicht übernommen
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="259" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Indiv. Feld 11" typeEnumId="FIELD_TYPE_TEXT" maxLength="40" sequenceNum="147">
+        <description><![CDATA[
+           # Wird derzeit nicht übernommen
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="260" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Indiv. Feld 12" typeEnumId="FIELD_TYPE_TEXT" maxLength="40" sequenceNum="148">
+        <description><![CDATA[
+           # Wird derzeit nicht übernommen
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="261" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Indiv. Feld 13" typeEnumId="FIELD_TYPE_TEXT" maxLength="40" sequenceNum="149">
+        <description><![CDATA[
+           # Wird derzeit nicht übernommen
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="262" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Indiv. Feld 14" typeEnumId="FIELD_TYPE_TEXT" maxLength="40" sequenceNum="150">
+        <description><![CDATA[
+           # Wird derzeit nicht übernommen
+        ]]></description>
+    </DatevFieldDefinition>
+    <DatevFieldDefinition fieldId="263" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" fieldName="Indiv. Feld 15" typeEnumId="FIELD_TYPE_TEXT" maxLength="40" sequenceNum="151">
+        <description><![CDATA[
+           # Wird derzeit nicht übernommen
+        ]]></description>
+    </DatevFieldDefinition>
+    
+    <!-- TODO: to be converted to datev field definitons
+
+    # 152
+    field 'Abweichende Anrede (Rechnungsadresse)', :string, :limit => 30
+    # Es kann ein beliebiger individueller Text verwendet werden.
+
+    # 153
+    field 'Adressart (Rechnungsadresse)', :string, :limit => 3
+    # STR = Straße 
+    # PF = Postfach
+    # GK = Großkunde
+    # Wird die Adressart nicht übergeben, wird sie automatisch in Abhängigkeit zu den übergebenen Feldern (Straße oder Postfach) gesetzt.
+
+    # 154
+    field 'Straße (Rechnungsadresse)', :string, :limit => 36
+    # Wird sowohl eine Straße als auch ein Postfach übergeben, werden beide Werte in den Datenbestand übernommen; auf der Visitenkarte in den Debitoren-/Kreditoren-Stammdaten wird die Postfachadresse angezeigt.
+
+    # 155
+    field 'Postfach (Rechnungsadresse)', :string, :limit => 10
+
+    # 156
+    field 'Postleitzahl (Rechnungsadresse)', :string, :limit => 10
+
+    # 157
+    field 'Ort (Rechnungsadresse)', :string, :limit => 30
+
+    # 158
+    field 'Land (Rechnungsadresse)', :string, :limit => 2
+    # ISO-Code beachten (siehe Dok.-Nr. 1080169)
+
+    # 159
+    field 'Versandzusatz (Rechnungsadresse)', :string, :limit => 50
+
+    # 160
+    field 'Adresszusatz (Rechnungsadresse)', :string, :limit => 36
+    # Beispiel: z. Hd. Herrn Mustermann
+
+    # 161
+    field 'Abw. Zustellbezeichnung 1 (Rechnungsadresse)', :string, :limit => 50
+
+    # 162
+    field 'Abw. Zustellbezeichnung 2 (Rechnungsadresse)', :string, :limit => 36
+
+    # 163
+    field 'Adresse Gültig von (Rechnungsadresse)', :date, :format => '%d%m%Y'
+
+    # 164
+    field 'Adresse Gültig bis (Rechnungsadresse)', :date, :format => '%d%m%Y'
+
+    # 165 bis 219
+    (6..10).each do |number|
+      bank_account(number)
+    end
+
+    # 220
+    field 'Nummer Fremdsystem', :string, :limit => 15
+    # Achtung: Wird bei Verwendung zentralisierter Geschäftspartner von DATEV überschrieben.
+
+    # 221
+    field 'Insolvent', :boolean
+    # 0 = Nein
+    # 1 = Ja
+
+    # 222 bis 231
+    (1..10).each do |number|
+      field "SEPA-Mandatsreferenz #{number}", :string, :limit => 35
+      # Sie können im Feld Mandatsreferenz dem Geschäftspartner je Bank eine Mandatsreferenz eintragen. Für eine korrekte Verwendung muss in der SEPA-Mandatsverwaltung die Mandatsreferenz für den Lastschriftteilnehmer vorhanden sein.
+    end
+
+    # 232
+    field 'Verknüpftes OPOS-Konto', :integer, :limit => 9
+    # Sie können für den Geschäftspartner das korrespondierende Konto (im Kreditorenbereich) erfassen, wenn es sich bei dem Geschäftspartner sowohl um einen Kunden als auch um einen Lieferanten handelt.
+
+    # --- Erweiterungen zur Jahreswechselversion 2015/2016
+
+    # 233
+    field 'Mahnsperre bis', :date, :format => '%d%m%Y'
+
+    # 234
+    field 'Lastschriftsperre bis', :date, :format => '%d%m%Y'
+
+    # 235
+    field 'Zahlungssperre bis', :date, :format => '%d%m%Y'
+
+    # 236
+    field 'Gebührenberechnung', :integer, :limit => 1
+    # 0 = MPD-Schlüsselung gilt
+    # 1 = Mahngebühr berechnen
+    # 9 = Keine Berechnung für diesen Debitor
+
+    # 237 bis 239
+    (1..3).each do |number|
+      field "Mahngebühr #{number}", :decimal, :precision => 4, :scale => 2
+      # Beispiel: 12,12
+    end
+
+    # 240
+    field 'Pauschalberechnung', :integer, :limit => 1
+    # 0 = MPD-Schlüsselung gilt
+    # 1 = Verzugspauschale berechnen
+    # 9 = Keine Berechnung für diesen Debitor
+
+    # 241 bis 243
+    (1..3).each do |number|
+      field "Verzugspauschale #{number}", :decimal, :precision => 5, :scale => 2
+      # Beispiel: 12,12
+    end
+  end
+  
+  -->
+    
     
         
 </entity-engine-xml>

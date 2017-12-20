@@ -4307,7 +4307,7 @@ under the License.
     <!-- SCIPIO: Datev (https://www.datev.de/dnlexom/client/app/index.html#/search) -->
     <entity entity-name="DatevFieldDefinition"
             package-name="com.ilscipio.scipio.accounting.external.datev"
-            title="DATEV - Field definition for transaction entries (http://www.datev.de/dnlexom/client/app/index.html#/document/1036228/D72057595488525963)">
+            title="DATEV - Field definitions for different data categories (http://www.datev.de/dnlexom/client/app/index.html#/document/1036228/D72057595488525963)">
         <field name="fieldId" type="id-ne"></field>
         <field name="dataCategoryId" type="short-varchar"></field>
         <field name="fieldName" type="short-varchar"></field>
@@ -4316,8 +4316,7 @@ under the License.
         <field name="maxLength" type="numeric"></field>
         <field name="scale" type="numeric"></field>
         <field name="format" type="short-varchar"></field>
-        <field name="required" type="indicator"></field>
-        <field name="metadata" type="indicator"></field>
+        <field name="required" type="indicator"></field>        
         <field name="sequenceNum" type="numeric"></field>
         <field name="description" type="very-long"></field>
         <prim-key field="fieldId"/>
@@ -4329,6 +4328,24 @@ under the License.
             <key-map field-name="dataCategoryId"/>
         </relation>
   	</entity>
+    
+     <entity entity-name="DatevMetadata"
+            package-name="com.ilscipio.scipio.accounting.external.datev"
+            title="DATEV - Metadata. If present, first CSV row. Don't be confused with the header row. (Should be the same for all data categories)">
+        <field name="metadataId" type="id-ne"></field>            
+        <field name="typeEnumId" type="short-varchar" not-null="true"></field>
+        <field name="length" type="numeric"></field>      
+        <field name="maxLength" type="numeric"></field>
+        <field name="scale" type="numeric"></field>
+        <field name="format" type="short-varchar"></field>
+        <field name="required" type="indicator"></field>        
+        <field name="sequenceNum" type="numeric"></field>
+        <field name="description" type="very-long"></field>
+        <prim-key field="metadataId"/>
+        <relation type="one" fk-name="DATEV_TYPE_ENUM" title="DatevFieldType" rel-entity-name="Enumeration">
+            <key-map field-name="typeEnumId" rel-field-name="enumId"/>
+        </relation>
+    </entity>
     
     <entity entity-name="DatevDataCategory"
             package-name="com.ilscipio.scipio.accounting.external.datev"

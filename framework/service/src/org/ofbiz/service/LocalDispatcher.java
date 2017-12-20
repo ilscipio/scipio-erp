@@ -323,6 +323,14 @@ public interface LocalDispatcher {
     void addCommitService(String serviceName, boolean persist, Object... context) throws GenericServiceException;
 
     /**
+     * SCIPIO: Returns a {@link ServiceSyncRegistrations} object that can be queried to get info about
+     * the services currently registered through {@link #addCommitService} and {@link #addRollbackService}.
+     * Added 2017-12-20.
+     * @throws GenericServiceException
+     */
+    ServiceSyncRegistrations getServiceSyncRegistrations() throws GenericServiceException;
+    
+    /**
      * Gets the JobManager associated with this dispatcher
      * @return JobManager that is associated with this dispatcher
      */

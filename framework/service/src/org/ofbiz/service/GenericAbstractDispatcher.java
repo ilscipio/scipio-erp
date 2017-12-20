@@ -142,6 +142,11 @@ public abstract class GenericAbstractDispatcher implements LocalDispatcher {
     public void addCommitService(String serviceName, boolean persist, Object... context) throws GenericServiceException {
         addCommitService(serviceName, ServiceUtil.makeContext(context), persist);
     }
+    
+    @Override
+    public ServiceSyncRegistrations getServiceSyncRegistrations() throws GenericServiceException { // SCIPIO
+        return ServiceSynchronization.getInstance();
+    }
 
     /**
      * @see org.ofbiz.service.LocalDispatcher#schedule(java.lang.String, java.util.Map, long, int, int, int, long)

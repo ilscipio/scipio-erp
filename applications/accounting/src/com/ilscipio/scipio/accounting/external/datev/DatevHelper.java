@@ -31,8 +31,8 @@ public class DatevHelper {
 
     }
 
-    public void processRecord(Map<String, String> recordMap) throws DatevException {
-        dataCategory.processRecord(recordMap);
+    public void processRecord(int index, Map<String, String> recordMap) throws DatevException {
+        dataCategory.processRecord(index, recordMap);
     }
 
     public String[] getFieldNames() throws DatevException {

@@ -21,6 +21,20 @@ under the License.
 <service-eca xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/service-eca.xsd">
 
-    <!-- (Insert any needed SECAs here) -->
+    <!-- 
+        Sorl Product indexing stock/example SECAs
+        If enabled, these ECAs enable automatic per-product solr reindexing upon
+        various common Scipio Product operations. To enable the invoked service(s) globally, see
+        the solrconfig.properties option solr.eca.enabled.
+        See documentation for issues regarding implementation and context-specific issues
+        (such as data loading/install).
+        SEE ALSO ENTITY ECAs IN entitydef/eecas.xml
+    -->
+    
+    <eca service="createProductStoreGroupRollup" event="">
+        <action service="checkProductStoreGroupRollup" mode="sync"/>
+    </eca>
+
+    <!-- (Insert any additional needed SECAs here) -->
 
 </service-eca>

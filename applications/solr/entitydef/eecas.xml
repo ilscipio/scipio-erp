@@ -28,6 +28,7 @@ xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entity-eca.xsd">
         the solrconfig.properties option solr.eca.enabled.
         See documentation for issues regarding implementation and context-specific issues
         (such as data loading/install).
+        SEE ALSO SERVICES ECAs IN servicedef/secas.xml
     -->
     
     <eca entity="Product" operation="create-store" event="return">
@@ -72,6 +73,6 @@ xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entity-eca.xsd">
         <action service="addToSolr" mode="sync" value-attr="instance"/>
     </eca>
     
-    <!-- (Insert any needed additional ECAs here) -->
+    <!-- (Insert any additional needed ECAs here) -->
     
 </entity-eca>

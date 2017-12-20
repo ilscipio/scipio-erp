@@ -30,6 +30,7 @@ import com.ilscipio.scipio.accounting.external.datev.stats.DatevBuchungsstapelSt
 import javolution.util.FastMap;
 
 public class DatevBuchungsstapel extends AbstractDatevDataCategory {
+    private static final String module = DatevBuchungsstapel.class.getName();
 
     private final List<GenericValue> datevTransactionEntryDefinitions;
     private final List<GenericValue> datevMetadataTransactionEntryDefinitions;
@@ -60,12 +61,15 @@ public class DatevBuchungsstapel extends AbstractDatevDataCategory {
     public DatevBuchungsstapel(Delegator delegator, DatevHelper datevHelper) throws DatevException {
         super(delegator, datevHelper);
         try {
-            this.datevTransactionEntryDefinitions = EntityQuery.use(delegator).from("DatevTransactionEntryDefinition")
-                    .where(EntityCondition.makeConditionWhere("METADATA IS NULL OR METADATA = 'N'")).queryList();
+            EntityCondition datevFieldDefinitionsCond = EntityCondition.makeCondition("dataCategoryId", EntityJoinOperator.EQUALS, "BUCHUNGSSTAPEL");
 
+            this.datevTransactionEntryDefinitions = EntityQuery.use(delegator).from("DatevFieldDefinition").where(EntityCondition.makeCondition(datevFieldDefinitionsCond),
+                    EntityJoinOperator.AND, EntityCondition.makeConditionWhere("METADATA IS NULL OR METADATA = 'N'")).queryList();
             this.datevTransactionFieldNames = EntityUtil.getFieldListFromEntityList(datevTransactionEntryDefinitions, "fieldName", true);
-            this.datevMetadataTransactionEntryDefinitions = EntityQuery.use(delegator).from("DatevTransactionEntryDefinition")
-                    .where(EntityCondition.makeCondition("metadata", EntityOperator.EQUALS, "Y")).queryList();
+
+            this.datevMetadataTransactionEntryDefinitions = EntityQuery.use(delegator).from("DatevFieldDefinition")
+                    .where(EntityCondition.makeCondition(datevFieldDefinitionsCond), EntityJoinOperator.AND, EntityCondition.makeCondition("metadata", EntityOperator.EQUALS, "Y"))
+                    .queryList();
         } catch (GenericEntityException e) {
             throw new DatevException("Internal error. Cannot initialize DATEV importer tool.");
         }
@@ -110,8 +114,14 @@ public class DatevBuchungsstapel extends AbstractDatevDataCategory {
     }
 
     @Override
-    public void processRecord(Map<String, String> recordMap) throws DatevException {
+    public void processRecord(int index, Map<String, String> recordMap) throws DatevException {
+        for (String fieldName : datevTransactionFieldNames) {
+            String value = recordMap.get(fieldName);
+            if (Debug.isOn(Debug.VERBOSE)) {
+                Debug.logInfo("Processing record [" + index + "] field [" + fieldName + "]: " + value, module);
+            }
 
+        }
     }
 
     @Override
@@ -211,7 +221,8 @@ public class DatevBuchungsstapel extends AbstractDatevDataCategory {
                 return false;
             }
         } catch (Exception e) {
-            datevHelper.addStat("Can't convert [" + value + "] to type " + type + " for field <" + fieldDefinition.getString("fieldName") + ">", NotificationScope.RECORD, NotificationLevel.WARNING);
+            datevHelper.addStat("Can't convert [" + value + "] to type " + type + " for field <" + fieldDefinition.getString("fieldName") + ">", NotificationScope.RECORD,
+                    NotificationLevel.WARNING);
             return false;
         }
 

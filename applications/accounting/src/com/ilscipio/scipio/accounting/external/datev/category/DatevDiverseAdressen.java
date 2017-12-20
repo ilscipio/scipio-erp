@@ -17,7 +17,7 @@ public class DatevDiverseAdressen extends AbstractDatevDataCategory {
     }
 
     @Override
-    public void processRecord(Map<String, String> recordMap) throws DatevException {
+    public void processRecord(int index, Map<String, String> recordMap) throws DatevException {
         // TODO Auto-generated method stub
         
     }

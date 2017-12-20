@@ -19,7 +19,7 @@ public abstract class AbstractDatevDataCategory {
         this.datevHelper = datevHelper;
     }
 
-    public abstract void processRecord(Map<String, String> recordMap) throws DatevException;
+    public abstract void processRecord(int index, Map<String, String> recordMap) throws DatevException;
 
     public abstract boolean validateField(String fieldName, String value) throws DatevException;
 

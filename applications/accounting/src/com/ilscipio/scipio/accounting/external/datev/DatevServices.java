@@ -158,7 +158,7 @@ public class DatevServices {
                 throw new DatevException("No records found after CSV has been parsed.");
             } else {
                 Iterator<CSVRecord> recordIter = records.iterator();
-                for (int x = 0; recordIter.hasNext(); x++) {
+                for (int index = 0; recordIter.hasNext(); index++) {
                     final CSVRecord rec = recordIter.next();
                     if (Debug.isOn(Debug.VERBOSE)) {
                         Debug.logInfo(rec.toString(), module);
@@ -185,9 +185,13 @@ public class DatevServices {
                         }
                     }
                     if (allFieldValid) {
-                        datevHelper.processRecord(recordMap);
+                        try {
+                            datevHelper.processRecord(index, recordMap);
+                        } catch (DatevException e) {
+
+                        }
                     } else {
-                        datevHelper.addRecordStat("Record validation failed", NotificationLevel.ERROR, x, recordMap, false);
+                        datevHelper.addRecordStat("Record validation failed", NotificationLevel.ERROR, index, recordMap, false);
                     }
                 }
             }

@@ -506,12 +506,12 @@ public abstract class SolrProductUtil {
             // if(category.size()>0) dispatchContext.put("category", category);
             // if(product.get("popularity") != null) dispatchContext.put("popularity", "");
 
-            Map<String, Object> featureSet = dispatcher.runSync("getProductFeatureSet", UtilMisc.toMap("productId", productId, "emptyAction", "success"));
+            Map<String, Object> featureSet = dispatcher.runSync("getProductFeatureSet", UtilMisc.toMap("productId", productId, "emptyAction", "success", "useCache", useCache));
             if (featureSet != null) {
                 dispatchContext.put("features", (Set<?>) featureSet.get("featureSet"));
             }
 
-            Map<String, Object> productInventoryAvailable = dispatcher.runSync("getProductInventoryAvailable", UtilMisc.toMap("productId", productId));
+            Map<String, Object> productInventoryAvailable = dispatcher.runSync("getProductInventoryAvailable", UtilMisc.toMap("productId", productId, "useCache", useCache));
             String inStock = null;
             BigDecimal availableToPromiseTotal = (BigDecimal) productInventoryAvailable.get("availableToPromiseTotal");
             if (availableToPromiseTotal != null) {
@@ -519,18 +519,14 @@ public abstract class SolrProductUtil {
             }
             dispatchContext.put("inStock", inStock);
 
-            Boolean isVirtual = ProductWorker.isVirtual(delegator, productId);
-            if (isVirtual)
-                dispatchContext.put("isVirtual", isVirtual);
-            Boolean isVariant = ProductWorker.isVariant(delegator, productId);
-            if (isVariant) // new 2017-08-17
-                dispatchContext.put("isVariant", isVariant); 
-            Boolean isDigital = ProductWorker.isDigital(product);
-            if (isDigital)
-                dispatchContext.put("isDigital", isDigital);
-            Boolean isPhysical = ProductWorker.isPhysical(product);
-            if (isPhysical)
-                dispatchContext.put("isPhysical", isPhysical);
+            boolean isVirtual = "Y".equals(product.getString("isVirtual"));
+            if (isVirtual) dispatchContext.put("isVirtual", isVirtual);
+            boolean isVariant = "Y".equals(product.getString("isVariant"));
+            if (isVariant) dispatchContext.put("isVariant", isVariant); // new 2017-08-17
+            boolean isDigital = ProductWorker.isDigital(product);
+            if (isDigital) dispatchContext.put("isDigital", isDigital);
+            boolean isPhysical = ProductWorker.isPhysical(product);
+            if (isPhysical) dispatchContext.put("isPhysical", isPhysical);
 
             dispatchContext.put("title", getLocalizedContentStringMap(delegator, dispatcher, product, "PRODUCT_NAME", locales, defLocale, pcwList, useCache));
             dispatchContext.put("description", getLocalizedContentStringMap(delegator, dispatcher, product, "DESCRIPTION", locales, defLocale, pcwList, useCache));

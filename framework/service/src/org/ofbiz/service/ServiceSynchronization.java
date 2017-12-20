@@ -80,7 +80,12 @@ public class ServiceSynchronization implements Synchronization {
 
     }
 
-    static class ServiceExecution {
+    /**
+     * Service execution.
+     * <p>
+     * SCIPIO: changed this to public as this will become needed elsewhere (2017-12-20).
+     */
+    public static class ServiceExecution {
         protected DispatchContext dctx = null;
         protected String serviceName;
         protected String runAsUser = null;
@@ -89,7 +94,12 @@ public class ServiceSynchronization implements Synchronization {
         protected boolean persist = true;
         protected boolean async = false;
 
-        ServiceExecution(DispatchContext dctx, String serviceName, String runAsUser, Map<String, ? extends Object> context, boolean async, boolean persist, boolean rollback) {
+        /**
+         * Main constructor.
+         * <p>
+         * SCIPIO: changed this to public as this will become needed elsewhere (2017-12-20).
+         */
+        public ServiceExecution(DispatchContext dctx, String serviceName, String runAsUser, Map<String, ? extends Object> context, boolean async, boolean persist, boolean rollback) {
             this.dctx = dctx;
             this.serviceName = serviceName;
             this.runAsUser = runAsUser;
@@ -99,7 +109,12 @@ public class ServiceSynchronization implements Synchronization {
             this.rollback = rollback;
         }
 
-        protected void runService(int status) {
+        /**
+         * Runs this execution's service with cached context.
+         * <p>
+         * SCIPIO: changed this to public (from protected) as this will become needed elsewhere (2017-12-20).
+         */
+        public void runService(int status) {
             if ((status == Status.STATUS_COMMITTED && !rollback) || (status == Status.STATUS_ROLLEDBACK && rollback)) {
                 Thread thread = new Thread() {
                     @Override

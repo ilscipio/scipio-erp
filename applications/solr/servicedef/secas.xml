@@ -30,10 +30,6 @@ xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/service-eca.xsd">
         (such as data loading/install).
         SEE ALSO ENTITY ECAs IN entitydef/eecas.xml
     -->
-    
-    <eca service="createProductStoreGroupRollup" event="">
-        <action service="checkProductStoreGroupRollup" mode="sync"/>
-    </eca>
 
     <!-- (Insert any additional needed SECAs here) -->
 

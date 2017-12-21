@@ -4367,6 +4367,7 @@ under the License.
             title="DATEV - Available Data Categories (http://www.datev.de/dnlexom/client/app/index.html#/document/1036228/D72057595488525963)">
             <field name="dataCategoryId" type="id-long"></field>
             <field name="dataCategoryName" type="short-varchar"></field>
+            <field name="dataCategoryClass" type="long-varchar"></field>
             <field name="description" type="long-varchar"></field>
             <prim-key field="dataCategoryId"/>
             <relation rel-entity-name="DatevFieldDefinition" type="many">
@@ -4377,7 +4378,7 @@ under the License.
     <!-- TODO: Not used yet -->
     <entity entity-name="DatevFieldDefinitionVersion"
             package-name="com.ilscipio.scipio.accounting.external.datev"
-            title="DATEV - Field definition version for transaction entries (http://www.datev.de/dnlexom/client/app/index.html#/document/1036228/D72057595488525963)">
+            title="DATEV - Field definition version (http://www.datev.de/dnlexom/client/app/index.html#/document/1036228/D72057595488525963)">
         <field name="fieldId" type="id-ne"></field>
         <field name="version" type="short-varchar"></field>
         <prim-key field="fieldId"/>

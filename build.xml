@@ -2116,11 +2116,13 @@ under the License.
     <!-- ================================================================== -->
 
     <target name="create-component"
-            description="Create the layout of an OFBiz component in the hot-deploy folder.">
-        <input addproperty="component-name" message="Component name: (e.g. mycomponent) [Mandatory]"/>
-        <input addproperty="component-resource-name" message="Component resource name: (e.g. MyComponent) [Mandatory]"/>
-        <input addproperty="webapp-name" message="Webapp name: (e.g. mycomponent) [Mandatory]"/>
-        <input addproperty="base-permission" message="Base permission: (e.g. MYCOMPONENT) [Mandatory]"/>
+            description="Create the layout of a Scipio component in the hot-deploy folder.">
+        <input addproperty="component-name" message="Component name (lowercase): (e.g. mycomponent) [Mandatory]"/>
+        <input addproperty="component-resource-name" message="Component resource name (CamelCase): (e.g. MyComponent) [Mandatory]"/>
+        <input addproperty="webapp-name" message="Webapp name (lowercase): (e.g. mycomponent) [Mandatory]"/>
+        <input addproperty="base-permission" message="Base permission (UPPERCASE): (e.g. MYCOMPONENT) [Mandatory]"/>
+        <input addproperty="component-package" message="Organization (package/group): (e.g. org.mycompany.myprojects) [default: com.ilscipio.scipio.ce.external]" defaultvalue="com.ilscipio.scipio.ce.external"/>
+
         <echo>The following hot-deploy component will be created:
               Name: ${component-name}
               Resource Name: ${component-resource-name}
@@ -2154,38 +2156,57 @@ under the License.
                 <equals arg1="${base-permission}" arg2="" casesensitive="false" trim="yes"/>
             </condition>
         </fail>
+        <fail message="Organization is mandatory">
+            <condition>
+                <equals arg1="${component-package}" arg2="" casesensitive="false" trim="yes"/>
+            </condition>
+        </fail>
         <filterset id="replacePlaceholders">
             <filter token="component-name" value="${component-name}"/>
             <filter token="component-resource-name" value="${component-resource-name}"/>
             <filter token="base-permission" value="${base-permission}"/>
             <filter token="webapp-name" value="${webapp-name}"/>
+            <filter token="component-package" value="${component-package}"/>
         </filterset>
         <mkdir dir="${basedir}/hot-deploy/${component-name}"/>
+        <copy file="${basedir}/framework/resources/templates/.gitignore-component" tofile="${basedir}/hot-deploy/${component-name}/.gitignore"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/config"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/data"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/data/helpdata"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/dtd"/>
+        <copy file="${basedir}/framework/resources/templates/.gitignore-empty" tofile="${basedir}/hot-deploy/${component-name}/dtd/.gitignore"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/documents"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/entitydef"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/lib"/>
+        <copy file="${basedir}/framework/resources/templates/.gitignore-lib" tofile="${basedir}/hot-deploy/${component-name}/lib/.gitignore"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/patches"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/patches/test"/>
+        <copy file="${basedir}/framework/resources/templates/.gitignore-empty" tofile="${basedir}/hot-deploy/${component-name}/patches/test/.gitignore"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/patches/qa"/>
+        <copy file="${basedir}/framework/resources/templates/.gitignore-empty" tofile="${basedir}/hot-deploy/${component-name}/patches/qa/.gitignore"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/patches/production"/>
+        <copy file="${basedir}/framework/resources/templates/.gitignore-empty" tofile="${basedir}/hot-deploy/${component-name}/patches/production/.gitignore"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/script"/>
+        <copy file="${basedir}/framework/resources/templates/.gitignore-empty" tofile="${basedir}/hot-deploy/${component-name}/script/.gitignore"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/servicedef"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/src"/>
+        <copy file="${basedir}/framework/resources/templates/.gitignore-empty" tofile="${basedir}/hot-deploy/${component-name}/src/.gitignore"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/testdef"/>
+        <copy file="${basedir}/framework/resources/templates/.gitignore-empty" tofile="${basedir}/hot-deploy/${component-name}/testdef/.gitignore"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/webapp"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/error"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/WEB-INF"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/WEB-INF/actions"/>
+        <copy file="${basedir}/framework/resources/templates/.gitignore-empty" tofile="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/WEB-INF/actions/.gitignore"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/widget/"/>
         <copy file="${basedir}/framework/resources/templates/ofbiz-component.xml" tofile="${basedir}/hot-deploy/${component-name}/ofbiz-component.xml" encoding="utf-8">
             <filterset refid="replacePlaceholders"/>
         </copy>
         <copy file="${basedir}/framework/resources/templates/build.xml" tofile="${basedir}/hot-deploy/${component-name}/build.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/ivy.xml" tofile="${basedir}/hot-deploy/${component-name}/ivy.xml" encoding="utf-8">
             <filterset refid="replacePlaceholders"/>
         </copy>
         <copy file="${basedir}/framework/resources/templates/TypeData.xml" tofile="${basedir}/hot-deploy/${component-name}/data/${component-resource-name}TypeData.xml" encoding="utf-8">
@@ -2244,7 +2265,209 @@ under the License.
             <filterset refid="replacePlaceholders"/>
         </copy>
         <echo>Component successfully created in folder ${basedir}/hot-deploy/${component-name}.
-            Restart OFBiz and then visit the URL: https://localhost:8443/${webapp-name}
+            Restart Scipio and then visit the URL: https://localhost:8443/${webapp-name}
+        </echo>
+    </target>
+    
+    <!-- SCIPIO: new -->
+    <target name="create-component-shop-override"
+            description="Create the layout of a Scipio shop webapp override component in the hot-deploy folder. (SCIPIO)">
+        <input addproperty="component-name" message="Component name (lowercase): (e.g. mycomponent) [Mandatory]"/>
+        <input addproperty="component-resource-name" message="Component resource name (CamelCase): (e.g. MyComponent) [Mandatory]"/>
+        <input addproperty="webapp-name" message="Webapp name (lowercase): (e.g. mycomponent) [default: ${component-name}]" defaultvalue="${component-name}"/>
+        <!--<input addproperty="base-permission" message="Base permission (uppercase): (e.g. MYCOMPONENT) [default: SHOP]" defaultvalue="SHOP"/>-->
+        <property name="base-permission" value="SHOP"/>
+        <input addproperty="component-package" message="Organization (package/group): (e.g. org.mycompany.myprojects) [default: com.ilscipio.scipio.ce.external]" defaultvalue="com.ilscipio.scipio.ce.external"/>
+
+        <!-- TODO? more options -->
+        <echo>The following hot-deploy component will be created:
+              Name: ${component-name}
+              Resource Name: ${component-resource-name}
+              Webapp Name: ${webapp-name}
+              Base permission: ${base-permission}
+              Folder: ${basedir}/hot-deploy/${component-name}
+            
+              The webapp will automatically override the one defined in /applications/shop/ofbiz-component.xml, and it will have:
+              webSiteId: ScipioWebStore
+              mount-point: /shop
+              demo data: inherited from /applications/shop/data/
+            
+              NOTE: If you have modified /applications/shop directly in the filesystem, some of those changes may be carried over here.
+        </echo>
+        <input addproperty="confirm-component-creation" message="Confirm: " defaultvalue="N" validargs="Y,N,y,n"/>
+        <fail message="Component creation cancelled by the user.">
+            <condition>
+                <equals arg1="${confirm-component-creation}" arg2="N" casesensitive="false"/>
+            </condition>
+        </fail>
+        <fail message="Component name is mandatory">
+            <condition>
+                <equals arg1="${component-name}" arg2="" casesensitive="false" trim="yes"/>
+            </condition>
+        </fail>
+        <fail message="Resource name is mandatory">
+            <condition>
+                <equals arg1="${component-resource-name}" arg2="" casesensitive="false" trim="yes"/>
+            </condition>
+        </fail>
+        <fail message="Webapp name is mandatory">
+            <condition>
+                <equals arg1="${webapp-name}" arg2="" casesensitive="false" trim="yes"/>
+            </condition>
+        </fail>
+        <fail message="Base permission is mandatory">
+            <condition>
+                <equals arg1="${base-permission}" arg2="" casesensitive="false" trim="yes"/>
+            </condition>
+        </fail>
+        <fail message="Organization is mandatory">
+            <condition>
+                <equals arg1="${component-package}" arg2="" casesensitive="false" trim="yes"/>
+            </condition>
+        </fail>
+        <filterset id="replacePlaceholders">
+            <filter token="component-name" value="${component-name}"/>
+            <filter token="component-resource-name" value="${component-resource-name}"/>
+            <filter token="base-permission" value="${base-permission}"/>
+            <filter token="webapp-name" value="${webapp-name}"/>
+            <filter token="component-package" value="${component-package}"/>
+        </filterset>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}"/>
+        <copy file="${basedir}/framework/resources/templates/.gitignore-component" tofile="${basedir}/hot-deploy/${component-name}/.gitignore"/>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/config"/>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/data"/>
+        <!--<mkdir dir="${basedir}/hot-deploy/${component-name}/data/helpdata"/>-->
+        <!--<mkdir dir="${basedir}/hot-deploy/${component-name}/dtd"/>-->
+        <!--<mkdir dir="${basedir}/hot-deploy/${component-name}/documents"/>-->
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/entitydef"/>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/lib"/>
+        <copy file="${basedir}/framework/resources/templates/.gitignore-lib" tofile="${basedir}/hot-deploy/${component-name}/lib/.gitignore"/>
+        <!--<mkdir dir="${basedir}/hot-deploy/${component-name}/patches"/>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/patches/test"/>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/patches/qa"/>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/patches/production"/>-->
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/script"/>
+        <copy file="${basedir}/framework/resources/templates/.gitignore-empty" tofile="${basedir}/hot-deploy/${component-name}/script/.gitignore"/>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/servicedef"/>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/src"/>
+        <copy file="${basedir}/framework/resources/templates/.gitignore-empty" tofile="${basedir}/hot-deploy/${component-name}/src/.gitignore"/>
+        <!--<mkdir dir="${basedir}/hot-deploy/${component-name}/testdef"/>-->
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/templates"/>
+        <copy file="${basedir}/framework/resources/templates/.gitignore-empty" tofile="${basedir}/hot-deploy/${component-name}/templates/.gitignore"/>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/webapp"/>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}"/>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/error"/>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/images"/>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/WEB-INF"/>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/WEB-INF/actions"/>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/widget/"/>
+        <copy file="${basedir}/framework/resources/templates/shop-override/ofbiz-component.xml" tofile="${basedir}/hot-deploy/${component-name}/ofbiz-component.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/shop/build.xml" tofile="${basedir}/hot-deploy/${component-name}/build.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/ivy.xml" tofile="${basedir}/hot-deploy/${component-name}/ivy.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <!--<copy file="${basedir}/framework/resources/templates/TypeData.xml" tofile="${basedir}/hot-deploy/${component-name}/data/${component-resource-name}TypeData.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>-->
+        <!--<copy file="${basedir}/framework/resources/templates/SecurityPermissionSeedData.xml" tofile="${basedir}/hot-deploy/${component-name}/data/${component-resource-name}SecurityPermissionSeedData.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>-->
+        <!--<copy file="${basedir}/framework/resources/templates/SecurityGroupDemoData.xml" tofile="${basedir}/hot-deploy/${component-name}/data/${component-resource-name}SecurityGroupDemoData.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>-->
+        <!--<copy file="${basedir}/framework/resources/templates/DemoData.xml" tofile="${basedir}/hot-deploy/${component-name}/data/${component-resource-name}DemoData.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>-->
+        <!--<copy file="${basedir}/framework/resources/templates/HELP.xml" tofile="${basedir}/hot-deploy/${component-name}/data/helpdata/HELP_${component-resource-name}.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>-->
+        <copy file="${basedir}/framework/resources/templates/shop-override/data/CatalogData.xml" tofile="${basedir}/hot-deploy/${component-name}/data/${component-resource-name}CatalogData.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/shop-override/data/DemoData.xml" tofile="${basedir}/hot-deploy/${component-name}/data/${component-resource-name}DemoData.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/shop-override/data/ProductData.xml" tofile="${basedir}/hot-deploy/${component-name}/data/${component-resource-name}ProductData.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/shop-override/data/SecurityGroupDemoData.xml" tofile="${basedir}/hot-deploy/${component-name}/data/${component-resource-name}SecurityGroupDemoData.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/shop-override/data/SecurityPermissionSeedData.xml" tofile="${basedir}/hot-deploy/${component-name}/data/${component-resource-name}SecurityPermissionSeedData.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/shop-override/data/ShippingData.xml" tofile="${basedir}/hot-deploy/${component-name}/data/${component-resource-name}ShippingData.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/shop-override/data/StoreData.xml" tofile="${basedir}/hot-deploy/${component-name}/data/${component-resource-name}StoreData.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/shop-override/data/TaxAuthorityData.xml" tofile="${basedir}/hot-deploy/${component-name}/data/${component-resource-name}TaxAuthorityData.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <!--<copy file="${basedir}/framework/resources/templates/document.xml" tofile="${basedir}/hot-deploy/${component-name}/documents/${component-resource-name}.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>-->
+        <copy file="${basedir}/framework/resources/templates/entitymodel.xml" tofile="${basedir}/hot-deploy/${component-name}/entitydef/entitymodel.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/services.xml" tofile="${basedir}/hot-deploy/${component-name}/servicedef/services.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <!--<copy file="${basedir}/framework/resources/templates/Tests.xml" tofile="${basedir}/hot-deploy/${component-name}/testdef/${component-resource-name}Tests.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>-->
+        <copy file="${basedir}/framework/resources/templates/UiLabels.xml" tofile="${basedir}/hot-deploy/${component-name}/config/${component-resource-name}UiLabels.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <!--<copy file="${basedir}/framework/resources/templates/index.jsp" tofile="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/index.jsp" encoding="iso-8859-1">
+            <filterset refid="replacePlaceholders"/>
+        </copy>-->
+        <!-- SCIPIO: gone
+        <copy file="${basedir}/framework/resources/templates/error.jsp" tofile="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/error/error.jsp" encoding="iso-8859-1">
+            <filterset refid="replacePlaceholders"/>
+        </copy>-->
+        <copy file="${basedir}/framework/resources/templates/shop-override/webapp/shop/WEB-INF/controller.xml" tofile="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/WEB-INF/controller.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/shop-override/webapp/shop/WEB-INF/web.xml" tofile="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/WEB-INF/web.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/shop/webapp/shop/WEB-INF/urlrewrite.xml" tofile="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/WEB-INF/urlrewrite.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/shop/webapp/shop/WEB-INF/actions/ShopSetup.groovy" tofile="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/WEB-INF/actions/ShopSetup.groovy" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/shop-override/widget/CommonScreens.xml" tofile="${basedir}/hot-deploy/${component-name}/widget/CommonScreens.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <!--<copy file="${basedir}/framework/resources/templates/Screens.xml" tofile="${basedir}/hot-deploy/${component-name}/widget/${component-resource-name}Screens.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>-->
+        <!--<copy file="${basedir}/framework/resources/templates/Menus.xml" tofile="${basedir}/hot-deploy/${component-name}/widget/${component-resource-name}Menus.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>-->
+        <!--<copy file="${basedir}/framework/resources/templates/Forms.xml" tofile="${basedir}/hot-deploy/${component-name}/widget/${component-resource-name}Forms.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>-->
+        <!-- /applications/shop file copies
+            FIXME?: we currently are forced to duplicate the following shop files some of which is not desirable, 
+                because no mechanism to extend them... -->
+        <copy todir="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/">
+            <fileset dir="${basedir}/applications/shop/webapp/shop/">
+                <include name="images/**"/>
+                <include name="error/404.jsp"/>
+                <include name="index.jsp"/>
+                <include name="robots.txt"/>
+            </fileset>
+        </copy>
+        <echo>Component successfully created in folder ${basedir}/hot-deploy/${component-name}.
+            Restart Scipio and then visit the URL: https://localhost:8443/shop
         </echo>
     </target>
 

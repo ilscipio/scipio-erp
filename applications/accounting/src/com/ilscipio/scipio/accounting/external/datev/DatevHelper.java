@@ -5,7 +5,9 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.GenericValue;
 
+import com.ilscipio.scipio.accounting.external.OperationResults;
 import com.ilscipio.scipio.accounting.external.OperationStats;
 import com.ilscipio.scipio.accounting.external.OperationStats.NotificationLevel;
 import com.ilscipio.scipio.accounting.external.OperationStats.NotificationScope;
@@ -17,33 +19,47 @@ public class DatevHelper {
 
     private final String orgPartyId;
     private final OperationStats stats;
-    private final AbstractDatevDataCategory dataCategory;
+    private final OperationResults results;
+    private final AbstractDatevDataCategory dataCategoryImpl;
+    private final GenericValue dataCategory;
 
-    public DatevHelper(Delegator delegator, String orgPartyId, Class<? extends AbstractDatevDataCategory> dataCategoryClass) throws DatevException {
+    public DatevHelper(Delegator delegator, String orgPartyId, GenericValue dataCategory) throws DatevException {
         this.orgPartyId = orgPartyId;
         try {
+            @SuppressWarnings("unchecked")
+            Class<? extends AbstractDatevDataCategory> dataCategoryClass = (Class<? extends AbstractDatevDataCategory>) Class.forName(dataCategory.getString("dataCategoryClass"));
             Constructor<? extends AbstractDatevDataCategory> datevDataCategoryConstructor = dataCategoryClass.getConstructor(Delegator.class, DatevHelper.class);
-            this.dataCategory = datevDataCategoryConstructor.newInstance(delegator, this);
-            this.stats = dataCategory.getOperationStatsClass().newInstance();
+            this.dataCategoryImpl = datevDataCategoryConstructor.newInstance(delegator, this);
+            this.stats = dataCategoryImpl.getOperationStatsClass().newInstance();
+            this.results = dataCategoryImpl.getOperationResultsClass().newInstance();
+            this.dataCategory = dataCategory;
         } catch (Exception e) {
             throw new DatevException("Internal error. Cannot initialize DATEV helper.");
         }
 
     }
 
+    public boolean hasFatalNotification() {
+        for (Stat stat : stats.getStats()) {
+            if (stat.getLevel().equals(NotificationLevel.FATAL))
+                return true;
+        }
+        return false;
+    }
+
     public void processRecord(int index, Map<String, String> recordMap) throws DatevException {
-        dataCategory.processRecord(index, recordMap);
+        dataCategoryImpl.processRecord(index, recordMap);
     }
 
     public String[] getFieldNames() throws DatevException {
-        return dataCategory.getFieldNames();
+        return dataCategoryImpl.getDatevFieldNames();
     }
 
     public boolean validateField(Object o, String value) throws DatevException {
         if (o instanceof String)
-            return dataCategory.validateField(String.valueOf(o), value);
+            return dataCategoryImpl.validateField(String.valueOf(o), value);
         else if (o instanceof Integer)
-            return dataCategory.validateField((Integer) o, value);
+            return dataCategoryImpl.validateField((Integer) o, value);
         return false;
     }
 
@@ -52,11 +68,19 @@ public class DatevHelper {
     }
 
     public boolean isMetaHeader(Iterator<String> metaHeader) throws DatevException {
-        return dataCategory.isMetaHeader(metaHeader);
+        return dataCategoryImpl.isMetaHeader(metaHeader);
+    }
+
+    public OperationResults getResults() {
+        return results;
     }
 
     public OperationStats getStats() {
         return stats;
+    }
+
+    public GenericValue getDataCategory() {
+        return dataCategory;
     }
 
     public void addRecordStat(String message, NotificationLevel level, int position, Map<String, String> value, boolean valid) {
@@ -70,4 +94,5 @@ public class DatevHelper {
     private void addStat(Stat stat) {
         stats.addStat(stat);
     }
+
 }

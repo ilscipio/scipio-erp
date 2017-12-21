@@ -35,8 +35,25 @@
         <fileset dir="../../framework/widget/build/lib" includes="*.jar"/>
         <fileset dir="../../framework/webapp/lib" includes="*.jar"/>
         <fileset dir="../../framework/webapp/build/lib" includes="*.jar"/>
+        <fileset dir="../../framework/common/build/lib" includes="*.jar"/>
+        <fileset dir="../../applications/content/build/lib" includes="*.jar"/>
+        <fileset dir="../../applications/party/build/lib" includes="*.jar"/>
+        <fileset dir="../../applications/product/build/lib" includes="*.jar"/>
+        <fileset dir="../../applications/marketing/build/lib" includes="*.jar"/>
+        <fileset dir="../../applications/order/build/lib" includes="*.jar"/>
+        <fileset dir="../../applications/accounting/build/lib" includes="*.jar"/>
+        <fileset dir="../../applications/securityext/build/lib" includes="*.jar"/>
     </path>
 
+    <!-- SCIPIO: Libraries manually committed to repo, excluded from ivy (or emulated) file cleanout/removal 
+        (by default, all jar files under /lib/ are automatically cleaned out by various ant clean commands)
+    <selector id="lib.update.manual.files">
+        <or>
+            <filename name="mylib-*.jar"/>
+        </or>
+    </selector>
+    -->
+    
     <!-- ================================================================= -->
     <!-- Targets to create patch files                                    -->
     <!-- ================================================================= -->

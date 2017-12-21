@@ -25,10 +25,8 @@ import org.ofbiz.service.ServiceUtil;
 
 import com.ilscipio.scipio.accounting.external.OperationStats.NotificationLevel;
 import com.ilscipio.scipio.accounting.external.OperationStats.NotificationScope;
-import com.ilscipio.scipio.accounting.external.datev.category.DatevBuchungsstapel;
 import com.ilscipio.scipio.common.util.TikaUtil;
 
-import javolution.util.FastList;
 import javolution.util.FastMap;
 
 public class DatevServices {
@@ -43,12 +41,11 @@ public class DatevServices {
      * @param context
      * @return
      */
-    public static Map<String, Object> importDatevTransactionEntries(DispatchContext dctx, Map<String, Object> context) {
+    public static Map<String, Object> importDatev(DispatchContext dctx, Map<String, Object> context) {
         Delegator delegator = dctx.getDelegator();
 
         // Prepare result objects
         Map<String, Object> result = ServiceUtil.returnSuccess();
-        List<GenericValue> transactionEntries = FastList.newInstance();
 
         // Get context params
         String orgPartyId = (String) context.get("orgPartyId");
@@ -57,13 +54,14 @@ public class DatevServices {
         String fileSize = (String) context.get("_uploadedFile_size");
         String fileName = (String) context.get("_uploadedFile_fileName");
         String contentType = (String) context.get("_uploadedFile_contentType");
+        GenericValue dataCategory = (GenericValue) context.get("dataCategory");
 
         BufferedReader csvReader = null;
         DatevHelper datevHelper = null;
         String errorMessage = null;
         try {
             // Initialize helper
-            datevHelper = new DatevHelper(delegator, orgPartyId, DatevBuchungsstapel.class);
+            datevHelper = new DatevHelper(delegator, orgPartyId, dataCategory);
 
             Character delimiter = DEFAULT_DELIMITER;
             if (UtilValidate.isNotEmpty(context.get("delimiter")))
@@ -142,8 +140,8 @@ public class DatevServices {
 
             // Find out if CSV has a header so we can remove it and loop only
             // real records
-            String[] datevTransactionsFieldNames = datevHelper.getFieldNames();
-            fmt = fmt.withHeader(datevTransactionsFieldNames);
+            String[] datevFieldNames = datevHelper.getFieldNames();
+            fmt = fmt.withHeader(datevFieldNames);
             if (fmt.getHeader() != null && fmt.getHeader().length > 0) {
                 fmt = fmt.withSkipHeaderRecord(true);
             } else {
@@ -181,7 +179,7 @@ public class DatevServices {
                             if (!datevHelper.validateField(i, value)) {
                                 allFieldValid = false;
                             }
-                            recordMap.put(datevTransactionsFieldNames[i], value);
+                            recordMap.put(datevFieldNames[i], value);
                         }
                     }
                     if (allFieldValid) {
@@ -202,11 +200,21 @@ public class DatevServices {
         } catch (Exception e) {
             Debug.logError(e, module);
         } finally {
-            if (UtilValidate.isNotEmpty(datevHelper)) {
-                datevHelper.addStat(errorMessage, NotificationScope.GLOBAL, NotificationLevel.FATAL);
-                result.put("operationStats", datevHelper.getStats());
+            if (UtilValidate.isNotEmpty(errorMessage)) {
+                if (UtilValidate.isNotEmpty(datevHelper)) {
+                    datevHelper.addStat(errorMessage, NotificationScope.GLOBAL, NotificationLevel.FATAL);
+                } else {
+                    result = ServiceUtil.returnError(errorMessage);
+                }
             } else {
-                result = ServiceUtil.returnError(errorMessage);
+                if (UtilValidate.isNotEmpty(datevHelper)) {
+                    result.put("operationStats", datevHelper.getStats());
+                    if (!datevHelper.hasFatalNotification()) {
+                        result.put("operationResults", datevHelper.getResults());
+                    } else {
+                        result = ServiceUtil.returnError("A fatal error ocurred while importing the CSV.");
+                    }
+                }
             }
 
             fileBytes.clear();
@@ -215,11 +223,11 @@ public class DatevServices {
             } catch (IOException e) {
                 ;
             }
+
         }
 
         result.put("orgPartyId", orgPartyId);
         result.put("topGlAccountId", topGlAccountId);
-        result.put("transactionEntries", transactionEntries);
 
         return result;
     }

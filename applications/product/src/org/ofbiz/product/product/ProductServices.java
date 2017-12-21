@@ -169,8 +169,11 @@ public class ProductServices {
         String errMsg=null;
         Set<String> featureSet = new LinkedHashSet<String>();
 
+        // SCIPIO: 2017-12-20: useCache flag
+        boolean useCache = !Boolean.FALSE.equals(context.get("useCache"));
+        
         try {
-            List<GenericValue> features = EntityQuery.use(delegator).from("ProductFeatureAndAppl").where("productId", productId, "productFeatureApplTypeId", productFeatureApplTypeId).orderBy("sequenceNum", "productFeatureTypeId").cache(true).filterByDate().queryList();
+            List<GenericValue> features = EntityQuery.use(delegator).from("ProductFeatureAndAppl").where("productId", productId, "productFeatureApplTypeId", productFeatureApplTypeId).orderBy("sequenceNum", "productFeatureTypeId").cache(useCache).filterByDate().queryList();
             for (GenericValue v: features) {
                 featureSet.add(v.getString("productFeatureTypeId"));
             }

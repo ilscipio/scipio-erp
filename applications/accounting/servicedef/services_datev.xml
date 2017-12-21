@@ -19,20 +19,19 @@ under the License.
 -->
 
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+        xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/services.xsd">
     <description>Accounting Services - Datev</description>
     <vendor>Scipio</vendor>
     <version>1.0</version>
-    <service name="importDatevTransactionEntries" engine="java"
-        location="com.ilscipio.scipio.accounting.external.datev.DatevServices" invoke="importDatevTransactionEntries" auth="true">
-        <description>Imports transactions entries in Datev format from a csv</description>
-        <permission-service service-name="acctgTransactionPermissionCheck" main-action="CREATE"/>
-        <attribute mode="INOUT" name="orgPartyId" type="String" optional="false"/>
-        <attribute mode="INOUT" name="topGlAccountId" type="String" optional="false"/>
-        
+    
+    <service name="importDatevInterface" engine="interface">
+        <attribute mode="IN" name="dataCategory" type="org.ofbiz.entity.GenericValue" optional="false" />
+        <!-- TODO: Review this. These values (and other csv format) may come predefined as stated in the documentation (likely to be moved to its own entity)  -->
         <attribute mode="IN" name="charset" type="String" optional="true" />
         <attribute mode="IN" name="delimiter" type="String" optional="true" />
         <attribute mode="IN" name="quote" type="String" optional="true" />
+        <!--  -->
+        
         <attribute mode="IN" name="hasMetaHeader" type="Boolean" optional="true" default-value="true"/>
         <attribute mode="IN" name="hasHeader" type="Boolean" optional="true" default-value="true" />
         
@@ -40,9 +39,33 @@ under the License.
         <attribute mode="IN" name="_uploadedFile_size" type="String" optional="false"/>
         <attribute mode="IN" name="_uploadedFile_fileName" type="String" optional="false"/>
         <attribute mode="IN" name="_uploadedFile_contentType" type="String" optional="false"/>
-        <attribute mode="OUT" name="operationStats" type="com.ilscipio.scipio.accounting.external.OperationStats" optional="true" />
-        <attribute mode="OUT" name="transactionEntries" type="List" optional="false" />
+        
+        <attribute mode="OUT" name="operationResult" type="com.ilscipio.scipio.accounting.external.OperationStats" optional="true" />
+        <attribute mode="OUT" name="operationStats" type="com.ilscipio.scipio.accounting.external.OperationStats" optional="false" />
+    </service> 
+    
+    <!-- 
+        Multiple services needed so we can run the corresponding permission-service/s depending on the type of import. Ultimately they will call the same service (importDatev), 
+        dataCategory attribute will determine which import logic should be executed. 
+    -->
+    <service name="importDatevTransactionEntries" engine="java"
+        location="com.ilscipio.scipio.accounting.external.datev.DatevServices" invoke="importDatev" auth="true" >
+        <description>Imports transactions entries in Datev format from a csv</description>
+        <permission-service service-name="acctgTransactionPermissionCheck" main-action="CREATE"/>
+        <implements service="importDatevInterface"/>
+        <attribute mode="INOUT" name="orgPartyId" type="String" optional="false"/>
+        <attribute mode="INOUT" name="topGlAccountId" type="String" optional="false"/>
     </service>
+    <service name="importDatevContacts" engine="java"
+        location="com.ilscipio.scipio.accounting.external.datev.DatevServices" invoke="importDatev" auth="true" >
+        <description>Imports contacts in Datev format from a csv</description>
+        <permission-service service-name="partyBasePermissionCheck" main-action="CREATE"/>
+        <implements service="importDatevInterface"/>
+        <attribute mode="INOUT" name="orgPartyId" type="String" optional="false"/>
+        <attribute mode="INOUT" name="topGlAccountId" type="String" optional="false"/>
+    </service>
+    
+    <!-- TODO: Not yet implemented -->
     <service name="exportDatevTransactionEntries" engine="java"
         location="com.ilscipio.scipio.accounting.external.datev.DatevServices" invoke="exportDatevTransactionEntries" auth="true">
         <description>Exports transactions entries in Datev format to a csv</description>

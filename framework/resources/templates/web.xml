@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.0">
-    <display-name>Apache OFBiz - @component-resource-name@ Component</display-name>
-    <description>@component-resource-name@ Component of the Apache OFBiz Project</description>
+    <display-name>SCIPIO-ERP - @component-resource-name@ Component</display-name>
+    <description>@component-resource-name@ Component of the SCIPIO-ERP Project</description>
 
     <!-- context-param>
         <param-name>webSiteId</param-name>

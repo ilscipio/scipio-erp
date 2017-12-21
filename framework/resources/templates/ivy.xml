@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+    <info module="@component-name@" organisation="@component-package@"/>
+    <configurations>
+        <!-- configurations for initial download/build -->
+        <conf name="application" description="download all jars required for build"/>
+    </configurations>
+    
+    <dependencies>
+        <!-- dependencies for initial/build downloads 
+            NOTE: these should be listed in lib/.gitignore, e.g.: /example-*.jar -->
+        <!-- /lib/example-1.0.0.jar
+        <dependency org="org.example" name="example" rev="1.0.0" transitive="false" conf="application->default"/>-->
+    </dependencies>
+    
+    <!-- NOTE: To include libraries manually in a project, they must be listed
+        in the project's build.xml "lib.update.manual.files" property; otherwise,
+        by default all *.jar /lib/ files not mentioned in ivy.xml are deleted on ant clean commands.
+        See /framework/base/build.xml for example. -->
+</ivy-module>

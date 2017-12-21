@@ -14,12 +14,12 @@
    <@field type="hidden" name="orgPartyId" value=(params.orgPartyId)!/>
    <@field type="hidden" name="topGlAccountId" value=(params.topGlAccountId)!/>
    <@field type="hidden" name="tabId" value="accountingTransactionsTab" />
-   <@field type="select" name="dataCategory" label=uiLabelMap.SetupAccountingDatevDataCategory>
-	<option value="buchungsstapel">${uiLabelMap.SetupAccountingDatevDataCategoryBuchungsstapel}</option>
-	<option value="debitorenKreditorenStammdaten">${uiLabelMap.SetupAccountingDatevDataCategoryDebitorenKreditorenStammdaten}</option>
-	<option value="kontenbeschriftungen">${uiLabelMap.SetupAccountingDatevDataCategoryKontenbeschriftungen}</option>
-	<option value="textschlussel">${uiLabelMap.SetupAccountingDatevDataCategoryTextschlussel}</option>
-	<option value="diverseAdressen">${uiLabelMap.SetupAccountingDatevDataCategoryDiverseAdressen}</option>	
+   <@field type="select" name="dataCategoryId" label=uiLabelMap.SetupAccountingDatevDataCategory>   	
+	<option value="BUCHUNGSSTAPEL">${uiLabelMap.SetupAccountingDatevDataCategoryBuchungsstapel}</option>
+	<option value="DEBITOREN_KREDITOREN_STAMMDATEN">${uiLabelMap.SetupAccountingDatevDataCategoryDebitorenKreditorenStammdaten}</option>
+	<option value="KONTENBESCHRIFTUNGEN">${uiLabelMap.SetupAccountingDatevDataCategoryKontenbeschriftungen}</option>
+	<option value="TEXTSCHLUSSEL">${uiLabelMap.SetupAccountingDatevDataCategoryTextschlussel}</option>
+	<option value="DIVERSEADRESSEN">${uiLabelMap.SetupAccountingDatevDataCategoryDiverseAdressen}</option>	
    </@field>
    <hr/>
    <@field type="input" name="delimiter" size="3" maxLength="1" label=uiLabelMap.SetupAccountingDatevCSVDelimiter />

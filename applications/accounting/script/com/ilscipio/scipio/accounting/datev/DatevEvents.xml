@@ -22,28 +22,50 @@ under the License.
         xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/simple-methods.xsd">
 
     <simple-method method-name="importDatevDataCategory" short-description="Import Datev Data Category" login-required="true">    
-        <script location="component://accounting/script/com/ilscipio/scipio/accounting/datev/DatevUtil.groovy"></script>
+        <script location="component://accounting/script/com/ilscipio/scipio/accounting/datev/DatevCSVUpload.groovy"></script>
         
-        <set field="datevImportDataCategory" from-field="multiPartMap.dataCategory" />
+        <set field="dataCategoryId" from-field="multiPartMap.dataCategory" />
+        <set field="importDatevCtx" from-field="multiPartMap" />
         
-        <if-compare value="buchungsstapel" operator="equals" field="datevImportDataCategory">
-            <set field="importDatevTransactionEntriesCtx" from-field="multiPartMap" />                
-            <call-service service-name="importDatevTransactionEntries" in-map-name="importDatevTransactionEntriesCtx" break-on-error="false" >
-                <result-to-request result-name="transactionEntries" />
-                <result-to-request result-name="operationStats" />
-            </call-service>            
-            <log message="operationStats ==============> ${parameters.operationStats}" level="always"/>
+        <entity-one value-field="dataCategory" entity-name="DatevDataCategory">
+            <field-map field-name="dataCategoryId"/>
+        </entity-one>
+                
+        <if-not-empty field="dataCategory">
+            <if-compare value="BUCHUNGSSTAPEL" operator="equals" field="dataCategoryId">                           
+                <call-service service-name="importDatevTransactionEntries" in-map-name="importDatevCtx" break-on-error="false" >
+                    <result-to-request result-name="transactionEntries" />
+                    <result-to-field field="operationStats" />
+                </call-service>
+                <else>
+                    <if-compare value="DEBITOREN_KREDITOREN_STAMMDATEN" operator="equals" field="dataCategoryId">            
+                        <call-service service-name="importDatevContacts" in-map-name="importDatevCtx" break-on-error="false" >
+                            <!-- <result-to-request result-name="transactionEntries" /> -->
+                            <result-to-field result-name="operationStats" />
+                        </call-service>
+                        <else>
+                            <add-error><fail-message message="Operation not supported yet."/></add-error>
+                        </else>
+                    </if-compare>
+                </else>
+            </if-compare>
+            
+            <if-not-empty field="operationStats">
+                <field-to-request field="operationStats"/>
+                <else>
+                    <add-error><fail-message message="Result not found."/></add-error>
+                </else>
+            </if-not-empty>
             <else>
-                <!-- TODO: Implement other service calls to Datev data categories -->
-                <add-error><fail-message message="Data category import not supported yet."/></add-error>
+                <add-error><fail-message message="Invalid DATEV data category."/></add-error>
             </else>
-        </if-compare>
+        </if-not-empty>
         
         <field-to-request field="multiPartMap.orgPartyId" request-name="orgPartyId" />
         <field-to-request field="multiPartMap.topGlAccountId" request-name="topGlAccountId" />
         <field-to-request field="multiPartMap.tabId" request-name="tabId" />
         
-        <field-to-request field="datevImportDataCategory" />        
+        <field-to-request field="dataCategoryId" />        
     </simple-method>
     
     

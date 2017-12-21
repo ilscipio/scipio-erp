@@ -14,8 +14,12 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityJoinOperator;
 import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entity.util.EntityUtil;
 
+import com.ilscipio.scipio.accounting.external.OperationResults;
 import com.ilscipio.scipio.accounting.external.OperationStats;
 import com.ilscipio.scipio.accounting.external.OperationStats.NotificationLevel;
 import com.ilscipio.scipio.accounting.external.OperationStats.NotificationScope;
@@ -32,13 +36,23 @@ public abstract class AbstractDatevDataCategory {
     final List<GenericValue> datevMetadataFieldsDefinitions;
     private Map<String, Object> datevMetadataValues = FastMap.newInstance();
 
+    private final List<GenericValue> datevFieldDefinitions;
+    private final List<String> datevFieldNames;
+
     public AbstractDatevDataCategory(Delegator delegator, DatevHelper datevHelper) throws DatevException {
         this.delegator = delegator;
         this.datevHelper = datevHelper;
+
         try {
+            EntityCondition datevFieldDefinitionsCond = EntityCondition.makeCondition("dataCategoryId", EntityJoinOperator.EQUALS,
+                    datevHelper.getDataCategory().getString("dataCategoryId"));
+
+            this.datevFieldDefinitions = EntityQuery.use(delegator).from("DatevFieldDefinition").where(datevFieldDefinitionsCond).queryList();
+            this.datevFieldNames = EntityUtil.getFieldListFromEntityList(datevFieldDefinitions, "fieldName", true);
+
             this.datevMetadataFieldsDefinitions = EntityQuery.use(delegator).from("DatevMetadata").queryList();
         } catch (GenericEntityException e) {
-            throw new DatevException(e.getMessage());
+            throw new DatevException("Internal error. Cannot initialize DATEV importer tool.", e);
         }
     }
 
@@ -70,7 +84,16 @@ public abstract class AbstractDatevDataCategory {
 
     public abstract Class<? extends OperationStats> getOperationStatsClass() throws DatevException;
 
-    public abstract String[] getFieldNames() throws DatevException;
+    public abstract Class<? extends OperationResults> getOperationResultsClass() throws DatevException;
+
+    public List<GenericValue> getDatevFieldDefinitions() {
+        return datevFieldDefinitions;
+    }
+
+    public String[] getDatevFieldNames() {
+        String[] fieldNames = new String[datevFieldNames.size()];
+        return datevFieldNames.toArray(fieldNames);
+    }
 
     public Map<String, Object> getDatevMetadataValues() {
         return datevMetadataValues;

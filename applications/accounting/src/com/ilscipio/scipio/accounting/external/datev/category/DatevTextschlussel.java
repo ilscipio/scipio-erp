@@ -1,10 +1,10 @@
 package com.ilscipio.scipio.accounting.external.datev.category;
 
-import java.util.Iterator;
 import java.util.Map;
 
 import org.ofbiz.entity.Delegator;
 
+import com.ilscipio.scipio.accounting.external.OperationResults;
 import com.ilscipio.scipio.accounting.external.OperationStats;
 import com.ilscipio.scipio.accounting.external.datev.DatevException;
 import com.ilscipio.scipio.accounting.external.datev.DatevHelper;
@@ -13,7 +13,6 @@ public class DatevTextschlussel extends AbstractDatevDataCategory {
 
     public DatevTextschlussel(Delegator delegator, DatevHelper datevHelper) throws DatevException {
         super(delegator, datevHelper);
-        // TODO Auto-generated constructor stub
     }
 
     @Override
@@ -35,19 +34,13 @@ public class DatevTextschlussel extends AbstractDatevDataCategory {
     }
 
     @Override
-    public boolean isMetaHeader(Iterator<String> metaHeader) throws DatevException {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
     public Class<? extends OperationStats> getOperationStatsClass() throws DatevException {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public String[] getFieldNames() throws DatevException {
+    public Class<? extends OperationResults> getOperationResultsClass() throws DatevException {
         // TODO Auto-generated method stub
         return null;
     }

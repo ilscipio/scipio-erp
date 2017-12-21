@@ -25,7 +25,7 @@
     <include location="component://commonext/webapp/WEB-INF/controller.xml"/>
     <include location="component://party/webapp/partymgr/WEB-INF/controller.xml"/>-->
     <include location="component://commonext/webapp/ofbizsetup/WEB-INF/controller.xml"/>
-    <description>SCIPIO-ERP Setup component controller</description>
+    <description>SCIPIO ERP Setup component controller</description>
     
     <!-- SCIPIO: NOTE: setup events will keep pointing to the original script locations (ofbizsetup, commonext) unless they
         diverge significantly, because they contain significant code that should not be moved. -->

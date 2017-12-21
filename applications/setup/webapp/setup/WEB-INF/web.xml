@@ -21,7 +21,7 @@
 
 <web-app version="3.0">
     <display-name>SCIPIO ERP - Setup</display-name>
-    <description>Setup Module of the SCIPIO-ERP Project</description>
+    <description>Setup Module of the SCIPIO ERP Project</description>
     
     <context-param>
         <description>The Name of the Entity Delegator to use, defined in entityengine.xml</description>

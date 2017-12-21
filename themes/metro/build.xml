@@ -18,7 +18,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<project name="OFBiz - Metro Theme" default="build" basedir=".">
+<project name="SCIPIO ERP - Metro Theme" default="build" basedir=".">
     <import file="../../commontheme.xml"/>
 
     <!-- ================================================================== -->

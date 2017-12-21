@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="SCIPIO - CMS" default="jar" basedir=".">
+<project name="SCIPIO ERP - CMS" default="jar" basedir=".">
     <import file="../../common.xml"/>
 
     <!-- ================================================================== -->

@@ -18,7 +18,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<project name="Scipio - Build Tools" default="jar" basedir=".">
+<project name="SCIPIO ERP - Build Tools" default="jar" basedir=".">
     
     <!-- SCIPIO: 2017-01-17: Assembles a small build tools jar
         that can run independently from the ofbiz jars.

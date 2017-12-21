@@ -1278,7 +1278,7 @@ under the License.
         ]]></description>
     </DatevFieldDefinition>
 
-    <DatevFieldDefinition fieldId="116" dataCategoryId="BUCHUNGSSTAPEL" fieldName="Datum Zuord." typeEnumId="FIELD_TYPE_DATE" format="ddMMyyyy" sequenceNum="116">
+    <DatevFieldDefinition fieldId="116" dataCategoryId="BUCHUNGSSTAPEL" fieldName="Datum Zuord. Steuerperiode" typeEnumId="FIELD_TYPE_DATE" format="ddMMyyyy" sequenceNum="116">
         <description><![CDATA[
             # Steuerperiode
         ]]></description>

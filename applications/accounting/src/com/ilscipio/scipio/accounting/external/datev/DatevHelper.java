@@ -7,32 +7,39 @@ import java.util.Map;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 
-import com.ilscipio.scipio.accounting.external.OperationResults;
-import com.ilscipio.scipio.accounting.external.OperationStats;
-import com.ilscipio.scipio.accounting.external.OperationStats.NotificationLevel;
-import com.ilscipio.scipio.accounting.external.OperationStats.NotificationScope;
-import com.ilscipio.scipio.accounting.external.OperationStats.Stat;
+import com.ilscipio.scipio.accounting.external.AbstractOperationResults;
+import com.ilscipio.scipio.accounting.external.BaseOperationResults;
+import com.ilscipio.scipio.accounting.external.BaseOperationStats;
+import com.ilscipio.scipio.accounting.external.BaseOperationStats.NotificationLevel;
+import com.ilscipio.scipio.accounting.external.BaseOperationStats.NotificationScope;
+import com.ilscipio.scipio.accounting.external.BaseOperationStats.Stat;
 import com.ilscipio.scipio.accounting.external.datev.category.AbstractDatevDataCategory;
 
 public class DatevHelper {
     private static final String module = DatevHelper.class.getName();
 
     private final String orgPartyId;
-    private final OperationStats stats;
-    private final OperationResults results;
+    private final BaseOperationStats stats;
+    private final AbstractOperationResults results;
     private final AbstractDatevDataCategory dataCategoryImpl;
     private final GenericValue dataCategory;
 
     public DatevHelper(Delegator delegator, String orgPartyId, GenericValue dataCategory) throws DatevException {
         this.orgPartyId = orgPartyId;
         try {
+            this.dataCategory = dataCategory;
             @SuppressWarnings("unchecked")
             Class<? extends AbstractDatevDataCategory> dataCategoryClass = (Class<? extends AbstractDatevDataCategory>) Class.forName(dataCategory.getString("dataCategoryClass"));
             Constructor<? extends AbstractDatevDataCategory> datevDataCategoryConstructor = dataCategoryClass.getConstructor(Delegator.class, DatevHelper.class);
             this.dataCategoryImpl = datevDataCategoryConstructor.newInstance(delegator, this);
-            this.stats = dataCategoryImpl.getOperationStatsClass().newInstance();
-            this.results = dataCategoryImpl.getOperationResultsClass().newInstance();
-            this.dataCategory = dataCategory;
+            if (dataCategoryImpl.getOperationStatsClass() != null)
+                this.stats = dataCategoryImpl.getOperationStatsClass().newInstance();
+            else
+                this.stats = BaseOperationStats.class.newInstance();
+            if (dataCategoryImpl.getOperationResultsClass() != null)
+                this.results = dataCategoryImpl.getOperationResultsClass().newInstance();
+            else
+                this.results = BaseOperationResults.class.newInstance();
         } catch (Exception e) {
             throw new DatevException("Internal error. Cannot initialize DATEV helper.");
         }
@@ -40,9 +47,11 @@ public class DatevHelper {
     }
 
     public boolean hasFatalNotification() {
-        for (Stat stat : stats.getStats()) {
-            if (stat.getLevel().equals(NotificationLevel.FATAL))
-                return true;
+        if (stats != null) {
+            for (Stat stat : stats.getStats()) {
+                if (stat.getLevel().equals(NotificationLevel.FATAL))
+                    return true;
+            }
         }
         return false;
     }
@@ -71,11 +80,11 @@ public class DatevHelper {
         return dataCategoryImpl.isMetaHeader(metaHeader);
     }
 
-    public OperationResults getResults() {
+    public AbstractOperationResults getResults() {
         return results;
     }
 
-    public OperationStats getStats() {
+    public BaseOperationStats getStats() {
         return stats;
     }
 

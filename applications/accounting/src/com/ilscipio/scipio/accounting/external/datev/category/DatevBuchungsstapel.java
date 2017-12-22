@@ -8,8 +8,8 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityJoinOperator;
 import org.ofbiz.entity.util.EntityUtil;
 
-import com.ilscipio.scipio.accounting.external.OperationResults;
-import com.ilscipio.scipio.accounting.external.OperationStats;
+import com.ilscipio.scipio.accounting.external.BaseOperationResults;
+import com.ilscipio.scipio.accounting.external.BaseOperationStats;
 import com.ilscipio.scipio.accounting.external.datev.DatevException;
 import com.ilscipio.scipio.accounting.external.datev.DatevHelper;
 import com.ilscipio.scipio.accounting.external.datev.results.DatevBuchungsstapelResults;
@@ -48,12 +48,12 @@ public class DatevBuchungsstapel extends AbstractDatevDataCategory {
     }
 
     @Override
-    public Class<? extends OperationStats> getOperationStatsClass() throws DatevException {
+    public Class<? extends BaseOperationStats> getOperationStatsClass() throws DatevException {
         return DatevBuchungsstapelStats.class;
     }
 
     @Override
-    public Class<? extends OperationResults> getOperationResultsClass() throws DatevException {
+    public Class<? extends BaseOperationResults> getOperationResultsClass() throws DatevException {
         return DatevBuchungsstapelResults.class;
     }
 

@@ -19,10 +19,10 @@ import org.ofbiz.entity.condition.EntityJoinOperator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 
-import com.ilscipio.scipio.accounting.external.OperationResults;
-import com.ilscipio.scipio.accounting.external.OperationStats;
-import com.ilscipio.scipio.accounting.external.OperationStats.NotificationLevel;
-import com.ilscipio.scipio.accounting.external.OperationStats.NotificationScope;
+import com.ilscipio.scipio.accounting.external.AbstractOperationResults;
+import com.ilscipio.scipio.accounting.external.BaseOperationStats;
+import com.ilscipio.scipio.accounting.external.BaseOperationStats.NotificationLevel;
+import com.ilscipio.scipio.accounting.external.BaseOperationStats.NotificationScope;
 import com.ilscipio.scipio.accounting.external.datev.DatevException;
 import com.ilscipio.scipio.accounting.external.datev.DatevHelper;
 
@@ -82,9 +82,9 @@ public abstract class AbstractDatevDataCategory {
 
     public abstract boolean validateField(int position, String value) throws DatevException;
 
-    public abstract Class<? extends OperationStats> getOperationStatsClass() throws DatevException;
+    public abstract Class<? extends BaseOperationStats> getOperationStatsClass() throws DatevException;
 
-    public abstract Class<? extends OperationResults> getOperationResultsClass() throws DatevException;
+    public abstract Class<? extends AbstractOperationResults> getOperationResultsClass() throws DatevException;
 
     public List<GenericValue> getDatevFieldDefinitions() {
         return datevFieldDefinitions;

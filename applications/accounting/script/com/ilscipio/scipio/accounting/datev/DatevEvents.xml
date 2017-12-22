@@ -24,23 +24,26 @@ under the License.
     <simple-method method-name="importDatevDataCategory" short-description="Import Datev Data Category" login-required="true">    
         <script location="component://accounting/script/com/ilscipio/scipio/accounting/datev/DatevCSVUpload.groovy"></script>
         
-        <set field="dataCategoryId" from-field="multiPartMap.dataCategory" />
+        <set field="dataCategoryId" from-field="multiPartMap.dataCategoryId" />
         <set field="importDatevCtx" from-field="multiPartMap" />
         
         <entity-one value-field="dataCategory" entity-name="DatevDataCategory">
             <field-map field-name="dataCategoryId"/>
         </entity-one>
+
+        <log level="always" message="dataCategoryId ==========> ${dataCategoryId}" />                
                 
         <if-not-empty field="dataCategory">
+            <set field="importDatevCtx.dataCategory" from-field="dataCategory" />
             <if-compare value="BUCHUNGSSTAPEL" operator="equals" field="dataCategoryId">                           
                 <call-service service-name="importDatevTransactionEntries" in-map-name="importDatevCtx" break-on-error="false" >
-                    <result-to-request result-name="transactionEntries" />
-                    <result-to-field field="operationStats" />
+                    <result-to-request result-name="operationResults" />
+                    <result-to-field result-name="operationStats" />
                 </call-service>
                 <else>
                     <if-compare value="DEBITOREN_KREDITOREN_STAMMDATEN" operator="equals" field="dataCategoryId">            
                         <call-service service-name="importDatevContacts" in-map-name="importDatevCtx" break-on-error="false" >
-                            <!-- <result-to-request result-name="transactionEntries" /> -->
+                            <result-to-request result-name="operationResults" />
                             <result-to-field result-name="operationStats" />
                         </call-service>
                         <else>

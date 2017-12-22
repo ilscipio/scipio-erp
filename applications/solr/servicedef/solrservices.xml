@@ -90,31 +90,47 @@ under the License.
         <attribute mode="IN" name="dataStatusId" optional="true" type="String" default-value="SOLR_DATA_OLD"/>
     </service>
 
-    <!--  Add to Solr Tree -->
-    <service name="addToSolr" engine="java"
-        transaction-timeout="72000"
-        location="com.ilscipio.scipio.solr.SolrProductSearch"
-        invoke="addToSolr">
-        <description>Adds product to solr, with product denoted by productId field in instance attribute
-            - intended for use with ECAs/SECAs</description>
-        <!-- NOTE: 2017-04-13: type may be org.ofbiz.entity.GenericValue or GenericPk, so use common parent GenericEntity -->
-        <attribute mode="IN" name="instance" optional="true" type="org.ofbiz.entity.GenericEntity" />
-        <attribute mode="IN" name="productId" optional="true" type="String" />
+    <service name="updateToSolrCommonInterface" engine="interface">
+        <!-- NOTE: 2017-12-20: type may be org.ofbiz.entity.GenericValue or GenericPk, so use common parent Map (previously GenericEntity) -->
+        <attribute mode="IN" name="instance" optional="true" type="Map"/><!-- type="org.ofbiz.entity.GenericEntity" -->
+        <attribute mode="IN" name="productId" optional="true" type="String"/>
         <attribute mode="IN" name="manual" optional="true" type="Boolean">
             <description>If true, add even if solr ECAs are configured off and don't mark dirty on fail (manual/debugging)</description>
         </attribute>
     </service>
+
+    <service name="updateToSolr" engine="java" location="com.ilscipio.scipio.solr.SolrProductSearch" invoke="updateToSolr"
+        transaction-timeout="72000">
+        <description>Adds OR removes product to solr index by product instance or by productId - intended for use with ECAs/SECAs</description>
+        <implements service="updateToSolrCommonInterface"/>
+        <attribute mode="IN" name="action" optional="true" type="String"><!-- default-value="auto" -->
+            <description>Supported values: add (same as addToSolr), remove (same as removeFromSolr), 
+                auto (default - this either adds or removes based on whether or not the productId still exists in the database)</description>
+        </attribute>
+    </service>
+
+    <service name="addToSolr" engine="java" location="com.ilscipio.scipio.solr.SolrProductSearch" invoke="addToSolr"
+        transaction-timeout="72000">
+        <description>Adds product to solr index by product instance or by productId - intended for use with ECAs/SECAs</description>
+        <implements service="updateToSolrCommonInterface"/>
+    </service>
     
-    <service name="removeFromSolr" engine="java"
-        transaction-timeout="72000"
-        location="com.ilscipio.scipio.solr.SolrProductSearch"
-        invoke="removeFromSolr">
-        <description>Removes product from solr, with product denoted by productId field in instance attribute OR by productId
-            - intended for use with ECAs/SECAs</description>
-        <attribute mode="IN" name="instance" optional="true" type="org.ofbiz.entity.GenericEntity" />
-        <attribute mode="IN" name="productId" optional="true" type="String" />
-        <attribute mode="IN" name="manual" optional="true" type="Boolean">
-            <description>If true, remove even if solr ECAs are configured off and don't mark dirty on fail (manual/debugging)</description>
+    <service name="removeFromSolr" engine="java" location="com.ilscipio.scipio.solr.SolrProductSearch" invoke="removeFromSolr" 
+        transaction-timeout="72000">
+        <description>Adds product to solr index by product instance or by productId - intended for use with ECAs/SECAs</description>
+        <implements service="updateToSolrCommonInterface"/>
+    </service>
+
+    <service name="registerUpdateToSolr" engine="java" location="com.ilscipio.scipio.solr.SolrProductSearch" invoke="registerUpdateToSolr"
+        use-transaction="false"><!-- must not force transaction; special behavior -->
+        <description>Registers (queues) a product add or remove to/from solr index by product instance or by productId - intended for use with ECAs/SECAs.
+            This is a SPECIAL ENTITY ENGINE implementation: it behaves like a "global-commit" service ECA, such that
+            it simply queues the add/removal to happen at global transaction commit instead of immediately;
+            if there is no transaction, behavior is controlled by the "noTransMode" parameter.</description>
+        <implements service="updateToSolr"/>
+        <attribute mode="IN" name="noTransMode" optional="true" type="String" default-value="update">
+            <description>Determines what to do if no transaction is in place.
+                Supported values: update (adds/remove to solr immediately even if no tx), mark-dirty (marks solr data dirty, IF not in manual mode).</description>
         </attribute>
     </service>
 

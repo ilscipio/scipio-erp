@@ -232,7 +232,7 @@ public class TransactionUtil implements Status {
      */
     public static boolean isTransactionInPlaceSafe() {
         try {
-            return isTransactionInPlaceSafe();
+            return isTransactionInPlace();
         } catch(Exception e) {
             Debug.logError("Could not get transaction status: " + e.getMessage(), module);
             return false;

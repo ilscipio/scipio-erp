@@ -4,8 +4,8 @@ import java.util.Map;
 
 import org.ofbiz.entity.Delegator;
 
-import com.ilscipio.scipio.accounting.external.OperationResults;
-import com.ilscipio.scipio.accounting.external.OperationStats;
+import com.ilscipio.scipio.accounting.external.AbstractOperationResults;
+import com.ilscipio.scipio.accounting.external.BaseOperationStats;
 import com.ilscipio.scipio.accounting.external.datev.DatevException;
 import com.ilscipio.scipio.accounting.external.datev.DatevHelper;
 
@@ -34,13 +34,13 @@ public class DatevTextschlussel extends AbstractDatevDataCategory {
     }
 
     @Override
-    public Class<? extends OperationStats> getOperationStatsClass() throws DatevException {
+    public Class<? extends BaseOperationStats> getOperationStatsClass() throws DatevException {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Class<? extends OperationResults> getOperationResultsClass() throws DatevException {
+    public Class<? extends AbstractOperationResults> getOperationResultsClass() throws DatevException {
         // TODO Auto-generated method stub
         return null;
     }

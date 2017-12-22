@@ -4354,8 +4354,9 @@ under the License.
         <field name="dataCategoryId" type="id-long"></field>
         <field name="entityName" type="long-varchar"></field>
         <field name="entityField" type="long-varchar"></field>
+        <field name="isAttrEntity" type="indicator"></field>
         <prim-key field="fieldId"/>
-        <prim-key field="dataCategoryId"/>        
+        <prim-key field="dataCategoryId"/>
         <relation rel-entity-name="DatevFieldDefinition" type="one">
             <key-map field-name="fieldId"/>
             <key-map field-name="dataCategoryId"/>

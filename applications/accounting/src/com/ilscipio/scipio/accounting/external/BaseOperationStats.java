@@ -4,8 +4,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public abstract class OperationStats {
+public class BaseOperationStats {
 
+    public BaseOperationStats() {
+        super();
+    }
     /**
      * Available modes to operate with
      * 

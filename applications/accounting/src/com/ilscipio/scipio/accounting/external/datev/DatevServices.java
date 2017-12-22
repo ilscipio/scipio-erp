@@ -23,8 +23,8 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 
-import com.ilscipio.scipio.accounting.external.OperationStats.NotificationLevel;
-import com.ilscipio.scipio.accounting.external.OperationStats.NotificationScope;
+import com.ilscipio.scipio.accounting.external.BaseOperationStats.NotificationLevel;
+import com.ilscipio.scipio.accounting.external.BaseOperationStats.NotificationScope;
 import com.ilscipio.scipio.common.util.TikaUtil;
 
 import javolution.util.FastMap;

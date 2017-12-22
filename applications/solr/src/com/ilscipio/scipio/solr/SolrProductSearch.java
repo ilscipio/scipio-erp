@@ -27,6 +27,7 @@ import org.apache.solr.client.solrj.response.SpellCheckResponse.Collation;
 import org.apache.solr.client.solrj.response.SpellCheckResponse.Suggestion;
 import org.apache.solr.common.SolrInputDocument;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
@@ -36,12 +37,15 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceSyncRegistrations;
+import org.ofbiz.service.ServiceSyncRegistrations.ServiceSyncRegistration;
 import org.ofbiz.service.ServiceUtil;
 
 /**
@@ -59,29 +63,76 @@ public abstract class SolrProductSearch {
     private static boolean reindexAutoForceRan = false;
     private static final String reindexAutoForcePropName = "scipio.solr.reindex.auto.force";
     
-    /**
-     * Adds product to solr, with product denoted by productId field in instance
-     * attribute - intended for use with ECAs/SECAs.
-     */
     public static Map<String, Object> addToSolr(DispatchContext dctx, Map<String, Object> context) {
+        return updateToSolrCommon(dctx, context, Boolean.TRUE, true);
+    }
+    
+    private static Map<String, Object> addToSolrCore(DispatchContext dctx, Map<String, Object> context, GenericValue product, String productId) {
         Map<String, Object> result;
-        LocalDispatcher dispatcher = dctx.getDispatcher();
-        Delegator delegator = dctx.getDelegator();
-        // NOTE: 2017-04-13: type may be org.ofbiz.entity.GenericValue or GenericPk, so use common parent GenericEntity
-        //GenericValue productInstance = (GenericValue) context.get("instance");
-        GenericEntity productInstance = (GenericEntity) context.get("instance");
-        String productId;
-        if (productInstance != null) {
-            productId = (String) productInstance.get("productId");
-        } else {
-            productId = (String) context.get("productId");
-            if (UtilValidate.isEmpty(productId)) {
-                return ServiceUtil.returnError("missing product or productId");
+        if (Debug.verboseOn()) Debug.logVerbose("Solr: addToSolr: Running indexing for productId '" + productId + "'", module);
+        try {
+            Map<String, Object> dispatchContext = SolrProductUtil.getProductContent(product, dctx, context);
+            dispatchContext.put("treatConnectErrorNonFatal", SolrUtil.isEcaTreatConnectErrorNonFatal());
+            copyStdServiceFieldsNotSet(context, dispatchContext);
+            Map<String, Object> runResult = dctx.getDispatcher().runSync("addToSolrIndex", dispatchContext);
+            String runMsg = ServiceUtil.getErrorMessage(runResult);
+            if (UtilValidate.isEmpty(runMsg)) {
+                runMsg = null;
             }
+            if (ServiceUtil.isError(runResult)) {
+                result = ServiceUtil.returnError(runMsg);
+            } else if (ServiceUtil.isFailure(runResult)) {
+                result = ServiceUtil.returnFailure(runMsg);
+            } else {
+                result = ServiceUtil.returnSuccess();
+            }
+        } catch (Exception e) {
+            Debug.logError(e, "Solr: addToSolr: " + e.getMessage(), module);
+            result = ServiceUtil.returnError(e.toString());
         }
-        
+        return result;
+    }
+    
+    public static Map<String, Object> removeFromSolr(DispatchContext dctx, Map<String, Object> context) {
+        return updateToSolrCommon(dctx, context, Boolean.FALSE, true);
+    }
+    
+    private static Map<String, Object> removeFromSolrCore(DispatchContext dctx, Map<String, Object> context, String productId) {
+        Map<String, Object> result;
+        // NOTE: log this as info because it's the only log line
+        Debug.logInfo("Solr: removeFromSolr: Removing productId '" + productId + "' from index", module);
+        try {
+            HttpSolrClient client = SolrUtil.getHttpSolrClient((String) context.get("core"));
+            client.deleteByQuery("productId:" + SolrExprUtil.escapeTermFull(productId));
+            client.commit();
+            result = ServiceUtil.returnSuccess();
+        } catch (Exception e) {
+            Debug.logError(e, "Solr: removeFromSolr: " + e.getMessage(), module);
+            result = ServiceUtil.returnError(e.toString());
+        }
+        return result;
+    }
+    
+    public static final Map<String, Boolean> updateToSolrActionMap = UtilMisc.toMap("add", true, "remove", false); // default: "auto" -> null
+    private static final String getUpdateToSolrAction(Boolean forceAdd) {
+        if (forceAdd == null) return null;
+        else return forceAdd ? "add" : "remove";
+    }
+    
+    public static Map<String, Object> updateToSolr(DispatchContext dctx, Map<String, Object> context) {
+        return updateToSolrCommon(dctx, context, updateToSolrActionMap.get(context.get("action")), true);
+    }
+    
+    
+    public static Map<String, Object> registerUpdateToSolr(DispatchContext dctx, Map<String, Object> context) {
+        return updateToSolrCommon(dctx, context, updateToSolrActionMap.get(context.get("action")), false);
+    }
+    
+    private static Map<String, Object> updateToSolrCommon(DispatchContext dctx, Map<String, Object> context, Boolean forceAdd, boolean immediate) {
+        Map<String, Object> result;
+
+        // DEV NOTE: BOILERPLATE ECA ENABLE CHECKING PATTERN, KEEP SAME FOR SERVICES ABOVE/BELOW
         boolean manual = Boolean.TRUE.equals(context.get("manual"));
-        
         boolean indexed = false;
         Boolean webappInitPassed = null;
         boolean skippedDueToWebappInit = false;
@@ -89,126 +140,146 @@ public abstract class SolrProductSearch {
         if (manual || SolrUtil.isSolrEcaEnabled()) {
             webappInitPassed = SolrUtil.isSolrEcaWebappInitCheckPassed();
             if (webappInitPassed) {
-                if (Debug.verboseOn()) Debug.logVerbose("Solr: addToSolr: Running indexing for productId '" + productId + "'", module);
+                String productId;
+                // NOTE: 2017-04-13: type may be org.ofbiz.entity.GenericValue or GenericPk, so use common parent GenericEntity (even better: Map)
+                //GenericValue productInstance = (GenericValue) context.get("instance");
+                @SuppressWarnings("unchecked")
+                Map<String, Object> productInst = (Map<String, Object>) context.get("instance");
+                if (productInst != null) productId = (String) productInst.get("productId");
+                else productId = (String) context.get("productId");
+                if (productId == null) ServiceUtil.returnError("missing product instance or productId");
 
-                try {
-                    GenericValue product = delegator.findOne("Product", UtilMisc.toMap("productId", productId), false);
-                    if (product == null) {
-                        // don't mark dirty - we don't even know if the invocation was for a real product
-                        return ServiceUtil.returnError("product not found for productId '" + productId + "'");
-                    }
-                    Map<String, Object> dispatchContext = SolrProductUtil.getProductContent(product, dctx, context);
-                    dispatchContext.put("treatConnectErrorNonFatal", SolrUtil.isEcaTreatConnectErrorNonFatal());
-                    copyStdServiceFieldsNotSet(context, dispatchContext);
-                    Map<String, Object> runResult = dispatcher.runSync("addToSolrIndex", dispatchContext);
-                    String runMsg = ServiceUtil.getErrorMessage(runResult);
-                    if (UtilValidate.isEmpty(runMsg)) {
-                        runMsg = null;
-                    }
-                    if (ServiceUtil.isError(runResult)) {
-                        result = ServiceUtil.returnError(runMsg);
-                    } else if (ServiceUtil.isFailure(runResult)) {
-                        result = ServiceUtil.returnFailure(runMsg);
+                if (immediate) {
+                    result = updateToSolrCore(dctx, context, forceAdd, productId, productInst);
+                    if (ServiceUtil.isSuccess(result)) indexed = true;
+                } else {
+                    if (TransactionUtil.isTransactionInPlaceSafe()) {
+                        result = registerUpdateToSolrForTxCore(dctx, context, forceAdd, productId, productInst);
+                        if (ServiceUtil.isSuccess(result)) indexed = true; // NOTE: not really indexed; this is just to skip the mark-dirty below
                     } else {
-                        result = ServiceUtil.returnSuccess();
-                        indexed = true;
+                        final String reason = "No transaction in place";
+                        if ("update".equals(context.get("noTransMode"))) {
+                            Debug.logInfo("Solr: registerUpdateToSolr: " + reason + "; running immediate index update", module);
+                            result = updateToSolrCore(dctx, context, forceAdd, productId, productInst);
+                            if (ServiceUtil.isSuccess(result)) indexed = true;
+                        } else { // "mark-dirty"
+                            result = ServiceUtil.returnSuccess();
+                            if (manual) {
+                                Debug.logInfo("Solr: registerUpdateToSolr: " + reason + "; skipping solr indexing completely (manual mode; not marking dirty)", module);
+                            } else {
+                                Debug.logInfo("Solr: registerUpdateToSolr: " + reason + "; skipping solr indexing, will mark dirty", module);
+                                indexed = false;
+                            }
+                        }
                     }
-                } catch (Exception e) {
-                    Debug.logError(e, "Solr: addToSolr: " + e.getMessage(), module);
-                    result = ServiceUtil.returnError(e.toString());
                 }
             } else {
-                if (Debug.verboseOn()) {
-                    final String statusMsg = "Solr webapp not available; skipping indexing for productId '" + productId + "'";
-                    Debug.logVerbose("Solr: addToSolr: " + statusMsg, module);
-                }
+                if (Debug.verboseOn()) Debug.logVerbose("Solr: updateToSolr: Solr webapp not available; skipping indexing for product", module);
                 result = ServiceUtil.returnSuccess();
                 skippedDueToWebappInit = true;
             }
         } else {
-            if (Debug.verboseOn()) {
-                final String statusMsg = "Solr ECA indexing disabled; skipping indexing for productId '" + productId + "'";
-                Debug.logVerbose("Solr: addToSolr: " + statusMsg, module);
-            }
+            if (Debug.verboseOn()) Debug.logVerbose("Solr: updateToSolr: Solr ECA indexing disabled; skipping indexing for product", module);
             result = ServiceUtil.returnSuccess();
         }
         
         if (!manual && !indexed && UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.eca.markDirty.enabled", false)) {
             boolean markDirtyNoWebappCheck = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.eca.markDirty.noWebappCheck", false);
             if (!(markDirtyNoWebappCheck && skippedDueToWebappInit)) {
-                if (Debug.verboseOn()) {
-                    final String statusMsg = "Did not index productId '" + productId + "'; marking SOLR data as dirty (old)";
-                    Debug.logVerbose("Solr: addToSolr: " + statusMsg, module);
-                }
-                SolrUtil.setSolrDataStatusId(delegator, "SOLR_DATA_OLD", false);
+                if (Debug.verboseOn()) Debug.logVerbose("Solr: updateToSolr: Did not update index for product; marking SOLR data as dirty (old)", module);
+                SolrUtil.setSolrDataStatusId(dctx.getDelegator(), "SOLR_DATA_OLD", false);
             }
         }
         
         return result;
     }
     
-    public static Map<String, Object> removeFromSolr(DispatchContext dctx, Map<String, Object> context) {
+    private static Map<String, Object> updateToSolrCore(DispatchContext dctx, Map<String, Object> context, Boolean forceAdd, String productId, Map<String, Object> productInst) {
         Map<String, Object> result;
-        //LocalDispatcher dispatcher = dctx.getDispatcher();
-        Delegator delegator = dctx.getDelegator();
-        
-        String productId = (String) context.get("productId");
-        if (UtilValidate.isEmpty(productId)) {
-            GenericEntity productInstance = (GenericEntity) context.get("instance");
-            if (productInstance != null) productId = (String) productInstance.get("productId");
-            if (UtilValidate.isEmpty(productId)) {
-                return ServiceUtil.returnError("missing product or productId");
-            }
-        }
-        boolean manual = Boolean.TRUE.equals(context.get("manual"));
-        
-        boolean indexed = false;
-        Boolean webappInitPassed = null;
-        boolean skippedDueToWebappInit = false;
-        
-        if (manual || SolrUtil.isSolrEcaEnabled()) {
-            webappInitPassed = SolrUtil.isSolrEcaWebappInitCheckPassed();
-            if (webappInitPassed) {
-                // NOTE: log this as info because it's the only log line
-                Debug.logInfo("Solr: removeFromSolr: Removing productId '" + productId + "' from index", module);
-
-                try {
-                    HttpSolrClient client = SolrUtil.getHttpSolrClient((String) context.get("core"));
-                    client.deleteByQuery("productId:" + SolrExprUtil.escapeTermFull(productId));
-                    client.commit();
-                    result = ServiceUtil.returnSuccess();
-                } catch (Exception e) {
-                    Debug.logError(e, "Solr: removeFromSolr: " + e.getMessage(), module);
-                    result = ServiceUtil.returnError(e.toString());
-                }
-            } else {
-                if (Debug.verboseOn()) {
-                    final String statusMsg = "Solr webapp not available; skipping removal for productId '" + productId + "'";
-                    Debug.logVerbose("Solr: removeFromSolr: " + statusMsg, module);
-                }
-                result = ServiceUtil.returnSuccess();
-                skippedDueToWebappInit = true;
-            }
+        if (Boolean.FALSE.equals(forceAdd)) {
+            result = removeFromSolrCore(dctx, context, productId);
         } else {
-            if (Debug.verboseOn()) {
-                final String statusMsg = "Solr ECA indexing disabled; skipping removal for productId '" + productId + "'";
-                Debug.logVerbose("Solr: removeFromSolr: " + statusMsg, module);
-            }
-            result = ServiceUtil.returnSuccess();
-        }
-        
-        if (!manual && !indexed && UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.eca.markDirty.enabled", false)) {
-            boolean markDirtyNoWebappCheck = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.eca.markDirty.noWebappCheck", false);
-            if (!(markDirtyNoWebappCheck && skippedDueToWebappInit)) {
-                if (Debug.verboseOn()) {
-                    final String statusMsg = "Did not remove productId '" + productId + "'; marking SOLR data as dirty (old)";
-                    Debug.logVerbose("Solr: removeFromSolr: " + statusMsg, module);
+            GenericValue product;
+            if (productInst instanceof GenericValue) {
+                product = (GenericValue) productInst;
+            } else {
+                try {
+                    product = dctx.getDelegator().findOne("Product", UtilMisc.toMap("productId", productId), false);
+                } catch (Exception e) {
+                    Debug.logError(e, "Solr: addToSolr: " + e.getMessage(), module);
+                    return ServiceUtil.returnError(e.toString());
                 }
-                SolrUtil.setSolrDataStatusId(delegator, "SOLR_DATA_OLD", false);
+            }
+            if (Boolean.TRUE.equals(forceAdd)) {
+                if (product == null) {
+                    ServiceUtil.returnError("Product not found for productId: " + productId);
+                }
+                result = addToSolrCore(dctx, context, product, productId);
+            } else {
+                if (product != null) {
+                    if (Debug.verboseOn()) Debug.logVerbose("Solr: updateToSolr: productId '" + productId + "' found in system; running solr add", module); 
+                    result = addToSolrCore(dctx, context, product, productId);
+                } else {
+                    if (Debug.verboseOn()) Debug.logVerbose("Solr: updateToSolr: productId '" + productId + "' not found in system; running solr remove", module); 
+                    result = removeFromSolrCore(dctx, context, productId);
+                }
             }
         }
-        
         return result;
+    }
+    
+    /**
+     * Registers an updateToSolr call at the end of the transaction using global-commit event.
+     * <p>
+     * NOTE: the checking loop below may not currently handle all possible cases imaginable, 
+     * but should cover the ones we're using.
+     */
+    private static Map<String, Object> registerUpdateToSolrForTxCore(DispatchContext dctx, Map<String, Object> context, Boolean forceAdd, String productId, Map<String, Object> productInst) {
+        try {
+            LocalDispatcher dispatcher = dctx.getDispatcher();
+            ServiceSyncRegistrations regs = dispatcher.getServiceSyncRegistrations();
+
+            List<ServiceSyncRegistration> unregList = null;
+            for(ServiceSyncRegistration reg : regs.getCommitRegistrationsForService("updateToSolr")) {
+                Map<String, ?> regServCtx = reg.getContext();
+                if (productId.equals(regServCtx.get("productId"))) {
+                    Boolean regServAction = updateToSolrActionMap.get(regServCtx.get("action"));
+                    if (regServAction == null) {
+                        // already registered
+                        return ServiceUtil.returnSuccess("updateToSolr already registered to run at transaction global-commit for productId '" + productId + ")");
+                    } else {
+                        if (regServAction == forceAdd) {
+                            // already registered
+                            return ServiceUtil.returnSuccess("updateToSolr already registered to run at transaction global-commit for productId '" + productId + ")");
+                        } else {
+                            // we will have to unregister
+                            if (unregList == null) unregList = new ArrayList<>();
+                            unregList.add(reg);
+                        }
+                    }
+                }
+            }
+            if (unregList != null) {
+                for(ServiceSyncRegistration reg : unregList) {
+                    regs.removeService(reg);
+                }
+            }
+            
+            // register the service
+            Map<String, Object> servCtx = dctx.makeValidContext("updateToSolr", ModelService.IN_PARAM, context);
+            // IMPORTANT: DO NOT PASS AN INSTANCE; use productId to force updateToSolr to re-query the Product
+            // after transaction committed
+            servCtx.remove("instance");
+            servCtx.put("productId", productId);
+            servCtx.put("action", getUpdateToSolrAction(forceAdd));
+            regs.addCommitService(dctx, "updateToSolr", null, servCtx, false, false);
+            
+            return ServiceUtil.returnSuccess("Registered updateToSolr to run at transaction global-commit for productId '" + productId + ")");
+        } catch (Exception e) {
+            final String errMsg = "Could not register updateToSolr to run at transaction global-commit for product '" + productId + "'";
+            Debug.logError(e, "Solr: registerUpdateToSolr: " + productId, module);
+            return ServiceUtil.returnError(errMsg);
+        }
     }
 
     /**

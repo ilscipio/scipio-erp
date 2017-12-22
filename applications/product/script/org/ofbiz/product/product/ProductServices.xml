@@ -1149,6 +1149,21 @@ under the License.
         <remove-by-and entity-name="ProductConfigStats" map="prodIdMap"/>
         <remove-by-and entity-name="ConfigOptionProductOption" map="prodIdMap"/>
         
+        <remove-by-and entity-name="GoodIdentification" map="prodIdMap"/>
+        
+        <!-- According to Ofbiz schema, it is illegal to remove this, so...
+        <entity-and entity-name="InventoryItem" list="inventoryItemList">
+            <field-map field-name="productId" from-field="prodIdMap.productId"/>
+        </entity-and>
+        <iterate list="inventoryItemList" entry="inventoryItem">
+            <remove-related relation-name="InventoryItemDetail" value-field="inventoryItem"/>
+            <remove-value value-field="inventoryItem"/>
+        </iterate>
+        <remove-by-and entity-name="InventoryItemTempRes" map="prodIdMap"/>
+        -->
+         
+        <remove-by-and entity-name="ProductPaymentMethodType" map="prodIdMap"/>
+
         <!-- TODO: REVIEW: 
             FixedAsset -> instanceOfProductId
             FixedAssetProduct
@@ -1186,13 +1201,7 @@ under the License.
             ProductFacilityLocation
             ProductFeatureAppl
             ProductFeatureApplAttr
-            
-            InventoryItem
-            InventoryItemTempRes
-            ProductPaymentMethodType
-            
-            GoodIdentification
-            
+
             ProductGlAccount
             ProductKeyword
             ProductMeter

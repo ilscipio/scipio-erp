@@ -224,7 +224,20 @@ public class TransactionUtil implements Status {
             return true;
         }
     }
-
+    
+    /**
+     * SCIPIO: Returns true if transaction is in place; false if no transaction in place or
+     * if error determining.
+     * Added 2017-12-22.
+     */
+    public static boolean isTransactionInPlaceSafe() {
+        try {
+            return isTransactionInPlace();
+        } catch(Exception e) {
+            Debug.logError("Could not get transaction status: " + e.getMessage(), module);
+            return false;
+        }
+    }
 
     /** Commits the transaction in the current thread IF transactions are available
      *  AND if beganTransaction is true

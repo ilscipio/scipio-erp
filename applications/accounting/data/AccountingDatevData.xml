@@ -28,10 +28,28 @@ under the License.
 
     <!-- DATEV DATA CATEGORIES -->
     <DatevDataCategory dataCategoryId="BUCHUNGSSTAPEL" dataCategoryName="Buchungsstapel" dataCategoryClass="com.ilscipio.scipio.accounting.external.datev.category.DatevBuchungsstapel" description=""/>
-    <DatevDataCategory dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" dataCategoryName="DebitorenKreditorenStammdaten" dataCategoryClass="com.ilscipio.scipio.accounting.external.datev.category.DatevDebitorenKreditorenStammdaten" description=""/>
+    <DatevDataCategory dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" dataCategoryName="Debitoren Kreditoren Stammdaten" dataCategoryClass="com.ilscipio.scipio.accounting.external.datev.category.DatevDebitorenKreditorenStammdaten" description=""/>
     <DatevDataCategory dataCategoryId="KONTENBESCHRIFTUNGEN" dataCategoryName="Kontenbeschriftungen" dataCategoryClass="com.ilscipio.scipio.accounting.external.datev.category.DatevKontenbeschriftungen" description=""/>
     <DatevDataCategory dataCategoryId="TEXTSCHLUSSEL" dataCategoryName="Textschlussel" dataCategoryClass="com.ilscipio.scipio.accounting.external.datev.category.DatevTextschlussel" description=""/>
     <DatevDataCategory dataCategoryId="DIVERSE_ADRESSEN" dataCategoryName="DiverseAdressen" dataCategoryClass="com.ilscipio.scipio.accounting.external.datev.category.DatevDiverseAdressen" description=""/>
+    
+    <!-- DATEV GENERAL SETTINGS -->
+    <DatevGeneralSetting dataCategoryId="BUCHUNGSSTAPEL" charset="Windows-1252" recordLayout="variable" fieldSeparator=";" thousandsSeparator="" decimalSeparator="," endOfRecordSeparator="" dateFormat="ddMM" headerRow="Y">
+        <textDelimiter><![CDATA["]]></textDelimiter>
+    </DatevGeneralSetting>
+    <DatevGeneralSetting dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" charset="Windows-1252" recordLayout="variable" fieldSeparator=";" thousandsSeparator="." decimalSeparator="," endOfRecordSeparator="" dateFormat="ddMMyyyy" headerRow="Y">
+        <textDelimiter><![CDATA["]]></textDelimiter>
+    </DatevGeneralSetting>
+    <DatevGeneralSetting dataCategoryId="KONTENBESCHRIFTUNGEN" charset="Windows-1252" recordLayout="variable" fieldSeparator=";" thousandsSeparator="" decimalSeparator="" endOfRecordSeparator="" dateFormat="" headerRow="Y">
+        <textDelimiter><![CDATA["]]></textDelimiter>
+    </DatevGeneralSetting>
+    <DatevGeneralSetting dataCategoryId="TEXTSCHLUSSEL" charset="Windows-1252" recordLayout="variable" fieldSeparator=";" thousandsSeparator="" decimalSeparator="" endOfRecordSeparator="" dateFormat="" headerRow="Y">
+        <textDelimiter><![CDATA["]]></textDelimiter>
+    </DatevGeneralSetting>
+    <DatevGeneralSetting dataCategoryId="DIVERSE_ADRESSEN" charset="Windows-1252" recordLayout="variable" fieldSeparator=";" thousandsSeparator="." decimalSeparator="," endOfRecordSeparator="" dateFormat="ddMMyyyy" headerRow="Y">
+        <textDelimiter><![CDATA["]]></textDelimiter>
+    </DatevGeneralSetting>
+    
     
     <!-- DATEV METADATA FIELDS -->
     <DatevMetadata metadataId="DATEV-Format-KZ" typeEnumId="FIELD_TYPE_TEXT" maxLength="4" sequenceNum="1">

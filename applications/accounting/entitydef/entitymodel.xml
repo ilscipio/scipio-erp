@@ -4328,6 +4328,24 @@ under the License.
             <key-map field-name="dataCategoryId"/>
         </relation>
   	</entity>
+
+    <entity entity-name="DatevGeneralSetting" package-name="com.ilscipio.scipio.accounting.external.datev"
+        title="DATEV -  General settings of the ASCII data format">
+        <field name="dataCategoryId" type="id-long"></field>
+        <field name="charset" type="short-varchar"></field>
+        <field name="recordLayout" type="short-varchar"></field>
+        <field name="fieldSeparator" type="short-varchar"></field>
+        <field name="thousandsSeparator" type="short-varchar"></field>
+        <field name="decimalSeparator" type="short-varchar"></field>        
+        <field name="endOfRecordSeparator" type="short-varchar"></field>
+        <field name="dateFormat" type="short-varchar"></field>
+        <field name="headerRow" type="indicator"></field>
+        <field name="textDelimiter" type="short-varchar"></field>
+        <prim-key field="dataCategoryId"/>
+        <relation rel-entity-name="DatevDataCategory" fk-name="DATEVDATACATEGORYSETTINGS" type="one">
+            <key-map field-name="dataCategoryId" />
+        </relation>
+    </entity>
     
      <entity entity-name="DatevMetadata"
             package-name="com.ilscipio.scipio.accounting.external.datev"

@@ -32,8 +32,6 @@ import javolution.util.FastMap;
 public class DatevServices {
 
     public final static String module = DatevServices.class.getName();
-    public final static Character DEFAULT_DELIMITER = ';';
-    public final static Character DEFAULT_QUOTE = '\"';
 
     /**
      * 
@@ -61,16 +59,19 @@ public class DatevServices {
         String errorMessage = null;
         try {
             // Initialize helper
-            datevHelper = new DatevHelper(delegator, orgPartyId, dataCategory);
-
-            Character delimiter = DEFAULT_DELIMITER;
-            if (UtilValidate.isNotEmpty(context.get("delimiter")))
-                delimiter = ((String) context.get("delimiter")).charAt(0);
-            Character quote = DEFAULT_QUOTE;
-            if (UtilValidate.isNotEmpty(context.get("quote")))
-                quote = ((String) context.get("quote")).charAt(0);
-            Boolean hasMetaHeader = (Boolean) context.get("hasMetaHeader");
-            Boolean hasHeader = (Boolean) context.get("hasHeader");
+            datevHelper = new DatevHelper(delegator, orgPartyId, dataCategory);            
+            
+            GenericValue settings = datevHelper.getDataCategorySettings();
+            
+            Character fieldSeparator = null;
+            if (UtilValidate.isNotEmpty(settings.get("fieldSeparator")))
+                fieldSeparator = settings.getString("fieldSeparator").charAt(0);
+                
+                
+            Character textDelimiter = null;
+            if (UtilValidate.isNotEmpty(settings.get("textDelimiter")))
+                textDelimiter = settings.getString("textDelimiter").charAt(0);
+            
 
             if (Debug.isOn(Debug.VERBOSE)) {
                 Debug.log("Content Type :" + contentType);
@@ -116,7 +117,7 @@ public class DatevServices {
             // Initialize CSV format
             fileBytes.rewind();
             csvReader = new BufferedReader(new StringReader(detectedCharset.decode(fileBytes).toString()));
-            CSVFormat fmt = CSVFormat.newFormat(delimiter).withQuote(quote).withQuoteMode(QuoteMode.NON_NUMERIC);
+            CSVFormat fmt = CSVFormat.newFormat(fieldSeparator).withQuote(textDelimiter).withQuoteMode(QuoteMode.NON_NUMERIC);
 
             // Find out if CSV has a meta header so we can remove it and loop
             // only real records

@@ -138,7 +138,10 @@ public abstract class AbstractDatevDataCategory {
     }
 
     protected boolean validateField(GenericValue fieldDefinition, String value) {
-        String fieldName = fieldDefinition.getString("fieldName");
+        String fieldName = "";
+        if (fieldDefinition.getModelEntity().isField("fieldName")) {
+            fieldName = fieldDefinition.getString("fieldName");
+        }
         String type = fieldDefinition.getString("typeEnumId");
         try {
             long length = -1;

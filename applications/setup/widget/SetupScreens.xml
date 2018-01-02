@@ -607,27 +607,7 @@
 	                                        		<@tab id="fiscalPeriodsTab" title="Configure Fiscal Periods"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditFiscalPeriods"/></@tab>
 	                                        		<@tab id="accountingTransactionsTab" title="Configure Accounting Transactions"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditAccountingTransactions"/></@tab>
 	                                        		<@tab id="journalTab" title="Configure Journal"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditJournals"/></@tab>
-	                                        	</@tabs>
-                                                <#if accountingData.tabId?has_content>
-                                                    <@script>
-                                                    	jQuery(document).ready(function() {   
-                                                            console.log("TAB ID ====> ${accountingData.tabId}");                                                        
-                                                            try {
-                                                                jQuery("#${accountingData.tabId}").tab('show');
-                                                            } catch (err) {
-                                                                console.log("err 1 ===> " + err);
-                                                                try {
-                                                                    jQuery("#${accountingData.tabId}").on('toggled', function(event, tab) {
-                                                                        jQuery(tab).trigger('click');
-                                                                        console.log("tab =======> " + tab);
-                                                                    });
-                                                                } catch (err) {
-                                                                    console.log("err 2 ===> " + err);
-                                                                }
-                                                            }
-                                                        });
-                                                    </@script>
-                                                </#if>
+	                                        	</@tabs>                                                
                                         	]]></html-template></html></platform-specific>
                                         </screenlet>
                                     </widgets>
@@ -735,6 +715,7 @@
         <section>
             <actions>
                 <!-- <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditJournals.groovy"/>      -->           
+                <entity-and list="datevDataCategories" entity-name="DatevDataCategory"></entity-and>
             </actions>
             <widgets>
             	<section>

@@ -14,19 +14,12 @@
    <@field type="hidden" name="orgPartyId" value=(params.orgPartyId)!/>
    <@field type="hidden" name="topGlAccountId" value=(params.topGlAccountId)!/>
    <@field type="hidden" name="tabId" value="accountingTransactionsTab" />
-   <@field type="select" name="dataCategoryId" label=uiLabelMap.SetupAccountingDatevDataCategory>   	
-	<option value="BUCHUNGSSTAPEL">${uiLabelMap.SetupAccountingDatevDataCategoryBuchungsstapel}</option>
-	<option value="DEBITOREN_KREDITOREN_STAMMDATEN">${uiLabelMap.SetupAccountingDatevDataCategoryDebitorenKreditorenStammdaten}</option>
-	<option value="KONTENBESCHRIFTUNGEN">${uiLabelMap.SetupAccountingDatevDataCategoryKontenbeschriftungen}</option>
-	<option value="TEXTSCHLUSSEL">${uiLabelMap.SetupAccountingDatevDataCategoryTextschlussel}</option>
-	<option value="DIVERSEADRESSEN">${uiLabelMap.SetupAccountingDatevDataCategoryDiverseAdressen}</option>	
+   <@field type="select" name="dataCategoryId" label=uiLabelMap.SetupAccountingDatevDataCategory>
+	   <#list datevDataCategories as datevDataCategory>
+	   		<option value="${datevDataCategory.dataCategoryId}">${datevDataCategory.dataCategoryName}</option>
+	   </#list>	
    </@field>
    <hr/>
-   <@field type="input" name="delimiter" size="3" maxLength="1" label=uiLabelMap.SetupAccountingDatevCSVDelimiter />
-   <@field type="input" name="quote" size="3" maxLength="1" label=uiLabelMap.SetupAccountingDatevCSVQuote />
-   <@field type="checkbox" name="hasMetaHeader" label=uiLabelMap.SetupAccountingDatevCSVDelimiter />
-   <@field type="checkbox" name="hasHeader" label=uiLabelMap.SetupAccountingDatevCSVDelimiter />
-   
    <@field type="file" name="uploadedFile" label=uiLabelMap.SetupAccountingDatevImportCSV />
 </#macro>
 <#macro eatImportElsterConfirmFields args={}>
@@ -139,6 +132,33 @@
 	    });
 	    return result;
 	};
+	
+	var runAjax = function(data) {  
+		console.log("submitting form");
+		jQuery.ajax({
+            url: '<@ofbizUrl>setupImportDatevDataCategory</@ofbizUrl>',
+            data: data,				            
+            async: true,
+            type: "POST",
+            contentType: false,
+			processData: false,
+			enctype: 'multipart/form-data',
+            success: function(data) {
+                if (data._ERROR_MESSAGE_ || data._ERROR_MESSAGE_LIST_) {
+                    if (data._ERROR_MESSAGE_) {
+                        console.log(data._ERROR_MESSAGE_);
+                    } else {
+                        console.log(data._ERROR_MESSAGE_LIST_[0]);
+                    }
+                } else {
+                    console.log("ajax call success.");
+                }
+            },
+            error: function() {
+                console.log("error");
+            }
+    	});
+	}
 
 	jQuery(document).ready(function() {
 		jQuery('.eat-menu-action').click(function(){
@@ -148,27 +168,22 @@
 			if (typeAction && typeAction.length == 3) {			
 	            var modalElem = jQuery('#${eatDialogIdModalPrefix}' + typeAction[1] + '-' + typeAction[2]);	             
 	            showConfirmMsg(null, confirmMsg, confirmExtraMsg, modalElem, function() {
-	            	
-	            
 	            	// check if the modal had any params, dump them into params
 	            	var containsFile = false;
+	            	var data = new FormData(jQuery('form.eat-dialogopts-form')[0]);
+	            	
 	                jQuery('form.eat-dialogopts-form :input', modalElem).each(function(i, input) {	                	
 	                    input = jQuery(input);
-	                    // console.log("input type ===> " + input.attr('type'));
-	                    /*var name = input.prop('name');
-	                    if (name) params[name] = input.val();*/
 	                    if (!containsFile && input.attr('type') == "file") {
-	                    	containsFile = true;
+	                    	containsFile = true;	                    	
 	                    }
 	                });
 	                if (containsFile) {
-	                	// console.log("containsFile");
 	                	jQuery('form.eat-dialogopts-form', modalElem).attr('enctype', 'multipart/form-data');
 	                }
 	                
+					jQuery('form.eat-dialogopts-form', modalElem).submit(runAjax(data));
 	                
-	                
-	                jQuery('form.eat-dialogopts-form', modalElem).submit();
 	            });
             }
 		});

@@ -29,9 +29,7 @@ under the License.
         
         <entity-one value-field="dataCategory" entity-name="DatevDataCategory">
             <field-map field-name="dataCategoryId"/>
-        </entity-one>
-
-        <log level="always" message="dataCategoryId ==========> ${dataCategoryId}" />                
+        </entity-one>                        
                 
         <if-not-empty field="dataCategory">
             <set field="importDatevCtx.dataCategory" from-field="dataCategory" />

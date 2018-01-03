@@ -59,19 +59,17 @@ public class DatevServices {
         String errorMessage = null;
         try {
             // Initialize helper
-            datevHelper = new DatevHelper(delegator, orgPartyId, dataCategory);            
-            
+            datevHelper = new DatevHelper(delegator, orgPartyId, dataCategory);
+
             GenericValue settings = datevHelper.getDataCategorySettings();
-            
+
             Character fieldSeparator = null;
             if (UtilValidate.isNotEmpty(settings.get("fieldSeparator")))
                 fieldSeparator = settings.getString("fieldSeparator").charAt(0);
-                
-                
+
             Character textDelimiter = null;
             if (UtilValidate.isNotEmpty(settings.get("textDelimiter")))
                 textDelimiter = settings.getString("textDelimiter").charAt(0);
-            
 
             if (Debug.isOn(Debug.VERBOSE)) {
                 Debug.log("Content Type :" + contentType);
@@ -96,7 +94,9 @@ public class DatevServices {
 
                 String mediaTypeStr = mediaType.getType().concat("/").concat(mediaType.getSubtype());
                 if (!contentType.equals("text/csv") && !mediaTypeStr.equals("text/csv")) {
-                    ServiceUtil.returnError("File [" + fileName + "] is not a valid CSV file.");
+                    String notificationMessage = "File [" + fileName + "] is not a valid CSV file.";
+                    datevHelper.addStat(notificationMessage, NotificationScope.GLOBAL, NotificationLevel.FATAL);
+                    throw new DatevException(notificationMessage);
                 } else if (!contentType.equals(mediaTypeStr)) {
                     String notificationMessage = "File content type  [" + contentType + "] differs from the content type found by Tika [" + mediaType.getType() + "/"
                             + mediaType.getSubtype() + "]";
@@ -107,16 +107,27 @@ public class DatevServices {
             fileBytes.rewind();
 
             // Find charset
-            Charset detectedCharset = TikaUtil.findCharsetSafe(fileBytes, fileName, UniversalEncodingDetector.class, mediaType);
-            if (UtilValidate.isEmpty(detectedCharset)) {
-                String systemEncoding = System.getProperty("file.encoding");
-                detectedCharset = Charset.forName(systemEncoding);
+            Charset charset = TikaUtil.findCharsetSafe(fileBytes, fileName, UniversalEncodingDetector.class, mediaType);
+            String expectedCharset = settings.getString("charset");
+            if ((UtilValidate.isNotEmpty(charset) && UtilValidate.isNotEmpty(expectedCharset)) && !charset.name().equalsIgnoreCase(expectedCharset)) {
+                String notificationMessage = "Detected charset [" + charset.name() + "] doesn't match expected charset   [" + expectedCharset + "].";
+                datevHelper.addStat(notificationMessage, NotificationScope.GLOBAL, NotificationLevel.FATAL);
+                throw new DatevException(notificationMessage);
+            } else if ((UtilValidate.isEmpty(charset) && UtilValidate.isNotEmpty(expectedCharset))) {
+                String notificationMessage = "Unable to auto detect charset, using [" + expectedCharset + "]. Note that this may produce unexpected decoding issues.";
+                datevHelper.addStat(notificationMessage, NotificationScope.GLOBAL, NotificationLevel.WARNING);
+                charset = Charset.forName(expectedCharset);
+            } else if (UtilValidate.isEmpty(charset) && UtilValidate.isEmpty(expectedCharset)) {
+                String notificationMessage = "Unable to auto detect charset, also there isn't a default charset found for [" + dataCategory.getString("dataCategoryName")
+                        + "]. Can't decode file.";
+                datevHelper.addStat(notificationMessage, NotificationScope.GLOBAL, NotificationLevel.FATAL);
+                throw new DatevException(notificationMessage);
             }
             fileBytes.rewind();
 
             // Initialize CSV format
             fileBytes.rewind();
-            csvReader = new BufferedReader(new StringReader(detectedCharset.decode(fileBytes).toString()));
+            csvReader = new BufferedReader(new StringReader(charset.decode(fileBytes).toString()));
             CSVFormat fmt = CSVFormat.newFormat(fieldSeparator).withQuote(textDelimiter).withQuoteMode(QuoteMode.NON_NUMERIC);
 
             // Find out if CSV has a meta header so we can remove it and loop
@@ -131,7 +142,7 @@ public class DatevServices {
                         csvReader.reset();
                     } else {
                         csvReader.close();
-                        csvReader = new BufferedReader(new StringReader(detectedCharset.decode(fileBytes).toString()));
+                        csvReader = new BufferedReader(new StringReader(charset.decode(fileBytes).toString()));
                     }
                 }
             } catch (Exception e) {

@@ -269,9 +269,9 @@
 	        <#-- MENU -->
 	        <ul class="side-nav">		       	
 	        	<li>
-	       			<@menuitem id="eat-datev-import" class="+eat-menu-action" type="link" href="javascript:void(0);" text=uiLabelMap.SetupAccountingImportDatev />
+	       			<@menuitem contentId="eat-datev-import" class="+eat-menu-action" type="link" href="javascript:void(0);" text=uiLabelMap.SetupAccountingImportDatev />
 	       			<hr/>
-	       			<@menuitem id="eat-elster-import" class="+eat-menu-action" type="link" href="javascript:void(0);" text=uiLabelMap.SetupAccountingImportElster />
+	       			<@menuitem contentId="eat-elster-import" class="+eat-menu-action" type="link" href="javascript:void(0);" text=uiLabelMap.SetupAccountingImportElster />
 	       		</li>
 	       	</ul>
 	      </@section>

@@ -57,8 +57,8 @@
             </#if>
         </@field>
         <@menu type="button" id="setupUser-selectUser-submit-buttons" class="+setupUser-selectUser-submit-buttons">
-          <@menuitem type="link" id="setupUser-selectUser-submit" href="javascript:void(0);" text=uiLabelMap.CommonSelect class="+${styles.action_run_session!} ${styles.action_update!}"/>
-          <@menuitem type="link" id="setupUser-selectUser-submit-continue" href="javascript:void(0);" text=uiLabelMap.SetupSelectAndContinue class="+${styles.action_run_session!} ${styles.action_continue!}"/>
+          <@menuitem type="link" contentId="setupUser-selectUser-submit" href="javascript:void(0);" text=uiLabelMap.CommonSelect class="+${styles.action_run_session!} ${styles.action_update!}"/>
+          <@menuitem type="link" contentId="setupUser-selectUser-submit-continue" href="javascript:void(0);" text=uiLabelMap.SetupSelectAndContinue class="+${styles.action_run_session!} ${styles.action_continue!}"/>
         </@menu>
     </@field>
   </@form>

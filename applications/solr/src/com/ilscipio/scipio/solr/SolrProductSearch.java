@@ -191,6 +191,20 @@ public abstract class SolrProductSearch {
     
     private static Map<String, Object> updateToSolrCore(DispatchContext dctx, Map<String, Object> context, Boolean forceAdd, String productId, Map<String, Object> productInst) {
         Map<String, Object> result;
+        
+        // SPECIAL: 2018-01-03: do not update to Solr if the current transaction marked as rollback,
+        // because the rollbacked data may be (even likely to be) product data that we don't want in index
+        // FIXME?: this cannot handle transaction rollbacks triggered after us! Some client diligence still needed for that...
+        try {
+            if (TransactionUtil.isTransactionInPlace() && TransactionUtil.getStatus() == TransactionUtil.STATUS_MARKED_ROLLBACK) {
+                Debug.logWarning("Solr: updateToSolr: Current transaction is marked for rollback; aborting solr index update", module);
+                return ServiceUtil.returnFailure("Current transaction is marked for rollback; aborting solr index update");
+            }
+        } catch (Exception e) {
+            Debug.logError("Solr: updateToSolr: Failed to check transaction status; aborting solr index update: " + e.getMessage(), module);
+            return ServiceUtil.returnError("Failed to check transaction status; aborting solr index update");
+        }
+            
         if (Boolean.FALSE.equals(forceAdd)) {
             result = removeFromSolrCore(dctx, context, productId);
         } else {

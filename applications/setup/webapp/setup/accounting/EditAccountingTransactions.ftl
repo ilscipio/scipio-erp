@@ -104,11 +104,13 @@
         if (modalElem && modalElem.length) {
             jQuery('.eat-dialogmsg', modalElem).html(msg);
             jQuery('.eat-dialogextramsg', modalElem).html(extraMsg || '');
-            jQuery('.eat-dialogbtn', modalElem).click(function() {
+            jQuery('.eat-dialogbtn', modalElem).click(function(e) {            	
+            	console.log("button clicked " + e.namespace);
                 closeModal(modalElem);
                 var selectedName = extractClassNameSuffix(jQuery(this), 'eat-dialogbtn-');
                 continueCallback(selectedName);
-            });
+                e.preventDefault();
+            });            
             openModal(modalElem);
         } else {
             var result = confirm(msg);
@@ -133,8 +135,7 @@
 	    return result;
 	};
 	
-	var runAjax = function(data) {  
-		console.log("submitting form");
+	var runAjax = function(data) {
 		jQuery.ajax({
             url: '<@ofbizUrl>setupImportDatevDataCategory</@ofbizUrl>',
             data: data,				            
@@ -143,21 +144,21 @@
             contentType: false,
 			processData: false,
 			enctype: 'multipart/form-data',
-            success: function(data) {
+            success: function(d) {
                 if (data._ERROR_MESSAGE_ || data._ERROR_MESSAGE_LIST_) {
                     if (data._ERROR_MESSAGE_) {
-                        console.log(data._ERROR_MESSAGE_);
+                        console.log(d._ERROR_MESSAGE_);
                     } else {
-                        console.log(data._ERROR_MESSAGE_LIST_[0]);
+                        console.log(d._ERROR_MESSAGE_LIST_[0]);
                     }
                 } else {
-                    console.log("ajax call success.");
+                    console.log("ajax call success. DATA: " + d);
                 }
             },
             error: function() {
                 console.log("error");
             }
-    	});
+    	});    	
 	}
 
 	jQuery(document).ready(function() {
@@ -167,23 +168,25 @@
 			var typeAction = this.id.split('-');
 			if (typeAction && typeAction.length == 3) {			
 	            var modalElem = jQuery('#${eatDialogIdModalPrefix}' + typeAction[1] + '-' + typeAction[2]);	             
-	            showConfirmMsg(null, confirmMsg, confirmExtraMsg, modalElem, function() {
-	            	// check if the modal had any params, dump them into params
-	            	var containsFile = false;
-	            	var data = new FormData(jQuery('form.eat-dialogopts-form')[0]);
-	            	
-	                jQuery('form.eat-dialogopts-form :input', modalElem).each(function(i, input) {	                	
-	                    input = jQuery(input);
-	                    if (!containsFile && input.attr('type') == "file") {
-	                    	containsFile = true;	                    	
-	                    }
-	                });
-	                if (containsFile) {
-	                	jQuery('form.eat-dialogopts-form', modalElem).attr('enctype', 'multipart/form-data');
-	                }
-	                
-					jQuery('form.eat-dialogopts-form', modalElem).submit(runAjax(data));
-	                
+	            showConfirmMsg(null, confirmMsg, confirmExtraMsg, modalElem, function(action) {
+	            	console.log("action ===> " + action);
+	            	if (action == 'upload') {
+		            	// check if the modal had any params, dump them into params
+		            	var containsFile = false;
+		            	var data = new FormData(jQuery('form.eat-dialogopts-form')[0]);
+		            	
+		                jQuery('form.eat-dialogopts-form :input', modalElem).each(function(i, input) {	                	
+		                    input = jQuery(input);
+		                    if (!containsFile && input.attr('type') == "file") {
+		                    	containsFile = true;	                    	
+		                    }
+		                });
+		                if (containsFile) {
+		                	jQuery('form.eat-dialogopts-form', modalElem).attr('enctype', 'multipart/form-data');
+		                }
+		                
+						runAjax(data);
+					}
 	            });
             }
 		});
@@ -231,7 +234,7 @@
 	                <@heading>${action} ${objectType}</@heading>
 	                <@eatDefActionInnerContent props=props/>
 	                <div class="modal-footer ${styles.text_right!}">	                   
-	                   <a class="eat-dialogbtn eat-dialogbtn-cancel ${styles.button!} btn-ok">${uiLabelMap.CommonCancel}</a>
+	                   <a class="eat-dialogbtn eat-dialogbtn-cancel ${styles.button!} btn-cancel">${uiLabelMap.CommonCancel}</a>
 	                   <#if action == "import">
 	                   	<a class="eat-dialogbtn eat-dialogbtn-upload ${styles.button!} btn-ok">${uiLabelMap.CommonUpload}</a>
 	                   </#if>

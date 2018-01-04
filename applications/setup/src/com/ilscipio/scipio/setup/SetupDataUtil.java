@@ -264,13 +264,11 @@ public abstract class SetupDataUtil {
 
         String orgPartyId = (String) params.get("orgPartyId");
         String topGlAccountId = (String) params.get("topGlAccountId");
-        
-        String tabId = (String) params.get("tabId");        
-        
+
         DynamicViewEntity dve = new DynamicViewEntity();
         dve.addMemberEntity("GAO", "GlAccountOrganization");
         dve.addMemberEntity("GA", "GlAccount");
-        dve.addViewLink("GA", "GAO", false, ModelKeyMap.makeKeyMapList("glAccountId"));        
+        dve.addViewLink("GA", "GAO", false, ModelKeyMap.makeKeyMapList("glAccountId"));
         dve.addAlias("GA", "glAccountId");
         dve.addAlias("GA", "parentGlAccountId");
         dve.addAlias("GAO", "organizationPartyId");
@@ -282,7 +280,7 @@ public abstract class SetupDataUtil {
         List<EntityCondition> dveConditions = FastList.newInstance();
         dveConditions.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "INTERNAL_ORGANIZATIO"));
         dveConditions.add(EntityCondition.makeCondition("parentGlAccountId", EntityOperator.EQUALS, null));
-        
+
         List<GenericValue> glAccountAndOrganizations = EntityQuery.use(delegator).from(dve).where(EntityCondition.makeCondition(dveConditions, EntityOperator.AND))
                 .orderBy(UtilMisc.toList("fromDate")).queryList();
         GenericValue glAccountOrganization = null;
@@ -310,7 +308,7 @@ public abstract class SetupDataUtil {
                     GenericValue gao = glAccountAndOrganization.getRelatedOne("GlAccountOrganization", false);
                     if (!glAccountAndOrganization.get("glAccountId").equals(topGlAccountId)) {
                         Debug.logWarning("Setup: GL account '" + glAccountAndOrganization.getString("glAccountId") + "' not used; expiring", module);
-                        
+
                         gao.put("thruDate", UtilDateTime.nowTimestamp());
                         gao.store();
                     } else {
@@ -322,23 +320,23 @@ public abstract class SetupDataUtil {
             if (topGlAccount != null) {
                 result.put("coreCompleted", true);
                 boolean isAcctgPreferencesSet = false;
-                
+
                 if (UtilValidate.isEmpty(glAccountOrganization)) {
                     glAccountOrganization = delegator.makeValue("GlAccountOrganization", UtilMisc.toMap("glAccountId", topGlAccountId, "organizationPartyId", orgPartyId,
                             "roleTypeId", "INTERNAL_ORGANIZATIO", "fromDate", UtilDateTime.nowTimestamp()));
                     delegator.create(glAccountOrganization);
                 }
-                
+
                 GenericValue partyAcctgPreference = delegator.findOne("PartyAcctgPreference", false, UtilMisc.toMap("partyId", orgPartyId));
                 if (UtilValidate.isNotEmpty(partyAcctgPreference)) {
                     isAcctgPreferencesSet = true;
                     result.put("acctgPreferences", partyAcctgPreference);
                 }
-                
+
                 if (isAcctgPreferencesSet) {
                     result.put("complete", true);
                 }
-                
+
                 if (params.containsKey("datevImportDataCategory")) {
                     String datevImportDataCategory = (String) params.get("datevImportDataCategory");
                     if (UtilValidate.isNotEmpty(datevImportDataCategory)) {
@@ -350,10 +348,10 @@ public abstract class SetupDataUtil {
                         }
                     }
                 }
-                
+
                 result.put("topGlAccountId", topGlAccountId);
                 result.put("topGlAccount", topGlAccount);
-                result.put("tabId", tabId);
+
             }
         }
 

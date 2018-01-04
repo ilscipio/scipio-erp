@@ -63,8 +63,7 @@ under the License.
         </if-not-empty>
         
         <field-to-request field="multiPartMap.orgPartyId" request-name="orgPartyId" />
-        <field-to-request field="multiPartMap.topGlAccountId" request-name="topGlAccountId" />
-        <field-to-request field="multiPartMap.tabId" request-name="tabId" />
+        <field-to-request field="multiPartMap.topGlAccountId" request-name="topGlAccountId" />        
         
         <field-to-request field="dataCategoryId" />        
     </simple-method>

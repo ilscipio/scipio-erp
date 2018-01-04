@@ -1,6 +1,8 @@
 package com.ilscipio.scipio.accounting.external.datev.category;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +21,7 @@ import org.ofbiz.entity.condition.EntityJoinOperator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 
-import com.ilscipio.scipio.accounting.external.AbstractOperationResults;
+import com.ilscipio.scipio.accounting.external.BaseOperationResults;
 import com.ilscipio.scipio.accounting.external.BaseOperationStats;
 import com.ilscipio.scipio.accounting.external.BaseOperationStats.NotificationLevel;
 import com.ilscipio.scipio.accounting.external.BaseOperationStats.NotificationScope;
@@ -87,7 +89,7 @@ public abstract class AbstractDatevDataCategory {
 
     public abstract Class<? extends BaseOperationStats> getOperationStatsClass() throws DatevException;
 
-    public abstract Class<? extends AbstractOperationResults> getOperationResultsClass() throws DatevException;
+    public abstract Class<? extends BaseOperationResults> getOperationResultsClass() throws DatevException;
 
     public List<GenericValue> getDatevFieldDefinitions() {
         return datevFieldDefinitions;
@@ -122,10 +124,10 @@ public abstract class AbstractDatevDataCategory {
                 String metaHeaderValue = metaHeaderIter.next();
                 boolean isMetadataFieldValid = validateField(fieldDefinition, metaHeaderValue);
                 if (!isMetadataFieldValid) {
-                    datevHelper.addStat("Metadata header field [" + fieldDefinition.getString("fieldName") + "] is not valid for value <" + metaHeaderValue + ">",
+                    datevHelper.addStat("Metadata header field [" + fieldDefinition.getString("metadataId") + "] is not valid for value <" + metaHeaderValue + ">",
                             NotificationScope.META_HEADER, NotificationLevel.WARNING);
                 }
-                datevMetadataValues.put(fieldDefinition.getString("fieldName"), UtilMisc.toMap(metaHeaderValue, isMetadataFieldValid));
+                datevMetadataValues.put(fieldDefinition.getString("metadataId"), UtilMisc.toMap(metaHeaderValue, isMetadataFieldValid));
             }
             if (i > datevMetadataFieldsDefinitions.size() - 1) {
                 datevHelper.addStat("Metadata header size doesn't match the expected size [" + datevMetadataFieldsDefinitions.size() + "]", NotificationScope.META_HEADER,
@@ -138,7 +140,10 @@ public abstract class AbstractDatevDataCategory {
     }
 
     protected boolean validateField(GenericValue fieldDefinition, String value) {
-        String fieldName = fieldDefinition.getString("fieldName");
+        String fieldName = "";
+        if (fieldDefinition.getModelEntity().isField("fieldName")) {
+            fieldName = fieldDefinition.getString("fieldName");
+        }
         String type = fieldDefinition.getString("typeEnumId");
         try {
             long length = -1;
@@ -161,17 +166,13 @@ public abstract class AbstractDatevDataCategory {
             if (UtilValidate.isNotEmpty(fieldDefinition.get("required"))) {
                 required = fieldDefinition.getBoolean("required");
             }
-            boolean metadata = false;
-            if (UtilValidate.isNotEmpty(fieldDefinition.get("metadata"))) {
-                metadata = fieldDefinition.getBoolean("metadata");
-            }
 
             GenericValue fieldTypeEnum = fieldDefinition.getRelatedOne("DatevFieldTypeEnumeration", true);
             DatevFieldType datevFieldType = DatevFieldType.valueOf(fieldTypeEnum.getString("enumCode"));
 
             if (Debug.isOn(Debug.VERBOSE)) {
                 Debug.log("Validating datev field [" + fieldName + "]:" + "\r\n\t type: " + fieldTypeEnum.getString("enumCode") + "\r\n\t length: " + length + "\r\n\t scale: "
-                        + scale + "\r\n\t maxLength: " + maxLength + "\r\n\t format: " + format + "\r\n\t required: " + required + "\r\n\t metadata" + metadata);
+                        + scale + "\r\n\t maxLength: " + maxLength + "\r\n\t format: " + format + "\r\n\t required: " + required);
             }
 
             if (UtilValidate.isEmpty(value)) {
@@ -189,6 +190,7 @@ public abstract class AbstractDatevDataCategory {
                 return false;
             }
 
+            GenericValue settings = datevHelper.getDataCategorySettings();
             Object validatedValue = null;
             switch (datevFieldType) {
             case TEXT:
@@ -208,7 +210,17 @@ public abstract class AbstractDatevDataCategory {
                 validatedValue = Integer.valueOf(value);
                 break;
             case AMOUNT:
-                validatedValue = BigDecimal.valueOf(Double.valueOf(value));
+                DecimalFormatSymbols dfs = DecimalFormatSymbols.getInstance();
+                if (UtilValidate.isNotEmpty(settings.get("decimalSeparator"))) {
+                    dfs.setDecimalSeparator(settings.getString("decimalSeparator").charAt(0));
+                }
+                if (UtilValidate.isNotEmpty(settings.get("thousandsSeparator"))) {
+                    dfs.setGroupingSeparator(settings.getString("thousandsSeparator").charAt(0));
+                }
+                DecimalFormat df = new DecimalFormat();
+                df.setDecimalFormatSymbols(dfs);
+
+                validatedValue = BigDecimal.valueOf(df.parse(value).doubleValue());
                 if (UtilValidate.isNotEmpty(validatedValue) && UtilValidate.isNotEmpty(scale)) {
                     validatedValue = ((BigDecimal) validatedValue).setScale(Math.toIntExact(scale));
                 }

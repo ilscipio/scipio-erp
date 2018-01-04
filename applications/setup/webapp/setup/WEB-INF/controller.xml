@@ -188,14 +188,7 @@
         <event type="service" invoke="setupUpdatePartyAcctgPreference"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupAccounting"/>
-    </request-map>
-    <request-map uri="setupImportDatevDataCategory">
-        <security https="true" auth="true"/>
-        <event type="simple" path="component://accounting/script/com/ilscipio/scipio/accounting/datev/DatevEvents.xml" invoke="importDatevDataCategory"/>                                              
-        <!-- <event type="service" invoke="importDatevTransactionEntries"/> -->
-        <response name="success" type="view" value="SetupAccounting"/>
-        <response name="error" type="request" value="setupAccounting"/>
-    </request-map>
+    </request-map>    
     <request-map uri="setupExportDatevDataCategory">
         <security https="true" auth="true"/>
         <event type="simple" path="component://accounting/script/com/ilscipio/scipio/accounting/datev/DatevEvents.xml" invoke="exportDatevDataCategory"/>
@@ -424,6 +417,14 @@
     <request-map uri="getGlAccountExtendedData">
         <security https="true" auth="true"/>
         <event type="service" invoke="getGlAccountAndAssocs"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    
+    <!-- accounting datev CSV import requests -->
+    <request-map uri="setupImportDatevDataCategory">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://accounting/script/com/ilscipio/scipio/accounting/datev/DatevEvents.xml" invoke="importDatevDataCategory"/>
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>

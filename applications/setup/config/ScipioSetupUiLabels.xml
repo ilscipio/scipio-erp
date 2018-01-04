@@ -191,5 +191,12 @@
     </property>
     <property key="SetupAccountingImportElster">
         <value xml:lang="en">Import Elster</value>
+    </property>    
+    <property key="SetupAccountingDatevDataCategory">
+        <value xml:lang="en">Select Datev data category you wish to import</value>
     </property>
+    <property key="SetupAccountingDatevImportCSV">
+        <value xml:lang="en">Upload Datev CSV to import</value>
+    </property>
+    
 </resource>

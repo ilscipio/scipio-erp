@@ -13,24 +13,16 @@
 <#macro eatImportDatevConfirmFields args={}>
    <@field type="hidden" name="orgPartyId" value=(params.orgPartyId)!/>
    <@field type="hidden" name="topGlAccountId" value=(params.topGlAccountId)!/>
-   <@field type="hidden" name="tabId" value="accountingTransactionsTab" />
-   <@field type="select" name="dataCategoryId" label=uiLabelMap.SetupAccountingDatevDataCategory>   	
-	<option value="BUCHUNGSSTAPEL">${uiLabelMap.SetupAccountingDatevDataCategoryBuchungsstapel}</option>
-	<option value="DEBITOREN_KREDITOREN_STAMMDATEN">${uiLabelMap.SetupAccountingDatevDataCategoryDebitorenKreditorenStammdaten}</option>
-	<option value="KONTENBESCHRIFTUNGEN">${uiLabelMap.SetupAccountingDatevDataCategoryKontenbeschriftungen}</option>
-	<option value="TEXTSCHLUSSEL">${uiLabelMap.SetupAccountingDatevDataCategoryTextschlussel}</option>
-	<option value="DIVERSEADRESSEN">${uiLabelMap.SetupAccountingDatevDataCategoryDiverseAdressen}</option>	
+   <@field type="select" name="dataCategoryId" label=uiLabelMap.SetupAccountingDatevDataCategory>
+	   <#list datevDataCategories as datevDataCategory>
+	   		<option value="${datevDataCategory.dataCategoryId}">${datevDataCategory.dataCategoryName}</option>
+	   </#list>	
    </@field>
    <hr/>
-   <@field type="input" name="delimiter" size="3" maxLength="1" label=uiLabelMap.SetupAccountingDatevCSVDelimiter />
-   <@field type="input" name="quote" size="3" maxLength="1" label=uiLabelMap.SetupAccountingDatevCSVQuote />
-   <@field type="checkbox" name="hasMetaHeader" label=uiLabelMap.SetupAccountingDatevCSVDelimiter />
-   <@field type="checkbox" name="hasHeader" label=uiLabelMap.SetupAccountingDatevCSVDelimiter />
-   
    <@field type="file" name="uploadedFile" label=uiLabelMap.SetupAccountingDatevImportCSV />
 </#macro>
 <#macro eatImportElsterConfirmFields args={}>
-   <@field type="hidden" name="organizationPartyId" value=(params.orgPartyId)!/>
+   <@field type="hidden" name="orgPartyId" value=(params.orgPartyId)!/>
    <@field type="hidden" name="topGlAccountId" value=(params.topGlAccountId)!/>
    <@field type="file" name="uploadedFile" label=uiLabelMap.SetupAccountingElsterImportCSV />
 </#macro>
@@ -111,11 +103,14 @@
         if (modalElem && modalElem.length) {
             jQuery('.eat-dialogmsg', modalElem).html(msg);
             jQuery('.eat-dialogextramsg', modalElem).html(extraMsg || '');
-            jQuery('.eat-dialogbtn', modalElem).click(function() {
+            jQuery('.eat-dialogbtn', modalElem).click(function(e) {
+            	e.preventDefault();
+            	e.stopImmediatePropagation();
                 closeModal(modalElem);
                 var selectedName = extractClassNameSuffix(jQuery(this), 'eat-dialogbtn-');
-                continueCallback(selectedName);
-            });
+                continueCallback(selectedName);      
+                return;          
+            });            
             openModal(modalElem);
         } else {
             var result = confirm(msg);
@@ -123,6 +118,7 @@
                 continueCallback();
             }
         }
+        return;
     };
     
     var extractClassNameSuffix = function(elem, prefix) {
@@ -139,38 +135,62 @@
 	    });
 	    return result;
 	};
+	
+	var runMultipartAjax = function(data) {
+		jQuery.ajax({
+            url: '<@ofbizUrl>setupImportDatevDataCategory</@ofbizUrl>',
+            data: data,				            
+            async: true,
+            type: "POST",
+            contentType: false,
+			processData: false,
+			enctype: 'multipart/form-data',
+            success: function(d) {
+                if (data._ERROR_MESSAGE_ || data._ERROR_MESSAGE_LIST_) {
+                    if (data._ERROR_MESSAGE_) {
+                        console.log(d._ERROR_MESSAGE_);
+                    } else {
+                        console.log(d._ERROR_MESSAGE_LIST_[0]);
+                    }
+                } else {
+                    // console.log("ajax call success. DATA: " + d);
+                }
+            },
+            error: function() {
+                console.log("error");
+            }
+    	});    	
+	}
 
 	jQuery(document).ready(function() {
-		jQuery('.eat-menu-action').click(function(){
+		jQuery('li.eat-menu-action a').click(function(e) {
 			var confirmMsg = "";
 			var confirmExtraMsg = "";
 			var typeAction = this.id.split('-');
-			if (typeAction && typeAction.length == 3) {			
+			if (typeAction && typeAction.length == 3) {
 	            var modalElem = jQuery('#${eatDialogIdModalPrefix}' + typeAction[1] + '-' + typeAction[2]);	             
-	            showConfirmMsg(null, confirmMsg, confirmExtraMsg, modalElem, function() {
-	            	
-	            
-	            	// check if the modal had any params, dump them into params
-	            	var containsFile = false;
-	                jQuery('form.eat-dialogopts-form :input', modalElem).each(function(i, input) {	                	
-	                    input = jQuery(input);
-	                    // console.log("input type ===> " + input.attr('type'));
-	                    /*var name = input.prop('name');
-	                    if (name) params[name] = input.val();*/
-	                    if (!containsFile && input.attr('type') == "file") {
-	                    	containsFile = true;
-	                    }
-	                });
-	                if (containsFile) {
-	                	// console.log("containsFile");
-	                	jQuery('form.eat-dialogopts-form', modalElem).attr('enctype', 'multipart/form-data');
-	                }
-	                
-	                
-	                
-	                jQuery('form.eat-dialogopts-form', modalElem).submit();
+	            showConfirmMsg(null, confirmMsg, confirmExtraMsg, modalElem, function(action) {
+	            	if (action == 'upload') {
+		            	// check if the modal had any params, dump them into params
+		            	var containsFile = false;
+		            	var data = new FormData(jQuery('form.eat-dialogopts-form')[0]);
+		            	
+		                jQuery('form.eat-dialogopts-form :input', modalElem).each(function(i, input) {	                	
+		                    input = jQuery(input);
+		                    if (!containsFile && input.attr('type') == "file") {
+		                    	containsFile = true;	                    	
+		                    }
+		                });
+		                if (containsFile) {
+		                	jQuery('form.eat-dialogopts-form', modalElem).attr('enctype', 'multipart/form-data');
+		                }
+		                
+		                jQuery('form.eat-dialogopts-form')[0].reset();
+		                
+						runMultipartAjax(data);
+					}
 	            });
-            }
+            }           
 		});
 	});
 </@script>
@@ -216,9 +236,9 @@
 	                <@heading>${action} ${objectType}</@heading>
 	                <@eatDefActionInnerContent props=props/>
 	                <div class="modal-footer ${styles.text_right!}">	                   
-	                   <a class="eat-dialogbtn eat-dialogbtn-cancel ${styles.button!} btn-ok">${uiLabelMap.CommonCancel}</a>
+	                   <a class="eat-dialogbtn eat-dialogbtn-cancel ${styles.button!} btn-cancel" href="javascript:void(0);">${uiLabelMap.CommonCancel}</a>
 	                   <#if action == "import">
-	                   	<a class="eat-dialogbtn eat-dialogbtn-upload ${styles.button!} btn-ok">${uiLabelMap.CommonUpload}</a>
+	                   	<a class="eat-dialogbtn eat-dialogbtn-upload ${styles.button!} btn-ok" >${uiLabelMap.CommonUpload}</a>
 	                   </#if>
 	                </div>
 	            </@modal>
@@ -251,9 +271,9 @@
 	        <#-- MENU -->
 	        <ul class="side-nav">		       	
 	        	<li>
-	       			<@menuitem id="eat-datev-import" class="+eat-menu-action" type="link" href="javascript:void(0);" text=uiLabelMap.SetupAccountingImportDatev />
+	       			<@menuitem contentId="eat-datev-import" class="+eat-menu-action" type="link" href="javascript:void(0);" text=uiLabelMap.SetupAccountingImportDatev />
 	       			<hr/>
-	       			<@menuitem id="eat-elster-import" class="+eat-menu-action" type="link" href="javascript:void(0);" text=uiLabelMap.SetupAccountingImportElster />
+	       			<@menuitem contentId="eat-elster-import" class="+eat-menu-action" type="link" href="javascript:void(0);" text=uiLabelMap.SetupAccountingImportElster />
 	       		</li>
 	       	</ul>
 	      </@section>

@@ -1,6 +1,6 @@
 package com.ilscipio.scipio.accounting.external;
 
-public class BaseOperationResults extends AbstractOperationResults {
+public class BaseOperationResults {
 
     public BaseOperationResults() {
         super();

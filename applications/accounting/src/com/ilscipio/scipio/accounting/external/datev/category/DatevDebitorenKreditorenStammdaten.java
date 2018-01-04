@@ -12,7 +12,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityJoinOperator;
 import org.ofbiz.entity.util.EntityUtil;
 
-import com.ilscipio.scipio.accounting.external.AbstractOperationResults;
+import com.ilscipio.scipio.accounting.external.BaseOperationResults;
 import com.ilscipio.scipio.accounting.external.BaseOperationStats;
 import com.ilscipio.scipio.accounting.external.datev.DatevException;
 import com.ilscipio.scipio.accounting.external.datev.DatevHelper;
@@ -87,7 +87,7 @@ public class DatevDebitorenKreditorenStammdaten extends AbstractDatevDataCategor
     }
 
     @Override
-    public Class<? extends AbstractOperationResults> getOperationResultsClass() throws DatevException {
+    public Class<? extends BaseOperationResults> getOperationResultsClass() throws DatevException {
         return null;
     }
 

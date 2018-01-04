@@ -175,14 +175,17 @@ public class DatevServices {
                     }
                     boolean allFieldValid = true;
                     Map<String, String> recordMap = FastMap.newInstance();
+                    Map<String, String> validRecordMap = FastMap.newInstance();
                     if (rec.isConsistent()) {
                         recordMap = rec.toMap();
                         for (String key : recordMap.keySet()) {
                             if (!datevHelper.validateField(key, recordMap.get(key))) {
                                 allFieldValid = false;
+                            } else if (UtilValidate.isNotEmpty(recordMap.get(key))) {
+                                validRecordMap.put(key, recordMap.get(key));
                             }
                         }
-                    } else {
+                    } else if (!settings.getString("recordLayout").equalsIgnoreCase("variable")) {
                         // Assuming here the fields (columns) are in the order
                         // DATEV specification determines
                         Iterator<String> iter = rec.iterator();
@@ -190,13 +193,17 @@ public class DatevServices {
                             String value = iter.next();
                             if (!datevHelper.validateField(i, value)) {
                                 allFieldValid = false;
+                            } else if (UtilValidate.isNotEmpty(value)) {
+                                validRecordMap.put(datevFieldNames[i], value);
                             }
-                            recordMap.put(datevFieldNames[i], value);
                         }
+                    } else {
+                        // TODO: Handle this case, if possible which I'm unsure.
+                        // Throw an error otherwise.
                     }
                     if (allFieldValid) {
                         try {
-                            datevHelper.processRecord(index, recordMap);
+                            datevHelper.processRecord(index, validRecordMap);
                         } catch (DatevException e) {
 
                         }

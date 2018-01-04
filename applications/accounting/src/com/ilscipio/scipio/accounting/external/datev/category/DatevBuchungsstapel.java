@@ -26,9 +26,9 @@ public class DatevBuchungsstapel extends AbstractDatevDataCategory {
     public void processRecord(int index, Map<String, String> recordMap) throws DatevException {
         for (String fieldName : getDatevFieldNames()) {
             String value = recordMap.get(fieldName);
-            if (Debug.isOn(Debug.VERBOSE)) {
+//            if (Debug.isOn(Debug.VERBOSE)) {
                 Debug.logInfo("Processing record [" + index + "] field [" + fieldName + "]: " + value, module);
-            }
+//            }
 
         }
     }

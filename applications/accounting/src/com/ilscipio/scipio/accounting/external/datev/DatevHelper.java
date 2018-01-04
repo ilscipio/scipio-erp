@@ -8,7 +8,6 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 
-import com.ilscipio.scipio.accounting.external.AbstractOperationResults;
 import com.ilscipio.scipio.accounting.external.BaseOperationResults;
 import com.ilscipio.scipio.accounting.external.BaseOperationStats;
 import com.ilscipio.scipio.accounting.external.BaseOperationStats.NotificationLevel;
@@ -21,7 +20,7 @@ public class DatevHelper {
 
     private final String orgPartyId;
     private final BaseOperationStats stats;
-    private final AbstractOperationResults results;
+    private final BaseOperationResults results;
     private final AbstractDatevDataCategory dataCategoryImpl;
     private final GenericValue dataCategory;
     private final GenericValue dataCategorySettings;
@@ -86,7 +85,7 @@ public class DatevHelper {
         return dataCategoryImpl.isMetaHeader(metaHeader);
     }
 
-    public AbstractOperationResults getResults() {
+    public BaseOperationResults getResults() {
         return results;
     }
 

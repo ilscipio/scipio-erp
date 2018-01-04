@@ -21,7 +21,7 @@ import org.ofbiz.entity.condition.EntityJoinOperator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 
-import com.ilscipio.scipio.accounting.external.AbstractOperationResults;
+import com.ilscipio.scipio.accounting.external.BaseOperationResults;
 import com.ilscipio.scipio.accounting.external.BaseOperationStats;
 import com.ilscipio.scipio.accounting.external.BaseOperationStats.NotificationLevel;
 import com.ilscipio.scipio.accounting.external.BaseOperationStats.NotificationScope;
@@ -89,7 +89,7 @@ public abstract class AbstractDatevDataCategory {
 
     public abstract Class<? extends BaseOperationStats> getOperationStatsClass() throws DatevException;
 
-    public abstract Class<? extends AbstractOperationResults> getOperationResultsClass() throws DatevException;
+    public abstract Class<? extends BaseOperationResults> getOperationResultsClass() throws DatevException;
 
     public List<GenericValue> getDatevFieldDefinitions() {
         return datevFieldDefinitions;

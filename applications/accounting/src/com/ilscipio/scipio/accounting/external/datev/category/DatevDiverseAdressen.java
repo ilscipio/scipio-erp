@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.ofbiz.entity.Delegator;
 
-import com.ilscipio.scipio.accounting.external.AbstractOperationResults;
+import com.ilscipio.scipio.accounting.external.BaseOperationResults;
 import com.ilscipio.scipio.accounting.external.BaseOperationStats;
 import com.ilscipio.scipio.accounting.external.datev.DatevException;
 import com.ilscipio.scipio.accounting.external.datev.DatevHelper;
@@ -40,7 +40,7 @@ public class DatevDiverseAdressen extends AbstractDatevDataCategory {
     }
 
     @Override
-    public Class<? extends AbstractOperationResults> getOperationResultsClass() throws DatevException {
+    public Class<? extends BaseOperationResults> getOperationResultsClass() throws DatevException {
         // TODO Auto-generated method stub
         return null;
     }

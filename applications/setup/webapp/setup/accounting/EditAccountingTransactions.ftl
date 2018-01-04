@@ -13,7 +13,6 @@
 <#macro eatImportDatevConfirmFields args={}>
    <@field type="hidden" name="orgPartyId" value=(params.orgPartyId)!/>
    <@field type="hidden" name="topGlAccountId" value=(params.topGlAccountId)!/>
-   <@field type="hidden" name="tabId" value="accountingTransactionsTab" />
    <@field type="select" name="dataCategoryId" label=uiLabelMap.SetupAccountingDatevDataCategory>
 	   <#list datevDataCategories as datevDataCategory>
 	   		<option value="${datevDataCategory.dataCategoryId}">${datevDataCategory.dataCategoryName}</option>
@@ -23,7 +22,7 @@
    <@field type="file" name="uploadedFile" label=uiLabelMap.SetupAccountingDatevImportCSV />
 </#macro>
 <#macro eatImportElsterConfirmFields args={}>
-   <@field type="hidden" name="organizationPartyId" value=(params.orgPartyId)!/>
+   <@field type="hidden" name="orgPartyId" value=(params.orgPartyId)!/>
    <@field type="hidden" name="topGlAccountId" value=(params.topGlAccountId)!/>
    <@field type="file" name="uploadedFile" label=uiLabelMap.SetupAccountingElsterImportCSV />
 </#macro>
@@ -104,12 +103,13 @@
         if (modalElem && modalElem.length) {
             jQuery('.eat-dialogmsg', modalElem).html(msg);
             jQuery('.eat-dialogextramsg', modalElem).html(extraMsg || '');
-            jQuery('.eat-dialogbtn', modalElem).click(function(e) {            	
-            	console.log("button clicked " + e.namespace);
+            jQuery('.eat-dialogbtn', modalElem).click(function(e) {
+            	e.preventDefault();
+            	e.stopImmediatePropagation();
                 closeModal(modalElem);
                 var selectedName = extractClassNameSuffix(jQuery(this), 'eat-dialogbtn-');
-                continueCallback(selectedName);
-                e.preventDefault();
+                continueCallback(selectedName);      
+                return;          
             });            
             openModal(modalElem);
         } else {
@@ -118,6 +118,7 @@
                 continueCallback();
             }
         }
+        return;
     };
     
     var extractClassNameSuffix = function(elem, prefix) {
@@ -135,7 +136,7 @@
 	    return result;
 	};
 	
-	var runAjax = function(data) {
+	var runMultipartAjax = function(data) {
 		jQuery.ajax({
             url: '<@ofbizUrl>setupImportDatevDataCategory</@ofbizUrl>',
             data: data,				            
@@ -152,7 +153,7 @@
                         console.log(d._ERROR_MESSAGE_LIST_[0]);
                     }
                 } else {
-                    console.log("ajax call success. DATA: " + d);
+                    // console.log("ajax call success. DATA: " + d);
                 }
             },
             error: function() {
@@ -162,14 +163,13 @@
 	}
 
 	jQuery(document).ready(function() {
-		jQuery('.eat-menu-action').click(function(){
+		jQuery('li.eat-menu-action a').click(function(e) {
 			var confirmMsg = "";
 			var confirmExtraMsg = "";
 			var typeAction = this.id.split('-');
-			if (typeAction && typeAction.length == 3) {			
+			if (typeAction && typeAction.length == 3) {
 	            var modalElem = jQuery('#${eatDialogIdModalPrefix}' + typeAction[1] + '-' + typeAction[2]);	             
 	            showConfirmMsg(null, confirmMsg, confirmExtraMsg, modalElem, function(action) {
-	            	console.log("action ===> " + action);
 	            	if (action == 'upload') {
 		            	// check if the modal had any params, dump them into params
 		            	var containsFile = false;
@@ -185,10 +185,12 @@
 		                	jQuery('form.eat-dialogopts-form', modalElem).attr('enctype', 'multipart/form-data');
 		                }
 		                
-						runAjax(data);
+		                jQuery('form.eat-dialogopts-form')[0].reset();
+		                
+						runMultipartAjax(data);
 					}
 	            });
-            }
+            }           
 		});
 	});
 </@script>
@@ -234,9 +236,9 @@
 	                <@heading>${action} ${objectType}</@heading>
 	                <@eatDefActionInnerContent props=props/>
 	                <div class="modal-footer ${styles.text_right!}">	                   
-	                   <a class="eat-dialogbtn eat-dialogbtn-cancel ${styles.button!} btn-cancel">${uiLabelMap.CommonCancel}</a>
+	                   <a class="eat-dialogbtn eat-dialogbtn-cancel ${styles.button!} btn-cancel" href="javascript:void(0);">${uiLabelMap.CommonCancel}</a>
 	                   <#if action == "import">
-	                   	<a class="eat-dialogbtn eat-dialogbtn-upload ${styles.button!} btn-ok">${uiLabelMap.CommonUpload}</a>
+	                   	<a class="eat-dialogbtn eat-dialogbtn-upload ${styles.button!} btn-ok" >${uiLabelMap.CommonUpload}</a>
 	                   </#if>
 	                </div>
 	            </@modal>

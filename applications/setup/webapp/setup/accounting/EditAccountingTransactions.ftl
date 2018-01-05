@@ -57,6 +57,7 @@
 <#assign eatObjectTypes = toSimpleMap(eatObjectTypes!{})>
 <#assign eatDialogIdPrefix = eatDialogIdPrefix!"eat-dialog-">
 <#assign eatDialogIdModalPrefix = eatDialogIdModalPrefix!("modal_" + eatDialogIdPrefix)>
+<#assign eatStatsIdPrefix = eatStatsIdPrefix!"eat-stats-">
 
 <@script>
 	var actionProps = <@objectAsScript object=(ectActionProps!{}) lang='js'/>;
@@ -136,7 +137,7 @@
 	    return result;
 	};
 	
-	var runMultipartAjax = function(data) {
+	var runMultipartAjax = function(data, typeAction) {
 		jQuery.ajax({
             url: '<@ofbizUrl>setupImportDatevDataCategory</@ofbizUrl>',
             data: data,				            
@@ -147,13 +148,15 @@
 			enctype: 'multipart/form-data',
             success: function(d) {
                 if (data._ERROR_MESSAGE_ || data._ERROR_MESSAGE_LIST_) {
-                    if (data._ERROR_MESSAGE_) {
+                	// TODO: Display errors though it's an unlikely scenario 
+                    if (data._ERROR_MESSAGE_) {                    	
                         console.log(d._ERROR_MESSAGE_);
                     } else {
                         console.log(d._ERROR_MESSAGE_LIST_[0]);
                     }
                 } else {
-                    // console.log("ajax call success. DATA: " + d);
+                	displayStats(d.operationStats, typeAction);
+                    console.log("ajax call success. DATA: " + d);
                 }
             },
             error: function() {
@@ -161,6 +164,18 @@
             }
     	});    	
 	}
+	
+	 var displayStats = function(stats, typeAction) {
+	 	var recordStatsTable = jQuery('#${eatStatsIdPrefix}' + typeAction[1] + '-' + typeAction[2]);
+	 	jQuery(recordStatsTable).show();
+	 	for (i in stats) {
+	 		console.log("stat ====> " + stats[i]);
+	 		if (stats[i].scope == "RECORD") {
+	 			jQuery('tr:last', recordStatsTable).after('<tr><td>' + stats[i].position + '</td><td>' + stats[i].level + '</td><td>' + stats[i].message + '</td></tr>');
+	 		}	 		
+	 	} 
+	 } 
+	
 
 	jQuery(document).ready(function() {
 		jQuery('li.eat-menu-action a').click(function(e) {
@@ -187,7 +202,7 @@
 		                
 		                jQuery('form.eat-dialogopts-form')[0].reset();
 		                
-						runMultipartAjax(data);
+						runMultipartAjax(data, typeAction);
 					}
 	            });
             }           
@@ -252,18 +267,38 @@
     "idModalPrefix": eatDialogIdModalPrefix
 }/>
 
+<#-- Stats -->
+<#macro eatStats args={}>
+	<#list args.objectTypes?keys as objectType>
+        <#local actionMaps = toSimpleMap(args.objectTypes[objectType])>        
+        <#list actionMaps?keys as action>
+	        <#local props = toSimpleMap(actionMaps[action])>
+			<div style="display:none;" id="${args.idPrefix}${rawString(objectType)}-${rawString(action)}" class="+eat-stats">
+				<@table type="data-complex" role="grid">
+					<@thead>
+						<@tr>
+							<@th>Record</@th>
+							<@th>Level</@th>
+							<@th>Message</@th>
+						</@tr>
+					</@thead>
+				</@table>
+			</div>
+		</#list>
+	</#list>
+</#macro>
 
-<@section title=uiLabelMap.SetupAccountingTransactions>		
-	
+
+<@section id="mainSection" title=uiLabelMap.SetupAccountingTransactions>
     <#-- TODO: REVIEW: may make a difference later -->
     <@defaultWizardFormFields exclude=["topGlAccountId"]/>
     <#--<@field type="hidden" name="setupContinue" value="N"/> not needed yet-->
 	<@row>
 	    <@cell medium=9 large=9>
-	    	<#-- 
-	    	<@form method="get" action=makeOfbizUrl("setupAccounting") id="setupAccounting-accounting-entry-form">    	
-	        </@form>
-	        -->
+	    	<@eatMarkupOut dir=eatStats args={	
+				"objectTypes": eatObjectTypes!{},
+			    "idPrefix": eatStatsIdPrefix
+			}/>
 	    </@cell>
 	    <@cell medium=3 large=3>    
 	      <#-- ACTIONS MENU -->

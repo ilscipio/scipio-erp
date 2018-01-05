@@ -92,6 +92,8 @@
         <dependency org="org.apache.tika" name="tika-core" rev="1.14" transitive="false" conf="base->default"/>
         <dependency org="org.apache.tika" name="tika-parsers" rev="1.14" transitive="false" conf="base->default"/>
         <dependency org="com.googlecode.juniversalchardet" name="juniversalchardet" rev="1.0.3" transitive="false" conf="base->default"/>
+        <!-- SCIPIO: replaces the ancient clhm-release-1.0-lru.jar file (from 2010) -->
+        <dependency org="com.googlecode.concurrentlinkedhashmap" name="concurrentlinkedhashmap-lru" rev="1.4.2" transitive="false" conf="base->default"/>
         <!-- FIXME: ivy fails to download this one due to a maven repo problem (missing parent pom) even though it exists
         <dependency org="org.apache.xmlgraphics" name="batik-all" rev="1.9" transitive="false" conf="base->default"/>-->
         <!-- FIXME: this version is older than the 1.0-SNAPSHOT provided by ofbiz
@@ -120,7 +122,7 @@
         <!-- SCIPIO: 2017-11: new -->
         <dependency org="com.google.code" name="sitemapgen4j" rev="1.0.1" transitive="false" conf="base->default"/>
         <!-- TODO? <dependency org="org.jasig.cas.client" name="cas-client-core" rev="3.4.1" transitive="false" conf="base->default"/>-->
-         
+        
         <!-- re Ant -->
         <!-- Update process relies on ant-contrib, can't update in-place reliably
         <dependency org="ant-contrib" name="ant-contrib" rev="1.0b3" transitive="false" conf="ant->default"/>-->

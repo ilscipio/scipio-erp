@@ -167,7 +167,6 @@ under the License.
             <filename name="avalon-framework-*.jar"/>
             <filename name="batik-all-*.jar"/>
             <filename name="bsh-engine-modified.jar"/>
-            <filename name="clhm-*.jar"/>
             <filename name="ical4j-*.jar"/>
             <filename name="jdbm-*.jar"/>
             <filename name="jpim-*.jar"/>

@@ -53,6 +53,15 @@ under the License.
             
             <if-not-empty field="operationStats">
                 <field-to-request field="operationStats"/>
+                <script>groovy:
+                    import com.ilscipio.scipio.accounting.external.BaseOperationStats.Stat;
+                    import org.ofbiz.base.util.Debug;                    
+                    if (operationStats) {
+                        for (Stat stat : operationStats) {
+                            Debug.log("Scope [" + stat.getScope()+ "] + Level [" + stat.getLevel() + "]: " + stat.getMessage());
+                        }
+                    }
+                </script>
                 <else>
                     <add-error><fail-message message="Result not found."/></add-error>
                 </else>

@@ -198,8 +198,9 @@ public class DatevServices {
                             }
                         }
                     } else {
-                        // TODO: Handle this case, if possible which I'm unsure.
+                        // TODO: Handle this case, if possible which is unsure.
                         // Throw an error otherwise.
+                        allFieldValid = false;
                     }
                     if (allFieldValid) {
                         try {
@@ -227,7 +228,7 @@ public class DatevServices {
                 }
             } else {
                 if (UtilValidate.isNotEmpty(datevHelper)) {
-                    result.put("operationStats", datevHelper.getStats());
+                    result.put("operationStats", datevHelper.getStats().getStats());
                     if (!datevHelper.hasFatalNotification()) {
                         result.put("operationResults", datevHelper.getResults());
                     } else {

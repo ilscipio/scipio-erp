@@ -39,7 +39,7 @@ public abstract class AbstractDatevDataCategory {
     private Map<String, Object> datevMetadataValues = FastMap.newInstance();
 
     private final List<GenericValue> datevFieldDefinitions;
-    private final List<GenericValue> datevFieldMappings;
+    private final Map<String, GenericValue> datevFieldMappingsByField;
     private final List<String> datevFieldNames;
 
     public AbstractDatevDataCategory(Delegator delegator, DatevHelper datevHelper) throws DatevException {
@@ -52,8 +52,14 @@ public abstract class AbstractDatevDataCategory {
 
             this.datevFieldDefinitions = EntityQuery.use(delegator).from("DatevFieldDefinition").where(datevFieldCommonCond).queryList();
             this.datevFieldNames = EntityUtil.getFieldListFromEntityList(datevFieldDefinitions, "fieldName", true);
-
-            this.datevFieldMappings = EntityQuery.use(delegator).from("DatevFieldMapping").where(datevFieldCommonCond).queryList();
+            
+            List<String> datevFieldIds = EntityUtil.getFieldListFromEntityList(datevFieldDefinitions, "fieldId", true);
+            Map<String, GenericValue> datevFieldMappingsByField = FastMap.newInstance();
+            List<GenericValue> datevFieldMappings = EntityQuery.use(delegator).from("DatevFieldMapping").where(datevFieldCommonCond).queryList();
+            for (String fieldId : datevFieldIds) {
+                datevFieldMappingsByField.put(fieldId, EntityUtil.getFirst(EntityUtil.filterByAnd(datevFieldMappings, UtilMisc.toMap("fieldId", fieldId))));
+            }
+            this.datevFieldMappingsByField = datevFieldMappingsByField;
 
             this.datevMetadataFieldsDefinitions = EntityQuery.use(delegator).from("DatevMetadata").queryList();
         } catch (GenericEntityException e) {
@@ -104,8 +110,8 @@ public abstract class AbstractDatevDataCategory {
         return datevMetadataValues;
     }
 
-    public List<GenericValue> getDatevMappingDefinitions() {
-        return datevFieldMappings;
+    public Map<String, GenericValue> getDatevMappingDefinitions() {
+        return datevFieldMappingsByField;
     }
 
     public boolean isMetaHeader(Iterator<String> metaHeaderIter) throws DatevException {

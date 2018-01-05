@@ -29,6 +29,8 @@ public class DatevBuchungsstapel extends AbstractDatevDataCategory {
 //            if (Debug.isOn(Debug.VERBOSE)) {
                 Debug.logInfo("Processing record [" + index + "] field [" + fieldName + "]: " + value, module);
 //            }
+                
+                  
 
         }
     }

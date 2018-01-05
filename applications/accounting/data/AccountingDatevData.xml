@@ -2545,11 +2545,11 @@ under the License.
     
     <!-- DATEV FIELD MAPPINGS -->
     <!-- BUCHUNGSSTAPEL -->
-    <DatevFieldMapping fieldId="1" dataCategoryId="BUCHUNGSSTAPEL" entityName="Party" entityField="partyId" isAttrEntity="N" />
-    <DatevFieldMapping fieldId="2" dataCategoryId="BUCHUNGSSTAPEL" entityName="PartyGroup" entityField="groupName" isAttrEntity="N" />
-    <DatevFieldMapping fieldId="3" dataCategoryId="BUCHUNGSSTAPEL" entityName="PartyGroup" entityField="comments" isAttrEntity="N" />
-    <DatevFieldMapping fieldId="4" dataCategoryId="BUCHUNGSSTAPEL" entityName="Person" entityField="" isAttrEntity="" />
-    <DatevFieldMapping fieldId="5" dataCategoryId="BUCHUNGSSTAPEL" entityName="Person" entityField="firstName" isAttrEntity="" />
+    <DatevFieldMapping fieldId="1" dataCategoryId="BUCHUNGSSTAPEL" entityName="" entityField="" isAttrEntity="" />
+    <DatevFieldMapping fieldId="2" dataCategoryId="BUCHUNGSSTAPEL" entityName="" entityField="" isAttrEntity="" />
+    <DatevFieldMapping fieldId="3" dataCategoryId="BUCHUNGSSTAPEL" entityName="" entityField="" isAttrEntity="" />
+    <DatevFieldMapping fieldId="4" dataCategoryId="BUCHUNGSSTAPEL" entityName="" entityField="" isAttrEntity="" />
+    <DatevFieldMapping fieldId="5" dataCategoryId="BUCHUNGSSTAPEL" entityName="" entityField="" isAttrEntity="" />
     <DatevFieldMapping fieldId="6" dataCategoryId="BUCHUNGSSTAPEL" entityName="" entityField="" isAttrEntity="" />
     <DatevFieldMapping fieldId="7" dataCategoryId="BUCHUNGSSTAPEL" entityName="" entityField="" isAttrEntity="" />
     <DatevFieldMapping fieldId="8" dataCategoryId="BUCHUNGSSTAPEL" entityName="" entityField="" isAttrEntity="" />
@@ -2663,11 +2663,11 @@ under the License.
     <DatevFieldMapping fieldId="116" dataCategoryId="BUCHUNGSSTAPEL" entityName="" entityField="" isAttrEntity="" />
     
     <!-- DEBITOREN_KREDITOREN_STAMMDATEN -->
-    <DatevFieldMapping fieldId="117" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" entityName="" entityField="" isAttrEntity="" />
-    <DatevFieldMapping fieldId="118" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" entityName="" entityField="" isAttrEntity="" />
-    <DatevFieldMapping fieldId="119" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" entityName="" entityField="" isAttrEntity="" />
-    <DatevFieldMapping fieldId="120" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" entityName="" entityField="" isAttrEntity="" />
-    <DatevFieldMapping fieldId="121" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" entityName="" entityField="" isAttrEntity="" />
+    <DatevFieldMapping fieldId="117" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" entityName="Party" entityField="partyId" isAttrEntity="" />
+    <DatevFieldMapping fieldId="118" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" entityName="PartyGroup" entityField="groupName" isAttrEntity="" />
+    <DatevFieldMapping fieldId="119" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" entityName="PartyGroup" entityField="comments" isAttrEntity="" />
+    <DatevFieldMapping fieldId="120" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" entityName="Person" entityField="" isAttrEntity="" />
+    <DatevFieldMapping fieldId="121" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" entityName="Person" entityField="firstName" isAttrEntity="" />
     <DatevFieldMapping fieldId="122" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" entityName="" entityField="" isAttrEntity="" />
     <DatevFieldMapping fieldId="123" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" entityName="" entityField="" isAttrEntity="" />
     <DatevFieldMapping fieldId="124" dataCategoryId="DEBITOREN_KREDITOREN_STAMMDATEN" entityName="" entityField="" isAttrEntity="" />

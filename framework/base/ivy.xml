@@ -55,7 +55,7 @@
         <dependency org="javolution" name="javolution" rev="5.4.3" transitive="false" conf="base->default"/>
         <dependency org="junit" name="junit-dep" rev="4.10" transitive="false" conf="base->default"/>
         <dependency org="net.sourceforge.nekohtml" name="nekohtml" rev="1.9.16" transitive="false" conf="base->default"/>
-        <dependency org="org.slf4j" name="slf4j-api" rev="1.6.4" conf="base->default"/>
+        <dependency org="org.slf4j" name="slf4j-api" rev="1.6.6" conf="base->default"/>
         <dependency org="xalan" name="xalan" rev="2.7.2" transitive="false" conf="base->default"/>
         <dependency org="org.freemarker" name="freemarker" rev="2.3.25-incubating" transitive="false" conf="base->default"/>
         <dependency org="com.google.guava" name="guava" rev="14.0.1" transitive="false" conf="base->default"/>

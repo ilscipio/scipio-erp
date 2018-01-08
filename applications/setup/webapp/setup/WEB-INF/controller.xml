@@ -425,7 +425,7 @@
     <request-map uri="setupImportDatevDataCategory">
         <security https="true" auth="true"/>
         <event type="simple" path="component://accounting/script/com/ilscipio/scipio/accounting/datev/DatevEvents.xml" invoke="importDatevDataCategory"/>
-        <response name="success" type="request" value="json"/>
+        <response name="success" type="view" value="DatevImportResult"/>
         <response name="error" type="request" value="json"/>
     </request-map>
 
@@ -483,5 +483,8 @@
     <view-map name="LookupProductCategory" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProductCategory"/>
     <view-map name="LookupProductFeature" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature"/>
     <view-map name="LookupProductStore" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProductStore"/>
+    
+    <!-- DATEV / ELSTER -->
+    <view-map name="DatevImportResult" type="screen" page="component://accounting/widget/external/ExternalAccountingScreens.xml#DatevImportResult"/>
 
 </site-conf>

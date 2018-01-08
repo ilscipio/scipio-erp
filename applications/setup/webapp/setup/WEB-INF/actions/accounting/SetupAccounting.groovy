@@ -58,7 +58,13 @@ context.topGlAccountId = topGlAccountId;
 topGlAccount = delegator.findOne("GlAccount", [glAccountId: topGlAccountId], false);
 context.topGlAccount = topGlAccount;
 
-
+/*
+ * AcctgTransType & AcctgTransEntryType
+ */
+acctgTransTypes = EntityQuery.use(delegator).from("AcctgTransType").queryList();
+context.acctgTransTypes = acctgTransTypes;
+acctgTransEntryTypes = EntityQuery.use(delegator).from("AcctgTransEntryType").queryList();
+context.acctgTransEntryTypes = acctgTransEntryTypes;
 
 /*
  * Extra prep

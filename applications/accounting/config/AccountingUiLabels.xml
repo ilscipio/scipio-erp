@@ -22585,4 +22585,8 @@
         <value xml:lang="de">Die Rechnung ${invoiceId} hat keine InvoiceStatus-Aufzeichnungen; Dies ist in der Regel auf Samen oder Demo-Daten nicht nach dem formalen Rechnungserstellungsprozess (createInvoice-Service).</value>
         <value xml:lang="en">Invoice ${invoiceId} has no InvoiceStatus records; this is usually due to seed or demo data not following the formal invoice creation process (createInvoice service).</value>
     </property>
+    
+     <property key="AccountingScipioAccountingStandardsInfo">
+        <value xml:lang="en">An accounting standard couldn't be found installed in your system. You can either load the demo data in order to get the US-GAAP standard or check out our store for additional accounting standard addons.</value>
+    </property>
 </resource>

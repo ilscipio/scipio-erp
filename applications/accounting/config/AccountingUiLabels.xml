@@ -22587,6 +22587,6 @@
     </property>
     
      <property key="AccountingScipioAccountingStandardsInfo">
-        <value xml:lang="en">An accounting standard couldn't be found installed in your system. You can either load the demo data in order to get the US-GAAP standard or check out our store for additional accounting standard addons.</value>
+        <value xml:lang="en">An accounting standard couldn't be found installed in your system. You can either load the demo data in order to get the US-GAAP standard or check out Scipio's official store for additional accounting standard addons.</value>
     </property>
 </resource>

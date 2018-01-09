@@ -264,7 +264,12 @@
                                     <condition>
                                         <and>
                                             <not><if-compare field="useDefaultSetupSubmitBar" operator="equals" type="Boolean" value="false"/></not>
-                                            <not><if-empty field="submitFormId"/></not>
+                                            <!-- 
+                                                IMPORTANT NOTE: This prevents rendering any button if submitFormId is not present, 
+                                                which is contradictory to the @setupSubmitBar logic (ie: skip button can be displayed even if submitFormId has no content).
+                                                Commented out for now, although it may have some implications I am currently unaware.   
+                                            -->
+                                            <!-- <not><if-empty field="submitFormId"/></not> -->
                                         </and>
                                     </condition>
                                     <widgets>

@@ -43,22 +43,23 @@
     <@defaultWizardFormFields exclude=["topGlAccountId"]/>
     <#--<@field type="hidden" name="setupContinue" value="N"/> not needed yet-->
     
-    <@field type="general" label=uiLabelMap.SetupAccountingSelectModuleForSetup>
-       <@field type="select" name="topGlAccountId" id="setupAccounting-selectGL-select" class="+setupAccounting-selectGL-select" inline=true style="display:inline-block;">
-            <option value="">[${uiLabelMap.SetupAccountingCreateNewModule}]</option>
-            <option value="" disabled="disabled"></option>
-            <#if accountingGLs?has_content>
-              <#list accountingGLs as accountingGL>
-              	<#assign selected = (rawString(accountingGL.glAccountId) == rawString(topGlAccountId!))>
-                <option value="${accountingGL.glAccountId!}"<#if selected> selected="selected"</#if>>${accountingGL.accountCode!} [${accountingGL.glAccountId!}]</option>
-              </#list>
-            </#if>
-        </@field>
-        <@menu type="button" id="setupAccounting-selectGL-submit-buttons" class="+setupAccounting-selectGL-submit-buttons">
-          <@menuitem type="link" contentId="setupAccounting-selectGL-submit" href="javascript:void(0);" text=uiLabelMap.CommonSelect class="+${styles.action_run_session!} ${styles.action_update!}"/>
-          <@menuitem type="link" contentId="setupAccounting-selectGL-submit-continue" href="javascript:void(0);" text=uiLabelMap.SetupSelectAndContinue class="+${styles.action_run_session!} ${styles.action_continue!}"/>
-        </@menu>
-    </@field>        
+    <#if accountingGLs?has_content>
+	    <@field type="general" label=uiLabelMap.SetupAccountingSelectStandardForSetup>
+	       <@field type="select" name="topGlAccountId" id="setupAccounting-selectGL-select" class="+setupAccounting-selectGL-select" inline=true style="display:inline-block;">
+	       		<#-- This will be enabled in the future -->
+	            <#-- <option value="">[${uiLabelMap.SetupAccountingCreateNewStandard}]</option> -->
+	            <option value="" disabled="disabled"></option>            
+		        <#list accountingGLs as accountingGL>
+		          <#assign selected = (rawString(accountingGL.glAccountId) == rawString(topGlAccountId!))>
+		          <option value="${accountingGL.glAccountId!}"<#if selected> selected="selected"</#if>>${accountingGL.accountCode!} [${accountingGL.glAccountId!}]</option>
+		        </#list>
+	        </@field>
+	        <@menu type="button" id="setupAccounting-selectGL-submit-buttons" class="+setupAccounting-selectGL-submit-buttons">
+	          <@menuitem type="link" contentId="setupAccounting-selectGL-submit" href="javascript:void(0);" text=uiLabelMap.CommonSelect class="+${styles.action_run_session!} ${styles.action_update!}"/>
+	          <@menuitem type="link" contentId="setupAccounting-selectGL-submit-continue" href="javascript:void(0);" text=uiLabelMap.SetupSelectAndContinue class="+${styles.action_run_session!} ${styles.action_continue!}"/>
+	        </@menu>
+	    </@field>   
+    </#if>     
   </@form>
   
   <@form method="get" action=makeOfbizUrl("setupWizard") id="setupAccounting-selectContinueGL-form">
@@ -69,10 +70,21 @@
     <@field type="hidden" name="topGlAccountId" value=""/>
   </@form>
   
-  <@form method="get" action=makeOfbizUrl("setupAccounting") id="setupAccounting-newGL-form">
-    <#-- TODO: REVIEW: may make a difference later -->
+  <#if !accountingGLs?has_content>
+  	<@alert type="info">
+  		${uiLabelMap.AccountingScipioAccountingStandardsInfo}
+  		<ul>  		
+  			<#list scipioAcctgStandardAddons.keySet() as addon>
+  				<li><a href="${scipioAcctgStandardAddons.get(addon)}">${addon}</a></li>
+  			</#list>
+  		</ul>
+  	</@alert>
+  </#if>
+  
+  <#-- 
+  <@form method="get" action=makeOfbizUrl("setupAccounting") id="setupAccounting-newGL-form">   
     <@defaultWizardFormFields exclude=["topGlAccountId"]/>    
     <@field type="hidden" name="newGlAccount" value="Y"/>
   </@form>
-  
+  -->
   

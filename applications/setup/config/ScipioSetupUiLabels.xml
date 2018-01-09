@@ -178,12 +178,27 @@
     <property key="SetupAccountingSelectTimePeriod">
     	<value xml:lang="en">Select time period</value>
     </property>
+     <property key="SetupAccountingSelectStandardForSetup">
+        <value xml:lang="en">Select accounting standard for setup</value>
+    </property>
+    <property key="SetupAccountingCreateNewGL">
+        <value xml:lang="en">Create new General Ledger</value>
+    </property>
     
     <property key="SetupAccountingJournalEntries">
     	<value xml:lang="en">Journal Entries</value>
     </property>
-    <property key="SetupAccountingTransactions">
-    	<value xml:lang="en">Accounting Transactions</value>
+    <property key="SetupAccountingTransactionTypes">
+    	<value xml:lang="en">Accounting Transaction Types</value>
+    </property>
+    <property key="SetupAccountingTransactionEntryTypes">
+        <value xml:lang="en">Accounting Transaction Entry Types</value>
+    </property>
+    <property key="SetupAddAccountingTransactionType">
+        <value xml:lang="en">Add Transaction Type</value>
+    </property>
+    <property key="SetupAddAccountingTransactionEntryType">
+        <value xml:lang="en">Add Transaction Entry Type</value>
     </property>
     
     <property key="SetupAccountingImportDatev">

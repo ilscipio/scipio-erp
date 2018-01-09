@@ -146,18 +146,8 @@
             contentType: false,
 			processData: false,
 			enctype: 'multipart/form-data',
-            success: function(d) {
-                if (data._ERROR_MESSAGE_ || data._ERROR_MESSAGE_LIST_) {
-                	// TODO: Display errors though it's an unlikely scenario 
-                    if (data._ERROR_MESSAGE_) {                    	
-                        console.log(d._ERROR_MESSAGE_);
-                    } else {
-                        console.log(d._ERROR_MESSAGE_LIST_[0]);
-                    }
-                } else {
-                	displayStats(d.operationStats, typeAction);
-                    console.log("ajax call success. DATA: " + d);
-                }
+            success: function(content) {
+				displayStats(content, typeAction);            
             },
             error: function() {
                 console.log("error");
@@ -165,15 +155,11 @@
     	});    	
 	}
 	
-	 var displayStats = function(stats, typeAction) {
-	 	var recordStatsTable = jQuery('#${eatStatsIdPrefix}' + typeAction[1] + '-' + typeAction[2]);
-	 	jQuery(recordStatsTable).show();
-	 	for (i in stats) {
-	 		console.log("stat ====> " + stats[i]);
-	 		if (stats[i].scope == "RECORD") {
-	 			jQuery('tr:last', recordStatsTable).after('<tr><td>' + stats[i].position + '</td><td>' + stats[i].level + '</td><td>' + stats[i].message + '</td></tr>');
-	 		}	 		
-	 	} 
+	 var displayStats = function(content, typeAction) {
+	 	var statsContainer = jQuery('#${eatStatsIdPrefix}' + typeAction[1] + '-' + typeAction[2]);
+	 	jQuery(statsContainer).html("");
+	 	jQuery(statsContainer).show();
+	 	jQuery(statsContainer).html(content);
 	 } 
 	
 
@@ -270,31 +256,53 @@
 <#-- Stats -->
 <#macro eatStats args={}>
 	<#list args.objectTypes?keys as objectType>
-        <#local actionMaps = toSimpleMap(args.objectTypes[objectType])>        
-        <#list actionMaps?keys as action>
-	        <#local props = toSimpleMap(actionMaps[action])>
-			<div style="display:none;" id="${args.idPrefix}${rawString(objectType)}-${rawString(action)}" class="+eat-stats">
-				<@table type="data-complex" role="grid">
-					<@thead>
-						<@tr>
-							<@th>Record</@th>
-							<@th>Level</@th>
-							<@th>Message</@th>
-						</@tr>
-					</@thead>
-				</@table>
-			</div>
+    	<#assign actionMaps = toSimpleMap(args.objectTypes[objectType])>        
+    	<#list actionMaps?keys as action>
+	        <#assign props = toSimpleMap(actionMaps[action])>	
+			<div style="display:none;" id="${args.idPrefix}${rawString(objectType)}-${rawString(action)}" class="+eat-stats"></div>
 		</#list>
 	</#list>
 </#macro>
 
 
-<@section id="mainSection" title=uiLabelMap.SetupAccountingTransactions>
+<@section id="mainSection">
     <#-- TODO: REVIEW: may make a difference later -->
     <@defaultWizardFormFields exclude=["topGlAccountId"]/>
     <#--<@field type="hidden" name="setupContinue" value="N"/> not needed yet-->
 	<@row>
 	    <@cell medium=9 large=9>
+	    	<@section title=uiLabelMap.SetupAccountingTransactionTypes>
+		    	<@table>
+			    	<@thead>
+			    		<@tr>
+			    			<@td>${uiLabelMap.acctrTransTypeId}</@td>
+			    			<@td>${uiLabelMap.commonDescription}</@td>	    			
+			    		</@tr>
+			    	</@thead>
+			    	<#list acctgTransTypes as type>
+			    		<@tr>
+			    			<@td>${type.acctgTransTypeId}</@td>
+			    			<@td>${type.description}</@td>	    				    	
+			    		</@tr>
+			    	</#list>
+		    	</@table>
+	    	</@section>
+	    	<@section title=uiLabelMap.SetupAccountingTransactionEntryTypes>
+		    	<@table>
+			    	<@thead>
+			    		<@tr>
+			    			<@td>${uiLabelMap.acctrTransEntryTypeId}</@td>
+			    			<@td>${uiLabelMap.commonDescription}</@td>	    			
+			    		</@tr>
+			    	</@thead>
+			    	<#list acctgTransEntryTypes as entryType>
+			    		<@tr>
+			    			<@td>${entryType.acctgTransEntryTypeId}</@td>
+			    			<@td>${entryType.description}</@td>	    				    	
+			    		</@tr>
+			    	</#list>
+		    	</@table>
+	    	</@section>
 	    	<@eatMarkupOut dir=eatStats args={	
 				"objectTypes": eatObjectTypes!{},
 			    "idPrefix": eatStatsIdPrefix
@@ -306,19 +314,14 @@
 	        <#-- MENU -->
 	        <ul class="side-nav">		       	
 	        	<li>
-	       			<@menuitem contentId="eat-datev-import" class="+eat-menu-action" type="link" href="javascript:void(0);" text=uiLabelMap.SetupAccountingImportDatev />
-	       			<hr/>
+	        		<@menuitem contentId="eat-type" class="+eat-menu-action" type="link" href="javascript:void(0);" text=uiLabelMap.SetupAddAccountingTransactionType />
+	        		<@menuitem contentId="eat-entry-type" class="+eat-menu-action" type="link" href="javascript:void(0);" text=uiLabelMap.SetupAddAccountingTransactionEntryType />
+	        		<hr/>
+	       			<@menuitem contentId="eat-datev-import" class="+eat-menu-action" type="link" href="javascript:void(0);" text=uiLabelMap.SetupAccountingImportDatev />	       			
 	       			<@menuitem contentId="eat-elster-import" class="+eat-menu-action" type="link" href="javascript:void(0);" text=uiLabelMap.SetupAccountingImportElster />
 	       		</li>
 	       	</ul>
 	      </@section>
 		</@cell>
 	</@row>
-	
-	<#-- 
-	<div style="display:none;">
-	  <@setupImportAccountingEntriesForm id="import-datev-form" target="setupImportDatevTransactionEntries" />
-	  <@setupImportAccountingEntriesForm id="import-elster-form" target="setupImportElsterTransactionEntries" />
-	</div>
-	-->
 </@section>

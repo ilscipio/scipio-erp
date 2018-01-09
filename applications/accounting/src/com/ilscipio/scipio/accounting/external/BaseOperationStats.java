@@ -15,7 +15,7 @@ public class BaseOperationStats {
      * @author jsoto
      *
      */
-    public static enum NotificationScope {
+    public enum NotificationScope {
         GLOBAL, META_HEADER, HEADER, RECORD
     }
 

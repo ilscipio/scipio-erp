@@ -48,7 +48,7 @@
 	       <@field type="select" name="topGlAccountId" id="setupAccounting-selectGL-select" class="+setupAccounting-selectGL-select" inline=true style="display:inline-block;">
 	       		<#-- This will be enabled in the future -->
 	            <#-- <option value="">[${uiLabelMap.SetupAccountingCreateNewStandard}]</option> -->
-	            <option value="" disabled="disabled"></option>            
+	            <option value=""<#if accountingGLs?has_content> selected="selected"</#if>>--</option>            
 		        <#list accountingGLs as accountingGL>
 		          <#assign selected = (rawString(accountingGL.glAccountId) == rawString(topGlAccountId!))>
 		          <option value="${accountingGL.glAccountId!}"<#if selected> selected="selected"</#if>>${accountingGL.accountCode!} [${accountingGL.glAccountId!}]</option>

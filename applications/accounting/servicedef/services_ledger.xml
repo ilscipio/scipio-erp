@@ -711,4 +711,21 @@ under the License.
         </attribute>        
         <attribute name="treeList" mode="OUT" type="List" optional="false" />
     </service>
+    
+    
+    <!-- SCIPIO: New service to build customTimePeriod tree-like structure according to the library being passed (currently jsTree supported only) -->
+    <service name="buildCustomPeriodTree" engine="java" default-entity-name="CustomTimePeriod" location="com.ilscipio.scipio.accounting.period.PeriodServices" invoke="buildCustomPeriodTree">
+        <description>Builds a tree containing customTimePeriods using a given customTimePeriodId as starting point</description>
+        <auto-attributes mode="IN" include="pk" optional="false" />        
+        <attribute name="library" mode="IN" type="String" optional="true" default-value="jsTree" />
+        <attribute name="mode" mode="IN" type="String" optional="true" default-value="full" />
+        <attribute name="state" mode="IN" type="Map" optional="true">
+            <description>Map of state attributes for top node: opened, selected, disabled. (added 2017-10-11)</description>
+        </attribute>
+        <attribute name="includeTimePeriodData" mode="IN" type="Boolean" optional="true" default-value="false"/>
+        <attribute name="includeEmptyTop" mode="IN" type="Boolean" optional="true" default-value="false">
+            <description>If false (default), empty customTimePeriod or top node is omitted</description>
+        </attribute>        
+        <attribute name="treeList" mode="OUT" type="List" optional="false" />
+    </service>
 </services>

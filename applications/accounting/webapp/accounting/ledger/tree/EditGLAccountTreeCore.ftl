@@ -27,8 +27,8 @@
     </#macro>
     <#macro egltDefMarkupMenu args={}>
         <#-- <ul class="side-nav eglt-action-menu" id="eglt-action-menu"> -->
-        <@menu class="side-nav eglt-action-menu box" id="eglt-action-menu">
-          <@egltMarkupOut dir=egltMarkupPostMenuItems!egltDefMarkupPostMenuItems/>
+        <@menu class="side-nav acctg-action-menu box" id="acctg-action-menu">
+          <@acctgMarkupOut dir=egltMarkupPostMenuItems!egltDefMarkupPostMenuItems/>
         </@menu>
         <#-- </ul> -->
     </#macro>
@@ -39,10 +39,10 @@
     <#macro egltDefMarkupEntry name>
       <div id="${egltDefMarkupIdPrefix}${name}"><#nested></div>
     </#macro>
-    <@egltDefMarkupEntry name="menuItem"><@egltMarkupOut dir=egltMarkupMenuItem!egltDefMarkupMenuItem/></@egltDefMarkupEntry>
-    <@egltDefMarkupEntry name="menuItemDisabled"><@egltMarkupOut dir=egltMarkupMenuItemDisabled!egltDefMarkupMenuItemDisabled/></@egltDefMarkupEntry>
-    <@egltDefMarkupEntry name="menuItemDivider"><@egltMarkupOut dir=egltMarkupMenuItemDivider!egltDefMarkupMenuItemDivider/></@egltDefMarkupEntry>
-    <@egltDefMarkupEntry name="postMenuItems"><@egltMarkupOut dir=egltMarkupPostMenuItems!egltDefMarkupPostMenuItems/></@egltDefMarkupEntry>
+    <@egltDefMarkupEntry name="menuItem"><@acctgMarkupOut dir=egltMarkupMenuItem!egltDefMarkupMenuItem/></@egltDefMarkupEntry>
+    <@egltDefMarkupEntry name="menuItemDisabled"><@acctgMarkupOut dir=egltMarkupMenuItemDisabled!egltDefMarkupMenuItemDisabled/></@egltDefMarkupEntry>
+    <@egltDefMarkupEntry name="menuItemDivider"><@acctgMarkupOut dir=egltMarkupMenuItemDivider!egltDefMarkupMenuItemDivider/></@egltDefMarkupEntry>
+    <@egltDefMarkupEntry name="postMenuItems"><@acctgMarkupOut dir=egltMarkupPostMenuItems!egltDefMarkupPostMenuItems/></@egltDefMarkupEntry>
   </div>
     
     <#-- modals -->
@@ -84,7 +84,7 @@
     </#macro>
 
     <#-- OUTPUT MODALS (not in display:none;) -->
-    <@egltMarkupOut dir=(egltActionMsgModals!egltDefActionMsgModals) args={
+    <@acctgMarkupOut dir=(egltActionMsgModals!egltDefActionMsgModals) args={
         "actionProps": egltActionProps!{},
         "idPrefix": egltDialogIdPrefix,
         "idModalPrefix": egltDialogIdModalPrefix
@@ -188,7 +188,7 @@ $(document).ready(function() {
         </@section>
         
         <#-- POST-JSTREE (ACTION FORMS, ETC.) -->
-      <@egltMarkupOut dir=egltPostTreeArea!/>
+      <@acctgMarkupOut dir=egltPostTreeArea!/>
         
     </@cell>
     
@@ -196,11 +196,11 @@ $(document).ready(function() {
       <#-- ACTIONS MENU -->
       <@section title=uiLabelMap.CommonActions>	        
         <#-- MENU -->
-        <@egltMarkupOut dir=egltMarkupMenu!egltDefMarkupMenu/>	        
+        <@acctgMarkupOut dir=egltMarkupMenu!egltDefMarkupMenu/>	        
         <#-- DISPLAY EXTRAS (OPTIONS, ETC.) -->
-        <@egltMarkupOut dir=egltActionExtrasArea!/>	
+        <@acctgMarkupOut dir=egltActionExtrasArea!/>	
       </@section>	      
       <#-- DISPLAY EXTRAS (OPTIONS, ETC.) -->
-      <@egltMarkupOut dir=egltExtrasArea!/>      
+      <@acctgMarkupOut dir=egltExtrasArea!/>      
 	</@cell>
 </@row>

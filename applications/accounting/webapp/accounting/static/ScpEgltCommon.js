@@ -5,17 +5,17 @@
 /**
  * A map of jQuery selectors that returns jQuery-wrapped cloned markup.
  */
-function ScpEgltFormMarkup(selectors) {
+function ScpAcctgFormMarkup(selectors) {
     this.selectors = selectors;
     
     this.getSelMarkup = function(name, defaultMarkupStr) {
-        return ScpEgltFormMarkup.getCntMarkup(this.selectors[name] ? jQuery(this.selectors[name]) : null, defaultMarkupStr);
+        return ScpAcctgFormMarkup.getCntMarkup(this.selectors[name] ? jQuery(this.selectors[name]) : null, defaultMarkupStr);
     };
     this.getCntMarkup = function(markupCnt, defaultMarkupStr) {
-        return ScpEgltFormMarkup.getCntMarkup(markupCnt, defaultMarkupStr);
+        return ScpAcctgFormMarkup.getCntMarkup(markupCnt, defaultMarkupStr);
     };
 }
-ScpEgltFormMarkup.getCntMarkup = function(markupCnt, defaultMarkupStr) {
+ScpAcctgFormMarkup.getCntMarkup = function(markupCnt, defaultMarkupStr) {
     if (markupCnt && markupCnt.length) {
         return markupCnt.children().clone(true, true);
     }
@@ -25,7 +25,7 @@ ScpEgltFormMarkup.getCntMarkup = function(markupCnt, defaultMarkupStr) {
 /**
  * Form helper for form handling that must be done separate from the tree.
  */
-function ScpEgltFormHelper(data) {
+function ScpAcctgFormHelper(data) {
     var sefh = this;
  
     var reportInternalError = function(msg) {
@@ -37,9 +37,9 @@ function ScpEgltFormHelper(data) {
     };
     
     this.extractLocalizedFieldName = function(fieldCnt) {
-        typeName = ScpEgltFormHelper.extractClassNameSuffix(fieldCnt, 'eglt-locfield-for-');
+        typeName = ScpAcctgFormHelper.extractClassNameSuffix(fieldCnt, 'acctg-locfield-for-');
         if (!typeName) {
-            reportInternalError('missing eglt-locfield-for- class on localized field');
+            reportInternalError('missing acctg-locfield-for- class on localized field');
             return null;
         }
         return typeName;
@@ -54,7 +54,7 @@ function ScpEgltFormHelper(data) {
                 reportInternalError('invalid getLocalizedFieldProps call');
                 return null;
             }
-            fieldCnt = jQuery('.eglt-locfield-for-'+typeName, allFieldsCnt);
+            fieldCnt = jQuery('.acctg-locfield-for-'+typeName, allFieldsCnt);
             if (!fieldCnt.length) {
                 return null; // form doesn't support
             }
@@ -64,15 +64,15 @@ function ScpEgltFormHelper(data) {
         }
         
         // NOTE: template markup is embedded in the html, now under the field itself (due to styling workaround)
-        var entryMarkupTmpl = jQuery('.eglt-markup-locFieldEntry:first', fieldCnt);
+        var entryMarkupTmpl = jQuery('.acctg-markup-locFieldEntry:first', fieldCnt);
         if (!entryMarkupTmpl.length) {
-            reportInternalError('missing eglt-markup-locFieldEntry html-embedded template');
+            reportInternalError('missing acctg-markup-locFieldEntry html-embedded template');
             return null;
         }
 
-        var entries = jQuery('.eglt-locfield-entries', fieldCnt);
+        var entries = jQuery('.acctg-locfield-entries', fieldCnt);
         if (!entries.length) {
-            reportInternalError('missing eglt-locfield-entries container');
+            reportInternalError('missing acctg-locfield-entries container');
             return null;
         }
         
@@ -80,11 +80,11 @@ function ScpEgltFormHelper(data) {
     };
     
     this.buildLocalizedFieldEntry = function(entryMarkupTmpl, typeName, index, entryData) {
-        var entryMarkup = ScpEgltFormMarkup.getCntMarkup(entryMarkupTmpl);
+        var entryMarkup = ScpAcctgFormMarkup.getCntMarkup(entryMarkupTmpl);
         if (!entryMarkup || !entryMarkup.length) return null;
         var namePrefix = sefh.makeLocFieldNamePrefix(typeName, index);
-        jQuery('.eglt-locfield-locale', entryMarkup).attr('name', namePrefix+'localeString').val(entryData.localeString || '');
-        jQuery('.eglt-locfield-text', entryMarkup).attr('name', namePrefix+'textData').val(entryData.textData || '');
+        jQuery('.acctg-locfield-locale', entryMarkup).attr('name', namePrefix+'localeString').val(entryData.localeString || '');
+        jQuery('.acctg-locfield-text', entryMarkup).attr('name', namePrefix+'textData').val(entryData.textData || '');
         return entryMarkup;
     };
 
@@ -133,7 +133,7 @@ function ScpEgltFormHelper(data) {
     this.addLocalizedFieldEntry = function(fieldProps, entryData) {
         if (!entryData) entryData = {}; // adds empty
         
-        var index = jQuery('.eglt-locfield-entry', fieldProps.fieldCnt).length; // starts at zero
+        var index = jQuery('.acctg-locfield-entry', fieldProps.fieldCnt).length; // starts at zero
         
         var entryMarkup = sefh.buildLocalizedFieldEntry(fieldProps.entryMarkupTmpl, fieldProps.typeName, index, entryData);
         if (entryMarkup) {
@@ -143,13 +143,13 @@ function ScpEgltFormHelper(data) {
     
     this.handleFieldAdd = function(linkElem) {
         linkElem = jQuery(linkElem);
-        var fieldCnt = linkElem.closest('.eglt-locfield');
+        var fieldCnt = linkElem.closest('.acctg-locfield');
         if (fieldCnt.length) {
             var fieldProps = sefh.getLocalizedFieldProps(fieldCnt);
             if (!fieldProps) return;
             sefh.addLocalizedFieldEntry(fieldProps, {});
         } else {
-            reportInternalError('missing eglt-locfield class on localized field');
+            reportInternalError('missing acctg-locfield class on localized field');
         }
     };
     
@@ -179,7 +179,7 @@ function ScpEgltFormHelper(data) {
         return viewsByType;
     };
 }
-ScpEgltFormHelper.extractClassNameSuffix = function(elem, prefix) {
+ScpAcctgFormHelper.extractClassNameSuffix = function(elem, prefix) {
     var classes = elem.attr('class').split(/\s+/);
     var result = null;
     var startsWith = function(str, prefix) {
@@ -194,20 +194,20 @@ ScpEgltFormHelper.extractClassNameSuffix = function(elem, prefix) {
     return result;
 };
 // Default instance (used to have properties, not required anymore)
-var scpEgltFormHelper = new ScpEgltFormHelper({});
+var scpAcctgFormHelper = new ScpAcctgFormHelper({});
 
 /**
  * GlAccount tree handler constructor.
  */
 function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js file
     var scth = this; // capture for private methods and js kludges
-    var sefh = scpEgltFormHelper;
+    var sefh = scpAcctgFormHelper;
     
     scth.fadeOptions = data.fadeOptions || {};
     scth.treeId = data.treeId;
     scth.glTopGlAccountEntity = data.topGlAccountEntity;    
     scth.allActionProps = data.actionProps || {};
-    scth.markup = new ScpEgltFormMarkup(data.markupSelectors || {});
+    scth.markup = new ScpAcctgFormMarkup(data.markupSelectors || {});
     scth.links = data.links || {};
     scth.hideShowFormIds = data.hideShowFormIds;
     scth.labels = data.labels || {};
@@ -261,7 +261,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         return (str.indexOf(suffix, str.length - suffix.length) !== -1);
     };
     var extractClassNameSuffix = function(elem, prefix) {
-        return ScpEgltFormHelper.extractClassNameSuffix(elem, prefix);
+        return ScpAcctgFormHelper.extractClassNameSuffix(elem, prefix);
     };
 
     // TODO: REVIEW: these
@@ -295,7 +295,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         if (scth.popupMsgModalId) {
             var modalElem = jQuery('#'+scth.popupMsgModalId);
             if (modalElem.length) {
-                jQuery('.eglt-dialogmsg', modalElem).html(msg);
+                jQuery('.acctg-dialogmsg', modalElem).html(msg);
                 openModal(modalElem);
             } else {
                 return alert(msg);
@@ -309,10 +309,10 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
             modalElem = jQuery('#'+scth.confirmMsgModalId);
         }
         if (modalElem && modalElem.length) {
-            jQuery('.eglt-dialogmsg', modalElem).html(msg);
-            jQuery('.eglt-dialogbtn', modalElem).click(function() {
+            jQuery('.acctg-dialogmsg', modalElem).html(msg);
+            jQuery('.acctg-dialogbtn', modalElem).click(function() {
                 closeModal(modalElem);
-                var selectedName = extractClassNameSuffix(jQuery(this), 'eglt-dialogbtn-');
+                var selectedName = extractClassNameSuffix(jQuery(this), 'acctg-dialogbtn-');
                 continueCallback(selectedName);
             });
             openModal(modalElem);
@@ -595,9 +595,9 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
      * By default, clears all fields/elems having "etc-xxxfield" classes.
      */
     this.clearFormCommon = function(form, params, ai) {
-        jQuery('.eglt-inputfield', form).filter(':input').val('');
-        jQuery('.eglt-displayfield', form).html('');
-        jQuery('.eglt-managefield', form).html('');
+        jQuery('.acctg-inputfield', form).filter(':input').val('');
+        jQuery('.acctg-displayfield', form).html('');
+        jQuery('.acctg-managefield', form).html('');
         
         if (params.local) {
             var localizedFields = params.local.localizedFields;
@@ -610,7 +610,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
     this.makeManageLinkForElem = function(elem, name, value, form, params, ai) {
         if (value) {
             // FIXME: unhardcode markup
-            var markup = jQuery('<a href="javascript:void(0);" class="eglt-managefield-link">' + value + '</a>');
+            var markup = jQuery('<a href="javascript:void(0);" class="acctg-managefield-link">' + value + '</a>');
             markup.click(function() {
                 scth.execManageForNode(ai.node);
             });
@@ -626,9 +626,9 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         }
         if (elem.is(':input')) {
             elem.val(value);
-        } else if (elem.hasClass('eglt-displayfield')) {
+        } else if (elem.hasClass('acctg-displayfield')) {
             elem.html(value);
-        } else if (elem.hasClass('eglt-managefield')) {
+        } else if (elem.hasClass('acctg-managefield')) {
             scth.makeManageLinkForElem(elem, name, value, form, params, ai);
         } else {
             reportInternalError('form field misconfigured for use with catalog tree - no value can be assigned. form id: ' + 
@@ -639,19 +639,19 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         }
     };
     
-    this.getEgltFormFieldName = function(elem) {
+    this.getAcctgFormFieldName = function(elem) {
         var name = null;
         if (elem.is(':input')) {
             name = elem.prop('name');
             if (!name) {
-                if (elem.hasClass('eglt-inputfield')) {
-                    name = extractClassNameSuffix(elem, 'eglt-inputfield-for-'); 
+                if (elem.hasClass('acctg-inputfield')) {
+                    name = extractClassNameSuffix(elem, 'acctg-inputfield-for-'); 
                 }
             }
-        } else if (elem.hasClass('eglt-displayfield')) {
-            name = extractClassNameSuffix(elem, 'eglt-displayfield-for-'); 
-        } else if (elem.hasClass('eglt-managefield')) {
-            name = extractClassNameSuffix(elem, 'eglt-managefield-for-'); 
+        } else if (elem.hasClass('acctg-displayfield')) {
+            name = extractClassNameSuffix(elem, 'acctg-displayfield-for-'); 
+        } else if (elem.hasClass('acctg-managefield')) {
+            name = extractClassNameSuffix(elem, 'acctg-managefield-for-'); 
         } 
         if (!name) {
             reportInternalError('form field misconfigured for use with catalog tree' +
@@ -665,15 +665,15 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
     
     /**
      * Default populate form implementation.
-     * Each form field/elem with "eglt-xxxclass" receives a param or empty value/html.
+     * Each form field/elem with "acctg-xxxclass" receives a param or empty value/html.
      */
     this.populateFormCommon = function(form, params, ai) {
         if (isObj(params)) {
             var fieldHandlers = ai.actionProps.populateFormFields || {};
             
-            jQuery('.eglt-inputfield, .eglt-displayfield, .eglt-managefield', form).each(function(i, elem) {
+            jQuery('.acctg-inputfield, .acctg-displayfield, .acctg-managefield', form).each(function(i, elem) {
                 elem = jQuery(elem);
-                var name = scth.getEgltFormFieldName(elem);
+                var name = scth.getAcctgFormFieldName(elem);
                 if (name) {
                     var value = params[name];
                     
@@ -701,17 +701,17 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
     
     var getCommonTreeFields = function(form, params, ai) {
         return {
-            egltTargetNodePath: getNodeObjectIdPathString(ai.node), // the "current" node path
-            egltNewTargetNodePath: params.egltNewTargetNodePath, // the "next" node path IF event success (must be set by callers)
-            egltSubmittedFormId: form.prop('id')
+            acctgTargetNodePath: getNodeObjectIdPathString(ai.node), // the "current" node path
+            acctgNewTargetNodePath: params.acctgNewTargetNodePath, // the "next" node path IF event success (must be set by callers)
+            acctgSubmittedFormId: form.prop('id')
         };
     };
     
     var populateFormCommonTreeFieldsOnly = function(form, params, ai) {
         var fields = getCommonTreeFields(form, params, ai);
-        jQuery('input[name=egltTargetNodePath].eglt-inputfield', form).val(fields.egltTargetNodePath || '');
-        jQuery('input[name=egltNewTargetNodePath].eglt-inputfield', form).val(fields.egltNewTargetNodePath || '');
-        jQuery('input[name=egltSubmittedFormId].eglt-inputfield', form).val(fields.egltSubmittedFormId || '');
+        jQuery('input[name=acctgTargetNodePath].acctg-inputfield', form).val(fields.acctgTargetNodePath || '');
+        jQuery('input[name=acctgNewTargetNodePath].acctg-inputfield', form).val(fields.acctgNewTargetNodePath || '');
+        jQuery('input[name=acctgSubmittedFormId].acctg-inputfield', form).val(fields.acctgSubmittedFormId || '');
     };
     
     var populateForm = function(form, params, ai) {
@@ -766,7 +766,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
                 }
                 
                 // check if the modal had any params, dump them into params
-                jQuery('form.eglt-dialogopts-form :input', modalElem).each(function(i, input) {
+                jQuery('form.acctg-dialogopts-form :input', modalElem).each(function(i, input) {
                     input = jQuery(input);
                     var name = input.prop('name');
                     if (name) params[name] = input.val();
@@ -854,7 +854,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
                 if (quoteChar === false) quoteChar = '';
             else if (!quoteChar) quoteChar = "'";
             
-            var spanOpen = '<span class="eglt-dialogmsg-recordname">';
+            var spanOpen = '<span class="acctg-dialogmsg-recordname">';
             var spanClose = '</span>';
             if (useHtml === false) {
                 spanOpen = '';
@@ -1157,7 +1157,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
     };
     
     this.sideMenuHandler = function($node) {
-        var $el = jQuery("#eglt-action-menu");
+        var $el = jQuery("#acctg-action-menu");
         var menuDefs = getMenuDefs($node);
         
         var useDividers = true;

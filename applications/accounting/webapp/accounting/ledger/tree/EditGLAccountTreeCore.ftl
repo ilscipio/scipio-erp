@@ -23,12 +23,14 @@
     <#macro egltDefMarkupMenuItemDivider args={}><@menuitem type="generic"><hr/></@menuitem></#macro>
     <#macro egltDefMarkupPostMenuItems args={}>
     	<#--  <@menuitem type="link" href="javascript:void(0);" onClick="egltHandler.execNewGlAccount();" text=uiLabelMap.CommonCreate /> -->
-        <@menuitem type="link" href="javascript:void(0);" onClick="egltHandler.execImport();" text=uiLabelMap.CommonImport />
+        <#-- <@menuitem type="link" href="javascript:void(0);" onClick="egltHandler.execImport();" text=uiLabelMap.CommonImport /> -->        
     </#macro>
     <#macro egltDefMarkupMenu args={}>
-        <ul class="side-nav eglt-action-menu" id="eglt-action-menu">
+        <#-- <ul class="side-nav eglt-action-menu" id="eglt-action-menu"> -->
+        <@menu class="side-nav eglt-action-menu box" id="eglt-action-menu">
           <@egltMarkupOut dir=egltMarkupPostMenuItems!egltDefMarkupPostMenuItems/>
-        </ul>
+        </@menu>
+        <#-- </ul> -->
     </#macro>
 
     <#-- PRE-OUTPUTTED MARKUP FOR JAVASCRIPT 

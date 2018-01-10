@@ -561,6 +561,9 @@
                 <set field="setupGlAccountForms.location" value="component://setup/widget/SetupScreens.xml"/>
                 <set field="setupGlAccountForms.name" value="SetupGlAccountForms"/>
                 
+                <set field="setupTimePeriodForms.location" value="component://accounting/widget/settings/SettingScreens.xml#EditCustomTimePeriod"/>
+                <set field="setupTimePeriodForms.name" value="EditCustomTimePeriod"/>
+                
                 <set field="isCreateForm" type="Boolean" value="false"/>      
                    
                 <set field="target" value="setupUpdateGlAccount" />

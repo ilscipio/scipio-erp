@@ -13,14 +13,14 @@
     "showFormActivated": wrapRawScript("setupShowFormActivatedCallback")
 }>
 <#assign egltAllHideShowFormIds = [
-    "eglt-newglaccount", "eglt-editglaccount"
+    "acctg-newglaccount", "acctg-editglaccount"
 ]>
 <#assign egltActionProps = {
     "default": {
         "newglaccount": {
             "type": "form",
             "mode": "show",
-            "id": "eglt-newglaccount",
+            "id": "acctg-newglaccount",
             "defaultParams": wrapRawScript("function() { return defaultGlAccountParams; }")
         }
     },
@@ -28,18 +28,18 @@
     	"add": {
             "type": "form",
             "mode": "show",
-            "id": "eglt-newglaccount"          
+            "id": "acctg-newglaccount"          
         },
         "edit": {
             "type": "form",
             "mode": "show",
-            "id": "eglt-editglaccount" <#-- NOTE: this can be ancestor container of form, both work (uses first descendent form) -->          
+            "id": "acctg-editglaccount" <#-- NOTE: this can be ancestor container of form, both work (uses first descendent form) -->          
         },       
         "remove": {
             "type": "form",
             "mode": "submit",
             "confirmMsg": rawLabel('CommonConfirmDeleteRecordPermanent'),
-            "id": "ect-removeglaccount-form"
+            "id": "acctg-removeglaccount-form"
         },
         "manage": {
             "type": "link",

@@ -561,10 +561,20 @@
                 <set field="setupGlAccountForms.location" value="component://setup/widget/SetupScreens.xml"/>
                 <set field="setupGlAccountForms.name" value="SetupGlAccountForms"/>
                 
+                <set field="setupTimePeriodForms.location" value="component://accounting/widget/settings/SettingScreens.xml#EditCustomTimePeriod"/>
+                <set field="setupTimePeriodForms.name" value="EditCustomTimePeriod"/>
+                
                 <set field="isCreateForm" type="Boolean" value="false"/>      
                    
                 <set field="target" value="setupUpdateGlAccount" />
-                
+                <if>
+                    <condition>
+                        <not><if-empty field="topGlAccountId"/></not>                        
+                    </condition>
+                    <then>
+                        <set field="submitFormId" value="EditAccounting"/>
+                    </then>
+                </if>
                 <!-- Commenting this for now; will be enabled once we sort out how to handle an accounting standard creation properly -->                
                 <!--
                 <set field="submitFormId" value="EditAccounting"/>
@@ -577,7 +587,8 @@
                     <else>
                     	<set field="useDefaultSetupSubmitBar" type="Boolean" value="true"/>
                     </else>
-                </if> -->
+                </if>
+                 -->
                 <set field="useDefaultSetupSubmitBar" type="Boolean" value="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/accounting/static/ScpEgltCommon.js" global="true"/>
             </actions>

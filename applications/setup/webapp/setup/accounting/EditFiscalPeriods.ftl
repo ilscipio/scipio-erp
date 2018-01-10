@@ -1,6 +1,58 @@
 <#-- SCIPIO: SETUP fiscal periods implementation -->
 
 <#include "component://setup/webapp/setup/common/common.ftl">
+<#include "component://accounting/webapp/accounting/ledger/tree/treecommon.ftl">
+
+<#assign efpObjectTypes = { 
+	"timePeriod": {   
+	    "add": {
+	        "type": "form",
+	        "mode": "show",
+	        "id": "efp-add-time-period",        
+	        "formAction": makeOfbizUrl('setupCreateTimePeriod'),
+	        "defaultParams": wrapRawScript("function() { return; }")
+	    },
+	    "edit": {
+	    	"type": "form",
+	        "mode": "show",
+	        "id": "efp-edit-time-period",        
+	        "formAction": makeOfbizUrl('setupUpdateTimePeriod'),
+	        "defaultParams": wrapRawScript("function() { return; }")
+	    }
+    }
+}>
+
+<#assign efpObjectTypes = toSimpleMap(efpObjectTypes!{})>
+<#assign efpIdPrefix = efpIdPrefix!"efp-timePeriod-">
+
+<@script>
+	var actionProps = <@objectAsScript object=(efpActionProps!{}) lang='js'/>;
+    
+    var extractClassNameSuffix = function(elem, prefix) {
+	    var classes = elem.attr('class').split(/\s+/);
+	    var result = null;
+	    var startsWith = function(str, prefix) {
+	        return (str.lastIndexOf(prefix, 0) === 0);
+	    };
+	    jQuery.each(classes, function(i, e) {
+	        if (startsWith(e, prefix)) {
+	            result = e.substring(prefix.length);
+	            return false;
+	        }
+	    });
+	    return result;
+	};
+
+	jQuery(document).ready(function() {
+		jQuery('li.efp-menu-action a').click(function(e) {			
+			var typeAction = this.id.split('-');
+			if (typeAction && typeAction.length == 3) {
+	            <#-- var modalElem = jQuery('#${efpDialogIdModalPrefix}' + typeAction[1] + '-' + typeAction[2]); -->	             
+	            console.log("typeaction-1 =====> " + typeAction[1] + "    typeaction-2 =====> " + typeAction[2]);
+            }           
+		});
+	});
+</@script>
 
 <#assign defaultParams = {	
 }>
@@ -13,22 +65,19 @@
 <#assign params = paramMaps.values>
 <#assign fixedParams = paramMaps.fixedValues>
 
-	
-	<@section title=uiLabelMap.AccountingTimePeriod>		
-		<@form method="get" action=makeOfbizUrl("setupAccounting") id="setupAccounting-selectTimePeriod-form">
-		    <#-- TODO: REVIEW: may make a difference later -->
-		    <@defaultWizardFormFields exclude=["topGlAccountId"]/>
-		    <#--<@field type="hidden" name="setupContinue" value="N"/> not needed yet-->
-		    
-		    <@field type="general" label=uiLabelMap.SetupAccountingSelectTimePeriod>
-		       <@field type="select" name="customTimePeriodId" id="setupAccounting-selectTimePeriod-select" class="+setupAccounting-selectTimePeriod-select" inline=true style="display:inline-block;">
-		            <option value="">[${uiLabelMap.SetupAccountingCreateNewTimePeriod}]</option>
-		            <option value="" disabled="disabled"></option>
-		              <#list timePeriods as timePeriod>
-		              	<#assign selected = (rawString(timePeriod.customTimePeriodId) == rawString(params.customTimePeriod!))>
-		                <option value="${timePeriod.customTimePeriodId!}"<#if selected> selected="selected"</#if>>${timePeriod.periodName!} [${timePeriod.customTimePeriodId!}]</option>
-		              </#list>
-		        </@field>
-		    </@field>
-		</@form>
-	</@section>		
+<#-- RENDERS SETUP FORMS -->
+<#macro efpPostTreeArea extraArgs...>
+    <@render type="screen" resource=setupTimePeriodForms.location name=setupTimePeriodForms.name/>
+</#macro>
+
+<#-- RENDERS DISPLAY OPTIONS -->
+<#macro efpExtrasArea extraArgs...>
+  <@section><#-- title=uiLabelMap.CommonDisplayOptions -->
+    <@form action=makeOfbizUrl("setupAccounting") method="get">
+      <@defaultWizardFormFields/>
+    </@form>
+  </@section>
+</#macro>
+
+<#-- CORE INCLUDE -->
+<#include "component://accounting/webapp/accounting/period/tree/EditCustomTimePeriodCore.ftl">		

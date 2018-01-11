@@ -421,13 +421,6 @@
         <response name="error" type="request" value="json"/>
     </request-map>
     
-    <request-map uri="getTimePeriodExtendedData">
-        <security https="true" auth="true"/>
-        <event type="service" invoke="getTimePeriod"/>
-        <response name="success" type="request" value="json"/>
-        <response name="error" type="request" value="json"/>
-    </request-map>
-    
     <!-- accounting datev CSV import requests -->
     <request-map uri="setupImportDatevDataCategory">
         <security https="true" auth="true"/>

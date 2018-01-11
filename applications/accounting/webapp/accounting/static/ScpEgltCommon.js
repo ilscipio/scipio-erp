@@ -416,7 +416,9 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         }
         return ($parent) ? $node : null; // prevents returning the root node
     };
-    
+    var getTopGlAccountIdNodeForNode = function($node) {
+        return getTopLevelNode($node);
+    }
     var getNodeObjectType = function($node) {
         if ($node && $node.data) return $node.data.type; // same names, 1-for-1 mapping
         else return null;
@@ -652,7 +654,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
             name = extractClassNameSuffix(elem, 'acctg-managefield-for-'); 
         } 
         if (!name) {
-            reportInternalError('form field misconfigured for use with tree' +
+            reportInternalError('form field misconfigured for use with catalog tree' +
                 ' - no name can be extracted from it. form id: ' + elem.closest('form').prop('id') + 
                 ', elem tag: ' + elem.prop('tagName') +
                 ', class: ' + elem.attr('class') +
@@ -787,7 +789,6 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
      */
     var execActionTarget = function(ai, params) {
         var coreExec = function() {
-        	console.log("(ai.actionProps.id ====> " + ai.actionProps.id);
             params = getResolvedActionPropsParams(ai, params);
             if (ai.actionProps.type == "link") {
                 openLink(ai.actionProps.url, params, ai.actionProps.target);
@@ -892,10 +893,8 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
 
         if (ai.objectType == "glAccount") {
             params.topGlAccountId = ai.objectId;
-        } else if (ai.objectType == "timePeriod") {
-        	params.customTimePeriodId = ai.objectId;
         } else if (ai.node) {
-//            params.topGlAccountId = getNodeObjectId(getTopLevelNode(ai.node))
+            params.topGlAccountId = getNodeObjectId(getTopGlAccountIdNodeForNode(ai.node))
         }
         
         // merge any *Entity fields into params map (this takes care of objectId & parent id)
@@ -1000,20 +999,6 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
                             }
                         );
                     }
-                } else if (ai.objectType === 'timePeriod') {
-                	if (scth.links.getTimePeriodExtendedData) {
-                		doExecEdit = false;
-                        runAjax(scth.links.getTimePeriodExtendedData, {
-                                customTimePeriodId: ai.objectId,
-                            }, 
-                            function(data) {
-                                if (data.timePeriod) {
-                                	params = $.extend(params, data.timePeriod);
-                                }
-                                execEdit();
-                            }
-                        );
-                	}
                 }
             }
             if (doExecEdit) {
@@ -1051,7 +1036,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         });
     };
     
-    this.execNewForNode = function($node) {
+    this.execNewGlAccountForNode = function($node) {
     	var ai = getActionInfo($node, "add");
     	var params = makeParamsMap(ai);
 
@@ -1060,7 +1045,6 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
     	});
     }
     
-    /**
     this.execNewGlAccount = function() {
         var ai = getActionInfo(null, "newglaccount", "default");
         var params = makeParamsMap(ai);
@@ -1069,7 +1053,6 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
             execActionTarget(ai, params);
         });
     };
-    */    
     
     this.execManageForNode = function($node) {
         var ai = getActionInfo($node, "manage");
@@ -1087,7 +1070,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         } else if (actionType === "remove") {
             return this.execRemoveForNode($node);
         } else if (actionType === "add") {
-            return this.execNewForNode($node);
+            return this.execNewGlAccountForNode($node);
         } else if (actionType === "manage") {
             return this.execManageForNode($node);
         } else {
@@ -1125,7 +1108,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
                 "separator_after": false,
                 "label": scth.labels.add,
                 "action": function(obj) {
-                    scth.execNewForNode($node);
+                    scth.execNewGlAccountForNode($node);
                 }
             },
             manage: {
@@ -1150,7 +1133,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         };
         
         var menuDefs = {};
-        if (objectType == 'glAccount' || objectType == 'timePeriod') {
+        if (objectType == 'glAccount') {
             menuDefs = {
             	"add": defs.add,            
                 "edit": defs.edit,

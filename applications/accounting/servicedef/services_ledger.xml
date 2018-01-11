@@ -728,15 +728,4 @@ under the License.
         </attribute>        
         <attribute name="treeList" mode="OUT" type="List" optional="false" />
     </service>
-    
-    <!-- SCIPIO: New service to get a customTimePeriod -->
-    <service name="getTimePeriod" default-entity-name="CustomPeriodTime" engine="java" 
-                location="com.ilscipio.scipio.accounting.period.PeriodServices" invoke="getTimePeriod" auth="true">
-        <description>SCIPIO: Gets a TimePeriod</description>
-        <permission-service service-name="basicGeneralLedgerPermissionCheck" main-action="VIEW"/>
-        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>
-        <attribute name="useCache" mode="IN" type="Boolean" optional="true" default-value="false"/>
-        <attribute name="timePeriod" mode="OUT" type="Map" optional="false"/>        
-    </service>
-    
 </services>

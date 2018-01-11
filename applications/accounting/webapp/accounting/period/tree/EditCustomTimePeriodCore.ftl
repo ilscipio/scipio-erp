@@ -1,5 +1,5 @@
 <#if !efpTreeId?has_content>
-  <#assign efpTreeId = "efpTree_" + rawString(orgPartyId!)>
+  <#assign efpTreeId = "efpTree_" + rawString(topGlAccountId!)>
 </#if>
 <#assign efpActionProps = toSimpleMap(efpActionProps!{})>
 
@@ -69,7 +69,7 @@
 	    },
 	    markupSelectors: <@objectAsScript object=efpDefMarkupSelectors lang='js'/>,
 	    links: {           
-	    	getTimePeriodExtendedData: '<@ofbizUrl uri="getTimePeriodExtendedData" escapeAs="js"/>',
+	    	
 	    },
 	    callbacks: <@objectAsScript object=(efpCallbacks!{}) lang='js'/>,
 	    targetNodeInfo: <@objectAsScript object=(efpTargetNodeInfo!{}) lang='js'/>,
@@ -139,9 +139,6 @@
 	                </#list>    
 	            </@treemenu>
 			</@section>
-			
-     		<#-- POST-JSTREE (ACTION FORMS, ETC.) -->
-      		<@acctgMarkupOut dir=efpPostTreeArea!/>
 		</@cell>
 		<@cell medium=3 large=3>    
 	      <#-- ACTIONS MENU -->

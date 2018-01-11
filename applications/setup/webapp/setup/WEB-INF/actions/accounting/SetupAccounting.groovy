@@ -108,6 +108,9 @@ context.glAccountTypes = EntityQuery.use(delegator).from("GlAccountType").orderB
 context.glAccountClasses = EntityQuery.use(delegator).from("GlAccountClass").orderBy("description").queryList();
 context.glResourceTypes = EntityQuery.use(delegator).from("GlResourceType").orderBy("description").queryList();
 
+context.periodTypes = EntityQuery.use(delegator).from("PeriodType").orderBy("description").queryList();
+
+
 // true if explicit newGlAccount=Y flag OR failed create
 //glSelected = topGlAccount || setupWorker?.isEffectiveNewRecordRequest(StringUtils.capitalize("GlAccount"));
 //context.glSelected = glSelected;

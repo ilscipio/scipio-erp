@@ -1,0 +1,16 @@
+[submodule "themes/bootstrap"]
+	path = themes/bootstrap
+	url = ssh://git@gitlab.ilscipio.com:12722/scipio-dev/dev/addons/bootstrap-theme-dev.git
+	branch = themes/bootstrap/master
+[submodule "themes/foundation6"]
+	path = themes/foundation6
+	url = ssh://git@gitlab.ilscipio.com:12722/scipio-dev/dev/addons/foundation6-theme-dev.git
+	branch = themes/foundation6/master
+[submodule "themes/ignite-admin"]
+	path = themes/ignite-admin
+	url = ssh://git@gitlab.ilscipio.com:12722/scipio-dev/dev/addons/ignite-admin-theme-dev.git
+	branch = themes/ignite-admin/master
+[submodule "addons/seccheck"]
+	path = addons/seccheck
+	url = ssh://git@gitlab.ilscipio.com:12722/scipio-dev/dev/addons/devaddons-dev.git
+	branch = addons/seccheck/master

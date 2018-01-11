@@ -3,71 +3,56 @@
 <#include "component://setup/webapp/setup/common/common.ftl">
 <#include "component://accounting/webapp/accounting/ledger/tree/treecommon.ftl">
 
-<#assign efpObjectTypes = { 
+<@script>
+    function setupShowFormActivatedCallback(form, ai) {
+        setupControlMenu.setSubmitFormId(form.prop('id'));
+    };
+</@script>
+
+<#assign efpCallbacks = {
+    "showFormActivated": wrapRawScript("setupShowFormActivatedCallback")
+}>
+<#assign efpAllHideShowFormIds = [
+    "acctg-newtimeperiod", "acctg-edittimeperiod"
+]>
+<#assign efpActionProps = {
+	"default": {
+        "newtimeperiod": {
+            "type": "form",
+            "mode": "show",
+            "id": "acctg-newtimeperiod",
+            "defaultParams": wrapRawScript("function() { return defaultGlAccountParams; }")
+        }
+    }, 
 	"timePeriod": {   
 	    "add": {
 	        "type": "form",
 	        "mode": "show",
-	        "id": "efp-add-time-period",        
-	        "formAction": makeOfbizUrl('setupCreateTimePeriod'),
-	        "defaultParams": wrapRawScript("function() { return; }")
+	        "id": "acctg-newtimeperiod"
 	    },
 	    "edit": {
 	    	"type": "form",
 	        "mode": "show",
-	        "id": "efp-edit-time-period",        
-	        "formAction": makeOfbizUrl('setupUpdateTimePeriod'),
-	        "defaultParams": wrapRawScript("function() { return; }")
-	    }
+	        "id": "acctg-edittimeperiod"	        
+	    },
+	    "remove": {
+	    	"type": "form",
+            "mode": "submit",
+            "confirmMsg": rawLabel('CommonConfirmDeleteRecordPermanent'),
+            "id": "acctg-removetimeperiod-form"
+	    },
+	    "manage": {
+            "type": "link",
+            "target": "_blank",
+            "url": makeOfbizInterWebappUrl({"uri":'/accounting/control/EditCustomTimePeriod', "extLoginKey":true}),
+            "paramNames": {"customTimePeriodId": true }            
+        }
     }
 }>
 
-<#assign efpObjectTypes = toSimpleMap(efpObjectTypes!{})>
-<#assign efpIdPrefix = efpIdPrefix!"efp-timePeriod-">
-
-<@script>
-	var actionProps = <@objectAsScript object=(efpActionProps!{}) lang='js'/>;
-    
-    var extractClassNameSuffix = function(elem, prefix) {
-	    var classes = elem.attr('class').split(/\s+/);
-	    var result = null;
-	    var startsWith = function(str, prefix) {
-	        return (str.lastIndexOf(prefix, 0) === 0);
-	    };
-	    jQuery.each(classes, function(i, e) {
-	        if (startsWith(e, prefix)) {
-	            result = e.substring(prefix.length);
-	            return false;
-	        }
-	    });
-	    return result;
-	};
-
-	jQuery(document).ready(function() {
-		jQuery('li.efp-menu-action a').click(function(e) {			
-			var typeAction = this.id.split('-');
-			if (typeAction && typeAction.length == 3) {
-	            <#-- var modalElem = jQuery('#${efpDialogIdModalPrefix}' + typeAction[1] + '-' + typeAction[2]); -->	             
-	            console.log("typeaction-1 =====> " + typeAction[1] + "    typeaction-2 =====> " + typeAction[2]);
-            }           
-		});
-	});
-</@script>
-
-<#assign defaultParams = {	
-}>
-
-<#assign paramMaps = getWizardFormFieldValueMaps({
-    "record":true, <#-- NOTE: must fallback with boolean true -->
-    "defaults":defaultParams,
-    "strictRecord":true <#-- TODO: REMOVE (debugging) -->
-})>
-<#assign params = paramMaps.values>
-<#assign fixedParams = paramMaps.fixedValues>
-
 <#-- RENDERS SETUP FORMS -->
 <#macro efpPostTreeArea extraArgs...>
-    <@render type="screen" resource=setupTimePeriodForms.location name=setupTimePeriodForms.name/>
+    <@render type="screen" resource=setupTimePeriodForms.location name=setupTimePeriodForms.name/>    
 </#macro>
 
 <#-- RENDERS DISPLAY OPTIONS -->

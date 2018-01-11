@@ -561,8 +561,8 @@
                 <set field="setupGlAccountForms.location" value="component://setup/widget/SetupScreens.xml"/>
                 <set field="setupGlAccountForms.name" value="SetupGlAccountForms"/>
                 
-                <set field="setupTimePeriodForms.location" value="component://accounting/widget/settings/SettingScreens.xml#EditCustomTimePeriod"/>
-                <set field="setupTimePeriodForms.name" value="EditCustomTimePeriod"/>
+                <set field="setupTimePeriodForms.location" value="component://setup/widget/SetupScreens.xml"/>
+                <set field="setupTimePeriodForms.name" value="SetupTimePeriodForms"/>
                 
                 <set field="isCreateForm" type="Boolean" value="false"/>      
                    
@@ -708,6 +708,15 @@
             <widgets>
             	<platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditFiscalPeriods.ftl"/></html></platform-specific>
             </widgets>           
+        </section>
+    </screen>
+    <screen name="SetupTimePeriodForms">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditFiscalPeriod.ftl"/></html></platform-specific>
+            </widgets>
         </section>
     </screen>
     <screen name="EditJournals">

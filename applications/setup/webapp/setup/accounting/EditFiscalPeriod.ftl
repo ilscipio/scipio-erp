@@ -60,8 +60,8 @@
 		
 		
 	    <#if formActionType == "edit">
-	        <@field type="display" label=uiLabelMap.FormFieldTitle_customTimePeriodTimeId><#rt/>
-	            <span class="acctg-managefield acctg-managefield-for-customTimePeriodTimeId">
+	        <@field type="display" label=uiLabelMap.FormFieldTitle_customTimePeriodId><#rt/>
+	            <span class="acctg-managefield acctg-managefield-for-customTimePeriodId">
 	            	<@setupExtAppLink uri="/accounting/control/EditCustomTimePeriod?organizationPartyId=${rawString(params.orgPartyId!)}&customTimePeriodId=${rawString(params.customTimePeriodId!)}" text=params.customTimePeriodId!/>
 	            </span><#t/>
 	        </@field><#lt/>
@@ -71,25 +71,25 @@
 	        <@field type="input" name="customTimePeriodId" label=uiLabelMap.CommonId value=(params.customTimePeriodId!) class="+acctg-inputfield"/>
 	    </#if>
 
-	    <@field type="text" name="periodNum" value=(params.periodNum!) label=uiLabelMap.AccountingPeriodNum class="+acctg-inputfield" />
+	    <@field type="text" name="periodNum" value=(params.periodNum!) label=uiLabelMap.AccountingPeriodNumber class="+acctg-inputfield" />
 	    <@field type="text" name="periodName" value=(params.periodName!) label=uiLabelMap.AccountingPeriodName class="+acctg-inputfield" />	    
 	    
 	    <@field type="select" name="periodTypeId" label=uiLabelMap.CommonType class="+acctg-inputfield">
 	      <option value="" disabled="disabled"></option>
 	      <#list periodTypes as periodType>
 	        <#assign selected = (rawString(params.periodTypeId!) == (periodType.periodTypeId!))>
-	        <option value="${periodType.description!}"<#if selected> selected="selected"</#if>>${periodType.description!}</option>
+	        <option value="${periodType.periodTypeId!}"<#if selected> selected="selected"</#if>>${periodType.description!}</option>
 	      </#list>
 	    </@field>
 	    
-	    <@field type="date" name="fromDate" value=(params.fromDate!) required=false label=uiLabelMap.CommonFromDate class="+acctg-inputfield"/>
-	    <@field type="date" name="thruDate" value=(params.thruDate!) required=false label=uiLabelMap.CommonThruDate class="+acctg-inputfield"/>
+	    <@field type="datetime" name="fromDate" value=(params.fromDate!) required=false label=uiLabelMap.CommonFromDate class="+acctg-inputfield" dateDisplayType="date" />
+	    <@field type="datetime" name="thruDate" value=(params.thruDate!) required=false label=uiLabelMap.CommonThruDate class="+acctg-inputfield" dateDisplayType="date" />
 	    
 	    <@field type="checkbox" name="isClosed" value=(params.thruDate!) required=false label=uiLabelMap.FormFieldTitle_isClosed class="+acctg-inputfield"/>	       
     </@form>
 </#macro>
 
-<@section title=uiLabelMap.PageTitleAddTimePeriod containerId="acctg-newtimeperiod" containerClass="+acctg-newtimeperiod acctg-recordaction acctg-newrecord" 
+<@section title=uiLabelMap.AccountingAddCustomTimePeriod containerId="acctg-newtimeperiod" containerClass="+acctg-newtimeperiod acctg-recordaction acctg-newrecord" 
     containerStyle=((targetRecordAction == "timeperiod-new")?string("","display:none;"))>
   <#if targetRecordAction == "timeperiod-new">
     <#assign paramMaps = initialParamMaps>
@@ -106,7 +106,7 @@
   />
 </@section>
 
-<@section title=uiLabelMap.PageTitleEditTimePeriod containerId="acctg-edittimeperiod" containerClass="+acctg-edittimeperiod acctg-recordaction acctg-editrecord" 
+<@section title=uiLabelMap.AccountingEditCustomTimePeriod containerId="acctg-edittimeperiod" containerClass="+acctg-edittimeperiod acctg-recordaction acctg-editrecord" 
     containerStyle=((targetRecordAction == "timeperiod-edit")?string("","display:none;"))>
   <#if targetRecordAction == "timeperiod-edit">
     <#assign paramMaps = initialParamMaps>

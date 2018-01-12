@@ -162,15 +162,18 @@ public class PeriodServices {
             timePeriod = EntityQuery.use(delegator).cache(useCache).from("CustomTimePeriod")
                     .where(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId)).queryOne();
             if (UtilValidate.isNotEmpty(timePeriod)) {
-                parentPeriod = timePeriod.getRelatedOne("ParentCustomPeriodTime", false);
+                parentPeriod = timePeriod.getRelatedOne("ParentCustomTimePeriod", false);
                 timePeriodMap.putAll(timePeriod.getAllFields());
                 StringBuilder parentTimePeriodDesc = new StringBuilder();
                 if (UtilValidate.isNotEmpty(parentPeriod)) {
-                    parentTimePeriodDesc.append("");
                     parentTimePeriodDesc.append("[");
-                    parentTimePeriodDesc.append(parentPeriod.getString(""));
+                    parentTimePeriodDesc.append(parentPeriod.getString("customTimePeriodId"));
                     parentTimePeriodDesc.append("]");
-
+                    if (UtilValidate.isNotEmpty(parentPeriod.getString("periodName"))) {
+                        parentTimePeriodDesc.append(" " + parentPeriod.getString("periodName"));
+                    } else if (UtilValidate.isNotEmpty(parentPeriod.getString("periodNum"))) {
+                        parentTimePeriodDesc.append(" " + parentPeriod.getString("periodNum"));
+                    }
                 } else {
                     parentTimePeriodDesc.append("_Not Applicable_");
                 }

@@ -622,23 +622,39 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         if (isUndefOrNull(value)) {
             value = ai.defaultParams[name] || '';
         }
+        console.log("elem id: " + elem.prop('id') + " name: " + name + " value: " + value);
         if (elem.is(':input')) {
-            elem.val(value);
+        	if (name.endsWith("_i18n")) {
+        		id = elem.prop('id');
+        		newId = "#" + id.substr(0, id.lastIndexOf('_i18n'));
+        		elem = jQuery(newId);
+        		console.log("i18n elem id: " + newId + " name: " + elem.prop('name') + " value: " + value);
+        	}
+        	if (elem) {
+        		elem.val(value);
+        	}
         } else if (elem.hasClass('acctg-displayfield')) {
             elem.html(value);
         } else if (elem.hasClass('acctg-managefield')) {
             scth.makeManageLinkForElem(elem, name, value, form, params, ai);
+        } else if (elem.is('span') && elem.hasClass('acctg-inputfield') && elem.hasClass('checkbox-item')) {
+        	childElem = jQuery(jQuery(elem).children('input[type="checkbox"]')[0]);        	
+        	childElem.val(value);
+        	if (value == true || value == "Y" ) {
+        		childElem.attr("checked", true);
+        	}
         } else {
-            reportInternalError('form field misconfigured for use with catalog tree - no value can be assigned. form id: ' + 
+            reportInternalError('form field misconfigured for use with tree - no value can be assigned. form id: ' + 
                 elem.closest('form').prop('id') + 
                 ', elem tag: ' + elem.prop('tagName') +
                 ', class: ' + elem.attr('class') +
+                ', id: ' + elem.attr('id') +
                 ',  name: ' + elem.prop('name'));
         }
     };
     
     this.getAcctgFormFieldName = function(elem) {
-        var name = null;
+        var name = null;        
         if (elem.is(':input')) {
             name = elem.prop('name');
             if (!name) {
@@ -646,16 +662,32 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
                     name = extractClassNameSuffix(elem, 'acctg-inputfield-for-'); 
                 }
             }
+            if (name.endsWith("_i18n")) {        		
+        		name = name.substr(0, name.lastIndexOf('_i18n'));        		
+        		console.log("i18n elem name: " + name);
+        	}        	
         } else if (elem.hasClass('acctg-displayfield')) {
             name = extractClassNameSuffix(elem, 'acctg-displayfield-for-'); 
         } else if (elem.hasClass('acctg-managefield')) {
             name = extractClassNameSuffix(elem, 'acctg-managefield-for-'); 
-        } 
+        } else if (elem.is('span') && elem.hasClass('acctg-inputfield') && elem.hasClass('checkbox-item')) {        
+        	childElem = jQuery(jQuery(elem.children('input[type="checkbox"]')[0]));
+        	if (childElem) {	        	
+	    	    name = childElem.prop('name');
+	    	    if (!name) {
+	                if (childElem.hasClass('acctg-inputfield')) {
+	                    name = extractClassNameSuffix(childElem, 'acctg-inputfield-for-'); 
+	                }
+	            }    
+        	}
+        }
+        
         if (!name) {
             reportInternalError('form field misconfigured for use with tree' +
                 ' - no name can be extracted from it. form id: ' + elem.closest('form').prop('id') + 
                 ', elem tag: ' + elem.prop('tagName') +
                 ', class: ' + elem.attr('class') +
+                ', id: ' + elem.attr('id') +
                 ',  name: ' + elem.prop('name'));
         }
         return name;
@@ -786,8 +818,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
      * NOTE: caller can pass params and call setActionPropsParams instead (convenience).
      */
     var execActionTarget = function(ai, params) {
-        var coreExec = function() {
-        	console.log("(ai.actionProps.id ====> " + ai.actionProps.id);
+        var coreExec = function() {        	
             params = getResolvedActionPropsParams(ai, params);
             if (ai.actionProps.type == "link") {
                 openLink(ai.actionProps.url, params, ai.actionProps.target);

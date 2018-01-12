@@ -159,10 +159,10 @@ public class PeriodServices {
         GenericValue parentPeriod = null;
         Map<String, Object> timePeriodMap = FastMap.newInstance();
         try {
-            timePeriod = EntityQuery.use(delegator).cache(useCache).from("TimePeriod")
+            timePeriod = EntityQuery.use(delegator).cache(useCache).from("CustomTimePeriod")
                     .where(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId)).queryOne();
             if (UtilValidate.isNotEmpty(timePeriod)) {
-                parentPeriod = timePeriod.getRelatedOne("ParentPeriodTime", false);
+                parentPeriod = timePeriod.getRelatedOne("ParentCustomPeriodTime", false);
                 timePeriodMap.putAll(timePeriod.getAllFields());
                 StringBuilder parentTimePeriodDesc = new StringBuilder();
                 if (UtilValidate.isNotEmpty(parentPeriod)) {

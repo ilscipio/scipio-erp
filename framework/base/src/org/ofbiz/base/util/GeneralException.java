@@ -225,6 +225,16 @@ public class GeneralException extends Exception implements SettablePropertyMessa
     }
     
     /**
+     * SCIPIO: Returns the list of messages attached to this exception, localized if possible.
+     * <p>
+     * NOTE: Depending on how the messages were added to the exception, these are not guaranteed
+     * to be localized or may even be in a different language.
+     */
+    public List<String> getMessageList(Locale locale) {
+        return PropertyMessage.getMessages(this.messages, locale); // SCIPIO: property messages
+    }
+    
+    /**
      * SCIPIO: Returns the list of attached messages as PropertyMessage instances.
      * May be null.
      * This can be passed to {@link PropertyMessage} helper methods to get localized messages.

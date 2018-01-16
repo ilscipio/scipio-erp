@@ -416,9 +416,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         }
         return ($parent) ? $node : null; // prevents returning the root node
     };
-    var getTopGlAccountIdNodeForNode = function($node) {
-        return getTopLevelNode($node);
-    }
+    
     var getNodeObjectType = function($node) {
         if ($node && $node.data) return $node.data.type; // same names, 1-for-1 mapping
         else return null;
@@ -624,23 +622,39 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         if (isUndefOrNull(value)) {
             value = ai.defaultParams[name] || '';
         }
+        console.log("elem id: " + elem.prop('id') + " name: " + name + " value: " + value);
         if (elem.is(':input')) {
-            elem.val(value);
+        	if (name.endsWith("_i18n")) {
+        		id = elem.prop('id');
+        		newId = "#" + id.substr(0, id.lastIndexOf('_i18n'));
+        		elem = jQuery(newId);
+        		console.log("i18n elem id: " + newId + " name: " + elem.prop('name') + " value: " + value);
+        	}
+        	if (elem) {
+        		elem.val(value);
+        	}
         } else if (elem.hasClass('acctg-displayfield')) {
             elem.html(value);
         } else if (elem.hasClass('acctg-managefield')) {
             scth.makeManageLinkForElem(elem, name, value, form, params, ai);
+        } else if (elem.is('span') && elem.hasClass('acctg-inputfield') && elem.hasClass('checkbox-item')) {
+        	childElem = jQuery(jQuery(elem).children('input[type="checkbox"]')[0]);        	
+        	childElem.val(value);
+        	if (value == true || value == "Y" ) {
+        		childElem.attr("checked", true);
+        	}
         } else {
-            reportInternalError('form field misconfigured for use with catalog tree - no value can be assigned. form id: ' + 
+            reportInternalError('form field misconfigured for use with tree - no value can be assigned. form id: ' + 
                 elem.closest('form').prop('id') + 
                 ', elem tag: ' + elem.prop('tagName') +
                 ', class: ' + elem.attr('class') +
+                ', id: ' + elem.attr('id') +
                 ',  name: ' + elem.prop('name'));
         }
     };
     
     this.getAcctgFormFieldName = function(elem) {
-        var name = null;
+        var name = null;        
         if (elem.is(':input')) {
             name = elem.prop('name');
             if (!name) {
@@ -648,16 +662,32 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
                     name = extractClassNameSuffix(elem, 'acctg-inputfield-for-'); 
                 }
             }
+            if (name.endsWith("_i18n")) {        		
+        		name = name.substr(0, name.lastIndexOf('_i18n'));        		
+        		console.log("i18n elem name: " + name);
+        	}        	
         } else if (elem.hasClass('acctg-displayfield')) {
             name = extractClassNameSuffix(elem, 'acctg-displayfield-for-'); 
         } else if (elem.hasClass('acctg-managefield')) {
             name = extractClassNameSuffix(elem, 'acctg-managefield-for-'); 
-        } 
+        } else if (elem.is('span') && elem.hasClass('acctg-inputfield') && elem.hasClass('checkbox-item')) {        
+        	childElem = jQuery(jQuery(elem.children('input[type="checkbox"]')[0]));
+        	if (childElem) {	        	
+	    	    name = childElem.prop('name');
+	    	    if (!name) {
+	                if (childElem.hasClass('acctg-inputfield')) {
+	                    name = extractClassNameSuffix(childElem, 'acctg-inputfield-for-'); 
+	                }
+	            }    
+        	}
+        }
+        
         if (!name) {
-            reportInternalError('form field misconfigured for use with catalog tree' +
+            reportInternalError('form field misconfigured for use with tree' +
                 ' - no name can be extracted from it. form id: ' + elem.closest('form').prop('id') + 
                 ', elem tag: ' + elem.prop('tagName') +
                 ', class: ' + elem.attr('class') +
+                ', id: ' + elem.attr('id') +
                 ',  name: ' + elem.prop('name'));
         }
         return name;
@@ -788,7 +818,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
      * NOTE: caller can pass params and call setActionPropsParams instead (convenience).
      */
     var execActionTarget = function(ai, params) {
-        var coreExec = function() {
+        var coreExec = function() {        	
             params = getResolvedActionPropsParams(ai, params);
             if (ai.actionProps.type == "link") {
                 openLink(ai.actionProps.url, params, ai.actionProps.target);
@@ -893,8 +923,10 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
 
         if (ai.objectType == "glAccount") {
             params.topGlAccountId = ai.objectId;
+        } else if (ai.objectType == "timePeriod") {
+        	params.customTimePeriodId = ai.objectId;
         } else if (ai.node) {
-            params.topGlAccountId = getNodeObjectId(getTopGlAccountIdNodeForNode(ai.node))
+//            params.topGlAccountId = getNodeObjectId(getTopLevelNode(ai.node))
         }
         
         // merge any *Entity fields into params map (this takes care of objectId & parent id)
@@ -999,6 +1031,20 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
                             }
                         );
                     }
+                } else if (ai.objectType === 'timePeriod') {
+                	if (scth.links.getTimePeriodExtendedData) {
+                		doExecEdit = false;
+                        runAjax(scth.links.getTimePeriodExtendedData, {
+                                customTimePeriodId: ai.objectId,
+                            }, 
+                            function(data) {
+                                if (data.timePeriod) {
+                                	params = $.extend(params, data.timePeriod);
+                                }
+                                execEdit();
+                            }
+                        );
+                	}
                 }
             }
             if (doExecEdit) {
@@ -1036,7 +1082,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         });
     };
     
-    this.execNewGlAccountForNode = function($node) {
+    this.execNewForNode = function($node) {
     	var ai = getActionInfo($node, "add");
     	var params = makeParamsMap(ai);
 
@@ -1045,6 +1091,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
     	});
     }
     
+    /**
     this.execNewGlAccount = function() {
         var ai = getActionInfo(null, "newglaccount", "default");
         var params = makeParamsMap(ai);
@@ -1053,6 +1100,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
             execActionTarget(ai, params);
         });
     };
+    */    
     
     this.execManageForNode = function($node) {
         var ai = getActionInfo($node, "manage");
@@ -1070,7 +1118,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         } else if (actionType === "remove") {
             return this.execRemoveForNode($node);
         } else if (actionType === "add") {
-            return this.execNewGlAccountForNode($node);
+            return this.execNewForNode($node);
         } else if (actionType === "manage") {
             return this.execManageForNode($node);
         } else {
@@ -1108,7 +1156,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
                 "separator_after": false,
                 "label": scth.labels.add,
                 "action": function(obj) {
-                    scth.execNewGlAccountForNode($node);
+                    scth.execNewForNode($node);
                 }
             },
             manage: {
@@ -1133,7 +1181,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         };
         
         var menuDefs = {};
-        if (objectType == 'glAccount') {
+        if (objectType == 'glAccount' || objectType == 'timePeriod') {
             menuDefs = {
             	"add": defs.add,            
                 "edit": defs.edit,

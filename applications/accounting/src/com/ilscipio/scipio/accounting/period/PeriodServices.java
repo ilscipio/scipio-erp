@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -30,6 +31,9 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 
@@ -38,6 +42,7 @@ import com.ilscipio.scipio.treeMenu.jsTree.JsTreeDataItem;
 import com.ilscipio.scipio.treeMenu.jsTree.JsTreeDataItem.JsTreeDataItemState;
 
 import javolution.util.FastList;
+import javolution.util.FastMap;
 
 public class PeriodServices {
 
@@ -103,10 +108,19 @@ public class PeriodServices {
         if (library.equals("jsTree")) {
             String customTimePeriodId = customTimePeriod.getString("customTimePeriodId");
             String periodName = customTimePeriod.getString("periodName");
+            String nodeText = (UtilValidate.isNotEmpty(periodName)) ? periodName : customTimePeriodId;
+            GenericValue periodType = null;
+            try {
+                periodType = customTimePeriod.getRelatedOne("PeriodType", true);
+            } catch (GenericEntityException e) {
+                Debug.logWarning("Can't retreive periodType [" + customTimePeriod.getString("periodTypeId") + "]", module);
+            }
+            if (UtilValidate.isNotEmpty(periodType)) {
+                nodeText = nodeText.concat(" [" + periodType.getString("description") + "]");
+            }
             JsTreeDataItem dataItem = null;
-            dataItem = new JsTreeDataItem(nodeId, customTimePeriodId, (UtilValidate.isNotEmpty(periodName)) ? periodName : customTimePeriodId, "jstree-folder",
-                    new JsTreeDataItemState(effState), parentNodeId);
-            dataItem.setType("customTimePeriod");
+            dataItem = new JsTreeDataItem(nodeId, customTimePeriodId, nodeText, "jstree-folder", new JsTreeDataItemState(effState), parentNodeId);
+            dataItem.setType("timePeriod");
             if (includeCustomTimePeriodData) {
                 dataItem.put("customTimePeriodEntity", customTimePeriod);
             }
@@ -132,5 +146,46 @@ public class PeriodServices {
             }
         }
         return childTreeDataItems;
+    }
+
+    public static Map<String, Object> getTimePeriod(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+
+        Delegator delegator = dctx.getDelegator();
+        String customTimePeriodId = (String) context.get("customTimePeriodId");
+        Boolean useCache = (Boolean) context.get("useCache");
+
+        GenericValue timePeriod = null;
+        GenericValue parentPeriod = null;
+        Map<String, Object> timePeriodMap = FastMap.newInstance();
+        try {
+            timePeriod = EntityQuery.use(delegator).cache(useCache).from("CustomTimePeriod")
+                    .where(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId)).queryOne();
+            if (UtilValidate.isNotEmpty(timePeriod)) {
+                parentPeriod = timePeriod.getRelatedOne("ParentCustomTimePeriod", false);
+                timePeriodMap.putAll(timePeriod.getAllFields());
+                StringBuilder parentTimePeriodDesc = new StringBuilder();
+                if (UtilValidate.isNotEmpty(parentPeriod)) {
+                    parentTimePeriodDesc.append("[");
+                    parentTimePeriodDesc.append(parentPeriod.getString("customTimePeriodId"));
+                    parentTimePeriodDesc.append("]");
+                    if (UtilValidate.isNotEmpty(parentPeriod.getString("periodName"))) {
+                        parentTimePeriodDesc.append(" " + parentPeriod.getString("periodName"));
+                    } else if (UtilValidate.isNotEmpty(parentPeriod.getString("periodNum"))) {
+                        parentTimePeriodDesc.append(" " + parentPeriod.getString("periodNum"));
+                    }
+                } else {
+                    parentTimePeriodDesc.append("_Not Applicable_");
+                }
+                timePeriodMap.put("parentPeriodDesc", parentTimePeriodDesc.toString());
+            }
+
+        } catch (GenericEntityException e) {
+            Debug.logError("TimePeriod [ " + customTimePeriodId + "] couldn't be found. " + e.getMessage(), module);
+        }
+
+        result.put("timePeriod", timePeriodMap);
+
+        return result;
     }
 }

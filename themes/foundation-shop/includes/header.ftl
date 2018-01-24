@@ -216,8 +216,13 @@ under the License.
 </#if>
 <#-- Twitter Authentication Addon (required)-->
 <#if getPropertyMsg("shop.properties","twitter.enabled")== "Y">
-    <#include "component://auth-twitter/webapp/facebook/fb-twitter.ftl"/>
+    <#include "component://auth-twitter/webapp/twitter/twitter-common.ftl"/>
     <@twitterInit/>
+</#if>
+<#-- LinkedIn Authentication Addon (required)-->
+<#if getPropertyMsg("shop.properties","linkedin.enabled")== "Y">
+    <#include "component://auth-linkedin/webapp/linkedin/linkedin-common.ftl"/>
+    <@linkedinInit/>
 </#if>
 <#-- ================================ -->
 <div class="header" id="header">

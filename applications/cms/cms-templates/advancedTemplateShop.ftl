@@ -88,23 +88,29 @@ NOTE: The parts below are duplicated from commonTemplateParts.ftl. They can also
   ${preContent!}
 </@container>
 <@container class="+${styles.grid_theme!}" id="content-main-section">
-  <#if displayInfo.showLeft>
-    <#if displayInfo.showRight>
-      <@leftColumn class=(styles.grid_sidebar_2_side!)/>
-      <@mainColumn class=(styles.grid_sidebar_2_main!)/>
-      <@rightColumn class=(styles.grid_sidebar_2_side!)/>
-    <#else>
-      <@leftColumn class=(styles.grid_sidebar_1_side!)/>
-      <@mainColumn class=(styles.grid_sidebar_1_main!)/>
-    </#if>
+  <#if displayInfo.customSideBar>
+    <div id="content-main-body"><#-- FIXME: this makes a div in between row and cell -->
+      <@mainColumn class=(styles.grid_sidebar_0_main!)/>
+    </div>
   <#else>
-    <#if displayInfo.showRight>
-      <@mainColumn class=(styles.grid_sidebar_1_main!)/>
-      <@rightColumn class=(styles.grid_sidebar_1_side!)/>
+    <#if displayInfo.showLeft>
+      <#if displayInfo.showRight>
+        <@leftColumn class=(styles.grid_sidebar_2_side!)/>
+        <@mainColumn class=(styles.grid_sidebar_2_main!)/>
+        <@rightColumn class=(styles.grid_sidebar_2_side!)/>
+      <#else>
+        <@leftColumn class=(styles.grid_sidebar_1_side!)/>
+        <@mainColumn class=(styles.grid_sidebar_1_main!)/>
+      </#if>
     <#else>
-      <div id="content-main-body"><#-- FIXME: this makes a div in between row and cell -->
-        <@mainColumn class=(styles.grid_sidebar_0_main!)/>
-      </div>
+      <#if displayInfo.showRight>
+        <@mainColumn class=(styles.grid_sidebar_1_main!)/>
+        <@rightColumn class=(styles.grid_sidebar_1_side!)/>
+      <#else>
+        <div id="content-main-body"><#-- FIXME: this makes a div in between row and cell -->
+          <@mainColumn class=(styles.grid_sidebar_0_main!)/>
+        </div>
+      </#if>
     </#if>
   </#if>
 </@container>

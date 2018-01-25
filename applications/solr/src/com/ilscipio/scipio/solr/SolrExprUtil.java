@@ -34,31 +34,31 @@ public abstract class SolrExprUtil {
     }
 
     /**
-         * Escapes all special solr/query characters in the given query term
-         * <em>not</em> enclosed in quotes (single term).
-         * At current time, this includes at least: 
-         * <code>+ - && || ! ( ) { } [ ] ^ " ~ * ? : \ /</code> and whitespace.
-         * NOTE: The result should NOT be enclosed in quotes; use {@link SolrUtil#escapeTermForQuote} for that.
-         * FIXME?: whitespace escaping appears to not always be honored by solr parser?...
-         * @see SolrUtil#escapeTermForQuote
-         */
-        public static String escapeTermPlain(String term) {
-            return ClientUtils.escapeQueryChars(term);
-            // Reference implementation:
-    //        StringBuilder sb = new StringBuilder();
-    //        for (int i = 0; i < s.length(); i++) {
-    //          char c = s.charAt(i);
-    //          // These characters are part of the query syntax and must be escaped
-    //          if (c == '\\' || c == '+' || c == '-' || c == '!'  || c == '(' || c == ')' || c == ':'
-    //            || c == '^' || c == '[' || c == ']' || c == '\"' || c == '{' || c == '}' || c == '~'
-    //            || c == '*' || c == '?' || c == '|' || c == '&'  || c == ';' || c == '/'
-    //            || Character.isWhitespace(c)) {
-    //            sb.append('\\');
-    //          }
-    //          sb.append(c);
-    //        }
-    //        return sb.toString();
-        }
+     * Escapes all special solr/query characters in the given query term
+     * <em>not</em> enclosed in quotes (single term).
+     * At current time, this includes at least: 
+     * <code>+ - && || ! ( ) { } [ ] ^ " ~ * ? : \ /</code> and whitespace.
+     * NOTE: The result should NOT be enclosed in quotes; use {@link SolrUtil#escapeTermForQuote} for that.
+     * FIXME?: whitespace escaping appears to not always be honored by solr parser?...
+     * @see SolrUtil#escapeTermForQuote
+     */
+    public static String escapeTermPlain(String term) {
+        return ClientUtils.escapeQueryChars(term);
+        // Reference implementation:
+//        StringBuilder sb = new StringBuilder();
+//        for (int i = 0; i < s.length(); i++) {
+//          char c = s.charAt(i);
+//          // These characters are part of the query syntax and must be escaped
+//          if (c == '\\' || c == '+' || c == '-' || c == '!'  || c == '(' || c == ')' || c == ':'
+//            || c == '^' || c == '[' || c == ']' || c == '\"' || c == '{' || c == '}' || c == '~'
+//            || c == '*' || c == '?' || c == '|' || c == '&'  || c == ';' || c == '/'
+//            || Character.isWhitespace(c)) {
+//            sb.append('\\');
+//          }
+//          sb.append(c);
+//        }
+//        return sb.toString();
+    }
 
     /**
      * Escapes all special solr/query characters in the given query term intended to be

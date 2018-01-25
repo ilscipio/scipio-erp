@@ -1,10 +1,5 @@
 package com.ilscipio.scipio.solr;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 import javax.transaction.Transaction;
 
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
@@ -12,7 +7,6 @@ import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.component.ComponentException;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -32,20 +26,6 @@ public abstract class SolrUtil {
     public static final String solrConfigName = "solrconfig";
     public static final String solrUrl = makeSolrWebappUrl();
     public static final String solrFullUrl = makeFullSolrWebappUrl();
-    
-    // TODO: REVIEW: the "!" standalone character appears not recognized in solr 5 query parser;
-    // it only works if space after is removed. but it shouldn't do any harm here so leaving in...
-    static final Set<String> noPrefixTerms = UtilMisc.unmodifiableHashSet("AND", "OR", "NOT", "&&", "||", "!", "/*");
-    static final Set<Character> noPrefixTermCharPrefixes = UtilMisc.unmodifiableHashSet('+', '-');
-    static final Map<Character, Character> termEnclosingCharMap; 
-    static {
-        Map<Character, Character> map = new HashMap<>();
-        map.put('"', '"');
-        map.put('{', '}');
-        map.put('[', ']');
-        map.put('(', ')');
-        termEnclosingCharMap = Collections.unmodifiableMap(map);
-    }
     
     public static String getSolrConfigVersionStatic() {
         return UtilProperties.getPropertyValue(solrConfigName, "solr.config.version");

@@ -2,6 +2,7 @@ package com.ilscipio.scipio.solr;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.util.ClientUtils;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 
 /**
@@ -30,35 +32,49 @@ public abstract class SolrExprUtil {
 
     public static final String module = SolrExprUtil.class.getName();
     
+    // TODO: REVIEW: the "!" standalone character appears not recognized in solr 5 query parser;
+    // it only works if space after is removed. but it shouldn't do any harm here so leaving in...
+    static final Set<String> noPrefixTerms = UtilMisc.unmodifiableHashSet("AND", "OR", "NOT", "&&", "||", "!", "/*");
+    static final Set<Character> noPrefixTermCharPrefixes = UtilMisc.unmodifiableHashSet('+', '-');
+    static final Map<Character, Character> termEnclosingCharMap; 
+    static {
+        Map<Character, Character> map = new HashMap<>();
+        map.put('"', '"');
+        map.put('{', '}');
+        map.put('[', ']');
+        map.put('(', ')');
+        termEnclosingCharMap = Collections.unmodifiableMap(map);
+    }
+    
     protected SolrExprUtil() {
     }
 
     /**
-         * Escapes all special solr/query characters in the given query term
-         * <em>not</em> enclosed in quotes (single term).
-         * At current time, this includes at least: 
-         * <code>+ - && || ! ( ) { } [ ] ^ " ~ * ? : \ /</code> and whitespace.
-         * NOTE: The result should NOT be enclosed in quotes; use {@link SolrUtil#escapeTermForQuote} for that.
-         * FIXME?: whitespace escaping appears to not always be honored by solr parser?...
-         * @see SolrUtil#escapeTermForQuote
-         */
-        public static String escapeTermPlain(String term) {
-            return ClientUtils.escapeQueryChars(term);
-            // Reference implementation:
-    //        StringBuilder sb = new StringBuilder();
-    //        for (int i = 0; i < s.length(); i++) {
-    //          char c = s.charAt(i);
-    //          // These characters are part of the query syntax and must be escaped
-    //          if (c == '\\' || c == '+' || c == '-' || c == '!'  || c == '(' || c == ')' || c == ':'
-    //            || c == '^' || c == '[' || c == ']' || c == '\"' || c == '{' || c == '}' || c == '~'
-    //            || c == '*' || c == '?' || c == '|' || c == '&'  || c == ';' || c == '/'
-    //            || Character.isWhitespace(c)) {
-    //            sb.append('\\');
-    //          }
-    //          sb.append(c);
-    //        }
-    //        return sb.toString();
-        }
+     * Escapes all special solr/query characters in the given query term
+     * <em>not</em> enclosed in quotes (single term).
+     * At current time, this includes at least: 
+     * <code>+ - && || ! ( ) { } [ ] ^ " ~ * ? : \ /</code> and whitespace.
+     * NOTE: The result should NOT be enclosed in quotes; use {@link SolrUtil#escapeTermForQuote} for that.
+     * FIXME?: whitespace escaping appears to not always be honored by solr parser?...
+     * @see SolrUtil#escapeTermForQuote
+     */
+    public static String escapeTermPlain(String term) {
+        return ClientUtils.escapeQueryChars(term);
+        // Reference implementation:
+//        StringBuilder sb = new StringBuilder();
+//        for (int i = 0; i < s.length(); i++) {
+//          char c = s.charAt(i);
+//          // These characters are part of the query syntax and must be escaped
+//          if (c == '\\' || c == '+' || c == '-' || c == '!'  || c == '(' || c == ')' || c == ':'
+//            || c == '^' || c == '[' || c == ']' || c == '\"' || c == '{' || c == '}' || c == '~'
+//            || c == '*' || c == '?' || c == '|' || c == '&'  || c == ';' || c == '/'
+//            || Character.isWhitespace(c)) {
+//            sb.append('\\');
+//          }
+//          sb.append(c);
+//        }
+//        return sb.toString();
+    }
 
     /**
      * Escapes all special solr/query characters in the given query term intended to be
@@ -135,7 +151,7 @@ public abstract class SolrExprUtil {
             } else if (SolrExprUtil.isQueryCharEscaped(c, backslashCount)) {
                 term.append(c);
             } else {
-                if (SolrUtil.termEnclosingCharMap.containsKey(c)) {
+                if (termEnclosingCharMap.containsKey(c)) {
                     int endIndex = SolrExprUtil.findTermClosingCharIndex(queryExpr, i, c);
                     if (endIndex > i) {
                         term.append(queryExpr.substring(i, endIndex+1));
@@ -184,7 +200,7 @@ public abstract class SolrExprUtil {
 
     static int findTermClosingCharIndex(String queryExpr, int start, char openChar) {
         int i = start + 1;
-        char closingChar = SolrUtil.termEnclosingCharMap.get(openChar); // NPE if bad openChar
+        char closingChar = termEnclosingCharMap.get(openChar); // NPE if bad openChar
         if (openChar == '"') { // for quote, can ignore all chars except quote and backslash
             int backslashCount = 0;
             while (i < queryExpr.length()) {
@@ -243,12 +259,12 @@ public abstract class SolrExprUtil {
 
     public static List<String> addPrefixToAllTerms(List<String> terms, String prefix) {
         List<String> newTerms = new ArrayList<>(terms.size());
-        Set<Character> noCharPrefix = SolrUtil.noPrefixTermCharPrefixes;
+        Set<Character> noCharPrefix = noPrefixTermCharPrefixes;
         if (prefix.length() == 1) { // optimization
             noCharPrefix = new HashSet<>(noCharPrefix);
             noCharPrefix.add(prefix.charAt(0));
             for(String term : terms) {
-                if (!term.isEmpty() && !SolrUtil.noPrefixTerms.contains(term) && !noCharPrefix.contains(term.charAt(0))) {
+                if (!term.isEmpty() && !noPrefixTerms.contains(term) && !noCharPrefix.contains(term.charAt(0))) {
                     newTerms.add(prefix + term);
                 } else {
                     newTerms.add(term);
@@ -256,7 +272,7 @@ public abstract class SolrExprUtil {
             }
         } else {
             for(String term : terms) {
-                if (!term.isEmpty() && !SolrUtil.noPrefixTerms.contains(term) && !noCharPrefix.contains(term.charAt(0)) && !term.startsWith(prefix)) {
+                if (!term.isEmpty() && !noPrefixTerms.contains(term) && !noCharPrefix.contains(term.charAt(0)) && !term.startsWith(prefix)) {
                     newTerms.add(prefix + term);
                 } else {
                     newTerms.add(term);

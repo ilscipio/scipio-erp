@@ -237,7 +237,7 @@
                     
                     <#if attrTemplates?has_content>
                         <@section title=uiLabelMap.CmsTemplateAttributes class="+editorAttr">
-                          <@table type="data-complex">
+                          <@table type="data-complex" autoAltRows=true responsive=true scrollable=true fixedColumnsRight=1>
                             <@thead>
                                 <@tr>
                                     <@th>inputPos</@th>
@@ -302,7 +302,7 @@
                     
                     <#if assetTemplates?has_content>
                         <@section title=uiLabelMap.CmsTemplateAssets class="+editorAssets">
-                          <@table type="data-complex">
+                          <@table type="data-complex" autoAltRows=true responsive=true scrollable=true fixedColumnsRight=1>
                             <@thead>
                                 <@tr>
                                     <#-- NOTE: we'll display the input position, but it has no actual function in rendering. -->
@@ -365,7 +365,7 @@
                     <#-- Versions -->
                     <#if (pageTemplate.pageTmpVersions.all)?has_content>
                         <@section title=uiLabelMap.CommonRevisions>
-                            <@table type="data-complex">
+                            <@table type="data-complex" autoAltRows=true responsive=true scrollable=true fixedColumnsRight=1>
                             <@thead>
                                 <@tr>
                                     <@th width="32px"></@th>

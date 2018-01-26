@@ -477,7 +477,7 @@
                     
                     <#-- Active Version -->
                     <@section title=uiLabelMap.CommonRevisions>
-                            <@table type="data-complex">
+                            <@table type="data-complex" autoAltRows=true responsive=true scrollable=true fixedColumnsRight=1>
                                 <@thead>
                                     <@tr>
                                         <@th width="32px"></@th>

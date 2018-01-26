@@ -24,7 +24,7 @@ under the License.
 <#assign ofbizServerName = application.getAttribute("_serverId")!"default-server">
 <#assign contextPath = request.getContextPath()>
 <#if person?has_content>
-  <#assign userName = person.firstName! + " " + person.middleName! + " " + person.lastName!>
+  <#assign userName = (person.firstName!"") + " " + (person.middleName!"") + " " + (person.lastName!"")>
 <#elseif partyGroup?has_content>
   <#assign userName = partyGroup.groupName!>
 <#elseif userHasAccount><#-- NOTE: see common.ftl for userHasAccount setup -->

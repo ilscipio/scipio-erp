@@ -147,7 +147,7 @@
                     <#-- Attributes -->
                     <#if assetAttr?has_content>
                         <@section title=uiLabelMap.CmsTemplateAttributes class="+editorAttr">
-                          <@table type="data-complex">
+                          <@table type="data-complex" autoAltRows=true responsive=true scrollable=true fixedColumnsRight=1>
                             <@thead>
                                 <@tr>
                                     <@th>inputPos</@th>

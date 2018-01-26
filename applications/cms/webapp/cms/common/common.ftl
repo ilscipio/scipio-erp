@@ -430,7 +430,7 @@ Common CMS editor macros and utilities
 <#macro cmsScriptTemplateAssocTable scriptTemplates updateAction="" updateFields={} deleteAction="" includeForms=true>
     <#if scriptTemplates?has_content>
         <@section title=uiLabelMap.CmsScripts class="editorScripts">
-          <@table type="data-complex">
+          <@table type="data-complex" autoAltRows=true responsive=true scrollable=true fixedColumnsRight=1>
             <@thead>
                 <@tr>
                     <@th width="32px">${uiLabelMap.CommonPosition}</@th>

@@ -1097,12 +1097,12 @@
                 words="lang/stopwords_en.txt"
                 />
         <filter class="solr.LowerCaseFilterFactory"/>
-  <filter class="solr.EnglishPossessiveFilterFactory"/>
+        <filter class="solr.EnglishPossessiveFilterFactory"/>
         <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
-  <!-- Optionally you may want to use this less aggressive stemmer instead of PorterStemFilterFactory:
+        <!-- Optionally you may want to use this less aggressive stemmer instead of PorterStemFilterFactory:-->
+        <!-- SCIPIO: 2018-01: indeed we should not use porter anymore, messes with wildcards -->
         <filter class="solr.EnglishMinimalStemFilterFactory"/>
-  -->
-        <filter class="solr.PorterStemFilterFactory"/>
+        <!--<filter class="solr.PorterStemFilterFactory"/>-->
       </analyzer>
       <analyzer type="query">
         <tokenizer class="solr.StandardTokenizerFactory"/>
@@ -1112,12 +1112,12 @@
                 words="lang/stopwords_en.txt"
                 />
         <filter class="solr.LowerCaseFilterFactory"/>
-  <filter class="solr.EnglishPossessiveFilterFactory"/>
+        <filter class="solr.EnglishPossessiveFilterFactory"/>
         <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
-  <!-- Optionally you may want to use this less aggressive stemmer instead of PorterStemFilterFactory:
+        <!-- Optionally you may want to use this less aggressive stemmer instead of PorterStemFilterFactory:-->
+        <!-- SCIPIO: 2018-01: indeed we should not use porter anymore, messes with wildcards -->
         <filter class="solr.EnglishMinimalStemFilterFactory"/>
-  -->
-        <filter class="solr.PorterStemFilterFactory"/>
+        <!--<filter class="solr.PorterStemFilterFactory"/>-->
       </analyzer>
     </fieldType>
 

@@ -628,6 +628,26 @@ if (!errorOccurred && ("Y".equals(kwsArgs.noConditionFind) || kwsArgs.searchStri
             }
         }
         
+        if (kwsArgs.searchString && kwsArgs.searchString != "*:*") {
+            try {
+                final wcsPropPrefix = cfgPropPrefix+"search.solr.wildcard.";
+                if (UtilProperties.getPropertyAsBoolean(cfgPropRes, wcsPropPrefix+"enabled", false)) {
+                    kwsArgs.searchString = SolrExprUtil.makeWildcardSimpleSearchTerms(kwsArgs.searchString, 
+                        SolrExprUtil.WildcardMode.valueOf(UtilProperties.getPropertyValue(cfgPropRes, wcsPropPrefix+"wildcardMode", "EDGE_NGRAM_BOTH")), 
+                        UtilProperties.getPropertyAsBoolean(cfgPropRes, wcsPropPrefix+"retainNonWild", true), 
+                        UtilProperties.getPropertyValue(cfgPropRes, wcsPropPrefix+"nonWildWeight") ?: null, 
+                        UtilProperties.getPropertyValue(cfgPropRes, wcsPropPrefix+"wildWeight") ?: null, 
+                        UtilProperties.getPropertyAsInteger(cfgPropRes, wcsPropPrefix+"minTermSize", null), 
+                        UtilProperties.getPropertyAsInteger(cfgPropRes, wcsPropPrefix+"maxTermSize", null), 
+                        UtilProperties.getPropertyAsBoolean(cfgPropRes, wcsPropPrefix+"deep", true));
+                    // SPECIAL: This feature conflicts with search suggestions, so turn them off...
+                    kwsArgs.spellcheck = false
+                }
+            } catch(Exception e) {
+                Debug.logError(e, "Solr: Error wildcarding simple search terms for query '" + kwsArgs.searchString + "': " + e.getMessage(), module);
+            }
+        }
+        
         solrKwsServCtx = [
             query: kwsArgs.searchString, 
             queryFilters: kwsArgs.searchFilters, 

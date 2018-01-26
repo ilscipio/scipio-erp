@@ -26,8 +26,8 @@ under the License.
                     <fo:table-cell>
                         <fo:block>
                             <fo:block font-weight="bold">${uiLabelMap.OrderAddress}: </fo:block>
-                            <#if quote.partyId??>
-                                <#assign quotePartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":quote.partyId, "compareDate":quote.issueDate, "userLogin":userLogin})/>
+                            <#if quote.partyId?has_content>
+                                <#assign quotePartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":quote.partyId, "compareDate":quote.issueDate?now, "userLogin":userLogin})/>
                                 <fo:block>${quotePartyNameResult.fullName?default("[${uiLabelMap.OrderPartyNameNotFound}]")}</fo:block>
                             <#else>
                                 <fo:block>[${uiLabelMap.OrderPartyNameNotFound}]</fo:block>

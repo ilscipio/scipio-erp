@@ -3,15 +3,18 @@ package com.ilscipio.scipio.solr;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 
@@ -328,6 +331,13 @@ public abstract class SolrLocaleUtil {
     
     public static Set<String> determineI18nQueryFieldsForUserLocale(Locale userLocale, GenericValue productStore, boolean useStoreLocale,
             Collection<Locale> forceLocales, String fieldPrefix, String userLocalePower, String storeLocalePower, String forceLocalePower) {
+        return determineI18nQueryFieldsForUserLocale(userLocale, productStore, useStoreLocale, forceLocales, fieldPrefix, userLocalePower, storeLocalePower, 
+                forceLocalePower, null, null, null);
+    }
+    
+    public static Set<String> determineI18nQueryFieldsForUserLocale(Locale userLocale, GenericValue productStore, boolean useStoreLocale,
+            Collection<Locale> forceLocales, String fieldPrefix, String userLocalePower, String storeLocalePower, String forceLocalePower, 
+            List<FlexibleStringExpander> extraLangFields, String extraUserLocalePower, String extraStoreLocalePower) {
         Set<String> fields = new LinkedHashSet<>();
  
         Locale locale = getCompatibleLocaleValid(userLocale, productStore);
@@ -336,8 +346,11 @@ public abstract class SolrLocaleUtil {
         if (locale == null) locale = storeLocale; // just in case; usually doesn't happen
 
         if (locale == null) {
+            if (storeLocalePower == null) storeLocalePower = "";
+
             // NOTE: this shouldn't happen unless store is misconfigured
-            fields.add(fieldPrefix + SolrLocaleUtil.I18N_GENERAL);
+            fields.add(fieldPrefix + SolrLocaleUtil.I18N_GENERAL + storeLocalePower);
+            addExpandedExtraFieldNames(fields, extraLangFields, SolrLocaleUtil.I18N_GENERAL, extraStoreLocalePower);
         } else {
             // NOTE: 2017-09-14: no need to include the "*_i18n_general" field here anymore because
             // its content will have been merged into the proper locale already (if applicable)
@@ -346,17 +359,31 @@ public abstract class SolrLocaleUtil {
             
             // add user locale
             fields.add(fieldPrefix + getLangCode(locale) + userLocalePower);
+            addExpandedExtraFieldNames(fields, extraLangFields, getLangCode(locale), extraUserLocalePower);
             
             if (useStoreLocale && storeLocale != null && !isSameLangCode(locale, storeLocale)) {
                 if (storeLocalePower == null) storeLocalePower = "";
  
                 // add store locale
                 fields.add(fieldPrefix + getLangCode(storeLocale) + storeLocalePower);
+                addExpandedExtraFieldNames(fields, extraLangFields, getLangCode(storeLocale), extraStoreLocalePower);
             }
         }
         
         addAllI18nValuePrefixSuffix(fields, forceLocales, fieldPrefix, forceLocalePower);
         return fields;
+    }
+    
+    private static void addExpandedExtraFieldNames(Set<String> fields, List<FlexibleStringExpander> extraFields, String langCode, String power) {
+        if (extraFields != null) {
+            Map<String, Object> ctx = new HashMap<>();
+            ctx.put("lang", langCode);
+            for(FlexibleStringExpander exdr : extraFields) {
+                String field = exdr.expandString(ctx);
+                if (power != null) field += power;
+                fields.add(field);
+            }
+        }
     }
     
     /**

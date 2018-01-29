@@ -25,6 +25,7 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
@@ -220,20 +221,28 @@ public abstract class SolrProductUtil {
     public static Set<String> determineUserProductSearchQueryFields(Delegator delegator, Locale userLocale, GenericValue productStore, Map<String, Object> config) {
         setDefaultsUserProductSearchConfig(config, getDefaultUserProductSearchConfig(productStore));
         
+        String defaultField = (String) config.get("product.defaultField");
+        if (defaultField == null || defaultField.isEmpty()) defaultField = "text_i18n_";
+        
         String i18nFieldsSelect = (String) config.get("i18nFieldsSelect");
         Collection<Locale> i18nForceLocales = UtilGenerics.checkCollection(config.get("i18nForceLocales"));
         String userLocalePower = (String) config.get("userLocalePower");
         Collection<String> commonFields = UtilGenerics.checkCollection(config.get("product.commonFields"));
         
+        List<FlexibleStringExpander> extraLangFields = UtilGenerics.checkList(config.get("product.extraLangFields"));
+        String extraUserLocalePower = (String) config.get("extraUserLocalePower");
+        String extraStoreLocalePower = (String) config.get("extraStoreLocalePower");
+
         Set<String> queryFields = null;
         if (UtilValidate.isNotEmpty(i18nFieldsSelect)) {
             if ("user-store".equals(i18nFieldsSelect)) {
                 // FIXME: Set strings are not check for power e.g. ^2 suffix
-                queryFields = SolrLocaleUtil.determineI18nQueryFieldsForUserLocale(userLocale, productStore, true, i18nForceLocales, "text_i18n_", userLocalePower, null, null);
+                queryFields = SolrLocaleUtil.determineI18nQueryFieldsForUserLocale(userLocale, productStore, true, i18nForceLocales, defaultField, userLocalePower, null, null, 
+                        extraLangFields, extraUserLocalePower, extraStoreLocalePower);
                 if (commonFields != null) queryFields.addAll(commonFields);
             } else if ("user".equals(i18nFieldsSelect)) {
-                queryFields = SolrLocaleUtil.determineI18nQueryFieldsForUserLocale(userLocale, productStore, false, i18nForceLocales, "text_i18n_", userLocalePower, null, null);
-                
+                queryFields = SolrLocaleUtil.determineI18nQueryFieldsForUserLocale(userLocale, productStore, false, i18nForceLocales, defaultField, userLocalePower, null, null,
+                        extraLangFields, extraUserLocalePower, extraStoreLocalePower);
             } else if ("all".equals(i18nFieldsSelect)) {
                 queryFields = new LinkedHashSet<>();
                 queryFields.add("text");
@@ -268,6 +277,12 @@ public abstract class SolrProductUtil {
         config.put("userLocalePower", EntityUtilProperties.getPropertyValue(propResource, propNamePrefix + "userLocalePower", null, delegator));
         config.put("product.commonFields", EntityUtilProperties.getPropertyValue(propResource, propNamePrefix + "product.commonFields", null, delegator));
         
+        config.put("product.defaultField", EntityUtilProperties.getPropertyValue(propResource, propNamePrefix + "product.defaultField", null, delegator));
+        
+        config.put("product.extraLangFields", EntityUtilProperties.getPropertyValue(propResource, propNamePrefix + "product.extraLangFields", null, delegator));
+        config.put("extraUserLocalePower", EntityUtilProperties.getPropertyValue(propResource, propNamePrefix + "extraUserLocalePower", null, delegator));
+        config.put("extraStoreLocalePower", EntityUtilProperties.getPropertyValue(propResource, propNamePrefix + "extraStoreLocalePower", null, delegator));
+
         if (parseCfg) parseUserProductSearchConfig(delegator, config);
         return config;
     }
@@ -331,6 +346,21 @@ public abstract class SolrProductUtil {
                 commonFields = Arrays.asList(((String) commonFieldsObj).split("\\s*,\\s*"));
             }
             config.put("product.commonFields", commonFields);
+        }
+        
+        Object extraLangFieldsObj = config.get("product.extraLangFields");
+        if (extraLangFieldsObj instanceof String) {
+            Collection<String> extraLangFields;
+            if (((String) extraLangFieldsObj).length() == 0 || "NONE".equals(extraLangFieldsObj)) {
+                extraLangFields = Collections.emptySet();
+            } else {
+                extraLangFields = Arrays.asList(((String) extraLangFieldsObj).split("\\s*,\\s*"));
+            }
+            List<FlexibleStringExpander> exdrList = new ArrayList<>(extraLangFields.size());
+            for(String expr : extraLangFields) {
+                exdrList.add(FlexibleStringExpander.getInstance(expr));
+            }
+            config.put("product.extraLangFields", exdrList);
         }
     }
     

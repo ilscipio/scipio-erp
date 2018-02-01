@@ -21,7 +21,9 @@ package org.ofbiz.party.contact;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +35,7 @@ import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Assert;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -547,6 +550,79 @@ public class ContactMechWorker {
      */
     public static GenericValue getFacilityContactMechByPurpose(Delegator delegator, String facilityId, List<String> purposeTypes) {
         return getFacilityContactMechByPurpose(delegator, facilityId, purposeTypes, true);
+    }
+    
+    /**
+     * SCIPIO: Finds the latest FacilityContactMech for each given purpose or for all purposes if not specified.
+     * Added 2018-02-01.
+     * @throws GenericEntityException 
+     */
+    public static Map<String, GenericValue> getFacilityContactMechsByPurpose(Delegator delegator, String facilityId, Collection<String> purposeTypes, boolean useCache) throws GenericEntityException {
+        if (UtilValidate.isEmpty(facilityId)) return null;
+
+        java.sql.Timestamp moment = UtilDateTime.nowTimestamp();
+        
+        // Simply lookup all active FacilityContactMechPurpose and filter after, will tend to be faster this way
+        List<GenericValue> facilityContactMechPurposes = EntityQuery.use(delegator).from("FacilityContactMechPurpose")
+                .where("facilityId", facilityId)
+                .orderBy("-fromDate")
+                .cache(useCache)
+                .filterByDate(moment)
+                .queryList();
+        
+        Map<String, GenericValue> results = new HashMap<>();
+        for(GenericValue facilityContactMechPurpose: facilityContactMechPurposes) {
+            String contactMechPurposeTypeId = facilityContactMechPurpose.getString("contactMechPurposeTypeId");
+            if (UtilValidate.isNotEmpty(purposeTypes) && !purposeTypes.contains(contactMechPurposeTypeId)) {
+                continue;
+            }
+            if (results.containsKey(contactMechPurposeTypeId)) {
+                //Debug.logWarning("Facility '" + facilityId + "' has two or more active contact mechs with same purpose: " + contactMechPurposeTypeId, module);
+                continue;
+            }
+            
+            String contactMechId = facilityContactMechPurpose.getString("contactMechId");
+            // NOTE: this appears redundant, but must validate fromDate/thruDate on this too
+            GenericValue facilityContactMech = EntityQuery.use(delegator).from("FacilityContactMech")
+                    .where("facilityId", facilityId, "contactMechId", contactMechId)
+                    .orderBy("-fromDate")
+                    .cache(useCache)
+                    .filterByDate(moment)
+                    .queryFirst();
+            if (facilityContactMech != null) {
+                results.put(contactMechPurposeTypeId, facilityContactMech);
+            }
+        }
+        return results;
+    }
+    
+    /**
+     * SCIPIO: Finds the latest Facility PostalAddress for each given purpose or for all purposes if not specified.
+     * NOTE: This uses some optimizations, so not guaranteed to check the full validity of each record (common operations).
+     * Added 2018-02-01.
+     * @throws GenericEntityException 
+     */
+    public static Map<String, GenericValue> getFacilityPostalAddressesByPurpose(Delegator delegator, String facilityId, Collection<String> purposeTypes, boolean useCache) throws GenericEntityException {
+        if (UtilValidate.isEmpty(facilityId)) return null;
+        Map<String, GenericValue> results = getFacilityContactMechsByPurpose(delegator, facilityId, purposeTypes, useCache);
+        Collection<String> keysToRemove = null;
+        for(Map.Entry<String, GenericValue> entry : results.entrySet()) {
+            String contactMechId = entry.getValue().getString("contactMechId");
+            GenericValue postalAddress = delegator.findOne("PostalAddress", UtilMisc.toMap("contactMechId", contactMechId), useCache);
+            // NOTE: we skip POSTAL_ADDRESS contactMechTypeId check; usually redundant here
+            if (postalAddress != null) {
+                entry.setValue(postalAddress);
+            } else {
+                if (keysToRemove == null) keysToRemove = new ArrayList<>();
+                keysToRemove.add(entry.getKey());
+            }
+        }
+        if (keysToRemove != null) {
+            for(String purposeType : keysToRemove) {
+                results.remove(purposeType);
+            }
+        }
+        return results;
     }
     
     public static void getFacilityContactMechAndRelated(ServletRequest request, String facilityId, Map<String, Object> target) {

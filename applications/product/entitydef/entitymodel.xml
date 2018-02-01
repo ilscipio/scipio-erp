@@ -1206,6 +1206,34 @@ under the License.
             <key-map field-name="contactMechId"/>
         </relation>
     </entity>
+    <!-- SCIPIO: 2018-02-01: Joins Facility's PostalAddress and FacilityContactMechPurposes -->
+    <view-entity entity-name="FacilityPostalAddressAndPurpose"
+        package-name="org.ofbiz.product.facility"
+        title="FacilityContactMech And ContactMech And PostalAddress And FacilityContactMechPurpose">
+        <member-entity entity-alias="FTCT" entity-name="FacilityContactMech"/>
+        <member-entity entity-alias="FTCTP" entity-name="FacilityContactMechPurpose"/>
+        <member-entity entity-alias="CT" entity-name="ContactMech"/>
+        <member-entity entity-alias="PTA" entity-name="PostalAddress"/>
+        <alias-all entity-alias="FTCT"/>
+        <alias-all entity-alias="CT"/>
+        <alias-all entity-alias="PTA"/>
+        <alias-all entity-alias="FTCTP">
+            <exclude field="fromDate"/>
+            <exclude field="thruDate"/>
+        </alias-all>
+        <alias entity-alias="FTCTP" name="puFromDate" field="fromDate"/>
+        <alias entity-alias="FTCTP" name="puThruDate" field="thruDate"/>
+        <view-link entity-alias="FTCT" rel-entity-alias="FTCTP">
+          <key-map field-name="facilityId"/>
+          <key-map field-name="contactMechId"/>
+        </view-link>
+        <view-link entity-alias="FTCT" rel-entity-alias="CT">
+          <key-map field-name="contactMechId"/>
+        </view-link>
+        <view-link entity-alias="CT" rel-entity-alias="PTA">
+          <key-map field-name="contactMechId"/>
+        </view-link>
+    </view-entity>
     <entity entity-name="FacilityGroup" package-name="org.ofbiz.product.facility" title="Facility Group Entity">
         <field name="facilityGroupId" type="id-ne"></field>
         <field name="facilityGroupTypeId" type="id"></field>

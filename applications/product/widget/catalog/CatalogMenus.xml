@@ -240,6 +240,9 @@ under the License.
     </menu>
 
     <menu name="CategorySubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <actions>
+            <property-to-field resource="catalog" property="shop.default.link.category.prefix" field="categoryPageUrl"/>
+        </actions>
         <menu-item name="EditCategory" title="${uiLabelMap.ProductNewCategory}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <not><if-compare field="isCreateCategory" operator="equals" type="Boolean" value="true"/></not>
@@ -273,12 +276,13 @@ under the License.
         </menu-item>
         <menu-item name="ProductCategoryPage" title="${uiLabelMap.ProductCategoryPage}" widget-style="+website">
             <condition>
-                <not><if-empty field="productCategory"/></not>
+                <and>
+                    <not><if-empty field="productCategory"/></not>
+                    <not><if-empty field="categoryPageUrl"/></not>
+                </and>
             </condition>
             <!-- SCIPIO: Now points to shop -->
-            <link target="/shop/control/category" url-mode="plain" target-window="_blank">
-                <parameter param-name="category_id" from-field="productCategoryId"/>
-            </link>
+            <link target="${categoryPageUrl}${productCategory.productCategoryId}" url-mode="plain" target-window="_blank"/>
         </menu-item>
     </menu>
     

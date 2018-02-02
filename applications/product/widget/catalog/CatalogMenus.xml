@@ -696,13 +696,12 @@ under the License.
             FIXME?: bigger issue is the feature screens in the sub-menu have no relation to Product and don't pass around a productId,
             so there's a disconnect. BUT as long as those screens are accesible then they must show in the
             sidebar somewhere, and this is the workaround. -->
-        <menu-item name="EditProductFeatures" title="${uiLabelMap.ProductFeatures}" disabled="${not currentMenuRenderState.itemState.conditionResult}">
+        <menu-item name="EditProductFeatures" title="${uiLabelMap.ProductFeatures}" disabled="${(empty context.productId) and (not currentMenuRenderState.itemState.conditionResult)}">
             <condition>
-                <or>
-                    <not>
-                        <if-empty field="parameters.productId"/>
-                    </not>
-                </or>
+                <not>
+                    <!--<if-empty field="parameters.productId"/>-->
+                    <if-empty field="productId"/>
+                </not>
             </condition>
             <link target="EditProductFeatures">
                 <parameter param-name="productId"/>
@@ -810,7 +809,7 @@ under the License.
             </link>
         </menu-item>
         <!-- SCIPIO: NOTE: the disabled is here due to same reasons as EditProductFeatures, see EditProductFeatures -->
-        <menu-item name="EditProductConfigs" title="${uiLabelMap.ProductConfigs}" disabled="${not currentMenuRenderState.itemState.conditionResult}">
+        <menu-item name="EditProductConfigs" title="${uiLabelMap.ProductConfigs}" disabled="${(empty context.productId) and (not currentMenuRenderState.itemState.conditionResult)}">
             <condition>
                 <and>
                     <or>
@@ -818,7 +817,8 @@ under the License.
                         <if-compare field="product.productTypeId" operator="equals" value="AGGREGATED_SERVICE"/>
                     </or>
                     <not>
-                        <if-empty field="parameters.productId"/>
+                        <!--<if-empty field="parameters.productId"/>-->
+                        <if-empty field="productId"/>
                     </not>
                 </and>
             </condition>

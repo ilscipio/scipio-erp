@@ -240,6 +240,9 @@ under the License.
     </menu>
 
     <menu name="CategorySubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <actions>
+            <property-to-field resource="catalog" property="shop.default.link.category.prefix" field="categoryPageUrl"/>
+        </actions>
         <menu-item name="EditCategory" title="${uiLabelMap.ProductNewCategory}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <not><if-compare field="isCreateCategory" operator="equals" type="Boolean" value="true"/></not>
@@ -273,12 +276,13 @@ under the License.
         </menu-item>
         <menu-item name="ProductCategoryPage" title="${uiLabelMap.ProductCategoryPage}" widget-style="+website">
             <condition>
-                <not><if-empty field="productCategory"/></not>
+                <and>
+                    <not><if-empty field="productCategory"/></not>
+                    <not><if-empty field="categoryPageUrl"/></not>
+                </and>
             </condition>
             <!-- SCIPIO: Now points to shop -->
-            <link target="/shop/control/category" url-mode="plain" target-window="_blank">
-                <parameter param-name="category_id" from-field="productCategoryId"/>
-            </link>
+            <link target="${categoryPageUrl}${productCategory.productCategoryId}" url-mode="plain" target-window="_blank"/>
         </menu-item>
     </menu>
     
@@ -692,13 +696,12 @@ under the License.
             FIXME?: bigger issue is the feature screens in the sub-menu have no relation to Product and don't pass around a productId,
             so there's a disconnect. BUT as long as those screens are accesible then they must show in the
             sidebar somewhere, and this is the workaround. -->
-        <menu-item name="EditProductFeatures" title="${uiLabelMap.ProductFeatures}" disabled="${not currentMenuRenderState.itemState.conditionResult}">
+        <menu-item name="EditProductFeatures" title="${uiLabelMap.ProductFeatures}" disabled="${(empty context.productId) and (not currentMenuRenderState.itemState.conditionResult)}">
             <condition>
-                <or>
-                    <not>
-                        <if-empty field="parameters.productId"/>
-                    </not>
-                </or>
+                <not>
+                    <!--<if-empty field="parameters.productId"/>-->
+                    <if-empty field="productId"/>
+                </not>
             </condition>
             <link target="EditProductFeatures">
                 <parameter param-name="productId"/>
@@ -806,7 +809,7 @@ under the License.
             </link>
         </menu-item>
         <!-- SCIPIO: NOTE: the disabled is here due to same reasons as EditProductFeatures, see EditProductFeatures -->
-        <menu-item name="EditProductConfigs" title="${uiLabelMap.ProductConfigs}" disabled="${not currentMenuRenderState.itemState.conditionResult}">
+        <menu-item name="EditProductConfigs" title="${uiLabelMap.ProductConfigs}" disabled="${(empty context.productId) and (not currentMenuRenderState.itemState.conditionResult)}">
             <condition>
                 <and>
                     <or>
@@ -814,7 +817,8 @@ under the License.
                         <if-compare field="product.productTypeId" operator="equals" value="AGGREGATED_SERVICE"/>
                     </or>
                     <not>
-                        <if-empty field="parameters.productId"/>
+                        <!--<if-empty field="parameters.productId"/>-->
+                        <if-empty field="productId"/>
                     </not>
                 </and>
             </condition>

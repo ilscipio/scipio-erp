@@ -187,6 +187,10 @@ under the License.
         location="com.ilscipio.scipio.solr.SolrProductSearch"
         invoke="addToSolrIndex">
         <description>Add a Product to Solr Index</description>
+        <attribute mode="IN" name="fields" optional="true" type="Map">
+            <description>A map of pre-formatted fields to add as-is to the solr document for indexing,
+                with no field renaming or Solr type abstraction (added 2018-02-05)</description>
+        </attribute>
         <implements service="solrProductAttributes"/>
         <!-- DEPRECATED/UNUSED FIELDS (Product attributes) -->
         <attribute mode="IN" name="sku" optional="true" type="String"><description>DEPRECATED (2017-08-17): unused</description></attribute>

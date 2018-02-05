@@ -824,6 +824,13 @@ public abstract class SolrProductUtil {
         addAlphaLocalizedContentStringMapToSolrDoc(delegator, doc, "alphaTitleSort_", "alphaTitleSort_"+SolrLocaleUtil.I18N_GENERAL, "title_i18n_", "title_i18n_"+SolrLocaleUtil.I18N_GENERAL, 
                 UtilGenerics.<String, String>checkMap(context.get("title")), locales, defaultLocale);
         
+        // SCIPIO: 2018-02-05: new "manual" fields map, without abstraction
+        Map<String, Object> fields = UtilGenerics.checkMap(context.get("fields"));
+        if (fields != null) {
+            for(Map.Entry<String, Object> entry : fields.entrySet()) {
+                doc.addField(entry.getKey(), entry.getValue());
+            }
+        }
         return doc;
     }
     

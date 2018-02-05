@@ -75,9 +75,9 @@ under the License.
     <#if (productFeatureAndAppl.getTimestamp("thruDate"))?? && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(productFeatureAndAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>
             <#if hasExpired><#assign class="alert"><#else><#assign class=""></#if>
             <@field type="datetime" name="thruDate_o_${productFeatureAndAppl_index}" value=((productFeatureAndAppl.thruDate)!) size="25" maxlength="30" id="thruDate_o_${productFeatureAndAppl_index}" />
-            <input type="text" size="6" name="amount_o_${productFeatureAndAppl_index}" value="${(productFeatureAndAppl.amount)!}" />
-            <input type="text" size="5" name="sequenceNum_o_${productFeatureAndAppl_index}" value="${(productFeatureAndAppl.sequenceNum)!}" />
-            <select name="productFeatureApplTypeId_o_${productFeatureAndAppl_index}" size="1">
+            <@field type="text" size="6" name="amount_o_${productFeatureAndAppl_index}" value="${(productFeatureAndAppl.amount)!}" />
+            <@field type="text" size="5" name="sequenceNum_o_${productFeatureAndAppl_index}" value="${(productFeatureAndAppl.sequenceNum)!}" />
+            <@field type="select" name="productFeatureApplTypeId_o_${productFeatureAndAppl_index}" size="1">
             <#if (productFeatureAndAppl.productFeatureApplTypeId)??>
               <option value="${(productFeatureAndAppl.productFeatureApplTypeId)!}"><#if curProductFeatureApplType??> ${(curProductFeatureApplType.get("description",locale))!} <#else> [${productFeatureAndAppl.productFeatureApplTypeId}]</#if></option>
               <option value="${productFeatureAndAppl.productFeatureApplTypeId}"> </option>
@@ -85,7 +85,7 @@ under the License.
             <#list productFeatureApplTypes as productFeatureApplType>
               <option value="${(productFeatureApplType.productFeatureApplTypeId)!}">${(productFeatureApplType.get("description",locale))!} </option>
             </#list>
-            </select>
+            </@field>
           </@td>
           <@td align="right">
             <input type="checkbox" name="_rowSubmit_o_${productFeatureAndAppl_index}" value="Y" onclick="javascript:checkToggle(this, 'selectAllForm');highlightRow(this,'productFeatureId_tableRow_${productFeatureAndAppl_index}');" />

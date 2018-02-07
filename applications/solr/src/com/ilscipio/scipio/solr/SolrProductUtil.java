@@ -569,7 +569,7 @@ public abstract class SolrProductUtil {
             // this is the currencyUomId that the prices in solr should use...
             String currencyUomId = getConfiguredDefaultCurrency(delegator, productStore);
             
-            if (product != null && "AGGREGATED".equals(product.getString("productTypeId"))) {
+            if ("AGGREGATED".equals(product.get("productTypeId")) || "AGGREGATED_SERVICE".equals(product.get("productTypeId"))) {
                 Locale priceConfigLocale = defaultProductLocale;
                 ProductConfigWrapper configWrapper = new ProductConfigWrapper(delegator, dispatcher, productId, null, null, null, currencyUomId, priceConfigLocale, userLogin);
                 configWrapper.setDefaultConfig(); // 2017-08-22: if this is not done, the price will always be zero

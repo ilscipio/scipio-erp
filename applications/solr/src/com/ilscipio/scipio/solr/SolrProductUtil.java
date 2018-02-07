@@ -578,11 +578,11 @@ public abstract class SolrProductUtil {
                 // this creates 0$ list prices we can't validate in queries; this logic requires an extra check + ofbiz patch
                 //if (listPrice != null) {
                 if (listPrice != null && ((listPrice.compareTo(BigDecimal.ZERO) != 0) || configWrapper.hasOriginalListPrice())) {
-                    dispatchContext.put("listPrice", listPrice.setScale(2, BigDecimal.ROUND_HALF_DOWN).toString());
+                    dispatchContext.put("listPrice", listPrice.setScale(2, BigDecimal.ROUND_HALF_UP).toString());
                 }
                 BigDecimal defaultPrice = configWrapper.getTotalPrice();
                 if (defaultPrice != null) {
-                    dispatchContext.put("defaultPrice", defaultPrice.setScale(2, BigDecimal.ROUND_HALF_DOWN).toString());
+                    dispatchContext.put("defaultPrice", defaultPrice.setScale(2, BigDecimal.ROUND_HALF_UP).toString());
                 }
             } else {
                 Map<String, Object> priceContext = UtilMisc.toMap("product", product);
@@ -591,11 +591,11 @@ public abstract class SolrProductUtil {
                 priceContext.put("useCache", useCache);
                 Map<String, Object> priceMap = dispatcher.runSync("calculateProductPrice", priceContext);
                 if (priceMap.get("listPrice") != null) {
-                    String listPrice = ((BigDecimal) priceMap.get("listPrice")).setScale(2, BigDecimal.ROUND_HALF_DOWN).toString();
+                    String listPrice = ((BigDecimal) priceMap.get("listPrice")).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
                     dispatchContext.put("listPrice", listPrice);
                 }
                 if (priceMap.get("defaultPrice") != null) {
-                    String defaultPrice = ((BigDecimal) priceMap.get("defaultPrice")).setScale(2, BigDecimal.ROUND_HALF_DOWN).toString();
+                    String defaultPrice = ((BigDecimal) priceMap.get("defaultPrice")).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
                     if (defaultPrice != null)
                         dispatchContext.put("defaultPrice", defaultPrice);
                 }

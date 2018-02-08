@@ -614,7 +614,7 @@ public abstract class SolrProductUtil {
         return dispatchContext;
     }
     
-    static void getProductKeywords(Collection<String> keywords, Delegator delegator, boolean useCache, String... productIds) throws GenericEntityException {
+    protected static void getProductKeywords(Collection<String> keywords, Delegator delegator, boolean useCache, String... productIds) throws GenericEntityException {
         List<EntityCondition> condList = new ArrayList<>();
         
         List<EntityCondition> productIdOrList = new ArrayList<>(productIds.length);
@@ -643,7 +643,7 @@ public abstract class SolrProductUtil {
         }
     }
     
-    private static Map<String, String> getLocalizedContentStringMap(Delegator delegator, LocalDispatcher dispatcher, GenericValue product, 
+    protected static Map<String, String> getLocalizedContentStringMap(Delegator delegator, LocalDispatcher dispatcher, GenericValue product, 
             String productContentTypeId, List<Locale> locales, Locale defaultProductLocale, List<ProductContentWrapper> pcwList, boolean useCache) throws GeneralException, IOException {
         Map<String, String> contentMap = new HashMap<>();
         
@@ -694,7 +694,7 @@ public abstract class SolrProductUtil {
      * Unlike ProductContentWrapper, this NEVER returns a fallback language for the locales, and
      * does not consult the entity field - no map entry if there's no text in the given language.
      */
-    private static void getProductContentForLocales(Map<String, String> contentMap, Delegator delegator, LocalDispatcher dispatcher, 
+    protected static void getProductContentForLocales(Map<String, String> contentMap, Delegator delegator, LocalDispatcher dispatcher, 
             GenericValue product, String productContentTypeId, Collection<Locale> locales, Locale defaultProductLocale, boolean useCache) throws GeneralException, IOException {
         String productId = product.getString("productId");
         
@@ -756,7 +756,7 @@ public abstract class SolrProductUtil {
         }
     }
     
-    static String getContentText(Delegator delegator, LocalDispatcher dispatcher, GenericValue targetContent, 
+    protected static String getContentText(Delegator delegator, LocalDispatcher dispatcher, GenericValue targetContent, 
             GenericValue product, GenericValue productContent, Locale locale, boolean useCache) throws GeneralException, IOException {
         Writer out = new StringWriter();
         Map<String, Object> inContext = new HashMap<>();
@@ -767,7 +767,7 @@ public abstract class SolrProductUtil {
         return out.toString();
     }
     
-    static List<String> getSolrProdAttrSimple() {
+    protected static List<String> getSolrProdAttrSimple() {
         List<String> attrList = solrProdAttrSimple;
         if (attrList == null) {
             ModelService model = getModelServiceStaticSafe("solrProductAttributesSimple");
@@ -834,14 +834,14 @@ public abstract class SolrProductUtil {
         return doc;
     }
     
-    private static Collection<String> asStringCollection(Object value) {
+    protected static Collection<String> asStringCollection(Object value) {
         if (value == null) return null;
         else if (value instanceof Collection) return UtilGenerics.checkCollection(value);
         else if (value instanceof String) return UtilMisc.<String>toList((String)value);
         else throw new IllegalArgumentException("generateSolrProductDocument: Expected Collection or String for parameter, instead got: " + value.getClass().getName());
     }
     
-    private static Collection<String> asStringCollection(Map<String, Object> context, String paramName) {
+    protected static Collection<String> asStringCollection(Map<String, Object> context, String paramName) {
         try {
             return asStringCollection(context.get(paramName));
         } catch(IllegalArgumentException e) {
@@ -849,7 +849,7 @@ public abstract class SolrProductUtil {
         }
     }
     
-    private static void addStringValuesToSolrDoc(SolrInputDocument doc, String solrFieldName, Collection<?> values) {
+    protected static void addStringValuesToSolrDoc(SolrInputDocument doc, String solrFieldName, Collection<?> values) {
         if (values == null) return;
         Iterator<?> attrIter = values.iterator();
         while (attrIter.hasNext()) {
@@ -858,12 +858,12 @@ public abstract class SolrProductUtil {
         }
     }
     
-    private static void addConcatenatedStringValuesToSolrDoc(SolrInputDocument doc, String solrFieldName, Collection<?> values, String joinStr) {
+    protected static void addConcatenatedStringValuesToSolrDoc(SolrInputDocument doc, String solrFieldName, Collection<?> values, String joinStr) {
         if (values == null) return;
         doc.addField(solrFieldName, StringUtils.join(values, joinStr));
     }
     
-    private static void addLocalizedContentStringMapToSolrDoc(Delegator delegator, SolrInputDocument doc, String solrFieldNamePrefix, String solrDefaultFieldName, Map<String, String> contentMap) {
+    protected static void addLocalizedContentStringMapToSolrDoc(Delegator delegator, SolrInputDocument doc, String solrFieldNamePrefix, String solrDefaultFieldName, Map<String, String> contentMap) {
         if (contentMap == null) return;
         for (Map.Entry<String, String> entry : contentMap.entrySet()) {
             if (SolrLocaleUtil.I18N_GENERAL.equals(entry.getKey())) {
@@ -890,7 +890,7 @@ public abstract class SolrProductUtil {
      *    considered an optimization to do it an indexing (at expense of correct-language),
      *    but this was done as a workaround.
      */
-    private static void addAlphaLocalizedContentStringMapToSolrDoc(Delegator delegator, SolrInputDocument doc, 
+    protected static void addAlphaLocalizedContentStringMapToSolrDoc(Delegator delegator, SolrInputDocument doc, 
             String alphaFieldNamePrefix, String alphaDefaultFieldName, String solrFieldNamePrefix, String solrDefaultFieldName, 
             Map<String, String> contentMap, List<Locale> locales, Locale defaultProductLocale) {
         if (contentMap == null) return;

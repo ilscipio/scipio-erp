@@ -570,10 +570,10 @@ public abstract class SolrProductUtil {
             String currencyUomId = getConfiguredDefaultCurrency(delegator, productStore);
             
             if ("AGGREGATED".equals(product.get("productTypeId")) || "AGGREGATED_SERVICE".equals(product.get("productTypeId"))) {
-                getStartingConfigurableProductPrices(dispatchContext, delegator, dispatcher, userLogin, context, product, 
+                getConfigurableProductStartingPrices(dispatchContext, delegator, dispatcher, userLogin, context, product, 
                         productStore, currencyUomId, defaultProductLocale, useCache);
             } else {
-                getStandardProductPrices(dispatchContext, delegator, dispatcher, userLogin, context, product, 
+                getProductStandardPrices(dispatchContext, delegator, dispatcher, userLogin, context, product, 
                         productStore, currencyUomId, defaultProductLocale, useCache);
             }
             
@@ -743,7 +743,7 @@ public abstract class SolrProductUtil {
         return out.toString();
     }
     
-    protected static void getStandardProductPrices(Map<String, Object> out, Delegator delegator, LocalDispatcher dispatcher, GenericValue userLogin, 
+    protected static void getProductStandardPrices(Map<String, Object> out, Delegator delegator, LocalDispatcher dispatcher, GenericValue userLogin, 
             Map<String, Object> context, GenericValue product, GenericValue productStore, String currencyUomId, Locale priceLocale, boolean useCache) throws Exception {
         Map<String, Object> priceContext = UtilMisc.toMap("product", product);
         priceContext.put("currencyUomId", currencyUomId);
@@ -762,7 +762,7 @@ public abstract class SolrProductUtil {
         }
     }
     
-    protected static void getStartingConfigurableProductPrices(Map<String, Object> out, Delegator delegator, LocalDispatcher dispatcher, GenericValue userLogin, 
+    protected static void getConfigurableProductStartingPrices(Map<String, Object> out, Delegator delegator, LocalDispatcher dispatcher, GenericValue userLogin, 
             Map<String, Object> context, GenericValue product, GenericValue productStore, String currencyUomId, Locale priceLocale, boolean useCache) throws Exception {
         ProductConfigWrapper configWrapper = new ProductConfigWrapper(delegator, dispatcher, product.getString("productId"), null, null, null, currencyUomId, priceLocale, userLogin);
         configWrapper.setDefaultConfig(); // 2017-08-22: if this is not done, the price will always be zero

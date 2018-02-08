@@ -570,35 +570,11 @@ public abstract class SolrProductUtil {
             String currencyUomId = getConfiguredDefaultCurrency(delegator, productStore);
             
             if ("AGGREGATED".equals(product.get("productTypeId")) || "AGGREGATED_SERVICE".equals(product.get("productTypeId"))) {
-                Locale priceConfigLocale = defaultProductLocale;
-                ProductConfigWrapper configWrapper = new ProductConfigWrapper(delegator, dispatcher, productId, null, null, null, currencyUomId, priceConfigLocale, userLogin);
-                configWrapper.setDefaultConfig(); // 2017-08-22: if this is not done, the price will always be zero
-                BigDecimal listPrice = configWrapper.getTotalListPrice();
-                // 2017-08-22: listPrice is NEVER null here - getTotalListPrice returns 0 if there was no list price - and 
-                // this creates 0$ list prices we can't validate in queries; this logic requires an extra check + ofbiz patch
-                //if (listPrice != null) {
-                if (listPrice != null && ((listPrice.compareTo(BigDecimal.ZERO) != 0) || configWrapper.hasOriginalListPrice())) {
-                    dispatchContext.put("listPrice", listPrice.setScale(2, BigDecimal.ROUND_HALF_UP).toString());
-                }
-                BigDecimal defaultPrice = configWrapper.getTotalPrice();
-                if (defaultPrice != null) {
-                    dispatchContext.put("defaultPrice", defaultPrice.setScale(2, BigDecimal.ROUND_HALF_UP).toString());
-                }
+                getStartingConfigurableProductPrices(dispatchContext, delegator, dispatcher, userLogin, context, product, 
+                        productStore, currencyUomId, defaultProductLocale, useCache);
             } else {
-                Map<String, Object> priceContext = UtilMisc.toMap("product", product);
-                priceContext.put("currencyUomId", currencyUomId);
-                SolrProductSearch.copyStdServiceFieldsNotSet(context, priceContext);
-                priceContext.put("useCache", useCache);
-                Map<String, Object> priceMap = dispatcher.runSync("calculateProductPrice", priceContext);
-                if (priceMap.get("listPrice") != null) {
-                    String listPrice = ((BigDecimal) priceMap.get("listPrice")).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
-                    dispatchContext.put("listPrice", listPrice);
-                }
-                if (priceMap.get("defaultPrice") != null) {
-                    String defaultPrice = ((BigDecimal) priceMap.get("defaultPrice")).setScale(2, BigDecimal.ROUND_HALF_UP).toString();
-                    if (defaultPrice != null)
-                        dispatchContext.put("defaultPrice", defaultPrice);
-                }
+                getStandardProductPrices(dispatchContext, delegator, dispatcher, userLogin, context, product, 
+                        productStore, currencyUomId, defaultProductLocale, useCache);
             }
             
             // 2017-09-12: added missing ProductKeyword lookup, otherwise can't input keywords from ofbiz
@@ -765,6 +741,46 @@ public abstract class SolrProductUtil {
         boolean deepCache = useCache; // SCIPIO: SPECIAL: only way to prevent all caching
         ContentWorker.renderContentAsText(dispatcher, delegator, targetContent, out, inContext, locale, "text/plain", null, useCache, deepCache, null);
         return out.toString();
+    }
+    
+    protected static void getStandardProductPrices(Map<String, Object> out, Delegator delegator, LocalDispatcher dispatcher, GenericValue userLogin, 
+            Map<String, Object> context, GenericValue product, GenericValue productStore, String currencyUomId, Locale priceLocale, boolean useCache) throws Exception {
+        Map<String, Object> priceContext = UtilMisc.toMap("product", product);
+        priceContext.put("currencyUomId", currencyUomId);
+        SolrProductSearch.copyStdServiceFieldsNotSet(context, priceContext);
+        priceContext.put("useCache", useCache);
+        Map<String, Object> priceMap = dispatcher.runSync("calculateProductPrice", priceContext);
+        if (priceMap.get("listPrice") != null) {
+            String listPrice = scaleCurrency((BigDecimal) priceMap.get("listPrice")).toString();
+            out.put("listPrice", listPrice);
+        }
+        if (priceMap.get("defaultPrice") != null) {
+            String defaultPrice = scaleCurrency((BigDecimal) priceMap.get("defaultPrice")).toString();
+            if (defaultPrice != null) {
+                out.put("defaultPrice", defaultPrice);
+            }
+        }
+    }
+    
+    protected static void getStartingConfigurableProductPrices(Map<String, Object> out, Delegator delegator, LocalDispatcher dispatcher, GenericValue userLogin, 
+            Map<String, Object> context, GenericValue product, GenericValue productStore, String currencyUomId, Locale priceLocale, boolean useCache) throws Exception {
+        ProductConfigWrapper configWrapper = new ProductConfigWrapper(delegator, dispatcher, product.getString("productId"), null, null, null, currencyUomId, priceLocale, userLogin);
+        configWrapper.setDefaultConfig(); // 2017-08-22: if this is not done, the price will always be zero
+        BigDecimal listPrice = configWrapper.getTotalListPrice();
+        // 2017-08-22: listPrice is NEVER null here - getTotalListPrice returns 0 if there was no list price - and 
+        // this creates 0$ list prices we can't validate in queries; this logic requires an extra check + ofbiz patch
+        //if (listPrice != null) {
+        if (listPrice != null && ((listPrice.compareTo(BigDecimal.ZERO) != 0) || configWrapper.hasOriginalListPrice())) {
+            out.put("listPrice", scaleCurrency(listPrice).toString());
+        }
+        BigDecimal defaultPrice = configWrapper.getTotalPrice();
+        if (defaultPrice != null) {
+            out.put("defaultPrice", scaleCurrency(defaultPrice).toString());
+        }
+    }
+    
+    protected static BigDecimal scaleCurrency(BigDecimal amount) {
+        return amount.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
     
     protected static List<String> getSolrProdAttrSimple() {

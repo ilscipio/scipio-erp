@@ -508,10 +508,6 @@ public abstract class SolrProductUtil {
                 parentProductId = ProductWorker.getParentProductId(productId, delegator, useCache);
             }
             
-            // FIXME: this should REALLY be configured per-store...
-            // but looking up the ProductStore for Product is inexact and slow...
-            Locale defLocale = Locale.getDefault();
-            
             dispatchContext.put("productId", productId);
             // if (product.get("sku") != null) dispatchContext.put("sku", product.get("sku"));
             if (product.get("internalName") != null)
@@ -558,9 +554,9 @@ public abstract class SolrProductUtil {
             boolean isPhysical = ProductWorker.isPhysical(product);
             if (isPhysical) dispatchContext.put("isPhysical", isPhysical);
 
-            dispatchContext.put("title", getLocalizedContentStringMap(delegator, dispatcher, product, "PRODUCT_NAME", locales, defLocale, pcwList, useCache));
-            dispatchContext.put("description", getLocalizedContentStringMap(delegator, dispatcher, product, "DESCRIPTION", locales, defLocale, pcwList, useCache));
-            dispatchContext.put("longDescription", getLocalizedContentStringMap(delegator, dispatcher, product, "LONG_DESCRIPTION", locales, defLocale, pcwList, useCache));
+            dispatchContext.put("title", getLocalizedContentStringMap(delegator, dispatcher, product, "PRODUCT_NAME", locales, defaultProductLocale, pcwList, useCache));
+            dispatchContext.put("description", getLocalizedContentStringMap(delegator, dispatcher, product, "DESCRIPTION", locales, defaultProductLocale, pcwList, useCache));
+            dispatchContext.put("longDescription", getLocalizedContentStringMap(delegator, dispatcher, product, "LONG_DESCRIPTION", locales, defaultProductLocale, pcwList, useCache));
 
             // dispatchContext.put("comments", "");
             // dispatchContext.put("keywords", "");

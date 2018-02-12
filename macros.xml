@@ -87,6 +87,17 @@ under the License.
    -->
   </default-javac>
  </presetdef>
+    
+ <!-- SCIPIO: new explicit target for java 1.8-compatibility -->
+ <presetdef name="javac18">
+  <default-javac compiler="javac1.8" target="1.8" source="1.8" encoding="UTF-8" includeantruntime="false">
+   <compilerarg value="-Xlint:-path"/>
+   <!--
+   Please leave this line here.  It makes it easier to enable/disable it.
+   <compilerarg value="-Xlint:unchecked"/>
+   -->
+  </default-javac>
+ </presetdef>
 
  <presetdef name="default-javadoc">
     <javadoc classpathref="local.class.path"

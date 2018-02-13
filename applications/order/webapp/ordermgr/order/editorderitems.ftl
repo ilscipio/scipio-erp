@@ -256,7 +256,7 @@ under the License.
                                             <@menuitem type="link" href=makeOfbizInterWebappUrl("/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}") text=uiLabelMap.ContentDownload target="_blank" class="+${styles.action_run_sys!} ${styles.action_export!}" />
                                           </#list>
                                           -->
-                                          <@modal id="${orderId}_${orderItem.orderItemSeqId}_downloads" label=uiLabelMap.ContentDownload anchorClass="${styles.link_nav!} ${styles.action_export!}">
+                                          <@modal id="${orderId}_${orderItem.orderItemSeqId}_downloads" label=uiLabelMap.ContentDownload linkClass="${styles.link_nav!} ${styles.action_export!}">
                                               <@heading relLevel=+1>${getLabel("EcommerceDownloadsAvailableTitle", "EcommerceUiLabels")}</@heading>
                                               <ol>
                                               <#list downloadContents as downloadContent>

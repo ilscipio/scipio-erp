@@ -121,7 +121,7 @@
                 };
             </@script>
             <@field type="generic" label=(rawLabel('CommonOr')+":")>
-                <@modal id="setupFacility-selectShipAddr" anchorClass="+${styles.link_nav!} ${styles.action_show!}" label=uiLabelMap.SetupSelectAddress>
+                <@modal id="setupFacility-selectShipAddr" linkClass="+${styles.link_nav!} ${styles.action_show!}" label=uiLabelMap.SetupSelectAddress>
                   <div class="setup-addresslist">
                     <#list srcPostalAddressList as postalAddress>
                       <div class="setup-addressentry">

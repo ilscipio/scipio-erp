@@ -21,7 +21,7 @@ under the License.
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
         <@menuitem type="generic">
-            <@modal id="modal_new_rule_${productPromoId}" label=uiLabelMap.ProductAddPromoRule anchorClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
+            <@modal id="modal_new_rule_${productPromoId}" label=uiLabelMap.ProductAddPromoRule linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                 <@heading>${uiLabelMap.ProductAddPromoRule}</@heading>
                  <form method="post" action="<@ofbizUrl>createProductPromoRule</@ofbizUrl>">
                     <@fields type="default-compact">
@@ -34,7 +34,7 @@ under the License.
         </@menuitem>
 
         <@menuitem type="generic">
-            <@modal id="modal_new_category_${productPromoId}" label=uiLabelMap.ProductAddPromoCategory anchorClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
+            <@modal id="modal_new_category_${productPromoId}" label=uiLabelMap.ProductAddPromoCategory linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                 <@heading>${uiLabelMap.ProductAddPromoCategory}</@heading>
                 <form method="post" action="<@ofbizUrl>createProductPromoCategory</@ofbizUrl>" name="createProductPromoCategoryPromotions">
                     <@fields type="default-compact">
@@ -61,7 +61,7 @@ under the License.
         </@menuitem>
 
         <@menuitem type="generic">
-            <@modal id="modal_new_product_${productPromoId}" label=uiLabelMap.ProductAddPromoProduct anchorClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
+            <@modal id="modal_new_product_${productPromoId}" label=uiLabelMap.ProductAddPromoProduct linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                 <@heading>${uiLabelMap.ProductAddPromoProduct}</@heading>
                  <form method="post" name="createpromoproductform" action="<@ofbizUrl>createProductPromoProduct</@ofbizUrl>">
                       <@fields type="default-compact">
@@ -555,7 +555,7 @@ under the License.
         <@td align="center">
                 <@menu type="button">
                     <@menuitem type="generic">
-                        <@modal id="modal_new_promo_condition_${productPromoId}_${(productPromoRule.productPromoRuleId)!}" label=uiLabelMap.ProductCreateCondition anchorClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
+                        <@modal id="modal_new_promo_condition_${productPromoId}_${(productPromoRule.productPromoRuleId)!}" label=uiLabelMap.ProductCreateCondition linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                             <@heading>${uiLabelMap.ProductAddPromoRule}</@heading>
                                 <#-- SCIPIO: TODO: Convert to @field -->
                                 <form method="post" action="<@ofbizUrl>createProductPromoCond</@ofbizUrl>">
@@ -588,7 +588,7 @@ under the License.
                             </@modal>
                     </@menuitem>
                     <@menuitem type="generic">
-                        <@modal id="modal_new_promo_action_${productPromoId}_${(productPromoRule.productPromoRuleId)!}" label=uiLabelMap.ProductCreateAction anchorClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
+                        <@modal id="modal_new_promo_action_${productPromoId}_${(productPromoRule.productPromoRuleId)!}" label=uiLabelMap.ProductCreateAction linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                             <@heading>${uiLabelMap.ProductCreateAction}</@heading>
                                 <#-- SCIPIO: TODO: Convert to @field -->
                                 <form method="post" action="<@ofbizUrl>createProductPromoAction</@ofbizUrl>">

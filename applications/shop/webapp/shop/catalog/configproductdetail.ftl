@@ -219,7 +219,7 @@ ${virtualJavaScript!}
                 <#if "Y" == (renderSingleChoiceWithRadioButtons!"")>
                     <#-- This is the radio button implementation -->
                     <#if !question.isMandatory()>
-                      <div><@field type="radio" name=counter?string value="checked" checked=(!question.isSelected()) label="No option" />
+                      <div><@field type="radio" name=counter?string value="" checked=(!question.isSelected()) label="No option" />
                     </#if>
                     <#assign optionCounter = 0>
                     <#list options as option>

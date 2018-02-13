@@ -106,6 +106,13 @@ under the License.
         <attribute name="custRequestItemSeqIdTo" type="String" mode="IN" optional="true"/>
         <attribute name="copyLinkedQuotes" type="String" mode="IN" optional="true"/>
     </service>
+    <!-- SCIPIO: Introduced request item removal service (see ticket #427) -->
+    <service name="removeCustRequestItem" engine="simple" default-entity-name="CustRequestItem"
+            location="component://order/script/org/ofbiz/order/request/CustRequestServices.xml" invoke="updateCustRequestItem" auth="true">
+        <description>Remove a CustRequestItem record</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
 
     <service name="createCustRequestParty" engine="simple" default-entity-name="CustRequestParty"
             location="component://order/script/org/ofbiz/order/request/CustRequestServices.xml" invoke="createCustRequestParty" auth="true">

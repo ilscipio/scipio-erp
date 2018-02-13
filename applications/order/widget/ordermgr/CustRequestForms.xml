@@ -197,6 +197,13 @@ under the License.
                 <parameter param-name="custRequestItemSeqId"/>
             </hyperlink>
         </field>
+        <!-- SCIPIO: Added remove button (see ticket #427) -->
+        <field name="removeRequestItem" use-when="!custRequest.get(&quot;statusId&quot;).equals(&quot;CRQ_CANCELLED&quot;)&amp;&amp;!custRequest.get(&quot;statusId&quot;).equals(&quot;CRQ_COMPLETED&quot;)" widget-style="${styles.link_run_sys} ${styles.action_remove}">
+            <hyperlink description="${uiLabelMap.CommonDelete}" target="removerequestitem">
+                <parameter param-name="custRequestId"/>
+                <parameter param-name="custRequestItemSeqId"/>
+            </hyperlink>
+        </field>
     </form>
     <form name="OverviewRequestItems" extends="ListRequestItems">
         <field name="priority"><ignored/></field>

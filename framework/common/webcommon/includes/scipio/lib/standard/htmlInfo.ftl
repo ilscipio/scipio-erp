@@ -75,9 +75,8 @@ FIXME: Needs parameter to control injection and location of hidden modal content
 <#-- @modal main markup - theme override -->
 <#macro modal_markup id="" modalId="" linkId="" label="" href="" class="" anchorClass="" icon="" linkHasContent=true origArgs={} passArgs={} catchArgs...>
   <#local class = addClassArg(class, styles.modal_wrap!)>
-  <#local class = addClassArg(class, styles.modal_wrap!)>
   <a id="${escapeVal(linkId, 'html')}" href="#" data-reveal-id="${escapeVal(modalId, 'html')}"<#if href?has_content> data-reveal-ajax="${escapeFullUrl(href, 'html')}"</#if><#rt/>
-    <#lt/><@compiledClassAttribStr anchorClass=anchorClass /><#if !linkHasContent> style="display:none;"</#if>><#if icon?has_content><i class="${escapeVal(icon, 'html')}"></i> </#if>${escapeVal(label, 'htmlmarkup')}</a>
+    <#lt/><@compiledClassAttribStr class=anchorClass /><#if !linkHasContent> style="display:none;"</#if>><#if icon?has_content><i class="${escapeVal(icon, 'html')}"></i> </#if>${escapeVal(label, 'htmlmarkup')}</a>
   <div id="${escapeVal(modalId, 'html')}" <@compiledClassAttribStr class=class /> data-reveal>
     <#nested>
     <a class="close-reveal-modal">&#215;</a>

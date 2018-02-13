@@ -4360,7 +4360,7 @@ under the License.
         <field name="sequenceNum" type="numeric"></field>
         <field name="description" type="very-long"></field>
         <prim-key field="metadataId"/>
-        <relation type="one" fk-name="DATEV_TYPE_ENUM" title="DatevFieldType" rel-entity-name="Enumeration">
+        <relation type="one" fk-name="DATEV_META_TYPE_ENUM" title="DatevFieldType" rel-entity-name="Enumeration">
             <key-map field-name="typeEnumId" rel-field-name="enumId"/>
         </relation>
     </entity>

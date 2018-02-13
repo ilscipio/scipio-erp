@@ -1374,6 +1374,12 @@ under the License.
         <response name="success" type="view" value="EditRequestItem"/>
         <response name="error" type="view" value="EditRequestItem"/>
     </request-map>
+    <request-map uri="removerequestitem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeCustRequestItem"/>
+        <response name="success" type="view" value="RequestItems"/>
+        <response name="error" type="view" value="RequestItems"/>
+    </request-map>
 
     <request-map uri="requestitemnotes"><security https="true" auth="true"/><response name="success" type="view" value="RequestItemNotes"/></request-map>
     <request-map uri="createrequestitemnote">

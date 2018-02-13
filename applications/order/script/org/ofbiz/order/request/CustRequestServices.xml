@@ -19,7 +19,7 @@ under the License.
 -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
+        xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
     <simple-method method-name="custRequestPermissionCheck" short-description="Cust Request Permission Check">
         <if>
             <condition>
@@ -252,6 +252,16 @@ under the License.
         <find-by-primary-key entity-name="CustRequestItem" map="lookupPKMap" value-field="custRequestItem"/>
         <set-nonpk-fields map="parameters" value-field="custRequestItem"/>
         <store-value value-field="custRequestItem"/>
+        <call-simple-method method-name="updateCustRequestLastModifiedDate"/>
+    </simple-method>
+    <!-- SCIPIO: Added new simple method to remove request items (see ticket #427) -->
+    <simple-method method-name="removeCustRequestItem" short-description="Remove Customer Request Item">
+        <call-simple-method method-name="checkStatusCustRequest"/>        
+        <set from-field="parameters.custRequestId" field="lookupPKMap.custRequestId"/>
+        <set from-field="parameters.custRequestItemSeqId" field="lookupPKMap.custRequestItemSeqId"/>
+        <find-by-primary-key entity-name="CustRequestItem" map="lookupPKMap" value-field="custRequestItem"/>
+        <log level="always" message="custRequestItem =======> ${custRequestItem}"></log>        
+        <remove-value  value-field="custRequestItem"/>
         <call-simple-method method-name="updateCustRequestLastModifiedDate"/>
     </simple-method>
 

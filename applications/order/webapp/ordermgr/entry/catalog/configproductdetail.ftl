@@ -562,7 +562,10 @@ function getConfigDetails() {
                   </#if>
                   <#if option.isSelected()>
                     <#assign optionComment = option.getComments()>
+                    <#-- SCIPIO: 2018-02-13: this stock ofbiz code appears to break the counter values and result in
+                              wrong selections sent to server for totalPrice calc; cannot find any reason for doing this
                     <#assign optionCounter = optionCounter + 1>
+                    -->
                   </#if>
                   <option value="${optionCounter}" <#if option.isSelected()>selected="selected"</#if>>
                     ${option.description}&nbsp;

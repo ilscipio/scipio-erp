@@ -4311,7 +4311,7 @@ under the License.
         <field name="fieldId" type="id-ne"></field>
         <field name="dataCategoryId" type="id-long"></field>
         <field name="fieldName" type="short-varchar"></field>
-        <field name="typeEnumId" type="short-varchar" not-null="true"></field>
+        <field name="typeEnumId" type="id-ne" not-null="true"></field>
         <field name="length" type="numeric"></field>      
         <field name="maxLength" type="numeric"></field>
         <field name="scale" type="numeric"></field>
@@ -4321,8 +4321,8 @@ under the License.
         <field name="description" type="very-long"></field>
         <prim-key field="fieldId"/>
         <prim-key field="dataCategoryId"/>
-        <relation type="one" fk-name="DATEV_TYPE_ENUM" title="DatevFieldType" rel-entity-name="Enumeration">
-            <key-map field-name="typeEnumId" rel-field-name="enumId"/>
+        <relation type="one-nofk" title="DatevFieldType" rel-entity-name="Enumeration">
+            <key-map field-name="typeEnumId" rel-field-name="enumId"/>            
         </relation>
         <relation rel-entity-name="DatevDataCategory" type="one">
             <key-map field-name="dataCategoryId"/>
@@ -4360,7 +4360,7 @@ under the License.
         <field name="sequenceNum" type="numeric"></field>
         <field name="description" type="very-long"></field>
         <prim-key field="metadataId"/>
-        <relation type="one" fk-name="DATEV_TYPE_ENUM" title="DatevFieldType" rel-entity-name="Enumeration">
+        <relation type="one-nofk" title="DatevFieldType" rel-entity-name="Enumeration">
             <key-map field-name="typeEnumId" rel-field-name="enumId"/>
         </relation>
     </entity>
@@ -4375,7 +4375,7 @@ under the License.
         <field name="isAttrEntity" type="indicator"></field>
         <prim-key field="fieldId"/>
         <prim-key field="dataCategoryId"/>
-        <relation rel-entity-name="DatevFieldDefinition" type="one">
+        <relation rel-entity-name="DatevFieldDefinition" type="one" fk-name="DATEV_FIELD_DEF">
             <key-map field-name="fieldId"/>
             <key-map field-name="dataCategoryId"/>
         </relation>
@@ -4399,11 +4399,14 @@ under the License.
             package-name="com.ilscipio.scipio.accounting.external.datev"
             title="DATEV - Field definition version (http://www.datev.de/dnlexom/client/app/index.html#/document/1036228/D72057595488525963)">
         <field name="fieldId" type="id-ne"></field>
+        <field name="dataCategoryId" type="id-long"></field>
         <field name="version" type="short-varchar"></field>
         <prim-key field="fieldId"/>
+        <prim-key field="dataCategoryId"/>
         <prim-key field="version"/>
-        <relation rel-entity-name="DatevFieldDefinition" type="one">
+        <relation rel-entity-name="DatevFieldDefinition" type="one" fk-name="DATEV_FIELD_DEF_VER">
             <key-map field-name="fieldId"/>
+            <key-map field-name="dataCategoryId"/>
         </relation>
     </entity>
     

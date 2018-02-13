@@ -112,6 +112,9 @@ public class ProductConfigWorker {
                 continue;
             }
             for (String opt: opts) {
+                // SCIPIO: 2018-02-13: option may have empty value ("No option"); this is normal; don't log warning (NumberFormatException)
+                if (UtilValidate.isEmpty(opt)) continue;
+                
                 int cnt = -1;
                 try {
                     cnt = Integer.parseInt(opt);

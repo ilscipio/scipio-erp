@@ -14,7 +14,7 @@
                 <@menuitem type="link" href=makeOfbizUrl("editMedia") class="+${styles.action_run_sys!} ${styles.action_add!}" text=uiLabelMap.CmsCreateMedia/>
                 
                 <@menuitem type="generic">
-                    <@modal id="modal_new_script" label="${rawLabel('CmsMediaVariants')}: ${rawLabel('CommonRecreate')}" class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_update!}">
+                    <@modal id="modal_new_script" label="${rawLabel('CmsMediaVariants')}: ${rawLabel('CommonRecreate')}" anchorClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_update!}">
                         <@heading>${uiLabelMap.CmsMediaRecreateImageVariants}</@heading>
                         <p>${uiLabelMap.CmsMediaRecreateImageVariantsDesc}<br/>
                           <em>${uiLabelMap.CommonNote}: ${uiLabelMap.CmsFunctionAsyncBackground}</em></p>

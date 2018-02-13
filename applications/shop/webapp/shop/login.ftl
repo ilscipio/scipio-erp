@@ -88,7 +88,7 @@ under the License.
                          <@row>
                              <@cell class="+${styles.text_left!}" columns=9>
                                 <small>
-                                    <@modal id="modal_login_forgotpassword" label=uiLabelMap.CommonForgotYourPassword class="${styles.medium!}">
+                                    <@modal id="modal_login_forgotpassword" label=uiLabelMap.CommonForgotYourPassword anchorClass="${styles.medium!}">
                                         <@row>
                                             <@cell class="large-centered ">
                                                 <@section title=uiLabelMap.CommonPassword>

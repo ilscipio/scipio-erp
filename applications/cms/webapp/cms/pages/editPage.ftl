@@ -379,7 +379,7 @@
                  <@field type="textarea" name="description" value=(meta.description!"") label=uiLabelMap.CommonDescription required=false/>
             </@cmsCopyMenuItem>
             <@menuitem type="generic">
-                <@modal id="modal_new_script" label=uiLabelMap.CmsAddScript class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
+                <@modal id="modal_new_script" label=uiLabelMap.CmsAddScript anchorClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                     <@heading>${uiLabelMap.CmsAddScript}</@heading>
                     <@fields type="default-compact">
                         <@cmsScriptTemplateSelectForm formAction=makeOfbizUrl("addScriptToPage")>
@@ -400,7 +400,7 @@
                 <#assign previewLabel = rawLabel('CmsPreview') + " (!)">
                 <#-- DEV NOTE: I did a modal due to tooltip issues and because it's clearer in the end -->
                 <@menuitem type="generic">
-                    <@modal id="modal_preview_disabled" label=previewLabel class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_show!} ${styles.disabled}">
+                    <@modal id="modal_preview_disabled" label=previewLabel anchorClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_show!} ${styles.disabled}">
                         <p>${uiLabelMap.CmsWebSitePreviewDisabledDesc}</p>
                     </@modal>
                 </@menuitem>

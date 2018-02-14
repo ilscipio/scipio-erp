@@ -556,7 +556,7 @@ Common CMS editor macros and utilities
 
 <#macro cmsObjectExportFormMenuItem presetConfigName="" pkField="" pkValue="" args...>
   <@menuitem type="generic">
-    <@modal id="modal_export_object" label=uiLabelMap.CommonExport class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_show!}">
+    <@modal id="modal_export_object" label=uiLabelMap.CommonExport linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_show!}">
         <@heading>${uiLabelMap.CommonExport}</@heading>
             <div id="dataexport-errorbox" style="display:none;">
                 <@alert type="error"><span id="export-object-errmsg"></span></@alert>
@@ -644,7 +644,7 @@ Common CMS editor macros and utilities
 
 <#macro cmsCopyMenuItem target title args...>
   <@menuitem type="generic">
-    <@modal id="modal_copy_object" label=uiLabelMap.CommonCopy class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_copy!}">
+    <@modal id="modal_copy_object" label=uiLabelMap.CommonCopy linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_copy!}">
         <@heading>${escapeVal(title, 'htmlmarkup')}</@heading>
         <@alert type="warning">${uiLabelMap.CommonFunctionalityWorkInProgressWarning} [2017-12-04]</@alert>
         <@fields type="default-compact">

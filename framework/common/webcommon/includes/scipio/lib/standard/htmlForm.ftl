@@ -2238,14 +2238,22 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
           imageAlt=description tooltip=tooltip formatText=formatText inlineLabel=effInlineLabel required=required passArgs=passArgs><#nested></@field_display_widget>
         <#break> 
       <#default> <#-- "generic", empty or unrecognized -->
-        <#if value?has_content>
-          <@field_generic_widget type=type name=name text=value class=class id=id style=style title=title tooltip=tooltip inlineLabel=effInlineLabel 
-                                required=required alert=alert value=value textSize=textSize maxlength=maxlength disabled=disabled readonly=readonly placeholder=placeholder
-                                clientAutocomplete=clientAutocomplete passArgs=passArgs/>
+        <#if !type?has_content || type == "generic">
+          <#if value?has_content>
+            <@field_generic_widget class=class text=value title=title tooltip=tooltip inlineLabel=effInlineLabel style=style required=required passArgs=passArgs/>
+          <#else>
+            <@field_generic_widget class=class title=title tooltip=tooltip inlineLabel=effInlineLabel style=style required=required passArgs=passArgs><#nested /></@field_generic_widget>
+          </#if>
         <#else>
-          <@field_generic_widget type=type name=name text=text class=class id=id style=style title=title tooltip=tooltip inlineLabel=effInlineLabel 
-                                 required=required alert=alert value=value textSize=textSize maxlength=maxlength disabled=disabled readonly=readonly placeholder=placeholder
-                                 clientAutocomplete=clientAutocomplete passArgs=passArgs><#nested /></@field_generic_widget>
+          <#if value?has_content>
+            <@field_inputgeneric_widget type=type name=name text=value class=class id=id style=style title=title tooltip=tooltip inlineLabel=effInlineLabel 
+                                   required=required alert=alert value=value textSize=textSize maxlength=maxlength disabled=disabled readonly=readonly placeholder=placeholder
+                                  clientAutocomplete=clientAutocomplete passArgs=passArgs/>
+          <#else>
+            <@field_inputgeneric_widget type=type name=name text=text class=class id=id style=style title=title tooltip=tooltip inlineLabel=effInlineLabel 
+                                   required=required alert=alert value=value textSize=textSize maxlength=maxlength disabled=disabled readonly=readonly placeholder=placeholder
+                                   clientAutocomplete=clientAutocomplete passArgs=passArgs><#nested /></@field_inputgeneric_widget>
+          </#if>
         </#if>
     </#switch>
   </@field_markup_container>

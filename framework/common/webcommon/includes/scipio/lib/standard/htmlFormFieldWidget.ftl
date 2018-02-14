@@ -1843,11 +1843,47 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 
 <#-- migrated from @renderField form widget macro -->
 <#assign field_generic_widget_defaultArgs = {
-  "type":"", "name":"","text":"", "class":"", "id":"", "style":"", "title":"", "tooltip":"", "inlineLabel":false, "required":false,
-  "placeholder":"","clientAutocomplete":true,"disabled":false, "readonly":false, "alert":"", "value":"", "textSize":"", "maxlength":"", "passArgs":{}
+  "text":"", "class":"", "id":"", "style":"", "title":"", "tooltip":"", "inlineLabel":false, "required":false, "passArgs":{}
 }>
 <#macro field_generic_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_generic_widget_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
+  <@field_generic_markup_widget text=text class=class id=id style=style title=title tooltip=tooltip inlineLabel=inlineLabel 
+    required=required origArgs=origArgs passArgs=passArgs><#nested></@field_generic_markup_widget>
+</#macro>
+
+<#-- field markup - theme override -->
+<#macro field_generic_markup_widget text="" class="" id="" style="" tooltip="" title="" inlineLabel=false 
+    required=false origArgs={} passArgs={} catchArgs...>
+  <#local attribs = {}>
+  <#local class = addClassArg(class, styles.field_generic_default!"")>
+  <#if tooltip?has_content>
+    <#local class = addClassArg(class, styles.field_generic_tooltip!styles.field_default_tooltip!"")>
+    <#local title = tooltip>
+    <#local attribs = attribs + styles.field_generic_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
+  </#if>
+  <#local classes = compileClassArg(class)>
+  <#local hasWrapper = (title?has_content || classes?has_content || id?has_content)>
+  <#if hasWrapper>
+    <div<#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if classes?has_content> class="${escapeVal(classes, 'html')}"</#if><#if title?has_content> title="${escapeVal(title, 'html')}"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if>><#rt/>
+  </#if>
+    <#if text?has_content>
+      ${escapeVal(text, 'htmlmarkup')}<#t/>
+    <#else>
+      <#nested><#t/>
+    </#if>
+  <#if hasWrapper>
+    </div><#lt/>
+  </#if>
+</#macro>
+
+<#assign field_inputgeneric_widget_defaultArgs = {
+  "type":"", "name":"","text":"", "class":"", "id":"", "style":"", "title":"", "tooltip":"", "inlineLabel":false, "required":false,
+  "placeholder":"","clientAutocomplete":true,"disabled":false, "readonly":false, "alert":"", "value":"", "textSize":"", "maxlength":"", "passArgs":{}
+}>
+<#macro field_inputgeneric_widget args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_inputgeneric_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
   <#if !clientAutocomplete?is_boolean>
@@ -1857,21 +1893,21 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
       <#local clientAutocomplete = true>
     </#if>
   </#if>
-  <@field_generic_markup_widget type=type name=name text=text class=class id=id style=style title=title tooltip=tooltip inlineLabel=inlineLabel 
+  <@field_inputgeneric_markup_widget type=type name=name text=text class=class id=id style=style title=title tooltip=tooltip inlineLabel=inlineLabel 
     required=required alert=alert value=value textSize=textSize maxlength=maxlength disabled=disabled readonly=readonly placeholder=placeholder
-    clientAutocomplete=clientAutocomplete origArgs=origArgs passArgs=passArgs><#nested></@field_generic_markup_widget>
+    clientAutocomplete=clientAutocomplete origArgs=origArgs passArgs=passArgs><#nested></@field_inputgeneric_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_generic_markup_widget type="" text="" class="" id="" style="" tooltip="" title="" 
+<#macro field_inputgeneric_markup_widget type="" text="" class="" id="" style="" tooltip="" title="" 
     value="" textSize="" maxlength="" name="" placeholder="" disabled=false readonly=false
     clientAutocomplete=true inlineLabel=false required=false alert=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
-  <#local class = addClassArg(class, styles.field_generic_default!"")>
+  <#local class = addClassArg(class, styles.field_inputgeneric_default!"")>
   <#if tooltip?has_content>
-    <#local class = addClassArg(class, styles.field_generic_tooltip!styles.field_default_tooltip!"")>
+    <#local class = addClassArg(class, styles.field_inputgeneric_tooltip!styles.field_default_tooltip!"")>
     <#local title = tooltip>
-    <#local attribs = attribs + styles.field_generic_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
+    <#local attribs = attribs + styles.field_inputgeneric_tooltip_attribs!styles.field_default_tooltip_attribs!{}>
   </#if>
   <#local classes = compileClassArg(class)>
   <#local hasWrapper = (title?has_content || classes?has_content || id?has_content)>

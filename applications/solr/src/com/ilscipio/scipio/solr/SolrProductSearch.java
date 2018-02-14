@@ -1050,6 +1050,7 @@ public abstract class SolrProductSearch {
         if (clearAndUseCache == null) clearAndUseCache = rebuildClearAndUseCacheDefault;
         
         int numDocs = 0;
+        int numDocsIndexed = 0; // 2018-02: needed for accurate stats in case a client edit filters out products within loop
         EntityListIterator prodIt = null;
         try {
             Debug.logInfo("Solr: rebuildSolrIndex: Clearing solr index", module);
@@ -1102,6 +1103,7 @@ public abstract class SolrProductSearch {
                     if (product != null) {
                         Map<String, Object> dispatchContext = SolrProductUtil.getProductContent(product, dctx, productContext);
                         solrDocs.add(dispatchContext);
+                        numDocsIndexed++;
                         numLeft--;
                     } else {
                         lastReached = true;
@@ -1130,8 +1132,8 @@ public abstract class SolrProductSearch {
             }
             
             if (result == null) {
-                Debug.logInfo("Solr: rebuildSolrIndex: Finished with " + numDocs + " documents indexed", module);
-                final String statusMsg = "Cleared solr index and reindexed " + numDocs + " documents";
+                Debug.logInfo("Solr: rebuildSolrIndex: Finished with " + numDocsIndexed + " documents indexed", module);
+                final String statusMsg = "Cleared solr index and reindexed " + numDocsIndexed + " documents";
                 result = ServiceUtil.returnSuccess(statusMsg);
             }
         } catch (SolrServerException e) {

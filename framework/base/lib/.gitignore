@@ -37,3 +37,4 @@
 /tika-*.jar
 /juniversalchardet-*.jar
 /concurrentlinkedhashmap-*.jar
+/caffeine-*.jar

@@ -94,6 +94,8 @@
         <dependency org="com.googlecode.juniversalchardet" name="juniversalchardet" rev="1.0.3" transitive="false" conf="base->default"/>
         <!-- SCIPIO: replaces the ancient clhm-release-1.0-lru.jar file (from 2010) -->
         <dependency org="com.googlecode.concurrentlinkedhashmap" name="concurrentlinkedhashmap-lru" rev="1.4.2" transitive="false" conf="base->default"/>
+        <!-- SCIPIO: 2018-02: now include caffeine (concurrentlinkedhashmap successor for java8), required by some addons -->
+        <dependency org="com.github.ben-manes.caffeine" name="caffeine" rev="2.6.1" transitive="false" conf="base->default"/>
         <!-- FIXME: ivy fails to download this one due to a maven repo problem (missing parent pom) even though it exists
         <dependency org="org.apache.xmlgraphics" name="batik-all" rev="1.9" transitive="false" conf="base->default"/>-->
         <!-- FIXME: this version is older than the 1.0-SNAPSHOT provided by ofbiz

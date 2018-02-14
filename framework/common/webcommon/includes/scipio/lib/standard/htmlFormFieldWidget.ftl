@@ -1843,29 +1843,19 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 
 <#-- migrated from @renderField form widget macro -->
 <#assign field_generic_widget_defaultArgs = {
-  "type":"", "name":"","text":"", "class":"", "id":"", "style":"", "title":"", "tooltip":"", "inlineLabel":false, "required":false,
-  "placeholder":"","clientAutocomplete":true,"disabled":false, "readonly":false, "alert":"", "value":"", "textSize":"", "maxlength":"", "passArgs":{}
+  "text":"", "class":"", "id":"", "style":"", "title":"", "tooltip":"", "inlineLabel":false, "required":false, "passArgs":{}
 }>
 <#macro field_generic_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_generic_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <#if !clientAutocomplete?is_boolean>
-    <#if clientAutocomplete?has_content>
-      <#local clientAutocomplete = clientAutocomplete?boolean>
-    <#else>
-      <#local clientAutocomplete = true>
-    </#if>
-  </#if>
-  <@field_generic_markup_widget type=type name=name text=text class=class id=id style=style title=title tooltip=tooltip inlineLabel=inlineLabel 
-    required=required alert=alert value=value textSize=textSize maxlength=maxlength disabled=disabled readonly=readonly placeholder=placeholder
-    clientAutocomplete=clientAutocomplete origArgs=origArgs passArgs=passArgs><#nested></@field_generic_markup_widget>
+  <@field_generic_markup_widget text=text class=class id=id style=style title=title tooltip=tooltip inlineLabel=inlineLabel 
+    required=required origArgs=origArgs passArgs=passArgs><#nested></@field_generic_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_generic_markup_widget type="" text="" class="" id="" style="" tooltip="" title="" 
-    value="" textSize="" maxlength="" name="" placeholder="" disabled=false readonly=false
-    clientAutocomplete=true inlineLabel=false required=false alert=false origArgs={} passArgs={} catchArgs...>
+<#macro field_generic_markup_widget text="" class="" id="" style="" tooltip="" title="" inlineLabel=false 
+    required=false origArgs={} passArgs={} catchArgs...>
   <#local attribs = {}>
   <#local class = addClassArg(class, styles.field_generic_default!"")>
   <#if tooltip?has_content>
@@ -1876,34 +1866,12 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <#local classes = compileClassArg(class)>
   <#local hasWrapper = (title?has_content || classes?has_content || id?has_content)>
   <#if hasWrapper>
-    <div<#if id?has_content && !type?has_content> id="${escapeVal(id, 'html')}"</#if><#if classes?has_content> class="${escapeVal(classes, 'html')}"</#if><#if title?has_content> title="${escapeVal(title, 'html')}"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if>><#rt/>
+    <div<#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if classes?has_content> class="${escapeVal(classes, 'html')}"</#if><#if title?has_content> title="${escapeVal(title, 'html')}"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if>><#rt/>
   </#if>
     <#if text?has_content>
       ${escapeVal(text, 'htmlmarkup')}<#t/>
     <#else>
       <#nested><#t/>
-    </#if>
-    <#if type?has_content>
-        <#if "color" != type>
-            <#local class = addClassArg(class, styles.field_input_default!"")>
-        </#if>
-        <input type="${escapeVal(type, 'html')}" name="${escapeVal(name, 'html')}"<#t/>
-            <#if id?has_content> id="${escapeVal(id, 'html')}"</#if>
-            <@fieldElemAttribStr attribs=attribs /><#t/>
-            <#if title?has_content> title="${escapeVal(title, 'html')}"</#if><#t/>
-            <@fieldClassAttribStr class=class alert=alert /><#t/>
-            <#if value?has_content> value="${escapeVal(value, 'html')}"</#if><#t/>
-            <#if textSize?has_content> size="${textSize}"</#if><#t/>
-            <#if maxlength?has_content> maxlength="${maxlength}"</#if><#t/>
-            <#if disabled> disabled="disabled"</#if><#t/>
-            <#if readonly> readonly="readonly"</#if><#t/>
-            <#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#t/>
-            <#if events?has_content><@commonElemEventAttribStr events=events /></#if><#t/>
-            <#if !clientAutocomplete> autocomplete="off"</#if><#t/>
-            <#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#t/>
-            <#if placeholder?has_content> placeholder="${escapeVal(placeholder, 'html')}"</#if><#t/>
-            <#if required> required="required"</#if><#t/>
-          /><#t/>
     </#if>
   <#if hasWrapper>
     </div><#lt/>

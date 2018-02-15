@@ -320,11 +320,11 @@ public class CommonServices {
         int count = ((Integer) context.get("count")).intValue();
 
         // SCIPIO: 2018-02-15: patch to add random userLoginId/partyId combo
-        Integer randomUserLoginAndPartyCount = (Integer) context.get("randomUserLoginAndPartyCount");
+        Integer randomUserCount = (Integer) context.get("randomUserCount");
         List<GenericValue> userLoginList = Collections.emptyList();
-        if (randomUserLoginAndPartyCount != null && randomUserLoginAndPartyCount > 0) {
+        if (randomUserCount != null && randomUserCount > 0) {
             EntityFindOptions efo = new EntityFindOptions();
-            efo.setMaxRows(randomUserLoginAndPartyCount);
+            efo.setMaxRows(randomUserCount);
             EntityCondition cond = EntityCondition.makeCondition("partyId", EntityOperator.NOT_EQUAL, null);
             try {
                 userLoginList = delegator.findList("UserLogin", cond, UtilMisc.toSet("userLoginId", "partyId"), 

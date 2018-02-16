@@ -219,7 +219,7 @@ under the License.
         <attribute mode="IN" name="statusId" type="String" optional="true"/>
         <attribute mode="IN" name="localeString" type="String" optional="true"/>
         <attribute mode="IN" name="isPublic" type="Boolean" optional="true"/>
-        <attribute mode="IN" name="custRequestId" type="String" optional="false"/>        
+        <attribute mode="INOUT" name="custRequestId" type="String" optional="false"/>        
         <!-- <attribute mode="IN" name="autoVariants" type="Boolean" optional="true"/> -->
         <attribute mode="OUT" name="contentId" type="String" optional="true"/>
         <attribute mode="OUT" name="dataResourceId" type="String" optional="true"/>

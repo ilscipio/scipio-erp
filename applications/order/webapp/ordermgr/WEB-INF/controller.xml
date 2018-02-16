@@ -1301,8 +1301,8 @@ under the License.
     <request-map uri="createCustRequestContent">
         <security auth="true" https="true"/>
         <!-- SCIPIO 14-02-2018: Replaces original event component://order/script/org/ofbiz/order/request/CustRequestEvents.xml#createCustRequestContent -->        
-        <event type="java" path="com.scipio.order.quote.content.CustRequestEvent" invoke="createCustRequestContent"/>
-        <response name="success" type="request-redirect" value="EditCustRequestContent"><redirect-parameter name="custRequestId"/></response>
+        <event type="service" invoke="CustRequestUploadContentFile"/>
+        <response name="success" type="view" value="EditCustRequestContent"/>
         <response name="error" type="view" value="EditCustRequestContent"/>
     </request-map>
 

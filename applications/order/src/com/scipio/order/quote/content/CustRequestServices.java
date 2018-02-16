@@ -174,6 +174,7 @@ public class CustRequestServices {
 			}
 
 		}
+		result.put("custRequestId", custRequestId);
 		return result;
 	}
 

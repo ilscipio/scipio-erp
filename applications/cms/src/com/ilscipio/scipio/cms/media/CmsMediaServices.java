@@ -280,16 +280,16 @@ public abstract class CmsMediaServices {
                         }
                         
                     } else {
-                        throw new FileTypeException(PropertyMessage.make("CMSErrorUiLabels", "CmsUnsupportedFileType"));
+                        throw new FileTypeException(PropertyMessage.make("CommonErrorUiLabels", "CommonUnsupportedFileType"));
                     }
                 } else {
-                    throw new FileTypeException(PropertyMessage.make("CMSErrorUiLabels", "CmsUnsupportedFileType"));
+                    throw new FileTypeException(PropertyMessage.make("CommonErrorUiLabels", "CommonUnsupportedFileType"));
                 }
             } else {
                 // TODO: Handle this case or throw an error. In fact as
                 // it is currently implemented all media (dataResources) handled
                 // in here must have an associated entity
-                throw new FileTypeException(PropertyMessage.make("CMSErrorUiLabels", "CmsUnsupportedFileType"));
+                throw new FileTypeException(PropertyMessage.make("CommonErrorUiLabels", "CommonUnsupportedFileType"));
             }
         } catch (Exception e) {
             FormattedError err = errorFmt.format(e, "Error getting media files", null, context);

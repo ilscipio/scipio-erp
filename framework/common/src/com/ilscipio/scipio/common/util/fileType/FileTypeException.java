@@ -18,14 +18,6 @@ public class FileTypeException extends GeneralException {
         super(e);
     }
 
-    public FileTypeException(String msg, PropertyMessage propMsg, Throwable e) {
-        // super(msg, propMsg, e);
-    }
-
-    public FileTypeException(String msg, PropertyMessage propMsg) {
-        // super(msg, propMsg);
-    }
-
     public FileTypeException(PropertyMessage propMsg, Throwable e) {
         super(propMsg, e);
     }

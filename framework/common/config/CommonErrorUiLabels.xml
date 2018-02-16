@@ -198,4 +198,13 @@
         <value xml:lang="en">The requested URL ${requestUrl} was not found on this server.</value>
         <value xml:lang="fr">L'URL demandée ${requestUrl} n'a pas été trouvée sur ce serveur.</value>
     </property>
+    
+    <property key="CommonUnsupportedFileType">
+        <value xml:lang="en">Unsupported file type for selected media type category</value>
+        <value xml:lang="de">Nicht unterstützter Dateityp für ausgewählte Medientypen</value>
+    </property>
+    <property key="CommonInvalidFileTypeForMediaCat">
+        <value xml:lang="en">Invalid file type (${mediaType}) for media type category (${providedType})</value>
+        <value xml:lang="de">Ungültiger Dateityp (${mediaType}) für Medientyp-Kategorie (${providedType})</value>
+    </property>
 </resource>

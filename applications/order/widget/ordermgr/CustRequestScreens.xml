@@ -524,9 +524,6 @@ under the License.
                     <order-by field-name="sequenceId"/>
                 </entity-condition>
                 <entity-condition list="contentTypes" entity-name="ContentType"><order-by field-name="description"/></entity-condition>
-                <entity-condition list="contentTypes" entity-name="DataResourceType"><order-by field-name="description"/></entity-condition>
-                
-                
             </actions>
             <widgets>
                 <decorator-screen name="CommonRequestDecorator" location="${parameters.mainDecoratorLocation}">

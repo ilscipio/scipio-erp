@@ -5,11 +5,10 @@ import java.io.ByteArrayInputStream;
 import java.nio.ByteBuffer;
 import java.sql.Timestamp;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 
 import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.conversion.ConversionException;
 import org.ofbiz.base.conversion.NumberConverters.StringToInteger;
@@ -17,34 +16,40 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.PropertyMessage;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ServiceUtil;
 
+//import com.ilscipio.scipio.cms.ServiceErrorFormatter.FormattedError;
 import com.ilscipio.scipio.common.util.fileType.FileTypeException;
 import com.ilscipio.scipio.common.util.fileType.FileTypeResolver;
 import com.ilscipio.scipio.common.util.fileType.FileTypeUtil;
 
-public class CustRequestEvent {
+public class CustRequestServices {
+	private static final String module = CustRequestServices.class.getName();
 
-	private static final String module = CustRequestEvent.class.getName();
-
-	public static String createCustRequestContent(HttpServletRequest request, HttpServletResponse response) {
-		Delegator delegator = (Delegator) request.getAttribute("delegator");
-		LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-		String result = "success";
+	public static Map<String, Object> createCustRequestContent(DispatchContext dctx, Map<String, Object> context) {
+		Delegator delegator = dctx.getDelegator();
+		LocalDispatcher dispatcher = dctx.getDispatcher();
+		Map<String, Object> result = ServiceUtil.returnSuccess();
 		// GenericValue userLogin = (GenericValue) context.get("userLogin");
-		Locale locale = (Locale) request.getAttribute("locale");
-		TimeZone timeZone = (TimeZone) request.getAttribute("timeZone");
+		Locale locale = (Locale) context.get("locale");
+		TimeZone timeZone = (TimeZone) context.get("timeZone");
+		GenericValue userLogin = (GenericValue) context.get("userLogin");
 
-		ByteBuffer byteBuffer = (ByteBuffer) request.getAttribute("uploadedFile");
-		String dataResourceTypeId = (String) request.getAttribute("dataResourceTypeId");
-		String contentName = (String) request.getAttribute("contentName");
+		ByteBuffer byteBuffer = (ByteBuffer) context.get("uploadedFile");
+		String dataResourceTypeId = (String) context.get("dataResourceTypeId");
+		String contentName = (String) context.get("contentName");
 
-		String fileSize = (String) request.getAttribute("_uploadedFile_size");
-		String fileName = (String) request.getAttribute("_uploadedFile_fileName");
-		String contentType = (String) request.getAttribute("_uploadedFile_contentType");
+		String fileSize = (String) context.get("_uploadedFile_size");
+		String fileName = (String) context.get("_uploadedFile_fileName");
+		String contentType = (String) context.get("_uploadedFile_contentType");
+		
+		String custRequestId = (String) context.get("custRequestId");
 
 		// USE SAME CREATED DATE FOR EVERYTHING RELATED
 		Timestamp createdDate = UtilDateTime.nowTimestamp();
@@ -98,10 +103,10 @@ public class CustRequestEvent {
 							mediaDataResource = delegator.makeValue("OtherDataResource");
 							mediaDataResource.put("dataResourceContent", byteBuffer.array());
 						}
-
+						
 						GenericValue dataResource = delegator.makeValue("DataResource");
 						dataResource.put("dataResourceTypeId", dataResourceTypeId);
-						dataResource.put("dataResourceName", contentName); 
+						dataResource.put("dataResourceName", contentName);
 						dataResource.put("statusId", "CTNT_IN_PROGRESS");
 						dataResource.put("mimeTypeId", mimeType.getString("mimeTypeId"));
 						dataResource.put("isPublic", "N");
@@ -115,17 +120,13 @@ public class CustRequestEvent {
 							} catch (Exception e) {
 								Debug.logError(e, "Error uploading media file: Could not read/parse image file: "
 										+ e.getMessage(), module);
-								// return
-								// ServiceUtil.returnError(UtilProperties.getMessage("ProductErrorUiLabels",
-								// "ScaleImage.unable_to_parse", locale) + ": "
-								// + e.getMessage());
-								return "error";
+								result = ServiceUtil.returnError(UtilProperties.getMessage("ProductErrorUiLabels",
+										"ScaleImage.unable_to_parse", locale) + ": " + e.getMessage());
+
 							}
 						}
 						dataResource = delegator.createSetNextSeqId(dataResource);
 						String dataResourceId = dataResource.getString("dataResourceId");
-						// result.put("dataResourceId", dataResourceId);
-						// result.put("dataResourceTypeId", dataResourceTypeId);
 
 						GenericValue fileSizeDataResourceAttr = delegator.makeValue("DataResourceAttribute");
 						fileSizeDataResourceAttr.put("dataResourceId", dataResource.get("dataResourceId"));
@@ -143,32 +144,12 @@ public class CustRequestEvent {
 						content.put("createdDate", createdDate);
 						content = delegator.createSetNextSeqId(content);
 						String contentId = content.getString("contentId");
-						// result.put("contentId", contentId);
 
-						if (dataResourceTypeId.equals(FileTypeResolver.IMAGE_TYPE)) {
-							// try {
-							// Map<String, Object> resizeCtx =
-							// dctx.makeValidContext("cmsRebuildMediaVariants",
-							// ModelService.IN_PARAM, context);
-							// resizeCtx.put("contentIdList",
-							// UtilMisc.<String>toList(contentId));
-							// resizeCtx.put("force", Boolean.TRUE);
-							// resizeCtx.put("createdDate", createdDate);
-							// Map<String, Object> resizeResult =
-							// dispatcher.runSync("cmsRebuildMediaVariants",
-							// resizeCtx);
-							// if (!ServiceUtil.isSuccess(resizeResult)) {
-							// return ServiceUtil.returnError("Error creating
-							// resized images: " +
-							// ServiceUtil.getErrorMessage(resizeResult));
-							// }
-							// } catch (GenericServiceException e) {
-							// FormattedError err = errorFmt.format(e, "Error
-							// creating resized images", null, context);
-							// Debug.logError(err.getEx(), err.getLogMsg(),
-							// module);
-							// return err.returnError();
-							// }
+						Map<String, Object> createCustRequestContentCtx = ServiceUtil.setServiceFields(dispatcher, "createCustRequestContent", context, userLogin, timeZone, locale);
+						createCustRequestContentCtx.put("contentId", contentId);
+						Map<String, Object> custRequestContentResult = dispatcher.runSync("createCustRequestContent", createCustRequestContentCtx);
+						if (ServiceUtil.isSuccess(custRequestContentResult)) {
+							Debug.log("createCustRequestContent is sucess");
 						}
 
 					} else {
@@ -186,11 +167,12 @@ public class CustRequestEvent {
 		} catch (Exception e) {
 			// FormattedError err = errorFmt.format(e, "Error getting media
 			// files", null, context);
-			// if (!(e instanceof FileTypeException)) { // don't log, common
-			// user input error
-			// Debug.logError(err.getEx(), err.getLogMsg(), module);
-			// }
-			return "error";
+			if (!(e instanceof FileTypeException)) {
+				// don't log, common user input error
+				Debug.logError(e, e.getMessage(), module);
+				result = ServiceUtil.returnError(e.getMessage());
+			}
+
 		}
 		return result;
 	}

@@ -1955,7 +1955,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
       <#case "datetime">
         <#if dateType == "date" || dateType == "time" || dateType == "month">
           <#-- leave as-is -->
-        <#else> <#-- "date-time" -->
+        <#else><#-- "date-time" -->
           <#local dateType = "timestamp">
         </#if>
         <@field_datetime_widget name=name 

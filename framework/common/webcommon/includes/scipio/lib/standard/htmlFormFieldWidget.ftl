@@ -279,7 +279,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         <#-- 2018-02-16: title/tooltip can now start with "+" to indicate prepend to default -->
         <#local titlePrefix = "">
         <#if rawString(title)?starts_with("+")>
-          <#local titlePrefix = rawString(title)[1..] + (styles.field_datetime_title_sep!" - ")>
+          <#local titlePrefix = rawString(title)[1..]>
           <#local title = "">
         </#if>
         <#if !title?has_content>
@@ -305,7 +305,13 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
             <#local title = getTextLabelFromExpr(title, {"dateLabel":origLabel, "dateFormatString":dateFormatString})!"">
           </#if>
         </#if>
-        <#local title = titlePrefix + title>
+        <#if titlePrefix?has_content>
+          <#if title?has_content>
+            <#local title = titlePrefix + (styles.field_datetime_title_sep!" - ") + title>
+          <#else>
+            <#local title = titlePrefix>
+          </#if>
+        </#if>
       </#if>
       <input type="text" name="${escapeVal(displayInputName, 'html')}"<@fieldClassAttribStr class=class alert=alert /><#rt/>
         <@fieldElemAttribStr attribs=attribs /><#t/>

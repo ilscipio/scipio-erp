@@ -26,7 +26,8 @@ under the License.
         <field name="JOB_NAME" title="${uiLabelMap.WebtoolsJob}"><text/></field>
         <field name="SERVICE_NAME" title="${uiLabelMap.WebtoolsService}"><text/></field>
         <field name="POOL_NAME" title="${uiLabelMap.WebtoolsPool}"><text/></field>
-        <field name="SERVICE_TIME" title="${uiLabelMap.CommonStartDateTime}"><date-time/></field>
+        <!-- SCIPIO: 2018-02: start time desperately needed a tooltip -->
+        <field name="SERVICE_TIME" title="${uiLabelMap.CommonStartDateTime}" tooltip="+${uiLabelMap.WebtoolsLeaveEmptyToRunJobImmediately}"><date-time/></field>
         <field name="SERVICE_END_TIME" title="${uiLabelMap.CommonEndDateTime}"><date-time/></field>
         <field name="SERVICE_FREQUENCY" title="${uiLabelMap.WebtoolsFrequency}">
             <drop-down>

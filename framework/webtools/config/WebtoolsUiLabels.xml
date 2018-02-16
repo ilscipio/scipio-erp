@@ -6047,4 +6047,9 @@
     <property key="WebtoolsTestLabel_de"><!-- SCIPIO: DO NOT LOCALIZE THIS, for testing -->
         <value xml:lang="de">Testetikett</value>
     </property>
+    <property key="WebtoolsLeaveEmptyToRunJobImmediately">
+        <value xml:lang="en">Leave start time field empty to run job immediately (on next job poll)</value>
+        <value xml:lang="de">Feld Startzeit leer lassen, um den Job sofort auszuführen (bei der nächsten Jobabfrage)</value>
+        <value xml:lang="fr">Laissez le champ Heure de début vide pour exécuter le travail immédiatement (au prochain rafraîchissement)</value>
+    </property>
 </resource>

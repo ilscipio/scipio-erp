@@ -144,6 +144,7 @@ public class CustRequestServices {
 						content.put("createdDate", createdDate);
 						content = delegator.createSetNextSeqId(content);
 						String contentId = content.getString("contentId");
+						result.put("contentId", contentId);
 
 						Map<String, Object> createCustRequestContentCtx = ServiceUtil.setServiceFields(dispatcher, "createCustRequestContent", context, userLogin, timeZone, locale);
 						createCustRequestContentCtx.put("contentId", contentId);

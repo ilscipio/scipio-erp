@@ -507,6 +507,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleEditRequestContent"/>
                 <set field="activeSubMenuItem" value="custRequestContent"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
+                <set field="contentId" from-field="parameters.contentId"/>
                 <entity-condition entity-name="CustRequestAndContent" list="custRequestAndContents">
                     <condition-list combine="and">
                         <condition-expr field-name="custRequestId" from-field="custRequestId"/>
@@ -528,13 +529,13 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonRequestDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet id="AddCustRequestContentsPanel" title="${uiLabelMap.PageTitleAddContent}" collapsible="true">
+                        <container id="contentWrapper">
                             <!-- SCIPIO 02-14-2018: Replaces component://order/widget/ordermgr/CustRequestForms.xml#AddCustRequestContent form widget -->
                             <platform-specific>
                                 <html><html-template location="component://order/webapp/ordermgr/request/AddCustRequestContent.ftl"/></html>                                                 
-                            </platform-specific>
-                        </screenlet>
-                        <include-form name="ListCustRequestContent" location="component://order/widget/ordermgr/CustRequestForms.xml"/>
+                            </platform-specific>                        
+                            <include-form name="ListCustRequestContent" location="component://order/widget/ordermgr/CustRequestForms.xml"/>
+                        </container>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

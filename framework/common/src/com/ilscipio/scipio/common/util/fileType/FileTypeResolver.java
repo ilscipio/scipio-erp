@@ -1,4 +1,4 @@
-package com.ilscipio.scipio.cms.util.fileType;
+package com.ilscipio.scipio.common.util.fileType;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -18,12 +18,12 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 
-import com.ilscipio.scipio.cms.util.fileType.AbstractFileType.MagicNumber;
-import com.ilscipio.scipio.cms.util.fileType.audio.AudioFileTypeResolver;
-import com.ilscipio.scipio.cms.util.fileType.document.DocumentFileTypeResolver;
-import com.ilscipio.scipio.cms.util.fileType.image.ImageFileTypeResolver;
-import com.ilscipio.scipio.cms.util.fileType.video.VideoFileTypeResolver;
 import com.ilscipio.scipio.common.util.TikaUtil;
+import com.ilscipio.scipio.common.util.fileType.AbstractFileType.MagicNumber;
+import com.ilscipio.scipio.common.util.fileType.audio.AudioFileTypeResolver;
+import com.ilscipio.scipio.common.util.fileType.document.DocumentFileTypeResolver;
+import com.ilscipio.scipio.common.util.fileType.image.ImageFileTypeResolver;
+import com.ilscipio.scipio.common.util.fileType.video.VideoFileTypeResolver;
 
 /**
  * File type resolver. Currently supports both manual file type detection and detection through

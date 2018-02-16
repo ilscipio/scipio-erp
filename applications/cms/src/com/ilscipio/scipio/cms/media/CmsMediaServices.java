@@ -45,9 +45,9 @@ import org.ofbiz.service.ServiceUtil;
 import com.ilscipio.scipio.cms.CmsServiceUtil;
 import com.ilscipio.scipio.cms.ServiceErrorFormatter;
 import com.ilscipio.scipio.cms.ServiceErrorFormatter.FormattedError;
-import com.ilscipio.scipio.cms.util.fileType.FileTypeException;
-import com.ilscipio.scipio.cms.util.fileType.FileTypeResolver;
-import com.ilscipio.scipio.cms.util.fileType.FileTypeUtil;
+import com.ilscipio.scipio.common.util.fileType.FileTypeException;
+import com.ilscipio.scipio.common.util.fileType.FileTypeResolver;
+import com.ilscipio.scipio.common.util.fileType.FileTypeUtil;
 
 public abstract class CmsMediaServices {
 

@@ -1,4 +1,4 @@
-package com.ilscipio.scipio.cms.util.fileType.video;
+package com.ilscipio.scipio.common.util.fileType.video;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,8 +7,10 @@ import java.util.Set;
 
 import org.ofbiz.entity.Delegator;
 
-import com.ilscipio.scipio.cms.util.fileType.AbstractFileType;
-import com.ilscipio.scipio.cms.util.fileType.FileTypeResolver;
+import com.ilscipio.scipio.common.util.fileType.AbstractFileType;
+import com.ilscipio.scipio.common.util.fileType.AbstractFileType.MagicNumber;
+import com.ilscipio.scipio.common.util.fileType.FileTypeResolver;
+import com.ilscipio.scipio.common.util.fileType.FileTypeResolver.ResolverConfig;
 
 /**
  * File type resolver focused on resolving video types. This is likely to be

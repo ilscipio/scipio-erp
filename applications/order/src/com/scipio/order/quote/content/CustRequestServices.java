@@ -24,7 +24,6 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
-//import com.ilscipio.scipio.cms.ServiceErrorFormatter.FormattedError;
 import com.ilscipio.scipio.common.util.fileType.FileTypeException;
 import com.ilscipio.scipio.common.util.fileType.FileTypeResolver;
 import com.ilscipio.scipio.common.util.fileType.FileTypeUtil;
@@ -138,44 +137,45 @@ public class CustRequestServices {
 						mediaDataResource.create();
 
 						GenericValue content = delegator.makeValue("Content");
-						content.put("contentTypeId", "SCP_MEDIA");
+						// TODO: Review this, not sure which contentType should be used here. Probably the user should select it?
+						content.put("contentTypeId", "DOCUMENT");
 						content.put("contentName", contentName);
 						content.put("dataResourceId", dataResourceId);
 						content.put("createdDate", createdDate);
 						content = delegator.createSetNextSeqId(content);
 						String contentId = content.getString("contentId");
-						result.put("contentId", contentId);
+						
 
 						Map<String, Object> createCustRequestContentCtx = ServiceUtil.setServiceFields(dispatcher, "createCustRequestContent", context, userLogin, timeZone, locale);
 						createCustRequestContentCtx.put("contentId", contentId);
 						Map<String, Object> custRequestContentResult = dispatcher.runSync("createCustRequestContent", createCustRequestContentCtx);
-						if (ServiceUtil.isSuccess(custRequestContentResult)) {
-							Debug.log("createCustRequestContent is sucess");
-						}
-
+						if (ServiceUtil.isError(custRequestContentResult) || ServiceUtil.isFailure(custRequestContentResult)) {
+							result = custRequestContentResult;
+						} else {
+							result.put("custRequestId", custRequestId);
+							result.put("contentId", contentId);
+						}						
 					} else {
-						throw new FileTypeException(PropertyMessage.make("CMSErrorUiLabels", "CmsUnsupportedFileType"));
+						throw new FileTypeException(PropertyMessage.make("CommonErrorUiLabels", "CommonUnsupportedFileType"));
 					}
 				} else {
-					throw new FileTypeException(PropertyMessage.make("CMSErrorUiLabels", "CmsUnsupportedFileType"));
+					throw new FileTypeException(PropertyMessage.make("CommonErrorUiLabels", "CommonUnsupportedFileType"));
 				}
 			} else {
 				// TODO: Handle this case or throw an error. In fact as
 				// it is currently implemented all media (dataResources) handled
 				// in here must have an associated entity
-				throw new FileTypeException(PropertyMessage.make("CMSErrorUiLabels", "CmsUnsupportedFileType"));
+				throw new FileTypeException(PropertyMessage.make("CommonErrorUiLabels", "CommonUnsupportedFileType"));
 			}
-		} catch (Exception e) {
-			// FormattedError err = errorFmt.format(e, "Error getting media
-			// files", null, context);
+		} catch (Exception e) {			
 			if (!(e instanceof FileTypeException)) {
 				// don't log, common user input error
 				Debug.logError(e, e.getMessage(), module);
-				result = ServiceUtil.returnError(e.getMessage());
+				result = ServiceUtil.returnError("Error getting media files");
 			}
 
 		}
-		result.put("custRequestId", custRequestId);
+		
 		return result;
 	}
 

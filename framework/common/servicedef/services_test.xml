@@ -247,6 +247,10 @@ under the License.
         <description>Test JavaScript Service</description>
         <attribute name="count" type="Integer" mode="IN" optional="false"/>
         <attribute name="rollback" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="randomUserCount" type="Integer" mode="IN" optional="true">
+            <description>SCIPIO: If non-zero, each Visit will get a random userLoginId and partyId 
+                from the system, with up to this count of possible different values (never null) (added 2018-02-15)</description>
+        </attribute>
     </service>
 
     <service name="byteBufferTest" engine="java" auth="true"

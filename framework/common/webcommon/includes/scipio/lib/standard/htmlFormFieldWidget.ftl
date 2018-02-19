@@ -232,7 +232,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName="" 
     alert=false mask="" events={} step="" timeValues="" tooltip="" postfix="" postfixColumns="" inlinePostfix=false manualInput=true collapse=false fieldTitleBlank=false origLabel="" inlineLabel=false 
     required=false origArgs={} passArgs={} catchArgs...>
-    <#local class = addClassArg(class, styles.field_datetime_default!"")>
+  <#local class = addClassArg(class, styles.field_datetime_default!"")>
   <#-- NOTE: dateType and dateDisplayType (previously shortDateInput) are distinct and both are necessary. 
       dateType controls the type of data sent to the server; dateDisplayType only controls what's displayed to user. 
       (dateType=="date") is not the same as (dateDisplayType=="date" && dateType=="timestamp"). -->  
@@ -276,6 +276,12 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         <#if title?is_boolean && title == true>
           <#local title = "">
         </#if>
+        <#-- 2018-02-16: title/tooltip can now start with "+" to indicate prepend to default -->
+        <#local titlePrefix = "">
+        <#if rawString(title)?starts_with("+")>
+          <#local titlePrefix = rawString(title)[1..]>
+          <#local title = "">
+        </#if>
         <#if !title?has_content>
           <#local title = styles.field_datetime_default_title!>
         </#if>
@@ -297,6 +303,13 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
             </#if>
           <#else>
             <#local title = getTextLabelFromExpr(title, {"dateLabel":origLabel, "dateFormatString":dateFormatString})!"">
+          </#if>
+        </#if>
+        <#if titlePrefix?has_content>
+          <#if title?has_content>
+            <#local title = titlePrefix + (styles.field_datetime_title_sep!" - ") + title>
+          <#else>
+            <#local title = titlePrefix>
           </#if>
         </#if>
       </#if>

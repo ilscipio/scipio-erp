@@ -45,9 +45,9 @@ import org.ofbiz.service.ServiceUtil;
 import com.ilscipio.scipio.cms.CmsServiceUtil;
 import com.ilscipio.scipio.cms.ServiceErrorFormatter;
 import com.ilscipio.scipio.cms.ServiceErrorFormatter.FormattedError;
-import com.ilscipio.scipio.cms.util.fileType.FileTypeException;
-import com.ilscipio.scipio.cms.util.fileType.FileTypeResolver;
-import com.ilscipio.scipio.cms.util.fileType.FileTypeUtil;
+import com.ilscipio.scipio.common.util.fileType.FileTypeException;
+import com.ilscipio.scipio.common.util.fileType.FileTypeResolver;
+import com.ilscipio.scipio.common.util.fileType.FileTypeUtil;
 
 public abstract class CmsMediaServices {
 
@@ -280,16 +280,16 @@ public abstract class CmsMediaServices {
                         }
                         
                     } else {
-                        throw new FileTypeException(PropertyMessage.make("CMSErrorUiLabels", "CmsUnsupportedFileType"));
+                        throw new FileTypeException(PropertyMessage.make("CommonErrorUiLabels", "CommonUnsupportedFileType"));
                     }
                 } else {
-                    throw new FileTypeException(PropertyMessage.make("CMSErrorUiLabels", "CmsUnsupportedFileType"));
+                    throw new FileTypeException(PropertyMessage.make("CommonErrorUiLabels", "CommonUnsupportedFileType"));
                 }
             } else {
                 // TODO: Handle this case or throw an error. In fact as
                 // it is currently implemented all media (dataResources) handled
                 // in here must have an associated entity
-                throw new FileTypeException(PropertyMessage.make("CMSErrorUiLabels", "CmsUnsupportedFileType"));
+                throw new FileTypeException(PropertyMessage.make("CommonErrorUiLabels", "CommonUnsupportedFileType"));
             }
         } catch (Exception e) {
             FormattedError err = errorFmt.format(e, "Error getting media files", null, context);

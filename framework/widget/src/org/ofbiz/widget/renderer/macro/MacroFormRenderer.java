@@ -788,10 +788,13 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(" mask=");
         sr.append(ftlFmt.makeStringLiteral(formattedMask));
         appendRequiredFieldParam(sr, context, modelFormField);
+        // SCIPIO: 2018-02-16: properly pass tooltip as parameter
+        appendTooltipParam(sr, context, modelFormField); // SCIPIO
         sr.append(" />");
         executeMacro(writer, sr.toString());
         this.addAsterisks(writer, context, modelFormField);
-        this.appendTooltip(writer, context, modelFormField);
+        // SCIPIO: 2018-02-16: now passed as parameter just above this
+        //this.appendTooltip(writer, context, modelFormField);
     }
 
     public void renderDropDownField(Appendable writer, Map<String, Object> context, DropDownField dropDownField) throws IOException {

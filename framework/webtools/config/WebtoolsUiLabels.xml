@@ -6047,4 +6047,19 @@
     <property key="WebtoolsTestLabel_de"><!-- SCIPIO: DO NOT LOCALIZE THIS, for testing -->
         <value xml:lang="de">Testetikett</value>
     </property>
+    <property key="WebtoolsLeaveEmptyToRunJobImmediately">
+        <value xml:lang="en">Leave start time field empty to run job immediately (on next job poll)</value>
+        <value xml:lang="de">Feld Startzeit leer lassen, um den Job sofort auszuführen (bei der nächsten Jobabfrage)</value>
+        <value xml:lang="fr">Laissez le champ Heure de début vide pour exécuter le travail immédiatement (au prochain rafraîchissement)</value>
+    </property>
+    <property key="WebtoolsRunServiceAsyncStartedInfo">
+        <value xml:lang="en">The service '${serviceName}' has been started asynchronously and will run in the background. Check server logs for more information.</value>
+        <value xml:lang="de">Der Dienst '${serviceName}' wurde asynchron gestartet und wird im Hintergrund ausgeführt. Überprüfen Sie die Serverprotokolle auf weitere Informationen.</value>
+        <value xml:lang="fr">Le service '${serviceName}' a été démarré de manière asynchrone et veut s'exécuter en arrière-plan. Vérifiez les journaux du serveur pour plus d'informations.</value>
+    </property>
+    <property key="WebtoolsOneTimeExecNotPersisted">
+        <value xml:lang="en">One-time execution, not persisted</value>
+        <value xml:lang="de">Einmalige Ausführung, nicht beibehalten</value>
+        <value xml:lang="fr">Exécution unique, non persistante</value>
+    </property>
 </resource>

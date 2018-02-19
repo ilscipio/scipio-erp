@@ -1,4 +1,4 @@
-package com.ilscipio.scipio.cms.util.fileType.document;
+package com.ilscipio.scipio.common.util.fileType.document;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -11,8 +11,8 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 
-import com.ilscipio.scipio.cms.util.fileType.AbstractFileType;
-import com.ilscipio.scipio.cms.util.fileType.FileTypeResolver;
+import com.ilscipio.scipio.common.util.fileType.AbstractFileType;
+import com.ilscipio.scipio.common.util.fileType.FileTypeResolver;
 
 /**
  * File type resolver focused on resolving document types. This is likely to be

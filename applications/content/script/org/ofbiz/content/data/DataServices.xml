@@ -19,7 +19,7 @@ under the License.
 -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
+        xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
   <!-- Methods for DataResource -->
     <simple-method method-name="createDataResource" short-description="Create a Data Resource">
         <make-value entity-name="DataResource" value-field="newEntity"/>
@@ -555,6 +555,7 @@ under the License.
     <simple-method method-name="attachUploadToDataResource" short-description="Attach an uploaded file to a data resource">
         <set field="isUpdate" value="false"/>
         <property-to-field resource="content.properties" property="content.upload.always.local.file" field="forceLocal"/>
+        <log level="always" message="forceLocal =============> ${forceLocal}" />
         <if>
             <condition>
                 <and>

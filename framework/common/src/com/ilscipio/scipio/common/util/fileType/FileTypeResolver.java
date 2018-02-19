@@ -1,4 +1,4 @@
-package com.ilscipio.scipio.cms.util.fileType;
+package com.ilscipio.scipio.common.util.fileType;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -18,12 +18,12 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 
-import com.ilscipio.scipio.cms.util.fileType.AbstractFileType.MagicNumber;
-import com.ilscipio.scipio.cms.util.fileType.audio.AudioFileTypeResolver;
-import com.ilscipio.scipio.cms.util.fileType.document.DocumentFileTypeResolver;
-import com.ilscipio.scipio.cms.util.fileType.image.ImageFileTypeResolver;
-import com.ilscipio.scipio.cms.util.fileType.video.VideoFileTypeResolver;
 import com.ilscipio.scipio.common.util.TikaUtil;
+import com.ilscipio.scipio.common.util.fileType.AbstractFileType.MagicNumber;
+import com.ilscipio.scipio.common.util.fileType.audio.AudioFileTypeResolver;
+import com.ilscipio.scipio.common.util.fileType.document.DocumentFileTypeResolver;
+import com.ilscipio.scipio.common.util.fileType.image.ImageFileTypeResolver;
+import com.ilscipio.scipio.common.util.fileType.video.VideoFileTypeResolver;
 
 /**
  * File type resolver. Currently supports both manual file type detection and detection through
@@ -43,7 +43,7 @@ public abstract class FileTypeResolver {
     public static final String AUDIO_TYPE = "AUDIO_OBJECT";
     public static final String DOCUMENT_TYPE = "DOCUMENT_OBJECT";
 
-    private static final ResolverConfig defaultResolverConfig = ResolverConfig.fromSettings(null);
+    private static final ResolverConfig defaultResolverConfig = ResolverConfig.fromSettings("general.properties");
     
     protected final ResolverConfig resolverConfig;
     protected final Delegator delegator;
@@ -53,12 +53,12 @@ public abstract class FileTypeResolver {
         this.resolverConfig = resolverConfig;
     }
     
-    public static ResolverConfig getDefaultResolverConfig(Delegator delegator) {
+    public static ResolverConfig getDefaultResolverConfig() {
         return defaultResolverConfig;
     }
     
     public static FileTypeResolver getInstance(Delegator delegator, String providedType) {
-        return getInstance(delegator, providedType, getDefaultResolverConfig(delegator));
+        return getInstance(delegator, providedType, getDefaultResolverConfig());
     }
     
     public static FileTypeResolver getInstance(Delegator delegator, String providedType, ResolverConfig resolverConfig) {
@@ -336,7 +336,7 @@ public abstract class FileTypeResolver {
             if (mimeType != null) {
                 // Check if the final result is an allowed type...
                 if (!isAllowedMediaType(mimeType.getString("mimeTypeId"))) {
-                    throw new FileTypeException(PropertyMessage.make("CMSErrorUiLabels", "CmsInvalidFileTypeForMediaCat", 
+                    throw new FileTypeException(PropertyMessage.make("CommonErrorUiLabels", "CommonInvalidFileTypeForMediaCat", 
                             UtilMisc.toMap("mediaType", mimeType.getString("mimeTypeId"), "providedType", getProvidedType())));
                 }
             }
@@ -355,7 +355,7 @@ public abstract class FileTypeResolver {
             // SPECIAL: here we assume Tika identified the file correctly.
             // so if it maps to a non-allowed type, we must throw error, NOT return null.
             if (!isAllowedMediaType(mimeTypeId)) {
-                throw new FileTypeException(PropertyMessage.make("CMSErrorUiLabels", "CmsInvalidFileTypeForMediaCat", 
+                throw new FileTypeException(PropertyMessage.make("CommonErrorUiLabels", "CommonInvalidFileTypeForMediaCat", 
                         UtilMisc.toMap("mediaType", mimeTypeId, "providedType", getProvidedType())));
             }
         }
@@ -406,12 +406,12 @@ public abstract class FileTypeResolver {
             this.manualMediaTypeDetectionPrioritized = other.manualMediaTypeDetectionPrioritized;
         }
         
-        public static ResolverConfig fromSettings(Delegator delegator) {
+        public static ResolverConfig fromSettings(String resource) {
             ResolverConfig.Builder builder = new ResolverConfig.Builder();
-            builder.setAllowMode(AllowMode.getFromNameSafe(UtilProperties.getPropertyValue("cms.properties", "media.detect.allowMode", "permissive")));
-            builder.setLibraryMediaTypeDetection(UtilProperties.getPropertyAsBoolean("cms.properties", "media.detect.libraryMediaTypeDetection", true));
-            builder.setManualMediaTypeDetection(UtilProperties.getPropertyAsBoolean("cms.properties", "media.detect.manualMediaTypeDetection", false));
-            builder.setManualMediaTypeDetectionPrioritized(UtilProperties.getPropertyAsBoolean("cms.properties", "media.detect.manualMediaTypeDetectionPrioritized", false));
+            builder.setAllowMode(AllowMode.getFromNameSafe(UtilProperties.getPropertyValue(resource, "media.detect.allowMode", "permissive")));
+            builder.setLibraryMediaTypeDetection(UtilProperties.getPropertyAsBoolean(resource, "media.detect.libraryMediaTypeDetection", true));
+            builder.setManualMediaTypeDetection(UtilProperties.getPropertyAsBoolean(resource, "media.detect.manualMediaTypeDetection", false));
+            builder.setManualMediaTypeDetectionPrioritized(UtilProperties.getPropertyAsBoolean(resource, "media.detect.manualMediaTypeDetectionPrioritized", false));
             return builder.getConfig();
         }
         

@@ -259,8 +259,7 @@ under the License.
         <call-simple-method method-name="checkStatusCustRequest"/>        
         <set from-field="parameters.custRequestId" field="lookupPKMap.custRequestId"/>
         <set from-field="parameters.custRequestItemSeqId" field="lookupPKMap.custRequestItemSeqId"/>
-        <find-by-primary-key entity-name="CustRequestItem" map="lookupPKMap" value-field="custRequestItem"/>
-        <log level="always" message="custRequestItem =======> ${custRequestItem}"></log>        
+        <find-by-primary-key entity-name="CustRequestItem" map="lookupPKMap" value-field="custRequestItem"/>          
         <remove-value  value-field="custRequestItem"/>
         <call-simple-method method-name="updateCustRequestLastModifiedDate"/>
     </simple-method>

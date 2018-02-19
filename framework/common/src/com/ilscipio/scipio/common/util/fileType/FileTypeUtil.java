@@ -1,4 +1,4 @@
-package com.ilscipio.scipio.cms.util.fileType;
+package com.ilscipio.scipio.common.util.fileType;
 
 import java.math.BigDecimal;
 import java.util.Locale;

@@ -16217,6 +16217,12 @@
         <value xml:lang="en">Media</value>
         <value xml:lang="fr">Médias</value>
     </property>
+    <property key="CommonMediaType">
+        <value xml:lang="en">Type</value>
+    </property>
+    <property key="CommonMediaTypes">
+        <value xml:lang="en">Media Types</value>
+    </property>
     <property key="CommonLicense">
         <value xml:lang="de">Lizenz</value>
         <value xml:lang="en">License</value>

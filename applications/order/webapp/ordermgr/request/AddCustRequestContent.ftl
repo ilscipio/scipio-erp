@@ -20,7 +20,7 @@
 		        <@field type="lookup" name="contentIdFrom" label=uiLabelMap.ContentCompDocParentContentId formName="AddCustRequestContent" fieldFormName="LookupDetailContentTree" />    
 		        -->     
 		                   
-		        <@field type="select" label=uiLabelMap.CmsMediaTypes name="dataResourceTypeId" required=true>
+		        <@field type="select" label=uiLabelMap.CommonMediaTypes name="dataResourceTypeId" required=true>
 		            <option value="IMAGE_OBJECT"<#if (parameters.dataResourceTypeId!) == "IMAGE_OBJECT"> selected</#if>>${uiLabelMap.CommonImage}</option>
 		            <option value="VIDEO_OBJECT"<#if (parameters.dataResourceTypeId!) == "VIDEO_OBJECT"> selected</#if>>${uiLabelMap.ContentResourceVideo}</option>
 		            <option value="AUDIO_OBJECT"<#if (parameters.dataResourceTypeId!) == "AUDIO_OBJECT"> selected</#if>>${uiLabelMap.ContentResourceAudio}</option>

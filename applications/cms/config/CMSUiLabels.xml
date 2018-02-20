@@ -294,13 +294,7 @@
     </property>
     <property key="CmsMediaPreview">
         <value xml:lang="en">Media Preview</value>
-    </property>
-    <property key="CmsMediaType">
-        <value xml:lang="en">Type</value>
-    </property>
-    <property key="CmsMediaTypes">
-        <value xml:lang="en">Media Types</value>
-    </property>
+    </property>    
     <property key="CmsMediaOriginalName">
         <value xml:lang="en">Original Name</value>
     </property>

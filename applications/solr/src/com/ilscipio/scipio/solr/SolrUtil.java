@@ -153,14 +153,14 @@ public abstract class SolrUtil {
                 if (Debug.verboseOn()) Debug.logVerbose("isSolrWebappPingOk: ping response status: " + status, module);
                 return true;
             } else {
-                Debug.logInfo("Solr: isSolrWebappPingOk: Solr webapp not pingable (status: " + status + ")", module);
+                Debug.logInfo("Solr: isSolrWebappPingOk: Solr webapp not pingable; status: " + status, module);
                 return false;
             }
         } catch(Exception e) {
             // FIXME: we are not supposed to catch this, but in current setup with Tomcat
             // solr can't handle the incomplete loading 503 and throws exception, so have no choice
             // but because this is only a Ping, we can usually assume this means not yet loaded...
-            Debug.logInfo("Solr: isSolrWebappPingOk: Solr webapp not pingable (status: exception)", module);
+            Debug.logInfo("Solr: isSolrWebappPingOk: Solr webapp not pingable; exception: " + e.getMessage(), module);
             return false;
         }
     }

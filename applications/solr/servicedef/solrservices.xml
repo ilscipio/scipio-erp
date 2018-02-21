@@ -24,6 +24,36 @@ under the License.
     <description>Content Component Services</description>
     <vendor>Ilscipio GmbH</vendor>
 
+    <service name="checkSolrReady" engine="java" use-transaction="false"
+        location="com.ilscipio.scipio.solr.SolrProductSearch" invoke="checkSolrReady">
+        <description>Checks if Solr webapp is loaded and available for queries</description>
+        <attribute mode="IN" name="core" optional="true" type="String"/>
+        <attribute mode="IN" name="client" optional="true" type="org.apache.solr.client.solrj.impl.HttpSolrClient"/>
+        <attribute mode="OUT" name="ready" optional="true" type="Boolean">
+            <description>True if Solr is enabled, loaded and available</description>
+        </attribute>
+        <attribute mode="OUT" name="enabled" optional="true" type="Boolean">
+            <description>True if Solr is enabled, or it is registered as an application in the system
+                (always true in stock Scipio config)</description>
+        </attribute>
+    </service>
+    
+    <service name="waitSolrReady" engine="java" use-transaction="false"
+        location="com.ilscipio.scipio.solr.SolrProductSearch" invoke="waitSolrReady">
+        <description>Returns only when Solr webapp is loaded and available for queries
+            (returns failure if Solr is not registered in the system or other error)</description>
+        <attribute mode="IN" name="core" optional="true" type="String"/>
+        <attribute mode="IN" name="client" optional="true" type="org.apache.solr.client.solrj.impl.HttpSolrClient"/>
+        <attribute mode="IN" name="sleepTime" optional="true" type="Integer">
+            <description>Time (milliseconds) to wait between checks.
+                Default: value of solrconfig.properties/solr.service.waitSolrReady.sleepTime</description>
+        </attribute>
+        <attribute mode="IN" name="maxChecks" optional="true" type="Integer">
+            <description>Max number of times to check (-1 for infinite), separated by sleepTime.
+                If passes this, returns failure. Default: value of solrconfig.properties/solr.service.waitSolrReady.maxChecks</description>
+        </attribute>
+    </service>
+
     <!-- Rebuild the Solr Tree -->
     <!-- NOTE: 2017-08-30: Now using semaphore="wait" (same as purgeOldJobs) to try to prevent concurrent executions
         doing strange things; this is more likely to happen now that SOLR_REBUILD_INIT job attempts retries on error, 
@@ -44,6 +74,9 @@ under the License.
         <attribute mode="IN" name="clearAndUseCache" optional="true" type="Boolean">
             <description>see solrconfig.properties/solr.index.rebuild.clearAndUseCache</description>
         </attribute>
+        <attribute mode="IN" name="waitSolrReady" optional="true" type="Boolean" default-value="false">
+            <description>If true, will wait for Solr to be loaded before running the indexing- see waitSolrReady service (added 2018-02-20)</description>
+        </attribute>
         <attribute mode="OUT" name="numDocs" optional="true" type="Integer" />
         <attribute mode="OUT" name="executed" optional="true" type="Boolean" />
     </service>
@@ -60,6 +93,7 @@ under the License.
         <attribute mode="IN" name="clearAndUseCache" optional="true" type="Boolean">
             <description>see solrconfig.properties/solr.index.rebuild.clearAndUseCache</description>
         </attribute>
+        <attribute mode="IN" name="waitSolrReady" optional="true" type="Boolean"/>
     </service>
     
     <service name="rebuildSolrIndexAuto" engine="java"
@@ -75,6 +109,7 @@ under the License.
         <attribute mode="IN" name="clearAndUseCache" optional="true" type="Boolean">
             <description>see solrconfig.properties/solr.index.rebuild.clearAndUseCache</description>
         </attribute>
+        <attribute mode="IN" name="waitSolrReady" optional="true" type="Boolean"/>
     </service>
     
     <service name="setSolrDataStatus" engine="java"

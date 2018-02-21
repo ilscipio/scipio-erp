@@ -3,6 +3,8 @@ package com.ilscipio.scipio.solr;
 import javax.transaction.Transaction;
 
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.apache.solr.client.solrj.request.SolrPing;
+import org.apache.solr.client.solrj.response.SolrPingResponse;
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.component.ComponentException;
@@ -24,8 +26,12 @@ public abstract class SolrUtil {
     public static final String module = SolrUtil.class.getName();
     
     public static final String solrConfigName = "solrconfig";
+    public static final String solrWebappPath = UtilProperties.getPropertyValue(solrConfigName, "solr.webapp.path", "/solr");
+    public static final String solrWebappServer = UtilProperties.getPropertyValue(solrConfigName, "solr.webapp.server", "default-server");
     public static final String solrUrl = makeSolrWebappUrl();
     public static final String solrFullUrl = makeFullSolrWebappUrl();
+
+    private static Boolean solrWebappPresent = null; // NOTE: don't really need volatile/sync; optimization only
     
     public static String getSolrConfigVersionStatic() {
         return UtilProperties.getPropertyValue(solrConfigName, "solr.config.version");
@@ -34,7 +40,7 @@ public abstract class SolrUtil {
     public static String makeSolrWebappUrl() {
         final String solrWebappProtocol = UtilProperties.getPropertyValue(solrConfigName, "solr.webapp.protocol");
         final String solrWebappDomainName = UtilProperties.getPropertyValue(solrConfigName, "solr.webapp.domainName");
-        final String solrWebappPath = UtilProperties.getPropertyValue(solrConfigName, "solr.webapp.path");
+        final String solrWebappPath = SolrUtil.solrWebappPath;
         final String solrWebappPortOverride = UtilProperties.getPropertyValue(solrConfigName, "solr.webapp.portOverride");
         
         String solrPort;
@@ -113,6 +119,58 @@ public abstract class SolrUtil {
         return Boolean.TRUE.equals(treatConnectErrorNonFatal);
     }
  
+    /**
+     * Returns true if the Solr webapp is present in the system (by context root).
+     * <p>
+     * For stock Scipio configuration, this always returns true.
+     * <p>
+     * WARN: Do not call this before or while components are being read.
+     */
+    public static boolean isSolrWebappPresent() {
+        Boolean present = solrWebappPresent;
+        if (present == null) {
+            present = (ComponentConfig.getWebAppInfo(solrWebappServer, solrWebappPath) != null);
+            solrWebappPresent = present;
+        }
+        return present;
+    }
+    
+    /**
+     * Returns true if the Solr webapp is present and enabled.
+     * <p>
+     * WARN: Do not call this before or while components are being read.
+     */
+    public static boolean isSolrWebappEnabled() {
+        return isSolrWebappPresent();
+    }
+    
+    public static boolean isSolrWebappPingOk(HttpSolrClient client) throws Exception {
+        try {
+            SolrPing solrPing = new SolrPing();
+            SolrPingResponse rsp = solrPing.process(client);
+            int status = rsp.getStatus();
+            if (status == 0) {
+                if (Debug.verboseOn()) Debug.logVerbose("isSolrWebappPingOk: ping response status: " + status, module);
+                return true;
+            } else {
+                Debug.logInfo("Solr: isSolrWebappPingOk: Solr webapp not pingable (status: " + status + ")", module);
+                return false;
+            }
+        } catch(Exception e) {
+            // FIXME: we are not supposed to catch this, but in current setup with Tomcat
+            // solr can't handle the incomplete loading 503 and throws exception, so have no choice
+            // but because this is only a Ping, we can usually assume this means not yet loaded...
+            Debug.logInfo("Solr: isSolrWebappPingOk: Solr webapp not pingable (status: exception)", module);
+            return false;
+        }
+    }
+    
+    /**
+     * Returns true if Solr is loaded and available for queries.
+     */
+    public static boolean isSolrWebappReady(HttpSolrClient client) throws Exception {
+        return isSolrWebappInitialized() && isSolrWebappPingOk(client);
+    }
 
     public static GenericValue getSolrStatus(Delegator delegator) {
         GenericValue solrStatus;

@@ -997,7 +997,7 @@ public abstract class SolrProductSearch {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         //GenericValue userLogin = (GenericValue) context.get("userLogin");
         //Locale locale = new Locale("de_DE");
-
+        
         // 2016-03-29: Only if dirty (or unknown)
         Boolean onlyIfDirty = (Boolean) context.get("onlyIfDirty");
         if (onlyIfDirty == null) onlyIfDirty = false;
@@ -1053,8 +1053,22 @@ public abstract class SolrProductSearch {
         int numDocsIndexed = 0; // 2018-02: needed for accurate stats in case a client edit filters out products within loop
         EntityListIterator prodIt = null;
         try {
-            Debug.logInfo("Solr: rebuildSolrIndex: Clearing solr index", module);
             client = SolrUtil.getHttpSolrClient((String) context.get("core"));
+            
+            // 2018-02-20: new ability to wait for Solr to load
+            if (Boolean.TRUE.equals(context.get("waitSolrReady"))) {
+                // NOTE: skipping runSync for speed; we know the implementation...
+                Map<String, Object> waitCtx = new HashMap<>();
+                waitCtx.put("client", client);
+                Map<String, Object> waitResult = waitSolrReady(dctx, waitCtx); // params will be null
+                if (!ServiceUtil.isSuccess(waitResult)) {
+                    final String errorMsg = "Error while waiting for Solr ready: " + ServiceUtil.getErrorMessage(waitResult);
+                    Debug.logError("Solr: rebuildSolrIndex: " + errorMsg, module);
+                    return ServiceUtil.returnError(errorMsg);
+                }
+            }
+            
+            Debug.logInfo("Solr: rebuildSolrIndex: Clearing solr index", module);
             // this removes everything from the index
             client.deleteByQuery("*:*");
             client.commit();
@@ -1232,6 +1246,11 @@ public abstract class SolrProductSearch {
                 ifConfigChange = false;
             }
             
+            Boolean waitSolrReady = (Boolean) context.get("waitSolrReady");
+            if (waitSolrReady == null) {
+                waitSolrReady = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.index.rebuild.autoRun.waitSolrReady", true);
+            }
+            
             Debug.logInfo("Solr: rebuildSolrIndexAuto: Launching index check/rebuild (onlyIfDirty: " + onlyIfDirty + ", ifConfigChange: " + ifConfigChange + ")", module);
 
             Map<String, Object> servCtx;
@@ -1240,6 +1259,7 @@ public abstract class SolrProductSearch {
                 
                 servCtx.put("onlyIfDirty", onlyIfDirty);
                 servCtx.put("ifConfigChange", ifConfigChange);
+                servCtx.put("waitSolrReady", waitSolrReady);
                 
                 Map<String, Object> servResult = dispatcher.runSync("rebuildSolrIndex", servCtx);
                 
@@ -1300,5 +1320,75 @@ public abstract class SolrProductSearch {
         for(String fieldName : fieldNames) {
             if (!destCtx.containsKey(fieldName)) destCtx.put(fieldName, srcCtx.get(fieldName));
         }
+    }
+    
+    public static Map<String, Object> checkSolrReady(DispatchContext dctx, Map<String, Object> context) {
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        boolean enabled = SolrUtil.isSolrWebappEnabled();
+        result.put("enabled", enabled);
+        try {
+            HttpSolrClient client = (HttpSolrClient) context.get("client");
+            if (client == null) client = SolrUtil.getHttpSolrClient((String) context.get("core"));
+            result.put("ready", SolrUtil.isSolrWebappReady(client));
+        } catch (Exception e) {
+            Debug.logWarning(e, "Solr: checkSolrReady: error trying to check if Solr ready: " + e.getMessage(), module);
+            result = ServiceUtil.returnFailure("Error while checking if Solr ready");
+            result.put("enabled", enabled);
+            result.put("ready", false);
+            return result;
+        }
+        return result;
+    }
+    
+    public static Map<String, Object> waitSolrReady(DispatchContext dctx, Map<String, Object> context) {
+        if (!SolrUtil.isSolrWebappEnabled()) {
+            return ServiceUtil.returnFailure("Solr webapp not enabled");
+        }
+        HttpSolrClient client = null;
+        try {
+            client = (HttpSolrClient) context.get("client");
+            if (client == null) client = SolrUtil.getHttpSolrClient((String) context.get("core"));
+            
+            if (SolrUtil.isSolrWebappReady(client)) {
+                if (Debug.verboseOn()) Debug.logInfo("Solr: waitSolrReady: Solr is ready, continuing", module);
+                return ServiceUtil.returnSuccess();
+            }
+        } catch (Exception e) {
+            Debug.logWarning(e, "Solr: waitSolrReady: error trying to check if Solr ready: " + e.getMessage(), module);
+            return ServiceUtil.returnFailure("Error while checking if Solr ready");
+        }
+        
+        Integer maxChecks = (Integer) context.get("maxChecks");
+        if (maxChecks == null) maxChecks = UtilProperties.getPropertyAsInteger(SolrUtil.solrConfigName, "solr.service.waitSolrReady.maxChecks", null);
+        if (maxChecks != null && maxChecks < 0) maxChecks = null;
+        
+        Integer sleepTime = (Integer) context.get("sleepTime");
+        if (sleepTime == null) sleepTime = UtilProperties.getPropertyAsInteger(SolrUtil.solrConfigName, "solr.service.waitSolrReady.sleepTime", null);
+        if (sleepTime == null || sleepTime < 0) sleepTime = 3000;
+        
+        int checkNum = 2; // first already done above
+        while((maxChecks == null || checkNum <= maxChecks)) {
+            Debug.logInfo("Solr: waitSolrReady: Solr not ready, waiting " + sleepTime + "ms (check " + checkNum + (maxChecks != null ? "/" + maxChecks : "") + ")", module);
+            
+            try {
+                Thread.sleep(sleepTime);
+            } catch (Exception e) {
+                Debug.logWarning("Solr: waitSolrReady: interrupted while waiting for Solr: " + e.getMessage(), module);
+                return ServiceUtil.returnFailure("Solr not ready, interrupted while waiting");
+            }
+            
+            try {
+                if (SolrUtil.isSolrWebappReady(client)) {
+                    Debug.logInfo("Solr: waitSolrReady: Solr is ready, continuing", module);
+                    return ServiceUtil.returnSuccess();
+                }
+            } catch (Exception e) {
+                Debug.logWarning(e, "Solr: waitSolrReady: error trying to check if Solr ready: " + e.getMessage(), module);
+                return ServiceUtil.returnFailure("Error while checking if Solr ready");
+            }
+            checkNum++;
+        }
+        
+        return ServiceUtil.returnFailure("Solr not ready, reached max wait time");
     }
 }

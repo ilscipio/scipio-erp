@@ -380,7 +380,13 @@ public class LoginWorker {
      */
     public static String login(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
-
+        
+        GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
+        
+        if(UtilValidate.isNotEmpty(userLogin)){
+            return "loggedIn";
+        }
+        
         String username = request.getParameter("USERNAME");
         String password = request.getParameter("PASSWORD");
 
@@ -520,7 +526,7 @@ public class LoginWorker {
         }
 
         if (ModelService.RESPOND_SUCCESS.equals(result.get(ModelService.RESPONSE_MESSAGE))) {
-            GenericValue userLogin = (GenericValue) result.get("userLogin");
+            userLogin = (GenericValue) result.get("userLogin");
 
             if (requirePasswordChange) {
                 Map<String, Object> inMap = UtilMisc.<String, Object>toMap("login.username", username, "login.password", password, "locale", UtilHttp.getLocale(request));

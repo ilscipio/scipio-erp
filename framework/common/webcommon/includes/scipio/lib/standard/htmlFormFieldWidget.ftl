@@ -1385,7 +1385,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
             passed through jQuery() - otherwise jQuery.validate is not triggered, and text-link everywhere will fail to trigger validation 
             IN ADDITION, must include void(0) afterward to prevent false click -->
         <a<@fieldElemAttribStr attribs=attribs /><@fieldClassAttribStr class=class alert=alert /><#rt>
-          href="<#if (href?string == "false")>javascript:void(0)<#elseif href?has_content>${escapeFullUrl(href, 'html')}<#elseif formName?has_content>javascript:jQuery(document['${escapeVal(formName, 'js-html')}']).submit();void(0)<#else>javascript:void(0)</#if>"<#t/>
+          <#lt> href="<#if (href?string == "false")>javascript:void(0)<#elseif href?has_content>${escapeFullUrl(href, 'html')}<#elseif formName?has_content>javascript:jQuery(document['${escapeVal(formName, 'js-html')}']).submit();void(0)<#else>javascript:void(0)</#if>"<#t/>
           <#if disabled> disabled="disabled"<#else><#if events?has_content><@commonElemEventAttribStr events=events /><#elseif confirmation?has_content> onclick="return confirm('${escapeVal(confirmation, 'js-html')}');"</#if></#if><#t/>
           <#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#t/>
           <#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#t/>

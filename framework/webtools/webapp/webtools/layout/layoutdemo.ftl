@@ -627,7 +627,7 @@
       <@field type="input" name="input3nolabel" />
       <@field type="email" name="input3a" label="Input 3a - Email"/>
       <@field type="password" name="input3b" label="Input 3b - Password"/>
-      <@field type="number" name="input3c" label="Input 3c - Number"/>
+      <@field type="number" name="input3c" label="Input 3c - Number" value="4"/>
       <@field type="file" name="input3d" label="Input 3d - File"/>
       <@field type="url" name="input3e" label="Input 3e - Url"/>
       <@field type="color" name="input3f" label="Input 3f - Color"/>

@@ -2266,15 +2266,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
               required=required attribs=attribs passArgs=passArgs><#nested/></@field_generic_widget>
           </#if>
         <#else>
-          <#if value?has_content>
-            <@field_inputgeneric_widget type=type name=name text=value class=class id=id style=style title=title tooltip=tooltip inlineLabel=effInlineLabel 
-              required=required alert=alert value=value textSize=textSize maxlength=maxlength disabled=disabled readonly=readonly placeholder=placeholder
-              clientAutocomplete=clientAutocomplete attribs=attribs passArgs=passArgs/>
-          <#else>
-            <@field_inputgeneric_widget type=type name=name text=text class=class id=id style=style title=title tooltip=tooltip inlineLabel=effInlineLabel 
-              required=required alert=alert value=value textSize=textSize maxlength=maxlength disabled=disabled readonly=readonly placeholder=placeholder
-              clientAutocomplete=clientAutocomplete attribs=attribs passArgs=passArgs><#nested/></@field_inputgeneric_widget>
-          </#if>
+          <@field_inputgeneric_widget type=type name=name class=class id=id style=style title=title tooltip=tooltip inlineLabel=effInlineLabel 
+            required=required alert=alert value=value textSize=textSize maxlength=maxlength disabled=disabled readonly=readonly placeholder=placeholder
+            clientAutocomplete=clientAutocomplete attribs=attribs passArgs=passArgs><#nested/></@field_inputgeneric_widget>
         </#if>
     </#switch>
   </@field_markup_container>

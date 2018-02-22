@@ -1136,7 +1136,9 @@
       <@field type="display" name="input2" label="Input" attribs=fieldAttribs/>
       <@field type="textarea" name="input3" label="Input" attribs=fieldAttribs/>
       <@field type="datetime" name="input4" label="Input" attribs=fieldAttribs/>
-      <@field type="select" name="input5" label="Input" attribs=fieldAttribs/>
+      <@field type="select" name="input5" label="Input" attribs=fieldAttribs>
+        <@field type="option" value="sdfsdf" attribs=fieldAttribs/>
+      </@field>
       <@field type="checkbox" name="input6" label="Input" attribs=fieldAttribs/>
       <@field type="radio" name="input7" label="Input" attribs=fieldAttribs/>
       <@field type="submit" name="input8a" label="Input" attribs=fieldAttribs/>

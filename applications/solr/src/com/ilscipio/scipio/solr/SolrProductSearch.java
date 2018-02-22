@@ -52,6 +52,8 @@ public abstract class SolrProductSearch {
 
     private static final boolean rebuildClearAndUseCacheDefault = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, 
             "solr.index.rebuild.clearAndUseCache", false);
+    private static final String defaultRegisterUpdateToSolrUpdateSrv = UtilProperties.getPropertyValue(SolrUtil.solrConfigName, 
+            "solr.service.registerUpdateToSolr.updateSrv", "updateToSolr");
     
     static final boolean excludeVariantsDefault = true;
     
@@ -123,6 +125,11 @@ public abstract class SolrProductSearch {
         return updateToSolrCommon(dctx, context, updateToSolrActionMap.get(context.get("action")), false);
     }
     
+    /**
+     * Core implementation for the updateToSolr, addToSolr, removeFromSolr, and registerUpdateToSolr services.
+     * <p>
+     * Upon error, unless instructed otherwise, this marks the Solr data as dirty.
+     */
     private static Map<String, Object> updateToSolrCommon(DispatchContext dctx, Map<String, Object> context, Boolean forceAdd, boolean immediate) {
         Map<String, Object> result;
 
@@ -244,22 +251,24 @@ public abstract class SolrProductSearch {
      * but should cover the ones we're using.
      */
     private static Map<String, Object> registerUpdateToSolrForTxCore(DispatchContext dctx, Map<String, Object> context, Boolean forceAdd, String productId, Map<String, Object> productInst) {
+        String updateSrv = (String) context.get("updateSrv");
+        if (updateSrv == null) updateSrv = defaultRegisterUpdateToSolrUpdateSrv;
         try {
             LocalDispatcher dispatcher = dctx.getDispatcher();
             ServiceSyncRegistrations regs = dispatcher.getServiceSyncRegistrations();
 
             List<ServiceSyncRegistration> unregList = null;
-            for(ServiceSyncRegistration reg : regs.getCommitRegistrationsForService("updateToSolr")) {
+            for(ServiceSyncRegistration reg : regs.getCommitRegistrationsForService(updateSrv)) {
                 Map<String, ?> regServCtx = reg.getContext();
                 if (productId.equals(regServCtx.get("productId"))) {
                     Boolean regServAction = updateToSolrActionMap.get(regServCtx.get("action"));
                     if (regServAction == null) {
                         // already registered
-                        return ServiceUtil.returnSuccess("updateToSolr already registered to run at transaction global-commit for productId '" + productId + ")");
+                        return ServiceUtil.returnSuccess(updateSrv + " already registered to run at transaction global-commit for productId '" + productId + ")");
                     } else {
                         if (regServAction == forceAdd) {
                             // already registered
-                            return ServiceUtil.returnSuccess("updateToSolr already registered to run at transaction global-commit for productId '" + productId + ")");
+                            return ServiceUtil.returnSuccess(updateSrv + " already registered to run at transaction global-commit for productId '" + productId + ")");
                         } else {
                             // we will have to unregister
                             if (unregList == null) unregList = new ArrayList<>();
@@ -275,17 +284,17 @@ public abstract class SolrProductSearch {
             }
             
             // register the service
-            Map<String, Object> servCtx = dctx.makeValidContext("updateToSolr", ModelService.IN_PARAM, context);
+            Map<String, Object> servCtx = dctx.makeValidContext(updateSrv, ModelService.IN_PARAM, context);
             // IMPORTANT: DO NOT PASS AN INSTANCE; use productId to force updateToSolr to re-query the Product
             // after transaction committed
             servCtx.remove("instance");
             servCtx.put("productId", productId);
             servCtx.put("action", getUpdateToSolrAction(forceAdd));
-            regs.addCommitService(dctx, "updateToSolr", null, servCtx, false, false);
+            regs.addCommitService(dctx, updateSrv, null, servCtx, false, false);
             
-            return ServiceUtil.returnSuccess("Registered updateToSolr to run at transaction global-commit for productId '" + productId + ")");
+            return ServiceUtil.returnSuccess("Registered " + updateSrv + " to run at transaction global-commit for productId '" + productId + ")");
         } catch (Exception e) {
-            final String errMsg = "Could not register updateToSolr to run at transaction global-commit for product '" + productId + "'";
+            final String errMsg = "Could not register " + updateSrv + " to run at transaction global-commit for product '" + productId + "'";
             Debug.logError(e, "Solr: registerUpdateToSolr: " + productId, module);
             return ServiceUtil.returnError(errMsg);
         }

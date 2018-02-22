@@ -27,10 +27,10 @@ import org.ofbiz.entity.transaction.TransactionUtil;
  * or by using the service ECA event attribute values global-commit,
  * global-rollback or global-commit-post-run
  * <p>
- * SCIPIO: 2017-12-20: This now implements ServiceRegistrations so it can return info
+ * SCIPIO: 2017-12-20: This now implements ServiceSyncRegistrations so it can return info
  * about the registered services.
  */
-public class ServiceSynchronization implements Synchronization, ServiceSyncRegistrations { // SCIPIO: added ServiceRegistrations
+public class ServiceSynchronization implements Synchronization, ServiceSyncRegistrations { // SCIPIO: added ServiceSyncRegistrations
 
     public static final String MODULE = ServiceSynchronization.class.getName();
 

@@ -164,11 +164,19 @@ under the License.
             "action" should be left to "auto".
             This is a SPECIAL ENTITY ENGINE implementation: it behaves like a "global-commit" service ECA, such that
             it simply queues the add/removal (updateToSolr) to happen at global transaction commit instead of immediately;
-            if there is no transaction, behavior is controlled by the "noTransMode" parameter. -->
+            if there is no transaction, behavior is controlled by the "noTransMode" parameter. 
+            NOTE: 2018-02: The ofbiz "global-commit" - and registerUpdateToSolr - calls the update service AFTER the parent transaction has been committed;
+                this means that an error in the update service can currently NOT rollback the global transaction;
+                the default updateToSolr handles this by marking the Solr data dirty in SolrStatus entity, for a rebuildSolrIndex call to fix later on. 
+            TODO?: FUTURE: ofbiz patch to support global-commits before transaction commits in case needed, and option on registerUpdateToSolr interface. -->
         <implements service="updateToSolr"/>
         <attribute mode="IN" name="noTransMode" optional="true" type="String" default-value="update">
             <description>Determines what to do if no transaction is in place.
                 Supported values: update (adds/remove to solr immediately even if no tx), mark-dirty (marks solr data dirty, IF not in manual mode).</description>
+        </attribute>
+        <attribute mode="IN" name="updateSrv" optional="true" type="String">
+            <description>Name of service implementing updateToSolr's interface to delegate to for the solr index update.
+                Default: value of solrconfig.properties/solr.service.registerUpdateToSolr.updateSrv, or updateToSolr.</description>
         </attribute>
     </service>
 

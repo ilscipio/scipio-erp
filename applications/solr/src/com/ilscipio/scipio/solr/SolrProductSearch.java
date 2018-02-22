@@ -1052,6 +1052,7 @@ public abstract class SolrProductSearch {
         int numDocs = 0;
         int numDocsIndexed = 0; // 2018-02: needed for accurate stats in case a client edit filters out products within loop
         EntityListIterator prodIt = null;
+        boolean executed = false;
         try {
             client = SolrUtil.getHttpSolrClient((String) context.get("core"));
             
@@ -1062,12 +1063,11 @@ public abstract class SolrProductSearch {
                 waitCtx.put("client", client);
                 Map<String, Object> waitResult = waitSolrReady(dctx, waitCtx); // params will be null
                 if (!ServiceUtil.isSuccess(waitResult)) {
-                    final String errorMsg = "Error while waiting for Solr ready: " + ServiceUtil.getErrorMessage(waitResult);
-                    Debug.logError("Solr: rebuildSolrIndex: " + errorMsg, module);
-                    return ServiceUtil.returnError(errorMsg);
+                    throw new ScipioSolrException(ServiceUtil.getErrorMessage(waitResult)).setLightweight(true);
                 }
             }
             
+            executed = true;
             Debug.logInfo("Solr: rebuildSolrIndex: Clearing solr index", module);
             // this removes everything from the index
             client.deleteByQuery("*:*");
@@ -1165,7 +1165,12 @@ public abstract class SolrProductSearch {
                 result = ServiceUtil.returnError(e.toString());
             }
         } catch (Exception e) {
-            Debug.logError(e, "Solr: rebuildSolrIndex: Error: " + e.getMessage(), module);
+            if (e instanceof ScipioSolrException && ((ScipioSolrException) e).isLightweight()) {
+                // don't print the error itself, too verbose
+                Debug.logError("Solr: rebuildSolrIndex: Error: " + e.getMessage(), module);
+            } else {
+                Debug.logError(e, "Solr: rebuildSolrIndex: Error: " + e.getMessage(), module);
+            }
             result = ServiceUtil.returnError(e.toString());
         } finally {
             if (prodIt != null) {
@@ -1180,7 +1185,7 @@ public abstract class SolrProductSearch {
         }
         
         // If success, mark data as good
-        if (ServiceUtil.isSuccess(result)) {
+        if (result != null && ServiceUtil.isSuccess(result)) {
             // TODO?: REVIEW?: 2018-01-03: for this method, for now, unlike updateToSolr,
             // we will leave the status update in the same transaction as parent service,
             // because it is technically possible that there was an error in the parent transaction
@@ -1194,7 +1199,7 @@ public abstract class SolrProductSearch {
             SolrUtil.setSolrDataStatusIdSafe(delegator, "SOLR_DATA_OK", true);
         }   
         result.put("numDocs", numDocs);
-        result.put("executed", Boolean.TRUE);
+        result.put("executed", executed);
         
         return result;
     }

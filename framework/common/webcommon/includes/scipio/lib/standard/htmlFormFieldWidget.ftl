@@ -1913,7 +1913,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
       <#local class = addClassArg(class, styles.field_input_default!"")>
   </#if>
   <input type="${escapeVal(type, 'html')}" name="${escapeVal(name, 'html')}"<#t/>
-    <#if id?has_content> id="${escapeVal(id, 'html')}"</#if>
+    <#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#t/>
     <@fieldElemAttribStr attribs=attribs /><#t/>
     <#if title?has_content> title="${escapeVal(title, 'html')}"</#if><#t/>
     <@fieldClassAttribStr class=class alert=alert /><#t/>

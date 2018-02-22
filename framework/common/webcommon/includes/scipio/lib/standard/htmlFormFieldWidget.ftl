@@ -626,12 +626,13 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
       <#-- SCIPIO: NOTE: this macro must support both item.value and legacy item.key. Here they are the same thing. -->
       <#local itemValue = item.value!item.key!>
       <#local itemMarkedSelected = item.selected?? && ((item.selected?is_boolean && item.selected == true) || (!item.selected?is_boolean && item.selected?has_content))>
+      <#local itemAttribs = item.attribs!{}>
       <#if multiple>
         <option<#if currentValue?has_content && itemMarkedSelected> selected="selected"<#rt/>
-          <#elseif !currentValue?has_content && defaultValue?has_content && defaultValue == itemValue> selected="selected"</#if> value="${escapeVal(itemValue, 'html')}">${escapeVal(item.description!, 'htmlmarkup')}</option><#lt/>
+          <#elseif !currentValue?has_content && defaultValue?has_content && defaultValue == itemValue> selected="selected"</#if> value="${escapeVal(itemValue, 'html')}"<@fieldElemAttribStr attribs=itemAttribs />>${escapeVal(item.description!, 'htmlmarkup')}</option><#lt/>
       <#else>
         <option<#if currentValue?has_content && currentValue == itemValue && inlineSelected> selected="selected"<#rt/>
-          <#elseif !currentValue?has_content && defaultValue?has_content && defaultValue == itemValue> selected="selected"</#if> value="${escapeVal(itemValue, 'html')}">${escapeVal(item.description!, 'htmlmarkup')}</option><#lt/>
+          <#elseif !currentValue?has_content && defaultValue?has_content && defaultValue == itemValue> selected="selected"</#if> value="${escapeVal(itemValue, 'html')}"<@fieldElemAttribStr attribs=itemAttribs />>${escapeVal(item.description!, 'htmlmarkup')}</option><#lt/>
       </#if>
     </#list>
   </#if>

@@ -1236,7 +1236,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     * select *
     multiple                = ((boolean), default: false) Allow multiple select
     items                   = ((list)) List of maps; if specified, generates options from list of maps 
-                              List of {"value": (value), "description": (label), "selected": (true/false)} maps
+                              List of {"value": (value), "description": (label), "selected": (true/false), "attribs":(html attributes map)} maps
                               If items list not specified, manual nested content options can be specified instead.
                               NOTE: {{{selected}}} is currently ignored for non-multiple (uses {{{currentValue}}} instead).
     allowEmpty              = ((boolean), default: false) If true, will add an empty option
@@ -1298,7 +1298,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     * checkbox (multi mode) *
     items                   = ((list)) List of maps, if specified, multiple-items checkbox field generated
                               List of {"value": (value), "altValue": (value), "useHidden": (boolean), 
-                              "description": (label), "tooltip": (tooltip), "events": (js event map), "checked": (true/false)} maps
+                              "description": (label), "tooltip": (tooltip), "events": (js event map), "checked": (true/false), "attribs":(html attributes map)} maps
                               NOTE: use of "checked" attrib is discouraged; is a manual override (both true and false override); prefer setting currentValue on macro
                               DEV NOTE: the names in this map cannot be changed easily; legacy ofbiz macro support
                               TODO: Currently the map does not support valueType
@@ -1326,7 +1326,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     
     * radio (multi mode) *
     items                   = ((list)) List of maps, if specified, multiple-items radio generated with map entries in provided list as arguments
-                              List of {"value": (value), "description": (label), "tooltip": (tooltip), "events": (js event map), "checked": (true/false)} maps
+                              List of {"value": (value), "description": (label), "tooltip": (tooltip), "events": (js event map), "checked": (true/false), "attribs":(html attributes map)} maps
                               NOTE: use of "checked" attrib is discouraged; is a manual override (both true and false override); prefer setting currentValue on macro
                               DEV NOTE: the names in this map cannot be changed easily; legacy ofbiz macro support
     inlineItems             = ((boolean), default: -from global styles-, fallback default: true) If true, radio items are many per line; if false, one per line

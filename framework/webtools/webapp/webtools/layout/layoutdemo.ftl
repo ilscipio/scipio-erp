@@ -1133,24 +1133,35 @@
     <@form name="form-attribs">
       <#assign fieldAttribs = {"my-attrib-1":"test-value-1", "myattrib2":"testvalue2"}>
       <@field type="input" name="input1" label="Input" attribs=fieldAttribs/>
-      <@field type="display" name="input2" label="Input" attribs=fieldAttribs/>
-      <@field type="textarea" name="input3" label="Input" attribs=fieldAttribs/>
-      <@field type="datetime" name="input4" label="Input" attribs=fieldAttribs/>
-      <@field type="select" name="input5" label="Input" attribs=fieldAttribs/>
-      <@field type="checkbox" name="input6" label="Input" attribs=fieldAttribs/>
-      <@field type="radio" name="input7" label="Input" attribs=fieldAttribs/>
-      <@field type="submit" name="input8a" label="Input" attribs=fieldAttribs/>
-      <@field type="submit" submitType="link" name="input8b" label="Input" attribs=fieldAttribs/>
-      <@field type="submit" submitType="image" name="input8c" label="Input" attribs=fieldAttribs/>
-      <@field type="reset" name="input9" label="Input" attribs=fieldAttribs/>
-      <@field type="hidden" name="input10" label="Input" attribs=fieldAttribs/>
-      <@field type="textfind" name="input11" label="Input" attribs=fieldAttribs/>
-      <@field type="datefind" name="input12" label="Input" attribs=fieldAttribs/>
-      <@field type="rangefind" name="input13" label="Input" attribs=fieldAttribs/>
-      <@field type="lookup" name="input14" label="Input" attribs=fieldAttribs fieldFormName="LookupGeo"/>
-      <@field type="file" name="input15" label="Input" attribs=fieldAttribs/>
-      <@field type="password" name="input16" label="Input" attribs=fieldAttribs/>
-      <@field type="color" name="input17" label="Input" attribs=fieldAttribs/>
+      <@field type="display" name="input2" label="Display" attribs=fieldAttribs/>
+      <@field type="textarea" name="input3" label="Textarea" attribs=fieldAttribs/>
+      <@field type="datetime" name="input4" label="Datetime" attribs=fieldAttribs/>
+      <@field type="select" name="input5" label="Select" attribs=fieldAttribs items=[
+        {"key":"val1", "description":"option1", "attribs":fieldAttribs}]>
+        <@field type="option" value="sdfsdf" attribs=fieldAttribs/>
+      </@field>
+      <@field type="checkbox" name="input6a" label="Checkbox" attribs=fieldAttribs/>
+      <#-- NOTE: here the fieldAttribs are blended with the item-specific attribs -->
+      <@field type="checkbox" name="input6b" label="Checkbox" attribs=fieldAttribs items=[
+        {"value":"val1", "description":"option1", "attribs":{"my-extra-3":"value-3"}},
+        {"value":"val2", "description":"option2", "attribs":{"my-extra-4":"value-4"}}]/>
+      <@field type="radio" name="input7a" label="Radio" attribs=fieldAttribs/>
+      <#-- NOTE: here the fieldAttribs are blended with the item-specific attribs -->
+      <@field type="radio" name="input7b" label="Radio" attribs=fieldAttribs items=[
+        {"value":"val1", "description":"option1", "attribs":{"my-extra-3":"value-3"}},
+        {"value":"val2", "description":"option2", "attribs":{"my-extra-4":"value-4"}}]/>
+      <@field type="submit" name="input8a" label="Submit" attribs=fieldAttribs/>
+      <@field type="submit" submitType="link" name="input8b" label="Submit" attribs=fieldAttribs/>
+      <@field type="submit" submitType="image" name="input8c" label="Submit" attribs=fieldAttribs/>
+      <@field type="reset" name="input9" label="Reset" attribs=fieldAttribs/>
+      <@field type="hidden" name="input10" attribs=fieldAttribs/>
+      <@field type="textfind" name="input11" label="Textfind" attribs=fieldAttribs/>
+      <@field type="datefind" name="input12" label="Datefind" attribs=fieldAttribs/>
+      <@field type="rangefind" name="input13" label="Rangefind" attribs=fieldAttribs/>
+      <@field type="lookup" name="input14" label="Lookup" attribs=fieldAttribs fieldFormName="LookupGeo"/>
+      <@field type="file" name="input15" label="File" attribs=fieldAttribs/>
+      <@field type="password" name="input16" label="Password" attribs=fieldAttribs/>
+      <@field type="color" name="input17" label="Color" attribs=fieldAttribs/>
     </@form>
   </@section>
   </#if>

@@ -123,6 +123,11 @@ public abstract class SolrProductSearch {
         return updateToSolrCommon(dctx, context, updateToSolrActionMap.get(context.get("action")), false);
     }
     
+    /**
+     * Core implementation for the updateToSolr, addToSolr, removeFromSolr, and registerUpdateToSolr services.
+     * <p>
+     * Upon error, unless instructed otherwise, this marks the Solr data as dirty.
+     */
     private static Map<String, Object> updateToSolrCommon(DispatchContext dctx, Map<String, Object> context, Boolean forceAdd, boolean immediate) {
         Map<String, Object> result;
 

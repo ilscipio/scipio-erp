@@ -136,7 +136,7 @@ under the License.
 
     <service name="updateToSolr" engine="java" location="com.ilscipio.scipio.solr.SolrProductSearch" invoke="updateToSolr"
         transaction-timeout="72000">
-        <description>Adds OR removes product to solr index by product instance or by productId - intended for use with ECAs/SECAs</description>
+        <description>Immediately adds OR removes product to/from solr index by product instance or by productId - intended for use with ECAs/SECAs</description>
         <implements service="updateToSolrCommonInterface"/>
         <attribute mode="IN" name="action" optional="true" type="String"><!-- default-value="auto" -->
             <description>Supported values: add (same as addToSolr), remove (same as removeFromSolr), 
@@ -146,22 +146,25 @@ under the License.
 
     <service name="addToSolr" engine="java" location="com.ilscipio.scipio.solr.SolrProductSearch" invoke="addToSolr"
         transaction-timeout="72000">
-        <description>Adds product to solr index by product instance or by productId - intended for use with ECAs/SECAs</description>
+        <description>Immediately adds product to solr index by product instance or by productId - intended for use with ECAs/SECAs</description>
         <implements service="updateToSolrCommonInterface"/>
     </service>
     
     <service name="removeFromSolr" engine="java" location="com.ilscipio.scipio.solr.SolrProductSearch" invoke="removeFromSolr" 
         transaction-timeout="72000">
-        <description>Adds product to solr index by product instance or by productId - intended for use with ECAs/SECAs</description>
+        <description>Immediately removes product from solr index by product instance or by productId - intended for use with ECAs/SECAs</description>
         <implements service="updateToSolrCommonInterface"/>
     </service>
 
     <service name="registerUpdateToSolr" engine="java" location="com.ilscipio.scipio.solr.SolrProductSearch" invoke="registerUpdateToSolr"
         use-transaction="false"><!-- must not force transaction; special behavior -->
-        <description>Registers (queues) a product add or remove to/from solr index by product instance or by productId - intended for use with ECAs/SECAs.
+        <description>Registers (queues) a product add or removal to/from solr index by product instance or by productId - intended for use with ECAs/SECAs
+            - delays the solr index update (updateToSolr) to the current transaction's global-commit</description>
+        <!-- NOTE: As of 2017-12, registerUpdateToSolr is the only service that the solr ECAs should invoke (NOT updateToSolr/addToSolr/remoteFromSolr).
+            "action" should be left to "auto".
             This is a SPECIAL ENTITY ENGINE implementation: it behaves like a "global-commit" service ECA, such that
-            it simply queues the add/removal to happen at global transaction commit instead of immediately;
-            if there is no transaction, behavior is controlled by the "noTransMode" parameter.</description>
+            it simply queues the add/removal (updateToSolr) to happen at global transaction commit instead of immediately;
+            if there is no transaction, behavior is controlled by the "noTransMode" parameter. -->
         <implements service="updateToSolr"/>
         <attribute mode="IN" name="noTransMode" optional="true" type="String" default-value="update">
             <description>Determines what to do if no transaction is in place.

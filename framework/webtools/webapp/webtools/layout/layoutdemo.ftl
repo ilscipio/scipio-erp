@@ -1127,6 +1127,33 @@
     </@form>
   </@section>
   </#if>
+  
+  <#if debugMode>
+  <@section title="@field custom attributes (attribs={})">
+    <@form name="form-attribs">
+      <#assign fieldAttribs = {"my-attrib-1":"test-value-1", "myattrib2":"testvalue2"}>
+      <@field type="input" name="input1" label="Input" attribs=fieldAttribs/>
+      <@field type="display" name="input2" label="Input" attribs=fieldAttribs/>
+      <@field type="textarea" name="input3" label="Input" attribs=fieldAttribs/>
+      <@field type="datetime" name="input4" label="Input" attribs=fieldAttribs/>
+      <@field type="select" name="input5" label="Input" attribs=fieldAttribs/>
+      <@field type="checkbox" name="input6" label="Input" attribs=fieldAttribs/>
+      <@field type="radio" name="input7" label="Input" attribs=fieldAttribs/>
+      <@field type="submit" name="input8a" label="Input" attribs=fieldAttribs/>
+      <@field type="submit" submitType="link" name="input8b" label="Input" attribs=fieldAttribs/>
+      <@field type="submit" submitType="image" name="input8c" label="Input" attribs=fieldAttribs/>
+      <@field type="reset" name="input9" label="Input" attribs=fieldAttribs/>
+      <@field type="hidden" name="input10" label="Input" attribs=fieldAttribs/>
+      <@field type="textfind" name="input11" label="Input" attribs=fieldAttribs/>
+      <@field type="datefind" name="input12" label="Input" attribs=fieldAttribs/>
+      <@field type="rangefind" name="input13" label="Input" attribs=fieldAttribs/>
+      <@field type="lookup" name="input14" label="Input" attribs=fieldAttribs fieldFormName="LookupGeo"/>
+      <@field type="file" name="input15" label="Input" attribs=fieldAttribs/>
+      <@field type="password" name="input16" label="Input" attribs=fieldAttribs/>
+      <@field type="custom-input-type" name="input17" label="Input" attribs=fieldAttribs/>
+    </@form>
+  </@section>
+  </#if>
 </@section>
 
 <#if debugMode>

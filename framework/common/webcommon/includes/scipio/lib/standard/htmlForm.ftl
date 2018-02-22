@@ -1183,7 +1183,12 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               Some extras that may be specified are: overrideName, paramName, recordName, defaultName.
                               NOTE: suffix is reserved for use and should never be specified.
                               See #getAutoValue for a comprehensive list.
-        
+    attribs                 = ((map)) map of extra/custom HTML attributes for the main input element (input, select, etc.)
+                              NOTE: In some cases, these could conflict with attributes defined in themes
+                                  or in the default theme markup, or with other parameters.
+                              NOTE: Unlike some other macros, @field does not support inline attributes;
+                                  only this attribs parameter will work.
+            
     * input (alias: text) *
     autoCompleteUrl         = If autocomplete function exists, specification of url will make it available
     postfix                 = ((boolean), default: false) If set to true, attach submit button
@@ -1396,7 +1401,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               May result in extra wrapping container.
                               
   * History *
-    Modified for 1.14.4 (fixed documentation for "display" type "formatText" parameter).
+    Modified for 1.14.4 (fixed documentation for "display" type "formatText" parameter, added "attribs" parameter).
 -->
 <#assign field_defaultArgs = {
   "type":"", "fieldsType":"", "label":"", "labelContent":false, "labelDetail":false, "name":"", "value":"", "valueType":"", 
@@ -1422,6 +1427,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   "manualInput":"",
   "events":{}, "wrap":"", 
   "autoValue":0, "autoValueArgs":{}, 
+  "attribs":{},
   "passArgs":{} 
 }>
 <#macro field args={} inlineArgs...> 
@@ -1932,6 +1938,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               tooltip=tooltip
                               inlineLabel=effInlineLabel
                               required=required
+                              attribs=attribs
                               passArgs=passArgs/>
         <#break>
       <#case "textarea">
@@ -1950,7 +1957,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               maxlength=maxlength
                               wrap=wrap
                               required=required
-                              passArgs=passArgs>${escapeVal(text, 'htmlmarkup')}${escapeVal(value, 'htmlmarkup')}<#nested></@field_textarea_widget>
+                              attribs=attribs
+                              passArgs=passArgs>${escapeVal(text, 'htmlmarkup')}${escapeVal(value, 'htmlmarkup')}<#nested/></@field_textarea_widget>
         <#break>
       <#case "datetime">
         <#if dateType == "date" || dateType == "time" || dateType == "month">
@@ -1978,6 +1986,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               postfixColumns=datePostfixColumns
                               inlineLabel=effInlineLabel
                               required=required
+                              attribs=attribs
                               passArgs=passArgs/>                
         <#break>
       <#case "datefind">
@@ -2008,6 +2017,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               origLabel=origLabel
                               inlineLabel=effInlineLabel
                               required=required
+                              attribs=attribs
                               passArgs=passArgs/>                 
         <#break>
       <#case "textfind">
@@ -2030,6 +2040,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               origLabel=origLabel
                               inlineLabel=effInlineLabel
                               required=required
+                              attribs=attribs
                               passArgs=passArgs/>                 
         <#break>
       <#case "rangefind">
@@ -2050,6 +2061,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                               origLabel=origLabel
                               inlineLabel=effInlineLabel
                               required=required
+                              attribs=attribs
                               passArgs=passArgs/>                 
         <#break>
       <#case "select">
@@ -2102,14 +2114,16 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                                 asmSelectArgs=asmSelectArgs
                                 inlineLabel=effInlineLabel
                                 required=required
-                                passArgs=passArgs><#nested></@field_select_widget>
+                                attribs=attribs
+                                passArgs=passArgs><#nested/></@field_select_widget>
         <#break>
       <#case "option">
-        <@field_option_widget value=value text=text selected=selected style=style passArgs=passArgs><#nested></@field_option_widget>
+        <@field_option_widget value=value text=text selected=selected style=style 
+          attribs=attribs passArgs=passArgs><#nested/></@field_option_widget>
         <#break>
       <#case "lookup">
         <@field_lookup_widget name=name formName=formName fieldFormName=fieldFormName class=class style=style alert="false" value=value 
-          size=size?string maxlength=maxlength id=id events=events title=title tooltip=tooltip required=required passArgs=passArgs/>
+          size=size?string maxlength=maxlength id=id events=events title=title tooltip=tooltip required=required attribs=attribs passArgs=passArgs/>
       <#break>
       <#case "checkbox">
         <#if valueType?is_string && valueType == "indicator">
@@ -2139,12 +2153,12 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
           <#local items=[{"value":value, "altValue":altValue, "useHidden":useHidden, "description":description, "tooltip":tooltip, "events":events, "checked":checked, "readonly":readonly, "disabled":disabled}]/>
           <@field_checkbox_widget multiMode=false items=items inlineItems=inlineItems id=id class=class style=style alert=alert 
             currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name tooltip="" inlineLabel=effInlineLabel type=checkboxType 
-                readonly=readonly disabled=disabled required=required passArgs=passArgs/>
+                readonly=readonly disabled=disabled required=required attribs=attribs passArgs=passArgs/>
         <#else>
           <@field_checkbox_widget multiMode=true items=items inlineItems=inlineItems id=id class=class style=style alert=alert 
             currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name events=events tooltip=tooltip inlineLabel=effInlineLabel type=checkboxType 
             value=value altValue=altValue useHidden=useHidden
-            readonly=readonly disabled=disabled required=required passArgs=passArgs/>
+            readonly=readonly disabled=disabled required=required attribs=attribs passArgs=passArgs/>
         </#if>
         <#break>
       <#case "radio">
@@ -2171,24 +2185,26 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
           <#local items=[{"key":value, "description":description, "tooltip":tooltip, "events":events, "checked":checked, "readonly":readonly, "disabled":disabled}]/>
           <@field_radio_widget multiMode=false items=items inlineItems=inlineItems id=id class=class style=style alert=alert 
             currentValue=currentValue defaultValue=defaultValue name=name tooltip="" inlineLabel=effInlineLabel type=radioType 
-            readonly=readonly disabled=disabled required=required passArgs=passArgs/>
+            readonly=readonly disabled=disabled required=required attribs=attribs passArgs=passArgs/>
         <#else>
           <#-- multi radio button item mode -->
           <@field_radio_widget multiMode=true items=items inlineItems=inlineItems id=id class=class style=style alert=alert 
             currentValue=currentValue defaultValue=defaultValue name=name events=events tooltip=tooltip inlineLabel=effInlineLabel type=radioType 
-            readonly=readonly disabled=disabled required=required passArgs=passArgs/>
+            readonly=readonly disabled=disabled required=required attribs=attribs passArgs=passArgs/>
         </#if>
         <#break>
       <#case "file">
         <@field_file_widget class=class alert=alert name=name value=value size=size maxlength=maxlength 
-          autocomplete=autocomplete?string("", "off") id=id inlineLabel=effInlineLabel style=style required=required passArgs=passArgs/>
+          autocomplete=autocomplete?string("", "off") id=id inlineLabel=effInlineLabel style=style required=required attribs=attribs passArgs=passArgs/>
         <#break>
       <#case "password">
         <@field_password_widget class=class alert=alert name=name value=value size=size maxlength=maxlength 
-          id=id autocomplete=autocomplete?string("", "off") placeholder=placeholder tooltip=tooltip inlineLabel=effInlineLabel style=style required=required passArgs=passArgs/>
+          id=id autocomplete=autocomplete?string("", "off") placeholder=placeholder tooltip=tooltip inlineLabel=effInlineLabel style=style 
+          required=required attribs=attribs passArgs=passArgs/>
         <#break> 
       <#case "reset">                    
-        <@field_reset_widget class=class alert=alert name=name text=text fieldTitleBlank=false inlineLabel=effInlineLabel style=style passArgs=passArgs/>
+        <@field_reset_widget class=class alert=alert name=name text=text fieldTitleBlank=false inlineLabel=effInlineLabel 
+            style=style attribs=attribs passArgs=passArgs/>
         <#break>    
       <#case "submit">
         <#if !scipioSubmitFieldTypeButtonMap??>
@@ -2211,13 +2227,15 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         <@field_submit_widget buttonType=buttonType class=class id=id alert=alert formName=formName name=name events=events 
           imgSrc=src confirmation=confirmMsg containerId="" ajaxUrl="" text=text description=description showProgress=false 
           href=href inputType=inputType disabled=disabled progressArgs=progressArgs progressOptions=progressOptions inlineLabel=effInlineLabel 
-          style=style passArgs=passArgs/>
+          style=style attribs=attribs passArgs=passArgs/>
         <#break>
       <#case "submitarea">
-        <@field_submitarea_widget progressArgs=progressArgs progressOptions=progressOptions inlineLabel=effInlineLabel style=style passArgs=passArgs><#nested></@field_submitarea_widget>
+        <@field_submitarea_widget progressArgs=progressArgs progressOptions=progressOptions inlineLabel=effInlineLabel style=style 
+          attribs=attribs passArgs=passArgs><#nested/></@field_submitarea_widget>
         <#break>
       <#case "hidden">                    
-        <@field_hidden_widget name=name value=value id=id class=class events=events inlineLabel=effInlineLabel style=style passArgs=passArgs/>
+        <@field_hidden_widget name=name value=value id=id class=class events=events inlineLabel=effInlineLabel style=style 
+          attribs=attribs passArgs=passArgs/>
         <#break>        
       <#case "display">
         <#-- TODO?: may need formatting here based on valueType... not done by field_display_widget... done in java OOTB... 
@@ -2235,24 +2253,27 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         </#if>
         <@field_display_widget type=displayType value=value idName="" 
           title=title class=class id=id alert=alert inPlaceEditorUrl="" inPlaceEditorParams="" style=style 
-          imageAlt=description tooltip=tooltip formatText=formatText inlineLabel=effInlineLabel required=required passArgs=passArgs><#nested></@field_display_widget>
+          imageAlt=description tooltip=tooltip formatText=formatText inlineLabel=effInlineLabel required=required 
+          attribs=attribs passArgs=passArgs><#nested/></@field_display_widget>
         <#break> 
       <#default> <#-- "generic", empty or unrecognized -->
         <#if !type?has_content || type == "generic">
           <#if value?has_content>
-            <@field_generic_widget class=class text=value title=title tooltip=tooltip inlineLabel=effInlineLabel style=style required=required passArgs=passArgs/>
+            <@field_generic_widget class=class text=value title=title tooltip=tooltip inlineLabel=effInlineLabel style=style 
+              required=required attribs=attribs passArgs=passArgs/>
           <#else>
-            <@field_generic_widget class=class title=title tooltip=tooltip inlineLabel=effInlineLabel style=style required=required passArgs=passArgs><#nested /></@field_generic_widget>
+            <@field_generic_widget class=class title=title tooltip=tooltip inlineLabel=effInlineLabel style=style 
+              required=required attribs=attribs passArgs=passArgs><#nested/></@field_generic_widget>
           </#if>
         <#else>
           <#if value?has_content>
             <@field_inputgeneric_widget type=type name=name text=value class=class id=id style=style title=title tooltip=tooltip inlineLabel=effInlineLabel 
-                                   required=required alert=alert value=value textSize=textSize maxlength=maxlength disabled=disabled readonly=readonly placeholder=placeholder
-                                  clientAutocomplete=clientAutocomplete passArgs=passArgs/>
+              required=required alert=alert value=value textSize=textSize maxlength=maxlength disabled=disabled readonly=readonly placeholder=placeholder
+              clientAutocomplete=clientAutocomplete attribs=attribs passArgs=passArgs/>
           <#else>
             <@field_inputgeneric_widget type=type name=name text=text class=class id=id style=style title=title tooltip=tooltip inlineLabel=effInlineLabel 
-                                   required=required alert=alert value=value textSize=textSize maxlength=maxlength disabled=disabled readonly=readonly placeholder=placeholder
-                                   clientAutocomplete=clientAutocomplete passArgs=passArgs><#nested /></@field_inputgeneric_widget>
+              required=required alert=alert value=value textSize=textSize maxlength=maxlength disabled=disabled readonly=readonly placeholder=placeholder
+              clientAutocomplete=clientAutocomplete attribs=attribs passArgs=passArgs><#nested/></@field_inputgeneric_widget>
           </#if>
         </#if>
     </#switch>

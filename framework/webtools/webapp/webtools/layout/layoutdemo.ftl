@@ -1150,7 +1150,7 @@
       <@field type="lookup" name="input14" label="Input" attribs=fieldAttribs fieldFormName="LookupGeo"/>
       <@field type="file" name="input15" label="Input" attribs=fieldAttribs/>
       <@field type="password" name="input16" label="Input" attribs=fieldAttribs/>
-      <@field type="custom-input-type" name="input17" label="Input" attribs=fieldAttribs/>
+      <@field type="color" name="input17" label="Input" attribs=fieldAttribs/>
     </@form>
   </@section>
   </#if>

@@ -296,4 +296,7 @@ public abstract class SolrUtil {
         return new HttpSolrClient.Builder(url).build();
     }
     
+    public static String getSolrConfigName() {
+        return solrConfigName;
+    }
 }

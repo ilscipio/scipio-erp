@@ -16493,4 +16493,8 @@
         <value xml:lang="en">Try reloading the page</value>
         <value xml:lang="de">Versuchen Sie, die Seite neu zu laden</value>
     </property>
+    <property key="CommonResult">
+        <value xml:lang="en">Result</value>
+        <value xml:lang="de">Ergebnis</value>
+    </property>
 </resource>

@@ -171,6 +171,13 @@ public abstract class SolrUtil {
     public static boolean isSolrWebappReady(HttpSolrClient client) throws Exception {
         return isSolrWebappInitialized() && isSolrWebappPingOk(client);
     }
+    
+    /**
+     * Returns true if Solr is loaded and available for queries, using default core and client.
+     */
+    public static boolean isSolrWebappReady() throws Exception {
+        return isSolrWebappReady(getHttpSolrClient());
+    }
 
     public static GenericValue getSolrStatus(Delegator delegator) {
         GenericValue solrStatus;

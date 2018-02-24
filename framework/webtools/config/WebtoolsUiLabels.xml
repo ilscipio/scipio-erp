@@ -4942,7 +4942,7 @@
         <value xml:lang="zh">指定的实体</value>
         <value xml:lang="zh_TW">指定的資料實體</value>
     </property>
-    <property key="WebtoolsSolrAdmin">
+    <property key="WebtoolsSolr">
         <value xml:lang="en">Solr</value>
     </property>
     <property key="WebtoolsSpecifiedEntity2">

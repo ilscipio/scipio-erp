@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <!-- TODO: REVIEW: perhaps this file could be moved to Solr component... doesn't matter much yet -->
+
+    <screen name="SolrStatus">
+        <section>
+            <actions>
+                <set field="titleProperty" value="SolrSolrStatus"/>
+                <set field="activeSubMenuItem" value="SolrStatus"/>
+                <include-screen-actions name="postRunSolrServiceActions"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSolrDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-screen name="solrStatusDetails"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="SolrServices">
+        <section>
+            <actions>
+                <set field="titleProperty" value="SolrSolrServices"/>
+                <set field="activeSubMenuItem" value="SolrServices"/>
+                <include-screen-actions name="postRunSolrServiceActions"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSolrDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-screen name="rebuildSolrIndexService"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="solrStatusDetails">
+        <section>
+            <actions>
+                <script location="component://solr/script/com/ilscipio/scipio/solr/GetSolrStatusDetails.groovy"/>
+                <set field="rebuildIndexCoreWidgetLoc" value="component://webtools/widget/SolrScreens.xml#rebuildSolrIndexServiceCore"/>
+                <set field="runServiceTarget" value="runSolrServiceForStatus"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://webtools/webapp/webtools/solr/solrStatusDetails.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="rebuildSolrIndexService">
+        <section>
+            <actions>
+                <set field="rebuildIndexCoreWidgetLoc" value="component://webtools/widget/SolrScreens.xml#rebuildSolrIndexServiceCore"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://webtools/webapp/webtools/solr/rebuildSolrIndexService.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="rebuildSolrIndexServiceCore">
+        <section>
+            <actions>
+                <script lang="groovy"><![CDATA[
+                    context.localVarsOnly = true;
+                    context.SERVICE_NAME = "rebuildSolrIndex"
+                ]]></script>
+                <script location="component://webtools/webapp/webtools/WEB-INF/actions/service/ScheduleJob.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://webtools/webapp/webtools/solr/rebuildSolrIndexServiceCore.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="postRunSolrServiceActions">
+        <actions>
+            <!-- handles schedule service messages, simplified for Solr services
+                - only need to show the message -->
+            <script lang="groovy"><![CDATA[
+                import org.ofbiz.base.util.*;
+                import org.ofbiz.service.*;
+                
+                cleanMsg = { msg ->
+                    // FIXME: this is crazy, should be ensured by the FTL! ofbiz issue
+                    return UtilCodec.getHtmlEncoder().encode(msg);
+                };
+                
+                if (parameters._SOLR_SRV_RUN_ == "Y") {
+                    serviceResult = session.getAttribute("_RUN_SYNC_RESULT_");
+                    if (serviceResult) {
+                        responseStatus = serviceResult[ModelService.RESPONSE_MESSAGE];
+                        if (ServiceUtil.isSuccess(serviceResult)) {
+                            // simply squash the 'scheduled' success message, useless
+                            successMsg = ServiceUtil.getSuccessMessage(serviceResult);
+                            if (successMsg) {
+                                context.eventMessageList = [successMsg]; // double-encode here?? cleanMsg(successMsg)
+                            }
+                        } else {
+                            // get rid of the event message, but make sure
+                            // to preserve the error message list, just append to it
+                            context.eventMessageList = [];
+                            errorMessageList = context.errorMessageList;
+                            if (errorMessageList == null) errorMessageList = [];
+                            errorMsg = ServiceUtil.getErrorMessage(serviceResult);
+                            errorMessageList.add(cleanMsg(errorMsg) + " (responseMessage: " + cleanMsg(responseStatus) + ")");
+                            context.errorMessageList = errorMessageList;
+                        }
+                    }
+                }
+            ]]></script>
+        </actions>
+    </screen>
+</screens>

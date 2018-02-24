@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <property key="SolrSolr">
+        <value xml:lang="en">Solr</value>
+        <value xml:lang="de">Solr</value>
+    </property>
+    <property key="SolrSolrAdmin">
+        <value xml:lang="en">Solr Admin</value>
+        <value xml:lang="de">Solr Admin</value>
+    </property>
+    <property key="SolrSolrStatus">
+        <value xml:lang="en">Solr Status</value>
+        <value xml:lang="de">Solr Status</value>
+    </property>
+    <property key="SolrSolrServices">
+        <value xml:lang="en">Solr Services</value>
+        <value xml:lang="de">Solr Dienstleistungen</value>
+    </property>
+    <property key="SolrSolrServices">
+        <value xml:lang="en">Solr Services</value>
+        <value xml:lang="de">Solr Dienstleistungen</value>
+    </property>
+    <property key="SolrSolrConfig">
+        <value xml:lang="en">Solr Config</value>
+        <value xml:lang="de">Solr Config</value>
+    </property>
+    <property key="SolrSolrWebappStatus">
+        <value xml:lang="en">Solr Webapp Status</value>
+        <value xml:lang="de">Solr Webapp Status</value>
+    </property>
+    <property key="SolrSolrDataStatus">
+        <value xml:lang="en">Solr Data Status</value>
+        <value xml:lang="de">Solr Data Status</value>
+    </property>
+    <property key="SolrDataStatus">
+        <value xml:lang="en">Data Status</value>
+        <value xml:lang="de">Data Status</value>
+    </property>
+    <property key="SolrDataConfigVersion">
+        <value xml:lang="en">Data Config Version</value>
+        <value xml:lang="de">Data Config Version</value>
+    </property>
+    <property key="SolrDataStatusDirtyInfo">
+        <value xml:lang="en">Data status is dirty/old - rebuildSolrIndex invocation required to correct</value>
+        <value xml:lang="de">Der Datenstatus ist schmutzig/alt - der Aufruf von rebuildSolrIndex muss korrigiert werden</value>
+    </property>
+    <property key="SolrDataConfigVersionDirtyInfo">
+        <value xml:lang="en">Data config version does not match current system config version (${solrConfigVersion}) - rebuildSolrIndex invocation required to correct</value>
+        <value xml:lang="de">Die Datenkonfigurationsversion stimmt nicht mit der aktuellen Systemkonfigurationsversion überein (${solrConfigVersion}) - rebuildSolrIndex-Aufruf muss korrigiert werden</value>
+    </property>
+    <property key="SolrRebuildIndexServiceDesc">
+        <value xml:lang="en">rebuildSolrIndex immediately reindexes all supported entity data to Solr and updates the data status. rebuildSolrIndexAuto is the same but only executes if the data is marked as dirty.</value>
+        <value xml:lang="de">rebuildSolrIndex führt sofort eine Neuindizierung aller unterstützten Entitätsdaten zu Solr durch und aktualisiert den Datenstatus. rebuildSolrIndexAuto ist identisch, wird aber nur ausgeführt, wenn die Daten als fehlerhaft markiert sind.</value>
+    </property>
+    <property key="SolrRebuildIndexStartupTip">
+        <value xml:lang="en">With stock settings, rebuildSolrIndexAuto automatically reindexes data at startup when the data is marked dirty, but it can also be forced to run on startup from the command line</value>
+        <value xml:lang="de">Bei Bestandseinstellungen indiziert rebuildSolrIndexAuto automatisch beim Start die Daten neu, wenn die Daten als "dreckig" markiert sind, aber es kann auch beim Starten über die Befehlszeile erzwungen werden</value>
+    </property>
+    <property key="SolrDataDirtyActionInfo">
+        <value xml:lang="en">When Solr data is marked dirty, it should be reindexed by running the rebuildSolrIndex service, either manually or by scheduling a job for rebuildSolrIndexAuto.</value>
+        <value xml:lang="de">Bei Bestandseinstellungen indiziert rebuildSolrIndexAuto automatisch beim Start die Daten neu, wenn die Daten als "dreckig" markiert sind, aber es kann auch beim Starten über die Befehlszeile erzwungen werden</value>
+    </property>
+    <property key="SolrCouldNotGetSolrStatus">
+        <value xml:lang="en">Could not get SolrStatus for SOLR-MAIN - seed data missing?</value>
+        <value xml:lang="de">SolrStatus für SOLR-MAIN konnte nicht gefunden werden - Seed-Daten fehlen?</value>
+    </property>
+    <property key="SolrPresent">
+        <value xml:lang="en">Present</value>
+        <value xml:lang="de">Present</value>
+    </property>
+    <property key="SolrEnabled">
+        <value xml:lang="en">Enabled</value>
+        <value xml:lang="de">Enabled</value>
+    </property>
+    <property key="SolrInitialized">
+        <value xml:lang="en">Initialized</value>
+        <value xml:lang="de">Initialized</value>
+    </property>
+    <property key="SolrReady">
+        <value xml:lang="en">Ready</value>
+        <value xml:lang="de">Ready</value>
+    </property>
+    <property key="SolrErrorSeeServerLogs">
+        <value xml:lang="en">Error - see server logs</value>
+        <value xml:lang="de">Fehler - siehe Serverprotokolle</value>
+    </property>
+</resource>

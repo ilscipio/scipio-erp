@@ -70,9 +70,15 @@
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
         <@menuitem type="generic">
-            <@modal id="modal_new_script" label="${rawLabel('CommonUpdate')}: rebuildSolrIndex" linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_begin!}">
+            <@modal id="rebuildSolrIndex" label="${rawLabel('CommonUpdate')}: rebuildSolrIndex" linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_begin!}">
                 <@heading>rebuildSolrIndex</@heading>
                 <@render resource=rebuildIndexCoreWidgetLoc/>
+            </@modal>
+        </@menuitem>
+        <@menuitem type="generic">
+            <@modal id="markSolrDataDirty" label="${rawLabel('CommonUpdate')}: markSolrDataDirty" linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_begin!}">
+                <@heading>markSolrDataDirty</@heading>
+                <@render resource=markSolrDataDirtyWidgetLoc/>
             </@modal>
         </@menuitem>
     </@menu>
@@ -114,6 +120,11 @@
           </@tr>
       </@tbody>
     </@table>
+    <p class="solrstatlist-statdesc">
+      <small>
+        ${uiLabelMap.SolrDataStatusInfo} ${uiLabelMap.SolrRebuildIndexStartupInfo}
+      </small>
+    </p>
   <#else>
     <@commonMsg type="error">${uiLabelMap.SolrCouldNotGetSolrStatus}</@commonMsg>
   </#if>

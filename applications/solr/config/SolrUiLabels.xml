@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <property key="SolrSolr">
+        <value xml:lang="en">Solr</value>
+        <value xml:lang="de">Solr</value>
+    </property>
+    <property key="SolrSolrAdmin">
+        <value xml:lang="en">Solr Admin</value>
+        <value xml:lang="de">Solr Admin</value>
+    </property>
+    <property key="SolrSolrStatus">
+        <value xml:lang="en">Solr Status</value>
+        <value xml:lang="de">Solr Status</value>
+    </property>
+    <property key="SolrSolrServices">
+        <value xml:lang="en">Solr Services</value>
+        <value xml:lang="de">Solr Dienstleistungen</value>
+    </property>
+    <property key="SolrSolrServices">
+        <value xml:lang="en">Solr Services</value>
+        <value xml:lang="de">Solr Dienstleistungen</value>
+    </property>
+    <property key="SolrSolrConfig">
+        <value xml:lang="en">Solr Config</value>
+        <value xml:lang="de">Solr Config</value>
+    </property>
+    <property key="SolrSolrWebappStatus">
+        <value xml:lang="en">Solr Webapp Status</value>
+        <value xml:lang="de">Solr Webapp Status</value>
+    </property>
+    <property key="SolrSolrDataStatus">
+        <value xml:lang="en">Solr Data Status</value>
+        <value xml:lang="de">Solr Data Status</value>
+    </property>
+    <property key="SolrDataStatus">
+        <value xml:lang="en">Data Status</value>
+        <value xml:lang="de">Data Status</value>
+    </property>
+    <property key="SolrDataConfigVersion">
+        <value xml:lang="en">Data Config Version</value>
+        <value xml:lang="de">Data Config Version</value>
+    </property>
+    <property key="SolrPresent">
+        <value xml:lang="en">Present</value>
+        <value xml:lang="de">Present</value>
+    </property>
+    <property key="SolrEnabled">
+        <value xml:lang="en">Enabled</value>
+        <value xml:lang="de">Enabled</value>
+    </property>
+    <property key="SolrInitialized">
+        <value xml:lang="en">Initialized</value>
+        <value xml:lang="de">Initialized</value>
+    </property>
+    <property key="SolrReady">
+        <value xml:lang="en">Ready</value>
+        <value xml:lang="de">Ready</value>
+    </property>
+    <property key="SolrErrorSeeServerLogs">
+        <value xml:lang="en">Error - see server logs</value>
+        <value xml:lang="de">Fehler - siehe Serverprotokolle</value>
+    </property>
+    <property key="SolrDataStatusInfo">
+        <value xml:lang="en">When Solr data is marked dirty (which can happen by manual marking, upon Solr ECA and service errors, or when Solr ECAs are triggered while Solr is unavailable) or when the Solr schema or reindexing code is modified (such as when the config version is updated), it should be reindexed by running the rebuildSolrIndex service, either manually or by scheduling a job for rebuildSolrIndexAuto.</value>
+        <value xml:lang="de">Wenn Solr-Daten als fehlerhaft gekennzeichnet sind (was durch manuelle Markierung, Solr ECA und Service-Fehler oder wenn Solr-ECAs ausgelöst werden, während Solr nicht verfügbar ist) oder wenn das Solr-Schema oder Reindexing-Code geändert wird (z. B. wenn die Konfigurationsversion ist) aktualisiert werden), sollte es neu indiziert werden, indem Sie den Dienst 'rebuildSolrIndex' entweder manuell ausführen oder indem Sie einen Job für rebuildSolrIndexAuto planen.</value>
+    </property>
+    <property key="SolrCouldNotGetSolrStatus">
+        <value xml:lang="en">Could not get SolrStatus for SOLR-MAIN - seed data missing?</value>
+        <value xml:lang="de">SolrStatus für SOLR-MAIN konnte nicht gefunden werden - Seed-Daten fehlen?</value>
+    </property>
+    <property key="SolrDataStatusDirtyInfo">
+        <value xml:lang="en">Data status is dirty/old - rebuildSolrIndex invocation required to correct</value>
+        <value xml:lang="de">Der Datenstatus ist schmutzig/alt - der Aufruf von rebuildSolrIndex muss korrigiert werden</value>
+    </property>
+    <property key="SolrDataConfigVersionDirtyInfo">
+        <value xml:lang="en">Data config version does not match current system config version (${solrConfigVersion}) - rebuildSolrIndex invocation required to correct</value>
+        <value xml:lang="de">Die Datenkonfigurationsversion stimmt nicht mit der aktuellen Systemkonfigurationsversion überein (${solrConfigVersion}) - rebuildSolrIndex-Aufruf muss korrigiert werden</value>
+    </property>
+    <property key="SolrRebuildIndexServiceDesc">
+        <value xml:lang="en">rebuildSolrIndex immediately reindexes all supported entity data to Solr and updates the data status. Its cousin, rebuildSolrIndexAuto, is the same but only executes if the data is marked as dirty, for use in jobs and startup events.</value>
+        <value xml:lang="de">rebuildSolrIndex führt sofort eine Neuindizierung aller unterstützten Entitätsdaten zu Solr durch und aktualisiert den Datenstatus. Sein Cousin, rebuildSolrIndexAuto, ist identisch, wird aber nur ausgeführt, wenn die Daten als fehlerhaft markiert sind, um sie in Jobs und Start-Events zu verwenden.</value>
+    </property>
+    <property key="SolrRebuildIndexStartupInfo">
+        <value xml:lang="en">With stock settings, rebuildSolrIndexAuto automatically reindexes data on server startup when the data is marked dirty or config version is increased.</value>
+        <value xml:lang="de">Mit den Einstellungen für die Bestandsgröße führt rebuildSolrIndexAuto automatisch eine Neuindizierung der Daten beim Serverstart durch, wenn die Daten als fehlerhaft markiert oder die Konfigurationsversion erhöht wird.</value>
+    </property>
+    <property key="SolrRebuildIndexStartupTip">
+        <value xml:lang="en">rebuildSolrIndexAuto can also be forced to run on startup from the command line</value>
+        <value xml:lang="de">rebuildSolrIndexAuto kann auch beim Start über die Befehlszeile ausgeführt werden</value>
+    </property>
+    <property key="SolrUpdateToSolrServiceDesc">
+        <value xml:lang="en">updateToSolr reindexes or removes (action automatically determined, the default) a single product from the Solr index. Simply specify the productId below.</value>
+        <value xml:lang="de">updateToSolr reindexiert oder entfernt (eine Aktion, die automatisch ermittelt wurde, die Standardeinstellung) ein einzelnes Produkt aus dem Solr-Index. Geben Sie einfach die Produkt-ID ein.</value>
+    </property>
+    <property key="SolrMarkSolrDataDirtyServiceDesc">
+        <value xml:lang="en">markSolrDataDirty marks the current data as old/dirty so that it will be reindexed on the next rebuildSolrIndexAuto call.</value>
+        <value xml:lang="de">markSolrDataDirty markiert die aktuellen Daten als alt / schmutzig, so dass sie beim nächsten Aufruf von rebuildSolrIndexAuto erneut indiziert werden.</value>
+    </property>
+</resource>

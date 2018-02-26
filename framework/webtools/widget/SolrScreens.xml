@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <!-- TODO: REVIEW: perhaps this file could be moved to Solr component... doesn't matter much yet -->
+
+    <screen name="postRunSolrServiceActions">
+        <actions>
+            <!-- handles schedule service messages, simplified for Solr services
+                - only need to show the message -->
+            <script lang="groovy"><![CDATA[
+                import org.ofbiz.base.util.*;
+                import org.ofbiz.service.*;
+                
+                if (parameters._SOLR_SRV_RUN_ == "Y") {
+                    serviceResult = session.getAttribute("_RUN_SYNC_RESULT_");
+                    if (serviceResult) {
+                        responseStatus = serviceResult[ModelService.RESPONSE_MESSAGE];
+                        if (ServiceUtil.isSuccess(serviceResult)) {
+                            // simply squash the 'scheduled' success message, useless
+                            successMsg = ServiceUtil.getSuccessMessage(serviceResult);
+                            if (successMsg) {
+                                context.eventMessageList = [successMsg];
+                            }
+                        } else {
+                            // get rid of the event message, but make sure
+                            // to preserve the error message list, just append to it
+                            context.eventMessageList = [];
+                            errorMessageList = context.errorMessageList;
+                            if (errorMessageList == null) errorMessageList = [];
+                            errorMsg = ServiceUtil.getErrorMessage(serviceResult);
+                            errorMessageList.add(errorMsg + " (responseMessage: " + responseStatus + ")");
+                            context.errorMessageList = errorMessageList;
+                        }
+                    }
+                }
+            ]]></script>
+        </actions>
+    </screen>
+
+    <screen name="SolrStatus">
+        <section>
+            <actions>
+                <set field="titleProperty" value="SolrSolrStatus"/>
+                <set field="activeSubMenuItem" value="SolrStatus"/>
+                <include-screen-actions name="postRunSolrServiceActions"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSolrDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-screen name="solrStatusDetails"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="SolrServices">
+        <section>
+            <actions>
+                <set field="titleProperty" value="SolrSolrServices"/>
+                <set field="activeSubMenuItem" value="SolrServices"/>
+                <include-screen-actions name="postRunSolrServiceActions"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSolrDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-screen name="rebuildSolrIndexService"/>
+                        <include-screen name="updateToSolrService"/>
+                        <include-screen name="markSolrDataDirtyService"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="solrStatusDetails">
+        <section>
+            <actions>
+                <script location="component://solr/script/com/ilscipio/scipio/solr/GetSolrStatusDetails.groovy"/>
+                <set field="rebuildIndexCoreWidgetLoc" value="component://webtools/widget/SolrScreens.xml#rebuildSolrIndexServiceCore"/>
+                <set field="markSolrDataDirtyWidgetLoc" value="component://webtools/widget/SolrScreens.xml#markSolrDataDirtyServiceCore"/>
+                <set field="runServiceTarget" value="runSolrServiceForStatus"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://webtools/webapp/webtools/solr/solrStatusDetails.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="rebuildSolrIndexService">
+        <section>
+            <actions>
+                <set field="rebuildIndexCoreWidgetLoc" value="component://webtools/widget/SolrScreens.xml#rebuildSolrIndexServiceCore"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template><![CDATA[
+                    <#macro menuContent menuArgs={}>
+                        <@menu args=menuArgs>
+                            <@menuitem type="link" href=makeOfbizUrl("scheduleJob?SERVICE_NAME=rebuildSolrIndex") text="${rawLabel('WebtoolsScheduleJob')}: rebuildSolrIndex" class="+${styles.action_nav!} ${styles.action_begin!}"/>
+                            <@menuitem type="link" href=makeOfbizUrl("scheduleJob?SERVICE_NAME=rebuildSolrIndexAuto") text="${rawLabel('WebtoolsScheduleJob')}: rebuildSolrIndexAuto" class="+${styles.action_nav!} ${styles.action_begin!}"/>
+                            <@menuitem type="link" href=makeOfbizUrl("FindJob?noConditionFind=Y&serviceName_op=like&serviceName=rebuildSolrIndex"+"%"?url) text=uiLabelMap.PageTitleFindJob class="+${styles.action_nav!} ${styles.action_find!}"/>
+                        </@menu>
+                    </#macro>
+                    <@section title="rebuildSolrIndex" class="scpadmservlist-service" menuContent=menuContent>
+                      <@render resource=rebuildIndexCoreWidgetLoc/>
+                    </@section>
+                ]]></html-template></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="rebuildSolrIndexServiceCore">
+        <section>
+            <actions>
+                <script lang="groovy"><![CDATA[
+                    context.SERVICE_NAME = "rebuildSolrIndex"
+                    context.localVarsOnly = true;
+                ]]></script>
+                <script location="component://webtools/webapp/webtools/WEB-INF/actions/service/ScheduleJob.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template><![CDATA[
+                    <#include "component://webtools/webapp/webtools/solr/solrcommon.ftl">
+                    
+                    <p class="scpadmservlist-servdesc">${uiLabelMap.SolrRebuildIndexServiceDesc}</p>
+                    
+                    <@solrServiceForm>
+                      <@solrServiceFields initParams={}/>
+                    </@solrServiceForm>
+                      
+                    <p class="scpadmservlist-servtip">
+                      <small>
+                        ${uiLabelMap.CommonNote}: ${uiLabelMap.SolrRebuildIndexStartupInfo} ${uiLabelMap.SolrRebuildIndexStartupTip}:
+                          <code>./ant start-reindex-solr</code> || <code>./ant start-debug-reindex-solr</code> (Linux),
+                          <code>ant start-reindex-solr</code> || <code>ant start-debug-reindex-solr</code> (Windows)
+                      </small>
+                    </p>
+                ]]></html-template></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="updateToSolrService">
+        <section>
+            <actions>
+                <script lang="groovy"><![CDATA[
+                    context.SERVICE_NAME = "updateToSolr"
+                    context.localVarsOnly = true;
+                ]]></script>
+                <script location="component://webtools/webapp/webtools/WEB-INF/actions/service/ScheduleJob.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template><![CDATA[
+                    <#include "component://webtools/webapp/webtools/solr/solrcommon.ftl">
+                    
+                    <#-- nothing for this
+                    <#macro menuContent menuArgs={}>
+                        <@menu args=menuArgs>
+                        </@menu>
+                    </#macro>-->
+                    <@section title="updateToSolr" class="scpadmservlist-service"><#-- menuContent=menuContent -->
+                    
+                      <p class="scpadmservlist-servdesc">${uiLabelMap.SolrUpdateToSolrServiceDesc}</p>
+                    
+                      <@solrServiceForm>
+                        <@solrServiceFields initParams={"manual":true} exclude={"instance":true}/>
+                      </@solrServiceForm>
+                    
+                    </@section>
+                ]]></html-template></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="markSolrDataDirtyService">
+        <section>
+            <actions>
+                <set field="markSolrDataDirtyWidgetLoc" value="component://webtools/widget/SolrScreens.xml#markSolrDataDirtyServiceCore"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template><![CDATA[                    
+                    <@section title="markSolrDataDirty" class="scpadmservlist-service">
+                      <@render resource=markSolrDataDirtyWidgetLoc/>
+                    </@section>
+                ]]></html-template></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="markSolrDataDirtyServiceCore">
+        <section>
+            <actions>
+                <script lang="groovy"><![CDATA[
+                    context.SERVICE_NAME = "markSolrDataDirty"
+                    context.localVarsOnly = true;
+                ]]></script>
+                <script location="component://webtools/webapp/webtools/WEB-INF/actions/service/ScheduleJob.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template><![CDATA[
+                    <#include "component://webtools/webapp/webtools/solr/solrcommon.ftl">
+                    
+                    <p class="scpadmservlist-servdesc">${uiLabelMap.SolrMarkSolrDataDirtyServiceDesc}</p>
+                    
+                    <@solrServiceForm>
+                      <@solrServiceFields initParams={}/>
+                    </@solrServiceForm>
+                ]]></html-template></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+</screens>

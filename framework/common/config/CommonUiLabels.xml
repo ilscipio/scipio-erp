@@ -6206,6 +6206,18 @@
         <value xml:lang="zh">请用twitter</value>
         <value xml:lang="zh_TW">請用twitter</value>
     </property>
+    <property key="LinkedinLogin">
+        <value xml:lang="de">Anmeldung mit Linkedin</value>
+        <value xml:lang="en">Sign in with Linkedin</value>
+        <value xml:lang="fr">Connectez-vous avec Linkedin</value>
+        <value xml:lang="hi_IN">Linkedin के साथ में साइन इन करें</value>
+        <value xml:lang="it">Collegati a Linkedin</value>
+        <value xml:lang="ja">Twitterのアカウントでログイン</value>
+        <value xml:lang="nl">Log in met Linkedin</value>
+        <value xml:lang="pt">Faça login no Linkedin</value>
+        <value xml:lang="zh">请用linkedin</value>
+        <value xml:lang="zh_TW">請用linkedin</value>
+    </property>
     <property key="CommonLongDescription">
         <value xml:lang="de">Ausführliche Beschreibung</value>
         <value xml:lang="en">Long Description</value>
@@ -16492,5 +16504,9 @@
     <property key="CommonTryReloadingPage">
         <value xml:lang="en">Try reloading the page</value>
         <value xml:lang="de">Versuchen Sie, die Seite neu zu laden</value>
+    </property>
+    <property key="CommonResult">
+        <value xml:lang="en">Result</value>
+        <value xml:lang="de">Ergebnis</value>
     </property>
 </resource>

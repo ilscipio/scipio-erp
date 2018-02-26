@@ -34,22 +34,35 @@ import org.ofbiz.service.RunningService;
 import org.ofbiz.service.engine.GenericEngine;
 import org.ofbiz.service.config.ServiceConfigUtil;
 
+// SCIPIO: 2018-02-23: new flag to prevent session and request parameters usage
+localVarsOnly = context.localVarsOnly;
+if (localVarsOnly == null) localVarsOnly = false;
+context.remove("localVarsOnly");
+
 savedSyncResult = null;
-if (session.getAttribute("_SAVED_SYNC_RESULT_") != null) {
-    savedSyncResult = session.getAttribute("_SAVED_SYNC_RESULT_");
+if (!localVarsOnly) { // SCIPIO
+    if (!session.getAttribute("_SAVED_SYNC_RESULT_") != null) {
+        savedSyncResult = session.getAttribute("_SAVED_SYNC_RESULT_");
+    }
 }
 
-serviceName = parameters.SERVICE_NAME;
+if (localVarsOnly) { // SCIPIO
+    serviceName = context.SERVICE_NAME;
+} else {
+    serviceName = parameters.SERVICE_NAME;
+}
 context.POOL_NAME = ServiceConfigUtil.getServiceEngine().getThreadPool().getSendToPool();
 
 scheduleOptions = [];
 serviceParameters = [];
 serviceParameterNames = []; // SCIPIO: added 2017-09-13
-e = request.getParameterNames();
-while (e.hasMoreElements()) {
-    paramName = e.nextElement();
-    paramValue = parameters[paramName];
-    scheduleOptions.add([name : paramName, value : paramValue]);
+if (!localVarsOnly) { // SCIPIO
+    e = request.getParameterNames();
+    while (e.hasMoreElements()) {
+        paramName = e.nextElement();
+        paramValue = parameters[paramName];
+        scheduleOptions.add([name : paramName, value : paramValue]);
+    }
 }
 
 context.scheduleOptions = scheduleOptions;

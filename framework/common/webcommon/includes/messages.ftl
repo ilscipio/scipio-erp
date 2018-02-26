@@ -40,8 +40,9 @@ under the License.
     <#assign eventMessageList = requestAttributes._EVENT_MESSAGE_LIST_!>
   </#if>
 
-  <#-- SCIPIO: FIXME: All the rawString calls here are dangerous and not right, 
-       they should be fixed in the upstream code instead! -->
+  <#-- SCIPIO: DEV NOTE: Please note that the rawString calls here do not prevent escaping;
+      FTL escaping is and must still be applied by the #escape statement earlier;
+      do not add #noescape statements here for stock variables -->
   
 <#assign hasErrorMsg = (errorMessage?has_content || errorMessageList?has_content)>
 <#assign hasEventMsg = (eventMessage?has_content || eventMessageList?has_content)>
@@ -57,15 +58,14 @@ under the License.
           <#if errorMessage?has_content>
                             ${rawString(errorMessage)}
           </#if>
-          <#noescape>
-            <#if errorMessageList?has_content>
+          <#if errorMessageList?has_content>
                             <ol>
                 <#list errorMessageList as errorMsg>
                               <li>${rawString(errorMsg)}</li>
                 </#list>
                             </ol>
-            </#if>
-          </#noescape>
+          </#if>
+
                 </@alert>
       </#if>
   </#if>
@@ -87,7 +87,11 @@ under the License.
       </#if>
     
         
-      <#-- SCIPIO: only if it is gotten from context and needs to include explicit content only -->
+      <#-- SCIPIO: only if it is gotten from context and needs to include explicit content only 
+          WARNING TO DEVELOPERS: infoMessage (scipio-specific) is NOT escaped by this ftl - 
+              The screen data preparation code must take care of it! For example, using:
+                context.infoMessage = org.ofbiz.base.util.UtilCodec.getHtmlEncoder().encode(msg);
+              DO NOT include unsanitized values in infoMessage context variable! -->
       <#if infoMessage?has_content>
             <@alert type="info">
                 <#noescape>${rawString(infoMessage)}</#noescape>

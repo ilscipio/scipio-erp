@@ -231,7 +231,7 @@ public class ControlServlet extends HttpServlet {
                 if (Debug.verboseOn()) Debug.logVerbose(throwable, module);
             } else {
                 Debug.logError(throwable, "Error in request handler: ", module);
-                request.setAttribute("_ERROR_MESSAGE_", RequestUtil.getEncodedSecureErrorMessage(request, throwable));
+                request.setAttribute("_ERROR_MESSAGE_", RequestUtil.getSecureErrorMessage(request, throwable)); // SCIPIO: 2018-02-26: removed hard HTML escaping here, now handled by error.ftl/other (at point-of-use)
                 errorPage = requestHandler.getDefaultErrorPage(request);
             }
          } catch (RequestHandlerExceptionAllowExternalRequests e) {
@@ -239,7 +239,7 @@ public class ControlServlet extends HttpServlet {
               Debug.logInfo("Going to external page: " + request.getPathInfo(), module);
         } catch (Exception e) {
             Debug.logError(e, "Error in request handler: ", module);
-            request.setAttribute("_ERROR_MESSAGE_", RequestUtil.getEncodedSecureErrorMessage(request, e));
+            request.setAttribute("_ERROR_MESSAGE_", RequestUtil.getSecureErrorMessage(request, e)); // SCIPIO: 2018-02-26: removed hard HTML escaping here, now handled by error.ftl/other (at point-of-use)
             errorPage = requestHandler.getDefaultErrorPage(request);
         }
 
@@ -269,7 +269,9 @@ public class ControlServlet extends HttpServlet {
                 } catch (Throwable t) {
                     Debug.logWarning("Error while trying to send error page using rd.forward (will try response.getOutputStream or response.getWriter): " + t.toString(), module);
 
-                    String errorMessage = "ERROR rendering error page [" + errorPage + "], but here is the error text: " + request.getAttribute("_ERROR_MESSAGE_");
+                    // SCIPIO: 2018-02-26: we must now HTML-encode the error here (at point-of-use) because no longer done above
+                    String causeMsg = RequestUtil.encodeErrorMessage(request, (String) request.getAttribute("_ERROR_MESSAGE_"));
+                    String errorMessage = "ERROR rendering error page [" + errorPage + "], but here is the error text: " + causeMsg;
                     // SCIPIO: 2017-03-23: ONLY print out the error if we're in DEBUG mode
                     if (UtilRender.getRenderExceptionMode(request) == UtilRender.RenderExceptionMode.DEBUG) {
                         try {
@@ -308,7 +310,9 @@ public class ControlServlet extends HttpServlet {
                     Debug.logError("Could not get RequestDispatcher for errorPage: " + errorPage, module);
                 }
 
-                String errorMessage = "<html><body>ERROR in error page, (infinite loop or error page not found with name [" + errorPage + "]), but here is the text just in case it helps you: " + request.getAttribute("_ERROR_MESSAGE_") + "</body></html>";
+                // SCIPIO: 2018-02-26: we must now HTML-encode the error here (at point-of-use) because no longer done above
+                String causeMsg = RequestUtil.encodeErrorMessage(request, (String) request.getAttribute("_ERROR_MESSAGE_"));
+                String errorMessage = "<html><body>ERROR in error page, (infinite loop or error page not found with name [" + errorPage + "]), but here is the text just in case it helps you: " + causeMsg + "</body></html>";
                 response.getWriter().print(errorMessage);
             }
         }

@@ -26,15 +26,38 @@ public abstract class SolrUtil {
     public static final String module = SolrUtil.class.getName();
     
     public static final String solrConfigName = "solrconfig";
-    public static final String solrWebappPath = UtilProperties.getPropertyValue(solrConfigName, "solr.webapp.path", "/solr");
-    public static final String solrWebappServer = UtilProperties.getPropertyValue(solrConfigName, "solr.webapp.server", "default-server");
+    
+    private static final String solrWebappPath = UtilProperties.getPropertyValue(solrConfigName, "solr.webapp.path", "/solr");
+    private static final String solrWebappServer = UtilProperties.getPropertyValue(solrConfigName, "solr.webapp.server", "default-server");
+    private static final String solrDefaultCore = UtilProperties.getPropertyValue(solrConfigName, "solr.core.default");
+    
+    /**
+     * @deprecated use {@link #getSolrWebappUrl} instead
+     */
+    @Deprecated
     public static final String solrUrl = makeSolrWebappUrl();
-    public static final String solrFullUrl = makeFullSolrWebappUrl();
+    /**
+     * @deprecated use {@link #getSolrDefaultCoreUrl} instead
+     */
+    @Deprecated
+    public static final String solrFullUrl = makeSolrDefaultCoreUrl();
 
     private static Boolean solrWebappPresent = null; // NOTE: don't really need volatile/sync; optimization only
     
+    public static String getSolrConfigName() {
+        return solrConfigName;
+    }
+    
     public static String getSolrConfigVersionStatic() {
         return UtilProperties.getPropertyValue(solrConfigName, "solr.config.version");
+    }
+    
+    public static String getSolrDefaultCore() {
+        return solrDefaultCore;
+    }
+    
+    public static String getSolrWebappUrl() {
+        return solrUrl;
     }
     
     public static String makeSolrWebappUrl() {
@@ -62,11 +85,26 @@ public abstract class SolrUtil {
         return sb.toString();
     }
     
-    public static String makeFullSolrWebappUrl() {
-        final String solrDefaultCore = UtilProperties.getPropertyValue(solrConfigName, "solr.core.default");
-        return makeSolrWebappUrl() + "/" + solrDefaultCore;
+    public static String getSolrCoreUrl(String core) {
+        return getSolrWebappUrl() + "/" + core;
     }
     
+    public static String getSolrDefaultCoreUrl() {
+        return solrFullUrl;
+    }
+    
+    private static String makeSolrDefaultCoreUrl() {
+        return getSolrCoreUrl(solrDefaultCore);
+    }
+    
+    /**
+     * @deprecated bad name; use {@link #getSolrDefaultCoreUrl()} instead. 
+     */
+    @Deprecated
+    public static String makeFullSolrWebappUrl() {
+        return makeSolrDefaultCoreUrl();
+    }
+
     public static boolean isSolrEcaEnabled() {
         Boolean ecaEnabled = null;
         String sysProp = System.getProperty("ofbiz.solr.eca.enabled");
@@ -171,6 +209,13 @@ public abstract class SolrUtil {
     public static boolean isSolrWebappReady(HttpSolrClient client) throws Exception {
         return isSolrWebappInitialized() && isSolrWebappPingOk(client);
     }
+    
+    /**
+     * Returns true if Solr is loaded and available for queries, using default core and client.
+     */
+    public static boolean isSolrWebappReady() throws Exception {
+        return isSolrWebappReady(getHttpSolrClient());
+    }
 
     public static GenericValue getSolrStatus(Delegator delegator) {
         GenericValue solrStatus;
@@ -273,7 +318,7 @@ public abstract class SolrUtil {
     
     public static HttpSolrClient getHttpSolrClient(String core) {
         if (UtilValidate.isNotEmpty(core)) {
-            return makeHttpSolrClientFromUrl(SolrUtil.solrUrl + "/" + core);
+            return makeHttpSolrClientFromUrl(getSolrCoreUrl(core));
         }
         else {
             return getHttpSolrClient();
@@ -281,12 +326,12 @@ public abstract class SolrUtil {
     }
     
     public static HttpSolrClient getHttpSolrClient() {
-        return makeHttpSolrClientFromUrl(SolrUtil.solrFullUrl);
+        return makeHttpSolrClientFromUrl(getSolrDefaultCoreUrl());
     }
     
     public static HttpSolrClient makeHttpSolrClientFromUrl(String url) {
         // TODO: REVIEW: .allowCompression(false)
         return new HttpSolrClient.Builder(url).build();
     }
-    
+
 }

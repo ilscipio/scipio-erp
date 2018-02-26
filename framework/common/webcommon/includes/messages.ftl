@@ -57,15 +57,14 @@ under the License.
           <#if errorMessage?has_content>
                             ${rawString(errorMessage)}
           </#if>
-          <#noescape>
-            <#if errorMessageList?has_content>
+          <#if errorMessageList?has_content>
                             <ol>
                 <#list errorMessageList as errorMsg>
                               <li>${rawString(errorMsg)}</li>
                 </#list>
                             </ol>
-            </#if>
-          </#noescape>
+          </#if>
+
                 </@alert>
       </#if>
   </#if>

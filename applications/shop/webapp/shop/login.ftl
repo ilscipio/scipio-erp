@@ -160,7 +160,8 @@ under the License.
 <#-- SOCIAL PLugins - requires Facebook, Google or Twitter Authentication Addon -->
 <#if getPropertyMsg("shop.properties","facebook.enabled") == "Y" 
     || getPropertyMsg("shop.properties","google.enabled") == "Y" 
-    || getPropertyMsg("shop.properties","twitter.enabled") == "Y">
+    || getPropertyMsg("shop.properties","twitter.enabled") == "Y"
+    || getPropertyMsg("shop.properties","linkedin.enabled") == "Y">
 <@section>
 <@row>
     <@cell columns=6>
@@ -178,6 +179,10 @@ under the License.
             <#if getPropertyMsg("shop.properties","twitter.enabled") == "Y">
                 <#include "component://auth-twitter/webapp/twitter/twitter-common.ftl"/>
                 <@twitterButton/>
+            </#if>
+            <#if getPropertyMsg("shop.properties","linkedin.enabled") == "Y">
+                <#include "component://auth-linkedin/webapp/linkedin/linkedin-common.ftl"/>
+                <@linkedinButton/>
             </#if>
          </@cell>
     </@row>

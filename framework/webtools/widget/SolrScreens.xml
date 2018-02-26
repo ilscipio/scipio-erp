@@ -13,11 +13,6 @@
                 import org.ofbiz.base.util.*;
                 import org.ofbiz.service.*;
                 
-                cleanMsg = { msg ->
-                    // FIXME: this is crazy, should be ensured by the FTL! ofbiz issue
-                    return UtilCodec.getHtmlEncoder().encode(msg);
-                };
-                
                 if (parameters._SOLR_SRV_RUN_ == "Y") {
                     serviceResult = session.getAttribute("_RUN_SYNC_RESULT_");
                     if (serviceResult) {
@@ -26,7 +21,7 @@
                             // simply squash the 'scheduled' success message, useless
                             successMsg = ServiceUtil.getSuccessMessage(serviceResult);
                             if (successMsg) {
-                                context.eventMessageList = [successMsg]; // double-encode here?? cleanMsg(successMsg)
+                                context.eventMessageList = [successMsg];
                             }
                         } else {
                             // get rid of the event message, but make sure
@@ -35,7 +30,7 @@
                             errorMessageList = context.errorMessageList;
                             if (errorMessageList == null) errorMessageList = [];
                             errorMsg = ServiceUtil.getErrorMessage(serviceResult);
-                            errorMessageList.add(cleanMsg(errorMsg) + " (responseMessage: " + cleanMsg(responseStatus) + ")");
+                            errorMessageList.add(errorMsg + " (responseMessage: " + responseStatus + ")");
                             context.errorMessageList = errorMessageList;
                         }
                     }

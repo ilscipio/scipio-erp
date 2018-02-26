@@ -40,8 +40,9 @@ under the License.
     <#assign eventMessageList = requestAttributes._EVENT_MESSAGE_LIST_!>
   </#if>
 
-  <#-- SCIPIO: FIXME: All the rawString calls here are dangerous and not right, 
-       they should be fixed in the upstream code instead! -->
+  <#-- SCIPIO: DEV NOTE: Please note that the rawString calls here do not prevent escaping;
+      FTL escaping is and must still be applied by the #escape statement earlier;
+      do not add #noescape statements here for stock variables -->
   
 <#assign hasErrorMsg = (errorMessage?has_content || errorMessageList?has_content)>
 <#assign hasEventMsg = (eventMessage?has_content || eventMessageList?has_content)>

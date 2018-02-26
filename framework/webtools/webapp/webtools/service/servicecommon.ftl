@@ -12,14 +12,15 @@
   </#if>
 </#function>
 
-<#macro serviceFields serviceParameters params={}>
-    <#list serviceParameters as serviceParameter>
-      <#-- WARN: watch out for screen auto-escaping on serviceParameter -->
+<#macro serviceFields serviceParameters params={} exclude={}>
+  <#list serviceParameters as serviceParameter>
+    <#-- WARN: watch out for screen auto-escaping on serviceParameter -->
+    <#local rawName = rawString(serviceParameter.name)>
+    <#if (exclude[rawName]!false) != true>
       <#local defaultValue = serviceParameter.defaultValue!>
       <#local defaultValStr = defaultValue?string><#-- NOTE: forced html escaping - do not pass to macro params -->
       <#local fieldLabel>${serviceParameter.name} (<em>${serviceParameter.type}</em>)<#if defaultValStr?has_content> (${uiLabelMap.WebtoolsServiceDefault}: <em>${defaultValStr}</em>)</#if></#local>
       <#local rawType = rawString(serviceParameter.type)>
-      <#local rawName = rawString(serviceParameter.name)>
       <#local required = (serviceParameter.optional == "N")>
       <#local value = params[rawName]!serviceParameter.value!>
       <#if rawType == "Boolean" || rawType == "java.lang.Boolean">
@@ -43,7 +44,8 @@
         <@field type="input" label=wrapAsRaw(fieldLabel, 'htmlmarkup') size="20" name=serviceParameter.name 
             value=getServiceParamStrRepr(value, rawType) required=required placeholder=getServiceParamStrRepr(defaultValue, rawType)/>
       </#if>
-    </#list>
+    </#if>
+  </#list>
 </#macro>
 
 <#-- This corresponds to: ServiceForms.xml#runService 

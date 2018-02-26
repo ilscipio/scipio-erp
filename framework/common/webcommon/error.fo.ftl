@@ -100,7 +100,9 @@ under the License.
                 ${uiLabelMap.CommonFollowingErrorsOccurred}:
             </fo:block>
             <fo:block space-after="0.2in" color="red">
-                ${errorMessage!}
+              <#escape x as x?html>
+                ${rawString(errorMessage!)}
+              </#escape>
             </fo:block>
             <fo:block id="theEnd"/>
         </fo:flow>

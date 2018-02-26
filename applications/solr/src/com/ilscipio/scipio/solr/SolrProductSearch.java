@@ -149,7 +149,7 @@ public abstract class SolrProductSearch {
                 Map<String, Object> productInst = (Map<String, Object>) context.get("instance");
                 if (productInst != null) productId = (String) productInst.get("productId");
                 else productId = (String) context.get("productId");
-                if (productId == null) ServiceUtil.returnError("missing product instance or productId");
+                if (productId == null) return ServiceUtil.returnError("missing product instance or productId");
 
                 if (immediate) {
                     result = updateToSolrCore(dctx, context, forceAdd, productId, productInst);

@@ -86,7 +86,11 @@ under the License.
       </#if>
     
         
-      <#-- SCIPIO: only if it is gotten from context and needs to include explicit content only -->
+      <#-- SCIPIO: only if it is gotten from context and needs to include explicit content only 
+          WARNING TO DEVELOPERS: infoMessage (scipio-specific) is NOT escaped by this ftl - 
+              The screen data preparation code must take care of it! For example, using:
+                context.infoMessage = org.ofbiz.base.util.UtilCodec.getHtmlEncoder().encode(msg);
+              DO NOT include unsanitized values in infoMessage context variable! -->
       <#if infoMessage?has_content>
             <@alert type="info">
                 <#noescape>${rawString(infoMessage)}</#noescape>

@@ -223,7 +223,7 @@ In order ta make this service active add the following to the service definition
                                 recordCount++;
                             }
                         }//end line
-                        sucMsg = "Convert Documents Tree Successful.<br/>Total : " + counterLine + " rows";
+                        sucMsg = "Convert Documents Tree Successful.\nTotal : " + counterLine + " rows"; // SCIPIO: 2018-02-27: switched out <br/> for line-break
                     }
                 }
              }

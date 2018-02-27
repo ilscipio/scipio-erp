@@ -19,7 +19,7 @@ under the License.
 <#--<#include rawString("component://widget/templates/htmlScreenMacroLibrary.ftl")>--> 
 
 <#assign contentMsgContentClass = "content-message-content"><#-- SCIPIO: especially used by JS, cannot put in global styles unless do same in JS -->
-<#escape x as x?html>
+
   <#-- SCIPIO: FIXME: THESE ASSIGNS ARE DUPLICATED IN commonHeadScripts.ftl; KEEP IN SYNC 
     NOTE: SEE commonHeadScripts.ftl FOR JS-OUTPUTTED ERROR MESSAGES -->
   <#if requestAttributes.errorMessageList?has_content><#assign errorMessageList=requestAttributes.errorMessageList></#if>
@@ -48,58 +48,58 @@ under the License.
 <#assign hasEventMsg = (eventMessage?has_content || eventMessageList?has_content)>
 <#assign msgPresAttrStr> has-scipio-errormsg="${hasErrorMsg?string}" has-scipio-eventmsg="${hasEventMsg?string}"</#assign>
   
-<div id="content-messages"<#noescape>${msgPresAttrStr}</#noescape>><#-- SCIPIO: need container always, to locate this via js -->
+<div id="content-messages"${msgPresAttrStr}><#-- SCIPIO: need container always, to locate this via js -->
   <#-- display the error messages -->
-  <div id="main-${styles.alert_wrap!}"<#noescape>${msgPresAttrStr}</#noescape>>
+  <div id="main-${styles.alert_wrap!}"${msgPresAttrStr}>
   <#if (isErrorPage!false) == false> <#-- Do not display the error messages when on error page -->
       <#if (errorMessage?has_content || errorMessageList?has_content)>
-                <@alert type="alert">
-          <#noescape><p>${uiLabelMap.CommonFollowingErrorsOccurred}:</p></#noescape>
+        <@alert type="alert">
+          <p>${uiLabelMap.CommonFollowingErrorsOccurred}:</p>
           <#if errorMessage?has_content>
-                            ${rawString(errorMessage)}
+            ${escapeEventMsg(errorMessage, 'htmlmarkup')}
           </#if>
           <#if errorMessageList?has_content>
-                            <ol>
-                <#list errorMessageList as errorMsg>
-                              <li>${rawString(errorMsg)}</li>
-                </#list>
-                            </ol>
+            <ol>
+              <#list errorMessageList as errorMsg>
+                <li>${escapeEventMsg(errorMsg, 'htmlmarkup')}</li>
+              </#list>
+            </ol>
           </#if>
-
-                </@alert>
+        </@alert>
       </#if>
   </#if>
       <#-- display the event messages -->
       <#if (eventMessage?has_content || eventMessageList?has_content)>
-            <@alert type="info">
-          <#noescape><p>${uiLabelMap.CommonFollowingOccurred}:</p></#noescape>
+        <@alert type="info">
+          <p>${uiLabelMap.CommonFollowingOccurred}:</p>
           <#if eventMessage?has_content>
-                            ${rawString(eventMessage)}
+            ${escapeEventMsg(eventMessage, 'htmlmarkup')}
           </#if>
           <#if eventMessageList?has_content>
-                            <ol>
-            <#list eventMessageList as eventMsg>
-                              <li>${rawString(eventMsg)}</li>
-            </#list>
-                            </ol>
+            <ol>
+              <#list eventMessageList as eventMsg>
+                <li>${escapeEventMsg(eventMsg, 'htmlmarkup')}</li>
+              </#list>
+            </ol>
           </#if>
-            </@alert>
+        </@alert>
       </#if>
     
-        
       <#-- SCIPIO: only if it is gotten from context and needs to include explicit content only 
           WARNING TO DEVELOPERS: infoMessage (scipio-specific) is NOT escaped by this ftl - 
               The screen data preparation code must take care of it! For example, using:
                 context.infoMessage = org.ofbiz.base.util.UtilCodec.getHtmlEncoder().encode(msg);
-              DO NOT include unsanitized values in infoMessage context variable! -->
+              DO NOT include unsanitized values in infoMessage context variable!
+          FIXME: Instead of rawString and leaving escaping to screens, 
+              this should try to exploit the #escapeVal (#escapeMsg) opts.allow parameter to allow a subset of HTML only;
+              unfortunately still misses parsing library to achieve this at this time -->
       <#if infoMessage?has_content>
-            <@alert type="info">
-                <#noescape>${rawString(infoMessage)}</#noescape>
-            </@alert>
+        <@alert type="info">
+          ${rawString(infoMessage)}
+        </@alert>
       </#if>
   </div>
 </div>
-</#escape>
 
 
 <#-- SCIPIO: this alert TEMPLATES for JS. JS can copy their inner markup, insert a message and add elsewhere. -->

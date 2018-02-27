@@ -2063,6 +2063,13 @@
         </li>
       </ul>
   </@section>
+  <@section title="Message/description escaping (escapeMsg, escapeEventMsg)">
+    <ul>
+      <li>${escapeMsg("this is a\nmessage with line\nbreaks and special chars <><>''", 'htmlmarkup')}</li>
+      <li>${escapeMsg("this is a\nmessage with line\nbreaks ignored and special chars <><>''", 'htmlmarkup', {"interpret":false})}</li>
+      <li>${escapeEventMsg(rewrapString("this is an event\nmessage with line\nbreaks and special chars <><>''"), 'htmlmarkup')}</li>
+    </ul>
+  </@section>
 </@section>
 
 <@section title="Date formatting (formatDate/formatDateTime/formatTime)">

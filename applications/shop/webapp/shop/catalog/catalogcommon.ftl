@@ -108,11 +108,9 @@
             ${uiLabelMap.CommonDepth}: ${product.productDepth!} ${((depthUom.abbreviation)?default(product.depthUomId))!}
         </p>
     </#if>
-
     <#if daysToShip??>
         <p id="product-specs-days-to-ship">${uiLabelMap.ProductUsuallyShipsIn} ${daysToShip} ${uiLabelMap.CommonDays}!</p>
     </#if>
-
     <#if disFeatureList?? && (0 < disFeatureList.size())>                
         <#list disFeatureList as currentFeature>
             <#assign disFeatureType = currentFeature.getRelatedOneCache("ProductFeatureType") />
@@ -121,7 +119,6 @@
             </p>
         </#list>
     </#if>
-
     <#-- SCIPIO: Debugging info
     <@heading relLevel=+1>Debugging Info</@heading>
     <p style="font-size:0.7em;">Product ID: ${product.productId}</p>

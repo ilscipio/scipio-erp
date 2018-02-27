@@ -43,7 +43,6 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ScriptUtil;
 import org.ofbiz.base.util.UtilDateTime;
-import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
@@ -62,7 +61,6 @@ import org.ofbiz.webapp.control.LoginWorker;
 import org.ofbiz.webapp.control.ViewAsJsonUtil;
 import org.ofbiz.webapp.renderer.FtlContextFetcher;
 import org.ofbiz.webapp.renderer.RenderContextFetcher;
-import org.ofbiz.webapp.renderer.RenderTargetUtil;
 import org.ofbiz.webapp.renderer.SimpleContextFetcher;
 import org.ofbiz.webapp.website.WebSiteWorker;
 import org.ofbiz.widget.WidgetWorker;
@@ -547,7 +545,9 @@ public class ScreenRenderer implements RenderContextFetcher {
         if (errorMessageList == null) errorMessageList = new LinkedList<String>();
 
         if (request.getAttribute("_EVENT_MESSAGE_") != null) {
-            eventMessageList.add(UtilFormatOut.replaceString((String) request.getAttribute("_EVENT_MESSAGE_"), "\n", "<br/>"));
+            // SCIPIO: 2018-02-27: will now be handled using correct point-of-use escaping (ftl)
+            //eventMessageList.add(UtilFormatOut.replaceString((String) request.getAttribute("_EVENT_MESSAGE_"), "\n", "<br/>"));
+            eventMessageList.add((String) request.getAttribute("_EVENT_MESSAGE_"));
             request.removeAttribute("_EVENT_MESSAGE_");
         }
         List<String> msgList = UtilGenerics.toList(request.getAttribute("_EVENT_MESSAGE_LIST_"));
@@ -556,11 +556,15 @@ public class ScreenRenderer implements RenderContextFetcher {
             request.removeAttribute("_EVENT_MESSAGE_LIST_");
         }
         if (request.getAttribute("_ERROR_MESSAGE_") != null) {
-            errorMessageList.add(UtilFormatOut.replaceString((String) request.getAttribute("_ERROR_MESSAGE_"), "\n", "<br/>"));
+            // SCIPIO: 2018-02-27: will now be handled using correct point-of-use escaping (ftl)
+            //errorMessageList.add(UtilFormatOut.replaceString((String) request.getAttribute("_ERROR_MESSAGE_"), "\n", "<br/>"));
+            errorMessageList.add((String) request.getAttribute("_ERROR_MESSAGE_"));
             request.removeAttribute("_ERROR_MESSAGE_");
         }
         if (session.getAttribute("_ERROR_MESSAGE_") != null) {
-            errorMessageList.add(UtilFormatOut.replaceString((String) session.getAttribute("_ERROR_MESSAGE_"), "\n", "<br/>"));
+            // SCIPIO: 2018-02-27: will now be handled using correct point-of-use escaping (ftl)
+            //errorMessageList.add(UtilFormatOut.replaceString((String) session.getAttribute("_ERROR_MESSAGE_"), "\n", "<br/>"));
+            errorMessageList.add((String) session.getAttribute("_ERROR_MESSAGE_"));
             session.removeAttribute("_ERROR_MESSAGE_");
         }
         msgList = UtilGenerics.toList(request.getAttribute("_ERROR_MESSAGE_LIST_"));

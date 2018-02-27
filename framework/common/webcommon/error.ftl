@@ -28,20 +28,16 @@ under the License.
     <@heading level=1><i class="${styles.icon!} ${styles.icon_error!}" style="font-size: 4rem;"></i> ${getLabel('PageTitleError')!}</@heading>
       <#if errorMessage?has_content || errorMessageList?has_content>
         ${getLabel('CommonFollowingErrorsOccurred')}
-  <#escape x as x?html><#-- SCIPIO: added 2018-02-26 -->
-                        <ol>
-        <#if errorMessage?has_content>
-                        <li>${rawString(errorMessage)}</li>
-        </#if>
-        <#if errorMessageList?has_content>
-                        
+        <ol>
+          <#if errorMessage?has_content>
+            <li>${escapeEventMsg(errorMessage, 'htmlmarkup')}</li>
+          </#if>
+          <#if errorMessageList?has_content>         
             <#list errorMessageList as errorMsg>
-                          <li>${rawString(errorMsg)}</li>
-            </#list>
-                        
-        </#if>
-                        </ol>
-  </#escape>
+              <li>${escapeEventMsg(errorMsg, 'htmlmarkup')}</li>
+            </#list>         
+          </#if>
+        </ol>
       <#else>
         ${getLabel('CommonErrorOccurredContactSupport')}
       </#if>

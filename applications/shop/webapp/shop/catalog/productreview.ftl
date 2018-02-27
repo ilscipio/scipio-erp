@@ -21,42 +21,46 @@ under the License.
   <@section title=uiLabelMap.OrderCustomerReviews>
       <#if averageRating?? && (averageRating > 0) && numRatings?? && (numRatings > 1)>
           <@row>
-            <@cell small=4>
+            <@cell small=4 class="+${styles.text_center}">
                 <@panel>
-                <@heading>${uiLabelMap.OrderAverageRating}</@heading>
-                <div>
-                    <b>${averageRating?string["0.#"]}</b> / 5
-                </div>
-                <div>
-                </div>
-                <#if numRatings??><small>(${uiLabelMap.CommonFrom} ${numRatings} ${uiLabelMap.OrderRatings})</small></#if>
+                    <@heading>${uiLabelMap.OrderAverageRating}</@heading>
+                    <div>
+                        <b>${averageRating?string["0.#"]}</b> / 5
+                    </div>
+                    <div>
+                    </div>
+                    <#if numRatings??><small>(${uiLabelMap.CommonFrom} ${numRatings} ${uiLabelMap.OrderRatings})</small></#if>
                 </@panel>
             </@cell>
-            <hr/>
           </@row>
       </#if>
       
       <#if productReviews?has_content>
-        <#list productReviews as productReview>
+        <@section>
+        <#list productReviews[0..*5] as productReview>
           <#assign postedUserLogin = productReview.getRelatedOne("UserLogin", false)>
           <#assign postedPerson = postedUserLogin.getRelatedOne("Person", false)!>
-          <@row class="review">
-            <@cell small=2 class="${styles.text_center}">
+          <@row class="+review">
+            <@cell small=2 class="+${styles.text_center}">
                     <div class="avatar">
-                        <#if (productReview.postedAnonymous!("N")) == "Y">${uiLabelMap.OrderAnonymous}<#else>${postedPerson.firstName} ${postedPerson.lastName}</#if>
+                        <i class="${styles.icon} ${styles.icon_prefix}user" style="font-size:5em;"></i>
                     </div>
                     <div class="time"><small>${productReview.postedDateTime!}</small></div>
             </@cell>
             <@cell small=10>
-                    <div class="rating">
-                        <em>${uiLabelMap.OrderRanking}: ${productReview.productRating!?string}</em>
-                    </div>
-                    <#if productReview.productReview?has_content>
-                        <p>${productReview.productReview!}</p>
-                    </#if>
+                    <blockquote class="blockquote">
+                        <div class="rating">
+                            <strong>${uiLabelMap.OrderRanking}: ${productReview.productRating!?string}</strong>
+                        </div>
+                        <#if productReview.productReview?has_content>
+                            <p>${productReview.productReview!}</p>
+                        </#if>
+                        <footer class="blockquote-footer"><#if (productReview.postedAnonymous!("N")) == "Y">${uiLabelMap.OrderAnonymous}<#else>${postedPerson.firstName} ${postedPerson.lastName}</#if></footer>
+                    </blockquote>
                 </@cell>
             </@row>
         </#list>
+        </@section>
         <hr/>
       </#if>
       <#if userLogin?has_content>
@@ -78,7 +82,7 @@ under the License.
                     {"value":"4.0", "description":"4"}
                     {"value":"5.0", "description":"5"}
                   ]>
-                  <@field type="radio" name="productRating" label=uiLabelMap.EcommerceRating items=ratingItems currentValue=""/>
+                  <@field type="radio" name="productRating" label=uiLabelMap.EcommerceRating items=ratingItems currentValue="3.0"/>
                   <@field type="checkbox" name="postedAnonymous" label=uiLabelMap.EcommercePostAnonymous value="Y" currentValue="N" defaultValue="N"/>
                   <@field type="textarea" name="productReview" label=uiLabelMap.CommonReview cols="40"/>
             

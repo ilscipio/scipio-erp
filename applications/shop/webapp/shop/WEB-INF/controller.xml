@@ -934,7 +934,7 @@ under the License.
     <request-map uri="createProductReview">
         <security https="false" auth="true"/>
         <event type="service" invoke="createProductReview"/>
-        <response name="success" type="view" value="product"/>
+        <response name="success" type="view-last" value="product"/>
         <response name="error" type="view" value="productReview"/>
     </request-map>
 

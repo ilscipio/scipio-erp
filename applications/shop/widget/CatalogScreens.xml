@@ -320,9 +320,20 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/productreview.ftl"/></html></platform-specific>
+                        <include-screen name="inlineproductreview"/>    
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="inlineproductreview">
+        <section>
+            <actions>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/shop/ProductReview.groovy"/>            
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://shop/webapp/shop/catalog/productreview.ftl"/></html></platform-specific>
             </widgets>
         </section>
     </screen>

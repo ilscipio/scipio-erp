@@ -17,58 +17,79 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#include "component://shop/webapp/shop/catalog/catalogcommon.ftl">
-
-<#if requestParameters.product_id??>
-  <form id="reviewProduct" method="post" action="<@ofbizUrl>createProductReview</@ofbizUrl>">
-    <fieldset class="inline">
-      <input type="hidden" name="productStoreId" value="${productStore.productStoreId}" />
-      <input type="hidden" name="productId" value="${requestParameters.product_id}" />
-      <input type="hidden" name="product_id" value="${requestParameters.product_id}" />
-      <input type="hidden" name="category_id" value="${requestParameters.category_id}" />
-      <div>
-        <span><label for="one">${uiLabelMap.EcommerceRating}:</label></span>
-        <span>
-          <label for="one">1</label>
-          <input type="radio" id="one" name="productRating" value="1.0" />
-        </span>
-        <span>
-          <label for="two">2</label>
-          <input type="radio" id="two" name="productRating" value="2.0" />
-        </span>
-        <span>
-          <label for="three">3</label>
-          <input type="radio" id="three" name="productRating" value="3.0" />
-        </span>
-        <span>
-          <label for="four">4</label>
-          <input type="radio" id="four" name="productRating" value="4.0" />
-        </span>
-        <span>
-          <label for="five">5</label>
-          <input type="radio" id="five" name="productRating" value="5.0" />
-        </span>
-      </div>
-      <div>
-        <span><label for="yes">${uiLabelMap.EcommercePostAnonymous}:</label></span>
-        <span>
-          <label for="yes">${uiLabelMap.CommonYes}</label>
-          <input type="radio" id="yes" name="postedAnonymous" value="Y" />
-        </span>
-        <span>
-          <label for="no">${uiLabelMap.CommonNo}</label>
-          <input type="radio" id="no" name="postedAnonymous" value="N" checked="checked" />
-        </span>
-      </div>
-      <div>
-        <label for="review">${uiLabelMap.CommonReview}:</label>
-        <textarea name="productReview" cols="40"></textarea>
-      </div>
-      <div>
-        <a href="javascript:document.getElementById('reviewProduct').submit();" class="${styles.link_run_sys!} ${styles.action_update!}">[${uiLabelMap.CommonSave}]</a>
-        <a href="<@ofbizUrl>product?product_id=${requestParameters.product_id}</@ofbizUrl>" class="${styles.link_nav_cancel!}">[${uiLabelMap.CommonCancel}]</a>
-      </div>
-    </fieldset>
-  </form>
-<#else>
-  <@heading>${uiLabelMap.ProductCannotReviewUnKnownProduct}.</@heading>
+<#if (requestParameters?has_content && requestParameters.product_id??) || productId?has_content>
+  <@section title=uiLabelMap.OrderCustomerReviews>
+      <#if averageRating?? && (averageRating > 0) && numRatings?? && (numRatings > 1)>
+          <@row>
+            <@cell small=4>
+                <@panel>
+                <@heading>${uiLabelMap.OrderAverageRating}</@heading>
+                <div>
+                    <b>${averageRating?string["0.#"]}</b> / 5
+                </div>
+                <div>
+                </div>
+                <#if numRatings??><small>(${uiLabelMap.CommonFrom} ${numRatings} ${uiLabelMap.OrderRatings})</small></#if>
+                </@panel>
+            </@cell>
+            <hr/>
+          </@row>
+      </#if>
+      
+      <#if productReviews?has_content>
+        <#list productReviews as productReview>
+          <#assign postedUserLogin = productReview.getRelatedOne("UserLogin", false)>
+          <#assign postedPerson = postedUserLogin.getRelatedOne("Person", false)!>
+          <@row class="review">
+            <@cell small=2 class="${styles.text_center}">
+                    <div class="avatar">
+                        <#if (productReview.postedAnonymous!("N")) == "Y">${uiLabelMap.OrderAnonymous}<#else>${postedPerson.firstName} ${postedPerson.lastName}</#if>
+                    </div>
+                    <div class="time"><small>${productReview.postedDateTime!}</small></div>
+            </@cell>
+            <@cell small=10>
+                    <div class="rating">
+                        <em>${uiLabelMap.OrderRanking}: ${productReview.productRating!?string}</em>
+                    </div>
+                    <#if productReview.productReview?has_content>
+                        <p>${productReview.productReview!}</p>
+                    </#if>
+                </@cell>
+            </@row>
+        </#list>
+        <hr/>
+      </#if>
+      <#if userLogin?has_content>
+          <@row>
+            <@cell>
+      
+              <#--<@heading>${uiLabelMap.ProductReviewThisProduct}<@heading> -->
+              
+              <@form id="reviewProduct" method="post" action=makeOfbizUrl("createProductReview")>
+                <@fieldset class="inline">
+                  <input type="hidden" name="productStoreId" value="${productStore.productStoreId}" />
+                  <input type="hidden" name="productId" value="${productId!requestParameters.product_id!""}" />
+                  <input type="hidden" name="categoryId" value="${categoryId!requestParameters.category_id!""}" />
+                  
+                  <#assign ratingItems = [
+                    {"value":"1.0", "description":"1"}
+                    {"value":"2.0", "description":"2"}
+                    {"value":"3.0", "description":"3"}
+                    {"value":"4.0", "description":"4"}
+                    {"value":"5.0", "description":"5"}
+                  ]>
+                  <@field type="radio" name="productRating" label=uiLabelMap.EcommerceRating items=ratingItems currentValue=""/>
+                  <@field type="checkbox" name="postedAnonymous" label=uiLabelMap.EcommercePostAnonymous value="Y" currentValue="N" defaultValue="N"/>
+                  <@field type="textarea" name="productReview" label=uiLabelMap.CommonReview cols="40"/>
+            
+                    <a href="javascript:document.getElementById('reviewProduct').submit();" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>
+                    <#if requestParameters.product_id?has_content><a href="<@ofbizUrl>product?product_id=${requestParameters.product_id}</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonCancel}</a></#if>
+                    
+                </@fieldset>
+              </@form>
+            <#-- <@heading>${uiLabelMap.ProductCannotReviewUnKnownProduct}.</@heading>-->
+            </@cell>
+        </@row>
+    </#if>
+  </@section>
 </#if>

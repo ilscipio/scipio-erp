@@ -556,6 +556,7 @@
     </#if>
     
 </@section>
+
 <@section>
         <#-- Prefill first select box (virtual products only)
         <div id="product-virtual-swatch">            
@@ -611,6 +612,12 @@
     </ul>
   </#if>
 </#macro>-->
+
+<@section>
+  <#-- Product Reviews -->
+  <@render resource="component://shop/widget/CatalogScreens.xml#inlineproductreview" reqAttribs={"productId": product.productId!"", "categoryId": requestParameters.category_id!"","productReviews":productReviews!,"numRatings":numRatings!,"averageRating":averageRating!} />
+  <#-- <a href="<@ofbizUrl>reviewProduct?category_id=${categoryId!}&amp;product_id=${product.productId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductReviewThisProduct}!</a> -->
+</@section>
 
 </div>
 

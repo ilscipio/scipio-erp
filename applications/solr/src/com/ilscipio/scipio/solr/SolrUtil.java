@@ -31,6 +31,11 @@ public abstract class SolrUtil {
     private static final String solrWebappServer = UtilProperties.getPropertyValue(solrConfigName, "solr.webapp.server", "default-server");
     private static final String solrDefaultCore = UtilProperties.getPropertyValue(solrConfigName, "solr.core.default");
     
+    private static final String effectiveConfigVersion = determineSolrConfigVersion(
+            UtilProperties.getPropertyValue(solrConfigName, "solr.config.version"),
+            UtilProperties.getPropertyValue(solrConfigName, "solr.config.version.custom"),
+            UtilProperties.getPropertyValue(solrConfigName, "solr.config.version.extra"));
+
     /**
      * @deprecated use {@link #getSolrWebappUrl} instead
      */
@@ -48,8 +53,27 @@ public abstract class SolrUtil {
         return solrConfigName;
     }
     
+    /**
+     * Returns the EFFECTIVE Solr config version, which is a combination
+     * of the solrconfig.properties values 
+     * <code>solr.config.version</code>,
+     * <code>solr.config.version.custom</code> and 
+     * <code>solr.config.version.extra</code>.
+     */
     public static String getSolrConfigVersionStatic() {
-        return UtilProperties.getPropertyValue(solrConfigName, "solr.config.version");
+        return effectiveConfigVersion;
+    }
+    
+    public static String determineSolrConfigVersion(String baseVersion, String customVersion, String extraVersion) {
+        String version = baseVersion;
+        if (UtilValidate.isNotEmpty(customVersion)) {
+            version = customVersion;
+        }
+        if (UtilValidate.isNotEmpty(extraVersion)) {
+            if (extraVersion.startsWith(".")) version += extraVersion;
+            else version += "." + extraVersion;
+        }
+        return version;
     }
     
     public static String getSolrDefaultCore() {

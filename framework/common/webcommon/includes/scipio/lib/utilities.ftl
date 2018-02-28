@@ -2026,7 +2026,7 @@ Returns the given value, bypassing the screen renderer html auto-escaping, as a 
 This is the same as the Ofbiz-provided function, {{{StringUtil.wrapString}}}, but further simplifies
 the resulting type into a simple Freemarker string.
 
-This can be seen as the reverse operation of #rewrapStringStd.
+This can be seen as the reverse operation of #rewrapString.
 
 NOTE: 2016-09-29: Now tolerates non-strings, which will be coerced to strings using ?string operator.
 
@@ -2044,7 +2044,7 @@ NOTE: 2016-10-20: Now supports multiple parameters, which are each {{{rawString}
                                     rawString(var1) + " " + rawString(var2)
                                   except the former is more efficient.
   * Related *
-    #rewrapStringStd  
+    #rewrapString  
     
   * History *
     Enhanced for 1.14.2.                        

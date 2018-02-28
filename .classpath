@@ -22,7 +22,7 @@
     <classpathentry kind="lib" path="framework/base/lib/caffeine-2.6.1.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/hamcrest-all-1.2.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/fop-2.2.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/freemarker-2.3.25-incubating.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/freemarker-2.3.27-incubating.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/httpclient-4.3.6.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/httpclient-cache-4.3.6.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/httpcore-4.3.3.jar"/>

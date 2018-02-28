@@ -4274,6 +4274,8 @@ TODO: implement as transform.
 <#macro elemAttribStr attribs includeEmpty=false emptyValToken="" noValToken="" exclude=[] 
   attribNamePrefix="" alwaysAddPrefix=true attribNamePrefixStrip="" attribNameSubstitutes={} camelCaseToDashLowerNames=false escapeLang="html">
   <#if isObjectType("map", attribs)>
+    <#-- DEV NOTE: here attribs are auto-unwrapped by Freemarker, but when this is made into transform,
+        the unwrap will have to be coded explicitly -->
     <#t>${rawString(Static["com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil"].makeElemAttribStr(attribs, includeEmpty, 
       emptyValToken, noValToken, exclude, attribNamePrefix, alwaysAddPrefix, attribNamePrefixStrip, attribNameSubstitutes, camelCaseToDashLowerNames, escapeLang))}<#t>
   <#elseif attribs?is_string>

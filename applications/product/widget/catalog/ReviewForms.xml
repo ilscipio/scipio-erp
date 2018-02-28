@@ -55,7 +55,6 @@ under the License.
             </entity-and>
             <set field="reviewBy" value="${userLoginAndPartyDetails[0].firstName} ${userLoginAndPartyDetails[0].middleName} ${userLoginAndPartyDetails[0].lastName}"/>
         </row-actions>
-        <field name="productReviewId"><hidden/></field>
         <field name="productId" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" description="${productId}" target="ViewProduct">
                 <parameter param-name="productId"/>
@@ -67,7 +66,7 @@ under the License.
         <field name="productRating" use-when="${statusId == 'PRR_DELETED'}"><text disabled="true"/></field>
         <field name="productReview" use-when="${statusId != 'PRR_DELETED'}"><textarea/></field>
         <field name="productReview" use-when="${statusId == 'PRR_DELETED'}"><textarea read-only="true"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}" use-when="${statusId != 'PRR_DELETED'}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}" use-when="${statusId != 'PRR_DELETED'}" ><submit button-type="button"/></field>
         <field name="approveAction" widget-style="${styles.link_run_sys} ${styles.action_updatestatus}" use-when="${statusId == 'PRR_PENDING'}">
             <hyperlink target="updateProductReviewStatus" description="${uiLabelMap.FormFieldTitle_approve}" also-hidden="false">
                 <parameter param-name="statusId" value="PRR_APPROVED"/>
@@ -80,5 +79,7 @@ under the License.
                 <parameter param-name="productReviewId" from-field="productReviewId"/>
             </hyperlink>
         </field>
+        <field name="productReviewId"><hidden/></field>
+        
     </form>
 </forms>

@@ -291,3 +291,16 @@
     </#if>
     <#return catName>
 </#function>
+
+<#macro ratingAsStars rating>
+    <#if rating?round &gt; 0>
+        <#list 1..rating?round as star>
+            <i class="${styles.icon} ${styles.icon_prefix}star"></i>
+        </#list>
+    </#if>
+    <#if (5-rating)?round &gt; 0>
+    <#list 1..((5-rating)?round) as star>
+        <i class="${styles.icon} ${styles.icon_prefix}star-o"></i>
+    </#list>
+    </#if>
+</#macro>

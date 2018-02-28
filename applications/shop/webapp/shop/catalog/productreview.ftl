@@ -19,21 +19,23 @@ under the License.
 <#include "component://shop/webapp/shop/catalog/catalogcommon.ftl">
 <#if (requestParameters?has_content && requestParameters.product_id??) || productId?has_content>
   <@section title=uiLabelMap.OrderCustomerReviews>
-      <#if averageRating?? && (averageRating > 0) && numRatings?? && (numRatings > 1)>
           <@row>
-            <@cell small=4 class="+${styles.text_center}">
+            <@cell small=4>
                 <@panel>
-                    <@heading>${uiLabelMap.OrderAverageRating}</@heading>
-                    <div>
-                        <b>${averageRating?string["0.#"]}</b> / 5
+                    <div class="${styles.text_center}">
+                        <@heading>${uiLabelMap.OrderAverageRating}</@heading>
+                        <div>
+                            <b>${(averageRating!0)?string("0.#")}</b> / 5
+                        </div>
+                        <div>
+                            <@ratingAsStars rating=averageRating!0 />
+                        </div>
+                        <small>(${uiLabelMap.CommonFrom} ${numRatings!0} ${uiLabelMap.OrderRatings})</small>
                     </div>
-                    <div>
-                    </div>
-                    <#if numRatings??><small>(${uiLabelMap.CommonFrom} ${numRatings} ${uiLabelMap.OrderRatings})</small></#if>
                 </@panel>
             </@cell>
           </@row>
-      </#if>
+      
       
       <#if productReviews?has_content>
         <@section>
@@ -63,10 +65,9 @@ under the License.
         </@section>
         <hr/>
       </#if>
-      <#if userLogin?has_content>
-          <@row>
-            <@cell>
-      
+      <@row>
+        <@cell>
+          <#if userLogin?has_content>
               <#--<@heading>${uiLabelMap.ProductReviewThisProduct}<@heading> -->
               
               <@form id="reviewProduct" method="post" action=makeOfbizUrl("createProductReview")>
@@ -91,9 +92,11 @@ under the License.
                     
                 </@fieldset>
               </@form>
-            <#-- <@heading>${uiLabelMap.ProductCannotReviewUnKnownProduct}.</@heading>-->
-            </@cell>
-        </@row>
-    </#if>
+                <#-- <@heading>${uiLabelMap.ProductCannotReviewUnKnownProduct}.</@heading>-->
+                <#else>
+                ${uiLabelMap.EcommerceLoggedToPost}
+            </#if>
+        </@cell>
+    </@row>
   </@section>
 </#if>

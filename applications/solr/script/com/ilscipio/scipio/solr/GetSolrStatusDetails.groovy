@@ -45,7 +45,7 @@ addConfigProp = { propName, title=null, label=null ->
 };
 
 addConfigProp("solr.version", "Solr Version");
-addConfigProp("solr.config.version", "Solr Config Version");
+addConfigEntry([name:"solr.config.version.effective", title:"Solr Config Version (Effective)", value:SolrUtil.getSolrConfigVersionStatic()]);
 addConfigProp("solr.core.default", "Default core");
 addConfigEntry([name:"Solr instance URL", value:SolrUtil.makeSolrWebappUrl()]);
 addConfigEntry([name:"Default core URL", value:SolrUtil.makeSolrDefaultCoreUrl()]);
@@ -53,7 +53,7 @@ addConfigProp("solr.eca.enabled", "Solr ECAs enabled");
 
 context.solrConfigs = solrConfigs;
 
-solrConfigVersion = solrConfigs["solr.config.version"]?.value;
+solrConfigVersion = solrConfigs["solr.config.version.effective"]?.value;
 context.solrConfigVersion = solrConfigVersion;
 
 

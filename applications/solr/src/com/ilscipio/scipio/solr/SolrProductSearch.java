@@ -1010,7 +1010,7 @@ public abstract class SolrProductSearch {
         // 2016-03-29: Only if dirty (or unknown)
         Boolean onlyIfDirty = (Boolean) context.get("onlyIfDirty");
         if (onlyIfDirty == null) onlyIfDirty = false;
-        // 2017-08-23: Only if solr.config.version changed
+        // 2017-08-23: Only if effective Solr config version changed
         Boolean ifConfigChange = (Boolean) context.get("ifConfigChange");
         if (ifConfigChange == null) ifConfigChange = false;
         if (onlyIfDirty || ifConfigChange) {

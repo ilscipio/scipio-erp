@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -730,7 +731,7 @@ public class FormRenderer {
 
                 if (hasSepColumns) {
                     boolean cellOpen = false;
-                    Iterator<ModelFormField> innerFormFieldsIt = innerFormFields.iterator();
+                    ListIterator<ModelFormField> innerFormFieldsIt = innerFormFields.listIterator(); // SCIPIO: now listIterator
                     ModelFormField modelFormField = null;
                     while (innerFormFieldsIt.hasNext()) {
                         modelFormField = innerFormFieldsIt.next();
@@ -750,10 +751,39 @@ public class FormRenderer {
                             }
                         }
                         // render field widget
-                        if ((!"list".equals(modelForm.getType()) && !"multi".equals(modelForm.getType()))
-                                || modelFormField.shouldUse(localContext)) {
+                        if ((!"list".equals(modelForm.getType()) && !"multi".equals(modelForm.getType()))) {
                             modelFormField.renderFieldString(writer, localContext, formStringRenderer);
+                        } else {
+                            // SCIPIO: 2018-02-28: for list forms, we could have several fields of same name
+                            // in a row with different use-when expressions. In such case, we must render 
+                            // exactly one cell for all of them (at most one, but one is always required also). 
+                            // We must process the fields having same name as a "batch" here.
+                            List<ModelFormField> sameNameFields = null;
+                            String modelFormFieldName = modelFormField.getName();
+                            if (modelFormFieldName == null) modelFormFieldName = "";
+                            while(innerFormFieldsIt.hasNext()) {
+                                ModelFormField nextField = innerFormFieldsIt.next();
+                                if (modelFormFieldName.equals(nextField.getName())) {
+                                    if (sameNameFields == null) sameNameFields = new ArrayList<>();
+                                    sameNameFields.add(nextField);
+                                } else {
+                                    innerFormFieldsIt.previous();
+                                    break;
+                                }
+                            }
+ 
+                            if (modelFormField.shouldUse(localContext)) {
+                                modelFormField.renderFieldString(writer, localContext, formStringRenderer);
+                            }
+                            if (sameNameFields != null) {
+                                for(ModelFormField sameNameField : sameNameFields) {
+                                    if (sameNameField.shouldUse(localContext)) {
+                                        sameNameField.renderFieldString(writer, localContext, formStringRenderer);
+                                    }
+                                }
+                            }
                         }
+                        
                         if (fieldHasSepColumn) {
                             formStringRenderer.renderFormatItemRowCellClose(writer, localContext, modelForm, modelFormField);
                             cellOpen = false;

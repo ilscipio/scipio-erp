@@ -355,11 +355,16 @@ public final class CallService extends MethodOperation {
             if (methodContext.isTraceOn()) {
                 outputTraceMessage(methodContext, "Service ran successfully. End call-service.");
             }
-            if (methodContext.getMethodType() == MethodContext.EVENT) {
-                methodContext.putEnv(simpleMethod.getEventResponseCodeName(), responseCode);
-            } else {
-                methodContext.putEnv(simpleMethod.getServiceResponseMessageName(), responseCode);
-            }
+            // SCIPIO: 2018-03-01: DO NOT set the responseMessage in the caller context on service success here!!
+            // The method SimpleMethod.exec gives the context field responseMessage the priority over the presence
+            // of error messages, which means if we do this here, then when a successful call-service finishes but an
+            // operation after it causes an error (most of which do NOT update responseMessage but only set error messages), 
+            // the whole simple-method service will return "success" as its response code!
+            //if (methodContext.getMethodType() == MethodContext.EVENT) {
+            //    methodContext.putEnv(simpleMethod.getEventResponseCodeName(), responseCode);
+            //} else {
+            //    methodContext.putEnv(simpleMethod.getServiceResponseMessageName(), responseCode);
+            //}
             return true;
         }
     }

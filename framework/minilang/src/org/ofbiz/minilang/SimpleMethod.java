@@ -481,14 +481,9 @@ public final class SimpleMethod extends MiniLangElement {
                 summaryErrorStringBuffer.append("; ");
                 summaryErrorStringBuffer.append(tempErrorMsgList.toString());
             }
-            String eventMsg = (String) methodContext.getEnv(eventEventMessageName);
-            if (UtilValidate.isNotEmpty(eventMsg)) {
-                methodContext.getRequest().setAttribute("_EVENT_MESSAGE_", eventMsg);
-            }
-            List<String> eventMsgList = UtilGenerics.checkList(methodContext.getEnv(eventEventMessageListName));
-            if (UtilValidate.isNotEmpty(eventMsgList)) {
-                methodContext.getRequest().setAttribute("_EVENT_MESSAGE_LIST_", eventMsgList);
-            }
+            
+            // SCIPIO: 2018-03-01: NOTE: eventMsg handling code that was here is now moved below response check
+            
             response = (String) methodContext.getEnv(eventResponseCodeName);
             if (UtilValidate.isEmpty(response)) {
                 if (forceError) {
@@ -503,6 +498,21 @@ public final class SimpleMethod extends MiniLangElement {
                 response = null;
             }
             returnValue = response;
+            
+            // SCIPIO: 2018-03-01: We now add event/success messages ONLY if no error (messages).
+            // The majority of events/services work under this assumption, and otherwise inappropriate success messages
+            // end up leaking through from use of call-service's default-message and such.
+            // NOTE: It is possible a little flexibility is lost because of this.
+            if (!forceError && !defaultErrorCode.equals(response) && !"error".equals(response)) {
+                String eventMsg = (String) methodContext.getEnv(eventEventMessageName);
+                if (UtilValidate.isNotEmpty(eventMsg)) {
+                    methodContext.getRequest().setAttribute("_EVENT_MESSAGE_", eventMsg);
+                }
+                List<String> eventMsgList = UtilGenerics.checkList(methodContext.getEnv(eventEventMessageListName));
+                if (UtilValidate.isNotEmpty(eventMsgList)) {
+                    methodContext.getRequest().setAttribute("_EVENT_MESSAGE_LIST_", eventMsgList);
+                }
+            }
         } else {
             boolean forceError = false;
             String tempErrorMsg = (String) methodContext.getEnv(serviceErrorMessageName);
@@ -526,14 +536,9 @@ public final class SimpleMethod extends MiniLangElement {
                 summaryErrorStringBuffer.append("; ");
                 summaryErrorStringBuffer.append(errorMsgMap.toString());
             }
-            String successMsg = (String) methodContext.getEnv(serviceSuccessMessageName);
-            if (UtilValidate.isNotEmpty(successMsg)) {
-                methodContext.putResult(ModelService.SUCCESS_MESSAGE, successMsg);
-            }
-            List<Object> successMsgList = UtilGenerics.checkList(methodContext.getEnv(serviceSuccessMessageListName));
-            if (UtilValidate.isNotEmpty(successMsgList)) {
-                methodContext.putResult(ModelService.SUCCESS_MESSAGE_LIST, successMsgList);
-            }
+            
+            // SCIPIO: 2018-03-01: NOTE: successMsg handling code that was here is now moved below response check
+
             response = (String) methodContext.getEnv(serviceResponseMessageName);
             if (UtilValidate.isEmpty(response)) {
                 if (forceError) {
@@ -547,6 +552,21 @@ public final class SimpleMethod extends MiniLangElement {
             }
             methodContext.putResult(ModelService.RESPONSE_MESSAGE, response);
             returnValue = response;
+            
+            // SCIPIO: 2018-03-01: We now add event/success messages ONLY if no error (messages).
+            // The majority of events/services work under this assumption, and otherwise inappropriate success messages
+            // end up leaking through from use of call-service's default-message and such.
+            // NOTE: It is possible a little flexibility is lost because of this.
+            if (!forceError && !defaultErrorCode.equals(response) && !ModelService.RESPOND_ERROR.equals(response) && !ModelService.RESPOND_FAIL.equals(response)) {
+                String successMsg = (String) methodContext.getEnv(serviceSuccessMessageName);
+                if (UtilValidate.isNotEmpty(successMsg)) {
+                    methodContext.putResult(ModelService.SUCCESS_MESSAGE, successMsg);
+                }
+                List<Object> successMsgList = UtilGenerics.checkList(methodContext.getEnv(serviceSuccessMessageListName));
+                if (UtilValidate.isNotEmpty(successMsgList)) {
+                    methodContext.putResult(ModelService.SUCCESS_MESSAGE_LIST, successMsgList);
+                }
+            }
         }
         // decide whether or not to commit based on the response message, ie only rollback if error is returned and not finished
         boolean doCommit = true;

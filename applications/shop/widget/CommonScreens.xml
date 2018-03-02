@@ -19,7 +19,7 @@ under the License.
 -->
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+        xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/widget-screen.xsd">
         
     <!-- SCIPIO: Common settings for other *Screens.xml files in this app that primarily use decorators referenced using parameters.mainDecoratorLocation -->
     <screen-settings name="common-settings"><!-- all settings are currently valid/needed for this file as well, so omit: active="false" -->
@@ -458,14 +458,22 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleLogin"/>
                 <set field="activeMainMenuItem" value="login"/>
+                <set field="tmpUserLogin" value="${groovy: request.getAttribute('tmpUserLogin')}"/>                
                 <script location="component://shop/webapp/shop/WEB-INF/actions/Login.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
+                            <!-- 
+                                SCIPIO: 03/02/2018 extended the check, so if a tmpUserLogin is present and requirePasswordChange equals Y, 
+                                then render the screen
+                            -->
                             <condition>
-                                <if-true field="userHasAccount" />
+                                <or>
+                                    <if-true field="userHasAccount" />
+                                    <if-compare field="tmpUserLogin.requirePasswordChange" value="Y" operator="equals" />
+                                </or>
                             </condition>
                             <widgets>
                                 <platform-specific>

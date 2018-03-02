@@ -785,11 +785,8 @@ public class FormRenderer {
                             }
                         }
                         // render field widget
-                        if (!isListOrMultiForm) {
-                            modelFormField.renderFieldString(writer, localContext, formStringRenderer);
-                        } else {
-                            renderItemRowCellFields(writer, localContext, formStringRenderer, modelFormField, innerFormFieldsIt);
-                        }
+                        // SCIPIO: 2018-03-02: factored out for possible need to reuse
+                        renderItemRowCellFields(writer, localContext, formStringRenderer, modelFormField, innerFormFieldsIt, !isListOrMultiForm);
                         
                         if (fieldHasSepColumn) {
                             formStringRenderer.renderFormatItemRowCellClose(writer, localContext, modelForm, modelFormField);
@@ -896,10 +893,9 @@ public class FormRenderer {
      * Added 2018-03-02.
      */
     private void renderItemRowCellFields(Appendable writer, Map<String, Object> localContext, FormStringRenderer formStringRenderer, 
-            ModelFormField modelFormField, ListIterator<ModelFormField> formFieldsIt) throws IOException {
+            ModelFormField modelFormField, ListIterator<ModelFormField> formFieldsIt, boolean forceUse) throws IOException {
         List<ModelFormField> sameNameFields = null;
         String modelFormFieldName = modelFormField.getName();
-        if (modelFormFieldName == null) modelFormFieldName = "";
         while(formFieldsIt.hasNext()) {
             ModelFormField nextField = formFieldsIt.next();
             if (modelFormFieldName.equals(nextField.getName())) {
@@ -911,12 +907,12 @@ public class FormRenderer {
             }
         }
 
-        if (modelFormField.shouldUse(localContext)) {
+        if (forceUse || modelFormField.shouldUse(localContext)) {
             modelFormField.renderFieldString(writer, localContext, formStringRenderer);
         }
         if (sameNameFields != null) {
             for(ModelFormField sameNameField : sameNameFields) {
-                if (sameNameField.shouldUse(localContext)) {
+                if (forceUse || sameNameField.shouldUse(localContext)) {
                     sameNameField.renderFieldString(writer, localContext, formStringRenderer);
                 }
             }

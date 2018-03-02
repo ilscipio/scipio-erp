@@ -502,7 +502,7 @@ public final class SimpleMethod extends MiniLangElement {
             // SCIPIO: 2018-03-01: We now add event/success messages ONLY if no error (messages).
             // The majority of events/services work under this assumption, and otherwise inappropriate success messages
             // end up leaking through from use of call-service's default-message and such.
-            // NOTE: It is possible a little flexibility is lost because of this.
+            // NOTE: It is possible a little flexibility is lost because of this; see simple-methods-v2.xsd for more info (event-event-message-name[-list]).
             if (!forceError && !defaultErrorCode.equals(response) && !"error".equals(response)) {
                 String eventMsg = (String) methodContext.getEnv(eventEventMessageName);
                 if (UtilValidate.isNotEmpty(eventMsg)) {
@@ -556,7 +556,7 @@ public final class SimpleMethod extends MiniLangElement {
             // SCIPIO: 2018-03-01: We now add event/success messages ONLY if no error (messages).
             // The majority of events/services work under this assumption, and otherwise inappropriate success messages
             // end up leaking through from use of call-service's default-message and such.
-            // NOTE: It is possible a little flexibility is lost because of this.
+            // NOTE: It is possible a little flexibility is lost because of this; see simple-methods-v2.xsd for more info (service-success-message-name[-list]).
             if (!forceError && !defaultErrorCode.equals(response) && !ModelService.RESPOND_ERROR.equals(response) && !ModelService.RESPOND_FAIL.equals(response)) {
                 String successMsg = (String) methodContext.getEnv(serviceSuccessMessageName);
                 if (UtilValidate.isNotEmpty(successMsg)) {

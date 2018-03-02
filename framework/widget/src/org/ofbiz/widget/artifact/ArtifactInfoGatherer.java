@@ -396,6 +396,10 @@ public final class ArtifactInfoGatherer implements ModelWidgetVisitor, ModelActi
         }
 
         @Override
+        public void visit(ModelFormField field) throws Exception { // SCIPIO: added 2018-03-02
+        }
+        
+        @Override
         public void visit(CheckField checkField) {
         }
 

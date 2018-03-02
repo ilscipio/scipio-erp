@@ -920,7 +920,20 @@ public class ModelFormField implements Serializable {
             throw new IllegalArgumentException(errMsg);
         }
     }
-
+    
+    @Override
+    public String toString() { // SCIPIO: added 2018-03-02 (debugging help)
+        StringBuilder sb = new StringBuilder();
+        ModelFieldVisitor visitor = new XmlWidgetFieldVisitor(sb);
+        try {
+            visitor.visit(this);
+        } catch (Exception e) {
+            Debug.logWarning(e, "Exception thrown in XmlWidgetFieldVisitor: ", module);
+        }
+        return sb.toString();
+    }
+    
+    
     /**
      * Models the &lt;auto-complete&gt; element.
      * 

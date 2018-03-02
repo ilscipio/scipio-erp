@@ -52,7 +52,8 @@ under the License.
             <@cell small=10>
                     <blockquote class="blockquote">
                         <div class="rating">
-                            <strong>${uiLabelMap.OrderRanking}: ${productReview.productRating!?string}</strong>
+                            <strong>${uiLabelMap.OrderRanking}: <@ratingAsStars rating=productReview.productRating!0 /> (${productReview.productRating!?string} / 5)</strong>
+                            
                         </div>
                         <#if productReview.productReview?has_content>
                             <p>${productReview.productReview!}</p>

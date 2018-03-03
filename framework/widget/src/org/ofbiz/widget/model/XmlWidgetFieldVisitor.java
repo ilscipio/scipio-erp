@@ -60,6 +60,16 @@ public class XmlWidgetFieldVisitor extends XmlAbstractWidgetVisitor implements M
     }
 
     @Override
+    public void visit(ModelFormField field) throws Exception { // SCIPIO: added 2018-03-02
+        if (field.getFieldInfo() != null) {
+            field.getFieldInfo().accept(this);
+        } else {
+            visitModelField(field);
+            writer.append("</field>");
+        }
+    }
+    
+    @Override
     public void visit(CheckField checkField) throws Exception {
         visitModelField(checkField.getModelFormField());
         writer.append("<check");

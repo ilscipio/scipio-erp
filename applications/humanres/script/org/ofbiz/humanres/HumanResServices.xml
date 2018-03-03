@@ -154,7 +154,8 @@
         <create-value value-field="newEntity"/>
         <check-errors/>
         <property-to-field resource="HumanResUiLabels" property="HumanResLeaveCreationSuccess" field="successMessage"/>
-        <field-to-result field="responseMessage" result-name="successMessage"/>
+        <!-- SCIPIO: 2018-03-01: this unnecessary and inappropriate use of reserved field name
+        <field-to-result field="responseMessage" result-name="successMessage"/>-->
     </simple-method>
 
     <simple-method method-name="getCurrentPartyEmploymentData" short-description="Get all current employment information for a certain partyId">

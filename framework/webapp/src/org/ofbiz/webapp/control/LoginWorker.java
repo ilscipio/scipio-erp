@@ -574,6 +574,8 @@ public class LoginWorker {
             // check to see if a password change is required for the user
             Map<String, Object> userLoginSession = checkMap(result.get("userLoginSession"), String.class, Object.class);
             if (userLogin != null && "Y".equals(userLogin.getString("requirePasswordChange"))) {
+            	// SCIPIO: 03/02/2018 added the userLogin as a tmpUserLogin in requestAttributes so we can extend the check in the screens
+            	request.setAttribute("tmpUserLogin", userLogin);
                 return "requirePasswordChange";
             }
             String autoChangePassword = EntityUtilProperties.getPropertyValue("security.properties", "user.auto.change.password.enable", "false", delegator);

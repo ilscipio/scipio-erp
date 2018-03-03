@@ -932,7 +932,7 @@ under the License.
             <actions>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="TOP" />
-                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="reviews"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="productReviews"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">

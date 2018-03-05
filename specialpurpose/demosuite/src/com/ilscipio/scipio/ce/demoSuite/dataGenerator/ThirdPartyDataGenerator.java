@@ -18,7 +18,7 @@ public abstract class ThirdPartyDataGenerator<T extends DemoDataObject> {
         properties = UtilProperties.getProperties("demosuite.properties");
     }
 
-    protected abstract List<T> retrieveData(Integer count);
+    protected abstract List<T> retrieveData(Integer count, String api);
 
     abstract List<T> handleData(String result, String format);
 
@@ -26,16 +26,19 @@ public abstract class ThirdPartyDataGenerator<T extends DemoDataObject> {
 
     protected abstract class DataGeneratorSettings extends HashMap<String, Object> {
         private static final long serialVersionUID = -8549187859117423507L;
-        private String method;
-        private URL url;
+        private final String method;
+
+        private final URL url;
 
         public DataGeneratorSettings() {
             try {
-                url = new URL(properties.getProperty("demosuite.test.data.provider." + getDataGeneratorName() + ".url"));
+                this.url = new URL(properties.getProperty("demosuite.test.data.provider." + getDataGeneratorName() + ".url"));
             } catch (MalformedURLException e) {
                 throw new RuntimeException(e);
             }
-            method = properties.getProperty("demosuite.test.data.provider." + getDataGeneratorName() + ".method");
+
+            this.method = properties.getProperty("demosuite.test.data.provider." + getDataGeneratorName() + ".method");
+
         }
 
         public String getMethod() {

@@ -43,7 +43,7 @@ public class DatabaseTestDataDataGenerator<T extends DemoDataObject> extends Thi
     }
 
     @Override
-    protected List<T> retrieveData(Integer count) {
+    protected List<T> retrieveData(Integer count, String api) {
         HttpClient httpClient = new HttpClient();
         DatabaseTestDataSettings settings = new DatabaseTestDataSettings();
         String format = properties.getProperty("demosuite.test.data.provider." + getDataGeneratorName() + ".exportFormat");

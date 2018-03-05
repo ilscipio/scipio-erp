@@ -24,7 +24,7 @@ public class PartyData extends DataGeneratorGroovyBaseScript {
         Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - PARTY DATA-=-=-=-", "");
     }
     
-    final String DEFAULT_USER_LOGIN_PWD = "ofbiz";
+    final String DEFAULT_USER_LOGIN_PWD = "scipio";
     
     // PartyTypeIds
     final List<String> partyTypeIds = [
@@ -38,10 +38,10 @@ public class PartyData extends DataGeneratorGroovyBaseScript {
         "PARTY_ENABLED"
     ]
     
-    public void init() {
-        int num = getNumRecordsToBeGenerated();
+    public void init() {        
         List<DemoDataPerson> generatedPersons = DemoSuiteDataWorker.generatePerson(num, MockarooDataGenerator.class);
         List<DemoDataUserLogin> generatedUserLogins = DemoSuiteDataWorker.generateUserLogin(num, MockarooDataGenerator.class);
+        setNumRecordsToBeGenerated(generatedPersons.size());
         List<GenericValue> roleTypeIds = from("RoleType").cache(false).queryList();
         context.generatedPersons = generatedPersons;
         context.generatedUserLogins = generatedUserLogins;

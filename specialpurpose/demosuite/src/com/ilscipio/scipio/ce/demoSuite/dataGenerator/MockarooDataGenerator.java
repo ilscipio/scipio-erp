@@ -14,6 +14,7 @@ import org.ofbiz.base.lang.JSON;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.HttpClient;
 import org.ofbiz.base.util.HttpClientException;
+import org.ofbiz.base.util.UtilProperties;
 
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataAddress;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject;
@@ -34,24 +35,28 @@ public class MockarooDataGenerator<T extends DemoDataObject> extends ThirdPartyD
     }
 
     @Override
-    protected List<T> retrieveData(Integer count) {
+    protected List<T> retrieveData(Integer count, String api) {
         HttpClient httpClient = new HttpClient();
         MockarooSettings settings = new MockarooSettings();
         String format = properties.getProperty("demosuite.test.data.provider." + getDataGeneratorName() + ".exportFormat");
-        String url = properties.getProperty("demosuite.test.data.provider." + getDataGeneratorName() + ".url") + format + "?key="
-                + settings.getQueryParameters().get("key");
+        StringBuilder url = new StringBuilder(settings.getUrl().toString());
+        url.append(properties.getProperty("demosuite.test.data.provider." + getDataGeneratorName() + ".api." + api));
+        url.append("." + format);
+        url.append("?key=" + settings.getQueryParameters().get("key"));
+        url.append("&count=" + count + "&array=true");
         httpClient.setContentType("application/json");
-        httpClient.setUrl(url + "&count=" + count + "&array=true");
-        ListToJSON listJsonConverter = new JSONConverters.ListToJSON();
-        try {
-            JSON json = listJsonConverter.convert(settings.getFields());
-            Debug.log(json.toString());
-            httpClient.setRawStream(json.toString());
-        } catch (ConversionException e1) {
-            Debug.logError(e1.getMessage(), "");
-        }
+        httpClient.setUrl(url.toString());
+//        ListToJSON listJsonConverter = new JSONConverters.ListToJSON();
+//        try {
+//            JSON json = listJsonConverter.convert(settings.getFields());
+//            Debug.log(json.toString());
+//            httpClient.setRawStream(json.toString());
+//        } catch (ConversionException e1) {
+//            Debug.logError(e1.getMessage(), "");
+//        }
 
         try {
+            httpClient.setAllowUntrusted(true);
             String r = httpClient.sendHttpRequest(settings.getMethod());
             return handleData(r, format);
 
@@ -68,10 +73,14 @@ public class MockarooDataGenerator<T extends DemoDataObject> extends ThirdPartyD
     public class MockarooSettings extends DataGeneratorSettings {
         private static final long serialVersionUID = 5626474670087711771L;
 
-        private HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        private final HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+//        private final Map<String, Map<String, Object>> schemas;
 
         public MockarooSettings() {
             queryParameters.put("key", properties.get("demosuite.test.data.provider." + getDataGeneratorName() + ".key"));
+//            Map<String, Map<String, Object>> schemas = new HashMap<>();
+//            UtilProperties.extractPropertiesWithPrefixAndId(schemas, properties, "demosuite.test.data.provider." + getDataGeneratorName() + ".api.");
+//            this.schemas = schemas;
         }
 
         // @Override
@@ -177,6 +186,10 @@ public class MockarooDataGenerator<T extends DemoDataObject> extends ThirdPartyD
             }
             return fields;
         }
+
+//        public Map<String, Map<String, Object>> getSchemas() {
+//            return schemas;
+//        }
 
     }
 

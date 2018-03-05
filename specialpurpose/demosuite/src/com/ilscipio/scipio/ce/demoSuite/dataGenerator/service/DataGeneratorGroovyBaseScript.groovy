@@ -24,6 +24,8 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
     private List<Map<String, DataGeneratorStat>> dataGeneratorStats;
     private int totalFailed = 0;
     private int totalStored = 0;
+    
+    private int numRecords = DATA_GENERATOR_MAX_RECORDS;
 
     DataGeneratorGroovyBaseScript() {
         dataGeneratorStats = FastList.newInstance();
@@ -74,12 +76,13 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
      * that max value is taken instead.
      * @return
      */
-    public int getNumRecordsToBeGenerated() {
-        Integer num = DATA_GENERATOR_MAX_RECORDS;
-        if (context.num && context.num < num)
-            num = context.num;
-        return num;
+    public void setNumRecordsToBeGenerated(numRecords) {
+        this.numRecords = numRecords;
     }
+    
+    
+    
+    
 
     /**
      * The method that extended classes must override in order to prepare the data to be generated. 
@@ -101,8 +104,7 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
     def Map run() {
         try {
             sanitizeDates();
-            init();
-            int numRecords = getNumRecordsToBeGenerated();
+            init();            
             for (int i = 0; i < numRecords; i++) {
                 List toBeStored = prepareData(i);
                 if (toBeStored)

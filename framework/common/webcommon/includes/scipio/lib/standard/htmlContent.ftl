@@ -1034,9 +1034,13 @@ Since this is very foundation specific, this function may be dropped in future i
 
   * Parameters *
     type                   = ((string) price|description|title|button|ribbon, default:-empty-)
+    class                   = ((css-class)) CSS classes 
+                              Supports prefixes (see #compileClassArg for more info):
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
 -->
 <#assign pli_defaultArgs = {
-  "type":"", "passArgs":{}
+   "class":"","type":"", "passArgs":{}
 }>
 <#macro pli args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.pli_defaultArgs)>
@@ -1049,22 +1053,28 @@ Since this is very foundation specific, this function may be dropped in future i
 <#macro pli_markup type="" origArgs={} passArgs={} catchArgs...>
   <#switch type>
     <#case "price">
-      <li class="${styles.pricing_price!}"><#nested></li>
+      <#local class = addClassArg(class, styles.pricing_price!)>
+      <li class="${class}"><#nested></li>
     <#break>
     <#case "ribbon">
-      <li class="${styles.pricing_ribbon!}"><span><#nested></span></li>
+      <#local class = addClassArg(class, styles.pricing_ribbon!)>
+      <li class="${class}"><span><#nested></span></li>
     <#break>
     <#case "description">
-      <li class="${styles.pricing_description!}"><#nested></li>
+      <#local class = addClassArg(class, styles.pricing_description!)>
+      <li class="${class!}"><#nested></li>
     <#break>
     <#case "title">
-      <li class="${styles.pricing_title!}"><#nested></li>
+      <#local class = addClassArg(class, styles.pricing_title!)>
+      <li class="${class!}"><#nested></li>
     <#break>
     <#case "button">
-      <li class="${styles.pricing_cta!}"><#nested></li>
+      <#local class = addClassArg(class, styles.pricing_cta!)>
+      <li class="${class!}"><#nested></li>
     <#break>        
     <#default>
-      <li class="${styles.pricing_bullet!}"><#nested></li>
+      <#local class = addClassArg(class, styles.pricing_bullet!)>
+      <li class="${class!}"><#nested></li>
     <#break>
   </#switch>
 </#macro>

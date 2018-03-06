@@ -1046,35 +1046,35 @@ Since this is very foundation specific, this function may be dropped in future i
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.pli_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@pli_markup type=type origArgs=origArgs passArgs=passArgs><#nested></@pli_markup>
+  <@pli_markup type=type class=class origArgs=origArgs passArgs=passArgs><#nested></@pli_markup>
 </#macro>
 
 <#-- @pli main markup - theme override -->
-<#macro pli_markup type="" origArgs={} passArgs={} catchArgs...>
+<#macro pli_markup type="" class="" origArgs={} passArgs={} catchArgs...>
   <#switch type>
     <#case "price">
       <#local class = addClassArg(class, styles.pricing_price!)>
-      <li class="${class}"><#nested></li>
+      <li <@compiledClassAttribStr class=class />><#nested></li>
     <#break>
     <#case "ribbon">
       <#local class = addClassArg(class, styles.pricing_ribbon!)>
-      <li class="${class}"><span><#nested></span></li>
+      <li <@compiledClassAttribStr class=class />><span><#nested></span></li>
     <#break>
     <#case "description">
       <#local class = addClassArg(class, styles.pricing_description!)>
-      <li class="${class!}"><#nested></li>
+      <li <@compiledClassAttribStr class=class />><#nested></li>
     <#break>
     <#case "title">
       <#local class = addClassArg(class, styles.pricing_title!)>
-      <li class="${class!}"><#nested></li>
+      <li <@compiledClassAttribStr class=class />><#nested></li>
     <#break>
     <#case "button">
       <#local class = addClassArg(class, styles.pricing_cta!)>
-      <li class="${class!}"><#nested></li>
+      <li <@compiledClassAttribStr class=class />><#nested></li>
     <#break>        
     <#default>
       <#local class = addClassArg(class, styles.pricing_bullet!)>
-      <li class="${class!}"><#nested></li>
+      <li <@compiledClassAttribStr class=class />><#nested></li>
     <#break>
   </#switch>
 </#macro>

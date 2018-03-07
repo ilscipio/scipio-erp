@@ -375,15 +375,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         };
     
         jQuery("#${escapeVal(displayInputId, 'js')}").change(function() {
-          <#if dateType == "timestamp">
-            jQuery("#${escapeVal(inputId, 'js')}").val(convertToDateTimeNorm(dateI18nToNorm(this.value)));
-          <#elseif dateType == "date">
-            jQuery("#${escapeVal(inputId, 'js')}").val(convertToDateNorm(dateI18nToNorm(this.value)));
-          <#elseif dateType == "time">
-            jQuery("#${escapeVal(inputId, 'js')}").val(convertToTimeNorm(dateI18nToNorm(this.value)));
-          <#elseif dateType == "month">
-            jQuery("#${escapeVal(inputId, 'js')}").val(convertToMonthNorm(dateI18nToNorm(this.value)));
-          </#if>
+            jQuery("#${escapeVal(inputId, 'js')}").val(convertToDateTypeNorm("${escapeVal(dateType, 'js')}", dateI18nToNorm(this.value)));
         });
         
       <#if dateType == "time">
@@ -397,12 +389,8 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
             oldDate = dateI18nToNorm(jQuery("#${escapeVal(displayInputId, 'js')}").val());
         };
         var onFDateChange = function(ev) {
-          <#if dateDisplayType == "timestamp">
-            jQuery("#${escapeVal(displayInputId, 'js')}").val(dateNormToI18n(convertToDateTimeNorm(dateI18nToNorm(jQuery("#${escapeVal(displayInputId, 'js')}").val()), oldDate)));
-          <#elseif dateDisplayType == "date">
-            jQuery("#${escapeVal(displayInputId, 'js')}").val(dateNormToI18n(convertToDateNorm(dateI18nToNorm(jQuery("#${escapeVal(displayInputId, 'js')}").val()), oldDate)));
-          <#elseif dateDisplayType == "month">
-            jQuery("#${escapeVal(displayInputId, 'js')}").val(dateNormToI18n(convertToMonthNorm(dateI18nToNorm(jQuery("#${escapeVal(displayInputId, 'js')}").val()), oldDate)));
+          <#if dateDisplayType != "time">
+            jQuery("#${escapeVal(displayInputId, 'js')}").val(dateNormToI18n(convertToDateTypeNorm("${escapeVal(dateDisplayType, 'js')}", dateI18nToNorm(jQuery("#${escapeVal(displayInputId, 'js')}").val()), oldDate)));
           </#if>
         };
         

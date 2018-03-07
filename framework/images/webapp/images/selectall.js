@@ -1275,3 +1275,37 @@ function convertToMonthNorm(date, fillerDate) {
     }
     return result;
 }
+
+/**
+ * Scipio: Transforms or truncates a date into normalized format using specified dateType.
+ */
+function convertToDateTypeNorm(dateType, date) {
+    if (dateType == "timestamp") {
+        return convertToDateTimeNorm(date);
+    } else if (dateType == "date") {
+        return convertToDateNorm(date);
+    } else if (dateType == "time") {
+        return convertToTimeNorm(date);
+    } else if (dateType == "month") {
+        return convertToMonthNorm(date);
+    } else {
+        return null;
+    }
+}
+
+/**
+ * Scipio: Common implementation of date field display type to internal normalized type conversion.
+ */
+function convertDateDisplayToNormCommon(normType, date) {
+    return date;
+}
+
+/**
+ * Scipio: Common implementation of date field internal normalized type to internal normalized type conversion.
+ */
+function convertDateNormToDisplayCommon(dateType, date) {
+    return date;
+}
+
+
+

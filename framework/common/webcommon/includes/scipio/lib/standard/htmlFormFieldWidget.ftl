@@ -390,7 +390,8 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         };
         var onFDateChange = function(ev) {
           <#if dateDisplayType != "time">
-            jQuery("#${escapeVal(displayInputId, 'js')}").val(dateNormToI18n(convertToDateTypeNorm("${escapeVal(dateDisplayType, 'js')}", dateI18nToNorm(jQuery("#${escapeVal(displayInputId, 'js')}").val()), oldDate)));
+            var normDate = convertToDateTypeNorm("${escapeVal(dateDisplayType, 'js')}", dateI18nToNorm(jQuery("#${escapeVal(displayInputId, 'js')}").val()), oldDate);
+            jQuery("#${escapeVal(displayInputId, 'js')}").val(dateNormToI18n(normDate));
           </#if>
         };
         

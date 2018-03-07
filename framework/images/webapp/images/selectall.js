@@ -1279,15 +1279,15 @@ function convertToMonthNorm(date, fillerDate) {
 /**
  * Scipio: Transforms or truncates a date into normalized format using specified dateType.
  */
-function convertToDateTypeNorm(dateType, date) {
+function convertToDateTypeNorm(dateType, date, fillerDate) {
     if (dateType == "timestamp") {
-        return convertToDateTimeNorm(date);
+        return convertToDateTimeNorm(date, fillerDate);
     } else if (dateType == "date") {
-        return convertToDateNorm(date);
+        return convertToDateNorm(date, fillerDate);
     } else if (dateType == "time") {
-        return convertToTimeNorm(date);
+        return convertToTimeNorm(date, fillerDate);
     } else if (dateType == "month") {
-        return convertToMonthNorm(date);
+        return convertToMonthNorm(date, fillerDate);
     } else {
         return null;
     }

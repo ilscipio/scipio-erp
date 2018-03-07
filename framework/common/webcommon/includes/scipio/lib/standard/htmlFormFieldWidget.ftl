@@ -357,6 +357,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <#local fdatepickerOptions>{format:"${escapeVal(dateFormatPicker, 'js')}" <#rt/>
     <#if dateDisplayType == "month">, startView: "year", minView: "year"</#if><#t/>
     , forceParse:false}</#local><#lt/><#--redundant, don't do this here: format:"yyyy-mm-dd", -->
+  <#local inputCorrect = true>
   <@script htmlwrap=htmlwrap>
     $(function() {
 
@@ -391,7 +392,9 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         var onFDateChange = function(ev) {
           <#if dateDisplayType != "time">
             var normDate = dateI18nToNorm(jQuery("#${escapeVal(displayInputId, 'js')}").val());
+            <#if inputCorrect>
             jQuery("#${escapeVal(displayInputId, 'js')}").val(dateNormToI18n(convertToDateTypeNorm("${escapeVal(dateDisplayType, 'js')}", normDate, oldDate)));
+            </#if>
             <#-- 2018-03-06: in case change event is not triggered above, assign this now -->
             jQuery("#${escapeVal(inputId, 'js')}").val(convertToDateTypeNorm("${escapeVal(dateDisplayType, 'js')}", normDate));
           </#if>

@@ -1034,37 +1034,47 @@ Since this is very foundation specific, this function may be dropped in future i
 
   * Parameters *
     type                   = ((string) price|description|title|button|ribbon, default:-empty-)
+    class                   = ((css-class)) CSS classes 
+                              Supports prefixes (see #compileClassArg for more info):
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
 -->
 <#assign pli_defaultArgs = {
-  "type":"", "passArgs":{}
+   "class":"","type":"", "passArgs":{}
 }>
 <#macro pli args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.pli_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@pli_markup type=type origArgs=origArgs passArgs=passArgs><#nested></@pli_markup>
+  <@pli_markup type=type class=class origArgs=origArgs passArgs=passArgs><#nested></@pli_markup>
 </#macro>
 
 <#-- @pli main markup - theme override -->
-<#macro pli_markup type="" origArgs={} passArgs={} catchArgs...>
+<#macro pli_markup type="" class="" origArgs={} passArgs={} catchArgs...>
   <#switch type>
     <#case "price">
-      <li class="${styles.pricing_price!}"><#nested></li>
+      <#local class = addClassArg(class, styles.pricing_price!)>
+      <li <@compiledClassAttribStr class=class />><#nested></li>
     <#break>
     <#case "ribbon">
-      <li class="${styles.pricing_ribbon!}"><span><#nested></span></li>
+      <#local class = addClassArg(class, styles.pricing_ribbon!)>
+      <li <@compiledClassAttribStr class=class />><span><#nested></span></li>
     <#break>
     <#case "description">
-      <li class="${styles.pricing_description!}"><#nested></li>
+      <#local class = addClassArg(class, styles.pricing_description!)>
+      <li <@compiledClassAttribStr class=class />><#nested></li>
     <#break>
     <#case "title">
-      <li class="${styles.pricing_title!}"><#nested></li>
+      <#local class = addClassArg(class, styles.pricing_title!)>
+      <li <@compiledClassAttribStr class=class />><#nested></li>
     <#break>
     <#case "button">
-      <li class="${styles.pricing_cta!}"><#nested></li>
+      <#local class = addClassArg(class, styles.pricing_cta!)>
+      <li <@compiledClassAttribStr class=class />><#nested></li>
     <#break>        
     <#default>
-      <li class="${styles.pricing_bullet!}"><#nested></li>
+      <#local class = addClassArg(class, styles.pricing_bullet!)>
+      <li <@compiledClassAttribStr class=class />><#nested></li>
     <#break>
   </#switch>
 </#macro>

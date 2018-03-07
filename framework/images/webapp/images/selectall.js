@@ -1289,21 +1289,32 @@ function convertToDateTypeNorm(dateType, date, fillerDate) {
     } else if (dateType == "month") {
         return convertToMonthNorm(date, fillerDate);
     } else {
-        return null;
+        return date;
     }
 }
 
 /**
  * Scipio: Common implementation of date field display type to internal normalized type conversion.
  */
-function convertDateDisplayToNormCommon(normType, date) {
-    return date;
+function convertFieldDateDisplayToNorm(dateType, date) {
+    if (dateType == "timestamp") {
+        return moment(date).format('YYYY-MM-DD HH:mm:ss.SSS');
+    } else if (dateType == "date") {
+        return moment(date).format('YYYY-MM-DD');
+    } else if (dateType == "time") {
+        return moment(date).format('HH:mm:ss.SSS');
+    } else if (dateType == "month") {
+        return moment(date).format('YYYY-MM');
+    } else {
+        return date;
+    }
 }
 
 /**
  * Scipio: Common implementation of date field internal normalized type to internal normalized type conversion.
+ * NOTE: this uses moment.js notation (YYYY-MM-DD HH:mm:ss).
  */
-function convertDateNormToDisplayCommon(dateType, date) {
+function convertFieldDateNormToDisplay(format, date) {
     return date;
 }
 

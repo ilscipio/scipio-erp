@@ -396,7 +396,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
             jQuery("#${escapeVal(displayInputId, 'js')}").val(dateNormToI18n(convertToDateTypeNorm("${escapeVal(dateDisplayType, 'js')}", normDate, oldDate)));
             </#if>
             <#-- 2018-03-06: in case change event is not triggered above, assign this now -->
-            jQuery("#${escapeVal(inputId, 'js')}").val(convertToDateTypeNorm("${escapeVal(dateDisplayType, 'js')}", normDate));
+            jQuery("#${escapeVal(inputId, 'js')}").val(convertToDateTypeNorm("${escapeVal(dateType, 'js')}", normDate));
           </#if>
         };
         

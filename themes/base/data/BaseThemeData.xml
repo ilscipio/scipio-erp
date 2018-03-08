@@ -104,8 +104,9 @@ under the License.
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/foundation/js/foundation/foundation.offcanvas.js" sequenceId="13"/>
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/foundation-datepicker/js/foundation-datepicker.js" sequenceId="14"/>
     <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/datatables/datatables.min.js" sequenceId="15"/>
-    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/js/app.js" sequenceId="16"/>
-    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/jstree/dist/jstree.min.js" sequenceId="17"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/moment/min/moment.min.js" sequenceId="16"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/js/app.js" sequenceId="17"/>
+    <VisualThemeResource visualThemeId="BASE" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/jstree/dist/jstree.min.js" sequenceId="18"/>
     
     <!-- ADD-ONS -->
     <!-- Uncomment for additional library options

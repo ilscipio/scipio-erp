@@ -99,6 +99,9 @@
         <@pli>
            ${productImage}
         </@pli>
+        <@pli class="+${styles.text_center}">
+            <@ratingAsStars rating=averageRating!0 />
+        </@pli>
         <#if productDescription?has_content>
         <@pli type="description">
             ${productDescription!""}       

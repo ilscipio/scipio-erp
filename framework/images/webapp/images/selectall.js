@@ -1123,13 +1123,209 @@ function submitPaginationPostForm(obj, url) {
 }
 
 /**
- * Scipio: Transforms a partial date into a normalized date-time/timestamp value (yyyy-MM-dd HH:mm:ss.SSS), optionally
- * completing the unspecified parts with a filler date.
- * It will also truncate.
- * NOTE: Normalized means the value can be submitted by form to service and entity update code.
- * TODO?: this is currently somewhat hardcoded; should follow sys timestamp format and/or use Date js class?
- * TODO: this currently only supports date as YYYY-mm-DD or prefix of a full timestamp value. should support more.
- * TODO: more robust and user-friendly date handling
+ * SCIPIO: Helper for date fields, each field new instance.
+ * Date formats are in moment.js format (e.g. YYYY-MM-DD HH:mm:ss.SSS).
+ */
+function ScpFieldDateHelper(options) {
+    var sfdh = this;
+    var opts = options ? $.extend({}, options) : {};
+
+    //opts.displayInputId = options.displayInputId;
+    //opts.inputId = options.inputId;
+    opts.displayCorrect = (options.displayCorrect !== false); // default true: stock scipio base/metro (sane)
+    opts.displayItrnFmt = (options.displayItrnFmt !== false); // default true: stock scipio base/metro (sane)
+    opts.useFillDate = (options.useFillDate === true); // default false: mostly for fdatepicker
+                                                       // should be false if displayCorrect or displayItrnFmt false
+    opts.clearDispOnError = (options.clearDispOnError === true); // (default: false) if true and parse error, display input is cleared (hidden always cleared)
+    //opts.dateFmt = options.dateFmt;
+    //opts.dateDisplayFmt = options.dateDisplayFmt;
+    
+    this.opts = opts; // for subclasses
+    this.oldDate = '';
+
+    // inFmts is array of date format strings passed as moment(date, format) to read
+    // from display field and avoid the moment(date) call - see dateCommonToNorm and dateToFmt.
+    // by default we'll set the internal and display formats for the field, should
+    // 'just work' in most cases.
+    if (typeof opts.inFmts === 'undefined') opts.inFmts = [opts.dateFmt, opts.dateDisplayFmt];
+    
+    
+    // CORE HELPERS
+    
+    this.isDate = function(obj) {
+        return moment.isMoment(obj);
+    };
+    
+    /**
+     * Converts date to format fmt.
+     * NOTE: srcFmt should not be omitted - if omitted, 
+     * the non-cross-platform-compapatible moment(date) call is done instead,
+     * which is recommended against - see moment.js docs.
+     */
+    this.dateToFmt = function(fmt, date, srcFmt) {
+        if (fmt) {
+            var mDate = sfdh.parseDate(date, srcFmt);
+            if (mDate.isValid()) return mDate.format(fmt);
+        }
+        return null;
+    };
+    this.parseDateOrNull = function(date, srcFmt) {
+        var mDate = sfdh.parseDate(date, srcFmt);
+        if (mDate.isValid()) return mDate;
+        else return null;
+    };
+    this.parseDate = function(date, srcFmt) {
+        if (sfdh.isDate(date)) return date;
+        else if (srcFmt) return moment(date, srcFmt);
+        else return moment(date); // non-cross-browser-compatible
+    };
+    
+    /**
+     * Fills the date by the trailing digits of fillDate, if the formats are compatible.
+     * This is a BASIC fill only, such that the fmt must be substring of fillFmt.
+     * If not doable, returns date as-is.
+     * If present, fillDate is assumed to be valid and match fillFmt (usually comes from internal pre-converted).
+     * TODO: this could be done with more complex support for differing formats of fmt and fillFmt, but very complex.
+     */
+    this.fillDateFmt = function(fmt, date, fillFmt, fillDate) {
+        // FIXME?: if date is already moment, we could be losing info here by using fmt instead of fillFmt...
+        // but using fillFmt would prevent this from running entirely...
+        if (sfdh.isDate(date) && fmt) date = date.format(fmt);
+        if (sfdh.isDate(fillDate) && fillFmt) fillDate = fillDate.format(fillFmt);
+        if (fmt && fillFmt && fillDate && (fillDate.length > date.length) && (fillFmt.lastIndexOf(fmt, 0) === 0)) {
+            // guard against user input, whereas fillDate assumed to be valid (internal)
+            var targetFmt = (date.length >= fillFmt.length) ? fillFmt : fillFmt.substring(0, date.length);
+            var mDate = moment(date, targetFmt); // strict
+            if (mDate.isValid()) {
+                date = mDate.format(targetFmt); // make sure
+                if (fillDate.length > date.length) {
+                    return date + fillDate.substr(date.length);
+                }
+            }
+        }
+        return date;
+    };
+    
+    
+    // COMMON FIELD EVENT HANDLERS - can be overridden
+    
+    /**
+     * Parse any date format associated with this field to a Moment.
+     * If already a moment returns as-is. May return null.
+     */
+    this.dateCommonParse = function(date) {
+        return sfdh.parseDateOrNull(date, opts.inFmts);
+    };
+    
+    /**
+     * Converts date (string or moment) to normalized internal/hidden format (e.g. timestamp). May return null.
+     * Input can be c
+     */
+    this.dateCommonToNorm = function(date) {
+        return sfdh.dateToFmt(opts.dateFmt, date, opts.inFmts);
+    };
+    
+    /**
+     * Converts date (string or moment) to display field format. May return null.
+     */
+    this.dateCommonToI18n = function(date) {
+        return sfdh.dateToFmt(opts.dateDisplayFmt, date, opts.inFmts);
+    };
+    
+    /**
+     * Needed for pickers/dates that don't have "old date" variables around;
+     * can trigger this on popup/show.
+     */
+    this.saveOldDateFromDisplay = function() {
+        sfdh.oldDate = sfdh.dateCommonToNorm(jQuery('#'+opts.displayInputId).val()) || '';
+    };
+
+    this.saveOldDateFromReal = function() {
+        sfdh.oldDate = jQuery('#'+opts.inputId).val() || '';
+    };
+    
+    /**
+     * Default date-filling behavior, or returns date as-is.
+     * NOTE: dates may be moment or string.
+     */
+    this.doFillDate = function(date, oldDate) {
+        return sfdh.fillDateFmt(opts.dateDisplayFmt, date, opts.dateFmt, oldDate);
+    };
+    
+    /**
+     * Updates the hidden input.
+     * Should be called on displayInputId change event, if possible.
+     */
+    this.updateRealDateInput = function(date) {
+        jQuery('#'+opts.inputId).val(sfdh.dateCommonToNorm(date) || '');
+    };
+    
+    /**
+     * Updates the display input.
+     * Should only be called if displayCorrect on.
+     */
+    this.updateDisplayDateInput = function(date, faildate) {
+        var outDate;
+        if (date === '') outDate = '';
+        else if (opts.displayItrnFmt) outDate = sfdh.dateCommonToNorm(date);
+        else outDate = sfdh.dateCommonToI18n(date);
+       
+        if (outDate == null && !opts.clearDispOnError) {
+            // NOTE: this is mainly for parsing errors, and if date/faildate were
+            // moments, it was handled by something else, so ignore them to simplify
+            if (date && $.type(date) === 'string') {
+                outDate = date;
+            } else if (faildate && $.type(faildate) === 'string') {
+                outDate = faildate;
+            }
+        }
+        
+        jQuery('#'+opts.displayInputId).val(outDate || '');
+    };
+    
+    /**
+     * MAIN CHANGE/UPDATE CALLBACK, may update both or either hidden and display inputs.
+     * Here date can be Date, string, or null/undef to get from displayInputId elem.
+     * args: date, oldDate, skipRealUp
+     * If oldDate null/undef, is gotten from this.oldDate (use empty string for none) - is
+     * used for fill date only.
+     */
+    this.updateAllDateInputs = function(args) {
+        if (!args) args = {};
+        var date = args.date;
+        if (date == null) {
+            date = jQuery('#'+opts.displayInputId).val();
+        }
+        if (!date) date = '';
+        //else if (sfdh.isDate(date)) { } // doFillDate and dateCommonToNorm will convert
+
+        if (opts.useFillDate) { // mostly for fdatepicker, should only be enabled if displayCorrect && displayItrnFmt
+            var oldDate = args.oldDate;
+            if (oldDate == null) oldDate = sfdh.oldDate;
+            if (oldDate) {
+                date = sfdh.doFillDate(date, oldDate);
+            }
+        }
+        
+        var normDate = sfdh.dateCommonParse(date) || '';
+
+        var skipRealUp = args.skipRealUp;
+        if (typeof skipRealUp === 'function') skipRealUp = skipRealUp(normDate);
+        if (skipRealUp !== true) {
+            // 2018-03: do this immediate by default, 
+            // because change events on displayInputId elem not guaranteed
+            sfdh.updateRealDateInput(normDate);
+        }
+        
+        if (opts.displayCorrect) {
+            sfdh.updateDisplayDateInput(normDate, date);
+        }
+    };
+    
+}
+
+/**
+ * @deprecated 2018-03: replaced by ScpFieldDateHelper, do not use anymore
  */
 function convertToDateTimeNorm(date, fillerDate) {
     date = date.trim();
@@ -1156,17 +1352,10 @@ function convertToDateTimeNorm(date, fillerDate) {
            result = date + zeroPat.substr(date.length);
        }
     }
-    // Don't do this in case want to accept higher precision
-    //// TRUNCATE to ensure correctness
-    //if (result.length > zeroPat.length) {
-    //    result = result.substring(0, zeroPat.length);
-    //}
     return result;
 }
-
 /**
- * Scipio: Transforms or truncates a date into normalize simple date format (yyyy-MM-dd).
- * TODO: more robust and user-friendly date handling
+ * @deprecated 2018-03: replaced by ScpFieldDateHelper, do not use anymore
  */
 function convertToDateNorm(date, fillerDate) {
     date = date.trim();
@@ -1198,10 +1387,8 @@ function convertToDateNorm(date, fillerDate) {
     }
     return result;
 }
-
 /**
- * Scipio: Transforms or truncates a time into normalized time (HH:mm:ss.SSS).
- * TODO: more robust and user-friendly date handling
+ * @deprecated 2018-03: replaced by ScpFieldDateHelper, do not use anymore
  */
 function convertToTimeNorm(time, fillerTime) {
     time = time.trim();
@@ -1210,40 +1397,12 @@ function convertToTimeNorm(time, fillerTime) {
     }
     var zeroPat = "00:00:00.000";
     var result;
-    // Treat the "h" separator as a ":" for user friendliness
-    // NOTE: it only replaces the first occurrence, but that's what we want anyway
     time = time.replace("h", ":");
     result = time;
-    /* FIXME: DON'T do any of this for now, because it doesn't handle differences in numbers of digits
-    if (fillerTime && fillerTime.match(/^\d\d:$/)) {
-       if (time.length >= fillerTime.length) {
-           result = time;
-       }
-       else {
-           result = time + fillerTime.substr(time.length);
-       }
-    }
-    else {
-       if (time.length >= zeroPat.length) {
-           result = time;
-       }
-       else {
-           // append zeroes
-           result = time + zeroPat.substr(time.length);
-       }
-    }
-    */
-    // Don't do this in case want to accept higher precision
-    //// TRUNCATE to ensure correctness
-    //if (result.length > zeroPat.length) {
-    //    result = result.substring(0, zeroPat.length);
-    //}
     return result;
 }
-
 /**
- * Scipio: Transforms or truncates a date into normalize simple month format (yyyy-MM).
- * TODO: more robust and user-friendly date handling
+ * @deprecated 2018-03: replaced by ScpFieldDateHelper, do not use anymore
  */
 function convertToMonthNorm(date, fillerDate) {
     date = date.trim();
@@ -1269,15 +1428,13 @@ function convertToMonthNorm(date, fillerDate) {
            result = date + zeroPat.substr(date.length);
        }
     }
-    // TRUNCATE to ensure correctness
     if (result.length > zeroPat.length) {
         result = result.substring(0, zeroPat.length);
     }
     return result;
 }
-
 /**
- * Scipio: Transforms or truncates a date into normalized format using specified dateType.
+ * @deprecated 2018-03: replaced by ScpFieldDateHelper, do not use anymore
  */
 function convertToDateTypeNorm(dateType, date, fillerDate) {
     if (dateType == "timestamp") {
@@ -1292,9 +1449,8 @@ function convertToDateTypeNorm(dateType, date, fillerDate) {
         return date;
     }
 }
-
 /**
- * Scipio: Common implementation of date field display type to internal normalized type conversion.
+ * @deprecated 2018-03: replaced by ScpFieldDateHelper, do not use anymore
  */
 function convertFieldDateDisplayToNorm(dateType, date) {
     if (dateType == "timestamp") {
@@ -1309,14 +1465,11 @@ function convertFieldDateDisplayToNorm(dateType, date) {
         return date;
     }
 }
-
 /**
- * Scipio: Common implementation of date field internal normalized type to internal normalized type conversion.
- * NOTE: this uses moment.js notation (YYYY-MM-DD HH:mm:ss).
+ * @deprecated 2018-03: replaced by ScpFieldDateHelper, do not use anymore
  */
 function convertFieldDateNormToDisplay(format, date) {
     return date;
 }
-
 
 

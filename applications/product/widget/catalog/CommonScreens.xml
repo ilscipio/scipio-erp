@@ -874,33 +874,12 @@ under the License.
             <actions>
                 <set field="activeSubMenuItem" value="main"/>
                 <set field="titleProperty" value="ProductCatalogManager"/>
+                <entity-and list="productStores" entity-name="ProductStore" />
             </actions>
             <widgets>            
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container style="${styles.grid_row}">
-                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                <section>
-                                   <actions>
-                                       <!-- SCIPIO: FIXME: Unhardcode this -->
-                                       <set field="productStoreId" value="ScipioShop" global="true"/>
-                                   </actions>
-                                   <widgets>
-                                       <include-screen name="ScipioViewCatalogTree"/>   
-                                   </widgets>
-                               </section>
-                            </container>
-                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                <section>
-                                   <actions>
-                                       <set field="productStoreId" value="RentalStore" global="true"/>
-                                   </actions>
-                                   <widgets>
-                                       <include-screen name="ScipioViewCatalogTree"/>   
-                                   </widgets>
-                               </section>
-                            </container>
-                        </container>
+                        <platform-specific><html><html-template location="component://product/webapp/catalog/catalog/ViewProdCatalogs.ftl"/></html></platform-specific>
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                 <include-screen name="ScipioRecentProductsAdded"/>

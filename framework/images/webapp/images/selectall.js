@@ -1324,3 +1324,152 @@ function ScpFieldDateHelper(options) {
     
 }
 
+/**
+ * @deprecated 2018-03: replaced by ScpFieldDateHelper, do not use anymore
+ */
+function convertToDateTimeNorm(date, fillerDate) {
+    date = date.trim();
+    if (!date) {
+        return "";
+    }
+    var zeroPat = "0000-00-00 00:00:00.000";
+    var result;
+    if (fillerDate && fillerDate.match(/^\d\d\d\d-\d\d-\d\d\s/)) {
+       if (date.length >= fillerDate.length) {
+           result = date;
+       }
+       else {
+           // preserve everything after days
+           result = date + fillerDate.substr(date.length);
+       }
+    }
+    else {
+       if (date.length >= zeroPat.length) {
+           result = date;
+       }
+       else {
+           // append zeroes
+           result = date + zeroPat.substr(date.length);
+       }
+    }
+    return result;
+}
+/**
+ * @deprecated 2018-03: replaced by ScpFieldDateHelper, do not use anymore
+ */
+function convertToDateNorm(date, fillerDate) {
+    date = date.trim();
+    if (!date) {
+        return "";
+    }
+    var zeroPat = "0000-01-01";
+    var result;
+    if (fillerDate && fillerDate.match(/^\d\d\d\d-\d\d-\d\d$/)) {
+       if (date.length >= fillerDate.length) {
+           result = date;
+       }
+       else {
+           result = date + fillerDate.substr(date.length);
+       }
+    }
+    else {
+       if (date.length >= zeroPat.length) {
+           result = date;
+       }
+       else {
+           // append zeroes
+           result = date + zeroPat.substr(date.length);
+       }
+    }
+    // TRUNCATE to ensure correctness
+    if (result.length > zeroPat.length) {
+        result = result.substring(0, zeroPat.length);
+    }
+    return result;
+}
+/**
+ * @deprecated 2018-03: replaced by ScpFieldDateHelper, do not use anymore
+ */
+function convertToTimeNorm(time, fillerTime) {
+    time = time.trim();
+    if (!time) {
+        return "";
+    }
+    var zeroPat = "00:00:00.000";
+    var result;
+    time = time.replace("h", ":");
+    result = time;
+    return result;
+}
+/**
+ * @deprecated 2018-03: replaced by ScpFieldDateHelper, do not use anymore
+ */
+function convertToMonthNorm(date, fillerDate) {
+    date = date.trim();
+    if (!date) {
+        return "";
+    }
+    var zeroPat = "0000-01";
+    var result;
+    if (fillerDate && fillerDate.match(/^\d\d\d\d-\d\d$/)) {
+       if (date.length >= fillerDate.length) {
+           result = date;
+       }
+       else {
+           result = date + fillerDate.substr(date.length);
+       }
+    }
+    else {
+       if (date.length >= zeroPat.length) {
+           result = date;
+       }
+       else {
+           // append zeroes
+           result = date + zeroPat.substr(date.length);
+       }
+    }
+    if (result.length > zeroPat.length) {
+        result = result.substring(0, zeroPat.length);
+    }
+    return result;
+}
+/**
+ * @deprecated 2018-03: replaced by ScpFieldDateHelper, do not use anymore
+ */
+function convertToDateTypeNorm(dateType, date, fillerDate) {
+    if (dateType == "timestamp") {
+        return convertToDateTimeNorm(date, fillerDate);
+    } else if (dateType == "date") {
+        return convertToDateNorm(date, fillerDate);
+    } else if (dateType == "time") {
+        return convertToTimeNorm(date, fillerDate);
+    } else if (dateType == "month") {
+        return convertToMonthNorm(date, fillerDate);
+    } else {
+        return date;
+    }
+}
+/**
+ * @deprecated 2018-03: replaced by ScpFieldDateHelper, do not use anymore
+ */
+function convertFieldDateDisplayToNorm(dateType, date) {
+    if (dateType == "timestamp") {
+        return moment(date).format('YYYY-MM-DD HH:mm:ss.SSS');
+    } else if (dateType == "date") {
+        return moment(date).format('YYYY-MM-DD');
+    } else if (dateType == "time") {
+        return moment(date).format('HH:mm:ss.SSS');
+    } else if (dateType == "month") {
+        return moment(date).format('YYYY-MM');
+    } else {
+        return date;
+    }
+}
+/**
+ * @deprecated 2018-03: replaced by ScpFieldDateHelper, do not use anymore
+ */
+function convertFieldDateNormToDisplay(format, date) {
+    return date;
+}
+
+

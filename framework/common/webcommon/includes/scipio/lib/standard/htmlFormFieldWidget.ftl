@@ -229,14 +229,16 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" 
     hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName="" 
     alert=false mask="" events={} step="" timeValues="" tooltip="" postfix="" postfixColumns="" inlinePostfix=false manualInput=true collapse=false fieldTitleBlank=false origLabel="" inlineLabel=false 
-    required=false attribs={} origArgs={} passArgs={} catchArgs...>
+    dateDisplayFormat="" required=false attribs={} origArgs={} passArgs={} catchArgs...>
   <#local class = addClassArg(class, styles.field_datetime_default!"")>
   <#-- NOTE: dateType and dateDisplayType (previously shortDateInput) are distinct and both are necessary. 
       dateType controls the type of data sent to the server; dateDisplayType only controls what's displayed to user. 
-      (dateType=="date") is not the same as (dateDisplayType=="date" && dateType=="timestamp"). -->  
-  <#local dateDisplayFormat><#if dateDisplayType == "date">yyyy-MM-dd<#elseif dateDisplayType == "time">HH:mm:ss.SSS<#elseif dateDisplayType == "month">yyyy-MM<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
+      (dateType=="date") is not the same as (dateDisplayType=="date" && dateType=="timestamp"). -->
+  <#if !dateDisplayFormat?has_content> 
+    <#local dateDisplayFormat><#if dateDisplayType == "date">yyyy-MM-dd<#elseif dateDisplayType == "time">HH:mm:ss.SSS<#elseif dateDisplayType == "month">yyyy-MM<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
+  </#if>
   <#-- don't do this here, let script macro handle the picker-specific stuff
-  <#local dateFormatPicker><#if dateDisplayType == "month">yyyy-mm<#else>yyyy-mm-dd</#if></#local>
+  <#local datePickerFmt><#if dateDisplayType == "month">yyyy-mm<#else>yyyy-mm-dd</#if></#local>
   -->
   <#-- FIXME: since our format hardcoded, these will be all wrong:
   <#local dateDisplayFormatProp><#if dateDisplayType == "date">CommonFormatDate<#elseif dateDisplayType == "time">CommonFormatTime<#elseif dateDisplayType == "month">CommonFormatMonth<#else>CommonFormatDateTime</#if></#local>
@@ -322,7 +324,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         <#if displayInputId?has_content> id="${escapeVal(displayInputId, 'html')}"</#if><#t/>
         <#if required> required="required"</#if><#t/>
         <#--don't set this stuff here anymore, because fdatepicker has bugs with this and also it's better to factor out the fdatepicker-specific stuff into the script macro:
-            data-date="" data-date-format="${escapeVal(dateFormatPicker, 'html')}"<#if dateDisplayType == "month"> data-start-view="year" data-min-view="year"</#if>--> /><#t/>
+            data-date="" data-date-format="${escapeVal(datePickerFmt, 'html')}"<#if dateDisplayType == "month"> data-start-view="year" data-min-view="year"</#if>--> /><#t/>
       <input type="hidden"<#if inputName?has_content> name="${escapeVal(inputName, 'html')}"</#if><#if inputId?has_content> id="${escapeVal(inputId, 'html')}"</#if><#if value?has_content> value="${escapeVal(value, 'html')}"</#if> />
       <#-- TODO?: we don't handle this case yet - only show date (renderer already passed dateType="date" for this). but we must submit zero values for the event to pass. -->
       <#if timeDropdown == "time-dropdown">
@@ -349,63 +351,65 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     dateType=dateType dateDisplayType=dateDisplayType required=required attribs=toSimpleMap(attribs) origArgs=origArgs passArgs=passArgs />
 </#macro>
 
+<#-- Internal/hidden datetime date formats - should not be changed -->
+<#assign field_datetime_typefmts = {
+    'timestamp': 'YYYY-MM-DD HH:mm:ss.SSS',
+    'date': 'YYYY-MM-DD',
+    'time': 'HH:mm:ss.SSS',
+    'month': 'YYYY-MM'
+}>
+
 <#macro field_datetime_markup_script inputId="" inputName="" displayInputId="" displayInputName="" dateType="" 
-    dateDisplayType="" dateFormatPicker="" htmlwrap=true required=false origArgs={} passArgs={} catchArgs...>
-  <#if !dateFormatPicker?has_content>
-    <#local dateFormatPicker><#if dateDisplayType == "month">yyyy-mm<#else>yyyy-mm-dd</#if></#local>
-  </#if>
-  <#local fdatepickerOptions>{format:"${escapeVal(dateFormatPicker, 'js')}" <#rt/>
+    dateDisplayType="" htmlwrap=true required=false origArgs={} passArgs={} catchArgs...>
+  <#-- Display behavior flags -->
+  <#local displayCorrect = true><#-- if true, display input is re-assigned value on every change; if false, lets datepicker choose -->
+  <#local displayItrnFmt = true><#-- for displayCorrect==true: if true, the display input re-assigned is the internal type (e.g. full timestamp); if false, tries to convert back to dateDisplayConvFmt -->
+  <#-- NOTE: useFillDate needed for fdatepicker, otherwise too arduous to edit dates; other pickers may not need -->
+  <#local useFillDate = true && displayCorrect && displayItrnFmt><#-- if true, the digits that picker can't set are preserved from last value - only works for simple dateDisplayConvFmt (YYYY-MM-DD) -->
+  
+  <#-- Real date format -->
+  <#local dateConvFmt = field_datetime_typefmts[dateType]!>
+  <#-- Display format for js (moment.js) -->
+  <#local dateDisplayConvFmt><#if dateDisplayType == "month">YYYY-MM<#else>YYYY-MM-DD</#if></#local>
+  <#-- Display format for fdatepicker (non-moment.js) -->
+  <#local datePickerFmt><#if dateDisplayType == "month">yyyy-mm<#else>yyyy-mm-dd</#if></#local>
+  
+  <#local displayInputIdJs = escapeVal(displayInputId, 'js')>
+  <#local inputIdJs = escapeVal(inputId, 'js')>
+  
+  <#local fdatepickerOptions>{format:"${escapeVal(datePickerFmt, 'js')}" <#rt/>
     <#if dateDisplayType == "month">, startView: "year", minView: "year"</#if><#t/>
-    , forceParse:false}</#local><#lt/><#--redundant, don't do this here: format:"yyyy-mm-dd", -->
-  <#local formatCorrect = true>
+    , forceParse:false}</#local><#lt/>
   <@script htmlwrap=htmlwrap>
     $(function() {
-
-        var dateI18nToNorm = function(date) {
-            <#-- TODO: WARN: this needs to be implemented if the displayed date is ever different from the 
-                    internal format (timestamp-like) 
-                NOTE: this will vary based on date type and format -->
-            return date;
-        };
-        
-        var dateNormToI18n = function(date) {
-            <#-- TODO: WARN: this needs to be implemented if the displayed date is ever different from the 
-                    internal format (timestamp-like) 
-                NOTE: this will vary based on date type and format -->
-            return date;
-        };
     
-        jQuery("#${escapeVal(displayInputId, 'js')}").change(function() {
-            jQuery("#${escapeVal(inputId, 'js')}").val(convertToDateTypeNorm("${escapeVal(dateType, 'js')}", dateI18nToNorm(this.value)));
+        var sfdh = new ScpFieldDateHelper({ <#-- see selectall.js -->
+            displayInputId: "${displayInputIdJs}",
+            inputId: "${inputIdJs}",
+            displayCorrect: ${displayCorrect?string},
+            displayItrnFmt: ${displayItrnFmt?string},
+            useFillDate: ${useFillDate?string},
+            dateFmt: "${dateConvFmt}",
+            dateDisplayFmt: "${dateDisplayConvFmt}"
+        });
+    
+        jQuery("#${displayInputIdJs}").change(function() {
+            sfdh.updateRealDateInput(this.value);
         });
         
       <#if dateType == "time">
-      
         <#-- do nothing for now; user inputs into box manually and change() should adjust -->
-
       <#else>
-      
-        var oldDate = "";
-        var onFDatePopup = function(ev) {
-            oldDate = dateI18nToNorm(jQuery("#${escapeVal(displayInputId, 'js')}").val());
-        };
-        var onFDateChange = function(ev) {
-          <#if dateDisplayType != "time">
-            var normDate = dateI18nToNorm(jQuery("#${escapeVal(displayInputId, 'js')}").val());
-            <#if formatCorrect>
-            jQuery("#${escapeVal(displayInputId, 'js')}").val(dateNormToI18n(convertToDateTypeNorm("${escapeVal(dateDisplayType, 'js')}", normDate, oldDate)));
-            </#if>
-            <#-- 2018-03-06: in case change event is not triggered above, assign this now -->
-            jQuery("#${escapeVal(inputId, 'js')}").val(convertToDateTypeNorm("${escapeVal(dateType, 'js')}", normDate));
-          </#if>
+        var onDatePopup = function(ev) {
+            sfdh.saveOldDateFromDisplay();
         };
         
-        <#-- SCIPIO: How this works: the fdatepicker will put a yyyy-MM-dd value into the id_i18n field. 
-            This triggers onFDateChange which may transform the date and put it back in id_i18n.
-            This triggers then another change() which copies it into the hidden id field (with another conversion if necessary). -->
-        $("#${escapeVal(displayInputId, 'js')}").fdatepicker(${fdatepickerOptions}).on('changeDate', onFDateChange).on('show', onFDatePopup);
-        <#-- Cannot use name, must use ID, this is invalid (will break multiple forms per page): $("input[name='${escapeVal(displayInputName, 'js')}']")-->
-
+        var onDateChange = function(ev) {
+            <#-- for fdatepicker, the default value lookup on displayInputId input is enough here. -->
+            sfdh.updateAllDateInputs();
+        };
+        
+        $("#${displayInputIdJs}").fdatepicker(${fdatepickerOptions}).on('changeDate', onDateChange).on('show', onDatePopup);
       </#if>
     });
   </@script>

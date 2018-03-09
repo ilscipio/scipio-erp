@@ -200,6 +200,24 @@ public class ProductConfigWrapper implements Serializable {
             }
         }
     }
+    
+    /**
+     * SCIPIO: Resets all selections including standard items and comments,
+     * virtual component options, or otherwise any selections that may be set
+     * by {@link ProductConfigWorker#fillProductConfigWrapper} (no validation).
+     * Should correspond to the initial state of a newly-constructed ProductConfigWrapper
+     * using {@link #init}.
+     */
+    public void resetConfigFull() {
+        for (ConfigItem ci: questions) {
+            List<ConfigOption> options = ci.getOptions();
+            for (ConfigOption co: options) {
+                co.setSelected(false);
+                co.setComments(null);
+                co.componentOptions = null;
+            }
+        }
+    }
 
     public void setDefaultConfig() {
         resetConfig();
@@ -656,7 +674,7 @@ public class ProductConfigWrapper implements Serializable {
                 BigDecimal listPrice = BigDecimal.ZERO;
                 BigDecimal price = BigDecimal.ZERO;
                 GenericValue oneComponentProduct = oneComponent.getRelatedOne("ProductProduct", false);
-                String variantProductId = componentOptions.get(oneComponent.getString("productId"));
+                String variantProductId = (componentOptions != null) ? componentOptions.get(oneComponent.getString("productId")) : null; // SCIPIO: added null check
 
                 if (UtilValidate.isNotEmpty(variantProductId)) {
                     oneComponentProduct = EntityQuery.use(delegator).from("Product").where("productId", variantProductId).queryOne();

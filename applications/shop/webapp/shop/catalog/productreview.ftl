@@ -47,7 +47,7 @@ under the License.
                     <div class="avatar">
                         <i class="${styles.icon} ${styles.icon_prefix}user" style="font-size:5em;"></i>
                     </div>
-                    <div class="time"><small>${productReview.postedDateTime!}</small></div>
+                    <div class="time"><small><@formattedDateTime date=productReview.postedDateTime!productReview.createdStamp! defaultVal="0000-00-00 00:00"/></small></div>
             </@cell>
             <@cell small=10>
                     <blockquote class="blockquote">

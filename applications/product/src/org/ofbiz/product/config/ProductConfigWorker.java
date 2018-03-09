@@ -87,7 +87,28 @@ public class ProductConfigWorker {
         return configWrapper;
     }
 
+    /**
+     * Fills the product content wrapper from request.
+     * <p>
+     * SCIPIO: 2018-03-09: patched to support reset operation - true by default - 
+     * prevents browser checkbox no-submission problems.
+     */
     public static void fillProductConfigWrapper(ProductConfigWrapper configWrapper, HttpServletRequest request) {
+        fillProductConfigWrapper(configWrapper, request, true);
+    }
+    
+    /**
+     * Fills the product content wrapper from request.
+     * <p>
+     * SCIPIO: 2018-03-09: Patched to support reset operation - 
+     * prevents browser checkbox no-submission problems.
+     * WARN: false is flawed without reset - is only for access to legacy behavior or if you already reset/unnecessary.
+     * TODO: 2018-03-09: Does not support un-setting for multiple choice/checkbox items (no checkbox selected),
+     * meaning full reset all options is always required, meaning does not support partial items filling, only sets all or none.
+     */
+    public static void fillProductConfigWrapper(ProductConfigWrapper configWrapper, HttpServletRequest request, boolean resetConfig) {
+        if (resetConfig) configWrapper.resetConfigFull();
+        
         int numOfQuestions = configWrapper.getQuestions().size();
         for (int k = 0; k < numOfQuestions; k++) {
             String[] opts = request.getParameterValues(Integer.toString(k));

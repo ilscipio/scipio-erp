@@ -362,17 +362,18 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 <#macro field_datetime_markup_script inputId="" inputName="" displayInputId="" displayInputName="" dateType="" 
     dateDisplayType="" htmlwrap=true required=false origArgs={} passArgs={} catchArgs...>
   <#-- Display behavior flags -->
+  <#-- NOTE: displayCorrect && useFillDate are needed for fdatepicker, otherwise the YYYY-MM-DD selection constantly resets the dates -->
   <#local displayCorrect = true><#-- if true, display input is re-assigned value on every change; if false, lets datepicker choose -->
-  <#local displayItrnFmt = true><#-- for displayCorrect==true: if true, the display input re-assigned is the internal type (e.g. full timestamp); if false, tries to convert back to dateDisplayConvFmt -->
-  <#-- NOTE: useFillDate needed for fdatepicker, otherwise too arduous to edit dates; other pickers may not need -->
-  <#local useFillDate = true && displayCorrect && displayItrnFmt><#-- if true, the digits that picker can't set are preserved from last value - only works for simple dateDisplayConvFmt (YYYY-MM-DD) -->
+  <#local useFillDate = true && displayCorrect><#-- if true, the digits that picker can't set are preserved from last value - only works for simple dateDisplayConvFmt (YYYY-MM-DD) -->
   
-  <#-- Real date format -->
-  <#local dateConvFmt = field_datetime_typefmts[dateType]!>
-  <#-- Display format for js (moment.js) -->
-  <#local dateDisplayConvFmt><#if dateDisplayType == "month">YYYY-MM<#else>YYYY-MM-DD</#if></#local>
-  <#-- Display format for fdatepicker (non-moment.js) -->
-  <#local datePickerFmt><#if dateDisplayType == "month">yyyy-mm<#else>yyyy-mm-dd</#if></#local>
+  <#local dateConvFmt = field_datetime_typefmts[dateType]!><#-- Real date format -->
+  <#local dateDisplayConvFmt><#if dateDisplayType == "month">YYYY-MM<#else>YYYY-MM-DD</#if></#local><#-- Display format for js (moment.js) -->
+  <#-- base/metro: we must show/override the internal types, because the picker is too limited for anything else, and want full timestamps anyway -->
+  <#-- Effective display format for when displayCorrect==true (bypass for picker display format)
+      (field_datetime_disptypefmts: friendly; field_datetime_typefmts: internal; custom hash possible) -->
+  <#local dateEffDispConvFmt = field_datetime_typefmts[dateDisplayType]!>
+
+  <#local datePickerFmt><#if dateDisplayType == "month">yyyy-mm<#else>yyyy-mm-dd</#if></#local><#-- Display format for fdatepicker (non-moment.js) -->
   
   <#local displayInputIdJs = escapeVal(displayInputId, 'js')>
   <#local inputIdJs = escapeVal(inputId, 'js')>
@@ -387,26 +388,26 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
             displayInputId: "${displayInputIdJs}",
             inputId: "${inputIdJs}",
             displayCorrect: ${displayCorrect?string},
-            displayItrnFmt: ${displayItrnFmt?string},
             useFillDate: ${useFillDate?string},
             dateFmt: "${dateConvFmt}",
-            dateDisplayFmt: "${dateDisplayConvFmt}"
+            dateDisplayFmt: "${dateDisplayConvFmt}",
+            dateEffDispFmt: "${dateEffDispConvFmt}"
         });
     
         jQuery("#${displayInputIdJs}").change(function() {
-            sfdh.updateRealDateInput(this.value);
+            sfdh.updateNormDateInputFromI18n(this.value);
         });
         
       <#if dateType == "time">
         <#-- do nothing for now; user inputs into box manually and change() should adjust -->
       <#else>
         var onDatePopup = function(ev) {
-            sfdh.saveOldDateFromDisplay();
+            sfdh.saveOldDateFromI18n();
         };
         
         var onDateChange = function(ev) {
             <#-- for fdatepicker, the default value lookup on displayInputId input is enough here. -->
-            sfdh.updateAllDateInputs();
+            sfdh.updateAllDateInputs(sfdh.getDefUpAllInputArgs());
         };
         
         $("#${displayInputIdJs}").fdatepicker(${fdatepickerOptions}).on('changeDate', onDateChange).on('show', onDatePopup);

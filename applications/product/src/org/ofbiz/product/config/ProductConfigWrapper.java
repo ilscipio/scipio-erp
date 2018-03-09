@@ -656,7 +656,7 @@ public class ProductConfigWrapper implements Serializable {
                 BigDecimal listPrice = BigDecimal.ZERO;
                 BigDecimal price = BigDecimal.ZERO;
                 GenericValue oneComponentProduct = oneComponent.getRelatedOne("ProductProduct", false);
-                String variantProductId = componentOptions.get(oneComponent.getString("productId"));
+                String variantProductId = (componentOptions != null) ? componentOptions.get(oneComponent.getString("productId")) : null; // SCIPIO: added null check
 
                 if (UtilValidate.isNotEmpty(variantProductId)) {
                     oneComponentProduct = EntityQuery.use(delegator).from("Product").where("productId", variantProductId).queryOne();

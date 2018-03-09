@@ -14,3 +14,7 @@
 	path = addons/seccheck
 	url = ssh://git@gitlab.ilscipio.com:12722/scipio-dev/dev/addons/devaddons-dev.git
 	branch = addons/seccheck/master
+[submodule "themes/ignite-shop"]
+	path = themes/ignite-shop
+	url = ssh://git@gitlab.ilscipio.com:12722/scipio-dev/dev/addons/ignite-shop-theme-dev.git
+	branch = themes/ignite-shop/1.14

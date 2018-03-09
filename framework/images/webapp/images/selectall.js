@@ -1124,6 +1124,8 @@ function submitPaginationPostForm(obj, url) {
 
 /**
  * SCIPIO: Helper for date fields, each field new instance.
+ * Manages a hidden "real" date input from a display "I18n" date input, the latter of which
+ * is managed by a datepicker (sometimes not).
  * Date formats are in moment.js format (e.g. YYYY-MM-DD HH:mm:ss.SSS).
  */
 function ScpFieldDateHelper(options) {
@@ -1132,13 +1134,14 @@ function ScpFieldDateHelper(options) {
 
     //opts.displayInputId = options.displayInputId;
     //opts.inputId = options.inputId;
-    opts.displayCorrect = (options.displayCorrect !== false); // default true: stock scipio base/metro (sane)
-    opts.displayItrnFmt = (options.displayItrnFmt !== false); // default true: stock scipio base/metro (sane)
-    opts.useFillDate = (options.useFillDate === true); // default false: mostly for fdatepicker
-                                                       // should be false if displayCorrect or displayItrnFmt false
+    opts.displayCorrect = (options.displayCorrect === true); // mostly for fdatepicker
+    opts.useFillDate = (options.useFillDate === true); // mostly for fdatepicker; should be false if displayCorrect false
     opts.clearDispOnError = (options.clearDispOnError === true); // (default: false) if true and parse error, display input is cleared (hidden always cleared)
-    //opts.dateFmt = options.dateFmt;
-    //opts.dateDisplayFmt = options.dateDisplayFmt;
+    //opts.dateFmt = options.dateFmt; // the internal format, e.g. full timestamp
+    //opts.dateDisplayFmt = options.dateDisplayFmt; // the format implemented by the datepicker, e.g. YYYY-MM-DD 
+    opts.dateEffDispFmt = options.dateEffDispFmt || options.dateDisplayFmt; // the format written by displayCorrect feature, e.g. full timestamp minus ss.SSS
+    this.codes = options.codes || {};
+    if (!this.codes.invalid) this.codes.invalid = "Invalid";
     
     this.opts = opts; // for subclasses
     this.oldDate = '';
@@ -1147,9 +1150,14 @@ function ScpFieldDateHelper(options) {
     // from display field and avoid the moment(date) call - see dateCommonToNorm and dateToFmt.
     // by default we'll set the internal and display formats for the field, should
     // 'just work' in most cases.
-    if (typeof opts.inFmts === 'undefined') opts.inFmts = [opts.dateFmt, opts.dateDisplayFmt];
-    
-    
+    if (typeof opts.inFmts === 'undefined') {
+        opts.inFmts = [opts.dateFmt];
+        if (opts.dateEffDispFmt !== opts.dateFmt) opts.inFmts.push(opts.dateEffDispFmt);
+        if (opts.dateDisplayFmt !== opts.dateFmt && opts.dateDisplayFmt !== opts.dateEffDispFmt) opts.inFmts.push(opts.dateDisplayFmt);
+    }
+    if (typeof opts.inNormFmts === 'undefined') opts.inNormFmts = opts.dateFmt;
+    if (typeof opts.inI18nFmts === 'undefined') opts.inI18nFmts = opts.inFmts;
+
     // CORE HELPERS
     
     this.isDate = function(obj) {
@@ -1165,6 +1173,7 @@ function ScpFieldDateHelper(options) {
     this.dateToFmt = function(fmt, date, srcFmt) {
         if (fmt) {
             var mDate = sfdh.parseDate(date, srcFmt);
+            //alert('parsing: [date: ' + date + '] [fmt: ' + srcFmt + '] [res: ' + mDate + '] [valid: ' + mDate.isValid() + ']');
             if (mDate.isValid()) return mDate.format(fmt);
         }
         return null;
@@ -1183,7 +1192,7 @@ function ScpFieldDateHelper(options) {
     /**
      * Fills the date by the trailing digits of fillDate, if the formats are compatible.
      * This is a BASIC fill only, such that the fmt must be substring of fillFmt.
-     * If not doable, returns date as-is.
+     * If not doable, returns null.
      * If present, fillDate is assumed to be valid and match fillFmt (usually comes from internal pre-converted).
      * TODO: this could be done with more complex support for differing formats of fmt and fillFmt, but very complex.
      */
@@ -1203,7 +1212,7 @@ function ScpFieldDateHelper(options) {
                 }
             }
         }
-        return date;
+        return null;
     };
     
     
@@ -1213,113 +1222,155 @@ function ScpFieldDateHelper(options) {
      * Parse any date format associated with this field to a Moment.
      * If already a moment returns as-is. May return null.
      */
-    this.dateCommonParse = function(date) {
-        return sfdh.parseDateOrNull(date, opts.inFmts);
+    this.dateCommonParse = function(date, srcFmt) {
+        return sfdh.parseDateOrNull(date, srcFmt || opts.inFmts);
     };
     
     /**
      * Converts date (string or moment) to normalized internal/hidden format (e.g. timestamp). May return null.
-     * Input can be c
      */
-    this.dateCommonToNorm = function(date) {
-        return sfdh.dateToFmt(opts.dateFmt, date, opts.inFmts);
+    this.dateCommonToNorm = function(date, srcFmt) {
+        return sfdh.dateToFmt(opts.dateFmt, date, srcFmt || opts.inFmts);
     };
-    
     /**
      * Converts date (string or moment) to display field format. May return null.
      */
-    this.dateCommonToI18n = function(date) {
-        return sfdh.dateToFmt(opts.dateDisplayFmt, date, opts.inFmts);
+    this.dateCommonToI18n = function(date, srcFmt) {
+        return sfdh.dateToFmt(opts.dateDisplayFmt, date, srcFmt || opts.inFmts);
+    };
+    /**
+     * Converts date (string or moment) to effective display field format (used by displayCorrect). May return null.
+     */
+    this.dateCommonToEffI18n = function(date, srcFmt) {
+        return sfdh.dateToFmt(opts.dateEffDispFmt, date, srcFmt || opts.inFmts);
     };
     
     /**
      * Needed for pickers/dates that don't have "old date" variables around;
      * can trigger this on popup/show.
      */
-    this.saveOldDateFromDisplay = function() {
-        sfdh.oldDate = sfdh.dateCommonToNorm(jQuery('#'+opts.displayInputId).val()) || '';
+    this.saveOldDateFromI18n = function() {
+        sfdh.oldDate = sfdh.dateCommonToNorm(jQuery('#'+opts.displayInputId).val(), opts.inI18nFmts) || '';
     };
 
-    this.saveOldDateFromReal = function() {
-        sfdh.oldDate = jQuery('#'+opts.inputId).val() || '';
+    this.saveOldDateFromNorm = function() {
+        sfdh.oldDate = jQuery('#'+opts.inputId).val() || ''; // already in right format
+    };
+    
+    this.getNormDateInst = function() {
+        return sfdh.dateCommonToNorm(jQuery('#'+opts.inputId).val(), opts.inNormFmts);
+    };
+    
+    this.getNormDateRaw = function() {
+        return jQuery('#'+opts.inputId).val();
+    };
+    
+    this.getI18nDateRaw = function() {
+        return jQuery('#'+opts.displayInputId).val();
     };
     
     /**
      * Default date-filling behavior, or returns date as-is.
+     * Tries to extend a dateDisplayFmt date using a bigger dateEffDispFmt fillDate.
      * NOTE: dates may be moment or string.
      */
-    this.doFillDate = function(date, oldDate) {
-        return sfdh.fillDateFmt(opts.dateDisplayFmt, date, opts.dateFmt, oldDate);
+    this.doFillDate = function(date, fillDate) {
+        var resDate = sfdh.fillDateFmt(opts.dateDisplayFmt, date, opts.dateEffDispFmt, fillDate);
+        if (resDate != null) {
+            resDate = sfdh.dateCommonParse(resDate, opts.dateEffDispFmt);
+            if (resDate != null) return resDate;
+        } 
+        return date;
     };
     
     /**
      * Updates the hidden input.
      * Should be called on displayInputId change event, if possible.
+     * 
+     * NOTE: null/undefined date is current treated as error/NaN. Pass empty string for empty value.
+     * However if you want to pass explicit error, you should pass a NaN moment instead, due to future changes.
+     * NOTE: Invalid dates and parsing (NaN from moment.js) is handled by setting a dummy "Invalid" value for the hidden input.
+     * This is currently the only reliable way to signal to server that something went wrong; can't put empty because 
+     * would be interpreted as success or missing value instead (much more confusing); and we don't have access to
+     * the original date string from here in all cases (which could cause less predictable behavior) and
+     * in cases where there is conversion between hidden and display inputs it makes no sense to set the 
+     * original value (risk of further mishandling on server-side).
+     * TODO?: could try to detect some cases where safe to send the orig value after convert fail, 
+     * but more effort than worth...
      */
-    this.updateRealDateInput = function(date) {
-        jQuery('#'+opts.inputId).val(sfdh.dateCommonToNorm(date) || '');
+    this.updateNormDateInput = function(date, srcFmt) {
+        var outDate = (date) ? sfdh.dateCommonToNorm(date, srcFmt) : date;
+        if (outDate == null) outDate = sfdh.codes.invalid;
+        jQuery('#'+opts.inputId).val(outDate || '');
+    };
+    
+    this.updateNormDateInputFromI18n = function(date) {
+        sfdh.updateNormDateInput(date, opts.inI18nFmts);
     };
     
     /**
      * Updates the display input.
-     * Should only be called if displayCorrect on.
+     * Normally should only be called if displayCorrect is on.
      */
-    this.updateDisplayDateInput = function(date, faildate) {
-        var outDate;
-        if (date === '') outDate = '';
-        else if (opts.displayItrnFmt) outDate = sfdh.dateCommonToNorm(date);
-        else outDate = sfdh.dateCommonToI18n(date);
-       
-        if (outDate == null && !opts.clearDispOnError) {
-            // NOTE: this is mainly for parsing errors, and if date/faildate were
-            // moments, it was handled by something else, so ignore them to simplify
-            if (date && $.type(date) === 'string') {
-                outDate = date;
-            } else if (faildate && $.type(faildate) === 'string') {
-                outDate = faildate;
-            }
+    this.updateI18nDateInput = function(date, srcFmt) {
+        if (date) date = sfdh.dateCommonToEffI18n(date, srcFmt);
+        if (date != null || opts.clearDispOnError) { // empty string always sets val, but null only does if clearDispOnError
+            jQuery('#'+opts.displayInputId).val(date || '');
         }
-        
-        jQuery('#'+opts.displayInputId).val(outDate || '');
     };
     
     /**
      * MAIN CHANGE/UPDATE CALLBACK, may update both or either hidden and display inputs.
-     * Here date can be Date, string, or null/undef to get from displayInputId elem.
-     * args: date, oldDate, skipRealUp
-     * If oldDate null/undef, is gotten from this.oldDate (use empty string for none) - is
-     * used for fill date only.
+     * args: date (moment or string), srcFmt, oldDate (always in dateFmt or moment), 
+     * skipNormUp, useFillDate.
+     * NOTE: null/undefined date are interpreted as error (same as invalid moment); boolean or empty string represent empty value.
+     * However if you want to pass explicit error, you should pass a NaN moment instead, due to future changes.
+     * If srcFmt is different than opts.inI18nFmts or opts.dateDisplayFmt, then useFillDate should be forced to false
+     * because it only works with date in opts.dateDisplayFmt (and its result is in opts.dateEffDispFmt).
      */
     this.updateAllDateInputs = function(args) {
         if (!args) args = {};
         var date = args.date;
-        if (date == null) {
-            date = jQuery('#'+opts.displayInputId).val();
-        }
-        if (!date) date = '';
-        //else if (sfdh.isDate(date)) { } // doFillDate and dateCommonToNorm will convert
-
-        if (opts.useFillDate) { // mostly for fdatepicker, should only be enabled if displayCorrect && displayItrnFmt
-            var oldDate = args.oldDate;
-            if (oldDate == null) oldDate = sfdh.oldDate;
-            if (oldDate) {
-                date = sfdh.doFillDate(date, oldDate);
+        if (typeof date === 'boolean') date = '';
+        
+        var normDate = date;
+        if (date) {
+            var srcFmt = args.srcFmt || opts.inI18nFmts;
+            
+            // NOTE: fill date is limited and assumes opts.dateDisplayFmt as source format - pass false if doesn't match
+            if (args.useFillDate !== false && opts.useFillDate) { // mostly for fdatepicker, should only be enabled if displayCorrect
+                var oldDate = args.oldDate;
+                if (oldDate && oldDate !== true) {
+                    if ($.type(oldDate) === 'string') {
+                        // old date is in dateFmt, but we need it in dateEffDispFmt fmt
+                        oldDate = sfdh.dateCommonToEffI18n(oldDate, opts.inNormFmts);
+                    }
+                    date = sfdh.doFillDate(date, oldDate);
+                }
             }
+            
+            normDate = sfdh.dateCommonParse(date, srcFmt);
+            // NOTE: if normDate null, will be handled by calls below
         }
         
-        var normDate = sfdh.dateCommonParse(date) || '';
-
-        var skipRealUp = args.skipRealUp;
-        if (typeof skipRealUp === 'function') skipRealUp = skipRealUp(normDate);
-        if (skipRealUp !== true) {
+        var skipNormUp = args.skipNormUp;
+        if (typeof skipNormUp === 'function') skipNormUp = skipNormUp(normDate);
+        if (skipNormUp !== true) {
             // 2018-03: do this immediate by default, 
             // because change events on displayInputId elem not guaranteed
-            sfdh.updateRealDateInput(normDate);
+            sfdh.updateNormDateInput(normDate, null);
         }
         
         if (opts.displayCorrect) {
-            sfdh.updateDisplayDateInput(normDate, date);
+            sfdh.updateI18nDateInput(normDate, null);
         }
+    };
+    
+    /**
+     * Gets date and oldDate from default implementation pattern.
+     */
+    this.getDefUpAllInputArgs = function() {
+        return {date: sfdh.getI18nDateRaw(), oldDate:sfdh.oldDate};
     };
     
 }

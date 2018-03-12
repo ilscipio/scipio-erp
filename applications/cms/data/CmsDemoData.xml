@@ -377,7 +377,7 @@
     <Content contentId="CMSPGV_ADVSHOPLT" contentTypeId="DOCUMENT" dataResourceId="CMSPGV_ADVSHOPLT"/>
     <CmsPageVersion versionId="ADVSHOPLT" pageId="ADVSHOPLAYOUTPAGE" contentId="CMSPGV_ADVSHOPLT" createdBy="admin"/>
     <CmsPageVersionState pageId="ADVSHOPLAYOUTPAGE" versionStateId="CMS_VER_ACTIVE" versionId="ADVSHOPLT"/>
-    <CmsProcessMapping processMappingId="ADVSHOPLT" sourceWebSiteId="ScipioWebStore" sourcePath="/layoutdemo" sourceFromContextRoot="Y" targetPath="/cmsPagePlainNoAuth" active="Y" primaryForpageId="ADVSHOPLAYOUTPAGE" indexable="N"/>
+    <CmsProcessMapping processMappingId="ADVSHOPLT" sourceWebSiteId="ScipioWebStore" sourcePath="/layoutdemo" sourceFromContextRoot="Y" targetPath="/cmsPagePlainNoAuth" active="Y" primaryForPageId="ADVSHOPLAYOUTPAGE" indexable="N"/>
     <CmsProcessViewMapping processViewMappingId="ADVSHOPLT" processMappingId="ADVSHOPLT" targetViewName="CmsPage" pageId="ADVSHOPLAYOUTPAGE" active="Y"/>
     <CmsPageSpecialMapping pageId="ADVSHOPLAYOUTPAGE" webSiteId="ScipioWebStore" mappingTypeId="CMS_PGSPCMAP_PRIMARY" processMappingId="ADVSHOPLT"/>
     

@@ -58,7 +58,7 @@
         <dependency org="org.slf4j" name="slf4j-api" rev="1.7.22" transitive="false" conf="base->default"/>
         <dependency org="xalan" name="xalan" rev="2.7.2" transitive="false" conf="base->default"/>
         <dependency org="org.freemarker" name="freemarker" rev="2.3.27-incubating" transitive="false" conf="base->default"/>
-        <dependency org="com.google.guava" name="guava" rev="14.0.1" transitive="false" conf="base->default"/>
+        <dependency org="com.google.guava" name="guava" rev="20.0" transitive="false" conf="base->default"/>
         <dependency org="de.odysseus.juel" name="juel-impl" rev="2.2.7" transitive="false" conf="base->default"/>
         <dependency org="de.odysseus.juel" name="juel-spi" rev="2.2.7" transitive="false" conf="base->default"/>
         <dependency org="jdom" name="jdom" rev="1.1" transitive="false" conf="base->default"/>

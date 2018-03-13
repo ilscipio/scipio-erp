@@ -31,9 +31,10 @@ public class DemoSuiteDataGeneratorUtil {
 	 *
 	 */
 	public enum LocaleClasses {
-		DE(Locale.forLanguageTag("de")), ES(Locale.forLanguageTag("es")), PL(Locale.forLanguageTag("pl")), SV(
-				Locale.forLanguageTag("sv")), EN(
-						Locale.forLanguageTag("en")), KA(Locale.forLanguageTag("ka")), ZH(Locale.forLanguageTag("zh"));
+		DE(new Locale("de", "DE")), ES(new Locale("es", "ES")), PL(new Locale("pl", "PL")), SV(
+				new Locale("sv", "SV")), EN(new Locale("en", "GB")), KA(new Locale("ka", "GE")), ZH(
+						new Locale("zh", "TW")), FR(new Locale("fr", "FR")), IT(new Locale("it", "IT"));
+
 		private final Locale locale;
 
 		private String name;

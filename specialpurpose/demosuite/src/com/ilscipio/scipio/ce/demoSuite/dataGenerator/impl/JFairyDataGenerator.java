@@ -1,6 +1,7 @@
 package com.ilscipio.scipio.ce.demoSuite.dataGenerator.impl;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.ofbiz.base.util.UtilValidate;
 
@@ -13,6 +14,7 @@ import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataUserLog
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.party.DemoDataParty;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.DemoDataHelper;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.jfairy.JFairyDemoDataHelper;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.util.DemoSuiteDataGeneratorUtil;
 
 import io.codearte.jfairy.Fairy;
 import io.codearte.jfairy.producer.person.Person;
@@ -37,9 +39,11 @@ public class JFairyDataGenerator extends LocalDataGenerator {
 	@Override
 	protected List<? extends DemoDataObject> retrieveData() throws Exception {
 		List<DemoDataObject> result = FastList.newInstance();
-		try {
-			Fairy fairy = Fairy.create();
+		try {			
 			for (int i = 0; i < helper.getCount(); i++) {
+				Locale locale = DemoSuiteDataGeneratorUtil.LocaleClasses.getRandom();
+				helper.setLocale(locale);
+				Fairy fairy = Fairy.create(locale);
 				Object o = null;
 				if (returnObjectClass.equals(DemoDataParty.class)) {
 					o = fairy.person();					
@@ -77,7 +81,7 @@ public class JFairyDataGenerator extends LocalDataGenerator {
 
 			if (helper.generateAddress()) {
 				DemoDataAddress demoDataAddress = new DemoDataAddress();
-				demoDataAddress.setCountry("");
+				demoDataAddress.setCountry(helper.getLocale().getCountry());
 				demoDataAddress.setCity(person.getAddress().getCity());
 				demoDataAddress.setStreet(person.getAddress().getAddressLine1());
 				demoDataAddress.setZip(person.getAddress().getPostalCode());

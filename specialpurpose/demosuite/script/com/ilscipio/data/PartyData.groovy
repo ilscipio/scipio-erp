@@ -2,6 +2,7 @@ import java.sql.Timestamp
 
 import org.ofbiz.base.crypto.HashCrypt
 import org.ofbiz.base.util.Debug
+import org.ofbiz.base.util.UtilDateTime
 import org.ofbiz.base.util.UtilMisc
 import org.ofbiz.base.util.UtilRandom
 import org.ofbiz.common.login.LoginServices
@@ -9,10 +10,13 @@ import org.ofbiz.entity.*
 import org.ofbiz.entity.util.*
 
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.DataGenerator
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataAddress
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataPerson
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataUserLogin
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.service.DataGeneratorGroovyBaseScript
+
+import javolution.util.FastList
 
 
 public class PartyData extends DataGeneratorGroovyBaseScript {
@@ -50,9 +54,9 @@ public class PartyData extends DataGeneratorGroovyBaseScript {
         List<GenericValue> toBeStored = new ArrayList<GenericValue>();
         List<GenericValue> partyEntrys = new ArrayList<GenericValue>();		
 		
-		DataGenerator generator = context.generator;		
+		DataGenerator generator = context.generator;
         
-        if (partyData) {            
+        if (partyData) {
             String partyId = "GEN_" + delegator.getNextSeqId("demo-partyId");
             String partyTypeId = partyTypeIds.get(UtilRandom.random(partyTypeIds));        
             String partyStatusId = partyStatus.get(UtilRandom.random(partyStatus)); 
@@ -96,6 +100,24 @@ public class PartyData extends DataGeneratorGroovyBaseScript {
 	            fields = UtilMisc.toMap("partyId", partyId, "userLoginId", userLoginId, "currentPassword", currentPassword, "enabled", userLoginEnabled);
 	            GenericValue userLogin = delegator.makeValue("UserLogin", fields);
 	            toBeStored.add(userLogin);
+			}
+			
+			if (generator.getHelper().generateAddress()) {
+				DemoDataAddress demoDataAddress = partyData.getAddress();
+				
+				GenericValue countryGeo = EntityUtil.getFirst(delegator.findByAnd("Geo", UtilMisc.toMap("geoCode", demoDataAddress.country, "geoTypeId", "COUNTRY"), UtilMisc.toList("geoId"), false));				
+				if (countryGeo) {
+					Debug.log("countryGeoId ====> " + countryGeo.geoId);
+					String contactMechId = "GEN_" + delegator.getNextSeqId("demo-contactMechId");
+					List<GenericValue> postalAddressToStore = FastList.newInstance();
+					GenericValue contactMech = delegator.makeValue("ContactMech", ["contactMechTypeId" : "POSTAL_ADDRESS", "contactMechId" : contactMechId]);
+					postalAddressToStore.add(contactMech);
+					postalAddressToStore.add(delegator.makeValue("PostalAddress", 
+						["contactMechId" : contactMech.contactMechId, "countryGeoId" : countryGeo.geoId, "address1" : demoDataAddress.street, "city" : demoDataAddress.city, "postalCode" : demoDataAddress.zip]));
+					postalAddressToStore.add(delegator.makeValue("PartyContactMech", ["partyId" : partyId, "contactMechId" : contactMech.contactMechId, "fromDate" : UtilDateTime.nowTimestamp()]));
+					postalAddressToStore.add(delegator.makeValue("PartyContactMechPurpose", ["partyId" : partyId, "contactMechId" : contactMech.contactMechId, "contactMechPurposeTypeId" : "GENERAL_LOCATION", "fromDate" : UtilDateTime.nowTimestamp()]));
+					toBeStored.addAll(postalAddressToStore);
+				}
 			}
         }
         return toBeStored;

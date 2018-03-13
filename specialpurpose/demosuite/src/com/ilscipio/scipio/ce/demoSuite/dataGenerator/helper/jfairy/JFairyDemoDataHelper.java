@@ -1,5 +1,6 @@
 package com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.jfairy;
 
+import java.util.Locale;
 import java.util.Map;
 
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject;
@@ -7,6 +8,8 @@ import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.party.DemoDataP
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.DemoDataHelper;
 
 public class JFairyDemoDataHelper extends DemoDataHelper {
+	
+	private Locale locale;
 
 	public JFairyDemoDataHelper(Map<String, Object> context) throws Exception {
 		super(context);
@@ -27,5 +30,13 @@ public class JFairyDemoDataHelper extends DemoDataHelper {
 	
 	public boolean generateUserLogin() {
 		return (boolean) context.get("generateUserLogin");
+	}
+
+	public Locale getLocale() {
+		return locale;
+	}
+
+	public void setLocale(Locale locale) {
+		this.locale = locale;
 	}
 }

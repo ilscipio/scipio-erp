@@ -1,17 +1,11 @@
-import java.util.LinkedList;
-
 import org.ofbiz.base.util.Debug
-import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc
-import org.ofbiz.base.util.UtilProperties
 import org.ofbiz.base.util.UtilRandom
-import org.ofbiz.base.util.UtilValidate
 import org.ofbiz.entity.*
 import org.ofbiz.entity.util.*
 import org.ofbiz.product.category.CategoryWorker
-import org.ofbiz.service.ServiceUtil
 
-import com.ilscipio.scipio.ce.demoSuite.dataGenerator.DemoSuiteDataWorker
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.DemoSuiteDataGeneratorUtil
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.MockarooDataGenerator
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataProduct
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.service.DataGeneratorGroovyBaseScript;
@@ -55,7 +49,8 @@ public class ProductData extends DataGeneratorGroovyBaseScript {
         if (productCategoryIds) {
             String productCategoryTypeId = (context.productCategoryTypeId) ? context.productCategoryTypeId : "CATALOG_CATEGORY";
             String prodCatalogCategoryTypeId = (context.prodCatalogCategoryTypeId) ? context.prodCatalogCategoryTypeId : null;
-            generatedProducts = DemoSuiteDataWorker.generateProduct(numRecords, MockarooDataGenerator.class);
+			// FIXME: This is no longer valid. Use a custom helper for each provider.
+//            generatedProducts = DemoSuiteDataGeneratorUtil.generateProduct(numRecords, MockarooDataGenerator.class);
         }
         context.generatedProducts = generatedProducts;
         context.productCategoryIds = productCategoryIds;

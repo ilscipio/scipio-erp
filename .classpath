@@ -19,7 +19,7 @@
     <classpathentry kind="lib" path="framework/base/lib/barcode4j-fop-ext-2.1.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/batik-all-1.9.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/concurrentlinkedhashmap-lru-1.4.2.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/caffeine-2.6.1.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/caffeine-2.6.2.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/hamcrest-all-1.2.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/fop-2.2.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/freemarker-2.3.27-incubating.jar"/>
@@ -47,7 +47,7 @@
     <classpathentry kind="lib" path="framework/base/lib/esapi-2.1.0.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/resolver-2.9.1.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/serializer-2.9.1.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/slf4j-api-1.6.6.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/slf4j-api-1.7.22.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/ws-commons-java5-1.0.1.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/ws-commons-util-1.0.2.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/xalan-2.7.2.jar"/>
@@ -127,6 +127,7 @@
     <classpathentry kind="lib" path="framework/webapp/lib/iText-2.1.7.jar"/>
     <classpathentry kind="lib" path="framework/webapp/lib/rome-0.9.jar"/>
     <classpathentry kind="lib" path="framework/webapp/lib/urlrewritefilter-4.0.4.jar"/>
+    <classpathentry kind="lib" path="specialpurpose/demosuite/lib/jfairy-0.5.9.jar"/>
     <classpathentry excluding="org/ofbiz/accounting/thirdparty/cybersource/**|org/ofbiz/accounting/thirdparty/verisign/**|org/ofbiz/accounting/thirdparty/paypal/PayPalServices.java|org/ofbiz/accounting/thirdparty/orbital/**|org/ofbiz/accounting/thirdparty/securepay/**|org/ofbiz/accounting/thirdparty/ideal/**" kind="src" path="applications/accounting/src"/>
     <classpathentry excluding="org/ofbiz/content/openoffice/|org/ofbiz/content/report/" kind="src" path="applications/content/src"/>
     <classpathentry kind="src" path="applications/manufacturing/src"/>

@@ -55,10 +55,10 @@
         <dependency org="javolution" name="javolution" rev="5.4.3" transitive="false" conf="base->default"/>
         <dependency org="junit" name="junit-dep" rev="4.10" transitive="false" conf="base->default"/>
         <dependency org="net.sourceforge.nekohtml" name="nekohtml" rev="1.9.16" transitive="false" conf="base->default"/>
-        <dependency org="org.slf4j" name="slf4j-api" rev="1.6.6" conf="base->default"/>
+        <dependency org="org.slf4j" name="slf4j-api" rev="1.7.22" transitive="false" conf="base->default"/>
         <dependency org="xalan" name="xalan" rev="2.7.2" transitive="false" conf="base->default"/>
         <dependency org="org.freemarker" name="freemarker" rev="2.3.27-incubating" transitive="false" conf="base->default"/>
-        <dependency org="com.google.guava" name="guava" rev="14.0.1" transitive="false" conf="base->default"/>
+        <dependency org="com.google.guava" name="guava" rev="20.0" transitive="false" conf="base->default"/>
         <dependency org="de.odysseus.juel" name="juel-impl" rev="2.2.7" transitive="false" conf="base->default"/>
         <dependency org="de.odysseus.juel" name="juel-spi" rev="2.2.7" transitive="false" conf="base->default"/>
         <dependency org="jdom" name="jdom" rev="1.1" transitive="false" conf="base->default"/>
@@ -95,7 +95,7 @@
         <!-- SCIPIO: replaces the ancient clhm-release-1.0-lru.jar file (from 2010) -->
         <dependency org="com.googlecode.concurrentlinkedhashmap" name="concurrentlinkedhashmap-lru" rev="1.4.2" transitive="false" conf="base->default"/>
         <!-- SCIPIO: 2018-02: now include caffeine (concurrentlinkedhashmap successor for java8), required by some addons -->
-        <dependency org="com.github.ben-manes.caffeine" name="caffeine" rev="2.6.1" transitive="false" conf="base->default"/>
+        <dependency org="com.github.ben-manes.caffeine" name="caffeine" rev="2.6.2" transitive="false" conf="base->default"/>
         <!-- FIXME: ivy fails to download this one due to a maven repo problem (missing parent pom) even though it exists
         <dependency org="org.apache.xmlgraphics" name="batik-all" rev="1.9" transitive="false" conf="base->default"/>-->
         <!-- FIXME: this version is older than the 1.0-SNAPSHOT provided by ofbiz

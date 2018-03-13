@@ -23,12 +23,19 @@
       xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
     <info module="demosuite" organisation="com.ilscipio.scipio.ce"/>
     <configurations>
-        <!-- configurations for initial download/build -->
+        <!-- configurations for initial download/build -->        
         <conf name="application" description="download all jars required for build"/>
     </configurations>
     
     <dependencies>
         <!-- dependencies for initial/build downloads -->
         <!-- re init -->
+        <dependency org="io.codearte.jfairy" name="jfairy" rev="0.5.9" conf="application->default" />        
+        
+        <!-- <exclude org="org.apache.commons" conf="application"/> -->
+        <exclude org="org.slf4j" conf="application"/>
+        <exclude org="joda-time" conf="application"/>
+        <exclude org="com.google.guava" conf="application"/>
+        
     </dependencies>
 </ivy-module>

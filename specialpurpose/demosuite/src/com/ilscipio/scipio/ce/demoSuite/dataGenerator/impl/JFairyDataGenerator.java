@@ -2,7 +2,6 @@ package com.ilscipio.scipio.ce.demoSuite.dataGenerator.impl;
 
 import java.util.List;
 
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
 
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.LocalDataGenerator;
@@ -40,11 +39,10 @@ public class JFairyDataGenerator extends LocalDataGenerator {
 		List<DemoDataObject> result = FastList.newInstance();
 		try {
 			Fairy fairy = Fairy.create();
-			for (int i = 0; i <= helper.getCount(); i++) {
+			for (int i = 0; i < helper.getCount(); i++) {
 				Object o = null;
 				if (returnObjectClass.equals(DemoDataParty.class)) {
-					o = fairy.person();
-					Debug.log("person [" + i + "]: " + o);
+					o = fairy.person();					
 				} else if (returnObjectClass.equals(DemoDataProduct.class)) {
 					throw new UnsupportedOperationException("Product demo data is not supported");
 				}

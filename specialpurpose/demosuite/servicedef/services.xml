@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+        xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/services.xsd">
     <description>DemoSuite Services</description>
     <vendor></vendor>
     <version>1.0</version>
@@ -44,7 +44,8 @@
         invoke="" transaction-timeout="7200">
         <description>Creates a number of Party demo data</description>
         <implements service="demoDataGenerator"/>
-        <attribute name="generatePassword" type="Boolean" mode="IN" optional="false" default-value="true"/>        
+        <attribute name="generateUserLogin" type="Boolean" mode="IN" optional="false" default-value="false"/>
+        <attribute name="generateAddress" type="Boolean" mode="IN" optional="false" default-value="false"/>                
     </service>
     
     <service name="createTrackingCodeVisitData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/TrackingCodeVisitData.groovy" 

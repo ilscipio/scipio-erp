@@ -26,7 +26,7 @@
     <!-- LEGACY ECOMMERCE REDIRECT -->
     <rule>
         <from>^/ecommerce([?;#/].*)?$</from>
-        <to type="permanent-redirect" last="true">$1/shop$2</to>
+        <to type="permanent-redirect" last="true">/shop$1?%{query-string}</to>
     </rule>
 
     <!-- SPECIAL REQUEST ATTRIBUTES FOR REWRITE RULES (scpCtrlServPath, etc.) -->

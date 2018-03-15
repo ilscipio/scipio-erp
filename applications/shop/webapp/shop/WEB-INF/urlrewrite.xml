@@ -26,7 +26,7 @@
     <!-- LEGACY ECOMMERCE REDIRECT -->
     <rule>
         <from>^/ecommerce([?;#/].*)?$</from>
-        <to type="permanent-redirect" last="true">$1/shop$2</to>
+        <to type="permanent-redirect" last="true">/shop$1?%{query-string}</to>
     </rule>
 
     <!-- SPECIAL REQUEST ATTRIBUTES FOR REWRITE RULES (scpCtrlServPath, etc.) -->
@@ -39,7 +39,7 @@
         uncomment this to get rid of /control/main URLs -->
     <rule>
         <from>^/[^/]+/?([?;#][^/]*)?$</from>
-        <to last="true">%{attribute:scpCtrlServPath}/main$3</to>
+        <to last="true">%{attribute:scpCtrlServPath}/main$1</to>
     </rule>
     <outbound-rule>
         <from>^([^/]*//[^/]*)?(/[^/]*?)?(/control)?/main([?;#].*)?$</from>

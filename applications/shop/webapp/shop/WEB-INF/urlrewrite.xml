@@ -39,7 +39,7 @@
         uncomment this to get rid of /control/main URLs -->
     <rule>
         <from>^/[^/]+/?([?;#][^/]*)?$</from>
-        <to last="true">%{attribute:scpCtrlServPath}/main$3</to>
+        <to last="true">%{attribute:scpCtrlServPath}/main$1</to>
     </rule>
     <outbound-rule>
         <from>^([^/]*//[^/]*)?(/[^/]*?)?(/control)?/main([?;#].*)?$</from>

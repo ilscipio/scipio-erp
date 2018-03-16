@@ -168,7 +168,7 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
      * Added 2018-03-15.
      */
     public static Map<String, Object> invokeRemoteMirrorService(LocalDispatcher dispatcher, ModelService modelService, 
-            String remoteService, String remoteLocation, String remoteNamespace, Map<String, Object> context, Set<String> alwaysAllowParams) throws GenericServiceException {
+            String remoteService, String remoteLocation, String remoteNamespace, Map<String, Object> context, Set<String> alwaysAllowParams, boolean alwaysThrowEx) throws Exception {
         if (remoteService == null) remoteService = modelService.name;
         if (alwaysAllowParams == null) alwaysAllowParams = Collections.emptySet();
         Delegator delegator = dispatcher.getDelegator();
@@ -224,7 +224,8 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
             OMXMLParserWrapper builder = OMXMLBuilderFactory.createStAXOMBuilder(reader);
             parameterSer = builder.getDocumentElement();
         } catch (Exception e) {
-            Debug.logError(e, module);
+            if (alwaysThrowEx) throw e;
+            else Debug.logError(e, module);
         }
 
         Map<String, Object> results = null;
@@ -236,7 +237,8 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
             client.cleanupTransport();
             results = UtilGenerics.cast(SoapSerializer.deserialize(respOMElement.toString(), delegator));
         } catch (Exception e) {
-            Debug.logError(e, module);
+            if (alwaysThrowEx) throw e;
+            else Debug.logError(e, module);
         }
         return results;
     }

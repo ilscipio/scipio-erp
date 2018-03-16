@@ -33,6 +33,7 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -44,7 +45,6 @@ import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.website.WebSiteWorker;
-import org.ofbiz.base.util.cache.UtilCache;
 
 /**
  * Product Config Worker class to reduce code in templates.
@@ -67,7 +67,8 @@ public class ProductConfigWorker {
             /* caching: there is one cache created, "product.config"  Each product's config wrapper is cached with a key of
              * productId::catalogId::webSiteId::currencyUomId, or whatever the SEPARATOR is defined above to be.
              */
-            String cacheKey = productId + SEPARATOR + productStoreId + SEPARATOR + catalogId + SEPARATOR + webSiteId + SEPARATOR + currencyUomId;
+            Delegator delegator = (Delegator) request.getAttribute("delegator");
+            String cacheKey = productId + SEPARATOR + productStoreId + SEPARATOR + catalogId + SEPARATOR + webSiteId + SEPARATOR + currencyUomId + SEPARATOR + delegator;
             configWrapper = productConfigCache.get(cacheKey);
             if (configWrapper == null) {
                 configWrapper = new ProductConfigWrapper((Delegator)request.getAttribute("delegator"),

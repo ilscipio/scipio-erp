@@ -19,9 +19,11 @@
 package org.ofbiz.service.engine;
 
 import java.io.StringReader;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
@@ -43,6 +45,7 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelParam;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceDispatcher;
@@ -146,6 +149,96 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
             results = UtilGenerics.cast(SoapSerializer.deserialize(respOMElement.toString(), delegator));
         } catch (Exception e) {
             Debug.logError(e, module);
+        }
+        return results;
+    }
+    
+    /**
+     * SCIPIO: Uses the LOCAL definition of a service to invoke a SOAP service on a remote
+     * Scipio instance. It is ASSUMED both servers are of same or compatible versions.
+     * <p>
+     * WARN: LOW-LEVEL implementation that bypasses transactions and most of the service engine!
+     * This is only for implementations of higher-level utilities, and should likely not be used by client code.
+     * <p>
+     * Here, <code>modelService</code> is the LOCAL service definition, not a "soap" engine definition.
+     * <p>
+     * NOTE: This is not proper WSDL, but should work in typical deployment scenarios.
+     * WARN: This bypasses service engine location aliasing.
+     * <p>
+     * Added 2018-03-15.
+     */
+    public static Map<String, Object> invokeRemoteMirrorService(LocalDispatcher dispatcher, ModelService modelService, 
+            String remoteService, String remoteLocation, String remoteNamespace, Map<String, Object> context, Set<String> alwaysAllowParams, boolean alwaysThrowEx) throws Exception {
+        if (remoteService == null) remoteService = modelService.name;
+        if (alwaysAllowParams == null) alwaysAllowParams = Collections.emptySet();
+        Delegator delegator = dispatcher.getDelegator();
+        if (remoteLocation == null || remoteService == null)
+            throw new GenericServiceException("Cannot locate service to invoke");
+
+        ServiceClient client = null;
+        QName serviceName = null;
+        String axis2Repo = "/framework/service/config/axis2";
+        String axis2RepoLocation = System.getProperty("ofbiz.home") + axis2Repo;
+        String axis2XmlFile = "/framework/service/config/axis2/conf/axis2.xml";
+        String axis2XmlFileLocation = System.getProperty("ofbiz.home") + axis2XmlFile;
+
+        try {
+            ConfigurationContext configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(axis2RepoLocation, axis2XmlFileLocation);
+            client = new ServiceClient(configContext, null);
+            Options options = new Options();
+            EndpointReference endPoint = new EndpointReference(remoteLocation);
+            options.setTo(endPoint);
+            client.setOptions(options);
+        } catch (AxisFault e) {
+            throw new GenericServiceException("RPC service error", e);
+        }
+
+        List<ModelParam> inModelParamList = modelService.getInModelParamList();
+
+        if (Debug.infoOn()) Debug.logInfo("[SOAPClientEngine.invoke] : Parameter length - " + inModelParamList.size(), module);
+
+        if (UtilValidate.isNotEmpty(remoteNamespace)) {
+            serviceName = new QName(remoteNamespace, remoteService);
+        } else {
+            serviceName = new QName(remoteService);
+        }
+
+        int i = 0;
+
+        Map<String, Object> parameterMap = new HashMap<String, Object>();
+        for (ModelParam p: inModelParamList) {
+            if (Debug.infoOn()) Debug.logInfo("[SOAPClientEngine.invoke} : Parameter: " + p.name + " (" + p.mode + ") - " + i, module);
+
+            // exclude params that ModelServiceReader insert into (internal params)
+            if (!p.internal || (alwaysAllowParams.contains(p.name) && context.containsKey(p.name))) {
+                parameterMap.put(p.name, context.get(p.name));
+            }
+            i++;
+        }
+
+        OMElement parameterSer = null;
+
+        try {
+            String xmlParameters = SoapSerializer.serialize(parameterMap);
+            XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(xmlParameters));
+            OMXMLParserWrapper builder = OMXMLBuilderFactory.createStAXOMBuilder(reader);
+            parameterSer = builder.getDocumentElement();
+        } catch (Exception e) {
+            if (alwaysThrowEx) throw e;
+            else Debug.logError(e, module);
+        }
+
+        Map<String, Object> results = null;
+        try {
+            OMFactory factory = OMAbstractFactory.getOMFactory();
+            OMElement payload = factory.createOMElement(serviceName);
+            payload.addChild(parameterSer.getFirstElement());
+            OMElement respOMElement = client.sendReceive(payload);
+            client.cleanupTransport();
+            results = UtilGenerics.cast(SoapSerializer.deserialize(respOMElement.toString(), delegator));
+        } catch (Exception e) {
+            if (alwaysThrowEx) throw e;
+            else Debug.logError(e, module);
         }
         return results;
     }

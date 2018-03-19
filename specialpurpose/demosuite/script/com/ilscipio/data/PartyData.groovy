@@ -14,14 +14,13 @@ import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataAddress
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataPerson
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataUserLogin
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.DemoDataHelper.dataTypeEnum
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.service.DataGeneratorGroovyBaseScript
 
 import javolution.util.FastList
 
 
 public class PartyData extends DataGeneratorGroovyBaseScript {
-	
-	final String DATA_TYPE = "party";
     
     PartyData() {
         Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - PARTY DATA-=-=-=-", "");
@@ -42,7 +41,7 @@ public class PartyData extends DataGeneratorGroovyBaseScript {
     ]
     
 	public String getDataType() {
-		return DATA_TYPE;
+		return dataTypeEnum.PARTY;
 	}
 	
 	public void init() {				
@@ -105,9 +104,8 @@ public class PartyData extends DataGeneratorGroovyBaseScript {
 			if (generator.getHelper().generateAddress()) {
 				DemoDataAddress demoDataAddress = partyData.getAddress();
 				
-				GenericValue countryGeo = EntityUtil.getFirst(delegator.findByAnd("Geo", UtilMisc.toMap("geoCode", demoDataAddress.country, "geoTypeId", "COUNTRY"), UtilMisc.toList("geoId"), false));				
-				if (countryGeo) {
-					Debug.log("countryGeoId ====> " + countryGeo.geoId);
+				GenericValue countryGeo = EntityUtil.getFirst(delegator.findByAnd("Geo", UtilMisc.toMap("geoCode", demoDataAddress.country, "geoTypeId", "COUNTRY"), UtilMisc.toList("geoId"), true));				
+				if (countryGeo) {					
 					String contactMechId = "GEN_" + delegator.getNextSeqId("demo-contactMechId");
 					List<GenericValue> postalAddressToStore = FastList.newInstance();
 					GenericValue contactMech = delegator.makeValue("ContactMech", ["contactMechTypeId" : "POSTAL_ADDRESS", "contactMechId" : contactMechId]);

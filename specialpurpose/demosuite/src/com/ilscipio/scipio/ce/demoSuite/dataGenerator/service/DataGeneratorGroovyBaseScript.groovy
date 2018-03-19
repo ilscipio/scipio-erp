@@ -4,6 +4,7 @@ import java.sql.Timestamp
 
 import org.ofbiz.base.util.Debug
 import org.ofbiz.base.util.UtilDateTime
+import org.ofbiz.base.util.UtilMisc
 import org.ofbiz.base.util.UtilProperties
 import org.ofbiz.base.util.UtilValidate
 import org.ofbiz.entity.GenericValue
@@ -22,7 +23,8 @@ import javolution.util.FastMap
 // FIXME?: revisit reuse pattern; in Ofbiz GroovyBaseScript is not meant to be hardcoded
 abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
     private static final Integer DATA_GENERATOR_MAX_RECORDS = UtilProperties.getPropertyAsInteger("demosuite", "demosuite.test.data.max.records", 50);
-	private static final String DATA_GENERATOR_DEFAULT_PROVIDER = UtilProperties.getPropertyValue("demosuite", "demosuite.test.data.default.provider", "jfairy");
+	private static final String DATA_GENERATOR_DEFAULT_PROVIDER = UtilProperties.getPropertyValue("demosuite", "demosuite.test.data.default.provider", "JFAIRY");	
+	
 	
     private static final String resource_error = "DemoSuiteUiLabels";
     public static final String module = DataGeneratorGroovyBaseScript.class.getName();
@@ -175,28 +177,31 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
         context.maxDate = maxDate;
     }
 	
-	private void initDataGenerator() {
-		String dataGeneratorProvider = context.dataGeneratorProvider;
-		if (!dataGeneratorProvider) {
-			dataGeneratorProvider = getDefaultProvider();
-		}
-		Class<? extends DataGenerator> clazz = Class.forName(UtilProperties.getPropertyValue("demosuite", "demosuite.test.data.provider." + dataGeneratorProvider + ".class"));
-		Class<? extends DemoDataHelper> helperClazz = null;
-		String demoDataHelperClass = UtilProperties.getPropertyValue("demosuite", "demosuite.test.data.provider." + dataGeneratorProvider + "." + getDataType() + ".helper.class");
+	private void initDataGenerator() throws Exception {
+		String dataGeneratorProviderId = context.dataGeneratorProviderId;
+		if (!dataGeneratorProviderId) {
+			dataGeneratorProviderId = getDefaultProvider();
+		}		
+		GenericValue dataGeneratorProvider = delegator.findOne("DataGeneratorProvider", false, UtilMisc.toMap("dataGeneratorProviderId", dataGeneratorProviderId));
 		
-		if (demoDataHelperClass) {
-			helperClazz = Class.forName(demoDataHelperClass);
+		if (dataGeneratorProvider) {
+			context.dataGeneratorProvider = dataGeneratorProvider;
+			try {				
+				Class<? extends DemoDataHelper> helperClazz = Class.forName(dataGeneratorProvider.get("dataGeneratorProviderHelperClass"));
+				DemoDataHelper helper = (DemoDataHelper) helperClazz.getConstructor(Map.class).newInstance(context);
+				try {										
+					Class<? extends DataGenerator> clazz = Class.forName(dataGeneratorProvider.get("dataGeneratorProviderClass"));
+					DataGenerator generator = (DataGenerator) clazz.getConstructor(DemoDataHelper.class).newInstance(helper);
+					context.generator = generator;
+				} catch (Exception e) {
+					throw new Exception("Can't instantiate provider class");
+				}					
+			} catch (Exception e) {
+				throw new Exception("Can't instantiate helper class");
+			}		
 		} else {
-			demoDataHelperClass = UtilProperties.getPropertyValue("demosuite", "demosuite.test.data.provider.default.party.helper.class");
-			helperClazz = Class.forName(demoDataHelperClass);
+			throw new Exception("Can't find provider [" + dataGeneratorProviderId + "]");
 		}
-		try {
-			DemoDataHelper helper = (DemoDataHelper) helperClazz.getConstructor(Map.class).newInstance(context);
-			DataGenerator generator = (DataGenerator) clazz.getConstructor(DemoDataHelper.class).newInstance(helper);
-			context.generator = generator;
-		} catch (Exception e) {
-			Debug.logError(e, module);
-		}	
 	}
 	
 	

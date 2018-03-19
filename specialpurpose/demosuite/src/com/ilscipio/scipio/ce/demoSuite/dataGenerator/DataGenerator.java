@@ -1,37 +1,48 @@
 package com.ilscipio.scipio.ce.demoSuite.dataGenerator;
 
 import java.util.List;
-import java.util.Properties;
 
-import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilValidate;
 
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.DemoDataHelper;
 
 public abstract class DataGenerator {
 
-	protected final Class<? extends DemoDataObject> returnObjectClass;
-	protected final Properties properties;
-	protected final DemoDataHelper helper;
+	private final DemoDataHelper helper;
 
 	public DataGenerator(DemoDataHelper helper) {
-		this.returnObjectClass = helper.getReturnObjectClass();
-		this.properties = UtilProperties.getProperties("demosuite.properties");
 		this.helper = helper;
 	}
 
-	protected abstract List<? extends DemoDataObject> retrieveData() throws Exception;
+	public abstract List<? extends DemoDataObject> retrieveData() throws Exception;
 
-	protected DemoDataObject handleData(Object result) {
+	public DemoDataObject handleData(Object result) {
 		return handleData(result, null);
 	}
 
-	protected abstract DemoDataObject handleData(Object result, String format);
+	public abstract DemoDataObject handleData(Object result, String format);
 
-	protected abstract String getDataGeneratorName();
+	public abstract String getDataGeneratorName();
 
 	public DemoDataHelper getHelper() {
 		return helper;
+	}
+
+	public abstract class DataGeneratorSettings {
+		public DataGeneratorSettings() {
+		}
+
+		public List<Object> getFields(String dataType) throws UnsupportedOperationException {
+			String fields = null;
+			fields = helper.getProperties()
+					.getProperty("demosuite.test.data.provider." + getDataGeneratorName() + ".fields." + dataType);
+			if (UtilValidate.isNotEmpty(fields)) {
+				return UtilMisc.toListArray(fields.split(",\\s{0,1}"));
+			}
+			return null;
+		}
 	}
 
 }

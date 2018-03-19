@@ -5,7 +5,7 @@ import java.util.Locale;
 
 import org.ofbiz.base.util.UtilValidate;
 
-import com.ilscipio.scipio.ce.demoSuite.dataGenerator.LocalDataGenerator;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.DataGenerator;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataAddress;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataPerson;
@@ -13,14 +13,14 @@ import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataProduct
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataUserLogin;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.party.DemoDataParty;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.DemoDataHelper;
-import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.jfairy.JFairyDemoDataHelper;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.JFairyDemoDataHelper;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.util.DemoSuiteDataGeneratorUtil;
 
 import io.codearte.jfairy.Fairy;
 import io.codearte.jfairy.producer.person.Person;
 import javolution.util.FastList;
 
-public class JFairyDataGenerator extends LocalDataGenerator {
+public class JFairyDataGenerator extends DataGenerator {
 	private final static String JFAIRY_DATA_GENERATOR = "jfairy";
 	private final static String module = JFairyDataGenerator.class.getName();
 
@@ -29,15 +29,10 @@ public class JFairyDataGenerator extends LocalDataGenerator {
 	public JFairyDataGenerator(DemoDataHelper helper) {
 		super(helper);
 		this.helper = (JFairyDemoDataHelper) helper;
-	}
-
-	public class JFairySettings extends LocalDataGeneratorSettings {
-		public JFairySettings() {
-		}
-	}
+	}	
 
 	@Override
-	protected List<? extends DemoDataObject> retrieveData() throws Exception {
+	public List<? extends DemoDataObject> retrieveData() throws Exception {
 		List<DemoDataObject> result = FastList.newInstance();
 		try {			
 			for (int i = 0; i < helper.getCount(); i++) {
@@ -45,9 +40,9 @@ public class JFairyDataGenerator extends LocalDataGenerator {
 				helper.setLocale(locale);
 				Fairy fairy = Fairy.create(locale);
 				Object o = null;
-				if (returnObjectClass.equals(DemoDataParty.class)) {
+				if (helper.getReturnObjectClass().equals(DemoDataParty.class)) {
 					o = fairy.person();					
-				} else if (returnObjectClass.equals(DemoDataProduct.class)) {
+				} else if (helper.getReturnObjectClass().equals(DemoDataProduct.class)) {
 					throw new UnsupportedOperationException("Product demo data is not supported");
 				}
 				if (UtilValidate.isNotEmpty(o)) {
@@ -63,13 +58,13 @@ public class JFairyDataGenerator extends LocalDataGenerator {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected DemoDataObject handleData(Object result, String format) throws UnsupportedOperationException {
+	public DemoDataObject handleData(Object result, String format) throws UnsupportedOperationException {
 		DemoDataObject handledData = null;
-		JFairySettings settings = new JFairySettings();
-		// TODO: Apply fields while creating the DemoData* objects
-		List<String> fields = settings.getFields(helper.getDataType());
+		// FIXME: Make sure this makes sense for all data generators
+//		JFairySettings settings = new JFairySettings();
+//		List<String> fields = settings.getFields(helper.getDataType());
 
-		if (returnObjectClass.equals(DemoDataParty.class) && result instanceof Person) {
+		if (helper.getReturnObjectClass().equals(DemoDataParty.class) && result instanceof Person) {
 			DemoDataParty demoDataParty = new DemoDataParty();
 			
 			Person person = (Person) result;
@@ -110,7 +105,7 @@ public class JFairyDataGenerator extends LocalDataGenerator {
 	}
 
 	@Override
-	protected String getDataGeneratorName() {
+	public String getDataGeneratorName() {
 		return JFAIRY_DATA_GENERATOR;
 	}
 

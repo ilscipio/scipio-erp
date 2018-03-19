@@ -4,11 +4,11 @@
   <#list serviceParameters as serviceParameter>
   	<#local rawName = rawString(serviceParameter.name)>
   	<#local fieldLabel>${serviceParameter.name} (<em>${serviceParameter.type}</em>)<#if defaultValStr?has_content> (${uiLabelMap.WebtoolsServiceDefault}: <em>${defaultValStr}</em>)</#if></#local>
-  	<#if rawName?has_content && rawName == "dataGeneratorProvider">
-      	 <@field type="select" label=wrapAsRaw(fieldLabel, 'htmlmarkup') name="dataGeneratorProvider">
+  	<#if rawName?has_content && rawName == "dataGeneratorProviderId">
+      	 <@field type="select" label=wrapAsRaw(fieldLabel, 'htmlmarkup') name="dataGeneratorProviderId">
 		 	<option value="">---</option>
 		 	<#list dataGeneratorProviders as dataGeneratorProvider>
-		 		<option value="${dataGeneratorProvider!""}">${dataGeneratorProvider!""}</option>
+		 		<option value="${dataGeneratorProvider.dataGeneratorProviderId}">${dataGeneratorProvider.dataGeneratorProviderName}</option>
 		 	</#list>
 		 </@field>
 	</#if>
@@ -17,7 +17,7 @@
   <#list serviceParameters as serviceParameter>
     <#-- WARN: watch out for screen auto-escaping on serviceParameter -->
     <#local rawName = rawString(serviceParameter.name)>
-    <#if (rawName?has_content && rawName != "dataGeneratorProvider")>
+    <#if (rawName?has_content && rawName != "dataGeneratorProviderId")>
 	    <#if (exclude[rawName]!false) != true && (rawName?has_content && rawName != "dataGeneratorProvider")>
 	      <#local defaultValue = serviceParameter.defaultValue!>
 	      <#local defaultValStr = defaultValue?string><#-- NOTE: forced html escaping - do not pass to macro params -->

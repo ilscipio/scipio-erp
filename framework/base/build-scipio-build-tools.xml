@@ -28,6 +28,9 @@ under the License.
     
     <!-- we need to reuse build.xml definitions...
     <import file="../../common.xml"/>-->
+    <!-- ofbiz.home.dir, normally inherited or set through common.xml/macros.xml -->
+    <dirname property="scipio.comp.buildtools.dir" file="${ant.file.SCIPIO ERP - Build Tools}"/>
+    <property name="ofbiz.home.dir2" location="${scipio.comp.buildtools.dir}/../.."/>
 
     <!-- ================================================================== -->
     <!-- Initialization of all property settings                            -->
@@ -35,7 +38,6 @@ under the License.
 
     <property name="desc" value="Scipio Build Tools"/>
     <property name="name" value="scipio-build-tools"/>
-    <property name="ofbiz.home.dir" value="../.."/>
     
     <!-- NOTE: this must be included AFTER property defs -->
     <import file="build.xml"/>

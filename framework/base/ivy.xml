@@ -1,198 +1,386 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
- Licensed to Ilscipio Gmbh (ILSCIPIO) under one
- or more contributor license agreements.  See the NOTICE file
- distributed with this work for additional information
- regarding copyright ownership.
-
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
-
-     http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
-
- -->
 <ivy-module version="2.0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
     <info module="base" organisation="com.ilscipio.scipio.ce"/>
-    <configurations>
-        <!-- configurations for initial download/build -->
-        <conf name="application" description="download all jars required for build"/>
 
-        <conf name="base" description="download all base root jars required for build"/>
-        <conf name="ant" description="download all ant jars required for build"/>
-        <conf name="commons" description="download all commons jars required for build"/>
-        <conf name="j2eespecs" description="download all j2eespecs jars required for build"/>
-        <conf name="scripting" description="download all scripting jars required for build"/>
-        <conf name="media" description="download all media jars required for build"/>
+    <!--
+        SCIPIO BASE IVY CONFIGURATIONS AND DEPENDENCIES
+
+        NOTICE: 2018-03-19: All prior (framework|applications|specialpurpose)/*/lib ivy dependencies
+        are now defined in this file (framework/base/ivy.xml) except for start component.
+
+        This file contains the base/core/common framework dependencies for stock ScipioCE/EE
+        as well as (now) the dependencies for nearly all framework, applications and specialpurpose
+        components, some themes dependencies, and even some (in temporary fashion) addons dependencies.
+
+        Use of single file allows centralized editing of stock Scipio dependencies
+        and exploiting transitive dependency resolution using ivy.
+
+        Custom/client configurations and dependencies may be added at the end of each section below.
         
-        <!-- TODO?: these are from the root /ivy.xml...
-        <conf name="activemq" description="downloads the ActiveMQ jars"/>
-        <conf name="cobertura" description="downloads cobertura 1.9.4.1 (GPL2.0) http://cobertura.sourceforge.net/"/>
-        <conf name="sonar-ant-task" description="downloads the ant sonar task (need sonar>=2.8)
-            http://docs.codehaus.org/display/SONAR/Analyzing+with+SonarQube+Ant+Task"/>
+        NOTE: Adding new configurations requires updating the framework/base/build.xml
+        file (lib.resolve.confs property and do-lib-update task overrides).
+        
+        NOTE: If a library is not available in central, it may be added to the project
+        locally using the local-ivy resolver (ivy/localRepo/, see ivy/ivysettings.xml).
+        Some original stock libraries may still be handled this way at this time (2018-03-20).
+    -->
+
+    <configurations defaultconfmapping="%->default">
+
+        <!--
+            BASE FRAMEWORK COMPONENT CONFIGURATIONS
+
+            These configurations were already defined in this file (framework/base/ivy.xml) prior to 2018-03-19.
         -->
+
+        <conf name="base" description="download all framework/base/lib (root dir) jars required for build"/>
+        <conf name="commons" description="download all framework/base/commons jars required for build"/>
+        <conf name="j2eespecs" description="download all framework/base/j2eespecs jars required for build"/>
+        <conf name="scripting" description="download all framework/base/scripting jars required for build"/>
+        <conf name="groovy" description="download groovy jars required for build"/>
+        <conf name="media" description="download all framework/base/media jars required for build"/>
+
+        <!--
+            OTHER COMPONENT CONFIGURATIONS
+
+            These configurations were defined in (framework|applications|specialpurse)/*/ivy.xml prior to 2018-03-19.
+        -->
+
+        <conf name="application" description="download all non-base (framework|applications|specialpurpose)/*/lib jars required for build"/>
+
+        <!--
+            ON-DEMAND OPTIONAL STOCK CONFIGURATIONS
+
+            These are special configurations for stock Scipio code and ant tasks which are only fetched
+            on user request and/or by special ant tasks, e.g. the "download-xxx" tasks in the main Scipio build.xml.
+            
+            NOTE: These must NOT be included in the framework/base/build.xml resolution and update overrides.
+        -->
+
+        <!-- deps for main build.xml ant task: download-activemq -->
+        <conf name="activemq" description="download the ActiveMQ jars"/>
+
+        <!-- deps for main build.xml ant task: download-cobertura -->
+        <conf name="cobertura" description="download cobertura (GPL2.0) http://cobertura.sourceforge.net/"/>
+
+        <!-- deps for main build.xml ant task: download-sonar-ant-task -->
+        <conf name="sonar-ant-task" description="download the ant sonar task (need sonar)
+            http://docs.codehaus.org/display/SONAR/Analyzing+with+SonarQube+Ant+Task"/>
+
+        <!--
+            CUSTOM/CLIENT CONFIGURATIONS
+
+            Custom/client configurations which are required by several modules
+            or by patches to the framework or any stock Scipio components or code
+            may be added below this comment.
+            
+            NOTE: If you add new confs here, you must modify the lib.resolve.confs property
+            and do-lib-update target in framework/base/build.xml.
+            It is recommended to simply reuse the "application" conf instead if possible.
+        -->
+
+
+        <!-- /CUSTOM/CLIENT CONFIGURATIONS (END) -->
+
     </configurations>
 
     <dependencies>
-        <!-- dependencies for initial/build downloads -->
-        <!-- re base root -->
-        <dependency org="net.sf.barcode4j" name="barcode4j" rev="2.1" transitive="false" conf="base->default"/>
-        <dependency org="net.sf.barcode4j" name="barcode4j-fop-ext" rev="2.1" transitive="false" conf="base->default"/>
-        <dependency org="org.apache.xmlgraphics" name="fop" rev="2.2" transitive="false" conf="base->default"/>
-        <dependency org="org.apache.httpcomponents" name="httpclient" transitive="false" rev="4.3.6" conf="base->default"/>
-        <dependency org="org.apache.httpcomponents" name="httpclient-cache" transitive="false" rev="4.3.6" conf="base->default"/>
-        <dependency org="org.apache.httpcomponents" name="httpcore" rev="4.3.3" transitive="false" conf="base->default"/>
-        <dependency org="httpunit" name="httpunit" rev="1.7" transitive="false" conf="base->default"/>
-        <dependency org="com.ibm.icu" name="icu4j" rev="57.1" transitive="false" conf="base->default"/>
-        <dependency org="javolution" name="javolution" rev="5.4.3" transitive="false" conf="base->default"/>
-        <dependency org="junit" name="junit-dep" rev="4.10" transitive="false" conf="base->default"/>
-        <dependency org="net.sourceforge.nekohtml" name="nekohtml" rev="1.9.16" transitive="false" conf="base->default"/>
-        <dependency org="org.slf4j" name="slf4j-api" rev="1.7.22" transitive="false" conf="base->default"/>
-        <dependency org="xalan" name="xalan" rev="2.7.2" transitive="false" conf="base->default"/>
-        <dependency org="org.freemarker" name="freemarker" rev="2.3.27-incubating" transitive="false" conf="base->default"/>
-        <dependency org="com.google.guava" name="guava" rev="24.0-jre" transitive="false" conf="base->default"/>
-        <dependency org="de.odysseus.juel" name="juel-impl" rev="2.2.7" transitive="false" conf="base->default"/>
-        <dependency org="de.odysseus.juel" name="juel-spi" rev="2.2.7" transitive="false" conf="base->default"/>
-        <dependency org="jdom" name="jdom" rev="1.1" transitive="false" conf="base->default"/>
-        <dependency org="org.apache.logging.log4j" name="log4j-1.2-api" rev="2.3" transitive="false" conf="base->default"/>
-        <dependency org="org.apache.logging.log4j" name="log4j-api" rev="2.3" transitive="false" conf="base->default"/>
-        <dependency org="org.apache.logging.log4j" name="log4j-core" rev="2.3" transitive="false" conf="base->default"/>
-        <dependency org="org.apache.logging.log4j" name="log4j-nosql" rev="2.3" transitive="false" conf="base->default"/>
-        <dependency org="org.apache.logging.log4j" name="log4j-slf4j-impl" rev="2.3" transitive="false" conf="base->default"/>
-        <dependency org="com.sun.mail" name="javax.mail" rev="1.5.1" transitive="false" conf="base->default"/>
-        <dependency org="xerces" name="xercesImpl" rev="2.11.0" transitive="false" conf="base->default"/>
-        <dependency org="xml-apis" name="xml-apis" rev="1.4.01" transitive="false" conf="base->default"/>
-        <dependency org="xml-apis" name="xml-apis-ext" rev="1.3.04" transitive="false" conf="base->default"/><!-- FIXME?: should be same version as xml-apis -->
-        <dependency org="org.apache.xmlgraphics" name="xmlgraphics-commons" rev="2.2" transitive="false" conf="base->default"/>
-        <dependency org="org.apache.xmlrpc" name="xmlrpc-client" rev="3.1.2" transitive="false" conf="base->default"/>
-        <dependency org="org.apache.xmlrpc" name="xmlrpc-common" rev="3.1.2" transitive="false" conf="base->default"/>
-        <dependency org="org.apache.xmlrpc" name="xmlrpc-server" rev="3.1.2" transitive="false" conf="base->default"/>
-        <dependency org="xpp3" name="xpp3" rev="1.1.4c" transitive="false" conf="base->default"/>
-        <dependency org="com.thoughtworks.xstream" name="xstream" rev="1.4.9" transitive="false" conf="base->default"/>
-        <dependency org="com.thoughtworks.xstream" name="xstream" rev="1.4.9" transitive="false" conf="base->default"/>
-        <dependency org="org.owasp.esapi" name="esapi" rev="2.1.0" transitive="false" conf="base->default"/>
-        <dependency org="com.googlecode.owasp-java-html-sanitizer" name="owasp-java-html-sanitizer" rev="r239" transitive="false" conf="base->default"/>
-        <dependency org="com.fasterxml.jackson.core" name="jackson-annotations" rev="2.4.0" transitive="false" conf="base->default"/>
-        <dependency org="com.fasterxml.jackson.core" name="jackson-core" rev="2.4.2" transitive="false" conf="base->default"/>
-        <dependency org="com.fasterxml.jackson.core" name="jackson-databind" rev="2.4.2" transitive="false" conf="base->default"/>
-        <dependency org="org.jdom" name="jdom" rev="1.1" transitive="false" conf="base->default"/>
-        <dependency org="org.apache.ws.commons" name="ws-commons-java5" rev="1.0.1" transitive="false" conf="base->default"/>
-        <dependency org="org.apache.ws.commons.util" name="ws-commons-util" rev="1.0.2" transitive="false" conf="base->default"/>
-        <dependency org="joda-time" name="joda-time" rev="2.9.9" transitive="false" conf="base->default" />
-        <dependency org="org.apache.avalon.framework" name="avalon-framework-impl" rev="4.3.1" transitive="false" conf="base->default"/>
-        <dependency org="org.apache.avalon.framework" name="avalon-framework-api" rev="4.3.1" transitive="false" conf="base->default"/>        
-        <dependency org="org.apache.tika" name="tika-core" rev="1.14" transitive="false" conf="base->default"/>
-        <dependency org="org.apache.tika" name="tika-parsers" rev="1.14" transitive="false" conf="base->default"/>
-        <dependency org="com.googlecode.juniversalchardet" name="juniversalchardet" rev="1.0.3" transitive="false" conf="base->default"/>
-        <!-- SCIPIO: replaces the ancient clhm-release-1.0-lru.jar file (from 2010) -->
-        <dependency org="com.googlecode.concurrentlinkedhashmap" name="concurrentlinkedhashmap-lru" rev="1.4.2" transitive="false" conf="base->default"/>
-        <!-- SCIPIO: 2018-02: now include caffeine (concurrentlinkedhashmap successor for java8), required by some addons -->
-        <dependency org="com.github.ben-manes.caffeine" name="caffeine" rev="2.6.2" transitive="false" conf="base->default"/>
-        <!-- FIXME: ivy fails to download this one due to a maven repo problem (missing parent pom) even though it exists
-        <dependency org="org.apache.xmlgraphics" name="batik-all" rev="1.9" transitive="false" conf="base->default"/>-->
-        <!-- FIXME: this version is older than the 1.0-SNAPSHOT provided by ofbiz
-        <dependency org="jdbm" name="jdbm" rev="1.0" transitive="false" conf="base->default"/>-->
-        <!-- FIXME: this version is only in Adobe 3rd-party repo
-        <dependency org="net.fortuna.ical4j" name="ical4j" rev="1.0-rc2" transitive="false" conf="base->default"/>-->
-        <!-- FIXME: the specific version we need, 1.2, is not in central; only 1.3 is
-        <dependency org="org.hamcrest" name="hamcrest-all" rev="1.2" transitive="false" conf="base->default"/>-->
-        <!-- FIXME: not in any repo
-        <dependency org="?" name="jpim" rev="0.1" transitive="false" conf="base->default"/>-->
-        <!-- FIXME: only available in third-party repo
-        <dependency org="org.apache.xerces" name="serializer" rev="2.9.1" transitive="false" conf="base->default"/>-->
-        <!-- FIXME: not in any repo
-        <dependency org="?" name="jpim" rev="0.1" transitive="false" conf="base->default"/>-->
-        <!-- FIXME: only in 3rd-party repo
-        <dependency org="org.apache.xerces" name="resolver" rev="2.9.1" transitive="false" conf="base->default"/>-->
-        <!-- FIXME: this appears to be a custom package
-        <dependency org="?" name="bsh-engine-modified" rev="?" transitive="false" conf="base->default"/>-->
-        <!-- FIXME: this appears to be a custom package
-        <dependency org="?" name="bsh-engine-modified" rev="?" transitive="false" conf="base->default"/>-->
-        <!-- FIXME: nowhere to be found
-        <dependency org="?" name="clhm-release" rev="1.0-lru" transitive="false" conf="base->default"/>-->
-        <!-- TODO?: Handle sonar here, instead of dedicated download task?
-        <dependency org="?" name="sonar" rev="?" transitive="false" conf="base->default"/>-->
-         
-        <!-- SCIPIO: 2017-11: new -->
-        <dependency org="com.google.code" name="sitemapgen4j" rev="1.0.1" transitive="false" conf="base->default"/>
-        <!-- TODO? <dependency org="org.jasig.cas.client" name="cas-client-core" rev="3.4.1" transitive="false" conf="base->default"/>-->
-        
-        <!-- re Ant -->
-        <!-- Update process relies on ant-contrib, can't update in-place reliably
-        <dependency org="ant-contrib" name="ant-contrib" rev="1.0b3" transitive="false" conf="ant->default"/>-->
 
-        <!-- re Commons -->
-        <dependency org="commons-beanutils" name="commons-beanutils-core" rev="1.8.3" transitive="false" conf="commons->default"/>
-        <dependency org="commons-codec" name="commons-codec" rev="1.10" transitive="false" conf="commons->default"/>
-        <dependency org="commons-collections" name="commons-collections" rev="3.2.2" transitive="false" conf="commons->default"/>
-        <dependency org="org.apache.commons" name="commons-collections4" rev="4.1" transitive="false" conf="commons->default"/>
-        <dependency org="org.apache.commons" name="commons-compress" rev="1.9" transitive="false" conf="commons->default"/>
-        <dependency org="commons-el" name="commons-el" rev="1.0" transitive="false" conf="commons->default"/>
-        <dependency org="commons-fileupload" name="commons-fileupload" rev="1.3.3" transitive="false" conf="commons->default"/>
-        <dependency org="commons-io" name="commons-io" rev="2.4" transitive="false" conf="commons->default"/>
-        <dependency org="commons-lang" name="commons-lang" rev="2.6" transitive="false" conf="commons->default"/>
-        <dependency org="commons-logging" name="commons-logging" rev="1.2" transitive="false" conf="commons->default"/>
-        <dependency org="commons-net" name="commons-net" rev="3.3" transitive="false" conf="commons->default"/>
-        <dependency org="org.apache.commons" name="commons-pool2" rev="2.3" transitive="false" conf="commons->default"/>
-        <dependency org="commons-validator" name="commons-validator" rev="1.4.1" transitive="false" conf="commons->default"/>
-        <dependency org="org.apache.commons" name="commons-csv" rev="1.5" transitive="false" conf="commons->default"/>
+        <!--
+            BASE FRAMEWORK COMPONENT DEPENDENCIES
 
-        <!-- re j2eespecs -->
-        <dependency org="org.apache.geronimo.specs" name="geronimo-activation_1.0.2_spec" rev="1.0" transitive="false" conf="j2eespecs->default"/>
-        <dependency org="org.apache.geronimo.specs" name="geronimo-j2ee-connector_1.5_spec" rev="2.0.0" transitive="false" conf="j2eespecs->default"/>
-        <dependency org="org.apache.geronimo.specs" name="geronimo-jaxr_1.0_spec" rev="1.0" transitive="false" conf="j2eespecs->default"/>
-        <dependency org="org.apache.geronimo.specs" name="geronimo-jaxrpc_1.1_spec" rev="1.0" transitive="false" conf="j2eespecs->default"/>
-        <dependency org="org.apache.geronimo.specs" name="geronimo-jms_1.1_spec" rev="1.1.1" transitive="false" conf="j2eespecs->default"/>
-        <dependency org="org.apache.geronimo.specs" name="geronimo-jta_1.1_spec" rev="1.1.1" transitive="false" conf="j2eespecs->default"/>
-        <dependency org="org.apache.geronimo.specs" name="geronimo-saaj_1.3_spec" rev="1.1" transitive="false" conf="j2eespecs->default"/>
+            These dependencies were already defined in this file (framework/base/ivy.xml) prior to 2018-03-19.
+            
+            NOTE: Some of these dependencies (from stock ofbiz) were not originally available in central
+            and may still be being fetched only locally from the local-ivy repo (ivy/localRepo/) at this time (2018-03-20).
+        -->
+
+        <!-- base jars -->
+        <dependency org="net.sf.barcode4j" name="barcode4j" rev="2.1" transitive="false" conf="base"/>
+        <dependency org="net.sf.barcode4j" name="barcode4j-fop-ext" rev="2.1" transitive="false" conf="base"/>
+        <dependency org="org.apache.xmlgraphics" name="fop" rev="2.2" transitive="false" conf="base"/>
+        <dependency org="org.apache.httpcomponents" name="httpclient" transitive="false" rev="4.3.6" conf="base"/>
+        <dependency org="org.apache.httpcomponents" name="httpclient-cache" transitive="false" rev="4.3.6" conf="base"/>
+        <dependency org="org.apache.httpcomponents" name="httpcore" rev="4.3.3" transitive="false" conf="base"/>
+        <dependency org="httpunit" name="httpunit" rev="1.7" transitive="false" conf="base"/>
+        <dependency org="com.ibm.icu" name="icu4j" rev="57.1" transitive="false" conf="base"/>
+        <dependency org="javolution" name="javolution" rev="5.4.3" transitive="false" conf="base"/>
+        <dependency org="junit" name="junit-dep" rev="4.10" transitive="false" conf="base"/>
+        <dependency org="net.sourceforge.nekohtml" name="nekohtml" rev="1.9.16" transitive="false" conf="base"/>
+        <dependency org="org.slf4j" name="slf4j-api" rev="1.7.22" transitive="false" conf="base"/>
+        <dependency org="xalan" name="xalan" rev="2.7.2" transitive="false" conf="base"/>
+        <dependency org="org.freemarker" name="freemarker" rev="2.3.27-incubating" transitive="false" conf="base"/>
+        <dependency org="com.google.guava" name="guava" rev="24.0-jre" transitive="false" conf="base"/>
+        <dependency org="de.odysseus.juel" name="juel-impl" rev="2.2.7" transitive="false" conf="base"/>
+        <dependency org="de.odysseus.juel" name="juel-spi" rev="2.2.7" transitive="false" conf="base"/>
+        <dependency org="jdom" name="jdom" rev="1.1" transitive="false" conf="base"/>
+        <dependency org="org.apache.logging.log4j" name="log4j-1.2-api" rev="2.3" transitive="false" conf="base"/>
+        <dependency org="org.apache.logging.log4j" name="log4j-api" rev="2.3" transitive="false" conf="base"/>
+        <dependency org="org.apache.logging.log4j" name="log4j-core" rev="2.3" transitive="false" conf="base"/>
+        <dependency org="org.apache.logging.log4j" name="log4j-nosql" rev="2.3" transitive="false" conf="base"/>
+        <dependency org="org.apache.logging.log4j" name="log4j-slf4j-impl" rev="2.3" transitive="false" conf="base"/>
+        <dependency org="com.sun.mail" name="javax.mail" rev="1.5.1" transitive="false" conf="base"/>
+        <dependency org="xerces" name="xercesImpl" rev="2.11.0" transitive="false" conf="base"/>
+        <dependency org="xml-apis" name="xml-apis" rev="1.4.01" transitive="false" conf="base"/>
+        <dependency org="xml-apis" name="xml-apis-ext" rev="1.3.04" transitive="false" conf="base"/><!-- FIXME?: should be same version as xml-apis -->
+        <dependency org="org.apache.xmlgraphics" name="xmlgraphics-commons" rev="2.2" transitive="false" conf="base"/>
+        <dependency org="org.apache.xmlrpc" name="xmlrpc-client" rev="3.1.2" transitive="false" conf="base"/>
+        <dependency org="org.apache.xmlrpc" name="xmlrpc-common" rev="3.1.2" transitive="false" conf="base"/>
+        <dependency org="org.apache.xmlrpc" name="xmlrpc-server" rev="3.1.2" transitive="false" conf="base"/>
+        <dependency org="xpp3" name="xpp3" rev="1.1.4c" transitive="false" conf="base"/>
+        <dependency org="com.thoughtworks.xstream" name="xstream" rev="1.4.9" transitive="false" conf="base"/>
+        <dependency org="com.thoughtworks.xstream" name="xstream" rev="1.4.9" transitive="false" conf="base"/>
+        <dependency org="org.owasp.esapi" name="esapi" rev="2.1.0" transitive="false" conf="base"/>
+        <dependency org="com.googlecode.owasp-java-html-sanitizer" name="owasp-java-html-sanitizer" rev="r239" transitive="false" conf="base"/>
+        <dependency org="com.fasterxml.jackson.core" name="jackson-annotations" rev="2.4.0" transitive="false" conf="base"/>
+        <dependency org="com.fasterxml.jackson.core" name="jackson-core" rev="2.4.2" transitive="false" conf="base"/>
+        <dependency org="com.fasterxml.jackson.core" name="jackson-databind" rev="2.4.2" transitive="false" conf="base"/>
+        <dependency org="org.jdom" name="jdom" rev="1.1" transitive="false" conf="base"/>
+        <dependency org="org.apache.ws.commons" name="ws-commons-java5" rev="1.0.1" transitive="false" conf="base"/>
+        <dependency org="org.apache.ws.commons.util" name="ws-commons-util" rev="1.0.2" transitive="false" conf="base"/>
+        <dependency org="joda-time" name="joda-time" rev="2.9.9" transitive="false" conf="base" />
+        <dependency org="org.apache.avalon.framework" name="avalon-framework-impl" rev="4.3.1" transitive="false" conf="base"/>
+        <dependency org="org.apache.avalon.framework" name="avalon-framework-api" rev="4.3.1" transitive="false" conf="base"/>
+        <dependency org="org.apache.tika" name="tika-core" rev="1.14" transitive="false" conf="base"/>
+        <dependency org="org.apache.tika" name="tika-parsers" rev="1.14" transitive="false" conf="base"/>
+        <dependency org="com.googlecode.juniversalchardet" name="juniversalchardet" rev="1.0.3" transitive="false" conf="base"/>
+        <dependency org="com.googlecode.concurrentlinkedhashmap" name="concurrentlinkedhashmap-lru" rev="1.4.2" transitive="false" conf="base"/>
+        <dependency org="org.hamcrest" name="hamcrest-all" rev="1.3" transitive="false" conf="base"/>
+        <!-- 2018-03-20: Not yet needed for framework (is shadowed in Camel addon)
+        <dependency org="com.github.ben-manes.caffeine" name="caffeine" rev="2.6.2" transitive="false" conf="base"/>-->
+        <dependency org="com.google.code" name="sitemapgen4j" rev="1.0.1" transitive="false" conf="base"/><!-- SCIPIO: 2017-11: new -->
+        <!-- TODO? <dependency org="org.jasig.cas.client" name="cas-client-core" rev="3.4.1" transitive="false" conf="base"/>-->
+
+        <!-- base jars - known to be missing/broken in central (2018-03-20) -->
+        <dependency org="org.apache.xmlgraphics" name="batik-all" rev="1.9" transitive="false" conf="base"/><!-- central artifact is pom-only -->
+        <dependency org="bsh.engine" name="bsh-engine-modified" rev="1.0" transitive="false" conf="base"/><!-- NOTE: rev was actually unknown; invented -->
+        <dependency org="net.fortuna.ical4j" name="ical4j" rev="1.0-rc2" transitive="false" conf="base"/><!-- 3rd-party repo only -->
+        <dependency org="jdbm" name="jdbm" rev="1.0-SNAPSHOT" transitive="false" conf="base"/><!-- snapshot newer than official 1.0 available -->
+        <dependency org="net.wimpi" name="pim" rev="0.1" transitive="false" conf="base"/><!-- previously "jpim-0.1.jar" -->
+        <dependency org="org.apache.xerces" name="resolver" rev="2.9.1" transitive="false" conf="base"/><!-- 3rd-party repo only -->
+        <dependency org="org.apache.xerces" name="serializer" rev="2.9.1" transitive="false" conf="base"/><!-- 3rd-party repo only -->
+
+        <!-- commons jars -->
+        <dependency org="commons-beanutils" name="commons-beanutils-core" rev="1.8.3" transitive="false" conf="commons"/>
+        <dependency org="commons-codec" name="commons-codec" rev="1.10" transitive="false" conf="commons"/>
+        <dependency org="commons-collections" name="commons-collections" rev="3.2.2" transitive="false" conf="commons"/>
+        <dependency org="org.apache.commons" name="commons-collections4" rev="4.1" transitive="false" conf="commons"/>
+        <dependency org="org.apache.commons" name="commons-compress" rev="1.9" transitive="false" conf="commons"/>
+        <dependency org="commons-el" name="commons-el" rev="1.0" transitive="false" conf="commons"/>
+        <dependency org="commons-fileupload" name="commons-fileupload" rev="1.3.3" transitive="false" conf="commons"/>
+        <dependency org="commons-io" name="commons-io" rev="2.4" transitive="false" conf="commons"/>
+        <dependency org="commons-lang" name="commons-lang" rev="2.6" transitive="false" conf="commons"/>
+        <dependency org="commons-logging" name="commons-logging" rev="1.2" transitive="false" conf="commons"/>
+        <dependency org="commons-net" name="commons-net" rev="3.3" transitive="false" conf="commons"/>
+        <dependency org="org.apache.commons" name="commons-pool2" rev="2.3" transitive="false" conf="commons"/>
+        <dependency org="commons-validator" name="commons-validator" rev="1.4.1" transitive="false" conf="commons"/>
+        <dependency org="org.apache.commons" name="commons-csv" rev="1.5" transitive="false" conf="commons"/>
+
+        <!-- j2eespecs jars -->
+        <dependency org="org.apache.geronimo.specs" name="geronimo-activation_1.0.2_spec" rev="1.0" transitive="false" conf="j2eespecs"/>
+        <dependency org="org.apache.geronimo.specs" name="geronimo-j2ee-connector_1.5_spec" rev="2.0.0" transitive="false" conf="j2eespecs"/>
+        <dependency org="org.apache.geronimo.specs" name="geronimo-jaxr_1.0_spec" rev="1.0" transitive="false" conf="j2eespecs"/>
+        <dependency org="org.apache.geronimo.specs" name="geronimo-jaxrpc_1.1_spec" rev="1.0" transitive="false" conf="j2eespecs"/>
+        <dependency org="org.apache.geronimo.specs" name="geronimo-jms_1.1_spec" rev="1.1.1" transitive="false" conf="j2eespecs"/>
+        <dependency org="org.apache.geronimo.specs" name="geronimo-jta_1.1_spec" rev="1.1.1" transitive="false" conf="j2eespecs"/>
+        <dependency org="org.apache.geronimo.specs" name="geronimo-saaj_1.3_spec" rev="1.1" transitive="false" conf="j2eespecs"/>
 
         <!-- NOTE: Ofbiz used the API jars from Tomcat instead of the official javax.servlet ones...
-        <dependency org="javax.servlet" name="javax.servlet-api" rev="3.1.0" transitive="false" conf="j2eespecs->default"/>
-        <dependency org="javax.servlet.jsp" name="javax.servlet.jsp-api" rev="2.3.0" transitive="false" conf="j2eespecs->default"/>
-        <dependency org="javax.el" name="javax.el-api" rev="3.0.0" transitive="false" conf="j2eespecs->default"/>
-        <dependency org="javax.?" name="annotations-api" rev="3.0" transitive="false" conf="j2eespecs->default"/>-->
-        <dependency org="org.apache.tomcat" name="tomcat-servlet-api" rev="8.0.50" transitive="false" conf="j2eespecs->default"/><!-- official: 3.1 -->
-        <dependency org="org.apache.tomcat" name="tomcat-jsp-api" rev="8.0.50" transitive="false" conf="j2eespecs->default"/><!-- official: 2.3 -->
-        <dependency org="org.apache.tomcat" name="tomcat-el-api" rev="8.0.50" transitive="false" conf="j2eespecs->default"/><!-- official: 3.0 -->
-        <dependency org="org.apache.tomcat" name="tomcat-annotations-api" rev="8.0.50" transitive="false" conf="j2eespecs->default"/><!-- official: 3.0 -->
+        <dependency org="javax.servlet" name="javax.servlet-api" rev="3.1.0" transitive="false" conf="j2eespecs"/>
+        <dependency org="javax.servlet.jsp" name="javax.servlet.jsp-api" rev="2.3.0" transitive="false" conf="j2eespecs"/>
+        <dependency org="javax.el" name="javax.el-api" rev="3.0.0" transitive="false" conf="j2eespecs"/>
+        <dependency org="javax.?" name="annotations-api" rev="3.0" transitive="false" conf="j2eespecs"/>-->
+        <dependency org="org.apache.tomcat" name="tomcat-servlet-api" rev="8.0.50" transitive="false" conf="j2eespecs"/><!-- official: 3.1 -->
+        <dependency org="org.apache.tomcat" name="tomcat-jsp-api" rev="8.0.50" transitive="false" conf="j2eespecs"/><!-- official: 2.3 -->
+        <dependency org="org.apache.tomcat" name="tomcat-el-api" rev="8.0.50" transitive="false" conf="j2eespecs"/><!-- official: 3.0 -->
+        <dependency org="org.apache.tomcat" name="tomcat-annotations-api" rev="8.0.50" transitive="false" conf="j2eespecs"/><!-- official: 3.0 -->
 
-        <!-- re scripting -->
-        <dependency org="org.codehaus.groovy" name="groovy-all" rev="2.4.5" transitive="false" conf="scripting->default"/>
-        <dependency org="antlr" name="antlr" rev="2.7.6" transitive="false" conf="scripting->default"/>
-        <dependency org="asm" name="asm" rev="3.2" transitive="false" conf="scripting->default"/>
-        <dependency org="bsf" name="bsf" rev="2.4.0" transitive="false" conf="scripting->default"/>
-        <!-- FIXME: despite the version looking correct, classes in public repo are different than lib from ofbiz trunk!
-        <dependency org="org.beanshell" name="bsh" rev="2.0b4" transitive="false" conf="scripting->default"/>-->
-        <dependency org="oro" name="oro" rev="2.0.8" transitive="false" conf="scripting->default"/>
-        <!-- FIXME: can't figure out the public name or a version for this
-        <dependency org="?" name="jython-nooro" rev="?" transitive="false" conf="scripting->default"/>-->
-        
-        <!-- TODO?: these are from the root /ivy.xml (also see build.xml)...
-        <dependency org="org.apache.activemq" name="activemq-all" rev="5.4.2" conf="activemq->default"/>
-        <dependency org="net.sourceforge.cobertura" name="cobertura" rev="1.9.4.1" conf="cobertura->default"/>
-        <dependency org="org.codehaus.sonar-plugins" name="sonar-ant-task" rev="1.3" conf="sonar-ant-task->default"/>
+        <!-- scripting jars -->
+        <dependency org="antlr" name="antlr" rev="2.7.6" transitive="false" conf="scripting"/>
+        <dependency org="asm" name="asm" rev="3.2" transitive="false" conf="scripting"/>
+        <dependency org="bsf" name="bsf" rev="2.4.0" transitive="false" conf="scripting"/>
+        <dependency org="org.codehaus.groovy" name="groovy-all" rev="2.4.5" transitive="false" conf="scripting,groovy"/>
+        <dependency org="oro" name="oro" rev="2.0.8" transitive="false" conf="scripting"/>
 
-        <!-Exclusions for cobertura->
-        <exclude module="log4j" conf="cobertura"/>
-        <exclude module="ant" conf="cobertura"/>
-        <exclude module="asm" conf="cobertura"/>
-        <exclude module="oro" conf="cobertura"/>
-        -->
-        
-        <!-- re media -->
+        <!-- scripting jars - known to be missing/broken in central (2018-03-20) -->
+        <dependency org="org.beanshell" name="bsh" rev="2.0b4" transitive="false" conf="scripting"/><!-- jar in central differed from ofbiz jar for same version! -->
+        <dependency org="jython-nooro" name="jython-nooro" rev="0.1" transitive="false" conf="scripting"/><!-- cannot be found; version here is invented -->
+
+        <!-- media jars -->
         <!-- SCIPIO: 2017-07-10: new image libs -->
-        <dependency org="net.coobird" name="thumbnailator" rev="0.4.8" transitive="false" conf="media->default"/>
-        <dependency org="com.mortennobel" name="java-image-scaling" rev="0.8.6" transitive="false" conf="media->default"/>
-        <dependency org="org.imgscalr" name="imgscalr-lib" rev="4.2" transitive="false" conf="media->default"/>
-        <dependency org="com.twelvemonkeys.common" name="common-image" rev="3.3.2" transitive="false" conf="media->default"/>
+        <dependency org="net.coobird" name="thumbnailator" rev="0.4.8" transitive="false" conf="media"/>
+        <dependency org="com.mortennobel" name="java-image-scaling" rev="0.8.6" transitive="false" conf="media"/>
+        <dependency org="org.imgscalr" name="imgscalr-lib" rev="4.2" transitive="false" conf="media"/>
+        <dependency org="com.twelvemonkeys.common" name="common-image" rev="3.3.2" transitive="false" conf="media"/>
+
+        <!--
+            OTHER FRAMEWORK COMPONENT DEPENDENCIES
+
+            These dependencies were defined in framework/*/ivy.xml prior to 2018-03-19,
+            excluding base and start components.
+        -->
+
+        <!-- catalina component (framework/catalina/ivy.xml) -->
+        <dependency org="org.apache.tomcat" name="tomcat-api" rev="8.0.50" transitive="false" conf="application"/>
+        <dependency org="org.apache.tomcat" name="tomcat-catalina" rev="8.0.50" transitive="false" conf="application"/>
+        <dependency org="org.apache.tomcat" name="tomcat-catalina-ha" rev="8.0.50" transitive="false" conf="application"/>
+        <dependency org="org.apache.tomcat" name="tomcat-coyote" rev="8.0.50" transitive="false" conf="application"/>
+        <dependency org="org.apache.tomcat" name="tomcat-jasper" rev="8.0.50" transitive="false" conf="application"/>
+        <dependency org="org.apache.tomcat" name="tomcat-jni" rev="8.0.50" transitive="false" conf="application"/>
+        <dependency org="org.apache.tomcat" name="tomcat-tribes" rev="8.0.50" transitive="false" conf="application"/>
+        <dependency org="org.apache.tomcat" name="tomcat-util" rev="8.0.50" transitive="false" conf="application"/>
+        <dependency org="org.apache.tomcat" name="tomcat-util-scan" rev="8.0.50" transitive="false" conf="application"/>
+        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli" rev="8.0.50" transitive="false" conf="application"/>
+        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli-adapters" rev="8.0.50" transitive="false" conf="application"/>
+        <dependency org="org.eclipse.jdt.core.compiler" name="ecj" rev="4.5" transitive="false" conf="application"/>
+
+        <!-- entity component (framework/entity/ivy.xml) -->
+        <dependency org="org.apache.commons" name="commons-dbcp2" rev="2.1" transitive="false" conf="application"/>
+
+        <!-- geronimo component (framework/geronimo/ivy.xml) -->
+        <dependency org="org.apache.geronimo.components" name="geronimo-transaction" rev="3.1.1" transitive="false" conf="application"/>
+
+        <!-- service component (framework/service/ivy.xml) -->
+        <dependency org="org.apache.axis2" name="axis2-adb" rev="1.7.1" transitive="false" conf="application"/>
+        <!-- WARN: 2017-02-03: axis2-kernel 1.7.1 in public repos has slight difference from version originally committed in Ofbiz trunk
+            (repos use old deprecated CommonsHTTPTransportSender instead of HTTPClient4TransportSender, in org/apache/axis2/deployment/axis2_default.xml);
+            but Ofbiz provides a separate axis2.xml conf (using HTTPClient4TransportSender), which should override it -->
+        <dependency org="org.apache.axis2" name="axis2-kernel" rev="1.7.1" transitive="false" conf="application"/>
+        <dependency org="org.apache.axis2" name="axis2-transport-http" rev="1.7.1" transitive="false" conf="application"/>
+        <dependency org="org.apache.axis2" name="axis2-transport-local" rev="1.7.1" transitive="false" conf="application"/>
+        <dependency org="org.apache.neethi" name="neethi" rev="3.0.3" transitive="false" conf="application"/>
+        <dependency org="org.apache.woden" name="woden-core" rev="1.0M10" transitive="false" conf="application"/>
+        <dependency org="org.apache.ws.commons.axiom" name="axiom-api" rev="1.2.17" transitive="false" conf="application"/>
+        <dependency org="org.apache.ws.commons.axiom" name="axiom-impl" rev="1.2.17" transitive="false" conf="application"/>
+        <dependency org="org.apache.ws.xmlschema" name="xmlschema-core" rev="2.2.1" transitive="false" conf="application"/>
+        <dependency org="wsdl4j" name="wsdl4j" rev="1.6.2" transitive="false" conf="application"/>
+
+        <!-- testtools component (framework/testtools/ivy.xml) -->
+        <dependency org="org.springframework" name="spring-core" rev="4.2.3.RELEASE" transitive="false" conf="application"/>
+        <dependency org="org.springframework" name="spring-test" rev="4.2.3.RELEASE" transitive="false" conf="application"/>
+
+        <!-- webapp component (framework/webapp/ivy.xml) -->
+        <dependency org="net.sf.ezmorph" name="ezmorph" rev="0.9.1" transitive="false" conf="application"/>
+        <dependency org="com.lowagie" name="itext" rev="2.1.7" transitive="false" conf="application"/>
+        <dependency org="rome" name="rome" rev="0.9" transitive="false" conf="application"/>
+        <dependency org="org.tuckey" name="urlrewritefilter" rev="4.0.4" transitive="false" conf="application"/>
+
+        <!--
+            APPLICATIONS COMPONENT DEPENDENCIES
+
+            These dependencies were defined in framework/*/ivy.xml prior to 2018-03-19.
+        -->
+
+        <!-- content component (applications/content/ivy.xml) -->
+        <dependency org="dom4j" name="dom4j" rev="1.6.1" transitive="false" conf="application"/>
+        <dependency org="org.apache.pdfbox" name="fontbox" rev="2.0.4" transitive="false" conf="application"/>
+        <dependency org="org.apache.pdfbox" name="jempbox" rev="1.8.12" transitive="false" conf="application"/>
+        <dependency org="org.apache.pdfbox" name="pdfbox" rev="2.0.3" transitive="false" conf="application"/>
+        <dependency org="org.apache.poi" name="poi" rev="3.15" transitive="false" conf="application"/>
+
+        <!-- product component (applications/product/ivy.xml) -->
+        <dependency org="net.sf.dozer" name="dozer" rev="4.2.1" transitive="false" conf="application"/>
+        <dependency org="watermarker" name="watermarker" rev="0.0.4" transitive="false" conf="application"/>
+
+        <!-- solr component (applications/solr/ivy.xml) -->
+        <dependency org="org.apache.solr" name="solr-solrj" rev="6.6.2" transitive="false" conf="application"/>
+        <!-- SPECIAL: solr-webapp depends on 'metrics' libs but they are not included under /WEB-INF/lib -->
+        <dependency org="info.ganglia.gmetric4j" name="gmetric4j" rev="1.0.7" transitive="false" conf="application"/>
+        <dependency org="io.dropwizard.metrics" name="metrics-core" rev="3.2.2" transitive="false" conf="application"/>
+        <dependency org="io.dropwizard.metrics" name="metrics-ganglia" rev="3.2.2" transitive="false" conf="application"/>
+        <dependency org="io.dropwizard.metrics" name="metrics-graphite" rev="3.2.2" transitive="false" conf="application"/>
+        <dependency org="io.dropwizard.metrics" name="metrics-jvm" rev="3.2.2" transitive="false" conf="application"/>
+
+        <!--
+            SPECIALPURPOSE COMPONENT DEPENDENCIES
+
+            These dependencies were defined in framework/*/ivy.xml prior to 2018-03-19.
+        -->
+
+        <!-- demosuite component (specialpurpose/demosuite/ivy.xml) -->
+        <dependency org="io.codearte.jfairy" name="jfairy" rev="0.5.9" conf="application" />
+
+        <!--
+            ADDONS COMPONENT DEPENDENCIES (TEMPORARY)
+
+            These dependencies reflect libraries needed to be shared between
+            several addons/*/ivy.xml.
+            This section is for TEMPORARY dependency includes subject to further review.
+
+            FIXME: Some addons libraries are very special in purpose and
+            should theoretically not be included in base/stock ScipioCE (here) or in most addons.
+            A different mechanism may be needed to handle this...
+
+            NOTE: When a library is confirmed as general-enough-use such that other
+            non-addons components use it or highly likely to use it, it can be moved
+            into one of the sections above.
+        -->
+
+
+        <!--
+            THEMES COMPONENT DEPENDENCIES
+
+            These dependencies reflect libraries needed to be shared between
+            several themes/*/ivy.xml.
+            This section is for share and temporary dependency includes subject to further review.
+
+            FIXME: Some themes libraries are very special in purpose and
+            should theoretically not be included in base/stock ScipioCE (here) or in most addons.
+            A different mechanism may be needed to handle this...
+
+            NOTE: When a library is confirmed as general-enough-use such that other
+            non-themes components use it or highly likely to use it, it can be moved
+            into one of the sections above.
+        -->
+
+        <!--
+            ON-DEMAND OPTIONAL STOCK DEPENDENCIES
+
+            These are special dependencies for stock Scipio code and ant tasks which are only fetched
+            on user request and/or by special ant tasks, e.g. the "download-xxx" tasks in the main Scipio build.xml.
+        -->
+
+        <!-- deps for main build.xml ant task: download-activemq -->
+        <dependency org="org.apache.activemq" name="activemq-all" rev="5.4.2" conf="activemq"/>
+
+        <!-- deps for main build.xml ant task: download-cobertura -->
+        <dependency org="net.sourceforge.cobertura" name="cobertura" rev="1.9.4.1" conf="cobertura">
+            <exclude module="log4j"/>
+            <exclude module="ant"/>
+            <exclude module="asm"/>
+            <exclude module="oro"/>
+        </dependency>
+
+        <!-- deps for main build.xml ant task: download-sonar-ant-task -->
+        <dependency org="org.codehaus.sonar-plugins" name="sonar-ant-task" rev="1.3" conf="sonar-ant-task"/>
+
+        <!--
+            CUSTOM/CLIENT DEPENDENCIES
+
+            Custom/client dependencies which are required by several modules
+            or by patches to the framework or any stock Scipio components or code
+            may be added below this comment.
+        -->
+
+
+        <!-- /CUSTOM/CLIENT DEPENDENCIES (END) -->
+
+        <!--
+            EXCLUDED LIBRARIES
+            
+            These are libraries committed directly into the lib folder.
+        -->
+
+        <!--
+            CUSTOM/CLIENT EXCLUDES
+
+            Custom/client excludes may be added below.
+        -->
+
+
+        <!-- /CUSTOM/CLIENT EXCLUDES (END) -->
 
     </dependencies>
 </ivy-module>

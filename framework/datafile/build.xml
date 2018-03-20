@@ -27,7 +27,6 @@ under the License.
 
     <property name="desc" value="Datafile Component"/>
     <property name="name" value="ofbiz-datafile"/>
-    <property name="ofbiz.home.dir" value="../.."/>
     <property name="src.dir" value="src"/>
     <property name="dtd.dir" value="dtd"/>
     <property name="lib.dir" value="lib"/>

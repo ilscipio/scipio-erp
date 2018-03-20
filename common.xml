@@ -18,27 +18,28 @@ specific language governing permissions and limitations
 under the License.
 -->
 <project name="Ant - Common" xmlns:ivy="antlib:org.apache.ivy.ant">
-    <dirname property="Ant - Common.dir" file="${ant.file.Ant - Common}"/>
-    <import file="${Ant - Common.dir}/macros.xml"/>
+    <dirname property="Ant - Common.dir" file="${ant.file.Ant - Common}" />
+    <!-- SCIPIO: NOTE: macros.xml sets ofbiz.home.dir (if not already inherited) -->
+    <import file="${Ant - Common.dir}/macros.xml" />
 
-    <property environment="env"/>
-    <property name="src.dir" value="src"/>
-    <property name="dtd.dir" value="dtd"/>
-    <property name="lib.dir" value="lib"/>
-    <property name="build.dir" value="build"/>
+    <property environment="env" />
+    <property name="src.dir" value="src" />
+    <property name="dtd.dir" value="dtd" />
+    <property name="lib.dir" value="lib" />
+    <property name="build.dir" value="build" />
 
     <path id="test.class.path">
-        <path refid="local.class.path"/>
-        <pathelement location="config"/>
+        <path refid="local.class.path" />
+        <pathelement location="config" />
     </path>
-    <filelist id="test.classes"/>
+    <filelist id="test.classes" />
 
     <!-- ================================================================== -->
     <!-- Removes all created files and directories                          -->
     <!-- ================================================================== -->
 
     <target name="clean">
-        <delete dir="${build.dir}"/>
+        <delete dir="${build.dir}" />
     </target>
 
     <!-- ================================================================== -->
@@ -46,53 +47,66 @@ under the License.
     <!-- ================================================================== -->
 
     <target name="prepare" depends="init">
-        <mkdir dir="${build.dir}/classes"/>
-        <mkdir dir="${build.dir}/lib"/>
+        <mkdir dir="${build.dir}/classes" />
+        <mkdir dir="${build.dir}/lib" />
     </target>
 
     <target name="prepare-docs" depends="init">
-        <mkdir dir="${build.dir}/javadocs"/>
+        <mkdir dir="${build.dir}/javadocs" />
     </target>
 
-    <target name="init"/>
+    <target name="init" />
 
     <if>
-        <available file="${src.dir}"/>
+        <available file="${src.dir}" />
         <then>
             <selector id="src-extra-set">
                 <or>
-                    <filename name="**/*.properties"/>
-                    <filename name="**/*.groovy"/>
-                    <filename name="**/*.xml"/>
-                    <filename name="**/*.bsh"/>
-                    <filename name="**/*.logic"/>
-                    <filename name="**/*.js"/>
-                    <filename name="**/*.js"/>
-                    <filename name="**/*.jacl"/>
-                    <filename name="**/*.py"/>
-                    <filename name="META-INF/**"/>
+                    <filename name="**/*.properties" />
+                    <filename name="**/*.groovy" />
+                    <filename name="**/*.xml" />
+                    <filename name="**/*.bsh" />
+                    <filename name="**/*.logic" />
+                    <filename name="**/*.js" />
+                    <filename name="**/*.js" />
+                    <filename name="**/*.jacl" />
+                    <filename name="**/*.py" />
+                    <filename name="META-INF/**" />
                 </or>
             </selector>
-            <property name="src.extra.dir" value="${src.dir}"/>
-        </then>            
+            <property name="src.extra.dir" value="${src.dir}" />
+        </then>
         <else>
             <selector id="src-extra-set">
-                <filename name="**" negate="true"/>
+                <filename name="**" negate="true" />
             </selector>
-            <property name="src.extra.dir" value="."/>
+            <property name="src.extra.dir" value="." />
         </else>
     </if>
 
+    <target name="groovy-init"><!-- SCIPIO: 2018-03-20: new -->
+        <if>
+            <resourcecount when="equal" count="0">
+                <fileset file="${ofbiz.home.dir}/framework/base/lib/groovy-*.jar"/>
+            </resourcecount>
+            <then>
+                <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="groovy"/>
+            </then>
+        </if>
+        <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="groovy.class.path"/>
+    </target>
+    
     <!-- ================================================================== -->
     <!-- Compilation of the source files                                    -->
     <!-- ================================================================== -->
 
-    <target name="classes" depends="prepare,check-init-lib-update"><!-- SCIPIO: per-comonent lib update hook -->
-        <javac18/>
+    <target name="classes" depends="prepare,check-init-lib-update">
+        <!-- SCIPIO: per-comonent lib update hook -->
+        <javac18 />
     </target>
 
     <target name="jar" depends="classes">
-        <main-jar/>
+        <main-jar />
     </target>
 
     <!-- ================================================================== -->
@@ -100,62 +114,62 @@ under the License.
     <!-- ================================================================== -->
 
     <target name="docs" depends="prepare-docs">
-        <default-javadoc/>
+        <default-javadoc />
     </target>
 
     <macrodef name="run-junit">
-        <attribute name="build.jar" default="${build.dir}/lib/${name}.jar"/>
-        <attribute name="build-test.jar" default="${build.dir}/lib/${name}-test.jar"/>
+        <attribute name="build.jar" default="${build.dir}/lib/${name}.jar" />
+        <attribute name="build-test.jar" default="${build.dir}/lib/${name}-test.jar" />
         <sequential>
-            <mkdir dir="${build.dir}/test-results"/>
+            <mkdir dir="${build.dir}/test-results" />
             <junit fork="on" haltonfailure="on" forkmode="once" showoutput="on" printsummary="off">
                 <classpath>
-                    <path refid="junit.class.path"/>
-                    <path refid="test.class.path"/>
-                    <pathelement location="@{build.jar}"/>
-                    <pathelement location="@{build-test.jar}"/>
+                    <path refid="junit.class.path" />
+                    <path refid="test.class.path" />
+                    <pathelement location="@{build.jar}" />
+                    <pathelement location="@{build-test.jar}" />
                 </classpath>
                 <sysproperty key="net.sourceforge.cobertura.datafile" file="${build.dir}/test-results/cobertura.dat" />
-                <sysproperty key="ofbiz.home" value="${ofbiz.home.dir}"/>
-                <formatter usefile="false" type="plain"/>
+                <sysproperty key="ofbiz.home" value="${ofbiz.home.dir}" />
+                <formatter usefile="false" type="plain" />
                 <batchtest>
-                    <filelist refid="test.classes"/>
+                    <filelist refid="test.classes" />
                 </batchtest>
             </junit>
         </sequential>
     </macrodef>
 
     <target name="tests" depends="jar">
-        <run-junit/>
+        <run-junit />
     </target>
 
     <patternset id="cobertura-src-dirs">
-        <include name="src"/>
+        <include name="src" />
     </patternset>
 
     <target name="tests-cobertura" depends="jar">
-        <mkdir dir="${build.dir}/cobertura-lib"/>
-        <taskdef resource="tasks.properties" classpathref="cobertura.class.path"/>
-        <delete file="${build.dir}/test-results/cobertura.dat"/>
+        <mkdir dir="${build.dir}/cobertura-lib" />
+        <taskdef resource="tasks.properties" classpathref="cobertura.class.path" />
+        <delete file="${build.dir}/test-results/cobertura.dat" />
         <cobertura-instrument datafile="${build.dir}/test-results/cobertura.dat" todir="${build.dir}/cobertura-lib">
             <fileset dir="${build.dir}/lib">
-                <include name="*.jar"/>
+                <include name="*.jar" />
             </fileset>
         </cobertura-instrument>
-        <run-junit build.jar="${build.dir}/cobertura-lib/${name}.jar" build-test.jar="${build.dir}/cobertura-lib/${name}-test.jar"/>
-        <delete dir="${build.dir}/test-results/cobertura-report"/>
-        <mkdir dir="${build.dir}/test-results/cobertura-report"/>
+        <run-junit build.jar="${build.dir}/cobertura-lib/${name}.jar" build-test.jar="${build.dir}/cobertura-lib/${name}-test.jar" />
+        <delete dir="${build.dir}/test-results/cobertura-report" />
+        <mkdir dir="${build.dir}/test-results/cobertura-report" />
         <cobertura-report datafile="${build.dir}/test-results/cobertura.dat" destdir="${build.dir}/test-results/cobertura-report">
             <dirset dir=".">
-                <patternset refid="cobertura-src-dirs"/>
+                <patternset refid="cobertura-src-dirs" />
             </dirset>
 
-            <include name="**/*.java"/>
+            <include name="**/*.java" />
         </cobertura-report>
     </target>
 
-    <target name="all" depends="jar,docs"/>
-    
+    <target name="all" depends="jar,docs" />
+
     <!-- ================================================================== -->
     <!-- Apply patches if exist                                             -->
     <!-- ================================================================== -->
@@ -169,48 +183,44 @@ under the License.
         <sequential>
             <!-- patch task can't handle a fileset => create a global patch -->
             <if>
-                <available file="patches"/>
-                <then>          
+                <available file="patches" />
+                <then>
                     <concat destfile="patches/@{deployment}.patch" encoding="UTF-8" outputencoding="UTF-8">
                         <!-- exclude the patch itself in case it's still there -->
-                        <fileset dir="patches" includes="@{deployment}/*.patch"/>
+                        <fileset dir="patches" includes="@{deployment}/*.patch" />
                     </concat>
-                    <patch strip="0" patchfile="patches/@{deployment}.patch" dir="${ofbiz.home.dir}" failonerror="true"/>
+                    <patch strip="0" patchfile="patches/@{deployment}.patch" dir="${ofbiz.home.dir}" failonerror="true" />
                     <delete>
-                        <fileset dir="patches" includes="@{deployment}.patch"/>
+                        <fileset dir="patches" includes="@{deployment}.patch" />
                     </delete>
                 </then>
             </if>
         </sequential>
     </macrodef>
-    
-    <target name="prepare-to-build-dev"
-        description="Does everything needed to get you a ready to start building OFBiz for development. This include generic patches for OFBiz itself, not only hot-deploy components">
+
+    <target name="prepare-to-build-dev" description="Does everything needed to get you a ready to start building OFBiz for development. This include generic patches for OFBiz itself, not only hot-deploy components">
         <apply-patches deployment="dev" />
     </target>
-    
-    <target name="prepare-to-build-test"
-        description="Does everything needed to get you a ready to start building OFBiz for integration testing">
+
+    <target name="prepare-to-build-test" description="Does everything needed to get you a ready to start building OFBiz for integration testing">
         <apply-patches deployment="test" />
     </target>
-    
-    <target name="prepare-to-build-qa"
-        description="Does everything needed to get you a ready to start building OFBiz in QA-Environment">
+
+    <target name="prepare-to-build-qa" description="Does everything needed to get you a ready to start building OFBiz in QA-Environment">
         <apply-patches deployment="qa" />
-        
+
         <!-- need to use flatten here as qa dir might not exist and thus can't be included in "dir" -->
         <copy toDir="config/" overwrite="true" flatten="true">
-            <fileset dir="patches" includes="qa/*.properties"/>
+            <fileset dir="patches" includes="qa/*.properties" />
         </copy>
     </target>
-    
-    <target name="prepare-to-build-production"
-        description="Does everything needed to get you a ready to start building OFBiz in production">
+
+    <target name="prepare-to-build-production" description="Does everything needed to get you a ready to start building OFBiz in production">
         <apply-patches deployment="production" />
-        
+
         <!-- need to use flatten here as production dir might not exist and thus can't be included in "dir" -->
         <copy toDir="config/" overwrite="true" flatten="true">
-            <fileset dir="patches" includes="production/*.properties"/>
+            <fileset dir="patches" includes="production/*.properties" />
         </copy>
         <!-- Some files might need to be deleted in production, notably some specific script files -->
         <!--exec executable="svn" dir="${ofbiz.home.dir}">
@@ -218,68 +228,70 @@ under the License.
             <arg value="filename.sh"/>
         </exec-->
     </target>
-    
+
     <!-- ================================================================== -->
     <!-- SCIPIO: Common component build new, original properties and tasks  -->
     <!-- ================================================================== -->
 
-    <property name="spicio.ofbiz.basedir" value="${Ant - Common.dir}" />
-    
     <property name="framework.dir" value="framework" />
     <property name="applications.dir" value="applications" />
     <property name="specialpurpose.dir" value="specialpurpose" />
     <property name="addons.dir" value="addons" />
     <property name="hotdeploy.dir" value="hot-deploy" />
-        
+
     <!-- Dynamic common.xml additions -->
-    <fileset id="framework.commoncomponentbuilds" dir="${spicio.ofbiz.basedir}/${framework.dir}">
-        <exclude name="disabled/**"/>
+    <fileset id="framework.commoncomponentbuilds" dir="${ofbiz.home.dir}/${framework.dir}">
+        <exclude name="disabled/**" />
         <include name="*/build-component-common.xml" />
     </fileset>
-    <fileset id="applications.commoncomponentbuilds" dir="${spicio.ofbiz.basedir}/${applications.dir}">
-        <exclude name="disabled/**"/>
+    <fileset id="applications.commoncomponentbuilds" dir="${ofbiz.home.dir}/${applications.dir}">
+        <exclude name="disabled/**" />
         <include name="*/build-component-common.xml" />
     </fileset>
-    <fileset id="specialpurpose.commoncomponentbuilds" dir="${spicio.ofbiz.basedir}/${specialpurpose.dir}">
-        <exclude name="disabled/**"/>
+    <fileset id="specialpurpose.commoncomponentbuilds" dir="${ofbiz.home.dir}/${specialpurpose.dir}">
+        <exclude name="disabled/**" />
         <include name="*/build-component-common.xml" />
     </fileset>
-    <fileset id="addons.commoncomponentbuilds" dir="${spicio.ofbiz.basedir}/${addons.dir}">
-        <exclude name="disabled/**"/>
+    <fileset id="addons.commoncomponentbuilds" dir="${ofbiz.home.dir}/${addons.dir}">
+        <exclude name="disabled/**" />
         <include name="*/build-component-common.xml" />
     </fileset>
-    <fileset id="hotdeploy.commoncomponentbuilds" dir="${spicio.ofbiz.basedir}/${hotdeploy.dir}">
-        <exclude name="disabled/**"/>
+    <fileset id="hotdeploy.commoncomponentbuilds" dir="${ofbiz.home.dir}/${hotdeploy.dir}">
+        <exclude name="disabled/**" />
         <include name="*/build-component-common.xml" />
     </fileset>
     <import optional="true">
-        <fileset file="${spicio.ofbiz.basedir}/tools/misc/build-dummy.xml" /><!-- at least one import required -->
+        <fileset file="${ofbiz.home.dir}/tools/misc/build-dummy.xml" />
+        <!-- at least one import required -->
         <fileset refid="framework.commoncomponentbuilds" />
     </import>
     <import optional="true">
-        <fileset file="${spicio.ofbiz.basedir}/tools/misc/build-dummy.xml" /><!-- at least one import required -->
+        <fileset file="${ofbiz.home.dir}/tools/misc/build-dummy.xml" />
+        <!-- at least one import required -->
         <fileset refid="applications.commoncomponentbuilds" />
-    </import> 
+    </import>
     <import optional="true">
-        <fileset file="${spicio.ofbiz.basedir}/tools/misc/build-dummy.xml" /><!-- at least one import required -->
+        <fileset file="${ofbiz.home.dir}/tools/misc/build-dummy.xml" />
+        <!-- at least one import required -->
         <fileset refid="specialpurpose.commoncomponentbuilds" />
     </import>
     <import optional="true">
-        <fileset file="${spicio.ofbiz.basedir}/tools/misc/build-dummy.xml" /><!-- at least one import required -->
+        <fileset file="${ofbiz.home.dir}/tools/misc/build-dummy.xml" />
+        <!-- at least one import required -->
         <fileset refid="addons.commoncomponentbuilds" />
     </import>
     <import optional="true">
-        <fileset file="${spicio.ofbiz.basedir}/tools/misc/build-dummy.xml" /><!-- at least one import required -->
+        <fileset file="${ofbiz.home.dir}/tools/misc/build-dummy.xml" />
+        <!-- at least one import required -->
         <fileset refid="hotdeploy.commoncomponentbuilds" />
     </import>
-    
-    <target name="get-component-build-deps"
-        description="Reads this component's build dependencies from component.build.dependencies filelist (if any) and prepares for automatic dependency resolution (SCIPIO)">
-        <read-component-build-deps/>
+
+    <target name="get-component-build-deps" description="Reads this component's build dependencies from component.build.dependencies filelist (if any) and prepares for automatic dependency resolution (SCIPIO)">
+        <read-component-build-deps />
     </target>
 
     <property name="lib.update.filename.pattern.ivy" value="[artifact]-[revision].[ext]" />
-    
+
     <!-- NOTE: IMPORTANT: All antcall to reusable targets that might invoke ivy: functions must specify inheritRefs="true" -->
     <target name="init-lib-update" description="Downloads initial jars, if applicable for component">
         <if>
@@ -289,14 +301,14 @@ under the License.
             </and>
             <then>
                 <!-- get info about the last retrieve attempt -->
-                <property file="${ofbiz.home.dir}/ivy/ivy-last.txt" prefix="lib.update.retrieve.last" />
-                
+                <property file="${ofbiz.home.dir}/ivy/ivy-last.txt" prefix="lib.update.retrieve.last"/>
+
                 <!-- NOTE: here we manually do the ivy:resolve call so we can detect if anything was
                     changed, separate from the ivy:retrieve call, because if nothing changed we want
                     to skip our manual clean as well as the retrieve -->
                 <!--
-                <echo level="verbose" message="lib.update.force: ${lib.update.force}" />
-                <echo level="verbose" message="lib.update.cache: ${lib.update.cache}" />
+                <echo level="verbose" message="lib.update.force: ${lib.update.force}"/>
+                <echo level="verbose" message="lib.update.cache: ${lib.update.cache}"/>
                 -->
                 <condition property="lib.update.ivy.refresh" value="true" else="false">
                     <or>
@@ -310,15 +322,12 @@ under the License.
                             <equals arg1="${lib.update.force}" arg2="true"/>
                             <not><equals arg1="${lib.update.cache}" arg2="true"/></not>
                         </and>
-                        <equals arg1="${lib.update.cache}" arg2="false"/>        
+                        <equals arg1="${lib.update.cache}" arg2="false"/>
                     </or>
                 </condition>
-                
-                <ivy:resolve refresh="${lib.update.ivy.refresh}"/>
-                <!--
-                <echo level="verbose" message="ivy.deps.changed: ${ivy.deps.changed}"/>
-                -->
-                
+
+                <antcallback target="do-lib-resolve" inheritrefs="true" return="lib.resolve.changed"/>
+
                 <!-- SPECIAL: check if the last (unfinished) clean/retrieve attempt was ours. if so, must force redeploy. -->
                 <condition property="last.update.retrieve.waslast" value="true" else="false">
                     <and>
@@ -326,19 +335,20 @@ under the License.
                         <equals arg1="${ivy.module}" arg2="${lib.update.retrieve.last.module}"/>
                     </and>
                 </condition>
-                <echo level="info" message="[Deps changed? ${ivy.deps.changed}. Was last retrieve attempt? ${last.update.retrieve.waslast}.]"/>
-                
+                <echo level="info" message="[Deps changed? ${lib.resolve.changed}. Was last retrieve attempt? ${last.update.retrieve.waslast}.]"/>
+
                 <if>
                     <or>
                         <equals arg1="${lib.update.force}" arg2="true"/>
                         <equals arg1="${lib.update.force.deploy}" arg2="true"/>
-                        <equals arg1="${ivy.deps.changed}" arg2="true"/>
-                        <equals arg1="${last.update.retrieve.waslast}" arg2="true"/><!-- force redeploy if last deploy didn't finish -->
+                        <equals arg1="${lib.resolve.changed}" arg2="true"/>
+                        <equals arg1="${last.update.retrieve.waslast}" arg2="true"/>
+                        <!-- force redeploy if last deploy didn't finish -->
                     </or>
                     <then>
                         <!-- flag this module as the last clean/retrieve attempt -->
-                        <echo message="status=RUNNING${line.separator}organisation=${ivy.organisation}${line.separator}module=${ivy.module}${line.separator}" file="${ofbiz.home.dir}/ivy/ivy-last.txt" />
-                        
+                        <echo message="status=RUNNING${line.separator}organisation=${ivy.organisation}${line.separator}module=${ivy.module}${line.separator}" file="${ofbiz.home.dir}/ivy/ivy-last.txt"/>
+
                         <dirname property="lib.component.current.dir" file="${ant.file}"/>
                         <basename property="lib.component.current.dirname" file="${lib.component.current.dir}"/>
                         <echo level="info" message="Lib deploy needed for ${lib.component.current.dirname} component: deploying files to lib folder..."/>
@@ -352,20 +362,48 @@ under the License.
                             </then>
                         </if>
                         <antcall target="do-lib-update" inheritrefs="true"/>
-                        
+
                         <!--<fail message="TEST FAIL"/>-->
-                        
+
                         <!-- if we're here, then we succeeded; clear the last flag -->
                         <delete file="${ofbiz.home.dir}/ivy/ivy-last.txt"/>
                     </then>
                 </if>
             </then>
+            <elseif>
+                <!-- 2018-03-20: migration cleanup: the ivy.xml files were removed for
+                    many components, so we must clean them out - TODO: remove this in a few months -->
+                <and>
+                    <matches pattern="/(framework|applications|specialpurpose)/[^/]+/build.xml$" string="${ant.file}"/>
+                    <not><available file="ivy.xml" type="file"/></not>
+                    <available file="lib" type="dir"/>
+                    <resourcecount when="greater" count="0">
+                        <fileset file="lib/*.jar"/>
+                    </resourcecount>
+                </and>
+                <then>
+                    <if>
+                        <and>
+                            <not><equals arg1="${lib.clean}" arg2="false"/></not>
+                            <not><equals arg1="${lib.clean.deployed}" arg2="false"/></not>
+                        </and>
+                        <then>
+                            <dirname property="lib.component.current.dir" file="${ant.file}"/>
+                            <basename property="lib.component.current.dirname" file="${lib.component.current.dir}"/>
+                            <echo level="info" message="Lib cleanout needed for ${lib.component.current.dirname} (ivy base lib migration)"/>
+                            <antcall target="do-lib-clean" inheritrefs="true"/>
+                        </then>
+                    </if>
+                </then>
+            </elseif>
         </if>
     </target>
-    
+
     <target name="check-init-lib-update" description="Initial libraries and dependencies download, per-component, if enabled only">
         <if>
-            <not><equals arg1="${lib.update.hook.mode}" arg2="component"/></not>
+            <not>
+                <equals arg1="${lib.update.hook.mode}" arg2="component"/>
+            </not>
             <then>
                 <echo level="verbose" message="Skipping component lib updates (not using per-component mode)"/>
             </then>
@@ -388,20 +426,26 @@ under the License.
             </else>
         </if>
     </target>
-    
-    <target name="do-lib-update" description="Downloads all jars">
-        <antcall target="common-lib-update" inheritrefs="true"/>
+
+    <!-- NOTE: must be called with: antcallback target="do-lib-resolve" inheritrefs="true" return="lib.resolve.changed" -->
+    <target name="do-lib-resolve" description="Resolves lib dependencies">
+        <property name="lib.resolve.confs" value="*"/>
+        <echo level="verbose" message="lib.resolve.confs: ${lib.resolve.confs}"/>
+        <ivy:resolve refresh="${lib.update.ivy.refresh}" conf="${lib.resolve.confs}"/>
+        <property name="lib.resolve.changed" value="${ivy.deps.changed}"/>
     </target>
     
-    <target name="common-lib-update" description="Downloads all jars (default/common implementation)">
-        <antcall target="root-lib-update" inheritrefs="true"/>
-    </target>
-    
-    <!-- NOTE: Must with called with antcall inheritrefs="true" -->
-    <target name="root-lib-update" description="Downloads root lib folder jars">
+    <!-- NOTE: xxx-lib-update targets must with called with: antcall inheritrefs="true" -->
+    <target name="do-lib-update" description="Deploys all jars">
         <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="application"/>
     </target>
-    
+    <target name="common-lib-update" description="Deploys all jars (default/common implementation)">
+        <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="application"/>
+    </target>
+    <target name="root-lib-update" description="Deploys root lib folder jars">
+        <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="application"/>
+    </target>
+
     <target name="init-lib-clean" description="Cleans downloadable jars, if applicable for component">
         <if>
             <and>
@@ -416,19 +460,40 @@ under the License.
                     </then>
                 </if>
             </then>
+            <elseif>
+                <!-- 2018-03-20: migration cleanup: the ivy.xml files were removed for
+                    many components, so we must clean them out - TODO: remove this in a few months -->
+                <and>
+                    <matches pattern="/(framework|applications|specialpurpose)/[^/]+/build.xml$" string="${ant.file}"/>
+                    <not><available file="ivy.xml" type="file"/></not>
+                    <available file="lib" type="dir"/>
+                    <resourcecount when="greater" count="0">
+                        <fileset file="lib/*.jar"/>
+                    </resourcecount>
+                </and>
+                <then>
+                    <if>
+                        <and>
+                            <not><equals arg1="${lib.clean.deployed}" arg2="false"/></not>
+                        </and>
+                        <then>
+                            <dirname property="lib.component.current.dir" file="${ant.file}"/>
+                            <basename property="lib.component.current.dirname" file="${lib.component.current.dir}"/>
+                            <echo level="info" message="Lib cleanout needed for ${lib.component.current.dirname} (ivy base lib migration)"/>
+                            <antcall target="do-lib-clean" inheritrefs="true"/>
+                        </then>
+                    </if>
+                </then>
+            </elseif>
         </if>
     </target>
-    
     <target name="do-lib-clean" description="Cleans out (removes) all ivy-handled jars">
-        <antcall target="common-lib-clean" inheritrefs="true"/>
-    </target>
-    
-    <target name="common-lib-clean" description="Cleans out (removes) all ivy-handled jars">
-        <!-- NOTE: This exists because we cannot use sync="true" on <ivy:retrieve/> because it will remove 
-            files we need to keep - we need exceptions. 
-            So instead we implement our own sync by cleaning out all files except for the listed
-            exceptions. -->
         <remove-lib-files dir="lib" excludes-refid="lib.update.manual.files"/>
     </target>
-    
+    <target name="common-lib-clean" description="Cleans out (removes) all ivy-handled jars">
+        <!-- NOTE: remove-lib-files is used as we cannot use sync="true" on <ivy:retrieve/>,
+            because it does not support file exceptions from deletion (lib.update.manual.files) -->
+        <remove-lib-files dir="lib" excludes-refid="lib.update.manual.files"/>
+    </target>
+
 </project>

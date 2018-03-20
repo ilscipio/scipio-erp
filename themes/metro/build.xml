@@ -27,7 +27,6 @@ under the License.
 
     <property name="desc" value="Metro Theme"/>
     <property name="name" value="metro-theme"/>
-    <property name="ofbiz.home.dir" value="../.."/>
 
     <filelist dir="." id="component.build.dependencies">
         <file name="../base" />

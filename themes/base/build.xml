@@ -27,7 +27,6 @@ under the License.
 
     <property name="desc" value="Base Theme"/>
     <property name="name" value="base-theme"/>
-    <property name="ofbiz.home.dir" value="../.."/>
 
     <target name="build" depends="check-init-lib-update">
         <!-- echo message="[build] ========== Building Base Theme ==========" />

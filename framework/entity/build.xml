@@ -27,15 +27,11 @@ under the License.
 
     <property name="desc" value="Entity Component"/>
     <property name="name" value="ofbiz-entity"/>
-    <property name="ofbiz.home.dir" value="../.."/>
 
     <path id="local.class.path">
         <fileset dir="${lib.dir}" includes="*.jar"/>
         <fileset dir="${lib.dir}/jdbc" includes="*.jar"/>
         <fileset dir="../base/lib" includes="*.jar"/>
-        <fileset dir="../base/lib/commons" includes="*.jar"/>
-        <fileset dir="../base/lib/j2eespecs" includes="*.jar"/>
-        <fileset dir="../base/lib/scripting" includes="*.jar"/>
         <fileset dir="../base/build/lib" includes="*.jar"/>
     </path>
 
@@ -52,9 +48,12 @@ under the License.
         </test-jar>
     </target>
 
+    <!-- SCIPIO: ivy confs to resolve (defaults to "*", meaning all) 
+        This should include all the confs manually handled in do-lib-update task override below,
+        or otherwise all ivy.xml configurations that are not optional. -->
+    <property name="lib.resolve.confs" value="jdbc"/>
+    
     <target name="do-lib-update" description="Downloads all jars">
-        <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="base">
-        </ivy:retrieve>
         <ivy:retrieve pattern="lib/jdbc/unused/${lib.update.filename.pattern.ivy}" conf="jdbc">
             <firstmatchmapper>
                 <!-- Move drivers to old locations (TODO?: remove? standardize?) -->

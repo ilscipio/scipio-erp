@@ -128,9 +128,8 @@
         <dependency org="org.apache.xmlrpc" name="xmlrpc-client" rev="3.1.2" conf="base"/>
         <dependency org="org.apache.xmlrpc" name="xmlrpc-common" rev="3.1.2" conf="base"/>
         <dependency org="org.apache.xmlrpc" name="xmlrpc-server" rev="3.1.2" conf="base"/>
-        <dependency org="xpp3" name="xpp3" rev="1.1.4c" conf="base"/>
         <dependency org="com.thoughtworks.xstream" name="xstream" rev="1.4.9" conf="base"/>
-        <dependency org="com.thoughtworks.xstream" name="xstream" rev="1.4.9" conf="base"/>
+        <!--<dependency org="xpp3" name="xpp3" rev="1.1.4c" conf="base"/> xstream dep: now fetched via xpp3-core + xmlpull transitive deps -->
         <dependency org="org.owasp.esapi" name="esapi" rev="2.1.0" conf="base"/>
         <dependency org="com.googlecode.owasp-java-html-sanitizer" name="owasp-java-html-sanitizer" rev="r239" conf="base"/>
         <dependency org="com.fasterxml.jackson.core" name="jackson-annotations" rev="2.4.0" conf="base"/>
@@ -415,7 +414,6 @@
 
         <!-- overlapping libs -->
         <exclude org="org\.apache\.xmlgraphics" artifact="batik-(?!all$).*" matcher="regexp"/><!-- batik-all includes all -->
-        <exclude org="xpp3" module="xpp3_min"/><!-- already have full xpp3 -->
 
         <!-- artifacts provided by different providers -->
         <!-- Tomcat provides the servlet APIs for us, so they are never physically outdated -->

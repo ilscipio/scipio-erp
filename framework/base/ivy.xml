@@ -163,60 +163,60 @@
         <dependency org="org.apache.xerces" name="serializer" rev="2.9.1" transitive="false" conf="base"/><!-- 3rd-party repo only -->
 
         <!-- commons jars -->
-        <dependency org="commons-beanutils" name="commons-beanutils-core" rev="1.8.3" transitive="false" conf="commons"/>
-        <dependency org="commons-codec" name="commons-codec" rev="1.10" transitive="false" conf="commons"/>
-        <dependency org="commons-collections" name="commons-collections" rev="3.2.2" transitive="false" conf="commons"/>
-        <dependency org="org.apache.commons" name="commons-collections4" rev="4.1" transitive="false" conf="commons"/>
-        <dependency org="org.apache.commons" name="commons-compress" rev="1.9" transitive="false" conf="commons"/>
-        <dependency org="commons-el" name="commons-el" rev="1.0" transitive="false" conf="commons"/>
-        <dependency org="commons-fileupload" name="commons-fileupload" rev="1.3.3" transitive="false" conf="commons"/>
-        <dependency org="commons-io" name="commons-io" rev="2.4" transitive="false" conf="commons"/>
-        <dependency org="commons-lang" name="commons-lang" rev="2.6" transitive="false" conf="commons"/>
-        <dependency org="commons-logging" name="commons-logging" rev="1.2" transitive="false" conf="commons"/>
-        <dependency org="commons-net" name="commons-net" rev="3.3" transitive="false" conf="commons"/>
-        <dependency org="org.apache.commons" name="commons-pool2" rev="2.3" transitive="false" conf="commons"/>
-        <dependency org="commons-validator" name="commons-validator" rev="1.4.1" transitive="false" conf="commons"/>
-        <dependency org="org.apache.commons" name="commons-csv" rev="1.5" transitive="false" conf="commons"/>
+        <dependency org="commons-beanutils" name="commons-beanutils-core" rev="1.8.3" transitive="false" conf="base,commons"/>
+        <dependency org="commons-codec" name="commons-codec" rev="1.10" transitive="false" conf="base,commons"/>
+        <dependency org="commons-collections" name="commons-collections" rev="3.2.2" transitive="false" conf="base,commons"/>
+        <dependency org="org.apache.commons" name="commons-collections4" rev="4.1" transitive="false" conf="base,commons"/>
+        <dependency org="org.apache.commons" name="commons-compress" rev="1.9" transitive="false" conf="base,commons"/>
+        <dependency org="commons-el" name="commons-el" rev="1.0" transitive="false" conf="base,commons"/>
+        <dependency org="commons-fileupload" name="commons-fileupload" rev="1.3.3" transitive="false" conf="base,commons"/>
+        <dependency org="commons-io" name="commons-io" rev="2.4" transitive="false" conf="base,commons"/>
+        <dependency org="commons-lang" name="commons-lang" rev="2.6" transitive="false" conf="base,commons"/>
+        <dependency org="commons-logging" name="commons-logging" rev="1.2" transitive="false" conf="base,commons"/>
+        <dependency org="commons-net" name="commons-net" rev="3.3" transitive="false" conf="base,commons"/>
+        <dependency org="org.apache.commons" name="commons-pool2" rev="2.3" transitive="false" conf="base,commons"/>
+        <dependency org="commons-validator" name="commons-validator" rev="1.4.1" transitive="false" conf="base,commons"/>
+        <dependency org="org.apache.commons" name="commons-csv" rev="1.5" transitive="false" conf="base,commons"/>
 
         <!-- j2eespecs jars -->
-        <dependency org="org.apache.geronimo.specs" name="geronimo-activation_1.0.2_spec" rev="1.0" transitive="false" conf="j2eespecs"/>
-        <dependency org="org.apache.geronimo.specs" name="geronimo-j2ee-connector_1.5_spec" rev="2.0.0" transitive="false" conf="j2eespecs"/>
-        <dependency org="org.apache.geronimo.specs" name="geronimo-jaxr_1.0_spec" rev="1.0" transitive="false" conf="j2eespecs"/>
-        <dependency org="org.apache.geronimo.specs" name="geronimo-jaxrpc_1.1_spec" rev="1.0" transitive="false" conf="j2eespecs"/>
-        <dependency org="org.apache.geronimo.specs" name="geronimo-jms_1.1_spec" rev="1.1.1" transitive="false" conf="j2eespecs"/>
-        <dependency org="org.apache.geronimo.specs" name="geronimo-jta_1.1_spec" rev="1.1.1" transitive="false" conf="j2eespecs"/>
-        <dependency org="org.apache.geronimo.specs" name="geronimo-saaj_1.3_spec" rev="1.1" transitive="false" conf="j2eespecs"/>
+        <dependency org="org.apache.geronimo.specs" name="geronimo-activation_1.0.2_spec" rev="1.0" transitive="false" conf="base,j2eespecs"/>
+        <dependency org="org.apache.geronimo.specs" name="geronimo-j2ee-connector_1.5_spec" rev="2.0.0" transitive="false" conf="base,j2eespecs"/>
+        <dependency org="org.apache.geronimo.specs" name="geronimo-jaxr_1.0_spec" rev="1.0" transitive="false" conf="base,j2eespecs"/>
+        <dependency org="org.apache.geronimo.specs" name="geronimo-jaxrpc_1.1_spec" rev="1.0" transitive="false" conf="base,j2eespecs"/>
+        <dependency org="org.apache.geronimo.specs" name="geronimo-jms_1.1_spec" rev="1.1.1" transitive="false" conf="base,j2eespecs"/>
+        <dependency org="org.apache.geronimo.specs" name="geronimo-jta_1.1_spec" rev="1.1.1" transitive="false" conf="base,j2eespecs"/>
+        <dependency org="org.apache.geronimo.specs" name="geronimo-saaj_1.3_spec" rev="1.1" transitive="false" conf="base,j2eespecs"/>
 
         <!-- j2eespecs servlet API jars -->
-        <dependency org="javax.servlet" name="javax.servlet-api" rev="3.1.0" transitive="false" conf="j2eespecs"/>
-        <dependency org="javax.servlet.jsp" name="javax.servlet.jsp-api" rev="2.3.0" transitive="false" conf="j2eespecs"/>
-        <dependency org="javax.el" name="javax.el-api" rev="3.0.0" transitive="false" conf="j2eespecs"/>
+        <dependency org="javax.servlet" name="javax.servlet-api" rev="3.1.0" transitive="false" conf="base,j2eespecs"/>
+        <dependency org="javax.servlet.jsp" name="javax.servlet.jsp-api" rev="2.3.0" transitive="false" conf="base,j2eespecs"/>
+        <dependency org="javax.el" name="javax.el-api" rev="3.0.0" transitive="false" conf="base,j2eespecs"/>
         <!-- not used; issue location version
-        <dependency org="javax.annotations" name="annotations-api" rev="3.0.0" transitive="false" conf="j2eespecs"/>-->
+        <dependency org="javax.annotations" name="annotations-api" rev="3.0.0" transitive="false" conf="base,j2eespecs"/>-->
         <!-- NOTE: Originally ofbiz used the API jars from Tomcat instead of the official javax.servlet ones... 
             worst case can go back to this (with build.xml do-lib-update renaming)
-        <dependency org="org.apache.tomcat" name="tomcat-servlet-api" rev="x.x.x" transitive="false" conf="j2eespecs"/>
-        <dependency org="org.apache.tomcat" name="tomcat-jsp-api" rev="x.x.x" transitive="false" conf="j2eespecs"/>
-        <dependency org="org.apache.tomcat" name="tomcat-el-api" rev="x.x.x" transitive="false" conf="j2eespecs"/>
-        <dependency org="org.apache.tomcat" name="tomcat-annotations-api" rev="x.x.x" transitive="false" conf="j2eespecs"/>-->
+        <dependency org="org.apache.tomcat" name="tomcat-servlet-api" rev="x.x.x" transitive="false" conf="base,j2eespecs"/>
+        <dependency org="org.apache.tomcat" name="tomcat-jsp-api" rev="x.x.x" transitive="false" conf="base,j2eespecs"/>
+        <dependency org="org.apache.tomcat" name="tomcat-el-api" rev="x.x.x" transitive="false" conf="base,j2eespecs"/>
+        <dependency org="org.apache.tomcat" name="tomcat-annotations-api" rev="x.x.x" transitive="false" conf="base,j2eespecs"/>-->
 
         <!-- scripting jars -->
-        <dependency org="antlr" name="antlr" rev="2.7.6" transitive="false" conf="scripting"/>
-        <dependency org="asm" name="asm" rev="3.2" transitive="false" conf="scripting"/>
-        <dependency org="bsf" name="bsf" rev="2.4.0" transitive="false" conf="scripting"/>
-        <dependency org="org.codehaus.groovy" name="groovy-all" rev="2.4.5" transitive="false" conf="scripting,groovy"/>
-        <dependency org="oro" name="oro" rev="2.0.8" transitive="false" conf="scripting"/>
+        <dependency org="antlr" name="antlr" rev="2.7.6" transitive="false" conf="base,scripting"/>
+        <dependency org="asm" name="asm" rev="3.2" transitive="false" conf="base,scripting"/>
+        <dependency org="bsf" name="bsf" rev="2.4.0" transitive="false" conf="base,scripting"/>
+        <dependency org="org.codehaus.groovy" name="groovy-all" rev="2.4.5" transitive="false" conf="base,scripting,groovy"/>
+        <dependency org="oro" name="oro" rev="2.0.8" transitive="false" conf="base,scripting"/>
 
         <!-- scripting jars - known to be missing/broken in central (2018-03-20) -->
-        <dependency org="org.beanshell" name="bsh" rev="2.0b4" transitive="false" conf="scripting"/><!-- jar in central differed from ofbiz jar for same version! -->
-        <dependency org="jython-nooro" name="jython-nooro" rev="0.1" transitive="false" conf="scripting"/><!-- cannot be found; version here is invented -->
+        <dependency org="org.beanshell" name="bsh" rev="2.0b4" transitive="false" conf="base,scripting"/><!-- jar in central differed from ofbiz jar for same version! -->
+        <dependency org="jython-nooro" name="jython-nooro" rev="0.1" transitive="false" conf="base,scripting"/><!-- cannot be found; version here is invented -->
 
         <!-- media jars -->
         <!-- SCIPIO: 2017-07-10: new image libs -->
-        <dependency org="net.coobird" name="thumbnailator" rev="0.4.8" transitive="false" conf="media"/>
-        <dependency org="com.mortennobel" name="java-image-scaling" rev="0.8.6" transitive="false" conf="media"/>
-        <dependency org="org.imgscalr" name="imgscalr-lib" rev="4.2" transitive="false" conf="media"/>
-        <dependency org="com.twelvemonkeys.common" name="common-image" rev="3.3.2" transitive="false" conf="media"/>
+        <dependency org="net.coobird" name="thumbnailator" rev="0.4.8" transitive="false" conf="base,media"/>
+        <dependency org="com.mortennobel" name="java-image-scaling" rev="0.8.6" transitive="false" conf="base,media"/>
+        <dependency org="org.imgscalr" name="imgscalr-lib" rev="4.2" transitive="false" conf="base,media"/>
+        <dependency org="com.twelvemonkeys.common" name="common-image" rev="3.3.2" transitive="false" conf="base,media"/>
 
         <!--
             OTHER FRAMEWORK COMPONENT DEPENDENCIES
@@ -226,49 +226,49 @@
         -->
 
         <!-- catalina component (framework/catalina/ivy.xml) -->
-        <dependency org="org.apache.tomcat" name="tomcat-api" rev="8.0.50" transitive="false" conf="application"/>
-        <dependency org="org.apache.tomcat" name="tomcat-catalina" rev="8.0.50" transitive="false" conf="application"/>
-        <dependency org="org.apache.tomcat" name="tomcat-catalina-ha" rev="8.0.50" transitive="false" conf="application"/>
-        <dependency org="org.apache.tomcat" name="tomcat-coyote" rev="8.0.50" transitive="false" conf="application"/>
-        <dependency org="org.apache.tomcat" name="tomcat-jasper" rev="8.0.50" transitive="false" conf="application"/>
-        <dependency org="org.apache.tomcat" name="tomcat-jni" rev="8.0.50" transitive="false" conf="application"/>
-        <dependency org="org.apache.tomcat" name="tomcat-tribes" rev="8.0.50" transitive="false" conf="application"/>
-        <dependency org="org.apache.tomcat" name="tomcat-util" rev="8.0.50" transitive="false" conf="application"/>
-        <dependency org="org.apache.tomcat" name="tomcat-util-scan" rev="8.0.50" transitive="false" conf="application"/>
-        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli" rev="8.0.50" transitive="false" conf="application"/>
-        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli-adapters" rev="8.0.50" transitive="false" conf="application"/>
-        <dependency org="org.eclipse.jdt.core.compiler" name="ecj" rev="4.5" transitive="false" conf="application"/>
+        <dependency org="org.apache.tomcat" name="tomcat-api" rev="8.0.50" transitive="false" conf="base"/>
+        <dependency org="org.apache.tomcat" name="tomcat-catalina" rev="8.0.50" transitive="false" conf="base"/>
+        <dependency org="org.apache.tomcat" name="tomcat-catalina-ha" rev="8.0.50" transitive="false" conf="base"/>
+        <dependency org="org.apache.tomcat" name="tomcat-coyote" rev="8.0.50" transitive="false" conf="base"/>
+        <dependency org="org.apache.tomcat" name="tomcat-jasper" rev="8.0.50" transitive="false" conf="base"/>
+        <dependency org="org.apache.tomcat" name="tomcat-jni" rev="8.0.50" transitive="false" conf="base"/>
+        <dependency org="org.apache.tomcat" name="tomcat-tribes" rev="8.0.50" transitive="false" conf="base"/>
+        <dependency org="org.apache.tomcat" name="tomcat-util" rev="8.0.50" transitive="false" conf="base"/>
+        <dependency org="org.apache.tomcat" name="tomcat-util-scan" rev="8.0.50" transitive="false" conf="base"/>
+        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli" rev="8.0.50" transitive="false" conf="base"/>
+        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli-adapters" rev="8.0.50" transitive="false" conf="base"/>
+        <dependency org="org.eclipse.jdt.core.compiler" name="ecj" rev="4.5" transitive="false" conf="base"/>
 
         <!-- entity component (framework/entity/ivy.xml) -->
-        <dependency org="org.apache.commons" name="commons-dbcp2" rev="2.1" transitive="false" conf="application"/>
+        <dependency org="org.apache.commons" name="commons-dbcp2" rev="2.1" transitive="false" conf="base"/>
 
         <!-- geronimo component (framework/geronimo/ivy.xml) -->
-        <dependency org="org.apache.geronimo.components" name="geronimo-transaction" rev="3.1.1" transitive="false" conf="application"/>
+        <dependency org="org.apache.geronimo.components" name="geronimo-transaction" rev="3.1.1" transitive="false" conf="base"/>
 
         <!-- service component (framework/service/ivy.xml) -->
-        <dependency org="org.apache.axis2" name="axis2-adb" rev="1.7.1" transitive="false" conf="application"/>
+        <dependency org="org.apache.axis2" name="axis2-adb" rev="1.7.1" transitive="false" conf="base"/>
         <!-- WARN: 2017-02-03: axis2-kernel 1.7.1 in public repos has slight difference from version originally committed in Ofbiz trunk
             (repos use old deprecated CommonsHTTPTransportSender instead of HTTPClient4TransportSender, in org/apache/axis2/deployment/axis2_default.xml);
             but Ofbiz provides a separate axis2.xml conf (using HTTPClient4TransportSender), which should override it -->
-        <dependency org="org.apache.axis2" name="axis2-kernel" rev="1.7.1" transitive="false" conf="application"/>
-        <dependency org="org.apache.axis2" name="axis2-transport-http" rev="1.7.1" transitive="false" conf="application"/>
-        <dependency org="org.apache.axis2" name="axis2-transport-local" rev="1.7.1" transitive="false" conf="application"/>
-        <dependency org="org.apache.neethi" name="neethi" rev="3.0.3" transitive="false" conf="application"/>
-        <dependency org="org.apache.woden" name="woden-core" rev="1.0M10" transitive="false" conf="application"/>
-        <dependency org="org.apache.ws.commons.axiom" name="axiom-api" rev="1.2.17" transitive="false" conf="application"/>
-        <dependency org="org.apache.ws.commons.axiom" name="axiom-impl" rev="1.2.17" transitive="false" conf="application"/>
-        <dependency org="org.apache.ws.xmlschema" name="xmlschema-core" rev="2.2.1" transitive="false" conf="application"/>
-        <dependency org="wsdl4j" name="wsdl4j" rev="1.6.2" transitive="false" conf="application"/>
+        <dependency org="org.apache.axis2" name="axis2-kernel" rev="1.7.1" transitive="false" conf="base"/>
+        <dependency org="org.apache.axis2" name="axis2-transport-http" rev="1.7.1" transitive="false" conf="base"/>
+        <dependency org="org.apache.axis2" name="axis2-transport-local" rev="1.7.1" transitive="false" conf="base"/>
+        <dependency org="org.apache.neethi" name="neethi" rev="3.0.3" transitive="false" conf="base"/>
+        <dependency org="org.apache.woden" name="woden-core" rev="1.0M10" transitive="false" conf="base"/>
+        <dependency org="org.apache.ws.commons.axiom" name="axiom-api" rev="1.2.17" transitive="false" conf="base"/>
+        <dependency org="org.apache.ws.commons.axiom" name="axiom-impl" rev="1.2.17" transitive="false" conf="base"/>
+        <dependency org="org.apache.ws.xmlschema" name="xmlschema-core" rev="2.2.1" transitive="false" conf="base"/>
+        <dependency org="wsdl4j" name="wsdl4j" rev="1.6.2" transitive="false" conf="base"/>
 
         <!-- testtools component (framework/testtools/ivy.xml) -->
-        <dependency org="org.springframework" name="spring-core" rev="4.2.3.RELEASE" transitive="false" conf="application"/>
-        <dependency org="org.springframework" name="spring-test" rev="4.2.3.RELEASE" transitive="false" conf="application"/>
+        <dependency org="org.springframework" name="spring-core" rev="4.2.3.RELEASE" transitive="false" conf="base"/>
+        <dependency org="org.springframework" name="spring-test" rev="4.2.3.RELEASE" transitive="false" conf="base"/>
 
         <!-- webapp component (framework/webapp/ivy.xml) -->
-        <dependency org="net.sf.ezmorph" name="ezmorph" rev="0.9.1" transitive="false" conf="application"/>
-        <dependency org="com.lowagie" name="itext" rev="2.1.7" transitive="false" conf="application"/>
-        <dependency org="rome" name="rome" rev="0.9" transitive="false" conf="application"/>
-        <dependency org="org.tuckey" name="urlrewritefilter" rev="4.0.4" transitive="false" conf="application"/>
+        <dependency org="net.sf.ezmorph" name="ezmorph" rev="0.9.1" transitive="false" conf="base"/>
+        <dependency org="com.lowagie" name="itext" rev="2.1.7" transitive="false" conf="base"/>
+        <dependency org="rome" name="rome" rev="0.9" transitive="false" conf="base"/>
+        <dependency org="org.tuckey" name="urlrewritefilter" rev="4.0.4" transitive="false" conf="base"/>
 
         <!--
             APPLICATIONS COMPONENT DEPENDENCIES
@@ -277,24 +277,24 @@
         -->
 
         <!-- content component (applications/content/ivy.xml) -->
-        <dependency org="dom4j" name="dom4j" rev="1.6.1" transitive="false" conf="application"/>
-        <dependency org="org.apache.pdfbox" name="fontbox" rev="2.0.4" transitive="false" conf="application"/>
-        <dependency org="org.apache.pdfbox" name="jempbox" rev="1.8.12" transitive="false" conf="application"/>
-        <dependency org="org.apache.pdfbox" name="pdfbox" rev="2.0.3" transitive="false" conf="application"/>
-        <dependency org="org.apache.poi" name="poi" rev="3.15" transitive="false" conf="application"/>
+        <dependency org="dom4j" name="dom4j" rev="1.6.1" transitive="false" conf="base"/>
+        <dependency org="org.apache.pdfbox" name="fontbox" rev="2.0.4" transitive="false" conf="base"/>
+        <dependency org="org.apache.pdfbox" name="jempbox" rev="1.8.12" transitive="false" conf="base"/>
+        <dependency org="org.apache.pdfbox" name="pdfbox" rev="2.0.3" transitive="false" conf="base"/>
+        <dependency org="org.apache.poi" name="poi" rev="3.15" transitive="false" conf="base"/>
 
         <!-- product component (applications/product/ivy.xml) -->
-        <dependency org="net.sf.dozer" name="dozer" rev="4.2.1" transitive="false" conf="application"/>
-        <dependency org="watermarker" name="watermarker" rev="0.0.4" transitive="false" conf="application"/>
+        <dependency org="net.sf.dozer" name="dozer" rev="4.2.1" transitive="false" conf="base"/>
+        <dependency org="watermarker" name="watermarker" rev="0.0.4" transitive="false" conf="base"/>
 
         <!-- solr component (applications/solr/ivy.xml) -->
-        <dependency org="org.apache.solr" name="solr-solrj" rev="6.6.2" transitive="false" conf="application"/>
+        <dependency org="org.apache.solr" name="solr-solrj" rev="6.6.2" transitive="false" conf="base"/>
         <!-- SPECIAL: solr-webapp depends on 'metrics' libs but they are not included under /WEB-INF/lib -->
-        <dependency org="info.ganglia.gmetric4j" name="gmetric4j" rev="1.0.7" transitive="false" conf="application"/>
-        <dependency org="io.dropwizard.metrics" name="metrics-core" rev="3.2.2" transitive="false" conf="application"/>
-        <dependency org="io.dropwizard.metrics" name="metrics-ganglia" rev="3.2.2" transitive="false" conf="application"/>
-        <dependency org="io.dropwizard.metrics" name="metrics-graphite" rev="3.2.2" transitive="false" conf="application"/>
-        <dependency org="io.dropwizard.metrics" name="metrics-jvm" rev="3.2.2" transitive="false" conf="application"/>
+        <dependency org="info.ganglia.gmetric4j" name="gmetric4j" rev="1.0.7" transitive="false" conf="base"/>
+        <dependency org="io.dropwizard.metrics" name="metrics-core" rev="3.2.2" transitive="false" conf="base"/>
+        <dependency org="io.dropwizard.metrics" name="metrics-ganglia" rev="3.2.2" transitive="false" conf="base"/>
+        <dependency org="io.dropwizard.metrics" name="metrics-graphite" rev="3.2.2" transitive="false" conf="base"/>
+        <dependency org="io.dropwizard.metrics" name="metrics-jvm" rev="3.2.2" transitive="false" conf="base"/>
 
         <!--
             SPECIALPURPOSE COMPONENT DEPENDENCIES
@@ -303,7 +303,7 @@
         -->
 
         <!-- demosuite component (specialpurpose/demosuite/ivy.xml) -->
-        <dependency org="io.codearte.jfairy" name="jfairy" rev="0.5.9" conf="application" />
+        <dependency org="io.codearte.jfairy" name="jfairy" rev="0.5.9" conf="base" />
 
         <!--
             ADDONS COMPONENT DEPENDENCIES (TEMPORARY)

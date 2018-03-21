@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
     <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-    <classpathentry kind="lib" path="framework/base/lib/annotations-api-3.0.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/ant/ant-1.9.0-ant.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/ant/ant-1.9.0-ant-junit.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/ant/ant-1.9.0-ant-launcher.jar"/>
@@ -40,7 +39,6 @@
     <classpathentry kind="lib" path="framework/base/lib/dom4j-1.6.1.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/dozer-4.2.1.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/ecj-4.5.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/el-api-3.0.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/esapi-2.1.0.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/ezmorph-0.9.1.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/fontbox-2.0.4.jar"/>
@@ -68,14 +66,16 @@
     <classpathentry kind="lib" path="framework/base/lib/jackson-core-2.4.2.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/jackson-databind-2.4.2.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/java-image-scaling-0.8.6.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/javax.el-api-3.0.0.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/javax.mail-1.5.1.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/javax.servlet-api-3.1.0.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/javax.servlet.jsp-api-2.3.0.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/javolution-5.4.3.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/jdbm-1.0-SNAPSHOT.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/jdom-1.1.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/jempbox-1.8.12.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/jfairy-0.5.9.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/joda-time-2.9.9.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/jsp-api-2.3.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/juel-impl-2.2.7.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/juel-spi-2.2.7.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/junit-dep-4.10.jar"/>
@@ -91,7 +91,6 @@
     <classpathentry kind="lib" path="framework/base/lib/resolver-2.9.1.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/rome-0.9.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/serializer-2.9.1.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/servlet-api-3.1.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/sitemapgen4j-1.0.1.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/slf4j-api-1.7.22.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/solr-solrj-6.6.2.jar"/>

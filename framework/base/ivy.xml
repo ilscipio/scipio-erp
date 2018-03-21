@@ -187,15 +187,18 @@
         <dependency org="org.apache.geronimo.specs" name="geronimo-jta_1.1_spec" rev="1.1.1" transitive="false" conf="j2eespecs"/>
         <dependency org="org.apache.geronimo.specs" name="geronimo-saaj_1.3_spec" rev="1.1" transitive="false" conf="j2eespecs"/>
 
-        <!-- NOTE: Ofbiz used the API jars from Tomcat instead of the official javax.servlet ones...
+        <!-- j2eespecs servlet API jars -->
         <dependency org="javax.servlet" name="javax.servlet-api" rev="3.1.0" transitive="false" conf="j2eespecs"/>
         <dependency org="javax.servlet.jsp" name="javax.servlet.jsp-api" rev="2.3.0" transitive="false" conf="j2eespecs"/>
         <dependency org="javax.el" name="javax.el-api" rev="3.0.0" transitive="false" conf="j2eespecs"/>
-        <dependency org="javax.?" name="annotations-api" rev="3.0" transitive="false" conf="j2eespecs"/>-->
-        <dependency org="org.apache.tomcat" name="tomcat-servlet-api" rev="8.0.50" transitive="false" conf="j2eespecs"/><!-- official: 3.1 -->
-        <dependency org="org.apache.tomcat" name="tomcat-jsp-api" rev="8.0.50" transitive="false" conf="j2eespecs"/><!-- official: 2.3 -->
-        <dependency org="org.apache.tomcat" name="tomcat-el-api" rev="8.0.50" transitive="false" conf="j2eespecs"/><!-- official: 3.0 -->
-        <dependency org="org.apache.tomcat" name="tomcat-annotations-api" rev="8.0.50" transitive="false" conf="j2eespecs"/><!-- official: 3.0 -->
+        <!-- not used; issue location version
+        <dependency org="javax.annotations" name="annotations-api" rev="3.0.0" transitive="false" conf="j2eespecs"/>-->
+        <!-- NOTE: Originally ofbiz used the API jars from Tomcat instead of the official javax.servlet ones... 
+            worst case can go back to this (with build.xml do-lib-update renaming)
+        <dependency org="org.apache.tomcat" name="tomcat-servlet-api" rev="x.x.x" transitive="false" conf="j2eespecs"/>
+        <dependency org="org.apache.tomcat" name="tomcat-jsp-api" rev="x.x.x" transitive="false" conf="j2eespecs"/>
+        <dependency org="org.apache.tomcat" name="tomcat-el-api" rev="x.x.x" transitive="false" conf="j2eespecs"/>
+        <dependency org="org.apache.tomcat" name="tomcat-annotations-api" rev="x.x.x" transitive="false" conf="j2eespecs"/>-->
 
         <!-- scripting jars -->
         <dependency org="antlr" name="antlr" rev="2.7.6" transitive="false" conf="scripting"/>

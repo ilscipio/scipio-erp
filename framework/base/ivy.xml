@@ -262,6 +262,9 @@
         <!-- webapp component (framework/webapp/ivy.xml) -->
         <dependency org="net.sf.ezmorph" name="ezmorph" rev="0.9.1" transitive="false" conf="base"/>
         <dependency org="com.lowagie" name="itext" rev="2.1.7" transitive="false" conf="base"/>
+        <dependency org="org.bouncycastle" name="bctsp-jdk14" rev="1.38" transitive="false" conf="base"/><!-- itext dependency -->
+        <dependency org="org.bouncycastle" name="bcmail-jdk14" rev="1.38" transitive="false" conf="base"/><!-- itext dependency -->
+        <dependency org="org.bouncycastle" name="bcprov-jdk14" rev="1.38" transitive="false" conf="base"/><!-- itext dependency -->
         <dependency org="rome" name="rome" rev="0.9" transitive="false" conf="base"/>
         <dependency org="org.tuckey" name="urlrewritefilter" rev="4.0.4" transitive="false" conf="base"/>
 
@@ -402,6 +405,7 @@
         <exclude org="junit" module="junit-dep"/><!-- now org="junit" name="junit" -->
         <exclude org="org.beanshell" module="bsh-.*" matcher="regexp"/><!-- we provide the full bsh jar -->
         <exclude org="jython" module="jython"/><!-- now org="org.python" -->
+        <exclude org="bouncycastle"/><!-- now org="org.bouncycastle" (NOTE: these had poor version numbers, like "138") -->
         <!--<exclude org="asm" module="asm"/> TODO?: this moved to org="org.ow2.asm"; conflict inevitable -->
         <!--<exclude org="rome" module="rome"/> TODO?: this moved to org="org.ow2.asm"; conflict inevitable -->
 

@@ -2066,6 +2066,15 @@ under the License.
     </target>
     <target name="init-lib-clean-cache-deployed" depends="clean-ivy-deployed" description="Cleans out Ivy resolution cache and deployment folders (but not repository/download cache) [alias for clean-ivy-deployed]">
     </target>
+    
+    <target name="show-lib-deptrees" description="Shows library dependency trees for all components with an ivyfile">
+        <iterate target="show-lib-deptree" filelist="framework-builds"/>
+        <iterate target="show-lib-deptree" filelist="application-builds"/>
+        <iterate target="show-lib-deptree" filelist="specialpurpose-builds"/>
+        <addonsant target="show-lib-deptree"/>
+        <hotdeployant target="show-lib-deptree"/>
+        <dep-subant dir="${basedir}/themes" target="show-lib-deptree"/>
+    </target>
 
     <target name="download-activemq" description="Download activemq for DCC (Distributed Cache Clearing">
         <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="activemq"/>

@@ -495,5 +495,15 @@ under the License.
             because it does not support file exceptions from deletion (lib.update.manual.files) -->
         <remove-lib-files dir="lib" excludes-refid="lib.update.manual.files"/>
     </target>
+    
+    <target name="show-lib-deptree" description="Shows library dependency tree">
+        <if>
+            <available file="ivy.xml" type="file"/>
+            <then>
+                <property name="lib.resolve.confs" value="*"/>
+                <ivy:dependencytree conf="${lib.resolve.confs}"/>
+            </then>
+        </if>
+    </target>
 
 </project>

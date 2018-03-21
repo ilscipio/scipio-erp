@@ -98,7 +98,11 @@
         <dependency org="org.apache.httpcomponents" name="httpclient-cache" rev="4.4.1" conf="base"/>
         <dependency org="org.apache.httpcomponents" name="httpcore" rev="4.4.1" conf="base"/>
         <dependency org="org.apache.httpcomponents" name="httpmime" rev="4.4.1" conf="base"/>
-        <dependency org="httpunit" name="httpunit" rev="1.7" conf="base"/>
+        <dependency org="httpunit" name="httpunit" rev="1.7" conf="base">
+            <!-- FIXME?: jtidy is dep of httpunit, but it has class conflicts with several
+                libs (javolution, xml-apis) and was not shipped with ofbiz 14/15 -->
+            <exclude module="jtidy"/>
+        </dependency>
         <dependency org="com.ibm.icu" name="icu4j" rev="57.1" conf="base"/>
         <dependency org="javolution" name="javolution" rev="5.4.3" conf="base"/>
         <dependency org="junit" name="junit" rev="4.12" conf="base"/>

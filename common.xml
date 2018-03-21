@@ -433,6 +433,7 @@ under the License.
         <echo level="verbose" message="lib.resolve.confs: ${lib.resolve.confs}"/>
         <ivy:resolve refresh="${lib.update.ivy.refresh}" conf="${lib.resolve.confs}"/>
         <property name="lib.resolve.changed" value="${ivy.deps.changed}"/>
+        <!-- FIXME: does not return enough properties; some ivy functionality blocked -->
     </target>
     
     <!-- NOTE: xxx-lib-update targets must with called with: antcall inheritrefs="true" -->
@@ -496,12 +497,24 @@ under the License.
         <remove-lib-files dir="lib" excludes-refid="lib.update.manual.files"/>
     </target>
     
-    <target name="show-lib-deptree" description="Shows library dependency tree">
+    <target name="init-lib-dep-tree" description="Shows library dependency tree">
         <if>
             <available file="ivy.xml" type="file"/>
             <then>
                 <property name="lib.resolve.confs" value="*"/>
                 <ivy:dependencytree conf="${lib.resolve.confs}"/>
+            </then>
+        </if>
+    </target>
+    
+    <target name="init-lib-dep-report" description="Generate library dependency HTML report">
+        <if>
+            <available file="ivy.xml" type="file"/>
+            <then>
+                <property name="lib.resolve.confs" value="*"/>
+                <!-- FIXME: this should be using do-lib-resolve, but has return property issues -->
+                <ivy:resolve refresh="false" conf="${lib.resolve.confs}"/>
+                <ivy:report conf="${lib.resolve.confs}" todir="lib-depreport"/>
             </then>
         </if>
     </target>

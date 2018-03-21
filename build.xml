@@ -1986,7 +1986,7 @@ under the License.
         <dep-subant dir="${basedir}/themes" target="init-lib-update"/>
     </target>
     
-    <target name="init-lib-clean" depends="ivy-init" description="Libraries and dependencies clean - by default, cleans ivy resolution cache (but not repository/download cache) and removes deployed JARs">
+    <target name="init-lib-clean" depends="ivy-init" description="Libraries and dependencies clean - by default, cleans ivy resolution cache (but not repository/download cache) and removes deployed JARs [alias for clean-ivy-deployed]">
         <stopwatch name="lib.clean.stopwatch" action="start"/>
 
         <if>
@@ -2003,6 +2003,8 @@ under the License.
         </if>
 
         <stopwatch name="lib.clean.stopwatch" action="total"/>
+    </target>
+    <target name="clean-ivy-deployed" depends="init-lib-clean" description="Libraries and dependencies clean - by default, cleans ivy resolution cache (but not repository/download cache) and removes deployed JARs [alias for init-lib-clean]">
     </target>
     
     <target name="clean-ivy" description="Cleans Ivy resolution cache (but not repository/download cache, unless lib.clean.cache.repo=true) [alias for init-lib-clean-cache]">
@@ -2062,18 +2064,22 @@ under the License.
         <dep-subant dir="${basedir}/themes" target="init-lib-clean"/>
     </target>
     
-    <target name="clean-ivy-deployed" depends="clean-ivy,init-lib-clean-deployed" description="Cleans out Ivy resolution cache and deployment folders (but not repository/download cache) [alias for init-lib-clean-cache-deployed]">
-    </target>
-    <target name="init-lib-clean-cache-deployed" depends="clean-ivy-deployed" description="Cleans out Ivy resolution cache and deployment folders (but not repository/download cache) [alias for clean-ivy-deployed]">
+    <target name="init-lib-dep-tree" description="Shows library dependency trees for all components with an ivyfile">
+        <iterate target="init-lib-dep-tree" filelist="framework-builds"/>
+        <iterate target="init-lib-dep-tree" filelist="application-builds"/>
+        <iterate target="init-lib-dep-tree" filelist="specialpurpose-builds"/>
+        <addonsant target="init-lib-dep-tree"/>
+        <hotdeployant target="init-lib-dep-tree"/>
+        <dep-subant dir="${basedir}/themes" target="init-lib-dep-tree"/>
     </target>
     
-    <target name="show-lib-deptrees" description="Shows library dependency trees for all components with an ivyfile">
-        <iterate target="show-lib-deptree" filelist="framework-builds"/>
-        <iterate target="show-lib-deptree" filelist="application-builds"/>
-        <iterate target="show-lib-deptree" filelist="specialpurpose-builds"/>
-        <addonsant target="show-lib-deptree"/>
-        <hotdeployant target="show-lib-deptree"/>
-        <dep-subant dir="${basedir}/themes" target="show-lib-deptree"/>
+    <target name="init-lib-dep-report" description="Generate library dependency HTML reports">
+        <iterate target="init-lib-dep-report" filelist="framework-builds"/>
+        <iterate target="init-lib-dep-report" filelist="application-builds"/>
+        <iterate target="init-lib-dep-report" filelist="specialpurpose-builds"/>
+        <addonsant target="init-lib-dep-report"/>
+        <hotdeployant target="init-lib-dep-report"/>
+        <dep-subant dir="${basedir}/themes" target="init-lib-dep-report"/>
     </target>
 
     <target name="download-activemq" description="Download activemq for DCC (Distributed Cache Clearing">

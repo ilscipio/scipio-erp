@@ -101,7 +101,7 @@
         <dependency org="httpunit" name="httpunit" rev="1.7" transitive="false" conf="base"/>
         <dependency org="com.ibm.icu" name="icu4j" rev="57.1" transitive="false" conf="base"/>
         <dependency org="javolution" name="javolution" rev="5.4.3" transitive="false" conf="base"/>
-        <dependency org="junit" name="junit-dep" rev="4.10" transitive="false" conf="base"/>
+        <dependency org="junit" name="junit" rev="4.12" transitive="false" conf="base"/>
         <dependency org="net.sourceforge.nekohtml" name="nekohtml" rev="1.9.16" transitive="false" conf="base"/>
         <dependency org="org.slf4j" name="slf4j-api" rev="1.7.22" transitive="false" conf="base"/>
         <dependency org="xalan" name="xalan" rev="2.7.2" transitive="false" conf="base"/>
@@ -396,6 +396,7 @@
         <exclude org="javax.servlet" module="servlet-api"/><!-- now org="javax.servlet" name="javax.servlet-api" -->
         <exclude org="org.hamcrest" module="hamcrest-core" /><!-- covered by org="org.hamcrest" name="hamcrest-all" (hamcrest-core is from junit) -->
         <exclude org="org\.apache\.xmlgraphics" module="batik-(?!all$).*" matcher="regexp"/><!-- batik-all includes all -->
+        <exclude org="junit" module="junit-dep"/><!-- now org="junit" name="junit" -->
         <!--<exclude org="asm" module="asm"/> TODO?: this moved to org="org.ow2.asm"; conflict inevitable -->
         <!--<exclude org="rome" module="rome"/> TODO?: this moved to org="org.ow2.asm"; conflict inevitable -->
 

@@ -386,7 +386,7 @@
 
             These are libraries directly committed to project, deprecated org/module names
             in central, etc.
-            
+
             NOTE: In some cases, like providing a combined lib like batik-all,
             artifact= exclude must be used instead of module=, otherwise some deps
             may be lost.
@@ -405,7 +405,6 @@
         <exclude org="org.eclipse.jdt" module="ecj"/><!-- now org="org.eclipse.jdt.core.compiler" -->
         <exclude org="javax.servlet" module="servlet-api"/><!-- now org="javax.servlet" name="javax.servlet-api" -->
         <exclude org="org.hamcrest" module="hamcrest-core" /><!-- covered by org="org.hamcrest" name="hamcrest-all" (hamcrest-core is from junit) -->
-        <exclude org="org\.apache\.xmlgraphics" artifact="batik-(?!all$).*" matcher="regexp"/><!-- batik-all includes all -->
         <exclude org="junit" module="junit-dep"/><!-- now org="junit" name="junit" -->
         <exclude org="org.beanshell" module="bsh-.*" matcher="regexp"/><!-- we provide the full bsh jar -->
         <exclude org="jython" module="jython"/><!-- now org="org.python" -->
@@ -413,6 +412,10 @@
         <exclude org="commons-beanutils" module="commons-beanutils-core"/><!-- now org="commons-beanutils" name="commons-beanutils" -->
         <!--<exclude org="asm" module="asm"/> TODO?: this moved to org="org.ow2.asm"; conflict inevitable -->
         <!--<exclude org="rome" module="rome"/> TODO?: this moved to org="org.ow2.asm"; conflict inevitable -->
+
+        <!-- overlapping libs -->
+        <exclude org="org\.apache\.xmlgraphics" artifact="batik-(?!all$).*" matcher="regexp"/><!-- batik-all includes all -->
+        <exclude org="xpp3" module="xpp3_min"/><!-- already have full xpp3 -->
 
         <!-- artifacts provided by different providers -->
         <!-- Tomcat provides the servlet APIs for us, so they are never physically outdated -->

@@ -173,7 +173,7 @@
 
         <!-- j2eespecs jars -->
         <dependency org="org.apache.geronimo.specs" name="geronimo-activation_1.1_spec" rev="1.0.2" conf="base,j2eespecs"/><!-- WARN: conflict with javax.activation#activation -->
-        <dependency org="org.apache.geronimo.specs" name="geronimo-j2ee-connector_1.5_spec" rev="2.0.0" conf="base,j2eespecs"/>
+        <dependency org="org.apache.geronimo.specs" name="geronimo-j2ee-connector_1.6_spec" rev="1.0" conf="base,j2eespecs"/>
         <dependency org="org.apache.geronimo.specs" name="geronimo-jaxr_1.0_spec" rev="1.0" conf="base,j2eespecs"/>
         <dependency org="org.apache.geronimo.specs" name="geronimo-jaxrpc_1.1_spec" rev="1.0" conf="base,j2eespecs"/>
         <dependency org="org.apache.geronimo.specs" name="geronimo-jms_1.1_spec" rev="1.1.1" conf="base,j2eespecs"/>

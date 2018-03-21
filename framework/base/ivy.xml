@@ -92,6 +92,7 @@
         <!-- base jars -->
         <dependency org="net.sf.barcode4j" name="barcode4j" rev="2.1" transitive="false" conf="base"/>
         <dependency org="net.sf.barcode4j" name="barcode4j-fop-ext" rev="2.1" transitive="false" conf="base"/>
+        <dependency org="org.apache.xmlgraphics" name="batik-all" rev="1.9.1" transitive="false" conf="base"/><!-- NOTE: deps are excluded further below -->
         <dependency org="org.apache.xmlgraphics" name="fop" rev="2.2" transitive="false" conf="base"/>
         <dependency org="org.apache.httpcomponents" name="httpclient" transitive="false" rev="4.3.6" conf="base"/>
         <dependency org="org.apache.httpcomponents" name="httpclient-cache" transitive="false" rev="4.3.6" conf="base"/>
@@ -146,7 +147,6 @@
         <!-- TODO? <dependency org="org.jasig.cas.client" name="cas-client-core" rev="3.4.1" transitive="false" conf="base"/>-->
 
         <!-- base jars - known to be missing/broken in central (2018-03-20) -->
-        <dependency org="org.apache.xmlgraphics" name="batik-all" rev="1.9" transitive="false" conf="base"/><!-- central artifact is pom-only -->
         <dependency org="bsh.engine" name="bsh-engine-modified" rev="1.0" transitive="false" conf="base"/><!-- NOTE: rev was actually unknown; invented -->
         <dependency org="net.fortuna.ical4j" name="ical4j" rev="1.0-rc2" transitive="false" conf="base"/><!-- 3rd-party repo only -->
         <dependency org="jdbm" name="jdbm" rev="1.0-SNAPSHOT" transitive="false" conf="base"/><!-- snapshot newer than official 1.0 available -->
@@ -363,12 +363,6 @@
         <!-- /CUSTOM/CLIENT DEPENDENCIES (END) -->
 
         <!--
-            EXCLUDED LIBRARIES
-            
-            These are libraries committed directly into the lib folder.
-        -->
-
-        <!--
             CUSTOM/CLIENT EXCLUDES
 
             Custom/client excludes may be added below.
@@ -376,6 +370,17 @@
 
 
         <!-- /CUSTOM/CLIENT EXCLUDES (END) -->
+
+
+        <!--
+            EXCLUDED LIBRARIES (STOCK)
+            
+            These are libraries directly committed to project, deprecated org/module names
+            in central, etc.
+        -->
+        
+        <!-- renamed/deprecated artifact org/names (causing conflicts) -->
+        <exclude org="org\.apache\.xmlgraphics" module="batik-(?!all$).*" matcher="regexp"/><!-- batik-all already includes all -->
 
     </dependencies>
 </ivy-module>

@@ -401,6 +401,7 @@
         <exclude org="org\.apache\.xmlgraphics" artifact="batik-(?!all$).*" matcher="regexp"/><!-- batik-all includes all -->
         <exclude org="junit" module="junit-dep"/><!-- now org="junit" name="junit" -->
         <exclude org="org.beanshell" module="bsh-.*" matcher="regexp"/><!-- we provide the full bsh jar -->
+        <exclude org="jython" module="jython"/><!-- now org="org.python" -->
         <!--<exclude org="asm" module="asm"/> TODO?: this moved to org="org.ow2.asm"; conflict inevitable -->
         <!--<exclude org="rome" module="rome"/> TODO?: this moved to org="org.ow2.asm"; conflict inevitable -->
 
@@ -410,6 +411,11 @@
         <exclude org="javax.servlet.jsp" module="javax.servlet.jsp-api"/>
         <exclude org="javax.el" module="javax.el-api"/>
         <exclude org="javax.annotation" module="javax.annotation-api"/>
+
+        <!-- problem libraries -->
+        <!-- jython (dep of batik-script) includes too many extras in its JAR; for now we
+            still provide the old ofbiz jython-nooro which excludes them, but is deprecated (FIXME) -->
+        <exclude org="org.python" module="jython"/>
 
     </dependencies>
 </ivy-module>

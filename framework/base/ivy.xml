@@ -94,9 +94,10 @@
         <dependency org="net.sf.barcode4j" name="barcode4j-fop-ext" rev="2.1" transitive="false" conf="base"/>
         <dependency org="org.apache.xmlgraphics" name="batik-all" rev="1.9.1" transitive="false" conf="base"/><!-- NOTE: deps are excluded further below -->
         <dependency org="org.apache.xmlgraphics" name="fop" rev="2.2" transitive="false" conf="base"/>
-        <dependency org="org.apache.httpcomponents" name="httpclient" transitive="false" rev="4.3.6" conf="base"/>
-        <dependency org="org.apache.httpcomponents" name="httpclient-cache" transitive="false" rev="4.3.6" conf="base"/>
-        <dependency org="org.apache.httpcomponents" name="httpcore" rev="4.3.3" transitive="false" conf="base"/>
+        <dependency org="org.apache.httpcomponents" name="httpclient" transitive="false" rev="4.4.1" conf="base"/>
+        <dependency org="org.apache.httpcomponents" name="httpclient-cache" transitive="false" rev="4.4.1" conf="base"/>
+        <dependency org="org.apache.httpcomponents" name="httpcore" rev="4.4.1" transitive="false" conf="base"/>
+        <dependency org="org.apache.httpcomponents" name="httpmime" rev="4.4.1" transitive="false" conf="base"/>
         <dependency org="httpunit" name="httpunit" rev="1.7" transitive="false" conf="base"/>
         <dependency org="com.ibm.icu" name="icu4j" rev="57.1" transitive="false" conf="base"/>
         <dependency org="javolution" name="javolution" rev="5.4.3" transitive="false" conf="base"/>

@@ -43,14 +43,6 @@
         <conf name="media" description="download all framework/base/media jars required for build"/>
 
         <!--
-            OTHER COMPONENT CONFIGURATIONS
-
-            These configurations were defined in (framework|applications|specialpurse)/*/ivy.xml prior to 2018-03-19.
-        -->
-
-        <conf name="application" description="download all non-base (framework|applications|specialpurpose)/*/lib jars required for build"/>
-
-        <!--
             ON-DEMAND OPTIONAL STOCK CONFIGURATIONS
 
             These are special configurations for stock Scipio code and ant tasks which are only fetched
@@ -78,7 +70,7 @@
             
             NOTE: If you add new confs here, you must modify the lib.resolve.confs property
             and do-lib-update target in framework/base/build.xml.
-            It is recommended to simply reuse the "application" conf instead if possible.
+            It is recommended to simply reuse the "base" conf instead if possible.
         -->
 
 

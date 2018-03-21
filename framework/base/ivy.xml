@@ -103,7 +103,7 @@
         <dependency org="javolution" name="javolution" rev="5.4.3" transitive="false" conf="base"/>
         <dependency org="junit" name="junit" rev="4.12" transitive="false" conf="base"/>
         <dependency org="net.sourceforge.nekohtml" name="nekohtml" rev="1.9.16" transitive="false" conf="base"/>
-        <dependency org="org.slf4j" name="slf4j-api" rev="1.7.22" transitive="false" conf="base"/>
+        <dependency org="org.slf4j" name="slf4j-api" rev="1.7.25" transitive="false" conf="base"/>
         <dependency org="xalan" name="xalan" rev="2.7.2" transitive="false" conf="base"/>
         <dependency org="org.freemarker" name="freemarker" rev="2.3.27-incubating" transitive="false" conf="base"/>
         <dependency org="com.google.guava" name="guava" rev="24.1-jre" transitive="false" conf="base"/>

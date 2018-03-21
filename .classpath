@@ -44,7 +44,7 @@
     <classpathentry kind="lib" path="framework/base/lib/fontbox-2.0.4.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/fop-2.2.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/freemarker-2.3.27-incubating.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/geronimo-activation_1.0.2_spec-1.0.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/geronimo-activation_1.1_spec-1.0.2.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/geronimo-j2ee-connector_1.5_spec-2.0.0.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/geronimo-jaxr_1.0_spec-1.0.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/geronimo-jaxrpc_1.1_spec-1.0.jar"/>

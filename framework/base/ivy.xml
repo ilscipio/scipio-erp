@@ -115,7 +115,7 @@
         <dependency org="org.apache.logging.log4j" name="log4j-core" rev="2.3" conf="base"/>
         <dependency org="org.apache.logging.log4j" name="log4j-nosql" rev="2.3" conf="base"/>
         <dependency org="org.apache.logging.log4j" name="log4j-slf4j-impl" rev="2.3" conf="base"/>
-        <dependency org="com.sun.mail" name="javax.mail" rev="1.5.1" conf="base"/>
+        <dependency org="com.sun.mail" name="javax.mail" rev="1.5.1" conf="base"/><!-- WARN: dep on javax.activation#activation, but excluded; conflict with geronimo, see below -->
         <dependency org="xerces" name="xercesImpl" rev="2.11.0" conf="base"/>
         <dependency org="xml-apis" name="xml-apis" rev="1.4.01" conf="base"/>
         <dependency org="xml-apis" name="xml-apis-ext" rev="1.3.04" conf="base"/><!-- FIXME?: should be same version as xml-apis -->
@@ -172,7 +172,7 @@
         <dependency org="org.apache.commons" name="commons-csv" rev="1.5" conf="base,commons"/>
 
         <!-- j2eespecs jars -->
-        <dependency org="org.apache.geronimo.specs" name="geronimo-activation_1.0.2_spec" rev="1.0" conf="base,j2eespecs"/>
+        <dependency org="org.apache.geronimo.specs" name="geronimo-activation_1.1_spec" rev="1.0.2" conf="base,j2eespecs"/><!-- WARN: conflict with javax.activation#activation -->
         <dependency org="org.apache.geronimo.specs" name="geronimo-j2ee-connector_1.5_spec" rev="2.0.0" conf="base,j2eespecs"/>
         <dependency org="org.apache.geronimo.specs" name="geronimo-jaxr_1.0_spec" rev="1.0" conf="base,j2eespecs"/>
         <dependency org="org.apache.geronimo.specs" name="geronimo-jaxrpc_1.1_spec" rev="1.0" conf="base,j2eespecs"/>
@@ -420,6 +420,8 @@
         <!-- jython (dep of batik-script) includes too many extras in its JAR; for now we
             still provide the old ofbiz jython-nooro which excludes them, but is deprecated (FIXME) -->
         <exclude org="org.python" module="jython"/>
+        <!-- conflicts with geronimo-activation (WARN: this one had slightly more classes! FIXME?) -->
+        <exclude org="javax.activation" module="activation"/>
 
     </dependencies>
 </ivy-module>

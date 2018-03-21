@@ -180,19 +180,6 @@
         <dependency org="org.apache.geronimo.specs" name="geronimo-jta_1.1_spec" rev="1.1.1" transitive="false" conf="base,j2eespecs"/>
         <dependency org="org.apache.geronimo.specs" name="geronimo-saaj_1.3_spec" rev="1.1" transitive="false" conf="base,j2eespecs"/>
 
-        <!-- j2eespecs servlet API jars -->
-        <dependency org="javax.servlet" name="javax.servlet-api" rev="3.1.0" transitive="false" conf="base,j2eespecs"/>
-        <dependency org="javax.servlet.jsp" name="javax.servlet.jsp-api" rev="2.3.0" transitive="false" conf="base,j2eespecs"/>
-        <dependency org="javax.el" name="javax.el-api" rev="3.0.0" transitive="false" conf="base,j2eespecs"/>
-        <!-- not used; issue location version
-        <dependency org="javax.annotations" name="annotations-api" rev="3.0.0" transitive="false" conf="base,j2eespecs"/>-->
-        <!-- NOTE: Originally ofbiz used the API jars from Tomcat instead of the official javax.servlet ones... 
-            worst case can go back to this (with build.xml do-lib-update renaming)
-        <dependency org="org.apache.tomcat" name="tomcat-servlet-api" rev="x.x.x" transitive="false" conf="base,j2eespecs"/>
-        <dependency org="org.apache.tomcat" name="tomcat-jsp-api" rev="x.x.x" transitive="false" conf="base,j2eespecs"/>
-        <dependency org="org.apache.tomcat" name="tomcat-el-api" rev="x.x.x" transitive="false" conf="base,j2eespecs"/>
-        <dependency org="org.apache.tomcat" name="tomcat-annotations-api" rev="x.x.x" transitive="false" conf="base,j2eespecs"/>-->
-
         <!-- scripting jars -->
         <dependency org="antlr" name="antlr" rev="2.7.6" transitive="false" conf="base,scripting"/>
         <dependency org="asm" name="asm" rev="3.2" transitive="false" conf="base,scripting"/>
@@ -230,6 +217,21 @@
         <dependency org="org.apache.tomcat" name="tomcat-util-scan" rev="8.0.50" transitive="false" conf="base"/>
         <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli" rev="8.0.50" transitive="false" conf="base"/>
         <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli-adapters" rev="8.0.50" transitive="false" conf="base"/>
+        
+        <!-- tomcat-provided j2eespecs servlet API jars -->
+        <!-- NOTE: these are renamed by base/build.xml
+            ofbiz originally used the Tomcat-provided APIs, and that is in fact the correct way of doing this;
+            the javax artifacts are excluded further below for anything that depends on them
+            FIXME?: annotations official version is unclear
+        <dependency org="javax.servlet" name="javax.servlet-api" rev="3.1.0" transitive="false" conf="base,j2eespecs"/>
+        <dependency org="javax.servlet.jsp" name="javax.servlet.jsp-api" rev="2.3.0" transitive="false" conf="base,j2eespecs"/>
+        <dependency org="javax.el" name="javax.el-api" rev="3.0.0" transitive="false" conf="base,j2eespecs"/>
+        <dependency org="javax.annotation" name="javax.annotation-api" rev="3.0.0" transitive="false" conf="base,j2eespecs"/>-->
+        <dependency org="org.apache.tomcat" name="tomcat-servlet-api" rev="8.0.50" transitive="false" conf="base,j2eespecs"/>
+        <dependency org="org.apache.tomcat" name="tomcat-jsp-api" rev="8.0.50" transitive="false" conf="base,j2eespecs"/>
+        <dependency org="org.apache.tomcat" name="tomcat-el-api" rev="8.0.50" transitive="false" conf="base,j2eespecs"/>
+        <dependency org="org.apache.tomcat" name="tomcat-annotations-api" rev="8.0.50" transitive="false" conf="base,j2eespecs"/>
+
         <dependency org="org.eclipse.jdt.core.compiler" name="ecj" rev="4.5" transitive="false" conf="base"/>
 
         <!-- entity component (framework/entity/ivy.xml) -->
@@ -397,5 +399,12 @@
         <!--<exclude org="asm" module="asm"/> TODO?: this moved to org="org.ow2.asm"; conflict inevitable -->
         <!--<exclude org="rome" module="rome"/> TODO?: this moved to org="org.ow2.asm"; conflict inevitable -->
 
+        <!-- artifacts provided by different providers -->
+        <!-- Tomcat provides the servlet APIs for us, so they are never physically outdated -->
+        <exclude org="javax.servlet" module="javax.servlet-api"/>
+        <exclude org="javax.servlet.jsp" module="javax.servlet.jsp-api"/>
+        <exclude org="javax.el" module="javax.el-api"/>
+        <exclude org="javax.annotation" module="javax.annotation-api"/>
+        
     </dependencies>
 </ivy-module>

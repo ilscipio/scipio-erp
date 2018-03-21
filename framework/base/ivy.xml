@@ -379,8 +379,22 @@
             in central, etc.
         -->
         
+        <!-- exclude ant & ivy, already committed in lib/ant -->
+        <exclude org="org\.apache\.ant" module="ant.*" matcher="regexp"/>
+        <exclude org="ant-contrib" module="ant-contrib"/>
+        <exclude org="org.apache.ivy" module="ivy"/>
+
+        <!-- exclude log4j 1.x.x -->
+        <exclude org="log4j" module="log4j"/><!-- now org="org.eclipse.jdt.core.compiler" -->
+
         <!-- renamed/deprecated artifact org/names (causing conflicts) -->
-        <exclude org="org\.apache\.xmlgraphics" module="batik-(?!all$).*" matcher="regexp"/><!-- batik-all already includes all -->
+        <exclude org="avalon-framework"/><!-- now org="org.apache.avalon.framework" -->
+        <exclude org="org.eclipse.jdt" module="ecj"/><!-- now org="org.eclipse.jdt.core.compiler" -->
+        <exclude org="javax.servlet" module="servlet-api"/><!-- now org="javax.servlet" name="javax.servlet-api" -->
+        <exclude org="org.hamcrest" module="hamcrest-core" /><!-- covered by org="org.hamcrest" name="hamcrest-all" (hamcrest-core is from junit) -->
+        <exclude org="org\.apache\.xmlgraphics" module="batik-(?!all$).*" matcher="regexp"/><!-- batik-all includes all -->
+        <!--<exclude org="asm" module="asm"/> TODO?: this moved to org="org.ow2.asm"; conflict inevitable -->
+        <!--<exclude org="rome" module="rome"/> TODO?: this moved to org="org.ow2.asm"; conflict inevitable -->
 
     </dependencies>
 </ivy-module>

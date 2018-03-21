@@ -18,10 +18,10 @@
         and exploiting transitive dependency resolution using ivy.
 
         Custom/client configurations and dependencies may be added at the end of each section below.
-        
+
         NOTE: Adding new configurations requires updating the framework/base/build.xml
         file (lib.resolve.confs property and do-lib-update task overrides).
-        
+
         NOTE: If a library is not available in central, it may be added to the project
         locally using the local-ivy resolver (ivy/localRepo/, see ivy/ivysettings.xml).
         Some original stock libraries may still be handled this way at this time (2018-03-20).
@@ -47,7 +47,7 @@
 
             These are special configurations for stock Scipio code and ant tasks which are only fetched
             on user request and/or by special ant tasks, e.g. the "download-xxx" tasks in the main Scipio build.xml.
-            
+
             NOTE: These must NOT be included in the framework/base/build.xml resolution and update overrides.
         -->
 
@@ -67,7 +67,7 @@
             Custom/client configurations which are required by several modules
             or by patches to the framework or any stock Scipio components or code
             may be added below this comment.
-            
+
             NOTE: If you add new confs here, you must modify the lib.resolve.confs property
             and do-lib-update target in framework/base/build.xml.
             It is recommended to simply reuse the "base" conf instead if possible.
@@ -84,7 +84,7 @@
             BASE FRAMEWORK COMPONENT DEPENDENCIES
 
             These dependencies were already defined in this file (framework/base/ivy.xml) prior to 2018-03-19.
-            
+
             NOTE: Some of these dependencies (from stock ofbiz) were not originally available in central
             and may still be being fetched only locally from the local-ivy repo (ivy/localRepo/) at this time (2018-03-20).
         -->
@@ -217,7 +217,7 @@
         <dependency org="org.apache.tomcat" name="tomcat-util-scan" rev="8.0.50" transitive="false" conf="base"/>
         <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli" rev="8.0.50" transitive="false" conf="base"/>
         <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli-adapters" rev="8.0.50" transitive="false" conf="base"/>
-        
+
         <!-- tomcat-provided j2eespecs servlet API jars -->
         <!-- NOTE: these are renamed by base/build.xml
             ofbiz originally used the Tomcat-provided APIs, and that is in fact the correct way of doing this;
@@ -374,14 +374,13 @@
 
         <!-- /CUSTOM/CLIENT EXCLUDES (END) -->
 
-
         <!--
             EXCLUDED LIBRARIES (STOCK)
-            
+
             These are libraries directly committed to project, deprecated org/module names
             in central, etc.
         -->
-        
+
         <!-- exclude ant & ivy, already committed in lib/ant -->
         <exclude org="org\.apache\.ant" module="ant.*" matcher="regexp"/>
         <exclude org="ant-contrib" module="ant-contrib"/>
@@ -406,6 +405,6 @@
         <exclude org="javax.servlet.jsp" module="javax.servlet.jsp-api"/>
         <exclude org="javax.el" module="javax.el-api"/>
         <exclude org="javax.annotation" module="javax.annotation-api"/>
-        
+
     </dependencies>
 </ivy-module>

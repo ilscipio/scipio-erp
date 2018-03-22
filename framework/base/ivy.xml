@@ -104,7 +104,7 @@
             <exclude module="jtidy"/>
         </dependency>
         <dependency org="com.ibm.icu" name="icu4j" rev="57.1" conf="base"/>
-        <dependency org="javolution" name="javolution" rev="5.4.3" conf="base"/>
+        <dependency org="javolution" name="javolution" rev="5.5.1" conf="base"/>
         <dependency org="junit" name="junit" rev="4.12" conf="base"/>
         <dependency org="net.sourceforge.nekohtml" name="nekohtml" rev="1.9.16" conf="base"/>
         <dependency org="org.slf4j" name="slf4j-api" rev="1.7.25" conf="base"/>

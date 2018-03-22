@@ -73,7 +73,7 @@
     <classpathentry kind="lib" path="framework/base/lib/javax.mail-1.5.1.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/javax.servlet-api-3.1.0.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/javax.servlet.jsp-api-2.3.0.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/javolution-5.4.3.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/javolution-5.5.1.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/jdbm-1.0-SNAPSHOT.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/jdom-1.1.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/jempbox-1.8.12.jar"/>

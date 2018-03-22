@@ -613,7 +613,8 @@ public class Interpreter
 	exception handling.
 	*/
 
-    public Object eval( 
+    // SCIPIO: This was the original eval method; renamed here (keep for reference) and redefined below
+    public Object evalOrig( 
 		Reader in, NameSpace nameSpace, String sourceFileInfo
 			/*, CallStack callstack */ ) 
 		throws EvalError 
@@ -723,6 +724,18 @@ public class Interpreter
 		return Primitive.unwrap( retVal );
     }
 
+    /**
+     * SCIPIO: New definition for eval method, delegates to script parsing.
+     */
+    public Object eval( 
+            Reader in, NameSpace nameSpace, String sourceFileInfo
+                /*, CallStack callstack */ ) 
+            throws EvalError 
+    {
+        if ( Interpreter.DEBUG ) debug("eval: nameSpace = "+nameSpace);
+        return evalParsedScript(parseScript(sourceFileInfo, in), nameSpace);
+    }
+    
 	/**
 		Evaluate the inputstream in this interpreter's global namespace.
 	*/
@@ -1249,6 +1262,178 @@ public class Interpreter
 
 	public static boolean getSaveClasses()  {
 		return getSaveClassesDir() != null;
+	}
+	
+    
+    /* *********************************************************** */
+    /* SCIPIO EXTENSIONS (based on OFBIZ-528 patch) */
+    /* *********************************************************** */
+    
+	/**
+	 * Inner class to represent a parsed source file and its line number information
+	 * 
+	 * @author David E. Jones - originator
+	 * @author Cameron Smith - reformatted and removed redundant constructor
+	 * TODO: use ArrayList instead of Vector for simpleNodeList if no concurrency issues?
+	 */
+	public static class ParsedScript implements Serializable
+	{
+	    private String sourceFileInfo;
+	    private java.util.Vector simpleNodeList;  //already-parsed expressions
+
+	    public ParsedScript(String sourceFileInfo, java.util.Vector simpleNodeList)
+	    {
+	        this.sourceFileInfo = sourceFileInfo;
+	        this.simpleNodeList = simpleNodeList;
+	    }
+
+	    String getSourceFileInfo() {  return sourceFileInfo; }
+
+	    java.util.Vector getSimpleNodeList() { return simpleNodeList; }
+	}
+
+	/**
+	 * Parse a script, and return the parsed representation as a ParsedScript,
+	 *  which can later on be passed to evalParsedScript for efficient, repeated evaluation.
+	 * 
+	 * @param sourceFileInfo - filename/path/system identifier of the script
+	 */
+	public ParsedScript parseScript(String sourceFileInfo, Reader in) throws ParseException
+	{
+	    java.util.Vector simpleNodeList = new java.util.Vector();  //will collect AST nodes as they are parsed
+	    Parser parser = new Parser(in);
+
+	    boolean eof = false;
+	    while(!eof)
+	    {
+	        try
+	        {
+	            eof = parser.Line();
+	            if(parser.jjtree.nodeArity() > 0)
+	            {
+	                SimpleNode node = (SimpleNode) parser.jjtree.rootNode();
+	                
+	                /* SCIPIO: NOTE: this getSaveClasses && etc. if is new in bsh 2.0b6 */
+                    if ( getSaveClasses()
+                        && !(node instanceof BSHClassDeclaration)
+                        && !(node instanceof BSHImportDeclaration )
+                        && !(node instanceof BSHPackageDeclaration )
+                    )
+                        continue;
+	                
+	                // nodes remember from where they were sourced
+	                node.setSourceFile(sourceFileInfo);
+	                simpleNodeList.addElement(node);
+	                if ( TRACE ) { println( "// " + node.getText() ); }
+	            }
+	        }
+	        catch(ParseException e)
+	        {
+	            // show extra "expecting..." info
+	            if ( DEBUG ) { error( e.getMessage(DEBUG) ); }
+
+	            // add the source file info and throw again
+	            e.setErrorSourceFile( sourceFileInfo );
+	            throw e;
+	        }
+	        finally {  parser.jjtree.reset(); }
+	    }
+
+	    return new ParsedScript(sourceFileInfo, simpleNodeList);
+	}
+
+    /**
+	 * Convenience method which calls evalParsedScript with global namespace
+	 */
+	public Object evalParsedScript(ParsedScript script) throws EvalError
+	{
+	    return evalParsedScript(script, getNameSpace());
+	}
+
+	/**
+	 * Evaluate the given already-parsed script and return its results
+	 * 
+	 * TODO: JDK1.5-ise this method?
+	 * 
+	 * @param script - should have been prepared earlier by parseScript
+	 * @see parseScript
+	 */
+	public Object evalParsedScript(ParsedScript script, NameSpace nameSpace) throws EvalError
+	{
+	    //1. Prepare and validate passed-in script info
+	    String sourceFileInfo = script.getSourceFileInfo();
+	    java.util.Vector simpleNodeList = script.getSimpleNodeList();
+
+	    if (simpleNodeList == null) { return null; }  //bail early as nothing to do!
+
+	    //2. Prepare helper objects for parsing process
+	    CallStack callstack = new CallStack();
+	    callstack.push(nameSpace);      
+	    Object retVal = null;  //will eventually old result of script execution
+
+	    //3. Evaluated each already-parsed node in order
+	    int listSize = simpleNodeList.size();
+	    for (int i = 0; i < listSize; i++)
+	    {
+	        SimpleNode node = (SimpleNode)simpleNodeList.elementAt(i);
+	        try
+	        {
+	            retVal = node.eval(callstack, this);
+
+	            // sanity check during development
+	            if(callstack.depth() > 1) { throw new InterpreterError("Callstack growing: " + callstack); }
+
+	            if(retVal instanceof ReturnControl)
+	            {
+	                retVal = ((ReturnControl)retVal).value;
+	                break; // non-interactive, return control now
+	            }              
+	        }
+	        catch(InterpreterError e)
+	        {
+                final EvalError evalError = new EvalError("Sourced file: " + sourceFileInfo + " internal Error: " + e.getMessage(), node, callstack);
+                evalError.initCause(e);
+                throw evalError;
+	        }
+	        catch(TargetError e)
+	        {
+	            // failsafe, set the Line as the origin of the error.
+	            if(e.getNode()==null) { e.setNode( node ); }
+	            if(e.getTarget() != null) { e.getTarget().printStackTrace(); }
+	            e.reThrow("Sourced file: " + sourceFileInfo);
+	        }
+	        catch(EvalError e)
+	        {
+	            if ( DEBUG ) { e.printStackTrace(); }
+	            // failsafe, set the Line as the origin of the error.
+	            if (e.getNode()==null) { e.setNode( node ); }
+	            e.reThrow( "Sourced file: "+ sourceFileInfo );
+	        }
+	        catch(Exception e)
+	        {
+                final EvalError evalError = new EvalError("Sourced file: " + sourceFileInfo + " unknown error: " + e.getMessage(), node, callstack);
+                evalError.initCause(e);
+                throw evalError;
+	        }
+	        catch(TokenMgrError e)
+	        {
+                final EvalError evalError = new EvalError("Sourced file: " + sourceFileInfo + " Token Parsing Error: " + e.getMessage(), node, callstack);
+                evalError.initCause(e);
+                throw evalError;
+	        }
+	        finally
+	        {
+	            // reinit the callstack
+	            if (callstack.depth() > 1)
+	            {
+	                callstack.clear();
+	                callstack.push(nameSpace);
+	            }
+	        }
+	    }
+
+	    //4. return the final result of the evaluation
+	    return Primitive.unwrap(retVal);
 	}
 }
 

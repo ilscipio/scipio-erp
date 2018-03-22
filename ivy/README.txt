@@ -38,3 +38,8 @@ This patterns helps standardize the ivy configurations and simplify the individu
 component ivy.xml, build.xml and .gitignore files.
 
 See ivysettings.xml for the exact path/file name format for artifacts.
+
+NOTES:
+* localRepo contains modified bsh for Scipio - source available under: tools/extra/src/beanshell-2.0b6-scipio
+
+

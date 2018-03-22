@@ -153,7 +153,6 @@
         <!-- TODO? <dependency org="org.jasig.cas.client" name="cas-client-core" rev="3.4.1" conf="base,sources"/>-->
 
         <!-- base jars - known to be missing/broken in central (2018-03-20) -->
-        <dependency org="bsh.engine" name="bsh-engine-modified" rev="1.0" conf="base"/><!-- NOTE: rev was actually unknown; invented -->
         <dependency org="net.fortuna.ical4j" name="ical4j" rev="1.0-rc2" conf="base"/><!-- 3rd-party repo only -->
         <dependency org="jdbm" name="jdbm" rev="1.0-SNAPSHOT" conf="base"/><!-- snapshot newer than official 1.0 available -->
         <dependency org="net.wimpi" name="pim" rev="0.1" conf="base"/><!-- previously "jpim-0.1.jar" -->
@@ -194,8 +193,9 @@
         <dependency org="org.codehaus.groovy" name="groovy-all" rev="2.4.5" conf="base,scripting,groovy,sources"/>
         <dependency org="oro" name="oro" rev="2.0.8" conf="base,scripting,sources"/>
 
-        <!-- scripting jars - known to be missing/broken in central (2018-03-20) -->
-        <dependency org="org.beanshell" name="bsh" rev="2.0b4" conf="base,scripting"/><!-- jar in central differed from ofbiz jar for same version! -->
+        <!-- scripting jars - special and/or known to be missing/broken in central (2018-03-20) -->
+        <!-- modified bsh from localRepo; source under tools/extra/src/beanshell-2.0b6-scipio -->
+        <dependency org="org.apache-extras.beanshell" name="bsh" rev="2.0b6-scipio-1.0" conf="base,scripting"/>
         <dependency org="jython-nooro" name="jython-nooro" rev="0.1" conf="base,scripting"/><!-- cannot be found; version here is invented -->
 
         <!-- media jars -->
@@ -409,7 +409,7 @@
         <exclude org="javax.servlet" module="servlet-api"/><!-- now org="javax.servlet" name="javax.servlet-api" -->
         <exclude org="org.hamcrest" module="hamcrest-core" /><!-- covered by org="org.hamcrest" name="hamcrest-all" (hamcrest-core is from junit) -->
         <exclude org="junit" module="junit-dep"/><!-- now org="junit" name="junit" -->
-        <exclude org="org.beanshell" module="bsh-.*" matcher="regexp"/><!-- we provide the full bsh jar -->
+        <exclude org="org.beanshell" module="bsh.*" matcher="regexp"/><!-- we provide the full bsh jar -->
         <exclude org="jython" module="jython"/><!-- now org="org.python" -->
         <exclude org="bouncycastle"/><!-- now org="org.bouncycastle" (NOTE: these had poor version numbers, like "138") -->
         <exclude org="commons-beanutils" module="commons-beanutils-core"/><!-- now org="commons-beanutils" name="commons-beanutils" -->

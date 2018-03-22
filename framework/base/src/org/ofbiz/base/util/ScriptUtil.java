@@ -150,15 +150,22 @@ public final class ScriptUtil {
                 throw new IllegalArgumentException("The script type is not supported for location: " + filePath);
             }
             engine = configureScriptEngineForInvoke(engine); // SCIPIO: 2017-01-27: Custom configurations for the engine
-            try {
-                Compilable compilableEngine = (Compilable) engine;
-                URL scriptUrl = FlexibleLocation.resolveLocation(filePath);
-                BufferedReader reader = new BufferedReader(new InputStreamReader(scriptUrl.openStream()));
-                script = compilableEngine.compile(reader);
-                if (Debug.verboseOn()) {
-                    Debug.logVerbose("Compiled script " + filePath + " using engine " + engine.getClass().getName(), module);
+            // SCIPIO: 2018-03-22: beanshell-xxx-scipio: special check for bsh to avoid extra patches
+            if (!(engine instanceof bsh.engine.BshScriptEngine)) {
+                try {
+                    Compilable compilableEngine = (Compilable) engine;
+                    URL scriptUrl = FlexibleLocation.resolveLocation(filePath);
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(scriptUrl.openStream()));
+                    script = compilableEngine.compile(reader);
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose("Compiled script " + filePath + " using engine " + engine.getClass().getName(), module);
+                    }
+                } catch (ClassCastException e) {
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose("Script engine " + engine.getClass().getName() + " does not implement Compilable", module);
+                    }
                 }
-            } catch (ClassCastException e) {
+            } else {
                 if (Debug.verboseOn()) {
                     Debug.logVerbose("Script engine " + engine.getClass().getName() + " does not implement Compilable", module);
                 }
@@ -190,13 +197,20 @@ public final class ScriptUtil {
                 throw new IllegalArgumentException("The script type is not supported for language: " + language);
             }
             engine = configureScriptEngineForInvoke(engine); // SCIPIO: 2017-01-27: Custom configurations for the engine
-            try {
-                Compilable compilableEngine = (Compilable) engine;
-                compiledScript = compilableEngine.compile(script);
-                if (Debug.verboseOn()) {
-                    Debug.logVerbose("Compiled script [" + script + "] using engine " + engine.getClass().getName(), module);
+            // SCIPIO: 2018-03-22: beanshell-xxx-scipio: special check for bsh to avoid extra patches
+            if (!(engine instanceof bsh.engine.BshScriptEngine)) {
+                try {
+                    Compilable compilableEngine = (Compilable) engine;
+                    compiledScript = compilableEngine.compile(script);
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose("Compiled script [" + script + "] using engine " + engine.getClass().getName(), module);
+                    }
+                } catch (ClassCastException e) {
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose("Script engine " + engine.getClass().getName() + " does not implement Compilable", module);
+                    }
                 }
-            } catch (ClassCastException e) {
+            } else {
                 if (Debug.verboseOn()) {
                     Debug.logVerbose("Script engine " + engine.getClass().getName() + " does not implement Compilable", module);
                 }

@@ -95,10 +95,10 @@
         <dependency org="net.sf.barcode4j" name="barcode4j-fop-ext" rev="2.1" conf="base,sources"/>
         <dependency org="org.apache.xmlgraphics" name="batik-all" rev="1.9.1" conf="base,sources"/><!-- NOTE: deps are excluded further below -->
         <dependency org="org.apache.xmlgraphics" name="fop" rev="2.2" conf="base,sources"/>
-        <dependency org="org.apache.httpcomponents" name="httpclient" rev="4.4.1" conf="base,sources"/>
-        <dependency org="org.apache.httpcomponents" name="httpclient-cache" rev="4.4.1" conf="base,sources"/>
-        <dependency org="org.apache.httpcomponents" name="httpcore" rev="4.4.1" conf="base,sources"/>
-        <dependency org="org.apache.httpcomponents" name="httpmime" rev="4.4.1" conf="base,sources"/>
+        <dependency org="org.apache.httpcomponents" name="httpclient" rev="4.5.5" conf="base,sources"/>
+        <dependency org="org.apache.httpcomponents" name="httpclient-cache" rev="4.5.5" conf="base,sources"/>
+        <dependency org="org.apache.httpcomponents" name="httpcore" rev="4.4.9" conf="base,sources"/>
+        <dependency org="org.apache.httpcomponents" name="httpmime" rev="4.5.5" conf="base,sources"/>
         <dependency org="httpunit" name="httpunit" rev="1.7" conf="base,sources">
             <!-- FIXME?: jtidy is dep of httpunit, but it has class conflicts with several
                 libs (javolution, xml-apis) and was not shipped with ofbiz 14/15 -->
@@ -249,17 +249,17 @@
         <dependency org="org.apache.geronimo.components" name="geronimo-transaction" rev="3.1.1" conf="base,sources"/>
 
         <!-- service component (framework/service/ivy.xml) -->
-        <dependency org="org.apache.axis2" name="axis2-adb" rev="1.7.1" conf="base,sources"/>
-        <!-- WARN: 2017-02-03: axis2-kernel 1.7.1 in public repos has slight difference from version originally committed in Ofbiz trunk
+        <dependency org="org.apache.axis2" name="axis2-adb" rev="1.7.7" conf="base,sources"/>
+        <!-- WARN: 2017-02-03: axis2-kernel 1.7.7 in public repos has slight difference from version originally committed in Ofbiz trunk
             (repos use old deprecated CommonsHTTPTransportSender instead of HTTPClient4TransportSender, in org/apache/axis2/deployment/axis2_default.xml);
             but Ofbiz provides a separate axis2.xml conf (using HTTPClient4TransportSender), which should override it -->
-        <dependency org="org.apache.axis2" name="axis2-kernel" rev="1.7.1" conf="base,sources"/>
-        <dependency org="org.apache.axis2" name="axis2-transport-http" rev="1.7.1" conf="base,sources"/>
-        <dependency org="org.apache.axis2" name="axis2-transport-local" rev="1.7.1" conf="base,sources"/>
+        <dependency org="org.apache.axis2" name="axis2-kernel" rev="1.7.7" conf="base,sources"/>
+        <dependency org="org.apache.axis2" name="axis2-transport-http" rev="1.7.7" conf="base,sources"/>
+        <dependency org="org.apache.axis2" name="axis2-transport-local" rev="1.7.7" conf="base,sources"/>
         <dependency org="org.apache.neethi" name="neethi" rev="3.0.3" conf="base,sources"/>
         <dependency org="org.apache.woden" name="woden-core" rev="1.0M10" conf="base,sources"/>
-        <dependency org="org.apache.ws.commons.axiom" name="axiom-api" rev="1.2.17" conf="base,sources"/>
-        <dependency org="org.apache.ws.commons.axiom" name="axiom-impl" rev="1.2.17" conf="base,sources"/>
+        <dependency org="org.apache.ws.commons.axiom" name="axiom-api" rev="1.2.20" conf="base,sources"/>
+        <dependency org="org.apache.ws.commons.axiom" name="axiom-impl" rev="1.2.20" conf="base,sources"/>
         <dependency org="org.apache.ws.xmlschema" name="xmlschema-core" rev="2.2.1" conf="base,sources"/>
         <dependency org="wsdl4j" name="wsdl4j" rev="1.6.2" conf="base,sources"/>
 

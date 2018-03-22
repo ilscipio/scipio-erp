@@ -150,7 +150,7 @@ under the License.
             <property name="keyAlias" value="ofbiz"/>
             <property name="keyPass" value="changeit"/>
             <property name="sslProtocol" value="TLS"/>
-            <property name="ciphers" value=""/>
+            <!--<property name="ciphers" value=""/>-->
         </property>
     </container>
     <container name="catalina-container-test" loaders="test" class="org.ofbiz.catalina.container.CatalinaContainer">
@@ -210,7 +210,7 @@ under the License.
             <property name="keystorePass" value="changeit"/>
             <property name="keystoreType" value="JKS"/>
             <property name="sslProtocol" value="TLS"/>
-            <property name="ciphers" value=""/>
+            <!--<property name="ciphers" value=""/>-->
         </property>
     </container>
     <!--

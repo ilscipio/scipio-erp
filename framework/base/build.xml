@@ -112,12 +112,13 @@ under the License.
         This should include all the confs manually handled in do-lib-update task override below,
         or otherwise all ivy.xml configurations that are not optional. -->
     <property name="lib.resolve.confs" value="base"/>
+    <property name="lib.resolve.src.confs" value="sources"/>
     
     <!-- SCIPIO: Special lib download script for complex base includes -->
     <target name="do-lib-update" description="Downloads all jars (base component implementation)">
         <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="${lib.resolve.confs}">
             <firstmatchmapper>
-                <!-- Tomcat-provided  -->
+                <!-- Tomcat-provided -->
                 <regexpmapper from="^(.*/)?tomcat-servlet-api-([^/-]+)\.jar$" to="\1javax.servlet-api-3.1.0.jar" handledirsep="true"/>
                 <regexpmapper from="^(.*/)?tomcat-jsp-api-([^/-]+)\.jar$" to="\1javax.servlet.jsp-api-2.3.0.jar" handledirsep="true"/>
                 <regexpmapper from="^(.*/)?tomcat-el-api-([^/-]+)\.jar$" to="\1javax.el-api-3.0.0.jar" handledirsep="true"/>
@@ -126,6 +127,22 @@ under the License.
                 <identitymapper/>
             </firstmatchmapper>
         </ivy:retrieve>
+        <if>
+            <equals arg1="${lib.update.sources}" arg2="true"/>
+            <then>
+                <ivy:retrieve pattern="libsrc/${lib.update.filename.pattern.src.ivy}" conf="${lib.resolve.src.confs}">
+                    <firstmatchmapper>
+                        <!-- Tomcat-provided -->
+                        <regexpmapper from="^(.*/)?tomcat-servlet-api-([^/-]+)-sources\.jar$" to="\1javax.servlet-api-3.1.0-sources.jar" handledirsep="true"/>
+                        <regexpmapper from="^(.*/)?tomcat-jsp-api-([^/-]+)-sources\.jar$" to="\1javax.servlet.jsp-api-2.3.0-sources.jar" handledirsep="true"/>
+                        <regexpmapper from="^(.*/)?tomcat-el-api-([^/-]+)-sources\.jar$" to="\1javax.el-api-3.0.0-sources.jar" handledirsep="true"/>
+                        <!-- FIXME?: annotations official version is unclear -->
+                        <regexpmapper from="^(.*/)?tomcat-annotations-api-([^/-]+)-sources\.jar$" to="\1javax.annotation-api-3.0.0-sources.jar" handledirsep="true"/>
+                        <identitymapper/>
+                    </firstmatchmapper>
+                </ivy:retrieve>
+            </then>
+        </if>
     </target>
 
     <!-- SCIPIO: Libraries manually committed to repo, excluded from ivy (or emulated) file cleanout/removal

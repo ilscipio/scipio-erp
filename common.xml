@@ -291,6 +291,7 @@ under the License.
     </target>
 
     <property name="lib.update.filename.pattern.ivy" value="[artifact]-[revision].[ext]" />
+    <property name="lib.update.filename.pattern.src.ivy" value="[artifact]-[revision]-sources.[ext]" />
 
     <!-- NOTE: IMPORTANT: All antcall to reusable targets that might invoke ivy: functions must specify inheritRefs="true" -->
     <target name="init-lib-update" description="Downloads initial jars, if applicable for component">
@@ -427,11 +428,26 @@ under the License.
         </if>
     </target>
 
+    <target name="get-lib-resolve-confs">
+        <if>
+            <and>
+                <equals arg1="${lib.update.sources}" arg2="true"/>
+                <isset property="lib.resolve.src.confs"/>
+            </and>
+            <then>
+                <property name="lib.resolve.confs.eff" value="${lib.resolve.confs},${lib.resolve.src.confs}"/>
+            </then>
+            <else>
+                <property name="lib.resolve.confs" value="*"/>
+                <property name="lib.resolve.confs.eff" value="${lib.resolve.confs}"/>
+            </else>
+        </if>
+    </target>
+    
     <!-- NOTE: must be called with: antcallback target="do-lib-resolve" inheritrefs="true" return="lib.resolve.changed" -->
-    <target name="do-lib-resolve" description="Resolves lib dependencies">
-        <property name="lib.resolve.confs" value="*"/>
-        <echo level="verbose" message="lib.resolve.confs: ${lib.resolve.confs}"/>
-        <ivy:resolve refresh="${lib.update.ivy.refresh}" conf="${lib.resolve.confs}"/>
+    <target name="do-lib-resolve" depends="get-lib-resolve-confs" description="Resolves lib dependencies">
+        <echo level="info" message="lib.resolve.confs.eff: ${lib.resolve.confs.eff}"/>
+        <ivy:resolve refresh="${lib.update.ivy.refresh}" conf="${lib.resolve.confs.eff}"/>
         <property name="lib.resolve.changed" value="${ivy.deps.changed}"/>
         <!-- FIXME: does not return enough properties; some ivy functionality blocked -->
     </target>
@@ -489,12 +505,21 @@ under the License.
         </if>
     </target>
     <target name="do-lib-clean" description="Cleans out (removes) all ivy-handled jars">
-        <remove-lib-files dir="lib" excludes-refid="lib.update.manual.files"/>
+        <antcall target="common-lib-clean" inheritrefs="true"/>
     </target>
     <target name="common-lib-clean" description="Cleans out (removes) all ivy-handled jars">
         <!-- NOTE: remove-lib-files is used as we cannot use sync="true" on <ivy:retrieve/>,
             because it does not support file exceptions from deletion (lib.update.manual.files) -->
         <remove-lib-files dir="lib" excludes-refid="lib.update.manual.files"/>
+        <if>
+            <and>
+                <equals arg1="${lib.update.sources}" arg2="true"/>
+                <available file="libsrc" type="dir"/>
+            </and>
+            <then>
+                <remove-lib-files dir="libsrc" excludes-refid="lib.update.manual.src.files"/>
+            </then>
+        </if>
     </target>
     
     <target name="init-lib-dep-tree" description="Shows library dependency tree">

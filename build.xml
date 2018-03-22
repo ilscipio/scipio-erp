@@ -1879,6 +1879,20 @@ under the License.
         -->
         <stopwatch name="lib.update.stopwatch" action="total"/>
     </target>
+    <target name="init-lib-update-force" description="Initial libraries and dependencies download, global - forced (even if no change)">
+        <property name="lib.update.force" value="true"/>
+        <antcall target="init-lib-update" inheritrefs="true"/>
+    </target>
+    
+    <target name="init-lib-update-withsources" description="Initial libraries and dependencies AND source JARs download, global">
+        <property name="lib.update.sources" value="true"/>
+        <antcall target="init-lib-update" inheritrefs="true"/>
+    </target>
+    <target name="init-lib-update-withsources-force" description="Initial libraries and dependencies AND source JARs download, global - forced (even if no change)">
+        <property name="lib.update.force" value="true"/>
+        <property name="lib.update.sources" value="true"/>
+        <antcall target="init-lib-update" inheritrefs="true"/>
+    </target>
     
     <target name="check-init-lib-update" description="Initial libraries and dependencies download, global, if enabled only">
         <!-- Removed - not really useful (see below): depends="get-lib-update-status" -->

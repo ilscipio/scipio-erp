@@ -159,8 +159,7 @@
         <dependency org="org.apache.xerces" name="resolver" rev="2.9.1" conf="base"/><!-- 3rd-party repo only -->
 
         <!-- commons jars -->
-        <!-- WARN: commons-beanutils has duplicate classes with commons-collections; update them together 
-            https://commons.apache.org/proper/commons-beanutils/javadocs/v1.8.2/apidocs/org/apache/commons/collections/ArrayStack.html-->
+        <!-- NOTE: these should generally be updated together (some deps between them and historical compat issues) -->
         <dependency org="commons-beanutils" name="commons-beanutils" rev="1.9.3" conf="base,commons"/>
         <dependency org="commons-codec" name="commons-codec" rev="1.11" conf="base,commons"/>
         <dependency org="commons-collections" name="commons-collections" rev="3.2.2" conf="base,commons"/>

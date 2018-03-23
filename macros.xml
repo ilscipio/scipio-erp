@@ -17,8 +17,12 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<project name="Ant - Macros">
+<project name="Ant - Macros" xmlns:ivy="antlib:org.apache.ivy.ant">
 
+  <!-- SCIPIO: NOTE: Despite the filename, this is used for all types of definitions
+    common to both main build.xml, component build.xml, and limited support for
+    individual component build.xml invocation in some cases. -->  
+  
   <!-- ================================================================== -->
   <!-- Requirements  -->
   <!-- ================================================================== -->
@@ -58,16 +62,16 @@ under the License.
   </path>
   <taskdef resource="net/sf/antcontrib/antlib.xml" classpathref="ant-contrib.class.path"/>
 
-  <!-- ivy (SCIPIO) -->
+  <!-- ivy (SCIPIO) (see ivy-init for taskdef) -->
   <property name="ivy.settings.file" value="${ofbiz.home.dir}/ivy/ivysettings.xml"/>
   <property name="lib.general.ivyfile" value="${ofbiz.home.dir}/ivy/ivy.xml"/>
   <property name="lib.comp.base.ivyfile" value="${ofbiz.home.dir}/framework/base/ivy.xml"/>
   <path id="lib.ivy.class.path">
-    <fileset dir="${ofbiz.home.dir}/framework/base/lib/ant/" includes="ivy-*.jar"/>
+      <fileset dir="${ofbiz.home.dir}/framework/base/lib/ant/" includes="ivy-*.jar"/>
+      <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="oro-*.jar"/>
   </path>
-  <taskdef uri="antlib:org.apache.ivy.ant" resource="org/apache/ivy/ant/antlib.xml" classpathref="lib.ivy.class.path"/>
 
-  <!-- groovy (SCIPIO: NOTE: 2018-03-20: taskdef now done in main/common build groovy-init task) -->
+  <!-- groovy (SCIPIO: NOTE: 2018-03-20: see groovy-init for taskdef) -->
   <path id="groovy.class.path">
     <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="groovy-all-*.jar"/>
   </path>
@@ -633,4 +637,30 @@ Unexpectedly received empty list of builds to iterate."/>
     </sequential>
   </macrodef>
 
+    <!-- ================================================================== -->
+    <!-- SCIPIO: tasks common to main build and standalone component builds -->
+    <!-- ================================================================== -->
+
+    <target name="groovy-init" depends="ivy-init"><!-- SCIPIO: 2018-03-20: new -->
+        <if>
+            <resourcecount when="equal" count="0">
+                <fileset file="${ofbiz.home.dir}/framework/base/lib/groovy-*.jar"/>
+            </resourcecount>
+            <then>
+                <antcall target="download-groovy"/>
+            </then>
+        </if>
+        <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="groovy.class.path"/>
+    </target>
+    
+    <target name="download-groovy" depends="ivy-init"><!-- SCIPIO: 2018-03-20: new -->
+        <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="groovy"/>
+    </target>
+    
+    <target name="ivy-init"><!-- SCIPIO: 2017-01-30: new -->
+        <!-- DEV NOTE: WARN: for performance reasons, this code has to be COPIED into 
+            common.xml#init-lib-update; keep in sync -->
+        <taskdef uri="antlib:org.apache.ivy.ant" resource="org/apache/ivy/ant/antlib.xml" classpathref="lib.ivy.class.path"/>
+    </target>
+    
 </project>

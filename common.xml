@@ -83,18 +83,6 @@ under the License.
             <property name="src.extra.dir" value="." />
         </else>
     </if>
-
-    <target name="groovy-init"><!-- SCIPIO: 2018-03-20: new -->
-        <if>
-            <resourcecount when="equal" count="0">
-                <fileset file="${ofbiz.home.dir}/framework/base/lib/groovy-*.jar"/>
-            </resourcecount>
-            <then>
-                <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="groovy"/>
-            </then>
-        </if>
-        <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="groovy.class.path"/>
-    </target>
     
     <!-- ================================================================== -->
     <!-- Compilation of the source files                                    -->
@@ -292,7 +280,35 @@ under the License.
 
     <property name="lib.update.filename.pattern.ivy" value="[artifact]-[revision].[ext]" />
     <property name="lib.update.filename.pattern.src.ivy" value="[artifact]-[revision]-sources.[ext]" />
-
+    
+    <target name="check-init-lib-update" description="Initial libraries and dependencies download, per-component, if enabled only">
+        <if>
+            <not>
+                <equals arg1="${lib.update.hook.mode}" arg2="component"/>
+            </not>
+            <then>
+                <echo level="verbose" message="Skipping component lib updates (not using per-component mode)"/>
+            </then>
+            <elseif>
+                <equals arg1="${lib.update.bypass}" arg2="true"/>
+                <then>
+                    <echo level="verbose" message="Skipping lib updates (bypassed)"/>
+                </then>
+            </elseif>
+            <elseif>
+                <equals arg1="${lib.update.force}" arg2="true"/>
+                <then>
+                    <echo level="verbose" message="Lib updates check forced - starting..."/>
+                    <antcall target="init-lib-update"/>
+                </then>
+            </elseif>
+            <else>
+                <echo level="verbose" message="Lib updates check starting..."/>
+                <antcall target="init-lib-update"/>
+            </else>
+        </if>
+    </target>
+    
     <!-- NOTE: IMPORTANT: All antcall to reusable targets that might invoke ivy: functions must specify inheritRefs="true" -->
     <target name="init-lib-update" description="Downloads initial jars, if applicable for component">
         <if>
@@ -301,93 +317,7 @@ under the License.
                 <available file="lib" type="dir"/>
             </and>
             <then>
-                <!-- get info about the last retrieve attempt -->
-                <property file="${ofbiz.home.dir}/ivy/ivy-last.txt" prefix="lib.update.retrieve.last"/>
-
-                <!-- NOTE: here we manually do the ivy:resolve call so we can detect if anything was
-                    changed, separate from the ivy:retrieve call, because if nothing changed we want
-                    to skip our manual clean as well as the retrieve -->
-                <!--
-                <echo level="verbose" message="lib.update.force: ${lib.update.force}"/>
-                <echo level="verbose" message="lib.update.cache: ${lib.update.cache}"/>
-                -->
-                <condition property="lib.update.ivy.refresh" value="true" else="false">
-                    <or>
-                        <!-- by themselves, both 
-                              -Dlib.update.force=true and 
-                              -Dlib.update.cache=false
-                            will force ivy to refresh, but is also possible to pass
-                              -Dlib.update.force=true -Dlib.update.cache=true
-                            which will force replacing the filesystem libs without forcing ivy refresh -->
-                        <and>
-                            <equals arg1="${lib.update.force}" arg2="true"/>
-                            <not><equals arg1="${lib.update.cache}" arg2="true"/></not>
-                        </and>
-                        <equals arg1="${lib.update.cache}" arg2="false"/>
-                    </or>
-                </condition>
-
-                <!-- FIXME: delegating this call (to allow override) cause refs lost over antcall(back);
-                    we have to inline it here for time being -->
-                <!--<antcallback target="do-lib-resolve" inheritrefs="true" return="lib.resolve.changed"/>-->
-                <if>
-                    <and>
-                        <equals arg1="${lib.update.sources}" arg2="true"/>
-                        <isset property="lib.resolve.src.confs"/>
-                    </and>
-                    <then>
-                        <property name="lib.resolve.confs.eff" value="${lib.resolve.confs},${lib.resolve.src.confs}"/>
-                    </then>
-                    <else>
-                        <property name="lib.resolve.confs" value="*"/>
-                        <property name="lib.resolve.confs.eff" value="${lib.resolve.confs}"/>
-                    </else>
-                </if>
-                <echo level="info" message="lib.resolve.confs.eff: ${lib.resolve.confs.eff}"/>
-                <ivy:resolve refresh="${lib.update.ivy.refresh}" conf="${lib.resolve.confs.eff}"/>
-                <property name="lib.resolve.changed" value="${ivy.deps.changed}"/>
-
-                <!-- SPECIAL: check if the last (unfinished) clean/retrieve attempt was ours. if so, must force redeploy. -->
-                <condition property="last.update.retrieve.waslast" value="true" else="false">
-                    <and>
-                        <equals arg1="${ivy.organisation}" arg2="${lib.update.retrieve.last.organisation}"/>
-                        <equals arg1="${ivy.module}" arg2="${lib.update.retrieve.last.module}"/>
-                    </and>
-                </condition>
-                <echo level="info" message="[Deps changed? ${lib.resolve.changed}. Was last retrieve attempt? ${last.update.retrieve.waslast}.]"/>
-
-                <if>
-                    <or>
-                        <equals arg1="${lib.update.force}" arg2="true"/>
-                        <equals arg1="${lib.update.force.deploy}" arg2="true"/>
-                        <equals arg1="${lib.resolve.changed}" arg2="true"/>
-                        <equals arg1="${last.update.retrieve.waslast}" arg2="true"/>
-                        <!-- force redeploy if last deploy didn't finish -->
-                    </or>
-                    <then>
-                        <!-- flag this module as the last clean/retrieve attempt -->
-                        <echo message="status=RUNNING${line.separator}organisation=${ivy.organisation}${line.separator}module=${ivy.module}${line.separator}" file="${ofbiz.home.dir}/ivy/ivy-last.txt"/>
-
-                        <dirname property="lib.component.current.dir" file="${ant.file}"/>
-                        <basename property="lib.component.current.dirname" file="${lib.component.current.dir}"/>
-                        <echo level="info" message="Lib deploy needed for ${lib.component.current.dirname} component: deploying files to lib folder..."/>
-                        <if>
-                            <and>
-                                <not><equals arg1="${lib.clean}" arg2="false"/></not>
-                                <not><equals arg1="${lib.clean.deployed}" arg2="false"/></not>
-                            </and>
-                            <then>
-                                <antcall target="do-lib-clean" inheritrefs="true"/>
-                            </then>
-                        </if>
-                        <antcall target="do-lib-update" inheritrefs="true"/>
-
-                        <!--<fail message="TEST FAIL"/>-->
-
-                        <!-- if we're here, then we succeeded; clear the last flag -->
-                        <delete file="${ofbiz.home.dir}/ivy/ivy-last.txt"/>
-                    </then>
-                </if>
+                <antcall target="init-lib-update-core" inheritrefs="true"/>
             </then>
             <elseif>
                 <!-- 2018-03-20: migration cleanup: the ivy.xml files were removed for
@@ -418,34 +348,50 @@ under the License.
         </if>
     </target>
 
-    <target name="check-init-lib-update" description="Initial libraries and dependencies download, per-component, if enabled only">
+    <target name="init-lib-update-core" depends="ivy-init,do-lib-resolve">
+        <!-- get info about the last retrieve attempt -->
+        <property file="${ofbiz.home.dir}/ivy/ivy-last.txt" prefix="lib.update.retrieve.last"/>
+        
+        <!-- SPECIAL: check if the last (unfinished) clean/retrieve attempt was ours. if so, must force redeploy. -->
+        <condition property="last.update.retrieve.waslast" value="true" else="false">
+            <and>
+                <equals arg1="${ivy.organisation}" arg2="${lib.update.retrieve.last.organisation}"/>
+                <equals arg1="${ivy.module}" arg2="${lib.update.retrieve.last.module}"/>
+            </and>
+        </condition>
+        <echo level="info" message="[Deps changed? ${lib.resolve.changed}. Was last retrieve attempt? ${last.update.retrieve.waslast}.]"/>
+
         <if>
-            <not>
-                <equals arg1="${lib.update.hook.mode}" arg2="component"/>
-            </not>
-            <then>
-                <echo level="verbose" message="Skipping component lib updates (not using per-component mode)"/>
-            </then>
-            <elseif>
-                <equals arg1="${lib.update.bypass}" arg2="true"/>
-                <then>
-                    <echo level="verbose" message="Skipping lib updates (bypassed)"/>
-                </then>
-            </elseif>
-            <elseif>
+            <or>
                 <equals arg1="${lib.update.force}" arg2="true"/>
-                <then>
-                    <echo level="verbose" message="Lib updates check forced - starting..."/>
-                    <antcall target="init-lib-update"/>
-                </then>
-            </elseif>
-            <else>
-                <echo level="verbose" message="Lib updates check starting..."/>
-                <antcall target="init-lib-update"/>
-            </else>
+                <equals arg1="${lib.update.force.deploy}" arg2="true"/>
+                <equals arg1="${lib.resolve.changed}" arg2="true"/>
+                <equals arg1="${last.update.retrieve.waslast}" arg2="true"/><!-- force redeploy if last deploy didn't finish -->
+            </or>
+            <then>
+                <!-- flag this module as the last clean/retrieve attempt -->
+                <echo message="status=RUNNING${line.separator}organisation=${ivy.organisation}${line.separator}module=${ivy.module}${line.separator}" file="${ofbiz.home.dir}/ivy/ivy-last.txt"/>
+
+                <dirname property="lib.component.current.dir" file="${ant.file}"/>
+                <basename property="lib.component.current.dirname" file="${lib.component.current.dir}"/>
+                <echo level="info" message="Lib deploy needed for ${lib.component.current.dirname} component: deploying files to lib folder..."/>
+                <if>
+                    <and>
+                        <not><equals arg1="${lib.clean}" arg2="false"/></not>
+                        <not><equals arg1="${lib.clean.deployed}" arg2="false"/></not>
+                    </and>
+                    <then>
+                        <antcall target="do-lib-clean" inheritrefs="true"/>
+                    </then>
+                </if>
+                <antcall target="do-lib-update" inheritrefs="true"/>
+
+                <!-- if we're here, then we succeeded; clear the last flag -->
+                <delete file="${ofbiz.home.dir}/ivy/ivy-last.txt"/>
+            </then>
         </if>
     </target>
-
+    
     <target name="get-lib-resolve-confs">
         <if>
             <and>
@@ -460,17 +406,39 @@ under the License.
                 <property name="lib.resolve.confs.eff" value="${lib.resolve.confs}"/>
             </else>
         </if>
-    </target>
-    <!-- FIXME: this target is not able to return all the ivy refs for reuse in subsequent retrieve - for now this call is inlined above -->
-    <!-- NOTE: must be called with: antcallback target="do-lib-resolve" inheritrefs="true" return="lib.resolve.changed" -->
-    <target name="do-lib-resolve" depends="get-lib-resolve-confs" description="Resolves lib dependencies">
-        <echo level="info" message="lib.resolve.confs.eff: ${lib.resolve.confs.eff}"/>
-        <ivy:resolve refresh="${lib.update.ivy.refresh}" conf="${lib.resolve.confs.eff}"/>
-        <property name="lib.resolve.changed" value="${ivy.deps.changed}"/>
-        <!-- FIXME: does not return enough properties; some ivy functionality blocked -->
+        
+        <!-- NOTE: here we manually do the ivy:resolve call so we can detect if anything was
+            changed, separate from the ivy:retrieve call, because if nothing changed we want
+            to skip our manual clean as well as the retrieve -->
+        <!--
+        <echo level="verbose" message="lib.update.force: ${lib.update.force}"/>
+        <echo level="verbose" message="lib.update.cache: ${lib.update.cache}"/>
+        -->
+        <condition property="lib.update.ivy.refresh" value="true" else="false">
+            <or>
+                <!-- by themselves, both 
+                      -Dlib.update.force=true and 
+                      -Dlib.update.cache=false
+                    will force ivy to refresh, but is also possible to pass
+                      -Dlib.update.force=true -Dlib.update.cache=true
+                    which will force replacing the filesystem libs without forcing ivy refresh -->
+                <and>
+                    <equals arg1="${lib.update.force}" arg2="true"/>
+                    <not><equals arg1="${lib.update.cache}" arg2="true"/></not>
+                </and>
+                <equals arg1="${lib.update.cache}" arg2="false"/>
+            </or>
+        </condition>
     </target>
     
-    <!-- NOTE: xxx-lib-update targets must with called with: antcall inheritrefs="true" -->
+    <!-- WARN: this can ONLY be called using depends="do-lib-resolve"! antcall will wreck it! -->
+    <target name="do-lib-resolve" depends="get-lib-resolve-confs" description="Resolves lib dependencies">
+        <echo level="info" message="lib.update.ivy.refresh: ${lib.update.ivy.refresh}"/>
+        <ivy:resolve refresh="${lib.update.ivy.refresh}" conf="${lib.resolve.confs.eff}"/>
+        <property name="lib.resolve.changed" value="${ivy.deps.changed}"/>
+    </target>
+    
+    <!-- NOTE: xxx-lib-update targets must with called with: antcall inheritrefs="true" or depends="" -->
     <target name="do-lib-update" description="Deploys all jars">
         <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="application"/>
     </target>
@@ -544,22 +512,26 @@ under the License.
         <if>
             <available file="ivy.xml" type="file"/>
             <then>
-                <property name="lib.resolve.confs" value="*"/>
-                <ivy:dependencytree conf="${lib.resolve.confs}"/>
+                <antcall target="init-lib-dep-tree-core" inheritrefs="true"/>
             </then>
         </if>
+    </target>
+    <target name="init-lib-dep-tree-core" depends="ivy-init">
+        <property name="lib.resolve.confs" value="*"/>
+        <ivy:dependencytree conf="${lib.resolve.confs}"/>
     </target>
     
     <target name="init-lib-dep-report" description="Generate library dependency HTML report">
         <if>
             <available file="ivy.xml" type="file"/>
             <then>
-                <property name="lib.resolve.confs" value="*"/>
-                <!-- FIXME: this should be using do-lib-resolve, but has return property issues -->
-                <ivy:resolve refresh="false" conf="${lib.resolve.confs}"/>
-                <ivy:report conf="${lib.resolve.confs}" todir="lib-depreport"/>
+                <antcall target="init-lib-dep-report-core" inheritrefs="true"/>
             </then>
         </if>
+    </target>
+    <target name="init-lib-dep-report-core" depends="ivy-init,do-lib-resolve">
+        <property name="lib.resolve.confs" value="*"/>
+        <ivy:report conf="${lib.resolve.confs}" todir="lib-depreport"/>
     </target>
 
 </project>

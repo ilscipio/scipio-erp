@@ -35,12 +35,19 @@
             These configurations were already defined in this file (framework/base/ivy.xml) prior to 2018-03-19.
         -->
 
+        <!-- general configurations -->
         <conf name="base" description="download all framework/base/lib (root dir) jars required for build"/>
+        
+        <!-- legacy categories (these each had a folder, no longer useful) -->
         <conf name="commons" description="download all framework/base/commons jars required for build"/>
         <conf name="j2eespecs" description="download all framework/base/j2eespecs jars required for build"/>
         <conf name="scripting" description="download all framework/base/scripting jars required for build"/>
-        <conf name="groovy" description="download groovy jars required for build"/>
         <conf name="media" description="download all framework/base/media jars required for build"/>
+        
+        <!-- specific library downloads (NOTE: these may have deletion excludes in base/build.xml) -->
+        <conf name="groovy" description="download groovy jars required for build"/>
+        
+        <!-- sources -->
         <conf name="sources" description="download all available source jars"/>
 
         <!--
@@ -191,7 +198,7 @@
         <dependency org="asm" name="asm" rev="3.2" conf="base,scripting,sources"/>
         <dependency org="bsf" name="bsf" rev="2.4.0" conf="base,scripting,sources"/>
         <dependency org="org.codehaus.groovy" name="groovy-all" rev="2.4.5" conf="base,scripting,groovy,sources"/>
-        <dependency org="oro" name="oro" rev="2.0.8" conf="base,scripting,sources"/>
+        <dependency org="oro" name="oro" rev="2.0.8" conf="base,scripting,sources"/><!-- NOTE: Jakarta ORO is closed project -->
 
         <!-- scripting jars - special and/or known to be missing/broken in central (2018-03-20) -->
         <!-- modified bsh from localRepo; source under tools/extra/src/beanshell-2.0b6-scipio -->
@@ -213,6 +220,7 @@
         -->
 
         <!-- catalina component (framework/catalina/ivy.xml) -->
+        <!-- catalina: tomcat -->
         <dependency org="org.apache.tomcat" name="tomcat-api" rev="8.5.29" conf="base,sources"/>
         <dependency org="org.apache.tomcat" name="tomcat-catalina" rev="8.5.29" conf="base,sources"/>
         <dependency org="org.apache.tomcat" name="tomcat-catalina-ha" rev="8.5.29" conf="base,sources"/>
@@ -226,7 +234,7 @@
         <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli" rev="8.5.29" conf="base,sources"/>
         <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli-adapters" rev="8.5.29" conf="base,sources"/>-->
 
-        <!-- tomcat-provided j2eespecs servlet API jars -->
+        <!-- catalina: tomcat-provided j2eespecs servlet API jars -->
         <!-- NOTE: these are renamed by base/build.xml
             ofbiz originally used the Tomcat-provided APIs, and that is in fact the correct way of doing this;
             the javax artifacts are excluded further below for anything that depends on them
@@ -240,7 +248,8 @@
         <dependency org="org.apache.tomcat" name="tomcat-el-api" rev="8.5.29" conf="base,j2eespecs,sources"/>
         <dependency org="org.apache.tomcat" name="tomcat-annotations-api" rev="8.5.29" conf="base,j2eespecs,sources"/>
 
-        <dependency org="org.eclipse.jdt.core.compiler" name="ecj" rev="4.5" conf="base,sources"/>
+        <!-- catalina: other -->
+        <!--<dependency org="org.eclipse.jdt.core.compiler" name="ecj" rev="4.5" conf="base,sources"/> nothing uses this -->
 
         <!-- entity component (framework/entity/ivy.xml) -->
         <dependency org="org.apache.commons" name="commons-dbcp2" rev="2.1" conf="base,sources"/>
@@ -250,14 +259,9 @@
 
         <!-- service component (framework/service/ivy.xml) -->
         <dependency org="org.apache.axis2" name="axis2-adb" rev="1.7.7" conf="base,sources"/>
-        <!-- WARN: 2017-02-03: axis2-kernel 1.7.7 in public repos has slight difference from version originally committed in Ofbiz trunk
-            (repos use old deprecated CommonsHTTPTransportSender instead of HTTPClient4TransportSender, in org/apache/axis2/deployment/axis2_default.xml);
-            but Ofbiz provides a separate axis2.xml conf (using HTTPClient4TransportSender), which should override it -->
         <dependency org="org.apache.axis2" name="axis2-kernel" rev="1.7.7" conf="base,sources"/>
         <dependency org="org.apache.axis2" name="axis2-transport-http" rev="1.7.7" conf="base,sources"/>
         <dependency org="org.apache.axis2" name="axis2-transport-local" rev="1.7.7" conf="base,sources"/>
-        <dependency org="org.apache.neethi" name="neethi" rev="3.0.3" conf="base,sources"/>
-        <dependency org="org.apache.woden" name="woden-core" rev="1.0M10" conf="base,sources"/>
         <dependency org="org.apache.ws.commons.axiom" name="axiom-api" rev="1.2.20" conf="base,sources"/>
         <dependency org="org.apache.ws.commons.axiom" name="axiom-impl" rev="1.2.20" conf="base,sources"/>
         <dependency org="org.apache.ws.xmlschema" name="xmlschema-core" rev="2.2.1" conf="base,sources"/>
@@ -270,9 +274,9 @@
         <!-- webapp component (framework/webapp/ivy.xml) -->
         <dependency org="net.sf.ezmorph" name="ezmorph" rev="0.9.1" conf="base,sources"/>
         <dependency org="com.lowagie" name="itext" rev="2.1.7" conf="base,sources"/>
-        <dependency org="org.bouncycastle" name="bctsp-jdk14" rev="1.38" conf="base,sources"/><!-- itext dependency -->
-        <dependency org="org.bouncycastle" name="bcmail-jdk14" rev="1.38" conf="base,sources"/><!-- itext dependency -->
-        <dependency org="org.bouncycastle" name="bcprov-jdk14" rev="1.38" conf="base,sources"/><!-- itext dependency -->
+        <dependency org="org.bouncycastle" name="bctsp-jdk14" rev="1.38" conf="base,sources"/><!-- itext dependency, explicit here due to conflict with version "138" -->
+        <dependency org="org.bouncycastle" name="bcmail-jdk14" rev="1.38" conf="base,sources"/><!-- itext dependency, explicit here due to conflict with version "138" -->
+        <dependency org="org.bouncycastle" name="bcprov-jdk14" rev="1.38" conf="base,sources"/><!-- itext dependency, explicit here due to conflict with version "138" -->
         <dependency org="rome" name="rome" rev="0.9" conf="base,sources"/>
         <dependency org="org.tuckey" name="urlrewritefilter" rev="4.0.4" conf="base,sources"/>
 

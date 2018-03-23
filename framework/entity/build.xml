@@ -52,6 +52,7 @@ under the License.
         This should include all the confs manually handled in do-lib-update task override below,
         or otherwise all ivy.xml configurations that are not optional. -->
     <property name="lib.resolve.confs" value="jdbc"/>
+    <property name="lib.entity.jdbc.conf.default" value="derby"/>
     
     <target name="do-lib-update" description="Downloads all jars">
         <ivy:retrieve pattern="lib/jdbc/unused/${lib.update.filename.pattern.ivy}" conf="jdbc">
@@ -66,17 +67,13 @@ under the License.
                 <identitymapper/>
             </firstmatchmapper>
         </ivy:retrieve>
-        <!-- if there are no JDBC drivers directly under lib/jdbc/, copy derby there by default -->
+        <!-- if there are no JDBC drivers directly under lib/jdbc/, put the default there -->
         <if>
             <resourcecount count="0" when="eq">
                 <fileset dir="lib/jdbc" includes="*.jar"/>
             </resourcecount>
             <then>
-                <copy todir="lib/jdbc">
-                    <fileset dir="lib/jdbc/unused/derby">
-                        <include name="derby-*.jar"/>
-                    </fileset>
-                </copy>
+                <ivy:retrieve pattern="lib/jdbc/${lib.update.filename.pattern.ivy}" conf="${lib.entity.jdbc.conf.default}"/>
             </then>
         </if>
     </target>

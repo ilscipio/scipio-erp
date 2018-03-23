@@ -304,6 +304,11 @@
                 it intentionally tries to replace (has same class names as) apache commons-logging classes -->
             <exclude org="org.slf4j" module="jcl-over-slf4j"/>
         </dependency>
+        <dependency org="info.ganglia.gmetric4j" name="gmetric4j" rev="1.0.7" conf="base,sources"/><!-- undeclared solrj dependency -->
+        <dependency org="io.dropwizard.metrics" name="metrics-core" rev="3.2.2" conf="base,sources"/><!-- undeclared solrj dependency -->
+        <dependency org="io.dropwizard.metrics" name="metrics-ganglia" rev="3.2.2" conf="base,sources"/><!-- undeclared solrj dependency -->
+        <dependency org="io.dropwizard.metrics" name="metrics-graphite" rev="3.2.2" conf="base,sources"/><!-- undeclared solrj dependency -->
+        <dependency org="io.dropwizard.metrics" name="metrics-jvm" rev="3.2.2" conf="base,sources"/><!-- undeclared solrj dependency -->
 
         <!--
             SPECIALPURPOSE COMPONENT DEPENDENCIES

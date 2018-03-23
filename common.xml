@@ -392,7 +392,7 @@ under the License.
         </if>
     </target>
     
-    <target name="get-lib-resolve-confs">
+    <target name="get-lib-resolve-conf">
         <if>
             <and>
                 <equals arg1="${lib.update.sources}" arg2="true"/>
@@ -432,8 +432,7 @@ under the License.
     </target>
     
     <!-- WARN: this can ONLY be called using depends="do-lib-resolve"! antcall will wreck it! -->
-    <target name="do-lib-resolve" depends="get-lib-resolve-confs" description="Resolves lib dependencies">
-        <echo level="info" message="lib.update.ivy.refresh: ${lib.update.ivy.refresh}"/>
+    <target name="do-lib-resolve" depends="get-lib-resolve-conf" description="Resolves lib dependencies">
         <ivy:resolve refresh="${lib.update.ivy.refresh}" conf="${lib.resolve.confs.eff}"/>
         <property name="lib.resolve.changed" value="${ivy.deps.changed}"/>
     </target>

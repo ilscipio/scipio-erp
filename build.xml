@@ -748,6 +748,12 @@ under the License.
         
     </target>
     
+    <!-- SCIPIO: new 2018-03-23 -->
+    <target name="build-withlibsrc" description="build plus download ivy lib JAR sources (implied -Dlib.update.sources=true)">
+        <property name="lib.update.sources" value="true"/>
+        <antcall target="build"/>
+    </target>
+    
     <!-- ================================================================== -->
     <!-- Build Components                                                   -->
     <!-- ================================================================== -->

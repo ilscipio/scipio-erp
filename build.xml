@@ -2100,22 +2100,39 @@ under the License.
         <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="cobertura"/>
     </target>
 
-    <target name="download-PG-JDBC" depends="ivy-init" description="Download postgres jdbc driver">
-        <ivy:retrieve file="${ofbiz.home.dir}/framework/entity/ivy.xml" pattern="framework/entity/lib/jdbc/[artifact]-[revision].[ext]" conf="postgres"/>
-        <echo> </echo>
-        <echo>======================================================</echo>
-        <echo>Please check that this version is appropriate for you!</echo>
+    <target name="download-PG-JDBC" depends="download-jdbc-postgresql" description="Download postgres jdbc driver (legacy alias for download-jdbc-postgresql)">
     </target>
 
     <target name="download-sonar-ant-task" depends="ivy-init" description="Download sonar related files">
         <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="sonar-ant-task"/>
     </target>
 
-    <target name="download-mySQL-JDBC" depends="ivy-init" description="Download mySQL jdbc driver">
-        <ivy:retrieve file="${ofbiz.home.dir}/framework/entity/ivy.xml" pattern="framework/entity/lib/jdbc/[artifact]-[revision].[ext]" conf="mysql"/>
+    <target name="download-mySQL-JDBC" depends="download-jdbc-mysql" description="Download mySQL jdbc driver (legacy alias for download-jdbc-mysql)">
+    </target>
+    
+    <!-- SCIPIO: new JDBC targets with consistent naming and common operation (where possible) -->
+    <target name="download-jdbc-common" depends="ivy-init" description="Download postgres jdbc driver (alias for download-PG-JDBC)">
+        <ivy:retrieve file="${ofbiz.home.dir}/framework/entity/ivy.xml" pattern="framework/entity/lib/jdbc/[artifact]-[revision].[ext]" conf="${lib.entity.jdbc.conf}"/>
         <echo> </echo>
         <echo>======================================================</echo>
         <echo>Please check that this version is appropriate for you!</echo>
+    </target>
+
+    <target name="download-jdbc-firebird" description="Download Firebird (Jaybird) JDBC driver">
+        <property name="lib.entity.jdbc.conf" value="firebird"/>
+        <antcall target="download-jdbc-common"/>
+    </target>
+    <target name="download-jdbc-hsqldb" description="Download hsqldb JDBC driver">
+        <property name="lib.entity.jdbc.conf" value="hsqldb"/>
+        <antcall target="download-jdbc-common"/>
+    </target>
+    <target name="download-jdbc-mysql" description="Download mySQL JDBC driver">
+        <property name="lib.entity.jdbc.conf" value="mysql"/>
+        <antcall target="download-jdbc-common"/>
+    </target>
+    <target name="download-jdbc-postgresql" description="Download PostgreSQL JDBC driver">
+        <property name="lib.entity.jdbc.conf" value="postgresql"/>
+        <antcall target="download-jdbc-common"/>
     </target>
 
     <!-- ================================================================== -->

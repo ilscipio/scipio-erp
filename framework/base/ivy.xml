@@ -37,16 +37,16 @@
 
         <!-- general configurations -->
         <conf name="base" description="download all framework/base/lib (root dir) jars required for build"/>
-        
+
         <!-- legacy categories (these each had a folder, no longer useful) -->
         <conf name="commons" description="download all framework/base/commons jars required for build"/>
         <conf name="j2eespecs" description="download all framework/base/j2eespecs jars required for build"/>
         <conf name="scripting" description="download all framework/base/scripting jars required for build"/>
         <conf name="media" description="download all framework/base/media jars required for build"/>
-        
+
         <!-- specific library downloads (NOTE: these may have deletion excludes in base/build.xml) -->
         <conf name="groovy" description="download groovy jars required for build"/>
-        
+
         <!-- sources -->
         <conf name="sources" description="download all available source jars"/>
 
@@ -198,7 +198,8 @@
         <dependency org="asm" name="asm" rev="3.2" conf="base,scripting,sources"/>
         <dependency org="bsf" name="bsf" rev="2.4.0" conf="base,scripting,sources"/>
         <dependency org="org.codehaus.groovy" name="groovy-all" rev="2.4.5" conf="base,scripting,groovy,sources"/>
-        <dependency org="oro" name="oro" rev="2.0.8" conf="base,scripting,sources"/><!-- NOTE: Jakarta ORO is closed project -->
+        <!-- Jakarta ORO is provided in filesystem due to ivy dependency, and excluded below NOTE: Jakarta ORO is a closed project
+        <dependency org="oro" name="oro" rev="2.0.8" conf="base,scripting,sources"/>-->
 
         <!-- scripting jars - special and/or known to be missing/broken in central (2018-03-20) -->
         <!-- modified bsh from localRepo; source under tools/extra/src/beanshell-2.0b6-scipio -->
@@ -430,6 +431,9 @@
         <exclude org="javax.servlet.jsp" module="javax.servlet.jsp-api"/>
         <exclude org="javax.el" module="javax.el-api"/>
         <exclude org="javax.annotation" module="javax.annotation-api"/>
+
+        <!-- artifacts provided in filesystem directly (should be very few!) -->
+        <exclude org="oro" module="oro"/>
 
         <!-- problem libraries -->
         <!-- jython (dep of batik-script) includes too many extras in its JAR; for now we

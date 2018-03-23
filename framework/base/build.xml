@@ -151,6 +151,7 @@ under the License.
         <or>
             <!-- Core build system dependencies (Ant & Ivy) -->
             <filename name="ant/**.jar"/>
+            <filename name="oro-*.jar"/><!-- required by Ivy for matcher="glob", committed in filesystem -->
  
             <!-- Optional dependencies, retrieved separately - do not delete! -->
             <filename name="sonar-*.jar"/>

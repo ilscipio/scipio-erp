@@ -234,6 +234,8 @@
         <!-- gone since 8.5.3+?
         <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli" rev="8.5.29" conf="base,sources"/>
         <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli-adapters" rev="8.5.29" conf="base,sources"/>-->
+        <!-- let the jasper compile dep give us the version it wants (NOTE: its version numbers are unrelated to org.eclipse.jdt.core.compiler! very confusing!)
+        <dependency org="org.eclipse.jdt" name="ecj" rev="xxx" conf="base,sources"/>-->
 
         <!-- catalina: tomcat-provided j2eespecs servlet API jars -->
         <!-- NOTE: these are renamed by base/build.xml
@@ -248,9 +250,6 @@
         <dependency org="org.apache.tomcat" name="tomcat-jsp-api" rev="8.5.29" conf="base,j2eespecs,sources"/>
         <dependency org="org.apache.tomcat" name="tomcat-el-api" rev="8.5.29" conf="base,j2eespecs,sources"/>
         <dependency org="org.apache.tomcat" name="tomcat-annotations-api" rev="8.5.29" conf="base,j2eespecs,sources"/>
-
-        <!-- catalina: other -->
-        <!--<dependency org="org.eclipse.jdt.core.compiler" name="ecj" rev="4.5" conf="base,sources"/> nothing uses this -->
 
         <!-- entity component (framework/entity/ivy.xml) -->
         <dependency org="org.apache.commons" name="commons-dbcp2" rev="2.1" conf="base,sources"/>
@@ -414,7 +413,6 @@
 
         <!-- renamed/deprecated artifact org/names (causing conflicts) -->
         <exclude org="avalon-framework"/><!-- now org="org.apache.avalon.framework" -->
-        <exclude org="org.eclipse.jdt" module="ecj"/><!-- now org="org.eclipse.jdt.core.compiler" -->
         <exclude org="javax.servlet" module="servlet-api"/><!-- now org="javax.servlet" name="javax.servlet-api" -->
         <exclude org="org.hamcrest" module="hamcrest-core" /><!-- covered by org="org.hamcrest" name="hamcrest-all" (hamcrest-core is from junit) -->
         <exclude org="junit" module="junit-dep"/><!-- now org="junit" name="junit" -->

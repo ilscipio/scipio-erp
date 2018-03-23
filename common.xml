@@ -327,7 +327,25 @@ under the License.
                     </or>
                 </condition>
 
-                <antcallback target="do-lib-resolve" inheritrefs="true" return="lib.resolve.changed"/>
+                <!-- FIXME: delegating this call (to allow override) cause refs lost over antcall(back);
+                    we have to inline it here for time being -->
+                <!--<antcallback target="do-lib-resolve" inheritrefs="true" return="lib.resolve.changed"/>-->
+                <if>
+                    <and>
+                        <equals arg1="${lib.update.sources}" arg2="true"/>
+                        <isset property="lib.resolve.src.confs"/>
+                    </and>
+                    <then>
+                        <property name="lib.resolve.confs.eff" value="${lib.resolve.confs},${lib.resolve.src.confs}"/>
+                    </then>
+                    <else>
+                        <property name="lib.resolve.confs" value="*"/>
+                        <property name="lib.resolve.confs.eff" value="${lib.resolve.confs}"/>
+                    </else>
+                </if>
+                <echo level="info" message="lib.resolve.confs.eff: ${lib.resolve.confs.eff}"/>
+                <ivy:resolve refresh="${lib.update.ivy.refresh}" conf="${lib.resolve.confs.eff}"/>
+                <property name="lib.resolve.changed" value="${ivy.deps.changed}"/>
 
                 <!-- SPECIAL: check if the last (unfinished) clean/retrieve attempt was ours. if so, must force redeploy. -->
                 <condition property="last.update.retrieve.waslast" value="true" else="false">
@@ -443,7 +461,7 @@ under the License.
             </else>
         </if>
     </target>
-    
+    <!-- FIXME: this target is not able to return all the ivy refs for reuse in subsequent retrieve - for now this call is inlined above -->
     <!-- NOTE: must be called with: antcallback target="do-lib-resolve" inheritrefs="true" return="lib.resolve.changed" -->
     <target name="do-lib-resolve" depends="get-lib-resolve-confs" description="Resolves lib dependencies">
         <echo level="info" message="lib.resolve.confs.eff: ${lib.resolve.confs.eff}"/>

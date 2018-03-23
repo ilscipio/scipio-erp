@@ -2118,6 +2118,10 @@ under the License.
         <echo>Please check that this version is appropriate for you!</echo>
     </target>
 
+    <target name="download-jdbc-derby" description="Download Derby JDBC driver">
+        <property name="lib.entity.jdbc.conf" value="derby"/>
+        <antcall target="download-jdbc-common"/>
+    </target>
     <target name="download-jdbc-firebird" description="Download Firebird (Jaybird) JDBC driver">
         <property name="lib.entity.jdbc.conf" value="firebird"/>
         <antcall target="download-jdbc-common"/>

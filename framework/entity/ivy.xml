@@ -4,7 +4,9 @@
       xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
     <info module="entity" organisation="com.ilscipio.scipio.ce"/>
     <configurations defaultconfmapping="%->default">
+        <conf name="application" description="download all jars required for build"/>
         <conf name="jdbc" description="download all lib/jdbc jars required for build"/>
+        <conf name="derby" description="downloads the derby JDBC driver"/>
         <conf name="firebird" description="downloads the firebird jaybird JDBC driver (JDK 8+)"/>
         <conf name="hsqldb" description="downloads the hsqldb JDBC driver"/>
         <conf name="mysql" description="downloads the mysql JDBC driver"/>
@@ -16,7 +18,7 @@
 
         <!-- DEV NOTE: IF YOU INCREASE ANY OF THESE VERSION NUMBERS, MAKE SURE TO UPDATE THE ONES
             IN THE ROOT /ivy.xml FILE (AS LONG AS THEY EXIST) -->
-        <dependency org="org.apache.derby" name="derby" rev="10.11.1.1" transitive="false" conf="jdbc"/>
+        <dependency org="org.apache.derby" name="derby" rev="10.11.1.1" transitive="false" conf="jdbc,derby"/>
         <dependency org="org.firebirdsql.jdbc" name="jaybird-jdk18" rev="2.2.10" transitive="false" conf="jdbc,firebird"/>
         <dependency org="org.hsqldb" name="hsqldb" rev="2.3.4" transitive="false" conf="jdbc,hsqldb"/>
         <dependency org="mysql" name="mysql-connector-java" rev="5.1.39" transitive="false" conf="jdbc,mysql"/>

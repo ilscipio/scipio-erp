@@ -18,11 +18,11 @@
 
         <!-- DEV NOTE: IF YOU INCREASE ANY OF THESE VERSION NUMBERS, MAKE SURE TO UPDATE THE ONES
             IN THE ROOT /ivy.xml FILE (AS LONG AS THEY EXIST) -->
-        <dependency org="org.apache.derby" name="derby" rev="10.11.1.1" transitive="false" conf="jdbc,derby"/>
-        <dependency org="org.firebirdsql.jdbc" name="jaybird-jdk18" rev="2.2.10" transitive="false" conf="jdbc,firebird"/>
-        <dependency org="org.hsqldb" name="hsqldb" rev="2.3.4" transitive="false" conf="jdbc,hsqldb"/>
-        <dependency org="mysql" name="mysql-connector-java" rev="5.1.39" transitive="false" conf="jdbc,mysql"/>
-        <dependency org="org.postgresql" name="postgresql" rev="9.4.1209" transitive="false" conf="jdbc,postgresql"/>
+        <dependency org="org.apache.derby" name="derby" rev="10.14.1.0" transitive="false" conf="jdbc,derby"/>
+        <dependency org="org.firebirdsql.jdbc" name="jaybird-jdk18" rev="3.0.3" transitive="false" conf="jdbc,firebird"/>
+        <dependency org="org.hsqldb" name="hsqldb" rev="2.4.0" transitive="false" conf="jdbc,hsqldb"/>
+        <dependency org="mysql" name="mysql-connector-java" rev="5.1.46" transitive="false" conf="jdbc,mysql"/>
+        <dependency org="org.postgresql" name="postgresql" rev="42.2.2" transitive="false" conf="jdbc,postgresql"/>
         
         <!-- WORKAROUND: fixes ivy failure for evicted postgresql dependencies -->
         <conflict manager="all"/>

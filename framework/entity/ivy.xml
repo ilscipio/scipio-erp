@@ -11,6 +11,7 @@
         <conf name="hsqldb" description="downloads the hsqldb JDBC driver"/>
         <conf name="mysql" description="downloads the mysql JDBC driver"/>
         <conf name="postgresql" description="downloads the postgresql JDBC driver (JDK 8+)"/>
+        <conf name="none" description="dummy empty conf"/>
     </configurations>
     <dependencies>
         <!-- NOTICE: 2018-03-19: All framework/*/lib root dir ivy dependencies are now defined in:

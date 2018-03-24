@@ -115,7 +115,6 @@
         <dependency org="javolution" name="javolution" rev="5.5.1" conf="base,sources"/>
         <dependency org="junit" name="junit" rev="4.12" conf="base,sources"/>
         <dependency org="net.sourceforge.nekohtml" name="nekohtml" rev="1.9.16" conf="base,sources"/>
-        <dependency org="org.slf4j" name="slf4j-api" rev="1.7.25" conf="base,sources"/>
         <dependency org="xalan" name="xalan" rev="2.7.2" conf="base,sources"/>
         <dependency org="org.freemarker" name="freemarker" rev="2.3.27-incubating" conf="base,sources"/>
         <dependency org="com.google.guava" name="guava" rev="24.1-jre" conf="base,sources"/>
@@ -127,6 +126,7 @@
         <dependency org="org.apache.logging.log4j" name="log4j-core" rev="2.11.0" conf="base,sources"/>
         <dependency org="org.apache.logging.log4j" name="log4j-nosql" rev="2.9.1" conf="base,sources"/>
         <dependency org="org.apache.logging.log4j" name="log4j-slf4j-impl" rev="2.11.0" conf="base,sources"/>
+        <dependency org="org.slf4j" name="slf4j-api" rev="1.7.25" conf="base,sources"/>
         <dependency org="com.sun.mail" name="javax.mail" rev="1.5.1" conf="base,sources"/><!-- WARN: dep on javax.activation#activation, but excluded; conflict with geronimo, see below -->
         <dependency org="xerces" name="xercesImpl" rev="2.11.0" conf="base,sources"/>
         <dependency org="xml-apis" name="xml-apis" rev="1.4.01" conf="base,sources"/>

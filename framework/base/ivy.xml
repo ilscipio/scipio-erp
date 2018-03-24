@@ -122,11 +122,11 @@
         <dependency org="de.odysseus.juel" name="juel-impl" rev="2.2.7" conf="base,sources"/>
         <dependency org="de.odysseus.juel" name="juel-spi" rev="2.2.7" conf="base,sources"/>
         <dependency org="jdom" name="jdom" rev="1.1" conf="base,sources"/>
-        <dependency org="org.apache.logging.log4j" name="log4j-1.2-api" rev="2.3" conf="base,sources"/>
-        <dependency org="org.apache.logging.log4j" name="log4j-api" rev="2.3" conf="base,sources"/>
-        <dependency org="org.apache.logging.log4j" name="log4j-core" rev="2.3" conf="base,sources"/>
-        <dependency org="org.apache.logging.log4j" name="log4j-nosql" rev="2.3" conf="base,sources"/>
-        <dependency org="org.apache.logging.log4j" name="log4j-slf4j-impl" rev="2.3" conf="base,sources"/>
+        <dependency org="org.apache.logging.log4j" name="log4j-1.2-api" rev="2.11.0" conf="base,sources"/>
+        <dependency org="org.apache.logging.log4j" name="log4j-api" rev="2.11.0" conf="base,sources"/>
+        <dependency org="org.apache.logging.log4j" name="log4j-core" rev="2.11.0" conf="base,sources"/>
+        <dependency org="org.apache.logging.log4j" name="log4j-nosql" rev="2.9.1" conf="base,sources"/>
+        <dependency org="org.apache.logging.log4j" name="log4j-slf4j-impl" rev="2.11.0" conf="base,sources"/>
         <dependency org="com.sun.mail" name="javax.mail" rev="1.5.1" conf="base,sources"/><!-- WARN: dep on javax.activation#activation, but excluded; conflict with geronimo, see below -->
         <dependency org="xerces" name="xercesImpl" rev="2.11.0" conf="base,sources"/>
         <dependency org="xml-apis" name="xml-apis" rev="1.4.01" conf="base,sources"/>

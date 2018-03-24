@@ -138,7 +138,7 @@
         <dependency org="org.apache.xmlrpc" name="xmlrpc-server" rev="3.1.2" conf="base,sources"/>
         <dependency org="com.thoughtworks.xstream" name="xstream" rev="1.4.9" conf="base,sources"/>
         <!--<dependency org="xpp3" name="xpp3" rev="1.1.4c" conf="base,sources"/> xstream dep: now fetched via xpp3-core + xmlpull transitive deps -->
-        <dependency org="org.owasp.esapi" name="esapi" rev="2.1.0" conf="base,sources"/>
+        <dependency org="org.owasp.esapi" name="esapi" rev="2.1.0.1" conf="base,sources"/>
         <dependency org="com.googlecode.owasp-java-html-sanitizer" name="owasp-java-html-sanitizer" rev="r239" conf="base,sources"/>
         <dependency org="com.fasterxml.jackson.core" name="jackson-annotations" rev="2.4.0" conf="base,sources"/>
         <dependency org="com.fasterxml.jackson.core" name="jackson-core" rev="2.4.2" conf="base,sources"/>

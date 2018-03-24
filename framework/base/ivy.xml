@@ -144,8 +144,6 @@
         <dependency org="com.fasterxml.jackson.core" name="jackson-core" rev="2.4.2" conf="base,sources"/>
         <dependency org="com.fasterxml.jackson.core" name="jackson-databind" rev="2.4.2" conf="base,sources"/>
         <dependency org="org.jdom" name="jdom" rev="1.1" conf="base,sources"/>
-        <dependency org="org.apache.ws.commons" name="ws-commons-java5" rev="1.0.1" conf="base,sources"/>
-        <dependency org="org.apache.ws.commons.util" name="ws-commons-util" rev="1.0.2" conf="base,sources"/>
         <dependency org="joda-time" name="joda-time" rev="2.9.9" conf="base,sources" />
         <dependency org="org.apache.avalon.framework" name="avalon-framework-impl" rev="4.3.1" conf="base,sources"/>
         <dependency org="org.apache.avalon.framework" name="avalon-framework-api" rev="4.3.1" conf="base,sources"/>

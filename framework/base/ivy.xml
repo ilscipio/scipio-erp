@@ -248,7 +248,7 @@
         <dependency org="org.apache.tomcat" name="tomcat-annotations-api" rev="8.5.29" conf="base,j2eespecs,sources"/>
 
         <!-- entity component (framework/entity/ivy.xml) -->
-        <dependency org="org.apache.commons" name="commons-dbcp2" rev="2.1" conf="base,sources"/>
+        <dependency org="org.apache.commons" name="commons-dbcp2" rev="2.2.0" conf="base,sources"/>
 
         <!-- geronimo component (framework/geronimo/ivy.xml) -->
         <dependency org="org.apache.geronimo.components" name="geronimo-transaction" rev="3.1.4" conf="base,sources"/>

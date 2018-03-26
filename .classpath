@@ -16,7 +16,6 @@
     <classpathentry kind="lib" path="framework/base/lib/axis2-transport-local-1.7.7.jar" sourcepath="framework/base/libsrc/axis2-transport-local-1.7.7-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/barcode4j-2.1.jar" sourcepath="framework/base/libsrc/barcode4j-2.1-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/barcode4j-fop-ext-2.1.jar" sourcepath="framework/base/libsrc/barcode4j-fop-ext-2.1-sources.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/batik-all-1.9.1.jar" sourcepath="framework/base/libsrc/batik-all-1.9.1-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/bsf-2.4.0.jar" sourcepath="framework/base/libsrc/bsf-2.4.0-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/bsh-2.0b6-scipio-1.0.jar" sourcepath="framework/base/libsrc/bsh-2.0b6-scipio-1.0-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/common-image-3.3.2.jar" sourcepath="framework/base/libsrc/common-image-3.3.2-sources.jar"/>

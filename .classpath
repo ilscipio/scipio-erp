@@ -26,7 +26,7 @@
     <classpathentry kind="lib" path="framework/base/lib/commons-collections4-4.1.jar" sourcepath="framework/base/libsrc/commons-collections4-4.1-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/commons-compress-1.16.1.jar" sourcepath="framework/base/libsrc/commons-compress-1.16.1-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/commons-csv-1.5.jar" sourcepath="framework/base/libsrc/commons-csv-1.5-sources.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/commons-dbcp2-2.1.jar" sourcepath="framework/base/libsrc/commons-dbcp2-2.1-sources.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/commons-dbcp2-2.2.0.jar" sourcepath="framework/base/libsrc/commons-dbcp2-2.2.0-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/commons-el-1.0.jar" sourcepath="framework/base/libsrc/commons-el-1.0-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/commons-fileupload-1.3.3.jar" sourcepath="framework/base/libsrc/commons-fileupload-1.3.3-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/commons-io-2.6.jar" sourcepath="framework/base/libsrc/commons-io-2.6-sources.jar"/>
@@ -40,7 +40,7 @@
     <classpathentry kind="lib" path="framework/base/lib/concurrentlinkedhashmap-lru-1.4.2.jar" sourcepath="framework/base/libsrc/concurrentlinkedhashmap-lru-1.4.2-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/dom4j-1.6.1.jar" sourcepath="framework/base/libsrc/dom4j-1.6.1-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/dozer-4.2.1.jar" sourcepath="framework/base/libsrc/dozer-4.2.1-sources.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/esapi-2.1.0.jar" sourcepath="framework/base/libsrc/esapi-2.1.0-sources.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/esapi-2.1.0.1.jar" sourcepath="framework/base/libsrc/esapi-2.1.0.1-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/ezmorph-0.9.1.jar" sourcepath="framework/base/libsrc/ezmorph-0.9.1-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/fontbox-2.0.4.jar" sourcepath="framework/base/libsrc/fontbox-2.0.4-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/fop-2.2.jar" sourcepath="framework/base/libsrc/fop-2.2-sources.jar"/>
@@ -53,7 +53,7 @@
     <classpathentry kind="lib" path="framework/base/lib/geronimo-jta_1.1_spec-1.1.1.jar" sourcepath="framework/base/libsrc/geronimo-jta_1.1_spec-1.1.1-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/geronimo-saaj_1.3_spec-1.1.jar" sourcepath="framework/base/libsrc/geronimo-saaj_1.3_spec-1.1-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/geronimo-transaction-3.1.4.jar" sourcepath="framework/base/libsrc/geronimo-transaction-3.1.4-sources.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/groovy-all-2.4.5.jar" sourcepath="framework/base/libsrc/groovy-all-2.4.5-sources.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/groovy-all-2.4.14.jar" sourcepath="framework/base/libsrc/groovy-all-2.4.14-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/hamcrest-all-1.3.jar" sourcepath="framework/base/libsrc/hamcrest-all-1.3-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/httpclient-4.5.5.jar" sourcepath="framework/base/libsrc/httpclient-4.5.5-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/httpclient-cache-4.5.5.jar" sourcepath="framework/base/libsrc/httpclient-cache-4.5.5-sources.jar"/>
@@ -61,7 +61,7 @@
     <classpathentry kind="lib" path="framework/base/lib/httpmime-4.5.5.jar" sourcepath="framework/base/libsrc/httpmime-4.5.5-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/httpunit-1.7.jar" sourcepath="framework/base/libsrc/httpunit-1.7-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/ical4j-1.0-rc2.jar" sourcepath="framework/base/libsrc/ical4j-1.0-rc2-sources.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/icu4j-57.1.jar" sourcepath="framework/base/libsrc/icu4j-57.1-sources.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/icu4j-60.2.jar" sourcepath="framework/base/libsrc/icu4j-60.2-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/imgscalr-lib-4.2.jar" sourcepath="framework/base/libsrc/imgscalr-lib-4.2-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/itext-2.1.7.jar" sourcepath="framework/base/libsrc/itext-2.1.7-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/jackson-annotations-2.4.0.jar" sourcepath="framework/base/libsrc/jackson-annotations-2.4.0-sources.jar"/>
@@ -82,7 +82,7 @@
     <classpathentry kind="lib" path="framework/base/lib/juel-spi-2.2.7.jar" sourcepath="framework/base/libsrc/juel-spi-2.2.7-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/junit-4.12.jar" sourcepath="framework/base/libsrc/junit-4.12-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/jython-nooro-0.1.jar" sourcepath="framework/base/libsrc/jython-nooro-0.1-sources.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/log4j-api-2.3.jar" sourcepath="framework/base/libsrc/log4j-api-2.3-sources.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/log4j-api-2.11.0.jar" sourcepath="framework/base/libsrc/log4j-api-2.11.0-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/neethi-3.0.3.jar" sourcepath="framework/base/libsrc/neethi-3.0.3-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/nekohtml-1.9.16.jar" sourcepath="framework/base/libsrc/nekohtml-1.9.16-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/oro-2.0.8.jar" sourcepath="framework/base/libsrc/oro-2.0.8-sources.jar"/>
@@ -90,17 +90,16 @@
     <classpathentry kind="lib" path="framework/base/lib/pdfbox-2.0.3.jar" sourcepath="framework/base/libsrc/pdfbox-2.0.3-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/pim-0.1.jar" sourcepath="framework/base/libsrc/pim-0.1-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/poi-3.15.jar" sourcepath="framework/base/libsrc/poi-3.15-sources.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/resolver-2.9.1.jar" sourcepath="framework/base/libsrc/resolver-2.9.1-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/rome-0.9.jar" sourcepath="framework/base/libsrc/rome-0.9-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/serializer-2.7.2.jar" sourcepath="framework/base/libsrc/serializer-2.7.2-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/sitemapgen4j-1.0.1.jar" sourcepath="framework/base/libsrc/sitemapgen4j-1.0.1-sources.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/slf4j-api-1.7.25.jar" sourcepath="framework/base/libsrc/slf4j-api-1.7.25-sources.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/slf4j-api-1.8.0-beta2.jar" sourcepath="framework/base/libsrc/slf4j-api-1.8.0-beta2-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/solr-solrj-6.6.2.jar" sourcepath="framework/base/libsrc/solr-solrj-6.6.2-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/spring-core-4.2.3.RELEASE.jar" sourcepath="framework/base/libsrc/spring-core-4.2.3.RELEASE-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/spring-test-4.2.3.RELEASE.jar" sourcepath="framework/base/libsrc/spring-test-4.2.3.RELEASE-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/thumbnailator-0.4.8.jar" sourcepath="framework/base/libsrc/thumbnailator-0.4.8-sources.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/tika-core-1.14.jar" sourcepath="framework/base/libsrc/tika-core-1.14-sources.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/tika-parsers-1.14.jar" sourcepath="framework/base/libsrc/tika-parsers-1.14-sources.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/tika-core-1.17.jar" sourcepath="framework/base/libsrc/tika-core-1.17-sources.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/tika-parsers-1.17.jar" sourcepath="framework/base/libsrc/tika-parsers-1.17-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/tomcat-api-8.5.29.jar" sourcepath="framework/base/libsrc/tomcat-api-8.5.29-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/tomcat-catalina-8.5.29.jar" sourcepath="framework/base/libsrc/tomcat-catalina-8.5.29-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/tomcat-catalina-ha-8.5.29.jar" sourcepath="framework/base/libsrc/tomcat-catalina-ha-8.5.29-sources.jar"/>
@@ -113,7 +112,6 @@
     <classpathentry kind="lib" path="framework/base/lib/urlrewritefilter-4.0.4.jar" sourcepath="framework/base/libsrc/urlrewritefilter-4.0.4-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/watermarker-0.0.4.jar" sourcepath="framework/base/libsrc/watermarker-0.0.4-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/woden-core-1.0M10.jar" sourcepath="framework/base/libsrc/woden-core-1.0M10-sources.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/ws-commons-java5-1.0.1.jar" sourcepath="framework/base/libsrc/ws-commons-java5-1.0.1-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/ws-commons-util-1.0.2.jar" sourcepath="framework/base/libsrc/ws-commons-util-1.0.2-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/wsdl4j-1.6.2.jar" sourcepath="framework/base/libsrc/wsdl4j-1.6.2-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/xalan-2.7.2.jar" sourcepath="framework/base/libsrc/xalan-2.7.2-sources.jar"/>

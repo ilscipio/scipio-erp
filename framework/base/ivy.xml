@@ -188,6 +188,7 @@
         <dependency org="org.apache.geronimo.specs" name="geronimo-jms_1.1_spec" rev="1.1.1" conf="base,j2eespecs,sources"/>
         <dependency org="org.apache.geronimo.specs" name="geronimo-jta_1.1_spec" rev="1.1.1" conf="base,j2eespecs,sources"/>
         <dependency org="org.apache.geronimo.specs" name="geronimo-saaj_1.3_spec" rev="1.1" conf="base,j2eespecs,sources"/>
+        <!--<dependency org="org.apache.geronimo.specs" name="geronimo-stax-api_1.0_spec" rev="1.0.1" conf="base,j2eespecs,sources"/> EXCLUDED - see excludes -->
 
         <!-- scripting jars -->
         <dependency org="antlr" name="antlr" rev="2.7.6" conf="base,scripting,sources"/>
@@ -419,7 +420,7 @@
         <!--<exclude org="asm" module="asm"/> TODO?: this moved to org="org.ow2.asm"; conflict inevitable -->
         <!--<exclude org="rome" module="rome"/> TODO?: this moved to org="org.ow2.asm"; conflict inevitable -->
 
-        <!-- overlapping libs -->
+        <!-- aggregate libs -->
         <exclude org="org\.apache\.xmlgraphics" artifact="batik-(?!all$).*" matcher="regexp"/><!-- batik-all includes all -->
 
         <!-- artifacts provided by different providers -->
@@ -438,6 +439,8 @@
         <exclude org="org.python" module="jython"/>
         <!-- conflicts with geronimo-activation (WARN: this one had slightly more classes! FIXME?) -->
         <exclude org="javax.activation" module="activation"/>
+        <!-- newer version of stax 1.0 spec found in xml-apis-1.4.01 -->
+        <exclude org="org.apache.geronimo.specs" module="geronimo-stax-api_1.0_spec"/>
 
     </dependencies>
 </ivy-module>

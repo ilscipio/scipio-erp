@@ -117,7 +117,6 @@
         <dependency org="com.ibm.icu" name="icu4j" rev="61.1" conf="base,sources"/>
         <dependency org="javolution" name="javolution" rev="5.5.1" conf="base,sources"/><!-- TODO: increase: blocked by EntitySaxReader -->
         <dependency org="junit" name="junit" rev="4.12" conf="base,sources"/>
-        <dependency org="xalan" name="xalan" rev="2.7.2" conf="base,sources"/>
         <dependency org="org.freemarker" name="freemarker" rev="2.3.27-incubating" conf="base,sources"/>
         <dependency org="com.google.guava" name="guava" rev="24.1-jre" conf="base,sources"/>
         <dependency org="de.odysseus.juel" name="juel-impl" rev="2.2.7" conf="base,sources"/>
@@ -132,6 +131,7 @@
         <dependency org="xerces" name="xercesImpl" rev="2.11.0" conf="base,sources"/>
         <dependency org="xml-apis" name="xml-apis" rev="1.4.01" conf="base,sources"/>
         <dependency org="xml-apis" name="xml-apis-ext" rev="1.3.04" conf="base,sources"/><!-- FIXME?: should be same version as xml-apis -->
+        <dependency org="xalan" name="xalan" rev="2.7.2" conf="base,sources"/>
         <dependency org="xalan" name="serializer" rev="2.7.2" conf="base,sources"/><!-- NOTE: orig ofbiz jar "serializer-2.9.1" (?) had MANIFEST.MF 2.7.1 -->
         <dependency org="org.apache.xmlgraphics" name="xmlgraphics-commons" rev="2.2" conf="base,sources"/>
         <dependency org="org.apache.xmlrpc" name="xmlrpc-client" rev="3.1.3" conf="base,sources"/>
@@ -155,12 +155,12 @@
         <dependency org="org.hamcrest" name="hamcrest-all" rev="1.3" conf="base,sources"/>
         <!-- 2018-03-20: Not yet needed for framework (is shadowed in Camel addon)
         <dependency org="com.github.ben-manes.caffeine" name="caffeine" rev="2.6.2" conf="base,sources"/>-->
-        <dependency org="com.google.code" name="sitemapgen4j" rev="1.0.1" conf="base,sources"/><!-- SCIPIO: 2017-11: new -->
+        <dependency org="com.google.code" name="sitemapgen4j" rev="1.0.1" conf="base,sources"/><!-- SCIPIO: 2017-11: new; TODO: REVIEW: no longer maintained -->
 
         <!-- base jars - known to be missing/broken in central (2018-03-20) (see ivy/localRepo) -->
         <dependency org="net.fortuna.ical4j" name="ical4j" rev="1.0-rc2" conf="base"/><!-- 3rd-party repo only -->
-        <dependency org="jdbm" name="jdbm" rev="1.0-SNAPSHOT" conf="base"/><!-- snapshot newer than official 1.0 available -->
-        <dependency org="net.wimpi" name="pim" rev="0.1" conf="base"/><!-- previously "jpim-0.1.jar" -->
+        <dependency org="jdbm" name="jdbm" rev="1.0-SNAPSHOT" conf="base"/><!-- ofbiz snapshot jar was newer than official 1.0 available... -->
+        <dependency org="net.wimpi" name="pim" rev="0.1" conf="base"/><!-- previously "jpim-0.1.jar"; not in central, 3rd-party only -->
 
         <!-- commons jars -->
         <!-- NOTE: these should generally be updated together (some deps between them and historical compat issues) -->
@@ -202,7 +202,7 @@
         <!-- scripting jars - special and/or known to be missing/broken in central (2018-03-20) -->
         <!-- modified bsh from localRepo; source under tools/extra/src/beanshell-2.0b6-scipio -->
         <dependency org="org.apache-extras.beanshell" name="bsh" rev="2.0b6-scipio-1.0" conf="base,scripting"/>
-        <dependency org="jython-nooro" name="jython-nooro" rev="0.1" conf="base,scripting"/><!-- cannot be found; version here is invented -->
+        <dependency org="jython-nooro" name="jython-nooro" rev="0.1" conf="base,scripting"/><!-- FIXME: cannot be found on web; version here is invented -->
 
         <!-- media jars -->
         <!-- SCIPIO: 2017-07-10: new image libs -->

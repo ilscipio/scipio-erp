@@ -284,7 +284,6 @@
         -->
 
         <!-- content component (applications/content/ivy.xml) -->
-        <dependency org="dom4j" name="dom4j" rev="1.6.1" conf="base,sources"/>
         <dependency org="org.apache.pdfbox" name="fontbox" rev="2.0.4" conf="base,sources"/>
         <dependency org="org.apache.pdfbox" name="jempbox" rev="1.8.12" conf="base,sources"/>
         <dependency org="org.apache.pdfbox" name="pdfbox" rev="2.0.3" conf="base,sources"/>

@@ -156,9 +156,9 @@
         <!-- 2018-03-20: Not yet needed for framework (is shadowed in Camel addon)
         <dependency org="com.github.ben-manes.caffeine" name="caffeine" rev="2.6.2" conf="base,sources"/>-->
         <dependency org="com.github.dfabulich" name="sitemapgen4j" rev="1.0.6" conf="base,sources"/><!-- SCIPIO: 2017-11: new -->
-
+        <dependency org="org.mnode.ical4j" name="ical4j" rev="1.0.7" conf="base,sources"/><!-- TODO?: there is now 2.x.x line; incompatible API -->
+        
         <!-- base jars - known to be missing/broken in central (2018-03-20) (see ivy/localRepo) -->
-        <dependency org="net.fortuna.ical4j" name="ical4j" rev="1.0-rc2" conf="base"/><!-- 3rd-party repo only -->
         <dependency org="jdbm" name="jdbm" rev="1.0-SNAPSHOT" conf="base"/><!-- ofbiz snapshot jar was newer than official 1.0 available... -->
         <dependency org="net.wimpi" name="pim" rev="0.1" conf="base"/><!-- previously "jpim-0.1.jar"; not in central, 3rd-party only -->
 

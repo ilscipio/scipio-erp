@@ -30,7 +30,6 @@ import javax.imageio.ImageIO;
 
 import javolution.util.FastMap;
 
-import org.jdom.JDOMException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -84,7 +83,7 @@ public class ScaleImage {
      * @throws  JDOMException               Errors occur in parsing
      */
     public static Map<String, Object> scaleImageInAllSize(Map<String, ? extends Object> context, String filenameToUse, String viewType, String viewNumber)
-        throws IllegalArgumentException, ImagingOpException, IOException, JDOMException {
+        throws IllegalArgumentException, ImagingOpException, IOException {
 
         /* VARIABLES */
         Locale locale = (Locale) context.get("locale");
@@ -266,7 +265,7 @@ public class ScaleImage {
      * SCIPIO: NOTE: No code in ofbiz appears to be using this method. It is yet unknown why it is here.
      */
     public static Map<String, Object> scaleImageManageInAllSize(Map<String, ? extends Object> context, String filenameToUse, String viewType, String viewNumber , String imageType)
-        throws IllegalArgumentException, ImagingOpException, IOException, JDOMException {
+        throws IllegalArgumentException, ImagingOpException, IOException {
 
         /* VARIABLES */
         Locale locale = (Locale) context.get("locale");

@@ -36,7 +36,6 @@ import javax.imageio.ImageIO;
 import javolution.util.FastList;
 import javolution.util.FastMap;
 
-import org.jdom.JDOMException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
@@ -71,7 +70,7 @@ public class ImageManagementServices {
     private static String imagePath;
     
     public static Map<String, Object> addMultipleuploadForProduct(DispatchContext dctx, Map<String, ? extends Object> context)
-    throws IOException, JDOMException {
+    throws IOException {
         
         Map<String, Object> result = FastMap.newInstance();
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -212,10 +211,6 @@ public class ImageManagementServices {
                     String errMsg = "Scale additional image in all different sizes is impossible : " + e.toString();
                     Debug.logError(e, errMsg, module);
                     return ServiceUtil.returnError(errMsg);
-                } catch (JDOMException e) {
-                    String errMsg = "Errors occur in parsing ImageProperties.xml : " + e.toString();
-                    Debug.logError(e, errMsg, module);
-                    return ServiceUtil.returnError(errMsg);
                 }
             }
             
@@ -311,7 +306,7 @@ public class ImageManagementServices {
      * {@link org.ofbiz.product.image.ScaleImage#scaleImageManageInAllSize}.
      */
     public static Map<String, Object> scaleImageMangementInAllSize(Map<String, ? extends Object> context, String filenameToUse, String resizeType, String productId)
-        throws IllegalArgumentException, ImagingOpException, IOException, JDOMException {
+        throws IllegalArgumentException, ImagingOpException, IOException {
         
         /* VARIABLES */
         Locale locale = (Locale) context.get("locale");
@@ -594,10 +589,6 @@ public class ImageManagementServices {
             resultResizeThumb.putAll(ImageManagementServices.scaleImageMangementInAllSize(context, filenameToUseThumb, "thumbnail", productId));
         } catch (IOException e) {
             String errMsg = "Scale additional image in all different sizes is impossible : " + e.toString();
-            Debug.logError(e, errMsg, module);
-            return ServiceUtil.returnError(errMsg);
-        } catch (JDOMException e) {
-            String errMsg = "Errors occur in parsing ImageProperties.xml : " + e.toString();
             Debug.logError(e, errMsg, module);
             return ServiceUtil.returnError(errMsg);
         }

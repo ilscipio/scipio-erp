@@ -29,7 +29,6 @@ import javax.imageio.ImageIO;
 
 import javolution.util.FastMap;
 
-import org.jdom.JDOMException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilProperties;
@@ -52,7 +51,7 @@ public class RotateImage {
     public static final String resource = "ProductErrorUiLabels";
 
     public static Map<String, Object> imageRotate(DispatchContext dctx, Map<String, ? extends Object> context)
-    throws IOException, JDOMException {
+    throws IOException {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
         GenericValue userLogin = (GenericValue) context.get("userLogin");

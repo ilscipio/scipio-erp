@@ -41,7 +41,6 @@ import javolution.util.FastList;
 import javolution.util.FastMap;
 import javolution.util.FastSet;
 
-import org.jdom.JDOMException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.PropertyMessage;
 import org.ofbiz.base.util.PropertyMessageExUtil;
@@ -984,7 +983,7 @@ public class ProductServices {
     }
 
     public static Map<String, Object> addAdditionalViewForProduct(DispatchContext dctx, Map<String, ? extends Object> context)
-        throws IOException, JDOMException {
+        throws IOException {
 
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
@@ -1098,10 +1097,10 @@ public class ProductServices {
                 Debug.logError(e, "Scale additional image in all different sizes is impossible : " + e.toString(), module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
                         "ProductImageViewScaleImpossible", UtilMisc.toMap("errorString", e.toString()), locale));
-            } catch (JDOMException e) {
-                Debug.logError(e, "Errors occur in parsing ImageProperties.xml : " + e.toString(), module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
-                        "ProductImageViewParsingError", UtilMisc.toMap("errorString", e.toString()), locale));
+            }
+
+            if( ServiceUtil.isError(resultResize)) { // SCIPIO: added 2018-03-27
+                return resultResize;
             }
 
             String imageUrl = imageUrlPrefix + "/" + fileLocation + "." +  extension.getString("fileExtensionId");
@@ -1289,7 +1288,7 @@ public class ProductServices {
     }
 
     public static Map<String, Object> addImageForProductPromo(DispatchContext dctx, Map<String, ? extends Object> context)
-            throws IOException, JDOMException {
+            throws IOException {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
         GenericValue userLogin = (GenericValue) context.get("userLogin");

@@ -44,7 +44,6 @@ import javax.swing.ImageIcon;
 
 import javolution.util.FastMap;
 
-import org.jdom.JDOMException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
@@ -75,7 +74,7 @@ public class FrameImage {
     public static final String resource = "ProductErrorUiLabels";
 
     public static Map<String, Object> addImageFrame(DispatchContext dctx, Map<String, ? extends Object> context)
-    throws IOException, JDOMException {
+    throws IOException {
         Map<String, Object> result = FastMap.newInstance();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
@@ -376,7 +375,7 @@ public class FrameImage {
         return "success";
     }
     
-    public static String previewFrameImage(HttpServletRequest request, HttpServletResponse response) throws IOException, JDOMException {
+    public static String previewFrameImage(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         Map<String, ? extends Object> context = UtilGenerics.checkMap(request.getParameterMap());
         HttpSession session = request.getSession();

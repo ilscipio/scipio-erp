@@ -65,7 +65,7 @@
     <classpathentry kind="lib" path="framework/base/lib/jackson-databind-2.9.4.jar" sourcepath="framework/base/libsrc/jackson-databind-2.9.4-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/java-image-scaling-0.8.6.jar" sourcepath="framework/base/libsrc/java-image-scaling-0.8.6-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/javax.el-api-3.0.0.jar" sourcepath="framework/base/libsrc/javax.el-api-3.0.0-sources.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/javax.mail-1.5.1.jar" sourcepath="framework/base/libsrc/javax.mail-1.5.1-sources.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/javax.mail-1.6.1.jar" sourcepath="framework/base/libsrc/javax.mail-1.6.1-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/javax.servlet-api-3.1.0.jar" sourcepath="framework/base/libsrc/javax.servlet-api-3.1.0-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/javax.servlet.jsp-api-2.3.0.jar" sourcepath="framework/base/libsrc/javax.servlet.jsp-api-2.3.0-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/javolution-5.5.1.jar" sourcepath="framework/base/libsrc/javolution-5.5.1-sources.jar"/>

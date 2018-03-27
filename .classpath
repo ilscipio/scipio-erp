@@ -37,7 +37,6 @@
     <classpathentry kind="lib" path="framework/base/lib/commons-pool2-2.5.0.jar" sourcepath="framework/base/libsrc/commons-pool2-2.5.0-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/commons-validator-1.6.jar" sourcepath="framework/base/libsrc/commons-validator-1.6-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/concurrentlinkedhashmap-lru-1.4.2.jar" sourcepath="framework/base/libsrc/concurrentlinkedhashmap-lru-1.4.2-sources.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/dozer-4.2.1.jar" sourcepath="framework/base/libsrc/dozer-4.2.1-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/esapi-2.1.0.1.jar" sourcepath="framework/base/libsrc/esapi-2.1.0.1-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/ezmorph-0.9.1.jar" sourcepath="framework/base/libsrc/ezmorph-0.9.1-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/fontbox-2.0.4.jar" sourcepath="framework/base/libsrc/fontbox-2.0.4-sources.jar"/>

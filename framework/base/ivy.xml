@@ -290,7 +290,6 @@
         <dependency org="org.apache.poi" name="poi" rev="3.17" conf="base,sources"/>
 
         <!-- product component (applications/product/ivy.xml) -->
-        <dependency org="net.sf.dozer" name="dozer" rev="4.2.1" conf="base,sources"/>
         <dependency org="watermarker" name="watermarker" rev="0.0.4" conf="base"/>
 
         <!-- solr component (applications/solr/ivy.xml) -->

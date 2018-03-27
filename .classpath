@@ -109,7 +109,7 @@
     <classpathentry kind="lib" path="framework/base/lib/watermarker-0.0.4.jar" sourcepath="framework/base/libsrc/watermarker-0.0.4-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/woden-core-1.0M10.jar" sourcepath="framework/base/libsrc/woden-core-1.0M10-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/ws-commons-util-1.0.2.jar" sourcepath="framework/base/libsrc/ws-commons-util-1.0.2-sources.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/wsdl4j-1.6.2.jar" sourcepath="framework/base/libsrc/wsdl4j-1.6.2-sources.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/wsdl4j-1.6.3.jar" sourcepath="framework/base/libsrc/wsdl4j-1.6.3-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/xalan-2.7.2.jar" sourcepath="framework/base/libsrc/xalan-2.7.2-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/xercesImpl-2.11.0.jar" sourcepath="framework/base/libsrc/xercesImpl-2.11.0-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/xml-apis-1.4.01.jar" sourcepath="framework/base/libsrc/xml-apis-1.4.01-sources.jar"/>
@@ -118,7 +118,7 @@
     <classpathentry kind="lib" path="framework/base/lib/xmlrpc-client-3.1.2.jar" sourcepath="framework/base/libsrc/xmlrpc-client-3.1.2-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/xmlrpc-common-3.1.2.jar" sourcepath="framework/base/libsrc/xmlrpc-common-3.1.2-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/xmlrpc-server-3.1.2.jar" sourcepath="framework/base/libsrc/xmlrpc-server-3.1.2-sources.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/xmlschema-core-2.2.1.jar" sourcepath="framework/base/libsrc/xmlschema-core-2.2.1-sources.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/xmlschema-core-2.2.3.jar" sourcepath="framework/base/libsrc/xmlschema-core-2.2.3-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/xstream-1.4.9.jar" sourcepath="framework/base/libsrc/xstream-1.4.9-sources.jar"/>
     <classpathentry excluding="org/ofbiz/accounting/thirdparty/cybersource/**|org/ofbiz/accounting/thirdparty/verisign/**|org/ofbiz/accounting/thirdparty/paypal/PayPalServices.java|org/ofbiz/accounting/thirdparty/orbital/**|org/ofbiz/accounting/thirdparty/securepay/**|org/ofbiz/accounting/thirdparty/ideal/**" kind="src" path="applications/accounting/src"/>
     <classpathentry excluding="org/ofbiz/content/openoffice/|org/ofbiz/content/report/" kind="src" path="applications/content/src"/>

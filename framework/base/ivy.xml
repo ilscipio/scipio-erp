@@ -193,8 +193,8 @@
 
         <!-- scripting jars -->
         <!--<dependency org="antlr" name="antlr" rev="2.7.6" conf="base,scripting,sources"/> unused in code and version quite old -->
-        <dependency org="asm" name="asm" rev="3.2" conf="base,scripting,sources"/>
-        <dependency org="bsf" name="bsf" rev="2.4.0" conf="base,scripting,sources"/>
+        <dependency org="asm" name="asm" rev="3.2" conf="base,scripting,sources"/><!-- used by cobertura, possibly junit TODO?: update this if updating cobertura -->
+        <dependency org="bsf" name="bsf" rev="2.4.0" conf="base,scripting,sources"/><!-- NOTE: 2.x is different API than 3.x; keeping latest 2.x; see ant-apache-bsf deps -->
         <dependency org="org.codehaus.groovy" name="groovy-all" rev="2.4.14" conf="base,scripting,groovy,sources"/>
         <!-- Jakarta ORO is provided in filesystem due to ivy dependency, and excluded below NOTE: Jakarta ORO is a closed project
         <dependency org="oro" name="oro" rev="2.0.8" conf="base,scripting,sources"/>-->

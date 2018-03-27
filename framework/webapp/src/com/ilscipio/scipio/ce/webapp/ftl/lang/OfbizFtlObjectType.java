@@ -1,6 +1,7 @@
 package com.ilscipio.scipio.ce.webapp.ftl.lang;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 import freemarker.ext.beans.BeanModel;
@@ -8,7 +9,6 @@ import freemarker.ext.util.WrapperTemplateModel;
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateModel;
-import javolution.util.FastMap;
 
 /**
  * SCIPIO: Type descriptions for common FTL object types as seen from templating code.
@@ -127,10 +127,11 @@ public enum OfbizFtlObjectType {
     private static final Map<String, OfbizFtlObjectType> ftlNameHash;
     
     static {
-        ftlNameHash = FastMap.newInstance();
+        Map<String, OfbizFtlObjectType> map = new HashMap<>();
         for (OfbizFtlObjectType type : OfbizFtlObjectType.values()) {
-            ftlNameHash.put(type.getFtlName(), type);
+            map.put(type.getFtlName(), type);
         }
+        ftlNameHash = map;
     }
     
     private final String fltName;

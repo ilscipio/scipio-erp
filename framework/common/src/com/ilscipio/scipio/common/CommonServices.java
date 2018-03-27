@@ -64,7 +64,6 @@ import org.ofbiz.widget.renderer.macro.MacroScreenRenderer;
 import org.xml.sax.SAXException;
 
 import freemarker.template.TemplateException;
-import javolution.util.FastMap;
 
 /**
  * SCIPIO: Common Services

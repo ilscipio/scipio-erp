@@ -69,7 +69,6 @@
     <classpathentry kind="lib" path="framework/base/lib/javax.servlet.jsp-api-2.3.0.jar" sourcepath="framework/base/libsrc/javax.servlet.jsp-api-2.3.0-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/javolution-5.5.1.jar" sourcepath="framework/base/libsrc/javolution-5.5.1-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/jdbm-1.0-SNAPSHOT.jar" sourcepath="framework/base/libsrc/jdbm-1.0-SNAPSHOT-sources.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/jdom-1.1.jar" sourcepath="framework/base/libsrc/jdom-1.1-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/jempbox-1.8.13.jar" sourcepath="framework/base/libsrc/jempbox-1.8.13-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/jfairy-0.5.9.jar" sourcepath="framework/base/libsrc/jfairy-0.5.9-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/joda-time-2.9.9.jar" sourcepath="framework/base/libsrc/joda-time-2.9.9-sources.jar"/>

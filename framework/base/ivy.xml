@@ -192,7 +192,7 @@
         <!--<dependency org="org.apache.geronimo.specs" name="geronimo-stax-api_1.0_spec" rev="1.0.1" conf="base,j2eespecs,sources"/> EXCLUDED - see excludes -->
 
         <!-- scripting jars -->
-        <dependency org="antlr" name="antlr" rev="2.7.6" conf="base,scripting,sources"/>
+        <!--<dependency org="antlr" name="antlr" rev="2.7.6" conf="base,scripting,sources"/> unused in code and version quite old -->
         <dependency org="asm" name="asm" rev="3.2" conf="base,scripting,sources"/>
         <dependency org="bsf" name="bsf" rev="2.4.0" conf="base,scripting,sources"/>
         <dependency org="org.codehaus.groovy" name="groovy-all" rev="2.4.14" conf="base,scripting,groovy,sources"/>

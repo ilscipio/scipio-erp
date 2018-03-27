@@ -87,7 +87,7 @@
     <classpathentry kind="lib" path="framework/base/lib/owasp-java-html-sanitizer-r239.jar" sourcepath="framework/base/libsrc/owasp-java-html-sanitizer-r239-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/pdfbox-2.0.3.jar" sourcepath="framework/base/libsrc/pdfbox-2.0.3-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/pim-0.1.jar" sourcepath="framework/base/libsrc/pim-0.1-sources.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/poi-3.15.jar" sourcepath="framework/base/libsrc/poi-3.15-sources.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/poi-3.17.jar" sourcepath="framework/base/libsrc/poi-3.17-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/rome-0.9.jar" sourcepath="framework/base/libsrc/rome-0.9-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/serializer-2.7.2.jar" sourcepath="framework/base/libsrc/serializer-2.7.2-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/sitemapgen4j-1.0.1.jar" sourcepath="framework/base/libsrc/sitemapgen4j-1.0.1-sources.jar"/>

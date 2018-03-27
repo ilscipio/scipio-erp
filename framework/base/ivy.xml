@@ -287,7 +287,7 @@
         <dependency org="org.apache.pdfbox" name="fontbox" rev="2.0.4" conf="base,sources"/>
         <dependency org="org.apache.pdfbox" name="jempbox" rev="1.8.12" conf="base,sources"/>
         <dependency org="org.apache.pdfbox" name="pdfbox" rev="2.0.3" conf="base,sources"/>
-        <dependency org="org.apache.poi" name="poi" rev="3.15" conf="base,sources"/>
+        <dependency org="org.apache.poi" name="poi" rev="3.17" conf="base,sources"/>
 
         <!-- product component (applications/product/ivy.xml) -->
         <dependency org="net.sf.dozer" name="dozer" rev="4.2.1" conf="base,sources"/>

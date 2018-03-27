@@ -94,6 +94,7 @@ under the License.
     <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="groovy-all-*.jar"/>
     <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="jython-*.jar"/>
     <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="oro-*.jar"/>
+    <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="hamcrest-*.jar"/><!-- SCIPIO: 2018-03-27: hamcrest-core dep for junit -->
   </path>
 
   <!-- cobertura -->

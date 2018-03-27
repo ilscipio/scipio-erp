@@ -113,10 +113,10 @@
                 libs (javolution, xml-apis) and was not shipped with ofbiz 14/15 - ->
             <exclude module="jtidy"/>
         </dependency>-->
+        <dependency org="net.sourceforge.nekohtml" name="nekohtml" rev="1.9.22" conf="base,sources"/>
         <dependency org="com.ibm.icu" name="icu4j" rev="61.1" conf="base,sources"/>
         <dependency org="javolution" name="javolution" rev="5.5.1" conf="base,sources"/><!-- TODO: increase: blocked by EntitySaxReader -->
         <dependency org="junit" name="junit" rev="4.12" conf="base,sources"/>
-        <dependency org="net.sourceforge.nekohtml" name="nekohtml" rev="1.9.16" conf="base,sources"/>
         <dependency org="xalan" name="xalan" rev="2.7.2" conf="base,sources"/>
         <dependency org="org.freemarker" name="freemarker" rev="2.3.27-incubating" conf="base,sources"/>
         <dependency org="com.google.guava" name="guava" rev="24.1-jre" conf="base,sources"/>

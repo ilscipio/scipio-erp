@@ -284,9 +284,10 @@
         -->
 
         <!-- content component (applications/content/ivy.xml) -->
-        <dependency org="org.apache.pdfbox" name="fontbox" rev="2.0.4" conf="base,sources"/>
-        <dependency org="org.apache.pdfbox" name="jempbox" rev="1.8.12" conf="base,sources"/>
-        <dependency org="org.apache.pdfbox" name="pdfbox" rev="2.0.3" conf="base,sources"/>
+        <!-- TODO: REVIEW: pdfbox was no longer in use by code at time of this writing (2018-03), but it may have future use... -->
+        <dependency org="org.apache.pdfbox" name="fontbox" rev="2.0.8" conf="base,sources"/>
+        <dependency org="org.apache.pdfbox" name="jempbox" rev="1.8.13" conf="base,sources"/>
+        <dependency org="org.apache.pdfbox" name="pdfbox" rev="2.0.8" conf="base,sources"/>
         <dependency org="org.apache.poi" name="poi" rev="3.17" conf="base,sources"/>
 
         <!-- product component (applications/product/ivy.xml) -->

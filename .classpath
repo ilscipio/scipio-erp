@@ -39,7 +39,7 @@
     <classpathentry kind="lib" path="framework/base/lib/concurrentlinkedhashmap-lru-1.4.2.jar" sourcepath="framework/base/libsrc/concurrentlinkedhashmap-lru-1.4.2-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/esapi-2.1.0.1.jar" sourcepath="framework/base/libsrc/esapi-2.1.0.1-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/ezmorph-0.9.1.jar" sourcepath="framework/base/libsrc/ezmorph-0.9.1-sources.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/fontbox-2.0.4.jar" sourcepath="framework/base/libsrc/fontbox-2.0.4-sources.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/fontbox-2.0.8.jar" sourcepath="framework/base/libsrc/fontbox-2.0.8-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/fop-2.2.jar" sourcepath="framework/base/libsrc/fop-2.2-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/freemarker-2.3.27-incubating.jar" sourcepath="framework/base/libsrc/freemarker-2.3.27-incubating-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/geronimo-activation_1.1_spec-1.0.2.jar" sourcepath="framework/base/libsrc/geronimo-activation_1.1_spec-1.0.2-sources.jar"/>
@@ -72,7 +72,7 @@
     <classpathentry kind="lib" path="framework/base/lib/javolution-5.5.1.jar" sourcepath="framework/base/libsrc/javolution-5.5.1-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/jdbm-1.0-SNAPSHOT.jar" sourcepath="framework/base/libsrc/jdbm-1.0-SNAPSHOT-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/jdom-1.1.jar" sourcepath="framework/base/libsrc/jdom-1.1-sources.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/jempbox-1.8.12.jar" sourcepath="framework/base/libsrc/jempbox-1.8.12-sources.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/jempbox-1.8.13.jar" sourcepath="framework/base/libsrc/jempbox-1.8.13-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/jfairy-0.5.9.jar" sourcepath="framework/base/libsrc/jfairy-0.5.9-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/joda-time-2.9.9.jar" sourcepath="framework/base/libsrc/joda-time-2.9.9-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/juel-impl-2.2.7.jar" sourcepath="framework/base/libsrc/juel-impl-2.2.7-sources.jar"/>
@@ -84,7 +84,7 @@
     <classpathentry kind="lib" path="framework/base/lib/nekohtml-1.9.16.jar" sourcepath="framework/base/libsrc/nekohtml-1.9.16-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/oro-2.0.8.jar" sourcepath="framework/base/libsrc/oro-2.0.8-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/owasp-java-html-sanitizer-r239.jar" sourcepath="framework/base/libsrc/owasp-java-html-sanitizer-r239-sources.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/pdfbox-2.0.3.jar" sourcepath="framework/base/libsrc/pdfbox-2.0.3-sources.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/pdfbox-2.0.8.jar" sourcepath="framework/base/libsrc/pdfbox-2.0.8-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/pim-0.1.jar" sourcepath="framework/base/libsrc/pim-0.1-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/poi-3.17.jar" sourcepath="framework/base/libsrc/poi-3.17-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/rome-0.9.jar" sourcepath="framework/base/libsrc/rome-0.9-sources.jar"/>

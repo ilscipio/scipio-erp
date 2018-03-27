@@ -265,8 +265,8 @@
         <dependency org="wsdl4j" name="wsdl4j" rev="1.6.3" conf="base,sources"/>
 
         <!-- testtools component (framework/testtools/ivy.xml) -->
-        <dependency org="org.springframework" name="spring-core" rev="4.2.3.RELEASE" conf="base,sources"/>
-        <dependency org="org.springframework" name="spring-test" rev="4.2.3.RELEASE" conf="base,sources"/>
+        <dependency org="org.springframework" name="spring-core" rev="5.0.4.RELEASE" conf="base,sources"/>
+        <dependency org="org.springframework" name="spring-test" rev="5.0.4.RELEASE" conf="base,sources"/>
 
         <!-- webapp component (framework/webapp/ivy.xml) -->
         <dependency org="com.lowagie" name="itext" rev="2.1.7" conf="base,sources"/>

@@ -269,7 +269,6 @@
         <dependency org="org.springframework" name="spring-test" rev="4.2.3.RELEASE" conf="base,sources"/>
 
         <!-- webapp component (framework/webapp/ivy.xml) -->
-        <dependency org="net.sf.ezmorph" name="ezmorph" rev="0.9.1" conf="base,sources"/>
         <dependency org="com.lowagie" name="itext" rev="2.1.7" conf="base,sources"/>
         <dependency org="org.bouncycastle" name="bctsp-jdk14" rev="1.38" conf="base,sources"/><!-- itext dependency, explicit here due to conflict with version "138" -->
         <dependency org="org.bouncycastle" name="bcmail-jdk14" rev="1.38" conf="base,sources"/><!-- itext dependency, explicit here due to conflict with version "138" -->

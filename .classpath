@@ -85,7 +85,7 @@
     <classpathentry kind="lib" path="framework/base/lib/poi-3.17.jar" sourcepath="framework/base/libsrc/poi-3.17-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/rome-1.9.0.jar" sourcepath="framework/base/libsrc/rome-1.9.0-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/serializer-2.7.2.jar" sourcepath="framework/base/libsrc/serializer-2.7.2-sources.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/sitemapgen4j-1.0.1.jar" sourcepath="framework/base/libsrc/sitemapgen4j-1.0.1-sources.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/sitemapgen4j-1.0.6.jar" sourcepath="framework/base/libsrc/sitemapgen4j-1.0.6-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/slf4j-api-1.8.0-beta2.jar" sourcepath="framework/base/libsrc/slf4j-api-1.8.0-beta2-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/solr-solrj-6.6.3.jar" sourcepath="framework/base/libsrc/solr-solrj-6.6.3-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/spring-core-5.0.4.RELEASE.jar" sourcepath="framework/base/libsrc/spring-core-5.0.4.RELEASE-sources.jar"/>

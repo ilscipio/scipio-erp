@@ -155,7 +155,7 @@
         <dependency org="org.hamcrest" name="hamcrest-all" rev="1.3" conf="base,sources"/>
         <!-- 2018-03-20: Not yet needed for framework (is shadowed in Camel addon)
         <dependency org="com.github.ben-manes.caffeine" name="caffeine" rev="2.6.2" conf="base,sources"/>-->
-        <dependency org="com.google.code" name="sitemapgen4j" rev="1.0.1" conf="base,sources"/><!-- SCIPIO: 2017-11: new; TODO: REVIEW: no longer maintained -->
+        <dependency org="com.github.dfabulich" name="sitemapgen4j" rev="1.0.6" conf="base,sources"/><!-- SCIPIO: 2017-11: new -->
 
         <!-- base jars - known to be missing/broken in central (2018-03-20) (see ivy/localRepo) -->
         <dependency org="net.fortuna.ical4j" name="ical4j" rev="1.0-rc2" conf="base"/><!-- 3rd-party repo only -->

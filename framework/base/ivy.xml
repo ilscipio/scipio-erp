@@ -106,11 +106,13 @@
         <dependency org="org.apache.httpcomponents" name="httpclient-cache" rev="4.5.5" conf="base,sources"/>
         <dependency org="org.apache.httpcomponents" name="httpcore" rev="4.4.9" conf="base,sources"/>
         <dependency org="org.apache.httpcomponents" name="httpmime" rev="4.5.5" conf="base,sources"/>
+        <!-- 2018-03-26: omitting httpunit for now because no current usage and its dependencies create class conflicts; 
+            however, may use it or a substitute in future...
         <dependency org="httpunit" name="httpunit" rev="1.7" conf="base,sources">
-            <!-- FIXME?: jtidy is dep of httpunit, but it has class conflicts with several
-                libs (javolution, xml-apis) and was not shipped with ofbiz 14/15 -->
+            <!- - FIXME?: jtidy is dep of httpunit, but it has class conflicts with several
+                libs (javolution, xml-apis) and was not shipped with ofbiz 14/15 - ->
             <exclude module="jtidy"/>
-        </dependency>
+        </dependency>-->
         <dependency org="com.ibm.icu" name="icu4j" rev="60.2" conf="base,sources"/>
         <dependency org="javolution" name="javolution" rev="5.5.1" conf="base,sources"/>
         <dependency org="junit" name="junit" rev="4.12" conf="base,sources"/>

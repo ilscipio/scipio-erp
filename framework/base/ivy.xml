@@ -274,10 +274,12 @@
         </dependency>
 
         <!-- webapp component (framework/webapp/ivy.xml) -->
+        <!-- TODO: itext 2.x is finished; 5.x or 7.x is available as com.itextpdf#itextpdf, but API changes means
+            parts of PdfSurveyServices.buildSurveyFromPdf have to be rewritten to upgrade (changing package names not enough) -->    
         <dependency org="com.lowagie" name="itext" rev="2.1.7" conf="base,sources"/>
-        <dependency org="org.bouncycastle" name="bctsp-jdk14" rev="1.38" conf="base,sources"/><!-- itext dependency, explicit here due to conflict with version "138" -->
-        <dependency org="org.bouncycastle" name="bcmail-jdk14" rev="1.38" conf="base,sources"/><!-- itext dependency, explicit here due to conflict with version "138" -->
-        <dependency org="org.bouncycastle" name="bcprov-jdk14" rev="1.38" conf="base,sources"/><!-- itext dependency, explicit here due to conflict with version "138" -->
+        <dependency org="org.bouncycastle" name="bctsp-jdk14" rev="1.38" conf="base,sources"/><!-- itext 2 dep; conflict with version "138"; remove in future -->
+        <dependency org="org.bouncycastle" name="bcmail-jdk14" rev="1.38" conf="base,sources"/><!-- itext 2 dep; conflict with version "138"; remove in future -->
+        <dependency org="org.bouncycastle" name="bcprov-jdk14" rev="1.38" conf="base,sources"/><!-- itext 2 dep; conflict with version "138"; remove in future -->
         <dependency org="com.rometools" name="rome" rev="1.9.0" conf="base,sources"/>
         <dependency org="org.tuckey" name="urlrewritefilter" rev="4.0.4" conf="base,sources"/>
 

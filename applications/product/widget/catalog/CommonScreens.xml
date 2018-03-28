@@ -874,7 +874,7 @@ under the License.
             <actions>
                 <set field="activeSubMenuItem" value="main"/>
                 <set field="titleProperty" value="ProductCatalogManager"/>
-                <entity-and list="productStores" entity-name="ProductStore" />
+                <entity-condition list="productStores" entity-name="ProductStore" />
             </actions>
             <widgets>            
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">

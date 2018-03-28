@@ -931,8 +931,8 @@ public class UtilMisc {
      * In particular, it may be used to replace instances of javolution FastList usage in old
      * code.
      * <p>
-     * This is useful for Freemarker workarounds and to guarantee a map
-     * is of the same type as the other toMap calls in this class.
+     * This is useful for Freemarker workarounds and to guarantee a list
+     * is of a type common used by Scipio code.
      */
     public static <V> List<V> newList() {
         return new ArrayList<V>(); // new LinkedList<V>()

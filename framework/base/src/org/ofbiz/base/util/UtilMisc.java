@@ -920,6 +920,25 @@ public class UtilMisc {
     }
     
     /**
+     * SCIPIO: Creates a new, empty list.
+     * <p>
+     * This returns a general-purpose list type with no specific initial capacity or structure, 
+     * appropriate for general use in most Scipio code and services - it may be ArrayList, 
+     * LinkedList, or even another.
+     * <p>
+     * NOTE: Usually it is better to choose a specific List type such as ArrayList or LinkedList
+     * for a given situation; this method is for code which has not been performance analyzed.
+     * In particular, it may be used to replace instances of javolution FastList usage in old
+     * code.
+     * <p>
+     * This is useful for Freemarker workarounds and to guarantee a map
+     * is of the same type as the other toMap calls in this class.
+     */
+    public static <V> List<V> newList() {
+        return new ArrayList<V>(); // new LinkedList<V>()
+    }
+    
+    /**
      * SCIPIO: Returns a new list of entries, where each entry corresponds to the value
      * for the given key for each map in the collection. 
      */

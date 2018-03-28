@@ -896,6 +896,9 @@ public class UtilMisc {
     /**
      * SCIPIO: Creates a new, empty map.
      * <p>
+     * This returns a general-purpose map type, such as HashMap, and does not
+     * guarantee insertion order.
+     * <p>
      * This is useful for Freemarker workarounds and to guarantee a map
      * is of the same type as the other toMap calls in this class.
      */
@@ -905,6 +908,9 @@ public class UtilMisc {
     
     /**
      * SCIPIO: Creates a new map initialized from the given map.
+     * <p>
+     * This returns a general-purpose map type, such as HashMap, and does not
+     * guarantee insertion order.
      * <p>
      * This is useful for Freemarker workarounds and to guarantee a map
      * is of the same type as the other toMap calls in this class.

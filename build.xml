@@ -2508,6 +2508,8 @@ under the License.
         <path id="gen-kek.class.path">
           <fileset dir="${ofbiz.home.dir}/framework/base/build/lib/" includes="ofbiz-base.jar"/>
           <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="commons-codec-*.jar"/>
+          <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="shiro-core-*.jar"/>
+          <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="slf4j-api-*.jar"/>
         </path>
         <java classname="org.ofbiz.base.crypto.Main" fork="false" classpathref="gen-kek.class.path">
             <arg value="-kek"/>

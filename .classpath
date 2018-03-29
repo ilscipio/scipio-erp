@@ -76,6 +76,7 @@
     <classpathentry kind="lib" path="framework/base/lib/junit-4.12.jar" sourcepath="framework/base/libsrc/junit-4.12-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/jython-nooro-0.1.jar" sourcepath="framework/base/libsrc/jython-nooro-0.1-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/log4j-api-2.11.0.jar" sourcepath="framework/base/libsrc/log4j-api-2.11.0-sources.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/mockito-core-2.16.0.jar" sourcepath="framework/base/libsrc/mockito-core-2.16.0-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/neethi-3.0.3.jar" sourcepath="framework/base/libsrc/neethi-3.0.3-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/nekohtml-1.9.22.jar" sourcepath="framework/base/libsrc/nekohtml-1.9.22-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/oro-2.0.8.jar" sourcepath="framework/base/libsrc/oro-2.0.8-sources.jar"/>

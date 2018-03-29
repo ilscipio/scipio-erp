@@ -106,17 +106,9 @@
         <dependency org="org.apache.httpcomponents" name="httpclient-cache" rev="4.5.5" conf="base,sources"/>
         <dependency org="org.apache.httpcomponents" name="httpcore" rev="4.4.9" conf="base,sources"/>
         <dependency org="org.apache.httpcomponents" name="httpmime" rev="4.5.5" conf="base,sources"/>
-        <!-- 2018-03-26: omitting httpunit for now because no current usage and its dependencies create class conflicts; 
-            however, may use it or a substitute in future...
-        <dependency org="httpunit" name="httpunit" rev="1.7" conf="base,sources">
-            <!- - FIXME?: jtidy is dep of httpunit, but it has class conflicts with several
-                libs (javolution, xml-apis) and was not shipped with ofbiz 14/15 - ->
-            <exclude module="jtidy"/>
-        </dependency>-->
         <dependency org="net.sourceforge.nekohtml" name="nekohtml" rev="1.9.22" conf="base,sources"/>
         <dependency org="com.ibm.icu" name="icu4j" rev="61.1" conf="base,sources"/>
         <dependency org="javolution" name="javolution" rev="5.5.1" conf="base,sources"/><!-- TODO: increase: blocked by EntitySaxReader -->
-        <dependency org="junit" name="junit" rev="4.12" conf="base,sources"/>
         <dependency org="org.freemarker" name="freemarker" rev="2.3.27-incubating" conf="base,sources"/>
         <dependency org="com.google.guava" name="guava" rev="24.1-jre" conf="base,sources"/>
         <dependency org="de.odysseus.juel" name="juel-impl" rev="2.2.7" conf="base,sources"/>
@@ -163,6 +155,17 @@
         <dependency org="jdbm" name="jdbm" rev="1.0-SNAPSHOT" conf="base"/><!-- ofbiz snapshot jar was newer than official 1.0 available... -->
         <dependency org="net.wimpi" name="pim" rev="0.1" conf="base"/><!-- previously "jpim-0.1.jar"; not in central, 3rd-party only -->
 
+        <!-- base testing jars -->
+        <dependency org="junit" name="junit" rev="4.12" conf="base,sources"/>
+        <dependency org="org.mockito" name="mockito-core" rev="2.16.0" conf="base,sources"/><!-- added at r41761440 ofbiz trunk 2016-09-19 09:36:32 -->
+        <!-- 2018-03-26: omitting httpunit for now because no current usage and its dependencies create class conflicts; 
+            however, may use it or a substitute in future...
+        <dependency org="httpunit" name="httpunit" rev="1.7" conf="base,sources">
+            <!- - FIXME?: jtidy is dep of httpunit, but it has class conflicts with several
+                libs (javolution, xml-apis) and was not shipped with ofbiz 14/15 - ->
+            <exclude module="jtidy"/>
+        </dependency>-->
+        
         <!-- commons jars -->
         <!-- NOTE: these should generally be updated together (some deps between them and historical compat issues) -->
         <dependency org="commons-beanutils" name="commons-beanutils" rev="1.9.3" conf="base,commons,sources"/>

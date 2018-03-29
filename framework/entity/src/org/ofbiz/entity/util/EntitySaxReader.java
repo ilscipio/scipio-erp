@@ -62,7 +62,6 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateHashModel;
-import javolution.lang.Reflection.Method;
 import javolution.text.CharArray;
 import javolution.text.Text;
 import javolution.xml.sax.Attributes;

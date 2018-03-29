@@ -25,8 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
@@ -124,7 +122,7 @@ public class InventoryWorker {
         condList.add(EntityCondition.makeCondition("orderItemStatusId", EntityOperator.NOT_EQUAL, "ITEM_CANCELLED"));
         EntityConditionList<EntityCondition> conditions = EntityCondition.makeCondition(condList, EntityOperator.AND);
 
-        Map<String, BigDecimal> results = FastMap.newInstance();
+        Map<String, BigDecimal> results = UtilMisc.newMap();
         try {
             List<GenericValue> orderedProducts = EntityQuery.use(delegator).select(fieldsToSelect).from("OrderItemQuantityReportGroupByProduct").where(conditions).queryList();
             for (GenericValue value: orderedProducts) {

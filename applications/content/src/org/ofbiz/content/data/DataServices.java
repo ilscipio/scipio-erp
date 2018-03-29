@@ -31,8 +31,6 @@ import java.sql.Timestamp;
 import java.util.Locale;
 import java.util.Map;
 
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
@@ -75,7 +73,7 @@ public class DataServices {
      */
     public static Map<String, Object> createDataResourceAndText(DispatchContext dctx, Map<String, ? extends Object> rcontext) {
         Map<String, Object> context = UtilMisc.makeMapWritable(rcontext);
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
 
         Map<String, Object> thisResult = createDataResourceMethod(dctx, context);
         if (thisResult.get(ModelService.RESPONSE_MESSAGE) != null) {
@@ -106,7 +104,7 @@ public class DataServices {
 
     public static Map<String, Object> createDataResourceMethod(DispatchContext dctx, Map<String, ? extends Object> rcontext) {
         Map<String, Object> context = UtilMisc.makeMapWritable(rcontext);
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         Delegator delegator = dctx.getDelegator();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String userLoginId = (String) userLogin.get("userLoginId");
@@ -167,7 +165,7 @@ public class DataServices {
     }
 
     public static Map<String, Object> createElectronicTextMethod(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         Delegator delegator = dctx.getDelegator();
         String dataResourceId = (String) context.get("dataResourceId");
         String textData = (String) context.get("textData");
@@ -300,7 +298,7 @@ public class DataServices {
     }
 
     public static Map<String, Object> updateDataResourceMethod(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         Delegator delegator = dctx.getDelegator();
         GenericValue dataResource = null;
         Locale locale = (Locale) context.get("locale");
@@ -349,7 +347,7 @@ public class DataServices {
      * @return update the ElectronicText
      */
     public static Map<String, Object> updateElectronicTextMethod(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         Delegator delegator = dctx.getDelegator();
         GenericValue electronicText = null;
         Locale locale = (Locale) context.get("locale");
@@ -398,7 +396,7 @@ public class DataServices {
     }
 
     public static Map<String, Object> updateFileMethod(DispatchContext dctx, Map<String, ? extends Object> context) throws GenericServiceException {
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         //GenericValue fileText = null;
         Locale locale = (Locale) context.get("locale");
         //String dataResourceId = (String) dataResource.get("dataResourceId");
@@ -470,7 +468,7 @@ public class DataServices {
     }
 
     public static Map<String, Object> renderDataResourceAsText(DispatchContext dctx, Map<String, ? extends Object> context) throws GeneralException, IOException {
-        Map<String, Object> results = FastMap.newInstance();
+        Map<String, Object> results = UtilMisc.newMap();
         Delegator delegator = dctx.getDelegator();
         //LocalDispatcher dispatcher = dctx.getDispatcher();
         Writer out = (Writer) context.get("outWriter");
@@ -488,7 +486,7 @@ public class DataServices {
         Locale locale = (Locale) context.get("locale");
 
         if (templateContext == null) {
-            templateContext = FastMap.newInstance();
+            templateContext = UtilMisc.newMap();
         }
 
         // GenericValue view = (GenericValue) context.get("subContentDataResourceView");
@@ -513,7 +511,7 @@ public class DataServices {
     }
 
     public static Map<String, Object> updateImageMethod(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         Delegator delegator = dctx.getDelegator();
         //Locale locale = (Locale) context.get("locale");
         String dataResourceId = (String) context.get("dataResourceId");
@@ -548,7 +546,7 @@ public class DataServices {
     }
 
     public static Map<String, Object> createImageMethod(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         Delegator delegator = dctx.getDelegator();
         String dataResourceId = (String) context.get("dataResourceId");
         ByteBuffer byteBuffer = (ByteBuffer)context.get("imageData");
@@ -584,7 +582,7 @@ public class DataServices {
     }
 
     public static Map<String, Object> createBinaryFileMethod(DispatchContext dctx, Map<String, ? extends Object> context) throws GenericServiceException {
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         GenericValue dataResource = (GenericValue) context.get("dataResource");
         //String dataResourceId = (String) dataResource.get("dataResourceId");
         String dataResourceTypeId = (String) dataResource.get("dataResourceTypeId");
@@ -641,7 +639,7 @@ public class DataServices {
     }
 
     public static Map<String, Object> updateBinaryFileMethod(DispatchContext dctx, Map<String, ? extends Object> context) throws GenericServiceException {
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         GenericValue dataResource = (GenericValue) context.get("dataResource");
         //String dataResourceId = (String) dataResource.get("dataResourceId");
         String dataResourceTypeId = (String) dataResource.get("dataResourceTypeId");

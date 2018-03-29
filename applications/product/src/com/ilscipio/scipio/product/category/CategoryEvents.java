@@ -60,7 +60,7 @@ public abstract class CategoryEvents {
     
         List categoryList = new ArrayList<>();
         List<GenericValue> childOfCats;
-        List<String> sortList = org.ofbiz.base.util.UtilMisc.toList("sequenceNum", "title");
+        List<String> sortList = UtilMisc.toList("sequenceNum", "title");
     
         try {
             GenericValue category = EntityQuery.use(delegator).from(entityName).where(primaryKeyName, productCategoryId).queryOne();

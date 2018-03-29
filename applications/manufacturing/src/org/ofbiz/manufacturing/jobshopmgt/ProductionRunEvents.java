@@ -27,8 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
@@ -62,7 +60,7 @@ public class ProductionRunEvents {
         }
 
         Collection<Map<String, Object>> componentRows = UtilHttp.parseMultiFormData(parameters);
-        Map<GenericPK, Object> componentsLocationMap = FastMap.newInstance();
+        Map<GenericPK, Object> componentsLocationMap = UtilMisc.newMap();
         for (Map<String, Object>componentRow : componentRows) {
             Timestamp fromDate = null;
             try {

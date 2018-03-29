@@ -53,9 +53,6 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 /**
  * CategoryServices - Category Services
  */
@@ -103,7 +100,7 @@ public class CategoryServices {
 
         List<String> orderByFields = UtilGenerics.checkList(context.get("orderByFields"));
         if (orderByFields == null)
-            orderByFields = FastList.newInstance();
+            orderByFields = UtilMisc.newList();
         String entityName = getCategoryFindEntityName(delegator, orderByFields, introductionDateLimit, releaseDateLimit);
 
         GenericValue productCategory;
@@ -120,7 +117,7 @@ public class CategoryServices {
         if (activeOnly) {
             productCategoryMembers = EntityUtil.filterByDate(productCategoryMembers, true);
         }
-        List<EntityCondition> filterConditions = FastList.newInstance();
+        List<EntityCondition> filterConditions = UtilMisc.newList();
         if (introductionDateLimit != null) {
             EntityCondition condition = EntityCondition.makeCondition(EntityCondition.makeCondition("introductionDate", EntityOperator.EQUALS, null),
                     EntityOperator.OR, EntityCondition.makeCondition("introductionDate", EntityOperator.LESS_THAN_EQUAL_TO, introductionDateLimit));
@@ -234,7 +231,7 @@ public class CategoryServices {
 
         List<String> orderByFields = UtilGenerics.checkList(context.get("orderByFields"));
         if (orderByFields == null)
-            orderByFields = FastList.newInstance();
+            orderByFields = UtilMisc.newList();
         String entityName = getCategoryFindEntityName(delegator, orderByFields, introductionDateLimit, releaseDateLimit);
 
         String prodCatalogId = (String) context.get("prodCatalogId");
@@ -308,7 +305,7 @@ public class CategoryServices {
                     if (activeOnly) {
                         productCategoryMembers = EntityUtil.filterByDate(productCategoryMembers, true);
                     }
-                    List<EntityCondition> filterConditions = FastList.newInstance();
+                    List<EntityCondition> filterConditions = UtilMisc.newList();
                     if (introductionDateLimit != null) {
                         EntityCondition condition = EntityCondition.makeCondition(
                                 EntityCondition.makeCondition("introductionDate", EntityOperator.EQUALS, null), EntityOperator.OR,
@@ -356,7 +353,7 @@ public class CategoryServices {
                         highIndex = listSize;
                     }
                 } else {
-                    List<EntityCondition> mainCondList = FastList.newInstance();
+                    List<EntityCondition> mainCondList = UtilMisc.newList();
                     mainCondList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, productCategory.getString("productCategoryId")));
                     if (activeOnly) {
                         mainCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimestamp));
@@ -383,7 +380,7 @@ public class CategoryServices {
                     if (limitView) {
                         if (viewProductCategoryId != null) {
                             // do manual checking to filter view allow
-                            productCategoryMembers = FastList.newInstance();
+                            productCategoryMembers = UtilMisc.newList();
                             GenericValue nextValue;
                             int chunkSize = 0;
                             listSize = 0;
@@ -425,7 +422,7 @@ public class CategoryServices {
                     }
                     // null safety
                     if (productCategoryMembers == null) {
-                        productCategoryMembers = FastList.newInstance();
+                        productCategoryMembers = UtilMisc.newList();
                     }
 
                     if (highIndex > listSize) {
@@ -440,7 +437,7 @@ public class CategoryServices {
             }
         }
 
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         result.put("viewIndex", Integer.valueOf(viewIndex));
         result.put("viewSize", Integer.valueOf(viewSize));
         result.put("lowIndex", Integer.valueOf(lowIndex));

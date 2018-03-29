@@ -54,38 +54,21 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
-import javolution.util.FastMap;
-import net.wimpi.pim.Pim;
 import net.wimpi.pim.Pim;
 import net.wimpi.pim.contact.basicimpl.AddressImpl;
-import net.wimpi.pim.contact.basicimpl.AddressImpl;
-import net.wimpi.pim.contact.basicimpl.EmailAddressImpl;
 import net.wimpi.pim.contact.basicimpl.EmailAddressImpl;
 import net.wimpi.pim.contact.basicimpl.PhoneNumberImpl;
-import net.wimpi.pim.contact.basicimpl.PhoneNumberImpl;
-import net.wimpi.pim.contact.io.ContactMarshaller;
 import net.wimpi.pim.contact.io.ContactMarshaller;
 import net.wimpi.pim.contact.io.ContactUnmarshaller;
-import net.wimpi.pim.contact.io.ContactUnmarshaller;
-import net.wimpi.pim.contact.model.Address;
 import net.wimpi.pim.contact.model.Address;
 import net.wimpi.pim.contact.model.Communications;
-import net.wimpi.pim.contact.model.Communications;
-import net.wimpi.pim.contact.model.Contact;
 import net.wimpi.pim.contact.model.Contact;
 import net.wimpi.pim.contact.model.EmailAddress;
-import net.wimpi.pim.contact.model.EmailAddress;
-import net.wimpi.pim.contact.model.Organization;
 import net.wimpi.pim.contact.model.Organization;
 import net.wimpi.pim.contact.model.OrganizationalIdentity;
-import net.wimpi.pim.contact.model.OrganizationalIdentity;
-import net.wimpi.pim.contact.model.PersonalIdentity;
 import net.wimpi.pim.contact.model.PersonalIdentity;
 import net.wimpi.pim.contact.model.PhoneNumber;
-import net.wimpi.pim.contact.model.PhoneNumber;
 import net.wimpi.pim.factory.ContactIOFactory;
-import net.wimpi.pim.factory.ContactIOFactory;
-import net.wimpi.pim.factory.ContactModelFactory;
 import net.wimpi.pim.factory.ContactModelFactory;
 
 public class VCard {
@@ -105,7 +88,7 @@ public class VCard {
         InputStream in = new ByteArrayInputStream(inputByteArray);
         String partyType = (String) context.get("partyType");
         Boolean isGroup =  "PartyGroup".equals(partyType); // By default we import a Person.
-        Map<String, Object> serviceCtx = FastMap.newInstance();
+        Map<String, Object> serviceCtx = UtilMisc.newMap();
 
         try {
             ContactIOFactory ciof = Pim.getContactIOFactory();

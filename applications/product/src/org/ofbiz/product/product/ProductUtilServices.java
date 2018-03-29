@@ -24,9 +24,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Locale;
 
-import javolution.util.FastMap;
-import javolution.util.FastSet;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilDateTime;
@@ -501,7 +498,7 @@ public class ProductUtilServices {
         String errMsg = null;
 
         if (UtilValidate.isEmpty(pattern)) {
-            Map<String, Object>imageContext = FastMap.newInstance();
+            Map<String, Object>imageContext = UtilMisc.newMap();
             imageContext.putAll(context);
             imageContext.put("tenantId",delegator.getDelegatorTenantId());
             String imageFilenameFormat = EntityUtilProperties.getPropertyValue("catalog", "image.filename.format", delegator);
@@ -627,7 +624,7 @@ while (allCatIter.hasNext()) {
         boolean doSubCategories = !"N".equals(doSubCategoriesStr);
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 
-        Set<String> productFeatureTypeIdsToExclude = FastSet.newInstance();
+        Set<String> productFeatureTypeIdsToExclude = UtilMisc.newSet();
         String excludeProp = EntityUtilProperties.getPropertyValue("prodsearch", "attach.feature.type.exclude", delegator);
         if (UtilValidate.isNotEmpty(excludeProp)) {
             List<String> typeList = StringUtil.split(excludeProp, ",");
@@ -672,7 +669,7 @@ while (allCatIter.hasNext()) {
         }
 
         // now get all features for this category and make associated feature groups
-        Map<String, Set<String>> productFeatureIdByTypeIdSetMap = FastMap.newInstance();
+        Map<String, Set<String>> productFeatureIdByTypeIdSetMap = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
         List<GenericValue> productCategoryMemberList = EntityQuery.use(delegator).from("ProductCategoryMember").where("productCategoryId", productCategoryId).queryList();
         for (GenericValue productCategoryMember: productCategoryMemberList) {
             String productId = productCategoryMember.getString("productId");
@@ -694,7 +691,7 @@ while (allCatIter.hasNext()) {
                 }
                 Set<String> productFeatureIdSet = productFeatureIdByTypeIdSetMap.get(productFeatureTypeId);
                 if (productFeatureIdSet == null) {
-                    productFeatureIdSet = FastSet.newInstance();
+                    productFeatureIdSet = UtilMisc.newSet();
                     productFeatureIdByTypeIdSetMap.put(productFeatureTypeId, productFeatureIdSet);
                 }
                 productFeatureIdSet.add(productFeatureId);

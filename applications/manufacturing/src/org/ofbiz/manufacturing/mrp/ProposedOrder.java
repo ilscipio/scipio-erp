@@ -25,9 +25,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -115,7 +112,7 @@ public class ProposedOrder {
                     if (routing == null) {
                         // try to find a routing linked to the virtual product
                         BOMTree tree = null;
-                        List<BOMNode> components = FastList.newInstance();
+                        List<BOMNode> components = UtilMisc.newList();
                         try {
                             tree = new BOMTree(product.getString("productId"), "MANUF_COMPONENT", requiredByDate, BOMTree.EXPLOSION_SINGLE_LEVEL, delegator, dispatcher, userLogin);
                             tree.setRootQuantity(quantity);
@@ -136,7 +133,7 @@ public class ProposedOrder {
                 }
             }
             if (routing != null) {
-                result = FastMap.newInstance();
+                result = UtilMisc.newMap();
                 //Looks for all the routingTask (ordered by inversed (begin from the end) sequence number)
                 if (listRoutingTaskAssoc == null) {
                     try {
@@ -234,7 +231,7 @@ public class ProposedOrder {
         Map<String, Object> parameters = UtilMisc.<String, Object>toMap("userLogin", userLogin);
         if (isBuilt) {
             try {
-                List<BOMNode> bom = FastList.newInstance();
+                List<BOMNode> bom = UtilMisc.newList();
                 BOMTree tree = new BOMTree(productId, "MANUF_COMPONENT", null, BOMTree.EXPLOSION_MANUFACTURING, delegator, dispatcher, userLogin);
                 tree.setRootQuantity(quantity);
                 tree.print(bom);

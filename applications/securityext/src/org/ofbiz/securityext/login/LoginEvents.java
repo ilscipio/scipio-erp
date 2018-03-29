@@ -21,7 +21,6 @@ package org.ofbiz.securityext.login;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -29,8 +28,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import javolution.util.FastMap;
 
 import org.apache.commons.lang.RandomStringUtils;
 
@@ -282,14 +279,14 @@ public class LoginEvents {
         }
 
         // set the needed variables in new context
-        Map<String, Object> bodyParameters = FastMap.newInstance();
+        Map<String, Object> bodyParameters = UtilMisc.newMap();
         bodyParameters.put("useEncryption", Boolean.valueOf(useEncryption));
         bodyParameters.put("password", UtilFormatOut.checkNull(passwordToSend));
         bodyParameters.put("locale", UtilHttp.getLocale(request));
         bodyParameters.put("userLogin", supposedUserLogin);
         bodyParameters.put("productStoreId", productStoreId);
 
-        Map<String, Object> serviceContext = FastMap.newInstance();
+        Map<String, Object> serviceContext = UtilMisc.newMap();
         serviceContext.put("bodyScreenUri", bodyScreenLocation);
         serviceContext.put("bodyParameters", bodyParameters);
         if (productStoreEmail != null) {

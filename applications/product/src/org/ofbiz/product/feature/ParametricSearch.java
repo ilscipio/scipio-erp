@@ -25,10 +25,6 @@ import java.util.Set;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-import javolution.util.FastSet;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
@@ -62,7 +58,7 @@ public class ParametricSearch {
     }
 
     public static Map<String, List<GenericValue>> makeCategoryFeatureLists(String productCategoryId, Delegator delegator, int perTypeMaxSize) {
-        Map<String, Map<String, GenericValue>> productFeaturesByTypeMap = FastMap.newInstance();
+        Map<String, Map<String, GenericValue>> productFeaturesByTypeMap = UtilMisc.newMap();
         try {
             List<GenericValue> productFeatureCategoryAppls = EntityQuery.use(delegator).from("ProductFeatureCategoryAppl").where("productCategoryId", productCategoryId).cache(true).queryList();
             productFeatureCategoryAppls = EntityUtil.filterByDate(productFeatureCategoryAppls, true);
@@ -73,7 +69,7 @@ public class ParametricSearch {
                         String productFeatureTypeId = productFeature.getString("productFeatureTypeId");
                         Map<String, GenericValue> featuresByType = productFeaturesByTypeMap.get(productFeatureTypeId);
                         if (featuresByType == null) {
-                            featuresByType = FastMap.newInstance();
+                            featuresByType = UtilMisc.newMap();
                             productFeaturesByTypeMap.put(productFeatureTypeId, featuresByType);
                         }
                         if (featuresByType.size() < perTypeMaxSize) {
@@ -98,7 +94,7 @@ public class ParametricSearch {
                         String productFeatureTypeId = productFeature.getString("productFeatureTypeId");
                         Map<String, GenericValue> featuresByType = productFeaturesByTypeMap.get(productFeatureTypeId);
                         if (featuresByType == null) {
-                            featuresByType = FastMap.newInstance();
+                            featuresByType = UtilMisc.newMap();
                             productFeaturesByTypeMap.put(productFeatureTypeId, featuresByType);
                         }
                         if (featuresByType.size() < perTypeMaxSize) {
@@ -112,7 +108,7 @@ public class ParametricSearch {
         }
 
         // now before returning, order the features in each list by description
-        Map<String, List<GenericValue>> productFeaturesByTypeMapSorted = FastMap.newInstance();
+        Map<String, List<GenericValue>> productFeaturesByTypeMapSorted = UtilMisc.newMap();
         for (Map.Entry<String, Map<String, GenericValue>> entry: productFeaturesByTypeMap.entrySet()) {
             List<GenericValue> sortedFeatures = EntityUtil.orderBy(entry.getValue().values(), UtilMisc.toList("description","defaultSequenceNum"));
             productFeaturesByTypeMapSorted.put(entry.getKey(), sortedFeatures);
@@ -125,16 +121,16 @@ public class ParametricSearch {
         return getAllFeaturesByType(delegator, DEFAULT_PER_TYPE_MAX_SIZE);
     }
     public static Map<String, List<GenericValue>> getAllFeaturesByType(Delegator delegator, int perTypeMaxSize) {
-        Map<String, List<GenericValue>> productFeaturesByTypeMap = FastMap.newInstance();
+        Map<String, List<GenericValue>> productFeaturesByTypeMap = UtilMisc.newMap();
         try {
-            Set<String> typesWithOverflowMessages = FastSet.newInstance();
+            Set<String> typesWithOverflowMessages = UtilMisc.newSet();
             EntityListIterator productFeatureEli = EntityQuery.use(delegator).from("ProductFeature").orderBy("description").queryIterator();
             GenericValue productFeature = null;
             while ((productFeature = productFeatureEli.next()) != null) {
                 String productFeatureTypeId = productFeature.getString("productFeatureTypeId");
                 List<GenericValue> featuresByType = productFeaturesByTypeMap.get(productFeatureTypeId);
                 if (featuresByType == null) {
-                    featuresByType = FastList.newInstance();
+                    featuresByType = UtilMisc.newList();
                     productFeaturesByTypeMap.put(productFeatureTypeId, featuresByType);
                 }
                 if (featuresByType.size() > perTypeMaxSize) {
@@ -160,7 +156,7 @@ public class ParametricSearch {
 
     /** Handles parameters coming in prefixed with "pft_" where the text in the key following the prefix is a productFeatureTypeId and the value is a productFeatureId; meant to be used with drop-downs and such */
     public static Map<String, String> makeFeatureIdByTypeMap(Map<String, Object> parameters) {
-        Map<String, String> featureIdByType = FastMap.newInstance();
+        Map<String, String> featureIdByType = UtilMisc.newMap();
         if (parameters == null) return featureIdByType;
 
 
@@ -180,7 +176,7 @@ public class ParametricSearch {
 
     /** Handles parameters coming in prefixed with "SEARCH_FEAT" where the parameter value is a productFeatureId; meant to be used with text entry boxes or check-boxes and such */
     public static List<String> makeFeatureIdListFromPrefixed(Map<String, Object> parameters) {
-        List<String> featureIdList = FastList.newInstance();
+        List<String> featureIdList = UtilMisc.newList();
         if (parameters == null) return featureIdList;
 
         for (Map.Entry<String, Object> entry: parameters.entrySet()) {
@@ -222,7 +218,7 @@ public class ParametricSearch {
      *  meant to be used with text entry boxes or check-boxes and such
      **/
     public static List<String> makeProductFeatureCategoryIdListFromPrefixed(Map<String, Object> parameters) {
-        List<String> prodFeatureCategoryIdList = FastList.newInstance();
+        List<String> prodFeatureCategoryIdList = UtilMisc.newList();
         if (parameters == null) return prodFeatureCategoryIdList;
 
         for (Map.Entry<String, Object> entry: parameters.entrySet()) {

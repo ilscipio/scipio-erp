@@ -26,8 +26,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import javolution.util.FastList;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
@@ -69,7 +67,7 @@ public class ContentSearchSession {
         public static void addConstraint(ContentSearchConstraint contentSearchConstraint, HttpSession session) {
             ContentSearchOptions contentSearchOptions = getContentSearchOptions(session);
             if (contentSearchOptions.constraintList == null) {
-                contentSearchOptions.constraintList = FastList.newInstance();
+                contentSearchOptions.constraintList = UtilMisc.newList();
             }
             if (!contentSearchOptions.constraintList.contains(contentSearchConstraint)) {
                 contentSearchOptions.constraintList.add(contentSearchConstraint);
@@ -132,7 +130,7 @@ public class ContentSearchSession {
 
         public List<String> searchGetConstraintStrings(boolean detailed, Delegator delegator, Locale locale) {
             List<ContentSearchConstraint> contentSearchConstraintList = this.getConstraintList();
-            List<String> constraintStrings = FastList.newInstance();
+            List<String> constraintStrings = UtilMisc.newList();
             if (contentSearchConstraintList == null) {
                 return constraintStrings;
             }
@@ -268,7 +266,7 @@ public class ContentSearchSession {
     public static List<ContentSearchOptions> getSearchOptionsHistoryList(HttpSession session) {
         List<ContentSearchOptions> optionsHistoryList = UtilGenerics.checkList(session.getAttribute("_CONTENT_SEARCH_OPTIONS_HISTORY_"));
         if (optionsHistoryList == null) {
-            optionsHistoryList = FastList.newInstance();
+            optionsHistoryList = UtilMisc.newList();
             session.setAttribute("_CONTENT_SEARCH_OPTIONS_HISTORY_", optionsHistoryList);
         }
         return optionsHistoryList;

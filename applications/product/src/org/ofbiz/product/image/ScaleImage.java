@@ -28,8 +28,6 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -89,14 +87,14 @@ public class ScaleImage {
         Locale locale = (Locale) context.get("locale");
         
         int index;
-        Map<String, Map<String, String>> imgPropertyMap = FastMap.newInstance();
+        Map<String, Map<String, String>> imgPropertyMap = UtilMisc.newMap();
         BufferedImage bufImg, bufNewImg;
         double imgHeight, imgWidth;
-        Map<String, String> imgUrlMap = FastMap.newInstance();
-        Map<String, Object> resultXMLMap = FastMap.newInstance();
-        Map<String, Object> resultBufImgMap = FastMap.newInstance();
-        Map<String, Object> resultScaleImgMap = FastMap.newInstance();
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, String> imgUrlMap = UtilMisc.newMap();
+        Map<String, Object> resultXMLMap = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+        Map<String, Object> resultBufImgMap = UtilMisc.newMap();
+        Map<String, Object> resultScaleImgMap = UtilMisc.newMap();
+        Map<String, Object> result = UtilMisc.newMap();
 
         /* ImageProperties.xml */
         String imgPropertyFullPath = ProductImageWorker.getProductImagePropertiesFullPath(); // SCIPIO
@@ -116,7 +114,7 @@ public class ScaleImage {
         String imgExtension = filenameToUse.substring(index + 1);
         // paths
         
-        Map<String, Object>imageContext = FastMap.newInstance();
+        Map<String, Object>imageContext = UtilMisc.newMap();
         imageContext.putAll(context);
         imageContext.put("tenantId",((Delegator)context.get("delegator")).getDelegatorTenantId());
         String imageServerPath = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.server.path", (Delegator)context.get("delegator")), imageContext);
@@ -277,14 +275,14 @@ public class ScaleImage {
         }
         
         int index;
-        Map<String, Map<String, String>> imgPropertyMap = FastMap.newInstance();
+        Map<String, Map<String, String>> imgPropertyMap = UtilMisc.newMap();
         BufferedImage bufImg, bufNewImg;
         double imgHeight, imgWidth;
-        Map<String, String> imgUrlMap = FastMap.newInstance();
-        Map<String, Object> resultXMLMap = FastMap.newInstance();
-        Map<String, Object> resultBufImgMap = FastMap.newInstance();
-        Map<String, Object> resultScaleImgMap = FastMap.newInstance();
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, String> imgUrlMap = UtilMisc.newMap();
+        Map<String, Object> resultXMLMap = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+        Map<String, Object> resultBufImgMap = UtilMisc.newMap();
+        Map<String, Object> resultScaleImgMap = UtilMisc.newMap();
+        Map<String, Object> result = UtilMisc.newMap();
 
         /* ImageProperties.xml */
         String imgPropertyFullPath = ProductImageWorker.getProductImagePropertiesFullPath(); // SCIPIO
@@ -304,7 +302,7 @@ public class ScaleImage {
         String imgName = filenameToUse.substring(0, index - 1);
         String imgExtension = filenameToUse.substring(index + 1);
         // paths
-        Map<String, Object>imageContext = FastMap.newInstance();
+        Map<String, Object>imageContext = UtilMisc.newMap();
         imageContext.putAll(context);
         imageContext.put("tenantId",((Delegator)context.get("delegator")).getDelegatorTenantId());
         String mainFilenameFormat = EntityUtilProperties.getPropertyValue("catalog", "image.filename.format", (Delegator) context.get("delegator"));

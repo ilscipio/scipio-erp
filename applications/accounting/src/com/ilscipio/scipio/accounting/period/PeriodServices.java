@@ -41,9 +41,6 @@ import com.ilscipio.scipio.treeMenu.TreeDataItem;
 import com.ilscipio.scipio.treeMenu.jsTree.JsTreeDataItem;
 import com.ilscipio.scipio.treeMenu.jsTree.JsTreeDataItem.JsTreeDataItemState;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 public class PeriodServices {
 
     public static String module = PeriodServices.class.getName();
@@ -132,7 +129,7 @@ public class PeriodServices {
     }
 
     private static List<TreeDataItem> childTimePeriodTree(List<GenericValue> childTimePeriods, String library, boolean includeTimePeriodData) throws GeneralException {
-        List<TreeDataItem> childTreeDataItems = FastList.newInstance();
+        List<TreeDataItem> childTreeDataItems = UtilMisc.newList();
         return childTimePeriodTree(childTimePeriods, library, includeTimePeriodData, childTreeDataItems);
     }
 
@@ -157,7 +154,7 @@ public class PeriodServices {
 
         GenericValue timePeriod = null;
         GenericValue parentPeriod = null;
-        Map<String, Object> timePeriodMap = FastMap.newInstance();
+        Map<String, Object> timePeriodMap = UtilMisc.newMap();
         try {
             timePeriod = EntityQuery.use(delegator).cache(useCache).from("CustomTimePeriod")
                     .where(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId)).queryOne();

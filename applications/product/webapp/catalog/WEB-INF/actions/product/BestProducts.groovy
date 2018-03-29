@@ -19,7 +19,6 @@
 
 import java.text.SimpleDateFormat
 
-import javolution.util.FastList
 
 import org.ofbiz.base.util.Debug
 import org.ofbiz.base.util.UtilDateTime
@@ -52,7 +51,7 @@ for (int i = 0; i < iCount; i++) {
     orderDateExprList.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntervals.getDateBegin()));
     orderDateExprList.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, dateIntervals.getDateEnd()));
 
-    orderHeaderItemExpr = FastList.newInstance(exprList);
+    orderHeaderItemExpr = new ArrayList(exprList);
     orderHeaderItemExpr.addAll(orderDateExprList);    
     orderHeaderItemList = from("OrderHeaderAndItems").where(orderHeaderItemExpr).queryList();
    

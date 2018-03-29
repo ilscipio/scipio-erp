@@ -16,7 +16,7 @@ import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.DemoDataHelper;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.MockarooDemoDataHelper;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.MockarooDemoDataHelper.MockarooSettings;
 
-import javolution.util.FastList;
+import org.ofbiz.base.util.UtilMisc;
 
 public class MockarooDataGenerator extends DataGenerator {
 	private static String MOCKAROO_DATA_GENERATOR = "mockaroo";
@@ -51,7 +51,7 @@ public class MockarooDataGenerator extends DataGenerator {
 			String r = httpClient.sendHttpRequest(settings.getMethod());
 
 			JSONToList jsonListConverter = new JSONConverters.JSONToList();
-			List<DemoDataObject> resultList = FastList.newInstance();
+			List<DemoDataObject> resultList = UtilMisc.newList();
 
 			for (Object o : jsonListConverter.convert(JSON.from(r))) {
 				resultList.add(handleData(o, format));

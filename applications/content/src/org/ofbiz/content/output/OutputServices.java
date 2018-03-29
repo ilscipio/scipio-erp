@@ -47,8 +47,6 @@ import javax.print.attribute.PrintServiceAttributeSet;
 import javax.print.attribute.standard.PrinterName;
 import javax.xml.transform.stream.StreamSource;
 
-import javolution.util.FastMap;
-
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.MimeConstants;
 import org.ofbiz.base.util.Debug;
@@ -87,7 +85,7 @@ public class OutputServices {
         String printerContentType = (String) serviceContext.remove("printerContentType");
 
         if (UtilValidate.isEmpty(screenContext)) {
-            screenContext = FastMap.newInstance();
+            screenContext = UtilMisc.newMap();
         }
         screenContext.put("locale", locale);
         if (UtilValidate.isEmpty(contentType)) {
@@ -203,7 +201,7 @@ public class OutputServices {
         String fileName = (String) serviceContext.remove("fileName");
 
         if (UtilValidate.isEmpty(screenContext)) {
-            screenContext = FastMap.newInstance();
+            screenContext = UtilMisc.newMap();
         }
         screenContext.put("locale", locale);
         if (UtilValidate.isEmpty(contentType)) {

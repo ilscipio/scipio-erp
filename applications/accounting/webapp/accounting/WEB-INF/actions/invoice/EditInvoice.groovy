@@ -19,9 +19,6 @@
 
 import java.text.DateFormat
 
-import javolution.util.FastList
-import javolution.util.FastMap
-
 import org.ofbiz.accounting.invoice.*
 import org.ofbiz.base.util.*
 import org.ofbiz.base.util.collections.*
@@ -62,8 +59,8 @@ if (invoice) {
     }
 
     invoiceItems = invoice.getRelated("InvoiceItem", null, ["invoiceItemSeqId"], false);
-    invoiceItemsConv = FastList.newInstance();
-    vatTaxesByType = FastMap.newInstance();
+    invoiceItemsConv = [];
+    vatTaxesByType = [:];
     invoiceItems.each { invoiceItem ->
         invoiceItem.amount = invoiceItem.getBigDecimal("amount").multiply(conversionRate).setScale(decimals, rounding);
         invoiceItemsConv.add(invoiceItem);
@@ -96,7 +93,7 @@ if (invoice) {
     context.vatTaxIds = vatTaxesByType.keySet().asList();
 
     // Get Tx already included
-    vatIncludedByRate = FastMap.newInstance();
+    vatIncludedByRate = [:];
     GenericValue myOrder = from("OrderItemBilling").where('invoiceId', invoiceId).orderBy('orderId').queryFirst();
         if(myOrder!=null){
         orderId = from("OrderItemBilling").where('invoiceId', invoiceId).orderBy('orderId').queryFirst().orderId;

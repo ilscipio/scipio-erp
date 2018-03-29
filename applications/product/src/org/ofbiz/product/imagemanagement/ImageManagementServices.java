@@ -33,9 +33,6 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
@@ -72,7 +69,7 @@ public class ImageManagementServices {
     public static Map<String, Object> addMultipleuploadForProduct(DispatchContext dctx, Map<String, ? extends Object> context)
     throws IOException {
         
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -104,10 +101,10 @@ public class ImageManagementServices {
                 sizeType = imageResize;
             }
             
-            Map<String, Object> contentCtx = FastMap.newInstance();
+            Map<String, Object> contentCtx = UtilMisc.newMap();
             contentCtx.put("contentTypeId", "DOCUMENT");
             contentCtx.put("userLogin", userLogin);
-            Map<String, Object> contentResult = FastMap.newInstance();
+            Map<String, Object> contentResult = UtilMisc.newMap();
             try {
                 contentResult = dispatcher.runSync("createContent", contentCtx);
             } catch (GenericServiceException e) {
@@ -134,7 +131,7 @@ public class ImageManagementServices {
                 fileContentType = "image/png";
             }
             
-            List<GenericValue> fileExtension = FastList.newInstance();
+            List<GenericValue> fileExtension = UtilMisc.newList();
             try {
                 fileExtension = EntityQuery.use(delegator).from("FileExtension").where("mimeTypeId", fileContentType).queryList();
             } catch (GenericEntityException e) {
@@ -204,7 +201,7 @@ public class ImageManagementServices {
                             "ProductImageViewUnableWriteBinaryData", UtilMisc.toMap("fileName", fileOriginal.getAbsolutePath()), locale));
                 }
                 
-                Map<String, Object> resultResize = FastMap.newInstance();
+                Map<String, Object> resultResize = UtilMisc.newMap();
                 try {
                     resultResize.putAll(ImageManagementServices.scaleImageMangementInAllSize(context, imageName, sizeType, productId));
                 } catch (IOException e) {
@@ -224,7 +221,7 @@ public class ImageManagementServices {
             createContentAndDataResource(dctx, userLogin, imageName, imageUrl, contentId, fileContentType);
             createContentAndDataResource(dctx, userLogin, filenameToUseThumb, imageUrlThumb, contentIdThumb, fileContentType);
             
-            Map<String, Object> createContentAssocMap = FastMap.newInstance();
+            Map<String, Object> createContentAssocMap = UtilMisc.newMap();
             createContentAssocMap.put("contentAssocTypeId", "IMAGE_THUMBNAIL");
             createContentAssocMap.put("contentId", contentId);
             createContentAssocMap.put("contentIdTo", contentIdThumb);
@@ -237,7 +234,7 @@ public class ImageManagementServices {
                 return ServiceUtil.returnError(e.getMessage());
             }
             
-            Map<String, Object> productContentCtx = FastMap.newInstance();
+            Map<String, Object> productContentCtx = UtilMisc.newMap();
             productContentCtx.put("productId", productId);
             productContentCtx.put("productContentTypeId", productContentTypeId);
             productContentCtx.put("fromDate", UtilDateTime.nowTimestamp());
@@ -251,7 +248,7 @@ public class ImageManagementServices {
                 return ServiceUtil.returnError(e.getMessage());
             }
             
-            Map<String, Object> contentApprovalCtx = FastMap.newInstance();
+            Map<String, Object> contentApprovalCtx = UtilMisc.newMap();
             contentApprovalCtx.put("contentId", contentId);
             contentApprovalCtx.put("userLogin", userLogin);
             try {
@@ -263,7 +260,7 @@ public class ImageManagementServices {
             
             String autoApproveImage = EntityUtilProperties.getPropertyValue("catalog", "image.management.autoApproveImage", delegator);
             if (autoApproveImage.equals("Y")) {
-                Map<String, Object> autoApproveCtx = FastMap.newInstance();
+                Map<String, Object> autoApproveCtx = UtilMisc.newMap();
                 autoApproveCtx.put("contentId", contentId);
                 autoApproveCtx.put("userLogin", userLogin);
                 autoApproveCtx.put("checkStatusId", "IM_APPROVED");
@@ -318,14 +315,14 @@ public class ImageManagementServices {
         }
         
         int index;
-        Map<String, Map<String, String>> imgPropertyMap = FastMap.newInstance();
+        Map<String, Map<String, String>> imgPropertyMap = UtilMisc.newMap();
         BufferedImage bufImg, bufNewImg;
         double imgHeight, imgWidth;
-        Map<String, String> imgUrlMap = FastMap.newInstance();
-        Map<String, Object> resultXMLMap = FastMap.newInstance();
-        Map<String, Object> resultBufImgMap = FastMap.newInstance();
-        Map<String, Object> resultScaleImgMap = FastMap.newInstance();
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, String> imgUrlMap = UtilMisc.newMap();
+        Map<String, Object> resultXMLMap = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+        Map<String, Object> resultBufImgMap = UtilMisc.newMap();
+        Map<String, Object> resultScaleImgMap = UtilMisc.newMap();
+        Map<String, Object> result = UtilMisc.newMap();
         
         /* ImageProperties.xml */
         String imgPropertyFullPath = ProductImageWorker.getProductImagePropertiesFullPath(); // SCIPIO
@@ -424,11 +421,11 @@ public class ImageManagementServices {
     }
    
     public static Map<String, Object> createContentAndDataResource(DispatchContext dctx, GenericValue userLogin, String filenameToUse, String imageUrl, String contentId, String fileContentType){
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
         
-        Map<String, Object> dataResourceCtx = FastMap.newInstance();
+        Map<String, Object> dataResourceCtx = UtilMisc.newMap();
         
         dataResourceCtx.put("objectInfo", imageUrl);
         dataResourceCtx.put("dataResourceName", filenameToUse);
@@ -437,7 +434,7 @@ public class ImageManagementServices {
         dataResourceCtx.put("mimeTypeId", fileContentType);
         dataResourceCtx.put("isPublic", "Y");
         
-        Map<String, Object> dataResourceResult = FastMap.newInstance();
+        Map<String, Object> dataResourceResult = UtilMisc.newMap();
         try {
             dataResourceResult = dispatcher.runSync("createDataResource", dataResourceCtx);
         } catch (GenericServiceException e) {
@@ -449,7 +446,7 @@ public class ImageManagementServices {
         result.put("dataResourceFrameId", dataResourceId);
         result.put("dataResourceId", dataResourceId);
         
-        Map<String, Object> contentUp = FastMap.newInstance();
+        Map<String, Object> contentUp = UtilMisc.newMap();
         contentUp.put("contentId", contentId);
         contentUp.put("dataResourceId", dataResourceResult.get("dataResourceId"));
         contentUp.put("contentName", filenameToUse);
@@ -492,7 +489,7 @@ public class ImageManagementServices {
     }
     
     public static Map<String, Object> createContentThumbnail(DispatchContext dctx, Map<String, ? extends Object> context, GenericValue userLogin, ByteBuffer imageData, String productId, String imageName){
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
         Locale locale = (Locale) context.get("locale");
@@ -502,10 +499,10 @@ public class ImageManagementServices {
         String nameOfThumb = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.management.nameofthumbnail", delegator), context);
         
         // Create content for thumbnail
-        Map<String, Object> contentThumb = FastMap.newInstance();
+        Map<String, Object> contentThumb = UtilMisc.newMap();
         contentThumb.put("contentTypeId", "DOCUMENT");
         contentThumb.put("userLogin", userLogin);
-        Map<String, Object> contentThumbResult = FastMap.newInstance();
+        Map<String, Object> contentThumbResult = UtilMisc.newMap();
         try {
             contentThumbResult = dispatcher.runSync("createContent", contentThumb);
         } catch (GenericServiceException e) {
@@ -531,7 +528,7 @@ public class ImageManagementServices {
             fileContentType = "image/png";
         }
         
-        List<GenericValue> fileExtensionThumb = FastList.newInstance();
+        List<GenericValue> fileExtensionThumb = UtilMisc.newList();
         try {
             fileExtensionThumb = delegator.findByAnd("FileExtension", UtilMisc.toMap("mimeTypeId", fileContentType), null, false);
         } catch (GenericEntityException e) {
@@ -552,7 +549,7 @@ public class ImageManagementServices {
             fileContentType = "image/png";
         }
         
-        List<GenericValue> fileExtensionThumb = FastList.newInstance();
+        List<GenericValue> fileExtensionThumb = UtilMisc.newList();
         try {
             fileExtensionThumb = EntityQuery.use(delegator).from("FileExtension").where("mimeTypeId", fileContentType).queryList();
         } catch (GenericEntityException e) {
@@ -584,7 +581,7 @@ public class ImageManagementServices {
                     UtilMisc.toMap("fileName", fileOriginalThumb.getAbsolutePath()), locale));
         }
         
-        Map<String, Object> resultResizeThumb = FastMap.newInstance();
+        Map<String, Object> resultResizeThumb = UtilMisc.newMap();
         try {
             resultResizeThumb.putAll(ImageManagementServices.scaleImageMangementInAllSize(context, filenameToUseThumb, "thumbnail", productId));
         } catch (IOException e) {
@@ -600,7 +597,7 @@ public class ImageManagementServices {
         /* VARIABLES */
         BufferedImage bufNewImg;
         double defaultHeight, defaultWidth, scaleFactor;
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         
         /* DIMENSIONS from ImageProperties */
         defaultHeight = 100;
@@ -668,7 +665,7 @@ public class ImageManagementServices {
         /* VARIABLES */
         BufferedImage bufNewImg;
         double defaultHeight, defaultWidth, scaleFactor;
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         
         /* DIMENSIONS from ImageProperties */
         defaultHeight = resizeHeight;
@@ -747,10 +744,10 @@ public class ImageManagementServices {
                 Map<String, Object> resultResize = ImageManagementServices.resizeImage(bufImg, imgHeight, imgWidth, resizeHeight, resizeWidth);
                 ImageIO.write((RenderedImage) resultResize.get("bufferedImage"), mimeType, new File(imageServerPath + "/" + productId + "/" + filenameToUse));
                 
-                Map<String, Object> contentThumb = FastMap.newInstance();
+                Map<String, Object> contentThumb = UtilMisc.newMap();
                 contentThumb.put("contentTypeId", "DOCUMENT");
                 contentThumb.put("userLogin", userLogin);
-                Map<String, Object> contentThumbResult = FastMap.newInstance();
+                Map<String, Object> contentThumbResult = UtilMisc.newMap();
                 try {
                     contentThumbResult = dispatcher.runSync("createContent", contentThumb);
                 } catch (GenericServiceException e) {
@@ -762,7 +759,7 @@ public class ImageManagementServices {
                 String imageUrlThumb = imageServerUrl + "/" + productId + "/" + filenameToUse;
                 ImageManagementServices.createContentAndDataResource(dctx, userLogin, filenameToUse, imageUrlThumb, contentIdThumb, "image/jpeg");
                 
-                Map<String, Object> createContentAssocMap = FastMap.newInstance();
+                Map<String, Object> createContentAssocMap = UtilMisc.newMap();
                 createContentAssocMap.put("contentAssocTypeId", "IMAGE_THUMBNAIL");
                 createContentAssocMap.put("contentId", contentId);
                 createContentAssocMap.put("contentIdTo", contentIdThumb);
@@ -833,7 +830,7 @@ public class ImageManagementServices {
                 File file = new File(imageServerPath + "/" + productId + "/" + dataResourceName);
                 file.delete();
                 
-                Map<String, Object> contentUp = FastMap.newInstance();
+                Map<String, Object> contentUp = UtilMisc.newMap();
                 contentUp.put("contentId", contentId);
                 contentUp.put("contentName", filenameToUse);
                 contentUp.put("userLogin", userLogin);
@@ -860,7 +857,7 @@ public class ImageManagementServices {
                     }
                     
                     if (dataResource != null) {
-                        Map<String, Object> dataResourceCtx = FastMap.newInstance();
+                        Map<String, Object> dataResourceCtx = UtilMisc.newMap();
                         dataResourceCtx.put("dataResourceId", dataResource.getString("dataResourceId"));
                         dataResourceCtx.put("objectInfo", imageUrl);
                         dataResourceCtx.put("dataResourceName", filenameToUse);
@@ -892,7 +889,7 @@ public class ImageManagementServices {
                         File fileAssoc = new File(imageServerPath + "/" + productId + "/" + drDataResourceNameAssoc);
                         fileAssoc.delete();
                         
-                        Map<String, Object> contentAssocMap = FastMap.newInstance();
+                        Map<String, Object> contentAssocMap = UtilMisc.newMap();
                         contentAssocMap.put("contentId", contentAssoc.get("contentIdTo"));
                         contentAssocMap.put("contentName", filenameToUseAssoc);
                         contentAssocMap.put("userLogin", userLogin);
@@ -919,7 +916,7 @@ public class ImageManagementServices {
                             }
                             
                             if (dataResourceAssocUp != null) {
-                                Map<String, Object> dataResourceAssocMap = FastMap.newInstance();
+                                Map<String, Object> dataResourceAssocMap = UtilMisc.newMap();
                                 dataResourceAssocMap.put("dataResourceId", dataResourceAssocUp.getString("dataResourceId"));
                                 dataResourceAssocMap.put("objectInfo", imageUrlAssoc);
                                 dataResourceAssocMap.put("dataResourceName", filenameToUseAssoc);

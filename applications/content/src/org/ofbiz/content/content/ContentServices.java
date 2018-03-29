@@ -27,9 +27,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.StringUtil;
@@ -66,7 +63,7 @@ public class ContentServices {
      */
     public static Map<String, Object> findRelatedContent(DispatchContext dctx, Map<String, ? extends Object> context) {
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        Map<String, Object> results = FastMap.newInstance();
+        Map<String, Object> results = UtilMisc.newMap();
 
         GenericValue currentContent = (GenericValue) context.get("currentContent");
         String fromDate = (String) context.get("fromDate");
@@ -95,12 +92,12 @@ public class ContentServices {
             return results;
         }
 
-        Map<String, Object> serviceInMap = FastMap.newInstance();
+        Map<String, Object> serviceInMap = UtilMisc.newMap();
         serviceInMap.put("userLogin", context.get("userLogin"));
         serviceInMap.put("targetOperationList", targetOperations);
         serviceInMap.put("entityOperation", context.get("entityOperation"));
 
-        List<GenericValue> permittedList = FastList.newInstance();
+        List<GenericValue> permittedList = UtilMisc.newList();
         Map<String, Object> permResults = null;
         for (GenericValue content : contentList) {
             serviceInMap.put("currentContent", content);
@@ -125,8 +122,8 @@ public class ContentServices {
      * This is a generic service for traversing a Content tree, typical of a blog response tree. It calls the ContentWorker.traverse method.
      */
     public static Map<String, Object> findContentParents(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> results = FastMap.newInstance();
-        List<Object> parentList = FastList.newInstance();
+        Map<String, Object> results = UtilMisc.newMap();
+        List<Object> parentList = UtilMisc.newList();
         results.put("parentList", parentList);
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String contentId = (String)context.get("contentId");
@@ -135,7 +132,7 @@ public class ContentServices {
         if (UtilValidate.isEmpty(direction)) {
             direction="To";
         }
-        Map<String, Object> traversMap = FastMap.newInstance();
+        Map<String, Object> traversMap = UtilMisc.newMap();
         traversMap.put("contentId", contentId);
         traversMap.put("direction", direction);
         traversMap.put("contentAssocTypeId", contentAssocTypeId);
@@ -169,7 +166,7 @@ public class ContentServices {
      */
     public static Map<String, Object> traverseContent(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
-        Map<String, Object> results = FastMap.newInstance();
+        Map<String, Object> results = UtilMisc.newMap();
         Locale locale = (Locale) context.get("locale");
 
         String contentId = (String) context.get("contentId");
@@ -204,7 +201,7 @@ public class ContentServices {
             thruDate = UtilDateTime.toTimestamp(thruDateStr);
         }
 
-        Map<String, Object> whenMap = FastMap.newInstance();
+        Map<String, Object> whenMap = UtilMisc.newMap();
         whenMap.put("followWhen", context.get("followWhen"));
         whenMap.put("pickWhen", context.get("pickWhen"));
         whenMap.put("returnBeforePickWhen", context.get("returnBeforePickWhen"));
@@ -215,8 +212,8 @@ public class ContentServices {
             startContentAssocTypeId = "PUBLISH";
         }
 
-        Map<String, Object> nodeMap = FastMap.newInstance();
-        List<GenericValue> pickList = FastList.newInstance();
+        Map<String, Object> nodeMap = UtilMisc.newMap();
+        List<GenericValue> pickList = UtilMisc.newList();
         ContentWorker.traverse(delegator, content, fromDate, thruDate, whenMap, 0, nodeMap, startContentAssocTypeId, pickList, direction);
 
         results.put("nodeMap", nodeMap);
@@ -258,7 +255,7 @@ public class ContentServices {
         context.put("contentPurposeList", contentPurposeList);
 
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String contentId = (String) context.get("contentId");
@@ -359,7 +356,7 @@ public class ContentServices {
 
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
 
         // This section guesses how contentId should be used (From or To) if
         // only a contentIdFrom o contentIdTo is passed in
@@ -390,7 +387,7 @@ public class ContentServices {
         /*
         String deactivateExisting = (String) context.get("deactivateExisting");
         if (deactivateExisting != null && deactivateExisting.equalsIgnoreCase("true")) {
-            Map andMap = FastMap.newInstance();
+            Map andMap = UtilMisc.newMap();
             andMap.put("contentIdTo", contentIdTo);
             andMap.put("contentAssocTypeId", context.get("contentAssocTypeId"));
 
@@ -412,7 +409,7 @@ public class ContentServices {
         }
         */
 
-        GenericValue contentAssoc = delegator.makeValue("ContentAssoc", FastMap.newInstance());
+        GenericValue contentAssoc = delegator.makeValue("ContentAssoc", UtilMisc.<String, Object>newMap());
         contentAssoc.put("contentId", contentIdFrom);
         contentAssoc.put("contentIdTo", contentIdTo);
         contentAssoc.put("contentAssocTypeId", context.get("contentAssocTypeId"));
@@ -463,7 +460,7 @@ public class ContentServices {
         contentAssoc.put("createdDate", createdDate);
         contentAssoc.put("lastModifiedDate", lastModifiedDate);
 
-        Map<String, Object> serviceInMap = FastMap.newInstance();
+        Map<String, Object> serviceInMap = UtilMisc.newMap();
         String permissionStatus = null;
         serviceInMap.put("userLogin", context.get("userLogin"));
         serviceInMap.put("targetOperationList", targetOperationList);
@@ -525,7 +522,7 @@ public class ContentServices {
         Map<String, Object> context = UtilMisc.makeMapWritable(rcontext);
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         
         context.put("entityOperation", "_UPDATE");
         List<String> targetOperationList = ContentWorker.prepTargetOperationList(context, "_UPDATE");
@@ -607,7 +604,7 @@ public class ContentServices {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
 
         context.put("entityOperation", "_UPDATE");
         List<String> targetOperationList = ContentWorker.prepTargetOperationList(context, "_UPDATE");
@@ -663,7 +660,7 @@ public class ContentServices {
         contentAssoc.put("lastModifiedDate", lastModifiedDate);
 
         String permissionStatus = null;
-        Map<String, Object> serviceInMap = FastMap.newInstance();
+        Map<String, Object> serviceInMap = UtilMisc.newMap();
         serviceInMap.put("userLogin", context.get("userLogin"));
         serviceInMap.put("targetOperationList", targetOperationList);
         serviceInMap.put("contentPurposeList", contentPurposeList);
@@ -720,7 +717,7 @@ public class ContentServices {
         Map<String, Object> context = UtilMisc.makeMapWritable(rcontext);
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         Locale locale = (Locale) context.get("locale");
         context.put("entityOperation", "_UPDATE");
         List<String> targetOperationList = ContentWorker.prepTargetOperationList(context, "_UPDATE");
@@ -760,7 +757,7 @@ public class ContentServices {
         contentAssoc.put("thruDate", UtilDateTime.nowTimestamp());
 
         String permissionStatus = null;
-        Map<String, Object> serviceInMap = FastMap.newInstance();
+        Map<String, Object> serviceInMap = UtilMisc.newMap();
         serviceInMap.put("userLogin", context.get("userLogin"));
         serviceInMap.put("targetOperationList", targetOperationList);
         serviceInMap.put("contentPurposeList", contentPurposeList);
@@ -805,7 +802,7 @@ public class ContentServices {
         Locale locale = (Locale) context.get("locale");
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
         String sequenceNum = null;
-        Map<String, Object> results = FastMap.newInstance();
+        Map<String, Object> results = UtilMisc.newMap();
 
         try {
             GenericValue activeAssoc = null;
@@ -817,7 +814,7 @@ public class ContentServices {
                 sequenceNum = (String) activeAssoc.get("sequenceNum");
             }
 
-            List<EntityCondition> exprList = FastList.newInstance();
+            List<EntityCondition> exprList = UtilMisc.newList();
             exprList.add(EntityCondition.makeCondition("mapKey", EntityOperator.EQUALS, mapKey));
             if (sequenceNum != null) {
                 exprList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, sequenceNum));
@@ -858,7 +855,7 @@ public class ContentServices {
      * matching content.
      */
     public static Map<String, Object> renderSubContentAsText(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> results = FastMap.newInstance();
+        Map<String, Object> results = UtilMisc.newMap();
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
 
@@ -895,7 +892,7 @@ public class ContentServices {
         Writer outWriter = new StringWriter();
 
         if (templateContext == null) {
-            templateContext = FastMap.newInstance();
+            templateContext = UtilMisc.newMap();
         }
 
         try {
@@ -919,7 +916,7 @@ public class ContentServices {
      * matching content.
      */
     public static Map<String, Object> renderContentAsText(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String,Object> results = FastMap.newInstance();
+        Map<String,Object> results = UtilMisc.newMap();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
         Writer out = (Writer) context.get("outWriter");
@@ -940,7 +937,7 @@ public class ContentServices {
         }
 
         if (templateContext == null) {
-            templateContext = FastMap.newInstance();
+            templateContext = UtilMisc.newMap();
         }
 
         Writer outWriter = new StringWriter();
@@ -964,7 +961,7 @@ public class ContentServices {
     }
 
     public static Map<String, Object> linkContentToPubPt(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> results = FastMap.newInstance();
+        Map<String, Object> results = UtilMisc.newMap();
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
 
@@ -978,7 +975,7 @@ public class ContentServices {
         if (Debug.infoOn()) Debug.logInfo("in publishContent, statusId:" + statusId, module);
         if (Debug.infoOn()) Debug.logInfo("in publishContent, userLogin:" + userLogin, module);
 
-        Map<String, Object> mapIn = FastMap.newInstance();
+        Map<String, Object> mapIn = UtilMisc.newMap();
         mapIn.put("contentId", contentId);
         mapIn.put("contentIdTo", contentIdTo);
         mapIn.put("contentAssocTypeId", contentAssocTypeId);
@@ -1008,7 +1005,7 @@ public class ContentServices {
                     content.put("statusId", statusId);
                     content.store();
 
-                    mapIn = FastMap.newInstance();
+                    mapIn = UtilMisc.newMap();
                     mapIn.put("contentId", contentId);
                     mapIn.put("contentIdTo", contentIdTo);
                     mapIn.put("contentAssocTypeId", contentAssocTypeId);
@@ -1043,7 +1040,7 @@ public class ContentServices {
     }
 
     public static Map<String, Object> publishContent(DispatchContext dctx, Map<String, ? extends Object> context) throws GenericServiceException{
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         GenericValue content = (GenericValue)context.get("content");
         
         try {
@@ -1057,10 +1054,10 @@ public class ContentServices {
     }
 
     public static Map<String, Object> getPrefixedMembers(DispatchContext dctx, Map<String, ? extends Object> context) throws GenericServiceException{
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         Map<String, Object> mapIn = UtilGenerics.checkMap(context.get("mapIn"));
         String prefix = (String)context.get("prefix");
-        Map<String, Object> mapOut = FastMap.newInstance();
+        Map<String, Object> mapOut = UtilMisc.newMap();
         result.put("mapOut", mapOut);
         if (mapIn != null) {
             Set<Map.Entry<String, Object>> entrySet = mapIn.entrySet();
@@ -1077,8 +1074,8 @@ public class ContentServices {
     }
 
     public static Map<String, Object> splitString(DispatchContext dctx, Map<String, ? extends Object> context) throws GenericServiceException{
-        Map<String, Object> result = FastMap.newInstance();
-        List<String> outputList = FastList.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
+        List<String> outputList = UtilMisc.newList();
         String delimiter = UtilFormatOut.checkEmpty((String)context.get("delimiter"), "|");
         String inputString = (String)context.get("inputString");
         if (UtilValidate.isNotEmpty(inputString)) {
@@ -1089,7 +1086,7 @@ public class ContentServices {
     }
 
     public static Map<String, Object> joinString(DispatchContext dctx, Map<String, ? extends Object> context) throws GenericServiceException{
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         String outputString = null;
         String delimiter = UtilFormatOut.checkEmpty((String)context.get("delimiter"), "|");
         List<String> inputList = UtilGenerics.checkList(context.get("inputList"));
@@ -1101,8 +1098,8 @@ public class ContentServices {
     }
 
     public static Map<String, Object> urlEncodeArgs(DispatchContext dctx, Map<String, ? extends Object> context) throws GenericServiceException{
-        Map<String, Object> result = FastMap.newInstance();
-        Map<String, Object> mapFiltered = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> mapFiltered = UtilMisc.newMap();
         Map<String, Object> mapIn = UtilGenerics.checkMap(context.get("mapIn"));
         if (mapIn != null) {
             Set<Map.Entry<String, Object>> entrySet = mapIn.entrySet();

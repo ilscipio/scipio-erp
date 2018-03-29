@@ -42,9 +42,6 @@ import com.ilscipio.scipio.treeMenu.TreeDataItem;
 import com.ilscipio.scipio.treeMenu.jsTree.JsTreeDataItem;
 import com.ilscipio.scipio.treeMenu.jsTree.JsTreeDataItem.JsTreeDataItemState;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 public class GeneralLedgerServices {
 
     public static final String module = GeneralLedgerServices.class.getName();
@@ -117,7 +114,7 @@ public class GeneralLedgerServices {
     }
 
     private static List<TreeDataItem> childGlAccountTree(List<GenericValue> childGlAccounts, String library, boolean includeGlAccountData) throws GeneralException {
-        List<TreeDataItem> childTreeDataItems = FastList.newInstance();
+        List<TreeDataItem> childTreeDataItems = UtilMisc.newList();
         return childGlAccountTree(childGlAccounts, library, includeGlAccountData, childTreeDataItems);
     }
 
@@ -142,7 +139,7 @@ public class GeneralLedgerServices {
 
         GenericValue glAccount = null;
         GenericValue parentGlAccount = null;
-        Map<String, Object> glAccountMap = FastMap.newInstance();
+        Map<String, Object> glAccountMap = UtilMisc.newMap();
         try {
             glAccount = EntityQuery.use(delegator).cache(useCache).from("GlAccount").where(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, glAccountId))
                     .queryOne();

@@ -28,8 +28,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import javolution.util.FastList;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilMisc;
@@ -76,7 +74,7 @@ public class ImageUrlServlet extends HttpServlet {
         String pathInfo = request.getPathInfo();
         List<String> pathElements = StringUtil.split(pathInfo, "/");
         
-        List<String> tagElements = FastList.newInstance();
+        List<String> tagElements = UtilMisc.newList();
         for (String pathElement : pathElements) {
             tagElements.addAll(StringUtil.split(pathElement, "-"));
         }

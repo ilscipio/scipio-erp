@@ -12,7 +12,7 @@ import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.DatabaseTestDemoDat
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.DatabaseTestDemoDataHelper.DatabaseTestSettings;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.DemoDataHelper;
 
-import javolution.util.FastList;
+import org.ofbiz.base.util.UtilMisc;
 
 @Deprecated
 /**
@@ -50,7 +50,7 @@ public class DatabaseTestDataDataGenerator extends DataGenerator {
 		httpClient.setUrl(url + "&x__format=" + format + "&x__no_entries=" + helper.getCount());
 
 		JSONToList jsonListConverter = new JSONConverters.JSONToList();
-		List<DemoDataObject> resultList = FastList.newInstance();
+		List<DemoDataObject> resultList = UtilMisc.newList();
 
 		// try {
 		// String r =

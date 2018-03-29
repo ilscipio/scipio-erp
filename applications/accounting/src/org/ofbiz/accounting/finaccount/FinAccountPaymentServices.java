@@ -24,8 +24,6 @@ import java.sql.Timestamp;
 import java.util.Locale;
 import java.util.Map;
 
-import javolution.util.FastMap;
-
 import org.ofbiz.accounting.payment.PaymentGatewayServices;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -404,7 +402,7 @@ public class FinAccountPaymentServices {
         }
 
         // build the withdraw context
-        Map<String, Object> withdrawCtx = FastMap.newInstance();
+        Map<String, Object> withdrawCtx = UtilMisc.newMap();
         withdrawCtx.put("finAccountId", finAccountId);
         withdrawCtx.put("productStoreId", productStoreId);
         withdrawCtx.put("currency", currency);
@@ -478,7 +476,7 @@ public class FinAccountPaymentServices {
         }
 
         // call the deposit service
-        Map<String, Object> depositCtx = FastMap.newInstance();
+        Map<String, Object> depositCtx = UtilMisc.newMap();
         depositCtx.put("finAccountId", finAccountId);
         depositCtx.put("productStoreId", productStoreId);
         depositCtx.put("isRefund", Boolean.TRUE);
@@ -843,7 +841,7 @@ public class FinAccountPaymentServices {
 
         // hit the payment method for the amount to replenish
         Map<String, BigDecimal> orderItemMap = UtilMisc.toMap("Auto-Replenishment FA #" + finAccountId, depositAmount);
-        Map<String, Object> replOrderCtx = FastMap.newInstance();
+        Map<String, Object> replOrderCtx = UtilMisc.newMap();
         replOrderCtx.put("productStoreId", productStoreId);
         replOrderCtx.put("paymentMethodId", paymentMethod.getString("paymentMethodId"));
         replOrderCtx.put("currency", currency);
@@ -863,7 +861,7 @@ public class FinAccountPaymentServices {
         String orderId = (String) replResp.get("orderId");
 
         // create the deposit
-        Map<String, Object> depositCtx = FastMap.newInstance();
+        Map<String, Object> depositCtx = UtilMisc.newMap();
         depositCtx.put("productStoreId", productStoreId);
         depositCtx.put("finAccountId", finAccountId);
         depositCtx.put("currency", currency);

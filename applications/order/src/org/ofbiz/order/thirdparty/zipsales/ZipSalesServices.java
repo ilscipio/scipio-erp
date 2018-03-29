@@ -27,8 +27,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javolution.util.FastList;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.StringUtil;
@@ -226,8 +224,8 @@ public class ZipSalesServices {
         String city = shippingAddress.getString("city");
 
         // setup the return lists.
-        List<GenericValue> orderAdjustments = FastList.newInstance();
-        List<List<GenericValue>> itemAdjustments = FastList.newInstance();
+        List<GenericValue> orderAdjustments = UtilMisc.newList();
+        List<List<GenericValue>> itemAdjustments = UtilMisc.newList();
 
         // check for a valid state/province geo
         String validStates = EntityUtilProperties.getPropertyValue("zipsales.properties", "zipsales.valid.states", delegator);
@@ -264,7 +262,7 @@ public class ZipSalesServices {
     }
 
     private static List<GenericValue>getItemTaxList(Delegator delegator, GenericValue item, String zipCode, String city, BigDecimal itemAmount, BigDecimal shippingAmount, boolean isUseTax) throws GeneralException {
-        List<GenericValue> adjustments = FastList.newInstance();
+        List<GenericValue> adjustments = UtilMisc.newList();
 
         // check the item for tax status
         if (item != null && item.get("taxable") != null && "N".equals(item.getString("taxable"))) {

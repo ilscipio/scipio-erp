@@ -25,9 +25,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilMisc;
@@ -151,7 +148,7 @@ public class ShippingEvents {
         // SCIPIO: This message assumes too much about the caller's intentions. Leave out the second part.
         //String standardMessage = "A problem occurred calculating shipping. Fees will be calculated offline.";
         String standardMessage = "A problem occurred calculating shipping.";
-        List<String> errorMessageList = FastList.newInstance();
+        List<String> errorMessageList = UtilMisc.newList();
 
         if ("NO_SHIPPING".equals(shipmentMethodTypeId)) {
             return ServiceUtil.returnSuccess();
@@ -211,7 +208,7 @@ public class ShippingEvents {
         BigDecimal shippingTotal = BigDecimal.ZERO;
 
         // prepare the service invocation fields
-        Map<String, Object> serviceFields = FastMap.newInstance();
+        Map<String, Object> serviceFields = UtilMisc.newMap();
         serviceFields.put("initialEstimateAmt", shippingTotal);
         serviceFields.put("shippableTotal", shippableTotal);
         serviceFields.put("shippableQuantity", shippableQuantity);

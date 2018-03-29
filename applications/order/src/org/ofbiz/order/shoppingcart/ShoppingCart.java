@@ -38,9 +38,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.GeneralRuntimeException;
@@ -129,22 +126,22 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     private String autoSaveListId = null;
 
     /** Holds value of order adjustments. */
-    private List<GenericValue> adjustments = FastList.newInstance();
+    private List<GenericValue> adjustments = UtilMisc.newList();
     // OrderTerms
     private boolean orderTermSet = false;
     private List<GenericValue> orderTerms = new LinkedList<GenericValue>();
 
-    private List<ShoppingCartItem> cartLines = FastList.newInstance();
-    private Map<String, ShoppingCartItemGroup> itemGroupByNumberMap = FastMap.newInstance();
+    private List<ShoppingCartItem> cartLines = UtilMisc.newList();
+    private Map<String, ShoppingCartItemGroup> itemGroupByNumberMap = UtilMisc.newMap();
     protected long nextGroupNumber = 1;
-    private List<CartPaymentInfo> paymentInfo = FastList.newInstance();
-    private List<CartShipInfo> shipInfo = FastList.<CartShipInfo> newInstance();
+    private List<CartPaymentInfo> paymentInfo = UtilMisc.newList();
+    private List<CartShipInfo> shipInfo = UtilMisc.newList();
     private Map<String, String> contactMechIdsMap = new HashMap<String, String>();
-    private Map<String, String> orderAttributes = FastMap.newInstance();
-    private Map<String, Object> attributes = FastMap.newInstance(); // user defined attributes
+    private Map<String, String> orderAttributes = UtilMisc.newMap();
+    private Map<String, Object> attributes = UtilMisc.newMap(); // user defined attributes
     // Lists of internal/public notes: when the order is stored they are transformed into OrderHeaderNotes
-    private List<String> internalOrderNotes = FastList.newInstance(); // internal notes
-    private List<String> orderNotes = FastList.newInstance(); // public notes (printed on documents etc.)
+    private List<String> internalOrderNotes = UtilMisc.newList(); // internal notes
+    private List<String> orderNotes = UtilMisc.newList(); // public notes (printed on documents etc.)
 
     /** contains a list of partyId for each roleTypeId (key) */
     private Map<String, List<String>> additionalPartyRole = new HashMap<String, List<String>>();
@@ -154,7 +151,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     private Timestamp defaultShipBeforeDate = null;
 
     /** Contains a List for each productPromoId (key) containing a productPromoCodeId (or empty string for no code) for each use of the productPromoId */
-    private List<ProductPromoUseInfo> productPromoUseInfoList = FastList.newInstance();
+    private List<ProductPromoUseInfo> productPromoUseInfoList = UtilMisc.newList();
     /** Contains the promo codes entered */
     private Set<String> productPromoCodes = new HashSet<String>();
     private List<GenericValue> freeShippingProductPromoActions = new ArrayList<GenericValue>();
@@ -733,7 +730,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     public List<ShoppingCartItem> findAllCartItems(String productId, String groupNumber) {
         if (productId == null) return this.items();
 
-        List<ShoppingCartItem> itemsToReturn = FastList.newInstance();
+        List<ShoppingCartItem> itemsToReturn = UtilMisc.newList();
         // Check for existing cart item.
         for (ShoppingCartItem cartItem : cartLines) {
             if (UtilValidate.isNotEmpty(groupNumber) && !cartItem.isInItemGroup(groupNumber)) {
@@ -751,7 +748,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         if (productCategoryId == null) return this.items();
 
         Delegator delegator = this.getDelegator();
-        List<ShoppingCartItem> itemsToReturn = FastList.newInstance();
+        List<ShoppingCartItem> itemsToReturn = UtilMisc.newList();
         try {
             // Check for existing cart item
             for (ShoppingCartItem cartItem : cartLines) {
@@ -795,7 +792,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         if (multipleItems.size() <= maxItems) return;
 
         // remove all except first <maxItems> in list from the cart, first because new cart items are added to the beginning...
-        List<ShoppingCartItem> localList = FastList.newInstance();
+        List<ShoppingCartItem> localList = UtilMisc.newList();
         localList.addAll(multipleItems);
         // the ones to keep...
         for (int i=0; i<maxItems; i++) localList.remove(0);
@@ -813,7 +810,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     public static List<GenericValue> getItemsProducts(List<ShoppingCartItem> cartItems) {
-        List<GenericValue> productList = FastList.newInstance();
+        List<GenericValue> productList = UtilMisc.newList();
         for (ShoppingCartItem item : cartItems) {
             GenericValue product = item.getProduct();
             if (product != null) {
@@ -1013,7 +1010,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
 
     /** Returns a Collection of items in the cart object. */
     public List<ShoppingCartItem> items() {
-        List<ShoppingCartItem> result = FastList.newInstance();
+        List<ShoppingCartItem> result = UtilMisc.newList();
         result.addAll(cartLines);
         return result;
     }
@@ -1057,7 +1054,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     public List<ShoppingCartItem> getCartItemsInNoGroup() {
-        List<ShoppingCartItem> cartItemList = FastList.newInstance();
+        List<ShoppingCartItem> cartItemList = UtilMisc.newList();
         for (ShoppingCartItem cartItem : cartLines) {
             if (cartItem.getItemGroup() == null) {
                 cartItemList.add(cartItem);
@@ -1067,7 +1064,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     public List<ShoppingCartItem> getCartItemsInGroup(String groupNumber) {
-        List<ShoppingCartItem> cartItemList = FastList.newInstance();
+        List<ShoppingCartItem> cartItemList = UtilMisc.newList();
         ShoppingCart.ShoppingCartItemGroup itemGroup = this.getItemGroupByNumber(groupNumber);
         if (itemGroup != null) {
             for (ShoppingCartItem cartItem : cartLines) {
@@ -1903,7 +1900,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
 
     /** Returns the Payment Method Ids */
     public List<String> getPaymentMethodTypeIds() {
-        List<String> pmt = FastList.newInstance();
+        List<String> pmt = UtilMisc.newList();
         for (CartPaymentInfo inf : paymentInfo) {
             if (inf.paymentMethodTypeId != null) {
                 pmt.add(inf.paymentMethodTypeId);
@@ -1914,7 +1911,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     
     /** SCIPIO: Returns the Payment Method Ids that have no paymentMethodIds */
     public List<String> getPaymentMethodTypeIdsNoPaymentMethodIds() {
-        List<String> pmt = FastList.newInstance();
+        List<String> pmt = UtilMisc.newList();
         for (CartPaymentInfo inf : paymentInfo) {
             if (inf.paymentMethodId == null && inf.paymentMethodTypeId != null) {
                 pmt.add(inf.paymentMethodTypeId);
@@ -1925,7 +1922,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
 
     /** Returns a list of PaymentMethod value objects selected in the cart */
     public List<GenericValue> getPaymentMethods() {
-        List<GenericValue> methods = FastList.newInstance();
+        List<GenericValue> methods = UtilMisc.newList();
         if (UtilValidate.isNotEmpty(paymentInfo)) {
             for (String paymentMethodId : getPaymentMethodIds()) {
                 try {
@@ -2167,7 +2164,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     /** Returns the ShoppingCartItem (key) and quantity (value) associated with the ship group */
     public Map<ShoppingCartItem, BigDecimal> getShipGroupItems(int idx) {
         CartShipInfo csi = this.getShipInfo(idx);
-        Map<ShoppingCartItem, BigDecimal> qtyMap = FastMap.newInstance();
+        Map<ShoppingCartItem, BigDecimal> qtyMap = UtilMisc.newMap();
         for (ShoppingCartItem item : csi.shipItemInfo.keySet()) {
             CartShipInfo.CartShipItemInfo csii = csi.shipItemInfo.get(item);
             qtyMap.put(item, csii.quantity);
@@ -2855,7 +2852,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
     public BigDecimal getOrderGlobalAdjustments() {
         List cartAdjustments = this.getAdjustments();
-        List tempAdjustmentsList = FastList.newInstance();
+        List tempAdjustmentsList = UtilMisc.newList();
         if (cartAdjustments != null) {
             Iterator<GenericValue> cartAdjustmentIter = cartAdjustments.iterator();
             while (cartAdjustmentIter.hasNext()) {
@@ -3077,7 +3074,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         if (orderAdjustmentTypeId == null) return;
 
         // make a list of adjustment lists including the cart adjustments and the cartItem adjustments for each item
-        List<List<GenericValue>> adjsLists = FastList.newInstance();
+        List<List<GenericValue>> adjsLists = UtilMisc.newList();
 
         adjsLists.add(this.getAdjustments());
 
@@ -3177,7 +3174,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     /** Returns a List of shippable item's size for a specific ship group. */
     public List<BigDecimal> getShippableSizes(int idx) {
         CartShipInfo info = this.getShipInfo(idx);
-        List<BigDecimal> shippableSizes = FastList.newInstance();
+        List<BigDecimal> shippableSizes = UtilMisc.newList();
 
         for (ShoppingCartItem item : info.shipItemInfo.keySet()) {
             CartShipInfo.CartShipItemInfo csii = info.shipItemInfo.get(item);
@@ -3194,7 +3191,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     /** Returns a List of shippable item info (quantity, size, weight) for a specific ship group */
     public List<Map<String, Object>> getShippableItemInfo(int idx) {
         CartShipInfo info = this.getShipInfo(idx);
-        List<Map<String, Object>> itemInfos = FastList.newInstance();
+        List<Map<String, Object>> itemInfos = UtilMisc.newList();
 
         for (ShoppingCartItem item : info.shipItemInfo.keySet()) {
             CartShipInfo.CartShipItemInfo csii = info.shipItemInfo.get(item);
@@ -3237,7 +3234,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     /** Returns a Map of all features applied to products in the cart with quantities for a specific ship group. */
     public Map<String, BigDecimal> getFeatureIdQtyMap(int idx) {
         CartShipInfo info = this.getShipInfo(idx);
-        Map<String, BigDecimal> featureMap = FastMap.newInstance();
+        Map<String, BigDecimal> featureMap = UtilMisc.newMap();
 
         for (ShoppingCartItem item : info.shipItemInfo.keySet()) {
             CartShipInfo.CartShipItemInfo csii = info.shipItemInfo.get(item);
@@ -3682,7 +3679,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     public List<GenericValue> makeOrderItemGroups() {
-        List<GenericValue> result = FastList.newInstance();
+        List<GenericValue> result = UtilMisc.newList();
         for (ShoppingCart.ShoppingCartItemGroup itemGroup : this.itemGroupByNumberMap.values()) {
             result.add(itemGroup.makeOrderItemGroup(this.getDelegator()));
         }
@@ -3757,7 +3754,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
 
         // now build the lines
         synchronized (cartLines) {
-            List<GenericValue> result = FastList.newInstance();
+            List<GenericValue> result = UtilMisc.newList();
 
             for (ShoppingCartItem item : cartLines) {
                 if (UtilValidate.isEmpty(item.getOrderItemSeqId())) {
@@ -3856,7 +3853,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
 
     /** make a list of all adjustments including order adjustments, order line adjustments, and special adjustments (shipping and tax if applicable) */
     public List<GenericValue> makeAllAdjustments() {
-        List<GenericValue> allAdjs = FastList.newInstance();
+        List<GenericValue> allAdjs = UtilMisc.newList();
 
         // before returning adjustments, go through them to find all that need counter adjustments (for instance: free shipping)
         for (GenericValue orderAdjustment: this.getAdjustments()) {
@@ -3944,7 +3941,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
      *  Internally, the quote adjustments are created from the order adjustments.
      */
     public List<GenericValue> makeAllQuoteAdjustments() {
-        List<GenericValue> quoteAdjs = FastList.newInstance();
+        List<GenericValue> quoteAdjs = UtilMisc.newList();
 
         for (GenericValue orderAdj: makeAllAdjustments()) {
             GenericValue quoteAdj = this.getDelegator().makeValue("QuoteAdjustment");
@@ -4026,7 +4023,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     public List<GenericValue> makeProductPromoUses() {
-        List<GenericValue> productPromoUses = FastList.newInstance();
+        List<GenericValue> productPromoUses = UtilMisc.newList();
         String partyId = this.getPartyId();
         int sequenceValue = 0;
         for (ProductPromoUseInfo productPromoUseInfo: this.productPromoUseInfoList) {
@@ -4141,7 +4138,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
 
         // now build order item attributes
         synchronized (cartLines) {
-            List<GenericValue> result = FastList.newInstance();
+            List<GenericValue> result = UtilMisc.newList();
 
             for (ShoppingCartItem item : cartLines) {
                 Map<String, String> orderItemAttributes = item.getOrderItemAttributes();
@@ -4174,7 +4171,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
 
     public List<GenericValue> makeAllOrderAttributes(String orderId, int mode) {
 
-        List<GenericValue> allOrderAttributes = FastList.newInstance();
+        List<GenericValue> allOrderAttributes = UtilMisc.newList();
 
         for (Map.Entry<String, String> entry: orderAttributes.entrySet()) {
             GenericValue orderAtt = this.getDelegator().makeValue("OrderAttribute");
@@ -4613,8 +4610,8 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     public static class CartShipInfo implements Serializable {
-        public Map<ShoppingCartItem, CartShipItemInfo> shipItemInfo = FastMap.newInstance();
-        public List<GenericValue> shipTaxAdj = FastList.newInstance();
+        public Map<ShoppingCartItem, CartShipItemInfo> shipItemInfo = UtilMisc.newMap();
+        public List<GenericValue> shipTaxAdj = UtilMisc.newList();
         public String orderTypeId = null;
         private String internalContactMechId = null;
         public String telecomContactMechId = null;
@@ -4634,7 +4631,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         private String associatedShipGroupSeqId = null;
         public String vendorPartyId = null;
         public String productStoreShipMethId = null;
-        public Map<String, Object> attributes = FastMap.newInstance();
+        public Map<String, Object> attributes = UtilMisc.newMap();
 
         public void setAttribute(String name, Object value) {
             this.attributes.put(name, value);
@@ -4740,7 +4737,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             values.add(shipGroup);
 
             //set estimated ship dates
-            FastList<Timestamp> estimatedShipDates = FastList.newInstance();
+            List<Timestamp> estimatedShipDates = UtilMisc.newList();
             for (ShoppingCartItem item : shipItemInfo.keySet()) {
                 Timestamp estimatedShipDate = item.getEstimatedShipDate();
                 if (estimatedShipDate != null) {
@@ -4749,12 +4746,12 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             }
             if (estimatedShipDates.size() > 0) {
                 Collections.sort(estimatedShipDates);
-                Timestamp estimatedShipDate  = estimatedShipDates.getLast();
+                Timestamp estimatedShipDate  = estimatedShipDates.get(estimatedShipDates.size() - 1);
                 shipGroup.set("estimatedShipDate", estimatedShipDate);
             }
 
             //set estimated delivery dates
-            FastList<Timestamp> estimatedDeliveryDates = FastList.newInstance();
+            List<Timestamp> estimatedDeliveryDates = UtilMisc.newList();
             for (ShoppingCartItem item : shipItemInfo.keySet()) {
                 Timestamp estimatedDeliveryDate = item.getDesiredDeliveryDate();
                 if (estimatedDeliveryDate != null) {
@@ -4763,7 +4760,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             }
             if (UtilValidate.isNotEmpty(estimatedDeliveryDates)) {
                 Collections.sort(estimatedDeliveryDates);
-                Timestamp estimatedDeliveryDate = estimatedDeliveryDates.getLast();
+                Timestamp estimatedDeliveryDate = estimatedDeliveryDates.get(estimatedDeliveryDates.size() - 1);
                 shipGroup.set("estimatedDeliveryDate", estimatedDeliveryDate);
             }
 
@@ -4884,7 +4881,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         }
 
         public BigDecimal getTotalTax(ShoppingCart cart) {
-            List<GenericValue> taxAdjustments = FastList.newInstance();
+            List<GenericValue> taxAdjustments = UtilMisc.newList();
             taxAdjustments.addAll(shipTaxAdj);
             for (CartShipItemInfo info : shipItemInfo.values()) {
                 taxAdjustments.addAll(info.itemTaxAdj);
@@ -4896,7 +4893,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         
         /**SCIPIO: Added VAT Tax calculation*/
         public BigDecimal getTotalVATTax(ShoppingCart cart){
-            List<GenericValue> taxAdjustments = FastList.newInstance();
+            List<GenericValue> taxAdjustments = UtilMisc.newList();
             taxAdjustments.addAll(shipTaxAdj);
             for (CartShipItemInfo info : shipItemInfo.values()) {
                 taxAdjustments.addAll(info.itemTaxAdj);
@@ -5261,7 +5258,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
                                                       .where("productId", itemProductId)
                                                       .filterByDate()
                                                       .queryList();
-            Map<String, BigDecimal> productPriceMap = FastMap.newInstance();
+            Map<String, BigDecimal> productPriceMap = UtilMisc.newMap();
             for (GenericValue productPrice : productPriceList) {
                 productPriceMap.put(productPrice.getString("productPriceTypeId"), productPrice.getBigDecimal("price"));
             }
@@ -5348,7 +5345,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
      */
     public List<GenericValue> getItemSubscriptions(Delegator delegator, String productId) throws GenericEntityException {
         if (this.cartSubscriptionItems == null)
-            this.cartSubscriptionItems = FastMap.newInstance();
+            this.cartSubscriptionItems = UtilMisc.newMap();
 
         List<GenericValue> productSubscriptionResources = EntityQuery.use(delegator).from("ProductSubscriptionResource").where("productId", productId)
                 .cache(true).filterByDate().queryList();

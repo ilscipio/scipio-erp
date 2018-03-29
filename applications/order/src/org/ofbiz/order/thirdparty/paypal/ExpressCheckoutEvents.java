@@ -25,8 +25,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
@@ -128,7 +126,7 @@ public class ExpressCheckoutEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         CheckoutType checkoutType = determineCheckoutType(request);
         if (checkoutType.equals(CheckoutType.STANDARD)) {
-            Map<String, Object> inMap = FastMap.newInstance();
+            Map<String, Object> inMap = UtilMisc.newMap();
             inMap.put("request", request);
             inMap.put("response", response);
             try {
@@ -180,7 +178,7 @@ public class ExpressCheckoutEvents {
             } else if (checkoutType.equals(CheckoutType.STANDARD)) {
                 serviceName = "payPalDoExpressCheckout";
             }
-            Map<String, Object> inMap = FastMap.newInstance();
+            Map<String, Object> inMap = UtilMisc.newMap();
             inMap.put("userLogin", userLogin);
             inMap.put("orderPaymentPreference", paymentPref);
             Map<String, Object> result = null;

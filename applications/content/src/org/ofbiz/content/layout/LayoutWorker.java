@@ -26,8 +26,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import javolution.util.FastMap;
-
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -57,8 +55,8 @@ public class LayoutWorker {
         //Debug.logVerbose("in uploadAndStoreImage", "");
         Locale locale = UtilHttp.getLocale(request);
 
-        Map<String, Object> results = FastMap.newInstance();
-        Map<String, String> formInput = FastMap.newInstance();
+        Map<String, Object> results = UtilMisc.newMap();
+        Map<String, String> formInput = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
         results.put("formInput", formInput);
         ServletFileUpload fu = new ServletFileUpload(new DiskFileItemFactory(10240, new File(new File("runtime"), "tmp")));
         

@@ -30,9 +30,6 @@ import java.util.Map;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -67,7 +64,7 @@ public class ProductDisplayWorker {
 
         List<GenericValue> cartAssocs = null;
         try {
-            Map<String, GenericValue> products = FastMap.newInstance();
+            Map<String, GenericValue> products = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
 
             Iterator<ShoppingCartItem> cartiter = cart.iterator();
 
@@ -117,16 +114,16 @@ public class ProductDisplayWorker {
                 String currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
                 String viewProductCategoryId = CatalogWorker.getCatalogViewAllowCategoryId(delegator, currentCatalogId);
                 if (viewProductCategoryId != null) {
-                    List<GenericValue> tempList = FastList.newInstance();
+                    List<GenericValue> tempList = UtilMisc.newList();
                     tempList.addAll(products.values());
                     tempList = CategoryWorker.filterProductsInCategory(delegator, tempList, viewProductCategoryId, "productId");
-                    cartAssocs = FastList.newInstance();
+                    cartAssocs = UtilMisc.newList();
                     cartAssocs.addAll(tempList);
                 }
             }
 
             if (cartAssocs == null) {
-                cartAssocs = FastList.newInstance();
+                cartAssocs = UtilMisc.newList();
                 cartAssocs.addAll(products.values());
             }
 
@@ -150,7 +147,7 @@ public class ProductDisplayWorker {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         GenericValue userLogin = (GenericValue) httpRequest.getSession().getAttribute("userLogin");
-        Map<String, Object> results = FastMap.newInstance();
+        Map<String, Object> results = UtilMisc.newMap();
 
         if (userLogin == null) userLogin = (GenericValue) httpRequest.getSession().getAttribute("autoUserLogin");
         if (userLogin == null) return results;
@@ -250,7 +247,7 @@ public class ProductDisplayWorker {
                 }
             //}
 
-            List<GenericValue> reorderProds = FastList.newInstance();
+            List<GenericValue> reorderProds = UtilMisc.newList();
             reorderProds.addAll(products.values());
 
             /*
@@ -264,7 +261,7 @@ public class ProductDisplayWorker {
             // sort descending by new metric...
             BigDecimal occurancesModifier = BigDecimal.ONE;
             BigDecimal quantityModifier = BigDecimal.ONE;
-            Map<String, Object> newMetric = FastMap.newInstance();
+            Map<String, Object> newMetric = UtilMisc.newMap();
             for (Map.Entry<String, Integer> entry : productOccurances.entrySet()) {
                 String prodId = entry.getKey();
                 Integer quantity = entry.getValue();
@@ -301,7 +298,7 @@ public class ProductDisplayWorker {
         if (values == null)  return null;
         if (values.size() == 0) return UtilMisc.toList(values);
 
-        List<GenericValue> result = FastList.newInstance();
+        List<GenericValue> result = UtilMisc.newList();
         result.addAll(values);
 
         Collections.sort(result, new ProductByMapComparator(orderByMap, descending));

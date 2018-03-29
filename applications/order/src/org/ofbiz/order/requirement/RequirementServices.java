@@ -22,9 +22,7 @@ import java.util.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-import javolution.util.FastSet;
+import org.ofbiz.base.util.UtilMisc;
 
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.condition.*;
@@ -87,23 +85,23 @@ public class RequirementServices {
                     .queryList();
 
             // maps to cache the associated suppliers and products data, so we don't do redundant DB and service requests
-            Map<String, GenericValue> suppliers = FastMap.newInstance();
-            Map<String, GenericValue> gids = FastMap.newInstance();
-            Map<String, Map<String, Object>> inventories = FastMap.newInstance();
-            Map<String, BigDecimal> productsSold = FastMap.newInstance();
+            Map<String, GenericValue> suppliers = UtilMisc.newMap();
+            Map<String, GenericValue> gids = UtilMisc.newMap();
+            Map<String, Map<String, Object>> inventories = UtilMisc.newMap();
+            Map<String, BigDecimal> productsSold = UtilMisc.newMap();
 
             // to count quantity, running total, and distinct products in list
             BigDecimal quantity = BigDecimal.ZERO;
             BigDecimal amountTotal = BigDecimal.ZERO;
-            Set<String> products = FastSet.newInstance();
+            Set<String> products = UtilMisc.newSet();
 
             // time period to count products ordered from, six months ago and the 1st of that month
             Timestamp timePeriodStart = UtilDateTime.getMonthStart(UtilDateTime.nowTimestamp(), 0, -6);
 
             // join in fields with extra data about the suppliers and products
-            List<Map<String, Object>> requirements = FastList.newInstance();
+            List<Map<String, Object>> requirements = UtilMisc.newList();
             for (GenericValue requirement : requirementAndRoles) {
-                Map<String, Object> union = FastMap.newInstance();
+                Map<String, Object> union = UtilMisc.newMap();
                 String productId = requirement.getString("productId");
                 partyId = requirement.getString("partyId");
                 String facilityId = requirement.getString("facilityId");

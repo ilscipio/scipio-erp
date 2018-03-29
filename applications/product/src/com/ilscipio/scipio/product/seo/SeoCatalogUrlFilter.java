@@ -53,8 +53,6 @@ import org.ofbiz.webapp.website.WebSiteWorker;
 
 import com.ilscipio.scipio.product.seo.SeoCatalogUrlWorker.SeoCatalogUrlInfo;
 
-import javolution.util.FastList;
-
 /**
  * SCIPIO: 2017: Seo catalog URL filter.
  * <p>
@@ -210,7 +208,7 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
 //        updateRequestTrail(request, delegator, urlInfo.getProductId(), urlInfo.getCategoryId(), trailCategoryIds, topCategoryId);
         
         // FOR NOW, just replace the whole trail with what we got for time being
-        List<String> newTrail = FastList.newInstance(); // FastList legacy code
+        List<String> newTrail = UtilMisc.newList();
         newTrail.add("TOP");
         newTrail.addAll(urlInfo.getPathCategoryIds());
         if (urlInfo.getCategoryId() != null && !urlInfo.getCategoryId().equals(newTrail.get(newTrail.size() - 1))) {

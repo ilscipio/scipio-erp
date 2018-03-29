@@ -26,9 +26,6 @@ import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
@@ -92,7 +89,7 @@ public class MrpServices {
 
         // Proposed requirements are deleted
         listResult = null;
-        List<GenericValue> listResultRoles = FastList.newInstance();
+        List<GenericValue> listResultRoles = UtilMisc.newList();
         try {
             listResult = EntityQuery.use(delegator).from("Requirement")
                     .where("requirementTypeId", "PRODUCT_REQUIREMENT","facilityId", facilityId,
@@ -494,7 +491,7 @@ public class MrpServices {
                 }
             }
         }
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         Debug.logInfo("return from initMrpEvent", module);
         return result;
@@ -833,8 +830,8 @@ public class MrpServices {
             // if there are 3 levels with no inventoryEvenPanned we stop
         } while (bomLevelWithNoEvent < 3);
 
-        result = FastMap.newInstance();
-        List<Object> msgResult = FastList.newInstance();
+        result = UtilMisc.newMap();
+        List<Object> msgResult = UtilMisc.newList();
         result.put("msgResult", msgResult);
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         Debug.logInfo("return from executeMrp", module);

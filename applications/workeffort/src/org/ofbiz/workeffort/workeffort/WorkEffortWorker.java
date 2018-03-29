@@ -22,8 +22,7 @@ package org.ofbiz.workeffort.workeffort;
 import java.util.List;
 import java.util.Set;
 
-import javolution.util.FastList;
-import javolution.util.FastSet;
+import org.ofbiz.base.util.UtilMisc;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
@@ -50,13 +49,13 @@ public class WorkEffortWorker {
             right = "workEffortIdTo";
         }
 
-        List<GenericValue> workEfforts = FastList.newInstance();
+        List<GenericValue> workEfforts = UtilMisc.newList();
         try {
             List<GenericValue> childWEAssocsLevelFirst = EntityQuery.use(delegator).from("WorkEffortAssoc").where(left, workEffortId, "workEffortAssocTypeId", workEffortAssocTypeId).cache(true).queryList();
             for (GenericValue childWEAssocLevelFirst : childWEAssocsLevelFirst) {
                 List<GenericValue> childWEAssocsLevelNext = EntityQuery.use(delegator).from("WorkEffortAssoc").where(left, childWEAssocLevelFirst.get(right), "workEffortAssocTypeId", workEffortAssocTypeId).cache(true).queryList();
                 while (UtilValidate.isNotEmpty(childWEAssocsLevelNext)) {
-                    List<GenericValue> tempWorkEffortList = FastList.newInstance();
+                    List<GenericValue> tempWorkEffortList = UtilMisc.newList();
                     for (GenericValue childWEAssocLevelNext : childWEAssocsLevelNext) {
                         List<GenericValue> childWEAssocsLevelNth = EntityQuery.use(delegator).from("WorkEffortAssoc").where(left, childWEAssocLevelNext.get(right), "workEffortAssocTypeId", workEffortAssocTypeId).cache(true).queryList();
                         if (UtilValidate.isNotEmpty(childWEAssocsLevelNth)) {
@@ -75,8 +74,8 @@ public class WorkEffortWorker {
     }
 
     public static List<GenericValue> removeDuplicateWorkEfforts(List<GenericValue> workEfforts) {
-        Set<String> keys = FastSet.newInstance();
-        Set<GenericValue> exclusions = FastSet.newInstance();
+        Set<String> keys = UtilMisc.newSet();
+        Set<GenericValue> exclusions = UtilMisc.newSet();
         for (GenericValue workEffort : workEfforts) {
             String workEffortId = workEffort.getString("workEffortId");
             if (keys.contains(workEffortId)) {

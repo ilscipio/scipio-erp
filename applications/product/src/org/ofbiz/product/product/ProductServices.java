@@ -37,10 +37,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-import javolution.util.FastSet;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.PropertyMessage;
 import org.ofbiz.base.util.PropertyMessageExUtil;
@@ -98,13 +94,13 @@ public class ProductServices {
         Delegator delegator = dctx.getDelegator();
         Locale locale = (Locale) context.get("locale");
         Map<String, String> selectedFeatures = UtilGenerics.checkMap(context.get("selectedFeatures"));
-        List<GenericValue> products = FastList.newInstance();
+        List<GenericValue> products = UtilMisc.newList();
         // All the variants for this products are retrieved
         Map<String, Object> resVariants = prodFindAllVariants(dctx, context);
         List<GenericValue> variants = UtilGenerics.checkList(resVariants.get("assocProducts"));
         for (GenericValue oneVariant: variants) {
             // For every variant, all the standard features are retrieved
-            Map<String, String> feaContext = FastMap.newInstance();
+            Map<String, String> feaContext = UtilMisc.newMap();
             feaContext.put("productId", oneVariant.getString("productIdTo"));
             feaContext.put("type", "STANDARD_FEATURE");
             Map<String, Object> resFeatures = prodGetFeatures(dctx, feaContext);
@@ -219,7 +215,7 @@ public class ProductServices {
 
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         List<String> featureOrder = UtilMisc.makeListWritable(UtilGenerics.<String>checkCollection(context.get("featureOrder")));
 
         if (UtilValidate.isEmpty(featureOrder)) {
@@ -228,13 +224,13 @@ public class ProductServices {
         }
 
         List<GenericValue> variants = UtilGenerics.checkList(prodFindAllVariants(dctx, context).get("assocProducts"));
-        List<String> virtualVariant = FastList.newInstance();
+        List<String> virtualVariant = UtilMisc.newList();
 
         if (UtilValidate.isEmpty(variants)) {
             return ServiceUtil.returnSuccess();
         }
-        List<String> items = FastList.newInstance();
-        List<GenericValue> outOfStockItems = FastList.newInstance();
+        List<String> items = UtilMisc.newList();
+        List<GenericValue> outOfStockItems = UtilMisc.newList();
 
         for (GenericValue variant: variants) {
             String productIdTo = variant.getString("productIdTo");
@@ -319,13 +315,13 @@ public class ProductServices {
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
                     "productservices.empty_list_of_selectable_features_found", locale));
         }
-        Map<String, List<String>> features = FastMap.newInstance();
+        Map<String, List<String>> features = UtilMisc.newMap();
         for (GenericValue v: selectableFeatures) {
             String featureType = v.getString("productFeatureTypeId");
             String feature = v.getString("description");
 
             if (!features.containsKey(featureType)) {
-                List<String> featureList = FastList.newInstance();
+                List<String> featureList = UtilMisc.newList();
                 featureList.add(feature);
                 features.put(featureType, featureList);
             } else {
@@ -376,7 +372,7 @@ public class ProductServices {
         // * String type           -- Type of feature (STANDARD_FEATURE, SELECTABLE_FEATURE)
         // * String distinct       -- Distinct feature (SIZE, COLOR)
         Delegator delegator = dctx.getDelegator();
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         String productId = (String) context.get("productId");
         String distinct = (String) context.get("distinct");
         String type = (String) context.get("type");
@@ -408,7 +404,7 @@ public class ProductServices {
     public static Map<String, Object> prodFindProduct(DispatchContext dctx, Map<String, ? extends Object> context) {
         // * String productId      -- Product ID to find
         Delegator delegator = dctx.getDelegator();
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         String productId = (String) context.get("productId");
         Locale locale = (Locale) context.get("locale");
         String errMsg = null;
@@ -459,7 +455,7 @@ public class ProductServices {
         // * String productId      -- Current Product ID
         // * String type           -- Type of association (ie PRODUCT_UPGRADE, PRODUCT_COMPLEMENT, PRODUCT_VARIANT)
         Delegator delegator = dctx.getDelegator();
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         String productId = (String) context.get("productId");
         String productIdTo = (String) context.get("productIdTo");
         String type = (String) context.get("type");
@@ -515,7 +511,7 @@ public class ProductServices {
         try {
             List<GenericValue> productAssocs = null;
 
-            List<String> orderBy = FastList.newInstance();
+            List<String> orderBy = UtilMisc.newList();
             if (sortDescending) {
                 orderBy.add("sequenceNum DESC");
             } else {
@@ -568,8 +564,8 @@ public class ProductServices {
     // Builds a product feature tree
     private static Map<String, Object> makeGroup(Delegator delegator, Map<String, List<String>> featureList, List<String> items, List<String> order, int index)
         throws IllegalArgumentException, IllegalStateException {
-        //List featureKey = FastList.newInstance();
-        Map<String, List<String>> tempGroup = FastMap.newInstance();
+        //List featureKey = UtilMisc.newList();
+        Map<String, List<String>> tempGroup = UtilMisc.newMap();
         Map<String, Object> group = new LinkedHashMap<String, Object>();
         String orderKey = order.get(index);
 
@@ -665,7 +661,7 @@ public class ProductServices {
 
     // builds a variant sample (a single sku for a featureType)
     private static Map<String, GenericValue> makeVariantSample(Delegator delegator, Map<String, List<String>> featureList, List<String> items, String feature) {
-        Map<String, GenericValue> tempSample = FastMap.newInstance();
+        Map<String, GenericValue> tempSample = UtilMisc.newMap();
         Map<String, GenericValue> sample = new LinkedHashMap<String, GenericValue>();
         for (String productId: items) {
             List<GenericValue> features = null;
@@ -704,7 +700,7 @@ public class ProductServices {
 
     public static Map<String, Object> quickAddVariant(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         Locale locale = (Locale) context.get("locale");
         String errMsg=null;
         String productId = (String) context.get("productId");
@@ -837,14 +833,14 @@ public class ProductServices {
 
             // separate variantProductIdsBag into a Set of variantProductIds
             //note: can be comma, tab, or white-space delimited
-            Set<String> prelimVariantProductIds = FastSet.newInstance();
+            Set<String> prelimVariantProductIds = UtilMisc.newSet();
             List<String> splitIds = Arrays.asList(variantProductIdsBag.split("[,\\p{Space}]"));
             Debug.logInfo("Variants: bag=" + variantProductIdsBag, module);
             Debug.logInfo("Variants: split=" + splitIds, module);
             prelimVariantProductIds.addAll(splitIds);
             //note: should support both direct productIds and GoodIdentification entries (what to do if more than one GoodID? Add all?
 
-            Map<String, GenericValue> variantProductsById = FastMap.newInstance();
+            Map<String, GenericValue> variantProductsById = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
             for (String variantProductId: prelimVariantProductIds) {
                 if (UtilValidate.isEmpty(variantProductId)) {
                     // not sure why this happens, but seems to from time to time with the split method
@@ -878,7 +874,7 @@ public class ProductServices {
             }
 
             // Attach productFeatureIdOne, Two, Three to the new virtual and all variant products as a standard feature
-            Set<String> featureProductIds = FastSet.newInstance();
+            Set<String> featureProductIds = UtilMisc.newSet();
             featureProductIds.add(productId);
             featureProductIds.addAll(variantProductsById.keySet());
             Set<String> productFeatureIds = new HashSet<String>();
@@ -993,7 +989,7 @@ public class ProductServices {
         Locale locale = (Locale) context.get("locale");
 
         if (UtilValidate.isNotEmpty(context.get("_uploadedFile_fileName"))) {
-            Map<String, Object>imageContext = FastMap.newInstance();
+            Map<String, Object>imageContext = UtilMisc.newMap();
             imageContext.putAll(context);
             imageContext.put("delegator", delegator);
             imageContext.put("tenantId",delegator.getDelegatorTenantId());
@@ -1019,7 +1015,7 @@ public class ProductServices {
                 filenameToUse = fileLocation.substring(fileLocation.lastIndexOf("/") + 1);
             }
 
-            List<GenericValue> fileExtension = FastList.newInstance();
+            List<GenericValue> fileExtension = UtilMisc.newList();
             try {
                 fileExtension = EntityQuery.use(delegator).from("FileExtension").where("mimeTypeId", (String) context.get("_uploadedFile_contentType")).queryList();
             } catch (GenericEntityException e) {
@@ -1090,7 +1086,7 @@ public class ProductServices {
             }
 
             /* scale Image in different sizes */
-            Map<String, Object> resultResize = FastMap.newInstance();
+            Map<String, Object> resultResize = UtilMisc.newMap();
             try {
                 resultResize.putAll(ScaleImage.scaleImageInAllSize(imageContext, filenameToUse, "additional", viewNumber));
             } catch (IOException e) {
@@ -1144,12 +1140,12 @@ public class ProductServices {
         if (UtilValidate.isNotEmpty(imageUrl) && imageUrl.length() > 0) {
             String contentId = (String) context.get("contentId");
 
-            Map<String, Object> dataResourceCtx = FastMap.newInstance();
+            Map<String, Object> dataResourceCtx = UtilMisc.newMap();
             dataResourceCtx.put("objectInfo", imageUrl);
             dataResourceCtx.put("dataResourceName", context.get("_uploadedFile_fileName"));
             dataResourceCtx.put("userLogin", userLogin);
 
-            Map<String, Object> productContentCtx = FastMap.newInstance();
+            Map<String, Object> productContentCtx = UtilMisc.newMap();
             productContentCtx.put("productId", productId);
             productContentCtx.put("productContentTypeId", productContentTypeId);
             productContentCtx.put("fromDate", context.get("fromDate"));
@@ -1185,7 +1181,7 @@ public class ProductServices {
                     } else {
                         dataResourceCtx.put("dataResourceTypeId", "SHORT_TEXT");
                         dataResourceCtx.put("mimeTypeId", "text/html");
-                        Map<String, Object> dataResourceResult = FastMap.newInstance();
+                        Map<String, Object> dataResourceResult = UtilMisc.newMap();
                         try {
                             dataResourceResult = dispatcher.runSync("createDataResource", dataResourceCtx);
                         } catch (GenericServiceException e) {
@@ -1193,7 +1189,7 @@ public class ProductServices {
                             return ServiceUtil.returnError(e.getMessage());
                         }
 
-                        Map<String, Object> contentCtx = FastMap.newInstance();
+                        Map<String, Object> contentCtx = UtilMisc.newMap();
                         contentCtx.put("contentId", contentId);
                         contentCtx.put("dataResourceId", dataResourceResult.get("dataResourceId"));
                         contentCtx.put("userLogin", userLogin);
@@ -1216,7 +1212,7 @@ public class ProductServices {
             } else {
                 dataResourceCtx.put("dataResourceTypeId", "SHORT_TEXT");
                 dataResourceCtx.put("mimeTypeId", "text/html");
-                Map<String, Object> dataResourceResult = FastMap.newInstance();
+                Map<String, Object> dataResourceResult = UtilMisc.newMap();
                 try {
                     dataResourceResult = dispatcher.runSync("createDataResource", dataResourceCtx);
                 } catch (GenericServiceException e) {
@@ -1224,11 +1220,11 @@ public class ProductServices {
                     return ServiceUtil.returnError(e.getMessage());
                 }
 
-                Map<String, Object> contentCtx = FastMap.newInstance();
+                Map<String, Object> contentCtx = UtilMisc.newMap();
                 contentCtx.put("contentTypeId", "DOCUMENT");
                 contentCtx.put("dataResourceId", dataResourceResult.get("dataResourceId"));
                 contentCtx.put("userLogin", userLogin);
-                Map<String, Object> contentResult = FastMap.newInstance();
+                Map<String, Object> contentResult = UtilMisc.newMap();
                 try {
                     contentResult = dispatcher.runSync("createContent", contentCtx);
                 } catch (GenericServiceException e) {
@@ -1299,7 +1295,7 @@ public class ProductServices {
         Locale locale = (Locale) context.get("locale");
 
         if (UtilValidate.isNotEmpty(context.get("_uploadedFile_fileName"))) {
-            Map<String, Object>imageContext = FastMap.newInstance();
+            Map<String, Object>imageContext = UtilMisc.newMap();
             imageContext.putAll(context);
             imageContext.put("tenantId",delegator.getDelegatorTenantId());
             String imageFilenameFormat = EntityUtilProperties.getPropertyValue("catalog", "image.filename.format", delegator);
@@ -1318,7 +1314,7 @@ public class ProductServices {
                 filenameToUse = fileLocation.substring(fileLocation.lastIndexOf("/") + 1);
             }
 
-            List<GenericValue> fileExtension = FastList.newInstance();
+            List<GenericValue> fileExtension = UtilMisc.newList();
             try {
                 fileExtension = EntityQuery.use(delegator).from("FileExtension").where(EntityCondition.makeCondition("mimeTypeId", EntityOperator.EQUALS, (String) context.get("_uploadedFile_contentType"))).queryList();
             } catch (GenericEntityException e) {
@@ -1355,12 +1351,12 @@ public class ProductServices {
             String imageUrl = imageUrlPrefix + "/" + filePathPrefix + filenameToUse;
 
             if (UtilValidate.isNotEmpty(imageUrl) && imageUrl.length() > 0) {
-                Map<String, Object> dataResourceCtx = FastMap.newInstance();
+                Map<String, Object> dataResourceCtx = UtilMisc.newMap();
                 dataResourceCtx.put("objectInfo", imageUrl);
                 dataResourceCtx.put("dataResourceName", context.get("_uploadedFile_fileName"));
                 dataResourceCtx.put("userLogin", userLogin);
 
-                Map<String, Object> productPromoContentCtx = FastMap.newInstance();
+                Map<String, Object> productPromoContentCtx = UtilMisc.newMap();
                 productPromoContentCtx.put("productPromoId", productPromoId);
                 productPromoContentCtx.put("productPromoContentTypeId", productPromoContentTypeId);
                 productPromoContentCtx.put("fromDate", context.get("fromDate"));
@@ -1396,7 +1392,7 @@ public class ProductServices {
                         } else {
                             dataResourceCtx.put("dataResourceTypeId", "SHORT_TEXT");
                             dataResourceCtx.put("mimeTypeId", "text/html");
-                            Map<String, Object> dataResourceResult = FastMap.newInstance();
+                            Map<String, Object> dataResourceResult = UtilMisc.newMap();
                             try {
                                 dataResourceResult = dispatcher.runSync("createDataResource", dataResourceCtx);
                             } catch (GenericServiceException e) {
@@ -1404,7 +1400,7 @@ public class ProductServices {
                                 return ServiceUtil.returnError(e.getMessage());
                             }
 
-                            Map<String, Object> contentCtx = FastMap.newInstance();
+                            Map<String, Object> contentCtx = UtilMisc.newMap();
                             contentCtx.put("contentId", contentId);
                             contentCtx.put("dataResourceId", dataResourceResult.get("dataResourceId"));
                             contentCtx.put("userLogin", userLogin);
@@ -1427,7 +1423,7 @@ public class ProductServices {
                 } else {
                     dataResourceCtx.put("dataResourceTypeId", "SHORT_TEXT");
                     dataResourceCtx.put("mimeTypeId", "text/html");
-                    Map<String, Object> dataResourceResult = FastMap.newInstance();
+                    Map<String, Object> dataResourceResult = UtilMisc.newMap();
                     try {
                         dataResourceResult = dispatcher.runSync("createDataResource", dataResourceCtx);
                     } catch (GenericServiceException e) {
@@ -1435,11 +1431,11 @@ public class ProductServices {
                         return ServiceUtil.returnError(e.getMessage());
                     }
 
-                    Map<String, Object> contentCtx = FastMap.newInstance();
+                    Map<String, Object> contentCtx = UtilMisc.newMap();
                     contentCtx.put("contentTypeId", "DOCUMENT");
                     contentCtx.put("dataResourceId", dataResourceResult.get("dataResourceId"));
                     contentCtx.put("userLogin", userLogin);
-                    Map<String, Object> contentResult = FastMap.newInstance();
+                    Map<String, Object> contentResult = UtilMisc.newMap();
                     try {
                         contentResult = dispatcher.runSync("createContent", contentCtx);
                     } catch (GenericServiceException e) {
@@ -1457,7 +1453,7 @@ public class ProductServices {
                 }
             }
         } else {
-            Map<String, Object> productPromoContentCtx = FastMap.newInstance();
+            Map<String, Object> productPromoContentCtx = UtilMisc.newMap();
             productPromoContentCtx.put("productPromoId", productPromoId);
             productPromoContentCtx.put("productPromoContentTypeId", productPromoContentTypeId);
             productPromoContentCtx.put("contentId", contentId);

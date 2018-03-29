@@ -28,8 +28,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
@@ -250,7 +248,7 @@ public class WorldPayEvents {
             }
         }
         // create the redirect string
-        Map<String, Object> parameters = FastMap.newInstance();
+        Map<String, Object> parameters = UtilMisc.newMap();
         parameters.put("instId", instId);
         parameters.put("cartId", orderId);
         parameters.put("currency", defCur);

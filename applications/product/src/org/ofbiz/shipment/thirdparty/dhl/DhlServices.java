@@ -27,9 +27,6 @@ import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Base64;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -242,7 +239,7 @@ public class DhlServices {
                     "FacilityShipmentDhlShipmentTemplateLocationNotFound", locale));
         }
         StringWriter outWriter = new StringWriter();
-        Map<String, Object> inContext = FastMap.newInstance();
+        Map<String, Object> inContext = UtilMisc.newMap();
         inContext.put("action", "RateEstimate");
         inContext.put("userid", userid);
         inContext.put("password", password);
@@ -318,8 +315,8 @@ public class DhlServices {
      * Parses an XML document from DHL to get the rate estimate
      */
     public static Map<String, Object> handleDhlRateResponse(Document rateResponseDocument, Locale locale) {
-        List<Object> errorList = FastList.newInstance();
-        Map<String, Object> dhlRateCodeMap = FastMap.newInstance();
+        List<Object> errorList = UtilMisc.newList();
+        Map<String, Object> dhlRateCodeMap = UtilMisc.newMap();
         // process RateResponse
         Element rateResponseElement = rateResponseDocument.getDocumentElement();
         DhlServices.handleErrors(rateResponseElement, errorList, locale);
@@ -360,10 +357,10 @@ public class DhlServices {
         List<? extends Element> chargeNodeList = UtilXml.childElementList(responseChargesElement,
                 "Charge");
 
-        List<Map<String, String>> chargeList = FastList.newInstance();
+        List<Map<String, String>> chargeList = UtilMisc.newList();
         if (UtilValidate.isNotEmpty(chargeNodeList)) {
             for (Element responseChargeElement: chargeNodeList) {
-                Map<String, String> charge = FastMap.newInstance();
+                Map<String, String> charge = UtilMisc.newMap();
 
                 Element responseChargeTypeElement = UtilXml.firstChildElement(
                         responseChargeElement, "Type");
@@ -402,7 +399,7 @@ public class DhlServices {
         String resource = (String) context.get("serviceConfigProps");
         String shipmentGatewayConfigId = (String) context.get("shipmentGatewayConfigId");
         Locale locale = (Locale) context.get("locale");
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         String postalCode = (String) context.get("postalCode");
         String accountNbr = getShipmentGatewayConfigValue(delegator, shipmentGatewayConfigId, "accessAccountNbr",
                 resource, "shipment.dhl.access.accountNbr");
@@ -476,7 +473,7 @@ public class DhlServices {
      * Parse response from DHL registration request to get shipping key
      */
     public static Map<String, Object> handleDhlRegisterResponse(Document registerResponseDocument, Locale locale) {
-        List<Object> errorList = FastList.newInstance();
+        List<Object> errorList = UtilMisc.newList();
         // process RegisterResponse
         Element registerResponseElement = registerResponseDocument.getDocumentElement();
         DhlServices.handleErrors(registerResponseElement, errorList, locale);
@@ -752,7 +749,7 @@ public class DhlServices {
                         "FacilityShipmentDhlRateEstimateTemplateNotConfigured", locale));
             }
             StringWriter outWriter = new StringWriter();
-            Map<String, Object> inContext = FastMap.newInstance();
+            Map<String, Object> inContext = UtilMisc.newMap();
             inContext.put("action", "GenerateLabel");
             inContext.put("userid", userid);
             inContext.put("password", password);

@@ -27,9 +27,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.webapp.webdav.RequestHandler;
 import org.ofbiz.webapp.webdav.RequestHandlerFactory;
 
@@ -45,7 +44,7 @@ public class ICalHandlerFactory implements RequestHandlerFactory {
     protected final RequestHandler doNothingHandler = new DoNothingHandler();
 
     public ICalHandlerFactory() {
-        this.handlerMap = FastMap.newInstance();
+        this.handlerMap = UtilMisc.newMap();
         this.handlerMap.put("COPY", doNothingHandler);
         this.handlerMap.put("DELETE", doNothingHandler);
         this.handlerMap.put("GET", new GetHandler());

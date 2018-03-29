@@ -11,7 +11,6 @@ import org.ofbiz.base.util.UtilProperties
 import org.ofbiz.content.content.UploadContentAndImage
 import org.ofbiz.webapp.event.FileUploadProgressListener
 
-import javolution.util.FastMap
 
 final String module = "DatevUtil.groovy";
 
@@ -39,8 +38,8 @@ if (lst.size() == 0) {
     return "error";
 }
 
-//Map<String, Object> passedParams = FastMap.newInstance();
-Map<String, Object> multiPartMap = FastMap.newInstance();
+//Map<String, Object> passedParams = [:];
+Map<String, Object> multiPartMap = [:];
 FileItem csvFileItem = null;
 byte[] csvFileBytes = [];
 for (int i = 0; i < lst.size(); i++) {

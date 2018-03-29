@@ -3,7 +3,6 @@ import org.ofbiz.entity.util.*;
 
 import com.ilscipio.scipio.setup.*;
 
-import javolution.util.FastMap
 
 final module = "SetupAccounting.groovy";
 
@@ -70,7 +69,7 @@ context.acctgTransEntryTypes = acctgTransEntryTypes;
  * Scipio store urls - Accounting addons
  */
 Properties generalProps = UtilProperties.getProperties("general");
-Map<String, String> scipioAcctgStandardAddons = FastMap.newInstance();
+Map<String, String> scipioAcctgStandardAddons = [:];
 for (String key in generalProps.stringPropertyNames()) {
     if (key.startsWith("scipio.store.addon.accounting")) {
         scipioAcctgStandardAddons.put(key.substring(key.lastIndexOf(".") + 1, key.length()), UtilProperties.getPropertyValue("general", "scipio.store.base.url") + generalProps.get(key));

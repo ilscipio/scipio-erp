@@ -26,9 +26,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -102,7 +99,7 @@ public class UploadContentAndImage {
                 return "error";
             }
 
-            Map<String, Object> passedParams = FastMap.newInstance();
+            Map<String, Object> passedParams = UtilMisc.newMap();
             FileItem fi = null;
             FileItem imageFi = null;
             byte[] imageBytes = {};
@@ -131,7 +128,7 @@ public class UploadContentAndImage {
             passedParams.put("targetOperationList", targetOperationList);
             
             // Create or update FTL template
-            Map<String, Object> ftlContext = FastMap.newInstance();
+            Map<String, Object> ftlContext = UtilMisc.newMap();
             ftlContext.put("userLogin", userLogin);
             ftlContext.put("contentId", passedParams.get("ftlContentId"));
             ftlContext.put("ownerContentId", passedParams.get("ownerContentId"));
@@ -162,7 +159,7 @@ public class UploadContentAndImage {
             }
             String ftlContentId = (String)ftlResults.get("contentId");
             if (UtilValidate.isNotEmpty(contentIdTo)) {
-                Map<String, Object> map = FastMap.newInstance();
+                Map<String, Object> map = UtilMisc.newMap();
                 map.put("fromDate", UtilDateTime.nowTimestamp());
                 map.put("contentId", ftlContentId);
                 map.put("contentIdTo", contentIdTo);
@@ -205,7 +202,7 @@ public class UploadContentAndImage {
             //if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]ftlDataResourceId:" + ftlDataResourceId, module);
             // Create or update summary text subContent
             if (passedParams.containsKey("summaryData")) {
-                Map<String, Object> sumContext = FastMap.newInstance();
+                Map<String, Object> sumContext = UtilMisc.newMap();
                 sumContext.put("userLogin", userLogin);
                 sumContext.put("contentId", passedParams.get("sumContentId"));
                 sumContext.put("ownerContentId", ftlContentId);
@@ -235,7 +232,7 @@ public class UploadContentAndImage {
 
             // Create or update electronic text subContent
             if (passedParams.containsKey("textData")) {
-                Map<String, Object> txtContext = FastMap.newInstance();
+                Map<String, Object> txtContext = UtilMisc.newMap();
                 txtContext.put("userLogin", userLogin);
                 txtContext.put("contentId", passedParams.get("txtContentId"));
                 txtContext.put("ownerContentId", ftlContentId);
@@ -264,7 +261,7 @@ public class UploadContentAndImage {
             }
 
             // Create or update image subContent
-            Map<String, Object> imgContext = FastMap.newInstance();
+            Map<String, Object> imgContext = UtilMisc.newMap();
             if (imageBytes.length > 0) {
                 imgContext.put("userLogin", userLogin);
                 imgContext.put("contentId", passedParams.get("imgContentId"));
@@ -375,7 +372,7 @@ public class UploadContentAndImage {
                 return "error";
             }
 
-            Map<String, Object> passedParams = FastMap.newInstance();
+            Map<String, Object> passedParams = UtilMisc.newMap();
             FileItem fi = null;
             FileItem imageFi = null;
             byte[] imageBytes = {};
@@ -446,7 +443,7 @@ public class UploadContentAndImage {
         Delegator delegator = (Delegator)request.getAttribute("delegator");
         HttpSession session = request.getSession();
         GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
-        Map<String, Object> ftlContext = FastMap.newInstance();
+        Map<String, Object> ftlContext = UtilMisc.newMap();
 
         String contentPurposeString = (String)passedParams.get("contentPurposeString" + suffix);
         if (UtilValidate.isEmpty(contentPurposeString)) {
@@ -476,8 +473,8 @@ public class UploadContentAndImage {
 
         ModelEntity modelEntity = delegator.getModelEntity("ContentAssocDataResourceViewFrom");
         List<String> fieldNames = modelEntity.getAllFieldNames();
-        Map<String, Object> ftlContext2 = FastMap.newInstance();
-        Map<String, Object> ftlContext3 = FastMap.newInstance();
+        Map<String, Object> ftlContext2 = UtilMisc.newMap();
+        Map<String, Object> ftlContext3 = UtilMisc.newMap();
         for (String keyName : fieldNames) {
             Object obj = passedParams.get(keyName + suffix);
             ftlContext2.put(keyName, obj);
@@ -485,17 +482,17 @@ public class UploadContentAndImage {
         if (Debug.infoOn()) {
             Debug.logInfo("[UploadContentStuff]ftlContext2:" + ftlContext2, module);
         }
-        List<Object> errorMessages = FastList.newInstance();
+        List<Object> errorMessages = UtilMisc.newList();
         Locale loc = Locale.getDefault();
         try {
             SimpleMapProcessor.runSimpleMapProcessor("component://content/script/org/ofbiz/content/ContentManagementMapProcessors.xml", "contentIn", ftlContext2, ftlContext3, errorMessages, loc);
             SimpleMapProcessor.runSimpleMapProcessor("component://content/script/org/ofbiz/content/ContentManagementMapProcessors.xml", "contentOut", ftlContext3, ftlContext, errorMessages, loc);
 
-            ftlContext3 = FastMap.newInstance();
+            ftlContext3 = UtilMisc.newMap();
             SimpleMapProcessor.runSimpleMapProcessor("component://content/script/org/ofbiz/content/ContentManagementMapProcessors.xml", "dataResourceIn", ftlContext2, ftlContext3, errorMessages, loc);
             SimpleMapProcessor.runSimpleMapProcessor("component://content/script/org/ofbiz/content/ContentManagementMapProcessors.xml", "dataResourceOut", ftlContext3, ftlContext, errorMessages, loc);
 
-            ftlContext3 = FastMap.newInstance();
+            ftlContext3 = UtilMisc.newMap();
             SimpleMapProcessor.runSimpleMapProcessor("component://content/script/org/ofbiz/content/ContentManagementMapProcessors.xml", "contentAssocIn", ftlContext2, ftlContext3, errorMessages, loc);
             SimpleMapProcessor.runSimpleMapProcessor("component://content/script/org/ofbiz/content/ContentManagementMapProcessors.xml", "contentAssocOut", ftlContext3, ftlContext, errorMessages, loc);
         } catch (MiniLangException e) {
@@ -525,7 +522,7 @@ public class UploadContentAndImage {
                 Debug.logInfo("[UploadContentStuff]msg:" + msg, module);
             }
             if (errorMsgList == null) {
-                errorMsgList = FastList.newInstance();
+                errorMsgList = UtilMisc.newList();
                 request.setAttribute("errorMessageList", errorMsgList);
             }
             errorMsgList.add(msg);
@@ -536,7 +533,7 @@ public class UploadContentAndImage {
             request.setAttribute("_ERROR_MESSAGE_", msg);
             List<String> errorMsgList = UtilGenerics.checkList(request.getAttribute("_EVENT_MESSAGE_LIST_"));
             if (errorMsgList == null) {
-                errorMsgList = FastList.newInstance();
+                errorMsgList = UtilMisc.newList();
                 request.setAttribute("errorMessageList", errorMsgList);
             }
             errorMsgList.add(msg);
@@ -556,7 +553,7 @@ public class UploadContentAndImage {
 
         String caContentIdTo = (String)passedParams.get("caContentIdTo");
         if (UtilValidate.isNotEmpty(caContentIdTo)) {
-            Map<String, Object> resequenceContext = FastMap.newInstance();
+            Map<String, Object> resequenceContext = UtilMisc.newMap();
             resequenceContext.put("contentIdTo", caContentIdTo);
             resequenceContext.put("userLogin", userLogin);
             try {
@@ -572,7 +569,7 @@ public class UploadContentAndImage {
                     Debug.logInfo("[UploadContentStuff]msg:" + msg, module);
                 }
                 if (errorMsgList == null) {
-                    errorMsgList = FastList.newInstance();
+                    errorMsgList = UtilMisc.newList();
                     request.setAttribute("errorMessageList", errorMsgList);
                 }
                 errorMsgList.add(msg);

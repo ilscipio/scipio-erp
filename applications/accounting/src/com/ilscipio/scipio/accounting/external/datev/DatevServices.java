@@ -27,8 +27,6 @@ import com.ilscipio.scipio.accounting.external.BaseOperationStats.NotificationLe
 import com.ilscipio.scipio.accounting.external.BaseOperationStats.NotificationScope;
 import com.ilscipio.scipio.common.util.TikaUtil;
 
-import javolution.util.FastMap;
-
 public class DatevServices {
 
     public final static String module = DatevServices.class.getName();
@@ -174,8 +172,8 @@ public class DatevServices {
                         Debug.logInfo(rec.toString(), module);
                     }
                     boolean allFieldValid = true;
-                    Map<String, String> recordMap = FastMap.newInstance();
-                    Map<String, String> validRecordMap = FastMap.newInstance();
+                    Map<String, String> recordMap = UtilMisc.newMap();
+                    Map<String, String> validRecordMap = UtilMisc.newMap();
                     if (rec.isConsistent()) {
                         recordMap = rec.toMap();
                         for (String key : recordMap.keySet()) {

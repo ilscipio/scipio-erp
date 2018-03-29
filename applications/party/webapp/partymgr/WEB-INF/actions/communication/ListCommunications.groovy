@@ -20,7 +20,6 @@
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.condition.EntityCondition;
 
-import javolution.util.FastList;
 
 partyId = parameters.partyId;
 context.partyId = partyId;
@@ -38,7 +37,7 @@ if (previousSort?.equals(sortField)) {
     sortField = "-" + sortField;
 }
 
-List eventExprs = FastList.newInstance();
+List eventExprs = [];
 expr = EntityCondition.makeCondition("partyIdTo", EntityOperator.EQUALS, partyId);
 eventExprs.add(expr);
 expr = EntityCondition.makeCondition("partyIdFrom", EntityOperator.EQUALS, "partyId");

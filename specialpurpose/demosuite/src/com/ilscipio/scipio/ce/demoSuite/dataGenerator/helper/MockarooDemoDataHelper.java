@@ -95,23 +95,23 @@ public class MockarooDemoDataHelper extends DemoDataHelper {
 		public List<Object> getFields() {
 			List<Object> fields = new ArrayList<Object>();
 			// if (returnObjectClass.equals(DemoDataAddress.class)) {
-			// Map<String, Object> country = FastMap.newInstance();
+			// Map<String, Object> country = UtilMisc.newMap();
 			// country.put("name", "country");
 			// country.put("type", "Country");
 			//
-			// Map<String, Object> state = FastMap.newInstance();
+			// Map<String, Object> state = UtilMisc.newMap();
 			// state.put("name", "state");
 			// state.put("type", "State");
 			//
-			// Map<String, Object> city = FastMap.newInstance();
+			// Map<String, Object> city = UtilMisc.newMap();
 			// city.put("name", "city");
 			// city.put("type", "City");
 			//
-			// Map<String, Object> street = FastMap.newInstance();
+			// Map<String, Object> street = UtilMisc.newMap();
 			// street.put("name", "street");
 			// street.put("type", "Street Name");
 			//
-			// Map<String, Object> zip = FastMap.newInstance();
+			// Map<String, Object> zip = UtilMisc.newMap();
 			// zip.put("name", "zip");
 			// zip.put("type", "Postal Code");
 			//
@@ -121,29 +121,29 @@ public class MockarooDemoDataHelper extends DemoDataHelper {
 			// fields.add(street);
 			// fields.add(zip);
 			// } else if (returnObjectClass.equals(DemoDataProduct.class)) {
-			// Map<String, Object> id = FastMap.newInstance();
+			// Map<String, Object> id = UtilMisc.newMap();
 			// id.put("name", "id");
 			// id.put("type", "Row Number");
 			//
-			// Map<String, Object> name = FastMap.newInstance();
+			// Map<String, Object> name = UtilMisc.newMap();
 			// name.put("name", "name");
 			// name.put("type", "Words");
 			// name.put("min", 1);
 			// name.put("max", 3);
 			//
-			// Map<String, Object> description = FastMap.newInstance();
+			// Map<String, Object> description = UtilMisc.newMap();
 			// description.put("name", "description");
 			// description.put("type", "Words");
 			// description.put("min", 5);
 			// description.put("max", 15);
 			//
-			// Map<String, Object> longDescription = FastMap.newInstance();
+			// Map<String, Object> longDescription = UtilMisc.newMap();
 			// longDescription.put("name", "longDescription");
 			// longDescription.put("type", "Sentences");
 			// longDescription.put("min", 1);
 			// longDescription.put("max", 3);
 			//
-			// Map<String, Object> price = FastMap.newInstance();
+			// Map<String, Object> price = UtilMisc.newMap();
 			// price.put("name", "price");
 			// price.put("type", "Money");
 			//
@@ -153,19 +153,19 @@ public class MockarooDemoDataHelper extends DemoDataHelper {
 			// fields.add(longDescription);
 			// fields.add(price);
 			// } else if (returnObjectClass.equals(DemoDataPerson.class)) {
-			// Map<String, Object> title = FastMap.newInstance();
+			// Map<String, Object> title = UtilMisc.newMap();
 			// title.put("name", "title");
 			// title.put("type", "Title");
 			//
-			// Map<String, Object> firstName = FastMap.newInstance();
+			// Map<String, Object> firstName = UtilMisc.newMap();
 			// firstName.put("name", "firstName");
 			// firstName.put("type", "First Name");
 			//
-			// Map<String, Object> lastName = FastMap.newInstance();
+			// Map<String, Object> lastName = UtilMisc.newMap();
 			// lastName.put("name", "lastName");
 			// lastName.put("type", "Last Name");
 			//
-			// Map<String, Object> gender = FastMap.newInstance();
+			// Map<String, Object> gender = UtilMisc.newMap();
 			// gender.put("name", "gender");
 			// gender.put("type", "Gender");
 			//
@@ -174,11 +174,11 @@ public class MockarooDemoDataHelper extends DemoDataHelper {
 			// fields.add(lastName);
 			// fields.add(gender);
 			// } else if (returnObjectClass.equals(DemoDataUserLogin.class)) {
-			// Map<String, Object> userLoginId = FastMap.newInstance();
+			// Map<String, Object> userLoginId = UtilMisc.newMap();
 			// userLoginId.put("name", "userLoginId");
 			// userLoginId.put("type", "Username");
 			//
-			// Map<String, Object> password = FastMap.newInstance();
+			// Map<String, Object> password = UtilMisc.newMap();
 			// password.put("name", "currentPassword");
 			// password.put("type", "Password");
 			//

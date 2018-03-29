@@ -25,9 +25,6 @@ import java.util.Map;
 
 import javax.servlet.ServletRequest;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
@@ -58,14 +55,14 @@ public class PaymentWorker {
     }
 
     public static List<Map<String, GenericValue>> getPartyPaymentMethodValueMaps(Delegator delegator, String partyId, Boolean showOld) {
-        List<Map<String, GenericValue>> paymentMethodValueMaps = FastList.newInstance();
+        List<Map<String, GenericValue>> paymentMethodValueMaps = UtilMisc.newList();
         try {
             List<GenericValue> paymentMethods = EntityQuery.use(delegator).from("PaymentMethod").where("partyId", partyId).queryList();
 
             if (!showOld) paymentMethods = EntityUtil.filterByDate(paymentMethods, true);
 
             for (GenericValue paymentMethod : paymentMethods) {
-                Map<String, GenericValue> valueMap = FastMap.newInstance();
+                Map<String, GenericValue> valueMap = UtilMisc.newMap();
 
                 paymentMethodValueMaps.add(valueMap);
                 valueMap.put("paymentMethod", paymentMethod);
@@ -88,7 +85,7 @@ public class PaymentWorker {
 
     public static Map<String, Object> getPaymentMethodAndRelated(ServletRequest request, String partyId) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        Map<String, Object> results = FastMap.newInstance();
+        Map<String, Object> results = UtilMisc.newMap();
 
         Boolean tryEntity = true;
         if (request.getAttribute("_ERROR_MESSAGE_") != null) tryEntity = false;

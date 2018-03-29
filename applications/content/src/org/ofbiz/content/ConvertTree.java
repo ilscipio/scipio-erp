@@ -25,8 +25,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
@@ -109,7 +107,7 @@ In order ta make this service active add the following to the service definition
                         Entity.set("createdTxStamp", UtilDateTime.nowTimestamp());
                         delegator.create(Entity);
 
-                        Map<String, Object> contentAssoc = FastMap.newInstance();
+                        Map<String, Object> contentAssoc = UtilMisc.newMap();
                         contentAssoc.put("contentId", "HOME_DUCUMENT");
                         contentAssoc.put("contentAssocTypeId", "TREE_CHILD");
                         contentAssoc.put("contentIdTo", "ROOT");
@@ -193,7 +191,7 @@ In order ta make this service active add the following to the service definition
                                                 .queryList();
 
                                         if (contentAssocs.size() == 0) {
-                                            contentAssoc = FastMap.newInstance();
+                                            contentAssoc = UtilMisc.newMap();
                                             contentAssoc.put("contentId", contentId);
                                             contentAssoc.put("contentAssocTypeId", "TREE_CHILD");
                                             contentAssoc.put("contentIdTo", rootContent);
@@ -284,7 +282,7 @@ In order ta make this service active add the following to the service definition
                     contentId = null;
                     if (contentNameMatch == false) {
                         //create DataResource
-                        Map<String,Object> data = FastMap.newInstance();
+                        Map<String,Object> data = UtilMisc.newMap();
                         data.put("userLogin", userLogin);
                         String dataResourceId = dispatcher.runSync("createDataResource", data).get("dataResourceId").toString();
                         //Debug.logInfo("==dataResourceId" + dataResourceId);
@@ -307,7 +305,7 @@ In order ta make this service active add the following to the service definition
                         delegator.create(Entity);
 
                         //Relation Content
-                        Map<String,Object> contentAssoc = FastMap.newInstance();
+                        Map<String,Object> contentAssoc = UtilMisc.newMap();
                         contentAssoc.put("contentId", contentId);
                         contentAssoc.put("contentAssocTypeId", "SUB_CONTENT");
                         contentAssoc.put("contentIdTo", rootContent);
@@ -346,7 +344,7 @@ In order ta make this service active add the following to the service definition
                     contentId = null;
                     if (contentNameMatch == false) {
                         //create DataResource
-                        Map<String,Object> data = FastMap.newInstance();
+                        Map<String,Object> data = UtilMisc.newMap();
                         data.put("userLogin", userLogin);
                         String dataResourceId = dispatcher.runSync("createDataResource",data).get("dataResourceId").toString();
                         //Debug.logInfo("==dataResourceId" + dataResourceId);
@@ -369,7 +367,7 @@ In order ta make this service active add the following to the service definition
                         delegator.create(Entity);
 
                         //create ContentAssoc
-                        Map<String,Object> contentAssoc = FastMap.newInstance();
+                        Map<String,Object> contentAssoc = UtilMisc.newMap();
                         contentAssoc.put("contentId", contentId);
                         contentAssoc.put("contentAssocTypeId", "SUB_CONTENT");
                         contentAssoc.put("contentIdTo", rootContent);

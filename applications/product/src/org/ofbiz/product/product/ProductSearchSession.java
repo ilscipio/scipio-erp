@@ -35,10 +35,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-import javolution.util.FastSet;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
@@ -94,7 +90,7 @@ public class ProductSearchSession {
 
         /** Basic copy constructor */
         public ProductSearchOptions(ProductSearchOptions productSearchOptions) {
-            this.constraintList = FastList.newInstance();
+            this.constraintList = UtilMisc.newList();
             if (UtilValidate.isNotEmpty(productSearchOptions.constraintList)) {
                 this.constraintList.addAll(productSearchOptions.constraintList);
             }
@@ -116,7 +112,7 @@ public class ProductSearchSession {
         public static void addConstraint(ProductSearchConstraint productSearchConstraint, HttpSession session) {
             ProductSearchOptions productSearchOptions = getProductSearchOptions(session);
             if (productSearchOptions.constraintList == null) {
-                productSearchOptions.constraintList = FastList.newInstance();
+                productSearchOptions.constraintList = UtilMisc.newList();
             }
             if (!productSearchOptions.constraintList.contains(productSearchConstraint)) {
                 productSearchOptions.constraintList.add(productSearchConstraint);
@@ -131,7 +127,7 @@ public class ProductSearchSession {
         public static void removeConstraintsByType(Class<? extends ProductSearchConstraint> constraintCls, HttpSession session) {
             ProductSearchOptions productSearchOptions = getProductSearchOptions(session);
             if (productSearchOptions.constraintList == null) {
-                productSearchOptions.constraintList = FastList.newInstance();
+                productSearchOptions.constraintList = UtilMisc.newList();
             }
             Iterator<ProductSearchConstraint> it = productSearchOptions.constraintList.iterator();
             while(it.hasNext()) {
@@ -301,7 +297,7 @@ public class ProductSearchSession {
 
         public List<String> searchGetConstraintStrings(boolean detailed, Delegator delegator, Locale locale) {
             List<ProductSearchConstraint> productSearchConstraintList = this.getConstraintList();
-            List<String> constraintStrings = FastList.newInstance();
+            List<String> constraintStrings = UtilMisc.newList();
             if (productSearchConstraintList == null) {
                 return constraintStrings;
             }
@@ -370,7 +366,7 @@ public class ProductSearchSession {
     public static List<ProductSearchOptions> getSearchOptionsHistoryList(HttpSession session) {
         List<ProductSearchOptions> optionsHistoryList = UtilGenerics.checkList(session.getAttribute("_PRODUCT_SEARCH_OPTIONS_HISTORY_"));
         if (optionsHistoryList == null) {
-            optionsHistoryList = FastList.newInstance();
+            optionsHistoryList = UtilMisc.newList();
             session.setAttribute("_PRODUCT_SEARCH_OPTIONS_HISTORY_", optionsHistoryList);
         }
         return optionsHistoryList;
@@ -436,7 +432,7 @@ public class ProductSearchSession {
         String productStoreId = ProductStoreWorker.getProductStoreId(request);
         if (productStoreId != null) {
             // get a Set of all keywords in the search, if there are any...
-            Set<String> keywords = FastSet.newInstance();
+            Set<String> keywords = UtilMisc.newSet();
             List<ProductSearchConstraint> constraintList = ProductSearchOptions.getConstraintList(session);
             if (constraintList != null) {
                 for (ProductSearchConstraint constraint: constraintList) {
@@ -943,7 +939,7 @@ public class ProductSearchSession {
         //int previousViewSize = 20;
         int previousViewSize = viewSize;
         Map<String, Object> requestParams = UtilHttp.getCombinedMap(request);
-        List<String> keywordTypeIds = FastList.newInstance();
+        List<String> keywordTypeIds = UtilMisc.newList();
         if (requestParams.get("keywordTypeId") instanceof String) {
             keywordTypeIds.add((String) requestParams.get("keywordTypeId"));
         } else if (requestParams.get("keywordTypeId") instanceof List){
@@ -981,7 +977,7 @@ public class ProductSearchSession {
         highIndex = (viewIndex + 1) * viewSize;
 
         // ========== Do the actual search
-        List<String> productIds = FastList.newInstance();
+        List<String> productIds = UtilMisc.newList();
         String visitId = VisitHandler.getVisitId(session);
         List<ProductSearchConstraint> productSearchConstraintList = ProductSearchOptions.getConstraintList(session);
         String noConditionFind = (String) requestParams.get("noConditionFind");
@@ -995,11 +991,11 @@ public class ProductSearchSession {
 
             int addOnTopTotalListSize = 0;
             int addOnTopListSize = 0;
-            List<GenericValue> addOnTopProductCategoryMembers = FastList.newInstance();
+            List<GenericValue> addOnTopProductCategoryMembers = UtilMisc.newList();
             if (UtilValidate.isNotEmpty(addOnTopProdCategoryId)) {
                 // always include the members of the addOnTopProdCategoryId
                 Timestamp now = UtilDateTime.nowTimestamp();
-                List<EntityCondition> addOnTopProdCondList = FastList.newInstance();
+                List<EntityCondition> addOnTopProdCondList = UtilMisc.newList();
                 addOnTopProdCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, now)));
                 addOnTopProdCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN, now));
                 addOnTopProdCondList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, addOnTopProdCategoryId));
@@ -1082,7 +1078,7 @@ public class ProductSearchSession {
         String searchSortOrderString = searchGetSortOrderString(false, request);
 
         // ========== populate the result Map
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
 
         result.put("productIds", productIds);
         result.put("viewIndex", Integer.valueOf(viewIndex));
@@ -1329,7 +1325,7 @@ public class ProductSearchSession {
             return null;
         }
 
-        List<Map<String, String>> featureCountList = FastList.newInstance();
+        List<Map<String, String>> featureCountList = UtilMisc.newList();
         GenericValue searchResult = null;
         while ((searchResult = eli.next()) != null) {
             featureCountList.add(UtilMisc.<String, String>toMap("productFeatureId", (String) searchResult.get("pfacProductFeatureId"), "productFeatureTypeId", (String) searchResult.get("pfcProductFeatureTypeId"), "description", (String) searchResult.get("pfcDescription"), "featureCount", Long.toString((Long) searchResult.get("featureCount"))));
@@ -1378,7 +1374,7 @@ public class ProductSearchSession {
 
         DynamicViewEntity dynamicViewEntity = productSearchContext.dynamicViewEntity;
         List<EntityCondition> entityConditionList = productSearchContext.entityConditionList;
-        List<String> fieldsToSelect = FastList.newInstance();
+        List<String> fieldsToSelect = UtilMisc.newList();
 
         dynamicViewEntity.addMemberEntity("PPC", "ProductPrice");
         dynamicViewEntity.addAlias("PPC", "ppcProductPriceTypeId", "productPriceTypeId", null, null, null, null);
@@ -1444,7 +1440,7 @@ public class ProductSearchSession {
 
         DynamicViewEntity dynamicViewEntity = productSearchContext.dynamicViewEntity;
         List<EntityCondition> entityConditionList = productSearchContext.entityConditionList;
-        List<String> fieldsToSelect = FastList.newInstance();
+        List<String> fieldsToSelect = UtilMisc.newList();
 
         dynamicViewEntity.addMemberEntity("PCMC", "ProductCategoryMember");
         dynamicViewEntity.addAlias("PCMC", "pcmcProductCategoryId", "productCategoryId", null, null, null, null);
@@ -1456,7 +1452,7 @@ public class ProductSearchSession {
         entityConditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("pcmcThruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("pcmcThruDate", EntityOperator.GREATER_THAN, productSearchContext.nowTimestamp)));
         entityConditionList.add(EntityCondition.makeCondition("pcmcFromDate", EntityOperator.LESS_THAN, productSearchContext.nowTimestamp));
 
-        Set<String> productCategoryIdSet = FastSet.newInstance();
+        Set<String> productCategoryIdSet = UtilMisc.newSet();
         ProductSearch.getAllSubCategoryIds(productCategoryId, productCategoryIdSet, delegator, productSearchContext.nowTimestamp);
         entityConditionList.add(EntityCondition.makeCondition("pcmcProductCategoryId", EntityOperator.IN, productCategoryIdSet));
 

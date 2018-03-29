@@ -30,9 +30,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
@@ -223,7 +220,7 @@ public class ShoppingListEvents {
 
             shoppingListItems = shoppingList.getRelated("ShoppingListItem", null, null, false);
             if (shoppingListItems == null) {
-                shoppingListItems = FastList.newInstance();
+                shoppingListItems = UtilMisc.newList();
             }
 
             // include all items of child lists if flagged to do so
@@ -272,7 +269,7 @@ public class ShoppingListEvents {
                 String listId = shoppingListItem.getString("shoppingListId");
                 String itemId = shoppingListItem.getString("shoppingListItemSeqId");
 
-                Map<String, Object> attributes = FastMap.newInstance();
+                Map<String, Object> attributes = UtilMisc.newMap();
                 // list items are noted in the shopping cart
                 if (setAsListItem) {
                     attributes.put("shoppingListId", listId);
@@ -335,7 +332,7 @@ public class ShoppingListEvents {
             // do nothing, just won't pass to service if it is null
         }
 
-        Map<String, Object> serviceInMap = FastMap.newInstance();
+        Map<String, Object> serviceInMap = UtilMisc.newMap();
         serviceInMap.put("shoppingListId", request.getParameter("shoppingListId"));
         serviceInMap.put("shoppingListItemSeqId", request.getParameter("shoppingListItemSeqId"));
         serviceInMap.put("productId", request.getParameter("add_product_id"));
@@ -571,7 +568,7 @@ public class ShoppingListEvents {
      * Returns Map keyed on item sequence ID containing a list of survey response IDs
      */
     public static Map<String, List<String>> getItemSurveyInfos(List<GenericValue> items) {
-        Map<String, List<String>> surveyInfos = FastMap.newInstance();
+        Map<String, List<String>> surveyInfos = UtilMisc.newMap();
         if (UtilValidate.isNotEmpty(items)) {
             for (GenericValue item : items) {
                 String listId = item.getString("shoppingListId");
@@ -587,7 +584,7 @@ public class ShoppingListEvents {
      * Returns a list of survey response IDs for a shopping list item
      */
     public static List<String> getItemSurveyInfo(GenericValue item) {
-        List<String> responseIds = FastList.newInstance();
+        List<String> responseIds = UtilMisc.newList();
         List<GenericValue> surveyResp = null;
         try {
             surveyResp = item.getRelated("ShoppingListItemSurvey", null, null, false);

@@ -26,7 +26,6 @@ import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
-import javolution.util.FastList;
 
 // SCIPIO: NOTE: some patches so doesn't crash without userLogin
 

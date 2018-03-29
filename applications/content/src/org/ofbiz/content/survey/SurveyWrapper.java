@@ -29,10 +29,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-import javolution.util.FastSet;
-
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -101,7 +97,7 @@ public class SurveyWrapper {
      */
     public void setPassThru(Map<String, Object> passThru) {
         if (passThru != null) {
-            this.passThru = FastMap.newInstance();
+            this.passThru = UtilMisc.newMap();
             this.passThru.putAll(passThru);
         }
     }
@@ -112,7 +108,7 @@ public class SurveyWrapper {
      */
     public void setDefaultValues(Map<String, Object> defaultValues) {
         if (defaultValues != null) {
-            this.defaultValues = FastMap.newInstance();
+            this.defaultValues = UtilMisc.newMap();
             this.defaultValues.putAll(defaultValues);
         }
     }
@@ -124,7 +120,7 @@ public class SurveyWrapper {
      */
     public void addToTemplateContext(String name, Object value) {
         if (templateContext == null) {
-            templateContext = FastMap.newInstance();
+            templateContext = UtilMisc.newMap();
         }
         templateContext.put(name, value);
     }
@@ -180,7 +176,7 @@ public class SurveyWrapper {
             currentAnswers = this.getResponseAnswers(null);
         }
 
-        Map<String, Object> sqaaWithColIdListByMultiRespId = FastMap.newInstance();
+        Map<String, Object> sqaaWithColIdListByMultiRespId = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
         for (GenericValue surveyQuestionAndAppl : surveyQuestionAndAppls) {
             String surveyMultiRespColId = surveyQuestionAndAppl.getString("surveyMultiRespColId");
             if (UtilValidate.isNotEmpty(surveyMultiRespColId)) {
@@ -190,11 +186,11 @@ public class SurveyWrapper {
         }
 
         if (this.templateContext == null) {
-            this.templateContext = FastMap.newInstance();
+            this.templateContext = UtilMisc.newMap();
         }
         
         // SCIPIO: create local context that includes parent context.
-        Map<String, Object> templateContext = FastMap.newInstance();
+        Map<String, Object> templateContext = UtilMisc.newMap();
         if (parentContext != null) {
             templateContext.putAll(parentContext);
         }
@@ -205,7 +201,7 @@ public class SurveyWrapper {
         templateContext.put("surveyResults", results);
         templateContext.put("surveyQuestionAndAppls", surveyQuestionAndAppls);
         templateContext.put("sqaaWithColIdListByMultiRespId", sqaaWithColIdListByMultiRespId);
-        templateContext.put("alreadyShownSqaaPkWithColId", FastSet.newInstance());
+        templateContext.put("alreadyShownSqaaPkWithColId", UtilMisc.newSet());
         templateContext.put("surveyAnswers", currentAnswers);
         templateContext.put("surveyResponseId", responseId);
         templateContext.put("sequenceSort", UtilMisc.toList("sequenceNum"));
@@ -291,7 +287,7 @@ public class SurveyWrapper {
 
     // returns a list of SurveyQuestions (in order by sequence number) for the current Survey
     public List<GenericValue> getSurveyQuestionAndAppls() {
-        List<GenericValue> questions = FastList.newInstance();
+        List<GenericValue> questions = UtilMisc.newList();
 
         try {
             questions = EntityQuery.use(delegator).from("SurveyQuestionAndAppl")
@@ -363,7 +359,7 @@ public class SurveyWrapper {
 
     // returns a Map of answers keyed on SurveyQuestion ID from the most current SurveyResponse ID
     public Map<String, Object> getResponseAnswers(String responseId) throws SurveyWrapperException {
-        Map<String, Object> answerMap = FastMap.newInstance();
+        Map<String, Object> answerMap = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
 
         if (responseId != null) {
             List<GenericValue> answers = null;
@@ -386,7 +382,7 @@ public class SurveyWrapper {
                 if (key.toUpperCase().startsWith("ANSWERS_")) {
                     int splitIndex = key.indexOf('_');
                     String questionId = key.substring(splitIndex+1);
-                    Map<String, Object> thisAnswer = FastMap.newInstance();
+                    Map<String, Object> thisAnswer = UtilMisc.newMap();
                     String answer = (String) passThru.remove(key);
                     thisAnswer.put("booleanResponse", answer);
                     thisAnswer.put("currencyResponse", answer);
@@ -440,7 +436,7 @@ public class SurveyWrapper {
     }
 
     public Map<String, Object> getResults(List<GenericValue> questions) throws SurveyWrapperException {
-        Map<String, Object> questionResults = FastMap.newInstance();
+        Map<String, Object> questionResults = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
         if (questions != null) {
             for (GenericValue question : questions) {
                 Map<String, Object> results = getResultInfo(question);
@@ -454,7 +450,7 @@ public class SurveyWrapper {
 
     // returns a map of question reqsults
     public Map<String, Object> getResultInfo(GenericValue question) throws SurveyWrapperException {
-        Map<String, Object> resultMap = FastMap.newInstance();
+        Map<String, Object> resultMap = UtilMisc.newMap();
 
         // special keys in the result:
         // "_q_type"      - question type (SurveyQuestionTypeId)
@@ -485,7 +481,7 @@ public class SurveyWrapper {
 
                 // create the map of option info ("_total", "_percent")
                 for (String optId : thisResult.keySet()) {
-                    Map<String, Object> optMap = FastMap.newInstance();
+                    Map<String, Object> optMap = UtilMisc.newMap();
                     Long optTotal = (Long) thisResult.get(optId);
                     if (optTotal == null) {
                         optTotal = Long.valueOf(0);
@@ -679,7 +675,7 @@ public class SurveyWrapper {
     }
 
     private Map<String, Object> getOptionResult(GenericValue question) throws SurveyWrapperException {
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         long total = 0;
 
         boolean beganTransaction = false;

@@ -1,8 +1,6 @@
 import org.ofbiz.security.Security;
 
 import org.ofbiz.webapp.stats.*;
-import javolution.util.FastList;
-import javolution.util.FastMap;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.sql.Timestamp;

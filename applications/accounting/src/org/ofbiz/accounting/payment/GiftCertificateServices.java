@@ -26,8 +26,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
@@ -413,7 +411,7 @@ public class GiftCertificateServices {
             // obtain the order information
             OrderReadHelper orh = new OrderReadHelper(delegator, orderPaymentPreference.getString("orderId"));
 
-            Map<String, Object> redeemCtx = FastMap.newInstance();
+            Map<String, Object> redeemCtx = UtilMisc.newMap();
             redeemCtx.put("userLogin", userLogin);
             redeemCtx.put("productStoreId", orh.getProductStoreId());
             redeemCtx.put("cardNumber", giftCard.get("finAccountId"));
@@ -658,7 +656,7 @@ public class GiftCertificateServices {
             currency = EntityUtilProperties.getPropertyValue("general.properties", "currency.uom.id.default", "USD", delegator);
         }
 
-        Map<String, Object> refundCtx = FastMap.newInstance();
+        Map<String, Object> refundCtx = UtilMisc.newMap();
         refundCtx.put("productStoreId", productStoreId);
         refundCtx.put("currency", currency);
         refundCtx.put("partyId", partyId);
@@ -806,7 +804,7 @@ public class GiftCertificateServices {
         }
 
         // make a map of answer info
-        Map<String, Object> answerMap = FastMap.newInstance();
+        Map<String, Object> answerMap = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
         if (responseAnswers != null) {
             for (GenericValue answer : responseAnswers) {
                 GenericValue question = null;
@@ -839,7 +837,7 @@ public class GiftCertificateServices {
         int qtyLoop = quantity.intValue();
         for (int i = 0; i < qtyLoop; i++) {
             // create a gift certificate
-            Map<String, Object> createGcCtx = FastMap.newInstance();
+            Map<String, Object> createGcCtx = UtilMisc.newMap();
             //createGcCtx.put("paymentConfig", paymentConfig);
             createGcCtx.put("productStoreId", productStoreId);
             createGcCtx.put("currency", currency);
@@ -863,7 +861,7 @@ public class GiftCertificateServices {
             }
 
             // create the fulfillment record
-            Map<String, Object> gcFulFill = FastMap.newInstance();
+            Map<String, Object> gcFulFill = UtilMisc.newMap();
             gcFulFill.put("typeEnumId", "GC_ACTIVATE");
             gcFulFill.put("partyId", partyId);
             gcFulFill.put("orderId", orderId);
@@ -911,7 +909,7 @@ public class GiftCertificateServices {
                         bcc = orderEmails;
                     }
                 }
-                Map<String, Object> emailCtx = FastMap.newInstance();
+                Map<String, Object> emailCtx = UtilMisc.newMap();
                 String bodyScreenLocation = productStoreEmail.getString("bodyScreenLocation");
                 if (UtilValidate.isEmpty(bodyScreenLocation)) {
                     bodyScreenLocation = ProductStoreWorker.getDefaultProductStoreEmailScreenLocation(emailType);
@@ -1035,7 +1033,7 @@ public class GiftCertificateServices {
         }
 
         // make a map of answer info
-        Map<String, Object> answerMap = FastMap.newInstance();
+        Map<String, Object> answerMap = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
         if (responseAnswers != null) {
             for (GenericValue answer : responseAnswers) {
                 GenericValue question = null;
@@ -1060,7 +1058,7 @@ public class GiftCertificateServices {
         String pinNumber = (String) answerMap.get(pinNumberKey);
 
         // reload the gift card
-        Map<String, Object> reloadCtx = FastMap.newInstance();
+        Map<String, Object> reloadCtx = UtilMisc.newMap();
         reloadCtx.put("productStoreId", productStoreId);
         reloadCtx.put("currency", currency);
         reloadCtx.put("partyId", partyId);
@@ -1083,7 +1081,7 @@ public class GiftCertificateServices {
         }
 
         // create the fulfillment record
-        Map<String, Object> gcFulFill = FastMap.newInstance();
+        Map<String, Object> gcFulFill = UtilMisc.newMap();
         gcFulFill.put("typeEnumId", "GC_RELOAD");
         gcFulFill.put("userLogin", userLogin);
         gcFulFill.put("partyId", partyId);
@@ -1141,7 +1139,7 @@ public class GiftCertificateServices {
         } else {
             answerMap.put("locale", locale);
 
-            Map<String, Object> emailCtx = FastMap.newInstance();
+            Map<String, Object> emailCtx = UtilMisc.newMap();
             String bodyScreenLocation = productStoreEmail.getString("bodyScreenLocation");
             if (UtilValidate.isEmpty(bodyScreenLocation)) {
                 bodyScreenLocation = ProductStoreWorker.getDefaultProductStoreEmailScreenLocation(emailType);
@@ -1235,7 +1233,7 @@ public class GiftCertificateServices {
             Debug.logInfo("Returnable INFO : " + returnableQuantity + " @ " + returnablePrice + " :: " + orderItem, module);
 
             // create the return header
-            Map<String, Object> returnHeaderInfo = FastMap.newInstance();
+            Map<String, Object> returnHeaderInfo = UtilMisc.newMap();
             returnHeaderInfo.put("fromPartyId", partyId);
             returnHeaderInfo.put("userLogin", userLogin);
             Map<String, Object> returnHeaderResp = null;
@@ -1265,7 +1263,7 @@ public class GiftCertificateServices {
             }
 
             // create the return item
-            Map<String, Object> returnItemInfo = FastMap.newInstance();
+            Map<String, Object> returnItemInfo = UtilMisc.newMap();
             returnItemInfo.put("returnId", returnId);
             returnItemInfo.put("returnReasonId", "RTN_DIG_FILL_FAIL");
             returnItemInfo.put("returnTypeId", "RTN_REFUND");
@@ -1315,7 +1313,7 @@ public class GiftCertificateServices {
             }
 
             // update the status to received so it can process
-            Map<String, Object> updateReturnInfo = FastMap.newInstance();
+            Map<String, Object> updateReturnInfo = UtilMisc.newMap();
             updateReturnInfo.put("returnId", returnId);
             updateReturnInfo.put("statusId", "RETURN_RECEIVED");
             updateReturnInfo.put("currentStatusId", "RETURN_REQUESTED");

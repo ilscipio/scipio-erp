@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
- import javolution.util.FastList
 
 import org.ofbiz.base.util.UtilValidate
 import org.ofbiz.entity.util.EntityUtil
@@ -25,7 +24,7 @@ import org.ofbiz.product.catalog.CatalogWorker
  prodCatalog = null;
  prodCatalogId = parameters.prodCatalogId;
  showScreen = "origin";
- List errMsgList = FastList.newInstance();
+ List errMsgList = [];
  
  productStore = EntityUtil.getFirst(delegator.findByAnd("ProductStore", [payToPartyId: partyId], null, false));
  if(productStore){

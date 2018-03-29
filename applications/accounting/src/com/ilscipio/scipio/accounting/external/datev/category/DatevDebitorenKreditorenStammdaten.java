@@ -17,8 +17,6 @@ import com.ilscipio.scipio.accounting.external.BaseOperationStats;
 import com.ilscipio.scipio.accounting.external.datev.DatevException;
 import com.ilscipio.scipio.accounting.external.datev.DatevHelper;
 
-import javolution.util.FastMap;
-
 public class DatevDebitorenKreditorenStammdaten extends AbstractDatevDataCategory {
 
     private static final String module = DatevDebitorenKreditorenStammdaten.class.getName();
@@ -29,7 +27,7 @@ public class DatevDebitorenKreditorenStammdaten extends AbstractDatevDataCategor
 
     @Override
     public void processRecord(int index, Map<String, String> recordMap) throws DatevException {
-        Map<String, GenericValue> recordsToStore = FastMap.newInstance();
+        Map<String, GenericValue> recordsToStore = UtilMisc.newMap();
         try {
             for (String fieldName : recordMap.keySet()) {
 //                String fieldId = fieldDefinition.getString("fieldId");

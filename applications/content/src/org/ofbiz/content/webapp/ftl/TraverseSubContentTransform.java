@@ -25,8 +25,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
+import org.ofbiz.base.util.UtilMisc;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -133,9 +132,9 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
         }
 
         final GenericValue subContentDataResourceView = view;
-        final Map<String, Object> traverseContext = FastMap.newInstance();
+        final Map<String, Object> traverseContext = UtilMisc.newMap();
         traverseContext.put("delegator", delegator);
-        Map<String, Object> whenMap = FastMap.newInstance();
+        Map<String, Object> whenMap = UtilMisc.newMap();
         whenMap.put("followWhen", templateCtx.get("followWhen"));
         whenMap.put("pickWhen", templateCtx.get("pickWhen"));
         whenMap.put("returnBeforePickWhen", templateCtx.get("returnBeforePickWhen"));
@@ -180,7 +179,7 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
             @Override
             public int onStart() throws TemplateModelException, IOException {
                 //templateContext.put("buf", new StringBuilder());
-                List<Map<String, Object>> nodeTrail = FastList.newInstance();
+                List<Map<String, Object>> nodeTrail = UtilMisc.newList();
                 traverseContext.put("nodeTrail", nodeTrail);
                 // GenericValue content = null;
 /*
@@ -287,7 +286,7 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
 
             private boolean checkWhen (GenericValue thisContent, String contentAssocTypeId) {
                 boolean isPick = false;
-                Map<String, Object> assocContext = FastMap.newInstance();
+                Map<String, Object> assocContext = UtilMisc.newMap();
                 if (UtilValidate.isEmpty(contentAssocTypeId)) {
                     contentAssocTypeId = "";
                 }
@@ -309,7 +308,7 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
                 assocContext.put("content", thisContent);
                 List<Object> purposes = ContentWorker.getPurposes(thisContent);
                 assocContext.put("purposes", purposes);
-                List<String> contentTypeAncestry = FastList.newInstance();
+                List<String> contentTypeAncestry = UtilMisc.newList();
                 String contentTypeId = (String)thisContent.get("contentTypeId");
                 try {
                     ContentWorker.getContentTypeAncestry(delegator, contentTypeId, contentTypeAncestry);

@@ -1,11 +1,9 @@
-import javolution.util.FastList
-
 import org.ofbiz.base.util.Debug
 import org.ofbiz.entity.condition.EntityCondition
 import org.ofbiz.entity.condition.EntityOperator
 
                 
-List mainAndExprs = FastList.newInstance();
+List mainAndExprs = [];
 
 mainAndExprs.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, context.partyId));
 

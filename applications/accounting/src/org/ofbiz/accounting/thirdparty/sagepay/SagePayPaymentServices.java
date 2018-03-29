@@ -26,8 +26,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javolution.util.FastMap;
-
 import org.ofbiz.accounting.payment.PaymentGatewayServices;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
@@ -53,7 +51,7 @@ public class SagePayPaymentServices {
         Debug.logInfo("SagePay - Entered buildCustomerBillingInfo", module);
         Debug.logInfo("SagePay buildCustomerBillingInfo context : " + context, module);
 
-        Map<String, String> billingInfo = FastMap.newInstance();
+        Map<String, String> billingInfo = UtilMisc.newMap();
 
         String orderId = null;
         BigDecimal processAmount = null;

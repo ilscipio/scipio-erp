@@ -27,10 +27,9 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
@@ -62,10 +61,10 @@ public class RotateImage {
         String angle = (String) context.get("angle");
         
         if (UtilValidate.isNotEmpty(imageName)) {
-            Map<String, Object> contentCtx = FastMap.newInstance();
+            Map<String, Object> contentCtx = UtilMisc.newMap();
             contentCtx.put("contentTypeId", "DOCUMENT");
             contentCtx.put("userLogin", userLogin);
-            Map<String, Object> contentResult = FastMap.newInstance();
+            Map<String, Object> contentResult = UtilMisc.newMap();
             try {
                 contentResult = dispatcher.runSync("createContent", contentCtx);
             } catch (GenericServiceException e) {
@@ -73,10 +72,10 @@ public class RotateImage {
                 return ServiceUtil.returnError(e.getMessage());
             }
             
-            Map<String, Object> contentThumb = FastMap.newInstance();
+            Map<String, Object> contentThumb = UtilMisc.newMap();
             contentThumb.put("contentTypeId", "DOCUMENT");
             contentThumb.put("userLogin", userLogin);
-            Map<String, Object> contentThumbResult = FastMap.newInstance();
+            Map<String, Object> contentThumbResult = UtilMisc.newMap();
             try {
                 contentThumbResult = dispatcher.runSync("createContent", contentThumb);
             } catch (GenericServiceException e) {
@@ -126,7 +125,7 @@ public class RotateImage {
             ImageManagementServices.createContentAndDataResource(dctx, userLogin, filenameToUse, imageUrlResource, contentId, "image/jpeg");
             ImageManagementServices.createContentAndDataResource(dctx, userLogin, filenameTouseThumb, imageUrlThumb, contentIdThumb, "image/jpeg");
             
-            Map<String, Object> createContentAssocMap = FastMap.newInstance();
+            Map<String, Object> createContentAssocMap = UtilMisc.newMap();
             createContentAssocMap.put("contentAssocTypeId", "IMAGE_THUMBNAIL");
             createContentAssocMap.put("contentId", contentId);
             createContentAssocMap.put("contentIdTo", contentIdThumb);
@@ -139,7 +138,7 @@ public class RotateImage {
                 return ServiceUtil.returnError(e.getMessage());
             }
             
-            Map<String, Object> productContentCtx = FastMap.newInstance();
+            Map<String, Object> productContentCtx = UtilMisc.newMap();
             productContentCtx.put("productId", productId);
             productContentCtx.put("productContentTypeId", "IMAGE");
             productContentCtx.put("fromDate", UtilDateTime.nowTimestamp());
@@ -153,7 +152,7 @@ public class RotateImage {
                 return ServiceUtil.returnError(e.getMessage());
             }
             
-            Map<String, Object> contentApprovalCtx = FastMap.newInstance();
+            Map<String, Object> contentApprovalCtx = UtilMisc.newMap();
             contentApprovalCtx.put("contentId", contentId);
             contentApprovalCtx.put("userLogin", userLogin);
             try {

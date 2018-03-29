@@ -15,8 +15,7 @@ import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.product.category.CategoryContentWrapper;
 import org.ofbiz.service.LocalDispatcher;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
+import org.ofbiz.base.util.UtilMisc;
 
 public class CategoryHelper {
 
@@ -54,7 +53,7 @@ public class CategoryHelper {
     
     @SuppressWarnings("unchecked")
     public List<Map<String, Object>> makeCategoryInfos(List<Object> categoryIdsOrItems) {
-        List<Map<String, Object>> res = FastList.newInstance();
+        List<Map<String, Object>> res = UtilMisc.newList();
         for(Object item : categoryIdsOrItems) {
             if (item != null) {
                 if (item instanceof String) {
@@ -78,7 +77,7 @@ public class CategoryHelper {
     }
     
     public Map<String, Object> makeCategoryInfo(String categoryId, Map<String, Object> item) {
-        Map<String, Object> info = FastMap.newInstance();
+        Map<String, Object> info = UtilMisc.newMap();
         info.put("item", item);
         info.put("productCategoryId", categoryId);
 

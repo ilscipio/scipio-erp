@@ -28,8 +28,6 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
@@ -79,7 +77,7 @@ public class RenderSubContentTransform implements TemplateTransformModel {
         final Environment env = FreeMarkerWorker.getCurrentEnvironment();
         Map<String, Object> ctx = FreeMarkerWorker.getWrappedObject("context", env);
         if (ctx == null) {
-            ctx = FastMap.newInstance();
+            ctx = UtilMisc.newMap();
         }
         final String mapKey = FreeMarkerWorker.getArg(args, "mapKey", ctx);
         final String subContentId = FreeMarkerWorker.getArg(args, "subContentId", ctx);

@@ -22,9 +22,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
@@ -51,7 +48,7 @@ public class SalesOrderTest extends OFBizTestCase {
         // SCIPIO: new default store
         Map<String, Object> ctx = UtilMisc.<String, Object>toMap("partyId", "DemoCustomer", "orderTypeId", "SALES_ORDER", "currencyUom", "USD", "productStoreId", "ScipioShop");
 
-        List<GenericValue> orderPaymentInfo = FastList.newInstance();
+        List<GenericValue> orderPaymentInfo = UtilMisc.newList();
         GenericValue orderContactMech = delegator.makeValue("OrderContactMech", UtilMisc.toMap("contactMechId", "9015", "contactMechPurposeTypeId", "BILLING_LOCATION"));
         orderPaymentInfo.add(orderContactMech);
 
@@ -60,7 +57,7 @@ public class SalesOrderTest extends OFBizTestCase {
         orderPaymentInfo.add(orderPaymentPreference);
         ctx.put("orderPaymentInfo", orderPaymentInfo);
 
-        List<GenericValue> orderItemShipGroupInfo = FastList.newInstance();
+        List<GenericValue> orderItemShipGroupInfo = UtilMisc.newList();
         orderContactMech.set("contactMechPurposeTypeId", "SHIPPING_LOCATION");
         orderItemShipGroupInfo.add(orderContactMech);
 
@@ -104,12 +101,12 @@ public class SalesOrderTest extends OFBizTestCase {
 
         ctx.put("orderItemShipGroupInfo", orderItemShipGroupInfo);
 
-        List<GenericValue> orderAdjustments = FastList.newInstance();
+        List<GenericValue> orderAdjustments = UtilMisc.newList();
         orderAdjustment = delegator.makeValue("OrderAdjustment", UtilMisc.toMap("orderAdjustmentTypeId", "PROMOTION_ADJUSTMENT", "productPromoActionSeqId", "01", "productPromoId", "9011", "productPromoRuleId", "01", "amount", new BigDecimal(-3.84)));
         orderAdjustments.add(orderAdjustment);
         ctx.put("orderAdjustments", orderAdjustments);
 
-        List<GenericValue> orderItems = FastList.newInstance();
+        List<GenericValue> orderItems = UtilMisc.newList();
         GenericValue orderItem = delegator.makeValue("OrderItem", UtilMisc.toMap("orderItemSeqId", "00001", "orderItemTypeId", "PRODUCT_ORDER_ITEM", "prodCatalogId", "DemoCatalog", "productId", "CAM-2644", "quantity", BigDecimal.ONE, "selectedAmount", BigDecimal.ZERO));
         orderItem.set("isPromo", "N");
         orderItem.set("isModifiedPrice", "N");
@@ -128,13 +125,13 @@ public class SalesOrderTest extends OFBizTestCase {
         
         ctx.put("orderItems", orderItems);
 
-        List<GenericValue> orderTerms = FastList.newInstance();
+        List<GenericValue> orderTerms = UtilMisc.newList();
         ctx.put("orderTerms", orderTerms);
 
-        GenericValue OrderContactMech = delegator.makeValue("OrderContactMech", FastMap.newInstance());
+        GenericValue OrderContactMech = delegator.makeValue("OrderContactMech", UtilMisc.newMap());
         OrderContactMech.set("contactMechPurposeTypeId", "SHIPPING_LOCATION");
         OrderContactMech.set("contactMechId", "10000");
-        List<GenericValue> orderContactMechs = FastList.newInstance();
+        List<GenericValue> orderContactMechs = UtilMisc.newList();
         orderContactMechs.add(OrderContactMech);
 
         ctx.put("placingCustomerPartyId", "DemoCustomer");

@@ -26,8 +26,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilFormatOut;
@@ -58,7 +56,7 @@ public class RenderSubContentAsText implements TemplateTransformModel {
     public Writer getWriter(final Writer out, Map args) {
         final Environment env = FreeMarkerWorker.getCurrentEnvironment();
         // final Map templateCtx = FreeMarkerWorker.getWrappedObject("context", env);
-        // final Map templateCtx = FastMap.newInstance();
+        // final Map templateCtx = UtilMisc.newMap();
         final LocalDispatcher dispatcher = FreeMarkerWorker.getWrappedObject("dispatcher", env);
         final Delegator delegator = FreeMarkerWorker.getWrappedObject("delegator", env);
         final HttpServletRequest request = FreeMarkerWorker.getWrappedObject("request", env);
@@ -68,7 +66,7 @@ public class RenderSubContentAsText implements TemplateTransformModel {
             Debug.logInfo("in RenderSubContent, contentId(0):" + templateRoot.get("contentId"), module);
         }
         FreeMarkerWorker.getSiteParameters(request, templateRoot);
-        final Map<String, Object> savedValuesUp = FastMap.newInstance();
+        final Map<String, Object> savedValuesUp = UtilMisc.newMap();
         FreeMarkerWorker.saveContextValues(templateRoot, upSaveKeyNames, savedValuesUp);
         FreeMarkerWorker.overrideWithArgs(templateRoot, args);
         if (Debug.infoOn()) {
@@ -129,7 +127,7 @@ public class RenderSubContentAsText implements TemplateTransformModel {
         templateRoot.put("subDataResourceTypeId", subDataResourceTypeId);
         */
 
-        final Map<String, Object> savedValues = FastMap.newInstance();
+        final Map<String, Object> savedValues = UtilMisc.newMap();
 
         return new Writer(out) {
 

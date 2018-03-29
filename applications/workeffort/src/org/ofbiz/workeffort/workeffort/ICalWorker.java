@@ -32,9 +32,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
@@ -72,7 +69,7 @@ public class ICalWorker {
     }
 
     protected static Map<String, Object> createConversionContext(HttpServletRequest request) {
-        Map<String, Object> context = FastMap.newInstance();
+        Map<String, Object> context = UtilMisc.newMap();
         Enumeration<String> attributeEnum = UtilGenerics.cast(request.getAttributeNames());
         while (attributeEnum.hasMoreElements()) {
             String attributeName = attributeEnum.nextElement();
@@ -174,8 +171,8 @@ public class ICalWorker {
             PropFindHelper helper = new PropFindHelper(requestDocument);
             if (!helper.isAllProp() && !helper.isPropName()) {
                 Document responseDocument = helper.getResponseDocument();
-                List<Element> supportedProps = FastList.newInstance();
-                List<Element> unSupportedProps = FastList.newInstance();
+                List<Element> supportedProps = UtilMisc.newList();
+                List<Element> unSupportedProps = UtilMisc.newList();
                 List<Element> propElements = helper.getFindPropsList(ResponseHelper.DAV_NAMESPACE_URI);
                 for (Element propElement : propElements) {
                     if ("getetag".equals(propElement.getNodeName())) {

@@ -865,8 +865,8 @@ public class InvoiceWorker {
                                 String organizationPartyId = invoice.getString("partyId");
                                 String taxAuthGeoId = invoiceItem.getString("taxAuthGeoId");
                                 String taxAuthPartyId = invoiceItem.getString("taxAuthPartyId");
-                                GenericValue taxAuthorityGlAccount = delegator.findByPrimaryKeyCache("TaxAuthorityGlAccount", UtilMisc.toMap(
-                                        "organizationPartyId", organizationPartyId, "taxAuthGeoId", taxAuthGeoId, "taxAuthPartyId", taxAuthPartyId));
+                                GenericValue taxAuthorityGlAccount = delegator.findOne("TaxAuthorityGlAccount", UtilMisc.toMap(
+                                        "organizationPartyId", organizationPartyId, "taxAuthGeoId", taxAuthGeoId, "taxAuthPartyId", taxAuthPartyId), true);
                                 if (UtilValidate.isNotEmpty(taxAuthorityGlAccount)) {
                                     taxGlAccountId = taxAuthorityGlAccount.getString("taxGlAccountId");
                                 }
@@ -905,8 +905,8 @@ public class InvoiceWorker {
                             String organizationPartyId = invoice.getString("partyId");
                             String taxAuthGeoId = orderAdjustment.getString("taxAuthGeoId");
                             String taxAuthPartyId = orderAdjustment.getString("taxAuthPartyId");
-                            GenericValue taxAuthorityGlAccount = delegator.findByPrimaryKeyCache("TaxAuthorityGlAccount", UtilMisc.toMap(
-                                    "organizationPartyId", organizationPartyId, "taxAuthGeoId", taxAuthGeoId, "taxAuthPartyId", taxAuthPartyId));
+                            GenericValue taxAuthorityGlAccount = delegator.findOne("TaxAuthorityGlAccount", UtilMisc.toMap(
+                                    "organizationPartyId", organizationPartyId, "taxAuthGeoId", taxAuthGeoId, "taxAuthPartyId", taxAuthPartyId), true);
                             if (UtilValidate.isNotEmpty(taxAuthorityGlAccount)) {
                                 taxGlAccountId = taxAuthorityGlAccount.getString("taxGlAccountId");
                             }
@@ -952,8 +952,8 @@ public class InvoiceWorker {
                     String organizationPartyId = invoice.getString("partyId");
                     String taxAuthGeoId = invoiceItem.getString("taxAuthGeoId");
                     String taxAuthPartyId = invoiceItem.getString("taxAuthPartyId");
-                    GenericValue taxAuthorityGlAccount = delegator.findByPrimaryKeyCache("TaxAuthorityGlAccount", UtilMisc.toMap(
-                            "organizationPartyId", organizationPartyId, "taxAuthGeoId", taxAuthGeoId, "taxAuthPartyId", taxAuthPartyId));
+                    GenericValue taxAuthorityGlAccount = delegator.findOne("TaxAuthorityGlAccount", UtilMisc.toMap(
+                            "organizationPartyId", organizationPartyId, "taxAuthGeoId", taxAuthGeoId, "taxAuthPartyId", taxAuthPartyId), true);
                     if (UtilValidate.isNotEmpty(taxAuthorityGlAccount)) {
                         taxGlAccountId = taxAuthorityGlAccount.getString("taxGlAccountId");
                     }
@@ -988,8 +988,8 @@ public class InvoiceWorker {
                     String organizationPartyId = invoice.getString("partyId");
                     String taxAuthGeoId = orderAdjustment.getString("taxAuthGeoId");
                     String taxAuthPartyId = orderAdjustment.getString("taxAuthPartyId");
-                    GenericValue taxAuthorityGlAccount = invoice.getDelegator().findByPrimaryKeyCache("TaxAuthorityGlAccount", UtilMisc.toMap(
-                            "organizationPartyId", organizationPartyId, "taxAuthGeoId", taxAuthGeoId, "taxAuthPartyId", taxAuthPartyId));
+                    GenericValue taxAuthorityGlAccount = invoice.getDelegator().findOne("TaxAuthorityGlAccount", UtilMisc.toMap(
+                            "organizationPartyId", organizationPartyId, "taxAuthGeoId", taxAuthGeoId, "taxAuthPartyId", taxAuthPartyId), true);
                     if (UtilValidate.isNotEmpty(taxAuthorityGlAccount)) {
                         taxGlAccountId = taxAuthorityGlAccount.getString("taxGlAccountId");
                     }

@@ -23,8 +23,5 @@
         <dependency org="org.hsqldb" name="hsqldb" rev="2.4.0" transitive="false" conf="jdbc,hsqldb"/>
         <dependency org="mysql" name="mysql-connector-java" rev="5.1.46" transitive="false" conf="jdbc,mysql"/>
         <dependency org="org.postgresql" name="postgresql" rev="42.2.2" transitive="false" conf="jdbc,postgresql"/>
-        
-        <!-- WORKAROUND: fixes ivy failure for evicted postgresql dependencies -->
-        <conflict manager="all"/>
     </dependencies>
 </ivy-module>

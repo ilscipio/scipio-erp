@@ -33,13 +33,12 @@ import java.util.concurrent.Future;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import javolution.util.FastSet;
-
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.concurrent.ExecutionPool;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.FileUtil;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.entity.Delegator;
@@ -331,7 +330,7 @@ public class ArtifactInfoFactory {
     }
 
     public Set<ArtifactInfoBase> getAllArtifactInfosByNamePartial(String artifactNamePartial, String type) {
-        Set<ArtifactInfoBase> aiBaseSet = FastSet.newInstance();
+        Set<ArtifactInfoBase> aiBaseSet = UtilMisc.newSet();
 
         if (UtilValidate.isEmpty(artifactNamePartial)) {
             return aiBaseSet;

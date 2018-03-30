@@ -47,8 +47,6 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 import java.math.BigDecimal;
 
-import javolution.util.FastMap;
-
 /**
  * Order Events
  */
@@ -115,7 +113,7 @@ public class OrderEvents {
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         Locale locale = UtilHttp.getLocale(request);
 
-        Map<String, Object> resultMap = FastMap.newInstance();
+        Map<String, Object> resultMap = UtilMisc.newMap();
         String  orderId = request.getParameter("orderId");
         String[] selectedItems = request.getParameterValues("selectedItem");
         
@@ -127,7 +125,7 @@ public class OrderEvents {
                 String orderItemSeqId = orderItemSeqIdAndOrderItemShipGrpId[0];
                 String shipGroupSeqId = orderItemSeqIdAndOrderItemShipGrpId[1];
                         BigDecimal cancelQuantity = new BigDecimal(request.getParameter("iqm_"+orderItemSeqId+":"+shipGroupSeqId));
-                        Map<String, Object> contextMap = FastMap.newInstance();
+                        Map<String, Object> contextMap = UtilMisc.newMap();
                         contextMap.put("orderId", orderId);
                         contextMap.put("orderItemSeqId", orderItemSeqId);
                         contextMap.put("shipGroupSeqId", shipGroupSeqId);

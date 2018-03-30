@@ -27,8 +27,6 @@ import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.store.*;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
-import javolution.util.FastList
-import javolution.util.FastMap
 
 cart = session.getAttribute("shoppingCart");
 context.cart = cart;
@@ -57,11 +55,11 @@ context.validPaymentMethodTypeForSubscriptions = (UtilValidate.isNotEmpty(cart) 
 context.orderContainsSubscriptionItemsOnly = orh.orderContainsSubscriptionItemsOnly();
 
 
-List<GenericValue> allSubscriptionAdjustments = FastList.newInstance();
+List<GenericValue> allSubscriptionAdjustments = [];
 if (context.subscriptions && context.validPaymentMethodTypeForSubscriptions) {	
-    Map<GenericValue, List<GenericValue>> orderSubscriptionAdjustments = FastMap.newInstance();
+    Map<GenericValue, List<GenericValue>> orderSubscriptionAdjustments = [:];
     for (GenericValue subscription : context.subscriptionItems.keySet()) {
-        List<GenericValue> subscriptionAdjustments = FastList.newInstance();
+        List<GenericValue> subscriptionAdjustments = [];
         orderItemRemoved = orderItems.remove(subscription);
         for (GenericValue orderAdjustment : orderAdjustments) {
             if (orderAdjustment.getString("orderItemSeqId").equals(subscription.getString("orderItemSeqId"))) {

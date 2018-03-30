@@ -16,8 +16,6 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ModelServiceIface;
 
-import javolution.util.FastMap;
-
 public class DemoSuiteDataGeneratorUtil {
 
 	private static final String DEMO_DATA_GENERATOR_SERVICE_INTERFACE_NAME = "demoDataGenerator";
@@ -68,7 +66,7 @@ public class DemoSuiteDataGeneratorUtil {
 			if (curServiceModel != null) {
 				for (ModelServiceIface implService : curServiceModel.implServices) {
 					if (implService.getService().equals(DEMO_DATA_GENERATOR_SERVICE_INTERFACE_NAME)) {
-						Map<String, Object> curServiceMap = FastMap.newInstance();
+						Map<String, Object> curServiceMap = UtilMisc.newMap();
 						String engineName = (UtilValidate.isNotEmpty(curServiceModel.engineName))
 								? curServiceModel.engineName : "NA";
 						String defaultEntityName = (UtilValidate.isNotEmpty(curServiceModel.defaultEntityName))

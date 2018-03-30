@@ -53,10 +53,6 @@ import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.security.Security;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-import javolution.util.FastSet;
-
 /**
  * Utility class for easily extracting important information from orders
  *
@@ -202,7 +198,7 @@ public class OrderReadHelper {
                 Debug.logError(e, module);
             }
             if (adjustments == null)
-                adjustments = FastList.newInstance();
+                adjustments = UtilMisc.newList();
         }
         return adjustments;
     }
@@ -226,10 +222,10 @@ public class OrderReadHelper {
      *         based on PaymentGatewayResponse.
      */
     public Map<String, BigDecimal> getReceivedPaymentTotalsByPaymentMethod() {
-        Map<String, BigDecimal> paymentMethodAmounts = FastMap.newInstance();
+        Map<String, BigDecimal> paymentMethodAmounts = UtilMisc.newMap();
         List<GenericValue> paymentPrefs = getPaymentPreferences();
         for (GenericValue paymentPref : paymentPrefs) {
-            List<GenericValue> payments = FastList.newInstance();
+            List<GenericValue> payments = UtilMisc.newList();
             try {
                 List<EntityExpr> exprs = UtilMisc.toList(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PMNT_RECEIVED"),
                         EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PMNT_CONFIRMED"));
@@ -275,10 +271,10 @@ public class OrderReadHelper {
      * @return returns a Map of paymentMethodId -> amount refunded
      */
     public Map<String, BigDecimal> getReturnedTotalsByPaymentMethod() {
-        Map<String, BigDecimal> paymentMethodAmounts = FastMap.newInstance();
+        Map<String, BigDecimal> paymentMethodAmounts = UtilMisc.newMap();
         List<GenericValue> paymentPrefs = getPaymentPreferences();
         for (GenericValue paymentPref : paymentPrefs) {
-            List<GenericValue> returnItemResponses = FastList.newInstance();
+            List<GenericValue> returnItemResponses = UtilMisc.newList();
             try {
                 returnItemResponses = orderHeader.getDelegator().findByAnd("ReturnItemResponse",
                         UtilMisc.toMap("orderPaymentPreferenceId", paymentPref.getString("orderPaymentPreferenceId")), null, false);
@@ -305,7 +301,7 @@ public class OrderReadHelper {
     }
 
     public List<GenericValue> getOrderPayments(GenericValue orderPaymentPreference) {
-        List<GenericValue> orderPayments = FastList.newInstance();
+        List<GenericValue> orderPayments = UtilMisc.newList();
         List<GenericValue> prefs = null;
 
         if (orderPaymentPreference == null) {
@@ -449,7 +445,7 @@ public class OrderReadHelper {
     }
 
     public List<GenericValue> getShippingLocations() {
-        List<GenericValue> shippingLocations = FastList.newInstance();
+        List<GenericValue> shippingLocations = UtilMisc.newList();
         List<GenericValue> shippingCms = this.getOrderContactMechs("SHIPPING_LOCATION");
         if (shippingCms != null) {
             for (GenericValue ocm : shippingCms) {
@@ -504,7 +500,7 @@ public class OrderReadHelper {
     }
 
     public List<GenericValue> getBillingLocations() {
-        List<GenericValue> billingLocations = FastList.newInstance();
+        List<GenericValue> billingLocations = UtilMisc.newList();
         List<GenericValue> billingCms = this.getOrderContactMechs("BILLING_LOCATION");
         if (billingCms != null) {
             for (GenericValue ocm : billingCms) {
@@ -839,7 +835,7 @@ public class OrderReadHelper {
     }
 
     public Map<String, BigDecimal> getFeatureIdQtyMap(String shipGroupSeqId) {
-        Map<String, BigDecimal> featureMap = FastMap.newInstance();
+        Map<String, BigDecimal> featureMap = UtilMisc.newMap();
         List<GenericValue> validItems = getValidOrderItems(shipGroupSeqId);
         if (validItems != null) {
             for (GenericValue item : validItems) {
@@ -1045,7 +1041,7 @@ public class OrderReadHelper {
     }
 
     public List<BigDecimal> getShippableSizes() {
-        List<BigDecimal> shippableSizes = FastList.newInstance();
+        List<BigDecimal> shippableSizes = UtilMisc.newList();
 
         List<GenericValue> validItems = getValidOrderItems();
         if (validItems != null) {
@@ -1251,7 +1247,7 @@ public class OrderReadHelper {
     }
 
     public List<Map<String, Object>> getShippableItemInfo(String shipGroupSeqId) {
-        List<Map<String, Object>> shippableInfo = FastList.newInstance();
+        List<Map<String, Object>> shippableInfo = UtilMisc.newList();
 
         List<GenericValue> validItems = getValidOrderItems(shipGroupSeqId);
         if (validItems != null) {
@@ -1264,7 +1260,7 @@ public class OrderReadHelper {
     }
 
     public Map<String, Object> getItemInfoMap(GenericValue item) {
-        Map<String, Object> itemInfo = FastMap.newInstance();
+        Map<String, Object> itemInfo = UtilMisc.newMap();
         itemInfo.put("productId", item.getString("productId"));
         itemInfo.put("quantity", getOrderItemQuantity(item));
         itemInfo.put("weight", this.getItemWeight(item));
@@ -1558,7 +1554,7 @@ public class OrderReadHelper {
     }
 
     public List<GenericValue> getValidDigitalItems() {
-        List<GenericValue> digitalItems = FastList.newInstance();
+        List<GenericValue> digitalItems = UtilMisc.newList();
         // only approved or complete items apply
         List<EntityExpr> exprs = UtilMisc.toList(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "ITEM_APPROVED"),
                 EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "ITEM_COMPLETED"));
@@ -1742,7 +1738,7 @@ public class OrderReadHelper {
 
     /** Get a set of productIds in the order. */
     public Collection<String> getOrderProductIds() {
-        Set<String> productIds = FastSet.newInstance();
+        Set<String> productIds = UtilMisc.newSet();
         for (GenericValue orderItem : getOrderItems()) {
             if (orderItem.get("productId") != null) {
                 productIds.add(orderItem.getString("productId"));
@@ -1776,7 +1772,7 @@ public class OrderReadHelper {
 
         // since we don't have a handy grouped view entity, we'll have to group
         // the return items by hand
-        Map<String, BigDecimal> returnMap = FastMap.newInstance();
+        Map<String, BigDecimal> returnMap = UtilMisc.newMap();
         for (GenericValue orderItem : this.getValidOrderItems()) {
             List<GenericValue> group = EntityUtil.filterByAnd(returnItems,
                     UtilMisc.toList(EntityCondition.makeCondition("orderId", orderItem.get("orderId")),
@@ -1856,7 +1852,7 @@ public class OrderReadHelper {
         }
         BigDecimal returnedAmount = ZERO;
         String orderId = orderHeader.getString("orderId");
-        List<String> returnHeaderList = FastList.newInstance();
+        List<String> returnHeaderList = UtilMisc.newList();
         for (GenericValue returnedItem : returnedItems) {
             if ((returnedItem.get("returnPrice") != null) && (returnedItem.get("returnQuantity") != null)) {
                 returnedAmount = returnedAmount
@@ -1919,7 +1915,7 @@ public class OrderReadHelper {
         returnedItems.addAll(EntityUtil.filterByAnd(returnedItemsBase, UtilMisc.toMap("statusId", "RETURN_RECEIVED")));
         returnedItems.addAll(EntityUtil.filterByAnd(returnedItemsBase, UtilMisc.toMap("statusId", "RETURN_COMPLETED")));
 
-        Map<String, BigDecimal> itemReturnedQuantities = FastMap.newInstance();
+        Map<String, BigDecimal> itemReturnedQuantities = UtilMisc.newMap();
         for (GenericValue returnedItem : returnedItems) {
             String orderItemSeqId = returnedItem.getString("orderItemSeqId");
             BigDecimal returnedQuantity = returnedItem.getBigDecimal("returnQuantity");
@@ -2297,7 +2293,7 @@ public class OrderReadHelper {
 
     public Set<String> getProductPromoCodesEntered() {
         Delegator delegator = orderHeader.getDelegator();
-        Set<String> productPromoCodesEntered = FastSet.newInstance();
+        Set<String> productPromoCodesEntered = UtilMisc.newSet();
         try {
             for (GenericValue orderProductPromoCode : EntityQuery.use(delegator).from("OrderProductPromoCode").where("orderId", orderHeader.get("orderId"))
                     .cache().queryList()) {
@@ -2316,7 +2312,7 @@ public class OrderReadHelper {
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
         }
-        return FastList.newInstance();
+        return UtilMisc.newList();
     }
 
     /**
@@ -2422,12 +2418,12 @@ public class OrderReadHelper {
         List<EntityExpr> contraints1 = UtilMisc.toList(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, null));
         List<EntityExpr> contraints2 = UtilMisc.toList(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, DataModelConstants.SEQ_ID_NA));
         List<EntityExpr> contraints3 = UtilMisc.toList(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, ""));
-        List<EntityExpr> contraints4 = FastList.newInstance();
+        List<EntityExpr> contraints4 = UtilMisc.newList();
         if (shipGroupSeqId != null) {
             contraints4.add(EntityCondition.makeCondition("shipGroupSeqId", EntityOperator.EQUALS, shipGroupSeqId));
         }
         List<GenericValue> toFilter = null;
-        List<GenericValue> adj = FastList.newInstance();
+        List<GenericValue> adj = UtilMisc.newList();
 
         if (shipGroupSeqId != null) {
             toFilter = EntityUtil.filterByAnd(adjustments, contraints4);
@@ -2450,7 +2446,7 @@ public class OrderReadHelper {
         contraints2.add(EntityCondition.makeCondition("orderPaymentPreferenceId", EntityOperator.EQUALS, DataModelConstants.SEQ_ID_NA));
         contraints2.add(EntityCondition.makeCondition("orderPaymentPreferenceId", EntityOperator.EQUALS, ""));
 
-        List<GenericValue> newOrderStatuses = FastList.newInstance();
+        List<GenericValue> newOrderStatuses = UtilMisc.newList();
         newOrderStatuses.addAll(EntityUtil.filterByOr(orderStatuses, contraints1));
         return EntityUtil.orderBy(EntityUtil.filterByOr(newOrderStatuses, contraints2), UtilMisc.toList("-statusDatetime"));
     }
@@ -2470,7 +2466,7 @@ public class OrderReadHelper {
         }
 
         if (responses == null) {
-            responses = FastList.newInstance();
+            responses = UtilMisc.newList();
         }
         return responses;
     }
@@ -2487,7 +2483,7 @@ public class OrderReadHelper {
         }
 
         if (responses == null) {
-            responses = FastList.newInstance();
+            responses = UtilMisc.newList();
         }
         return responses;
     }
@@ -2739,7 +2735,7 @@ public class OrderReadHelper {
         contraints2.add(EntityCondition.makeCondition("orderPaymentPreferenceId", EntityOperator.EQUALS, DataModelConstants.SEQ_ID_NA));
         contraints2.add(EntityCondition.makeCondition("orderPaymentPreferenceId", EntityOperator.EQUALS, ""));
 
-        List<GenericValue> newOrderStatuses = FastList.newInstance();
+        List<GenericValue> newOrderStatuses = UtilMisc.newList();
         newOrderStatuses.addAll(EntityUtil.filterByAnd(orderStatuses, contraints1));
         return EntityUtil.orderBy(EntityUtil.filterByOr(newOrderStatuses, contraints2), UtilMisc.toList("-statusDatetime"));
     }
@@ -2811,7 +2807,7 @@ public class OrderReadHelper {
 
     public static List<GenericValue> filterOrderAdjustments(List<GenericValue> adjustments, boolean includeOther, boolean includeTax, boolean includeShipping,
             boolean forTax, boolean forShipping) {
-        List<GenericValue> newOrderAdjustmentsList = FastList.newInstance();
+        List<GenericValue> newOrderAdjustmentsList = UtilMisc.newList();
 
         if (UtilValidate.isNotEmpty(adjustments)) {
             for (GenericValue orderAdjustment : adjustments) {
@@ -2926,7 +2922,7 @@ public class OrderReadHelper {
      */
     public List<GenericValue> getAvailableOrderHeaderAdjustments() {
         List<GenericValue> orderHeaderAdjustments = this.getOrderHeaderAdjustments();
-        List<GenericValue> filteredAdjustments = FastList.newInstance();
+        List<GenericValue> filteredAdjustments = UtilMisc.newList();
         if (orderHeaderAdjustments != null) {
             for (GenericValue orderAdjustment : orderHeaderAdjustments) {
                 long count = 0;
@@ -3006,7 +3002,7 @@ public class OrderReadHelper {
         contraints1.add(EntityCondition.makeCondition("orderItemSeqId", EntityOperator.EQUALS, ""));
 
         List<EntityExpr> contraints2 = UtilMisc.toList(EntityCondition.makeCondition("orderPaymentPreferenceId", EntityOperator.NOT_EQUAL, null));
-        List<GenericValue> newOrderStatuses = FastList.newInstance();
+        List<GenericValue> newOrderStatuses = UtilMisc.newList();
         newOrderStatuses.addAll(EntityUtil.filterByOr(orderStatuses, contraints1));
 
         return EntityUtil.orderBy(EntityUtil.filterByAnd(newOrderStatuses, contraints2), UtilMisc.toList("-statusDatetime"));
@@ -3047,8 +3043,8 @@ public class OrderReadHelper {
     /** SCIPIO: generalized the tax calculation */
     public static Map<String, Object> getCommonOrderTaxByTaxAuthGeoAndParty(List<GenericValue> orderAdjustmentsOriginal) {
         BigDecimal taxGrandTotal = BigDecimal.ZERO;
-        List<Map<String, Object>> taxByTaxAuthGeoAndPartyList = FastList.newInstance();
-        List<GenericValue> orderAdjustmentsToUse = FastList.newInstance();
+        List<Map<String, Object>> taxByTaxAuthGeoAndPartyList = UtilMisc.newList();
+        List<GenericValue> orderAdjustmentsToUse = UtilMisc.newList();
         if (UtilValidate.isNotEmpty(orderAdjustmentsOriginal)) {
             orderAdjustmentsToUse.addAll(orderAdjustmentsOriginal);
             // get orderAdjustment where orderAdjustmentTypeId is SALES_TAX.
@@ -3062,7 +3058,7 @@ public class OrderReadHelper {
 
             // Keep a list of amount that have been added to make sure none are
             // missed (if taxAuth* information is missing)
-            List<GenericValue> processedAdjustments = FastList.newInstance();
+            List<GenericValue> processedAdjustments = UtilMisc.newList();
             // For each taxAuthGeoId get and add amount from orderAdjustment
             for (String taxAuthGeoId : distinctTaxAuthGeoIdList) {
                 for (String taxAuthPartyId : distinctTaxAuthPartyIdList) {
@@ -3097,7 +3093,7 @@ public class OrderReadHelper {
                 }
             }
             // Process any adjustments that got missed
-            List<GenericValue> missedAdjustments = FastList.newInstance();
+            List<GenericValue> missedAdjustments = UtilMisc.newList();
             missedAdjustments.addAll(orderAdjustmentsToUse);
             missedAdjustments.removeAll(processedAdjustments);
             for (GenericValue orderAdjustment : missedAdjustments) {
@@ -3105,7 +3101,7 @@ public class OrderReadHelper {
             }
             taxGrandTotal = taxGrandTotal.setScale(taxFinalScale, taxRounding);
         }
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         result.put("taxByTaxAuthGeoAndPartyList", taxByTaxAuthGeoAndPartyList);
         result.put("taxGrandTotal", taxGrandTotal);
         return result;
@@ -3216,7 +3212,7 @@ public class OrderReadHelper {
     }
 
     public List<BigDecimal> getShippableSizes(String shipGrouSeqId) {
-        List<BigDecimal> shippableSizes = FastList.newInstance();
+        List<BigDecimal> shippableSizes = UtilMisc.newList();
         List<GenericValue> validItems = getValidOrderItems(shipGrouSeqId);
         if (validItems != null) {
             Iterator<GenericValue> i = validItems.iterator();
@@ -3284,7 +3280,7 @@ public class OrderReadHelper {
     public List<GenericValue> getItemSubscriptions(GenericValue orderItem) throws GenericEntityException {
         Delegator delegator = orderItem.getDelegator();
         if (this.orderSubscriptionItems == null)
-            this.orderSubscriptionItems = FastMap.newInstance();
+            this.orderSubscriptionItems = UtilMisc.newMap();
 
         List<GenericValue> productSubscriptionResources = EntityQuery.use(delegator).from("ProductSubscriptionResource")
                 .where("productId", orderItem.getString("productId")).cache(true).filterByDate().queryList();

@@ -21,10 +21,9 @@ package org.ofbiz.shipment.packing;
 import java.math.BigDecimal;
 import java.util.Map;
 
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilFormatOut;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.Delegator;
@@ -182,7 +181,7 @@ public class PackingSessionLine implements java.io.Serializable {
             quantity = this.getQuantity();
         }
 
-        Map<String, Object> issueMap = FastMap.newInstance();
+        Map<String, Object> issueMap = UtilMisc.newMap();
         issueMap.put("shipmentId", shipmentId);
         issueMap.put("orderId", this.getOrderId());
         issueMap.put("orderItemSeqId", this.getOrderItemSeqId());
@@ -207,7 +206,7 @@ public class PackingSessionLine implements java.io.Serializable {
             // find the pick list item
             Debug.logInfo("Looking up picklist item for bin ID #" + picklistBinId, module);
             Delegator delegator = dispatcher.getDelegator();
-            Map<String, Object> itemLookup = FastMap.newInstance();
+            Map<String, Object> itemLookup = UtilMisc.newMap();
             itemLookup.put("picklistBinId", picklistBinId);
             itemLookup.put("orderId", this.getOrderId());
             itemLookup.put("orderItemSeqId", this.getOrderItemSeqId());
@@ -244,7 +243,7 @@ public class PackingSessionLine implements java.io.Serializable {
         // assign item to package
         String shipmentPackageSeqId = UtilFormatOut.formatPaddedNumber(this.getPackageSeq(), 5);
 
-        Map<String, Object> packageMap = FastMap.newInstance();
+        Map<String, Object> packageMap = UtilMisc.newMap();
         packageMap.put("shipmentId", shipmentId);
         packageMap.put("shipmentItemSeqId", this.getShipmentItemSeqId());
         packageMap.put("quantity", this.getQuantity());

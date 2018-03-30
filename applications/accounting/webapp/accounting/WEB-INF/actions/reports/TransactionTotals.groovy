@@ -28,8 +28,6 @@ import org.ofbiz.entity.util.EntityUtil;
 
 import org.ofbiz.accounting.util.UtilAccounting;
 
-import javolution.util.FastList;
-
 import java.sql.Date;
 
 import org.ofbiz.base.util.Debug;
@@ -57,7 +55,7 @@ if (lastClosedDate) {
 postedTotals = [];
 postedTotalDebit = BigDecimal.ZERO;
 postedTotalCredit = BigDecimal.ZERO;
-andExprs = FastList.newInstance();
+andExprs = [];
 andExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.IN, partyIds));
 andExprs.add(EntityCondition.makeCondition("isPosted", EntityOperator.EQUALS, "Y"));
 andExprs.add(EntityCondition.makeCondition("glFiscalTypeId", EntityOperator.EQUALS, glFiscalTypeId));
@@ -91,7 +89,7 @@ if (postedTransactionTotals) {
                 accountMap.put("balance", BigDecimal.ZERO);
             }
             //
-            List mainAndExprs = FastList.newInstance();
+            List mainAndExprs = [];
             mainAndExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.IN, partyIds));
             mainAndExprs.add(EntityCondition.makeCondition("isPosted", EntityOperator.EQUALS, "Y"));
             mainAndExprs.add(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, postedTransactionTotal.glAccountId));
@@ -110,7 +108,7 @@ if (postedTransactionTotals) {
     postedTotals = postedTransactionTotalsMap.values().asList();
 }
 // Posted grand total for Debits
-andExprs = FastList.newInstance();
+andExprs = [];
 andExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.IN, partyIds));
 andExprs.add(EntityCondition.makeCondition("isPosted", EntityOperator.EQUALS, "Y"));
 andExprs.add(EntityCondition.makeCondition("glFiscalTypeId", EntityOperator.EQUALS, glFiscalTypeId));
@@ -125,7 +123,7 @@ if (postedDebitTransactionTotals) {
     }
 }
 // Posted grand total for Credits
-andExprs = FastList.newInstance();
+andExprs = [];
 andExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.IN, partyIds));
 andExprs.add(EntityCondition.makeCondition("isPosted", EntityOperator.EQUALS, "Y"));
 andExprs.add(EntityCondition.makeCondition("glFiscalTypeId", EntityOperator.EQUALS, glFiscalTypeId));
@@ -147,7 +145,7 @@ context.postedTransactionTotals = postedTotals;
 unpostedTotals = [];
 unpostedTotalDebit = BigDecimal.ZERO;
 unpostedTotalCredit = BigDecimal.ZERO;
-andExprs = FastList.newInstance();
+andExprs = [];
 andExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.IN, partyIds));
 andExprs.add(EntityCondition.makeCondition("isPosted", EntityOperator.EQUALS, "N"));
 andExprs.add(EntityCondition.makeCondition("glFiscalTypeId", EntityOperator.EQUALS, glFiscalTypeId));
@@ -182,7 +180,7 @@ if (unpostedTransactionTotals) {
                 accountMap.put("balance", BigDecimal.ZERO);
             }
             //
-            List mainAndExprs = FastList.newInstance();
+            List mainAndExprs = [];
             mainAndExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.IN, partyIds));
             mainAndExprs.add(EntityCondition.makeCondition("isPosted", EntityOperator.EQUALS, "N"));
             mainAndExprs.add(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, unpostedTransactionTotal.glAccountId));
@@ -201,7 +199,7 @@ if (unpostedTransactionTotals) {
     unpostedTotals = unpostedTransactionTotalsMap.values().asList();
 }
 // Unposted grand total for Debits
-andExprs = FastList.newInstance();
+andExprs = [];
 andExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.IN, partyIds));
 andExprs.add(EntityCondition.makeCondition("isPosted", EntityOperator.EQUALS, "N"));
 andExprs.add(EntityCondition.makeCondition("glFiscalTypeId", EntityOperator.EQUALS, glFiscalTypeId));
@@ -216,7 +214,7 @@ if (unpostedDebitTransactionTotals) {
     }
 }
 // Unposted grand total for Credits
-andExprs = FastList.newInstance();
+andExprs = [];
 andExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.IN, partyIds));
 andExprs.add(EntityCondition.makeCondition("isPosted", EntityOperator.EQUALS, "N"));
 andExprs.add(EntityCondition.makeCondition("glFiscalTypeId", EntityOperator.EQUALS, glFiscalTypeId));
@@ -239,7 +237,7 @@ context.unpostedTransactionTotals = unpostedTotals;
 allTotals = [];
 allTotalDebit = BigDecimal.ZERO;
 allTotalCredit = BigDecimal.ZERO;
-andExprs = FastList.newInstance();
+andExprs = [];
 andExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.IN, partyIds));
 andExprs.add(EntityCondition.makeCondition("glFiscalTypeId", EntityOperator.EQUALS, glFiscalTypeId));
 andExprs.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
@@ -257,7 +255,7 @@ if (allTransactionTotals) {
                 // Get the opening balances at the end of the last closed time period
                 if (UtilAccounting.isAssetAccount(glAccount) || UtilAccounting.isLiabilityAccount(glAccount) || UtilAccounting.isEquityAccount(glAccount)) {
                     if (lastClosedTimePeriod) {
-                        List timePeriodAndExprs = FastList.newInstance();
+                        List timePeriodAndExprs = [];
                         timePeriodAndExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, organizationPartyId));
                         timePeriodAndExprs.add(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, allTransactionTotal.glAccountId));
                         timePeriodAndExprs.add(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, lastClosedTimePeriod.customTimePeriodId));
@@ -277,7 +275,7 @@ if (allTransactionTotals) {
                 accountMap.put("balance", BigDecimal.ZERO);
             }
             //
-            List mainAndExprs = FastList.newInstance();
+            List mainAndExprs = [];
             mainAndExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.IN, partyIds));
             mainAndExprs.add(EntityCondition.makeCondition("isPosted", EntityOperator.EQUALS, "N"));
             mainAndExprs.add(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, allTransactionTotal.glAccountId));
@@ -296,7 +294,7 @@ if (allTransactionTotals) {
     allTotals = allTransactionTotalsMap.values().asList();
 }
 // Posted and unposted grand total for Debits
-andExprs = FastList.newInstance();
+andExprs = [];
 andExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.IN, partyIds));
 andExprs.add(EntityCondition.makeCondition("glFiscalTypeId", EntityOperator.EQUALS, glFiscalTypeId));
 andExprs.add(EntityCondition.makeCondition("debitCreditFlag", EntityOperator.EQUALS, "D"));
@@ -310,7 +308,7 @@ if (allDebitTransactionTotals) {
     }
 }
 // Posted and unposted grand total for Credits
-andExprs = FastList.newInstance();
+andExprs = [];
 andExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.IN, partyIds));
 andExprs.add(EntityCondition.makeCondition("glFiscalTypeId", EntityOperator.EQUALS, glFiscalTypeId));
 andExprs.add(EntityCondition.makeCondition("debitCreditFlag", EntityOperator.EQUALS, "C"));

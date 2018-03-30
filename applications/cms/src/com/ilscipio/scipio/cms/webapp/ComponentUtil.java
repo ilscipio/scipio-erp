@@ -20,9 +20,6 @@ import org.ofbiz.webapp.control.ConfigXMLReader;
 import org.ofbiz.webapp.control.ConfigXMLReader.RequestMap;
 import org.ofbiz.webapp.control.ConfigXMLReader.ViewMap;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 /**
  * Component utilities
  * <p>
@@ -47,7 +44,7 @@ public class ComponentUtil {
      */
     public static List<Map<String, Object>> getComponentInfos(Set<String> webSiteIds) {
         Collection<ComponentConfig> components = ComponentConfig.getAllComponents();
-        List<Map<String, Object>> componentList = FastList.newInstance();
+        List<Map<String, Object>> componentList = new ArrayList<>(components.size());
 
         for (ComponentConfig component : components) {
             List<WebappInfo> webApps = component.getWebappInfos();
@@ -64,7 +61,7 @@ public class ComponentUtil {
      * Returns a map containing component information
      */
     public static Map<String, Object> getWebAppInfo(ComponentConfig component, WebappInfo webApp) {
-        Map<String, Object> componentMap = FastMap.newInstance();
+        Map<String, Object> componentMap = UtilMisc.newMap();
         String webSiteId = null;
         try {
             webSiteId = WebAppUtil.getWebSiteId(webApp);

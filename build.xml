@@ -21,23 +21,24 @@ under the License.
 <project name="Scipio Main Build" default="build" basedir="."
     xmlns:ivy="antlib:org.apache.ivy.ant"
     xmlns:sonar="antlib:org.sonar.ant:sonar">
-
-    <!-- SCIPIO: NOTE: 2017-02-02: the framework/base/lib libraries are not automatically
-        on the classpath (this is now enforced). Any needed libraries must be specified
-        explicitly, including for the <junit/> task. -->
     
-    <taskdef uri="antlib:org.apache.ivy.ant" resource="org/apache/ivy/ant/antlib.xml">
-        <classpath>
-            <pathelement location="framework/base/lib/ivy-2.4.0.jar"/>
-        </classpath>
-    </taskdef>
-
+    <!-- 
+        SCIPIO MAIN BUILD
+        
+        NOTES:
+        * macros.xml (legacy name) contains all early defs (including ofbiz.homedir), 
+          defined for both main build invocations and component build subfolder ant invocations
+        * The framework/base/lib libraries are not automatically on the classpath; this is now (2017-02-02) 
+          enforced; needed libs must be specified explicitly (<taskdef>), including for the <junit/> task.
+    -->
+    
     <import file="macros.xml"/>
     
     <!-- ================================================================== -->
     <!-- SCIPIO: early-inclusion, new, original properties and tasks        -->
     <!-- ================================================================== -->
-
+    <!-- NOTE: Properties may also be defined in macros.xml (e.g. for standalone component task support) -->
+    
     <!-- 2017-02-03: New build.local.properties file (ignored by version control), where
         you may specify some default properties -->
     <property file="build.local.properties"/>
@@ -50,17 +51,17 @@ under the License.
         or "component" (runs per-component, before each component) -->
     <property name="lib.update.hook.mode" value="component"/>
     
-    <property name="framework.dir" value="framework" />
-    <property name="applications.dir" value="applications" />
-    <property name="specialpurpose.dir" value="specialpurpose" />
-    <property name="themes.dir" value="themes" />
-    <property name="addons.dir" value="addons" />
-    <property name="hotdeploy.dir" value="hot-deploy" />
+    <property name="framework.dir" value="framework"/>
+    <property name="applications.dir" value="applications"/>
+    <property name="specialpurpose.dir" value="specialpurpose"/>
+    <property name="themes.dir" value="themes"/>
+    <property name="addons.dir" value="addons"/>
+    <property name="hotdeploy.dir" value="hot-deploy"/>
     
     <!-- Top-level component directories, in their generally-expect build and load order 
         NOTE: 2017-01-31: build order is for now rectified to framework->themes->... in order for the build order
             to be consistent with the component load order (as defined in stock ofbiz) -->
-    <property name="ofbiz.component.dirs" value="framework,themes,applications,specialpurpose,addons,hot-deploy" />
+    <property name="ofbiz.component.dirs" value="framework,themes,applications,specialpurpose,addons,hot-deploy"/>
     
     <property file="${framework.dir}/base/config/scipiometainfo.properties" />
     
@@ -71,6 +72,7 @@ under the License.
         <propertyref name="ofbiz.component.dirs"/>
         <propertyref regex="lib\.update\..*"/>
         <propertyref regex="lib\.clean\..*"/>
+        <propertyref name="ivy.settings.file"/>
     </propertyset>
     
     <!-- Dynamic early main build.xml additions. Allows any component or addon to include
@@ -177,16 +179,11 @@ under the License.
         <copy file="runtime/data/derby.properties" todir="runtime/data/derby"/>
     </target>
     
-    <target name="ivy-init"><!-- SCIPIO: 2017-01-30: new -->
-        <!-- (nothing to do for now; taskdef already defined) -->
-    </target>
-    
     <target name="sonar-init" depends="ivy-init">
-        <taskdef uri="antlib:org.sonar.ant:sonar" resource="org/sonar/ant/antlib.xml">
-            <classpath>
-                <pathelement location="framework/base/lib/sonar-ant-task-1.3.jar" />
-            </classpath>
-        </taskdef>
+        <path id="sonar-ant-tasks.class.path">
+          <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="sonar-ant-task-*.jar"/>
+        </path>
+        <taskdef uri="antlib:org.sonar.ant:sonar" resource="org/sonar/ant/antlib.xml" classpathref="sonar-ant-tasks.class.path"/>
     </target>
 
     <!-- SCIPIO: solr flagging -->
@@ -735,6 +732,12 @@ under the License.
         
     </target>
     
+    <!-- SCIPIO: new 2018-03-23 -->
+    <target name="build-withlibsrc" description="build plus download ivy lib JAR sources (implied -Dlib.update.sources=true)">
+        <property name="lib.update.sources" value="true"/>
+        <antcall target="build"/>
+    </target>
+    
     <!-- ================================================================== -->
     <!-- Build Components                                                   -->
     <!-- ================================================================== -->
@@ -856,9 +859,6 @@ under the License.
 
         <path id="local.class.path">
           <fileset dir="${ofbiz.home.dir}/framework/base/lib" includes="*.jar"/>
-          <fileset dir="${ofbiz.home.dir}/framework/base/lib/commons" includes="*.jar"/>
-          <fileset dir="${ofbiz.home.dir}/framework/base/lib/j2eespecs" includes="*.jar"/>
-          <fileset dir="${ofbiz.home.dir}/framework/base/lib/scripting" includes="*.jar"/>
           <fileset dir="${ofbiz.home.dir}/framework/catalina/lib" includes="*.jar"/>
           <fileset dir="${ofbiz.home.dir}/framework/entity/lib" includes="*.jar"/>
           <fileset dir="${ofbiz.home.dir}/framework/geronimo/lib" includes="*.jar"/>
@@ -1753,16 +1753,7 @@ under the License.
             description="Generate a HTML code coverage report with cobertura, can be found in runtime/logs/cobertura-report">
         <delete dir="runtime/logs/cobertura-report"/>
         <mkdir dir="runtime/logs/cobertura-report"/>
-        <taskdef resource="tasks.properties">
-            <classpath>
-                <fileset dir="framework/base/lib">
-                    <include name="cobertura-1.9.4.1.jar" />
-                    <include name="log4j-1.2.17.jar" />
-                    <include name="scripting/asm*.jar" />
-                    <include name="scripting/jakarta-oro-2.0.8.jar" />
-                </fileset>
-            </classpath>
-        </taskdef>
+        <taskdef resource="tasks.properties" classpathref="cobertura.class.path"/>
         <cobertura-merge datafile="runtime/logs/cobertura.dat">
             <fileset dir="runtime/logs">
                 <include name="cobertura-base.dat"/>
@@ -1782,16 +1773,7 @@ under the License.
             description="Generate a XML file from the cobertura report, this will be used by sonar">
         <delete dir="runtime/logs/cobertura-report"/>
         <mkdir dir="runtime/logs/cobertura-report"/>
-        <taskdef resource="tasks.properties">
-            <classpath>
-                <fileset dir="framework/base/lib">
-                    <include name="cobertura-1.9.4.1.jar" />
-                    <include name="log4j-1.2.17.jar" />
-                    <include name="scripting/asm*.jar" />
-                    <include name="scripting/jakarta-oro-2.0.8.jar" />
-                </fileset>
-            </classpath>
-        </taskdef>
+        <taskdef resource="tasks.properties" classpathref="cobertura.class.path"/>
         <cobertura-merge datafile="runtime/logs/cobertura.dat">
             <fileset dir="runtime/logs">
                 <include name="cobertura-base.dat"/>
@@ -1886,6 +1868,20 @@ under the License.
         <echo message="status=SUCCESS${line.separator}startTime=${lib.update.start.time}${line.separator}finishTime=${lib.update.finish.time}${line.separator}" file="ivy/ivy-status.txt" />
         -->
         <stopwatch name="lib.update.stopwatch" action="total"/>
+    </target>
+    <target name="init-lib-update-force" description="Initial libraries and dependencies download, global - forced (even if no change)">
+        <property name="lib.update.force" value="true"/>
+        <antcall target="init-lib-update" inheritrefs="true"/>
+    </target>
+    
+    <target name="init-lib-update-withsources" description="Initial libraries and dependencies AND source JARs download, global">
+        <property name="lib.update.sources" value="true"/>
+        <antcall target="init-lib-update" inheritrefs="true"/>
+    </target>
+    <target name="init-lib-update-withsources-force" description="Initial libraries and dependencies AND source JARs download, global - forced (even if no change)">
+        <property name="lib.update.force" value="true"/>
+        <property name="lib.update.sources" value="true"/>
+        <antcall target="init-lib-update" inheritrefs="true"/>
     </target>
     
     <target name="check-init-lib-update" description="Initial libraries and dependencies download, global, if enabled only">
@@ -1994,7 +1990,7 @@ under the License.
         <dep-subant dir="${basedir}/themes" target="init-lib-update"/>
     </target>
     
-    <target name="init-lib-clean" depends="ivy-init" description="Libraries and dependencies clean - by default, cleans ivy resolution cache (but not repository/download cache) and removes deployed JARs">
+    <target name="init-lib-clean" depends="ivy-init" description="Libraries and dependencies clean - by default, cleans ivy resolution cache (but not repository/download cache) and removes deployed JARs [alias for clean-ivy-deployed]">
         <stopwatch name="lib.clean.stopwatch" action="start"/>
 
         <if>
@@ -2012,8 +2008,10 @@ under the License.
 
         <stopwatch name="lib.clean.stopwatch" action="total"/>
     </target>
+    <target name="clean-ivy-deployed" depends="init-lib-clean" description="Libraries and dependencies clean - by default, cleans ivy resolution cache (but not repository/download cache) and removes deployed JARs [alias for init-lib-clean]">
+    </target>
     
-    <target name="clean-ivy" description="Cleans Ivy resolution cache (but not repository/download cache, unless lib.clean.cache.repo=true) [alias for init-lib-clean-cache]">
+    <target name="clean-ivy" depends="ivy-init" description="Cleans Ivy resolution cache (but not repository/download cache, unless lib.clean.cache.repo=true) [alias for init-lib-clean-cache]">
         <!-- SCIPIO: NOTE: 2017-02-03: the cache is split between repository and resolution cache.
             99% of the time, emptying the repository cache is a giant waste of time, so don't do it
             by default. -->
@@ -2030,7 +2028,7 @@ under the License.
     <target name="init-lib-clean-cache" depends="clean-ivy" description="Cleans Ivy resolution cache (but not repository/download cache, unless lib.clean.cache.repo=true) [alias for clean-ivy]">
     </target>
     
-    <target name="clean-ivy-full" description="Cleans Ivy resolution and repository/download caches (forces lib re-download, may affect other projects) [alias for init-lib-clean-cache-full]">
+    <target name="clean-ivy-full" depends="ivy-init" description="Cleans Ivy resolution and repository/download caches (forces lib re-download, may affect other projects) [alias for init-lib-clean-cache-full]">
         <!-- SCIPIO: NOTE: because the repository cache uses the default ivy user cache, this may affect other projects -->
         <ivy:cleancache/>
     </target>
@@ -2038,6 +2036,9 @@ under the License.
     </target>
     
     <target name="init-lib-clean-deployed" description="Cleans out the library deployment folders (but not library/ivy caches)">
+        <!-- when doing "full" clean-deployed, by default also clean out libsrc, because makes no sense
+            to keep sources for libs whose versions we might be trying to change -->
+        <property name="lib.update.sources" value="true"/>
         <antcall target="framework-lib-clean"/>
         <antcall target="themes-lib-clean"/>
         <antcall target="applications-lib-clean"/>
@@ -2070,45 +2071,72 @@ under the License.
         <dep-subant dir="${basedir}/themes" target="init-lib-clean"/>
     </target>
     
+    <target name="init-lib-dep-tree" description="Shows library dependency trees for all components with an ivyfile">
+        <iterate target="init-lib-dep-tree" filelist="framework-builds"/>
+        <iterate target="init-lib-dep-tree" filelist="application-builds"/>
+        <iterate target="init-lib-dep-tree" filelist="specialpurpose-builds"/>
+        <addonsant target="init-lib-dep-tree"/>
+        <hotdeployant target="init-lib-dep-tree"/>
+        <dep-subant dir="${basedir}/themes" target="init-lib-dep-tree"/>
+    </target>
+    
+    <target name="init-lib-dep-report" description="Generate library dependency HTML reports">
+        <iterate target="init-lib-dep-report" filelist="framework-builds"/>
+        <iterate target="init-lib-dep-report" filelist="application-builds"/>
+        <iterate target="init-lib-dep-report" filelist="specialpurpose-builds"/>
+        <addonsant target="init-lib-dep-report"/>
+        <hotdeployant target="init-lib-dep-report"/>
+        <dep-subant dir="${basedir}/themes" target="init-lib-dep-report"/>
+    </target>
 
-    <target name="download-activemq" description="Download activemq for DCC (Distributed Cache Clearing">
-        <ivy:retrieve pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="activemq"/>
+    <target name="download-activemq" depends="ivy-init" description="Download activemq for DCC (Distributed Cache Clearing">
+        <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="activemq"/>
         <echo> </echo>
         <echo>======================================================</echo>
         <echo>Please check that this version is appropriate for you!</echo>
     </target>
 
-    <target name="download-cobertura" description="Download cobertura related files">
-        <ivy:retrieve pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="cobertura"/>
+    <target name="download-cobertura" depends="ivy-init" description="Download cobertura related files">
+        <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="cobertura"/>
     </target>
 
-    <target name="download-PG-JDBC" description="Download postgres jdbc driver">
-        <!-- SCIPIO: get proper version for jvm -->
-        <if>
-            <equals arg1="${ant.java.version}" arg2="1.7"/>
-            <then>
-                <echo message="Java 1.7 detected, fetching postgres JRE7 JDBC driver"/>
-                <ivy:retrieve pattern="framework/entity/lib/jdbc/[artifact]-[revision].[ext]" conf="postgresjre7"/>
-            </then>
-            <else>
-                <echo message="Java 1.8+ detected, fetching postgres JRE8+ JDBC driver"/>
-                <ivy:retrieve pattern="framework/entity/lib/jdbc/[artifact]-[revision].[ext]" conf="postgres"/>
-            </else>
-        </if>
+    <target name="download-PG-JDBC" depends="download-jdbc-postgresql" description="Download postgres jdbc driver (legacy alias for download-jdbc-postgresql)">
+    </target>
+
+    <target name="download-sonar-ant-task" depends="ivy-init" description="Download sonar related files">
+        <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="sonar-ant-task"/>
+    </target>
+
+    <target name="download-mySQL-JDBC" depends="download-jdbc-mysql" description="Download mySQL jdbc driver (legacy alias for download-jdbc-mysql)">
+    </target>
+    
+    <!-- SCIPIO: new JDBC targets with consistent naming and common operation (where possible) -->
+    <target name="download-jdbc-common" depends="ivy-init" description="Download postgres jdbc driver (alias for download-PG-JDBC)">
+        <ivy:retrieve file="${ofbiz.home.dir}/framework/entity/ivy.xml" pattern="framework/entity/lib/jdbc/[artifact]-[revision].[ext]" conf="${lib.entity.jdbc.conf}"/>
         <echo> </echo>
         <echo>======================================================</echo>
         <echo>Please check that this version is appropriate for you!</echo>
     </target>
 
-    <target name="download-sonar-ant-task" description="Download sonar related files">
-        <ivy:retrieve pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="sonar-ant-task"/>
+    <target name="download-jdbc-derby" description="Download Derby JDBC driver">
+        <property name="lib.entity.jdbc.conf" value="derby"/>
+        <antcall target="download-jdbc-common"/>
     </target>
-
-    <target name="download-mySQL-JDBC" description="Download mySQL jdbc driver">
-        <ivy:retrieve pattern="framework/entity/lib/jdbc/[artifact]-[revision].[ext]" conf="mysql"/>
-        <echo> </echo>
-        <echo>======================================================</echo>
-        <echo>Please check that this version is appropriate for you!</echo>
+    <target name="download-jdbc-firebird" description="Download Firebird (Jaybird) JDBC driver">
+        <property name="lib.entity.jdbc.conf" value="firebird"/>
+        <antcall target="download-jdbc-common"/>
+    </target>
+    <target name="download-jdbc-hsqldb" description="Download hsqldb JDBC driver">
+        <property name="lib.entity.jdbc.conf" value="hsqldb"/>
+        <antcall target="download-jdbc-common"/>
+    </target>
+    <target name="download-jdbc-mysql" description="Download mySQL JDBC driver">
+        <property name="lib.entity.jdbc.conf" value="mysql"/>
+        <antcall target="download-jdbc-common"/>
+    </target>
+    <target name="download-jdbc-postgresql" description="Download PostgreSQL JDBC driver">
+        <property name="lib.entity.jdbc.conf" value="postgresql"/>
+        <antcall target="download-jdbc-common"/>
     </target>
 
     <!-- ================================================================== -->
@@ -2477,12 +2505,14 @@ under the License.
 
     <target name="gen-kek"
             description="Generate a new key-encrypting-key for use in entityengine.xml">
-        <java classname="org.ofbiz.base.crypto.Main" fork="false">
+        <path id="gen-kek.class.path">
+          <fileset dir="${ofbiz.home.dir}/framework/base/build/lib/" includes="ofbiz-base.jar"/>
+          <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="commons-codec-*.jar"/>
+          <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="shiro-core-*.jar"/>
+          <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="slf4j-api-*.jar"/>
+        </path>
+        <java classname="org.ofbiz.base.crypto.Main" fork="false" classpathref="gen-kek.class.path">
             <arg value="-kek"/>
-            <classpath>
-                <path location="framework/base/build/lib/ofbiz-base.jar"/>
-                <path location="framework/base/lib/commons/commons-codec-1.10.jar"/>
-            </classpath>
         </java>
     </target>
 

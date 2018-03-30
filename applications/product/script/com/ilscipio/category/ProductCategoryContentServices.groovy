@@ -1,6 +1,5 @@
 import java.nio.ByteBuffer
 
-import javolution.util.FastList
 
 import org.ofbiz.base.util.Debug
 import org.ofbiz.base.util.UtilMisc
@@ -45,7 +44,7 @@ Map<String, Object> uploadProductCategoryImage() {
         }
 
         // Get the file extension
-        List<GenericValue> fileExtension = FastList.newInstance();
+        List<GenericValue> fileExtension = [];
         try {
             fileExtension = EntityQuery.use(delegator).from("FileExtension").where("mimeTypeId", (String) context.get("_uploadedFile_contentType")).queryList();
         } catch (GenericEntityException e) {

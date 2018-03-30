@@ -24,8 +24,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
@@ -56,7 +54,7 @@ public class SupplierProductServices {
      *         filtered by date and optionally by partyId, ordered with lowest price first
      */
     public static Map<String, Object> getSuppliersForProduct(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> results = FastMap.newInstance();
+        Map<String, Object> results = UtilMisc.newMap();
         Delegator delegator = dctx.getDelegator();
 
         GenericValue product = null;
@@ -132,7 +130,7 @@ public class SupplierProductServices {
      * SupplierProduct entity for that supplier party and feature, and return it as convertedProductFeatures
      */
     public static Map<String, Object> convertFeaturesForSupplier(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> results = FastMap.newInstance();
+        Map<String, Object> results = UtilMisc.newMap();
         String partyId = (String) context.get("partyId");
         Collection<GenericValue> features = UtilGenerics.checkList(context.get("productFeatures"));
 

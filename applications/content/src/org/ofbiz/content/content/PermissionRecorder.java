@@ -21,9 +21,6 @@ package org.ofbiz.content.content;
 import java.util.List;
 import java.util.Map;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
@@ -42,7 +39,7 @@ public class PermissionRecorder {
 
     protected boolean isOn = false;
     protected GenericValue userLogin;
-    protected List<Map<String, Object>> permCheckResults = FastList.newInstance();
+    protected List<Map<String, Object>> permCheckResults = UtilMisc.newList();
     protected boolean entityPermCheckResult = false;
     protected String currentContentId = "";
     protected Map<String, Object> currentContentMap;
@@ -127,10 +124,10 @@ public class PermissionRecorder {
 
     public void setCurrentContentId(String id) {
         if (!currentContentId.equals(id)) {
-            currentContentMap = FastMap.newInstance();
+            currentContentMap = UtilMisc.newMap();
             permCheckResults.add(currentContentMap);
             currentContentMap.put("contentId", id);
-            currentContentMap.put("checkResults", FastList.newInstance());
+            currentContentMap.put("checkResults", UtilMisc.newList());
         }
         currentContentId = id;
     }
@@ -158,7 +155,7 @@ public class PermissionRecorder {
     }
 
     public void startMatchGroup(List<String> targetOperations, List<String> purposes, List<String> roles, List<String> targStatusList, String targPrivilegeEnumId, String contentId) {
-        currentContentMap = FastMap.newInstance();
+        currentContentMap = UtilMisc.newMap();
         permCheckResults.add(currentContentMap);
         String s = null;
         if (targetOperations != null) {
@@ -185,7 +182,7 @@ public class PermissionRecorder {
             //if (Debug.infoOn()) Debug.logInfo("startMatchGroup, targStatusList(string):" + s, module);
             currentContentMap.put("statusId", s);
         }
-        List<Map<String, Object>> checkResultList = FastList.newInstance();
+        List<Map<String, Object>> checkResultList = UtilMisc.newList();
         currentContentMap.put("privilegeEnumId", privilegeEnumId);
         currentContentMap.put("contentId", contentId);
         currentContentMap.put("checkResultList", checkResultList);

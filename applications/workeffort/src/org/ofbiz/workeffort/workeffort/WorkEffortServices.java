@@ -61,10 +61,6 @@ import org.ofbiz.service.calendar.TemporalExpressionWorker;
 
 import com.ibm.icu.util.Calendar;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-import javolution.util.FastSet;
-
 /**
  * WorkEffortServices - WorkEffort related Services
  */
@@ -83,7 +79,7 @@ public class WorkEffortServices {
         List<GenericValue> validWorkEfforts = null;
         if (userLogin != null && userLogin.get("partyId") != null) {
             try {
-                List<EntityExpr> conditionList = FastList.newInstance();
+                List<EntityExpr> conditionList = UtilMisc.newList();
                 conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin.get("partyId")));
                 conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, roleTypeId));
                 conditionList.add(EntityCondition.makeCondition("workEffortTypeId", EntityOperator.EQUALS, "EVENT"));
@@ -108,9 +104,9 @@ public class WorkEffortServices {
             }
         }
 
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         if (validWorkEfforts == null) {
-            validWorkEfforts = FastList.newInstance();
+            validWorkEfforts = UtilMisc.newList();
         }
         result.put("events", validWorkEfforts);
         return result;
@@ -124,7 +120,7 @@ public class WorkEffortServices {
 
         List<GenericValue> validWorkEfforts = null;
         try {
-            List<EntityExpr> conditionList = FastList.newInstance();
+            List<EntityExpr> conditionList = UtilMisc.newList();
             conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, roleTypeId));
             conditionList.add(EntityCondition.makeCondition("workEffortTypeId", EntityOperator.EQUALS, "EVENT"));
             conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_DECLINED"));
@@ -147,9 +143,9 @@ public class WorkEffortServices {
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, "WorkEffortNotFound", UtilMisc.toMap("errorString", e.toString()), locale));
         }
 
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         if (validWorkEfforts == null) {
-            validWorkEfforts = FastList.newInstance();
+            validWorkEfforts = UtilMisc.newList();
         }
         result.put("events", validWorkEfforts);
         return result;
@@ -164,7 +160,7 @@ public class WorkEffortServices {
         List<GenericValue> validWorkEfforts = null;
         if (userLogin != null && userLogin.get("partyId") != null) {
             try {
-                List<EntityExpr> conditionList = FastList.newInstance();                
+                List<EntityExpr> conditionList = UtilMisc.newList();                
                 conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin.get("partyId")));
                 conditionList.add(EntityCondition.makeCondition("workEffortTypeId", EntityOperator.EQUALS, "TASK"));
                 conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_DECLINED"));
@@ -183,7 +179,7 @@ public class WorkEffortServices {
                 EntityConditionList<EntityExpr> ecl = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
                 validWorkEfforts = EntityQuery.use(delegator).from("WorkEffortAndPartyAssign").where(ecl).orderBy("priority").filterByDate().queryList();
                 
-                conditionList = FastList.newInstance();                
+                conditionList = UtilMisc.newList();                
                 conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin.get("partyId")));
                 conditionList.add(EntityCondition.makeCondition("workEffortTypeId", EntityOperator.EQUALS, "PROD_ORDER_TASK"));
                 conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "PRUN_CANCELLED"));
@@ -206,9 +202,9 @@ public class WorkEffortServices {
             }
         }
 
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         if (validWorkEfforts == null)
-            validWorkEfforts = FastList.newInstance();
+            validWorkEfforts = UtilMisc.newList();
         validWorkEfforts = WorkEffortWorker.removeDuplicateWorkEfforts(validWorkEfforts);
         result.put("tasks", validWorkEfforts);
         return result;
@@ -230,7 +226,7 @@ public class WorkEffortServices {
         List<GenericValue> validWorkEfforts = null;
         if (userLogin != null && userLogin.get("partyId") != null) {
             try {
-                List<EntityExpr> conditionList = FastList.newInstance();
+                List<EntityExpr> conditionList = UtilMisc.newList();
                 conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin.get("partyId")));
                 conditionList.add(EntityCondition.makeCondition("workEffortTypeId", EntityOperator.EQUALS, "TASK"));
                 conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_ACCEPTED"));
@@ -246,7 +242,7 @@ public class WorkEffortServices {
                 EntityConditionList<EntityExpr> ecl = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
                 validWorkEfforts = EntityQuery.use(delegator).from("WorkEffortAndPartyAssign").where(ecl).orderBy("priority").filterByDate().queryList();
                 
-                conditionList = FastList.newInstance();
+                conditionList = UtilMisc.newList();
                 conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin.get("partyId")));
                 conditionList.add(EntityCondition.makeCondition("workEffortTypeId", EntityOperator.EQUALS, "PROD_ORDER_TASK"));
                 conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "PRUN_CREATED "));
@@ -270,9 +266,9 @@ public class WorkEffortServices {
             }
         }
 
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         if (validWorkEfforts == null)
-            validWorkEfforts = FastList.newInstance();
+            validWorkEfforts = UtilMisc.newList();
         validWorkEfforts = WorkEffortWorker.removeDuplicateWorkEfforts(validWorkEfforts);
         result.put("tasks", validWorkEfforts);
         return result;
@@ -294,7 +290,7 @@ public class WorkEffortServices {
         List<GenericValue> validWorkEfforts = null;
         if (userLogin != null && userLogin.get("partyId") != null) {
             try {
-                List<EntityExpr> constraints = FastList.newInstance();
+                List<EntityExpr> constraints = UtilMisc.newList();
                 constraints.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin.get("partyId")));
                 constraints.add(EntityCondition.makeCondition("workEffortTypeId", EntityOperator.EQUALS, "ACTIVITY"));
                 constraints.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_NEEDS_ACTION"));
@@ -317,9 +313,9 @@ public class WorkEffortServices {
             }
         }
 
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         if (validWorkEfforts == null)
-            validWorkEfforts = FastList.newInstance();
+            validWorkEfforts = UtilMisc.newList();
         result.put("activities", validWorkEfforts);
         return result;
     }
@@ -333,7 +329,7 @@ public class WorkEffortServices {
         List<GenericValue> validWorkEfforts = null;
         if (userLogin != null && userLogin.get("partyId") != null) {
             try {
-                List<EntityExpr> constraints = FastList.newInstance();
+                List<EntityExpr> constraints = UtilMisc.newList();
 
                 // SCIPIO: I think this was wrong the statusId and currentStatusId
                 // should be in the other way round
@@ -369,9 +365,9 @@ public class WorkEffortServices {
             }
         }
 
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         if (validWorkEfforts == null)
-            validWorkEfforts = FastList.newInstance();
+            validWorkEfforts = UtilMisc.newList();
         result.put("activities", validWorkEfforts);
         return result;
     }
@@ -385,7 +381,7 @@ public class WorkEffortServices {
         List<GenericValue> roleWorkEfforts = null;
         if (userLogin != null && userLogin.get("partyId") != null) {
             try {
-                List<EntityExpr> constraints = FastList.newInstance();
+                List<EntityExpr> constraints = UtilMisc.newList();
 
                 // SCIPIO: I think this was wrong the statusId and currentStatusId
                 // should be in the other way round
@@ -422,9 +418,9 @@ public class WorkEffortServices {
             }
         }
 
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         if (roleWorkEfforts == null)
-            roleWorkEfforts = FastList.newInstance();
+            roleWorkEfforts = UtilMisc.newList();
         result.put("roleActivities", roleWorkEfforts);
         return result;
     }
@@ -438,7 +434,7 @@ public class WorkEffortServices {
         List<GenericValue> groupWorkEfforts = null;
         if (userLogin != null && userLogin.get("partyId") != null) {
             try {
-                List<EntityExpr> constraints = FastList.newInstance();
+                List<EntityExpr> constraints = UtilMisc.newList();
 
                 // SCIPIO: I think this was wrong the statusId and currentStatusId
                 // should be in the other way round
@@ -475,9 +471,9 @@ public class WorkEffortServices {
             }
         }
 
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         if (groupWorkEfforts == null)
-            groupWorkEfforts = FastList.newInstance();
+            groupWorkEfforts = UtilMisc.newList();
         result.put("groupActivities", groupWorkEfforts);
         return result;
     }
@@ -486,7 +482,7 @@ public class WorkEffortServices {
         Delegator delegator = ctx.getDelegator();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Security security = ctx.getSecurity();
-        Map<String, Object> resultMap = FastMap.newInstance();
+        Map<String, Object> resultMap = UtilMisc.newMap();
 
         String workEffortId = (String) context.get("workEffortId");
         GenericValue workEffort = null;
@@ -580,7 +576,7 @@ public class WorkEffortServices {
                             && !(calEntryRange.end().equals(dateRange.start()) || calEntryRange.start().equals(dateRange.end()))) {
                         List<Map<String, Object>> calendarEntryByDateRangeList = calendarEntriesByDateRange.get(dateRange);
                         if (calendarEntryByDateRangeList == null) {
-                            calendarEntryByDateRangeList = FastList.newInstance();
+                            calendarEntryByDateRangeList = UtilMisc.newList();
                         }
                         calendarEntryByDateRangeList.add(calendarEntry);
                         calendarEntriesByDateRange.put(dateRange, calendarEntryByDateRangeList);
@@ -594,11 +590,11 @@ public class WorkEffortServices {
 
     private static List<EntityCondition> getDefaultWorkEffortExprList(String calendarType, Collection<String> partyIds, String workEffortTypeId,
             List<EntityCondition> cancelledCheckAndList) {
-        List<EntityCondition> entityExprList = FastList.newInstance();
+        List<EntityCondition> entityExprList = UtilMisc.newList();
         if (cancelledCheckAndList != null) {
             entityExprList.addAll(cancelledCheckAndList);
         }
-        List<EntityExpr> typesList = FastList.newInstance();
+        List<EntityExpr> typesList = UtilMisc.newList();
         if (UtilValidate.isNotEmpty(workEffortTypeId)) {
             typesList.add(EntityCondition.makeCondition("workEffortTypeId", EntityOperator.EQUALS, workEffortTypeId));
         }
@@ -750,7 +746,7 @@ public class WorkEffortServices {
         List<GenericValue> validWorkEfforts = null;
         Collection<String> partyIdsToUse = partyIds;
         if (partyIdsToUse == null) {
-            partyIdsToUse = FastSet.newInstance();
+            partyIdsToUse = UtilMisc.newSet();
         }
         if (UtilValidate.isNotEmpty(partyId)) {
             if (partyId.equals(userLogin.getString("partyId")) || security.hasEntityPermission("WORKEFFORTMGR", "_VIEW", userLogin)) {
@@ -852,9 +848,9 @@ public class WorkEffortServices {
 
         // Split the WorkEffort list into a map with entries for each period,
         // period start is the key
-        List<Map<String, Object>> periods = FastList.newInstance();
+        List<Map<String, Object>> periods = UtilMisc.newList();
         if (validWorkEfforts != null) {
-            List<DateRange> periodRanges = FastList.newInstance();
+            List<DateRange> periodRanges = UtilMisc.newList();
             for (int i = 0; i < numPeriods; i++) {
                 Timestamp curPeriodStart = UtilDateTime.adjustTimestamp(startStamp, periodType, i, timeZone, locale);
                 Timestamp curPeriodEnd = UtilDateTime.adjustTimestamp(curPeriodStart, periodType, 1, timeZone, locale);
@@ -863,8 +859,8 @@ public class WorkEffortServices {
             }
             try {
                 // Process recurring work efforts
-                Set<GenericValue> exclusions = FastSet.newInstance();
-                Set<GenericValue> inclusions = FastSet.newInstance();
+                Set<GenericValue> exclusions = UtilMisc.newSet();
+                Set<GenericValue> inclusions = UtilMisc.newSet();
                 DateRange range = new DateRange(startStamp, endStamp);
                 Calendar cal = UtilDateTime.toCalendar(startStamp, timeZone, locale);
                 for (GenericValue workEffort : validWorkEfforts) {
@@ -918,8 +914,8 @@ public class WorkEffortServices {
             // they fall within range
             boolean firstEntry = true;
             for (DateRange periodRange : periodRanges) {
-                List<Map<String, Object>> curWorkEfforts = FastList.newInstance();
-                Map<String, Object> entry = FastMap.newInstance();
+                List<Map<String, Object>> curWorkEfforts = UtilMisc.newList();
+                Map<String, Object> entry = UtilMisc.newMap();
                 for (GenericValue workEffort : validWorkEfforts) {
                     Timestamp startDate = workEffort.getTimestamp("estimatedStartDate");
                     if (workEffort.getTimestamp("actualStartDate") != null) {
@@ -933,7 +929,7 @@ public class WorkEffortServices {
                         endDate = startDate;
                     DateRange weRange = new DateRange(startDate, endDate);
                     if (periodRange.intersectsRange(weRange)) {
-                        Map<String, Object> calEntry = FastMap.newInstance();
+                        Map<String, Object> calEntry = UtilMisc.newMap();
                         calEntry.put("workEffort", workEffort);
                         long length = ((weRange.end().after(endStamp) ? endStamp.getTime() : weRange.end().getTime()) - (weRange.start().before(startStamp) ? startStamp
                                 .getTime() : weRange.start().getTime()));
@@ -968,7 +964,7 @@ public class WorkEffortServices {
                 periods.add(entry);
             }
         }
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         result.put("periods", periods);
         result.put("maxConcurrentEntries", Integer.valueOf(maxConcurrentEntries));
         return result;
@@ -980,14 +976,14 @@ public class WorkEffortServices {
         String facilityId = (String) context.get("facilityId"); // optional
         Locale locale = (Locale) context.get("locale");
 
-        Map<String, Map<String, Object>> summaryInByFacility = FastMap.newInstance();
-        Map<String, Map<String, Object>> summaryOutByFacility = FastMap.newInstance();
+        Map<String, Map<String, Object>> summaryInByFacility = UtilMisc.newMap();
+        Map<String, Map<String, Object>> summaryOutByFacility = UtilMisc.newMap();
         try {
             //
             // Information about the running production runs that are going
             // to produce units of productId by facility.
             //
-            List<EntityCondition> findIncomingProductionRunsConds = FastList.newInstance();
+            List<EntityCondition> findIncomingProductionRunsConds = UtilMisc.newList();
 
             findIncomingProductionRunsConds.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
             findIncomingProductionRunsConds.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "WEGS_CREATED"));
@@ -996,7 +992,7 @@ public class WorkEffortServices {
                 findIncomingProductionRunsConds.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
             }
 
-            List<EntityCondition> findIncomingProductionRunsStatusConds = FastList.newInstance();
+            List<EntityCondition> findIncomingProductionRunsStatusConds = UtilMisc.newList();
             findIncomingProductionRunsStatusConds.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.EQUALS, "PRUN_CREATED"));
             findIncomingProductionRunsStatusConds.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.EQUALS, "PRUN_SCHEDULED"));
             findIncomingProductionRunsStatusConds.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.EQUALS, "PRUN_DOC_PRINTED"));
@@ -1040,7 +1036,7 @@ public class WorkEffortServices {
 
                 Map<String, Object> quantitySummary = UtilGenerics.checkMap(summaryInByFacility.get(weFacilityId));
                 if (quantitySummary == null) {
-                    quantitySummary = FastMap.newInstance();
+                    quantitySummary = UtilMisc.newMap();
                     quantitySummary.put("facilityId", weFacilityId);
                     summaryInByFacility.put(weFacilityId, quantitySummary);
                 }
@@ -1053,7 +1049,7 @@ public class WorkEffortServices {
 
                 List<GenericValue> incomingProductionRunList = UtilGenerics.checkList(quantitySummary.get("incomingProductionRunList"));
                 if (incomingProductionRunList == null) {
-                    incomingProductionRunList = FastList.newInstance();
+                    incomingProductionRunList = UtilMisc.newList();
                     quantitySummary.put("incomingProductionRunList", incomingProductionRunList);
                 }
                 incomingProductionRunList.add(incomingProductionRun);
@@ -1062,7 +1058,7 @@ public class WorkEffortServices {
             // Information about the running production runs that are going
             // to consume units of productId by facility.
             //
-            List<EntityCondition> findOutgoingProductionRunsConds = FastList.newInstance();
+            List<EntityCondition> findOutgoingProductionRunsConds = UtilMisc.newList();
 
             findOutgoingProductionRunsConds.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
             findOutgoingProductionRunsConds.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "WEGS_CREATED"));
@@ -1071,7 +1067,7 @@ public class WorkEffortServices {
                 findOutgoingProductionRunsConds.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
             }
 
-            List<EntityCondition> findOutgoingProductionRunsStatusConds = FastList.newInstance();
+            List<EntityCondition> findOutgoingProductionRunsStatusConds = UtilMisc.newList();
             findOutgoingProductionRunsStatusConds.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.EQUALS, "PRUN_CREATED"));
             findOutgoingProductionRunsStatusConds.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.EQUALS, "PRUN_SCHEDULED"));
             findOutgoingProductionRunsStatusConds.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.EQUALS, "PRUN_DOC_PRINTED"));
@@ -1089,7 +1085,7 @@ public class WorkEffortServices {
 
                 Map<String, Object> quantitySummary = UtilGenerics.checkMap(summaryOutByFacility.get(weFacilityId));
                 if (quantitySummary == null) {
-                    quantitySummary = FastMap.newInstance();
+                    quantitySummary = UtilMisc.newMap();
                     quantitySummary.put("facilityId", weFacilityId);
                     summaryOutByFacility.put(weFacilityId, quantitySummary);
                 }
@@ -1102,7 +1098,7 @@ public class WorkEffortServices {
 
                 List<GenericValue> outgoingProductionRunList = UtilGenerics.checkList(quantitySummary.get("outgoingProductionRunList"));
                 if (outgoingProductionRunList == null) {
-                    outgoingProductionRunList = FastList.newInstance();
+                    outgoingProductionRunList = UtilMisc.newList();
                     quantitySummary.put("outgoingProductionRunList", outgoingProductionRunList);
                 }
                 outgoingProductionRunList.add(outgoingProductionRun);
@@ -1384,8 +1380,8 @@ public class WorkEffortServices {
         EntityListIterator eli = (EntityListIterator) context.get("workEffortIterator");
         if (eli != null) {
             try {
-                Set<String> keys = FastSet.newInstance();
-                resultList = FastList.newInstance();
+                Set<String> keys = UtilMisc.newSet();
+                resultList = UtilMisc.newList();
                 GenericValue workEffort = eli.next();
                 while (workEffort != null) {
                     String workEffortId = workEffort.getString("workEffortId");

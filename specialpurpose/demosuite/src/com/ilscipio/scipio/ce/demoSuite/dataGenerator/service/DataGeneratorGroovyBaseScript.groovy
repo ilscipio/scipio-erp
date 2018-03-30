@@ -16,8 +16,6 @@ import com.ilscipio.scipio.ce.demoSuite.dataGenerator.DataGenerator
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.DemoDataHelper
 
-import javolution.util.FastList
-import javolution.util.FastMap
 
 
 // FIXME?: revisit reuse pattern; in Ofbiz GroovyBaseScript is not meant to be hardcoded
@@ -36,7 +34,7 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
     private int numRecords = DATA_GENERATOR_MAX_RECORDS;
 
     DataGeneratorGroovyBaseScript() {
-        dataGeneratorStats = FastList.newInstance();
+        dataGeneratorStats = [];
     }
 
     /**
@@ -45,7 +43,7 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
      * @param toBeStored
      */
     private void storeData(List toBeStored) {
-        Map result = FastMap.newInstance();
+        Map result = [:];
         if (UtilValidate.isNotEmpty(toBeStored)) {
             Locale locale = (Locale) context.get("locale");
             for (GenericValue value : toBeStored) {

@@ -29,9 +29,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-import javolution.util.FastSet;
+import org.ofbiz.base.util.UtilMisc;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -52,7 +50,7 @@ public class ContentMapFacade implements Map<Object, Object> {
 
     public static final String module = ContentMapFacade.class.getName();
 
-    protected static final Set<String> mapKeySet = FastSet.newInstance();
+    protected static final Set<String> mapKeySet = UtilMisc.newSet();
     static {
         mapKeySet.add("fields");
         mapKeySet.add("link");
@@ -279,10 +277,10 @@ public class ContentMapFacade implements Map<Object, Object> {
             return dataResource;
         } else if ("subcontent_all".equalsIgnoreCase(name)) {
             // subcontent list of ordered subcontent
-            List<ContentMapFacade> subContent = FastList.newInstance();
+            List<ContentMapFacade> subContent = UtilMisc.newList();
             List<GenericValue> subs = null;
             try {
-                Map<String, Object> expressions = FastMap.newInstance();
+                Map<String, Object> expressions = UtilMisc.newMap();
                 expressions.put("contentIdStart", contentId);
                 if(!this.mapKeyFilter.equals("")) {
                     expressions.put("caMapKey", this.mapKeyFilter);
@@ -329,7 +327,7 @@ public class ContentMapFacade implements Map<Object, Object> {
             return "=========> " + errorMsg + " <=========";
         }
         // TODO: change to use the MapStack instead of a cloned Map
-        Map<String, Object> renderCtx = FastMap.newInstance();
+        Map<String, Object> renderCtx = UtilMisc.newMap();
         renderCtx.putAll(context);
         if (this.decoratedContent != null) {
             renderCtx.put("decoratedContent", decoratedContent);
@@ -457,7 +455,7 @@ public class ContentMapFacade implements Map<Object, Object> {
             // key is the mapKey
             GenericValue sub = null;
             try {
-                Map<String, Object> expressions = FastMap.newInstance();
+                Map<String, Object> expressions = UtilMisc.newMap();
                 expressions.put("contentIdStart", contentId);
                 expressions.put("caMapKey", name);
                 if(!this.statusFilter.equals("")) {

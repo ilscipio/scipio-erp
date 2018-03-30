@@ -94,7 +94,7 @@
                             <@field type="display" label=uiLabelMap.CmsMediaOriginalName value=(media.objectInfo!"") />                            
 
                             <#if fileSizeAttr?has_content>
-                                <#assign fileSize = Static["com.ilscipio.scipio.cms.util.fileType.FileTypeUtil"].formatFileSize(fileSizeAttr.attrValue, dispatcher, locale) />
+                                <#assign fileSize = Static["com.ilscipio.scipio.common.util.fileType.FileTypeUtil"].formatFileSize(fileSizeAttr.attrValue, dispatcher, locale) />                                							
                                 <@field type="display" label=uiLabelMap.CommonSize value=fileSize />
                             </#if>
                             <@field type="display" label=uiLabelMap.FormFieldTitle_createdDate value=media.createdDate valueType="date" />

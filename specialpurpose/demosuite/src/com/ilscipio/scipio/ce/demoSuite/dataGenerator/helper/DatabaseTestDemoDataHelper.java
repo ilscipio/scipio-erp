@@ -5,13 +5,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.party.DemoDataParty;
-
-import javolution.util.FastMap;
 
 public class DatabaseTestDemoDataHelper extends DemoDataHelper {
 
@@ -56,7 +55,7 @@ public class DatabaseTestDemoDataHelper extends DemoDataHelper {
 
 		public DatabaseTestSettings(Delegator delegator) throws GenericEntityException  {
 			super(delegator);
-			this.queryParameters = FastMap.newInstance();
+			this.queryParameters = UtilMisc.newMap();
 		}
 
 		// @Override

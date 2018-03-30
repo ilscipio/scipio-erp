@@ -56,8 +56,6 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
-import javolution.util.FastList;
-
 /**
  * SCIPIO: Content/generic image services.
  * FIXME: MISSING DELETION CODE LOGIC
@@ -544,7 +542,7 @@ public abstract class ContentImageServices {
                     return ServiceUtil.returnError("can't determine output format (no targetFormatName or DataResource.mimeTypeId) (dataResourceId: " + origImageDataResourceId + ")");
                 }
                 
-                List<GenericValue> fileExtValues = FastList.newInstance();
+                List<GenericValue> fileExtValues = UtilMisc.newList();
                 try {
                     fileExtValues = EntityQuery.use(delegator).from("FileExtension").where("mimeTypeId", mimeTypeId).queryList();
                     if (UtilValidate.isEmpty(fileExtValues)) {

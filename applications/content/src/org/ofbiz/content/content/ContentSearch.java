@@ -27,9 +27,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javolution.util.FastList;
-import javolution.util.FastSet;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
@@ -114,17 +111,17 @@ public class ContentSearch {
 
     public static class ContentSearchContext {
         public int index = 1;
-        public List<EntityCondition> entityConditionList = FastList.newInstance();
-        public List<String> orderByList = FastList.newInstance();
+        public List<EntityCondition> entityConditionList = UtilMisc.newList();
+        public List<String> orderByList = UtilMisc.newList();
         public Set<String> fieldsToSelect = UtilMisc.toSet("contentId");
         public DynamicViewEntity dynamicViewEntity = new DynamicViewEntity();
         public boolean contentIdGroupBy = false;
         public boolean includedKeywordSearch = false;
         public Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
-        public List<Set<String>> keywordFixedOrSetAndList = FastList.newInstance();
-        public Set<String> orKeywordFixedSet = FastSet.newInstance();
-        public Set<String> andKeywordFixedSet = FastSet.newInstance();
-        public List<GenericValue> contentSearchConstraintList = FastList.newInstance();
+        public List<Set<String>> keywordFixedOrSetAndList = UtilMisc.newList();
+        public Set<String> orKeywordFixedSet = UtilMisc.newSet();
+        public Set<String> andKeywordFixedSet = UtilMisc.newSet();
+        public List<GenericValue> contentSearchConstraintList = UtilMisc.newList();
         public ResultSortOrder resultSortOrder = null;
         public Integer resultOffset = null;
         public Integer maxResults = null;
@@ -254,7 +251,7 @@ public class ContentSearch {
                     dynamicViewEntity.addMemberEntity(entityAlias, "ContentKeyword");
                     dynamicViewEntity.addAlias(entityAlias, prefix + "Keyword", "keyword", null, null, null, null);
                     dynamicViewEntity.addViewLink("CNT", entityAlias, Boolean.FALSE, ModelKeyMap.makeKeyMapList("contentId"));
-                    List<EntityExpr> keywordOrList = FastList.newInstance();
+                    List<EntityExpr> keywordOrList = UtilMisc.newList();
                     for (String keyword: keywordFixedOrSet) {
                         keywordOrList.add(EntityCondition.makeCondition(prefix + "Keyword", EntityOperator.LIKE, keyword));
                     }
@@ -372,7 +369,7 @@ public class ContentSearch {
                 int numRetreived = 1;
                 int duplicatesFound = 0;
 
-                Set<String> contentIdSet = FastSet.newInstance();
+                Set<String> contentIdSet = UtilMisc.newSet();
 
                 contentIds.add(searchResult.getString("contentId"));
                 contentIdSet.add(searchResult.getString("contentId"));
@@ -494,7 +491,7 @@ public class ContentSearch {
 
         @Override
         public void addConstraint(ContentSearchContext contentSearchContext) {
-            Set<String> contentIdSet = FastSet.newInstance();
+            Set<String> contentIdSet = UtilMisc.newSet();
             if (includeSubContents) {
                 // find all sub-categories recursively, make a Set of contentId
                 ContentSearch.getAllSubContentIds(contentId, contentIdSet, contentSearchContext.getDelegator(), contentSearchContext.nowTimestamp);
@@ -521,7 +518,7 @@ public class ContentSearch {
             contentSearchContext.dynamicViewEntity.addAlias(entityAlias, prefix + "ThruDate", "thruDate", null, null, null, null);
             contentSearchContext.dynamicViewEntity.addViewLink("CNT", entityAlias, Boolean.TRUE, ModelKeyMap.makeKeyMapList("contentId","contentIdFrom"));
 
-            List<EntityExpr> assocConditionFromTo = FastList.newInstance();
+            List<EntityExpr> assocConditionFromTo = UtilMisc.newList();
             assocConditionFromTo.add(EntityCondition.makeCondition(prefix + "ContentIdTo", EntityOperator.IN, contentIdSet));
             if (UtilValidate.isNotEmpty(contentAssocTypeId)) {
                 assocConditionFromTo.add(EntityCondition.makeCondition(prefix + "ContentAssocTypeId", EntityOperator.EQUALS, contentAssocTypeId));
@@ -542,7 +539,7 @@ public class ContentSearch {
             contentSearchContext.dynamicViewEntity.addAlias(entityAlias, prefix + "ThruDate", "thruDate", null, null, null, null);
             contentSearchContext.dynamicViewEntity.addViewLink("CNT", entityAlias, Boolean.TRUE, ModelKeyMap.makeKeyMapList("contentId","contentIdTo"));
 
-            List<EntityExpr> assocConditionToFrom = FastList.newInstance();
+            List<EntityExpr> assocConditionToFrom = UtilMisc.newList();
             assocConditionToFrom.add(EntityCondition.makeCondition(prefix + "ContentIdFrom", EntityOperator.IN, contentIdSet));
             if (UtilValidate.isNotEmpty(contentAssocTypeId)) {
                 assocConditionToFrom.add(EntityCondition.makeCondition(prefix + "ContentAssocTypeId", EntityOperator.EQUALS, contentAssocTypeId));
@@ -688,7 +685,7 @@ public class ContentSearch {
                         expandedSet.add(keyword);
                     }
                     Set<String> fixedSet = KeywordSearchUtil.fixKeywordsForSearch(expandedSet, anyPrefix, anySuffix, removeStems, isAnd);
-                    Set<String> fixedKeywordSet = FastSet.newInstance();
+                    Set<String> fixedKeywordSet = UtilMisc.newSet();
                     fixedKeywordSet.addAll(fixedSet);
                     contentSearchContext.keywordFixedOrSetAndList.add(fixedKeywordSet);
                 }

@@ -36,5 +36,6 @@ find_jar() {
         exit 1
     fi
 }
-"$JAVA" -jar "$(find_jar)" -lib "$top/framework/base/lib/ant" "$@"
+# FIXME: 2018-03-26: oro: adding libs outside base/lib/ant for ivy from within builds does not work without this
+"$JAVA" -jar "$(find_jar)" -lib "$top/framework/base/lib/ant" -lib "$top"/framework/base/lib/oro-*.jar "$@"
 

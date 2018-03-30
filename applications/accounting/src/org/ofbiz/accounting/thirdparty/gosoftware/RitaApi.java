@@ -21,13 +21,12 @@ package org.ofbiz.accounting.thirdparty.gosoftware;
 import java.io.IOException;
 import java.util.Map;
 
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.HttpClient;
 import org.ofbiz.base.util.HttpClientException;
 import org.ofbiz.base.util.ObjectType;
+import org.ofbiz.base.util.UtilMisc;
 
 
 public class RitaApi {
@@ -99,13 +98,13 @@ public class RitaApi {
     protected int mode = 0;
 
     public RitaApi(Map<String, String> document) {
-        this.document = FastMap.newInstance();
+        this.document = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
         this.document.putAll(document);
         this.mode = MODE_OUT;
     }
 
     public RitaApi() {
-        this.document = FastMap.newInstance();
+        this.document = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
         this.mode = MODE_IN;
     }
 
@@ -226,7 +225,7 @@ public class RitaApi {
             br.close();
             */
 
-            Map<String, String> docMap = FastMap.newInstance();
+            Map<String, String> docMap = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
             String resp = null;
             try {
                 resp = http.post(stream);

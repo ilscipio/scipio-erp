@@ -83,7 +83,6 @@ import org.xml.sax.SAXException;
 import com.sun.mail.smtp.SMTPAddressFailedException;
 
 import freemarker.template.TemplateException;
-import javolution.util.FastMap;
 
 /**
  * Email Services

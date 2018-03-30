@@ -894,9 +894,12 @@ public class UtilMisc {
     }
     
     /**
-     * SCIPIO: Creates a new, empty map.
+     * SCIPIO: Creates a new, empty map (abstraction).
      * <p>
-     * This is useful for Freemarker workarounds and to guarantee a map
+     * This returns a general-purpose map type, such as HashMap, and does not
+     * guarantee insertion order.
+     * <p>
+     * This and the other methods below are useful for Freemarker workarounds and to guarantee a map
      * is of the same type as the other toMap calls in this class.
      */
     public static <K, V> Map<K, V> newMap() {
@@ -904,13 +907,155 @@ public class UtilMisc {
     }
     
     /**
-     * SCIPIO: Creates a new map initialized from the given map.
+     * SCIPIO: Creates a new map initialized from the given map (abstraction).
+     * <p>
+     * This returns a general-purpose map type, such as HashMap, and does not
+     * guarantee insertion order.
+     * @see #newMap()
+     */
+    public static <K, V> Map<K, V> newMap(Map<? extends K, ? extends V> map) {
+        return new HashMap<K, V>(map);
+    }
+    
+    /**
+     * SCIPIO: Creates a new map with given initial capacity hint (abstraction).
+     * <p>
+     * This returns a general-purpose map type, such as HashMap, and does not
+     * guarantee insertion order. The initial capacity hint may or may not
+     * be honored.
+     * @see #newMap()
+     */
+    public static <K, V> Map<K, V> newMap(int initialCapacity) {
+        return new HashMap<K, V>(initialCapacity);
+    }
+    
+    /**
+     * SCIPIO: Creates a new, insert-order-preserving empty map (abstraction).
+     * <p>
+     * This returns a general-purpose insert-order-preserving map type, such as LinkedHashMap.
      * <p>
      * This is useful for Freemarker workarounds and to guarantee a map
      * is of the same type as the other toMap calls in this class.
      */
-    public static <K, V> Map<K, V> newMap(Map<? extends K, ? extends V> map) {
-        return new HashMap<K, V>(map);
+    public static <K, V> Map<K, V> newInsertOrderMap() {
+        return new LinkedHashMap<K, V>();
+    }
+    
+    /**
+     * SCIPIO: Creates a new, insert-order-preserving empty map initialized from the 
+     * given collection (abstraction).
+     * <p>
+     * This returns a general-purpose insert-order-preserving map type, such as LinkedHashMap.
+     * @see #newInsertOrderMap()
+     */
+    public static <K, V> Map<K, V> newInsertOrderMap(Map<? extends K, ? extends V> map) {
+        return new LinkedHashMap<K, V>(map);
+    }
+    
+    /**
+     * SCIPIO: Creates a new, empty list (abstraction).
+     * <p>
+     * This returns a general-purpose list type with no specific initial capacity or structure, 
+     * appropriate for general use in most Scipio code and services - it may be ArrayList, 
+     * LinkedList, or even another.
+     * <p>
+     * NOTE: Often it is better to choose a specific List type such as ArrayList or LinkedList
+     * for a given situation; this method is for code which has not been performance written or analyzed.
+     * In particular, it may be used to replace instances of javolution FastList usage in old
+     * code. This type is likely - but not guaranteed - to remain ArrayList.
+     * <p>
+     * This is useful for Freemarker workarounds and to guarantee a list
+     * is of a type common used by Scipio code.
+     */
+    public static <V> List<V> newList() {
+        return new ArrayList<V>(); // new LinkedList<V>()
+    }
+    
+    /**
+     * SCIPIO: Creates a new list initialized from the given collection (abstraction).
+     * <p>
+     * This returns a general-purpose list type with no specific structure, 
+     * with contents duplicated from the passed collection,
+     * appropriate for general use in most Scipio code and services - it may be ArrayList, 
+     * LinkedList, or even another.
+     * <p>
+     * NOTE: Usually it is better to choose a specific List type such as ArrayList or LinkedList
+     * for a given situation; this method is for code which has not been performance analyzed.
+     * In particular, it may be used to replace instances of javolution FastList usage in old
+     * code. This type is likely - but not guaranteed - to remain ArrayList.
+     * @see #newList()
+     */
+    public static <V> List<V> newList(Collection<? extends V> c) {
+        return new ArrayList<V>(c); // new LinkedList<V>(c)
+    }
+    
+    /**
+     * SCIPIO: Creates a new, empty list, with given initial capacity hint (abstraction).
+     * <p>
+     * This returns a general-purpose list type with no specific structure, 
+     * and which may or may not honor the passed initialCapacity,
+     * appropriate for general use in most Scipio code and services - it may be ArrayList, 
+     * LinkedList, or even another.
+     * <p>
+     * NOTE: Usually it is better to choose a specific List type such as ArrayList or LinkedList
+     * for a given situation; this method is for code which has not been performance analyzed.
+     * In particular, it may be used to replace instances of javolution FastList usage in old
+     * code. This type is likely - but not guaranteed - to remain ArrayList.
+     * @see #newList()
+     */
+    public static <V> List<V> newList(int initialCapacity) {
+        return new ArrayList<V>(initialCapacity); // new LinkedList<V>()
+    }
+    
+    /**
+     * SCIPIO: Creates a new, empty set (abstraction).
+     * <p>
+     * This returns a general-purpose set type with no specific initial capacity, structure, 
+     * and not guaranteed to preserve order,
+     * appropriate for general use in most Scipio code and services.
+     * <p>
+     * This is useful for Freemarker workarounds and to guarantee a list
+     * is of a type common used by Scipio code.
+     */
+    public static <V> Set<V> newSet() {
+        return new HashSet<V>();
+    }
+    
+    /**
+     * SCIPIO: Creates a new set initialized from the given collection (abstraction).
+     * <p>
+     * This returns a general-purpose set type with no specific initial capacity, structure, 
+     * and not guaranteed to preserve order,
+     * appropriate for general use in most Scipio code and services.
+     * @see #newSet()
+     */
+    public static <V> Set<V> newSet(Collection<? extends V> c) {
+        return new HashSet<V>(c);
+    }
+    
+    /**
+     * SCIPIO: Creates a new, empty insert-order-preserving set (abstraction).
+     * <p>
+     * This returns a general-purpose insert-order-preserving set type with no specific 
+     * initial capacity or structure, 
+     * appropriate for general use in most Scipio code and services.
+     * <p>
+     * This is useful for Freemarker workarounds and to guarantee a list
+     * is of a type common used by Scipio code.
+     */
+    public static <V> Set<V> newInsertOrderSet() {
+        return new LinkedHashSet<V>();
+    }
+    
+    /**
+     * SCIPIO: Creates a new insert-order-preserving set initialized from the given collection (abstraction).
+     * <p>
+     * This returns a general-purpose insert-order-preserving set type with no specific 
+     * initial capacity or structure, appropriate for general use in most Scipio code and services.
+     * @see #newInsertOrderSet()
+     */
+    public static <V> Set<V> newInsertOrderSet(Collection<? extends V> c) {
+        return new LinkedHashSet<V>(c);
     }
     
     /**

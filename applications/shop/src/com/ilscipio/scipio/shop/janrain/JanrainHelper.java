@@ -41,8 +41,6 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
@@ -220,7 +218,7 @@ public class JanrainHelper {
                 return "error";
             }
             
-            Map<String, String> result = FastMap.newInstance();
+            Map<String, String> result = UtilMisc.newMap();
             result.put("displayName", displayName);
             result.put("email", email);
             result.put("identifier", identifier);

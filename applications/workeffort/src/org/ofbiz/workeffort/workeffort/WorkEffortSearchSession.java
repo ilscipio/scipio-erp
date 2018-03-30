@@ -26,8 +26,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import javolution.util.FastList;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
@@ -69,7 +67,7 @@ public class WorkEffortSearchSession {
         public static void addConstraint(WorkEffortSearchConstraint workEffortSearchConstraint, HttpSession session) {
             WorkEffortSearchOptions workEffortSearchOptions = getWorkEffortSearchOptions(session);
             if (workEffortSearchOptions.constraintList == null) {
-                workEffortSearchOptions.constraintList = FastList.newInstance();
+                workEffortSearchOptions.constraintList = UtilMisc.newList();
             }
             if (!workEffortSearchOptions.constraintList.contains(workEffortSearchConstraint)) {
                 workEffortSearchOptions.constraintList.add(workEffortSearchConstraint);
@@ -132,7 +130,7 @@ public class WorkEffortSearchSession {
 
         public List<String> searchGetConstraintStrings(boolean detailed, Delegator delegator, Locale locale) {
             List<WorkEffortSearchConstraint> workEffortSearchConstraintList = this.getConstraintList();
-            List<String> constraintStrings = FastList.newInstance();
+            List<String> constraintStrings = UtilMisc.newList();
             if (workEffortSearchConstraintList == null) {
                 return constraintStrings;
             }
@@ -209,7 +207,7 @@ public class WorkEffortSearchSession {
 
 //      add a Product Set to the search
         if (UtilValidate.isNotEmpty(parameters.get("productId_1"))) {
-            List<String> productSet = FastList.newInstance();
+            List<String> productSet = UtilMisc.newList();
             productSet.add((String) parameters.get("productId_1"));
             if (UtilValidate.isNotEmpty(parameters.get("productId_2"))) {
                 productSet.add((String) parameters.get("productId_2"));
@@ -292,7 +290,7 @@ public class WorkEffortSearchSession {
     public static List<WorkEffortSearchOptions> getSearchOptionsHistoryList(HttpSession session) {
         List<WorkEffortSearchOptions> optionsHistoryList = UtilGenerics.checkList(session.getAttribute("_WORK_EFFORT_SEARCH_OPTIONS_HISTORY_"));
         if (optionsHistoryList == null) {
-            optionsHistoryList = FastList.newInstance();
+            optionsHistoryList = UtilMisc.newList();
             session.setAttribute("_WORK_EFFORT_SEARCH_OPTIONS_HISTORY_", optionsHistoryList);
         }
         return optionsHistoryList;

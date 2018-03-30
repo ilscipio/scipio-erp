@@ -1,4 +1,3 @@
-import javolution.util.FastList
 
 import org.ofbiz.base.util.*
 import org.ofbiz.base.util.UtilDateTime.TimeInterval
@@ -23,7 +22,7 @@ Map<Date, Map<String, BigDecimal>> processResults() {
     
     Map<Date, Long> totalRequests = [:];
     for (int i = 0; i <= iCount; i++) {
-        List serverHitDateAndExprs = FastList.newInstance();
+        List serverHitDateAndExprs = [];
         serverHitDateAndExprs.add(EntityCondition.makeCondition("hitStartDateTime", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntervals.getDateBegin()));
         serverHitDateAndExprs.add(EntityCondition.makeCondition("hitStartDateTime", EntityOperator.LESS_THAN, dateIntervals.getDateEnd()));
         serverHitDateAndExprs.add(EntityCondition.makeCondition("hitTypeId", EntityOperator.EQUALS, "REQUEST"));

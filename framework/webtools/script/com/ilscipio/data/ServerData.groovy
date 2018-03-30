@@ -10,8 +10,6 @@ import org.ofbiz.webapp.stats.*;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.base.util.Debug;
-import javolution.util.FastList;
-import javolution.util.FastMap;
 import java.text.SimpleDateFormat;
 import java.sql.Timestamp;
 import com.ibm.icu.util.Calendar;

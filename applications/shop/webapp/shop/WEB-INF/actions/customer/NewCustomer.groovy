@@ -54,5 +54,7 @@ if (userInfoMap) {
     request.getSession().setAttribute("userInfoMap", userInfoMap);
 }
 
-donePage = "main;" + parameters.visit.sessionId
+// SCIPIO: should be automatic now...
+//donePage = "main;" + parameters.visit.sessionId
+donePage = "main";
 context.donePage = donePage;

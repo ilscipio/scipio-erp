@@ -29,11 +29,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -108,7 +107,7 @@ public class CompDocEvents {
                 request.setAttribute(obj.toString(), val);
             }
             // Update ContentRevision and ContentRevisonItem
-            Map<String, Object> contentRevisionMap = FastMap.newInstance();
+            Map<String, Object> contentRevisionMap = UtilMisc.newMap();
             contentRevisionMap.put("itemContentId", contentId);
             contentRevisionMap.put("contentId", contentId);
             contentRevisionMap.put("userLogin", userLogin);
@@ -160,7 +159,7 @@ public class CompDocEvents {
             https = (String) servletContext.getAttribute("https");
         }
 
-        Map<String, Object> mapIn = FastMap.newInstance();
+        Map<String, Object> mapIn = UtilMisc.newMap();
         mapIn.put("contentId", contentId);
         mapIn.put("locale", locale);
         mapIn.put("rootDir", rootDir);
@@ -231,7 +230,7 @@ public class CompDocEvents {
             https = (String) servletContext.getAttribute("https");
         }
 
-        Map<String, Object> mapIn = FastMap.newInstance();
+        Map<String, Object> mapIn = UtilMisc.newMap();
         mapIn.put("contentId", contentId);
         mapIn.put("locale", locale);
         mapIn.put("rootDir", rootDir);

@@ -28,15 +28,13 @@ import com.ilscipio.scipio.accounting.external.BaseOperationStats.NotificationSc
 import com.ilscipio.scipio.accounting.external.datev.DatevException;
 import com.ilscipio.scipio.accounting.external.datev.DatevHelper;
 
-import javolution.util.FastMap;
-
 public abstract class AbstractDatevDataCategory {
 
     final Delegator delegator;
     final DatevHelper datevHelper;
 
     private final List<GenericValue> datevMetadataFieldsDefinitions;
-    private Map<String, Object> datevMetadataValues = FastMap.newInstance();
+    private Map<String, Object> datevMetadataValues = UtilMisc.newMap();
 
     private final List<GenericValue> datevFieldDefinitions;
     private final Map<String, GenericValue> datevFieldMappingsByField;
@@ -54,7 +52,7 @@ public abstract class AbstractDatevDataCategory {
             this.datevFieldNames = EntityUtil.getFieldListFromEntityList(datevFieldDefinitions, "fieldName", true);
             
             List<String> datevFieldIds = EntityUtil.getFieldListFromEntityList(datevFieldDefinitions, "fieldId", true);
-            Map<String, GenericValue> datevFieldMappingsByField = FastMap.newInstance();
+            Map<String, GenericValue> datevFieldMappingsByField = UtilMisc.newMap();
             List<GenericValue> datevFieldMappings = EntityQuery.use(delegator).from("DatevFieldMapping").where(datevFieldCommonCond).queryList();
             for (String fieldId : datevFieldIds) {
                 datevFieldMappingsByField.put(fieldId, EntityUtil.getFirst(EntityUtil.filterByAnd(datevFieldMappings, UtilMisc.toMap("fieldId", fieldId))));

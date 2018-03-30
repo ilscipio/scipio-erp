@@ -25,8 +25,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
@@ -157,7 +155,7 @@ public class SubscriptionServices {
                             null, null, updateSubscriptionResult);
                 }
             } else {
-                Map<String, Object> ensurePartyRoleMap = FastMap.newInstance();
+                Map<String, Object> ensurePartyRoleMap = UtilMisc.newMap();
                 if (UtilValidate.isNotEmpty(roleTypeId)) {
                     ensurePartyRoleMap.put("partyId", partyId);
                     ensurePartyRoleMap.put("roleTypeId", roleTypeId);

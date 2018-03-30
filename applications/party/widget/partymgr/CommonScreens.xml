@@ -384,9 +384,9 @@ under the License.
     <screen name="ScipioNewRegistrationsList">
         <section>
             <actions>
-               <entity-and entity-name="PartyAndPerson" list="registrations">
+               <entity-condition entity-name="PartyAndPerson" list="registrations">
                     <order-by field-name="createdDate"/>
-                </entity-and>
+                </entity-condition>
            </actions>
            <widgets>
                 <section>

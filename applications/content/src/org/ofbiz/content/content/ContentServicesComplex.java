@@ -24,9 +24,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilDateTime;
@@ -81,7 +78,7 @@ public class ContentServicesComplex {
     }
 
     public static Map<String, Object> getAssocAndContentAndDataResourceMethod(Delegator delegator, String contentId, String mapKey, String direction, Timestamp fromDate, Timestamp thruDate, String fromDateStr, String thruDateStr, List<String> assocTypes, List<String> contentTypes) {
-        List<EntityCondition> exprList = FastList.newInstance();
+        List<EntityCondition> exprList = UtilMisc.newList();
         EntityExpr joinExpr = null;
         String viewName = null;
         if (mapKey != null) {
@@ -115,7 +112,7 @@ public class ContentServicesComplex {
             exprList.add(fromExpr);
         }
         if (thruDate != null) {
-            List<EntityExpr> thruList = FastList.newInstance();
+            List<EntityExpr> thruList = UtilMisc.newList();
             //thruDate = UtilDateTime.getDayStart(thruDate, daysLater);
 
             EntityExpr thruExpr = EntityCondition.makeCondition("caThruDate", EntityOperator.LESS_THAN, thruDate);
@@ -125,7 +122,7 @@ public class ContentServicesComplex {
             EntityConditionList<EntityExpr> thruExprList = EntityCondition.makeCondition(thruList, EntityOperator.OR);
             exprList.add(thruExprList);
         } else if (fromDate != null) {
-            List<EntityExpr> thruList = FastList.newInstance();
+            List<EntityExpr> thruList = UtilMisc.newList();
 
             EntityExpr thruExpr = EntityCondition.makeCondition("caThruDate", EntityOperator.GREATER_THAN, fromDate);
             thruList.add(thruExpr);
@@ -145,7 +142,7 @@ public class ContentServicesComplex {
             GenericValue a = relatedAssocs.get(i);
             Debug.logVerbose(" contentId:" + a.get("contentId") + " To:" + a.get("caContentIdTo") + " fromDate:" + a.get("caFromDate") + " thruDate:" + a.get("caThruDate") + " AssocTypeId:" + a.get("caContentAssocTypeId"), null);
         }
-        Map<String, Object> results = FastMap.newInstance();
+        Map<String, Object> results = UtilMisc.newMap();
         results.put("entityList", relatedAssocs);
         return results;
     }
@@ -165,7 +162,7 @@ public class ContentServicesComplex {
         if (UtilValidate.isNotEmpty(assocTypesString)) {
             List<String> lst = StringUtil.split(assocTypesString, "|");
             if (assocTypes == null) {
-                assocTypes = FastList.newInstance();
+                assocTypes = UtilMisc.newList();
             }
             assocTypes.addAll(lst);
         }
@@ -174,7 +171,7 @@ public class ContentServicesComplex {
         if (UtilValidate.isNotEmpty(contentTypesString)) {
             List<String> lst = StringUtil.split(contentTypesString, "|");
             if (contentTypes == null) {
-                contentTypes = FastList.newInstance();
+                contentTypes = UtilMisc.newList();
             }
             contentTypes.addAll(lst);
         }
@@ -248,7 +245,7 @@ public class ContentServicesComplex {
         GenericValue contentAssocDataResourceView = null;
         GenericValue content = null;
         GenericValue dataResource = null;
-        List<GenericValue> contentAssocDataResourceList = FastList.newInstance();
+        List<GenericValue> contentAssocDataResourceList = UtilMisc.newList();
         Locale locale = Locale.getDefault(); // TODO: this needs to be passed in
         try{
         for (GenericValue contentAssocView : contentAssocsTypeFiltered) {
@@ -266,12 +263,12 @@ public class ContentServicesComplex {
                 contentAssocDataResourceView = delegator.makeValue(viewName);
                 contentAssocDataResourceView.setAllFields(content, true, null, null);
             }
-            SimpleMapProcessor.runSimpleMapProcessor("component://content/script/org/ofbiz/content/ContentManagementMapProcessors.xml", "contentAssocOut", contentAssoc, contentAssocDataResourceView, FastList.newInstance(), locale);
+            SimpleMapProcessor.runSimpleMapProcessor("component://content/script/org/ofbiz/content/ContentManagementMapProcessors.xml", "contentAssocOut", contentAssoc, contentAssocDataResourceView, UtilMisc.newList(), locale);
             String dataResourceId = content.getString("dataResourceId");
             if (UtilValidate.isNotEmpty(dataResourceId))
                 dataResource = content.getRelatedOne("DataResource", true);
             if (dataResource != null) {
-                SimpleMapProcessor.runSimpleMapProcessor("component://content/script/org/ofbiz/content/ContentManagementMapProcessors.xml", "dataResourceOut", dataResource, contentAssocDataResourceView, FastList.newInstance(), locale);
+                SimpleMapProcessor.runSimpleMapProcessor("component://content/script/org/ofbiz/content/ContentManagementMapProcessors.xml", "dataResourceOut", dataResource, contentAssocDataResourceView, UtilMisc.newList(), locale);
             }
             contentAssocDataResourceList.add(contentAssocDataResourceView);
         }
@@ -284,7 +281,7 @@ public class ContentServicesComplex {
             List<String> orderByList = StringUtil.split(orderBy, "|");
            contentAssocDataResourceList = EntityUtil.orderBy(contentAssocDataResourceList, orderByList);
         }
-        Map<String, Object> results = FastMap.newInstance();
+        Map<String, Object> results = UtilMisc.newMap();
         results.put("entityList", contentAssocDataResourceList);
         if (UtilValidate.isNotEmpty(contentAssocDataResourceList)) {
             results.put("view", contentAssocDataResourceList.get(0));

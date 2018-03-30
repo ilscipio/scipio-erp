@@ -27,7 +27,6 @@ under the License.
 
     <property name="desc" value="SCIPIO ERP SOLR Component"/>
     <property name="name" value="ofbiz-solr"/>
-    <property name="ofbiz.home.dir" value="../.."/>
     <property name="src.dir" value="src" />
     <property name="dtd.dir" value="dtd" />
     <property name="lib.dir" value="lib" />
@@ -36,7 +35,6 @@ under the License.
     <path id="local.class.path">
         <fileset dir="${lib.dir}" includes="*.jar"/>
         <fileset dir="../../framework/base/lib" includes="*.jar"/>
-        <fileset dir="../../framework/base/lib/j2eespecs" includes="*.jar"/>
         <fileset dir="../../framework/base/build/lib" includes="*.jar"/>
         <fileset dir="../../framework/entity/lib" includes="*.jar"/>
         <fileset dir="../../framework/entity/build/lib" includes="*.jar"/>
@@ -81,9 +79,10 @@ under the License.
         <antcall target="clean-uiloginservice"/>
     </target>
     
+    <property name="lib.resolve.build.confs" value="solr-webapp"/>
+    
     <!-- SCIPIO: Special lib download script for complex base includes -->
     <target name="do-lib-update" description="Downloads all jars (solr component implementation)">
-        <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="application"/>
         <ivy:retrieve pattern="webapp/WEB-INF/lib/${lib.update.filename.pattern.ivy}" conf="solr-webapp"/>
     </target>
     
@@ -91,19 +90,4 @@ under the License.
         <antcall target="common-lib-clean" inheritrefs="true"/>
         <remove-lib-files dir="webapp/WEB-INF/lib" excludes-refid="lib.update.manual.files.solr.webapp"/>
     </target>
-    
-    <!-- SCIPIO: Libraries manually committed to repo, excluded from ivy (or emulated) file cleanout/removal
-        NOTE: This should be defined implicitly as an include (treated as exclude as needed)
-    <selector id="lib.update.manual.files">
-        <or>
-            <filename name="xxxx-*.jar"/>
-        </or>
-    </selector>-->
-    <selector id="lib.update.manual.files.solr.webapp">
-        <or>
-            <!-- FIXME: these are not in central -->
-            <filename name="org.restlet*.jar"/>
-        </or>
-    </selector>
-    
 </project>

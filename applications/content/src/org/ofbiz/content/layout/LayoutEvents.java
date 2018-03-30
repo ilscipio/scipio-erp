@@ -29,9 +29,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
@@ -69,7 +66,7 @@ public class LayoutEvents {
             Map<String, Object> uploadResults = LayoutWorker.uploadImageAndParameters(request, "imageData");
             //Debug.logVerbose("in createLayoutImage(java), uploadResults:" + uploadResults, "");
             Map<String, Object> formInput = UtilGenerics.checkMap(uploadResults.get("formInput"));
-            Map<String, Object> context = FastMap.newInstance();
+            Map<String, Object> context = UtilMisc.newMap();
             ByteBuffer byteWrap = (ByteBuffer) uploadResults.get("imageData");
             if (byteWrap == null) {
                 String errMsg = UtilProperties.getMessage(LayoutEvents.err_resource, "layoutEvents.image_data_null", locale);
@@ -87,7 +84,7 @@ public class LayoutEvents {
                 }
             }
             String mimeTypeId = "image/" + imageFileNameExt;
-            List<Object> errorMessages = FastList.newInstance();
+            List<Object> errorMessages = UtilMisc.newList();
             if (locale == null) {
                 locale = Locale.getDefault();
             }
@@ -120,7 +117,7 @@ public class LayoutEvents {
             String dataResourceId = (String) result.get("dataResourceId");
             String activeContentId = (String) result.get("contentId");
             if (UtilValidate.isNotEmpty(activeContentId)) {
-                Map<String, Object> context2 = FastMap.newInstance();
+                Map<String, Object> context2 = UtilMisc.newMap();
                 context2.put("activeContentId", activeContentId);
                 //context2.put("dataResourceId", dataResourceId);
                 context2.put("contentAssocTypeId", result.get("contentAssocTypeId"));
@@ -228,7 +225,7 @@ public class LayoutEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         HttpSession session = request.getSession();
         Locale locale = UtilHttp.getLocale(request);
-        Map<String, Object> context = FastMap.newInstance();
+        Map<String, Object> context = UtilMisc.newMap();
         Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
         Debug.logVerbose("in replaceSubContent, paramMap:" + paramMap, module);
         String dataResourceId = (String) paramMap.get("dataResourceId");
@@ -277,7 +274,7 @@ public class LayoutEvents {
                 Map<String, Object> result = dispatcher.runSync("persistContentAndAssoc", context);
                 //Debug.logVerbose("in replaceSubContent, result:" + result, module);
                 request.setAttribute("contentId", contentIdTo);
-                Map<String, Object> context2 = FastMap.newInstance();
+                Map<String, Object> context2 = UtilMisc.newMap();
                 context2.put("activeContentId", contentId);
                 //context2.put("dataResourceId", dataResourceId);
                 context2.put("contentAssocTypeId", "SUB_CONTENT");
@@ -369,7 +366,7 @@ public class LayoutEvents {
             request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
             return "error";
         }
-        Map<String, Object> serviceIn = FastMap.newInstance();
+        Map<String, Object> serviceIn = UtilMisc.newMap();
         Map<String, Object> results = null;
         serviceIn.put("fromDate", UtilDateTime.nowTimestamp());
         serviceIn.put("contentId", contentId);
@@ -389,14 +386,14 @@ public class LayoutEvents {
             return "error";
         }
 
-        serviceIn = FastMap.newInstance();
+        serviceIn = UtilMisc.newMap();
         serviceIn.put("userLogin", session.getAttribute("userLogin"));
 
         // Can't count on records being unique
-        Map<String, GenericValue> beenThere = FastMap.newInstance();
+        Map<String, GenericValue> beenThere = UtilMisc.newMap();
         for (int i=0; i<entityList.size(); i++) {
             GenericValue view = entityList.get(i);
-            List<Object> errorMessages = FastList.newInstance();
+            List<Object> errorMessages = UtilMisc.newList();
             if (locale == null) {
                 locale = Locale.getDefault();
             }
@@ -450,7 +447,7 @@ public class LayoutEvents {
                 Debug.logVerbose("in createSubContent, contentIdTo:" + contentIdTo, module);
                 Debug.logVerbose("in createSubContent, mapKey:" + mapKey, module);
             }
-            Map<String, Object> context = FastMap.newInstance();
+            Map<String, Object> context = UtilMisc.newMap();
             List<Object> errorMessages = null;
             Locale loc = (Locale) request.getSession().getServletContext().getAttribute("locale");
             if (loc == null) {
@@ -497,7 +494,7 @@ public class LayoutEvents {
             request.setAttribute("contentId", contentId);
             request.setAttribute("drDataResourceId", dataResourceId);
             request.setAttribute("currentEntityName", "SubContentDataResourceId");
-            Map<String, Object> context2 = FastMap.newInstance();
+            Map<String, Object> context2 = UtilMisc.newMap();
             context2.put("activeContentId", contentId);
             //context2.put("dataResourceId", dataResourceId);
             context2.put("contentAssocTypeId", "SUB_CONTENT");
@@ -522,7 +519,7 @@ public class LayoutEvents {
             Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
             // String contentIdTo = (String) paramMap.get("contentIdTo");
             // String mapKey = (String) paramMap.get("mapKey");
-            Map<String, Object> context = FastMap.newInstance();
+            Map<String, Object> context = UtilMisc.newMap();
             List<Object> errorMessages = null;
             Locale loc = (Locale) request.getSession().getServletContext().getAttribute("locale");
             if (loc == null) {
@@ -563,7 +560,7 @@ public class LayoutEvents {
             request.setAttribute("drDataResourceId", dataResourceId);
             request.setAttribute("currentEntityName", "SubContentDataResourceId");
             /*
-            Map context2 = FastMap.newInstance();
+            Map context2 = UtilMisc.newMap();
             context2.put("activeContentId", contentId);
             //context2.put("dataResourceId", dataResourceId);
             context2.put("contentAssocTypeId", "SUB_CONTENT");

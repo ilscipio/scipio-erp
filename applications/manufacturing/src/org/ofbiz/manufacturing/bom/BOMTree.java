@@ -24,8 +24,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javolution.util.FastList;
-
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -106,7 +104,7 @@ public class BOMTree {
                 .where("productId", productId, 
                         "productFeatureApplTypeId", "STANDARD_FEATURE")
                 .queryList();
-        List<GenericValue> productFeatures = FastList.newInstance();
+        List<GenericValue> productFeatures = UtilMisc.newList();
         GenericValue oneProductFeatureAppl = null;
         for (int i = 0; i < productFeaturesAppl.size(); i++) {
             oneProductFeatureAppl = productFeaturesAppl.get(i);
@@ -184,7 +182,7 @@ public class BOMTree {
      *
      */
     public boolean isConfigured() {
-        List<BOMNode> notConfiguredParts = FastList.newInstance();
+        List<BOMNode> notConfiguredParts = UtilMisc.newList();
         root.isConfigured(notConfiguredParts);
         return (notConfiguredParts.size() == 0);
     }
@@ -301,8 +299,8 @@ public class BOMTree {
      * @return List containing all the tree's productId.
      */
     public List<String> getAllProductsId() {
-        List<BOMNode> nodeArr = FastList.newInstance();
-        List<String> productsId = FastList.newInstance();
+        List<BOMNode> nodeArr = UtilMisc.newList();
+        List<String> productsId = UtilMisc.newList();
         print(nodeArr);
         for (int i = 0; i < nodeArr.size(); i++) {
             productsId.add((nodeArr.get(i)).getProduct().getString("productId"));

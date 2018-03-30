@@ -23,8 +23,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
@@ -96,7 +94,7 @@ public class FixedAssetMaintServices {
                 } else {
                     issueQuantity = new Double(requestedQty);
                 }
-                Map<String, Object> itemIssuanceCtx = FastMap.newInstance();
+                Map<String, Object> itemIssuanceCtx = UtilMisc.newMap();
                 itemIssuanceCtx.put("userLogin", userLogin);
                 itemIssuanceCtx.put("inventoryItemId", inventoryItemId);
                 itemIssuanceCtx.put("fixedAssetId", fixedAssetId);

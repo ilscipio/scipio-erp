@@ -1288,7 +1288,6 @@ public class UtilDateTime {
     }
     
     public static TimeInterval getPeriodInterval(String period, int timeShift, Timestamp fromDate, Locale locale, TimeZone timezone) {
-//        Map<String, Timestamp> result = FastMap.newInstance();
         Timestamp dateBegin = null;
         Timestamp dateEnd = null;
         if (!checkValidInterval(period))

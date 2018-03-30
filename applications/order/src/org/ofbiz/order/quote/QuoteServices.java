@@ -23,8 +23,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -59,7 +57,7 @@ public class QuoteServices {
         String note = (String) context.get("note");
 
         // prepare the order information
-        Map<String, Object> sendMap = FastMap.newInstance();
+        Map<String, Object> sendMap = UtilMisc.newMap();
 
         // get the quote and store
         GenericValue quote = null;
@@ -167,7 +165,7 @@ public class QuoteServices {
         //TODO create Quote Term Attributes still to be implemented
         //List<GenericValue> quoteTermAttributes = UtilGenerics.cast(context.get("quoteTermAttributes"));
         
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
 
         try {
             Map<String, Object> quoteIn = UtilMisc.toMap("quoteTypeId", quoteTypeId, "partyId", partyId, "issueDate", issueDate, "statusId", statusId, "currencyUomId", currencyUomId);

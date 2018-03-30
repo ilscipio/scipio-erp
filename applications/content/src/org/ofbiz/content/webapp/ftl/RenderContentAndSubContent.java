@@ -61,11 +61,11 @@ public class RenderContentAndSubContent implements TemplateTransformModel {
         ((MapStack)templateRoot).push(envMap);
         if (Debug.verboseOn()) Debug.logVerbose("in RenderContentAndSubContent, contentId(0):" + templateRoot.get("contentId"), module);
         FreeMarkerWorker.getSiteParameters(request, templateRoot);
-        // final Map savedValuesUp = FastMap.newInstance();
+        // final Map savedValuesUp = UtilMisc.newMap();
         // FreeMarkerWorker.saveContextValues(templateRoot, upSaveKeyNames, savedValuesUp);
         FreeMarkerWorker.overrideWithArgs(templateRoot, args);
 
-        // final Map<String, Object> savedValues = FastMap.newInstance();
+        // final Map<String, Object> savedValues = UtilMisc.newMap();
 
         return new Writer(out) {
 

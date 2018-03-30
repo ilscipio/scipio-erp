@@ -23,8 +23,6 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
-import javolution.util.FastList;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
@@ -56,7 +54,7 @@ public class PartyRelationshipHelper {
         String partyRelationshipTypeId = (String) partyRelationshipValues.get("partyRelationshipTypeId") ;
         Timestamp fromDate = UtilDateTime.nowTimestamp();
 
-        List<EntityCondition> condList = FastList.newInstance();
+        List<EntityCondition> condList = UtilMisc.newList();
         condList.add(EntityCondition.makeCondition("partyIdFrom", partyIdFrom));
         condList.add(EntityCondition.makeCondition("partyIdTo", partyIdTo));
         condList.add(EntityCondition.makeCondition("roleTypeIdFrom", roleTypeIdFrom));

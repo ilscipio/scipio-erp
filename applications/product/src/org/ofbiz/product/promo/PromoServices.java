@@ -28,9 +28,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import org.apache.commons.lang.RandomStringUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
@@ -131,7 +128,7 @@ public class PromoServices {
         Locale locale = (Locale) context.get("locale");
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 
-        List<EntityCondition> condList = FastList.newInstance();
+        List<EntityCondition> condList = UtilMisc.newList();
         if (UtilValidate.isEmpty(productStoreId)) {
             condList.add(EntityCondition.makeCondition("productStoreId", EntityOperator.EQUALS, productStoreId));
         }
@@ -184,7 +181,7 @@ public class PromoServices {
 
         // read the bytes into a reader
         BufferedReader reader = new BufferedReader(new StringReader(file));
-        List<Object> errors = FastList.newInstance();
+        List<Object> errors = UtilMisc.newList();
         int lines = 0;
         String line;
 
@@ -195,7 +192,7 @@ public class PromoServices {
                 if (line.length() > 0 && !line.startsWith("#")) {
                     if (line.length() > 0 && line.length() <= 20) {
                         // valid promo code
-                        Map<String, Object> inContext = FastMap.newInstance();
+                        Map<String, Object> inContext = UtilMisc.newMap();
                         inContext.putAll(invokeCtx);
                         inContext.put("productPromoCodeId", line);
                         Map<String, Object> result = dispatcher.runSync("createProductPromoCode", inContext);
@@ -250,7 +247,7 @@ public class PromoServices {
        
       // read the bytes into a reader
         BufferedReader reader = new BufferedReader(new StringReader(new String(wrapper)));
-        List<Object> errors = FastList.newInstance();
+        List<Object> errors = UtilMisc.newList();
         int lines = 0;
         String line;
 

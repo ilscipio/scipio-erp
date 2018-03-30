@@ -35,7 +35,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import javolution.util.FastList;
+import org.ofbiz.base.util.UtilMisc;
 
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.util.Debug;
@@ -388,7 +388,7 @@ public class CatalogUrlFilter extends ContextFilter {
                 while(li.hasPrevious()) {
                     String trailCatId = li.previous();
                     if (categoryId.equals(trailCatId)) {
-                        trailElements = FastList.newInstance();
+                        trailElements = UtilMisc.newList();
                         trailElements.add(categoryId);
                         break;
                     }
@@ -398,7 +398,7 @@ public class CatalogUrlFilter extends ContextFilter {
                     while(li.hasPrevious()) {
                         String trailCatId = li.previous();
                         if (CategoryWorker.isCategoryChildOf(request, trailCatId, categoryId)) {
-                            trailElements = FastList.newInstance();
+                            trailElements = UtilMisc.newList();
                             trailElements.add(trailCatId);
                             trailElements.add(categoryId);
                             break;
@@ -415,7 +415,7 @@ public class CatalogUrlFilter extends ContextFilter {
                 while(li.hasPrevious()) {
                     String trailCatId = li.previous();
                     if (CategoryWorker.isCategoryContainsProduct(request, trailCatId, productId)) {
-                        trailElements = FastList.newInstance();
+                        trailElements = UtilMisc.newList();
                         trailElements.add(trailCatId);
                         break;
                     }
@@ -535,7 +535,7 @@ public class CatalogUrlFilter extends ContextFilter {
      * SCIPIO: Stock code factored out from doGet.
      */
     public static List<String> getTrailElements(Delegator delegator, String productCategoryId, List<String> trailCategoryIds) {
-        List<String> trailElements = FastList.newInstance();
+        List<String> trailElements = UtilMisc.newList();
         trailElements.add(productCategoryId);
         String parentProductCategoryId = productCategoryId;
         while (UtilValidate.isNotEmpty(parentProductCategoryId)) {
@@ -598,7 +598,7 @@ public class CatalogUrlFilter extends ContextFilter {
         
         List<String> trail = CategoryWorker.getTrail(request);
         if (trail == null) {
-            trail = FastList.newInstance();
+            trail = UtilMisc.newList();
         }
 
         // adjust trail
@@ -661,7 +661,7 @@ public class CatalogUrlFilter extends ContextFilter {
                 if (trail == null) {
                     trail = CategoryWorker.getTrail(request);
                     if (trail == null) {
-                        trail = FastList.newInstance();
+                        trail = UtilMisc.newList();
                     }
                 }
     
@@ -862,7 +862,7 @@ public class CatalogUrlFilter extends ContextFilter {
             url = urlBuilder.toString();
         } else {
             if (UtilValidate.isEmpty(trail)) {
-                trail = FastList.newInstance();
+                trail = UtilMisc.newList();
             }
             url = CatalogUrlServlet.makeCatalogUrl(contextPath, trail, productId, productCategoryId, previousCategoryId);
         }
@@ -905,7 +905,7 @@ public class CatalogUrlFilter extends ContextFilter {
             url = urlBuilder.toString();
         } else {
             if (UtilValidate.isEmpty(trail)) {
-                trail = FastList.newInstance();
+                trail = UtilMisc.newList();
             }
             url = CatalogUrlServlet.makeCatalogUrl(contextPath, trail, productId, productCategoryId, previousCategoryId);
         }

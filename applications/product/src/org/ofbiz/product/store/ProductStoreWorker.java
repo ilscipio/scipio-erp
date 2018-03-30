@@ -28,9 +28,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
@@ -220,7 +217,7 @@ public class ProductStoreWorker {
 
     public static List<GenericValue> getAvailableStoreShippingMethods(Delegator delegator, String productStoreId, GenericValue shippingAddress, List<BigDecimal> itemSizes, Map<String, BigDecimal> featureIdMap, BigDecimal weight, BigDecimal orderTotal) {
         if (featureIdMap == null) {
-            featureIdMap = FastMap.newInstance();
+            featureIdMap = UtilMisc.newMap();
         }
         List<GenericValue> shippingMethods = null;
         try {
@@ -462,7 +459,7 @@ public class ProductStoreWorker {
     }
 
     public static List<GenericValue> getSurveys(Delegator delegator, String productStoreId, String groupName, String productId, String surveyApplTypeId, String parentProductId) {
-        List<GenericValue> surveys = FastList.newInstance();
+        List<GenericValue> surveys = UtilMisc.newList();
         List<GenericValue> storeSurveys = null;
         try {
             storeSurveys = EntityQuery.use(delegator).from("ProductStoreSurveyAppl").where("productStoreId", productStoreId, "surveyApplTypeId", surveyApplTypeId).orderBy("sequenceNum").cache(true).queryList();
@@ -700,7 +697,7 @@ public class ProductStoreWorker {
         }
     }
 
-    protected static Map<String, String> defaultProductStoreEmailScreenLocation = FastMap.newInstance();
+    protected static Map<String, String> defaultProductStoreEmailScreenLocation = UtilMisc.newMap();
 
     static {
         // SCIPIO: now points to shop

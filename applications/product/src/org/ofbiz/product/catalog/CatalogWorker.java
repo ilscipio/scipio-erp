@@ -29,8 +29,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import javolution.util.FastList;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilHttp;
@@ -74,7 +72,7 @@ public class CatalogWorker {
     }
 
     public static List<String> getAllCatalogIds(ServletRequest request) {
-        List<String> catalogIds = FastList.newInstance();
+        List<String> catalogIds = UtilMisc.newList();
         List<GenericValue> catalogs = null;
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         try {
@@ -187,8 +185,8 @@ public class CatalogWorker {
             if (saveTrail) {
                 // SCIPIO: 2016-13-22: Do NOT override the trail if it was already set earlier in request, 
                 // otherwise may lose work done by servlets and filters
-                //CategoryWorker.setTrail(request, FastList.<String>newInstance());
-                CategoryWorker.setTrailIfFirstInRequest(request, FastList.<String>newInstance());
+                //CategoryWorker.setTrail(request, UtilMisc.<String>newList());
+                CategoryWorker.setTrailIfFirstInRequest(request, UtilMisc.<String>newList());
             }
         }
         return prodCatalogId;
@@ -244,8 +242,8 @@ public class CatalogWorker {
     }
 
     public static List<String> getCatalogIdsAvailable(List<GenericValue> partyCatalogs, List<GenericValue> storeCatalogs) {
-        List<String> categoryIds = FastList.newInstance();
-        List<GenericValue> allCatalogLinks = FastList.newInstance();
+        List<String> categoryIds = UtilMisc.newList();
+        List<GenericValue> allCatalogLinks = UtilMisc.newList();
         if (partyCatalogs != null) allCatalogLinks.addAll(partyCatalogs);
         if (storeCatalogs != null) allCatalogLinks.addAll(storeCatalogs);
 
@@ -454,7 +452,7 @@ public class CatalogWorker {
     public static Collection<String> getCatalogQuickaddCategories(ServletRequest request, String prodCatalogId) {
         if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
 
-        Collection<String> categoryIds = FastList.newInstance();
+        Collection<String> categoryIds = UtilMisc.newList();
 
         Collection<GenericValue> prodCatalogCategories = getProdCatalogCategories(request, prodCatalogId, "PCCT_QUICK_ADD");
 

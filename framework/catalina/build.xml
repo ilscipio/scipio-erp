@@ -27,31 +27,13 @@ under the License.
 
     <property name="desc" value="Catalina Http/Servlet Container"/>
     <property name="name" value="ofbiz-catalina"/>
-    <property name="ofbiz.home.dir" value="../.."/>
 
     <path id="local.class.path">
         <fileset dir="${lib.dir}" includes="*.jar"/>
         <fileset dir="../base/lib" includes="*.jar"/>
-        <fileset dir="../base/lib/commons" includes="*.jar"/>
-        <fileset dir="../base/lib/j2eespecs" includes="*.jar"/>
         <fileset dir="../base/build/lib" includes="*.jar"/>
         <fileset dir="../start/build/lib" includes="*.jar"/>
         <fileset dir="../entity/lib" includes="*.jar"/>
         <fileset dir="../entity/build/lib" includes="*.jar"/>
     </path>
-    
-    <!-- SCIPIO: Special lib download script for complex base includes -->
-    <target name="do-lib-update" description="Downloads all jars (catalina component implementation)">
-        <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="application">
-            <firstmatchmapper>
-                <!-- Legacy ofbiz filename compatibility support (TODO?: remove?) -->
-                <regexpmapper from="^(.*/)?tomcat-tribes-([^/-]+)\.jar$$" to="\1tomcat-\2-catalina-tribes.jar" handledirsep="true"/>
-                <regexpmapper from="^(.*/)?tomcat-extras-juli(-adapters)?-([^/-]+)\.jar$$" to="\1tomcat-extras-\3-tomcat-juli\2.jar" handledirsep="true"/>
-                <regexpmapper from="^(.*/)?tomcat-((?:catalina|jasper)(?:-[^/]+)?)-([^/-]+)\.jar$$" to="\1tomcat-\3-\2.jar" handledirsep="true"/>
-                <regexpmapper from="^(.*/)?tomcat-([^/]+)-([^/-]+)\.jar$$" to="\1tomcat-\3-tomcat-\2.jar" handledirsep="true"/>
-                <identitymapper/>
-            </firstmatchmapper>
-        </ivy:retrieve>
-    </target>
-    
 </project>

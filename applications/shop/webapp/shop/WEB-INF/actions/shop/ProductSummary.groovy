@@ -71,7 +71,7 @@ if (product) {
         /*resultOutput = dispatcher.runSync("getInventoryAvailableByFacility", [productId : product.productId, facilityId : facilityId, useCache : true]);
         totalAvailableToPromise = resultOutput.availableToPromiseTotal;
         if (totalAvailableToPromise && totalAvailableToPromise.doubleValue() > 0) {
-            productFacility = delegator.findByPrimaryKeyCache("ProductFacility", [productId : product.productId, facilityId : facilityId]);
+            productFacility = delegator.findOne("ProductFacility", [productId : product.productId, facilityId : facilityId], true);
             if (productFacility?.daysToShip != null) {
                 context.daysToShip = productFacility.daysToShip;
             }

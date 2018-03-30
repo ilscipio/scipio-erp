@@ -23,8 +23,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
-import javolution.util.FastList;
-import javolution.util.FastSet;
+import org.ofbiz.base.util.UtilMisc;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.*;
@@ -70,10 +69,10 @@ public class ICalRecurConverter implements TemporalExpressionVisitor {
     }
 
     protected DtStart dateStart = null;
-    protected List<DateListProperty> incDateList = FastList.newInstance();
-    protected List<DateListProperty> exDateList = FastList.newInstance();
-    protected List<RRule> incRuleList = FastList.newInstance();
-    protected List<ExRule> exRuleList = FastList.newInstance();
+    protected List<DateListProperty> incDateList = UtilMisc.newList();
+    protected List<DateListProperty> exDateList = UtilMisc.newList();
+    protected List<RRule> incRuleList = UtilMisc.newList();
+    protected List<ExRule> exRuleList = UtilMisc.newList();
     protected VisitorState state = new VisitorState();
     protected Stack<VisitorState> stateStack = new Stack<VisitorState>();
 
@@ -82,11 +81,11 @@ public class ICalRecurConverter implements TemporalExpressionVisitor {
     @SuppressWarnings("unchecked")
     protected Recur consolidateRecurs(List<Recur> recurList) {
         // Try to consolidate a list of Recur instances into one instance
-        Set<Integer> monthList = FastSet.newInstance();
-        Set<Integer> monthDayList = FastSet.newInstance();
-        Set<WeekDay> weekDayList = FastSet.newInstance();
-        Set<Integer> hourList = FastSet.newInstance();
-        Set<Integer> minuteList = FastSet.newInstance();
+        Set<Integer> monthList = UtilMisc.newSet();
+        Set<Integer> monthDayList = UtilMisc.newSet();
+        Set<WeekDay> weekDayList = UtilMisc.newSet();
+        Set<Integer> hourList = UtilMisc.newSet();
+        Set<Integer> minuteList = UtilMisc.newSet();
         String freq = null;
         int freqCount = 0;
         for (Recur recur : recurList) {
@@ -302,8 +301,8 @@ public class ICalRecurConverter implements TemporalExpressionVisitor {
     protected class VisitorState {
         public boolean isExcluded = false;
         public boolean isIntersection = false;
-        public List<Recur> inclRecurList = FastList.newInstance();
-        public List<Recur> exRecurList = FastList.newInstance();
+        public List<Recur> inclRecurList = UtilMisc.newList();
+        public List<Recur> exRecurList = UtilMisc.newList();
         public void addRecur(Recur recur) {
             if (this.isIntersection) {
                 if (this.isExcluded) {

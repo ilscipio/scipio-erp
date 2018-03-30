@@ -20,14 +20,11 @@ package org.ofbiz.webtools.artifactinfo;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
-import javolution.util.FastSet;
 
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.GeneralException;
@@ -114,22 +111,25 @@ public class ServiceEcaArtifactInfo extends ArtifactInfoBase {
     }
 
     public Map<String, Object> createEoModelMap(Set<ServiceArtifactInfo> triggeringServiceSet, Set<ServiceArtifactInfo> triggeredServiceSet, boolean useMoreDetailedNames) {
-        if (triggeringServiceSet == null) triggeringServiceSet = FastSet.newInstance();
-        if (triggeredServiceSet == null) triggeredServiceSet = FastSet.newInstance();
-        Map<String, Object> topLevelMap = FastMap.newInstance();
+        if (triggeringServiceSet == null) triggeringServiceSet = UtilMisc.newSet();
+        if (triggeredServiceSet == null) triggeredServiceSet = UtilMisc.newSet();
+        Map<String, Object> topLevelMap = UtilMisc.newMap();
 
         topLevelMap.put("name", this.getDisplayPrefixedName());
         topLevelMap.put("className", "EOGenericRecord");
 
         // for classProperties add attribute names AND relationship names to get a nice, complete chart
-        List<String> classPropertiesList = FastList.newInstance();
+        // SCIPIO: 2018-03-28: reordered for ArrayList initial capacity
+        List<ServiceEcaCondition> ecaCondList = this.serviceEcaRule.getEcaConditionList();
+        List<ServiceEcaAction> ecaActionList = this.serviceEcaRule.getEcaActionList();
+        List<String> classPropertiesList = new ArrayList<>(ecaCondList.size() + ecaActionList.size());
         topLevelMap.put("classProperties", classPropertiesList);
         // conditions
-        for (ServiceEcaCondition ecaCondition: this.serviceEcaRule.getEcaConditionList()) {
+        for (ServiceEcaCondition ecaCondition: ecaCondList) {
             classPropertiesList.add(ecaCondition.getShortDisplayDescription(useMoreDetailedNames));
         }
         // actions
-        for (ServiceEcaAction ecaAction: this.serviceEcaRule.getEcaActionList()) {
+        for (ServiceEcaAction ecaAction: ecaActionList) {
             if (useMoreDetailedNames) {
                 classPropertiesList.add(ecaAction.getShortDisplayDescription());
             } else {
@@ -139,10 +139,10 @@ public class ServiceEcaArtifactInfo extends ArtifactInfoBase {
 
         /* going to try this without any attributes...
         // attributes
-        List<Map<String, Object>> attributesList = FastList.newInstance();
+        List<Map<String, Object>> attributesList = UtilMisc.newList();
         topLevelMap.put("attributes", attributesList);
         for (ModelParam param: this.modelService.getModelParamList()) {
-            Map<String, Object> attributeMap = FastMap.newInstance();
+            Map<String, Object> attributeMap = UtilMisc.newMap();
             attributesList.add(attributeMap);
 
             if (useMoreDetailedNames) {
@@ -156,10 +156,10 @@ public class ServiceEcaArtifactInfo extends ArtifactInfoBase {
         */
 
         // relationships
-        List<Map<String, Object>> relationshipsMapList = FastList.newInstance();
+        List<Map<String, Object>> relationshipsMapList = new ArrayList<>(triggeringServiceSet.size() + triggeredServiceSet.size()); // SCIPIO: 2018-03-28: initial capacity
 
         for (ServiceArtifactInfo sai: triggeringServiceSet) {
-            Map<String, Object> relationshipMap = FastMap.newInstance();
+            Map<String, Object> relationshipMap = UtilMisc.newMap();
             relationshipsMapList.add(relationshipMap);
 
             relationshipMap.put("name", sai.getDisplayPrefixedName());
@@ -168,7 +168,7 @@ public class ServiceEcaArtifactInfo extends ArtifactInfoBase {
             relationshipMap.put("isMandatory", "Y");
         }
         for (ServiceArtifactInfo sai: triggeredServiceSet) {
-            Map<String, Object> relationshipMap = FastMap.newInstance();
+            Map<String, Object> relationshipMap = UtilMisc.newMap();
             relationshipsMapList.add(relationshipMap);
 
             relationshipMap.put("name", sai.getDisplayPrefixedName());

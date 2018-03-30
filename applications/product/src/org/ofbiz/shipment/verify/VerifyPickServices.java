@@ -22,10 +22,10 @@ package org.ofbiz.shipment.verify;
 import java.math.BigDecimal;
 import java.util.Locale;
 import java.util.Map;
-import javolution.util.FastMap;
 
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
@@ -105,7 +105,7 @@ public class VerifyPickServices {
         String orderId = (String) context.get("orderId");
         try {
             shipmentId = pickSession.complete(orderId, locale);
-            Map<String, Object> shipment = FastMap.newInstance();
+            Map<String, Object> shipment = UtilMisc.newMap();
             shipment.put("shipmentId", shipmentId);
             pickSession.clearAllRows();
             return shipment;

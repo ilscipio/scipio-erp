@@ -25,8 +25,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import javolution.util.FastList;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
@@ -56,7 +54,7 @@ public class WorkEffortKeywordIndex {
         Set<String> stemSet = KeywordSearchUtil.getStemSet();
 
         Map<String, Long> keywords = new TreeMap<String, Long>();
-        List<String> strings = FastList.newInstance();
+        List<String> strings = UtilMisc.newList();
         int widWeight = 1;
         try {
             widWeight = Integer.parseInt(EntityUtilProperties.getPropertyValue("workeffortsearch", "index.weight.WorkEffort.workEffortId", "1", delegator));
@@ -109,7 +107,7 @@ public class WorkEffortKeywordIndex {
             KeywordSearchUtil.processKeywordsForIndex(str, keywords, separators, stopWordBagAnd, stopWordBagOr, removeStems, stemSet);
         }
 
-        List<GenericValue> toBeStored = FastList.newInstance();
+        List<GenericValue> toBeStored = UtilMisc.newList();
         for (Map.Entry<String, Long> entry: keywords.entrySet()) {
             if (entry.getKey().length() < 60) { // ignore very long strings, cannot be stored anyway
                 GenericValue workEffortKeyword = delegator.makeValue("WorkEffortKeyword", UtilMisc.toMap("workEffortId", workEffort.getString("workEffortId"), "keyword", entry.getKey(), "relevancyWeight", entry.getValue()));

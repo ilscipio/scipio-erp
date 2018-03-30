@@ -30,9 +30,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.GeneralRuntimeException;
@@ -419,7 +416,7 @@ public class CheckOutEvents {
 
         if (paymentMethods != null) {
             for (int i = 0; i < paymentMethods.length; i++) {
-                Map<String, Object> paymentMethodInfo = FastMap.newInstance();
+                Map<String, Object> paymentMethodInfo = UtilMisc.newMap();
 
                 // SCIPIO: Allow inlined address creation
                 String paymentMethodId = paymentMethods[i];
@@ -1673,7 +1670,7 @@ public class CheckOutEvents {
 //    static List<String> getCheckoutErrors(HttpServletRequest request) {
 //        List<String> errors = UtilGenerics.checkList(request.getAttribute("checkoutErrors"));
 //        if (errors == null) {
-//            errors = FastList.newInstance();
+//            errors = UtilMisc.newList();
 //        }
 //        return errors;
 //    }

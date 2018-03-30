@@ -27,8 +27,6 @@ import com.ilscipio.scipio.accounting.external.BaseOperationStats.Stat;
 import com.ilscipio.scipio.setup.ContactMechPurposeInfo.FacilityContactMechPurposeInfo;
 import com.ilscipio.scipio.setup.ContactMechPurposeInfo.PartyContactMechPurposeInfo;
 
-import javolution.util.FastList;
-
 /**
  * Raw setup step data check logic. 
  * USE {@link SetupWorker} TO INVOKE THESE DURING REAL SETUP. 
@@ -277,7 +275,7 @@ public abstract class SetupDataUtil {
         dve.addAlias("GAO", "thruDate");
         dve.addRelation("one", null, "GlAccount", ModelKeyMap.makeKeyMapList("glAccountId"));
         dve.addRelation("one", null, "GlAccountOrganization", ModelKeyMap.makeKeyMapList("glAccountId", "glAccountId", "organizationPartyId", "organizationPartyId"));
-        List<EntityCondition> dveConditions = FastList.newInstance();
+        List<EntityCondition> dveConditions = UtilMisc.newList();
         dveConditions.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "INTERNAL_ORGANIZATIO"));
         dveConditions.add(EntityCondition.makeCondition("parentGlAccountId", EntityOperator.EQUALS, null));
 

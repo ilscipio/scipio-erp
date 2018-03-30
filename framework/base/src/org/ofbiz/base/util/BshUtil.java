@@ -109,7 +109,7 @@ public final class BshUtil {
         //find the "master" BshClassManager for this classpath
         BshClassManager master = BshUtil.masterClassManagers.get(classLoader);
         if (master == null) {
-            master = BshClassManager.createClassManager();
+            master = BshClassManager.createClassManager(null); // SCIPIO: 2018-03-22: beanshell-xxx-scipio: pass null here to avoid extra bsh patches
             master.setClassLoader(classLoader);
             BshUtil.masterClassManagers.putIfAbsent(classLoader, master);
             master = BshUtil.masterClassManagers.get(classLoader);

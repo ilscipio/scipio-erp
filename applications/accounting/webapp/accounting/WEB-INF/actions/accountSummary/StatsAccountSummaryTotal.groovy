@@ -34,9 +34,6 @@ import java.sql.Date;
 
 import org.ofbiz.accounting.util.UtilAccounting;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 
 contentCache = UtilCache.getOrCreateUtilCache("stats.accounting", 0, 0, 0, true, false);
 
@@ -73,7 +70,7 @@ Timestamp lastClosedDate = (Timestamp)findLastClosedDateOutMap.lastClosedDate;
 
 // POSTED AND UNPOSTED
 // Posted and unposted transactions totals and grand totals
-andExprs = FastList.newInstance();
+andExprs = [];
 andExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.IN, partyIds));
 andExprs.add(EntityCondition.makeCondition("glFiscalTypeId", EntityOperator.EQUALS, glFiscalTypeId));
 andExprs.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
@@ -84,7 +81,7 @@ List allTransactionDebit = [];
 List allTransactionCredit = [];
 if (allTransactionTotals) {    
     allTransactionTotals.each { allTransactionTotal ->
-        accountMap = FastMap.newInstance();
+        accountMap = [:];
         accountMap.put("amount", allTransactionTotal.amount);
         acctgTransType = select("description").from("AcctgTransType").where(["acctgTransTypeId" : allTransactionTotal.acctgTransTypeId]).cache(true).queryOne();
         accountMap.put("type", acctgTransType.description);

@@ -26,8 +26,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import javolution.util.FastList;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
@@ -289,8 +287,8 @@ public class TrackingCodeEvents {
             session.setAttribute("CURRENT_CATALOG_ID", prodCatalogId);
             // SCIPIO: 2016-13-22: Do NOT override the trail if it was already set earlier in request, 
             // otherwise may lose work done by servlets and filters
-            //CategoryWorker.setTrail(request, FastList.<String>newInstance());
-            CategoryWorker.setTrailIfFirstInRequest(request, FastList.<String>newInstance());
+            //CategoryWorker.setTrail(request, UtilMisc.<String>newList());
+            CategoryWorker.setTrailIfFirstInRequest(request, UtilMisc.<String>newList());
         }
 
         // if forward/redirect is needed, do a response.sendRedirect and return null to tell the control servlet to not do any other requests/views
@@ -439,7 +437,7 @@ public class TrackingCodeEvents {
     public static List<GenericValue> makeTrackingCodeOrders(HttpServletRequest request) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         java.sql.Timestamp nowStamp = UtilDateTime.nowTimestamp();
-        List<GenericValue> trackingCodeOrders = FastList.newInstance();
+        List<GenericValue> trackingCodeOrders = UtilMisc.newList();
 
         Cookie[] cookies = request.getCookies();
         Timestamp affiliateReferredTimeStamp = null;

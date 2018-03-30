@@ -22,9 +22,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
@@ -50,7 +47,7 @@ public class PurchaseOrderTest extends OFBizTestCase {
     }
 
     public void testCreatePurchaseOrder() throws Exception {
-        Map <String, Object> ctx = FastMap.newInstance();
+        Map <String, Object> ctx = UtilMisc.newMap();
         ctx.put("partyId", "Company");
         ctx.put("orderTypeId", "PURCHASE_ORDER");
         ctx.put("currencyUom", "USD");
@@ -61,30 +58,30 @@ public class PurchaseOrderTest extends OFBizTestCase {
         orderItem.set("unitListPrice", BigDecimal.ZERO);
         orderItem.set("isModifiedPrice", "N");
         orderItem.set("statusId", "ITEM_CREATED");
-        List <GenericValue> orderItems = FastList.newInstance();
+        List <GenericValue> orderItems = UtilMisc.newList();
         orderItems.add(orderItem);
         ctx.put("orderItems", orderItems);
 
         GenericValue orderContactMech = delegator.makeValue("OrderContactMech", UtilMisc.toMap("contactMechPurposeTypeId", "SHIPPING_LOCATION", "contactMechId", "9000"));
-        List <GenericValue> orderContactMechs = FastList.newInstance();
+        List <GenericValue> orderContactMechs = UtilMisc.newList();
         orderContactMechs.add(orderContactMech);
         ctx.put("orderContactMechs", orderContactMechs);
 
         GenericValue orderItemContactMech = delegator.makeValue("OrderItemContactMech", UtilMisc.toMap("contactMechPurposeTypeId", "SHIPPING_LOCATION", "contactMechId", "9000", "orderItemSeqId", "00001"));
-        List <GenericValue> orderItemContactMechs = FastList.newInstance();
+        List <GenericValue> orderItemContactMechs = UtilMisc.newList();
         orderItemContactMechs.add(orderItemContactMech);
         ctx.put("orderItemContactMechs", orderItemContactMechs);
 
         GenericValue orderItemShipGroup = delegator.makeValue("OrderItemShipGroup", UtilMisc.toMap("carrierPartyId", "UPS", "contactMechId", "9000", "isGift", "N", "maySplit", "N", "shipGroupSeqId", "00001", "shipmentMethodTypeId", "NEXT_DAY"));
         orderItemShipGroup.set("carrierRoleTypeId","CARRIER");
-        List <GenericValue> orderItemShipGroupInfo = FastList.newInstance();
+        List <GenericValue> orderItemShipGroupInfo = UtilMisc.newList();
         orderItemShipGroupInfo.add(orderItemShipGroup);
         ctx.put("orderItemShipGroupInfo", orderItemShipGroupInfo);
 
-        List <GenericValue> orderTerms = FastList.newInstance();
+        List <GenericValue> orderTerms = UtilMisc.newList();
         ctx.put("orderTerms", orderTerms);
 
-        List <GenericValue> orderAdjustments = FastList.newInstance();
+        List <GenericValue> orderAdjustments = UtilMisc.newList();
         ctx.put("orderAdjustments", orderAdjustments);
 
         ctx.put("billToCustomerPartyId", "Company");

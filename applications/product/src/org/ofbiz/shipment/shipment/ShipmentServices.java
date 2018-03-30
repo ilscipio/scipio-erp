@@ -26,9 +26,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -66,10 +63,10 @@ public class ShipmentServices {
     public static final BigDecimal ZERO = BigDecimal.ZERO.setScale(decimals, rounding);
 
     public static Map<String, Object> createShipmentEstimate(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = UtilMisc.newMap();
         Delegator delegator = dctx.getDelegator();
         Locale locale = (Locale) context.get("locale");
-        List<GenericValue> storeAll = FastList.newInstance();
+        List<GenericValue> storeAll = UtilMisc.newList();
         String productStoreShipMethId = (String)context.get("productStoreShipMethId");
 
         GenericValue productStoreShipMeth = null;
@@ -320,7 +317,7 @@ public class ShipmentServices {
             shipAddress.set("postalCodeGeoId", shippingPostalCode);
         }
         // Get the possible estimates.
-        List<GenericValue> estimateList = FastList.newInstance();
+        List<GenericValue> estimateList = UtilMisc.newList();
 
         for (GenericValue thisEstimate: estimates) {
             String toGeo = thisEstimate.getString("geoIdTo");
@@ -427,8 +424,8 @@ public class ShipmentServices {
         }
 
         // make the shippable item size/feature objects
-        List<BigDecimal> shippableItemSizes = FastList.newInstance();
-        Map<String, BigDecimal> shippableFeatureMap = FastMap.newInstance();
+        List<BigDecimal> shippableItemSizes = UtilMisc.newList();
+        Map<String, BigDecimal> shippableFeatureMap = UtilMisc.newMap();
         if (shippableItemInfo != null) {
             for (Map<String, Object> itemMap: shippableItemInfo) {
                 // add the item sizes
@@ -677,7 +674,7 @@ public class ShipmentServices {
             GenericValue routeSeg = EntityUtil.getFirst(routeSegs);
 
             // to store list
-            List<GenericValue> toStore = FastList.newInstance();
+            List<GenericValue> toStore = UtilMisc.newList();
 
             //String shipGroupSeqId = shipment.getString("primaryShipGroupSeqId");
             //String orderId = shipment.getString("primaryOrderId");
@@ -733,7 +730,7 @@ public class ShipmentServices {
         Delegator delegator = dctx.getDelegator();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Locale locale = (Locale) context.get("locale");
-        Map<String, String> shipmentMap = FastMap.newInstance();
+        Map<String, String> shipmentMap = UtilMisc.newMap();
 
         EntityListIterator eli = null;
         try {
@@ -779,7 +776,7 @@ public class ShipmentServices {
                         }
                     }
 
-                    Map<String, Object> pkgCtx = FastMap.newInstance();
+                    Map<String, Object> pkgCtx = UtilMisc.newMap();
                     pkgCtx.put("shipmentId", shipmentId);
                     pkgCtx.put("shipmentPackageSeqId", packageSeqId);
 
@@ -858,7 +855,7 @@ public class ShipmentServices {
         for (Map.Entry<String, String> entry: shipmentMap.entrySet()) {
             String shipmentId = entry.getKey();
             String voidInd = entry.getValue();
-            Map<String, Object> shipCtx = FastMap.newInstance();
+            Map<String, Object> shipCtx = UtilMisc.newMap();
             shipCtx.put("shipmentId", shipmentId);
             if ("Y".equals(voidInd)) {
                 shipCtx.put("statusId", "SHIPMENT_CANCELLED");
@@ -939,7 +936,7 @@ public class ShipmentServices {
             }
 
             // store the quantity of each product shipped in a hashmap keyed to productId
-            Map<String, BigDecimal> shippedCountMap = FastMap.newInstance();
+            Map<String, BigDecimal> shippedCountMap = UtilMisc.newMap();
             for (GenericValue item: shipmentAndItems) {
                 BigDecimal shippedQuantity = item.getBigDecimal("quantity");
                 BigDecimal quantity = shippedCountMap.get(item.getString("productId"));
@@ -948,7 +945,7 @@ public class ShipmentServices {
             }
 
             // store the quantity of each product received in a hashmap keyed to productId
-            Map<String, BigDecimal> receivedCountMap = FastMap.newInstance();
+            Map<String, BigDecimal> receivedCountMap = UtilMisc.newMap();
             for (GenericValue item: shipmentReceipts) {
                 BigDecimal receivedQuantity = item.getBigDecimal("quantityAccepted");
                 BigDecimal quantity = receivedCountMap.get(item.getString("productId"));
@@ -1150,7 +1147,7 @@ public class ShipmentServices {
         Locale localePar = (Locale) context.get("locale");
         
         // prepare the shipment information
-        Map<String, Object> sendMap = FastMap.newInstance();
+        Map<String, Object> sendMap = UtilMisc.newMap();
         GenericValue shipment = null ;
         GenericValue orderHeader = null;
         try {

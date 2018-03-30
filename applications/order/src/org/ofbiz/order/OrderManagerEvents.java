@@ -27,8 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import javolution.util.FastList;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
@@ -68,7 +66,7 @@ public class OrderManagerEvents {
 
         if (session.getAttribute("OFFLINE_PAYMENTS") != null) {
             String orderId = (String) request.getAttribute("orderId");
-            List<GenericValue> toBeStored = FastList.newInstance();
+            List<GenericValue> toBeStored = UtilMisc.newList();
             List<GenericValue> paymentPrefs = null;
             GenericValue placingCustomer = null;
             try {
@@ -220,7 +218,7 @@ public class OrderManagerEvents {
             }
         }
 
-        List<GenericValue> toBeStored = FastList.newInstance();
+        List<GenericValue> toBeStored = UtilMisc.newList();
         for (GenericValue paymentMethodType : paymentMethodTypes) {
             String paymentMethodTypeId = paymentMethodType.getString("paymentMethodTypeId");
             String amountStr = request.getParameter(paymentMethodTypeId + "_amount");

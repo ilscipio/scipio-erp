@@ -328,6 +328,15 @@ function submitForm(form, mode, value) {
                     </@td>
                   </@tr>
                   </#if>
+                  <#if productStorePaymentMethodTypeIdMap.EXT_STRIPE??>
+                  <@tr>
+                    <@td width="1%">
+                      <@field type="radio" name="checkOutPaymentId" value="EXT_STRIPE" checked=("EXT_STRIPE" == checkOutPaymentId)/>
+                    </@td>
+                    <@td width="50%">${uiLabelMap.AccountingPayWithPayPal}
+                    </@td>
+                  </@tr>
+                  </#if>
                   <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
 
                   <#-- financial accounts -->

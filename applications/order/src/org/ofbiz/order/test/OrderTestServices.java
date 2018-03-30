@@ -24,8 +24,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
-import javolution.util.FastList;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -85,7 +83,7 @@ public class OrderTestServices {
             salesChannel = "WEB_SALES_CHANNEL";
         }
 
-        List<String> productsList = FastList.newInstance();
+        List<String> productsList = UtilMisc.newList();
         try {
             if (UtilValidate.isNotEmpty(productId)) {
                 productsList.add(productId);

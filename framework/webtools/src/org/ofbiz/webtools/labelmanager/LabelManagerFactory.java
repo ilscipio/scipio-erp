@@ -30,7 +30,7 @@ import java.util.TreeSet;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import javolution.util.FastList;
+import org.ofbiz.base.util.UtilMisc;
 
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.component.ComponentConfig.ClasspathInfo;
@@ -57,7 +57,7 @@ public class LabelManagerFactory {
 
     protected Map<String, LabelInfo> labels = new TreeMap<String, LabelInfo>();
     protected Set<String> localesFound = new TreeSet<String>();
-    protected List<LabelInfo> duplicatedLocalesLabelsList = FastList.newInstance();
+    protected List<LabelInfo> duplicatedLocalesLabelsList = UtilMisc.newList();
 
     public static synchronized LabelManagerFactory getInstance() throws IOException {
         if (componentNamesFound == null) {

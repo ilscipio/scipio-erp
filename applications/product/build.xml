@@ -27,13 +27,10 @@ under the License.
 
     <property name="desc" value="Product Component"/>
     <property name="name" value="ofbiz-product"/>
-    <property name="ofbiz.home.dir" value="../.."/>
 
     <path id="local.class.path">
         <!--<fileset dir="${lib.dir}" includes="*.jar"/>-->
         <fileset dir="../../framework/base/lib" includes="*.jar"/>
-        <fileset dir="../../framework/base/lib/commons" includes="*.jar"/>
-        <fileset dir="../../framework/base/lib/j2eespecs" includes="*.jar"/>
         <fileset dir="../../framework/base/build/lib" includes="*.jar"/>
         <fileset dir="../../framework/entity/lib" includes="*.jar"/>
         <fileset dir="../../framework/entity/build/lib" includes="*.jar"/>
@@ -72,14 +69,4 @@ under the License.
         <main-jar/>
         <test-jar/>
     </target>
-    
-    <!-- SCIPIO: Libraries manually committed to repo, excluded from ivy (or emulated) file cleanout/removal
-        NOTE: This should be defined implicitly as an include (treated as exclude as needed) -->
-    <selector id="lib.update.manual.files">
-        <or>
-            <!-- FIXME: manually-committed JARs missing from public repos -->
-            <filename name="watermarker-*.jar"/>
-        </or>
-    </selector>
-    
 </project>

@@ -34,9 +34,6 @@ import java.util.Map;
 
 import javax.xml.transform.TransformerException;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import org.apache.commons.lang.StringUtils;
 import org.ofbiz.base.util.Base64;
 import org.ofbiz.base.util.Debug;
@@ -78,7 +75,7 @@ public class UspsServices {
     public final static String resourceError = "ProductUiLabels";
     public final static String shipmentPropertiesFile = "shipment.properties";
 
-    private static List<String> domesticCountries = FastList.newInstance();
+    private static List<String> domesticCountries = UtilMisc.newList();
     // Countries treated as domestic for rate enquiries
     static {
         domesticCountries.add("USA");
@@ -498,7 +495,7 @@ public class UspsServices {
 
         List<? extends Element> detailElementList = UtilXml.childElementList(trackInfoElement, "TrackDetail");
         if (UtilValidate.isNotEmpty(detailElementList)) {
-            List<String> trackingDetailList = FastList.newInstance();
+            List<String> trackingDetailList = UtilMisc.newList();
             for (Element detailElement: detailElementList) {
                 trackingDetailList.add(UtilXml.elementValue(detailElement));
             }
@@ -1097,7 +1094,7 @@ public class UspsServices {
                 }
                 if (!"WT_lb".equals(weightUomId)) {
                     // attempt a conversion to pounds
-                    Map<String, Object> result = FastMap.newInstance();
+                    Map<String, Object> result = UtilMisc.newMap();
                     try {
                         result = dispatcher.runSync("convertUom", UtilMisc.<String, Object>toMap("uomId", weightUomId, "uomIdTo", "WT_lb", "originalValue", weight));
                     } catch (GenericServiceException ex) {

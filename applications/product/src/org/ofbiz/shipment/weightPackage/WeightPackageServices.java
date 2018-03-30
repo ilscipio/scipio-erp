@@ -23,8 +23,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
@@ -151,7 +149,7 @@ public class WeightPackageServices {
         weightPackageSession.setEstimatedShipCost(estimatedShippingCost);
         weightPackageSession.setActualShipCost(newEstimatedShippingCost);
 
-        Map<String, Object> response = FastMap.newInstance();
+        Map<String, Object> response = UtilMisc.newMap();
         try {
             String getActualShippingQuoteFromUps = EntityUtilProperties.getPropertyValue("shipment.properties", "shipment.ups.shipping", "N", delegator);
             String result = weightPackageSession.complete(orderId, locale, getActualShippingQuoteFromUps);
@@ -176,7 +174,7 @@ public class WeightPackageServices {
         String shipmentId = (String) context.get("shipmentId");
         String orderId = (String) context.get("orderId");
 
-        Map<String, Object> response = FastMap.newInstance();
+        Map<String, Object> response = UtilMisc.newMap();
         try {
             String getActualShippingQuoteFromUps = EntityUtilProperties.getPropertyValue("shipment.properties", "shipment.ups.shipping", "N", delegator);
             if (weightPackageSession.completeShipment(orderId, getActualShippingQuoteFromUps)) {

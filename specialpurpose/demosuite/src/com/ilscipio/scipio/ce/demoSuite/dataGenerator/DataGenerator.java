@@ -39,7 +39,7 @@ public abstract class DataGenerator {
 			fields = helper.getProperties()
 					.getProperty("demosuite.test.data.provider." + getDataGeneratorName() + ".fields." + dataType);
 			if (UtilValidate.isNotEmpty(fields)) {
-				return UtilMisc.toListArray(fields.split(",\\s{0,1}"));
+				return UtilMisc.<Object>toListArray(fields.split(",\\s{0,1}"));
 			}
 			return null;
 		}

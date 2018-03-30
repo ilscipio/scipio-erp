@@ -42,9 +42,6 @@ import javax.servlet.http.HttpSession;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -120,11 +117,11 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
                 .where("parentCategoryId", parentCategoryId)
                 .cache().queryList();
         categoryNode.put("count", Integer.valueOf(categoryValues.size()));
-        List<Map<String, Object>> subCategoryIds = FastList.newInstance();
+        List<Map<String, Object>> subCategoryIds = UtilMisc.newList();
         for (GenericValue category : categoryValues) {
             String id = (String) category.get("dataCategoryId");
             String categoryName = (String) category.get("categoryName");
-            Map<String, Object> newNode = FastMap.newInstance();
+            Map<String, Object> newNode = UtilMisc.newMap();
             newNode.put("id", id);
             newNode.put("name", categoryName);
             errorMsg = getDataCategoryMap(delegator, depth + 1, newNode, categoryTypeIds, getAll);
@@ -172,7 +169,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
         String spc = "";
         for (int i = 0; i < depth; i++)
             spc += "&nbsp;&nbsp;";
-        Map<String, Object> map = FastMap.newInstance();
+        Map<String, Object> map = UtilMisc.newMap();
         map.put("dataCategoryId", id);
         map.put("categoryName", spc + nm);
         if (id != null && !id.equals("ROOT") && !id.equals("")) {
@@ -221,7 +218,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
         FileItem fi = null;
         FileItem imageFi = null;
         String imageFileName = null;
-        Map<String, Object> passedParams = FastMap.newInstance();
+        Map<String, Object> passedParams = UtilMisc.newMap();
         HttpSession session = request.getSession();
         GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
         passedParams.put("userLogin", userLogin);
@@ -297,14 +294,14 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
      */
     public static Map<String, Object> callDataResourcePermissionCheckResult(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> context) {
 
-        Map<String, Object> permResults = FastMap.newInstance();
+        Map<String, Object> permResults = UtilMisc.newMap();
         String skipPermissionCheck = (String) context.get("skipPermissionCheck");
             if (Debug.infoOn()) Debug.logInfo("in callDataResourcePermissionCheckResult, skipPermissionCheck:" + skipPermissionCheck,"");
 
         if (UtilValidate.isEmpty(skipPermissionCheck) 
                 || (!"true".equalsIgnoreCase(skipPermissionCheck) && !"granted".equalsIgnoreCase(skipPermissionCheck))) {
             GenericValue userLogin = (GenericValue) context.get("userLogin");
-            Map<String, Object> serviceInMap = FastMap.newInstance();
+            Map<String, Object> serviceInMap = UtilMisc.newMap();
             serviceInMap.put("userLogin", userLogin);
             serviceInMap.put("targetOperationList", context.get("targetOperationList"));
             serviceInMap.put("contentPurposeList", context.get("contentPurposeList"));
@@ -398,7 +395,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
     }
 
     public static String buildRequestPrefix(Delegator delegator, Locale locale, String webSiteId, String https) {
-        Map<String, Object> prefixValues = FastMap.newInstance();
+        Map<String, Object> prefixValues = UtilMisc.newMap();
         String prefix;
 
         NotificationServices.setBaseUrl(delegator, webSiteId, prefixValues);
@@ -619,7 +616,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
             throw new GeneralException("Cannot lookup data resource with for a null dataResourceId");
         }
         if (templateContext == null) {
-            templateContext = FastMap.newInstance();
+            templateContext = UtilMisc.newMap();
         }
         if (UtilValidate.isEmpty(targetMimeTypeId)) {
             targetMimeTypeId = "text/html";
@@ -716,7 +713,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
                     // prepare the map for preRenderedContent
                     String textData = (String) context.get("textData");
                     if (UtilValidate.isNotEmpty(textData)) {
-                        Map<String, Object> prc = FastMap.newInstance();
+                        Map<String, Object> prc = UtilMisc.newMap();
                         String mapKey = (String) context.get("mapKey");
                         if (mapKey != null) {
                             prc.put(mapKey, mapKey);
@@ -779,7 +776,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
             Delegator delegator, Appendable out, boolean cache) throws IOException, GeneralException {
         Map<String, Object> context = UtilGenerics.checkMap(templateContext.get("context"));
         if (context == null) {
-            context = FastMap.newInstance();
+            context = UtilMisc.newMap();
         }
         String webSiteId = (String) templateContext.get("webSiteId");
         if (UtilValidate.isEmpty(webSiteId)) {
@@ -893,7 +890,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
 
             if (mimeTypeTemplate != null && mimeTypeTemplate.get("templateLocation") != null) {
                 // prepare the context
-                Map<String, Object> mimeContext = FastMap.newInstance();
+                Map<String, Object> mimeContext = UtilMisc.newMap();
                 mimeContext.putAll(context);
                 mimeContext.put("dataResource", dataResource);
                 mimeContext.put("textData", textData);

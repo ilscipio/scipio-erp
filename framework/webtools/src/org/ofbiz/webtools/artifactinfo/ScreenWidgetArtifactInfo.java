@@ -26,8 +26,6 @@ import java.util.TreeSet;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import javolution.util.FastSet;
-
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -216,7 +214,7 @@ public class ScreenWidgetArtifactInfo extends ArtifactInfoBase {
 
     public Set<ScreenWidgetArtifactInfo> getScreensIncludedInScreen() {
         // TODO: implement this
-        return FastSet.newInstance();
+        return UtilMisc.newSet();
     }
 
     public Set<ScreenWidgetArtifactInfo> getScreensIncludingThisScreen() {

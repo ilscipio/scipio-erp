@@ -28,9 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
@@ -396,7 +393,7 @@ public class ProductSearchEvents {
     public static String searchExportProductList(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         String errMsg = null;
-        List<Map<String, Object>> productExportList = FastList.newInstance();
+        List<Map<String, Object>> productExportList = UtilMisc.newList();
 
         try {
             boolean beganTransaction = TransactionUtil.begin(DEFAULT_TX_TIMEOUT);
@@ -410,7 +407,7 @@ public class ProductSearchEvents {
 
                 GenericValue searchResultView = null;
                 while ((searchResultView = eli.next()) != null) {
-                    Map<String, Object> productMap = FastMap.newInstance();
+                    Map<String, Object> productMap = UtilMisc.newMap();
                     String productId = searchResultView.getString("mainProductId");
                     productMap.put("productId", productId);
 

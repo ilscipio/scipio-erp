@@ -4,7 +4,6 @@
       xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
     <info module="entity" organisation="com.ilscipio.scipio.ce"/>
     <configurations defaultconfmapping="%->default">
-        <conf name="application" description="download all jars required for build"/>
         <conf name="jdbc" description="download all lib/jdbc jars required for build"/>
         <conf name="derby" description="downloads the derby JDBC driver"/>
         <conf name="firebird" description="downloads the firebird jaybird JDBC driver (JDK 8+)"/>

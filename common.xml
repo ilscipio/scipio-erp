@@ -393,7 +393,25 @@ under the License.
     </target>
     
     <target name="get-lib-resolve-confs">
+        <!-- if an explicit lib.resolve.build.confs is set but no lib.resolve.confs, set it to it; 
+            otherwise use "*" for backward compat -->
+        <if>
+            <and>
+                <not><isset property="lib.resolve.confs"/></not>
+                <isset property="lib.resolve.build.confs"/>
+            </and>
+            <then>
+                <property name="lib.resolve.confs" value="${lib.resolve.build.confs}"/>
+            </then>
+            <else>
+                <property name="lib.resolve.confs" value="*"/>
+            </else>
+        </if>
+        
+        <!-- default build conf is called "application", named for legacy reasons -->
         <property name="lib.resolve.build.confs" value="application"/>
+        
+        <!-- if lib.resolve.src.confs is not set, assume based on existence of libsrc folder -->
         <if>
             <and>
                 <not><isset property="lib.resolve.src.confs"/></not>
@@ -403,7 +421,8 @@ under the License.
                 <property name="lib.resolve.src.confs" value="sources"/>
             </then>
         </if>
-        <property name="lib.resolve.confs" value="*"/>
+        
+        <!-- determine effective confs to use in this call (either include sources or don't) -->
         <if>
             <and>
                 <equals arg1="${lib.update.sources}" arg2="true"/>

@@ -403,17 +403,18 @@ under the License.
                 <property name="lib.resolve.src.confs" value="sources"/>
             </then>
         </if>
+        <property name="lib.resolve.confs" value="*"/>
         <if>
             <and>
                 <equals arg1="${lib.update.sources}" arg2="true"/>
                 <isset property="lib.resolve.src.confs"/>
                 <not><equals arg1="${lib.resolve.src.confs}" arg2="none"/></not>
+                <not><equals arg1="${lib.resolve.confs}" arg2="*"/></not>
             </and>
             <then>
                 <property name="lib.resolve.confs.eff" value="${lib.resolve.confs},${lib.resolve.src.confs}"/>
             </then>
             <else>
-                <property name="lib.resolve.confs" value="*"/>
                 <property name="lib.resolve.confs.eff" value="${lib.resolve.confs}"/>
             </else>
         </if>

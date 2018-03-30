@@ -79,14 +79,11 @@ under the License.
         <antcall target="clean-uiloginservice"/>
     </target>
     
-    <!-- SCIPIO: ivy confs to resolve (defaults to "*", meaning all) 
-        This should include all the confs manually handled in do-lib-update task override below,
-        or otherwise all ivy.xml configurations that are not optional. -->
-    <property name="lib.resolve.confs" value="solr-webapp"/>
+    <property name="lib.resolve.build.confs" value="solr-webapp"/>
     
     <!-- SCIPIO: Special lib download script for complex base includes -->
     <target name="do-lib-update" description="Downloads all jars (solr component implementation)">
-        <ivy:retrieve pattern="webapp/WEB-INF/lib/${lib.update.filename.pattern.ivy}" conf="${lib.resolve.confs}"/>
+        <ivy:retrieve pattern="webapp/WEB-INF/lib/${lib.update.filename.pattern.ivy}" conf="solr-webapp"/>
     </target>
     
     <target name="do-lib-clean" description="Cleans out (removes) all ivy-handled jars">

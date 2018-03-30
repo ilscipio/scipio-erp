@@ -408,7 +408,8 @@ under the License.
             </else>
         </if>
         
-        <!-- default build conf is called "application", named for legacy reasons -->
+        <!-- default build conf is called "application", named for legacy reasons; however,
+            it's now recommended to use the name "build" instead (2018-03) -->
         <property name="lib.resolve.build.confs" value="application"/>
         
         <!-- if lib.resolve.src.confs is not set, assume based on existence of libsrc folder -->
@@ -566,8 +567,7 @@ under the License.
             </then>
         </if>
     </target>
-    <target name="init-lib-dep-tree-core" depends="ivy-init">
-        <property name="lib.resolve.confs" value="*"/>
+    <target name="init-lib-dep-tree-core" depends="ivy-init,get-lib-resolve-confs">
         <ivy:dependencytree conf="${lib.resolve.confs}"/>
     </target>
     
@@ -580,7 +580,6 @@ under the License.
         </if>
     </target>
     <target name="init-lib-dep-report-core" depends="ivy-init,do-lib-resolve">
-        <property name="lib.resolve.confs" value="*"/>
         <ivy:report conf="${lib.resolve.confs}" todir="lib-depreport"/>
     </target>
 

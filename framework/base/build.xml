@@ -111,12 +111,12 @@ under the License.
     <!-- SCIPIO: ivy confs to resolve (defaults to "*", meaning all) 
         This should include all the confs manually handled in do-lib-update task override below,
         or otherwise all ivy.xml configurations that are not optional. -->
-    <property name="lib.resolve.confs" value="base"/>
+    <property name="lib.resolve.build.confs" value="base"/>
     <property name="lib.resolve.src.confs" value="sources"/>
     
     <!-- SCIPIO: Special lib download script for complex base includes -->
     <target name="do-lib-update" description="Downloads all jars (base component implementation)">
-        <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="${lib.resolve.confs}">
+        <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="${lib.resolve.build.confs}">
             <firstmatchmapper>
                 <!-- Tomcat-provided -->
                 <regexpmapper from="^(.*/)?tomcat-servlet-api-([^/-]+)\.jar$" to="\1javax.servlet-api-3.1.0.jar" handledirsep="true"/>

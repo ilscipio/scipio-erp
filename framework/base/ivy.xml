@@ -20,7 +20,7 @@
         Custom/client configurations and dependencies may be added at the end of each section below.
 
         NOTE: Adding new configurations requires updating the framework/base/build.xml
-        file (lib.resolve.confs property and do-lib-update task overrides).
+        file (lib.resolve(.build).confs property and do-lib-update task overrides).
 
         NOTE: If a library is not available in central, it may be added to the project
         locally using the local-ivy resolver (ivy/localRepo/, see ivy/ivysettings.xml).

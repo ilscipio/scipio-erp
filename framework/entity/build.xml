@@ -60,11 +60,11 @@ under the License.
     <property name="lib.entity.jdbc.conf.default" value="derby"/><!-- should be a single conf -->
     <property name="lib.entity.jdbc.conf.update" value="${lib.entity.jdbc.conf.default}"/>
     <property name="lib.entity.jdbc.conf.all" value="jdbc,${lib.entity.jdbc.conf.update}" />
-    <property name="lib.resolve.confs" value="${lib.entity.jdbc.conf.all}"/>
+    <property name="lib.resolve.build.confs" value="${lib.entity.jdbc.conf.all}"/>
     
     <target name="do-lib-update" description="Downloads all jars">
         <if>
-            <contains string="${lib.resolve.confs}" substring="jdbc"/>
+            <contains string="${lib.resolve.build.confs}" substring="jdbc"/>
             <then>
                 <ivy:retrieve pattern="lib/jdbc/unused/${lib.update.filename.pattern.ivy}" conf="jdbc">
                     <firstmatchmapper>

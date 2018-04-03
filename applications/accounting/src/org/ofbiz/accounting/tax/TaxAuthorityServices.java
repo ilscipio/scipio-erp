@@ -733,6 +733,8 @@ public class TaxAuthorityServices {
                 Debug.logInfo("Shipping Tax Adjustment: " + taxAdjValue, module);
     
                 adjustments.add(taxAdjValue);
+            }else{
+                Debug.logWarning("No TaxAuthority found. Skipping tax calculation for shipping rates",module);
             }
         } catch (GenericEntityException e) {
             Debug.logError("Error while calculating shipping tax: "+e, module);

@@ -17,7 +17,8 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<project name="Ant - Macros" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="Ant - Macros" 
+    xmlns:ivy="antlib:org.apache.ivy.ant">
 
   <!-- SCIPIO: NOTE: Despite the filename, this is used for all types of definitions
     common to both main build.xml, component build.xml, and limited support for
@@ -27,18 +28,63 @@ under the License.
   <!-- Requirements  -->
   <!-- ================================================================== -->
 
-  <property name="minimumantversion" value="1.9.0"/>
-  <antversion property="antversion" atleast="${minimumantversion}"/>
-  <fail unless="antversion" message="Please upgrade ant to at least ${minimumantversion}. Current ant version is ${ant.version}"/>
+  <property name="minimumantversion" value="1.9.1"/>
+    
+  <!-- FOR DEVELOPERS:
+      If you are a developer using an IDE-provided Ant version and certain there are no problems,
+      you can eliminate the provided ant version warning by uncommenting the following line or setting this property: -->
+  <!--<property name="antlib.ok" value="true"/>-->
+  
+  <!-- SCIPIO: 2018-04-04: The ant and JDK version checks are now only done once with include guard
+      NOTE: the macro call is further below due to ant-contrib use -->
+  <macrodef name="check-reqs">
+    <sequential>
+      <if>
+        <not><isset property="checkreqs.ran"/></not>
+        <then>
+          <antversion property="antversion" atleast="${minimumantversion}"/>
+          <fail unless="antversion">ANT VERSION: Scipio build requires minimum ant version: ${minimumantversion}
+You are running: ${ant.version} (${ant.core.lib})
 
-  <!-- SCIPIO: 2017-09-06: JDK version minimum requirement is now 1.8 -->
-  <condition property="javaatleast18">
-    <not>
-      <matches pattern="^1\.[0-7]($|\..*)" string="${ant.java.version}"/>
-    </not>
-  </condition>
-  <fail unless="javaatleast18" message="Please upgrade java to at least 1.8. Current Java version is ${ant.java.version}"/>
+From command line, Scipio build should be invoked using the provided ant launch scripts in project root:
+* Linux:    ./ant [target]
+* Windows:  ant [target] (ant.bat)</fail>
 
+          <condition property="antlib.ok">
+            <contains substring="framework/base/lib/ant/" string="${ant.core.lib}"/>
+          </condition>
+          <if>
+            <not><isset property="antlib.ok"/></not>
+            <then>
+              <!--<antversion property="providedantversion.ok" exactly="${providedantversion}"/>-->
+              <echo level="warning">WARNING: The ant jar executing is not the one provided with Scipio (framework/base/lib/ant/)
+You are running: ${ant.version} (${ant.core.lib})
+
+From command line, Scipio build should be invoked using the provided ant launch scripts in project root:
+* Linux:    ./ant [target]
+* Windows:  ant [target] (ant.bat)
+(Developers can eliminate this message for IDEs by setting the antlib.ok property to true)</echo>
+            </then>
+          </if>
+
+          <!-- SCIPIO: 2017-09-06: JDK version minimum requirement is now 1.8 -->
+          <condition property="javaatleast18">
+            <not>
+              <matches pattern="^1\.[0-7]($|\..*)" string="${ant.java.version}"/>
+            </not>
+          </condition>
+          <fail unless="javaatleast18" message="Please upgrade java to at least 1.8. Current Java version is ${ant.java.version}"/>
+       
+          <property name="checkreqs.ran" value="true"/>
+        </then>
+      </if>
+    </sequential>
+  </macrodef>
+  
+  <target name="check-reqs">
+      <check-reqs/>
+  </target>
+      
   <!-- ================================================================== -->
   <!-- Common/generic defs for all builds  -->
   <!-- ================================================================== -->
@@ -62,6 +108,9 @@ under the License.
   </path>
   <taskdef resource="net/sf/antcontrib/antlib.xml" classpathref="ant-contrib.class.path"/>
 
+  <!-- trigger the requirements check (requires ant-contrib) -->
+  <check-reqs/>
+    
   <!-- ivy (SCIPIO) (see ivy-init for taskdef) -->
   <property name="ivy.settings.file" value="${ofbiz.home.dir}/ivy/ivysettings.xml"/>
   <property name="lib.general.ivyfile" value="${ofbiz.home.dir}/ivy/ivy.xml"/>

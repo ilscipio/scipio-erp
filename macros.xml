@@ -33,7 +33,7 @@ under the License.
   <!-- FOR DEVELOPERS:
       If you are a developer using an IDE-provided Ant version and certain there are no problems,
       you can eliminate the provided ant version warning by uncommenting the following line or setting this property: -->
-  <!--<property name="antlib.ok" value="true"/>-->
+  <!--<property name="antlib.check.ok" value="true"/>-->
   
   <!-- SCIPIO: 2018-04-04: The ant and JDK version checks are now only done once with include guard
       NOTE: the macro call is further below due to ant-contrib use -->
@@ -46,24 +46,31 @@ under the License.
           <fail unless="antversion">ANT VERSION: Scipio build requires minimum ant version: ${minimumantversion}
 You are running: ${ant.version} (${ant.core.lib})
 
+If you are running from command line, an ant jar is provided with Scipio (framework/base/lib/ant/);
+using a system ant installation is not recommended, as such configurations may not be tested.
+              
 From command line, Scipio build should be invoked using the provided ant launch scripts in project root:
 * Linux:    ./ant [target]
 * Windows:  ant [target] (ant.bat)</fail>
 
-          <condition property="antlib.ok">
+          <condition property="antlib.check.ok">
             <contains substring="framework/base/lib/ant/" string="${ant.core.lib}"/>
           </condition>
           <if>
-            <not><isset property="antlib.ok"/></not>
+            <not><isset property="antlib.check.ok"/></not>
             <then>
+              <path id="antlib.provided.jar.full">
+                <fileset dir="${ofbiz.home.dir}/framework/base/lib/ant/" includes="ant-*-ant.jar"/>
+              </path>
+              <property name="antlib.provided.jar.rel" value="${toString:antlib.provided.jar.full}" relative="true" basedir="${ofbiz.home.dir}"/>
               <!--<antversion property="providedantversion.ok" exactly="${providedantversion}"/>-->
-              <echo level="warning">WARNING: The ant jar executing is not the one provided with Scipio (framework/base/lib/ant/)
+              <echo level="warning">WARNING: The ant jar executing is not the one provided with Scipio (${antlib.provided.jar.rel})
 You are running: ${ant.version} (${ant.core.lib})
 
 From command line, Scipio build should be invoked using the provided ant launch scripts in project root:
 * Linux:    ./ant [target]
 * Windows:  ant [target] (ant.bat)
-(Developers can eliminate this message for IDEs by setting the antlib.ok property to true)</echo>
+(Developers can eliminate this message for IDEs by setting the antlib.check.ok property to true)</echo>
             </then>
           </if>
 

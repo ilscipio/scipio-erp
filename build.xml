@@ -73,6 +73,7 @@ under the License.
         <propertyref regex="lib\.update\..*"/>
         <propertyref regex="lib\.clean\..*"/>
         <propertyref name="ivy.settings.file"/>
+        <propertyref name="checkreqs.ran"/>
     </propertyset>
     
     <!-- Dynamic early main build.xml additions. Allows any component or addon to include

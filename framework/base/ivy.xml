@@ -133,9 +133,9 @@
         <!--<dependency org="xpp3" name="xpp3" rev="1.1.4c" conf="base,sources"/> xstream dep: now fetched via xpp3-core + xmlpull transitive deps -->
         <dependency org="org.owasp.esapi" name="esapi" rev="2.1.0.1" conf="base,sources"/>
         <dependency org="com.googlecode.owasp-java-html-sanitizer" name="owasp-java-html-sanitizer" rev="r239" conf="base,sources"/>
-        <dependency org="com.fasterxml.jackson.core" name="jackson-annotations" rev="2.9.4" conf="base,sources"/>
-        <dependency org="com.fasterxml.jackson.core" name="jackson-core" rev="2.9.4" conf="base,sources"/>
-        <dependency org="com.fasterxml.jackson.core" name="jackson-databind" rev="2.9.4" conf="base,sources"/>
+        <dependency org="com.fasterxml.jackson.core" name="jackson-annotations" rev="2.9.5" conf="base,sources"/>
+        <dependency org="com.fasterxml.jackson.core" name="jackson-core" rev="2.9.5" conf="base,sources"/>
+        <dependency org="com.fasterxml.jackson.core" name="jackson-databind" rev="2.9.5" conf="base,sources"/>
         <dependency org="org.jdom" name="jdom" rev="1.1.3" conf="base,sources"/><!-- TODO: REVIEW: not used in any code; but some libs _might_ have it as optional dependency -->
         <dependency org="joda-time" name="joda-time" rev="2.9.9" conf="base,sources" />
         <dependency org="org.apache.avalon.framework" name="avalon-framework-impl" rev="4.3.1" conf="base,sources"/>

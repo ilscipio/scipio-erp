@@ -111,7 +111,6 @@
         <dependency org="javolution" name="javolution" rev="5.5.1" conf="base,sources"/><!-- TODO: increase: blocked by EntitySaxReader -->
         <dependency org="org.freemarker" name="freemarker" rev="2.3.27-incubating" conf="base,sources"/>
         <dependency org="com.google.guava" name="guava" rev="24.1-jre" conf="base,sources"/>
-        <dependency org="com.google.code.gson" name="gson" rev="2.8.2" conf="base,sources"/><!-- dep lib for addons, also reusable -->
         <dependency org="com.google.code.findbugs" name="jsr305" rev="3.0.2" conf="base,sources"/>
         <dependency org="de.odysseus.juel" name="juel-impl" rev="2.2.7" conf="base,sources"/>
         <dependency org="de.odysseus.juel" name="juel-spi" rev="2.2.7" conf="base,sources"/>

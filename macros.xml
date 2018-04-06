@@ -662,6 +662,7 @@ Unexpectedly received empty list of builds to iterate."/>
   <macrodef name="remove-lib-files">
     <attribute name="dir"/>
     <attribute name="excludes-refid" default=""/>
+    <attribute name="include" default="**/*.jar"/>
     <!-- this takes a <selector> of <filename> elements -->
     <element name="patterns" optional="true"/>
     <sequential>
@@ -672,7 +673,7 @@ Unexpectedly received empty list of builds to iterate."/>
           <!-- never delete empty dirs; never delete .git, .svn, .gitignore, ... -->
           <delete includeemptydirs="false" defaultexcludes="true">
             <fileset dir="@{dir}">
-              <include name="**/*.jar"/>
+              <include name="@{include}"/>
               <patterns />
               <!-- instead of taking excludes, take an include list and negate it
                 <patternset refid="@{excludes-refid}"/>-->
@@ -685,7 +686,7 @@ Unexpectedly received empty list of builds to iterate."/>
         <else>
           <delete includeemptydirs="false" defaultexcludes="true">
             <fileset dir="@{dir}">
-              <include name="**/*.jar"/>
+              <include name="@{include}"/>
               <patterns />
             </fileset>
           </delete>

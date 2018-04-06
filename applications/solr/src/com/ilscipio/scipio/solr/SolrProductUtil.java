@@ -870,9 +870,20 @@ public abstract class SolrProductUtil {
         }
     }
     
+    /**
+     * addConcatenatedStringValuesToSolrDoc.
+     * NOTE: 2018-04-04: this now omits the field if empty string by default.
+     */
     protected static void addConcatenatedStringValuesToSolrDoc(SolrInputDocument doc, String solrFieldName, Collection<?> values, String joinStr) {
+        addConcatenatedStringValuesToSolrDoc(doc, solrFieldName, values, joinStr, true);
+    }
+    
+    protected static void addConcatenatedStringValuesToSolrDoc(SolrInputDocument doc, String solrFieldName, Collection<?> values, String joinStr, boolean omitIfEmpty) {
         if (values == null) return;
-        doc.addField(solrFieldName, StringUtils.join(values, joinStr));
+        String joined = StringUtils.join(values, joinStr);
+        if (!(omitIfEmpty && joined.isEmpty())) {
+            doc.addField(solrFieldName, joined);
+        }
     }
     
     protected static void addLocalizedContentStringMapToSolrDoc(Delegator delegator, SolrInputDocument doc, String solrFieldNamePrefix, String solrDefaultFieldName, Map<String, String> contentMap) {

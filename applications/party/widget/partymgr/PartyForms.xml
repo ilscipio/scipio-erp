@@ -613,10 +613,10 @@ under the License.
             </display-entity>
         </field>
         <field name="partyContentTypeId"><display-entity entity-name="PartyContentType"/></field>
+        <field name="contentTypeId"><display-entity entity-name="ContentType"></display-entity></field><!-- SCIPIO: moved types together -->
         <field name="description"><display/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"></display-entity></field>
         <field name="localeString"><display-entity entity-name="CountryCode" key-field-name="countryCode" description="${countryName}${countryCode}"></display-entity></field>
-        <field name="contentTypeId"><display-entity entity-name="ContentType"></display-entity></field>
         <field name="mimeTypeId"><display-entity entity-name="MimeType"></display-entity></field>
         <field name="dataResourceId" title="${uiLabelMap.FormFieldTitle_dataResourceName}" use-when="dataResourceId==null"><display/> </field>
         <field name="dataResourceId" title="${uiLabelMap.FormFieldTitle_dataResourceName}" use-when="dataResourceId!=null">

@@ -54,6 +54,13 @@ under the License.
                 <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap" global="true"/>
+                
+                <!-- SCIPIO: TODO: REVIEW: added these uiLabelMaps due to some possible inlined screens from other apps still remaining... -->
+                <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="SecurityUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                
                 <set field="applicationMenuName" value="HumanResAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://humanres/widget/HumanresMenus.xml" global="true"/>
                 <set field="applicationTitle" value="${uiLabelMap.HumanResManager}" global="true"/>

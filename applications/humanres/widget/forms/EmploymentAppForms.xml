@@ -63,7 +63,13 @@ under the License.
             </drop-down>
         </field>
         <field name="partyId"><hidden/></field>
-        <field name="applyingPartyId" title="${uiLabelMap.FormFieldTitle_applyingPartyId}"><lookup target-form-name="LookupPartyName"/></field>
+        <!-- SCIPIO: FIXME: there is a bug here with use-when, so show only the link for now
+        <field name="applyingPartyId" title="${uiLabelMap.FormFieldTitle_applyingPartyId}" use-when="applyingPartyId==null"><lookup target-form-name="LookupPartyName"/></field> -->
+        <field name="applyingPartyId" title="${uiLabelMap.FormFieldTitle_applyingPartyId}"><!-- SCIPIO: bug: use-when="applyingPartyId!=null" -->
+            <hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${applyingPartyId}" also-hidden="true" style="${styles.link_nav_info_id}">
+                <parameter param-name="partyId" from-field="applyingPartyId"/>
+            </hyperlink>
+        </field>
         <field name="referredByPartyId" title="${uiLabelMap.FormFieldTitle_referredByPartyId}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="applicationDate" title="${uiLabelMap.FormFieldTitle_applicationDate}"><date-time/></field>
         <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_run_sys} ${styles.action_remove}">
@@ -169,7 +175,14 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="applyingPartyId" required-field="true"><lookup target-form-name="LookupPartyName"/></field><!-- SCIPIO: required to avoid errors, somewhat nonsensical to leave empty -->
+        <field name="applyingPartyId" required-field="true" use-when="applyingPartyId==null"><lookup target-form-name="LookupPartyName"/></field><!-- SCIPIO: required to avoid errors, somewhat nonsensical to leave empty -->
+        <field name="applyingPartyId" required-field="true" use-when="applyingPartyId!=null"><!-- SCIPIO: link to party -->
+            <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}" key-field-name="partyId" also-hidden="true">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${employmentApp.applyingPartyId}" link-style="${styles.link_nav_info_id}">
+                    <parameter param-name="partyId" from-field="employmentApp.applyingPartyId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
         <field name="referredByPartyId" use-when="employmentApp==null"><lookup target-form-name="LookupPartyName"/></field>
         <field name="referredByPartyId" use-when="employmentApp!=null"><hidden/></field>
         <field name="employmentAppSourceTypeId">
@@ -184,11 +197,18 @@ under the License.
     </form>
     
     <!-- SCIPIO: new quick view form -->
-    <form name="ViewEmploymentApp" type="single" default-entity-name="EmploymentApp" 
+    <form name="ViewEmploymentApp" type="single" default-entity-name="EmploymentApp" default-map-name="employmentApp"
         header-row-style="header-row">
         <actions>
             <set field="insideEmployee" from-field="parameters.insideEmployee"/>
         </actions>
         <auto-fields-entity entity-name="EmploymentApp" default-field-type="display" map-name="employmentApp"/>
+        <field name="applyingPartyId" required-field="true" use-when="applyingPartyId!=null"><!-- SCIPIO: link to party -->
+            <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}" key-field-name="partyId">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${employmentApp.applyingPartyId}" link-style="${styles.link_nav_info_id}">
+                    <parameter param-name="partyId" from-field="employmentApp.applyingPartyId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
     </form>
 </forms>

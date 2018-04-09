@@ -26,6 +26,8 @@ under the License.
         <input type="hidden" name="contentTypeId" value="DOCUMENT"/>
         <input type="hidden" name="statusId" value="CTNT_PUBLISHED"/>
         <input type="hidden" name="partyId" value="${partyId}" id="contentPartyId"/>
+        <#-- SCIPIO: WARN: see ContentList.ftl for security implications of this parameter -->
+        <input type="hidden" name="cntListRemoveDonePage" value="${escapeVal(cntListRemoveDonePage!parameters.cntListRemoveDonePage!, 'html')}"/>
 
         <@field type="file" label=uiLabelMap.PartyAttachFile name="uploadedFile" required=true class="+error" size=25 />
         

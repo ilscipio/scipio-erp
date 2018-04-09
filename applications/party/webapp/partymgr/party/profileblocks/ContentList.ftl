@@ -40,7 +40,19 @@ under the License.
                 <#if (content.contentName?has_content)>
                     <a href="<@ofbizUrl>img/${content.contentName}?imgId=${(content.dataResourceId)!}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.CommonView}</a>
                 </#if>
-                <form name="removePartyContent_${pContent_index}" method="post" action="<@ofbizUrl>removePartyContent/viewprofile</@ofbizUrl>">
+                <#-- SCIPIO: WARN: for security reasons, we can currently only allow a view switch override here, not a full request URI 
+                    - see also ContentList.ftl -->
+                <#if !cntListRemoveDonePage??>
+                  <#assign cntListRemoveDonePage = rawString(parameters.cntListRemoveDonePage!)>
+                  <#if cntListRemoveDonePage?has_content>
+                    <#assign cntListRemoveDonePage = cntListRemoveDonePage?replace("[^a-zA-Z0-9_-]+","")>
+                  <#else>
+                    <#assign cntListRemoveDonePage = "viewprofile">
+                  </#if>
+                <#else>
+                  <#assign cntListRemoveDonePage = rawString(cntListRemoveDonePage)>
+                </#if>
+                <form name="removePartyContent_${pContent_index}" method="post" action="<@ofbizUrl uri=("removePartyContent/"+cntListRemoveDonePage) escapeAs='html'/>">
                   <input type="hidden" name="contentId" value="${pContent.contentId}" />
                   <input type="hidden" name="partyId" value="${pContent.partyId}" />
                   <input type="hidden" name="partyContentTypeId" value="${pContent.partyContentTypeId}" />

@@ -357,7 +357,7 @@ function ajaxSubmitRequestUpdateAreas(target, targetParams, areaCsvString) {
 function submitFormInBackground(form, areaId, submitUrl) {
     submitFormDisableSubmits(form);
     updateFunction = function() {
-        jQuery("#" + areaId).load(submitUrl);
+        jQuery("#" + areaId).on('load', submitUrl);
     }
     jQuery.ajax({
         url: jQuery(form).attr("action"),
@@ -1744,9 +1744,9 @@ function ScipioUploadProgress(options) {
             uploadInfo.iframeCreated = true;
         }
 
-        jQuery("#"+uploadInfo.iframeId).off("load");
+        jQuery("#"+uploadInfo.iframeId).off('load');
         jQuery("#"+uploadInfo.iframeId).empty();
-        jQuery("#"+uploadInfo.iframeId).load(jQuery.proxy(this.checkIframeAsyncLoad, this, uploadInfo));
+        jQuery("#"+uploadInfo.iframeId).on('load', jQuery.proxy(this.checkIframeAsyncLoad, this, uploadInfo));
 
         this.getFormElem().attr("target", uploadInfo.iframeId);
 

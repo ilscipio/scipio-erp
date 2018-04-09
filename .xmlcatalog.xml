@@ -3,12 +3,12 @@
      More at https://cwiki.apache.org/confluence/display/OFBIZ/Eclipse+Tips#EclipseTips-xmlCatalog
 -->
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
-  <nextCatalog catalog="platform:/resource/scipioce-1.14/framework/base/dtd/base-catalog.xml"/>
-  <nextCatalog catalog="platform:/resource/scipioce-1.14/framework/datafile/dtd/datafiles-catalog.xml"/>
-  <nextCatalog catalog="platform:/resource/scipioce-1.14/framework/entity/dtd/entity-catalog.xml"/>
-  <nextCatalog catalog="platform:/resource/scipioce-1.14/framework/minilang/dtd/minilang-catalog.xml"/>
-  <nextCatalog catalog="platform:/resource/scipioce-1.14/framework/service/dtd/service-catalog.xml"/>
-  <nextCatalog catalog="platform:/resource/scipioce-1.14/framework/testtools/dtd/testtools-catalog.xml"/>
-  <nextCatalog catalog="platform:/resource/scipioce-1.14/framework/webapp/dtd/webapp-catalog.xml"/>
-  <nextCatalog catalog="platform:/resource/scipioce-1.14/framework/widget/dtd/widget-catalog.xml"/>
+  <nextCatalog catalog="platform:/resource/scipioce-1.14-dev/framework/base/dtd/base-catalog.xml"/>
+  <nextCatalog catalog="platform:/resource/scipioce-1.14-dev/framework/datafile/dtd/datafiles-catalog.xml"/>
+  <nextCatalog catalog="platform:/resource/scipioce-1.14-dev/framework/entity/dtd/entity-catalog.xml"/>
+  <nextCatalog catalog="platform:/resource/scipioce-1.14-dev/framework/minilang/dtd/minilang-catalog.xml"/>
+  <nextCatalog catalog="platform:/resource/scipioce-1.14-dev/framework/service/dtd/service-catalog.xml"/>
+  <nextCatalog catalog="platform:/resource/scipioce-1.14-dev/framework/testtools/dtd/testtools-catalog.xml"/>
+  <nextCatalog catalog="platform:/resource/scipioce-1.14-dev/framework/webapp/dtd/webapp-catalog.xml"/>
+  <nextCatalog catalog="platform:/resource/scipioce-1.14-dev/framework/widget/dtd/widget-catalog.xml"/>
 </catalog>

@@ -357,7 +357,7 @@ function ajaxSubmitRequestUpdateAreas(target, targetParams, areaCsvString) {
 function submitFormInBackground(form, areaId, submitUrl) {
     submitFormDisableSubmits(form);
     updateFunction = function() {
-        jQuery("#" + areaId).on('load', submitUrl);
+        jQuery("#" + areaId).load(submitUrl);
     }
     jQuery.ajax({
         url: jQuery(form).attr("action"),

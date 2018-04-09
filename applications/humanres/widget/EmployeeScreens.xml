@@ -77,6 +77,7 @@ under the License.
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/ViewProfile.groovy"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/GetUserLoginPrimaryEmail.groovy"/>
                 <set field="titleProperty" value="HumanResEmployeeProfile"/><!-- PageTitleViewPartyProfile -->
+                <set field="cntListRemoveDonePage" value="EmployeeProfile"/><!-- SCIPIO -->
             </actions>
             <widgets>
                 <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">

@@ -935,7 +935,7 @@ under the License.
                 <entity-one entity-name="Content" value-field="content"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyDecorator"  location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet><!-- title="${uiLabelMap.PageTitleListContent}"-->
                             <!-- links to same page

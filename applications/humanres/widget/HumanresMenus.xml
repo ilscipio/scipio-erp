@@ -294,6 +294,11 @@
                 <parameter param-name="partyId"/>
             </link>
         </menu-item> -->
+        <menu-item name="EditEmployeeContent" title="${uiLabelMap.HumanResPartyContentAndResumes}"><!-- SCIPIO: 2018: stand-in for EditEmployeeResumes above -->
+            <link target="EditPartyContents">
+                <parameter param-name="partyId"/>
+            </link>
+        </menu-item>
         <menu-item name="EditEmployeeLeaves" title="${uiLabelMap.HumanResEmplLeave}">
             <link target="EditEmployeeLeaves">
                 <parameter param-name="partyId"/>

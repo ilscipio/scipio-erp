@@ -95,8 +95,6 @@ under the License.
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/ViewProfile.groovy"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/GetUserLoginPrimaryEmail.groovy"/>
                 <set field="titleProperty" value="HumanResEmployeeApplicantProfile"/><!-- PageTitleViewPartyProfile -->
-                <set field="cntListRemoveDonePage" value="EmployeeProfile"/><!-- SCIPIO -->
-                <set field="cntListEditInter" type="Boolean" value="true"/><!-- SCIPIO -->
             </actions>
             <widgets>
                 <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
@@ -135,9 +133,19 @@ under the License.
                                 <container style="profile-right">
                                     <include-screen name="CurrentEmploymentData" location="component://humanres/widget/EmployeeScreens.xml"/>
                                     <include-screen name="UserLogin" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                    <include-screen name="Attributes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                    <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                    <section>
+                                        <actions>
+                                            <!-- SCIPIO: tweaks for Content list -->
+                                            <set field="pcntListRemoveDonePage" value="EmployeeProfile"/>
+                                            <set field="pcntListEditInter" type="Boolean" value="false"/><!-- false: we now override EditPartyContents, see PartyResumeScreens.xml -->
+                                            <set field="pcntTitle" value="${uiLabelMap.HumanResPartyContentAndResumes}"/>
+                                        </actions>
+                                        <widgets>
+                                            <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                        </widgets>
+                                    </section>
                                     <include-screen name="Notes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                    <include-screen name="Attributes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                 </container>
                             </widgets>
                             <fail-widgets>

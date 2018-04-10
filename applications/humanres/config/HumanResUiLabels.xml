@@ -3446,4 +3446,8 @@
         <value xml:lang="en">Employee/Applicant Profile</value>
         <value xml:lang="fr">Profil de l'employé/candidat</value>
     </property>
+    <property key="HumanResPartyContentAndResumes">
+        <value xml:lang="de">Inhalt und Lebenslauf</value>
+        <value xml:lang="en">Content and Resumes</value>
+    </property>
 </resource>

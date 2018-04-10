@@ -69,4 +69,20 @@
             </widgets>
         </section>
     </screen>
+    
+    <!-- SCIPIO: 2018: takes place of the formal PartyResume entity handling screens above and sets menu.
+        TODO: REVIEW: this is not 100% correct in meaning, should not really override EditPartyContents to this in controller... -->
+    <screen name="EditPartyContents">
+        <section>
+            <actions>
+                <set field="titleProperty" value="HumanResPartyContentAndResumes"/>
+                <set field="activeSubMenu" value="EmployeeProfile"/>
+                <set field="activeSubMenuItem" value="EditEmployeeContent"/>   
+            </actions>
+            <widgets>
+                <include-screen name="EditPartyContents" location="component://party/widget/partymgr/PartyScreens.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>

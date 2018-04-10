@@ -1263,4 +1263,8 @@ under the License.
     
     <!-- ==================PayRoll History View Map===================== -->
     <view-map name="PayrollHistory" type="screen" page="component://humanres/widget/EmployeeScreens.xml#PayrollHistory"/>
+    
+    <!-- ==================SCIPIO: Party screen overrides===================== -->
+    <view-map name="EditPartyContents" type="screen" page="component://humanres/widget/PartyResumeScreens.xml#EditPartyContents"/>
+    
 </site-conf>

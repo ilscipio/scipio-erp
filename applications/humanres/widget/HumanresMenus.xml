@@ -22,7 +22,7 @@
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
     <menu name="HumanResAppBar" title="${uiLabelMap.HumanResManager}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <!-- SCIPIO: simplified -->
-        <menu-item name="Employees" title="${uiLabelMap.HumanResEmployees}"><link target="findEmployees"/></menu-item>
+        <menu-item name="Employees" title="${uiLabelMap.HumanResEmployeesApplicants}"><link target="findEmployees"/></menu-item>
         <!--<menu-item name="Employment" title="${uiLabelMap.HumanResEmployment}"><link target="FindEmployments"/></menu-item>-->
         <menu-item name="EmplPosition" title="${uiLabelMap.HumanResPositions}"><link target="FindEmplPositions"/></menu-item><!-- ${uiLabelMap.HumanResEmployeePosition} -->
         <!--<menu-item name="PerfReview" title="${uiLabelMap.HumanResPerfReview}"><link target="FindPerfReviews"/></menu-item>-->

@@ -24,7 +24,7 @@ under the License.
 <#-- SCIPIO: show at bottom 
     <@menuitem type="link" href="javascript:document.lookupparty.submit();" text=uiLabelMap.PartyLookupParty class="+${styles.action_run_sys!} ${styles.action_find!}" />->
 -->
-    <@menuitem type="link" href=makeOfbizUrl("NewEmployee") text=uiLabelMap.HumanResNewEmployee class="+${styles.action_nav!} ${styles.action_add!}"/>
+    <@menuitem type="link" href=makeOfbizUrl("NewEmployee") text=uiLabelMap.HumanResNewEmployeeApplicant class="+${styles.action_nav!} ${styles.action_add!}"/>
     <#if findEmplQueryRan>
        <#if (parameters.hideFields!"N") == "Y">
          <@menuitem type="link" href=makeOfbizUrl("findEmployees?hideFields=N&doFindQuery=Y${rawString(paramList)}") text=uiLabelMap.CommonShowLookupFields class="+${styles.action_run_sys!} ${styles.action_show!}"/>

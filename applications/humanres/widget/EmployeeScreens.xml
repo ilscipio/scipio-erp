@@ -25,7 +25,7 @@ under the License.
             <actions>
                 <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="title" value="${uiLabelMap.CommonFind} ${uiLabelMap.HumanResEmployee}"/>
+                <set field="title" value="${uiLabelMap.CommonFind} ${uiLabelMap.HumanResEmployeeApplicant}"/>
                 <set field="activeSubMenuItem" value="Employees"/>
             </actions>
             <widgets>
@@ -52,7 +52,7 @@ under the License.
     <screen name="NewEmployee">
         <section>
             <actions>
-                <set field="titleProperty" value="PartyCreateNewEmployee"/>
+                <set field="titleProperty" value="HumanResNewEmployeeApplicant"/><!-- PartyCreateNewEmployee -->
                 <set field="activeSubMenuItem" value="Employees"/>
                 <property-to-field field="defaultCountryGeoId" resource="general" property="country.geo.id.default" default="USA"/>
             </actions>
@@ -76,7 +76,7 @@ under the License.
                 <set field="layoutSettings.javaScripts[]" value="/partymgr/static/PartyProfileContent.js" global="true"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/ViewProfile.groovy"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/GetUserLoginPrimaryEmail.groovy"/>
-                <set field="titleProperty" value="HumanResEmployeeProfile"/><!-- PageTitleViewPartyProfile -->
+                <set field="titleProperty" value="HumanResEmployeeApplicantProfile"/><!-- PageTitleViewPartyProfile -->
                 <set field="cntListRemoveDonePage" value="EmployeeProfile"/><!-- SCIPIO -->
                 <set field="cntListEditInter" type="Boolean" value="true"/><!-- SCIPIO -->
             </actions>

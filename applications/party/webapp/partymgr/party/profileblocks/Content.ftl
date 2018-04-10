@@ -28,6 +28,7 @@ under the License.
         <input type="hidden" name="partyId" value="${partyId}" id="contentPartyId"/>
         <#-- SCIPIO: WARN: see ContentList.ftl for security implications of this parameter -->
         <input type="hidden" name="cntListRemoveDonePage" value="${escapeVal(cntListRemoveDonePage!parameters.cntListRemoveDonePage!, 'html')}"/>
+        <input type="hidden" name="cntListEditInter" value="${(cntListEditInter!parameters.cntListEditInter!)?string}"/>
 
         <@field type="file" label=uiLabelMap.PartyAttachFile name="uploadedFile" required=true class="+error" size=25 />
         

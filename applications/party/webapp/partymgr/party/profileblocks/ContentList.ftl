@@ -28,7 +28,15 @@ under the License.
             <#assign status = content.getRelatedOne("StatusItem", true)!>
             <#assign pcType = pContent.getRelatedOne("PartyContentType", false)>
             <@tr>
-              <@td class="button-col"><a href="<@ofbizUrl>EditPartyContents?contentId=${pContent.contentId}&amp;partyId=${pContent.partyId}&amp;partyContentTypeId=${pContent.partyContentTypeId}&amp;fromDate=${pContent.fromDate}</@ofbizUrl>">${content.contentId}</a></@td>
+              <#-- SCIPIO: for inter-app linking 
+                  TODO: REVIEW: it might be sane to assume the default for cntListEditInter to be true instead of false... -->
+              <#assign cntListEditUri>EditPartyContents?contentId=${pContent.contentId}&amp;partyId=${pContent.partyId}&amp;partyContentTypeId=${pContent.partyContentTypeId}&amp;fromDate=${pContent.fromDate}</#assign>
+              <#if ((cntListEditInter!parameters.cntListEditInter!)?string) == "true">
+                <#assign cntListEditLink><@ofbizInterWebappUrl extLoginKey=true>/partymgr/control/${cntListEditUri}</@ofbizInterWebappUrl></#assign>
+              <#else>
+                <#assign cntListEditLink><@ofbizUrl>${cntListEditUri}</@ofbizUrl></#assign>
+              </#if>
+              <@td class="button-col"><a href="${cntListEditLink}">${content.contentId}</a></@td>
               <@td>${(pcType.get("description", locale))!}</@td>
               <@td>${content.contentName!}</@td>
               <#-- take too much space -->

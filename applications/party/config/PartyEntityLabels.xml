@@ -1502,6 +1502,13 @@
         <value xml:lang="zh">厂家送货信息</value>
         <value xml:lang="zh_TW">賣家送貨資訊</value>
     </property>
+    <property key="PartyContentType.description.RESUME"><!-- SCIPIO: TODO: Localize -->
+        <value xml:lang="en">Resume</value>
+        <value xml:lang="de">Lebenslauf</value>
+        <value xml:lang="fr">Curriculum vitae</value>
+        <value xml:lang="it">Curriculum vitae</value>
+        <value xml:lang="pt_BR">Currículo</value>
+    </property>
     <property key="PartyRelationshipType.partyRelationshipName.ACCOUNT">
         <value xml:lang="cs">Účet</value>
         <value xml:lang="en">Account Owned by</value>

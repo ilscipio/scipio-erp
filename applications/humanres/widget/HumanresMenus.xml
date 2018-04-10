@@ -412,4 +412,29 @@
         <include-elements menu-name="EmplLeaveTabBar" recursive="includes-only" />
     </menu>
     
+    <!-- SCIPIO: new -->
+    <menu name="EmploymentAppSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="EditEmploymentApp" title="${uiLabelMap.CommonEdit}">
+            <condition>
+                <if-compare field="activeSubMenuItem" operator="not-equals" value="EditEmploymentApp"/>
+            </condition>
+            <link target="EditEmploymentApp">
+                <parameter param-name="applicationId" from-field="applicationId"/>
+            </link>
+        </menu-item>
+        <menu-item name="ViewEmploymentApp" title="${uiLabelMap.CommonView}">
+            <condition>
+                <if-compare field="activeSubMenuItem" operator="equals" value="EditEmploymentApp"/>
+            </condition>
+            <link target="ViewEmploymentApp">
+                <parameter param-name="applicationId" from-field="applicationId"/>
+            </link>
+        </menu-item>
+        <menu-item name="LookupPartyResume" title="${uiLabelMap.HumanResLookupPartyResume}">
+            <link target="/partymgr/control/EditPartyContents" url-mode="inter-app">
+                <parameter param-name="partyId" from-field="employmentApp.applyingPartyId"/>
+            </link>
+        </menu-item>
+    </menu>
+    
 </menus>

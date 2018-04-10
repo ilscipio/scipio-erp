@@ -137,13 +137,8 @@
                             <widgets>
                                 <decorator-screen name="CommonEmploymentAppDecorator" location="${parameters.mainDecoratorLocation}">
                                     <decorator-section name="body">
-                                        <!-- SCIPIO: I added this link so you can toggle view the application with/without edit boxes, nowhere else can you do this -->
-                                        <container>
-                                            <link target="ViewEmploymentApp" text="${uiLabelMap.CommonView}" style="${styles.link_nav}">
-                                                <parameter param-name="applicationId" from-field="applicationId"/>
-                                            </link>
-                                        </container>
-                                        <screenlet>
+                                        <screenlet navigation-menu-name="EmploymentAppSubTabBar">
+                                            <include-menu name="EmploymentAppSubTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
                                             <include-form name="EditEmploymentApp" location="component://humanres/widget/forms/EmploymentAppForms.xml"/>
                                         </screenlet>
                                     </decorator-section>
@@ -168,13 +163,8 @@
             <widgets>
                 <decorator-screen name="CommonEmploymentAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <!-- SCIPIO: I added this link so you can toggle view the application with/without edit boxes, nowhere else can you do this -->
-                        <container>
-                            <link target="EditEmploymentApp" text="${uiLabelMap.CommonEdit}" style="${styles.link_nav}">
-                                <parameter param-name="applicationId" from-field="applicationId"/>
-                            </link>
-                        </container>
-                        <screenlet>
+                        <screenlet navigation-menu-name="EmploymentAppSubTabBar">
+                            <include-menu name="EmploymentAppSubTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
                             <include-form name="ViewEmploymentApp" location="component://humanres/widget/forms/EmploymentAppForms.xml"/>
                         </screenlet>
                     </decorator-section>

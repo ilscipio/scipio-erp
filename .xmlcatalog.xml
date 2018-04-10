@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- 
     SCIPIO: Catalog of SCIPIO/OFBiz XML schemas for Eclipse
-    Importing this catalog into Eclipse allows the XML editor in Eclipse to validate the service/entity/minilang/other XMLs.
+    Importing this catalog into Eclipse allows the XML editor in Eclipse to validate the service/entity/minilang/other XMLs,
+    using the exact DTD/schema modifications provided by Scipio for the version you are using.
+    IF YOU DO DO
     To import, simply use:
         File -> Import -> XML -> XML Catalog -> (select this file)
     https://www.eclipse.org/webtools/community/tutorials/XMLCatalog/XMLCatalogTutorial.html

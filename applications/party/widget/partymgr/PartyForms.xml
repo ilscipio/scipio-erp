@@ -629,6 +629,11 @@ under the License.
                 <parameter param-name="dataResourceId"/>
             </hyperlink>
         </field>
+        <field name="viewAction" title=" " widget-style="${styles.link_nav} ${styles.action_view}">
+           <hyperlink also-hidden="false" description="${uiLabelMap.CommonView}" target="img/${contentName}">
+                <parameter param-name="imgId" from-field="dataResourceId"/>
+            </hyperlink>
+        </field>
     </form>
 
     <form name="ApplyServiceCredit" type="single" target="applyServiceCredit" default-map-name="serviceCredit" focus-field-name="amount"

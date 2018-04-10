@@ -933,6 +933,9 @@ under the License.
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="contentId" from-field="parameters.contentId"/>
                 <entity-one entity-name="Content" value-field="content"/>
+                <!-- TODO: REVIEW: header & title stuff, this is due to CommonPartyDecorator lingering in humanres -->
+                <set field="skipProfileHeader" type="Boolean" value="true"/>
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle}${groovy: context.partyId ? (': ' + context.partyId) : ''}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">

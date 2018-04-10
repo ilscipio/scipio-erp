@@ -379,10 +379,13 @@ under the License.
                 <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
                     <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
                 </condition-to-field>
+                <!-- SCIPIO: TODO: REVIEW: may want this instead of the old profile header below:
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle}${groovy: context.partyId ? (': ' + context.partyId) : ''}"/>-->
             </actions>
             <widgets>
                 <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                        <!-- SCIPIO: 2018: TODO: REVIEW: possibly this could all be removed... -->
                         <section>
                             <!-- do check for PARTYMGR, _VIEW permission -->
                             <condition>
@@ -390,7 +393,12 @@ under the License.
                             </condition>
                             <widgets>
                                 <section>
-                                    <condition><not><if-empty field="partyId"/></not></condition>
+                                    <condition>
+                                        <and>
+                                            <not><if-empty field="partyId"/></not>
+                                            <not><if-true field="skipProfileHeader"/></not><!-- SCIPIO: new -->
+                                        </and>
+                                    </condition>
                                     <widgets>
                                         <container style="heading">
                                             <section>
@@ -404,7 +412,17 @@ under the License.
                                                     <label text="${uiLabelMap.PartyTheProfileOf} ${lookupPerson.personalTitle} ${lookupPerson.firstName} ${lookupPerson.middleName} ${lookupPerson.lastName} ${lookupPerson.suffix} ${lookupGroup.groupName} [${partyId}]"/>
                                                 </widgets>
                                                 <fail-widgets>
-                                                    <label style="heading" text="${uiLabelMap.PartyNewUser}"/>
+                                                    <section>
+                                                        <condition>
+                                                            <not><if-empty field="party"/></not>
+                                                        </condition>
+                                                        <widgets>
+                                                            <label text="${uiLabelMap.PartyTheProfileOf} ${partyId}"/>
+                                                        </widgets>
+                                                        <fail-widgets>
+                                                            <label style="heading" text="${uiLabelMap.PartyNewUser}"/>
+                                                        </fail-widgets>
+                                                    </section>
                                                 </fail-widgets>
                                             </section>
                                         </container>

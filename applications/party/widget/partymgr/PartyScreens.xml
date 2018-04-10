@@ -933,6 +933,24 @@ under the License.
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="contentId" from-field="parameters.contentId"/>
                 <entity-one entity-name="Content" value-field="content"/>
+                
+                <!-- SCIPIO: 2018: we can't accept a Content here that's not already related to the Party (or assoc was removed) -->
+                <if>
+                    <condition><not><if-empty field="content"/></not></condition>
+                    <then>
+                        <entity-and entity-name="PartyContent" list="partyContentList" filter-by-date="false">
+                            <field-map field-name="partyId"/>
+                            <field-map field-name="contentId"/>
+                        </entity-and>
+                        <if>
+                            <condition><if-empty field="partyContentList"/></condition>
+                            <then>
+                                <set field="content" type="Object" value=""/>
+                            </then>
+                        </if>
+                    </then>
+                </if>
+                
                 <!-- TODO: REVIEW: header & title stuff, this is due to CommonPartyDecorator lingering in humanres -->
                 <set field="skipProfileHeader" type="Boolean" value="true"/>
                 <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle}${groovy: context.partyId ? (': ' + context.partyId) : ''}"/>

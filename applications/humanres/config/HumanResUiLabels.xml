@@ -2050,7 +2050,7 @@
         <value xml:lang="zh_TW">查詢雇佣申請</value>
     </property>
     <property key="HumanResLookupPartyResume">
-        <value xml:lang="en">Lookup PartyResume</value>
+        <value xml:lang="en">Lookup Resume</value>
         <value xml:lang="fr">Consultation de CV</value>
         <value xml:lang="it">Ricerca riassunto soggetto</value>
         <value xml:lang="ja">取引先復帰を検索</value>

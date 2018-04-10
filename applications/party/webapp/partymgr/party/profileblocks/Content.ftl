@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-  <@section id="partyContent" title=uiLabelMap.PartyContent>
+  <@section id="partyContent" title=(pcntTitle!uiLabelMap.PartyContent)><#-- SCIPIO: allow title override -->
     
     <@render resource="component://party/widget/partymgr/ProfileScreens.xml#ContentList" />
       
@@ -27,8 +27,8 @@ under the License.
         <input type="hidden" name="statusId" value="CTNT_PUBLISHED"/>
         <input type="hidden" name="partyId" value="${partyId}" id="contentPartyId"/>
         <#-- SCIPIO: WARN: see ContentList.ftl for security implications of this parameter -->
-        <input type="hidden" name="cntListRemoveDonePage" value="${escapeVal(cntListRemoveDonePage!parameters.cntListRemoveDonePage!, 'html')}"/>
-        <input type="hidden" name="cntListEditInter" value="${(cntListEditInter!parameters.cntListEditInter!)?string}"/>
+        <input type="hidden" name="pcntListRemoveDonePage" value="${escapeVal(pcntListRemoveDonePage!parameters.pcntListRemoveDonePage!, 'html')}"/>
+        <input type="hidden" name="pcntListEditInter" value="${(pcntListEditInter!parameters.pcntListEditInter!)?string}"/>
 
         <@field type="file" label=uiLabelMap.PartyAttachFile name="uploadedFile" required=true class="+error" size=25 />
         

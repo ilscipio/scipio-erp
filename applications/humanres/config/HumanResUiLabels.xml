@@ -1858,6 +1858,7 @@
     </property>
     <property key="HumanResJobRequisition">
         <value xml:lang="en">Job Requisition</value>
+        <value xml:lang="de">Stellenausschreibungen</value>
         <value xml:lang="fr">Demande de poste</value>
         <value xml:lang="ja">職務辞令</value>
         <value xml:lang="pt_BR">Petição de emprego</value>

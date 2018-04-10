@@ -59,6 +59,7 @@ under the License.
                 <#else>
                   <#assign pcntListRemoveDonePage = rawString(pcntListRemoveDonePage)>
                 </#if>
+                <#-- SCIPIO: TODO: WARN: this only removes the association, not the content itself! -->
                 <form name="removePartyContent_${pContent_index}" method="post" action="<@ofbizUrl uri=("removePartyContent/"+pcntListRemoveDonePage) escapeAs='html'/>">
                   <input type="hidden" name="contentId" value="${pContent.contentId}" />
                   <input type="hidden" name="partyId" value="${pContent.partyId}" />

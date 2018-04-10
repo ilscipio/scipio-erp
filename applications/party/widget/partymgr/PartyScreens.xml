@@ -924,7 +924,8 @@ under the License.
         </section>
     </screen>
     -->
-    <!-- Party Content Screen -->
+    <!-- Party Content Screen 
+        SCIPIO: 2018: TODO: REVIEW: this screen does not honor filter-by-date logic on PartyContent -->
     <screen name="EditPartyContents">
         <section>
             <actions>

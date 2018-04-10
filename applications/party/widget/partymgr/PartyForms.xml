@@ -590,8 +590,8 @@ under the License.
                 <option key="Y" description="${uiLabelMap.CommonYes}"/>
             </drop-down>
         </field>
-        <field name="createAction" use-when="content==null" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
-        <field name="updateAction" use-when="content!=null" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="createAction" title="${uiLabelMap.CommonAdd}" use-when="content==null" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" use-when="content!=null" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListPartyContents" type="list" separate-columns="false"
@@ -622,6 +622,13 @@ under the License.
         <field name="dataResourceId" title="${uiLabelMap.FormFieldTitle_dataResourceName}" use-when="dataResourceId!=null">
             <display-entity entity-name="DataResource" description="${dataResourceName}"/>
         </field>
+        <field name="fromDate" title="${uiLabelMap.CommonDate}"><display type="date-time"/></field>
+        <!--<field name="thruDate"><display type="date-time"/></field> SCIPIO: TODO: REVIEW: EditPartyContents does not honor filter-by-date -->
+        <field name="viewAction" title=" " widget-style="${styles.link_nav} ${styles.action_view}">
+           <hyperlink also-hidden="false" description="${uiLabelMap.CommonView}" target="img/${contentName}">
+                <parameter param-name="imgId" from-field="dataResourceId"/>
+            </hyperlink>
+        </field>
         <field name="editAction" title=" " widget-style="${styles.link_nav} ${styles.action_update}">
            <hyperlink also-hidden="false" description="${uiLabelMap.CommonEdit}" target="EditPartyContents">
                 <parameter param-name="contentId"/>
@@ -629,9 +636,14 @@ under the License.
                 <parameter param-name="dataResourceId"/>
             </hyperlink>
         </field>
-        <field name="viewAction" title=" " widget-style="${styles.link_nav} ${styles.action_view}">
-           <hyperlink also-hidden="false" description="${uiLabelMap.CommonView}" target="img/${contentName}">
-                <parameter param-name="imgId" from-field="dataResourceId"/>
+        <!-- SCIPIO: TODO: WARN: this only removes the association, not the content itself! -->
+        <field name="deleteAction" title=" " widget-style="${styles.link_nav} ${styles.action_remove}">
+           <hyperlink also-hidden="false" description="${uiLabelMap.CommonRemove}" target="removePartyContent">
+                <parameter param-name="contentId"/>
+                <parameter param-name="partyId"/>
+                <parameter param-name="dataResourceId"/>
+                <parameter param-name="partyContentTypeId"/>
+                <parameter param-name="fromDate"/>
             </hyperlink>
         </field>
     </form>

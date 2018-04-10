@@ -59,11 +59,11 @@ under the License.
        jQuery('.img-src img').ajaxStart(function() {
             jQuery(this).attr('style', 'opacity:0.6;filter:alpha(opacity=40)');
        });
-       jQuery('.img-src img').load(function() {
+       jQuery('.img-src img').on('load', function() {
             jQuery(this).attr('style', 'opacity:1.0;filter:alpha(opacity=100)');
        });
     });
-    jQuery(window).load(function() {
+    jQuery(window).on('load', function() {
        var width = jQuery('.img-src img').width();
        var height = jQuery('.img-src img').height();
        jQuery('#ImageWatermarking_width').attr('value', width);

@@ -33,10 +33,11 @@ under the License.
         <@field type="file" label=uiLabelMap.PartyAttachFile name="uploadedFile" required=true class="+error" size=25 />
         
         <@field type="select" label=uiLabelMap.PartyContentType name="partyContentTypeId" required=true class="+error">
-          <option value="">${uiLabelMap.PartySelectPurpose}</option>
+          <#-- preselect "INTERNAL"
+          <option value="">${uiLabelMap.PartySelectPurpose}</option>-->
           <#list partyContentTypes as partyContentType>
-            <option value="${partyContentType.partyContentTypeId}">${partyContentType.get("description", locale)!(partyContentType.partyContentTypeId)}</option>
-          </#list> 
+            <option value="${partyContentType.partyContentTypeId}"<#if "INTERNAL"==rawString(partyContentType.partyContentTypeId)> selected="selected"</#if>>${partyContentType.get("description", locale)!(partyContentType.partyContentTypeId)}</option>
+          </#list>
         </@field>
 
         <@field type="select" label=uiLabelMap.PartyIsPublic name="isPublic">
@@ -44,11 +45,12 @@ under the License.
           <option value="Y">${uiLabelMap.CommonYes}</option>
         </@field>
        
+        <#-- SCIPIO: 2018-04-10: obscure, impossible to understand what this does here
         <@field type="select" label=uiLabelMap.PartySelectRole name="roleTypeId">
           <#list roles as role>
             <option value="${role.roleTypeId}" <#if role.roleTypeId == "_NA_">selected="selected"</#if>>${role.get("description", locale)!(role.roleTypeId)}</option>
           </#list>
-        </@field>
+        </@field>-->
    
         <#assign progressOptions = {
             "formSel" : "#uploadPartyContent",

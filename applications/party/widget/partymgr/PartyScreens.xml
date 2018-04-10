@@ -928,8 +928,8 @@ under the License.
     <screen name="EditPartyContents">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleListContent"/>
-                <set field="activeSubMenuItem" value="PartyContents"/>
+                <set field="titleProperty" from-field="titleProperty" default-value="PageTitleListContent"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="PartyContents"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="contentId" from-field="parameters.contentId"/>
                 <entity-one entity-name="Content" value-field="content"/>

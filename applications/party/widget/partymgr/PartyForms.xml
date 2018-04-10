@@ -565,7 +565,7 @@ under the License.
             </drop-down>
         </field>
         <field name="mimeTypeId" >
-            <drop-down allow-empty="false">
+            <drop-down allow-empty="true"><!-- SCIPIO: should allow empty (auto-determine) -->
                 <entity-options description="${description}" entity-name="MimeType"/>
             </drop-down>
         </field>

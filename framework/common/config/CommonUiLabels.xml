@@ -16509,4 +16509,8 @@
         <value xml:lang="en">Result</value>
         <value xml:lang="de">Ergebnis</value>
     </property>
+    <property key="CommonLeaveEmptyToAutoDetermine">
+        <value xml:lang="en">Leave empty to auto-determine</value>
+        <value xml:lang="de">Lassen Sie leer, um automatisch zu bestimmen</value>
+    </property>
 </resource>

@@ -60,7 +60,25 @@ under the License.
                 <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet><!-- SCIPIO: title="${uiLabelMap.HumanResNewEmployee}" -->
-                            <include-form name="NewEmployee" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                            <section>
+                                <actions><!-- SCIPIO -->
+                                    <!-- fields for setDependentDropdownValuesJs.ftl -->
+                                    <set field="dependentForm" value="NewEmployee"/>
+                                    <set field="paramKey" value="countryGeoId"/>
+                                    <set field="mainId" value="countryGeoId"/>
+                                    <set field="dependentId" value="stateProvinceGeoId"/>
+                                    <set field="requestName" value="getAssociatedStateList"/>
+                                    <set field="responseName" value="stateList"/>
+                                    <set field="dependentKeyName" value="geoId"/>
+                                    <set field="descName" value="geoName"/>
+                                    <set field="selectedDependentOption" value="_none_"/>
+                                    <!--<set field="focusFieldName" value="NewEmployee_USER_PARTY_ID"/>-->
+                                </actions>
+                                <widgets>
+                                    <platform-specific><html><html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/></html></platform-specific>
+                                    <include-form name="NewEmployee" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                                </widgets>
+                            </section>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

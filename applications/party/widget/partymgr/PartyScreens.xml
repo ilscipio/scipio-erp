@@ -793,7 +793,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PartyCreateNewProspect"/>
-                <set field="displayPassword" value="Y"/>
+                <set field="displayPassword" value="true" type="Boolean"/>
                 <set field="target" value="createProspect"/>
                 <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>
                 <set field="activeSubMenuItem" value="newprospect"/>
@@ -839,7 +839,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PartyCreateNewEmployee"/>
                 <set field="activeSubMenuItem" value="newemployee"/>
-                <set field="displayPassword" value="Y"/>
+                <set field="displayPassword" value="true" type="Boolean"/>
                 <set field="target" value="createEmployee"/>
                 <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>
             </actions>

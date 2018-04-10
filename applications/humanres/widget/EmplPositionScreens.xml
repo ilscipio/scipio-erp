@@ -207,7 +207,8 @@
             <widgets>
                 <decorator-screen name="CommonEmplPositionDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container style=" ${styles.grid_row}">
+                        <include-menu name="EmplPositionViewSubTarBar" location="component://humanres/widget/HumanresMenus.xml"/><!-- SCIPIO -->
+                        <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                 <screenlet><!-- SCIPIO: too redundant: title="${uiLabelMap.HumanResEmployeePosition} ${uiLabelMap.CommonInformation}" -->
                                     <include-form name="EmplPositionInfo" location="component://humanres/widget/forms/EmplPositionForms.xml"/>

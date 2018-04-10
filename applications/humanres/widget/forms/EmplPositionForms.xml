@@ -46,6 +46,11 @@ under the License.
         </field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" description="${description}"/></field>
         <field name="emplPositionTypeId"><display-entity entity-name="EmplPositionType" description="${description}"/></field>
+        <field name="applyAction" title=" " widget-style="${styles.link_nav} ${styles.action_add}"><!-- SCIPIO -->
+            <hyperlink also-hidden="false" description="${uiLabelMap.HumanResNewEmploymentApp}" target="EditEmploymentApp">
+                <parameter param-name="emplPositionId" from-field="emplPositionId"/>
+            </hyperlink>
+        </field>
     </form>
     <form name="ListEmplPositionsParty" extends="ListEmplPositions" list-name="ListEmplPositions">
         <actions>

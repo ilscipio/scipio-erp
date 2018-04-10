@@ -3421,9 +3421,9 @@
         <value xml:lang="fr">Positions</value>
     </property>
     <property key="HumanResEitherPositionOrRequisitionMustBeSpecified">
-        <value xml:lang="de">Entweder Position oder Jobanforderung angegeben werden muss (solange Job Anforderung an eine Position gebunden ist)</value>
-        <value xml:lang="en">Either position or job requisition must be specified (as long as job requisition is linked to a position)</value>
-        <value xml:lang="fr">Soit poste ou réquisition doit être spécifié (aussi longtemps que la réquisition est liée à une position)</value>
+        <value xml:lang="de">Es muss entweder eine Position oder eine Stellenanforderung angegeben werden (Stellenausschreibungen müssen bereits mit einer Position verknüpft sein).</value>
+        <value xml:lang="en">Either a Position or a Job Requisition must be specified (Job Requisition must already be linked to a Position).</value>
+        <value xml:lang="fr">Soit une demande de poste ou de travail doit être spécifiée (la demande de travail doit déjà être liée à une position).</value>
     </property>
     <property key="HumanResEmploymentApplication">
         <value xml:lang="de">Beschäftigung Bewerbung</value>

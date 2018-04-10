@@ -3395,6 +3395,21 @@
         <value xml:lang="de">Neue Bewerber</value>
         <value xml:lang="fr">Nouveaux candidats</value>
     </property>
+    <property key="HumanResEmployeesApplicants">
+        <value xml:lang="en">Employees/Applicants</value>
+        <value xml:lang="de">Mitarbeiter/Bewerber</value>
+        <value xml:lang="fr">Employés/candidats</value>
+    </property>
+    <property key="HumanResEmployeeApplicant">
+        <value xml:lang="en">Employee/Applicant</value>
+        <value xml:lang="de">Mitarbeiter/Bewerber</value>
+        <value xml:lang="fr">Employé/candidat</value>
+    </property>
+    <property key="HumanResNewEmployeeApplicant">
+        <value xml:lang="en">New Employee/Applicant</value>
+        <value xml:lang="de">Neue Mitarbeiter/Bewerber</value>
+        <value xml:lang="fr">Nouvel employé/candidat</value>
+    </property>
     <property key="HumanResCurrentOpenings">
         <value xml:lang="en">Current Openings</value>
         <value xml:lang="de">Aktuelle Stellenangebote</value>
@@ -3421,5 +3436,10 @@
         <value xml:lang="de">Mitarbeiterprofil</value>
         <value xml:lang="en">Employee Profile</value>
         <value xml:lang="fr">Profil de l'employé</value>
+    </property>
+    <property key="HumanResEmployeeApplicantProfile">
+        <value xml:lang="de">Mitarbeiter/Bewerberprofil</value>
+        <value xml:lang="en">Employee/Applicant Profile</value>
+        <value xml:lang="fr">Profil de l'employé/candidat</value>
     </property>
 </resource>

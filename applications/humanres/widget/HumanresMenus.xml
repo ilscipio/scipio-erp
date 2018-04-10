@@ -413,7 +413,20 @@
     </menu>
     
     <!-- SCIPIO: new -->
-    <menu name="EmploymentAppSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="EmploymentAppGeneralSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="EditEmploymentApp" title="${uiLabelMap.HumanResNewEmploymentApp}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <if-compare field="activeSubMenuItem" operator="not-equals" value="EditEmploymentApp"/>
+            </condition>
+            <link target="EditEmploymentApp"/>
+        </menu-item>
+        <menu-item name="NewEmployee" title="${uiLabelMap.HumanResNewEmployeeApplicant}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="NewEmployee"/>
+        </menu-item>
+    </menu>
+
+    <!-- SCIPIO: new -->
+    <menu name="EmploymentAppEditSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="EditEmploymentApp" title="${uiLabelMap.CommonEdit}">
             <condition>
                 <if-compare field="activeSubMenuItem" operator="not-equals" value="EditEmploymentApp"/>

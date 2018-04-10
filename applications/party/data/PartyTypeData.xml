@@ -206,6 +206,7 @@ under the License.
     <!-- second level role types -->
     <RoleType description="Account" hasTable="N" parentTypeId="SFA_ROLE" roleTypeId="ACCOUNT"/>
     <RoleType description="Addressee" hasTable="N" parentTypeId="COMMEVENT_ROLE" roleTypeId="ADDRESSEE"/>
+    <RoleType description="Applicant" hasTable="N" parentTypeId="PERSON_ROLE" roleTypeId="APPLICANT"/><!-- SCIPIO: 2018: for applicants trying to become employees -->
     <RoleType description="Association" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="ASSOCIATION"/>
     <RoleType description="Bill-From Vendor" hasTable="N" parentTypeId="VENDOR" roleTypeId="BILL_FROM_VENDOR"/>
     <RoleType description="Bill-To Customer" hasTable="N" parentTypeId="CUSTOMER" roleTypeId="BILL_TO_CUSTOMER"/>

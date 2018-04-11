@@ -68,7 +68,7 @@ under the License.
         <!-- SCIPIO: FIXME: there is a bug here with use-when, so show only the link for now
         <field name="applyingPartyId" title="${uiLabelMap.FormFieldTitle_applyingPartyId}" use-when="applyingPartyId==null"><lookup target-form-name="LookupPartyName"/></field> -->
         <field name="applyingPartyId" title="${uiLabelMap.FormFieldTitle_applyingPartyId}"><!-- SCIPIO: bug: use-when="applyingPartyId!=null" -->
-            <hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${applyingPartyId}" also-hidden="true" style="${styles.link_nav_info_id}">
+            <hyperlink target="EmployeeProfile" target-type="intra-app" description="${applyingPartyId}" also-hidden="true" style="${styles.link_nav_info_id}">
                 <parameter param-name="partyId" from-field="applyingPartyId"/>
             </hyperlink>
         </field>
@@ -128,9 +128,9 @@ under the License.
         <field name="approverPartyId"><hidden/></field>
         <field name="partyId"><hidden value="${referredByPartyId}" /></field>
         <field name="applicationId" tooltip="${uiLabelMap.CommonLeaveEmptyAutoValue}"><text/></field><!-- SCIPIO: this should auto-generated if absent: required-field="true" --><!-- SCIPIO: don't look this up, makes no sense: <lookup target-form-name="LookupEmploymentApp"/> -->
-        <field name="emplPositionId" tooltip="${uiLabelMap.HumanResEitherPositionOrRequisitionMustBeSpecified}"><lookup target-form-name="LookupEmplPosition"/></field>
+        <field name="emplPositionId" tooltip="${uiLabelMap.HumanResEitherPositionOrRequisitionMustBeSpecified}" title="${uiLabelMap.FormFieldTitle_emplPositionId} **"><lookup target-form-name="LookupEmplPosition"/></field>
         <!-- SCIPIO: you should be able to specify job req instead of position -->
-        <field name="jobRequisitionId" tooltip="${uiLabelMap.HumanResEitherPositionOrRequisitionMustBeSpecified}"><lookup target-form-name="LookupJobRequisition"/></field>
+        <field name="jobRequisitionId" tooltip="${uiLabelMap.HumanResEitherPositionOrRequisitionMustBeSpecified}" title="${uiLabelMap.FormFieldTitle_jobRequisitionId} **"><lookup target-form-name="LookupJobRequisition"/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}" required-field="true"><!-- SCIPIO: required to avoid errors -->
             <drop-down current-description=""><!-- SCIPIO: don't allow empty, to avoid confusion: allow-empty="true"  -->
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
@@ -165,9 +165,9 @@ under the License.
         <field name="approverPartyId"><hidden/></field>
         <field name="partyId"><hidden value="${referredByPartyId}" /></field>
         <field name="applicationId"><display/></field>
-        <field name="emplPositionId" tooltip="${uiLabelMap.HumanResEitherPositionOrRequisitionMustBeSpecified}"><lookup target-form-name="LookupEmplPosition"/></field>
+        <field name="emplPositionId" tooltip="${uiLabelMap.HumanResEitherPositionOrRequisitionMustBeSpecified}" title="${uiLabelMap.FormFieldTitle_emplPositionId} **"><lookup target-form-name="LookupEmplPosition"/></field>
         <!-- SCIPIO: you should be able to specify job req instead of position -->
-        <field name="jobRequisitionId" tooltip="${uiLabelMap.HumanResEitherPositionOrRequisitionMustBeSpecified}"><lookup target-form-name="LookupJobRequisition"/></field>
+        <field name="jobRequisitionId" tooltip="${uiLabelMap.HumanResEitherPositionOrRequisitionMustBeSpecified}" title="${uiLabelMap.FormFieldTitle_jobRequisitionId} **"><lookup target-form-name="LookupJobRequisition"/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}" required-field="true"><!-- SCIPIO: required to avoid errors -->
             <drop-down current-description=""><!-- SCIPIO: don't allow empty, to avoid confusion: allow-empty="true"  -->
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
@@ -179,15 +179,10 @@ under the License.
         <field name="applyingPartyId" required-field="true" use-when="employmentApp==null"><lookup target-form-name="LookupPartyName"/></field><!-- SCIPIO: required to avoid errors, somewhat nonsensical to leave empty -->
         <field name="applyingPartyId" required-field="true" use-when="employmentApp!=null"><!-- SCIPIO: link to party -->
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}" key-field-name="partyId" also-hidden="true">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${employmentApp.applyingPartyId}" link-style="${styles.link_nav_info_id}">
+                <sub-hyperlink target="EmployeeProfile" target-type="intra-app" description="${employmentApp.applyingPartyId}" link-style="${styles.link_nav_info_id}">
                     <parameter param-name="partyId" from-field="employmentApp.applyingPartyId"/>
                 </sub-hyperlink>
             </display-entity>
-        </field>
-        <field name="applyingPartyResume" title="${uiLabelMap.HumanResPartyResume}" use-when="employmentApp!=null" widget-style="${styles.link_nav} ${styles.action_view}">
-            <hyperlink target="/partymgr/control/EditPartyContents" target-type="inter-app" description="${uiLabelMap.HumanResLookupPartyResume}">
-                <parameter param-name="partyId" from-field="employmentApp.applyingPartyId"/>
-            </hyperlink>
         </field>
         <field name="referredByPartyId">
             <lookup target-form-name="LookupPartyName">
@@ -231,15 +226,10 @@ under the License.
         </field>
         <field name="applyingPartyId">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}" key-field-name="partyId">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${employmentApp.applyingPartyId}" link-style="${styles.link_nav_info_id}">
+                <sub-hyperlink target="EmployeeProfile" target-type="intra-app" description="${employmentApp.applyingPartyId}" link-style="${styles.link_nav_info_id}">
                     <parameter param-name="partyId" from-field="employmentApp.applyingPartyId"/>
                 </sub-hyperlink>
             </display-entity>
-        </field>
-        <field name="applyingPartyResume" title="${uiLabelMap.HumanResPartyResume}" widget-style="${styles.link_nav} ${styles.action_view}">
-            <hyperlink target="/partymgr/control/EditPartyContents" target-type="inter-app" description="${uiLabelMap.HumanResLookupPartyResume}">
-                <parameter param-name="partyId" from-field="employmentApp.applyingPartyId"/>
-            </hyperlink>
         </field>
         <field name="referredByPartyId">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}" key-field-name="partyId">

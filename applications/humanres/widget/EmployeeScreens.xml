@@ -25,7 +25,7 @@ under the License.
             <actions>
                 <property-map resource="HumanResUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-                <set field="title" value="${uiLabelMap.CommonFind} ${uiLabelMap.HumanResEmployee}"/>
+                <set field="title" value="${uiLabelMap.CommonFind} ${uiLabelMap.HumanResEmployeeApplicant}"/>
                 <set field="activeSubMenuItem" value="Employees"/>
             </actions>
             <widgets>
@@ -52,7 +52,7 @@ under the License.
     <screen name="NewEmployee">
         <section>
             <actions>
-                <set field="titleProperty" value="PartyCreateNewEmployee"/>
+                <set field="titleProperty" value="HumanResNewEmployeeApplicant"/><!-- PartyCreateNewEmployee -->
                 <set field="activeSubMenuItem" value="Employees"/>
                 <property-to-field field="defaultCountryGeoId" resource="general" property="country.geo.id.default" default="USA"/>
             </actions>
@@ -60,7 +60,25 @@ under the License.
                 <decorator-screen name="CommonHumanResAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet><!-- SCIPIO: title="${uiLabelMap.HumanResNewEmployee}" -->
-                            <include-form name="NewEmployee" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                            <section>
+                                <actions><!-- SCIPIO -->
+                                    <!-- fields for setDependentDropdownValuesJs.ftl -->
+                                    <set field="dependentForm" value="NewEmployee"/>
+                                    <set field="paramKey" value="countryGeoId"/>
+                                    <set field="mainId" value="countryGeoId"/>
+                                    <set field="dependentId" value="stateProvinceGeoId"/>
+                                    <set field="requestName" value="getAssociatedStateList"/>
+                                    <set field="responseName" value="stateList"/>
+                                    <set field="dependentKeyName" value="geoId"/>
+                                    <set field="descName" value="geoName"/>
+                                    <set field="selectedDependentOption" value="_none_"/>
+                                    <!--<set field="focusFieldName" value="NewEmployee_USER_PARTY_ID"/>-->
+                                </actions>
+                                <widgets>
+                                    <platform-specific><html><html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/></html></platform-specific>
+                                    <include-form name="NewEmployee" location="component://humanres/widget/forms/EmployeeForms.xml"/>
+                                </widgets>
+                            </section>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -76,9 +94,7 @@ under the License.
                 <set field="layoutSettings.javaScripts[]" value="/partymgr/static/PartyProfileContent.js" global="true"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/ViewProfile.groovy"/>
                 <script location="component://party/webapp/partymgr/WEB-INF/actions/party/GetUserLoginPrimaryEmail.groovy"/>
-                <set field="titleProperty" value="HumanResEmployeeProfile"/><!-- PageTitleViewPartyProfile -->
-                <set field="cntListRemoveDonePage" value="EmployeeProfile"/><!-- SCIPIO -->
-                <set field="cntListEditInter" type="Boolean" value="true"/><!-- SCIPIO -->
+                <set field="titleProperty" value="HumanResEmployeeApplicantProfile"/><!-- PageTitleViewPartyProfile -->
             </actions>
             <widgets>
                 <decorator-screen name="EmployeeDecorator" location="${parameters.mainDecoratorLocation}">
@@ -88,26 +104,7 @@ under the License.
                                 <not><if-empty field="party"/></not>
                             </condition>
                             <widgets>
-                                <section>
-                                    <condition>
-                                        <if-true field="showOld"/>
-                                    </condition>
-                                    <widgets>
-                                        <container style="button-bar button-style-2">
-                                            <link target="EmployeeProfile" text="${uiLabelMap.PartyHideOld}" style="${styles.link_run_sys} ${styles.action_hide}">
-                                                <parameter param-name="partyId" from-field="party.partyId"/>
-                                            </link>
-                                        </container>
-                                    </widgets>
-                                    <fail-widgets>
-                                        <container style="button-bar button-style-2">
-                                            <link target="EmployeeProfile" text="${uiLabelMap.PartyShowOld}" style="${styles.link_run_sys} ${styles.action_show}">
-                                                <parameter param-name="partyId" from-field="party.partyId"/>
-                                                <parameter param-name="SHOW_OLD" value="true"/>
-                                            </link>
-                                        </container>
-                                    </fail-widgets>
-                                </section>
+                                <include-menu name="EmployeeProfileSubTarBar" location="component://humanres/widget/HumanresMenus.xml"/><!-- SCIPIO -->
                                 <container style="profile-left">
                                     <include-screen name="Party" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                     <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/>
@@ -117,9 +114,19 @@ under the License.
                                 <container style="profile-right">
                                     <include-screen name="CurrentEmploymentData" location="component://humanres/widget/EmployeeScreens.xml"/>
                                     <include-screen name="UserLogin" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                    <include-screen name="Attributes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                    <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                    <section>
+                                        <actions>
+                                            <!-- SCIPIO: tweaks for Content list -->
+                                            <set field="pcntListRemoveDonePage" value="EmployeeProfile"/>
+                                            <set field="pcntListEditInter" type="Boolean" value="false"/><!-- false: we now override EditPartyContents, see PartyResumeScreens.xml -->
+                                            <set field="pcntTitle" value="${uiLabelMap.HumanResPartyContentAndResumes}"/>
+                                        </actions>
+                                        <widgets>
+                                            <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                        </widgets>
+                                    </section>
                                     <include-screen name="Notes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                    <include-screen name="Attributes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                 </container>
                             </widgets>
                             <fail-widgets>

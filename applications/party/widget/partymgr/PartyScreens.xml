@@ -793,7 +793,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PartyCreateNewProspect"/>
-                <set field="displayPassword" value="Y"/>
+                <set field="displayPassword" value="true" type="Boolean"/>
                 <set field="target" value="createProspect"/>
                 <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>
                 <set field="activeSubMenuItem" value="newprospect"/>
@@ -839,7 +839,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PartyCreateNewEmployee"/>
                 <set field="activeSubMenuItem" value="newemployee"/>
-                <set field="displayPassword" value="Y"/>
+                <set field="displayPassword" value="true" type="Boolean"/>
                 <set field="target" value="createEmployee"/>
                 <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>
             </actions>
@@ -924,18 +924,40 @@ under the License.
         </section>
     </screen>
     -->
-    <!-- Party Content Screen -->
+    <!-- Party Content Screen 
+        SCIPIO: 2018: TODO: REVIEW: this screen does not honor filter-by-date logic on PartyContent -->
     <screen name="EditPartyContents">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleListContent"/>
-                <set field="activeSubMenuItem" value="PartyContents"/>
+                <set field="titleProperty" from-field="titleProperty" default-value="PageTitleListContent"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="PartyContents"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="contentId" from-field="parameters.contentId"/>
                 <entity-one entity-name="Content" value-field="content"/>
+                
+                <!-- SCIPIO: 2018: we can't accept a Content here that's not already related to the Party (or assoc was removed) -->
+                <if>
+                    <condition><not><if-empty field="content"/></not></condition>
+                    <then>
+                        <entity-and entity-name="PartyContent" list="partyContentList" filter-by-date="false">
+                            <field-map field-name="partyId"/>
+                            <field-map field-name="contentId"/>
+                        </entity-and>
+                        <if>
+                            <condition><if-empty field="partyContentList"/></condition>
+                            <then>
+                                <set field="content" type="Object" value=""/>
+                            </then>
+                        </if>
+                    </then>
+                </if>
+                
+                <!-- TODO: REVIEW: header & title stuff, this is due to CommonPartyDecorator lingering in humanres -->
+                <set field="skipProfileHeader" type="Boolean" value="true"/>
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle}${groovy: context.partyId ? (': ' + context.partyId) : ''}"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyDecorator"  location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet><!-- title="${uiLabelMap.PageTitleListContent}"-->
                             <!-- links to same page

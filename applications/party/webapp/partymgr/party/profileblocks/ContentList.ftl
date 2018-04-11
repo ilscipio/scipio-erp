@@ -17,6 +17,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+  <#assign pcntListReadOnly = ((pcntListReadOnly!parameters.pcntListReadOnly!)?string) == "true"><#-- SCIPIO -->
+  <#assign pcntPartyContentTypeId = pcntPartyContentTypeId!parameters.pcntPartyContentTypeId!?string>
+  
   <@section id="partyContentList">
       <#if partyContent?has_content>
         <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
@@ -29,15 +32,19 @@ under the License.
             <#assign pcType = pContent.getRelatedOne("PartyContentType", false)>
             <@tr>
               <#-- SCIPIO: for inter-app linking 
-                  TODO: REVIEW: it might be sane to assume the default for cntListEditInter to be true instead of false... -->
-              <#assign cntListEditUri>EditPartyContents?contentId=${pContent.contentId}&amp;partyId=${pContent.partyId}&amp;partyContentTypeId=${pContent.partyContentTypeId}&amp;fromDate=${pContent.fromDate}</#assign>
-              <#if ((cntListEditInter!parameters.cntListEditInter!)?string) == "true">
-                <#assign cntListEditLink><@ofbizInterWebappUrl extLoginKey=true>/partymgr/control/${cntListEditUri}</@ofbizInterWebappUrl></#assign>
+                  TODO: REVIEW: it might be sane to assume the default for pcntListEditInter to be true instead of false... -->
+              <#assign pcntListEditUri>EditPartyContents?contentId=${pContent.contentId}&amp;partyId=${pContent.partyId}&amp;partyContentTypeId=${pContent.partyContentTypeId}&amp;fromDate=${pContent.fromDate}</#assign>
+              <#if ((pcntListEditInter!parameters.pcntListEditInter!)?string) == "true">
+                <#assign pcntListEditLink><@ofbizInterWebappUrl extLoginKey=true>/partymgr/control/${pcntListEditUri}</@ofbizInterWebappUrl></#assign>
               <#else>
-                <#assign cntListEditLink><@ofbizUrl>${cntListEditUri}</@ofbizUrl></#assign>
+                <#assign pcntListEditLink><@ofbizUrl>${pcntListEditUri}</@ofbizUrl></#assign>
               </#if>
-              <@td class="button-col"><a href="${cntListEditLink}">${content.contentId}</a></@td>
+              <@td class="button-col"><a href="${pcntListEditLink}">${content.contentId}</a></@td>
+              
+            <#if !pcntPartyContentTypeId?has_content>
               <@td>${(pcType.get("description", locale))!}</@td>
+            </#if>
+            
               <@td>${content.contentName!}</@td>
               <#-- take too much space -->
               <#--<@td>${(contentType.get("description",locale))!}</@td>-->
@@ -45,28 +52,31 @@ under the License.
               <@td>${(status.get("description",locale))!}</@td>
               <@td>${pContent.fromDate!}</@td>
               <@td class="button-col">
-                <#if (content.contentName?has_content)>
-                    <a href="<@ofbizUrl>img/${content.contentName}?imgId=${(content.dataResourceId)!}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.CommonView}</a>
-                </#if>
+                <a href="<@ofbizUrl>img<#if (content.contentName?has_content)>/${content.contentName}</#if>?imgId=${(content.dataResourceId)!}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.CommonView}</a>
+              
+              <#if !pcntListReadOnly>
                 <#-- SCIPIO: WARN: for security reasons, we can currently only allow a view switch override here, not a full request URI 
                     - see also ContentList.ftl -->
-                <#if !cntListRemoveDonePage??>
-                  <#assign cntListRemoveDonePage = rawString(parameters.cntListRemoveDonePage!)>
-                  <#if cntListRemoveDonePage?has_content>
-                    <#assign cntListRemoveDonePage = cntListRemoveDonePage?replace("[^a-zA-Z0-9_-]+","")>
+                <#if !pcntListRemoveDonePage??>
+                  <#assign pcntListRemoveDonePage = rawString(parameters.pcntListRemoveDonePage!)>
+                  <#if pcntListRemoveDonePage?has_content>
+                    <#assign pcntListRemoveDonePage = pcntListRemoveDonePage?replace("[^a-zA-Z0-9_-]+","")>
                   <#else>
-                    <#assign cntListRemoveDonePage = "viewprofile">
+                    <#assign pcntListRemoveDonePage = "viewprofile">
                   </#if>
                 <#else>
-                  <#assign cntListRemoveDonePage = rawString(cntListRemoveDonePage)>
+                  <#assign pcntListRemoveDonePage = rawString(pcntListRemoveDonePage)>
                 </#if>
-                <form name="removePartyContent_${pContent_index}" method="post" action="<@ofbizUrl uri=("removePartyContent/"+cntListRemoveDonePage) escapeAs='html'/>">
+                <#-- SCIPIO: TODO: WARN: this only removes the association, not the content itself! -->
+                <form name="removePartyContent_${pContent_index}" method="post" action="<@ofbizUrl uri=("removePartyContent/"+pcntListRemoveDonePage) escapeAs='html'/>">
                   <input type="hidden" name="contentId" value="${pContent.contentId}" />
                   <input type="hidden" name="partyId" value="${pContent.partyId}" />
                   <input type="hidden" name="partyContentTypeId" value="${pContent.partyContentTypeId}" />
                   <input type="hidden" name="fromDate" value="${pContent.fromDate}" />
                   <a href="javascript:document.removePartyContent_${pContent_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>
                 </form>
+              </#if>
+              
               </@td>
             </@tr>
           </#list>

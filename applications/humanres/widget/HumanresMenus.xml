@@ -448,11 +448,26 @@
                 <parameter param-name="applicationId" from-field="applicationId"/>
             </link>
         </menu-item>
-        <menu-item name="LookupPartyResume" title="${uiLabelMap.HumanResLookupPartyResume}">
-            <link target="/partymgr/control/EditPartyContents" url-mode="inter-app">
+        <!--<menu-item name="LookupPartyResume" title="${uiLabelMap.HumanResPartyContentAndResumes}">
+            <link target="EditPartyContents" url-mode="intra-app">
                 <parameter param-name="partyId" from-field="employmentApp.applyingPartyId"/>
             </link>
+        </menu-item>-->
+    </menu>
+    
+    <!-- SCIPIO: new -->
+    <menu name="ResumeListSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="EditResumes" title="${uiLabelMap.CommonManage}" widget-style="+${styles.action_nav} ${styles.action_update}">
+            <link target="EditPartyContents" url-mode="intra-app">
+                <parameter param-name="partyId" from-field="resumePartyId"/>
+            </link>
         </menu-item>
+        <!--<menu-item name="AddResume" title="${uiLabelMap.CommonAdd}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="EditPartyContents" url-mode="intra-app">
+                <parameter param-name="partyId" from-field="resumePartyId"/>
+                <parameter param-name="partyContentTypeId" value="RESUME"/>
+            </link>
+        </menu-item>-->
     </menu>
     
     <!-- SCIPIO: new -->

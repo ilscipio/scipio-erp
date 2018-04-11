@@ -140,6 +140,7 @@
                                             <include-menu name="EmploymentAppEditSubTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
                                             <include-form name="EditEmploymentApp" location="component://humanres/widget/forms/EmploymentAppForms.xml"/>
                                             <include-screen name="EditEmploymentAppInfoBox"/>
+                                            <include-screen name="EmploymentAppResumeContent"/>
                                         </screenlet>
                                     </decorator-section>
                                 </decorator-screen>
@@ -173,6 +174,7 @@
                 <set field="applicationId" from-field="parameters.applicationId"/>
                 <entity-one entity-name="EmploymentApp" value-field="employmentApp"/>
                 <set field="activeSubMenuItem" value="ViewEmploymentApp"/>
+                <set field="pcntNoAttach" type="Boolean" value="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonEmploymentAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -180,12 +182,57 @@
                         <screenlet navigation-menu-name="EmploymentAppEditSubTabBar">
                             <include-menu name="EmploymentAppEditSubTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
                             <include-form name="ViewEmploymentApp" location="component://humanres/widget/forms/EmploymentAppForms.xml"/>
+                            <include-screen name="EmploymentAppResumeContent"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
+    
+    <!-- SCIPIO: new -->
+    <screen name="EmploymentAppResumeContent">
+        <section>
+            <actions>
+                <set field="resumePartyId" from-field="resumePartyId" default-value="${employmentApp.applyingPartyId}"/>
+                <set field="partyId" from-field="resumePartyId"/>
+            
+                <set field="pcntTitle" value="${uiLabelMap.HumanResPartyResume}: ${partyId}"/>
+                <set field="pcntAttachTitle" value="${uiLabelMap.CommonUpload}"/>
+                <set field="pcntListRemoveDonePage" value="EditEmploymentApp"/>
+                <set field="pcntListEditInter" type="Boolean" value="false"/>
+                <set field="pcntCntListLoc" value="component://humanres/widget/EmploymentAppScreens.xml#EmploymentAppResumeList"/>
+                <!--<set field="pcntListReadOnly" from-field="pcntNoAttach" type="Boolean" default-value="false"/>-->
+                <!-- TODO: cannot implement Remove button from here at this time -->
+                <set field="pcntListReadOnly" type="Boolean" value="true"/>
+                <set field="pcntPartyContentTypeId" value="RESUME"/>
+            </actions>
+            <widgets>
+                <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EmploymentAppResumeList">
+        <section>
+            <actions>
+                <!--
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
+                -->
+                <entity-and entity-name="PartyContent" list="partyContent" filter-by-date="true">
+                    <field-map field-name="partyId" from-field="partyId"/>
+                    <field-map field-name="partyContentTypeId" value="RESUME"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <include-menu name="ResumeListSubTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                <platform-specific>
+                    <html><html-template location="component://party/webapp/partymgr/party/profileblocks/ContentList.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
     
     <screen name="ScipioNewApplications">
         <section>

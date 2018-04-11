@@ -184,11 +184,6 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="applyingPartyResume" title="${uiLabelMap.HumanResPartyResume}" use-when="employmentApp!=null" widget-style="${styles.link_nav} ${styles.action_view}">
-            <hyperlink target="/partymgr/control/EditPartyContents" target-type="inter-app" description="${uiLabelMap.HumanResLookupPartyResume}">
-                <parameter param-name="partyId" from-field="employmentApp.applyingPartyId"/>
-            </hyperlink>
-        </field>
         <field name="referredByPartyId">
             <lookup target-form-name="LookupPartyName">
                 <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${employmentApp.referredByPartyId}" link-style="${styles.link_nav_info_id}">
@@ -235,11 +230,6 @@ under the License.
                     <parameter param-name="partyId" from-field="employmentApp.applyingPartyId"/>
                 </sub-hyperlink>
             </display-entity>
-        </field>
-        <field name="applyingPartyResume" title="${uiLabelMap.HumanResPartyResume}" widget-style="${styles.link_nav} ${styles.action_view}">
-            <hyperlink target="/partymgr/control/EditPartyContents" target-type="inter-app" description="${uiLabelMap.HumanResLookupPartyResume}">
-                <parameter param-name="partyId" from-field="employmentApp.applyingPartyId"/>
-            </hyperlink>
         </field>
         <field name="referredByPartyId">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}" key-field-name="partyId">

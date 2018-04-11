@@ -625,8 +625,9 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonDate}"><display type="date-time"/></field>
         <!--<field name="thruDate"><display type="date-time"/></field> SCIPIO: TODO: REVIEW: EditPartyContents does not honor filter-by-date -->
         <field name="viewAction" title=" " widget-style="${styles.link_nav} ${styles.action_view}">
-           <hyperlink also-hidden="false" description="${uiLabelMap.CommonView}" target="img/${contentName}">
-                <parameter param-name="imgId" from-field="dataResourceId"/>
+            <!-- SCIPIO: NOTE: 2018-04-10: see ContentList.ftl for issues with target -->
+            <hyperlink also-hidden="false" description="${uiLabelMap.CommonView}" target="stream">
+                <parameter param-name="contentId" from-field="contentId"/>
             </hyperlink>
         </field>
         <field name="editAction" title=" " widget-style="${styles.link_nav} ${styles.action_update}">

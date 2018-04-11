@@ -52,8 +52,10 @@ under the License.
               <@td>${(status.get("description",locale))!}</@td>
               <@td>${pContent.fromDate!}</@td>
               <@td class="button-col">
-                <a href="<@ofbizUrl>img<#if (content.contentName?has_content)>/${content.contentName}</#if>?imgId=${(content.dataResourceId)!}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.CommonView}</a>
-              
+                <#-- SCIPIO: 2018-04-10: the img? request is old and has issues with permissions and denies admins
+                <a href="<@ofbizUrl>img<#if (content.contentName?has_content)>/${content.contentName}</#if>?imgId=${(content.dataResourceId)!}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.CommonView}</a>-->
+                <a href="<@ofbizUrl>stream?contentId=${(content.contentId)!}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.CommonView}</a>
+                
               <#if !pcntListReadOnly>
                 <#-- SCIPIO: WARN: for security reasons, we can currently only allow a view switch override here, not a full request URI 
                     - see also ContentList.ftl -->

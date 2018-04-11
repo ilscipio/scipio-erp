@@ -18,9 +18,10 @@ under the License.
 -->
   <@section id="partyContent" title=(pcntTitle!uiLabelMap.PartyContent)><#-- SCIPIO: allow title override -->
     
-    <@render resource="component://party/widget/partymgr/ProfileScreens.xml#ContentList" />
+    <@render resource=rawString(pcntCntListLoc!"component://party/widget/partymgr/ProfileScreens.xml#ContentList")/>
       
-    <@section title=uiLabelMap.PartyAttachContent id="partyAttachContent">
+  <#if (pcntNoAttach!false) != true>
+    <@section title=(pcntAttachTitle!uiLabelMap.PartyAttachContent) id="partyAttachContent">
       <form id="uploadPartyContent" method="post" enctype="multipart/form-data" action="<@ofbizUrl>uploadPartyContent</@ofbizUrl>">
         <input type="hidden" name="dataCategoryId" value="PERSONAL"/>
         <input type="hidden" name="contentTypeId" value="DOCUMENT"/>
@@ -29,16 +30,24 @@ under the License.
         <#-- SCIPIO: WARN: see ContentList.ftl for security implications of this parameter -->
         <input type="hidden" name="pcntListRemoveDonePage" value="${escapeVal(pcntListRemoveDonePage!parameters.pcntListRemoveDonePage!, 'html')}"/>
         <input type="hidden" name="pcntListEditInter" value="${(pcntListEditInter!parameters.pcntListEditInter!)?string}"/>
+        <input type="hidden" name="pcntListReadOnly" value="${(pcntListReadOnly!parameters.pcntListReadOnly!)?string}"/>
+        <input type="hidden" name="pcntPartyContentTypeId" value="${(pcntPartyContentTypeId!parameters.pcntPartyContentTypeId!)?string}"/>
 
         <@field type="file" label=uiLabelMap.PartyAttachFile name="uploadedFile" required=true class="+error" size=25 />
         
+        <#assign pcntDefPartyContentTypeId = rawString(pcntDefPartyContentTypeId!"INTERNAL")> 
+       
+      <#if pcntPartyContentTypeId?has_content>
+        <input type="hidden" name="partyContentTypeId" value="${pcntPartyContentTypeId}"/>
+      <#else>
         <@field type="select" label=uiLabelMap.PartyContentType name="partyContentTypeId" required=true class="+error">
           <#-- preselect "INTERNAL"
           <option value="">${uiLabelMap.PartySelectPurpose}</option>-->
           <#list partyContentTypes as partyContentType>
-            <option value="${partyContentType.partyContentTypeId}"<#if "INTERNAL"==rawString(partyContentType.partyContentTypeId)> selected="selected"</#if>>${partyContentType.get("description", locale)!(partyContentType.partyContentTypeId)}</option>
+            <option value="${partyContentType.partyContentTypeId}"<#if pcntDefPartyContentTypeId==rawString(partyContentType.partyContentTypeId)> selected="selected"</#if>>${partyContentType.get("description", locale)!(partyContentType.partyContentTypeId)}</option>
           </#list>
         </@field>
+      </#if>
 
         <@field type="select" label=uiLabelMap.PartyIsPublic name="isPublic">
           <option value="N">${uiLabelMap.CommonNo}</option>
@@ -76,5 +85,6 @@ under the License.
         </@field>
       </form>
     </@section>
+  </#if>
     
   </@section>

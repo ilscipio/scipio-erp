@@ -17,7 +17,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-  <#assign pcntListReadOnly = (pcntListReadOnly!?string) == "true"><#-- SCIPIO -->
+  <#assign pcntListReadOnly = ((pcntListReadOnly!parameters.pcntListReadOnly!)?string) == "true"><#-- SCIPIO -->
+  <#assign pcntPartyContentTypeId = pcntPartyContentTypeId!parameters.pcntPartyContentTypeId!?string>
+  
   <@section id="partyContentList">
       <#if partyContent?has_content>
         <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
@@ -38,7 +40,11 @@ under the License.
                 <#assign pcntListEditLink><@ofbizUrl>${pcntListEditUri}</@ofbizUrl></#assign>
               </#if>
               <@td class="button-col"><a href="${pcntListEditLink}">${content.contentId}</a></@td>
+              
+            <#if !pcntPartyContentTypeId?has_content>
               <@td>${(pcType.get("description", locale))!}</@td>
+            </#if>
+            
               <@td>${content.contentName!}</@td>
               <#-- take too much space -->
               <#--<@td>${(contentType.get("description",locale))!}</@td>-->

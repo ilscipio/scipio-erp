@@ -17,6 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+  <#assign pcntListReadOnly = (pcntListReadOnly!?string) == "true"><#-- SCIPIO -->
   <@section id="partyContentList">
       <#if partyContent?has_content>
         <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
@@ -46,7 +47,8 @@ under the License.
               <@td>${pContent.fromDate!}</@td>
               <@td class="button-col">
                 <a href="<@ofbizUrl>img<#if (content.contentName?has_content)>/${content.contentName}</#if>?imgId=${(content.dataResourceId)!}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.CommonView}</a>
-
+              
+              <#if !pcntListReadOnly>
                 <#-- SCIPIO: WARN: for security reasons, we can currently only allow a view switch override here, not a full request URI 
                     - see also ContentList.ftl -->
                 <#if !pcntListRemoveDonePage??>
@@ -67,6 +69,8 @@ under the License.
                   <input type="hidden" name="fromDate" value="${pContent.fromDate}" />
                   <a href="javascript:document.removePartyContent_${pContent_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>
                 </form>
+              </#if>
+              
               </@td>
             </@tr>
           </#list>

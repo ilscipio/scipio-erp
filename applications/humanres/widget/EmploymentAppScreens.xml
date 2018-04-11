@@ -174,7 +174,7 @@
                 <set field="applicationId" from-field="parameters.applicationId"/>
                 <entity-one entity-name="EmploymentApp" value-field="employmentApp"/>
                 <set field="activeSubMenuItem" value="ViewEmploymentApp"/>
-                <set field="pcntNoAttach" type="Boolean" value="true"/>
+                <set field="resumeReadOnly" type="Boolean" value="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonEmploymentAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -197,8 +197,10 @@
                 <set field="resumePartyId" from-field="resumePartyId" default-value="${employmentApp.applyingPartyId}"/>
                 <set field="partyId" from-field="resumePartyId"/>
             
+                <set field="resumeReadOnly" from-field="resumeReadOnly" type="Boolean" default-value="false"/>
                 <set field="pcntTitle" value="${uiLabelMap.HumanResPartyResume}: ${partyId}"/>
                 <set field="pcntAttachTitle" value="${uiLabelMap.CommonUpload}"/>
+                <set field="pcntNoAttach" from-field="resumeReadOnly" type="Boolean" default-value="false"/>
                 <set field="pcntListRemoveDonePage" value="EditEmploymentApp"/>
                 <set field="pcntListEditInter" type="Boolean" value="false"/>
                 <set field="pcntCntListLoc" value="component://humanres/widget/EmploymentAppScreens.xml#EmploymentAppResumeList"/>
@@ -225,7 +227,12 @@
                 </entity-and>
             </actions>
             <widgets>
-                <include-menu name="ResumeListSubTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                <section>
+                    <condition><not><if-true field="resumeReadOnly"/></not></condition>
+                    <widgets>
+                        <include-menu name="ResumeListSubTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                    </widgets>
+                </section>
                 <platform-specific>
                     <html><html-template location="component://party/webapp/partymgr/party/profileblocks/ContentList.ftl"/></html>
                 </platform-specific>

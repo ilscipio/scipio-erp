@@ -225,18 +225,18 @@
 
         <!-- catalina component (framework/catalina/ivy.xml) -->
         <!-- catalina: tomcat -->
-        <dependency org="org.apache.tomcat" name="tomcat-api" rev="8.5.29" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-catalina" rev="8.5.29" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-catalina-ha" rev="8.5.29" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-coyote" rev="8.5.29" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-jasper" rev="8.5.29" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-jni" rev="8.5.29" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-tribes" rev="8.5.29" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-util" rev="8.5.29" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-util-scan" rev="8.5.29" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-api" rev="8.5.30" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-catalina" rev="8.5.30" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-catalina-ha" rev="8.5.30" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-coyote" rev="8.5.30" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-jasper" rev="8.5.30" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-jni" rev="8.5.30" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-tribes" rev="8.5.30" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-util" rev="8.5.30" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-util-scan" rev="8.5.30" conf="base,sources"/>
         <!-- gone since 8.5.3+?
-        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli" rev="8.5.29" conf="base,sources"/>
-        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli-adapters" rev="8.5.29" conf="base,sources"/>-->
+        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli" rev="8.5.30" conf="base,sources"/>
+        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli-adapters" rev="8.5.30" conf="base,sources"/>-->
         <!-- let the jasper compile dep give us the version it wants (NOTE: its version numbers are unrelated to org.eclipse.jdt.core.compiler! very confusing!)
         <dependency org="org.eclipse.jdt" name="ecj" rev="xxx" conf="base,sources"/>-->
 
@@ -249,10 +249,10 @@
         <dependency org="javax.servlet.jsp" name="javax.servlet.jsp-api" rev="2.3.0" conf="base,j2eespecs,sources"/>
         <dependency org="javax.el" name="javax.el-api" rev="3.0.0" conf="base,j2eespecs,sources"/>
         <dependency org="javax.annotation" name="javax.annotation-api" rev="3.0.0" conf="base,j2eespecs,sources"/>-->
-        <dependency org="org.apache.tomcat" name="tomcat-servlet-api" rev="8.5.29" conf="base,j2eespecs,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-jsp-api" rev="8.5.29" conf="base,j2eespecs,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-el-api" rev="8.5.29" conf="base,j2eespecs,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-annotations-api" rev="8.5.29" conf="base,j2eespecs,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-servlet-api" rev="8.5.30" conf="base,j2eespecs,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-jsp-api" rev="8.5.30" conf="base,j2eespecs,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-el-api" rev="8.5.30" conf="base,j2eespecs,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-annotations-api" rev="8.5.30" conf="base,j2eespecs,sources"/>
 
         <!-- entity component (framework/entity/ivy.xml) -->
         <dependency org="org.apache.commons" name="commons-dbcp2" rev="2.2.0" conf="base,sources"/>

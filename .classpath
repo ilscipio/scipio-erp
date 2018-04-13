@@ -95,15 +95,15 @@
     <classpathentry kind="lib" path="framework/base/lib/thumbnailator-0.4.8.jar" sourcepath="framework/base/libsrc/thumbnailator-0.4.8-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/tika-core-1.17.jar" sourcepath="framework/base/libsrc/tika-core-1.17-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/tika-parsers-1.17.jar" sourcepath="framework/base/libsrc/tika-parsers-1.17-sources.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/tomcat-api-8.5.29.jar" sourcepath="framework/base/libsrc/tomcat-api-8.5.29-sources.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/tomcat-catalina-8.5.29.jar" sourcepath="framework/base/libsrc/tomcat-catalina-8.5.29-sources.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/tomcat-catalina-ha-8.5.29.jar" sourcepath="framework/base/libsrc/tomcat-catalina-ha-8.5.29-sources.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/tomcat-coyote-8.5.29.jar" sourcepath="framework/base/libsrc/tomcat-coyote-8.5.29-sources.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/tomcat-jasper-8.5.29.jar" sourcepath="framework/base/libsrc/tomcat-jasper-8.5.29-sources.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/tomcat-jni-8.5.29.jar" sourcepath="framework/base/libsrc/tomcat-jni-8.5.29-sources.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/tomcat-tribes-8.5.29.jar" sourcepath="framework/base/libsrc/tomcat-tribes-8.5.29-sources.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/tomcat-util-8.5.29.jar" sourcepath="framework/base/libsrc/tomcat-util-8.5.29-sources.jar"/>
-    <classpathentry kind="lib" path="framework/base/lib/tomcat-util-scan-8.5.29.jar" sourcepath="framework/base/libsrc/tomcat-util-scan-8.5.29-sources.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/tomcat-api-8.5.30.jar" sourcepath="framework/base/libsrc/tomcat-api-8.5.30-sources.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/tomcat-catalina-8.5.30.jar" sourcepath="framework/base/libsrc/tomcat-catalina-8.5.30-sources.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/tomcat-catalina-ha-8.5.30.jar" sourcepath="framework/base/libsrc/tomcat-catalina-ha-8.5.30-sources.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/tomcat-coyote-8.5.30.jar" sourcepath="framework/base/libsrc/tomcat-coyote-8.5.30-sources.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/tomcat-jasper-8.5.30.jar" sourcepath="framework/base/libsrc/tomcat-jasper-8.5.30-sources.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/tomcat-jni-8.5.30.jar" sourcepath="framework/base/libsrc/tomcat-jni-8.5.30-sources.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/tomcat-tribes-8.5.30.jar" sourcepath="framework/base/libsrc/tomcat-tribes-8.5.30-sources.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/tomcat-util-8.5.30.jar" sourcepath="framework/base/libsrc/tomcat-util-8.5.30-sources.jar"/>
+    <classpathentry kind="lib" path="framework/base/lib/tomcat-util-scan-8.5.30.jar" sourcepath="framework/base/libsrc/tomcat-util-scan-8.5.30-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/urlrewritefilter-4.0.4.jar" sourcepath="framework/base/libsrc/urlrewritefilter-4.0.4-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/watermarker-0.0.4.jar" sourcepath="framework/base/libsrc/watermarker-0.0.4-sources.jar"/>
     <classpathentry kind="lib" path="framework/base/lib/woden-core-1.0M10.jar" sourcepath="framework/base/libsrc/woden-core-1.0M10-sources.jar"/>

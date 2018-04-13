@@ -118,12 +118,16 @@ under the License.
     <target name="do-lib-update" description="Downloads all jars (base component implementation)">
         <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="${lib.resolve.build.confs}">
             <firstmatchmapper>
-                <!-- Tomcat-provided -->
+                <!-- Official Servlet API - 2018-04-13: move the servlet API jars to j2eespecs-ref -->
+                <regexpmapper from="^(.*/)?(javax\.(servlet-api|servlet\.jsp-api|el-api|annotation-api)-[^/]+\.jar)$" to="\1j2eespecs-ref/\2" handledirsep="true"/>
+                
+                <!-- Tomcat-provided Servlet API - 2018-04-13: no longer need to do this; we have two different sets of JARs
                 <regexpmapper from="^(.*/)?tomcat-servlet-api-([^/-]+)\.jar$" to="\1javax.servlet-api-3.1.0.jar" handledirsep="true"/>
                 <regexpmapper from="^(.*/)?tomcat-jsp-api-([^/-]+)\.jar$" to="\1javax.servlet.jsp-api-2.3.0.jar" handledirsep="true"/>
                 <regexpmapper from="^(.*/)?tomcat-el-api-([^/-]+)\.jar$" to="\1javax.el-api-3.0.0.jar" handledirsep="true"/>
-                <!-- FIXME?: annotations official version is unclear -->
+                <!- - FIXME?: annotations official version is unclear - ->
                 <regexpmapper from="^(.*/)?tomcat-annotations-api-([^/-]+)\.jar$" to="\1javax.annotation-api-3.0.0.jar" handledirsep="true"/>
+                -->
                 <identitymapper/>
             </firstmatchmapper>
         </ivy:retrieve>
@@ -132,12 +136,15 @@ under the License.
             <then>
                 <ivy:retrieve pattern="libsrc/${lib.update.filename.pattern.src.ivy}" conf="${lib.resolve.src.confs}">
                     <firstmatchmapper>
-                        <!-- Tomcat-provided -->
+                        <!-- Official Servlet API - 2018-04-13: move the servlet API jars to j2eespecs-ref -->
+                        <regexpmapper from="^(.*/)?(javax\.(servlet-api|servlet\.jsp-api|el-api|annotation-api)-[^/]+\.jar)$" to="\1j2eespecs-ref/\2" handledirsep="true"/>
+
+                        <!-- Tomcat-provided Servlet API - 2018-04-13: no longer need to do this; we have two different sets of JARs
                         <regexpmapper from="^(.*/)?tomcat-servlet-api-([^/-]+)-sources\.jar$" to="\1javax.servlet-api-3.1.0-sources.jar" handledirsep="true"/>
                         <regexpmapper from="^(.*/)?tomcat-jsp-api-([^/-]+)-sources\.jar$" to="\1javax.servlet.jsp-api-2.3.0-sources.jar" handledirsep="true"/>
                         <regexpmapper from="^(.*/)?tomcat-el-api-([^/-]+)-sources\.jar$" to="\1javax.el-api-3.0.0-sources.jar" handledirsep="true"/>
-                        <!-- FIXME?: annotations official version is unclear -->
-                        <regexpmapper from="^(.*/)?tomcat-annotations-api-([^/-]+)-sources\.jar$" to="\1javax.annotation-api-3.0.0-sources.jar" handledirsep="true"/>
+                        <!- - FIXME?: annotations official version is unclear - ->
+                        <regexpmapper from="^(.*/)?tomcat-annotations-api-([^/-]+)-sources\.jar$" to="\1javax.annotation-api-3.0.0-sources.jar" handledirsep="true"/>-->
                         <identitymapper/>
                     </firstmatchmapper>
                 </ivy:retrieve>

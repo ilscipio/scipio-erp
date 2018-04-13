@@ -982,7 +982,8 @@ under the License.
                                 <set field="progressOptions" value="{}" />
                             </actions>
                             <widgets>
-                                <screenlet title="${uiLabelMap.PageTitleAddPartyContent}">
+                                <screenlet title="${groovy: context.content ? uiLabelMap.PageTitleEditPartyContent : uiLabelMap.PageTitleAddPartyContent}" navigation-menu-name="PartyContentAddEditSubTabBar">
+                                    <include-menu name="PartyContentAddEditSubTabBar" location="component://party/widget/partymgr/PartyMenus.xml"/><!-- SCIPIO: new -->
                                     <include-form name="AddPartyContent" location="component://party/widget/partymgr/PartyForms.xml"/>
                                 </screenlet>
                             </widgets>

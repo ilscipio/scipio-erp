@@ -16,22 +16,24 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-  <@section id="partyContent" title=(pcntTitle!uiLabelMap.PartyContent)><#-- SCIPIO: allow title override -->
+  <@section id="partyContent" title=(pcntTitle!uiLabelMap.PartyContent) menuContent=(pcntMenuCnt!"")><#-- SCIPIO: allow title override -->
     
-    <@render resource=rawString(pcntCntListLoc!"component://party/widget/partymgr/ProfileScreens.xml#ContentList")/>
+    <@render resource=(pcntCntListLoc!"component://party/widget/partymgr/ProfileScreens.xml#ContentList")/>
       
   <#if (pcntNoAttach!false) != true>
-    <@section title=(pcntAttachTitle!uiLabelMap.PartyAttachContent) id="partyAttachContent">
-      <form id="uploadPartyContent" method="post" enctype="multipart/form-data" action="<@ofbizUrl>uploadPartyContent</@ofbizUrl>">
+    <@section title=(pcntAttachTitle!uiLabelMap.PartyAttachContent) id="partyAttachContent" menuContent=(pcntAttachMenuCnt!"")>
+      <form id="uploadPartyContent" method="post" enctype="multipart/form-data" action="<@ofbizUrl uri=(pcntUploadUri!"uploadPartyContent") escapeAs='html'/>">
         <input type="hidden" name="dataCategoryId" value="PERSONAL"/>
         <input type="hidden" name="contentTypeId" value="DOCUMENT"/>
         <input type="hidden" name="statusId" value="CTNT_PUBLISHED"/>
         <input type="hidden" name="partyId" value="${partyId}" id="contentPartyId"/>
-        <#-- SCIPIO: WARN: see ContentList.ftl for security implications of this parameter -->
-        <input type="hidden" name="pcntListRemoveDonePage" value="${escapeVal(pcntListRemoveDonePage!parameters.pcntListRemoveDonePage!, 'html')}"/>
-        <input type="hidden" name="pcntListEditInter" value="${(pcntListEditInter!parameters.pcntListEditInter!)?string}"/>
-        <input type="hidden" name="pcntListReadOnly" value="${(pcntListReadOnly!parameters.pcntListReadOnly!)?string}"/>
-        <input type="hidden" name="pcntPartyContentTypeId" value="${(pcntPartyContentTypeId!parameters.pcntPartyContentTypeId!)?string}"/>
+        <#-- SCIPIO: extra params -->
+        <#if pcntExtraParams?has_content>
+          <#assign pcntExtraParams = toSimpleMap(pcntExtraParams)>
+          <#list pcntExtraParams?keys as paramName>
+            <input type="hidden" name="${paramName}" value="${escapeVal(pcntExtraParams[rawString(paramName)]!, 'html')}"/>
+          </#list>
+        </#if>
 
         <@field type="file" label=uiLabelMap.PartyAttachFile name="uploadedFile" required=true class="+error" size=25 />
         
@@ -49,10 +51,14 @@ under the License.
         </@field>
       </#if>
 
+      <#if (pcntAllowPublic!true) == true>
         <@field type="select" label=uiLabelMap.PartyIsPublic name="isPublic">
           <option value="N">${uiLabelMap.CommonNo}</option>
           <option value="Y">${uiLabelMap.CommonYes}</option>
         </@field>
+      <#else>
+        <input type="hidden" name="isPublic" value="N"/>
+      </#if>
        
         <#-- SCIPIO: 2018-04-10: obscure, impossible to understand what this does here
         <@field type="select" label=uiLabelMap.PartySelectRole name="roleTypeId">

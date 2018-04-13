@@ -114,17 +114,7 @@ under the License.
                                 <container style="profile-right">
                                     <include-screen name="CurrentEmploymentData" location="component://humanres/widget/EmployeeScreens.xml"/>
                                     <include-screen name="UserLogin" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                    <section>
-                                        <actions>
-                                            <!-- SCIPIO: tweaks for Content list -->
-                                            <set field="pcntListRemoveDonePage" value="EmployeeProfile"/>
-                                            <set field="pcntListEditInter" type="Boolean" value="false"/><!-- false: we now override EditPartyContents, see PartyResumeScreens.xml -->
-                                            <set field="pcntTitle" value="${uiLabelMap.HumanResPartyContentAndResumes}"/>
-                                        </actions>
-                                        <widgets>
-                                            <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                        </widgets>
-                                    </section>
+                                    <include-screen name="EmployeeContent"/>
                                     <include-screen name="Notes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                     <include-screen name="Attributes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
                                 </container>
@@ -351,4 +341,45 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+    <!-- SCIPIO: 2018: takes place of the formal PartyResume entity handling screens above and sets menu.
+        TODO: REVIEW: this is not 100% correct in meaning, should not really override EditPartyContents to this in controller... -->
+    <screen name="EditPartyContents">
+        <section>
+            <actions>
+                <set field="titleProperty" value="HumanResPartyContentAndResumes"/>
+                <set field="activeSubMenu" value="EmployeeProfile"/>
+                <set field="activeSubMenuItem" value="EditEmployeeContent"/>   
+            </actions>
+            <widgets>
+                <include-screen name="EditPartyContents" location="component://party/widget/partymgr/PartyScreens.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: 2018: Override for party Content widget from viewprofile -->
+    <screen name="EmployeeContent">
+        <section>
+            <actions>
+                <set field="pcntTitle" from-field="pcntTitle" default-value="${uiLabelMap.HumanResPartyContentAndResumes}"/>
+                <set field="pcntCntListLoc" from-field="pcntCntListLoc" default-value="component://humanres/widget/EmployeeScreens.xml#EmployeeContentList"/><!-- see below -->
+                <set field="pcntUploadUri" value="uploadEmployeeContent"/><!-- this loads EmployeeContentList below -->
+            </actions>
+            <widgets>
+                <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    <!-- SCIPIO: 2018: Override for party Content List widget from viewprofile -->
+    <screen name="EmployeeContentList">
+        <section>
+            <actions>
+                <set field="pcntListRemoveDonePage" from-field="pcntListRemoveDonePage" default-value="EmployeeProfile"/>
+            </actions>
+            <widgets>
+                <include-screen name="ContentList" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    
 </screens>

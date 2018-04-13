@@ -198,44 +198,67 @@
                 <set field="partyId" from-field="resumePartyId"/>
             
                 <set field="resumeReadOnly" from-field="resumeReadOnly" type="Boolean" default-value="false"/>
+                <set field="pcntExtraParams" type="Object" value=""/>
+                <set field="pcntExtraParams.resumeReadOnly" from-field="resumeReadOnly"/>
+                <set field="pcntExtraParams.applicationId" from-field="applicationId"/>
                 <set field="pcntTitle" value="${uiLabelMap.HumanResPartyResume}: ${partyId}"/>
                 <set field="pcntAttachTitle" value="${uiLabelMap.CommonUpload}"/>
                 <set field="pcntNoAttach" from-field="resumeReadOnly" type="Boolean" default-value="false"/>
-                <set field="pcntListRemoveDonePage" value="EditEmploymentApp"/>
-                <set field="pcntListEditInter" type="Boolean" value="false"/>
+                <set field="pcntUploadUri" value="uploadEmplAppResume"/><!-- this loads EmploymentAppResumeList below -->
                 <set field="pcntCntListLoc" value="component://humanres/widget/EmploymentAppScreens.xml#EmploymentAppResumeList"/>
-                <!--<set field="pcntListReadOnly" from-field="pcntNoAttach" type="Boolean" default-value="false"/>-->
-                <!-- TODO: cannot implement Remove button from here at this time -->
-                <set field="pcntListReadOnly" type="Boolean" value="true"/>
                 <set field="pcntPartyContentTypeId" value="RESUME"/>
+                <set field="pcntAllowPublic" type="Boolean" value="false"/>
             </actions>
             <widgets>
                 <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
             </widgets>
         </section>
     </screen>
+    <!-- SCIPIO: Duplicated from component://party/widget/partymgr/ProfileScreens.xml#ContentList -->
     <screen name="EmploymentAppResumeList">
         <section>
             <actions>
-                <!--
+                <set field="resumeReadOnly" from-field="resumeReadOnly" type="Boolean" default-value="${groovy: parameters.resumeReadOnly ?: 'true'}"/>
+                <set field="pcntListReadOnly" from-field="resumeReadOnly" type="Boolean" default-value="false"/>
+                <set field="applicationId" from-field="applicationId" default-value="${parameters.applicationId}"/>
+                <set field="pcntListRemoveDonePage" from-field="pcntListRemoveDonePage" default-value="EditEmploymentApp"/>
+                <set field="pcntListRemoveExtraParams" type="Object" value=""/>
+                <set field="pcntListRemoveExtraParams.applicationId" from-field="applicationId"/>
+                <set field="pcntListShowStatus" type="Boolean" value="false"/>
+                <set field="pcntPartyContentTypeId" value="RESUME"/>
+
+                <!-- modified from component://party/widget/partymgr/ProfileScreens.xml#ContentList -->
+                <set field="partyId" from-field="partyId" default-value="${groovy: (parameters.partyId ?: context.userLogin?.partyId)}"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
-                -->
-                <entity-and entity-name="PartyContent" list="partyContent" filter-by-date="true">
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/><!-- SCIPIO: for PartyNoContent -->
+                <entity-and entity-name="PartyContent" list="partyContent">
                     <field-map field-name="partyId" from-field="partyId"/>
                     <field-map field-name="partyContentTypeId" value="RESUME"/>
                 </entity-and>
             </actions>
             <widgets>
+                <!-- SCIPIO: this widget is invoked through controller for ajax, so perm check needed -->
                 <section>
-                    <condition><not><if-true field="resumeReadOnly"/></not></condition>
+                    <condition>
+                        <if-service-permission service-name="partyIdPermissionCheck" main-action="VIEW"/>
+                    </condition>
                     <widgets>
-                        <include-menu name="ResumeListSubTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <section>
+                            <condition><not><if-true field="resumeReadOnly"/></not></condition>
+                            <widgets>
+                                <!-- FIXME: should use pcntMenuCnt for this somehow in above widget... wrong widget... -->
+                                <include-menu name="ResumeListSubTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                            </widgets>
+                        </section>
+                        <platform-specific>
+                            <html><html-template location="component://party/webapp/partymgr/party/profileblocks/ContentList.ftl"/></html>
+                        </platform-specific>
                     </widgets>
+                    <fail-widgets>
+                        <label style="common-msg-error-perm">${uiLabelMap.CommonPermissionError}</label>
+                    </fail-widgets>
                 </section>
-                <platform-specific>
-                    <html><html-template location="component://party/webapp/partymgr/party/profileblocks/ContentList.ftl"/></html>
-                </platform-specific>
             </widgets>
         </section>
     </screen>

@@ -434,16 +434,28 @@
                 <set field="partyId" from-field="parameters.partyId" default-value="${userLogin.partyId}"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/><!-- SCIPIO: for PartyNoContent -->
                 <entity-and entity-name="PartyContent" list="partyContent">
                     <field-map field-name="partyId" from-field="partyId"/>
                 </entity-and>
             </actions>
             <widgets>
-                <platform-specific>
-                    <html>
-                        <html-template location="component://party/webapp/partymgr/party/profileblocks/ContentList.ftl"/>
-                    </html>
-                </platform-specific>
+                <!-- SCIPIO: this widget is invoked through controller for ajax, so perm check needed -->
+                <section>
+                    <condition>
+                        <if-service-permission service-name="partyIdPermissionCheck" main-action="VIEW"/>
+                    </condition>
+                    <widgets>
+                        <platform-specific>
+                            <html>
+                                <html-template location="component://party/webapp/partymgr/party/profileblocks/ContentList.ftl"/>
+                            </html>
+                        </platform-specific>
+                    </widgets>
+                    <fail-widgets>
+                        <label style="common-msg-error-perm">${uiLabelMap.CommonPermissionError}</label>
+                    </fail-widgets>
+                </section>
             </widgets>
         </section>
     </screen>

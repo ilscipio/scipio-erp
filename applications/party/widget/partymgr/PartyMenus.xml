@@ -881,4 +881,14 @@
     <menu name="PartyClassificationSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="PartyClassificationTabBar" recursive="includes-only" />
     </menu>
+    
+    <!-- SCIPIO: 2018: new -->
+    <menu name="PartyContentAddEditSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="NewPartyContent" title="${uiLabelMap.CommonNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition><not><if-empty field="content"/></not></condition>
+            <link target="EditPartyContents">
+                <parameter param-name="partyId"/>
+            </link>
+        </menu-item>
+    </menu>
 </menus>

@@ -248,6 +248,18 @@ under the License.
         <event type="service" invoke="deleteEmploymentApp"/>
         <response name="success" type="view" value="FindEmploymentApps"/>
     </request-map>
+    <request-map uri="uploadEmployeeContent"><!-- SCIPIO: new 2018-04: variant of uploadPartyContent request-map -->
+        <security auth="true" https="true"/>
+        <event type="service" invoke="uploadPartyContentFile"/>
+        <response name="success" type="view" value="employeeContentList"/>
+        <response name="error" type="view" value="EventMessages"/>
+    </request-map>
+    <request-map uri="uploadEmplAppResume"><!-- SCIPIO: new 2018-04: variant of uploadPartyContent request-map -->
+        <security auth="true" https="true"/>
+        <event type="service" invoke="uploadPartyContentFile"/>
+        <response name="success" type="view" value="emplAppResumeList"/>
+        <response name="error" type="view" value="EventMessages"/>
+    </request-map>
     <request-map uri="ListPayHistories">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ListPayHistories"/>
@@ -1264,7 +1276,9 @@ under the License.
     <!-- ==================PayRoll History View Map===================== -->
     <view-map name="PayrollHistory" type="screen" page="component://humanres/widget/EmployeeScreens.xml#PayrollHistory"/>
     
-    <!-- ==================SCIPIO: Party screen overrides===================== -->
-    <view-map name="EditPartyContents" type="screen" page="component://humanres/widget/PartyResumeScreens.xml#EditPartyContents"/>
-    
+    <!-- ==================SCIPIO: new and overrides===================== -->
+    <view-map name="EditPartyContents" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EditPartyContents"/>
+    <view-map name="employeeContentList" type="screen" page="component://humanres/widget/EmployeeScreens.xml#EmployeeContentList"/>
+    <view-map name="emplAppResumeList" type="screen" page="component://humanres/widget/EmploymentAppScreens.xml#EmploymentAppResumeList"/>
+
 </site-conf>

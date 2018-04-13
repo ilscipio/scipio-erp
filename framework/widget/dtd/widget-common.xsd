@@ -569,7 +569,17 @@ under the License.
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="select-field" />
             </xs:sequence>
             <xs:attribute name="entity-name" type="xs:string" use="required" />
-            <xs:attribute name="value-field" type="xs:string" use="required" />
+            <xs:attribute name="value-field" type="xs:string"><!-- SCIPIO: 2018-04-14: was never required: use="required" -->
+                <xs:annotation>
+                    <xs:documentation>
+                        Name of a context field to store the resulting entity value;
+                        if omitted, the entity's fields are dumped into the current context.
+                        
+                        SCIPIO: NOTE: This attribute was marked as required in stock ofbiz,
+                        but it always worked fine without it and behaved as described here.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attribute name="use-cache" default="false">
                 <xs:simpleType>
                     <xs:restriction base="xs:token">

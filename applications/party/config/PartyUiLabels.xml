@@ -13221,4 +13221,10 @@
         <value xml:lang="es">La información de contacto especificada no pertenece a este usuario o ha caducado. Intenta volver y volver a cargar la página.</value>
         <value xml:lang="fr">Les informations de contact spécifiées n'appartiennent pas à cet utilisateur ou ont expiré. Essayez de revenir en arrière et de recharger la page.</value>
     </property>
+    <property key="PageTitleEditPartyContent">
+        <value xml:lang="de">Nutzer Inhalt bearbeiten</value>
+        <value xml:lang="en">Edit User Content</value>
+        <value xml:lang="es">Editar contenido de participante</value>
+        <value xml:lang="fr">Modifier le contenu de l'utilisateur</value>
+    </property>
 </resource>

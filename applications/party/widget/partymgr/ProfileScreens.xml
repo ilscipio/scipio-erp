@@ -440,11 +440,22 @@
                 </entity-and>
             </actions>
             <widgets>
-                <platform-specific>
-                    <html>
-                        <html-template location="component://party/webapp/partymgr/party/profileblocks/ContentList.ftl"/>
-                    </html>
-                </platform-specific>
+                <!-- SCIPIO: this widget is invoked through controller for ajax, so perm check needed -->
+                <section>
+                    <condition>
+                        <if-service-permission service-name="partyIdPermissionCheck" main-action="VIEW"/>
+                    </condition>
+                    <widgets>
+                        <platform-specific>
+                            <html>
+                                <html-template location="component://party/webapp/partymgr/party/profileblocks/ContentList.ftl"/>
+                            </html>
+                        </platform-specific>
+                    </widgets>
+                    <fail-widgets>
+                        <label style="common-msg-error-perm">${uiLabelMap.CommonPermissionError}</label>
+                    </fail-widgets>
+                </section>
             </widgets>
         </section>
     </screen>

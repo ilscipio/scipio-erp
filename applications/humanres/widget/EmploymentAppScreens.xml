@@ -237,16 +237,27 @@
                 </entity-and>
             </actions>
             <widgets>
+                <!-- SCIPIO: this widget is invoked through controller for ajax, so perm check needed -->
                 <section>
-                    <condition><not><if-true field="resumeReadOnly"/></not></condition>
+                    <condition>
+                        <if-service-permission service-name="partyIdPermissionCheck" main-action="VIEW"/>
+                    </condition>
                     <widgets>
-                        <!-- FIXME: should use pcntMenuCnt for this somehow in above widget... wrong widget... -->
-                        <include-menu name="ResumeListSubTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                        <section>
+                            <condition><not><if-true field="resumeReadOnly"/></not></condition>
+                            <widgets>
+                                <!-- FIXME: should use pcntMenuCnt for this somehow in above widget... wrong widget... -->
+                                <include-menu name="ResumeListSubTabBar" location="component://humanres/widget/HumanresMenus.xml"/>
+                            </widgets>
+                        </section>
+                        <platform-specific>
+                            <html><html-template location="component://party/webapp/partymgr/party/profileblocks/ContentList.ftl"/></html>
+                        </platform-specific>
                     </widgets>
+                    <fail-widgets>
+                        <label style="common-msg-error-perm">${uiLabelMap.CommonPermissionError}</label>
+                    </fail-widgets>
                 </section>
-                <platform-specific>
-                    <html><html-template location="component://party/webapp/partymgr/party/profileblocks/ContentList.ftl"/></html>
-                </platform-specific>
             </widgets>
         </section>
     </screen>

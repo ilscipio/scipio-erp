@@ -200,6 +200,7 @@
                 <set field="resumeReadOnly" from-field="resumeReadOnly" type="Boolean" default-value="false"/>
                 <set field="pcntExtraParams" type="Object" value=""/>
                 <set field="pcntExtraParams.resumeReadOnly" from-field="resumeReadOnly"/>
+                <set field="pcntExtraParams.applicationId" from-field="applicationId"/>
                 <set field="pcntTitle" value="${uiLabelMap.HumanResPartyResume}: ${partyId}"/>
                 <set field="pcntAttachTitle" value="${uiLabelMap.CommonUpload}"/>
                 <set field="pcntNoAttach" from-field="resumeReadOnly" type="Boolean" default-value="false"/>
@@ -220,9 +221,11 @@
         <section>
             <actions>
                 <set field="resumeReadOnly" from-field="resumeReadOnly" type="Boolean" default-value="${groovy: parameters.resumeReadOnly ?: 'true'}"/>
-                <!-- TODO: cannot implement Remove button from here at this time
-                <set field="pcntListReadOnly" from-field="resumeReadOnly" type="Boolean" default-value="false"/>-->
-                <set field="pcntListReadOnly" type="Boolean" value="true"/>
+                <set field="pcntListReadOnly" from-field="resumeReadOnly" type="Boolean" default-value="false"/>
+                <set field="applicationId" from-field="applicationId" default-value="${parameters.applicationId}"/>
+                <set field="pcntListRemoveDonePage" from-field="pcntListRemoveDonePage" default-value="EditEmploymentApp"/>
+                <set field="pcntListRemoveExtraParams" type="Object" value=""/>
+                <set field="pcntListRemoveExtraParams.applicationId" from-field="applicationId"/>
                 
                 <set field="partyId" from-field="partyId" default-value="${groovy: (parameters.partyId ?: context.userLogin?.partyId)}"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>

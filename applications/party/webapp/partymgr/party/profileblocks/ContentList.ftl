@@ -67,6 +67,12 @@ under the License.
                   <input type="hidden" name="partyId" value="${pContent.partyId}" />
                   <input type="hidden" name="partyContentTypeId" value="${pContent.partyContentTypeId}" />
                   <input type="hidden" name="fromDate" value="${pContent.fromDate}" />
+                  <#if pcntListRemoveExtraParams?has_content><#-- SCIPIO -->
+                    <#assign pcntListRemoveExtraParams = toSimpleMap(pcntListRemoveExtraParams)>
+                    <#list pcntListRemoveExtraParams?keys as paramName>
+                      <input type="hidden" name="${paramName}" value="${escapeVal(pcntListRemoveExtraParams[rawString(paramName)]!, 'html')}"/>
+                    </#list>
+                  </#if>
                   <a href="javascript:document.removePartyContent_${pContent_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>
                 </form>
               </#if>

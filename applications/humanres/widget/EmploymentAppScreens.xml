@@ -205,11 +205,9 @@
                 <set field="pcntAttachTitle" value="${uiLabelMap.CommonUpload}"/>
                 <set field="pcntNoAttach" from-field="resumeReadOnly" type="Boolean" default-value="false"/>
                 <set field="pcntUploadUri" value="uploadEmplAppResume"/><!-- this loads EmploymentAppResumeList below -->
-                <set field="pcntListRemoveDonePage" value="EditEmploymentApp"/>
                 <set field="pcntCntListLoc" value="component://humanres/widget/EmploymentAppScreens.xml#EmploymentAppResumeList"/>
                 <set field="pcntPartyContentTypeId" value="RESUME"/>
                 <set field="pcntAllowPublic" type="Boolean" value="false"/>
-                <set field="pcntListShowStatus" type="Boolean" value="false"/>
             </actions>
             <widgets>
                 <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
@@ -226,7 +224,10 @@
                 <set field="pcntListRemoveDonePage" from-field="pcntListRemoveDonePage" default-value="EditEmploymentApp"/>
                 <set field="pcntListRemoveExtraParams" type="Object" value=""/>
                 <set field="pcntListRemoveExtraParams.applicationId" from-field="applicationId"/>
-                
+                <set field="pcntListShowStatus" type="Boolean" value="false"/>
+                <set field="pcntPartyContentTypeId" value="RESUME"/>
+
+                <!-- modified from component://party/widget/partymgr/ProfileScreens.xml#ContentList -->
                 <set field="partyId" from-field="partyId" default-value="${groovy: (parameters.partyId ?: context.userLogin?.partyId)}"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>

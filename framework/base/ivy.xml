@@ -240,19 +240,20 @@
         <!-- let the jasper compile dep give us the version it wants (NOTE: its version numbers are unrelated to org.eclipse.jdt.core.compiler! very confusing!)
         <dependency org="org.eclipse.jdt" name="ecj" rev="xxx" conf="base,sources"/>-->
 
-        <!-- catalina: tomcat-provided j2eespecs servlet API jars -->
-        <!-- NOTE: these are renamed by base/build.xml
-            ofbiz originally used the Tomcat-provided APIs, and that is in fact the correct way of doing this;
-            the javax artifacts are excluded further below for anything that depends on them
-            FIXME?: annotations official version is unclear
+        <!-- catalina: j2eespecs servlet API jars -->
+        <!-- 2018-04-13: NEW SETUP: For the actual JARs loaded by ofbiz (base conf), we download the tomcat-provided
+            libs into base/lib, so we should never get any runtime problems. 
+            But for sources, the tomcat files have unusable documentation, so we use the official java API files instead;
+            so we put the official servlet API jars in j2eespecs-ref dir (see build/base.xml for the renaming).
+            NOTE: the tomcat-provided jar are renamed in base/build.xml so they match the API ones in name (TODO: REVIEW: still necessary?) -->
+        <dependency org="org.apache.tomcat" name="tomcat-servlet-api" rev="8.5.30" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-jsp-api" rev="8.5.30" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-el-api" rev="8.5.30" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-annotations-api" rev="8.5.30" conf="base,sources"/>
         <dependency org="javax.servlet" name="javax.servlet-api" rev="3.1.0" conf="base,j2eespecs,sources"/>
         <dependency org="javax.servlet.jsp" name="javax.servlet.jsp-api" rev="2.3.0" conf="base,j2eespecs,sources"/>
         <dependency org="javax.el" name="javax.el-api" rev="3.0.0" conf="base,j2eespecs,sources"/>
-        <dependency org="javax.annotation" name="javax.annotation-api" rev="3.0.0" conf="base,j2eespecs,sources"/>-->
-        <dependency org="org.apache.tomcat" name="tomcat-servlet-api" rev="8.5.30" conf="base,j2eespecs,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-jsp-api" rev="8.5.30" conf="base,j2eespecs,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-el-api" rev="8.5.30" conf="base,j2eespecs,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-annotations-api" rev="8.5.30" conf="base,j2eespecs,sources"/>
+        <dependency org="javax.annotation" name="javax.annotation-api" rev="1.3" conf="base,j2eespecs,sources"/>
 
         <!-- entity component (framework/entity/ivy.xml) -->
         <dependency org="org.apache.commons" name="commons-dbcp2" rev="2.2.0" conf="base,sources"/>
@@ -433,12 +434,12 @@
         <!-- aggregate libs -->
         <exclude org="org\.apache\.xmlgraphics" artifact="batik-(?!all$).*" matcher="regexp"/><!-- batik-all includes all -->
 
-        <!-- artifacts provided by different providers -->
-        <!-- Tomcat provides the servlet APIs for us, so they are never physically outdated -->
+        <!-- artifacts provided by different providers
+            2018-04-13: we now download these separately ourselves, so don't exclude - see j2eespecs above
         <exclude org="javax.servlet" module="javax.servlet-api"/>
         <exclude org="javax.servlet.jsp" module="javax.servlet.jsp-api"/>
         <exclude org="javax.el" module="javax.el-api"/>
-        <exclude org="javax.annotation" module="javax.annotation-api"/>
+        <exclude org="javax.annotation" module="javax.annotation-api"/> -->
 
         <!-- artifacts provided in filesystem directly (should be very few!) -->
         <exclude org="oro" module="oro"/>

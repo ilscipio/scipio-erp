@@ -594,6 +594,12 @@ under the License.
                 <option key="Y" description="${uiLabelMap.CommonYes}"/>
             </drop-down>
         </field>
+        <!-- SCIPIO: Extra fields: it may be necessary for user to be able to see extra fields
+            like fromDate/thruDate here which are too verbose for the ListPartyContents.
+            there is ambiguity about the filter-by-date logic, so we must show thruDate somewhere. -->
+        <field name="fromDate" use-when="partyContent!=null" map-name="partyContent"><display type="date-time" also-hidden="false"/></field>
+        <field name="thruDate" use-when="partyContent!=null" map-name="partyContent"><display type="date-time" also-hidden="false"/></field>
+        <field name="lastModifiedDate" use-when="content!=null"><display type="date-time" also-hidden="false"/></field>
         <field name="createAction" title="${uiLabelMap.CommonAdd}" use-when="content==null" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
         <field name="updateAction" title="${uiLabelMap.CommonUpdate}" use-when="content!=null" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
@@ -640,6 +646,8 @@ under the License.
                 <parameter param-name="contentId"/>
                 <parameter param-name="partyId"/>
                 <parameter param-name="dataResourceId"/>
+                <parameter param-name="partyContentTypeId"/><!-- SCIPIO: added -->
+                <parameter param-name="fromDate"/><!-- SCIPIO: added -->
             </hyperlink>
         </field>
         <!-- SCIPIO: TODO: WARN: this only removes the association, not the content itself! -->

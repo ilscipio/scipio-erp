@@ -958,6 +958,12 @@ under the License.
         <event type="service" invoke="removePartyContent"/>
         <response name="success" type="view" value="EditPartyContents"/>
     </request-map>
+    
+    <request-map uri="removePartyContentAndRelated"><!-- SCIPIO: added 2018-04-16 -->
+        <security auth="true" https="true"/>
+        <event type="service" invoke="removePartyContentAndRelated"/>
+        <response name="success" type="view" value="EditPartyContents"/>
+    </request-map>
 
     <request-map uri="uploadPartyContent">
         <security auth="true" https="true"/>

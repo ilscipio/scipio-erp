@@ -981,6 +981,15 @@ under the License.
         <description>Remove a PartyContent record</description>
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
+    
+    <service name="removePartyContentAndRelated" engine="group" auth="true"><!-- SCIPIO: added 2018-04-16 -->
+        <description>Remove a PartyContent record and the Content record itself (SCIPIO)
+            WARN: Does not delete files stored in the filesystem!</description>
+        <group>
+            <invoke name="removePartyContent"/>
+            <invoke name="removeContentAndRelated"/>
+        </group>
+    </service>
 
     <service name="createPartyTextContent" engine="group" transaction-timeout="300" auth="true">
         <description>Creates a Text Document DataResource and Content Records</description>

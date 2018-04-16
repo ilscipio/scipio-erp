@@ -2195,15 +2195,15 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         <#break>
       <#case "file">
         <@field_file_widget class=class alert=alert name=name value=value size=size maxlength=maxlength 
-          autocomplete=autocomplete?string("", "off") id=id inlineLabel=effInlineLabel style=style required=required attribs=attribs passArgs=passArgs/>
+          autocomplete=autocomplete?string("", "off") id=id title=title tooltip=tooltip inlineLabel=effInlineLabel style=style required=required attribs=attribs passArgs=passArgs/>
         <#break>
       <#case "password">
         <@field_password_widget class=class alert=alert name=name value=value size=size maxlength=maxlength 
-          id=id autocomplete=autocomplete?string("", "off") placeholder=placeholder tooltip=tooltip inlineLabel=effInlineLabel style=style 
+          id=id autocomplete=autocomplete?string("", "off") placeholder=placeholder title=title tooltip=tooltip inlineLabel=effInlineLabel style=style 
           required=required attribs=attribs passArgs=passArgs/>
         <#break> 
       <#case "reset">                    
-        <@field_reset_widget class=class alert=alert name=name text=text fieldTitleBlank=false inlineLabel=effInlineLabel 
+        <@field_reset_widget class=class alert=alert name=name text=text title=title tooltip=tooltip fieldTitleBlank=false inlineLabel=effInlineLabel 
             style=style attribs=attribs passArgs=passArgs/>
         <#break>    
       <#case "submit">
@@ -2225,7 +2225,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
           <#local text = value>
         </#if>
         <@field_submit_widget buttonType=buttonType class=class id=id alert=alert formName=formName name=name events=events 
-          imgSrc=src confirmation=confirmMsg containerId="" ajaxUrl="" text=text description=description showProgress=false 
+          imgSrc=src confirmation=confirmMsg containerId="" ajaxUrl="" text=text title=title tooltip=tooltip description=description showProgress=false 
           href=href inputType=inputType disabled=disabled progressArgs=progressArgs progressOptions=progressOptions inlineLabel=effInlineLabel 
           style=style attribs=attribs passArgs=passArgs/>
         <#break>

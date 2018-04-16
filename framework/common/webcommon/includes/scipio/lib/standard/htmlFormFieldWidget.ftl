@@ -495,10 +495,17 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <#if name?has_content>
     <#local opSelectName = rawString(name) + "_fld0_op">
   </#if>
+  <#if tooltip?has_content> 
+    <#local class = addClassArg(class, styles.field_datefind_tooltip!styles.field_default_tooltip!"")>
+    <#local title = tooltip>
+    <#local attribs = (styles.field_datefind_tooltip_attribs!styles.field_default_tooltip_attribs!{}) + attribs>
+  <#elseif !title?has_content>
+    <#local title = localizedInputTitle>
+  </#if>
   <div class="${styles.grid_row!} ${styles.collapse!} date" data-date="" data-date-format="${escapeVal(dateDisplayFormat, 'html')}">
     <div class="${styles.grid_small!}<#if !inlinePostfix>5<#else>6 ${styles.grid_postfix_container}</#if> ${styles.grid_cell!}">
       <input type="text"<@fieldElemAttribStr attribs=attribs /><#if displayInputId?has_content> id="${escapeVal(displayInputId, 'html')}"</#if><#if displayInputName?has_content> name="${escapeVal(displayInputName, 'html')}"</#if><@fieldClassAttribStr class=class alert=alert /><#rt/>
-        <#if localizedInputTitle?has_content> title="${escapeVal(localizedInputTitle, 'html')}"</#if><#if value?has_content> value="${escapeVal(value, 'html')}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#rt/>/><#lt/>
+        <#if title?has_content> title="${escapeVal(title, 'html')}"</#if><#if value?has_content> value="${escapeVal(value, 'html')}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#rt/>/><#lt/>
       <input type="hidden"<#if inputId?has_content> id="${escapeVal(inputId, 'html')}"</#if><#if inputName?has_content> name="${escapeVal(inputName, 'html')}"</#if><#if value?has_content> value="${escapeVal(value, 'html')}"</#if>/>
     <#if !inlinePostfix></div></#if>
     <#if !inlinePostfix><div class="${styles.grid_small!}1 ${styles.grid_cell!}"></#if>
@@ -731,9 +738,9 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   </#if>-->
   <#local class = addClassArg(class, styles.field_lookup_default!"")>
   <#if tooltip?has_content> 
-    <#local class = addClassArg(class, styles.field_input_tooltip!styles.field_default_tooltip!"")>
+    <#local class = addClassArg(class, styles.field_lookup_tooltip!styles.field_default_tooltip!"")>
     <#local title = tooltip>
-    <#local attribs = (styles.field_input_tooltip_attribs!styles.field_default_tooltip_attribs!{}) + attribs>
+    <#local attribs = (styles.field_lookup_tooltip_attribs!styles.field_default_tooltip_attribs!{}) + attribs>
   </#if>
   <#if (!ajaxUrl?has_content) && ajaxEnabled>
     <#local ajaxUrl = requestAttributes._REQUEST_HANDLER_.makeLink(request, response, rawString(fieldFormName))/>
@@ -1245,23 +1252,28 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 
 <#-- migrated from @renderFileField form widget macro -->
 <#assign field_file_widget_defaultArgs = {
-  "class":"", "alert":"", "name":"", "value":"", "size":"", "style":"", "maxlength":"", "autocomplete":"", "id":"", "title":"", 
+  "class":"", "alert":"", "name":"", "value":"", "size":"", "style":"", "maxlength":"", "autocomplete":"", "id":"", "title":"", "tooltip":"",
   "fieldTitleBlank":false, "inlineLabel":false, "required":false, "attribs":{}, "passArgs":{}
 }>
 <#macro field_file_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_file_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@field_file_markup_widget class=class alert=alert name=name style=style value=value size=size maxlength=maxlength autocomplete=autocomplete id=id title=title fieldTitleBlank=fieldTitleBlank 
+  <@field_file_markup_widget class=class alert=alert name=name style=style value=value size=size maxlength=maxlength autocomplete=autocomplete id=id title=title tooltip=tooltip fieldTitleBlank=fieldTitleBlank 
     inlineLabel=inlineLabel required=required attribs=toSimpleMap(attribs) origArgs=origArgs passArgs=passArgs><#nested></@field_file_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_file_markup_widget class="" alert="" name="" value="" size="" style="" maxlength="" autocomplete="" id="" title="" fieldTitleBlank=false inlineLabel=false 
+<#macro field_file_markup_widget class="" alert="" name="" value="" size="" style="" maxlength="" autocomplete="" id="" title="" tooltip="" fieldTitleBlank=false inlineLabel=false 
     required=false attribs={} origArgs={} passArgs={} catchArgs...>
   <#local class = addClassArg(class, styles.field_file_default!"")>
+  <#if tooltip?has_content>
+    <#local class = addClassArg(class, styles.field_file_tooltip!styles.field_default_tooltip!"")>
+    <#local attribs = (styles.field_file_tooltip_attribs!styles.field_default_tooltip_attribs!{}) + attribs>
+    <#local title = tooltip>
+  </#if>
   <input type="file"<@fieldElemAttribStr attribs=attribs /><@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if name?has_content> name="${escapeVal(name, 'html')}"</#if><#rt/>
-    <#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#if value?has_content> value="${escapeVal(value, 'html')}"</#if><#if size?has_content> size="${size}"</#if><#t/>
+    <#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#if value?has_content> value="${escapeVal(value, 'html')}"</#if><#if size?has_content> size="${size}"</#if><#if title?has_content> title="${escapeVal(title, 'html')}"</#if><#t/>
     <#if required> required="required"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#t/>
 </#macro>
 
@@ -1299,20 +1311,26 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 
 <#-- migrated from @renderResetField form widget macro -->
 <#assign field_reset_widget_defaultArgs = {
-  "class":"", "id":"", "alert":"", "style":"", "name":"", "text":"", "fieldTitleBlank":false, "inlineLabel":false, "attribs":{}, "passArgs":{}
+  "class":"", "id":"", "alert":"", "style":"", "name":"", "text":"", "fieldTitleBlank":false, "inlineLabel":false, "title":"", "tooltip":"", "attribs":{}, "passArgs":{}
 }>
 <#macro field_reset_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_reset_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
   <@field_reset_markup_widget class=class alert=alert name=name id=id style=style text=text fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel 
-    attribs=toSimpleMap(attribs) origArgs=origArgs passArgs=passArgs/>
+    title=title tooltip=tooltip attribs=toSimpleMap(attribs) origArgs=origArgs passArgs=passArgs/>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_reset_markup_widget class="" alert="" name="" id="" style="" text="" fieldTitleBlank=false inlineLabel=false attribs={} origArgs={} passArgs={} catchArgs...>
+<#macro field_reset_markup_widget class="" alert="" name="" id="" style="" text="" fieldTitleBlank=false inlineLabel=false title="" tooltip="" attribs={} origArgs={} passArgs={} catchArgs...>
   <#local class = addClassArg(class, styles.field_reset_default!"")>
-  <input type="reset"<@fieldElemAttribStr attribs=attribs /><@fieldClassAttribStr class=class alert=alert /> name="${escapeVal(name, 'html')}"<#if text?has_content> value="${escapeVal(text, 'html')}"</#if><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if>/>
+  <#if tooltip?has_content>
+    <#local class = addClassArg(class, styles.field_reset_tooltip!styles.field_default_tooltip!"")>
+    <#local attribs = (styles.field_reset_tooltip_attribs!styles.field_default_tooltip_attribs!{}) + attribs>
+    <#local title = tooltip>
+  </#if>
+  <input type="reset"<@fieldElemAttribStr attribs=attribs /><@fieldClassAttribStr class=class alert=alert /> name="${escapeVal(name, 'html')}"<#if text?has_content> value="${escapeVal(text, 'html')}"</#if><#rt/>
+    <#lt/><#if title?has_content> title="${escapeVal(title, 'html')}"</#if><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if>/>
 </#macro>
 
 <#-- migrated from @renderSubmitField form widget macro 
@@ -1324,7 +1342,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 <#assign field_submit_widget_defaultArgs = {
   "buttonType":"", "class":"", "alert":"", "formName":"", "name":"", "events":{}, "imgSrc":"", "confirmation":"", 
   "containerId":"", "ajaxUrl":"", "text":"", "description":"", "fieldTitleBlank":false, "showProgress":"", "href":"", "inputType":"", 
-  "disabled":false, "progressArgs":{}, "progressOptions":{}, "id":"", "inlineLabel":false, "style":"", "noButtonMarkup":"", "attribs":{}, "passArgs":{}
+  "disabled":false, "progressArgs":{}, "progressOptions":{}, "id":"", "inlineLabel":false, "style":"", "title":"", "tooltip":"", "noButtonMarkup":"", "attribs":{}, "passArgs":{}
 }>
 <#macro field_submit_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_submit_widget_defaultArgs)>
@@ -1355,18 +1373,23 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     </#if>
   </#if>
   <@field_submit_markup_widget buttonType=buttonType class=class alert=alert formName=formName name=name events=events imgSrc=imgSrc confirmation=confirmation 
-    containerId=containerId ajaxUrl=ajaxUrl text=text description=description fieldTitleBlank=fieldTitleBlank showProgress=showProgress href=href inputType=inputType 
+    containerId=containerId ajaxUrl=ajaxUrl text=text description=description fieldTitleBlank=fieldTitleBlank showProgress=showProgress href=href inputType=inputType title=title tooltip=tooltip
     disabled=disabled progressArgs=progressArgs id=id inlineLabel=inlineLabel style=style noButtonMarkup=noButtonMarkup attribs=toSimpleMap(attribs) origArgs=origArgs passArgs=passArgs><#nested></@field_submit_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_submit_markup_widget buttonType="" class="" alert="" formName="" name="" events={} imgSrc="" confirmation="" 
-    containerId="" ajaxUrl="" text="" fieldTitleBlank=false showProgress="" href="" inputType="" disabled=false 
+    containerId="" ajaxUrl="" text="" fieldTitleBlank=false showProgress="" href="" inputType="" disabled=false title="" tooltip="" 
     progressArgs={} id="" inlineLabel=false style="" noButtonMarkup=false attribs={} origArgs={} passArgs={} catchArgs...>
   <#local class = addClassArg(class, styles.field_submit_default!"")>
   <#if noButtonMarkup>
     <#local buttonMarkup = "">
   <#else>
+    <#if tooltip?has_content>
+      <#local class = addClassArg(class, styles.field_submit_tooltip!styles.field_default_tooltip!"")>
+      <#local attribs = (styles.field_submit_tooltip_attribs!styles.field_default_tooltip_attribs!{}) + attribs>
+      <#local title = tooltip>
+    </#if>
     <#local buttonMarkup>
       <#if buttonType == "text-link">
         <#-- FIXME?: slow, very specific check to test if link already has an action class.
@@ -1389,14 +1412,14 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
           <#if disabled> disabled="disabled"<#else><#if events?has_content><@commonElemEventAttribStr events=events /><#elseif confirmation?has_content> onclick="return confirm('${escapeVal(confirmation, 'js-html')}');"</#if></#if><#t/>
           <#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#t/>
           <#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#t/>
-          <#lt>><#if text?has_content>${escapeVal(text, 'htmlmarkup')}</#if></a>
+          <#lt><#if title?has_content> title="${escapeVal(title, 'html')}"</#if>><#if text?has_content>${escapeVal(text, 'htmlmarkup')}</#if></a>
       <#elseif buttonType == "image">
         <input type="<#if inputType?has_content>${escapeVal(inputType, 'html')}<#else>image</#if>" src="${escapeFullUrl(imgSrc, 'html')}"<@fieldElemAttribStr attribs=attribs /><@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${escapeVal(name, 'html')}"</#if><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#rt>
         <#if description?has_content> alt="${escapeVal(description, 'html')}"</#if><#t/>
         <#if disabled> disabled="disabled"<#else><#t/>
           <#if events?has_content><@commonElemEventAttribStr events=events /><#elseif confirmation?has_content> onclick="return confirm('${escapeVal(confirmation, 'js-html')}');"</#if><#t/>
         </#if><#t/>
-        <#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#t/>
+        <#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#if title?has_content> title="${escapeVal(title, 'html')}"</#if><#t/>
         <#lt>/>
       <#else>
         <#-- FIXME?: slow, very specific check to test if link already has an action class.
@@ -1409,7 +1432,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         </#if>
         <#-- TODO?: here there is no case to generate <button> (instead of <input type="button">) in case template needs... -->
         <input type="<#if inputType?has_content>${escapeVal(inputType, 'html')}<#elseif containerId?has_content>button<#else>submit</#if>"<@fieldElemAttribStr attribs=attribs /><@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#rt>
-        <#if name?has_content> name="${escapeVal(name, 'html')}"</#if><#if text?has_content> value="${escapeVal(text, 'html')}"</#if><#t/>
+        <#if name?has_content> name="${escapeVal(name, 'html')}"</#if><#if text?has_content> value="${escapeVal(text, 'html')}"</#if><#if title?has_content> title="${escapeVal(title, 'html')}"</#if><#t/>
         <#if disabled> disabled="disabled"<#else><#t/>
           <#if events?has_content><@commonElemEventAttribStr events=events /><#else><#t/>
             <#if containerId?has_content> onclick="<#if confirmation?has_content>if (confirm('${escapeVal(confirmation, 'js-html')}')) </#if>ajaxSubmitFormUpdateAreas('${escapeVal(containerId, 'js-html')}', '${escapeFullUrl(ajaxUrl, 'js-html')}')"<#else><#t/>

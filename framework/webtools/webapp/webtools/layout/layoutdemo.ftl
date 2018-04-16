@@ -1133,7 +1133,7 @@
     <@form name="form-attribs">
       <#assign fieldAttribs = {"my-attrib-1":"test-value-1", "myattrib2":"testvalue2"}>
       <@field type="input" name="input1" label="Input" attribs=fieldAttribs/>
-      <@field type="display" name="input2" label="Display" attribs=fieldAttribs/>
+      <@field type="display" name="input2" label="Display" attribs=fieldAttribs>Test</@field>
       <@field type="textarea" name="input3" label="Textarea" attribs=fieldAttribs/>
       <@field type="datetime" name="input4" label="Datetime" attribs=fieldAttribs/>
       <@field type="select" name="input5" label="Select" attribs=fieldAttribs items=[
@@ -1169,7 +1169,7 @@
     <@form name="form-tooltips">
       <#assign fieldTooltip = "This is a tooltip!">
       <@field type="input" name="input1" label="Input" tooltip=fieldTooltip/>
-      <@field type="display" name="input2" label="Display" tooltip=fieldTooltip/>
+      <@field type="display" name="input2" label="Display" tooltip=fieldTooltip>Test</@field>
       <@field type="textarea" name="input3" label="Textarea" tooltip=fieldTooltip/>
       <@field type="datetime" name="input4" label="Datetime" tooltip=fieldTooltip/>
       <@field type="select" name="input5" label="Select" tooltip=fieldTooltip items=[

@@ -1164,6 +1164,42 @@
       <@field type="color" name="input17" label="Color" attribs=fieldAttribs/>
     </@form>
   </@section>
+  
+  <@section title="@field tooltips">
+    <@form name="form-tooltips">
+      <#assign fieldTooltip = "This is a tooltip!">
+      <@field type="input" name="input1" label="Input" tooltip=fieldTooltip/>
+      <@field type="display" name="input2" label="Display" tooltip=fieldTooltip/>
+      <@field type="textarea" name="input3" label="Textarea" tooltip=fieldTooltip/>
+      <@field type="datetime" name="input4" label="Datetime" tooltip=fieldTooltip/>
+      <@field type="select" name="input5" label="Select" tooltip=fieldTooltip items=[
+        {"key":"val1", "description":"option1", "attribs":fieldAttribs}]>
+        <@field type="option" value="sdfsdf" tooltip=fieldTooltip/>
+      </@field>
+      <@field type="checkbox" name="input6a" label="Checkbox" tooltip=fieldTooltip/>
+      <#-- NOTE: here the fieldAttribs are blended with the item-specific attribs -->
+      <@field type="checkbox" name="input6b" label="Checkbox" tooltip=fieldTooltip items=[
+        {"value":"val1", "description":"option1", "attribs":{"my-extra-3":"value-3"}},
+        {"value":"val2", "description":"option2", "attribs":{"my-extra-4":"value-4"}}]/>
+      <@field type="radio" name="input7a" label="Radio" tooltip=fieldTooltip/>
+      <#-- NOTE: here the fieldAttribs are blended with the item-specific attribs -->
+      <@field type="radio" name="input7b" label="Radio" tooltip=fieldTooltip items=[
+        {"value":"val1", "description":"option1", "attribs":{"my-extra-3":"value-3"}},
+        {"value":"val2", "description":"option2", "attribs":{"my-extra-4":"value-4"}}]/>
+      <@field type="submit" name="input8a" label="Submit" tooltip=fieldTooltip/>
+      <@field type="submit" submitType="link" name="input8b" label="Submit" tooltip=fieldTooltip/>
+      <@field type="submit" submitType="image" name="input8c" label="Submit" tooltip=fieldTooltip/>
+      <@field type="reset" name="input9" label="Reset" tooltip=fieldTooltip/>
+      <@field type="hidden" name="input10" tooltip=fieldTooltip/>
+      <@field type="textfind" name="input11" label="Textfind" tooltip=fieldTooltip/>
+      <@field type="datefind" name="input12" label="Datefind" tooltip=fieldTooltip/>
+      <@field type="rangefind" name="input13" label="Rangefind" tooltip=fieldTooltip/>
+      <@field type="lookup" name="input14" label="Lookup" tooltip=fieldTooltip fieldFormName="LookupGeo"/>
+      <@field type="file" name="input15" label="File" tooltip=fieldTooltip/>
+      <@field type="password" name="input16" label="Password" tooltip=fieldTooltip/>
+      <@field type="color" name="input17" label="Color" tooltip=fieldTooltip/>
+    </@form>
+  </@section>
   </#if>
 </@section>
 

@@ -9,6 +9,38 @@ indexing (rebuildSolrIndex[Auto]) automatically executes on first server run.
 
 **********************************************
 
+NOTE: 2018-04: BASIC AUTHENTICATION: It is possible to set up an internal login to prevent access to the /solr
+web interface and functions. This can be done by defining a security.json file in this directory
+(applications/solr/security.json) with one or more users, and by setting the corresponding username/password in
+solrconfig.properties (solr.query.login.* and solr.update.login.*).
+
+The format of the security.json file is explained at https://lucene.apache.org/solr/guide/6_6/basic-authentication-plugin.html
+
+For example, this defines a single username 'solr' with password 'SolrRocks' (applications/solr/security.json):
+
+{
+"authentication":{
+   "blockUnknown": true,
+   "class":"solr.BasicAuthPlugin",
+   "credentials":{"solr":"IV0EHq1OnNrj6gvRCwvFwTrZ1+z1oBbnQdiVC3otuq0= Ndd7LKvVBAaZIF0QAVi1ekCfAJXr1GGfLtRUXhgrF8c="}
+},
+"authorization":{
+   "class":"solr.RuleBasedAuthorizationPlugin",
+   "permissions":[{"name":"security-edit",
+      "role":"admin"}],
+   "user-role":{"solr":"admin"}
+}}
+
+and the properties (applications/solr/config/solrconfig.properties):
+
+solr.query.login.username=solr
+solr.query.login.password=SolrRocks
+solr.update.login.username=solr
+solr.update.login.password=SolrRocks
+
+
+**********************************************
+
 This document describes the Ofbiz solr component, an Ofbiz (http://ofbiz.apache.org/)
 implementation of the Apache Solr search platform (http://lucene.apache.org/solr/).
 The solr component includes an Ofbiz service-based wrapper layer to the Apache Solr

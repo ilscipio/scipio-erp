@@ -65,9 +65,9 @@ under the License.
             </drop-down>
         </field>
         <field name="partyId"><hidden/></field>
-        <!-- SCIPIO: FIXME: there is a bug here with use-when, so show only the link for now
+        <!-- SCIPIO: NOTE: because hyperlinks are sent to the right by the form renderer for multi forms like this, use-when cannot be used here.
         <field name="applyingPartyId" title="${uiLabelMap.FormFieldTitle_applyingPartyId}" use-when="applyingPartyId==null"><lookup target-form-name="LookupPartyName"/></field> -->
-        <field name="applyingPartyId" title="${uiLabelMap.FormFieldTitle_applyingPartyId}"><!-- SCIPIO: bug: use-when="applyingPartyId!=null" -->
+        <field name="applyingPartyId" title="${uiLabelMap.FormFieldTitle_applyingPartyId}"><!-- use-when="applyingPartyId!=null" -->
             <hyperlink target="EmployeeProfile" target-type="intra-app" description="${applyingPartyId}" also-hidden="true" style="${styles.link_nav_info_id}">
                 <parameter param-name="partyId" from-field="applyingPartyId"/>
             </hyperlink>

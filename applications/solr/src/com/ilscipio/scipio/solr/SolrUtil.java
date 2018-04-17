@@ -2,6 +2,7 @@ package com.ilscipio.scipio.solr;
 
 import javax.transaction.Transaction;
 
+import org.apache.solr.client.solrj.SolrRequest;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.request.SolrPing;
 import org.apache.solr.client.solrj.response.SolrPingResponse;
@@ -36,6 +37,11 @@ public abstract class SolrUtil {
             UtilProperties.getPropertyValue(solrConfigName, "solr.config.version.custom"),
             UtilProperties.getPropertyValue(solrConfigName, "solr.config.version.extra"));
 
+    private static final String solrQueryLoginUsername = getSolrPropValueOrNull("solr.query.login.username");
+    private static final String solrQueryLoginPassword = getSolrPropValueOrNull("solr.query.login.password");
+    private static final String solrUpdateLoginUsername = getSolrPropValueOrNull("solr.update.login.username");
+    private static final String solrUpdateLoginPassword = getSolrPropValueOrNull("solr.update.login.password");
+    
     /**
      * @deprecated use {@link #getSolrWebappUrl} instead
      */
@@ -51,6 +57,11 @@ public abstract class SolrUtil {
     
     public static String getSolrConfigName() {
         return solrConfigName;
+    }
+
+    private static String getSolrPropValueOrNull(String name) {
+        String value = UtilProperties.getPropertyValue(solrConfigName, name);
+        return (value.isEmpty() ? null : value);
     }
     
     /**
@@ -238,7 +249,7 @@ public abstract class SolrUtil {
      * Returns true if Solr is loaded and available for queries, using default core and client.
      */
     public static boolean isSolrWebappReady() throws Exception {
-        return isSolrWebappReady(getHttpSolrClient());
+        return isSolrWebappReady(getQueryHttpSolrClient(null));
     }
 
     public static GenericValue getSolrStatus(Delegator delegator) {
@@ -339,23 +350,116 @@ public abstract class SolrUtil {
         }
         return false;
     }
-    
-    public static HttpSolrClient getHttpSolrClient(String core) {
+
+    /**
+     * Returns a Solr client for making read-only queries.
+     * <p>
+     * This client includes the basic auth defined in solrconfig.properties/solr.query.login.*,
+     * which can be overridden on individual requests (using QueryRequest).
+     */
+    public static HttpSolrClient getQueryHttpSolrClient(String core) {
         if (UtilValidate.isNotEmpty(core)) {
-            return makeHttpSolrClientFromUrl(getSolrCoreUrl(core));
-        }
-        else {
-            return getHttpSolrClient();
+            return makeHttpSolrClientFromUrlAndAuth(getSolrCoreUrl(core), getSolrQueryLoginUsername(), getSolrQueryLoginPassword());
+        } else {
+            return makeHttpSolrClientFromUrlAndAuth(getSolrDefaultCoreUrl(), getSolrQueryLoginUsername(), getSolrQueryLoginPassword());
         }
     }
     
+    /**
+     * Returns a Solr client for making update/indexing queries.
+     * <p>
+     * This client includes the basic auth defined in solrconfig.properties/solr.update.login.*,
+     * which can be overridden on individual requests (using UpdateRequest).
+     */
+    public static HttpSolrClient getUpdateHttpSolrClient(String core) {
+        if (UtilValidate.isNotEmpty(core)) {
+            return makeHttpSolrClientFromUrlAndAuth(getSolrCoreUrl(core), getSolrUpdateLoginUsername(), getSolrUpdateLoginPassword());
+        } else {
+            return makeHttpSolrClientFromUrlAndAuth(getSolrDefaultCoreUrl(), getSolrUpdateLoginUsername(), getSolrUpdateLoginPassword());
+        }
+    }
+    
+    /**
+     * Returns a Solr client for making read-only queries.
+     * @deprecated 2018-04-17: now ambiguous; use {@link #getQueryHttpSolrClient(String) instead
+     */
+    @Deprecated
+    public static HttpSolrClient getHttpSolrClient(String core) {
+        return getQueryHttpSolrClient(core);
+    }
+    
+    @Deprecated
     public static HttpSolrClient getHttpSolrClient() {
-        return makeHttpSolrClientFromUrl(getSolrDefaultCoreUrl());
+        return getQueryHttpSolrClient(null);
     }
     
+    @Deprecated
     public static HttpSolrClient makeHttpSolrClientFromUrl(String url) {
-        // TODO: REVIEW: .allowCompression(false)
-        return new HttpSolrClient.Builder(url).build();
+        // use query username/password for backward compat, but this is not guaranteed to work
+        return makeHttpSolrClientFromUrlAndAuth(url, getSolrQueryLoginUsername(), getSolrQueryLoginPassword());
+    }
+    
+    public static HttpSolrClient makeHttpSolrClientFromUrlAndAuth(String url, String solrUsername, String solrPassword) {
+        //return new HttpSolrClient.Builder(url).build();
+        return ScipioHttpSolrClient.fromUrlAndAuth(url, solrUsername, solrPassword);
+    }
+    
+    static String getSolrQueryLoginUsername() {
+        return solrQueryLoginUsername;
+    }
+    
+    static String getSolrQueryLoginPassword() {
+        return solrQueryLoginPassword;
+    }
+    
+    static String getSolrUpdateLoginUsername() {
+        return solrUpdateLoginUsername;
+    }
+    
+    static String getSolrUpdateLoginPassword() {
+        return solrUpdateLoginPassword;
     }
 
+    /**
+     * Sets basic Solr auth on the given request.
+     * <p>
+     * NOTE: 2018-04-17: This should largely not be needed now; it should be
+     * already handled in ScipioHttpSolrClient returned by {@link #getQueryHttpSolrClient}, 
+     * although doing it in double here on the SolrRequest will not cause any problems.
+     */
+    public static void setQueryRequestAuth(SolrRequest<?> req, String solrUsername, String solrPassword) {
+        if (solrUsername == null) {
+            solrUsername = getSolrQueryLoginUsername();
+            solrPassword = getSolrQueryLoginPassword();
+        }
+        if (solrUsername != null) {
+            req.setBasicAuthCredentials(solrUsername, solrPassword);
+        }
+    }
+    
+    public static void setQueryRequestAuth(SolrRequest<?> req) {
+        String solrUsername = getSolrQueryLoginUsername();
+        if (solrUsername != null) {
+            String solrPassword = getSolrQueryLoginPassword();
+            req.setBasicAuthCredentials(solrUsername, solrPassword);
+        }
+    }
+    
+    public static void setUpdateRequestAuth(SolrRequest<?> req, String solrUsername, String solrPassword) {
+        if (solrUsername == null) {
+            solrUsername = getSolrUpdateLoginUsername();
+            solrPassword = getSolrUpdateLoginPassword();
+        }
+        if (solrUsername != null) {
+            req.setBasicAuthCredentials(solrUsername, solrPassword);
+        }
+    }
+    
+    public static void setUpdateRequestAuth(SolrRequest<?> req) {
+        String solrUsername = getSolrUpdateLoginUsername();
+        if (solrUsername != null) {
+            String solrPassword = getSolrUpdateLoginPassword();
+            req.setBasicAuthCredentials(solrUsername, solrPassword);
+        }
+    }
 }

@@ -18,6 +18,7 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrRequest.METHOD;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.apache.solr.client.solrj.request.QueryRequest;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -631,8 +632,11 @@ public abstract class SolrProductSearch {
             if ((String) context.get("facetQuery") != null) {
                 solrQuery.addFacetQuery((String) context.get("facetQuery"));
             }
-
-            QueryResponse rsp = client.query(solrQuery, METHOD.POST);
+         
+            //QueryResponse rsp = client.query(solrQuery, METHOD.POST); // old way (can't configure the request)
+            QueryRequest req = new QueryRequest(solrQuery, METHOD.POST);
+            QueryResponse rsp = req.process(client);
+            
             result = ServiceUtil.returnSuccess();
             result.put("queryResult", rsp);
         } catch (Exception e) {

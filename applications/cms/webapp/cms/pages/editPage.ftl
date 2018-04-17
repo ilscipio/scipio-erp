@@ -71,9 +71,17 @@
               <#if !fieldObj.expandLang?has_content || fieldObj.expandLang == "NONE">
                 <#-- TODO?: review this, it's because default-compact looks ugly in this case... maybe default-compact needs a review... -->
                 <@fields type="default">
+                  <#-- 2018-04-16: DO NOT USE CHECKBOX - it prevents templates from using default-value logic and operators - ternary needed
                   <@field label=fieldLabel labelDetail=labelDetail type="checkbox" name=name tooltip=tooltip required=required maxlength=maxLength id=id 
                       value="true" altValue="false" 
-                      checked=(toBooleanCms(value)!toBooleanCms(fieldObj.defaultValue!)!false) containerClass=containerClass/>
+                      checked=(toBooleanCms(value)!toBooleanCms(fieldObj.defaultValue!)!false) containerClass=containerClass/>-->
+                  <#local boolVal = toBooleanCms(value)!"">
+                  <#local defBoolVal = toBooleanCms(fieldObj.defaultValue!"")!"">
+                  <@field label=fieldLabel labelDetail=labelDetail type="select" name=name tooltip=tooltip required=required id=id containerClass=containerClass>
+                    <option value=""<#if !boolVal?is_boolean> selected="selected"</#if>><#if defBoolVal?is_boolean>(${defBoolVal?string})</#if></option><#-- not needed? ${uiLabelMap.CommonDefault}: -->
+                    <option value="true"<#if boolVal?is_boolean && boolVal> selected="selected"</#if>>true</option>
+                    <option value="false"<#if boolVal?is_boolean && !boolVal> selected="selected"</#if>>false</option>
+                  </@field>
                 </@fields>
               <#else>
                 <@field label=fieldLabel labelDetail=labelDetail type="input" name=name placeholder=(fieldObj.defaultValue!"") tooltip=tooltip required=required maxlength=maxLength id=id value=value containerClass=containerClass/>

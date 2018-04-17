@@ -952,6 +952,29 @@ under the License.
                     </then>
                 </if>
                 
+                <!-- SCIPIO: if editing a record, must look it up here -->
+                <if>
+                    <condition>
+                        <and>
+                            <not><if-empty field="partyId"/></not>
+                            <not><if-empty field="contentId"/></not>
+                            <not><if-empty field="parameters.fromDate"/></not>
+                            <not><if-empty field="parameters.partyContentTypeId"/></not>
+                        </and>
+                    </condition>
+                    <then>
+                        <entity-one entity-name="PartyContent" value-field="partyContent">
+                            <field-map field-name="partyId"/>
+                            <field-map field-name="contentId"/>
+                            <field-map field-name="partyContentTypeId" from-field="parameters.partyContentTypeId"/>
+                            <field-map field-name="fromDate" from-field="parameters.fromDate"/>
+                        </entity-one>
+                    </then>
+                    <else>
+                        <set field="partyContent" type="Object" value=""/>
+                    </else>
+                </if>
+                
                 <!-- TODO: REVIEW: header & title stuff, this is due to CommonPartyDecorator lingering in humanres -->
                 <set field="skipProfileHeader" type="Boolean" value="true"/>
                 <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle}${groovy: context.partyId ? (': ' + context.partyId) : ''}"/>

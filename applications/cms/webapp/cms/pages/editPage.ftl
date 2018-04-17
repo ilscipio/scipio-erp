@@ -71,10 +71,9 @@
               <#if !fieldObj.expandLang?has_content || fieldObj.expandLang == "NONE">
                 <#-- TODO?: review this, it's because default-compact looks ugly in this case... maybe default-compact needs a review... -->
                 <@fields type="default">
-                  <#-- FIXME: CHECKBOX breaks ternary logic and default value logic!... -->
                   <@field label=fieldLabel labelDetail=labelDetail type="checkbox" name=name tooltip=tooltip required=required maxlength=maxLength id=id 
                       value="true" altValue="false" 
-                      checked=(toBooleanCms(fieldObj.value!)!toBooleanCms(fieldObj.defaultValue!)!false) containerClass=containerClass/>
+                      checked=(toBooleanCms(value)!toBooleanCms(fieldObj.defaultValue!)!false) containerClass=containerClass/>
                 </@fields>
               <#else>
                 <@field label=fieldLabel labelDetail=labelDetail type="input" name=name placeholder=(fieldObj.defaultValue!"") tooltip=tooltip required=required maxlength=maxLength id=id value=value containerClass=containerClass/>

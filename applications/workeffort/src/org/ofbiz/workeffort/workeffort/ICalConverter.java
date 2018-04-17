@@ -44,7 +44,6 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
-import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VToDo;
@@ -73,6 +72,7 @@ import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.model.property.Version;
 import net.fortuna.ical4j.model.property.XProperty;
+import net.fortuna.ical4j.validate.ValidationException;
 
 import org.ofbiz.base.util.DateRange;
 import org.ofbiz.base.util.Debug;
@@ -306,7 +306,7 @@ public class ICalConverter {
         if (propertyName == null) {
             return null;
         }
-        Property property = propertyList.getProperty(propertyName);
+        Property property = (Property) propertyList.getProperty(propertyName); // SCIPIO: added cast (FIXME: use generics)
         if (property != null) {
             return property.getValue();
         }
@@ -556,7 +556,7 @@ public class ICalConverter {
         replaceProperty(componentProps, toLocation(workEffort.getString("locationDesc")));
         replaceProperty(componentProps, toStatus(workEffort.getString("currentStatusId")));
         replaceProperty(componentProps, toSummary(workEffort.getString("workEffortName")));
-        Property uid = componentProps.getProperty(Uid.UID);
+        Property uid = (Property) componentProps.getProperty(Uid.UID); // SCIPIO: added cast (FIXME: use generics)
         if (uid == null) {
             // Don't overwrite UIDs created by calendar clients
             replaceProperty(componentProps, toUid(workEffort.getString("workEffortId")));
@@ -625,7 +625,7 @@ public class ICalConverter {
         if (property == null) {
             return;
         }
-        Property existingProp = propertyList.getProperty(property.getName());
+        Property existingProp = (Property) propertyList.getProperty(property.getName()); // SCIPIO: added cast (FIXME: use generics)
         if (existingProp != null) {
             propertyList.remove(existingProp);
         }

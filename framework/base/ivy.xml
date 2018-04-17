@@ -149,7 +149,7 @@
         <!-- 2018-03-20: Not yet needed for framework (is shadowed in Camel addon)
         <dependency org="com.github.ben-manes.caffeine" name="caffeine" rev="2.6.2" conf="base,sources"/>-->
         <dependency org="com.github.dfabulich" name="sitemapgen4j" rev="1.0.6" conf="base,sources"/><!-- SCIPIO: 2017-11: new -->
-        <dependency org="org.mnode.ical4j" name="ical4j" rev="1.0.7" conf="base,sources"/><!-- TODO?: there is now 2.x.x line; incompatible API -->
+        <dependency org="org.mnode.ical4j" name="ical4j" rev="2.2.0" conf="base,sources"/><!-- TODO?: there is now 2.x.x line; incompatible API -->
         <dependency org="org.apache.shiro" name="shiro-core" rev="1.4.0" conf="base,sources"/><!-- TODO?: there is now 2.x.x line; incompatible API -->
 
         <!-- base jars - known to be missing/broken in central (2018-03-20) (see ivy/localRepo) -->

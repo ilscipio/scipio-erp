@@ -37,7 +37,11 @@ import org.ofbiz.base.util.GeneralException;
 /**
  * Utility class for doing DESded (3DES) Two-Way Encryption
  *
+ * @deprecated SCIPIO: 2018-04: DES is no longer considered secure
+ * and should not be used as main cipher in any code; some code may
+ * still remain where it is used as pure fallback only, to read back old records.
  */
+@Deprecated
 public class DesCrypt {
 
     public static final String module = DesCrypt.class.getName();

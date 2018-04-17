@@ -348,7 +348,7 @@ public abstract class SolrCategoryUtil {
         QueryResponse returnMap = new QueryResponse();
         try {
             // do the basic query
-            client = SolrUtil.getHttpSolrClient(core);
+            client = SolrUtil.getQueryHttpSolrClient(core);
             // create Query Object
             String query = "inStock[1 TO *]";
             if (categoryId != null)

@@ -288,6 +288,12 @@ under the License.
         </attribute>
         <attribute mode="IN" optional="true" name="highlight" type="Boolean"/><!-- default: false -->
         <attribute mode="IN" optional="true" name="excludeVariants" type="Boolean"/><!-- default true (added 2017-09-14) -->
+        <attribute mode="IN" optional="true" name="solrUsername" type="String">
+            <description>Username for Solr basic authentication (default: solrconfig.properties/solr.query.login.username)</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="solrPassword" type="String">
+            <description>Password for Solr basic authentication (default: solrconfig.properties/solr.query.login.password)</description>
+        </attribute>
         <attribute name="results" type="List" mode="OUT" optional="true"/>
         <attribute name="start" type="Long" mode="OUT" optional="true"/>
         <attribute name="viewSize" type="Integer" mode="OUT" optional="true"/>
@@ -345,6 +351,12 @@ under the License.
         <attribute mode="IN" optional="true" name="spellDict" type="Object"/><!-- String or List -->
         <attribute mode="IN" optional="true" name="highlight" type="Boolean"/><!-- default: false (changed 2017-09) -->
         <attribute mode="IN" optional="true" name="excludeVariants" type="Boolean"/><!-- default true (added 2017-09-14) -->
+        <attribute mode="IN" optional="true" name="solrUsername" type="String">
+            <description>Username for Solr basic authentication (default: solrconfig.properties/solr.query.login.username)</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="solrPassword" type="String">
+            <description>Password for Solr basic authentication (default: solrconfig.properties/solr.query.login.password)</description>
+        </attribute>
         <attribute name="results" type="List" mode="OUT" optional="true"/>
         <attribute name="isCorrectlySpelled" type="Boolean" mode="OUT" optional="true">
             <description>Correctly-spelled flag - set if spellcheck was enabled
@@ -413,6 +425,12 @@ under the License.
             <description>Optional manual extra query options; NOTE: using above options is preferred when possible for better future-proofing of queries</description>
         </attribute>
         <attribute mode="IN" name="core" optional="true" type="String" />
+        <attribute mode="IN" optional="true" name="solrUsername" type="String">
+            <description>Username for Solr basic authentication (default: solrconfig.properties/solr.query.login.username)</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="solrPassword" type="String">
+            <description>Password for Solr basic authentication (default: solrconfig.properties/solr.query.login.password)</description>
+        </attribute>
         <attribute name="queryResult" type="org.apache.solr.client.solrj.response.QueryResponse" mode="OUT" optional="true"/>
         <attribute name="errorType" type="String" mode="OUT" optional="true">
             <description>"query-syntax" for query syntax error, "general" otherwise (if error occurred) (added 2017-08-25)</description>

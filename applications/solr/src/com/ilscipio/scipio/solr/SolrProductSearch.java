@@ -100,7 +100,7 @@ public abstract class SolrProductSearch {
         // NOTE: log this as info because it's the only log line
         Debug.logInfo("Solr: removeFromSolr: Removing productId '" + productId + "' from index", module);
         try {
-            HttpSolrClient client = SolrUtil.getHttpSolrClient((String) context.get("core"));
+            HttpSolrClient client = SolrUtil.getUpdateHttpSolrClient((String) context.get("core"));
             client.deleteByQuery("productId:" + SolrExprUtil.escapeTermFull(productId));
             client.commit();
             result = ServiceUtil.returnSuccess();
@@ -316,7 +316,7 @@ public abstract class SolrProductSearch {
         try {
             Debug.logInfo("Solr: Generating and indexing document for productId '" + productId + "'", module);
 
-            client = SolrUtil.getHttpSolrClient((String) context.get("core"));
+            client = SolrUtil.getUpdateHttpSolrClient((String) context.get("core"));
             // Debug.log(server.ping().toString());
 
             // Construct Documents
@@ -398,7 +398,7 @@ public abstract class SolrProductSearch {
                     docs.add(doc1);
                 }
                 // push Documents to server
-                client = SolrUtil.getHttpSolrClient((String) context.get("core"));
+                client = SolrUtil.getUpdateHttpSolrClient((String) context.get("core"));
                 client.add(docs);
                 client.commit();
             }
@@ -462,7 +462,7 @@ public abstract class SolrProductSearch {
             // the passed values may not be simple fields names, they require complex expressions containing spaces and special chars
             // (for example the old "queryFilter" parameter was unusable, so now have "queryFilters" list in addition).
             
-            client = SolrUtil.getHttpSolrClient((String) context.get("core"));
+            client = SolrUtil.getQueryHttpSolrClient((String) context.get("core"));
             // create Query Object
             SolrQuery solrQuery = new SolrQuery();
             solrQuery.setQuery((String) context.get("query"));
@@ -635,6 +635,12 @@ public abstract class SolrProductSearch {
          
             //QueryResponse rsp = client.query(solrQuery, METHOD.POST); // old way (can't configure the request)
             QueryRequest req = new QueryRequest(solrQuery, METHOD.POST);
+            String solrUsername = (String) context.get("solrUsername");
+            if (solrUsername != null) {
+                String solrPassword = (String) context.get("solrPassword");
+                // This will override the credentials stored in (Scipio)HttpSolrClient, if any
+                req.setBasicAuthCredentials(solrUsername, solrPassword);
+            }
             QueryResponse rsp = req.process(client);
             
             result = ServiceUtil.returnSuccess();
@@ -1067,7 +1073,7 @@ public abstract class SolrProductSearch {
         EntityListIterator prodIt = null;
         boolean executed = false;
         try {
-            client = SolrUtil.getHttpSolrClient((String) context.get("core"));
+            client = SolrUtil.getUpdateHttpSolrClient((String) context.get("core"));
             
             // 2018-02-20: new ability to wait for Solr to load
             if (Boolean.TRUE.equals(context.get("waitSolrReady"))) {
@@ -1346,7 +1352,7 @@ public abstract class SolrProductSearch {
         result.put("enabled", enabled);
         try {
             HttpSolrClient client = (HttpSolrClient) context.get("client");
-            if (client == null) client = SolrUtil.getHttpSolrClient((String) context.get("core"));
+            if (client == null) client = SolrUtil.getQueryHttpSolrClient((String) context.get("core"));
             result.put("ready", SolrUtil.isSolrWebappReady(client));
         } catch (Exception e) {
             Debug.logWarning(e, "Solr: checkSolrReady: error trying to check if Solr ready: " + e.getMessage(), module);
@@ -1365,7 +1371,7 @@ public abstract class SolrProductSearch {
         HttpSolrClient client = null;
         try {
             client = (HttpSolrClient) context.get("client");
-            if (client == null) client = SolrUtil.getHttpSolrClient((String) context.get("core"));
+            if (client == null) client = SolrUtil.getQueryHttpSolrClient((String) context.get("core"));
             
             if (SolrUtil.isSolrWebappReady(client)) {
                 if (Debug.verboseOn()) Debug.logInfo("Solr: waitSolrReady: Solr is ready, continuing", module);

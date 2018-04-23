@@ -582,5 +582,18 @@ under the License.
     <target name="init-lib-dep-report-core" depends="ivy-init,do-lib-resolve">
         <ivy:report conf="${lib.resolve.confs}" todir="lib-depreport"/>
     </target>
+    
+    <target name="init-lib-dep-checkupdates" description="Check for library dependency updates">
+        <if>
+            <available file="ivy.xml" type="file"/>
+            <then>
+                <antcall target="init-lib-dep-checkupdates-core" inheritrefs="true"/>
+            </then>
+        </if>
+    </target>
+    <target name="init-lib-dep-checkupdates-core" depends="ivy-init,get-lib-resolve-confs">
+        <property name="lib.dep.checkupdates.transitive" value="false"/>
+        <ivy:checkdepsupdate conf="${lib.resolve.confs}" showTransitive="${lib.dep.checkupdates.transitive}"/>
+    </target>
 
 </project>

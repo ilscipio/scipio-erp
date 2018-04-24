@@ -43,11 +43,11 @@
     </rule>
     <outbound-rule>
         <from>^([^/]*//[^/]*)?(/[^/]*?)?(/control)?/main([?;#].*)?$</from>
-        <to last="true">$1$2/$4</to>
+        <to>$1$2/$4</to>
     </outbound-rule>
     <outbound-rule>
         <from>^([^/]*//[^/]*)?(/[^/]*?)?(/control)?/main(/.*)$</from>
-        <to last="true">$1$2$4</to>
+        <to>$1$2$4</to>
     </outbound-rule>
 
     <!-- CONTROL-SERVLET-STRIPPING RULES 

@@ -1991,7 +1991,7 @@ under the License.
         <dep-subant dir="${basedir}/themes" target="lib-update"/>
     </target>
     
-    <target name="lib-clean" depends="ivy-init" description="Libraries and dependencies clean - by default, cleans ivy resolution cache (but not repository/download cache) and removes deployed JARs [alias for clean-ivy-deployed]">
+    <target name="lib-clean" depends="ivy-init" description="Libraries and dependencies clean - by default, cleans ivy resolution cache (but not repository/download cache) and removes deployed JARs [same as clean-ivy-deployed]">
         <stopwatch name="lib.clean.stopwatch" action="start"/>
 
         <if>
@@ -2026,14 +2026,14 @@ under the License.
             </else>
         </if>
     </target>
-    <target name="lib-clean-cache" depends="clean-ivy" description="Cleans Ivy resolution cache (but not repository/download cache, unless lib.clean.cache.repo=true) [alias for clean-ivy]">
+    <target name="lib-clean-cache" depends="clean-ivy" description="Cleans Ivy resolution cache (but not repository/download cache, unless lib.clean.cache.repo=true) [same as clean-ivy]">
     </target>
     
     <target name="clean-ivy-full" depends="ivy-init" description="Cleans Ivy resolution and repository/download caches (forces lib re-download, may affect other projects) [alias for lib-clean-cache-full]">
         <!-- SCIPIO: NOTE: because the repository cache uses the default ivy user cache, this may affect other projects -->
         <ivy:cleancache/>
     </target>
-    <target name="lib-clean-cache-full" depends="clean-ivy-full" description="Cleans Ivy resolution and repository/download caches (forces lib re-download, may affect other projects) [alias for clean-ivy-full]">
+    <target name="lib-clean-cache-full" depends="clean-ivy-full" description="Cleans Ivy resolution and repository/download caches (forces lib re-download, may affect other projects) [same as clean-ivy-full]">
     </target>
     
     <target name="lib-clean-deployed" description="Cleans out the library deployment folders (but not library/ivy caches)">

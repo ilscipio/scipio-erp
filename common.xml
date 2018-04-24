@@ -88,7 +88,7 @@ under the License.
     <!-- Compilation of the source files                                    -->
     <!-- ================================================================== -->
 
-    <target name="classes" depends="prepare,check-init-lib-update">
+    <target name="classes" depends="prepare,check-lib-update">
         <!-- SCIPIO: per-comonent lib update hook -->
         <javac18 />
     </target>
@@ -281,7 +281,7 @@ under the License.
     <property name="lib.update.filename.pattern.ivy" value="[artifact]-[revision].[ext]" />
     <property name="lib.update.filename.pattern.src.ivy" value="[artifact]-[revision]-sources.[ext]" />
     
-    <target name="check-init-lib-update" description="Initial libraries and dependencies download, per-component, if enabled only">
+    <target name="check-lib-update" description="Initial libraries and dependencies download, per-component, if enabled only">
         <if>
             <not>
                 <equals arg1="${lib.update.hook.mode}" arg2="component"/>
@@ -299,25 +299,27 @@ under the License.
                 <equals arg1="${lib.update.force}" arg2="true"/>
                 <then>
                     <echo level="verbose" message="Lib updates check forced - starting..."/>
-                    <antcall target="init-lib-update"/>
+                    <antcall target="lib-update"/>
                 </then>
             </elseif>
             <else>
                 <echo level="verbose" message="Lib updates check starting..."/>
-                <antcall target="init-lib-update"/>
+                <antcall target="lib-update"/>
             </else>
         </if>
     </target>
+    <target name="check-init-lib-update" depends="check-lib-update" description="[deprecated] alias for check-lib-update">
+    </target>
     
     <!-- NOTE: IMPORTANT: All antcall to reusable targets that might invoke ivy: functions must specify inheritRefs="true" -->
-    <target name="init-lib-update" description="Downloads initial jars, if applicable for component">
+    <target name="lib-update" description="Downloads initial jars, if applicable for component">
         <if>
             <and>
                 <available file="ivy.xml" type="file"/>
                 <available file="lib" type="dir"/>
             </and>
             <then>
-                <antcall target="init-lib-update-core" inheritrefs="true"/>
+                <antcall target="lib-update-core" inheritrefs="true"/>
             </then>
             <elseif>
                 <!-- 2018-03-20: migration cleanup: the ivy.xml files were removed for
@@ -348,7 +350,7 @@ under the License.
         </if>
     </target>
 
-    <target name="init-lib-update-core" depends="ivy-init,get-lib-resolve-confs,do-lib-resolve">
+    <target name="lib-update-core" depends="ivy-init,get-lib-resolve-confs,do-lib-resolve">
         <!-- get info about the last retrieve attempt -->
         <property file="${ofbiz.home.dir}/ivy/ivy-last.txt" prefix="lib.update.retrieve.last"/>
         
@@ -500,7 +502,7 @@ under the License.
         <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="${lib.resolve.build.confs}"/>
     </target>
 
-    <target name="init-lib-clean" description="Cleans downloadable jars, if applicable for component">
+    <target name="lib-clean" description="Cleans downloadable jars, if applicable for component">
         <if>
             <and>
                 <available file="ivy.xml" type="file"/>
@@ -559,39 +561,39 @@ under the License.
         </if>
     </target>
     
-    <target name="init-lib-dep-tree" description="Shows library dependency tree">
+    <target name="lib-dep-tree" description="Shows library dependency tree">
         <if>
             <available file="ivy.xml" type="file"/>
             <then>
-                <antcall target="init-lib-dep-tree-core" inheritrefs="true"/>
+                <antcall target="lib-dep-tree-core" inheritrefs="true"/>
             </then>
         </if>
     </target>
-    <target name="init-lib-dep-tree-core" depends="ivy-init,get-lib-resolve-confs">
+    <target name="lib-dep-tree-core" depends="ivy-init,get-lib-resolve-confs">
         <ivy:dependencytree conf="${lib.resolve.confs}"/>
     </target>
     
-    <target name="init-lib-dep-report" description="Generate library dependency HTML report">
+    <target name="lib-dep-report" description="Generate library dependency HTML report">
         <if>
             <available file="ivy.xml" type="file"/>
             <then>
-                <antcall target="init-lib-dep-report-core" inheritrefs="true"/>
+                <antcall target="lib-dep-report-core" inheritrefs="true"/>
             </then>
         </if>
     </target>
-    <target name="init-lib-dep-report-core" depends="ivy-init,do-lib-resolve">
+    <target name="lib-dep-report-core" depends="ivy-init,do-lib-resolve">
         <ivy:report conf="${lib.resolve.confs}" todir="lib-depreport"/>
     </target>
     
-    <target name="init-lib-dep-checkupdates" description="Check for library dependency updates">
+    <target name="lib-dep-checkupdates" description="Check for library dependency updates">
         <if>
             <available file="ivy.xml" type="file"/>
             <then>
-                <antcall target="init-lib-dep-checkupdates-core" inheritrefs="true"/>
+                <antcall target="lib-dep-checkupdates-core" inheritrefs="true"/>
             </then>
         </if>
     </target>
-    <target name="init-lib-dep-checkupdates-core" depends="ivy-init,get-lib-resolve-confs">
+    <target name="lib-dep-checkupdates-core" depends="ivy-init,get-lib-resolve-confs">
         <property name="lib.dep.checkupdates.transitive" value="false"/>
         <ivy:checkdepsupdate conf="${lib.resolve.confs}" showTransitive="${lib.dep.checkupdates.transitive}"/>
     </target>

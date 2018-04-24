@@ -214,7 +214,7 @@ under the License.
             <equals arg1="${lib.clean.deployed}" arg2="true"/>-->
             <not><equals arg1="${lib.clean.deployed}" arg2="false"/></not>
             <then>
-                <antcall target="init-lib-clean-deployed" inheritrefs="true"/>
+                <antcall target="lib-clean-deployed" inheritrefs="true"/>
             </then>
         </if>
         <antcall target="clean-data"/>
@@ -238,7 +238,7 @@ under the License.
     </target>
 
     <target name="clean-downloads"
-          description="Clean all downloaded files (NOTE: to avoid removing JDBC drivers, use init-lib-clean instead)">
+          description="Clean all downloaded files (NOTE: to avoid removing JDBC drivers, use lib-clean instead)">
         
         <!-- SCIPIO: hooks -->
         <invokehook target="pre-clean-downloads" />
@@ -256,7 +256,7 @@ under the License.
         <if><!-- SCIPIO: NOTE: 2017-02-03: new -->
             <not><equals arg1="${lib.clean.deployed}" arg2="false"/></not>
             <then>
-                <antcall target="init-lib-clean-deployed" inheritrefs="true"/>
+                <antcall target="lib-clean-deployed" inheritrefs="true"/>
             </then>
         </if>
         
@@ -743,7 +743,7 @@ under the License.
     <!-- Build Components                                                   -->
     <!-- ================================================================== -->
     
-    <target name="build" depends="ofbiz-init,build-scipio-build-tools,check-init-lib-update">
+    <target name="build" depends="ofbiz-init,build-scipio-build-tools,check-lib-update">
         <echo message="[build] ========== Start Building (Compile) =========="/>
         
         <!-- SCIPIO: hooks -->
@@ -1846,7 +1846,7 @@ under the License.
     
     <!-- SCIPIO: 2017-01-30: New ivy download targets -->
     
-    <target name="init-lib-update" depends="ivy-init" description="Initial libraries and dependencies download, global">
+    <target name="lib-update" depends="ivy-init" description="Initial libraries and dependencies download, global">
         <stopwatch name="lib.update.stopwatch" action="start"/>
         <!--
         <tstamp>
@@ -1870,22 +1870,22 @@ under the License.
         -->
         <stopwatch name="lib.update.stopwatch" action="total"/>
     </target>
-    <target name="init-lib-update-force" description="Initial libraries and dependencies download, global - forced (even if no change)">
+    <target name="lib-update-force" description="Initial libraries and dependencies download, global - forced (even if no change)">
         <property name="lib.update.force" value="true"/>
-        <antcall target="init-lib-update" inheritrefs="true"/>
+        <antcall target="lib-update" inheritrefs="true"/>
     </target>
     
-    <target name="init-lib-update-withsources" description="Initial libraries and dependencies AND source JARs download, global">
+    <target name="lib-update-withsources" description="Initial libraries and dependencies AND source JARs download, global">
         <property name="lib.update.sources" value="true"/>
-        <antcall target="init-lib-update" inheritrefs="true"/>
+        <antcall target="lib-update" inheritrefs="true"/>
     </target>
-    <target name="init-lib-update-withsources-force" description="Initial libraries and dependencies AND source JARs download, global - forced (even if no change)">
+    <target name="lib-update-withsources-force" description="Initial libraries and dependencies AND source JARs download, global - forced (even if no change)">
         <property name="lib.update.force" value="true"/>
         <property name="lib.update.sources" value="true"/>
-        <antcall target="init-lib-update" inheritrefs="true"/>
+        <antcall target="lib-update" inheritrefs="true"/>
     </target>
     
-    <target name="check-init-lib-update" description="Initial libraries and dependencies download, global, if enabled only">
+    <target name="check-lib-update" description="Initial libraries and dependencies download, global, if enabled only">
         <!-- Removed - not really useful (see below): depends="get-lib-update-status" -->
         <if>
             <not><equals arg1="${lib.update.hook.mode}" arg2="global"/></not>
@@ -1905,12 +1905,12 @@ under the License.
                 </or>
                 <then>
                     <echo message="Lib updates check forced - starting..."/>
-                    <antcall target="init-lib-update"/>
+                    <antcall target="lib-update"/>
                 </then>
             </elseif>
             <else>
                 <echo message="Lib updates check starting..."/>
-                <antcall target="init-lib-update"/>
+                <antcall target="lib-update"/>
                 <!-- Removed - turns out this check is useless to deal with changes or anything after 
                     the initial download... too simplistic
                 <if>
@@ -1924,13 +1924,13 @@ under the License.
                             <else>
                                 <echo level="error" message="Lib download: SANITY CHECK FAILED: missing major libraries despite last run status marked success!"/>
                                 <echo message="Lib download required (sanity check failed) - starting..."/>
-                                <antcall target="init-lib-update"/>
+                                <antcall target="lib-update"/>
                             </else>
                         </if>
                     </then>
                     <else>
                         <echo message="Lib download required (last download status unknown or non-success) - starting..."/>
-                        <antcall target="init-lib-update"/>
+                        <antcall target="lib-update"/>
                     </else>
                 </if>-->
             </else>
@@ -1968,51 +1968,51 @@ under the License.
     -->
 
     <target name="framework-lib-update">
-        <iterate target="init-lib-update" filelist="framework-builds"/>
+        <iterate target="lib-update" filelist="framework-builds"/>
     </target>
 
     <target name="applications-lib-update" if="${applications.present}">
-        <iterate target="init-lib-update" filelist="application-builds"/>
+        <iterate target="lib-update" filelist="application-builds"/>
     </target>
 
     <target name="specialpurpose-lib-update" if="${specialpurpose.present}">
-        <iterate target="init-lib-update" filelist="specialpurpose-builds"/>
+        <iterate target="lib-update" filelist="specialpurpose-builds"/>
     </target>
     
     <target name="addons-lib-update">
-        <addonsant target="init-lib-update"/>
+        <addonsant target="lib-update"/>
     </target>
     
     <target name="hotdeploy-lib-update">
-        <hotdeployant target="init-lib-update"/>
+        <hotdeployant target="lib-update"/>
     </target>
     
     <target name="themes-lib-update">
-        <dep-subant dir="${basedir}/themes" target="init-lib-update"/>
+        <dep-subant dir="${basedir}/themes" target="lib-update"/>
     </target>
     
-    <target name="init-lib-clean" depends="ivy-init" description="Libraries and dependencies clean - by default, cleans ivy resolution cache (but not repository/download cache) and removes deployed JARs [alias for clean-ivy-deployed]">
+    <target name="lib-clean" depends="ivy-init" description="Libraries and dependencies clean - by default, cleans ivy resolution cache (but not repository/download cache) and removes deployed JARs [alias for clean-ivy-deployed]">
         <stopwatch name="lib.clean.stopwatch" action="start"/>
 
         <if>
             <not><equals arg1="${lib.clean.cache}" arg2="false"/></not>
             <then>
-                <antcall target="init-lib-clean-cache" inheritrefs="true"/>
+                <antcall target="lib-clean-cache" inheritrefs="true"/>
             </then>
         </if>
         <if>
             <not><equals arg1="${lib.clean.deployed}" arg2="false"/></not>
             <then>
-                <antcall target="init-lib-clean-deployed" inheritrefs="true"/>
+                <antcall target="lib-clean-deployed" inheritrefs="true"/>
             </then>
         </if>
 
         <stopwatch name="lib.clean.stopwatch" action="total"/>
     </target>
-    <target name="clean-ivy-deployed" depends="init-lib-clean" description="Libraries and dependencies clean - by default, cleans ivy resolution cache (but not repository/download cache) and removes deployed JARs [alias for init-lib-clean]">
+    <target name="clean-ivy-deployed" depends="lib-clean" description="Libraries and dependencies clean - by default, cleans ivy resolution cache (but not repository/download cache) and removes deployed JARs [alias for lib-clean]">
     </target>
     
-    <target name="clean-ivy" depends="ivy-init" description="Cleans Ivy resolution cache (but not repository/download cache, unless lib.clean.cache.repo=true) [alias for init-lib-clean-cache]">
+    <target name="clean-ivy" depends="ivy-init" description="Cleans Ivy resolution cache (but not repository/download cache, unless lib.clean.cache.repo=true) [alias for lib-clean-cache]">
         <!-- SCIPIO: NOTE: 2017-02-03: the cache is split between repository and resolution cache.
             99% of the time, emptying the repository cache is a giant waste of time, so don't do it
             by default. -->
@@ -2026,17 +2026,17 @@ under the License.
             </else>
         </if>
     </target>
-    <target name="init-lib-clean-cache" depends="clean-ivy" description="Cleans Ivy resolution cache (but not repository/download cache, unless lib.clean.cache.repo=true) [alias for clean-ivy]">
+    <target name="lib-clean-cache" depends="clean-ivy" description="Cleans Ivy resolution cache (but not repository/download cache, unless lib.clean.cache.repo=true) [alias for clean-ivy]">
     </target>
     
-    <target name="clean-ivy-full" depends="ivy-init" description="Cleans Ivy resolution and repository/download caches (forces lib re-download, may affect other projects) [alias for init-lib-clean-cache-full]">
+    <target name="clean-ivy-full" depends="ivy-init" description="Cleans Ivy resolution and repository/download caches (forces lib re-download, may affect other projects) [alias for lib-clean-cache-full]">
         <!-- SCIPIO: NOTE: because the repository cache uses the default ivy user cache, this may affect other projects -->
         <ivy:cleancache/>
     </target>
-    <target name="init-lib-clean-cache-full" depends="clean-ivy-full" description="Cleans Ivy resolution and repository/download caches (forces lib re-download, may affect other projects) [alias for clean-ivy-full]">
+    <target name="lib-clean-cache-full" depends="clean-ivy-full" description="Cleans Ivy resolution and repository/download caches (forces lib re-download, may affect other projects) [alias for clean-ivy-full]">
     </target>
     
-    <target name="init-lib-clean-deployed" description="Cleans out the library deployment folders (but not library/ivy caches)">
+    <target name="lib-clean-deployed" description="Cleans out the library deployment folders (but not library/ivy caches)">
         <!-- when doing "full" clean-deployed, by default also clean out libsrc, because makes no sense
             to keep sources for libs whose versions we might be trying to change -->
         <property name="lib.update.sources" value="true"/>
@@ -2049,54 +2049,54 @@ under the License.
     </target>
     
     <target name="framework-lib-clean">
-        <iterate target="init-lib-clean" filelist="framework-builds"/>
+        <iterate target="lib-clean" filelist="framework-builds"/>
     </target>
 
     <target name="applications-lib-clean" if="${applications.present}">
-        <iterate target="init-lib-clean" filelist="application-builds"/>
+        <iterate target="lib-clean" filelist="application-builds"/>
     </target>
 
     <target name="specialpurpose-lib-clean" if="${specialpurpose.present}">
-        <iterate target="init-lib-clean" filelist="specialpurpose-builds"/>
+        <iterate target="lib-clean" filelist="specialpurpose-builds"/>
     </target>
     
     <target name="addons-lib-clean">
-        <addonsant target="init-lib-clean"/>
+        <addonsant target="lib-clean"/>
     </target>
     
     <target name="hotdeploy-lib-clean">
-        <hotdeployant target="init-lib-clean"/>
+        <hotdeployant target="lib-clean"/>
     </target>
     
     <target name="themes-lib-clean">
-        <dep-subant dir="${basedir}/themes" target="init-lib-clean"/>
+        <dep-subant dir="${basedir}/themes" target="lib-clean"/>
     </target>
     
-    <target name="init-lib-dep-tree" description="Shows library dependency trees for all components with an ivyfile">
-        <iterate target="init-lib-dep-tree" filelist="framework-builds"/>
-        <iterate target="init-lib-dep-tree" filelist="application-builds"/>
-        <iterate target="init-lib-dep-tree" filelist="specialpurpose-builds"/>
-        <addonsant target="init-lib-dep-tree"/>
-        <hotdeployant target="init-lib-dep-tree"/>
-        <dep-subant dir="${basedir}/themes" target="init-lib-dep-tree"/>
+    <target name="lib-dep-tree" description="Shows library dependency trees for all components with an ivyfile">
+        <iterate target="lib-dep-tree" filelist="framework-builds"/>
+        <iterate target="lib-dep-tree" filelist="application-builds"/>
+        <iterate target="lib-dep-tree" filelist="specialpurpose-builds"/>
+        <addonsant target="lib-dep-tree"/>
+        <hotdeployant target="lib-dep-tree"/>
+        <dep-subant dir="${basedir}/themes" target="lib-dep-tree"/>
     </target>
     
-    <target name="init-lib-dep-report" description="Generate library dependency HTML reports">
-        <iterate target="init-lib-dep-report" filelist="framework-builds"/>
-        <iterate target="init-lib-dep-report" filelist="application-builds"/>
-        <iterate target="init-lib-dep-report" filelist="specialpurpose-builds"/>
-        <addonsant target="init-lib-dep-report"/>
-        <hotdeployant target="init-lib-dep-report"/>
-        <dep-subant dir="${basedir}/themes" target="init-lib-dep-report"/>
+    <target name="lib-dep-report" description="Generate library dependency HTML reports">
+        <iterate target="lib-dep-report" filelist="framework-builds"/>
+        <iterate target="lib-dep-report" filelist="application-builds"/>
+        <iterate target="lib-dep-report" filelist="specialpurpose-builds"/>
+        <addonsant target="lib-dep-report"/>
+        <hotdeployant target="lib-dep-report"/>
+        <dep-subant dir="${basedir}/themes" target="lib-dep-report"/>
     </target>
     
-    <target name="init-lib-dep-checkupdates" description="Check for library dependency updates">
-        <iterate target="init-lib-dep-checkupdates" filelist="framework-builds"/>
-        <iterate target="init-lib-dep-checkupdates" filelist="application-builds"/>
-        <iterate target="init-lib-dep-checkupdates" filelist="specialpurpose-builds"/>
-        <addonsant target="init-lib-dep-checkupdates"/>
-        <hotdeployant target="init-lib-dep-checkupdates"/>
-        <dep-subant dir="${basedir}/themes" target="init-lib-dep-checkupdates"/>
+    <target name="lib-dep-checkupdates" description="Check for library dependency updates">
+        <iterate target="lib-dep-checkupdates" filelist="framework-builds"/>
+        <iterate target="lib-dep-checkupdates" filelist="application-builds"/>
+        <iterate target="lib-dep-checkupdates" filelist="specialpurpose-builds"/>
+        <addonsant target="lib-dep-checkupdates"/>
+        <hotdeployant target="lib-dep-checkupdates"/>
+        <dep-subant dir="${basedir}/themes" target="lib-dep-checkupdates"/>
     </target>
 
     <target name="download-activemq" depends="ivy-init" description="Download activemq for DCC (Distributed Cache Clearing">

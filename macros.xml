@@ -717,7 +717,7 @@ Unexpectedly received empty list of builds to iterate."/>
     
     <target name="ivy-init"><!-- SCIPIO: 2017-01-30: new -->
         <!-- DEV NOTE: WARN: for performance reasons, this code has to be COPIED into 
-            common.xml#init-lib-update; keep in sync -->
+            common.xml#lib-update; keep in sync -->
         <taskdef uri="antlib:org.apache.ivy.ant" resource="org/apache/ivy/ant/antlib.xml" classpathref="lib.ivy.class.path"/>
     </target>
     

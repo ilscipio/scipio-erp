@@ -1875,11 +1875,11 @@ under the License.
         <antcall target="lib-update" inheritrefs="true"/>
     </target>
     
-    <target name="lib-update-withsources" description="Initial libraries and dependencies AND source JARs download, global">
+    <target name="lib-update-withlibsrc" description="Initial libraries and dependencies AND source JARs download, global">
         <property name="lib.update.sources" value="true"/>
         <antcall target="lib-update" inheritrefs="true"/>
     </target>
-    <target name="lib-update-withsources-force" description="Initial libraries and dependencies AND source JARs download, global - forced (even if no change)">
+    <target name="lib-update-withlibsrc-force" description="Initial libraries and dependencies AND source JARs download, global - forced (even if no change)">
         <property name="lib.update.force" value="true"/>
         <property name="lib.update.sources" value="true"/>
         <antcall target="lib-update" inheritrefs="true"/>

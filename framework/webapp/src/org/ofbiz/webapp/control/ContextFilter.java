@@ -284,8 +284,11 @@ public class ContextFilter implements Filter {
                         }
                     }
                     filterMessage = filterMessage + " (" + error + ")";
-                    httpResponse.sendError(error, contextUri);
-                    request.setAttribute("filterRequestUriError", contextUri);
+                    // SCIPIO: 2018-04: here the message will be public-facing, so encode the URI for urlrewriting
+                    //String reasonUri = contextUri;
+                    String reasonUri = UtilValidate.isNotEmpty(contextUri) ? httpResponse.encodeURL(contextUri) : contextUri;
+                    httpResponse.sendError(error, reasonUri);
+                    request.setAttribute("filterRequestUriError", reasonUri);
                 } else {
                     filterMessage = filterMessage + " (" + redirectPath + ")";
                     if (!redirectPath.toLowerCase().startsWith("http")) {

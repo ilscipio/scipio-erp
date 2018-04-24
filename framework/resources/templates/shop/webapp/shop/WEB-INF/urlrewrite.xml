@@ -42,12 +42,8 @@
         <to last="true">%{attribute:scpCtrlServPath}/main$3</to>
     </rule>
     <outbound-rule>
-        <from>^([^/]*//[^/]*)?(/[^/]*?)?(/control)?/main([?;#].*)?$</from>
-        <to>$1$2/$4</to>
-    </outbound-rule>
-    <outbound-rule>
-        <from>^([^/]*//[^/]*)?(/[^/]*?)?(/control)?/main(/.*)$</from>
-        <to>$1$2$4</to>
+        <from>^([^/]*//[^/]*)?(/[^/]*?)?(?:/control)?/main(?:(?:/|([?;#]))(.*))?$</from>
+        <to>$1$2/$3$4</to>
     </outbound-rule>
 
     <!-- CONTROL-SERVLET-STRIPPING RULES 

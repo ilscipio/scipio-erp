@@ -191,6 +191,7 @@ under the License.
         <url-pattern>/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>FORWARD</dispatcher>
+        <dispatcher>ERROR</dispatcher><!-- 2018-04: needed for outbound-rules to run on error page -->
     </filter-mapping>
     <filter-mapping>
         <filter-name>SeoCatalogUrlFilter</filter-name>

@@ -42,7 +42,7 @@
         <to last="true">%{attribute:scpCtrlServPath}/main$1</to>
     </rule>
     <outbound-rule>
-        <from>^([^/]*//[^/]*)?(/[^/]*?)?(?:/control)?/main(?:(?:/|([?;#]))(.*))?$</from>
+        <from>^([^/]*//[^/]*)?(/(?!control/)[^/]*?)?(?:/control)?/main(?:(?:/|([?;#]))(.*))?$</from>
         <to>$1$2/$3$4</to>
     </outbound-rule>
 

@@ -32,7 +32,7 @@ under the License.
     <!-- Compilation of the source files                                    -->
     <!-- ================================================================== -->
 
-    <target name="classes" depends="prepare,check-init-lib-update"><!-- SCIPIO: added per-component lib update check -->
+    <target name="classes" depends="prepare,check-lib-update"><!-- SCIPIO: added per-component lib update check -->
         <!-- compile start -->
         <javac18 destdir="${build.dir}/classes" srcdir="${src.dir}"/>
     </target>

@@ -32,7 +32,7 @@ under the License.
         <file name="../base" />
     </filelist>
 
-    <target name="build" depends="check-init-lib-update">
+    <target name="build" depends="check-lib-update">
         <!--echo message="[build] ========== Building Foundation-Shop Theme ==========" />
         <echo message="[build] ========== Done Building Foundation-Shop Theme ==========" /-->
     </target>

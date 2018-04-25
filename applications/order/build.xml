@@ -53,7 +53,7 @@ under the License.
     <!-- Compilation of the source files                                                                                                                         -->
     <!-- ================================================================== -->
 
-    <target name="classes" depends="prepare,check-init-lib-update"><!-- SCIPIO: added per-component lib update check -->
+    <target name="classes" depends="prepare,check-lib-update"><!-- SCIPIO: added per-component lib update check -->
         <javac18>
             <!-- exclude the payment processor packages; comment if you have libs -->
             <exclude name="org/ofbiz/order/thirdparty/taxware/**"/>

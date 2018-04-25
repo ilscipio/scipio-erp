@@ -525,8 +525,7 @@ Unexpectedly received empty list of builds to iterate."/>
                     <pathconvert property="component.build.dependencies.prop" refid="component.build.dependencies" 
                         pathsep="${component.build.dependencies.sep}" setonempty="true">
                         <!-- DEV NOTE: see https://ant.apache.org/manual/Tasks/script.html for language details -->
-                        <scriptmapper language="javascript">
-                            <![CDATA[
+                        <scriptmapper language="javascript"><![CDATA[
                             var proj = self.getProject();
                             
                             var doFail = function(msg) {
@@ -607,8 +606,7 @@ Unexpectedly received empty list of builds to iterate."/>
                                     doFail("missing or invalid build dependency: invalid path (must be a build.xml file or component directory): " + source);
                                 }
                             }
-                            ]]>
-                        </scriptmapper>
+                        ]]></scriptmapper>
                         <!-- strip the full path, make relative to ofbiz base folder (most versatile)
                             NOTE: this runs after the mapper (even if you list the map before the mapper) -->
                         <!--<globmapper from="${ofbiz.home.dir}/*" to="*" />-->

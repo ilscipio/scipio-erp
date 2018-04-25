@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
+import org.tuckey.web.filters.urlrewrite.Condition;
 import org.tuckey.web.filters.urlrewrite.Conf;
 import org.tuckey.web.filters.urlrewrite.OutboundRule;
 
@@ -50,13 +51,25 @@ public class UrlRewriteConf {
                 Debug.logWarning("urlrewrite: outbound-rule in " + urlConfPath + " omits 'from' or 'to' elements; unsupported; ignoring rule", module);
                 continue;
             }
-            if (UtilValidate.isNotEmpty(outboundRule.getConditions())) {
-                Debug.logWarning("urlrewrite: outbound-rule in " + urlConfPath + " has condition elements; unsupported; ignoring rule", module);
+            if (UtilValidate.isNotEmpty(outboundRule.getConditions()) && !checkConditionsSupported(outboundRule.getConditions())) {
+                Debug.logWarning("urlrewrite: outbound-rule in " + urlConfPath + " has unsupported condition elements; unsupported; ignoring rule", module);
                 continue;
             }
             filteredRules.add(outboundRule);
         }
         return filteredRules;
+    }
+    
+    protected static boolean checkConditionsSupported(List<Condition> conds) {
+        for(Condition cond : conds) {
+            if (!checkConditionSupported(cond)) return false;
+        }
+        return true;
+    }
+    
+    protected static boolean checkConditionSupported(Condition cond) {
+        // TODO: try to support context-path regexp, etc.
+        return false;
     }
     
     public static UrlRewriteConf loadConf(String urlConfPath) throws IOException {

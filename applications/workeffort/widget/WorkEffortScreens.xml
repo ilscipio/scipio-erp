@@ -75,32 +75,33 @@ under the License.
     <screen name="EditWorkEffort">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditWorkEffort"/>
-                <set field="activeSubMenuItem" value="WorkEffort"/>
-                <set field="labelTitleProperty" value="PageTitleEditWorkEffort"/>
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="/workeffort/control/ListWorkEfforts"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <set field="thisWorkEffortId" from-field="parameters.workEffortId"/>
                 <entity-one entity-name="WorkEffort" value-field="workEffort"/>
+                <set field="titleProperty" value="${groovy: context.workEffort ? 'PageTitleEditWorkEffort' : 'PageTitleAddWorkEffort'}"/>
+                <set field="activeSubMenuItem" value="${groovy: context.workEffort ? 'WorkEffort' : 'NewWorkEffort'}"/>
+                <set field="labelTitleProperty" from-field="titleProperty"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                        <include-menu name="EditWorkEffortSubTabBar" location="component://workeffort/widget/WorkEffortMenus.xml"/>
                         <section>
                             <condition>
                                 <if-empty field="workEffort"/>
                             </condition>
                             <widgets>
-                                <screenlet title="${uiLabelMap.PageTitleAddWorkEffort}">
+                                <screenlet><!-- title="${uiLabelMap.PageTitleAddWorkEffort}" -->
                                     <include-form name="EditWorkEffort" location="component://workeffort/widget/WorkEffortForms.xml"/>
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <container style="button-bar">
+                                <!--<container style="button-bar">
                                     <link text="${uiLabelMap.WorkEffortCreate}" target="EditWorkEffort" style="${styles.link_nav} ${styles.action_add}">
                                         <parameter param-name="DONE_PAGE" from-field="donePage"/>
                                     </link>
-                                </container>
+                                </container>-->
                                 <screenlet>
                                     <include-form name="EditWorkEffort" location="component://workeffort/widget/WorkEffortForms.xml"/>
                                 </screenlet>
@@ -120,21 +121,22 @@ under the License.
     <screen name="FindWorkEffort">
         <section>
             <actions>
-                <set field="activeSubMenuItem" value="workeffort"/>
+                <set field="activeSubMenuItem" value="FindWorkEffort"/><!-- value="workeffort" -->
                 <set field="titleProperty" value="PageTitleFindWorkEffort"/>
                 <set field="donePage" from-field="parameters.DONE_PAGE"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonWorkEffortAppDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
-                                <container style="button-bar">
+                                <include-menu name="FindWorkEffortSubTabBar" location="component://workeffort/widget/WorkEffortMenus.xml"/>
+                                <!--<container style="button-bar">
                                     <link text="${uiLabelMap.WorkEffortCreate}" target="EditWorkEffort" style="${styles.link_nav} ${styles.action_add}">
                                         <parameter param-name="DONE_PAGE" from-field="donePage"/>
                                     </link>
                                     <link text="${uiLabelMap.CommonAdvancedSearch}" target="WorkEffortSearchOptions" style="${styles.link_nav} ${styles.action_find}"/>
-                                </container>
+                                </container>-->
                             </decorator-section>
                             <decorator-section name="search-options">
                                 <include-form name="FindWorkEffort" location="component://workeffort/widget/WorkEffortForms.xml"/>
@@ -655,15 +657,17 @@ under the License.
     <screen name="WorkEffortSearchResults">
         <section>
             <actions>
+                <set field="activeSubMenuItem" value="WorkEffortAdvancedSearch"/><!-- SCIPIO -->
                 <set field="titleProperty" value="PageTitleSearchResults"/>
                 <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/find/WorkEffortSearchResults.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                         <platform-specific>
-                              <html><html-template location="component://workeffort/webapp/workeffort/find/WorkEffortSearchResults.ftl"/></html>
-                         </platform-specific>
+                        <include-menu name="FindWorkEffortSubTabBar" location="component://workeffort/widget/WorkEffortMenus.xml"/><!-- SCIPIO -->
+                        <platform-specific>
+                            <html><html-template location="component://workeffort/webapp/workeffort/find/WorkEffortSearchResults.ftl"/></html>
+                        </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -673,15 +677,17 @@ under the License.
     <screen name="WorkEffortSearchOptions">
         <section>
             <actions>
+                <set field="activeSubMenuItem" value="WorkEffortAdvancedSearch"/><!-- SCIPIO -->
                 <set field="titleProperty" value="PageTitleSearchResults"/>
                 <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/find/WorkEffortSearchOptions.groovy"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                         <platform-specific>
-                              <html><html-template location="component://workeffort/webapp/workeffort/find/WorkEffortSearchOptions.ftl"/></html>
-                         </platform-specific>
+                        <include-menu name="FindWorkEffortSubTabBar" location="component://workeffort/widget/WorkEffortMenus.xml"/><!-- SCIPIO -->
+                        <platform-specific>
+                            <html><html-template location="component://workeffort/webapp/workeffort/find/WorkEffortSearchOptions.ftl"/></html>
+                        </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -768,9 +774,9 @@ under the License.
                                 <if-service-permission service-name="workEffortManagerPermission" main-action="VIEW"/>
                             </condition>
                             <widgets>
-                                <container style="h2">
+                                <!--<container style="h2">
                                     <label text="${uiLabelMap.WorkEffortICalendarFind}"/>
-                                </container>
+                                </container>-->
                                 <container style="button-bar">
                                     <link text="${uiLabelMap.CommonCreate}" target="EditICalendar" style="${styles.link_nav} ${styles.action_add}"/>
                                     <link text="${uiLabelMap.CommonHelp}" target="ICalendarHelp" style="${styles.link_nav} ${styles.action_view}"/>
@@ -795,16 +801,16 @@ under the License.
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <entity-one entity-name="WorkEffort" value-field="workEffort"/>
                 <set field="title" value="${uiLabelMap.WorkEffortICalendarEdit} - ${workEffort.workEffortName}"/>
-            </actions>
-            <widgets>
-                <section>
+                <if>
                     <condition>
                         <if-empty field="workEffort"/>
                     </condition>
-                    <actions>
+                    <then>
                         <set field="title" value="${uiLabelMap.WorkEffortICalendarAdd}"/>
-                    </actions>
-                </section>
+                    </then>
+                </if>
+            </actions>
+            <widgets>
                 <decorator-screen name="iCalendarDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
@@ -913,15 +919,19 @@ under the License.
     <screen name="ICalendarHelp">
         <section>
             <actions>
-                <set field="layoutSettings.styleSheets[+0]" value="/images/wiki-content.css" global="true"/>
+                <!--<set field="layoutSettings.styleSheets[+0]" value="/images/wiki-content.css" global="true"/> SCIPIO: removed long ago -->
                 <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap"/>
                 <set field="activeSubMenuItem" value="ICalendarHelp"/>
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <entity-one entity-name="WorkEffort" value-field="workEffort"/>
                 <set field="title" value="${uiLabelMap.WorkEffortICalendarHelp}"/>
+                <!-- SCIPIO: TODO: REVIEW: should have local help, why fetch this from ofbiz? -->
                 <set field="document" from-field="dom:readHtmlDocument(uiLabelMap.WorkEffortICalendarHelpUrl)"/>
                 <set field="wikiDivList" from-field="document[&quot;//DIV[@class='wiki-content']&quot;]"/>
-                <set field="wikiContent" from-field="dom:toHtmlString(wikiDivList[0], 'UTF-8', true, 2)"/>
+                <!-- SCIPIO: 2018-04: this causes a cast exception, maybe something in API changed...
+                <set field="wikiContent" from-field="dom:toHtmlString(wikiDivList[0], 'UTF-8', true, 2)"/>-->
+                <set field="wikiContent" from-field="dom:toHtmlString(wikiDivList, 'UTF-8', true, 2)"/>
+                <set field="wikiContent" value="${groovy: context?.wikiContent.replaceAll('(?i)ofbiz', 'Scipio')}"/>
             </actions>
             <widgets>
                 <decorator-screen name="iCalendarDecorator" location="${parameters.mainDecoratorLocation}">

@@ -30,7 +30,7 @@ Contents:
 
 In Scipio, Solr is already installed and enabled for use out-of-the-box.
 
-Solr is pre-configured to index all Product data using the rebuildSolrIndex(Auto) service 
+Solr is pre-configured to index all Product data (using the rebuildSolrIndexAuto service)
 on first server startup (after the initial database seeding), once the webapps are available
 and loaded. Afterward, the indexing status is checked at every server startup and if the indexed
 data is marked dirty, all products are reindexed. This is recorded using the special SolrStatus entity.
@@ -80,15 +80,18 @@ using services defined in the file:
 There are two methods for indexing data:
 
 
-2.1 Index rebuilding service (rebuildSolrIndex(Auto))
+2.1 Index rebuilding service (rebuildSolrIndex/rebuildSolrIndexAuto)
 
 rebuildSolrIndex is the most important data import service. It reindexes all Scipio Products existing
-in the system into the solr index. In Scipio a rebuildSolrIndex job runs once automatically after initial data load 
+in the system into the solr index. rebuildSolrIndexAuto is a wrapper that invokes rebuildSolrIndex if
+the data is marked dirty, the schema appears to have changed or other conditions.
+
+In Scipio, a rebuildSolrIndexAuto job runs once automatically after initial data load 
 and again every server startup if the data appears to have been marked dirty (through SolrStatus entity)
 or when the "solr.config.version"/"solr.config.version.custom" property from solrconfig.properties is
 detected to have changed (from the last full indexing, through through SolrStatus entity).
 
-This service can be triggered manually or by scheduling a job through the backend:
+These services can be triggered manually or by scheduling a job through the backend:
 
   https://localhost:8443/admin/control/SolrServices
 
@@ -121,11 +124,11 @@ fashion. Client projects may need to modify or augment these for their own needs
   servicedef/secas.xml
 
 NOTE: In the current implementation (2017-12), the Scipio will log info-level Solr ECA service calls 
-even when Solr ECAs are disabled with "solr.eca.enabled=false"; this has no effect on functionality.
-It is simply that the service engine is a bit verbose. You can, alternatively, simply comment out
+even when Solr ECAs are disabled with "solr.eca.enabled=false"; this has little effect on functionality.
+It is simply that the service engine is a bit verbose. You may, alternatively, simply comment out
 all the ECAs/SECAs or their file includes in ofbiz-component.xml; however this may negatively affect
 dirty-data detection and you then have to be doubly certain about your plan to schedule 
-rebuildSolrIndex(Auto) invocations. 
+rebuildSolrIndex/rebuildSolrIndexAuto invocations. 
 
 ***
 

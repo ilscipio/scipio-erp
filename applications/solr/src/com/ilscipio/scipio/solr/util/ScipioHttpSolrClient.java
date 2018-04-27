@@ -27,12 +27,14 @@ import org.apache.solr.client.solrj.ResponseParser;
 import org.apache.solr.client.solrj.SolrRequest;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.BinaryResponseParser;
+import org.apache.solr.client.solrj.impl.HttpClientUtil;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.common.util.Base64;
 import org.apache.solr.common.util.NamedList;
 
 import com.ilscipio.scipio.solr.SolrUtil;
+import com.ilscipio.scipio.solr.SolrUtil.SolrConnectConfig;
 
 /**
  * Special HttpSolrClient implementation that adds missing support for basic auth in the client.
@@ -56,9 +58,9 @@ public class ScipioHttpSolrClient extends HttpSolrClient {
     protected final String solrUsername;
     protected final String solrPassword;
     
-    protected ScipioHttpSolrClient(String baseURL, HttpClient client, ResponseParser parser, boolean allowCompression,
+    protected ScipioHttpSolrClient(String baseURL, HttpClient httpClient, ResponseParser parser, boolean allowCompression,
             ModifiableSolrParams invariantParams, String solrUsername, String solrPassword) {
-        super(baseURL, client, parser, allowCompression, invariantParams);
+        super(baseURL, httpClient, parser, allowCompression, invariantParams);
         this.solrUsername = solrUsername;
         this.solrPassword = solrPassword;
     }
@@ -70,10 +72,34 @@ public class ScipioHttpSolrClient extends HttpSolrClient {
      * DEV NOTE: Implementation must be maintained with the superclass; the default values
      * are taken from {@link HttpSolrClient.Builder} and are subject to change at solrj updates.
      */
-    public static HttpSolrClient create(String baseURL, HttpClient client, String solrUsername, String solrPassword) {
+    public static HttpSolrClient create(String baseURL, HttpClient httpClient, String solrUsername, String solrPassword, 
+            Integer maxConnections, Integer maxConnectionsPerHost, Integer connectTimeout, Integer socketTimeout) {
+        
+        if (httpClient == null) {
+            ModifiableSolrParams params = new ModifiableSolrParams();
+            if (maxConnections != null) {
+                params.set(HttpClientUtil.PROP_MAX_CONNECTIONS, maxConnections);
+            }
+            if (maxConnectionsPerHost != null) {
+                params.set(HttpClientUtil.PROP_MAX_CONNECTIONS_PER_HOST, maxConnectionsPerHost);
+            }
+            params.set(HttpClientUtil.PROP_FOLLOW_REDIRECTS, true);
+            httpClient = HttpClientUtil.createClient(params);
+        }
+ 
         // DEV NOTE: the defaults must match what HttpSolrClient.Builder does! Must keep up to date!
-        return new ScipioHttpSolrClient(baseURL, client, new BinaryResponseParser(), 
+        HttpSolrClient client = new ScipioHttpSolrClient(baseURL, httpClient, new BinaryResponseParser(), 
                 false, new ModifiableSolrParams(), solrUsername, solrPassword);
+        
+        // TODO: In Solr 7, these are deprecated and moved to Builder/constructor 
+        if (connectTimeout != null) {
+            client.setConnectionTimeout(connectTimeout);
+        }
+        if (socketTimeout != null) {
+            client.setSoTimeout(socketTimeout);
+        }
+        
+        return client;
     }
 
     /** 

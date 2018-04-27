@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ilscipio.scipio.solr;
+package com.ilscipio.scipio.solr.util;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -31,6 +31,8 @@ import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.common.util.Base64;
 import org.apache.solr.common.util.NamedList;
+
+import com.ilscipio.scipio.solr.SolrUtil;
 
 /**
  * Special HttpSolrClient implementation that adds missing support for basic auth in the client.
@@ -68,9 +70,9 @@ public class ScipioHttpSolrClient extends HttpSolrClient {
      * DEV NOTE: Implementation must be maintained with the superclass; the default values
      * are taken from {@link HttpSolrClient.Builder} and are subject to change at solrj updates.
      */
-    protected static HttpSolrClient fromUrlAndAuth(String baseURL, String solrUsername, String solrPassword) {
+    public static HttpSolrClient create(String baseURL, HttpClient client, String solrUsername, String solrPassword) {
         // DEV NOTE: the defaults must match what HttpSolrClient.Builder does! Must keep up to date!
-        return new ScipioHttpSolrClient(baseURL, null, new BinaryResponseParser(), 
+        return new ScipioHttpSolrClient(baseURL, client, new BinaryResponseParser(), 
                 false, new ModifiableSolrParams(), solrUsername, solrPassword);
     }
 

@@ -195,7 +195,7 @@ public class UtilProperties implements Serializable {
         else if ("false".equalsIgnoreCase(str)) return Boolean.FALSE;
         else return defaultValue;
     }
-
+    
     /**
      * Returns an Integer-Object of the specified property name from the specified resource/properties file.
      * If the specified property name or properties file is not found, the defaultNumber is returned.
@@ -352,6 +352,18 @@ public class UtilProperties implements Serializable {
             Debug.logInfo(e, module);
         }
         return value == null ? "" : value.trim();
+    }
+    
+    /** SCIPIO: Returns the value of the specified property name from the specified resource/properties file,
+     * or null if it is absent or empty.
+     * Added 2018-04-27.
+     * @param resource The name of the resource - can be a file, class, or URL
+     * @param name The name of the property in the properties file
+     * @return The value of the property in the properties file
+     */
+    public static String getPropertyValueOrNull(String resource, String name) {
+        String value = getPropertyValue(resource, name);
+        return value.isEmpty() ? null : value;
     }
 
     /** Returns the specified resource/properties file
@@ -1180,6 +1192,66 @@ public class UtilProperties implements Serializable {
     }
     
     /**
+     * SCIPIO: Puts all property name/value pairs in the given Properties that start with given prefix
+     * with option to forbid dots in names, to the given out map.
+     * Added 2017-07-10.
+     */
+    public static void putPropertiesWithPrefix(Map<String, ? super String> out, Properties properties, String prefix, boolean allowDots, boolean returnPrefix) {
+        for(String name : properties.stringPropertyNames()) {
+            if ((prefix == null || name.startsWith(prefix))) {
+                String middle = name.substring(prefix.length(), name.length());
+                if (allowDots || !middle.contains(".")) {
+                    String value = properties.getProperty(name);
+                    if (value != null) value = value.trim();
+                    out.put((returnPrefix ? prefix : "") + middle, value);
+                }
+            }
+        }
+    }
+    
+    /**
+     * SCIPIO: Puts all property name/value pairs in the given Properties that start with given prefix,
+     * stripping the prefix and allowing dots in names, to the given out map.
+     * Added 2017-07-10.
+     */
+    public static void putPropertiesWithPrefix(Map<String, ? super String> out, Properties properties, String prefix) {
+        putPropertiesWithPrefix(out, properties, prefix, true, false);
+    }
+    
+    /**
+     * SCIPIO: Gets all property name/value pairs in the given Properties that start with given prefix
+     * and end with given suffix, with option to forbid dots in between, in an unordered map.
+     * Added 2018-04-27.
+     */
+    public static Map<String, String> getPropertiesWithPrefixSuffix(Properties properties, String prefix, String suffix, boolean allowDots, boolean returnPrefix, boolean returnSuffix) {
+        Map<String, String> out = new HashMap<>();
+        putPropertiesWithPrefixSuffix(out, properties, prefix, suffix, allowDots, returnPrefix, returnSuffix);
+        return out;
+    }
+    
+    /**
+     * SCIPIO: Gets all property name/value pairs in the given Properties that start with given prefix
+     * with option to forbid dots in name, in an unordered map.
+     * Added 2018-04-27.
+     */
+    public static Map<String, String> getPropertiesWithPrefix(Properties properties, String prefix, boolean allowDots, boolean returnPrefix) {
+        Map<String, String> out = new HashMap<>();
+        putPropertiesWithPrefix(out, properties, prefix, allowDots, returnPrefix);
+        return out;
+    }
+    
+    /**
+     * SCIPIO: Gets all property name/value pairs in the given Properties that start with given prefix,
+     * stripping the prefix and allowing dots in names, in an unordered map.
+     * Added 2018-04-27.
+     */
+    public static Map<String, String> getPropertiesWithPrefix(Properties properties, String prefix) {
+        Map<String, String> out = new HashMap<>();
+        putPropertiesWithPrefix(out, properties, prefix, true, false);
+        return out;
+    }
+    
+    /**
      * SCIPIO: Extracts properties having the given prefix and keyed by an ID as the next name part between dots.
      * Added 2017-11.
      */
@@ -1202,6 +1274,361 @@ public class UtilProperties implements Serializable {
                 }
             }
         }
+    }
+
+    /**
+     * SCIPIO: Cleans the given string value, following {@link #getPropertyValue} logic.
+     * Added 2018-04-27.
+     */
+    public static String cleanValue(String value) {
+        return value == null ? "" : value.trim();
+    }
+    
+    /**
+     * SCIPIO: Returns the value or null.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static String valueOrNull(String value) {
+        return (value == null || value.isEmpty()) ? null : value;
+    }
+    
+    /**
+     * SCIPIO: Converts the given string value to a number type, following {@link #getPropertyNumber} logic.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    @SuppressWarnings("unchecked")
+    public static <N extends Number> N asNumber(Class<N> type, String value, N defaultNumber) {
+        if (UtilValidate.isEmpty(value)) {
+            return defaultNumber;
+        } else {
+            try {
+                return (N)(ObjectType.simpleTypeConvert(value, type.getSimpleName(), null, null));
+            } catch (GeneralException e) {
+                Debug.logWarning("Error converting String \"" + value + "\" to " + type + "; using defaultNumber " + defaultNumber + ".", module);
+            }
+            return defaultNumber;
+        }
+    }
+    
+    /**
+     * SCIPIO: Converts the given string value to a number type, following {@link #getPropertyNumber} logic.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static <N extends Number> N asNumber(Class<N> type, String value) {
+        return asNumber(type, value, null);
+    }
+    
+    /**
+     * SCIPIO: Converts the given value to a number type, following {@link #getPropertyNumber} logic.
+     * NOTE: If string, this assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    @SuppressWarnings("unchecked")
+    public static <N extends Number> N asNumber(Class<N> type, Object value, N defaultNumber) {
+        if (value == null) return defaultNumber;
+        else if (type.isAssignableFrom(value.getClass())) return (N) value;
+        else return asNumber(type, (String) value, defaultNumber);
+    }
+    
+    /**
+     * SCIPIO: Converts the given value to a number type, following {@link #getPropertyNumber} logic.
+     * NOTE: If string, this assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    @SuppressWarnings("unchecked")
+    public static <N extends Number> N asNumber(Class<N> type, Object value) {
+        if (value == null || type.isAssignableFrom(value.getClass())) return (N) value;
+        else return asNumber(type, (String) value, null);
+    }
+    
+    /**
+     * SCIPIO: Converts the given string value to a Boolean type, following {@link #getPropertyAsBoolean} logic.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Boolean asBoolean(String value, Boolean defaultValue) {
+        if ("true".equalsIgnoreCase(value)) return Boolean.TRUE;
+        else if ("false".equalsIgnoreCase(value)) return Boolean.FALSE;
+        else return defaultValue;
+    }
+    
+    /**
+     * SCIPIO: Converts the given string value to a Boolean type, following {@link #getPropertyAsBoolean} logic.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Boolean asBoolean(String value) {
+        return asBoolean(value, null);
+    }
+    
+    /**
+     * SCIPIO: Converts the given value to a Boolean type, following {@link #getPropertyAsBoolean} logic.
+     * NOTE: If string, this assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Boolean asBoolean(Object value, Boolean defaultValue) {
+        if (value == null) return defaultValue;
+        else if (value instanceof Boolean) return (Boolean) value;
+        else return asBoolean((String) value, defaultValue);
+    }
+    
+    /**
+     * SCIPIO: Converts the given value to a Boolean type, following {@link #getPropertyAsBoolean} logic.
+     * NOTE: If string, this assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Boolean asBoolean(Object value) {
+        if (value == null || value instanceof Boolean) return (Boolean) value;
+        else return asBoolean((String) value);
+    }
+    
+    /**
+     * SCIPIO: Converts the given string value to a Integer type, following {@link #getPropertyAsInteger} logic.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Integer asInteger(String value, Integer defaultValue) {
+        return asNumber(Integer.class, value, defaultValue);
+    }
+    
+    /**
+     * SCIPIO: Converts the given string value to a Integer type, following {@link #getPropertyAsInteger} logic.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Integer asInteger(String value) {
+        return asInteger(value, null);
+    }
+
+    /**
+     * SCIPIO: Converts the given value to a Integer type, following {@link #getPropertyAsInteger} logic.
+     * NOTE: If string, this assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Integer asInteger(Object value, Integer defaultValue) {
+        if (value == null) return defaultValue;
+        else if (value instanceof Integer) return (Integer) value;
+        else return asInteger((String) value, defaultValue);
+    }
+    
+    /**
+     * SCIPIO: Converts the given value to a Integer type, following {@link #getPropertyAsInteger} logic.
+     * NOTE: If string, this assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Integer asInteger(Object value) {
+        if (value == null || value instanceof Integer) return (Integer) value;
+        else return asInteger((String) value, null);
+    }
+    
+    /**
+     * SCIPIO: Converts the given string value to a Long type, following {@link #getPropertyAsLong} logic.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Long asLong(String value, Long defaultValue) {
+        return asNumber(Long.class, value, defaultValue);
+    }
+    
+    /**
+     * SCIPIO: Converts the given string value to a Long type, following {@link #getPropertyAsLong} logic.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Long asLong(String value) {
+        return asLong(value, null);
+    }
+
+    /**
+     * SCIPIO: Converts the given value to a Long type, following {@link #getPropertyAsLong} logic.
+     * NOTE: If string, this assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Long asLong(Object value, Long defaultValue) {
+        if (value == null) return defaultValue;
+        else if (value instanceof Long) return (Long) value;
+        else return asLong((String) value, defaultValue);
+    }
+    
+    /**
+     * SCIPIO: Converts the given value to a Long type, following {@link #getPropertyAsLong} logic.
+     * NOTE: If string, this assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Long asLong(Object value) {
+        if (value == null || value instanceof Long) return (Long) value;
+        else return asLong((String) value, null);
+    }
+    
+    /**
+     * SCIPIO: Converts the given string value to a Float type, following {@link #getPropertyAsFloat} logic.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Float asFloat(String value, Float defaultValue) {
+        return asNumber(Float.class, value, defaultValue);
+    }
+    
+    /**
+     * SCIPIO: Converts the given string value to a Float type, following {@link #getPropertyAsFloat} logic.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Float asFloat(String value) {
+        return asFloat(value, null);
+    }
+
+    /**
+     * SCIPIO: Converts the given value to a Float type, following {@link #getPropertyAsFloat} logic.
+     * NOTE: If string, this assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Float asFloat(Object value, Float defaultValue) {
+        if (value == null) return defaultValue;
+        else if (value instanceof Float) return (Float) value;
+        else return asFloat((String) value, defaultValue);
+    }
+    
+    /**
+     * SCIPIO: Converts the given value to a Float type, following {@link #getPropertyAsFloat} logic.
+     * NOTE: If string, this assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Float asFloat(Object value) {
+        if (value == null || value instanceof Float) return (Float) value;
+        else return asFloat((String) value, null);
+    }
+    
+    /**
+     * SCIPIO: Converts the given string value to a Double type, following {@link #getPropertyAsDouble} logic.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Double asDouble(String value, Double defaultValue) {
+        return asNumber(Double.class, value, defaultValue);
+    }
+    
+    /**
+     * SCIPIO: Converts the given string value to a Double type, following {@link #getPropertyAsDouble} logic.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Double asDouble(String value) {
+        return asDouble(value, null);
+    }
+
+    /**
+     * SCIPIO: Converts the given value to a Double type, following {@link #getPropertyAsDouble} logic.
+     * NOTE: If string, this assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Double asDouble(Object value, Double defaultValue) {
+        if (value == null) return defaultValue;
+        else if (value instanceof Double) return (Double) value;
+        else return asDouble((String) value, defaultValue);
+    }
+    
+    /**
+     * SCIPIO: Converts the given value to a Double type, following {@link #getPropertyAsDouble} logic.
+     * NOTE: If string, this assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Double asDouble(Object value) {
+        if (value == null || value instanceof Double) return (Double) value;
+        else return asDouble((String) value, null);
+    }
+    
+    /**
+     * SCIPIO: Converts the given string value to a BigInteger type, following {@link #getPropertyAsBigInteger} logic.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static BigInteger asBigInteger(String value, BigInteger defaultValue) {
+        BigInteger result = defaultValue;
+        try {
+            result = new BigInteger(value);
+        } catch (NumberFormatException nfe) {
+            Debug.logWarning("Couldn't convert String \"" + value + "\" to BigInteger; using defaultNumber " + defaultValue.toString() + ".", module);
+        }
+        return result;
+    }
+    
+    /**
+     * SCIPIO: Converts the given string value to a BigInteger type, following {@link #getPropertyAsBigInteger} logic.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static BigInteger asBigInteger(String value) {
+        return asBigInteger(value, null);
+    }
+
+    /**
+     * SCIPIO: Converts the given value to a BigInteger type, following {@link #getPropertyAsBigInteger} logic.
+     * NOTE: If string, this assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static BigInteger asBigInteger(Object value, BigInteger defaultValue) {
+        if (value == null) return defaultValue;
+        else if (value instanceof BigInteger) return (BigInteger) value;
+        else return asBigInteger((String) value, defaultValue);
+    }
+    
+    /**
+     * SCIPIO: Converts the given value to a BigInteger type, following {@link #getPropertyAsBigInteger} logic.
+     * NOTE: If string, this assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static BigInteger asBigInteger(Object value) {
+        if (value == null || value instanceof BigInteger) return (BigInteger) value;
+        else return asBigInteger((String) value, null);
+    }
+    
+    /**
+     * SCIPIO: Converts the given string value to a BigDecimal type, following {@link #getPropertyAsBigDecimal} logic.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static BigDecimal asBigDecimal(String value, BigDecimal defaultValue) {
+        BigDecimal result = defaultValue;
+        try {
+            result = new BigDecimal(value);
+        } catch (NumberFormatException nfe) {
+            Debug.logWarning("Couldn't convert String \"" + value + "\" to BigDecimal; using defaultNumber " + defaultValue.toString() + ".", module);
+        }
+        return result;
+    }
+    
+    /**
+     * SCIPIO: Converts the given string value to a BigDecimal type, following {@link #getPropertyAsBigDecimal} logic.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static BigDecimal asBigDecimal(String value) {
+        return asBigDecimal(value, null);
+    }
+
+    /**
+     * SCIPIO: Converts the given value to a BigDecimal type, following {@link #getPropertyAsBigDecimal} logic.
+     * NOTE: If string, this assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static BigDecimal asBigDecimal(Object value, BigDecimal defaultValue) {
+        if (value == null) return defaultValue;
+        else if (value instanceof BigDecimal) return (BigDecimal) value;
+        else return asBigDecimal((String) value, defaultValue);
+    }
+    
+    /**
+     * SCIPIO: Converts the given value to a BigDecimal type, following {@link #getPropertyAsBigDecimal} logic.
+     * NOTE: If string, this assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static BigDecimal asBigDecimal(Object value) {
+        if (value == null || value instanceof BigDecimal) return (BigDecimal) value;
+        else return asBigDecimal((String) value, null);
     }
     
     /** Custom ResourceBundle class. This class extends ResourceBundle

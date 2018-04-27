@@ -84,7 +84,9 @@ There are two methods for indexing data:
 
 rebuildSolrIndex is the most important data import service. It reindexes all Scipio Products existing
 in the system into the solr index. In Scipio a rebuildSolrIndex job runs once automatically after initial data load 
-and again every server startup if the data appears to have been marked dirty (through SolrStatus entity).
+and again every server startup if the data appears to have been marked dirty (through SolrStatus entity)
+or when the "solr.config.version"/"solr.config.version.custom" property from solrconfig.properties is
+detected to have changed (from the last full indexing, through through SolrStatus entity).
 
 This service can be triggered manually or by scheduling a job through the backend:
 

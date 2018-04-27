@@ -50,7 +50,9 @@ under the License.
         <response name="error" type="view" value="error"/>
     </request-map>
 
-    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="mytasks"/></request-map>
+    <!-- SCIPIO: use main as dashboard for this
+    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="mytasks"/></request-map>-->
+    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
 
     <request-map uri="requestlist"><security https="true" auth="true"/><response name="success" type="view" value="RequestList"/></request-map>
 

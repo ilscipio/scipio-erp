@@ -20,7 +20,7 @@ under the License.
     <#assign uiLabelMap = requestAttributes.uiLabelMap>
 </#if>
 
-<@section title=uiLabelMap.WorkEffortWorkEffortManagerMainPage>
+<@section><#-- title=uiLabelMap.WorkEffortWorkEffortManagerMainPage -->
       <#if !userLogin?has_content>
           <p>${uiLabelMap.WorkEffortInterestingSure}.</p>
       </#if>

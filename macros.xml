@@ -17,24 +17,24 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<project name="Ant - Macros" 
+<project name="Ant - Macros"
     xmlns:ivy="antlib:org.apache.ivy.ant">
 
     <!-- SCIPIO: NOTE: Despite the filename, this is used for all types of definitions
         common to both main build.xml, component build.xml, and limited support for
-        individual component build.xml invocation in some cases. -->  
-  
+        individual component build.xml invocation in some cases. -->
+
     <!-- ================================================================== -->
     <!-- Requirements  -->
     <!-- ================================================================== -->
 
     <property name="minimumantversion" value="1.9.1"/>
-    
+
     <!-- FOR DEVELOPERS:
         If you are a developer using an IDE-provided Ant version and certain there are no problems,
         you can eliminate the provided ant version warning by uncommenting the following line or setting this property: -->
     <!--<property name="antlib.check.ok" value="true"/>-->
-  
+
     <!-- SCIPIO: 2018-04-04: The ant and JDK version checks are now only done once with include guard
         NOTE: the macro call is further below due to ant-contrib use -->
     <macrodef name="check-reqs">
@@ -48,7 +48,7 @@ You are running: ${ant.version} (${ant.core.lib})
 
 If you are running from command line, an ant jar is provided with Scipio (framework/base/lib/ant/);
 using a system ant installation is not recommended, as such configurations may not be tested.
-              
+
 From command line, Scipio build should be invoked using the provided ant launch scripts in project root:
 * Linux:    ./ant [target]
 * Windows:  ant [target] (ant.bat)</fail>
@@ -81,17 +81,17 @@ From command line, Scipio build should be invoked using the provided ant launch 
                         </not>
                     </condition>
                     <fail unless="javaatleast18" message="Please upgrade java to at least 1.8. Current Java version is ${ant.java.version}"/>
-       
+
                     <property name="checkreqs.ran" value="true"/>
                 </then>
             </if>
         </sequential>
     </macrodef>
-  
+
     <target name="check-reqs">
         <check-reqs/>
     </target>
-      
+
     <!-- ================================================================== -->
     <!-- Common/generic defs for all builds  -->
     <!-- ================================================================== -->
@@ -117,7 +117,7 @@ From command line, Scipio build should be invoked using the provided ant launch 
 
     <!-- trigger the requirements check (requires ant-contrib) -->
     <check-reqs/>
-    
+
     <!-- ivy (SCIPIO) (see ivy-init for taskdef) -->
     <property name="ivy.settings.file" value="${ofbiz.home.dir}/ivy/ivysettings.xml"/>
     <property name="lib.general.ivyfile" value="${ofbiz.home.dir}/ivy/ivy.xml"/>
@@ -131,7 +131,7 @@ From command line, Scipio build should be invoked using the provided ant launch 
     <path id="groovy.class.path">
         <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="groovy-all-*.jar"/>
     </path>
-    
+
     <!-- rhino -->
     <path id="rhino.class.path">
         <fileset dir="${ofbiz.home.dir}/extension/rhino/lib/" includes="js-*.jar"/>
@@ -323,9 +323,9 @@ From command line, Scipio build should be invoked using the provided ant launch 
     <!-- ================================================================== -->
 
     <!-- SCIPIO: Build invoker with automatic dependency resolution.
-        Fetches the component.build.dependencies filelist from each component within a given component directory 
-        and resolves the resulting dependency graph to determine a build order, mirroring the same 
-        algorithm now used for the ofbiz-component.xml depends-on functionality (new 2017-01-17). 
+        Fetches the component.build.dependencies filelist from each component within a given component directory
+        and resolves the resulting dependency graph to determine a build order, mirroring the same
+        algorithm now used for the ofbiz-component.xml depends-on functionality (new 2017-01-17).
         See also the "get-component-build-deps" target (called by this macro). -->
     <macrodef name="dep-subant">
         <attribute name="dir" default=""/>
@@ -339,7 +339,7 @@ From command line, Scipio build should be invoked using the provided ant launch 
                 <include name="*/build.xml"/>
               </fileset>
             </externalsubant>-->
-            
+
             <if>
                 <equals arg1="@{target}" arg2="" trim="true"/>
                 <then>
@@ -430,7 +430,7 @@ From command line, Scipio build should be invoked using the provided ant launch 
                     <var name="depres.builds" unset="true"/>
                         <var name="depres.stderr" unset="true"/>
                     <var name="depres.result" unset="true"/>
-                    <java classname="com.ilscipio.scipio.ce.build.util.DependencyGraph" fork="true" 
+                    <java classname="com.ilscipio.scipio.ce.build.util.DependencyGraph" fork="true"
                         outputproperty="depres.builds" errorproperty="depres.stderr" resultproperty="depres.result" failonerror="false">
                         <arg value="-f=resolve-deps-dfs"/>
                         <!-- function to run -->
@@ -495,7 +495,7 @@ Unexpectedly received empty list of builds to iterate."/>
             <file name="../other2" /> <!- abstracted component dependency: component may or may not have a build ->
           </filelist>
         The component.build.dependencies are file paths which must specify either a component directory
-        or the project build file within it - you MUST use filelist and NOT fileset to express these. 
+        or the project build file within it - you MUST use filelist and NOT fileset to express these.
         The second form requires the dependency to have a build, while the first is more abstracted
         and will work even if the component has no build project or it is removed (e.g., themes).
         Currently (2017-01-18), only dependencies on components within the same component directory (addons, hot-deploy, themes)
@@ -503,7 +503,7 @@ Unexpectedly received empty list of builds to iterate."/>
         Dependencies on components from other, lower-layer components directories which load first are
         allowed to appear and may be verified, but will have no functional effect.
         NOTE: These build-time dependencies are managed independently from the load-time
-            dependencies (component loader), and are designated using filesystem paths as opposed 
+            dependencies (component loader), and are designated using filesystem paths as opposed
             to component names. However, it is recommended to keep the same order for
             build-time and load-time dependencies as much as possible.
             Currently (2017-01-18), Scipio supports this same directory-focused automatic
@@ -512,7 +512,7 @@ Unexpectedly received empty list of builds to iterate."/>
               component://framework/base/dtd/ofbiz-component.xsd
         FIXME?: get-component-build-deps must currently be defined in macros.xml due to theme patterns... -->
     <macrodef name="read-component-build-deps">
-        <!-- 
+        <!--
             NOTE: Caller must specify:
             * component.build.dependencies.sep (context-dependent)
             * ofbiz.home.dir
@@ -522,12 +522,12 @@ Unexpectedly received empty list of builds to iterate."/>
                 <isreference refid="component.build.dependencies"/>
                 <then>
                     <var name="component.build.dependencies.prop" unset="true" />
-                    <pathconvert property="component.build.dependencies.prop" refid="component.build.dependencies" 
+                    <pathconvert property="component.build.dependencies.prop" refid="component.build.dependencies"
                         pathsep="${component.build.dependencies.sep}" setonempty="true">
                         <!-- DEV NOTE: see https://ant.apache.org/manual/Tasks/script.html for language details -->
                         <scriptmapper language="javascript"><![CDATA[
                             var proj = self.getProject();
-                            
+
                             var doFail = function(msg) {
                                 var failTask = proj.createTask("fail");
                                 failTask.setMessage("Project " + proj.getName() + ": component.build.dependencies: " + msg);
@@ -541,7 +541,7 @@ Unexpectedly received empty list of builds to iterate."/>
                             var stringEndsWith = function(str, suffix) { // old JS support
                                 return str.indexOf(suffix, str.length - str.length) !== -1;
                             };
-                            
+
                             // NOTE: here source is the full path to file
                             var sourceFile = new java.io.File(source);
                             if (!sourceFile.exists()) {
@@ -557,7 +557,7 @@ Unexpectedly received empty list of builds to iterate."/>
                                         var pathPath = java.nio.file.Paths.get(path, []);
                                         return homeDirPath.relativize(pathPath).getName(0);
                                     }
-                                    
+
                                     var projCompDir = getCompDir(proj.getProperty("ant.file")); // NOTE: not basedir
                                     var depCompDir = getCompDir(targetDep);
                                     if (depCompDir.compareTo(projCompDir) !== 0) {
@@ -578,11 +578,11 @@ Unexpectedly received empty list of builds to iterate."/>
                                     }
                                     return false;
                                 };
-                            
+
                                 var validateCommitDep = function(targetDep) {
                                     self.addMappedName(targetDep);
                                 };
-                            
+
                                 if (stringEndsWith(source.toLowerCase(), ".xml") && sourceFile.isFile()) {
                                     // If explicit build file referenced as dependency, interpret as explicit request and don't modify.
                                     // In other words, the component must have a build file, otherwise dependency will fail.
@@ -693,15 +693,15 @@ Unexpectedly received empty list of builds to iterate."/>
         </if>
         <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="groovy.class.path"/>
     </target>
-    
+
     <target name="download-groovy" depends="ivy-init"><!-- SCIPIO: 2018-03-20: new -->
         <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="groovy"/>
     </target>
-    
+
     <target name="ivy-init"><!-- SCIPIO: 2017-01-30: new -->
-        <!-- DEV NOTE: WARN: for performance reasons, this code has to be COPIED into 
+        <!-- DEV NOTE: WARN: for performance reasons, this code has to be COPIED into
             common.xml#lib-update; keep in sync -->
         <taskdef uri="antlib:org.apache.ivy.ant" resource="org/apache/ivy/ant/antlib.xml" classpathref="lib.ivy.class.path"/>
     </target>
-    
+
 </project>

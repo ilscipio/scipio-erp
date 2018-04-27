@@ -21,10 +21,10 @@ under the License.
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
 
     <menu name="WorkEffortAppBar" title="${uiLabelMap.WorkEffortManager}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        default-menu-item-name="task">
+        ><!-- default-menu-item-name="task" -->
         <menu-item name="task" title="${uiLabelMap.WorkEffortTaskList}"><link target="mytasks"/></menu-item>
         <menu-item name="calendar" title="${uiLabelMap.WorkEffortCalendar}"><link target="calendar"/></menu-item>
-        <menu-item name="mytime" title="${uiLabelMap.WorkEffortTimesheetMyTime}"><link target="MyTimesheets"/></menu-item>
+        <!--<menu-item name="mytime" title="${uiLabelMap.WorkEffortTimesheetMyTime}"><link target="MyTimesheets"/></menu-item>-->
         <menu-item name="request" title="${uiLabelMap.WorkEffortRequestList}"><link target="requestlist"/></menu-item>
         <menu-item name="workeffort" title="${uiLabelMap.WorkEffortWorkEffort}"><link target="FindWorkEffort"/></menu-item>
         <menu-item name="timesheet" title="${uiLabelMap.WorkEffortTimesheet}"><link target="FindTimesheet"/></menu-item>
@@ -32,7 +32,7 @@ under the License.
         <menu-item name="WorkEffortICalendar" title="${uiLabelMap.WorkEffortICalendar}"><link target="FindICalendars"/></menu-item>
     </menu>
     <menu name="WorkEffortAppSideBar" title="${uiLabelMap.WorkEffortManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
-        default-menu-item-name="task" always-expand-selected-or-ancestor="true">
+        always-expand-selected-or-ancestor="true"><!-- default-menu-item-name="task" -->
         <include-elements menu-name="WorkEffortAppBar" recursive="full" />
         <menu-item name="workeffort">
             <sub-menu name="WorkEffort" include="WorkEffortSideBar"/>
@@ -157,6 +157,9 @@ under the License.
     <menu name="WorkEffortSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="WorkEffort">
         <include-elements menu-name="WorkEffortTabBar" recursive="includes-only" />
+        <menu-item-alias name="FindWorkEffort" for="PARENT-NOSUB"/>
+        <menu-item-alias name="NewWorkEffort" for="PARENT-NOSUB"/>
+        <menu-item-alias name="WorkEffortAdvancedSearch" for="PARENT-NOSUB"/>
     </menu>
     
     <menu name="Day" extends="Calendar">
@@ -403,6 +406,33 @@ under the License.
     <menu name="ICalendarSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="WorkEffort">
         <include-elements menu-name="ICalendarTabBar" recursive="includes-only" />
+    </menu>
+    
+    <!-- SCIPIO: new -->
+    <menu name="FindWorkEffortSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="EditWorkEffort" title="${uiLabelMap.WorkEffortCreate}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="EditWorkEffort">
+                <parameter param-name="DONE_PAGE" from-field="donePage"/>
+            </link>
+        </menu-item>
+        <menu-item name="WorkEffortAdvancedSearch" title="${uiLabelMap.CommonAdvancedSearch}" widget-style="+${styles.action_nav} ${styles.action_find}">
+            <condition><if-compare field="activeSubMenuItem" operator="not-equals" value="WorkEffortAdvancedSearch"/></condition>
+            <link target="WorkEffortSearchOptions"/>
+        </menu-item>
+        <menu-item name="FindWorkEffort" title="${uiLabelMap.CommonFind}" widget-style="+${styles.action_nav} ${styles.action_find}">
+            <condition><if-compare field="activeSubMenuItem" operator="equals" value="WorkEffortAdvancedSearch"/></condition>
+            <link target="FindWorkEffort"/>
+        </menu-item>
+    </menu>
+    
+    <!-- SCIPIO: new -->
+    <menu name="EditWorkEffortSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="EditWorkEffort" title="${uiLabelMap.WorkEffortCreate}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition><not><if-empty field="workEffort"/></not></condition>
+            <link target="EditWorkEffort">
+                <parameter param-name="DONE_PAGE" from-field="donePage"/>
+            </link>
+        </menu-item>
     </menu>
     
 </menus>

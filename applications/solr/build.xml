@@ -90,4 +90,10 @@ under the License.
         <antcall target="common-lib-clean" inheritrefs="true"/>
         <remove-lib-files dir="webapp/WEB-INF/lib" excludes-refid="lib.update.manual.files.solr.webapp"/>
     </target>
+    
+    <target name="clean-local-solr-indexes" description="Cleans out any solr data under applications/solr [but not solr data stored outside this folder]">
+        <delete includeemptydirs="true" verbose="on">
+            <fileset dir="./cores" includes="*/data/**" erroronmissingdir="false"/>
+        </delete>
+    </target>
 </project>

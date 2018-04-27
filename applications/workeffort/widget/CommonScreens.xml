@@ -144,11 +144,17 @@ under the License.
                 <set field="workEffortId" from-field="parameters.workEffortId"/>
                 <entity-one entity-name="WorkEffort" value-field="workEffort"/>
                 <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.workEffortId}"/>
+                
+                <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${workEffortId} ${${extraFunctionName}}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWorkEffortAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
+                        <!-- TODO?
+                        <include-menu name="WorkEffortSubTabBar" location="component://workeffort/widget/WorkEffortMenus.xml"/>
+                        -->
+                        <!--<section>
                             <condition>
                                 <not>
                                     <if-empty field="workEffortId"/>
@@ -169,7 +175,7 @@ under the License.
                                     </section>
                                 </container>
                             </widgets>
-                        </section>
+                        </section>-->
                         <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
@@ -182,13 +188,17 @@ under the License.
             <actions>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://workeffort/widget/TimesheetMenus.xml#Timesheet" />
                 <set field="timesheetId" from-field="parameters.timesheetId"/>
-                <entity-one entity-name="Timesheet" value-field="timesheet"/>
-                <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.timesheetId}"/>
+                <entity-one entity-name="Timesheet" value-field="timesheet"/><!-- SCIPIO: NOTE: only menu needs this -->
+                <!-- <set field="commonSideBarMenu.condList[]" type="Boolean" value="${not empty context.timesheetId}"/> handled in menu items instead (complex) -->
+                
+                <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${timesheetId} ${${extraFunctionName}}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWorkEffortAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label>${uiLabelMap.WorkEffortTimesheetTimesheetId}: ${timesheetId}</label>
+                        <!--<label>${uiLabelMap.WorkEffortTimesheetTimesheetId}: ${timesheetId}</label>-->
+                        <include-menu name="TimesheetSubTabBar" location="component://workeffort/widget/TimesheetMenus.xml"/><!-- SCIPIO: new -->
                         <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
@@ -238,9 +248,9 @@ under the License.
                                 </or>
                             </condition>
                             <widgets>
-                                <container style="h2">
+                                <!--<container style="h2">
                                     <label text="${title}"/>
-                                </container>
+                                </container>-->
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>

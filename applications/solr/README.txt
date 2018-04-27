@@ -109,7 +109,7 @@ This is done by defining ECAs or SECAs that trigger the registerUpdateToSolr ser
 a single Product and its associated data.
 
 In Scipio, Solr ECAs are enabled by default. Some projects may want to disable these, which can be done
-by setting "solr.eca.enabled=false" in "config/solrconfig.properties", or by passing the system property
+by setting "solr.eca.enabled=false" in solrconfig.properties, or by passing the system property
 "ofbiz.solr.eca.enabled=false" on the command line (./ant start -Dofbiz.solr.eca.enabled=false).
 
 Some stock/default/example ECAs/SECAs are provided and cover a number of product changes, in a best-effort

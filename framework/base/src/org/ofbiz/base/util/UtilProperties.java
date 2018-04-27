@@ -156,13 +156,14 @@ public class UtilProperties implements Serializable {
             //Debug.logWarning("Error converting String \"" + str + "\" to " + type + "; using defaultNumber " + defaultNumber + ".", module);
             Debug.logInfo("Property [" + resource + "/" + name + "] empty; using defaultNumber " + defaultNumber + ".", module);
             return defaultNumber;
-        } else
+        } else {
             try {
                 return (Number)(ObjectType.simpleTypeConvert(str, type, null, null));
             } catch (GeneralException e) {
                 Debug.logWarning("Error converting String \"" + str + "\" to " + type + "; using defaultNumber " + defaultNumber + ".", module);
             }
             return defaultNumber;
+        }
     }
 
     /**

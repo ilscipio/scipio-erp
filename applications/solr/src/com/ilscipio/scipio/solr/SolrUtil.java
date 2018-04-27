@@ -573,28 +573,9 @@ public abstract class SolrUtil {
             
             public static HttpSolrClient makeClient(SolrConnectConfig connectConfig, String url, String solrUsername, String solrPassword) {
                 if (Debug.verboseOn()) Debug.logVerbose("Solr: Creating new solr " + connectConfig.makeClientLogDesc(url,  solrUsername), module);
-                
-                ModifiableSolrParams params = new ModifiableSolrParams();
-                if (connectConfig.getMaxConnections() != null) {
-                    params.set(HttpClientUtil.PROP_MAX_CONNECTIONS, connectConfig.getMaxConnections());
-                }
-                if (connectConfig.getMaxConnectionsPerHost() != null) {
-                    params.set(HttpClientUtil.PROP_MAX_CONNECTIONS_PER_HOST, connectConfig.getMaxConnectionsPerHost());
-                }
-                params.set(HttpClientUtil.PROP_FOLLOW_REDIRECTS, true);
-                HttpClient httpClient = HttpClientUtil.createClient(params);
-
-                HttpSolrClient client = ScipioHttpSolrClient.create(url, httpClient, solrUsername, solrPassword);
-                
-                // TODO: In Solr 7, these are deprecated and moved to Builder/constructor 
-                if (connectConfig.getConnectTimeout() != null) {
-                    client.setConnectionTimeout(connectConfig.getConnectTimeout());
-                }
-                if (connectConfig.getSocketTimeout() != null) {
-                    client.setSoTimeout(connectConfig.getSocketTimeout());
-                }
-                
-                return client;
+                return ScipioHttpSolrClient.create(url, null, solrUsername, solrPassword,
+                            connectConfig.getMaxConnections(), connectConfig.getMaxConnectionsPerHost(),
+                            connectConfig.getConnectTimeout(), connectConfig.getSocketTimeout());
             }
         }
         

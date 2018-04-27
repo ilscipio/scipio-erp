@@ -2,270 +2,222 @@
 Solr Component for SCIPIO ERP
 =====================================================
 
-SCIPIO: NOTE: 2017-08-17: This document is currently out of date, and several features
-or locations may be different than the ones described below (e.g., no installation
-is required). In SCIPIO ERP, no installation is required, and by default, 
-indexing (rebuildSolrIndex[Auto]) automatically executes on first server run.
+This document describes the Scipio Solr component, which wraps and provides access to a powerful 
+Apache Solr indexing and search software. It is based on the Solr component developed by Ilscipio 
+that was originally submitted to the Ofbiz project many years ago (around Solr 4).
+Please note that the Scipio Solr component may differ substantially with large improvements 
+from the one now provided in the Ofbiz plugins project.
 
-**********************************************
+Currently, the component implements Solr 6. Its native documentation can be found at:
 
-NOTE: 2018-04: BASIC AUTHENTICATION: It is possible to set up an internal login to prevent access to the /solr
-web interface and functions. This can be done by defining a security.json file in this directory
-(applications/solr/security.json) with one or more users, and by setting the corresponding username/password in
-solrconfig.properties (solr.query.login.* and solr.update.login.*).
+  https://lucene.apache.org/solr/guide/6_6/
 
-The format of the security.json file is explained at https://lucene.apache.org/solr/guide/6_6/basic-authentication-plugin.html
+This stock component focuses on indexing Product data.
 
-For example, this defines a single username 'solr' with password 'SolrRocks' (applications/solr/security.json):
-
-{
-"authentication":{
-   "blockUnknown": true,
-   "class":"solr.BasicAuthPlugin",
-   "credentials":{"solr":"IV0EHq1OnNrj6gvRCwvFwTrZ1+z1oBbnQdiVC3otuq0= Ndd7LKvVBAaZIF0QAVi1ekCfAJXr1GGfLtRUXhgrF8c="}
-},
-"authorization":{
-   "class":"solr.RuleBasedAuthorizationPlugin",
-   "permissions":[{"name":"security-edit",
-      "role":"admin"}],
-   "user-role":{"solr":"admin"}
-}}
-
-and the properties (applications/solr/config/solrconfig.properties):
-
-solr.query.login.username=solr
-solr.query.login.password=SolrRocks
-solr.update.login.username=solr
-solr.update.login.password=SolrRocks
-
-
-**********************************************
-
-This document describes the Ofbiz solr component, an Ofbiz (http://ofbiz.apache.org/)
-implementation of the Apache Solr search platform (http://lucene.apache.org/solr/).
-The solr component includes an Ofbiz service-based wrapper layer to the Apache Solr
-webapp queries as well as the native Apache Solr web interface itself.
-
-Currently, the solr component focuses on Product data.
-
-Note: This document is a work in progress; information is subject to change.
 
 Contents:
 
-1. Installation
-2. Configuration
-3. Data Indexing
-4. Data Querying
-5. Implementation Concerns
-6. Known Bugs, Limitations and Issues
+1. Configuration
+2. Data Indexing
+3. Data Querying
+4. Schema Modification
+5. Known Bugs, Limitations and Issues
 
 
 -----------------------------------------------------
-1. Installation
+1. Configuration
 -----------------------------------------------------
 
-To install solr in an Ofbiz setting, simply extract the solr directory and
-and sub-folders to the hot-deploy folder.
+In Scipio, Solr is already installed and enabled for use out-of-the-box.
 
-Afterward, the solr home system property (solr.solr.home) must be set to the value
-hot-deploy/solr manually using one of the following methods:
+Solr is pre-configured to index all Product data (using the rebuildSolrIndexAuto service)
+on first server startup (after the initial database seeding), once the webapps are available
+and loaded. Afterward, the indexing status is checked at every server startup and if the indexed
+data is marked dirty, all products are reindexed. This is recorded using the special SolrStatus entity.
 
+In addition, Solr ECAs are enabled by default, and will attempt to index Product data upon
+product entity changes. However, note that this is a best-effort coverage of entity modifications, 
+and client projects may need to add/modify Solr ECAs to meet their needs.
+NOTE: 2017-12: The Solr ECA system was recently significantly overhauled, and now performs much
+more reliably than the old component.
 
-* solr.solr.home in batch/script file:
-
-Add the parameter "-Dsolr.solr.home=hot-deploy/solr" to the Java command
-invocation for ofbiz.jar.
-e.g.:
-"%JAVA_HOME%\bin\java" -Xms128M -Xmx512M -XX:MaxPermSize=512m -Dsolr.solr.home=hot-deploy/solr -jar ofbiz.jar
-
-
-* solr.solr.home in Ant build configuration:
-
-In your root Ofbiz build.xml file, add the element "<jvmarg value="-Dsolr.solr.home=hot-deploy/solr"/>"
-to the "<java jar="ofbiz.jar"...>" invocation of the appropriate Ant target(s) (run, start, run-install, etc.).
-e.g.:
-<target name="start" description="Start OFBiz">
-    <java jar="ofbiz.jar" fork="true">
-        <jvmarg value="${memory.initial.param}"/>
-        <jvmarg value="${memory.max.param}"/>
-        <jvmarg value="${memory.maxpermsize.param}"/>
-        <jvmarg value="-Dsolr.solr.home=hot-deploy/solr"/>
-    </java>
-</target>
-
-
-* solr.solr.home in Eclipse Debug Configurations:
-
-In the applicable Debug configuration sheet (Java Application; see Ofbiz documentation for information on how to
-set up Eclipse debugging for Ofbiz), under the Arguments tab, simply append "-Dsolr.solr.home=hot-deploy/solr" to
-the VM Arguments line.
-e.g.:
--Xms128M -Xmx512M -XX:MaxPermSize=512m -Dsolr.solr.home=hot-deploy/solr
-
-***
-
-It may be possible to specify solr home using other methods (JNDI, web.xml), but at the time
-of this writing, this was the most reliable method known.
-
-
------------------------------------------------------
-2. Configuration
------------------------------------------------------
-
-The solr component can run out-of-the-box without configuration, but many
-files, settings and interfaces allow custom settings. Some of these include:
-
-* Ofbiz configurations:
+* Scipio configurations:
 ** System properties:
 *** ofbiz.solr.eca.enabled - Global solr ECA toggling boolean (true/false, see Data Indexing)
 ** Config files:
-*** solr/config/solrconfig.properties - Ofbiz solr service behavior control
-*** ofbiz-component.xml - Standard Ofbiz component config
+*** config/solrconfig.properties - Scipio solr service behavior control
+*** ofbiz-component.xml - Standard Scipio component config
 
 * Apache Solr configurations:
-** System properties:
-*** solr.solr.home - Solr home (see Installation)
 ** Config files:
 *** solr.xml - Base solr config
-*** conf/schema.xml - Solr index schema
-*** webapp/WEB-INF/web.xml - Dual Ofbiz/Solr webapp config
+*** configsets/*/conf/managed-schema - Solr index schema
+*** webapp/WEB-INF/web.xml - Dual Scipio/Solr webapp config
 ** Interfaces:
-*** /solr/admin/ - Webapp admin interface (see below)
+*** /solr - Webapp admin interface (see below)
 
 ***
 
-It is possible to set extensive native Solr configuration using
-the admin webapp interface noted above. It should be accessible at the address:
-http://localhost:8080/solr/admin/
-(where 8080 is your server's http port)
+It is possible to examine native Solr configuration and perform diagnostic queries using
+the admin webapp interface noted above. It is accessible at the address:
+
+  http://localhost:8080/solr
+  (substitute 8080 with your server's http port)
+  
 Please refer to the Apache Solr documentation for usage of this interface
 and other native Solr configuration details.
 
 
 -----------------------------------------------------
-3. Data Indexing
+2. Data Indexing
 -----------------------------------------------------
 
 The solr component indexes data such as Products into the Apache Solr database
 using services defined in the file:
-servicesdef/solrservices.xml
-The initial indexing may need to be performed or scheduled manually, but subsequent indexing
-may be partially or fully automated, though automated methods are disabled by default and must be enabled.
-Note that in general, solr services can only successfully run in contexts where the solr webapp is
-loaded and accessible.
+
+  servicesdef/solrservices.xml
 
 There are two methods for indexing data:
 
 
-* Index rebuilding service (rebuildSolrIndex):
+2.1 Index rebuilding service (rebuildSolrIndex/rebuildSolrIndexAuto)
 
-The rebuildSolrIndex is the most important data import service. It reindexes
-all Ofbiz Products existing in the system into the solr index. rebuildSolrIndex MUST be run
-AT LEAST once after installation and also following any data load operation that loads new products using the Ofbiz
-"install" starting mode (run-install, load-demo, etc.).
+rebuildSolrIndex is the most important data import service. It reindexes all Scipio Products existing
+in the system into the solr index. rebuildSolrIndexAuto is a wrapper that invokes rebuildSolrIndex if
+the data is marked dirty, the schema appears to have changed or other conditions.
 
-To do this, one can simply use the Webtools backend to invoke the service manually
-(e.g., /admin/control/setSyncServiceParameters?SERVICE_NAME=rebuildSolrIndex&POOL_NAME=pool&_RUN_SYNC_=Y)
-or summon the Webtools Job Scheduler.
+In Scipio, a rebuildSolrIndexAuto job runs once automatically after initial data load 
+and again every server startup if the data appears to have been marked dirty (through SolrStatus entity)
+or when the "solr.config.version"/"solr.config.version.custom" property from solrconfig.properties is
+detected to have changed (from the last full indexing, through through SolrStatus entity).
 
-Once the initial indexing has been performed, one can then use the Job Scheduler to
-invoke rebuildSolrIndex on a regular basis (every hour, every midnight, etc.) to update the Solr index.
+These services can be triggered manually or by scheduling a job through the backend:
+
+  https://localhost:8443/admin/control/SolrServices
+
+It can also be requested on the command line (this forces the startup-time reindex, even if not marked dirty):
+
+  ./ant start-reindex-solr
+  
+The Solr data is marked "dirty" by the Scipio Solr component in several situations, notably on errors
+or whenever product data is changed but the invoked Solr ECAs/SECAs cannot be executed in context 
+(assuming you haven't commented out those ECAs/SECAs - see below).
 
 
-* ECAs/SECAs (addToSolr, for Product data):
+2.2 ECAs/SECAs (registerUpdateToSolr service)
 
 Although the rebuildSolrIndex is always necessary for the initial data import, one may also
 use ECAs and SECAs to import subsequent data changes automatically at every individual data (e.g. Product)
-update instead of running rebuildSolrIndex periodically. This is done by defining ECAs or SECAs that
-trigger the addToSolr service.
+update instead of running rebuildSolrIndex periodically.
 
-The addToSolr service simply accepts a single "instance" parameter, a GenericValue. At the time of this writing,
-any entity value having a valid "productId" field designating a Product value may be passed; this will trigger reindexing
-for the specific product.
+This is done by defining ECAs or SECAs that trigger the registerUpdateToSolr service, which reindexes
+a single Product and its associated data.
 
-By default, the addToSolr service implementation (and any service intended for use with ECAs) is disabled globally and
-succeeds silently. It can be enabled by setting the "solr.eca.enabled=true" in "config/solrconfig.properties".
-This property is provided for easy toggling. It can also be specified on the command line or using ant through
-the true/false "ofbiz.solr.eca.enabled" system property (which has priority over file-based "solr.eca.enabled") in the same
-way described for the solr home system property (see Installation); this allows toggling them per Ant target.
+In Scipio, Solr ECAs are enabled by default. Some projects may want to disable these, which can be done
+by setting "solr.eca.enabled=false" in solrconfig.properties, or by passing the system property
+"ofbiz.solr.eca.enabled=false" on the command line (./ant start -Dofbiz.solr.eca.enabled=false).
 
-Some stock/default/example ECAs are provided and are functional once enabled. They can be found in:
-entitydef/eecas.xml
-Custom ECAs may also be added to this file, and custom SECAs may be added to the file:
-servicedef/secas.xml
+Some stock/default/example ECAs/SECAs are provided and cover a number of product changes, in a best-effort
+fashion. Client projects may need to modify or augment these for their own needs. They can be found in:
 
-Special care may need to be taken to ensure the addToSolr is not triggered during "install" sequences
-(run-install/load-demo) because it requires the solr webapp to be accessible. addToSolr will automatically
-attempt to prevent reindexing in cases where the solr webapp is unavailable. However, it is possible that
-this behavior results in needlessly prevented reindexing (and thus lost updates) in some unknown complex server
-configurations. If this is the case, this behavior can be disabled by setting the option
-"solr.eca.useSolrWebappLoadedCheck=false" in the properties file "config/solrconfig.properties".
- 
-However, if the above useSolrWebappLoadedCheck option is specified, you will have to manually disable or comment the
-ECA definitions/services to prevent them from executing during data-load operations; the "solr.eca.enabled" property and "ofbiz.solr.eca.enabled" system property can be used for this purpose. One easy way is to set "solr.eca.enabled=true" in
-the property files and then specify "-Dofbiz.solr.eca.enabled=false" for any relevant
-Ant build install/run-install/load-demo targets.
+  entitydef/eecas.xml
+  servicedef/secas.xml
 
-Note that simply commenting the ECAs/SECAs or preventing their inclusion using
-ofbiz-component.xml may eliminate some service call overhead compared to using the property toggling. Ideally,
-a method exploiting ofbiz-component.xml or eecas.xml to prevent ECAs from running in inappropriate contexts
-would be ideal; however, at the time of this writing, such a method could not be established.
+NOTE: In the current implementation (2017-12), the Scipio will log info-level Solr ECA service calls 
+even when Solr ECAs are disabled with "solr.eca.enabled=false"; this has little effect on functionality.
+It is simply that the service engine is a bit verbose. You may, alternatively, simply comment out
+all the ECAs/SECAs or their file includes in ofbiz-component.xml; however this may negatively affect
+dirty-data detection and you then have to be doubly certain about your plan to schedule 
+rebuildSolrIndex/rebuildSolrIndexAuto invocations. 
 
 ***
 
-To reset and clear the solr index completely, it is sufficient to shut down the server and delete the folders:
-solr/data/index
-solr/data/spellchecker
-and any other such folders (must delete the whole folders, not only contents).
+To reset and clear the solr index completely, simply run the following Ant task in the main project directory:
+
+  ./ant clean-search-indexes
+  
+In addition, they are now (2018-04-26) cleared by the "clean-all" task.
 
 
 -----------------------------------------------------
-4. Data Querying
+3. Data Querying
 -----------------------------------------------------
 
-Solr queries can be done using two methods:
+Solr queries can be done using severals methods:
 
 
-* Solr Ofbiz services:
+* Solr Scipio services:
 
 Simply invoke (manually or in code) the query services found in the file:
-servicesdef/solrservices.xml
+
+  servicesdef/solrservices.xml
+  
 These include solrProductsSearch, solrKeywordSearch and others. Note that in general,
 solr services can only successfully run in contexts where the solr webapp is loaded and accessible.
+
+For developers, the Scipio Shop contains a developed keyword search implementations in the file:
+
+  /applications/shop/webapp/shop/WEB-INF/actions/shop/KeywordSearch.groovy
 
 
 * Solr native admin webapp interface:
 
-One can also perform native Solr queries and diagnostics using the standard
-admin interface, accessible as described under Configuration. Please refer
-to the Apache Solr documentation for usage of this interface.
+  http://localhost:8080/solr
+  (substitute 8080 with your server's http port)
+  
+One can also perform native Solr queries and diagnostics using the standard admin interface, 
+accessible as described under Configuration. Please refer to the Apache Solr documentation for usage 
+of this interface.
 
 
 -----------------------------------------------------
-5. Implementation Concerns
+4. Schema Modification
 -----------------------------------------------------
 
-* The structure of the solr/webapp directory closely mirrors the contents of the solr.war
-distribution; however, please note that it contains some Ofbiz-specific modifications such
-as those found in web.xml. The same is true for other folders such as solr/conf. Therefore,
-any library updates must be done with care to preserve these modifications.
+For Solr 6, the schemas are now defined for each configset in:
+
+  configsets/*/conf/managed-schema
+  
+  (this is an XML file; it has no extension)
+  
+This file may be edited by hand WHILE THE SERVER IS STOPPED (./ant stop).
+  
+In Scipio, for most projects, despite ominous warnings from parts of the Solr documentation,
+it is NOT recommended to use the UI interface to modify the Solr schema, because the file
+is then restructured and all comments and formatting are lost. In fact, it is perfectly safe
+to edit the file by hand AS LONG AS the server is stopped (the following is a quote):
+
+  https://lucene.apache.org/solr/guide/6_6/schema-api.html#schema-api
+  
+    "Why is hand editing of the managed schema discouraged?
+
+    The file named "managed-schema" in the example configurations may include a note that recommends 
+    never hand-editing the file. Before the Schema API existed, such edits were the only way to make 
+    changes to the schema, and users may have a strong desire to continue making changes this way.
+
+    The reason that this is discouraged is because hand-edits of the schema may be lost if the 
+    Schema API described here is later used to make a change, unless the core or collection is reloaded 
+    or Solr is restarted before using the Schema API. If care is taken to always reload or restart after 
+    a manual edit, then there is no problem at all with doing those edits."
+
+Whenever the schema is changed, you must run the rebuildSolrIndex service on next server startup
+or as soon as possible. You may do this manually or, if you work with other developers, you can 
+choose to manage the "solr.config.version.custom" property in solrconfig.properties; whenever 
+this is increased, the stock Scipio Solr setup will trigger a rebuildSolrIndex call on server 
+startup, so that you don't need to tell other users of your (git) project when to rebuild the index.
 
 
 -----------------------------------------------------
-6. Known Bugs, Limitations and Issues
+5. Known Bugs, Limitations and Issues
 -----------------------------------------------------
 
 * In general, solr services can only successfully run in contexts where the solr webapp
-is loaded and accessible.
-* ECA indexing may be problematic due to data loading and unknown complex server configurations;
-various toggling options are provided to work around this issue (see Data Indexing for details).
-In the future - and ideally - this could be addressed using ofbiz-component.xml (or eecas.xml) directives.
-* The indexing services often produce the log warning "Problem reading product features" due to their
-use of the stock Ofbiz getProductFeatureSet service.
+  is loaded and accessible. This means it is impossible to index data during load-demo/load-* targets.
 
 ***
 
-Please report any other issues encountered. Thank you.
+Please report any other issues encountered, or ask any further questions, on the SCIPIO ERP 
+forum (https://forum.scipioerp.com/). Thank you.
 
 
 

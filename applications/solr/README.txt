@@ -18,10 +18,11 @@ This stock component focuses on indexing Product data.
 Contents:
 
 1. Configuration
-2. Data Indexing
-3. Data Querying
-4. Schema Modification
-5. Known Bugs, Limitations and Issues
+2. Interfaces
+3. Data Indexing
+4. Data Querying
+5. Schema Modification
+6. Known Bugs, Limitations and Issues
 
 
 -----------------------------------------------------
@@ -42,34 +43,47 @@ NOTE: 2017-12: The Solr ECA system was recently significantly overhauled, and no
 more reliably than the old component.
 
 * Scipio configurations:
-** System properties:
-*** ofbiz.solr.eca.enabled - Global solr ECA toggling boolean (true/false, see Data Indexing)
-** Config files:
-*** config/solrconfig.properties - Scipio solr service behavior control
-*** ofbiz-component.xml - Standard Scipio component config
+ * System properties:
+  * ofbiz.solr.eca.enabled - Global solr ECA toggling boolean (true/false, see Data Indexing)
+ * Config files:
+  * config/solrconfig.properties - Scipio solr service behavior control
+  * ofbiz-component.xml - Standard Scipio component config
 
 * Apache Solr configurations:
-** Config files:
-*** solr.xml - Base solr config
-*** configsets/*/conf/managed-schema - Solr index schema
-*** webapp/WEB-INF/web.xml - Dual Scipio/Solr webapp config
-** Interfaces:
-*** /solr - Webapp admin interface (see below)
-
-***
-
-It is possible to examine native Solr configuration and perform diagnostic queries using
-the admin webapp interface noted above. It is accessible at the address:
-
-  http://localhost:8080/solr
-  (substitute 8080 with your server's http port)
-  
-Please refer to the Apache Solr documentation for usage of this interface
-and other native Solr configuration details.
+ * Config files:
+  * solr.xml - Base solr config
+  * configsets/*/conf/managed-schema - Solr index schema
+  * webapp/WEB-INF/web.xml - Dual Scipio/Solr webapp config
 
 
 -----------------------------------------------------
-2. Data Indexing
+2. Interfaces
+-----------------------------------------------------
+
+
+* Scipio Solr status and control screens:
+
+  https://localhost:8443/admin/control/SolrStatus
+  (substitute 8443 with your server's http port)
+  
+Allows to view Scipio-side status information about the Solr webapp (to see if accessible/working)
+and trigger indexing and other services.
+
+
+* Native Solr interface:
+
+  http://localhost:8080/solr
+  (substitute 8080 with your server's http port)
+
+This accesses the native Solr webapp itself.
+
+Please refer to the Apache Solr documentation for usage of this interface
+and other native Solr configuration details. Note that not all native Solr functions
+are available due to running within Scipio (such as logging control).
+
+
+-----------------------------------------------------
+3. Data Indexing
 -----------------------------------------------------
 
 The solr component indexes data such as Products into the Apache Solr database
@@ -80,7 +94,7 @@ using services defined in the file:
 There are two methods for indexing data:
 
 
-2.1 Index rebuilding service (rebuildSolrIndex/rebuildSolrIndexAuto)
+3.1 Index rebuilding service (rebuildSolrIndex/rebuildSolrIndexAuto)
 
 rebuildSolrIndex is the most important data import service. It reindexes all Scipio Products existing
 in the system into the solr index. rebuildSolrIndexAuto is a wrapper that invokes rebuildSolrIndex if
@@ -104,7 +118,7 @@ or whenever product data is changed but the invoked Solr ECAs/SECAs cannot be ex
 (assuming you haven't commented out those ECAs/SECAs - see below).
 
 
-2.2 ECAs/SECAs (registerUpdateToSolr service)
+3.2 ECAs/SECAs (registerUpdateToSolr service)
 
 Although the rebuildSolrIndex is always necessary for the initial data import, one may also
 use ECAs and SECAs to import subsequent data changes automatically at every individual data (e.g. Product)
@@ -140,7 +154,7 @@ In addition, they are now (2018-04-26) cleared by the "clean-all" task.
 
 
 -----------------------------------------------------
-3. Data Querying
+4. Data Querying
 -----------------------------------------------------
 
 Solr queries can be done using severals methods:
@@ -171,7 +185,7 @@ of this interface.
 
 
 -----------------------------------------------------
-4. Schema Modification
+5. Schema Modification
 -----------------------------------------------------
 
 For Solr 6, the schemas are now defined for each configset in:
@@ -208,7 +222,7 @@ startup, so that you don't need to tell other users of your (git) project when t
 
 
 -----------------------------------------------------
-5. Known Bugs, Limitations and Issues
+6. Known Bugs, Limitations and Issues
 -----------------------------------------------------
 
 * In general, solr services can only successfully run in contexts where the solr webapp

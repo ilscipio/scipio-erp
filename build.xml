@@ -379,7 +379,7 @@ under the License.
     </target>
 
     <target name="clean-search-indexes"
-        description="Remove search indexes (e.g. Lucene indexes) created under runtime/indexes">
+        description="Remove (Solr) search indexes/data created under runtime/indexes and anywhere else">
         
         <!-- SCIPIO: hooks -->
         <invokehook target="pre-clean-search-indexes" />
@@ -389,6 +389,13 @@ under the License.
                 <exclude name="README"/>
             </fileset>
         </delete>
+        
+        <!-- SCIPIO: the Solr data is now actually stored under applications/solr -->
+        <externalsubant target="clean-local-solr-indexes">
+            <fileset dir="${basedir}/applications/solr">
+                <include name="build.xml" />
+            </fileset>
+        </externalsubant>
         
         <!-- SCIPIO: hooks -->
         <invokehook target="post-clean-search-indexes" />

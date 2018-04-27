@@ -1180,6 +1180,17 @@ public class UtilProperties implements Serializable {
     }
     
     /**
+     * SCIPIO: Gets all property name/value pairs in the given Properties that start with given prefix
+     * and end with given suffix, with option to forbid dots in between, in an unordered map.
+     * Added 2018-04-27.
+     */
+    public static Map<String, String> getPropertiesWithPrefixSuffix(Properties properties, String prefix, String suffix, boolean allowDots, boolean returnPrefix, boolean returnSuffix) {
+        Map<String, String> out = new HashMap<>();
+        putPropertiesWithPrefixSuffix(out, properties, prefix, suffix, allowDots, returnPrefix, returnSuffix);
+        return out;
+    }
+    
+    /**
      * SCIPIO: Extracts properties having the given prefix and keyed by an ID as the next name part between dots.
      * Added 2017-11.
      */

@@ -106,7 +106,7 @@ under the License.
                                                     <include-form name="QuickCreateTimeEntry" location="component://workeffort/widget/TimesheetForms.xml"/>
                                                 </widgets>
                                                 <fail-widgets>
-                                                    <include-menu name="MyCurrentTimesheetsSubTabBar" location="component://workeffort/widget/TimesheetMenus.xml"/>
+                                                    <include-menu name="MyCurrentTimesheetSubTabBar" location="component://workeffort/widget/TimesheetMenus.xml"/>
                                                     <!--<container>
                                                         <link target="MyTimesheets" text="${uiLabelMap.WorkEffortTimesheetQuickTimeEntry}" style="${styles.link_nav} ${styles.action_view}">
                                                             <parameter param-name="showQuickEntry" from-field="currentTimesheet.timesheetId"/>
@@ -194,7 +194,7 @@ under the License.
                                     <include-form name="AddTimesheetToInvoice" location="component://workeffort/widget/TimesheetForms.xml"/>
                                 </screenlet>
                                 <screenlet title="${uiLabelMap.PageTitleDisplayTimesheetEntries}">
-                                    <container><link text="${uiLabelMap.WorkEffortTimesheetCreate}" target="EditTimesheet" style="${styles.link_nav} ${styles.action_add}" /></container>
+                                    <!--<container><link text="${uiLabelMap.WorkEffortTimesheetCreate}" target="EditTimesheet" style="${styles.link_nav} ${styles.action_add}" /></container>-->
                                     <include-form name="DisplayTimesheetEntries" location="component://workeffort/widget/TimesheetForms.xml"/>
                                 </screenlet>
                                 <screenlet title="${uiLabelMap.PageTitleAddTimesheetToNewInvoice}">

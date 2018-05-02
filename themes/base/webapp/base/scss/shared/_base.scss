@@ -298,7 +298,9 @@ div.scrollable-table-container > table {
 */
 
 // adds a margin to last elem inside "display" type fields, because all other types get a margin
-.field-entry-widget.field-entry-type-display:last-child, .field-entry-widget.field-entry-type-displayentity:last-child {
+.field-entry-widget.field-entry-type-display:last-child, 
+.field-entry-widget.field-entry-type-displayentity:last-child,
+.field-entry-widget.field-entry-type-hyperlink:last-child {
   margin-bottom: 1rem;
 }
 

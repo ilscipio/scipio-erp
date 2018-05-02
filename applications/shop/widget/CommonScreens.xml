@@ -255,6 +255,12 @@ under the License.
                 <set field="parameters.VIEW_SIZE" from-field="parameters.VIEW_SIZE" default-value="12"/> <!-- Number of items to be displayed on a page -->
                 <set field="parameters.INDEX_SIZE" from-field="parameters.INDEX_SIZE" default-value="0"/> <!-- View index for a list of items-->
                 
+                <script lang="groovy"><![CDATA[
+                    org.ofbiz.base.util.Debug.logInfo("TEST: " + session.getAttribute("heyhey"), "asdfasdf.groovy");
+                
+                ]]>
+                </script>
+                
                 <include-screen-actions name="ShopSetupActions"/>
             </actions>
             <widgets>
@@ -371,6 +377,13 @@ under the License.
                 <!--<set field="title" value="${uiLabelMap.PageTitleMain}: ${categoryTitle}"/>-->
                 <set field="title" value=""/>
                 <set field="titleProperty" value=""/>
+                
+                              
+                <script lang="groovy"><![CDATA[
+                    session.setAttribute("heyhey", "hello");
+                
+                ]]>
+                </script>
             </actions>
             <widgets>
                 <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">

@@ -387,8 +387,8 @@ under the License.
         <sort-order>
             <sort-field name="workEffortIdFrom"/>
             <sort-field name="workEffortAssocTypeId"/>
+            <sort-field name="sequenceNum"/><!-- SCIPIO: swapped with fromDate, silly -->
             <sort-field name="fromDate"/>
-            <sort-field name="sequenceNum"/>
             <sort-field name="thruDate"/>
             <sort-field name="workEffortIdTo"/>
             <sort-field name="workEffortName"/>
@@ -1360,7 +1360,11 @@ under the License.
         <field name="workEffortTypeId"><hidden value="PUBLISH_PROPS"></hidden></field>
         <field name="currentStatusId"><hidden value="CAL_CANCELLED"></hidden></field>
         <field name="quickAssignPartyId" title="${uiLabelMap.WorkEffortICalendarOwner}" use-when="workEffort==null @and workEffortId==null"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="workEffortId" use-when="workEffort!=null" title="${uiLabelMap.WorkEffortICalendarUrl}"><display description="${serverRootUrl}/iCalendar/${workEffortId}/"/></field>
+        <!-- SCIPIO: this should be linked
+        <field name="workEffortId" use-when="workEffort!=null" title="${uiLabelMap.WorkEffortICalendarUrl}"><display description="${serverRootUrl}/iCalendar/${workEffortId}/"/></field>-->
+        <field name="workEffortId" use-when="workEffort!=null" title="${uiLabelMap.WorkEffortICalendarUrl}">
+            <hyperlink also-hidden="true" target-type="plain" target="${serverRootUrl}/iCalendar/${workEffortId}/" description="${serverRootUrl}/iCalendar/${workEffortId}/"/>
+        </field>
         <field name="workEffortName" title="${uiLabelMap.WorkEffortICalendarName}" required-field="true"><text/></field>
         <field name="scopeEnumId" title="${uiLabelMap.WorkEffortICalendarVisibility}">
             <drop-down no-current-selected-key="WES_PRIVATE">
@@ -1461,5 +1465,13 @@ under the License.
         <field name="allocatedCost"><ignored/></field>
         <field name="deleteAction"><ignored/></field>
     </form>
+    
+    <!-- SCIPIO: new form - replaces WorkEffortTrees.xml#TreeWorkEffort
+    <form name="ListICalendarFixedAssetAssigns" extends="ListWorkEffortFixedAssetAssigns" target="updateICalendarFixedAssetAssign">
+        <field name="statusId"><ignored/></field>
+        <field name="availabilityStatusId"><ignored/></field>
+        <field name="allocatedCost"><ignored/></field>
+        <field name="deleteAction"><ignored/></field>
+    </form> -->
 
 </forms>

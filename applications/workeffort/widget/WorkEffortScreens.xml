@@ -184,14 +184,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container style="button-bar">
-                            <link target="AddWorkEffortAndAssoc" text="${uiLabelMap.WorkEffortAddChild}" style="${styles.link_nav} ${styles.action_add}">
-                                <parameter param-name="workEffortIdFrom" from-field="workEffortId"/>
-                            </link>
-                            <link target="AddWorkEffortAssoc" text="${uiLabelMap.WorkEffortAddExistingWorkEffortChild}" style="${styles.link_nav} ${styles.action_add}">
-                                <parameter param-name="workEffortIdFrom" from-field="workEffortId"/>
-                            </link>
-                        </container>
+                        <include-menu name="ChildWorkEffortsSubTabBar" location="component://workeffort/widget/WorkEffortMenus.xml"/><!-- SCIPIO -->
                         <include-tree name="TreeWorkEffort" location="component://workeffort/widget/WorkEffortTrees.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -202,20 +195,20 @@ under the License.
     <screen name="AddWorkEffortAndAssoc">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditWorkEffort"/>
+                <!--<set field="titleProperty" value="PageTitleEditWorkEffort"/>-->
                 <set field="activeSubMenuItem" value="WorkEffort"/>
                 <set field="labelTitleProperty" value="PageTitleEditWorkEffort"/>
                 <set field="donePage" from-field="parameters.DONE_PAGE" default-value="ChildWorkEfforts?workEffortId=${parameters.workEffortIdFrom}"/>
                 <set field="workEffortIdFrom" from-field="parameters.workEffortIdFrom"/>
                 <set field="workEffortAssocTypeId" value=""/>
                 <set field="fromDate" from-field="nowTimestamp"/>
+                <property-map map-name="uiLabelMap" resource="WorkEffortUiLabels" global="true"/>
+                <set field="title" value="${uiLabelMap.PageTitleAddWorkEffort} ${uiLabelMap.WorkEffortAssociatedFromParentToChild}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container style="h2">
-                            <label text="${uiLabelMap.PageTitleAddWorkEffort} ${uiLabelMap.WorkEffortAssociatedFromParentToChild}"/>
-                        </container>
+                        <!--<label style="heading" text="${uiLabelMap.PageTitleAddWorkEffort} ${uiLabelMap.WorkEffortAssociatedFromParentToChild}"/>-->
                         <include-form name="AddWorkEffortAndAssoc" location="component://workeffort/widget/WorkEffortForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -226,7 +219,7 @@ under the License.
     <screen name="EditWorkEffortAndAssoc">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditWorkEffort"/>
+                <!--<set field="titleProperty" value="PageTitleEditWorkEffort"/>-->
                 <set field="activeSubMenuItem" value="WorkEffort"/>
                 <set field="labelTitleProperty" value="PageTitleEditWorkEffort"/>
                 <set field="donePage" from-field="parameters.DONE_PAGE"/>
@@ -238,10 +231,13 @@ under the License.
                 <entity-one entity-name="WorkEffort" value-field="workEffort"/>
                 <entity-one entity-name="WorkEffortAssoc" value-field="workEffortAssoc"/>
                 <set field="parameters.workEffortId" from-field="workEffortId"/>
+                <property-map map-name="uiLabelMap" resource="WorkEffortUiLabels" global="true"/>
+                <set field="title" value="${uiLabelMap.PageTitleEditWorkEffort} ${uiLabelMap.WorkEffortAssociatedFromParentToChild}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                        <include-menu name="EditWorkEffortAssocSubTabBar" location="component://workeffort/widget/WorkEffortMenus.xml"/><!-- SCIPIO: new -->
                         <include-form name="EditWorkEffortAndAssoc" location="component://workeffort/widget/WorkEffortForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -253,19 +249,25 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditWorkEffortAssoc"/>
-                <set field="activeSubMenuItem" value="WorkEffort"/>
+                <set field="activeSubMenuItem" value="WorkEffortAssocs"/><!-- SCIPIO: confusing: value="WorkEffort" -->
                 <set field="labelTitleProperty" value="PageTitleEditWorkEffortAssoc"/>
                 <set field="workEffortIdFrom" from-field="parameters.workEffortIdFrom"/>
                 <entity-one entity-name="WorkEffortAssoc" value-field="workEffortAssoc"/>
                 <set field="donePage" value="ChildWorkEfforts?workEffortId=${workEffortIdFrom}&amp;trail=${workEffortIdFrom}"/>
+                <!-- SCIPIO: added workEffortId here - needed so the menu opens -->
+                <set field="workEffortId" from-field="workEffortIdFrom"/>
+                <set field="parameters.workEffortId" from-field="workEffortIdFrom"/>
+                <entity-one entity-name="WorkEffort" value-field="workEffort"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container style="h2">
+                        <!--<container style="h2">
                             <label text="${uiLabelMap.PageTitleEditWorkEffortAssoc}"/>
-                        </container>
-                        <include-form name="AddWorkEffortAssoc" location="component://workeffort/widget/WorkEffortForms.xml"/>
+                        </container>-->
+                        <screenlet>
+                            <include-form name="AddWorkEffortAssoc" location="component://workeffort/widget/WorkEffortForms.xml"/>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -275,7 +277,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditWorkEffortAssoc"/>
-                <set field="activeSubMenuItem" value="WorkEffort"/>
+                <set field="activeSubMenuItem" value="WorkEffortAssocs"/><!-- SCIPIO: confusing: value="WorkEffort" -->
                 <set field="labelTitleProperty" value="PageTitleEditWorkEffortAssoc"/>
                 <set field="workEffortIdTo" from-field="parameters.workEffortIdTo"/>
                 <set field="workEffortIdFrom" from-field="parameters.workEffortIdFrom"/>
@@ -283,11 +285,16 @@ under the License.
                 <set field="fromDate" from-field="parameters.fromDate"/>
                 <entity-one entity-name="WorkEffortAssoc" value-field="workEffortAssoc"/>
                 <set field="donePage" value="ChildWorkEfforts?workEffortId=${workEffortIdFrom}&amp;trail=${workEffortIdFrom}"/>
+                <!-- SCIPIO: added workEffortId here - needed so the menu opens -->
+                <set field="workEffortId" from-field="workEffortIdFrom"/>
+                <set field="parameters.workEffortId" from-field="workEffortIdFrom"/>
+                <entity-one entity-name="WorkEffort" value-field="workEffort"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet>
+                        <screenlet navigation-menu-name="EditWorkEffortAssocSubTabBar">
+                            <include-menu name="EditWorkEffortAssocSubTabBar" location="component://workeffort/widget/WorkEffortMenus.xml"/>
                             <include-form name="EditWorkEffortAssoc" location="component://workeffort/widget/WorkEffortForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -777,10 +784,11 @@ under the License.
                                 <!--<container style="h2">
                                     <label text="${uiLabelMap.WorkEffortICalendarFind}"/>
                                 </container>-->
-                                <container style="button-bar">
+                                <!--<container style="button-bar">
                                     <link text="${uiLabelMap.CommonCreate}" target="EditICalendar" style="${styles.link_nav} ${styles.action_add}"/>
                                     <link text="${uiLabelMap.CommonHelp}" target="ICalendarHelp" style="${styles.link_nav} ${styles.action_view}"/>
-                                </container>
+                                </container>-->
+                                <include-menu name="FindICalendarsSubTabBar" location="component://workeffort/widget/WorkEffortMenus.xml"/>
                                 <include-form name="ListIcalendars" location="component://workeffort/widget/WorkEffortForms.xml"/>
                             </widgets>
                             <fail-widgets>
@@ -824,9 +832,10 @@ under the License.
                                 <include-form name="EditICalendar" location="component://workeffort/widget/WorkEffortForms.xml"/>
                             </widgets>
                             <fail-widgets>
-                                <container style="button-bar">
+                                <include-menu name="EditICalendarsSubTabBar" location="component://workeffort/widget/WorkEffortMenus.xml"/>
+                                <!--<container style="button-bar">
                                     <link text="${uiLabelMap.CommonCreate}" target="EditICalendar" style="${styles.link_nav} ${styles.action_add}"/>
-                                </container>
+                                </container>-->
                                 <include-form name="EditICalendar" location="component://workeffort/widget/WorkEffortForms.xml"/>
                             </fail-widgets>
                         </section>

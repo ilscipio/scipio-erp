@@ -189,7 +189,9 @@ public class MacroTreeRenderer implements TreeStringRenderer {
             if (ModelWidget.widgetBoundaryCommentsEnabled(context)) {
                 renderBeginningBoundaryComment(writer, "Tree Widget", node.getModelTree());
             }
-            style = "basic-tree";
+            // SCIPIO: 2018-05: need something unique to identify this type of tree
+            //style = "basic-tree";
+            style = "basic-tree scp-tree-widget";
         }
  
         StringWriter sr = new StringWriter();

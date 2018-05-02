@@ -58,10 +58,13 @@ context.orderContainsSubscriptionItemsOnly = orh.orderContainsSubscriptionItemsO
 List<GenericValue> allSubscriptionAdjustments = [];
 if (context.subscriptions && context.validPaymentMethodTypeForSubscriptions) {	
     Map<GenericValue, List<GenericValue>> orderSubscriptionAdjustments = [:];
-    for (GenericValue subscription : context.subscriptionItems.keySet()) {
+    subscriptionItems = context.subscriptionItems.keySet();
+    for (Iterator<GenericValue> iterSubscription; iterSubscription = subscriptionItems.iterator(); iterSubscription.hasNext()) {
+        GenericValue subscription = iterSubscription.next();
         List<GenericValue> subscriptionAdjustments = [];
-        orderItemRemoved = orderItems.remove(subscription);
-        for (GenericValue orderAdjustment : orderAdjustments) {
+        orderItemRemoved = orderItems.remove(subscription);        
+        for (Iterator<GenericValue> iterSubscriptionAdjustment; iterSubscriptionAdjustment = orderAdjustments.iterator(); iterSubscriptionAdjustment.hasNext()) {
+            orderAdjustment = iterSubscriptionAdjustment.next();            
             if (orderAdjustment.getString("orderItemSeqId").equals(subscription.getString("orderItemSeqId"))) {
                 orderAdjustments.remove(orderAdjustment);
                 subscriptionAdjustments.add(orderAdjustment);

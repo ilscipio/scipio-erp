@@ -740,6 +740,11 @@ under the License.
             <create-value value-field="newEntity"/>
         </else>
         </if-not-empty>
+        <!-- SCIPIO: 2018-05-02: here, output the PK because we may generate fromDate -->
+        <field-to-result result-name="workEffortIdFrom" field="newEntity.workEffortIdFrom"/>
+        <field-to-result result-name="workEffortIdTo" field="newEntity.workEffortIdTo"/>
+        <field-to-result result-name="workEffortAssocTypeId" field="newEntity.workEffortAssocTypeId"/>
+        <field-to-result result-name="fromDate" field="newEntity.fromDate"/>
     </simple-method>
     <simple-method method-name="updateWorkEffortAssoc" short-description="Update a WorkEffort association">
         <entity-one entity-name="WorkEffortAssoc" value-field="lookedUpValue"/>

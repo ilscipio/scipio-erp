@@ -58,12 +58,25 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
 </#macro>
 
 <#macro renderLink id style name title targetWindow linkUrl linkText imgStr extraArgs...>
+<#-- SCIPIO: 2018-05: detect the special collapse/expand links and set a simple "icon" here, 
+    otherwise functionality loss - see also extra space at end -->
+<#local expColl = false>
+<#if linkText == " ">
+  <#if style == "expanded">
+    <#local expColl = true>
+    <#local linkText = "[-]">
+  <#elseif style == "collapsed">
+    <#local expColl = true>
+    <#local linkText = "[+]">
+  </#if>
+</#if>
 <a<#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#rt/>
 <#if style?has_content> class="${escapeVal(style, 'html')}"</#if><#rt/>
 <#if name?has_content> name="${escapeVal(name, 'html')}"</#if><#rt/>
 <#if title?has_content> title="${escapeVal(title, 'html')}"</#if><#rt/>
 <#if targetWindow?has_content> target="${escapeVal(targetWindow, 'html')}</#if><#if linkUrl?has_content> href="${escapeFullUrl(linkUrl, 'html')}"<#else> href="javascript:void(0);"</#if>><#rt/>
 <#if imgStr?has_content>${imgStr}<#elseif linkText?has_content/>${escapeVal(linkText, 'htmlmarkup')}<#else>&nbsp;</#if></a><#rt/>
+<#if expColl> </#if><#rt/><#-- SCIPIO: extra space -->
 </#macro>
 
 <#macro renderImage src id style wid hgt border alt urlString extraArgs...>

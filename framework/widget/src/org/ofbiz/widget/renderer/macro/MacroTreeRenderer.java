@@ -235,7 +235,10 @@ public class MacroTreeRenderer implements TreeStringRenderer {
                         target.append("&");
                     }
                     target.append(trailName).append("=").append(currentNodeTrailPiped);
-                    expandCollapseLink = new ModelTree.ModelNode.Link("collapsed", target.toString(), " ");
+                    // SCIPIO: 2018-04: the empty text is difficult to style properly in themes, so as a workaround
+                    // I simply hardcode it here - the tree renderer is barely used anyway, but this is confusing if it appears
+                    //expandCollapseLink = new ModelTree.ModelNode.Link("collapsed", target.toString(), " ");
+                    expandCollapseLink = new ModelTree.ModelNode.Link("collapsed", target.toString(), "[+] ");
                 }
             } else {
                 context.put("processChildren", Boolean.TRUE);

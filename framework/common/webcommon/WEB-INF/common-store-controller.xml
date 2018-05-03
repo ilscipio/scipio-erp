@@ -133,7 +133,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
 
     <!-- Common Mappings used for locales and timezones -->
     <!-- SCIPIO: Not for frotend for now
-    <request-map uri="ListLocales"><security https="true" auth="true"/><response name="success" type="view" value="ListLocales" save-last-view="true"/></request-map>
+    <request-map uri="ListLocales"><security https="true" auth="false"/><response name="success" type="view" value="ListLocales" save-last-view="true"/></request-map>
     -->
     <request-map uri="setSessionLocale">
         <security https="false" auth="false"/>

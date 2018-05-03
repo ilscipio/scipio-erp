@@ -94,7 +94,7 @@ under the License.
     </request-map>
 
     <!-- Common Mappings used for locales and timezones -->
-    <request-map uri="ListLocales"><security https="true" auth="true"/><response name="success" type="view" value="ListLocales" save-last-view="true"/></request-map>
+    <request-map uri="ListLocales"><security https="true" auth="false"/><response name="success" type="view" value="ListLocales" save-last-view="true"/></request-map>
     <request-map uri="setSessionLocale">
         <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.common.CommonEvents" invoke="setSessionLocale"/>

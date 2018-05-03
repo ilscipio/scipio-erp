@@ -432,4 +432,49 @@ under the License.
         </menu-item>
     </menu>
     
+    <!-- SCIPIO: new -->
+    <menu name="ChildWorkEffortsSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="AddWorkEffortAssoc" title="${uiLabelMap.WorkEffortAddExistingWorkEffortChild}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="AddWorkEffortAssoc">        
+                <parameter param-name="workEffortIdFrom" from-field="workEffortId"/>
+            </link>
+        </menu-item>
+        <menu-item name="AddWorkEffortAndAssoc" title="${uiLabelMap.WorkEffortAddChild}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="AddWorkEffortAndAssoc">        
+                <parameter param-name="workEffortIdFrom" from-field="workEffortId"/>
+            </link>
+        </menu-item>
+    </menu>
+    
+    <!-- SCIPIO: new -->
+    <menu name="FindICalendarsSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="EditICalendar" title="${uiLabelMap.CommonCreate}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="EditICalendar"/>
+        </menu-item>
+        <menu-item name="ICalendarHelp" title="${uiLabelMap.CommonHelp}" widget-style="+${styles.action_nav} ${styles.action_view}">
+            <link target="ICalendarHelp"/>
+        </menu-item>
+    </menu>
+    
+    <!-- SCIPIO: new -->
+    <menu name="EditICalendarsSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="EditICalendar" title="${uiLabelMap.CommonCreate}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition><not><if-empty field="workEffort"/></not></condition>
+            <link target="EditICalendar"/>
+        </menu-item>
+    </menu>
+    
+    <!-- SCIPIO: new -->
+    <menu name="EditWorkEffortAssocSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="removeWorkEffortAssoc" title="${uiLabelMap.CommonRemoveAssoc}" widget-style="+${styles.action_run_sys} ${styles.action_remove}">
+            <condition><not><if-empty field="workEffortAssoc"/></not></condition>
+            <link target="removeWorkEffortAssoc" link-type="hidden-form">
+                <parameter param-name="workEffortIdFrom" from-field="workEffortAssoc.workEffortIdFrom"/>
+                <parameter param-name="workEffortIdTo" from-field="workEffortAssoc.workEffortIdTo"/>
+                <parameter param-name="workEffortAssocTypeId" from-field="workEffortAssoc.workEffortAssocTypeId"/>
+                <parameter param-name="fromDate" from-field="workEffortAssoc.fromDate"/>
+            </link>
+        </menu-item>
+    </menu>
+    
 </menus>

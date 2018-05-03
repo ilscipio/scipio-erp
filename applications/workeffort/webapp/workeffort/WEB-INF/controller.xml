@@ -98,6 +98,15 @@ under the License.
         <response name="success" type="view" value="EditWorkEffortAssoc"/>
         <response name="error" type="view" value="EditWorkEffortAssoc"/>
     </request-map>
+    <request-map uri="removeWorkEffortAssoc"><!-- SCIPIO: added 2018-05-02: missing from stock ofbiz -->
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeWorkEffortAssoc"/>
+        <response name="success" type="request-redirect" value="ChildWorkEfforts">
+            <redirect-parameter name="workEffortId" from="workEffortIdFrom"/>
+            <redirect-parameter name="trail" from="workEffortIdFrom"/>
+        </response>
+        <response name="error" type="view" value="EditWorkEffortAssoc"/>
+    </request-map>
     <request-map uri="createWorkEffortAndAssoc">
         <security https="true" auth="true"/>
         <event type="service" invoke="createWorkEffortAndAssoc"/>

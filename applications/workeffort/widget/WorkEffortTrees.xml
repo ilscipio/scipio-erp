@@ -24,6 +24,10 @@ under the License.
         default-render-style="expand-collapse" default-wrap-style="treeWrapper">
         <node name="node-root"  entity-name="WorkEffort" >
             <entity-one entity-name="WorkEffort" value-field="workEffort"/>
+            <!-- SCIPIO: added this link - otherwise is just an empty bullet...? -->
+            <link target="EditWorkEffort" text="${workEffort.workEffortName} - ${workEffort.description} [${workEffort.workEffortId}]">
+                <parameter param-name="workEffortId" from-field="workEffort.workEffortId"/>
+            </link>
             <sub-node node-name="node-list">
                 <entity-condition entity-name="WorkEffortAssoc">
                     <condition-expr field-name="workEffortIdFrom" operator="equals" from-field="workEffortId"/>
@@ -31,10 +35,19 @@ under the License.
             </sub-node>
         </node>
         <node name="node-list" entry-name="workEffortAssoc" entity-name="WorkEffortAssoc" join-field-name="workEffortIdTo">
-            <entity-one entity-name="WorkEffort" value-field="workEffort">
-                <field-map field-name="workEffortId" from-field="workEffortAssoc.workEffortIdTo"/>
-            </entity-one>
-            <link target="EditWorkEffortAndAssoc" text="${workEffort.workEffortName} - ${workEffort.description} [${workEffort.workEffortId}]">
+            <actions>
+                <entity-one entity-name="WorkEffort" value-field="workEffort">
+                    <field-map field-name="workEffortId" from-field="workEffortAssoc.workEffortIdTo"/>
+                </entity-one>
+                <!-- SCIPIO: need to see the assoc type -->
+                <entity-one entity-name="WorkEffortAssocType" value-field="workEffortAssocType">
+                    <field-map field-name="workEffortAssocTypeId" from-field="workEffortAssoc.workEffortAssocTypeId"/>
+                </entity-one>
+            </actions>
+            <!-- SCIPIO: 2018-05: this used to be this screen in stock: target="EditWorkEffortAndAssoc"
+                but that screen inverts the target workEffortId and makes browsing too confusing
+                TODO: REVIEW: that screen EditWorkEffortAndAssoc is more efficient to use, but it's just too confusing for now... -->
+            <link target="EditWorkEffortAssoc" text="${workEffort.workEffortName} - ${workEffort.description} (${workEffortAssocType.description}) [${workEffort.workEffortId}]">
                 <parameter param-name="workEffortIdTo" from-field="workEffortAssoc.workEffortIdTo"/>
                 <parameter param-name="workEffortIdFrom" from-field="workEffortAssoc.workEffortIdFrom"/>
                 <parameter param-name="workEffortAssocTypeId" from-field="workEffortAssoc.workEffortAssocTypeId"/>

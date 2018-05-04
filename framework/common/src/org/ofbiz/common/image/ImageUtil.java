@@ -1,7 +1,9 @@
 package org.ofbiz.common.image;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -264,5 +266,49 @@ public abstract class ImageUtil {
             }
         }
         return options;
+    }
+    
+    /**
+     * SCIPIO: Encodes an arbitrary filename (last part of a full file path) 
+     * for secure usage inside a file path/URL used
+     * for images - preventing directory separators and directory switches ("..").
+     * <p>
+     * TODO: REVIEW: under review.
+     * <p>
+     * Added 2018-05-04.
+     */
+    public static String cleanFilename(String name) {
+        return cleanPathname(name);
+//        try {
+//            name = URLEncoder.encode(name, "UTF-8").replaceAll("[.]{2,}", ".");
+//            if (name.startsWith(".")) name = name.substring(1);
+//            return name;
+//        } catch (UnsupportedEncodingException e) {
+//            Debug.logFatal(e, "Serious system error: could not encode name into UTF-8: " + e.getMessage(), module);
+//            return name.replaceAll("[^a-zA-Z0-9]", ""); // emergency fallback for security reasons
+//        }
+    }
+    
+    /**
+     * SCIPIO: Encodes an arbitrary directory name (non-last part of a full file path) 
+     * for secure usage inside a file path/URL used
+     * for images - preventing directory separators and directory switches ("..").
+     * <p>
+     * TODO: REVIEW: under review.
+     * <p>
+     * Added 2018-05-04.
+     */
+    public static String cleanPathname(String name) {
+        name = name.replaceAll("[/\\\\]", "_").replaceAll("[.]{2,}", ".");
+        if (name.startsWith(".")) name = name.substring(1);
+        return name;
+//        try {
+//            name = URLEncoder.encode(name, "UTF-8").replaceAll("[.]{2,}", ".");
+//            if (name.startsWith(".")) name = name.substring(1);
+//            return name;
+//        } catch (UnsupportedEncodingException e) {
+//            Debug.logFatal(e, "Serious system error: could not encode name into UTF-8: " + e.getMessage(), module);
+//            return name.replaceAll("[^a-zA-Z0-9]", ""); // emergency fallback for security reasons
+//        }
     }
 }

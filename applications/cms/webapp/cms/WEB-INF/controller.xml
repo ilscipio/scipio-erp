@@ -16,6 +16,10 @@
     </postprocessor>
     -->
 
+    <after-login>
+        <event name="registerSessionPreviewToken" type="java" path="com.ilscipio.scipio.cms.control.CmsPreviewTokenHandler" invoke="registerSessionToken"/>
+    </after-login>
+
     <!-- **************** -->
     <!-- REQUEST MAPPINGS -->
     <!-- **************** -->

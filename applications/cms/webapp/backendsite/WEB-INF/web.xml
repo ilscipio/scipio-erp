@@ -84,9 +84,10 @@
         <param-value></param-value>
     </context-param>
     <context-param><!-- 2016: new -->
-        <description>Whether to allow CMS preview mode on this webapp (default: false). Preview mode is identify
-            by the request parameter "cmsPreviewMode".
-            NOTE: On production webapps, this must be left out or set to false!</description>
+        <description>Whether to allow CMS preview mode on this webapp (default: false). 
+            Preview mode is identified by the request parameter "cmsPreviewMode", which
+            (as of 2018-05-06) holds a generated access token.
+            NOTE: On production webapps that require tight security, this should be set to false.</description>
         <param-name>cmsAllowPreviewMode</param-name>
         <param-value>true</param-value>
     </context-param>

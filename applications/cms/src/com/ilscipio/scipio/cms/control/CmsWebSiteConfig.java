@@ -32,6 +32,8 @@ public abstract class CmsWebSiteConfig implements Serializable {
     private static final CmsWebSiteConfig HARD_DEFAULT = new CmsWebSiteVirtualConfig();
     private static final CmsWebSiteConfig DEFAULT = readDefaultConfig("cms", "webSiteConfig.defaults.", HARD_DEFAULT);
 
+    public static final String PREVIEW_MODE_PARAM_DEFAULT = "cmsPreviewMode";
+    
     /**
      * The fields on this class that represent configurable web.xml settings.
      */
@@ -87,7 +89,7 @@ public abstract class CmsWebSiteConfig implements Serializable {
      */
     protected CmsWebSiteConfig() {
         this.allowPreviewMode = false;
-        this.previewModeParamName = "cmsPreviewMode";
+        this.previewModeParamName = PREVIEW_MODE_PARAM_DEFAULT;
         
         /*
          * NOTE: /control here is an emergency fallback used when we FAIL to detect the controller.

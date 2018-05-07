@@ -83,8 +83,8 @@ under the License.
     </context-param>
     <context-param>
         <param-name>cmsAllowPreviewMode</param-name>
-        <!-- for live production store, preview should be set to false for security at current time (2017-11) -->
-        <param-value>false</param-value>
+        <!-- NOTE: On production webapps that require tight security, this should be set to false. -->
+        <param-value>true</param-value>
     </context-param>
 
     <!-- SCIPIO: UrlRewriteFilter - processes urlrewrite.xml

@@ -117,9 +117,10 @@
     <#assign editPageUrl = makeOfbizUrl("editPage?webSiteId=${webSiteId!}&path=${escapeVal(pagePrimaryPath, 'url')}")>
     <#assign editPageByIdUrl = makeOfbizUrl("editPage?pageId=${pageId!}")>
 
-
     <#-- NOTE: the preview links must use the *Expanded variable, or this would break in future -->
-    <#assign previewUrl = makeOfbizInterWebappUrl({"controller":false, "uri":'${rawString(pagePrimaryPathExpanded!)}?cmsPreviewMode=Y&cmsPageVersionId=${rawString(versionId!"")}', "webSiteId":webSiteId, "extLoginKey": false})/>
+    <#-- NOTE: as of 2018-05-06, preview mode "Y" no longer has any effect; an access token is expected instead -->
+    <#assign previewMode = (previewToken?has_content)?then(rawString(previewToken), "")>
+    <#assign previewUrl = makeOfbizInterWebappUrl({"controller":false, "uri":'${rawString(pagePrimaryPathExpanded!)}?cmsPreviewMode=${previewMode}&cmsPageVersionId=${rawString(versionId!"")}', "webSiteId":webSiteId, "extLoginKey": false})/>
     <#assign liveUrl = makeOfbizInterWebappUrl({"controller":false, "uri":pagePrimaryPathExpanded!, "webSiteId":webSiteId, "extLoginKey": false})/>
     
     <#-- Javascript functions -->

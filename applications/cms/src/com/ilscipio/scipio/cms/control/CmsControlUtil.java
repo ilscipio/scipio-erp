@@ -67,8 +67,25 @@ public abstract class CmsControlUtil {
         String previewMode = (String) request.getAttribute(paramName);
         if (previewMode == null) {
             previewMode = request.getParameter(paramName);
-            if (!"Y".equals(previewMode)) {
+            if (previewMode == null || "N".equals(previewMode) || previewMode.isEmpty()) {
                 previewMode = "N";
+            } else {
+                // NOTE: 2018-05-06: We no longer accept "Y" coming from parameters;
+                // must be a valid preview token
+                // FIXME?: missing page and/or pagePath
+                boolean validToken = CmsPreviewTokenHandler.isValidPreviewToken(request, null, null, previewMode);
+                if (validToken) {
+                    previewMode = "Y";
+                } else {
+                    Debug.logError("Cms: Preview Mode: Invalid preview token for session " 
+                            + request.getSession().getId(), module);
+                    
+                    // TODO: THROW INVALID ACCESS ERROR
+                    //throw new CmsPermissionException("Preview Mode: Invalid preview token for session " 
+                    //  + request.getSession().getId());
+                    
+                    previewMode = "N";
+                }
             }
             request.setAttribute(paramName, previewMode);
         }
@@ -246,4 +263,28 @@ public abstract class CmsControlUtil {
         return cmsPageVersionId;
     }
 
+    public static Delegator getDelegator(HttpSession session) throws IllegalStateException {
+        Delegator delegator = (Delegator) session.getAttribute("delegator");
+        if (delegator == null) {
+            ServletContext sc = session.getServletContext();
+            delegator = (Delegator) sc.getAttribute("delegator");
+            if (delegator == null) {
+                String delegatorName = (String) session.getAttribute("delegatorName");
+                if (delegatorName == null) {
+                    delegatorName = (String) sc.getAttribute("delegatorName");
+                    if (delegatorName == null) {
+                        Debug.logWarning("Cms: delegator not found in session or servlet context"
+                                + " - using default delegator", module);
+                        delegatorName = "default";
+                    }
+                }
+                delegator = DelegatorFactory.getDelegator(delegatorName);
+                if (delegator == null) {
+                    throw new IllegalStateException("Could not get delegator from session, servlet context"
+                            + " or from delegator name '" + delegatorName + "'");
+                }
+            }
+        }
+        return delegator;
+    }
 }

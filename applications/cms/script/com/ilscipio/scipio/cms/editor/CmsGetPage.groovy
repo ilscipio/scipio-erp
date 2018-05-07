@@ -19,6 +19,7 @@ import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.LocalDispatcher
 import com.ilscipio.scipio.cms.control.CmsWebSiteConfig;
 import com.ilscipio.scipio.cms.control.CmsWebSiteInfo;
+import com.ilscipio.scipio.cms.control.CmsPreviewTokenHandler;
 
 final String module = "CmsGetPage.groovy";
 
@@ -37,6 +38,8 @@ if (isCreate && Boolean.TRUE.equals(context.isError)) {
     isNewPage = true;
 }
 context.isNewPage = isNewPage;
+
+pageModel = null;
 
 /*Process request information*/
 if ((pageId || primaryPath) && !isNewPage) { // edit mode requires either pageId or primary path
@@ -59,6 +62,7 @@ if ((pageId || primaryPath) && !isNewPage) { // edit mode requires either pageId
     pageResult = dispatcher.runSync("cmsGetPage", servCtx);
     if (ServiceUtil.isSuccess(pageResult)) {
         meta = pageResult.meta;
+        pageModel = pageResult.pageModel;
         context.meta = meta;
         context.variables = pageResult.variables;
         context.content = pageResult.content;
@@ -124,3 +128,7 @@ context.webSiteAllowPreview = webSiteAllowPreview;
 
 cmsCtrlRootAliasMsgs = context.cmsWebSiteHelper.getWebSitesControlRootAliasMsgs(context);
 context.cmsCtrlRootAliasMsgs = cmsCtrlRootAliasMsgs;
+
+// 2018-05-06: preview token
+previewToken = CmsPreviewTokenHandler.getPreviewTokenString(request, pageModel, context.pagePrimaryPathExpanded);
+context.previewToken = previewToken;

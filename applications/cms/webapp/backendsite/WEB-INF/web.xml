@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app>
-    <display-name>SCIPIO ERP - Dummy Backend Site Component</display-name>
-    <description>Empty CMS Component of the Scipio ERP Project - used as a simple container for an empty backend site</description>
+    <display-name>SCIPIO ERP - Preview Backend Site Component</display-name>
+    <description>Preview CMS Component of the Scipio ERP Project - used as a simple container for an empty backend site</description>
 
     <context-param>
         <param-name>webSiteId</param-name>

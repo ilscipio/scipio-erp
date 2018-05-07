@@ -47,7 +47,7 @@
 
     <!-- Empty Website container -->
     <webapp name="cmsSite"
-        title="Empty Website"
+        title="Preview Website"
         app-bar-display="false"
         menu-name="main"
         server="default-server"
@@ -57,7 +57,7 @@
 
     <!-- Empty Backend Site container -->
     <webapp name="cmsBackendSite"
-        title="Empty Backend Site"
+        title="Preview Backend Site"
         app-bar-display="false"
         menu-name="main"
         server="default-server"

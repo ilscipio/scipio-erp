@@ -9,8 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpSession;
 
-import com.ilscipio.scipio.ce.webapp.control.util.AccessTokenProvider.AccessToken;
-
 /**
  * Provides generalized LoginWorker-like externalLoginKey-like
  * access token functionality.
@@ -81,13 +79,18 @@ public abstract class AccessTokenProvider<V> {
     /**
      * Simple access token equivalent to a single string.
      * DEV NOTE: This wrapper is needed for weak hash map keys to work.
+     * WARN: does not support null tokenString; use {@link NullSimpleAccessToken} for null token.
      */
     @SuppressWarnings("serial")
     public static class SimpleAccessToken extends AccessToken {
         protected final String tokenString;
 
-        public SimpleAccessToken(String tokenString) {
+        protected SimpleAccessToken(String tokenString) {
             this.tokenString = tokenString;
+        }
+        
+        public static SimpleAccessToken newToken(String tokenString) {
+            return (tokenString != null) ? new SimpleAccessToken(tokenString) : NullSimpleAccessToken.INSTANCE;
         }
 
         @Override
@@ -95,6 +98,27 @@ public abstract class AccessTokenProvider<V> {
             return tokenString;
         }
     }
+    
+    @SuppressWarnings("serial")
+    public static class NullSimpleAccessToken extends SimpleAccessToken {
+        public static final NullSimpleAccessToken INSTANCE = new NullSimpleAccessToken();
+        
+        private NullSimpleAccessToken() {
+            super(null);
+        }
+
+        @Override
+        public int hashCode() {
+            return 0;
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            return (other == null) || (other.toString() == null);
+        }
+    }
+    
+    
     
     /**
      * Returns a new THREAD-SAFE token provider that does NOT have weak keys (may be faster).
@@ -141,7 +165,7 @@ public abstract class AccessTokenProvider<V> {
 
         @Override
         public AccessToken newToken(String tokenString) {
-            return new SimpleAccessToken(tokenString);
+            return (tokenString != null) ? new SimpleAccessToken(tokenString) : NullSimpleAccessToken.INSTANCE;
         }
     }
 

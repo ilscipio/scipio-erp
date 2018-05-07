@@ -117,11 +117,19 @@
     <#assign editPageUrl = makeOfbizUrl("editPage?webSiteId=${webSiteId!}&path=${escapeVal(pagePrimaryPath, 'url')}")>
     <#assign editPageByIdUrl = makeOfbizUrl("editPage?pageId=${pageId!}")>
 
-    <#-- NOTE: the preview links must use the *Expanded variable, or this would break in future -->
-    <#-- NOTE: as of 2018-05-06, preview mode "Y" no longer has any effect; an access token is expected instead -->
-    <#assign previewMode = (previewToken?has_content)?then(rawString(previewToken), "")>
-    <#assign previewUrl = makeOfbizInterWebappUrl({"controller":false, "uri":'${rawString(pagePrimaryPathExpanded!)}?cmsPreviewMode=${previewMode}&cmsPageVersionId=${rawString(versionId!"")}', "webSiteId":webSiteId, "extLoginKey": false})/>
-    <#assign liveUrl = makeOfbizInterWebappUrl({"controller":false, "uri":pagePrimaryPathExpanded!, "webSiteId":webSiteId, "extLoginKey": false})/>
+    <#-- NOTES: Preview & Live links:
+        * the preview links must use the *Expanded variable, otherwise will break in future
+        * as of 2018-05-07, preview mode "Y" requires cmsAccessToken to also be set
+          * cmsAccessToken should also be passed to live link - whether works without depends on website
+        * see CmsGetPage.groovy for the secure and extLoginKey logic
+        * preview and live support explicit access token param:
+            rawString(webSiteConfig.accessTokenParamName)+"="+rawString(accessToken!)
+          but for preview mode can be inlined into the preview mode toggle param (done like that below, to lower URL length)
+      -->
+    <#assign previewUrl = makeOfbizInterWebappUrl({"controller":false, "secure":useSecurePreviewLink, "webSiteId":webSiteId, "extLoginKey": useLinkExtLoginKey, 
+        "uri":(rawString(pagePrimaryPathExpanded!)+"?"+rawString(webSiteConfig.previewModeParamName)+"="+rawString(accessToken!)+"&cmsPageVersionId="+rawString(versionId!""))})/>
+    <#assign liveUrl = makeOfbizInterWebappUrl({"controller":false, "secure":useSecureLiveLink, "webSiteId":webSiteId, "extLoginKey": useLinkExtLoginKey,
+        "uri":(rawString(pagePrimaryPathExpanded!)+(requireLiveAccessToken?then("?"+rawString(webSiteConfig.accessTokenParamName)+"="+rawString(accessToken!),"")))})/>
     
     <#-- Javascript functions -->
     <@script>

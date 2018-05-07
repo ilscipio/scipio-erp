@@ -115,7 +115,7 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
         // 2016: check preview mode parameter
         // NOTE: this MAY have been done in process filter, but it possible to run without it, so do it again here
         if (renderMode == null) {
-            renderMode = CmsControlUtil.checkRenderMode(request, webSiteConfig.getPreviewModeParamName(), webSiteConfig.isAllowPreviewMode());
+            renderMode = CmsControlUtil.getRenderMode(request, webSiteConfig);
         }
         
         // 2016: MUST NOT CACHE PREVIEWS!
@@ -250,6 +250,24 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
         } 
        
         boolean renderDefault;
+        
+        // check cmsAccessToken
+        if (renderMode == CmsCallType.OFBIZ_PREVIEW || webSiteConfig.isRequireLiveAccessToken()) {
+            String accessToken = CmsControlUtil.getAccessToken(request, webSiteConfig);
+            // TODO: REVIEW: the request URI here might not necessarily match one of the page's URIs
+            // but won't matter until isValidAccessToken actively checks it
+            if (!CmsAccessHandler.isValidAccessToken(request, cmsPage, request.getRequestURI(), accessToken)) {
+                Debug.logError("Cms: Invalid access token for session " + request.getSession().getId() + "; denying render", module);
+                // TODO: REVIEW: could try to show an error page here, 
+                // but a straight 403 is safer for now
+                try {
+                    response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                } catch (IOException e) {
+                    Debug.logError(e, module);
+                }
+                return;
+            }
+        }
         
         if (cmsPage != null) {
             //CmsPageInfo cmsPageInfo = new CmsPageInfo(cmsPage);

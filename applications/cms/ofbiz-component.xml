@@ -44,7 +44,7 @@
         location="webapp/cms"
         base-permission="OFBTOOLS,CMS"
         mount-point="/cms"/>
-        
+
     <!-- Empty Website container -->
     <webapp name="cmsSite"
         title="Empty Website"
@@ -54,9 +54,9 @@
         location="webapp/website"
         base-permission="OFBTOOLS,CMS"
         mount-point="/website"/>
-        
-     <!-- Empty Backend Site container -->
-      <webapp name="cmsBackendSite"
+
+    <!-- Empty Backend Site container -->
+    <webapp name="cmsBackendSite"
         title="Empty Backend Site"
         app-bar-display="false"
         menu-name="main"

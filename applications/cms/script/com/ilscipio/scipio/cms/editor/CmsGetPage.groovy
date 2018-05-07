@@ -19,7 +19,7 @@ import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.LocalDispatcher
 import com.ilscipio.scipio.cms.control.CmsWebSiteConfig;
 import com.ilscipio.scipio.cms.control.CmsWebSiteInfo;
-import com.ilscipio.scipio.cms.control.CmsPreviewTokenHandler;
+import com.ilscipio.scipio.cms.control.CmsAccessHandler;
 
 final String module = "CmsGetPage.groovy";
 
@@ -130,5 +130,13 @@ cmsCtrlRootAliasMsgs = context.cmsWebSiteHelper.getWebSitesControlRootAliasMsgs(
 context.cmsCtrlRootAliasMsgs = cmsCtrlRootAliasMsgs;
 
 // 2018-05-06: preview token
-previewToken = CmsPreviewTokenHandler.getPreviewTokenString(request, pageModel, context.pagePrimaryPathExpanded);
-context.previewToken = previewToken;
+accessToken = CmsAccessHandler.getAccessTokenString(request, pageModel, context.pagePrimaryPathExpanded);
+context.accessToken = accessToken;
+requireLiveAccessToken = webSiteConfig.isRequireLiveAccessToken();
+context.requireLiveAccessToken = requireLiveAccessToken;
+useLinkExtLoginKey = webSiteConfig.isUseLinkExtLoginKey();
+context.useLinkExtLoginKey = useLinkExtLoginKey;
+// for preview link, we're always passing an access token, to must always generate as secure
+context.useSecurePreviewLink = true;
+// for live link, we only need to use secure=true if we're passing the ext login key
+context.useSecureLiveLink = (useLinkExtLoginKey || requireLiveAccessToken) ? true : "";

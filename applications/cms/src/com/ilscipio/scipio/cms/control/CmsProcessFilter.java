@@ -200,7 +200,7 @@ public class CmsProcessFilter implements Filter {
         Delegator delegator = CmsControlUtil.getDelegatorForControl(request, servletContext);
         String webSiteId = CmsControlUtil.getWebSiteIdForControl(request, servletContext);
         // 2016: check render mode
-        CmsCallType renderMode = CmsControlUtil.checkRenderMode(request, webSiteConfig.getPreviewModeParamName(), webSiteConfig.isAllowPreviewMode());
+        CmsCallType renderMode = CmsControlUtil.getRenderMode(request, webSiteConfig);
         
         // 2017-11: _SCP_FWDROOTURIS_ instructs ContextFilter (Scipio feature) to forward these root request URIs,
         // if configured to do so using forwardRootControllerUris.

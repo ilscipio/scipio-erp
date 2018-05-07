@@ -91,6 +91,19 @@
         <param-name>cmsAllowPreviewMode</param-name>
         <param-value>true</param-value>
     </context-param>
+    <context-param><!-- 2018: new -->
+        <description>Whether the live/preview links to this webapp should use externalLoginKey (default: false). 
+            In other words, whether it should be accessed using the CMS UI user login or not.
+            This should usually only be true if this is a backend webapp or a dedicated preview webapp.</description>
+        <param-name>cmsUseLinkExtLoginKey</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param><!-- 2018: new -->
+        <description>If true, live links (in addition to preview links) require an access token (default: false).
+            This is mainly for implementing preview webapps.</description>
+        <param-name>cmsRequireLiveAccessToken</param-name>
+        <param-value>false</param-value>
+    </context-param>
     <context-param><!-- 2016: new -->
         <description>Boolean (true/false) value used to control whether primary paths for this webapp
             are from context root by default or not (default: true)</description>

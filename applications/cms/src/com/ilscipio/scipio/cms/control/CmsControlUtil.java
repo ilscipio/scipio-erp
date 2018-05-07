@@ -63,39 +63,24 @@ public abstract class CmsControlUtil {
         //}
     }
     
-    public static boolean checkPreviewMode(HttpServletRequest request, String paramName) {
-        String previewMode = (String) request.getAttribute(paramName);
+    public static boolean getPreviewMode(HttpServletRequest request, CmsWebSiteConfig webSiteConfig) {
+        String previewMode = (String) request.getAttribute(webSiteConfig.getPreviewModeParamName());
         if (previewMode == null) {
-            previewMode = request.getParameter(paramName);
-            if (previewMode == null || "N".equals(previewMode) || previewMode.isEmpty()) {
-                previewMode = "N";
+            previewMode = request.getParameter(webSiteConfig.getPreviewModeParamName());
+            if ("Y".equals(previewMode) || (previewMode != null && previewMode.length() >= 5)) {
+                previewMode = "Y";
             } else {
-                // NOTE: 2018-05-06: We no longer accept "Y" coming from parameters;
-                // must be a valid preview token
-                // FIXME?: missing page and/or pagePath
-                boolean validToken = CmsPreviewTokenHandler.isValidPreviewToken(request, null, null, previewMode);
-                if (validToken) {
-                    previewMode = "Y";
-                } else {
-                    Debug.logError("Cms: Preview Mode: Invalid preview token for session " 
-                            + request.getSession().getId(), module);
-                    
-                    // TODO: THROW INVALID ACCESS ERROR
-                    //throw new CmsPermissionException("Preview Mode: Invalid preview token for session " 
-                    //  + request.getSession().getId());
-                    
-                    previewMode = "N";
-                }
+                previewMode = "N";
             }
-            request.setAttribute(paramName, previewMode);
+            request.setAttribute(webSiteConfig.getPreviewModeParamName(), previewMode);
         }
         return "Y".equals(previewMode);
     }
     
-    public static CmsCallType checkRenderMode(HttpServletRequest request, String paramName, boolean allowPreviewMode) {
+    public static CmsCallType getRenderMode(HttpServletRequest request, CmsWebSiteConfig webSiteConfig) {
         CmsCallType renderMode;
-        if (allowPreviewMode) {
-            renderMode = CmsControlUtil.checkPreviewMode(request, paramName) ?
+        if (webSiteConfig.isAllowPreviewMode()) {
+            renderMode = CmsControlUtil.getPreviewMode(request, webSiteConfig) ?
                     CmsCallType.OFBIZ_PREVIEW : CmsCallType.OFBIZ_RENDER;
         } else {
             renderMode = CmsCallType.OFBIZ_RENDER;
@@ -103,6 +88,24 @@ public abstract class CmsControlUtil {
         return renderMode;
     }
     
+    public static String getAccessToken(HttpServletRequest request, CmsWebSiteConfig webSiteConfig) {
+        String accessToken = (String) request.getAttribute(webSiteConfig.getAccessTokenParamName());
+        if (accessToken == null) {
+            accessToken = request.getParameter(webSiteConfig.getAccessTokenParamName());
+            if (accessToken == null) {
+                // access token may also be inlined into cmsPreviewMode param
+                String inlineAccessToken = request.getParameter(webSiteConfig.getPreviewModeParamName());
+                if (inlineAccessToken != null && inlineAccessToken.length() >= 5) {
+                    accessToken = inlineAccessToken;
+                } else {
+                    accessToken = "";
+                }
+            }
+            request.setAttribute(webSiteConfig.getAccessTokenParamName(), accessToken);
+        }
+        return accessToken.isEmpty() ? null : accessToken;
+    }
+
     public static String normalizeServletPath(String servletPath) { // Servlet path only
         if (servletPath == null) return null;
         return PathUtil.ensureStartAndNoTrailDelim(servletPath);

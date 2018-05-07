@@ -14,15 +14,15 @@ import com.ilscipio.scipio.ce.webapp.control.util.AccessTokenProvider.AccessToke
 import com.ilscipio.scipio.cms.content.CmsPage;
 
 /**
- * Generates and cleanups preview tokens for CMS.
+ * Generates and cleanups access tokens for CMS, mainly for preview mode.
  * <p>
  * Added 2018-05-06.
  */
-public class CmsPreviewTokenHandler implements HttpSessionListener {
+public class CmsAccessHandler implements HttpSessionListener {
 
-    public static final String module = CmsPreviewTokenHandler.class.getName();
+    public static final String module = CmsAccessHandler.class.getName();
     
-    public static final String SESSION_TOKEN_ATTR = "cmsPreviewToken";
+    public static final String SESSION_TOKEN_ATTR = "cmsAccessToken";
     
     /**
      * The global token hash map - associates token to UserLogin value.
@@ -37,27 +37,27 @@ public class CmsPreviewTokenHandler implements HttpSessionListener {
      */
     private static final AccessTokenProvider<GenericValue> tokens = AccessTokenProvider.newAccessTokenProvider();
     
-    public CmsPreviewTokenHandler() {
+    public CmsAccessHandler() {
     }
     
-    public static String getPreviewTokenString(HttpServletRequest request, CmsPage cmsPage, String cmsPagePath) {
+    public static String getAccessTokenString(HttpServletRequest request, CmsPage cmsPage, String cmsPagePath) {
         // TODO?: we are not currently using the page path or ID (ID may not work; in future a path could lead to different pages)
         // but could try to combine somehow to create more secure per-page tokens, using:
         //   hash(sessiontoken + cmsPagePrimaryPath)
         String tokenString = tokens.getSessionTokenString(request.getSession(), SESSION_TOKEN_ATTR);
         if (tokenString == null) {
-            Debug.logWarning("Cms: Preview token: No preview token string found in session"
+            Debug.logWarning("Cms: Access token: No access token string found in session"
                     + " (bad controller config?) - preview mode may fail", module);
         }
         return tokenString;
     }
     
-    public static boolean isValidPreviewToken(HttpServletRequest request, CmsPage page, String cmsPagePath, String paramToken) {
+    public static boolean isValidAccessToken(HttpServletRequest request, CmsPage page, String cmsPagePath, String paramToken) {
         // TODO?: in future could want a hash(paramToken + cmsPagePath) or so
         return (tokens.get(paramToken) != null);
     }
     
-    public static boolean isValidPreviewToken(String internalToken, String paramToken) {
+    public static boolean isValidAccessToken(String internalToken, String paramToken) {
         if (internalToken == null) return false;
         else return internalToken.equals(paramToken);
     }
@@ -83,14 +83,14 @@ public class CmsPreviewTokenHandler implements HttpSessionListener {
         HttpSession session = request.getSession(true);
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         if (userLogin == null) {
-            Debug.logWarning("Cms: Preview Token: userLogin is not set in session"
-                    + "; cannot associate the preview token with a userLogin"
+            Debug.logWarning("Cms: Access Token: userLogin is not set in session"
+                    + "; cannot associate the access token with a userLogin"
                     + "- preview mode may fail"
-                    + "; is the CmsPreviewTokenHandler.registerSessionToken method properly"
+                    + "; is the CmsAccessHandler.registerSessionToken method properly"
                     + " associated to the controller after-login events?", module);
         }
         tokens.updateAndGetSessionToken(session, SESSION_TOKEN_ATTR, userLogin);
-        Debug.logInfo("Cms: Preview Token: Generated new preview token for session " + session.getId()
+        Debug.logInfo("Cms: Access Token: Generated new access token for session " + session.getId()
             + " (userLoginId: " + (userLogin != null ? userLogin.getString("userLoginId") : "[MISSING]") + ")", module);
         
         return "success";

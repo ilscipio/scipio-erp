@@ -119,8 +119,8 @@
 
 
     <#-- NOTE: the preview links must use the *Expanded variable, or this would break in future -->
-    <#assign previewUrl = makeOfbizInterWebappUrl({"controller":false, "uri":'${rawString(pagePrimaryPathExpanded!)}?cmsPreviewMode=Y&cmsPageVersionId=${rawString(versionId!"")}', "webSiteId":webSiteId, "extLoginKey": true})/>
-    <#assign liveUrl = makeOfbizInterWebappUrl({"controller":false, "uri":pagePrimaryPathExpanded!, "webSiteId":webSiteId, "extLoginKey": true})/>
+    <#assign previewUrl = makeOfbizInterWebappUrl({"controller":false, "uri":'${rawString(pagePrimaryPathExpanded!)}?cmsPreviewMode=Y&cmsPageVersionId=${rawString(versionId!"")}', "webSiteId":webSiteId, "extLoginKey": false})/>
+    <#assign liveUrl = makeOfbizInterWebappUrl({"controller":false, "uri":pagePrimaryPathExpanded!, "webSiteId":webSiteId, "extLoginKey": false})/>
     
     <#-- Javascript functions -->
     <@script>

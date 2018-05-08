@@ -22,7 +22,8 @@ Contents:
 3. Data Indexing
 4. Data Querying
 5. Schema Modification
-6. Known Bugs, Limitations and Issues
+6. Troubleshooting
+7. Known Bugs, Limitations and Issues
 
 
 -----------------------------------------------------
@@ -222,16 +223,37 @@ startup, so that you don't need to tell other users of your (git) project when t
 
 
 -----------------------------------------------------
-6. Known Bugs, Limitations and Issues
+6. Troubleshooting
+-----------------------------------------------------
+
+Timeouts and internal connection failures to Solr:
+
+Check the solr.query.connect.* and solr.update.connect.* settings in solrconfig.properties;
+under extremely heavy loads, pooling settings (reuseClient + maxConnections*) may need to be tweaked.
+Debug logging for Apache HttpClient (used for Solr connections) can be enabled by
+uncommenting the appropriate line in:
+
+  framework/base/config/log4j2.xml
+
+
+-----------------------------------------------------
+7. Known Bugs, Limitations and Issues
 -----------------------------------------------------
 
 * In general, solr services can only successfully run in contexts where the solr webapp
   is loaded and accessible. This means it is impossible to index data during load-demo/load-* targets.
+* On fast systems, the rebuildSolrIndexAuto service may fail to connect to Solr on server startup 
+  when Solr is slower to load than Scipio, which will cause errors in the log; however this is already
+  accounted for and the service should reschedule and attempt another check/reindex every few moments
+  thereafter.
 
 ***
 
-Please report any other issues encountered, or ask any further questions, on the SCIPIO ERP 
-forum (https://forum.scipioerp.com/). Thank you.
+Please report any other issues encountered, or ask any further questions, on the SCIPIO ERP forum:
+  
+  https://forum.scipioerp.com/
+  
+Thank you.
 
 
 

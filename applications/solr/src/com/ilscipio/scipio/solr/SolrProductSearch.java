@@ -59,8 +59,9 @@ public abstract class SolrProductSearch {
     static final boolean excludeVariantsDefault = true;
     
     private static boolean reindexAutoForceRan = false;
-    private static final String reindexAutoForcePropName = "scipio.solr.reindex.auto.force";
-    
+    private static final String reindexStartupForceSysProp = "scipio.solr.reindex.startup.force";
+    private static final String reindexStartupForceConfigProp = "solr.index.rebuild.startup.force";
+
     public static Map<String, Object> addToSolr(DispatchContext dctx, Map<String, Object> context) {
         return updateToSolrCommon(dctx, context, Boolean.TRUE, true);
     }
@@ -1223,21 +1224,19 @@ public abstract class SolrProductSearch {
         return result;
     }
     
-    private static boolean isReindexAutoForce(Delegator delegator, LocalDispatcher dispatcher) {
-        boolean autoForce = false;
-        if (!reindexAutoForceRan) {
-            synchronized(SolrProductSearch.class) {
-                if (!reindexAutoForceRan) {
-                    autoForce = Boolean.TRUE.equals(getReindexAutoForceProperty(delegator, dispatcher));
-                    reindexAutoForceRan = true;
-                }
-            }
+    private static boolean isReindexStartupForce(Delegator delegator, LocalDispatcher dispatcher) {
+        if (reindexAutoForceRan) return false;
+        synchronized(SolrProductSearch.class) {
+            if (reindexAutoForceRan) return false;
+            reindexAutoForceRan = true;
+            return getReindexStartupForceProperty(delegator, dispatcher, false);
         }
-        return autoForce;
     }
     
-    private static Boolean getReindexAutoForceProperty(Delegator delegator, LocalDispatcher dispatcher) {
-        return UtilMisc.booleanValueVersatile(System.getProperty(reindexAutoForcePropName));
+    private static Boolean getReindexStartupForceProperty(Delegator delegator, LocalDispatcher dispatcher, Boolean defaultValue) {
+        Boolean force = UtilMisc.booleanValueVersatile(System.getProperty(reindexStartupForceSysProp));
+        if (force != null) return force;
+        return UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, reindexStartupForceConfigProp, defaultValue);
     }
     
     /**
@@ -1248,11 +1247,11 @@ public abstract class SolrProductSearch {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
 
-        boolean autoForce = isReindexAutoForce(delegator, dispatcher);
-        if (autoForce) {
-            Debug.logInfo("Solr: rebuildSolrIndexAuto: Execution forced by system property " + reindexAutoForcePropName + "=true", module);
+        boolean startupForce = isReindexStartupForce(delegator, dispatcher);
+        if (startupForce) {
+            Debug.logInfo("Solr: rebuildSolrIndexAuto: Execution forced by force-startup system or config property", module);
         }
-        boolean force = autoForce;
+        boolean force = startupForce;
 
         boolean autoRunEnabled = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.index.rebuild.autoRun.enabled", false);
         

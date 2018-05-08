@@ -141,9 +141,10 @@ under the License.
         two ofbiz instances always fails before webapps load, due to ports-in-use. -->
     <!--<property name="solr.lock.type" value="native"/>-->
     <property name="solr.lock.type" value="single"/>
-    <!-- Passing -Dscipio.solr.reindex.auto.force=true or uncommenting forces rebuildSolrIndex(Auto) on startup; 
+    <!-- Passing -Dscipio.solr.reindex.startup.force=true or uncommenting forces rebuildSolrIndex(Auto) on startup; 
         see also "[set|start|...]-reindex-solr" helper tasks. -->
-    <!--<property name="scipio.solr.reindex.auto.force" value="true"/>-->
+    <!--<property name="scipio.solr.reindex.startup.force" value="true"/>-->
+    <!-- Backward-compat for old property name -->
     <!-- If set to "true", prevents editing Solr config through Solr webapp's config API -->
     <property name="solr.disable.configEdit" value=""/><!-- added 2017-10-12 -->
     
@@ -189,7 +190,7 @@ under the License.
 
     <!-- SCIPIO: solr flagging -->
     <target name="set-reindex-solr">
-        <property name="scipio.solr.reindex.auto.force" value="true"/>
+        <property name="scipio.solr.reindex.startup.force" value="true"/>
     </target>
     
     <!-- ================================================================== -->
@@ -1064,6 +1065,12 @@ under the License.
         <attribute name="secure" default="false"/>
         <element name="args" optional="true" implicit="true"/>
         <sequential>
+            <if><!-- SCIPIO: 2018-05-08: backward compat for old scripts -->
+                <isset property="scipio.solr.reindex.auto.force"/>
+                <then>
+                    <property name="scipio.solr.reindex.startup.force" value="${scipio.solr.reindex.auto.force}"/>   
+                </then>
+            </if>
             <if><!-- FIXME: get rid of this copy-paste with ant 1.9.3... -->
                 <equals arg1="@{secure}" arg2="true"/>
                 <then>
@@ -1081,7 +1088,7 @@ under the License.
                         <jvmarg value="-Dsolr.log.dir=${solr.log.dir}"/>
                         <jvmarg value="-Dsolr.lock.type=${solr.lock.type}"/>
                         <jvmarg value="-Ddisable.configEdit=${solr.disable.configEdit}"/>
-                        <jvmarg value="-Dscipio.solr.reindex.auto.force=${scipio.solr.reindex.auto.force}"/>
+                        <jvmarg value="-Dscipio.solr.reindex.startup.force=${scipio.solr.reindex.startup.force}"/>
                         <args/>
                     </java>
                 </then>
@@ -1095,7 +1102,7 @@ under the License.
                         <jvmarg value="-Dsolr.log.dir=${solr.log.dir}"/>
                         <jvmarg value="-Dsolr.lock.type=${solr.lock.type}"/>
                         <jvmarg value="-Ddisable.configEdit=${solr.disable.configEdit}"/>
-                        <jvmarg value="-Dscipio.solr.reindex.auto.force=${scipio.solr.reindex.auto.force}"/>
+                        <jvmarg value="-Dscipio.solr.reindex.startup.force=${scipio.solr.reindex.startup.force}"/>
                         <args/>
                     </java>
                 </else>

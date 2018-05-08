@@ -24,7 +24,10 @@ import javax.servlet.http.HttpSession;
  */
 public abstract class AccessTokenProvider<V> {
 
-    protected AccessTokenProvider() {
+    private final EventHandler<V> eventHandler;
+    
+    protected AccessTokenProvider(EventHandler<V> eventHandler) {
+        this.eventHandler = (eventHandler != null) ? eventHandler : NoopEventHandler.getInstance();
     }
 
     /**
@@ -56,6 +59,10 @@ public abstract class AccessTokenProvider<V> {
     public abstract V remove(AccessToken token);
     public V remove(String tokenString) {
         return remove(newToken(tokenString));
+    }
+    
+    protected EventHandler<V> getEventHandler() {
+        return eventHandler;
     }
     
     /**
@@ -126,8 +133,8 @@ public abstract class AccessTokenProvider<V> {
      * <p>
      * WARN: Caller should ONLY use this if he knows he can always clear the keys himself.
      */
-    public static <V> AccessTokenProvider<V> newAccessTokenProvider() {
-        return new ConcurrentSimpleAccessTokenProvider<V>();
+    public static <V> AccessTokenProvider<V> newAccessTokenProvider(EventHandler<V> eventHandler) {
+        return new ConcurrentSimpleAccessTokenProvider<V>(eventHandler);
     }
     
     /**
@@ -140,25 +147,29 @@ public abstract class AccessTokenProvider<V> {
      * FIXME: This implementation is slow because it synchronizes around WeakHashMap get accesses!
      * Needs a fast concurrent weak hash map implementation instead!
      */
-    public static <V> AccessTokenProvider<V> newWeakAccessTokenProvider() {
-        return new WeakSimpleAccessTokenProvider<V>();
+    public static <V> AccessTokenProvider<V> newWeakAccessTokenProvider(EventHandler<V> eventHandler) {
+        return new WeakSimpleAccessTokenProvider<V>(eventHandler);
     }
     
     /**
      * Returns a new NON-THREAD-SAFE token provider that does NOT have weak keys.
      */
-    public static <V> AccessTokenProvider<V> newUnsafeAccessTokenProvider() {
-        return new HashMapSimpleAccessTokenProvider<V>();
+    public static <V> AccessTokenProvider<V> newUnsafeAccessTokenProvider(EventHandler<V> eventHandler) {
+        return new HashMapSimpleAccessTokenProvider<V>(eventHandler);
     }
     
     /**
      * Returns a new NON-THREAD-SAFE token provider with weak keys.
      */
-    public static <V> AccessTokenProvider<V> newUnsafeWeakAccessTokenProvider() {
-        return new UnsafeWeakSimpleAccessTokenProvider<V>();
+    public static <V> AccessTokenProvider<V> newUnsafeWeakAccessTokenProvider(EventHandler<V> eventHandler) {
+        return new UnsafeWeakSimpleAccessTokenProvider<V>(eventHandler);
     }
     
     public static abstract class SimpleAccessTokenProvider<V> extends AccessTokenProvider<V> {
+        protected SimpleAccessTokenProvider(EventHandler<V> eventHandler) {
+            super(eventHandler);
+        }
+
         @Override
         public AccessToken newToken() {
             return new SimpleAccessToken(newTokenString());
@@ -174,7 +185,8 @@ public abstract class AccessTokenProvider<V> {
     public static abstract class MapSimpleAccessTokenProvider<V> extends SimpleAccessTokenProvider<V> {
         protected final Map<AccessToken, V> tokens;
 
-        protected MapSimpleAccessTokenProvider(Map<AccessToken, V> tokens) {
+        protected MapSimpleAccessTokenProvider(EventHandler<V> eventHandler, Map<AccessToken, V> tokens) {
+            super(eventHandler);
             this.tokens = tokens;
         }
 
@@ -200,8 +212,8 @@ public abstract class AccessTokenProvider<V> {
      * WARN: get accesses are synchronized - relatively slow.
      */
     public static abstract class SyncingMapSimpleAccessTokenProvider<V> extends MapSimpleAccessTokenProvider<V> {
-        protected SyncingMapSimpleAccessTokenProvider(Map<AccessToken, V> tokens) {
-            super(tokens);
+        protected SyncingMapSimpleAccessTokenProvider(EventHandler<V> eventHandler, Map<AccessToken, V> tokens) {
+            super(eventHandler, tokens);
         }
 
         @Override
@@ -230,8 +242,8 @@ public abstract class AccessTokenProvider<V> {
      * Thread-safe fast token provider with non-weak keys.
      */
     public static class ConcurrentSimpleAccessTokenProvider<V> extends MapSimpleAccessTokenProvider<V> {
-        protected ConcurrentSimpleAccessTokenProvider() {
-            super(new ConcurrentHashMap<AccessToken, V>());
+        protected ConcurrentSimpleAccessTokenProvider(EventHandler<V> eventHandler) {
+            super(eventHandler, new ConcurrentHashMap<AccessToken, V>());
         }
     }
 
@@ -241,8 +253,8 @@ public abstract class AccessTokenProvider<V> {
      * WARN: get accesses are synchronized - relatively slow.
      */
     public static class WeakSimpleAccessTokenProvider<V> extends SyncingMapSimpleAccessTokenProvider<V> {
-        protected WeakSimpleAccessTokenProvider() {
-            super(new WeakHashMap<AccessToken, V>());
+        protected WeakSimpleAccessTokenProvider(EventHandler<V> eventHandler) {
+            super(eventHandler, new WeakHashMap<AccessToken, V>());
         }
     }
     
@@ -250,8 +262,8 @@ public abstract class AccessTokenProvider<V> {
      * Non-thread-safe fast HashMap token provider with non-weak keys.
      */
     public static class HashMapSimpleAccessTokenProvider<V> extends MapSimpleAccessTokenProvider<V> {
-        protected HashMapSimpleAccessTokenProvider() {
-            super(new HashMap<AccessToken, V>());
+        protected HashMapSimpleAccessTokenProvider(EventHandler<V> eventHandler) {
+            super(eventHandler, new HashMap<AccessToken, V>());
         }
     }
     
@@ -259,8 +271,8 @@ public abstract class AccessTokenProvider<V> {
      * Non-thread-safe fast WeakHashMap token provider with weak keys.
      */
     public static class UnsafeWeakSimpleAccessTokenProvider<V> extends MapSimpleAccessTokenProvider<V> {
-        protected UnsafeWeakSimpleAccessTokenProvider() {
-            super(new WeakHashMap<AccessToken, V>());
+        protected UnsafeWeakSimpleAccessTokenProvider(EventHandler<V> eventHandler) {
+            super(eventHandler, new WeakHashMap<AccessToken, V>());
         }
     }
 
@@ -268,8 +280,11 @@ public abstract class AccessTokenProvider<V> {
      * Returns the session token - only if it's already set in session (no create).
      * <p>
      * NOTE: there is no value parameter, which indicates this cannot create token.
+     * <p>
+     * WARN: Even if this returns non-null, it is not guaranteed the token is properly
+     * registered in the provider! Use {@link #getEnsureSessionToken} to guarantee that.
      */
-    public AccessToken getSessionToken(HttpSession session, HttpServletRequest request, String attrName) {
+    public AccessToken getLocalSessionToken(HttpSession session, HttpServletRequest request, String attrName) {
         AccessToken token;
         if (request != null) {
             token = (AccessToken) request.getAttribute(attrName);
@@ -281,70 +296,9 @@ public abstract class AccessTokenProvider<V> {
         }
         return token;
     }
-    
+
     /**
-     * Returns the session token string - only if it's already set in session (no create).
-     * <p>
-     * NOTE: there is no value parameter, which indicates this cannot create token.
-     */
-    public String getSessionTokenString(HttpSession session, HttpServletRequest request, String attrName) {
-        AccessToken token = getSessionToken(session, request, attrName);
-        return (token != null) ? token.toString() : null;
-    }
-    
-    // REMOVED - dangerous - trying to update existing tokens (onlyIfNewToken true) implies concurrency issues
-    // that will lead to memory leaks
-//    private AccessToken updateSessionToken(HttpSession session, HttpServletRequest request, String attrName, V value, boolean onlyIfNewToken) {
-//        AccessToken token = getSessionToken(session, request, attrName);
-//        if (token != null) {
-//            if (!onlyIfNewToken) {
-//                put(token, value);
-//            }
-//            return token;
-//        }
-//        
-//        // FIXME: this session sync is best-effort and not guaranteed by the serlvet API -
-//        // will not work with session replication
-//        synchronized(session) {
-//            token = (AccessToken) session.getAttribute(attrName);
-//            if (token != null) {
-//                if (!onlyIfNewToken) {
-//                    put(token, value);
-//                }
-//                return token;
-//            }
-//            
-//            token = newToken();
-//            put(token, value);
-//            session.setAttribute(attrName, token);
-//            request.setAttribute(attrName, token);
-//            return token;
-//        }
-//    }
-    
-    // REMOVED - dangerous - trying to update existing tokens implies concurrency issues
-    // that will lead to memory leaks
-//    /**
-//     * Updates current token in session to the given value, creating it if it doesn't already exist,
-//     * and returns the current token.
-//     * <p>
-//     * After this call, the session is guaranteed to contain a token.
-//     * <p>
-//     * NOTE: If you only need to set the value on creation (i.e. it doesn't change for a given token), 
-//     * it's better to call {@link #createOrGetSessionToken} instead, for performance reasons.
-//     * <p>
-//     * WARN: FIXME: Synchronization on session is not guaranteed due to servlet API -
-//     * e.g. will fail for session replication.
-//     * To prevent issues, only call this from controller after-login events or from
-//     * {@link javax.servlet.http.HttpSessionListener#sessionCreated} implementations.
-//     */
-//    public AccessToken updateAndGetSessionToken(HttpSession session, HttpServletRequest request, String attrName, V value) {
-//        return updateSessionToken(session, request, attrName, value, false);
-//    }
-    
-    /**
-     * Creates token in session with given value if it doesn't already exist;
-     * otherwise returns the current token.
+     * Gets session token; if not yet created or registered in the provider for whatever reason, does so.
      * <p>
      * After this call, the session is guaranteed to contain a token.
      * <p>
@@ -353,23 +307,22 @@ public abstract class AccessTokenProvider<V> {
      * To prevent issues, only call this from controller after-login events or from
      * {@link javax.servlet.http.HttpSessionListener#sessionCreated} implementations.
      */
-    public AccessToken createOrGetSessionToken(HttpSession session, HttpServletRequest request, String attrName, V value) {
-        AccessToken token = getSessionToken(session, request, attrName);
+    public AccessToken getSessionToken(HttpSession session, HttpServletRequest request, String attrName, V initialValue) {
+        // the following is an optimization to skip synchronized block, at least for ConcurrentHashMap
+        AccessToken token = getLocalSessionToken(session, request, attrName);
         if (token != null) {
-            return token;
+            if (this.get(token) != null) {
+                return token;
+            }
         }
-
         synchronized(session) { // FIXME: best-effort sync only - servlet API doesn't guarantee - can't work with session replication
             token = (AccessToken) session.getAttribute(attrName);
             if (token != null) {
-                return token;
+                if (this.get(token) != null) {
+                    return token;
+                }
             }
-            
-            token = newToken();
-            put(token, value);
-            session.setAttribute(attrName, token);
-            request.setAttribute(attrName, token);
-            return token;
+            return createSessionToken(session, request, attrName, initialValue);
         }
     }
     
@@ -383,35 +336,16 @@ public abstract class AccessTokenProvider<V> {
      * To prevent issues, only call this from controller after-login events or from
      * {@link javax.servlet.http.HttpSessionListener#sessionCreated} implementations.
      */
-    public AccessToken createNewSessionToken(HttpSession session, HttpServletRequest request, String attrName, V value) {
+    public AccessToken createSessionToken(HttpSession session, HttpServletRequest request, String attrName, V initialValue) {
         synchronized(session) { // FIXME: best-effort sync only - servlet API doesn't guarantee - can't work with session replication
             cleanupSessionToken(session, request, attrName);
             
             AccessToken token = newToken();
-            put(token, value);
+            put(token, initialValue);
             session.setAttribute(attrName, token);
             request.setAttribute(attrName, token);
-            return token;
-        }
-    }
-    
-    /**
-     * Restores token stored in session to this provider's tokens map.
-     * <p>
-     * Needed mainly to handle persisted session deserialization.
-     */
-    public AccessToken ensureSessionTokenRegistered(HttpSession session, HttpServletRequest request, String attrName, V value) {
-        // the following is an optimization to skip synchronized block, at least for ConcurrentHashMap
-        if (value == null) return null;
-        AccessToken token = (AccessToken) session.getAttribute(attrName);
-        if (token == null) return null;
-        if (this.get(token) != null) return token;
-        
-        synchronized(session) { // FIXME: best-effort sync only - servlet API doesn't guarantee - can't work with session replication
-            token = (AccessToken) session.getAttribute(attrName);
-            if (token == null) return null;
-            if (this.get(token) != null) return token;
-            this.put(token, value); // update the central provider/registry
+            
+            getEventHandler().sessionTokenCreated(session, request, attrName, token, initialValue);            
             return token;
         }
     }
@@ -431,6 +365,26 @@ public abstract class AccessTokenProvider<V> {
                 session.removeAttribute(attrName);
                 remove(token);
             }
+        }
+    }
+    
+    public interface EventHandler<V> {
+        void sessionTokenCreated(HttpSession session, HttpServletRequest request, 
+                String attrName, AccessToken token, V value);
+    }
+    
+    public static class NoopEventHandler<V> implements EventHandler<V> {
+        private static final NoopEventHandler<?> INSTANCE = new NoopEventHandler<Object>();
+
+        @SuppressWarnings("unchecked")
+        public static <V> NoopEventHandler<V> getInstance() {
+            // implemented via type erasure to avoid needless extra objects
+            return (NoopEventHandler<V>) INSTANCE;
+        }
+        
+        @Override
+        public void sessionTokenCreated(HttpSession session, HttpServletRequest request, 
+                String attrName, AccessToken token, V value) {
         }
     }
     

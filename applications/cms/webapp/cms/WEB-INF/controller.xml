@@ -6,10 +6,12 @@
     <description>Scipio CMS Webapp Configuration File</description>
 
     <!-- Events to run on every request before security (chains exempt) -->
-    <!--
     <preprocessor>
+        <!-- Persisted session CMS access token handling: updates the central registry from session token
+            FIXME: in reality this only need to run at persisted session deserialize, but such event does not appear hookable -->
+        <event name="ensureCmsAccessTokenRegistered" type="java" path="com.ilscipio.scipio.cms.control.CmsAccessHandler" invoke="ensureSessionTokenRegistered"/>
     </preprocessor>
-    -->
+
     <!-- Events to run on every request after all other processing (chains exempt) -->
     <!--
     <postprocessor>
@@ -17,7 +19,8 @@
     -->
 
     <after-login>
-        <event name="registerSessionPreviewToken" type="java" path="com.ilscipio.scipio.cms.control.CmsAccessHandler" invoke="registerSessionToken"/>
+        <!-- New login CMS access token handling: creates a new base access token in session -->
+        <event name="createCmsAccessToken" type="java" path="com.ilscipio.scipio.cms.control.CmsAccessHandler" invoke="createNewSessionAccessToken"/>
     </after-login>
 
     <!-- **************** -->

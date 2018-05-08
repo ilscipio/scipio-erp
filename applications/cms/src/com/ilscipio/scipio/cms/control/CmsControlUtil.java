@@ -16,6 +16,7 @@ import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
 import com.ilscipio.scipio.ce.util.PathUtil;
+import com.ilscipio.scipio.cms.content.CmsPage;
 import com.ilscipio.scipio.cms.control.cmscall.CmsCallType;
 import com.ilscipio.scipio.cms.webapp.CmsWebappUtil;
 
@@ -63,7 +64,7 @@ public abstract class CmsControlUtil {
         //}
     }
     
-    public static boolean getPreviewMode(HttpServletRequest request, CmsWebSiteConfig webSiteConfig) {
+    public static boolean getPreviewModeParam(HttpServletRequest request, CmsWebSiteConfig webSiteConfig) {
         String previewMode = (String) request.getAttribute(webSiteConfig.getPreviewModeParamName());
         if (previewMode == null) {
             previewMode = request.getParameter(webSiteConfig.getPreviewModeParamName());
@@ -77,10 +78,10 @@ public abstract class CmsControlUtil {
         return "Y".equals(previewMode);
     }
     
-    public static CmsCallType getRenderMode(HttpServletRequest request, CmsWebSiteConfig webSiteConfig) {
+    public static CmsCallType getRenderModeParam(HttpServletRequest request, CmsWebSiteConfig webSiteConfig) {
         CmsCallType renderMode;
         if (webSiteConfig.isAllowPreviewMode()) {
-            renderMode = CmsControlUtil.getPreviewMode(request, webSiteConfig) ?
+            renderMode = CmsControlUtil.getPreviewModeParam(request, webSiteConfig) ?
                     CmsCallType.OFBIZ_PREVIEW : CmsCallType.OFBIZ_RENDER;
         } else {
             renderMode = CmsCallType.OFBIZ_RENDER;
@@ -88,7 +89,7 @@ public abstract class CmsControlUtil {
         return renderMode;
     }
     
-    public static String getAccessToken(HttpServletRequest request, CmsWebSiteConfig webSiteConfig) {
+    public static String getAccessTokenParam(HttpServletRequest request, CmsWebSiteConfig webSiteConfig) {
         String accessToken = (String) request.getAttribute(webSiteConfig.getAccessTokenParamName());
         if (accessToken == null) {
             accessToken = request.getParameter(webSiteConfig.getAccessTokenParamName());
@@ -105,6 +106,19 @@ public abstract class CmsControlUtil {
         }
         return accessToken.isEmpty() ? null : accessToken;
     }
+    
+    public static boolean verifyValidAccessToken(HttpServletRequest request, CmsWebSiteConfig webSiteConfig, CmsCallType renderMode) {
+        if (renderMode == CmsCallType.OFBIZ_PREVIEW || webSiteConfig.isRequireLiveAccessToken()) {
+            String accessToken = CmsControlUtil.getAccessTokenParam(request, webSiteConfig);
+            // TODO: REVIEW: the request URI here might not necessarily match one of the page's URIs
+            // but won't matter until isValidAccessToken actively checks it
+            if (!CmsAccessHandler.isValidAccessToken(request, request.getRequestURI(), accessToken)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     public static String normalizeServletPath(String servletPath) { // Servlet path only
         if (servletPath == null) return null;

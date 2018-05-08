@@ -115,7 +115,7 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
         // 2016: check preview mode parameter
         // NOTE: this MAY have been done in process filter, but it possible to run without it, so do it again here
         if (renderMode == null) {
-            renderMode = CmsControlUtil.getRenderMode(request, webSiteConfig);
+            renderMode = CmsControlUtil.getRenderModeParam(request, webSiteConfig);
         }
         
         // 2016: MUST NOT CACHE PREVIEWS!
@@ -248,27 +248,22 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
                 return; // Nothing can be sent after this
             }
         } 
-       
-        boolean renderDefault;
         
-        // check cmsAccessToken
-        if (renderMode == CmsCallType.OFBIZ_PREVIEW || webSiteConfig.isRequireLiveAccessToken()) {
-            String accessToken = CmsControlUtil.getAccessToken(request, webSiteConfig);
-            // TODO: REVIEW: the request URI here might not necessarily match one of the page's URIs
-            // but won't matter until isValidAccessToken actively checks it
-            if (!CmsAccessHandler.isValidAccessToken(request, cmsPage, request.getRequestURI(), accessToken)) {
-                Debug.logError("Cms: Invalid access token for session " + request.getSession().getId() + "; denying render", module);
-                // TODO: REVIEW: could try to show an error page here, 
-                // but a straight 403 is safer for now
-                try {
-                    response.sendError(HttpServletResponse.SC_FORBIDDEN);
-                } catch (IOException e) {
-                    Debug.logError(e, module);
-                }
-                return;
+        // check cmsAccessToken (NOTE: we must do this in both CmsProcessFilter and CmsScreenViewHandler)
+        boolean validAccessToken = CmsControlUtil.verifyValidAccessToken(request, webSiteConfig, renderMode);
+        if (!validAccessToken) {
+            Debug.logError("Cms: Invalid access token for session " + request.getSession().getId() 
+                    + "; denying request" + CmsControlUtil.getReqLogIdDelimStr(request), module);
+            try {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            } catch (IOException e) {
+                Debug.logError(e, "Cms: Error sending server error response" + CmsControlUtil.getReqLogIdDelimStr(request), module);
             }
+            return;
         }
         
+        boolean renderDefault;
+
         if (cmsPage != null) {
             //CmsPageInfo cmsPageInfo = new CmsPageInfo(cmsPage);
             

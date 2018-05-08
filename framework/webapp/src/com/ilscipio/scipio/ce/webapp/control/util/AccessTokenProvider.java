@@ -7,6 +7,7 @@ import java.util.UUID;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -268,8 +269,17 @@ public abstract class AccessTokenProvider<V> {
      * <p>
      * NOTE: there is no value parameter, which indicates this cannot create token.
      */
-    public AccessToken getSessionToken(HttpSession session, String attrName) {
-        return (AccessToken) session.getAttribute(attrName);
+    public AccessToken getSessionToken(HttpSession session, HttpServletRequest request, String attrName) {
+        AccessToken token;
+        if (request != null) {
+            token = (AccessToken) request.getAttribute(attrName);
+            if (token != null) return token;
+        }
+        token = (AccessToken) session.getAttribute(attrName);
+        if (token != null) {
+            request.setAttribute(attrName, token);
+        }
+        return token;
     }
     
     /**
@@ -277,55 +287,60 @@ public abstract class AccessTokenProvider<V> {
      * <p>
      * NOTE: there is no value parameter, which indicates this cannot create token.
      */
-    public String getSessionTokenString(HttpSession session, String attrName) {
-        AccessToken token = getSessionToken(session, attrName);
+    public String getSessionTokenString(HttpSession session, HttpServletRequest request, String attrName) {
+        AccessToken token = getSessionToken(session, request, attrName);
         return (token != null) ? token.toString() : null;
     }
     
-    private AccessToken updateSessionToken(HttpSession session, String attrName, V value, boolean onlyIfNewToken) {
-        AccessToken token = (AccessToken) session.getAttribute(attrName);
-        if (token != null) {
-            if (!onlyIfNewToken) {
-                put(token, value);
-            }
-            return token;
-        }
-        
-        // FIXME: this session sync is best-effort and not guaranteed by the serlvet API -
-        // will not work with session replication
-        synchronized(session) {
-            token = (AccessToken) session.getAttribute(attrName);
-            if (token != null) {
-                if (!onlyIfNewToken) {
-                    put(token, value);
-                }
-                return token;
-            }
-            
-            token = newToken();
-            put(token, value);
-            session.setAttribute(attrName, token);
-            return token;
-        }
-    }
+    // REMOVED - dangerous - trying to update existing tokens (onlyIfNewToken true) implies concurrency issues
+    // that will lead to memory leaks
+//    private AccessToken updateSessionToken(HttpSession session, HttpServletRequest request, String attrName, V value, boolean onlyIfNewToken) {
+//        AccessToken token = getSessionToken(session, request, attrName);
+//        if (token != null) {
+//            if (!onlyIfNewToken) {
+//                put(token, value);
+//            }
+//            return token;
+//        }
+//        
+//        // FIXME: this session sync is best-effort and not guaranteed by the serlvet API -
+//        // will not work with session replication
+//        synchronized(session) {
+//            token = (AccessToken) session.getAttribute(attrName);
+//            if (token != null) {
+//                if (!onlyIfNewToken) {
+//                    put(token, value);
+//                }
+//                return token;
+//            }
+//            
+//            token = newToken();
+//            put(token, value);
+//            session.setAttribute(attrName, token);
+//            request.setAttribute(attrName, token);
+//            return token;
+//        }
+//    }
     
-    /**
-     * Updates current token in session to the given value, creating it if it doesn't already exist,
-     * and returns the current token.
-     * <p>
-     * After this call, the session is guaranteed to contain a token.
-     * <p>
-     * NOTE: If you only need to set the value on creation (i.e. it doesn't change for a given token), 
-     * it's better to call {@link #createOrGetSessionToken} instead, for performance reasons.
-     * <p>
-     * WARN: FIXME: Synchronization on session is not guaranteed due to servlet API -
-     * e.g. will fail for session replication.
-     * To prevent issues, only call this from controller after-login events or from
-     * {@link javax.servlet.http.HttpSessionListener#sessionCreated} implementations.
-     */
-    public AccessToken updateAndGetSessionToken(HttpSession session, String attrName, V value) {
-        return updateSessionToken(session, attrName, value, false);
-    }
+    // REMOVED - dangerous - trying to update existing tokens implies concurrency issues
+    // that will lead to memory leaks
+//    /**
+//     * Updates current token in session to the given value, creating it if it doesn't already exist,
+//     * and returns the current token.
+//     * <p>
+//     * After this call, the session is guaranteed to contain a token.
+//     * <p>
+//     * NOTE: If you only need to set the value on creation (i.e. it doesn't change for a given token), 
+//     * it's better to call {@link #createOrGetSessionToken} instead, for performance reasons.
+//     * <p>
+//     * WARN: FIXME: Synchronization on session is not guaranteed due to servlet API -
+//     * e.g. will fail for session replication.
+//     * To prevent issues, only call this from controller after-login events or from
+//     * {@link javax.servlet.http.HttpSessionListener#sessionCreated} implementations.
+//     */
+//    public AccessToken updateAndGetSessionToken(HttpSession session, HttpServletRequest request, String attrName, V value) {
+//        return updateSessionToken(session, request, attrName, value, false);
+//    }
     
     /**
      * Creates token in session with given value if it doesn't already exist;
@@ -338,29 +353,85 @@ public abstract class AccessTokenProvider<V> {
      * To prevent issues, only call this from controller after-login events or from
      * {@link javax.servlet.http.HttpSessionListener#sessionCreated} implementations.
      */
-    public AccessToken createOrGetSessionToken(HttpSession session, String attrName, V value) {
-        return updateSessionToken(session, attrName, value, true);
+    public AccessToken createOrGetSessionToken(HttpSession session, HttpServletRequest request, String attrName, V value) {
+        AccessToken token = getSessionToken(session, request, attrName);
+        if (token != null) {
+            return token;
+        }
+
+        synchronized(session) { // FIXME: best-effort sync only - servlet API doesn't guarantee - can't work with session replication
+            token = (AccessToken) session.getAttribute(attrName);
+            if (token != null) {
+                return token;
+            }
+            
+            token = newToken();
+            put(token, value);
+            session.setAttribute(attrName, token);
+            request.setAttribute(attrName, token);
+            return token;
+        }
+    }
+    
+    /**
+     * Creates token in session with given value, removing any prior 
+     * <p>
+     * After this call, the session is guaranteed to contain a token.
+     * <p>
+     * WARN: FIXME: Synchronization on session is not guaranteed due to servlet API -
+     * e.g. will fail for session replication.
+     * To prevent issues, only call this from controller after-login events or from
+     * {@link javax.servlet.http.HttpSessionListener#sessionCreated} implementations.
+     */
+    public AccessToken createNewSessionToken(HttpSession session, HttpServletRequest request, String attrName, V value) {
+        synchronized(session) { // FIXME: best-effort sync only - servlet API doesn't guarantee - can't work with session replication
+            cleanupSessionToken(session, request, attrName);
+            
+            AccessToken token = newToken();
+            put(token, value);
+            session.setAttribute(attrName, token);
+            request.setAttribute(attrName, token);
+            return token;
+        }
     }
     
     /**
      * Restores token stored in session to this provider's tokens map.
      * <p>
-     * Needed only for persisted session deserialization.
+     * Needed mainly to handle persisted session deserialization.
      */
-    public AccessToken restoreSessionTokenToProvider(HttpSession session, String attrName, V value) {
-        AccessToken token = getSessionToken(session, attrName);
-        if (token != null) {
-            this.put(token, value);
+    public AccessToken ensureSessionTokenRegistered(HttpSession session, HttpServletRequest request, String attrName, V value) {
+        // the following is an optimization to skip synchronized block, at least for ConcurrentHashMap
+        if (value == null) return null;
+        AccessToken token = (AccessToken) session.getAttribute(attrName);
+        if (token == null) return null;
+        if (this.get(token) != null) return token;
+        
+        synchronized(session) { // FIXME: best-effort sync only - servlet API doesn't guarantee - can't work with session replication
+            token = (AccessToken) session.getAttribute(attrName);
+            if (token == null) return null;
+            if (this.get(token) != null) return token;
+            this.put(token, value); // update the central provider/registry
+            return token;
         }
-        return token;
     }
     
-    public V cleanupSessionToken(HttpSession session, String attrName) {
-        AccessToken token = (AccessToken) session.getAttribute(attrName);
-        if (token != null) {
-            return remove(token);
+    public void cleanupSessionToken(HttpSession session, HttpServletRequest request, String attrName) {
+        synchronized(session) { // FIXME: best-effort sync only - servlet API doesn't guarantee - can't work with session replication
+            if (request != null) {
+                AccessToken token = (AccessToken) request.getAttribute(attrName);
+                if (token != null) {
+                    request.removeAttribute(attrName);
+                    remove(token);
+                }
+            }
+    
+            AccessToken token = (AccessToken) session.getAttribute(attrName);
+            if (token != null) {
+                session.removeAttribute(attrName);
+                remove(token);
+            }
         }
-        return null;
     }
     
 }

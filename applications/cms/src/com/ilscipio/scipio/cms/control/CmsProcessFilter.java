@@ -200,7 +200,7 @@ public class CmsProcessFilter implements Filter {
         Delegator delegator = CmsControlUtil.getDelegatorForControl(request, servletContext);
         String webSiteId = CmsControlUtil.getWebSiteIdForControl(request, servletContext);
         // 2016: check render mode
-        CmsCallType renderMode = CmsControlUtil.getRenderMode(request, webSiteConfig);
+        CmsCallType renderMode = CmsControlUtil.getRenderModeParam(request, webSiteConfig);
         
         // 2017-11: _SCP_FWDROOTURIS_ instructs ContextFilter (Scipio feature) to forward these root request URIs,
         // if configured to do so using forwardRootControllerUris.
@@ -241,6 +241,19 @@ public class CmsProcessFilter implements Filter {
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             } catch (IOException e1) {
                 Debug.logError(e1, "Cms: Error sending server error response" + CmsControlUtil.getReqLogIdDelimStr(request), module);
+            }
+            return;
+        }
+        
+        // check cmsAccessToken (NOTE: we must do this in both CmsProcessFilter and CmsScreenViewHandler)
+        boolean validAccessToken = CmsControlUtil.verifyValidAccessToken(request, webSiteConfig, renderMode);
+        if (!validAccessToken) {
+            Debug.logError("Cms: Invalid access token for session " + request.getSession().getId() 
+                    + "; denying request" + CmsControlUtil.getReqLogIdDelimStr(request), module);
+            try {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            } catch (IOException e) {
+                Debug.logError(e, "Cms: Error sending server error response" + CmsControlUtil.getReqLogIdDelimStr(request), module);
             }
             return;
         }

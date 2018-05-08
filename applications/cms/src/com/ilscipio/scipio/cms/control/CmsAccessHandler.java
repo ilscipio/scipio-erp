@@ -44,7 +44,7 @@ public class CmsAccessHandler implements HttpSessionListener {
         // TODO?: we are not currently using the page path or ID (ID may not work; in future a path could lead to different pages)
         // but could try to combine somehow to create more secure per-page tokens, using:
         //   hash(sessiontoken + cmsPagePrimaryPath)
-        String tokenString = tokens.getSessionTokenString(request.getSession(), SESSION_TOKEN_ATTR);
+        String tokenString = tokens.getSessionTokenString(request.getSession(), request, SESSION_TOKEN_ATTR);
         if (tokenString == null) {
             Debug.logWarning("Cms: Access token: No access token string found in session"
                     + " (bad controller config?) - preview mode may fail", module);
@@ -52,7 +52,7 @@ public class CmsAccessHandler implements HttpSessionListener {
         return tokenString;
     }
     
-    public static boolean isValidAccessToken(HttpServletRequest request, CmsPage page, String cmsPagePath, String paramToken) {
+    public static boolean isValidAccessToken(HttpServletRequest request, String cmsPagePath, String paramToken) {
         // TODO?: in future could want a hash(paramToken + cmsPagePath) or so
         return (tokens.get(paramToken) != null);
     }
@@ -62,44 +62,80 @@ public class CmsAccessHandler implements HttpSessionListener {
         else return internalToken.equals(paramToken);
     }
 
-    @Override
-    public void sessionCreated(HttpSessionEvent se) {
-        // IMPORTANT: If the session was persisted and deserialized, we must re-add the token to the global hash here
-        restoreSessionTokenToProvider(se.getSession());
+    /**
+     * Creates a new session access token and registers in the central provider.
+     * A userLogin is required in session.
+     */
+    public static String createNewSessionAccessToken(HttpServletRequest request, HttpServletResponse response) {
+        createNewSessionAccessToken(request.getSession(), request);
+        return "success";
     }
     
     /**
-     * Restores token stored in session to this provider's tokens map.
-     * <p>
-     * Needed only for persisted session deserialization.
+     * Creates a new session access token and registers in the central provider.
+     * A userLogin is required in session.
      */
-    public static String restoreSessionTokenToProvider(HttpSession session) {
-        AccessToken token = tokens.restoreSessionTokenToProvider(session, SESSION_TOKEN_ATTR, 
-                (GenericValue) session.getAttribute("userLogin"));
-        return (token != null) ? token.toString() : null;
+    public static String createNewSessionAccessToken(HttpSession session, HttpServletRequest request) {
+        GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+        if (userLogin != null) {
+            // create new token
+            AccessToken token = tokens.createNewSessionToken(session, request, SESSION_TOKEN_ATTR, userLogin);
+            Debug.logInfo("Cms: Access Token: Generated new CMS access token for session " + session.getId()
+                + " (userLoginId: " + userLogin.getString("userLoginId") + ")", module);
+            return token.toString();
+        } else {
+            // we have no user login, but we can get rid of any old lingering token
+            tokens.cleanupSessionToken(session, request, SESSION_TOKEN_ATTR);
+        }
+        return null;
+    }
+    
+    /**
+     * Ensures the session token is present in the central provider/registry.
+     * Implements the persisted deserialized session handling.
+     */
+    public static String ensureSessionTokenRegistered(HttpServletRequest request, HttpServletResponse response) {
+        ensureSessionTokenRegistered(request.getSession(), request);
+        return "success";
+    }
+    
+    /**
+     * Ensures the session token is present in the central provider/registry.
+     * Implements the persisted deserialized session handling.
+     */
+    public static String ensureSessionTokenRegistered(HttpSession session, HttpServletRequest request) {
+        GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+        if (userLogin != null) {
+            // create new token
+            AccessToken token = tokens.ensureSessionTokenRegistered(session, request, SESSION_TOKEN_ATTR, userLogin);
+            return token.toString();
+        }
+        return null;
+    }
+    
+    /**
+     * Removes the current session access token from session and central provider.
+     */
+    public static String cleanupSessionAccessToken(HttpServletRequest request, HttpServletResponse response) {
+        cleanupSessionAccessToken(request.getSession(), request);
+        return "success";
+    }
+    
+    /**
+     * Removes the current session access token from session and central provider.
+     */
+    public static void cleanupSessionAccessToken(HttpSession session, HttpServletRequest request) {
+        tokens.cleanupSessionToken(session, request, SESSION_TOKEN_ATTR);
     }
 
-    public static String registerSessionToken(HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session = request.getSession(true);
-        GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
-        if (userLogin == null) {
-            Debug.logWarning("Cms: Access Token: userLogin is not set in session"
-                    + "; cannot associate the access token with a userLogin"
-                    + "- preview mode may fail"
-                    + "; is the CmsAccessHandler.registerSessionToken method properly"
-                    + " associated to the controller after-login events?", module);
-        }
-        tokens.updateAndGetSessionToken(session, SESSION_TOKEN_ATTR, userLogin);
-        Debug.logInfo("Cms: Access Token: Generated new access token for session " + session.getId()
-            + " (userLoginId: " + (userLogin != null ? userLogin.getString("userLoginId") : "[MISSING]") + ")", module);
-        
-        return "success";
+    @Override
+    public void sessionCreated(HttpSessionEvent se) {
+        // nothing useful is in the session at this point
     }
     
     @Override
     public void sessionDestroyed(HttpSessionEvent se) {
-        HttpSession session = se.getSession();
-        tokens.cleanupSessionToken(session, SESSION_TOKEN_ATTR);
+        cleanupSessionAccessToken(se.getSession(), null);
     }
 
 }

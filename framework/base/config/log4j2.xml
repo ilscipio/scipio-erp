@@ -44,6 +44,9 @@
         <logger name="net.fortuna.ical4j" level="warn"/><!-- SCIPIO: ical4j 2.2.0+ is very verbose -->
         <logger name="org.apache" level="warn"/>
         <logger name="freemarker" level="warn"/>
+        
+        <!--SCIPIO: HttpClient debug logging - uncomment to debug Solr connections -->
+        <!--<logger name="org.apache.http" level="debug"/>-->
 
         <Root level="all">
             <AppenderRef ref="async"/>

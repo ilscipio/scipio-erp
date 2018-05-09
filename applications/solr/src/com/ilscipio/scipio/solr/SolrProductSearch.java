@@ -463,7 +463,10 @@ public abstract class SolrProductSearch {
             // the passed values may not be simple fields names, they require complex expressions containing spaces and special chars
             // (for example the old "queryFilter" parameter was unusable, so now have "queryFilters" list in addition).
             
-            client = SolrUtil.getQueryHttpSolrClient((String) context.get("core"));
+            String solrUsername = (String) context.get("solrUsername");
+            String solrPassword = (String) context.get("solrPassword");
+            client = SolrUtil.getQueryHttpSolrClient((String) context.get("core"), solrUsername, solrPassword);
+            
             // create Query Object
             SolrQuery solrQuery = new SolrQuery();
             solrQuery.setQuery((String) context.get("query"));
@@ -636,9 +639,7 @@ public abstract class SolrProductSearch {
          
             //QueryResponse rsp = client.query(solrQuery, METHOD.POST); // old way (can't configure the request)
             QueryRequest req = new QueryRequest(solrQuery, METHOD.POST);
-            String solrUsername = (String) context.get("solrUsername");
             if (solrUsername != null) {
-                String solrPassword = (String) context.get("solrPassword");
                 // This will override the credentials stored in (Scipio)HttpSolrClient, if any
                 req.setBasicAuthCredentials(solrUsername, solrPassword);
             }

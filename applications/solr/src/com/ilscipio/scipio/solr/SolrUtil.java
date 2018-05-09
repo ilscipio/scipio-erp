@@ -464,7 +464,7 @@ public abstract class SolrUtil {
         private final boolean reuseClient;
         private final Integer connectTimeout;
         private final Integer socketTimeout;
-        private final boolean noDelay; // TODO: FLAG NOT IMPLEMENTED (client building issue)
+        //private final Boolean noDelay; // TODO: FLAG NOT IMPLEMENTED (client building issue)
         private final Integer maxConnections;
         private final Integer maxConnectionsPerHost;
         
@@ -472,10 +472,10 @@ public abstract class SolrUtil {
             this.clientMode = clientMode;
             this.solrUsername = UtilProperties.valueOrNull((String) configMap.get("login.username"));
             this.solrPassword = UtilProperties.valueOrNull((String) configMap.get("login.password"));
-            this.reuseClient = UtilProperties.asBoolean(configMap.get("reuseConnections"), false);
+            this.reuseClient = UtilProperties.asBoolean(configMap.get("reuseClient"), false);
             this.connectTimeout = UtilProperties.asInteger(configMap.get("connectTimeout"));
             this.socketTimeout = UtilProperties.asInteger(configMap.get("socketTimeout"));
-            this.noDelay = UtilProperties.asBoolean(configMap.get("noDelay"), true);
+            //this.noDelay = UtilProperties.asBoolean(configMap.get("noDelay"));
             // NOTE: Defaults are based on Solr 7 (not 6) - see org.apache.solr.client.solrj.impl.HttpClientUtil source
             // For Solr 6, the defaults were 128 and 32, respectively
             this.maxConnections = UtilProperties.asInteger(configMap.get("maxConnections"), 10000);
@@ -495,7 +495,7 @@ public abstract class SolrUtil {
         public String getSolrCoreUrl() { return SolrUtil.getSolrDefaultCoreUrl(); }
         public Integer getConnectTimeout() { return connectTimeout; }
         public Integer getSocketTimeout() { return socketTimeout; }
-        public boolean isNoDelay() { return noDelay; }
+        //public Boolean getNoDelay() { return noDelay; }
         public Integer getMaxConnections() { return maxConnections; }
         public Integer getMaxConnectionsPerHost() { return maxConnectionsPerHost; }
 

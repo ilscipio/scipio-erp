@@ -18,12 +18,13 @@ This stock component focuses on indexing Product data.
 Contents:
 
 1. Configuration
-2. Interfaces
-3. Data Indexing
-4. Data Querying
-5. Schema Modification
-6. Troubleshooting
-7. Known Bugs, Limitations and Issues
+2. Authentication
+3. Interfaces
+4. Data Indexing
+5. Data Querying
+6. Schema Modification
+7. Troubleshooting
+8. Known Bugs, Limitations and Issues
 
 
 -----------------------------------------------------
@@ -58,7 +59,65 @@ more reliably than the old component.
 
 
 -----------------------------------------------------
-2. Interfaces
+2. Authentication
+-----------------------------------------------------
+
+Currently (2018-05-08), the /solr webapp is openly accessible in stock Scipio installations.
+On production systems, it is extremely important not to expose this webapp to the
+public-facing network.
+
+
+2.1 Basic Solr authentication
+
+Basic Solr authentication - independent from the Scipio login system and users - can be configured
+following:
+
+  https://lucene.apache.org/solr/guide/6_6/basic-authentication-plugin.html
+
+It requires specifying a pair of logins in solrconfig.properties and in the file (you may need to create it):
+
+  applications/solr/security.json
+  
+Example:
+
+The following defines a single basic auth user 'solr' with password 'SolrRocks':
+
+security.json:
+
+{
+"authentication":{
+   "blockUnknown": true,
+   "class":"solr.BasicAuthPlugin",
+   "credentials":{"solr":"IV0EHq1OnNrj6gvRCwvFwTrZ1+z1oBbnQdiVC3otuq0= Ndd7LKvVBAaZIF0QAVi1ekCfAJXr1GGfLtRUXhgrF8c="}
+},
+"authorization":{
+   "class":"solr.RuleBasedAuthorizationPlugin",
+   "permissions":[{"name":"security-edit",
+      "role":"admin"}],
+   "user-role":{"solr":"admin"}
+}}
+
+solrconfig.properties:
+
+solr.query.connect.login.username=solr
+solr.query.connect.login.password=SolrRocks
+solr.update.connect.login.username=solr
+solr.update.connect.login.password=SolrRocks
+
+You may, however, want to define separate users for internal query/update connections 
+versus /solr webapp UI user access.
+
+
+2.2 Scipio UserLogin-based authentication
+
+TODO: Not yet implemented (2018-04-30)
+
+(Unfortunately, this suffers from connection/performance problems due to forced HTTPS usage in current design;
+it may be implemented in the near future, but available implementations are inadequate)
+
+
+-----------------------------------------------------
+3. Interfaces
 -----------------------------------------------------
 
 
@@ -84,7 +143,7 @@ are available due to running within Scipio (such as logging control).
 
 
 -----------------------------------------------------
-3. Data Indexing
+4. Data Indexing
 -----------------------------------------------------
 
 The solr component indexes data such as Products into the Apache Solr database
@@ -95,7 +154,7 @@ using services defined in the file:
 There are two methods for indexing data:
 
 
-3.1 Index rebuilding service (rebuildSolrIndex/rebuildSolrIndexAuto)
+4.1 Index rebuilding service (rebuildSolrIndex/rebuildSolrIndexAuto)
 
 rebuildSolrIndex is the most important data import service. It reindexes all Scipio Products existing
 in the system into the solr index. rebuildSolrIndexAuto is a wrapper that invokes rebuildSolrIndex if
@@ -119,7 +178,7 @@ or whenever product data is changed but the invoked Solr ECAs/SECAs cannot be ex
 (assuming you haven't commented out those ECAs/SECAs - see below).
 
 
-3.2 ECAs/SECAs (registerUpdateToSolr service)
+4.2 ECAs/SECAs (registerUpdateToSolr service)
 
 Although the rebuildSolrIndex is always necessary for the initial data import, one may also
 use ECAs and SECAs to import subsequent data changes automatically at every individual data (e.g. Product)
@@ -155,7 +214,7 @@ In addition, they are now (2018-04-26) cleared by the "clean-all" task.
 
 
 -----------------------------------------------------
-4. Data Querying
+5. Data Querying
 -----------------------------------------------------
 
 Solr queries can be done using severals methods:
@@ -186,7 +245,7 @@ of this interface.
 
 
 -----------------------------------------------------
-5. Schema Modification
+6. Schema Modification
 -----------------------------------------------------
 
 For Solr 6, the schemas are now defined for each configset in:
@@ -223,10 +282,10 @@ startup, so that you don't need to tell other users of your (git) project when t
 
 
 -----------------------------------------------------
-6. Troubleshooting
+7. Troubleshooting
 -----------------------------------------------------
 
-Timeouts and internal connection failures to Solr:
+7.1 Timeouts and internal connection failures to Solr:
 
 Check the solr.query.connect.* and solr.update.connect.* settings in solrconfig.properties;
 under extremely heavy loads, pooling settings (reuseClient + maxConnections*) may need to be tweaked.
@@ -237,7 +296,7 @@ uncommenting the appropriate line in:
 
 
 -----------------------------------------------------
-7. Known Bugs, Limitations and Issues
+8. Known Bugs, Limitations and Issues
 -----------------------------------------------------
 
 * In general, solr services can only successfully run in contexts where the solr webapp

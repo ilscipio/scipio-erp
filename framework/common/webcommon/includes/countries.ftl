@@ -31,7 +31,7 @@ under the License.
   <#list optionList as option>
     <#if option.geoId?has_content>
       <#local optVal = option.geoId>
-      <#if optionList.getModelEntity??>
+      <#if option.getModelEntity??>
         <#local optLabel = option.get("geoName", locale)!option.geoId>
       <#else>
         <#local optLabel = option.geoName!option.geoId>

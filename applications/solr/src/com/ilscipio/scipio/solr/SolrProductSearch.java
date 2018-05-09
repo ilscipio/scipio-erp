@@ -59,8 +59,9 @@ public abstract class SolrProductSearch {
     static final boolean excludeVariantsDefault = true;
     
     private static boolean reindexAutoForceRan = false;
-    private static final String reindexAutoForcePropName = "scipio.solr.reindex.auto.force";
-    
+    private static final String reindexStartupForceSysProp = "scipio.solr.reindex.startup.force";
+    private static final String reindexStartupForceConfigProp = "solr.index.rebuild.startup.force";
+
     public static Map<String, Object> addToSolr(DispatchContext dctx, Map<String, Object> context) {
         return updateToSolrCommon(dctx, context, Boolean.TRUE, true);
     }
@@ -462,7 +463,10 @@ public abstract class SolrProductSearch {
             // the passed values may not be simple fields names, they require complex expressions containing spaces and special chars
             // (for example the old "queryFilter" parameter was unusable, so now have "queryFilters" list in addition).
             
-            client = SolrUtil.getQueryHttpSolrClient((String) context.get("core"));
+            String solrUsername = (String) context.get("solrUsername");
+            String solrPassword = (String) context.get("solrPassword");
+            client = SolrUtil.getQueryHttpSolrClient((String) context.get("core"), solrUsername, solrPassword);
+            
             // create Query Object
             SolrQuery solrQuery = new SolrQuery();
             solrQuery.setQuery((String) context.get("query"));
@@ -635,9 +639,7 @@ public abstract class SolrProductSearch {
          
             //QueryResponse rsp = client.query(solrQuery, METHOD.POST); // old way (can't configure the request)
             QueryRequest req = new QueryRequest(solrQuery, METHOD.POST);
-            String solrUsername = (String) context.get("solrUsername");
             if (solrUsername != null) {
-                String solrPassword = (String) context.get("solrPassword");
                 // This will override the credentials stored in (Scipio)HttpSolrClient, if any
                 req.setBasicAuthCredentials(solrUsername, solrPassword);
             }
@@ -1223,21 +1225,19 @@ public abstract class SolrProductSearch {
         return result;
     }
     
-    private static boolean isReindexAutoForce(Delegator delegator, LocalDispatcher dispatcher) {
-        boolean autoForce = false;
-        if (!reindexAutoForceRan) {
-            synchronized(SolrProductSearch.class) {
-                if (!reindexAutoForceRan) {
-                    autoForce = Boolean.TRUE.equals(getReindexAutoForceProperty(delegator, dispatcher));
-                    reindexAutoForceRan = true;
-                }
-            }
+    private static boolean isReindexStartupForce(Delegator delegator, LocalDispatcher dispatcher) {
+        if (reindexAutoForceRan) return false;
+        synchronized(SolrProductSearch.class) {
+            if (reindexAutoForceRan) return false;
+            reindexAutoForceRan = true;
+            return getReindexStartupForceProperty(delegator, dispatcher, false);
         }
-        return autoForce;
     }
     
-    private static Boolean getReindexAutoForceProperty(Delegator delegator, LocalDispatcher dispatcher) {
-        return UtilMisc.booleanValueVersatile(System.getProperty(reindexAutoForcePropName));
+    private static Boolean getReindexStartupForceProperty(Delegator delegator, LocalDispatcher dispatcher, Boolean defaultValue) {
+        Boolean force = UtilMisc.booleanValueVersatile(System.getProperty(reindexStartupForceSysProp));
+        if (force != null) return force;
+        return UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, reindexStartupForceConfigProp, defaultValue);
     }
     
     /**
@@ -1248,11 +1248,11 @@ public abstract class SolrProductSearch {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
 
-        boolean autoForce = isReindexAutoForce(delegator, dispatcher);
-        if (autoForce) {
-            Debug.logInfo("Solr: rebuildSolrIndexAuto: Execution forced by system property " + reindexAutoForcePropName + "=true", module);
+        boolean startupForce = isReindexStartupForce(delegator, dispatcher);
+        if (startupForce) {
+            Debug.logInfo("Solr: rebuildSolrIndexAuto: Execution forced by force-startup system or config property", module);
         }
-        boolean force = autoForce;
+        boolean force = startupForce;
 
         boolean autoRunEnabled = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.index.rebuild.autoRun.enabled", false);
         

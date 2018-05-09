@@ -44,20 +44,20 @@
         location="webapp/cms"
         base-permission="OFBTOOLS,CMS"
         mount-point="/cms"/>
-        
+
     <!-- Empty Website container -->
     <webapp name="cmsSite"
-        title="Empty Website"
+        title="Preview Website"
         app-bar-display="false"
         menu-name="main"
         server="default-server"
         location="webapp/website"
         base-permission="OFBTOOLS,CMS"
         mount-point="/website"/>
-        
-     <!-- Empty Backend Site container -->
-      <webapp name="cmsBackendSite"
-        title="Empty Backend Site"
+
+    <!-- Empty Backend Site container -->
+    <webapp name="cmsBackendSite"
+        title="Preview Backend Site"
         app-bar-display="false"
         menu-name="main"
         server="default-server"

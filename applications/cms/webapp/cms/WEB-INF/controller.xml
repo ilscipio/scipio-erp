@@ -16,6 +16,11 @@
     </postprocessor>
     -->
 
+    <after-login>
+        <!-- New login CMS access token handling: creates a new base access token in session -->
+        <event name="createCmsAccessToken" type="java" path="com.ilscipio.scipio.cms.control.CmsAccessHandler" invoke="createSessionAccessToken"/>
+    </after-login>
+
     <!-- **************** -->
     <!-- REQUEST MAPPINGS -->
     <!-- **************** -->

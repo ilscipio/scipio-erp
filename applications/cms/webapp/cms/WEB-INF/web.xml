@@ -116,7 +116,9 @@
     <!-- NOTE: not all app servers support mounting implementations of the HttpSessionActivationListener 
         interface -->
     <!-- <listener><listener-class>org.ofbiz.webapp.control.ControlActivationEventListener</listener-class></listener> -->
-
+    <!-- SCIPIO: 2018-05-06: Generates and cleanups preview tokens for CMS -->
+    <listener><listener-class>com.ilscipio.scipio.cms.control.CmsAccessHandler</listener-class></listener>
+    
     <servlet>
         <servlet-name>ControlServlet</servlet-name>
         <display-name>ControlServlet</display-name>

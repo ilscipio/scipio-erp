@@ -32,6 +32,9 @@ public abstract class CmsWebSiteConfig implements Serializable {
     private static final CmsWebSiteConfig HARD_DEFAULT = new CmsWebSiteVirtualConfig();
     private static final CmsWebSiteConfig DEFAULT = readDefaultConfig("cms", "webSiteConfig.defaults.", HARD_DEFAULT);
 
+    public static final String PREVIEW_MODE_PARAM_DEFAULT = "cmsPreviewMode";
+    public static final String ACCESS_TOKEN_PARAM_DEFAULT = "cmsAccessToken";
+    
     /**
      * The fields on this class that represent configurable web.xml settings.
      */
@@ -56,6 +59,8 @@ public abstract class CmsWebSiteConfig implements Serializable {
     // DEV NOTE: these class member names must match the web.xml option names (except "cms" prefix and first char case)
     private final boolean allowPreviewMode;
     private final String previewModeParamName;
+    private final String accessTokenParamName;
+    private final boolean requireLiveAccessToken;
 
     private final String defaultServletPath;
     private final String defaultSourceServletPath;
@@ -82,12 +87,16 @@ public abstract class CmsWebSiteConfig implements Serializable {
     
     private final boolean mappingsIndexableDefault;
     
+    private final boolean useLinkExtLoginKey;
+    
     /**
      * Hard defaults/fallbacks constructor.
      */
     protected CmsWebSiteConfig() {
         this.allowPreviewMode = false;
-        this.previewModeParamName = "cmsPreviewMode";
+        this.previewModeParamName = PREVIEW_MODE_PARAM_DEFAULT;
+        this.accessTokenParamName = ACCESS_TOKEN_PARAM_DEFAULT;
+        this.requireLiveAccessToken = false;
         
         /*
          * NOTE: /control here is an emergency fallback used when we FAIL to detect the controller.
@@ -118,6 +127,8 @@ public abstract class CmsWebSiteConfig implements Serializable {
         this.applyPrimaryPathFromContextRootDefaultAtStorage = true;
         
         this.controlRootAlias = false;
+        
+        this.useLinkExtLoginKey = false;
     }
     
     /**
@@ -131,6 +142,8 @@ public abstract class CmsWebSiteConfig implements Serializable {
     protected CmsWebSiteConfig(ConfigReaderBase config, CmsWebSiteConfig defaultConfig) {
         this.allowPreviewMode = config.getBoolean("allowPreviewMode", defaultConfig.isAllowPreviewMode());
         this.previewModeParamName = config.getString("previewModeParamName", defaultConfig.getPreviewModeParamName());
+        this.accessTokenParamName = config.getString("accessTokenParamName", defaultConfig.getAccessTokenParamName());
+        this.requireLiveAccessToken = config.getBoolean("requireLiveAccessToken", defaultConfig.isRequireLiveAccessToken());
 
         // NOTE: dedicated getDefaultServletPath call so child class can override
         this.defaultServletPath = config.getDefaultServletPath("defaultServletPath", defaultConfig.getDefaultServletPath()); 
@@ -167,6 +180,8 @@ public abstract class CmsWebSiteConfig implements Serializable {
         this.controlRootAlias = config.getBoolean("controlRootAlias", defaultConfig.isControlRootAlias());
         
         this.mappingsIndexableDefault = config.getBoolean("mappingsIndexableDefault", defaultConfig.getMappingsIndexableDefault());
+        
+        this.useLinkExtLoginKey = config.getBoolean("useLinkExtLoginKey", defaultConfig.isUseLinkExtLoginKey());
     }
 
     protected abstract String getLogMsgPrefix();
@@ -397,6 +412,14 @@ public abstract class CmsWebSiteConfig implements Serializable {
     public String getPreviewModeParamName() {
         return previewModeParamName;
     }
+    
+    public String getAccessTokenParamName() {
+        return accessTokenParamName;
+    }
+
+    public boolean isRequireLiveAccessToken() {
+        return requireLiveAccessToken;
+    }
 
     public String getDefaultServletPath() {
         return defaultServletPath;
@@ -474,6 +497,10 @@ public abstract class CmsWebSiteConfig implements Serializable {
         return mappingsIndexableDefault;
     }
     
+    public boolean isUseLinkExtLoginKey() {
+        return useLinkExtLoginKey;
+    }
+
     /**
      * Returns the web.xml config option names, excluding the "cms" prefix, and the first
      * letter is lowercase.

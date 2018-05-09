@@ -358,21 +358,37 @@ public abstract class SolrUtil {
     /**
      * Returns a Solr client for making read-only queries.
      * <p>
+     * Supports explicit solr basic auth username/password, if not empty; otherwise
+     * includes the basic auth defined in solrconfig.properties/solr.query.login.*,
+     * which can be further overridden on individual requests (using QueryRequest).
+     */
+    public static HttpSolrClient getQueryHttpSolrClient(String core, String solrUsername, String solrPassword) {
+        return SolrClientFactory.queryClientFactory.getClientForCore(core, solrUsername, solrPassword);
+    }
+    
+    /**
+     * Returns a Solr client for making read-only queries.
+     * <p>
      * This client includes the basic auth defined in solrconfig.properties/solr.query.login.*,
      * which can be overridden on individual requests (using QueryRequest).
      */
     public static HttpSolrClient getQueryHttpSolrClient(String core) {
-        if (UtilValidate.isNotEmpty(core)) {
-            return SolrClientFactory.queryClientFactory.getClient(getSolrCoreUrl(core), 
-                    getSolrQueryConnectConfig().getSolrUsername(), getSolrQueryConnectConfig().getSolrPassword());
-        } else {
-            return SolrClientFactory.queryClientFactory.getClient(getSolrDefaultCoreUrl(), 
-                    getSolrQueryConnectConfig().getSolrUsername(), getSolrQueryConnectConfig().getSolrPassword());
-        }
+        return SolrClientFactory.queryClientFactory.getClientForCore(core, null, null);
     }
 
     public static HttpSolrClient getQueryHttpSolrClientFromUrl(String url, String solrUsername, String solrPassword) {
-        return SolrClientFactory.queryClientFactory.getClient(url, solrUsername, solrPassword);
+        return SolrClientFactory.queryClientFactory.getClientFromUrl(url, solrUsername, solrPassword);
+    }
+    
+    /**
+     * Returns a Solr client for making update/indexing queries.
+     * <p>
+     * Supports explicit solr basic auth username/password, if not empty; otherwise
+     * includes the basic auth defined in solrconfig.properties/solr.update.login.*,
+     * which can be further overridden on individual requests (using QueryRequest).
+     */
+    public static HttpSolrClient getUpdateHttpSolrClient(String core, String solrUsername, String solrPassword) {
+        return SolrClientFactory.updateClientFactory.getClientForCore(core, solrUsername, solrPassword);
     }
     
     /**
@@ -382,17 +398,11 @@ public abstract class SolrUtil {
      * which can be overridden on individual requests (using UpdateRequest).
      */
     public static HttpSolrClient getUpdateHttpSolrClient(String core) {
-        if (UtilValidate.isNotEmpty(core)) {
-            return SolrClientFactory.updateClientFactory.getClient(getSolrCoreUrl(core), 
-                    getSolrUpdateConnectConfig().getSolrUsername(), getSolrUpdateConnectConfig().getSolrPassword());
-        } else {
-            return SolrClientFactory.updateClientFactory.getClient(getSolrDefaultCoreUrl(), 
-                    getSolrUpdateConnectConfig().getSolrUsername(), getSolrUpdateConnectConfig().getSolrPassword());
-        }
+        return SolrClientFactory.updateClientFactory.getClientForCore(core, null, null);
     }
  
     public static HttpSolrClient getUpdateHttpSolrClientFromUrl(String url, String solrUsername, String solrPassword) {
-        return SolrClientFactory.updateClientFactory.getClient(url, solrUsername, solrPassword);
+        return SolrClientFactory.updateClientFactory.getClientFromUrl(url, solrUsername, solrPassword);
     }
     
     /**
@@ -424,11 +434,11 @@ public abstract class SolrUtil {
     }
     
     public static HttpSolrClient makeQueryHttpSolrClientFromUrl(String url, String solrUsername, String solrPassword) {
-        return SolrClientFactory.newQueryClientFactory.getClient(url, solrUsername, solrPassword);
+        return SolrClientFactory.newQueryClientFactory.getClientFromUrl(url, solrUsername, solrPassword);
     }
     
     public static HttpSolrClient makeUpdateHttpSolrClientFromUrl(String url, String solrUsername, String solrPassword) {
-        return SolrClientFactory.newUpdateClientFactory.getClient(url, solrUsername, solrPassword);
+        return SolrClientFactory.newUpdateClientFactory.getClientFromUrl(url, solrUsername, solrPassword);
     }
     
     static SolrConnectConfig getSolrQueryConnectConfig() {
@@ -464,7 +474,7 @@ public abstract class SolrUtil {
         private final boolean reuseClient;
         private final Integer connectTimeout;
         private final Integer socketTimeout;
-        private final boolean noDelay; // TODO: FLAG NOT IMPLEMENTED (client building issue)
+        //private final Boolean noDelay; // TODO: FLAG NOT IMPLEMENTED (client building issue)
         private final Integer maxConnections;
         private final Integer maxConnectionsPerHost;
         
@@ -472,10 +482,10 @@ public abstract class SolrUtil {
             this.clientMode = clientMode;
             this.solrUsername = UtilProperties.valueOrNull((String) configMap.get("login.username"));
             this.solrPassword = UtilProperties.valueOrNull((String) configMap.get("login.password"));
-            this.reuseClient = UtilProperties.asBoolean(configMap.get("reuseConnections"), false);
+            this.reuseClient = UtilProperties.asBoolean(configMap.get("reuseClient"), false);
             this.connectTimeout = UtilProperties.asInteger(configMap.get("connectTimeout"));
             this.socketTimeout = UtilProperties.asInteger(configMap.get("socketTimeout"));
-            this.noDelay = UtilProperties.asBoolean(configMap.get("noDelay"), true);
+            //this.noDelay = UtilProperties.asBoolean(configMap.get("noDelay"));
             // NOTE: Defaults are based on Solr 7 (not 6) - see org.apache.solr.client.solrj.impl.HttpClientUtil source
             // For Solr 6, the defaults were 128 and 32, respectively
             this.maxConnections = UtilProperties.asInteger(configMap.get("maxConnections"), 10000);
@@ -495,7 +505,7 @@ public abstract class SolrUtil {
         public String getSolrCoreUrl() { return SolrUtil.getSolrDefaultCoreUrl(); }
         public Integer getConnectTimeout() { return connectTimeout; }
         public Integer getSocketTimeout() { return socketTimeout; }
-        public boolean isNoDelay() { return noDelay; }
+        //public Boolean getNoDelay() { return noDelay; }
         public Integer getMaxConnections() { return maxConnections; }
         public Integer getMaxConnectionsPerHost() { return maxConnectionsPerHost; }
 
@@ -553,7 +563,21 @@ public abstract class SolrUtil {
             else return NewSolrClientFactory.create(connectConfig);
         }
        
-        public abstract HttpSolrClient getClient(String url, String solrUsername, String solrPassword);
+        public abstract HttpSolrClient getClientFromUrl(String url, String solrUsername, String solrPassword);
+        
+        public HttpSolrClient getClientForCore(String core, String solrUsername, String solrPassword) {
+            if (UtilValidate.isEmpty(solrUsername)) {
+                solrUsername = getConnectConfig().getSolrUsername();
+                solrPassword = getConnectConfig().getSolrPassword();
+            }
+            if (UtilValidate.isNotEmpty(core)) {
+                return getClientFromUrl(getSolrCoreUrl(core), solrUsername, solrPassword);
+            } else {
+                return getClientFromUrl(getSolrDefaultCoreUrl(), solrUsername, solrPassword);
+            }
+        }
+        
+        public abstract SolrConnectConfig getConnectConfig();
         
         static class NewSolrClientFactory extends SolrClientFactory {
             private final SolrConnectConfig connectConfig;
@@ -567,7 +591,7 @@ public abstract class SolrUtil {
             }
             
             @Override
-            public HttpSolrClient getClient(String url, String solrUsername, String solrPassword) {
+            public HttpSolrClient getClientFromUrl(String url, String solrUsername, String solrPassword) {
                 return makeClient(connectConfig, url, solrUsername, solrPassword);
             }
             
@@ -576,6 +600,11 @@ public abstract class SolrUtil {
                 return ScipioHttpSolrClient.create(url, null, solrUsername, solrPassword,
                             connectConfig.getMaxConnections(), connectConfig.getMaxConnectionsPerHost(),
                             connectConfig.getConnectTimeout(), connectConfig.getSocketTimeout());
+            }
+            
+            @Override
+            public SolrConnectConfig getConnectConfig() {
+                return connectConfig;
             }
         }
         
@@ -607,7 +636,7 @@ public abstract class SolrUtil {
             }
             
             @Override
-            public HttpSolrClient getClient(String url, String solrUsername, String solrPassword) {
+            public HttpSolrClient getClientFromUrl(String url, String solrUsername, String solrPassword) {
                 final String cacheKey = (solrUsername != null) ? (url + ":" + solrUsername + ":" + solrPassword) : url;
                 if (defaultClientCacheKey.equals(cacheKey)) {
                     if (Debug.verboseOn()) Debug.logVerbose("Solr: Using default solr " + connectConfig.makeClientLogDesc(url,  solrUsername), module);
@@ -632,6 +661,11 @@ public abstract class SolrUtil {
                     if (Debug.verboseOn()) Debug.logVerbose("Solr: Using cached solr " + connectConfig.makeClientLogDesc(url,  solrUsername), module);
                 }
                 return client;
+            }
+
+            @Override
+            public SolrConnectConfig getConnectConfig() {
+                return connectConfig;
             }
         }
     }

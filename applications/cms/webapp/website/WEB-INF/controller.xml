@@ -41,21 +41,21 @@
         <response name="success" type="view" value="pagenotfound"/>
     </request-map>
     <request-map uri="main">
-        <security https="false" auth="false"/>
+        <security https="true" auth="true"/>
         <response name="success" type="view" value="main" />
     </request-map>
     
     <!-- Test requests -->
     <request-map uri="testRequest1">
-        <security https="false" auth="false"/>
+        <security https="true" auth="true"/>
         <response name="success" type="view" value="testView1" />
     </request-map>
     <request-map uri="testRequest2">
-        <security https="false" auth="false"/>
+        <security https="true" auth="true"/>
         <response name="success" type="view" value="testView2" />
     </request-map>
     <request-map uri="testRequest3">
-        <security https="false" auth="false"/>
+        <security https="true" auth="true"/>
         <response name="success" type="view" value="testView3" />
     </request-map>
     

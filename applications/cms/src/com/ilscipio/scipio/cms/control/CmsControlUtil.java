@@ -16,6 +16,7 @@ import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
 import com.ilscipio.scipio.ce.util.PathUtil;
+import com.ilscipio.scipio.cms.content.CmsPage;
 import com.ilscipio.scipio.cms.control.cmscall.CmsCallType;
 import com.ilscipio.scipio.cms.webapp.CmsWebappUtil;
 
@@ -63,22 +64,24 @@ public abstract class CmsControlUtil {
         //}
     }
     
-    public static boolean checkPreviewMode(HttpServletRequest request, String paramName) {
-        String previewMode = (String) request.getAttribute(paramName);
+    public static boolean getPreviewModeParam(HttpServletRequest request, CmsWebSiteConfig webSiteConfig) {
+        String previewMode = (String) request.getAttribute(webSiteConfig.getPreviewModeParamName());
         if (previewMode == null) {
-            previewMode = request.getParameter(paramName);
-            if (!"Y".equals(previewMode)) {
+            previewMode = request.getParameter(webSiteConfig.getPreviewModeParamName());
+            if ("Y".equals(previewMode) || (previewMode != null && previewMode.length() >= 5)) {
+                previewMode = "Y";
+            } else {
                 previewMode = "N";
             }
-            request.setAttribute(paramName, previewMode);
+            request.setAttribute(webSiteConfig.getPreviewModeParamName(), previewMode);
         }
         return "Y".equals(previewMode);
     }
     
-    public static CmsCallType checkRenderMode(HttpServletRequest request, String paramName, boolean allowPreviewMode) {
+    public static CmsCallType getRenderModeParam(HttpServletRequest request, CmsWebSiteConfig webSiteConfig) {
         CmsCallType renderMode;
-        if (allowPreviewMode) {
-            renderMode = CmsControlUtil.checkPreviewMode(request, paramName) ?
+        if (webSiteConfig.isAllowPreviewMode()) {
+            renderMode = CmsControlUtil.getPreviewModeParam(request, webSiteConfig) ?
                     CmsCallType.OFBIZ_PREVIEW : CmsCallType.OFBIZ_RENDER;
         } else {
             renderMode = CmsCallType.OFBIZ_RENDER;
@@ -86,6 +89,37 @@ public abstract class CmsControlUtil {
         return renderMode;
     }
     
+    public static String getAccessTokenParam(HttpServletRequest request, CmsWebSiteConfig webSiteConfig) {
+        String accessToken = (String) request.getAttribute(webSiteConfig.getAccessTokenParamName());
+        if (accessToken == null) {
+            accessToken = request.getParameter(webSiteConfig.getAccessTokenParamName());
+            if (accessToken == null) {
+                // access token may also be inlined into cmsPreviewMode param
+                String inlineAccessToken = request.getParameter(webSiteConfig.getPreviewModeParamName());
+                if (inlineAccessToken != null && inlineAccessToken.length() >= 5) {
+                    accessToken = inlineAccessToken;
+                } else {
+                    accessToken = "";
+                }
+            }
+            request.setAttribute(webSiteConfig.getAccessTokenParamName(), accessToken);
+        }
+        return accessToken.isEmpty() ? null : accessToken;
+    }
+    
+    public static boolean verifyValidAccessToken(HttpServletRequest request, CmsWebSiteConfig webSiteConfig, CmsCallType renderMode) {
+        if (renderMode == CmsCallType.OFBIZ_PREVIEW || webSiteConfig.isRequireLiveAccessToken()) {
+            String accessToken = CmsControlUtil.getAccessTokenParam(request, webSiteConfig);
+            // TODO: REVIEW: the request URI here might not necessarily match one of the page's URIs
+            // but won't matter until isValidAccessToken actively checks it
+            if (!CmsAccessHandler.isValidAccessToken(request, request.getRequestURI(), accessToken)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
     public static String normalizeServletPath(String servletPath) { // Servlet path only
         if (servletPath == null) return null;
         return PathUtil.ensureStartAndNoTrailDelim(servletPath);
@@ -246,4 +280,28 @@ public abstract class CmsControlUtil {
         return cmsPageVersionId;
     }
 
+    public static Delegator getDelegator(HttpSession session) throws IllegalStateException {
+        Delegator delegator = (Delegator) session.getAttribute("delegator");
+        if (delegator == null) {
+            ServletContext sc = session.getServletContext();
+            delegator = (Delegator) sc.getAttribute("delegator");
+            if (delegator == null) {
+                String delegatorName = (String) session.getAttribute("delegatorName");
+                if (delegatorName == null) {
+                    delegatorName = (String) sc.getAttribute("delegatorName");
+                    if (delegatorName == null) {
+                        Debug.logWarning("Cms: delegator not found in session or servlet context"
+                                + " - using default delegator", module);
+                        delegatorName = "default";
+                    }
+                }
+                delegator = DelegatorFactory.getDelegator(delegatorName);
+                if (delegator == null) {
+                    throw new IllegalStateException("Could not get delegator from session, servlet context"
+                            + " or from delegator name '" + delegatorName + "'");
+                }
+            }
+        }
+        return delegator;
+    }
 }

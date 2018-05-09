@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app>
-    <display-name>SCIPIO ERP - Dummy Website Component</display-name>
-    <description>Empty CMS Component of the Scipio ERP Project - used as a simple container for an empty website</description>
+    <display-name>SCIPIO ERP - Preview Website Component</display-name>
+    <description>Preview CMS Component of the Scipio ERP Project - used as a simple container for an empty website</description>
 
     <context-param>
         <param-name>webSiteId</param-name>
@@ -84,11 +84,25 @@
         <param-value></param-value>
     </context-param>
     <context-param><!-- 2016: new -->
-        <description>Whether to allow CMS preview mode on this webapp (default: false). Preview mode is identify
-            by the request parameter "cmsPreviewMode".
-            NOTE: On production webapps, this must be left out or set to false!</description>
+        <description>Whether to allow CMS preview mode on this webapp (default: false). 
+            Preview mode is identified by the request parameter "cmsPreviewMode", which
+            (as of 2018-05-06) holds a generated access token.
+            NOTE: On production webapps that require tight security, this should be set to false.</description>
         <param-name>cmsAllowPreviewMode</param-name>
         <param-value>true</param-value>
+    </context-param>
+    <context-param><!-- 2018: new -->
+        <description>Whether the live/preview links to this webapp should use externalLoginKey (default: false). 
+            In other words, whether it should be accessed using the CMS UI user login or not.
+            This should usually only be true if this is a backend webapp or a dedicated preview webapp.</description>
+        <param-name>cmsUseLinkExtLoginKey</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param><!-- 2018: new -->
+        <description>If true, live links (in addition to preview links) require an access token (default: false).
+            This is mainly for implementing preview webapps.</description>
+        <param-name>cmsRequireLiveAccessToken</param-name>
+        <param-value>false</param-value>
     </context-param>
     <context-param><!-- 2016: new -->
         <description>Boolean (true/false) value used to control whether primary paths for this webapp

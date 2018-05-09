@@ -40,7 +40,7 @@ if (!localVarsOnly) {
     if (!productCategoryId) {
         productCategoryId = request.getAttribute("productCategoryId") ?: parameters.category_id;
     }
-    if (updateRequestVars) {
+    if (productCategoryId && updateRequestVars) {
         // SCIPIO: If we're allowed to update request vars, do this call which will ensure
         // the session trail and request attributes are set in the case that it was not already done previously in request.
         // In stock Ofbiz, this was only done in special filter requests, but this leaves other requests barren.
@@ -72,7 +72,7 @@ if (productCategoryId) {
 }
  */
 
-category = delegator.findOne("ProductCategory", [productCategoryId : productCategoryId], true);
+category = (productCategoryId) ? delegator.findOne("ProductCategory", [productCategoryId : productCategoryId], true) : null;
 if (category) {
     if (category.detailScreen) {
         detailScreen = category.detailScreen;

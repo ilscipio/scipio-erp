@@ -2163,6 +2163,20 @@ under the License.
         <antcall target="download-jdbc-common"/>
     </target>
 
+    <target name="download-util-all" description="Utility target to download all utilities (except JDBC)">
+        <antcall target="download-activemq"/>
+        <antcall target="download-cobertura"/>
+        <antcall target="download-sonar-ant-task"/>
+    </target>
+
+    <target name="download-jdbc-all" description="Utility target to download all JDBC drivers, for testing purposes">
+        <antcall target="download-jdbc-derby"/>
+        <antcall target="download-jdbc-firebird"/>
+        <antcall target="download-jdbc-hsqldb"/>
+        <antcall target="download-jdbc-mysql"/>
+        <antcall target="download-jdbc-postgresql"/>
+    </target>
+
     <!-- ================================================================== -->
     <!-- Create New Component. This target will create basic directory structure for an OFBiz component in hot-deploy directory. -->
     <!-- ================================================================== -->

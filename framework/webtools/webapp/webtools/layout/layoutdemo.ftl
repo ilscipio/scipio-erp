@@ -2033,6 +2033,8 @@
       </style>
       <div id="demo-css-escaping-container">
       </div>
+      <div style="width: 200px; height: 200px; background-image: url('${escapeFullUrl(makeOfbizContentUrl("/images/scipio/scipio-logo-small.png?test1=value1&test2=value2;somethingelse%34"), "css-html")}');">
+      </div>
     </@section>
   </@section>
   <@section title="Screen html auto-escaping bypass (rawString)">

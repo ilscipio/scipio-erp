@@ -50,7 +50,14 @@ under the License.
                 <then>
                     <script lang="groovy"><![CDATA[
                         import org.ofbiz.base.util.*;
-                        Debug.logInfo("Running layout demo in debug mode", "LayoutDemoActions.groovy");
+                        
+                        Debug.logInfo("\n\n"
+                            + "******************************************************\n"
+                            + "Running layout demo in Debug mode\n"
+                            + "******************************************************\n"
+                            + "Note: This screen intentionally causes some log warnings and errors for testing purposes.\n"
+                            + "See component://webtools/widget/MiscScreens.xml#WebtoolsLayoutDemo and related resources for details.\n"
+                            , "LayoutDemoActions.groovy");
                         
                         Debug.logInfo("Testing GeneralException messages...", "LayoutDemoActions.groovy");
                         try {

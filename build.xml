@@ -2114,6 +2114,7 @@ under the License.
     </target>
 
     <target name="download-activemq" depends="ivy-init" description="Download activemq for DCC (Distributed Cache Clearing">
+        <delete verbose="on"><fileset dir="framework/base/lib" includes="activemq-*.jar"/></delete>
         <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="activemq"/>
         <echo> </echo>
         <echo>======================================================</echo>
@@ -2121,6 +2122,7 @@ under the License.
     </target>
 
     <target name="download-cobertura" depends="ivy-init" description="Download cobertura related files">
+        <delete verbose="on"><fileset dir="framework/base/lib" includes="cobertura-*.jar"/></delete>
         <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="cobertura"/>
     </target>
 
@@ -2128,6 +2130,7 @@ under the License.
     </target>
 
     <target name="download-sonar-ant-task" depends="ivy-init" description="Download sonar related files">
+        <delete verbose="on"><fileset dir="framework/base/lib" includes="sonar-ant-task-*.jar"/></delete>
         <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="sonar-ant-task"/>
     </target>
 
@@ -2143,22 +2146,27 @@ under the License.
     </target>
 
     <target name="download-jdbc-derby" description="Download Derby JDBC driver">
+        <delete verbose="on"><fileset dir="framework/entity/lib/jdbc" includes="derby-*.jar"/></delete>
         <property name="lib.entity.jdbc.conf" value="derby"/>
         <antcall target="download-jdbc-common"/>
     </target>
     <target name="download-jdbc-firebird" description="Download Firebird (Jaybird) JDBC driver">
+        <delete verbose="on"><fileset dir="framework/entity/lib/jdbc" includes="jaybird-*.jar"/></delete>
         <property name="lib.entity.jdbc.conf" value="firebird"/>
         <antcall target="download-jdbc-common"/>
     </target>
     <target name="download-jdbc-hsqldb" description="Download hsqldb JDBC driver">
+        <delete verbose="on"><fileset dir="framework/entity/lib/jdbc" includes="hsqldb-*.jar"/></delete>
         <property name="lib.entity.jdbc.conf" value="hsqldb"/>
         <antcall target="download-jdbc-common"/>
     </target>
     <target name="download-jdbc-mysql" description="Download mySQL JDBC driver">
+        <delete verbose="on"><fileset dir="framework/entity/lib/jdbc" includes="mysql-*.jar"/></delete>
         <property name="lib.entity.jdbc.conf" value="mysql"/>
         <antcall target="download-jdbc-common"/>
     </target>
     <target name="download-jdbc-postgresql" description="Download PostgreSQL JDBC driver">
+        <delete verbose="on"><fileset dir="framework/entity/lib/jdbc" includes="postgresql-*.jar"/></delete>
         <property name="lib.entity.jdbc.conf" value="postgresql"/>
         <antcall target="download-jdbc-common"/>
     </target>

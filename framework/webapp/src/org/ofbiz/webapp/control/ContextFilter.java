@@ -79,7 +79,7 @@ public class ContextFilter implements Filter {
 
     // default charset used to decode requests body data if no encoding is specified in the request
     private String defaultCharacterEncoding;
-    private boolean isMultitenant;
+    private static boolean isMultitenant = EntityUtil.isMultiTenantEnabled(); // SCIPIO: made static
 
     /**
      * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
@@ -110,7 +110,7 @@ public class ContextFilter implements Filter {
         getDispatcher(config.getServletContext());
 
         // check if multi tenant is enabled
-        isMultitenant = EntityUtil.isMultiTenantEnabled();
+        //isMultitenant = EntityUtil.isMultiTenantEnabled(); // SCIPIO: made static
 
         // this will speed up the initial sessionId generation
         new java.security.SecureRandom().nextLong();

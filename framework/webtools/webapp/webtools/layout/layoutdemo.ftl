@@ -2019,6 +2019,22 @@
         }/></li>
       </ul>
   </@section>
+  <@section title="escapeVal escaping">
+    <@section title="css escaping">
+      <style>
+        #demo-css-escaping-container {
+            width: 200px;
+            height: 200px;
+            background-image: url("${escapeFullUrl(makeOfbizContentUrl("/images/scipio/scipio-logo-small.png?test1=value1&test2=value2;somethingelse%34"), "css")}"); 
+        }
+        #demo-css-escaping-container:after {
+            content: "${escapeVal("/images/scipio/scipio-logo-small.png?test1=value1&test2=value2;somethingelse%34", "css")}"
+        }
+      </style>
+      <div id="demo-css-escaping-container">
+      </div>
+    </@section>
+  </@section>
   <@section title="Screen html auto-escaping bypass (rawString)">
       <p><em>The current renderer implementation automatically html-escapes strings as soon as they
         are output or interpolated using $\{} or ?string. The function #rawString prevents this.

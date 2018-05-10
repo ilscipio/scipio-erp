@@ -204,7 +204,7 @@ under the License.
     </target>
 
     <target name="clean-all"
-          description="Clean all DB, Catalina and caches data, logs, and runtime subdirectories and all specific files like .rej, .orig">
+          description="Clean DB (Derby), Catalina and caches data, logs, and runtime subdirectories and all specific files like .rej, .orig (NOTE: does NOT clear external DBs: postgres/mysql/etc.)">
 
         <!-- SCIPIO: hooks -->
         <invokehook target="pre-clean-all" />
@@ -266,7 +266,7 @@ under the License.
         
     </target>
     <target name="clean-data"
-          description="Clean all DB data (Derby) under runtime/data">
+          description="Clean DB (Derby) data under runtime/data (NOTE: does NOT clear external DBs: postgres/mysql/etc.)">
         
         <!-- SCIPIO: hooks -->
         <invokehook target="pre-clean-data" />

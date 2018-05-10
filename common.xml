@@ -570,7 +570,15 @@ under the License.
         </if>
     </target>
     <target name="lib-dep-tree-core" depends="ivy-init,get-lib-resolve-confs">
-        <ivy:dependencytree conf="${lib.resolve.confs}"/>
+        <trycatch><!-- 2018-05-10: needed because ivy 2.4 gives NullPointerException for empty ivy.xml files -->
+            <try>
+                <ivy:dependencytree conf="${lib.resolve.confs}"/>
+            </try>
+            <catch>
+                <echo level="warning" 
+                    message="ERROR: Ivy threw exception while generating dependency tree - known bug in Ivy 2.4 when ivy.xml empty"/>
+            </catch>
+        </trycatch>
     </target>
     
     <target name="lib-dep-report" description="Generate library dependency HTML report">

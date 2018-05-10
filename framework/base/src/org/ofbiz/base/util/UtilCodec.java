@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -43,9 +44,13 @@ public class UtilCodec {
     private static final XmlEncoder xmlEncoder = new XmlEncoder();
     private static final StringEncoder stringEncoder = new StringEncoder();
     /**
-     * SCIPIO: Css encoder (new).
+     * SCIPIO: Css identifier encoder (new).
      */
-    private static final CssEncoder cssEncoder = new CssEncoder();
+    private static final CssIdEncoder cssIdEncoder = new CssIdEncoder();
+    /**
+     * SCIPIO: Css string encoder (new).
+     */
+    private static final CssStringEncoder cssStringEncoder = new CssStringEncoder();
     /**
      * SCIPIO: Raw/none encoder that returns the original string as-is. Useful as workaround.
      */
@@ -64,7 +69,7 @@ public class UtilCodec {
      * SCIPIO: list of available encoder names.
      */
     private static final Set<String> encoderNames = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(new String[] {
-            "raw", "url", "xml", "html", "css", "string"
+            "raw", "url", "xml", "html", "css", "cssstr", "cssid", "string"
     })));
     
     /**
@@ -141,16 +146,26 @@ public class UtilCodec {
     }
 
     /**
-     * SCIPIO: CSS part encoder.
+     * SCIPIO: CSS identifier encoder (aggressive).
      */
-    public static class CssEncoder implements SimpleEncoder {
-        private static final char[] IMMUNE_CSS = {',', '.', '-', '_', ' '}; // safe?: , '%'
+    public static class CssIdEncoder implements SimpleEncoder {
+        private static final char[] IMMUNE_CSS = {'-', '_'};
         private CSSCodec cssCodec = new CSSCodec();
         public String encode(String original) {
-            if (original == null) {
-                return null;
-            }
-            return cssCodec.encode(IMMUNE_CSS, original);
+            return (original != null) ? cssCodec.encode(IMMUNE_CSS, original) : null;
+        }
+    }
+    
+    /**
+     * SCIPIO: CSS string literal encoder, ONLY for values placed between quotes.
+     */
+    public static class CssStringEncoder implements SimpleEncoder {
+        // TODO: REVIEW: there many be many more characters safe to allow... these are mainly URL-related
+        // TODO: REVIEW: should we really skip ampersand here? '&' - if we let it encode, it could prevent some html-related user misuse...
+        private static final char[] IMMUNE_CSS = {',', '.', '-', '_', ' ', '?', ';', ':', '=', '/', '&', '%'};
+        private CSSCodec cssCodec = new CSSCodec();
+        public String encode(String original) {
+            return (original != null) ? cssCodec.encode(IMMUNE_CSS, original) : null;
         }
     }
     
@@ -166,23 +181,23 @@ public class UtilCodec {
     
     // ================== Begin General Functions ==================
 
+    private static final Map<String, SimpleEncoder> encoderMap;
+    static {
+        Map<String, SimpleEncoder> map = new HashMap<>();
+        map.put("raw", rawEncoder); // SCIPIO: Raw/none encoder that returns the original string as-is. Useful as workaround and to simplify code.
+        map.put("url", urlCodec);
+        map.put("xml", xmlEncoder);
+        map.put("html", htmlEncoder);
+        map.put("css", cssStringEncoder);
+        map.put("cssstr", cssStringEncoder);
+        map.put("cssid", cssIdEncoder);
+        map.put("string", stringEncoder);
+        map.put("raw", rawEncoder);
+        encoderMap = map;
+    }
+    
     public static SimpleEncoder getEncoder(String type) {
-        // SCIPIO: Raw/none encoder that returns the original string as-is. Useful as workaround and to simplify code.
-        if ("raw".equals(type)) {
-            return rawEncoder;
-        } else if ("url".equals(type)) {
-            return urlCodec;
-        } else if ("xml".equals(type)) {
-            return xmlEncoder;
-        } else if ("html".equals(type)) {
-            return htmlEncoder;
-        } else if ("css".equals(type)) { // SCIPIO: new
-            return cssEncoder;
-        } else if ("string".equals(type)) {
-            return stringEncoder;
-        } else {
-            return null;
-        }
+        return encoderMap.get(type);
     }
     
     /**
@@ -217,10 +232,26 @@ public class UtilCodec {
     }
     
     /**
-     * SCIPIO: Returns css encoder (quick method).
+     * SCIPIO: Returns css string literator encoder (quick method).
+     * @deprecated ambiguous; use {@link #getCssIdEncoder()} or {@link #getCssStringEncoder()} instead
      */
+    @Deprecated
     public static SimpleEncoder getCssEncoder() {
-        return cssEncoder;
+        return cssStringEncoder;
+    }
+    
+    /**
+     * SCIPIO: Returns css identifier encoder, aggressive (quick method).
+     */
+    public static SimpleEncoder getCssIdEncoder() {
+        return cssIdEncoder;
+    }
+    
+    /**
+     * SCIPIO: Returns css string literator encoder, aggressive (quick method).
+     */
+    public static SimpleEncoder getCssStringEncoder() {
+        return cssStringEncoder;
     }
     
     /**

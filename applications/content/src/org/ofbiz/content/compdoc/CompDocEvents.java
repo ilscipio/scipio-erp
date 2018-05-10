@@ -141,7 +141,7 @@ public class CompDocEvents {
     public static String genCompDocPdf(HttpServletRequest request, HttpServletResponse response) {
         String responseStr = "success";
         //ByteBuffer byteBuffer = null;
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
         GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
         ServletContext servletContext = session.getServletContext();
         LocalDispatcher dispatcher = (LocalDispatcher)request.getAttribute("dispatcher");

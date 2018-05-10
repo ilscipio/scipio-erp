@@ -131,7 +131,7 @@ public class RenderSubContentTransform implements TemplateTransformModel {
             public void renderSubContent() throws IOException {
                 // TemplateHashModel dataRoot = env.getDataModel();
                 // Timestamp fromDate = UtilDateTime.nowTimestamp();
-                ServletContext servletContext = request.getSession().getServletContext();
+                ServletContext servletContext = request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
                 String rootDir = servletContext.getRealPath("/");
                 String webSiteId = WebSiteWorker.getWebSiteId(request);
                 String https = (String) servletContext.getAttribute("https");

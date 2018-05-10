@@ -449,14 +449,14 @@ public class LayoutEvents {
             }
             Map<String, Object> context = UtilMisc.newMap();
             List<Object> errorMessages = null;
-            Locale loc = (Locale) request.getSession().getServletContext().getAttribute("locale");
+            Locale loc = (Locale) request.getServletContext().getAttribute("locale"); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
             if (loc == null) {
                 loc = Locale.getDefault();
             }
             GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
             context.put("userLogin", userLogin);
 
-            String rootDir = request.getSession().getServletContext().getRealPath("/");
+            String rootDir = request.getServletContext().getRealPath("/"); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
             context.put("rootDir", rootDir);
             try {
                 SimpleMapProcessor.runSimpleMapProcessor("component://content/script/org/ofbiz/content/ContentManagementMapProcessors.xml", "contentIn", paramMap, context, errorMessages, loc);
@@ -521,7 +521,7 @@ public class LayoutEvents {
             // String mapKey = (String) paramMap.get("mapKey");
             Map<String, Object> context = UtilMisc.newMap();
             List<Object> errorMessages = null;
-            Locale loc = (Locale) request.getSession().getServletContext().getAttribute("locale");
+            Locale loc = (Locale) request.getServletContext().getAttribute("locale"); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
             if (loc == null) {
                 loc = Locale.getDefault();
             }
@@ -529,7 +529,7 @@ public class LayoutEvents {
             GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
             context.put("userLogin", userLogin);
 
-            String rootDir = request.getSession().getServletContext().getRealPath("/");
+            String rootDir = request.getServletContext().getRealPath("/"); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
             context.put("rootDir", rootDir);
             try {
                 SimpleMapProcessor.runSimpleMapProcessor("component://content/script/org/ofbiz/content/ContentManagementMapProcessors.xml", "contentIn", paramMap, context, errorMessages, loc);

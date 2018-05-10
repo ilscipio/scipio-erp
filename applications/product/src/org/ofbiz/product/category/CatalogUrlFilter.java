@@ -89,7 +89,7 @@ public class CatalogUrlFilter extends ContextFilter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
-        Delegator delegator = (Delegator) httpRequest.getSession().getServletContext().getAttribute("delegator");
+        Delegator delegator = (Delegator) httpRequest.getServletContext().getAttribute("delegator"); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
 
         // SCIPIO: 2017-11-08: factored out
         prepareRequestAlways(httpRequest, httpResponse, delegator);

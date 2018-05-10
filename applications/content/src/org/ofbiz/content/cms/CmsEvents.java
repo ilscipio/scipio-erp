@@ -64,7 +64,7 @@ public class CmsEvents {
     public static String cms(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        ServletContext servletContext = request.getSession().getServletContext();
+        ServletContext servletContext = request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
         HttpSession session = request.getSession();
 
         String webSiteId = (String) session.getAttribute("webSiteId");

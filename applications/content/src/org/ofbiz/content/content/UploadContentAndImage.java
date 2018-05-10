@@ -284,7 +284,7 @@ public class UploadContentAndImage {
                 imgContext.put("imageData", imageBytes);
                 imgContext.put("mapKey", "IMAGE");
                 imgContext.put("dataTemplateTypeId", "NONE");
-                // String rootDir = request.getSession().getServletContext().getRealPath("/");
+                // String rootDir = request.getServletContext().getRealPath("/"); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
                 imgContext.put("rootDir", "rootDir");
                 if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]imgContext " + imgContext, module);
                 Map<String, Object> imgResults = dispatcher.runSync("persistContentAndAssoc", imgContext);

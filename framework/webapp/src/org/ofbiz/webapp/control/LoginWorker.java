@@ -649,7 +649,7 @@ public class LoginWorker {
         request.setAttribute("_LOGIN_PASSED_", "TRUE");
 
         // run the after-login events
-        RequestHandler rh = RequestHandler.getRequestHandler(request.getSession().getServletContext());
+        RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext()); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
         rh.runAfterLoginEvents(request, response);
 
         // make sure the autoUserLogin is set to the same and that the client cookie has the correct userLoginId
@@ -708,7 +708,7 @@ public class LoginWorker {
      */
     public static String logout(HttpServletRequest request, HttpServletResponse response) {
         // run the before-logout events
-        RequestHandler rh = RequestHandler.getRequestHandler(request.getSession().getServletContext());
+        RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext()); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
         rh.runBeforeLogoutEvents(request, response);
 
 

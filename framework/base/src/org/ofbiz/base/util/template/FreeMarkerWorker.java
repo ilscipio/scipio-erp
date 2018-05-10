@@ -761,7 +761,7 @@ public class FreeMarkerWorker {
         if (ctx == null) {
             throw new IllegalArgumentException("Error in getSiteParameters, context/ctx cannot be null");
         }
-        ServletContext servletContext = request.getSession().getServletContext();
+        ServletContext servletContext = request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
         String rootDir = (String)ctx.get("rootDir");
         String webSiteId = (String)ctx.get("webSiteId");
         String https = (String)ctx.get("https");

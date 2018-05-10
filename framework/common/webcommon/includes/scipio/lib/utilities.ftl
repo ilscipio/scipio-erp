@@ -5,7 +5,7 @@
 * A set of standalone utility functions and macros, largely devoid of markup and 
 * independent from templating macros and styles and with minimal dependencies, 
 * part of standard Scipio Freemarker API.
-* Generally CSS-framework-agnostic. 
+* Generally CSS-framework-agnostic.
 * Intended as platform-agnostic (html, fo, etc.) though some individually are only applicable for specific platforms.
 * Automatically included at all times, for all themes, independently of theme markup override files.
 *
@@ -2850,7 +2850,8 @@ Checks if the value was wrapped using {{{#wrapAsRaw(object, "script")}}}.
 ************
 Escapes an individual value or code "part" for a given language, ignoring and crushing delimiters.
 
-WARN: 2016-10-10: {{{css}}} not currently implemented. '''Do not pass''' input of unsafe origin for CSS to this method at this time!
+NOTE: 2018-05-10: {{{css}}} and {{{cssid}}} are now available: 
+    {{{cssid}}} aggressively escapes any identifier, while {{{css}}} is only for escaping string literals between quotes (like "js" and freemarker's ?js).
 
 Essentially this is a wrapper around #rawString and language encoders. It abstracts the encoder selection.
 It first performs a #rawString call to bypass the screen auto-escaping on the value.
@@ -2909,7 +2910,7 @@ NOTE: Validation and allowed code filters are not fully implemented (TODO), but 
   * Parameters *
     value                   = The string or string-like value to escape
                               2016-09-29: This now automatically coerces non-strings to string, for convenience.
-    lang                    = (js|jsdq|json|html|htmlmarkup|url|xml|css|js-html|html-js|htmlmarkup-js|css-html|html-css|raw) The target language for escaping
+    lang                    = (js|jsdq|json|html|htmlmarkup|url|xml|css|cssid|js-html|html-js|htmlmarkup-js|raw) The target language for escaping
                               These are analogous to the Freemarker built-in counterparts of same names, but
                               with implementation details subject to change.
                               In composed types, the order is meaningful, such that "js-html" performs like {{{?js?html}}}
@@ -2923,8 +2924,8 @@ NOTE: Validation and allowed code filters are not fully implemented (TODO), but 
                                 NOTE: by default this can safely escapes any html, even for attributes; 
                                     but the caller overrides (#wrapAsRaw) can make the value unsafe for insertion in attributes, so
                                     the distinction is important.
-                              WARN: 2016-10-10: {{{css}}} not currently implemented. '''Do not pass''' input of unsafe origin for CSS to this method at this time!
-                              NOTE: The previous language name "style" has been deprecated and will be removed. Use {{{css}}} instead, even if not implemented.
+                              * {{{css}}}: escapes a CSS string, ONLY for placing between quotes
+                              * {{{cssid}}}: escapes any CSS identifier, aggressively
     opts                    = ((map)) Additional options, including language-specific options
                               Members:
                               * {{{strict}}} {{{((boolean), default: false)}}} Whether to escape strictly or allow handling of pre-escaped characters
@@ -2955,12 +2956,10 @@ NOTE: Validation and allowed code filters are not fully implemented (TODO), but 
     #escapeFullUrl
     
   * History *
+    Modified for 1.14.4 (added {{{css}}}, {{{cssid}}}, removed the old {{{style}}} synonym)
     Added for 1.14.2, previously known as {{{escapePart}}}.
 -->
 <#function escapeVal value lang opts={}>
-  <#if lang?contains("style")><#-- DEPRECATED: TODO: remove (slow) -->
-    <#local lang = lang?replace("style", "css")>
-  </#if>
   <#local resolved = Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].resolveScriptForLang(value, lang)!false>
   <#if resolved?is_boolean>
     <#local value = rawString(value)><#-- performs coercion to string if needed -->
@@ -3020,19 +3019,22 @@ NOTE: Validation and allowed code filters are not fully implemented (TODO), but 
       <#return value?url("UTF-8")><#-- FIXME: lang should not be hardcoded, ofbiz config issue -->
       <#break>
     <#case "css">
-      <#-- FIXME: too aggressive
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("css", value))> -->
-      <#return value>
+      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("cssstr", value))>
       <#break>
     <#case "css-html">
-      <#-- FIXME: too aggressive
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("css", value))?html>-->
-      <#return value?html>
+      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("cssstr", value))?html>
       <#break>
     <#case "html-css">
-      <#-- FIXME: too aggressive
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("css", value?html))>-->
-      <#return value?html>
+      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("cssstr", value?html))>
+      <#break>
+    <#case "cssid">
+      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("cssid", value))>
+      <#break>
+    <#case "cssid-html">
+      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("cssid", value))?html>
+      <#break>
+    <#case "html-cssid">
+      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("cssid", value?html))>
       <#break>
     <#case "raw">
     <#default>
@@ -3090,9 +3092,6 @@ DEPRECATED: This was never properly defined or implemented and no longer meaning
     #escapeFullUrl
 -->
 <#function escapeFull value lang opts={}>
-  <#if lang?contains("style")><#-- DEPRECATED: TODO: remove (slow) -->
-    <#local lang = lang?replace("style", "css")>
-  </#if>
   <#local resolved = Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].resolveScriptForLang(value, lang)!false>
   <#if resolved?is_boolean>
     <#local value = rawString(value)><#-- performs coercion to string if needed -->
@@ -3114,7 +3113,7 @@ DEPRECATED: This was never properly defined or implemented and no longer meaning
 ************
 Escapes a complete URL for safe insertion in code of a given language.
 
-WARN: 2016-10-10: {{{css}}} not currently implemented. '''Do not pass''' input of unsafe origin for CSS to this method at this time!
+NOTE: 2018-05-10: {{{css}}} is now available; see #escapeVal for details. It must only be used for values between quotes.
 
 Essentially this is a wrapper around #rawString and language encoders. It abstracts the encoder selection.
 It first performs a #rawString call to bypass the screen auto-escaping on the value.
@@ -3151,8 +3150,6 @@ For more information about escaping in general, see >>>standard/htmlTemplate.ftl
                               * {{{jsdq}}}: special case of js where it is assumed the value
                                 will be contained in double quotes, such that single quotes
                                 don't need to be escaped.
-                              WARN: 2016-10-10: {{{css}}} not currently implemented. '''Do not pass''' input of unsafe origin for CSS to this method at this time!
-                              NOTE: The previous language name "style" has been deprecated and will be removed. Use {{{css}}} instead, even if not implemented.
                               WARN: Inserting URLs into CSS (using {{{url()}}}) is known to be unsafe even with escaping.
     opts                    = ((map)) Additional options, including lang-specific options
                               Members:
@@ -3168,9 +3165,6 @@ For more information about escaping in general, see >>>standard/htmlTemplate.ftl
                                     or to this function or equivalent.
 -->
 <#function escapeFullUrl value lang opts={}>
-  <#if lang?contains("style")><#-- DEPRECATED: TODO: remove (slow) -->
-    <#local lang = lang?replace("style", "css")>
-  </#if>
   <#local resolved = Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].resolveScriptForLang(value, lang)!false>
   <#if resolved?is_boolean>
     <#local value = rawString(value)><#-- performs coercion to string if needed -->
@@ -3214,19 +3208,13 @@ For more information about escaping in general, see >>>standard/htmlTemplate.ftl
       <#return value?xml>
       <#break>
     <#case "css">
-      <#-- FIXME: too aggressive
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("css", value))> -->
-      <#return value>
+      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("cssstr", value))>
       <#break>
     <#case "css-html">
-      <#-- FIXME: too aggressive
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("css", value))?html>-->
-      <#return value?html>
+      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("cssstr", value))?html>
       <#break>
     <#case "html-css">
-      <#-- FIXME: too aggressive
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("css", value?html))>-->
-      <#return value?html>
+      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("cssstr", value?html))>
       <#break>
     <#case "raw">
     <#default>
@@ -3252,7 +3240,7 @@ NOTE: For event messages, please use #escapeEventMsg instead for specific suppor
   * Parameters *
     value                   = The string or string-like value to escape
                               See #escapeVal for details.
-    lang                    = (js|jsdq|json|html|htmlmarkup|url|xml|css|js-html|html-js|htmlmarkup-js|css-html|html-css|raw) The target language for escaping
+    lang                    = (js|jsdq|json|html|htmlmarkup|url|xml|css|js-html|html-js|htmlmarkup-js|raw) The target language for escaping
                               See #escapeVal for details.
     opts                    = ((map)) Additional options, including language-specific options
                               * {{{interpret}}} {{{((boolean), default: true)}}}: if true (default), translates line-breaks
@@ -3291,7 +3279,7 @@ improved for Scipio.
   * Parameters *
     value                   = The string or string-like value to escape
                               See #escapeVal for details.
-    lang                    = (js|jsdq|json|html|htmlmarkup|url|xml|css|js-html|html-js|htmlmarkup-js|css-html|html-css|raw) The target language for escaping
+    lang                    = (js|jsdq|json|html|htmlmarkup|url|xml|css|js-html|html-js|htmlmarkup-js|raw) The target language for escaping
                               See #escapeVal for details.
     opts                    = ((map)) Additional options, including language-specific options
                               * {{{interpret}}} {{{((boolean), default: true)}}}: if true (default), translates line-breaks

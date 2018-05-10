@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponseWrapper;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.webapp.control.ContextFilter;
 import org.ofbiz.webapp.control.RequestHandler;
 
 import com.ilscipio.scipio.ce.util.PathUtil;
@@ -147,6 +148,9 @@ public class CmsProcessFilter implements Filter {
             }
         }
  
+        // We are supposed to set character encoding before reading any request parameters.
+        ContextFilter.setCharacterEncoding(request);
+
         CmsProcessMapping mapping = null;
         
         // NOTE: 2016: currently no need to strip the preview path from this path; done in the findByRequest lookup

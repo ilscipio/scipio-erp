@@ -57,7 +57,7 @@ public class RomeEventHandler implements EventHandler {
      * @see org.ofbiz.webapp.event.EventHandler#invoke(ConfigXMLReader.Event, ConfigXMLReader.RequestMap, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
     public String invoke(Event event, RequestMap requestMap, HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
-        RequestHandler handler = (RequestHandler) request.getSession().getServletContext().getAttribute("_REQUEST_HANDLER_");
+        RequestHandler handler = (RequestHandler) request.getServletContext().getAttribute("_REQUEST_HANDLER_"); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
         if (handler == null) {
             throw new EventHandlerException("No request handler found in servlet context!");
         }

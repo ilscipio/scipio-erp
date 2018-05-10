@@ -57,7 +57,7 @@ public class ContentUrlFilter extends ContextFilter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)  throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
-        Delegator delegator = (Delegator) httpRequest.getSession().getServletContext().getAttribute("delegator");
+        Delegator delegator = (Delegator) httpRequest.getServletContext().getAttribute("delegator"); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
         
         //Get ServletContext
         ServletContext servletContext = config.getServletContext();
@@ -165,7 +165,7 @@ public class ContentUrlFilter extends ContextFilter {
             return null;
         }
         StringBuilder urlBuilder = new StringBuilder();
-        urlBuilder.append(request.getSession().getServletContext().getContextPath());
+        urlBuilder.append(request.getServletContext().getContextPath()); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
         if (urlBuilder.length() == 0 || urlBuilder.charAt(urlBuilder.length() - 1) != '/') {
             urlBuilder.append("/");
         }

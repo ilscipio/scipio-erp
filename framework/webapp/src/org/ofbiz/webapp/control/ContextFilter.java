@@ -77,13 +77,17 @@ public class ContextFilter implements Filter {
     protected Set<String> allowedPaths = null; // SCIPIO: new: prevent parsing at every request
     protected boolean forwardRootControllerUris = false; // SCIPIO: new
 
+    // default charset used to decode requests body data if no encoding is specified in the request
+    private String defaultCharacterEncoding;
+    private static boolean isMultitenant = EntityUtil.isMultiTenantEnabled(); // SCIPIO: made static
+
     /**
      * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
      */
     public void init(FilterConfig config) throws ServletException {
         this.config = config;
 
-        // puts all init-parameters in ServletContext attributes for easier parameterization without code changes
+        // puts all init-parameters in ServletContext attributes for easier parametrization without code changes
         this.putAllInitParametersInAttributes();
 
         // set debug
@@ -92,6 +96,10 @@ public class ContextFilter implements Filter {
             debug = Debug.verboseOn();
         }
 
+        defaultCharacterEncoding = config.getServletContext().getInitParameter("charset");
+        if (UtilValidate.isEmpty(defaultCharacterEncoding)) {
+            defaultCharacterEncoding = "UTF-8";
+        }
         // check the serverId
         getServerId();
         // initialize the delegator
@@ -100,6 +108,9 @@ public class ContextFilter implements Filter {
         getSecurity();
         // initialize the services dispatcher
         getDispatcher(config.getServletContext());
+
+        // check if multi tenant is enabled
+        //isMultitenant = EntityUtil.isMultiTenantEnabled(); // SCIPIO: made static
 
         // this will speed up the initial sessionId generation
         new java.security.SecureRandom().nextLong();
@@ -301,15 +312,20 @@ public class ContextFilter implements Filter {
             }
         }
 
-        // check if multi tenant is enabled
-        boolean useMultitenant = EntityUtil.isMultiTenantEnabled();
-        setCharacterEncoding(request);
+        if (request.getCharacterEncoding() == null) {
+            request.setCharacterEncoding(defaultCharacterEncoding);
+        }
+
         setAttributesFromRequestBody(request);
-        if (useMultitenant) {
+
+        request.setAttribute("delegator", config.getServletContext().getAttribute("delegator"));
+        request.setAttribute("dispatcher", config.getServletContext().getAttribute("dispatcher"));
+        request.setAttribute("security", config.getServletContext().getAttribute("security"));
+
+        if (isMultitenant) {
             // get tenant delegator by domain name
             String serverName = httpRequest.getServerName();
             try {
-                
                 // if tenant was specified, replace delegator with the new per-tenant delegator and set tenantId to session attribute
                 Delegator delegator = getDelegator(config.getServletContext());
 
@@ -325,11 +341,11 @@ public class ContextFilter implements Filter {
                     tenantId = (String) httpRequest.getAttribute("userTenantId");
                 }
                 if(UtilValidate.isEmpty(tenantId)) {
-                    tenantId = (String) httpRequest.getParameter("userTenantId");
+                    tenantId = httpRequest.getParameter("userTenantId");
                 }
                 if (UtilValidate.isNotEmpty(tenantId)) {
                     // if the request path is a root mount then redirect to the initial path
-                    if (UtilValidate.isNotEmpty(requestPath) && requestPath.equals(contextUri)) {
+                    if ("".equals(httpRequest.getContextPath()) && "".equals(httpRequest.getServletPath())) {
                         GenericValue tenant = EntityQuery.use(baseDelegator).from("Tenant").where("tenantId", tenantId).queryOne();
                         String initialPath = tenant.getString("initialPath");
                         if (UtilValidate.isNotEmpty(initialPath) && !"/".equals(initialPath)) {
@@ -356,6 +372,7 @@ public class ContextFilter implements Filter {
                     LocalDispatcher dispatcher = getDispatcher(config.getServletContext());
 
                     // set web context objects
+                    request.setAttribute("delegator", delegator);
                     request.setAttribute("dispatcher", dispatcher);
                     request.setAttribute("security", security);
                     
@@ -395,13 +412,22 @@ public class ContextFilter implements Filter {
     }
 
     public static void setCharacterEncoding(ServletRequest request) throws UnsupportedEncodingException {
-        String charset = request.getServletContext().getInitParameter("charset");
-        if (UtilValidate.isEmpty(charset)) charset = request.getCharacterEncoding();
-        if (UtilValidate.isEmpty(charset)) charset = "UTF-8";
-        if (Debug.verboseOn()) Debug.logVerbose("The character encoding of the request is: [" + request.getCharacterEncoding() + "]. The character encoding we will use for the request is: [" + charset + "]", module);
-
-        if (!"none".equals(charset)) {
-            request.setCharacterEncoding(charset);
+        // SCIPIO: 2018-05-10: this is the old implementation - it did not check if charset was already set
+        // updating this to the new behavior above instead
+//        String charset = request.getServletContext().getInitParameter("charset");
+//        if (UtilValidate.isEmpty(charset)) charset = request.getCharacterEncoding();
+//        if (UtilValidate.isEmpty(charset)) charset = "UTF-8";
+//        if (Debug.verboseOn()) Debug.logVerbose("The character encoding of the request is: [" + request.getCharacterEncoding() + "]. The character encoding we will use for the request is: [" + charset + "]", module);
+//
+//        if (!"none".equals(charset)) {
+//            request.setCharacterEncoding(charset);
+//        }
+        if (request.getCharacterEncoding() == null) {
+            String defaultCharacterEncoding = request.getServletContext().getInitParameter("charset");
+            if (UtilValidate.isEmpty(defaultCharacterEncoding)) {
+                defaultCharacterEncoding = "UTF-8";
+            }
+            request.setCharacterEncoding(defaultCharacterEncoding);
         }
     }
 

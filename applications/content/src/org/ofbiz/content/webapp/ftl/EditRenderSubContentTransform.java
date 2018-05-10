@@ -184,7 +184,7 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
                 if (editTemplate != null && editTemplate.equalsIgnoreCase("true")) {
                     if (UtilValidate.isNotEmpty(wrapTemplateId)) {
                         templateContext.put("wrappedFTL", wrappedFTL);
-                        //ServletContext servletContext = (ServletContext)request.getSession().getServletContext();
+                        //ServletContext servletContext = (ServletContext)request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
                         //String rootDir = servletContext.getRealPath("/");
                         templateContext.put("webSiteId", webSiteId);
                         templateContext.put("https", https);

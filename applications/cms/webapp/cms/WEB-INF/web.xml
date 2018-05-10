@@ -3,9 +3,10 @@
     <display-name>SCIPIO ERP - CMS Component</display-name>
     <description>CMS Component of the Scipio ERP Project</description>
 
-    <!-- NOTE: currently this webapp (along with some others like ordermgr) 
-         _cannot_ have a webSiteId (usually defined as a context-param here).
-         It would interfere with existing editor screens. -->
+    <!-- NOTE: This webapp (along with some other backend webapps such as ordermgr) 
+         _cannot_ have a webSiteId (usually defined as a context-param here)
+         because it would interfere with existing editor screens. This also means it 
+         and similar webapps cannot support CmsProcessFilter or CMS functions. -->
 
     <context-param>
         <param-name>localDispatcherName</param-name>
@@ -40,32 +41,6 @@
         </description>
     </context-param>
 
-    <!-- SCIPIO: CMS parameters (see website webapp web.xml for descriptions) -->
-    <!-- REMOVED because this backend app does not have (can't have?) a dedicated webSiteId
-    <context-param>
-        <param-name>cmsSetResponseBrowserNoCacheCmsPage</param-name>
-        <param-value>true</param-value>
-    </context-param>
-    <context-param>
-        <param-name>cmsSetResponseBrowserNoCacheScreen</param-name>
-        <param-value>false</param-value>
-    </context-param>
-    <context-param>
-        <param-name>cmsSetResponseBrowserNoCache</param-name>
-        <param-value>false</param-value>
-    </context-param>
-    <context-param>
-        <param-name>cmsPreviewPath</param-name>
-        <param-value>/preview</param-value>
-    </context-param>-->
-
-    <!-- SCIPIO: CMS Process filter -->
-    <!-- REMOVED because this backend app does not have (can't have?) a dedicated webSiteId
-    <filter>
-        <display-name>CmsProcessFilter</display-name>
-        <filter-name>CmsProcessFilter</filter-name>
-        <filter-class>com.ilscipio.scipio.cms.control.CmsProcessFilter</filter-class>         
-    </filter>-->
     <filter>
         <filter-name>ContextFilter</filter-name>
         <display-name>ContextFilter</display-name>
@@ -89,20 +64,9 @@
         </init-param>
     </filter>
     
-    <!-- SCIPIO: CMS Process filter mapping -->
-    <!-- REMOVED because this backend app does not have (can't have?) a dedicated webSiteId
-    <filter-mapping>
-        <filter-name>CmsProcessFilter</filter-name>
-        <url-pattern>/*</url-pattern>   
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>FORWARD</dispatcher>
-    </filter-mapping>-->
     <filter-mapping>
         <filter-name>ContextFilter</filter-name>
         <url-pattern>/*</url-pattern>
-        <!-- SCIPIO: Need dispatchers -->
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>FORWARD</dispatcher>
     </filter-mapping>
 
     <listener>

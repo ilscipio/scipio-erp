@@ -79,12 +79,12 @@ public class UrlServletHelper extends ContextFilter {
         }
 
         // set the web context in the request for future use
-        request.setAttribute("servletContext", httpRequest.getSession().getServletContext());
+        request.setAttribute("servletContext", httpRequest.getServletContext()); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
         request.setAttribute("delegator", delegator);
 
         // set the webSiteId in the session
         if (UtilValidate.isEmpty(httpRequest.getSession().getAttribute("webSiteId"))){
-            httpRequest.getSession().setAttribute("webSiteId", httpRequest.getSession().getServletContext().getAttribute("webSiteId"));
+            httpRequest.getSession().setAttribute("webSiteId", httpRequest.getServletContext().getAttribute("webSiteId")); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
         }
     }
     

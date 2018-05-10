@@ -204,7 +204,7 @@ under the License.
     </target>
 
     <target name="clean-all"
-          description="Clean all DB, Catalina and caches data, logs, and runtime subdirectories and all specific files like .rej, .orig">
+          description="Clean DB (Derby), Catalina and caches data, logs, and runtime subdirectories and all specific files like .rej, .orig (NOTE: does NOT clear external DBs: postgres/mysql/etc.)">
 
         <!-- SCIPIO: hooks -->
         <invokehook target="pre-clean-all" />
@@ -266,7 +266,7 @@ under the License.
         
     </target>
     <target name="clean-data"
-          description="Clean all DB data (Derby) under runtime/data">
+          description="Clean DB (Derby) data under runtime/data (NOTE: does NOT clear external DBs: postgres/mysql/etc.)">
         
         <!-- SCIPIO: hooks -->
         <invokehook target="pre-clean-data" />
@@ -1803,13 +1803,18 @@ under the License.
         </cobertura-report>
     </target>
 
-    <target name="sonar" depends="download-sonar-ant-task, sonar-init"
+    <target name="sonar" depends="download-sonar-ant-task,sonar-init"
             description="Sonar code analysis. You need a Sonar instance running to use it. More info on http://www.sonarsource.org/">
+        <!-- SCIPIO: now git
         <exec executable="svn" dir="." output="runtime/svninfo_tmp.xml">
             <arg value="info"/>
-            <arg value="--xml"/>
+            <arg value="- -xml"/>
         </exec>
-        <xmlproperty file="runtime/svninfo_tmp.xml"/>
+        <xmlproperty file="runtime/svninfo_tmp.xml"/>-->
+        <exec executable="git" outputproperty="git.info.revision">
+            <arg value="rev-parse"/>
+            <arg value="HEAD"/>
+        </exec>
 
         <property name="sonar.sources" value="specialpurpose/appserver/src, framework/base/src, framework/bi/src,
             framework/catalina/src, framework/common/src, framework/datafile/src, framework/entity/src, framework/entityext/src,
@@ -1827,12 +1832,16 @@ under the License.
             applications/securityext/src/org/ofbiz/securityext/test" />
 
         <!-- list of optional Sonar properties -->
-        <property name="sonar.projectName" value="Apache OFBiz" />
-        <sonar:sonar key="org.apache:ofbiz" version="${info.entry.commit(revision)}" xmlns:sonar="antlib:org.sonar.ant:sonar"/>
+        <property name="sonar.projectName" value="SCIPIO ERP" />
+        <!-- SCIPIO: this was for old sonar-ant-task
+        <sonar:sonar key="org.apache:ofbiz" version="${info.entry.commit(revision)}" xmlns:sonar="antlib:org.sonar.ant:sonar"/>-->
+        <property name="sonar.projectKey" value="com.ilscipio:scipio" />
+        <property name="sonar.projectVersion" value="${git.info.revision}" />
+        <sonar:sonar xmlns:sonar="antlib:org.sonar.ant:sonar"/>
         <property name="sonar.dynamicAnalysis" value="reuseReports" />
         <property name="sonar.cobertura.reportPath" value="runtime/logs/cobertura-report/coverage.xml"/>
-        <property name="sonar.java.source" value="1.7" />
-        <property name="sonar.java.target" value="1.7" />
+        <property name="sonar.java.source" value="1.8" />
+        <property name="sonar.java.target" value="1.8" />
         <!-- default for jdbc url: jdbc:mysql://localhost:3306/sonar?useUnicode=true&amp;characterEncoding=utf8-->
         <property name="sonar.jdbc.url" value="${sonar.jdbc.url}"/>
         <property name="sonar.jdbc.driverClassName" value="com.mysql.jdbc.Driver" />
@@ -2114,6 +2123,7 @@ under the License.
     </target>
 
     <target name="download-activemq" depends="ivy-init" description="Download activemq for DCC (Distributed Cache Clearing">
+        <delete verbose="on"><fileset dir="framework/base/lib" includes="activemq-*.jar"/></delete>
         <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="activemq"/>
         <echo> </echo>
         <echo>======================================================</echo>
@@ -2121,6 +2131,7 @@ under the License.
     </target>
 
     <target name="download-cobertura" depends="ivy-init" description="Download cobertura related files">
+        <delete verbose="on"><fileset dir="framework/base/lib" includes="cobertura-*.jar"/></delete>
         <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="cobertura"/>
     </target>
 
@@ -2128,6 +2139,7 @@ under the License.
     </target>
 
     <target name="download-sonar-ant-task" depends="ivy-init" description="Download sonar related files">
+        <delete verbose="on"><fileset dir="framework/base/lib" includes="sonar-ant-task-*.jar"/></delete>
         <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="sonar-ant-task"/>
     </target>
 
@@ -2143,22 +2155,27 @@ under the License.
     </target>
 
     <target name="download-jdbc-derby" description="Download Derby JDBC driver">
+        <delete verbose="on"><fileset dir="framework/entity/lib/jdbc" includes="derby-*.jar"/></delete>
         <property name="lib.entity.jdbc.conf" value="derby"/>
         <antcall target="download-jdbc-common"/>
     </target>
     <target name="download-jdbc-firebird" description="Download Firebird (Jaybird) JDBC driver">
+        <delete verbose="on"><fileset dir="framework/entity/lib/jdbc" includes="jaybird-*.jar"/></delete>
         <property name="lib.entity.jdbc.conf" value="firebird"/>
         <antcall target="download-jdbc-common"/>
     </target>
     <target name="download-jdbc-hsqldb" description="Download hsqldb JDBC driver">
+        <delete verbose="on"><fileset dir="framework/entity/lib/jdbc" includes="hsqldb-*.jar"/></delete>
         <property name="lib.entity.jdbc.conf" value="hsqldb"/>
         <antcall target="download-jdbc-common"/>
     </target>
     <target name="download-jdbc-mysql" description="Download mySQL JDBC driver">
+        <delete verbose="on"><fileset dir="framework/entity/lib/jdbc" includes="mysql-*.jar"/></delete>
         <property name="lib.entity.jdbc.conf" value="mysql"/>
         <antcall target="download-jdbc-common"/>
     </target>
     <target name="download-jdbc-postgresql" description="Download PostgreSQL JDBC driver">
+        <delete verbose="on"><fileset dir="framework/entity/lib/jdbc" includes="postgresql-*.jar"/></delete>
         <property name="lib.entity.jdbc.conf" value="postgresql"/>
         <antcall target="download-jdbc-common"/>
     </target>

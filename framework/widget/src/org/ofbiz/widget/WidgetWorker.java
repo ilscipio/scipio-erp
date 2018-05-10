@@ -67,7 +67,7 @@ public final class WidgetWorker {
 
         if ("intra-app".equals(targetType)) {
             if (request != null && response != null) {
-                ServletContext servletContext = request.getSession().getServletContext();
+                ServletContext servletContext = request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
                 RequestHandler rh = (RequestHandler) servletContext.getAttribute("_REQUEST_HANDLER_");
                 externalWriter.append(rh.makeLink(request, response, localRequestName, fullPath, secure, encode)); // SCIPIO: doesn't need slash, only makes less clear errors:  "/" + localRequestName
             } else if (prefix != null) {
@@ -116,7 +116,7 @@ public final class WidgetWorker {
                 // SCIPIO: We want to make sure this goes through encodeURL, and we now also want to send this
                 // through makeLinkAuto so it can produce smarter inter-webapp links.
                 // TODO? widgets currently don't support specifying target webSiteId, so absPath always true
-                ServletContext servletContext = request.getSession().getServletContext();
+                ServletContext servletContext = request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
                 RequestHandler rh = (RequestHandler) servletContext.getAttribute("_REQUEST_HANDLER_");
                 externalWriter.append(rh.makeLinkAuto(request, response, tempWriter.toString(), true, true, null, null, fullPath, secure, encode));
             } else {
@@ -513,7 +513,7 @@ public final class WidgetWorker {
         if ("auto".equals(linkType)) {
             if ("intra-app".equals(targetType)) {
                 String requestUri = (target.indexOf('?') > -1) ? target.substring(0, target.indexOf('?')) : target;
-                ServletContext servletContext = request.getSession().getServletContext();
+                ServletContext servletContext = request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
                 RequestHandler rh = (RequestHandler) servletContext.getAttribute("_REQUEST_HANDLER_");
                 ConfigXMLReader.RequestMap requestMap = null;
                 try {

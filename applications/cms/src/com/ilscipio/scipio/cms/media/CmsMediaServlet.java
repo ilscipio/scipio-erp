@@ -276,7 +276,7 @@ public class CmsMediaServlet extends HttpServlet {
                     : dataResource.getString(fnSrcFieldNameFallback);
             
             // see org.ofbiz.content.data.DataEvents#serveImage for reference code
-            ServletContext application = request.getSession().getServletContext();
+            ServletContext application = request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
             Map<String, Object> streamResult = DataResourceWorker.getDataResourceStream(dataResource, "", application.getInitParameter("webSiteId"), locale, application.getRealPath("/"), false);
             byte[] mediaData = (byte[]) streamResult.get("streamBytes");
             InputStream mediaStream = (InputStream) streamResult.get("stream");

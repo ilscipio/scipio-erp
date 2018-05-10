@@ -199,6 +199,7 @@
         <!-- scripting jars -->
         <!--<dependency org="antlr" name="antlr" rev="2.7.6" conf="base,scripting,sources"/> unused in code and version quite old -->
         <dependency org="asm" name="asm" rev="3.2" conf="base,scripting,sources"/><!-- used by cobertura, possibly junit TODO?: update this if updating cobertura -->
+        <dependency org="asm" name="asm-tree" rev="3.2" conf="base,scripting,sources"/><!-- used by cobertura, possibly junit TODO?: update this if updating cobertura -->
         <dependency org="bsf" name="bsf" rev="2.4.0" conf="base,scripting,sources"/><!-- NOTE: 2.x is different API than 3.x; keeping latest 2.x; see ant-apache-bsf deps -->
         <dependency org="org.codehaus.groovy" name="groovy-all" rev="2.4.15" conf="base,scripting,groovy,sources"/>
         <!-- Jakarta ORO is provided in filesystem due to ivy dependency, and excluded below NOTE: Jakarta ORO is a closed project
@@ -366,18 +367,19 @@
         -->
 
         <!-- deps for main build.xml ant task: download-activemq -->
-        <dependency org="org.apache.activemq" name="activemq-all" rev="5.4.2" conf="activemq"/>
+        <dependency org="org.apache.activemq" name="activemq-all" rev="5.15.3" conf="activemq"/>
 
         <!-- deps for main build.xml ant task: download-cobertura -->
         <dependency org="net.sourceforge.cobertura" name="cobertura" rev="1.9.4.1" conf="cobertura">
             <exclude module="log4j"/>
             <exclude module="ant"/>
             <exclude module="asm"/>
+            <exclude module="asm-tree"/>
             <exclude module="oro"/>
         </dependency>
 
         <!-- deps for main build.xml ant task: download-sonar-ant-task -->
-        <dependency org="org.codehaus.sonar-plugins" name="sonar-ant-task" rev="1.3" conf="sonar-ant-task"/>
+        <dependency org="org.codehaus.sonar-plugins" name="sonar-ant-task" rev="2.2" conf="sonar-ant-task"/>
 
         <!--
             CUSTOM/CLIENT DEPENDENCIES

@@ -377,7 +377,7 @@
         </dependency>
 
         <!-- deps for main build.xml ant task: download-sonar-ant-task -->
-        <dependency org="org.codehaus.sonar-plugins" name="sonar-ant-task" rev="1.3" conf="sonar-ant-task"/>
+        <dependency org="org.codehaus.sonar-plugins" name="sonar-ant-task" rev="2.2" conf="sonar-ant-task"/>
 
         <!--
             CUSTOM/CLIENT DEPENDENCIES

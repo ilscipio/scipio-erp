@@ -26,7 +26,6 @@ under the License.
     
     <classpath type="dir" location="config" />
     <classpath location="lib/*" type="jar"/>
-    <classpath type="jar" location="webapp/WEB-INF/lib/*"/>
     <classpath type="jar" location="build/lib/*"/>
     <classpath type="dir" location="src/*" />
     

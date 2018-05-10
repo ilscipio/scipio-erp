@@ -1685,7 +1685,6 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
     <#switch type>
         <#case "bgcover">
             <#local imgStyle>
-                <#-- WARN/FIXME: escapeFullUrl currently doesn't escape style, so this is unsafe! no easy functions for this -->
                 background:url('${escapeFullUrl(src, 'css-html')}') no-repeat center center fixed;        
                 -webkit-background-size: cover;
                 -moz-background-size: cover;

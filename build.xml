@@ -1803,13 +1803,18 @@ under the License.
         </cobertura-report>
     </target>
 
-    <target name="sonar" depends="download-sonar-ant-task, sonar-init"
+    <target name="sonar" depends="download-sonar-ant-task,sonar-init"
             description="Sonar code analysis. You need a Sonar instance running to use it. More info on http://www.sonarsource.org/">
+        <!-- SCIPIO: now git
         <exec executable="svn" dir="." output="runtime/svninfo_tmp.xml">
             <arg value="info"/>
-            <arg value="--xml"/>
+            <arg value="- -xml"/>
         </exec>
-        <xmlproperty file="runtime/svninfo_tmp.xml"/>
+        <xmlproperty file="runtime/svninfo_tmp.xml"/>-->
+        <exec executable="git" outputproperty="git.info.revision">
+            <arg value="rev-parse"/>
+            <arg value="HEAD"/>
+        </exec>
 
         <property name="sonar.sources" value="specialpurpose/appserver/src, framework/base/src, framework/bi/src,
             framework/catalina/src, framework/common/src, framework/datafile/src, framework/entity/src, framework/entityext/src,
@@ -1828,7 +1833,8 @@ under the License.
 
         <!-- list of optional Sonar properties -->
         <property name="sonar.projectName" value="Apache OFBiz" />
-        <sonar:sonar key="org.apache:ofbiz" version="${info.entry.commit(revision)}" xmlns:sonar="antlib:org.sonar.ant:sonar"/>
+        <!--<sonar:sonar key="org.apache:ofbiz" version="${info.entry.commit(revision)}" xmlns:sonar="antlib:org.sonar.ant:sonar"/>-->
+        <sonar:sonar key="org.apache:ofbiz" version="${git.info.revision}" xmlns:sonar="antlib:org.sonar.ant:sonar"/><!-- SCIPIO -->
         <property name="sonar.dynamicAnalysis" value="reuseReports" />
         <property name="sonar.cobertura.reportPath" value="runtime/logs/cobertura-report/coverage.xml"/>
         <property name="sonar.java.source" value="1.7" />

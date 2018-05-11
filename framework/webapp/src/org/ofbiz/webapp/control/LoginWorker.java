@@ -1114,6 +1114,16 @@ public class LoginWorker {
         return "success";
     }
 
+    /**
+     * SCIPIO: Checks the given externalLoginKey to see if it matches one in the registry,
+     * and returns the UserLogin associated with the target key if matches, or null.
+     * <p>
+     * Added 2018-05-11.
+     */
+    public static GenericValue checkExternalLoginKeyUserLogin(String externalLoginKey) {
+        return LoginWorker.externalLoginKeys.get(externalLoginKey);
+    }
+
     public static boolean isFlaggedLoggedOut(GenericValue userLogin, Delegator delegator) {
         if ("true".equalsIgnoreCase(EntityUtilProperties.getPropertyValue("security.properties", "login.disable.global.logout", delegator))) {
             return false;

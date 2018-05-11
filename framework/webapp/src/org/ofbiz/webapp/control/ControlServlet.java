@@ -455,8 +455,10 @@ public class ControlServlet extends HttpServlet {
                     Class<?> cls = Thread.currentThread().getContextClassLoader().loadClass(servletClassName);
                     if (ControlServlet.class.isAssignableFrom(cls)) bestServletDef = servletDef;
                 } catch(Exception e) {
-                    Debug.logWarning("Could not load or test servlet class (" + servletClassName + "); may be invalid or a classloader issue: " 
-                            + e.getMessage(), module);
+                    // NOTE: 2018-05-11: this should not be a warning because this is a regular occurrence
+                    // for webapps which have servlet classes in libs under WEB-INF/lib
+                    //Debug.logWarning("Could not load or test servlet class (" + servletClassName + "); may be invalid or a classloader issue: " 
+                    //        + e.getMessage(), module);
                 }
             }
         }

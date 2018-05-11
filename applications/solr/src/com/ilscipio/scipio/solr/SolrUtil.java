@@ -223,21 +223,25 @@ public abstract class SolrUtil {
     
     public static boolean isSolrWebappPingOk(HttpSolrClient client) throws Exception {
         try {
-            SolrPing solrPing = new SolrPing();
-            SolrPingResponse rsp = solrPing.process(client);
-            int status = rsp.getStatus();
-            if (status == 0) {
-                if (Debug.verboseOn()) Debug.logVerbose("isSolrWebappPingOk: ping response status: " + status, module);
-                return true;
-            } else {
-                Debug.logInfo("Solr: isSolrWebappPingOk: Solr webapp not pingable; status: " + status, module);
-                return false;
-            }
+            return isSolrWebappPingOkRaw(client);
         } catch(Exception e) {
             // FIXME: we are not supposed to catch this, but in current setup with Tomcat
             // solr can't handle the incomplete loading 503 and throws exception, so have no choice
             // but because this is only a Ping, we can usually assume this means not yet loaded...
             Debug.logInfo("Solr: isSolrWebappPingOk: Solr webapp not pingable; exception: " + e.getMessage(), module);
+            return false;
+        }
+    }
+    
+    public static boolean isSolrWebappPingOkRaw(HttpSolrClient client) throws Exception {
+        SolrPing solrPing = new SolrPing();
+        SolrPingResponse rsp = solrPing.process(client);
+        int status = rsp.getStatus();
+        if (status == 0) {
+            if (Debug.verboseOn()) Debug.logVerbose("isSolrWebappPingOk: ping response status: " + status, module);
+            return true;
+        } else {
+            Debug.logInfo("Solr: isSolrWebappPingOk: Solr webapp not pingable; status: " + status, module);
             return false;
         }
     }
@@ -254,6 +258,14 @@ public abstract class SolrUtil {
      */
     public static boolean isSolrWebappReady() throws Exception {
         return isSolrWebappReady(getQueryHttpSolrClient(null));
+    }
+
+    public static boolean isSolrWebappReadyRaw(HttpSolrClient client) throws Exception {
+        return isSolrWebappInitialized() && isSolrWebappPingOkRaw(client);
+    }
+
+    public static boolean isSolrWebappReadyRaw() throws Exception {
+        return isSolrWebappReadyRaw(getQueryHttpSolrClient(null));
     }
 
     public static GenericValue getSolrStatus(Delegator delegator) {

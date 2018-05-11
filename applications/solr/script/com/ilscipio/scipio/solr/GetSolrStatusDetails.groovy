@@ -13,14 +13,15 @@ if (pingWebapp == null) pingWebapp = true;
 
 solrWebappStatus = new LinkedHashMap();
 
-setWebappStatus = { name, label, cb ->
+setWebappStatus = { name, label, cb, defStatus=null ->
     def info = [:];
     info.label = label;
     try {
         info.status = cb();
     } catch(Exception e) {
-        Debug.logError(e, "Solr: Error determining Solr webapp '" + name + "' status: " + e.getMessage(), module);
+        Debug.logError("Solr: Error determining Solr webapp '" + name + "' status: " + e.getMessage(), module);
         info.errMsg = e.getMessage() + " (" + e.getClass().getName() + ")";
+        if (defStatus != null) info.status = defStatus;
     }
     solrWebappStatus[name] = info;
 };
@@ -29,7 +30,7 @@ setWebappStatus("present", "SolrPresent", { SolrUtil.isSolrWebappPresent(); });
 setWebappStatus("enabled", "SolrEnabled", { SolrUtil.isSolrWebappEnabled(); });
 setWebappStatus("initialized", "SolrInitialized", { SolrUtil.isSolrWebappInitialized(); });
 if (pingWebapp) {
-    setWebappStatus("ready", "SolrReady", { SolrUtil.isSolrWebappReady(); });
+    setWebappStatus("ready", "SolrReady", { SolrUtil.isSolrWebappReadyRaw(); }, false);
 }
 
 context.solrWebappStatus = solrWebappStatus;

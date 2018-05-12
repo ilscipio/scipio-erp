@@ -9,11 +9,13 @@ jQuery.ajaxSetup({
       return data;
     }
 
+    if (data) {
     for (i = 0, l = prefixes.length; i < l; i++) {
       pos = data.indexOf(prefixes[i]);
       if (pos === 0) {
         return data.substring(prefixes[i].length);
       }
+    }
     }
 
     return data;

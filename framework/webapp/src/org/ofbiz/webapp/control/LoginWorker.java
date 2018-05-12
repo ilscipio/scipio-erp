@@ -1114,6 +1114,16 @@ public class LoginWorker {
         return "success";
     }
 
+    /**
+     * SCIPIO: Checks the given externalLoginKey to see if it matches one in the registry,
+     * and returns the UserLogin associated with the target key if matches, or null.
+     * <p>
+     * Added 2018-05-11.
+     */
+    public static GenericValue checkExternalLoginKeyUserLogin(String externalLoginKey) {
+        return LoginWorker.externalLoginKeys.get(externalLoginKey);
+    }
+
     public static boolean isFlaggedLoggedOut(GenericValue userLogin, Delegator delegator) {
         if ("true".equalsIgnoreCase(EntityUtilProperties.getPropertyValue("security.properties", "login.disable.global.logout", delegator))) {
             return false;
@@ -1157,19 +1167,30 @@ public class LoginWorker {
         if (security != null) {
             ServletContext context = (ServletContext) request.getAttribute("servletContext");
             String serverId = (String) context.getAttribute("_serverId");
-            // get a context path from the request, if it is empty then assume it is the root mount point
-            String contextPath = request.getContextPath();
-            if (UtilValidate.isEmpty(contextPath)) {
-                contextPath = "/";
-            }
-            ComponentConfig.WebappInfo info = ComponentConfig.getWebAppInfo(serverId, contextPath);
-            if (info != null) {
-                return hasApplicationPermission(info, security, userLogin);
-            } else {
-                Debug.logInfo("No webapp configuration found for : " + serverId + " / " + contextPath, module);
-            }
+            // SCIPIO: delegated to new overload
+            return hasBasePermission(userLogin, request, security, serverId);
         } else {
             Debug.logWarning("Received a null Security object from HttpServletRequest", module);
+        }
+        return true;
+    }
+
+    /**
+     * SCIPIO: hasBasePermission - variant that does not lookup any request attributes.
+     * <p>
+     * Added 2018-05-11.
+     */
+    public static boolean hasBasePermission(GenericValue userLogin, HttpServletRequest request, Security security, String serverId) {
+        // get a context path from the request, if it is empty then assume it is the root mount point
+        String contextPath = request.getContextPath();
+        if (UtilValidate.isEmpty(contextPath)) {
+            contextPath = "/";
+        }
+        ComponentConfig.WebappInfo info = ComponentConfig.getWebAppInfo(serverId, contextPath);
+        if (info != null) {
+            return hasApplicationPermission(info, security, userLogin);
+        } else {
+            Debug.logInfo("No webapp configuration found for : " + serverId + " / " + contextPath, module);
         }
         return true;
     }

@@ -43,6 +43,7 @@ under the License.
         <fileset dir="../../framework/service/build/lib" includes="*.jar"/>
         <fileset dir="../../framework/minilang/build/lib" includes="*.jar"/>
         <fileset dir="../../framework/common/build/lib" includes="*.jar"/>
+        <fileset dir="../../framework/webapp/build/lib" includes="*.jar"/>
         <fileset dir="../../framework/widget/build/lib" includes="*.jar"/><!-- SCIPIO: ofbiz dependency kludge -->
         <fileset dir="../../applications/content/build/lib" includes="*.jar"/>
         <!--<fileset dir="../../applications/party/build/lib" includes="*.jar"/> -->
@@ -50,7 +51,7 @@ under the License.
         <!-- <fileset dir="../../applications/marketing/build/lib" includes="*.jar"/>
         <fileset dir="../../applications/order/build/lib" includes="*.jar"/>
         <fileset dir="../../applications/accounting/build/lib" includes="*.jar"/>-->
-        <fileset dir="webapp/WEB-INF/lib" includes="*.jar"/>
+        <fileset dir="webapp/WEB-INF/lib" includes="solr-core-*.jar"/><!-- for plugins -->
     </path>
     
     <target name="check-uiloginservice">
@@ -79,7 +80,26 @@ under the License.
         <antcall target="clean-uiloginservice"/>
     </target>
     
+    <target name="jar" depends="classes">
+        <main-jar>
+            <main-pattern>
+                <exclude name="com/ilscipio/scipio/solr/plugin/**"/>
+            </main-pattern>
+        </main-jar>
+        <main-jar jarfile="webapp/WEB-INF/lib/scipio-solr-plugins-1.0.0.jar">
+            <main-pattern>
+                <include name="com/ilscipio/scipio/solr/plugin/**"/>
+            </main-pattern>
+        </main-jar>
+    </target>
+    
     <property name="lib.resolve.build.confs" value="solr-webapp"/>
+    
+    <selector id="lib.update.manual.files.solr.webapp">
+        <or>
+            <filename name="scipio-*.jar"/>
+        </or>
+    </selector>
     
     <!-- SCIPIO: Special lib download script for complex base includes -->
     <target name="do-lib-update" description="Downloads all jars (solr component implementation)">

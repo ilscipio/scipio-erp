@@ -1,0 +1,11 @@
+{
+"authentication":{
+   "blockUnknown": true,
+   "class":"com.ilscipio.scipio.solr.plugin.security.ScipioUserLoginAuthPlugin"
+},
+"authorization":{
+   "class":"solr.RuleBasedAuthorizationPlugin",
+   "permissions":[{"name":"security-edit",
+      "role":"admin"}],
+   "user-role":{"solr":"admin"}
+}}

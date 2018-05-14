@@ -94,6 +94,7 @@ under the License.
     </target>
     
     <property name="lib.resolve.build.confs" value="solr-webapp"/>
+    <property name="lib.resolve.src.confs" value="solr-webapp-sources"/>
     
     <selector id="lib.update.manual.files.solr.webapp">
         <or>
@@ -104,11 +105,23 @@ under the License.
     <!-- SCIPIO: Special lib download script for complex base includes -->
     <target name="do-lib-update" description="Downloads all jars (solr component implementation)">
         <ivy:retrieve pattern="webapp/WEB-INF/lib/${lib.update.filename.pattern.ivy}" conf="solr-webapp"/>
+        <if>
+            <equals arg1="${lib.update.sources}" arg2="true"/>
+            <then>
+                <ivy:retrieve pattern="webapp/WEB-INF/libsrc/${lib.update.filename.pattern.src.ivy}" conf="solr-webapp-sources"/>
+            </then>
+        </if>
     </target>
     
     <target name="do-lib-clean" description="Cleans out (removes) all ivy-handled jars">
         <antcall target="common-lib-clean" inheritrefs="true"/>
         <remove-lib-files dir="webapp/WEB-INF/lib" excludes-refid="lib.update.manual.files.solr.webapp"/>
+        <if>
+            <equals arg1="${lib.update.sources}" arg2="true"/>
+            <then>
+                <remove-lib-files dir="webapp/WEB-INF/libsrc" excludes-refid="lib.update.manual.src.files"/>
+            </then>
+        </if>
     </target>
     
     <target name="clean-local-solr-indexes" description="Cleans out any solr data under applications/solr [but not solr data stored outside this folder]">

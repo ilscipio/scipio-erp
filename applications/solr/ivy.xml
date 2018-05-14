@@ -5,6 +5,7 @@
     <info module="solr" organisation="com.ilscipio.scipio.ce"/>
     <configurations defaultconfmapping="%->default">
         <conf name="solr-webapp" description="download solr webapp jars required for build"/>
+        <conf name="solr-webapp-sources" description="download solr webapp source jars"/>
     </configurations>
     <dependencies>
         <!-- NOTICE: 2018-03-19: All applications/*/lib root dir ivy dependencies are now defined in:
@@ -83,7 +84,7 @@
         <dependency org="org.restlet.jee" name="org.restlet" rev="2.3.0" transitive="false" conf="solr-webapp"/>
         <dependency org="org.restlet.jee" name="org.restlet.ext.servlet" rev="2.3.0" transitive="false" conf="solr-webapp"/>
         <dependency org="com.google.protobuf" name="protobuf-java" rev="3.1.0" transitive="false" conf="solr-webapp"/>
-        <dependency org="org.apache.solr" name="solr-core" rev="6.6.3" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.solr" name="solr-core" rev="6.6.3" transitive="false" conf="solr-webapp,solr-webapp-sources"/>
         <dependency org="org.apache.solr" name="solr-solrj" rev="6.6.3" transitive="false" conf="solr-webapp"/>
         <dependency org="org.locationtech.spatial4j" name="spatial4j" rev="0.6" transitive="false" conf="solr-webapp"/>
         <dependency org="org.codehaus.woodstox" name="stax2-api" rev="3.1.4" transitive="false" conf="solr-webapp"/>

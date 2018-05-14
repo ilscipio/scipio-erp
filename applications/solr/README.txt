@@ -66,8 +66,12 @@ Currently (2018-05-08), the /solr webapp is openly accessible in stock Scipio in
 On production systems, it is extremely important not to expose this webapp to the
 public-facing network.
 
+On production environments the /solr webapp should be denied from public access.
+In addition, it is possible to configure basic HTTP authentication so safe
+access from within intranet, using one of the methods below.
 
-2.1 Basic Solr authentication
+
+2.1 Solr Basic HTTP authentication
 
 Basic Solr authentication - independent from the Scipio login system and users - can be configured
 following:
@@ -82,7 +86,7 @@ Example:
 
 The following defines a single basic auth user 'solr' with password 'SolrRocks':
 
-security.json:
+security.json (from security_solrbasicauth_disabled.json):
 
 {
 "authentication":{
@@ -108,12 +112,48 @@ You may, however, want to define separate users for internal query/update connec
 versus /solr webapp UI user access.
 
 
-2.2 Scipio UserLogin-based authentication
+2.2 Scipio UserLogin Basic HTTP authentication
 
-TODO: Not yet implemented (2018-04-30)
+Instead of Solr-only credentials, it is now possible to use Scipio entity UserLogin
+authentication using the ScipioUserLoginAuthPlugin plugin. This gives the same
+prompt as the Solr basic HTTP authentication but using the UserLogin entity
+and providing support for external login keys (auto login from /admin).
 
-(Unfortunately, this suffers from connection/performance problems due to forced HTTPS usage in current design;
-it may be implemented in the near future, but available implementations are inadequate)
+It allows only login to users having OFBTOOLS_* and SOLRADM_* permissions 
+(as defined in ofbiz-component.xml).
+
+In security.json, the "cacheLogins" should be specified and is meant mainly for 
+the one or two query/update accounts specified in solrconfig.properties below.
+It provides an additional cache to session management, and it becomes needed if the 
+Solr HTTP client (Apache HttpClient) has cookies/sessions disabled or is configured 
+with reuseClient=false.
+
+security.json (from security_scipiouserlogin_disabled.json):
+
+{
+"authentication":{
+   "blockUnknown": true,
+   "class":"com.ilscipio.scipio.solr.plugin.security.ScipioUserLoginAuthPlugin",
+   "cacheLogins":{"admin":true},
+   "cachedLoginExpiry":3600000
+},
+"authorization":{
+   "class":"solr.RuleBasedAuthorizationPlugin",
+   "permissions":[{"name":"security-edit",
+      "role":"admin"}],
+   "user-role":{"solr":"admin"}
+}}
+
+
+solrconfig.properties:
+
+solr.query.connect.login.username=admin
+solr.query.connect.login.password=scipio
+solr.update.connect.login.username=admin
+solr.update.connect.login.password=scipio
+
+WARNING: The example above is for example purposes only; using the admin account
+as the solr query/update connection account in the properties above is NOT recommended.
 
 
 -----------------------------------------------------

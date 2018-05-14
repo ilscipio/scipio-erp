@@ -3,7 +3,7 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
     <info module="solr" organisation="com.ilscipio.scipio.ce"/>
-    <configurations defaultconfmapping="%->default">
+    <configurations defaultconfmapping="solr-webapp-sources->sources;%->default">
         <conf name="solr-webapp" description="download solr webapp jars required for build"/>
         <conf name="solr-webapp-sources" description="download solr webapp source jars"/>
     </configurations>

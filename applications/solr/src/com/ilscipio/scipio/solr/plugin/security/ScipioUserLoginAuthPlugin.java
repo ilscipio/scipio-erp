@@ -1,6 +1,7 @@
 package com.ilscipio.scipio.solr.plugin.security;
 
 import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.HashSet;
@@ -33,6 +34,8 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceContainer;
 import org.ofbiz.webapp.control.LoginWorker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * EXPERIMENTAL auth plugin for Solr.
@@ -48,6 +51,7 @@ import org.ofbiz.webapp.control.LoginWorker;
  * * perm checks
  */
 public class ScipioUserLoginAuthPlugin extends BasicAuthPlugin {
+    private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     // WARN: Debug.log must only be used from component-level classloader
     private static final String module = ScipioUserLoginAuthPlugin.class.getName();

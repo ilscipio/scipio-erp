@@ -95,8 +95,8 @@ security.json (from security_solrbasicauth_disabled.json):
    "class":"solr.BasicAuthPlugin",
    "credentials":{"admin":"IV0EHq1OnNrj6gvRCwvFwTrZ1+z1oBbnQdiVC3otuq0= Ndd7LKvVBAaZIF0QAVi1ekCfAJXr1GGfLtRUXhgrF8c=",
       "solradmin":"IV0EHq1OnNrj6gvRCwvFwTrZ1+z1oBbnQdiVC3otuq0= Ndd7LKvVBAaZIF0QAVi1ekCfAJXr1GGfLtRUXhgrF8c=",
-      "solrq":"IV0EHq1OnNrj6gvRCwvFwTrZ1+z1oBbnQdiVC3otuq0= Ndd7LKvVBAaZIF0QAVi1ekCfAJXr1GGfLtRUXhgrF8c=",
-      "solru":"IV0EHq1OnNrj6gvRCwvFwTrZ1+z1oBbnQdiVC3otuq0= Ndd7LKvVBAaZIF0QAVi1ekCfAJXr1GGfLtRUXhgrF8c="}
+      "solrquery":"IV0EHq1OnNrj6gvRCwvFwTrZ1+z1oBbnQdiVC3otuq0= Ndd7LKvVBAaZIF0QAVi1ekCfAJXr1GGfLtRUXhgrF8c=",
+      "solrupdate":"IV0EHq1OnNrj6gvRCwvFwTrZ1+z1oBbnQdiVC3otuq0= Ndd7LKvVBAaZIF0QAVi1ekCfAJXr1GGfLtRUXhgrF8c="}
 },
 "authorization":{
    "class":"solr.RuleBasedAuthorizationPlugin",
@@ -110,14 +110,14 @@ security.json (from security_solrbasicauth_disabled.json):
       {"name":"update","role":["update","admin"]},
       {"name":"security-edit","role":"admin"},
       {"name":"all","role":"admin"}],
-   "user-role":{"solradmin":"admin","admin":"admin","solru":"update","solrq":"query"}
+   "user-role":{"solradmin":"admin","admin":"admin","solrupdate":"update","solrquery":"query"}
 }}
 
 solrconfig.properties:
 
-solr.query.connect.login.username=solrq
+solr.query.connect.login.username=solrquery
 solr.query.connect.login.password=SolrRocks
-solr.update.connect.login.username=solru
+solr.update.connect.login.username=solrupdate
 solr.update.connect.login.password=SolrRocks
 
 You may, however, want to define separate users for internal query/update connections 
@@ -131,14 +131,31 @@ authentication using the ScipioUserLoginAuthPlugin plugin. This gives the same
 prompt as the Solr basic HTTP authentication but using the UserLogin entity
 and providing support for external login keys (auto login from /admin).
 
-It allows only login to users having OFBTOOLS_* and SOLRADM_* permissions 
+It allows only login to users having and SOLRADM_* permissions 
 (as defined in ofbiz-component.xml).
 
-In security.json, the "cacheLogins" should be specified and is meant mainly for 
-the one or two query/update accounts specified in solrconfig.properties below.
-It provides an additional cache to session management, and it becomes needed if the 
-Solr HTTP client (Apache HttpClient) has cookies/sessions disabled or is configured 
-with reuseClient=false.
+NOTE: The example below requires the permission/security Solr Demo data files under data/*.xml
+to be seeded. If you are on a production system with ext data only, you may need to copy over
+these accounts to your seed files. You should also change the stock passwords.
+
+security.json "authentication" block definitions:
+* cacheLogins: Should be specified for and is meant mainly for 
+  the one or two query/update accounts specified in solrconfig.properties.
+  It provides an additional cache to session management, and it becomes needed if the 
+  Solr HTTP client (Apache HttpClient) has cookies/sessions disabled or is configured 
+  with reuseClient=false.
+* cachedLoginExpiry: Max time for cacheLogins to remain cached globally
+
+security.json "authorization" block definitions:
+* scipioPermSolrRoles: This is an INITIALIZATION-TIME-ONLY mapping of 
+  Scipio SecurityPermission permissionIds to Solr roles. In other words,
+  at load time, it will find all users having the specified permissions
+  and create "user-role" entries for them. It only supports the default delegator.
+  NOTE: If you create new Solr permissions in Scipio, you must restart
+  the server for them to take effect! This is a limitation that may be addressed
+  in the future.
+  NOTE: You can use both scipioPermSolrRoles and "user-role" entries at the same
+  time; the resulting lists of roles for each username are merged together.
 
 security.json (from security_scipiouserlogin_disabled.json):
 
@@ -150,22 +167,30 @@ security.json (from security_scipiouserlogin_disabled.json):
    "cachedLoginExpiry":3600000
 },
 "authorization":{
-   "class":"solr.RuleBasedAuthorizationPlugin",
-   "permissions":[{"name":"security-edit",
-      "role":"admin"}],
-   "user-role":{"solr":"admin"}
+   "class":"com.ilscipio.scipio.solr.plugin.security.ScipioRuleBasedAuthorizationPlugin",
+   "permissions":[{"name":"read","role":"*"},
+      {"name":"schema-read","role":"*"},
+      {"name":"config-read","role":"*"},
+      {"name":"collection-admin-read","role":"*"},
+      {"name":"metrics-read","role":"*"},
+      {"name":"core-admin-read","role":"*"},
+      {"path":"/admin/ping","collection":null,"role":"*"},
+      {"name":"update","role":["update","admin"]},
+      {"name":"security-edit","role":"admin"},
+      {"name":"all","role":"admin"}],
+   "scipioPermSolrRoles":{"SOLRADM_ADMIN":"admin", "SOLRADM_UPDATE":"update", "SOLRADM_VIEW":"query"}
 }}
 
 
 solrconfig.properties:
 
-solr.query.connect.login.username=admin
+solr.query.connect.login.username=solrquery
 solr.query.connect.login.password=scipio
-solr.update.connect.login.username=admin
+solr.update.connect.login.username=solrupdate
 solr.update.connect.login.password=scipio
 
-WARNING: The example above is for example purposes only; using the admin account
-as the solr query/update connection account in the properties above is NOT recommended.
+WARNING: The example above is for example purposes only; passwords should be changed
+and security settings may not fit all projects.
 
 
 -----------------------------------------------------

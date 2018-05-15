@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
+    <!-- SCIPIO: Unlike other applications, these are not appropriate for Solr
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="SOLRADM_ADMIN"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SOLRADM_CREATE"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SOLRADM_DELETE"/>
@@ -7,4 +8,5 @@
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SOLRADM_VIEW"/>
     <SecurityGroupPermission groupId="VIEWADMIN" permissionId="SOLRADM_VIEW"/>
     <SecurityGroupPermission groupId="BIZADMIN" permissionId="SOLRADM_ADMIN"/>
+    -->
 </entity-engine-xml>

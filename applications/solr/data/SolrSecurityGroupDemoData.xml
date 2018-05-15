@@ -9,4 +9,16 @@
     <SecurityGroupPermission groupId="VIEWADMIN" permissionId="SOLRADM_VIEW"/>
     <SecurityGroupPermission groupId="BIZADMIN" permissionId="SOLRADM_ADMIN"/>
     -->
+    
+    <SecurityGroup groupId="SOLRADM_ADMIN" description="Solr full admin user group"/>
+    <SecurityGroup groupId="SOLRADM_UPDATE" description="Solr user group for Solr update/indexing operations"/>
+    <SecurityGroup groupId="SOLRADM_QUERY" description="Solr user group for Solr queries (read-only)"/>
+        
+    <SecurityGroupPermission groupId="SOLRADM_ADMIN" permissionId="SOLRADM_ADMIN"/>
+    <SecurityGroupPermission groupId="SOLRADM_UPDATE" permissionId="SOLRADM_CREATE"/>
+    <SecurityGroupPermission groupId="SOLRADM_UPDATE" permissionId="SOLRADM_DELETE"/>
+    <SecurityGroupPermission groupId="SOLRADM_UPDATE" permissionId="SOLRADM_UPDATE"/>
+    <SecurityGroupPermission groupId="SOLRADM_UPDATE" permissionId="SOLRADM_VIEW"/>
+    <SecurityGroupPermission groupId="SOLRADM_QUERY" permissionId="SOLRADM_VIEW"/>
+
 </entity-engine-xml>

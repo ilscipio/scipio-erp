@@ -24,6 +24,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.security.Security;
 import org.ofbiz.security.SecurityConfigurationException;
 import org.ofbiz.security.SecurityFactory;
@@ -69,6 +70,8 @@ public class ScipioUserLoginAuthPlugin extends BasicAuthPlugin {
      */
     protected Set<String> cacheLogins = Collections.emptySet();
 
+    private static boolean isMultitenant = EntityUtil.isMultiTenantEnabled();
+    
     @SuppressWarnings("serial")
     public static class UserLoginInfo implements Serializable {
         protected final String userLoginId;
@@ -255,7 +258,6 @@ public class ScipioUserLoginAuthPlugin extends BasicAuthPlugin {
         private Map<String, String> promptHeader;
 
         private final Map<String, UserLoginInfo> successLogins = new ConcurrentHashMap<>();
-        private long lastLoginClearTime;
 
         @Override
         public void init(Map<String, Object> pluginConfig) {
@@ -263,8 +265,6 @@ public class ScipioUserLoginAuthPlugin extends BasicAuthPlugin {
             else this.realm = "solr";
 
             promptHeader = Collections.unmodifiableMap(Collections.singletonMap("WWW-Authenticate", "Basic realm=\"" + realm + "\""));
-
-            lastLoginClearTime = System.currentTimeMillis();
         }
 
         @Override
@@ -287,12 +287,14 @@ public class ScipioUserLoginAuthPlugin extends BasicAuthPlugin {
             }
 
             String tenantId = null; // TODO: REVIEW: is there any case this could be needed? getRequestParameterSafe(request, "userTenantId")
-            int tenantSepIdx = username.lastIndexOf(';');
-            if (tenantSepIdx >= 0) {
-                tenantId = username.substring(tenantSepIdx + 1);
-                if (tenantId.isEmpty()) tenantId = null;
-                username = username.substring(0, tenantSepIdx);
-                if (username.isEmpty()) return false;
+            if (isMultitenant) {
+                int tenantSepIdx = username.lastIndexOf(';');
+                if (tenantSepIdx >= 0) {
+                    tenantId = username.substring(tenantSepIdx + 1);
+                    if (tenantId.isEmpty()) tenantId = null;
+                    username = username.substring(0, tenantSepIdx);
+                    if (username.isEmpty()) return false;
+                }
             }
 
             UserLoginInfo userLoginInfo;
@@ -368,7 +370,7 @@ public class ScipioUserLoginAuthPlugin extends BasicAuthPlugin {
         Delegator delegator;
         LocalDispatcher dispatcher;
         
-        if (tenantId != null) {
+        if (isMultitenant && tenantId != null) {
             delegator = DelegatorFactory.getDelegator(entityDelegatorName + "#" + tenantId);
         } else {
             delegator = DelegatorFactory.getDelegator(entityDelegatorName);

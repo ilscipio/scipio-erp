@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="applications/solr/webapp/WEB-INF/lib/solr-core-6.6.3.jar"/>
+	<classpathentry kind="lib" path="applications/solr/webapp/WEB-INF/lib/solr-core-6.6.3.jar" sourcepath="applications/solr/webapp/WEB-INF/libsrc/solr-core-6.6.3-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/ant/ant-1.10.2-ant.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/ant/ant-1.10.2-ant-junit.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/ant/ant-1.10.2-ant-launcher.jar"/>

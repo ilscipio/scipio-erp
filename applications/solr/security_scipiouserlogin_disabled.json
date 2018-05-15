@@ -1,7 +1,9 @@
 {
 "authentication":{
    "blockUnknown": true,
-   "class":"com.ilscipio.scipio.solr.plugin.security.ScipioUserLoginAuthPlugin"
+   "class":"com.ilscipio.scipio.solr.plugin.security.ScipioUserLoginAuthPlugin",
+   "cacheLogins":{"admin":true},
+   "cachedLoginExpiry":3600000
 },
 "authorization":{
    "class":"solr.RuleBasedAuthorizationPlugin",

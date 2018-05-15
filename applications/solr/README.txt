@@ -163,7 +163,7 @@ security.json (from security_scipiouserlogin_disabled.json):
 "authentication":{
    "blockUnknown": true,
    "class":"com.ilscipio.scipio.solr.plugin.security.ScipioUserLoginAuthPlugin",
-   "cacheLogins":{"admin":true},
+   "cacheLogins":{"solrquery":true,"solrupdate":true},
    "cachedLoginExpiry":3600000
 },
 "authorization":{

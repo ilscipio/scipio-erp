@@ -84,7 +84,8 @@ It requires specifying a pair of logins in solrconfig.properties and in the file
   
 Example:
 
-The following defines a single basic auth user 'solr' with password 'SolrRocks':
+The following defines a few users (two admins, one query user, one update user), all having 
+the same password, 'SolrRocks':
 
 security.json (from security_solrbasicauth_disabled.json):
 
@@ -92,20 +93,31 @@ security.json (from security_solrbasicauth_disabled.json):
 "authentication":{
    "blockUnknown": true,
    "class":"solr.BasicAuthPlugin",
-   "credentials":{"solr":"IV0EHq1OnNrj6gvRCwvFwTrZ1+z1oBbnQdiVC3otuq0= Ndd7LKvVBAaZIF0QAVi1ekCfAJXr1GGfLtRUXhgrF8c="}
+   "credentials":{"admin":"IV0EHq1OnNrj6gvRCwvFwTrZ1+z1oBbnQdiVC3otuq0= Ndd7LKvVBAaZIF0QAVi1ekCfAJXr1GGfLtRUXhgrF8c=",
+      "solradmin":"IV0EHq1OnNrj6gvRCwvFwTrZ1+z1oBbnQdiVC3otuq0= Ndd7LKvVBAaZIF0QAVi1ekCfAJXr1GGfLtRUXhgrF8c=",
+      "solrq":"IV0EHq1OnNrj6gvRCwvFwTrZ1+z1oBbnQdiVC3otuq0= Ndd7LKvVBAaZIF0QAVi1ekCfAJXr1GGfLtRUXhgrF8c=",
+      "solru":"IV0EHq1OnNrj6gvRCwvFwTrZ1+z1oBbnQdiVC3otuq0= Ndd7LKvVBAaZIF0QAVi1ekCfAJXr1GGfLtRUXhgrF8c="}
 },
 "authorization":{
    "class":"solr.RuleBasedAuthorizationPlugin",
-   "permissions":[{"name":"security-edit",
-      "role":"admin"}],
-   "user-role":{"solr":"admin"}
+   "permissions":[{"name":"read","role":"*"},
+      {"name":"schema-read","role":"*"},
+      {"name":"config-read","role":"*"},
+      {"name":"collection-admin-read","role":"*"},
+      {"name":"metrics-read","role":"*"},
+      {"name":"core-admin-read","role":"*"},
+      {"path":"/admin/ping","collection":null,"role":"*"},
+      {"name":"update","role":["update","admin"]},
+      {"name":"security-edit","role":"admin"},
+      {"name":"all","role":"admin"}],
+   "user-role":{"solradmin":"admin","admin":"admin","solru":"update","solrq":"query"}
 }}
 
 solrconfig.properties:
 
-solr.query.connect.login.username=solr
+solr.query.connect.login.username=solrq
 solr.query.connect.login.password=SolrRocks
-solr.update.connect.login.username=solr
+solr.update.connect.login.username=solru
 solr.update.connect.login.password=SolrRocks
 
 You may, however, want to define separate users for internal query/update connections 

@@ -14,7 +14,11 @@ import org.apache.solr.security.RuleBasedAuthorizationPlugin;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
+import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.slf4j.Logger;
@@ -24,15 +28,26 @@ public class ScipioRuleBasedAuthorizationPlugin extends RuleBasedAuthorizationPl
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private static final String module = ScipioRuleBasedAuthorizationPlugin.class.getName();
-    
-    public ScipioRuleBasedAuthorizationPlugin() {
-    }
 
+    protected String entityDelegatorName = "default";
+
+    private boolean multitenant = EntityUtil.isMultiTenantEnabled();
+
+    @SuppressWarnings("unchecked")
     @Override
     public void init(Map<String, Object> initInfo) {
+        String entityDelegatorName = (String) initInfo.get("entityDelegatorName");
+        if (entityDelegatorName != null && !entityDelegatorName.isEmpty()) {
+            this.entityDelegatorName = entityDelegatorName;
+        }
+        Object multitenant = initInfo.get("multitenant");
+        if (multitenant instanceof Boolean) {
+            this.multitenant = (Boolean) multitenant;
+        }
+
         Map<String, Object> scipioPermSolrRoles = (Map<String, Object>) initInfo.get("scipioPermSolrRoles");
         if (scipioPermSolrRoles != null && scipioPermSolrRoles.size() > 0) {
-            Map<String, Set<String>> allUserIdPerms = getPermsForUserLoginIds(scipioPermSolrRoles.keySet());
+            Map<String, Set<String>> allUserIdPerms = getPermsForAllUserLoginIds(scipioPermSolrRoles.keySet());
             if (!allUserIdPerms.isEmpty()) {
                 Map<String, Object> newInitInfo = new LinkedHashMap<>(initInfo);
                 Map<String, Object> userRoles = (Map<String, Object>) newInitInfo.get("user-role");
@@ -42,13 +57,13 @@ public class ScipioRuleBasedAuthorizationPlugin extends RuleBasedAuthorizationPl
                     userRoles = new LinkedHashMap<>(userRoles);
                 }
                 newInitInfo.put("user-role", userRoles);
-                
+
                 for(Map.Entry<String, Set<String>> entry : allUserIdPerms.entrySet()) {
                     String user = entry.getKey();
                     Set<String> newRoles = expandRoles(entry.getValue(), scipioPermSolrRoles);
                     if (!newRoles.isEmpty()) {
                         Set<String> combinedRoles = new LinkedHashSet<>();
-                        
+
                         Object oldRoles = userRoles.get(user);
                         if (oldRoles instanceof String) {
                             combinedRoles.add((String) oldRoles);
@@ -60,15 +75,15 @@ public class ScipioRuleBasedAuthorizationPlugin extends RuleBasedAuthorizationPl
                         userRoles.put(user, new ArrayList<>(combinedRoles));
                     }
                 }
-                
-                log.info("Solr: security.json: Generated new user-roles in security.json from SecurityPermissions: {}", userRoles);
+
+                log.info("Solr: auth: security.json: auto-generated new solr user-roles in security.json from SecurityPermissions: {}", userRoles);
                 initInfo = newInitInfo;
             }
         }
 
         super.init(initInfo);
     }
-    
+
     protected static Set<String> expandRoles(Collection<String> perms, Map<String, Object> scipioPermSolrRoles) {
         if (perms == null) return null;
         Set<String> set = new LinkedHashSet<>();
@@ -87,21 +102,55 @@ public class ScipioRuleBasedAuthorizationPlugin extends RuleBasedAuthorizationPl
         return set;
     }
 
-    protected Map<String, Set<String>> getPermsForUserLoginIds(Collection<String> perms) {
+    protected Map<String, Set<String>> getPermsForAllUserLoginIds(Collection<String> perms) {
         ClassLoader solrClassLoader = Thread.currentThread().getContextClassLoader();
         ClassLoader ofbizClassLoader = ScipioUserLoginAuthPlugin.findParentNonWebappClassLoader(solrClassLoader);
         Thread.currentThread().setContextClassLoader(ofbizClassLoader);
         try {
-            return getPermsForUserLoginIdsCore(perms);
+            return getPermsForAllUserLoginIdsCore(perms);
         } finally {
             Thread.currentThread().setContextClassLoader(solrClassLoader);
         }
     }
-    
-    protected Map<String, Set<String>> getPermsForUserLoginIdsCore(Collection<String> perms) {
-        Delegator delegator = DelegatorFactory.getDelegator("default");
+
+    protected Map<String, Set<String>> getPermsForAllUserLoginIdsCore(Collection<String> perms) {
         Map<String, Set<String>> allUserIdPerms = new HashMap<>();
-       
+
+        Delegator delegator = DelegatorFactory.getDelegator(entityDelegatorName);
+        if (delegator == null) {
+            Debug.logError("Solr: auth: Could not get delegator '" + entityDelegatorName
+                    + "'; no scipio perms can be mapped to solr roles", module);
+            return allUserIdPerms;
+        }
+
+        getPermsForAllUserLoginIdsCore(delegator, perms, allUserIdPerms);
+
+        if (multitenant) {
+            List<GenericValue> activeTenants;
+            try {
+                activeTenants = getActiveTenants(delegator);
+            } catch(Exception e) {
+                Debug.logError(e, "Solr: auth: Could not read active tenants: " + e.getMessage(), module);
+                return allUserIdPerms;
+            }
+            for(GenericValue tenant : activeTenants) {
+                String tenantDelegName = delegator.getDelegatorBaseName() + "#" + tenant.getString("tenantId");
+                Delegator tenantDelegator = DelegatorFactory.getDelegator(tenantDelegName);
+                if (tenantDelegator == null) {
+                    Debug.logError("Solr: auth: Could not get tenant delegator '" + tenantDelegName + "'", module);
+                    continue;
+                }
+                getPermsForAllUserLoginIdsCore(tenantDelegator, perms, allUserIdPerms);
+            }
+        }
+
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("Solr: security.json: userLoginId->permissionId map: " + allUserIdPerms, module);
+        }
+        return allUserIdPerms;
+    }
+
+    protected void getPermsForAllUserLoginIdsCore(Delegator delegator, Collection<String> perms, Map<String, Set<String>> allUserIdPerms) {
         for(String perm : perms) {
             try {
                 List<GenericValue> securityGroupPermissions = EntityQuery.use(delegator).from("SecurityGroupPermission")
@@ -111,6 +160,9 @@ public class ScipioRuleBasedAuthorizationPlugin extends RuleBasedAuthorizationPl
                             .from("UserLoginSecurityGroup").where("groupId", securityGroupPermission.getString("groupId")).queryList());
                     for(GenericValue userLoginSecurityGroup : userLoginSecurityGroups) {
                         String userLoginId = userLoginSecurityGroup.getString("userLoginId");
+                        if (delegator.getDelegatorTenantId() != null) {
+                            userLoginId += "#" + delegator.getDelegatorTenantId();
+                        }
                         Set<String> userIdPerms = allUserIdPerms.get(userLoginId);
                         if (userIdPerms == null) {
                             userIdPerms = new LinkedHashSet<>();
@@ -123,11 +175,13 @@ public class ScipioRuleBasedAuthorizationPlugin extends RuleBasedAuthorizationPl
                 Debug.logError(e, module);
             }
         }
-        
-        if (Debug.verboseOn()) {
-            Debug.logVerbose("Solr: security.json: userLoginId->permissionId map: " + allUserIdPerms, module);
-        }
-        return allUserIdPerms;
     }
-    
+
+    protected static List<GenericValue> getActiveTenants(Delegator delegator) throws GenericEntityException {
+        List<EntityExpr> expr = new ArrayList<EntityExpr>();
+        expr.add(EntityCondition.makeCondition("disabled", EntityOperator.EQUALS, "N"));
+        expr.add(EntityCondition.makeCondition("disabled", EntityOperator.EQUALS, null));
+        return EntityQuery.use(delegator).from("Tenant")
+                .where(EntityCondition.makeCondition(expr, EntityOperator.OR)).queryList();
+    }
 }

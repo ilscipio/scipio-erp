@@ -42,7 +42,7 @@ In addition, Solr ECAs are enabled by default, and will attempt to index Product
 product entity changes. However, note that this is a best-effort coverage of entity modifications, 
 and client projects may need to add/modify Solr ECAs to meet their needs.
 NOTE: 2017-12: The Solr ECA system was recently significantly overhauled, and now performs much
-more reliably than the old component.
+  more reliably than the old component.
 
 * Scipio configurations:
  * System properties:
@@ -135,27 +135,43 @@ It allows only login to users having and SOLRADM_* permissions
 (as defined in ofbiz-component.xml).
 
 NOTE: The example below requires the permission/security Solr Demo data files under data/*.xml
-to be seeded. If you are on a production system with ext data only, you may need to copy over
-these accounts to your seed files. You should also change the stock passwords.
+  to be seeded. If you are on a production system with ext data only, you may need to copy over
+  these accounts to your seed files. You should also change the stock passwords.
 
-security.json "authentication" block definitions:
-* cacheLogins: Should be specified for and is meant mainly for 
+Multitenant support: Currently (2018-05-16) there is limited multitenant support 
+for multitenant login when enabled in general.properties. To login to the Solr web UI
+using a user from a specific tenant database, append a pound '#' to your username
+followed by the tenant ID, into the username field. e.g.,
+  
+  myadmin#mytenant
+  
+NOTE: The full "username#tenant" string is passed to Solr authentication/authorization
+  as the username. In other words Solr would print the user as "username#tenant" in
+  its logs. The tenant ID is part of the user.
+
+security.json "authentication" plugin block definitions:
+* cacheLogins: Enables an additional cache to session management, needed
+  for connections to solr that may not support or want cookies (or when reuseClient=false).
+  It should be specified for and is meant mainly for 
   the one or two query/update accounts specified in solrconfig.properties.
-  It provides an additional cache to session management, and it becomes needed if the 
-  Solr HTTP client (Apache HttpClient) has cookies/sessions disabled or is configured 
-  with reuseClient=false.
+  The names here are tenant-specific unless you append "#all" which means the
+  username will be cached regardless of which tenant DB it's from.
+  In general you will want:
+    "cacheLogins":["solrquery","solrupdate"],
+  OR (for multi-tenant, if appropriate):
+    "cacheLogins":["solrquery#all","solrupdate#all"],
 * cachedLoginExpiry: Max time for cacheLogins to remain cached globally
 
-security.json "authorization" block definitions:
+security.json "authorization" plugin block definitions:
 * scipioPermSolrRoles: This is an INITIALIZATION-TIME-ONLY mapping of 
   Scipio SecurityPermission permissionIds to Solr roles. In other words,
   at load time, it will find all users having the specified permissions
   and create "user-role" entries for them. It only supports the default delegator.
   NOTE: If you create new Solr permissions in Scipio, you must restart
-  the server for them to take effect! This is a limitation that may be addressed
-  in the future.
+    the server for them to take effect! This is a limitation that may be addressed
+    in the future.
   NOTE: You can use both scipioPermSolrRoles and "user-role" entries at the same
-  time; the resulting lists of roles for each username are merged together.
+    time; the resulting lists of roles for each username are merged together.
 
 security.json (from security_scipiouserlogin_disabled.json):
 
@@ -163,7 +179,7 @@ security.json (from security_scipiouserlogin_disabled.json):
 "authentication":{
    "blockUnknown": true,
    "class":"com.ilscipio.scipio.solr.plugin.security.ScipioUserLoginAuthPlugin",
-   "cacheLogins":{"solrquery":true,"solrupdate":true},
+   "cacheLogins":["solrquery","solrupdate"],
    "cachedLoginExpiry":3600000
 },
 "authorization":{
@@ -178,6 +194,7 @@ security.json (from security_scipiouserlogin_disabled.json):
       {"name":"update","role":["update","admin"]},
       {"name":"security-edit","role":"admin"},
       {"name":"all","role":"admin"}],
+   "user-role":{},
    "scipioPermSolrRoles":{"SOLRADM_ADMIN":"admin", "SOLRADM_UPDATE":"update", "SOLRADM_VIEW":"query"}
 }}
 
@@ -190,7 +207,7 @@ solr.update.connect.login.username=solrupdate
 solr.update.connect.login.password=scipio
 
 WARNING: The example above is for example purposes only; passwords should be changed
-and security settings may not fit all projects.
+  and security settings may not fit all projects.
 
 
 -----------------------------------------------------
@@ -275,11 +292,11 @@ fashion. Client projects may need to modify or augment these for their own needs
   servicedef/secas.xml
 
 NOTE: In the current implementation (2017-12), the Scipio will log info-level Solr ECA service calls 
-even when Solr ECAs are disabled with "solr.eca.enabled=false"; this has little effect on functionality.
-It is simply that the service engine is a bit verbose. You may, alternatively, simply comment out
-all the ECAs/SECAs or their file includes in ofbiz-component.xml; however this may negatively affect
-dirty-data detection and you then have to be doubly certain about your plan to schedule 
-rebuildSolrIndex/rebuildSolrIndexAuto invocations. 
+  even when Solr ECAs are disabled with "solr.eca.enabled=false"; this has little effect on functionality.
+  It is simply that the service engine is a bit verbose. You may, alternatively, simply comment out
+  all the ECAs/SECAs or their file includes in ofbiz-component.xml; however this may negatively affect
+  dirty-data detection and you then have to be doubly certain about your plan to schedule 
+  rebuildSolrIndex/rebuildSolrIndexAuto invocations. 
 
 ***
 

@@ -3,6 +3,7 @@ package com.ilscipio.scipio.solr.plugin.security;
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.security.Principal;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
@@ -62,6 +63,11 @@ public class ScipioUserLoginAuthPlugin extends BasicAuthPlugin {
 
     public static final String LOGIN_SESSION_ATTR = "scpLoginInfo";
 
+    public static final char USERID_TENANTID_SEP = '#';
+
+    public static final String ALL_TENANTS = "all";
+    public static final String ALL_TENANTS_SUFFIX = USERID_TENANTID_SEP + ALL_TENANTS;
+
     protected String entityDelegatorName = "default";
     protected String localDispatcherName = "solr";
     protected long cachedLoginExpiry = 30000;
@@ -70,21 +76,34 @@ public class ScipioUserLoginAuthPlugin extends BasicAuthPlugin {
      * Logins allowed to be cached globally, sessionless.
      * <p>
      * In security.json this is:
-     * <code>"cacheLogins":{"admin":true}</code>
+     * <code>"cacheLogins":["solrquery","solrupdate","tenantuser#tenant1"],</code>
      */
     protected Set<String> cacheLogins = Collections.emptySet();
+    /**
+     * Logins allowed to be cached globally, sessionless, for all tenants.
+     * <p>
+     * In security.json this is:
+     * <code>"cacheLogins":["solrquery#all","solrupdate#all"],</code>
+     */
+    protected Set<String> cacheLoginsAllTenants = Collections.emptySet();
 
-    private static boolean isMultitenant = EntityUtil.isMultiTenantEnabled();
-    
+    private boolean multitenant = EntityUtil.isMultiTenantEnabled();
+
     @SuppressWarnings("serial")
     public static class UserLoginInfo implements Serializable {
         protected final String userLoginId;
         protected final String tenantId;
+        protected final String solrUsername;
         protected final long loginTime;
 
         public UserLoginInfo(String userLoginId, String tenantId) {
             this.userLoginId = userLoginId;
             this.tenantId = tenantId;
+            if (tenantId != null) {
+                this.solrUsername = userLoginId + USERID_TENANTID_SEP + tenantId;
+            } else {
+                this.solrUsername = userLoginId;
+            }
             this.loginTime = System.currentTimeMillis();
         }
 
@@ -94,6 +113,13 @@ public class ScipioUserLoginAuthPlugin extends BasicAuthPlugin {
 
         public String getTenantId() {
             return tenantId;
+        }
+
+        /**
+         * Returns userLoginId + sep + tenantId.
+         */
+        public String getSolrUsername() {
+            return solrUsername;
         }
 
         public long getLoginTime() {
@@ -120,6 +146,10 @@ public class ScipioUserLoginAuthPlugin extends BasicAuthPlugin {
             }
             return true;
         }
+
+        public boolean matches(String solrUsername) {
+            return this.solrUsername.equals(solrUsername);
+        }
     }
 
     @Override
@@ -130,23 +160,30 @@ public class ScipioUserLoginAuthPlugin extends BasicAuthPlugin {
         if (entityDelegatorName != null && !entityDelegatorName.isEmpty()) {
             this.entityDelegatorName = entityDelegatorName;
         }
-
         String localDispatcherName = (String) pluginConfig.get("localDispatcherName");
         if (localDispatcherName != null && !localDispatcherName.isEmpty()) {
             this.localDispatcherName = localDispatcherName;
         }
+        Object multitenant = pluginConfig.get("multitenant");
+        if (multitenant instanceof Boolean) {
+            this.multitenant = (Boolean) multitenant;
+        }
 
         @SuppressWarnings("unchecked")
-        Map<String, Object> cacheLoginsMap = (Map<String, Object>) pluginConfig.get("cacheLogins");
+        Collection<String> cacheLoginsList = (Collection<String>) pluginConfig.get("cacheLogins");
         Set<String> cacheLogins = new HashSet<>();
-        if (cacheLoginsMap != null) {
-            for(Map.Entry<String, Object> entry : cacheLoginsMap.entrySet()) {
-                if (Boolean.TRUE.equals(entry.getValue()) || "true".equals(entry.getValue())) {
-                    cacheLogins.add(entry.getKey());
+        Set<String> cacheLoginsAllTenants = new HashSet<>();
+        if (cacheLoginsList != null) {
+            for(String entry : cacheLoginsList) {
+                if (entry.endsWith(ALL_TENANTS_SUFFIX)) {
+                    cacheLoginsAllTenants.add(entry.substring(0, entry.length() - ALL_TENANTS_SUFFIX.length()));
+                } else {
+                    cacheLogins.add(entry);
                 }
             }
         }
-        this.cacheLogins = Collections.unmodifiableSet(cacheLogins);
+        this.cacheLogins = cacheLogins;
+        this.cacheLoginsAllTenants = cacheLoginsAllTenants;
 
         Object cachedLoginExpiryObj = pluginConfig.get("cachedLoginExpiry");
         if (cachedLoginExpiryObj instanceof Long) {
@@ -227,7 +264,7 @@ public class ScipioUserLoginAuthPlugin extends BasicAuthPlugin {
         // TODO: optimize this
         int termIdx = queryString.indexOf('&', paramValIdx);
         if (termIdx < 0) {
-            queryString.indexOf(';', paramValIdx);
+            queryString.indexOf(USERID_TENANTID_SEP, paramValIdx);
         }
         if (termIdx >= 0) {
             return queryString.substring(paramValIdx, termIdx);
@@ -241,7 +278,7 @@ public class ScipioUserLoginAuthPlugin extends BasicAuthPlugin {
         return new HttpServletRequestWrapper(request) {
             @Override
             public Principal getUserPrincipal() {
-                return new BasicUserPrincipal(userLoginInfo.getUserLoginId());
+                return new BasicUserPrincipal(userLoginInfo.getSolrUsername());
             }
         };
     }
@@ -290,14 +327,17 @@ public class ScipioUserLoginAuthPlugin extends BasicAuthPlugin {
                 return false;
             }
 
+            // NOTE: username is userLoginId + sep + tenantId
+
+            String userLoginId = username;
             String tenantId = null; // TODO: REVIEW: is there any case this could be needed? getRequestParameterSafe(request, "userTenantId")
-            if (isMultitenant) {
-                int tenantSepIdx = username.lastIndexOf(';');
+            if (multitenant) {
+                int tenantSepIdx = username.lastIndexOf(USERID_TENANTID_SEP);
                 if (tenantSepIdx >= 0) {
                     tenantId = username.substring(tenantSepIdx + 1);
                     if (tenantId.isEmpty()) tenantId = null;
-                    username = username.substring(0, tenantSepIdx);
-                    if (username.isEmpty()) return false;
+                    userLoginId = username.substring(0, tenantSepIdx);
+                    if (userLoginId.isEmpty()) return false;
                 }
             }
 
@@ -309,14 +349,14 @@ public class ScipioUserLoginAuthPlugin extends BasicAuthPlugin {
                 // HTTP header with every single request. We use an explicit session var check to prevent
                 // re-invoking the login at every single request.
                 userLoginInfo = (UserLoginInfo) session.getAttribute(LOGIN_SESSION_ATTR);
-                if (userLoginInfo != null && userLoginInfo.matches(username, tenantId)) {
+                if (userLoginInfo != null && userLoginInfo.matches(username)) {
                     // don't try to login again
                     return true;
                 }
             }
 
-            //if (cacheLogins.contains(username)) { // redundant
-            final String cacheKey = username + "::" + password + "::" + tenantId;
+            //if (cacheLogins.contains(username)) { // redundant and incomplete - see below
+            final String cacheKey = username + "::" + password; // includes tenantId
             userLoginInfo = successLogins.get(cacheKey);
             if (userLoginInfo != null) {
                 if (userLoginInfo.isLoginTimeExpired(cachedLoginExpiry)) {
@@ -332,13 +372,14 @@ public class ScipioUserLoginAuthPlugin extends BasicAuthPlugin {
             }
             //}
 
-            userLoginInfo = authenticateUserLoginSafe(request, username, password, tenantId);
+            userLoginInfo = authenticateUserLoginSafe(request, userLoginId, password, tenantId);
 
             if (userLoginInfo != null) {
                 // NOTE: here we must create a new session (even for otherwise sessionless requests),
                 // otherwise the UI requests cannot work
                 request.getSession(true).setAttribute(LOGIN_SESSION_ATTR, userLoginInfo);
-                if (cacheLogins.contains(userLoginInfo.getUserLoginId())) {
+                if (cacheLogins.contains(userLoginInfo.getSolrUsername())
+                        || cacheLoginsAllTenants.contains(userLoginInfo.getUserLoginId())) {
                     successLogins.put(cacheKey, userLoginInfo);
                 }
                 return true;
@@ -359,48 +400,63 @@ public class ScipioUserLoginAuthPlugin extends BasicAuthPlugin {
         }
     }
 
-    protected UserLoginInfo authenticateUserLoginSafe(HttpServletRequest request, String username, String password, String tenantId) {
+    protected UserLoginInfo authenticateUserLoginSafe(HttpServletRequest request, String userLoginId, String password, String tenantId) {
         ClassLoader solrClassLoader = Thread.currentThread().getContextClassLoader();
         ClassLoader ofbizClassLoader = findParentNonWebappClassLoader(solrClassLoader);
         Thread.currentThread().setContextClassLoader(ofbizClassLoader);
         try {
-            return authenticateUserLoginCore(request, username, password, tenantId);
+            return authenticateUserLoginCore(request, userLoginId, password, tenantId);
         } finally {
             Thread.currentThread().setContextClassLoader(solrClassLoader);
         }
     }
 
-    protected UserLoginInfo authenticateUserLoginCore(HttpServletRequest request, String username, String password, String tenantId) {
+    protected UserLoginInfo authenticateUserLoginCore(HttpServletRequest request, String userLoginId, String password, String tenantId) {
         Delegator delegator;
         LocalDispatcher dispatcher;
-        
-        if (isMultitenant && tenantId != null) {
+
+        if (multitenant && tenantId != null) {
             delegator = DelegatorFactory.getDelegator(entityDelegatorName + "#" + tenantId);
+            if (delegator == null) {
+                Debug.logError("Solr: auth: could not get tenant delegator '" + entityDelegatorName + "#" + tenantId
+                        + "'; auth failed", module);
+                return null;
+            }
         } else {
             delegator = DelegatorFactory.getDelegator(entityDelegatorName);
+            if (delegator == null) {
+                Debug.logError("Solr: auth: could not get delegator '" + entityDelegatorName
+                        + "'; auth failed", module);
+                return null;
+            }
         }
+
         dispatcher = ServiceContainer.getLocalDispatcher(localDispatcherName, delegator);
 
         Map<String, Object> result;
         try {
-            result = dispatcher.runSync("userLogin", UtilMisc.toMap("login.username", username, "login.password", password));
+            result = dispatcher.runSync("userLogin", UtilMisc.toMap("login.username", userLoginId, "login.password", password));
         } catch (GenericServiceException e) {
-            Debug.logError(e, "Solr: auth: Error logging in user '" + username + "' through userLogin service: " + e.getMessage(), module);
+            Debug.logError(e, "Solr: auth: Error logging in user '" + userLoginId + "'"
+                    + (tenantId != null ? " (tenant: " + tenantId + ")" : "") + " through userLogin service: " + e.getMessage(), module);
             return null;
         }
         if (ModelService.RESPOND_SUCCESS.equals(result.get(ModelService.RESPONSE_MESSAGE))) {
             GenericValue userLogin = (GenericValue) result.get("userLogin");
 
             if (!hasSolrPermsCore(request, delegator, userLogin)) {
-                Debug.logInfo("Solr: auth: User login failed from username/password (no base permissions): " + username, module);
+                Debug.logInfo("Solr: auth: User login failed from user/pass (no base permissions): "
+                        + userLoginId + (tenantId != null ? " (tenant: " + tenantId + ")" : ""), module);
                 return null;
             }
 
-            Debug.logInfo("Solr: auth: Logged in user from username/password: " + username, module);
+            Debug.logInfo("Solr: auth: Logged in user from user/pass: "
+                    + userLoginId + (tenantId != null ? " (tenant: " + tenantId + ")" : ""), module);
 
             return new UserLoginInfo(userLogin.getString("userLoginId"), delegator.getDelegatorTenantId());
         } else {
-            Debug.logInfo("Solr: auth: User login failed from username/password: " + username, module);
+            Debug.logInfo("Solr: auth: User login failed from user/pass: "
+                    + userLoginId + (tenantId != null ? " (tenant: " + tenantId + ")" : ""), module);
         }
         return null;
     }
@@ -427,7 +483,8 @@ public class ScipioUserLoginAuthPlugin extends BasicAuthPlugin {
         }
 
         String newUserLoginId = userLogin.getString("userLoginId");
-        if (prevUserLoginInfo != null && newUserLoginId.equals(prevUserLoginInfo.getUserLoginId())) {
+        String newTenantId = userLogin.getDelegator().getDelegatorTenantId();
+        if (prevUserLoginInfo != null && prevUserLoginInfo.matches(newUserLoginId, newTenantId)) {
             return prevUserLoginInfo;
         }
 
@@ -437,7 +494,7 @@ public class ScipioUserLoginAuthPlugin extends BasicAuthPlugin {
 
         Debug.logInfo("Solr: auth: Logged in user from externalLoginKey: " + newUserLoginId, module);
 
-        return new UserLoginInfo(newUserLoginId, userLogin.getDelegator().getDelegatorTenantId());
+        return new UserLoginInfo(newUserLoginId, newTenantId);
     }
 
     protected boolean hasSolrPermsCore(HttpServletRequest request, Delegator delegator, GenericValue userLogin) {

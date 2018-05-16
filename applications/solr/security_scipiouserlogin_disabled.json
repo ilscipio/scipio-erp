@@ -2,7 +2,7 @@
 "authentication":{
    "blockUnknown": true,
    "class":"com.ilscipio.scipio.solr.plugin.security.ScipioUserLoginAuthPlugin",
-   "cacheLogins":{"solrquery":true,"solrupdate":true},
+   "cacheLogins":["solrquery","solrupdate"],
    "cachedLoginExpiry":3600000
 },
 "authorization":{
@@ -17,5 +17,6 @@
       {"name":"update","role":["update","admin"]},
       {"name":"security-edit","role":"admin"},
       {"name":"all","role":"admin"}],
+   "user-role":{},
    "scipioPermSolrRoles":{"SOLRADM_ADMIN":"admin", "SOLRADM_UPDATE":"update", "SOLRADM_VIEW":"query"}
 }}

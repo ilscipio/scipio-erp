@@ -45,11 +45,17 @@
         <logger name="org.apache" level="warn"/>
         <logger name="freemarker" level="warn"/>
 
-        <!--SCIPIO: HttpClient debug logging - uncomment to debug Solr connections -->
+        <!-- SCIPIO: HttpClient debug logging - uncomment to debug Solr connections -->
         <!--<logger name="org.apache.http" level="debug"/>-->
-        
-        <!--SCIPIO: Solr debugging - uncomment to debug Solr itself -->
+
+        <!-- SCIPIO: Solr debugging - uncomment to debug Solr itself -->
         <!--<logger name="org.apache.solr" level="debug"/>-->
+
+        <!-- SCIPIO: Scipio Solr general plugins -->
+        <logger name="com.ilscipio.scipio.solr.plugin" level="warn"/>
+
+        <!-- SCIPIO: Scipio Solr auth/security plugins -->
+        <logger name="com.ilscipio.scipio.solr.plugin.security" level="info"/>
 
         <Root level="all">
             <AppenderRef ref="async"/>

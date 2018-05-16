@@ -4,8 +4,8 @@
    "class":"solr.BasicAuthPlugin",
    "credentials":{"admin":"IV0EHq1OnNrj6gvRCwvFwTrZ1+z1oBbnQdiVC3otuq0= Ndd7LKvVBAaZIF0QAVi1ekCfAJXr1GGfLtRUXhgrF8c=",
       "solradmin":"IV0EHq1OnNrj6gvRCwvFwTrZ1+z1oBbnQdiVC3otuq0= Ndd7LKvVBAaZIF0QAVi1ekCfAJXr1GGfLtRUXhgrF8c=",
-      "solrq":"IV0EHq1OnNrj6gvRCwvFwTrZ1+z1oBbnQdiVC3otuq0= Ndd7LKvVBAaZIF0QAVi1ekCfAJXr1GGfLtRUXhgrF8c=",
-      "solru":"IV0EHq1OnNrj6gvRCwvFwTrZ1+z1oBbnQdiVC3otuq0= Ndd7LKvVBAaZIF0QAVi1ekCfAJXr1GGfLtRUXhgrF8c="}
+      "solrquery":"IV0EHq1OnNrj6gvRCwvFwTrZ1+z1oBbnQdiVC3otuq0= Ndd7LKvVBAaZIF0QAVi1ekCfAJXr1GGfLtRUXhgrF8c=",
+      "solrupdate":"IV0EHq1OnNrj6gvRCwvFwTrZ1+z1oBbnQdiVC3otuq0= Ndd7LKvVBAaZIF0QAVi1ekCfAJXr1GGfLtRUXhgrF8c="}
 },
 "authorization":{
    "class":"solr.RuleBasedAuthorizationPlugin",
@@ -19,5 +19,5 @@
       {"name":"update","role":["update","admin"]},
       {"name":"security-edit","role":"admin"},
       {"name":"all","role":"admin"}],
-   "user-role":{"solradmin":"admin","admin":"admin","solru":"update","solrq":"query"}
+   "user-role":{"solradmin":"admin","admin":"admin","solrupdate":"update","solrquery":"query"}
 }}

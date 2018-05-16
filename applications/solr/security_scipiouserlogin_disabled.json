@@ -2,12 +2,20 @@
 "authentication":{
    "blockUnknown": true,
    "class":"com.ilscipio.scipio.solr.plugin.security.ScipioUserLoginAuthPlugin",
-   "cacheLogins":{"admin":true},
+   "cacheLogins":{"solrquery":true,"solrupdate":true},
    "cachedLoginExpiry":3600000
 },
 "authorization":{
-   "class":"solr.RuleBasedAuthorizationPlugin",
-   "permissions":[{"name":"security-edit",
-      "role":"admin"}],
-   "user-role":{"solr":"admin"}
+   "class":"com.ilscipio.scipio.solr.plugin.security.ScipioRuleBasedAuthorizationPlugin",
+   "permissions":[{"name":"read","role":"*"},
+      {"name":"schema-read","role":"*"},
+      {"name":"config-read","role":"*"},
+      {"name":"collection-admin-read","role":"*"},
+      {"name":"metrics-read","role":"*"},
+      {"name":"core-admin-read","role":"*"},
+      {"path":"/admin/ping","collection":null,"role":"*"},
+      {"name":"update","role":["update","admin"]},
+      {"name":"security-edit","role":"admin"},
+      {"name":"all","role":"admin"}],
+   "scipioPermSolrRoles":{"SOLRADM_ADMIN":"admin", "SOLRADM_UPDATE":"update", "SOLRADM_VIEW":"query"}
 }}

@@ -34,6 +34,7 @@ under the License.
     <entity-resource type="data" reader-name="seed" loader="main" location="data/SolrSecurityPermissionSeedData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/SolrSecurityGroupDemoData.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/SolrSeedData.xml"/>   
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/SolrUserDemoData.xml"/>   
     <entity-resource type="data" reader-name="seed-initial" loader="main" location="data/SolrScheduledServiceData.xml"/>   
 
     <entity-resource type="eca" reader-name="main" loader="main" location="entitydef/eecas.xml"/>
@@ -45,7 +46,7 @@ under the License.
        title="solr"
        server="default-server"
        location="webapp"
-       base-permission="OFBTOOLS,SOLRADM"
+       base-permission="SOLRADM"
        mount-point="/solr"
        app-bar-display="false"/>
 

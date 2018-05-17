@@ -418,6 +418,31 @@ public abstract class SolrUtil {
     }
     
     /**
+     * Returns a Solr client for making admin queries.
+     * <p>
+     * Supports explicit solr basic auth username/password, if not empty; otherwise
+     * includes the basic auth defined in solrconfig.properties/solr.admin.login.*,
+     * which can be further overridden on individual requests.
+     */
+    public static HttpSolrClient getAdminHttpSolrClient(String core, String solrUsername, String solrPassword) {
+        return SolrClientFactory.adminClientFactory.getClientForCore(core, solrUsername, solrPassword);
+    }
+    
+    /**
+     * Returns a Solr client for making admin queries.
+     * <p>
+     * This client includes the basic auth defined in solrconfig.properties/solr.admin.login.*,
+     * which can be overridden on individual requests.
+     */
+    public static HttpSolrClient getAdminHttpSolrClient(String core) {
+        return SolrClientFactory.adminClientFactory.getClientForCore(core, null, null);
+    }
+ 
+    public static HttpSolrClient getAdminHttpSolrClientFromUrl(String url, String solrUsername, String solrPassword) {
+        return SolrClientFactory.adminClientFactory.getClientFromUrl(url, solrUsername, solrPassword);
+    }
+    
+    /**
      * Returns a Solr client for making read-only queries.
      * @deprecated 2018-04-17: now ambiguous; use {@link #getQueryHttpSolrClient(String) instead
      */
@@ -453,6 +478,10 @@ public abstract class SolrUtil {
         return SolrClientFactory.newUpdateClientFactory.getClientFromUrl(url, solrUsername, solrPassword);
     }
     
+    public static HttpSolrClient makeAdminHttpSolrClientFromUrl(String url, String solrUsername, String solrPassword) {
+        return SolrClientFactory.newAdminClientFactory.getClientFromUrl(url, solrUsername, solrPassword);
+    }
+    
     static SolrConnectConfig getSolrQueryConnectConfig() {
         return SolrConnectConfig.queryConnectConfig;
     }
@@ -461,9 +490,14 @@ public abstract class SolrUtil {
         return SolrConnectConfig.updateConnectConfig;
     }
     
+    static SolrConnectConfig getSolrAdminConnectConfig() {
+        return SolrConnectConfig.adminConnectConfig;
+    }
+    
     public enum SolrClientMode {
         QUERY("query"),
-        UPDATE("update");
+        UPDATE("update"),
+        ADMIN("admin");
         
         private final String name;
 
@@ -479,7 +513,8 @@ public abstract class SolrUtil {
     public static class SolrConnectConfig {
         private static final SolrConnectConfig queryConnectConfig = SolrConnectConfig.fromProperties(SolrClientMode.QUERY, solrConfigName, "solr.query.connect.");
         private static final SolrConnectConfig updateConnectConfig = SolrConnectConfig.fromProperties(SolrClientMode.UPDATE, solrConfigName, "solr.update.connect.");
-        
+        private static final SolrConnectConfig adminConnectConfig = SolrConnectConfig.fromProperties(SolrClientMode.ADMIN, solrConfigName, "solr.admin.connect.");
+
         private final SolrClientMode clientMode;
         private final String solrUsername;
         private final String solrPassword;
@@ -563,13 +598,15 @@ public abstract class SolrUtil {
          */
         static final SolrClientFactory newQueryClientFactory = NewSolrClientFactory.create(SolrConnectConfig.queryConnectConfig);
         static final SolrClientFactory newUpdateClientFactory = NewSolrClientFactory.create(SolrConnectConfig.updateConnectConfig);
+        static final SolrClientFactory newAdminClientFactory = NewSolrClientFactory.create(SolrConnectConfig.adminConnectConfig);
 
         /**
          * Abstracted factory that gets a cached or new client.
          */
         static final SolrClientFactory queryClientFactory = create(SolrConnectConfig.queryConnectConfig);
         static final SolrClientFactory updateClientFactory = create(SolrConnectConfig.updateConnectConfig);
-        
+        static final SolrClientFactory adminClientFactory = create(SolrConnectConfig.adminConnectConfig);
+
         public static SolrClientFactory create(SolrConnectConfig connectConfig) {
             if (connectConfig.isReuseClient()) return CachedSolrClientFactory.create(connectConfig);
             else return NewSolrClientFactory.create(connectConfig);

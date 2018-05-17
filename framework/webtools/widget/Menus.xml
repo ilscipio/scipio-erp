@@ -638,6 +638,9 @@ under the License.
         <menu-item name="SolrAdmin" title="${uiLabelMap.SolrSolrAdmin}">
             <link target="/solr/index.html" url-mode="inter-app" target-window="_blank"/>
         </menu-item>
+        <menu-item name="SolrDoc" title="Readme">
+            <link target="SolrDoc"/>
+        </menu-item>
     </menu>
     
     <menu name="SolrButtonBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">

@@ -101,6 +101,27 @@
         </section>
     </screen>
     
+    <screen name="SolrDoc">
+        <section>
+            <actions>
+                <set field="title" value="Solr README.txt"/>
+                <set field="activeSubMenuItem" value="SolrDoc"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSolrDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template><![CDATA[
+                          <@section>
+                            <p><i>applications/solr/README.txt</i></p>
+                            <pre><#include "component://solr/README.txt" parse=false></pre>
+                          </@section>
+                        ]]></html-template></html></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="solrStatusDetails">
         <section>
             <actions>

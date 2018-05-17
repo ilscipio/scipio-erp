@@ -418,14 +418,14 @@ public class ScipioUserLoginAuthPlugin extends BasicAuthPlugin {
         if (multitenant && tenantId != null) {
             delegator = DelegatorFactory.getDelegator(entityDelegatorName + "#" + tenantId);
             if (delegator == null) {
-                Debug.logError("Solr: auth: could not get tenant delegator '" + entityDelegatorName + "#" + tenantId
+                Debug.logError("Solr: authentication: could not get tenant delegator '" + entityDelegatorName + "#" + tenantId
                         + "'; auth failed", module);
                 return null;
             }
         } else {
             delegator = DelegatorFactory.getDelegator(entityDelegatorName);
             if (delegator == null) {
-                Debug.logError("Solr: auth: could not get delegator '" + entityDelegatorName
+                Debug.logError("Solr: authentication: could not get delegator '" + entityDelegatorName
                         + "'; auth failed", module);
                 return null;
             }
@@ -437,7 +437,7 @@ public class ScipioUserLoginAuthPlugin extends BasicAuthPlugin {
         try {
             result = dispatcher.runSync("userLogin", UtilMisc.toMap("login.username", userLoginId, "login.password", password));
         } catch (GenericServiceException e) {
-            Debug.logError(e, "Solr: auth: Error logging in user '" + userLoginId + "'"
+            Debug.logError(e, "Solr: authentication: Error logging in user '" + userLoginId + "'"
                     + (tenantId != null ? " (tenant: " + tenantId + ")" : "") + " through userLogin service: " + e.getMessage(), module);
             return null;
         }
@@ -445,17 +445,17 @@ public class ScipioUserLoginAuthPlugin extends BasicAuthPlugin {
             GenericValue userLogin = (GenericValue) result.get("userLogin");
 
             if (!hasSolrPermsCore(request, delegator, userLogin)) {
-                Debug.logInfo("Solr: auth: User login failed from user/pass (no base permissions): "
+                Debug.logInfo("Solr: authentication: User login failed from user/pass (no base permissions): "
                         + userLoginId + (tenantId != null ? " (tenant: " + tenantId + ")" : ""), module);
                 return null;
             }
 
-            Debug.logInfo("Solr: auth: Logged in user from user/pass: "
+            Debug.logInfo("Solr: authentication: Logged in user from user/pass: "
                     + userLoginId + (tenantId != null ? " (tenant: " + tenantId + ")" : ""), module);
 
             return new UserLoginInfo(userLogin.getString("userLoginId"), delegator.getDelegatorTenantId());
         } else {
-            Debug.logInfo("Solr: auth: User login failed from user/pass: "
+            Debug.logInfo("Solr: authentication: User login failed from user/pass: "
                     + userLoginId + (tenantId != null ? " (tenant: " + tenantId + ")" : ""), module);
         }
         return null;
@@ -492,7 +492,7 @@ public class ScipioUserLoginAuthPlugin extends BasicAuthPlugin {
             return null;
         }
 
-        Debug.logInfo("Solr: auth: Logged in user from externalLoginKey: " + newUserLoginId, module);
+        Debug.logInfo("Solr: authentication: Logged in user from externalLoginKey: " + newUserLoginId, module);
 
         return new UserLoginInfo(newUserLoginId, newTenantId);
     }
@@ -502,7 +502,7 @@ public class ScipioUserLoginAuthPlugin extends BasicAuthPlugin {
         try { // TODO?: try to store the Security instance?
             security = SecurityFactory.getInstance(delegator);
         } catch (SecurityConfigurationException e) {
-            Debug.logError(e, "Solr: auth: Error getting ofbiz Security instance: " + e.getMessage(), module);
+            Debug.logError(e, "Solr: authentication: Error getting ofbiz Security instance: " + e.getMessage(), module);
             return false;
         }
         String serverId = (String) request.getServletContext().getAttribute("_serverId"); // set by CatalinaContainer

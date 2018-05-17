@@ -140,6 +140,8 @@ WARNING: 2018-05-17: The ScipioRuleBasedAuthorizationPlugin below only processes
   mappings at server load time or if manually re-triggered, due to code design limitations
   of upstream classes. It can be reloaded while server is active from the command line using:
     curl -u admin:scipio -H 'Content-type:application/json' -d '{ "set-user-role" : {} }' http://localhost:8080/solr/admin/authorization
+  OR using the reloadSolrSecurityAuthorizations service in the admin UI at:
+    https://localhost:8443/admin/control/SolrServices
     
 NOTE: The example below requires the permission/security Solr Demo data files under data/*.xml
   to be seeded. If you are on a production system with ext data only, you may need to copy over
@@ -177,6 +179,8 @@ security.json "authorization" plugin block definitions:
   WARNING: If you create new Solr permissions in Scipio, you must either restart
     the server or reload all permission mappings from command line using:
       curl -u admin:scipio -H 'Content-type:application/json' -d '{ "set-user-role" : {} }' http://localhost:8080/solr/admin/authorization
+    OR using the reloadSolrSecurityAuthorizations service in the admin UI at:
+      https://localhost:8443/admin/control/SolrServices
   NOTE: You can use both scipioPermSolrRoles and "user-role" entries at the same
     time; the resulting lists of roles for each username are merged together.
 

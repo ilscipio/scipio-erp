@@ -40,6 +40,10 @@
         <value xml:lang="en">Data Config Version</value>
         <value xml:lang="de">Data Config Version</value>
     </property>
+    <property key="SolrNonAdminWarning">
+        <value xml:lang="en">Warning: Your account does not have the SOLRADM_ADMIN permission. You may not see or be able to run all services on this page. If you migrated from an earlier Scipio revision, you may need to import the security and user seed/demo data files under applications/solr/data.</value>
+        <value xml:lang="de">Warnung: Ihr Konto verfügt nicht über die SOLRADM_ADMIN-Berechtigung. Sie können möglicherweise nicht alle Dienste auf dieser Seite ausführen oder ausführen. Wenn Sie von einer früheren Scipio-Revision migriert haben, müssen Sie unter applications/solr/data möglicherweise die Sicherheits- und Benutzer-Seed-/Demo-Datendateien importieren.</value>
+    </property>
     <property key="SolrPresent">
         <value xml:lang="en">Present</value>
         <value xml:lang="de">Present</value>
@@ -95,5 +99,9 @@
     <property key="SolrMarkSolrDataDirtyServiceDesc">
         <value xml:lang="en">markSolrDataDirty marks the current data as old/dirty so that it will be reindexed on the next rebuildSolrIndexAuto call.</value>
         <value xml:lang="de">markSolrDataDirty markiert die aktuellen Daten als alt / schmutzig, so dass sie beim nächsten Aufruf von rebuildSolrIndexAuto erneut indiziert werden.</value>
+    </property>
+    <property key="SolrReloadSolrSecurityAuthorizationsServiceDesc">
+        <value xml:lang="en">reloadSolrSecurityAuthorizations reloads the Solr security authorization plugin data from applications/solr/security.json and the system (if applicable to plugin). It is mainly needed if you have enabled the ScipioRuleBasedAuthorizationPlugin authorization plugin (see applications/solr/README.txt). You must run this service manually any time you have assigned or removed SOLRADM_* SecurityPermissions from a UserLogin (if you do not plan to restart the server), to update Solr's security users and roles.</value>
+        <value xml:lang="de">reloadSolrSecurityAuthorizations lädt die Daten des Solr-Sicherheitsautorisierungs-Plugins von applications/solr/security.json und vom System (falls für das Plugin relevant) neu. Es wird hauptsächlich benötigt, wenn Sie das Autorisierungs-Plugin ScipioRuleBasedAuthorizationPlugin aktiviert haben (siehe applications/solr/README.txt). Sie müssen diesen Service jedes Mal manuell ausführen, wenn Sie SOLRADM_* SecurityPermissions aus einer Benutzeranmeldung (falls der Server nicht neu gestartet werden soll) zugewiesen oder entfernt haben, um die Sicherheitsbenutzer und Rollen von Solr zu aktualisieren.</value>
     </property>
 </resource>

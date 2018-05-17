@@ -392,6 +392,10 @@ public abstract class SolrUtil {
         return SolrClientFactory.queryClientFactory.getClientFromUrl(url, solrUsername, solrPassword);
     }
     
+    public static HttpSolrClient getQueryHttpSolrClientFromUrl(String url) {
+        return SolrClientFactory.queryClientFactory.getClientFromUrl(url, null, null);
+    }
+    
     /**
      * Returns a Solr client for making update/indexing queries, for given core or default core (if null).
      * <p>
@@ -417,6 +421,10 @@ public abstract class SolrUtil {
         return SolrClientFactory.updateClientFactory.getClientFromUrl(url, solrUsername, solrPassword);
     }
     
+    public static HttpSolrClient getUpdateHttpSolrClientFromUrl(String url) {
+        return SolrClientFactory.updateClientFactory.getClientFromUrl(url, null, null);
+    }
+    
     /**
      * Returns a Solr client for making admin queries, for given core or default core (if null).
      * <p>
@@ -440,6 +448,10 @@ public abstract class SolrUtil {
  
     public static HttpSolrClient getAdminHttpSolrClientFromUrl(String url, String solrUsername, String solrPassword) {
         return SolrClientFactory.adminClientFactory.getClientFromUrl(url, solrUsername, solrPassword);
+    }
+    
+    public static HttpSolrClient getAdminHttpSolrClientFromUrl(String url) {
+        return SolrClientFactory.adminClientFactory.getClientFromUrl(url, null, null);
     }
     
     /**
@@ -612,17 +624,31 @@ public abstract class SolrUtil {
             else return NewSolrClientFactory.create(connectConfig);
         }
        
-        public abstract HttpSolrClient getClientFromUrl(String url, String solrUsername, String solrPassword);
+        public abstract HttpSolrClient getClientFromUrlRaw(String url, String solrUsername, String solrPassword);
+        
+        public HttpSolrClient getClientFromUrl(String url, String solrUsername, String solrPassword) {
+            if (UtilValidate.isEmpty(solrUsername)) {
+                solrUsername = getConnectConfig().getSolrUsername();
+                solrPassword = getConnectConfig().getSolrPassword();
+            } else if ("_none_".equals(solrUsername)) {
+                solrUsername = null;
+                solrPassword = null;
+            }
+            return getClientFromUrlRaw(url, solrUsername, solrPassword);
+        }
         
         public HttpSolrClient getClientForCore(String core, String solrUsername, String solrPassword) {
             if (UtilValidate.isEmpty(solrUsername)) {
                 solrUsername = getConnectConfig().getSolrUsername();
                 solrPassword = getConnectConfig().getSolrPassword();
+            } else if ("_none_".equals(solrUsername)) {
+                solrUsername = null;
+                solrPassword = null;
             }
             if (UtilValidate.isNotEmpty(core)) {
-                return getClientFromUrl(getSolrCoreUrl(core), solrUsername, solrPassword);
+                return getClientFromUrlRaw(getSolrCoreUrl(core), solrUsername, solrPassword);
             } else {
-                return getClientFromUrl(getSolrDefaultCoreUrl(), solrUsername, solrPassword);
+                return getClientFromUrlRaw(getSolrDefaultCoreUrl(), solrUsername, solrPassword);
             }
         }
         
@@ -640,7 +666,7 @@ public abstract class SolrUtil {
             }
             
             @Override
-            public HttpSolrClient getClientFromUrl(String url, String solrUsername, String solrPassword) {
+            public HttpSolrClient getClientFromUrlRaw(String url, String solrUsername, String solrPassword) {
                 return makeClient(connectConfig, url, solrUsername, solrPassword);
             }
             
@@ -685,7 +711,7 @@ public abstract class SolrUtil {
             }
             
             @Override
-            public HttpSolrClient getClientFromUrl(String url, String solrUsername, String solrPassword) {
+            public HttpSolrClient getClientFromUrlRaw(String url, String solrUsername, String solrPassword) {
                 final String cacheKey = (solrUsername != null) ? (url + ":" + solrUsername + ":" + solrPassword) : url;
                 if (defaultClientCacheKey.equals(cacheKey)) {
                     if (Debug.verboseOn()) Debug.logVerbose("Solr: Using default solr " + connectConfig.makeClientLogDesc(url,  solrUsername), module);

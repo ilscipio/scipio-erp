@@ -368,7 +368,7 @@ public abstract class SolrUtil {
     }
 
     /**
-     * Returns a Solr client for making read-only queries.
+     * Returns a Solr client for making read-only queries, for given core or default core (if null).
      * <p>
      * Supports explicit solr basic auth username/password, if not empty; otherwise
      * includes the basic auth defined in solrconfig.properties/solr.query.login.*,
@@ -379,7 +379,7 @@ public abstract class SolrUtil {
     }
     
     /**
-     * Returns a Solr client for making read-only queries.
+     * Returns a Solr client for making read-only queries, for given core or default core (if null).
      * <p>
      * This client includes the basic auth defined in solrconfig.properties/solr.query.login.*,
      * which can be overridden on individual requests (using QueryRequest).
@@ -393,7 +393,7 @@ public abstract class SolrUtil {
     }
     
     /**
-     * Returns a Solr client for making update/indexing queries.
+     * Returns a Solr client for making update/indexing queries, for given core or default core (if null).
      * <p>
      * Supports explicit solr basic auth username/password, if not empty; otherwise
      * includes the basic auth defined in solrconfig.properties/solr.update.login.*,
@@ -404,7 +404,7 @@ public abstract class SolrUtil {
     }
     
     /**
-     * Returns a Solr client for making update/indexing queries.
+     * Returns a Solr client for making update/indexing queries, for given core or default core (if null).
      * <p>
      * This client includes the basic auth defined in solrconfig.properties/solr.update.login.*,
      * which can be overridden on individual requests (using UpdateRequest).
@@ -418,7 +418,7 @@ public abstract class SolrUtil {
     }
     
     /**
-     * Returns a Solr client for making admin queries.
+     * Returns a Solr client for making admin queries, for given core or default core (if null).
      * <p>
      * Supports explicit solr basic auth username/password, if not empty; otherwise
      * includes the basic auth defined in solrconfig.properties/solr.admin.login.*,
@@ -429,7 +429,7 @@ public abstract class SolrUtil {
     }
     
     /**
-     * Returns a Solr client for making admin queries.
+     * Returns a Solr client for making admin queries, for given core or default core (if null).
      * <p>
      * This client includes the basic auth defined in solrconfig.properties/solr.admin.login.*,
      * which can be overridden on individual requests.

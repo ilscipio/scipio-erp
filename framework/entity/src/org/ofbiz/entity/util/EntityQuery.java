@@ -33,6 +33,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityJoinOperator;
 import org.ofbiz.entity.model.DynamicViewEntity;
 
 /**
@@ -180,6 +181,20 @@ public class EntityQuery {
      */
     public <T extends EntityCondition> EntityQuery where(List<T> andConditions) {
         this.whereEntityCondition = EntityCondition.makeCondition(andConditions);
+        return this;
+    }
+
+    /** Set a list of EntityCondition objects to be combined together with given operator as the WHERE clause for the query
+     * 
+     * NOTE: Each successive call to any of the where(...) methods will replace the currently set condition for the query.
+     * <p>
+     * SCIPIO: New, added 2018-05-17.
+     * @param conditions - A list of EntityCondition objects to be combined together as the WHERE clause for the query
+     * @param operation - The join operator
+     * @return this EntityQuery object, to enable chaining
+     */
+    public <T extends EntityCondition> EntityQuery where(List<T> conditions, EntityJoinOperator operator) {
+        this.whereEntityCondition = EntityCondition.makeCondition(conditions, operator);
         return this;
     }
 

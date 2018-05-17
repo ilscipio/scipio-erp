@@ -24,6 +24,11 @@ under the License.
     <description>Content Component Services</description>
     <vendor>Ilscipio GmbH</vendor>
 
+    <service name="solrGenericPermission" engine="simple"
+        location="component://solr/script/com/ilscipio/scipio/solr/SolrServices.xml" invoke="solrGenericPermission">
+        <implements service="permissionInterface"/>
+    </service>
+
     <service name="checkSolrReady" engine="java" use-transaction="false"
         location="com.ilscipio.scipio.solr.SolrProductSearch" invoke="checkSolrReady">
         <description>Checks if Solr webapp is loaded and available for queries</description>
@@ -469,6 +474,14 @@ under the License.
         <attribute mode="IN" name="core" optional="true" type="String" />
         <attribute name="numFound" type="Long" mode="OUT" optional="false"/>
         <attribute name="categories" type="java.util.Map" mode="OUT" optional="true"/>
+    </service>
+    
+    <service name="reloadSolrSecurityAuthorizations" engine="java"
+        use-transaction="false"
+        location="com.ilscipio.scipio.solr.SolrProductSearch"
+        invoke="reloadSolrSecurityAuthorizations">
+        <description>Reloads the security authorizations defined in security.json</description>
+        <permission-service service-name="solrGenericPermission" main-action="ADMIN"/>
     </service>
     
 </services>

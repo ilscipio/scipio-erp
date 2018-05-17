@@ -15,9 +15,12 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrRequest;
 import org.apache.solr.client.solrj.SolrRequest.METHOD;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.apache.solr.client.solrj.request.DirectXmlRequest;
+import org.apache.solr.client.solrj.request.GenericSolrRequest;
 import org.apache.solr.client.solrj.request.QueryRequest;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
@@ -26,6 +29,8 @@ import org.apache.solr.client.solrj.response.SpellCheckResponse;
 import org.apache.solr.client.solrj.response.SpellCheckResponse.Collation;
 import org.apache.solr.client.solrj.response.SpellCheckResponse.Suggestion;
 import org.apache.solr.common.SolrInputDocument;
+import org.apache.solr.common.params.CommonParams;
+import org.apache.solr.common.params.ModifiableSolrParams;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -43,6 +48,8 @@ import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceSyncRegistrations;
 import org.ofbiz.service.ServiceSyncRegistrations.ServiceSyncRegistration;
 import org.ofbiz.service.ServiceUtil;
+
+import com.ilscipio.scipio.solr.util.DirectJsonRequest;
 
 /**
  * Base class for OFBiz Test Tools test case implementations.
@@ -1414,5 +1421,26 @@ public abstract class SolrProductSearch {
         }
         
         return ServiceUtil.returnFailure("Solr not ready, reached max wait time");
+    }
+    
+    public static Map<String, Object> reloadSolrSecurityAuthorizations(DispatchContext dctx, Map<String, Object> context) {
+        if (!SolrUtil.isSolrWebappEnabled()) {
+            return ServiceUtil.returnFailure("Solr webapp not enabled");
+        }
+        try {
+            HttpSolrClient client = SolrUtil.getAdminHttpSolrClientFromUrl(SolrUtil.getSolrWebappUrl());
+            //ModifiableSolrParams params = new ModifiableSolrParams();
+            //// this is very sketchy, I don't think ModifiableSolrParams were meant for this
+            //params.set("set-user-role", (String) null);
+            //SolrRequest<?> request = new GenericSolrRequest(METHOD.POST, CommonParams.AUTHZ_PATH, params);
+            SolrRequest<?> request = new DirectJsonRequest(CommonParams.AUTHZ_PATH, 
+                    "{\"set-user-role\":{}}"); // "{\"set-user-role\":{\"dummy\":\"dummy\"}}"
+            client.request(request);
+            Debug.logInfo("Solr: reloadSolrSecurityAuthorizations: invoked reload", module);
+            return ServiceUtil.returnSuccess();
+        } catch (Exception e) {
+            Debug.logError("Solr: reloadSolrSecurityAuthorizations: error: " + e.getMessage(), module);
+            return ServiceUtil.returnError("Error reloading Solr security authorizations");
+        }
     }
 }

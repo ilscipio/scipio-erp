@@ -835,6 +835,9 @@ context.styles = [
     "pagination_item_next" : "nav-next",
     "pagination_item_active" : "current",
     "pagination_item_disabled" : "unavailable",
+    "pagination_toggleon" : "",
+    "pagination_toggleoff" : "",
+    "pagination_labels" : [],  /* see @paginate's pagLabels for details. e.g.: ["next":">","previous":"<"] */
     "pagination_layout" : "bottom",
     "pagination_noresultsmode" : "hide",
     "pagination_showcount" : true,           /* show count by default */

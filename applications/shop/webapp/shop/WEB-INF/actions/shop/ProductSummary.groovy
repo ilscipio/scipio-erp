@@ -34,6 +34,7 @@ import org.ofbiz.service.*;
 import com.ilscipio.scipio.solr.*;
 
 // SCIPIO: NOTE: This script is responsible for checking whether solr is applicable (if no check, implies the shop assumes solr is always enabled).
+final module = "ProductSummary.groovy";
 
 //either optProduct, optProductId or productId must be specified
 product = request.getAttribute("optProduct");

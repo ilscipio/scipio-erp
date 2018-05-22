@@ -30,6 +30,8 @@ import org.ofbiz.product.store.*;
 import org.ofbiz.order.shoppingcart.*;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
+final module = "MiniProductSummary.groovy";
+
 miniProduct = request.getAttribute("miniProduct");
 optProductId = request.getAttribute("optProductId");
 webSiteId = WebSiteWorker.getWebSiteId(request);
@@ -40,9 +42,12 @@ context.remove("totalPrice");
 
 if (optProductId) {
     miniProduct = from("Product").where("productId", optProductId).queryOne();
+    if (!miniProduct) { // SCIPIO: report this, could be due to inefficient caching or solr setup
+        Debug.logWarning("Shop: Product '" + optProductId + "' not found in DB (caching/solr sync?)", module);
+    }
 }
 
-if (miniProduct && productStoreId && prodCatalogId ) {
+if (miniProduct && productStoreId && prodCatalogId) {
     // calculate the "your" price
     priceParams = [product : miniProduct,
                    prodCatalogId : prodCatalogId,

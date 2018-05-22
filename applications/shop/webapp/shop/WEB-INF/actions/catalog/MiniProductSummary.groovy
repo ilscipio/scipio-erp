@@ -42,9 +42,6 @@ context.remove("totalPrice");
 
 if (optProductId) {
     miniProduct = from("Product").where("productId", optProductId).queryOne();
-    if (!miniProduct) { // SCIPIO: report this, could be due to inefficient caching or solr setup
-        Debug.logWarning("Shop: Product '" + optProductId + "' not found in DB (caching/solr sync?)", module);
-    }
 }
 
 if (miniProduct && productStoreId && prodCatalogId) {
@@ -93,4 +90,8 @@ if (miniProduct && productStoreId && prodCatalogId) {
     ProductContentWrapper miniProductContentWrapper = new ProductContentWrapper(miniProduct, request);
     context.miniProductContentWrapper = miniProductContentWrapper;
 
+} else {
+    if (!miniProduct && optProductId) { // SCIPIO: report this, could be due to inefficient caching or solr setup
+        Debug.logWarning("Shop: Product '" + optProductId + "' not found in DB (caching/solr sync?)", module);
+    }
 }

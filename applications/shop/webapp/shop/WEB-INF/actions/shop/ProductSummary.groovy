@@ -65,9 +65,6 @@ context.remove("totalPrice");
 // get the product entity
 if (!product && productId) {
     product = delegator.findOne("Product", [productId : productId], true);
-    if (!product) { // SCIPIO: report this, could be due to inefficient caching or solr setup
-        Debug.logWarning("Shop: Product '" + productId + "' not found in DB (caching/solr sync?)", module);
-    }
 }
 if (product) {
     //if order is purchase then don't calculate available inventory for product.
@@ -98,6 +95,10 @@ if (product) {
     context.solrTitle = solrProductWorker.getFieldValueI18nForDisplay("title");
     context.description = solrProductWorker.getFieldValueI18nForDisplay("description");
     context.longdescription = solrProductWorker.getFieldValueI18nForDisplay("longdescription");
+} else {
+    if (productId) { // SCIPIO: report this, could be due to inefficient caching or solr setup
+        Debug.logWarning("Shop: Product '" + productId + "' not found in DB (caching/solr sync?)", module);
+    }
 }
 
 categoryId = null;

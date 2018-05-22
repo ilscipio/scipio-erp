@@ -64,7 +64,7 @@ context.remove("totalPrice");
 // get the product entity
 if (!product && productId) {
     product = delegator.findOne("Product", [productId : productId], true);
-    if (!productId) { // SCIPIO: report this, could be due to inefficient caching or solr setup
+    if (!product) { // SCIPIO: report this, could be due to inefficient caching or solr setup
         Debug.logWarning("Shop: Product '" + productId + "' not found in DB (caching/solr sync?)", module);
     }
 }

@@ -45,10 +45,19 @@
                 <set field="titleProperty" value="SolrSolrStatus"/>
                 <set field="activeSubMenuItem" value="SolrStatus"/>
                 <include-screen-actions name="postRunSolrServiceActions"/>
+                <condition-to-field field="isSolrAdmin"><if-has-permission permission="SOLRADM" action="_ADMIN"/></condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSolrDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-false field="isSolrAdmin"/>
+                            </condition>
+                            <widgets>
+                                <label style="common-msg-warning" text="${uiLabelMap.SolrNonAdminWarning}"/>
+                            </widgets>
+                        </section>
                         <include-screen name="solrStatusDetails"/>
                     </decorator-section>
                 </decorator-screen>
@@ -62,13 +71,51 @@
                 <set field="titleProperty" value="SolrSolrServices"/>
                 <set field="activeSubMenuItem" value="SolrServices"/>
                 <include-screen-actions name="postRunSolrServiceActions"/>
+                <condition-to-field field="isSolrAdmin"><if-has-permission permission="SOLRADM" action="_ADMIN"/></condition-to-field>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSolrDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-false field="isSolrAdmin"/>
+                            </condition>
+                            <widgets>
+                                <label style="common-msg-warning" text="${uiLabelMap.SolrNonAdminWarning}"/>
+                            </widgets>
+                        </section>
                         <include-screen name="rebuildSolrIndexService"/>
                         <include-screen name="updateToSolrService"/>
                         <include-screen name="markSolrDataDirtyService"/>
+                        <section>
+                            <condition>
+                                <if-true field="isSolrAdmin"/>
+                            </condition>
+                            <widgets>
+                                <include-screen name="reloadSolrSecurityAuthorizationsService"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="SolrDoc">
+        <section>
+            <actions>
+                <set field="title" value="Solr README.txt"/>
+                <set field="activeSubMenuItem" value="SolrDoc"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSolrDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template><![CDATA[
+                          <@section>
+                            <p><i>applications/solr/README.txt</i></p>
+                            <pre><#include "component://solr/README.txt" parse=false></pre>
+                          </@section>
+                        ]]></html-template></html></platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -201,6 +248,47 @@
                     <#include "component://webtools/webapp/webtools/solr/solrcommon.ftl">
                     
                     <p class="scpadmservlist-servdesc">${uiLabelMap.SolrMarkSolrDataDirtyServiceDesc}</p>
+                    
+                    <@solrServiceForm>
+                      <@solrServiceFields initParams={}/>
+                    </@solrServiceForm>
+                ]]></html-template></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="reloadSolrSecurityAuthorizationsService">
+        <section>
+            <actions>
+                <set field="reloadSolrSecurityAuthorizationsWidgetLoc" value="component://webtools/widget/SolrScreens.xml#reloadSolrSecurityAuthorizationsServiceCore"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template><![CDATA[                    
+                    <@section title="reloadSolrSecurityAuthorizations" class="scpadmservlist-service">
+                      <@render resource=reloadSolrSecurityAuthorizationsWidgetLoc/>
+                    </@section>
+                ]]></html-template></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="reloadSolrSecurityAuthorizationsServiceCore">
+        <section>
+            <actions>
+                <script lang="groovy"><![CDATA[
+                    context.SERVICE_NAME = "reloadSolrSecurityAuthorizations"
+                    context.localVarsOnly = true;
+                ]]></script>
+                <script location="component://webtools/webapp/webtools/WEB-INF/actions/service/ScheduleJob.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template><![CDATA[
+                    <#include "component://webtools/webapp/webtools/solr/solrcommon.ftl">
+                    
+                    <@alert type="warning"><b>Warning (2018-05-17):</b> This service may not currently work reliably due
+                        to a reported Solr bug. Until it is fixed upstream, you may be forced to restart the server instead of running
+                        this service (after you modify SOLRADM_* permissions).</@alert>
+                    
+                    <p class="scpadmservlist-servdesc">${uiLabelMap.SolrReloadSolrSecurityAuthorizationsServiceDesc}</p>
                     
                     <@solrServiceForm>
                       <@solrServiceFields initParams={}/>

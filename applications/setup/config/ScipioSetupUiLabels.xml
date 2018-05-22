@@ -100,7 +100,7 @@
     </property>
     <property key="SetupSelectOrganizationForSetup">
         <value xml:lang="en">Select Organization for Setup</value>
-        <value xml:lang="de">Wählen Sie Organisation für Setup</value>
+        <value xml:lang="de">Bitte wählen Sie eine Organisation aus</value>
         <value xml:lang="fr">Sélectionnez l'organisation pour l'installation</value>
     </property>
     <property key="SetupSelectOrganizationForSetup">

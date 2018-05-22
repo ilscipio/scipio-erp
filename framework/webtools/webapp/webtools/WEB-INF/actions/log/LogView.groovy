@@ -17,29 +17,32 @@
  * under the License.
  */
 
+import java.util.regex.Pattern
+
 import org.ofbiz.base.util.FileUtil;
+
+final levelMap = [
+    'I':'INFO',
+    'W':'WARN',
+    'E':'ERROR',
+    'D':'DEBUG',
+    'T':'TRACE',
+    'F':'FATAL',
+    'A':'',
+    'O':''
+];
+final levelPat = Pattern.compile(' |([A-Z])| ');
 
 List logLines = [];
 try {
     File logFile = FileUtil.getFile(logFileName);
     logFile.eachLine { line ->
         // SCIPIO: All of these checks modified to be more strict and precise
-        // NOTE: updated 2016-06-28
+        // UPDATED 2018-15-18 for better parsing
         type = '';
-        if (line.contains(" |I| ")) {
-            type = 'INFO';
-        } else if (line.contains(" |W| ")) {
-            type = 'WARN';
-        } else if (line.contains(" |E| ")) {
-            type = 'ERROR';
-        } else if (line.contains(" |D| ")) {
-            type = 'DEBUG';
-        } else if (line.contains(" |T| ")) {
-            type = 'TRACE';
-        } else if (line.contains(" |F| ")) {
-            type = 'FATAL';
-        } else if (line.contains(" |A| ")) {
-            type = '';
+        m = levelPat.matcher(line);
+        if (m.find()) {
+            type = levelMap[m.group(1)] ?: '';
         }
         logLines.add([type: type, line:line.trim()]);
     }

@@ -672,6 +672,10 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="SolrServices"/>
     </request-map>
+    <request-map uri="SolrDoc">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="SolrDoc"/>
+    </request-map>
     <request-map uri="runSolrService">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.webapp.event.CoreEvents" invoke="scheduleService"/>
@@ -803,6 +807,7 @@ under the License.
     <!-- SCIPIO: Solr -->
     <view-map name="SolrStatus" type="screen" page="component://webtools/widget/SolrScreens.xml#SolrStatus"/>
     <view-map name="SolrServices" type="screen" page="component://webtools/widget/SolrScreens.xml#SolrServices"/>
+    <view-map name="SolrDoc" type="screen" page="component://webtools/widget/SolrScreens.xml#SolrDoc"/>
 
     <!-- end of view mappings -->
 </site-conf>

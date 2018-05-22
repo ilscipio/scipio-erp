@@ -119,6 +119,8 @@ solr.query.connect.login.username=solrquery
 solr.query.connect.login.password=SolrRocks
 solr.update.connect.login.username=solrupdate
 solr.update.connect.login.password=SolrRocks
+solr.update.connect.login.username=solradmin
+solr.update.connect.login.password=SolrRocks
 
 You may, however, want to define separate users for internal query/update connections 
 versus /solr webapp UI user access.
@@ -134,6 +136,13 @@ and providing support for external login keys (auto login from /admin).
 It allows only login to users having and SOLRADM_* permissions 
 (as defined in ofbiz-component.xml).
 
+WARNING: 2018-05-17: The ScipioRuleBasedAuthorizationPlugin below only processes the scipioPermSolrRoles
+  mappings at server load time or if manually re-triggered, due to code design limitations
+  of upstream classes. It can be reloaded while server is active from the command line using:
+    curl -u admin:scipio -H 'Content-type:application/json' -d '{ "set-user-role" : {} }' http://localhost:8080/solr/admin/authorization
+  OR using the reloadSolrSecurityAuthorizations service in the admin UI at:
+    https://localhost:8443/admin/control/SolrServices
+    
 NOTE: The example below requires the permission/security Solr Demo data files under data/*.xml
   to be seeded. If you are on a production system with ext data only, you may need to copy over
   these accounts to your seed files. You should also change the stock passwords.
@@ -167,9 +176,11 @@ security.json "authorization" plugin block definitions:
   Scipio SecurityPermission permissionIds to Solr roles. In other words,
   at load time, it will find all users having the specified permissions
   and create "user-role" entries for them. It only supports the default delegator.
-  NOTE: If you create new Solr permissions in Scipio, you must restart
-    the server for them to take effect! This is a limitation that may be addressed
-    in the future.
+  WARNING: If you create new Solr permissions in Scipio, you must either restart
+    the server or reload all permission mappings from command line using:
+      curl -u admin:scipio -H 'Content-type:application/json' -d '{ "set-user-role" : {} }' http://localhost:8080/solr/admin/authorization
+    OR using the reloadSolrSecurityAuthorizations service in the admin UI at:
+      https://localhost:8443/admin/control/SolrServices
   NOTE: You can use both scipioPermSolrRoles and "user-role" entries at the same
     time; the resulting lists of roles for each username are merged together.
 
@@ -205,6 +216,8 @@ solr.query.connect.login.username=solrquery
 solr.query.connect.login.password=scipio
 solr.update.connect.login.username=solrupdate
 solr.update.connect.login.password=scipio
+solr.admin.connect.login.username=solradmin
+solr.admin.connect.login.password=scipio
 
 WARNING: The example above is for example purposes only; passwords should be changed
   and security settings may not fit all projects.

@@ -40,7 +40,7 @@
     is stored elsewhere). -->
 <#macro stcLocFieldContainer containerClass="" onAddClick="" wrapperArgs={} entryTmpl=false mainEntryArgs={} altEntryArgs={} footTmpl="" footArgs={} extraArgs...>
     <#local containerClass = addClassArg(containerClass, "+stc-locfield")>
-    <@field type="general" containerClass=containerClass args=wrapperArgs><#t/>
+    <@field type="generic" containerClass=containerClass args=wrapperArgs><#t/>
       <div class="stc-locfield-entries"><#nested></div><#t/>
       <div class="stc-locfield-add-cnt"><a href="javascript:void(0);" class="stc-locfield-add"<#t/>
         <#if onAddClick?has_content> onClick="${onAddClick}"</#if>>[+]</a></div><#t/>

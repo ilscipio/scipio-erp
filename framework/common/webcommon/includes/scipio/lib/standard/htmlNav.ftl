@@ -1064,6 +1064,14 @@ functionality.
                               NOTE: Does not affect paramStr - caller must handle.
    paramDelim               = (default: "&amp;") Param delimiter. Some screens need "/".
                               NOTE: Does not affect paramStr - caller must handle.
+   pagLabels                = ((map)) Map of label names to labels
+                              These can be set in themes also in a styles.pagination_labels hash, where
+                              they support #getTextLabelFromExpr syntax (NOTE: the macro pagLabels arg
+                              does not support that syntax, not needed there).
+                              Supported keys: first, previous, page, next, last, viewSize, on, off
+                              
+  * History *
+    Enhanced for 1.14.4 (added pagLabels).
 -->
 <#assign paginate_defaultArgs = {
   "mode":"single", "type":"default", "layout":"default", "noResultsMode":"default", "enabled":true, "url":"", "class":"", 
@@ -1074,7 +1082,7 @@ functionality.
   "viewIndexString":"", "viewSizeString":"", "paginateToggleString":"", 
   "paramDelim":"", "paramPrefix":"",
   "previousViewSize":"", "paginateOffViewSize":"",
-  "passArgs":{}
+  "pagLabels":{}, "passArgs":{}
 }>
 <#macro paginate args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.paginate_defaultArgs)>
@@ -1228,14 +1236,31 @@ functionality.
       <#local paginateOffUrl=commonUrl+"${viewSizeString}=${paginateOffViewSize}${paramDelim}${viewIndexString}=${viewIndexFirst}${paramDelim}${paginateToggleString}=${paginateToggleOffValue}"+urlSuffix/>
     </#if>
     
+    <#-- optimization to avoid too much overhead during request -->
+    <#local stPagLabels = getRequestVar("scpStylesPagLabels")!false>
+    <#if stPagLabels?is_boolean>
+      <#local stPgL = styles.pagination_labels!>
+      <#local stPagLabels = {
+        "first":getTextLabelFromExpr(stPgL.first!""),
+        "previous":getTextLabelFromExpr(stPgL.previous!""),
+        "page":getTextLabelFromExpr(stPgL.page!""),
+        "next":getTextLabelFromExpr(stPgL.next!""),
+        "last":getTextLabelFromExpr(stPgL.last!""),
+        "viewSize":getTextLabelFromExpr(stPgL.viewSize!""),
+        "on":getTextLabelFromExpr(stPgL.on!""),
+        "off":getTextLabelFromExpr(stPgL.off!"")
+      }>
+      <#local dummy = setRequestVar("scpStylesPagLabels", stPagLabels)>
+    </#if>
+    <#local pagLabels = stPagLabels + toSimpleMap(pagLabels)>
     <#-- NOTE: javaScriptEnabled is a context var -->
     <#-- DEV NOTE: make sure all @paginate_core calls same (DO NOT use #local capture; risks duplicate IDs) -->
     <#if mode == "single">
-      <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex lowIndex=lowIndex highIndex=highIndex realHighIndex=realHighIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel="" paginatePreviousClass="${styles.pagination_item_previous!}" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel="" pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl showCount=showCount alwaysShowCount=alwaysShowCount countMsg=countMsg lowCountMsg="" paginateNextClass="${styles.pagination_item_next!}" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel="" paginateLastClass="${styles.pagination_item_last!}" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel="" paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst enabled=enabled paginateToggle=paginateToggle paginateOn=paginateOn ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass="" paginateOnLabel="" ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass="" paginateOffLabel="" noResultsMode=noResultsMode viewSizeSelection=viewSizeSelection layout=layout position=position passArgs=passArgs/>
+      <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex lowIndex=lowIndex highIndex=highIndex realHighIndex=realHighIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=(pagLabels.first!) paginatePreviousClass=(styles.pagination_item_previous!) ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=(pagLabels.previous!) pageLabel=(pagLabels.page!) ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl showCount=showCount alwaysShowCount=alwaysShowCount countMsg=countMsg lowCountMsg="" paginateNextClass=(styles.pagination_item_next!) ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=(pagLabels.next!) paginateLastClass=(styles.pagination_item_last!) ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=(pagLabels.last!) paginateViewSizeLabel=(pagLabels.viewSize!) forcePost=forcePost viewIndexFirst=viewIndexFirst enabled=enabled paginateToggle=paginateToggle paginateOn=paginateOn ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass=(styles.pagination_toggleon!) paginateOnLabel=(pagLabels.on!) ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass=(styles.pagination_toggleoff!) paginateOffLabel=(pagLabels.off!) noResultsMode=noResultsMode viewSizeSelection=viewSizeSelection layout=layout position=position passArgs=passArgs/>
     <#else>
-      <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex lowIndex=lowIndex highIndex=highIndex realHighIndex=realHighIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel="" paginatePreviousClass="${styles.pagination_item_previous!}" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel="" pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl showCount=showCount alwaysShowCount=alwaysShowCount countMsg=countMsg lowCountMsg="" paginateNextClass="${styles.pagination_item_next!}" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel="" paginateLastClass="${styles.pagination_item_last!}" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel="" paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst enabled=enabled paginateToggle=paginateToggle paginateOn=paginateOn ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass="" paginateOnLabel="" ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass="" paginateOffLabel="" noResultsMode=noResultsMode viewSizeSelection=viewSizeSelection layout=layout position="top" passArgs=passArgs/>
+      <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex lowIndex=lowIndex highIndex=highIndex realHighIndex=realHighIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=(pagLabels.first!) paginatePreviousClass=(styles.pagination_item_previous!) ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=(pagLabels.previous!) pageLabel=(pagLabels.page!) ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl showCount=showCount alwaysShowCount=alwaysShowCount countMsg=countMsg lowCountMsg="" paginateNextClass=(styles.pagination_item_next!) ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=(pagLabels.next!) paginateLastClass=(styles.pagination_item_last!) ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=(pagLabels.last!) paginateViewSizeLabel=(pagLabels.viewSize!) forcePost=forcePost viewIndexFirst=viewIndexFirst enabled=enabled paginateToggle=paginateToggle paginateOn=paginateOn ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass=(styles.pagination_toggleon!) paginateOnLabel=(pagLabels.on!) ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass=(styles.pagination_toggleoff!) paginateOffLabel=(pagLabels.off!) noResultsMode=noResultsMode viewSizeSelection=viewSizeSelection layout=layout position="top" passArgs=passArgs/>
         <#nested>
-      <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex lowIndex=lowIndex highIndex=highIndex realHighIndex=realHighIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel="" paginatePreviousClass="${styles.pagination_item_previous!}" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel="" pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl showCount=showCount alwaysShowCount=alwaysShowCount countMsg=countMsg lowCountMsg="" paginateNextClass="${styles.pagination_item_next!}" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel="" paginateLastClass="${styles.pagination_item_last!}" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel="" paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst enabled=enabled paginateToggle=paginateToggle paginateOn=paginateOn ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass="" paginateOnLabel="" ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass="" paginateOffLabel="" noResultsMode=noResultsMode viewSizeSelection=viewSizeSelection layout=layout position="bottom" passArgs=passArgs/>
+      <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex lowIndex=lowIndex highIndex=highIndex realHighIndex=realHighIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=(pagLabels.first!) paginatePreviousClass=(styles.pagination_item_previous!) ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=(pagLabels.previous!) pageLabel=(pagLabels.page!) ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl showCount=showCount alwaysShowCount=alwaysShowCount countMsg=countMsg lowCountMsg="" paginateNextClass=(styles.pagination_item_next!) ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=(pagLabels.next!) paginateLastClass=(styles.pagination_item_last!) ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=(pagLabels.last!) paginateViewSizeLabel=(pagLabels.viewSize!) forcePost=forcePost viewIndexFirst=viewIndexFirst enabled=enabled paginateToggle=paginateToggle paginateOn=paginateOn ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass=(styles.pagination_toggleon!) paginateOnLabel=(pagLabels.on!) ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass=(styles.pagination_toggleoff!) paginateOffLabel=(pagLabels.off!) noResultsMode=noResultsMode viewSizeSelection=viewSizeSelection layout=layout position="bottom" passArgs=passArgs/>
     </#if>
   </#if>
 </#macro>

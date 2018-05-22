@@ -49,6 +49,9 @@ public class ScipioRuleBasedAuthorizationPlugin extends RuleBasedAuthorizationPl
         if (scipioPermSolrRoles != null && scipioPermSolrRoles.size() > 0) {
             Map<String, Set<String>> allUserIdPerms = getPermsForAllUserLoginIds(scipioPermSolrRoles.keySet());
             if (!allUserIdPerms.isEmpty()) {
+                log.debug("Solr: authorization: security.json: auto-generating new solr user-roles"
+                        + " from UserLogin SecurityPermissions:\n{}\nand scipioPermSolrRoles mappings:\n{}", allUserIdPerms, scipioPermSolrRoles);
+
                 Map<String, Object> newInitInfo = new LinkedHashMap<>(initInfo);
                 Map<String, Object> userRoles = (Map<String, Object>) newInitInfo.get("user-role");
                 if (userRoles == null) {
@@ -76,10 +79,11 @@ public class ScipioRuleBasedAuthorizationPlugin extends RuleBasedAuthorizationPl
                     }
                 }
 
-                log.info("Solr: auth: security.json: auto-generated new solr user-roles in security.json from SecurityPermissions: {}", userRoles);
                 initInfo = newInitInfo;
             }
         }
+
+        log.info("Solr: authorization: security.json: initializing with solr user-roles: {}", initInfo.get("user-role"));
 
         super.init(initInfo);
     }
@@ -118,7 +122,7 @@ public class ScipioRuleBasedAuthorizationPlugin extends RuleBasedAuthorizationPl
 
         Delegator delegator = DelegatorFactory.getDelegator(entityDelegatorName);
         if (delegator == null) {
-            Debug.logError("Solr: auth: Could not get delegator '" + entityDelegatorName
+            Debug.logError("Solr: authorization: Could not get delegator '" + entityDelegatorName
                     + "'; no scipio perms can be mapped to solr roles", module);
             return allUserIdPerms;
         }
@@ -130,14 +134,14 @@ public class ScipioRuleBasedAuthorizationPlugin extends RuleBasedAuthorizationPl
             try {
                 activeTenants = getActiveTenants(delegator);
             } catch(Exception e) {
-                Debug.logError(e, "Solr: auth: Could not read active tenants: " + e.getMessage(), module);
+                Debug.logError(e, "Solr: authorization: Could not read active tenants: " + e.getMessage(), module);
                 return allUserIdPerms;
             }
             for(GenericValue tenant : activeTenants) {
                 String tenantDelegName = delegator.getDelegatorBaseName() + "#" + tenant.getString("tenantId");
                 Delegator tenantDelegator = DelegatorFactory.getDelegator(tenantDelegName);
                 if (tenantDelegator == null) {
-                    Debug.logError("Solr: auth: Could not get tenant delegator '" + tenantDelegName + "'", module);
+                    Debug.logError("Solr: authorization: Could not get tenant delegator '" + tenantDelegName + "'", module);
                     continue;
                 }
                 getPermsForAllUserLoginIdsCore(tenantDelegator, perms, allUserIdPerms);

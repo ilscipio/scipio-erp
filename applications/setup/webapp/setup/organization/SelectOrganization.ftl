@@ -43,7 +43,7 @@
     <@defaultWizardFormFields exclude=[]/> -->
     <#--<@field type="hidden" name="setupContinue" value="N"/> not needed yet-->
   
-    <@field type="general" label=uiLabelMap.SetupSelectOrganizationForSetup>
+    <@field type="generic" label=uiLabelMap.SetupSelectOrganizationForSetup>
         <#-- FIXME: submit doesn't align -->
         <@field type="select" name="partyId" id="setupOrg-selectOrg-select" class="+setupOrg-selectOrg-select" inline=true style="display:inline-block;">
             <option value="">[${uiLabelMap.SetupCreateNewOrganization}]</option>

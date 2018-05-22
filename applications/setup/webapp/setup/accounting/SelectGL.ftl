@@ -44,7 +44,7 @@
     <#--<@field type="hidden" name="setupContinue" value="N"/> not needed yet-->
     
     <#if accountingGLs?has_content>
-	    <@field type="general" label=uiLabelMap.SetupAccountingSelectStandardForSetup>
+	    <@field type="generic" label=uiLabelMap.SetupAccountingSelectStandardForSetup>
 	       <@field type="select" name="topGlAccountId" id="setupAccounting-selectGL-select" class="+setupAccounting-selectGL-select" inline=true style="display:inline-block;">
 	       		<#-- This will be enabled in the future -->
 	            <#-- <option value="">[${uiLabelMap.SetupAccountingCreateNewStandard}]</option> -->

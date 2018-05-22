@@ -50,7 +50,7 @@
 		    	</@field>
 		    </@section>
 		   	<@section title=uiLabelMap.SetupAccountingPreferencesFiscalPeriods>
-			    <@field type="general" label=uiLabelMap.SetupAccountingSelectStartFiscalDayMonth>
+			    <@field type="generic" label=uiLabelMap.SetupAccountingSelectStartFiscalDayMonth>
 				    <@field type="select" name="fiscalYearStartMonth" value=(params.fiscalYearStartMonth!) label=uiLabelMap.FormFieldTitle_fiscalYearStartMonth class="+setupAccounting-preferences-start-month-select" inline=true style="display:inline-block;">				    	
 		            	<option value=""></option>  	
 						<option value="1">${uiLabelMap.CommonJanuary}</option>

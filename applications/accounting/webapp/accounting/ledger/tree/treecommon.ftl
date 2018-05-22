@@ -40,7 +40,7 @@
 
 <#-- NOTE: this one no longer used as JS template -->
 <#macro acctgDefMarkupLocFieldCnt args={}>
-    <@field type="general" containerClass="+acctg-locfield acctg-locfield-for-${args.typeName}" args=(args.fieldArgs!{})><#t/>
+    <@field type="generic" containerClass="+acctg-locfield acctg-locfield-for-${args.typeName}" args=(args.fieldArgs!{})><#t/>
       <div class="acctg-locfield-entries"><#nested></div><#t/>
       <div class="acctg-locfield-add-cnt"><a href="javascript:void(0);" class="acctg-locfield-add"<#t/>
         <#if args.onAddClick?has_content> onClick="${args.onAddClick}"</#if>>[+]</a></div><#t/>

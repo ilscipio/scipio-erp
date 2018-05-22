@@ -43,7 +43,7 @@
     <@defaultWizardFormFields exclude=["userPartyId"]/>
     <#--<@field type="hidden" name="setupContinue" value="N"/> not needed yet-->
   
-    <@field type="general" label=uiLabelMap.SetupSelectUserForSetup>
+    <@field type="generic" label=uiLabelMap.SetupSelectUserForSetup>
         <#-- FIXME: submit doesn't align -->
         <@field type="select" name="userPartyId" id="setupUser-selectUser-select" class="+setupUser-selectUser-select" inline=true style="display:inline-block;">
             <option value="">[${uiLabelMap.SetupCreateNewUser}]</option>

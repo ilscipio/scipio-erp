@@ -331,7 +331,7 @@ if (product) {
                     featureOrder = new LinkedList(featureSet);
                     featureOrder.each { featureKey ->
                         featureValue = from("ProductFeatureType").where("productFeatureTypeId", featureKey).cache(true).queryOne();
-                        fValue = featureValue.get("description") ?: featureValue.productFeatureTypeId;
+                        fValue = featureValue.get("description", context.locale) ?: featureValue.productFeatureTypeId;
                         featureTypes[featureKey] = fValue;
                     }
                 }

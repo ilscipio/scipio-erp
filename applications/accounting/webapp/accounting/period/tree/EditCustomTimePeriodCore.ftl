@@ -27,7 +27,7 @@
         <@menuitem type="link" href="javascript:void(0);" onClick="efpHandler.execNewTimePeriod();" text=uiLabelMap.CommonAdd/><#t/>     
     </#macro>
     <#macro efpDefMarkupMenu args={}>
-        <@menu class="side-nav acctg-action-menu box" id="acctg-action-menu-timePeriod">
+        <@menu class="side-nav acctg-action-menu" id="acctg-action-menu-timePeriod">
           <@acctgMarkupOut dir=efpMarkupPostMenuItems!efpDefMarkupPostMenuItems/>
         </@menu>        
     </#macro>
@@ -145,14 +145,7 @@
 		<@cell medium=3 large=3>    
 	      <#-- ACTIONS MENU -->
 	      <@section title=uiLabelMap.CommonActions>
-	      	<@efpDefMarkupMenu/>
-	      	<#-- 
-	      	<ul class="side-nav acctg-action-menu" id="acctg-action-menu"">		       	
-	        	<li>
-	        		<@menuitem contentId="efp-timePeriod-add" class="+efp-menu-action" type="link" href="javascript:void(0);" text=uiLabelMap.CommonAdd />
-	        	</li>
-	        </ul>
-	        -->
+	      	<@efpDefMarkupMenu/>	      
 	      </@section>
 	   </@cell>	       
 	</@row>			

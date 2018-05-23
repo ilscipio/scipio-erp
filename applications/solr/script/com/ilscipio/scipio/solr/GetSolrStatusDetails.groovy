@@ -18,7 +18,7 @@ setStatus = { name, label, cb, defStatus=null, msg=null ->
     info.label = label;
     if (msg) info.msg = msg;
     try {
-        info.status = cb();
+        info.status = cb(info);
     } catch(Exception e) {
         Debug.logError("Solr: Error determining Solr webapp '" + name + "' status: " + e.getMessage(), module);
         info.errMsg = e.getMessage() + " (" + e.getClass().getName() + ")";
@@ -29,9 +29,18 @@ setStatus = { name, label, cb, defStatus=null, msg=null ->
 
 setStatus("enabled", "SolrSolrEnabled", { SolrUtil.isSolrEnabled(); });
 setStatus("systemInitialized", "SolrSystemInitialized", { SolrUtil.isSystemInitialized(); });
-setStatus("isLocal", "SolrIsWebappLocal", { SolrUtil.isSolrWebappLocal(); }, null, SolrUtil.getSolrWebappUrl());
-setStatus("localEnabled", "SolrLocalWebappEnabled", { SolrUtil.isSolrLocalWebappPresent(); });
-setStatus("localInitialized", "SolrLocalWebappStarted", { SolrUtil.isSolrLocalWebappStarted(); });
+boolean solrWebappLocal = true;
+setStatus("isLocal", "SolrIsWebappLocal", { solrWebappLocal = SolrUtil.isSolrWebappLocal(); return solrWebappLocal; }, null, SolrUtil.getSolrWebappUrl());
+setStatus("localEnabled", "SolrLocalWebappEnabled", { info ->
+    boolean res = SolrUtil.isSolrLocalWebappPresent();
+    if (!solrWebappLocal && res) info.warnMsg = UtilProperties.getMessage("SolrUiLabels", "SolrRedundantLocalInstanceInfo", context.locale);
+    return res;
+});
+setStatus("localInitialized", "SolrLocalWebappStarted", { info ->
+    boolean res = SolrUtil.isSolrLocalWebappStarted();
+    if (!solrWebappLocal && res) info.warnMsg = UtilProperties.getMessage("SolrUiLabels", "SolrRedundantLocalInstanceInfo", context.locale);
+    return res;
+});
 if (pingWebapp) {
     setStatus("webappReady", "SolrWebappReady", { SolrUtil.isSolrWebappReadyRaw(); }, false, SolrUtil.getSolrWebappUrl());
 }

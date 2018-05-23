@@ -36,6 +36,7 @@
             <@td>
               <#if statusInfo.msg??>${statusInfo.msg}<#if statusInfo.errMsg??><br/></#if></#if>
               <#if statusInfo.errMsg??><span class="${styles.text_color_error!}"><strong>${uiLabelMap.CommonError}</strong>: ${statusInfo.errMsg}</span></#if>
+              <#if statusInfo.warnMsg??><span class="${styles.text_color_warning!}"><strong>${uiLabelMap.CommonWarning}</strong>: ${statusInfo.warnMsg}</span></#if>
             </@td>
           </@tr>
         </#list>

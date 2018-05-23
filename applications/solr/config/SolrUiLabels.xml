@@ -88,6 +88,10 @@
         <value xml:lang="en">Local webapp started</value>
         <value xml:lang="de">Local webapp started</value>
     </property>
+    <property key="SolrRedundantLocalInstanceInfo">
+        <value xml:lang="en">The target Solr instance appears to be a non-local-instance address, but you still have a local instance running; it is recommended to disable the local instance in applications/solr/ofbiz-component.xml to preserve resources (set webapp element enabled="false").</value>
+        <value xml:lang="de">Die Ziel-Solr-Instanz scheint eine nicht lokale Instanzadresse zu sein, aber Sie haben immer noch eine lokale Instanz ausgeführt; Es wird empfohlen, die lokale Instanz in applications/solr/ofbiz-component.xml zu deaktivieren, um Ressourcen zu erhalten (set webapp element enabled="false").</value>
+    </property>
     <property key="SolrErrorSeeServerLogs">
         <value xml:lang="en">Error - see server logs</value>
         <value xml:lang="de">Fehler - siehe Serverprotokolle</value>

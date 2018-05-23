@@ -27,9 +27,10 @@ setStatus = { name, label, cb, defStatus=null ->
 };
 
 setStatus("enabled", "SolrEnabled", { SolrUtil.isSolrEnabled(); });
-setStatus("initialized", "SolrInitialized", { SolrUtil.isSolrInitialized(); });
+setStatus("initialized", "SolrSystemInitialized", { SolrUtil.isSystemInitialized(); });
+setStatus("isLocal", "SolrIsWebappLocal", { SolrUtil.isSolrWebappLocal(); });
 setStatus("localEnabled", "SolrLocalWebappEnabled", { SolrUtil.isSolrLocalWebappPresent(); });
-setStatus("localInitialized", "SolrLocalWebappIntialized", { SolrUtil.isSolrLocalWebappInitialized(); });
+setStatus("localInitialized", "SolrLocalWebappStarted", { SolrUtil.isSolrLocalWebappStarted(); });
 if (pingWebapp) {
     setStatus("ready", "SolrReady", { SolrUtil.isSolrWebappReadyRaw(); }, false);
 }

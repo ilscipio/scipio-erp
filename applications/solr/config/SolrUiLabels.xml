@@ -56,9 +56,25 @@
         <value xml:lang="en">Initialized</value>
         <value xml:lang="de">Initialized</value>
     </property>
+    <property key="SolrSystemInitialized">
+        <value xml:lang="en">System initialized</value>
+        <value xml:lang="de">System initialized</value>
+    </property>
     <property key="SolrReady">
         <value xml:lang="en">Ready</value>
         <value xml:lang="de">Ready</value>
+    </property>
+    <property key="SolrIsWebappLocal">
+        <value xml:lang="en">Is webapp local</value>
+        <value xml:lang="de">Is webapp local</value>
+    </property>
+    <property key="SolrLocalWebappEnabled">
+        <value xml:lang="en">Local webapp enabled</value>
+        <value xml:lang="de">Local webapp enabled</value>
+    </property>
+    <property key="SolrLocalWebappStarted">
+        <value xml:lang="en">Local webapp started</value>
+        <value xml:lang="de">Local webapp started</value>
     </property>
     <property key="SolrErrorSeeServerLogs">
         <value xml:lang="en">Error - see server logs</value>

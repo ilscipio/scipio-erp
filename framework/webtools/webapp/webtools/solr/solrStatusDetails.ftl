@@ -8,32 +8,8 @@
     </#if>
 </#macro>
 
-<@section title=uiLabelMap.SolrSolrConfig>
-  <#if solrConfigs?has_content>
-    <@table type="data-complex" autoAltRows=true>
-      <@thead>
-        <@tr>
-          <@th width="20%">${uiLabelMap.CommonItem}</@th>
-          <@th>${uiLabelMap.CommonValue}</@th>
-        </@tr>
-      </@thead>
-      <@tbody>
-        <#list toSimpleMap(solrConfigs) as configName, configEntry>
-          <@tr>
-            <@td><#if configEntry.label??>${getLabel(configEntry.label)}<#else>${configEntry.title!configEntry.name!}</#if>
-              <#if configEntry.propName??> <em>(${configEntry.propName})</em></#if></@td>
-            <@td>${configEntry.value!}</@td>
-          </@tr>
-        </#list>
-      </@tbody>
-    </@table>
-  <#else>
-    <@commonMsg type="error">${uiLabelMap.CommonUnexpectedError} (missing solrConfig)</@commonMsg>
-  </#if>
-</@section>
-
-<@section title=uiLabelMap.SolrSolrWebappStatus>
-  <#if solrWebappStatus?has_content>
+<@section title=uiLabelMap.SolrSolrStatus>
+  <#if solrStatus?has_content>
     <@table type="data-complex" autoAltRows=true>
       <@thead>
         <@tr>
@@ -43,7 +19,7 @@
         </@tr>
       </@thead>
       <@tbody>
-        <#list toSimpleMap(solrWebappStatus) as statusName, statusInfo>
+        <#list toSimpleMap(solrStatus) as statusName, statusInfo>
           <@tr>
             <@td><#if statusInfo.label??>${getLabel(statusInfo.label)!}<#else>${statusName}</#if></@td>
             <@td>
@@ -129,3 +105,28 @@
     <@commonMsg type="error">${uiLabelMap.SolrCouldNotGetSolrStatus}</@commonMsg>
   </#if>
 </@section>
+
+<@section title=uiLabelMap.SolrSolrConfig>
+  <#if solrConfigs?has_content>
+    <@table type="data-complex" autoAltRows=true>
+      <@thead>
+        <@tr>
+          <@th width="20%">${uiLabelMap.CommonItem}</@th>
+          <@th>${uiLabelMap.CommonValue}</@th>
+        </@tr>
+      </@thead>
+      <@tbody>
+        <#list toSimpleMap(solrConfigs) as configName, configEntry>
+          <@tr>
+            <@td><#if configEntry.label??>${getLabel(configEntry.label)}<#else>${configEntry.title!configEntry.name!}</#if>
+              <#if configEntry.propName??> <em>(${configEntry.propName})</em></#if></@td>
+            <@td>${configEntry.value!}</@td>
+          </@tr>
+        </#list>
+      </@tbody>
+    </@table>
+  <#else>
+    <@commonMsg type="error">${uiLabelMap.CommonUnexpectedError} (missing solrConfig)</@commonMsg>
+  </#if>
+</@section>
+

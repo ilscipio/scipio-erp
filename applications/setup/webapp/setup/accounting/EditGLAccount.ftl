@@ -53,7 +53,7 @@
       	      	
       	<@field type="display" label=uiLabelMap.FormFieldTitle_parentGlAccountId><#rt/>
             <span class="acctg-managefield acctg-managefield-for-parentGlAccountDesc">            	
-            	<@setupExtAppLink uri="/accounting/control/EditGlAccount?glAccountId=${rawString(params.parentGlAccountId!)}" text=params.parentGlAccountDesc!"_NA_"/>
+            	<@setupExtAppLink uri="/accounting/control/EditGlobalGlAccount?glAccountId=${rawString(params.parentGlAccountId!)}" text=params.parentGlAccountDesc!"_NA_"/>
            	</span><#t/>
         </@field><#lt/>
         <@field type="hidden" name="parentGlAccountId" value=(params.parentGlAccountId!) class="+acctg-inputfield"/>
@@ -61,7 +61,7 @@
 		
 	    <#if formActionType == "edit">
 	        <@field type="display" label=uiLabelMap.FormFieldTitle_glAccountId><#rt/>
-	            <span class="acctg-managefield acctg-managefield-for-glAccountId"><@setupExtAppLink uri="/accounting/control/EditGlAccount?glAccountId=${rawString(params.glAccountId!)}" text=params.glAccountId!/></span><#t/>
+	            <span class="acctg-managefield acctg-managefield-for-glAccountId"><@setupExtAppLink uri="/accounting/control/EditGlobalGlAccount?glAccountId=${rawString(params.glAccountId!)}" text=params.glAccountId!/></span><#t/>
 	        </@field><#lt/>
 	        <@field type="hidden" name="glAccountId" value=(params.glAccountId!) class="+acctg-inputfield"/>
 	    <#else>

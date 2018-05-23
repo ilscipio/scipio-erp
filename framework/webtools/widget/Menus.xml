@@ -635,8 +635,11 @@ under the License.
         <menu-item name="SolrServices" title="${uiLabelMap['GlResourceType.description.SERVICES']}">
             <link target="SolrServices"/>
         </menu-item>
-        <menu-item name="SolrAdmin" title="${uiLabelMap.SolrSolrAdmin}">
-            <link target="/solr/index.html" url-mode="inter-app" target-window="_blank"/>
+        <menu-item name="SolrAdmin" title="${uiLabelMap.SolrSolrAdmin}" disabled="${not context.isSolrWebappLocal}">
+            <!-- FIXME?: disabled: cannot link to non-local with absolute link because don't have HTTPS port -->
+            <link target="/solr/index.html" url-mode="plain" target-window="_blank">
+                <parameter param-name="externalLoginKey" from-field="externalLoginKey"/>
+            </link>
         </menu-item>
         <menu-item name="SolrDoc" title="Readme">
             <link target="SolrDoc"/>
@@ -645,7 +648,10 @@ under the License.
     
     <menu name="SolrButtonBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="SolrAdmin" title="${uiLabelMap.SolrSolrAdmin}">
-            <link target="/solr/index.html" url-mode="inter-app" target-window="_blank"/>
+            <condition><if-true field="isSolrWebappLocal"/></condition><!-- FIXME?: cannot link to non-local with absolute link because don't have HTTPS port -->
+            <link target="/solr/index.html" url-mode="plain" target-window="_blank">
+                <parameter param-name="externalLoginKey" from-field="externalLoginKey"/>
+            </link>
         </menu-item>
         <!--<menu-item name="ScipioLog" title="${uiLabelMap.WebtoolsViewLog}">
             <link target="LogView"/>

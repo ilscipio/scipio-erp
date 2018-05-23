@@ -98,7 +98,9 @@ public final class Debug {
             // SCIPIO: 2016-11-11: this is a workaround for .groovy module names not showing
             // FIXME?: This should maybe solved another way as this might impact performance?
             if (module != null && module.endsWith(".groovy")) {
-                module = module.substring(0, module.length() - 7) + "Groovy";
+                // 2018-05-22: some of the groovy names are very long, and this looks a little poor, so simply omit the groovy part
+                //module = module.substring(0, module.length() - 7) + "Groovy";
+                module = module.substring(0, module.length() - 7);
             }
             
             if (msg != null && params.length > 0) {

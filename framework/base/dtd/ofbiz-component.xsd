@@ -258,10 +258,25 @@ under the License.
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-<xs:attribute name="override-mode" default="override-mount-point">
+        <xs:attribute name="enabled" default="true">
             <xs:annotation>
                 <xs:documentation>
-                    SCIPIO: 2017-01-19: Determines the behavior when this webapp's
+                    SCIPIO: Toggles whether the webapp gets loaded and enabled.
+                    Setting to false has same effect as commenting out the tag, but is easier to edit.
+                    Added 2018-05-22.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="override-mode" default="override-mount-point">
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: Determines the behavior when this webapp's
                     mount-point is the same as the mount-point of a previously-loaded
                     webapp (from a different component).
                     Possible values:
@@ -270,7 +285,8 @@ under the License.
                         both webapps are left in place in the system, and the override
                         is largely handled by the webapp container (rather than the ofbiz loader).
                     remove-overridden-webapp: the webapp which is being overridden will be
-                        removed from the global registry, as if it had been commented out.    
+                        removed from the global registry, as if it had been commented out.
+                    Added 2017-01-19. 
                 </xs:documentation>
             </xs:annotation>
             <xs:simpleType>

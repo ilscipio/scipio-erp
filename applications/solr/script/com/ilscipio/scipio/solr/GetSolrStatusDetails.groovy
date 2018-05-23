@@ -11,29 +11,41 @@ final module = "GetSolrStatusDetails.groovy";
 pingWebapp = context.pingWebapp;
 if (pingWebapp == null) pingWebapp = true;
 
-solrWebappStatus = new LinkedHashMap();
+solrStatus = new LinkedHashMap();
 
-setWebappStatus = { name, label, cb, defStatus=null ->
+setStatus = { name, label, cb, defStatus=null, msg=null ->
     def info = [:];
     info.label = label;
+    if (msg) info.msg = msg;
     try {
-        info.status = cb();
+        info.status = cb(info);
     } catch(Exception e) {
         Debug.logError("Solr: Error determining Solr webapp '" + name + "' status: " + e.getMessage(), module);
         info.errMsg = e.getMessage() + " (" + e.getClass().getName() + ")";
         if (defStatus != null) info.status = defStatus;
     }
-    solrWebappStatus[name] = info;
+    solrStatus[name] = info;
 };
 
-setWebappStatus("present", "SolrPresent", { SolrUtil.isSolrWebappPresent(); });
-setWebappStatus("enabled", "SolrEnabled", { SolrUtil.isSolrWebappEnabled(); });
-setWebappStatus("initialized", "SolrInitialized", { SolrUtil.isSolrWebappInitialized(); });
+setStatus("enabled", "SolrSolrEnabled", { SolrUtil.isSolrEnabled(); });
+setStatus("systemInitialized", "SolrSystemInitialized", { SolrUtil.isSystemInitialized(); });
+boolean solrWebappLocal = true;
+setStatus("isLocal", "SolrIsWebappLocal", { solrWebappLocal = SolrUtil.isSolrWebappLocal(); return solrWebappLocal; }, null, SolrUtil.getSolrWebappUrl());
+setStatus("localEnabled", "SolrLocalWebappEnabled", { info ->
+    boolean res = SolrUtil.isSolrLocalWebappPresent();
+    if (!solrWebappLocal && res) info.warnMsg = UtilProperties.getMessage("SolrUiLabels", "SolrRedundantLocalInstanceInfo", context.locale);
+    return res;
+});
+setStatus("localInitialized", "SolrLocalWebappStarted", { info ->
+    boolean res = SolrUtil.isSolrLocalWebappStarted();
+    if (!solrWebappLocal && res) info.warnMsg = UtilProperties.getMessage("SolrUiLabels", "SolrRedundantLocalInstanceInfo", context.locale);
+    return res;
+});
 if (pingWebapp) {
-    setWebappStatus("ready", "SolrReady", { SolrUtil.isSolrWebappReadyRaw(); }, false);
+    setStatus("webappReady", "SolrWebappReady", { SolrUtil.isSolrWebappReadyRaw(); }, false, SolrUtil.getSolrWebappUrl());
 }
 
-context.solrWebappStatus = solrWebappStatus;
+context.solrStatus = solrStatus;
 
 solrDataStatus = SolrUtil.getSolrStatus(delegator);
 context.solrDataStatus = solrDataStatus;
@@ -45,6 +57,7 @@ addConfigProp = { propName, title=null, label=null ->
     addConfigEntry([propName:propName, name:propName, title:title?:propName, value:value, label:label]);
 };
 
+addConfigProp("solr.enabled", "Solr Enabled");
 addConfigProp("solr.version", "Solr Version");
 addConfigEntry([name:"solr.config.version.effective", title:"Solr Config Version (Effective)", value:SolrUtil.getSolrConfigVersionStatic()]);
 addConfigProp("solr.core.default", "Default core");

@@ -34,6 +34,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.common.geo.GeoWorker;
 import org.ofbiz.entity.Delegator;
@@ -507,12 +508,18 @@ public class ProductWorker {
         return featureTypeFeatures;
     }
     
+    
+    public static List<Map<String,Map<String,Object>>> getProductFeatures(GenericValue product) {
+        Locale locale = new Locale(UtilProperties.getPropertyValue("start", "ofbiz.locale.default"));
+        return getProductFeatures(product, locale);
+    }
+
     /**
      * SCIPIO: Returns a list of Product features by Type and sequence Id. Replaces getSelectableProductFeaturesByTypesAndSeq
      * @param product
      * @return list featureType and related featuresIds, description and feature price for this product ordered by type and sequence
      * */
-    public static List<Map<String,Map<String,Object>>> getProductFeatures(GenericValue product) {
+    public static List<Map<String,Map<String,Object>>> getProductFeatures(GenericValue product, Locale locale) {
         if (product == null) {
             return null;
         }
@@ -537,8 +544,8 @@ public class ProductWorker {
                 if(featureType == null){
                     featureType = UtilMisc.newMap();
                     GenericValue productFeatureType = EntityQuery.use(delegator).from("ProductFeatureType").where("productFeatureTypeId", productFeatureAppl.getString("productFeatureTypeId")).queryOne();
-                    featureType.put("description",productFeatureType.getString("description"));
-                    featureType.put("productFeatureTypeId", productFeatureAppl.getString("productFeatureTypeId"));
+                    featureType.put("description",productFeatureType.get("description", locale));
+                    featureType.put("productFeatureTypeId", productFeatureAppl.get("productFeatureTypeId", locale));
                     featureType.put("features", UtilMisc.newList());
                     featureTypeFeatures.add(featureType);
                 }

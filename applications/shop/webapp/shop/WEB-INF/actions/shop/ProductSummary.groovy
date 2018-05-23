@@ -34,6 +34,7 @@ import org.ofbiz.service.*;
 import com.ilscipio.scipio.solr.*;
 
 // SCIPIO: NOTE: This script is responsible for checking whether solr is applicable (if no check, implies the shop assumes solr is always enabled).
+final module = "ProductSummary.groovy";
 
 //either optProduct, optProductId or productId must be specified
 product = request.getAttribute("optProduct");
@@ -94,6 +95,10 @@ if (product) {
     context.solrTitle = solrProductWorker.getFieldValueI18nForDisplay("title");
     context.description = solrProductWorker.getFieldValueI18nForDisplay("description");
     context.longdescription = solrProductWorker.getFieldValueI18nForDisplay("longdescription");
+} else {
+    if (productId) { // SCIPIO: report this, could be due to inefficient caching or solr setup
+        Debug.logWarning("Shop: Product '" + productId + "' not found in DB (caching/solr sync?)", module);
+    }
 }
 
 categoryId = null;

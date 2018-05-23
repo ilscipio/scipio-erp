@@ -297,7 +297,7 @@ if (product) {
     // Special Variant Code
     if ("Y".equals(product.isVirtual)) {
         if ("VV_FEATURETREE".equals(ProductWorker.getProductVirtualVariantMethod(delegator, productId))) {
-            context.featureLists = ProductWorker.getProductFeatures(product);
+            context.featureLists = ProductWorker.getProductFeatures(product, context.locale);
         } else {
             featureMap = runService('getProductFeatureSet', [productId : productId]);
             featureSet = featureMap.featureSet;
@@ -331,7 +331,7 @@ if (product) {
                     featureOrder = new LinkedList(featureSet);
                     featureOrder.each { featureKey ->
                         featureValue = from("ProductFeatureType").where("productFeatureTypeId", featureKey).cache(true).queryOne();
-                        fValue = featureValue.get("description") ?: featureValue.productFeatureTypeId;
+                        fValue = featureValue.get("description", context.locale) ?: featureValue.productFeatureTypeId;
                         featureTypes[featureKey] = fValue;
                     }
                 }

@@ -24,6 +24,10 @@
         <value xml:lang="en">Solr Config</value>
         <value xml:lang="de">Solr Config</value>
     </property>
+    <property key="SolrSolrSystemStatus">
+        <value xml:lang="en">Solr System Status</value>
+        <value xml:lang="de">Solr System Status</value>
+    </property>
     <property key="SolrSolrWebappStatus">
         <value xml:lang="en">Solr Webapp Status</value>
         <value xml:lang="de">Solr Webapp Status</value>
@@ -52,13 +56,41 @@
         <value xml:lang="en">Enabled</value>
         <value xml:lang="de">Enabled</value>
     </property>
+    <property key="SolrSolrEnabled">
+        <value xml:lang="en">Solr enabled</value>
+        <value xml:lang="de">Solr enabled</value>
+    </property>
     <property key="SolrInitialized">
         <value xml:lang="en">Initialized</value>
         <value xml:lang="de">Initialized</value>
     </property>
+    <property key="SolrSystemInitialized">
+        <value xml:lang="en">System initialized</value>
+        <value xml:lang="de">System initialized</value>
+    </property>
     <property key="SolrReady">
         <value xml:lang="en">Ready</value>
         <value xml:lang="de">Ready</value>
+    </property>
+    <property key="SolrWebappReady">
+        <value xml:lang="en">Webapp ready</value>
+        <value xml:lang="de">Webapp ready</value>
+    </property>
+    <property key="SolrIsWebappLocal">
+        <value xml:lang="en">Is webapp local</value>
+        <value xml:lang="de">Is webapp local</value>
+    </property>
+    <property key="SolrLocalWebappEnabled">
+        <value xml:lang="en">Local webapp enabled</value>
+        <value xml:lang="de">Local webapp enabled</value>
+    </property>
+    <property key="SolrLocalWebappStarted">
+        <value xml:lang="en">Local webapp started</value>
+        <value xml:lang="de">Local webapp started</value>
+    </property>
+    <property key="SolrRedundantLocalInstanceInfo">
+        <value xml:lang="en">The target Solr instance appears to be a non-local-instance address, but you still have a local instance running; it is recommended to disable the local instance in applications/solr/ofbiz-component.xml to preserve resources (set webapp element enabled="false").</value>
+        <value xml:lang="de">Die Ziel-Solr-Instanz scheint eine nicht lokale Instanzadresse zu sein, aber Sie haben immer noch eine lokale Instanz ausgeführt; Es wird empfohlen, die lokale Instanz in applications/solr/ofbiz-component.xml zu deaktivieren, um Ressourcen zu erhalten (set webapp element enabled="false").</value>
     </property>
     <property key="SolrErrorSeeServerLogs">
         <value xml:lang="en">Error - see server logs</value>

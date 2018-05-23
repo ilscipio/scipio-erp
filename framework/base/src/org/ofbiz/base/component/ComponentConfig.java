@@ -492,6 +492,12 @@ public final class ComponentConfig {
         if (!childElements.isEmpty()) {
             List<WebappInfo> webappInfos = new ArrayList<WebappInfo>(childElements.size());
             for (Element curElement : childElements) {
+                // SCIPIO: 2018-05-22: webapp disable tag for easier toggling webapps
+                if ("false".equals(curElement.getAttribute("enabled"))) {
+                    Debug.logInfo("Webapp '" + curElement.getAttribute("name")
+                        + "' of component '" + componentName + "' is disabled; ignoring definition", module);
+                    continue;
+                }
                 WebappInfo webappInfo = new WebappInfo(this, curElement);
                 webappInfos.add(webappInfo);
             }

@@ -29,8 +29,7 @@
     <#macro efpDefMarkupMenu args={}>
         <@menu class="side-nav acctg-action-menu box" id="acctg-action-menu-timePeriod">
           <@acctgMarkupOut dir=efpMarkupPostMenuItems!efpDefMarkupPostMenuItems/>
-        </@menu>
-        
+        </@menu>        
     </#macro>
 
     <#-- PRE-OUTPUTTED MARKUP FOR JAVASCRIPT 

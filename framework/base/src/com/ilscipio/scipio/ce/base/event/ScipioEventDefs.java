@@ -52,8 +52,6 @@ public class ScipioEventDefs<H> {
             ScipioEventDefs.readEventMapDefs(allMapDefs, props, propPrefix);
         }
 
-        StringBuilder sb = new StringBuilder("Scipio: Registered event handlers for " + EVENTS_PROPRES + " " + propPrefix + ":");
-
         for(Map<String, String> defMap : allMapDefs.values()) {
             EventDef<H> eventDef;
             try {
@@ -65,13 +63,18 @@ public class ScipioEventDefs<H> {
                 continue;
             }
             allDefs.add(eventDef);
-            sb.append("\n");
-            sb.append(eventDef);
         }
         Collections.sort(allDefs);
         
+        StringBuilder sb = new StringBuilder("Scipio: Registered event handlers for " + EVENTS_PROPRES + " " + propPrefix + ":");
+
         if (allDefs.isEmpty()) {
             sb.append("(none)");
+        } else {
+            for(EventDef<H> eventDef : allDefs) {
+                sb.append("\n");
+                sb.append(eventDef);
+            }
         }
         Debug.logInfo(sb.toString(), module);
         
@@ -258,7 +261,7 @@ public class ScipioEventDefs<H> {
 
         @Override
         public String toString() {
-            return name + " [" + handler.getClass().getName() + "] [prio: " + priority + "]";
+            return "[" + priority + "] " + name + " (" + handler.getClass().getName() + ")";
         }
 
         @Override

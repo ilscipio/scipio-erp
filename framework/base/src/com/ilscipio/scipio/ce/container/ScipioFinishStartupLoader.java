@@ -23,9 +23,9 @@ import org.ofbiz.base.util.ScriptUtil;
  * <p>
  * Added 2018-05-22.
  */
-public class ScipioPostStartupLoader implements StartupLoader {
+public class ScipioFinishStartupLoader implements StartupLoader {
 
-    private static final String module = ScipioPostStartupLoader.class.getName();
+    private static final String module = ScipioFinishStartupLoader.class.getName();
 
     @Override
     public void load(Config config, String[] args) throws StartupException {
@@ -45,7 +45,7 @@ public class ScipioPostStartupLoader implements StartupLoader {
      * see {@link org.ofbiz.base.start.Start#printStartupReadyMessage}.
      */
     protected void initPostStartup() {
-        Debug.logInfo("Scipio: Running post-startup actions...", module);
+        Debug.logInfo("Scipio: Startup end events begin...", module);
     }
 
     /**
@@ -55,7 +55,7 @@ public class ScipioPostStartupLoader implements StartupLoader {
      * see {@link org.ofbiz.base.start.Start#printStartupReadyMessage}.
      */
     protected void initPostStartupComplete() {
-        Debug.logInfo("Scipio: Post-startup complete.", module);
+        Debug.logInfo("Scipio: Startup end events complete.", module);
     }
 
     /**

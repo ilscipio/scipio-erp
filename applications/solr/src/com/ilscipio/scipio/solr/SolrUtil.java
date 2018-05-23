@@ -15,6 +15,8 @@ import org.apache.solr.client.solrj.response.SolrPingResponse;
 import org.apache.solr.common.params.ModifiableSolrParams;
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
+import org.ofbiz.base.start.Start;
+import org.ofbiz.base.start.Start.ServerState;
 import org.ofbiz.base.component.ComponentException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
@@ -38,6 +40,13 @@ public abstract class SolrUtil {
     
     public static final String solrConfigName = "solrconfig";
     
+    private static final boolean solrEnabled = getSolrSysPropCfgBool("enabled", true);
+    private static final boolean solrEcaEnabled = getSolrSysPropCfgBool("eca.enabled", false);
+    private static final boolean solrWebappCheckEnabled = getSolrSysPropCfgBool("eca.useSolrWebappLoadedCheck", true);
+    
+    private static final String solrWebappProtocol = UtilProperties.getPropertyValue(solrConfigName, "solr.webapp.protocol");
+    private static final String solrWebappHost = UtilProperties.getPropertyValue(solrConfigName, "solr.webapp.domainName");
+    private static final Integer solrWebappPort = readSolrWebappPort();
     private static final String solrWebappPath = UtilProperties.getPropertyValue(solrConfigName, "solr.webapp.path", "/solr");
     private static final String solrWebappServer = UtilProperties.getPropertyValue(solrConfigName, "solr.webapp.server", "default-server");
     private static final String solrDefaultCore = UtilProperties.getPropertyValue(solrConfigName, "solr.core.default");
@@ -46,26 +55,20 @@ public abstract class SolrUtil {
             UtilProperties.getPropertyValue(solrConfigName, "solr.config.version"),
             UtilProperties.getPropertyValue(solrConfigName, "solr.config.version.custom"),
             UtilProperties.getPropertyValue(solrConfigName, "solr.config.version.extra"));
+    
     /**
-     * @deprecated use {@link #getSolrWebappUrl} instead
+     * @deprecated use {@link #getSolrWebappUrl} instead.
      */
     @Deprecated
     public static final String solrUrl = makeSolrWebappUrl();
     /**
-     * @deprecated use {@link #getSolrDefaultCoreUrl} instead
+     * @deprecated use {@link #getSolrDefaultCoreUrl} instead.
      */
     @Deprecated
     public static final String solrFullUrl = makeSolrDefaultCoreUrl();
 
-    private static Boolean solrWebappPresent = null; // NOTE: don't really need volatile/sync; optimization only
-    
     public static String getSolrConfigName() {
         return solrConfigName;
-    }
-
-    private static String getSolrPropValueOrNull(String name) {
-        String value = UtilProperties.getPropertyValue(solrConfigName, name);
-        return (value.isEmpty() ? null : value);
     }
     
     /**
@@ -95,35 +98,65 @@ public abstract class SolrUtil {
         return solrDefaultCore;
     }
     
+    public static String getSolrWebappProtocol() {
+        return solrWebappProtocol;
+    }
+    
+    public static String getSolrWebappHost() {
+        return solrWebappHost;
+    }
+    
+    public static int getSolrWebappPort() {
+        return solrWebappPort;
+    }
+    
+    private static int readSolrWebappPort() {
+        Integer solrPort = UtilProperties.getPropertyAsInteger(solrConfigName, "solr.webapp.portOverride", null);
+        if (solrPort != null) {
+            return solrPort;
+        }
+        solrPort = LocalUrlUtil.getWebappContainerPort(solrWebappProtocol);
+        if (solrPort != null) {
+            return solrPort;
+        }
+        solrPort = LocalUrlUtil.getStandardPort(solrWebappProtocol);
+        Debug.logWarning("Solr: Could not determine a solr webapp port from " + solrConfigName 
+                + ", url.properties or container; using default: " + solrPort, module);
+        return solrPort;
+    }
+    
+    public static boolean isSolrWebappLocal() {
+        if (!LocalUrlUtil.isLocalhost(getSolrWebappHost())) {
+            return false;
+        }
+        return LocalUrlUtil.isWebappContainerPort(getSolrWebappPort());
+    }
+    
+    public static String getSolrWebappPath() {
+        return solrWebappPath;
+    }
+    
     public static String getSolrWebappUrl() {
         return solrUrl;
     }
     
-    public static String makeSolrWebappUrl() {
-        final String solrWebappProtocol = UtilProperties.getPropertyValue(solrConfigName, "solr.webapp.protocol");
-        final String solrWebappDomainName = UtilProperties.getPropertyValue(solrConfigName, "solr.webapp.domainName");
-        final String solrWebappPath = SolrUtil.solrWebappPath;
-        final String solrWebappPortOverride = UtilProperties.getPropertyValue(solrConfigName, "solr.webapp.portOverride");
-        
-        String solrPort;
-        if (UtilValidate.isNotEmpty(solrWebappPortOverride)) {
-            solrPort = solrWebappPortOverride;
-        } else {
-            solrPort = UtilProperties.getPropertyValue("url", ("https".equals(solrWebappProtocol) ? "port.https" : "port.http"));
-        }
+    private static String makeSolrWebappUrl() {
         StringBuilder sb = new StringBuilder();
-        sb.append(solrWebappProtocol);
+        sb.append(getSolrWebappProtocol());
         sb.append("://");
-        sb.append(solrWebappDomainName);
-        sb.append(":");
-        sb.append(solrPort);
-        sb.append(solrWebappPath);
+        sb.append(getSolrWebappHost());
+        if (!LocalUrlUtil.isStandardPort(getSolrWebappPort(), getSolrWebappProtocol())) {
+            sb.append(":");
+            sb.append(getSolrWebappPort());
+        }
+        sb.append(getSolrWebappPath());
         if (sb.charAt(sb.length() - 1) == '/') {
             sb.setLength(sb.length() - 1);
         }
+        Debug.logInfo("Solr: Determined internal Solr webapp URL: " + sb.toString(), module);
         return sb.toString();
     }
-    
+
     public static String getSolrCoreUrl(String core) {
         return getSolrWebappUrl() + "/" + core;
     }
@@ -143,23 +176,7 @@ public abstract class SolrUtil {
     public static String makeFullSolrWebappUrl() {
         return makeSolrDefaultCoreUrl();
     }
-
-    public static boolean isSolrEcaEnabled() {
-        Boolean ecaEnabled = null;
-        String sysProp = System.getProperty("ofbiz.solr.eca.enabled");
-        if (UtilValidate.isNotEmpty(sysProp)) {
-            if ("true".equalsIgnoreCase(sysProp))  {
-                ecaEnabled = Boolean.TRUE;
-            } else if ("false".equalsIgnoreCase(sysProp)) {
-                ecaEnabled = Boolean.FALSE;
-            }
-        }
-        if (ecaEnabled == null) {
-            ecaEnabled = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.eca.enabled", false);
-        }
-        return Boolean.TRUE.equals(ecaEnabled);
-    }
-    
+ 
     public static WebappInfo getSolrWebappInfo() {
         WebappInfo solrApp = null;
         try {
@@ -170,25 +187,65 @@ public abstract class SolrUtil {
                     break;
                 }
             }
-        }
-        catch(ComponentException e) {
+        } catch(ComponentException e) {
             throw new IllegalStateException(e);
         }
         return solrApp;
     }
-    
-    public static boolean isSolrEcaWebappInitCheckPassed() {
-        Boolean webappCheckEnabled = UtilProperties.getPropertyAsBoolean(solrConfigName, "solr.eca.useSolrWebappLoadedCheck", true);
-        if (Boolean.TRUE.equals(webappCheckEnabled)) {
-            return isSolrWebappInitialized();
-        } else {
-            // If webapp check disabled, then we say the check passed.
-            return true;
+
+    private static boolean getSolrSysPropCfgBool(String name, boolean defaultValue) {
+        Boolean value = UtilMisc.booleanValueVersatile(System.getProperty("scipio.solr."+name));
+        if (value == null) {
+            value = UtilMisc.booleanValueVersatile(System.getProperty("ofbiz.solr."+name));
+            if (value == null) {
+                value = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr."+name, defaultValue);
+            }
         }
+        return value;
     }
     
-    public static boolean isSolrWebappInitialized() {
+    public static boolean isSolrEnabled() {
+        return solrEnabled;
+    }
+    
+    public static boolean isSolrEcaEnabled() {
+        return solrEcaEnabled;
+    }
+    
+    /**
+     * Checks if solr is enabled and scipio is initialized for solr and the system/server 
+     * is in a running state in which queries may be attempted against the solr webapp.
+     * <p>
+     * NOTE: true does NOT mean that solr webapp is fully loaded and pingable,
+     * because the webapp may be remote and such a check must be done physically using
+     * waitSolrReady service, {@link #isSolrWebappPingOk()} or {@link #isSolrWebappReady()}.
+     */
+    public static boolean isSystemInitialized() {
+        return isSolrEnabled() && (Start.getInstance().getCurrentState() == ServerState.RUNNING);
+    }
+
+    /**
+     * Returns true if the LOCAL Solr webapp has reached initialization.
+     */
+    public static boolean isSolrLocalWebappStarted() {
         return ScipioSolrInfoServlet.isServletInitStatusReached();
+    }
+    
+    /**
+     * Returns true if the LOCAL Solr webapp is initialized.
+     * @deprecated 2018-05-25: ambiguous; use {@link #isSystemInitialized()} or {@link #isSolrLocalWebappStarted()}.
+     */
+    @Deprecated
+    public static boolean isSolrWebappInitialized() {
+        return isSolrLocalWebappStarted();
+    }
+    
+    /**
+     * If the solr webapp/initialization check if enabled in config, 
+     * returns {@link #isSystemInitialized()}, otherwise returns true.
+     */
+    public static boolean isSolrEcaWebappInitCheckPassed() {
+        return (solrWebappCheckEnabled) ? isSystemInitialized() : true;
     }
     
     public static boolean isEcaTreatConnectErrorNonFatal() {
@@ -197,28 +254,34 @@ public abstract class SolrUtil {
     }
  
     /**
-     * Returns true if the Solr webapp is present in the system (by context root).
+     * Returns true if the LOCAL Solr webapp is present in the system (by context root),
+     * as defined in applications/solr/ofbiz-component.xml.
      * <p>
      * For stock Scipio configuration, this always returns true.
+     * It only returns false if the webapp is disabled/commented in ofbiz-component.xml.
      * <p>
      * WARN: Do not call this before or while components are being read.
      */
-    public static boolean isSolrWebappPresent() {
-        Boolean present = solrWebappPresent;
-        if (present == null) {
-            present = (ComponentConfig.getWebAppInfo(solrWebappServer, solrWebappPath) != null);
-            solrWebappPresent = present;
-        }
-        return present;
+    public static boolean isSolrLocalWebappPresent() {
+        return (ComponentConfig.getWebAppInfo(solrWebappServer, solrWebappPath) != null);
     }
     
     /**
-     * Returns true if the Solr webapp is present and enabled.
-     * <p>
-     * WARN: Do not call this before or while components are being read.
+     * Returns true if the LOCAL Solr webapp is present in the system (by context root).
+     * @deprecated 2018-05-25: ambiguous; use {@link #isSystemInitialized()} or {@link #isSolrLocalWebappPresent()}.
      */
+    @Deprecated
+    public static boolean isSolrWebappPresent() {
+        return isSolrLocalWebappPresent();
+    }
+    
+    /**
+     * Returns true if the LOCAL Solr webapp is present in the system (by context root) and running state.
+     * @deprecated 2018-05-25: ambiguous; use {@link #isSystemInitialized()} or {@link #isSolrLocalWebappPresent()}.
+     */
+    @Deprecated
     public static boolean isSolrWebappEnabled() {
-        return isSolrWebappPresent();
+        return isSolrEnabled() && isSolrLocalWebappPresent();
     }
     
     public static boolean isSolrWebappPingOk(HttpSolrClient client) throws Exception {
@@ -250,7 +313,7 @@ public abstract class SolrUtil {
      * Returns true if Solr is loaded and available for queries.
      */
     public static boolean isSolrWebappReady(HttpSolrClient client) throws Exception {
-        return isSolrWebappInitialized() && isSolrWebappPingOk(client);
+        return isSystemInitialized() && isSolrWebappPingOk(client);
     }
     
     /**
@@ -261,7 +324,7 @@ public abstract class SolrUtil {
     }
 
     public static boolean isSolrWebappReadyRaw(HttpSolrClient client) throws Exception {
-        return isSolrWebappInitialized() && isSolrWebappPingOkRaw(client);
+        return isSystemInitialized() && isSolrWebappPingOkRaw(client);
     }
 
     public static boolean isSolrWebappReadyRaw() throws Exception {
@@ -742,6 +805,37 @@ public abstract class SolrUtil {
             public SolrConnectConfig getConnectConfig() {
                 return connectConfig;
             }
+        }
+    }
+    
+    static class LocalUrlUtil {
+        public static boolean isLocalhost(String host) {
+            return "localhost".equals(host) || "127.0.0.1".equals(host);
+        }
+        
+        public static int getStandardPort(String protocol) {
+            return ("https".equals(protocol)) ? 443 : 80;
+        }
+        
+        public static boolean isStandardPort(int port, String protocol) {
+            return ("https".equals(protocol) && port == 443) || ("http".equals(protocol) && port == 80);
+        }
+        
+        public static Integer getWebappContainerPort(String protocol) {
+            Integer port = UtilProperties.getPropertyAsInteger("url", "https".equals(protocol) ? "port.https" : "port.http", null);
+            // TODO: should try to lookup a container port in this case
+            return port;
+        }
+        
+        public static boolean isWebappContainerPort(int port) {
+            if (port == UtilProperties.getPropertyAsInteger("url", "port.https", -1)) {
+                return true;
+            }
+            if (port == UtilProperties.getPropertyAsInteger("url", "port.http", -1)) {
+                return true;
+            }
+            // TODO: should try to lookup container ports in this case
+            return false;
         }
     }
 }

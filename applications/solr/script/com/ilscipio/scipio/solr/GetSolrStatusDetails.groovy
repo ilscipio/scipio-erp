@@ -11,9 +11,9 @@ final module = "GetSolrStatusDetails.groovy";
 pingWebapp = context.pingWebapp;
 if (pingWebapp == null) pingWebapp = true;
 
-solrWebappStatus = new LinkedHashMap();
+solrStatus = new LinkedHashMap();
 
-setWebappStatus = { name, label, cb, defStatus=null ->
+setStatus = { name, label, cb, defStatus=null ->
     def info = [:];
     info.label = label;
     try {
@@ -23,17 +23,18 @@ setWebappStatus = { name, label, cb, defStatus=null ->
         info.errMsg = e.getMessage() + " (" + e.getClass().getName() + ")";
         if (defStatus != null) info.status = defStatus;
     }
-    solrWebappStatus[name] = info;
+    solrStatus[name] = info;
 };
 
-setWebappStatus("present", "SolrPresent", { SolrUtil.isSolrWebappPresent(); });
-setWebappStatus("enabled", "SolrEnabled", { SolrUtil.isSolrWebappEnabled(); });
-setWebappStatus("initialized", "SolrInitialized", { SolrUtil.isSolrWebappInitialized(); });
+setStatus("enabled", "SolrEnabled", { SolrUtil.isSolrEnabled(); });
+setStatus("initialized", "SolrInitialized", { SolrUtil.isSolrInitialized(); });
+setStatus("localEnabled", "SolrLocalWebappEnabled", { SolrUtil.isSolrLocalWebappPresent(); });
+setStatus("localInitialized", "SolrLocalWebappIntialized", { SolrUtil.isSolrLocalWebappInitialized(); });
 if (pingWebapp) {
-    setWebappStatus("ready", "SolrReady", { SolrUtil.isSolrWebappReadyRaw(); }, false);
+    setStatus("ready", "SolrReady", { SolrUtil.isSolrWebappReadyRaw(); }, false);
 }
 
-context.solrWebappStatus = solrWebappStatus;
+context.solrStatus = solrStatus;
 
 solrDataStatus = SolrUtil.getSolrStatus(delegator);
 context.solrDataStatus = solrDataStatus;
@@ -45,6 +46,7 @@ addConfigProp = { propName, title=null, label=null ->
     addConfigEntry([propName:propName, name:propName, title:title?:propName, value:value, label:label]);
 };
 
+addConfigProp("solr.enabled", "Solr Enabled");
 addConfigProp("solr.version", "Solr Version");
 addConfigEntry([name:"solr.config.version.effective", title:"Solr Config Version (Effective)", value:SolrUtil.getSolrConfigVersionStatic()]);
 addConfigProp("solr.core.default", "Default core");

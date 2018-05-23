@@ -8,6 +8,9 @@ import org.ofbiz.base.util.Debug;
 
 /**
  * Scipio Solr info/helper servlet.
+ * <p>
+ * WARN: 2018-05-22: This should no longer be used to check Solr initialization state;
+ * use {@link com.ilscipio.scipio.solr.SolrUtil#isSystemInitialized()} instead.
  */
 @SuppressWarnings("serial")
 public class ScipioSolrInfoServlet extends HttpServlet {
@@ -20,13 +23,6 @@ public class ScipioSolrInfoServlet extends HttpServlet {
      */
     private static volatile boolean servletInitStatusReached = false;
     
-    public ScipioSolrInfoServlet() {
-        super();
-    }
-    
-    /**
-     * @see javax.servlet.Servlet#init(javax.servlet.ServletConfig)
-     */
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -38,18 +34,22 @@ public class ScipioSolrInfoServlet extends HttpServlet {
     
     private static boolean setServletInitStatusReached() {
         if (!isServletInitStatusReached()) {
-            Debug.logInfo("Solr: ScipioSolrInfoServlet: First servlet init executed", module);
-            servletInitStatusReached = true;
-            return true;
-        } else {
-            return false;
-        }
+            synchronized(ScipioSolrInfoServlet.class) {
+                if (!isServletInitStatusReached()) {
+                    Debug.logInfo("Solr: ScipioSolrInfoServlet: First servlet init executed", module);
+                    servletInitStatusReached = true;
+                    return true;
+                }
+            }
+        } 
+        return false;
     }
     
     /**
      * Checks if the init method was called for any instance of this servlet.
      * <p>
-     * This can be used as a workaround to detect the approximate point at which the webapp was loaded.
+     * WARN: 2018-05-22: This should no longer be used to check Solr initialization state;
+     * use {@link com.ilscipio.scipio.solr.SolrUtil#isSystemInitialized()} instead.
      */
     public static boolean isServletInitStatusReached() {
         return servletInitStatusReached;

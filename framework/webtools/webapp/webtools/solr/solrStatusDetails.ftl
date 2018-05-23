@@ -8,7 +8,7 @@
     </#if>
 </#macro>
 
-<@section title=uiLabelMap.SolrSolrStatus>
+<@section title=uiLabelMap.SolrSolrSystemStatus>
   <#if solrStatus?has_content>
     <@table type="data-complex" autoAltRows=true>
       <@thead>
@@ -33,7 +33,10 @@
                   -
                 </#if>
             </@td>
-            <@td><#if statusInfo.errMsg??><span class="${styles.text_color_error!}"><strong>${uiLabelMap.CommonError}</strong>: ${statusInfo.errMsg}</span></#if></@td>
+            <@td>
+              <#if statusInfo.msg??>${statusInfo.msg}<#if statusInfo.errMsg??><br/></#if></#if>
+              <#if statusInfo.errMsg??><span class="${styles.text_color_error!}"><strong>${uiLabelMap.CommonError}</strong>: ${statusInfo.errMsg}</span></#if>
+            </@td>
           </@tr>
         </#list>
       </@tbody>

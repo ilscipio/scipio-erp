@@ -13,9 +13,10 @@ if (pingWebapp == null) pingWebapp = true;
 
 solrStatus = new LinkedHashMap();
 
-setStatus = { name, label, cb, defStatus=null ->
+setStatus = { name, label, cb, defStatus=null, msg=null ->
     def info = [:];
     info.label = label;
+    if (msg) info.msg = msg;
     try {
         info.status = cb();
     } catch(Exception e) {
@@ -26,13 +27,13 @@ setStatus = { name, label, cb, defStatus=null ->
     solrStatus[name] = info;
 };
 
-setStatus("enabled", "SolrEnabled", { SolrUtil.isSolrEnabled(); });
-setStatus("initialized", "SolrSystemInitialized", { SolrUtil.isSystemInitialized(); });
-setStatus("isLocal", "SolrIsWebappLocal", { SolrUtil.isSolrWebappLocal(); });
+setStatus("enabled", "SolrSolrEnabled", { SolrUtil.isSolrEnabled(); });
+setStatus("systemInitialized", "SolrSystemInitialized", { SolrUtil.isSystemInitialized(); });
+setStatus("isLocal", "SolrIsWebappLocal", { SolrUtil.isSolrWebappLocal(); }, null, SolrUtil.getSolrWebappUrl());
 setStatus("localEnabled", "SolrLocalWebappEnabled", { SolrUtil.isSolrLocalWebappPresent(); });
 setStatus("localInitialized", "SolrLocalWebappStarted", { SolrUtil.isSolrLocalWebappStarted(); });
 if (pingWebapp) {
-    setStatus("ready", "SolrReady", { SolrUtil.isSolrWebappReadyRaw(); }, false);
+    setStatus("webappReady", "SolrWebappReady", { SolrUtil.isSolrWebappReadyRaw(); }, false);
 }
 
 context.solrStatus = solrStatus;

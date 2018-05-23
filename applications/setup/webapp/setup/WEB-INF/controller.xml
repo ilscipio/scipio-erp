@@ -165,6 +165,26 @@
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupAccounting"/>
     </request-map>
+    
+    <request-map uri="setupCreateTimePeriod">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createTimePeriod"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
+    <request-map uri="setupUpdateTimePeriod">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateTimePeriod"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
+    <request-map uri="setupDeleteTimePeriod">
+        <security https="true" auth="true"/>
+        <!-- TODO -->
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
+    
     <request-map uri="setupAssignGlAccount">
         <security https="true" auth="true"/>
         <!-- TODO -->

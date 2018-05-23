@@ -694,6 +694,9 @@ under the License.
                 <property-map resource="SolrUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="AccountingEntityLabels" map-name="uiLabelMap" global="true"/>
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="Solr" />
+                <script lang="groovy"><![CDATA[
+                    globalContext.isSolrWebappLocal = com.ilscipio.scipio.solr.SolrUtil.isSolrWebappLocal(); 
+                ]]></script>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">

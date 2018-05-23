@@ -33,7 +33,7 @@ setStatus("isLocal", "SolrIsWebappLocal", { SolrUtil.isSolrWebappLocal(); }, nul
 setStatus("localEnabled", "SolrLocalWebappEnabled", { SolrUtil.isSolrLocalWebappPresent(); });
 setStatus("localInitialized", "SolrLocalWebappStarted", { SolrUtil.isSolrLocalWebappStarted(); });
 if (pingWebapp) {
-    setStatus("webappReady", "SolrWebappReady", { SolrUtil.isSolrWebappReadyRaw(); }, false);
+    setStatus("webappReady", "SolrWebappReady", { SolrUtil.isSolrWebappReadyRaw(); }, false, SolrUtil.getSolrWebappUrl());
 }
 
 context.solrStatus = solrStatus;

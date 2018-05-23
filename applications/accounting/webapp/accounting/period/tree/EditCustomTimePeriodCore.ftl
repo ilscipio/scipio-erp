@@ -23,14 +23,14 @@
     <#macro efpDefMarkupMenuItemDivider args={}><@menuitem type="generic"><hr/></@menuitem></#macro>
     <#macro efpDefMarkupPostMenuItems args={}>
     	<#--  <@menuitem type="link" href="javascript:void(0);" onClick="efpHandler.execNewGlAccount();" text=uiLabelMap.CommonCreate /> -->
-        <#-- <@menuitem type="link" href="javascript:void(0);" onClick="efpHandler.execImport();" text=uiLabelMap.CommonImport /> -->        
+        <#-- <@menuitem type="link" href="javascript:void(0);" onClick="efpHandler.execImport();" text=uiLabelMap.CommonImport /> -->   
+        <@menuitem type="link" href="javascript:void(0);" onClick="efpHandler.execNewTimePeriod();" text=uiLabelMap.CommonAdd/><#t/>     
     </#macro>
     <#macro efpDefMarkupMenu args={}>
-        <#-- <ul class="side-nav efp-action-menu" id="efp-action-menu"> -->
-        <@menu class="side-nav acctg-action-menu box" id="acctg-action-menu">
+        <@menu class="side-nav acctg-action-menu box" id="acctg-action-menu-timePeriod">
           <@acctgMarkupOut dir=efpMarkupPostMenuItems!efpDefMarkupPostMenuItems/>
         </@menu>
-        <#-- </ul> -->
+        
     </#macro>
 
     <#-- PRE-OUTPUTTED MARKUP FOR JAVASCRIPT 
@@ -146,11 +146,14 @@
 		<@cell medium=3 large=3>    
 	      <#-- ACTIONS MENU -->
 	      <@section title=uiLabelMap.CommonActions>
-	      	<ul class="side-nav">		       	
+	      	<@efpDefMarkupMenu/>
+	      	<#-- 
+	      	<ul class="side-nav acctg-action-menu" id="acctg-action-menu"">		       	
 	        	<li>
 	        		<@menuitem contentId="efp-timePeriod-add" class="+efp-menu-action" type="link" href="javascript:void(0);" text=uiLabelMap.CommonAdd />
 	        	</li>
 	        </ul>
+	        -->
 	      </@section>
 	   </@cell>	       
 	</@row>			

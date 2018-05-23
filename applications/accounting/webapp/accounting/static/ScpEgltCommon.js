@@ -1100,7 +1100,15 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
             execActionTarget(ai, params);
         });
     };
-    */    
+    */   
+    this.execNewTimePeriod = function() {
+        var ai = getActionInfo(null, "newtimeperiod", "default");
+        var params = makeParamsMap(ai);
+        // default params OK
+        checkExecConfirm(ai, params, {}, function() {            
+            execActionTarget(ai, params);
+        });
+    };
     
     this.execManageForNode = function($node) {
         var ai = getActionInfo($node, "manage");
@@ -1205,7 +1213,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
     };
     
     this.sideMenuHandler = function($node) {
-        var $el = jQuery("#acctg-action-menu");
+        var $el = jQuery("#acctg-action-menu-" + $node.data.type);
         var menuDefs = getMenuDefs($node);
         
         var useDividers = true;

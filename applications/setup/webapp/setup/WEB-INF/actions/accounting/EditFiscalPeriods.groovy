@@ -16,16 +16,19 @@ orgPartyId = context.orgPartyId;
 EntityConditionList conds = EntityCondition.makeCondition([
     EntityCondition.makeCondition("parentPeriodId", EntityOperator.EQUALS, null),
     EntityCondition.makeCondition("organizationPartyId", EntityOperator.EQUALS, orgPartyId),
-    EntityCondition.makeCondition([
-           EntityCondition.makeCondition("isClosed", EntityOperator.EQUALS, "N"),
-           EntityCondition.makeCondition("isClosed", EntityOperator.NOT_EQUAL, null)
+//    EntityCondition.makeCondition([
+//           EntityCondition.makeCondition("isClosed", EntityOperator.EQUALS, "N"),
+//           EntityCondition.makeCondition("isClosed", EntityOperator.NOT_EQUAL, null)
     ],
-    EntityOperator.OR)],
+//    EntityOperator.OR)],
     EntityOperator.AND
 );
 
 List<GenericValue> timePeriods = EntityQuery.use(delegator).from("CustomTimePeriod").where(conds).queryList();
 context.allCustomTimePeriods = timePeriods;
+for (timePeriod in timePeriods) {
+    Debug.log("timePeriod id ===> " + timePeriod.customTimePeriodId);
+}
 
 treeMenuHelper = new JsTreeHelper();
 treeMenuData = [];

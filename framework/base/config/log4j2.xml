@@ -25,7 +25,10 @@
         </RollingFile>
         <RollingFile name="error" fileName="runtime/logs/error.log"
                      filePattern="runtime/logs/error-%d{yyyy-MM-dd}-%i.log">
-            <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+            <Filters>
+                <ThresholdFilter level="off" onMatch="DENY" onMismatch="NEUTRAL"/><!-- SCIPIO: don't log OFF level in error log -->
+                <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
             <PatternLayout pattern="%date{DEFAULT} |%-20.20thread |%-30.30logger{1}|%level{length=1}| %message%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy/>

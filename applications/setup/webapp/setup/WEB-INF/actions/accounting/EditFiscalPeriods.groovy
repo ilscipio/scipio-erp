@@ -25,6 +25,7 @@ EntityConditionList conds = EntityCondition.makeCondition([
 );
 
 List<GenericValue> timePeriods = EntityQuery.use(delegator).select("customTimePeriodId").from("CustomTimePeriod").where(conds).queryList();
+context.allCustomTimePeriods = timePeriods;
 
 treeMenuHelper = new JsTreeHelper();
 treeMenuData = [];
@@ -41,3 +42,4 @@ context.treeMenuData = treeMenuHelper;
 for (GenericValue timePeriod in timePeriods) {
     Debug.log("time period id =====>  " + timePeriod.customTimePeriodId);    
 }
+

@@ -738,8 +738,8 @@
     <screen name="EditAccountingTransactions">
         <section>
             <actions>
-                <!-- <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditJournals.groovy"/>      -->           
-                <entity-and list="datevDataCategories" entity-name="DatevDataCategory"></entity-and>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditAccountingTransactions.groovy"/>
+                <!-- <entity-and list="datevDataCategories" entity-name="DatevDataCategory"></entity-and> -->
             </actions>
             <widgets>
             	<section>

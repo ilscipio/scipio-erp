@@ -26,11 +26,9 @@
         <#-- <@menuitem type="link" href="javascript:void(0);" onClick="egltHandler.execImport();" text=uiLabelMap.CommonImport /> -->        
     </#macro>
     <#macro egltDefMarkupMenu args={}>
-        <#-- <ul class="side-nav eglt-action-menu" id="eglt-action-menu"> -->
-        <@menu class="side-nav acctg-action-menu box" id="acctg-action-menu">
+        <@menu class="side-nav acctg-action-menu box" id="acctg-action-menu-glAccount">
           <@acctgMarkupOut dir=egltMarkupPostMenuItems!egltDefMarkupPostMenuItems/>
-        </@menu>
-        <#-- </ul> -->
+        </@menu>        
     </#macro>
 
     <#-- PRE-OUTPUTTED MARKUP FOR JAVASCRIPT 

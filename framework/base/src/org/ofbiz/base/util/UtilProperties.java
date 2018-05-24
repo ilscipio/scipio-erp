@@ -45,6 +45,8 @@ import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.cache.UtilCache;
@@ -1274,6 +1276,53 @@ public class UtilProperties implements Serializable {
                 }
             }
         }
+    }
+
+    /**
+     * SCIPIO: Puts all property name/value pairs in the given Properties that match the given regexp,
+     * with option to return names from the first numbered regexp group.
+     * Added 2018-08-23.
+     */
+    public static void putPropertiesMatching(Map<String, ? super String> out, Properties properties, Pattern nameRegexp, boolean returnFirstGroup) {
+        for(String name : properties.stringPropertyNames()) {
+            Matcher m = nameRegexp.matcher(name);
+            if (m.matches()) {
+                String value = properties.getProperty(name);
+                if (value != null) value = value.trim();
+                out.put(returnFirstGroup ? m.group(1) : name, value);
+            }
+        }
+    }
+
+    /**
+     * SCIPIO: Puts all property name/value pairs in the given Properties that match the given regexp.
+     * The names are unchanged.
+     * Added 2018-08-23.
+     */
+    public static void putPropertiesMatching(Map<String, ? super String> out, Properties properties, Pattern nameRegexp) {
+        putPropertiesMatching(out, properties, nameRegexp, false);
+    }
+
+    /**
+     * SCIPIO: Gets all property name/value pairs in the given Properties that match the given regexp,
+     * with option to return names from the first numbered regexp group.
+     * Added 2018-08-23.
+     */
+    public static Map<String, String> getPropertiesMatching(Properties properties, Pattern nameRegexp, boolean returnFirstGroup) {
+        Map<String, String> out = new HashMap<>();
+        putPropertiesMatching(out, properties, nameRegexp, returnFirstGroup);
+        return out;
+    }
+
+    /**
+     * SCIPIO: Gets all property name/value pairs in the given Properties that match the given regexp.
+     * The names are unchanged.
+     * Added 2018-08-23.
+     */
+    public static Map<String, String>  getPropertiesMatching(Properties properties, Pattern nameRegexp) {
+        Map<String, String> out = new HashMap<>();
+        putPropertiesMatching(out, properties, nameRegexp, false);
+        return out;
     }
 
     /**

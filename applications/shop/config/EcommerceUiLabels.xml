@@ -3269,6 +3269,7 @@
     </property>
     <property key="EcommerceSelectOption">
         <value xml:lang="de">Option wählen</value>
+        <value xml:lang="es">Selecciona una opción</value>
         <value xml:lang="en">Select Option</value>
         <value xml:lang="fr">Sélectionnez une option</value>
         <value xml:lang="ja">オプションを選択</value>

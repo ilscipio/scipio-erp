@@ -1089,6 +1089,9 @@ under the License.
                         <jvmarg value="-Dsolr.lock.type=${solr.lock.type}"/>
                         <jvmarg value="-Ddisable.configEdit=${solr.disable.configEdit}"/>
                         <jvmarg value="-Dscipio.solr.reindex.startup.force=${scipio.solr.reindex.startup.force}"/>
+                        <syspropertyset>
+                            <propertyref prefix="scipio."/>
+                        </syspropertyset>
                         <args/>
                     </java>
                 </then>
@@ -1103,6 +1106,9 @@ under the License.
                         <jvmarg value="-Dsolr.lock.type=${solr.lock.type}"/>
                         <jvmarg value="-Ddisable.configEdit=${solr.disable.configEdit}"/>
                         <jvmarg value="-Dscipio.solr.reindex.startup.force=${scipio.solr.reindex.startup.force}"/>
+                        <syspropertyset>
+                            <propertyref prefix="scipio."/>
+                        </syspropertyset>
                         <args/>
                     </java>
                 </else>

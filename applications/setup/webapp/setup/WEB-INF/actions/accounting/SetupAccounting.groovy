@@ -108,6 +108,8 @@ context.glAccountClasses = EntityQuery.use(delegator).from("GlAccountClass").ord
 context.glResourceTypes = EntityQuery.use(delegator).from("GlResourceType").orderBy("description").queryList();
 
 context.periodTypes = EntityQuery.use(delegator).from("PeriodType").orderBy("description").queryList();
+allCustomTimePeriods = from("CustomTimePeriod").orderBy(["organizationPartyId", "parentPeriodId", "periodTypeId", "periodNum", "fromDate"]).queryList();
+context.allCustomTimePeriods = allCustomTimePeriods;
 
 
 // true if explicit newGlAccount=Y flag OR failed create

@@ -102,6 +102,7 @@ under the License.
             <xs:attribute name="main-action" use="optional">
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
+                        <xs:enumeration value="ADMIN"/><!-- SCIPIO: 2018-05-24: allow direct test for ADMIN -->
                         <xs:enumeration value="CREATE" />
                         <xs:enumeration value="UPDATE" />
                         <xs:enumeration value="DELETE" />

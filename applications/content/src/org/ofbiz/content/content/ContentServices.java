@@ -248,7 +248,7 @@ public class ContentServices {
         Map<String, Object> context = UtilMisc.makeMapWritable(rcontext);
         context.put("entityOperation", "_CREATE");
         List<String> targetOperationList = ContentWorker.prepTargetOperationList(context, "_CREATE");
-        if (Debug.infoOn()) Debug.logInfo("in createContentMethod, targetOperationList: " + targetOperationList, null);
+        if (Debug.infoOn()) Debug.logInfo("in createContentMethod, targetOperationList: " + targetOperationList, module);
 
         List<String> contentPurposeList = ContentWorker.prepContentPurposeList(context);
         context.put("targetOperationList", targetOperationList);
@@ -291,7 +291,7 @@ public class ContentServices {
         content.put("lastModifiedDate", nowTimestamp);
 
         context.put("currentContent", content);
-        if (Debug.infoOn()) Debug.logInfo("in createContentMethod, context: " + context, null);
+        if (Debug.infoOn()) Debug.logInfo("in createContentMethod, context: " + context, module);
 
         Map<String, Object> permResults = ContentWorker.callContentPermissionCheckResult(delegator, dispatcher, context);
         String permissionStatus = (String) permResults.get("permissionStatus");

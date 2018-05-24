@@ -644,7 +644,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
                 }
             }
         } catch (GenericEntityException e) {
-            Debug.logError("Entity Error:" + e.getMessage(), null);
+            Debug.logError("Entity Error:" + e.getMessage(), module);
         }
     }
 
@@ -745,7 +745,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
                 purposes.add(purposeValue.get("contentPurposeTypeId"));
             }
         } catch (GenericEntityException e) {
-            Debug.logError("Entity Error:" + e.getMessage(), null);
+            Debug.logError("Entity Error:" + e.getMessage(), module);
         }
         return purposes;
     }
@@ -762,7 +762,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
                 }
             }
         } catch (GenericEntityException e) {
-            Debug.logError("Entity Error:" + e.getMessage(), null);
+            Debug.logError("Entity Error:" + e.getMessage(), module);
         }
         return sections;
     }
@@ -778,7 +778,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
                     topics.add(topicValue.get("contentIdTo"));
             }
         } catch (GenericEntityException e) {
-            Debug.logError("Entity Error:" + e.getMessage(), null);
+            Debug.logError("Entity Error:" + e.getMessage(), module);
         }
         return topics;
     }
@@ -846,7 +846,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
                 Boolean isWhenObj = (Boolean) BshUtil.eval(newWhen, context);
                 isWhen = isWhenObj.booleanValue();
             } catch (EvalError e) {
-                Debug.logError("Error in evaluating :" + whenStr + " : " + e.getMessage(), null);
+                Debug.logError("Error in evaluating :" + whenStr + " : " + e.getMessage(), module);
                 throw new RuntimeException(e.getMessage());
             }
         }
@@ -863,7 +863,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
                 Boolean isWhenObj = (Boolean) BshUtil.eval(newWhen, context);
                 isWhen = isWhenObj.booleanValue();
             } catch (EvalError e) {
-                Debug.logError("Error in evaluating :" + whenStr + " : " + e.getMessage(), null);
+                Debug.logError("Error in evaluating :" + whenStr + " : " + e.getMessage(), module);
                 throw new RuntimeException(e.getMessage());
             }
         }

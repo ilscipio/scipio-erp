@@ -50,13 +50,36 @@
         <@field type="hidden" name="isUpdateTimePeriod" value=(formActionType == "edit")?string("Y", "N")/>
         
         <#assign fieldsRequired = true>
-      	      	
-      	<@field type="display" label=uiLabelMap.FormFieldTitle_parentPeriodId><#rt/>      		 
-            <span class="acctg-managefield acctg-managefield-for-parentTimePeriodDesc">
-            	<@setupExtAppLink uri="/accounting/control/EditCustomTimePeriod?organizationPartyId=${rawString(params.orgPartyId!)}&customTimePeriodId=${rawString(params.parentPeriodId!)}" text=params.parentTimePeriodDesc!"_NA_"/>
-           	</span><#t/>           	
-        </@field><#lt/>
-        <@field type="hidden" name="parentPeriodId" value=(params.parentPeriodId!) class="+acctg-inputfield"/>
+      	 
+      	${Static["org.ofbiz.base.util.Debug"].log("formActionType ======> " + formActionType)} 
+      	<#if formActionType != "add">    	
+	      	<@field type="display" label=uiLabelMap.FormFieldTitle_parentPeriodId><#rt/>      		 
+	            <span class="acctg-managefield acctg-managefield-for-parentTimePeriodDesc">
+	            	<@setupExtAppLink uri="/accounting/control/EditCustomTimePeriod?organizationPartyId=${rawString(params.orgPartyId!)}&customTimePeriodId=${rawString(params.parentPeriodId!)}" text=params.parentTimePeriodDesc!"_NA_"/>
+	           	</span><#t/>           	
+	        </@field><#lt/>
+	        <@field type="hidden" name="parentPeriodId" value=(params.parentPeriodId!) class="+acctg-inputfield"/>
+        <#else>
+        	<@field type="select" name="parentPeriodId" label=uiLabelMap.CommonParent>
+                <option value="">&nbsp;</option>
+                <#list allCustomTimePeriods as allCustomTimePeriod>
+                    <#assign allPeriodType = allCustomTimePeriod.getRelatedOne("PeriodType", true)!>                    
+                    <#assign isDefault = false>
+                    <#if currentCustomTimePeriod??>
+                        <#if currentCustomTimePeriod.customTimePeriodId == allCustomTimePeriod.customTimePeriodId>
+                            <#assign isDefault = true>
+                        </#if>
+                    </#if>
+                    <option value="${allCustomTimePeriod.customTimePeriodId}"<#if isDefault> selected="selected"</#if>>
+                        ${allCustomTimePeriod.organizationPartyId}
+                        <#if (allCustomTimePeriod.parentPeriodId)??>Par:${allCustomTimePeriod.parentPeriodId}</#if>
+                        <#if allPeriodType?has_content> ${allPeriodType.description}:</#if>
+                        ${allCustomTimePeriod.periodNum!}
+                        [${allCustomTimePeriod.customTimePeriodId}]
+                    </option>
+                </#list>
+            </@field>
+        </#if>
 		
 		
 	    <#if formActionType == "edit">
@@ -89,7 +112,24 @@
     </@form>
 </#macro>
 
-<@section title=uiLabelMap.AccountingAddCustomTimePeriod containerId="acctg-newtimeperiod" containerClass="+acctg-newtimeperiod acctg-recordaction acctg-newrecord" 
+<@section title=uiLabelMap.AccountingAddCustomTimePeriod containerId="acctg-addtimeperiod" containerClass="+acctg-addtimeperiod acctg-recordaction acctg-addrecord" 
+    containerStyle=((targetRecordAction == "timeperiod-add")?string("","display:none;"))>
+  <#if targetRecordAction == "timeperiod-add">
+    <#assign paramMaps = initialParamMaps>
+  <#else>
+    <#assign paramMaps = getWizardFormFieldValueMaps({
+      "record":true,
+      "defaults":defaultParams,
+      "isError":isTimePeriodError,
+      "useReqParams":useReqParams
+    })>
+  </#if>
+  <@setupTimePeriodForm id="AddTmePeriod" formActionType="add" target="setupCreateTimePeriod" params=paramMaps.values
+    treeFieldValues={"acctgSubmittedFormId":"AddTimePeriod"} <#-- SPECIAL: this form (only) is initially submitted outside the JS tree, so we have to pre-populate treeFieldValues -->
+  />
+</@section>
+
+<@section title=uiLabelMap.AccountingNewCustomTimePeriod containerId="acctg-newtimeperiod" containerClass="+acctg-newtimeperiod acctg-recordaction acctg-newrecord" 
     containerStyle=((targetRecordAction == "timeperiod-new")?string("","display:none;"))>
   <#if targetRecordAction == "timeperiod-new">
     <#assign paramMaps = initialParamMaps>

@@ -388,6 +388,9 @@
     <property key="AccountingEditCustomTimePeriod">        
         <value xml:lang="en">Edit Custom Time Period</value>
     </property>
+    <property key="AccountingNewCustomTimePeriod">        
+        <value xml:lang="en">New Custom Time Period</value>
+    </property>
     <property key="AccountingAddFinAccountReconciliations">
         <value xml:lang="de">Finanzkontenabstimmung für Finanzkonto : ${finAccount.finAccountName} [${finAccountId}] hinzufügen</value>
         <value xml:lang="en">Add Financial Account Reconciliations for Financial Account : ${finAccount.finAccountName} [${finAccountId}]</value>

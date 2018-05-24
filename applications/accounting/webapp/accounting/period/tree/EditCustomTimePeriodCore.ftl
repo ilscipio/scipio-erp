@@ -24,11 +24,12 @@
     <#macro efpDefMarkupPostMenuItems args={}>
     	<#--  <@menuitem type="link" href="javascript:void(0);" onClick="efpHandler.execNewGlAccount();" text=uiLabelMap.CommonCreate /> -->
         <#-- <@menuitem type="link" href="javascript:void(0);" onClick="efpHandler.execImport();" text=uiLabelMap.CommonImport /> -->   
-        <@menuitem type="link" href="javascript:void(0);" onClick="efpHandler.execNewTimePeriod();" text=uiLabelMap.CommonAdd/><#t/>     
+        <#-- <@menuitem type="link" href="javascript:void(0);" onClick="efpHandler.execNewTimePeriod();" text=uiLabelMap.CommonAdd/><#t/> -->
     </#macro>
     <#macro efpDefMarkupMenu args={}>
         <@menu class="side-nav acctg-action-menu" id="acctg-action-menu-timePeriod">
           <@acctgMarkupOut dir=efpMarkupPostMenuItems!efpDefMarkupPostMenuItems/>
+          <#nested/>          
         </@menu>        
     </#macro>
 
@@ -144,8 +145,10 @@
 		</@cell>
 		<@cell medium=3 large=3>    
 	      <#-- ACTIONS MENU -->
-	      <@section title=uiLabelMap.CommonActions>
-	      	<@efpDefMarkupMenu/>	      
+	      <@section title=uiLabelMap.CommonActions>	      	
+	      	<@efpDefMarkupMenu>
+	      		<@menuitem type="link" href="javascript:void(0);" onClick="efpHandler.execNewTimePeriod();" text=uiLabelMap.CommonAdd/><#t/>
+	      	</@efpDefMarkupMenu>
 	      </@section>
 	   </@cell>	       
 	</@row>			

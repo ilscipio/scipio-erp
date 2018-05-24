@@ -2134,9 +2134,9 @@ under the License.
         <dep-subant dir="${basedir}/themes" target="lib-dep-report"/>
     </target>
     
-    <target name="lib-clean-dep-report" description="Cleans out runtime/analysis/lib-depreport">
+    <target name="lib-clean-dep-report" description="Cleans out runtime/analysis/lib-dep-report">
         <delete includeemptydirs="true" verbose="on">
-            <fileset dir="./runtime/analysis/lib-depreport" includes="**" erroronmissingdir="false" />
+            <fileset dir="./runtime/analysis/lib-dep-report" includes="**" erroronmissingdir="false" />
         </delete>
     </target>
     

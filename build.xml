@@ -231,6 +231,7 @@ under the License.
             all supported JDBC drivers but only the legacy ofbiz download targets (TODO: clarify the legacy download targets)
         <antcall target="clean-downloads"/>-->
         <antcall target="clean-uploads"/>
+        <antcall target="clean-analysis"/><!-- SCIPIO: 2018-04-24: new -->
         <antcall target="clean"/>
         
         <!-- SCIPIO: hooks -->
@@ -415,6 +416,20 @@ under the License.
         
         <!-- SCIPIO: hooks -->
         <invokehook target="post-clean-uploads" />
+        
+    </target>
+    
+    <target name="clean-analysis" description="Remove code analysis results (Scipio)">
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="pre-clean-analysis" />
+        
+        <delete includeemptydirs="true">
+            <fileset dir="./runtime/analysis" includes="**/*" erroronmissingdir="false" />
+        </delete>
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="post-clean-analysis" />
         
     </target>
     
@@ -2117,6 +2132,12 @@ under the License.
         <addonsant target="lib-dep-report"/>
         <hotdeployant target="lib-dep-report"/>
         <dep-subant dir="${basedir}/themes" target="lib-dep-report"/>
+    </target>
+    
+    <target name="lib-clean-dep-report" description="Cleans out runtime/analysis/lib-depreport">
+        <delete includeemptydirs="true" verbose="on">
+            <fileset dir="./runtime/analysis/lib-depreport" includes="**" erroronmissingdir="false" />
+        </delete>
     </target>
     
     <target name="lib-dep-checkupdates" description="Check for library dependency updates">

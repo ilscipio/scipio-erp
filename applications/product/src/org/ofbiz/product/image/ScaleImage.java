@@ -53,7 +53,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class ScaleImage {
 
-    public static final String module = ScaleImage.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ProductErrorUiLabels";
     /* public so that other code can easily use the imageUrlMap returned by scaleImageInAllSize */
     public static final List<String> sizeTypeList = UtilMisc.toList("small", "medium", "large", "detail");

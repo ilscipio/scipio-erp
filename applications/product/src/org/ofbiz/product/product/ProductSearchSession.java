@@ -73,7 +73,7 @@ import org.ofbiz.webapp.stats.VisitHandler;
  */
 public class ProductSearchSession {
 
-    public static final String module = ProductSearchSession.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     @SuppressWarnings("serial")
     public static class ProductSearchOptions implements java.io.Serializable {

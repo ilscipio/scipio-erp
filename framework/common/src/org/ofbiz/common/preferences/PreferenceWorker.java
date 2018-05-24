@@ -35,7 +35,7 @@ import org.ofbiz.service.ServiceUtil;
  * User preference worker methods.
  */
 public class PreferenceWorker {
-    public static final String module = PreferenceWorker.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     /**
      * User preference administrator permission. Currently set to "USERPREF_ADMIN".
      */

@@ -41,7 +41,7 @@ import org.xml.sax.SAXException;
 /** Utility methods needed to implement a WebDAV servlet. */
 public class WebDavUtil {
 
-    public static final String module = WebDavUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final TimeZone GMT_TIMEZONE = TimeZone.getTimeZone("GMT");
     public static final String RFC1123_DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss zzz";
 

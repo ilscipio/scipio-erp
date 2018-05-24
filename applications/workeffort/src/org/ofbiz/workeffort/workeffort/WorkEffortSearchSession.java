@@ -38,7 +38,7 @@ import org.ofbiz.workeffort.workeffort.WorkEffortSearch.WorkEffortSearchConstrai
 
 public class WorkEffortSearchSession {
 
-    public static final String module = WorkEffortSearchSession.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     @SuppressWarnings("serial")
     public static class WorkEffortSearchOptions implements java.io.Serializable {

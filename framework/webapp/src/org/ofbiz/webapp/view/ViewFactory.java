@@ -36,7 +36,7 @@ import org.ofbiz.webapp.control.ConfigXMLReader;
  */
 public class ViewFactory {
 
-    public static final String module = ViewFactory.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final Map<String, ViewHandler> handlers = new HashMap<String, ViewHandler>();
 

@@ -25,7 +25,7 @@ import org.ofbiz.service.ServiceUtil;
 
 public class AcctgAdminServices {
 
-    public static final String module = AcctgAdminServices.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static Map<String, Object> setupUpdatePartyAcctgPreference(DispatchContext dctx, Map<String, ? extends Object> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();

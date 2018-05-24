@@ -76,9 +76,7 @@ import freemarker.template.Template;
  * to templates such as script templates that execute instead of rendering).
  */
 public interface CmsRenderTemplate extends Serializable {
-
-    public static final String module = CmsRenderTemplate.class.getName();
-        
+  
     public TemplateRenderer<?> getRenderer();
     
     /**
@@ -88,7 +86,9 @@ public interface CmsRenderTemplate extends Serializable {
      */
     @SuppressWarnings("serial")
     public static abstract class TemplateRenderer<T extends CmsComplexTemplate & CmsRenderTemplate> extends AbstractPreloadable implements Preloadable, Serializable {
-        
+
+        private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
         // 2017-02: this is now unacceptable: we must use dynamically built one that can
         // depend on theme selection.
 //        protected static final ScreenStringRenderer screenStringRenderer;

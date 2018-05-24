@@ -59,7 +59,7 @@ import watermarker.model.WatermarkerSettings;
 
 public class WatermarkImage{
     
-    public static final String module = WatermarkImage.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ProductErrorUiLabels";
     
     public static String createWatermarkImage(HttpServletRequest request, HttpServletResponse response) throws WatermarkerException, IOException {

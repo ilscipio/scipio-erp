@@ -20,7 +20,7 @@ public class DemoSuiteDataGeneratorUtil {
 
 	private static final String DEMO_DATA_GENERATOR_SERVICE_INTERFACE_NAME = "demoDataGenerator";
 
-	public static String module = DemoSuiteDataGeneratorUtil.class.getName();
+	private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
 	/**
 	 * NOTE:

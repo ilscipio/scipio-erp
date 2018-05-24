@@ -41,7 +41,7 @@ import org.ofbiz.entity.util.EntityQuery;
  */
 public class ProtectViewWorker {
 
-    private final static String module = ProtectViewWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final String resourceWebapp = "WebappUiLabels";
     private static final Map<String, Long> hitsByViewAccessed = new ConcurrentHashMap<String, Long>();
     private static final Map<String, Long> durationByViewAccessed = new ConcurrentHashMap<String, Long>();

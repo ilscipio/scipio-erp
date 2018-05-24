@@ -55,7 +55,7 @@ import javax.xml.transform.stream.StreamResult;
 
 public final class XslTransform {
 
-    public static final String module = XslTransform.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final UtilCache<String, Templates> xslTemplatesCache = UtilCache.createUtilCache("XsltTemplates", 0, 0);
 
     /**

@@ -53,7 +53,7 @@ import org.ofbiz.service.ModelService;
  */
 public class OrderManagerEvents {
 
-    public static final String module = OrderManagerEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource_error = "OrderErrorUiLabels";
 
     // FIXME: this event doesn't seem to be used; we may want to remove it

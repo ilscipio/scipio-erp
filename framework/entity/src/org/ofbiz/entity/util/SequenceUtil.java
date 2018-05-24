@@ -41,7 +41,7 @@ import org.ofbiz.entity.transaction.TransactionUtil;
  */
 public class SequenceUtil {
 
-    public static final String module = SequenceUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final ConcurrentMap<String, SequenceBank> sequences = new ConcurrentHashMap<String, SequenceBank>();
     private final GenericHelperInfo helperInfo;

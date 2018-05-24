@@ -33,7 +33,7 @@ import org.ofbiz.service.ServiceUtil;
 
 public class PackingServices {
 
-    public static final String module = PackingServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ProductUiLabels";
 
     public static Map<String, Object> addPackLine(DispatchContext dctx, Map<String, ? extends Object> context) {

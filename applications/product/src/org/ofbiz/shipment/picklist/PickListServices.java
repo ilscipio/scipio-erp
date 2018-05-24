@@ -37,7 +37,7 @@ import org.ofbiz.service.ServiceUtil;
 
 public class PickListServices {
 
-    public static final String module = PickListServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static Map<String, Object> convertOrderIdListToHeaders(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();

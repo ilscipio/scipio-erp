@@ -43,7 +43,7 @@ import com.ilscipio.scipio.treeMenu.jsTree.JsTreeDataItem.JsTreeDataItemState;
 
 public class PeriodServices {
 
-    public static String module = PeriodServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "AccountingUiLabels";
 
     /**

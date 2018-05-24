@@ -50,7 +50,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class BillingAccountWorker {
 
-    public static final String module = BillingAccountWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resourceError = "AccountingUiLabels";
     private static BigDecimal ZERO = BigDecimal.ZERO;
     private static int decimals = -1;

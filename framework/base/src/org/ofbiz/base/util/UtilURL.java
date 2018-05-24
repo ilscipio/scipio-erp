@@ -32,7 +32,7 @@ import java.net.URL;
  */
 public class UtilURL {
 
-    public static final String module = UtilURL.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static <C> URL fromClass(Class<C> contextClass) {
         String resourceName = contextClass.getName();

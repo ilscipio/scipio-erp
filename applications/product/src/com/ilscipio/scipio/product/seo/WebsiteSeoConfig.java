@@ -15,7 +15,7 @@ import org.ofbiz.base.util.Debug;
  */
 public class WebsiteSeoConfig {
     
-    private static final String module = WebsiteSeoConfig.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     // WARN: special sync behavior
     private static Map<String, WebsiteSeoConfig> websiteSeoConfigs;

@@ -31,7 +31,7 @@ import freemarker.template.TemplateModelException;
  */
 public class GlobalsPutAllMethod extends VarsPutAllMethod {
 
-    public static final String module = GlobalsPutAllMethod.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)

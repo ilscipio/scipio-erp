@@ -38,7 +38,7 @@ import org.w3c.dom.Element;
  */
 public abstract class ConditionalFactory<C extends Conditional> {
 
-    public static final String module = ConditionalFactory.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final Map<String, ConditionalFactory<?>> conditionalFactories;
 
     static {

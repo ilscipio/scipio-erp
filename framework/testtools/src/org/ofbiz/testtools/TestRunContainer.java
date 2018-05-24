@@ -47,7 +47,7 @@ import org.ofbiz.entity.Delegator;
  */
 public class TestRunContainer implements Container {
 
-    public static final String module = TestRunContainer.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String logDir = "runtime/logs/test-results/";
 
     protected String configFile = null;

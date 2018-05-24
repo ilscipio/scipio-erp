@@ -54,7 +54,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class ZipSalesServices {
 
-    public static final String module = ZipSalesServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String dataFile = "org/ofbiz/order/thirdparty/zipsales/ZipSalesTaxTables.xml";
     public static final String flatTable = "FlatTaxTable";
     public static final String ruleTable = "FreightRuleTable";

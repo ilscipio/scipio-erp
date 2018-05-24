@@ -45,7 +45,7 @@ import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
  */
 public class OfbizAmountTransform implements TemplateTransformModel {
 
-    public static final String module = OfbizAmountTransform.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String SPELLED_OUT_FORMAT = "spelled-out";
 
     @SuppressWarnings("unchecked")

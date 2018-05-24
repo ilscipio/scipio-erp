@@ -47,7 +47,7 @@ import org.ofbiz.entity.util.EntityUtilProperties;
  */
 public class InvoiceWorker {
 
-    public static String module = InvoiceWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static BigDecimal ZERO = BigDecimal.ZERO;
     private static int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
     private static int rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");

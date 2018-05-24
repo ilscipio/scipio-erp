@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  */
 public class WidgetFactory {
 
-    public static final String module = WidgetFactory.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     protected static final Map<String, Constructor<? extends ModelScreenWidget>> screenWidgets = new ConcurrentHashMap<String, Constructor<? extends ModelScreenWidget>>();
 
     static {

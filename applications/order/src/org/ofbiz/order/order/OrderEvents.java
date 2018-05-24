@@ -52,7 +52,7 @@ import java.math.BigDecimal;
  */
 public class OrderEvents {
 
-    public static final String module = OrderEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static String downloadDigitalProduct(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();

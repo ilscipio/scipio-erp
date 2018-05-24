@@ -47,7 +47,7 @@ import org.ofbiz.base.util.UtilDateTime;
 @SuppressWarnings("serial")
 public class MimeMessageWrapper implements java.io.Serializable {
 
-    public static final String module = MimeMessageWrapper.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     protected transient MimeMessage message = null;
     protected transient Session session = null;
     protected Properties mailProperties = null;

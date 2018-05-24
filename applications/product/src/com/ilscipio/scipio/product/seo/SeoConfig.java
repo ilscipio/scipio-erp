@@ -58,7 +58,7 @@ import com.ilscipio.scipio.product.seo.UrlProcessors.UrlProcessor;
  */
 public class SeoConfig {
     
-    private static final String module = SeoConfig.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     public static final String SEO_CONFIG_FILENAME = "SeoConfig.xml";
     public static final String ALLOWED_CONTEXT_PATHS_SEPERATOR = ":";

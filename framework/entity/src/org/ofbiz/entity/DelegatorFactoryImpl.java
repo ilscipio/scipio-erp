@@ -24,7 +24,7 @@ import org.ofbiz.base.util.Debug;
  * instance of <code>GenericDelegator</code>. */
 public class DelegatorFactoryImpl extends DelegatorFactory {
 
-    public static final String module = DelegatorFactoryImpl.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public Delegator getInstance(String delegatorName) {
         if (Debug.infoOn()) Debug.logInfo("Creating new delegator [" + delegatorName + "] (" + Thread.currentThread().getName() + ")", module);

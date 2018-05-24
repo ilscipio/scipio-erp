@@ -33,7 +33,7 @@ import org.ofbiz.entity.util.EntityTypeUtil;
  */
 public class PartyTypeHelper {
 
-    public static final String module = PartyTypeHelper.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /** Check if a related party is of the right party type (PERSON or PARTY_GROUP)
      *@param delegator needed Delegator

@@ -28,7 +28,7 @@ import org.ofbiz.service.DispatchContext;
  */
 public abstract class SolrCategoryUtil {
     
-    public static final String module = SolrCategoryUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * Gets catalog IDs for specified product category.

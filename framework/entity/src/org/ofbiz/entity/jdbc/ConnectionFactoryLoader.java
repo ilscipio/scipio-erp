@@ -28,7 +28,7 @@ import org.ofbiz.entity.connection.ConnectionFactory;
  */
 public class ConnectionFactoryLoader {
     // Debug module name
-    public static final String module = ConnectionFactoryLoader.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final ConnectionFactory connFactory = createConnectionFactory();
 
     private static ConnectionFactory createConnectionFactory() {

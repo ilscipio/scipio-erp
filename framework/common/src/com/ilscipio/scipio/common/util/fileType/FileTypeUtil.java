@@ -15,7 +15,7 @@ import org.ofbiz.service.LocalDispatcher;
 
 public class FileTypeUtil {
     
-    private static final String module = "FileTypeUtil";
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final String FILE_SIZE_ATTRIBUTE_NAME = "fileSize";
     // 2017-02-07: not using; not abstracted enough

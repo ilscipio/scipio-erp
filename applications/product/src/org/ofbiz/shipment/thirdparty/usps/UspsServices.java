@@ -71,7 +71,7 @@ import org.w3c.dom.Element;
  */
 public class UspsServices {
 
-    public final static String module = UspsServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public final static String resourceError = "ProductUiLabels";
     public final static String shipmentPropertiesFile = "shipment.properties";
 

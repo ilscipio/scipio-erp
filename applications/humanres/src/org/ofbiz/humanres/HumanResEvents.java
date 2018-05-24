@@ -36,7 +36,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
 
 public class HumanResEvents {
-    public static final String module = HumanResEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resourceError = "ProductErrorUiLabels";
     
     // Please note : the structure of map in this function is according to the JSON data map of the jsTree

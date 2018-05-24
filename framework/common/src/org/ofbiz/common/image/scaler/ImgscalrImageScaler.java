@@ -25,7 +25,7 @@ import org.ofbiz.common.image.ImageType.ImageTypeInfo;
  */
 public class ImgscalrImageScaler extends AbstractImageScaler {
 
-    public static final String module = ImgscalrImageScaler.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String API_NAME = "imgscalr";
     
     /**

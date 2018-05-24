@@ -28,7 +28,7 @@ import java.util.*;
  */
 public class ReportHelper {
 
-    public static final String module = ReportHelper.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
 /**
  * Calculate conversion rates based on a List of visits and orders.  Designed to be used for reporting on

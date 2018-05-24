@@ -40,7 +40,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public final class Start {
 
-    public static final String module = Start.class.getName();
+    private static final String module = Start.class.getName();
     
     /*
      * This class implements a thread-safe state machine. The design is critical

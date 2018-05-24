@@ -65,7 +65,7 @@ import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
  */
 public class ServiceDispatcher {
 
-    public static final String module = ServiceDispatcher.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final int lruLogSize = 200;
     public static final int LOCK_RETRIES = 3;
 

@@ -49,7 +49,7 @@ import com.rometools.rome.feed.synd.SyndFeedImpl;
  */
 public class BlogRssServices {
 
-    public static final String module = BlogRssServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ContentUiLabels";
     public static final String mimeTypeId = "text/html";
     public static final String mapKey = "SUMMARY";

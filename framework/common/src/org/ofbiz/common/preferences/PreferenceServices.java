@@ -48,7 +48,7 @@ import org.ofbiz.service.ServiceUtil;
  * This class handles any data conversion needed.</p>
  */
 public class PreferenceServices {
-    public static final String module = PreferenceServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final String resource = "PrefErrorUiLabels";
 

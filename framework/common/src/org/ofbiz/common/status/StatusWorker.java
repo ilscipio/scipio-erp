@@ -35,7 +35,7 @@ import org.ofbiz.entity.util.EntityQuery;
  */
 public class StatusWorker {
 
-    public static final String module = StatusWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static void getStatusItems(PageContext pageContext, String attributeName, String statusTypeId) {
         Delegator delegator = (Delegator) pageContext.getRequest().getAttribute("delegator");

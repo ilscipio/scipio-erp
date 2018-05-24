@@ -30,7 +30,7 @@ import com.ilscipio.scipio.ce.build.util.DependencyGraph;
  */
 public abstract class EntityInfoUtil {
 
-    public static final String module = EntityInfoUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     public static final String DEFAULT_DELEGATOR_NAME = "default";
     

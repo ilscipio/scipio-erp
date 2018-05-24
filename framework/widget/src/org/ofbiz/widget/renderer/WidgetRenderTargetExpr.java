@@ -85,7 +85,7 @@ import org.ofbiz.widget.renderer.WidgetRenderTargetExpr.WidgetRenderTargetState.
 @SuppressWarnings("serial")
 public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implements RenderTargetExpr, Serializable {
 
-    public static final String module = WidgetRenderTargetExpr.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     // WARN: this is public-facing so it must have size limits in cache.properties
     private static final UtilCache<String, WidgetRenderTargetExpr> cache = UtilCache.createUtilCache("widget.renderer.targeted.expr");
@@ -1022,7 +1022,7 @@ public class WidgetRenderTargetExpr extends WidgetRenderTargetExprBase implement
     public static class WidgetRenderTargetState implements RenderTargetExpr.RenderTargetState, Serializable {
         public static final WidgetRenderTargetState DISABLED = new DisabledWidgetRenderTargetState();
         
-        public static final String module = WidgetRenderTargetState.class.getName();
+        private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
         
         private final WidgetRenderTargetExprBase expr;
         

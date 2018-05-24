@@ -18,7 +18,7 @@ import org.ofbiz.common.image.ImageUtil;
  */
 public abstract class ImageScalers {
 
-    public static final String module = ImageScalers.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String IMAGE_PROP_SCALER_PREFIX = ImageUtil.IMAGEOP_PROP_PREFIX + "scaler.";
     
     public static final String SCALER_NAME_OPT = "scalerName";

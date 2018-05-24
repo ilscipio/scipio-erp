@@ -53,7 +53,7 @@ import freemarker.template.TemplateException;
  */
 public class CmsScreenViewHandler extends MacroScreenViewHandler implements ViewHandlerExt {
     
-    public static final String module = CmsScreenViewHandler.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final Set<Integer> passOnHttpStatusesFromCms = Collections.unmodifiableSet(new HashSet<Integer>(Arrays.asList(
             new Integer[] { HttpServletResponse.SC_NOT_FOUND })));

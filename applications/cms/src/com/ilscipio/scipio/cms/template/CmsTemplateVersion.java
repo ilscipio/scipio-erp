@@ -27,7 +27,7 @@ public abstract class CmsTemplateVersion extends CmsTemplate implements CmsDataO
 
     private static final long serialVersionUID = 2461746703166121074L;
 
-    public static final String module = CmsTemplateVersion.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     protected enum VersionStatus {
         ACTIVE,

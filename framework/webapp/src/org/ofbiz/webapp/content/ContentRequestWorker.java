@@ -21,7 +21,7 @@ import org.ofbiz.webapp.taglib.ContentUrlTag;
  */
 public abstract class ContentRequestWorker {
     
-    public static final String module = ContentRequestWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     // SCIPIO: FIXME: this is for strict=false mode, and it's a wreck of a workaround
     private static final String htmlEscapedFrontSlash = UtilCodec.encode("html", "/");

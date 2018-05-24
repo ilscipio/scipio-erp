@@ -39,7 +39,7 @@ import com.rometools.rome.io.WireFeedOutput;
  */
 public class RomeEventHandler implements EventHandler {
 
-    public static final String module = RomeEventHandler.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String mime = "application/xml; charset=UTF-8";
     public static final String defaultFeedType = "rss_2.0";
 

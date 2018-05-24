@@ -43,7 +43,7 @@ import org.ofbiz.service.ServiceUtil;
 @SuppressWarnings("serial")
 public class VerifyPickSession implements Serializable {
 
-    public static final String module = VerifyPickSession.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected GenericValue userLogin = null;
     protected String dispatcherName = null;

@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public abstract class StdTemplateFtlUtil {
 
-    public static final String module = StdTemplateFtlUtil.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     protected StdTemplateFtlUtil() {
     }

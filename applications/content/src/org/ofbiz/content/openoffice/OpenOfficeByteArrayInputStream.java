@@ -32,7 +32,7 @@ import com.sun.star.io.NotConnectedException;
 
 public class OpenOfficeByteArrayInputStream extends ByteArrayInputStream implements XInputStream, XSeekable {
 
-    public static final String module = OpenOfficeByteArrayInputStream.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public OpenOfficeByteArrayInputStream(byte [] bytes) {
         super(bytes);

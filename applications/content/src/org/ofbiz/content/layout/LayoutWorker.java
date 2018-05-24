@@ -42,7 +42,7 @@ import org.ofbiz.webapp.event.FileUploadProgressListener;
  */
 public class LayoutWorker {
 
-    public static final String module = LayoutWorker.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String err_resource = "ContentErrorUiLabels";
 
     /**

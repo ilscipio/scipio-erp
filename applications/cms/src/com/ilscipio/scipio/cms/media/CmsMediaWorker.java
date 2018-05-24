@@ -24,7 +24,7 @@ import org.ofbiz.entity.util.EntityListIterator;
 
 public abstract class CmsMediaWorker {
 
-    public static final String module = CmsMediaWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     /**
      * NOTE: currently (2017-08-01) it is recommended to not use this file and to use 

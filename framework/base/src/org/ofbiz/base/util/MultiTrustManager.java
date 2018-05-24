@@ -35,7 +35,7 @@ import javax.net.ssl.X509TrustManager;
  */
 public class MultiTrustManager implements X509TrustManager {
 
-    public static final String module = MultiTrustManager.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected List<KeyStore> keystores;
 

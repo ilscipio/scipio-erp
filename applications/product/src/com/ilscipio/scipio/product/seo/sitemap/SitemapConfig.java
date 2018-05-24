@@ -35,7 +35,7 @@ import com.redfin.sitemapgenerator.W3CDateFormat;
 
 @SuppressWarnings("serial")
 public class SitemapConfig implements Serializable {
-    public static final String module = SitemapConfig.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final String SITEMAPCONFIGS_RESOURCE = "sitemaps"; // .properties
     public static final String SITEMAPCOMMON_RESOURCE = "sitemapcommon"; // .properties

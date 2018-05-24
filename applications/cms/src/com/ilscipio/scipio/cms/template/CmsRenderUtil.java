@@ -33,7 +33,7 @@ import freemarker.template.TemplateModelException;
 
 public abstract class CmsRenderUtil {
 
-    public static final String module = CmsRenderUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     private static final RenderExceptionMode liveExceptionMode = RenderExceptionMode.valueOfPermissive(UtilProperties.getPropertyValue("cms.properties", 
             "render.live.exception.mode"));
@@ -153,7 +153,7 @@ public abstract class CmsRenderUtil {
      * PropertyMessage + Locale because logs are always english. we should ideally follow what
      * Freemarker normally does.
      */
-    public static boolean handleDirectiveError(Environment env, String label, Throwable t, String msg, RenderExceptionMode liveExMode, String module) throws TemplateException {
+    public static boolean handleDirectiveError(Environment env, String label, Throwable t, String msg, RenderExceptionMode liveExMode, Debug.OfbizLogger module) throws TemplateException {
         try {
             Map<String, Object> context = null;
             CmsPageContext pageContext = null;
@@ -175,7 +175,7 @@ public abstract class CmsRenderUtil {
     }
 
     public static boolean handleDirectiveError(CmsPageContext pageContext, CmsPageTemplate pageTemplate, 
-            String label, Throwable t, String msg, RenderExceptionMode liveExMode, String module) throws CmsTemplateException {
+            String label, Throwable t, String msg, RenderExceptionMode liveExMode, Debug.OfbizLogger module) throws CmsTemplateException {
         String sysMsg = msg;
         String userMsg = msg;
         if (pageContext != null) {
@@ -197,7 +197,7 @@ public abstract class CmsRenderUtil {
     }
     
     public static boolean handleDirectiveError(String label, Throwable t, String sysMsg, String userMsg,
-            boolean isPreview, RenderExceptionMode liveExMode, String module) throws CmsTemplateException {
+            boolean isPreview, RenderExceptionMode liveExMode, Debug.OfbizLogger module) throws CmsTemplateException {
         String msg;
         if (t != null) {
             msg = label + ": " + sysMsg + ": " + t.getMessage();

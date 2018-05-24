@@ -65,7 +65,7 @@ import org.w3c.dom.Element;
  */
 public class ModelFormFieldBuilder {
 
-    public static final String module = ModelFormFieldBuilder.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private FlexibleStringExpander action = FlexibleStringExpander.getInstance("");;
     private String attributeName = "";

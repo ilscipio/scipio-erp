@@ -47,7 +47,7 @@ import org.w3c.dom.Element;
  */
 public final class Iterate extends MethodOperation {
 
-    public static final String module = Iterate.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final FlexibleMapAccessor<Object> entryFma;
     private final FlexibleMapAccessor<Object> listFma;

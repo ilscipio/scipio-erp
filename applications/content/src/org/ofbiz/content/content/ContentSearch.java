@@ -52,7 +52,7 @@ import org.ofbiz.entity.util.EntityUtil;
 
 public class ContentSearch {
 
-    public static final String module = ContentSearch.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ContentUiLabels";
 
     public static ArrayList<String> searchContents(List<? extends ContentSearchConstraint> contentSearchConstraintList, ResultSortOrder resultSortOrder, Delegator delegator, String visitId) {

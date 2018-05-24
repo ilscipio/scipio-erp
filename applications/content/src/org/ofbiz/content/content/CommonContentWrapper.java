@@ -29,7 +29,7 @@ import org.ofbiz.service.ServiceContainer;
 @SuppressWarnings("serial")
 public abstract class CommonContentWrapper implements ContentWrapper, Serializable {
 
-    public static final String module = CommonContentWrapper.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     private transient Delegator delegator;
     private final String delegatorName;

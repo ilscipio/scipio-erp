@@ -29,7 +29,7 @@ import org.ofbiz.base.util.HttpClient;
  */
 public class TestEvent {
 
-    public static final String module = TestEvent.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static String test(HttpServletRequest request, HttpServletResponse response) {
         request.setAttribute("MESSAGE", "Test Event Ran Fine.");

@@ -41,7 +41,7 @@ import org.ofbiz.entity.model.ModelFieldType;
  */
 @SuppressWarnings("serial")
 public final class EntityExpr extends EntityCondition {
-    public static final String module = EntityExpr.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final Object lhs;
     private final EntityOperator<Object, Object, ?> operator;

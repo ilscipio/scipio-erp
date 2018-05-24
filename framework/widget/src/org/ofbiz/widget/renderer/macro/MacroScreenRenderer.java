@@ -83,7 +83,7 @@ import freemarker.template.TemplateException;
 
 public class MacroScreenRenderer implements ScreenStringRenderer {
 
-    public static final String module = MacroScreenRenderer.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private Template macroLibrary;
     private WeakHashMap<Appendable, Environment> environments = new WeakHashMap<Appendable, Environment>();
     private String rendererName;

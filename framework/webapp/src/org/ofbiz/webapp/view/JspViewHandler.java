@@ -35,7 +35,7 @@ import org.ofbiz.webapp.control.ContextFilter;
  */
 public class JspViewHandler extends AbstractViewHandler {
 
-    public static final String module = JspViewHandler.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected ServletContext context;
 

@@ -46,7 +46,7 @@ import org.ofbiz.service.LocalDispatcher;
  */
 public class ProposedOrder {
 
-    public static final String module = ProposedOrder.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ManufacturingUiLabels";
 
     protected GenericValue product;

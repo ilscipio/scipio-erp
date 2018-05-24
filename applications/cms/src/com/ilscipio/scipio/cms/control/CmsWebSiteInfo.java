@@ -41,7 +41,7 @@ public class CmsWebSiteInfo implements Serializable {
      */
 
     // Use Ofbiz logging carefully only...
-    public static final String module = CmsWebSiteInfo.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private static volatile Map<String, CmsWebSiteInfo> cmsRegisteredWebSites = Collections.emptyMap();
 

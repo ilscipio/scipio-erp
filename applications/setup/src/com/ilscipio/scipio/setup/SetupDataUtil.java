@@ -34,7 +34,7 @@ import com.ilscipio.scipio.setup.ContactMechPurposeInfo.PartyContactMechPurposeI
  */
 public abstract class SetupDataUtil {
 
-    public static final String module = SetupDataUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final Set<String> ORGANIZATION_MAINADDR_PURPOSES = UtilMisc.unmodifiableLinkedHashSet(
             "GENERAL_LOCATION", "PAYMENT_LOCATION", "BILLING_LOCATION"

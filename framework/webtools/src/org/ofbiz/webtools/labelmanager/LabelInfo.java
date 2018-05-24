@@ -26,7 +26,7 @@ import org.ofbiz.base.util.UtilValidate;
 
 public class LabelInfo {
 
-    public static final String module = LabelInfo.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected String labelKey = "";
     protected String labelKeyComment = "";

@@ -13,7 +13,7 @@ import com.ilscipio.scipio.party.PartyUtil;
  */
 public abstract class CmsUtil {
 
-    public static final String module = CmsUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     private static final boolean DEBUG = UtilProperties.getPropertyAsBoolean("cms.properties", "debug", false);
     

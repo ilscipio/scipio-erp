@@ -39,7 +39,7 @@ import freemarker.template.TemplateScalarModel;
  */
 public class SetGlobalContextFieldMethod implements TemplateMethodModelEx {
 
-    public static final String module = SetGlobalContextFieldMethod.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)

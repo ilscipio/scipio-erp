@@ -72,7 +72,7 @@ import org.ofbiz.service.mail.MimeMessageWrapper;
 
 public class CommunicationEventServices {
 
-    public static final String module = CommunicationEventServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "PartyErrorUiLabels";
 
     public static Map<String, Object> sendCommEventAsEmail(DispatchContext ctx, Map<String, ? extends Object> context) {

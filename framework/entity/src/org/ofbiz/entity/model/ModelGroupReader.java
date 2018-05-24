@@ -52,7 +52,7 @@ import org.w3c.dom.Node;
 @SuppressWarnings("serial")
 public class ModelGroupReader implements Serializable {
 
-    public static final String module = ModelGroupReader.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final UtilCache<String, ModelGroupReader> readers = UtilCache.createUtilCache("entity.ModelGroupReader", 0, 0);
 
     private Map<String, String> groupCache = null;

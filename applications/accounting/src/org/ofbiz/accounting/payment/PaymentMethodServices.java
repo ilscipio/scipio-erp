@@ -46,7 +46,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class PaymentMethodServices {
 
-    public final static String module = PaymentMethodServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public final static String resource = "AccountingUiLabels";
     // SCIPIO: Fix wrong error resource!
     //public static final String resourceError = "AccountingUiLabels";

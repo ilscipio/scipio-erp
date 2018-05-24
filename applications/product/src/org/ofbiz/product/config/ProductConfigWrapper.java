@@ -46,7 +46,7 @@ import org.ofbiz.service.ServiceContainer;
 @SuppressWarnings("serial")
 public class ProductConfigWrapper implements Serializable {
 
-    public static final String module = ProductConfigWrapper.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected transient LocalDispatcher dispatcher;
     protected String dispatcherName;

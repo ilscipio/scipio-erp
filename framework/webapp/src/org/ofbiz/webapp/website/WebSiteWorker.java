@@ -33,7 +33,7 @@ import org.ofbiz.entity.util.EntityQuery;
  */
 public class WebSiteWorker {
 
-    public static final String module = WebSiteWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static String getWebSiteId(ServletRequest request) {
         ServletContext application = ((ServletContext) request.getAttribute("servletContext"));

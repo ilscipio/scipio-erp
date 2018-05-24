@@ -17,7 +17,7 @@ import org.ofbiz.base.util.UtilValidate;
  */
 @SuppressWarnings("serial")
 public class JsTreeHelper extends ArrayList<JsTreeDataItem> {
-    private static final String module = JsTreeHelper.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private static final String JSTREE_FIELD_ID_SEPARATOR = "_";
 

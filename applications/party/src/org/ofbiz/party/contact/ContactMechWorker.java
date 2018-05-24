@@ -48,7 +48,7 @@ import org.ofbiz.entity.util.EntityUtilProperties;
  */
 public class ContactMechWorker {
 
-    public static final String module = ContactMechWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private ContactMechWorker() {}
 

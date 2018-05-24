@@ -31,7 +31,7 @@ import org.ofbiz.entity.util.EntityUtil;
 
 public class EntityListCache extends AbstractEntityConditionCache<Object, List<GenericValue>> {
 
-    public static final String module = EntityListCache.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public EntityListCache(String delegatorName) {
         super(delegatorName, "entity-list");

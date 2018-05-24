@@ -92,7 +92,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
             MODEL_SERVICE_FIELD_MAP.put(field.getName(), field);
         }
     }
-    public static final String module = ModelService.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final String XSD = "http://www.w3.org/2001/XMLSchema";
     public static final String TNS = "http://ofbiz.apache.org/service/";
@@ -1244,7 +1244,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
             builder = factory.newDocumentBuilder();
             document = builder.newDocument();
         } catch (Exception e) {
-            throw new WSDLException("can not create WSDL", module);
+            throw new WSDLException("can not create WSDL", module.toString());
         }
         def.setTypes(this.getTypes(document, def));
 

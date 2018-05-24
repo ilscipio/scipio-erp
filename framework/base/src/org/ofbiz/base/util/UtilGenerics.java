@@ -27,7 +27,7 @@ import java.util.Stack;
 
 public class UtilGenerics {
 
-    public static final String module = UtilMisc.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     @SuppressWarnings("unchecked")
     public static <V> V cast(Object object) {

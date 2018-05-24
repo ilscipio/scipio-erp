@@ -45,7 +45,7 @@ import org.ofbiz.service.ServiceContainer;
  */
 public class FileListener {
 
-    public static final String module = FileListener.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final ThreadGroup FILE_LISTENER_THREAD_GROUP = new ThreadGroup("WatchServices");
     private static final Delegator delegator = DelegatorFactory.getDelegator("default");
     private static final LocalDispatcher dispatcher = ServiceContainer.getLocalDispatcher(delegator.getDelegatorName(), delegator);

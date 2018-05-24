@@ -86,7 +86,7 @@ import org.ofbiz.webapp.stats.VisitHandler;
  */
 public class LoginWorker {
 
-    public final static String module = LoginWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resourceWebapp = "SecurityextUiLabels";
 
     public static final String EXTERNAL_LOGIN_KEY_ATTR = "externalLoginKey";

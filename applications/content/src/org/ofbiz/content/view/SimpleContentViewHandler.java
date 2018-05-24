@@ -54,7 +54,7 @@ import org.ofbiz.webapp.website.WebSiteWorker;
 
 public class SimpleContentViewHandler extends AbstractViewHandler {
 
-    public static final String module = SimpleContentViewHandler.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private String rootDir = null;
     private String https = null;
     private String defaultCharset = null;

@@ -59,7 +59,7 @@ import org.ofbiz.service.LocalDispatcher;
 @SuppressWarnings("serial")
 public class PartyContentWrapper extends CommonContentWrapper {
 
-    public static final String module = PartyContentWrapper.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String CACHE_KEY_SEPARATOR = "::";
 
     private static final UtilCache<String, String> partyContentCache = UtilCache.createUtilCache("party.content.rendered", true);

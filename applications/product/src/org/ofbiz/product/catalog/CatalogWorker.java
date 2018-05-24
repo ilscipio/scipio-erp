@@ -50,7 +50,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  */
 public class CatalogWorker {
 
-    public static final String module = CatalogWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private CatalogWorker () {}
 

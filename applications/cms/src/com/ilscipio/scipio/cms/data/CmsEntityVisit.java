@@ -32,7 +32,7 @@ import com.ilscipio.scipio.cms.template.CmsTemplate.TemplateBodySource;
  * Entity visiting interfaces (visitor/visitee) and common implementations.
  */
 public abstract class CmsEntityVisit {
-    public static final String module = CmsEntityVisit.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     public static final String LOG_PREFIX = "Cms: Data Visit: ";
     
@@ -117,7 +117,7 @@ public abstract class CmsEntityVisit {
      * that weren't already looked up (subclass should override this behavior to optimize).
      */
     public static abstract class AbstractCmsEntityVisitor implements CmsEntityVisitor {
-        public static final String module = AbstractCmsEntityVisitor.class.getName();
+        private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
         
         protected final Delegator delegator;
         protected final CmsEntityInfo cmsEntityInfo; // fast access

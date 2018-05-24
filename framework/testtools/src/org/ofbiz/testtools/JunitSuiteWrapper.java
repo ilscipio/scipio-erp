@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
  */
 public class JunitSuiteWrapper {
 
-    public static final String module = JunitSuiteWrapper.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected List<ModelTestSuite> modelTestSuiteList = new LinkedList<ModelTestSuite>();
 

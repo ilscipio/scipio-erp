@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  */
 public final class RemoveByAnd extends EntityOperation {
 
-    public static final String module = RemoveByAnd.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private final FlexibleStringExpander entityNameFse;
     private final FlexibleMapAccessor<Map<String, ? extends Object>> mapFma;
 

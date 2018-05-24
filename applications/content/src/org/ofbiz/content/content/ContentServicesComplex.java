@@ -50,7 +50,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class ContentServicesComplex {
 
-    public static final String module = ContentServicesComplex.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
 
    /*

@@ -23,8 +23,8 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class SeoCatalogUrlRemover extends SeoCatalogTraverser {
 
-    public static final String module = SeoCatalogUrlRemover.class.getName();
-    
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
     static final String logPrefix = "Seo: Alt URLs: ";
     
     public SeoCatalogUrlRemover(Delegator delegator, LocalDispatcher dispatcher, RemoveTraversalConfig travConfig) throws GeneralException {

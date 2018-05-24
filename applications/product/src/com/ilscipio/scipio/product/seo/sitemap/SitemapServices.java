@@ -17,7 +17,7 @@ import com.ilscipio.scipio.product.seo.UrlGenStats;
  */
 public abstract class SitemapServices {
 
-    public static final String module = SitemapServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     private static final String logPrefix = SitemapGenerator.logPrefix;
     

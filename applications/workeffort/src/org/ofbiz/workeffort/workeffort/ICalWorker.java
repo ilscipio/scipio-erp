@@ -57,7 +57,7 @@ import org.w3c.dom.Element;
  */
 public class ICalWorker {
 
-    public static final String module = ICalWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static class ResponseProperties {
         public final int statusCode;

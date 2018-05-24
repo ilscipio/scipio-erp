@@ -21,7 +21,7 @@ public abstract class CmsComplexTemplate extends CmsTemplate {
 
     private static final long serialVersionUID = -3008583211100355776L;
 
-    public static final String module = CmsComplexTemplate.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     protected List<CmsAttributeTemplate> attributeTemplates = null;
 

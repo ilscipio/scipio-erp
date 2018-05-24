@@ -69,7 +69,7 @@ import com.ibm.icu.util.Calendar;
  */
 public class EntitySyncServices {
 
-    public static final String module = EntitySyncServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "EntityExtUiLabels";
 
     /**
@@ -118,10 +118,10 @@ public class EntitySyncServices {
             esc.saveFinalSyncResults();
 
         } catch (SyncAbortException e) {
-            return e.returnError(module);
+            return e.returnError(module.toString()); // SCIPIO: 2018-05-24: modified for OfbizLogger
         } catch (SyncErrorException e) {
             e.saveSyncErrorInfo(esc);
-            return e.returnError(module);
+            return e.returnError(module.toString()); // SCIPIO: 2018-05-24: modified for OfbizLogger
         }
 
         return ServiceUtil.returnSuccess();
@@ -435,10 +435,10 @@ public class EntitySyncServices {
                 esc.saveFinalSyncResults();
             }
         } catch (SyncAbortException e) {
-            return e.returnError(module);
+            return e.returnError(module.toString()); // SCIPIO: 2018-05-24: modified for OfbizLogger
         } catch (SyncErrorException e) {
             e.saveSyncErrorInfo(esc);
-            return e.returnError(module);
+            return e.returnError(module.toString()); // SCIPIO: 2018-05-24: modified for OfbizLogger
         }
         return ServiceUtil.returnSuccess();
     }
@@ -514,10 +514,10 @@ public class EntitySyncServices {
             // save the final results
             esc.saveFinalSyncResults();
         } catch (SyncAbortException e) {
-            return e.returnError(module);
+            return e.returnError(module.toString()); // SCIPIO: 2018-05-24: modified for OfbizLogger
         } catch (SyncErrorException e) {
             e.saveSyncErrorInfo(esc);
-            return e.returnError(module);
+            return e.returnError(module.toString()); // SCIPIO: 2018-05-24: modified for OfbizLogger
         }
 
         return ServiceUtil.returnSuccess();

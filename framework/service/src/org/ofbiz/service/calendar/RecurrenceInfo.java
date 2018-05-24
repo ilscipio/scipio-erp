@@ -38,7 +38,7 @@ import org.ofbiz.entity.GenericValue;
  */
 public class RecurrenceInfo {
 
-    public static final String module = RecurrenceInfo.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected GenericValue info;
     protected Date startDate;

@@ -24,7 +24,7 @@ public class CmsProcessViewMapping extends CmsControlDataObject {
 
     private static final long serialVersionUID = -7866463524435797534L;
 
-    public static final String module = CmsProcessViewMapping.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     // No longer needed; moved caching to CmsProcessMapping
     //private static final CmsObjectCache<CmsProcessViewMapping> pathAndNameCache = getNewMappingCache();

@@ -91,7 +91,7 @@ import org.xml.sax.SAXException;
  */
 public class GenericDelegator implements Delegator {
 
-    public static final String module = GenericDelegator.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected ModelReader modelReader = null;
     protected ModelGroupReader modelGroupReader = null;

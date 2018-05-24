@@ -26,7 +26,7 @@ import com.ilscipio.scipio.cms.webapp.CmsWebappUtil;
  */
 public abstract class CmsControlUtil {
 
-    public static final String module = CmsControlUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     public static final String CMS_NOCACHERESPONSESET_REQATTRNAME = "_CMS_NOCACHERESPONSE_SET_";
     
@@ -233,7 +233,7 @@ public abstract class CmsControlUtil {
                 } else {
                     Debug.logWarning("Cms: ERROR: could not get session delegator for control/filter; " +
                             "delegator factory returned null for session delegatorName \"" + 
-                            delegatorName + "\"; defaulting to servlet or default delegator", CmsWebappUtil.module);
+                            delegatorName + "\"; defaulting to servlet or default delegator", module);
                 }
             }
         }
@@ -248,7 +248,7 @@ public abstract class CmsControlUtil {
         delegator = DelegatorFactory.getDelegator("default");
         
         if (delegator == null) {
-            Debug.logError("Cms: ERROR: could not get any delegator for control/filter!", CmsWebappUtil.module);
+            Debug.logError("Cms: ERROR: could not get any delegator for control/filter!", module);
         }
         return delegator;
     }

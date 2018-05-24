@@ -67,7 +67,7 @@ import freemarker.template.utility.RichObjectWrapper;
  */
 public abstract class LangFtlUtil {
 
-    public static final String module = LangFtlUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     // NOTE: there's no _real_ need to synchronize on these. if two templates are built for one builtin its not big deal.
     private static final Map<String, Template> builtInCalls = new ConcurrentHashMap<>();

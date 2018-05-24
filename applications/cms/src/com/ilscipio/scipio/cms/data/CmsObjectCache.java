@@ -24,7 +24,7 @@ import com.ilscipio.scipio.cms.data.Preloadable.PreloadWorker;
  */
 public abstract class CmsObjectCache<T extends CmsObject> {
     
-    public static final String module = CmsObjectCache.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     private static final int EXPIRATION_TIME_DEFAULT = UtilProperties.getPropertyAsInteger("cms.properties", "cache.data.expiration", 10000);
 

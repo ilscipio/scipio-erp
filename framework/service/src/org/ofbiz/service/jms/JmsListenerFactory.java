@@ -39,7 +39,7 @@ import org.ofbiz.service.config.model.Server;
  */
 public class JmsListenerFactory implements Runnable {
 
-    public static final String module = JmsListenerFactory.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final String TOPIC_LISTENER_CLASS = "org.ofbiz.service.jms.JmsTopicListener";
     public static final String QUEUE_LISTENER_CLASS = "org.ofbiz.service.jms.JmsQueueListener";

@@ -69,7 +69,7 @@ import org.w3c.dom.Element;
 @SuppressWarnings("serial")
 public class UtilProperties implements Serializable {
 
-    public static final String module = UtilProperties.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /** An instance of the generic cache for storing the non-locale-specific properties.
      *  Each Properties instance is keyed by the resource String.

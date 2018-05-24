@@ -73,7 +73,7 @@ import org.xml.sax.SAXException;
  */
 public class UpsServices {
 
-    public final static String module = UpsServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static Map<String, String> unitsUpsToOfbiz = UtilMisc.newMap();
     public static Map<String, String> unitsOfbizToUps = UtilMisc.newMap();

@@ -55,7 +55,7 @@ import paypal.payflow.SDKProperties;
  */
 public class PayflowPro {
 
-    public static final String module = PayflowPro.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public final static String resource = "AccountingUiLabels";
 
     /**

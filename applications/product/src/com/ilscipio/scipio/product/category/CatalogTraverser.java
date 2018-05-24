@@ -40,7 +40,7 @@ import com.ilscipio.scipio.product.seo.SeoCatalogTraverser;
  */
 public class CatalogTraverser extends AbstractCatalogVisitor {
 
-    public static final String module = CatalogTraverser.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     /**
      * Expected max category depth (optimization), intentionally exaggerated (probably no one has categories

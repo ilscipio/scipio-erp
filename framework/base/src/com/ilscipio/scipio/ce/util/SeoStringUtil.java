@@ -11,7 +11,7 @@ import org.ofbiz.base.util.Debug;
  */
 public class SeoStringUtil {
 
-    private static final String module = SeoStringUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final String URL_HYPHEN = "-";
     public static final String ASCII_REGEX = "^[0-9-_a-zA-Z]*$";

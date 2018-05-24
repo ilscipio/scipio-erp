@@ -62,7 +62,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class ProductionRunServices {
 
-    public static final String module = ProductionRunServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ManufacturingUiLabels";
     public static final String resourceOrder = "OrderErrorUiLabels";
     public static final String resourceProduct = "ProductUiLabels";    

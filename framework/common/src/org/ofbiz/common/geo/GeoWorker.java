@@ -37,7 +37,7 @@ import org.ofbiz.entity.util.EntityUtil;
  */
 public class GeoWorker {
 
-    public static final String module = GeoWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static List<GenericValue> expandGeoGroup(String geoId, Delegator delegator) {
         GenericValue geo = null;

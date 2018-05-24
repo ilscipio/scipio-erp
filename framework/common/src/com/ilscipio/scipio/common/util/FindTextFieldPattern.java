@@ -18,7 +18,7 @@ import org.ofbiz.entity.condition.EntityOperator;
  */
 @SuppressWarnings("serial")
 public class FindTextFieldPattern implements Serializable {
-    public static final String module = FindTextFieldPattern.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     @SuppressWarnings("unchecked")
     public static final EntityComparisonOperator<Comparable<Object>, Object> EQUALS_ENTITY_OPERATOR = (EntityComparisonOperator<Comparable<Object>, Object>) FindServices.getEntityOperatorsMap().get("equals");

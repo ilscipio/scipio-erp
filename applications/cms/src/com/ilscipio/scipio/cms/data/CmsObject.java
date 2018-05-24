@@ -23,7 +23,7 @@ public abstract class CmsObject implements Serializable, Preloadable {
 
     private static final long serialVersionUID = 8922531894662530516L;
     
-    public static final String module = CmsObject.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     // Cache flags. Note: In general if one or our methods is called with useCache false, that means don't
     // use any kind of cache. Basically you have a generic "useCache" flag passed around

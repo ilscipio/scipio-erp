@@ -44,7 +44,7 @@ import org.ofbiz.entity.model.ModelField;
 @SuppressWarnings("serial")
 public abstract class EntityComparisonOperator<L, R> extends EntityOperator<L, R, Boolean> {
 
-    public static final String module = EntityComparisonOperator.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static Pattern makeOroPattern(String sqlLike) {
         Perl5Util perl5Util = new Perl5Util();

@@ -49,7 +49,7 @@ import org.xml.sax.SAXException;
 @SuppressWarnings("serial")
 public class FormFactory extends WidgetFactory {
 
-    public static final String module = FormFactory.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final UtilCache<String, ModelForm> formLocationCache = UtilCache.createUtilCache("widget.form.locationResource", 0, 0, false);
     private static final UtilCache<String, ModelForm> formWebappCache = UtilCache.createUtilCache("widget.form.webappResource", 0, 0, false);
 

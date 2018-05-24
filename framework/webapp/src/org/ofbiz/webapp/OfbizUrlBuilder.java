@@ -48,7 +48,7 @@ import org.xml.sax.SAXException;
  */
 public final class OfbizUrlBuilder {
 
-    public static final String module = OfbizUrlBuilder.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * Returns an <code>OfbizUrlBuilder</code> instance.

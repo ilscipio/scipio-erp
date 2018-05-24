@@ -97,7 +97,7 @@ public abstract class AbstractModelAction implements Serializable, ModelAction {
      * 
      */
 
-    public static final String module = AbstractModelAction.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * Returns a new <code>ModelAction</code> instance, built from <code>actionElement</code>.

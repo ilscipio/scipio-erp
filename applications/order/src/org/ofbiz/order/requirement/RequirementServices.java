@@ -43,7 +43,7 @@ import org.ofbiz.service.ServiceUtil;
 
 public class RequirementServices {
 
-    public static final String module = RequirementServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource_error = "OrderErrorUiLabels";
 
     public static Map<String, Object> getRequirementsForSupplier(DispatchContext ctx, Map<String, ? extends Object> context) {

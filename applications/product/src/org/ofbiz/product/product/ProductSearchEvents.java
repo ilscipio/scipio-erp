@@ -50,7 +50,7 @@ import org.ofbiz.product.product.ProductSearch.ResultSortOrder;
  */
 public class ProductSearchEvents {
 
-    public static final String module = ProductSearchEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ProductErrorUiLabels";
     public static final int DEFAULT_TX_TIMEOUT = 600;
 

@@ -33,7 +33,7 @@ import org.ofbiz.service.ServiceUtil;
 
 public class ShippingEstimateWrapper {
 
-    public static final String module = ShippingEstimateWrapper.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected Delegator delegator = null;
     protected LocalDispatcher dispatcher = null;

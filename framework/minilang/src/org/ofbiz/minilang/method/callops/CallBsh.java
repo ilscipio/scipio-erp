@@ -47,7 +47,7 @@ import bsh.Interpreter;
  */
 public final class CallBsh extends MethodOperation {
 
-    public static final String module = CallBsh.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // This method is needed only during the v1 to v2 transition
     private static boolean autoCorrect(Element element) {

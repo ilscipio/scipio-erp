@@ -21,7 +21,7 @@ import org.ofbiz.entity.GenericValue;
  */
 public abstract class CmsWebappUtil {
 
-    public static final String module = CmsWebappUtil.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     private CmsWebappUtil() {}
 

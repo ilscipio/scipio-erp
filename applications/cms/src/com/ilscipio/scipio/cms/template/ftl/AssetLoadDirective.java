@@ -6,6 +6,7 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilRender.RenderExceptionMode;
@@ -92,9 +93,11 @@ import freemarker.template.TemplateModel;
  */
 public class AssetLoadDirective implements TemplateDirectiveModel, Serializable {
 
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    
     private static final long serialVersionUID = -2664394439313786601L;
 
-    public static final String module = AssetLoadDirective.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     private static final AssetLoadDirective instance = new AssetLoadDirective();
 

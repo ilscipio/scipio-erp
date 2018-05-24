@@ -27,7 +27,7 @@ import org.ofbiz.webapp.control.ServletUtil;
 @SuppressWarnings("serial")
 public abstract class CmsWebSiteConfig implements Serializable {
 
-    public static final String module = CmsWebSiteConfig.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     private static final CmsWebSiteConfig HARD_DEFAULT = new CmsWebSiteVirtualConfig();
     private static final CmsWebSiteConfig DEFAULT = readDefaultConfig("cms", "webSiteConfig.defaults.", HARD_DEFAULT);

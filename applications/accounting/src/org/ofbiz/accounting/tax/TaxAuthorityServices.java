@@ -57,7 +57,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class TaxAuthorityServices {
 
-    public static final String module = TaxAuthorityServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final BigDecimal ZERO_BASE = BigDecimal.ZERO;
     public static final BigDecimal ONE_BASE = BigDecimal.ONE;
     public static final BigDecimal PERCENT_SCALE = new BigDecimal("100.000");

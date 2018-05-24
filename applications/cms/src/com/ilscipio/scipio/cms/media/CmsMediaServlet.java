@@ -41,7 +41,7 @@ import com.ilscipio.scipio.cms.CmsUtil;
 @SuppressWarnings("serial")
 public class CmsMediaServlet extends HttpServlet {
 
-    public static final String module = CmsMediaServlet.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private static final String FN_SOURCE = UtilProperties.getPropertyValue("cms", "media.serve.filename.source", "name");
     private static final String fnSrcFieldName = "origfn".equals(FN_SOURCE) ? "objectInfo" : "dataResourceName";

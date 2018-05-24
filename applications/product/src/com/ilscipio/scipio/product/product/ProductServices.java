@@ -37,7 +37,7 @@ import org.ofbiz.service.ServiceUtil;
  *******************************************************************************/
 public abstract class ProductServices {
 
-    public static final String module = ProductServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static Set<String> usedProductFields = new HashSet<String>(Arrays.asList("productId", "productTypeId", "introductionDate", "releaseDate",
             "salesDiscontinuationDate", "productRating", "lastModifiedDate", "lastUpdatedStamp"));

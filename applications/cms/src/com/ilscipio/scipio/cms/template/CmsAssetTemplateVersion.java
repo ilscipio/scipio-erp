@@ -15,7 +15,7 @@ public class CmsAssetTemplateVersion extends CmsTemplateVersion {
 
     private static final long serialVersionUID = -2831896712431295094L;
 
-    public static final String module = CmsAssetTemplateVersion.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     private CmsAssetTemplate assetTemplate; // Mutable - set on first get if necessary.
     

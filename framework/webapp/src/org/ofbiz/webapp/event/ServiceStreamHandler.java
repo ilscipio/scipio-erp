@@ -45,7 +45,7 @@ import org.ofbiz.webapp.control.ConfigXMLReader.RequestMap;
  */
 public class ServiceStreamHandler implements EventHandler {
 
-    public static final String module = ServiceStreamHandler.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     protected LocalDispatcher dispatcher;
     protected Delegator delegator;
 

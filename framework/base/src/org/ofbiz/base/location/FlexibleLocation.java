@@ -39,7 +39,7 @@ import org.ofbiz.base.util.UtilValidate;
 
 public final class FlexibleLocation {
 
-    public static final String module = FlexibleLocation.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final Map<String, LocationResolver> locationResolvers;
 
     static {

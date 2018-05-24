@@ -53,7 +53,7 @@ import com.sun.star.uri.ExternalUriReferenceTranslator;
  */
 public class OpenOfficeWorker{
 
-    public static final String module = OpenOfficeWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * Use OpenOffice to convert documents between types

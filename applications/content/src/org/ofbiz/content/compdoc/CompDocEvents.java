@@ -52,7 +52,7 @@ import org.ofbiz.webapp.website.WebSiteWorker;
  * CompDocEvents Class
  */
 public class CompDocEvents {
-    public static final String module = CompDocEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      *

@@ -46,7 +46,7 @@ import org.ofbiz.service.ServiceUtil;
 
 public class OrderTestServices {
 
-    public static final String module = OrderTestServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static Map<String, Object> createTestSalesOrders(DispatchContext dctx, Map<String, ? extends Object> context) {
         LocalDispatcher dispatcher = dctx.getDispatcher();

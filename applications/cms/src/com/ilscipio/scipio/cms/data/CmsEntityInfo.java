@@ -33,7 +33,7 @@ import com.ilscipio.scipio.cms.CmsUtil;
  */
 public class CmsEntityInfo {
 
-    public static final String module = CmsEntityInfo.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     public static final String CMS_ENTITY_BASE_PKG = "com.ilscipio.scipio.cms";
     public static final String CMS_ENTITY_BASE_PKG_PREFIX = CMS_ENTITY_BASE_PKG + ".";

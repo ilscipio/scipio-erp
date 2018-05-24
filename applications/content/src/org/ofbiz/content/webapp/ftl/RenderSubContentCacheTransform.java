@@ -51,7 +51,7 @@ import freemarker.template.TemplateTransformModel;
  */
 public class RenderSubContentCacheTransform implements TemplateTransformModel {
 
-    public static final String module = RenderSubContentCacheTransform.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String [] upSaveKeyNames = {"globalNodeTrail"};
     public static final String [] saveKeyNames = {"contentId", "subContentId", "subDataResourceTypeId", "mimeTypeId", "whenMap", "locale",  "wrapTemplateId", "encloseWrapText", "nullThruDatesOnly", "globalNodeTrail"};
 

@@ -46,7 +46,7 @@ import org.ofbiz.service.ServiceUtil;
 @SuppressWarnings("serial")
 public class PackingSession implements java.io.Serializable {
 
-    public static final String module = PackingSession.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected GenericValue userLogin = null;
     protected String pickerPartyId = null;

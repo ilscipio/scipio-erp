@@ -60,7 +60,7 @@ import org.w3c.dom.Element;
  */
 public class EntityPermissionChecker {
 
-    public static final String module = EntityPermissionChecker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected FlexibleStringExpander entityIdExdr;
     protected FlexibleStringExpander entityNameExdr;

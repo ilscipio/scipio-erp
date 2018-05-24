@@ -29,6 +29,8 @@ import org.ofbiz.base.util.collections.MapStack;
  */
 class ContextHandler {
 
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    
     private final String rendererLabel;
     private MacroScreenRenderer screenRenderer = null;
     private Map<String, Object> lastRenderContext = new HashMap<String, Object>();
@@ -65,7 +67,7 @@ class ContextHandler {
         }
         else {
             Debug.logError("macro " + rendererLabel + " renderer template environment initial context register "
-                    + "could not retrieve macro screen renderer instance", MacroScreenRenderer.module);
+                    + "could not retrieve macro screen renderer instance", module);
         }
     }
     
@@ -105,13 +107,13 @@ class ContextHandler {
                 renderContext = createRenderContextFromInitial(initContext, extraValues);
             }
             else {
-                Debug.logError("macro " + rendererLabel + " renderer template environment initial context absent", MacroScreenRenderer.module);
+                Debug.logError("macro " + rendererLabel + " renderer template environment initial context absent", module);
                 renderContext = new HashMap<String, Object>(extraValues);
             }
         }
         else {
             Debug.logError("macro " + rendererLabel + " renderer template environment initial context populate "
-                    + "could not retrieve macro screen renderer instance", MacroScreenRenderer.module);
+                    + "could not retrieve macro screen renderer instance", module);
             renderContext = new HashMap<String, Object>(extraValues);
         }
         lastRenderContext = renderContext;

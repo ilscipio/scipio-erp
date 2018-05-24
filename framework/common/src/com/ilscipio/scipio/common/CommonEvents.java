@@ -32,7 +32,7 @@ import org.ofbiz.entity.util.EntityQuery;
  */
 public class CommonEvents {
 
-    public static final String module = CommonEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     
     /**

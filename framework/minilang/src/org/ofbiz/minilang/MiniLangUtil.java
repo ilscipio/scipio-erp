@@ -57,7 +57,7 @@ import org.w3c.dom.Node;
  */
 public final class MiniLangUtil {
 
-    public static final String module = MiniLangUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final Set<String> SCRIPT_PREFIXES;
 

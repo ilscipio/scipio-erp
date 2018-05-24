@@ -43,7 +43,7 @@ import org.w3c.dom.Node;
  */
 public class ObjectType {
 
-    public static final String module = ObjectType.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final Object NULL = new NullObject();
 

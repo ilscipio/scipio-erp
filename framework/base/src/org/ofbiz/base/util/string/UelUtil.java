@@ -48,7 +48,7 @@ import org.ofbiz.base.util.collections.LocalizedMap;
 
 /** Implements the Unified Expression Language (JSR-245). */
 public class UelUtil {
-    protected static final String module = UelUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String localizedMapLocaleKey = LocalizedMap.class.getName() + "_locale".replace(".", "_");
     protected static final ExpressionFactory exprFactory = JuelConnector.newExpressionFactory();
     protected static final ELResolver defaultResolver = new ExtendedCompositeResolver() {

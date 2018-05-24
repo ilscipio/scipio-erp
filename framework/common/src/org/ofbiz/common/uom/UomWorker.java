@@ -43,7 +43,7 @@ import com.ibm.icu.util.Calendar;
  */
 public class UomWorker {
 
-    public static final String module = UomWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private UomWorker () {}
 

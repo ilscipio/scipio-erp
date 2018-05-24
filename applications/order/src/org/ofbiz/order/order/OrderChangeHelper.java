@@ -39,7 +39,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class OrderChangeHelper {
 
-    public static final String module = OrderChangeHelper.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static boolean approveOrder(LocalDispatcher dispatcher, GenericValue userLogin, String orderId) {
         return approveOrder(dispatcher, userLogin, orderId, false);

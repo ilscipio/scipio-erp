@@ -43,7 +43,7 @@ import org.ofbiz.service.LocalDispatcher;
  */
 
 public class BOMNode {
-    public static final String module = BOMNode.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected LocalDispatcher dispatcher = null;
     protected Delegator delegator = null;

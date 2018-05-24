@@ -90,7 +90,7 @@ import com.ilscipio.scipio.cms.webapp.CmsWebappUtil;
  */
 public class CmsProcessFilter implements Filter {
 
-    public static final String module = CmsProcessFilter.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     //private FilterConfig config = null;
     private ServletContext servletContext;

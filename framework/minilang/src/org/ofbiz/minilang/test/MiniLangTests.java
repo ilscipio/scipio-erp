@@ -33,7 +33,7 @@ import org.ofbiz.service.testtools.OFBizTestCase;
 
 public class MiniLangTests extends OFBizTestCase {
 
-    private static final String module = MiniLangTests.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final boolean traceEnabled;
 
@@ -56,7 +56,7 @@ public class MiniLangTests extends OFBizTestCase {
     }
 
     private SimpleMethod createSimpleMethod(String xmlString) throws Exception {
-        return new SimpleMethod(UtilXml.readXmlDocument(xmlString).getDocumentElement(), module);
+        return new SimpleMethod(UtilXml.readXmlDocument(xmlString).getDocumentElement(), module.toString()); // SCIPIO: 2018-05-24: modified for OfbizLogger
     }
 
     public void testAssignmentOperators() throws Exception {

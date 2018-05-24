@@ -62,7 +62,7 @@ import org.ofbiz.service.LocalDispatcher;
 @SuppressWarnings("serial")
 public class ProductPromoContentWrapper extends CommonContentWrapper {
 
-    public static final String module = ProductPromoContentWrapper.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String SEPARATOR = "::";    // cache key separator
 
     private static final UtilCache<String, String> productPromoContentCache = UtilCache.createUtilCache("product.promo.content.rendered", true);

@@ -63,7 +63,7 @@ import org.xml.sax.SAXException;
 
 public class ArtifactInfoFactory {
 
-    public static final String module = ArtifactInfoFactory.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private static final UtilCache<String, ArtifactInfoFactory> artifactInfoFactoryCache = UtilCache.createUtilCache("ArtifactInfoFactory");
 

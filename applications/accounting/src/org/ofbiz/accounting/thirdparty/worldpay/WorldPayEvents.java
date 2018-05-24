@@ -56,7 +56,7 @@ public class WorldPayEvents {
     public static final String resource = "AccountingUiLabels";
     public static final String resourceErr = "AccountingErrorUiLabels";
     public static final String commonResource = "CommonUiLabels";
-    public static final String module = WorldPayEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static String worldPayRequest(HttpServletRequest request, HttpServletResponse response) {
         Locale locale = UtilHttp.getLocale(request);

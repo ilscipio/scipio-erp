@@ -22,7 +22,7 @@ import org.ofbiz.base.util.UtilMisc;
 
 public class JFairyDataGenerator extends DataGenerator {
 	private final static String JFAIRY_DATA_GENERATOR = "jfairy";
-	private final static String module = JFairyDataGenerator.class.getName();
+	//private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
 	private final JFairyDemoDataHelper helper;
 

@@ -68,7 +68,7 @@ import org.w3c.dom.Element;
  */
 public class JmsServiceEngine extends AbstractEngine {
 
-    public static final String module = JmsServiceEngine.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public JmsServiceEngine(ServiceDispatcher dispatcher) {
         super(dispatcher);

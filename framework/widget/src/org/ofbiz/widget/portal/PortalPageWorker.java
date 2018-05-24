@@ -42,7 +42,7 @@ import org.ofbiz.widget.WidgetWorker;
  */
 public class PortalPageWorker {
 
-    public static final String module = PortalPageWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public PortalPageWorker() { }
 

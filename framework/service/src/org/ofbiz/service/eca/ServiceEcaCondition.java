@@ -39,7 +39,7 @@ import org.w3c.dom.Element;
 @SuppressWarnings("serial")
 public class ServiceEcaCondition implements java.io.Serializable {
 
-    public static final String module = ServiceEcaCondition.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected String conditionService = null;
     protected String lhsValueName = null;

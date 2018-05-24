@@ -45,7 +45,7 @@ import org.w3c.dom.Element;
  */
 public final class EntityCount extends EntityOperation {
 
-    public static final String module = EntityCount.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final FlexibleMapAccessor<Long> countFma;
     private final FlexibleStringExpander entityNameFse;

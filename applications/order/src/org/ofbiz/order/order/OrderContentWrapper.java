@@ -52,7 +52,7 @@ import org.ofbiz.service.LocalDispatcher;
 @SuppressWarnings("serial")
 public class OrderContentWrapper extends CommonContentWrapper {
 
-    public static final String module = OrderContentWrapper.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String SEPARATOR = "::";    // cache key separator
 
     private static final UtilCache<String, String> orderContentCache = UtilCache.createUtilCache("order.content", true); // use soft reference to free up memory if needed

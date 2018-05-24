@@ -72,7 +72,7 @@ import org.ofbiz.widget.renderer.macro.MacroScreenRenderer;
  */
 public class OutputServices {
 
-    public final static String module = OutputServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected static final FoFormRenderer foFormRenderer = new FoFormRenderer();
     public static final String resource = "ContentUiLabels";

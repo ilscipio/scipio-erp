@@ -45,7 +45,7 @@ import org.ofbiz.base.util.UtilValidate;
  */
 public class ContainerLoader implements StartupLoader {
 
-    public static final String module = ContainerLoader.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private String configFile = null;
     private final List<Container> loadedContainers = new LinkedList<Container>();

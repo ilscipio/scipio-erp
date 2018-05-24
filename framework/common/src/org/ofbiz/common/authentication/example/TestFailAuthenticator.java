@@ -30,7 +30,7 @@ import org.ofbiz.base.util.Debug;
  */
 public class TestFailAuthenticator implements Authenticator {
 
-    private static final String module = TestFailAuthenticator.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     protected Delegator delegator;
     protected LocalDispatcher dispatcher;
     protected float weight = 1;

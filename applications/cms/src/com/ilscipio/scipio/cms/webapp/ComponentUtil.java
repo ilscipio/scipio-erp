@@ -28,7 +28,7 @@ import org.ofbiz.webapp.control.ConfigXMLReader.ViewMap;
  */
 public class ComponentUtil {
     
-    public static final String module = UtilHttp.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * Return a list of Maps containing all component/webapp informations

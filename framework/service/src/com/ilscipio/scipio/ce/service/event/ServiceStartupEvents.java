@@ -42,7 +42,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class ServiceStartupEvents implements ExtendedStartupLoader {
 
-    private static final String module = ServiceStartupEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     @Override
     public void load(Config config, String[] args) throws StartupException {

@@ -59,7 +59,7 @@ import freemarker.template.TemplateTransformModel;
  */
 public class OfbizContentTransform implements TemplateTransformModel {
 
-    public final static String module = OfbizContentTransform.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     @SuppressWarnings("unchecked")
     public Writer getWriter(final Writer out, Map args) throws TemplateModelException {

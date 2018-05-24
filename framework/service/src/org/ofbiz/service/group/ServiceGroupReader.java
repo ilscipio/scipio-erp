@@ -37,7 +37,7 @@ import org.w3c.dom.Element;
  */
 public class ServiceGroupReader {
 
-    public static final String module = ServiceGroupReader.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // using a cache is dangerous here because if someone clears it the groups won't work at all: public static UtilCache groupsCache = new UtilCache("service.ServiceGroups", 0, 0, false);
     public static Map<String, GroupModel> groupsCache = new ConcurrentHashMap<String, GroupModel>();

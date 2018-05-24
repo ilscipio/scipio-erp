@@ -84,7 +84,7 @@ import com.ilscipio.scipio.product.category.CatalogUrlType;
 @SuppressWarnings("serial")
 public class SeoCatalogUrlWorker implements Serializable {
 
-    public static final String module = SeoCatalogUrlWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final String DEFAULT_CONFIG_RESOURCE = "SeoConfigUiLabels";
 

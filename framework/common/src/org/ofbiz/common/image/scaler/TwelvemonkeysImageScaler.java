@@ -29,7 +29,7 @@ import com.twelvemonkeys.image.ResampleOp;
 @Deprecated
 public class TwelvemonkeysImageScaler extends AbstractImageScaler {
 
-    public static final String module = TwelvemonkeysImageScaler.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String API_NAME = "twelvemonkeys";
     
     /**

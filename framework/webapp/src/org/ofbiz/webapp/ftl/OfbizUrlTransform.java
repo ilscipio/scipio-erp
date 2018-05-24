@@ -66,7 +66,7 @@ import freemarker.template.TemplateTransformModel;
  */
 public class OfbizUrlTransform implements TemplateTransformModel {
 
-    public final static String module = OfbizUrlTransform.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     @Override
     @SuppressWarnings("rawtypes")

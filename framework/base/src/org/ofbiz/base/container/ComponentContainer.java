@@ -48,7 +48,7 @@ import com.ilscipio.scipio.ce.build.util.DependencyGraph;
  */
 public class ComponentContainer implements Container {
 
-    public static final String module = ComponentContainer.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected String configFileLocation = null;
     private String name;

@@ -27,7 +27,7 @@ import org.ofbiz.common.authentication.api.AuthenticatorException;
  */
 public class TestPassAuthenticator extends TestFailAuthenticator {
 
-    private static final String module = TestPassAuthenticator.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * Method to authenticate a user

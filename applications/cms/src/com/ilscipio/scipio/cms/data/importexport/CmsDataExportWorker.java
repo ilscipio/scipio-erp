@@ -92,7 +92,7 @@ import com.ilscipio.scipio.cms.template.CmsTemplate.TemplateBodySource;
 @SuppressWarnings("serial")
 public abstract class CmsDataExportWorker implements Serializable {
 
-    public static final String module = CmsDataExportWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     protected static final int DEFAULT_TRANSACTION_TIMEOUT = 3600;
     protected static final int LOG_RECORD_COUNT_INTERVAL = 500;
@@ -703,7 +703,7 @@ public abstract class CmsDataExportWorker implements Serializable {
      * See {@link #buildDefaultEntityPresets} body for available presets, or simply visit Cms Data Export page.
      */
     public static class EntityPresetMap implements Serializable, Map<String, PresetConfig> {
-        public static final String module = EntityPresetMap.class.getName();
+        private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
         private static final EntityPresetMap INSTANCE = buildDefaultEntityPresets(DelegatorFactory.getDelegator("default")); // optimization: only need one inst
         protected final Map<String, PresetConfig> map;
         protected final Set<String> simpleOptionKeys;

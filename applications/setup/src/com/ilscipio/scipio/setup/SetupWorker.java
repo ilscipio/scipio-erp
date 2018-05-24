@@ -37,7 +37,7 @@ import com.ilscipio.scipio.setup.SetupWorker.StaticSetupWorker.StaticStepState;
 @SuppressWarnings("serial")
 public abstract class SetupWorker implements Serializable {
 
-    public static final String module = SetupWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     /* 
      * *******************************************

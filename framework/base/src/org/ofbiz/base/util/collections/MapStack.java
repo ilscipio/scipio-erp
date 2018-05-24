@@ -29,7 +29,7 @@ import org.ofbiz.base.util.Debug;
  */
 public class MapStack<K> extends MapContext<K, Object> {
 
-    public static final String module = MapStack.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static <K> MapStack<K> create() {
         MapStack<K> newValue = new MapStack<K>();

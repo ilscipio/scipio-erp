@@ -63,7 +63,7 @@ import com.ibm.icu.util.Calendar;
  */
 public class UtilHttp {
 
-    public static final String module = UtilHttp.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final String MULTI_ROW_DELIMITER = "_o_";
     public static final String ROW_SUBMIT_PREFIX = "_rowSubmit_o_";

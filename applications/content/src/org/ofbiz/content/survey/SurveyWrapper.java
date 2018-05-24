@@ -54,7 +54,7 @@ import freemarker.template.TemplateException;
  */
 public class SurveyWrapper {
 
-    public static final String module = SurveyWrapper.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected Delegator delegator = null;
     protected String responseId = null;

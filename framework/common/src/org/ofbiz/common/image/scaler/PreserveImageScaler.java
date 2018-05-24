@@ -16,7 +16,7 @@ import org.ofbiz.common.image.ImageTransform;
  */
 public class PreserveImageScaler extends AbstractImageScaler {
 
-    public static final String module = PreserveImageScaler.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String API_NAME = "preserve";
 
     public static final Map<String, Object> DEFAULT_OPTIONS;

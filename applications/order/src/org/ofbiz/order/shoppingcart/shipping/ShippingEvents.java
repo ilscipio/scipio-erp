@@ -53,7 +53,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class ShippingEvents {
 
-    public static final String module = ShippingEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static String getShipEstimate(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");

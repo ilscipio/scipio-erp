@@ -36,7 +36,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class XmlRpcTests extends AbstractXmlRpcTestCase {
 
-    public static final String module = XmlRpcTests.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ServiceErrorUiLabels";
     public static String url = "http://localhost:8080/admin/control/xmlrpc";
 

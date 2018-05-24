@@ -50,7 +50,7 @@ import com.paymentech.orbital.sdk.util.exceptions.InitializationException;
 
 public class OrbitalPaymentServices {
 
-    public static String module = OrbitalPaymentServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
     private static int rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
     public final static String resource = "AccountingUiLabels";

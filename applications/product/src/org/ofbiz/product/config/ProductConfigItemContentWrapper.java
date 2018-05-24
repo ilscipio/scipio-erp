@@ -60,7 +60,7 @@ import org.ofbiz.service.ServiceContainer;
 @SuppressWarnings("serial")
 public class ProductConfigItemContentWrapper extends CommonContentWrapper {
 
-    public static final String module = ProductConfigItemContentWrapper.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String SEPARATOR = "::";    // cache key separator
     private static final UtilCache<String, String> configItemContentCache = UtilCache.createUtilCache("configItem.content", true); // use soft reference to free up memory if needed
 

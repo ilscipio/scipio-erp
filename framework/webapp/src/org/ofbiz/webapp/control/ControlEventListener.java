@@ -43,7 +43,7 @@ import org.ofbiz.entity.util.EntityQuery;
  */
 public class ControlEventListener implements HttpSessionListener {
     // Debug module name
-    public static final String module = ControlEventListener.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected static long totalActiveSessions = 0;
     protected static long totalPassiveSessions = 0;

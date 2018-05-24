@@ -102,7 +102,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class InvoiceServices {
 
-    public static String module = InvoiceServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // set some BigDecimal properties
     private static final BigDecimal ZERO = BigDecimal.ZERO;

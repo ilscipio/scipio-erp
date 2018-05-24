@@ -37,7 +37,7 @@ public class CmsViewMapping extends CmsControlDataObject implements CmsMajorObje
 
     private static final long serialVersionUID = -5208044951376304256L;
 
-    public static final String module = CmsViewMapping.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     public static final String TARGET_SERVLET_PATH_DEFAULT = "DEFAULT";
     

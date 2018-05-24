@@ -61,7 +61,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class ImageManagementServices {
     
-    public static final String module = ImageManagementServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ProductErrorUiLabels";
     private static int imageCount = 0;
     private static String imagePath;

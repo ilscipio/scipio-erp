@@ -49,7 +49,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class ValueLinkServices {
 
-    public static final String module = ValueLinkServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public final static String resource = "AccountingUiLabels";
     public final static String resourceError = "AccountingErrorUiLabels";
     public final static String resourceOrder = "OrderUiLabels";

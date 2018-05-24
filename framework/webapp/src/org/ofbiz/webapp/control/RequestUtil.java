@@ -15,7 +15,7 @@ import org.ofbiz.base.util.UtilValidate;
  */
 public abstract class RequestUtil {
 
-    public static final String module = RequestUtil.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     // TODO: unhardcode
     private static final String GENERICERRMSG_EN_FALLBACK = "An error occurred. Please contact support.";

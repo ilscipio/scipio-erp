@@ -56,7 +56,7 @@ import freemarker.template.TemplateException;
  */
 public class MacroTreeRenderer implements TreeStringRenderer {
 
-    public static final String module = MacroTreeRenderer.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private Template macroLibrary;
     
     // SCIPIO: new

@@ -34,7 +34,7 @@ import org.ofbiz.entity.GenericValue;
  */
 public class EntityTypeUtil {
 
-    public static final String module = EntityTypeUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static boolean isType(Collection<GenericValue> thisCollection, String typeRelation, GenericValue targetType) {
         for (GenericValue value: thisCollection) {

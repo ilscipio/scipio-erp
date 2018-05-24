@@ -46,7 +46,7 @@ import org.ofbiz.service.ServiceUtil;
 
 public class RotateImage {
 
-    public static final String module = RotateImage.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ProductErrorUiLabels";
 
     public static Map<String, Object> imageRotate(DispatchContext dctx, Map<String, ? extends Object> context)

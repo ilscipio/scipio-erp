@@ -67,7 +67,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
     
     private static final long serialVersionUID = -6442528536238200118L;
 
-    public static final String module = CmsPage.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * NOTE: 2016: page cache is almost completely covered by CmsProcess/ViewMapping; 

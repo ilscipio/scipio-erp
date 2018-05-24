@@ -59,7 +59,7 @@ import freemarker.template.TemplateException;
 
 public class MacroMenuRenderer implements MenuStringRenderer {
 
-    public static final String module = MacroMenuRenderer.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     /**
      * SCIPIO: NOTE: This should always be true. Scipio no longer supports the old rendering method.

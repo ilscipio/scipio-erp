@@ -63,7 +63,7 @@ import org.ofbiz.webapp.control.ConfigXMLReader.RequestMap;
  */
 public class ServiceEventHandler implements EventHandler {
 
-    public static final String module = ServiceEventHandler.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final String SYNC = "sync";
     public static final String ASYNC = "async";

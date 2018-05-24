@@ -31,7 +31,7 @@ import org.ofbiz.common.image.ImageType.ImageTypeInfo;
  */
 public class AwtImageScaler extends AbstractImageScaler {
 
-    public static final String module = AwtImageScaler.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String API_NAME = "java-awt";
     
     /**

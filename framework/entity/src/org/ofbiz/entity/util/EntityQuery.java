@@ -47,7 +47,7 @@ import org.ofbiz.entity.model.DynamicViewEntity;
  */
 public class EntityQuery {
 
-    public static final String module = EntityQuery.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private Delegator delegator;
     private String entityName = null;

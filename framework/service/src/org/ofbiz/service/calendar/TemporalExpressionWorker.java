@@ -34,7 +34,7 @@ import org.ofbiz.entity.util.EntityQuery;
 /** TemporalExpression persistence worker. */
 public class TemporalExpressionWorker {
 
-    public final static String module = TemporalExpressionWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // Temporal expression type constants
     public final static String DateRange = "DATE_RANGE";

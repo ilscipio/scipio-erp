@@ -16,7 +16,7 @@ import java.util.Map;
 @SuppressWarnings("serial")
 public abstract class PropertyMessage implements Serializable {
 
-    public static final String module = PropertyMessage.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected abstract String getMessageImpl(Locale locale);
     

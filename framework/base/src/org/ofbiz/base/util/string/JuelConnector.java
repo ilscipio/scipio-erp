@@ -54,7 +54,7 @@ import org.ofbiz.base.util.Debug;
  * auto-vivify.</p>
  */
 public class JuelConnector {
-    protected static final String module = JuelConnector.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /** Returns an <code>ExpressionFactory</code> instance.
      * @return A customized <code>ExpressionFactory</code> instance

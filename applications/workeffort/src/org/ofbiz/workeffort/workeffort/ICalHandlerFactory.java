@@ -37,7 +37,7 @@ import org.ofbiz.webapp.webdav.RequestHandlerFactory;
  */
 public class ICalHandlerFactory implements RequestHandlerFactory {
 
-    public static final String module = ICalHandlerFactory.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected final Map<String, RequestHandler> handlerMap;
     protected final RequestHandler invalidMethodHandler = new InvalidMethodHandler();

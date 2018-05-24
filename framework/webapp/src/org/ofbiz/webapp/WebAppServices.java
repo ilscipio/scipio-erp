@@ -46,7 +46,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public abstract class WebAppServices {
 
-    public static final String module = WebAppServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     private static final int VISIT_STAT_INTERVAL = 1000;
     

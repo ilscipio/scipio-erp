@@ -50,7 +50,7 @@ import org.ofbiz.service.ServiceDispatcher;
  * Product utility class for solr.
  */
 public abstract class SolrProductUtil {
-    public static final String module = SolrProductUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * Maps a few simple Product entity fields to solr product fields.

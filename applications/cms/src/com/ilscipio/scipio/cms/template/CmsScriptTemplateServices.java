@@ -19,7 +19,7 @@ import com.ilscipio.scipio.cms.ServiceErrorFormatter.FormattedError;
 
 public abstract class CmsScriptTemplateServices {
     
-    public static final String module = CmsScriptTemplateServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final ServiceErrorFormatter errorFmt = 
             CmsServiceUtil.getErrorFormatter().specialize().setDefaultLogMsgGeneral("Script Template Error").build();
     

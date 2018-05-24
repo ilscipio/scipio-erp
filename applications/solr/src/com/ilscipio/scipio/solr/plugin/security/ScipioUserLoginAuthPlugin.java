@@ -55,7 +55,7 @@ public class ScipioUserLoginAuthPlugin extends BasicAuthPlugin {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     // WARN: Debug.log must only be used from component-level classloader
-    private static final String module = ScipioUserLoginAuthPlugin.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private ThreadLocal<ServletRequest> request = new ThreadLocal<>(); // hack around the BasicAuthPlugin interface limitations
 

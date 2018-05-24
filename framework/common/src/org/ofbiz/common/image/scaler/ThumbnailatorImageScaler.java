@@ -34,7 +34,7 @@ import net.coobird.thumbnailator.resizers.configurations.ScalingMode;
  */
 public class ThumbnailatorImageScaler extends AbstractImageScaler {
 
-    public static final String module = ThumbnailatorImageScaler.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String API_NAME = "thumbnailator";
     
     /**

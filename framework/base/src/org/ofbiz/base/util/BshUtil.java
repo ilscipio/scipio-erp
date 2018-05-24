@@ -42,7 +42,7 @@ import bsh.ParseException;
  */
 public final class BshUtil {
 
-    public static final String module = BshUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected static ConcurrentHashMap<ClassLoader, BshClassManager> masterClassManagers = new ConcurrentHashMap<ClassLoader, BshClassManager>();
     private static final UtilCache<String, Interpreter.ParsedScript> parsedScripts = UtilCache.createUtilCache("script.BshLocationParsedCache", 0, 0, false);

@@ -40,7 +40,7 @@ import org.ofbiz.base.util.UtilGenerics;
  */
 public class MapContext<K, V> implements Map<K, V>, LocalizedMap<V> {
 
-    public static final String module = MapContext.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final <K, V> MapContext<K, V> getMapContext() {
         return new MapContext<K, V>();

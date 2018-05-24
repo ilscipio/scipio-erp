@@ -38,7 +38,7 @@ import static org.ofbiz.base.util.UtilGenerics.checkMap;
  */
 public class UtilPlist {
 
-    public static final String module = UtilPlist.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /** simple 4 char indentation */
     public static final String indentFourString = "    ";

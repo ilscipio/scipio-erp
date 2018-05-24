@@ -62,7 +62,7 @@ import org.xml.sax.SAXException;
  */
 public class JanrainHelper {
 
-    public static final String module = JanrainHelper.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     // SCIPIO: now points to shop
     private static String apiKey = UtilProperties.getPropertyValue("shop.properties", "janrain.apiKey");
     private static String baseUrl = UtilProperties.getPropertyValue("shop.properties", "janrain.baseUrl");

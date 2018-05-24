@@ -29,7 +29,7 @@ import org.ofbiz.service.testtools.OFBizTestCase;
 
 public class ServiceSOAPTests extends OFBizTestCase {
 
-    public final static String module = ServiceSOAPTests.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public ServiceSOAPTests(String name) {
         // TODO Auto-generated constructor stub

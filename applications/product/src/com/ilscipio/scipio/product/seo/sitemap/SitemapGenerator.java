@@ -51,7 +51,7 @@ import com.redfin.sitemapgenerator.WebSitemapUrl;
  */
 public class SitemapGenerator extends SeoCatalogTraverser {
 
-    public static final String module = SitemapGenerator.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     static final String logPrefix = "Seo: Sitemap: ";
     

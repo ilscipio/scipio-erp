@@ -29,7 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class UtilTimer {
 
-    public static final String module = UtilTimer.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     protected static ConcurrentHashMap<String, UtilTimer> staticTimers = new ConcurrentHashMap<String, UtilTimer>();
 
     protected String timerName = null;
@@ -89,7 +89,7 @@ public class UtilTimer {
      * @param module The debug/log module/thread to use, can be null for root module
      * @return A String with the timing information, the timer String
      */
-    public String timerString(String message, String module) {
+    public String timerString(String message, Debug.OfbizLogger module) { // SCIPIO: 2018-05-24: modified overloads for OfbizLogger
         // time this call to avoid it interfering with the main timer
         long tsStart = System.currentTimeMillis();
 
@@ -115,6 +115,15 @@ public class UtilTimer {
         startTime += (lastMessageTime - tsStart);
 
         return retString;
+    }
+
+    /** Creates a string with information including the passed message, the last passed message and the time since the last call, and the time since the beginning
+     * @param message A message to put into the timer String
+     * @param module The debug/log module/thread to use, can be null for root module
+     * @return A String with the timing information, the timer String
+     */
+    public String timerString(String message, String module) { // SCIPIO: 2018-05-24: modified overloads for OfbizLogger
+        return timerString(message, Debug.getOfbizLogger(module));
     }
 
     /** Returns the number of seconds since the timer started
@@ -228,7 +237,7 @@ public class UtilTimer {
         return timer;
     }
 
-    public static void timerLog(String timerName, String message, String module) {
+    public static void timerLog(String timerName, String message, Debug.OfbizLogger module) { // SCIPIO: 2018-05-24: modified overloads for OfbizLogger
         UtilTimer timer = UtilTimer.getTimer(timerName);
         if (!timer.isRunning()) {
             timer.startTimer();
@@ -236,24 +245,32 @@ public class UtilTimer {
 
         if (timer.getLog()) {
             if (module == null) {
-                module = timer.getClass().getName();
+                module = UtilTimer.module; // SCIPIO
             }
             timer.timerString(message, module);
         }
     }
 
+    public static void timerLog(String timerName, String message, String module) {
+        timerLog(timerName, message, Debug.getOfbizLogger(module));
+    }
+
     public static void closeTimer(String timerName) {
-        UtilTimer.closeTimer(timerName, null, null);
+        UtilTimer.closeTimer(timerName, null, (Debug.OfbizLogger) null); // SCIPIO
     }
 
     public static void closeTimer(String timerName, String message) {
-        UtilTimer.closeTimer(timerName, message, null);
+        UtilTimer.closeTimer(timerName, message, (Debug.OfbizLogger) null); // SCIPIO
     }
 
-    public static void closeTimer(String timerName, String message, String module) {
+    public static void closeTimer(String timerName, String message, Debug.OfbizLogger module) { // SCIPIO: 2018-05-24: modified overloads for OfbizLogger
         if (message != null) {
             UtilTimer.timerLog(timerName, message, module);
         }
         staticTimers.remove(timerName);
+    }
+
+    public static void closeTimer(String timerName, String message, String module) { // SCIPIO: 2018-05-24: modified overloads for OfbizLogger
+        closeTimer(timerName, message, Debug.getOfbizLogger(module));
     }
 }

@@ -63,7 +63,7 @@ import com.ibm.icu.util.Calendar;
  */
 public class ShoppingListServices {
 
-    public static final String module = ShoppingListServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource_error = "OrderErrorUiLabels";
 
     public static Map<String, Object> setShoppingListRecurrence(DispatchContext dctx, Map<String, ? extends Object> context) {

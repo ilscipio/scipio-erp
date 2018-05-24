@@ -36,7 +36,7 @@ import freemarker.template.TemplateModelException;
  */
 public abstract class ArgMapMethod implements TemplateMethodModelEx {
 
-    public static final String module = ArgMapMethod.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     @SuppressWarnings("unchecked")
     protected Object execMergeArgMaps(List methodArgs, boolean recordArgNames) throws TemplateModelException {

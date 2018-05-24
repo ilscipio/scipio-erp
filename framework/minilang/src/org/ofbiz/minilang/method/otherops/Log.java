@@ -34,7 +34,7 @@ import org.w3c.dom.Element;
  */
 public final class Log extends MethodOperation {
 
-    public static final String module = Log.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String[] LEVEL_ARRAY = {"always", "verbose", "timing", "info", "important", "warning", "error", "fatal", "notify"};
 
     private final int level;

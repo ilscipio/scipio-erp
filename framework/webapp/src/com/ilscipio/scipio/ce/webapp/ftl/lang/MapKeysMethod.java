@@ -29,7 +29,7 @@ import freemarker.template.TemplateModelException;
  */
 public class MapKeysMethod implements TemplateMethodModelEx {
 
-    public static final String module = MapKeysMethod.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)

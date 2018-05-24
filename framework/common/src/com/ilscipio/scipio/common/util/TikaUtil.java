@@ -42,7 +42,7 @@ import sun.nio.ByteBuffered;
  */
 public abstract class TikaUtil {
 
-    public static final String module = TikaUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     private TikaUtil() {
     }

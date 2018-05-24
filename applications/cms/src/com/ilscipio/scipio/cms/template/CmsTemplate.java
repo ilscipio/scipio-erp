@@ -42,7 +42,7 @@ public abstract class CmsTemplate extends CmsDataObject {
 
     private static final long serialVersionUID = -9152090660349076392L;
 
-    public static final String module = CmsTemplate.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     /**
      * Fields recognized by service but not physically present in entity.

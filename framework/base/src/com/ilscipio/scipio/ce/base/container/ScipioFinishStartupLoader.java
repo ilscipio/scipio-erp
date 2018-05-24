@@ -29,7 +29,7 @@ import com.ilscipio.scipio.ce.base.event.ScipioEventDefs;
  */
 public class ScipioFinishStartupLoader implements ExtendedStartupLoader {
 
-    private static final String module = ScipioFinishStartupLoader.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final String EVENTS_PROPPREFIX = "scipio.start.finish.loader";
 

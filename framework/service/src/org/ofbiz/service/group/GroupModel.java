@@ -35,7 +35,7 @@ import org.w3c.dom.Element;
  */
 public class GroupModel {
 
-    public static final String module = GroupModel.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private String groupName, sendMode;
     private List<GroupServiceModel> services;

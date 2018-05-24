@@ -34,7 +34,7 @@ import org.w3c.dom.Element;
  */
 public class ServiceEcaSetField {
 
-    public static final String module = ServiceEcaSetField.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected String fieldName = null;
     protected String mapName = null;

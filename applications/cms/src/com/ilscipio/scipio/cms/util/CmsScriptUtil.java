@@ -17,7 +17,7 @@ import com.ilscipio.scipio.cms.template.CmsScriptTemplate;
  */
 public abstract class CmsScriptUtil {
 
-    private static final String module = CmsScriptUtil.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     protected CmsScriptUtil() {
     }

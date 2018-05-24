@@ -44,7 +44,7 @@ import freemarker.template.TransformControl;
  */
 public class InjectNodeTrailCsvTransform implements TemplateTransformModel {
 
-    public static final String module = InjectNodeTrailCsvTransform.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final String [] saveKeyNames = {"nodeTrailCsv","globalNodeTrail", "nodeTrail"};
     public static final String [] removeKeyNames = {"nodeTrailCsv"};

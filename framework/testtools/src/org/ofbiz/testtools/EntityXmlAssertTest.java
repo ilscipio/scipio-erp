@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
 
 public class EntityXmlAssertTest extends OFBizTestCase {
 
-    public static final String module = ServiceTest.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected String entityXmlUrlString;
     protected String action;

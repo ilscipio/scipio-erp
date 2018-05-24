@@ -35,7 +35,7 @@ import org.ofbiz.base.util.template.FreeMarkerWorker;
  */
 public class RenderWrappedTextTransform implements  TemplateTransformModel {
 
-    public static final String module = RenderWrappedTextTransform.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     @SuppressWarnings("unchecked")
     public Writer getWriter(final Writer out, Map args) {

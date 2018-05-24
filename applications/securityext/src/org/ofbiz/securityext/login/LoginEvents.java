@@ -58,7 +58,7 @@ import org.ofbiz.webapp.control.LoginWorker;
  */
 public class LoginEvents {
 
-    public static final String module = LoginEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "SecurityextUiLabels";
     public static final String usernameCookieName = "OFBiz.Username";
 

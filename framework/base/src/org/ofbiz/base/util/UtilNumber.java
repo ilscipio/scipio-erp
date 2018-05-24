@@ -27,7 +27,7 @@ import com.ibm.icu.text.RuleBasedNumberFormat;
 
 public class UtilNumber {
 
-    public static String module = UtilNumber.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // properties file name for arithmetic configuration
     private static final String arithmeticPropertiesFile = "arithmetic.properties";

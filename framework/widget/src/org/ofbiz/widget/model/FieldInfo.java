@@ -34,7 +34,7 @@ import org.w3c.dom.Element;
 @SuppressWarnings("serial")
 public abstract class FieldInfo implements Serializable  {
 
-    public static final String module = FieldInfo.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final int DISPLAY = 1;
     public static final int HYPERLINK = 2;

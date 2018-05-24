@@ -70,7 +70,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public abstract class ContentImageServices {
 
-    public static final String module = ContentImageServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // SCIPIO: FIXME?: don't really want this dependency, but not major issue 
     private static final String resourceProduct = "ProductErrorUiLabels";

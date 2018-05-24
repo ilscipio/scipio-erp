@@ -37,7 +37,7 @@ import org.ofbiz.entity.model.ModelViewEntity;
  */
 @SuppressWarnings("serial")
 public class EntityConditionSubSelect extends EntityConditionValue {
-    public static final String module = EntityConditionSubSelect.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected ModelEntity localModelEntity = null;
     protected String keyFieldName = null;

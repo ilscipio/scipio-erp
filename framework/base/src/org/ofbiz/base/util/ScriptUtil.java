@@ -61,7 +61,7 @@ import org.ofbiz.base.util.cache.UtilCache;
  */
 public final class ScriptUtil {
 
-    public static final String module = ScriptUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     /** The screen widget context map bindings key. */
     public static final String WIDGET_CONTEXT_KEY = "widget";
     /** The service/servlet/request parameters map bindings key. */

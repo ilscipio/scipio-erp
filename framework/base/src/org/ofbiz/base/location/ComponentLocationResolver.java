@@ -36,7 +36,7 @@ import org.ofbiz.base.util.Debug;
 
 public class ComponentLocationResolver implements LocationResolver {
 
-    public static final String module = ComponentLocationResolver.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public URL resolveLocation(String location) throws MalformedURLException {
         String baseLocation = getBaseLocation(location).toString();

@@ -84,7 +84,7 @@ import freemarker.ext.servlet.ServletContextHashModel;
  */
 public class ScreenRenderer implements RenderContextFetcher {
 
-    public static final String module = ScreenRenderer.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // SCIPIO: these get set in context to indicate render init has been run for the context.
     public static final String WEBAPP_RENDER_INIT_GUARD = "_scpRdrInitWebappRun"; // stored as Boolean

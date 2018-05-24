@@ -42,7 +42,7 @@ import org.ofbiz.entity.util.EntityUtilProperties;
  */
 public class CommonWorkers {
 
-    public final static String module = CommonWorkers.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static List<GenericValue> getCountryList(Delegator delegator) {
         List<GenericValue> geoList = new LinkedList<GenericValue>();

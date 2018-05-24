@@ -46,7 +46,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public final class EntityAutoEngine extends GenericAsyncEngine {
 
-    public static final String module = EntityAutoEngine.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ServiceErrorUiLabels";
 
     public EntityAutoEngine(ServiceDispatcher dispatcher) {

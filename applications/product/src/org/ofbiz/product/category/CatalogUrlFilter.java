@@ -72,7 +72,7 @@ import org.xml.sax.SAXException;
  */
 public class CatalogUrlFilter extends ContextFilter {
 
-    public final static String module = CatalogUrlFilter.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     /**
      * @deprecated SCIPIO: 2017: this was unhardcoded; use {@link org.ofbiz.webapp.control.RequestHandler#getControlServletPath(HttpServletRequest)}.

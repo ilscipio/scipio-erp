@@ -45,7 +45,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class SupplierProductServices {
 
-    public static final String module = SupplierProductServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ProductUiLabels";
 
     /*

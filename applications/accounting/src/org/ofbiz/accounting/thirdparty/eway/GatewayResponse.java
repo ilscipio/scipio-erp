@@ -40,7 +40,7 @@ import org.w3c.dom.Text;
  */
 public class GatewayResponse {
 
-    private static final String module = GatewayResponse.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     // private field definitions, values are set to default
     

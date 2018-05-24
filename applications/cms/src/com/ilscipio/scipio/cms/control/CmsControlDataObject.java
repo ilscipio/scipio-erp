@@ -19,7 +19,7 @@ public abstract class CmsControlDataObject extends CmsDataObject {
 
     private static final long serialVersionUID = -3604820756898342590L;
 
-    public static final String module = CmsControlDataObject.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected CmsControlDataObject(GenericValue entity) {
         super(entity);

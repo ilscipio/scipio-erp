@@ -27,7 +27,7 @@ import org.xml.sax.SAXException;
  */
 public abstract class RequestLinkUtil {
 
-    public static final String module = RequestLinkUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     private static final Pattern jsessionIdPat = Pattern.compile("((;jsessionid=)([^\\?#]*))");
     

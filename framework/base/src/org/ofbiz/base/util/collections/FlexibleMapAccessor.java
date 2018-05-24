@@ -41,7 +41,7 @@ import org.ofbiz.base.util.string.UelUtil;
 @SourceMonitored
 @SuppressWarnings("serial")
 public final class FlexibleMapAccessor<T> implements Serializable, IsEmpty {
-    public static final String module = FlexibleMapAccessor.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final UtilCache<String, FlexibleMapAccessor<?>> fmaCache = UtilCache.createUtilCache("flexibleMapAccessor.ExpressionCache");
     @SuppressWarnings("unchecked")
     private static final FlexibleMapAccessor nullFma = new FlexibleMapAccessor("");

@@ -41,7 +41,7 @@ import org.ofbiz.service.ServiceContainer;
  */
 public class RmiServiceContainer implements Container {
 
-    public static final String module = RmiServiceContainer.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected RemoteDispatcherImpl remote = null;
     protected String configFile = null;

@@ -59,7 +59,7 @@ import freemarker.template.TemplateException;
  */
 public class CmsEvents {
 
-    public static final String module = CmsEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static String cms(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");

@@ -49,7 +49,7 @@ import org.xml.sax.SAXException;
 @SuppressWarnings("serial")
 public class GridFactory extends WidgetFactory {
 
-    public static final String module = GridFactory.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final UtilCache<String, ModelGrid> gridLocationCache = UtilCache.createUtilCache("widget.grid.locationResource", 0, 0, false);
     private static final UtilCache<String, ModelGrid> gridWebappCache = UtilCache.createUtilCache("widget.grid.webappResource", 0, 0, false);
 

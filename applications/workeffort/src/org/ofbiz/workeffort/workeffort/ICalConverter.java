@@ -100,7 +100,7 @@ import org.ofbiz.workeffort.workeffort.ICalWorker.ResponseProperties;
  */
 public class ICalConverter {
 
-    protected static final String module = ICalConverter.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     protected static final String partyIdXParamName = "X-ORG-APACHE-OFBIZ-PARTY-ID";
     protected static final ProdId prodId = new ProdId("-//Apache OFBiz//Work Effort Calendar//EN");
     protected static final String workEffortIdParamName = "X-ORG-APACHE-OFBIZ-WORKEFFORT-ID";

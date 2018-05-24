@@ -42,7 +42,7 @@ import java.math.BigDecimal;
  */
 public class FinAccountProductServices {
 
-    public static final String module = FinAccountProductServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resourceOrderError = "OrderErrorUiLabels";
     public static final String resourceError = "AccountingErrorUiLabels";
     

@@ -49,7 +49,7 @@ import org.ofbiz.webapp.website.WebSiteWorker;
  */
 public class ProductConfigWorker {
 
-    public static final String module = ProductConfigWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ProductUiLabels";
     public static final String SEPARATOR = "::";    // cache key separator
 

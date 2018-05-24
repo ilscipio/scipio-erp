@@ -35,7 +35,7 @@ import org.ofbiz.entity.util.EntityUtil;
 
 public class ProductStoreEvents {
 
-    public static final String module = ProductStoreWorker.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // Please note : the structure of map in this function is according to the JSON data map of the jsTree
     @SuppressWarnings("unchecked")

@@ -55,7 +55,7 @@ import com.ibm.icu.util.Calendar;
  */
 public class MrpServices {
 
-    public static final String module = MrpServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ManufacturingUiLabels";
 
     public static Map<String, Object> initMrpEvents(DispatchContext ctx, Map<String, ? extends Object> context) {

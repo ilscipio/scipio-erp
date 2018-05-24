@@ -49,7 +49,7 @@ import org.ofbiz.product.product.ProductWorker;
 
 public class ProductDisplayWorker {
 
-    public static final String module = ProductDisplayWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /* ========================================================================================*/
 

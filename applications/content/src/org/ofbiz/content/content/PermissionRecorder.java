@@ -49,7 +49,7 @@ public class PermissionRecorder {
     protected String [] statusTargets;
     protected String [] targetOperations;
 
-    public static final String module = PermissionRecorder.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final String [] opFields = { "contentPurposeTypeId", "contentOperationId", "roleTypeId", "statusId", "privilegeEnumId"};
     public static final String [] fieldTitles = { "Purpose", "Operation", "Role", "Status", "Privilege"};

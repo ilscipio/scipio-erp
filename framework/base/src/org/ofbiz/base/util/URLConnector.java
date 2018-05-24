@@ -35,7 +35,7 @@ import org.ofbiz.base.config.GenericConfigException;
  */
 public class URLConnector {
 
-    public static final String module = URLConnector.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private URLConnection connection = null;
     private URL url = null;

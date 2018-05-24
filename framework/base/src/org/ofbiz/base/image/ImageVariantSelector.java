@@ -61,7 +61,7 @@ public interface ImageVariantSelector {
     
     public static class FactoryUtil {
         
-        public static final String module = FactoryUtil.class.getName();
+        private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
         
         public static Factory getFactoryFromSource(String factorySourceClass) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
             return ((FactorySource) Thread.currentThread().getContextClassLoader().loadClass(factorySourceClass).newInstance()).getFactory();

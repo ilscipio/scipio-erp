@@ -91,7 +91,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
      * 
      */
 
-    public static final String module = ModelForm.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String DEFAULT_FORM_RESULT_LIST_NAME = "defaultFormResultList";
     /** Pagination settings and defaults. */
     public static int DEFAULT_PAGE_SIZE = 10;

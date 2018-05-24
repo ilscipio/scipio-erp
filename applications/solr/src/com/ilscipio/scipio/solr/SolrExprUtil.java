@@ -32,7 +32,7 @@ import org.ofbiz.base.util.UtilValidate;
  */
 public abstract class SolrExprUtil {
 
-    public static final String module = SolrExprUtil.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     // TODO: REVIEW: the "!" standalone character appears not recognized in solr 5 query parser;
     // it only works if space after is removed. but it shouldn't do any harm here so leaving in...

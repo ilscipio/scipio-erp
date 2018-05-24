@@ -33,7 +33,7 @@ import java.util.Map;
 
 public class DebugManagedDataSource extends ManagedDataSource {
 
-    public static final String module = DebugManagedDataSource.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public DebugManagedDataSource(ObjectPool pool, TransactionRegistry transactionRegistry) {
         super(pool, transactionRegistry);

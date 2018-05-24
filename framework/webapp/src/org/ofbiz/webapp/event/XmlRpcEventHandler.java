@@ -65,7 +65,7 @@ import org.ofbiz.webapp.control.ConfigXMLReader.RequestMap;
  */
 public class XmlRpcEventHandler extends XmlRpcHttpServer implements EventHandler {
 
-    public static final String module = XmlRpcEventHandler.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     protected Delegator delegator;
     protected LocalDispatcher dispatcher;
 

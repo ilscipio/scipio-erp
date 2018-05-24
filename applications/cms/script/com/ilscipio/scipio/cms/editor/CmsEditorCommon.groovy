@@ -145,7 +145,7 @@ public class CmsWebSiteHelper {
 }
 
 public class CmsScriptUtil {
-    public static final module = CmsScriptUtil.class.getName();
+    private static final module = CmsScriptUtil.class.getName();
     
     def getScriptTemplateFromEntity(scriptEntity) {
         try {

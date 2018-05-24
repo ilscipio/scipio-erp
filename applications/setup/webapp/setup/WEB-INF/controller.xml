@@ -168,13 +168,13 @@
     
     <request-map uri="setupCreateTimePeriod">
         <security https="true" auth="true"/>
-        <event type="service" invoke="createTimePeriod"/>
+        <event type="service" invoke="createCustomTimePeriod"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupAccounting"/>
     </request-map>
     <request-map uri="setupUpdateTimePeriod">
         <security https="true" auth="true"/>
-        <event type="service" invoke="updateTimePeriod"/>
+        <event type="service" invoke="updateCustomTimePeriod"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupAccounting"/>
     </request-map>

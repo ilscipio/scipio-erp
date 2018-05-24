@@ -51,7 +51,7 @@ import org.ofbiz.webapp.website.WebSiteWorker;
  */
 public class ProductStoreWorker {
 
-    public static final String module = ProductStoreWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static GenericValue getProductStore(String productStoreId, Delegator delegator) {
         if (productStoreId == null || delegator == null) {

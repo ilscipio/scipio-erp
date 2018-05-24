@@ -60,7 +60,7 @@ import org.w3c.dom.Element;
  */
 public class ModelEntity implements Comparable<ModelEntity>, Serializable {
 
-    public static final String module = ModelEntity.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /** The name of the time stamp field for locking/synchronization */
     public static final String STAMP_FIELD = "lastUpdatedStamp";

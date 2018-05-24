@@ -39,7 +39,7 @@ public class CmsPageVersion extends CmsDataObject implements CmsDataObjectVersio
     
     private static final long serialVersionUID = -714031134721469544L;
     
-    public static final String module = CmsPageVersion.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     protected static final CmsPageActiveVersionWorker activeVersionWorker = new CmsPageActiveVersionWorker();
     

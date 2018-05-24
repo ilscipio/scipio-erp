@@ -69,7 +69,7 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
      * 
      */
 
-    public static final String module = ModelMenu.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // SCIPIO: special/keyword menu and item names
     public static final String TOP_MENU_NAME = "TOP";

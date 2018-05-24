@@ -61,7 +61,7 @@ import com.ibm.icu.util.Calendar;
 @SuppressWarnings("serial")
 public class PersistedServiceJob extends GenericServiceJob {
 
-    public static final String module = PersistedServiceJob.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final transient Delegator delegator;
     private long nextRecurrence = -1;

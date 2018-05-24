@@ -39,7 +39,7 @@ import org.ofbiz.entity.util.EntityQuery;
  */
 public class PartyRelationshipHelper {
 
-    public static final String module = PartyRelationshipHelper.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /** Return A List of the active Party Relationships (ie with valid from and thru dates)
      *@param delegator needed Delegator

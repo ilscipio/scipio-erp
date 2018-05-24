@@ -64,7 +64,7 @@ import org.w3c.dom.Document;
  */
 public class SOAPEventHandler implements EventHandler {
 
-    public static final String module = SOAPEventHandler.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * @see org.ofbiz.webapp.event.EventHandler#init(javax.servlet.ServletContext)

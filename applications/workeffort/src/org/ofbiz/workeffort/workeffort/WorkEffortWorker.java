@@ -35,7 +35,7 @@ import org.ofbiz.entity.util.EntityQuery;
 /** WorkEffortWorker - Work Effort worker class. */
 public class WorkEffortWorker {
 
-    public static final String module = WorkEffortWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static List<GenericValue> getLowestLevelWorkEfforts(Delegator delegator, String workEffortId, String workEffortAssocTypeId) {
         return getLowestLevelWorkEfforts(delegator, workEffortId, workEffortAssocTypeId, "workEffortIdFrom", "workEffortIdTo");

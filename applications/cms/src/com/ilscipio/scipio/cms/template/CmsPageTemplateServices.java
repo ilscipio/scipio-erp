@@ -31,7 +31,7 @@ import com.ilscipio.scipio.cms.template.CmsTemplate.TemplateBodySource;
  */
 public abstract class CmsPageTemplateServices {
     
-    public static final String module = CmsPageTemplateServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final ServiceErrorFormatter errorFmt = 
             CmsServiceUtil.getErrorFormatter().specialize().setDefaultLogMsgGeneral("Page Template Error").build();
 

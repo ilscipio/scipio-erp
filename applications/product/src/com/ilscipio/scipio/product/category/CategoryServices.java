@@ -32,7 +32,7 @@ import com.ilscipio.scipio.treeMenu.jsTree.JsTreeDataItem.JsTreeDataItemState;
  */
 public abstract class CategoryServices {
 
-    public static final String module = CategoryServices.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     protected CategoryServices() {
     }

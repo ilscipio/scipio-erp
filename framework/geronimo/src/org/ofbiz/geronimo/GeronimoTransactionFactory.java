@@ -42,7 +42,7 @@ import org.ofbiz.entity.transaction.TransactionFactory;
  */
 public class GeronimoTransactionFactory implements TransactionFactory {
 
-    public static final String module = GeronimoTransactionFactory.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private static int defaultTransactionTimeoutSeconds = 60;
     private static TransactionLog transactionLog;

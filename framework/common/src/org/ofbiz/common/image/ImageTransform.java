@@ -59,7 +59,7 @@ import org.w3c.dom.Element;
  */
 public class ImageTransform {
 
-    public static final String module = ImageTransform.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "CommonErrorUiLabels";
 
     public ImageTransform() {

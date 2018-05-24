@@ -29,7 +29,7 @@ import org.w3c.dom.Element;
 public class MiniLangElement {
 
     // This must be private so subclasses cannot reference it.
-    private static final String module = MiniLangElement.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final Object lineNumber;
     protected final SimpleMethod simpleMethod;

@@ -45,7 +45,7 @@ import org.ofbiz.service.DispatchContext;
  */
 public class LdapAuthenticationServices {
 
-    public static final String module = LdapAuthenticationServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static boolean userLogin(DispatchContext ctx, Map<String, ?> context) {
         Debug.logVerbose("Starting LDAP authentication", module);

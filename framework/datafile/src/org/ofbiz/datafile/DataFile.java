@@ -42,7 +42,7 @@ import org.ofbiz.base.util.UtilValidate;
 
 public class DataFile {
 
-    public static final String module = DataFile.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /** List of record in the file, contains Record objects */
     protected List<Record> records = new ArrayList<Record>();

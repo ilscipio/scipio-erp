@@ -45,7 +45,7 @@ import org.ofbiz.entity.util.EntityUtilProperties;
  */
 public class KeywordIndex {
 
-    public static final String module = KeywordIndex.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static void forceIndexKeywords(GenericValue product) throws GenericEntityException {
         KeywordIndex.indexKeywords(product, true);

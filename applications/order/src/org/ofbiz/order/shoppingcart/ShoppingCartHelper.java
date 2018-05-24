@@ -65,7 +65,7 @@ import org.ofbiz.service.ServiceUtil;
 public class ShoppingCartHelper {
 
     public static final String resource = "OrderUiLabels";
-    public static String module = ShoppingCartHelper.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource_error = "OrderErrorUiLabels";
 
     // The shopping cart to manipulate

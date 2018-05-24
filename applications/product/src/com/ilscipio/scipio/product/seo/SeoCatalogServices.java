@@ -50,7 +50,7 @@ import com.ilscipio.scipio.product.seo.SeoCatalogUrlRemover.RemoveTraversalConfi
  */
 public abstract class SeoCatalogServices {
 
-    public static final String module = SeoCatalogServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     private static final String logPrefix = "Seo: ";
     

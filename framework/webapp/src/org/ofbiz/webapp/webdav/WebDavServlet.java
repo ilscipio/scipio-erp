@@ -49,7 +49,7 @@ import org.ofbiz.service.ServiceContainer;
 @SuppressWarnings("serial")
 public class WebDavServlet extends GenericServlet {
 
-    public static final String module = WebDavServlet.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected Delegator delegator = null;
     protected LocalDispatcher dispatcher = null;

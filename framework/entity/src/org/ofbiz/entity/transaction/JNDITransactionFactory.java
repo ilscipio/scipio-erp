@@ -47,7 +47,7 @@ import org.ofbiz.entity.jdbc.ConnectionFactoryLoader;
 public class JNDITransactionFactory implements TransactionFactory {
 
     // Debug module name
-    public static final String module = JNDITransactionFactory.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     static TransactionManager transactionManager = null;
     static UserTransaction userTransaction = null;

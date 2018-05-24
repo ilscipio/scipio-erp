@@ -46,7 +46,7 @@ import org.ofbiz.base.location.ComponentLocationResolver;
  */
 public class FileUtil {
 
-    public static final String module = FileUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static File getFile(String path) {
         return getFile(null, path);

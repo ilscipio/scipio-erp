@@ -33,7 +33,7 @@ import org.ofbiz.base.util.Debug;
  */
 public class GatewayRequest {
     
-    private static final String module = GatewayRequest.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     // request urls
     public static final String REQUEST_URL_REFUND_TEST = "";

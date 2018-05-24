@@ -41,7 +41,7 @@ import freemarker.template.TemplateModelException;
  */
 public abstract class ContextFtlUtil {
 
-    public static final String module = ContextFtlUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     /**
      * Global unique names of scipio request variables container maps, or in other words,

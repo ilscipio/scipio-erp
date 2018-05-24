@@ -85,7 +85,7 @@ import freemarker.template.utility.DeepUnwrap;
  */
 public class FreeMarkerWorker {
 
-    public static final String module = FreeMarkerWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final Version version = Configuration.VERSION_2_3_28;
 

@@ -29,7 +29,7 @@ import com.ilscipio.scipio.cms.webapp.CmsWebappUtil;
  */
 public abstract class CmsServices {
 
-    public static final String module = CmsServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final ServiceErrorFormatter errorFmt = CmsServiceUtil.getErrorFormatter();
 
     protected CmsServices() {

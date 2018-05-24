@@ -25,7 +25,10 @@
         </RollingFile>
         <RollingFile name="error" fileName="runtime/logs/error.log"
                      filePattern="runtime/logs/error-%d{yyyy-MM-dd}-%i.log">
-            <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+            <Filters>
+                <ThresholdFilter level="off" onMatch="DENY" onMismatch="NEUTRAL"/><!-- SCIPIO: don't log OFF level in error log -->
+                <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
             <PatternLayout pattern="%date{DEFAULT} |%-20.20thread |%-30.30logger{1}|%level{length=1}| %message%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy/>
@@ -41,9 +44,11 @@
     </Appenders>
     <Loggers>
         <logger name="org.ofbiz.base.converter.Converters" level="warn"/>
-        <logger name="net.fortuna.ical4j" level="warn"/><!-- SCIPIO: ical4j 2.2.0+ is very verbose -->
         <logger name="org.apache" level="warn"/>
         <logger name="freemarker" level="warn"/>
+
+        <!-- SCIPIO: filter third-party libraries -->
+        <logger name="net.fortuna.ical4j" level="warn"/>
 
         <!-- SCIPIO: HttpClient debug logging - uncomment to debug Solr connections -->
         <!--<logger name="org.apache.http" level="debug"/>-->

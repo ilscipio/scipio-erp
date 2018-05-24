@@ -54,7 +54,7 @@ import org.xml.sax.SAXException;
 
 public class LabelReferences {
 
-    public static final String module = LabelReferences.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final String bracketedUiLabelMap = "${uiLabelMap.";
     private static final String uiLabelMap = "uiLabelMap.";
     private static final String formFieldTitle = "FormFieldTitle_";

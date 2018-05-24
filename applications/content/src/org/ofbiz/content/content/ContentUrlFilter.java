@@ -42,7 +42,7 @@ import org.ofbiz.webapp.control.ContextFilter;
 import org.ofbiz.webapp.control.RequestHandler;
 
 public class ContentUrlFilter extends ContextFilter {
-    public final static String module = ContentUrlFilter.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     /**
      * @deprecated SCIPIO: 2017: this was unhardcoded; use {@link org.ofbiz.webapp.control.RequestHandler#getControlServletPath(HttpServletRequest)}.

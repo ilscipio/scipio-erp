@@ -40,7 +40,7 @@ import org.ofbiz.entity.util.EntityQuery;
  */
 public class KeywordSearchUtil {
 
-    public static final String module = KeywordSearchUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static Set<String> thesaurusRelsToInclude = new HashSet<String>();
     public static Set<String> thesaurusRelsForReplace = new HashSet<String>();

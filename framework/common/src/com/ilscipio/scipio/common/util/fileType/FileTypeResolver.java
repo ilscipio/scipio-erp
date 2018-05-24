@@ -36,7 +36,7 @@ import com.ilscipio.scipio.common.util.fileType.video.VideoFileTypeResolver;
  */
 public abstract class FileTypeResolver {
     
-    public static final String module = FileTypeResolver.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     public static final String IMAGE_TYPE = "IMAGE_OBJECT";
     public static final String VIDEO_TYPE = "VIDEO_OBJECT";

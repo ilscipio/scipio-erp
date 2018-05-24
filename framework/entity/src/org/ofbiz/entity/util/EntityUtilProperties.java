@@ -43,7 +43,7 @@ import org.ofbiz.entity.GenericValue;
 @SuppressWarnings("serial")
 public class EntityUtilProperties implements Serializable {
 
-    public final static String module = EntityUtilProperties.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     protected static String getSystemPropertyValue(String resource, String name, Delegator delegator) {
         if (resource == null || resource.length() <= 0) {

@@ -39,7 +39,7 @@ import org.w3c.dom.Element;
  */
 public final class StoreList extends EntityOperation {
 
-    public static final String module = StoreList.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private final FlexibleMapAccessor<List<GenericValue>> listFma;
 
     public StoreList(Element element, SimpleMethod simpleMethod) throws MiniLangException {

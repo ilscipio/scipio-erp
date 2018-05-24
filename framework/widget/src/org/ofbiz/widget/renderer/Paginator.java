@@ -38,7 +38,7 @@ import org.ofbiz.widget.model.ModelForm;
  */
 public final class Paginator {
 
-    public static final String module = Paginator.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static int getActualPageSize(Map<String, Object> context) {
         Integer value = (Integer) context.get("actualPageSize");

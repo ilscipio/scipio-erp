@@ -41,7 +41,7 @@ import org.ofbiz.entity.util.EntityUtil;
  */
 public class ParametricSearch {
 
-    public static final String module = ParametricSearch.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final int DEFAULT_PER_TYPE_MAX_SIZE = 1000;
 

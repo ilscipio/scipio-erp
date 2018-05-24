@@ -42,7 +42,7 @@ import org.ofbiz.entity.util.EntityQuery;
 @SuppressWarnings("serial")
 public class ImageUrlServlet extends HttpServlet {
 
-    public static final String module = ImageUrlServlet.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public ImageUrlServlet() {
         super();

@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
  */
 public class ValidateMethod extends SimpleMapOperation {
 
-    public static final String module = ValidateMethod.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     String className;
     String methodName;

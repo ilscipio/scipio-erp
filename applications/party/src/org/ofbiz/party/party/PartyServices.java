@@ -65,7 +65,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class PartyServices {
 
-    public static final String module = PartyServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "PartyUiLabels";
     public static final String resourceError = "PartyErrorUiLabels";
 

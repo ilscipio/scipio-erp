@@ -41,7 +41,7 @@ import org.ofbiz.party.contact.ContactHelper;
 
 public class TruitionCoReg {
 
-    public static final String module =  TruitionCoReg.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String logPrefix = "Truition Cookie Info: ";
 
     public static String truitionReg(HttpServletRequest req, HttpServletResponse resp) {

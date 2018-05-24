@@ -43,7 +43,7 @@ import com.ibm.icu.util.Calendar;
 
 @SourceMonitored
 public class ObjectTypeTests extends GenericTestCaseBase {
-    public static final String module = ObjectTypeTests.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final LocaleData localeData = new LocaleData("en_US", "Pacific/Wake", "fr", "GMT");
     private final TimeDuration duration = new TimeDuration(0, 0, 0, 1, 1, 1, 1);
     // These numbers are all based on 1 / 128, which is a binary decimal

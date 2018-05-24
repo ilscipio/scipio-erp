@@ -44,7 +44,7 @@ import org.w3c.dom.Element;
  */
 @SuppressWarnings("serial")
 public class PrimaryKeyFinder extends Finder {
-    public static final String module = PrimaryKeyFinder.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected FlexibleMapAccessor<Object> valueNameAcsr;
     protected FlexibleStringExpander autoFieldMapExdr;

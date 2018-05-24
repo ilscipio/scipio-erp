@@ -55,7 +55,7 @@ import org.ofbiz.service.ServiceDispatcher;
  */
 public final class SOAPClientEngine extends GenericAsyncEngine {
 
-    public static final String module = SOAPClientEngine.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public SOAPClientEngine(ServiceDispatcher dispatcher) {
         super(dispatcher);

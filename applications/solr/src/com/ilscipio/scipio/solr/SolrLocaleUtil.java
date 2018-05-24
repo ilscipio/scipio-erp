@@ -26,7 +26,7 @@ import org.ofbiz.entity.GenericValue;
  */
 public abstract class SolrLocaleUtil {
 
-    public static final String module = SolrLocaleUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     /**
      * Name used as a special value in place of locale string to designate the default or "general"

@@ -39,7 +39,7 @@ public class SecurePayServiceTest extends OFBizTestCase{
         super(name);
     }
     
-    public static final String module = SecurePayServiceTest.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // test data
     protected GenericValue emailAddr = null;

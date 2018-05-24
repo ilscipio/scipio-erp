@@ -83,7 +83,7 @@ import freemarker.template.utility.DeepUnwrap;
  * </ul>
  */
 public class OfbizCatalogUrlTransform implements TemplateTransformModel {
-    public final static String module = OfbizCatalogUrlTransform.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     @Override
     @SuppressWarnings("unchecked")

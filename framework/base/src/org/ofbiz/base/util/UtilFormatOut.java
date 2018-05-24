@@ -31,7 +31,7 @@ import java.util.TimeZone;
  */
 public class UtilFormatOut {
 
-    public static final String module = UtilFormatOut.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static String safeToString(Object obj) {
         if (obj != null) {

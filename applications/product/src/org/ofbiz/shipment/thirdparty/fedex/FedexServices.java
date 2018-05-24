@@ -69,7 +69,7 @@ import org.w3c.dom.Element;
  */
 public class FedexServices {
 
-    public final static String module = FedexServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public final static String shipmentPropertiesFile = "shipment.properties";
     public static final String resourceError = "ProductUiLabels";
     

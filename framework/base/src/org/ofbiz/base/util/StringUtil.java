@@ -44,7 +44,7 @@ import org.ofbiz.base.lang.Appender;
 public class StringUtil {
 
     public static final StringUtil INSTANCE = new StringUtil();
-    public static final String module = StringUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     // FIXME: Not thread safe
     protected static final Map<String, Pattern> substitutionPatternMap;
 

@@ -71,7 +71,7 @@ import com.ibm.icu.util.Calendar;
  */
 public class PaymentGatewayServices {
 
-    public static final String module = PaymentGatewayServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String AUTH_SERVICE_TYPE = "PRDS_PAY_AUTH";
     public static final String REAUTH_SERVICE_TYPE = "PRDS_PAY_REAUTH";
     public static final String RELEASE_SERVICE_TYPE = "PRDS_PAY_RELEASE";

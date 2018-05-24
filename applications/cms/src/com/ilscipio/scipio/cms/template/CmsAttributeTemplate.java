@@ -27,7 +27,7 @@ public class CmsAttributeTemplate extends CmsDataObject {
 
     private static final long serialVersionUID = 8475667988447131968L;
     
-    public static final String module = CmsAttributeTemplate.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * The default expand position (relative to scripts).

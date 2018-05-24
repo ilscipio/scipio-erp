@@ -54,7 +54,7 @@ import org.ofbiz.service.GenericServiceException;
  */
 public class ContactMechServices {
 
-    public static final String module = ContactMechServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "PartyUiLabels";
     public static final String resourceError = "PartyErrorUiLabels";
 

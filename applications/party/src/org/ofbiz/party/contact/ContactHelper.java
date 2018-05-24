@@ -34,7 +34,7 @@ import org.ofbiz.entity.util.EntityUtil;
  */
 public class ContactHelper {
 
-    public static final String module = ContactHelper.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private ContactHelper() {}
 

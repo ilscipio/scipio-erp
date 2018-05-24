@@ -34,7 +34,7 @@ import org.ofbiz.widget.renderer.ScreenStringRenderer;
  */
 public class TextScreenRenderer implements ScreenStringRenderer {
 
-    public static final String module = TextScreenRenderer.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public TextScreenRenderer() {}
 

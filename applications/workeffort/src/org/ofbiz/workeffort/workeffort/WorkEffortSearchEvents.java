@@ -38,7 +38,7 @@ import org.ofbiz.workeffort.workeffort.WorkEffortSearchSession.WorkEffortSearchO
 
 public class WorkEffortSearchEvents {
 
-    public static final String module = WorkEffortSearchEvents.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static Map<String, Object> getWorkEffortSearchResult(HttpServletRequest request, Delegator delegator) {
 

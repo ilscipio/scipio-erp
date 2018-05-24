@@ -76,7 +76,7 @@ import org.ofbiz.service.mail.MimeMessageWrapper;
  */
 public class CommonServices {
 
-    public final static String module = CommonServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "CommonUiLabels";
 
     /**

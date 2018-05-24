@@ -13,7 +13,7 @@ import org.ofbiz.service.ServiceUtil;
 
 public abstract class CmsServiceUtil {
     
-    public static final String module = CmsServiceUtil.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     private static final ServiceErrorFormatter errorFmt = new ServiceErrorFormatter("Cms: ", ServiceErrorFormatter.Precision.DETAILED);
     

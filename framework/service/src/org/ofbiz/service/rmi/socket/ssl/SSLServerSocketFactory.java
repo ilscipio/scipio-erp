@@ -42,7 +42,7 @@ import org.ofbiz.base.util.SSLUtil;
 @SuppressWarnings("serial")
 public class SSLServerSocketFactory implements RMIServerSocketFactory, Serializable {
 
-    public static final String module =  SSLServerSocketFactory.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     protected boolean clientAuth = false;
     protected String keystore = null;
     protected String ksType = null;

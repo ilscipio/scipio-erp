@@ -40,7 +40,7 @@ import org.ofbiz.entity.util.EntityUtil;
 
 public class ThirdPartyEvents {
 
-    public static final String module = ThirdPartyEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public final static String DISTRIBUTOR_ID = "_DISTRIBUTOR_ID_";
     public final static String AFFILIATE_ID = "_AFFILIATE_ID_";

@@ -63,7 +63,7 @@ import com.ilscipio.scipio.product.seo.SeoCatalogUrlWorker.SeoCatalogUrlInfo;
  */
 public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFilter implements Filter
 
-    public static final String module = SeoCatalogUrlFilter.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final String SEOURLINFO_ATTR = "_SCPSEO_URLINFO_";
     public static final String FORWARDED_ATTR = "_SCPSEO_FWDED_";

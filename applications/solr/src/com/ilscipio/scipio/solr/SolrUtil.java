@@ -36,7 +36,7 @@ import com.ilscipio.scipio.solr.util.ScipioHttpSolrClient;
  */
 public abstract class SolrUtil {
     
-    public static final String module = SolrUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     public static final String solrConfigName = "solrconfig";
     

@@ -51,7 +51,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class DataEvents {
 
-    public static final String module = DataEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String err_resource = "ContentErrorUiLabels";
 
     public static String uploadImage(HttpServletRequest request, HttpServletResponse response) {

@@ -59,7 +59,7 @@ import org.ofbiz.widget.renderer.FormStringRenderer;
  */
 public class XmlFormRenderer implements FormStringRenderer {
 
-    public static final String module = XmlFormRenderer.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     HttpServletRequest request;
     HttpServletResponse response;

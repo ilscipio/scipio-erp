@@ -15,7 +15,7 @@ import org.ofbiz.common.image.ImageType.ImageTypeInfo;
  * Added 2017-07-10.
  */
 public abstract class AbstractImageOp implements ImageOp {
-    public static final String module = AbstractImageOp.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     protected static void putDefaultImageTypeOptions(Map<String, Object> options) {
         // NOTE: comments below only apply to the filters that make use of these options

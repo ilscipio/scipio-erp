@@ -51,7 +51,7 @@ import org.ofbiz.entity.transaction.TransactionUtil;
 
 public final class EntityCrypto {
 
-    public static final String module = EntityCrypto.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected final Delegator delegator;
     protected final ConcurrentMap<String, byte[]> keyMap = new ConcurrentHashMap<String, byte[]>();

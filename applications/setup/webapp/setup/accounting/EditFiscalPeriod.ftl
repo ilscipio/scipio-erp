@@ -42,25 +42,24 @@
 })>
 <#macro setupTimePeriodForm id formActionType target params treeFieldValues={}>
     <@form id=id name=id action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
-        <@defaultWizardFormFields exclude=[]/>
+        <@defaultWizardFormFields exclude=["topGlAccountId"]/>
         <@acctgCommonTreeFormFields params=params initialValues=treeFieldValues/>
        
+        <@field type="hidden" name="organizationPartyId" value=(orgPartyId!)/>
         <@field type="hidden" name="isAddTimePeriod" value=(formActionType == "add")?string("Y", "N")/>
         <@field type="hidden" name="isCreateTimePeriod" value=(formActionType == "new")?string("Y", "N")/>
         <@field type="hidden" name="isUpdateTimePeriod" value=(formActionType == "edit")?string("Y", "N")/>
         
         <#assign fieldsRequired = true>
-      	 
-      	${Static["org.ofbiz.base.util.Debug"].log("formActionType ======> " + formActionType)} 
-      	<#if formActionType != "add">    	
+      	<#if formActionType != "new">    	
 	      	<@field type="display" label=uiLabelMap.FormFieldTitle_parentPeriodId><#rt/>      		 
 	            <span class="acctg-managefield acctg-managefield-for-parentTimePeriodDesc">
 	            	<@setupExtAppLink uri="/accounting/control/EditCustomTimePeriod?organizationPartyId=${rawString(params.orgPartyId!)}&customTimePeriodId=${rawString(params.parentPeriodId!)}" text=params.parentTimePeriodDesc!"_NA_"/>
-	           	</span><#t/>           	
+	           	</span>--<#t/>           	
 	        </@field><#lt/>
 	        <@field type="hidden" name="parentPeriodId" value=(params.parentPeriodId!) class="+acctg-inputfield"/>
         <#else>
-        	<@field type="select" name="parentPeriodId" label=uiLabelMap.CommonParent>
+        	<@field type="select" name="parentPeriodId" label=uiLabelMap.CommonParent class="+acctg-inputfield">
                 <option value="">&nbsp;</option>
                 <#list allCustomTimePeriods as allCustomTimePeriod>
                     <#assign allPeriodType = allCustomTimePeriod.getRelatedOne("PeriodType", true)!>                    
@@ -105,31 +104,23 @@
 	      </#list>
 	    </@field>
 	    
-	    <@field type="datetime" name="fromDate" value=(params.fromDate!) required=false label=uiLabelMap.CommonFromDate class="+acctg-inputfield" dateDisplayType="date" />
-	    <@field type="datetime" name="thruDate" value=(params.thruDate!) required=false label=uiLabelMap.CommonThruDate class="+acctg-inputfield" dateDisplayType="date" />
+	    <#--
+		    <#if formActionType == "edit">
+	        <@field type="display" name="fromDate" label=uiLabelMap.FormFieldTitle_fromDate><span class="ect-displayfield ect-displayfield-for-fromDate">${params.fromDate!}</span></@field>
+	        <@field type="hidden" name="fromDate" value=(params.fromDate!) class="+ect-inputfield"/>
+	      <#else>
+	        <@field type="datetime" name="fromDate" label=uiLabelMap.FormFieldTitle_fromDate value=(params.fromDate!) class="+ect-inputfield"/>
+	      </#if>
+	      -->
+	    <@field type="datetime" name="fromDate" value=(params.fromDate!"") required=false label=uiLabelMap.CommonFromDate class="+acctg-inputfield acctg-inputdate" dateType="date"/>
+	    <@field type="datetime" name="thruDate" value=(params.thruDate!"") required=false label=uiLabelMap.CommonThruDate class="+acctg-inputfield acctg-inputdate" dateType="date"/>
 	    
-	    <@field type="checkbox" name="isClosed" value=(params.thruDate!) required=false label=uiLabelMap.FormFieldTitle_isClosed class="+acctg-inputfield"/>	       
+	    <@field type="checkbox" name="isClosed" value=(params.isClosed!"N") altValue=false checked=(params.isClosed?has_content && params.isClosed == "Y")
+	    	required=false label=uiLabelMap.FormFieldTitle_isClosed class="+acctg-inputfield"/>	       
     </@form>
 </#macro>
 
-<@section title=uiLabelMap.AccountingAddCustomTimePeriod containerId="acctg-addtimeperiod" containerClass="+acctg-addtimeperiod acctg-recordaction acctg-addrecord" 
-    containerStyle=((targetRecordAction == "timeperiod-add")?string("","display:none;"))>
-  <#if targetRecordAction == "timeperiod-add">
-    <#assign paramMaps = initialParamMaps>
-  <#else>
-    <#assign paramMaps = getWizardFormFieldValueMaps({
-      "record":true,
-      "defaults":defaultParams,
-      "isError":isTimePeriodError,
-      "useReqParams":useReqParams
-    })>
-  </#if>
-  <@setupTimePeriodForm id="AddTmePeriod" formActionType="add" target="setupCreateTimePeriod" params=paramMaps.values
-    treeFieldValues={"acctgSubmittedFormId":"AddTimePeriod"} <#-- SPECIAL: this form (only) is initially submitted outside the JS tree, so we have to pre-populate treeFieldValues -->
-  />
-</@section>
-
-<@section title=uiLabelMap.AccountingNewCustomTimePeriod containerId="acctg-newtimeperiod" containerClass="+acctg-newtimeperiod acctg-recordaction acctg-newrecord" 
+<@section title=uiLabelMap.AccountingCustomTimePeriod containerId="acctg-newtimeperiod" containerClass="+acctg-newtimeperiod acctg-recordaction acctg-newrecord" 
     containerStyle=((targetRecordAction == "timeperiod-new")?string("","display:none;"))>
   <#if targetRecordAction == "timeperiod-new">
     <#assign paramMaps = initialParamMaps>

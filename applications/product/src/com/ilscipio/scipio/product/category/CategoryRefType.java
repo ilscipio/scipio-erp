@@ -22,7 +22,7 @@ public enum CategoryRefType {
     CATALOG_ASSOC("ProdCatalogCategory", new CatalogAssocResolver()),
     CATEGORY_ASSOC("ProductCategoryRollup", new CategoryAssocResolver());
     
-    public static final String module = CategoryRefType.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     private static final Map<String, CategoryRefType> entityNameMap;
     static {

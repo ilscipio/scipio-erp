@@ -62,7 +62,7 @@ import com.ibm.icu.util.Calendar;
  */
 public class UtilValidate {
 
-    public static final String module = UtilValidate.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /** boolean specifying by default whether or not it is okay for a String to be empty */
     public static final boolean defaultEmptyOK = true;

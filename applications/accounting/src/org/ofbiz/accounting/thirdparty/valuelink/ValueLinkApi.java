@@ -73,7 +73,7 @@ import org.ofbiz.entity.util.EntityQuery;
  */
 public class ValueLinkApi {
 
-    public static final String module = ValueLinkApi.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // static object cache
     private static Map<String, Object> objectCache = new ConcurrentHashMap<>(); // SCIPIO: 2018-03-38: concurrency fix

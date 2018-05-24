@@ -38,7 +38,7 @@ import org.ofbiz.content.content.ContentSearch.ContentSearchConstraint;
 
 public class ContentSearchSession {
 
-    public static final String module = ContentSearchSession.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     @SuppressWarnings("serial")
     public static class ContentSearchOptions implements java.io.Serializable {

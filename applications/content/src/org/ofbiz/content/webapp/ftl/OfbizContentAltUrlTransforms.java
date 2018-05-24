@@ -52,7 +52,7 @@ import freemarker.template.TemplateTransformModel;
  * it would have been <code>true</code>).
  */
 public class OfbizContentAltUrlTransforms implements TemplateTransformModel {
-    public final static String module = OfbizContentAltUrlTransforms.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     @Override
     @SuppressWarnings("unchecked")

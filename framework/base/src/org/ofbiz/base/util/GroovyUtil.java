@@ -43,7 +43,7 @@ import org.ofbiz.base.util.cache.UtilCache;
  */
 public class GroovyUtil {
 
-    public static final String module = GroovyUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private static final UtilCache<String, Class<?>> parsedScripts = UtilCache.createUtilCache("script.GroovyLocationParsedCache", 0, 0, false);
 

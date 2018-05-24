@@ -14,7 +14,7 @@ import com.ilscipio.scipio.cms.control.cmscall.CmsInvoker;
 
 public abstract class RenderInvoker extends CmsInvoker {
 
-    public static final String module = RenderInvoker.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     protected RenderInvoker(ServletContext servletCtx) {
         super(servletCtx);

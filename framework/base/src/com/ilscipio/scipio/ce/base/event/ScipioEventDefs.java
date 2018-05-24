@@ -18,7 +18,7 @@ import org.ofbiz.base.util.UtilProperties;
 
 public class ScipioEventDefs<H> {
 
-    private static final String module = ScipioEventDefs.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // DEV NOTE: DO NOT remove the .properties suffix from either of these; will break the scanning!
     public static final String EVENTS_PROPRES = "scipio-events.properties";

@@ -36,7 +36,7 @@ import org.ofbiz.entity.GenericValue;
  */
 public class RecurrenceRule {
 
-    public static final String module = RecurrenceRule.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // **********************
     // * byXXX constants

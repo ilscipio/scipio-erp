@@ -47,7 +47,7 @@ import org.ofbiz.service.ModelService;
  */
 public final class ContextHelper {
 
-    public static final String module = ContextHelper.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final int EVENT = 1;
     private static final int SERVICE = 2;
     private static final int UNKNOWN = 3;

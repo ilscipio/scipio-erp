@@ -12,7 +12,7 @@ import javax.servlet.ServletRequest;
  */
 public abstract class UtilRender {
 
-    public static final String module = UtilRender.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     public static final String RENDER_EXCEPTION_MODE_VAR = "scipioRenderExMode";
     

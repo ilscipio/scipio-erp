@@ -18,7 +18,7 @@ public class CmsPageTemplateVersion extends CmsTemplateVersion {
 
     private static final long serialVersionUID = 8929881699136390307L;
     
-    public static final String module = CmsPageTemplateVersion.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private CmsPageTemplate pageTemplate; // Mutable - set on first get if necessary.    
     private String versionComment = null; // Content.description

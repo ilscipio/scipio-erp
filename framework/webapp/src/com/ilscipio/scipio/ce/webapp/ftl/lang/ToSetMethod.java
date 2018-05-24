@@ -34,7 +34,7 @@ import freemarker.template.TemplateModelException;
  */
 public class ToSetMethod implements TemplateMethodModelEx {
 
-    public static final String module = ToSetMethod.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)

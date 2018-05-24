@@ -23,7 +23,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class SeoCatalogUrlGenerator extends SeoCatalogTraverser {
 
-    public static final String module = SeoCatalogUrlGenerator.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     static final String logPrefix = "Seo: Alt URLs: ";
     

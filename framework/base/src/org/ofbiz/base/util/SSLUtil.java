@@ -51,7 +51,7 @@ import org.ofbiz.base.config.GenericConfigException;
  */
 public class SSLUtil {
 
-    public static final String module = SSLUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final int HOSTCERT_NO_CHECK = 0;
     public static final int HOSTCERT_MIN_CHECK = 1;

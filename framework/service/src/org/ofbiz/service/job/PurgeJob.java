@@ -31,7 +31,7 @@ import org.ofbiz.entity.GenericValue;
 @SuppressWarnings("serial")
 public class PurgeJob extends AbstractJob implements Serializable {
 
-    public static final String module = PurgeJob.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final GenericValue jobValue;
 

@@ -35,7 +35,7 @@ import org.ofbiz.service.ServiceUtil;
 @SuppressWarnings("serial")
 public class ImageVariantConfig implements Serializable, ImageVariantSelector {
 
-    public static final String module = ImageVariantConfig.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     public static final ImageVariantConfig FALLBACK = new ImageVariantConfig("dummy", null, null, 
             UtilMisc.toList(new VariantInfo("thumbnail", 100, 100)));

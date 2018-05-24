@@ -34,7 +34,7 @@ import com.ilscipio.scipio.cms.template.RendererType;
 
 public abstract class CmsPageServices {
 
-    public static final String module = CmsPageServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final ServiceErrorFormatter errorFmt = CmsServiceUtil.getErrorFormatter();
 
     protected CmsPageServices() {

@@ -48,7 +48,7 @@ import org.ofbiz.webapp.website.WebSiteWorker;
  */
 public class ContentMapFacade implements Map<Object, Object> {
 
-    public static final String module = ContentMapFacade.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected static final Set<String> mapKeySet = UtilMisc.newSet();
     static {

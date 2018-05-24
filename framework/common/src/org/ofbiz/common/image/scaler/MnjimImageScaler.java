@@ -31,7 +31,7 @@ import com.mortennobel.imagescaling.ResampleOp;
  */
 public class MnjimImageScaler extends AbstractImageScaler {
 
-    public static final String module = MnjimImageScaler.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String API_NAME = "mortennobel";
     
     /**

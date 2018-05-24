@@ -47,7 +47,7 @@ import org.w3c.dom.Element;
 @SuppressWarnings("serial")
 public abstract class ModelMenuAction implements Serializable {
 
-    public static final String module = ModelMenuAction.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static List<ModelAction> readSubActions(ModelMenu modelMenu, Element parentElement) {
         List<? extends Element> actionElementList = UtilXml.childElementList(parentElement);

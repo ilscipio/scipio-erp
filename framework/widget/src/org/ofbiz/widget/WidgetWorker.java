@@ -51,7 +51,7 @@ import org.ofbiz.widget.model.ModelFormField;
 
 public final class WidgetWorker {
 
-    public static final String module = WidgetWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private WidgetWorker () {}
 

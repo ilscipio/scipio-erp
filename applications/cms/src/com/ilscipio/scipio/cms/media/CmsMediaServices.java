@@ -51,7 +51,7 @@ import com.ilscipio.scipio.common.util.fileType.FileTypeUtil;
 
 public abstract class CmsMediaServices {
 
-    public static final String module = CmsMediaServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     static final String logPrefix = "Cms: Media: ";
     private static final ServiceErrorFormatter errorFmt = 
             CmsServiceUtil.getErrorFormatter().specialize().setDefaultLogMsgGeneral("Media Error").build();

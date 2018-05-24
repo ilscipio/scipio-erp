@@ -62,7 +62,7 @@ import org.ofbiz.webapp.event.FileUploadProgressListener;
  */
 public class UploadContentAndImage {
 
-    public static final String module = UploadContentAndImage.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String err_resource = "ContentErrorUiLabels";
 
     public UploadContentAndImage() {}

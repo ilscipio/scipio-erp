@@ -27,7 +27,7 @@ import com.ilscipio.scipio.content.content.ContentTraversalException.StopContent
  * not load.
  */
 public class ContentTraverser extends AbstractContentEntityVisitor {
-    public static final String module = ContentTraverser.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     protected final ContentEntityVisitor visitor;
     protected final Delegator delegator;

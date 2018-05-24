@@ -43,7 +43,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class StatusServices {
 
-    public static final String module = StatusServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "CommonUiLabels";
 
     public static Map<String, Object> getStatusItems(DispatchContext ctx, Map<String, ?> context) {

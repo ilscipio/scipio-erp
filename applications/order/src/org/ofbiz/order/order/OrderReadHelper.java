@@ -65,7 +65,7 @@ import org.ofbiz.security.Security;
  */
 public class OrderReadHelper {
 
-    public static final String module = OrderReadHelper.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // scales and rounding modes for BigDecimal math    
     public static final int scale = UtilNumber.getBigDecimalScale("order.decimals");
@@ -2963,7 +2963,7 @@ public class OrderReadHelper {
                 }
             }
         } catch (GenericEntityException e) {
-            Debug.logError(e, OrderReturnServices.module);
+            Debug.logError(e, module);
         }
         return total;
     }

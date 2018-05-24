@@ -38,7 +38,7 @@ import org.ofbiz.entity.util.EntityQuery;
 
 public class InventoryWorker {
 
-    public final static String module = InventoryWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * Finds all outstanding Purchase orders for a productId.  The orders and the items cannot be completed, cancelled, or rejected

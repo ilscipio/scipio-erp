@@ -32,7 +32,7 @@ import java.util.Map;
  */
 public final class EntityEcaSetField {
 
-    public static final String module = EntityEcaSetField.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final String fieldName;
     private final String envName;

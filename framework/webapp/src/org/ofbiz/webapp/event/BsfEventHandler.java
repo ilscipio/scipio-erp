@@ -42,7 +42,7 @@ import org.ofbiz.webapp.control.ConfigXMLReader;
  */
 public class BsfEventHandler implements EventHandler {
 
-    public static final String module = BsfEventHandler.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final UtilCache<String, String> eventCache = UtilCache.createUtilCache("webapp.BsfEvents");
 
     /**

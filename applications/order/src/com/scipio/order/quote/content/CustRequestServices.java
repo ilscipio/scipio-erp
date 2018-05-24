@@ -29,7 +29,7 @@ import com.ilscipio.scipio.common.util.fileType.FileTypeResolver;
 import com.ilscipio.scipio.common.util.fileType.FileTypeUtil;
 
 public class CustRequestServices {
-	private static final String module = CustRequestServices.class.getName();
+	private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
 	public static Map<String, Object> createCustRequestContent(DispatchContext dctx, Map<String, Object> context) {
 		Delegator delegator = dctx.getDelegator();

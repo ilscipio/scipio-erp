@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
  */
 public class Convert extends SimpleMapOperation {
 
-    public static final String module = Convert.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     String format;
     boolean replace = true;

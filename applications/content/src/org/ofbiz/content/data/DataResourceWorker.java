@@ -90,7 +90,7 @@ import freemarker.template.TemplateException;
  */
 public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourceWorkerInterface {
 
-    public static final String module = DataResourceWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String err_resource = "ContentErrorUiLabels";
 
     /**

@@ -36,6 +36,8 @@ import org.xml.sax.SAXException;
 @SuppressWarnings("serial")
 public class ModelScreenGroup extends ModelWidget implements ModelScreens.ScreenEntry {
 
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
     public static final String ROOT_GROUP_NAME = "root-screens";
     
     protected final ModelScreens modelScreens;

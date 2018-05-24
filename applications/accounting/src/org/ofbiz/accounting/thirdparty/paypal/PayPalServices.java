@@ -80,7 +80,7 @@ import com.paypal.sdk.services.NVPCallerServices;
  */
 public class PayPalServices {
 
-    public static final String module = PayPalServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public final static String resource = "AccountingErrorUiLabels";
     
     // Used to maintain a weak reference to the ShoppingCart for customers who have gone to PayPal to checkout

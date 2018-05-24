@@ -16,7 +16,7 @@ import com.ilscipio.scipio.accounting.external.datev.results.DatevBuchungsstapel
 import com.ilscipio.scipio.accounting.external.datev.stats.DatevBuchungsstapelStats;
 
 public class DatevBuchungsstapel extends AbstractDatevDataCategory {
-    private static final String module = DatevBuchungsstapel.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public DatevBuchungsstapel(Delegator delegator, DatevHelper datevHelper) throws DatevException {
         super(delegator, datevHelper);

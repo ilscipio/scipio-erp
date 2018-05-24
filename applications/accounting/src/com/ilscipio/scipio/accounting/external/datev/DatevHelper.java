@@ -16,7 +16,7 @@ import com.ilscipio.scipio.accounting.external.BaseOperationStats.Stat;
 import com.ilscipio.scipio.accounting.external.datev.category.AbstractDatevDataCategory;
 
 public class DatevHelper {
-    private static final String module = DatevHelper.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final String orgPartyId;
     private final BaseOperationStats stats;

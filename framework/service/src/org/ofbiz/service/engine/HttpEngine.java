@@ -43,7 +43,7 @@ import org.ofbiz.service.ServiceDispatcher;
  */
 public class HttpEngine extends GenericAsyncEngine {
 
-    public static final String module = HttpEngine.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final boolean exportAll = false;
 
     public HttpEngine(ServiceDispatcher dispatcher) {

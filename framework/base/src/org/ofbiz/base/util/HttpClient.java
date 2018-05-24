@@ -37,7 +37,7 @@ import java.util.Map;
  */
 public class HttpClient {
 
-    public static final String module = HttpClient.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private int hostVerification = SSLUtil.HOSTCERT_NORMAL_CHECK;
     private int timeout = 30000;

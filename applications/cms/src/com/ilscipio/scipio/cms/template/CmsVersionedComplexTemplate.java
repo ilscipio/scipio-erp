@@ -29,7 +29,7 @@ public abstract class CmsVersionedComplexTemplate<T extends CmsVersionedComplexT
 
     private static final long serialVersionUID = 1294180234678880297L;
 
-    public static final String module = CmsVersionedComplexTemplate.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     // NOTE: these must be Optionals (emulated) for caching/thread safety reasons
     protected Optional<V> activeVersion; // NOTE: this is only temporarily cached in live render but then gets discarded by the subclasses

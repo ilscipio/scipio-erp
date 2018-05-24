@@ -33,7 +33,7 @@ import org.ofbiz.entity.util.EntityListIterator;
  */
 public class JREntityListIteratorDataSource implements JRDataSource {
 
-    public static final String module = JREntityListIteratorDataSource.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private EntityListIterator entityListIterator = null;
     private GenericEntity currentEntity = null;

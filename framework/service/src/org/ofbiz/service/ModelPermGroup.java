@@ -31,7 +31,7 @@ import org.ofbiz.base.util.UtilValidate;
 @SuppressWarnings("serial")
 public class ModelPermGroup implements Serializable {
 
-    public static final String module = ModelPermGroup.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final String PERM_JOIN_AND = "AND";
     public static final String PERM_JOIN_OR = "OR";

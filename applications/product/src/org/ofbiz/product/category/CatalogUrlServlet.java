@@ -55,7 +55,7 @@ import org.ofbiz.webapp.website.WebSiteWorker;
 @SuppressWarnings("serial")
 public class CatalogUrlServlet extends HttpServlet {
 
-    public static final String module = CatalogUrlServlet.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final String CATALOG_URL_MOUNT_POINT = "products";
     /**

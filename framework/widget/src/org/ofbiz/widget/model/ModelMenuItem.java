@@ -73,7 +73,7 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
      * 
      */
 
-    public static final String module = ModelMenuItem.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     // SCIPIO: special/keyword menu and item names
     public static final String NONE_MENU_ITEM_NAME = "NONE";

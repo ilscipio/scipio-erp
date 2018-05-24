@@ -45,7 +45,7 @@ import org.ofbiz.widget.renderer.html.HtmlScreenRenderer;
 
 public class FoPrintServerEvents {
 
-    public static final String module = FoPrintServerEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static HtmlScreenRenderer htmlScreenRenderer = new HtmlScreenRenderer();
 
     public static String getXslFo(HttpServletRequest req, HttpServletResponse resp) {

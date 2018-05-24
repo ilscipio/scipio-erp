@@ -73,7 +73,7 @@ import org.xml.sax.SAXException;
  */
 public class DhlServices {
 
-    public final static String module = DhlServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public final static String shipmentPropertiesFile = "shipment.properties";
     public final static String DHL_WEIGHT_UOM_ID = "WT_lb"; // weight Uom used by DHL
     public static final String resourceError = "ProductUiLabels";

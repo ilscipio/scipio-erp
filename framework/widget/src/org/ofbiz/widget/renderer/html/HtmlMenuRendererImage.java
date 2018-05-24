@@ -42,6 +42,8 @@ import org.ofbiz.widget.model.ModelMenuItem;
 @Deprecated
 public class HtmlMenuRendererImage extends HtmlMenuRenderer {
 
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
     protected HtmlMenuRendererImage() {}
 
     public HtmlMenuRendererImage(HttpServletRequest request, HttpServletResponse response) {

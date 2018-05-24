@@ -21,7 +21,7 @@ package org.ofbiz.webtools.labelmanager;
 import java.io.File;
 
 public class LabelFile {
-    public static final String module = LabelFile.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected final boolean fileLoaded = false;
     protected final File file;

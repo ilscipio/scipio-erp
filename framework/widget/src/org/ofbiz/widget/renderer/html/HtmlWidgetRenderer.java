@@ -32,7 +32,7 @@ import org.ofbiz.widget.model.ModelWidget;
  */
 @Deprecated
 public class HtmlWidgetRenderer {
-    public static final String module = HtmlWidgetRenderer.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * Characters that are appended to the end of each rendered element. Currently set to

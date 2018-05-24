@@ -43,7 +43,7 @@ import org.xml.sax.SAXException;
 @Deprecated
 public class HtmlMenuWrapperImage extends HtmlMenuWrapper {
 
-    public static final String module = HtmlMenuWrapperImage.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected HtmlMenuWrapperImage() {}
 

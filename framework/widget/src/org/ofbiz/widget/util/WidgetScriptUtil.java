@@ -21,7 +21,7 @@ import org.ofbiz.widget.model.ScreenFactory;
  */
 public abstract class WidgetScriptUtil {
 
-    public static final String module = WidgetScriptUtil.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     protected WidgetScriptUtil() {
     }

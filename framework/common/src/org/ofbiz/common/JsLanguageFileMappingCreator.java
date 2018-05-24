@@ -40,7 +40,7 @@ import org.ofbiz.service.ServiceUtil;
 
 public class JsLanguageFileMappingCreator {
 
-    private static final String module = JsLanguageFileMappingCreator.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static Map<String, Object> createJsLanguageFileMapping(DispatchContext ctx, Map<String, ?> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();

@@ -51,7 +51,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class FinAccountPaymentServices {
 
-    public static final String module = FinAccountPaymentServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resourceError = "AccountingErrorUiLabels";
 
     // base payment integration services

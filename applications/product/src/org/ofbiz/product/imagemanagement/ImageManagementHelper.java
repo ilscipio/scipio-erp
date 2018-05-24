@@ -34,7 +34,7 @@ import org.ofbiz.entity.util.EntityUtil;
 
 public class ImageManagementHelper {
 
-    static String module = ImageManagementHelper.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static String getInternalImageUrl(HttpServletRequest request, String productId) {
         String internalImageUrl = null;

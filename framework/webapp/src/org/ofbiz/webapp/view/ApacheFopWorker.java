@@ -54,7 +54,7 @@ import org.ofbiz.base.util.UtilValidate;
 
 public final class ApacheFopWorker {
 
-    public static final String module = ApacheFopWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     /** File name prefix used for temporary files. Currently set to
      * <code>org.ofbiz.webapp.view.ApacheFopWorker-</code>.
      */

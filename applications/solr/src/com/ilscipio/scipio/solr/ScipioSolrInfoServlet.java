@@ -15,7 +15,7 @@ import org.ofbiz.base.util.Debug;
 @SuppressWarnings("serial")
 public class ScipioSolrInfoServlet extends HttpServlet {
 
-    public static final String module = ScipioSolrInfoServlet.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     /**
      * Used to deduce whether the solr webapp initialization step was reached

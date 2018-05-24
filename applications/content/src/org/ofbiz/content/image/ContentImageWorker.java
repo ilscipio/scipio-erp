@@ -45,7 +45,7 @@ import org.ofbiz.entity.condition.EntityOperator;
  */
 public abstract class ContentImageWorker {
 
-    public static final String module = ContentImageWorker.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     /**
      * Special image size type name designating the original (unscaled/unmodified) image.

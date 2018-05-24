@@ -66,7 +66,7 @@ import com.ibm.icu.util.Calendar;
  */
 public class WorkEffortServices {
 
-    public static final String module = WorkEffortServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resourceError = "WorkEffortUiLabels";
 
     public static Map<String, Object> getWorkEffortAssignedEventsForRole(DispatchContext ctx, Map<String, ? extends Object> context) {

@@ -14,7 +14,7 @@ import com.ilscipio.scipio.cms.data.CmsDataObject;
 
 public abstract class CmsControlDataUtil {
 
-    public static final String module = CmsControlDataUtil.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     /**
      * Names of all Cms mapping-related entities.

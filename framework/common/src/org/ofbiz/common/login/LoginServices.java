@@ -63,7 +63,7 @@ import org.ofbiz.webapp.control.LoginWorker;
  */
 public class LoginServices {
 
-    public static final String module = LoginServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "SecurityextUiLabels";
 
     /** Login service to authenticate username and password

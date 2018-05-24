@@ -32,7 +32,7 @@ public interface CatalogVisitor {
     }
 
     public static class LoggingCatalogVisitor extends AbstractCatalogVisitor {
-        public static final String module = LoggingCatalogVisitor.class.getName();
+        private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
                 
         protected List<String> trailIds = new ArrayList<>();
         protected String lastId = null;

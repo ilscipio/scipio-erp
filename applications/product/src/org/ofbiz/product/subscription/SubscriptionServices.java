@@ -51,7 +51,7 @@ import com.ibm.icu.util.Calendar;
  */
 public class SubscriptionServices {
 
-    public static final String module = SubscriptionServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ProductUiLabels";
     public static final String resourceOrderError = "OrderErrorUiLabels";
 

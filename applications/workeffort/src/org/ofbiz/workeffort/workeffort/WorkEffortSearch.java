@@ -74,7 +74,7 @@ import org.ofbiz.entity.util.EntityUtil;
  */
 public class WorkEffortSearch {
 
-    public static final String module = WorkEffortSearch.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "WorkEffortUiLabels";
 
     public static ArrayList<String> searchWorkEfforts(List<? extends WorkEffortSearchConstraint> workEffortSearchConstraintList, ResultSortOrder resultSortOrder, Delegator delegator, String visitId) {

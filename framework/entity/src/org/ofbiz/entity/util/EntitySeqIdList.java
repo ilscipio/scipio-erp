@@ -23,7 +23,7 @@ import org.ofbiz.entity.Delegator;
  */
 public abstract class EntitySeqIdList<E> implements List<E> {
 
-    public static final String module = EntitySeqIdList.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     private static final boolean DEBUG = false;
     

@@ -39,7 +39,7 @@ import org.apache.bsf.BSFManager;
  */
 public class BSFEngine extends GenericAsyncEngine {
 
-    public static final String module = BSFEngine.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final UtilCache<String, String> scriptCache = UtilCache.createUtilCache("BSFScripts", 0, 0);
 
     public BSFEngine(ServiceDispatcher dispatcher) {

@@ -23,7 +23,7 @@ import com.ilscipio.scipio.cms.template.RendererType;
 
 public class LocalCmsPageRenderInvoker extends RenderInvoker {
 
-    public static final String module = LocalCmsPageRenderInvoker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     public LocalCmsPageRenderInvoker(ServletContext servletCtx) {
         super(servletCtx);

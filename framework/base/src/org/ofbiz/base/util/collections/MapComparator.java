@@ -31,7 +31,7 @@ import org.ofbiz.base.util.UtilGenerics;
  */
 public class MapComparator implements Comparator<Map<Object, Object>> {
 
-    public static final String module = MapComparator.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private List<? extends Object> keys;
 

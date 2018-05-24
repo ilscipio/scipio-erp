@@ -78,7 +78,7 @@ public class ModelTree extends ModelWidget {
      * 
      */
 
-    public static final String module = ModelTree.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final String defaultEntityName;
     private final String defaultRenderStyle;

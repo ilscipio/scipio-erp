@@ -29,7 +29,7 @@ import com.ilscipio.scipio.common.util.TikaUtil;
 
 public class DatevServices {
 
-    public final static String module = DatevServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * 

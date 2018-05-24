@@ -39,7 +39,7 @@ import org.ofbiz.entity.Delegator;
  */
 public class JmsTopicListener extends AbstractJmsListener {
 
-    public static final String module = JmsTopicListener.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private TopicConnection con = null;
     private TopicSession session = null;

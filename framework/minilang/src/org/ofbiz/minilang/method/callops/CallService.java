@@ -53,7 +53,7 @@ import org.w3c.dom.Element;
  */
 public final class CallService extends MethodOperation {
 
-    public static final String module = CallService.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "MiniLangErrorUiLabels";
 
     private final boolean breakOnError;

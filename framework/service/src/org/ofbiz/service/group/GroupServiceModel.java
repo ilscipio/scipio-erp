@@ -34,7 +34,7 @@ import org.w3c.dom.Element;
  */
 public class GroupServiceModel {
 
-    public static final String module = GroupServiceModel.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private String serviceName, serviceMode;
     private boolean resultToContext = false;

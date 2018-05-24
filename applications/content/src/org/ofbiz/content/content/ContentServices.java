@@ -55,7 +55,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class ContentServices {
 
-    public static final String module = ContentServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ContentUiLabels";
 
     /**

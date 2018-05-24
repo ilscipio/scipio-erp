@@ -14,7 +14,7 @@ import org.ofbiz.base.util.Debug;
 @SuppressWarnings("serial")
 public class UrlProcessors implements Serializable {
 
-    public static final String module = UrlProcessors.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     private static final UrlProcessors DUMMY = new UrlProcessors(Collections.<UrlProcessor>emptyList());
     

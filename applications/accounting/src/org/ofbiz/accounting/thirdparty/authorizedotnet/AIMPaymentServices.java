@@ -48,7 +48,7 @@ import com.ibm.icu.util.Calendar;
 
 public class AIMPaymentServices {
 
-    public static final String module = AIMPaymentServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public final static String resource = "AccountingUiLabels";
 
     // The list of refund failure response codes that would cause the ccRefund service

@@ -74,7 +74,7 @@ import org.ofbiz.service.ServiceUtil;
 @SuppressWarnings("serial")
 public class ShoppingCartItem implements java.io.Serializable {
 
-    public static String module = ShoppingCartItem.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "OrderUiLabels";
     public static final String resource_error = "OrderErrorUiLabels";
     public static String[] attributeNames = { "shoppingListId", "shoppingListItemSeqId", "surveyResponses",

@@ -34,7 +34,7 @@ import org.ofbiz.base.util.Debug;
  */
 public class GatewayConnector {
     
-    private static final String module = GatewayConnector.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     private int timeout = 0;
 

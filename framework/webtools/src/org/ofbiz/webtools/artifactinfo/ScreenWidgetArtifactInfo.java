@@ -40,7 +40,7 @@ import org.xml.sax.SAXException;
  *
  */
 public class ScreenWidgetArtifactInfo extends ArtifactInfoBase {
-    public static final String module = ScreenWidgetArtifactInfo.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected ModelScreen modelScreen;
 

@@ -48,7 +48,7 @@ import org.ofbiz.entity.util.EntityUtil;
  */
 public class PartyWorker {
 
-    public static String module = PartyWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private PartyWorker() {}
 

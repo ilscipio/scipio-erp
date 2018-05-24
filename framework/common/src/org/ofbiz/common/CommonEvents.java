@@ -67,7 +67,7 @@ import org.ofbiz.webapp.control.RequestHandler;
  */
 public class CommonEvents {
 
-    public static final String module = CommonEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private static final String[] ignoreAttrs = new String[] { // Attributes removed for security reason; _ERROR_MESSAGE_ is kept
         "javax.servlet.request.key_size",

@@ -45,7 +45,7 @@ public final class ModelMenuCondition implements Serializable {
      * 
      */
 
-    public static final String module = ModelMenuCondition.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final FlexibleStringExpander passStyleExdr;
     private final FlexibleStringExpander failStyleExdr;

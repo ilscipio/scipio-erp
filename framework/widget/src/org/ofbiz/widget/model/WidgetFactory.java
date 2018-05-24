@@ -20,7 +20,7 @@ import org.ofbiz.service.ServiceContainer;
 @SuppressWarnings("serial")
 public abstract class WidgetFactory implements Serializable {
 
-    public static final String module = WidgetFactory.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     // SCIPIO: new: static factories
     protected static final ScreenFactory screenFactory = new ScreenFactory();

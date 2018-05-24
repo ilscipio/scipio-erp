@@ -32,7 +32,7 @@ public abstract class CmsDataObject extends CmsObject implements CmsEntityReadab
 
     private static final long serialVersionUID = -5083909231662111225L;
 
-    public static final String module = CmsDataObject.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /*
      * This is the default "active" bool value when no flag specified in value.

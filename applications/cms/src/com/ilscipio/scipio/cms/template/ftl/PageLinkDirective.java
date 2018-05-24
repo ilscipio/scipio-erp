@@ -75,7 +75,7 @@ public class PageLinkDirective implements TemplateDirectiveModel, Serializable {
 
     private static final long serialVersionUID = 4165213097346590960L;
     
-    public static final String module = PageLinkDirective.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     private static final PageLinkDirective instance = new PageLinkDirective();
     

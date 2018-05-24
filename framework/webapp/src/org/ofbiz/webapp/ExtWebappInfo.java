@@ -31,7 +31,7 @@ import com.ilscipio.scipio.ce.util.Optional;
 @SuppressWarnings("serial")
 public class ExtWebappInfo implements Serializable {
     
-    public static final String module = ExtWebappInfo.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     private static final Object webSiteIdCacheLock = new Object();
     private static Map<String, ExtWebappInfo> webSiteIdCache = Collections.emptyMap();

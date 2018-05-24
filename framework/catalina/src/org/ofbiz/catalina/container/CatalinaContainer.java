@@ -136,7 +136,7 @@ public class CatalinaContainer implements Container {
     public static final String CATALINA_HOSTS_HOME = System.getProperty("ofbiz.home") + "/framework/catalina/hosts";
     public static final String J2EE_SERVER = "Scipio Container 3.1";
     public static final String J2EE_APP = "Scipio";
-    public static final String module = CatalinaContainer.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final ThreadGroup CATALINA_THREAD_GROUP = new ThreadGroup("CatalinaContainer");
 
     // load the JSSE properties (set the trust store)

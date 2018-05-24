@@ -50,7 +50,7 @@ import org.ofbiz.base.util.collections.MapComparator;
  */
 public class UtilMisc {
 
-    public static final String module = UtilMisc.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final BigDecimal ZERO_BD = BigDecimal.ZERO;
 

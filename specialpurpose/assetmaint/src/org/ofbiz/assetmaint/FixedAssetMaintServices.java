@@ -42,7 +42,7 @@ import org.ofbiz.service.ServiceUtil;
 
 public class FixedAssetMaintServices {
 
-    public static final String module = FixedAssetMaintServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "AssetMaintUiLabels";
 
     public static Map<String, Object> addPartFixedAssetMaint(DispatchContext ctx, Map<String, Object> context) {

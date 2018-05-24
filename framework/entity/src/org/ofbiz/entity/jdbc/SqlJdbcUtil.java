@@ -69,7 +69,7 @@ import org.ofbiz.entity.model.ModelViewEntity;
  *
  */
 public class SqlJdbcUtil {
-    public static final String module = SqlJdbcUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final int CHAR_BUFFER_SIZE = 4096;
 

@@ -35,7 +35,7 @@ import org.ofbiz.entity.GenericValue;
  */
 public class ContentUrlTag {
 
-    public static final String module = ContentUrlTag.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * Appends content prefix to buffer.

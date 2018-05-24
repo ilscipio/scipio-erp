@@ -29,7 +29,7 @@ import org.ofbiz.service.ServiceUtil;
 
 public class EntityWatchServices {
 
-    public static final String module = EntityWatchServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * This service is meant to be called through an Entity ECA (EECA) to watch an entity

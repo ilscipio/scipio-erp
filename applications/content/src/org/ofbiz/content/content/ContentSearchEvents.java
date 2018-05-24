@@ -38,7 +38,7 @@ import org.ofbiz.content.content.ContentSearchSession.ContentSearchOptions;
 
 public class ContentSearchEvents {
 
-    public static final String module = ContentSearchEvents.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static Map<String, Object> getContentSearchResult(HttpServletRequest request, Delegator delegator) {
 

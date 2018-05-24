@@ -62,7 +62,7 @@ import org.ofbiz.entity.jdbc.CursorConnection;
  */
 public class TransactionUtil implements Status {
     // Debug module name
-    public static final String module = TransactionUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private static ThreadLocal<List<Transaction>> suspendedTxStack = new ThreadLocal<List<Transaction>>();
     private static ThreadLocal<List<Exception>> suspendedTxLocationStack = new ThreadLocal<List<Exception>>();

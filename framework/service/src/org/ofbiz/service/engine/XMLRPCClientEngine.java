@@ -45,7 +45,7 @@ import org.ofbiz.service.xmlrpc.XmlRpcClient;
  */
 public class XMLRPCClientEngine extends GenericAsyncEngine {
 
-    public static final String module = XMLRPCClientEngine.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public XMLRPCClientEngine(ServiceDispatcher dispatcher) {
         super(dispatcher);

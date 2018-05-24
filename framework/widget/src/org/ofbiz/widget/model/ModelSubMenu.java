@@ -48,7 +48,7 @@ import org.w3c.dom.Element;
 @SuppressWarnings("serial")
 public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base class to share with top menu
 
-    public static final String module = ModelSubMenu.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     private final boolean anonName; // true if an anonymous name was generated for this menu
     private final String effectiveName;

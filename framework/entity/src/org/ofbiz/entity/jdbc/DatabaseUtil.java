@@ -68,7 +68,7 @@ import org.ofbiz.entity.transaction.TransactionUtil;
  */
 public class DatabaseUtil {
 
-    public static final String module = DatabaseUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // OFBiz Connections
     protected ModelFieldTypeReader modelFieldTypeReader = null;

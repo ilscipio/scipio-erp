@@ -57,7 +57,7 @@ import com.ibm.icu.util.Calendar;
  */
 public class InventoryServices {
 
-    public final static String module = InventoryServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ProductUiLabels";
     public static final MathContext generalRounding = new MathContext(10);
 

@@ -56,7 +56,7 @@ import org.w3c.dom.Element;
  */
 public class ConfigXMLReader {
 
-    public static final String module = ConfigXMLReader.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String controllerXmlFileName = "/WEB-INF/controller.xml";
     private static final UtilCache<URL, ControllerConfig> controllerCache = UtilCache.createUtilCache("webapp.ControllerConfig");
     private static final UtilCache<String, List<ControllerConfig>> controllerSearchResultsCache = UtilCache.createUtilCache("webapp.ControllerSearchResults");

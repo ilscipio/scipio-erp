@@ -38,7 +38,7 @@ import org.ofbiz.service.LocalDispatcher;
  */
 public class ProductionRunHelper {
 
-    public static final String module = ProductionRunHelper.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ManufacturingUiLabels";
 
 

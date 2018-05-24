@@ -49,7 +49,7 @@ import org.ofbiz.entity.GenericValue;
  */
 public class TaxwareUTL {
 
-    public static final String module = TaxwareUTL.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // default data files
     DataFile outHead = null;

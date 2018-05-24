@@ -40,7 +40,7 @@ import org.ofbiz.service.ModelService;
  */
 public class ShipmentWorker {
 
-    public static final String module = ShipmentWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final MathContext generalRounding = new MathContext(10);
     /*
      * Returns the value of a given ShipmentPackageContent record.  Calculated by working out the total value (from the OrderItems) of all ItemIssuances

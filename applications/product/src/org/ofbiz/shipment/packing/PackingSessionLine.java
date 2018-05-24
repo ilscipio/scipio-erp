@@ -34,7 +34,7 @@ import org.ofbiz.service.ServiceUtil;
 @SuppressWarnings("serial")
 public class PackingSessionLine implements java.io.Serializable {
 
-    public final String module = PackingSessionLine.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected String orderId = null;
     protected String orderItemSeqId = null;

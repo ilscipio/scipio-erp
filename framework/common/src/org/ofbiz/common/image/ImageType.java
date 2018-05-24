@@ -48,7 +48,7 @@ public class ImageType implements Serializable {
      * *************************************************************
      */
     
-    public static final String module = ImageType.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final UtilCache<String, ImageType> strReprCache = 
             UtilCache.createUtilCache("common.image.imageType", 1000, 100000); // NOTE: we need limit because these could be passed from screens
 

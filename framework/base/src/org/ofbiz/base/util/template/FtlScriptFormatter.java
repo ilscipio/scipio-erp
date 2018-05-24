@@ -11,7 +11,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class FtlScriptFormatter {
 
-    public static final String module = FtlScriptFormatter.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     
     /******************************************************/

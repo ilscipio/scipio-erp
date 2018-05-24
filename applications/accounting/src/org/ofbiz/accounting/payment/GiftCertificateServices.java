@@ -48,7 +48,7 @@ import org.ofbiz.service.ServiceUtil;
 
 public class GiftCertificateServices {
 
-    public static final String module = GiftCertificateServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resourceError = "AccountingErrorUiLabels";
     public static final String resourceOrderError = "OrderErrorUiLabels";
     // These are default settings, in case ProductStoreFinActSetting does not have them

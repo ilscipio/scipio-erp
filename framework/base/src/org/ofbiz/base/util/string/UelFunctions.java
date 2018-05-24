@@ -153,7 +153,7 @@ import org.w3c.dom.Node;
  */
 public class UelFunctions {
 
-    public static final String module = UelFunctions.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     protected static final Functions functionMapper = new Functions();
 
     /** Returns a <code>FunctionMapper</code> instance.

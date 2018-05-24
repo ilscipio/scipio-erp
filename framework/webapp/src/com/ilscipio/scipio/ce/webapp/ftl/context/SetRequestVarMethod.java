@@ -40,7 +40,7 @@ import freemarker.template.TemplateScalarModel;
  */
 public class SetRequestVarMethod implements TemplateMethodModelEx {
 
-    public static final String module = SetRequestVarMethod.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)

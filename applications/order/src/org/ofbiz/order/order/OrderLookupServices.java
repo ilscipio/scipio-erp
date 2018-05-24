@@ -57,7 +57,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class OrderLookupServices {
 
-    public static final String module = OrderLookupServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // SCIPIO: find orders overload behavior options
     private static final FindOrdersLocalOptions findOrdersOptions = new FindOrdersLocalOptions().setFullQuery(false);

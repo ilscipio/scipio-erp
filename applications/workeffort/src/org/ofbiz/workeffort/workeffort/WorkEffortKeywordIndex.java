@@ -40,7 +40,7 @@ import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.util.EntityUtilProperties;
 
 public class WorkEffortKeywordIndex {
-    public static final String module = WorkEffortKeywordIndex.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static void indexKeywords(GenericValue workEffort) throws GenericEntityException {
         if (workEffort == null) return;
 

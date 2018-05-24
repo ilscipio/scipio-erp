@@ -26,7 +26,7 @@ import org.ofbiz.base.util.ReferenceCleaner;
 @SuppressWarnings("serial")
 public abstract class CacheSoftReference<V> extends ReferenceCleaner.Soft<V> implements Serializable {
 
-    public static final String module = CacheSoftReference.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public CacheSoftReference(V o) {
         super(o);

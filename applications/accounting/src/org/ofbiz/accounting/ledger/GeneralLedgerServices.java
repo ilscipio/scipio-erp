@@ -33,7 +33,7 @@ import org.ofbiz.service.ServiceUtil;
 
 public class GeneralLedgerServices {
 
-    public static final String module = GeneralLedgerServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private static BigDecimal ZERO = BigDecimal.ZERO;
 

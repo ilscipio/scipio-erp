@@ -24,7 +24,7 @@ import org.ofbiz.product.category.CategoryWorker;
  */
 public abstract class CategoryEvents {
 
-    public static final String module = CategoryEvents.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     protected CategoryEvents() {
     }

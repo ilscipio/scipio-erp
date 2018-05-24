@@ -44,7 +44,7 @@ import freemarker.template.TemplateException;
  */
 public class FreeMarkerViewHandler extends AbstractViewHandler {
 
-    public static final String module = FreeMarkerViewHandler.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     protected Configuration config = (Configuration) FreeMarkerWorker.getDefaultOfbizConfig().clone();
 
     public void init(ServletContext context) throws ViewHandlerException {

@@ -12,7 +12,7 @@ import org.w3c.dom.Element;
 @SuppressWarnings("serial")
 public abstract class ValueAccessor implements Serializable {
     
-    public static final String module = ValueAccessor.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final NullAccessor NULL_ACCESSOR = new NullAccessor();
     public static final ConstantAccessor BOOLEAN_TRUE_ACCESSOR = new ConstantAccessor(Boolean.TRUE);

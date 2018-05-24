@@ -56,7 +56,7 @@ import com.ilscipio.scipio.solr.util.DirectJsonRequest;
  */
 public abstract class SolrProductSearch {
 
-    public static final String module = SolrProductSearch.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private static final boolean rebuildClearAndUseCacheDefault = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, 
             "solr.index.rebuild.clearAndUseCache", false);

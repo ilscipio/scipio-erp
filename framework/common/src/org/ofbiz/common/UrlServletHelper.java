@@ -45,7 +45,7 @@ import org.ofbiz.webapp.website.WebSiteWorker;
 
 public class UrlServletHelper extends ContextFilter {
     
-    public final static String module = UrlServletHelper.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     public static void setRequestAttributes(ServletRequest request, Delegator delegator, ServletContext servletContext) {
         HttpServletRequest httpRequest = (HttpServletRequest) request;

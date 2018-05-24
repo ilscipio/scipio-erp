@@ -36,7 +36,7 @@ import org.ofbiz.entity.util.EntityQuery;
 
 public class UtilAccounting {
 
-    public static String module = UtilAccounting.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * Get the GL Account for a product or the default account type based on input. This replaces the simple-method service

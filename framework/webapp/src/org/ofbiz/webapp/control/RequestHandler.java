@@ -80,7 +80,7 @@ import org.xml.sax.SAXException;
  */
 public class RequestHandler {
 
-    public static final String module = RequestHandler.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private final String defaultStatusCodeString = UtilProperties.getPropertyValue("requestHandler.properties", "status-code", "301");
     private final ViewFactory viewFactory;
     private final EventFactory eventFactory;

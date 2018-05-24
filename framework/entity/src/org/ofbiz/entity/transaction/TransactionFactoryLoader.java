@@ -27,7 +27,7 @@ import org.ofbiz.entity.config.model.EntityConfig;
  */
 public class TransactionFactoryLoader {
 
-    public static final String module = TransactionFactoryLoader.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final TransactionFactory txFactory = createTransactionFactory();
 
     private static TransactionFactory createTransactionFactory() {

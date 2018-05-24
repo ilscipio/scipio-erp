@@ -34,7 +34,7 @@ import org.ofbiz.base.component.ComponentConfig;
  */
 public class UtilJavaParse {
 
-    public static final String module = UtilJavaParse.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static String findRealPathAndFileForClass(String fullyQualifiedClassName) {
         // search through the component directories, in the src directory for each, using the class path as the path within it

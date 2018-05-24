@@ -28,7 +28,7 @@ import org.ofbiz.base.util.Debug;
 @SuppressWarnings("serial")
 public class GenericResultWaiter implements GenericRequester {
 
-    public static final String module = GenericResultWaiter.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /** Status code for a running service */
     public static final int SERVICE_RUNNING = -1;

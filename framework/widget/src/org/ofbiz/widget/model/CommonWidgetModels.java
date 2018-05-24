@@ -55,7 +55,7 @@ import org.w3c.dom.Element;
  */
 public final class CommonWidgetModels {
 
-    public static final String module = CommonWidgetModels.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private CommonWidgetModels() {
     }

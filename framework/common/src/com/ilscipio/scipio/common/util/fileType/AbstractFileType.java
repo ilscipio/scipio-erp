@@ -12,7 +12,7 @@ import org.ofbiz.entity.GenericValue;
 
 public abstract class AbstractFileType {
 
-    public static final String module = AbstractFileType.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     protected abstract List<MagicNumber> getMagicNumbers();
 

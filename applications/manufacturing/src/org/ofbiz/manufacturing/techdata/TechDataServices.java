@@ -49,7 +49,7 @@ import com.ibm.icu.util.Calendar;
  */
 public class TechDataServices {
 
-    public static final String module = TechDataServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ManufacturingUiLabels";
 
     /**

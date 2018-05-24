@@ -19,7 +19,7 @@ import com.ilscipio.scipio.accounting.external.datev.DatevHelper;
 
 public class DatevDebitorenKreditorenStammdaten extends AbstractDatevDataCategory {
 
-    private static final String module = DatevDebitorenKreditorenStammdaten.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public DatevDebitorenKreditorenStammdaten(Delegator delegator, DatevHelper datevHelper) throws DatevException {
         super(delegator, datevHelper);

@@ -100,7 +100,7 @@ import freemarker.template.TemplateHashModel;
 
 public class WebToolsServices {
 
-    public static final String module = WebToolsServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "WebtoolsUiLabels";
 
     public static Map<String, Object> entityImport(DispatchContext dctx, Map<String, ? extends Object> context) {

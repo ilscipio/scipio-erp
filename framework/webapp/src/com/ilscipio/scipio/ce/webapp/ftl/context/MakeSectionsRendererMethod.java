@@ -38,7 +38,7 @@ import freemarker.template.TemplateScalarModel;
  */
 public class MakeSectionsRendererMethod implements TemplateMethodModelEx {
 
-    public static final String module = MakeSectionsRendererMethod.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     @SuppressWarnings("unchecked")
     @Override

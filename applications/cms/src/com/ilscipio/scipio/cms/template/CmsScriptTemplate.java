@@ -54,7 +54,7 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
 
     private static final long serialVersionUID = -1589382218994735791L;
     
-    public static final String module = CmsScriptTemplate.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * Fields recognized by service but not physically present in entity.

@@ -26,7 +26,7 @@ import com.ilscipio.scipio.cms.data.importexport.CmsDataExportWorker.GenericWork
 
 public abstract class CmsImportExportServices {
     
-    public static final String module = CmsImportExportServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final ServiceErrorFormatter errorFmt = CmsServiceUtil.getErrorFormatter();
 
     protected CmsImportExportServices() {

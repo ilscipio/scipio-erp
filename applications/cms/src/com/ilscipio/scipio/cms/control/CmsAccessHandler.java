@@ -21,7 +21,7 @@ import com.ilscipio.scipio.cms.content.CmsPage;
  */
 public class CmsAccessHandler implements HttpSessionListener {
 
-    public static final String module = CmsAccessHandler.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final String SESSION_TOKEN_ATTR = "cmsAccessToken";
 

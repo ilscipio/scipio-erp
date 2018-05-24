@@ -30,7 +30,7 @@ import org.ofbiz.entity.transaction.TransactionUtil;
  */
 public abstract class AbstractJob implements Job {
 
-    public static final String module = AbstractJob.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final String jobId;
     private final String jobName;

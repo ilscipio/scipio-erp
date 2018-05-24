@@ -31,7 +31,7 @@ import com.ilscipio.scipio.cms.template.CmsAssetTemplate.CmsAssetTemplateScriptA
  */
 public abstract class CmsAssetTemplateServices {
     
-    public static final String module = CmsAssetTemplateServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final ServiceErrorFormatter errorFmt = 
             CmsServiceUtil.getErrorFormatter().specialize().setDefaultLogMsgGeneral("Asset Template Error").build();
 

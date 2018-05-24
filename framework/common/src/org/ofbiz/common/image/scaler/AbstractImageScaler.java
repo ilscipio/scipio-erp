@@ -14,7 +14,7 @@ import org.ofbiz.common.image.ImageUtil;
  * Added 2017-07-10.
  */
 public abstract class AbstractImageScaler extends AbstractImageOp implements ImageScaler {
-    public static final String module = AbstractImageScaler.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
 
     

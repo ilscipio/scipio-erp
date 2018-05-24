@@ -30,7 +30,7 @@ import org.ofbiz.service.LocalDispatcher;
  * NOT thread-safe due to logPrefix.
  */
 abstract class ContactMechPurposeInfo {
-    public static final String module = ContactMechPurposeInfo.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     //private final List<GenericValue> contactMechAndPurposeList;
     protected final Map<String, Set<String>> contactMechPurposes;

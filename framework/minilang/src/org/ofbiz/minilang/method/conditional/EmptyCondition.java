@@ -39,7 +39,7 @@ import org.w3c.dom.Element;
  */
 public final class EmptyCondition extends MethodOperation implements Conditional {
 
-    public static final String module = EmptyCondition.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final FlexibleMapAccessor<Object> fieldFma;
     // Sub-operations are used only when this is a method operation.

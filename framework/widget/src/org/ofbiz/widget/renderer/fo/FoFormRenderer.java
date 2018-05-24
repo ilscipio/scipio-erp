@@ -64,7 +64,7 @@ import org.ofbiz.widget.renderer.html.HtmlWidgetRenderer;
  */
 public class FoFormRenderer extends HtmlWidgetRenderer implements FormStringRenderer {
 
-    public static final String module = FoFormRenderer.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     HttpServletRequest request;
     HttpServletResponse response;

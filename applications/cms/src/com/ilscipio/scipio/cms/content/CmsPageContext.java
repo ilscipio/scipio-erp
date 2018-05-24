@@ -44,7 +44,7 @@ import com.ilscipio.scipio.cms.template.RendererType;
  */
 public class CmsPageContext {
 
-    public static final String module = CmsPageContext.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final HttpServletRequest request;
     private final boolean preview;

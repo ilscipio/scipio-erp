@@ -39,7 +39,7 @@ public final class UtilObject {
     private UtilObject() {
     }
 
-    public static final String module = UtilObject.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static byte[] getBytes(InputStream is) {
         byte[] buffer = new byte[4 * 1024];

@@ -51,7 +51,7 @@ import org.ofbiz.service.group.ServiceGroupReader;
  *
  */
 public class ServiceArtifactInfo extends ArtifactInfoBase {
-    public static final String module = ServiceArtifactInfo.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected ModelService modelService;
     protected String displayPrefix = null;

@@ -18,7 +18,7 @@ public class CmsView extends CmsObject {
     
     private static final long serialVersionUID = 1591804709705152250L;
 
-    public static final String module = CmsView.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     private static final CmsObjectCache<CmsView> nameCache = CmsObjectCache.getGlobalCache("cms.control.view.name");
 

@@ -61,7 +61,7 @@ import freemarker.ext.servlet.ServletContextHashModel;
 @SuppressWarnings("serial")
 public class ControlServlet extends HttpServlet {
 
-    public static final String module = ControlServlet.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public ControlServlet() {
         super();

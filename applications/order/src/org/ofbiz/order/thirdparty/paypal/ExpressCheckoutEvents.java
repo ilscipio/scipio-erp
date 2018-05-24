@@ -45,7 +45,7 @@ import org.ofbiz.service.ServiceUtil;
 public class ExpressCheckoutEvents {
 
     public static final String resourceErr = "AccountingErrorUiLabels";
-    public static final String module = ExpressCheckoutEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static enum CheckoutType {PAYFLOW, STANDARD, NONE}
 
     public static String setExpressCheckout(HttpServletRequest request, HttpServletResponse response) {

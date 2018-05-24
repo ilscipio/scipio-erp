@@ -29,6 +29,8 @@ import org.ofbiz.entity.Delegator;
  */
 public class GenericDispatcherFactory implements LocalDispatcherFactory {
 
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
     protected static boolean ecasDisabled = false;
 
     @Override

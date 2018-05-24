@@ -43,7 +43,7 @@ import org.ofbiz.service.ServiceUtil;
 
 public class AgreementServices {
 
-    public static final String module = AgreementServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     // set some BigDecimal properties
     private static BigDecimal ZERO = BigDecimal.ZERO;
     private static int decimals = -1;

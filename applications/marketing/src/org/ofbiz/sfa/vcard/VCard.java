@@ -72,7 +72,7 @@ import net.wimpi.pim.factory.ContactIOFactory;
 import net.wimpi.pim.factory.ContactModelFactory;
 
 public class VCard {
-    public static final String module = VCard.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resourceError = "MarketingUiLabels";
 
     public static Map<String, Object> importVCard(DispatchContext dctx, Map<String, ? extends Object> context) {

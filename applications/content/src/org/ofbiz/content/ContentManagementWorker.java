@@ -58,7 +58,7 @@ import org.ofbiz.security.Security;
  */
 public class ContentManagementWorker {
 
-    public static final String module = ContentManagementWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static Map<String, GenericValue> cachedWebSitePublishPoints = new ConcurrentHashMap<>(); // SCIPIO: 2018-03-28: concurrency fix
     public static Map<String, Map<String, Object>> cachedStaticValues = new ConcurrentHashMap<>(); // SCIPIO: 2018-03-28: concurrency fix
 

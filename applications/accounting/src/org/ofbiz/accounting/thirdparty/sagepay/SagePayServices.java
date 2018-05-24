@@ -45,7 +45,7 @@ import org.ofbiz.service.ServiceUtil;
 
 public class SagePayServices
 {
-    public static final String module = SagePayServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "AccountingUiLabels";
 
     private static Map<String, String> buildSagePayProperties(Map<String, Object> context, Delegator delegator) {

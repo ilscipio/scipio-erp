@@ -53,7 +53,7 @@ import org.w3c.dom.Element;
  */
 public class EntityDataLoader {
 
-    public static final String module = EntityDataLoader.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static String getPathsString(String helperName) {
         StringBuilder pathBuffer = new StringBuilder();

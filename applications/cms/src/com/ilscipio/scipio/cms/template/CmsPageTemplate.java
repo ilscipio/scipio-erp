@@ -46,7 +46,7 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
 
     private static final long serialVersionUID = 9154893402134263580L;
     
-    public static final String module = CmsPageTemplate.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     // default is TRUE
     private static final boolean firstVersionActive = UtilProperties.getPropertyAsBoolean("cms.properties", "page.template.firstVersionActive", true);

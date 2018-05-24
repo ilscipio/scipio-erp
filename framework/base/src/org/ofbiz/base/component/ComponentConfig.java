@@ -54,7 +54,7 @@ import org.w3c.dom.Element;
  */
 public final class ComponentConfig {
 
-    public static final String module = ComponentConfig.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String OFBIZ_COMPONENT_XML_FILENAME = "ofbiz-component.xml";
     /* Note: These Maps are not UtilCache instances because there is no strategy or implementation for reloading components.
      * Also, we are using LinkedHashMap to maintain insertion order - which client code depends on. This means

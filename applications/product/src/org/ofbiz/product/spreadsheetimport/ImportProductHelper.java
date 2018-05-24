@@ -31,7 +31,7 @@ import org.ofbiz.entity.util.EntityQuery;
 
 public class ImportProductHelper {
 
-    static String module = ImportProductHelper.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // prepare the product map
     public static Map<String, Object> prepareProduct(String productId) {

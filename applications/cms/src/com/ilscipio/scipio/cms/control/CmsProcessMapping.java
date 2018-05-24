@@ -51,7 +51,7 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
 
     private static final long serialVersionUID = 716726095952003354L;
 
-    public static final String module = CmsProcessMapping.class.getName();    
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());    
     
     private static final CmsObjectCache<CmsProcessMapping> pathCache = CmsObjectCache.getGlobalCache("cms.control.processMapping.path"); 
     private static final UtilCache<String, Set<String>> rootControlUriCache = CmsObjectCache.getGenericGlobalCache("cms.control.processMapping.rootctrluri"); 

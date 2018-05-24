@@ -43,7 +43,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class MarketingServices {
 
-    public static final String module = MarketingServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resourceMarketing = "MarketingUiLabels";
     public static final String resourceOrder = "OrderUiLabels";
 

@@ -35,7 +35,7 @@ import org.ofbiz.base.util.UtilGenerics;
  */
 public final class StandardJavaEngine extends GenericAsyncEngine {
 
-    public static final String module = StandardJavaEngine.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public StandardJavaEngine(ServiceDispatcher dispatcher) {
         super(dispatcher);

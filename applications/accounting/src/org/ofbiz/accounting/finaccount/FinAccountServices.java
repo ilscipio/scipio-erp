@@ -49,7 +49,7 @@ import org.ofbiz.service.ServiceUtil;
 
 public class FinAccountServices {
 
-    public static final String module = FinAccountServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resourceError = "AccountingErrorUiLabels";
 
     public static Map<String, Object> createAccountAndCredit(DispatchContext dctx, Map<String, Object> context) {

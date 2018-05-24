@@ -16,7 +16,7 @@ import org.ofbiz.service.ServiceUtil;
 
 public class PartyServices {
     
-    public final static String module = PartyServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     /**
      * Checks if an a UserLogin exists.

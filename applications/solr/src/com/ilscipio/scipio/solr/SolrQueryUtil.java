@@ -15,7 +15,7 @@ import org.apache.solr.common.SolrException;
  */
 public abstract class SolrQueryUtil {
 
-    public static final String module = SolrQueryUtil.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     protected SolrQueryUtil() {
     }

@@ -42,7 +42,7 @@ import org.ofbiz.entity.util.EntityUtilProperties;
  */
 public class ContentKeywordIndex {
 
-    public static final String module = ContentKeywordIndex.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static void forceIndexKeywords(GenericValue content) throws GenericEntityException {
         ContentKeywordIndex.indexKeywords(content, true);

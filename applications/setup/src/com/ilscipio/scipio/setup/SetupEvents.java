@@ -15,7 +15,7 @@ import org.ofbiz.base.util.UtilValidate;
  */
 public abstract class SetupEvents {
 
-    public static final String module = SetupEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     protected SetupEvents() {
     }

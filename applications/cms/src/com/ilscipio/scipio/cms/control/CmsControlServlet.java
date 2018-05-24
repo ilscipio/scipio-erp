@@ -58,7 +58,7 @@ import com.ilscipio.scipio.cms.control.cmscall.CmsCallType;
 @Deprecated
 public class CmsControlServlet extends HttpServlet {
     
-    public static final String module = CmsControlServlet.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * The pageMountPoint sets the path which responds to page ids to return

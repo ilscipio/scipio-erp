@@ -98,7 +98,7 @@ public class ModelFormField implements Serializable {
      * 
      */
 
-    public static final String module = ModelFormField.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static ModelFormField from(ModelFormFieldBuilder builder) {
         return new ModelFormField(builder);

@@ -32,7 +32,7 @@ import org.ofbiz.entity.config.model.EntityConfig;
  */
 public class GenericHelperFactory {
 
-    public static final String module = GenericHelperFactory.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // protected static UtilCache helperCache = new UtilCache("entity.GenericHelpers", 0, 0);
     protected static Map<String, GenericHelper> helperCache = new HashMap<String, GenericHelper>();

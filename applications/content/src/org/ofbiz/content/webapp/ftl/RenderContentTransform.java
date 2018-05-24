@@ -50,7 +50,7 @@ import freemarker.template.TemplateTransformModel;
  */
 public class RenderContentTransform implements TemplateTransformModel {
 
-    public static final String module = RenderContentTransform.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     @SuppressWarnings("unchecked")
     public Writer getWriter(final Writer out, Map args) {

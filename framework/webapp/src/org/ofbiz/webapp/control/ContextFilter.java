@@ -68,7 +68,7 @@ import org.ofbiz.webapp.website.WebSiteWorker;
  */
 public class ContextFilter implements Filter {
 
-    public static final String module = ContextFilter.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final String contextFilterClassName = ContextFilter.class.getSimpleName();
     public static final String FORWARDED_FROM_SERVLET = "_FORWARDED_FROM_SERVLET_";
 

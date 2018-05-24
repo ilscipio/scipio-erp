@@ -44,7 +44,7 @@ import com.ilscipio.scipio.content.content.ContentTraverser.ContentTraverserConf
 
 public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
 
-    public static final String module = SeoCatalogUrlExporter.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     public static final String DATAFILECONFIGS_RESOURCE = "seo-urls";
     

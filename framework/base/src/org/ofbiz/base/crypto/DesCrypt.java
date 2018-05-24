@@ -44,7 +44,7 @@ import org.ofbiz.base.util.GeneralException;
 @Deprecated
 public class DesCrypt {
 
-    public static final String module = DesCrypt.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static Key generateKey() throws NoSuchAlgorithmException {
         KeyGenerator keyGen = KeyGenerator.getInstance("DESede");

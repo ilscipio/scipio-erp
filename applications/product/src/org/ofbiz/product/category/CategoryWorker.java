@@ -58,7 +58,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class CategoryWorker {
 
-    public static final String module = CategoryWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private CategoryWorker() {
     }

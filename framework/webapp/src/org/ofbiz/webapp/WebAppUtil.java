@@ -57,7 +57,7 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public final class WebAppUtil {
 
-    public static final String module = WebAppUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final String webAppFileName = "/WEB-INF/web.xml";
     private static final UtilCache<String, WebXml> webXmlCache = UtilCache.createUtilCache("webapp.WebXml");
 

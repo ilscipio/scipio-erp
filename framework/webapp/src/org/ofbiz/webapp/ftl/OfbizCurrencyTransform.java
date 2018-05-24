@@ -49,7 +49,7 @@ import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
  */
 public class OfbizCurrencyTransform implements TemplateTransformModel {
 
-    public static final String module = OfbizCurrencyTransform.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     @SuppressWarnings("unchecked")
     private static String getArg(Map args, String key) {

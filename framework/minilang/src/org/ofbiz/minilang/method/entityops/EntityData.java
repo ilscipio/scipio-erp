@@ -43,7 +43,7 @@ import org.w3c.dom.Element;
  */
 public final class EntityData extends EntityOperation {
 
-    public static final String module = EntityData.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final FlexibleMapAccessor<List<Object>> errorListFma;
     private final FlexibleStringExpander locationFse;

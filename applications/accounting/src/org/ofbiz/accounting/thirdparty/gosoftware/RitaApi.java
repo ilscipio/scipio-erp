@@ -31,7 +31,7 @@ import org.ofbiz.base.util.UtilMisc;
 
 public class RitaApi {
 
-    public static final String module = RitaApi.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String xschema = "x-schema:..\\dtd\\stnd.xdr";
     public static final String rootElement = "XML_FILE";
     public static final String reqElement = "XML_REQUEST";

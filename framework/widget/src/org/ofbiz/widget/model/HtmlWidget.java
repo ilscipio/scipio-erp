@@ -57,7 +57,7 @@ import freemarker.template.TemplateException;
  */
 @SuppressWarnings("serial")
 public class HtmlWidget extends ModelScreenWidget {
-    public static final String module = HtmlWidget.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private static final UtilCache<String, Template> specialTemplateCache = UtilCache.createUtilCache("widget.screen.template.ftl.general", 0, 0, false);
     // SCIPIO: 2017-04-03: use new generalized extended wrapper

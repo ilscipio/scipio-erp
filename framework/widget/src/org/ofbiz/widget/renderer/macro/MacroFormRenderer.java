@@ -108,7 +108,7 @@ import freemarker.template.TemplateModelException;
  */
 public final class MacroFormRenderer implements FormStringRenderer {
 
-    public static final String module = MacroFormRenderer.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private final Template macroLibrary;
     private final WeakHashMap<Appendable, Environment> environments = new WeakHashMap<Appendable, Environment>();
     //private final UtilCodec.SimpleEncoder internalEncoder; // SCIPIO: better off without this

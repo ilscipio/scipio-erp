@@ -59,7 +59,7 @@ import org.ofbiz.webapp.control.RequestHandler;
  */
 public class CoreEvents {
 
-    public static final String module = CoreEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String err_resource = "WebappUiLabels";
 
     /**

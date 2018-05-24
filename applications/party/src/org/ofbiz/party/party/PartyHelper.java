@@ -33,7 +33,7 @@ import org.ofbiz.entity.util.EntityQuery;
  */
 public class PartyHelper {
 
-    public static final String module = PartyHelper.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private PartyHelper() {}
 

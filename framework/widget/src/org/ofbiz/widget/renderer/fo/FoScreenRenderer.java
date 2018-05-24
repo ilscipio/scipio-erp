@@ -37,7 +37,7 @@ import org.ofbiz.widget.renderer.html.HtmlWidgetRenderer;
  */
 public class FoScreenRenderer extends HtmlWidgetRenderer implements ScreenStringRenderer {
 
-    public static final String module = FoScreenRenderer.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public FoScreenRenderer() {}
 

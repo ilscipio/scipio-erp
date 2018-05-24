@@ -38,7 +38,7 @@ import freemarker.template.TemplateException;
  */
 public abstract class AttributeExpander {
 
-    public static final String module = AttributeExpander.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     private static final List<String> javaShortTypeList = Collections.unmodifiableList(Arrays.asList(new String[] {
             "String", "BigDecimal", "Double", "Float", "Long", "Integer", "Date", "Time", "Timestamp", "Boolean", "Object"

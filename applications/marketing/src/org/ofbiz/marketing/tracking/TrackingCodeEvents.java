@@ -45,7 +45,7 @@ import org.ofbiz.product.category.CategoryWorker;
  */
 public class TrackingCodeEvents {
 
-    public static final String module = TrackingCodeEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /** If TrackingCode monitoring is desired this event should be added to the list
      * of events that run on every request. This event looks for the parameter

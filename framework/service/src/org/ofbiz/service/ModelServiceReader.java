@@ -57,7 +57,7 @@ import org.xml.sax.SAXException;
 @SuppressWarnings("serial")
 public class ModelServiceReader implements Serializable {
 
-    public static final String module = ModelServiceReader.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /** is either from a URL or from a ResourceLoader (through the ResourceHandler) */
     protected boolean isFromURL;

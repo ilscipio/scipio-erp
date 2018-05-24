@@ -33,7 +33,7 @@ import org.ofbiz.base.util.UtilValidate;
  */
 public class HttpViewHandler extends AbstractViewHandler {
 
-    public static final String module = HttpViewHandler.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public void init(ServletContext context) throws ViewHandlerException {
     }

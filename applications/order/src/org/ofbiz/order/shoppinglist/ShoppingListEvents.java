@@ -62,7 +62,7 @@ import org.ofbiz.webapp.website.WebSiteWorker;
  */
 public class ShoppingListEvents {
 
-    public static final String module = ShoppingListEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "OrderUiLabels";
     public static final String resource_error = "OrderErrorUiLabels";
     public static final String PERSISTANT_LIST_NAME = "auto-save";

@@ -25,7 +25,7 @@ import org.ofbiz.common.image.ImageUtil;
  */
 public class ComposedImageScaler extends AbstractImageScaler {
 
-    public static final String module = ComposedImageScaler.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String API_NAME = "composed";
     
     public static final Map<String, Object> DEFAULT_OPTIONS;

@@ -46,7 +46,7 @@ public class CmsAssetTemplate extends CmsMasterComplexTemplate<CmsAssetTemplate,
     
     private static final long serialVersionUID = -423202960558153897L;
     
-    public static final String module = CmsAssetTemplate.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     // default is TRUE
     private static final boolean firstVersionActive = UtilProperties.getPropertyAsBoolean("cms.properties", "asset.template.firstVersionActive", true);

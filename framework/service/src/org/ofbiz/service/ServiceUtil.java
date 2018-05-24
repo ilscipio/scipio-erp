@@ -60,7 +60,7 @@ import com.ibm.icu.util.Calendar;
  */
 public class ServiceUtil {
 
-    public static final String module = ServiceUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ServiceErrorUiLabels";
 
     /** A little short-cut method to check to see if a service returned an error */

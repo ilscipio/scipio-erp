@@ -32,7 +32,7 @@ import freemarker.template.TemplateScalarModel;
  */
 public abstract class TransformUtil {
 
-    public static final String module = TransformUtil.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     protected TransformUtil() {
     }

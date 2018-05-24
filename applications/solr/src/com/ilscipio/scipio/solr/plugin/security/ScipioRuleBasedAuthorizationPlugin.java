@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 public class ScipioRuleBasedAuthorizationPlugin extends RuleBasedAuthorizationPlugin {
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private static final String module = ScipioRuleBasedAuthorizationPlugin.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected String entityDelegatorName = "default";
 

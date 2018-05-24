@@ -40,7 +40,7 @@ import org.ofbiz.service.ServiceUtil;
 
 public class QuoteServices {
 
-    public static final String module = QuoteServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "OrderUiLabels";
     public static final String resource_error = "OrderErrorUiLabels";
     public static final String resourceProduct = "ProductUiLabels";

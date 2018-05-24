@@ -58,7 +58,7 @@ import org.ofbiz.base.util.UtilMisc;
 @SuppressWarnings("serial")
 public class OrderListState implements Serializable {
 
-    public static final String module = OrderListState.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String SESSION_KEY = "__ORDER_LIST_STATUS__";
     public static final String VIEW_SIZE_PARAM = "viewSize";
     public static final String VIEW_INDEX_PARAM = "viewIndex";

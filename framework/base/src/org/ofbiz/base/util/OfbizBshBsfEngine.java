@@ -56,7 +56,7 @@ import org.ofbiz.base.util.cache.UtilCache;
  */
 public class OfbizBshBsfEngine extends BSFEngineImpl {
 
-    public static final String module = OfbizBshBsfEngine.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected Interpreter interpreter;
     protected boolean installedApplyMethod;

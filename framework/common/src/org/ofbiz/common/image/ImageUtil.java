@@ -28,7 +28,7 @@ import com.ilscipio.scipio.ce.build.util.DependencyGraph;
  * Added 2017-07-10.
  */
 public abstract class ImageUtil {
-    public static final String module = ImageUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String IMAGECOMMON_PROP_RESOURCE = "imagecommon.properties";
     public static final String IMAGECOMMON_PROP_PREFIX = "image.";
     public static final String IMAGEOP_PROP_RESOURCE = "imageops.properties";

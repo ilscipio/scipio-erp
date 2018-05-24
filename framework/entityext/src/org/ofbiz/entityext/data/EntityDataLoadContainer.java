@@ -59,7 +59,7 @@ import org.ofbiz.service.ServiceDispatcher;
  */
 public class EntityDataLoadContainer implements Container {
 
-    public static final String module = EntityDataLoadContainer.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected String overrideDelegator = null;
     protected String overrideGroup = null;

@@ -622,17 +622,27 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         if (isUndefOrNull(value)) {
             value = ai.defaultParams[name] || '';
         }
-//        console.log("elem id: " + elem.prop('id') + " name: " + name + " value: " + value);
-        if (elem.is(':input')) {
+        console.log("elem id: " + elem.prop('id') + " name: " + name + " value: " + value);
+        if (elem.is('input:checkbox')) {
+        	if (value && (value === true || value === "Y"))
+        		elem.attr("checked", true);
+        } else if (elem.is(':input')) {
         	if (name.endsWith("_i18n")) {
         		id = elem.prop('id');
         		newId = "#" + id.substr(0, id.lastIndexOf('_i18n'));
         		elem = jQuery(newId);
-        		console.log("i18n elem id: " + newId + " name: " + elem.prop('name') + " value: " + value);
+        		// console.log("i18n elem id: " + newId + " name: " + elem.prop('name') + " value: " + value);
         	}
-        	if (elem) {
+        	if (elem.hasClass("acctg-inputdate")) {        		
+        		if (value) {
+        			var datetime = new Date(value);        		
+        			elem.val(datetime.toLocaleDateString());
+        		}
+        	} else if (elem) {
         		elem.val(value);
         	}
+        } else if (elem.is('select')) {
+        	elem.val(value);        	
         } else if (elem.hasClass('acctg-displayfield')) {
             elem.html(value);
         } else if (elem.hasClass('acctg-managefield')) {
@@ -664,8 +674,8 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
             }
             if (name.endsWith("_i18n")) {        		
         		name = name.substr(0, name.lastIndexOf('_i18n'));        		
-        		console.log("i18n elem name: " + name);
-        	}        	
+//        		console.log("i18n elem name: " + name);
+        	}
         } else if (elem.hasClass('acctg-displayfield')) {
             name = extractClassNameSuffix(elem, 'acctg-displayfield-for-'); 
         } else if (elem.hasClass('acctg-managefield')) {
@@ -924,7 +934,11 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         if (ai.objectType == "glAccount") {
             params.topGlAccountId = ai.objectId;
         } else if (ai.objectType == "timePeriod") {
-        	params.customTimePeriodId = ai.objectId;
+        	if (ai.actionType === "add") {
+        		params.parentPeriodId = ai.objectId;
+        	} else {
+        		params.customTimePeriodId = ai.objectId;
+        	}
         } else if (ai.node) {
 //            params.topGlAccountId = getNodeObjectId(getTopLevelNode(ai.node))
         }
@@ -1102,7 +1116,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
     };
     */   
     this.execNewTimePeriod = function() {
-        var ai = getActionInfo(null, "newtimeperiod", "default");
+        var ai = getActionInfo(null, "add", "timePeriod");
         var params = makeParamsMap(ai);
         // default params OK
         checkExecConfirm(ai, params, {}, function() {            

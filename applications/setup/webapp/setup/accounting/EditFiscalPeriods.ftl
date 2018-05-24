@@ -17,7 +17,7 @@
 ]>
 <#assign efpActionProps = {
 	"default": {
-        "newtimeperiod": {
+        "add": {
             "type": "form",
             "mode": "show",
             "id": "acctg-newtimeperiod",

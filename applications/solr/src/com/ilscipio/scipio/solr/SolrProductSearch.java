@@ -923,6 +923,7 @@ public abstract class SolrProductSearch {
                 catalogId = (String) context.get("catalogId");
             
             List<String> currentTrail = UtilGenerics.checkList(context.get("currentTrail"));
+            List<String> queryFilters = UtilGenerics.checkList(context.get("queryFilters"));
 
             // 2016-03-22: FIXME?: I think we could call getCategoryNameWithTrail with showDepth=false,
             // instead of check in loop...
@@ -966,7 +967,7 @@ public abstract class SolrProductSearch {
                     // Debug.logInfo("categoryPath: "+categoryPath + "
                     // facetPrefix: "+facetPrefix,module);
                     Map<String, Object> query = SolrCategoryUtil.categoriesAvailable(catalogId, categoryPath,
-                            null, facetPrefix, false, 0, 0, null, excludeVariants);
+                            null, facetPrefix, false, 0, 0, queryFilters, excludeVariants);
                     QueryResponse cat = (QueryResponse) query.get("rows");
                     Long subNumFound = (Long) query.get("numFound");
                     if (subNumFound != null) {

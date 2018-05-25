@@ -361,6 +361,8 @@ public abstract class SolrCategoryUtil {
             if (catalogId != null)
                 solrQuery.addFilterQuery("+catalog:" + SolrExprUtil.escapeTermFull(catalogId));
             
+            SolrQueryUtil.addFilterQueries(solrQuery, queryFilters);
+            
             if (excludeVariants == null) excludeVariants = SolrProductSearch.excludeVariantsDefault;
             if (excludeVariants)
                 SolrProductUtil.addExcludeVariantsFilter(solrQuery);

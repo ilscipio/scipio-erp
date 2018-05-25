@@ -472,6 +472,9 @@ under the License.
         <attribute mode="IN" optional="true" name="currentTrail" type="java.util.List"/>
         <attribute mode="IN" optional="true" name="excludeVariants" type="Boolean"/><!-- default true (added 2017-09-14) -->
         <attribute mode="IN" name="core" optional="true" type="String" />
+        <attribute mode="IN" optional="true" name="queryFilters" type="List">
+            <description>List of strings, each used as-is as a filter (no splitting).</description>
+        </attribute>
         <attribute name="numFound" type="Long" mode="OUT" optional="false"/>
         <attribute name="categories" type="java.util.Map" mode="OUT" optional="true"/>
     </service>

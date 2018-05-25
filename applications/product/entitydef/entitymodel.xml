@@ -3939,7 +3939,7 @@ under the License.
       <field name="splitPayPrefPerShpGrp" type="indicator"><description>Default N. If Y then before the order is stored the OrderPaymentPreference record will be split, one for each OrderItemShipGroup.</description></field>
       <field name="managedByLot" type="indicator"><description>If Y, the preparator can choose the InventoryItem by this lotId when he makes the picklist.</description></field>
       <field name="showOutOfStockProducts" type="indicator"><description>Default Y. If N then out of stock products will not be displayed on site</description></field>
-      <field name="orderDecimalQuantity" type="indicator"><description>use to indicate if decimal quantity can be ordered for this producStore. Default value is Y</description></field>
+      <field name="orderDecimalQuantity" type="indicator"><description>use to indicate if decimal quantity can be ordered for this productStore. Default value is Y</description></field>
         
         <!-- old fields, deprecated -->
         <field name="oldStyleSheet" col-name="STYLE_SHEET" type="url"></field>

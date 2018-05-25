@@ -190,10 +190,17 @@ public class ProductServices {
                 } else if ("error".equals(emptyAction)) {
                     Debug.logError(errMsg + " for product " + productId, module);
                     return ServiceUtil.returnError(errMsg);
-                } else { // SCIPIO: default (stock): "warn"
+                } else if ("warn".equals(emptyAction)) {
                     // ToDo DO 2004-02-23 Where should the errMsg go?
                     Debug.logWarning(errMsg + " for product " + productId, module);
                     //return ServiceUtil.returnError(errMsg);
+                } else {
+                    // SCIPIO: 2018-05-25: changed the default to print no warning (success) -
+                    // this service is constantly called in situations where it's normal
+                    // for it to return no features
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose(errMsg + " for product " + productId, module);
+                    }
                 }
             }
         }

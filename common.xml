@@ -590,7 +590,8 @@ under the License.
         </if>
     </target>
     <target name="lib-dep-report-core" depends="ivy-init,do-lib-resolve">
-        <ivy:report conf="${lib.resolve.confs}" todir="lib-depreport"/>
+        <basename file="./" property="component.dir"/>
+        <ivy:report conf="${lib.resolve.confs}" todir="${ofbiz.home.dir}/runtime/analysis/lib-dep-report/${component.dir}"/>
     </target>
     
     <target name="lib-dep-checkupdates" description="Check for library dependency updates">

@@ -133,6 +133,7 @@
         <dependency org="com.thoughtworks.xstream" name="xstream" rev="1.4.10" conf="base,sources"/>
         <!--<dependency org="xpp3" name="xpp3" rev="1.1.4c" conf="base,sources"/> xstream dep: now fetched via xpp3-core + xmlpull transitive deps -->
         <dependency org="org.owasp.esapi" name="esapi" rev="2.1.0.1" conf="base,sources"/>
+        <dependency org="org.owasp.antisamy" name="antisamy" rev="1.5.7" conf="base,sources"/><!-- esapi dependency -->
         <dependency org="com.googlecode.owasp-java-html-sanitizer" name="owasp-java-html-sanitizer" rev="r239" conf="base,sources"/>
         <dependency org="com.fasterxml.jackson.core" name="jackson-annotations" rev="2.9.5" conf="base,sources"/>
         <dependency org="com.fasterxml.jackson.core" name="jackson-core" rev="2.9.5" conf="base,sources"/>
@@ -367,7 +368,7 @@
         -->
 
         <!-- deps for main build.xml ant task: download-activemq -->
-        <dependency org="org.apache.activemq" name="activemq-all" rev="5.15.3" conf="activemq"/>
+        <dependency org="org.apache.activemq" name="activemq-all" rev="5.15.4" conf="activemq"/>
 
         <!-- deps for main build.xml ant task: download-cobertura -->
         <dependency org="net.sourceforge.cobertura" name="cobertura" rev="1.9.4.1" conf="cobertura">

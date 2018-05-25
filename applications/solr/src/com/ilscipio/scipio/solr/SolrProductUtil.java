@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -573,6 +574,12 @@ public abstract class SolrProductUtil {
                         productStore, currencyUomId, defaultProductLocale, useCache);
             }
             
+            Map<String, Object> fields = getGenSolrDocFieldsMap(dispatchContext);
+            Timestamp salesDiscDate = product.getTimestamp("salesDiscontinuationDate");
+            if (salesDiscDate != null) {
+                fields.put("salesDiscDate_dt", salesDiscDate);
+            }
+            
             // 2017-09-12: added missing ProductKeyword lookup, otherwise can't input keywords from ofbiz
             Set<String> keywords = new LinkedHashSet<>();
             // NOTE: for variant products, we also include the keywords from the virtual/parent
@@ -584,6 +591,18 @@ public abstract class SolrProductUtil {
             Debug.logError(e, "Solr: getProductContent: " + e.getMessage(), module);
         }
         return dispatchContext;
+    }
+    
+    /**
+     * Gets or creates and stores the unabstracted "fields" map for addToSolrIndex.
+     */
+    protected static Map<String, Object> getGenSolrDocFieldsMap(Map<String, Object> dispatchContext) {
+        Map<String, Object> fields = UtilGenerics.checkMap(dispatchContext.get("fields"));
+        if (fields == null) {
+            fields = new HashMap<>();
+            dispatchContext.put("fields", fields);
+        }
+        return fields;
     }
     
     protected static void getProductKeywords(Collection<String> keywords, Delegator delegator, boolean useCache, String... productIds) throws GenericEntityException {

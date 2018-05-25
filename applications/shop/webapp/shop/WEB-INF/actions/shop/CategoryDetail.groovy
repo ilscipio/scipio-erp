@@ -49,10 +49,7 @@ try {
     viewSize = context.viewSize;
     viewIndex = context.viewIndex;
     currIndex = context.currIndex;
-    
-    catArgs = context.catArgs ? new HashMap(context.catArgs) : new HashMap();
-    catArgs.queryFilters = catArgs.queryFilters ? new ArrayList(catArgs.queryFilters) : new ArrayList();
-    
+
     if (!localVarsOnly) {
         if (!productCategoryId) {
             productCategoryId = request.getAttribute("productCategoryId");
@@ -70,15 +67,14 @@ try {
     
     context.productCategoryId = productCategoryId;
     currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
-    
-    if (productStore.showDiscontinuedProducts != "Y") { // 2018-05-24: Product.salesDiscontinuationDate filter (default on)
-        catArgs.queryFilters.add(SolrExprUtil.makeDateFieldAfterOrUnsetExpr("salesDiscDate_dt", nowTimestamp));
-    }
-    
+
+    catArgs = context.catArgs ? new HashMap(context.catArgs) : new HashMap();
+    catArgs.queryFilters = catArgs.queryFilters ? new ArrayList(catArgs.queryFilters) : new ArrayList();
+
     // get the product category & members
     result = dispatcher.runSync("solrProductsSearch",
-        [productCategoryId:productCategoryId, queryFilters: catArgs.queryFilters, viewSize:viewSize, viewIndex:viewIndex, 
-         locale:context.locale, userLogin:context.userLogin, timeZone:context.timeZone],
+        [productStore:productStore, productCategoryId:productCategoryId, queryFilters: catArgs.queryFilters, useDefaultFilters:catArgs.useDefaultFilters,
+         filterTimestamp:nowTimestamp, viewSize:viewSize, viewIndex:viewIndex, locale:context.locale, userLogin:context.userLogin, timeZone:context.timeZone],
         -1, true); // SEPARATE TRANSACTION so error doesn't crash screen
     if (!ServiceUtil.isSuccess(result)) {
         throw new Exception("Error in solrProductsSearch: " + ServiceUtil.getErrorMessage(result));
@@ -87,6 +83,7 @@ try {
     productCategory = delegator.findOne("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId), true);
     solrProducts = result.results;
     
+    /* SCIPIO: 2018-05-25: this is now done as part of solrProductsSearch by default
     // Prevents out of stock product to be displayed on site
     productStore = ProductStoreWorker.getProductStore(request);
     if(productStore) {
@@ -100,11 +97,12 @@ try {
                     }
                 }
             }
-            context.solrProducts = productsInStock;
-        } else {
-            context.solrProducts = solrProducts;
+            solrProducts = productsInStock;
         }
     }
+    */
+    
+    context.solrProducts = solrProducts;
     
     /*
     subCatList = [];

@@ -53,16 +53,12 @@ if (curCategoryId) {
     catArgs = context.catArgs ? new HashMap(context.catArgs) : new HashMap();
     catArgs.queryFilters = catArgs.queryFilters ? new ArrayList(catArgs.queryFilters) : new ArrayList();
 
-    if (productStore.showDiscontinuedProducts != "Y") { // 2018-05-24: Product.salesDiscontinuationDate filter (default on)
-        catArgs.queryFilters.add(SolrExprUtil.makeDateFieldAfterOrUnsetExpr("salesDiscDate_dt", nowTimestamp));
-    }
-
     try {
         // TODO?: cache results?
         result = dispatcher.runSync("solrSideDeepCategory",
-            [productCategoryId:curCategoryId, catalogId:currentCatalogId, 
-             currentTrail:currentTrail, queryFilters:catArgs.queryFilters,
-             locale:context.locale, userLogin:context.userLogin, timeZone:context.timeZone],
+            [productStore:productStore, productCategoryId:curCategoryId, catalogId:currentCatalogId, 
+             currentTrail:currentTrail, queryFilters:catArgs.queryFilters, useDefaultFilters:catArgs.useDefaultFilters,
+             filterTimestamp:nowTimestamp, locale:context.locale, userLogin:context.userLogin, timeZone:context.timeZone],
             -1, true); // SEPARATE TRANSACTION so error doesn't crash screen
         if (!ServiceUtil.isSuccess(result)) {
             throw new Exception("Error in solrSideDeepCategory: " + ServiceUtil.getErrorMessage(result));

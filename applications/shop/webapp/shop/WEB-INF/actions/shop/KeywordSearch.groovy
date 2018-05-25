@@ -196,7 +196,6 @@ try {
     kwsArgs.priceSortField = kwsArgs.priceSortField ?: "exists"; // "min", "exists", "exact"
     //kwsArgs.spellcheck = kwsArgs.spellcheck;
     //kwsArgs.facet = kwsArgs.facet; // boolean, default false
-    //kwsArgs.filterSalesDisc = kwsArgs.filterSalesDisc; // boolean, default true // 2018-05-24: Product.salesDiscontinuationDate filter
     
     if (!localVarsOnly) {
         // REUSE the stock class where possibly so we might maintain some compatibility, duplicate less code,
@@ -562,10 +561,6 @@ if (!errorOccurred && ("Y".equals(kwsArgs.noConditionFind) || kwsArgs.searchStri
             kwsArgs.searchFilters.add("+catalog:(" + catalogFilter.toString() + ")");
         }
         
-        if (productStore.showDiscontinuedProducts != "Y") { // 2018-05-24: Product.salesDiscontinuationDate filter (default on)
-            kwsArgs.searchFilters.add(SolrExprUtil.makeDateFieldAfterOrUnsetExpr("salesDiscDate_dt", nowTimestamp));
-        }
-        
         if (kwsArgs.searchCategories) {
             catExprList = [];
             for (category in kwsArgs.searchCategories) {
@@ -669,6 +664,9 @@ if (!errorOccurred && ("Y".equals(kwsArgs.noConditionFind) || kwsArgs.searchStri
             queryFields: queryFields?:null,
             queryParams: kwsArgs.queryParams,
             excludeVariants: kwsArgs.excludeVariants,
+            filterTimestamp: nowTimestamp, // 2018-05-25
+            productStore: productStore, // 2018-05-25
+            useDefaultFilters:kwsArgs.useDefaultFilters,
             locale: locale, 
             userLogin: context.userLogin, 
             timeZone: context.timeZone

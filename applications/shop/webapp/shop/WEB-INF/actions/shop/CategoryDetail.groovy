@@ -28,6 +28,7 @@ import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.category.CategoryContentWrapper;
 import org.ofbiz.product.category.CategoryWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
+import com.ilscipio.scipio.solr.*;
 
 // SCIPIO: NOTE: This script is responsible for checking whether solr is applicable (if no check, implies the shop assumes solr is always enabled).
 
@@ -40,11 +41,17 @@ if (localVarsOnly == null) {
 }
 context.remove("localVarsOnly");
 
+nowTimestamp = context.nowTimestamp ?: UtilDateTime.nowTimestamp();
+productStore = context.productStore ?: ProductStoreWorker.getProductStore(request);
+
 try {
     productCategoryId = context.productCategoryId;
     viewSize = context.viewSize;
     viewIndex = context.viewIndex;
     currIndex = context.currIndex;
+    
+    catArgs = context.catArgs ? new HashMap(context.catArgs) : new HashMap();
+    catArgs.queryFilters = catArgs.queryFilters ? new ArrayList(catArgs.queryFilters) : new ArrayList();
     
     if (!localVarsOnly) {
         if (!productCategoryId) {
@@ -64,9 +71,13 @@ try {
     context.productCategoryId = productCategoryId;
     currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
     
+    if (productStore.showDiscontinuedProducts != "Y") { // 2018-05-24: Product.salesDiscontinuationDate filter (default on)
+        catArgs.queryFilters.add(SolrExprUtil.makeDateFieldAfterOrUnsetExpr("salesDiscDate_dt", nowTimestamp));
+    }
+    
     // get the product category & members
     result = dispatcher.runSync("solrProductsSearch",
-        [productCategoryId:productCategoryId, viewSize:viewSize, viewIndex:viewIndex, 
+        [productCategoryId:productCategoryId, queryFilters: catArgs.queryFilters, viewSize:viewSize, viewIndex:viewIndex, 
          locale:context.locale, userLogin:context.userLogin, timeZone:context.timeZone],
         -1, true); // SEPARATE TRANSACTION so error doesn't crash screen
     if (!ServiceUtil.isSuccess(result)) {

@@ -133,6 +133,7 @@
         <dependency org="com.thoughtworks.xstream" name="xstream" rev="1.4.10" conf="base,sources"/>
         <!--<dependency org="xpp3" name="xpp3" rev="1.1.4c" conf="base,sources"/> xstream dep: now fetched via xpp3-core + xmlpull transitive deps -->
         <dependency org="org.owasp.esapi" name="esapi" rev="2.1.0.1" conf="base,sources"/>
+        <dependency org="org.owasp.antisamy" name="antisamy" rev="1.5.7" conf="base,sources"/><!-- esapi dependency -->
         <dependency org="com.googlecode.owasp-java-html-sanitizer" name="owasp-java-html-sanitizer" rev="r239" conf="base,sources"/>
         <dependency org="com.fasterxml.jackson.core" name="jackson-annotations" rev="2.9.5" conf="base,sources"/>
         <dependency org="com.fasterxml.jackson.core" name="jackson-core" rev="2.9.5" conf="base,sources"/>

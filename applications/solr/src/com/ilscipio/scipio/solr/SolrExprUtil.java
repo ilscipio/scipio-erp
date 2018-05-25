@@ -590,4 +590,20 @@ public abstract class SolrExprUtil {
     public static String formatTimestampForQuote(Date timestamp) {
         return DateTimeFormatter.ISO_INSTANT.format(timestamp.toInstant());
     }
+
+    /**
+     * Creates a filter expression that returns documents with the given date field after the passed timestamp
+     * or having the field unset.
+     */
+    public static String makeDateFieldAfterOrUnsetExpr(String fieldName, Date timestamp) {
+        return "((*:* NOT " + fieldName + ":*) OR " + fieldName + ":[" + formatTimestampForQuote(timestamp) + " TO *])";
+    }
+
+    /**
+     * Creates a filter expression that returns documents with the given date field before the passed timestamp
+     * or having the field unset.
+     */
+    public static String makeDateFieldBeforeOrUnsetExpr(String fieldName, Date timestamp) {
+        return "((*:* NOT " + fieldName + ":*) OR " + fieldName + ":[* TO " + formatTimestampForQuote(timestamp) + "])";
+    }
 }

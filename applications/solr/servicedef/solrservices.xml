@@ -364,9 +364,8 @@ under the License.
                 (default: ProductStore.showDiscontinuedProductsDefault, or false)</description>
         </attribute>
         <attribute mode="IN" optional="true" name="excludeVariants" type="Boolean">
-            <description>If true, exclude variant products (default: true)
-                NOTE: 2018-05-25: This filters does not have a ProductStore setting at current time; generally
-                    stores want to exclude variants.</description>
+            <description>If true, exclude variant products
+                (default: ProductStore.prodSearchExcludeVariants, or true)</description>
         </attribute>
         <attribute mode="IN" optional="true" name="filterTimestamp" type="java.sql.Timestamp"/><!-- added 2018-05-25 -->
     </service>

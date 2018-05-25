@@ -92,11 +92,6 @@ public abstract class SolrProductUtil {
     
     public static final String PRODUCTFIELD_SALESDISCDATE = "salesDiscDate_dt";
 
-    static final boolean excludeVariantsDefault = UtilProperties.getPropertyAsBoolean("shop", "shop.filters.product.excludeVariants.default", true);
-    // NOTE: these should be configured on ProductStore entity rather than properties
-    static final boolean showOutOfStockProductsDefault = UtilProperties.getPropertyAsBoolean("shop", "shop.filters.product.showOutOfStockProducts.default", true);
-    static final boolean showDiscontinuedProductsDefault = UtilProperties.getPropertyAsBoolean("shop", "shop.filters.product.showDiscontinuedProducts.default", true);
-
     private static final Map<String, Object> defaultUserProductSearchConfig;
     static {
         Map<String, Object> config = null;
@@ -1001,21 +996,21 @@ public abstract class SolrProductUtil {
         Timestamp filterTimestamp = (Timestamp) context.get("filterTimestamp");
         if (filterTimestamp == null) filterTimestamp = UtilDateTime.nowTimestamp();
         
-        Boolean useStockFilter = (Boolean) context.get("useStockFilter"); // default TRUE
+        Boolean useStockFilter = (Boolean) context.get("useStockFilter"); // default FALSE
         if (Boolean.TRUE.equals(useStockFilter) || 
             (useStockFilter == null && productStore != null && Boolean.FALSE.equals(productStore.getBoolean("showOutOfStockProducts")))) {
             queryFilters.add("inStock:[1 TO *]");
         }
         
-        Boolean useDiscFilter = (Boolean) context.get("useDiscFilter"); // default TRUE
+        Boolean useDiscFilter = (Boolean) context.get("useDiscFilter"); // default FALSE
         if (Boolean.TRUE.equals(useDiscFilter) || 
             (useDiscFilter == null && productStore != null && Boolean.FALSE.equals(productStore.getBoolean("showDiscontinuedProducts")))) {
             queryFilters.add(SolrExprUtil.makeDateFieldAfterOrUnsetExpr(SolrProductUtil.PRODUCTFIELD_SALESDISCDATE, filterTimestamp));
         }
 
-        Boolean excludeVariants = (Boolean) context.get("excludeVariants");
-        if (excludeVariants == null) excludeVariants = SolrProductUtil.excludeVariantsDefault;
-        if (excludeVariants) {
+        Boolean excludeVariants = (Boolean) context.get("excludeVariants"); // default TRUE
+        if (Boolean.TRUE.equals(excludeVariants) ||
+            (excludeVariants == null && (productStore == null || !Boolean.FALSE.equals(productStore.getBoolean("prodSearchExcludeVariants"))))) {
             SolrProductUtil.addExcludeVariantsFilter(queryFilters);
         }
     }

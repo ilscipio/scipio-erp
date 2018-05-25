@@ -356,17 +356,17 @@ under the License.
                 requested with the explicit filter flags (default: true)</description>
         </attribute>
         <attribute mode="IN" optional="true" name="useStockFilter" type="Boolean"><!-- added 2018-05-25 -->
-            <description>If true, filter out products with no inventory (default: ProductStore.showOutOfStockProducts, otherwise true)
-                NOTE: In Scipio the default ProductStore.showOutOfStockProducts setting is effectively "N", 
-                instead of "Y" as in stock Ofbiz/ecommerce.</description>
+            <description>If true, filter out products with no inventory 
+                (default: ProductStore.showOutOfStockProducts, or false)</description>
         </attribute>
         <attribute mode="IN" optional="true" name="useDiscFilter" type="Boolean"><!-- added 2018-05-25 -->
-            <description>If true, filter out products past their Product.salesDiscontinuationDate date (default: ProductStore.showOutOfStockProducts, otherwise true)</description>
+            <description>If true, filter out products past their Product.salesDiscontinuationDate date 
+                (default: ProductStore.showDiscontinuedProductsDefault, or false)</description>
         </attribute>
         <attribute mode="IN" optional="true" name="excludeVariants" type="Boolean">
             <description>If true, exclude variant products (default: true)
-                NOTE: 2018-05-25: This filters does NOT have a ProductStore setting at current time; generally
-                    all stores want to exclude variants.</description>
+                NOTE: 2018-05-25: This filters does not have a ProductStore setting at current time; generally
+                    stores want to exclude variants.</description>
         </attribute>
         <attribute mode="IN" optional="true" name="filterTimestamp" type="java.sql.Timestamp"/><!-- added 2018-05-25 -->
     </service>

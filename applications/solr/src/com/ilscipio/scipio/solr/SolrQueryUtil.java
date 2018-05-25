@@ -64,8 +64,9 @@ public abstract class SolrQueryUtil {
      * Product inventory and Product.salesDiscontinuationDate, with options corresponding
      * to the attributes of the solrDefaultQueryFilters service interface.
      * <p>
-     * NOTE: In Scipio the default ProductStore.showOutOfStockProducts setting is
-     * effectively "N", instead of "Y" as in stock Ofbiz/ecommerce.
+     * NOTE: The defaults for ProductStore.showOutOfStockProducts and ProductStore.showDiscontinuedProducts
+     * is FALSE (inherited from stock ofbiz; see entitymodel.xml descriptions for ProductStore).
+     * The default for excludeVariants is TRUE.
      */
     public static void addDefaultQueryFilters(List<String> queryFilters, Map<String, ?> context) {
         if (!Boolean.FALSE.equals(context.get("useDefaultFilters"))) {
@@ -74,12 +75,8 @@ public abstract class SolrQueryUtil {
     }
 
     /**
-     * Adds the default/common query filters for products, including filters for
-     * Product inventory and Product.salesDiscontinuationDate, with options corresponding
-     * to the attributes of the solrDefaultQueryFilters service interface.
-     * <p>
-     * NOTE: In Scipio the default ProductStore.showOutOfStockProducts setting is
-     * effectively "N", instead of "Y" as in stock Ofbiz/ecommerce.
+     * Adds the default/common query filters for products.
+     * @see #addDefaultQueryFilters(List, Map)
      */
     public static void addDefaultQueryFilters(SolrQuery solrQuery, Map<String, ?> context) {
         List<String> queryFilters = new ArrayList<>();

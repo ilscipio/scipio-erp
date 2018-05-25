@@ -246,7 +246,7 @@ try {
             kwCatalogCnsts = [];
             kwCategoryCnsts = [];
             kwFeatureCnsts = [];
-            kwExcludeVariants = false;
+            kwExcludeVariants = null;
             
             for(ProductSearchConstraint psc in pscList) {
                 if (psc instanceof ProductSearch.ExcludeVariantsConstraint) {

@@ -8,19 +8,18 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrRequest.METHOD;
-import org.apache.solr.client.solrj.impl.HttpSolrClient;
-import org.apache.solr.client.solrj.response.QueryResponse;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.category.CategoryWorker;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ServiceDispatcher;
 
 /**
  * Product category util class for solr.
@@ -123,6 +122,7 @@ public abstract class SolrCategoryUtil {
      * Can be gotten using {@link org.ofbiz.product.category.CategoryWorker#getCategoryPathFromTrailAsList}.
      */
     public static String getCategoryNameWithTrail(String productCategoryId, String catalogId, Boolean showDepth, DispatchContext dctx, List<String> currentTrail) {
+        if (productCategoryId == null) return null;
         List<List<String>> trailElements = SolrCategoryUtil.getCategoryTrail(productCategoryId, dctx);
         StringBuilder catMember = new StringBuilder();
         String cm = "";
@@ -330,75 +330,35 @@ public abstract class SolrCategoryUtil {
         }
     }
     
+    /**
+     * @deprecated 2018-05-25: use the solrAvailableCategories or solrSideDeepCategory services instead.
+     */
+    @Deprecated
     public static Map<String, Object> categoriesAvailable(String catalogId, String categoryId, String productId, 
             boolean displayproducts, int viewIndex, int viewSize, List<String> queryFilters, Boolean excludeVariants) {
         return categoriesAvailable(catalogId, categoryId, productId, null, displayproducts, viewIndex, viewSize, queryFilters, excludeVariants, null);
     }
     
+    /**
+     * @deprecated 2018-05-25: use the solrAvailableCategories or solrSideDeepCategory services instead.
+     */
+    @Deprecated
     public static Map<String, Object> categoriesAvailable(String catalogId, String categoryId, String productId, 
             String facetPrefix, boolean displayproducts, int viewIndex, int viewSize, List<String> queryFilters, Boolean excludeVariants) {
         return categoriesAvailable(catalogId, categoryId, productId, facetPrefix, displayproducts, viewIndex, viewSize, queryFilters, excludeVariants, null);
     }
 
+    /**
+     * @deprecated 2018-05-25: use the solrAvailableCategories or solrSideDeepCategory services instead.
+     */
+    @Deprecated
     public static Map<String, Object> categoriesAvailable(String catalogId, String categoryId, String productId, 
             String facetPrefix, boolean displayproducts, int viewIndex, int viewSize, List<String> queryFilters, Boolean excludeVariants, String core) {
-        // create the data model
-        Map<String, Object> result = new HashMap<>();
-        HttpSolrClient client = null;
-        QueryResponse returnMap = new QueryResponse();
-        try {
-            // do the basic query
-            client = SolrUtil.getQueryHttpSolrClient(core);
-            // create Query Object
-            String query = "inStock[1 TO *]";
-            if (categoryId != null)
-                query += " +cat:"+ SolrExprUtil.escapeTermFull(categoryId);
-            else if (productId != null)
-                query += " +productId:" + SolrExprUtil.escapeTermFull(productId);
-            SolrQuery solrQuery = new SolrQuery();
-            solrQuery.setQuery(query);
-
-            if (catalogId != null)
-                solrQuery.addFilterQuery("+catalog:" + SolrExprUtil.escapeTermFull(catalogId));
-            
-            SolrQueryUtil.addFilterQueries(solrQuery, queryFilters);
-            
-            if (excludeVariants == null) excludeVariants = SolrProductSearch.excludeVariantsDefault;
-            if (excludeVariants)
-                SolrProductUtil.addExcludeVariantsFilter(solrQuery);
-            
-            if (displayproducts) {
-                if (viewSize > -1) {
-                    solrQuery.setRows(viewSize);
-                } else
-                    solrQuery.setRows(50000);
-                if (viewIndex > -1) {
-                    // 2016-04-01: This must be calculated
-                    //solrQuery.setStart(viewIndex);
-                    if (viewSize > 0) {
-                        solrQuery.setStart(viewSize * viewIndex);
-                    }
-                }
-            } else {
-                solrQuery.setFields("cat");
-                solrQuery.setRows(0);
-            }
-            
-            if(UtilValidate.isNotEmpty(facetPrefix)){
-                solrQuery.setFacetPrefix(facetPrefix);
-            }
-            
-            solrQuery.setFacetMinCount(0);
-            solrQuery.setFacet(true);
-            solrQuery.addFacetField("cat");
-            solrQuery.setFacetLimit(-1);
-            if (Debug.verboseOn()) Debug.logVerbose("solr: solrQuery: " + solrQuery, module);
-            returnMap = client.query(solrQuery,METHOD.POST);
-            result.put("rows", returnMap);
-            result.put("numFound", returnMap.getResults().getNumFound());
-        } catch (Exception e) {
-            Debug.logError(e.getMessage(), module);
-        }
-        return result;
+        LocalDispatcher dispatcher = ServiceDispatcher.getLocalDispatcher("default", DelegatorFactory.getDelegator("default"));
+        Map<String, Object> context = new HashMap<>();
+        context.put("core", core);
+        context.put("queryFilters", queryFilters);
+        context.put("excludeVariants", excludeVariants);
+        return SolrProductSearch.getAvailableCategories(dispatcher.getDispatchContext(), context, catalogId, categoryId, productId, facetPrefix, displayproducts, viewIndex, viewSize);
     }
 }

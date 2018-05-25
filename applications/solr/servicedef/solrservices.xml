@@ -29,6 +29,10 @@ under the License.
         <implements service="permissionInterface"/>
     </service>
 
+    <!-- ========================================================= -->
+    <!-- Status -->
+    <!-- ========================================================= -->
+
     <service name="checkSolrReady" engine="java" use-transaction="false"
         location="com.ilscipio.scipio.solr.SolrProductSearch" invoke="checkSolrReady">
         <description>Checks if Solr webapp is loaded and available for queries</description>
@@ -58,6 +62,35 @@ under the License.
                 If passes this, returns failure. Default: value of solrconfig.properties/solr.service.waitSolrReady.maxChecks</description>
         </attribute>
     </service>
+
+    <service name="setSolrDataStatus" engine="java"
+        location="com.ilscipio.scipio.solr.SolrProductSearch"
+        invoke="setSolrDataStatus">
+        <description>Set SOLR data status ID</description>
+        <attribute mode="IN" name="dataStatusId" optional="false" type="String" />
+    </service>
+
+    <service name="markSolrDataDirty" engine="java"
+        location="com.ilscipio.scipio.solr.SolrProductSearch"
+        invoke="setSolrDataStatus">
+        <attribute mode="IN" name="dataStatusId" optional="true" type="String" default-value="SOLR_DATA_OLD"/>
+    </service>
+
+    <!-- ========================================================= -->
+    <!-- Security -->
+    <!-- ========================================================= -->
+    
+    <service name="reloadSolrSecurityAuthorizations" engine="java"
+        use-transaction="false"
+        location="com.ilscipio.scipio.solr.SolrProductSearch"
+        invoke="reloadSolrSecurityAuthorizations">
+        <description>Reloads the security authorizations defined in security.json</description>
+        <permission-service service-name="solrGenericPermission" main-action="ADMIN"/>
+    </service>
+
+    <!-- ========================================================= -->
+    <!-- Indexing -->
+    <!-- ========================================================= -->
 
     <!-- Rebuild the Solr Tree -->
     <!-- NOTE: 2017-08-30: Now using semaphore="wait" (same as purgeOldJobs) to try to prevent concurrent executions
@@ -115,19 +148,6 @@ under the License.
             <description>see solrconfig.properties/solr.index.rebuild.clearAndUseCache</description>
         </attribute>
         <attribute mode="IN" name="waitSolrReady" optional="true" type="Boolean"/>
-    </service>
-    
-    <service name="setSolrDataStatus" engine="java"
-        location="com.ilscipio.scipio.solr.SolrProductSearch"
-        invoke="setSolrDataStatus">
-        <description>Set SOLR data status ID</description>
-        <attribute mode="IN" name="dataStatusId" optional="false" type="String" />
-    </service>
-    
-    <service name="markSolrDataDirty" engine="java"
-        location="com.ilscipio.scipio.solr.SolrProductSearch"
-        invoke="setSolrDataStatus">
-        <attribute mode="IN" name="dataStatusId" optional="true" type="String" default-value="SOLR_DATA_OLD"/>
     </service>
 
     <service name="updateToSolrCommonInterface" engine="interface">
@@ -266,130 +286,10 @@ under the License.
         <attribute mode="OUT" name="errorType" optional="true" type="String" />
     </service>
 
-    <!--  Solr Queries  -->
-    <service name="solrProductsSearch" engine="java"
-        transaction-timeout="72000"
-        location="com.ilscipio.scipio.solr.SolrProductSearch"
-        invoke="productsSearch">
-        <description>Run a query on Solr and return the results</description>
-        <attribute mode="IN" optional="false" name="productCategoryId" type="String"/>
-        <attribute mode="IN" optional="true" name="includeSubCategories" type="Boolean">
-            <description>default: true (legacy behavior)</description>
-        </attribute>
-        <attribute mode="IN" optional="true" name="viewSize" type="Object">
-            <description>Supports String, Integer (2017-09-11)</description>
-        </attribute>
-        <attribute mode="IN" optional="true" name="viewIndex" type="Object">
-            <description>Supports String, Integer (2017-09-11)</description>
-        </attribute>
-        <attribute mode="IN" optional="true" name="sortBy" type="String"/>
-        <attribute mode="IN" optional="true" name="sortByReverse" type="Boolean"/>
-        <attribute mode="IN" optional="true" name="queryFilters" type="List">
-            <description>List of strings, each used as-is as a filter (no splitting).
-                NOTE: excludeVariants param adds a filter to this list, pass excludeVariants=false to prevent</description>
-        </attribute>
-        <attribute mode="IN" optional="true" name="queryParams" type="Map">
-            <description>Optional manual extra query options; NOTE: using above options is preferred when possible for better future-proofing of queries</description>
-        </attribute>
-        <attribute mode="IN" optional="true" name="highlight" type="Boolean"/><!-- default: false -->
-        <attribute mode="IN" optional="true" name="excludeVariants" type="Boolean"/><!-- default true (added 2017-09-14) -->
-        <attribute mode="IN" optional="true" name="solrUsername" type="String">
-            <description>Username for Solr basic authentication (default: solrconfig.properties/solr.query.login.username)</description>
-        </attribute>
-        <attribute mode="IN" optional="true" name="solrPassword" type="String">
-            <description>Password for Solr basic authentication (default: solrconfig.properties/solr.query.login.password)</description>
-        </attribute>
-        <attribute name="results" type="List" mode="OUT" optional="true"/>
-        <attribute name="start" type="Long" mode="OUT" optional="true"/>
-        <attribute name="viewSize" type="Integer" mode="OUT" optional="true"/>
-        <attribute name="viewIndex" type="Integer" mode="OUT" optional="true"/>
-        <attribute name="listSize" type="Long" mode="OUT" optional="true"/>
-        <attribute name="errorType" type="String" mode="OUT" optional="true">
-            <description>"query-syntax" for query syntax error, "general" otherwise (if error occurred) (added 2017-08-25)</description>
-        </attribute>
-        <attribute name="nestedErrorMessage" type="String" mode="OUT" optional="true">
-            <description>Specific error message for the error, IF available (added 2017-08-25)</description>
-        </attribute>
-    </service>
-    
-    <service name="solrKeywordSearch" engine="java"
-        transaction-timeout="72000"
-        location="com.ilscipio.scipio.solr.SolrProductSearch"
-        invoke="keywordSearch">
-        <description>Run a query on Solr and return the results</description>
-        <attribute mode="IN" optional="false" name="query" type="String"/>
-        <attribute mode="IN" optional="true" name="viewSize" type="Object">
-            <description>Supports String or Integer (2017-09-11)</description>
-        </attribute>
-        <attribute mode="IN" optional="true" name="viewIndex" type="Object">
-            <description>Supports String or Integer (2017-09-11)</description>
-        </attribute>
-        <attribute mode="IN" optional="true" name="queryFilter" type="String">
-            <description>WARN: for legacy code reasons, this string is split on whitespace to produce multiple filters.
-                    To avoid splitting, use queryFilters instead (with one entry).</description>
-        </attribute>
-        <attribute mode="IN" optional="true" name="queryFilters" type="List">
-            <description>List of strings, each used as-is as a filter (no splitting).
-                NOTE: excludeVariants param adds a filter to this list, pass excludeVariants=false to prevent</description>
-        </attribute>
-        <attribute mode="IN" optional="true" name="sortBy" type="String"/>
-        <attribute mode="IN" optional="true" name="sortByReverse" type="Boolean"/>
-        <attribute mode="IN" optional="true" name="returnFields" type="String"/>
-        <attribute mode="IN" optional="true" name="facetQuery" type="String"/>
-        <attribute mode="IN" optional="true" name="queryType" type="String">
-            <description>Name of a request handler defined in solrconfig.xml (starts with /)</description>
-        </attribute>
-        <attribute mode="IN" optional="true" name="defType" type="String">
-            <description>Query language def handler type (dismax, edismax, ...), overrides the request handler</description>
-        </attribute>
-        <attribute mode="IN" optional="true" name="defaultOp" type="String">
-            <description>OR or AND (default depends on configuration, usually OR); NOTE: Not honored by all defTypes (edismax supports)</description>
-        </attribute>
-        <attribute mode="IN" optional="true" name="queryFields" type="String">
-            <description>For edismax defType only: the target fields to query, usually space-separated ("qf" parameter)</description>
-        </attribute>
-        <attribute mode="IN" optional="true" name="queryParams" type="Map">
-            <description>Optional manual extra query options; NOTE: using above options is preferred when possible for better future-proofing of queries</description>
-        </attribute>
-        <attribute mode="IN" optional="true" name="facet" type="Boolean"/><!-- default: false (changed 2017-09) -->
-        <attribute mode="IN" optional="true" name="spellcheck" type="Boolean"/><!-- default: false (changed 2017-09) -->
-        <attribute mode="IN" optional="true" name="spellDict" type="Object"/><!-- String or List -->
-        <attribute mode="IN" optional="true" name="highlight" type="Boolean"/><!-- default: false (changed 2017-09) -->
-        <attribute mode="IN" optional="true" name="excludeVariants" type="Boolean"/><!-- default true (added 2017-09-14) -->
-        <attribute mode="IN" optional="true" name="solrUsername" type="String">
-            <description>Username for Solr basic authentication (default: solrconfig.properties/solr.query.login.username)</description>
-        </attribute>
-        <attribute mode="IN" optional="true" name="solrPassword" type="String">
-            <description>Password for Solr basic authentication (default: solrconfig.properties/solr.query.login.password)</description>
-        </attribute>
-        <attribute name="results" type="List" mode="OUT" optional="true"/>
-        <attribute name="isCorrectlySpelled" type="Boolean" mode="OUT" optional="true">
-            <description>Correctly-spelled flag - set if spellcheck was enabled
-                WARN: May not behave as you might expect: https://issues.apache.org/jira/browse/SOLR-4278
-                Can return false even if tokenSuggestions and fullSuggestions are empty</description>
-        </attribute>
-        <attribute name="facetQueries" type="Map" mode="OUT" optional="true"/>
-        <attribute name="facetFields" type="Map" mode="OUT" optional="true"/>
-        <attribute name="start" type="Long" mode="OUT" optional="true"/>
-        <attribute name="viewSize" type="Integer" mode="OUT" optional="true"/>
-        <attribute name="viewIndex" type="Integer" mode="OUT" optional="true"/>
-        <attribute name="listSize" type="Long" mode="OUT" optional="true"/>
-        <attribute name="queryTime" type="Long" mode="OUT" optional="true"/>
-        <attribute name="suggestions" type="List" mode="OUT" optional="true"/><!-- DEPRECATED (2017-09-14): always returns null -->
-        <attribute name="tokenSuggestions" type="Map" mode="OUT" optional="true">
-            <description>Maps token to lists of suggestions - set if spellcheck was enabled (added 2017-09-14)</description>
-        </attribute>
-        <attribute name="fullSuggestions" type="List" mode="OUT" optional="true">
-            <description>List of strings - spellcheck suggestions in collated format - set if spellcheck was enabled (added 2017-09-14)</description>
-        </attribute>
-        <attribute name="errorType" type="String" mode="OUT" optional="true">
-            <description>"query-syntax" for query syntax error, "general" otherwise (if error occurred) (added 2017-08-25)</description>
-        </attribute>
-        <attribute name="nestedErrorMessage" type="String" mode="OUT" optional="true">
-            <description>Specific error message for the error, IF available (added 2017-08-25)</description>
-        </attribute>
-    </service>
-    
+    <!-- ========================================================= -->
+    <!-- Querying -->
+    <!-- ========================================================= -->
+
     <service name="runSolrQuery" engine="java"
         transaction-timeout="72000"
         location="com.ilscipio.scipio.solr.SolrProductSearch"
@@ -444,20 +344,169 @@ under the License.
             <description>Specific error message for the error, IF available (added 2017-08-25)</description>
         </attribute>
     </service>
+
+    <service name="solrDefaultQueryFilters" engine="interface">
+        <attribute mode="IN" name="core" optional="true" type="String" />
+        <attribute mode="IN" optional="true" name="productStore" type="GenericValue"><!-- added 2018-05-25 -->
+            <description>Product store (used to determine the product filtering defaults)</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="useDefaultFilters" type="Boolean"><!-- added 2018-05-25 -->
+            <description>If true, unless overridden with the explicit filter flags, the product stock and discontinuation filters 
+                are applied based on the ProductStore configuration; if false, filters are not applied unless explicitly
+                requested with the explicit filter flags (default: true)</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="useStockFilter" type="Boolean"><!-- added 2018-05-25 -->
+            <description>If true, filter out products with no inventory (default: ProductStore.showOutOfStockProducts, otherwise true)
+                NOTE: In Scipio the default ProductStore.showOutOfStockProducts setting is effectively "N", 
+                instead of "Y" as in stock Ofbiz/ecommerce.</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="useDiscFilter" type="Boolean"><!-- added 2018-05-25 -->
+            <description>If true, filter out products past their Product.salesDiscontinuationDate date (default: ProductStore.showOutOfStockProducts, otherwise true)</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="excludeVariants" type="Boolean">
+            <description>If true, exclude variant products (default: true)
+                NOTE: 2018-05-25: This filters does NOT have a ProductStore setting at current time; generally
+                    all stores want to exclude variants.</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="filterTimestamp" type="java.sql.Timestamp"/><!-- added 2018-05-25 -->
+    </service>
+
+    <service name="solrSearchCommon" engine="interface">
+        <implements service="solrDefaultQueryFilters"/>
+        <attribute mode="IN" name="core" optional="true" type="String" />
+        <attribute mode="IN" optional="true" name="queryFilters" type="List">
+            <description>List of strings, each used as-is as a filter (no splitting).</description>
+        </attribute>
+    </service>
+
+    <service name="solrProductsSearch" engine="java"
+        transaction-timeout="72000"
+        location="com.ilscipio.scipio.solr.SolrProductSearch"
+        invoke="productsSearch">
+        <description>Run a query on Solr and return the results</description>
+        <implements service="solrSearchCommon"/>
+        <attribute mode="IN" optional="false" name="productCategoryId" type="String"/>
+        <attribute mode="IN" optional="true" name="includeSubCategories" type="Boolean">
+            <description>default: true (legacy behavior)</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="viewSize" type="Object">
+            <description>Supports String, Integer (2017-09-11)</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="viewIndex" type="Object">
+            <description>Supports String, Integer (2017-09-11)</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="sortBy" type="String"/>
+        <attribute mode="IN" optional="true" name="sortByReverse" type="Boolean"/>
+        <attribute mode="IN" optional="true" name="queryParams" type="Map">
+            <description>Optional manual extra query options; NOTE: using above options is preferred when possible for better future-proofing of queries</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="highlight" type="Boolean"/><!-- default: false -->
+        <attribute mode="IN" optional="true" name="solrUsername" type="String">
+            <description>Username for Solr basic authentication (default: solrconfig.properties/solr.query.login.username)</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="solrPassword" type="String">
+            <description>Password for Solr basic authentication (default: solrconfig.properties/solr.query.login.password)</description>
+        </attribute>
+        <attribute name="results" type="List" mode="OUT" optional="true"/>
+        <attribute name="start" type="Long" mode="OUT" optional="true"/>
+        <attribute name="viewSize" type="Integer" mode="OUT" optional="true"/>
+        <attribute name="viewIndex" type="Integer" mode="OUT" optional="true"/>
+        <attribute name="listSize" type="Long" mode="OUT" optional="true"/>
+        <attribute name="errorType" type="String" mode="OUT" optional="true">
+            <description>"query-syntax" for query syntax error, "general" otherwise (if error occurred) (added 2017-08-25)</description>
+        </attribute>
+        <attribute name="nestedErrorMessage" type="String" mode="OUT" optional="true">
+            <description>Specific error message for the error, IF available (added 2017-08-25)</description>
+        </attribute>
+    </service>
+
+    <service name="solrKeywordSearch" engine="java"
+        transaction-timeout="72000"
+        location="com.ilscipio.scipio.solr.SolrProductSearch"
+        invoke="keywordSearch">
+        <description>Run a query on Solr and return the results</description>
+        <implements service="solrSearchCommon"/>
+        <attribute mode="IN" optional="false" name="query" type="String"/>
+        <attribute mode="IN" optional="true" name="viewSize" type="Object">
+            <description>Supports String or Integer (2017-09-11)</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="viewIndex" type="Object">
+            <description>Supports String or Integer (2017-09-11)</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="queryFilter" type="String">
+            <description>WARN: for legacy code reasons, this string is split on whitespace to produce multiple filters.
+                    To avoid splitting, use queryFilters instead (with one entry).</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="sortBy" type="String"/>
+        <attribute mode="IN" optional="true" name="sortByReverse" type="Boolean"/>
+        <attribute mode="IN" optional="true" name="returnFields" type="String"/>
+        <attribute mode="IN" optional="true" name="facetQuery" type="String"/>
+        <attribute mode="IN" optional="true" name="queryType" type="String">
+            <description>Name of a request handler defined in solrconfig.xml (starts with /)</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="defType" type="String">
+            <description>Query language def handler type (dismax, edismax, ...), overrides the request handler</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="defaultOp" type="String">
+            <description>OR or AND (default depends on configuration, usually OR); NOTE: Not honored by all defTypes (edismax supports)</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="queryFields" type="String">
+            <description>For edismax defType only: the target fields to query, usually space-separated ("qf" parameter)</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="queryParams" type="Map">
+            <description>Optional manual extra query options; NOTE: using above options is preferred when possible for better future-proofing of queries</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="facet" type="Boolean"/><!-- default: false (changed 2017-09) -->
+        <attribute mode="IN" optional="true" name="spellcheck" type="Boolean"/><!-- default: false (changed 2017-09) -->
+        <attribute mode="IN" optional="true" name="spellDict" type="Object"/><!-- String or List -->
+        <attribute mode="IN" optional="true" name="highlight" type="Boolean"/><!-- default: false (changed 2017-09) -->
+        <attribute mode="IN" optional="true" name="solrUsername" type="String">
+            <description>Username for Solr basic authentication (default: solrconfig.properties/solr.query.login.username)</description>
+        </attribute>
+        <attribute mode="IN" optional="true" name="solrPassword" type="String">
+            <description>Password for Solr basic authentication (default: solrconfig.properties/solr.query.login.password)</description>
+        </attribute>
+        <attribute name="results" type="List" mode="OUT" optional="true"/>
+        <attribute name="isCorrectlySpelled" type="Boolean" mode="OUT" optional="true">
+            <description>Correctly-spelled flag - set if spellcheck was enabled
+                WARN: May not behave as you might expect: https://issues.apache.org/jira/browse/SOLR-4278
+                Can return false even if tokenSuggestions and fullSuggestions are empty</description>
+        </attribute>
+        <attribute name="facetQueries" type="Map" mode="OUT" optional="true"/>
+        <attribute name="facetFields" type="Map" mode="OUT" optional="true"/>
+        <attribute name="start" type="Long" mode="OUT" optional="true"/>
+        <attribute name="viewSize" type="Integer" mode="OUT" optional="true"/>
+        <attribute name="viewIndex" type="Integer" mode="OUT" optional="true"/>
+        <attribute name="listSize" type="Long" mode="OUT" optional="true"/>
+        <attribute name="queryTime" type="Long" mode="OUT" optional="true"/>
+        <attribute name="suggestions" type="List" mode="OUT" optional="true"/><!-- DEPRECATED (2017-09-14): always returns null -->
+        <attribute name="tokenSuggestions" type="Map" mode="OUT" optional="true">
+            <description>Maps token to lists of suggestions - set if spellcheck was enabled (added 2017-09-14)</description>
+        </attribute>
+        <attribute name="fullSuggestions" type="List" mode="OUT" optional="true">
+            <description>List of strings - spellcheck suggestions in collated format - set if spellcheck was enabled (added 2017-09-14)</description>
+        </attribute>
+        <attribute name="errorType" type="String" mode="OUT" optional="true">
+            <description>"query-syntax" for query syntax error, "general" otherwise (if error occurred) (added 2017-08-25)</description>
+        </attribute>
+        <attribute name="nestedErrorMessage" type="String" mode="OUT" optional="true">
+            <description>Specific error message for the error, IF available (added 2017-08-25)</description>
+        </attribute>
+    </service>
     
     <service name="solrAvailableCategories" engine="java"
         transaction-timeout="72000"
         location="com.ilscipio.scipio.solr.SolrProductSearch"
         invoke="getAvailableCategories">
         <description>Run a query on Solr and return the results</description>
+        <implements service="solrSearchCommon"/>
         <attribute mode="IN" optional="true" name="productCategoryId" type="String"/>
         <attribute mode="IN" optional="true" name="productId" type="String"/>
         <attribute mode="IN" optional="true" name="catalogId" type="String"/>
-        <attribute mode="IN" optional="true" name="currentTrail" type="java.util.List"/>
+        <attribute mode="IN" optional="true" name="currentTrail" type="List"/>
         <attribute mode="IN" optional="true" name="displayProducts" type="Boolean"/>
         <attribute mode="IN" optional="true" name="viewSize" type="Integer"/>
         <attribute mode="IN" optional="true" name="viewIndex" type="Integer"/>
-        <attribute mode="IN" optional="true" name="excludeVariants" type="Boolean"/><!-- default true (added 2017-09-14) -->
         <attribute name="numFound" type="Long" mode="OUT" optional="false"/>
         <attribute name="categories" type="java.util.Map" mode="OUT" optional="true"/>
     </service>
@@ -467,24 +516,12 @@ under the License.
         location="com.ilscipio.scipio.solr.SolrProductSearch"
         invoke="getSideDeepCategories">
         <description>Run a query on Solr and return the results</description>
+        <implements service="solrSearchCommon"/>
         <attribute mode="IN" optional="false" name="productCategoryId" type="String"/>
         <attribute mode="IN" optional="true" name="catalogId" type="String"/>
-        <attribute mode="IN" optional="true" name="currentTrail" type="java.util.List"/>
-        <attribute mode="IN" optional="true" name="excludeVariants" type="Boolean"/><!-- default true (added 2017-09-14) -->
-        <attribute mode="IN" name="core" optional="true" type="String" />
-        <attribute mode="IN" optional="true" name="queryFilters" type="List">
-            <description>List of strings, each used as-is as a filter (no splitting).</description>
-        </attribute>
+        <attribute mode="IN" optional="true" name="currentTrail" type="List"/>
         <attribute name="numFound" type="Long" mode="OUT" optional="false"/>
         <attribute name="categories" type="java.util.Map" mode="OUT" optional="true"/>
     </service>
-    
-    <service name="reloadSolrSecurityAuthorizations" engine="java"
-        use-transaction="false"
-        location="com.ilscipio.scipio.solr.SolrProductSearch"
-        invoke="reloadSolrSecurityAuthorizations">
-        <description>Reloads the security authorizations defined in security.json</description>
-        <permission-service service-name="solrGenericPermission" main-action="ADMIN"/>
-    </service>
-    
+
 </services>

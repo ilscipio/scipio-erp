@@ -22,6 +22,7 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.common.SolrInputDocument;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
@@ -89,6 +90,10 @@ public abstract class SolrProductUtil {
         PRODSIMPLEFIELDMAP_SOLR_TO_ENTITY = Collections.unmodifiableMap(solrEntMap);
     }
     
+    public static final String PRODUCTFIELD_SALESDISCDATE = "salesDiscDate_dt";
+
+    static final boolean excludeVariantsDefault = true;
+
     private static final Map<String, Object> defaultUserProductSearchConfig;
     static {
         Map<String, Object> config = null;
@@ -980,4 +985,32 @@ public abstract class SolrProductUtil {
         solrQuery.addFilterQuery("-isVariant:true");
     }
     
+    /**
+     * Adds the default product filters, for solr service implementations.
+     * @see SolrQueryUtil#addDefaultQueryFilters
+     */
+    public static void addDefaultProductFilters(List<String> queryFilters, Map<String, ?> context) {
+        GenericValue productStore = (GenericValue) context.get("productStore");
+        Timestamp filterTimestamp = (Timestamp) context.get("filterTimestamp");
+        if (filterTimestamp == null) filterTimestamp = UtilDateTime.nowTimestamp();
+        
+        // IMPORTANT NOTE: In Scipio we have logically changed the showOutOfStockProducts default from Y to N!
+        Boolean useStockFilter = (Boolean) context.get("useStockFilter"); // default TRUE
+        if (Boolean.TRUE.equals(useStockFilter) || 
+            (useStockFilter == null && (productStore == null || !Boolean.TRUE.equals(productStore.getBoolean("showOutOfStockProducts"))))) {
+            queryFilters.add("inStock[1 TO *]");
+        }
+        
+        Boolean useDiscFilter = (Boolean) context.get("useDiscFilter"); // default TRUE
+        if (Boolean.TRUE.equals(useDiscFilter) || 
+            (useDiscFilter == null && (productStore == null || !Boolean.TRUE.equals(productStore.getBoolean("showDiscontinuedProducts"))))) {
+            queryFilters.add(SolrExprUtil.makeDateFieldAfterOrUnsetExpr(SolrProductUtil.PRODUCTFIELD_SALESDISCDATE, filterTimestamp));
+        }
+
+        Boolean excludeVariants = (Boolean) context.get("excludeVariants");
+        if (excludeVariants == null) excludeVariants = SolrProductUtil.excludeVariantsDefault;
+        if (excludeVariants) {
+            SolrProductUtil.addExcludeVariantsFilter(queryFilters);
+        }
+    }
 }

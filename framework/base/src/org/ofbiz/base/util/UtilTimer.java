@@ -107,7 +107,7 @@ public class UtilTimer {
 
         lastMessage = message;
         String retString = retBuf.toString();
-        if (log) Debug.log(Debug.TIMING, null, retString, module, "org.ofbiz.base.util.UtilTimer");
+        if (log) Debug.log(Debug.TIMING, null, retString, module != null ? module : Debug.getOfbizLogger(), "org.ofbiz.base.util.UtilTimer"); // SCIPIO: 2018-05-25: handle null module
 
         // have lastMessageTime come as late as possible to just time what happens between calls
         lastMessageTime = System.currentTimeMillis();
@@ -245,7 +245,7 @@ public class UtilTimer {
 
         if (timer.getLog()) {
             if (module == null) {
-                module = UtilTimer.module; // SCIPIO
+                module = UtilTimer.module; // SCIPIO: 2018-05-25: default to timer module, for this method (stock behavior)
             }
             timer.timerString(message, module);
         }

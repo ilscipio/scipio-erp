@@ -90,7 +90,7 @@ function getAssociatedStateListEx(options) {
     
     var countryGeoId = jQuery("#" + countryId).val();
     var requestToSend = "getAssociatedStateList";
-    if (jQuery('#orderViewed')) {
+    if (jQuery('#orderViewed').length) {
         requestToSend = "/ordermgr/control/getAssociatedStateList"
     }
     // SCIPIO: check for async

@@ -1,8 +1,10 @@
 package com.ilscipio.scipio.solr;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -576,4 +578,32 @@ public abstract class SolrExprUtil {
         sb.append(")");
     }
 
+    /**
+     * Formats a timestamp in Solr-recognized format for insertion in
+     * double-quotes or range expression.
+     * <p>
+     * Currently (2018-05-25) this formats in 
+     * {@link java.time.format.DateTimeFormatter#ISO_INSTANT} format.
+     * <p>
+     * Added 2018-05-25.
+     */
+    public static String formatTimestampForQuote(Date timestamp) {
+        return DateTimeFormatter.ISO_INSTANT.format(timestamp.toInstant());
+    }
+
+    /**
+     * Creates a filter expression that returns documents with the given date field after the passed timestamp
+     * or having the field unset.
+     */
+    public static String makeDateFieldAfterOrUnsetExpr(String fieldName, Date timestamp) {
+        return "((*:* NOT " + fieldName + ":*) OR " + fieldName + ":[" + formatTimestampForQuote(timestamp) + " TO *])";
+    }
+
+    /**
+     * Creates a filter expression that returns documents with the given date field before the passed timestamp
+     * or having the field unset.
+     */
+    public static String makeDateFieldBeforeOrUnsetExpr(String fieldName, Date timestamp) {
+        return "((*:* NOT " + fieldName + ":*) OR " + fieldName + ":[* TO " + formatTimestampForQuote(timestamp) + "])";
+    }
 }

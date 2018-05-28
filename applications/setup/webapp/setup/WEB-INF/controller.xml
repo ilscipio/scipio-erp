@@ -136,6 +136,8 @@
         <response name="success" type="view" value="SetupAccounting"/>
         <response name="error" type="view" value="SetupError"/>
     </request-map>
+    
+        <!-- GlAccounts -->
     <request-map uri="setupAddGlAccount">
         <security https="true" auth="true"/>        
         <response name="success" type="view" value="SetupAccounting"/>
@@ -165,7 +167,20 @@
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupAccounting"/>
     </request-map>
+    <request-map uri="setupAssignGlAccount">
+        <security https="true" auth="true"/>
+        <!-- TODO -->
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
+    <request-map uri="setupImportGlAccounts">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="importGlAccounts"/>
+        <response name="success" type="view" value="SetupAccounting"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
     
+        <!-- Time Periods -->
     <request-map uri="setupCreateTimePeriod">
         <security https="true" auth="true"/>
         <event type="service" invoke="createCustomTimePeriod"/>
@@ -180,23 +195,12 @@
     </request-map>
     <request-map uri="setupDeleteTimePeriod">
         <security https="true" auth="true"/>
-        <!-- TODO -->
+        <event type="service" invoke="deleteCustomTimePeriod"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupAccounting"/>
     </request-map>
-    
-    <request-map uri="setupAssignGlAccount">
-        <security https="true" auth="true"/>
-        <!-- TODO -->
-        <response name="success" type="request" value="nextSetupStep"/>
-        <response name="error" type="request" value="setupAccounting"/>
-    </request-map>
-    <request-map uri="setupImportGlAccounts">
-        <security https="true" auth="true"/>
-        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="importGlAccounts"/>
-        <response name="success" type="view" value="SetupAccounting"/>
-        <response name="error" type="request" value="setupAccounting"/>
-    </request-map>
+
+        <!-- Preferences -->
     <request-map uri="setupCreateAccountingPreferences">
         <security https="true" auth="true"/>
         <event type="service" invoke="createPartyAcctgPreference"/>
@@ -208,7 +212,9 @@
         <event type="service" invoke="setupUpdatePartyAcctgPreference"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupAccounting"/>
-    </request-map>    
+    </request-map>   
+    
+        <!-- Accounting transactions --> 
     <request-map uri="setupExportDatevDataCategory">
         <security https="true" auth="true"/>
         <event type="simple" path="component://accounting/script/com/ilscipio/scipio/accounting/datev/DatevEvents.xml" invoke="exportDatevDataCategory"/>

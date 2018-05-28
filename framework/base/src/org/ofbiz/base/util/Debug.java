@@ -393,7 +393,14 @@ public final class Debug {
          * For Groovy, the module name can simply be specified as "MyScriptName.groovy".
          */
         public static OfbizLogger getInstance(String module) {
-            return new OfbizLogger(Debug.getLogger(module));
+            return UtilValidate.isNotEmpty(module) ? new OfbizLogger(Debug.getLogger(module)) : rootOfbizLogger;
+        }
+
+        /**
+         * Returns the root OfbizLogger logger wrapper.
+         */
+        public static OfbizLogger getInstance() {
+            return rootOfbizLogger;
         }
 
         public Logger getLogger() {
@@ -680,6 +687,13 @@ public final class Debug {
         return OfbizLogger.getInstance(module);
     }
 
+    /**
+     * Returns the root OfbizLogger logger wrapper.
+     */
+    public static OfbizLogger getOfbizLogger() {
+        return OfbizLogger.getInstance();
+    }
+
     /*
      * *********************************************************************
      * SCIPIO: OfbizLogger overloads
@@ -712,7 +726,7 @@ public final class Debug {
             }
 
             // log
-            (logger != null ? logger.log4jLogger : Debug.root).log(levelObjs[level], msg, t);
+            logger.log4jLogger.log(levelObjs[level], msg, t);
         }
     }
 

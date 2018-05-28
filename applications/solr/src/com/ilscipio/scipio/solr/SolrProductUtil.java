@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -21,6 +22,7 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.common.SolrInputDocument;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
@@ -88,6 +90,8 @@ public abstract class SolrProductUtil {
         PRODSIMPLEFIELDMAP_SOLR_TO_ENTITY = Collections.unmodifiableMap(solrEntMap);
     }
     
+    public static final String PRODUCTFIELD_SALESDISCDATE = "salesDiscDate_dt";
+
     private static final Map<String, Object> defaultUserProductSearchConfig;
     static {
         Map<String, Object> config = null;
@@ -573,6 +577,12 @@ public abstract class SolrProductUtil {
                         productStore, currencyUomId, defaultProductLocale, useCache);
             }
             
+            Map<String, Object> fields = getGenSolrDocFieldsMap(dispatchContext);
+            Timestamp salesDiscDate = product.getTimestamp("salesDiscontinuationDate");
+            if (salesDiscDate != null) {
+                fields.put("salesDiscDate_dt", salesDiscDate);
+            }
+            
             // 2017-09-12: added missing ProductKeyword lookup, otherwise can't input keywords from ofbiz
             Set<String> keywords = new LinkedHashSet<>();
             // NOTE: for variant products, we also include the keywords from the virtual/parent
@@ -584,6 +594,18 @@ public abstract class SolrProductUtil {
             Debug.logError(e, "Solr: getProductContent: " + e.getMessage(), module);
         }
         return dispatchContext;
+    }
+    
+    /**
+     * Gets or creates and stores the unabstracted "fields" map for addToSolrIndex.
+     */
+    protected static Map<String, Object> getGenSolrDocFieldsMap(Map<String, Object> dispatchContext) {
+        Map<String, Object> fields = UtilGenerics.checkMap(dispatchContext.get("fields"));
+        if (fields == null) {
+            fields = new HashMap<>();
+            dispatchContext.put("fields", fields);
+        }
+        return fields;
     }
     
     protected static void getProductKeywords(Collection<String> keywords, Delegator delegator, boolean useCache, String... productIds) throws GenericEntityException {
@@ -961,4 +983,35 @@ public abstract class SolrProductUtil {
         solrQuery.addFilterQuery("-isVariant:true");
     }
     
+    /**
+     * Adds the default product filters, for solr service implementations.
+     * <p>
+     * NOTE: The defaults for ProductStore.showOutOfStockProducts and ProductStore.showDiscontinuedProducts
+     * is FALSE (inherited from stock ofbiz; see entitymodel.xml descriptions for ProductStore).
+     * The default for excludeVariants is TRUE.
+     * @see SolrQueryUtil#addDefaultQueryFilters
+     */
+    public static void addDefaultProductFilters(List<String> queryFilters, Map<String, ?> context) {
+        GenericValue productStore = (GenericValue) context.get("productStore");
+        Timestamp filterTimestamp = (Timestamp) context.get("filterTimestamp");
+        if (filterTimestamp == null) filterTimestamp = UtilDateTime.nowTimestamp();
+        
+        Boolean useStockFilter = (Boolean) context.get("useStockFilter"); // default FALSE
+        if (Boolean.TRUE.equals(useStockFilter) || 
+            (useStockFilter == null && productStore != null && Boolean.FALSE.equals(productStore.getBoolean("showOutOfStockProducts")))) {
+            queryFilters.add("inStock:[1 TO *]");
+        }
+        
+        Boolean useDiscFilter = (Boolean) context.get("useDiscFilter"); // default FALSE
+        if (Boolean.TRUE.equals(useDiscFilter) || 
+            (useDiscFilter == null && productStore != null && Boolean.FALSE.equals(productStore.getBoolean("showDiscontinuedProducts")))) {
+            queryFilters.add(SolrExprUtil.makeDateFieldAfterOrUnsetExpr(SolrProductUtil.PRODUCTFIELD_SALESDISCDATE, filterTimestamp));
+        }
+
+        Boolean excludeVariants = (Boolean) context.get("excludeVariants"); // default TRUE
+        if (Boolean.TRUE.equals(excludeVariants) ||
+            (excludeVariants == null && (productStore == null || !Boolean.FALSE.equals(productStore.getBoolean("prodSearchExcludeVariants"))))) {
+            SolrProductUtil.addExcludeVariantsFilter(queryFilters);
+        }
+    }
 }

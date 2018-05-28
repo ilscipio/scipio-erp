@@ -31,46 +31,13 @@ under the License.
 <#assign params = paramMaps.values>
 <#assign fixedParams = paramMaps.fixedValues>
 
-<@form method="post" action=makeOfbizUrl(target) id=submitFormId name=submitFormId validate=setupFormValidate>
-    <@defaultWizardFormFields exclude=["topGlAccountId"] />
-    <@field type="hidden" name="isCreateGl" value=(topAccountGlId??)?string("N","Y")/> 
-    
-    <#assign fieldsRequired = true>
-    
-    <#if topGlAccount??>
-        <@field type="display" name="topGlAccountId" value=(topGlAccount.glAccountId!) label=uiLabelMap.CommonId />
-    <#else>
-        <@field type="text" name="topGlAccountId" value=(params.topGlAccountId!) label=uiLabelMap.CommonId />    
-    </#if>
-    
-    <@field type="text" name="accountCode" value=(params.accountCode!) label=uiLabelMap.CommonCode />
-    <@field type="text" name="accountName" value=(params.accountName!) label=uiLabelMap.CommonName />
-    
-    <@field type="select" name="glAccountTypeId">
-      <option value="" <#if params.glAccountTypeId?has_content> selected="selected"</#if>></option>
-      <#list glAccountTypes as glAccountType>
-        <#assign selected = (rawString(params.glAccountTypeId!) == (glAccountType.glAccountTypeId!))>
-        <option value="${glAccountType.glAccountTypeId!}"<#if selected> selected="selected"</#if>>${glAccountType.description!}</option>
-      </#list>
-    </@field>
-    
-    <@field type="select" name="glAccountClassId">
-      <option value="" <#if params.glAccountClassId?has_content> selected="selected"</#if>></option>
-      <#list glAccountClasses as glAccountClass>
-        <#assign selected = (rawString(params.glAccountClassId!) == (glAccountClass.glAccountClassId!))>
-        <option value="${glAccountClass.glAccountClassId!}"<#if selected> selected="selected"</#if>>${glAccountClass.description!}</option>
-      </#list>
-    </@field>
-    
-    <@field type="select" name="glResourceTypeId">
-      <option value="" <#if params.glResourceTypeId?has_content> selected="selected"</#if>></option>
-      <#list glResourceTypes as glResourceType>
-        <#assign selected = (rawString(params.glResourceTypeId!) == (glResourceType.glResourceTypeId!))>
-        <option value="${glResourceType.glResourceTypeId!}"<#if selected> selected="selected"</#if>>${glResourceType.description!}</option>
-      </#list>
-    </@field>
-    
-    <@field type="textarea" name="description" cols="30" rows="3" value=(params.description!) required=false label=uiLabelMap.CommonDescription />
-
-</@form>
+<@tabs id="accountingTabs">
+	<@tab id="preferencesTab" title="Preferences"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditAcctgPreferences"/></@tab>
+	<@tab id="glAccountsTab" title="Configure GL Accounts">
+		<@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditGLAccountTree" />
+	</@tab>
+	<@tab id="fiscalPeriodsTab" title="Configure Fiscal Periods"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditFiscalPeriods"/></@tab>
+	<@tab id="accountingTransactionsTab" title="Configure Accounting Transactions"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditAccountingTransactions"/></@tab>
+	<@tab id="journalTab" title="Configure Journal"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditJournals"/></@tab>
+</@tabs>     
 

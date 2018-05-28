@@ -41,18 +41,24 @@ curCategoryId = parameters.category_id ?: parameters.CATEGORY_ID ?: request.getA
 //curProductId = parameters.product_id ?: "" ?: parameters.PRODUCT_ID ?: "";    
 topCategoryId = CatalogWorker.getCatalogTopCategoryId(request, currentCatalogId);
 
+nowTimestamp = context.nowTimestamp ?: UtilDateTime.nowTimestamp();
+productStore = context.productStore ?: ProductStoreWorker.getProductStore(request);
+
 infoMap = [currentTrail:currentTrail, curCategoryId:curCategoryId];
 
 if (DEBUG) Debug.logVerbose("Category (pre-resolve): " + infoMap, module);
 
 catLevel = null; // use null here, not empty list
 if (curCategoryId) {
+    catArgs = context.catArgs ? new HashMap(context.catArgs) : new HashMap();
+    catArgs.queryFilters = catArgs.queryFilters ? new ArrayList(catArgs.queryFilters) : new ArrayList();
+
     try {
         // TODO?: cache results?
         result = dispatcher.runSync("solrSideDeepCategory",
-            [productCategoryId:curCategoryId, catalogId:currentCatalogId, 
-             currentTrail:currentTrail, 
-             locale:context.locale, userLogin:context.userLogin, timeZone:context.timeZone],
+            [productStore:productStore, productCategoryId:curCategoryId, catalogId:currentCatalogId, 
+             currentTrail:currentTrail, queryFilters:catArgs.queryFilters, useDefaultFilters:catArgs.useDefaultFilters,
+             filterTimestamp:nowTimestamp, locale:context.locale, userLogin:context.userLogin, timeZone:context.timeZone],
             -1, true); // SEPARATE TRANSACTION so error doesn't crash screen
         if (!ServiceUtil.isSuccess(result)) {
             throw new Exception("Error in solrSideDeepCategory: " + ServiceUtil.getErrorMessage(result));

@@ -608,31 +608,13 @@
                                         <!-- don't show tree until at least one topGlAccountId created -->
                                         <not><if-empty field="topGlAccountId"/></not>
                                     </condition>
-                                    <widgets>                                    	
-                                        <screenlet>
-                                        	<platform-specific><html><html-template><![CDATA[                                                
-	                                        	<@tabs id="accountingTabs">
-	                                        		<@tab id="preferencesTab" title="Preferences"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditAcctgPreferences"/></@tab>
-	                                        		<@tab id="glAccountsTab" title="Configure GL Accounts">
-	                                        			<@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditGLAccountTree" />
-	                                        		</@tab>
-	                                        		<@tab id="fiscalPeriodsTab" title="Configure Fiscal Periods"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditFiscalPeriods"/></@tab>
-	                                        		<@tab id="accountingTransactionsTab" title="Configure Accounting Transactions"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditAccountingTransactions"/></@tab>
-	                                        		<@tab id="journalTab" title="Configure Journal"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditJournals"/></@tab>
-	                                        	</@tabs>                                                
-                                        	]]></html-template></html></platform-specific>
-                                        </screenlet>
-                                    </widgets>
-                                    <!-- Commenting this for now; will be enabled once we sort out how to handle an accounting standard creation properly -->
-                                    <!-- 
-                                    <fail-widgets>
+                                    <widgets> 
                                     	<screenlet>                                            
                                             <platform-specific>
                                                 <html><html-template location="component://setup/webapp/setup/accounting/EditAccounting.ftl"/></html>
                                             </platform-specific>
                                         </screenlet>
-                                    </fail-widgets>
-                                    -->
+                                    </widgets>                                    
                                 </section>                              
                             </widgets>
                             <fail-widgets>

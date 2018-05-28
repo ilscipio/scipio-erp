@@ -62,9 +62,7 @@ public abstract class SolrProductSearch {
             "solr.index.rebuild.clearAndUseCache", false);
     private static final String defaultRegisterUpdateToSolrUpdateSrv = UtilProperties.getPropertyValue(SolrUtil.solrConfigName, 
             "solr.service.registerUpdateToSolr.updateSrv", "updateToSolr");
-    
-    static final boolean excludeVariantsDefault = true;
-    
+
     private static boolean reindexAutoForceRan = false;
     private static final String reindexStartupForceSysProp = "scipio.solr.reindex.startup.force";
     private static final String reindexStartupForceConfigProp = "solr.index.rebuild.startup.force";
@@ -692,8 +690,8 @@ public abstract class SolrProductSearch {
             dispatchMap.put("spellcheck", false); // 2017-09: changed to false (always false)
             if (dispatchMap.get("highlight") == null) dispatchMap.put("highlight", false); // 2017-09: default changed to false
             
-            List<String> queryFilters = getEnsureQueryFiltersList(dispatchMap);
-            checkAddExcludeVariantsFilter(queryFilters, context);
+            List<String> queryFilters = getEnsureQueryFiltersModifiable(dispatchMap);
+            SolrQueryUtil.addDefaultQueryFilters(queryFilters, context); // 2018-05-25
             
             Map<String, Object> searchResult = dispatcher.runSync("runSolrQuery", dispatchMap);
             if (ServiceUtil.isFailure(searchResult)) {
@@ -723,27 +721,14 @@ public abstract class SolrProductSearch {
         return dest;
     }
     
-    private static List<String> getEnsureQueryFiltersList(Map<String, Object> context) {
+    private static List<String> getEnsureQueryFiltersModifiable(Map<String, Object> context) {
         List<String> queryFilters = UtilGenerics.checkList(context.get("queryFilters"));
         if (queryFilters != null) queryFilters = new ArrayList<>(queryFilters);
         else queryFilters = new ArrayList<>();
         context.put("queryFilters", queryFilters);
         return queryFilters;
     }
-    
-    /**
-     * 2017-09: IMPORTANT: checks flag to exclude variants, true by default
-     * needed because the categories/catalog/productStore have been corrected for variants but as side effect
-     * they must be excluded in queries like this.
-     */
-    static void checkAddExcludeVariantsFilter(List<String> queryFilters, Map<String, Object> context) {
-        Boolean excludeVariants = (Boolean) context.get("excludeVariants");
-        if (excludeVariants == null) excludeVariants = excludeVariantsDefault;
-        if (excludeVariants) {
-            SolrProductUtil.addExcludeVariantsFilter(queryFilters);
-        }
-    }
-    
+
     /**
      * Performs keyword search.
      * <p>
@@ -766,8 +751,8 @@ public abstract class SolrProductSearch {
             if (dispatchMap.get("spellcheck") == null) dispatchMap.put("spellcheck", false); // 2017-09: default changed to false
             if (dispatchMap.get("highlight") == null) dispatchMap.put("highlight", false); // 2017-09: default changed to false
 
-            List<String> queryFilters = getEnsureQueryFiltersList(dispatchMap);
-            checkAddExcludeVariantsFilter(queryFilters, context);
+            List<String> queryFilters = getEnsureQueryFiltersModifiable(dispatchMap);
+            SolrQueryUtil.addDefaultQueryFilters(queryFilters, context); // 2018-05-25
             
             Map<String, Object> searchResult = dispatcher.runSync("runSolrQuery", dispatchMap);
             if (ServiceUtil.isFailure(searchResult)) {
@@ -856,34 +841,27 @@ public abstract class SolrProductSearch {
     public static Map<String, Object> getAvailableCategories(DispatchContext dctx, Map<String, Object> context) {
         Map<String, Object> result;
         try {
-            boolean displayProducts = false;
-            if (UtilValidate.isNotEmpty(context.get("displayProducts")))
-                displayProducts = (Boolean) context.get("displayProducts");
-
+            boolean displayProducts = Boolean.TRUE.equals(context.get("displayProducts"));
             int viewIndex = 0;
             int viewSize = 9;
             if (displayProducts) {
                 viewIndex = (Integer) context.get("viewIndex");
                 viewSize = (Integer) context.get("viewSize");
             }
-            String catalogId = null;
-            if (UtilValidate.isNotEmpty(context.get("catalogId")))
-                catalogId = (String) context.get("catalogId");
-            
-            Boolean excludeVariants = (Boolean) context.get("excludeVariants");
-            
+            String catalogId = (String) context.get("catalogId");
+            if (catalogId != null && catalogId.isEmpty()) catalogId = null; // TODO: REVIEW: is this necessary?
+
             List<String> currentTrail = UtilGenerics.checkList(context.get("currentTrail"));
-
-            // String productCategoryId = (String)
-            // context.get("productCategoryId") != null ?
-            // CategoryUtil.getCategoryNameWithTrail((String)
-            // context.get("productCategoryId"), catalogId, dctx, currentTrail): null;
-            String productCategoryId = (String) context.get("productCategoryId") != null
-                    ? SolrCategoryUtil.getCategoryNameWithTrail((String) context.get("productCategoryId"), catalogId, dctx, currentTrail) : null;
+            String productCategoryId = SolrCategoryUtil.getCategoryNameWithTrail((String) context.get("productCategoryId"), 
+                    catalogId, dctx, currentTrail);
+            String productId = (String) context.get("productId");
             if (Debug.verboseOn()) Debug.logVerbose("Solr: getAvailableCategories: productCategoryId: " + productCategoryId, module);
-            Map<String, Object> query = SolrCategoryUtil.categoriesAvailable(catalogId, productCategoryId, (String) context.get("productId"), displayProducts,
-                    viewIndex, viewSize, null, excludeVariants);
-
+            Map<String, Object> query = getAvailableCategories(dctx, context, catalogId, productCategoryId, productId, null, 
+                    displayProducts, viewIndex, viewSize);
+            if (ServiceUtil.isError(query)) {
+                throw new Exception(ServiceUtil.getErrorMessage(query));
+            }
+            
             QueryResponse cat = (QueryResponse) query.get("rows");
             result = ServiceUtil.returnSuccess();
             result.put("numFound", (long) 0);
@@ -908,6 +886,73 @@ public abstract class SolrProductSearch {
         } catch (Exception e) {
             result = ServiceUtil.returnError(e.toString());
             result.put("numFound", (long) 0);
+            return result;
+        }
+        return result;
+    }
+    
+    /**
+     * NOTE: This method is package-private for backward compat only and should not be made public; its interface is subject to change.
+     * Client code should call the solrAvailableCategories or solrSideDeepCategory service instead.
+     */
+    static Map<String, Object> getAvailableCategories(DispatchContext dctx, Map<String, Object> context, 
+            String catalogId, String categoryId, String productId, String facetPrefix, boolean displayProducts, int viewIndex, int viewSize) {
+        Map<String, Object> result;
+
+        try {
+            HttpSolrClient client = SolrUtil.getQueryHttpSolrClient((String) context.get("core"));
+            SolrQuery solrQuery = new SolrQuery();
+
+            String query;
+            if (categoryId != null) {
+                query = "+cat:"+ SolrExprUtil.escapeTermFull(categoryId);
+            } else if (productId != null) {
+                query = "+productId:" + SolrExprUtil.escapeTermFull(productId);
+            } else {
+                query = "*:*";
+            }
+            solrQuery.setQuery(query);
+ 
+            if (catalogId != null) {
+                solrQuery.addFilterQuery("+catalog:" + SolrExprUtil.escapeTermFull(catalogId));
+            }
+
+            SolrQueryUtil.addDefaultQueryFilters(solrQuery, context);
+            SolrQueryUtil.addFilterQueries(solrQuery, UtilGenerics.<String>checkList(context.get("queryFilters")));
+            
+            if (displayProducts) {
+                if (viewSize > -1) {
+                    solrQuery.setRows(viewSize);
+                } else
+                    solrQuery.setRows(50000);
+                if (viewIndex > -1) {
+                    // 2016-04-01: This must be calculated
+                    //solrQuery.setStart(viewIndex);
+                    if (viewSize > 0) {
+                        solrQuery.setStart(viewSize * viewIndex);
+                    }
+                }
+            } else {
+                solrQuery.setFields("cat");
+                solrQuery.setRows(0);
+            }
+            
+            if(UtilValidate.isNotEmpty(facetPrefix)){
+                solrQuery.setFacetPrefix(facetPrefix);
+            }
+            
+            solrQuery.setFacetMinCount(0);
+            solrQuery.setFacet(true);
+            solrQuery.addFacetField("cat");
+            solrQuery.setFacetLimit(-1);
+            if (Debug.verboseOn()) Debug.logVerbose("solr: solrQuery: " + solrQuery, module);
+            QueryResponse returnMap = client.query(solrQuery, METHOD.POST);
+            result = ServiceUtil.returnSuccess();
+            result.put("rows", returnMap);
+            result.put("numFound", returnMap.getResults().getNumFound());
+        } catch (Exception e) {
+            Debug.logError(e.getMessage(), module);
+            return ServiceUtil.returnError(e.getMessage());
         }
         return result;
     }
@@ -918,27 +963,21 @@ public abstract class SolrProductSearch {
     public static Map<String, Object> getSideDeepCategories(DispatchContext dctx, Map<String, Object> context) {
         Map<String, Object> result;
         try {
-            String catalogId = null;
-            if (UtilValidate.isNotEmpty(context.get("catalogId")))
-                catalogId = (String) context.get("catalogId");
-            
+            String catalogId = (String) context.get("catalogId");
+            if (catalogId != null && catalogId.isEmpty()) catalogId = null; // TODO: REVIEW: is this necessary?
             List<String> currentTrail = UtilGenerics.checkList(context.get("currentTrail"));
 
             // 2016-03-22: FIXME?: I think we could call getCategoryNameWithTrail with showDepth=false,
             // instead of check in loop...
-            String productCategoryId = (String) context.get("productCategoryId") != null
-                    ? SolrCategoryUtil.getCategoryNameWithTrail((String) context.get("productCategoryId"), catalogId, dctx, currentTrail) : null;
+            String productCategoryId = SolrCategoryUtil.getCategoryNameWithTrail((String) context.get("productCategoryId"), catalogId, dctx, currentTrail);
             result = ServiceUtil.returnSuccess();
             Map<String, List<Map<String, Object>>> catLevel = new HashMap<>();
             if (Debug.verboseOn()) Debug.logVerbose("Solr: getSideDeepCategories: productCategoryId: " + productCategoryId, module);
 
             // Add toplevel categories
             String[] trailElements = productCategoryId.split("/");
-            
-            Boolean excludeVariants = (Boolean) context.get("excludeVariants");
 
             long numFound = 0;
-            
             boolean isFirstElement = true;
             
             // iterate over actual results
@@ -965,8 +1004,11 @@ public abstract class SolrProductSearch {
                     }
                     // Debug.logInfo("categoryPath: "+categoryPath + "
                     // facetPrefix: "+facetPrefix,module);
-                    Map<String, Object> query = SolrCategoryUtil.categoriesAvailable(catalogId, categoryPath,
-                            null, facetPrefix, false, 0, 0, null, excludeVariants);
+                    Map<String, Object> query = getAvailableCategories(dctx, context, catalogId, categoryPath, null, facetPrefix, false, 0, 0);
+                    if (ServiceUtil.isError(query)) {
+                        throw new Exception(ServiceUtil.getErrorMessage(query));
+                    }
+
                     QueryResponse cat = (QueryResponse) query.get("rows");
                     Long subNumFound = (Long) query.get("numFound");
                     if (subNumFound != null) {
@@ -1011,6 +1053,7 @@ public abstract class SolrProductSearch {
         } catch (Exception e) {
             result = ServiceUtil.returnError(e.toString());
             result.put("numFound", (long) 0);
+            return result;
         }
         return result;
     }
@@ -1232,21 +1275,6 @@ public abstract class SolrProductSearch {
         return result;
     }
     
-    private static boolean isReindexStartupForce(Delegator delegator, LocalDispatcher dispatcher) {
-        if (reindexAutoForceRan) return false;
-        synchronized(SolrProductSearch.class) {
-            if (reindexAutoForceRan) return false;
-            reindexAutoForceRan = true;
-            return getReindexStartupForceProperty(delegator, dispatcher, false);
-        }
-    }
-    
-    private static Boolean getReindexStartupForceProperty(Delegator delegator, LocalDispatcher dispatcher, Boolean defaultValue) {
-        Boolean force = UtilMisc.booleanValueVersatile(System.getProperty(reindexStartupForceSysProp));
-        if (force != null) return force;
-        return UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, reindexStartupForceConfigProp, defaultValue);
-    }
-    
     /**
      * Rebuilds the solr index - auto run.
      */
@@ -1320,14 +1348,29 @@ public abstract class SolrProductSearch {
 
         return result;
     }    
-    
+
+    private static boolean isReindexStartupForce(Delegator delegator, LocalDispatcher dispatcher) {
+        if (reindexAutoForceRan) return false;
+        synchronized(SolrProductSearch.class) {
+            if (reindexAutoForceRan) return false;
+            reindexAutoForceRan = true;
+            return getReindexStartupForceProperty(delegator, dispatcher, false);
+        }
+    }
+
+    private static Boolean getReindexStartupForceProperty(Delegator delegator, LocalDispatcher dispatcher, Boolean defaultValue) {
+        Boolean force = UtilMisc.booleanValueVersatile(System.getProperty(reindexStartupForceSysProp));
+        if (force != null) return force;
+        return UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, reindexStartupForceConfigProp, defaultValue);
+    }
+
     /**
      * Rebuilds the solr index - only if dirty.
      */
     public static Map<String, Object> rebuildSolrIndexIfDirty(DispatchContext dctx, Map<String, Object> context) {
         return rebuildSolrIndex(dctx, context);
     }
-    
+
     /**
      * Marks SOLR data as dirty.
      */
@@ -1342,17 +1385,17 @@ public abstract class SolrProductSearch {
         }
         return result;
     }
-    
+
     static void copyStdServiceFieldsNotSet(Map<String, Object> srcCtx, Map<String, Object> destCtx) {
         copyServiceFieldsNotSet(srcCtx, destCtx, "locale", "userLogin", "timeZone");
     }
-    
+
     static void copyServiceFieldsNotSet(Map<String, Object> srcCtx, Map<String, Object> destCtx, String... fieldNames) {
         for(String fieldName : fieldNames) {
             if (!destCtx.containsKey(fieldName)) destCtx.put(fieldName, srcCtx.get(fieldName));
         }
     }
-    
+
     public static Map<String, Object> checkSolrReady(DispatchContext dctx, Map<String, Object> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         boolean enabled = SolrUtil.isSolrWebappEnabled();
@@ -1370,7 +1413,7 @@ public abstract class SolrProductSearch {
         }
         return result;
     }
-    
+
     public static Map<String, Object> waitSolrReady(DispatchContext dctx, Map<String, Object> context) {
         if (!SolrUtil.isSolrWebappEnabled()) {
             return ServiceUtil.returnFailure("Solr webapp not enabled");

@@ -246,7 +246,7 @@ try {
             kwCatalogCnsts = [];
             kwCategoryCnsts = [];
             kwFeatureCnsts = [];
-            kwExcludeVariants = false;
+            kwExcludeVariants = null;
             
             for(ProductSearchConstraint psc in pscList) {
                 if (psc instanceof ProductSearch.ExcludeVariantsConstraint) {
@@ -664,6 +664,9 @@ if (!errorOccurred && ("Y".equals(kwsArgs.noConditionFind) || kwsArgs.searchStri
             queryFields: queryFields?:null,
             queryParams: kwsArgs.queryParams,
             excludeVariants: kwsArgs.excludeVariants,
+            filterTimestamp: nowTimestamp, // 2018-05-25
+            productStore: productStore, // 2018-05-25
+            useDefaultFilters:kwsArgs.useDefaultFilters,
             locale: locale, 
             userLogin: context.userLogin, 
             timeZone: context.timeZone

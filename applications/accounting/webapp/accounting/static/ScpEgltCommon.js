@@ -622,7 +622,7 @@ function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js f
         if (isUndefOrNull(value)) {
             value = ai.defaultParams[name] || '';
         }
-        console.log("elem id: " + elem.prop('id') + " name: " + name + " value: " + value);
+        // console.log("elem id: " + elem.prop('id') + " name: " + name + " value: " + value);
         if (elem.is('input:checkbox')) {
         	if (value && (value === true || value === "Y"))
         		elem.attr("checked", true);

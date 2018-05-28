@@ -180,7 +180,7 @@
     </request-map>
     <request-map uri="setupDeleteTimePeriod">
         <security https="true" auth="true"/>
-        <!-- TODO -->
+        <event type="service" invoke="deleteCustomTimePeriod"/>
         <response name="success" type="request" value="nextSetupStep"/>
         <response name="error" type="request" value="setupAccounting"/>
     </request-map>

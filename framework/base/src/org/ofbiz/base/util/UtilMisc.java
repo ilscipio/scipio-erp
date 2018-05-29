@@ -1420,4 +1420,66 @@ public class UtilMisc {
     public static <K, V> Map<K, V> toLinkedHashMapWithoutKeys(Map<? extends K, ? extends V> inMap, K... keys) {
         return toLinkedHashMapWithoutKeys(inMap, new HashSet<>(Arrays.asList(keys)));
     }
+    
+    /**
+     * SCIPIO: For each map in the given collection, extracts the value for the specified key and adds
+     * it to the given outValueCollection.
+     * Added 2018-05-29.
+     */
+    @SuppressWarnings("unchecked")
+    public static <K, V, T extends V, C extends Collection<T>> C extractValuesForKey(Collection<? extends Map<K, V>> mapList, 
+            K key, C outValueCollection) {
+        for(Map<K, V> map : mapList) {
+            outValueCollection.add((T) map.get(key));
+        }
+        return outValueCollection;
+    }
+    
+    /**
+     * SCIPIO: For each map in the given collection, extracts the value for the specified key and adds
+     * it to the given outValueCollection; skips null values.
+     * Added 2018-05-29.
+     */
+    @SuppressWarnings("unchecked")
+    public static <K, V, T extends V, C extends Collection<T>> C extractValuesForKeyNonNull(Collection<? extends Map<K, V>> mapList, 
+            K key, C outValueCollection) {
+        for(Map<K, V> map : mapList) {
+            V value = map.get(key);
+            if (value != null) {
+                outValueCollection.add((T) map.get(key));
+            }
+        }
+        return outValueCollection;
+    }
+    
+    /**
+     * SCIPIO: For each map in the given collection, extracts the value for the specified key and 
+     * maps it to the original map value in the outValueMap.
+     * Added 2018-05-29.
+     */
+    @SuppressWarnings("unchecked")
+    public static <K, V, T extends V, E extends Map<K, V>, M extends Map<T, E>> M extractValuesForKeyAsMap(Collection<E> mapList, 
+            K key, M outValueMap) {
+        for(E map : mapList) {
+            outValueMap.put((T) map.get(key), map);
+        }
+        return outValueMap;
+    }
+    
+    /**
+     * SCIPIO: For each map in the given collection, extracts the value for the specified key and 
+     * maps it to the original map value in the outValueMap; skips null values.
+     * Added 2018-05-29.
+     */
+    @SuppressWarnings("unchecked")
+    public static <K, V, T extends V, E extends Map<K, V>, M extends Map<T, E>> M extractValuesForKeyAsMapNonNull(Collection<E> mapList, 
+            K key, M outValueMap) {
+        for(E map : mapList) {
+            V value = map.get(key);
+            if (value != null) {
+                outValueMap.put((T) map.get(key), map);
+            }
+        }
+        return outValueMap;
+    }
 }

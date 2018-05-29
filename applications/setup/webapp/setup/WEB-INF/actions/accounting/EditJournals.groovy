@@ -18,8 +18,5 @@ EntityConditionList conds = EntityCondition.makeCondition([
 );
 
 List<GenericValue> glJournals = EntityQuery.use(delegator).from("GlJournal").where(conds).queryList();
-for (GenericValue glJournal in glJournals) {
-    Debug.log("Gl Journal id =====>  " + glJournal.glJournalId);    
-}
 
 context.glJournals = glJournals;

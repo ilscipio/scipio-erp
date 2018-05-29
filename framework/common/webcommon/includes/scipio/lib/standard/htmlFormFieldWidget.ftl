@@ -1224,11 +1224,13 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
           <#local inputChecked = true>
         </#if>
       <#elseif currentValue?has_content>
-        <#if currentValue==itemValue> 
+        <#if currentValue == itemValue> 
           <#local inputChecked = true>
         </#if>
-      <#elseif defaultValue?has_content && defaultValue == itemValue> 
-        <#local inputChecked = true>
+      <#elseif defaultValue?has_content>
+        <#if defaultValue == itemValue>
+          <#local inputChecked = true>
+        </#if>
       </#if>
       <input type="radio"<@fieldClassAttribStr class=inputClass alert=inputAlert /><#rt/>
         <@fieldElemAttribStr attribs=inputAttribs /><#t/>

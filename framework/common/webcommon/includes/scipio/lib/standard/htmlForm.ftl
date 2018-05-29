@@ -1831,7 +1831,6 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
       <#local currentValue = getAutoValue(autoValueArgsAll + autoValueArgs)!>
     <#else>
       <#-- types with extra inputs -->
-
       <#if type == "textfind">
         <#local autoValueArgsAll = {"name":name}>
         <#if explArgs.value??>
@@ -1857,7 +1856,6 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         </#if>
         <#local ignoreCaseValueStr = getAutoValue(autoValueArgsAll + autoValueArgs)!>
         <#local ignoreCaseValue = (ignoreCaseValueStr == "Y")>
-
       <#elseif type == "rangefind">
         <#local autoValueArgsAll = {"name":name, "suffix":"_fld0_value"}>
         <#if explArgs.value??>
@@ -1875,7 +1873,6 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
           <#local autoValueArgsAll = autoValueArgsAll + {"value":explArgs.opThruValue}>
         </#if>
         <#local opThruValue = getAutoValue(autoValueArgsAll + autoValueArgs)!>
-        
       <#elseif type == "datefind">
         <#local autoValueArgsAll = {"name":name, "suffix":"_fld0_value"}>
         <#if explArgs.value??>
@@ -1892,7 +1889,6 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         </#if>
         <#local opFromValue = getAutoValue(autoValueArgsAll + autoValueArgs)!>
         <#local opValue = opFromValue>
-        
       <#else>
         <#-- standard value input case -->
         <#local autoValueArgsAll = {"name":name}>
@@ -1901,7 +1897,6 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         </#if>
         <#local value = getAutoValue(autoValueArgsAll + autoValueArgs)!>
       </#if>
-
     </#if>
   </#if>
  
@@ -1919,46 +1914,14 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     inverted=inverted labelSmallDiffColumns=labelSmallDiffColumns origArgs=origArgs required=required passArgs=passArgs>
     <#switch type>
       <#case "input">
-        <@field_input_widget name=name 
-                              class=class 
-                              style=style 
-                              alert=alert 
-                              value=value 
-                              textSize=size 
-                              maxlength=maxlength 
-                              id=id 
-                              events=events
-                              disabled=disabled
-                              readonly=readonly 
-                              clientAutocomplete="" 
-                              ajaxUrl=autoCompleteUrl 
-                              ajaxEnabled="" 
-                              mask=mask 
-                              placeholder=placeholder 
-                              tooltip=tooltip
-                              inlineLabel=effInlineLabel
-                              required=required
-                              attribs=attribs
-                              passArgs=passArgs/>
+        <@field_input_widget name=name class=class style=style alert=alert value=value textSize=size maxlength=maxlength id=id events=events 
+          disabled=disabled readonly=readonly clientAutocomplete="" ajaxUrl=autoCompleteUrl ajaxEnabled="" mask=mask placeholder=placeholder 
+          tooltip=tooltip inlineLabel=effInlineLabel required=required attribs=attribs passArgs=passArgs/>
         <#break>
       <#case "textarea">
-        <@field_textarea_widget name=name 
-                              class=class 
-                              alert=alert 
-                              cols=cols 
-                              style=style 
-                              rows=rows 
-                              id=id
-                              readonly=readonly 
-                              value=value 
-                              placeholder=placeholder
-                              tooltip=tooltip
-                              inlineLabel=effInlineLabel
-                              maxlength=maxlength
-                              wrap=wrap
-                              required=required
-                              attribs=attribs
-                              passArgs=passArgs>${escapeVal(text, 'htmlmarkup')}${escapeVal(value, 'htmlmarkup')}<#nested/></@field_textarea_widget>
+        <@field_textarea_widget name=name class=class alert=alert cols=cols style=style rows=rows id=id readonly=readonly value=value 
+          placeholder=placeholder tooltip=tooltip inlineLabel=effInlineLabel maxlength=maxlength wrap=wrap required=required attribs=attribs 
+          passArgs=passArgs>${escapeVal(text, 'htmlmarkup')}${escapeVal(value, 'htmlmarkup')}<#nested/></@field_textarea_widget>
         <#break>
       <#case "datetime">
         <#if dateType == "date" || dateType == "time" || dateType == "month">
@@ -1966,28 +1929,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         <#else><#-- "date-time" -->
           <#local dateType = "timestamp">
         </#if>
-        <@field_datetime_widget name=name 
-                              class=class 
-                              style=style 
-                              alert=alert 
-                              title=title 
-                              value=value 
-                              events=events
-                              size=size 
-                              maxlength=maxlength 
-                              id=id 
-                              dateType=dateType 
-                              dateDisplayType=dateDisplayType 
-                              formName=formName
-                              tooltip=tooltip
-                              origLabel=origLabel
-                              manualInput=manualInput
-                              postfix=datePostfix
-                              postfixColumns=datePostfixColumns
-                              inlineLabel=effInlineLabel
-                              required=required
-                              attribs=attribs
-                              passArgs=passArgs/>                
+        <@field_datetime_widget name=name class=class style=style alert=alert title=title value=value events=events size=size maxlength=maxlength 
+          id=id dateType=dateType dateDisplayType=dateDisplayType formName=formName tooltip=tooltip origLabel=origLabel manualInput=manualInput 
+          postfix=datePostfix postfixColumns=datePostfixColumns inlineLabel=effInlineLabel required=required attribs=attribs passArgs=passArgs/>                
         <#break>
       <#case "datefind">
         <#if dateType == "date" || dateType == "time">
@@ -2000,69 +1944,19 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
         <#else>
           <#local datefindOpFromValue = opValue>
         </#if>
-        <@field_datefind_widget name=name 
-                              class=class 
-                              style=style 
-                              alert=alert 
-                              title=title 
-                              value=value 
-                              defaultOptionFrom=datefindOpFromValue
-                              size=size 
-                              maxlength=maxlength 
-                              id=id 
-                              dateType=dateType 
-                              dateDisplayType=dateDisplayType 
-                              formName=formName
-                              tooltip=tooltip
-                              origLabel=origLabel
-                              inlineLabel=effInlineLabel
-                              required=required
-                              attribs=attribs
-                              passArgs=passArgs/>                 
+        <@field_datefind_widget name=name class=class style=style alert=alert title=title value=value defaultOptionFrom=datefindOpFromValue size=size 
+          maxlength=maxlength id=id dateType=dateType dateDisplayType=dateDisplayType formName=formName tooltip=tooltip origLabel=origLabel 
+          inlineLabel=effInlineLabel required=required attribs=attribs passArgs=passArgs/>                 
         <#break>
       <#case "textfind">
-        <@field_textfind_widget name=name 
-                              class=class 
-                              style=style 
-                              alert=alert 
-                              title=title 
-                              value=value 
-                              defaultOption=opValue
-                              ignoreCase=ignoreCaseValue
-                              size=size 
-                              maxlength=maxlength 
-                              id=id 
-                              formName=formName
-                              tooltip=tooltip
-                              hideOptions=hideOptions
-                              hideIgnoreCase=hideIgnoreCase
-                              titleClass=titleClass
-                              origLabel=origLabel
-                              inlineLabel=effInlineLabel
-                              required=required
-                              attribs=attribs
-                              passArgs=passArgs/>                 
+        <@field_textfind_widget name=name class=class style=style alert=alert title=title value=value defaultOption=opValue ignoreCase=ignoreCaseValue 
+          size=size maxlength=maxlength id=id formName=formName tooltip=tooltip hideOptions=hideOptions hideIgnoreCase=hideIgnoreCase titleClass=titleClass 
+          origLabel=origLabel inlineLabel=effInlineLabel required=required attribs=attribs passArgs=passArgs/>                 
         <#break>
       <#case "rangefind">
-        <@field_rangefind_widget name=name 
-                              class=class 
-                              style=style 
-                              alert=alert 
-                              title=title 
-                              value=value 
-                              defaultOptionFrom=opFromValue
-                              defaultOptionThru=opThruValue
-                              size=size 
-                              maxlength=maxlength 
-                              id=id 
-                              formName=formName
-                              tooltip=tooltip
-                              titleClass=titleClass
-                              origLabel=origLabel
-                              inlineLabel=effInlineLabel
-                              required=required
-                              attribs=attribs
-                              passArgs=passArgs/>                 
+        <@field_rangefind_widget name=name class=class style=style alert=alert title=title value=value defaultOptionFrom=opFromValue defaultOptionThru=opThruValue 
+          size=size maxlength=maxlength id=id formName=formName tooltip=tooltip titleClass=titleClass origLabel=origLabel inlineLabel=effInlineLabel 
+          required=required attribs=attribs passArgs=passArgs/>                 
         <#break>
       <#case "select">
         <#if !manualItemsOnly?is_boolean>
@@ -2072,50 +1966,12 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
           <#-- FIXME? this should be based on whether nested has content, but don't want to invoke #nested twice -->
           <#local manualItems = !items?is_sequence>
         </#if>
-        <@field_select_widget name=name
-                                class=class 
-                                style=style 
-                                alert=alert 
-                                id=id
-                                disabled=disabled 
-                                multiple=multiple
-                                formName=formName
-                                formId=formId
-                                otherFieldName="" 
-                                events=events 
-                                size=size
-                                currentFirst=currentFirst
-                                currentValue=currentValue 
-                                allowEmpty=allowEmpty
-                                options=items
-                                fieldName=name
-                                otherFieldName="" 
-                                otherValue="" 
-                                otherFieldSize=0 
-                                inlineSelected=!currentFirst
-                                ajaxEnabled=false
-                                defaultValue=defaultValue
-                                ajaxOptions=""
-                                frequency=""
-                                minChars=""
-                                choices="" 
-                                autoSelect=""
-                                partialSearch=""
-                                partialChars=""
-                                ignoreCase=""
-                                fullSearch=""
-                                title=title
-                                tooltip=tooltip
-                                description=description
-                                manualItems=manualItems
-                                manualItemsOnly=manualItemsOnly
-                                currentDescription=currentDescription
-                                dynSelectArgs=dynSelectArgs
-                                asmSelectArgs=asmSelectArgs
-                                inlineLabel=effInlineLabel
-                                required=required
-                                attribs=attribs
-                                passArgs=passArgs><#nested/></@field_select_widget>
+        <@field_select_widget name=name class=class style=style alert=alert id=id disabled=disabled multiple=multiple formName=formName formId=formId otherFieldName="" 
+          events=events size=size currentFirst=currentFirst currentValue=currentValue allowEmpty=allowEmpty options=items fieldName=name otherFieldName="" otherValue="" 
+          otherFieldSize=0 inlineSelected=!currentFirst ajaxEnabled=false defaultValue=defaultValue ajaxOptions="" frequency="" minChars="" choices="" autoSelect="" 
+          partialSearch="" partialChars="" ignoreCase="" fullSearch="" title=title tooltip=tooltip description=description manualItems=manualItems manualItemsOnly=manualItemsOnly 
+          currentDescription=currentDescription dynSelectArgs=dynSelectArgs asmSelectArgs=asmSelectArgs inlineLabel=effInlineLabel required=required attribs=attribs 
+          passArgs=passArgs><#nested/></@field_select_widget>
         <#break>
       <#case "option">
         <@field_option_widget value=value text=text selected=selected style=style 
@@ -2153,12 +2009,11 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
           <#local items=[{"value":value, "altValue":altValue, "useHidden":useHidden, "description":description, "tooltip":tooltip, "events":events, "checked":checked, "readonly":readonly, "disabled":disabled}]/>
           <@field_checkbox_widget multiMode=false items=items inlineItems=inlineItems id=id class=class style=style alert=alert 
             currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name tooltip="" inlineLabel=effInlineLabel type=checkboxType 
-                readonly=readonly disabled=disabled required=required attribs=attribs passArgs=passArgs/>
+            readonly=readonly disabled=disabled required=required attribs=attribs passArgs=passArgs/>
         <#else>
           <@field_checkbox_widget multiMode=true items=items inlineItems=inlineItems id=id class=class style=style alert=alert 
             currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name events=events tooltip=tooltip inlineLabel=effInlineLabel type=checkboxType 
-            value=value altValue=altValue useHidden=useHidden
-            readonly=readonly disabled=disabled required=required attribs=attribs passArgs=passArgs/>
+            value=value altValue=altValue useHidden=useHidden readonly=readonly disabled=disabled required=required attribs=attribs passArgs=passArgs/>
         </#if>
         <#break>
       <#case "radio">

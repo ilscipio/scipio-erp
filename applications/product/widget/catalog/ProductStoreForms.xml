@@ -108,8 +108,11 @@
         <field name="balanceResOnOrderCreation">
             <drop-down allow-empty="false" no-current-selected-key="N"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
         </field>
-        <field name="showOutOfStockProducts" position="2">
+        <field name="showOutOfStockProducts">
             <drop-down allow-empty="false"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+        </field>
+        <field name="showDiscontinuedProducts" position="2"><!-- SCIPIO: new -->
+            <drop-down allow-empty="true" no-current-selected-key="Y"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
         </field>
         <field name="requirementMethodEnumId" position="2">
             <drop-down allow-empty="true">
@@ -139,6 +142,9 @@
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
+        </field>
+        <field name="isContentReference"><!-- SCIPIO: new -->
+            <drop-down allow-empty="true" no-current-selected-key="N"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
         </field>
         <field name="defaultSalesChannelEnumId" position="2">
             <drop-down allow-empty="true">
@@ -299,6 +305,9 @@
         <field name="setOwnerUponIssuance">
             <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
         </field>
+        <field name="reqPayMethForFreeOrders"><!-- SCIPIO: new -->
+            <drop-down allow-empty="true" no-current-selected-key="Y"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+        </field>
         <field name="reqReturnInventoryReceive" position="2">
             <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
         </field>
@@ -318,6 +327,7 @@
                 <sort-field name="isDemoStore"/>
                 <sort-field name="defaultLocaleString"/>
                 <sort-field name="defaultCurrencyUomId"/>
+                <sort-field name="isContentReference"/><!-- SCIPIO: new -->
             </field-group>
             <field-group title="${uiLabelMap.CommonInventory}" collapsible="true">
                 <sort-field name="oneInventoryFacility"/>
@@ -329,8 +339,9 @@
                 <sort-field name="reserveInventory"/>
                 <sort-field name="reserveOrderEnumId"/>
                 <sort-field name="balanceResOnOrderCreation"/>
-                <sort-field name="showOutOfStockProducts"/>
                 <sort-field name="managedByLot"/>
+                <sort-field name="showOutOfStockProducts"/>
+                <sort-field name="showDiscontinuedProducts"/><!-- SCIPIO: new -->
             </field-group>
             <field-group title="${uiLabelMap.CommonShoppingCart}" collapsible="true" initially-collapsed="true">
                 <sort-field name="viewCartOnAdd"/>
@@ -372,6 +383,7 @@
                 <sort-field name="autoOrderCcTryLaterMax"/>
                 <sort-field name="storeCreditValidDays"/>
                 <sort-field name="setOwnerUponIssuance"/>
+                <sort-field name="reqPayMethForFreeOrders"/><!-- SCIPIO: new -->
             </field-group>
             <field-group title="${uiLabelMap.CommonShipping}" collapsible="true" initially-collapsed="true">
                 <sort-field name="prorateShipping"/>

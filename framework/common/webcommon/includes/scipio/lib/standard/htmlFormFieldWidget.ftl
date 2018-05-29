@@ -1045,10 +1045,14 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         <#if allChecked> 
           <#local inputChecked = true>
         </#if>
-      <#elseif currentValue?has_content && currentValue?seq_contains(itemValue)> 
-        <#local inputChecked = true>
-      <#elseif defaultValue?has_content && defaultValue?seq_contains(itemValue)> 
-        <#local inputChecked = true>
+      <#elseif currentValue?has_content> 
+        <#if currentValue?seq_contains(itemValue)>
+          <#local inputChecked = true>
+        </#if>
+      <#elseif defaultValue?has_content> 
+        <#if defaultValue?seq_contains(itemValue)>
+          <#local inputChecked = true>
+        </#if>
       </#if>
       <#if itemUseHidden>
         <#if !itemDisabled>

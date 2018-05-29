@@ -921,6 +921,13 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
         options.append("]");
         String noCurrentSelectedKey = dropDownField.getNoCurrentSelectedKey(context);
+        
+        // SCIPIO: 2018-05-28: Added new conditions for use of noCurrentSelectedKey (defaultValue).
+        // See ModelFormField#isExplicitEntry for conditions.
+        if (dropDownField.getAllowEmpty() && UtilValidate.isEmpty(currentValue) && modelFormField.isExplicitEntry(context)) {
+            noCurrentSelectedKey = "";
+        }
+        
         String otherValue = "", fieldName = "";
         // Adapted from work by Yucca Korpela
         // http://www.cs.tut.fi/~jkorpela/forms/combo.html
@@ -933,15 +940,6 @@ public final class MacroFormRenderer implements FormStringRenderer {
             Object otherValueObj = dataMap.get(otherFieldName);
             otherValue = (otherValueObj == null) ? "" : otherValueObj.toString();
         }
-        
-        // SCIPIO: 2018-05-28: Added new conditions for use of noCurrentSelectedKey (defaultValue).
-        // We should not use no-current-select-key if the currentValue is empty, empty is allowed, and:
-        // 1) submitted a form and got an error
-        // 2) loading an existing record
-        if (dropDownField.getAllowEmpty() && UtilValidate.isEmpty(currentValue) && modelFormField.isExplicitEntry(context)) {
-            noCurrentSelectedKey = "";
-        }
-        
         String frequency = "";
         String minChars = "";
         String choices = "";
@@ -1085,6 +1083,13 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String key = checkField.getKey(context);
         String altKey = checkField.getAltKey(context);
         String noCurrentSelectedKey = checkField.getNoCurrentSelectedKey(context);
+        
+        // SCIPIO: 2018-05-28: Added new conditions for use of noCurrentSelectedKey (defaultValue).
+        // See ModelFormField#isExplicitEntry for conditions.
+        if (UtilValidate.isEmpty(currentValue) && modelFormField.isExplicitEntry(context)) {
+            noCurrentSelectedKey = "";
+        }
+        
         Boolean useHidden = checkField.getUseHidden(context);
         StringWriter sr = new StringWriter();
         sr.append("<@renderCheckField ");
@@ -1146,6 +1151,13 @@ public final class MacroFormRenderer implements FormStringRenderer {
             }
         }
         String noCurrentSelectedKey = radioField.getNoCurrentSelectedKey(context);
+        
+        // SCIPIO: 2018-05-28: Added new conditions for use of noCurrentSelectedKey (defaultValue).
+        // See ModelFormField#isExplicitEntry for conditions.
+        if (UtilValidate.isEmpty(currentValue) && modelFormField.isExplicitEntry(context)) {
+            noCurrentSelectedKey = "";
+        }
+        
         items.append("[");
         for (ModelFormField.OptionValue optionValue : allOptionValues) {
             if (items.length() > 1) {

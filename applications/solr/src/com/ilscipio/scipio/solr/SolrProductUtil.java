@@ -424,6 +424,7 @@ public abstract class SolrProductUtil {
         String productId = (String) product.get("productId");
         boolean useCache = Boolean.TRUE.equals(context.get("useCache"));
         Map<String, Object> dispatchContext = new HashMap<String, Object>();
+        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 
         if (Debug.verboseOn()) Debug.logVerbose("Solr: Getting product content for productId '" + productId + "'", module);
 
@@ -431,6 +432,10 @@ public abstract class SolrProductUtil {
             if (UtilValidate.isEmpty(productId)) { // sanity check
                 throw new IllegalArgumentException("Missing productId");
             }
+            // 2018: The fields map is needed for arbitrarily-named fields such as dynamicFields.
+            // It is much more flexible than the stock static field names in the 
+            // solrProductAttributes service interface and in the future may replace it entirely.
+            Map<String, Object> fields = getGenSolrDocFieldsMap(dispatchContext);
             
             List<GenericValue> productVariantAssocs = ProductWorker.getVariantVirtualAssocs(product, useCache);
             
@@ -541,13 +546,32 @@ public abstract class SolrProductUtil {
                 dispatchContext.put("features", (Set<?>) featureSet.get("featureSet"));
             }
 
+            /* 2018-05-29: Use a more precise, total AND per-store count
             Map<String, Object> productInventoryAvailable = dispatcher.runSync("getProductInventoryAvailable", UtilMisc.toMap("productId", productId, "useCache", useCache));
             String inStock = null;
             BigDecimal availableToPromiseTotal = (BigDecimal) productInventoryAvailable.get("availableToPromiseTotal");
             if (availableToPromiseTotal != null) {
                 inStock = availableToPromiseTotal.toBigInteger().toString();
             }
-            dispatchContext.put("inStock", inStock);
+            */
+            Map<String, BigDecimal> productStoreInventories = ProductWorker.getProductStockPerProductStore(delegator, dispatcher, 
+                    product, productStores, nowTimestamp, useCache);
+            for(Map.Entry<String, BigDecimal> entry : productStoreInventories.entrySet()) {
+                if ("_total_".equals(entry.getKey())) {
+                    dispatchContext.put("inStock", entry.getValue().toBigInteger().intValue());
+                } else {
+                    String fieldName = "storeStock_" + SolrExprUtil.escapeFieldNamePart(entry.getKey()) + "_pi";
+                    if (fields.containsKey(fieldName)) {
+                        Debug.logError("Solr: DATA ERROR - DUPLICATE PRODUCT STORE storeStock_ VARIABLE DETECTED (" + fieldName 
+                                + ", for productStoreId '" + entry.getKey() + "') - productStoreId clash - Solr cannot index data for this store!"
+                                + " This means that your system contains two ProductStores that have productStoreIds"
+                                + " too similar so they cannot be uniquely represented in the Solr schema field names."
+                                + " You will need to change the ID of one of the ProductStores and reindex using rebuildSolrIndex.", module);
+                    } else {
+                        fields.put(fieldName, entry.getValue().toBigInteger().intValue());
+                    }
+                }
+            }
 
             boolean isVirtual = "Y".equals(product.getString("isVirtual"));
             if (isVirtual) dispatchContext.put("isVirtual", isVirtual);
@@ -577,7 +601,6 @@ public abstract class SolrProductUtil {
                         productStore, currencyUomId, defaultProductLocale, useCache);
             }
             
-            Map<String, Object> fields = getGenSolrDocFieldsMap(dispatchContext);
             Timestamp salesDiscDate = product.getTimestamp("salesDiscontinuationDate");
             if (salesDiscDate != null) {
                 fields.put("salesDiscDate_dt", salesDiscDate);
@@ -965,22 +988,26 @@ public abstract class SolrProductUtil {
         }
     }
     
+    public static String makeExcludeVariantsExpr() {
+        return "-isVariant:true";
+    }
+
     /**
-     * Adds a variant exclude filter ot the list.
+     * Adds a variant exclude filter to the list.
      * Emulates ProductSearchSession's 
      * <code>EntityCondition.makeCondition("prodIsVariant", EntityOperator.NOT_EQUAL, "Y")</code>
      */
     public static void addExcludeVariantsFilter(List<String> queryFilters) {
-        queryFilters.add("-isVariant:true");
+        queryFilters.add(makeExcludeVariantsExpr());
     }
-    
+
     /**
-     * Adds a variant exclude filter ot the list.
+     * Adds a variant exclude filter to the query.
      * Emulates ProductSearchSession's 
      * <code>EntityCondition.makeCondition("prodIsVariant", EntityOperator.NOT_EQUAL, "Y")</code>
      */
     public static void addExcludeVariantsFilter(SolrQuery solrQuery) {
-        solrQuery.addFilterQuery("-isVariant:true");
+        solrQuery.addFilterQuery(makeExcludeVariantsExpr());
     }
     
     /**
@@ -999,7 +1026,7 @@ public abstract class SolrProductUtil {
         Boolean useStockFilter = (Boolean) context.get("useStockFilter"); // default FALSE
         if (Boolean.TRUE.equals(useStockFilter) || 
             (useStockFilter == null && productStore != null && Boolean.FALSE.equals(productStore.getBoolean("showOutOfStockProducts")))) {
-            queryFilters.add("inStock:[1 TO *]");
+            queryFilters.add(makeProductInStockExpr(productStore));
         }
         
         Boolean useDiscFilter = (Boolean) context.get("useDiscFilter"); // default FALSE
@@ -1011,7 +1038,21 @@ public abstract class SolrProductUtil {
         Boolean excludeVariants = (Boolean) context.get("excludeVariants"); // default TRUE
         if (Boolean.TRUE.equals(excludeVariants) ||
             (excludeVariants == null && (productStore == null || !Boolean.FALSE.equals(productStore.getBoolean("prodSearchExcludeVariants"))))) {
-            SolrProductUtil.addExcludeVariantsFilter(queryFilters);
+            addExcludeVariantsFilter(queryFilters);
+        }
+    }
+    
+    /**
+     * Makes a product in-stock filter expression, specific to the productStore if non-null,
+     * or if null, for all the product's facilities combined.
+     */
+    public static String makeProductInStockExpr(GenericValue productStore) {
+        if (productStore != null) {
+            return "storeStock_" 
+                    + SolrExprUtil.escapeFieldNamePart(productStore.getString("productStoreId")) 
+                    + "_pi:[1 TO *]";
+        } else {
+            return "inStock:[1 TO *]";
         }
     }
 }

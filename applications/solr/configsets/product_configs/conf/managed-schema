@@ -150,6 +150,7 @@
      This pattern will help alleviate maintenance for client schemas derived from this stock one.
      Currently, these include:
        * salesDiscDate_dt (Product.salesDiscontinuationDate)
+       * storeStock_[productStoreId]_pi (per-store inventory stock counts; [productStoreId] is encoded using SolrExprUtil.escapeFieldNamePart)
    -->
    <field name="productId" type="string" indexed="true" stored="true" required="true"/>
    <field name="productTypeId" type="string" indexed="true" stored="true"/>

@@ -31,6 +31,56 @@ under the License.
 <#assign params = paramMaps.values>
 <#assign fixedParams = paramMaps.fixedValues>
 
+
+
+
+<@script>
+	$(document).ready(function () {
+		if (typeof Foundation !== "undefined") { 
+			$('ul.tabs').on('toggled', customToggleTab);
+		} else if (typeof  $.fn.tooltip.Constructor.VERSION!== "undefined") { 
+			$('a[data-toggle="tab"]').on('shown.bs.tab', customToggleTab);
+		} else {
+			 console.log("Bootstrap or Foundation cannot be found");			 
+		}
+	});
+	
+	function customToggleTab (e, t) {
+	  if (typeof setupControlMenu != "undefined") {
+		  var tabId = null;
+		  if ($(t).length) { // foundation 5.5.3		  	
+		  	tabId = t.context.hash.substring(1, t.context.hash.length);	  	
+		  } else if ($(e).length) { // bootstrap 4
+		    tabId = e.target.hash.substring(1, e.target.hash.length);		    
+		  }
+		  var tabIdToFormId = {
+		    "preferencesTab": {
+		        "formId": "setupAccounting-preferences-form"
+		    },
+		    "glAccountsTab": {
+		    	"formId": ""
+		    },
+		    "fiscalPeriodsTab": {
+		    	"formId": ""
+		    },
+		    "accountingTransactionsTab": {
+		    	"formId": ""
+		    },
+		    "journalTab": {
+		    	"formId": "setupAccounting-selectJournalEntry-form"
+		    }
+		  }
+		  formId = tabIdToFormId[tabId].formId;
+		  setupControlMenu.setSubmitFormId(formId);
+		  console.log("formId =======> " + formId);
+	  } else {
+	  	console.log("setupControlMenu cannot be found");
+	  }
+	}
+	
+	
+</@script>
+
 <@tabs id="accountingTabs">
 	<@tab id="preferencesTab" title="Preferences"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditAcctgPreferences"/></@tab>
 	<@tab id="glAccountsTab" title="Configure GL Accounts">

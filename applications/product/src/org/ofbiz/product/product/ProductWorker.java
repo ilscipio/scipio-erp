@@ -24,6 +24,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -51,6 +52,7 @@ import org.ofbiz.product.config.ProductConfigWrapper.ConfigOption;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceUtil;
 
 /**
  * Product Worker class to reduce code in JSPs.
@@ -1414,7 +1416,88 @@ nextProd:
         }
         return productsInStock;
     }
-    
+
+    /**
+     * SCIPIO: Returns a last inventory count (based on ProductFacility.lastInventoryCount) of the product
+     * for each specified product store, as a map of productStoreId to inventory counts; also returns
+     * total for all facilities as "_total_" key.
+     * <p>
+     * Based on {@link #filterOutOfStockProducts}.
+     * <p>
+     * NOTE: there may still be a case for using service getProductInventoryAvailable
+     * instead of ProductFacility.lastInventoryCount... but ProductFacility.lastInventoryCount is more common
+     * for shop code and faster.
+     * <p>
+     * Added 2018-05-29.
+     */
+    public static Map<String, BigDecimal> getProductStockPerProductStore(Delegator delegator, LocalDispatcher dispatcher,
+            GenericValue product, Collection<GenericValue> productStores, Timestamp moment, boolean useCache) throws GeneralException {
+        Map<String, BigDecimal> countMap = new HashMap<>();
+        
+        String productId = product.getString("productId");
+        if (!"Product".equals(product.getEntityName())) {
+            product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache(useCache).queryOne();
+        }
+        boolean isMarketingPackage = EntityTypeUtil.hasParentType(delegator, "ProductType", "productTypeId", product.getString("productTypeId"), "parentTypeId", "MARKETING_PKG");
+        
+        List<GenericValue> productFacilities = EntityQuery.use(delegator).from("ProductFacility")
+                .where("productId", productId).cache(useCache).queryList();
+        Map<String, GenericValue> productFacilityIdMap = UtilMisc.extractValuesForKeyAsMap(productFacilities, "facilityId", new HashMap<>());
+        
+        for(GenericValue productStore : productStores) {
+            BigDecimal storeInventory = BigDecimal.ZERO;
+            String productStoreId = productStore.getString("productStoreId");
+            List<GenericValue> productStoreFacilities = EntityQuery.use(delegator).from("ProductStoreFacility")
+                    .where("productStoreId", productStoreId).filterByDate(moment).cache(useCache).queryList();
+            for(GenericValue productStoreFacility : productStoreFacilities) {
+                String facilityId = productStoreFacility.getString("facilityId");
+                GenericValue productFacility = productFacilityIdMap.get(facilityId);
+                if (productFacility != null) {
+                    if (Boolean.TRUE.equals(isMarketingPackage)) {
+                        Map<String, Object> resultOutput = dispatcher.runSync("getMktgPackagesAvailable", 
+                                UtilMisc.toMap("productId", productId, "facilityId", facilityId));
+                        if (!ServiceUtil.isSuccess(resultOutput)) {
+                            Debug.logWarning("Error getting available marketing package.", module);
+                        } 
+                        BigDecimal availableInventory = (BigDecimal) resultOutput.get("availableToPromiseTotal");
+                        if (availableInventory != null) {
+                            storeInventory = storeInventory.add(availableInventory);
+                        }
+                    } else {
+                        BigDecimal lastInventoryCount = productFacility.getBigDecimal("lastInventoryCount");
+                        if (lastInventoryCount != null) {
+                            storeInventory = storeInventory.add(lastInventoryCount);
+                        }
+                    }
+                }
+            }
+            countMap.put(productStoreId, storeInventory);
+        }
+        
+        BigDecimal totalInventory = BigDecimal.ZERO;
+        if (Boolean.TRUE.equals(isMarketingPackage)) {
+            Map<String, Object> resultOutput = dispatcher.runSync("getMktgPackagesAvailable", 
+                    UtilMisc.toMap("productId", productId));
+            if (!ServiceUtil.isSuccess(resultOutput)) {
+                Debug.logWarning("Error getting available marketing package.", module);
+            } 
+            BigDecimal availableInventory = (BigDecimal) resultOutput.get("availableToPromiseTotal");
+            if (availableInventory != null) {
+                totalInventory = availableInventory;
+            }
+        } else {
+            for(GenericValue productFacility : productFacilities) {
+                BigDecimal lastInventoryCount = productFacility.getBigDecimal("lastInventoryCount");
+                if (lastInventoryCount != null) {
+                    totalInventory = totalInventory.add(lastInventoryCount);
+                }
+            }
+        }
+        countMap.put("_total_", totalInventory);
+        
+        return countMap;
+    }
+
     /**
      * SCIPIO: For each simple-text-compatible productContentTypeIdList, returns a list of complex record views,
      * where the first entry is ProductContentAndElectronicText and the following entries (if any)

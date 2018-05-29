@@ -30,7 +30,7 @@ xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entity-eca.xsd">
         (such as data loading/install).
         SEE ALSO SERVICES ECAs IN servicedef/secas.xml
     -->
-    
+
     <eca entity="Product" operation="create-store" event="return">
         <action service="registerUpdateToSolr" mode="sync" value-attr="instance"/>
     </eca>
@@ -70,6 +70,9 @@ xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entity-eca.xsd">
         WARN: this ECA could be performance-heavy in production -->
     <eca entity="InventoryItem" operation="create-store" event="return">
         <condition operator="is-not-empty" field-name="productId"/>
+        <action service="registerUpdateToSolr" mode="sync" value-attr="instance"/>
+    </eca>
+    <eca entity="ProductFacility" operation="create-store-remove" event="return">
         <action service="registerUpdateToSolr" mode="sync" value-attr="instance"/>
     </eca>
     

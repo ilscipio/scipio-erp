@@ -320,7 +320,7 @@ public abstract class SolrProductSearch {
         Boolean treatConnectErrorNonFatal = (Boolean) context.get("treatConnectErrorNonFatal");
         boolean useCache = Boolean.TRUE.equals(context.get("useCache"));
         try {
-            Debug.logInfo("Solr: Generating and indexing document for productId '" + productId + "'", module);
+            Debug.logInfo("Solr: Indexing product '" + productId + "'", module);
 
             client = SolrUtil.getUpdateHttpSolrClient((String) context.get("core"));
             // Debug.log(server.ping().toString());
@@ -337,8 +337,8 @@ public abstract class SolrProductSearch {
             client.add(docs);
             client.commit();
 
-            final String statusStr = "Document for productId " + productId + " added to solr index";
-            Debug.logInfo("Solr: " + statusStr, module);
+            final String statusStr = "Product '" + productId + "' indexed";
+            if (Debug.verboseOn()) Debug.logVerbose("Solr: " + statusStr, module);
             result = ServiceUtil.returnSuccess(statusStr);
         } catch (MalformedURLException e) {
             Debug.logError(e, "Solr: addToSolrIndex: " + e.getMessage(), module);

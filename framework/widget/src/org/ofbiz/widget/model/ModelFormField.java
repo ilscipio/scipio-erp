@@ -381,7 +381,8 @@ public class ModelFormField implements Serializable {
      * <li>If list or multi form, always return true.
      * <li>If single form:
      *   <ul>
-     *     <li>If from request parameters, returns true only if empty string.
+     *     <li>If service error, we assume error in a form submit, return true.
+     *     <li>If from request parameters (but no error), returns true only if empty string.
      *     <li>If from an existing record (Map or GenericValue), returns true if either null or empty string.
      *     <li>If from context, returns true only if empty string.
      *   </ul>
@@ -397,8 +398,9 @@ public class ModelFormField implements Serializable {
             return true;
         }
         
-        if ((Boolean.TRUE.equals(isError) && !Boolean.FALSE.equals(useRequestParameters))
-                || (Boolean.TRUE.equals(useRequestParameters))) {
+        if (Boolean.TRUE.equals(isError) && !Boolean.FALSE.equals(useRequestParameters)) {
+            return true;
+        } else if (Boolean.TRUE.equals(useRequestParameters)) {
             Map<String, Object> parameters = UtilGenerics.checkMap(context.get("parameters"), String.class, Object.class);
             String parameterName = this.getParameterName(context);
             if (parameters != null && parameters.get(parameterName) != null) {

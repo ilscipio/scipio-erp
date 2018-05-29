@@ -1,5 +1,7 @@
 package com.ilscipio.scipio.solr;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +18,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.util.ClientUtils;
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 
@@ -34,7 +37,7 @@ import org.ofbiz.base.util.UtilValidate;
  */
 public abstract class SolrExprUtil {
 
-    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     // TODO: REVIEW: the "!" standalone character appears not recognized in solr 5 query parser;
     // it only works if space after is removed. but it shouldn't do any harm here so leaving in...
@@ -259,6 +262,71 @@ public abstract class SolrExprUtil {
             }
         } 
         return -1;
+    }
+    
+    private static final Pattern urlUnfilteredCharPat = Pattern.compile("[.*+%-]");
+    
+    /**
+     * Escapes an identifier for use in a Solr field name, in any part
+     * of the name EXCEPT the beginning, with best-effort attempt to preserve
+     * identifier uniqueness (best-effort only).
+     * <p>
+     * This method attempts to make the escaped name part as unique as possible, but
+     * because of the restrictive character set, this is NOT guaranteed.
+     * For this reason, this method should be used sparingly, and effort should
+     * be taken to try to detect duplicates by the caller and warn users if they occur.
+     * <p>
+     * This assumes the name part will NOT be at the start of the field name;
+     * Solr field names must always start with a letter, which is not and cannot be
+     * enforced by this method.
+     * <p>
+     * Solr field name rules (https://lucene.apache.org/solr/guide/6_6/defining-fields.html):
+     * "Field names should consist of alphanumeric or underscore characters only 
+     * and not start with a digit. This is not currently strictly enforced, but 
+     * other field names will not have first class support from all components and 
+     * back compatibility is not guaranteed. Names with both leading and trailing 
+     * underscores (e.g., _version_) are reserved."
+     * <p>
+     * NOTE: 2018-05-29: This method currently works by URL-encoding the whole string and
+     * then replacing the "%" characters with "_". 
+     * This is SUBJECT TO CHANGE and should not be relied on for permanent value storage.
+     * <p>
+     * Added 2018-05-29.
+     */
+    public static String escapeFieldNamePart(String namePart) {
+        try {
+            namePart = URLEncoder.encode(namePart, "UTF-8");
+            
+            // handle special chars not covered by URLEncoder, including %,
+            // which gets converted to underscore
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < namePart.length(); i++) {
+                char c = namePart.charAt(i);
+                switch(c) {
+                case '%':
+                    sb.append("_");
+                    break;
+                case '-':
+                    sb.append("_2D");
+                    break;
+                case '.':
+                    sb.append("_2E");
+                    break;
+                case '+':
+                    sb.append("_2B");
+                    break;
+                case '*':
+                    sb.append("_2A");
+                    break;
+                default:
+                    sb.append(c);
+                }
+            }
+            return sb.toString();
+        } catch (UnsupportedEncodingException e) {
+            Debug.logError(e, module); // this will never happen
+            return namePart;
+        }
     }
 
     /**

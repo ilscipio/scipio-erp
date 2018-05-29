@@ -1766,10 +1766,14 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         return this.type;
     }
 
+    public boolean isManyType() { // SCIPIO: abstraction
+        return "list".equals(getType()) || "multi".equals(getType());
+    }
+
     public boolean getUseRowSubmit() {
         return this.useRowSubmit;
     }
-    
+
     // SCIPIO: helper check for clarity
     public boolean getUseMasterSubmitField() {
         return this.useRowSubmit || "multi".equals(getType());

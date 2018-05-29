@@ -933,6 +933,15 @@ public final class MacroFormRenderer implements FormStringRenderer {
             Object otherValueObj = dataMap.get(otherFieldName);
             otherValue = (otherValueObj == null) ? "" : otherValueObj.toString();
         }
+        
+        // SCIPIO: 2018-05-28: Added new conditions for use of noCurrentSelectedKey (defaultValue).
+        // We should not use no-current-select-key if the currentValue is empty, empty is allowed, and:
+        // 1) submitted a form and got an error
+        // 2) loading an existing record
+        if (dropDownField.getAllowEmpty() && UtilValidate.isEmpty(currentValue) && modelFormField.isExplicitEntry(context)) {
+            noCurrentSelectedKey = "";
+        }
+        
         String frequency = "";
         String minChars = "";
         String choices = "";

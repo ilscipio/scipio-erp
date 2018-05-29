@@ -142,7 +142,15 @@
    -->   
    <!-- SCIPIO: use productId instead: <field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false" />-->
 
-   <!-- SCIPIO: NEW static product fields -->
+   <!-- SCIPIO: NEW static product fields
+   
+     NOTE: 2018-05-29: In addition to these static fields, stock Scipio
+     product indexing now also submits some single fields defined using the 
+     type-based dynamicField definitions further below (*_i, *_dt, etc.).
+     This pattern will help alleviate maintenance for client schemas derived from this stock one.
+     Currently, these include:
+       * salesDiscDate_dt (Product.salesDiscontinuationDate)
+   -->
    <field name="productId" type="string" indexed="true" stored="true" required="true"/>
    <field name="productTypeId" type="string" indexed="true" stored="true"/>
    <field name="internalName" type="text_general" indexed="true" stored="true"/>

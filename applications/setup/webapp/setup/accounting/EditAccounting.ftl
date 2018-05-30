@@ -36,10 +36,14 @@ under the License.
 
 <@script>
 	$(document).ready(function () {
+		firstTab = $('a[data-toggle="tab"]:first');
 		if (typeof Foundation !== "undefined") { 
 			$('ul.tabs').on('toggled', customToggleTab);
+			foundation = $(document).foundation();
+		//	customToggleTab(null, firstTab);
 		} else if (typeof  $.fn.tooltip.Constructor.VERSION!== "undefined") { 
-			$('a[data-toggle="tab"]').on('shown.bs.tab', customToggleTab);
+			$('a[data-toggle="tab"]').on('shown.bs.tab', customToggleTab);			
+			customToggleTab(firstTab); 
 		} else {
 			 console.log("Bootstrap or Foundation cannot be found");			 
 		}

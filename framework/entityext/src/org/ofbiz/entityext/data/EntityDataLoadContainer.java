@@ -134,7 +134,9 @@ public class EntityDataLoadContainer implements Container {
                 Debug.logInfo("Install Argument - " + argumentName + " = " + argumentVal, module);
 
                 if ("readers".equalsIgnoreCase(argumentName)) {
-                    this.readers = argumentVal;
+                    if (UtilValidate.isNotEmpty(argumentVal)) { // SCIPIO: 2018-05-30: reject empty value, sometimes happens in build
+                        this.readers = argumentVal;
+                    }
                 } else if ("timeout".equalsIgnoreCase(argumentName)) {
                     try {
                         this.txTimeout = Integer.parseInt(argumentVal);

@@ -21,6 +21,7 @@ package com.ilscipio.scipio.accounting.ledger;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -61,7 +62,7 @@ public class AcctgAdminServices {
         if (ServiceUtil.isSuccess(result)) {
             // Update more fields if there's no data in their respective main
             // entities.
-            GenericValue partyAcctgPreference = delegator.makeValue("PartyAcctgPreference");
+            GenericValue partyAcctgPreference = delegator.findOne("PartyAcctgPreference", UtilMisc.toMap("partyId", context.get("partyId")), false);
             if (acctgTransCount == 0) {
                 partyAcctgPreference.set("fiscalYearStartMonth", context.get("fiscalYearStartMonth"));
                 partyAcctgPreference.set("fiscalYearStartDay", context.get("fiscalYearStartDay"));

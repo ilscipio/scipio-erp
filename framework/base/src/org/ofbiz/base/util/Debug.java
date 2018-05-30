@@ -730,159 +730,159 @@ public final class Debug {
         }
     }
 
-    public static void log(String msg, OfbizLogger logger, Object... params) {
-        log(Debug.ALWAYS, null, msg, logger, params);
+    public static void log(String msg, OfbizLogger module, Object... params) {
+        log(Debug.ALWAYS, null, msg, module, params);
     }
 
-    public static void log(Throwable t, OfbizLogger logger) {
-        log(Debug.ALWAYS, t, null, logger, emptyParams);
+    public static void log(Throwable t, OfbizLogger module) {
+        log(Debug.ALWAYS, t, null, module, emptyParams);
     }
 
-    public static void log(Throwable t, String msg, OfbizLogger logger) {
-        log(Debug.ALWAYS, t, msg, logger, emptyParams);
+    public static void log(Throwable t, String msg, OfbizLogger module) {
+        log(Debug.ALWAYS, t, msg, module, emptyParams);
     }
 
-    public static void log(Throwable t, String msg, OfbizLogger logger, Object... params) {
-        log(Debug.ALWAYS, t, msg, logger, params);
+    public static void log(Throwable t, String msg, OfbizLogger module, Object... params) {
+        log(Debug.ALWAYS, t, msg, module, params);
     }
 
-    public static void logVerbose(String msg, OfbizLogger logger) {
-        log(Debug.VERBOSE, null, msg, logger, emptyParams);
+    public static void logVerbose(String msg, OfbizLogger module) {
+        log(Debug.VERBOSE, null, msg, module, emptyParams);
     }
 
-    public static void logVerbose(String msg, OfbizLogger logger, Object... params) {
-        log(Debug.VERBOSE, null, msg, logger, params);
+    public static void logVerbose(String msg, OfbizLogger module, Object... params) {
+        log(Debug.VERBOSE, null, msg, module, params);
     }
 
-    public static void logVerbose(Throwable t, OfbizLogger logger) {
-        log(Debug.VERBOSE, t, null, logger, emptyParams);
+    public static void logVerbose(Throwable t, OfbizLogger module) {
+        log(Debug.VERBOSE, t, null, module, emptyParams);
     }
 
-    public static void logVerbose(Throwable t, String msg, OfbizLogger logger) {
-        log(Debug.VERBOSE, t, msg, logger, emptyParams);
+    public static void logVerbose(Throwable t, String msg, OfbizLogger module) {
+        log(Debug.VERBOSE, t, msg, module, emptyParams);
     }
 
-    public static void logVerbose(Throwable t, String msg, OfbizLogger logger, Object... params) {
-        log(Debug.VERBOSE, t, msg, logger, params);
+    public static void logVerbose(Throwable t, String msg, OfbizLogger module, Object... params) {
+        log(Debug.VERBOSE, t, msg, module, params);
     }
 
-    public static void logTiming(String msg, OfbizLogger logger) {
-        log(Debug.TIMING, null, msg, logger, emptyParams);
+    public static void logTiming(String msg, OfbizLogger module) {
+        log(Debug.TIMING, null, msg, module, emptyParams);
     }
 
-    public static void logTiming(String msg, OfbizLogger logger, Object... params) {
-        log(Debug.TIMING, null, msg, logger, params);
+    public static void logTiming(String msg, OfbizLogger module, Object... params) {
+        log(Debug.TIMING, null, msg, module, params);
     }
 
-    public static void logTiming(Throwable t, OfbizLogger logger) {
-        log(Debug.TIMING, t, null, logger, emptyParams);
+    public static void logTiming(Throwable t, OfbizLogger module) {
+        log(Debug.TIMING, t, null, module, emptyParams);
     }
 
-    public static void logTiming(Throwable t, String msg, OfbizLogger logger) {
-        log(Debug.TIMING, t, msg, logger, emptyParams);
+    public static void logTiming(Throwable t, String msg, OfbizLogger module) {
+        log(Debug.TIMING, t, msg, module, emptyParams);
     }
 
-    public static void logTiming(Throwable t, String msg, OfbizLogger logger, Object... params) {
-        log(Debug.TIMING, t, msg, logger, params);
+    public static void logTiming(Throwable t, String msg, OfbizLogger module, Object... params) {
+        log(Debug.TIMING, t, msg, module, params);
     }
 
-    public static void logInfo(String msg, OfbizLogger logger) {
-        log(Debug.INFO, null, msg, logger, emptyParams);
+    public static void logInfo(String msg, OfbizLogger module) {
+        log(Debug.INFO, null, msg, module, emptyParams);
     }
 
-    public static void logInfo(String msg, OfbizLogger logger, Object... params) {
-        log(Debug.INFO, null, msg, logger, params);
+    public static void logInfo(String msg, OfbizLogger module, Object... params) {
+        log(Debug.INFO, null, msg, module, params);
     }
 
-    public static void logInfo(Throwable t, OfbizLogger logger) {
-        log(Debug.INFO, t, null, logger, emptyParams);
+    public static void logInfo(Throwable t, OfbizLogger module) {
+        log(Debug.INFO, t, null, module, emptyParams);
     }
 
-    public static void logInfo(Throwable t, String msg, OfbizLogger logger) {
-        log(Debug.INFO, t, msg, logger, emptyParams);
+    public static void logInfo(Throwable t, String msg, OfbizLogger module) {
+        log(Debug.INFO, t, msg, module, emptyParams);
     }
 
-    public static void logInfo(Throwable t, String msg, OfbizLogger logger, Object... params) {
-        log(Debug.INFO, t, msg, logger, params);
+    public static void logInfo(Throwable t, String msg, OfbizLogger module, Object... params) {
+        log(Debug.INFO, t, msg, module, params);
     }
 
-    public static void logImportant(String msg, OfbizLogger logger) {
-        log(Debug.IMPORTANT, null, msg, logger, emptyParams);
+    public static void logImportant(String msg, OfbizLogger module) {
+        log(Debug.IMPORTANT, null, msg, module, emptyParams);
     }
 
-    public static void logImportant(String msg, OfbizLogger logger, Object... params) {
-        log(Debug.IMPORTANT, null, msg, logger, params);
+    public static void logImportant(String msg, OfbizLogger module, Object... params) {
+        log(Debug.IMPORTANT, null, msg, module, params);
     }
 
-    public static void logImportant(Throwable t, OfbizLogger logger) {
-        log(Debug.IMPORTANT, t, null, logger, emptyParams);
+    public static void logImportant(Throwable t, OfbizLogger module) {
+        log(Debug.IMPORTANT, t, null, module, emptyParams);
     }
 
-    public static void logImportant(Throwable t, String msg, OfbizLogger logger) {
-        log(Debug.IMPORTANT, t, msg, logger, emptyParams);
+    public static void logImportant(Throwable t, String msg, OfbizLogger module) {
+        log(Debug.IMPORTANT, t, msg, module, emptyParams);
     }
 
-    public static void logImportant(Throwable t, String msg, OfbizLogger logger, Object... params) {
-        log(Debug.IMPORTANT, t, msg, logger, params);
+    public static void logImportant(Throwable t, String msg, OfbizLogger module, Object... params) {
+        log(Debug.IMPORTANT, t, msg, module, params);
     }
 
-    public static void logWarning(String msg, OfbizLogger logger) {
-        log(Debug.WARNING, null, msg, logger, emptyParams);
+    public static void logWarning(String msg, OfbizLogger module) {
+        log(Debug.WARNING, null, msg, module, emptyParams);
     }
 
-    public static void logWarning(String msg, OfbizLogger logger, Object... params) {
-        log(Debug.WARNING, null, msg, logger, params);
+    public static void logWarning(String msg, OfbizLogger module, Object... params) {
+        log(Debug.WARNING, null, msg, module, params);
     }
 
-    public static void logWarning(Throwable t, OfbizLogger logger) {
-        log(Debug.WARNING, t, null, logger, emptyParams);
+    public static void logWarning(Throwable t, OfbizLogger module) {
+        log(Debug.WARNING, t, null, module, emptyParams);
     }
 
-    public static void logWarning(Throwable t, String msg, OfbizLogger logger) {
-        log(Debug.WARNING, t, msg, logger, emptyParams);
+    public static void logWarning(Throwable t, String msg, OfbizLogger module) {
+        log(Debug.WARNING, t, msg, module, emptyParams);
     }
 
-    public static void logWarning(Throwable t, String msg, OfbizLogger logger, Object... params) {
-        log(Debug.WARNING, t, msg, logger, params);
+    public static void logWarning(Throwable t, String msg, OfbizLogger module, Object... params) {
+        log(Debug.WARNING, t, msg, module, params);
     }
 
-    public static void logError(String msg, OfbizLogger logger) {
-        log(Debug.ERROR, null, msg, logger, emptyParams);
+    public static void logError(String msg, OfbizLogger module) {
+        log(Debug.ERROR, null, msg, module, emptyParams);
     }
 
-    public static void logError(String msg, OfbizLogger logger, Object... params) {
-        log(Debug.ERROR, null, msg, logger, params);
+    public static void logError(String msg, OfbizLogger module, Object... params) {
+        log(Debug.ERROR, null, msg, module, params);
     }
 
-    public static void logError(Throwable t, OfbizLogger logger) {
-        log(Debug.ERROR, t, null, logger, emptyParams);
+    public static void logError(Throwable t, OfbizLogger module) {
+        log(Debug.ERROR, t, null, module, emptyParams);
     }
 
-    public static void logError(Throwable t, String msg, OfbizLogger logger) {
-        log(Debug.ERROR, t, msg, logger, emptyParams);
+    public static void logError(Throwable t, String msg, OfbizLogger module) {
+        log(Debug.ERROR, t, msg, module, emptyParams);
     }
 
-    public static void logError(Throwable t, String msg, OfbizLogger logger, Object... params) {
-        log(Debug.ERROR, t, msg, logger, params);
+    public static void logError(Throwable t, String msg, OfbizLogger module, Object... params) {
+        log(Debug.ERROR, t, msg, module, params);
     }
 
-    public static void logFatal(String msg, OfbizLogger logger) {
-        log(Debug.FATAL, null, msg, logger, emptyParams);
+    public static void logFatal(String msg, OfbizLogger module) {
+        log(Debug.FATAL, null, msg, module, emptyParams);
     }
 
-    public static void logFatal(String msg, OfbizLogger logger, Object... params) {
-        log(Debug.FATAL, null, msg, logger, params);
+    public static void logFatal(String msg, OfbizLogger module, Object... params) {
+        log(Debug.FATAL, null, msg, module, params);
     }
 
-    public static void logFatal(Throwable t, OfbizLogger logger) {
-        log(Debug.FATAL, t, null, logger, emptyParams);
+    public static void logFatal(Throwable t, OfbizLogger module) {
+        log(Debug.FATAL, t, null, module, emptyParams);
     }
 
-    public static void logFatal(Throwable t, String msg, OfbizLogger logger) {
-        log(Debug.FATAL, t, msg, logger, emptyParams);
+    public static void logFatal(Throwable t, String msg, OfbizLogger module) {
+        log(Debug.FATAL, t, msg, module, emptyParams);
     }
 
-    public static void logFatal(Throwable t, String msg, OfbizLogger logger, Object... params) {
-        log(Debug.FATAL, t, msg, logger, params);
+    public static void logFatal(Throwable t, String msg, OfbizLogger module, Object... params) {
+        log(Debug.FATAL, t, msg, module, params);
     }
 }

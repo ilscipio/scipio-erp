@@ -52,6 +52,14 @@ public class UtilCodec {
      */
     private static final CssStringEncoder cssStringEncoder = new CssStringEncoder();
     /**
+     * SCIPIO: Javascript encoder for string literals (new).
+     */
+    private static final JsStringEncoder jsStringEncoder = new JsStringEncoder();
+    /**
+     * SCIPIO: JSON encoder for string literals (new).
+     */
+    private static final JsonStringEncoder jsonStringEncoder = new JsonStringEncoder();
+    /**
      * SCIPIO: Raw/none encoder that returns the original string as-is. Useful as workaround.
      */
     private static final RawEncoder rawEncoder = new RawEncoder();
@@ -170,6 +178,26 @@ public class UtilCodec {
     }
     
     /**
+     * SCIPIO: Javascript string literal encoder, ONLY for values placed between quotes.
+     */
+    public static class JsStringEncoder implements SimpleEncoder {
+        public String encode(String original) {
+            return (original != null) ? 
+                    freemarker.template.utility.StringUtil.javaScriptStringEnc(original) : null;
+        }
+    }
+    
+    /**
+     * SCIPIO: JSON string literal encoder, ONLY for values placed between quotes.
+     */
+    public static class JsonStringEncoder implements SimpleEncoder {
+        public String encode(String original) {
+            return (original != null) ? 
+                    freemarker.template.utility.StringUtil.jsonStringEnc(original) : null;
+        }
+    }
+    
+    /**
      * SCIPIO: Raw/none encoder that returns the original string as-is. Useful as workaround.
      */
     public static class RawEncoder implements SimpleEncoder {
@@ -191,6 +219,8 @@ public class UtilCodec {
         map.put("css", cssStringEncoder);
         map.put("cssstr", cssStringEncoder);
         map.put("cssid", cssIdEncoder);
+        map.put("jsstr", jsStringEncoder);
+        map.put("jsonstr", jsonStringEncoder);
         map.put("string", stringEncoder);
         map.put("raw", rawEncoder);
         encoderMap = map;
@@ -252,6 +282,22 @@ public class UtilCodec {
      */
     public static SimpleEncoder getCssStringEncoder() {
         return cssStringEncoder;
+    }
+    
+    /**
+     * SCIPIO: Returns Javascript string literator encoder.
+     * Based on Freemarker ?js_string algorithm.
+     */
+    public static SimpleEncoder getJsStringEncoder() {
+        return jsStringEncoder;
+    }
+    
+    /**
+     * SCIPIO: Returns JSON string literator encoder.
+     * Based on Freemarker ?json_string algorithm.
+     */
+    public static SimpleEncoder getJsonStringEncoder() {
+        return jsonStringEncoder;
     }
     
     /**

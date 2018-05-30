@@ -49,31 +49,31 @@ public class AcctgAdminServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
 
         long acctgTransCount = EntityQuery.use(delegator).from("AcctgTrans").queryCount();
-        long orderCount = EntityQuery.use(delegator).from("Order").queryCount();
+        long orderCount = EntityQuery.use(delegator).from("OrderHeader").queryCount();
         long invoiceCount = EntityQuery.use(delegator).from("Invoice").queryCount();
         long quoteCount = EntityQuery.use(delegator).from("Quote").queryCount();
 
-        // If we find related data in place, only run the default service which
-        // safely updates the fields that can't provoke any issue
-        if (acctgTransCount > 0 && orderCount > 0 && invoiceCount > 0 && quoteCount > 0) {
-            try {
-                result = dispatcher.runSync("updatePartyAcctgPreference", context);
-            } catch (GenericServiceException e) {
-                Debug.logError(e.getMessage(), module);
-            }
-        } else {
+        try {
+            result = dispatcher.runSync("updatePartyAcctgPreference", context);
+        } catch (GenericServiceException e) {
+            Debug.logError(e.getMessage(), module);
+        }
+        if (ServiceUtil.isSuccess(result)) {
+            // Update more fields if there's no data in their respective main
+            // entities.
             GenericValue partyAcctgPreference = delegator.makeValue("PartyAcctgPreference");
             if (acctgTransCount == 0) {
                 partyAcctgPreference.set("fiscalYearStartMonth", context.get("fiscalYearStartMonth"));
                 partyAcctgPreference.set("fiscalYearStartDay", context.get("fiscalYearStartDay"));
                 partyAcctgPreference.set("taxFormId", context.get("taxFormId"));
                 partyAcctgPreference.set("cogsMethodId", context.get("cogsMethodId"));
-                // This may have a undesired impact
-                // partyAcctgPreference.set("baseCurrencyUomId", context.get("baseCurrencyUomId"));
+                // This may have an undesired impact
+                // partyAcctgPreference.set("baseCurrencyUomId",
+                // context.get("baseCurrencyUomId"));
             } else if (orderCount == 0) {
                 partyAcctgPreference.set("orderSeqCustMethId", context.get("orderSeqCustMethId"));
                 partyAcctgPreference.set("orderIdPrefix", context.get("orderIdPrefix"));
-                partyAcctgPreference.set("lastOrderNumber", context.get("lastOrderNumber"));                
+                partyAcctgPreference.set("lastOrderNumber", context.get("lastOrderNumber"));
             } else if (invoiceCount == 0) {
                 partyAcctgPreference.set("invoiceSeqCustMethId", context.get("invoiceSeqCustMethId"));
                 partyAcctgPreference.set("invoiceIdPrefix", context.get("invoiceIdPrefix"));
@@ -83,8 +83,9 @@ public class AcctgAdminServices {
             } else if (quoteCount == 0) {
                 partyAcctgPreference.set("quoteSeqCustMethId", context.get("quoteSeqCustMethId"));
                 partyAcctgPreference.set("quoteIdPrefix", context.get("quoteIdPrefix"));
-                partyAcctgPreference.set("lastQuoteNumber", context.get("lastQuoteNumber"));                
+                partyAcctgPreference.set("lastQuoteNumber", context.get("lastQuoteNumber"));
             }
+            partyAcctgPreference.store();
         }
 
         return result;

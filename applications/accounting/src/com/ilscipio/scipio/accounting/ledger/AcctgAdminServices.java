@@ -20,21 +20,75 @@ package com.ilscipio.scipio.accounting.ledger;
 
 import java.util.Map;
 
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
 public class AcctgAdminServices {
 
-    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    private static final String module = AcctgAdminServices.class.getName();
 
-    public static Map<String, Object> setupUpdatePartyAcctgPreference(DispatchContext dctx, Map<String, ? extends Object> context) {
+    /**
+     * Custom update PartyAcctgPreference only meant to be used during setup.
+     * Allows fields not allowed in the stock service to be safely updated.
+     * 
+     * @param dctx
+     * @param context
+     * @return
+     * @throws GenericEntityException
+     */
+    public static Map<String, Object> updatePartyAcctgPreference(DispatchContext dctx, Map<String, ? extends Object> context) throws GenericEntityException {
         Map<String, Object> result = ServiceUtil.returnSuccess();
-//        Delegator delegator = dctx.getDelegator();
-       
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+
+        long acctgTransCount = EntityQuery.use(delegator).from("AcctgTrans").queryCount();
+        long orderCount = EntityQuery.use(delegator).from("Order").queryCount();
+        long invoiceCount = EntityQuery.use(delegator).from("Invoice").queryCount();
+        long quoteCount = EntityQuery.use(delegator).from("Quote").queryCount();
+
+        // If we find related data in place, only run the default service which
+        // safely updates the fields that can't provoke any issue
+        if (acctgTransCount > 0 && orderCount > 0 && invoiceCount > 0 && quoteCount > 0) {
+            try {
+                result = dispatcher.runSync("updatePartyAcctgPreference", context);
+            } catch (GenericServiceException e) {
+                Debug.logError(e.getMessage(), module);
+            }
+        } else {
+            GenericValue partyAcctgPreference = delegator.makeValue("PartyAcctgPreference");
+            if (acctgTransCount == 0) {
+                partyAcctgPreference.set("fiscalYearStartMonth", context.get("fiscalYearStartMonth"));
+                partyAcctgPreference.set("fiscalYearStartDay", context.get("fiscalYearStartDay"));
+                partyAcctgPreference.set("taxFormId", context.get("taxFormId"));
+                partyAcctgPreference.set("cogsMethodId", context.get("cogsMethodId"));
+                // This may have a undesired impact
+                // partyAcctgPreference.set("baseCurrencyUomId", context.get("baseCurrencyUomId"));
+            } else if (orderCount == 0) {
+                partyAcctgPreference.set("orderSeqCustMethId", context.get("orderSeqCustMethId"));
+                partyAcctgPreference.set("orderIdPrefix", context.get("orderIdPrefix"));
+                partyAcctgPreference.set("lastOrderNumber", context.get("lastOrderNumber"));                
+            } else if (invoiceCount == 0) {
+                partyAcctgPreference.set("invoiceSeqCustMethId", context.get("invoiceSeqCustMethId"));
+                partyAcctgPreference.set("invoiceIdPrefix", context.get("invoiceIdPrefix"));
+                partyAcctgPreference.set("lastInvoiceNumber", context.get("lastInvoiceNumber"));
+                partyAcctgPreference.set("lastInvoiceRestartDate", context.get("lastInvoiceRestartDate"));
+                partyAcctgPreference.set("useInvoiceIdForReturns", context.get("useInvoiceIdForReturns"));
+            } else if (quoteCount == 0) {
+                partyAcctgPreference.set("quoteSeqCustMethId", context.get("quoteSeqCustMethId"));
+                partyAcctgPreference.set("quoteIdPrefix", context.get("quoteIdPrefix"));
+                partyAcctgPreference.set("lastQuoteNumber", context.get("lastQuoteNumber"));                
+            }
+        }
+
         return result;
 
     }
-
-  
 
 }

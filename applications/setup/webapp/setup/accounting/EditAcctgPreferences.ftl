@@ -30,9 +30,10 @@
 <@section title=uiLabelMap.SetupAccountingPreferences>		
 	<@form method="post" action=makeOfbizUrl(acctgPreferencesActionUrl!) id="setupAccounting-preferences-form">
 	    <#-- TODO: REVIEW: may make a difference later -->
-	    <@defaultWizardFormFields exclude=["topGlAccountId"]/>				    
-	    
-	    <@section title=uiLabelMap.SetupAccountingPreferencesTaxes>				        
+	    <@defaultWizardFormFields exclude=["topGlAccountId"]/>
+	    <@field type="hidden" name="partyId" value=orgPartyId! />
+
+	    <@section title=uiLabelMap.SetupAccountingPreferencesTaxes>
 	        <@field type="select" name="taxFormId" value=(params.taxFormId!) label=uiLabelMap.FormFieldTitle_taxFormId>
 	    		<option value=""></option>
 		    	<#list taxForms as taxForm>

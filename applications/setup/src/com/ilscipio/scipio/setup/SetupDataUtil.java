@@ -1,5 +1,6 @@
 package com.ilscipio.scipio.setup;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -318,6 +319,7 @@ public abstract class SetupDataUtil {
             if (topGlAccount != null) {
                 result.put("coreCompleted", true);
                 boolean isAcctgPreferencesSet = false;
+                boolean isFiscalPeriodSet = false;
 
                 if (UtilValidate.isEmpty(glAccountOrganization)) {
                     glAccountOrganization = delegator.makeValue("GlAccountOrganization", UtilMisc.toMap("glAccountId", topGlAccountId, "organizationPartyId", orgPartyId,
@@ -330,8 +332,18 @@ public abstract class SetupDataUtil {
                     isAcctgPreferencesSet = true;
                     result.put("acctgPreferences", partyAcctgPreference);
                 }
+                
+                Timestamp now = UtilDateTime.nowTimestamp();
+                List<EntityCondition> openedCurrentFiscalPeriodsCond = UtilMisc.toList(EntityCondition.makeCondition("isClosed", EntityOperator.NOT_EQUAL, "N"));                
+                openedCurrentFiscalPeriodsCond.add(EntityCondition.makeCondition(EntityCondition.makeCondition("fromDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, now)));
+                openedCurrentFiscalPeriodsCond.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN, now)));                               
+                
+                GenericValue openedCurrentFiscalPeriods = EntityQuery.use(delegator).from("CustomTimePeriod").where(openedCurrentFiscalPeriodsCond, EntityOperator.AND).queryFirst();
+                if (UtilValidate.isNotEmpty(openedCurrentFiscalPeriods)) {
+                	isFiscalPeriodSet = true;
+                }
 
-                if (isAcctgPreferencesSet) {
+                if (isAcctgPreferencesSet && isFiscalPeriodSet) {
                     result.put("complete", true);
                 }
 

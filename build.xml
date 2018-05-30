@@ -1426,28 +1426,27 @@ under the License.
         sub-target of create-tenant, can't used alone => no description, to not clutter "ant -p" -->
     <target name="get-tenant-data">
         <input addproperty="tenantId" message="Enter Id for the tenant: "/>
-        <input addproperty="tenantName" message="Enter name for tenant: "/>
+        <!-- SCIPIO: improved defaults and messages -->
+        <input addproperty="tenantName" message="Enter name for tenant: " defaultvalue="${tenantId}"/>
         <input addproperty="domainName" message="Enter domain name for tenant (Optional): "/>
-        <input addproperty="data-readers" message="Enter data to install.
-        Choices are e.g. seed,seed-initial,ext,demo.
-        Multipe datasets must be separated with a comma: "/>
-        <input addproperty="db-Platform" message="Select your default database platform, D = Derby,M = MySQL, O = Oracle, P = PostgreSQL"
-            validargs="D,M,O,P"/>
+        <input addproperty="data-readers" message="Enter data to install. Choices are e.g.: seed,seed-initial,ext,demo (default: same as load-demo). Multipe datasets must be separated with a comma: "/>
+        <input addproperty="db-Platform" message="Select your default database platform, D = Derby, M = MySQL, O = Oracle, P = PostgreSQL"
+            validargs="D,M,O,P,d,m,o,p"/>
         <echo message="Please make sure that the driver of the platform is installed and that the databases have been created (in function of the entityengine.xml datasource-names)"/>
         <input addproperty="db-IP" message="Enter IP address of the database server (you may add a port number)"/>
         <input addproperty="db-User" message="Enter userID of database user: "/>
         <input addproperty="db-Password" message="Enter password of database user: "/>
         <condition property="isDerby">
-            <equals arg1="${db-Platform}" arg2="D"/>
+            <equals arg1="${db-Platform}" arg2="D" casesensitive="no"/><!-- SCIPIO: accept lowercase -->
         </condition>
         <condition property="isMySQL">
-            <equals arg1="${db-Platform}" arg2="M"/>
+            <equals arg1="${db-Platform}" arg2="M" casesensitive="no"/>
         </condition>
         <condition property="isOracle">
-            <equals arg1="${db-Platform}" arg2="O"/>
+            <equals arg1="${db-Platform}" arg2="O" casesensitive="no"/>
         </condition>
         <condition property="isPostgreSQL">
-            <equals arg1="${db-Platform}" arg2="P"/>
+            <equals arg1="${db-Platform}" arg2="P" casesensitive="no"/>
         </condition>
         <antcall target="tenant-data-entry"/>
     </target>

@@ -278,7 +278,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(modelFormField.shouldBeRed(context)));
         if (ajaxEnabled) {
             String url = inPlaceEditor.getUrl(context);
-            // SCIPIO: FIXME?: the javascript string values should probably be escaped for javascript syntax
+            // SCIPIO: js encoder
+            UtilCodec.SimpleEncoder jsEnc = UtilCodec.getJsStringEncoder();
             String extraParameter = "{";
             Map<String, Object> fieldMap = inPlaceEditor.getFieldMap(context);
             if (fieldMap != null) {
@@ -288,7 +289,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
                 while (fieldIterator.hasNext()) {
                     count++;
                     Entry<String, Object> field = fieldIterator.next();
-                    extraParameter += field.getKey() + ":'" + (String) field.getValue() + "'";
+                    // SCIPIO: added JS escaping and value toString() call here
+                    extraParameter += jsEnc.encode(field.getKey()) 
+                            + ":'" + jsEnc.encode(field.getValue() != null ? field.getValue().toString() : null) + "'";
                     if (count < fieldSet.size()) {
                         extraParameter += ',';
                     }
@@ -302,38 +305,38 @@ public final class MacroFormRenderer implements FormStringRenderer {
             StringWriter inPlaceEditorParams = new StringWriter();
             inPlaceEditorParams.append("{name: '");
             if (UtilValidate.isNotEmpty(inPlaceEditor.getParamName())) {
-                inPlaceEditorParams.append(inPlaceEditor.getParamName());
+                inPlaceEditorParams.append(jsEnc.encode(inPlaceEditor.getParamName()));
             } else {
-                inPlaceEditorParams.append(modelFormField.getFieldName());
+                inPlaceEditorParams.append(jsEnc.encode(modelFormField.getFieldName()));
             }
             inPlaceEditorParams.append("'");
             inPlaceEditorParams.append(", method: 'POST'");
             inPlaceEditorParams.append(", submitdata: " + extraParameter);
             inPlaceEditorParams.append(", type: 'textarea'");
             inPlaceEditorParams.append(", select: 'true'");
-            inPlaceEditorParams.append(", onreset: function(){jQuery('#cc_" + idName + "').css('background-color', 'transparent');}");
+            inPlaceEditorParams.append(", onreset: function(){jQuery('#cc_" + jsEnc.encode(idName) + "').css('background-color', 'transparent');}");
             if (UtilValidate.isNotEmpty(inPlaceEditor.getCancelText())) {
-                inPlaceEditorParams.append(", cancel: '" + inPlaceEditor.getCancelText() + "'");
+                inPlaceEditorParams.append(", cancel: '" + jsEnc.encode(inPlaceEditor.getCancelText()) + "'");
             } else {
                 inPlaceEditorParams.append(", cancel: 'Cancel'");
             }
             if (UtilValidate.isNotEmpty(inPlaceEditor.getClickToEditText())) {
-                inPlaceEditorParams.append(", tooltip: '" + inPlaceEditor.getClickToEditText() + "'");
+                inPlaceEditorParams.append(", tooltip: '" + jsEnc.encode(inPlaceEditor.getClickToEditText()) + "'");
             }
             if (UtilValidate.isNotEmpty(inPlaceEditor.getFormClassName())) {
-                inPlaceEditorParams.append(", cssclass: '" + inPlaceEditor.getFormClassName() + "'");
+                inPlaceEditorParams.append(", cssclass: '" + jsEnc.encode(inPlaceEditor.getFormClassName()) + "'");
             } else {
                 inPlaceEditorParams.append(", cssclass: 'inplaceeditor-form'");
             }
             if (UtilValidate.isNotEmpty(inPlaceEditor.getLoadingText())) {
-                inPlaceEditorParams.append(", indicator: '" + inPlaceEditor.getLoadingText() + "'");
+                inPlaceEditorParams.append(", indicator: '" + jsEnc.encode(inPlaceEditor.getLoadingText()) + "'");
             }
             if (UtilValidate.isNotEmpty(inPlaceEditor.getOkControl())) {
                 inPlaceEditorParams.append(", submit: ");
                 if (!"false".equals(inPlaceEditor.getOkControl())) {
                     inPlaceEditorParams.append("'");
                 }
-                inPlaceEditorParams.append(inPlaceEditor.getOkControl());
+                inPlaceEditorParams.append(jsEnc.encode(inPlaceEditor.getOkControl()));
                 if (!"false".equals(inPlaceEditor.getOkControl())) {
                     inPlaceEditorParams.append("'");
                 }

@@ -248,7 +248,7 @@ public final class WidgetWorker {
             }
             if (UtilValidate.isNotEmpty(confirmation)){
                 writer.append(" onclick=\"return confirm('");
-                writer.append(confirmation);
+                writer.append(UtilCodec.getJsStringEncoder().encode(confirmation)); // SCIPIO: js encode
                 writer.append("')\"");
             }
             writer.append('>');
@@ -274,9 +274,9 @@ public final class WidgetWorker {
                 writer.append("\"");
             }
 
-            writer.append(" href=\"javascript:document.");
-            writer.append(makeLinkHiddenFormName(context, modelFormField));
-            writer.append(".submit()\"");
+            writer.append(" href=\"javascript:document['");
+            writer.append(UtilCodec.getJsStringEncoder().encode(makeLinkHiddenFormName(context, modelFormField))); // SCIPIO: JS escaping
+            writer.append("'].submit()\"");
 
             if (UtilValidate.isNotEmpty(modelFormField.getEvent()) && UtilValidate.isNotEmpty(modelFormField.getAction(context))) {
                 writer.append(" ");
@@ -288,7 +288,7 @@ public final class WidgetWorker {
 
             if (UtilValidate.isNotEmpty(confirmation)){
                 writer.append(" onclick=\"return confirm('");
-                writer.append(confirmation);
+                writer.append(UtilCodec.getJsStringEncoder().encode(confirmation)); // SCIPIO: JS escaping
                 writer.append("')\"");
             }
 
@@ -340,6 +340,7 @@ public final class WidgetWorker {
     
     /**
      * SCIPIO: Creates JS script to populate the target hidden form with the corresponding fields of the row being selected (only when use-submit-row is true)
+     * @deprecated Do not use; INSECURE; integrate into Freemarker macros instead
      */
     @Deprecated
     private static void makeJSForRowSubmit(Appendable writer, Map<String, Object> context, ModelForm modelForm, String hiddenFormName) throws IOException {    
@@ -392,6 +393,7 @@ public final class WidgetWorker {
    
     /**
      * SCIPIO: Creates JS script to populate the target hidden form with the corresponding fields of the row that triggered the submission (only when use-submit-row is false)
+     * @deprecated Do not use; INSECURE; integrate into Freemarker macros instead
      */
     @Deprecated
     private static void makeJSForInlineSubmit(Appendable writer, Map<String, Object> context, ModelForm modelForm, String hiddenFormName) throws IOException {        
@@ -419,6 +421,7 @@ public final class WidgetWorker {
     
     /**
      * SCIPIO: Creates a form that gets populated with the corresponding fields of the row being submitted and then submits it.
+     * @deprecated Do not use; INSECURE; integrate into Freemarker macros instead
      */
     @Deprecated
     public static void makeHiddenFormSubmitForm(Appendable writer, String target, String targetType, String targetWindow, Map<String, String> parameterMap,

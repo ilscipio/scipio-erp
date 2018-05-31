@@ -21,6 +21,7 @@ package org.ofbiz.content.layout;
 import java.nio.ByteBuffer;
 import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -66,7 +67,7 @@ public class LayoutEvents {
             Map<String, Object> uploadResults = LayoutWorker.uploadImageAndParameters(request, "imageData");
             //Debug.logVerbose("in createLayoutImage(java), uploadResults:" + uploadResults, "");
             Map<String, Object> formInput = UtilGenerics.checkMap(uploadResults.get("formInput"));
-            Map<String, Object> context = UtilMisc.newMap();
+            Map<String, Object> context = new HashMap<String, Object>();
             ByteBuffer byteWrap = (ByteBuffer) uploadResults.get("imageData");
             if (byteWrap == null) {
                 String errMsg = UtilProperties.getMessage(LayoutEvents.err_resource, "layoutEvents.image_data_null", locale);
@@ -117,7 +118,7 @@ public class LayoutEvents {
             String dataResourceId = (String) result.get("dataResourceId");
             String activeContentId = (String) result.get("contentId");
             if (UtilValidate.isNotEmpty(activeContentId)) {
-                Map<String, Object> context2 = UtilMisc.newMap();
+                Map<String, Object> context2 = new HashMap<String, Object>();
                 context2.put("activeContentId", activeContentId);
                 //context2.put("dataResourceId", dataResourceId);
                 context2.put("contentAssocTypeId", result.get("contentAssocTypeId"));
@@ -225,7 +226,7 @@ public class LayoutEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         HttpSession session = request.getSession();
         Locale locale = UtilHttp.getLocale(request);
-        Map<String, Object> context = UtilMisc.newMap();
+        Map<String, Object> context = new HashMap<String, Object>();
         Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
         Debug.logVerbose("in replaceSubContent, paramMap:" + paramMap, module);
         String dataResourceId = (String) paramMap.get("dataResourceId");
@@ -274,7 +275,7 @@ public class LayoutEvents {
                 Map<String, Object> result = dispatcher.runSync("persistContentAndAssoc", context);
                 //Debug.logVerbose("in replaceSubContent, result:" + result, module);
                 request.setAttribute("contentId", contentIdTo);
-                Map<String, Object> context2 = UtilMisc.newMap();
+                Map<String, Object> context2 = new HashMap<String, Object>();
                 context2.put("activeContentId", contentId);
                 //context2.put("dataResourceId", dataResourceId);
                 context2.put("contentAssocTypeId", "SUB_CONTENT");
@@ -366,7 +367,7 @@ public class LayoutEvents {
             request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
             return "error";
         }
-        Map<String, Object> serviceIn = UtilMisc.newMap();
+        Map<String, Object> serviceIn = new HashMap<String, Object>();
         Map<String, Object> results = null;
         serviceIn.put("fromDate", UtilDateTime.nowTimestamp());
         serviceIn.put("contentId", contentId);
@@ -386,11 +387,11 @@ public class LayoutEvents {
             return "error";
         }
 
-        serviceIn = UtilMisc.newMap();
+        serviceIn = new HashMap<String, Object>();
         serviceIn.put("userLogin", session.getAttribute("userLogin"));
 
         // Can't count on records being unique
-        Map<String, GenericValue> beenThere = UtilMisc.newMap();
+        Map<String, GenericValue> beenThere = new HashMap<String, GenericValue>();
         for (int i=0; i<entityList.size(); i++) {
             GenericValue view = entityList.get(i);
             List<Object> errorMessages = UtilMisc.newList();
@@ -447,7 +448,7 @@ public class LayoutEvents {
                 Debug.logVerbose("in createSubContent, contentIdTo:" + contentIdTo, module);
                 Debug.logVerbose("in createSubContent, mapKey:" + mapKey, module);
             }
-            Map<String, Object> context = UtilMisc.newMap();
+            Map<String, Object> context = new HashMap<String, Object>();
             List<Object> errorMessages = null;
             Locale loc = (Locale) request.getServletContext().getAttribute("locale"); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
             if (loc == null) {
@@ -494,7 +495,7 @@ public class LayoutEvents {
             request.setAttribute("contentId", contentId);
             request.setAttribute("drDataResourceId", dataResourceId);
             request.setAttribute("currentEntityName", "SubContentDataResourceId");
-            Map<String, Object> context2 = UtilMisc.newMap();
+            Map<String, Object> context2 = new HashMap<String, Object>();
             context2.put("activeContentId", contentId);
             //context2.put("dataResourceId", dataResourceId);
             context2.put("contentAssocTypeId", "SUB_CONTENT");
@@ -519,7 +520,7 @@ public class LayoutEvents {
             Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
             // String contentIdTo = (String) paramMap.get("contentIdTo");
             // String mapKey = (String) paramMap.get("mapKey");
-            Map<String, Object> context = UtilMisc.newMap();
+            Map<String, Object> context = new HashMap<String, Object>();
             List<Object> errorMessages = null;
             Locale loc = (Locale) request.getServletContext().getAttribute("locale"); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
             if (loc == null) {
@@ -560,7 +561,7 @@ public class LayoutEvents {
             request.setAttribute("drDataResourceId", dataResourceId);
             request.setAttribute("currentEntityName", "SubContentDataResourceId");
             /*
-            Map context2 = UtilMisc.newMap();
+            Map context2 = new HashMap<String, Object>();
             context2.put("activeContentId", contentId);
             //context2.put("dataResourceId", dataResourceId);
             context2.put("contentAssocTypeId", "SUB_CONTENT");

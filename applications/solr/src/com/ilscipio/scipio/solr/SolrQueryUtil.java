@@ -1,6 +1,5 @@
 package com.ilscipio.scipio.solr;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -9,8 +8,6 @@ import java.util.Map;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrException;
-import org.ofbiz.base.util.UtilDateTime;
-import org.ofbiz.entity.GenericValue;
 
 /**
  * High-level util to help dealing with SolrQuery object and high-level query ops.
@@ -33,7 +30,7 @@ public abstract class SolrQueryUtil {
     }
     
     public static List<String> copyQueryFilters(List<String> queryFilters) {
-        return queryFilters != null ? new ArrayList<String>(queryFilters) : new ArrayList<String>();
+        return queryFilters != null ? new ArrayList<>(queryFilters) : new ArrayList<>();
     }
 
     /**

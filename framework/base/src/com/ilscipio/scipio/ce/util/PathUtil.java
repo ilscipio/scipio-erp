@@ -140,7 +140,7 @@ public class PathUtil {
      * /first/second/third
      */
     public static List<String> makeAllRequestPathPrefixes(String requestPath) {
-        List<String> subPaths = new ArrayList<String>();
+        List<String> subPaths = new ArrayList<>();
         
         if (requestPath != null){
             int index = requestPath.indexOf("/", 0);

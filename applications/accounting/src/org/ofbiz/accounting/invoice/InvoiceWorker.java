@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -631,7 +632,7 @@ public class InvoiceWorker {
                 }
             }
         }
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         result.put("taxByTaxAuthGeoAndPartyList", taxByTaxAuthGeoAndPartyList);
         result.put("taxGrandTotal", taxGrandTotal);
         return result;
@@ -644,7 +645,7 @@ public class InvoiceWorker {
      *         will not account for tax lines that do not contain a taxAuthPartyId
      */
     public static Map<String, Set<String>> getInvoiceTaxAuthPartyAndGeos (GenericValue invoice) {
-        Map<String, Set<String>> result = UtilMisc.newMap();
+        Map<String, Set<String>> result = new HashMap<String, Set<String>>();
 
         if (invoice == null)
            throw new IllegalArgumentException("Invoice cannot be null.");
@@ -832,7 +833,7 @@ public class InvoiceWorker {
      *         will not account for tax lines that do not contain a taxAuthPartyId)
      */
     public static Map<String, String> getInvoiceTaxRateProducts(GenericValue invoice) {
-        Map<String, String> result = UtilMisc.newMap();
+        Map<String, String> result = new HashMap<String, String>();
 
         if (invoice == null)
             throw new IllegalArgumentException("Invoice cannot be null.");

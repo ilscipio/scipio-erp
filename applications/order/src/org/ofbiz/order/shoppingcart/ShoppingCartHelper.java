@@ -208,7 +208,7 @@ public class ShoppingCartHelper {
 
         // Get the additional features selected for the product (if any)
         Map<String, Object> selectedFeatures = UtilHttp.makeParamMapWithPrefix(context, null, "FT", null);
-        Map<String, GenericValue> additionalFeaturesMap = UtilMisc.newMap();
+        Map<String, GenericValue> additionalFeaturesMap = new HashMap<String, GenericValue>();
         for (String selectedFeatureType : selectedFeatures.keySet()) {
             String selectedFeatureValue = (String)selectedFeatures.get(selectedFeatureType);
             if (UtilValidate.isNotEmpty(selectedFeatureValue)) {
@@ -229,7 +229,7 @@ public class ShoppingCartHelper {
         }
 
         // get order item attributes
-        Map<String, String> orderItemAttributes = UtilMisc.newMap();
+        Map<String, String> orderItemAttributes = new HashMap<String, String>();
         String orderItemAttributePrefix = EntityUtilProperties.getPropertyValue("order.properties", "order.item.attr.prefix", delegator);
         for (Entry<String, ? extends Object> entry : context.entrySet()) {
             if (entry.getKey().toString().contains(orderItemAttributePrefix) && UtilValidate.isNotEmpty(entry.getValue())) {

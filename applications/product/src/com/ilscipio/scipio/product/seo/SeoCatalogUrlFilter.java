@@ -19,6 +19,7 @@
 package com.ilscipio.scipio.product.seo;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -208,7 +209,7 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
 //        updateRequestTrail(request, delegator, urlInfo.getProductId(), urlInfo.getCategoryId(), trailCategoryIds, topCategoryId);
         
         // FOR NOW, just replace the whole trail with what we got for time being
-        List<String> newTrail = UtilMisc.newList();
+        List<String> newTrail = new ArrayList<>();
         newTrail.add("TOP");
         newTrail.addAll(urlInfo.getPathCategoryIds());
         if (urlInfo.getCategoryId() != null && !urlInfo.getCategoryId().equals(newTrail.get(newTrail.size() - 1))) {

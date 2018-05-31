@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -319,7 +320,7 @@ public class PaymentGatewayServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String orderId = (String) context.get("orderId");
         Locale locale = (Locale) context.get("locale");
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         boolean reAuth = false;
         if (context.get("reAuth") != null) {
             reAuth = ((Boolean)context.get("reAuth")).booleanValue();
@@ -379,7 +380,7 @@ public class PaymentGatewayServices {
                     continue;
                 }
             }
-            Map<String, Object> authContext = UtilMisc.newMap();
+            Map<String, Object> authContext = new HashMap<String, Object>();
             authContext.put("orderPaymentPreferenceId", paymentPref.getString("orderPaymentPreferenceId"));
             authContext.put("userLogin", context.get("userLogin"));
 
@@ -472,7 +473,7 @@ public class PaymentGatewayServices {
         }
 
         // make the process context
-        Map<String, Object> processContext = UtilMisc.newMap();
+        Map<String, Object> processContext = new HashMap<String, Object>();
 
         // get the visit record to obtain the client's IP address
         GenericValue orderHeader = orh.getOrderHeader();
@@ -948,7 +949,7 @@ public class PaymentGatewayServices {
             paymentConfig = "payment.properties";
         }
         GenericValue authTransaction = PaymentGatewayServices.getAuthTransaction(paymentPref);
-        Map<String, Object> releaseContext = UtilMisc.newMap();
+        Map<String, Object> releaseContext = new HashMap<String, Object>();
         releaseContext.put("orderPaymentPreference", paymentPref);
         releaseContext.put("releaseAmount", authTransaction.getBigDecimal("amount"));
         releaseContext.put("currency", currency);
@@ -1711,7 +1712,7 @@ public class PaymentGatewayServices {
         }
 
         // prepare the context for the capture service (must follow the ccCaptureInterface
-        Map<String, Object> captureContext = UtilMisc.newMap();
+        Map<String, Object> captureContext = new HashMap<String, Object>();
         captureContext.put("userLogin", userLogin);
         captureContext.put("orderPaymentPreference", paymentPref);
         captureContext.put("paymentConfig", paymentConfig);
@@ -1785,7 +1786,7 @@ public class PaymentGatewayServices {
     }
 
     private static void saveError(LocalDispatcher dispatcher, GenericValue userLogin, GenericValue paymentPref, Map<String, Object> result, String serviceType, String transactionCode) {
-        Map<String, Object> serviceContext = UtilMisc.newMap();
+        Map<String, Object> serviceContext = new HashMap<String, Object>();
         serviceContext.put("paymentServiceTypeEnumId", serviceType);
         serviceContext.put("orderPaymentPreference", paymentPref);
         serviceContext.put("transCodeEnumId", transactionCode);
@@ -2384,7 +2385,7 @@ public class PaymentGatewayServices {
         // call the service refundPayment
         Map<String, Object> refundResponse = null;
         try {
-            Map<String, Object> serviceContext = UtilMisc.newMap();
+            Map<String, Object> serviceContext = new HashMap<String, Object>();
             serviceContext.put("orderPaymentPreference", orderPaymentPreference);
             serviceContext.put("refundAmount", amount);
             serviceContext.put("userLogin", userLogin);
@@ -2437,7 +2438,7 @@ public class PaymentGatewayServices {
             paymentGatewayConfigId = paymentSettings.getString("paymentGatewayConfigId");
 
             if (serviceName != null) {
-                Map<String, Object> serviceContext = UtilMisc.newMap();
+                Map<String, Object> serviceContext = new HashMap<String, Object>();
                 serviceContext.put("orderPaymentPreference", paymentPref);
                 serviceContext.put("paymentConfig", paymentConfig);
                 serviceContext.put("paymentGatewayConfigId", paymentGatewayConfigId);
@@ -2446,7 +2447,7 @@ public class PaymentGatewayServices {
                 // get the creditCard/address/email
                 String payToPartyId = null;
                 try {
-                    payToPartyId = getBillingInformation(orh, paymentPref, UtilMisc.<String, Object>newMap());
+                    payToPartyId = getBillingInformation(orh, paymentPref, new HashMap<String, Object>());
                 } catch (GenericEntityException e) {
                     Debug.logError(e, "Problems getting billing information", module);
                     return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
@@ -3064,7 +3065,7 @@ public class PaymentGatewayServices {
         }
 
         // prepare the order payment preference (facade)
-        GenericValue orderPaymentPref = delegator.makeValue("OrderPaymentPreference", UtilMisc.newMap());
+        GenericValue orderPaymentPref = delegator.makeValue("OrderPaymentPreference", new HashMap<String, Object>());
         orderPaymentPref.set("orderPaymentPreferenceId", "_NA_");
         orderPaymentPref.set("orderId", "_NA_");
         orderPaymentPref.set("presentFlag", "N");
@@ -3080,7 +3081,7 @@ public class PaymentGatewayServices {
         String currency = EntityUtilProperties.getPropertyValue("general.properties", "currency.uom.id.default", "USD", delegator);
 
         // prepare the auth context
-        Map<String, Object> authContext = UtilMisc.newMap();
+        Map<String, Object> authContext = new HashMap<String, Object>();
         authContext.put("orderId", "_NA_");
         authContext.put("orderItems", UtilMisc.newList());
         authContext.put("orderPaymentPreference", orderPaymentPref);
@@ -3181,7 +3182,7 @@ public class PaymentGatewayServices {
                     "AccountingPaymentTransactionNotYetSupported",    locale));
         }
         // transaction request context
-        Map<String, Object> requestContext = UtilMisc.newMap();
+        Map<String, Object> requestContext = new HashMap<String, Object>();
         String paymentService = null;
         String paymentConfig = null;
         String paymentGatewayConfigId = null;
@@ -3327,7 +3328,7 @@ public class PaymentGatewayServices {
         if (UtilValidate.isNotEmpty(amount)) {
             BigDecimal authAmount = new BigDecimal(amount);
             if (authAmount.compareTo(BigDecimal.ZERO) > 0) {
-                Map<String, Object> ccAuthContext = UtilMisc.newMap();
+                Map<String, Object> ccAuthContext = new HashMap<String, Object>();
                 ccAuthContext.put("paymentMethodId", paymentMethodId);
                 ccAuthContext.put("productStoreId", productStoreId);
                 ccAuthContext.put("amount", authAmount);
@@ -3360,7 +3361,7 @@ public class PaymentGatewayServices {
      */
     public static Map<String, Object> testProcessor(DispatchContext dctx, Map<String, ? extends Object> context) {
         Locale locale = (Locale) context.get("locale");
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         BigDecimal processAmount = (BigDecimal) context.get("processAmount");
 
         if (processAmount != null && processAmount.compareTo(new BigDecimal("100.00")) >= 0)
@@ -3390,7 +3391,7 @@ public class PaymentGatewayServices {
      */
     public static Map<String, Object> testProcessorWithCapture(DispatchContext dctx, Map<String, ? extends Object> context) {
         Locale locale = (Locale) context.get("locale");
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         BigDecimal processAmount = (BigDecimal) context.get("processAmount");
 
         if (processAmount != null && processAmount.compareTo(new BigDecimal("100.00")) >= 0)
@@ -3453,7 +3454,7 @@ public class PaymentGatewayServices {
      */
     public static Map<String, Object> alwaysApproveProcessor(DispatchContext dctx, Map<String, ? extends Object> context) {
         Locale locale = (Locale) context.get("locale");
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Debug.logInfo("Test Processor Approving Credit Card", module);
 
         String refNum = UtilDateTime.nowAsString();
@@ -3471,7 +3472,7 @@ public class PaymentGatewayServices {
 
     public static Map<String, Object> alwaysApproveWithCapture(DispatchContext dctx, Map<String, ? extends Object> context) {
         Locale locale = (Locale) context.get("locale");
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         String refNum = UtilDateTime.nowAsString();
         Debug.logInfo("Test Processor Approving Credit Card with Capture", module);
 

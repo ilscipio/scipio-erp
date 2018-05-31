@@ -19,6 +19,7 @@
 package org.ofbiz.humanres;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -81,10 +82,10 @@ public class HumanResEvents {
                             title = memGroupCtx.getString("groupName");
                         }
                         
-                        Map josonMap = UtilMisc.newMap();
-                        Map dataMap = UtilMisc.newMap();
-                        Map dataAttrMap = UtilMisc.newMap();
-                        Map attrMap = UtilMisc.newMap();
+                        Map josonMap = new HashMap<String, Object>();
+                        Map dataMap = new HashMap<String, Object>();
+                        Map dataAttrMap = new HashMap<String, Object>();
+                        Map attrMap = new HashMap<String, Object>();
                         
                         dataAttrMap.put("onClick", onclickFunction + "('" + memberId + additionParam + "')");
                         
@@ -123,10 +124,10 @@ public class HumanResEvents {
                         String catNameField = null;
                         String title = null;
                         
-                        Map josonMap = UtilMisc.newMap();
-                        Map dataMap = UtilMisc.newMap();
-                        Map dataAttrMap = UtilMisc.newMap();
-                        Map attrMap = UtilMisc.newMap();
+                        Map josonMap = new HashMap<String, Object>();
+                        Map dataMap = new HashMap<String, Object>();
+                        Map dataAttrMap = new HashMap<String, Object>();
+                        Map attrMap = new HashMap<String, Object>();
                         
                         catId = childOfCom.get("partyIdTo");
                         
@@ -197,10 +198,10 @@ public class HumanResEvents {
 
                 if (UtilValidate.isNotEmpty(isEmpls)) {
                     for (GenericValue childOfEmpl : isEmpls ) {
-                        Map emplMap = UtilMisc.newMap();
-                        Map emplAttrMap = UtilMisc.newMap();
-                        Map empldataMap = UtilMisc.newMap();
-                        Map emplDataAttrMap = UtilMisc.newMap();
+                        Map emplMap = new HashMap<String, Object>();
+                        Map emplAttrMap = new HashMap<String, Object>();
+                        Map empldataMap = new HashMap<String, Object>();
+                        Map emplDataAttrMap = new HashMap<String, Object>();
                         
                         String emplId = (String) childOfEmpl.get("emplPositionId");
                         String typeId = (String) childOfEmpl.get("emplPositionTypeId");

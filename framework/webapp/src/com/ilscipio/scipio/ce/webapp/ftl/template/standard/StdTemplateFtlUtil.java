@@ -31,7 +31,7 @@ public abstract class StdTemplateFtlUtil {
         // TODO
         throw new UnsupportedOperationException("Not implemented");
         /*
-        Map<String, Object> res = new HashMap<String, Object>();
+        Map<String, Object> res = new HashMap<>();
         res.put("large", 1F);
         res.put("medium", 1F);
         res.put("small", 1F);

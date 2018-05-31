@@ -21,6 +21,7 @@ package org.ofbiz.content.compdoc;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -107,7 +108,7 @@ public class CompDocEvents {
                 request.setAttribute(obj.toString(), val);
             }
             // Update ContentRevision and ContentRevisonItem
-            Map<String, Object> contentRevisionMap = UtilMisc.newMap();
+            Map<String, Object> contentRevisionMap = new HashMap<String, Object>();
             contentRevisionMap.put("itemContentId", contentId);
             contentRevisionMap.put("contentId", contentId);
             contentRevisionMap.put("userLogin", userLogin);
@@ -159,7 +160,7 @@ public class CompDocEvents {
             https = (String) servletContext.getAttribute("https");
         }
 
-        Map<String, Object> mapIn = UtilMisc.newMap();
+        Map<String, Object> mapIn = new HashMap<String, Object>();
         mapIn.put("contentId", contentId);
         mapIn.put("locale", locale);
         mapIn.put("rootDir", rootDir);
@@ -230,7 +231,7 @@ public class CompDocEvents {
             https = (String) servletContext.getAttribute("https");
         }
 
-        Map<String, Object> mapIn = UtilMisc.newMap();
+        Map<String, Object> mapIn = new HashMap<String, Object>();
         mapIn.put("contentId", contentId);
         mapIn.put("locale", locale);
         mapIn.put("rootDir", rootDir);

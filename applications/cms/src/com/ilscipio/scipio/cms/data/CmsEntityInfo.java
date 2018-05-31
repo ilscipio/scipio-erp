@@ -100,8 +100,8 @@ public class CmsEntityInfo {
     }
     
     // NOTE: special fast cache pattern (read-only cache)
-    private static Map<ModelEntity, Set<String>> cmsContentIdFieldNamesCache = Collections.unmodifiableMap(new HashMap<ModelEntity, Set<String>>());
-    private static Map<ModelEntity, List<ModelRelation>> cmsContentModelRelationsCache = Collections.unmodifiableMap(new HashMap<ModelEntity, List<ModelRelation>>());
+    private static Map<ModelEntity, Set<String>> cmsContentIdFieldNamesCache = Collections.emptyMap();
+    private static Map<ModelEntity, List<ModelRelation>> cmsContentModelRelationsCache = Collections.emptyMap();
     
     // doesn't depend on model reader
     protected static final Map<String, Set<String>> entityCdataFields = Collections.unmodifiableMap(makeEntityCdataFieldsMap());
@@ -698,7 +698,7 @@ public class CmsEntityInfo {
             try {
                 List<String> resolvedEntityNames = EntityInfoUtil.makeEntityNameDependencyOrder(candidateModelEntities, candidateEntityNames,
                         CmsUtil.verboseOn(), logPrefix, logErrorSuffix);
-                List<String> candidateEntityNamesList = new ArrayList<String>(candidateEntityNames); // needed for equals
+                List<String> candidateEntityNamesList = new ArrayList<>(candidateEntityNames); // needed for equals
                 boolean orderChanged = !resolvedEntityNames.equals(candidateEntityNamesList);
                 if (prefOrderCheck && orderChanged) {
                     Debug.logWarning(logPrefix + "EntityInfo: Preferred entity order does not match the resolved dependencies order"

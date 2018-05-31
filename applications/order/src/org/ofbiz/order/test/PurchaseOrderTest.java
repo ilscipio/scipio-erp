@@ -19,6 +19,7 @@
 package org.ofbiz.order.test;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +48,7 @@ public class PurchaseOrderTest extends OFBizTestCase {
     }
 
     public void testCreatePurchaseOrder() throws Exception {
-        Map <String, Object> ctx = UtilMisc.newMap();
+        Map <String, Object> ctx = new HashMap<String, Object>();
         ctx.put("partyId", "Company");
         ctx.put("orderTypeId", "PURCHASE_ORDER");
         ctx.put("currencyUom", "USD");

@@ -289,8 +289,9 @@
                     
                     // BUTTON Definitions
                     var scipioAssetsBtn = {
-                        text: trumbowyg.lang.scipio_assets_insert,
-                        ico: 'unorderedList', // TODO: custom icon
+                        title: trumbowyg.lang.scipio_assets_insert,
+                        text: '<i class="fa fa-file-code-o" style="margin-left:5px; margin-right:5px;"/>',
+                        hasIcon: false,
                         fn: function () {
                             $.ajax({
                                 url: trumbowyg.o.plugins.scipio_assets.getAssetTypesServerPath,

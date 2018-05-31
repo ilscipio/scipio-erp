@@ -33,6 +33,7 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -697,7 +698,7 @@ public class ValueLinkApi {
      * @return Map containing the inital request values
      */
     public Map<String, Object> getInitialRequestMap(Map<String, Object> context) {
-        Map<String, Object> request = UtilMisc.newMap();
+        Map<String, Object> request = new HashMap<String, Object>();
 
         // merchant information
         request.put("MerchID", merchantId + terminalId);
@@ -942,7 +943,7 @@ public class ValueLinkApi {
         subResponse = StringUtil.replaceString(subResponse, "</td>", "");
 
         // make the map
-        Map<String, Object> responseMap = UtilMisc.newMap();
+        Map<String, Object> responseMap = new HashMap<String, Object>();
         responseMap.putAll(StringUtil.strToMap(subResponse, true));
 
         // add the raw html back in just in case we need it later

@@ -253,7 +253,7 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
         for(Object part : prevSplit) {
             if (part instanceof String) {
                 List<Object> listSplit = splitByPat((String) part, linkManualPat, modelMap, "origText", "value");
-                List<Object> fixupListSplit = new ArrayList<Object>();
+                List<Object> fixupListSplit = new ArrayList<>();
                 for(Object listObj : listSplit) {
                     fixupListSplit.add(fixupLink(listObj, entryMap, libMap, libInfo));
                 }
@@ -272,7 +272,7 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
         for(Object part : prevSplit) {
             if (part instanceof String) {
                 List<Object> listSplit = splitByPat((String) part, linkAutoPat, modelMap, "origText", null, "value");
-                List<Object> fixupListSplit = new ArrayList<Object>();
+                List<Object> fixupListSplit = new ArrayList<>();
                 for(Object listObj : listSplit) {
                     fixupListSplit.add(fixupLink(listObj, entryMap, libMap, libInfo));
                 }
@@ -445,13 +445,13 @@ public class ScipioLibTemplateHelper extends TemplateHelper {
             
             msgHandler.logDebug("Pattern: " + listLinePat.toString());
             
-            List<Object> listItemTexts = new LinkedList<>();
-            String listItemText = null;
-            
             int lineCharsConsumed = 0;
             int numLinesConsumed = 0;
             // NOTE: intentionally hardcode \n for now
             String[] lines = listText.split("\n");
+            List<Object> listItemTexts = new ArrayList<>();
+            String listItemText = null;
+
             for(String line : lines) {
                 Matcher linem = listLinePat.matcher(line);
                 if (linem.matches()) {

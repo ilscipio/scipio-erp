@@ -544,7 +544,7 @@ public class ProductWorker {
                 }
                 // otherwise create a new featureType
                 if(featureType == null){
-                    featureType = UtilMisc.newMap();
+                    featureType = new HashMap<String, Object>();
                     GenericValue productFeatureType = EntityQuery.use(delegator).from("ProductFeatureType").where("productFeatureTypeId", productFeatureAppl.getString("productFeatureTypeId")).queryOne();
                     featureType.put("description",productFeatureType.get("description", locale));
                     featureType.put("productFeatureTypeId", productFeatureAppl.get("productFeatureTypeId", locale));
@@ -989,7 +989,7 @@ public class ProductWorker {
         } else {
             // attempt a conversion if necessary
             if (desiredUomId != null && product.get("weightUomId") != null && !desiredUomId.equals(product.get("weightUomId"))) {
-                Map<String, Object> result = UtilMisc.newMap();
+                Map<String, Object> result = new HashMap<String, Object>();
                 try {
                     result = dispatcher.runSync("convertUom", UtilMisc.<String, Object>toMap("uomId", weightUomId, "uomIdTo", desiredUomId, "originalValue", weight));
                 } catch (GenericServiceException e) {
@@ -1389,7 +1389,7 @@ nextProd:
                 Boolean isMarketingPackage = EntityTypeUtil.hasParentType(delegator, "ProductType", "productTypeId", product.getString("productTypeId"), "parentTypeId", "MARKETING_PKG");
                 
                 if ( UtilValidate.isNotEmpty(isMarketingPackage) && isMarketingPackage) {
-                    Map<String, Object> resultOutput = UtilMisc.newMap();
+                    Map<String, Object> resultOutput = new HashMap<String, Object>();
                     resultOutput = dispatcher.runSync("getMktgPackagesAvailable", UtilMisc.toMap("productId" ,productId));
                     Debug.logWarning("Error getting available marketing package.", module);
                     

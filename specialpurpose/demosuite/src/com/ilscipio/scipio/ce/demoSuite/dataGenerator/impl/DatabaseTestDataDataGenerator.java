@@ -1,18 +1,14 @@
 package com.ilscipio.scipio.ce.demoSuite.dataGenerator.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.ofbiz.base.conversion.JSONConverters;
-import org.ofbiz.base.conversion.JSONConverters.JSONToList;
 import org.ofbiz.base.util.HttpClient;
 
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.DataGenerator;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.DatabaseTestDemoDataHelper;
-import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.DatabaseTestDemoDataHelper.DatabaseTestSettings;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.DemoDataHelper;
-
-import org.ofbiz.base.util.UtilMisc;
 
 @Deprecated
 /**
@@ -41,7 +37,7 @@ public class DatabaseTestDataDataGenerator extends DataGenerator {
 	@Override
 	public List<? extends DemoDataObject> retrieveData() {
 		HttpClient httpClient = new HttpClient();
-		DatabaseTestSettings settings = helper.getSettings();
+		//DatabaseTestSettings settings = helper.getSettings();
 		String format = helper.getProperties()
 				.getProperty("demosuite.test.data.provider." + getDataGeneratorName() + ".exportFormat");
 		String url = helper.getProperties()
@@ -49,8 +45,8 @@ public class DatabaseTestDataDataGenerator extends DataGenerator {
 		httpClient.setContentType("application/json");
 		httpClient.setUrl(url + "&x__format=" + format + "&x__no_entries=" + helper.getCount());
 
-		JSONToList jsonListConverter = new JSONConverters.JSONToList();
-		List<DemoDataObject> resultList = UtilMisc.newList();
+		//JSONToList jsonListConverter = new JSONConverters.JSONToList();
+		List<DemoDataObject> resultList = new ArrayList<>();
 
 		// try {
 		// String r =

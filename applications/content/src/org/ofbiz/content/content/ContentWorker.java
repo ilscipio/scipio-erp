@@ -257,7 +257,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
         String contentId = content.getString("contentId");
 
         if (templateContext == null) {
-            templateContext = UtilMisc.newMap();
+            templateContext = new HashMap<String, Object>();
         }
 
         // create the content facade
@@ -585,7 +585,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
             List<String> contentTypeAncestry = UtilMisc.newList();
             getContentTypeAncestry(delegator, contentTypeId, contentTypeAncestry);
 
-            Map<String, Object> context = UtilMisc.newMap();
+            Map<String, Object> context = new HashMap<String, Object>();
             context.put("content", content);
             context.put("contentAssocTypeId", contentAssocTypeId);
             //context.put("related", related);
@@ -597,7 +597,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
             boolean isReturnBefore = checkReturnWhen(context, (String) whenMap.get("returnBeforePickWhen"));
             Map<String, Object> thisNode = null;
             if (isPick || !isReturnBefore) {
-                thisNode = UtilMisc.newMap();
+                thisNode = new HashMap<String, Object>();
                 thisNode.put("contentId", contentId);
                 thisNode.put("contentTypeId", contentTypeId);
                 thisNode.put("contentAssocTypeId", contentAssocTypeId);
@@ -616,7 +616,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
             if (!isReturnAfter) {
                 List<String> assocTypes = UtilMisc.newList();
                 List<GenericValue> relatedAssocs = getContentAssocsWithId(delegator, contentId, fromDate, thruDate, direction, assocTypes);
-                Map<String, Object> assocContext = UtilMisc.newMap();
+                Map<String, Object> assocContext = new HashMap<String, Object>();
                 assocContext.put("related", relatedAssocs);
                 for (GenericValue assocValue : relatedAssocs) {
                     contentAssocTypeId = (String) assocValue.get("contentAssocTypeId");
@@ -1147,13 +1147,13 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
     }
 
     public static Map<String, Object> callContentPermissionCheckResult(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> context) {
-        Map<String, Object> permResults = UtilMisc.newMap();
+        Map<String, Object> permResults = new HashMap<String, Object>();
         String skipPermissionCheck = (String) context.get("skipPermissionCheck");
 
         if (UtilValidate.isEmpty(skipPermissionCheck) 
                 || (!"true".equalsIgnoreCase(skipPermissionCheck) && !"granted".equalsIgnoreCase(skipPermissionCheck))) {
             GenericValue userLogin = (GenericValue) context.get("userLogin");
-            Map<String, Object> serviceInMap = UtilMisc.newMap();
+            Map<String, Object> serviceInMap = new HashMap<String, Object>();
             serviceInMap.put("userLogin", userLogin);
             serviceInMap.put("targetOperationList", context.get("targetOperationList"));
             serviceInMap.put("contentPurposeList", context.get("contentPurposeList"));
@@ -1322,7 +1322,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
     }
 
     public static Map<String, Object> buildPickContext(Delegator delegator, String contentAssocTypeId, String assocContentId, String direction, GenericValue thisContent) throws GenericEntityException {
-        Map<String, Object> ctx = UtilMisc.newMap();
+        Map<String, Object> ctx = new HashMap<String, Object>();
         ctx.put("contentAssocTypeId", contentAssocTypeId);
         ctx.put("contentId", assocContentId);
         // This needs to be the opposite
@@ -1349,7 +1349,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
     }
 
     public static void checkConditions(Delegator delegator, Map<String, Object> trailNode, Map<String, Object> contentAssoc, Map<String, Object> whenMap) {
-        Map<String, Object> context = UtilMisc.newMap();
+        Map<String, Object> context = new HashMap<String, Object>();
         GenericValue content = (GenericValue)trailNode.get("value");
         // String contentId = (String)trailNode.get("contentId");
         if (contentAssoc == null && content != null && (content.getEntityName().indexOf("Assoc") >= 0)) {
@@ -1520,7 +1520,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
             return thisNode;
         }
 
-        thisNode = UtilMisc.newMap();
+        thisNode = new HashMap<String, Object>();
         thisNode.put("value", thisContent);
         String contentId = (String)thisContent.get("contentId");
         thisNode.put("contentId", contentId);

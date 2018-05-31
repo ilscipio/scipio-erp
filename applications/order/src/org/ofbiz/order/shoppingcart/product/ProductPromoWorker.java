@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -2079,7 +2080,7 @@ public class ProductPromoWorker {
     protected static void handleProductPromoCategories(Set<String> productIds, List<GenericValue> productPromoCategories, String productPromoApplEnumId, Delegator delegator, Timestamp nowTimestamp) throws GenericEntityException {
         boolean include = !"PPPA_EXCLUDE".equals(productPromoApplEnumId);
         Set<String> productCategoryIds = UtilMisc.newSet();
-        Map<String, List<Set<String>>> productCategoryGroupSetListMap = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+        Map<String, List<Set<String>>> productCategoryGroupSetListMap = new LinkedHashMap<String, List<Set<String>>>();
 
         for (GenericValue productPromoCategory : productPromoCategories) {
             if (productPromoApplEnumId.equals(productPromoCategory.getString("productPromoApplEnumId"))) {

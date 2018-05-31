@@ -23,7 +23,6 @@ import org.ofbiz.service.ServiceDispatcher;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.config.ServiceConfigUtil;
 import org.ofbiz.service.config.model.Engine;
-import org.ofbiz.service.config.model.ServiceConfig;
 import org.ofbiz.service.config.model.ServiceEngine;
 import org.ofbiz.service.engine.XMLRPCClientEngine;
 

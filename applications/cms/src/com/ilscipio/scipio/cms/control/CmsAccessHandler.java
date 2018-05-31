@@ -10,8 +10,8 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.GenericValue;
 
 import com.ilscipio.scipio.ce.webapp.control.util.AccessTokenProvider;
-import com.ilscipio.scipio.ce.webapp.control.util.AccessTokenProvider.EventHandler;
 import com.ilscipio.scipio.ce.webapp.control.util.AccessTokenProvider.AccessToken;
+import com.ilscipio.scipio.ce.webapp.control.util.AccessTokenProvider.EventHandler;
 import com.ilscipio.scipio.cms.content.CmsPage;
 
 /**

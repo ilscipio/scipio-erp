@@ -170,7 +170,7 @@ public class FinAccountProductServices {
         }
 
         // create the context for FSE
-        Map<String, Object> expContext = UtilMisc.newMap();
+        Map<String, Object> expContext = new HashMap<String, Object>();
         expContext.put("orderHeader", orderHeader);
         expContext.put("orderItem", orderItem);
         expContext.put("party", party);
@@ -187,7 +187,7 @@ public class FinAccountProductServices {
         BigDecimal deposit = price.multiply(quantity).setScale(FinAccountHelper.decimals, FinAccountHelper.rounding);
 
         // create the financial account
-        Map<String, Object> createCtx = UtilMisc.newMap();
+        Map<String, Object> createCtx = new HashMap<String, Object>();
         String finAccountId;
 
         createCtx.put("finAccountTypeId", finAccountTypeId);
@@ -219,7 +219,7 @@ public class FinAccountProductServices {
         finAccountId = (String) createResp.get("finAccountId");
 
         // create the owner role
-        Map<String, Object> roleCtx = UtilMisc.newMap();
+        Map<String, Object> roleCtx = new HashMap<String, Object>();
         roleCtx.put("partyId", partyId);
         roleCtx.put("roleTypeId", "OWNER");
         roleCtx.put("finAccountId", finAccountId);
@@ -238,7 +238,7 @@ public class FinAccountProductServices {
         }
 
         // create the initial deposit
-        Map<String, Object> depositCtx = UtilMisc.newMap();
+        Map<String, Object> depositCtx = new HashMap<String, Object>();
         depositCtx.put("finAccountId", finAccountId);
         depositCtx.put("productStoreId", productStoreId);
         depositCtx.put("currency", currency);

@@ -20,6 +20,7 @@
 package org.ofbiz.product.test;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.ofbiz.base.util.UtilDateTime;
@@ -49,7 +50,7 @@ public class InventoryItemTransferTest extends OFBizTestCase {
 
     public void testCreateInventoryItemsTransfer() throws Exception {
         // create
-        Map<String, Object> ctx = UtilMisc.newMap();
+        Map<String, Object> ctx = new HashMap<String, Object>();
         String inventoryItemId = "9005";
         ctx.put("inventoryItemId", inventoryItemId);
         ctx.put("statusId", "IXF_REQUESTED");
@@ -63,7 +64,7 @@ public class InventoryItemTransferTest extends OFBizTestCase {
         assertNotNull(inventoryTransferId);
 
         // transfer
-        ctx = UtilMisc.newMap();
+        ctx = new HashMap<String, Object>();
         ctx.put("inventoryTransferId", inventoryTransferId);
         ctx.put("inventoryItemId", inventoryItemId);
         ctx.put("statusId", "IXF_COMPLETE");

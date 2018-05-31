@@ -43,7 +43,7 @@ public abstract class CmsWebSiteConfig implements Serializable {
 
     static {
         Set<String> excludeFields = UtilMisc.toHashSet("webSiteId");
-        ArrayList<Field> fields = new ArrayList<Field>(CmsWebSiteConfig.class.getDeclaredFields().length);
+        ArrayList<Field> fields = new ArrayList<>(CmsWebSiteConfig.class.getDeclaredFields().length);
         Set<String> names = new LinkedHashSet<>();
         for(Field field : CmsWebSiteConfig.class.getDeclaredFields()) {
             if (excludeFields.contains(field.getName())) continue;

@@ -263,7 +263,7 @@ public abstract class AccessTokenProvider<V> {
      */
     public static class HashMapSimpleAccessTokenProvider<V> extends MapSimpleAccessTokenProvider<V> {
         protected HashMapSimpleAccessTokenProvider(EventHandler<V> eventHandler) {
-            super(eventHandler, new HashMap<AccessToken, V>());
+            super(eventHandler, new HashMap<>());
         }
     }
     

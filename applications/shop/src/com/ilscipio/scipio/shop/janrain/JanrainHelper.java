@@ -43,7 +43,6 @@ import javax.xml.xpath.XPathFactory;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
@@ -218,7 +217,7 @@ public class JanrainHelper {
                 return "error";
             }
             
-            Map<String, String> result = UtilMisc.newMap();
+            Map<String, String> result = new HashMap<String, String>();
             result.put("displayName", displayName);
             result.put("email", email);
             result.put("identifier", identifier);

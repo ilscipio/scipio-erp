@@ -20,6 +20,7 @@ package org.ofbiz.product.product;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -1014,7 +1015,7 @@ public class ProductEvents {
         paramMap.put("locale", UtilHttp.getLocale(request));
         paramMap.put("userLogin", session.getAttribute("userLogin"));
 
-        Map<String, Object> context = UtilMisc.newMap();
+        Map<String, Object> context = new HashMap<String, Object>();
         context.put("bodyScreenUri", bodyScreenLocation);
         context.put("bodyParameters", paramMap);
         context.put("sendTo", paramMap.get("sendTo"));

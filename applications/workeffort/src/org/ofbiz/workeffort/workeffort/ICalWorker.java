@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -69,7 +70,7 @@ public class ICalWorker {
     }
 
     protected static Map<String, Object> createConversionContext(HttpServletRequest request) {
-        Map<String, Object> context = UtilMisc.newMap();
+        Map<String, Object> context = new HashMap<String, Object>();
         Enumeration<String> attributeEnum = UtilGenerics.cast(request.getAttributeNames());
         while (attributeEnum.hasMoreElements()) {
             String attributeName = attributeEnum.nextElement();

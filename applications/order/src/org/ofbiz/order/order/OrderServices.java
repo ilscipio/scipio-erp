@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -94,8 +95,8 @@ public class OrderServices {
     public static final String resourceProduct = "ProductUiLabels";
     public static final String resourceCommon = "CommonUiLabels";
 
-    public static Map<String, String> salesAttributeRoleMap = UtilMisc.newMap();
-    public static Map<String, String> purchaseAttributeRoleMap = UtilMisc.newMap();
+    public static Map<String, String> salesAttributeRoleMap = new HashMap<String, String>();
+    public static Map<String, String> purchaseAttributeRoleMap = new HashMap<String, String>();
     static {
         salesAttributeRoleMap.put("placingCustomerPartyId", "PLACING_CUSTOMER");
         salesAttributeRoleMap.put("billToCustomerPartyId", "BILL_TO_CUSTOMER");
@@ -263,9 +264,9 @@ public class OrderServices {
 
         // check inventory and other things for each item
         List<String> errorMessages = UtilMisc.newList();
-        Map<String, BigDecimal> normalizedItemQuantities = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
-        Map<String, String> normalizedItemNames = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
-        Map<String, GenericValue> itemValuesBySeqId = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+        Map<String, BigDecimal> normalizedItemQuantities = new LinkedHashMap<String, BigDecimal>();
+        Map<String, String> normalizedItemNames = new LinkedHashMap<String, String>();
+        Map<String, GenericValue> itemValuesBySeqId = new LinkedHashMap<String, GenericValue>();
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 
         // need to run through the items combining any cases where multiple
@@ -467,7 +468,7 @@ public class OrderServices {
         }
 
         if (UtilValidate.isNotEmpty(orgPartyId)) {
-            Map<String, Object> getNextOrderIdContext = UtilMisc.newMap();
+            Map<String, Object> getNextOrderIdContext = new HashMap<String, Object>();
             getNextOrderIdContext.putAll(context);
             getNextOrderIdContext.put("partyId", orgPartyId);
             getNextOrderIdContext.put("userLogin", userLogin);
@@ -1183,7 +1184,7 @@ public class OrderServices {
                             }
                         }
 
-                        Map<String, Object> ripCtx = UtilMisc.newMap();
+                        Map<String, Object> ripCtx = new HashMap<String, Object>();
                         if (UtilValidate.isNotEmpty(inventoryFacilityId) && UtilValidate.isNotEmpty(productId)
                                 && orderItem.getBigDecimal("quantity").compareTo(BigDecimal.ZERO) > 0) {
                             // do something tricky here: run as the "system"
@@ -2365,7 +2366,7 @@ public class OrderServices {
                             changeComments = itemCommentMap.get(orderItem.getString("orderItemSeqId"));
                         }
 
-                        Map<String, Object> serviceCtx = UtilMisc.newMap();
+                        Map<String, Object> serviceCtx = new HashMap<String, Object>();
                         serviceCtx.put("orderId", orderItem.getString("orderId"));
                         serviceCtx.put("orderItemSeqId", orderItem.getString("orderItemSeqId"));
                         serviceCtx.put("cancelQuantity", thisCancelQty);
@@ -2818,7 +2819,7 @@ public class OrderServices {
         }
 
         // prepare the order information
-        Map<String, Object> sendMap = UtilMisc.newMap();
+        Map<String, Object> sendMap = new HashMap<String, Object>();
 
         // get the order header and store
         GenericValue orderHeader = null;
@@ -3798,7 +3799,7 @@ public class OrderServices {
 
             // update the status of service goods to COMPLETED;
             for (GenericValue item : serviceItems) {
-                Map<String, Object> statusCtx = UtilMisc.newMap();
+                Map<String, Object> statusCtx = new HashMap<String, Object>();
                 statusCtx.put("orderId", item.getString("orderId"));
                 statusCtx.put("orderItemSeqId", item.getString("orderItemSeqId"));
                 statusCtx.put("statusId", "ITEM_COMPLETED");
@@ -4731,7 +4732,7 @@ public class OrderServices {
                 if ("Y".equals(valueObj.getString("isPromo"))) {
                     // Fetching the new promo items and adding it to list so
                     // that we can create OrderStatus record for that items.
-                    Map<String, Object> promoItem = UtilMisc.newMap();
+                    Map<String, Object> promoItem = new HashMap<String, Object>();
                     promoItem.put("orderId", valueObj.getString("orderId"));
                     promoItem.put("orderItemSeqId", valueObj.getString("orderItemSeqId"));
                     promoItem.put("quantity", valueObj.getBigDecimal("quantity"));
@@ -4756,7 +4757,7 @@ public class OrderServices {
                     String oldItemComment = oldOrderItem.getString("comments") != null ? oldOrderItem.getString("comments") : "";
 
                     boolean changeFound = false;
-                    Map<String, Object> modifiedItem = UtilMisc.newMap();
+                    Map<String, Object> modifiedItem = new HashMap<String, Object>();
                     if (!oldItemDescription.equals(valueObj.getString("itemDescription"))) {
                         modifiedItem.put("itemDescription", oldItemDescription);
                         changeFound = true;
@@ -4796,7 +4797,7 @@ public class OrderServices {
                     // this is a new item appended to the order
                     Map<String, String> itemReasonMap = UtilGenerics.checkMap(changeMap.get("itemReasonMap"));
                     Map<String, String> itemCommentMap = UtilGenerics.checkMap(changeMap.get("itemCommentMap"));
-                    Map<String, Object> appendedItem = UtilMisc.newMap();
+                    Map<String, Object> appendedItem = new HashMap<String, Object>();
                     if (UtilValidate.isNotEmpty(itemReasonMap)) {
                         String changeReasonId = itemReasonMap.get("reasonEnumId");
                         appendedItem.put("reasonEnumId", changeReasonId);
@@ -4838,7 +4839,7 @@ public class OrderServices {
         // store the OrderItemChange
         if (UtilValidate.isNotEmpty(modifiedItems)) {
             for (Map<String, Object> modifiendItem : modifiedItems) {
-                Map<String, Object> serviceCtx = UtilMisc.newMap();
+                Map<String, Object> serviceCtx = new HashMap<String, Object>();
                 serviceCtx.put("orderId", modifiendItem.get("orderId"));
                 serviceCtx.put("orderItemSeqId", modifiendItem.get("orderItemSeqId"));
                 serviceCtx.put("itemDescription", modifiendItem.get("itemDescription"));
@@ -5122,7 +5123,7 @@ public class OrderServices {
                 return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "OrderOrderNotFound", UtilMisc.toMap("orderId", orderId), locale));
             }
 
-            Map<String, Object> ctx = UtilMisc.newMap();
+            Map<String, Object> ctx = new HashMap<String, Object>();
             ctx.put("statusId", statusId);
             ctx.put("orderId", orderId);
             ctx.put("setItemStatus", "Y");
@@ -5162,7 +5163,7 @@ public class OrderServices {
                 return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "OrderOrderNotFound", UtilMisc.toMap("orderId", orderId), locale));
             }
 
-            Map<String, Object> ctx = UtilMisc.newMap();
+            Map<String, Object> ctx = new HashMap<String, Object>();
             ctx.put("statusId", statusId);
             ctx.put("orderId", orderId);
             ctx.put("userLogin", userLogin);
@@ -5189,7 +5190,7 @@ public class OrderServices {
             if (UtilValidate.isEmpty(orderId)) {
                 continue;
             }
-            Map<String, Object> ctx = UtilMisc.newMap();
+            Map<String, Object> ctx = new HashMap<String, Object>();
             ctx.put("userLogin", userLogin);
             ctx.put("orderId", orderId);
 
@@ -5213,7 +5214,7 @@ public class OrderServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Locale locale = (Locale) context.get("locale");
         // grouped by facility
-        Map<String, List<String>> facilityOrdersMap = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+        Map<String, List<String>> facilityOrdersMap = new LinkedHashMap<String, List<String>>();
 
         // make the list per facility
         List<String> orderIds = UtilGenerics.checkList(context.get("orderIdList"));
@@ -5246,7 +5247,7 @@ public class OrderServices {
         for (String facilityId : facilityOrdersMap.keySet()) {
             List<String> orderIdList = facilityOrdersMap.get(facilityId);
 
-            Map<String, Object> ctx = UtilMisc.newMap();
+            Map<String, Object> ctx = new HashMap<String, Object>();
             ctx.put("userLogin", userLogin);
             ctx.put("orderIdList", orderIdList);
             ctx.put("facilityId", facilityId);
@@ -5278,7 +5279,7 @@ public class OrderServices {
             if (UtilValidate.isEmpty(orderId)) {
                 continue;
             }
-            Map<String, Object> ctx = UtilMisc.newMap();
+            Map<String, Object> ctx = new HashMap<String, Object>();
             ctx.put("userLogin", userLogin);
             ctx.put("screenLocation", screenLocation);
             // ctx.put("contentType", "application/postscript");
@@ -5307,7 +5308,7 @@ public class OrderServices {
             if (UtilValidate.isEmpty(orderId)) {
                 continue;
             }
-            Map<String, Object> ctx = UtilMisc.newMap();
+            Map<String, Object> ctx = new HashMap<String, Object>();
             ctx.put("userLogin", userLogin);
             ctx.put("screenLocation", screenLocation);
             // ctx.put("contentType", "application/postscript");
@@ -5333,7 +5334,7 @@ public class OrderServices {
             if (UtilValidate.isEmpty(orderId)) {
                 continue;
             }
-            Map<String, Object> ctx = UtilMisc.newMap();
+            Map<String, Object> ctx = new HashMap<String, Object>();
             ctx.put("orderId", orderId);
             ctx.put("userLogin", userLogin);
 
@@ -6742,7 +6743,7 @@ public class OrderServices {
         }
 
         for (String orderId : orderIds) {
-            Map<String, Object> svcIn = UtilMisc.newMap();
+            Map<String, Object> svcIn = new HashMap<String, Object>();
             svcIn.put("userLogin", context.get("userLogin"));
             svcIn.put("orderId", orderId);
             try {
@@ -6807,7 +6808,7 @@ public class OrderServices {
                         updateCtx.put("quantity", newQuantity);
                         dispatcher.runSync("updateProductAssoc", updateCtx);
                     } else {
-                        Map<String, Object> createCtx = UtilMisc.newMap();
+                        Map<String, Object> createCtx = new HashMap<String, Object>();
                         createCtx.put("userLogin", context.get("userLogin"));
                         createCtx.put("productId", productId);
                         createCtx.put("productIdTo", productIdTo);

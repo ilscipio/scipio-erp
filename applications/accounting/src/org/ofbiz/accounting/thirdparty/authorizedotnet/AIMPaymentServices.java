@@ -21,6 +21,7 @@ package org.ofbiz.accounting.thirdparty.authorizedotnet;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -80,7 +81,7 @@ public class AIMPaymentServices {
         Delegator delegator = ctx.getDelegator();
         Locale locale = (Locale) context.get("locale");
         Map<String, Object> results = ServiceUtil.returnSuccess();
-        Map<String, Object> request = UtilMisc.newMap();
+        Map<String, Object> request = new HashMap<String, Object>();
         Properties props = buildAIMProperties(context, delegator);
         buildMerchantInfo(context, props, request);
         buildGatewayResponeConfig(context, props, request);
@@ -121,7 +122,7 @@ public class AIMPaymentServices {
         context.put("creditCard", creditCard);
         context.put("authTransaction", authTransaction);
         Map<String, Object> results = ServiceUtil.returnSuccess();
-        Map<String, Object> request = UtilMisc.newMap();
+        Map<String, Object> request = new HashMap<String, Object>();
         Properties props = buildAIMProperties(context, delegator);
         buildMerchantInfo(context, props, request);
         buildGatewayResponeConfig(context, props, request);
@@ -169,7 +170,7 @@ public class AIMPaymentServices {
         context.put("creditCard",creditCard);
         context.put("authTransaction",authTransaction);
         Map<String, Object> results = ServiceUtil.returnSuccess();
-        Map<String, Object> request = UtilMisc.newMap();
+        Map<String, Object> request = new HashMap<String, Object>();
         Properties props = buildAIMProperties(context, delegator);
         buildMerchantInfo(context, props, request);
         buildGatewayResponeConfig(context, props, request);
@@ -260,7 +261,7 @@ public class AIMPaymentServices {
         Locale locale = (Locale) context.get("locale");
         context.put("authTransaction", authTransaction);
         Map<String, Object> results = ServiceUtil.returnSuccess();
-        Map<String, Object> request = UtilMisc.newMap();
+        Map<String, Object> request = new HashMap<String, Object>();
         Properties props = buildAIMProperties(context, delegator);
         buildMerchantInfo(context, props, request);
         buildGatewayResponeConfig(context, props, request);
@@ -277,7 +278,7 @@ public class AIMPaymentServices {
     }
 
     public static Map<String, Object> ccCredit(DispatchContext ctx, Map<String, Object> context) {
-        Map<String, Object> results = UtilMisc.newMap();
+        Map<String, Object> results = new HashMap<String, Object>();
         results.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
         results.put(ModelService.ERROR_MESSAGE, "Authorize.net ccCredit unsupported with version 3.1");
         return results;
@@ -287,7 +288,7 @@ public class AIMPaymentServices {
         Delegator delegator = ctx.getDelegator();
         Locale locale = (Locale) context.get("locale");
         Map<String, Object> results = ServiceUtil.returnSuccess();
-        Map<String, Object> request = UtilMisc.newMap();
+        Map<String, Object> request = new HashMap<String, Object>();
         Properties props = buildAIMProperties(context, delegator);
         buildMerchantInfo(context, props, request);
         buildGatewayResponeConfig(context, props, request);
@@ -313,7 +314,7 @@ public class AIMPaymentServices {
     }
 
     private static Map<String, Object> processCard(Map<String, Object> request, Properties props, Locale locale) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         String url = props.getProperty("url");
         if (UtilValidate.isEmpty(url)) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
@@ -635,7 +636,7 @@ public class AIMPaymentServices {
     }
 
     private static Map<String, Object> validateRequest(Map<String, Object> params, Properties props, Map<String, Object> AIMRequest) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
     }
@@ -697,7 +698,7 @@ public class AIMPaymentServices {
     }
 
     private static Map<String, Object> processRefundTransResult(Map<String, Object> request, Map<String, Object> reply) {
-        Map<String, Object> results = UtilMisc.newMap();
+        Map<String, Object> results = new HashMap<String, Object>();
         AuthorizeResponse ar = (AuthorizeResponse) reply.get("authorizeResponse");
         try {
             Boolean captureResult = (Boolean) reply.get("authResult");
@@ -724,7 +725,7 @@ public class AIMPaymentServices {
     }
 
     private static Map<String, Object> processReleaseTransResult(Map<String, Object> request, Map<String, Object> reply) {
-        Map<String, Object> results = UtilMisc.newMap();
+        Map<String, Object> results = new HashMap<String, Object>();
         AuthorizeResponse ar = (AuthorizeResponse) reply.get("authorizeResponse");
         try {
             Boolean captureResult = (Boolean) reply.get("authResult");

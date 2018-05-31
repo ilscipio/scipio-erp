@@ -24,6 +24,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -1078,7 +1079,7 @@ public class ProductSearchSession {
         String searchSortOrderString = searchGetSortOrderString(false, request);
 
         // ========== populate the result Map
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
 
         result.put("productIds", productIds);
         result.put("viewIndex", Integer.valueOf(viewIndex));

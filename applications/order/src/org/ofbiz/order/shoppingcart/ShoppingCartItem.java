@@ -140,7 +140,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     private Timestamp estimatedShipDate = null;
     private Timestamp cancelBackOrderDate = null;
 
-    private Map<String, String> contactMechIdsMap = UtilMisc.newMap();
+    private Map<String, String> contactMechIdsMap = new HashMap<String, String>();
     private List<GenericValue> orderItemPriceInfos = null;
     private List<GenericValue> itemAdjustments = UtilMisc.newList();
     private boolean isPromo = false;
@@ -678,7 +678,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.orderItemAssocTypeId = item.getOrderItemAssocTypeId();
         this.setStatusId(item.getStatusId());
         if (UtilValidate.isEmpty(item.getOrderItemAttributes())) {
-            this.orderItemAttributes = UtilMisc.newMap();
+            this.orderItemAttributes = new HashMap<String, String>();
             this.orderItemAttributes.putAll(item.getOrderItemAttributes());
         }
         this.attributes = item.getAttributes() == null ? new HashMap<String, Object>() : new HashMap<String, Object>(item.getAttributes());
@@ -1133,7 +1133,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         // set basePrice using the calculateProductPrice service
         if (_product != null && isModifiedPrice == false) {
             try {
-                Map<String, Object> priceContext = UtilMisc.newMap();
+                Map<String, Object> priceContext = new HashMap<String, Object>();
 
                 String partyId = cart.getPartyId();
                 if (partyId != null) {
@@ -1271,7 +1271,7 @@ public class ShoppingCartItem implements java.io.Serializable {
                     }
 
                     // no try to do a recurring price calculation; not all products have recurring prices so may be null
-                    Map<String, Object> recurringPriceContext = UtilMisc.newMap();
+                    Map<String, Object> recurringPriceContext = new HashMap<String, Object>();
                     recurringPriceContext.putAll(priceContext);
                     recurringPriceContext.put("productPricePurposeId", "RECURRING_CHARGE");
                     Map<String, Object> recurringPriceResult = dispatcher.runSync("calculateProductPrice", recurringPriceContext);
@@ -1946,7 +1946,7 @@ public class ShoppingCartItem implements java.io.Serializable {
 
 
     public Map<String, Object> getItemProductInfo() {
-        Map<String, Object> itemInfo = UtilMisc.newMap();
+        Map<String, Object> itemInfo = new HashMap<String, Object>();
         itemInfo.put("productId", this.getProductId());
         itemInfo.put("weight", this.getWeight());
         itemInfo.put("weightUomId", this.getProduct().getString("weightUomId"));
@@ -2186,7 +2186,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     }
 
     public Map<String, BigDecimal> getFeatureIdQtyMap(BigDecimal quantity) {
-        Map<String, BigDecimal> featureMap = UtilMisc.newMap();
+        Map<String, BigDecimal> featureMap = new HashMap<String, BigDecimal>();
         GenericValue product = this.getProduct();
         if (product != null) {
             List<GenericValue> featureAppls = null;
@@ -2252,7 +2252,7 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     /** Creates an OrderItemAttribute entry. */
     public void setOrderItemAttribute(String name, String value) {
-        if (orderItemAttributes == null) orderItemAttributes = UtilMisc.newMap();
+        if (orderItemAttributes == null) orderItemAttributes = new HashMap<String, String>();
         this.orderItemAttributes.put(name, value);
     }
 
@@ -2263,7 +2263,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     }
 
     public Map<String, String> getOrderItemAttributes() {
-        Map<String, String> attrs = UtilMisc.newMap();
+        Map<String, String> attrs = new HashMap<String, String>();
         if (orderItemAttributes != null) {
             attrs.putAll(orderItemAttributes);
         }
@@ -2507,7 +2507,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             return ProductWorker.getOptionalProductFeatures(getDelegator(), this.productId);
         } else {
             // non-product items do not have features
-            return UtilMisc.newMap();
+            return new HashMap<String, List<GenericValue>>();
         }
     }
 

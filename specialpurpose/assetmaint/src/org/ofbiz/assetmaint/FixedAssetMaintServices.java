@@ -18,6 +18,7 @@ under the License.
 **/
 package org.ofbiz.assetmaint;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -94,7 +95,7 @@ public class FixedAssetMaintServices {
                 } else {
                     issueQuantity = new Double(requestedQty);
                 }
-                Map<String, Object> itemIssuanceCtx = UtilMisc.newMap();
+                Map<String, Object> itemIssuanceCtx = new HashMap<String, Object>();
                 itemIssuanceCtx.put("userLogin", userLogin);
                 itemIssuanceCtx.put("inventoryItemId", inventoryItemId);
                 itemIssuanceCtx.put("fixedAssetId", fixedAssetId);

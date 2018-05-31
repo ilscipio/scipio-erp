@@ -19,8 +19,8 @@
 package com.ilscipio.scipio.accounting.ledger;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
@@ -35,7 +35,6 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.DispatchContext;
-import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
 import com.ilscipio.scipio.treeMenu.TreeDataItem;
@@ -49,8 +48,8 @@ public class GeneralLedgerServices {
     public static Map<String, Object> buildGlAccountTree(DispatchContext dctx, Map<String, ? extends Object> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         Delegator delegator = dctx.getDelegator();
-        LocalDispatcher dispatcher = dctx.getDispatcher();
-        Locale locale = (Locale) context.get("locale");
+        //LocalDispatcher dispatcher = dctx.getDispatcher();
+        //Locale locale = (Locale) context.get("locale");
         String library = (String) context.get("library");
         String mode = (String) context.get("mode");
         String glAccountId = (String) context.get("glAccountId");
@@ -114,7 +113,7 @@ public class GeneralLedgerServices {
     }
 
     private static List<TreeDataItem> childGlAccountTree(List<GenericValue> childGlAccounts, String library, boolean includeGlAccountData) throws GeneralException {
-        List<TreeDataItem> childTreeDataItems = UtilMisc.newList();
+        List<TreeDataItem> childTreeDataItems = new ArrayList<>();
         return childGlAccountTree(childGlAccounts, library, includeGlAccountData, childTreeDataItems);
     }
 
@@ -139,7 +138,7 @@ public class GeneralLedgerServices {
 
         GenericValue glAccount = null;
         GenericValue parentGlAccount = null;
-        Map<String, Object> glAccountMap = UtilMisc.newMap();
+        Map<String, Object> glAccountMap = new HashMap<>();
         try {
             glAccount = EntityQuery.use(delegator).cache(useCache).from("GlAccount").where(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, glAccountId))
                     .queryOne();

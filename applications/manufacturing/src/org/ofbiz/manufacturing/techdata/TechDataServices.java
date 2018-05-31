@@ -20,6 +20,7 @@ package org.ofbiz.manufacturing.techdata;
 
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -62,7 +63,7 @@ public class TechDataServices {
      */
     public static Map<String, Object> lookupRoutingTask(DispatchContext ctx, Map<String, ? extends Object> context) {
         Delegator delegator = ctx.getDelegator();
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Locale locale = (Locale) context.get("locale");
         String workEffortName = (String) context.get("workEffortName");
         String fixedAssetId = (String) context.get("fixedAssetId");
@@ -109,7 +110,7 @@ public class TechDataServices {
      */
     public static Map<String, Object> checkRoutingTaskAssoc(DispatchContext ctx, Map<String, ? extends Object> context) {
         Delegator delegator = ctx.getDelegator();
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         String sequenceNumNotOk = "N";
         Locale locale = (Locale) context.get("locale");
         String workEffortIdFrom = (String) context.get("workEffortIdFrom");
@@ -215,7 +216,7 @@ public class TechDataServices {
      * @return a map with the  capacity (Double) available and moveDay (int): the number of day it's necessary to move to have capacity available
      */
     public static Map<String, Object> dayStartCapacityAvailable(GenericValue techDataCalendarWeek,  int  dayStart) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         int moveDay = 0;
         Double capacity = null;
         Time startTime = null;
@@ -299,7 +300,7 @@ public class TechDataServices {
      * @return a map with Timestamp dateTo, Double nextCapacity
      */
     public static Map<String, Object> startNextDay(GenericValue techDataCalendar, Timestamp  dateFrom) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Timestamp dateTo = null;
         GenericValue techDataCalendarWeek = null;
         // TODO read TechDataCalendarExcWeek to manage execption week (maybe it's needed to refactor the entity definition
@@ -349,7 +350,7 @@ public class TechDataServices {
             amount = 0;
         } else amount -= nextCapacity;
 
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         while (amount > 0)  {
             result = startNextDay(techDataCalendar, dateTo);
             dateTo = (Timestamp) result.get("dateTo");
@@ -370,7 +371,7 @@ public class TechDataServices {
      * @return a map with the  capacity (Double) available, the startTime and  moveDay (int): the number of day it's necessary to move to have capacity available
      */
     public static Map<String, Object> dayEndCapacityAvailable(GenericValue techDataCalendarWeek, int dayEnd) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         int moveDay = 0;
         Double capacity = null;
         Time startTime = null;
@@ -453,7 +454,7 @@ public class TechDataServices {
      * @return a map with Timestamp dateTo, Double previousCapacity
      */
     public static Map<String, Object> endPreviousDay(GenericValue techDataCalendar,  Timestamp  dateFrom) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Timestamp dateTo = null;
         GenericValue techDataCalendarWeek = null;
         // TODO read TechDataCalendarExcWeek to manage exception week (maybe it's needed to refactor the entity definition
@@ -505,7 +506,7 @@ public class TechDataServices {
             amount = 0;
         } else amount -= previousCapacity;
 
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         while (amount > 0)  {
             result = endPreviousDay(techDataCalendar, dateTo);
             dateTo = (Timestamp) result.get("dateTo");

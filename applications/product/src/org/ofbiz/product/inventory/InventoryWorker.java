@@ -21,6 +21,7 @@ package org.ofbiz.product.inventory;
 
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -122,7 +123,7 @@ public class InventoryWorker {
         condList.add(EntityCondition.makeCondition("orderItemStatusId", EntityOperator.NOT_EQUAL, "ITEM_CANCELLED"));
         EntityConditionList<EntityCondition> conditions = EntityCondition.makeCondition(condList, EntityOperator.AND);
 
-        Map<String, BigDecimal> results = UtilMisc.newMap();
+        Map<String, BigDecimal> results = new HashMap<String, BigDecimal>();
         try {
             List<GenericValue> orderedProducts = EntityQuery.use(delegator).select(fieldsToSelect).from("OrderItemQuantityReportGroupByProduct").where(conditions).queryList();
             for (GenericValue value: orderedProducts) {

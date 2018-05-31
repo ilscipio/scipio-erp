@@ -34,7 +34,6 @@ import org.apache.solr.common.util.Base64;
 import org.apache.solr.common.util.NamedList;
 
 import com.ilscipio.scipio.solr.SolrUtil;
-import com.ilscipio.scipio.solr.SolrUtil.SolrConnectConfig;
 
 /**
  * Special HttpSolrClient implementation that adds missing support for basic auth in the client.

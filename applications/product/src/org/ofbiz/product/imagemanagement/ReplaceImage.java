@@ -20,6 +20,7 @@ package org.ofbiz.product.imagemanagement;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -104,7 +105,7 @@ public class ReplaceImage{
             GenericValue productContent = EntityQuery.use(delegator).from("ProductContent").where("productId", productId, "contentId", contentIdReplace, "productContentTypeId", "IMAGE").queryFirst();
             
             if (productContent != null) {
-                Map<String, Object> productContentCtx = UtilMisc.newMap();
+                Map<String, Object> productContentCtx = new HashMap<String, Object>();
                 productContentCtx.put("productId", productId);
                 productContentCtx.put("contentId", contentIdReplace);
                 productContentCtx.put("productContentTypeId", "IMAGE");

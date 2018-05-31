@@ -160,7 +160,7 @@ public class CmsPageVersion extends CmsDataObject implements CmsDataObjectVersio
                             + getPageId() + ", versionId: " + getId() + ", contentId: " + getContentId() + "): " + e.getMessage(), module);
                 }
             }
-            content = content != null ? content : new HashMap<String, Object>();
+            content = content != null ? content : new HashMap<>();
             this.content = content;
         }
         return content;

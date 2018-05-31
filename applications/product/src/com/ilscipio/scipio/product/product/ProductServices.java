@@ -61,7 +61,7 @@ public abstract class ProductServices {
             product.set("comments", "Product discontinued (manually disabled)");
             product.store();
             LocalDispatcher dispatcher = dctx.getDispatcher();
-            Map<String, Object> params = new HashMap<String, Object>();
+            Map<String, Object> params = new HashMap<>();
             params.put("productId", productId);
             try {
                 dispatcher.runSync("updateSolrWithProduct", params);

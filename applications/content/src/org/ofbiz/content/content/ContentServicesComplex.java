@@ -20,6 +20,7 @@ package org.ofbiz.content.content;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -142,7 +143,7 @@ public class ContentServicesComplex {
             GenericValue a = relatedAssocs.get(i);
             Debug.logVerbose(" contentId:" + a.get("contentId") + " To:" + a.get("caContentIdTo") + " fromDate:" + a.get("caFromDate") + " thruDate:" + a.get("caThruDate") + " AssocTypeId:" + a.get("caContentAssocTypeId"), module);
         }
-        Map<String, Object> results = UtilMisc.newMap();
+        Map<String, Object> results = new HashMap<String, Object>();
         results.put("entityList", relatedAssocs);
         return results;
     }
@@ -281,7 +282,7 @@ public class ContentServicesComplex {
             List<String> orderByList = StringUtil.split(orderBy, "|");
            contentAssocDataResourceList = EntityUtil.orderBy(contentAssocDataResourceList, orderByList);
         }
-        Map<String, Object> results = UtilMisc.newMap();
+        Map<String, Object> results = new HashMap<String, Object>();
         results.put("entityList", contentAssocDataResourceList);
         if (UtilValidate.isNotEmpty(contentAssocDataResourceList)) {
             results.put("view", contentAssocDataResourceList.get(0));

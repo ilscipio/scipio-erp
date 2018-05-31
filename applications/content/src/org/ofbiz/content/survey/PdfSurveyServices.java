@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -305,7 +306,7 @@ public class PdfSurveyServices {
     /**
      */
     public static Map<String, Object> getAcroFieldsFromPdf(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> acroFieldMap = UtilMisc.newMap();
+        Map<String, Object> acroFieldMap = new HashMap<String, Object>();
         try {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             Delegator delegator = dctx.getDelegator();
@@ -509,7 +510,7 @@ public class PdfSurveyServices {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Map<String, Object> results = ServiceUtil.returnSuccess();
-        Map<String, Object> acroFieldMap = UtilMisc.newMap();
+        Map<String, Object> acroFieldMap = new HashMap<String, Object>();
         String surveyResponseId = (String)context.get("surveyResponseId");
         String acroFormContentId = null;
 

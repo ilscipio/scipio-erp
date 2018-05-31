@@ -19,6 +19,7 @@
 package org.ofbiz.order.thirdparty.paypal;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -126,7 +127,7 @@ public class ExpressCheckoutEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         CheckoutType checkoutType = determineCheckoutType(request);
         if (checkoutType.equals(CheckoutType.STANDARD)) {
-            Map<String, Object> inMap = UtilMisc.newMap();
+            Map<String, Object> inMap = new HashMap<String, Object>();
             inMap.put("request", request);
             inMap.put("response", response);
             try {
@@ -178,7 +179,7 @@ public class ExpressCheckoutEvents {
             } else if (checkoutType.equals(CheckoutType.STANDARD)) {
                 serviceName = "payPalDoExpressCheckout";
             }
-            Map<String, Object> inMap = UtilMisc.newMap();
+            Map<String, Object> inMap = new HashMap<String, Object>();
             inMap.put("userLogin", userLogin);
             inMap.put("orderPaymentPreference", paymentPref);
             Map<String, Object> result = null;

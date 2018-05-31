@@ -20,6 +20,7 @@ package org.ofbiz.order.order;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -77,7 +78,7 @@ public class OrderListState implements Serializable {
     protected static final Map<String, String> parameterToFilterId;
 
     static {
-        Map<String, String> map = UtilMisc.newMap();
+        Map<String, String> map = new HashMap<String, String>();
         map.put("viewcompleted", "ORDER_COMPLETED");
         map.put("viewcancelled", "ORDER_CANCELLED");
         map.put("viewrejected", "ORDER_REJECTED");
@@ -88,12 +89,12 @@ public class OrderListState implements Serializable {
         map.put("viewhold", "ORDER_HOLD");
         parameterToOrderStatusId = map;
 
-        map = UtilMisc.newMap();
+        map = new HashMap<String, String>();
         map.put("view_SALES_ORDER", "SALES_ORDER");
         map.put("view_PURCHASE_ORDER", "PURCHASE_ORDER");
         parameterToOrderTypeId = map;
 
-        map = UtilMisc.newMap();
+        map = new HashMap<String, String>();
         map.put("filterInventoryProblems", "filterInventoryProblems");
         map.put("filterAuthProblems", "filterAuthProblems");
         map.put("filterPartiallyReceivedPOs", "filterPartiallyReceivedPOs");
@@ -113,9 +114,9 @@ public class OrderListState implements Serializable {
         // viewSize = 10;
         viewSize = UtilProperties.getPropertyAsInteger("order.properties", "order.paginate.defaultViewSize", 10);
         viewIndex = 0;
-        orderStatusState = UtilMisc.newMap();
-        orderTypeState = UtilMisc.newMap();
-        orderFilterState = UtilMisc.newMap();
+        orderStatusState = new HashMap<String, String>();
+        orderTypeState = new HashMap<String, String>();
+        orderFilterState = new HashMap<String, String>();
 
         // defaults (TODO: configuration)
         orderStatusState.put("viewcreated", "Y");

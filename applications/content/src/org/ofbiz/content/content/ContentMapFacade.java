@@ -21,6 +21,7 @@ package org.ofbiz.content.content;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -280,7 +281,7 @@ public class ContentMapFacade implements Map<Object, Object> {
             List<ContentMapFacade> subContent = UtilMisc.newList();
             List<GenericValue> subs = null;
             try {
-                Map<String, Object> expressions = UtilMisc.newMap();
+                Map<String, Object> expressions = new HashMap<String, Object>();
                 expressions.put("contentIdStart", contentId);
                 if(!this.mapKeyFilter.equals("")) {
                     expressions.put("caMapKey", this.mapKeyFilter);
@@ -327,7 +328,7 @@ public class ContentMapFacade implements Map<Object, Object> {
             return "=========> " + errorMsg + " <=========";
         }
         // TODO: change to use the MapStack instead of a cloned Map
-        Map<String, Object> renderCtx = UtilMisc.newMap();
+        Map<String, Object> renderCtx = new HashMap<String, Object>();
         renderCtx.putAll(context);
         if (this.decoratedContent != null) {
             renderCtx.put("decoratedContent", decoratedContent);
@@ -455,7 +456,7 @@ public class ContentMapFacade implements Map<Object, Object> {
             // key is the mapKey
             GenericValue sub = null;
             try {
-                Map<String, Object> expressions = UtilMisc.newMap();
+                Map<String, Object> expressions = new HashMap<String, Object>();
                 expressions.put("contentIdStart", contentId);
                 expressions.put("caMapKey", name);
                 if(!this.statusFilter.equals("")) {

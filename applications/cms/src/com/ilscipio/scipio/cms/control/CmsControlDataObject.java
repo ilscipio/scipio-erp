@@ -145,7 +145,7 @@ public abstract class CmsControlDataObject extends CmsDataObject {
                 // Only run candidate key check if we're trying to change the candidate key; least surprise.
                 if (changingLogicalPk) {
                 
-                    Map<String, Object> logicalPkFields = new HashMap<String, Object>();
+                    Map<String, Object> logicalPkFields = new HashMap<>();
                     for(String fieldName : logicalPkFieldNames) {
                         String fieldVal = (String) fields.get(fieldName);
                         if (fieldVal != null && fieldVal.length() == 0) {

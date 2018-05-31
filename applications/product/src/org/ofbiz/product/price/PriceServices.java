@@ -21,6 +21,7 @@ package org.ofbiz.product.price;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -87,7 +88,7 @@ public class PriceServices {
 
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 
         GenericValue product = (GenericValue) context.get("product");
@@ -538,7 +539,7 @@ public class PriceServices {
         if ("true".equals(EntityUtilProperties.getPropertyValue("catalog.properties", "convertProductPriceCurrency", delegator))) {
             if (UtilValidate.isNotEmpty(currencyDefaultUomId) && UtilValidate.isNotEmpty(currencyUomIdTo) && !currencyDefaultUomId.equals(currencyUomIdTo)) {
                 if (UtilValidate.isNotEmpty(result)) {
-                    Map<String, Object> convertPriceMap = UtilMisc.newMap();
+                    Map<String, Object> convertPriceMap = new HashMap<String, Object>();
                     for (Map.Entry<String, Object> entry : result.entrySet()) {
                         BigDecimal tempPrice = BigDecimal.ZERO;
                         if(entry.getKey() == "basePrice")
@@ -559,7 +560,7 @@ public class PriceServices {
                             tempPrice = (BigDecimal) entry.getValue();
                         
                         if (tempPrice != null && tempPrice != BigDecimal.ZERO) {
-                            Map<String, Object> priceResults = UtilMisc.newMap();
+                            Map<String, Object> priceResults = new HashMap<String, Object>();
                             try {
                                 priceResults = dispatcher.runSync("convertUom", UtilMisc.<String, Object> toMap("uomId", currencyDefaultUomId, "uomIdTo", currencyUomIdTo,
                                         "originalValue", tempPrice, "defaultDecimalScale", Long.valueOf(2), "defaultRoundingMode", "HalfUp"));
@@ -839,7 +840,7 @@ public class PriceServices {
         String webSiteId, String partyId, BigDecimal quantity, String currencyUomId, Delegator delegator, Timestamp nowTimestamp,
         Locale locale, boolean useCache) throws GenericEntityException {
 
-        Map<String, Object> calcResults = UtilMisc.newMap();
+        Map<String, Object> calcResults = new HashMap<String, Object>();
 
         List<GenericValue> orderItemPriceInfos = UtilMisc.newList();
         boolean isSale = false;
@@ -1285,7 +1286,7 @@ public class PriceServices {
     public static Map<String, Object> calculatePurchasePrice(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
 
         List<GenericValue> orderItemPriceInfos = UtilMisc.newList();
         boolean validPriceFound = false;

@@ -21,6 +21,7 @@ package org.ofbiz.content.webapp.ftl;
 import java.io.IOException;
 import java.io.Writer;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -132,9 +133,9 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
         }
 
         final GenericValue subContentDataResourceView = view;
-        final Map<String, Object> traverseContext = UtilMisc.newMap();
+        final Map<String, Object> traverseContext = new HashMap<String, Object>();
         traverseContext.put("delegator", delegator);
-        Map<String, Object> whenMap = UtilMisc.newMap();
+        Map<String, Object> whenMap = new HashMap<String, Object>();
         whenMap.put("followWhen", templateCtx.get("followWhen"));
         whenMap.put("pickWhen", templateCtx.get("pickWhen"));
         whenMap.put("returnBeforePickWhen", templateCtx.get("returnBeforePickWhen"));
@@ -286,7 +287,7 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
 
             private boolean checkWhen (GenericValue thisContent, String contentAssocTypeId) {
                 boolean isPick = false;
-                Map<String, Object> assocContext = UtilMisc.newMap();
+                Map<String, Object> assocContext = new HashMap<String, Object>();
                 if (UtilValidate.isEmpty(contentAssocTypeId)) {
                     contentAssocTypeId = "";
                 }

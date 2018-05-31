@@ -19,6 +19,7 @@
 package org.ofbiz.workeffort.workeffort;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -102,7 +103,7 @@ public class WorkEffortSearchEvents {
         String searchSortOrderString = WorkEffortSearchSession.searchGetSortOrderString(false, request);
 
         // ========== populate the result Map
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
 
         result.put("workEffortIds", workEffortIds);
         result.put("viewIndex", Integer.valueOf(viewIndex));

@@ -20,6 +20,7 @@ package org.ofbiz.order.shoppinglist;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -269,7 +270,7 @@ public class ShoppingListEvents {
                 String listId = shoppingListItem.getString("shoppingListId");
                 String itemId = shoppingListItem.getString("shoppingListItemSeqId");
 
-                Map<String, Object> attributes = UtilMisc.newMap();
+                Map<String, Object> attributes = new HashMap<String, Object>();
                 // list items are noted in the shopping cart
                 if (setAsListItem) {
                     attributes.put("shoppingListId", listId);
@@ -332,7 +333,7 @@ public class ShoppingListEvents {
             // do nothing, just won't pass to service if it is null
         }
 
-        Map<String, Object> serviceInMap = UtilMisc.newMap();
+        Map<String, Object> serviceInMap = new HashMap<String, Object>();
         serviceInMap.put("shoppingListId", request.getParameter("shoppingListId"));
         serviceInMap.put("shoppingListItemSeqId", request.getParameter("shoppingListItemSeqId"));
         serviceInMap.put("productId", request.getParameter("add_product_id"));
@@ -568,7 +569,7 @@ public class ShoppingListEvents {
      * Returns Map keyed on item sequence ID containing a list of survey response IDs
      */
     public static Map<String, List<String>> getItemSurveyInfos(List<GenericValue> items) {
-        Map<String, List<String>> surveyInfos = UtilMisc.newMap();
+        Map<String, List<String>> surveyInfos = new HashMap<String, List<String>>();
         if (UtilValidate.isNotEmpty(items)) {
             for (GenericValue item : items) {
                 String listId = item.getString("shoppingListId");

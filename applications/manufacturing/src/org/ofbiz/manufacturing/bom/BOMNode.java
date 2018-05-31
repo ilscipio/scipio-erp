@@ -22,6 +22,7 @@ package org.ofbiz.manufacturing.bom;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -269,7 +270,7 @@ public class BOMNode {
                         // -----------------------------------------------------------
                         // We try to apply directly the selected features
                         if (newNode.equals(oneChildNode)) {
-                            Map<String, String> selectedFeatures = UtilMisc.newMap();
+                            Map<String, String> selectedFeatures = new HashMap<String, String>();
                             if (productFeatures != null) {
                                 GenericValue feature = null;
                                 for (int j = 0; j < productFeatures.size(); j++) {
@@ -279,7 +280,7 @@ public class BOMNode {
                             }
 
                             if (selectedFeatures.size() > 0) {
-                                Map<String, Object> context = UtilMisc.newMap();
+                                Map<String, Object> context = new HashMap<String, Object>();
                                 context.put("productId", node.get("productIdTo"));
                                 context.put("selectedFeatures", selectedFeatures);
                                 Map<String, Object> storeResult = null;
@@ -525,7 +526,7 @@ public class BOMNode {
             }
 
             Timestamp startDate = UtilDateTime.toTimestamp(UtilDateTime.toDateTimeString(date));
-            Map<String, Object> serviceContext = UtilMisc.newMap();
+            Map<String, Object> serviceContext = new HashMap<String, Object>();
             if (!useSubstitute) {
                 serviceContext.put("productId", getProduct().getString("productId"));
                 serviceContext.put("facilityId", getProduct().getString("facilityId"));

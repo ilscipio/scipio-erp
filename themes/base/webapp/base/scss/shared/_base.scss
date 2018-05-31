@@ -596,6 +596,32 @@ input[type="radio"] + label, .checkbox-type-simple-standard input[type="checkbox
      }
 }
 
+.trumbowyg-modal-box {
+    label {
+        select {
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 27px;
+            line-height: 27px;
+            border: 1px solid #DEDEDE;
+            background: #fff;
+            font-size: 14px;
+            max-width: 330px;
+            width: 70%;
+            padding: 0 7px;
+
+            &:hover,
+            &:focus {
+                outline: none;
+                border: 1px solid #95a5a6;
+            }
+            &:focus {
+            }
+        }
+    }
+}
+
 /* stcLocField */
 .stc-locfield {
     .stc-locfield-entries .stc-locfield-entry:last-child {

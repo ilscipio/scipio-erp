@@ -35,6 +35,7 @@ import java.sql.Timestamp;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -179,7 +180,7 @@ public class WebToolsServices {
             try {
                 Configuration conf = org.ofbiz.base.util.template.FreeMarkerWorker.getDefaultOfbizConfig();
                 template = new Template("FMImportFilter", templateReader, conf);
-                Map<String, Object> fmcontext = UtilMisc.newMap();
+                Map<String, Object> fmcontext = new HashMap<String, Object>();
 
                 InputSource ins = url != null ? new InputSource(url.openStream()) : new InputSource(new StringReader(fulltext));
                 NodeModel nodeModel;
@@ -654,7 +655,7 @@ public class WebToolsServices {
         Map<String, Object> resultMap = ServiceUtil.returnSuccess();
 
         ModelReader reader = delegator.getModelReader();
-        Map<String, TreeSet<String>> entitiesByPackage = UtilMisc.newMap();
+        Map<String, TreeSet<String>> entitiesByPackage = new HashMap<String, TreeSet<String>>();
         TreeSet<String> packageNames = new TreeSet<String>();
         TreeSet<String> tableNames = new TreeSet<String>();
 
@@ -684,12 +685,12 @@ public class WebToolsServices {
         List<Map<String, Object>> packagesList = new ArrayList<>(packageNames.size()); // SCIPIO: 2018-03-28: ArrayList + initial capacity
         try {
             for (String pName : packageNames) {
-                Map<String, Object> packageMap = UtilMisc.newMap();
+                Map<String, Object> packageMap = new HashMap<String, Object>();
                 TreeSet<String> entities = entitiesByPackage.get(pName);
                 List<Map<String, Object>> entitiesList = (search == null) ? new ArrayList<Map<String, Object>>(entities.size()) 
                         : new ArrayList<Map<String, Object>>(); // SCIPIO: 2018-03-28: ArrayList + initial capacity
                 for (String entityName: entities) {
-                    Map<String, Object> entityMap = UtilMisc.newMap();
+                    Map<String, Object> entityMap = new HashMap<String, Object>();
                     String helperName = delegator.getEntityHelperName(entityName);
                     String groupName = delegator.getEntityGroupName(entityName);
                     if (search == null || entityName.toLowerCase().indexOf(search.toLowerCase()) != -1) {
@@ -715,7 +716,7 @@ public class WebToolsServices {
                         // fields list
                         List<Map<String, Object>> javaNameList = new ArrayList<>(entity.getFieldsSize()); // SCIPIO: 2018-03-28: ArrayList + initial capacity
                         for (Iterator<ModelField> f = entity.getFieldsIterator(); f.hasNext();) {
-                            Map<String, Object> javaNameMap = UtilMisc.newMap();
+                            Map<String, Object> javaNameMap = new HashMap<String, Object>();
                             ModelField field = f.next();
                             ModelFieldType type = delegator.getEntityFieldType(entity, field.getType());
                             javaNameMap.put("isPk", field.getIsPk());
@@ -751,12 +752,12 @@ public class WebToolsServices {
                         // relations list
                         List<Map<String, Object>> relationsList = new ArrayList<>(entity.getRelationsSize()); // SCIPIO: 2018-03-28: ArrayList + initial capacity
                         for (int r = 0; r < entity.getRelationsSize(); r++) {
-                            Map<String, Object> relationMap = UtilMisc.newMap();
+                            Map<String, Object> relationMap = new HashMap<String, Object>();
                             ModelRelation relation = entity.getRelation(r);
                             List<Map<String, Object>> keysList = new ArrayList<>(relation.getKeyMaps().size()); // SCIPIO: 2018-03-28: ArrayList + initial capacity
                             int row = 1;
                             for (ModelKeyMap keyMap : relation.getKeyMaps()) {
-                                Map<String, Object> keysMap = UtilMisc.newMap();
+                                Map<String, Object> keysMap = new HashMap<String, Object>();
                                 String fieldName = null;
                                 String relFieldName = null;
                                 if (keyMap.getFieldName().equals(keyMap.getRelFieldName())) {
@@ -790,7 +791,7 @@ public class WebToolsServices {
                                 fieldNameList.add(fieldIterator.next().getFieldName());
                             }
 
-                            Map<String, Object> indexMap = UtilMisc.newMap();
+                            Map<String, Object> indexMap = new HashMap<String, Object>();
                             indexMap.put("name", index.getName());
                             indexMap.put("description", index.getDescription());
                             indexMap.put("fieldNameList", fieldNameList);
@@ -881,12 +882,12 @@ public class WebToolsServices {
             }
 
             // write the index.eomodeld file
-            Map<String, Object> topLevelMap = UtilMisc.newMap();
+            Map<String, Object> topLevelMap = new HashMap<String, Object>();
             topLevelMap.put("EOModelVersion", "\"2.1\"");
             List<Map<String, Object>> entitiesMapList = new ArrayList<>(entityNames.size()); // SCIPIO: 2018-03-28: ArrayList + initial capacity
             topLevelMap.put("entities", entitiesMapList);
             for (String entityName: entityNames) {
-                Map<String, Object> entitiesMap = UtilMisc.newMap();
+                Map<String, Object> entitiesMap = new HashMap<String, Object>();
                 entitiesMapList.add(entitiesMap);
                 entitiesMap.put("className", "EOGenericRecord");
                 entitiesMap.put("name", entityName);

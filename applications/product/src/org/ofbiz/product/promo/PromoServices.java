@@ -24,6 +24,7 @@ import java.io.StringReader;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -192,7 +193,7 @@ public class PromoServices {
                 if (line.length() > 0 && !line.startsWith("#")) {
                     if (line.length() > 0 && line.length() <= 20) {
                         // valid promo code
-                        Map<String, Object> inContext = UtilMisc.newMap();
+                        Map<String, Object> inContext = new HashMap<String, Object>();
                         inContext.putAll(invokeCtx);
                         inContext.put("productPromoCodeId", line);
                         Map<String, Object> result = dispatcher.runSync("createProductPromoCode", inContext);

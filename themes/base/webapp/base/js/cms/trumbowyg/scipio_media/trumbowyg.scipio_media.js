@@ -135,8 +135,9 @@
                     
                     // BUTTON Definitions
                     var scipioImageBtn = {
-                        text: trumbowyg.lang.insert_media_image,
-                        ico: 'insertImage',
+                        title: trumbowyg.lang.insert_media_image,
+                        text: '<i class="fa fa-picture-o" style="margin-left:1px; margin-right:14px;"/>'+trumbowyg.lang.insert_media_image,
+                        hasIcon: false,
                         fn: function () {
                             trumbowyg.saveRange();
                             var data = {'dataResourceTypeId':'IMAGE_OBJECT'};
@@ -190,8 +191,9 @@
                     };
                     
                     var scipioVideoBtn = {
-                            text: trumbowyg.lang.insert_media_video,
-                            ico: 'insertImage',
+                            title: trumbowyg.lang.insert_media_video,
+                            text: '<i class="fa fa-film" style="margin-left:1px; margin-right:14px;"/>'+trumbowyg.lang.insert_media_video,
+                            hasIcon: false,
                             fn: function () {
                                 trumbowyg.saveRange();
                                 var data = {'dataResourceTypeId':'VIDEO_OBJECT'};
@@ -245,8 +247,9 @@
                         };
                     
                     var scipioAudioBtn = {
-                            text: trumbowyg.lang.insert_media_audio,
-                            ico: 'insertImage',
+                            title: trumbowyg.lang.insert_media_audio,
+                            text: '<i class="fa fa-volume-up" style="margin-left:1px; margin-right:14px;"/>'+trumbowyg.lang.insert_media_audio,
+                            hasIcon: false,
                             fn: function () {
                                 trumbowyg.saveRange();
                                 var data = {'dataResourceTypeId':'AUDIO_OBJECT'};
@@ -300,8 +303,9 @@
                         };
                     
                     var scipioFileBtn = {
-                            text: trumbowyg.lang.insert_media_file,
-                            ico: 'insertImage',
+                            title: trumbowyg.lang.insert_media_file,
+                            text: '<i class="fa fa-file" style="margin-left:1px; margin-right:14px;"/>'+trumbowyg.lang.insert_media_file,
+                            hasIcon: false,
                             fn: function () {
                                 trumbowyg.saveRange();
                                 var data = {'dataResourceTypeId':'DOCUMENT_OBJECT'};

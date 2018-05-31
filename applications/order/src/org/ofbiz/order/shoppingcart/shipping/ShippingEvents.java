@@ -19,6 +19,7 @@
 package org.ofbiz.order.shoppingcart.shipping;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -208,7 +209,7 @@ public class ShippingEvents {
         BigDecimal shippingTotal = BigDecimal.ZERO;
 
         // prepare the service invocation fields
-        Map<String, Object> serviceFields = UtilMisc.newMap();
+        Map<String, Object> serviceFields = new HashMap<String, Object>();
         serviceFields.put("initialEstimateAmt", shippingTotal);
         serviceFields.put("shippableTotal", shippableTotal);
         serviceFields.put("shippableQuantity", shippableQuantity);

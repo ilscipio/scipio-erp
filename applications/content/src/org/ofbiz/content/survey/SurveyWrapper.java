@@ -25,6 +25,8 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -97,7 +99,7 @@ public class SurveyWrapper {
      */
     public void setPassThru(Map<String, Object> passThru) {
         if (passThru != null) {
-            this.passThru = UtilMisc.newMap();
+            this.passThru = new HashMap<String, Object>();
             this.passThru.putAll(passThru);
         }
     }
@@ -108,7 +110,7 @@ public class SurveyWrapper {
      */
     public void setDefaultValues(Map<String, Object> defaultValues) {
         if (defaultValues != null) {
-            this.defaultValues = UtilMisc.newMap();
+            this.defaultValues = new HashMap<String, Object>();
             this.defaultValues.putAll(defaultValues);
         }
     }
@@ -120,7 +122,7 @@ public class SurveyWrapper {
      */
     public void addToTemplateContext(String name, Object value) {
         if (templateContext == null) {
-            templateContext = UtilMisc.newMap();
+            templateContext = new HashMap<String, Object>();
         }
         templateContext.put(name, value);
     }
@@ -176,7 +178,7 @@ public class SurveyWrapper {
             currentAnswers = this.getResponseAnswers(null);
         }
 
-        Map<String, Object> sqaaWithColIdListByMultiRespId = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+        Map<String, Object> sqaaWithColIdListByMultiRespId = new LinkedHashMap<String, Object>();
         for (GenericValue surveyQuestionAndAppl : surveyQuestionAndAppls) {
             String surveyMultiRespColId = surveyQuestionAndAppl.getString("surveyMultiRespColId");
             if (UtilValidate.isNotEmpty(surveyMultiRespColId)) {
@@ -186,11 +188,11 @@ public class SurveyWrapper {
         }
 
         if (this.templateContext == null) {
-            this.templateContext = UtilMisc.newMap();
+            this.templateContext = new HashMap<String, Object>();
         }
         
         // SCIPIO: create local context that includes parent context.
-        Map<String, Object> templateContext = UtilMisc.newMap();
+        Map<String, Object> templateContext = new HashMap<String, Object>();
         if (parentContext != null) {
             templateContext.putAll(parentContext);
         }
@@ -359,7 +361,7 @@ public class SurveyWrapper {
 
     // returns a Map of answers keyed on SurveyQuestion ID from the most current SurveyResponse ID
     public Map<String, Object> getResponseAnswers(String responseId) throws SurveyWrapperException {
-        Map<String, Object> answerMap = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+        Map<String, Object> answerMap = new LinkedHashMap<String, Object>();
 
         if (responseId != null) {
             List<GenericValue> answers = null;
@@ -382,7 +384,7 @@ public class SurveyWrapper {
                 if (key.toUpperCase().startsWith("ANSWERS_")) {
                     int splitIndex = key.indexOf('_');
                     String questionId = key.substring(splitIndex+1);
-                    Map<String, Object> thisAnswer = UtilMisc.newMap();
+                    Map<String, Object> thisAnswer = new HashMap<String, Object>();
                     String answer = (String) passThru.remove(key);
                     thisAnswer.put("booleanResponse", answer);
                     thisAnswer.put("currencyResponse", answer);
@@ -436,7 +438,7 @@ public class SurveyWrapper {
     }
 
     public Map<String, Object> getResults(List<GenericValue> questions) throws SurveyWrapperException {
-        Map<String, Object> questionResults = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+        Map<String, Object> questionResults = new LinkedHashMap<String, Object>();
         if (questions != null) {
             for (GenericValue question : questions) {
                 Map<String, Object> results = getResultInfo(question);
@@ -450,7 +452,7 @@ public class SurveyWrapper {
 
     // returns a map of question reqsults
     public Map<String, Object> getResultInfo(GenericValue question) throws SurveyWrapperException {
-        Map<String, Object> resultMap = UtilMisc.newMap();
+        Map<String, Object> resultMap = new HashMap<String, Object>();
 
         // special keys in the result:
         // "_q_type"      - question type (SurveyQuestionTypeId)
@@ -481,7 +483,7 @@ public class SurveyWrapper {
 
                 // create the map of option info ("_total", "_percent")
                 for (String optId : thisResult.keySet()) {
-                    Map<String, Object> optMap = UtilMisc.newMap();
+                    Map<String, Object> optMap = new HashMap<String, Object>();
                     Long optTotal = (Long) thisResult.get(optId);
                     if (optTotal == null) {
                         optTotal = Long.valueOf(0);
@@ -675,7 +677,7 @@ public class SurveyWrapper {
     }
 
     private Map<String, Object> getOptionResult(GenericValue question) throws SurveyWrapperException {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         long total = 0;
 
         boolean beganTransaction = false;

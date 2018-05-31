@@ -721,7 +721,7 @@ public abstract class LangFtlUtil {
 
     public static Map<String, Object> copyMapToRawMap(Map<String, Object> map, Set<String> inExKeys, Boolean include) throws TemplateModelException {
         if (include == Boolean.TRUE) {
-            Map<String, Object> res = new HashMap<String, Object>(map.size());
+            Map<String, Object> res = new HashMap<>(map.size());
             if (inExKeys == null) {
                 inExKeys = new HashSet<String>();
             }
@@ -734,10 +734,10 @@ public abstract class LangFtlUtil {
             return res;
         }
         else if (include == null || inExKeys == null || inExKeys.isEmpty()) {
-            return new HashMap<String, Object>(map);        
+            return new HashMap<>(map);        
         }
         else {
-            Map<String, Object> res = new HashMap<String, Object>(map.size());
+            Map<String, Object> res = new HashMap<>(map.size());
             for(Map.Entry<String, Object> entry : map.entrySet()) {
                 String key = entry.getKey();
                 if (!inExKeys.contains(key)) {
@@ -772,20 +772,20 @@ public abstract class LangFtlUtil {
         if (object instanceof Collection) {
             Collection<Object> collection = UtilGenerics.<Collection<Object>>cast(object);
             if (targetType == TemplateValueTargetType.PRESERVE || targetType == TemplateValueTargetType.RAW) {
-                return new ArrayList<Object>(collection);
+                return new ArrayList<>(collection);
             }
             else if (targetType == TemplateValueTargetType.MODEL || targetType == TemplateValueTargetType.SIMPLEMODEL) {
                 return new SimpleSequence(collection, objectWrapper);
             }
             else if (targetType == TemplateValueTargetType.COMPLEXMODEL) {
                 // no choice but to use user-supplied object wrapper
-                return wrap(new ArrayList<Object>(collection), objectWrapper);
+                return wrap(new ArrayList<>(collection), objectWrapper);
             }
         }
         else {
             Iterable<Object> iterable = UtilGenerics.<Iterable<Object>>cast(object);
             if (targetType == TemplateValueTargetType.PRESERVE || targetType == TemplateValueTargetType.RAW) {
-                List<Object> res = new ArrayList<Object>();
+                List<Object> res = new ArrayList<>();
                 for(Object val : iterable) {
                     res.add(val);
                 }
@@ -799,7 +799,7 @@ public abstract class LangFtlUtil {
                 return res;
             }
             else if (targetType == TemplateValueTargetType.COMPLEXMODEL) {
-                List<Object> res = new ArrayList<Object>();
+                List<Object> res = new ArrayList<>();
                 for(Object val : iterable) {
                     res.add(val);
                 }
@@ -825,7 +825,7 @@ public abstract class LangFtlUtil {
         if (object instanceof TemplateCollectionModel) { // TODO: isObjectType
             TemplateCollectionModel collectionModel = (TemplateCollectionModel) object;
             if (targetType == TemplateValueTargetType.RAW) {
-                List<Object> res = new ArrayList<Object>();
+                List<Object> res = new ArrayList<>();
                 TemplateModelIterator it = collectionModel.iterator();
                 while(it.hasNext()) {
                     res.add(it.next());
@@ -844,7 +844,7 @@ public abstract class LangFtlUtil {
                 return res;
             }
             else if (targetType == TemplateValueTargetType.COMPLEXMODEL) {
-                List<Object> res = new ArrayList<Object>();
+                List<Object> res = new ArrayList<>();
                 TemplateModelIterator it = collectionModel.iterator();
                 while(it.hasNext()) {
                     res.add(it.next());
@@ -855,7 +855,7 @@ public abstract class LangFtlUtil {
         else if (object instanceof TemplateSequenceModel) { // TODO: isObjectType
             TemplateSequenceModel seqModel = (TemplateSequenceModel) object;
             if (targetType == TemplateValueTargetType.RAW) {
-                List<Object> res = new ArrayList<Object>();
+                List<Object> res = new ArrayList<>();
                 for(int i=0; i < seqModel.size(); i++) {
                     res.add(seqModel.get(i));
                 }
@@ -869,7 +869,7 @@ public abstract class LangFtlUtil {
                 return res;
             }
             else if (targetType == TemplateValueTargetType.COMPLEXMODEL) {
-                List<Object> res = new ArrayList<Object>();
+                List<Object> res = new ArrayList<>();
                 for(int i=0; i < seqModel.size(); i++) {
                     res.add(seqModel.get(i));
                 }
@@ -882,19 +882,19 @@ public abstract class LangFtlUtil {
             if (wrappedObj instanceof Collection) {
                 Collection<Object> collection = UtilGenerics.<Collection<Object>>cast(object);
                 if (targetType == TemplateValueTargetType.RAW) {
-                    return new ArrayList<Object>(collection);
+                    return new ArrayList<>(collection);
                 }
                 else if (targetType == TemplateValueTargetType.MODEL || targetType == TemplateValueTargetType.SIMPLEMODEL) {
                     return new SimpleSequence(collection, objectWrapper);
                 }
                 else if (targetType == TemplateValueTargetType.PRESERVE || targetType == TemplateValueTargetType.COMPLEXMODEL) {
-                    return wrap(new ArrayList<Object>(collection), objectWrapper);
+                    return wrap(new ArrayList<>(collection), objectWrapper);
                 }
             }
             else if (wrappedObj instanceof Iterable) {
                 Iterable<Object> iterable = UtilGenerics.<Iterable<Object>>cast(object);
                 if (targetType == TemplateValueTargetType.RAW) {
-                    List<Object> res = new ArrayList<Object>();
+                    List<Object> res = new ArrayList<>();
                     for(Object val : iterable) {
                         res.add(val);
                     }
@@ -908,7 +908,7 @@ public abstract class LangFtlUtil {
                     return res;
                 }
                 else if (targetType == TemplateValueTargetType.PRESERVE || targetType == TemplateValueTargetType.COMPLEXMODEL) {
-                    List<Object> res = new ArrayList<Object>();
+                    List<Object> res = new ArrayList<>();
                     for(Object val : iterable) {
                         res.add(val);
                     }

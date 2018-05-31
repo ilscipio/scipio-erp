@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -407,7 +406,7 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
     }
     
     public <T> List<T> newCategoryTrailList() {
-        return new ArrayList<T>(MAX_CATEGORY_DEPTH_PERF);
+        return new ArrayList<>(MAX_CATEGORY_DEPTH_PERF);
     }
     
     /**
@@ -739,7 +738,7 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
     public List<GenericValue> getTargetCatalogList(String prodCatalogId, Collection<String> prodCatalogIdList, 
             String productStoreId, String webSiteId, boolean returnProdCatalogEntityOnly) throws GeneralException {
         if (UtilValidate.isNotEmpty(prodCatalogId) || UtilValidate.isNotEmpty(prodCatalogIdList)) {
-            List<GenericValue> prodCatalogList = new LinkedList<>();
+            List<GenericValue> prodCatalogList = new ArrayList<>();
             if (UtilValidate.isNotEmpty(prodCatalogId)) {
                 GenericValue prodCatalog = delegator.findOne("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId), isUseCache());
                 if (prodCatalog == null) throw new GeneralException("catalog '" + prodCatalogId + " not found");
@@ -770,7 +769,7 @@ public class CatalogTraverser extends AbstractCatalogVisitor {
                     .filterByDate().orderBy("sequenceNum").cache(isUseCache()).queryList();
             
             if (returnProdCatalogEntityOnly && productStoreCatalogList.size() > 0) {
-                List<GenericValue> prodCatalogList = new LinkedList<>();
+                List<GenericValue> prodCatalogList = new ArrayList<>();
                 for(GenericValue productStoreCatalog : productStoreCatalogList) {
                     GenericValue prodCatalog = delegator.findOne("ProdCatalog", UtilMisc.toMap("prodCatalogId", productStoreCatalog.get("prodCatalogId")), isUseCache());
                     if (prodCatalog == null) throw new GenericEntityException("schema error: catalog '" + productStoreCatalog.get("prodCatalogId") + " not found");

@@ -20,6 +20,7 @@ package org.ofbiz.accounting.thirdparty.worldpay;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -248,7 +249,7 @@ public class WorldPayEvents {
             }
         }
         // create the redirect string
-        Map<String, Object> parameters = UtilMisc.newMap();
+        Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("instId", instId);
         parameters.put("cartId", orderId);
         parameters.put("currency", defCur);

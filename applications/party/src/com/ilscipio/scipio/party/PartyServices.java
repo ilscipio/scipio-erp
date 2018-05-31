@@ -1,6 +1,5 @@
 package com.ilscipio.scipio.party;
 
-import java.util.Locale;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;

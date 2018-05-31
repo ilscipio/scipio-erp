@@ -20,6 +20,7 @@ package org.ofbiz.product.product;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -407,7 +408,7 @@ public class ProductSearchEvents {
 
                 GenericValue searchResultView = null;
                 while ((searchResultView = eli.next()) != null) {
-                    Map<String, Object> productMap = UtilMisc.newMap();
+                    Map<String, Object> productMap = new HashMap<String, Object>();
                     String productId = searchResultView.getString("mainProductId");
                     productMap.put("productId", productId);
 

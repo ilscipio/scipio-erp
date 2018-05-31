@@ -132,13 +132,13 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     private List<GenericValue> orderTerms = new LinkedList<GenericValue>();
 
     private List<ShoppingCartItem> cartLines = UtilMisc.newList();
-    private Map<String, ShoppingCartItemGroup> itemGroupByNumberMap = UtilMisc.newMap();
+    private Map<String, ShoppingCartItemGroup> itemGroupByNumberMap = new HashMap<String, ShoppingCartItemGroup>();
     protected long nextGroupNumber = 1;
     private List<CartPaymentInfo> paymentInfo = UtilMisc.newList();
     private List<CartShipInfo> shipInfo = UtilMisc.newList();
     private Map<String, String> contactMechIdsMap = new HashMap<String, String>();
-    private Map<String, String> orderAttributes = UtilMisc.newMap();
-    private Map<String, Object> attributes = UtilMisc.newMap(); // user defined attributes
+    private Map<String, String> orderAttributes = new HashMap<String, String>();
+    private Map<String, Object> attributes = new HashMap<String, Object>(); // user defined attributes
     // Lists of internal/public notes: when the order is stored they are transformed into OrderHeaderNotes
     private List<String> internalOrderNotes = UtilMisc.newList(); // internal notes
     private List<String> orderNotes = UtilMisc.newList(); // public notes (printed on documents etc.)
@@ -2164,7 +2164,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     /** Returns the ShoppingCartItem (key) and quantity (value) associated with the ship group */
     public Map<ShoppingCartItem, BigDecimal> getShipGroupItems(int idx) {
         CartShipInfo csi = this.getShipInfo(idx);
-        Map<ShoppingCartItem, BigDecimal> qtyMap = UtilMisc.newMap();
+        Map<ShoppingCartItem, BigDecimal> qtyMap = new HashMap<ShoppingCartItem, BigDecimal>();
         for (ShoppingCartItem item : csi.shipItemInfo.keySet()) {
             CartShipInfo.CartShipItemInfo csii = csi.shipItemInfo.get(item);
             qtyMap.put(item, csii.quantity);
@@ -3234,7 +3234,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     /** Returns a Map of all features applied to products in the cart with quantities for a specific ship group. */
     public Map<String, BigDecimal> getFeatureIdQtyMap(int idx) {
         CartShipInfo info = this.getShipInfo(idx);
-        Map<String, BigDecimal> featureMap = UtilMisc.newMap();
+        Map<String, BigDecimal> featureMap = new HashMap<String, BigDecimal>();
 
         for (ShoppingCartItem item : info.shipItemInfo.keySet()) {
             CartShipInfo.CartShipItemInfo csii = info.shipItemInfo.get(item);
@@ -4610,7 +4610,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
     }
 
     public static class CartShipInfo implements Serializable {
-        public Map<ShoppingCartItem, CartShipItemInfo> shipItemInfo = UtilMisc.newMap();
+        public Map<ShoppingCartItem, CartShipItemInfo> shipItemInfo = new HashMap<ShoppingCartItem, CartShipItemInfo>();
         public List<GenericValue> shipTaxAdj = UtilMisc.newList();
         public String orderTypeId = null;
         private String internalContactMechId = null;
@@ -4631,7 +4631,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         private String associatedShipGroupSeqId = null;
         public String vendorPartyId = null;
         public String productStoreShipMethId = null;
-        public Map<String, Object> attributes = UtilMisc.newMap();
+        public Map<String, Object> attributes = new HashMap<String, Object>();
 
         public void setAttribute(String name, Object value) {
             this.attributes.put(name, value);
@@ -5258,7 +5258,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
                                                       .where("productId", itemProductId)
                                                       .filterByDate()
                                                       .queryList();
-            Map<String, BigDecimal> productPriceMap = UtilMisc.newMap();
+            Map<String, BigDecimal> productPriceMap = new HashMap<String, BigDecimal>();
             for (GenericValue productPrice : productPriceList) {
                 productPriceMap.put(productPrice.getString("productPriceTypeId"), productPrice.getBigDecimal("price"));
             }
@@ -5345,7 +5345,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
      */
     public List<GenericValue> getItemSubscriptions(Delegator delegator, String productId) throws GenericEntityException {
         if (this.cartSubscriptionItems == null)
-            this.cartSubscriptionItems = UtilMisc.newMap();
+            this.cartSubscriptionItems = new HashMap<String, List<GenericValue>>();
 
         List<GenericValue> productSubscriptionResources = EntityQuery.use(delegator).from("ProductSubscriptionResource").where("productId", productId)
                 .cache(true).filterByDate().queryList();

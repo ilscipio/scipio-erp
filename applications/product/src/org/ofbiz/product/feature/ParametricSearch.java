@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.product.feature;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -58,7 +59,7 @@ public class ParametricSearch {
     }
 
     public static Map<String, List<GenericValue>> makeCategoryFeatureLists(String productCategoryId, Delegator delegator, int perTypeMaxSize) {
-        Map<String, Map<String, GenericValue>> productFeaturesByTypeMap = UtilMisc.newMap();
+        Map<String, Map<String, GenericValue>> productFeaturesByTypeMap = new HashMap<String, Map<String, GenericValue>>();
         try {
             List<GenericValue> productFeatureCategoryAppls = EntityQuery.use(delegator).from("ProductFeatureCategoryAppl").where("productCategoryId", productCategoryId).cache(true).queryList();
             productFeatureCategoryAppls = EntityUtil.filterByDate(productFeatureCategoryAppls, true);
@@ -69,7 +70,7 @@ public class ParametricSearch {
                         String productFeatureTypeId = productFeature.getString("productFeatureTypeId");
                         Map<String, GenericValue> featuresByType = productFeaturesByTypeMap.get(productFeatureTypeId);
                         if (featuresByType == null) {
-                            featuresByType = UtilMisc.newMap();
+                            featuresByType = new HashMap<String, GenericValue>();
                             productFeaturesByTypeMap.put(productFeatureTypeId, featuresByType);
                         }
                         if (featuresByType.size() < perTypeMaxSize) {
@@ -94,7 +95,7 @@ public class ParametricSearch {
                         String productFeatureTypeId = productFeature.getString("productFeatureTypeId");
                         Map<String, GenericValue> featuresByType = productFeaturesByTypeMap.get(productFeatureTypeId);
                         if (featuresByType == null) {
-                            featuresByType = UtilMisc.newMap();
+                            featuresByType = new HashMap<String, GenericValue>();
                             productFeaturesByTypeMap.put(productFeatureTypeId, featuresByType);
                         }
                         if (featuresByType.size() < perTypeMaxSize) {
@@ -108,7 +109,7 @@ public class ParametricSearch {
         }
 
         // now before returning, order the features in each list by description
-        Map<String, List<GenericValue>> productFeaturesByTypeMapSorted = UtilMisc.newMap();
+        Map<String, List<GenericValue>> productFeaturesByTypeMapSorted = new HashMap<String, List<GenericValue>>();
         for (Map.Entry<String, Map<String, GenericValue>> entry: productFeaturesByTypeMap.entrySet()) {
             List<GenericValue> sortedFeatures = EntityUtil.orderBy(entry.getValue().values(), UtilMisc.toList("description","defaultSequenceNum"));
             productFeaturesByTypeMapSorted.put(entry.getKey(), sortedFeatures);
@@ -121,7 +122,7 @@ public class ParametricSearch {
         return getAllFeaturesByType(delegator, DEFAULT_PER_TYPE_MAX_SIZE);
     }
     public static Map<String, List<GenericValue>> getAllFeaturesByType(Delegator delegator, int perTypeMaxSize) {
-        Map<String, List<GenericValue>> productFeaturesByTypeMap = UtilMisc.newMap();
+        Map<String, List<GenericValue>> productFeaturesByTypeMap = new HashMap<String, List<GenericValue>>();
         try {
             Set<String> typesWithOverflowMessages = UtilMisc.newSet();
             EntityListIterator productFeatureEli = EntityQuery.use(delegator).from("ProductFeature").orderBy("description").queryIterator();
@@ -156,7 +157,7 @@ public class ParametricSearch {
 
     /** Handles parameters coming in prefixed with "pft_" where the text in the key following the prefix is a productFeatureTypeId and the value is a productFeatureId; meant to be used with drop-downs and such */
     public static Map<String, String> makeFeatureIdByTypeMap(Map<String, Object> parameters) {
-        Map<String, String> featureIdByType = UtilMisc.newMap();
+        Map<String, String> featureIdByType = new HashMap<String, String>();
         if (parameters == null) return featureIdByType;
 
 

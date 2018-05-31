@@ -30,7 +30,7 @@
         <!--<menu-item name="PartyQual" title="${uiLabelMap.HumanResPartyQualification}"><link target="FindPartyQuals"/></menu-item>-->
         <menu-item name="Recruitment" title="${uiLabelMap.HumanResRecruitment}"><link target="FindJobRequisitions"/></menu-item>        
         <!--<menu-item name="Training" title="${uiLabelMap.HumanResTraining}"><link target="TrainingCalendar"/></menu-item>-->
-        <menu-item name="EmploymentApp" title="${uiLabelMap.AccountingApplications}"><link target="FindEmploymentApps"/></menu-item><!-- ${uiLabelMap.HumanResEmploymentApp} -->
+        <menu-item name="EmploymentApp" title="${uiLabelMap.HumanResApplications}"><link target="FindEmploymentApps"/></menu-item><!-- ${uiLabelMap.HumanResEmploymentApp} -->
         <!--<menu-item name="PartyResume" title="${uiLabelMap.HumanResPartyResume}"><link target="FindPartyResumes"/></menu-item>-->
         <menu-item name="Leave" title="${uiLabelMap.HumanResEmplLeave}"><link target="FindEmplLeaves"/></menu-item>
         <menu-item name="GlobalHRSettings" title="${uiLabelMap.CommonSettings}"><link target="globalHRSettings"/></menu-item><!-- ${uiLabelMap.HumanResGlobalHRSettings} -->

@@ -91,7 +91,7 @@ public class ContactMechWorker {
                 Debug.logWarning(e, module);
             }
             if (contactMech != null) {
-                Map<String, Object> partyContactMechValueMap = UtilMisc.newMap();
+                Map<String, Object> partyContactMechValueMap = new HashMap<String, Object>();
 
                 partyContactMechValueMaps.add(partyContactMechValueMap);
                 partyContactMechValueMap.put("contactMech", contactMech);
@@ -162,7 +162,7 @@ public class ContactMechWorker {
                 Debug.logWarning(e, module);
             }
             if (contactMech != null) {
-                Map<String, Object> facilityContactMechValueMap = UtilMisc.newMap();
+                Map<String, Object> facilityContactMechValueMap = new HashMap<String, Object>();
 
                 facilityContactMechValueMaps.add(facilityContactMechValueMap);
                 facilityContactMechValueMap.put("contactMech", contactMech);
@@ -224,7 +224,7 @@ public class ContactMechWorker {
                 Debug.logWarning(e, module);
             }
             if (contactMech != null) {
-                Map<String, GenericValue> orderContactMechValueMap = UtilMisc.newMap();
+                Map<String, GenericValue> orderContactMechValueMap = new HashMap<String, GenericValue>();
 
                 orderContactMechValueMaps.add(orderContactMechValueMap);
                 orderContactMechValueMap.put("contactMech", contactMech);
@@ -284,7 +284,7 @@ public class ContactMechWorker {
                 Debug.logWarning(e, module);
             }
             if (contactMech != null) {
-                Map<String, GenericValue> workEffortContactMechValueMap = UtilMisc.newMap();
+                Map<String, GenericValue> workEffortContactMechValueMap = new HashMap<String, GenericValue>();
 
                 workEffortContactMechValueMaps.add(workEffortContactMechValueMap);
                 workEffortContactMechValueMap.put("contactMech", contactMech);
@@ -817,7 +817,7 @@ public class ContactMechWorker {
                 Debug.logWarning(e, module);
             }
             if (contactMech != null && "POSTAL_ADDRESS".equals(contactMech.getString("contactMechTypeId")) && !contactMech.getString("contactMechId").equals(curContactMechId)) {
-                Map<String, Object> postalAddressInfo = UtilMisc.newMap();
+                Map<String, Object> postalAddressInfo = new HashMap<String, Object>();
 
                 postalAddressInfos.add(postalAddressInfo);
                 postalAddressInfo.put("contactMech", contactMech);
@@ -844,7 +844,7 @@ public class ContactMechWorker {
 
     public static Map<String, Object> getCurrentPostalAddress(ServletRequest request, String partyId, String curContactMechId) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        Map<String, Object> results = UtilMisc.newMap();
+        Map<String, Object> results = new HashMap<String, Object>();
 
         if (curContactMechId != null) {
             List<GenericValue> partyContactMechs = null;

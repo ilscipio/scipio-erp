@@ -6,18 +6,15 @@ import java.util.Map;
 
 import javax.transaction.Transaction;
 
-import org.apache.http.client.HttpClient;
 import org.apache.solr.client.solrj.SolrRequest;
-import org.apache.solr.client.solrj.impl.HttpClientUtil;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.request.SolrPing;
 import org.apache.solr.client.solrj.response.SolrPingResponse;
-import org.apache.solr.common.params.ModifiableSolrParams;
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
+import org.ofbiz.base.component.ComponentException;
 import org.ofbiz.base.start.Start;
 import org.ofbiz.base.start.Start.ServerState;
-import org.ofbiz.base.component.ComponentException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;

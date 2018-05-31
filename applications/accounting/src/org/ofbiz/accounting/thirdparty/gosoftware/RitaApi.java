@@ -19,6 +19,7 @@
 package org.ofbiz.accounting.thirdparty.gosoftware;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
@@ -98,13 +99,13 @@ public class RitaApi {
     protected int mode = 0;
 
     public RitaApi(Map<String, String> document) {
-        this.document = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+        this.document = new LinkedHashMap<String, String>();
         this.document.putAll(document);
         this.mode = MODE_OUT;
     }
 
     public RitaApi() {
-        this.document = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+        this.document = new LinkedHashMap<String, String>();
         this.mode = MODE_IN;
     }
 
@@ -225,7 +226,7 @@ public class RitaApi {
             br.close();
             */
 
-            Map<String, String> docMap = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+            Map<String, String> docMap = new LinkedHashMap<String, String>();
             String resp = null;
             try {
                 resp = http.post(stream);

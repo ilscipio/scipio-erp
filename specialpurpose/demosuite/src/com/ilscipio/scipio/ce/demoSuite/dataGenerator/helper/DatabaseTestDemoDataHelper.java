@@ -1,11 +1,11 @@
 package com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 
@@ -55,7 +55,7 @@ public class DatabaseTestDemoDataHelper extends DemoDataHelper {
 
 		public DatabaseTestSettings(Delegator delegator) throws GenericEntityException  {
 			super(delegator);
-			this.queryParameters = UtilMisc.newMap();
+			this.queryParameters = new HashMap<>();
 		}
 
 		// @Override
@@ -67,8 +67,7 @@ public class DatabaseTestDemoDataHelper extends DemoDataHelper {
 
 		@Override
 		public List<Object> getFields() {
-			List<Object> fields = new ArrayList<Object>();
-
+			List<Object> fields = new ArrayList<>();
 			return fields;
 		}
 	}

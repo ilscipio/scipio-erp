@@ -44,7 +44,7 @@ public class ReportHelper {
 
         // loop through all the visits
         for (GenericValue visit: visits) {
-            Map<String, Object> reportValue = UtilMisc.newMap();
+            Map<String, Object> reportValue = new HashMap<String, Object>();
             reportValue.put(keyFieldName, visit.getString(keyFieldName));
             reportValue.put("visits", visit.getLong("visitId")); // actually # of visits
 

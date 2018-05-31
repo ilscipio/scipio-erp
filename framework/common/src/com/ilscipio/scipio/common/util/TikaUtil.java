@@ -31,8 +31,6 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 
-import sun.nio.ByteBuffered;
-
 /**
  * Apache Tika file detection utility.
  * <p>

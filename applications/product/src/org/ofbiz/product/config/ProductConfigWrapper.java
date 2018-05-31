@@ -22,6 +22,7 @@ package org.ofbiz.product.config;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -310,7 +311,7 @@ public class ProductConfigWrapper implements Serializable {
         GenericValue oneComponent = components.get(component);
         if (theOption.isVirtualComponent(oneComponent)) {
             if (theOption.componentOptions == null) {
-                theOption.componentOptions = UtilMisc.newMap();
+                theOption.componentOptions = new HashMap<String, String>();
             }
             theOption.componentOptions.put(oneComponent.getString("productId"), componentOption);
 

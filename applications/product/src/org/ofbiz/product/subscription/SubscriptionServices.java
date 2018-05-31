@@ -155,7 +155,7 @@ public class SubscriptionServices {
                             null, null, updateSubscriptionResult);
                 }
             } else {
-                Map<String, Object> ensurePartyRoleMap = UtilMisc.newMap();
+                Map<String, Object> ensurePartyRoleMap = new HashMap<String, Object>();
                 if (UtilValidate.isNotEmpty(roleTypeId)) {
                     ensurePartyRoleMap.put("partyId", partyId);
                     ensurePartyRoleMap.put("roleTypeId", roleTypeId);

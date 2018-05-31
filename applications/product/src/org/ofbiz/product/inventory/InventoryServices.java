@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -418,8 +419,8 @@ public class InventoryServices {
         }
         */
 
-        Map<String, Map<String, Timestamp>> ordersToUpdate = UtilMisc.newMap();
-        Map<String, Map<String, Timestamp>> ordersToCancel = UtilMisc.newMap();
+        Map<String, Map<String, Timestamp>> ordersToUpdate = new HashMap<String, Map<String, Timestamp>>();
+        Map<String, Map<String, Timestamp>> ordersToCancel = new HashMap<String, Map<String, Timestamp>>();
 
         // find all inventory items w/ a negative ATP
         List<GenericValue> inventoryItems = null;
@@ -526,7 +527,7 @@ public class InventoryServices {
                         Debug.logInfo("We won't ship on time, getting notification info", module);
                         Map<String, Timestamp> notifyItems = ordersToUpdate.get(orderId);
                         if (notifyItems == null) {
-                            notifyItems = UtilMisc.newMap();
+                            notifyItems = new HashMap<String, Timestamp>();
                         }
                         notifyItems.put(orderItemSeqId, nextShipDate);
                         ordersToUpdate.put(orderId, notifyItems);
@@ -554,7 +555,7 @@ public class InventoryServices {
                             Debug.logInfo("Flagging the item to auto-cancel", module);
                             Map<String, Timestamp> cancelItems = ordersToCancel.get(orderId);
                             if (cancelItems == null) {
-                                cancelItems = UtilMisc.newMap();
+                                cancelItems = new HashMap<String, Timestamp>();
                             }
                             cancelItems.put(orderItemSeqId, farPastPromised);
                             ordersToCancel.put(orderId, cancelItems);
@@ -623,7 +624,7 @@ public class InventoryServices {
 
                 // if there are none to cancel just create an empty map
                 if (cancelItems == null) {
-                    cancelItems = UtilMisc.newMap();
+                    cancelItems = new HashMap<String, Timestamp>();
                 }
 
                 if (orderItems != null) {
@@ -761,10 +762,10 @@ public class InventoryServices {
         List<GenericValue> orderItems = UtilGenerics.checkList(context.get("orderItems"));
         String facilityId = (String) context.get("facilityId");
         Locale locale = (Locale) context.get("locale");
-        Map<String, BigDecimal> atpMap = UtilMisc.newMap();
-        Map<String, BigDecimal> qohMap = UtilMisc.newMap();
-        Map<String, BigDecimal> mktgPkgAtpMap = UtilMisc.newMap();
-        Map<String, BigDecimal> mktgPkgQohMap = UtilMisc.newMap();
+        Map<String, BigDecimal> atpMap = new HashMap<String, BigDecimal>();
+        Map<String, BigDecimal> qohMap = new HashMap<String, BigDecimal>();
+        Map<String, BigDecimal> mktgPkgAtpMap = new HashMap<String, BigDecimal>();
+        Map<String, BigDecimal> mktgPkgQohMap = new HashMap<String, BigDecimal>();
         Map<String, Object> results = ServiceUtil.returnSuccess();
 
         // get a list of all available facilities for looping
@@ -857,8 +858,8 @@ public class InventoryServices {
         BigDecimal minimumStock = (BigDecimal)context.get("minimumStock");
         String statusId = (String)context.get("statusId");
 
-        Map<String, Object> result = UtilMisc.newMap();
-        Map<String, Object> resultOutput = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> resultOutput = new HashMap<String, Object>();
 
         Map<String, String> contextInput = UtilMisc.toMap("productId", productId, "facilityId", facilityId, "statusId", statusId);
         GenericValue product = null;

@@ -20,6 +20,7 @@ package org.ofbiz.shipment.shipment;
 
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -63,7 +64,7 @@ public class ShipmentServices {
     public static final BigDecimal ZERO = BigDecimal.ZERO.setScale(decimals, rounding);
 
     public static Map<String, Object> createShipmentEstimate(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = dctx.getDelegator();
         Locale locale = (Locale) context.get("locale");
         List<GenericValue> storeAll = UtilMisc.newList();
@@ -425,7 +426,7 @@ public class ShipmentServices {
 
         // make the shippable item size/feature objects
         List<BigDecimal> shippableItemSizes = UtilMisc.newList();
-        Map<String, BigDecimal> shippableFeatureMap = UtilMisc.newMap();
+        Map<String, BigDecimal> shippableFeatureMap = new HashMap<String, BigDecimal>();
         if (shippableItemInfo != null) {
             for (Map<String, Object> itemMap: shippableItemInfo) {
                 // add the item sizes
@@ -730,7 +731,7 @@ public class ShipmentServices {
         Delegator delegator = dctx.getDelegator();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Locale locale = (Locale) context.get("locale");
-        Map<String, String> shipmentMap = UtilMisc.newMap();
+        Map<String, String> shipmentMap = new HashMap<String, String>();
 
         EntityListIterator eli = null;
         try {
@@ -776,7 +777,7 @@ public class ShipmentServices {
                         }
                     }
 
-                    Map<String, Object> pkgCtx = UtilMisc.newMap();
+                    Map<String, Object> pkgCtx = new HashMap<String, Object>();
                     pkgCtx.put("shipmentId", shipmentId);
                     pkgCtx.put("shipmentPackageSeqId", packageSeqId);
 
@@ -855,7 +856,7 @@ public class ShipmentServices {
         for (Map.Entry<String, String> entry: shipmentMap.entrySet()) {
             String shipmentId = entry.getKey();
             String voidInd = entry.getValue();
-            Map<String, Object> shipCtx = UtilMisc.newMap();
+            Map<String, Object> shipCtx = new HashMap<String, Object>();
             shipCtx.put("shipmentId", shipmentId);
             if ("Y".equals(voidInd)) {
                 shipCtx.put("statusId", "SHIPMENT_CANCELLED");
@@ -936,7 +937,7 @@ public class ShipmentServices {
             }
 
             // store the quantity of each product shipped in a hashmap keyed to productId
-            Map<String, BigDecimal> shippedCountMap = UtilMisc.newMap();
+            Map<String, BigDecimal> shippedCountMap = new HashMap<String, BigDecimal>();
             for (GenericValue item: shipmentAndItems) {
                 BigDecimal shippedQuantity = item.getBigDecimal("quantity");
                 BigDecimal quantity = shippedCountMap.get(item.getString("productId"));
@@ -945,7 +946,7 @@ public class ShipmentServices {
             }
 
             // store the quantity of each product received in a hashmap keyed to productId
-            Map<String, BigDecimal> receivedCountMap = UtilMisc.newMap();
+            Map<String, BigDecimal> receivedCountMap = new HashMap<String, BigDecimal>();
             for (GenericValue item: shipmentReceipts) {
                 BigDecimal receivedQuantity = item.getBigDecimal("quantityAccepted");
                 BigDecimal quantity = receivedCountMap.get(item.getString("productId"));
@@ -1147,7 +1148,7 @@ public class ShipmentServices {
         Locale localePar = (Locale) context.get("locale");
         
         // prepare the shipment information
-        Map<String, Object> sendMap = UtilMisc.newMap();
+        Map<String, Object> sendMap = new HashMap<String, Object>();
         GenericValue shipment = null ;
         GenericValue orderHeader = null;
         try {

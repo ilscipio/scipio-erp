@@ -19,6 +19,7 @@
 package org.ofbiz.order.test;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -128,7 +129,7 @@ public class SalesOrderTest extends OFBizTestCase {
         List<GenericValue> orderTerms = UtilMisc.newList();
         ctx.put("orderTerms", orderTerms);
 
-        GenericValue OrderContactMech = delegator.makeValue("OrderContactMech", UtilMisc.newMap());
+        GenericValue OrderContactMech = delegator.makeValue("OrderContactMech", new HashMap<String, Object>());
         OrderContactMech.set("contactMechPurposeTypeId", "SHIPPING_LOCATION");
         OrderContactMech.set("contactMechId", "10000");
         List<GenericValue> orderContactMechs = UtilMisc.newList();

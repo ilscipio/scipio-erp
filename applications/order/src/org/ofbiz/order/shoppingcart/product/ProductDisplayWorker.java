@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -64,7 +65,7 @@ public class ProductDisplayWorker {
 
         List<GenericValue> cartAssocs = null;
         try {
-            Map<String, GenericValue> products = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+            Map<String, GenericValue> products = new LinkedHashMap<String, GenericValue>();
 
             Iterator<ShoppingCartItem> cartiter = cart.iterator();
 
@@ -147,7 +148,7 @@ public class ProductDisplayWorker {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         GenericValue userLogin = (GenericValue) httpRequest.getSession().getAttribute("userLogin");
-        Map<String, Object> results = UtilMisc.newMap();
+        Map<String, Object> results = new HashMap<String, Object>();
 
         if (userLogin == null) userLogin = (GenericValue) httpRequest.getSession().getAttribute("autoUserLogin");
         if (userLogin == null) return results;
@@ -261,7 +262,7 @@ public class ProductDisplayWorker {
             // sort descending by new metric...
             BigDecimal occurancesModifier = BigDecimal.ONE;
             BigDecimal quantityModifier = BigDecimal.ONE;
-            Map<String, Object> newMetric = UtilMisc.newMap();
+            Map<String, Object> newMetric = new HashMap<String, Object>();
             for (Map.Entry<String, Integer> entry : productOccurances.entrySet()) {
                 String prodId = entry.getKey();
                 Integer quantity = entry.getValue();

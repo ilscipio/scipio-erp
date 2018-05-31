@@ -32,6 +32,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.ByteBuffer;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -121,7 +122,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
         for (GenericValue category : categoryValues) {
             String id = (String) category.get("dataCategoryId");
             String categoryName = (String) category.get("categoryName");
-            Map<String, Object> newNode = UtilMisc.newMap();
+            Map<String, Object> newNode = new HashMap<String, Object>();
             newNode.put("id", id);
             newNode.put("name", categoryName);
             errorMsg = getDataCategoryMap(delegator, depth + 1, newNode, categoryTypeIds, getAll);
@@ -169,7 +170,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
         String spc = "";
         for (int i = 0; i < depth; i++)
             spc += "&nbsp;&nbsp;";
-        Map<String, Object> map = UtilMisc.newMap();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("dataCategoryId", id);
         map.put("categoryName", spc + nm);
         if (id != null && !id.equals("ROOT") && !id.equals("")) {
@@ -218,7 +219,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
         FileItem fi = null;
         FileItem imageFi = null;
         String imageFileName = null;
-        Map<String, Object> passedParams = UtilMisc.newMap();
+        Map<String, Object> passedParams = new HashMap<String, Object>();
         HttpSession session = request.getSession();
         GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
         passedParams.put("userLogin", userLogin);
@@ -294,14 +295,14 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
      */
     public static Map<String, Object> callDataResourcePermissionCheckResult(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> context) {
 
-        Map<String, Object> permResults = UtilMisc.newMap();
+        Map<String, Object> permResults = new HashMap<String, Object>();
         String skipPermissionCheck = (String) context.get("skipPermissionCheck");
             if (Debug.infoOn()) Debug.logInfo("in callDataResourcePermissionCheckResult, skipPermissionCheck:" + skipPermissionCheck,"");
 
         if (UtilValidate.isEmpty(skipPermissionCheck) 
                 || (!"true".equalsIgnoreCase(skipPermissionCheck) && !"granted".equalsIgnoreCase(skipPermissionCheck))) {
             GenericValue userLogin = (GenericValue) context.get("userLogin");
-            Map<String, Object> serviceInMap = UtilMisc.newMap();
+            Map<String, Object> serviceInMap = new HashMap<String, Object>();
             serviceInMap.put("userLogin", userLogin);
             serviceInMap.put("targetOperationList", context.get("targetOperationList"));
             serviceInMap.put("contentPurposeList", context.get("contentPurposeList"));
@@ -395,7 +396,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
     }
 
     public static String buildRequestPrefix(Delegator delegator, Locale locale, String webSiteId, String https) {
-        Map<String, Object> prefixValues = UtilMisc.newMap();
+        Map<String, Object> prefixValues = new HashMap<String, Object>();
         String prefix;
 
         NotificationServices.setBaseUrl(delegator, webSiteId, prefixValues);
@@ -616,7 +617,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
             throw new GeneralException("Cannot lookup data resource with for a null dataResourceId");
         }
         if (templateContext == null) {
-            templateContext = UtilMisc.newMap();
+            templateContext = new HashMap<String, Object>();
         }
         if (UtilValidate.isEmpty(targetMimeTypeId)) {
             targetMimeTypeId = "text/html";
@@ -713,7 +714,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
                     // prepare the map for preRenderedContent
                     String textData = (String) context.get("textData");
                     if (UtilValidate.isNotEmpty(textData)) {
-                        Map<String, Object> prc = UtilMisc.newMap();
+                        Map<String, Object> prc = new HashMap<String, Object>();
                         String mapKey = (String) context.get("mapKey");
                         if (mapKey != null) {
                             prc.put(mapKey, mapKey);
@@ -776,7 +777,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
             Delegator delegator, Appendable out, boolean cache) throws IOException, GeneralException {
         Map<String, Object> context = UtilGenerics.checkMap(templateContext.get("context"));
         if (context == null) {
-            context = UtilMisc.newMap();
+            context = new HashMap<String, Object>();
         }
         String webSiteId = (String) templateContext.get("webSiteId");
         if (UtilValidate.isEmpty(webSiteId)) {
@@ -890,7 +891,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
 
             if (mimeTypeTemplate != null && mimeTypeTemplate.get("templateLocation") != null) {
                 // prepare the context
-                Map<String, Object> mimeContext = UtilMisc.newMap();
+                Map<String, Object> mimeContext = new HashMap<String, Object>();
                 mimeContext.putAll(context);
                 mimeContext.put("dataResource", dataResource);
                 mimeContext.put("textData", textData);

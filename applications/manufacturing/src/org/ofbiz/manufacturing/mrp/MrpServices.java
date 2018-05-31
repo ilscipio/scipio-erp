@@ -21,6 +21,7 @@ package org.ofbiz.manufacturing.mrp;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
@@ -491,7 +492,7 @@ public class MrpServices {
                 }
             }
         }
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         Debug.logInfo("return from initMrpEvent", module);
         return result;
@@ -830,7 +831,7 @@ public class MrpServices {
             // if there are 3 levels with no inventoryEvenPanned we stop
         } while (bomLevelWithNoEvent < 3);
 
-        result = UtilMisc.newMap();
+        result = new HashMap<String, Object>();
         List<Object> msgResult = UtilMisc.newList();
         result.put("msgResult", msgResult);
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);

@@ -19,7 +19,7 @@ import com.ilscipio.scipio.cms.webapp.ComponentUtil;
 import com.ilscipio.scipio.cms.control.CmsWebSiteInfo;
 import com.ilscipio.scipio.cms.control.CmsViewMapping;
 
-final String module = "CmsPageViewMappings.groovy";
+final String module = "CmsGetPageViewMappings.groovy";
 
 /*Create view mappings tree*/
 // Fetch controller entries
@@ -92,7 +92,7 @@ if (viewMappings != null) {
                         //viewEntry.state = state;
 
                         // doesn't work, seems to prevent uncheck and too low-level
-                        //a_attr = viewEntry.a_attr ?: UtilMisc.newMap();
+                        //a_attr = viewEntry.a_attr ?: [:];
                         //a_attr["class"] = "jstree-checked";
                         //viewEntry.a_attr = a_attr;
                     }

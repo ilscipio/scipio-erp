@@ -7,16 +7,11 @@ import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.base.util.template.ScipioFtlWrappers;
 import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioBeansWrapper;
-import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioDefaultObjectWrapper;
 import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioExtendedBeansWrapper;
-import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioExtendedBeansWrapperImpl;
-import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioExtendedDefaultObjectWrapperImpl;
 import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioExtendedObjectWrapper;
-import org.ofbiz.webapp.ftl.ExtendedWrapper;
 
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeansWrapper;
-import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.TemplateModelException;
 

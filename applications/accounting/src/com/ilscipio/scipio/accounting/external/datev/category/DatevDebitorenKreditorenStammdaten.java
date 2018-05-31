@@ -28,7 +28,7 @@ public class DatevDebitorenKreditorenStammdaten extends AbstractDatevDataCategor
 
     @Override
     public void processRecord(int index, Map<String, String> recordMap) throws DatevException {
-        Map<String, GenericValue> recordsToStore = new HashMap<String, GenericValue>();
+        Map<String, GenericValue> recordsToStore = new HashMap<>();
         try {
             for (String fieldName : recordMap.keySet()) {
 //                String fieldId = fieldDefinition.getString("fieldId");

@@ -12,7 +12,6 @@ import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
-import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.webapp.WebAppUtil;
@@ -61,7 +60,7 @@ public class ComponentUtil {
      * Returns a map containing component information
      */
     public static Map<String, Object> getWebAppInfo(ComponentConfig component, WebappInfo webApp) {
-        Map<String, Object> componentMap = new HashMap<String, Object>();
+        Map<String, Object> componentMap = new HashMap<>();
         String webSiteId = null;
         try {
             webSiteId = WebAppUtil.getWebSiteId(webApp);
@@ -95,7 +94,7 @@ public class ComponentUtil {
      */
     public static Map<String, Map<String, Object>> getWebappRequestMaps(Set<String> webSiteIds,
             Map<String, Map<String, Object>> webSiteExtraConfigs) {
-        Map<String, Map<String, Object>> requestMaps = new HashMap<String, Map<String, Object>>();
+        Map<String, Map<String, Object>> requestMaps = new HashMap<>();
         //Map<String, ConfigXMLReader.RequestMap> requestMapMap = null;
         List<Map<String, Object>> components = ComponentUtil.getComponentInfos(webSiteIds);
 
@@ -170,7 +169,7 @@ public class ComponentUtil {
      * @param webSiteIds only include trees for these webSiteIds
      */
     public static Map<String, Map<String, Object>> getWebappViewMaps(Set<String> webSiteIds) {
-        Map<String, Map<String, Object>> viewMaps = new HashMap<String, Map<String, Object>>();
+        Map<String, Map<String, Object>> viewMaps = new HashMap<>();
         List<Map<String, Object>> components = ComponentUtil.getComponentInfos(webSiteIds);
         for (Map<String, Object> component : components) {
             try {
@@ -253,7 +252,7 @@ public class ComponentUtil {
                 boolean isTargetPath = subPathStr.equals(path);
 
                 // determine if node is parent and add appropriate folder
-                itemMap = new HashMap<String, Object>(UtilMisc.toMap("text", item, "a_attr", subPathStr, "id", id, "state", state,
+                itemMap = new HashMap<>(UtilMisc.toMap("text", item, "a_attr", subPathStr, "id", id, "state", state,
                         "parent", parent, "data", UtilMisc.toMap("type", type, "parentPath", parentPath, "path",
                                 subPathStr, "websiteid", webSiteId, "isTargetPath", isTargetPath)));
                 parent = id;

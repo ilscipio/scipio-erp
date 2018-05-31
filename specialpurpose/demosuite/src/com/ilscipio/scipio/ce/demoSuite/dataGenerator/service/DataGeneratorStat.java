@@ -13,7 +13,7 @@ public class DataGeneratorStat {
 
     DataGeneratorStat(String entityName) {
         this.entityName = entityName;
-        this.setGeneratedValues(new ArrayList<GenericValue>());
+        this.setGeneratedValues(new ArrayList<>());
     }
 
     public String getEntityName() {

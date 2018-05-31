@@ -59,7 +59,7 @@ public class CmsAttributeTemplate extends CmsDataObject {
         COMPLEX_LIST, // NOTE: may be different from DYNAMIC_LIST (old)
         COMPLEX_MAP;
         
-        private static final List<Type> displayValues = Collections.unmodifiableList(new ArrayList<Type>(Arrays.asList(new Type[] {
+        private static final List<Type> displayValues = Collections.unmodifiableList(new ArrayList<>(Arrays.asList(new Type[] {
                 SHORT_TEXT, LONG_TEXT, BOOLEAN, INTEGER
         })));
         

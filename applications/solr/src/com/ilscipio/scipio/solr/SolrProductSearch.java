@@ -19,8 +19,6 @@ import org.apache.solr.client.solrj.SolrRequest;
 import org.apache.solr.client.solrj.SolrRequest.METHOD;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
-import org.apache.solr.client.solrj.request.DirectXmlRequest;
-import org.apache.solr.client.solrj.request.GenericSolrRequest;
 import org.apache.solr.client.solrj.request.QueryRequest;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
@@ -30,7 +28,6 @@ import org.apache.solr.client.solrj.response.SpellCheckResponse.Collation;
 import org.apache.solr.client.solrj.response.SpellCheckResponse.Suggestion;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.common.params.CommonParams;
-import org.apache.solr.common.params.ModifiableSolrParams;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -327,7 +324,7 @@ public abstract class SolrProductSearch {
 
             // Construct Documents
             SolrInputDocument doc1 = SolrProductUtil.generateSolrProductDocument(dctx.getDelegator(), dctx.getDispatcher(), context, useCache);
-            Collection<SolrInputDocument> docs = new ArrayList<SolrInputDocument>();
+            Collection<SolrInputDocument> docs = new ArrayList<>();
 
             if (Debug.verboseOn()) Debug.logVerbose("Solr: Indexing document: " + doc1.toString(), module);
 
@@ -391,7 +388,7 @@ public abstract class SolrProductSearch {
         Boolean treatConnectErrorNonFatal = (Boolean) context.get("treatConnectErrorNonFatal");
         boolean useCache = Boolean.TRUE.equals(context.get("useCache"));
         try {
-            Collection<SolrInputDocument> docs = new ArrayList<SolrInputDocument>();
+            Collection<SolrInputDocument> docs = new ArrayList<>();
             List<Map<String, Object>> fieldList = UtilGenerics.<Map<String, Object>> checkList(context.get("fieldList"));
 
             if (fieldList.size() > 0) {
@@ -1166,7 +1163,7 @@ public abstract class SolrProductSearch {
             int bufNumDocs = 0;
             
             // NOTE: use ArrayList instead of LinkedList (EntityListIterator) in buffered mode because it will use less total memory
-            List<Map<String, Object>> solrDocs = (bufSize > 0) ? new ArrayList<Map<String, Object>>(Math.min(bufSize, numDocs)) : new LinkedList<Map<String, Object>>();
+            List<Map<String, Object>> solrDocs = (bufSize > 0) ? new ArrayList<>(Math.min(bufSize, numDocs)) : new LinkedList<>();
             
             Map<String, Object> productContext = new HashMap<>(context);
             productContext.put("useCache", clearAndUseCache);

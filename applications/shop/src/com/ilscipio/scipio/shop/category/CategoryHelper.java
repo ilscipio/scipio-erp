@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -15,8 +16,6 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.product.category.CategoryContentWrapper;
 import org.ofbiz.service.LocalDispatcher;
-
-import org.ofbiz.base.util.UtilMisc;
 
 public class CategoryHelper {
 
@@ -78,7 +77,7 @@ public class CategoryHelper {
     }
     
     public Map<String, Object> makeCategoryInfo(String categoryId, Map<String, Object> item) {
-        Map<String, Object> info = new HashMap<String, Object>();
+        Map<String, Object> info = new HashMap<>();
         info.put("item", item);
         info.put("productCategoryId", categoryId);
 

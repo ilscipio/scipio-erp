@@ -21,7 +21,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -201,7 +200,7 @@ public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
             entityTypeValues = new LinkedHashMap<>();
             // preset this order; any extras will go at the end
             for(String entityName : getTravConfig().getExportEntityNames()) {
-                entityTypeValues.put(entityName, new LinkedList<GenericValue>());
+                entityTypeValues.put(entityName, new ArrayList<>());
             }
         }
     }
@@ -317,7 +316,7 @@ public class SeoCatalogUrlExporter extends SeoCatalogTraverser {
         if (isEntityTypeGrouping()) {
             List<GenericValue> entityList = entityTypeValues.get(entityValue.getEntityName());
             if (entityList == null) {
-                entityList = new LinkedList<>();
+                entityList = new ArrayList<>();
                 entityTypeValues.put(entityValue.getEntityName(), entityList);
             }
             entityList.add(entityValue);

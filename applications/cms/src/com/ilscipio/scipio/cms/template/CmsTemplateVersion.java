@@ -15,7 +15,6 @@ import org.ofbiz.entity.GenericValue;
 
 import com.ilscipio.scipio.cms.CmsException;
 import com.ilscipio.scipio.cms.CmsUtil;
-import com.ilscipio.scipio.cms.data.CmsDataException;
 import com.ilscipio.scipio.cms.data.CmsDataObject;
 import com.ilscipio.scipio.cms.data.CmsDataObjectVersion;
 

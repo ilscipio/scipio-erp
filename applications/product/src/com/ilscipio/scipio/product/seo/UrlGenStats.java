@@ -69,7 +69,7 @@ public class UrlGenStats {
     }
     
     public Map<String, Object> toMap() {
-        return toMap(new HashMap<String, Object>());
+        return toMap(new HashMap<>());
     }
     
     public void toMsgLists(Locale locale, List<String> msgList, List<String> errMsgList) {

@@ -143,7 +143,7 @@ public abstract class CmsAssetTemplateServices {
                 // originalTemplate.store();
                 // Paritas dos tacos: Update original template and set to
                 // inactive (assetTemplateId)
-                CmsAssetTemplate newTemplate = (CmsAssetTemplate) originalTemplate.copy(new HashMap<String, Object>());
+                CmsAssetTemplate newTemplate = (CmsAssetTemplate) originalTemplate.copy(new HashMap<>());
                 if (context.get("templateName") != null) {
                     newTemplate.setName((String) context.get("templateName"));
                 }

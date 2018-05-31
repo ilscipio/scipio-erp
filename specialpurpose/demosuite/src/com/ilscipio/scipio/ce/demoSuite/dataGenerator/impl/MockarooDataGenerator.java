@@ -1,6 +1,7 @@
 package com.ilscipio.scipio.ce.demoSuite.dataGenerator.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.ofbiz.base.conversion.JSONConverters;
@@ -15,8 +16,6 @@ import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.DemoDataHelper;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.MockarooDemoDataHelper;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.MockarooDemoDataHelper.MockarooSettings;
-
-import org.ofbiz.base.util.UtilMisc;
 
 public class MockarooDataGenerator extends DataGenerator {
 	private static String MOCKAROO_DATA_GENERATOR = "mockaroo";
@@ -35,7 +34,7 @@ public class MockarooDataGenerator extends DataGenerator {
 		// argument to be passed that represents the api");
 		// String api = args[0];
 		// FIXME: Find a way to pass api properly
-		String api = "";
+		//String api = "";
 		HttpClient httpClient = new HttpClient();
 		MockarooSettings settings = helper.getSettings();
 		String format = settings.getExportFormat();
@@ -51,9 +50,9 @@ public class MockarooDataGenerator extends DataGenerator {
 			String r = httpClient.sendHttpRequest(settings.getMethod());
 
 			JSONToList jsonListConverter = new JSONConverters.JSONToList();
-			List<DemoDataObject> resultList = UtilMisc.newList();
-
-			for (Object o : jsonListConverter.convert(JSON.from(r))) {
+			List<Object> converted = jsonListConverter.convert(JSON.from(r));
+			List<DemoDataObject> resultList = new ArrayList<>(converted.size());
+			for (Object o : converted) {
 				resultList.add(handleData(o, format));
 			}
 

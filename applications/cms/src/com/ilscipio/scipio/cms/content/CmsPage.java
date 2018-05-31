@@ -45,8 +45,8 @@ import com.ilscipio.scipio.cms.data.CmsEntityVisit.VisitRelation;
 import com.ilscipio.scipio.cms.data.CmsEntityVisit.VisitRelations;
 import com.ilscipio.scipio.cms.data.CmsMajorObject;
 import com.ilscipio.scipio.cms.data.CmsObjectCache;
-import com.ilscipio.scipio.cms.data.CmsVersionedDataObject;
 import com.ilscipio.scipio.cms.data.CmsObjectCache.CacheEntry;
+import com.ilscipio.scipio.cms.data.CmsVersionedDataObject;
 import com.ilscipio.scipio.cms.template.CmsComplexTemplate;
 import com.ilscipio.scipio.cms.template.CmsMasterComplexTemplate;
 import com.ilscipio.scipio.cms.template.CmsMasterComplexTemplate.CmsTemplateScriptAssoc;
@@ -430,7 +430,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
     public CmsPageVersion getActiveOrNewVersion(boolean cacheActiveVersion) {
         CmsPageVersion version = getActiveVersion(cacheActiveVersion);
         if (version == null) {
-            version = new CmsPageVersion(getDelegator(), new HashMap<String, Object>(), this);
+            version = new CmsPageVersion(getDelegator(), new HashMap<>(), this);
         }
         return version;
     }    
@@ -451,7 +451,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         } catch (IOException e) {
             Debug.logError(e, "Unable to read JSON-formatted content from cms page '" + getId() + "'", module);
         }
-        return content != null ? content : new HashMap<String, Object>();
+        return content != null ? content : new HashMap<>();
     }
 
     /**
@@ -662,7 +662,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
     public CmsPageVersion getLastVersionOrNewVersion() {
         CmsPageVersion version = getLastVersion();
         if (version == null) {
-            version = new CmsPageVersion(getDelegator(), new HashMap<String, Object>(), this);
+            version = new CmsPageVersion(getDelegator(), new HashMap<>(), this);
         }
         return version;
     }
@@ -1317,7 +1317,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
     }
     
     private static void addWebSiteIdsFromMappings(Delegator delegator, String pageId, String active, Collection<String> webSiteIds) {
-        Map<String, Object> fields = new HashMap<String, Object>();
+        Map<String, Object> fields = new HashMap<>();
         fields.put("pageId", pageId);
         fields.put("active", active);
         
@@ -1454,7 +1454,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 ////            }
 //        }
 //        
-//        return new ArrayList<String>(webSiteIds);
+//        return new ArrayList<>(webSiteIds);
 //    }
     
     // 2016: not appropriate unless rewritten
@@ -1513,7 +1513,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 //        String pageId = null;
 //        
 //        if (delegator != null && path != null) {
-//            Map<String, Object> fields = new HashMap<String, Object>();
+//            Map<String, Object> fields = new HashMap<>();
 //            fields.put("cmsPageReqPath", path);
 //            List<String> orderBy = new ArrayList<>();
 //            orderBy.add("lastUpdatedStamp DESC");

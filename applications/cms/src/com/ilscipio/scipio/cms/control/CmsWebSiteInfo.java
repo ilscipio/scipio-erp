@@ -414,7 +414,7 @@ public class CmsWebSiteInfo implements Serializable {
          * Probably you should use the Ofbiz classes above.
          */
 
-        Map<String, Object> simpleTree = new HashMap<String, Object>();
+        Map<String, Object> simpleTree = new HashMap<>();
         Map<String, RequestMap> reqMapMap = getRequestMapMap();
         if (maxDepth == null || maxDepth != 0) {
             for (RequestMap req : reqMapMap.values()) {
@@ -429,7 +429,7 @@ public class CmsWebSiteInfo implements Serializable {
     
     @Deprecated
     protected Map<String, Object> buildRequestMapSimpleTree(RequestMap req, Map<String, RequestMap> reqMapMap, Set<String> branchReqUris, Integer maxDepth, int currDepth) {
-        Map<String, Object> simpleReq = new HashMap<String, Object>();
+        Map<String, Object> simpleReq = new HashMap<>();
         
         simpleReq.put("uri", req.uri);
         
@@ -445,7 +445,7 @@ public class CmsWebSiteInfo implements Serializable {
                 // Only record view names once (turned to list at the end)
                 Set<String> viewNames = new LinkedHashSet<String>();
                 
-                Map<String, Object> subRequestsMap = new HashMap<String, Object>();
+                Map<String, Object> subRequestsMap = new HashMap<>();
                 for(RequestResponse resp : req.requestResponseMap.values()) {
                     if ("view".equals(resp.type)) {
                         viewNames.add(resp.value);

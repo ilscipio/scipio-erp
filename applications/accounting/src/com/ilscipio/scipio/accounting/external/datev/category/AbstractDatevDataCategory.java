@@ -35,7 +35,7 @@ public abstract class AbstractDatevDataCategory {
     final DatevHelper datevHelper;
 
     private final List<GenericValue> datevMetadataFieldsDefinitions;
-    private Map<String, Object> datevMetadataValues = new HashMap<String, Object>();
+    private Map<String, Object> datevMetadataValues = new HashMap<>();
 
     private final List<GenericValue> datevFieldDefinitions;
     private final Map<String, GenericValue> datevFieldMappingsByField;
@@ -53,7 +53,7 @@ public abstract class AbstractDatevDataCategory {
             this.datevFieldNames = EntityUtil.getFieldListFromEntityList(datevFieldDefinitions, "fieldName", true);
             
             List<String> datevFieldIds = EntityUtil.getFieldListFromEntityList(datevFieldDefinitions, "fieldId", true);
-            Map<String, GenericValue> datevFieldMappingsByField = new HashMap<String, GenericValue>();
+            Map<String, GenericValue> datevFieldMappingsByField = new HashMap<>();
             List<GenericValue> datevFieldMappings = EntityQuery.use(delegator).from("DatevFieldMapping").where(datevFieldCommonCond).queryList();
             for (String fieldId : datevFieldIds) {
                 datevFieldMappingsByField.put(fieldId, EntityUtil.getFirst(EntityUtil.filterByAnd(datevFieldMappings, UtilMisc.toMap("fieldId", fieldId))));

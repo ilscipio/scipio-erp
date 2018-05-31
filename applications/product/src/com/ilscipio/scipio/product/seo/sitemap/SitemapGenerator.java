@@ -36,7 +36,6 @@ import com.ilscipio.scipio.ce.util.PathUtil;
 import com.ilscipio.scipio.ce.webapp.filter.UrlRewriteConf;
 import com.ilscipio.scipio.product.seo.SeoCatalogTraverser;
 import com.ilscipio.scipio.product.seo.SeoCatalogUrlWorker;
-import com.ilscipio.scipio.product.seo.UrlGenStats;
 import com.redfin.sitemapgenerator.SitemapIndexGenerator;
 import com.redfin.sitemapgenerator.WebSitemapGenerator;
 import com.redfin.sitemapgenerator.WebSitemapUrl;
@@ -709,7 +708,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
 
         Map<String, List<GenericValue>> valuesByType = new HashMap<>();
         for(String typeId : orderedFieldValues) { // simplifies the code
-            valuesByType.put(typeId, new ArrayList<GenericValue>());
+            valuesByType.put(typeId, new ArrayList<>());
         }
         List<GenericValue> unknownTypes = new ArrayList<>();
         

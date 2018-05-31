@@ -22,7 +22,7 @@ public class UrlProcessors implements Serializable {
     protected final List<UrlProcessor> processorList;
   
     protected UrlProcessors(Collection<UrlProcessor> processorList) {
-        this.processorList = new ArrayList<UrlProcessor>(processorList);
+        this.processorList = new ArrayList<>(processorList);
     }
     
     public static UrlProcessors createProcessors(Collection<UrlProcessor> processorList) {

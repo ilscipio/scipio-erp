@@ -77,6 +77,7 @@ import com.ilscipio.scipio.cms.data.CmsEntityVisit.VisitRelation;
 import com.ilscipio.scipio.cms.data.CmsMajorObject;
 import com.ilscipio.scipio.cms.data.CmsObjectRegistry;
 import com.ilscipio.scipio.cms.data.EntityInfoUtil;
+import com.ilscipio.scipio.cms.data.importexport.CmsDataExportWorker.PresetConfig;
 import com.ilscipio.scipio.cms.media.CmsMediaWorker;
 import com.ilscipio.scipio.cms.template.CmsTemplate.TemplateBodySource;
 
@@ -820,7 +821,7 @@ public abstract class CmsDataExportWorker implements Serializable {
             this.attribTmplAssocType = other.attribTmplAssocType;
             this.labelName = (other.labelName != null) ? other.labelName : ("CmsEntityPresetLabel_" + this.presetName);
             this.entityNames = (other.entityNames != null) ? Collections.unmodifiableSet(other.entityNames) : null;
-            this.map = Collections.unmodifiableMap(toMap(new HashMap<String, Object>()));
+            this.map = Collections.unmodifiableMap(toMap(new HashMap<>()));
         }
 
         public String getPresetName() { return presetName; }
@@ -984,7 +985,7 @@ public abstract class CmsDataExportWorker implements Serializable {
         Map<String, List<GenericValue>> map = new LinkedHashMap<>();
         // establish order
         for(String name : extEntityOrder) {
-            map.put(name, new ArrayList<GenericValue>());
+            map.put(name, new ArrayList<>());
         }
         for(String contentId : contentIds) {
             List<GenericValue> values = getContentAndRelatedValues(contentId);

@@ -16,7 +16,6 @@ import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
 import com.ilscipio.scipio.ce.util.PathUtil;
-import com.ilscipio.scipio.cms.content.CmsPage;
 import com.ilscipio.scipio.cms.control.cmscall.CmsCallType;
 import com.ilscipio.scipio.cms.webapp.CmsWebappUtil;
 

@@ -223,7 +223,7 @@ public class CmsAssetTemplate extends CmsMasterComplexTemplate<CmsAssetTemplate,
         public void update(Map<String, ?> fields, boolean setIfEmpty) {
             // here, must ignore scriptTemplateId - set at creation and should never change
             if (fields.containsKey("scriptTemplateId") && UtilValidate.isNotEmpty(getAssetTemplateId())) {
-                fields = new HashMap<String, Object>(fields);
+                fields = new HashMap<>(fields);
                 fields.remove("scriptTemplateId");
             }
             super.update(fields, setIfEmpty);

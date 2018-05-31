@@ -150,6 +150,6 @@ public enum CategoryRefType {
     
     // TODO: move util to better place
     private static Map<String, ModelEntity> filterModelEntitiesHavingFields(Map<String, ModelEntity> inModelEntities, String... fieldNames) {
-        return filterModelEntitiesHavingFields(inModelEntities, new HashMap<String, ModelEntity>(), Arrays.asList(fieldNames));
+        return filterModelEntitiesHavingFields(inModelEntities, new HashMap<>(), Arrays.asList(fieldNames));
     }
 }

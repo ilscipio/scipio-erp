@@ -182,7 +182,7 @@ public class ScipioRuleBasedAuthorizationPlugin extends RuleBasedAuthorizationPl
     }
 
     protected static List<GenericValue> getActiveTenants(Delegator delegator) throws GenericEntityException {
-        List<EntityExpr> expr = new ArrayList<EntityExpr>();
+        List<EntityExpr> expr = new ArrayList<>();
         expr.add(EntityCondition.makeCondition("disabled", EntityOperator.EQUALS, "N"));
         expr.add(EntityCondition.makeCondition("disabled", EntityOperator.EQUALS, null));
         return EntityQuery.use(delegator).from("Tenant")

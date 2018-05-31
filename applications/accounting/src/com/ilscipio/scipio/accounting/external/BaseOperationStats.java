@@ -1,6 +1,6 @@
 package com.ilscipio.scipio.accounting.external;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +40,7 @@ public class BaseOperationStats {
         FATAL, ERROR, WARNING, IGNORE
     }
 
-    List<Stat> stats = new LinkedList<Stat>();
+    List<Stat> stats = new ArrayList<>();
 
     public void addStat(Stat stat) {
         stats.add(stat);

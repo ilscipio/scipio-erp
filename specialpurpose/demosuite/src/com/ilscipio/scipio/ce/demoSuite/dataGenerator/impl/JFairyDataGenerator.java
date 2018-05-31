@@ -1,8 +1,10 @@
 package com.ilscipio.scipio.ce.demoSuite.dataGenerator.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.DataGenerator;
@@ -18,7 +20,6 @@ import com.ilscipio.scipio.ce.demoSuite.dataGenerator.util.DemoSuiteDataGenerato
 
 import io.codearte.jfairy.Fairy;
 import io.codearte.jfairy.producer.person.Person;
-import org.ofbiz.base.util.UtilMisc;
 
 public class JFairyDataGenerator extends DataGenerator {
 	private final static String JFAIRY_DATA_GENERATOR = "jfairy";
@@ -33,7 +34,7 @@ public class JFairyDataGenerator extends DataGenerator {
 
 	@Override
 	public List<? extends DemoDataObject> retrieveData() throws Exception {
-		List<DemoDataObject> result = UtilMisc.newList();
+		List<DemoDataObject> result = new ArrayList<>(helper.getCount());
 		try {			
 			for (int i = 0; i < helper.getCount(); i++) {
 				Locale locale = DemoSuiteDataGeneratorUtil.LocaleClasses.getRandom();

@@ -130,7 +130,7 @@ public class PeriodServices {
     }
 
     private static List<TreeDataItem> childTimePeriodTree(List<GenericValue> childTimePeriods, String library, boolean includeTimePeriodData) throws GeneralException {
-        List<TreeDataItem> childTreeDataItems = UtilMisc.newList();
+        List<TreeDataItem> childTreeDataItems = new ArrayList<>();
         return childTimePeriodTree(childTimePeriods, library, includeTimePeriodData, childTreeDataItems);
     }
 
@@ -155,7 +155,7 @@ public class PeriodServices {
 
         GenericValue timePeriod = null;
         GenericValue parentPeriod = null;
-        Map<String, Object> timePeriodMap = new HashMap<String, Object>();
+        Map<String, Object> timePeriodMap = new HashMap<>();
         try {
             timePeriod = EntityQuery.use(delegator).cache(useCache).from("CustomTimePeriod")
                     .where(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId)).queryOne();

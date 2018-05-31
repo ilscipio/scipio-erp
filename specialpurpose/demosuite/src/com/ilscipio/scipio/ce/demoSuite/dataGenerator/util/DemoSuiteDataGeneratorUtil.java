@@ -59,7 +59,7 @@ public class DemoSuiteDataGeneratorUtil {
 
 	public static List<Map<String, Object>> getDemoDataServices(LocalDispatcher dispatcher)
 			throws GenericServiceException {
-		List<Map<String, Object>> servicesList = new ArrayList<Map<String, Object>>();
+		List<Map<String, Object>> servicesList = new ArrayList<>();
 		DispatchContext dispatchCtx = dispatcher.getDispatchContext();
 		Set<String> serviceNames = dispatchCtx.getAllServiceNames();
 		for (String serviceName : serviceNames) {
@@ -67,7 +67,7 @@ public class DemoSuiteDataGeneratorUtil {
 			if (curServiceModel != null) {
 				for (ModelServiceIface implService : curServiceModel.implServices) {
 					if (implService.getService().equals(DEMO_DATA_GENERATOR_SERVICE_INTERFACE_NAME)) {
-						Map<String, Object> curServiceMap = new HashMap<String, Object>();
+						Map<String, Object> curServiceMap = new HashMap<>();
 						String engineName = (UtilValidate.isNotEmpty(curServiceModel.engineName))
 								? curServiceModel.engineName : "NA";
 						String defaultEntityName = (UtilValidate.isNotEmpty(curServiceModel.defaultEntityName))

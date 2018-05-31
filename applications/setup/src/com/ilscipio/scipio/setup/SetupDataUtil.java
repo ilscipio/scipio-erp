@@ -276,7 +276,7 @@ public abstract class SetupDataUtil {
         dve.addAlias("GAO", "thruDate");
         dve.addRelation("one", null, "GlAccount", ModelKeyMap.makeKeyMapList("glAccountId"));
         dve.addRelation("one", null, "GlAccountOrganization", ModelKeyMap.makeKeyMapList("glAccountId", "glAccountId", "organizationPartyId", "organizationPartyId"));
-        List<EntityCondition> dveConditions = UtilMisc.newList();
+        List<EntityCondition> dveConditions = new ArrayList<>();
         dveConditions.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "INTERNAL_ORGANIZATIO"));
         dveConditions.add(EntityCondition.makeCondition("parentGlAccountId", EntityOperator.EQUALS, null));
 
@@ -520,7 +520,7 @@ public abstract class SetupDataUtil {
             if (productStoreCatalogList.size() >= 2) {
                 Debug.logInfo("Setup: Store '" + productStoreId + "' has multiple active catalogs, selecting first ('" 
                         + productStoreCatalog.getString("prodCatalogId") + "') as default for setup"
-                        + " (catalogs: " + getEntityStringFieldValues(productStoreCatalogList, "prodCatalogId", new ArrayList<String>(productStoreCatalogList.size())) + ")",
+                        + " (catalogs: " + getEntityStringFieldValues(productStoreCatalogList, "prodCatalogId", new ArrayList<>(productStoreCatalogList.size())) + ")",
                         productStoreCatalog.getString("prodCatalogId"));
             } else if (productStoreCatalogList.size() == 0 && UtilValidate.isNotEmpty(prodCatalogId)) {
                 Debug.logInfo("Setup: Store '" + productStoreId + "' has no active catalog", module);

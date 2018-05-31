@@ -423,7 +423,7 @@ public abstract class SolrProductUtil {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String productId = (String) product.get("productId");
         boolean useCache = Boolean.TRUE.equals(context.get("useCache"));
-        Map<String, Object> dispatchContext = new HashMap<String, Object>();
+        Map<String, Object> dispatchContext = new HashMap<>();
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 
         if (Debug.verboseOn()) Debug.logVerbose("Solr: Getting product content for productId '" + productId + "'", module);
@@ -473,7 +473,7 @@ public abstract class SolrProductUtil {
                     }
                 }
             }
-            dispatchContext.put("category", new ArrayList<String>(trails));
+            dispatchContext.put("category", new ArrayList<>(trails));
 
             // Get the catalogs that have associated the categories
             Collection<String> catalogs = new LinkedHashSet<>();

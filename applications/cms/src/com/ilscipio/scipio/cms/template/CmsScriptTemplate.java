@@ -369,7 +369,7 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
         public void update(Map<String, ?> fields, boolean setIfEmpty) {
             // here, must ignore scriptTemplateId - set at creation and should never change
             if (fields.containsKey("scriptTemplateId") && UtilValidate.isNotEmpty(getScriptTemplateId())) {
-                fields = new HashMap<String, Object>(fields);
+                fields = new HashMap<>(fields);
                 fields.remove("scriptTemplateId");
             }
             super.update(fields, setIfEmpty);
@@ -733,7 +733,7 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
                 String method = invokeName;
 
                 // Based on org.ofbiz.widget.model.AbstractModelAction.Script.runAction
-                Map<String, Object> localContext = new HashMap<String, Object>();
+                Map<String, Object> localContext = new HashMap<>();
                 localContext.putAll(context);
                 DispatchContext ctx = WidgetWorker.getDispatcher(context).getDispatchContext();
                 MethodContext methodContext = new MethodContext(ctx, localContext, null);

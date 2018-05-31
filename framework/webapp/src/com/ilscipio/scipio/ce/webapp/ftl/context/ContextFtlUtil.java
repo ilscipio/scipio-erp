@@ -219,7 +219,7 @@ public abstract class ContextFtlUtil {
         }
         
         public RequestVarMapWrapper() {
-            this.map = new HashMap<String, Object>();
+            this.map = new HashMap<>();
         }
         
         public Map<String, Object> getRawMap() {
@@ -240,7 +240,7 @@ public abstract class ContextFtlUtil {
         }
         
         public RequestVarMapWrapperModel() {
-            this.map = new HashMap<String, Object>();
+            this.map = new HashMap<>();
         }
         
         public Map<String, Object> getRawMap() {
@@ -419,7 +419,7 @@ public abstract class ContextFtlUtil {
             if (stackObj != null) {
                 Debug.logWarning("Overriding " + desc + " var with new stack (name: " + name + ")", module);
             }
-            stack = new ArrayList<Object>(ContextFtlUtil.REQUEST_STACK_INITIAL_CAPACITY);
+            stack = new ArrayList<>(ContextFtlUtil.REQUEST_STACK_INITIAL_CAPACITY);
         }
         
         if (setLast) {

@@ -417,7 +417,7 @@ public abstract class TemplateFtlUtil {
     }
 
     public static Map<String, Object> extractPrefixedStyleNamesWithInt(String styleStr, Map<String, String> prefixMap) {
-        Map<String, Object> res = new HashMap<String, Object>();        
+        Map<String, Object> res = new HashMap<>();        
         Set<String> prefixes = prefixMap.keySet();
         Matcher m = Pattern.compile("(^|\\s)(" + StringUtils.join(prefixes, "|") + ")(\\d+)(?=\\s|$)").matcher(styleStr);
         while (m.find()) {

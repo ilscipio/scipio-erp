@@ -254,7 +254,7 @@ public abstract class CmsTemplate extends CmsDataObject {
                 if (tmplBodySrc.isDefined()) {
                     // need prev body for checks
                     String prevEffectiveBody = DataResourceWorker.getDataResourceText(dataResource, 
-                            "text/plain", Locale.getDefault(), new HashMap<String, Object>(), delegator, false);
+                            "text/plain", Locale.getDefault(), new HashMap<>(), delegator, false);
                     
                     String dataResourceTypeId = dataResource.getString("dataResourceTypeId");
                     if ("ELECTRONIC_TEXT".equals(dataResourceTypeId)) {
@@ -400,7 +400,7 @@ public abstract class CmsTemplate extends CmsDataObject {
             
             // force this for now: dataResource.getString("mimeTypeId")
             String effectiveBody = DataResourceWorker.getDataResourceText(dataResource, 
-                    "text/plain", Locale.getDefault(), new HashMap<String, Object>(), delegator, useCache);
+                    "text/plain", Locale.getDefault(), new HashMap<>(), delegator, useCache);
             
             String storedBody = null;
             String location = null;
@@ -453,7 +453,7 @@ public abstract class CmsTemplate extends CmsDataObject {
             }
             // force this for now: dataResource.getString("mimeTypeId")
             String templateBody = DataResourceWorker.getDataResourceText(dataResource, 
-                    "text/plain", Locale.getDefault(), new HashMap<String, Object>(), delegator, useCache);
+                    "text/plain", Locale.getDefault(), new HashMap<>(), delegator, useCache);
             return templateBody;
         } catch (GenericEntityException e) {
             throw new CmsException("Could not get template content", e);

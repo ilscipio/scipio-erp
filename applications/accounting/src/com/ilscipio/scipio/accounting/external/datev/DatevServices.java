@@ -173,8 +173,8 @@ public class DatevServices {
                         Debug.logInfo(rec.toString(), module);
                     }
                     boolean allFieldValid = true;
-                    Map<String, String> recordMap = new HashMap<String, String>();
-                    Map<String, String> validRecordMap = new HashMap<String, String>();
+                    Map<String, String> recordMap = new HashMap<>();
+                    Map<String, String> validRecordMap = new HashMap<>();
                     if (rec.isConsistent()) {
                         recordMap = rec.toMap();
                         for (String key : recordMap.keySet()) {

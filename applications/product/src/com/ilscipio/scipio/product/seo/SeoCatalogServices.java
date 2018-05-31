@@ -104,7 +104,7 @@ public abstract class SeoCatalogServices {
                     return ServiceUtil.returnError("product not found for ID: " + productId);
                 }
             }
-            return generateProductAlternativeUrls(dctx, context, product, new ArrayList<GenProdAltUrlParentEntry>(),
+            return generateProductAlternativeUrls(dctx, context, product, new ArrayList<>(),
                     replaceExisting, removeOldLocales, moment, skipProductIds, new HashSet<String>(), doChildProducts, includeVariant, genFixedIds, fixedIdPat, useCache);
         } catch (Exception e) {
             String productIdStr = "";

@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -289,7 +288,7 @@ public abstract class CategoryWorker {
     }
 
     public static List<GenericValue> extractAllProductCategoryFromTreeItems(List<? extends Map<String, Object>> treeItems) {
-        List<GenericValue> outList = new LinkedList<>();
+        List<GenericValue> outList = new ArrayList<>(treeItems.size());
         extractAllProductCategoryFromTreeItems(treeItems, outList);
         return outList;
     }

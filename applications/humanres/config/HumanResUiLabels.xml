@@ -89,7 +89,7 @@
         <value xml:lang="zh_TW">應聘申請識別</value>
     </property>
     <property key="FormFieldTitle_applyingPartyId">
-        <value xml:lang="de">Anwendungsteilnehmer ID</value>
+        <value xml:lang="de">Bewerber ID</value>
         <value xml:lang="en">Applying Party Id</value>
         <value xml:lang="fr">Acteur en demande</value>
         <value xml:lang="it">Soggetto Applicato</value>
@@ -1081,6 +1081,7 @@
     </property>
     <property key="HumanResAgreementEmploymentAppl">
         <value xml:lang="en">Agreement Employment Appl</value>
+        <value xml:lang="de">Bewerber Anstellungszuweisung</value>
         <value xml:lang="fr">Application d'accord d'emploi</value>
         <value xml:lang="it">Applicazione contratti d'impiego</value>
         <value xml:lang="ja">雇用契約申請</value>
@@ -1090,7 +1091,7 @@
         <value xml:lang="zh_TW">雇佣合約</value>
     </property>
     <property key="HumanResApplicationId">
-        <value xml:lang="de">Einsatzgebiet ID</value>
+        <value xml:lang="de">Bewerber ID</value>
         <value xml:lang="en">Application Id</value>
         <value xml:lang="fr">Demande d'emploi</value>
         <value xml:lang="it">Codice Applicazione</value>
@@ -1658,6 +1659,12 @@
         <value xml:lang="zh">应聘管理</value>
         <value xml:lang="zh_TW">應聘管理</value>
     </property>
+    <property key="HumanResApplications">
+        <value xml:lang="de">Bewerbungen</value>
+        <value xml:lang="en">Applications</value>
+        <value xml:lang="es">Candidatura</value>
+        <value xml:lang="fr">Candidature</value>
+    </property>
     <property key="HumanResEmploymentPartyIdFrom">
         <value xml:lang="en">Internal Organization</value>
         <value xml:lang="fr">Organisation interne</value>
@@ -1999,6 +2006,7 @@
     </property>
     <property key="HumanResLookupApplicationId">
         <value xml:lang="en">Lookup ApplicationId</value>
+        <value xml:lang="de">Suche nach BewerberId</value>
         <value xml:lang="fr">Consultation de réf. d'application</value>
         <value xml:lang="it">Ricerca applicazione</value>
         <value xml:lang="ja">申請IDを検索</value>
@@ -3430,7 +3438,7 @@
         <value xml:lang="en">Either a ${position} or a ${jobReq} must be specified (Job Requisition must already be linked to a Position).</value>
     </property>
     <property key="HumanResEmploymentApplication">
-        <value xml:lang="de">Beschäftigung Bewerbung</value>
+        <value xml:lang="de">Bewerbung</value>
         <value xml:lang="en">Employment Application</value>
         <value xml:lang="fr">Demande d'emploi</value>
         <value xml:lang="it">Candidatura d'impiego</value>

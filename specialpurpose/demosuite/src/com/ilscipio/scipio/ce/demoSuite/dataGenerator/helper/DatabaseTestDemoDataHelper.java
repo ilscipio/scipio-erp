@@ -1,6 +1,7 @@
 package com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -55,7 +56,7 @@ public class DatabaseTestDemoDataHelper extends DemoDataHelper {
 
 		public DatabaseTestSettings(Delegator delegator) throws GenericEntityException  {
 			super(delegator);
-			this.queryParameters = UtilMisc.newMap();
+			this.queryParameters = new HashMap<String, Object>();
 		}
 
 		// @Override

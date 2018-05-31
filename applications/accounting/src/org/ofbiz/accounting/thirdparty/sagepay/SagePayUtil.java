@@ -43,7 +43,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilMisc;
 
 
 public class SagePayUtil
@@ -53,7 +52,7 @@ public class SagePayUtil
     public static Map<String, Object> buildCardAuthorisationPaymentResponse
     (Boolean authResult, String authCode, String authFlag, BigDecimal processAmount, String authRefNum, String authAltRefNum, String authMessage) {
 
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         if(authResult != null) { result.put("authResult", authResult); }
         if(authCode != null) { result.put("authCode", authCode); }
         if(authFlag != null) { result.put("authFlag", authFlag); }
@@ -67,7 +66,7 @@ public class SagePayUtil
     public static Map<String, Object> buildCardCapturePaymentResponse
     (Boolean captureResult, String captureCode, String captureFlag, BigDecimal captureAmount, String captureRefNum, String captureAltRefNum, String captureMessage) {
 
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         if(captureResult != null) { result.put("captureResult", captureResult); }
         if(captureCode != null) { result.put("captureCode", captureCode); }
         if(captureFlag != null) { result.put("captureFlag", captureFlag); }
@@ -81,7 +80,7 @@ public class SagePayUtil
     public static Map<String, Object> buildCardReleasePaymentResponse
     (Boolean releaseResult, String releaseCode, BigDecimal releaseAmount, String releaseRefNum, String releaseAltRefNum, String releaseMessage) {
 
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         if(releaseResult != null) { result.put("releaseResult", releaseResult); }
         if(releaseCode != null) { result.put("releaseCode", releaseCode); }
         if(releaseAmount != null) { result.put("releaseAmount", releaseAmount); }
@@ -94,7 +93,7 @@ public class SagePayUtil
     public static Map<String, Object> buildCardVoidPaymentResponse
     (Boolean refundResult, BigDecimal refundAmount, String refundRefNum, String refundAltRefNum, String refundMessage) {
 
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         if(refundResult != null) { result.put("refundResult", refundResult); }
         if(refundAmount != null) { result.put("refundAmount", refundAmount); }
         if(refundRefNum != null) { result.put("refundRefNum", refundRefNum); }
@@ -106,7 +105,7 @@ public class SagePayUtil
     public static Map<String, Object> buildCardRefundPaymentResponse
     (Boolean refundResult, String refundCode, BigDecimal refundAmount, String refundRefNum, String refundAltRefNum, String refundMessage) {
 
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         if(refundResult != null) { result.put("refundResult", refundResult); }
         if(refundCode != null) { result.put("refundCode", refundCode); }
         if(refundAmount != null) { result.put("refundAmount", refundAmount); }

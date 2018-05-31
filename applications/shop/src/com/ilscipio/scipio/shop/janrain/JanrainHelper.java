@@ -218,7 +218,7 @@ public class JanrainHelper {
                 return "error";
             }
             
-            Map<String, String> result = UtilMisc.newMap();
+            Map<String, String> result = new HashMap<String, String>();
             result.put("displayName", displayName);
             result.put("email", email);
             result.put("identifier", identifier);

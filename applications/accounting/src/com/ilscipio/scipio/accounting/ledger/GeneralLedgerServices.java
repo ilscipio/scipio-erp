@@ -19,6 +19,7 @@
 package com.ilscipio.scipio.accounting.ledger;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -139,7 +140,7 @@ public class GeneralLedgerServices {
 
         GenericValue glAccount = null;
         GenericValue parentGlAccount = null;
-        Map<String, Object> glAccountMap = UtilMisc.newMap();
+        Map<String, Object> glAccountMap = new HashMap<String, Object>();
         try {
             glAccount = EntityQuery.use(delegator).cache(useCache).from("GlAccount").where(EntityCondition.makeCondition("glAccountId", EntityOperator.EQUALS, glAccountId))
                     .queryOne();

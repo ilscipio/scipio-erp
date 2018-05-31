@@ -21,6 +21,7 @@ package org.ofbiz.content.webapp.ftl;
 import java.io.IOException;
 import java.io.Writer;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -85,9 +86,9 @@ public class TraverseSubContentCacheTransform implements TemplateTransformModel 
         //final Map templateRoot = FreeMarkerWorker.getWrappedObject("context", env);
         final Map<String, Object> templateRoot = FreeMarkerWorker.createEnvironmentMap(env);
         //FreeMarkerWorker.convertContext(templateRoot);
-        final Map<String, Object> savedValuesUp = UtilMisc.newMap();
+        final Map<String, Object> savedValuesUp = new HashMap<String, Object>();
         FreeMarkerWorker.saveContextValues(templateRoot, upSaveKeyNames, savedValuesUp);
-        final Map<String, Object> savedValues = UtilMisc.newMap();
+        final Map<String, Object> savedValues = new HashMap<String, Object>();
         FreeMarkerWorker.overrideWithArgs(templateRoot, args);
         String startContentAssocTypeId = (String)templateRoot.get("contentAssocTypeId");
         // if (Debug.infoOn()) Debug.logInfo("in TraverseSubContentCache, startContentAssocTypeId:" + startContentAssocTypeId, module);
@@ -113,9 +114,9 @@ public class TraverseSubContentCacheTransform implements TemplateTransformModel 
         // final GenericValue view = val;
 
 
-        final Map<String, Object> traverseContext = UtilMisc.newMap();
+        final Map<String, Object> traverseContext = new HashMap<String, Object>();
         traverseContext.put("delegator", delegator);
-        Map<String, Object> whenMap = UtilMisc.newMap();
+        Map<String, Object> whenMap = new HashMap<String, Object>();
         whenMap.put("followWhen", templateRoot.get("followWhen"));
         whenMap.put("pickWhen", templateRoot.get("pickWhen"));
         whenMap.put("returnBeforePickWhen", templateRoot.get("returnBeforePickWhen"));

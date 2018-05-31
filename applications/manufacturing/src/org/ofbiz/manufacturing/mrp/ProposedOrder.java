@@ -21,6 +21,7 @@ package org.ofbiz.manufacturing.mrp;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -133,7 +134,7 @@ public class ProposedOrder {
                 }
             }
             if (routing != null) {
-                result = UtilMisc.newMap();
+                result = new HashMap<String, Object>();
                 //Looks for all the routingTask (ordered by inversed (begin from the end) sequence number)
                 if (listRoutingTaskAssoc == null) {
                     try {

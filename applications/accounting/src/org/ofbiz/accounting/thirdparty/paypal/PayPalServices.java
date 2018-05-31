@@ -189,7 +189,7 @@ public class PayPalServices {
         // Since most if not all of the shipping estimate codes requires a persisted contactMechId we'll create one and
         // then delete once we're done, now is not the time to worry about updating everything
         String contactMechId = null;
-        Map<String, Object> inMap = UtilMisc.newMap();
+        Map<String, Object> inMap = new HashMap<String, Object>();
         inMap.put("address1", paramMap.get("SHIPTOSTREET"));
         inMap.put("address2", paramMap.get("SHIPTOSTREET2"));
         inMap.put("city", paramMap.get("SHIPTOCITY"));
@@ -299,7 +299,7 @@ public class PayPalServices {
         String ack = decoder.get("ACK");
         Map<String, String> result = null;
         if (!"Success".equals(ack)) {
-            result = UtilMisc.newMap();
+            result = new HashMap<String, Object>();
             int i = 0;
             while (UtilValidate.isNotEmpty(decoder.get("L_ERRORCODE" + i))) {
                 String errorCode = decoder.get("L_ERRORCODE" + i);
@@ -413,7 +413,7 @@ public class PayPalServices {
             }
         }
 
-        Map<String, Object> inMap = UtilMisc.newMap();
+        Map<String, Object> inMap = new HashMap<String, Object>();
         Map<String, Object> outMap = null;
         // Create the person if necessary
         boolean newParty = false;
@@ -520,7 +520,7 @@ public class PayPalServices {
         boolean needsShippingPurpose = true;
         // if the cart for some reason already has a billing address, we'll leave it be
         boolean needsBillingPurpose = (cart.getContactMech("BILLING_LOCATION") == null);
-        Map<String, Object> postalMap = UtilMisc.newMap();
+        Map<String, Object> postalMap = new HashMap<String, Object>();
         postalMap.put("toName", decoder.get("SHIPTONAME"));
         postalMap.put("address1", decoder.get("SHIPTOSTREET"));
         postalMap.put("address2", decoder.get("SHIPTOSTREET2"));
@@ -728,7 +728,7 @@ public class PayPalServices {
             return ServiceUtil.returnError(UtilMisc.toList(errorMessages.values()));
         }
 
-        Map<String, Object> inMap = UtilMisc.newMap();
+        Map<String, Object> inMap = new HashMap<String, Object>();
         inMap.put("userLogin", userLogin);
         inMap.put("paymentMethodId", payPalPaymentMethod.get("paymentMethodId"));
         inMap.put("transactionId", decoder.get("TRANSACTIONID"));

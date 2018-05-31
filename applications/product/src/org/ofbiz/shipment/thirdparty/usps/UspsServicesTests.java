@@ -19,6 +19,7 @@
 
 package org.ofbiz.shipment.thirdparty.usps;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -166,7 +167,7 @@ public class UspsServicesTests extends OFBizTestCase {
     public void testUspsDomesticRate() throws Exception {
 
         // prepare the context
-        Map<String, Object> context = UtilMisc.newMap();
+        Map<String, Object> context = new HashMap<String, Object>();
 
         context.put("service", "Priority");
         context.put("originZip", "20770");

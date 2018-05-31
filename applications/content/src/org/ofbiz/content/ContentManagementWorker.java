@@ -22,6 +22,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -79,7 +80,7 @@ public class ContentManagementWorker {
 
         Map<String, LifoSet<Object>> lookupCaches = UtilGenerics.checkMap(session.getAttribute("lookupCaches"));
         if (lookupCaches == null) {
-            lookupCaches = UtilMisc.newMap();
+            lookupCaches = new HashMap<String, LifoSet<Object>>();
             session.setAttribute("lookupCaches", lookupCaches);
         }
         String entityName = pk.getEntityName();
@@ -152,7 +153,7 @@ public class ContentManagementWorker {
         HttpSession session = request.getSession();
         Map<String, GenericEntity> currentEntityMap = UtilGenerics.checkMap(session.getAttribute("currentEntityMap"));
         if (currentEntityMap == null) {
-            currentEntityMap = UtilMisc.newMap();
+            currentEntityMap = new HashMap<String, GenericEntity>();
             session.setAttribute("currentEntityMap", currentEntityMap);
         }
         currentEntityMap.put(entityName, ent);
@@ -181,7 +182,7 @@ public class ContentManagementWorker {
         HttpSession session = request.getSession();
         Map<String, GenericPK> currentEntityMap = UtilGenerics.checkMap(session.getAttribute("currentEntityMap"));
         if (currentEntityMap == null) {
-            currentEntityMap     = UtilMisc.newMap();
+            currentEntityMap     = new HashMap<String, GenericPK>();
             session.setAttribute("currentEntityMap", currentEntityMap);
         }
         Map<String, Object> paramMap = UtilHttp.getParameterMap(request);
@@ -334,7 +335,7 @@ public class ContentManagementWorker {
 
     public static Map<String, GenericValue> getPublishPointMap(Delegator delegator, String pubPtId) throws GeneralException {
         List<GenericValue> publishPointList = getAllPublishPoints(delegator, pubPtId);
-        Map<String, GenericValue> publishPointMap = UtilMisc.newMap();
+        Map<String, GenericValue> publishPointMap = new HashMap<String, GenericValue>();
         for (GenericValue webSitePublishPoint : publishPointList) {
            String pub = (String)webSitePublishPoint.get("contentId");
            publishPointMap.put(pub, webSitePublishPoint);
@@ -353,7 +354,7 @@ public class ContentManagementWorker {
     }
 
     public static Map<String, GenericValue> getPublishPointMap(Delegator delegator, List<GenericValue> publishPointList) {
-        Map<String, GenericValue> publishPointMap = UtilMisc.newMap();
+        Map<String, GenericValue> publishPointMap = new HashMap<String, GenericValue>();
         for (GenericValue webSitePublishPoint : publishPointList) {
            String pub = (String)webSitePublishPoint.get("contentId");
            publishPointMap.put(pub, webSitePublishPoint);
@@ -375,7 +376,7 @@ public class ContentManagementWorker {
             String contentId = (String)content.get("contentId");
             String contentName = (String)content.get("contentName");
             String description = (String)content.get("description");
-            Map<String, Object> map = UtilMisc.newMap();
+            Map<String, Object> map = new HashMap<String, Object>();
             map.put("contentId", contentId);
             map.put("contentName", contentName);
             map.put("description", description);
@@ -480,7 +481,7 @@ public class ContentManagementWorker {
                 synchronized(ContentManagementWorker.class) { // SCIPIO: 2018-03-28: concurrency fix
                     subStaticValueMap = cachedStaticValues.get(parentPlaceholderId);
                     if (subStaticValueMap == null) {
-                        subStaticValueMap = UtilMisc.newMap();
+                        subStaticValueMap = new HashMap<String, Object>();
                         cachedStaticValues.put(parentPlaceholderId, subStaticValueMap);
                     }
                 }
@@ -508,8 +509,8 @@ public class ContentManagementWorker {
         List<GenericValue> allPublishPointList = getAllPublishPoints(delegator, rootPubId);
         //if (Debug.infoOn()) Debug.logInfo("in getPublishLinks, allPublishPointList:" + allPublishPointList, module);
         List<String []> publishPointList = getPermittedPublishPoints(delegator, allPublishPointList, userLogin, security , permittedAction, permittedOperations, passedRoles);
-        Map<String, Object> publishPointMap = UtilMisc.newMap();
-        Map<String, Object> publishPointMapAll = UtilMisc.newMap();
+        Map<String, Object> publishPointMap = new HashMap<String, Object>();
+        Map<String, Object> publishPointMapAll = new HashMap<String, Object>();
         for (String [] arr : publishPointList) {
             //GenericValue webSitePublishPoint = (GenericValue)it.next();
             //String contentId = (String)webSitePublishPoint.get("contentId");

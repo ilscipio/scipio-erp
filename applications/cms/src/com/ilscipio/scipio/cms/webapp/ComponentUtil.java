@@ -61,7 +61,7 @@ public class ComponentUtil {
      * Returns a map containing component information
      */
     public static Map<String, Object> getWebAppInfo(ComponentConfig component, WebappInfo webApp) {
-        Map<String, Object> componentMap = UtilMisc.newMap();
+        Map<String, Object> componentMap = new HashMap<String, Object>();
         String webSiteId = null;
         try {
             webSiteId = WebAppUtil.getWebSiteId(webApp);
@@ -95,7 +95,7 @@ public class ComponentUtil {
      */
     public static Map<String, Map<String, Object>> getWebappRequestMaps(Set<String> webSiteIds,
             Map<String, Map<String, Object>> webSiteExtraConfigs) {
-        Map<String, Map<String, Object>> requestMaps = UtilMisc.newMap();
+        Map<String, Map<String, Object>> requestMaps = new HashMap<String, Map<String, Object>>();
         //Map<String, ConfigXMLReader.RequestMap> requestMapMap = null;
         List<Map<String, Object>> components = ComponentUtil.getComponentInfos(webSiteIds);
 
@@ -170,7 +170,7 @@ public class ComponentUtil {
      * @param webSiteIds only include trees for these webSiteIds
      */
     public static Map<String, Map<String, Object>> getWebappViewMaps(Set<String> webSiteIds) {
-        Map<String, Map<String, Object>> viewMaps = UtilMisc.newMap();
+        Map<String, Map<String, Object>> viewMaps = new HashMap<String, Map<String, Object>>();
         List<Map<String, Object>> components = ComponentUtil.getComponentInfos(webSiteIds);
         for (Map<String, Object> component : components) {
             try {
@@ -253,7 +253,7 @@ public class ComponentUtil {
                 boolean isTargetPath = subPathStr.equals(path);
 
                 // determine if node is parent and add appropriate folder
-                itemMap = UtilMisc.newMap(UtilMisc.toMap("text", item, "a_attr", subPathStr, "id", id, "state", state,
+                itemMap = new HashMap<String, Object>(UtilMisc.toMap("text", item, "a_attr", subPathStr, "id", id, "state", state,
                         "parent", parent, "data", UtilMisc.toMap("type", type, "parentPath", parentPath, "path",
                                 subPathStr, "websiteid", webSiteId, "isTargetPath", isTargetPath)));
                 parent = id;

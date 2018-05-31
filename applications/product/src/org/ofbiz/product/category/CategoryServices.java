@@ -20,6 +20,7 @@ package org.ofbiz.product.category;
 
 import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -437,7 +438,7 @@ public class CategoryServices {
             }
         }
 
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         result.put("viewIndex", Integer.valueOf(viewIndex));
         result.put("viewSize", Integer.valueOf(viewSize));
         result.put("lowIndex", Integer.valueOf(lowIndex));

@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.product.feature;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -58,7 +59,7 @@ public class ProductFeatureServices {
      * The optional productFeatureApplTypeId causes results to be filtered by this parameter--only used in conjunction with productId.
      */
     public static Map<String, Object> getProductFeaturesByType(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> results = UtilMisc.newMap();
+        Map<String, Object> results = new HashMap<String, Object>();
         Delegator delegator = dctx.getDelegator();
         Locale locale = (Locale) context.get("locale");
 
@@ -125,7 +126,7 @@ public class ProductFeatureServices {
      * Result: variantProductIds: a List of productIds of variants with those features
      */
     public static Map<String, Object> getAllExistingVariants(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> results = UtilMisc.newMap();
+        Map<String, Object> results = new HashMap<String, Object>();
         Delegator delegator = dctx.getDelegator();
 
         String productId = (String) context.get("productId");
@@ -180,7 +181,7 @@ public class ProductFeatureServices {
      * {defaultVariantProductId: id of this variant; curProductFeatureAndAppls: features applied to this variant; existingVariantProductIds: List of productIds which are already variants with these features }
      */
     public static Map<String, Object> getVariantCombinations(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> results = UtilMisc.newMap();
+        Map<String, Object> results = new HashMap<String, Object>();
         LocalDispatcher dispatcher = dctx.getDispatcher();
 
         String productId = (String) context.get("productId");
@@ -220,7 +221,7 @@ public class ProductFeatureServices {
                 if (combinations.size()==0) {
                     for (GenericValue currentFeature: currentFeatures) {
                         if (currentFeature.getString("productFeatureApplTypeId").equals("SELECTABLE_FEATURE")) {
-                            Map<String, Object> newCombination = UtilMisc.newMap();
+                            Map<String, Object> newCombination = new HashMap<String, Object>();
                             List<GenericValue> newFeatures = UtilMisc.newList();
                             List<String> newFeatureIds = UtilMisc.newList();
                             if (currentFeature.getString("idCode") != null) {
@@ -239,7 +240,7 @@ public class ProductFeatureServices {
                     for (Map<String, Object> combination: combinations) {
                         for (GenericValue currentFeature: currentFeatures) {
                             if (currentFeature.getString("productFeatureApplTypeId").equals("SELECTABLE_FEATURE")) {
-                                Map<String, Object> newCombination = UtilMisc.newMap();
+                                Map<String, Object> newCombination = new HashMap<String, Object>();
                                 // .clone() is important, or you'll keep adding to the same List for all the variants
                                 // have to cast twice: once from get() and once from clone()
                                 List<GenericValue> newFeatures = UtilMisc.makeListWritable(UtilGenerics.<GenericValue>checkList(combination.get("curProductFeatureAndAppls")));
@@ -294,7 +295,7 @@ public class ProductFeatureServices {
      * Result: products (a List of Product GenericValues)
      */
     public static Map<String, Object> getCategoryVariantProducts(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> results = UtilMisc.newMap();
+        Map<String, Object> results = new HashMap<String, Object>();
         LocalDispatcher dispatcher = dctx.getDispatcher();
 
         List<GenericValue> productFeatures = UtilGenerics.checkList(context.get("productFeatures"));
@@ -313,7 +314,7 @@ public class ProductFeatureServices {
         List<GenericValue> memberProducts = UtilGenerics.checkList(result.get("categoryMembers"));
         if ((memberProducts != null) && (memberProducts.size() > 0)) {
             // construct a Map of productFeatureTypeId -> productFeatureId from the productFeatures List
-            Map<String, String> featuresByType = UtilMisc.newMap();
+            Map<String, String> featuresByType = new HashMap<String, String>();
             for (GenericValue nextFeature: productFeatures) {
                 featuresByType.put(nextFeature.getString("productFeatureTypeId"), nextFeature.getString("productFeatureId"));
             }

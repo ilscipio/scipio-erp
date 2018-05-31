@@ -22,6 +22,7 @@ package org.ofbiz.manufacturing.bom;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -59,7 +60,7 @@ public class BOMServices {
      * @return returns the product's low level code (llc) i.e. the maximum depth
      */
     public static Map<String, Object> getMaxDepth(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = dctx.getDelegator();
         String productId = (String) context.get("productId");
         String fromDateStr = (String) context.get("fromDate");
@@ -117,7 +118,7 @@ public class BOMServices {
      * @return the results of the updates the product's low level code 
     */
     public static Map<String, Object> updateLowLevelCode(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String productId = (String) context.get("productIdTo");
@@ -204,7 +205,7 @@ public class BOMServices {
      * @return the results of the updates the product's low level code 
     */
     public static Map<String, Object> initLowLevelCode(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
@@ -244,7 +245,7 @@ public class BOMServices {
      * @return returns the ProductAssoc generic value for a duplicate productIdKey ancestor if present 
      */
     public static Map<String, Object> searchDuplicatedAncestor(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue)context.get("userLogin");
@@ -277,7 +278,7 @@ public class BOMServices {
      * @return return the bill of material tree
      */
     public static Map<String, Object> getBOMTree(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue)context.get("userLogin");
@@ -328,7 +329,7 @@ public class BOMServices {
      * @return return the list of manufacturing components
      */
     public static Map<String, Object> getManufacturingComponents(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue)context.get("userLogin");
@@ -402,7 +403,7 @@ public class BOMServices {
         // also return a componentMap (useful in scripts and simple language code)
         List<Map<String, Object>> componentsMap = UtilMisc.newList();
         for (BOMNode node : components) {
-            Map<String, Object> componentMap = UtilMisc.newMap();
+            Map<String, Object> componentMap = new HashMap<String, Object>();
             componentMap.put("product", node.getProduct());
             componentMap.put("quantity", node.getQuantity());
             componentsMap.add(componentMap);
@@ -412,7 +413,7 @@ public class BOMServices {
     }
 
     public static Map<String, Object> getNotAssembledComponents(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String productId = (String) context.get("productId");
@@ -464,7 +465,7 @@ public class BOMServices {
     // Service for the Product (Shipment) component
     //
     public static Map<String, Object> createShipmentPackages(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
@@ -486,7 +487,7 @@ public class BOMServices {
         } catch (GenericEntityException gee) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingBomErrorLoadingShipmentItems", locale));
         }
-        Map<String, Object> orderReadHelpers = UtilMisc.newMap();
+        Map<String, Object> orderReadHelpers = new HashMap<String, Object>();
         Map<String, Object> partyOrderShipments = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
         for (GenericValue shipmentItem : shipmentItems) {
             // Get the OrderShipments
@@ -526,7 +527,7 @@ public class BOMServices {
                 OrderReadHelper orderReadHelper = (OrderReadHelper)orderShipmentReadMap.get("orderReadHelper");
                 GenericValue orderItem = orderReadHelper.getOrderItem(orderShipment.getString("orderItemSeqId"));
                 // getProductsInPackages
-                Map<String, Object> serviceContext = UtilMisc.newMap();
+                Map<String, Object> serviceContext = new HashMap<String, Object>();
                 serviceContext.put("productId", orderItem.getString("productId"));
                 serviceContext.put("quantity", orderShipment.getBigDecimal("quantity"));
                 Map<String, Object> resultService = null;
@@ -553,7 +554,7 @@ public class BOMServices {
         }
         // Group together products and components
         // of the same box type.
-        Map<String, GenericValue> boxTypes = UtilMisc.newMap();
+        Map<String, GenericValue> boxTypes = new HashMap<String, GenericValue>();
         for (Map.Entry<String, Object> partyOrderShipment : partyOrderShipments.entrySet()) {
             Map<String, List<Map<String, Object>>> boxTypeContent = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
             List<Map<String, Object>> orderShipmentReadMapList = UtilGenerics.checkList(partyOrderShipment.getValue());
@@ -567,7 +568,7 @@ public class BOMServices {
                     // this is a multi package shipment item
                     for (int j = 0; j < productsInPackages.size(); j++) {
                         BOMNode component = productsInPackages.get(j);
-                        Map<String, Object> boxTypeContentMap = UtilMisc.newMap();
+                        Map<String, Object> boxTypeContentMap = new HashMap<String, Object>();
                         boxTypeContentMap.put("content", orderShipmentReadMap);
                         boxTypeContentMap.put("componentIndex", Integer.valueOf(j));
                         GenericValue product = component.getProduct();
@@ -591,7 +592,7 @@ public class BOMServices {
                 } else {
                     // no subcomponents, the product has its own package:
                     // this is a single package shipment item
-                    Map<String, Object> boxTypeContentMap = UtilMisc.newMap();
+                    Map<String, Object> boxTypeContentMap = new HashMap<String, Object>();
                     boxTypeContentMap.put("content", orderShipmentReadMap);
                     GenericValue orderItem = orderReadHelper.getOrderItem(orderShipment.getString("orderItemSeqId"));
                     GenericValue product = null;
@@ -730,7 +731,7 @@ public class BOMServices {
      * @return returns the list of products in packages
      */
     public static Map<String, Object> getProductsInPackages(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue)context.get("userLogin");

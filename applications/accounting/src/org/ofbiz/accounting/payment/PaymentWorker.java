@@ -20,6 +20,7 @@ package org.ofbiz.accounting.payment;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -62,7 +63,7 @@ public class PaymentWorker {
             if (!showOld) paymentMethods = EntityUtil.filterByDate(paymentMethods, true);
 
             for (GenericValue paymentMethod : paymentMethods) {
-                Map<String, GenericValue> valueMap = UtilMisc.newMap();
+                Map<String, GenericValue> valueMap = new HashMap<String, GenericValue>();
 
                 paymentMethodValueMaps.add(valueMap);
                 valueMap.put("paymentMethod", paymentMethod);
@@ -85,7 +86,7 @@ public class PaymentWorker {
 
     public static Map<String, Object> getPaymentMethodAndRelated(ServletRequest request, String partyId) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        Map<String, Object> results = UtilMisc.newMap();
+        Map<String, Object> results = new HashMap<String, Object>();
 
         Boolean tryEntity = true;
         if (request.getAttribute("_ERROR_MESSAGE_") != null) tryEntity = false;

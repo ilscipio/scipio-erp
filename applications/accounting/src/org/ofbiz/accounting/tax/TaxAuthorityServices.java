@@ -255,7 +255,7 @@ public class TaxAuthorityServices {
     
     // SCIPIO: 2017-12-19: added useCache flag
     private static void getTaxAuthorities(Delegator delegator, GenericValue shippingAddress, Set<GenericValue> taxAuthoritySet, boolean useCache) throws GenericEntityException {
-        Map<String, String> geoIdByTypeMap = UtilMisc.newMap();
+        Map<String, String> geoIdByTypeMap = new HashMap<String, String>();
         if (shippingAddress != null) {
             if (UtilValidate.isNotEmpty(shippingAddress.getString("countryGeoId"))) {
                 geoIdByTypeMap.put("COUNTRY", shippingAddress.getString("countryGeoId"));

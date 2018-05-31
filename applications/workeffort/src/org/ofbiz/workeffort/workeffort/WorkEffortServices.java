@@ -22,6 +22,7 @@ package org.ofbiz.workeffort.workeffort;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -104,7 +105,7 @@ public class WorkEffortServices {
             }
         }
 
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         if (validWorkEfforts == null) {
             validWorkEfforts = UtilMisc.newList();
         }
@@ -143,7 +144,7 @@ public class WorkEffortServices {
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, "WorkEffortNotFound", UtilMisc.toMap("errorString", e.toString()), locale));
         }
 
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         if (validWorkEfforts == null) {
             validWorkEfforts = UtilMisc.newList();
         }
@@ -202,7 +203,7 @@ public class WorkEffortServices {
             }
         }
 
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         if (validWorkEfforts == null)
             validWorkEfforts = UtilMisc.newList();
         validWorkEfforts = WorkEffortWorker.removeDuplicateWorkEfforts(validWorkEfforts);
@@ -266,7 +267,7 @@ public class WorkEffortServices {
             }
         }
 
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         if (validWorkEfforts == null)
             validWorkEfforts = UtilMisc.newList();
         validWorkEfforts = WorkEffortWorker.removeDuplicateWorkEfforts(validWorkEfforts);
@@ -313,7 +314,7 @@ public class WorkEffortServices {
             }
         }
 
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         if (validWorkEfforts == null)
             validWorkEfforts = UtilMisc.newList();
         result.put("activities", validWorkEfforts);
@@ -365,7 +366,7 @@ public class WorkEffortServices {
             }
         }
 
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         if (validWorkEfforts == null)
             validWorkEfforts = UtilMisc.newList();
         result.put("activities", validWorkEfforts);
@@ -418,7 +419,7 @@ public class WorkEffortServices {
             }
         }
 
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         if (roleWorkEfforts == null)
             roleWorkEfforts = UtilMisc.newList();
         result.put("roleActivities", roleWorkEfforts);
@@ -471,7 +472,7 @@ public class WorkEffortServices {
             }
         }
 
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         if (groupWorkEfforts == null)
             groupWorkEfforts = UtilMisc.newList();
         result.put("groupActivities", groupWorkEfforts);
@@ -482,7 +483,7 @@ public class WorkEffortServices {
         Delegator delegator = ctx.getDelegator();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Security security = ctx.getSecurity();
-        Map<String, Object> resultMap = UtilMisc.newMap();
+        Map<String, Object> resultMap = new HashMap<String, Object>();
 
         String workEffortId = (String) context.get("workEffortId");
         GenericValue workEffort = null;
@@ -915,7 +916,7 @@ public class WorkEffortServices {
             boolean firstEntry = true;
             for (DateRange periodRange : periodRanges) {
                 List<Map<String, Object>> curWorkEfforts = UtilMisc.newList();
-                Map<String, Object> entry = UtilMisc.newMap();
+                Map<String, Object> entry = new HashMap<String, Object>();
                 for (GenericValue workEffort : validWorkEfforts) {
                     Timestamp startDate = workEffort.getTimestamp("estimatedStartDate");
                     if (workEffort.getTimestamp("actualStartDate") != null) {
@@ -929,7 +930,7 @@ public class WorkEffortServices {
                         endDate = startDate;
                     DateRange weRange = new DateRange(startDate, endDate);
                     if (periodRange.intersectsRange(weRange)) {
-                        Map<String, Object> calEntry = UtilMisc.newMap();
+                        Map<String, Object> calEntry = new HashMap<String, Object>();
                         calEntry.put("workEffort", workEffort);
                         long length = ((weRange.end().after(endStamp) ? endStamp.getTime() : weRange.end().getTime()) - (weRange.start().before(startStamp) ? startStamp
                                 .getTime() : weRange.start().getTime()));
@@ -964,7 +965,7 @@ public class WorkEffortServices {
                 periods.add(entry);
             }
         }
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         result.put("periods", periods);
         result.put("maxConcurrentEntries", Integer.valueOf(maxConcurrentEntries));
         return result;
@@ -976,8 +977,8 @@ public class WorkEffortServices {
         String facilityId = (String) context.get("facilityId"); // optional
         Locale locale = (Locale) context.get("locale");
 
-        Map<String, Map<String, Object>> summaryInByFacility = UtilMisc.newMap();
-        Map<String, Map<String, Object>> summaryOutByFacility = UtilMisc.newMap();
+        Map<String, Map<String, Object>> summaryInByFacility = new HashMap<String, Map<String, Object>>();
+        Map<String, Map<String, Object>> summaryOutByFacility = new HashMap<String, Map<String, Object>>();
         try {
             //
             // Information about the running production runs that are going
@@ -1036,7 +1037,7 @@ public class WorkEffortServices {
 
                 Map<String, Object> quantitySummary = UtilGenerics.checkMap(summaryInByFacility.get(weFacilityId));
                 if (quantitySummary == null) {
-                    quantitySummary = UtilMisc.newMap();
+                    quantitySummary = new HashMap<String, Object>();
                     quantitySummary.put("facilityId", weFacilityId);
                     summaryInByFacility.put(weFacilityId, quantitySummary);
                 }
@@ -1085,7 +1086,7 @@ public class WorkEffortServices {
 
                 Map<String, Object> quantitySummary = UtilGenerics.checkMap(summaryOutByFacility.get(weFacilityId));
                 if (quantitySummary == null) {
-                    quantitySummary = UtilMisc.newMap();
+                    quantitySummary = new HashMap<String, Object>();
                     quantitySummary.put("facilityId", weFacilityId);
                     summaryOutByFacility.put(weFacilityId, quantitySummary);
                 }

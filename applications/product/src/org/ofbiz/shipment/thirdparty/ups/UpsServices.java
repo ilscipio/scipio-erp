@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -75,8 +76,8 @@ public class UpsServices {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    public static Map<String, String> unitsUpsToOfbiz = UtilMisc.newMap();
-    public static Map<String, String> unitsOfbizToUps = UtilMisc.newMap();
+    public static Map<String, String> unitsUpsToOfbiz = new HashMap<String, String>();
+    public static Map<String, String> unitsOfbizToUps = new HashMap<String, String>();
     static {
         unitsUpsToOfbiz.put("LBS", "WT_lb");
         unitsUpsToOfbiz.put("KGS", "WT_kg");
@@ -1847,7 +1848,7 @@ public class UpsServices {
 
         if ("1".equals(responseStatusCode)) {
             List<? extends Element> rates = UtilXml.childElementList(rateResponseElement, "RatedShipment");
-            Map<String, BigDecimal> rateMap = UtilMisc.newMap();
+            Map<String, BigDecimal> rateMap = new HashMap<String, BigDecimal>();
             BigDecimal firstRate = null;
             if (UtilValidate.isEmpty(rates)) {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, 
@@ -2356,7 +2357,7 @@ public class UpsServices {
             // TODO: return error if there are no matches?
             if (UtilValidate.isNotEmpty(avResultList)) {
                 for (Element avResultElement: avResultList) {
-                    Map<String, String> match = UtilMisc.newMap();
+                    Map<String, String> match = new HashMap<String, String>();
 
                     match.put("Rank", UtilXml.childElementValue(avResultElement, "Rank"));
                     match.put("Quality", UtilXml.childElementValue(avResultElement, "Quality"));
@@ -3097,7 +3098,7 @@ public class UpsServices {
                 List <GenericValue> productStoreShipmentMethods = EntityQuery.use(delegator).from("ProductStoreShipmentMethView").where("productStoreId", productStoreId).queryList();
                 for (GenericValue productStoreShipmentMethod :productStoreShipmentMethods) {
                     if ("UPS".equals(productStoreShipmentMethod.get("partyId"))) {
-                        Map<String,Object> thisUpsRateCodeMap = UtilMisc.newMap();
+                        Map<String,Object> thisUpsRateCodeMap = new HashMap<String, Object>();
                         carrierShipmentMethod = EntityQuery.use(delegator).from("CarrierShipmentMethod")
                                 .where("shipmentMethodTypeId", productStoreShipmentMethod.getString("shipmentMethodTypeId"), "partyId", productStoreShipmentMethod.getString("partyId"), "roleTypeId", productStoreShipmentMethod.getString("roleTypeId"))
                                 .queryOne();
@@ -3144,7 +3145,7 @@ public class UpsServices {
 
         if ("1".equals(responseStatusCode)) {
             List<? extends Element> rates = UtilXml.childElementList(rateResponseElement, "RatedShipment");
-            Map<String, BigDecimal> rateMap = UtilMisc.newMap();
+            Map<String, BigDecimal> rateMap = new HashMap<String, BigDecimal>();
             if (UtilValidate.isEmpty(rates)) {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, "FacilityShipmentUpsNoRateAvailable", locale));
             } else {

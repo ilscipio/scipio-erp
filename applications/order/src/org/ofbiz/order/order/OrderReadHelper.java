@@ -222,7 +222,7 @@ public class OrderReadHelper {
      *         based on PaymentGatewayResponse.
      */
     public Map<String, BigDecimal> getReceivedPaymentTotalsByPaymentMethod() {
-        Map<String, BigDecimal> paymentMethodAmounts = UtilMisc.newMap();
+        Map<String, BigDecimal> paymentMethodAmounts = new HashMap<String, BigDecimal>();
         List<GenericValue> paymentPrefs = getPaymentPreferences();
         for (GenericValue paymentPref : paymentPrefs) {
             List<GenericValue> payments = UtilMisc.newList();
@@ -271,7 +271,7 @@ public class OrderReadHelper {
      * @return returns a Map of paymentMethodId -> amount refunded
      */
     public Map<String, BigDecimal> getReturnedTotalsByPaymentMethod() {
-        Map<String, BigDecimal> paymentMethodAmounts = UtilMisc.newMap();
+        Map<String, BigDecimal> paymentMethodAmounts = new HashMap<String, BigDecimal>();
         List<GenericValue> paymentPrefs = getPaymentPreferences();
         for (GenericValue paymentPref : paymentPrefs) {
             List<GenericValue> returnItemResponses = UtilMisc.newList();
@@ -835,7 +835,7 @@ public class OrderReadHelper {
     }
 
     public Map<String, BigDecimal> getFeatureIdQtyMap(String shipGroupSeqId) {
-        Map<String, BigDecimal> featureMap = UtilMisc.newMap();
+        Map<String, BigDecimal> featureMap = new HashMap<String, BigDecimal>();
         List<GenericValue> validItems = getValidOrderItems(shipGroupSeqId);
         if (validItems != null) {
             for (GenericValue item : validItems) {
@@ -1260,7 +1260,7 @@ public class OrderReadHelper {
     }
 
     public Map<String, Object> getItemInfoMap(GenericValue item) {
-        Map<String, Object> itemInfo = UtilMisc.newMap();
+        Map<String, Object> itemInfo = new HashMap<String, Object>();
         itemInfo.put("productId", item.getString("productId"));
         itemInfo.put("quantity", getOrderItemQuantity(item));
         itemInfo.put("weight", this.getItemWeight(item));
@@ -1772,7 +1772,7 @@ public class OrderReadHelper {
 
         // since we don't have a handy grouped view entity, we'll have to group
         // the return items by hand
-        Map<String, BigDecimal> returnMap = UtilMisc.newMap();
+        Map<String, BigDecimal> returnMap = new HashMap<String, BigDecimal>();
         for (GenericValue orderItem : this.getValidOrderItems()) {
             List<GenericValue> group = EntityUtil.filterByAnd(returnItems,
                     UtilMisc.toList(EntityCondition.makeCondition("orderId", orderItem.get("orderId")),
@@ -1915,7 +1915,7 @@ public class OrderReadHelper {
         returnedItems.addAll(EntityUtil.filterByAnd(returnedItemsBase, UtilMisc.toMap("statusId", "RETURN_RECEIVED")));
         returnedItems.addAll(EntityUtil.filterByAnd(returnedItemsBase, UtilMisc.toMap("statusId", "RETURN_COMPLETED")));
 
-        Map<String, BigDecimal> itemReturnedQuantities = UtilMisc.newMap();
+        Map<String, BigDecimal> itemReturnedQuantities = new HashMap<String, BigDecimal>();
         for (GenericValue returnedItem : returnedItems) {
             String orderItemSeqId = returnedItem.getString("orderItemSeqId");
             BigDecimal returnedQuantity = returnedItem.getBigDecimal("returnQuantity");
@@ -3101,7 +3101,7 @@ public class OrderReadHelper {
             }
             taxGrandTotal = taxGrandTotal.setScale(taxFinalScale, taxRounding);
         }
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         result.put("taxByTaxAuthGeoAndPartyList", taxByTaxAuthGeoAndPartyList);
         result.put("taxGrandTotal", taxGrandTotal);
         return result;
@@ -3280,7 +3280,7 @@ public class OrderReadHelper {
     public List<GenericValue> getItemSubscriptions(GenericValue orderItem) throws GenericEntityException {
         Delegator delegator = orderItem.getDelegator();
         if (this.orderSubscriptionItems == null)
-            this.orderSubscriptionItems = UtilMisc.newMap();
+            this.orderSubscriptionItems = new HashMap<GenericValue, List<GenericValue>>();
 
         List<GenericValue> productSubscriptionResources = EntityQuery.use(delegator).from("ProductSubscriptionResource")
                 .where("productId", orderItem.getString("productId")).cache(true).filterByDate().queryList();

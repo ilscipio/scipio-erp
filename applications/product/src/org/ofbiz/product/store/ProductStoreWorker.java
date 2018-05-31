@@ -19,6 +19,7 @@
 package org.ofbiz.product.store;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -217,7 +218,7 @@ public class ProductStoreWorker {
 
     public static List<GenericValue> getAvailableStoreShippingMethods(Delegator delegator, String productStoreId, GenericValue shippingAddress, List<BigDecimal> itemSizes, Map<String, BigDecimal> featureIdMap, BigDecimal weight, BigDecimal orderTotal) {
         if (featureIdMap == null) {
-            featureIdMap = UtilMisc.newMap();
+            featureIdMap = new HashMap<String, BigDecimal>();
         }
         List<GenericValue> shippingMethods = null;
         try {
@@ -697,7 +698,7 @@ public class ProductStoreWorker {
         }
     }
 
-    protected static Map<String, String> defaultProductStoreEmailScreenLocation = UtilMisc.newMap();
+    protected static Map<String, String> defaultProductStoreEmailScreenLocation = new HashMap<String, String>();
 
     static {
         // SCIPIO: now points to shop

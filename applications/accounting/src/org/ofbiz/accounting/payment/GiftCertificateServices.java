@@ -21,6 +21,7 @@ package org.ofbiz.accounting.payment;
 import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -411,7 +412,7 @@ public class GiftCertificateServices {
             // obtain the order information
             OrderReadHelper orh = new OrderReadHelper(delegator, orderPaymentPreference.getString("orderId"));
 
-            Map<String, Object> redeemCtx = UtilMisc.newMap();
+            Map<String, Object> redeemCtx = new HashMap<String, Object>();
             redeemCtx.put("userLogin", userLogin);
             redeemCtx.put("productStoreId", orh.getProductStoreId());
             redeemCtx.put("cardNumber", giftCard.get("finAccountId"));
@@ -656,7 +657,7 @@ public class GiftCertificateServices {
             currency = EntityUtilProperties.getPropertyValue("general.properties", "currency.uom.id.default", "USD", delegator);
         }
 
-        Map<String, Object> refundCtx = UtilMisc.newMap();
+        Map<String, Object> refundCtx = new HashMap<String, Object>();
         refundCtx.put("productStoreId", productStoreId);
         refundCtx.put("currency", currency);
         refundCtx.put("partyId", partyId);
@@ -837,7 +838,7 @@ public class GiftCertificateServices {
         int qtyLoop = quantity.intValue();
         for (int i = 0; i < qtyLoop; i++) {
             // create a gift certificate
-            Map<String, Object> createGcCtx = UtilMisc.newMap();
+            Map<String, Object> createGcCtx = new HashMap<String, Object>();
             //createGcCtx.put("paymentConfig", paymentConfig);
             createGcCtx.put("productStoreId", productStoreId);
             createGcCtx.put("currency", currency);
@@ -861,7 +862,7 @@ public class GiftCertificateServices {
             }
 
             // create the fulfillment record
-            Map<String, Object> gcFulFill = UtilMisc.newMap();
+            Map<String, Object> gcFulFill = new HashMap<String, Object>();
             gcFulFill.put("typeEnumId", "GC_ACTIVATE");
             gcFulFill.put("partyId", partyId);
             gcFulFill.put("orderId", orderId);
@@ -909,7 +910,7 @@ public class GiftCertificateServices {
                         bcc = orderEmails;
                     }
                 }
-                Map<String, Object> emailCtx = UtilMisc.newMap();
+                Map<String, Object> emailCtx = new HashMap<String, Object>();
                 String bodyScreenLocation = productStoreEmail.getString("bodyScreenLocation");
                 if (UtilValidate.isEmpty(bodyScreenLocation)) {
                     bodyScreenLocation = ProductStoreWorker.getDefaultProductStoreEmailScreenLocation(emailType);
@@ -1058,7 +1059,7 @@ public class GiftCertificateServices {
         String pinNumber = (String) answerMap.get(pinNumberKey);
 
         // reload the gift card
-        Map<String, Object> reloadCtx = UtilMisc.newMap();
+        Map<String, Object> reloadCtx = new HashMap<String, Object>();
         reloadCtx.put("productStoreId", productStoreId);
         reloadCtx.put("currency", currency);
         reloadCtx.put("partyId", partyId);
@@ -1081,7 +1082,7 @@ public class GiftCertificateServices {
         }
 
         // create the fulfillment record
-        Map<String, Object> gcFulFill = UtilMisc.newMap();
+        Map<String, Object> gcFulFill = new HashMap<String, Object>();
         gcFulFill.put("typeEnumId", "GC_RELOAD");
         gcFulFill.put("userLogin", userLogin);
         gcFulFill.put("partyId", partyId);
@@ -1139,7 +1140,7 @@ public class GiftCertificateServices {
         } else {
             answerMap.put("locale", locale);
 
-            Map<String, Object> emailCtx = UtilMisc.newMap();
+            Map<String, Object> emailCtx = new HashMap<String, Object>();
             String bodyScreenLocation = productStoreEmail.getString("bodyScreenLocation");
             if (UtilValidate.isEmpty(bodyScreenLocation)) {
                 bodyScreenLocation = ProductStoreWorker.getDefaultProductStoreEmailScreenLocation(emailType);
@@ -1233,7 +1234,7 @@ public class GiftCertificateServices {
             Debug.logInfo("Returnable INFO : " + returnableQuantity + " @ " + returnablePrice + " :: " + orderItem, module);
 
             // create the return header
-            Map<String, Object> returnHeaderInfo = UtilMisc.newMap();
+            Map<String, Object> returnHeaderInfo = new HashMap<String, Object>();
             returnHeaderInfo.put("fromPartyId", partyId);
             returnHeaderInfo.put("userLogin", userLogin);
             Map<String, Object> returnHeaderResp = null;
@@ -1263,7 +1264,7 @@ public class GiftCertificateServices {
             }
 
             // create the return item
-            Map<String, Object> returnItemInfo = UtilMisc.newMap();
+            Map<String, Object> returnItemInfo = new HashMap<String, Object>();
             returnItemInfo.put("returnId", returnId);
             returnItemInfo.put("returnReasonId", "RTN_DIG_FILL_FAIL");
             returnItemInfo.put("returnTypeId", "RTN_REFUND");
@@ -1313,7 +1314,7 @@ public class GiftCertificateServices {
             }
 
             // update the status to received so it can process
-            Map<String, Object> updateReturnInfo = UtilMisc.newMap();
+            Map<String, Object> updateReturnInfo = new HashMap<String, Object>();
             updateReturnInfo.put("returnId", returnId);
             updateReturnInfo.put("statusId", "RETURN_RECEIVED");
             updateReturnInfo.put("currentStatusId", "RETURN_REQUESTED");

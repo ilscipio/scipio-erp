@@ -20,6 +20,7 @@
 package org.ofbiz.content.blog;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -114,7 +115,7 @@ public class BlogRssServices {
             for (GenericValue v : contentRecs) {
                 String sub = null;
                 try {
-                    Map<String, Object> dummy = UtilMisc.newMap();
+                    Map<String, Object> dummy = new HashMap<String, Object>();
                     sub = ContentWorker.renderSubContentAsText(dispatcher, delegator, v.getString("contentId"), mapKey, dummy, locale, mimeTypeId, true);
                 } catch (GeneralException e) {
                     Debug.logError(e, module);

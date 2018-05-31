@@ -21,6 +21,7 @@ package org.ofbiz.product.supplier;
 
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -54,7 +55,7 @@ public class SupplierProductServices {
      *         filtered by date and optionally by partyId, ordered with lowest price first
      */
     public static Map<String, Object> getSuppliersForProduct(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> results = UtilMisc.newMap();
+        Map<String, Object> results = new HashMap<String, Object>();
         Delegator delegator = dctx.getDelegator();
 
         GenericValue product = null;
@@ -130,7 +131,7 @@ public class SupplierProductServices {
      * SupplierProduct entity for that supplier party and feature, and return it as convertedProductFeatures
      */
     public static Map<String, Object> convertFeaturesForSupplier(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> results = UtilMisc.newMap();
+        Map<String, Object> results = new HashMap<String, Object>();
         String partyId = (String) context.get("partyId");
         Collection<GenericValue> features = UtilGenerics.checkList(context.get("productFeatures"));
 

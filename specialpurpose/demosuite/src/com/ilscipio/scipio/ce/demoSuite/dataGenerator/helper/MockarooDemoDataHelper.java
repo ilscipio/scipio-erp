@@ -95,23 +95,23 @@ public class MockarooDemoDataHelper extends DemoDataHelper {
 		public List<Object> getFields() {
 			List<Object> fields = new ArrayList<Object>();
 			// if (returnObjectClass.equals(DemoDataAddress.class)) {
-			// Map<String, Object> country = UtilMisc.newMap();
+			// Map<String, Object> country = new HashMap<String, Object>();
 			// country.put("name", "country");
 			// country.put("type", "Country");
 			//
-			// Map<String, Object> state = UtilMisc.newMap();
+			// Map<String, Object> state = new HashMap<String, Object>();
 			// state.put("name", "state");
 			// state.put("type", "State");
 			//
-			// Map<String, Object> city = UtilMisc.newMap();
+			// Map<String, Object> city = new HashMap<String, Object>();
 			// city.put("name", "city");
 			// city.put("type", "City");
 			//
-			// Map<String, Object> street = UtilMisc.newMap();
+			// Map<String, Object> street = new HashMap<String, Object>();
 			// street.put("name", "street");
 			// street.put("type", "Street Name");
 			//
-			// Map<String, Object> zip = UtilMisc.newMap();
+			// Map<String, Object> zip = new HashMap<String, Object>();
 			// zip.put("name", "zip");
 			// zip.put("type", "Postal Code");
 			//
@@ -121,29 +121,29 @@ public class MockarooDemoDataHelper extends DemoDataHelper {
 			// fields.add(street);
 			// fields.add(zip);
 			// } else if (returnObjectClass.equals(DemoDataProduct.class)) {
-			// Map<String, Object> id = UtilMisc.newMap();
+			// Map<String, Object> id = new HashMap<String, Object>();
 			// id.put("name", "id");
 			// id.put("type", "Row Number");
 			//
-			// Map<String, Object> name = UtilMisc.newMap();
+			// Map<String, Object> name = new HashMap<String, Object>();
 			// name.put("name", "name");
 			// name.put("type", "Words");
 			// name.put("min", 1);
 			// name.put("max", 3);
 			//
-			// Map<String, Object> description = UtilMisc.newMap();
+			// Map<String, Object> description = new HashMap<String, Object>();
 			// description.put("name", "description");
 			// description.put("type", "Words");
 			// description.put("min", 5);
 			// description.put("max", 15);
 			//
-			// Map<String, Object> longDescription = UtilMisc.newMap();
+			// Map<String, Object> longDescription = new HashMap<String, Object>();
 			// longDescription.put("name", "longDescription");
 			// longDescription.put("type", "Sentences");
 			// longDescription.put("min", 1);
 			// longDescription.put("max", 3);
 			//
-			// Map<String, Object> price = UtilMisc.newMap();
+			// Map<String, Object> price = new HashMap<String, Object>();
 			// price.put("name", "price");
 			// price.put("type", "Money");
 			//
@@ -153,19 +153,19 @@ public class MockarooDemoDataHelper extends DemoDataHelper {
 			// fields.add(longDescription);
 			// fields.add(price);
 			// } else if (returnObjectClass.equals(DemoDataPerson.class)) {
-			// Map<String, Object> title = UtilMisc.newMap();
+			// Map<String, Object> title = new HashMap<String, Object>();
 			// title.put("name", "title");
 			// title.put("type", "Title");
 			//
-			// Map<String, Object> firstName = UtilMisc.newMap();
+			// Map<String, Object> firstName = new HashMap<String, Object>();
 			// firstName.put("name", "firstName");
 			// firstName.put("type", "First Name");
 			//
-			// Map<String, Object> lastName = UtilMisc.newMap();
+			// Map<String, Object> lastName = new HashMap<String, Object>();
 			// lastName.put("name", "lastName");
 			// lastName.put("type", "Last Name");
 			//
-			// Map<String, Object> gender = UtilMisc.newMap();
+			// Map<String, Object> gender = new HashMap<String, Object>();
 			// gender.put("name", "gender");
 			// gender.put("type", "Gender");
 			//
@@ -174,11 +174,11 @@ public class MockarooDemoDataHelper extends DemoDataHelper {
 			// fields.add(lastName);
 			// fields.add(gender);
 			// } else if (returnObjectClass.equals(DemoDataUserLogin.class)) {
-			// Map<String, Object> userLoginId = UtilMisc.newMap();
+			// Map<String, Object> userLoginId = new HashMap<String, Object>();
 			// userLoginId.put("name", "userLoginId");
 			// userLoginId.put("type", "Username");
 			//
-			// Map<String, Object> password = UtilMisc.newMap();
+			// Map<String, Object> password = new HashMap<String, Object>();
 			// password.put("name", "currentPassword");
 			// password.put("type", "Password");
 			//

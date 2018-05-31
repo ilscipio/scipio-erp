@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.manufacturing.jobshopmgt;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,7 +53,7 @@ public class ProductionRunHelper {
      * <li> the productionRunProduct
      */
     public static Map<String, Object> getProductionRun(Delegator delegator, String productionRunId) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         
         try {
             if (productionRunId != null) {

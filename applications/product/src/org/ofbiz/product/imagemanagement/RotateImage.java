@@ -23,6 +23,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
@@ -61,10 +62,10 @@ public class RotateImage {
         String angle = (String) context.get("angle");
         
         if (UtilValidate.isNotEmpty(imageName)) {
-            Map<String, Object> contentCtx = UtilMisc.newMap();
+            Map<String, Object> contentCtx = new HashMap<String, Object>();
             contentCtx.put("contentTypeId", "DOCUMENT");
             contentCtx.put("userLogin", userLogin);
-            Map<String, Object> contentResult = UtilMisc.newMap();
+            Map<String, Object> contentResult = new HashMap<String, Object>();
             try {
                 contentResult = dispatcher.runSync("createContent", contentCtx);
             } catch (GenericServiceException e) {
@@ -72,10 +73,10 @@ public class RotateImage {
                 return ServiceUtil.returnError(e.getMessage());
             }
             
-            Map<String, Object> contentThumb = UtilMisc.newMap();
+            Map<String, Object> contentThumb = new HashMap<String, Object>();
             contentThumb.put("contentTypeId", "DOCUMENT");
             contentThumb.put("userLogin", userLogin);
-            Map<String, Object> contentThumbResult = UtilMisc.newMap();
+            Map<String, Object> contentThumbResult = new HashMap<String, Object>();
             try {
                 contentThumbResult = dispatcher.runSync("createContent", contentThumb);
             } catch (GenericServiceException e) {
@@ -125,7 +126,7 @@ public class RotateImage {
             ImageManagementServices.createContentAndDataResource(dctx, userLogin, filenameToUse, imageUrlResource, contentId, "image/jpeg");
             ImageManagementServices.createContentAndDataResource(dctx, userLogin, filenameTouseThumb, imageUrlThumb, contentIdThumb, "image/jpeg");
             
-            Map<String, Object> createContentAssocMap = UtilMisc.newMap();
+            Map<String, Object> createContentAssocMap = new HashMap<String, Object>();
             createContentAssocMap.put("contentAssocTypeId", "IMAGE_THUMBNAIL");
             createContentAssocMap.put("contentId", contentId);
             createContentAssocMap.put("contentIdTo", contentIdThumb);
@@ -138,7 +139,7 @@ public class RotateImage {
                 return ServiceUtil.returnError(e.getMessage());
             }
             
-            Map<String, Object> productContentCtx = UtilMisc.newMap();
+            Map<String, Object> productContentCtx = new HashMap<String, Object>();
             productContentCtx.put("productId", productId);
             productContentCtx.put("productContentTypeId", "IMAGE");
             productContentCtx.put("fromDate", UtilDateTime.nowTimestamp());
@@ -152,7 +153,7 @@ public class RotateImage {
                 return ServiceUtil.returnError(e.getMessage());
             }
             
-            Map<String, Object> contentApprovalCtx = UtilMisc.newMap();
+            Map<String, Object> contentApprovalCtx = new HashMap<String, Object>();
             contentApprovalCtx.put("contentId", contentId);
             contentApprovalCtx.put("userLogin", userLogin);
             try {

@@ -22,6 +22,7 @@ package org.ofbiz.order.order;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -244,7 +245,7 @@ public class OrderReturnServices {
 
         // get the email setting and send the mail
         if (UtilValidate.isNotEmpty(productStoreId)) {
-            Map<String, Object> sendMap = UtilMisc.newMap();
+            Map<String, Object> sendMap = new HashMap<String, Object>();
 
             GenericValue productStoreEmail = null;
             try {
@@ -536,7 +537,7 @@ public class OrderReturnServices {
                         if (((BigDecimal) serviceResult.get("returnableQuantity")).compareTo(BigDecimal.ZERO) == 0) {
                             continue;
                         }
-                        Map<String, Object> returnInfo = UtilMisc.newMap();
+                        Map<String, Object> returnInfo = new HashMap<String, Object>();
                         // first the return info (quantity/price)
                         returnInfo.put("returnableQuantity", serviceResult.get("returnableQuantity"));
                         returnInfo.put("returnablePrice", serviceResult.get("returnablePrice"));
@@ -573,7 +574,7 @@ public class OrderReturnServices {
                         }
                         if (UtilValidate.isNotEmpty(itemAdjustments)) {
                             for (GenericValue itemAdjustment : itemAdjustments) {
-                                returnInfo = UtilMisc.newMap();
+                                returnInfo = new HashMap<String, Object>();
                                 returnInfo.put("returnableQuantity", BigDecimal.ONE);
                                  // TODO: the returnablePrice should be set to the amount minus the already returned amount
                                 returnInfo.put("returnablePrice", itemAdjustment.get("amount"));
@@ -830,7 +831,7 @@ public class OrderReturnServices {
                         }
 
                         if (finAccountId == null) {
-                            Map<String, Object> createAccountCtx = UtilMisc.newMap();
+                            Map<String, Object> createAccountCtx = new HashMap<String, Object>();
                             createAccountCtx.put("ownerPartyId", fromPartyId);
                             createAccountCtx.put("finAccountTypeId", "STORE_CREDIT_ACCT");
                             createAccountCtx.put("productStoreId", productStore.getString("productStoreId"));
@@ -1086,7 +1087,7 @@ public class OrderReturnServices {
         Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String orderId = (String) context.get("orderId");
-        Map<String, Object> serviceResult = UtilMisc.newMap();
+        Map<String, Object> serviceResult = new HashMap<String, Object>();
 
         GenericValue orderHeader = null;
         List<GenericValue> orderPayPrefs = UtilMisc.newList();
@@ -1262,7 +1263,7 @@ public class OrderReturnServices {
                  * Then group these refund amounts and orderPaymentPreferences by paymentMethodTypeId.  That is,
                  * the intent is to get the refundable amounts per orderPaymentPreference, grouped by payment method type.
                  */
-                Map<String, List<Map<String, Object>>> prefSplitMap = UtilMisc.newMap();
+                Map<String, List<Map<String, Object>>> prefSplitMap = new HashMap<String, List<Map<String, Object>>>();
                 for (GenericValue orderPayPref : orderPayPrefs) {
                     String paymentMethodTypeId = orderPayPref.getString("paymentMethodTypeId");
                     String orderPayPrefKey = orderPayPref.getString("paymentMethodId") != null ? orderPayPref.getString("paymentMethodId") : orderPayPref.getString("paymentMethodTypeId");
@@ -1284,7 +1285,7 @@ public class OrderReturnServices {
 
                     // add the refundable amount and orderPaymentPreference to the paymentMethodTypeId map
                     if (orderPayPrefAvailableTotal.compareTo(ZERO) > 0) {
-                        Map<String, Object> orderPayPrefDetails = UtilMisc.newMap();
+                        Map<String, Object> orderPayPrefDetails = new HashMap<String, Object>();
                         orderPayPrefDetails.put("orderPaymentPreference", orderPayPref);
                         orderPayPrefDetails.put("availableTotal", orderPayPrefAvailableTotal);
                         if (prefSplitMap.containsKey(paymentMethodTypeId)) {
@@ -1422,7 +1423,7 @@ public class OrderReturnServices {
                             }
 
                             // Fill out the data for the new ReturnItemResponse
-                            Map<String, Object> response = UtilMisc.newMap();
+                            Map<String, Object> response = new HashMap<String, Object>();
                             if (UtilValidate.isNotEmpty(refundOrderPaymentPreference)) {
                                 response.put("orderPaymentPreferenceId", refundOrderPaymentPreference.getString("orderPaymentPreferenceId"));
                             } else {
@@ -1623,7 +1624,7 @@ public class OrderReturnServices {
             }
 
             // for each return invoice found, sum up the related billings
-            Map<String, BigDecimal> invoiceTotals = UtilMisc.newMap(); // key is invoiceId, value is the sum of all billings for that invoice
+            Map<String, BigDecimal> invoiceTotals = new HashMap<String, BigDecimal>(); // key is invoiceId, value is the sum of all billings for that invoice
             BigDecimal grandTotal = ZERO; // The sum of all return invoice totals
             for (GenericValue invoice : returnInvoices.values()) {
                 List<GenericValue> billings = invoice.getRelated("ReturnItemBilling", null, null, false);
@@ -1914,7 +1915,7 @@ public class OrderReturnServices {
                                                 newItem = delegator.makeValue("OrderItem", UtilMisc.toMap("orderItemSeqId", UtilFormatOut.formatPaddedNumber(itemCount++, 5)));
 
                                                 // price
-                                                Map<String, Object> priceContext = UtilMisc.newMap();
+                                                Map<String, Object> priceContext = new HashMap<String, Object>();
                                                 priceContext.put("currencyUomId", orderHeader.get("currencyUom"));
                                                 if (placingPartyId != null) {
                                                     priceContext.put("partyId", placingPartyId);
@@ -2042,7 +2043,7 @@ public class OrderReturnServices {
                 // we'll assume the new order has the same order roles of the original one
                 try {
                     List<GenericValue> orderRoles = orderHeader.getRelated("OrderRole", null, null, false);
-                    Map<String, List<String>> orderRolesMap = UtilMisc.newMap();
+                    Map<String, List<String>> orderRolesMap = new HashMap<String, List<String>>();
                     if (orderRoles != null) {
                         for (GenericValue orderRole : orderRoles) {
                             List<String> parties = orderRolesMap.get(orderRole.getString("roleTypeId"));
@@ -2101,7 +2102,7 @@ public class OrderReturnServices {
                     }
 
                     // create a ReturnItemResponse and attach to each ReturnItem
-                    Map<String, Object> itemResponse = UtilMisc.newMap();
+                    Map<String, Object> itemResponse = new HashMap<String, Object>();
                     itemResponse.put("replacementOrderId", createdOrderId);
                     itemResponse.put("responseAmount", orderPriceTotal);
                     itemResponse.put("responseDate", nowTimestamp);
@@ -2122,7 +2123,7 @@ public class OrderReturnServices {
                     }
 
                     for (GenericValue returnItem : returnItemList) {
-                        Map<String, Object> updateReturnItemCtx = UtilMisc.newMap();
+                        Map<String, Object> updateReturnItemCtx = new HashMap<String, Object>();
                         updateReturnItemCtx.put("returnId", returnId);
                         updateReturnItemCtx.put("returnItemSeqId", returnItem.get("returnItemSeqId"));
                         updateReturnItemCtx.put("returnItemResponseId", returnItemResponseId);
@@ -2283,7 +2284,7 @@ public class OrderReturnServices {
         String returnId = (String) context.get("returnId");
         Locale locale = (Locale) context.get("locale");
         List<GenericValue> returnItems = null;
-        Map<String, Object> returnAmountByOrder = UtilMisc.newMap();
+        Map<String, Object> returnAmountByOrder = new HashMap<String, Object>();
         try {
             returnItems = EntityQuery.use(delegator).from("ReturnItem").where("returnId", returnId).queryList();
 

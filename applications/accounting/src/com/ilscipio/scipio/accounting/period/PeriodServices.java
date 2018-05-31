@@ -20,6 +20,7 @@
 package com.ilscipio.scipio.accounting.period;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -154,7 +155,7 @@ public class PeriodServices {
 
         GenericValue timePeriod = null;
         GenericValue parentPeriod = null;
-        Map<String, Object> timePeriodMap = UtilMisc.newMap();
+        Map<String, Object> timePeriodMap = new HashMap<String, Object>();
         try {
             timePeriod = EntityQuery.use(delegator).cache(useCache).from("CustomTimePeriod")
                     .where(EntityCondition.makeCondition("customTimePeriodId", EntityOperator.EQUALS, customTimePeriodId)).queryOne();

@@ -22,6 +22,7 @@ package org.ofbiz.shipment.thirdparty.fedex;
 import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -160,7 +161,7 @@ public class FedexServices {
         String companyPartyId = (String) context.get("companyPartyId");
         String contactPartyName = (String) context.get("contactPartyName");
 
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
 
         String accountNumber = getShipmentGatewayConfigValue(delegator, shipmentGatewayConfigId, "accessAccountNbr", resource, "shipment.fedex.access.accountNbr");
         if (UtilValidate.isEmpty(accountNumber)) {
@@ -308,7 +309,7 @@ public class FedexServices {
             }
 
             // Populate the Freemarker context
-            Map<String, Object> subscriptionRequestContext = UtilMisc.newMap();
+            Map<String, Object> subscriptionRequestContext = new HashMap<String, Object>();
             subscriptionRequestContext.put("AccountNumber", accountNumber);
             subscriptionRequestContext.put("PersonName", contactPartyName);
             subscriptionRequestContext.put("CompanyName", companyName);
@@ -466,7 +467,7 @@ public class FedexServices {
         }
 
         try {
-            Map<String, Object> shipRequestContext = UtilMisc.newMap();
+            Map<String, Object> shipRequestContext = new HashMap<String, Object>();
 
             // Get the shipment and the shipmentRouteSegment
             GenericValue shipment = EntityQuery.use(delegator).from("Shipment").where("shipmentId", shipmentId).queryOne();

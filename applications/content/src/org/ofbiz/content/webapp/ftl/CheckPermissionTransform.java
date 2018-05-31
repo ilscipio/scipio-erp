@@ -20,6 +20,7 @@ package org.ofbiz.content.webapp.ftl;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -95,7 +96,7 @@ public class CheckPermissionTransform implements TemplateTransformModel {
         FreeMarkerWorker.overrideWithArgs(templateCtx, args);
         final String mode = (String)templateCtx.get("mode");
         final String quickCheckContentId = (String)templateCtx.get("quickCheckContentId");
-        final Map<String, Object> savedValues = UtilMisc.newMap();
+        final Map<String, Object> savedValues = new HashMap<String, Object>();
         //Debug.logInfo("in CheckPermission, contentId(1):" + templateCtx.get("contentId"),"");
         //Debug.logInfo("in CheckPermission, subContentId(1):" + templateCtx.get("subContentId"),"");
 

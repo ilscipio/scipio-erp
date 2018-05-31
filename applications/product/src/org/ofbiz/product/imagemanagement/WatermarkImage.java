@@ -30,6 +30,7 @@ import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
@@ -148,10 +149,10 @@ public class WatermarkImage{
             
             if (UtilValidate.isNotEmpty(imageUrl)) {
                 
-                Map<String, Object> contentCtx = UtilMisc.newMap();
+                Map<String, Object> contentCtx = new HashMap<String, Object>();
                 contentCtx.put("contentTypeId", "DOCUMENT");
                 contentCtx.put("userLogin", userLogin);
-                Map<String, Object> contentResult = UtilMisc.newMap();
+                Map<String, Object> contentResult = new HashMap<String, Object>();
                 try {
                     contentResult = dispatcher.runSync("createContent", contentCtx);
                 } catch (GenericServiceException e) {
@@ -160,10 +161,10 @@ public class WatermarkImage{
                 return "error";
                 }
                 
-                Map<String, Object> contentThumb = UtilMisc.newMap();
+                Map<String, Object> contentThumb = new HashMap<String, Object>();
                 contentThumb.put("contentTypeId", "DOCUMENT");
                 contentThumb.put("userLogin", userLogin);
-                Map<String, Object> contentThumbResult = UtilMisc.newMap();
+                Map<String, Object> contentThumbResult = new HashMap<String, Object>();
                 try {
                     contentThumbResult = dispatcher.runSync("createContent", contentThumb);
                 } catch (GenericServiceException e) {
@@ -197,7 +198,7 @@ public class WatermarkImage{
                 createContentAndDataResourceWaterMark(request, userLogin, filenameToUse, imageUrlResource, contentId, "image/jpeg");
                 createContentAndDataResourceWaterMark(request, userLogin, filenameTouseThumb, imageUrlThumb, contentIdThumb, "image/jpeg");
                 
-                Map<String, Object> createContentAssocMap = UtilMisc.newMap();
+                Map<String, Object> createContentAssocMap = new HashMap<String, Object>();
                 createContentAssocMap.put("contentAssocTypeId", "IMAGE_THUMBNAIL");
                 createContentAssocMap.put("contentId", contentId);
                 createContentAssocMap.put("contentIdTo", contentIdThumb);
@@ -210,7 +211,7 @@ public class WatermarkImage{
                     return e.getMessage();
                 }
                 
-                Map<String, Object> productContentCtx = UtilMisc.newMap();
+                Map<String, Object> productContentCtx = new HashMap<String, Object>();
                 productContentCtx.put("productId", productId);
                 productContentCtx.put("productContentTypeId", "IMAGE");
                 productContentCtx.put("fromDate", UtilDateTime.nowTimestamp());
@@ -224,7 +225,7 @@ public class WatermarkImage{
                     request.setAttribute("_ERROR_MESSAGE_", e.getMessage());return "error";
                 }
                 
-                Map<String, Object> contentApprovalCtx = UtilMisc.newMap();
+                Map<String, Object> contentApprovalCtx = new HashMap<String, Object>();
                 contentApprovalCtx.put("contentId", contentId);
                 contentApprovalCtx.put("userLogin", userLogin);
                 try {
@@ -246,11 +247,11 @@ public class WatermarkImage{
     }
     
     public static Map<String, Object> createContentAndDataResourceWaterMark(HttpServletRequest request, GenericValue userLogin, String filenameToUse, String imageUrl, String contentId, String mimeTypeId){
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         
-        Map<String, Object> dataResourceCtx = UtilMisc.newMap();
+        Map<String, Object> dataResourceCtx = new HashMap<String, Object>();
         
         dataResourceCtx.put("objectInfo", imageUrl);
         dataResourceCtx.put("dataResourceName", filenameToUse);
@@ -259,7 +260,7 @@ public class WatermarkImage{
         dataResourceCtx.put("mimeTypeId", mimeTypeId);
         dataResourceCtx.put("isPublic", "Y");
         
-        Map<String, Object> dataResourceResult = UtilMisc.newMap();
+        Map<String, Object> dataResourceResult = new HashMap<String, Object>();
         try {
             dataResourceResult = dispatcher.runSync("createDataResource", dataResourceCtx);
         } catch (GenericServiceException e) {
@@ -267,7 +268,7 @@ public class WatermarkImage{
             return ServiceUtil.returnError(e.getMessage());
         }
         
-        Map<String, Object> contentUp = UtilMisc.newMap();
+        Map<String, Object> contentUp = new HashMap<String, Object>();
         contentUp.put("contentId", contentId);
         contentUp.put("dataResourceId", dataResourceResult.get("dataResourceId"));
         contentUp.put("contentName", filenameToUse);

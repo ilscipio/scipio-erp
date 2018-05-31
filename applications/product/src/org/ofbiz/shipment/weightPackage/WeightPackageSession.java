@@ -20,6 +20,7 @@ package org.ofbiz.shipment.weightPackage;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -353,7 +354,7 @@ public class WeightPackageSession implements Serializable {
         List<GenericValue> shipmentRouteSegments = EntityQuery.use(delegator).from("ShipmentRouteSegment").where("shipmentId", shipmentId).queryList();
         if (UtilValidate.isNotEmpty(shipmentRouteSegments)) {
             for (GenericValue shipmentRouteSegment : shipmentRouteSegments) {
-                Map<String, Object> shipmentRouteSegmentMap = UtilMisc.newMap();
+                Map<String, Object> shipmentRouteSegmentMap = new HashMap<String, Object>();
                 shipmentRouteSegmentMap.put("shipmentId", shipmentId);
                 shipmentRouteSegmentMap.put("shipmentRouteSegmentId", shipmentRouteSegment.getString("shipmentRouteSegmentId"));
                 shipmentRouteSegmentMap.put("userLogin", userLogin);
@@ -372,7 +373,7 @@ public class WeightPackageSession implements Serializable {
         List<GenericValue> shipmentRouteSegments = this.getDelegator().findByAnd("ShipmentRouteSegment", UtilMisc.toMap("shipmentId", shipmentId), null, false);
         if (UtilValidate.isNotEmpty(shipmentRouteSegments)) {
             for (GenericValue shipmentRouteSegment : shipmentRouteSegments) {
-                Map<String, Object> shipmentRouteSegmentMap = UtilMisc.newMap();
+                Map<String, Object> shipmentRouteSegmentMap = new HashMap<String, Object>();
                 shipmentRouteSegmentMap.put("shipmentId", shipmentId);
                 shipmentRouteSegmentMap.put("shipmentRouteSegmentId", shipmentRouteSegment.getString("shipmentRouteSegmentId"));
                 shipmentRouteSegmentMap.put("userLogin", userLogin);
@@ -404,7 +405,7 @@ public class WeightPackageSession implements Serializable {
         for (WeightPackageSessionLine packedLine : this.getPackedLines(orderId)) {
             String shipmentPackageSeqId = UtilFormatOut.formatPaddedNumber(++shipPackSeqId, 5);
 
-            Map<String, Object> shipmentPackageMap = UtilMisc.newMap();
+            Map<String, Object> shipmentPackageMap = new HashMap<String, Object>();
             shipmentPackageMap.put("shipmentId", shipmentId);
             shipmentPackageMap.put("shipmentPackageSeqId", shipmentPackageSeqId);
             shipmentPackageMap.put("weight", packedLine.getPackageWeight());
@@ -416,7 +417,7 @@ public class WeightPackageSession implements Serializable {
             shipmentPackageMap.put("weightUomId", getWeightUomId());
             shipmentPackageMap.put("userLogin", userLogin);
 
-            Map<String, Object> shipmentPackageResult = UtilMisc.newMap();
+            Map<String, Object> shipmentPackageResult = new HashMap<String, Object>();
             GenericValue shipmentPackage = this.getDelegator().findOne("ShipmentPackage", UtilMisc.toMap("shipmentId", shipmentId, "shipmentPackageSeqId", shipmentPackageSeqId), false);
             if (UtilValidate.isEmpty(shipmentPackage)) {
                 shipmentPackageResult = this.getDispatcher().runSync("createShipmentPackage", shipmentPackageMap);
@@ -440,7 +441,7 @@ public class WeightPackageSession implements Serializable {
         for (GenericValue orderItem : orderItems) {
             List<GenericValue> orderItemShipGrpInvReserves = orderItem.getRelated("OrderItemShipGrpInvRes", null, null, false);
             if (UtilValidate.isEmpty(orderItemShipGrpInvReserves)) {
-                Map<String, Object> orderItemStatusMap = UtilMisc.newMap();
+                Map<String, Object> orderItemStatusMap = new HashMap<String, Object>();
                 orderItemStatusMap.put("orderId", orderId);
                 orderItemStatusMap.put("orderItemSeqId", orderItem.getString("orderItemSeqId"));
                 orderItemStatusMap.put("userLogin", userLogin);
@@ -478,7 +479,7 @@ public class WeightPackageSession implements Serializable {
     }
 
     protected void setShipmentToPacked() throws GeneralException {
-        Map<String, Object> shipmentMap = UtilMisc.newMap();
+        Map<String, Object> shipmentMap = new HashMap<String, Object>();
         shipmentMap.put("shipmentId", shipmentId);
         shipmentMap.put("statusId", "SHIPMENT_PACKED");
         shipmentMap.put("userLogin", userLogin);
@@ -498,7 +499,7 @@ public class WeightPackageSession implements Serializable {
         BigDecimal shipmentCostEstimate = ZERO;
         Map<String, Object> shipCostEstimateResult = null;
         try {
-            Map<String, Object> shipCostEstimateMap = UtilMisc.newMap();
+            Map<String, Object> shipCostEstimateMap = new HashMap<String, Object>();
             shipCostEstimateMap.put("shippingContactMechId", shippingContactMechId);
             shipCostEstimateMap.put("shipmentMethodTypeId", shipmentMethodTypeId);
             shipCostEstimateMap.put("carrierPartyId", carrierPartyId);

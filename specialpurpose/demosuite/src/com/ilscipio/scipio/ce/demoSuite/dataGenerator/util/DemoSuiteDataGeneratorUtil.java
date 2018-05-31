@@ -1,6 +1,7 @@
 package com.ilscipio.scipio.ce.demoSuite.dataGenerator.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -66,7 +67,7 @@ public class DemoSuiteDataGeneratorUtil {
 			if (curServiceModel != null) {
 				for (ModelServiceIface implService : curServiceModel.implServices) {
 					if (implService.getService().equals(DEMO_DATA_GENERATOR_SERVICE_INTERFACE_NAME)) {
-						Map<String, Object> curServiceMap = UtilMisc.newMap();
+						Map<String, Object> curServiceMap = new HashMap<String, Object>();
 						String engineName = (UtilValidate.isNotEmpty(curServiceModel.engineName))
 								? curServiceModel.engineName : "NA";
 						String defaultEntityName = (UtilValidate.isNotEmpty(curServiceModel.defaultEntityName))

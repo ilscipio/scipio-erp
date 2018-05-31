@@ -1,5 +1,6 @@
 package com.ilscipio.scipio.shop.category;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -77,7 +78,7 @@ public class CategoryHelper {
     }
     
     public Map<String, Object> makeCategoryInfo(String categoryId, Map<String, Object> item) {
-        Map<String, Object> info = UtilMisc.newMap();
+        Map<String, Object> info = new HashMap<String, Object>();
         info.put("item", item);
         info.put("productCategoryId", categoryId);
 

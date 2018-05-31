@@ -2130,7 +2130,7 @@ public class ShoppingCartEvents {
                             ", quantity = " + quantity + ", itemType = " + itemType + " and itemDescription = " + itemDescription, module);
                     HttpSession session = request.getSession();
                     GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
-                    Map<String, Object> appendOrderItemMap = UtilMisc.newMap();
+                    Map<String, Object> appendOrderItemMap = new HashMap<String, Object>();
                     appendOrderItemMap.put("productId", productId);
                     appendOrderItemMap.put("quantity", quantity);
                     appendOrderItemMap.put("orderId", orderId);

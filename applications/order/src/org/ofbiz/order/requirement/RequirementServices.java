@@ -85,10 +85,10 @@ public class RequirementServices {
                     .queryList();
 
             // maps to cache the associated suppliers and products data, so we don't do redundant DB and service requests
-            Map<String, GenericValue> suppliers = UtilMisc.newMap();
-            Map<String, GenericValue> gids = UtilMisc.newMap();
-            Map<String, Map<String, Object>> inventories = UtilMisc.newMap();
-            Map<String, BigDecimal> productsSold = UtilMisc.newMap();
+            Map<String, GenericValue> suppliers = new HashMap<String, GenericValue>();
+            Map<String, GenericValue> gids = new HashMap<String, GenericValue>();
+            Map<String, Map<String, Object>> inventories = new HashMap<String, Map<String, Object>>();
+            Map<String, BigDecimal> productsSold = new HashMap<String, BigDecimal>();
 
             // to count quantity, running total, and distinct products in list
             BigDecimal quantity = BigDecimal.ZERO;
@@ -101,7 +101,7 @@ public class RequirementServices {
             // join in fields with extra data about the suppliers and products
             List<Map<String, Object>> requirements = UtilMisc.newList();
             for (GenericValue requirement : requirementAndRoles) {
-                Map<String, Object> union = UtilMisc.newMap();
+                Map<String, Object> union = new HashMap<String, Object>();
                 String productId = requirement.getString("productId");
                 partyId = requirement.getString("partyId");
                 String facilityId = requirement.getString("facilityId");

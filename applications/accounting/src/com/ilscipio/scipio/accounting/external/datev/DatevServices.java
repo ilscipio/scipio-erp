@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -172,8 +173,8 @@ public class DatevServices {
                         Debug.logInfo(rec.toString(), module);
                     }
                     boolean allFieldValid = true;
-                    Map<String, String> recordMap = UtilMisc.newMap();
-                    Map<String, String> validRecordMap = UtilMisc.newMap();
+                    Map<String, String> recordMap = new HashMap<String, String>();
+                    Map<String, String> validRecordMap = new HashMap<String, String>();
                     if (rec.isConsistent()) {
                         recordMap = rec.toMap();
                         for (String key : recordMap.keySet()) {

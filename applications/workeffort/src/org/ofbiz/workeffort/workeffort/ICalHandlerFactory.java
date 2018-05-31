@@ -20,6 +20,7 @@
 package org.ofbiz.workeffort.workeffort;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -44,7 +45,7 @@ public class ICalHandlerFactory implements RequestHandlerFactory {
     protected final RequestHandler doNothingHandler = new DoNothingHandler();
 
     public ICalHandlerFactory() {
-        this.handlerMap = UtilMisc.newMap();
+        this.handlerMap = new HashMap<String, RequestHandler>();
         this.handlerMap.put("COPY", doNothingHandler);
         this.handlerMap.put("DELETE", doNothingHandler);
         this.handlerMap.put("GET", new GetHandler());

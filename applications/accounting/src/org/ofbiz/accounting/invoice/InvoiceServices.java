@@ -26,6 +26,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -237,7 +238,7 @@ public class InvoiceServices {
 
             // create the invoice record
             if (UtilValidate.isEmpty(invoiceId)) {
-                Map<String, Object> createInvoiceContext = UtilMisc.newMap();
+                Map<String, Object> createInvoiceContext = new HashMap<String, Object>();
                 createInvoiceContext.put("partyId", billToCustomerPartyId);
                 createInvoiceContext.put("partyIdFrom", billFromVendorPartyId);
                 createInvoiceContext.put("billingAccountId", billingAccountId);
@@ -262,7 +263,7 @@ public class InvoiceServices {
 
             // order roles to invoice roles
             List<GenericValue> orderRoles = orderHeader.getRelated("OrderRole", null, null, false);
-            Map<String, Object> createInvoiceRoleContext = UtilMisc.newMap();
+            Map<String, Object> createInvoiceRoleContext = new HashMap<String, Object>();
             createInvoiceRoleContext.put("invoiceId", invoiceId);
             createInvoiceRoleContext.put("userLogin", userLogin);
             for (GenericValue orderRole : orderRoles) {
@@ -424,7 +425,7 @@ public class InvoiceServices {
 
                 BigDecimal billingAmount = orderItem.getBigDecimal("unitPrice").setScale(invoiceTypeDecimals, ROUNDING);
 
-                Map<String, Object> createInvoiceItemContext = UtilMisc.newMap();
+                Map<String, Object> createInvoiceItemContext = new HashMap<String, Object>();
                 createInvoiceItemContext.put("invoiceId", invoiceId);
                 createInvoiceItemContext.put("invoiceItemSeqId", invoiceItemSeqId);
                 createInvoiceItemContext.put("invoiceItemTypeId", getInvoiceItemType(delegator, (orderItem.getString("orderItemTypeId")), (product == null ? null : product.getString("productTypeId")), invoiceType, "INV_FPROD_ITEM"));
@@ -469,7 +470,7 @@ public class InvoiceServices {
                 invoiceQuantity = invoiceQuantity.add(billingQuantity).setScale(invoiceTypeDecimals, ROUNDING);
 
                 // create the OrderItemBilling record
-                Map<String, Object> createOrderItemBillingContext = UtilMisc.newMap();
+                Map<String, Object> createOrderItemBillingContext = new HashMap<String, Object>();
                 createOrderItemBillingContext.put("invoiceId", invoiceId);
                 createOrderItemBillingContext.put("invoiceItemSeqId", invoiceItemSeqId);
                 createOrderItemBillingContext.put("orderId", orderItem.get("orderId"));
@@ -564,7 +565,7 @@ public class InvoiceServices {
                         }
                     }
                     if (amount.signum() != 0) {
-                        Map<String, Object> createInvoiceItemAdjContext = UtilMisc.newMap();
+                        Map<String, Object> createInvoiceItemAdjContext = new HashMap<String, Object>();
                         createInvoiceItemAdjContext.put("invoiceId", invoiceId);
                         createInvoiceItemAdjContext.put("invoiceItemSeqId", invoiceItemSeqId);
                         createInvoiceItemAdjContext.put("invoiceItemTypeId", getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), null, invoiceType, "INVOICE_ITM_ADJ"));
@@ -613,7 +614,7 @@ public class InvoiceServices {
                         }
 
                         // Create the OrderAdjustmentBilling record
-                        Map<String, Object> createOrderAdjustmentBillingContext = UtilMisc.newMap();
+                        Map<String, Object> createOrderAdjustmentBillingContext = new HashMap<String, Object>();
                         createOrderAdjustmentBillingContext.put("orderAdjustmentId", adj.getString("orderAdjustmentId"));
                         createOrderAdjustmentBillingContext.put("invoiceId", invoiceId);
                         createOrderAdjustmentBillingContext.put("invoiceItemSeqId", invoiceItemSeqId);
@@ -798,7 +799,7 @@ public class InvoiceServices {
                 }
                 BigDecimal notApplied = PaymentWorker.getPaymentNotApplied(payment);
                 if (notApplied.signum() > 0) {
-                    Map<String, Object> appl = UtilMisc.newMap();
+                    Map<String, Object> appl = new HashMap<String, Object>();
                     appl.put("paymentId", payment.get("paymentId"));
                     appl.put("invoiceId", invoiceId);
                     appl.put("billingAccountId", billingAccountId);
@@ -962,7 +963,7 @@ public class InvoiceServices {
             Long days = (Long) (commList.get(0)).get("days");
             // create the invoice record
             // To and From are in commission's sense, opposite for invoice
-            Map<String, Object> createInvoiceMap = UtilMisc.newMap();
+            Map<String, Object> createInvoiceMap = new HashMap<String, Object>();
             createInvoiceMap.put("partyId", partyIdBillTo);
             createInvoiceMap.put("partyIdFrom", partyIdBillFrom);
             createInvoiceMap.put("invoiceDate", now);
@@ -1184,7 +1185,7 @@ public class InvoiceServices {
 
         for (GenericValue itemIssuance : itemIssuances) {
             String orderId = itemIssuance.getString("orderId");
-            Map<String, Object> billFields = UtilMisc.newMap();
+            Map<String, Object> billFields = new HashMap<String, Object>();
             billFields.put("orderId", orderId);
 
             GenericValue orderItemBilling = null;
@@ -1217,7 +1218,7 @@ public class InvoiceServices {
      // For In-Process invoice, move the status to ready and capture the payment
         for (GenericValue invoice : ordersWithInProcessInvoice.values()) {
             String invoiceId = invoice.getString("invoiceId");
-            Map<String, Object> setInvoiceStatusResult = UtilMisc.newMap();
+            Map<String, Object> setInvoiceStatusResult = new HashMap<String, Object>();
             try {
                 setInvoiceStatusResult = dispatcher.runSync("setInvoiceStatus", UtilMisc.<String, Object>toMap("invoiceId", invoiceId, "statusId", "INVOICE_READY", "userLogin", userLogin));
             } catch (GenericServiceException e) {
@@ -1403,7 +1404,7 @@ public class InvoiceServices {
             List<GenericValue> toBillItems = UtilMisc.newList();
 
             // map of available quantities so we only have to calc once
-            Map<String, BigDecimal> itemQtyAvail = UtilMisc.newMap();
+            Map<String, BigDecimal> itemQtyAvail = new HashMap<String, BigDecimal>();
 
             // now we will check each issuance and make sure it hasn't already been billed
             for (GenericValue issue : billItems) {
@@ -1559,7 +1560,7 @@ public class InvoiceServices {
                         GenericValue shipment = entry.getKey();
                         BigDecimal additionalShippingCharge = entry.getValue();
                         String shipmentId = shipment.getString("shipmentId");
-                        Map<String, Object> createOrderAdjustmentContext = UtilMisc.newMap();
+                        Map<String, Object> createOrderAdjustmentContext = new HashMap<String, Object>();
                         createOrderAdjustmentContext.put("orderId", orderId);
                         createOrderAdjustmentContext.put("orderAdjustmentTypeId", "SHIPPING_CHARGES");
                         String addtlChargeDescription = shipment.getString("addtlShippingChargeDesc");
@@ -1593,7 +1594,7 @@ public class InvoiceServices {
                         }
 
                         List<Object> emptyList = UtilMisc.newList();
-                        Map<String, Object> calcTaxContext = UtilMisc.newMap();
+                        Map<String, Object> calcTaxContext = new HashMap<String, Object>();
                         calcTaxContext.put("productStoreId", orh.getProductStoreId());
                         calcTaxContext.put("payToPartyId", payToParty.getString("partyId"));
                         calcTaxContext.put("billToPartyId", billToParty.getString("partyId"));
@@ -2302,7 +2303,7 @@ public class InvoiceServices {
                 amount = baseAmount.multiply(multiplier).divide(divisor, decimals, rounding);
             }
             if (amount.signum() != 0) {
-                Map<String, Object> createInvoiceItemContext = UtilMisc.newMap();
+                Map<String, Object> createInvoiceItemContext = new HashMap<String, Object>();
                 createInvoiceItemContext.put("invoiceId", invoiceId);
                 createInvoiceItemContext.put("invoiceItemSeqId", invoiceItemSeqId);
                 createInvoiceItemContext.put("invoiceItemTypeId", getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), null, invoiceTypeId, "INVOICE_ADJ"));
@@ -2331,7 +2332,7 @@ public class InvoiceServices {
                 }
 
                 // Create the OrderAdjustmentBilling record
-                Map<String, Object> createOrderAdjustmentBillingContext = UtilMisc.newMap();
+                Map<String, Object> createOrderAdjustmentBillingContext = new HashMap<String, Object>();
                 createOrderAdjustmentBillingContext.put("orderAdjustmentId", adj.getString("orderAdjustmentId"));
                 createOrderAdjustmentBillingContext.put("invoiceId", invoiceId);
                 createOrderAdjustmentBillingContext.put("invoiceItemSeqId", invoiceItemSeqId);
@@ -2358,7 +2359,7 @@ public class InvoiceServices {
                 amount = percent.multiply(divisor);
             }
             if (amount.signum() != 0) {
-                Map<String, Object> createInvoiceItemContext = UtilMisc.newMap();
+                Map<String, Object> createInvoiceItemContext = new HashMap<String, Object>();
                 createInvoiceItemContext.put("invoiceId", invoiceId);
                 createInvoiceItemContext.put("invoiceItemSeqId", invoiceItemSeqId);
                 createInvoiceItemContext.put("invoiceItemTypeId", getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), null, invoiceTypeId, "INVOICE_ADJ"));
@@ -2387,7 +2388,7 @@ public class InvoiceServices {
                 }
 
                 // Create the OrderAdjustmentBilling record
-                Map<String, Object> createOrderAdjustmentBillingContext = UtilMisc.newMap();
+                Map<String, Object> createOrderAdjustmentBillingContext = new HashMap<String, Object>();
                 createOrderAdjustmentBillingContext.put("orderAdjustmentId", adj.getString("orderAdjustmentId"));
                 createOrderAdjustmentBillingContext.put("invoiceId", invoiceId);
                 createOrderAdjustmentBillingContext.put("invoiceItemSeqId", invoiceItemSeqId);
@@ -2416,7 +2417,7 @@ public class InvoiceServices {
         if (terms != null) {
             for (GenericValue term : terms) {
 
-                Map<String, Object> createInvoiceTermContext = UtilMisc.newMap();
+                Map<String, Object> createInvoiceTermContext = new HashMap<String, Object>();
                 createInvoiceTermContext.put("invoiceId", invoiceId);
                 createInvoiceTermContext.put("invoiceItemSeqId", "_NA_");
                 createInvoiceTermContext.put("termTypeId", term.get("termTypeId"));

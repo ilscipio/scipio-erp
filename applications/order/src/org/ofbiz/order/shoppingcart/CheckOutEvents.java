@@ -416,7 +416,7 @@ public class CheckOutEvents {
 
         if (paymentMethods != null) {
             for (int i = 0; i < paymentMethods.length; i++) {
-                Map<String, Object> paymentMethodInfo = UtilMisc.newMap();
+                Map<String, Object> paymentMethodInfo = new HashMap<String, Object>();
 
                 // SCIPIO: Allow inlined address creation
                 String paymentMethodId = paymentMethods[i];

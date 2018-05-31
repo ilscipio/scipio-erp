@@ -24,6 +24,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -342,7 +343,7 @@ public class ServiceArtifactInfo extends ArtifactInfoBase {
             //allServiceList.add(calledService); // SCIPIO: 2018-03-28: does nothing
         }
 
-        Map<String, Integer> displaySuffixNumByEcaName = UtilMisc.newMap();
+        Map<String, Integer> displaySuffixNumByEcaName = new HashMap<String, Integer>();
 
         // all SECAs and triggering services that call this service as an action
         Set<ServiceEcaArtifactInfo> callingServiceEcaSet = this.getServiceEcaRulesCallingService();
@@ -383,12 +384,12 @@ public class ServiceArtifactInfo extends ArtifactInfoBase {
         }
 
         // write index.eomodeld file
-        Map<String, Object> indexEoModelMap = UtilMisc.newMap();
+        Map<String, Object> indexEoModelMap = new HashMap<String, Object>();
         indexEoModelMap.put("EOModelVersion", "\"2.1\"");
         List<Map<String, Object>> entitiesMapList = new ArrayList<>(allDiagramEntitiesWithPrefixes.size()); // SCIPIO: 2018-03-28: ArrayList initial capacity
         indexEoModelMap.put("entities", entitiesMapList);
         for (String entityName: allDiagramEntitiesWithPrefixes) {
-            Map<String, Object> entitiesMap = UtilMisc.newMap();
+            Map<String, Object> entitiesMap = new HashMap<String, Object>();
             entitiesMapList.add(entitiesMap);
             entitiesMap.put("className", "EOGenericRecord");
             entitiesMap.put("name", entityName);
@@ -447,7 +448,7 @@ public class ServiceArtifactInfo extends ArtifactInfoBase {
         if (calledServiceSet == null) calledServiceSet = UtilMisc.newSet();
         if (callingServiceEcaSet == null) callingServiceEcaSet = UtilMisc.newSet();
         if (calledServiceEcaSet == null) calledServiceEcaSet = UtilMisc.newSet();
-        Map<String, Object> topLevelMap = UtilMisc.newMap();
+        Map<String, Object> topLevelMap = new HashMap<String, Object>();
 
         topLevelMap.put("name", this.getDisplayPrefixedName());
         topLevelMap.put("className", "EOGenericRecord");
@@ -486,7 +487,7 @@ public class ServiceArtifactInfo extends ArtifactInfoBase {
         List<Map<String, Object>> attributesList = new ArrayList<>(modelParamList.size()); // SCIPIO: 2018-03-28: ArrayList initial capacity
         topLevelMap.put("attributes", attributesList);
         for (ModelParam param: modelParamList) {
-            Map<String, Object> attributeMap = UtilMisc.newMap();
+            Map<String, Object> attributeMap = new HashMap<String, Object>();
             attributesList.add(attributeMap);
 
             if (useMoreDetailedNames) {
@@ -503,7 +504,7 @@ public class ServiceArtifactInfo extends ArtifactInfoBase {
                 + callingServiceEcaSet.size() + calledServiceEcaSet.size()); // SCIPIO: 2018-03-28: ArrayList initial capacity
 
         for (ServiceArtifactInfo sai: callingServiceSet) {
-            Map<String, Object> relationshipMap = UtilMisc.newMap();
+            Map<String, Object> relationshipMap = new HashMap<String, Object>();
             relationshipsMapList.add(relationshipMap);
 
             relationshipMap.put("name", sai.getDisplayPrefixedName());
@@ -518,7 +519,7 @@ public class ServiceArtifactInfo extends ArtifactInfoBase {
             //joinsMap.put("destinationAttribute", keyMap.getRelFieldName());
         }
         for (ServiceArtifactInfo sai: calledServiceSet) {
-            Map<String, Object> relationshipMap = UtilMisc.newMap();
+            Map<String, Object> relationshipMap = new HashMap<String, Object>();
             relationshipsMapList.add(relationshipMap);
 
             relationshipMap.put("name", sai.getDisplayPrefixedName());
@@ -534,7 +535,7 @@ public class ServiceArtifactInfo extends ArtifactInfoBase {
         }
 
         for (ServiceEcaArtifactInfo seai: callingServiceEcaSet) {
-            Map<String, Object> relationshipMap = UtilMisc.newMap();
+            Map<String, Object> relationshipMap = new HashMap<String, Object>();
             relationshipsMapList.add(relationshipMap);
 
             relationshipMap.put("name", seai.getDisplayPrefixedName());
@@ -543,7 +544,7 @@ public class ServiceArtifactInfo extends ArtifactInfoBase {
             relationshipMap.put("isMandatory", "Y");
         }
         for (ServiceEcaArtifactInfo seai: calledServiceEcaSet) {
-            Map<String, Object> relationshipMap = UtilMisc.newMap();
+            Map<String, Object> relationshipMap = new HashMap<String, Object>();
             relationshipsMapList.add(relationshipMap);
 
             relationshipMap.put("name", seai.getDisplayPrefixedName());

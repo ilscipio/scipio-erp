@@ -26,6 +26,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -88,7 +89,7 @@ public class VCard {
         InputStream in = new ByteArrayInputStream(inputByteArray);
         String partyType = (String) context.get("partyType");
         Boolean isGroup =  "PartyGroup".equals(partyType); // By default we import a Person.
-        Map<String, Object> serviceCtx = UtilMisc.newMap();
+        Map<String, Object> serviceCtx = new HashMap<String, Object>();
 
         try {
             ContactIOFactory ciof = Pim.getContactIOFactory();

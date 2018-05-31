@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.content.content;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -124,7 +125,7 @@ public class PermissionRecorder {
 
     public void setCurrentContentId(String id) {
         if (!currentContentId.equals(id)) {
-            currentContentMap = UtilMisc.newMap();
+            currentContentMap = new HashMap<String, Object>();
             permCheckResults.add(currentContentMap);
             currentContentMap.put("contentId", id);
             currentContentMap.put("checkResults", UtilMisc.newList());
@@ -155,7 +156,7 @@ public class PermissionRecorder {
     }
 
     public void startMatchGroup(List<String> targetOperations, List<String> purposes, List<String> roles, List<String> targStatusList, String targPrivilegeEnumId, String contentId) {
-        currentContentMap = UtilMisc.newMap();
+        currentContentMap = new HashMap<String, Object>();
         permCheckResults.add(currentContentMap);
         String s = null;
         if (targetOperations != null) {

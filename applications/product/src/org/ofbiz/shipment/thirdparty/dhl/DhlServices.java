@@ -21,6 +21,7 @@ package org.ofbiz.shipment.thirdparty.dhl;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -239,7 +240,7 @@ public class DhlServices {
                     "FacilityShipmentDhlShipmentTemplateLocationNotFound", locale));
         }
         StringWriter outWriter = new StringWriter();
-        Map<String, Object> inContext = UtilMisc.newMap();
+        Map<String, Object> inContext = new HashMap<String, Object>();
         inContext.put("action", "RateEstimate");
         inContext.put("userid", userid);
         inContext.put("password", password);
@@ -316,7 +317,7 @@ public class DhlServices {
      */
     public static Map<String, Object> handleDhlRateResponse(Document rateResponseDocument, Locale locale) {
         List<Object> errorList = UtilMisc.newList();
-        Map<String, Object> dhlRateCodeMap = UtilMisc.newMap();
+        Map<String, Object> dhlRateCodeMap = new HashMap<String, Object>();
         // process RateResponse
         Element rateResponseElement = rateResponseDocument.getDocumentElement();
         DhlServices.handleErrors(rateResponseElement, errorList, locale);
@@ -360,7 +361,7 @@ public class DhlServices {
         List<Map<String, String>> chargeList = UtilMisc.newList();
         if (UtilValidate.isNotEmpty(chargeNodeList)) {
             for (Element responseChargeElement: chargeNodeList) {
-                Map<String, String> charge = UtilMisc.newMap();
+                Map<String, String> charge = new HashMap<String, String>();
 
                 Element responseChargeTypeElement = UtilXml.firstChildElement(
                         responseChargeElement, "Type");
@@ -399,7 +400,7 @@ public class DhlServices {
         String resource = (String) context.get("serviceConfigProps");
         String shipmentGatewayConfigId = (String) context.get("shipmentGatewayConfigId");
         Locale locale = (Locale) context.get("locale");
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         String postalCode = (String) context.get("postalCode");
         String accountNbr = getShipmentGatewayConfigValue(delegator, shipmentGatewayConfigId, "accessAccountNbr",
                 resource, "shipment.dhl.access.accountNbr");
@@ -749,7 +750,7 @@ public class DhlServices {
                         "FacilityShipmentDhlRateEstimateTemplateNotConfigured", locale));
             }
             StringWriter outWriter = new StringWriter();
-            Map<String, Object> inContext = UtilMisc.newMap();
+            Map<String, Object> inContext = new HashMap<String, Object>();
             inContext.put("action", "GenerateLabel");
             inContext.put("userid", userid);
             inContext.put("password", password);

@@ -1,5 +1,6 @@
 package com.ilscipio.scipio.accounting.external.datev.category;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
@@ -27,7 +28,7 @@ public class DatevDebitorenKreditorenStammdaten extends AbstractDatevDataCategor
 
     @Override
     public void processRecord(int index, Map<String, String> recordMap) throws DatevException {
-        Map<String, GenericValue> recordsToStore = UtilMisc.newMap();
+        Map<String, GenericValue> recordsToStore = new HashMap<String, GenericValue>();
         try {
             for (String fieldName : recordMap.keySet()) {
 //                String fieldId = fieldDefinition.getString("fieldId");

@@ -21,6 +21,7 @@ package org.ofbiz.manufacturing.jobshopmgt;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -86,7 +87,7 @@ public class ProductionRunServices {
      * @return Map with the result of the service, the output parameters.
      */
     public static Map<String, Object> cancelProductionRun(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         LocalDispatcher dispatcher = ctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
@@ -112,7 +113,7 @@ public class ProductionRunServices {
                         return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunStatusNotChangedMandatoryProductionRunFound", locale));
                     }
                 }
-                Map<String, Object> serviceContext = UtilMisc.newMap();
+                Map<String, Object> serviceContext = new HashMap<String, Object>();
                 // change the production run (header) status to PRUN_CANCELLED
                 serviceContext.put("workEffortId", productionRunId);
                 serviceContext.put("currentStatusId", "PRUN_CANCELLED");
@@ -179,7 +180,7 @@ public class ProductionRunServices {
      * @return Map with the result of the service, the output parameters.
      */
     public static Map<String, Object> createProductionRun(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         LocalDispatcher dispatcher = ctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
@@ -243,7 +244,7 @@ public class ProductionRunServices {
         // The components are retrieved using the getManufacturingComponents service
         // (that performs a bom breakdown and if needed runs the configurator).
         List<BOMNode> components = null;
-        Map<String, Object> serviceContext = UtilMisc.newMap();
+        Map<String, Object> serviceContext = new HashMap<String, Object>();
         serviceContext.put("productId", productId); // the product that we want to manufacture
         serviceContext.put("quantity", pRQuantity); // the quantity that we want to manufacture
         serviceContext.put("userLogin", userLogin);
@@ -553,7 +554,7 @@ public class ProductionRunServices {
     }
 
     public static Map<String, Object> changeProductionRunStatus(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         LocalDispatcher dispatcher = ctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
@@ -577,7 +578,7 @@ public class ProductionRunServices {
         // PRUN_CREATED --> PRUN_SCHEDULED
         if ("PRUN_CREATED".equals(currentStatusId) && "PRUN_SCHEDULED".equals(statusId)) {
             // change the production run status to PRUN_SCHEDULED
-            Map<String, Object> serviceContext = UtilMisc.newMap();
+            Map<String, Object> serviceContext = new HashMap<String, Object>();
             serviceContext.clear();
             serviceContext.put("workEffortId", productionRunId);
             serviceContext.put("currentStatusId", statusId);
@@ -609,7 +610,7 @@ public class ProductionRunServices {
         // PRUN_CREATED or PRUN_SCHEDULED --> PRUN_DOC_PRINTED
         if ((currentStatusId.equals("PRUN_CREATED") || currentStatusId.equals("PRUN_SCHEDULED")) && (statusId == null || statusId.equals("PRUN_DOC_PRINTED"))) {
             // change only the production run (header) status to PRUN_DOC_PRINTED
-            Map<String, Object> serviceContext = UtilMisc.newMap();
+            Map<String, Object> serviceContext = new HashMap<String, Object>();
             serviceContext.clear();
             serviceContext.put("workEffortId", productionRunId);
             serviceContext.put("currentStatusId", "PRUN_DOC_PRINTED");
@@ -661,7 +662,7 @@ public class ProductionRunServices {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunStatusNotChanged", locale));
             }
 
-            Map<String, Object> serviceContext = UtilMisc.newMap();
+            Map<String, Object> serviceContext = new HashMap<String, Object>();
             serviceContext.clear();
             serviceContext.put("workEffortId", productionRunId);
             serviceContext.put("currentStatusId", "PRUN_RUNNING");
@@ -682,7 +683,7 @@ public class ProductionRunServices {
         // this should be called only when the last task is completed
         if (currentStatusId.equals("PRUN_RUNNING") && (statusId == null || statusId.equals("PRUN_COMPLETED"))) {
             // change only the production run (header) status to PRUN_COMPLETED
-            Map<String, Object> serviceContext = UtilMisc.newMap();
+            Map<String, Object> serviceContext = new HashMap<String, Object>();
             serviceContext.clear();
             serviceContext.put("workEffortId", productionRunId);
             serviceContext.put("currentStatusId", "PRUN_COMPLETED");
@@ -702,7 +703,7 @@ public class ProductionRunServices {
         // PRUN_COMPLETED --> PRUN_CLOSED
         if (currentStatusId.equals("PRUN_COMPLETED") && (statusId == null || statusId.equals("PRUN_CLOSED"))) {
             // change the production run status to PRUN_CLOSED
-            Map<String, Object> serviceContext = UtilMisc.newMap();
+            Map<String, Object> serviceContext = new HashMap<String, Object>();
             serviceContext.clear();
             serviceContext.put("workEffortId", productionRunId);
             serviceContext.put("currentStatusId", "PRUN_CLOSED");
@@ -736,7 +737,7 @@ public class ProductionRunServices {
     }
 
     public static Map<String, Object> changeProductionRunTaskStatus(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         LocalDispatcher dispatcher = ctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
@@ -796,7 +797,7 @@ public class ProductionRunServices {
             if (productionRun.getGenericValue().getString("currentStatusId").equals("PRUN_CREATED")) {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunTaskCannotStartDocsNotPrinted", locale));
             }
-            Map<String, Object> serviceContext = UtilMisc.newMap();
+            Map<String, Object> serviceContext = new HashMap<String, Object>();
             serviceContext.clear();
             serviceContext.put("workEffortId", taskId);
             serviceContext.put("currentStatusId", "PRUN_RUNNING");
@@ -829,7 +830,7 @@ public class ProductionRunServices {
         // PRUN_RUNNING --> PRUN_COMPLETED
         // this should be called only when the last task is completed
         if (currentStatusId.equals("PRUN_RUNNING") && (statusId == null || statusId.equals("PRUN_COMPLETED"))) {
-            Map<String, Object> serviceContext = UtilMisc.newMap();
+            Map<String, Object> serviceContext = new HashMap<String, Object>();
             if (issueAllComponents.booleanValue()) {
                 // Issue all the components, if this task needs components and they still need to be issued
                 try {
@@ -971,7 +972,7 @@ public class ProductionRunServices {
     }
 
     public static Map<String, Object> getWorkEffortCosts(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         String workEffortId = (String)context.get("workEffortId");
         Locale locale = (Locale) context.get("locale");
@@ -1005,7 +1006,7 @@ public class ProductionRunServices {
     }
 
     public static Map<String, Object> getProductionRunCost(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         LocalDispatcher dispatcher = ctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -1149,7 +1150,7 @@ public class ProductionRunServices {
         }
         // materials costs: these are the costs derived from the materials used by the production run task
         try {
-            Map<String, BigDecimal> materialsCostByCurrency = UtilMisc.newMap();
+            Map<String, BigDecimal> materialsCostByCurrency = new HashMap<String, BigDecimal>();
             for (GenericValue inventoryConsumed : EntityQuery.use(delegator).from("WorkEffortAndInventoryAssign")
                                 .where("workEffortId", productionRunTaskId).queryList()) {
                 BigDecimal quantity = inventoryConsumed.getBigDecimal("quantity");
@@ -1263,7 +1264,7 @@ public class ProductionRunServices {
     }
 
     public static Map<String, Object> addProductionRunComponent(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         LocalDispatcher dispatcher = ctx.getDispatcher();
         Timestamp now = UtilDateTime.nowTimestamp();
@@ -1313,7 +1314,7 @@ public class ProductionRunServices {
             Debug.logWarning(e.getMessage(), module);
             return ServiceUtil.returnError(e.getMessage());
         }
-        Map<String, Object> serviceContext = UtilMisc.newMap();
+        Map<String, Object> serviceContext = new HashMap<String, Object>();
         serviceContext.clear();
         serviceContext.put("workEffortId", workEffortId);
         serviceContext.put("productId", productId);
@@ -1334,7 +1335,7 @@ public class ProductionRunServices {
     }
 
     public static Map<String, Object> updateProductionRunComponent(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         LocalDispatcher dispatcher = ctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
@@ -1387,7 +1388,7 @@ public class ProductionRunServices {
             Debug.logWarning(e.getMessage(), module);
             return ServiceUtil.returnError(e.getMessage());
         }
-        Map<String, Object> serviceContext = UtilMisc.newMap();
+        Map<String, Object> serviceContext = new HashMap<String, Object>();
         serviceContext.clear();
         serviceContext.put("workEffortId", theComponent.getString("workEffortId"));
         serviceContext.put("workEffortGoodStdTypeId", "PRUNT_PROD_NEEDED");
@@ -1408,7 +1409,7 @@ public class ProductionRunServices {
     }
 
     public static Map<String, Object> addProductionRunRoutingTask(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         LocalDispatcher dispatcher = ctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
@@ -1484,7 +1485,7 @@ public class ProductionRunServices {
             long totalTime = ProductionRun.getEstimatedTaskTime(routingTask, pRQuantity, dispatcher);
             estimatedCompletionDate = TechDataServices.addForward(TechDataServices.getTechDataCalendar(routingTask), estimatedStartDate, totalTime);
         }
-        Map<String, Object> serviceContext = UtilMisc.newMap();
+        Map<String, Object> serviceContext = new HashMap<String, Object>();
         serviceContext.clear();
         serviceContext.put("priority", priority);
         serviceContext.put("workEffortPurposeTypeId", routingTask.get("workEffortPurposeTypeId"));
@@ -1552,7 +1553,7 @@ public class ProductionRunServices {
     }
 
     public static Map<String, Object> productionRunProduce(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         LocalDispatcher dispatcher = ctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
@@ -1704,7 +1705,7 @@ public class ProductionRunServices {
                     serviceContext.put("inventoryItemId", inventoryItemId);
                     resultService = dispatcher.runSync("createWorkEffortInventoryProduced", serviceContext);
                     // Recompute reservations
-                    serviceContext = UtilMisc.newMap();
+                    serviceContext = new HashMap<String, Object>();
                     serviceContext.put("inventoryItemId", inventoryItemId);
                     serviceContext.put("userLogin", userLogin);
                     resultService = dispatcher.runSync("balanceInventoryItems", serviceContext);
@@ -1742,7 +1743,7 @@ public class ProductionRunServices {
                 serviceContext.put("inventoryItemId", inventoryItemId);
                 resultService = dispatcher.runSync("createWorkEffortInventoryProduced", serviceContext);
                 // Recompute reservations
-                serviceContext = UtilMisc.newMap();
+                serviceContext = new HashMap<String, Object>();
                 serviceContext.put("inventoryItemId", inventoryItemId);
                 serviceContext.put("userLogin", userLogin);
                 if (orderItem != null) {
@@ -1772,7 +1773,7 @@ public class ProductionRunServices {
     }
 
     public static Map<String, Object> productionRunDeclareAndProduce(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         LocalDispatcher dispatcher = ctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
@@ -1829,7 +1830,7 @@ public class ProductionRunServices {
             }
         }
         try {
-            Map<String, Object> inputMap = UtilMisc.newMap();
+            Map<String, Object> inputMap = new HashMap<String, Object>();
             inputMap.putAll(context);
             inputMap.remove("componentsLocationMap");
             result = dispatcher.runSync("productionRunProduce", inputMap);
@@ -1841,7 +1842,7 @@ public class ProductionRunServices {
     }
 
     public static Map<String, Object> productionRunTaskProduce(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         LocalDispatcher dispatcher = ctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -1905,7 +1906,7 @@ public class ProductionRunServices {
                     resultService = dispatcher.runSync("createWorkEffortInventoryProduced", serviceContext);
                     inventoryItemIds.add(inventoryItemId);
                     // Recompute reservations
-                    serviceContext = UtilMisc.newMap();
+                    serviceContext = new HashMap<String, Object>();
                     serviceContext.put("inventoryItemId", inventoryItemId);
                     serviceContext.put("userLogin", userLogin);
                     resultService = dispatcher.runSync("balanceInventoryItems", serviceContext);
@@ -1946,7 +1947,7 @@ public class ProductionRunServices {
                 resultService = dispatcher.runSync("createWorkEffortInventoryProduced", serviceContext);
                 inventoryItemIds.add(inventoryItemId);
                 // Recompute reservations
-                serviceContext = UtilMisc.newMap();
+                serviceContext = new HashMap<String, Object>();
                 serviceContext.put("inventoryItemId", inventoryItemId);
                 serviceContext.put("userLogin", userLogin);
                 resultService = dispatcher.runSync("balanceInventoryItems", serviceContext);
@@ -2024,7 +2025,7 @@ public class ProductionRunServices {
     }
 
     public static Map<String, Object> updateProductionRunTask(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         LocalDispatcher dispatcher = ctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
@@ -2174,7 +2175,7 @@ public class ProductionRunServices {
             GenericValue timeEntry = delegator.makeValue("TimeEntry", timeEntryFields);
             timeEntry.create();
             */
-            Map<String, Object> serviceContext = UtilMisc.newMap();
+            Map<String, Object> serviceContext = new HashMap<String, Object>();
             serviceContext.clear();
             serviceContext.put("workEffortId", workEffortId);
             if (addTaskTime != null) {
@@ -2230,7 +2231,7 @@ public class ProductionRunServices {
     }
 
     public static Map<String, Object> createProductionRunFromRequirement(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         LocalDispatcher dispatcher = ctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
@@ -2255,7 +2256,7 @@ public class ProductionRunServices {
         if (quantity == null) {
             quantity = requirement.getBigDecimal("quantity");
         }
-        Map<String, Object> serviceContext = UtilMisc.newMap();
+        Map<String, Object> serviceContext = new HashMap<String, Object>();
         serviceContext.clear();
         serviceContext.put("productId", requirement.getString("productId"));
         serviceContext.put("quantity", quantity);
@@ -2290,7 +2291,7 @@ public class ProductionRunServices {
     }
 
     public static Map<String, Object> createProductionRunFromConfiguration(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         LocalDispatcher dispatcher = ctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
@@ -2324,7 +2325,7 @@ public class ProductionRunServices {
             return ServiceUtil.returnError(e.getMessage());
         }
 
-        Map<String, Object> serviceContext = UtilMisc.newMap();
+        Map<String, Object> serviceContext = new HashMap<String, Object>();
         serviceContext.clear();
         serviceContext.put("productId", instanceProductId);
         serviceContext.put("pRQuantity", quantity);
@@ -2428,7 +2429,7 @@ public class ProductionRunServices {
                 componentQuantity = BigDecimal.ONE;
             }
             resultService = null;
-            serviceContext = UtilMisc.newMap();
+            serviceContext = new HashMap<String, Object>();
             serviceContext.put("productionRunId", productionRunId);
             serviceContext.put("productId", productId);
             serviceContext.put("estimatedQuantity", componentQuantity);
@@ -2452,7 +2453,7 @@ public class ProductionRunServices {
     }
 
     public static Map<String, Object> createProductionRunForMktgPkg(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         LocalDispatcher dispatcher = ctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
@@ -2507,7 +2508,7 @@ public class ProductionRunServices {
                 // how many should we produce?  If there already is some inventory, then just produce enough to bring ATP back up to zero.
                 BigDecimal qtyRequired = BigDecimal.ZERO.subtract(existingAtp);
                 // ok so that's how many we WANT to produce, but let's check how many we can actually produce based on the available components
-                Map<String, Object> serviceContext = UtilMisc.newMap();
+                Map<String, Object> serviceContext = new HashMap<String, Object>();
                 serviceContext.put("productId", orderItem.getString("productId"));
                 serviceContext.put("facilityId", facilityId);
                 serviceContext.put("userLogin", userLogin);
@@ -2564,7 +2565,7 @@ public class ProductionRunServices {
     }
 
     public static Map<String, Object> createProductionRunsForOrder(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue)context.get("userLogin");
@@ -2685,7 +2686,7 @@ public class ProductionRunServices {
     }
 
     public static Map<String, Object> createProductionRunsForProductBom(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin =(GenericValue)context.get("userLogin");
@@ -2738,7 +2739,7 @@ public class ProductionRunServices {
         String taskId = (String) context.get("taskId");
 
         try {
-            Map<String, Object> serviceContext = UtilMisc.newMap();
+            Map<String, Object> serviceContext = new HashMap<String, Object>();
             Map<String, Object> resultService = null;
             GenericValue task = EntityQuery.use(delegator).from("WorkEffort").where("workEffortId", taskId).queryOne();
             String currentStatusId = task.getString("currentStatusId");
@@ -2791,7 +2792,7 @@ public class ProductionRunServices {
             oneTask = tasks.get(i);
             taskId = oneTask.getString("workEffortId");
             try {
-                Map<String, Object> serviceContext = UtilMisc.newMap();
+                Map<String, Object> serviceContext = new HashMap<String, Object>();
                 serviceContext.put("productionRunId", productionRunId);
                 serviceContext.put("taskId", taskId);
                 serviceContext.put("userLogin", userLogin);
@@ -2860,7 +2861,7 @@ public class ProductionRunServices {
         String startAllTasks = (String) context.get("startAllTasks");
 
         try {
-            Map<String, Object> serviceContext = UtilMisc.newMap();
+            Map<String, Object> serviceContext = new HashMap<String, Object>();
             // Change the task status to running
             
             if (statusId.equals("PRUN_DOC_PRINTED") ||
@@ -3003,7 +3004,7 @@ public class ProductionRunServices {
     }
 
     public static Map<String, Object> decomposeInventoryItem(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = UtilMisc.newMap();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         LocalDispatcher dispatcher = ctx.getDispatcher();
         Timestamp now = UtilDateTime.nowTimestamp();

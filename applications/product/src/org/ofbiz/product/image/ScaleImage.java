@@ -23,6 +23,7 @@ import java.awt.image.ImagingOpException;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -92,7 +93,7 @@ public class ScaleImage {
         BufferedImage bufImg, bufNewImg;
         double imgHeight, imgWidth;
         Map<String, String> imgUrlMap = new HashMap<String, String>();
-        Map<String, Object> resultXMLMap = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+        Map<String, Object> resultXMLMap = new LinkedHashMap<String, Object>();
         Map<String, Object> resultBufImgMap = new HashMap<String, Object>();
         Map<String, Object> resultScaleImgMap = new HashMap<String, Object>();
         Map<String, Object> result = new HashMap<String, Object>();
@@ -280,7 +281,7 @@ public class ScaleImage {
         BufferedImage bufImg, bufNewImg;
         double imgHeight, imgWidth;
         Map<String, String> imgUrlMap = new HashMap<String, String>();
-        Map<String, Object> resultXMLMap = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+        Map<String, Object> resultXMLMap = new LinkedHashMap<String, Object>();
         Map<String, Object> resultBufImgMap = new HashMap<String, Object>();
         Map<String, Object> resultScaleImgMap = new HashMap<String, Object>();
         Map<String, Object> result = new HashMap<String, Object>();

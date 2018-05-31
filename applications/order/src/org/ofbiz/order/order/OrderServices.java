@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -263,9 +264,9 @@ public class OrderServices {
 
         // check inventory and other things for each item
         List<String> errorMessages = UtilMisc.newList();
-        Map<String, BigDecimal> normalizedItemQuantities = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
-        Map<String, String> normalizedItemNames = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
-        Map<String, GenericValue> itemValuesBySeqId = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+        Map<String, BigDecimal> normalizedItemQuantities = new LinkedHashMap<String, BigDecimal>();
+        Map<String, String> normalizedItemNames = new LinkedHashMap<String, String>();
+        Map<String, GenericValue> itemValuesBySeqId = new LinkedHashMap<String, GenericValue>();
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 
         // need to run through the items combining any cases where multiple
@@ -5213,7 +5214,7 @@ public class OrderServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Locale locale = (Locale) context.get("locale");
         // grouped by facility
-        Map<String, List<String>> facilityOrdersMap = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+        Map<String, List<String>> facilityOrdersMap = new LinkedHashMap<String, List<String>>();
 
         // make the list per facility
         List<String> orderIds = UtilGenerics.checkList(context.get("orderIdList"));

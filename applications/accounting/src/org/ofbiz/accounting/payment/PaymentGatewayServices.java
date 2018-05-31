@@ -2447,7 +2447,7 @@ public class PaymentGatewayServices {
                 // get the creditCard/address/email
                 String payToPartyId = null;
                 try {
-                    payToPartyId = getBillingInformation(orh, paymentPref, UtilMisc.<String, Object>newMap());
+                    payToPartyId = getBillingInformation(orh, paymentPref, new HashMap<String, Object>());
                 } catch (GenericEntityException e) {
                     Debug.logError(e, "Problems getting billing information", module);
                     return ServiceUtil.returnError(UtilProperties.getMessage(resource, 

@@ -21,6 +21,7 @@ package org.ofbiz.content.layout;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -57,7 +58,7 @@ public class LayoutWorker {
         Locale locale = UtilHttp.getLocale(request);
 
         Map<String, Object> results = new HashMap<String, Object>();
-        Map<String, String> formInput = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+        Map<String, String> formInput = new LinkedHashMap<String, String>();
         results.put("formInput", formInput);
         ServletFileUpload fu = new ServletFileUpload(new DiskFileItemFactory(10240, new File(new File("runtime"), "tmp")));
         

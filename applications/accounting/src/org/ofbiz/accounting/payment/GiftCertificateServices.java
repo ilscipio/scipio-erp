@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -805,7 +806,7 @@ public class GiftCertificateServices {
         }
 
         // make a map of answer info
-        Map<String, Object> answerMap = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+        Map<String, Object> answerMap = new LinkedHashMap<String, Object>();
         if (responseAnswers != null) {
             for (GenericValue answer : responseAnswers) {
                 GenericValue question = null;
@@ -1034,7 +1035,7 @@ public class GiftCertificateServices {
         }
 
         // make a map of answer info
-        Map<String, Object> answerMap = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+        Map<String, Object> answerMap = new LinkedHashMap<String, Object>();
         if (responseAnswers != null) {
             for (GenericValue answer : responseAnswers) {
                 GenericValue question = null;

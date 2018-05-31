@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -64,7 +65,7 @@ public class ProductDisplayWorker {
 
         List<GenericValue> cartAssocs = null;
         try {
-            Map<String, GenericValue> products = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+            Map<String, GenericValue> products = new LinkedHashMap<String, GenericValue>();
 
             Iterator<ShoppingCartItem> cartiter = cart.iterator();
 

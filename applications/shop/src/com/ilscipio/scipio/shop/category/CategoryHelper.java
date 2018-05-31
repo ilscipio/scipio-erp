@@ -1,5 +1,6 @@
 package com.ilscipio.scipio.shop.category;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -8,7 +9,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -53,7 +53,7 @@ public class CategoryHelper {
     
     @SuppressWarnings("unchecked")
     public List<Map<String, Object>> makeCategoryInfos(List<Object> categoryIdsOrItems) {
-        List<Map<String, Object>> res = UtilMisc.newList();
+        List<Map<String, Object>> res = new ArrayList<>(categoryIdsOrItems.size());
         for(Object item : categoryIdsOrItems) {
             if (item != null) {
                 if (item instanceof String) {

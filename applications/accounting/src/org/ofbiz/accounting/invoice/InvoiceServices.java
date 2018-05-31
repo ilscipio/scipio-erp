@@ -28,6 +28,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -650,8 +651,8 @@ public class InvoiceServices {
             }
 
             // create header adjustments as line items -- always to tax/shipping last
-            Map<GenericValue, BigDecimal> shipAdjustments = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
-            Map<GenericValue, BigDecimal> taxAdjustments = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+            Map<GenericValue, BigDecimal> shipAdjustments = new LinkedHashMap<GenericValue, BigDecimal>();
+            Map<GenericValue, BigDecimal> taxAdjustments = new LinkedHashMap<GenericValue, BigDecimal>();
 
             List<GenericValue> headerAdjustments = orh.getOrderHeaderAdjustments();
             for (GenericValue adj : headerAdjustments) {
@@ -849,7 +850,7 @@ public class InvoiceServices {
         Locale locale = (Locale) context.get("locale");
         List<String> salesInvoiceIds = UtilGenerics.checkList(context.get("invoiceIds"));
         List<Map<String, String>> invoicesCreated = UtilMisc.newList();
-        Map<String, List<Map<String, Object>>> commissionParties = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+        Map<String, List<Map<String, Object>>> commissionParties = new LinkedHashMap<String, List<Map<String, Object>>>();
         for (String salesInvoiceId : salesInvoiceIds) {
             List<String> salesRepPartyIds = UtilGenerics.checkList(context.get("partyIds"));
             BigDecimal amountTotal =  InvoiceWorker.getInvoiceTotal(delegator, salesInvoiceId);
@@ -1181,7 +1182,7 @@ public class InvoiceServices {
         // The orders can now be placed in separate groups, each for
         // 1. The group of orders for which payment is already captured. No grouping and action required.
         // 2. The group of orders for which invoice is IN-Process status.
-        Map<String, GenericValue> ordersWithInProcessInvoice = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+        Map<String, GenericValue> ordersWithInProcessInvoice = new LinkedHashMap<String, GenericValue>();
 
         for (GenericValue itemIssuance : itemIssuances) {
             String orderId = itemIssuance.getString("orderId");
@@ -1348,7 +1349,7 @@ public class InvoiceServices {
         }
 
         // group items by order
-        Map<String, List<GenericValue>> shippedOrderItems = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+        Map<String, List<GenericValue>> shippedOrderItems = new LinkedHashMap<String, List<GenericValue>>();
         for (GenericValue item : items) {
             String orderId = item.getString("orderId");
             String orderItemSeqId = item.getString("orderItemSeqId");
@@ -1541,7 +1542,7 @@ public class InvoiceServices {
                 }
 
                 // Total the additional shipping charges for the shipments
-                Map<GenericValue, BigDecimal> additionalShippingCharges = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+                Map<GenericValue, BigDecimal> additionalShippingCharges = new LinkedHashMap<GenericValue, BigDecimal>();
                 BigDecimal totalAdditionalShippingCharges = ZERO;
                 if (UtilValidate.isNotEmpty(invoiceableShipments)) {
                     for (GenericValue shipment : invoiceableShipments) {
@@ -1819,7 +1820,7 @@ public class InvoiceServices {
             }
 
             // group the shipments by returnId (because we want a seperate itemized invoice for each return)
-            Map<String, List<GenericValue>> itemsShippedGroupedByReturn = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+            Map<String, List<GenericValue>> itemsShippedGroupedByReturn = new LinkedHashMap<String, List<GenericValue>>();
 
             for (GenericValue item : shippedItems) {
                 String returnId = null;
@@ -2244,7 +2245,7 @@ public class InvoiceServices {
                     UtilMisc.toMap("invoiceId", invoiceId), locale));
         }
 
-        Map<String, BigDecimal> payments = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+        Map<String, BigDecimal> payments = new LinkedHashMap<String, BigDecimal>();
         Timestamp paidDate = null;
         for (GenericValue payAppl : paymentAppl) {
             payments.put(payAppl.getString("paymentId"), payAppl.getBigDecimal("amountApplied"));

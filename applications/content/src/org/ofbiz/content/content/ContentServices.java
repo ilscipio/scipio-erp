@@ -410,7 +410,7 @@ public class ContentServices {
         }
         */
 
-        GenericValue contentAssoc = delegator.makeValue("ContentAssoc", UtilMisc.<String, Object>newMap());
+        GenericValue contentAssoc = delegator.makeValue("ContentAssoc", new HashMap<String, Object>());
         contentAssoc.put("contentId", contentIdFrom);
         contentAssoc.put("contentIdTo", contentIdTo);
         contentAssoc.put("contentAssocTypeId", context.get("contentAssocTypeId"));

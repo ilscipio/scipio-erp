@@ -23,6 +23,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -2342,7 +2343,7 @@ public class ProductionRunServices {
         String productionRunId = (String)resultService.get("productionRunId");
         result.put("productionRunId", productionRunId);
 
-        Map<String, BigDecimal> components = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+        Map<String, BigDecimal> components = new LinkedHashMap<String, BigDecimal>();
         for (ConfigOption co : config.getSelectedOptions()) {
             //components.addAll(co.getComponents());
             for (GenericValue selComponent : co.getComponents()) {
@@ -3113,7 +3114,7 @@ public class ProductionRunServices {
         Delegator delegator = ctx.getDelegator();
         Timestamp now = UtilDateTime.nowTimestamp();
         Locale locale = (Locale) context.get("locale");
-        Map<String, TreeMap<Timestamp, Object>> products = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+        Map<String, TreeMap<Timestamp, Object>> products = new LinkedHashMap<String, TreeMap<Timestamp, Object>>();
 
         try {
             List<GenericValue> resultList = EntityQuery.use(delegator).from("WorkEffortAndGoods")

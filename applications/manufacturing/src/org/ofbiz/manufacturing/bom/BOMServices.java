@@ -23,6 +23,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -488,7 +489,7 @@ public class BOMServices {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingBomErrorLoadingShipmentItems", locale));
         }
         Map<String, Object> orderReadHelpers = new HashMap<String, Object>();
-        Map<String, Object> partyOrderShipments = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+        Map<String, Object> partyOrderShipments = new LinkedHashMap<String, Object>();
         for (GenericValue shipmentItem : shipmentItems) {
             // Get the OrderShipments
             GenericValue orderShipment = null;
@@ -556,7 +557,7 @@ public class BOMServices {
         // of the same box type.
         Map<String, GenericValue> boxTypes = new HashMap<String, GenericValue>();
         for (Map.Entry<String, Object> partyOrderShipment : partyOrderShipments.entrySet()) {
-            Map<String, List<Map<String, Object>>> boxTypeContent = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+            Map<String, List<Map<String, Object>>> boxTypeContent = new LinkedHashMap<String, List<Map<String, Object>>>();
             List<Map<String, Object>> orderShipmentReadMapList = UtilGenerics.checkList(partyOrderShipment.getValue());
             for (int i = 0; i < orderShipmentReadMapList.size(); i++) {
                 Map<String, Object> orderShipmentReadMap = UtilGenerics.checkMap(orderShipmentReadMapList.get(i));

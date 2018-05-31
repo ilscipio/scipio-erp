@@ -848,7 +848,7 @@ public class ProductServices {
             prelimVariantProductIds.addAll(splitIds);
             //note: should support both direct productIds and GoodIdentification entries (what to do if more than one GoodID? Add all?
 
-            Map<String, GenericValue> variantProductsById = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+            Map<String, GenericValue> variantProductsById = new LinkedHashMap<String, GenericValue>();
             for (String variantProductId: prelimVariantProductIds) {
                 if (UtilValidate.isEmpty(variantProductId)) {
                     // not sure why this happens, but seems to from time to time with the split method

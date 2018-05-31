@@ -1165,8 +1165,8 @@ public class OrderReturnServices {
         BigDecimal adjustments = getReturnAdjustmentTotal(delegator, UtilMisc.toMap("returnId", returnId, "returnTypeId", returnTypeId));
 
         if (returnHeader != null && (UtilValidate.isNotEmpty(returnItems) || adjustments.compareTo(ZERO) > 0)) {
-            Map<String, List<GenericValue>> itemsByOrder = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
-            Map<String, BigDecimal> totalByOrder = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+            Map<String, List<GenericValue>> itemsByOrder = new LinkedHashMap<String, List<GenericValue>>();
+            Map<String, BigDecimal> totalByOrder = new LinkedHashMap<String, BigDecimal>();
 
             // make sure total refunds on a return don't exceed amount of returned orders
             Map<String, Object> serviceResult = null;
@@ -1609,7 +1609,7 @@ public class OrderReturnServices {
             String paymentId = response.getString("paymentId");
 
             // for each return item in the response, get the list of return item billings and then a list of invoices
-            Map<String, GenericValue> returnInvoices = UtilMisc.newInsertOrderMap(); // key is invoiceId, value is Invoice GenericValue // SCIPIO: 2018-03-28: consistent iter order type
+            Map<String, GenericValue> returnInvoices = new LinkedHashMap<String, GenericValue>(); // key is invoiceId, value is Invoice GenericValue
             List<GenericValue> items = response.getRelated("ReturnItem", null, null, false);
             for (GenericValue item : items) {
                 List<GenericValue> billings = item.getRelated("ReturnItemBilling", null, null, false);
@@ -1697,8 +1697,8 @@ public class OrderReturnServices {
         String returnHeaderTypeId = returnHeader.getString("returnHeaderTypeId");
         List<String> createdOrderIds = UtilMisc.newList();
         if (returnHeader != null && UtilValidate.isNotEmpty(returnItems)) {
-            Map<String, List<GenericValue>> returnItemsByOrderId = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
-            Map<String, BigDecimal> totalByOrder = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+            Map<String, List<GenericValue>> returnItemsByOrderId = new LinkedHashMap<String, List<GenericValue>>();
+            Map<String, BigDecimal> totalByOrder = new LinkedHashMap<String, BigDecimal>();
             groupReturnItemsByOrder(returnItems, returnItemsByOrderId, totalByOrder, delegator, returnId, returnTypeId);
 
             // process each one by order

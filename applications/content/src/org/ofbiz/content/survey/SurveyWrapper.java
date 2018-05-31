@@ -26,6 +26,7 @@ import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -177,7 +178,7 @@ public class SurveyWrapper {
             currentAnswers = this.getResponseAnswers(null);
         }
 
-        Map<String, Object> sqaaWithColIdListByMultiRespId = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+        Map<String, Object> sqaaWithColIdListByMultiRespId = new LinkedHashMap<String, Object>();
         for (GenericValue surveyQuestionAndAppl : surveyQuestionAndAppls) {
             String surveyMultiRespColId = surveyQuestionAndAppl.getString("surveyMultiRespColId");
             if (UtilValidate.isNotEmpty(surveyMultiRespColId)) {
@@ -360,7 +361,7 @@ public class SurveyWrapper {
 
     // returns a Map of answers keyed on SurveyQuestion ID from the most current SurveyResponse ID
     public Map<String, Object> getResponseAnswers(String responseId) throws SurveyWrapperException {
-        Map<String, Object> answerMap = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+        Map<String, Object> answerMap = new LinkedHashMap<String, Object>();
 
         if (responseId != null) {
             List<GenericValue> answers = null;
@@ -437,7 +438,7 @@ public class SurveyWrapper {
     }
 
     public Map<String, Object> getResults(List<GenericValue> questions) throws SurveyWrapperException {
-        Map<String, Object> questionResults = UtilMisc.newInsertOrderMap(); // SCIPIO: 2018-03-28: consistent iter order type
+        Map<String, Object> questionResults = new LinkedHashMap<String, Object>();
         if (questions != null) {
             for (GenericValue question : questions) {
                 Map<String, Object> results = getResultInfo(question);

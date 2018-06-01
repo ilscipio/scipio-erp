@@ -16,7 +16,7 @@
     <#-- Javascript functions -->
     <@script>
         <@commonCmsScripts />
-    
+
         <#-- Activate Template version -->
         function activateVersion(versionId) {
             var pageTemplateId = $("#pageTemplateId").val();
@@ -26,14 +26,14 @@
                   data: {pageTemplateId:pageTemplateId,versionId:versionId},
                   cache:false,
                   async:true,
-                  success: function(data) { 
+                  success: function(data) {
                       handleCmsEventResponse(data, function(eventMsgs) {
                           doCmsSuccessRedirect("${escapeFullUrl(editTemplateUrl, 'js')}", eventMsgs);
                       });
                   }
             });
         }
-            
+
         <#-- Save current template -->
         <#-- NOTE: javascript: calls to this must end in void(0) otherwise breaks browsers (firefox) -->
         function addVersion(form, activate) {
@@ -43,7 +43,7 @@
                   data: getFormData(),
                   cache:false,
                   async:true,
-                  success: function(data) { 
+                  success: function(data) {
                       handleCmsEventResponse(data, function(eventMsgs) {
                           var newUrl = "${escapeFullUrl(editTemplateUrl, 'js')}";
                           newUrl = updateQueryStringParameter(newUrl, "versionId", data.versionId);
@@ -52,7 +52,7 @@
                   }
             });
         }
-        
+
         <#-- Save and activate current template -->
         function addAndActivateVersion() {
             addVersion($('form#editorForm'), true).done(function(data) {
@@ -62,41 +62,41 @@
             });
             return false;
         }
-                
+
         <#-- Serialize the content -->
-        function getFormData() {            
+        function getFormData() {
             //serialize form info
             var formInfo = $("form#editorForm").serializeArray();
             return formInfo;
         }
-        
+
         <#-- To be loaded on pageload -->
         $( document ).ready(function() {
             var pEdit= $( document ).ready(function() {
-            CodeMirror.fromTextArea($('textarea#templateBody')[0], {
-                lineNumbers: true,
-                matchBrackets: true,
-                mode: "freemarker",
-                indentUnit: 4,
-                indentWithTabs: true,
-                foldGutter: true,
-                gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-                extraKeys: {"Ctrl-Space": "autocomplete"}
-                }).on('change', function(cMirror){
-                    $('textarea#templateBody')[0].value = cMirror.getValue();
-                    setTemplateSource('Body');
-                }
-            );
-            
-            setupCmsDeleteActionHooks();
-        }); 
-         
-        $( "form#editorForm" ).on( "submit", function( event ) {
+                CodeMirror.fromTextArea($('textarea#templateBody')[0], {
+                    lineNumbers: true,
+                    matchBrackets: true,
+                    mode: "freemarker",
+                    indentUnit: 4,
+                    indentWithTabs: true,
+                    foldGutter: true,
+                    gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+                    extraKeys: {"Ctrl-Space": "autocomplete"}
+                    }).on('change', function(cMirror){
+                        $('textarea#templateBody')[0].value = cMirror.getValue();
+                        setTemplateSource('Body');
+                    }
+                );
+
+                setupCmsDeleteActionHooks();
+            });
+
+            $( "form#editorForm" ).on( "submit", function( event ) {
               event.preventDefault();
               addVersion(this,false);
             });
         });
-        
+
         <#-- Template Source auto-select code -->
         var setTemplateSource = function(val) {
             jQuery('#editorForm input[name=templateSource]').val([val]);
@@ -106,26 +106,26 @@
                 setTemplateSource('Location');
             });
         });
-        
+
         function updateTemplateInfo() {
             cmsCheckSubmitFieldOnlyIfChanged('settingsForm', 'description');
-            updateCmsElement("<@ofbizUrl escapeAs='js'>updateTemplateInfo</@ofbizUrl>", 'settingsForm', 
+            updateCmsElement("<@ofbizUrl escapeAs='js'>updateTemplateInfo</@ofbizUrl>", 'settingsForm',
                 function(eventMsgs) {
                     doCmsSuccessRedirect("${escapeFullUrl(editTemplateUrl, 'js')}", eventMsgs);
                 }
             );
         }
-        
+
         function deleteTemplate() {
-            deleteCmsElement("<@ofbizUrl escapeAs='js'>deleteTemplate</@ofbizUrl>", 
-                { pageTemplateId : "${(pageTemplate.pageTemplateId)!}" }, 
+            deleteCmsElement("<@ofbizUrl escapeAs='js'>deleteTemplate</@ofbizUrl>",
+                { pageTemplateId : "${(pageTemplate.pageTemplateId)!}" },
                 function(eventMsgs) {
                     doCmsSuccessRedirect("<@ofbizUrl escapeAs='js'>templates</@ofbizUrl>", eventMsgs);
                 }
             );
         }
     </@script>
-    
+
     <@modal id="delete-dialog">
         <@heading>${uiLabelMap.CommonWarning}</@heading>
         ${uiLabelMap.CmsConfirmDeleteAction}
@@ -169,7 +169,7 @@
                     </form>
                 </@modal>
             </@menuitem>
-            
+
             <@menuitem type="generic">
                 <@modal id="modal_new_script" label=uiLabelMap.CmsAddScript linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                     <@heading>${uiLabelMap.CmsAddScript}</@heading>
@@ -180,16 +180,16 @@
                     </@fields>
                 </@modal>
             </@menuitem>
-            
+
             <#-- NOTE: void(0) MUST be at the end to prevent browser failure -->
             <@menuitem type="link" href="javascript:addVersion($('form#editorForm'),false); void(0);" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CommonSave/>
             <@menuitem type="link" href="javascript:activateVersion($('#versionId').val()); void(0);" class="+${styles.action_run_sys!} ${styles.action_update!}" text=uiLabelMap.CmsPublish/>
             <@menuitem type="link" href="javascript:addAndActivateVersion(); void(0);" class="+${styles.action_run_sys!} ${styles.action_create!}" text=uiLabelMap.CmsSaveAndPublish/>
 
             <@menuitem type="link" href="javascript:deleteTemplate(); void(0);" class="+${styles.action_run_sys!} ${styles.action_remove!} action_delete" text=uiLabelMap.CommonDelete/>
-            
+
             <@cmsObjectExportFormMenuItem presetConfigName="CmsPageTemplates" pkField="CmsPageTemplate" pkValue=(pageTemplate.pageTemplateId!"") />
-        </@menu>  
+        </@menu>
     </#macro>
     <@section menuContent=menuContent class="+cms-edit-elem cms-edit-template"><#-- FIXME: get these classes on <body> instead... -->
             <@row>
@@ -198,7 +198,7 @@
                 </@cell>
             </@row>
             <@row>
-              
+
                 <@cell columns=9>
                     <@form method="post" id="editorForm">
                         <@field type="hidden" name="pageTemplateId" id="pageTemplateId" value=(pageTemplate.pageTemplateId!"")/>
@@ -208,8 +208,8 @@
                         </#if>
                         <#if versionId?has_content>
                             <input type="hidden" name="versionId" id="versionId" value="${versionId}"/>
-                        </#if> 
-                        
+                        </#if>
+
                         <#-- General Content -->
                         <@section title=uiLabelMap.CmsTemplate class="+editorContent">
                           <@fields type="default-compact">
@@ -219,10 +219,10 @@
                             <style type="text/css">
                                 .CodeMirror-hints {font-size:1em;}
                             </style>
-                            
+
                             <@field type="input" name="templateLocation" value=(pageTemplate.templateLocation!"") id="templateLocation" label=uiLabelMap.CmsTemplateLocation placeholder="component://cms/cms-templates/xxx.ftl"/>
-                            
-                            <#-- NOTE: this explicit switch makes it clear to the user which is going to be submitted, so less likely to accidentally lose work 
+
+                            <#-- NOTE: this explicit switch makes it clear to the user which is going to be submitted, so less likely to accidentally lose work
                                 It is auto-selected (see JS above) -->
                             <@field type="generic" label="${rawLabel('CmsUse')}:">
                                 <#assign templateLocationSelected = pageTemplate.templateLocation?has_content>
@@ -231,10 +231,10 @@
                             </@field>
                         </@section>
                     </@form>
-                    
+
                     <#-- Attributes -->
                     <#assign attrTemplates = pageTemplate.attrTemplates![]>
-                    
+
                     <#if attrTemplates?has_content>
                         <@section title=uiLabelMap.CmsTemplateAttributes class="+editorAttr">
                           <@table type="data-complex" autoAltRows=true responsive=true scrollable=true fixedColumnsRight=1>
@@ -296,10 +296,10 @@
                           </@modal>
                         </#list>
                     </#if>
-                    
+
                     <#-- Assets -->
                     <#assign assetTemplates = pageTemplate.assetTemplates![]>
-                    
+
                     <#if assetTemplates?has_content>
                         <@section title=uiLabelMap.CmsTemplateAssets class="+editorAssets">
                           <@table type="data-complex" autoAltRows=true responsive=true scrollable=true fixedColumnsRight=1>
@@ -355,13 +355,13 @@
                           </@modal>
                         </#list>
                     </#if>
-                    
+
                     <#-- Scripts -->
                     <#assign scriptTemplates = pageTemplate.scriptTemplates![]>
                     <@cmsScriptTemplateAssocTable scriptTemplates=scriptTemplates
                         updateAction="updateTemplateScript" updateFields={"pageTemplateId":pageTemplate.pageTemplateId!""}
                         deleteAction="deleteScriptAndPageTemplateAssoc" />
-                    
+
                     <#-- Versions -->
                     <#if (pageTemplate.pageTmpVersions.all)?has_content>
                         <@section title=uiLabelMap.CommonRevisions>
@@ -385,31 +385,31 @@
                                    <@td><a href="<@ofbizUrl>editTemplate?versionId=${version.versionId!""}&pageTemplateId=${version.pageTemplateId}</@ofbizUrl>">${version.lastUpdatedStamp}</a></@td>
                                    <@td><#if version.versionComment?has_content>${version.versionComment!""}</#if></@td>
                                    <@td><a href="<@ofbizUrl>editTemplate?versionId=${version.versionId!""}&pageTemplateId=${version.pageTemplateId}</@ofbizUrl>"><i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_edit!}" style="font-size:16px;margin:4px;"/></a></@td>
-                                   <@td><#if version.isActive==true><i class="${styles.text_color_success} ${styles.icon!} ${styles.icon_check!}" style="font-size:16px;margin:4px;"/></#if></@td>      
+                                   <@td><#if version.isActive==true><i class="${styles.text_color_success} ${styles.icon!} ${styles.icon_check!}" style="font-size:16px;margin:4px;"/></#if></@td>
                                 </@tr>
                             </#list>
                             </@table>
                         </@section>
                     </#if>
                 </@cell>
-              
-              
+
+
                 <@cell columns=3>
                   <@form method="post" id="settingsForm" action=makeOfbizUrl('updateTemplateInfo')>
                     <@field type="hidden" name="pageTemplateId" value=(pageTemplate.pageTemplateId!"")/>
-                    
+
                     <#-- Template Information -->
                     <@section title=uiLabelMap.CommonInformation class="+editorMeta">
-                        <@field type="display" value=(pageTemplate.pageTemplateId!) label=uiLabelMap.CommonId/> 
+                        <@field type="display" value=(pageTemplate.pageTemplateId!) label=uiLabelMap.CommonId/>
                         <@field type="input" name="templateName" value=(pageTemplate.templateName!) required=true label=uiLabelMap.CommonName />
-                        
+
                         <@field type="textarea" name="description_visible" value=(pageTemplate.description!) required=false label=uiLabelMap.CommonDescription />
 
-                        <#-- NOTE: 2016: this WebSite field has NO rendering impact anymore; for organization purposes only 
+                        <#-- NOTE: 2016: this WebSite field has NO rendering impact anymore; for organization purposes only
                             DEV NOTE: Questionable whether this switch should really be here anymore -->
                         <@webSiteSelectField name="webSiteId" value=(pageTemplate.webSiteId!) required=false
                             tooltip="${rawLabel('CmsOnlyHookedWebSitesListed')} - ${rawLabel('CmsSettingNotUsedInRenderingNote')}"/>
-                        
+
                         <#assign pageRevisions><@compress_single_line>
                             <#if pageTemplate.pageTmpVersions?has_content && pageTemplate.pageTmpVersions.all?has_content>
                                 ${pageTemplate.pageTmpVersions.all?size}
@@ -418,21 +418,21 @@
                             </#if></@compress_single_line>
                         </#assign>
                         <@field label=uiLabelMap.CmsRevisions type="display" value=pageRevisions/>
-                        
+
                         <@menu type="button">
                             <@menuitem type="link" href="javascript:updateTemplateInfo(); void(0);" class="+${styles.action_run_sys!} ${styles.action_update!}" text="${rawLabel('CmsSaveSettings')}" />
-                        </@menu> 
+                        </@menu>
                     </@section>
                   </@form>
-                </@cell>               
-              
+                </@cell>
+
             </@row>
-        
-        
+
+
         <#-- Workaround for OFBIZ-2330 -->
         <#list attrTemplates as attrTmpl>
-            <#-- DEV NOTE: in the form IDs, I (seemingly redundantly) call escapeVal with html 
-                even if it's the only html attrib like that and it seems inconsistent; 
+            <#-- DEV NOTE: in the form IDs, I (seemingly redundantly) call escapeVal with html
+                even if it's the only html attrib like that and it seems inconsistent;
                 it's because we need the output result to be the _exact_
                 same as the one further above that was escaped as 'js-html' (so we must do the 'html' part
                 with the exact same encoder - in other words the Freemarker one, and not the
@@ -460,7 +460,7 @@
                       <@fields type="default-compact">
                         <input type="hidden" name="isCreate" value="Y"/>
                         <@field type="input" name="templateName" value=(parameters.templateName!) id="templateName" label=uiLabelMap.CmsTemplateName placeholder="My Template Name" required=true/>
-                        <#-- NOTE: 2016: this WebSite field has NO rendering impact anymore; for organization purposes only 
+                        <#-- NOTE: 2016: this WebSite field has NO rendering impact anymore; for organization purposes only
                             DEV NOTE: Questionable whether this switch should really be here anymore -->
                         <@webSiteSelectField name="webSiteId" value=(parameters.webSiteId!) required=false
                             tooltip="${rawLabel('CmsOnlyHookedWebSitesListed')} - ${rawLabel('CmsSettingNotUsedInRenderingNote')}"/>

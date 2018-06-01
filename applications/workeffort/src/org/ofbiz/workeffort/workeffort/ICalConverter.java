@@ -27,6 +27,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -775,7 +776,7 @@ public class ICalConverter {
     protected static ResponseProperties storePartyAssignments(String workEffortId, Component component, Map<String, Object> context) {
         ResponseProperties responseProps = null;
         Map<String, Object> serviceMap = new HashMap<String, Object>();
-        List<Property> partyList = UtilMisc.newList();
+        List<Property> partyList = new LinkedList<Property>();
         partyList.addAll(UtilGenerics.checkList(component.getProperties("ATTENDEE"), Property.class));
         partyList.addAll(UtilGenerics.checkList(component.getProperties("CONTACT"), Property.class));
         partyList.addAll(UtilGenerics.checkList(component.getProperties("ORGANIZER"), Property.class));

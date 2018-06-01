@@ -22,6 +22,7 @@ import java.nio.ByteBuffer;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -85,7 +86,7 @@ public class LayoutEvents {
                 }
             }
             String mimeTypeId = "image/" + imageFileNameExt;
-            List<Object> errorMessages = UtilMisc.newList();
+            List<Object> errorMessages = new LinkedList<Object>();
             if (locale == null) {
                 locale = Locale.getDefault();
             }
@@ -394,7 +395,7 @@ public class LayoutEvents {
         Map<String, GenericValue> beenThere = new HashMap<String, GenericValue>();
         for (int i=0; i<entityList.size(); i++) {
             GenericValue view = entityList.get(i);
-            List<Object> errorMessages = UtilMisc.newList();
+            List<Object> errorMessages = new LinkedList<Object>();
             if (locale == null) {
                 locale = Locale.getDefault();
             }

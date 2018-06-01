@@ -33,6 +33,7 @@ import java.net.URLConnection;
 import java.nio.ByteBuffer;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -118,7 +119,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
                 .where("parentCategoryId", parentCategoryId)
                 .cache().queryList();
         categoryNode.put("count", Integer.valueOf(categoryValues.size()));
-        List<Map<String, Object>> subCategoryIds = UtilMisc.newList();
+        List<Map<String, Object>> subCategoryIds = new LinkedList<Map<String, Object>>();
         for (GenericValue category : categoryValues) {
             String id = (String) category.get("dataCategoryId");
             String categoryName = (String) category.get("categoryName");

@@ -19,6 +19,7 @@
 
 package org.ofbiz.workeffort.workeffort;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -49,13 +50,13 @@ public class WorkEffortWorker {
             right = "workEffortIdTo";
         }
 
-        List<GenericValue> workEfforts = UtilMisc.newList();
+        List<GenericValue> workEfforts = new LinkedList<GenericValue>();
         try {
             List<GenericValue> childWEAssocsLevelFirst = EntityQuery.use(delegator).from("WorkEffortAssoc").where(left, workEffortId, "workEffortAssocTypeId", workEffortAssocTypeId).cache(true).queryList();
             for (GenericValue childWEAssocLevelFirst : childWEAssocsLevelFirst) {
                 List<GenericValue> childWEAssocsLevelNext = EntityQuery.use(delegator).from("WorkEffortAssoc").where(left, childWEAssocLevelFirst.get(right), "workEffortAssocTypeId", workEffortAssocTypeId).cache(true).queryList();
                 while (UtilValidate.isNotEmpty(childWEAssocsLevelNext)) {
-                    List<GenericValue> tempWorkEffortList = UtilMisc.newList();
+                    List<GenericValue> tempWorkEffortList = new LinkedList<GenericValue>();
                     for (GenericValue childWEAssocLevelNext : childWEAssocsLevelNext) {
                         List<GenericValue> childWEAssocsLevelNth = EntityQuery.use(delegator).from("WorkEffortAssoc").where(left, childWEAssocLevelNext.get(right), "workEffortAssocTypeId", workEffortAssocTypeId).cache(true).queryList();
                         if (UtilValidate.isNotEmpty(childWEAssocsLevelNth)) {

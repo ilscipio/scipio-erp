@@ -21,6 +21,7 @@ package org.ofbiz.content.blog;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -98,7 +99,7 @@ public class BlogRssServices {
     }
 
     public static List<SyndEntry> generateEntryList(LocalDispatcher dispatcher, Delegator delegator, String contentId, String entryLink, Locale locale, GenericValue userLogin) {
-        List<SyndEntry> entries = UtilMisc.newList();
+        List<SyndEntry> entries = new LinkedList<SyndEntry>();
 
         List<GenericValue> contentRecs = null;
         try {

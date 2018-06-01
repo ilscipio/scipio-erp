@@ -21,6 +21,7 @@ package org.ofbiz.product.product;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -394,7 +395,7 @@ public class ProductSearchEvents {
     public static String searchExportProductList(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         String errMsg = null;
-        List<Map<String, Object>> productExportList = UtilMisc.newList();
+        List<Map<String, Object>> productExportList = new LinkedList<Map<String, Object>>();
 
         try {
             boolean beganTransaction = TransactionUtil.begin(DEFAULT_TX_TIMEOUT);

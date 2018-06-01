@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -362,7 +363,7 @@ public class PaymentGatewayServices {
         // loop through and auth each order payment preference
         int finished = 0;
         int hadError = 0;
-        List<String> messages = UtilMisc.newList();
+        List<String> messages = new LinkedList<String>();
         for (GenericValue paymentPref : paymentPrefs) {
             if (reAuth && "PAYMENT_AUTHORIZED".equals(paymentPref.getString("statusId"))) {
                 String paymentConfig = null;
@@ -757,7 +758,7 @@ public class PaymentGatewayServices {
         }
 
         // iterate over the prefs and release each one
-        List<GenericValue> finished = UtilMisc.newList();
+        List<GenericValue> finished = new LinkedList<GenericValue>();
         for (GenericValue pPref : paymentPrefs) {
             Map<String, Object> releaseContext = UtilMisc.toMap("userLogin", userLogin, "orderPaymentPreferenceId", pPref.getString("orderPaymentPreferenceId"));
             Map<String, Object> releaseResult = null;
@@ -814,7 +815,7 @@ public class PaymentGatewayServices {
         pgCredit.set("transactionDate", UtilDateTime.nowTimestamp());
         pgCredit.set("currencyUomId", currencyUomId);
         // create the internal messages
-        List<GenericValue> messageEntities = UtilMisc.newList();
+        List<GenericValue> messageEntities = new LinkedList<GenericValue>();
         List<String> messages = UtilGenerics.cast(context.get("internalRespMsgs"));
         if (UtilValidate.isNotEmpty(messages)) {
             for (String message : messages) {
@@ -1941,7 +1942,7 @@ public class PaymentGatewayServices {
             if (Boolean.TRUE.equals(context.get("resultBadCardNumber"))) response.set("resultBadCardNumber", "Y");
 
             // create the internal messages
-            List<GenericValue> messageEntities = UtilMisc.newList();
+            List<GenericValue> messageEntities = new LinkedList<GenericValue>();
             List<String> messages = UtilGenerics.cast(context.get("internalRespMsgs"));
             if (UtilValidate.isNotEmpty(messages)) {
                 Iterator<String> i = messages.iterator();
@@ -2701,7 +2702,7 @@ public class PaymentGatewayServices {
                     .where(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PAYMENT_NOT_AUTH"),
                             EntityCondition.makeCondition("processAttempt", EntityOperator.GREATER_THAN, Long.valueOf(0)))
                     .orderBy("orderId").queryIterator();
-            List<String> processList = UtilMisc.newList();
+            List<String> processList = new LinkedList<String>();
             if (eli != null) {
                 Debug.logInfo("Processing failed order re-auth(s)", module);
                 GenericValue value = null;
@@ -2751,7 +2752,7 @@ public class PaymentGatewayServices {
                             EntityCondition.makeCondition(ModelEntity.STAMP_FIELD, EntityOperator.LESS_THAN_EQUAL_TO, oneWeekAgo))
                     .orderBy("orderId").queryIterator();
 
-            List<String> processList = UtilMisc.newList();
+            List<String> processList = new LinkedList<String>();
             if (eli != null) {
                 Debug.logInfo("Processing failed order re-auth(s)", module);
                 GenericValue value = null;
@@ -3083,7 +3084,7 @@ public class PaymentGatewayServices {
         // prepare the auth context
         Map<String, Object> authContext = new HashMap<String, Object>();
         authContext.put("orderId", "_NA_");
-        authContext.put("orderItems", UtilMisc.newList());
+        authContext.put("orderItems", new LinkedList<GenericValue>());
         authContext.put("orderPaymentPreference", orderPaymentPref);
         authContext.put("creditCard", creditCard);
         authContext.put("billToParty", billToParty);
@@ -3743,7 +3744,7 @@ public class PaymentGatewayServices {
     public static boolean isReplacementOrder(GenericValue orderHeader) {
         boolean replacementOrderFlag = false;
 
-        List<GenericValue> returnItemResponses = UtilMisc.newList();
+        List<GenericValue> returnItemResponses = new LinkedList<GenericValue>();
         try {
             returnItemResponses = orderHeader.getRelated("ReplacementReturnItemResponse", null, null, false);
         } catch (GenericEntityException e) {

@@ -263,7 +263,7 @@ public class OrderServices {
         List<GenericValue> orderItemPriceInfo = UtilGenerics.checkList(context.get("orderItemPriceInfos"));
 
         // check inventory and other things for each item
-        List<String> errorMessages = UtilMisc.newList();
+        List<String> errorMessages = new LinkedList<String>();
         Map<String, BigDecimal> normalizedItemQuantities = new LinkedHashMap<String, BigDecimal>();
         Map<String, String> normalizedItemNames = new LinkedHashMap<String, String>();
         Map<String, GenericValue> itemValuesBySeqId = new LinkedHashMap<String, GenericValue>();
@@ -905,7 +905,7 @@ public class OrderServices {
         }
 
         // set the order item ship groups
-        List<String> dropShipGroupIds = UtilMisc.newList(); // this list
+        List<String> dropShipGroupIds = new LinkedList<String>(); // this list
                                                                 // will contain
                                                                 // the ids of
                                                                 // all the ship
@@ -3501,7 +3501,7 @@ public class OrderServices {
             }
 
             // single list with all invoice items
-            List<GenericValue> itemsToInvoice = UtilMisc.newList();
+            List<GenericValue> itemsToInvoice = new LinkedList<GenericValue>();
             itemsToInvoice.addAll(nonProductItems);
             itemsToInvoice.addAll(digitalItems);
             if (UtilValidate.isNotEmpty(itemSubscriptions) && validPaymentMethodTypeForSubscriptions) {
@@ -3642,7 +3642,7 @@ public class OrderServices {
                     if (UtilValidate.isEmpty(allProductContent) && ("Y".equals(product.getString("isVariant")))) {
                         GenericValue parentProduct = ProductWorker.getParentProduct(product.getString("productId"), delegator);
                         if (allProductContent == null) {
-                            allProductContent = UtilMisc.newList();
+                            allProductContent = new LinkedList<GenericValue>();
                         }
                         if (parentProduct != null) {
                             allProductContent.addAll(parentProduct.getRelated("ProductContent", null, null, false));
@@ -3751,7 +3751,7 @@ public class OrderServices {
         orderItems = orh.getOrderItemsByCondition(EntityCondition.makeCondition("statusId", "ITEM_APPROVED"));
 
         // find any service items
-        List<GenericValue> serviceItems = UtilMisc.newList();
+        List<GenericValue> serviceItems = new LinkedList<GenericValue>();
         if (UtilValidate.isNotEmpty(orderItems)) {
             for (GenericValue item : orderItems) {
                 GenericValue product = null;
@@ -3773,7 +3773,7 @@ public class OrderServices {
         if (UtilValidate.isNotEmpty(serviceItems)) {
             // Make sure there is actually something needing invoicing because
             // createInvoiceForOrder doesn't check
-            List<GenericValue> billItems = UtilMisc.newList();
+            List<GenericValue> billItems = new LinkedList<GenericValue>();
             for (GenericValue item : serviceItems) {
                 BigDecimal orderQuantity = OrderReadHelper.getOrderItemQuantity(item);
                 BigDecimal invoiceQuantity = OrderReadHelper.getOrderItemInvoicedQuantity(item);
@@ -4571,8 +4571,8 @@ public class OrderServices {
 
         // get the new orderItems, adjustments, shipping info, payments and
         // order item attributes from the cart
-        List<Map<String, Object>> modifiedItems = UtilMisc.newList();
-        List<Map<String, Object>> newItems = UtilMisc.newList();
+        List<Map<String, Object>> modifiedItems = new LinkedList<Map<String, Object>>();
+        List<Map<String, Object>> newItems = new LinkedList<Map<String, Object>>();
         List<GenericValue> toStore = new LinkedList<GenericValue>();
         List<GenericValue> toAddList = new ArrayList<GenericValue>();
         toAddList.addAll(cart.makeAllAdjustments());
@@ -4642,7 +4642,7 @@ public class OrderServices {
         toStore.addAll(cart.makeAllOrderPaymentInfos(dispatcher));
         toStore.addAll(cart.makeAllOrderItemAttributes(orderId, ShoppingCart.FILLED_ONLY));
 
-        List<GenericValue> toRemove = UtilMisc.newList();
+        List<GenericValue> toRemove = new LinkedList<GenericValue>();
         if (deleteItems) {
             // flag to delete existing order items and adjustments
             try {
@@ -4687,7 +4687,7 @@ public class OrderServices {
         toRemove.addAll(existingPromoUses);
 
         // set the orderId & other information on all new value objects
-        List<String> dropShipGroupIds = UtilMisc.newList(); // this list
+        List<String> dropShipGroupIds = new LinkedList<String>(); // this list
                                                                 // will contain
                                                                 // the ids of
                                                                 // all the ship

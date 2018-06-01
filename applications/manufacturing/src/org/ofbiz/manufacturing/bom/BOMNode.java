@@ -23,6 +23,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -71,8 +72,8 @@ public class BOMNode {
         this.delegator = product.getDelegator();
         this.dispatcher = dispatcher;
         this.userLogin = userLogin;
-        children = UtilMisc.newList();
-        childrenNodes = UtilMisc.newList();
+        children = new LinkedList<GenericValue>();
+        childrenNodes = new LinkedList<BOMNode>();
         parentNode = null;
         productForRules = null;
         bomTypeId = null;
@@ -109,9 +110,9 @@ public class BOMNode {
                     .orderBy("sequenceNum")
                     .filterByDate(inDate).queryList();
         }
-        children = UtilMisc.newList();
+        children = new LinkedList<GenericValue>();
         children.addAll(rows);
-        childrenNodes = UtilMisc.newList();
+        childrenNodes = new LinkedList<BOMNode>();
         BOMNode oneChildNode = null;
         for (GenericValue oneChild : children) {
             // Configurator
@@ -336,9 +337,9 @@ public class BOMNode {
                     .orderBy("sequenceNum")
                     .filterByDate(inDate).queryList();
         }
-        children = UtilMisc.newList();
+        children = new LinkedList<GenericValue>();
         children.addAll(rows);
-        childrenNodes = UtilMisc.newList();
+        childrenNodes = new LinkedList<BOMNode>();
 
         BOMNode oneChildNode = null;
         for (GenericValue oneChild : children) {
@@ -504,7 +505,7 @@ public class BOMNode {
         Timestamp endDate = null;
         if (isManufactured(ignoreSupplierProducts)) {
             BOMNode oneChildNode = null;
-            List<String> childProductionRuns = UtilMisc.newList();
+            List<String> childProductionRuns = new LinkedList<String>();
             Timestamp maxEndDate = null;
             for (int i = 0; i < childrenNodes.size(); i++) {
                 oneChildNode = childrenNodes.get(i);

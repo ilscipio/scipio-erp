@@ -23,6 +23,7 @@ import java.math.MathContext;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -783,7 +784,7 @@ public class ShoppingCartServices {
         for (GenericValue quoteAdj : quoteAdjs) {
             List<GenericValue> orderAdjs = orderAdjsMap.get(UtilValidate.isNotEmpty(quoteAdj.getString("quoteItemSeqId")) ? quoteAdj.getString("quoteItemSeqId") : quoteId);
             if (orderAdjs == null) {
-                orderAdjs = UtilMisc.newList();
+                orderAdjs = new LinkedList<GenericValue>();
                 orderAdjsMap.put(UtilValidate.isNotEmpty(quoteAdj.getString("quoteItemSeqId")) ? quoteAdj.getString("quoteItemSeqId") : quoteId, orderAdjs);
             }
             // convert quote adjustments to order adjustments

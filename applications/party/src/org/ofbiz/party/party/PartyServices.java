@@ -27,6 +27,7 @@ import java.nio.charset.Charset;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -109,7 +110,7 @@ public class PartyServices {
         Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         Timestamp now = UtilDateTime.nowTimestamp();
-        List<GenericValue> toBeStored = UtilMisc.newList();
+        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
         Locale locale = (Locale) context.get("locale");
         // in most cases userLogin will be null, but get anyway so we can keep track of that info if it is available
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -717,7 +718,7 @@ public class PartyServices {
     public static Map<String, Object> getPartyFromExactEmail(DispatchContext dctx, Map<String, ? extends Object> context) {
         Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = dctx.getDelegator();
-        Collection<Map<String, GenericValue>> parties = UtilMisc.newList();
+        Collection<Map<String, GenericValue>> parties = new LinkedList<Map<String, GenericValue>>();
         String email = (String) context.get("email");
         Locale locale = (Locale) context.get("locale");
 
@@ -755,7 +756,7 @@ public class PartyServices {
     public static Map<String, Object> getPartyFromEmail(DispatchContext dctx, Map<String, ? extends Object> context) {
         Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = dctx.getDelegator();
-        Collection<Map<String, GenericValue>> parties = UtilMisc.newList();
+        Collection<Map<String, GenericValue>> parties = new LinkedList<Map<String, GenericValue>>();
         String email = (String) context.get("email");
         Locale locale = (Locale) context.get("locale");
 
@@ -800,7 +801,7 @@ public class PartyServices {
         Debug.logWarning("Running the getPartyFromUserLogin Service...", module);
         Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = dctx.getDelegator();
-        Collection<Map<String, GenericValue>> parties = UtilMisc.newList();
+        Collection<Map<String, GenericValue>> parties = new LinkedList<Map<String, GenericValue>>();
         String userLoginId = (String) context.get("userLoginId");
         Locale locale = (Locale) context.get("locale");
 
@@ -843,7 +844,7 @@ public class PartyServices {
     public static Map<String, Object> getPartyFromPerson(DispatchContext dctx, Map<String, ? extends Object> context) {
         Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = dctx.getDelegator();
-        Collection<Map<String, GenericValue>> parties = UtilMisc.newList();
+        Collection<Map<String, GenericValue>> parties = new LinkedList<Map<String, GenericValue>>();
         String firstName = (String) context.get("firstName");
         String lastName = (String) context.get("lastName");
         Locale locale = (Locale) context.get("locale");
@@ -893,7 +894,7 @@ public class PartyServices {
     public static Map<String, Object> getPartyFromPartyGroup(DispatchContext dctx, Map<String, ? extends Object> context) {
         Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = dctx.getDelegator();
-        Collection<Map<String, GenericValue>> parties = UtilMisc.newList();
+        Collection<Map<String, GenericValue>> parties = new LinkedList<Map<String, GenericValue>>();
         String groupName = (String) context.get("groupName");
         Locale locale = (Locale) context.get("locale");
 
@@ -1139,11 +1140,11 @@ public class PartyServices {
             dynamicView.addRelation("many", "", "UserLogin", ModelKeyMap.makeKeyMapList("partyId"));
 
             // define the main condition & expression list
-            List<EntityCondition> andExprs = UtilMisc.newList();
+            List<EntityCondition> andExprs = new LinkedList<EntityCondition>();
             EntityCondition mainCond = null;
 
-            List<String> orderBy = UtilMisc.newList();
-            List<String> fieldsToSelect = UtilMisc.newList();
+            List<String> orderBy = new LinkedList<String>();
+            List<String> fieldsToSelect = new LinkedList<String>();
             // fields we need to select; will be used to set distinct
             fieldsToSelect.add("partyId");
             fieldsToSelect.add("statusId");
@@ -1503,7 +1504,7 @@ public class PartyServices {
             }
         }
 
-        if (partyList == null) partyList = UtilMisc.newList();
+        if (partyList == null) partyList = new LinkedList<GenericValue>();
         result.put("partyList", partyList);
         result.put("partyListSize", Integer.valueOf(partyListSize));
         result.put("paramList", paramList);
@@ -1885,8 +1886,8 @@ public class PartyServices {
         String csvString = Charset.forName(encoding).decode(fileBytes).toString();
         final BufferedReader csvReader = new BufferedReader(new StringReader(csvString));
         CSVFormat fmt = CSVFormat.DEFAULT.withHeader();
-        List<String> errMsgs = UtilMisc.newList();
-        List<String> newErrMsgs = UtilMisc.newList();
+        List<String> errMsgs = new LinkedList<String>();
+        List<String> newErrMsgs = new LinkedList<String>();
         String lastPartyId = null;        // last partyId read from the csv file
         String currentPartyId = null;     // current partyId from the csv file
         String newPartyId = null;        // new to create/update partyId in the system
@@ -2102,7 +2103,7 @@ public class PartyServices {
                         partiesCreated++;
                     } else {
                         errMsgs.addAll(newErrMsgs);
-                        newErrMsgs = UtilMisc.newList();
+                        newErrMsgs = new LinkedList<String>();
                     }
                 }
                 
@@ -2207,7 +2208,7 @@ public class PartyServices {
                         
                     lastPartyId = currentPartyId;
                     errMsgs.addAll(newErrMsgs);
-                    newErrMsgs = UtilMisc.newList();
+                    newErrMsgs = new LinkedList<String>();
                     }
                 }
 

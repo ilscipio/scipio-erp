@@ -24,6 +24,7 @@ import java.io.Writer;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -172,8 +173,8 @@ public class ICalWorker {
             PropFindHelper helper = new PropFindHelper(requestDocument);
             if (!helper.isAllProp() && !helper.isPropName()) {
                 Document responseDocument = helper.getResponseDocument();
-                List<Element> supportedProps = UtilMisc.newList();
-                List<Element> unSupportedProps = UtilMisc.newList();
+                List<Element> supportedProps = new LinkedList<Element>();
+                List<Element> unSupportedProps = new LinkedList<Element>();
                 List<Element> propElements = helper.getFindPropsList(ResponseHelper.DAV_NAMESPACE_URI);
                 for (Element propElement : propElements) {
                     if ("getetag".equals(propElement.getNodeName())) {

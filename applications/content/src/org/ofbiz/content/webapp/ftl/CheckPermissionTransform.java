@@ -21,6 +21,7 @@ package org.ofbiz.content.webapp.ftl;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -151,7 +152,7 @@ public class CheckPermissionTransform implements TemplateTransformModel {
                 String passedStatusId = (String)templateCtx.get("statusId");
                 List<String> statusList = StringUtil.split(passedStatusId, "|");
                 if (statusList == null) {
-                    statusList = UtilMisc.newList();
+                    statusList = new LinkedList<String>();
                 }
                 if (UtilValidate.isNotEmpty(statusId) && !statusList.contains(statusId)) {
                     statusList.add(statusId);
@@ -171,7 +172,7 @@ public class CheckPermissionTransform implements TemplateTransformModel {
                     //Debug.logInfo("in CheckPermission, templateCtx:" + templateCtx,"");
                     throw new IOException("targetOperationList has zero size.");
                 }
-                List<String> roleList = UtilMisc.newList();
+                List<String> roleList = new LinkedList<String>();
 
                 String privilegeEnumId = (String)currentContent.get("privilegeEnumId");
                 Map<String, Object> results = EntityPermissionChecker.checkPermission(currentContent, statusList, userLogin, purposeList, targetOperationList, roleList, delegator, security, entityOperation, privilegeEnumId, quickCheckContentId);

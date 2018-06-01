@@ -1670,7 +1670,7 @@ public class CheckOutEvents {
 //    static List<String> getCheckoutErrors(HttpServletRequest request) {
 //        List<String> errors = UtilGenerics.checkList(request.getAttribute("checkoutErrors"));
 //        if (errors == null) {
-//            errors = UtilMisc.newList();
+//            errors = new LinkedList<String>();
 //        }
 //        return errors;
 //    }

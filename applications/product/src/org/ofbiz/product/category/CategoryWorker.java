@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
@@ -101,7 +102,7 @@ public class CategoryWorker {
 
     public static void getCategoriesWithNoParent(ServletRequest request, String attributeName) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        Collection<GenericValue> results = UtilMisc.newList();
+        Collection<GenericValue> results = new LinkedList<GenericValue>();
 
         try {
             Collection<GenericValue> allCategories = EntityQuery.use(delegator).from("ProductCategory").queryList();
@@ -161,7 +162,7 @@ public class CategoryWorker {
 
     public static List<GenericValue> getRelatedCategoriesRet(Delegator delegator, String attributeName, String parentId, boolean limitView,
             boolean excludeEmpty, boolean recursive) {
-        List<GenericValue> categories = UtilMisc.newList();
+        List<GenericValue> categories = new LinkedList<GenericValue>();
 
         if (Debug.verboseOn())
             Debug.logVerbose("[CategoryWorker.getRelatedCategories] ParentID: " + parentId, module);
@@ -263,12 +264,12 @@ public class CategoryWorker {
     }
 
     private static EntityCondition buildCountCondition(String fieldName, String fieldValue) {
-        List<EntityCondition> orCondList = UtilMisc.newList();
+        List<EntityCondition> orCondList = new LinkedList<EntityCondition>();
         orCondList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, UtilDateTime.nowTimestamp()));
         orCondList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
         EntityCondition orCond = EntityCondition.makeCondition(orCondList, EntityOperator.OR);
 
-        List<EntityCondition> andCondList = UtilMisc.newList();
+        List<EntityCondition> andCondList = new LinkedList<EntityCondition>();
         andCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN, UtilDateTime.nowTimestamp()));
         andCondList.add(EntityCondition.makeCondition(fieldName, EntityOperator.EQUALS, fieldValue));
         andCondList.add(orCond);
@@ -300,7 +301,7 @@ public class CategoryWorker {
     }
 
     public static List<String> adjustTrail(List<String> origTrail, String currentCategoryId, String previousCategoryId) {
-        List<String> trail = UtilMisc.newList();
+        List<String> trail = new LinkedList<String>();
         if (origTrail != null) {
             trail.addAll(origTrail);
         }
@@ -500,7 +501,7 @@ public class CategoryWorker {
 
     public static List<GenericValue> filterProductsInCategory(Delegator delegator, List<GenericValue> valueObjects, String productCategoryId,
             String productIdFieldName) throws GenericEntityException {
-        List<GenericValue> newList = UtilMisc.newList();
+        List<GenericValue> newList = new LinkedList<GenericValue>();
 
         if (productCategoryId == null)
             return newList;
@@ -560,13 +561,13 @@ public class CategoryWorker {
         String productCategoryId = (String) context.get("productCategoryId");
         Map<String, Object> results = ServiceUtil.returnSuccess();
         Delegator delegator = dctx.getDelegator();
-        List<String> trailElements = UtilMisc.newList();
+        List<String> trailElements = new LinkedList<String>();
         trailElements.add(productCategoryId);
         String parentProductCategoryId = productCategoryId;
         while (UtilValidate.isNotEmpty(parentProductCategoryId)) {
             // find product category rollup
             try {
-                List<EntityCondition> rolllupConds = UtilMisc.newList();
+                List<EntityCondition> rolllupConds = new LinkedList<EntityCondition>();
                 rolllupConds.add(EntityCondition.makeCondition("productCategoryId", parentProductCategoryId));
                 List<GenericValue> productCategoryRollups = EntityQuery.use(delegator).from("ProductCategoryRollup").where(rolllupConds).orderBy("sequenceNum")
                         .filterByDate().cache(true).queryList();
@@ -604,7 +605,7 @@ public class CategoryWorker {
      */
     public static boolean isCategoryChildOf(Delegator delegator, LocalDispatcher dispatcher, String parentProductCategoryId, String productCategoryId) {
         try {
-            List<EntityCondition> rolllupConds = UtilMisc.newList();
+            List<EntityCondition> rolllupConds = new LinkedList<EntityCondition>();
             rolllupConds.add(EntityCondition.makeCondition("parentProductCategoryId", parentProductCategoryId));
             rolllupConds.add(EntityCondition.makeCondition("productCategoryId", productCategoryId));
             Collection<GenericValue> rollups = EntityQuery.use(delegator).from("ProductCategoryRollup").where(rolllupConds).filterByDate().cache().queryList();
@@ -635,7 +636,7 @@ public class CategoryWorker {
             return false;
         }
         try {
-            List<EntityCondition> rolllupConds = UtilMisc.newList();
+            List<EntityCondition> rolllupConds = new LinkedList<EntityCondition>();
             rolllupConds.add(EntityCondition.makeCondition("productCategoryId", productCategoryId));
             Collection<GenericValue> rollups = EntityQuery.use(delegator).from("ProductCategoryRollup").where(rolllupConds).filterByDate().cache().queryList();
             return rollups.isEmpty();
@@ -665,7 +666,7 @@ public class CategoryWorker {
             return false;
         }
         try {
-            List<EntityCondition> conds = UtilMisc.newList();
+            List<EntityCondition> conds = new LinkedList<EntityCondition>();
             conds.add(EntityCondition.makeCondition("productCategoryId", productCategoryId));
             conds.add(EntityCondition.makeCondition("productId", productId));
             List<GenericValue> productCategoryMembers = EntityQuery.use(delegator).select("productCategoryId").from("ProductCategoryMember")

@@ -20,6 +20,7 @@ package org.ofbiz.product.store;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -460,7 +461,7 @@ public class ProductStoreWorker {
     }
 
     public static List<GenericValue> getSurveys(Delegator delegator, String productStoreId, String groupName, String productId, String surveyApplTypeId, String parentProductId) {
-        List<GenericValue> surveys = UtilMisc.newList();
+        List<GenericValue> surveys = new LinkedList<GenericValue>();
         List<GenericValue> storeSurveys = null;
         try {
             storeSurveys = EntityQuery.use(delegator).from("ProductStoreSurveyAppl").where("productStoreId", productStoreId, "surveyApplTypeId", surveyApplTypeId).orderBy("sequenceNum").cache(true).queryList();

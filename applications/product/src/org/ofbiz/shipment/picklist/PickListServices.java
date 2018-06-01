@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.shipment.picklist;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -49,8 +50,8 @@ public class PickListServices {
         if (orderHeaderList == null) {
             // convert the ID list to headers
             if (orderIdList != null) {
-                List<EntityCondition> conditionList1 = UtilMisc.newList();
-                List<EntityCondition> conditionList2 = UtilMisc.newList();
+                List<EntityCondition> conditionList1 = new LinkedList<EntityCondition>();
+                List<EntityCondition> conditionList2 = new LinkedList<EntityCondition>();
 
                 // we are only concerned about approved sales orders
                 conditionList2.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "ORDER_APPROVED"));

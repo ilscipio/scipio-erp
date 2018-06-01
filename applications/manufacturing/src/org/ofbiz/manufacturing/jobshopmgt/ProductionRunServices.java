@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -106,7 +107,7 @@ public class ProductionRunServices {
         if (currentStatusId.equals("PRUN_CREATED") || currentStatusId.equals("PRUN_DOC_PRINTED") || currentStatusId.equals("PRUN_SCHEDULED")) {
             try {
                 // First of all, make sure that there aren't production runs that depend on this one.
-                List<ProductionRun> mandatoryWorkEfforts = UtilMisc.newList();
+                List<ProductionRun> mandatoryWorkEfforts = new LinkedList<ProductionRun>();
                 ProductionRunHelper.getLinkedProductionRuns(delegator, dispatcher, productionRunId, mandatoryWorkEfforts);
                 for (int i = 1; i < mandatoryWorkEfforts.size(); i++) {
                     GenericValue mandatoryWorkEffort = (mandatoryWorkEfforts.get(i)).getGenericValue();
@@ -1582,7 +1583,7 @@ public class ProductionRunServices {
             autoCreateLot = Boolean.FALSE;
         }
 
-        List<String> inventoryItemIds = UtilMisc.newList();
+        List<String> inventoryItemIds = new LinkedList<String>();
         result.put("inventoryItemIds", inventoryItemIds);
         // The production run is loaded
         ProductionRun productionRun = new ProductionRun(productionRunId, delegator, dispatcher);
@@ -1871,7 +1872,7 @@ public class ProductionRunServices {
             ProductionRun productionRun = new ProductionRun(productionRunTaskId, delegator, dispatcher);
             facilityId = productionRun.getGenericValue().getString("facilityId");
         }
-        List<String> inventoryItemIds = UtilMisc.newList();
+        List<String> inventoryItemIds = new LinkedList<String>();
         if ("SERIALIZED_INV_ITEM".equals(inventoryItemTypeId)) {
             try {
                 int numOfItems = quantity.intValue();
@@ -2619,7 +2620,7 @@ public class ProductionRunServices {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resourceOrder, "OrderProblemsReadingOrderItemInformation", UtilMisc.toMap("errorString", gee.getMessage()), locale));
             }
         }
-        List<String> productionRuns = UtilMisc.newList();
+        List<String> productionRuns = new LinkedList<String>();
         for (int i = 0; i < orderItems.size(); i++) {
             GenericValue orderItemOrShipGroupAssoc = orderItems.get(i);
             String productId = null;
@@ -2672,7 +2673,7 @@ public class ProductionRunServices {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturinWorkOrderItemFulfillmentError", UtilMisc.toMap("errorString", gee.getMessage()), locale));
             }
             try {
-                List<BOMNode> components = UtilMisc.newList();
+                List<BOMNode> components = new LinkedList<BOMNode>();
                 BOMTree tree = new BOMTree(productId, "MANUF_COMPONENT", fromDate, BOMTree.EXPLOSION_MANUFACTURING, delegator, dispatcher, userLogin);
                 tree.setRootQuantity(quantity);
                 tree.setRootAmount(amount);
@@ -2704,7 +2705,7 @@ public class ProductionRunServices {
             quantity = BigDecimal.ONE;
         }
         try {
-            List<BOMNode> components = UtilMisc.newList();
+            List<BOMNode> components = new LinkedList<BOMNode>();
             BOMTree tree = new BOMTree(productId, "MANUF_COMPONENT", startDate, BOMTree.EXPLOSION_MANUFACTURING, delegator, dispatcher, userLogin);
             tree.setRootQuantity(quantity);
             tree.setRootAmount(BigDecimal.ZERO);
@@ -2716,7 +2717,7 @@ public class ProductionRunServices {
         if (workEffortId == null) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunIsNotRequiredForProductId", UtilMisc.toMap("productId", productId, "startDate", startDate), locale));
         }
-        List<String> productionRuns = UtilMisc.newList();
+        List<String> productionRuns = new LinkedList<String>();
         result.put("productionRuns" , productionRuns);
         result.put("productionRunId" , workEffortId);
         return result;
@@ -2930,13 +2931,13 @@ public class ProductionRunServices {
         }
         BigDecimal totQty = BigDecimal.ZERO;
         try {
-            List<EntityCondition> findOutgoingProductionRunsConds = UtilMisc.newList();
+            List<EntityCondition> findOutgoingProductionRunsConds = new LinkedList<EntityCondition>();
 
             findOutgoingProductionRunsConds.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
             findOutgoingProductionRunsConds.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "WEGS_CREATED"));
             findOutgoingProductionRunsConds.add(EntityCondition.makeCondition("estimatedStartDate", EntityOperator.LESS_THAN_EQUAL_TO, startDate));
 
-            List<EntityCondition> findOutgoingProductionRunsStatusConds = UtilMisc.newList();
+            List<EntityCondition> findOutgoingProductionRunsStatusConds = new LinkedList<EntityCondition>();
             findOutgoingProductionRunsStatusConds.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.EQUALS, "PRUN_CREATED"));
             findOutgoingProductionRunsStatusConds.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.EQUALS, "PRUN_SCHEDULED"));
             findOutgoingProductionRunsStatusConds.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.EQUALS, "PRUN_DOC_PRINTED"));
@@ -3014,7 +3015,7 @@ public class ProductionRunServices {
         // Mandatory input fields
         String inventoryItemId = (String)context.get("inventoryItemId");
         BigDecimal quantity = (BigDecimal)context.get("quantity");
-        List<String> inventoryItemIds = UtilMisc.newList();
+        List<String> inventoryItemIds = new LinkedList<String>();
         try {
             GenericValue inventoryItem = EntityQuery.use(delegator).from("InventoryItem")
                     .where("inventoryItemId", inventoryItemId).queryOne();
@@ -3150,7 +3151,7 @@ public class ProductionRunServices {
                 TreeMap<Timestamp, Object> productMap = products.get(productId);
                 if (!productMap.containsKey(estimatedShipDate)) {
                     productMap.put(estimatedShipDate, 
-                            UtilMisc.<String, Object>toMap("remainingQty", BigDecimal.ZERO, "reservations", UtilMisc.newList()));
+                            UtilMisc.<String, Object>toMap("remainingQty", BigDecimal.ZERO, "reservations", new LinkedList<>()));
                 }
                 Map<String, Object> dateMap = UtilGenerics.checkMap(productMap.get(estimatedShipDate));
                 BigDecimal remainingQty = (BigDecimal)dateMap.get("remainingQty");
@@ -3199,7 +3200,7 @@ public class ProductionRunServices {
                 }
                 TreeMap<Timestamp, Object> productMap = products.get(productId);
                 if (!productMap.containsKey(estimatedShipDate)) {
-                    productMap.put(estimatedShipDate, UtilMisc.toMap("remainingQty", BigDecimal.ZERO, "reservations", UtilMisc.newList()));
+                    productMap.put(estimatedShipDate, UtilMisc.toMap("remainingQty", BigDecimal.ZERO, "reservations", new LinkedList()));
                 }
                 Map<String, Object> dateMap = UtilGenerics.checkMap(productMap.get(estimatedShipDate));
                 BigDecimal remainingQty = (BigDecimal)dateMap.get("remainingQty");
@@ -3209,7 +3210,7 @@ public class ProductionRunServices {
             }
 
             // backorders
-            List<EntityCondition> backordersCondList = UtilMisc.newList();
+            List<EntityCondition> backordersCondList = new LinkedList<EntityCondition>();
             backordersCondList.add(EntityCondition.makeCondition("quantityNotAvailable", EntityOperator.NOT_EQUAL, null));
             backordersCondList.add(EntityCondition.makeCondition("quantityNotAvailable", EntityOperator.GREATER_THAN, BigDecimal.ZERO));
             //backordersCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "ITEM_CREATED"), EntityOperator.OR, EntityCondition.makeCondition("statusId", EntityOperator.LESS_THAN, "ITEM_APPROVED")));

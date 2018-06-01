@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -57,14 +58,14 @@ public class ContactMechWorker {
     }
 
     public static List<Map<String, Object>> getPartyContactMechValueMaps(Delegator delegator, String partyId, boolean showOld, String contactMechTypeId) {
-        List<Map<String, Object>> partyContactMechValueMaps = UtilMisc.newList();
+        List<Map<String, Object>> partyContactMechValueMaps = new LinkedList<Map<String, Object>>();
 
         List<GenericValue> allPartyContactMechs = null;
 
         try {
             List<GenericValue> tempCol = EntityQuery.use(delegator).from("PartyContactMech").where("partyId", partyId).queryList();
             if (contactMechTypeId != null) {
-                List<GenericValue> tempColTemp = UtilMisc.newList();
+                List<GenericValue> tempColTemp = new LinkedList<GenericValue>();
                 for (GenericValue partyContactMech: tempCol) {
                     GenericValue contactMech = delegator.getRelatedOne("ContactMech", partyContactMech, false);
                     if (contactMech != null && contactMechTypeId.equals(contactMech.getString("contactMechTypeId"))) {
@@ -128,14 +129,14 @@ public class ContactMechWorker {
     }
 
     public static List<Map<String, Object>> getFacilityContactMechValueMaps(Delegator delegator, String facilityId, boolean showOld, String contactMechTypeId) {
-        List<Map<String, Object>> facilityContactMechValueMaps = UtilMisc.newList();
+        List<Map<String, Object>> facilityContactMechValueMaps = new LinkedList<Map<String, Object>>();
 
         List<GenericValue> allFacilityContactMechs = null;
 
         try {
             List<GenericValue> tempCol = EntityQuery.use(delegator).from("FacilityContactMech").where("facilityId", facilityId).queryList();
             if (contactMechTypeId != null) {
-                List<GenericValue> tempColTemp = UtilMisc.newList();
+                List<GenericValue> tempColTemp = new LinkedList<GenericValue>();
                 for (GenericValue partyContactMech: tempCol) {
                     GenericValue contactMech = delegator.getRelatedOne("ContactMech", partyContactMech, false);
                     if (contactMech != null && contactMechTypeId.equals(contactMech.getString("contactMechTypeId"))) {
@@ -200,7 +201,7 @@ public class ContactMechWorker {
 
 
     public static List<Map<String, GenericValue>> getOrderContactMechValueMaps(Delegator delegator, String orderId) {
-        List<Map<String, GenericValue>> orderContactMechValueMaps = UtilMisc.newList();
+        List<Map<String, GenericValue>> orderContactMechValueMaps = new LinkedList<Map<String, GenericValue>>();
 
         List<GenericValue> allOrderContactMechs = null;
 
@@ -260,7 +261,7 @@ public class ContactMechWorker {
     }
 
     public static Collection<Map<String, GenericValue>> getWorkEffortContactMechValueMaps(Delegator delegator, String workEffortId) {
-        Collection<Map<String, GenericValue>> workEffortContactMechValueMaps = UtilMisc.newList();
+        Collection<Map<String, GenericValue>> workEffortContactMechValueMaps = new LinkedList<Map<String, GenericValue>>();
 
         List<GenericValue> allWorkEffortContactMechs = null;
 
@@ -391,7 +392,7 @@ public class ContactMechWorker {
                 Debug.logWarning(e, module);
             }
 
-            Collection<GenericValue> purposeTypes = UtilMisc.newList();
+            Collection<GenericValue> purposeTypes = new LinkedList<GenericValue>();
             Iterator<GenericValue> typePurposes = null;
 
             try {
@@ -497,7 +498,7 @@ public class ContactMechWorker {
 
         for (String purposeType: purposeTypes) {
             List<GenericValue> facilityContactMechPurposes = null;
-            List<EntityCondition> conditionList = UtilMisc.newList();
+            List<EntityCondition> conditionList = new LinkedList<EntityCondition>();
             conditionList.add(EntityCondition.makeCondition("facilityId", facilityId));
             conditionList.add(EntityCondition.makeCondition("contactMechPurposeTypeId", purposeType));
             EntityCondition entityCondition = EntityCondition.makeCondition(conditionList);
@@ -515,7 +516,7 @@ public class ContactMechWorker {
             for (GenericValue facilityContactMechPurpose: facilityContactMechPurposes) {
                 String contactMechId = facilityContactMechPurpose.getString("contactMechId");
                 List<GenericValue> facilityContactMechs = null;
-                conditionList = UtilMisc.newList();
+                conditionList = new LinkedList<EntityCondition>();
                 conditionList.add(EntityCondition.makeCondition("facilityId", facilityId));
                 conditionList.add(EntityCondition.makeCondition("contactMechId", contactMechId));
                 entityCondition = EntityCondition.makeCondition(conditionList);
@@ -702,7 +703,7 @@ public class ContactMechWorker {
                 Debug.logWarning(e, module);
             }
 
-            Collection<GenericValue> purposeTypes = UtilMisc.newList();
+            Collection<GenericValue> purposeTypes = new LinkedList<GenericValue>();
             Iterator<GenericValue> typePurposes = null;
 
             try {
@@ -796,7 +797,7 @@ public class ContactMechWorker {
 
     public static List<Map<String, Object>> getPartyPostalAddresses(ServletRequest request, String partyId, String curContactMechId) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        List<Map<String, Object>> postalAddressInfos = UtilMisc.newList();
+        List<Map<String, Object>> postalAddressInfos = new LinkedList<Map<String, Object>>();
 
         List<GenericValue> allPartyContactMechs = null;
 
@@ -955,7 +956,7 @@ public class ContactMechWorker {
 
         // get all company addresses
         Delegator delegator = postalAddress.getDelegator();
-        List<GenericValue> postalAddresses = UtilMisc.newList();
+        List<GenericValue> postalAddresses = new LinkedList<GenericValue>();
         try {
             List<GenericValue> partyContactMechs = EntityQuery.use(delegator).from("PartyContactMech")
                     .where("partyId", companyPartyId)

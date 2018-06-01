@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
@@ -208,7 +209,7 @@ public class OrderReturnServices {
 
         // get the return items
         List<GenericValue> returnItems = null;
-        List<GenericValue> returnAdjustments = UtilMisc.newList();
+        List<GenericValue> returnAdjustments = new LinkedList<GenericValue>();
         try {
             returnItems = returnHeader.getRelated("ReturnItem", null, null, false);
             returnAdjustments = EntityQuery.use(delegator).from("ReturnAdjustment")
@@ -628,7 +629,7 @@ public class OrderReturnServices {
             }
         }
 
-        List<GenericValue> completedItems = UtilMisc.newList();
+        List<GenericValue> completedItems = new LinkedList<GenericValue>();
         if (returnHeader != null && UtilValidate.isNotEmpty(returnItems)) {
             for (GenericValue item : returnItems) {
                 String itemStatus = item != null ? item.getString("statusId") : null;
@@ -766,7 +767,7 @@ public class OrderReturnServices {
 
             if (finAccountId == null && billingAccountId == null) {
                 // First find a Billing Account with negative balance, and if found store credit to that
-                List<GenericValue> billingAccounts = UtilMisc.newList();
+                List<GenericValue> billingAccounts = new LinkedList<GenericValue>();
                 try {
                     billingAccounts = EntityQuery.use(delegator).from("BillingAccountRoleAndAddress")
                             .where("partyId", fromPartyId, "roleTypeId", "BILL_TO_CUSTOMER")
@@ -1090,7 +1091,7 @@ public class OrderReturnServices {
         Map<String, Object> serviceResult = new HashMap<String, Object>();
 
         GenericValue orderHeader = null;
-        List<GenericValue> orderPayPrefs = UtilMisc.newList();
+        List<GenericValue> orderPayPrefs = new LinkedList<GenericValue>();
         try {
             orderHeader = EntityQuery.use(delegator).from("OrderHeader").where("orderId", orderId).queryOne();
             orderPayPrefs = orderHeader.getRelated("OrderPaymentPreference", null, UtilMisc.toList("-maxAmount"), false);
@@ -1102,7 +1103,7 @@ public class OrderReturnServices {
 
         // Check for replacement order
         if (UtilValidate.isEmpty(orderPayPrefs)) {
-            List<GenericValue> returnItemResponses = UtilMisc.newList();
+            List<GenericValue> returnItemResponses = new LinkedList<GenericValue>();
             try {
                 returnItemResponses = orderHeader.getRelated("ReplacementReturnItemResponse", null, null, false);
             } catch (GenericEntityException e) {
@@ -1310,7 +1311,7 @@ public class OrderReturnServices {
                     }
                 }
                 // This defines the ordered part of the sequence of refund processing
-                List<String> orderedRefundPaymentMethodTypes = UtilMisc.newList();
+                List<String> orderedRefundPaymentMethodTypes = new LinkedList<String>();
                 orderedRefundPaymentMethodTypes.add("EXT_BILLACT");
                 orderedRefundPaymentMethodTypes.add("FIN_ACCOUNT");
                 orderedRefundPaymentMethodTypes.add("GIFT_CARD");
@@ -1318,7 +1319,7 @@ public class OrderReturnServices {
                 orderedRefundPaymentMethodTypes.add("EFT_ACCOUNT");
 
                 // Add all the other paymentMethodTypes, in no particular order
-                List<GenericValue> otherPaymentMethodTypes = UtilMisc.newList();
+                List<GenericValue> otherPaymentMethodTypes = new LinkedList<GenericValue>();
                 try {
                     otherPaymentMethodTypes = EntityQuery.use(delegator).from("PaymentMethodType")
                             .where(EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.NOT_IN, orderedRefundPaymentMethodTypes))
@@ -1695,7 +1696,7 @@ public class OrderReturnServices {
                     "OrderErrorGettingReturnHeaderItemInformation", locale));
         }
         String returnHeaderTypeId = returnHeader.getString("returnHeaderTypeId");
-        List<String> createdOrderIds = UtilMisc.newList();
+        List<String> createdOrderIds = new LinkedList<String>();
         if (returnHeader != null && UtilValidate.isNotEmpty(returnItems)) {
             Map<String, List<GenericValue>> returnItemsByOrderId = new LinkedHashMap<String, List<GenericValue>>();
             Map<String, BigDecimal> totalByOrder = new LinkedHashMap<String, BigDecimal>();
@@ -1743,7 +1744,7 @@ public class OrderReturnServices {
                 orderMap.put("grandTotal",  BigDecimal.ZERO);
 
                 // make the contact mechs
-                List<GenericValue> contactMechs = UtilMisc.newList();
+                List<GenericValue> contactMechs = new LinkedList<GenericValue>();
                 List<GenericValue> orderCm = null;
                 try {
                     orderCm = orderHeader.getRelated("OrderContactMech", null, null, false);
@@ -1780,10 +1781,10 @@ public class OrderReturnServices {
                 // make the order items
                 BigDecimal orderPriceTotal = BigDecimal.ZERO;
                 BigDecimal additionalItemTotal = BigDecimal.ZERO;
-                List<GenericValue> orderItems = UtilMisc.newList();
-                List<GenericValue> orderItemShipGroupInfo = UtilMisc.newList();
-                List<String> orderItemShipGroupIds = UtilMisc.newList(); // this is used to store the ship group ids of the groups already added to the orderItemShipGroupInfo list
-                List<GenericValue> orderItemAssocs = UtilMisc.newList();
+                List<GenericValue> orderItems = new LinkedList<GenericValue>();
+                List<GenericValue> orderItemShipGroupInfo = new LinkedList<GenericValue>();
+                List<String> orderItemShipGroupIds = new LinkedList<String>(); // this is used to store the ship group ids of the groups already added to the orderItemShipGroupInfo list
+                List<GenericValue> orderItemAssocs = new LinkedList<GenericValue>();
                 if (returnItemList != null) {
                     int itemCount = 1;
                     for (GenericValue returnItem : returnItemList) {
@@ -2048,7 +2049,7 @@ public class OrderReturnServices {
                         for (GenericValue orderRole : orderRoles) {
                             List<String> parties = orderRolesMap.get(orderRole.getString("roleTypeId"));
                             if (parties == null) {
-                                parties = UtilMisc.newList();
+                                parties = new LinkedList<String>();
                                 orderRolesMap.put(orderRole.getString("roleTypeId"), parties);
                             }
                             parties.add(orderRole.getString("partyId"));
@@ -2235,7 +2236,7 @@ public class OrderReturnServices {
 
                     List<GenericValue> returnItemList = returnItemsByOrderId.get(orderId);
                     if (returnItemList == null) {
-                        returnItemList = UtilMisc.newList();
+                        returnItemList = new LinkedList<GenericValue>();
                     }
                     if (totalForOrder == null) {
                         totalForOrder = BigDecimal.ZERO;
@@ -2294,7 +2295,7 @@ public class OrderReturnServices {
                     "OrderErrorGettingReturnHeaderItemInformation", locale));
         }
         if ((returnItems != null) && (returnItems.size() > 0)) {
-            List<String> paymentList = UtilMisc.newList();
+            List<String> paymentList = new LinkedList<String>();
             for (GenericValue returnItem : returnItems) {
                 String orderId = returnItem.getString("orderId");
                 try {

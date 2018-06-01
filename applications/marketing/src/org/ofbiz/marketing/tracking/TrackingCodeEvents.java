@@ -19,6 +19,7 @@
 package org.ofbiz.marketing.tracking;
 
 import java.sql.Timestamp;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.http.Cookie;
@@ -436,7 +437,7 @@ public class TrackingCodeEvents {
     public static List<GenericValue> makeTrackingCodeOrders(HttpServletRequest request) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         java.sql.Timestamp nowStamp = UtilDateTime.nowTimestamp();
-        List<GenericValue> trackingCodeOrders = UtilMisc.newList();
+        List<GenericValue> trackingCodeOrders = new LinkedList<GenericValue>();
 
         Cookie[] cookies = request.getCookies();
         Timestamp affiliateReferredTimeStamp = null;

@@ -22,6 +22,7 @@ package org.ofbiz.manufacturing.jobshopmgt;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -328,7 +329,7 @@ public class ProductionRun {
                 if (productionRunRoutingTasks == null)  this.getProductionRunRoutingTasks();
                 if (productionRunRoutingTasks != null) {
                     try {
-                        productionRunComponents = UtilMisc.newList();
+                        productionRunComponents = new LinkedList<GenericValue>();
                         GenericValue routingTask;
                         for (Iterator<GenericValue> iter = productionRunRoutingTasks.iterator(); iter.hasNext();) {
                             routingTask = iter.next();

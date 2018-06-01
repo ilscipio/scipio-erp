@@ -19,6 +19,7 @@
 
 package org.ofbiz.workeffort.workeffort;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.Stack;
@@ -69,10 +70,10 @@ public class ICalRecurConverter implements TemporalExpressionVisitor {
     }
 
     protected DtStart dateStart = null;
-    protected List<DateListProperty> incDateList = UtilMisc.newList();
-    protected List<DateListProperty> exDateList = UtilMisc.newList();
-    protected List<RRule> incRuleList = UtilMisc.newList();
-    protected List<ExRule> exRuleList = UtilMisc.newList();
+    protected List<DateListProperty> incDateList = new LinkedList<DateListProperty>();
+    protected List<DateListProperty> exDateList = new LinkedList<DateListProperty>();
+    protected List<RRule> incRuleList = new LinkedList<RRule>();
+    protected List<ExRule> exRuleList = new LinkedList<ExRule>();
     protected VisitorState state = new VisitorState();
     protected Stack<VisitorState> stateStack = new Stack<VisitorState>();
 
@@ -301,8 +302,8 @@ public class ICalRecurConverter implements TemporalExpressionVisitor {
     protected class VisitorState {
         public boolean isExcluded = false;
         public boolean isIntersection = false;
-        public List<Recur> inclRecurList = UtilMisc.newList();
-        public List<Recur> exRecurList = UtilMisc.newList();
+        public List<Recur> inclRecurList = new LinkedList<Recur>();
+        public List<Recur> exRecurList = new LinkedList<Recur>();
         public void addRecur(Recur recur) {
             if (this.isIntersection) {
                 if (this.isExcluded) {

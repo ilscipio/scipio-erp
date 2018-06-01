@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -788,7 +789,7 @@ public class InvoiceServices {
                     .where(EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId),
                             EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PAYMENT_CANCELLED")
                     ).queryList();
-            List<GenericValue> currentPayments = UtilMisc.newList();
+            List<GenericValue> currentPayments = new LinkedList<GenericValue>();
             for (GenericValue paymentPref : orderPaymentPrefs) {
                 List<GenericValue> payments = paymentPref.getRelated("Payment", null, null, false);
                 currentPayments.addAll(payments);
@@ -849,7 +850,7 @@ public class InvoiceServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Locale locale = (Locale) context.get("locale");
         List<String> salesInvoiceIds = UtilGenerics.checkList(context.get("invoiceIds"));
-        List<Map<String, String>> invoicesCreated = UtilMisc.newList();
+        List<Map<String, String>> invoicesCreated = new LinkedList<Map<String, String>>();
         Map<String, List<Map<String, Object>>> commissionParties = new LinkedHashMap<String, List<Map<String, Object>>>();
         for (String salesInvoiceId : salesInvoiceIds) {
             List<String> salesRepPartyIds = UtilGenerics.checkList(context.get("partyIds"));
@@ -950,7 +951,7 @@ public class InvoiceServices {
         Timestamp now = UtilDateTime.nowTimestamp();
         // Create invoice for each commission receiving party
         for (Map.Entry<String, List<Map<String, Object>>> commissionParty : commissionParties.entrySet()) {
-            List<GenericValue> toStore = UtilMisc.newList();
+            List<GenericValue> toStore = new LinkedList<GenericValue>();
             List<Map<String, Object>> commList = commissionParty.getValue();
             // get the billing parties
             if (UtilValidate.isEmpty(commList)) {
@@ -1098,7 +1099,7 @@ public class InvoiceServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String shipmentId = (String) context.get("shipmentId");
         Locale locale = (Locale) context.get("locale");
-        List<String> invoicesCreated = UtilMisc.newList();
+        List<String> invoicesCreated = new LinkedList<String>();
         Map<String, Object> response = ServiceUtil.returnSuccess();
         GenericValue orderShipment = null;
         String invoicePerShipment = null;
@@ -1166,7 +1167,7 @@ public class InvoiceServices {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "AccountingShipmentNotFound", locale));
         }
 
-        List<GenericValue> itemIssuances = UtilMisc.newList();
+        List<GenericValue> itemIssuances = new LinkedList<GenericValue>();
         try {
             itemIssuances = EntityQuery.use(delegator).select("orderId", "shipmentId")
                     .from("ItemIssuance").where("shipmentId", shipmentId).orderBy("orderId").distinct().queryList();
@@ -1266,7 +1267,7 @@ public class InvoiceServices {
         boolean purchaseShipmentFound = false;
         boolean dropShipmentFound = false;
 
-        List<String> invoicesCreated = UtilMisc.newList();
+        List<String> invoicesCreated = new LinkedList<String>();
 
         //DEJ20060520: not used? planned to be used? List shipmentIdList = new LinkedList();
         for (String tmpShipmentId : shipmentIds) {
@@ -1355,11 +1356,11 @@ public class InvoiceServices {
             String orderItemSeqId = item.getString("orderItemSeqId");
             List<GenericValue> itemsByOrder = shippedOrderItems.get(orderId);
             if (itemsByOrder == null) {
-                itemsByOrder = UtilMisc.newList();
+                itemsByOrder = new LinkedList<GenericValue>();
             }
 
             // check and make sure we haven't already billed for this issuance or shipment receipt
-            List<EntityCondition> billFields = UtilMisc.newList();
+            List<EntityCondition> billFields = new LinkedList<EntityCondition>();
             billFields.add(EntityCondition.makeCondition("orderId", orderId));
             billFields.add(EntityCondition.makeCondition("orderItemSeqId", orderItemSeqId));
             billFields.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
@@ -1402,7 +1403,7 @@ public class InvoiceServices {
             List<GenericValue> billItems = shippedOrderItems.get(orderId);
 
             // a new list to be used to pass to the create invoice service
-            List<GenericValue> toBillItems = UtilMisc.newList();
+            List<GenericValue> toBillItems = new LinkedList<GenericValue>();
 
             // map of available quantities so we only have to calc once
             Map<String, BigDecimal> itemQtyAvail = new HashMap<String, BigDecimal>();
@@ -1419,7 +1420,7 @@ public class InvoiceServices {
 
                 BigDecimal billAvail = itemQtyAvail.get(issue.getString("orderItemSeqId"));
                 if (billAvail == null) {
-                    List<EntityCondition> lookup = UtilMisc.newList();
+                    List<EntityCondition> lookup = new LinkedList<EntityCondition>();
                     lookup.add(EntityCondition.makeCondition("orderId", orderId));
                     lookup.add(EntityCondition.makeCondition("orderItemSeqId", issue.get("orderItemSeqId")));
                     lookup.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
@@ -1594,7 +1595,7 @@ public class InvoiceServices {
                                     "AccountingTroubleCallingCreateInvoicesFromShipmentService", locale));
                         }
 
-                        List<Object> emptyList = UtilMisc.newList();
+                        List<Object> emptyList = new LinkedList<Object>();
                         Map<String, Object> calcTaxContext = new HashMap<String, Object>();
                         calcTaxContext.put("productStoreId", orh.getProductStoreId());
                         calcTaxContext.put("payToPartyId", payToParty.getString("partyId"));
@@ -1789,7 +1790,7 @@ public class InvoiceServices {
         boolean salesReturnFound = false;
         boolean purchaseReturnFound = false;
 
-        List<String> invoicesCreated = UtilMisc.newList();
+        List<String> invoicesCreated = new LinkedList<String>();
         try {
 
             // get the shipment and validate that it is a sales return
@@ -1852,7 +1853,7 @@ public class InvoiceServices {
                 // get the List of items shipped to/from this returnId
                 List<GenericValue> billItems = itemsShippedGroupedByReturn.get(returnId);
                 if (billItems == null) {
-                    billItems = UtilMisc.newList();
+                    billItems = new LinkedList<GenericValue>();
                 }
 
                 // add our item to the group and put it back in the map
@@ -2508,7 +2509,7 @@ public class InvoiceServices {
         String taxAuthGeoId = (String) context.get("taxAuthGeoId");
         String useHighestAmount = (String) context.get("useHighestAmount");
 
-        List<String> errorMessageList = UtilMisc.newList();
+        List<String> errorMessageList = new LinkedList<String>();
 
         if (debug) Debug.logInfo("updatePaymentApplicationDefBd input parameters..." +
                 " defaultInvoiceProcessing: " + defaultInvoiceProcessing +
@@ -3422,8 +3423,8 @@ public class InvoiceServices {
         String csvString = Charset.forName(encoding).decode(fileBytes).toString();
         final BufferedReader csvReader = new BufferedReader(new StringReader(csvString));
         CSVFormat fmt = CSVFormat.DEFAULT.withHeader();
-        List<String> errMsgs = UtilMisc.newList();
-        List<String> newErrMsgs = UtilMisc.newList();
+        List<String> errMsgs = new LinkedList<String>();
+        List<String> newErrMsgs = new LinkedList<String>();
         String lastInvoiceId = null;
         String currentInvoiceId = null;
         String newInvoiceId = null;
@@ -3460,7 +3461,7 @@ public class InvoiceServices {
 
                     // invoice validation
                     try {
-                        newErrMsgs = UtilMisc.newList();
+                        newErrMsgs = new LinkedList<String>();
                         if (UtilValidate.isEmpty(invoice.get("partyIdFrom"))) {
                             newErrMsgs.add("Line number " + rec.getRecordNumber() + ": Mandatory Party Id From and Party Id From Trans missing for invoice: " + currentInvoiceId);
                         } else if (EntityQuery.use(delegator).from("Party").where("partyId", invoice.get("partyIdFrom")).queryOne() == null) {
@@ -3526,7 +3527,7 @@ public class InvoiceServices {
                     }
                     // invoice item validation
                     try {
-                        newErrMsgs = UtilMisc.newList();
+                        newErrMsgs = new LinkedList<String>();
                         if (UtilValidate.isEmpty(invoiceItem.get("invoiceItemSeqId"))) {
                             newErrMsgs.add("Line number " + rec.getRecordNumber() + ": Mandatory item sequence Id missing for invoice: " + currentInvoiceId);
                         } 

@@ -21,6 +21,7 @@ package org.ofbiz.accounting.payment;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -56,7 +57,7 @@ public class PaymentWorker {
     }
 
     public static List<Map<String, GenericValue>> getPartyPaymentMethodValueMaps(Delegator delegator, String partyId, Boolean showOld) {
-        List<Map<String, GenericValue>> paymentMethodValueMaps = UtilMisc.newList();
+        List<Map<String, GenericValue>> paymentMethodValueMaps = new LinkedList<Map<String, GenericValue>>();
         try {
             List<GenericValue> paymentMethods = EntityQuery.use(delegator).from("PaymentMethod").where("partyId", partyId).queryList();
 

@@ -25,6 +25,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -129,7 +130,7 @@ public class PromoServices {
         Locale locale = (Locale) context.get("locale");
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 
-        List<EntityCondition> condList = UtilMisc.newList();
+        List<EntityCondition> condList = new LinkedList<EntityCondition>();
         if (UtilValidate.isEmpty(productStoreId)) {
             condList.add(EntityCondition.makeCondition("productStoreId", EntityOperator.EQUALS, productStoreId));
         }
@@ -182,7 +183,7 @@ public class PromoServices {
 
         // read the bytes into a reader
         BufferedReader reader = new BufferedReader(new StringReader(file));
-        List<Object> errors = UtilMisc.newList();
+        List<Object> errors = new LinkedList<Object>();
         int lines = 0;
         String line;
 
@@ -248,7 +249,7 @@ public class PromoServices {
        
       // read the bytes into a reader
         BufferedReader reader = new BufferedReader(new StringReader(new String(wrapper)));
-        List<Object> errors = UtilMisc.newList();
+        List<Object> errors = new LinkedList<Object>();
         int lines = 0;
         String line;
 

@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -57,7 +58,7 @@ public class LabelManagerFactory {
 
     protected Map<String, LabelInfo> labels = new TreeMap<String, LabelInfo>();
     protected Set<String> localesFound = new TreeSet<String>();
-    protected List<LabelInfo> duplicatedLocalesLabelsList = UtilMisc.newList();
+    protected List<LabelInfo> duplicatedLocalesLabelsList = new LinkedList<LabelInfo>();
 
     public static synchronized LabelManagerFactory getInstance() throws IOException {
         if (componentNamesFound == null) {

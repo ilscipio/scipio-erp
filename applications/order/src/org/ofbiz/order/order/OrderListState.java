@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -269,14 +270,14 @@ public class OrderListState implements Serializable {
         Delegator delegator = (Delegator) context.get("delegator");
         TimeZone timeZone = (TimeZone) context.get("timeZone");
         Locale locale = (Locale) context.get("locale");
-        List<EntityCondition> allConditions = UtilMisc.newList();
+        List<EntityCondition> allConditions = new LinkedList<EntityCondition>();
 
         if (facilityId != null) {
             allConditions.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, facilityId));
         }
 
         if (fromDate != null) {
-            List<EntityCondition> andExprs = UtilMisc.newList();
+            List<EntityCondition> andExprs = new LinkedList<EntityCondition>();
             if (intervalPeriod != null) {                
                 TimeInterval intervalDates = UtilDateTime.getPeriodInterval(intervalPeriod, fromDate, locale, timeZone);
                 context.put("intervalDates", intervalDates);
@@ -289,13 +290,13 @@ public class OrderListState implements Serializable {
             allConditions.add(EntityCondition.makeCondition(andExprs, EntityOperator.AND));
         }
 
-        List<EntityCondition> statusConditions = UtilMisc.newList();
+        List<EntityCondition> statusConditions = new LinkedList<EntityCondition>();
         for (String status : orderStatusState.keySet()) {
             if (!hasStatus(status))
                 continue;
             statusConditions.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, parameterToOrderStatusId.get(status)));
         }
-        List<EntityCondition> typeConditions = UtilMisc.newList();
+        List<EntityCondition> typeConditions = new LinkedList<EntityCondition>();
         for (String type : orderTypeState.keySet()) {
             if (!hasType(type))
                 continue;

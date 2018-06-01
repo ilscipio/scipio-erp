@@ -22,6 +22,7 @@ package org.ofbiz.content.content;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -278,7 +279,7 @@ public class ContentMapFacade implements Map<Object, Object> {
             return dataResource;
         } else if ("subcontent_all".equalsIgnoreCase(name)) {
             // subcontent list of ordered subcontent
-            List<ContentMapFacade> subContent = UtilMisc.newList();
+            List<ContentMapFacade> subContent = new LinkedList<ContentMapFacade>();
             List<GenericValue> subs = null;
             try {
                 Map<String, Object> expressions = new HashMap<String, Object>();

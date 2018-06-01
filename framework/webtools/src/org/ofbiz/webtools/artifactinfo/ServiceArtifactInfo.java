@@ -315,8 +315,8 @@ public class ServiceArtifactInfo extends ArtifactInfoBase {
         Debug.logInfo("Writing Service Call Graph EO Model for service [" + this.modelService.name + "] to [" + eomodeldFullPath + "]", module);
 
         Set<String> allDiagramEntitiesWithPrefixes = UtilMisc.newSet();
-        //List<ServiceArtifactInfo> allServiceList = UtilMisc.newList(); // SCIPIO: 2018-03-28: does nothing
-        //List<ServiceEcaArtifactInfo> allServiceEcaList = UtilMisc.newList(); // SCIPIO: 2018-03-28: does nothing
+        //List<ServiceArtifactInfo> allServiceList = new LinkedList<ServiceArtifactInfo>(); // SCIPIO: 2018-03-28: does nothing
+        //List<ServiceEcaArtifactInfo> allServiceEcaList = new LinkedList<ServiceEcaArtifactInfo>(); // SCIPIO: 2018-03-28: does nothing
 
         // make sure that any prefix that might have been set on this is cleared
         this.setDisplayPrefix("");

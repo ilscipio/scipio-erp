@@ -20,6 +20,7 @@ package org.ofbiz.order.test;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -49,7 +50,7 @@ public class SalesOrderTest extends OFBizTestCase {
         // SCIPIO: new default store
         Map<String, Object> ctx = UtilMisc.<String, Object>toMap("partyId", "DemoCustomer", "orderTypeId", "SALES_ORDER", "currencyUom", "USD", "productStoreId", "ScipioShop");
 
-        List<GenericValue> orderPaymentInfo = UtilMisc.newList();
+        List<GenericValue> orderPaymentInfo = new LinkedList<GenericValue>();
         GenericValue orderContactMech = delegator.makeValue("OrderContactMech", UtilMisc.toMap("contactMechId", "9015", "contactMechPurposeTypeId", "BILLING_LOCATION"));
         orderPaymentInfo.add(orderContactMech);
 
@@ -58,7 +59,7 @@ public class SalesOrderTest extends OFBizTestCase {
         orderPaymentInfo.add(orderPaymentPreference);
         ctx.put("orderPaymentInfo", orderPaymentInfo);
 
-        List<GenericValue> orderItemShipGroupInfo = UtilMisc.newList();
+        List<GenericValue> orderItemShipGroupInfo = new LinkedList<GenericValue>();
         orderContactMech.set("contactMechPurposeTypeId", "SHIPPING_LOCATION");
         orderItemShipGroupInfo.add(orderContactMech);
 
@@ -102,12 +103,12 @@ public class SalesOrderTest extends OFBizTestCase {
 
         ctx.put("orderItemShipGroupInfo", orderItemShipGroupInfo);
 
-        List<GenericValue> orderAdjustments = UtilMisc.newList();
+        List<GenericValue> orderAdjustments = new LinkedList<GenericValue>();
         orderAdjustment = delegator.makeValue("OrderAdjustment", UtilMisc.toMap("orderAdjustmentTypeId", "PROMOTION_ADJUSTMENT", "productPromoActionSeqId", "01", "productPromoId", "9011", "productPromoRuleId", "01", "amount", new BigDecimal(-3.84)));
         orderAdjustments.add(orderAdjustment);
         ctx.put("orderAdjustments", orderAdjustments);
 
-        List<GenericValue> orderItems = UtilMisc.newList();
+        List<GenericValue> orderItems = new LinkedList<GenericValue>();
         GenericValue orderItem = delegator.makeValue("OrderItem", UtilMisc.toMap("orderItemSeqId", "00001", "orderItemTypeId", "PRODUCT_ORDER_ITEM", "prodCatalogId", "DemoCatalog", "productId", "CAM-2644", "quantity", BigDecimal.ONE, "selectedAmount", BigDecimal.ZERO));
         orderItem.set("isPromo", "N");
         orderItem.set("isModifiedPrice", "N");
@@ -126,13 +127,13 @@ public class SalesOrderTest extends OFBizTestCase {
         
         ctx.put("orderItems", orderItems);
 
-        List<GenericValue> orderTerms = UtilMisc.newList();
+        List<GenericValue> orderTerms = new LinkedList<GenericValue>();
         ctx.put("orderTerms", orderTerms);
 
         GenericValue OrderContactMech = delegator.makeValue("OrderContactMech", new HashMap<String, Object>());
         OrderContactMech.set("contactMechPurposeTypeId", "SHIPPING_LOCATION");
         OrderContactMech.set("contactMechId", "10000");
-        List<GenericValue> orderContactMechs = UtilMisc.newList();
+        List<GenericValue> orderContactMechs = new LinkedList<GenericValue>();
         orderContactMechs.add(OrderContactMech);
 
         ctx.put("placingCustomerPartyId", "DemoCustomer");

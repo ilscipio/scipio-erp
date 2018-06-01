@@ -21,6 +21,7 @@ package org.ofbiz.order.shoppinglist;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -221,7 +222,7 @@ public class ShoppingListEvents {
 
             shoppingListItems = shoppingList.getRelated("ShoppingListItem", null, null, false);
             if (shoppingListItems == null) {
-                shoppingListItems = UtilMisc.newList();
+                shoppingListItems = new LinkedList<GenericValue>();
             }
 
             // include all items of child lists if flagged to do so
@@ -585,7 +586,7 @@ public class ShoppingListEvents {
      * Returns a list of survey response IDs for a shopping list item
      */
     public static List<String> getItemSurveyInfo(GenericValue item) {
-        List<String> responseIds = UtilMisc.newList();
+        List<String> responseIds = new LinkedList<String>();
         List<GenericValue> surveyResp = null;
         try {
             surveyResp = item.getRelated("ShoppingListItemSurvey", null, null, false);

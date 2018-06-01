@@ -99,7 +99,7 @@ public class RequirementServices {
             Timestamp timePeriodStart = UtilDateTime.getMonthStart(UtilDateTime.nowTimestamp(), 0, -6);
 
             // join in fields with extra data about the suppliers and products
-            List<Map<String, Object>> requirements = UtilMisc.newList();
+            List<Map<String, Object>> requirements = new LinkedList<Map<String, Object>>();
             for (GenericValue requirement : requirementAndRoles) {
                 Map<String, Object> union = new HashMap<String, Object>();
                 String productId = requirement.getString("productId");

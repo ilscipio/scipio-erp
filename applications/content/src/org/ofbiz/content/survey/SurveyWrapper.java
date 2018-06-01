@@ -27,6 +27,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -289,7 +290,7 @@ public class SurveyWrapper {
 
     // returns a list of SurveyQuestions (in order by sequence number) for the current Survey
     public List<GenericValue> getSurveyQuestionAndAppls() {
-        List<GenericValue> questions = UtilMisc.newList();
+        List<GenericValue> questions = new LinkedList<GenericValue>();
 
         try {
             questions = EntityQuery.use(delegator).from("SurveyQuestionAndAppl")

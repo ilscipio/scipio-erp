@@ -21,6 +21,7 @@ package org.ofbiz.product.catalog;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -72,7 +73,7 @@ public class CatalogWorker {
     }
 
     public static List<String> getAllCatalogIds(ServletRequest request) {
-        List<String> catalogIds = UtilMisc.newList();
+        List<String> catalogIds = new LinkedList<String>();
         List<GenericValue> catalogs = null;
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         try {
@@ -242,8 +243,8 @@ public class CatalogWorker {
     }
 
     public static List<String> getCatalogIdsAvailable(List<GenericValue> partyCatalogs, List<GenericValue> storeCatalogs) {
-        List<String> categoryIds = UtilMisc.newList();
-        List<GenericValue> allCatalogLinks = UtilMisc.newList();
+        List<String> categoryIds = new LinkedList<String>();
+        List<GenericValue> allCatalogLinks = new LinkedList<GenericValue>();
         if (partyCatalogs != null) allCatalogLinks.addAll(partyCatalogs);
         if (storeCatalogs != null) allCatalogLinks.addAll(storeCatalogs);
 
@@ -452,7 +453,7 @@ public class CatalogWorker {
     public static Collection<String> getCatalogQuickaddCategories(ServletRequest request, String prodCatalogId) {
         if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
 
-        Collection<String> categoryIds = UtilMisc.newList();
+        Collection<String> categoryIds = new LinkedList<String>();
 
         Collection<GenericValue> prodCatalogCategories = getProdCatalogCategories(request, prodCatalogId, "PCCT_QUICK_ADD");
 

@@ -23,6 +23,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -98,7 +99,7 @@ public class ContentServices {
         serviceInMap.put("targetOperationList", targetOperations);
         serviceInMap.put("entityOperation", context.get("entityOperation"));
 
-        List<GenericValue> permittedList = UtilMisc.newList();
+        List<GenericValue> permittedList = new LinkedList<GenericValue>();
         Map<String, Object> permResults = null;
         for (GenericValue content : contentList) {
             serviceInMap.put("currentContent", content);
@@ -124,7 +125,7 @@ public class ContentServices {
      */
     public static Map<String, Object> findContentParents(DispatchContext dctx, Map<String, ? extends Object> context) {
         Map<String, Object> results = new HashMap<String, Object>();
-        List<Object> parentList = UtilMisc.newList();
+        List<Object> parentList = new LinkedList<Object>();
         results.put("parentList", parentList);
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String contentId = (String)context.get("contentId");
@@ -214,7 +215,7 @@ public class ContentServices {
         }
 
         Map<String, Object> nodeMap = new HashMap<String, Object>();
-        List<GenericValue> pickList = UtilMisc.newList();
+        List<GenericValue> pickList = new LinkedList<GenericValue>();
         ContentWorker.traverse(delegator, content, fromDate, thruDate, whenMap, 0, nodeMap, startContentAssocTypeId, pickList, direction);
 
         results.put("nodeMap", nodeMap);
@@ -815,7 +816,7 @@ public class ContentServices {
                 sequenceNum = (String) activeAssoc.get("sequenceNum");
             }
 
-            List<EntityCondition> exprList = UtilMisc.newList();
+            List<EntityCondition> exprList = new LinkedList<EntityCondition>();
             exprList.add(EntityCondition.makeCondition("mapKey", EntityOperator.EQUALS, mapKey));
             if (sequenceNum != null) {
                 exprList.add(EntityCondition.makeCondition("sequenceNum", EntityOperator.EQUALS, sequenceNum));
@@ -1076,7 +1077,7 @@ public class ContentServices {
 
     public static Map<String, Object> splitString(DispatchContext dctx, Map<String, ? extends Object> context) throws GenericServiceException{
         Map<String, Object> result = new HashMap<String, Object>();
-        List<String> outputList = UtilMisc.newList();
+        List<String> outputList = new LinkedList<String>();
         String delimiter = UtilFormatOut.checkEmpty((String)context.get("delimiter"), "|");
         String inputString = (String)context.get("inputString");
         if (UtilValidate.isNotEmpty(inputString)) {

@@ -21,6 +21,7 @@ package org.ofbiz.shipment.weightPackage;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -83,7 +84,7 @@ public class WeightPackageSession implements Serializable {
         this.picklistBinId = picklistBinId;
         this.userLogin = userLogin;
         this.facilityId = facilityId;
-        this.weightPackageLines = UtilMisc.newList();
+        this.weightPackageLines = new LinkedList<WeightPackageSessionLine>();
     }
 
     public WeightPackageSession(LocalDispatcher dispatcher, GenericValue userLogin, String facilityId) {
@@ -214,7 +215,7 @@ public class WeightPackageSession implements Serializable {
     }
 
     public List<WeightPackageSessionLine> getPackedLines(String orderId) {
-        List<WeightPackageSessionLine> packedLines = UtilMisc.newList();
+        List<WeightPackageSessionLine> packedLines = new LinkedList<WeightPackageSessionLine>();
         if (UtilValidate.isNotEmpty(orderId)) {
             for (WeightPackageSessionLine packedLine: this.getPackedLines()) {
                if (orderId.equals(packedLine.getOrderId()))

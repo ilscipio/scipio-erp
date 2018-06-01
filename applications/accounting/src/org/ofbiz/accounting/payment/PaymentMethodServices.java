@@ -20,6 +20,7 @@ package org.ofbiz.accounting.payment;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -145,7 +146,7 @@ public class PaymentMethodServices {
         if (result.size() > 0) return result;
 
         // do some more complicated/critical validation...
-        List<String> messages = UtilMisc.newList();
+        List<String> messages = new LinkedList<String>();
 
         // first remove all spaces from the credit card number
         context.put("cardNumber", StringUtil.removeSpaces((String) context.get("cardNumber")));
@@ -166,7 +167,7 @@ public class PaymentMethodServices {
             return ServiceUtil.returnError(messages);
         }
 
-        List<GenericValue> toBeStored = UtilMisc.newList();
+        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
         GenericValue newPm = delegator.makeValue("PaymentMethod");
 
         toBeStored.add(newPm);
@@ -250,7 +251,7 @@ public class PaymentMethodServices {
 
         if (result.size() > 0) return result;
 
-        List<GenericValue> toBeStored = UtilMisc.newList();
+        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
         boolean isModified = false;
 
         GenericValue paymentMethod = null;
@@ -279,7 +280,7 @@ public class PaymentMethodServices {
         }
 
         // do some more complicated/critical validation...
-        List<String> messages = UtilMisc.newList();
+        List<String> messages = new LinkedList<String>();
 
         // first remove all spaces from the credit card number
         String updatedCardNumber = StringUtil.removeSpaces((String) context.get("cardNumber"));
@@ -464,7 +465,7 @@ public class PaymentMethodServices {
         if (result.size() > 0)
             return result;
 
-        List<GenericValue> toBeStored = UtilMisc.newList();
+        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
         GenericValue newPm = delegator.makeValue("PaymentMethod");
         toBeStored.add(newPm);
         GenericValue newGc = delegator.makeValue("GiftCard");
@@ -521,7 +522,7 @@ public class PaymentMethodServices {
         if (result.size() > 0)
             return result;
 
-        List<GenericValue> toBeStored = UtilMisc.newList();
+        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
         boolean isModified = false;
 
         GenericValue paymentMethod = null;
@@ -654,7 +655,7 @@ public class PaymentMethodServices {
 
         if (result.size() > 0) return result;
 
-        List<GenericValue> toBeStored = UtilMisc.newList();
+        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
         GenericValue newPm = delegator.makeValue("PaymentMethod");
 
         toBeStored.add(newPm);
@@ -742,7 +743,7 @@ public class PaymentMethodServices {
 
         if (result.size() > 0) return result;
 
-        List<GenericValue> toBeStored = UtilMisc.newList();
+        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
         boolean isModified = false;
 
         GenericValue paymentMethod = null;

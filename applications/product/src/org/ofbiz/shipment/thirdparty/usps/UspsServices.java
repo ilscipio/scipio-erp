@@ -28,6 +28,7 @@ import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
@@ -76,7 +77,7 @@ public class UspsServices {
     public final static String resourceError = "ProductUiLabels";
     public final static String shipmentPropertiesFile = "shipment.properties";
 
-    private static List<String> domesticCountries = UtilMisc.newList();
+    private static List<String> domesticCountries = new LinkedList<String>();
     // Countries treated as domestic for rate enquiries
     static {
         domesticCountries.add("USA");
@@ -496,7 +497,7 @@ public class UspsServices {
 
         List<? extends Element> detailElementList = UtilXml.childElementList(trackInfoElement, "TrackDetail");
         if (UtilValidate.isNotEmpty(detailElementList)) {
-            List<String> trackingDetailList = UtilMisc.newList();
+            List<String> trackingDetailList = new LinkedList<String>();
             for (Element detailElement: detailElementList) {
                 trackingDetailList.add(UtilXml.elementValue(detailElement));
             }

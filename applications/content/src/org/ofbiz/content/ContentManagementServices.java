@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -82,7 +83,7 @@ public class ContentManagementServices {
         if (UtilValidate.isNotEmpty(assocTypesString)) {
             List<String> lst = StringUtil.split(assocTypesString, "|");
             if (assocTypes == null) {
-                assocTypes = UtilMisc.newList();
+                assocTypes = new LinkedList<String>();
             }
             assocTypes.addAll(lst);
         }
@@ -159,7 +160,7 @@ public class ContentManagementServices {
         // ContentPurposes can get passed in as a delimited string or a list. Combine.
         List<String> contentPurposeList = UtilGenerics.checkList(context.get("contentPurposeList"));
         if (contentPurposeList == null) {
-            contentPurposeList = UtilMisc.newList();
+            contentPurposeList = new LinkedList<String>();
         }
         String contentPurposeString = (String) context.get("contentPurposeString");
         if (UtilValidate.isNotEmpty(contentPurposeString)) {
@@ -294,7 +295,7 @@ public class ContentManagementServices {
                     return ServiceUtil.returnError(e.toString());
                 }
             }
-            //List targetOperations = UtilMisc.newList();
+            //List targetOperations = new LinkedList();
             //context.put("targetOperations", targetOperations);
             context.putAll(content);
             if (contentExists) {
@@ -883,7 +884,7 @@ public class ContentManagementServices {
         int seqIncrement = seqInc.intValue();
         List<String> typeList = UtilGenerics.checkList(context.get("typeList"));
         if (typeList == null) {
-            typeList = UtilMisc.newList();
+            typeList = new LinkedList<String>();
         }
         String contentAssocTypeId = (String)context.get("contentAssocTypeId");
         if (UtilValidate.isNotEmpty(contentAssocTypeId)) {
@@ -1405,7 +1406,7 @@ public class ContentManagementServices {
 
         String contentId = (String)context.get("contentId");
         String contentAssocTypeId = (String)context.get("contentAssocTypeId");
-        List<String> typeList = UtilMisc.newList();
+        List<String> typeList = new LinkedList<String>();
         if (UtilValidate.isNotEmpty(contentAssocTypeId)) {
             typeList.add(contentAssocTypeId);
         } else {
@@ -1616,7 +1617,7 @@ public class ContentManagementServices {
         String contentId = (String)context.get("contentId");
         String serviceName = (String)context.get("serviceName");
         String contentAssocTypeId = (String)context.get("contentAssocTypeId");
-        List<String> contentAssocTypeIdList = UtilMisc.newList();
+        List<String> contentAssocTypeIdList = new LinkedList<String>();
         if (UtilValidate.isNotEmpty(contentAssocTypeId)) {
              contentAssocTypeIdList = StringUtil.split(contentAssocTypeId, "|");
         }
@@ -1698,7 +1699,7 @@ public class ContentManagementServices {
               return ServiceUtil.returnError(errorMsg);
           }
           String contentId = (String)result.get("contentId");
-          List<String> parentList = UtilMisc.newList();
+          List<String> parentList = new LinkedList<String>();
           if (UtilValidate.isEmpty(masterRevisionContentId)) {
               Map<String, Object> traversMap = new HashMap<String, Object>();
               traversMap.put("contentId", contentId);

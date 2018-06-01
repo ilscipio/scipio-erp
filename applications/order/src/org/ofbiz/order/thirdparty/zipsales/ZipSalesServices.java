@@ -23,6 +23,7 @@ import java.net.URL;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -224,8 +225,8 @@ public class ZipSalesServices {
         String city = shippingAddress.getString("city");
 
         // setup the return lists.
-        List<GenericValue> orderAdjustments = UtilMisc.newList();
-        List<List<GenericValue>> itemAdjustments = UtilMisc.newList();
+        List<GenericValue> orderAdjustments = new LinkedList<GenericValue>();
+        List<List<GenericValue>> itemAdjustments = new LinkedList<List<GenericValue>>();
 
         // check for a valid state/province geo
         String validStates = EntityUtilProperties.getPropertyValue("zipsales", "zipsales.valid.states", delegator);
@@ -262,7 +263,7 @@ public class ZipSalesServices {
     }
 
     private static List<GenericValue>getItemTaxList(Delegator delegator, GenericValue item, String zipCode, String city, BigDecimal itemAmount, BigDecimal shippingAmount, boolean isUseTax) throws GeneralException {
-        List<GenericValue> adjustments = UtilMisc.newList();
+        List<GenericValue> adjustments = new LinkedList<GenericValue>();
 
         // check the item for tax status
         if (item != null && item.get("taxable") != null && "N".equals(item.getString("taxable"))) {

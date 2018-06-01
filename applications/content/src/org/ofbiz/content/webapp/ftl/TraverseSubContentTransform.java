@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -180,7 +181,7 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
             @Override
             public int onStart() throws TemplateModelException, IOException {
                 //templateContext.put("buf", new StringBuilder());
-                List<Map<String, Object>> nodeTrail = UtilMisc.newList();
+                List<Map<String, Object>> nodeTrail = new LinkedList<Map<String, Object>>();
                 traverseContext.put("nodeTrail", nodeTrail);
                 // GenericValue content = null;
 /*
@@ -309,7 +310,7 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
                 assocContext.put("content", thisContent);
                 List<Object> purposes = ContentWorker.getPurposes(thisContent);
                 assocContext.put("purposes", purposes);
-                List<String> contentTypeAncestry = UtilMisc.newList();
+                List<String> contentTypeAncestry = new LinkedList<String>();
                 String contentTypeId = (String)thisContent.get("contentTypeId");
                 try {
                     ContentWorker.getContentTypeAncestry(delegator, contentTypeId, contentTypeAncestry);

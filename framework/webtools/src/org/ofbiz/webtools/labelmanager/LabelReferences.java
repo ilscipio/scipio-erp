@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -114,7 +115,7 @@ public class LabelReferences {
         // get labels from simple method files
         getLabelsFromSimpleMethodFiles();
         // get labels from widgets files
-        List<File> fileList = UtilMisc.newList();
+        List<File> fileList = new LinkedList<File>();
         for (String rootFolder : this.rootFolders) {
             fileList.addAll(FileUtil.findXmlFiles(rootFolder + "webapp", null, null, null));
             fileList.addAll(FileUtil.findXmlFiles(rootFolder + "widget", null, null, null));

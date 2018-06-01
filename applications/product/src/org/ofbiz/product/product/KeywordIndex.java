@@ -20,6 +20,7 @@ package org.ofbiz.product.product;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -84,7 +85,7 @@ public class KeywordIndex {
         Set<String> stemSet = KeywordSearchUtil.getStemSet();
 
         Map<String, Long> keywords = new TreeMap<String, Long>();
-        List<String> strings = UtilMisc.newList();
+        List<String> strings = new LinkedList<String>();
 
         int pidWeight = 1;
         try {
@@ -188,7 +189,7 @@ public class KeywordIndex {
             }
         }
 
-        List<GenericValue> toBeStored = UtilMisc.newList();
+        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
         int keywordMaxLength = Integer.parseInt(EntityUtilProperties.getPropertyValue("prodsearch", "product.keyword.max.length", delegator));
         for (Map.Entry<String, Long> entry: keywords.entrySet()) {
             if (entry.getKey().length() <= keywordMaxLength) {

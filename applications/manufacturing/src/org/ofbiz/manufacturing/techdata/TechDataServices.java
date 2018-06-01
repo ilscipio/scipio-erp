@@ -21,6 +21,7 @@ package org.ofbiz.manufacturing.techdata;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -69,7 +70,7 @@ public class TechDataServices {
         String fixedAssetId = (String) context.get("fixedAssetId");
 
         List<GenericValue> listRoutingTask = null;
-        List<EntityExpr> constraints = UtilMisc.newList();
+        List<EntityExpr> constraints = new LinkedList<EntityExpr>();
 
         if (UtilValidate.isNotEmpty(workEffortName)) {
             constraints.add(EntityCondition.makeCondition("workEffortName", EntityOperator.GREATER_THAN_EQUAL_TO, workEffortName));
@@ -90,7 +91,7 @@ public class TechDataServices {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingTechDataWorkEffortNotExist", UtilMisc.toMap("errorString", e.toString()), locale));
         }
         if (listRoutingTask == null) {
-            listRoutingTask = UtilMisc.newList();
+            listRoutingTask = new LinkedList<GenericValue>();
         }
         if (listRoutingTask.size() == 0) {
             //FIXME is it correct ?

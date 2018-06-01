@@ -27,6 +27,7 @@ import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -542,7 +543,7 @@ public abstract class ContentImageServices {
                     return ServiceUtil.returnError("can't determine output format (no targetFormatName or DataResource.mimeTypeId) (dataResourceId: " + origImageDataResourceId + ")");
                 }
                 
-                List<GenericValue> fileExtValues = UtilMisc.newList();
+                List<GenericValue> fileExtValues = new LinkedList<GenericValue>();
                 try {
                     fileExtValues = EntityQuery.use(delegator).from("FileExtension").where("mimeTypeId", mimeTypeId).queryList();
                     if (UtilValidate.isEmpty(fileExtValues)) {

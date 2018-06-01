@@ -21,6 +21,7 @@ package org.ofbiz.content.content;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -111,17 +112,17 @@ public class ContentSearch {
 
     public static class ContentSearchContext {
         public int index = 1;
-        public List<EntityCondition> entityConditionList = UtilMisc.newList();
-        public List<String> orderByList = UtilMisc.newList();
+        public List<EntityCondition> entityConditionList = new LinkedList<EntityCondition>();
+        public List<String> orderByList = new LinkedList<String>();
         public Set<String> fieldsToSelect = UtilMisc.toSet("contentId");
         public DynamicViewEntity dynamicViewEntity = new DynamicViewEntity();
         public boolean contentIdGroupBy = false;
         public boolean includedKeywordSearch = false;
         public Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
-        public List<Set<String>> keywordFixedOrSetAndList = UtilMisc.newList();
+        public List<Set<String>> keywordFixedOrSetAndList = new LinkedList<Set<String>>();
         public Set<String> orKeywordFixedSet = UtilMisc.newSet();
         public Set<String> andKeywordFixedSet = UtilMisc.newSet();
-        public List<GenericValue> contentSearchConstraintList = UtilMisc.newList();
+        public List<GenericValue> contentSearchConstraintList = new LinkedList<GenericValue>();
         public ResultSortOrder resultSortOrder = null;
         public Integer resultOffset = null;
         public Integer maxResults = null;
@@ -251,7 +252,7 @@ public class ContentSearch {
                     dynamicViewEntity.addMemberEntity(entityAlias, "ContentKeyword");
                     dynamicViewEntity.addAlias(entityAlias, prefix + "Keyword", "keyword", null, null, null, null);
                     dynamicViewEntity.addViewLink("CNT", entityAlias, Boolean.FALSE, ModelKeyMap.makeKeyMapList("contentId"));
-                    List<EntityExpr> keywordOrList = UtilMisc.newList();
+                    List<EntityExpr> keywordOrList = new LinkedList<EntityExpr>();
                     for (String keyword: keywordFixedOrSet) {
                         keywordOrList.add(EntityCondition.makeCondition(prefix + "Keyword", EntityOperator.LIKE, keyword));
                     }
@@ -518,7 +519,7 @@ public class ContentSearch {
             contentSearchContext.dynamicViewEntity.addAlias(entityAlias, prefix + "ThruDate", "thruDate", null, null, null, null);
             contentSearchContext.dynamicViewEntity.addViewLink("CNT", entityAlias, Boolean.TRUE, ModelKeyMap.makeKeyMapList("contentId","contentIdFrom"));
 
-            List<EntityExpr> assocConditionFromTo = UtilMisc.newList();
+            List<EntityExpr> assocConditionFromTo = new LinkedList<EntityExpr>();
             assocConditionFromTo.add(EntityCondition.makeCondition(prefix + "ContentIdTo", EntityOperator.IN, contentIdSet));
             if (UtilValidate.isNotEmpty(contentAssocTypeId)) {
                 assocConditionFromTo.add(EntityCondition.makeCondition(prefix + "ContentAssocTypeId", EntityOperator.EQUALS, contentAssocTypeId));
@@ -539,7 +540,7 @@ public class ContentSearch {
             contentSearchContext.dynamicViewEntity.addAlias(entityAlias, prefix + "ThruDate", "thruDate", null, null, null, null);
             contentSearchContext.dynamicViewEntity.addViewLink("CNT", entityAlias, Boolean.TRUE, ModelKeyMap.makeKeyMapList("contentId","contentIdTo"));
 
-            List<EntityExpr> assocConditionToFrom = UtilMisc.newList();
+            List<EntityExpr> assocConditionToFrom = new LinkedList<EntityExpr>();
             assocConditionToFrom.add(EntityCondition.makeCondition(prefix + "ContentIdFrom", EntityOperator.IN, contentIdSet));
             if (UtilValidate.isNotEmpty(contentAssocTypeId)) {
                 assocConditionToFrom.add(EntityCondition.makeCondition(prefix + "ContentAssocTypeId", EntityOperator.EQUALS, contentAssocTypeId));

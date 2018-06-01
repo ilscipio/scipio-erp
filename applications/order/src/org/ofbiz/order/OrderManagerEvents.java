@@ -19,6 +19,7 @@
 package org.ofbiz.order;
 
 import java.math.BigDecimal;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -66,7 +67,7 @@ public class OrderManagerEvents {
 
         if (session.getAttribute("OFFLINE_PAYMENTS") != null) {
             String orderId = (String) request.getAttribute("orderId");
-            List<GenericValue> toBeStored = UtilMisc.newList();
+            List<GenericValue> toBeStored = new LinkedList<GenericValue>();
             List<GenericValue> paymentPrefs = null;
             GenericValue placingCustomer = null;
             try {
@@ -218,7 +219,7 @@ public class OrderManagerEvents {
             }
         }
 
-        List<GenericValue> toBeStored = UtilMisc.newList();
+        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
         for (GenericValue paymentMethodType : paymentMethodTypes) {
             String paymentMethodTypeId = paymentMethodType.getString("paymentMethodTypeId");
             String amountStr = request.getParameter(paymentMethodTypeId + "_amount");

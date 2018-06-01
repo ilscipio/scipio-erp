@@ -19,6 +19,7 @@
 package org.ofbiz.content.content;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +41,7 @@ public class PermissionRecorder {
 
     protected boolean isOn = false;
     protected GenericValue userLogin;
-    protected List<Map<String, Object>> permCheckResults = UtilMisc.newList();
+    protected List<Map<String, Object>> permCheckResults = new LinkedList<Map<String, Object>>();
     protected boolean entityPermCheckResult = false;
     protected String currentContentId = "";
     protected Map<String, Object> currentContentMap;
@@ -128,7 +129,7 @@ public class PermissionRecorder {
             currentContentMap = new HashMap<String, Object>();
             permCheckResults.add(currentContentMap);
             currentContentMap.put("contentId", id);
-            currentContentMap.put("checkResults", UtilMisc.newList());
+            currentContentMap.put("checkResults", new LinkedList());
         }
         currentContentId = id;
     }
@@ -183,7 +184,7 @@ public class PermissionRecorder {
             //if (Debug.infoOn()) Debug.logInfo("startMatchGroup, targStatusList(string):" + s, module);
             currentContentMap.put("statusId", s);
         }
-        List<Map<String, Object>> checkResultList = UtilMisc.newList();
+        List<Map<String, Object>> checkResultList = new LinkedList<Map<String, Object>>();
         currentContentMap.put("privilegeEnumId", privilegeEnumId);
         currentContentMap.put("contentId", contentId);
         currentContentMap.put("checkResultList", checkResultList);

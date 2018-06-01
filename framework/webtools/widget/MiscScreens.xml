@@ -140,7 +140,7 @@ under the License.
                 <set field="demoText" value="${uiLabelMap.WebtoolsLayoutDemoText}" global="true"/>
                 <set field="errorMessage" from-field="demoText" global="true"/>
                 <set field="eventMessage" from-field="demoText" global="true"/>
-                <set field="demoTargetUrl" value="WebtoolsLayoutDemo"/>
+                <set field="demoTargetUrl" value="LayoutDemo"/>
                 <set field="demoParam1" value="one"/>
                 <set field="demoParam2" value="two"/>
                 <set field="demoParam3" value="three"/>

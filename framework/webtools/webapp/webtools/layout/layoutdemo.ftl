@@ -510,7 +510,7 @@
   <#if debugMode>
   <#assign menuItems = [
     {"type":"link", "text":"Menu Tab 2", "disabled":true},
-    {"type":"link", "text":"Menu Tab 1", "href":"ofbizUrl://WebtoolsLayoutDemo"},
+    {"type":"link", "text":"Menu Tab 1", "href":"ofbizUrl://LayoutDemo"},
     {"type":"link", "text":"Menu Tab 4", "contentClass":"+${styles.button_color_green}", "onClick":"javascript:alert('Clicked menu item!');"},
     {"type":"text", "text":"Menu Tab 3 (text entry)", "nestedContent":"<!-- hidden nested menu item comment -->"},
     {"type":"submit", "text":"Menu Tab 5 (submit)", "disabled":true, "class":"+mymenuitemclass", "contentClass":"+mymenuitemcontentclass"},
@@ -1212,7 +1212,7 @@
 <#if debugMode>
 <a name="AutoValueFormFields"></a>
 <@section title="Auto-Value Form Fields">
-  <#assign autoformAction><@ofbizUrl>WebtoolsLayoutDemo<#if debugMode>?debugMode=true</#if></@ofbizUrl></#assign>
+  <#assign autoformAction><@ofbizUrl>LayoutDemo<#if debugMode>?debugMode=true</#if></@ofbizUrl></#assign>
   <#macro simulateErrorField>
     <#-- NOTE: this field is for demo usage only, bypasses auto-value -->
     <@field type="checkbox" autoValue=false name="simulateError" label="Simulate Error" value="Y" checked=((parameters.simulateError!"") == "Y") />
@@ -1837,23 +1837,23 @@
 <#if shopWebSiteId?has_content>
   <@section title="Standard navigation URLs">
     <ul>
-      <li><@ofbizUrl uri="WebtoolsLayoutDemo?param1=val1&param2=val2" escapeAs='html'/> <em>(html post-escaping - <strong>strongly preferred</strong> to pre-escaping)</em></li>
-      <li><@ofbizUrl uri="WebtoolsLayoutDemo?param1=val1&amp;param2=val2" /> <em>(html pre-escaping - legacy ofbiz mode - escaping done by caller before passing to macro)</em></li>
-      <li><@ofbizUrl>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li>${makeOfbizUrl("WebtoolsLayoutDemo?param1=val1&amp;param2=val2")}</li>
-      <li><@ofbizUrl fullPath=true>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li><@ofbizUrl fullPath="true">WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li><@ofbizUrl secure=true>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li><@ofbizUrl secure="true">WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li><@ofbizUrl secure=false>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li><@ofbizUrl secure="false">WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li><@ofbizUrl fullPath=true secure=true>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li><@ofbizUrl fullPath=true secure="true">WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li><@ofbizUrl fullPath=true secure=false>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li><@ofbizUrl fullPath=true secure="false">WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li><@ofbizUrl fullPath=true encode=false>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl uri="LayoutDemo?param1=val1&param2=val2" escapeAs='html'/> <em>(html post-escaping - <strong>strongly preferred</strong> to pre-escaping)</em></li>
+      <li><@ofbizUrl uri="LayoutDemo?param1=val1&amp;param2=val2" /> <em>(html pre-escaping - legacy ofbiz mode - escaping done by caller before passing to macro)</em></li>
+      <li><@ofbizUrl>LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li>${makeOfbizUrl("LayoutDemo?param1=val1&amp;param2=val2")}</li>
+      <li><@ofbizUrl fullPath=true>LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl fullPath="true">LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl secure=true>LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl secure="true">LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl secure=false>LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl secure="false">LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl fullPath=true secure=true>LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl fullPath=true secure="true">LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl fullPath=true secure=false>LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl fullPath=true secure="false">LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl fullPath=true encode=false>LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
       <li><@ofbizUrl uri="main" webSiteId=shopWebSiteId/></li>
-      <li><@ofbizWebappUrl uri="/control/WebtoolsLayoutDemo?param1=val1&amp;param2=val2" /></li>
+      <li><@ofbizWebappUrl uri="/control/LayoutDemo?param1=val1&amp;param2=val2" /></li>
       
       <li><@ofbizInterWebappUrl uri=shopMainUri /></li>
       <li><@ofbizInterWebappUrl uri=shopMainUri fullPath=true/></li>

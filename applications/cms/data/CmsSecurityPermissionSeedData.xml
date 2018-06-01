@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
-    
+
     <SecurityPermission description="View operations in the CMS Component." permissionId="CMS_VIEW"/>
     <SecurityPermission description="Create operations in the CMS Component." permissionId="CMS_CREATE"/>
     <SecurityPermission description="Update operations in the CMS Component." permissionId="CMS_UPDATE"/>
     <SecurityPermission description="Delete operations in the CMS Component." permissionId="CMS_DELETE"/>
     <SecurityPermission description="ALL operations in the CMS Component." permissionId="CMS_ADMIN"/>
     
+    <!-- add admin to SUPER permission group -->
+    <SecurityGroupPermission groupId="SUPER" permissionId="CMS_ADMIN"/>
+    <SecurityGroupPermission groupId="SUPER" permissionId="CMS_VIEW"/>
+    <SecurityGroupPermission groupId="SUPER" permissionId="CMS_CREATE"/>    
+    <SecurityGroupPermission groupId="SUPER" permissionId="CMS_UPDATE"/>
+    <SecurityGroupPermission groupId="SUPER" permissionId="CMS_DELETE"/>
+
 </entity-engine-xml>

@@ -43,7 +43,7 @@ public abstract class FileTypeResolver {
     public static final String AUDIO_TYPE = "AUDIO_OBJECT";
     public static final String DOCUMENT_TYPE = "DOCUMENT_OBJECT";
 
-    private static final ResolverConfig defaultResolverConfig = ResolverConfig.fromSettings("general.properties");
+    private static final ResolverConfig defaultResolverConfig = ResolverConfig.fromSettings("general");
     
     protected final ResolverConfig resolverConfig;
     protected final Delegator delegator;

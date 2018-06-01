@@ -47,7 +47,7 @@ public abstract class DemoDataHelper {
 		}
 		this.count = (Integer) context.get("num");
 		this.settings = settingsClass.getConstructor(Delegator.class).newInstance(delegator);
-		this.properties = UtilProperties.getProperties("demosuite.properties");
+		this.properties = UtilProperties.getProperties("demosuite");
 	}
 
 	public Class<? extends DemoDataObject> getReturnObjectClass() {

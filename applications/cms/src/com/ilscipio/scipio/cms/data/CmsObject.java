@@ -37,9 +37,9 @@ public abstract class CmsObject implements Serializable, Preloadable {
     // will only disable caching but never enable
     // NOTE: the 
     
-    static final boolean ALLOW_DB_CACHE = UtilProperties.getPropertyAsBoolean("cms.properties", "cache.db.allow", true);
-    static final boolean ALLOW_LOCAL_OBJ_CACHE = UtilProperties.getPropertyAsBoolean("cms.properties", "cache.obj.local.allow", true);
-    static final boolean ALLOW_GLOBAL_OBJ_CACHE = UtilProperties.getPropertyAsBoolean("cms.properties", "cache.obj.global.allow", true);
+    static final boolean ALLOW_DB_CACHE = UtilProperties.getPropertyAsBoolean("cms", "cache.db.allow", true);
+    static final boolean ALLOW_LOCAL_OBJ_CACHE = UtilProperties.getPropertyAsBoolean("cms", "cache.obj.local.allow", true);
+    static final boolean ALLOW_GLOBAL_OBJ_CACHE = UtilProperties.getPropertyAsBoolean("cms", "cache.obj.global.allow", true);
 
 // 2016: currently no occurrences of these. 
 //    protected boolean isUseCache() {

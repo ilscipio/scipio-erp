@@ -30,7 +30,7 @@ public abstract class CmsMasterComplexTemplate<T extends CmsVersionedComplexTemp
 
     private static final long serialVersionUID = -5341063606131700832L;
 
-    protected static final boolean removeAssociatedScripts = UtilProperties.getPropertyAsBoolean("cms.properties", "page.template.remove.removeAssociatedScripts", true);
+    protected static final boolean removeAssociatedScripts = UtilProperties.getPropertyAsBoolean("cms", "page.template.remove.removeAssociatedScripts", true);
     
     /**
      * A list of script templates (assocs) sorted by inputPosition.

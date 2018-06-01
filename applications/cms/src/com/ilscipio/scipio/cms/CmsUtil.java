@@ -15,7 +15,7 @@ public abstract class CmsUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
-    private static final boolean DEBUG = UtilProperties.getPropertyAsBoolean("cms.properties", "debug", false);
+    private static final boolean DEBUG = UtilProperties.getPropertyAsBoolean("cms", "debug", false);
     
     static {
         if (DEBUG) {

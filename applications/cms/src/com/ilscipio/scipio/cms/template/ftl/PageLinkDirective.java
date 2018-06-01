@@ -79,7 +79,7 @@ public class PageLinkDirective implements TemplateDirectiveModel, Serializable {
     
     private static final PageLinkDirective instance = new PageLinkDirective();
     
-    static final RenderExceptionMode urlLiveExceptionMode = CmsRenderUtil.getDirectiveLiveRenderExceptionMode(RenderExceptionMode.valueOfPermissive(UtilProperties.getPropertyValue("cms.properties", 
+    static final RenderExceptionMode urlLiveExceptionMode = CmsRenderUtil.getDirectiveLiveRenderExceptionMode(RenderExceptionMode.valueOfPermissive(UtilProperties.getPropertyValue("cms", 
             "render.live.exception.directive.url.mode")));   
     
     public PageLinkDirective() {

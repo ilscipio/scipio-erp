@@ -16,7 +16,7 @@ import com.ilscipio.scipio.accounting.external.datev.results.DatevBuchungsstapel
 import com.ilscipio.scipio.accounting.external.datev.stats.DatevBuchungsstapelStats;
 
 public class DatevBuchungsstapel extends AbstractDatevDataCategory {
-    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    private static final String module = DatevBuchungsstapel.class.getName();
 
     public DatevBuchungsstapel(Delegator delegator, DatevHelper datevHelper) throws DatevException {
         super(delegator, datevHelper);
@@ -24,14 +24,12 @@ public class DatevBuchungsstapel extends AbstractDatevDataCategory {
 
     @Override
     public void processRecord(int index, Map<String, String> recordMap) throws DatevException {
+        
         for (String fieldName : recordMap.keySet()) {
             String value = recordMap.get(fieldName);
 //            if (Debug.isOn(Debug.VERBOSE)) {
                 Debug.logInfo("Processing record [" + index + "] field [" + fieldName + "]: " + value, module);
 //            }
-                
-                  
-
         }
     }
 

@@ -288,7 +288,7 @@ public class TrackingCodeEvents {
             // SCIPIO: 2016-13-22: Do NOT override the trail if it was already set earlier in request, 
             // otherwise may lose work done by servlets and filters
             //CategoryWorker.setTrail(request, UtilMisc.<String>newList());
-            CategoryWorker.setTrailIfFirstInRequest(request, UtilMisc.<String>newList());
+            CategoryWorker.setTrailIfFirstInRequest(request, new LinkedList<String>());
         }
 
         // if forward/redirect is needed, do a response.sendRedirect and return null to tell the control servlet to not do any other requests/views

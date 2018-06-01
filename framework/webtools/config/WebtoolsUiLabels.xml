@@ -6062,4 +6062,8 @@
         <value xml:lang="de">Einmalige Ausführung, nicht beibehalten</value>
         <value xml:lang="fr">Exécution unique, non persistante</value>
     </property>
+    <property key="WebtoolsTemplateTest">
+        <value xml:lang="en">Template Test</value>
+        <value xml:lang="de">Template Test</value>
+    </property>
 </resource>

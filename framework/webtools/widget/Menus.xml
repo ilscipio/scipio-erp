@@ -477,11 +477,20 @@ under the License.
         <actions>
             <set field="demoTargetUrl" from-field="demoTargetUrl" default-value="WebtoolsLayoutDemo"/>
         </actions>
-        <menu-item name="LayoutDemo" title="Layout Demo">
+        <menu-item name="LayoutDemo" title="${uiLabelMap.WebtoolsLayoutDemo}">
             <link target="${demoTargetUrl}">
                 <parameter param-name="debugMode" from-field="parameters.debugMode"/><!-- preserve the mode -->
             </link>
             <sub-menu name="LayoutDemo" include="LayoutDemoSideBar"/>
+        </menu-item>
+        <menu-item name="TemplateTest" title="${uiLabelMap.WebtoolsTemplateTest}">
+            <condition>
+                <and>
+                    <if-has-permission permission="OFBTOOLS" action="_VIEW"/>
+                    <if-has-permission permission="ENTITY_DATA_ADMIN"/><!-- SUPER/FULLADMIN only, for security reasons -->
+                </and>
+            </condition>
+            <link target="TemplateTest"/>
         </menu-item>
         <menu-item name="DeveloperDocIndex" title="${uiLabelMap.WebtoolsDeveloperDocumentation}">
             <link target="DeveloperDocIndex"/>

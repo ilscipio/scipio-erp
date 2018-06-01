@@ -21,6 +21,7 @@ package org.ofbiz.shipment.packing;
 import java.math.BigDecimal;
 import java.util.AbstractMap;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -472,7 +473,7 @@ public class PackingSession implements java.io.Serializable {
     }
 
     public List<String> getCurrentShipmentIds(String orderId, String orderItemSeqId, String shipGroupSeqId) {
-        Set<String> shipmentIds = UtilMisc.newSet();
+        Set<String> shipmentIds = new HashSet<String>();
         List<GenericValue> issues = this.getItemIssuances(orderId, orderItemSeqId, shipGroupSeqId);
 
         if (issues != null) {

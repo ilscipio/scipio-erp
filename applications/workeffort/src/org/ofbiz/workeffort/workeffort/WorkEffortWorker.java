@@ -19,6 +19,7 @@
 
 package org.ofbiz.workeffort.workeffort;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -75,8 +76,8 @@ public class WorkEffortWorker {
     }
 
     public static List<GenericValue> removeDuplicateWorkEfforts(List<GenericValue> workEfforts) {
-        Set<String> keys = UtilMisc.newSet();
-        Set<GenericValue> exclusions = UtilMisc.newSet();
+        Set<String> keys = new HashSet<String>();
+        Set<GenericValue> exclusions = new HashSet<GenericValue>();
         for (GenericValue workEffort : workEfforts) {
             String workEffortId = workEffort.getString("workEffortId");
             if (keys.contains(workEffortId)) {

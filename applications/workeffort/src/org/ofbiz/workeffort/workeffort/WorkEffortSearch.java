@@ -21,6 +21,7 @@ package org.ofbiz.workeffort.workeffort;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -140,8 +141,8 @@ public class WorkEffortSearch {
         public boolean includedKeywordSearch = false;
         public Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
         public List<Set<String>> keywordFixedOrSetAndList = new LinkedList<Set<String>>();
-        public Set<String> orKeywordFixedSet = UtilMisc.newSet();
-        public Set<String> andKeywordFixedSet = UtilMisc.newSet();
+        public Set<String> orKeywordFixedSet = new HashSet<String>();
+        public Set<String> andKeywordFixedSet = new HashSet<String>();
         public List<GenericValue> workEffortSearchConstraintList = new LinkedList<GenericValue>();
         public ResultSortOrder resultSortOrder = null;
         public Integer resultOffset = null;
@@ -384,7 +385,7 @@ public class WorkEffortSearch {
                 int numRetreived = 1;
                 int duplicatesFound = 0;
 
-                Set<String> workEffortIdSet = UtilMisc.newSet();
+                Set<String> workEffortIdSet = new HashSet<String>();
 
                 workEffortIds.add(searchResult.getString("workEffortId"));
                 workEffortIdSet.add(searchResult.getString("workEffortId"));
@@ -506,7 +507,7 @@ public class WorkEffortSearch {
 
         @Override
         public void addConstraint(WorkEffortSearchContext workEffortSearchContext) {
-            Set<String> workEffortIdSet = UtilMisc.newSet();
+            Set<String> workEffortIdSet = new HashSet<String>();
             if (includeSubWorkEfforts) {
                 // find all sub-categories recursively, make a Set of workEffortId
                 WorkEffortSearch.getAllSubWorkEffortIds(workEffortId, workEffortIdSet, workEffortSearchContext.getDelegator(), workEffortSearchContext.nowTimestamp);
@@ -953,7 +954,7 @@ public class WorkEffortSearch {
                         expandedSet.add(keyword);
                     }
                     Set<String> fixedSet = KeywordSearchUtil.fixKeywordsForSearch(expandedSet, anyPrefix, anySuffix, removeStems, isAnd);
-                    Set<String> fixedKeywordSet = UtilMisc.newSet();
+                    Set<String> fixedKeywordSet = new HashSet<String>();
                     fixedKeywordSet.addAll(fixedSet);
                     workEffortSearchContext.keywordFixedOrSetAndList.add(fixedKeywordSet);
                 }

@@ -19,6 +19,7 @@
 package org.ofbiz.product.feature;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -266,7 +267,7 @@ public class ProductFeatureServices {
             }
 
             int defaultCodeCounter = 1;
-            Set<String> defaultVariantProductIds = UtilMisc.newSet(); // this map will contain the codes already used (as keys)
+            Set<String> defaultVariantProductIds = new HashSet<String>(); // this map will contain the codes already used (as keys)
             defaultVariantProductIds.add(productId);
 
             // now figure out which of these combinations already have productIds associated with them

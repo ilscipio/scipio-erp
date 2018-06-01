@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -65,8 +66,8 @@ public class LabelReferences {
     protected Delegator delegator;
     protected DispatchContext dispatchContext;
     protected Map<String, LabelInfo> labels;
-    protected Set<String> labelSet = UtilMisc.newSet();
-    protected Set<String> rootFolders = UtilMisc.newSet();
+    protected Set<String> labelSet = new HashSet<String>();
+    protected Set<String> rootFolders = new HashSet<String>();
 
     public LabelReferences(Delegator delegator, LabelManagerFactory factory) {
         this.delegator = delegator;
@@ -294,7 +295,7 @@ public class LabelReferences {
     }
 
     private void getLabelsFromFormWidgets(String inFile, File file) throws MalformedURLException, SAXException, ParserConfigurationException, IOException, GenericServiceException {
-        Set<String> fieldNames = UtilMisc.newSet();
+        Set<String> fieldNames = new HashSet<String>();
         findUiLabelMapInFile(inFile, file.getPath());
         Document formDocument = UtilXml.readXmlDocument(file.toURI().toURL());
         Element rootElem = formDocument.getDocumentElement();

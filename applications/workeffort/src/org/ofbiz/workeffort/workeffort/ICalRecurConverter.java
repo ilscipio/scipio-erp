@@ -19,6 +19,7 @@
 
 package org.ofbiz.workeffort.workeffort;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -82,11 +83,11 @@ public class ICalRecurConverter implements TemporalExpressionVisitor {
     @SuppressWarnings("unchecked")
     protected Recur consolidateRecurs(List<Recur> recurList) {
         // Try to consolidate a list of Recur instances into one instance
-        Set<Integer> monthList = UtilMisc.newSet();
-        Set<Integer> monthDayList = UtilMisc.newSet();
-        Set<WeekDay> weekDayList = UtilMisc.newSet();
-        Set<Integer> hourList = UtilMisc.newSet();
-        Set<Integer> minuteList = UtilMisc.newSet();
+        Set<Integer> monthList = new HashSet<Integer>();
+        Set<Integer> monthDayList = new HashSet<Integer>();
+        Set<WeekDay> weekDayList = new HashSet<WeekDay>();
+        Set<Integer> hourList = new HashSet<Integer>();
+        Set<Integer> minuteList = new HashSet<Integer>();
         String freq = null;
         int freqCount = 0;
         for (Recur recur : recurList) {

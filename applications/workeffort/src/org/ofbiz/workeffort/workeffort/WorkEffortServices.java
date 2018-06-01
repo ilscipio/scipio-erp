@@ -23,6 +23,7 @@ import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -748,7 +749,7 @@ public class WorkEffortServices {
         List<GenericValue> validWorkEfforts = null;
         Collection<String> partyIdsToUse = partyIds;
         if (partyIdsToUse == null) {
-            partyIdsToUse = UtilMisc.newSet();
+            partyIdsToUse = new HashSet<String>();
         }
         if (UtilValidate.isNotEmpty(partyId)) {
             if (partyId.equals(userLogin.getString("partyId")) || security.hasEntityPermission("WORKEFFORTMGR", "_VIEW", userLogin)) {
@@ -861,8 +862,8 @@ public class WorkEffortServices {
             }
             try {
                 // Process recurring work efforts
-                Set<GenericValue> exclusions = UtilMisc.newSet();
-                Set<GenericValue> inclusions = UtilMisc.newSet();
+                Set<GenericValue> exclusions = new HashSet<GenericValue>();
+                Set<GenericValue> inclusions = new HashSet<GenericValue>();
                 DateRange range = new DateRange(startStamp, endStamp);
                 Calendar cal = UtilDateTime.toCalendar(startStamp, timeZone, locale);
                 for (GenericValue workEffort : validWorkEfforts) {
@@ -1382,7 +1383,7 @@ public class WorkEffortServices {
         EntityListIterator eli = (EntityListIterator) context.get("workEffortIterator");
         if (eli != null) {
             try {
-                Set<String> keys = UtilMisc.newSet();
+                Set<String> keys = new HashSet<String>();
                 resultList = new LinkedList<GenericValue>();
                 GenericValue workEffort = eli.next();
                 while (workEffort != null) {

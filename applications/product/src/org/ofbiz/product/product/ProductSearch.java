@@ -23,6 +23,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -71,7 +72,7 @@ public class ProductSearch {
     public static final String resourceCommon = "CommonUiLabels";
 
     public static ArrayList<String> parametricKeywordSearch(Map<?, String> featureIdByType, String keywordsString, Delegator delegator, String productCategoryId, String visitId, boolean anyPrefix, boolean anySuffix, boolean isAnd) {
-        Set<String> featureIdSet = UtilMisc.newSet();
+        Set<String> featureIdSet = new HashSet<String>();
         if (featureIdByType != null) {
             featureIdSet.addAll(featureIdByType.values());
         }
@@ -149,8 +150,8 @@ public class ProductSearch {
         public boolean includedKeywordSearch = false;
         public Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
         public List<Set<String>> keywordFixedOrSetAndList = new LinkedList<Set<String>>();
-        public Set<String> orKeywordFixedSet = UtilMisc.newSet();
-        public Set<String> andKeywordFixedSet = UtilMisc.newSet();
+        public Set<String> orKeywordFixedSet = new HashSet<String>();
+        public Set<String> andKeywordFixedSet = new HashSet<String>();
         public List<GenericValue> productSearchConstraintList = new LinkedList<GenericValue>();
         public ResultSortOrder resultSortOrder = null;
         public Integer resultOffset = null;
@@ -159,27 +160,27 @@ public class ProductSearch {
         protected String visitId = null;
         protected Integer totalResults = null;
 
-        public Set<String> includeCategoryIds = UtilMisc.newSet();
-        public Set<String> excludeCategoryIds = UtilMisc.newSet();
-        public Set<String> alwaysIncludeCategoryIds = UtilMisc.newSet();
+        public Set<String> includeCategoryIds = new HashSet<String>();
+        public Set<String> excludeCategoryIds = new HashSet<String>();
+        public Set<String> alwaysIncludeCategoryIds = new HashSet<String>();
 
         public List<Set<String>> includeCategoryIdOrSetAndList = new LinkedList<Set<String>>();
         public List<Set<String>> alwaysIncludeCategoryIdOrSetAndList = new LinkedList<Set<String>>();
 
-        public Set<String> includeFeatureIds = UtilMisc.newSet();
-        public Set<String> excludeFeatureIds = UtilMisc.newSet();
-        public Set<String> alwaysIncludeFeatureIds = UtilMisc.newSet();
+        public Set<String> includeFeatureIds = new HashSet<String>();
+        public Set<String> excludeFeatureIds = new HashSet<String>();
+        public Set<String> alwaysIncludeFeatureIds = new HashSet<String>();
 
         public List<Set<String>> includeFeatureIdOrSetAndList = new LinkedList<Set<String>>();
         public List<Set<String>> alwaysIncludeFeatureIdOrSetAndList = new LinkedList<Set<String>>();
 
-        public Set<String> includeFeatureCategoryIds = UtilMisc.newSet();
-        public Set<String> excludeFeatureCategoryIds = UtilMisc.newSet();
-        public Set<String> alwaysIncludeFeatureCategoryIds = UtilMisc.newSet();
+        public Set<String> includeFeatureCategoryIds = new HashSet<String>();
+        public Set<String> excludeFeatureCategoryIds = new HashSet<String>();
+        public Set<String> alwaysIncludeFeatureCategoryIds = new HashSet<String>();
 
-        public Set<String> includeFeatureGroupIds = UtilMisc.newSet();
-        public Set<String> excludeFeatureGroupIds = UtilMisc.newSet();
-        public Set<String> alwaysIncludeFeatureGroupIds = UtilMisc.newSet();
+        public Set<String> includeFeatureGroupIds = new HashSet<String>();
+        public Set<String> excludeFeatureGroupIds = new HashSet<String>();
+        public Set<String> alwaysIncludeFeatureGroupIds = new HashSet<String>();
 
         public List<String> keywordTypeIds = new LinkedList<String>();
         public String statusId = null;
@@ -744,7 +745,7 @@ public class ProductSearch {
                 int numRetreived = 1;
                 int duplicatesFound = 0;
 
-                Set<String> productIdSet = UtilMisc.newSet();
+                Set<String> productIdSet = new HashSet<String>();
 
                 productIds.add(searchResult.getString("mainProductId"));
                 productIdSet.add(searchResult.getString("mainProductId"));
@@ -950,7 +951,7 @@ public class ProductSearch {
 
         @Override
         public void addConstraint(ProductSearchContext productSearchContext) {
-            Set<String> productCategoryIdSet = UtilMisc.newSet();
+            Set<String> productCategoryIdSet = new HashSet<String>();
             if (includeSubCategories) {
                 // find all sub-categories recursively, make a Set of productCategoryId
                 ProductSearch.getAllSubCategoryIds(productCategoryId, productCategoryIdSet, productSearchContext.getDelegator(), productSearchContext.nowTimestamp);
@@ -1320,7 +1321,7 @@ public class ProductSearch {
          * @param exclude This is a tri-state variable: null = Include, true = Exclude, false = AlwaysInclude
          */
         public FeatureSetConstraint(Collection<String> productFeatureIdSet, Boolean exclude) {
-            this.productFeatureIdSet = UtilMisc.newSet();
+            this.productFeatureIdSet = new HashSet<String>();
             this.productFeatureIdSet.addAll(productFeatureIdSet);
             this.exclude = exclude;
         }
@@ -1467,7 +1468,7 @@ public class ProductSearch {
                         expandedSet.add(keyword);
                     }
                     Set<String> fixedSet = KeywordSearchUtil.fixKeywordsForSearch(expandedSet, anyPrefix, anySuffix, removeStems, isAnd);
-                    Set<String> fixedKeywordSet = UtilMisc.newSet();
+                    Set<String> fixedKeywordSet = new HashSet<String>();
                     fixedKeywordSet.addAll(fixedSet);
                     productSearchContext.keywordFixedOrSetAndList.add(fixedKeywordSet);
                 }

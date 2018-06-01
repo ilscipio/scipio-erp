@@ -19,6 +19,7 @@
 package org.ofbiz.product.feature;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -125,7 +126,7 @@ public class ParametricSearch {
     public static Map<String, List<GenericValue>> getAllFeaturesByType(Delegator delegator, int perTypeMaxSize) {
         Map<String, List<GenericValue>> productFeaturesByTypeMap = new HashMap<String, List<GenericValue>>();
         try {
-            Set<String> typesWithOverflowMessages = UtilMisc.newSet();
+            Set<String> typesWithOverflowMessages = new HashSet<String>();
             EntityListIterator productFeatureEli = EntityQuery.use(delegator).from("ProductFeature").orderBy("description").queryIterator();
             GenericValue productFeature = null;
             while ((productFeature = productFeatureEli.next()) != null) {

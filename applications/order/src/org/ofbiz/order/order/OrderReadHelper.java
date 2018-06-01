@@ -1739,7 +1739,7 @@ public class OrderReadHelper {
 
     /** Get a set of productIds in the order. */
     public Collection<String> getOrderProductIds() {
-        Set<String> productIds = UtilMisc.newSet();
+        Set<String> productIds = new HashSet<String>();
         for (GenericValue orderItem : getOrderItems()) {
             if (orderItem.get("productId") != null) {
                 productIds.add(orderItem.getString("productId"));
@@ -2294,7 +2294,7 @@ public class OrderReadHelper {
 
     public Set<String> getProductPromoCodesEntered() {
         Delegator delegator = orderHeader.getDelegator();
-        Set<String> productPromoCodesEntered = UtilMisc.newSet();
+        Set<String> productPromoCodesEntered = new HashSet<String>();
         try {
             for (GenericValue orderProductPromoCode : EntityQuery.use(delegator).from("OrderProductPromoCode").where("orderId", orderHeader.get("orderId"))
                     .cache().queryList()) {

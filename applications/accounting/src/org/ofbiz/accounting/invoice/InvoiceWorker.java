@@ -23,6 +23,7 @@ import java.math.MathContext;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -667,7 +668,7 @@ public class InvoiceWorker {
                 String taxAuthGeoId = invoiceItem.getString("taxAuthGeoId");
                 if (UtilValidate.isNotEmpty(taxAuthPartyId)) {
                     if (!result.containsKey(taxAuthPartyId)) {
-                        Set<String> taxAuthGeos = UtilMisc.newSet();
+                        Set<String> taxAuthGeos = new HashSet<String>();
                         taxAuthGeos.add(taxAuthGeoId);
                         result.put(taxAuthPartyId, taxAuthGeos);
                     } else {
@@ -687,7 +688,7 @@ public class InvoiceWorker {
                 String taxAuthGeoId = orderAdjustment.getString("taxAuthGeoId");
                 if (UtilValidate.isNotEmpty(taxAuthPartyId)) {
                     if (!result.containsKey(taxAuthPartyId)) {
-                        Set<String> taxAuthGeos = UtilMisc.newSet();
+                        Set<String> taxAuthGeos = new HashSet<String>();
                         taxAuthGeos.add(taxAuthGeoId);
                         result.put(taxAuthPartyId, taxAuthGeos);
                     } else {

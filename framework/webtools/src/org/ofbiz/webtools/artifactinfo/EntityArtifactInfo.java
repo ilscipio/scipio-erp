@@ -20,6 +20,7 @@ package org.ofbiz.webtools.artifactinfo;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -111,13 +112,13 @@ public class EntityArtifactInfo extends ArtifactInfoBase {
 
     /** Get the Services called by Entity ECA */
     public Set<ServiceArtifactInfo> getServicesCalledByEntityEca() {
-        Set<ServiceArtifactInfo> serviceSet = UtilMisc.newSet();
+        Set<ServiceArtifactInfo> serviceSet = new HashSet<ServiceArtifactInfo>();
         // TODO: implement this
         return serviceSet;
     }
 
     public Set<EntityEcaRule> getEntityEcaRules() {
-        Set<EntityEcaRule> eecaSet = UtilMisc.newSet();
+        Set<EntityEcaRule> eecaSet = new HashSet<EntityEcaRule>();
         // TODO: implement this
         return eecaSet;
     }

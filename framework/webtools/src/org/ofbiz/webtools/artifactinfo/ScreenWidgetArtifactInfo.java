@@ -21,6 +21,7 @@ package org.ofbiz.webtools.artifactinfo;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -214,7 +215,7 @@ public class ScreenWidgetArtifactInfo extends ArtifactInfoBase {
 
     public Set<ScreenWidgetArtifactInfo> getScreensIncludedInScreen() {
         // TODO: implement this
-        return UtilMisc.newSet();
+        return new HashSet<ScreenWidgetArtifactInfo>();
     }
 
     public Set<ScreenWidgetArtifactInfo> getScreensIncludingThisScreen() {

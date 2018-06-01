@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -1107,7 +1108,7 @@ public class ContentManagementServices {
         Locale locale = (Locale) context.get("locale");
         Set<String> visitedSet = UtilGenerics.checkSet(context.get("visitedSet"));
         if (visitedSet == null) {
-            visitedSet = UtilMisc.newSet();
+            visitedSet = new HashSet<String>();
             context.put("visitedSet", visitedSet);
         }
         String pageMode = (String)context.get("pageMode");
@@ -1147,7 +1148,7 @@ public class ContentManagementServices {
         Locale locale = (Locale) context.get("locale");
         Set<String> visitedSet = UtilGenerics.checkSet(context.get("visitedSet"));
         if (visitedSet == null) {
-            visitedSet = UtilMisc.newSet();
+            visitedSet = new HashSet<String>();
             context.put("visitedSet", visitedSet);
         }
         String contentId = (String)context.get("contentId");
@@ -1221,7 +1222,7 @@ public class ContentManagementServices {
         String contentId = content.getString("contentId");
         Set<String> visitedSet = UtilGenerics.checkSet(context.get("visitedSet"));
         if (visitedSet == null) {
-            visitedSet = UtilMisc.newSet();
+            visitedSet = new HashSet<String>();
             context.put("visitedSet", visitedSet);
         } else {
             if (visitedSet.contains(contentId)) {
@@ -1254,7 +1255,7 @@ public class ContentManagementServices {
         String contentId = content.getString("contentId");
         Set<String> visitedSet = UtilGenerics.checkSet(context.get("visitedSet"));
         if (visitedSet == null) {
-            visitedSet = UtilMisc.newSet();
+            visitedSet = new HashSet<String>();
             context.put("visitedSet", visitedSet);
         } else {
             if (visitedSet.contains(contentId)) {
@@ -1644,7 +1645,7 @@ public class ContentManagementServices {
         Locale locale = (Locale) context.get("locale");
         Set<String> visitedSet = UtilGenerics.checkSet(context.get("visitedSet"));
         if (visitedSet == null) {
-            visitedSet = UtilMisc.newSet();
+            visitedSet = new HashSet<String>();
             context.put("visitedSet", visitedSet);
         } else {
             if (visitedSet.contains(contentId)) {

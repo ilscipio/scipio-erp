@@ -20,6 +20,7 @@ package org.ofbiz.content.content;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -120,8 +121,8 @@ public class ContentSearch {
         public boolean includedKeywordSearch = false;
         public Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
         public List<Set<String>> keywordFixedOrSetAndList = new LinkedList<Set<String>>();
-        public Set<String> orKeywordFixedSet = UtilMisc.newSet();
-        public Set<String> andKeywordFixedSet = UtilMisc.newSet();
+        public Set<String> orKeywordFixedSet = new HashSet<String>();
+        public Set<String> andKeywordFixedSet = new HashSet<String>();
         public List<GenericValue> contentSearchConstraintList = new LinkedList<GenericValue>();
         public ResultSortOrder resultSortOrder = null;
         public Integer resultOffset = null;
@@ -370,7 +371,7 @@ public class ContentSearch {
                 int numRetreived = 1;
                 int duplicatesFound = 0;
 
-                Set<String> contentIdSet = UtilMisc.newSet();
+                Set<String> contentIdSet = new HashSet<String>();
 
                 contentIds.add(searchResult.getString("contentId"));
                 contentIdSet.add(searchResult.getString("contentId"));
@@ -492,7 +493,7 @@ public class ContentSearch {
 
         @Override
         public void addConstraint(ContentSearchContext contentSearchContext) {
-            Set<String> contentIdSet = UtilMisc.newSet();
+            Set<String> contentIdSet = new HashSet<String>();
             if (includeSubContents) {
                 // find all sub-categories recursively, make a Set of contentId
                 ContentSearch.getAllSubContentIds(contentId, contentIdSet, contentSearchContext.getDelegator(), contentSearchContext.nowTimestamp);
@@ -686,7 +687,7 @@ public class ContentSearch {
                         expandedSet.add(keyword);
                     }
                     Set<String> fixedSet = KeywordSearchUtil.fixKeywordsForSearch(expandedSet, anyPrefix, anySuffix, removeStems, isAnd);
-                    Set<String> fixedKeywordSet = UtilMisc.newSet();
+                    Set<String> fixedKeywordSet = new HashSet<String>();
                     fixedKeywordSet.addAll(fixedSet);
                     contentSearchContext.keywordFixedOrSetAndList.add(fixedKeywordSet);
                 }

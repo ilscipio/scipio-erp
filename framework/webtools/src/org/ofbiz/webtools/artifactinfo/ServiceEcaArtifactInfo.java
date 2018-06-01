@@ -22,6 +22,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -112,8 +113,8 @@ public class ServiceEcaArtifactInfo extends ArtifactInfoBase {
     }
 
     public Map<String, Object> createEoModelMap(Set<ServiceArtifactInfo> triggeringServiceSet, Set<ServiceArtifactInfo> triggeredServiceSet, boolean useMoreDetailedNames) {
-        if (triggeringServiceSet == null) triggeringServiceSet = UtilMisc.newSet();
-        if (triggeredServiceSet == null) triggeredServiceSet = UtilMisc.newSet();
+        if (triggeringServiceSet == null) triggeringServiceSet = new HashSet<ServiceArtifactInfo>();
+        if (triggeredServiceSet == null) triggeredServiceSet = new HashSet<ServiceArtifactInfo>();
         Map<String, Object> topLevelMap = new HashMap<String, Object>();
 
         topLevelMap.put("name", this.getDisplayPrefixedName());

@@ -842,7 +842,7 @@ public class ProductServices {
 
             // separate variantProductIdsBag into a Set of variantProductIds
             //note: can be comma, tab, or white-space delimited
-            Set<String> prelimVariantProductIds = UtilMisc.newSet();
+            Set<String> prelimVariantProductIds = new HashSet<String>();
             List<String> splitIds = Arrays.asList(variantProductIdsBag.split("[,\\p{Space}]"));
             Debug.logInfo("Variants: bag=" + variantProductIdsBag, module);
             Debug.logInfo("Variants: split=" + splitIds, module);
@@ -883,7 +883,7 @@ public class ProductServices {
             }
 
             // Attach productFeatureIdOne, Two, Three to the new virtual and all variant products as a standard feature
-            Set<String> featureProductIds = UtilMisc.newSet();
+            Set<String> featureProductIds = new HashSet<String>();
             featureProductIds.add(productId);
             featureProductIds.addAll(variantProductsById.keySet());
             Set<String> productFeatureIds = new HashSet<String>();

@@ -22,6 +22,7 @@ package org.ofbiz.content.content;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -52,7 +53,7 @@ public class ContentMapFacade implements Map<Object, Object> {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    protected static final Set<String> mapKeySet = UtilMisc.newSet();
+    protected static final Set<String> mapKeySet = new HashSet<String>();
     static {
         mapKeySet.add("fields");
         mapKeySet.add("link");

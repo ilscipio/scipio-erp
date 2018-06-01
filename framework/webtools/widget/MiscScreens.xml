@@ -650,6 +650,7 @@ under the License.
                                         <set field="resField2" value="else block"/>
                                     </else>
                                 </if>
+                                <!-- the errors pollute the log; don't need to test this every time
                                 <set field="testField1" value="other"/>
                                 <if>
                                     <condition><if-true field="testField1"/></condition>
@@ -661,7 +662,7 @@ under the License.
                                     <else>
                                         <set field="resField3" value="else block"/>
                                     </else>
-                                </if>
+                                </if>-->
                                 <set field="testField1" value="other"/>
                                 <if>
                                     <condition><if-true value="${testField1 == 'other'}"/></condition>

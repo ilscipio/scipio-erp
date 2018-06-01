@@ -63,8 +63,8 @@ public class JanrainHelper {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     // SCIPIO: now points to shop
-    private static String apiKey = UtilProperties.getPropertyValue("shop.properties", "janrain.apiKey");
-    private static String baseUrl = UtilProperties.getPropertyValue("shop.properties", "janrain.baseUrl");
+    private static String apiKey = UtilProperties.getPropertyValue("shop", "janrain.apiKey");
+    private static String baseUrl = UtilProperties.getPropertyValue("shop", "janrain.baseUrl");
     public JanrainHelper(String apiKey, String baseUrl) {
         while (baseUrl.endsWith("/"))
             baseUrl = baseUrl.substring(0, baseUrl.length() - 1);

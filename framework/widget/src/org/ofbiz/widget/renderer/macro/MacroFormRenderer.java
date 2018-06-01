@@ -1399,7 +1399,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             sr.append("<@renderFieldTitle ");
             sr.append(" style=");
             sr.append(ftlFmt.makeStringLiteral(style));
-            String displayHelpText = UtilProperties.getPropertyValue("widget.properties", "widget.form.displayhelpText");
+            String displayHelpText = UtilProperties.getPropertyValue("widget", "widget.form.displayhelpText");
             if ("Y".equals(displayHelpText)) {
                 Delegator delegator = WidgetWorker.getDelegator(context);
                 Locale locale = (Locale) context.get("locale");

@@ -224,7 +224,7 @@ under the License.
         <attribute mode="IN" name="listPrice" optional="true" type="String" />
         <attribute mode="IN" name="defaultPrice" optional="true" type="String" />
         
-        <attribute mode="IN" name="inStock" optional="true" type="String" />
+        <attribute mode="IN" name="inStock" optional="true" type="Integer" />
         <attribute mode="IN" name="isVirtual" optional="true" type="Boolean" />
         <attribute mode="IN" name="isVariant" optional="true" type="Boolean" />
         

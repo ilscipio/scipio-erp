@@ -65,7 +65,7 @@
     </property>
     <property key="SetupSaveAndContinue">
         <value xml:lang="en">Save &amp; Continue</value>
-        <value xml:lang="de">Speichern fortsetzen</value>
+        <value xml:lang="de">Speichern &amp; Fortsetzen</value>
         <value xml:lang="fr">Enregistrer et continuer</value>
     </property>
     <property key="SetupSelectAndContinue">

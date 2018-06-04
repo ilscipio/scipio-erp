@@ -19062,6 +19062,7 @@
         <value xml:lang="zh-TW">有效</value>
     </property>
     <property key="ProductInventoryAverageCosts">
+        <value xml:lang="de">Lagerbestand Durchschnittskosten</value>
         <value xml:lang="en">Inventory Average Costs</value>
         <value xml:lang="fr">Coûts moyens de stokage</value>
         <value xml:lang="it">Costi medi di inventario</value>

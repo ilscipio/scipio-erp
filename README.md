@@ -59,14 +59,14 @@ will assist). For some projects, master may be the recommended branch to use.
 In order to install, the following steps must be taken:
 
 1. Open your command line, go to the extracted folder and run:
-a. Linux ./install.sh
-b. OS X: ./install.sh
-c. Windows: install.bat
+ a. Linux ./install.sh
+ b. OS X: ./install.sh
+ c. Windows: install.bat
 
 2. From the same command line run:
-a. Linux ./start.sh
-b. OS X: bash ./start.sh
-c. Windows: start.bat
+ a. Linux ./start.sh
+ b. OS X: bash ./start.sh
+ c. Windows: start.bat
 
 3. To access the application visit the SCIPIO ERP Dashboard:
   https://localhost:8443/admin

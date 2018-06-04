@@ -166,7 +166,8 @@
         <value xml:lang="de">Finanzperiode</value>
     </property>
     <property key="SetupAccountingSelectStartFiscalDayMonth">
-    	<value xml:lang="en">Select start fiscal day/month</value>
+    	<value xml:lang="en">Select start fiscal month/day</value>
+        <value xml:lang="de">Start der Finanzperiode (Monat/Tag)</value>
     </property>
     <property key="SetupAccountingPreferencesCurrencies">
     	<value xml:lang="en">Currencies</value>

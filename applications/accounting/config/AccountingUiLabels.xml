@@ -16864,6 +16864,7 @@
         <value xml:lang="zh-TW">期末借款餘額</value>
     </property>
     <property key="FormFieldTitle_cogsMethodId">
+        <value xml:lang="de">Umsatzkostenverfahren (COGS)</value>
         <value xml:lang="en">Cost Of Goods Sold (COGS) Method</value>
         <value xml:lang="es">Método de costo de bienes vendidos</value>
         <value xml:lang="fr">Méthode du coût direct (COGS)</value>
@@ -18090,6 +18091,7 @@
         <value xml:lang="zh-TW">發票識別</value>
     </property>
     <property key="FormFieldTitle_invoiceIdPrefix">
+        <value xml:lang="de">Rechnungsnummern Präfix</value>
         <value xml:lang="en">Invoice Id Prefix</value>
         <value xml:lang="es">Id Prefijo Factura</value>
         <value xml:lang="fr">Préfixe de facture</value>
@@ -18197,6 +18199,7 @@
     </property>
     <property key="FormFieldTitle_invoiceSequenceEnumId">
         <value xml:lang="ar">تسلسل الفاتورة</value>
+        <value xml:lang="de">Rechnungsbezifferung</value>
         <value xml:lang="en">Invoice Sequence</value>
         <value xml:lang="es">Secuencia de Factura</value>
         <value xml:lang="fr">Séquence de facturation</value>
@@ -18300,6 +18303,7 @@
     </property>
     <property key="FormFieldTitle_lastInvoiceNumber">
         <value xml:lang="ar">آخر رقم فاتورة</value>
+        <value xml:lang="de">Letzte Rechnungsnummer</value>
         <value xml:lang="en">Last Invoice Number</value>
         <value xml:lang="es">Último número de factura</value>
         <value xml:lang="fr">Dernier n° de facture</value>
@@ -18317,6 +18321,7 @@
     </property>
     <property key="FormFieldTitle_lastInvoiceRestartDate">
         <value xml:lang="ar">آخر تاريخ إعادة الفاتورة</value>
+        <value xml:lang="de">Startdatum der Rechnungsnummern</value>
         <value xml:lang="en">Last Invoice Restart Date</value>
         <value xml:lang="es">Ultima fecha de reinicio de factura</value>
         <value xml:lang="fr">Date de reprise de la dernière facture</value>
@@ -18334,6 +18339,7 @@
     </property>
     <property key="FormFieldTitle_lastOrderNumber">
         <value xml:lang="ar">آخر رقم طلبية</value>
+        <value xml:lang="de">Letzte Bestellnummer</value>
         <value xml:lang="en">Last Order Number</value>
         <value xml:lang="es">Último número de orden</value>
         <value xml:lang="fr">Dernier n° de commande</value>
@@ -18351,6 +18357,7 @@
     </property>
     <property key="FormFieldTitle_lastQuoteNumber">
         <value xml:lang="ar">أخر رقم قوطة</value>
+        <value xml:lang="de">Letzte Angebotsnummer</value>
         <value xml:lang="en">Last Quote Number</value>
         <value xml:lang="es">Último número de presupuesto</value>
         <value xml:lang="fr">Dernier n° de devis</value>
@@ -18661,6 +18668,7 @@
         <value xml:lang="zh-TW">期初借方餘額</value>
     </property>
     <property key="FormFieldTitle_orderIdPrefix">
+        <value xml:lang="de">Bestellnummern Präfix</value>
         <value xml:lang="en">Order Id Prefix</value>
         <value xml:lang="es">Id Prefijo de orden</value>
         <value xml:lang="fr">Préfixe de commande</value>
@@ -18693,6 +18701,7 @@
         <value xml:lang="zh-TW">訂單支付偏好方法識別</value>
     </property>
     <property key="FormFieldTitle_orderSequenceEnumId">
+        <value xml:lang="de">Bestellnummern</value>
         <value xml:lang="en">Order Sequence</value>
         <value xml:lang="es">Orden de secuencia</value>
         <value xml:lang="fr">Séquence de commandes</value>
@@ -19524,6 +19533,7 @@
         <value xml:lang="zh-TW">密碼</value>
     </property>
     <property key="FormFieldTitle_quoteIdPrefix">
+        <value xml:lang="de">Angebotsnummer Präfix</value>
         <value xml:lang="en">Quote Id Prefix</value>
         <value xml:lang="es">Id Prefijo de Presupuesto</value>
         <value xml:lang="fr">Préfixe de devis</value>
@@ -19540,6 +19550,7 @@
         <value xml:lang="zh-TW">報價識別字首</value>
     </property>
     <property key="FormFieldTitle_quoteSequenceEnumId">
+        <value xml:lang="de">Angebotsnummer</value>
         <value xml:lang="en">Quote Sequence</value>
         <value xml:lang="es">Secuencia de presupuesto</value>
         <value xml:lang="fr">Séquence de devis</value>
@@ -20034,6 +20045,7 @@
         <value xml:lang="zh-TW">稅務機關稅率序號</value>
     </property>
     <property key="FormFieldTitle_taxFormId">
+        <value xml:lang="de">Steuerformular der Organisation</value>
         <value xml:lang="en">Tax Form for Organization</value>
         <value xml:lang="es">Forma fiscal para organización</value>
         <value xml:lang="fr">Formulaire fiscal applicable à l'organisation</value>
@@ -20436,6 +20448,7 @@
         <value xml:lang="zh-TW">未開發票金額</value>
     </property>
     <property key="FormFieldTitle_useInvoiceIdForReturns">
+        <value xml:lang="de">Retouren mit neuer Rechnungsnummer ausstellen</value>
         <value xml:lang="en">Use Invoice Id For Returns</value>
         <value xml:lang="es">Usar Id de Factura para Devolución</value>
         <value xml:lang="fr">Utiliser réf. de facture pour les retours</value>

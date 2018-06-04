@@ -187,7 +187,7 @@ public interface CmsRenderTemplate extends Serializable {
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
             Enumeration<URL> resources;
             try {
-                resources = loader.getResources("cmsFreemarkerTransforms");
+                resources = loader.getResources("cmsFreemarkerTransforms.properties");
             } catch (IOException e) {
                 Debug.logError(e, "Could not load list of cmsFreemarkerTransforms", module);
                 throw UtilMisc.initCause(new InternalError(e.getMessage()), e);

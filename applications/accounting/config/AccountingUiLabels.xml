@@ -18245,6 +18245,7 @@
         <value xml:lang="zh-TW">發票類型</value>
     </property>
     <property key="FormFieldTitle_isClosed">
+        <value xml:lang="de">Abgeschlossen</value>
         <value xml:lang="en">Is Closed</value>
         <value xml:lang="fr">Fermée</value>
         <value xml:lang="it">E' Chiuso</value>

@@ -561,7 +561,7 @@
         <value xml:lang="en">Advanced Search</value>
     </property>
     <property key="CommonAdvanced"><!-- SCIPIO: TODO: localize -->
-        <value xml:lang="de">Erweiterte</value>
+        <value xml:lang="de">Erweitert</value>
         <value xml:lang="en">Advanced</value>
         <value xml:lang="es">Avanzada</value>
         <value xml:lang="fr">Avancé</value>

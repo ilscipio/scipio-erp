@@ -16085,7 +16085,7 @@
     </property>      
     <property key="FormFieldTitle_setupAction">
         <!-- TODO: incomplete -->
-        <value xml:lang="de">Einrichten</value>
+        <value xml:lang="de">Konfiguration</value>
         <value xml:lang="en">Setup</value>
     </property>
     <property key="FormFieldTitle_submitAction">

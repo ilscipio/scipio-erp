@@ -40,7 +40,7 @@
     </property>
     <property key="SetupSettingUp">
         <value xml:lang="en">Setting up</value>
-        <value xml:lang="de">Einrichten</value>
+        <value xml:lang="de">Konfiguration</value>
         <value xml:lang="fr">Configuration</value>
     </property>
     <property key="SetupSetupCompleteFor">

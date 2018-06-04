@@ -19,6 +19,7 @@
 package org.ofbiz.order.test;
 
 import java.math.BigDecimal;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -83,7 +84,7 @@ public class OrderTestServices {
             salesChannel = "WEB_SALES_CHANNEL";
         }
 
-        List<String> productsList = UtilMisc.newList();
+        List<String> productsList = new LinkedList<String>();
         try {
             if (UtilValidate.isNotEmpty(productId)) {
                 productsList.add(productId);

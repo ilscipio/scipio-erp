@@ -31,8 +31,8 @@ import com.ilscipio.scipio.accounting.external.datev.DatevHelper;
 
 public abstract class AbstractDatevDataCategory {
 
-    final Delegator delegator;
-    final DatevHelper datevHelper;
+    protected final Delegator delegator;
+    protected final DatevHelper datevHelper;
 
     private final List<GenericValue> datevMetadataFieldsDefinitions;
     private Map<String, Object> datevMetadataValues = new HashMap<>();

@@ -40,7 +40,7 @@
     </property>
     <property key="SetupSettingUp">
         <value xml:lang="en">Setting up</value>
-        <value xml:lang="de">Einrichten</value>
+        <value xml:lang="de">Konfiguration</value>
         <value xml:lang="fr">Configuration</value>
     </property>
     <property key="SetupSetupCompleteFor">
@@ -65,7 +65,7 @@
     </property>
     <property key="SetupSaveAndContinue">
         <value xml:lang="en">Save &amp; Continue</value>
-        <value xml:lang="de">Speichern fortsetzen</value>
+        <value xml:lang="de">Speichern &amp; Fortsetzen</value>
         <value xml:lang="fr">Enregistrer et continuer</value>
     </property>
     <property key="SetupSelectAndContinue">
@@ -134,31 +134,40 @@
     </property>
     <property key="SetupSelectUserForSetup">
         <value xml:lang="en">Select User for Setup</value>
+        <value xml:lang="de">Einen Nutzer einrichten</value>
     </property>
     <property key="SetupAccountingCreateNewModule">
-    	<value xml:lang="en">Configure a new accounting module</value>
-    </property>    
+    	<value xml:lang="en">Accounting configuration</value>
+        <value xml:lang="de">Konfiguration der Buchhaltung</value>
+    </property>
     <property key="SetupUseEmailAddress">
         <value xml:lang="en">Use email address</value>
+        <value xml:lang="de">Die Email Addresse verwenden</value>
     </property>
     <property key="SetupAccountInformation">
         <value xml:lang="en">Account information</value>
+        <value xml:lang="de">Konto Informationen</value>
     </property>    
     <property key="SetupIsRelatedToOrgAs">
         <value xml:lang="en">Is related to ${orgPartyId} as</value>
+        <value xml:lang="de">Steht in Verbindung zu ${orgPartyId} als</value>
     </property>
     
     <property key="SetupAccountingPreferences">
     	<value xml:lang="en">Accounting Preferences</value>
+        <value xml:lang="de">Buchhaltungspräferenzen</value>
     </property>
     <property key="SetupAccountingPreferencesTaxes">
     	<value xml:lang="en">Taxes</value>
+        <value xml:lang="de">Steuer</value>
     </property>
     <property key="SetupAccountingPreferencesFiscalPeriods">
     	<value xml:lang="en">Fiscal Periods</value>
+        <value xml:lang="de">Finanzperiode</value>
     </property>
     <property key="SetupAccountingSelectStartFiscalDayMonth">
-    	<value xml:lang="en">Select start fiscal day/month</value>
+    	<value xml:lang="en">Select start fiscal month/day</value>
+        <value xml:lang="de">Start der Finanzperiode (Monat/Tag)</value>
     </property>
     <property key="SetupAccountingPreferencesCurrencies">
     	<value xml:lang="en">Currencies</value>

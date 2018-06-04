@@ -122,7 +122,7 @@ public final class MiniLangUtil {
      * auto-correct version changes
      */
     public static boolean autoCorrectOn() {
-        return "true".equals(UtilProperties.getPropertyValue("minilang.properties", "autocorrect"));
+        return "true".equals(UtilProperties.getPropertyValue("minilang", "autocorrect"));
     }
 
     /**

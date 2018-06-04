@@ -21,7 +21,9 @@ package org.ofbiz.shipment.packing;
 import java.math.BigDecimal;
 import java.util.AbstractMap;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -85,9 +87,9 @@ public class PackingSession implements java.io.Serializable {
         this.picklistBinId = binId;
         this.userLogin = userLogin;
         this.facilityId = facilityId;
-        this.packLines = UtilMisc.newList();
-        this.packEvents = UtilMisc.newList();
-        this.itemInfos = UtilMisc.newList();
+        this.packLines = new LinkedList<PackingSessionLine>();
+        this.packEvents = new LinkedList<PackingEvent>();
+        this.itemInfos = new LinkedList<ItemDisplay>();
         this.packageSeq = 1;
         this.packageWeights = new HashMap<Integer, BigDecimal>();
         this.shipmentBoxTypes = new HashMap<Integer, String>();
@@ -345,14 +347,14 @@ public class PackingSession implements java.io.Serializable {
            int pSeq = line.getPackageSeq();
            List<PackingSessionLine> packageLineList = packageMap.get(pSeq);
            if (packageLineList == null) {
-               packageLineList = UtilMisc.newList();
+               packageLineList = new LinkedList<PackingSessionLine>();
                packageMap.put(pSeq, packageLineList);
            }
            packageLineList.add(line);
         }
         Object[] keys = packageMap.keySet().toArray();
         java.util.Arrays.sort(keys);
-        List<Object> sortedKeys = UtilMisc.newList();
+        List<Object> sortedKeys = new LinkedList<Object>();
         for (Object key : keys) {
             sortedKeys.add(key);
         }
@@ -471,7 +473,7 @@ public class PackingSession implements java.io.Serializable {
     }
 
     public List<String> getCurrentShipmentIds(String orderId, String orderItemSeqId, String shipGroupSeqId) {
-        Set<String> shipmentIds = UtilMisc.newSet();
+        Set<String> shipmentIds = new HashSet<String>();
         List<GenericValue> issues = this.getItemIssuances(orderId, orderItemSeqId, shipGroupSeqId);
 
         if (issues != null) {
@@ -480,7 +482,7 @@ public class PackingSession implements java.io.Serializable {
             }
         }
 
-        List<String> retList = UtilMisc.newList();
+        List<String> retList = new LinkedList<String>();
         retList.addAll(shipmentIds);
         return retList;
     }
@@ -652,7 +654,7 @@ public class PackingSession implements java.io.Serializable {
     }
 
     protected void checkReservations(boolean ignore) throws GeneralException {
-        List<String> errors = UtilMisc.newList();
+        List<String> errors = new LinkedList<String>();
         for (PackingSessionLine line: this.getLines()) {
             BigDecimal reservedQty =  this.getCurrentReservedQuantity(line.getOrderId(), line.getOrderItemSeqId(), line.getShipGroupSeqId(), line.getProductId());
             BigDecimal packedQty = this.getPackedQuantity(line.getOrderId(), line.getOrderItemSeqId(), line.getShipGroupSeqId(), line.getProductId());
@@ -672,7 +674,7 @@ public class PackingSession implements java.io.Serializable {
     }
 
     protected void checkEmptyLines() throws GeneralException {
-        List<PackingSessionLine> lines = UtilMisc.newList();
+        List<PackingSessionLine> lines = new LinkedList<PackingSessionLine>();
         lines.addAll(this.getLines());
         for (PackingSessionLine l: lines) {
             if (l.getQuantity().compareTo(BigDecimal.ZERO) == 0) {
@@ -767,7 +769,7 @@ public class PackingSession implements java.io.Serializable {
     }
 
     protected void issueItemsToShipment() throws GeneralException {
-        List<PackingSessionLine> processedLines = UtilMisc.newList();
+        List<PackingSessionLine> processedLines = new LinkedList<PackingSessionLine>();
         for (PackingSessionLine line: this.getLines()) {
             if (this.checkLine(processedLines, line)) {
                 BigDecimal totalPacked = this.getPackedQuantity(line.getOrderId(),  line.getOrderItemSeqId(),
@@ -906,7 +908,7 @@ public class PackingSession implements java.io.Serializable {
             serviceContext.put("productStoreId", productStoreId);
 
             if (UtilValidate.isEmpty(shippableItemInfo)) {
-                shippableItemInfo = UtilMisc.newList();
+                shippableItemInfo = new LinkedList<GenericValue>();
                 for (PackingSessionLine line: getLines()) {
                     List<GenericValue> oiasgas = getDelegator().findByAnd("OrderItemAndShipGroupAssoc", UtilMisc.toMap("orderId", line.getOrderId(), "orderItemSeqId", line.getOrderItemSeqId(), "shipGroupSeqId", line.getShipGroupSeqId()), null, false);
                     shippableItemInfo.addAll(oiasgas);

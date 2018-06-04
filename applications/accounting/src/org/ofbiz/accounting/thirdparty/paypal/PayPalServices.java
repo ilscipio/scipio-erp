@@ -1032,7 +1032,7 @@ public class PayPalServices {
 
     private static String parseStateProvinceGeoId(String payPalShipToState, String countryGeoId, Delegator delegator) {
         String lookupField = "geoName";
-        List<EntityCondition> conditionList = UtilMisc.newList();
+        List<EntityCondition> conditionList = new LinkedList<EntityCondition>();
         conditionList.add(EntityCondition.makeCondition("geoAssocTypeId", "REGIONS"));
         if ("USA".equals(countryGeoId) || "CAN".equals(countryGeoId)) {
             // PayPal returns two letter code for US and Canadian States/Provinces

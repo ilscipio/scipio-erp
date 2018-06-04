@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -170,7 +171,7 @@ public class TraverseSubContentCacheTransform implements TemplateTransformModel 
                 // if (Debug.infoOn()) Debug.logInfo("in TraverseSubContentCache, onStart, trailCsv(1):" + trailCsv , module);
                 if (globalNodeTrail.size() > 0) {
                     int sz = globalNodeTrail.size() ;
-                    nodeTrail = UtilMisc.newList();
+                    nodeTrail = new LinkedList<Map<String, ? extends Object>>();
                     //nodeTrail = passedGlobalNodeTrail.subList(sz - 1, sz);
                     node = UtilGenerics.checkMap(globalNodeTrail.get(sz - 1));
                     //if (Debug.infoOn()) Debug.logInfo("in TraverseSubContentCache, onStart, node(1):" + node , module);
@@ -265,7 +266,7 @@ public class TraverseSubContentCacheTransform implements TemplateTransformModel 
                     Map<String, ? extends Object> ndStart = nodeTrail.get(0);
                     contentIdStart = (String)ndStart.get("contentId");
                 } else {
-                    globalNodeTrail = UtilMisc.newList();
+                    globalNodeTrail = new LinkedList<Map<String, ? extends Object>>();
                 }
                 //if (Debug.infoOn()) Debug.logInfo("in TraverseSubContentCache, populateContext, contentIdEnd(1):" + contentIdEnd + " contentIdStart:" + contentIdStart + " equals:" + (contentIdStart.equals(contentIdEnd)), module);
                 boolean bIdEnd = UtilValidate.isNotEmpty(contentIdEnd);

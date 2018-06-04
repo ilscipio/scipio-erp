@@ -36,7 +36,9 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -108,7 +110,7 @@ public class WebToolsServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
-        List<String> messages = UtilMisc.newList();
+        List<String> messages = new LinkedList<String>();
 
         String filename = null;
         String fmfilename = null;
@@ -246,7 +248,7 @@ public class WebToolsServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
-        List<String> messages = UtilMisc.newList();
+        List<String> messages = new LinkedList<String>();
 
         String path = (String) context.get("path");
         String mostlyInserts = (String) context.get("mostlyInserts");
@@ -272,7 +274,7 @@ public class WebToolsServices {
 
             if (baseDir.isDirectory() && baseDir.canRead()) {
                 File[] fileArray = baseDir.listFiles();
-                List<File> files = UtilMisc.newList();
+                List<File> files = new LinkedList<File>();
                 for (File file: fileArray) {
                     if (file.getName().toUpperCase().endsWith("XML")) {
                         files.add(file);
@@ -282,11 +284,11 @@ public class WebToolsServices {
                 int passes=0;
                 int initialListSize = files.size();
                 int lastUnprocessedFilesCount = 0;
-                List<File> unprocessedFiles = UtilMisc.newList();
+                List<File> unprocessedFiles = new LinkedList<File>();
                 while (files.size()>0 &&
                         files.size() != lastUnprocessedFilesCount) {
                     lastUnprocessedFilesCount = files.size();
-                    unprocessedFiles = UtilMisc.newList();
+                    unprocessedFiles = new LinkedList<File>();
                     for (File f: files) {
                         Map<String, Object> parseEntityXmlFileArgs = UtilMisc.toMap("mostlyInserts", mostlyInserts,
                                 "createDummyFks", createDummyFks,
@@ -357,13 +359,13 @@ public class WebToolsServices {
         Integer txTimeoutInt = (Integer) context.get("txTimeout");
         int txTimeout = txTimeoutInt != null ? txTimeoutInt.intValue() : -1;
 
-        List<Object> messages = UtilMisc.newList();
+        List<Object> messages = new LinkedList<Object>();
 
         // parse the pass in list of readers to use
         List<String> readerNames = null;
         if (UtilValidate.isNotEmpty(readers) && !"none".equalsIgnoreCase(readers)) {
             if (readers.indexOf(",") == -1) {
-                readerNames = UtilMisc.newList();
+                readerNames = new LinkedList<String>();
                 readerNames.add(readers);
             } else {
                 readerNames = StringUtil.split(readers, ",");
@@ -393,7 +395,7 @@ public class WebToolsServices {
 
         // need a list if it is empty
         if (urlList == null) {
-            urlList = UtilMisc.newList();
+            urlList = new LinkedList<URL>();
         }
 
         // process the list of files
@@ -401,8 +403,8 @@ public class WebToolsServices {
         changedFormat.setMinimumIntegerDigits(5);
         changedFormat.setGroupingUsed(false);
 
-        List<Object> errorMessages = UtilMisc.newList();
-        List<String> infoMessages = UtilMisc.newList();
+        List<Object> errorMessages = new LinkedList<Object>();
+        List<String> infoMessages = new LinkedList<String>();
         int totalRowsChanged = 0;
         if (UtilValidate.isNotEmpty(urlList)) {
             messages.add("=-=-=-=-=-=-= Doing a data " + (checkDataOnly ? "check" : "load") + " with the following files:");
@@ -508,7 +510,7 @@ public class WebToolsServices {
             txTimeout = Integer.valueOf(7200);
         }
 
-        List<String> results = UtilMisc.newList();
+        List<String> results = new LinkedList<String>();
 
         if (UtilValidate.isNotEmpty(outpath)) {
             File outdir = new File(outpath);
@@ -540,7 +542,7 @@ public class WebToolsServices {
                         boolean beganTx = TransactionUtil.begin();
                         // some databases don't support cursors, or other problems may happen, so if there is an error here log it and move on to get as much as possible
                         try {
-                            List<EntityCondition> conds = UtilMisc.newList();
+                            List<EntityCondition> conds = new LinkedList<EntityCondition>();
                             if (UtilValidate.isNotEmpty(fromDate)) {
                                 conds.add(EntityCondition.makeCondition("createdStamp", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
                             }
@@ -854,7 +856,7 @@ public class WebToolsServices {
 
             Set<String> entityNames = new TreeSet<String>();
             if (UtilValidate.isNotEmpty(entityPackageNameOrig)) {
-                Set<String> entityPackageNameSet = UtilMisc.newSet();
+                Set<String> entityPackageNameSet = new HashSet<String>();
                 entityPackageNameSet.addAll(StringUtil.split(entityPackageNameOrig, ","));
 
                 Debug.logInfo("Exporting with entityPackageNameSet: " + entityPackageNameSet, module);

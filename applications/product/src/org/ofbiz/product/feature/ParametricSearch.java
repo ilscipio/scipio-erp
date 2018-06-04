@@ -19,6 +19,8 @@
 package org.ofbiz.product.feature;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -124,14 +126,14 @@ public class ParametricSearch {
     public static Map<String, List<GenericValue>> getAllFeaturesByType(Delegator delegator, int perTypeMaxSize) {
         Map<String, List<GenericValue>> productFeaturesByTypeMap = new HashMap<String, List<GenericValue>>();
         try {
-            Set<String> typesWithOverflowMessages = UtilMisc.newSet();
+            Set<String> typesWithOverflowMessages = new HashSet<String>();
             EntityListIterator productFeatureEli = EntityQuery.use(delegator).from("ProductFeature").orderBy("description").queryIterator();
             GenericValue productFeature = null;
             while ((productFeature = productFeatureEli.next()) != null) {
                 String productFeatureTypeId = productFeature.getString("productFeatureTypeId");
                 List<GenericValue> featuresByType = productFeaturesByTypeMap.get(productFeatureTypeId);
                 if (featuresByType == null) {
-                    featuresByType = UtilMisc.newList();
+                    featuresByType = new LinkedList<GenericValue>();
                     productFeaturesByTypeMap.put(productFeatureTypeId, featuresByType);
                 }
                 if (featuresByType.size() > perTypeMaxSize) {
@@ -177,7 +179,7 @@ public class ParametricSearch {
 
     /** Handles parameters coming in prefixed with "SEARCH_FEAT" where the parameter value is a productFeatureId; meant to be used with text entry boxes or check-boxes and such */
     public static List<String> makeFeatureIdListFromPrefixed(Map<String, Object> parameters) {
-        List<String> featureIdList = UtilMisc.newList();
+        List<String> featureIdList = new LinkedList<String>();
         if (parameters == null) return featureIdList;
 
         for (Map.Entry<String, Object> entry: parameters.entrySet()) {
@@ -219,7 +221,7 @@ public class ParametricSearch {
      *  meant to be used with text entry boxes or check-boxes and such
      **/
     public static List<String> makeProductFeatureCategoryIdListFromPrefixed(Map<String, Object> parameters) {
-        List<String> prodFeatureCategoryIdList = UtilMisc.newList();
+        List<String> prodFeatureCategoryIdList = new LinkedList<String>();
         if (parameters == null) return prodFeatureCategoryIdList;
 
         for (Map.Entry<String, Object> entry: parameters.entrySet()) {

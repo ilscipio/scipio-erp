@@ -49,7 +49,7 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     // default is TRUE
-    private static final boolean firstVersionActive = UtilProperties.getPropertyAsBoolean("cms.properties", "page.template.firstVersionActive", true);
+    private static final boolean firstVersionActive = UtilProperties.getPropertyAsBoolean("cms", "page.template.firstVersionActive", true);
 
     /**
      * A map of asset templates (assocs) with their importName as key.

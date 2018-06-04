@@ -21,6 +21,7 @@ package org.ofbiz.product.category;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -101,7 +102,7 @@ public class CategoryServices {
 
         List<String> orderByFields = UtilGenerics.checkList(context.get("orderByFields"));
         if (orderByFields == null)
-            orderByFields = UtilMisc.newList();
+            orderByFields = new LinkedList<String>();
         String entityName = getCategoryFindEntityName(delegator, orderByFields, introductionDateLimit, releaseDateLimit);
 
         GenericValue productCategory;
@@ -118,7 +119,7 @@ public class CategoryServices {
         if (activeOnly) {
             productCategoryMembers = EntityUtil.filterByDate(productCategoryMembers, true);
         }
-        List<EntityCondition> filterConditions = UtilMisc.newList();
+        List<EntityCondition> filterConditions = new LinkedList<EntityCondition>();
         if (introductionDateLimit != null) {
             EntityCondition condition = EntityCondition.makeCondition(EntityCondition.makeCondition("introductionDate", EntityOperator.EQUALS, null),
                     EntityOperator.OR, EntityCondition.makeCondition("introductionDate", EntityOperator.LESS_THAN_EQUAL_TO, introductionDateLimit));
@@ -232,7 +233,7 @@ public class CategoryServices {
 
         List<String> orderByFields = UtilGenerics.checkList(context.get("orderByFields"));
         if (orderByFields == null)
-            orderByFields = UtilMisc.newList();
+            orderByFields = new LinkedList<String>();
         String entityName = getCategoryFindEntityName(delegator, orderByFields, introductionDateLimit, releaseDateLimit);
 
         String prodCatalogId = (String) context.get("prodCatalogId");
@@ -306,7 +307,7 @@ public class CategoryServices {
                     if (activeOnly) {
                         productCategoryMembers = EntityUtil.filterByDate(productCategoryMembers, true);
                     }
-                    List<EntityCondition> filterConditions = UtilMisc.newList();
+                    List<EntityCondition> filterConditions = new LinkedList<EntityCondition>();
                     if (introductionDateLimit != null) {
                         EntityCondition condition = EntityCondition.makeCondition(
                                 EntityCondition.makeCondition("introductionDate", EntityOperator.EQUALS, null), EntityOperator.OR,
@@ -354,7 +355,7 @@ public class CategoryServices {
                         highIndex = listSize;
                     }
                 } else {
-                    List<EntityCondition> mainCondList = UtilMisc.newList();
+                    List<EntityCondition> mainCondList = new LinkedList<EntityCondition>();
                     mainCondList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, productCategory.getString("productCategoryId")));
                     if (activeOnly) {
                         mainCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimestamp));
@@ -381,7 +382,7 @@ public class CategoryServices {
                     if (limitView) {
                         if (viewProductCategoryId != null) {
                             // do manual checking to filter view allow
-                            productCategoryMembers = UtilMisc.newList();
+                            productCategoryMembers = new LinkedList<GenericValue>();
                             GenericValue nextValue;
                             int chunkSize = 0;
                             listSize = 0;
@@ -423,7 +424,7 @@ public class CategoryServices {
                     }
                     // null safety
                     if (productCategoryMembers == null) {
-                        productCategoryMembers = UtilMisc.newList();
+                        productCategoryMembers = new LinkedList<GenericValue>();
                     }
 
                     if (highIndex > listSize) {

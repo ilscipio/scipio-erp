@@ -22,6 +22,7 @@ package org.ofbiz.shipment.verify;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -66,7 +67,7 @@ public class VerifyPickSession implements Serializable {
         this._delegator = _dispatcher.getDelegator();
         this.delegatorName = _delegator.getDelegatorName();
         this.userLogin = userLogin;
-        this.pickRows = UtilMisc.newList();
+        this.pickRows = new LinkedList<VerifyPickSessionRow>();
     }
 
     public LocalDispatcher getDispatcher() {
@@ -253,7 +254,7 @@ public class VerifyPickSession implements Serializable {
     }
 
     public List<VerifyPickSessionRow> getPickRows(String orderId) {
-        List<VerifyPickSessionRow> pickVerifyRows = UtilMisc.newList();
+        List<VerifyPickSessionRow> pickVerifyRows = new LinkedList<VerifyPickSessionRow>();
         for (VerifyPickSessionRow line: this.getPickRows()) {
             if (orderId.equals(line.getOrderId())) {
                 pickVerifyRows.add(line);
@@ -318,7 +319,7 @@ public class VerifyPickSession implements Serializable {
     }
 
     protected void checkReservedQty(String orderId, Locale locale) throws GeneralException {
-        List<String> errorList = UtilMisc.newList();
+        List<String> errorList = new LinkedList<String>();
         for (VerifyPickSessionRow pickRow : this.getPickRows(orderId)) {
             BigDecimal reservedQty =  this.getReservedQty(pickRow.getOrderId(), pickRow.getOrderItemSeqId(), pickRow.getShipGroupSeqId());
             BigDecimal verifiedQty = this.getReadyToVerifyQuantity(pickRow.getOrderId(), pickRow.getOrderItemSeqId());
@@ -363,7 +364,7 @@ public class VerifyPickSession implements Serializable {
     }
 
     protected void issueItemsToShipment(String shipmentId, Locale locale) throws GeneralException {
-        List<VerifyPickSessionRow> processedRows = UtilMisc.newList();
+        List<VerifyPickSessionRow> processedRows = new LinkedList<VerifyPickSessionRow>();
         for (VerifyPickSessionRow pickRow : this.getPickRows()) {
             if (this.checkLine(processedRows, pickRow)) {
                 BigDecimal totalVerifiedQty = this.getVerifiedQuantity(pickRow.getOrderId(),  pickRow.getOrderItemSeqId(), pickRow.getShipGroupSeqId(), pickRow.getProductId(), pickRow.getInventoryItemId());

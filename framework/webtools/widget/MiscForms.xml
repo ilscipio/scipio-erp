@@ -118,7 +118,7 @@ under the License.
         <field name="dropDown1" tooltip="This is a tooltip!"><drop-down/></field>
         <field name="reset1" tooltip="This is a tooltip!"><reset/></field>
         <field name="image1" tooltip="This is a tooltip!"><image value="/images/scipio/scipio-logo-small.png"/></field>
-        <field name="hyperlink1" tooltip="This is a tooltip!"><hyperlink target="WebtoolsLayoutDemo" description="This is a link"/></field>
+        <field name="hyperlink1" tooltip="This is a tooltip!"><hyperlink target="LayoutDemo" description="This is a link"/></field>
         <field name="textarea1" tooltip="This is a tooltip!"><textarea/></field>
         <field name="submit1" tooltip="This is a tooltip!"><submit/></field>
         <field name="submit2" tooltip="This is a tooltip!"><submit button-type="text-link"/></field>

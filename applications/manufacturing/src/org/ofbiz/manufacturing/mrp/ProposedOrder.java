@@ -22,6 +22,7 @@ package org.ofbiz.manufacturing.mrp;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -113,7 +114,7 @@ public class ProposedOrder {
                     if (routing == null) {
                         // try to find a routing linked to the virtual product
                         BOMTree tree = null;
-                        List<BOMNode> components = UtilMisc.newList();
+                        List<BOMNode> components = new LinkedList<BOMNode>();
                         try {
                             tree = new BOMTree(product.getString("productId"), "MANUF_COMPONENT", requiredByDate, BOMTree.EXPLOSION_SINGLE_LEVEL, delegator, dispatcher, userLogin);
                             tree.setRootQuantity(quantity);
@@ -232,7 +233,7 @@ public class ProposedOrder {
         Map<String, Object> parameters = UtilMisc.<String, Object>toMap("userLogin", userLogin);
         if (isBuilt) {
             try {
-                List<BOMNode> bom = UtilMisc.newList();
+                List<BOMNode> bom = new LinkedList<BOMNode>();
                 BOMTree tree = new BOMTree(productId, "MANUF_COMPONENT", null, BOMTree.EXPLOSION_MANUFACTURING, delegator, dispatcher, userLogin);
                 tree.setRootQuantity(quantity);
                 tree.print(bom);

@@ -152,7 +152,7 @@ public class WeightPackageServices {
 
         Map<String, Object> response = new HashMap<String, Object>();
         try {
-            String getActualShippingQuoteFromUps = EntityUtilProperties.getPropertyValue("shipment.properties", "shipment.ups.shipping", "N", delegator);
+            String getActualShippingQuoteFromUps = EntityUtilProperties.getPropertyValue("shipment", "shipment.ups.shipping", "N", delegator);
             String result = weightPackageSession.complete(orderId, locale, getActualShippingQuoteFromUps);
             if ("showWarningForm".equals(result)) {
                 response.put("showWarningForm", true);
@@ -177,7 +177,7 @@ public class WeightPackageServices {
 
         Map<String, Object> response = new HashMap<String, Object>();
         try {
-            String getActualShippingQuoteFromUps = EntityUtilProperties.getPropertyValue("shipment.properties", "shipment.ups.shipping", "N", delegator);
+            String getActualShippingQuoteFromUps = EntityUtilProperties.getPropertyValue("shipment", "shipment.ups.shipping", "N", delegator);
             if (weightPackageSession.completeShipment(orderId, getActualShippingQuoteFromUps)) {
                 response.put("shipmentId", shipmentId);
             } else {
@@ -196,7 +196,7 @@ public class WeightPackageServices {
 
         String orderId = (String) context.get("orderId");
 
-        String getActualShippingQuoteFromUps = EntityUtilProperties.getPropertyValue("shipment.properties", "shipment.ups.shipping", "N", delegator);
+        String getActualShippingQuoteFromUps = EntityUtilProperties.getPropertyValue("shipment", "shipment.ups.shipping", "N", delegator);
         try {
             weightPackageSession.savePackagesInfo(orderId, getActualShippingQuoteFromUps);
         } catch (GeneralException e) {

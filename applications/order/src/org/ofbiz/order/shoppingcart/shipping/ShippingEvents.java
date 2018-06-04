@@ -20,6 +20,7 @@ package org.ofbiz.order.shoppingcart.shipping;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -149,7 +150,7 @@ public class ShippingEvents {
         // SCIPIO: This message assumes too much about the caller's intentions. Leave out the second part.
         //String standardMessage = "A problem occurred calculating shipping. Fees will be calculated offline.";
         String standardMessage = "A problem occurred calculating shipping.";
-        List<String> errorMessageList = UtilMisc.newList();
+        List<String> errorMessageList = new LinkedList<String>();
 
         if ("NO_SHIPPING".equals(shipmentMethodTypeId)) {
             return ServiceUtil.returnSuccess();
@@ -304,10 +305,10 @@ public class ShippingEvents {
         // invoke the external shipping estimate service
         BigDecimal externalShipAmt = null;
         if (serviceName != null) {
-            String doEstimates = EntityUtilProperties.getPropertyValue("shipment.properties", "shipment.doratecheck", "true", delegator);
+            String doEstimates = EntityUtilProperties.getPropertyValue("shipment", "shipment.doratecheck", "true", delegator);
             //If all estimates are not turned off, check for the individual one
             if ("true".equals(doEstimates)) {
-                String dothisEstimate = EntityUtilProperties.getPropertyValue("shipment.properties", "shipment.doratecheck." + serviceName, "true", delegator);
+                String dothisEstimate = EntityUtilProperties.getPropertyValue("shipment", "shipment.doratecheck." + serviceName, "true", delegator);
                 if ("false".equals(dothisEstimate))
                  serviceName = null;
             } else {

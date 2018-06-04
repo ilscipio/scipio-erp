@@ -40,7 +40,7 @@ under the License.
         <#if "ar.iw"?contains(langAttr?substring(0, 2))>
             <#assign langDir = "rtl">
         </#if>
-        <option value="${availableLocale.toString()}" lang="${langAttr}" dir="${langDir}"<#if (locale?has_content) && (locale.getLanguage() == availableLocale.getLanguage())> selected="selected"</#if>>${availableLocale.getDisplayName(availableLocale)} &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp; [${availableLocale.toString()}]</option>
+        <option value="${availableLocale.toString()}" lang="${langAttr}" dir="${langDir}"<#if (locale?has_content) && (locale.getLanguage() == availableLocale.getLanguage())> selected="selected"</#if>>${availableLocale.getDisplayName(availableLocale)} &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp; [${langAttr}]</option>
     </#list>
   </@field>
   <@field type="submit" text=uiLabelMap.CommonSubmit/>

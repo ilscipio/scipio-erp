@@ -23,6 +23,7 @@ import java.math.MathContext;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -577,7 +578,7 @@ public class InventoryServices {
         }
 
         // all items to cancel will also be in the notify list so start with that
-        List<String> ordersToNotify = UtilMisc.newList();
+        List<String> ordersToNotify = new LinkedList<String>();
         for (Map.Entry<String, Map<String, Timestamp>> entry: ordersToUpdate.entrySet()) {
             String orderId = entry.getKey();
             Map<String, Timestamp> backOrderedItems = entry.getValue();
@@ -593,7 +594,7 @@ public class InventoryServices {
             }
 
             for (GenericValue orderItemShipGroup: orderItemShipGroups) {
-                List<GenericValue> orderItems = UtilMisc.newList();
+                List<GenericValue> orderItems = new LinkedList<GenericValue>();
                 List<GenericValue> orderItemShipGroupAssoc = null;
                 try {
                     orderItemShipGroupAssoc = EntityQuery.use(delegator).from("OrderItemShipGroupAssoc").where("shipGroupSeqId", orderItemShipGroup.get("shipGroupSeqId"), "orderId", orderId).queryList();
@@ -628,7 +629,7 @@ public class InventoryServices {
                 }
 
                 if (orderItems != null) {
-                    List<GenericValue> toBeStored = UtilMisc.newList();
+                    List<GenericValue> toBeStored = new LinkedList<GenericValue>();
                     for (GenericValue orderItem: orderItems) {
                         String orderItemSeqId = orderItem.getString("orderItemSeqId");
                         Timestamp shipDate = backOrderedItems.get(orderItemSeqId);

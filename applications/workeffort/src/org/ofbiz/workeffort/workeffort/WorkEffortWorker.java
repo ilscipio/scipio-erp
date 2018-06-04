@@ -19,6 +19,8 @@
 
 package org.ofbiz.workeffort.workeffort;
 
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -49,13 +51,13 @@ public class WorkEffortWorker {
             right = "workEffortIdTo";
         }
 
-        List<GenericValue> workEfforts = UtilMisc.newList();
+        List<GenericValue> workEfforts = new LinkedList<GenericValue>();
         try {
             List<GenericValue> childWEAssocsLevelFirst = EntityQuery.use(delegator).from("WorkEffortAssoc").where(left, workEffortId, "workEffortAssocTypeId", workEffortAssocTypeId).cache(true).queryList();
             for (GenericValue childWEAssocLevelFirst : childWEAssocsLevelFirst) {
                 List<GenericValue> childWEAssocsLevelNext = EntityQuery.use(delegator).from("WorkEffortAssoc").where(left, childWEAssocLevelFirst.get(right), "workEffortAssocTypeId", workEffortAssocTypeId).cache(true).queryList();
                 while (UtilValidate.isNotEmpty(childWEAssocsLevelNext)) {
-                    List<GenericValue> tempWorkEffortList = UtilMisc.newList();
+                    List<GenericValue> tempWorkEffortList = new LinkedList<GenericValue>();
                     for (GenericValue childWEAssocLevelNext : childWEAssocsLevelNext) {
                         List<GenericValue> childWEAssocsLevelNth = EntityQuery.use(delegator).from("WorkEffortAssoc").where(left, childWEAssocLevelNext.get(right), "workEffortAssocTypeId", workEffortAssocTypeId).cache(true).queryList();
                         if (UtilValidate.isNotEmpty(childWEAssocsLevelNth)) {
@@ -74,8 +76,8 @@ public class WorkEffortWorker {
     }
 
     public static List<GenericValue> removeDuplicateWorkEfforts(List<GenericValue> workEfforts) {
-        Set<String> keys = UtilMisc.newSet();
-        Set<GenericValue> exclusions = UtilMisc.newSet();
+        Set<String> keys = new HashSet<String>();
+        Set<GenericValue> exclusions = new HashSet<GenericValue>();
         for (GenericValue workEffort : workEfforts) {
             String workEffortId = workEffort.getString("workEffortId");
             if (keys.contains(workEffortId)) {

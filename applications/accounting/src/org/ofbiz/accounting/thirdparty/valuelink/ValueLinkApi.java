@@ -34,6 +34,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -56,8 +57,6 @@ import javax.crypto.spec.DHParameterSpec;
 import javax.crypto.spec.DHPrivateKeySpec;
 import javax.crypto.spec.DHPublicKeySpec;
 import javax.crypto.spec.IvParameterSpec;
-
-import org.ofbiz.base.util.UtilMisc;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.HttpClient;
@@ -999,7 +998,7 @@ public class ValueLinkApi {
         List<String> valueList = StringUtil.split(values, "&");
 
         // create a List of Maps for each set of values
-        List<Map<String, String>> valueMap = UtilMisc.newList();
+        List<Map<String, String>> valueMap = new LinkedList<Map<String, String>>();
         for (int i = 0; i < valueList.size(); i++) {
             valueMap.add(StringUtil.createMap(StringUtil.split(keys, "|"), StringUtil.split(valueList.get(i), "|")));
         }

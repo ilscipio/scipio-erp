@@ -20,6 +20,7 @@ package org.ofbiz.order.test;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -59,30 +60,30 @@ public class PurchaseOrderTest extends OFBizTestCase {
         orderItem.set("unitListPrice", BigDecimal.ZERO);
         orderItem.set("isModifiedPrice", "N");
         orderItem.set("statusId", "ITEM_CREATED");
-        List <GenericValue> orderItems = UtilMisc.newList();
+        List <GenericValue> orderItems = new LinkedList<GenericValue>();
         orderItems.add(orderItem);
         ctx.put("orderItems", orderItems);
 
         GenericValue orderContactMech = delegator.makeValue("OrderContactMech", UtilMisc.toMap("contactMechPurposeTypeId", "SHIPPING_LOCATION", "contactMechId", "9000"));
-        List <GenericValue> orderContactMechs = UtilMisc.newList();
+        List <GenericValue> orderContactMechs = new LinkedList<GenericValue>();
         orderContactMechs.add(orderContactMech);
         ctx.put("orderContactMechs", orderContactMechs);
 
         GenericValue orderItemContactMech = delegator.makeValue("OrderItemContactMech", UtilMisc.toMap("contactMechPurposeTypeId", "SHIPPING_LOCATION", "contactMechId", "9000", "orderItemSeqId", "00001"));
-        List <GenericValue> orderItemContactMechs = UtilMisc.newList();
+        List <GenericValue> orderItemContactMechs = new LinkedList<GenericValue>();
         orderItemContactMechs.add(orderItemContactMech);
         ctx.put("orderItemContactMechs", orderItemContactMechs);
 
         GenericValue orderItemShipGroup = delegator.makeValue("OrderItemShipGroup", UtilMisc.toMap("carrierPartyId", "UPS", "contactMechId", "9000", "isGift", "N", "maySplit", "N", "shipGroupSeqId", "00001", "shipmentMethodTypeId", "NEXT_DAY"));
         orderItemShipGroup.set("carrierRoleTypeId","CARRIER");
-        List <GenericValue> orderItemShipGroupInfo = UtilMisc.newList();
+        List <GenericValue> orderItemShipGroupInfo = new LinkedList<GenericValue>();
         orderItemShipGroupInfo.add(orderItemShipGroup);
         ctx.put("orderItemShipGroupInfo", orderItemShipGroupInfo);
 
-        List <GenericValue> orderTerms = UtilMisc.newList();
+        List <GenericValue> orderTerms = new LinkedList<GenericValue>();
         ctx.put("orderTerms", orderTerms);
 
-        List <GenericValue> orderAdjustments = UtilMisc.newList();
+        List <GenericValue> orderAdjustments = new LinkedList<GenericValue>();
         ctx.put("orderAdjustments", orderAdjustments);
 
         ctx.put("billToCustomerPartyId", "Company");

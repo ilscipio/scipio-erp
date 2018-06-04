@@ -40,7 +40,7 @@ public class ReportHelper {
  * conversionRate - # orders/# visits
  */
     public static List<Map<String, Object>> calcConversionRates(List<GenericValue> visits, List<GenericValue> orders, String keyFieldName) {
-        List<Map<String, Object>> conversionRates = UtilMisc.newList();
+        List<Map<String, Object>> conversionRates = new LinkedList<Map<String, Object>>();
 
         // loop through all the visits
         for (GenericValue visit: visits) {

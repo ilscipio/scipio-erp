@@ -20,6 +20,7 @@ package org.ofbiz.product.product;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -626,7 +627,7 @@ while (allCatIter.hasNext()) {
         boolean doSubCategories = !"N".equals(doSubCategoriesStr);
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 
-        Set<String> productFeatureTypeIdsToExclude = UtilMisc.newSet();
+        Set<String> productFeatureTypeIdsToExclude = new HashSet<String>();
         String excludeProp = EntityUtilProperties.getPropertyValue("prodsearch", "attach.feature.type.exclude", delegator);
         if (UtilValidate.isNotEmpty(excludeProp)) {
             List<String> typeList = StringUtil.split(excludeProp, ",");
@@ -693,7 +694,7 @@ while (allCatIter.hasNext()) {
                 }
                 Set<String> productFeatureIdSet = productFeatureIdByTypeIdSetMap.get(productFeatureTypeId);
                 if (productFeatureIdSet == null) {
-                    productFeatureIdSet = UtilMisc.newSet();
+                    productFeatureIdSet = new HashSet<String>();
                     productFeatureIdByTypeIdSetMap.put(productFeatureTypeId, productFeatureIdSet);
                 }
                 productFeatureIdSet.add(productFeatureId);

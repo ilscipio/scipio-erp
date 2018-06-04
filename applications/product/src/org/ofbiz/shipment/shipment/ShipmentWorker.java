@@ -21,6 +21,7 @@ package org.ofbiz.shipment.shipment;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -104,7 +105,7 @@ public class ShipmentWorker {
 
     public static List<Map<String, BigDecimal>> getPackageSplit(DispatchContext dctx, List<Map<String, Object>> shippableItemInfo, BigDecimal maxWeight) {
         // create the package list w/ the first package
-        List<Map<String, BigDecimal>> packages = UtilMisc.newList();
+        List<Map<String, BigDecimal>> packages = new LinkedList<Map<String, BigDecimal>>();
 
         if (UtilValidate.isNotEmpty(shippableItemInfo)) {
             for (Map<String, Object> itemInfo: shippableItemInfo) {
@@ -162,7 +163,7 @@ public class ShipmentWorker {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
         BigDecimal totalWeight = BigDecimal.ZERO;
-        String defaultWeightUomId = EntityUtilProperties.getPropertyValue("shipment.properties", "shipment.default.weight.uom", delegator);
+        String defaultWeightUomId = EntityUtilProperties.getPropertyValue("shipment", "shipment.default.weight.uom", delegator);
 
         for (Map.Entry<String, BigDecimal> entry: packageMap.entrySet()) {
             String productId = entry.getKey();

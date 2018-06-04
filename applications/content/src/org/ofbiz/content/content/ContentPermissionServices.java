@@ -19,6 +19,7 @@
 package org.ofbiz.content.content;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -145,7 +146,7 @@ public class ContentPermissionServices {
         if (UtilValidate.isNotEmpty(contentPurposeString)) {
             List<String> purposesFromString = StringUtil.split(contentPurposeString, "|");
             if (passedPurposes == null) {
-                passedPurposes = UtilMisc.newList();
+                passedPurposes = new LinkedList<String>();
             }
             passedPurposes.addAll(purposesFromString);
         }
@@ -162,7 +163,7 @@ public class ContentPermissionServices {
         if (UtilValidate.isNotEmpty(targetOperationString)) {
             List<String> operationsFromString = StringUtil.split(targetOperationString, "|");
             if (targetOperations == null) {
-                targetOperations = UtilMisc.newList();
+                targetOperations = new LinkedList<String>();
             }
             targetOperations.addAll(operationsFromString);
         }
@@ -173,7 +174,7 @@ public class ContentPermissionServices {
         EntityPermissionChecker.StdRelatedRoleGetter roleGetter = new EntityPermissionChecker.StdRelatedRoleGetter("Content",  "roleTypeId", "contentId", "partyId", "ownerContentId", "ContentRole");
         //Debug.logInfo("targetOperations(b):" + targetOperations, "");
         List<String> passedRoles = UtilGenerics.checkList(context.get("roleTypeList"));
-        if (passedRoles == null) passedRoles = UtilMisc.newList();
+        if (passedRoles == null) passedRoles = new LinkedList<String>();
         String roleTypeString = (String) context.get("roleTypeString");
         if (UtilValidate.isNotEmpty(roleTypeString)) {
             List<String> rolesFromString = StringUtil.split(roleTypeString, "|");
@@ -189,7 +190,7 @@ public class ContentPermissionServices {
 
         StringBuilder errBuf = new StringBuilder();
         String permissionStatus = null;
-        List<Object> entityIds = UtilMisc.newList();
+        List<Object> entityIds = new LinkedList<Object>();
         if (passed) {
             results.put("permissionStatus", "granted");
             permissionStatus = "granted";

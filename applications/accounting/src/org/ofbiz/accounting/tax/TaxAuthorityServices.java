@@ -23,6 +23,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -95,7 +97,7 @@ public class TaxAuthorityServices {
             }
 
             if ("Y".equals(productStore.getString("showPricesWithVatTax"))) {
-                Set<GenericValue> taxAuthoritySet = UtilMisc.newSet();
+                Set<GenericValue> taxAuthoritySet = new HashSet<GenericValue>();
                 if (productStore.get("vatTaxAuthPartyId") == null) {
                     List<GenericValue> taxAuthorityRawList = EntityQuery.use(delegator).from("TaxAuthority")
                             .where("taxAuthGeoId", productStore.get("vatTaxAuthGeoId")).cache(useCache).queryList();
@@ -201,7 +203,7 @@ public class TaxAuthorityServices {
         }
 
         // without knowing the TaxAuthority parties, just find all TaxAuthories for the set of IDs...
-        Set<GenericValue> taxAuthoritySet = UtilMisc.newSet();
+        Set<GenericValue> taxAuthoritySet = new HashSet<GenericValue>();
         try {
             getTaxAuthorities(delegator, shippingAddress, taxAuthoritySet, useCache);
         } catch (GenericEntityException e) {
@@ -210,8 +212,8 @@ public class TaxAuthorityServices {
         }
 
         // Setup the return lists.
-        List<GenericValue> orderAdjustments = UtilMisc.newList();
-        List<List<GenericValue>> itemAdjustments = UtilMisc.newList();
+        List<GenericValue> orderAdjustments = new LinkedList<GenericValue>();
+        List<List<GenericValue>> itemAdjustments = new LinkedList<List<GenericValue>>();
 
         // Loop through the products; get the taxCategory; and lookup each in the cache.
         for (int i = 0; i < itemProductList.size(); i++) {
@@ -300,7 +302,7 @@ public class TaxAuthorityServices {
             BigDecimal itemPrice, BigDecimal itemQuantity, BigDecimal itemAmount,
             BigDecimal shippingAmount, BigDecimal orderPromotionsAmount, boolean useCache) {
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
-        List<GenericValue> adjustments = UtilMisc.newList();
+        List<GenericValue> adjustments = new LinkedList<GenericValue>();
 
         if (payToPartyId == null) {
             if (productStore != null) {
@@ -320,7 +322,7 @@ public class TaxAuthorityServices {
         }
 
         // build the TaxAuthority expressions (taxAuthGeoId, taxAuthPartyId)
-        List<EntityCondition> taxAuthCondOrList = UtilMisc.newList();
+        List<EntityCondition> taxAuthCondOrList = new LinkedList<EntityCondition>();
         // start with the _NA_ TaxAuthority...
         taxAuthCondOrList.add(EntityCondition.makeCondition(
                 EntityCondition.makeCondition("taxAuthPartyId", EntityOperator.EQUALS, "_NA_"),
@@ -346,7 +348,7 @@ public class TaxAuthorityServices {
                 if ("Y".equals(product.getString("isVariant"))) {
                     virtualProductId = ProductWorker.getVariantVirtualId(product, useCache);
                 }
-                Set<String> productCategoryIdSet = UtilMisc.newSet();
+                Set<String> productCategoryIdSet = new HashSet<String>();
                 EntityCondition productIdCond = null;
                 if (virtualProductId != null) {
                     productIdCond = EntityCondition.makeCondition(
@@ -511,7 +513,7 @@ public class TaxAuthorityServices {
                 if (UtilValidate.isNotEmpty(billToPartyId) && UtilValidate.isNotEmpty(taxAuthGeoId)) {
                     // see if partyId is a member of any groups, if so honor their tax exemptions
                     // look for PartyRelationship with partyRelationshipTypeId=GROUP_ROLLUP, the partyIdTo is the group member, so the partyIdFrom is the groupPartyId
-                    Set<String> billToPartyIdSet = UtilMisc.newSet();
+                    Set<String> billToPartyIdSet = new HashSet<String>();
                     billToPartyIdSet.add(billToPartyId);
                     List<GenericValue> partyRelationshipList = EntityQuery.use(delegator).from("PartyRelationship")
                             .where("partyIdTo", billToPartyId, "partyRelationshipTypeId", "GROUP_ROLLUP")
@@ -575,7 +577,7 @@ public class TaxAuthorityServices {
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problems looking up tax rates", module);
-            return UtilMisc.newList();
+            return new LinkedList<GenericValue>();
         }
 
         return adjustments;
@@ -713,7 +715,7 @@ public class TaxAuthorityServices {
                 if (UtilValidate.isNotEmpty(billToPartyId) && UtilValidate.isNotEmpty(taxAuthGeoId)) {
                     // see if partyId is a member of any groups, if so honor their tax exemptions
                     // look for PartyRelationship with partyRelationshipTypeId=GROUP_ROLLUP, the partyIdTo is the group member, so the partyIdFrom is the groupPartyId
-                    Set<String> billToPartyIdSet = UtilMisc.newSet();
+                    Set<String> billToPartyIdSet = new HashSet<String>();
                     billToPartyIdSet.add(billToPartyId);
                     List<GenericValue> partyRelationshipList = EntityQuery.use(delegator).from("PartyRelationship")
                             .where("partyIdTo", billToPartyId, "partyRelationshipTypeId", "GROUP_ROLLUP")

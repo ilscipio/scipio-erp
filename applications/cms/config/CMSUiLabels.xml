@@ -99,7 +99,7 @@
         <value xml:lang="th">เว็บไซต์</value>
         <value xml:lang="vi">Trang thông tin</value>
         <value xml:lang="zh">网站</value>
-        <value xml:lang="zh_TW">網站</value>
+        <value xml:lang="zh-TW">網站</value>
     </property>
     <property key="CmsWebSiteAddMenu">
         <value xml:lang="da">Opret menu</value>
@@ -112,7 +112,7 @@
         <value xml:lang="th">เพิ่มเมนู</value>
         <value xml:lang="vi">Thêm thực đơn</value>
         <value xml:lang="zh">添加菜单</value>
-        <value xml:lang="zh_TW">增加選單</value>
+        <value xml:lang="zh-TW">增加選單</value>
     </property>
     <property key="CmsMenus">
         <value xml:lang="da">Menuer</value>

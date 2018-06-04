@@ -23,6 +23,7 @@ import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -145,7 +146,7 @@ public class FedexServices {
         String shipmentGatewayConfigId = (String) context.get("shipmentGatewayConfigId");
         String resource = (String) context.get("configProps");
         Locale locale = (Locale) context.get("locale");
-        List<Object> errorList = UtilMisc.newList();
+        List<Object> errorList = new LinkedList<Object>();
 
         Boolean replaceMeterNumber = (Boolean) context.get("replaceMeterNumber");
 
@@ -207,7 +208,7 @@ public class FedexServices {
                     .queryList();
 
             // Get the first valid postal address (address1, city, postalCode and countryGeoId are required by Fedex)
-            List<EntityCondition> postalAddressConditions = UtilMisc.newList();
+            List<EntityCondition> postalAddressConditions = new LinkedList<EntityCondition>();
             postalAddressConditions.add(EntityCondition.makeCondition("contactMechTypeId", EntityOperator.EQUALS, "POSTAL_ADDRESS"));
             postalAddressConditions.add(EntityCondition.makeCondition("address1", EntityOperator.NOT_EQUAL, null));
             postalAddressConditions.add(EntityCondition.makeCondition("address1", EntityOperator.NOT_EQUAL, ""));
@@ -247,7 +248,7 @@ public class FedexServices {
             }
 
             // Get the first valid primary phone number (required by Fedex)
-            List<EntityCondition> phoneNumberConditions = UtilMisc.newList();
+            List<EntityCondition> phoneNumberConditions = new LinkedList<EntityCondition>();
             phoneNumberConditions.add(EntityCondition.makeCondition("contactMechTypeId", EntityOperator.EQUALS, "TELECOM_NUMBER"));
             phoneNumberConditions.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "PRIMARY_PHONE"));
             phoneNumberConditions.add(EntityCondition.makeCondition("areaCode", EntityOperator.NOT_EQUAL, null));
@@ -271,7 +272,7 @@ public class FedexServices {
             phoneNumber = phoneNumber.replaceAll("[^+\\d]", "");
 
             // Get the first valid fax number
-            List<EntityCondition> faxNumberConditions = UtilMisc.newList();
+            List<EntityCondition> faxNumberConditions = new LinkedList<EntityCondition>();
             faxNumberConditions.add(EntityCondition.makeCondition("contactMechTypeId", EntityOperator.EQUALS, "TELECOM_NUMBER"));
             faxNumberConditions.add(EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "FAX_NUMBER"));
             faxNumberConditions.add(EntityCondition.makeCondition("areaCode", EntityOperator.NOT_EQUAL, null));
@@ -290,7 +291,7 @@ public class FedexServices {
             }
 
             // Get the first valid email address
-            List<EntityCondition> emailConditions = UtilMisc.newList();
+            List<EntityCondition> emailConditions = new LinkedList<EntityCondition>();
             emailConditions.add(EntityCondition.makeCondition("contactMechTypeId", EntityOperator.EQUALS, "EMAIL_ADDRESS"));
             emailConditions.add(EntityCondition.makeCondition("infoString", EntityOperator.NOT_EQUAL, null));
             emailConditions.add(EntityCondition.makeCondition("infoString", EntityOperator.NOT_EQUAL, ""));
@@ -523,7 +524,7 @@ public class FedexServices {
             } else if (UtilValidate.isNotEmpty(shipmentRouteSegment.getString("currencyUomId"))) {
                 currencyCode = shipment.getString("currencyUomId");
             } else {
-                currencyCode = EntityUtilProperties.getPropertyValue("general.properties", "currency.uom.id.default", "USD", delegator);
+                currencyCode = EntityUtilProperties.getPropertyValue("general", "currency.uom.id.default", "USD", delegator);
             }
 
             // Get and validate origin postal address
@@ -974,7 +975,7 @@ public class FedexServices {
      */
     public static Map<String, Object> handleFedexShipReply(String fDXShipReplyString, GenericValue shipmentRouteSegment, 
             List<GenericValue> shipmentPackageRouteSegs, Locale locale) throws GenericEntityException {
-        List<Object> errorList = UtilMisc.newList();
+        List<Object> errorList = new LinkedList<Object>();
         GenericValue shipmentPackageRouteSeg = shipmentPackageRouteSegs.get(0);
 
         Document fdxShipReplyDocument = null;

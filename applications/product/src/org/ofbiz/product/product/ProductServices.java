@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -95,7 +96,7 @@ public class ProductServices {
         Delegator delegator = dctx.getDelegator();
         Locale locale = (Locale) context.get("locale");
         Map<String, String> selectedFeatures = UtilGenerics.checkMap(context.get("selectedFeatures"));
-        List<GenericValue> products = UtilMisc.newList();
+        List<GenericValue> products = new LinkedList<GenericValue>();
         // All the variants for this products are retrieved
         Map<String, Object> resVariants = prodFindAllVariants(dctx, context);
         List<GenericValue> variants = UtilGenerics.checkList(resVariants.get("assocProducts"));
@@ -232,13 +233,13 @@ public class ProductServices {
         }
 
         List<GenericValue> variants = UtilGenerics.checkList(prodFindAllVariants(dctx, context).get("assocProducts"));
-        List<String> virtualVariant = UtilMisc.newList();
+        List<String> virtualVariant = new LinkedList<String>();
 
         if (UtilValidate.isEmpty(variants)) {
             return ServiceUtil.returnSuccess();
         }
-        List<String> items = UtilMisc.newList();
-        List<GenericValue> outOfStockItems = UtilMisc.newList();
+        List<String> items = new LinkedList<String>();
+        List<GenericValue> outOfStockItems = new LinkedList<GenericValue>();
 
         for (GenericValue variant: variants) {
             String productIdTo = variant.getString("productIdTo");
@@ -329,7 +330,7 @@ public class ProductServices {
             String feature = v.getString("description");
 
             if (!features.containsKey(featureType)) {
-                List<String> featureList = UtilMisc.newList();
+                List<String> featureList = new LinkedList<String>();
                 featureList.add(feature);
                 features.put(featureType, featureList);
             } else {
@@ -519,7 +520,7 @@ public class ProductServices {
         try {
             List<GenericValue> productAssocs = null;
 
-            List<String> orderBy = UtilMisc.newList();
+            List<String> orderBy = new LinkedList<String>();
             if (sortDescending) {
                 orderBy.add("sequenceNum DESC");
             } else {
@@ -572,7 +573,7 @@ public class ProductServices {
     // Builds a product feature tree
     private static Map<String, Object> makeGroup(Delegator delegator, Map<String, List<String>> featureList, List<String> items, List<String> order, int index)
         throws IllegalArgumentException, IllegalStateException {
-        //List featureKey = UtilMisc.newList();
+        //List featureKey = new LinkedList<Object>();
         Map<String, List<String>> tempGroup = new HashMap<String, List<String>>();
         Map<String, Object> group = new LinkedHashMap<String, Object>();
         String orderKey = order.get(index);
@@ -841,7 +842,7 @@ public class ProductServices {
 
             // separate variantProductIdsBag into a Set of variantProductIds
             //note: can be comma, tab, or white-space delimited
-            Set<String> prelimVariantProductIds = UtilMisc.newSet();
+            Set<String> prelimVariantProductIds = new HashSet<String>();
             List<String> splitIds = Arrays.asList(variantProductIdsBag.split("[,\\p{Space}]"));
             Debug.logInfo("Variants: bag=" + variantProductIdsBag, module);
             Debug.logInfo("Variants: split=" + splitIds, module);
@@ -882,7 +883,7 @@ public class ProductServices {
             }
 
             // Attach productFeatureIdOne, Two, Three to the new virtual and all variant products as a standard feature
-            Set<String> featureProductIds = UtilMisc.newSet();
+            Set<String> featureProductIds = new HashSet<String>();
             featureProductIds.add(productId);
             featureProductIds.addAll(variantProductsById.keySet());
             Set<String> productFeatureIds = new HashSet<String>();
@@ -924,7 +925,7 @@ public class ProductServices {
 
     public static Map<String, Object> updateProductIfAvailableFromShipment(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
-        if ("Y".equals(EntityUtilProperties.getPropertyValue("catalog.properties", "reactivate.product.from.receipt", "N", delegator))) {
+        if ("Y".equals(EntityUtilProperties.getPropertyValue("catalog", "reactivate.product.from.receipt", "N", delegator))) {
             LocalDispatcher dispatcher = dctx.getDispatcher();
             GenericValue userLogin = (GenericValue) context.get("userLogin");
             String inventoryItemId = (String) context.get("inventoryItemId");
@@ -1023,7 +1024,7 @@ public class ProductServices {
                 filenameToUse = fileLocation.substring(fileLocation.lastIndexOf("/") + 1);
             }
 
-            List<GenericValue> fileExtension = UtilMisc.newList();
+            List<GenericValue> fileExtension = new LinkedList<GenericValue>();
             try {
                 fileExtension = EntityQuery.use(delegator).from("FileExtension").where("mimeTypeId", (String) context.get("_uploadedFile_contentType")).queryList();
             } catch (GenericEntityException e) {
@@ -1322,7 +1323,7 @@ public class ProductServices {
                 filenameToUse = fileLocation.substring(fileLocation.lastIndexOf("/") + 1);
             }
 
-            List<GenericValue> fileExtension = UtilMisc.newList();
+            List<GenericValue> fileExtension = new LinkedList<GenericValue>();
             try {
                 fileExtension = EntityQuery.use(delegator).from("FileExtension").where(EntityCondition.makeCondition("mimeTypeId", EntityOperator.EQUALS, (String) context.get("_uploadedFile_contentType"))).queryList();
             } catch (GenericEntityException e) {

@@ -25,6 +25,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -115,16 +116,16 @@ public class ProductDisplayWorker {
                 String currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
                 String viewProductCategoryId = CatalogWorker.getCatalogViewAllowCategoryId(delegator, currentCatalogId);
                 if (viewProductCategoryId != null) {
-                    List<GenericValue> tempList = UtilMisc.newList();
+                    List<GenericValue> tempList = new LinkedList<GenericValue>();
                     tempList.addAll(products.values());
                     tempList = CategoryWorker.filterProductsInCategory(delegator, tempList, viewProductCategoryId, "productId");
-                    cartAssocs = UtilMisc.newList();
+                    cartAssocs = new LinkedList<GenericValue>();
                     cartAssocs.addAll(tempList);
                 }
             }
 
             if (cartAssocs == null) {
-                cartAssocs = UtilMisc.newList();
+                cartAssocs = new LinkedList<GenericValue>();
                 cartAssocs.addAll(products.values());
             }
 
@@ -248,7 +249,7 @@ public class ProductDisplayWorker {
                 }
             //}
 
-            List<GenericValue> reorderProds = UtilMisc.newList();
+            List<GenericValue> reorderProds = new LinkedList<GenericValue>();
             reorderProds.addAll(products.values());
 
             /*
@@ -299,7 +300,7 @@ public class ProductDisplayWorker {
         if (values == null)  return null;
         if (values.size() == 0) return UtilMisc.toList(values);
 
-        List<GenericValue> result = UtilMisc.newList();
+        List<GenericValue> result = new LinkedList<GenericValue>();
         result.addAll(values);
 
         Collections.sort(result, new ProductByMapComparator(orderByMap, descending));

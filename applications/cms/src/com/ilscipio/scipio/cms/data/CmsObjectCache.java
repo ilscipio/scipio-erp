@@ -26,7 +26,7 @@ public abstract class CmsObjectCache<T extends CmsObject> {
     
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
-    private static final int EXPIRATION_TIME_DEFAULT = UtilProperties.getPropertyAsInteger("cms.properties", "cache.data.expiration", 10000);
+    private static final int EXPIRATION_TIME_DEFAULT = UtilProperties.getPropertyAsInteger("cms", "cache.data.expiration", 10000);
 
     /**
      * Debug-like flag: If true, the cached preloaded objects are kept mutable
@@ -121,7 +121,7 @@ public abstract class CmsObjectCache<T extends CmsObject> {
         Integer expireTime = null;
         // FIRST, lookup the cache name in cache.properties, so
         // consistent with rest of system
-        String expireTimeStr = UtilProperties.getPropertyValue("cache.properties", cacheName);
+        String expireTimeStr = UtilProperties.getPropertyValue("cache", cacheName);
         if (UtilValidate.isNotEmpty(expireTimeStr)) {
             try {
                 expireTime = (Integer) ObjectType.simpleTypeConvert(expireTimeStr, "Integer", null, null);

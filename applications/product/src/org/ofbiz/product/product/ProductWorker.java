@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -300,7 +301,7 @@ public class ProductWorker {
      */
     public static Set<GenericValue> getVariantDistinguishingFeatures(GenericValue variantProduct) throws GenericEntityException {
         if (variantProduct == null) {
-            return UtilMisc.newSet();
+            return new HashSet<GenericValue>();
         }
         if (!"Y".equals(variantProduct.getString("isVariant"))) {
             throw new IllegalArgumentException("Cannot get distinguishing features for a product that is not a variant (ie isVariant!=Y).");
@@ -309,7 +310,7 @@ public class ProductWorker {
         String virtualProductId = getVariantVirtualId(variantProduct);
 
         // find all selectable features on the virtual product that are also standard features on the variant
-        Set<GenericValue> distFeatures = UtilMisc.newSet();
+        Set<GenericValue> distFeatures = new HashSet<GenericValue>();
 
         List<GenericValue> variantDistinguishingFeatures = EntityQuery.use(delegator).from("ProductFeatureAndAppl").where("productId", variantProduct.get("productId"), "productFeatureApplTypeId", "DISTINGUISHING_FEAT").cache(true).queryList();
         // Debug.logInfo("Found variantDistinguishingFeatures: " + variantDistinguishingFeatures, module);
@@ -323,7 +324,7 @@ public class ProductWorker {
         List<GenericValue> virtualSelectableFeatures = EntityQuery.use(delegator).from("ProductFeatureAndAppl").where("productId", virtualProductId, "productFeatureApplTypeId", "SELECTABLE_FEATURE").cache(true).queryList();
         // Debug.logInfo("Found virtualSelectableFeatures: " + virtualSelectableFeatures, module);
 
-        Set<String> virtualSelectableFeatureIds = UtilMisc.newSet();
+        Set<String> virtualSelectableFeatureIds = new HashSet<String>();
         for (GenericValue virtualSelectableFeature: EntityUtil.filterByDate(virtualSelectableFeatures)) {
             virtualSelectableFeatureIds.add(virtualSelectableFeature.getString("productFeatureId"));
         }
@@ -426,7 +427,7 @@ public class ProductWorker {
             features = EntityUtil.orderBy(features, UtilMisc.toList("description"));
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            features = UtilMisc.newList();
+            features = new LinkedList<GenericValue>();
         }
         return features;
     }
@@ -455,7 +456,7 @@ public class ProductWorker {
         if (product == null) {
             return null;
         }
-        List <List<Map<String,String>>> featureTypeFeatures = UtilMisc.newList();
+        List <List<Map<String,String>>> featureTypeFeatures = new LinkedList<List<Map<String,String>>>();
         try {
             Delegator delegator = product.getDelegator();
             //List<GenericValue> features = delegator.findByAnd("ProductFeatureAndAppl", fields, order, true);
@@ -467,13 +468,13 @@ public class ProductWorker {
                                                     .cache(true)
                                                     .queryList();
             String oldType = null;
-            List<Map<String,String>> featureList = UtilMisc.newList();
+            List<Map<String,String>> featureList = new LinkedList<Map<String,String>>();
             for (GenericValue productFeatureAppl: featuresSorted) {
                 if (oldType == null || !oldType.equals(productFeatureAppl.getString("productFeatureTypeId"))) {
                     // use first entry for type and description
                     if (oldType != null) {
                         featureTypeFeatures.add(featureList);
-                        featureList = UtilMisc.newList();
+                        featureList = new LinkedList<Map<String,String>>();
                     }
                     GenericValue productFeatureType = EntityQuery.use(delegator).from("ProductFeatureType").where("productFeatureTypeId", productFeatureAppl.getString("productFeatureTypeId")).queryOne();
                     featureList.add(UtilMisc.<String, String>toMap("productFeatureTypeId", productFeatureAppl.getString("productFeatureTypeId"),
@@ -525,7 +526,7 @@ public class ProductWorker {
         if (product == null) {
             return null;
         }
-        List <Map<String,Map<String,Object>>> featureTypeFeatures = UtilMisc.newList();
+        List <Map<String,Map<String,Object>>> featureTypeFeatures = new LinkedList<Map<String,Map<String,Object>>>();
         try {
             Delegator delegator = product.getDelegator();
             List<GenericValue> featuresSorted = EntityQuery.use(delegator)
@@ -548,7 +549,7 @@ public class ProductWorker {
                     GenericValue productFeatureType = EntityQuery.use(delegator).from("ProductFeatureType").where("productFeatureTypeId", productFeatureAppl.getString("productFeatureTypeId")).queryOne();
                     featureType.put("description",productFeatureType.get("description", locale));
                     featureType.put("productFeatureTypeId", productFeatureAppl.get("productFeatureTypeId", locale));
-                    featureType.put("features", UtilMisc.newList());
+                    featureType.put("features", new LinkedList<Map>());
                     featureTypeFeatures.add(featureType);
                 }
                 List features = (List) featureType.get("features");
@@ -600,7 +601,7 @@ public class ProductWorker {
         List<String> selectableTypes = EntityUtil.getFieldListFromEntityList(selectableFeatures, "productFeatureTypeId", true);
         // The standard features from the variant product
         List<GenericValue> standardFeatures = ProductWorker.getProductFeaturesByApplTypeId(variantProduct, "STANDARD_FEATURE");
-        List<GenericValue> result = UtilMisc.newList();
+        List<GenericValue> result = new LinkedList<GenericValue>();
         for (GenericValue standardFeature : standardFeatures) {
             // For each standard variant feature check it is also a virtual selectable feature and
             // if a feature of the same type hasn't already been added to the list
@@ -627,7 +628,7 @@ public class ProductWorker {
                 String featureType = appl.getString("productFeatureTypeId");
                 List<GenericValue> features = featureMap.get(featureType);
                 if (features == null) {
-                    features = UtilMisc.newList();
+                    features = new LinkedList<GenericValue>();
                 }
                 features.add(appl);
                 featureMap.put(featureType, features);
@@ -664,7 +665,7 @@ public class ProductWorker {
     }
 
     public static List<GenericValue> filterOrderAdjustments(List<GenericValue> adjustments, boolean includeOther, boolean includeTax, boolean includeShipping, boolean forTax, boolean forShipping) {
-        List<GenericValue> newOrderAdjustmentsList = UtilMisc.newList();
+        List<GenericValue> newOrderAdjustmentsList = new LinkedList<GenericValue>();
 
         if (UtilValidate.isNotEmpty(adjustments)) {
             for (GenericValue orderAdjustment: adjustments) {
@@ -796,7 +797,7 @@ public class ProductWorker {
         if (product == null) {
             return null;
         }
-        List<GenericValue> categories = UtilMisc.newList();
+        List<GenericValue> categories = new LinkedList<GenericValue>();
         try {
             List<GenericValue> categoryMembers = product.getRelated("ProductCategoryMember", null, null, false);
             categoryMembers = EntityUtil.filterByDate(categoryMembers);
@@ -1137,7 +1138,7 @@ public class ProductWorker {
     }
 
     public static Set<String> getRefurbishedProductIdSet(String productId, Delegator delegator) throws GenericEntityException {
-        Set<String> productIdSet = UtilMisc.newSet();
+        Set<String> productIdSet = new HashSet<String>();
 
         // find associated refurb items, we want serial number for main item or any refurb items too
         List<GenericValue> refubProductAssocs = EntityQuery.use(delegator).from("ProductAssoc").where("productId", productId, "productAssocTypeId", "PRODUCT_REFURB").filterByDate().queryList();
@@ -1304,7 +1305,7 @@ nextProd:
         if(productId != null || virtualVariantId != null){
             List<GenericValue> alternativePackingProds = null;
             try {
-                List<EntityCondition> condList = UtilMisc.newList();
+                List<EntityCondition> condList = new LinkedList<EntityCondition>();
 
                 if (UtilValidate.isNotEmpty(productId)) {
                     condList.add(EntityCondition.makeCondition("productIdTo", productId));

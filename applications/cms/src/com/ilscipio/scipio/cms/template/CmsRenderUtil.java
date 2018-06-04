@@ -35,10 +35,10 @@ public abstract class CmsRenderUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
-    private static final RenderExceptionMode liveExceptionMode = RenderExceptionMode.valueOfPermissive(UtilProperties.getPropertyValue("cms.properties", 
+    private static final RenderExceptionMode liveExceptionMode = RenderExceptionMode.valueOfPermissive(UtilProperties.getPropertyValue("cms", 
             "render.live.exception.mode"));
     
-    static final RenderExceptionMode directiveLiveExceptionMode = RenderExceptionMode.valueOfPermissive(UtilProperties.getPropertyValue("cms.properties", 
+    static final RenderExceptionMode directiveLiveExceptionMode = RenderExceptionMode.valueOfPermissive(UtilProperties.getPropertyValue("cms", 
             "render.live.exception.directive.mode"));
     
     protected CmsRenderUtil() {

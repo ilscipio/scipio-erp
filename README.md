@@ -1,4 +1,4 @@
-
+```
 **************************************************************************
 
    _____    _____   _   _____    _    ____      _____   _____    _____
@@ -8,32 +8,31 @@
   ____) | | |____  | | | |      | | | |__| |   | |___  | | \ \  | |
  |_____/   \_____| |_| |_|      |_|  \____/    |_____| |_|  \_\ |_|
 
-                    http://www.scipioerp.com
+                    https://www.scipioerp.com
 
 **************************************************************************
+```
 
-SCIPIO ERP - Community Edition
+# SCIPIO ERP - Community Edition
 
-***************************
-* I N S T A L L A T I O N *
-***************************
-System Requirements
+## Installation
+### System Requirements
 * Operating System: Windows, Linux, OS X
 * Core 2 Duo or Athlon X2 at 2.4 GHz or higher
 * 4+GB RAM, 2+GB free hard disk space
 
-Software Requirements
+### Software Requirements
 * Java 1.8 (or greater) SDK
 * Apache ANT
 
-Recommended Development Tools
+### Recommended Development Tools
 * GIT Client
 * Eclipse Java IDE
  * m2eclipse
  * Groovy-eclipse
  * Freemarker IDE editor (select from JBooss tools plugin)
 
-Prerequisites
+### Prerequisites
 In order to install SCIPIO ERP, the following prerequisites must be installed:
 * Java 1.8 (or greater) SDK
  * Download and Install
@@ -42,7 +41,7 @@ In order to install SCIPIO ERP, the following prerequisites must be installed:
 * Install Apache Ant
  * Download and Install
 
-Download
+### Download
 The standard way to get SCIPIO ERP to is to checkout the scipioce-1.14 branch, which
 provides you with the latest version of the 1.14.x line with latest important updates:
 
@@ -56,18 +55,18 @@ for access to latest features and changes, but it is subject to compatibility-br
 changes without notice (unless you have a supported client project, in which case we
 will assist). For some projects, master may be the recommended branch to use.
 
-Installation
+### Installation Process
 In order to install, the following steps must be taken:
 
 1. Open your command line, go to the extracted folder and run:
-a. Linux ./install.sh
-b. OS X: ./install.sh
-c. Windows: install.bat
+ a. Linux ./install.sh
+ b. OS X: ./install.sh
+ c. Windows: install.bat
 
 2. From the same command line run:
-a. Linux ./start.sh
-b. OS X: bash ./start.sh
-c. Windows: start.bat
+ a. Linux ./start.sh
+ b. OS X: bash ./start.sh
+ c. Windows: start.bat
 
 3. To access the application visit the SCIPIO ERP Dashboard:
   https://localhost:8443/admin
@@ -76,9 +75,9 @@ c. Windows: start.bat
   Username: admin
   Password: scipio
 
-                    Congratulations, you have installed SCIPIO ERP!
+                    **Congratulations, you have installed SCIPIO ERP!**
 
-Updates
+### Updates
 1. Retrieve latest code updates from git:
 a. git checkout scipioce-1.14
 b. git pull
@@ -89,29 +88,25 @@ b. Visit entity utility services page:
   https://localhost:8443/admin/control/EntityUtilityServices
 c. Click "Visual Theme Resources - Reload All, Now"
 
-Optional Configuration
+### Optional Configuration
   http://www.scipioerp.com/community/developer/installation-configuration/configuration/
 
-Docker
+### Docker
 We also provide Docker images if you would like to try out Scipio with minimal effort. To create a fully functional Scipio ERP instance with some demo data already loaded, you can create a container with the following command:
 
   docker create -p 8080:8080 -p 8443:8443 ilscipio/scipio-erp:demo
   
 
-*****************
-* S U P P O R T *
-*****************
+## Support
 For detailed information and changes about the SCIPIO ERP suite, visit the official website at:
 
-  http://www.scipioerp.com
+  [https://www.scipioerp.com](https://www.scipioerp.com "Scipio ERP Website")
 
 You can get in touch with the community over at:
 
-  http://forum.scipioerp.com
+  [https://forum.scipioerp.com](https://forum.scipioerp.com "Community Forum")
 
-*************
-* O F B I Z *
-*************
+## OFBiz
 Scipio ERP is a fork of the Apache OFBiz project.
 
 For more details about OFBiz please visit the OFBiz Documentation page:
@@ -128,9 +123,7 @@ developers, the following page will help to get started:
 
   http://ofbiz.apache.org/community.html
   
-*****************
-* L I C E N S E *
-***************** 
+## License
 The source code that makes up The SCIPIO ERP Community Edition
 (hereinafter referred to as "SCIPIO ERP") and the majority of the
 libraries distributed with it are licensed under the Apache License v2.0.
@@ -141,9 +134,7 @@ ERP and the full text of the license used for each.
 
 For additional details, see the NOTICE file.
 
-***********************
-* D I S C L A I M E R *
-***********************
+## Disclaimer
 This software is provided as is and free of charge. There is no warranty
 or support implied under the terms of the license included.
 
@@ -152,9 +143,7 @@ SCIPIO ERP and the SCIPIO logo are trademarks of Ilscipio GmbH.
 Apache OFBiz, Apache, the Apache feather logo are trademarks
 of The Apache Software Foundation.
 
-***********************************
-* BIS Crypto TSU exception notice *
-***********************************
+### BIS Crypto TSU exception notice
 
    This distribution includes cryptographic software.  The country in
    which you currently reside may have restrictions on the import,
@@ -178,7 +167,7 @@ of The Apache Software Foundation.
    The following provides more details on the included cryptographic
    software:
 
-   * Various classes in OFBiz, including DesCrypt, HashCrypt, and
+   * Various classes in Scipio, including DesCrypt, HashCrypt, and
      BlowFishCrypt use libraries from the Sun Java JDK API including
      java.security.* and javax.crypto.* (the JCE, Java Cryptography
      Extensions API)

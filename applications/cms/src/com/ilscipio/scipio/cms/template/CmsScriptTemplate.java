@@ -83,7 +83,7 @@ public class CmsScriptTemplate extends CmsComplexTemplate implements CmsMajorObj
         }
     }
     
-    private static final String processorLocation = UtilProperties.getPropertyValue("cms.properties", "contentprocessor.script.location");
+    private static final String processorLocation = UtilProperties.getPropertyValue("cms", "contentprocessor.script.location");
 
     private static final ScriptExecutor processorScriptExecutor = makeProcessorExecutor();
     

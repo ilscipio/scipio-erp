@@ -33,7 +33,7 @@ public class CmsPageContent extends AbstractPreloadable implements Serializable,
     
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
-    private static final String useNamesForMissingAttributesStr = UtilProperties.getPropertyValue("cms.properties", "render.attributes.useNamesForMissing", "never");
+    private static final String useNamesForMissingAttributesStr = UtilProperties.getPropertyValue("cms", "render.attributes.useNamesForMissing", "never");
     private static final boolean useNamesForMissingAttributesAlways = "always".equals(useNamesForMissingAttributesStr);
     private static final boolean useNamesForMissingAttributesPreview = "preview".equals(useNamesForMissingAttributesStr);
 

@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -266,7 +267,7 @@ public class LimitedSubContentCacheTransform implements TemplateTransformModel {
                         isPickObj.booleanValue()) || (isFollowObj != null && isFollowObj.booleanValue()))) {
                     List<Map<String, ? extends Object>> globalNodeTrail = UtilGenerics.checkList(ctx.get("globalNodeTrail"));
                     if (globalNodeTrail == null) {
-                        globalNodeTrail = UtilMisc.newList();
+                        globalNodeTrail = new LinkedList<Map<String, ? extends Object>>();
                     }
                     globalNodeTrail.add(trailNode);
                     ctx.put("globalNodeTrail", globalNodeTrail);

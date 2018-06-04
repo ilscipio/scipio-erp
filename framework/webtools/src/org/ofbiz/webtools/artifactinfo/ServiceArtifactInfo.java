@@ -25,6 +25,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -176,7 +177,7 @@ public class ServiceArtifactInfo extends ArtifactInfoBase {
                 populateServicesFromNameSet(allServiceNameSet);
             }
         } else if ("group".equals(this.modelService.engineName)) {
-            Set<String> allServiceNameSet = UtilMisc.newSet();
+            Set<String> allServiceNameSet = new HashSet<String>();
             GroupModel groupModel = modelService.internalGroup;
             if (groupModel == null) {
                 groupModel = ServiceGroupReader.getGroupModel(this.modelService.location);
@@ -277,7 +278,7 @@ public class ServiceArtifactInfo extends ArtifactInfoBase {
 
     public Set<ServiceArtifactInfo> getServicesCalledByServiceEcas() {
         // TODO: implement this sometime, not really necessary
-        return UtilMisc.newSet();
+        return new HashSet<ServiceArtifactInfo>();
     }
 
     public Set<ServiceEcaArtifactInfo> getServiceEcaRulesTriggeredByService() {
@@ -286,7 +287,7 @@ public class ServiceArtifactInfo extends ArtifactInfoBase {
 
     public Set<ServiceArtifactInfo> getServicesCallingServiceByEcas() {
         // TODO: implement this sometime, not really necessary
-        return UtilMisc.newSet();
+        return new HashSet<ServiceArtifactInfo>();
     }
 
     public Set<ServiceEcaArtifactInfo> getServiceEcaRulesCallingService() {
@@ -314,9 +315,9 @@ public class ServiceArtifactInfo extends ArtifactInfoBase {
 
         Debug.logInfo("Writing Service Call Graph EO Model for service [" + this.modelService.name + "] to [" + eomodeldFullPath + "]", module);
 
-        Set<String> allDiagramEntitiesWithPrefixes = UtilMisc.newSet();
-        //List<ServiceArtifactInfo> allServiceList = UtilMisc.newList(); // SCIPIO: 2018-03-28: does nothing
-        //List<ServiceEcaArtifactInfo> allServiceEcaList = UtilMisc.newList(); // SCIPIO: 2018-03-28: does nothing
+        Set<String> allDiagramEntitiesWithPrefixes = new HashSet<String>();
+        //List<ServiceArtifactInfo> allServiceList = new LinkedList<ServiceArtifactInfo>(); // SCIPIO: 2018-03-28: does nothing
+        //List<ServiceEcaArtifactInfo> allServiceEcaList = new LinkedList<ServiceEcaArtifactInfo>(); // SCIPIO: 2018-03-28: does nothing
 
         // make sure that any prefix that might have been set on this is cleared
         this.setDisplayPrefix("");
@@ -444,10 +445,10 @@ public class ServiceArtifactInfo extends ArtifactInfoBase {
     }
 
     public Map<String, Object> createEoModelMap(Set<ServiceArtifactInfo> callingServiceSet, Set<ServiceArtifactInfo> calledServiceSet, Set<ServiceEcaArtifactInfo> callingServiceEcaSet, Set<ServiceEcaArtifactInfo> calledServiceEcaSet, boolean useMoreDetailedNames) {
-        if (callingServiceSet == null) callingServiceSet = UtilMisc.newSet();
-        if (calledServiceSet == null) calledServiceSet = UtilMisc.newSet();
-        if (callingServiceEcaSet == null) callingServiceEcaSet = UtilMisc.newSet();
-        if (calledServiceEcaSet == null) calledServiceEcaSet = UtilMisc.newSet();
+        if (callingServiceSet == null) callingServiceSet = new HashSet<ServiceArtifactInfo>();
+        if (calledServiceSet == null) calledServiceSet = new HashSet<ServiceArtifactInfo>();
+        if (callingServiceEcaSet == null) callingServiceEcaSet = new HashSet<ServiceEcaArtifactInfo>();
+        if (calledServiceEcaSet == null) calledServiceEcaSet = new HashSet<ServiceEcaArtifactInfo>();
         Map<String, Object> topLevelMap = new HashMap<String, Object>();
 
         topLevelMap.put("name", this.getDisplayPrefixedName());

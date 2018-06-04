@@ -19,6 +19,7 @@
 package org.ofbiz.content.content;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -483,7 +484,7 @@ public class UploadContentAndImage {
         if (Debug.infoOn()) {
             Debug.logInfo("[UploadContentStuff]ftlContext2:" + ftlContext2, module);
         }
-        List<Object> errorMessages = UtilMisc.newList();
+        List<Object> errorMessages = new LinkedList<Object>();
         Locale loc = Locale.getDefault();
         try {
             SimpleMapProcessor.runSimpleMapProcessor("component://content/script/org/ofbiz/content/ContentManagementMapProcessors.xml", "contentIn", ftlContext2, ftlContext3, errorMessages, loc);
@@ -523,7 +524,7 @@ public class UploadContentAndImage {
                 Debug.logInfo("[UploadContentStuff]msg:" + msg, module);
             }
             if (errorMsgList == null) {
-                errorMsgList = UtilMisc.newList();
+                errorMsgList = new LinkedList<String>();
                 request.setAttribute("errorMessageList", errorMsgList);
             }
             errorMsgList.add(msg);
@@ -534,7 +535,7 @@ public class UploadContentAndImage {
             request.setAttribute("_ERROR_MESSAGE_", msg);
             List<String> errorMsgList = UtilGenerics.checkList(request.getAttribute("_EVENT_MESSAGE_LIST_"));
             if (errorMsgList == null) {
-                errorMsgList = UtilMisc.newList();
+                errorMsgList = new LinkedList<String>();
                 request.setAttribute("errorMessageList", errorMsgList);
             }
             errorMsgList.add(msg);
@@ -570,7 +571,7 @@ public class UploadContentAndImage {
                     Debug.logInfo("[UploadContentStuff]msg:" + msg, module);
                 }
                 if (errorMsgList == null) {
-                    errorMsgList = UtilMisc.newList();
+                    errorMsgList = new LinkedList<String>();
                     request.setAttribute("errorMessageList", errorMsgList);
                 }
                 errorMsgList.add(msg);

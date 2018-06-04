@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -275,7 +276,7 @@ public class ContentManagementWorker {
     }
 
     public static List<String []> getPermittedPublishPoints(Delegator delegator, List<GenericValue> allPublishPoints, GenericValue userLogin, Security security, String permittedAction, String permittedOperations, String passedRoles) throws GeneralException {
-        List<String []> permittedPublishPointList = UtilMisc.newList();
+        List<String []> permittedPublishPointList = new LinkedList<String []>();
 
         // Check that user has permission to admin sites
         for (GenericValue webSitePP : allPublishPoints) {
@@ -289,7 +290,7 @@ public class ContentManagementWorker {
             }
             List<String> passedPurposes = UtilMisc.toList("ARTICLE");
             List<String> roles = StringUtil.split(passedRoles, "|");
-            List<String> targetOperationList = UtilMisc.newList();
+            List<String> targetOperationList = new LinkedList<String>();
             if (UtilValidate.isEmpty(permittedOperations)) {
                  targetOperationList.add("CONTENT" + entityAction);
             } else {
@@ -322,7 +323,7 @@ public class ContentManagementWorker {
         } catch (GenericEntityException e) {
             throw new GeneralException(e.getMessage());
         }
-        List<GenericValue> allPublishPoints = UtilMisc.newList();
+        List<GenericValue> allPublishPoints = new LinkedList<GenericValue>();
         GenericValue webSitePublishPoint = null;
         for (GenericValue contentAssoc : relatedPubPts) {
            String pub = (String)contentAssoc.get("contentId");
@@ -370,7 +371,7 @@ public class ContentManagementWorker {
             throw new GeneralException(e.getMessage());
         }
 
-        List<Map<String, Object>> staticValueList = UtilMisc.newList();
+        List<Map<String, Object>> staticValueList = new LinkedList<Map<String, Object>>();
         int counter = 0;
         for (GenericValue content : assocValueList) {
             String contentId = (String)content.get("contentId");
@@ -517,7 +518,7 @@ public class ContentManagementWorker {
             //String description = (String)webSitePublishPoint.get("description");
             String contentId = arr[0];
             String description = arr[1];
-            List<Object []> subPointList = UtilMisc.newList();
+            List<Object []> subPointList = new LinkedList<Object []>();
             Object nullObj = null;
             Object [] subArr = {contentId, subPointList, description, nullObj};
             publishPointMap.put(contentId, subArr);
@@ -567,7 +568,7 @@ public class ContentManagementWorker {
             }
         }
 
-        List<Object []> publishedLinkList = UtilMisc.newList();
+        List<Object []> publishedLinkList = new LinkedList<Object []>();
         for (String contentId : publishPointMap.keySet()) {
             Object [] subPointArr = (Object [])publishPointMap.get(contentId);
             publishedLinkList.add(subPointArr);
@@ -599,7 +600,7 @@ public class ContentManagementWorker {
     }
 
     public static List<String []> getPermittedDepartmentPoints(Delegator delegator, List<GenericValue> allDepartmentPoints, GenericValue userLogin, Security security, String permittedAction, String permittedOperations, String passedRoles) throws GeneralException {
-        List<String []> permittedDepartmentPointList = UtilMisc.newList();
+        List<String []> permittedDepartmentPointList = new LinkedList<String []>();
 
         // Check that user has permission to admin sites
         for (GenericValue content : allDepartmentPoints) {
@@ -611,7 +612,7 @@ public class ContentManagementWorker {
                 entityAction = "_ADMIN";
             List<String> passedPurposes = UtilMisc.<String>toList("ARTICLE");
             List<String> roles = StringUtil.split(passedRoles, "|");
-            List<String> targetOperationList = UtilMisc.newList();
+            List<String> targetOperationList = new LinkedList<String>();
             if (UtilValidate.isEmpty(permittedOperations)) {
                  targetOperationList.add("CONTENT" + entityAction);
             } else {
@@ -645,7 +646,7 @@ public class ContentManagementWorker {
         } catch (GenericEntityException e) {
             throw new GeneralException(e.getMessage());
         }
-        List<GenericValue> allDepartmentPoints = UtilMisc.newList();
+        List<GenericValue> allDepartmentPoints = new LinkedList<GenericValue>();
         GenericValue departmentContent = null;
         for (GenericValue contentAssoc : relatedPubPts) {
            String pub = (String)contentAssoc.get("contentId");

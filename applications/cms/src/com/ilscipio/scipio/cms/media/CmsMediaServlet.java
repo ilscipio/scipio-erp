@@ -231,7 +231,7 @@ public class CmsMediaServlet extends HttpServlet {
             }
             
             // SECURITY: 2017-08-02: isPublic check; borrowed from DataEvents.serveObjectData
-            String permissionService = EntityUtilProperties.getPropertyValue("content.properties", "stream.permission.service", "genericContentPermission", delegator);
+            String permissionService = EntityUtilProperties.getPropertyValue("content", "stream.permission.service", "genericContentPermission", delegator);
             // see if data resource is public or not
             if (UtilValidate.isEmpty(isPublic)) {
                 isPublic = "N";

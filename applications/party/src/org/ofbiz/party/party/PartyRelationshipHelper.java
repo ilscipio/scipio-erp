@@ -20,6 +20,7 @@
 package org.ofbiz.party.party;
 
 import java.sql.Timestamp;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -54,7 +55,7 @@ public class PartyRelationshipHelper {
         String partyRelationshipTypeId = (String) partyRelationshipValues.get("partyRelationshipTypeId") ;
         Timestamp fromDate = UtilDateTime.nowTimestamp();
 
-        List<EntityCondition> condList = UtilMisc.newList();
+        List<EntityCondition> condList = new LinkedList<EntityCondition>();
         condList.add(EntityCondition.makeCondition("partyIdFrom", partyIdFrom));
         condList.add(EntityCondition.makeCondition("partyIdTo", partyIdTo));
         condList.add(EntityCondition.makeCondition("roleTypeIdFrom", roleTypeIdFrom));

@@ -547,7 +547,7 @@ public class EntityUtil {
      * property in <code>general.properties</code> to "Y".</p>
      */
     public static boolean isMultiTenantEnabled() {
-        return "Y".equalsIgnoreCase(UtilProperties.getPropertyValue("general.properties", "multitenant"));
+        return "Y".equalsIgnoreCase(UtilProperties.getPropertyValue("general", "multitenant"));
     }
     
     

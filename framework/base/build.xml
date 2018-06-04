@@ -120,7 +120,7 @@ under the License.
             <firstmatchmapper>
                 <!-- Official Servlet API - 2018-04-13: move the servlet API jars to j2eespecs-ref -->
                 <regexpmapper from="^(.*/)?(javax\.(servlet-api|servlet\.jsp-api|el-api|annotation-api)-[^/]+\.jar)$" to="\1j2eespecs-ref/\2" handledirsep="true"/>
-                
+
                 <!-- Tomcat-provided Servlet API - 2018-04-13: no longer need to do this; we have two different sets of JARs
                 <regexpmapper from="^(.*/)?tomcat-servlet-api-([^/-]+)\.jar$" to="\1javax.servlet-api-3.1.0.jar" handledirsep="true"/>
                 <regexpmapper from="^(.*/)?tomcat-jsp-api-([^/-]+)\.jar$" to="\1javax.servlet.jsp-api-2.3.0.jar" handledirsep="true"/>
@@ -128,6 +128,10 @@ under the License.
                 <!- - FIXME?: annotations official version is unclear - ->
                 <regexpmapper from="^(.*/)?tomcat-annotations-api-([^/-]+)\.jar$" to="\1javax.annotation-api-3.0.0.jar" handledirsep="true"/>
                 -->
+
+                <!-- badly named zhing jar -->
+                <regexpmapper from="^(.*/)?core-([0-9.]+\.jar)$" to="\1zxing-core-\2" handledirsep="true"/>
+
                 <identitymapper/>
             </firstmatchmapper>
         </ivy:retrieve>
@@ -145,6 +149,10 @@ under the License.
                         <regexpmapper from="^(.*/)?tomcat-el-api-([^/-]+)-sources\.jar$" to="\1javax.el-api-3.0.0-sources.jar" handledirsep="true"/>
                         <!- - FIXME?: annotations official version is unclear - ->
                         <regexpmapper from="^(.*/)?tomcat-annotations-api-([^/-]+)-sources\.jar$" to="\1javax.annotation-api-3.0.0-sources.jar" handledirsep="true"/>-->
+ 
+                        <!-- badly named zhing jar -->
+                        <regexpmapper from="^(.*/)?core-([0-9.]+-sources\.jar)$" to="\1zxing-core-\2" handledirsep="true"/>
+
                         <identitymapper/>
                     </firstmatchmapper>
                 </ivy:retrieve>

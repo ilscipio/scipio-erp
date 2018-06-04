@@ -33,7 +33,7 @@
         <value xml:lang="th">สินค้า</value>
         <value xml:lang="vi">Sản phẩm</value>
         <value xml:lang="zh">产品</value>
-        <value xml:lang="zh_TW">產品</value>
+        <value xml:lang="zh-TW">產品</value>
     </property>
     <property key="SeoConfigPathNameCategory">
         <value xml:lang="cs">skupina-výrobků</value>
@@ -41,16 +41,16 @@
         <value xml:lang="en">category</value>
         <value xml:lang="es">categoría</value>
         <value xml:lang="fr">catégorie</value>
-        <value xml:lang="hi_IN">सूची</value>
+        <value xml:lang="hi-IN">सूची</value>
         <value xml:lang="it">categoria-it</value>
         <value xml:lang="ja">カテゴリ</value>
         <value xml:lang="nl">categorie-nl</value>
-        <value xml:lang="pt_PT">categoria-pt</value>
+        <value xml:lang="pt-PT">categoria-pt</value>
         <value xml:lang="ro">categoria-ro</value>
         <value xml:lang="ru">kатегория</value>
         <value xml:lang="th">หมวดหมู่</value>
         <value xml:lang="vi">phân-loại-quản-lý</value>
         <value xml:lang="zh">分类</value>
-        <value xml:lang="zh_TW">分類</value>
+        <value xml:lang="zh-TW">分類</value>
     </property>
 </resource>

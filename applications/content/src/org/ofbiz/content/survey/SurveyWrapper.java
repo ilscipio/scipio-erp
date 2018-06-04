@@ -26,7 +26,9 @@ import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -203,7 +205,7 @@ public class SurveyWrapper {
         templateContext.put("surveyResults", results);
         templateContext.put("surveyQuestionAndAppls", surveyQuestionAndAppls);
         templateContext.put("sqaaWithColIdListByMultiRespId", sqaaWithColIdListByMultiRespId);
-        templateContext.put("alreadyShownSqaaPkWithColId", UtilMisc.newSet());
+        templateContext.put("alreadyShownSqaaPkWithColId", new HashSet());
         templateContext.put("surveyAnswers", currentAnswers);
         templateContext.put("surveyResponseId", responseId);
         templateContext.put("sequenceSort", UtilMisc.toList("sequenceNum"));
@@ -289,7 +291,7 @@ public class SurveyWrapper {
 
     // returns a list of SurveyQuestions (in order by sequence number) for the current Survey
     public List<GenericValue> getSurveyQuestionAndAppls() {
-        List<GenericValue> questions = UtilMisc.newList();
+        List<GenericValue> questions = new LinkedList<GenericValue>();
 
         try {
             questions = EntityQuery.use(delegator).from("SurveyQuestionAndAppl")

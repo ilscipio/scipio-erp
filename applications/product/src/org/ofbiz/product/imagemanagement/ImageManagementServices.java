@@ -29,6 +29,7 @@ import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -133,7 +134,7 @@ public class ImageManagementServices {
                 fileContentType = "image/png";
             }
             
-            List<GenericValue> fileExtension = UtilMisc.newList();
+            List<GenericValue> fileExtension = new LinkedList<GenericValue>();
             try {
                 fileExtension = EntityQuery.use(delegator).from("FileExtension").where("mimeTypeId", fileContentType).queryList();
             } catch (GenericEntityException e) {
@@ -530,7 +531,7 @@ public class ImageManagementServices {
             fileContentType = "image/png";
         }
         
-        List<GenericValue> fileExtensionThumb = UtilMisc.newList();
+        List<GenericValue> fileExtensionThumb = new LinkedList<GenericValue>();
         try {
             fileExtensionThumb = delegator.findByAnd("FileExtension", UtilMisc.toMap("mimeTypeId", fileContentType), null, false);
         } catch (GenericEntityException e) {
@@ -551,7 +552,7 @@ public class ImageManagementServices {
             fileContentType = "image/png";
         }
         
-        List<GenericValue> fileExtensionThumb = UtilMisc.newList();
+        List<GenericValue> fileExtensionThumb = new LinkedList<GenericValue>();
         try {
             fileExtensionThumb = EntityQuery.use(delegator).from("FileExtension").where("mimeTypeId", fileContentType).queryList();
         } catch (GenericEntityException e) {

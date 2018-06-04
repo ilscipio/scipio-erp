@@ -19,7 +19,9 @@
 package org.ofbiz.product.feature;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -96,7 +98,7 @@ public class ProductFeatureServices {
             if (entityToSearch.equals("ProductFeatureAndAppl") && productFeatureApplTypeId != null)
                 allFeatures = EntityUtil.filterByAnd(allFeatures, UtilMisc.toMap("productFeatureApplTypeId", productFeatureApplTypeId));
 
-            List<String> featureTypes = UtilMisc.newList();
+            List<String> featureTypes = new LinkedList<String>();
             Map<String, List<GenericValue>> featuresByType = new LinkedHashMap<String, List<GenericValue>>();
             for (GenericValue feature: allFeatures) {
                 String featureType = feature.getString("productFeatureTypeId");
@@ -105,7 +107,7 @@ public class ProductFeatureServices {
                 }
                 List<GenericValue> features = featuresByType.get(featureType);
                 if (features == null) {
-                    features = UtilMisc.newList();
+                    features = new LinkedList<GenericValue>();
                     featuresByType.put(featureType, features);
                 }
                 features.add(feature);
@@ -131,7 +133,7 @@ public class ProductFeatureServices {
 
         String productId = (String) context.get("productId");
         List<String> curProductFeatureAndAppls = UtilGenerics.checkList(context.get("productFeatureAppls"));
-        List<String> existingVariantProductIds = UtilMisc.newList();
+        List<String> existingVariantProductIds = new LinkedList<String>();
 
         try {
             /*
@@ -198,20 +200,20 @@ public class ProductFeatureServices {
 
             // need to keep 2 lists, oldCombinations and newCombinations, and keep swapping them after each looping.  Otherwise, you'll get a
             // concurrent modification exception
-            List<Map<String, Object>> oldCombinations = UtilMisc.newList();
+            List<Map<String, Object>> oldCombinations = new LinkedList<Map<String, Object>>();
 
             // loop through each feature type
             for (Map.Entry<String, List<GenericValue>> entry: features.entrySet()) {
                 List<GenericValue> currentFeatures = entry.getValue();
 
-                List<Map<String, Object>> newCombinations = UtilMisc.newList();
+                List<Map<String, Object>> newCombinations = new LinkedList<Map<String, Object>>();
                 List<Map<String, Object>> combinations;
 
                 // start with either existing combinations or from scratch
                 if (oldCombinations.size() > 0) {
                     combinations = oldCombinations;
                 } else {
-                    combinations = UtilMisc.newList();
+                    combinations = new LinkedList<Map<String, Object>>();
                 }
 
                 // in both cases, use each feature of current feature type's idCode and
@@ -222,8 +224,8 @@ public class ProductFeatureServices {
                     for (GenericValue currentFeature: currentFeatures) {
                         if (currentFeature.getString("productFeatureApplTypeId").equals("SELECTABLE_FEATURE")) {
                             Map<String, Object> newCombination = new HashMap<String, Object>();
-                            List<GenericValue> newFeatures = UtilMisc.newList();
-                            List<String> newFeatureIds = UtilMisc.newList();
+                            List<GenericValue> newFeatures = new LinkedList<GenericValue>();
+                            List<String> newFeatureIds = new LinkedList<String>();
                             if (currentFeature.getString("idCode") != null) {
                                 newCombination.put("defaultVariantProductId", productId + currentFeature.getString("idCode"));
                             } else {
@@ -265,7 +267,7 @@ public class ProductFeatureServices {
             }
 
             int defaultCodeCounter = 1;
-            Set<String> defaultVariantProductIds = UtilMisc.newSet(); // this map will contain the codes already used (as keys)
+            Set<String> defaultVariantProductIds = new HashSet<String>(); // this map will contain the codes already used (as keys)
             defaultVariantProductIds.add(productId);
 
             // now figure out which of these combinations already have productIds associated with them
@@ -319,7 +321,7 @@ public class ProductFeatureServices {
                 featuresByType.put(nextFeature.getString("productFeatureTypeId"), nextFeature.getString("productFeatureId"));
             }
 
-            List<GenericValue> products = UtilMisc.newList();  // final list of variant products
+            List<GenericValue> products = new LinkedList<GenericValue>();  // final list of variant products
             for (GenericValue memberProduct: memberProducts) {
                 // find variants for each member product of the category
 

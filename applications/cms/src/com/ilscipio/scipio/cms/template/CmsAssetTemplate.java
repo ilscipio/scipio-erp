@@ -49,7 +49,7 @@ public class CmsAssetTemplate extends CmsMasterComplexTemplate<CmsAssetTemplate,
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     // default is TRUE
-    private static final boolean firstVersionActive = UtilProperties.getPropertyAsBoolean("cms.properties", "asset.template.firstVersionActive", true);
+    private static final boolean firstVersionActive = UtilProperties.getPropertyAsBoolean("cms", "asset.template.firstVersionActive", true);
     
     private static final CmsObjectCache<CmsAssetTemplate> idCache = CmsObjectCache.getGlobalCache("cms.template.asset.id");
     private static final CmsObjectCache<CmsAssetTemplate> nameCache = CmsObjectCache.getGlobalCache("cms.template.asset.name");

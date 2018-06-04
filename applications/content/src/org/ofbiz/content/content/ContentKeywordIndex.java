@@ -19,6 +19,7 @@
 package org.ofbiz.content.content;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -67,7 +68,7 @@ public class ContentKeywordIndex {
         Set<String> stemSet = KeywordSearchUtil.getStemSet();
 
         Map<String, Long> keywords = new TreeMap<String, Long>();
-        List<String> strings = UtilMisc.newList();
+        List<String> strings = new LinkedList<String>();
 
         int pidWeight = 1;
         keywords.put(content.getString("contentId").toLowerCase(), Long.valueOf(pidWeight));
@@ -197,7 +198,7 @@ public class ContentKeywordIndex {
             }
         }
 
-        List<GenericValue> toBeStored = UtilMisc.newList();
+        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
         int keywordMaxLength = Integer.parseInt(EntityUtilProperties.getPropertyValue("contentsearch", "content.keyword.max.length", delegator));
         for (Map.Entry<String, Long> entry: keywords.entrySet()) {
             if (entry.getKey().length() <= keywordMaxLength) {

@@ -3,22 +3,22 @@
     <property key="DemoSuiteApplication">
         <value xml:lang="en">DemoSuite Application</value>
         <value xml:lang="zh">DemoSuite应用程序</value>
-        <value xml:lang="zh_TW">DemoSuite應用程式</value>
+        <value xml:lang="zh-TW">DemoSuite應用程式</value>
     </property>
     <property key="DemoSuiteCompanyName">
         <value xml:lang="en">SCIPIO - DemoSuite</value>
-        <value xml:lang="zh_TW">SCIPIO - DemoSuite</value>
+        <value xml:lang="zh-TW">SCIPIO - DemoSuite</value>
     </property>
     <property key="DemoSuiteCompanySubtitle">
         <value xml:lang="en">Part of the Open For Business Family of Open Source Software</value>
         <value xml:lang="it">Un modulo della famiglia di software open source Open For Business</value>
         <value xml:lang="zh">开源软件SCIPIO -的组成部分</value>
-        <value xml:lang="zh_TW">開源軟體SCIPIO -的組成部分</value>
+        <value xml:lang="zh-TW">開源軟體SCIPIO -的組成部分</value>
     </property>
     <property key="DemoSuiteViewPermissionError">
         <value xml:lang="en">You are not allowed to view this page.</value>
         <value xml:lang="zh">不允许你浏览这个页面。</value>
-        <value xml:lang="zh_TW">不允許您檢視這個頁面.</value>
+        <value xml:lang="zh-TW">不允許您檢視這個頁面.</value>
     </property>
     
     <!-- Data load services errors -->

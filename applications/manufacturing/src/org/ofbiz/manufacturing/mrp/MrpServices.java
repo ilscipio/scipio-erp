@@ -22,6 +22,7 @@ package org.ofbiz.manufacturing.mrp;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
@@ -90,7 +91,7 @@ public class MrpServices {
 
         // Proposed requirements are deleted
         listResult = null;
-        List<GenericValue> listResultRoles = UtilMisc.newList();
+        List<GenericValue> listResultRoles = new LinkedList<GenericValue>();
         try {
             listResult = EntityQuery.use(delegator).from("Requirement")
                     .where("requirementTypeId", "PRODUCT_REQUIREMENT","facilityId", facilityId,
@@ -832,7 +833,7 @@ public class MrpServices {
         } while (bomLevelWithNoEvent < 3);
 
         result = new HashMap<String, Object>();
-        List<Object> msgResult = UtilMisc.newList();
+        List<Object> msgResult = new LinkedList<Object>();
         result.put("msgResult", msgResult);
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         Debug.logInfo("return from executeMrp", module);

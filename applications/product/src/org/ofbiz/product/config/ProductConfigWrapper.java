@@ -23,6 +23,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -87,7 +89,7 @@ public class ProductConfigWrapper implements Serializable {
         listPrice = pcw.listPrice;
         basePrice = pcw.basePrice;
         defaultPrice = pcw.defaultPrice;
-        questions = UtilMisc.newList();
+        questions = new LinkedList<ConfigItem>();
         delegator = pcw.getDelegator();
         delegatorName = delegator.getDelegatorName();
         dispatcher = pcw.getDispatcher();
@@ -130,10 +132,10 @@ public class ProductConfigWrapper implements Serializable {
         if (price != null) {
             basePrice = price;
         }
-        questions = UtilMisc.newList();
+        questions = new LinkedList<ConfigItem>();
         if ("AGGREGATED".equals(product.getString("productTypeId")) || "AGGREGATED_SERVICE".equals(product.getString("productTypeId"))) {
             List<GenericValue> questionsValues = EntityQuery.use(delegator).from("ProductConfig").where("productId", productId).orderBy("sequenceNum").filterByDate().queryList();
-            Set<String> itemIds = UtilMisc.newSet();
+            Set<String> itemIds = new HashSet<String>();
             for (GenericValue questionsValue: questionsValues) {
                 ConfigItem oneQuestion = new ConfigItem(questionsValue);
                 oneQuestion.setContent(locale, "text/html"); // TODO: mime-type shouldn't be hardcoded
@@ -322,7 +324,7 @@ public class ProductConfigWrapper implements Serializable {
     }
 
     public List<ConfigOption> getSelectedOptions() {
-        List<ConfigOption> selectedOptions = UtilMisc.newList();
+        List<ConfigOption> selectedOptions = new LinkedList<ConfigOption>();
         for (ConfigItem ci: questions) {
             if (ci.isStandard()) {
                 selectedOptions.addAll(ci.getOptions());
@@ -338,7 +340,7 @@ public class ProductConfigWrapper implements Serializable {
     }
 
     public List<ConfigOption> getDefaultOptions() {
-        List<ConfigOption> defaultOptions = UtilMisc.newList();
+        List<ConfigOption> defaultOptions = new LinkedList<ConfigOption>();
         for (ConfigItem ci: questions) {
             ConfigOption co = ci.getDefault();
             if (co != null) {
@@ -442,13 +444,13 @@ public class ProductConfigWrapper implements Serializable {
         public ConfigItem(GenericValue questionAssoc) throws Exception {
             configItemAssoc = questionAssoc;
             configItem = configItemAssoc.getRelatedOne("ConfigItemProductConfigItem", false);
-            options = UtilMisc.newList();
+            options = new LinkedList<ConfigOption>();
         }
 
         public ConfigItem(ConfigItem ci) {
             configItem = GenericValue.create(ci.configItem);
             configItemAssoc = GenericValue.create(ci.configItemAssoc);
-            options = UtilMisc.newList();
+            options = new LinkedList<ConfigOption>();
             for (ConfigOption co: ci.options) {
                 options.add(new ConfigOption(co));
             }
@@ -653,7 +655,7 @@ public class ProductConfigWrapper implements Serializable {
 
         public ConfigOption(ConfigOption co) {
             configOption = GenericValue.create(co.configOption);
-            componentList = UtilMisc.newList();
+            componentList = new LinkedList<GenericValue>();
             for (GenericValue component: co.componentList) {
                 componentList.add(GenericValue.create(component));
             }

@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -316,7 +317,7 @@ public class DhlServices {
      * Parses an XML document from DHL to get the rate estimate
      */
     public static Map<String, Object> handleDhlRateResponse(Document rateResponseDocument, Locale locale) {
-        List<Object> errorList = UtilMisc.newList();
+        List<Object> errorList = new LinkedList<Object>();
         Map<String, Object> dhlRateCodeMap = new HashMap<String, Object>();
         // process RateResponse
         Element rateResponseElement = rateResponseDocument.getDocumentElement();
@@ -358,7 +359,7 @@ public class DhlServices {
         List<? extends Element> chargeNodeList = UtilXml.childElementList(responseChargesElement,
                 "Charge");
 
-        List<Map<String, String>> chargeList = UtilMisc.newList();
+        List<Map<String, String>> chargeList = new LinkedList<Map<String, String>>();
         if (UtilValidate.isNotEmpty(chargeNodeList)) {
             for (Element responseChargeElement: chargeNodeList) {
                 Map<String, String> charge = new HashMap<String, String>();
@@ -474,7 +475,7 @@ public class DhlServices {
      * Parse response from DHL registration request to get shipping key
      */
     public static Map<String, Object> handleDhlRegisterResponse(Document registerResponseDocument, Locale locale) {
-        List<Object> errorList = UtilMisc.newList();
+        List<Object> errorList = new LinkedList<Object>();
         // process RegisterResponse
         Element registerResponseElement = registerResponseDocument.getDocumentElement();
         DhlServices.handleErrors(registerResponseElement, errorList, locale);

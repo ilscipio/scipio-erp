@@ -19,6 +19,7 @@
 package org.ofbiz.product.imagemanagement;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -74,7 +75,7 @@ public class ImageUrlServlet extends HttpServlet {
         String pathInfo = request.getPathInfo();
         List<String> pathElements = StringUtil.split(pathInfo, "/");
         
-        List<String> tagElements = UtilMisc.newList();
+        List<String> tagElements = new LinkedList<String>();
         for (String pathElement : pathElements) {
             tagElements.addAll(StringUtil.split(pathElement, "-"));
         }

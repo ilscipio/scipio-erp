@@ -50,7 +50,7 @@
           <#local localeFound = true>
         </#if>
         <option value="${availableLocale.toString()}" lang="${langAttr}" dir="${langDir}"<#rt/>
-          <#lt/><#if localeSelected> selected="selected"</#if>>${availableLocale.getDisplayName(availableLocale)} &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp; [${availableLocale.toString()}]</option>
+          <#lt/><#if localeSelected> selected="selected"</#if>>${availableLocale.getDisplayName(availableLocale)} &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp; [${langAttr}]</option>
     </#list>
     </#local>
     <#if allowExtra && !localeFound && rawLocale?has_content && rawLocale != "false">
@@ -61,7 +61,7 @@
             <#local langDir = "rtl">
         </#if>
         <option value="${availableLocale.toString()}" lang="${langAttr}" dir="${langDir}"<#rt/>
-          <#lt/> selected="selected">${availableLocale.getDisplayName(availableLocale)} &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp; [${availableLocale.toString()}]</option>
+          <#lt/> selected="selected">${availableLocale.getDisplayName(availableLocale)} &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp; [${langAttr}]</option>
     </#if>
     <#if allowEmpty>
       <option value=""<#if rawLocale == ""> selected="selected"</#if>></option>

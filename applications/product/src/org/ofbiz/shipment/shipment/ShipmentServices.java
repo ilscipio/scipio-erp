@@ -21,6 +21,7 @@ package org.ofbiz.shipment.shipment;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -67,7 +68,7 @@ public class ShipmentServices {
         Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = dctx.getDelegator();
         Locale locale = (Locale) context.get("locale");
-        List<GenericValue> storeAll = UtilMisc.newList();
+        List<GenericValue> storeAll = new LinkedList<GenericValue>();
         String productStoreShipMethId = (String)context.get("productStoreShipMethId");
 
         GenericValue productStoreShipMeth = null;
@@ -318,7 +319,7 @@ public class ShipmentServices {
             shipAddress.set("postalCodeGeoId", shippingPostalCode);
         }
         // Get the possible estimates.
-        List<GenericValue> estimateList = UtilMisc.newList();
+        List<GenericValue> estimateList = new LinkedList<GenericValue>();
 
         for (GenericValue thisEstimate: estimates) {
             String toGeo = thisEstimate.getString("geoIdTo");
@@ -425,7 +426,7 @@ public class ShipmentServices {
         }
 
         // make the shippable item size/feature objects
-        List<BigDecimal> shippableItemSizes = UtilMisc.newList();
+        List<BigDecimal> shippableItemSizes = new LinkedList<BigDecimal>();
         Map<String, BigDecimal> shippableFeatureMap = new HashMap<String, BigDecimal>();
         if (shippableItemInfo != null) {
             for (Map<String, Object> itemMap: shippableItemInfo) {
@@ -675,7 +676,7 @@ public class ShipmentServices {
             GenericValue routeSeg = EntityUtil.getFirst(routeSegs);
 
             // to store list
-            List<GenericValue> toStore = UtilMisc.newList();
+            List<GenericValue> toStore = new LinkedList<GenericValue>();
 
             //String shipGroupSeqId = shipment.getString("primaryShipGroupSeqId");
             //String orderId = shipment.getString("primaryOrderId");

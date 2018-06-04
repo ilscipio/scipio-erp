@@ -19,7 +19,6 @@
 package org.ofbiz.base.util;
 
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -71,17 +70,12 @@ public class UtilProperties implements Serializable {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    /** An instance of the generic cache for storing the non-locale-specific properties.
-     *  Each Properties instance is keyed by the resource String.
-     */
-    private static final UtilCache<String, Properties> resourceCache = UtilCache.createUtilCache("properties.UtilPropertiesResourceCache");
-
-    /** An instance of the generic cache for storing the non-locale-specific properties.
-     *  Each Properties instance is keyed by the file's URL.
+    /**
+     * A cache for storing Properties instances. Each Properties instance is keyed by its URL.
      */
     private static final UtilCache<String, Properties> urlCache = UtilCache.createUtilCache("properties.UtilPropertiesUrlCache");
 
-    protected static Set<String> propertiesNotFound = new HashSet<String>();
+    private static final Set<String> propertiesNotFound = new HashSet<String>();
 
     /** Compares the specified property to the compareString, returns true if they are the same, false otherwise
      * @param resource The name of the resource - if the properties file is 'webevent.properties', the resource name is 'webevent'
@@ -355,7 +349,7 @@ public class UtilProperties implements Serializable {
         }
         return value == null ? "" : value.trim();
     }
-    
+
     /** SCIPIO: Returns the value of the specified property name from the specified resource/properties file,
      * or null if it is absent or empty.
      * Added 2018-04-27.
@@ -368,6 +362,42 @@ public class UtilProperties implements Serializable {
         return value.isEmpty() ? null : value;
     }
 
+    /**
+     * Returns a new <code>Properties</code> instance created from <code>fileName</code>.
+     * <p>This method is intended for low-level framework classes that need to read
+     * properties files before OFBiz has been fully initialized.</p>
+     * 
+     * @param fileName The full name of the properties file ("foo.properties")
+     * @return A new <code>Properties</code> instance created from <code>fileName</code>, or
+     * <code>null</code> if the file was not found
+     * @throws IllegalArgumentException if <code>fileName</code> is empty
+     * @throws IllegalStateException if there was a problem reading the file
+     */
+    public static Properties createProperties(String fileName) {
+        Assert.notEmpty("fileName", fileName);
+        InputStream inStream = null;
+        try {
+            URL url = Thread.currentThread().getContextClassLoader().getResource(fileName);
+            if (url == null) {
+                return null;
+            }
+            inStream = url.openStream();
+            Properties properties = new Properties();
+            properties.load(inStream);
+            return properties;
+        } catch (Exception e) {
+            throw new IllegalStateException("Exception thrown while reading " + fileName + ": " + e);
+        } finally {
+            if (inStream != null) {
+                try {
+                    inStream.close();
+                } catch (IOException e) {
+                    System.out.println("Exception thrown while closing InputStream: " + e);
+                }
+            }
+        }
+    }
+
     /** Returns the specified resource/properties file
      * @param resource The name of the resource - can be a file, class, or URL
      * @return The properties file
@@ -376,30 +406,8 @@ public class UtilProperties implements Serializable {
         if (resource == null || resource.length() <= 0) {
             return null;
         }
-        String cacheKey = resource.replace(".properties", "");
-        Properties properties = resourceCache.get(cacheKey);
-        if (properties == null) {
-            try {
-                URL url = UtilURL.fromResource(resource);
-
-                if (url == null)
-                    return null;
-                String fileName = url.getFile();
-                File file = new File(fileName);
-                if (file.isDirectory()) {
-                    Debug.logError(fileName + " is (also?) a directory! No properties assigned.", module);
-                    return null;
-                }
-                properties = resourceCache.putIfAbsentAndGet(cacheKey, getProperties(url));
-            } catch (MissingResourceException e) {
-                Debug.logInfo(e, module);
-            }
-        }
-        if (properties == null) {
-            Debug.logInfo("[UtilProperties.getProperties] could not find resource: " + resource, module);
-            return null;
-        }
-        return properties;
+        URL url = resolvePropertiesUrl(resource, null);
+        return getProperties(url);
     }
 
     /** Returns the specified resource/properties file
@@ -410,12 +418,12 @@ public class UtilProperties implements Serializable {
         if (url == null) {
             return null;
         }
-        Properties properties = urlCache.get(url.toString());
+        String cacheKey = url.toString();
+        Properties properties = urlCache.get(cacheKey);
         if (properties == null) {
             try {
-                properties = new Properties();
-                properties.load(url.openStream());
-                urlCache.put(url.toString(), properties);
+                properties = new ExtendedProperties(url, null);
+                urlCache.put(cacheKey, properties);
             } catch (Exception e) {
                 Debug.logInfo(e, module);
             }
@@ -1036,31 +1044,53 @@ public class UtilProperties implements Serializable {
         if (propertiesNotFound.contains(resourceName)) {
             return null;
         }
+        boolean containsProtocol = resource.contains(":");
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
         URL url = null;
         try {
             // Check for complete URL first
             if (resource.endsWith(".xml") || resource.endsWith(".properties")) {
-                url = FlexibleLocation.resolveLocation(resource);
+                if (containsProtocol) {
+                    url = FlexibleLocation.resolveLocation(resource, loader);
+                } else {
+                    url = UtilURL.fromResource(resource, loader);
+                }
                 if (url != null) {
                     return url;
                 }
             }
             // Check for *.properties file
-            url = FlexibleLocation.resolveLocation(resourceName + ".properties");
+            if (containsProtocol) {
+                url = FlexibleLocation.resolveLocation(resourceName + ".properties", loader);
+            } else {
+                url = UtilURL.fromResource(resourceName + ".properties", loader);
+            }
             if (url != null) {
                 return url;
             }
             // Check for Java XML properties file
-            url = FlexibleLocation.resolveLocation(resourceName + ".xml");
+            if (containsProtocol) {
+                url = FlexibleLocation.resolveLocation(resourceName + ".xml", loader);
+            } else {
+                url = UtilURL.fromResource(resourceName + ".xml", loader);
+            }
             if (url != null) {
                 return url;
             }
             // Check for Custom XML properties file
-            url = FlexibleLocation.resolveLocation(resource + ".xml");
+            if (containsProtocol) {
+                url = FlexibleLocation.resolveLocation(resource + ".xml", loader);
+            } else {
+                url = UtilURL.fromResource(resource + ".xml", loader);
+            }
             if (url != null) {
                 return url;
             }
-            url = FlexibleLocation.resolveLocation(resourceName);
+            if (containsProtocol) {
+                url = FlexibleLocation.resolveLocation(resource, loader);
+            } else {
+                url = UtilURL.fromResource(resource, loader);
+            }
             if (url != null) {
                 return url;
             }
@@ -1088,7 +1118,7 @@ public class UtilProperties implements Serializable {
      * &nbsp;&nbsp;...<br />
      * &nbsp;&lt;/property&gt;<br />
      * &nbsp;...<br />
-     * &lt;/resource&gt;<br /><br /></code> where <em>"locale 1", "locale 2"</em> are valid Locale strings.
+     * &lt;/resource&gt;<br /><br /></code> where <em>"locale 1", "locale 2"</em> are valid xml:lang values..
      * </p>
      *
      * @param in XML file InputStream
@@ -1102,11 +1132,10 @@ public class UtilProperties implements Serializable {
         }
         Document doc = null;
         try {
-            // set validation true when we have a DTD for the custom XML format
-            doc = UtilXml.readXmlDocument(in, false, "XML Properties file");
+            doc = UtilXml.readXmlDocument(in, true, "XML Properties file");
             in.close();
         } catch (Exception e) {
-            Debug.logWarning(e, "XML Locale file for locale " + locale + " could not be loaded.", module);
+            Debug.logWarning(e, "XML file for locale " + locale + " could not be loaded.", module);
             in.close();
             return null;
         }
@@ -1707,13 +1736,12 @@ public class UtilProperties implements Serializable {
             String resourceName = createResourceName(resource, locale, true);
             UtilResourceBundle bundle = bundleCache.get(resourceName);
             if (bundle == null) {
-                synchronized (bundleCache) {
                     double startTime = System.currentTimeMillis();
                     List<Locale> candidateLocales = (List<Locale>) getCandidateLocales(locale);
                     UtilResourceBundle parentBundle = null;
                     int numProperties = 0;
                     while (candidateLocales.size() > 0) {
-                        Locale candidateLocale = candidateLocales.remove(candidateLocales.size() -1);
+                    Locale candidateLocale = candidateLocales.remove(candidateLocales.size() - 1);
                         // ResourceBundles are connected together as a singly-linked list
                         String lookupName = createResourceName(resource, candidateLocale, true);
                         UtilResourceBundle lookupBundle = bundleCache.get(lookupName);
@@ -1723,7 +1751,7 @@ public class UtilProperties implements Serializable {
                                 // The last bundle we found becomes the parent of the new bundle
                                 parentBundle = bundle;
                                 bundle = new UtilResourceBundle(newProps, candidateLocale, parentBundle);
-                                bundleCache.put(lookupName, bundle);
+                            bundleCache.putIfAbsent(lookupName, bundle);
                                 numProperties = newProps.size();
                             }
                         } else {
@@ -1739,10 +1767,10 @@ public class UtilProperties implements Serializable {
                     }
                     double totalTime = System.currentTimeMillis() - startTime;
                     if (Debug.infoOn()) {
-                        Debug.logInfo("ResourceBundle " + resource + " (" + locale + ") created in " + totalTime/1000.0 + "s with " + numProperties + " properties", module);
-                    }
-                    bundleCache.put(resourceName, bundle);
+                    Debug.logInfo("ResourceBundle " + resource + " (" + locale + ") created in " + totalTime / 1000.0 + "s with "
+                            + numProperties + " properties", module);
                 }
+                bundleCache.putIfAbsent(resourceName, bundle);
             }
             return bundle;
         }
@@ -1793,18 +1821,27 @@ public class UtilProperties implements Serializable {
             super(defaults);
         }
         public ExtendedProperties(URL url, Locale locale) throws IOException, InvalidPropertiesFormatException {
-            InputStream in = new BufferedInputStream(url.openStream());
+            InputStream in = null;
+            try {
+                in = new BufferedInputStream(url.openStream());
             if (url.getFile().endsWith(".xml")) {
                 xmlToProperties(in, locale, this);
             } else {
                 load(in);
             }
+            } finally {
+                if (in != null) {
             in.close();
+        }
+            }
         }
         @Override
         public void loadFromXML(InputStream in) throws IOException, InvalidPropertiesFormatException {
+            try {
             xmlToProperties(in, null, this);
+            } finally {
             in.close();
         }
+    }
     }
 }

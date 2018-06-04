@@ -22,6 +22,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -142,7 +143,7 @@ public class CompDocServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
         try {
-            List<EntityCondition> exprList = UtilMisc.newList();
+            List<EntityCondition> exprList = new LinkedList<EntityCondition>();
             exprList.add(EntityCondition.makeCondition("contentIdTo", EntityOperator.EQUALS, contentId));
             exprList.add(EntityCondition.makeCondition("contentAssocTypeId", EntityOperator.EQUALS, "COMPDOC_PART"));
             exprList.add(EntityCondition.makeCondition("rootRevisionContentId", EntityOperator.EQUALS, contentId));

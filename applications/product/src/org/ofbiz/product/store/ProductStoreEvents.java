@@ -19,6 +19,7 @@
 package org.ofbiz.product.store;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +46,7 @@ public class ProductStoreEvents {
         String parentGroupId = request.getParameter("parentGroupId");
         String onclickFunction = request.getParameter("onclickFunction");
 
-        List productStoreGroupList = UtilMisc.newList();
+        List productStoreGroupList = new LinkedList<Object>();
         List<GenericValue> children;
         List<String> sortList = UtilMisc.toList("sequenceNum");
 

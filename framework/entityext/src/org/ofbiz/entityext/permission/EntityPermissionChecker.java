@@ -257,7 +257,7 @@ public class EntityPermissionChecker {
 
         // Get all the condition operations that could apply, rather than having to go thru
         // entire table each time.
-        //List condList = UtilMisc.newList();
+        //List condList = new LinkedList();
         //Iterator iterType = targetOperationList.iterator();
         //while (iterType.hasNext()) {
         //    String op = (String)iterType.next();

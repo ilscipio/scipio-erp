@@ -142,7 +142,7 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     private Map<String, String> contactMechIdsMap = new HashMap<String, String>();
     private List<GenericValue> orderItemPriceInfos = null;
-    private List<GenericValue> itemAdjustments = UtilMisc.newList();
+    private List<GenericValue> itemAdjustments = new LinkedList<GenericValue>();
     private boolean isPromo = false;
     private BigDecimal promoQuantityUsed = BigDecimal.ZERO;
     private Map<GenericPK, BigDecimal> quantityUsedPerPromoCandidate = new HashMap<GenericPK, BigDecimal>();
@@ -699,7 +699,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.additionalProductFeatureAndAppls = item.getAdditionalProductFeatureAndAppls() == null ?
                 null : new HashMap<String, GenericValue>(item.getAdditionalProductFeatureAndAppls());
         if (item.getAlternativeOptionProductIds() != null) {
-            List<String> tempAlternativeOptionProductIds = UtilMisc.newList();
+            List<String> tempAlternativeOptionProductIds = new LinkedList<String>();
             tempAlternativeOptionProductIds.addAll(item.getAlternativeOptionProductIds());
             this.setAlternativeOptionProductIds(tempAlternativeOptionProductIds);
         }
@@ -1190,7 +1190,7 @@ public class ShoppingCartItem implements java.io.Serializable {
                             }
                         }
                     }
-                    if ("true".equals(EntityUtilProperties.getPropertyValue("catalog.properties", "convertProductPriceCurrency", delegator))){
+                    if ("true".equals(EntityUtilProperties.getPropertyValue("catalog", "convertProductPriceCurrency", delegator))){
                         priceContext.put("currencyUomIdTo", cart.getCurrency());
                     } else {
                         priceContext.put("currencyUomId", cart.getCurrency());

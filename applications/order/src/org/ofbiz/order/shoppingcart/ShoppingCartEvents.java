@@ -585,7 +585,7 @@ public class ShoppingCartEvents {
                             EntityCondition.makeCondition(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId), EntityOperator.OR, EntityCondition.makeCondition("productIdTo", EntityOperator.EQUALS, productId)),
                             EntityCondition.makeCondition("productAssocTypeId", EntityOperator.EQUALS, "PRODUCT_INCOMPATABLE")), EntityOperator.AND);
                     productAssocs = EntityQuery.use(delegator).from("ProductAssoc").where(cond).filterByDate().queryList();
-                    List<String> productList = UtilMisc.newList();
+                    List<String> productList = new LinkedList<String>();
                     for (GenericValue productAssoc : productAssocs) {
                         if (productId.equals(productAssoc.getString("productId"))) {
                             productList.add(productAssoc.getString("productIdTo"));
@@ -1050,7 +1050,7 @@ public class ShoppingCartEvents {
         }
         List<ShoppingCart> cartList = UtilGenerics.checkList(session.getAttribute("shoppingCartList"));
         if (UtilValidate.isEmpty(cartList)) {
-            cartList = UtilMisc.newList();
+            cartList = new LinkedList<ShoppingCart>();
             session.setAttribute("shoppingCartList", cartList);
         }
         ShoppingCart currentCart = (ShoppingCart) session.getAttribute("shoppingCart");

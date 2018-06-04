@@ -24,6 +24,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -330,7 +331,7 @@ public class ArtifactInfoFactory {
     }
 
     public Set<ArtifactInfoBase> getAllArtifactInfosByNamePartial(String artifactNamePartial, String type) {
-        Set<ArtifactInfoBase> aiBaseSet = UtilMisc.newSet();
+        Set<ArtifactInfoBase> aiBaseSet = new HashSet<ArtifactInfoBase>();
 
         if (UtilValidate.isEmpty(artifactNamePartial)) {
             return aiBaseSet;

@@ -52,6 +52,7 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.renderer.RenderTargetUtil;
 import org.ofbiz.webapp.stats.ServerHitBin;
 import org.ofbiz.webapp.stats.VisitHandler;
+import org.ofbiz.entity.util.EntityClassLoader;
 
 import freemarker.ext.servlet.ServletContextHashModel;
 
@@ -175,6 +176,10 @@ public class ControlServlet extends HttpServlet {
             request.setAttribute("delegator", delegator);
             // always put this in the session too so that session events can use the delegator
             session.setAttribute("delegatorName", delegator.getDelegatorName());
+            /* Uncomment this to enable the EntityClassLoader
+            ClassLoader loader = EntityClassLoader.getInstance(delegator.getDelegatorName(), Thread.currentThread().getContextClassLoader());
+            Thread.currentThread().setContextClassLoader(loader);
+            */
         }
 
         LocalDispatcher dispatcher = (LocalDispatcher) session.getAttribute("dispatcher");

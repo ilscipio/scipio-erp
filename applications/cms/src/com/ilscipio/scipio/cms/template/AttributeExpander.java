@@ -74,7 +74,7 @@ public abstract class AttributeExpander {
         FLEXIBLE("CmsExpandLang.description.FLEXIBLE", "${map1.field1}, ${groovy: [expr]}, ..."),
         SIMPLE("CmsExpandLang.description.SIMPLE", "{{map1.field1}}");
         
-        private static final ExpandLang defaultExpandLang = ExpandLang.fromStringSafe(UtilProperties.getPropertyValue("cms.properties", 
+        private static final ExpandLang defaultExpandLang = ExpandLang.fromStringSafe(UtilProperties.getPropertyValue("cms", 
                 "render.attributes.expandLang.default"), ExpandLang.NONE);
         
         private final String descriptionProperty;
@@ -612,7 +612,7 @@ public abstract class AttributeExpander {
     protected static class FtlAttributeExpander extends AttributeExpander {
         
         // NOTE: we currently don't get this involved in the ftl Configuration instance - no need?
-        private static final boolean bracketSyntaxEnabled = UtilProperties.getPropertyAsBoolean("cms.properties",
+        private static final boolean bracketSyntaxEnabled = UtilProperties.getPropertyAsBoolean("cms",
                 "render.attributes.expandLang.ftl.bracketSyntax", Boolean.TRUE);
         
         protected final Map<Type, TypeParser> typeParsers;

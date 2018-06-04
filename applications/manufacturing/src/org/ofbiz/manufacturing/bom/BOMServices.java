@@ -24,6 +24,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -78,7 +79,7 @@ public class BOMServices {
         if (fromDate == null) {
             fromDate = new Date();
         }
-        List<String> bomTypes = UtilMisc.newList();
+        List<String> bomTypes = new LinkedList<String>();
         if (bomType == null) {
             try {
                 List<GenericValue> bomTypesValues = EntityQuery.use(delegator).from("ProductAssocType")
@@ -166,7 +167,7 @@ public class BOMServices {
             if (alsoComponents.booleanValue()) {
                 Map<String, Object> treeResult = dispatcher.runSync("getBOMTree", UtilMisc.toMap("productId", productId, "bomType", "MANUF_COMPONENT"));
                 BOMTree tree = (BOMTree)treeResult.get("tree");
-                List<BOMNode> products = UtilMisc.newList();
+                List<BOMNode> products = new LinkedList<BOMNode>();
                 tree.print(products, llc.intValue());
                 for (int i = 0; i < products.size(); i++) {
                     BOMNode oneNode = products.get(i);
@@ -214,7 +215,7 @@ public class BOMServices {
         try {
             List<GenericValue> products = EntityQuery.use(delegator).from("Product").orderBy("isVirtual DESC").queryList();
             Long zero = Long.valueOf(0);
-            List<GenericValue> allProducts = UtilMisc.newList();
+            List<GenericValue> allProducts = new LinkedList<GenericValue>();
             for (GenericValue product : products) {
                 product.set("billOfMaterialLevel", zero);
                 allProducts.add(product);
@@ -366,7 +367,7 @@ public class BOMServices {
         // Components
         //
         BOMTree tree = null;
-        List<BOMNode> components = UtilMisc.newList();
+        List<BOMNode> components = new LinkedList<BOMNode>();
         try {
             tree = new BOMTree(productId, "MANUF_COMPONENT", fromDate, BOMTree.EXPLOSION_SINGLE_LEVEL, delegator, dispatcher, userLogin);
             tree.setRootQuantity(quantity);
@@ -402,7 +403,7 @@ public class BOMServices {
         result.put("components", components);
 
         // also return a componentMap (useful in scripts and simple language code)
-        List<Map<String, Object>> componentsMap = UtilMisc.newList();
+        List<Map<String, Object>> componentsMap = new LinkedList<Map<String, Object>>();
         for (BOMNode node : components) {
             Map<String, Object> componentMap = new HashMap<String, Object>();
             componentMap.put("product", node.getProduct());
@@ -443,8 +444,8 @@ public class BOMServices {
         }
 
         BOMTree tree = null;
-        List<BOMNode> components = UtilMisc.newList();
-        List<BOMNode> notAssembledComponents = UtilMisc.newList();
+        List<BOMNode> components = new LinkedList<BOMNode>();
+        List<BOMNode> notAssembledComponents = new LinkedList<BOMNode>();
         try {
             tree = new BOMTree(productId, "MANUF_COMPONENT", fromDate, BOMTree.EXPLOSION_MANUFACTURING, delegator, dispatcher, userLogin);
             tree.setRootQuantity(quantity);
@@ -510,7 +511,7 @@ public class BOMServices {
                 String partyId = (orderReadHelper.getPlacingParty() != null? orderReadHelper.getPlacingParty().getString("partyId"): null); // FIXME: is it the customer?
                 if (partyId != null) {
                     if (!partyOrderShipments.containsKey(partyId)) {
-                        List<Map<String, Object>> orderShipmentReadMapList = UtilMisc.newList();
+                        List<Map<String, Object>> orderShipmentReadMapList = new LinkedList<Map<String, Object>>();
                         partyOrderShipments.put(partyId, orderShipmentReadMapList);
                     }
                     List<Map<String, Object>> orderShipmentReadMapList = UtilGenerics.checkList(partyOrderShipments.get(partyId));
@@ -583,7 +584,7 @@ public class BOMServices {
                                     return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingPackageConfiguratorError", locale));
                                 }
                                 boxTypes.put(boxTypeId, boxType);
-                                List<Map<String, Object>> box = UtilMisc.newList();
+                                List<Map<String, Object>> box = new LinkedList<Map<String, Object>>();
                                 boxTypeContent.put(boxTypeId, box);
                             }
                             List<Map<String, Object>> boxTypeContentList = UtilGenerics.checkList(boxTypeContent.get(boxTypeId));
@@ -613,7 +614,7 @@ public class BOMServices {
                             }
 
                             boxTypes.put(boxTypeId, boxType);
-                            List<Map<String, Object>> box = UtilMisc.newList();
+                            List<Map<String, Object>> box = new LinkedList<Map<String, Object>>();
                             boxTypeContent.put(boxTypeId, box);
                         }
                         List<Map<String, Object>> boxTypeContentList = UtilGenerics.checkList(boxTypeContent.get(boxTypeId));
@@ -759,7 +760,7 @@ public class BOMServices {
         // Components
         //
         BOMTree tree = null;
-        List<BOMNode> components = UtilMisc.newList();
+        List<BOMNode> components = new LinkedList<BOMNode>();
         try {
             tree = new BOMTree(productId, "MANUF_COMPONENT", fromDate, BOMTree.EXPLOSION_MANUFACTURING, delegator, dispatcher, userLogin);
             tree.setRootQuantity(quantity);

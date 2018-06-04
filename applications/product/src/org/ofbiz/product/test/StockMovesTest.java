@@ -21,11 +21,11 @@ package org.ofbiz.product.test;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.base.util.UtilGenerics;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.testtools.OFBizTestCase;
@@ -53,7 +53,7 @@ public class StockMovesTest extends OFBizTestCase {
     public void testStockMoves() throws Exception {
         Map<String, Object> fsmnCtx = new HashMap<String, Object>();
         Map<?,?> stockMoveHandled = null;
-        List<?> warningList = UtilMisc.newList();
+        List<?> warningList = new LinkedList<>();
 
         fsmnCtx.put("facilityId", "ScipioShopWarehouse");
         fsmnCtx.put("userLogin", userLogin);

@@ -27,6 +27,7 @@ import java.nio.ByteBuffer;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -486,7 +487,7 @@ public class PdfSurveyServices {
         //LocalDispatcher dispatcher = dctx.getDispatcher();
         Map<String, Object> results = ServiceUtil.returnSuccess();
         String surveyResponseId = (String)context.get("surveyResponseId");
-        List<Object> qAndA = UtilMisc.newList();
+        List<Object> qAndA = new LinkedList<Object>();
 
         try {
             List<GenericValue> responses = EntityQuery.use(delegator).from("SurveyResponseAnswer").where("surveyResponseId", surveyResponseId).queryList();

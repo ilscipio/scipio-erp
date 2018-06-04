@@ -21,7 +21,7 @@
                 matchBrackets: true,
                 mode: "freemarker",
                 indentUnit: 4,
-                indentWithTabs: true,
+                indentWithTabs: ${indentWithTabs?string},
                 foldGutter: true,
                 gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
                 extraKeys: {"Ctrl-Space": "autocomplete"}

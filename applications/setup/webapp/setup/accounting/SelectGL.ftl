@@ -6,6 +6,8 @@
     display:inline-block;
   }
   .setupAccounting-selectGL-select {
+    max-width: 50%!important;
+    width: 50%!important;
     margin-right:0.5em;
   }
   .setupAccounting-selectGL-select, .setupAccounting-selectGL-submit-buttons {
@@ -45,7 +47,7 @@
     
     <#if accountingGLs?has_content>
 	    <@field type="generic" label=uiLabelMap.SetupAccountingSelectStandardForSetup>
-	       <@field type="select" name="topGlAccountId" id="setupAccounting-selectGL-select" class="+setupAccounting-selectGL-select" inline=true style="display:inline-block;">
+	       <@field type="select" name="topGlAccountId" id="setupAccounting-selectGL-select" class="+setupAccounting-selectGL-select" inline=true>
 	       		<#-- This will be enabled in the future -->
 	            <#-- <option value="">[${uiLabelMap.SetupAccountingCreateNewStandard}]</option> -->
 	            <option value=""<#if accountingGLs?has_content> selected="selected"</#if>>--</option>            

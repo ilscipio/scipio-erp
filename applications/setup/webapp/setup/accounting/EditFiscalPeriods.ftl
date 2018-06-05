@@ -49,6 +49,13 @@
         }
     }
 }>
+<#macro efpMarkupPostMenuItems args={}>	
+	<li>
+		<@modal id="acctg-preferences" label=uiLabelMap.AccountingPreference>    
+	    	<@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditAcctgPreferences"/>
+		</@modal>
+	</li>   
+</#macro>
 
 <#-- RENDERS SETUP FORMS -->
 <#macro efpPostTreeArea extraArgs...>

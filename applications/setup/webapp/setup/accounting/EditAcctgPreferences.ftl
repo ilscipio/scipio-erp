@@ -91,7 +91,7 @@
 	    	<@field type="datetime" name="lastInvoiceRestartDate" value=(params.lastInvoiceRestartDate!) label=uiLabelMap.FormFieldTitle_lastInvoiceRestartDate />
 	    	<@field type="input" name="useInvoiceIdForReturns" value=(params.useInvoiceIdForReturns!) label=uiLabelMap.FormFieldTitle_useInvoiceIdForReturns />
 	    </@section>
-	    <@section title=uiLabelMap.AccountingOrdersSetupAccountingPreferencesOrders>
+	    <@section title=uiLabelMap.AccountingOrders>
 	    	<@field type="select" name="oldOrderSequenceEnumId" value=(params.oldOrderSequenceEnumId!) label=uiLabelMap.FormFieldTitle_orderSequenceEnumId>
 	    		<option value=""></option>
 		    	<#list orderCustomMethods as orderCustomMethod>
@@ -113,5 +113,7 @@
 	    	<@field type="text" name="quoteIdPrefix" value=(params.quoteIdPrefix!) label=uiLabelMap.FormFieldTitle_quoteIdPrefix />
 	    	<@field type="text" name="lastQuoteNumber" value=(params.lastQuoteNumber!) label=uiLabelMap.FormFieldTitle_lastQuoteNumber />        			
 	    </@section>
+	    
+	    <@field type="submit" name="acctgPreferencesActionSubmit" label=uiLabelMap.CommonUpdate />
 	</@form>
 </@section>		

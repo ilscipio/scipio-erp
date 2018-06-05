@@ -4072,7 +4072,6 @@
     </property>
     <property key="CommonExtraFields">
         <value xml:lang="de">Extra (Optionale) Felder</value>
-        >
         <value xml:lang="nl">Extra (Optional) Fields</value>
     </property>
     <property key="CommonFalse">
@@ -12861,7 +12860,7 @@
         <value xml:lang="ru">Доступ к этому виду - запрещен</value>
         <value xml:lang="vi">Quyền truy cập tới giao diện này hiện đã bị khoá</value>
         <value xml:lang="zh">已经禁止访问这个界面了。</value>
-        <value xml:lang="zh_-TW">已經禁止訪問這個檢視了.</value>
+        <value xml:lang="zh-TW">已經禁止訪問這個檢視了.</value>
     </property>
     <property key="CommonViewCalendar">
         <value xml:lang="ar">مشاهدة الرزمانة</value>

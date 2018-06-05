@@ -1080,8 +1080,8 @@
         <value xml:lang="zh-TW">新建有效責任</value>
     </property>
     <property key="HumanResAgreementEmploymentAppl">
-        <value xml:lang="en">Agreement Employment Appl</value>
         <value xml:lang="de">Bewerber Anstellungszuweisung</value>
+        <value xml:lang="en">Agreement Employment Appl</value>
         <value xml:lang="fr">Application d'accord d'emploi</value>
         <value xml:lang="it">Applicazione contratti d'impiego</value>
         <value xml:lang="ja">雇用契約申請</value>
@@ -1864,8 +1864,8 @@
         <value xml:lang="zh-TW">工作面試類型</value>
     </property>
     <property key="HumanResJobRequisition">
-        <value xml:lang="en">Job Requisition</value>
         <value xml:lang="de">Stellenausschreibungen</value>
+        <value xml:lang="en">Job Requisition</value>
         <value xml:lang="fr">Demande de poste</value>
         <value xml:lang="ja">職務辞令</value>
         <value xml:lang="pt-BR">Petição de emprego</value>
@@ -2005,8 +2005,8 @@
         <value xml:lang="zh-TW">查詢合約細項序號</value>
     </property>
     <property key="HumanResLookupApplicationId">
-        <value xml:lang="en">Lookup ApplicationId</value>
         <value xml:lang="de">Suche nach BewerberId</value>
+        <value xml:lang="en">Lookup ApplicationId</value>
         <value xml:lang="fr">Consultation de réf. d'application</value>
         <value xml:lang="it">Ricerca applicazione</value>
         <value xml:lang="ja">申請IDを検索</value>
@@ -3058,6 +3058,7 @@
     </property>
     <property key="PageTitleAddPublicHoliday">
         <value xml:lang="en">Add Public Holiday</value>
+        <value xml:lang="fr">Ajouter un jour de vacances</value>
         <value xml:lang="ja">祝日を追加</value>
         <value xml:lang="vi">Thêm Kỳ nghỉ công cộng</value>
         <value xml:lang="zh">添加公众假日</value>
@@ -3351,6 +3352,7 @@
     </property>
     <property key="PageTitlePublicHoliday">
         <value xml:lang="en">Public Holiday</value>
+        <value xml:lang="fr">Jours de vacances</value>
         <value xml:lang="ja">祝日</value>
         <value xml:lang="vi">Kỳ nghỉ công cộng</value>
         <value xml:lang="zh">公众假日</value>
@@ -3358,6 +3360,7 @@
     </property>
     <property key="PageTitlePublicHolidayList">
         <value xml:lang="en">Public Holiday List</value>
+        <value xml:lang="fr">Liste des jours de vacances</value>
         <value xml:lang="ja">祝日一覧</value>
         <value xml:lang="vi">Danh sách kỳ nghỉ công cộng</value>
         <value xml:lang="zh">公众假日列表</value>
@@ -3395,33 +3398,33 @@
     </property>
     <!-- SCIPIO ERP: TODO: Localize -->
     <property key="HumanResResourcePlanning">
-        <value xml:lang="en">Resource Planning</value>
         <value xml:lang="de">Ressourcenplanung</value>
+        <value xml:lang="en">Resource Planning</value>
         <value xml:lang="fr">Planification des ressources</value>
     </property>
     <property key="HumanResNewApplicants">
-        <value xml:lang="en">New Applicants</value>
         <value xml:lang="de">Neue Bewerber</value>
+        <value xml:lang="en">New Applicants</value>
         <value xml:lang="fr">Nouveaux candidats</value>
     </property>
     <property key="HumanResEmployeesApplicants">
-        <value xml:lang="en">Employees/Applicants</value>
         <value xml:lang="de">Mitarbeiter/Bewerber</value>
+        <value xml:lang="en">Employees/Applicants</value>
         <value xml:lang="fr">Employés/candidats</value>
     </property>
     <property key="HumanResEmployeeApplicant">
-        <value xml:lang="en">Employee/Applicant</value>
         <value xml:lang="de">Mitarbeiter/Bewerber</value>
+        <value xml:lang="en">Employee/Applicant</value>
         <value xml:lang="fr">Employé/candidat</value>
     </property>
     <property key="HumanResNewEmployeeApplicant">
-        <value xml:lang="en">New Employee/Applicant</value>
         <value xml:lang="de">Neue Mitarbeiter/Bewerber</value>
+        <value xml:lang="en">New Employee/Applicant</value>
         <value xml:lang="fr">Nouvel employé/candidat</value>
     </property>
     <property key="HumanResCurrentOpenings">
-        <value xml:lang="en">Current Openings</value>
         <value xml:lang="de">Aktuelle Stellenangebote</value>
+        <value xml:lang="en">Current Openings</value>
         <value xml:lang="fr">Postes à pourvoir</value>
     </property>
     <property key="HumanResPositions">

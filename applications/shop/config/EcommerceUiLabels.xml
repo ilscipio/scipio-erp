@@ -134,28 +134,6 @@
         <value xml:lang="zh">添加新地址</value>
         <value xml:lang="zh-TW">增加新的位址</value>
     </property>
-    <property key="EcommerceShippingOptions">
-        <value xml:lang="de">Versand</value>
-        <value xml:lang="en">Shipping</value>
-        <value xml:lang="es">Envío</value>
-        <value xml:lang="fr">Livraison</value>
-        <value xml:lang="hi-IN">शिपिंग</value>
-        <value xml:lang="it">Spedizione</value>
-        <value xml:lang="nl">Verzendopties</value>
-        <value xml:lang="zh">航运</value>
-        <value xml:lang="zh-TW">航運</value>
-    </property>
-    <property key="EcommercePaymentOptions">
-        <value xml:lang="de">Zahlung</value>
-        <value xml:lang="en">Payment</value>
-        <value xml:lang="es">Pago</value>
-        <value xml:lang="fr">Paiement</value>
-        <value xml:lang="hi-IN">भुगतान</value>
-        <value xml:lang="it">Pagamento</value>
-        <value xml:lang="nl">Betaling</value>
-        <value xml:lang="zh">付款</value>
-        <value xml:lang="zh-TW">付款</value>
-    </property>
     <property key="EcommerceAddNewDigitalProduct">
         <value xml:lang="da">Tilføj nyt digitalt produkt</value>
         <value xml:lang="de">Neues digitales Produkt hinzufügen</value>
@@ -390,8 +368,6 @@
         <value xml:lang="zh">确信包括了你的订单 #</value>
         <value xml:lang="zh-TW">確任包括你的訂單 #</value>
     </property>
-    <!-- SCIPIO: ToDO: Remove-->
-    <!-- 
     <property key="EcommerceBlogAddResponse">
         <value xml:lang="da">Tilføj et svar</value>
         <value xml:lang="en">Add a response:</value>
@@ -532,7 +508,6 @@
         <value xml:lang="zh">浏览博客文章</value>
         <value xml:lang="zh-TW">檢視部落格文章</value>
     </property>
-    -->
     <property key="EcommerceBronze">
         <value xml:lang="da">Bronze</value>
         <value xml:lang="en">Bronze</value>
@@ -5176,8 +5151,31 @@
         <value xml:lang="zh-TW">檢視報價</value>
     </property>
     <property key="ThankYouForContactingUs">
-        <value xml:lang="en">Thank You for contacting us.</value>
         <value xml:lang="de">Danke, dass Sie uns kontaktiert haben.</value>
+        <value xml:lang="en">Thank You for contacting us.</value>
         <value xml:lang="zh">感谢您与我们联系！</value>
+    </property>
+    <!-- SCIPIO -->
+    <property key="EcommerceShippingOptions">
+        <value xml:lang="de">Versand</value>
+        <value xml:lang="en">Shipping</value>
+        <value xml:lang="es">Envío</value>
+        <value xml:lang="fr">Livraison</value>
+        <value xml:lang="hi-IN">शिपिंग</value>
+        <value xml:lang="it">Spedizione</value>
+        <value xml:lang="nl">Verzendopties</value>
+        <value xml:lang="zh">航运</value>
+        <value xml:lang="zh-TW">航運</value>
+    </property>
+    <property key="EcommercePaymentOptions">
+        <value xml:lang="de">Zahlung</value>
+        <value xml:lang="en">Payment</value>
+        <value xml:lang="es">Pago</value>
+        <value xml:lang="fr">Paiement</value>
+        <value xml:lang="hi-IN">भुगतान</value>
+        <value xml:lang="it">Pagamento</value>
+        <value xml:lang="nl">Betaling</value>
+        <value xml:lang="zh">付款</value>
+        <value xml:lang="zh-TW">付款</value>
     </property>
 </resource>

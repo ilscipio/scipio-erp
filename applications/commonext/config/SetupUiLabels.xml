@@ -48,6 +48,7 @@
         <value xml:lang="zh-TW">設置應用程式</value>
     </property>
     <property key="SetupCompanyName">
+        <value xml:lang="de">SCIPIO - Setup Application </value>
         <value xml:lang="en">SCIPIO - Setup Application </value>
         <value xml:lang="it">SCIPIO - componente di configurazione</value>
         <value xml:lang="ja">SCIPIO - 設定アプリケーション</value>

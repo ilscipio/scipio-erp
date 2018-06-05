@@ -1179,8 +1179,8 @@
         <value xml:lang="zh-TW">新建根複合檔模板</value>
     </property>
     <property key="ContentCreateNewWebSite">
-        <value xml:lang="de">Schaffen neue Webseite</value>
         <value xml:lang="da">Opret ny Webside</value>
+        <value xml:lang="de">Schaffen neue Webseite</value>
         <value xml:lang="en">Create New WebSite</value>
         <value xml:lang="fr">Créer un nouveau Site Web</value>
         <value xml:lang="it">Nuovo sito web</value>
@@ -1525,16 +1525,16 @@
         <value xml:lang="zh">文件路径</value>
         <value xml:lang="zh-TW">檔案路徑</value>
     </property>
-    <property key="ContentFileRelToSCIPIO -Home">
-        <value xml:lang="da">Fil relativt til SCIPIO ERP -_HOME</value>
-        <value xml:lang="en">File Rel. to SCIPIO ERP -_HOME</value>
-        <value xml:lang="fr">Fichier au nom relatif à SCIPIO ERP -_HOME</value>
-        <value xml:lang="it">File relativo alla SCIPIO ERP -_HOME</value>
-        <value xml:lang="ja">SCIPIO ERP -_HOMEへの相対パス</value>
-        <value xml:lang="pt">Arquivo relativo a SCIPIO ERP -_HOME</value>
-        <value xml:lang="vi">Đường dẫn so với thư mục gốc SCIPIO ERP -_HOME</value>
-        <value xml:lang="zh">文件相对于SCIPIO ERP -_HOME</value>
-        <value xml:lang="zh-TW">檔案相對於SCIPIO ERP -_HOME</value>
+    <property key="ContentFileRelToOFBizHome">
+        <value xml:lang="da">Fil relativt til OFBIZ_HOME</value>
+        <value xml:lang="en">File Rel. to OFBIZ_HOME</value>
+        <value xml:lang="fr">Fichier au nom relatif à OFBIZ_HOME</value>
+        <value xml:lang="it">File relativo alla OFBIZ_HOME</value>
+        <value xml:lang="ja">OFBIZ_HOMEへの相対パス</value>
+        <value xml:lang="pt">Arquivo relativo a OFBIZ_HOME</value>
+        <value xml:lang="vi">Đường dẫn so với thư mục gốc OFBIZ_HOME</value>
+        <value xml:lang="zh">文件相对于OFBIZ_HOME</value>
+        <value xml:lang="zh-TW">檔案相對於OFBIZ_HOME</value>
     </property>
     <property key="ContentFileRelToWebappRoot">
         <value xml:lang="da">Fil relativt til webapp rod</value>
@@ -2026,6 +2026,22 @@
         <value xml:lang="vi">MS Word</value>
         <value xml:lang="zh">微软Word</value>
         <value xml:lang="zh-TW">微軟Word</value>
+    </property>
+    <property key="ContentMain">
+        <value xml:lang="ar">الرئيسية</value>
+        <value xml:lang="da">Primær</value>
+        <value xml:lang="de">Primärer</value>
+        <value xml:lang="en">Main</value>
+        <value xml:lang="es">Principal</value>
+        <value xml:lang="fr">Page d'accueil</value>
+        <value xml:lang="it">Pagina Principale</value>
+        <value xml:lang="ja">メイン</value>
+        <value xml:lang="pt">Pricipal</value>
+        <value xml:lang="ro">Pagina Principala</value>
+        <value xml:lang="th">หน้าหลัก</value>
+        <value xml:lang="vi">Trang chủ</value>
+        <value xml:lang="zh">首页</value>
+        <value xml:lang="zh-TW">首頁</value>
     </property>
     <property key="ContentMapKey">
         <value xml:lang="da">MapKey</value>
@@ -3540,8 +3556,8 @@
     <property key="ContentUploadedFile">
         <value xml:lang="ar">ملف التحميل</value>
         <value xml:lang="da">Uploadet fil</value>
-        <value xml:lang="en">Uploaded File</value>
         <value xml:lang="de">Datei-Upload</value>
+        <value xml:lang="en">Uploaded File</value>
         <value xml:lang="fr">Fichier téléversé</value>
         <value xml:lang="it">File caricato</value>
         <value xml:lang="ja">アップロードファイル</value>
@@ -3711,7 +3727,7 @@
     <property key="ContentWebSiteGenerateMissingSeoUrl">
         <value xml:lang="en">Generate missing SEO URLs</value>
         <value xml:lang="ja">SEO URLの生成に失敗しました</value>
-        <value xml:lang="pt">Gerar URLs necessárias para SEO</value>
+        <value xml:lang="pt">Gerar urls necessárias para SEO</value>
         <value xml:lang="vi">Sinh các liên kết URL phục vụ SEO bị thiếu</value>
         <value xml:lang="zh">生成缺失的搜索引擎优化的网址</value>
         <value xml:lang="zh-TW">產生遺缺的搜尋引擎優化的網址</value>
@@ -5884,7 +5900,7 @@
     <property key="FormFieldTitle_updateSurveyResponse">
         <value xml:lang="da">Opdater rundspørge svar</value>
         <value xml:lang="en">Update Survey Response</value>
-        <value xml:lang="fr">Màj de la réponse du sondage</value>
+        <value xml:lang="fr">Actualisation de la réponse du sondage</value>
         <value xml:lang="it">Aggiorna risposta sondaggio</value>
         <value xml:lang="ja">評価の回答を更新</value>
         <value xml:lang="pt">Atualizar resposta de pesquisa</value>
@@ -7651,8 +7667,8 @@
         <value xml:lang="zh-TW">網站內容</value>
     </property>
     <property key="PageTitleWebSiteSEO"><!-- SCIPIO: changed -->
-        <value xml:lang="en">Generate SEO URLs</value>
         <value xml:lang="de">SEO-URLs generieren</value>
+        <value xml:lang="en">Generate SEO URLs</value>
         <value xml:lang="ja">SEO URLの生成に失敗しました</value>
         <value xml:lang="pt">Gerar URLs faltantes para SEO</value>
         <value xml:lang="vi">Sinh lại các URL dành cho SEO bị thiếu</value>
@@ -7660,8 +7676,8 @@
         <value xml:lang="zh-TW">產生缺失的搜尋引擎優化的網址</value>
     </property>
     <property key="PageTitleRemoveWebSiteSEO"><!-- SCIPIO: new -->
-        <value xml:lang="en">Remove SEO URLs</value>
         <value xml:lang="de">SEO-URLs entfernen</value>
+        <value xml:lang="en">Remove SEO URLs</value>
     </property>
     <property key="ContentNewWebSite">
         <value xml:lang="de">Neue Webseite</value>
@@ -7740,31 +7756,31 @@
         <value xml:lang="en">Include Variant Products</value>
     </property>
     <property key="ContentGenerateSitemaps">
-        <value xml:lang="en">Generate Sitemaps</value>
         <value xml:lang="de">Sitemaps erstellen</value>
+        <value xml:lang="en">Generate Sitemaps</value>
     </property>
     <property key="ContentGenerateSitemapsInfo">
-        <value xml:lang="en">Note: The sitemap should be generated after the alternative SEO URLs have been generated. They will be generated in the locations specified in the sitemaps.properties configuration files. Generated sitemaps are only valid for websites which have SEO URLs enabled (see SeoConfig.xml).</value>
         <value xml:lang="de">Hinweis: Die Sitemap sollte generiert werden, nachdem die alternativen SEO-URLs generiert wurden. Der Speicherort wird in der Datei sitemaps.properties definiert. Generierte Sitemaps sind nur für Websites gültig, für die SEO-URLs aktiviert sind (siehe SeoConfig.xml).</value>
+        <value xml:lang="en">Note: The sitemap should be generated after the alternative SEO URLs have been generated. They will be generated in the locations specified in the sitemaps.properties configuration files. Generated sitemaps are only valid for websites which have SEO URLs enabled (see SeoConfig.xml).</value>
     </property>
     <property key="ContentGenerateSeoUrlInfo">
-        <value xml:lang="en">This automatically generates alternative URLs from product and category names using the SEO configuration specified in SeoConfig.xml (/applications/product/config/SeoConfig.xml).</value>
         <value xml:lang="de">Mit Hilfe dieses Service können die URLs für alle Produkt- und Kategorienamen mithilfe der in SeoConfig.xml (/applications/product/config/SeoConfig.xml) angegebenen SEO-Konfiguration neu generiert werden.</value>
+        <value xml:lang="en">This automatically generates alternative URLs from product and category names using the SEO configuration specified in SeoConfig.xml (/applications/product/config/SeoConfig.xml).</value>
     </property>
     <property key="ContentRemoveSeoUrlInfo">
-        <value xml:lang="en">This removes alternative URLs for the website. If you experience errors during generation and have no important data in these records, sometimes removing before generating again can solve issues with old or incompatible data.</value>
         <value xml:lang="de">Dadurch werden alternative URLs für die Website entfernt. Wenn während der Generierung Fehler auftreten und keine wichtigen Daten in diesen Datensätzen vorhanden sind, können durch das Entfernen vor der erneuten Generierung Probleme mit alten oder inkompatiblen Daten behoben werden.</value>
+        <value xml:lang="en">This removes alternative URLs for the website. If you experience errors during generation and have no important data in these records, sometimes removing before generating again can solve issues with old or incompatible data.</value>
     </property>
     <property key="ContentGenerateSeoUrlInfoMayChangeUrls">
-        <value xml:lang="en">Note: This may change all category/product URLs in the store (turn off "Replace Existing" to generate missing only).</value>
         <value xml:lang="de">Hinweis: Dies kann alle Kategorie-/Produkt-URLs im Store ändern (deaktivieren Sie "Bestehende ersetzen", um nur fehlende zu generieren).</value>
+        <value xml:lang="en">Note: This may change all category/product URLs in the store (turn off "Replace Existing" to generate missing only).</value>
     </property>
     <property key="ContentMainStcLocFieldInfo">
-        <value xml:lang="en">This locale field entry (the first) corresponds to the main Content record for this field type (${typeField}: ${typeName}); the following entries (if any) will be linked to this one by contentAssocTypeId ALTERNATE_LOCALE content association.</value>
         <value xml:lang="de">Dieser Gebietsschema-Feldeintrag (der erste) entspricht dem Hauptinhaltsdatensatz für diesen Feldtyp (${typeField}: ${typeName}); Die folgenden Einträge (falls vorhanden) werden durch die Inhaltsverknüpfung contentAssocTypeId ALTERNATE_LOCALE mit dieser verknüpft.</value>
+        <value xml:lang="en">This locale field entry (the first) corresponds to the main Content record for this field type (${typeField}: ${typeName}); the following entries (if any) will be linked to this one by contentAssocTypeId ALTERNATE_LOCALE content association.</value>
     </property>
     <property key="ContentAltStcLocFieldInfo">
-        <value xml:lang="en">This locale field entry corresponds to an ALTERNATE_LOCALE Content record associated to the main Content record for this field type (${typeField}: ${typeName}), denoted by the first locale field entry above.</value>
         <value xml:lang="de">Dieser Gebietsschema-Feldeintrag entspricht einem ALTERNATE_LOCALE-Inhaltsdatensatz, der dem Hauptinhaltsdatensatz für diesen Feldtyp (${typeField}: ${typeName}) zugeordnet ist und durch den ersten Gebietsschema-Eintrag oben angegeben wird.</value>
+        <value xml:lang="en">This locale field entry corresponds to an ALTERNATE_LOCALE Content record associated to the main Content record for this field type (${typeField}: ${typeName}), denoted by the first locale field entry above.</value>
     </property>
 </resource>

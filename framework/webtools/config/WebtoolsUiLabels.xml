@@ -433,9 +433,13 @@
         <value xml:lang="es">Admin</value>
         <value xml:lang="fr">Admin</value>
         <value xml:lang="it">Admin</value>
-    </property>
-    <property key="PageTitleDemoDataGenerator">
-        <value xml:lang="en">Demo Data Generator</value>
+        <value xml:lang="ja">Admin</value>
+        <value xml:lang="pt">Admin</value>
+        <value xml:lang="ro">Admin</value>
+        <value xml:lang="th">Admin</value>
+        <value xml:lang="vi">Admin</value>
+        <value xml:lang="zh">Admin</value>
+        <value xml:lang="zh-TW">Admin</value>
     </property>
     <property key="PageTitleEditUtilCache">
         <value xml:lang="de">Util Cache bearbeiten</value>
@@ -832,11 +836,11 @@
         <value xml:lang="zh-TW">全部</value>
     </property>
     <property key="WebtoolsArtifactInfo">
-        <value xml:lang="de">SCIPIO - Elemente-Info</value>
+        <value xml:lang="de">SCIPIO Elemente-Info</value>
         <value xml:lang="en">Artifact Info</value>
-        <value xml:lang="fr">Information sur les éléments d'SCIPIO -</value>
+        <value xml:lang="fr">Information sur les éléments de SCIPIO</value>
         <value xml:lang="it">Informazioni sugli artefatti</value>
-        <value xml:lang="ja">SCIPIO -要素情報</value>
+        <value xml:lang="ja">SCIPIO 要素情報</value>
         <value xml:lang="pt">Info do Artefato</value>
         <value xml:lang="vi">Thông tin Nhân tạo</value>
         <value xml:lang="zh">人工程序信息</value>
@@ -985,11 +989,11 @@
         <value xml:lang="zh-TW">取消任務</value>
     </property>
     <property key="WebtoolsCannotViewArtifactInfoPages">
-        <value xml:lang="de">Für den Zugriff zu den SCIPIO - Elementinfo-Seiten wird die ARTIFACT_INFO_VIEW Berechtigung benötigt.</value>
+        <value xml:lang="de">Für den Zugriff zu den SCIPIO Elementinfo-Seiten wird die ARTIFACT_INFO_VIEW Berechtigung benötigt.</value>
         <value xml:lang="en">Cannot view Artifact Info pages without ARTIFACT_INFO_VIEW permission.</value>
-        <value xml:lang="fr">Impossible de voir les pages sur les info à propos des éléments d'SCIPIO - sans l'autorisation ARTIFACT_INFO_VIEW.</value>
+        <value xml:lang="fr">Impossible de voir les pages sur les info à propos des éléments de SCIPIO sans l'autorisation ARTIFACT_INFO_VIEW.</value>
         <value xml:lang="it">Non è possibile visualizzare le pagine senza avere il permesso ARTIFACT_INFO_VIEW.</value>
-        <value xml:lang="ja">SCIPIO -要素情報ページの表示は、ARTIFACT_INFO_VIEW 権限が必要です</value>
+        <value xml:lang="ja">SCIPIO 要素情報ページの表示は、ARTIFACT_INFO_VIEW 権限が必要です</value>
         <value xml:lang="pt">NÃ£o Ã© possÃ­vel visualizar pÃ¡ginas de InformaÃ§Ãµes de Artefato sem autorizaÃ§Ã£o ARTIFACT_INFO_VIEW.</value>
         <value xml:lang="vi">Bạn không thể xem Artifact nếu khống có quyền ARTIFACT_INFO_VIEW</value>
         <value xml:lang="zh">没有ARTIFACT_INFO_VIEW权限，无法浏览人工程序页面。</value>
@@ -1294,6 +1298,10 @@
         <value xml:lang="zh">配置</value>
         <value xml:lang="zh-TW">配置</value>
     </property>
+    <property key="WebtoolsConfirmDelete">
+        <value xml:lang="en">Are you sure you want to delete?</value>
+        <value xml:lang="fr">Êtes-vous sûr de vouloir supprimer l'élément ?</value>
+    </property>
     <property key="WebtoolsCount">
         <value xml:lang="de">Anzahl</value>
         <value xml:lang="en">Count</value>
@@ -1579,13 +1587,6 @@
         <value xml:lang="en">Definition Location</value>
         <value xml:lang="zh">定义位置</value>
         <value xml:lang="zh-TW">定義位置</value>
-    </property>
-    <!-- SCIPIO: TODO: Localize -->
-    <property key="WebtoolsDemoDataGeneratorServiceList">
-        <value xml:lang="en">Data Generator Services</value>
-    </property>
-    <property key="WebtoolsDemoDataGeneratorProviders">
-        <value xml:lang="en">Data Generator Providers</value>
     </property>
     <property key="WebtoolsDeleteFiles">
         <value xml:lang="de">Dateien nachher löschen?</value>
@@ -2411,7 +2412,7 @@
     <property key="WebtoolsGeneralArtifactInfoTools">
         <value xml:lang="de">Allgemeine Info</value>
         <value xml:lang="en">General Artifact Info Tools</value>
-        <value xml:lang="fr">Outils généraux pour les informations sur les éléments d'SCIPIO -</value>
+        <value xml:lang="fr">Outils généraux pour les informations sur les éléments de SCIPIO</value>
         <value xml:lang="it">Strumento per informazioni generali su artifatti</value>
         <value xml:lang="ja">成果物情報ツール全般</value>
         <value xml:lang="pt">Ferramentas de InformaÃ§Ãµes Gerais do Artefato</value>
@@ -2429,6 +2430,10 @@
         <value xml:lang="vi">Tiến trình Java chung</value>
         <value xml:lang="zh">通用Java线程</value>
         <value xml:lang="zh-TW">通用JAVA執行緒</value>
+    </property>
+    <property key="WebtoolsGeoAssocList">
+        <value xml:lang="en">List GeoAssoc</value>
+        <value xml:lang="fr">Lister les relations de zone géographique</value>
     </property>
     <property key="WebtoolsGeoCreateNew">
         <value xml:lang="de">Zone erstellen/bearbeiten</value>
@@ -2959,7 +2964,7 @@
         <value xml:lang="zh-TW">解決重複標簽後清除快取</value>
     </property>
     <property key="WebtoolsLabelManagerComponentName">
-        <value xml:lang="de">SCIPIO - Komponente</value>
+        <value xml:lang="de">Komponente</value>
         <value xml:lang="en">Component Name</value>
         <value xml:lang="fr">Nom de composant</value>
         <value xml:lang="it">Nome componente</value>
@@ -3382,9 +3387,6 @@
         <value xml:lang="zh">日志记录</value>
         <value xml:lang="zh-TW">日誌記錄</value>
     </property>
-    <property key="WebtoolsLogs">
-        <value xml:lang="en">Logs</value>
-    </property>
     <property key="WebtoolsMainPage">
         <value xml:lang="de">Startseite</value>
         <value xml:lang="en">Main Page</value>
@@ -3794,17 +3796,17 @@
         <value xml:lang="zh-TW">沒有出現</value>
     </property>
     <property key="WebtoolsNoteAntRunInstall">
-        <value xml:lang="de">HINWEIS: Sofern Sie das Installationsskript zum Daten lagen noch nicht haben laufen lassen, geben Sie bitte im SCIPIO -_HOME Verzeichnis "ant load-demo" oder "java -jar SCIPIO -.jar load-data" ein.</value>
-        <value xml:lang="en">NOTE: If you have not already run the installation data loading script, from the SCIPIO - home directory run "ant load-demo" or "java -jar SCIPIO -.jar load-data"</value>
-        <value xml:lang="fr">NOTE: Si vous n'avez pas déjà exécuté le script de chargement des données d'installation : à partir du répertoire racine d'SCIPIO -, exécutez "ant load-demo" ou "java -jar SCIPIO -.jar load-data"</value>
-        <value xml:lang="it">NOTA: Se non hai ancora eseguito lo script di installazione di caricamento dei dati, esegui dalla home directory di SCIPIO - "ant load-demo" o "java -jar SCIPIO -.jar load-data"</value>
-        <value xml:lang="ja">注意: データをロードするインストールスクリプトをまだ実行していない場合、SCIPIO -ホームディレクトリで"ant load-demo"または"java -jar SCIPIO -.jar load-data"を実行してください</value>
-        <value xml:lang="pt">NOTA: Se vocÃª ainda nÃ£o executou o script de carregamento e instalaÃ§Ã£o de dados, a partir do diretÃ³rio home do SCIPIO - executar "ant load-demo" ou "SCIPIO -.jar java-jar-install"</value>
-        <value xml:lang="ro">NOTA: Daca inca nu ai executat script_ul de instalare incarcare date, executa de la home directory SCIPIO - "ant load-demo" sau "java -jar SCIPIO -.jar load-data"</value>
-        <value xml:lang="th">หมายเหตุ: ถ้าคุณไม่ได้ทำการดำเนินงานติดตั้ง data loading script จาก SCIPIO - home directory ให้ใช้คำสั่ง "ant load-demo" หรือ "java -jar SCIPIO -.jar load-data"</value>
-        <value xml:lang="vi">Ghi chú: nếu bạn đã chạy quá trình tải dữ liệu, từ thư mục gốc của SCIPIO - bạn hãy chạy "ant load-demo" hoặc "java -jar SCIPIO -.jar load-data"</value>
-        <value xml:lang="zh">注意：如果你还没有运行安装数据载入脚本，那么你可以在SCIPIO -目录下运行"ant load-demo"或"java -jar SCIPIO -.jar load-data"</value>
-        <value xml:lang="zh-TW">注意:如果你還沒有執行安裝資料載入腳本,那麼你可以在SCIPIO -目錄下執行"ant load-demo"或"java -jar SCIPIO -.jar load-data"</value>
+        <value xml:lang="de">HINWEIS: Sofern Sie das Installationsskript zum Daten lagen noch nicht haben laufen lassen, geben Sie bitte im SCIPIO Verzeichnis "ant load-demo" oder "java -jar ofbiz.jar load-data" ein.</value>
+        <value xml:lang="en">NOTE: If you have not already run the installation data loading script, from the SCIPIO home directory run "ant load-demo" or "java -jar ofbiz.jar load-data"</value>
+        <value xml:lang="fr">NOTE: Si vous n'avez pas déjà exécuté le script de chargement des données d'installation : à partir du répertoire racine de SCIPIO, exécutez "ant load-demo" ou "java -jar ofbiz.jar load-data"</value>
+        <value xml:lang="it">NOTA: Se non hai ancora eseguito lo script di installazione di caricamento dei dati, esegui dalla home directory di SCIPIO "ant load-demo" o "java -jar ofbiz.jar load-data"</value>
+        <value xml:lang="ja">注意: データをロードするインストールスクリプトをまだ実行していない場合、SCIPIO ホームディレクトリで"ant load-demo"または"java -jar ofbiz.jar load-data"を実行してください</value>
+        <value xml:lang="pt">NOTA: Se vocÃª ainda nÃ£o executou o script de carregamento e instalaÃ§Ã£o de dados, a partir do diretÃ³rio home do SCIPIO executar "ant load-demo" ou "ofbiz.jar java-jar-install"</value>
+        <value xml:lang="ro">NOTA: Daca inca nu ai executat script_ul de instalare incarcare date, executa de la home directory SCIPIO "ant load-demo" sau "java -jar ofbiz.jar load-data"</value>
+        <value xml:lang="th">หมายเหตุ: ถ้าคุณไม่ได้ทำการดำเนินงานติดตั้ง data loading script จาก SCIPIO home directory ให้ใช้คำสั่ง "ant load-demo" หรือ "java -jar ofbiz.jar load-data"</value>
+        <value xml:lang="vi">Ghi chú: nếu bạn đã chạy quá trình tải dữ liệu, từ thư mục gốc của SCIPIO bạn hãy chạy "ant load-demo" hoặc "java -jar ofbiz.jar load-data"</value>
+        <value xml:lang="zh">注意：如果你还没有运行安装数据载入脚本，那么你可以在SCIPIO目录下运行"ant load-demo"或"java -jar ofbiz.jar load-data"</value>
+        <value xml:lang="zh-TW">注意:如果你還沒有執行安裝資料載入腳本,那麼你可以在SCIPIO目錄下執行"ant load-demo"或"java -jar ofbiz.jar load-data"</value>
     </property>
     <property key="WebtoolsNoteForeighKeysMayAlsoBeCreated">
         <value xml:lang="de">HINWEIS: Fremdschlüssel können mit der Datenbank-Check/-Update Funktion ebenfalls generiert werden, sofern die check-fks-on-start und andere Optionen auf der Datensource entsprechend gesetzt sind.</value>
@@ -4683,19 +4685,6 @@
         <value xml:lang="zh">服务器击中统计工具</value>
         <value xml:lang="zh-TW">伺服器拜訪統計工具</value>
     </property>
-    <property key="WebtoolsServer">
-        <value xml:lang="de">Server</value>
-        <value xml:lang="en">Server</value>
-        <value xml:lang="fr">Server</value>
-        <value xml:lang="it">Server</value>
-        <value xml:lang="ja">Server</value>
-        <value xml:lang="pt">Server</value>
-        <value xml:lang="ro">Server</value>
-        <value xml:lang="th">Server</value>
-        <value xml:lang="vi">Server</value>
-        <value xml:lang="zh">Server</value>
-        <value xml:lang="zh-TW">Server</value>
-    </property>
     <property key="WebtoolsService">
         <value xml:lang="de">Dienst</value>
         <value xml:lang="en">Service</value>
@@ -4947,9 +4936,6 @@
         <value xml:lang="vi">Thực thể 1</value>
         <value xml:lang="zh">指定的实体</value>
         <value xml:lang="zh-TW">指定的資料實體</value>
-    </property>
-    <property key="WebtoolsSolr">
-        <value xml:lang="en">Solr</value>
     </property>
     <property key="WebtoolsSpecifiedEntity2">
         <value xml:lang="de">Entität 2</value>
@@ -5217,10 +5203,6 @@
         <value xml:lang="zh">刷新页面</value>
         <value xml:lang="zh-TW">刷新頁面</value>
     </property>
-    <property key="WebtoolsStatsRequestsBy">
-        <value xml:lang="de">Zugriffe pro</value>
-        <value xml:lang="en">Requests by</value>
-    </property>
     <property key="WebtoolsStatsRequestId">
         <value xml:lang="de">Anfrage ID</value>
         <value xml:lang="en">Request ID</value>
@@ -5245,7 +5227,6 @@
         <value xml:lang="zh">请求统计</value>
         <value xml:lang="zh-TW">請求統計</value>
     </property>
-  
     <property key="WebtoolsStatsSinceServerStart">
         <value xml:lang="de">Serverstatistik (seit Start)</value>
         <value xml:lang="en">Stats Since Server Start</value>
@@ -5306,10 +5287,6 @@
         <value xml:lang="vi">Xem thống kê</value>
         <value xml:lang="zh">浏览统计</value>
         <value xml:lang="zh-TW">檢視統計</value>
-    </property>
-    <property key="WebtoolsStatsSystemMemory">
-        <value xml:lang="de">System Speicher</value>
-        <value xml:lang="en">System Memory</value>
     </property>
     <property key="WebtoolsStatusInvalid">
         <value xml:lang="de">Ungültiger Status</value>
@@ -5800,7 +5777,7 @@
         <value xml:lang="zh-TW">檢視度量</value>
     </property>
     <property key="WebtoolsViewPermissionError">
-        <value xml:lang="de">Sie haben keine Berechtigung um diesen Bereich anzusehen (Sie benötigen OFBTOOLS_VIEW oder SCIPIO -TOOLS_ADMIN Berechtigung)</value>
+        <value xml:lang="de">Sie haben keine Berechtigung um diesen Bereich anzusehen (Sie benötigen OFBTOOLS_VIEW oder OFBIZTOOLS_ADMIN Berechtigung)</value>
         <value xml:lang="en">You do not have permission to view this page. ("OFBTOOLS_VIEW" or "OFBTOOLS_ADMIN" needed)</value>
         <value xml:lang="fr">Vous n'avez pas l'autorisation de voir cette page ("OFBTOOLS_VIEW" ou "OFBTOOLS_ADMIN" nécessaire)</value>
         <value xml:lang="it">Non sei autorizzato a vedere questa pagina. (Necessario permesso "OFBTOOLS_VIEW" o "OFBTOOLS_ADMIN")</value>
@@ -6081,5 +6058,41 @@
     <property key="WebtoolsTemplateTest">
         <value xml:lang="en">Template Test</value>
         <value xml:lang="de">Template Test</value>
+    </property>
+    <property key="PageTitleDemoDataGenerator">
+        <value xml:lang="en">Demo Data Generator</value>
+    </property>
+    <property key="WebtoolsDemoDataGeneratorServiceList">
+        <value xml:lang="en">Data Generator Services</value>
+    </property>
+    <property key="WebtoolsDemoDataGeneratorProviders">
+        <value xml:lang="en">Data Generator Providers</value>
+    </property>
+    <property key="WebtoolsLogs">
+        <value xml:lang="en">Logs</value>
+    </property>
+    <property key="WebtoolsServer">
+        <value xml:lang="de">Server</value>
+        <value xml:lang="en">Server</value>
+        <value xml:lang="fr">Server</value>
+        <value xml:lang="it">Server</value>
+        <value xml:lang="ja">Server</value>
+        <value xml:lang="pt">Server</value>
+        <value xml:lang="ro">Server</value>
+        <value xml:lang="th">Server</value>
+        <value xml:lang="vi">Server</value>
+        <value xml:lang="zh">Server</value>
+        <value xml:lang="zh-TW">Server</value>
+    </property>
+    <property key="WebtoolsSolr">
+        <value xml:lang="en">Solr</value>
+    </property>
+    <property key="WebtoolsStatsRequestsBy">
+        <value xml:lang="de">Zugriffe pro</value>
+        <value xml:lang="en">Requests by</value>
+    </property>
+    <property key="WebtoolsStatsSystemMemory">
+        <value xml:lang="de">System Speicher</value>
+        <value xml:lang="en">System Memory</value>
     </property>
 </resource>

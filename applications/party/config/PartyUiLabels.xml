@@ -2365,6 +2365,7 @@
     </property>
     <property key="PageTitleEditPartyInvitationGroupAssoc">
         <value xml:lang="ar">تعديل ترابط مجموعة دعوة الطرف</value>
+        <value xml:lang="de">Gruppenzuweisung Einladung Nutzer bearbeiten</value>
         <value xml:lang="en">Edit User Invitation GroupAssoc</value>
         <value xml:lang="es">Editar asociación de grupo de invitación de participante</value>
         <value xml:lang="fr">Modifier le groupe d'association d'invitation de l'acteur</value>
@@ -2380,7 +2381,7 @@
     </property>
     <property key="PageTitleEditPartyInvitationRoleAssoc">
         <value xml:lang="ar">تعديل ترابط دور دعوة الطرف</value>
-        <value xml:lang="de">Verbindung Rolle Einladung Nutzer bearbeiten</value>
+        <value xml:lang="de">Rollenzuweisung Einladung Nutzer bearbeiten</value>
         <value xml:lang="en">Edit User Invitation RoleAssoc</value>
         <value xml:lang="es">Editar asociación de rol de invitación de participante</value>
         <value xml:lang="fr">Modifier l'association du rôle d'invitation de l'acteur</value>
@@ -2396,7 +2397,7 @@
     </property>
     <property key="PageTitleEditPartyRates">
         <value xml:lang="ar">تعديل تسعير الطرف</value>
-        <value xml:lang="de">Nutzer Ansätze bearbeiten</value>
+        <value xml:lang="de">Nutzer Sätze bearbeiten</value>
         <value xml:lang="en">Edit User Rates</value>
         <value xml:lang="es">Editar tasas de participación</value>
         <value xml:lang="fr">Modifier le taux de l'acteur</value>
@@ -3167,7 +3168,7 @@
     <property key="PartyAddOtherRelationship">
         <value xml:lang="ar">أضافة علاقة بطرف آخر</value>
         <value xml:lang="de">Weitere Nutzerverbindung hinzufügen</value>
-        <value xml:lang="en">Add other user relationship user ${partyId}</value>
+        <value xml:lang="en">Add other user relationship</value>
         <value xml:lang="fr">Ajouter une autre relation entre acteurs</value>
         <value xml:lang="hi-IN">अन्य पार्टी के रिश्ते जोड़ें</value>
         <value xml:lang="it">Aggiungi altro rapporto soggetti</value>
@@ -3579,6 +3580,7 @@
     </property>
     <property key="PartyAdjustInAccountingComponent">
         <value xml:lang="ar">ضبط في وحدة المحاسبة</value>
+        <value xml:lang="de">Einstellen in Buchhaltungskomponente</value>
         <value xml:lang="en">Adjust in accounting component</value>
         <value xml:lang="fr">Ajuster en comptabilité</value>
         <value xml:lang="hi-IN">लेखांकन घटक(accounting component) में समायोजित करें</value>
@@ -4943,6 +4945,10 @@
         <value xml:lang="zh">联系信息</value>
         <value xml:lang="zh-TW">聯絡資訊</value>
     </property>
+    <property key="PartyContactInformationOther">
+        <value xml:lang="en">Other Contact Information</value>
+        <value xml:lang="fr">Autres Coordonnées</value>
+    </property>
     <property key="PartyContactListPartyCreate">
         <value xml:lang="ar">إضافة طرف لقائمة الإتصال</value>
         <value xml:lang="de">Nutzer zur Kontaktliste hinzufügen</value>
@@ -5132,7 +5138,7 @@
     <property key="PartyContactNumber">
         <value xml:lang="ar">رقم الصلة</value>
         <value xml:lang="cs">Kontaktní číslo</value>
-        <value xml:lang="de">kontaktnummer</value>
+        <value xml:lang="de">Kontaktnummer</value>
         <value xml:lang="en">Contact Number</value>
         <value xml:lang="es">Teléfono de Contacto</value>
         <value xml:lang="fr">N° de téléphone</value>
@@ -5392,7 +5398,7 @@
         <value xml:lang="hi-IN">सुरक्षा त्रुटि: addWebSiteRole चलाने के लिए आप को PARTYMGR_CREATE या PARTYMGR_ADMIN की अनुमति होना चाहिए</value>
         <value xml:lang="it">Errore Sicurezza : per eseguire addWebSiteRole tu devi avere il permesso PARTYMGR_CREATE o PARTYMGR_ADMIN</value>
         <value xml:lang="ja">セキュリティエラー: Webサイトロールの追加には、PARTYMGR_CREATE または PARTYMGR_ADMIN 権限が必要です</value>
-        <value xml:lang="nl">Toegangfout: om SCIPIO -servie 'addWebSiteRole' te draaien heb je 'PARTYMGR_CREATE'- of 'PARTYMGR_ADMIN'-permissie nodig</value>
+        <value xml:lang="nl">Toegangfout: om service 'addWebSiteRole' te draaien heb je 'PARTYMGR_CREATE'- of 'PARTYMGR_ADMIN'-permissie nodig</value>
         <value xml:lang="pt-BR">Erro de segurança: para executar addWebSiteRole você dever ter a permissão PARTYMGR_CREATE ou PARTYMGR_ADMIN</value>
         <value xml:lang="ro">Eroare de Siguranta : pentru a folosi  addWebSiteRole trebbie sa ai permisul PARTYMGR_CREATE sau PARTYMGR_ADMIN</value>
         <value xml:lang="ru">Ошибка доступа: для запуска addWebSiteRole у вас должны быть права PARTYMGR_CREATE или PARTYMGR_ADMIN</value>
@@ -5410,7 +5416,7 @@
         <value xml:lang="hi-IN">सुरक्षा त्रुटि: createPartyAttribute चलाने के लिए आप को PARTYMGR_CREATE या PARTYMGR_ADMIN की अनुमति होना चाहिए</value>
         <value xml:lang="it">Errore Sicurezza : per eseguire createPartyAttribute tu devi avere il permesso PARTYMGR_CREATE o PARTYMGR_ADMIN</value>
         <value xml:lang="ja">セキュリティエラー: 取引先属性の作成には、PARTYMGR_CREATE または PARTYMGR_ADMIN 権限が必要です</value>
-        <value xml:lang="nl">Toegangfout: om SCIPIO -service 'createPartyAttribute' te draaien heb je 'PARTYMGR_CREATE'- of 'PARTYMGR_ADMIN'-permissie nodig</value>
+        <value xml:lang="nl">Toegangfout: om service 'createPartyAttribute' te draaien heb je 'PARTYMGR_CREATE'- of 'PARTYMGR_ADMIN'-permissie nodig</value>
         <value xml:lang="pt-BR">Erro de segurança: para acessar esta função você deve ter a permissão PARTYMGR_CREATE ou PARTYMGR_ADMIN</value>
         <value xml:lang="ro">Eroare De Siguranta : pentru a folosi createPartyAttribute trebbie sa ai permisul PARTYMGR_CREATE sau PARTYMGR_ADMIN</value>
         <value xml:lang="ru">Ошибка доступа: для запуска createPartyAttribute у вас должны быть права PARTYMGR_CREATE или PARTYMGR_ADMIN</value>
@@ -5428,7 +5434,7 @@
         <value xml:lang="hi-IN">सुरक्षा त्रुटि: createCommunicationEvent चलाने के लिए आप को PARTYMGR_CREATE या PARTYMGR_ADMIN की अनुमति होना चाहिए</value>
         <value xml:lang="it">Errore Sicurezza : per eseguire createCommunicationEvent tu devi avere il permesso PARTYMGR_CREATE o PARTYMGR_ADMIN</value>
         <value xml:lang="ja">セキュリティエラー: 通信イベントの作成には、PARTYMGR_CREATE または PARTYMGR_ADMIN 権限が必要です</value>
-        <value xml:lang="nl">Toegangfout: om SCIPIO -service 'createCommunicationEvent' te draaien heb je 'PARTYMGR_CREATE'- of 'PARTYMGR_ADMIN'-permissie nodig</value>
+        <value xml:lang="nl">Toegangfout: om service 'createCommunicationEvent' te draaien heb je 'PARTYMGR_CREATE'- of 'PARTYMGR_ADMIN'-permissie nodig</value>
         <value xml:lang="pt-BR">Erro de segurança: para executar PARTYMGR_CREATE ou PARTYMGR_ADMIN você deve ter a permissão PARTYMGR_CREATE ou PARTYMGR_ADMIN</value>
         <value xml:lang="pt-PT">Erro de Segurança: para criar Comunicação de Acontecimento necessita permissão para PARTYMGR_CREATE ou PARTYMGR_ADMIN</value>
         <value xml:lang="ro">EROARE De Siguranta : pentru a folosi createCommunicationEvent trebuie sa ai permisul PARTYMGR_CREATE sau PARTYMGR_ADMIN</value>
@@ -5447,7 +5453,7 @@
         <value xml:lang="hi-IN">सुरक्षा त्रुटि: createCommunicationEventPurpose चलाने के लिए आप को PARTYMGR_CREATE या PARTYMGR_ADMIN की अनुमति होना चाहिए</value>
         <value xml:lang="it">Errore Sicurezza : per eseguire createCommunicationEventPurpose tu devi avere il permesso PARTYMGR_CREATE o PARTYMGR_ADMIN</value>
         <value xml:lang="ja">セキュリティエラー: 通信イベント目的の作成には、PARTYMGR_CREATE または PARTYMGR_ADMIN 権限が必要です</value>
-        <value xml:lang="nl">Toegangfout: om SCIPIO -service 'createCommunicationEventPurpose' te draaien heb je 'PARTYMGR_CREATE'- of 'PARTYMGR_ADMIN'-permissie nodig</value>
+        <value xml:lang="nl">Toegangfout: om service 'createCommunicationEventPurpose' te draaien heb je 'PARTYMGR_CREATE'- of 'PARTYMGR_ADMIN'-permissie nodig</value>
         <value xml:lang="pt-BR">Erro de segurança: para executar createCommunicationEventPurpose você deve ter a permissão PARTYMGR_CREATE ou PARTYMGR_ADMIN</value>
         <value xml:lang="pt-PT">Erro de Segurança: para criar Objectivo de Comunicação de Acontecimento necessita permissão para PARTYMGR_CREATE ou PARTYMGR_ADMIN</value>
         <value xml:lang="ro">EROARE De Siguranta : pentru a folosi createCommunicationEventPurpose trebuie sa ai permisul PARTYMGR_CREATE sau PARTYMGR_ADMIN</value>
@@ -5466,7 +5472,7 @@
         <value xml:lang="hi-IN">सुरक्षा त्रुटि: createCommunicationEventRole चलाने के लिए आप को PARTYMGR_CREATE या PARTYMGR_ADMIN की अनुमति होना चाहिए</value>
         <value xml:lang="it">Errore Sicurezza : per eseguire createCommunicationEventRole tu devi avere il permesso PARTYMGR_CREATE o PARTYMGR_ADMIN</value>
         <value xml:lang="ja">セキュリティエラー: 通信イベントロールの作成には、PARTYMGR_CREATE または PARTYMGR_ADMIN 権限が必要です</value>
-        <value xml:lang="nl">Toegangfout: om SCIPIO -service 'createCommunicationEventRole' te draaien heb je 'PARTYMGR_CREATE'- of 'PARTYMGR_ADMIN'-permissie nodig</value>
+        <value xml:lang="nl">Toegangfout: om service 'createCommunicationEventRole' te draaien heb je 'PARTYMGR_CREATE'- of 'PARTYMGR_ADMIN'-permissie nodig</value>
         <value xml:lang="pt-BR">Erro de segurança: para executar createCommunicationEventRole você deve ter a permissão PARTYMGR_CREATE ou PARTYMGR_ADMIN</value>
         <value xml:lang="pt-PT">Erro de Segurança: para criar Função de Comunicação de Acontecimento necessita permissão para PARTYMGR_CREATE ou PARTYMGR_ADMIN</value>
         <value xml:lang="ro">EROARE De Siguranta : pentru a folosi  createCommunicationEventRole trebuie sa ai permisul PARTYMGR_CREATE sau PARTYMGR_ADMIN</value>
@@ -5486,8 +5492,7 @@
         <value xml:lang="zh">缺少上传文件...</value>
         <value xml:lang="zh-TW">缺少上傳檔...</value>
     </property>
-    <!-- SCIPIO: TODO: Localize (label content changed, originals in PartyCreateNewBillingAddressCreditCard) -->
-    <property key="PartyCreateNewBillingAddress">
+    <property key="PartyCreateNewBillingAddress"><!-- SCIPIO: TODO: Localize (label content changed, originals in PartyCreateNewBillingAddressCreditCard) -->
         <value xml:lang="ar">خلق عنوان فوترة جديد لهذة البطاقة الإئتمانية</value>
         <value xml:lang="cs">Zložte novou fakturační adresu</value>
         <value xml:lang="de">Neue Rechnungsadresse anlegen</value>
@@ -5814,7 +5819,7 @@
         <value xml:lang="hi-IN">सुरक्षा त्रुटि: createPartyClassificationGroup चलाने के लिए आप को PARTYMGR_CREATE या PARTYMGR_ADMIN की अनुमति होना चाहिए</value>
         <value xml:lang="it">Errore Sicurezza : per eseguire createPartyClassificationGroup tu devi avere il permesso PARTYMGR_CREATE o PARTYMGR_ADMIN</value>
         <value xml:lang="ja">セキュリティエラー: 取引先分類グループの作成には、PARTYMGR_CREATE または PARTYMGR_ADMIN 権限が必要です</value>
-        <value xml:lang="nl">Toegangfout: om SCIPIO -service 'createPartyClassificationGroup' te draaien heb je 'PARTYMGR_CREATE' of 'PARTYMGR_ADMIN'-permissie nodig</value>
+        <value xml:lang="nl">Toegangfout: om service 'createPartyClassificationGroup' te draaien heb je 'PARTYMGR_CREATE' of 'PARTYMGR_ADMIN'-permissie nodig</value>
         <value xml:lang="pt-BR">Erro de segurança: para executar createPartyClassificationGroup você deve ter permissão PARTYMGR_CREATE ou PARTYMGR_ADMIN</value>
         <value xml:lang="ro">EROARE De Siguranta : pentru a folosi createPartyClassificationGroup trebuie sa ai permisul PARTYMGR_CREATE sau PARTYMGR_ADMIN</value>
         <value xml:lang="ru">Ошибка доступа: для запуска createPartyClassificationGroup у вас должны быть права PARTYMGR_CREATE или PARTYMGR_ADMIN</value>
@@ -5832,7 +5837,7 @@
         <value xml:lang="hi-IN">सुरक्षा त्रुटि: createPartyClassification चलाने के लिए आप को PARTYMGR_CREATE या PARTYMGR_ADMIN की अनुमति होना चाहिए</value>
         <value xml:lang="it">Errore Sicurezza : per eseguire createPartyClassification tu devi avere il permesso PARTYMGR_CREATE o PARTYMGR_ADMIN</value>
         <value xml:lang="ja">セキュリティエラー: 取引先分類の作成には、PARTYMGR_CREATE または PARTYMGR_ADMIN 権限が必要です</value>
-        <value xml:lang="nl">Toegangfout: om SCIPIO -service 'createPartyClassification' te draaien heb je 'PARTYMGR_CREATE' of 'PARTYMGR_ADMIN'-permissie nodig</value>
+        <value xml:lang="nl">Toegangfout: om service 'createPartyClassification' te draaien heb je 'PARTYMGR_CREATE' of 'PARTYMGR_ADMIN'-permissie nodig</value>
         <value xml:lang="pt-BR">Erro de segurança: para executar createPartyClassification você deve ter permissão PARTYMGR_CREATE ou PARTYMGR_ADMIN</value>
         <value xml:lang="ro">EROARE De Siguranta : pentru a executa createPartyClassification trebuie sa ai permisul PARTYMGR_CREATE sau PARTYMGR_ADMIN</value>
         <value xml:lang="ru">Ошибка доступа: для запуска createPartyClassification у вас должны быть права PARTYMGR_CREATE или PARTYMGR_ADMIN</value>
@@ -5849,7 +5854,7 @@
         <value xml:lang="hi-IN">सुरक्षा त्रुटि: createPartyRole चलाने के लिए आप को PARTYMGR_CREATE या PARTYMGR_ADMIN की अनुमति होना चाहिए</value>
         <value xml:lang="it">Errore sicurezza: per eseguire il servizio createPartyRole tu devi avere il permesso PARTYMGR_ROLE_CREATE o PARTYMGR_ADMIN</value>
         <value xml:lang="ja">セキュリティエラー: 取引先ロールの作成には、PARTYMGR_ROLE_CREATE または PARTYMGR_ADMIN 権限が必要です</value>
-        <value xml:lang="nl">Toegangfout: om SCIPIO -service 'createPartyRole' te draaien heb je 'PARTYMGR_CREATE' of 'PARTYMGR_ADMIN'-permissie nodig</value>
+        <value xml:lang="nl">Toegangfout: om service 'createPartyRole' te draaien heb je 'PARTYMGR_CREATE' of 'PARTYMGR_ADMIN'-permissie nodig</value>
         <value xml:lang="pt-BR">Erro de segurança: para executar createPartyRole você deve ter permissão PARTYMGR_ROLE_CREATE ou PARTYMGR_ADMIN</value>
         <value xml:lang="ru">Ошибка доступа: для запуска createPartyRole у вас должны быть права PARTYMGR_ROLE_CREATE или PARTYMGR_ADMIN</value>
         <value xml:lang="th">Security Error: ผิดพลาด ! ในการสร้างสถานะกลุ่มผู้ใช้ คุณต้องได้รับความยินยอมจาก PARTYMGR_CREATE หรือ PARTYMGR_ADMIN ก่อน</value>
@@ -5866,7 +5871,7 @@
         <value xml:lang="hi-IN">सुरक्षा त्रुटि: createPostalAddressBoundary चलाने के लिए आप को PARTYMGR_CREATE या PARTYMGR_ADMIN की अनुमति होना चाहिए</value>
         <value xml:lang="it">Errore Sicurezza : per eseguire createPostalAddressBoundary tu devi avere il permesso PARTYMGR_CREATE o PARTYMGR_ADMIN</value>
         <value xml:lang="ja">セキュリティエラー: 郵便番号地域の作成には、PARTYMGR_CREATE または PARTYMGR_ADMIN 権限が必要です</value>
-        <value xml:lang="nl">Toegangfout: om SCIPIO -service 'createPostalAddressBoundary' te draaien heb je 'PARTYMGR_CREATE' of 'PARTYMGR_ADMIN'-permissie nodig</value>
+        <value xml:lang="nl">Toegangfout: om service 'createPostalAddressBoundary' te draaien heb je 'PARTYMGR_CREATE' of 'PARTYMGR_ADMIN'-permissie nodig</value>
         <value xml:lang="pt-BR">Erro de segurança: para executar createPostalAddressBoundary você deve ter permissão PARTYMGR_CREATE ou PARTYMGR_ADMIN</value>
         <value xml:lang="ro">EROARE De Siguranta : pentru  eseguire createPostalAddressBoundary trebuie sa ai permisulPARTYMGR_CREATE sau PARTYMGR_ADMIN</value>
         <value xml:lang="ru">Ошибка доступа: для запуска createPostalAddressBoundary у вас должны быть права PARTYMGR_CREATE или PARTYMGR_ADMIN</value>
@@ -5899,7 +5904,7 @@
         <value xml:lang="hi-IN">सुरक्षा त्रुटि: createVendor चलाने के लिए आप को PARTYMGR_CREATE या PARTYMGR_ADMIN की अनुमति होना चाहिए</value>
         <value xml:lang="it">Errore Sicurezza : per eseguire createVendor tu devi avere il permesso PARTYMGR_CREATE o PARTYMGR_ADMIN</value>
         <value xml:lang="ja">セキュリティエラー: ベンダの作成には、PARTYMGR_CREATE または PARTYMGR_ADMIN 権限が必要です</value>
-        <value xml:lang="nl">Toegangfout: om SCIPIO -service 'createVendor' te draaien heb je 'PARTYMGR_CREATE' of 'PARTYMGR_ADMIN'-permissie nodig</value>
+        <value xml:lang="nl">Toegangfout: om service 'createVendor' te draaien heb je 'PARTYMGR_CREATE' of 'PARTYMGR_ADMIN'-permissie nodig</value>
         <value xml:lang="pt-BR">Erro de segurança: para executar createVendor você deve ter permissão PARTYMGR_CREATE ou PARTYMGR_ADMIN</value>
         <value xml:lang="ro">EROARE De Siguranta : pentru a executa createVendor trebuie sa ai permisul PARTYMGR_CREATE sau PARTYMGR_ADMIN</value>
         <value xml:lang="ru">Ошибка доступа: для запуска createVendor у вас должны быть права PARTYMGR_CREATE или PARTYMGR_ADMIN</value>
@@ -5977,7 +5982,7 @@
     </property>
     <property key="PartyTemporaryPassword">
         <value xml:lang="ar">سوف يستلم الشخص كلمة سر مؤقتة عن طريق البريد الإلكتروني</value>
-        <value xml:lang="de">Die Person wird ein provisorischen Passwort per E-Mail erhalten.</value>
+        <value xml:lang="de">Die Person wird ein provisorisches Passwort per E-Mail erhalten.</value>
         <value xml:lang="en">The person will receive a temporary password by email.</value>
         <value xml:lang="es">La persona recibirá una contraseña temporal por el email.</value>
         <value xml:lang="fr">La personne recevra un mot de passe provisoire par courriel.</value>
@@ -6061,7 +6066,7 @@
         <value xml:lang="hi-IN">सुरक्षा त्रुटि: deletePartyRole चलाने के लिए आप को PARTYMGR_DELETE या PARTYMGR_ADMIN की अनुमति होना चाहिए</value>
         <value xml:lang="it">Errore sicurezza: per eseguire il servizio deletePartyRole tu devi avere il permesso PARTYMGR_DELETE o PARTYMGR_ADMIN</value>
         <value xml:lang="ja">セキュリティエラー: 取引先ロールの削除には、PARTYMGR_DELETE または PARTYMGR_ADMIN 権限が必要です</value>
-        <value xml:lang="nl">Toegangfout: om SCIPIO -service 'deletePartyRole' te draaien heb je 'PARTYMGR_DELETE'- of 'PARTYMGR_ADMIN'-permissie nodig</value>
+        <value xml:lang="nl">Toegangfout: om service 'deletePartyRole' te draaien heb je 'PARTYMGR_DELETE'- of 'PARTYMGR_ADMIN'-permissie nodig</value>
         <value xml:lang="pt-BR">Erro de segurança: para executar deletePartyRole você deve ter permissão PARTYMGR_DELETE ou PARTYMGR_ADMIN</value>
         <value xml:lang="ru">Ошибка доступа: для запуска deletePartyRole у вас должны быть права PARTYMGR_DELETE или PARTYMGR_ADMIN</value>
         <value xml:lang="th">Security Error: ผิดพลาด ! ในการลบสถานะกลุ่มผู้ใช้ คุณต้องได้รับความยินยอมจาก PARTYMGR_DELETE หรือ PARTYMGR_ADMIN ก่อน</value>
@@ -6078,7 +6083,7 @@
         <value xml:lang="hi-IN">सुरक्षा त्रुटि: deleteVendor चलाने के लिए आप को PARTYMGR_DELETE या PARTYMGR_ADMIN की अनुमति होना चाहिए</value>
         <value xml:lang="it">Errore Sicurezza : per eseguire deleteVendor tu devi avere il permesso PARTYMGR_CREATE o PARTYMGR_ADMIN</value>
         <value xml:lang="ja">セキュリティエラー: ベンダの削除には、PARTYMGR_DELETE または PARTYMGR_ADMIN 権限が必要です</value>
-        <value xml:lang="nl">Toegangfout: om SCIPIO -service 'deleteVendor' te draaien heb je 'PARTYMGR_DELETE'- of 'PARTYMGR_ADMIN'-permissie nodig</value>
+        <value xml:lang="nl">Toegangfout: om service 'deleteVendor' te draaien heb je 'PARTYMGR_DELETE'- of 'PARTYMGR_ADMIN'-permissie nodig</value>
         <value xml:lang="pt-BR">Erro de segurança: para executar deleteVendor você deve ter permissão PARTYMGR_DELETE ou PARTYMGR_ADMIN</value>
         <value xml:lang="ro">EROARE De Siguranta : pentru a executa deleteVendor trebuie sa ai permisul PARTYMGR_CREATE sau PARTYMGR_ADMIN</value>
         <value xml:lang="ru">Ошибка доступа: для запуска deleteVendor у вас должны быть права PARTYMGR_CREATE или PARTYMGR_ADMIN</value>
@@ -6593,7 +6598,7 @@
     </property>
     <property key="PartyEmailsFromUnknownOrigin">
         <value xml:lang="ar">رسائل بريد إلكتروني من مصدر مجهول</value>
-        <value xml:lang="de">E-Mail unbekannter Herkunft</value>
+        <value xml:lang="de">E-Mail von unbekannter Herkunft</value>
         <value xml:lang="en">Emails from UN-known origin</value>
         <value xml:lang="fr">Mél issu d'une origine inconnue</value>
         <value xml:lang="hi-IN">अज्ञात मूल से ईमेल</value>
@@ -7209,7 +7214,7 @@
     </property>
     <property key="PartyHeightNotValidNumber">
         <value xml:lang="ar">الطول ليس رقم صحيح</value>
-        <value xml:lang="de">Grösse ist keine gültige Zahl</value>
+        <value xml:lang="de">Größe ist keine gültige Zahl</value>
         <value xml:lang="en">Height is not a valid number</value>
         <value xml:lang="es">Altura no tiene un valor válido</value>
         <value xml:lang="fr">La taille n'est pas un nombre valide</value>
@@ -7228,7 +7233,7 @@
     <property key="PartyHideOld">
         <value xml:lang="ar">إخفاء القديم</value>
         <value xml:lang="cs">Skrýt původní</value>
-        <value xml:lang="de">Altes ausblenden</value>
+        <value xml:lang="de">Alte ausblenden</value>
         <value xml:lang="en">Hide Old</value>
         <value xml:lang="es">Guardar historial</value>
         <value xml:lang="fr">Masquer l'historique</value>
@@ -8093,6 +8098,7 @@
         <value xml:lang="zh-TW">表列類型</value>
     </property>
     <property key="PartyLoginFailed">
+        <value xml:lang="de">Anmeldung fehlgeschlagen</value>
         <value xml:lang="en">Login Failed</value>
     </property>
     <property key="PartyLoggedInUsers">
@@ -8150,7 +8156,6 @@
         <value xml:lang="vi">Tìm kiếm chi tiết (Mech) của Liên lạc (Contact)</value>
         <value xml:lang="zh">查找联系方法</value>
         <value xml:lang="zh-TW">尋找聯絡方法</value>
-
     </property>
     <property key="PartyLookupInternalOrganization">
         <value xml:lang="ar">إيجاد منظمة داخلية</value>
@@ -9803,6 +9808,7 @@
         <value xml:lang="zh-TW">如果不重新新建安全群組的話,不能修改這個.</value>
     </property>
     <property key="PartyNotificationMailActivated">
+        <value xml:lang="de">Nutzer Kontoaktivierung Mailbenachrichtigung</value>
         <value xml:lang="en">User Account Activated Notification Mail</value>
         <value xml:lang="zh">会员账户激活通知邮件</value>
         <value xml:lang="zh-TW">團體帳戶啓用通知郵件</value>
@@ -10245,7 +10251,7 @@
     </property>
     <property key="PartyPartyIDUserLoginID">
         <value xml:lang="ar">دليل الطرف/دليل اسم المستخدم</value>
-        <value xml:lang="de">Nutzer ID/Benuterzanmeldung ID</value>
+        <value xml:lang="de">Nutzer ID/Benutzeranmeldung ID</value>
         <value xml:lang="en">PartyID/UserLoginID</value>
         <value xml:lang="es">Código / usuario</value>
         <value xml:lang="fr">Acteur / ident. de connexion</value>
@@ -10501,7 +10507,7 @@
     </property>
     <property key="PartyPassportExpireDate">
         <value xml:lang="ar">تاريخ إنتهاء صلاحية جواز السفر</value>
-        <value xml:lang="de">Reisepass/Personalausweis Ablauffrist</value>
+        <value xml:lang="de">Ablauffrist Reisepass/Personalausweis</value>
         <value xml:lang="en">Passport Expire Date</value>
         <value xml:lang="es">Fecha de expiración del pasaporte</value>
         <value xml:lang="fr">Date d'expiration du passeport</value>
@@ -10711,7 +10717,7 @@
         <value xml:lang="hi-IN">सुरक्षा त्रुटि: ${methodShortDescription} चलाने के लिए आप को PARTYMGR${securityAction} या PARTYMGR_ADMIN की अनुमति होना चाहिए</value>
         <value xml:lang="it">Errore Sicurezza : per eseguire ${methodShortDescription} tu devi avere i permessi PARTYMGR${securityAction} o PARTYMGR_ADMIN</value>
         <value xml:lang="ja">セキュリティエラー: ${methodShortDescription} の実行には、PARTYMGR${securityAction} または PARTYMGR_ADMIN 権限が必要です</value>
-        <value xml:lang="nl">Toegangfout: om SCIPIO -service '${methodShortDescription}' te draaien heb je 'PARTYMGR${securityAction}'- of 'PARTYMGR_ADMIN'-permissie nodig</value>
+        <value xml:lang="nl">Toegangfout: om service '${methodShortDescription}' te draaien heb je 'PARTYMGR${securityAction}'- of 'PARTYMGR_ADMIN'-permissie nodig</value>
         <value xml:lang="pt-BR">Erro de segurança: para executar ${methodShortDescription} você deve ter a permissão PARTYMGR${securityAction} ou PARTYMGR_ADMIN</value>
         <value xml:lang="ro">EROARE De Siguranta : pentru a executa ${methodShortDescription} trbuie sa ai permisul PARTYMGR${securityAction} sau PARTYMGR_ADMIN</value>
         <value xml:lang="ru">Ошибка доступа: для запуска ${methodShortDescription} у вас должны быть права PARTYMGR${securityAction} или PARTYMGR_ADMIN</value>
@@ -11371,7 +11377,7 @@
     </property>
     <property key="PartyQuantityPurchased">
         <value xml:lang="ar">الكمية التي تم شراؤها</value>
-        <value xml:lang="de">Menge eingekauft</value>
+        <value xml:lang="de">Gekaufte Menge</value>
         <value xml:lang="en">Quantity Purchased</value>
         <value xml:lang="es">Cantidad comprada</value>
         <value xml:lang="fr">Quantité achetée</value>
@@ -11389,7 +11395,7 @@
     </property>
     <property key="PartyQuickAddList">
         <value xml:lang="ar">إضافة سريعة لقائمة التسوق</value>
-        <value xml:lang="de">Schnell zur Einkaufliste hinzufügen</value>
+        <value xml:lang="de">Schnell zur Einkaufsliste hinzufügen</value>
         <value xml:lang="en">Quick Add To Shopping List</value>
         <value xml:lang="es">Añadir rápido</value>
         <value xml:lang="fr">Ajout rapide à la liste d'achats</value>
@@ -11421,7 +11427,7 @@
     <property key="PartyReceivePasswordByEmail">
         <value xml:lang="ar">سوف يتم إرسال كلمة السر اليك بالبريد الإلكتروني بعد الموافقة على حسابك</value>
         <value xml:lang="cs">Heslo oddržíte e-mailem jakmile bude Váš účet aktivován</value>
-        <value xml:lang="de">Sie werden ein Passwort per E-Mail erhalten, wenn Ihr neues Konto freigegeben wird</value>
+        <value xml:lang="de">Sie werden ein Passwort per E-Mail erhalten, wenn Ihr neues Konto freigeschaltet wird</value>
         <value xml:lang="en">You will receive a password by email when your new account is approved</value>
         <value xml:lang="es">Recibirá la contraseña por email cuando la nueva cuenta sea aprobada</value>
         <value xml:lang="fr">Vous recevrez votre mot de passe par mél quand votre compte sera validé</value>
@@ -11748,7 +11754,7 @@
     <property key="PartyReplyAll">
         <value xml:lang="ar">الرد على الجميع</value>
         <value xml:lang="cs">Odpovědět všem</value>
-        <value xml:lang="de">Allen Antworten</value>
+        <value xml:lang="de">Allen antworten</value>
         <value xml:lang="en">Reply All</value>
         <value xml:lang="fr">Répondre à tous</value>
         <value xml:lang="hi-IN">सभी को जवाब दे</value>
@@ -11874,6 +11880,7 @@
         <value xml:lang="zh-TW">角色類型來自</value>
     </property>
     <property key="PartyRoleTypeNotFoundForTheParty">
+        <value xml:lang="de">Rollentyp ${roleTypeId} für diesen Nutzer nicht gefunden.</value>
         <value xml:lang="en">Role Type ${roleTypeId} not found for the user.</value>
         <value xml:lang="fr">Le rôle ${roleTypeId} n'est pas présent pour cet acteur.</value>
         <value xml:lang="zh">没有找到这个会员的角色类型${roleTypeId}。</value>
@@ -11917,6 +11924,7 @@
     </property>
     <property key="PartyRoleTypeIdMissing">
         <value xml:lang="ar">دليل نوع الطرف مفقود</value>
+        <value xml:lang="de">Rollentyp ID fehlt.</value>
         <value xml:lang="en">Role Type ID is missing.</value>
         <value xml:lang="fr">Rôle manquant</value>
         <value xml:lang="hi-IN">भूमिका प्रकार क्रमांक गायब है|</value>
@@ -12282,7 +12290,7 @@
         <value xml:lang="hi-IN">ContactMechs प्रकार POSTAL_ADDRESS के लिए यह सेवा (createContactMech) उपयोग नहीं होना चाहिए, createPostalAddress सेवा का उपयोग करें</value>
         <value xml:lang="it">Questo servizio (createContactMech) non dovrebbe essere usaato per POSTAL_ADDRESS tipo ContactMechs, usare il servizio createPostalAddress</value>
         <value xml:lang="ja">このサービス (createContactMech) は種類 POSTAL_ADDRESS の連絡方法では使用できません、createPostalAddress サービスを使用してください</value>
-        <value xml:lang="nl">Fout: Deze SCIPIO -service (createContactMech) should not be used for POSTAL_ADDRESS type ContactMechs, use the createPostalAddress service</value>
+        <value xml:lang="nl">Fout: Deze service (createContactMech) should not be used for POSTAL_ADDRESS type ContactMechs, use the createPostalAddress service</value>
         <value xml:lang="pt-BR">Este serviço (createContactMech) não deveria ser usado para mecanismos de contato do tipo POSTAL_ADDRESS, use o serviço createPostalAddress</value>
         <value xml:lang="pt-PT">Este serviço (criar mecanismo de contacto)não deverá ser usado nos Tipos de Mecanismos de Contacto, utilize o serviço de "Criar Endereço Postal"</value>
         <value xml:lang="ro">Acest serviciu (createContactMech) nu ar trebbi sa fie utilizat pentru POSTAL_ADDRESS tip ContactMechs, utilizati serviciul createPostalAddress</value>
@@ -12301,7 +12309,7 @@
         <value xml:lang="hi-IN">ContactMechs प्रकार TELECOM_NUMBER के लिए यह सेवा (createContactMech) उपयोग नहीं होना चाहिए, createTelecomNumber सेवा का उपयोग करें</value>
         <value xml:lang="it">Questo servizio (createContactMech) non dovrebbe essere usaato per TELECOM_NUMBER tipo ContactMechs, usare il servizio createTelecomNumber</value>
         <value xml:lang="ja">このサービス (createContactMech) は種類 TELECOM_NUMBER の連絡方法では使用できません、createTelecomNumber サービスを使用してください</value>
-        <value xml:lang="nl">Fout: Deze SCIPIO -service (createContactMech) should not be used for TELECOM_NUMBER type ContactMechs, use the createTelecomNumber service</value>
+        <value xml:lang="nl">Fout: Deze service (createContactMech) should not be used for TELECOM_NUMBER type ContactMechs, use the createTelecomNumber service</value>
         <value xml:lang="pt-BR">Este serviço (createContactMech) não deveria ser usado para mecanismos de contato do tipo TELECOM_NUMBER, use o serviço createTelecomNumber</value>
         <value xml:lang="pt-PT">Este serviço (criar Mecanismo de Contacto) não deverá ser utilizado nos tipos de mecanismos de contacto telefónico, utilize o serviço "Criar Número de Telefone"</value>
         <value xml:lang="ro">Acest serviciu (createContactMech) nu ar trebbi sa fie utilizat pentru TELECOM_NUMBER tip ContactMechs, utilizati serviciul createTelecomNumber</value>
@@ -12451,7 +12459,7 @@
     <property key="PartyShowOld">
         <value xml:lang="ar">إظهار القديم</value>
         <value xml:lang="cs">Ukázat původní</value>
-        <value xml:lang="de">Altes zeigen</value>
+        <value xml:lang="de">Alte zeigen</value>
         <value xml:lang="en">Show Old</value>
         <value xml:lang="es">Mostrar historial</value>
         <value xml:lang="fr">Historique</value>
@@ -12747,6 +12755,9 @@
         <value xml:lang="vi">Thêm thông tin thuế</value>
         <value xml:lang="zh">添加税务信息</value>
         <value xml:lang="zh-TW">增加稅務資訊</value>
+    </property>
+    <property key="PartyTaxAuthPartyAndGeoNotAvailable">
+        <value xml:lang="en">Tax authority is not availble for provided Tax Authority Party and Tax Authority Geo.</value>
     </property>
     <property key="PartyTaxAuthInfos">
         <value xml:lang="ar">معلومات الضريبة</value>
@@ -13119,7 +13130,7 @@
     <property key="PartyTotal">
         <value xml:lang="ar">الإجمالي</value>
         <value xml:lang="cs">Celkem</value>
-        <value xml:lang="de">Total</value>
+        <value xml:lang="de">Gesamt</value>
         <value xml:lang="en">Total</value>
         <value xml:lang="es">Total</value>
         <value xml:lang="fr">Total</value>

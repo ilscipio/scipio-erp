@@ -6,13 +6,17 @@
     display:inline-block;
   }
   .setupAccounting-selectGL-select {
-    max-width: 50%!important;
-    width: 50%!important;
+    max-width: 30%!important;
+    width: 30%!important;
     margin-right:0.5em;
   }
   .setupAccounting-selectGL-select, .setupAccounting-selectGL-submit-buttons {
     vertical-align:top; <#-- firefox align issue hack -->
   }
+  .setupAccounting-preferences {
+  	clear: right;
+  }
+  
 </style>
 
 <@script>
@@ -59,6 +63,11 @@
 	        <@menu type="button" id="setupAccounting-selectGL-submit-buttons" class="+setupAccounting-selectGL-submit-buttons">
 	          <@menuitem type="link" contentId="setupAccounting-selectGL-submit" href="javascript:void(0);" text=uiLabelMap.CommonSelect class="+${styles.action_run_session!} ${styles.action_update!}"/>
 	          <@menuitem type="link" contentId="setupAccounting-selectGL-submit-continue" href="javascript:void(0);" text=uiLabelMap.SetupSelectAndContinue class="+${styles.action_run_session!} ${styles.action_continue!}"/>
+	          <li class="${styles.action_run_session!} ${styles.action_modify!} setupAccounting-preferences">
+		          <@modal id="acctg-preferences" label=uiLabelMap.AccountingPreference linkClass="tiny button">    
+		    		<@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditAcctgPreferences"/>
+				  </@modal>
+			  </li>	          
 	        </@menu>
 	    </@field>   
     </#if>     
@@ -73,7 +82,7 @@
   </@form>
   
   <#if !accountingGLs?has_content>
-  	<@alert type="info">
+  	<@alert type="warning">
   		${uiLabelMap.AccountingScipioAccountingStandardsInfo}
   		<ul>  		
   			<#list scipioAcctgStandardAddons.keySet() as addon>

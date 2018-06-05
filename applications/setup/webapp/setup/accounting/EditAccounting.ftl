@@ -36,16 +36,10 @@ under the License.
 		if (typeof Foundation !== "undefined") { 
 			$('ul.tabs').on('toggled', customToggleTab);
 			tabs = $('li:first-child a[data-toggle="tab"]').foundation();			
-			customToggleTab(null, tabs[0]);
-			$("#acctg-preferences-link a").click(function() {
-				$("#modal_acctg-preferences").foundation('reveal', 'open');
-			});			
+			customToggleTab(null, tabs[0]);					
 		} else if (typeof  $.fn.tooltip.Constructor.VERSION!== "undefined") { 
 			$('a[data-toggle="tab"]').on('shown.bs.tab', customToggleTab);			
-			customToggleTab($('li:first-child a[data-toggle="tab"]').tab()[0]); 
-			$("#acctg-preferences-link a").click(function() {
-				$("#modal_acctg-preferences").modal('show'); 
-			});
+			customToggleTab($('li:first-child a[data-toggle="tab"]').tab()[0]);
 		} else {
 			console.log("Bootstrap or Foundation cannot be found");			 
 		}		

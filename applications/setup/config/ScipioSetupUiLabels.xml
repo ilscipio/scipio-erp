@@ -171,15 +171,7 @@
     </property>
     <property key="SetupAccountingPreferencesCurrencies">
     	<value xml:lang="en">Currencies</value>
-    </property>
-    <property key="SetupAccountingPreferencesInvoices">
-    	<value xml:lang="en">Invoices</value>
-    </property>
-    <property key="SetupAccountingPreferencesOrders">
-    	<value xml:lang="en">Orders</value>
-    </property>
-    <property key="SetupAccountingPreferencesQuotes">
-    	<value xml:lang="en">Quotes</value>
+        <value xml:lang="en">Währungen</value>
     </property>
     <property key="SetupAccountingCreateNewTimePeriod">
     	<value xml:lang="en">Create new time period</value>

@@ -1675,7 +1675,8 @@ public class RequestHandler {
             // There is virtually no case where this is not a coding error we want to catch, and if we don't show an error,
             // then we can't use this as a security check. Likely also to make some template errors clearer.
             if (requestMap == null) {
-                Debug.logError("Scipio: Cannot build link: could not locate the expected request '" + requestUri + "' in controller config", module);
+                Debug.log(getMakeLinkErrorLogLevel(request), null, "Scipio: Cannot build link: could not locate the expected request '" 
+                        + requestUri + "' in controller config", module);
                 return null; 
             }
         }
@@ -1798,6 +1799,11 @@ public class RequestHandler {
         //Debug.logInfo("Making URL, encode=" + encode + " for URL: " + newURL + "\n encodedUrl: " + encodedUrl, module);
 
         return encodedUrl;
+    }
+    
+    private static int getMakeLinkErrorLogLevel(HttpServletRequest request) {
+        Integer level = (Integer) request.getAttribute("_SCP_LINK_ERROR_LEVEL_");
+        return (level != null) ? level : Debug.ERROR;
     }
 
     /**

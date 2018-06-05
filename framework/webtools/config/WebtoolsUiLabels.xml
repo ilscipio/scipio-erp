@@ -18,7 +18,7 @@
     specific language governing permissions and limitations
     under the License.
 -->
-<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="ConnectionPoolStatus">
         <value xml:lang="en">Connection Pool Status</value>
         <value xml:lang="fr">État du pool de connexions</value>
@@ -644,6 +644,7 @@
     </property>
     <property key="PageTitleProgramExport">
         <value xml:lang="en">Programmable Export</value>
+        <value xml:lang="zh">可编程导出</value>
     </property>
     <property key="PageTitleRunService">
         <value xml:lang="de">Dienst starten</value>
@@ -846,6 +847,7 @@
         <value xml:lang="en">(may take some time to load)</value>
         <value xml:lang="fr">(cela peut prendre un certain temps à charger)</value>
         <value xml:lang="vi">(đợi chút thời gian)</value>
+        <value xml:lang="zh">(可能会花些时间载入)</value>
     </property>
     <property key="WebtoolsAsync">
         <value xml:lang="de">Asynchron</value>
@@ -2481,6 +2483,10 @@
         <value xml:lang="vi">Tại liên kết giữa các Địa lý</value>
         <value xml:lang="zh">链接地理（把它们关联到一个地理位置）</value>
         <value xml:lang="zh-TW">連結地理(把它們結合到一個地理位置)</value>
+    </property>
+    <property key="WebtoolsGeoPoints">
+        <value xml:lang="en">GEO Points</value>
+        <value xml:lang="zh">地理点</value>
     </property>
     <property key="WebtoolsGeosSelect">
         <value xml:lang="de">Zu verknüpfende Zone wählen</value>
@@ -5740,6 +5746,16 @@
         <value xml:lang="vi">Cấp độ Verbose quy định thông tin sự kiện rất hữu ích để khắc phục sự cố của ứng dụng.</value>
         <value xml:lang="zh">冗长级别会细颗粒地指出应用程序进行情况的信息，适于调试程序。</value>
         <value xml:lang="zh-TW">冗長級別會細顆粒地指出應用程式進行情況的資訊,適于偵錯程式.</value>
+    </property>
+    <property key="WebtoolsViewAsPdfTheHtmlLayoutDemo">
+        <value xml:lang="en">View as Pdf the html layout : testing macro template ftl and global render (but not forcing the screen coherence)</value>
+        <value xml:lang="fr">Voir en Pdf la disposition html : permet de tester les modèles de macro ftl et le rendu global (mais pas forcement la cohérence d'écran)</value>
+        <value xml:lang="zh">按PDF浏览网页版式：测试宏模版FTL和全局渲染程序(但是不强制页面一致)</value>
+    </property>
+    <property key="WebtoolsViewAsTextTheHtmlLayoutDemo">
+        <value xml:lang="en">View as text (xml, csv and text) the html layout : testing macro template ftl and global render (but not forcing the screen coherence)</value>
+        <value xml:lang="fr">Voir en text (xml, csv, text) la disposition html : permet de tester les modèles de macro ftl et le rendu global (mais pas forcement la cohérence d'écran)</value>
+        <value xml:lang="zh">按文本(XML，逗号分隔格式和文本)浏览网页版式：测试宏模版FTL和全局渲染程序(但是不强制页面一致)</value>
     </property>
     <property key="WebtoolsViewComponents">
         <value xml:lang="de">Komponenten ansehen</value>

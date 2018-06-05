@@ -18,7 +18,7 @@
     specific language governing permissions and limitations
     under the License.
 -->
-<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="CannotFindCmsform">
         <value xml:lang="de">Die CMS Form kann nicht gefunden werden!</value>
         <value xml:lang="en">Cannot find the cmsform!</value>
@@ -1034,6 +1034,7 @@
     <property key="ContentContentShow">
         <value xml:lang="en">Show Content (if visible else simply Id)</value>
         <value xml:lang="fr">Montre le contenu (si visible sinon uniquement la référence</value>
+        <value xml:lang="zh">显示内容（如果可见的话，否则只显示内容标识）</value>
     </property>
     <property key="ContentContentToOrFromErrorRetriving">
         <value xml:lang="en">Error in retrieving content To or From.</value>
@@ -1066,6 +1067,7 @@
         <value xml:lang="zh-TW">在${serviceName}中更新內容時出錯</value>
     </property>
     <property key="ContentContents">
+        <value xml:lang="ar">المحتويات</value>
         <value xml:lang="en">Contents</value>
         <value xml:lang="fr">Contenus</value>
         <value xml:lang="ja">コンテンツ</value>
@@ -1245,6 +1247,7 @@
     <property key="ContentDataResourceId">
         <value xml:lang="en">Data Resource Id</value>
         <value xml:lang="fr">Ressource de données</value>
+        <value xml:lang="zh">数据资源标识</value>
     </property>
     <property key="ContentDataResourceImage">
         <value xml:lang="ar">صورة</value>
@@ -3441,6 +3444,7 @@
         <value xml:lang="zh-TW">樹</value>
     </property>
     <property key="ContentType">
+        <value xml:lang="ar">نوع المحتوى</value>
         <value xml:lang="da">Indholdstype</value>
         <value xml:lang="de">Inhalt Typ</value>
         <value xml:lang="en">Content Type</value>
@@ -3534,6 +3538,7 @@
         <value xml:lang="zh-TW">上傳檔案類型與你選擇的不符.</value>
     </property>
     <property key="ContentUploadedFile">
+        <value xml:lang="ar">ملف التحميل</value>
         <value xml:lang="da">Uploadet fil</value>
         <value xml:lang="en">Uploaded File</value>
         <value xml:lang="de">Datei-Upload</value>
@@ -3683,6 +3688,12 @@
         <value xml:lang="zh">联系方式列表视图</value>
         <value xml:lang="zh-TW">聯絡清單檢視</value>
     </property>
+    <property key="ContentWebSitePathAliasCreate">
+        <value xml:lang="de">Neuen Pfad Alias erstellen</value>
+        <value xml:lang="en">Create New Path Alias</value>
+        <value xml:lang="nl">Aanmaken Nieuwe Path Alias</value>
+        <value xml:lang="zh">新建路径别名</value>
+    </property>  
     <property key="ContentWebSiteContent">
         <value xml:lang="da">Webside indhold</value>
         <value xml:lang="de">Webseite Inhalt</value>
@@ -7369,6 +7380,12 @@
         <value xml:lang="zh">站点列表</value>
         <value xml:lang="zh-TW">網站清單</value>
     </property>
+    <property key="PageTitleEditWebSitePathAlias">
+        <value xml:lang="de">WebSite Pfad Alias bearbeiten</value>
+        <value xml:lang="en">Edit WebSite Path Alias</value>
+        <value xml:lang="nl">Wijzigen WebSite Path Alias</value>
+        <value xml:lang="zh">编辑网站路径别名</value>
+    </property> 
     <property key="PageTitleLookupContent">
         <value xml:lang="ar">البحث عن المحتوى</value>
         <value xml:lang="da">Søg indhold</value>

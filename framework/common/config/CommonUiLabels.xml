@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed 
-    with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, 
-    Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at 
-    http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the 
-    License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License 
-    for the specific language governing permissions and limitations under the License. -->
-<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="Accounting - AP">
         <value xml:lang="ar">ذمم دائنة</value>
         <value xml:lang="cs">Závazky</value>
@@ -1075,24 +1087,6 @@
         <value xml:lang="zh-CN">注</value>
         <value xml:lang="zh-TW">至</value>
     </property>
-    <property key="CommonAttribute">
-        <value xml:lang="de">Attribut</value>
-        <value xml:lang="en">Attribute</value>
-    </property>
-    <property key="CommonAttributes">
-        <value xml:lang="de">Attribute</value>
-        <value xml:lang="en">Attributes</value>
-        <value xml:lang="es">Atributos</value>
-        <value xml:lang="fr">Attributs</value>
-        <value xml:lang="it">Attributi</value>
-        <value xml:lang="ja">属性</value>
-        <value xml:lang="ro">Atribute</value>
-        <value xml:lang="ru">Атрибуты</value>
-        <value xml:lang="th">ลักษณะ</value>
-        <value xml:lang="vi">Thuộc tính</value>
-        <value xml:lang="zh">属性</value>
-        <value xml:lang="zh-TW">屬性</value>
-    </property>
     <property key="CommonAugust">
         <value xml:lang="ar">أغسطس</value>
         <value xml:lang="cs">Srpen</value>
@@ -1354,6 +1348,7 @@
     <property key="CommonBuiltOn">
         <value xml:lang="en">built on</value>
         <value xml:lang="fr">compilée le</value>
+        <value xml:lang="zh">编译日期为</value>
     </property>
     <property key="CommonBut">
         <value xml:lang="ar">إلا</value>
@@ -2295,6 +2290,7 @@
         <value xml:lang="zh-TW">國家</value>
     </property>
     <property key="CommonCountryCode">
+        <value xml:lang="ar">رمز الدولة</value>
         <value xml:lang="cs">Mezinárodní předvolba</value>
         <value xml:lang="de">Landesvorwahl</value>
         <value xml:lang="en">Country Code</value>
@@ -2314,6 +2310,7 @@
         <value xml:lang="zh-TW">國碼</value>
     </property>
     <property key="CommonCountryCodeMissing">
+        <value xml:lang="ar">رمز الدولة مفقود</value>
         <value xml:lang="de">Landesvorwahl fehlt</value>
         <value xml:lang="en">Country code is Missing</value>
         <value xml:lang="fr">Le code pays manque</value>
@@ -2327,6 +2324,7 @@
         <value xml:lang="zh-TW">沒有國碼</value>
     </property>
     <property key="CommonCountryMissing">
+        <value xml:lang="ar">الدولة مفقودة</value>
         <value xml:lang="cs">Chybí země</value>
         <value xml:lang="de">Land fehlt</value>
         <value xml:lang="en">Country is Missing</value>
@@ -2386,6 +2384,11 @@
         <value xml:lang="zh">县城</value>
         <value xml:lang="zh-CN">县市</value>
         <value xml:lang="zh-TW">縣城</value>
+    </property>
+    <property key="CommonCost">
+        <value xml:lang="en">Cost</value>
+        <value xml:lang="nl">Kosten</value>
+        <value xml:lang="zh">成本</value>
     </property>
     <property key="CommonCreate">
         <value xml:lang="ar">خلق</value>
@@ -4730,6 +4733,7 @@
     <property key="CommonFromDateThruDateCheck">
         <value xml:lang="en">Through date can't be same or smaller than from date</value>
         <value xml:lang="fr">La date de fin ne peut être égale ou plus récente que la date de début</value>
+        <value xml:lang="zh">截至日期不能小于等于开始日期</value>
     </property>
     <property key="CommonFromDateTime">
         <value xml:lang="ar">تاريخ و وقت البدء</value>
@@ -5378,6 +5382,16 @@
         <value xml:lang="zh">每小时</value>
         <value xml:lang="zh-TW">每小時</value>
     </property>
+    <property key="CommonHours">
+        <value xml:lang="de">Stunden</value>
+        <value xml:lang="en">Hours</value>
+        <value xml:lang="es">Hora</value>
+        <value xml:lang="fr">Heure</value>
+        <value xml:lang="it">Ora</value>
+        <value xml:lang="ja">時間</value>
+        <value xml:lang="nl">Uren</value>
+        <value xml:lang="zh">小时</value>
+    </property>
     <property key="CommonId">
         <value xml:lang="ar">دليل</value>
         <value xml:lang="cs">ID</value>
@@ -5456,6 +5470,11 @@
         <value xml:lang="zh-CN">标识</value>
         <value xml:lang="zh-TW">識別</value>
     </property>
+    <property key="CommonIdGeneratedIfEmpty">
+        <value xml:lang="ar">يتم خلق دليل تسلسلي اذا ترك فارغا</value>
+        <value xml:lang="en">ID sequence will be generated if empty</value>
+        <value xml:lang="zh">如果空着，会自动生成序号</value>
+    </property>
     <property key="CommonIds">
         <value xml:lang="ar">دلائل</value>
         <value xml:lang="cs">Identifikátory</value>
@@ -5487,10 +5506,12 @@
     </property>
     <property key="CommonImport">
         <value xml:lang="en">Import</value>
+        <value xml:lang="zh">导入</value>
         <value xml:lang="zh-TW">匯入</value>
     </property>
     <property key="CommonImportExport">
         <value xml:lang="en">Import/Export</value>
+        <value xml:lang="zh">导入/导出</value>
         <value xml:lang="zh-TW">匯入/匯出</value>
     </property>
     <property key="CommonIn">
@@ -6103,6 +6124,8 @@
     </property>
     <property key="CommonLocation">
         <value xml:lang="en">Location</value>
+        <value xml:lang="nl">Locatie</value>
+        <value xml:lang="zh">地点</value>
     </property>
     <property key="CommonLogin">
         <value xml:lang="ar">دخول</value>
@@ -8330,8 +8353,10 @@
         <value xml:lang="zh-TW">概覽</value>
     </property>
     <property key="CommonOwner">
-        <value xml:lang="en">Owner</value>
         <value xml:lang="de">Besitzer</value>
+        <value xml:lang="en">Owner</value>
+        <value xml:lang="nl">Eigenaar</value>
+        <value xml:lang="zh">拥有者</value>
     </property>
     <property key="CommonPage">
         <value xml:lang="ar">صفحة</value>
@@ -8584,6 +8609,7 @@
         <value xml:lang="ar">PDF</value>
         <value xml:lang="en">PDF</value>
         <value xml:lang="hi-IN">पीडीऍफ़(PDF)</value>
+        <value xml:lang="zh">PDF</value>
     </property>
     <property key="CommonPercentage">
         <value xml:lang="en">Percentage</value>
@@ -8622,8 +8648,10 @@
         <value xml:lang="zh-TW">執行</value>
     </property>
     <property key="CommonPeriod">
-        <value xml:lang="en">Period</value>
         <value xml:lang="de">Zeitraum</value>
+        <value xml:lang="en">Period</value>
+        <value xml:lang="nl">Periode</value>
+        <value xml:lang="zh">时间段</value>
     </property>
     <property key="CommonPermissionError">
         <value xml:lang="ar">خطأ في الصلاحية</value>
@@ -9096,6 +9124,62 @@
         <value xml:lang="zh">打印</value>
         <value xml:lang="zh-TW">列印</value>
     </property>
+    <property key="CommonPrice">
+        <value xml:lang="en">Price</value>
+        <value xml:lang="nl">Prijs</value>
+        <value xml:lang="zh">价格</value>
+    </property>
+    <property key="CommonPrices">
+        <value xml:lang="en">Prices</value>
+        <value xml:lang="nl">Prijzen</value>
+        <value xml:lang="zh">价格</value>
+    </property>
+    <property key="CommonAdjustment">
+        <value xml:lang="en">Adjustment</value>
+        <value xml:lang="nl">Aanpassing</value>
+        <value xml:lang="zh">调整</value>
+    </property>
+    <property key="CommonAdjustments">
+        <value xml:lang="en">Adjustments</value>
+        <value xml:lang="nl">Aanpassingen</value>
+        <value xml:lang="zh">调整</value>
+    </property>
+    <property key="CommonAttribute">
+        <value xml:lang="de">Attribut</value>
+        <value xml:lang="en">Attribute</value>
+        <value xml:lang="nl">Attribuut</value>
+        <value xml:lang="zh">属性</value>
+    </property>
+    <property key="CommonAttributes">
+        <value xml:lang="de">Attribute</value>
+        <value xml:lang="en">Attributes</value>
+        <value xml:lang="es">Atributos</value>
+        <value xml:lang="fr">Attributs</value>
+        <value xml:lang="it">Attributi</value>
+        <value xml:lang="ja">属性</value>
+        <value xml:lang="nl">Attritbuten</value>
+        <value xml:lang="ro">Atribute</value>
+        <value xml:lang="ru">Атрибуты</value>
+        <value xml:lang="th">ลักษณะ</value>
+        <value xml:lang="vi">Thuộc tính</value>
+        <value xml:lang="zh">属性</value>
+        <value xml:lang="zh-TW">屬性</value>
+    </property>
+    <property key="CommonWorkEffort">
+        <value xml:lang="en">Work Effort</value>
+        <value xml:lang="nl">Activiteit</value>
+        <value xml:lang="zh">人工服务</value>
+    </property>
+    <property key="CommonWorkEfforts">
+        <value xml:lang="en">Work Effort</value>
+        <value xml:lang="nl">Activiteiten</value>
+        <value xml:lang="zh">人工服务</value>
+    </property>
+    <property key="CommonProfit">
+        <value xml:lang="en">Profit</value>
+        <value xml:lang="nl">Winst</value>
+        <value xml:lang="zh">利润</value>
+    </property>
     <property key="CommonPrinterFriendly">
         <value xml:lang="ar">مناسب للطابعة</value>
         <value xml:lang="cs">Tisk</value>
@@ -9154,6 +9238,8 @@
     </property>
     <property key="CommonProduct">
         <value xml:lang="en">Product</value>
+        <value xml:lang="nl">Product</value>
+        <value xml:lang="zh">产品</value>
     </property>
     <property key="CommonProfile">
         <value xml:lang="ar">خصائص</value>
@@ -9421,8 +9507,10 @@
         <value xml:lang="zh-CN">快速添加到购物列表</value>
         <value xml:lang="zh-TW">快速增加到購物清單</value>
     </property>
-    <property key="CommonQuoteTerms">
-        <value xml:lang="en">Quote Terms</value>
+    <property key="CommonQuote">
+        <value xml:lang="en">Quote</value>
+        <value xml:lang="nl">Offerte</value>
+        <value xml:lang="zh">询价</value>
     </property>
     <property key="CommonRate">
         <value xml:lang="ar">النسبة</value>
@@ -9669,6 +9757,11 @@
         <value xml:lang="zh-CN">拒绝</value>
         <value xml:lang="zh-TW">已拒絕</value>
     </property>
+    <property key="CommonRelation">
+        <value xml:lang="en">Relation</value>
+        <value xml:lang="nl">Relatie</value>
+        <value xml:lang="zh">关系</value>
+    </property>
     <property key="CommonRelatedInformation">
         <value xml:lang="ar">المعلومات ذات الصلة</value>
         <value xml:lang="cs">Související informace</value>
@@ -9849,6 +9942,11 @@
         <value xml:lang="zh">重新查询</value>
         <value xml:lang="zh-TW">再查詢</value>
     </property>
+    <property key="CommonRequest">
+        <value xml:lang="en">Request</value>
+        <value xml:lang="nl">Verzoek</value>
+        <value xml:lang="zh">请求</value>
+    </property>
     <property key="CommonRequired">
         <value xml:lang="ar">إلزامي</value>
         <value xml:lang="cs">Požadováno</value>
@@ -10017,12 +10115,16 @@
         <value xml:lang="zh-TW">評論</value>
     </property>
     <property key="CommonRole">
-        <value xml:lang="en">Role</value>
         <value xml:lang="de">Rolle</value>
+        <value xml:lang="en">Role</value>
+        <value xml:lang="nl">Rol</value>
+        <value xml:lang="zh">角色</value>
     </property>
     <property key="CommonRoles">
-        <value xml:lang="en">Roles</value>
         <value xml:lang="de">Rollen</value>
+        <value xml:lang="en">Roles</value>
+        <value xml:lang="nl">Rollen</value>
+        <value xml:lang="zh">角色</value>
     </property>
     <property key="CommonRouting">
         <value xml:lang="ar">تمرير</value>
@@ -10667,6 +10769,11 @@
         <value xml:lang="zh-CN">序列编号</value>
         <value xml:lang="zh-TW">序號數</value>
     </property>
+    <property key="CommonSeqId">
+        <value xml:lang="en">Sequence Id</value>
+        <value xml:lang="nl">Volg ID</value>
+        <value xml:lang="zh">序号</value>
+    </property>
     <property key="CommonServerHour">
         <value xml:lang="en">Server Hour</value>
         <value xml:lang="fr">Heure du serveur </value>
@@ -10780,6 +10887,8 @@
     </property>
     <property key="CommonShipment">
         <value xml:lang="en">Shipment</value>
+        <value xml:lang="nl">Zending</value>
+        <value xml:lang="zh">送货</value>
     </property>
     <property key="CommonShipping">
         <value xml:lang="ar">الشحن</value>
@@ -11538,11 +11647,13 @@
         <value xml:lang="ar">شرط</value>
         <value xml:lang="en">Term</value>
         <value xml:lang="nl">Conditie</value>
+        <value xml:lang="zh">期</value>
     </property>
     <property key="CommonTerms">
         <value xml:lang="ar">شروط</value>
         <value xml:lang="en">Terms</value>
         <value xml:lang="nl">Condities</value>
+        <value xml:lang="zh">期</value>
     </property>
     <property key="CommonTest">
         <value xml:lang="ar">إختبار</value>
@@ -12451,6 +12562,7 @@
     <property key="CommonUseBackButton">
         <value xml:lang="en">Use the browser Back button for that</value>
         <value xml:lang="fr">Utilisez le bouton de retour de votre navigateur pour cela</value>
+        <value xml:lang="zh">使用浏览器的后退按钮</value>
     </property>
     <property key="CommonUsed">
         <value xml:lang="ar">مستعمل</value>
@@ -12713,6 +12825,26 @@
         <value xml:lang="zh">浏览</value>
         <value xml:lang="zh-CN">查看</value>
         <value xml:lang="zh-TW">檢視</value>
+    </property>
+    <property key="CommonViewAsCsv">
+        <value xml:lang="en">View as csv</value>
+        <value xml:lang="fr">Voir en csv</value>
+        <value xml:lang="zh">按逗号分隔格式浏览</value>
+    </property>
+    <property key="CommonViewAsPdf">
+        <value xml:lang="en">View as Pdf</value>
+        <value xml:lang="fr">Voir en Pdf</value>
+        <value xml:lang="zh">按PDF格式浏览</value>
+    </property>
+    <property key="CommonViewAsText">
+        <value xml:lang="en">View as text</value>
+        <value xml:lang="fr">Voir en texte</value>
+        <value xml:lang="zh">按文本格式浏览</value>
+    </property>
+    <property key="CommonViewAsXml">
+        <value xml:lang="en">View as xml</value>
+        <value xml:lang="fr">Voir en xml</value>
+        <value xml:lang="zh">按XML格式浏览</value>
     </property>
     <property key="CommonViewBlocked">
         <value xml:lang="ar">تم حظر الدخول على هذه الصفحة</value>
@@ -13012,6 +13144,7 @@
     <property key="CommonWeeks">
         <value xml:lang="en">Weeks</value>
         <value xml:lang="fr">Semaines</value>
+        <value xml:lang="zh">星期</value>
     </property>
     <property key="CommonWeekly">
         <value xml:lang="ar">أسبوعيا</value>
@@ -13471,6 +13604,7 @@
     <property key="Ebay">
         <value xml:lang="en">eBay</value>
         <value xml:lang="th">อีเบย์</value>
+        <value xml:lang="zh">eBay</value>
         <value xml:lang="zh-TW">eBay</value>
     </property>
     <property key="Example">
@@ -14577,7 +14711,7 @@
         <value xml:lang="de">Aktualisieren</value>
         <value xml:lang="en">Update</value>
         <value xml:lang="es">Actualizar</value>
-        <value xml:lang="fr">Mettre à jour</value>
+        <value xml:lang="fr">Actualiser</value>
         <value xml:lang="hi-IN">अद्यतन करे</value>
         <value xml:lang="it">Aggiorna</value>
         <value xml:lang="ja">更新</value>
@@ -14598,6 +14732,7 @@
         <value xml:lang="pt-BR">Base do Google</value>
         <value xml:lang="ru">Гугл база</value>
         <value xml:lang="vi">Trên nền tảng Google</value>
+        <value xml:lang="zh">Google Base</value>
     </property>
     <property key="HR">
         <value xml:lang="ar">الموارد البشرية</value>
@@ -14740,6 +14875,7 @@
         <value xml:lang="en">Oagis</value>
         <value xml:lang="th">การรวมภาษาทางธุรกิจ</value>
         <value xml:lang="vi">Giao thức XML Oagis</value>
+        <value xml:lang="zh">OAGIS</value>
     </property>
     <property key="Order">
         <value xml:lang="ar">أمر</value>

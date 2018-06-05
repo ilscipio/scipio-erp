@@ -18,7 +18,7 @@
     specific language governing permissions and limitations
     under the License.
 -->
-<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="CustomMethod.description.6000">
         <value xml:lang="cs">Příklad vzorce pro splnění úkolu (qty * estimatedMilliSeconds * 10)</value>
         <value xml:lang="de">Beispiel Formel für Aufgabe (qty * estimatedMilliSeconds * 10)</value>
@@ -3669,6 +3669,16 @@
         <value xml:lang="vi">Chung, truy nhập công khai</value>
         <value xml:lang="zh">通用，公共访问</value>
         <value xml:lang="zh-TW">通用,公共訪問</value>
+    </property>
+    <property key="Enumeration.description.WF_PREDECESSOR">
+        <value xml:lang="en">Preceding</value>
+        <value xml:lang="nl">Voorafgaand</value>
+        <value xml:lang="zh">预处理</value>
+    </property>
+    <property key="Enumeration.description.WF_SUCCESSOR">
+        <value xml:lang="en">Succeeding</value>
+        <value xml:lang="nl">Opvolgend</value>
+        <value xml:lang="zh">后处理</value>
     </property>
     <property key="Enumeration.description.WFI_MULTIPLE">
         <value xml:lang="en">WFI_MULTIPLE</value>
@@ -11642,6 +11652,7 @@
     </property>
     <property key="StatusItem.description.PMNT_VOID">
         <value xml:lang="en">Voided</value>
+        <value xml:lang="zh">已作废</value>
         <value xml:lang="zh-TW">已作廢</value>
     </property>
     <property key="StatusItem.description.POSTX_ACTIVE">

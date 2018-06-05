@@ -18,7 +18,7 @@
     specific language governing permissions and limitations
     under the License.
 -->
-<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="AddNewProductFeatureToProduct">
         <value xml:lang="de">Neues Merkmal für dieses Produkt erstellen</value>
         <value xml:lang="en">Add new Product Feature to current product</value>
@@ -34,6 +34,7 @@
         <value xml:lang="it">Aggiungi componente</value>
         <value xml:lang="pt-BR">Adicionar componente de produto</value>
         <value xml:lang="ro">Adauga Componente Produs</value>
+        <value xml:lang="zh">添加产品组件</value>
     </property>
     <property key="CatalogWebAnalytics">
         <value xml:lang="de">Web Analytik</value>
@@ -107,6 +108,7 @@
     <property key="FacilityCat">
         <value xml:lang="en">CAT</value>
         <value xml:lang="nl">Cat.</value>
+        <value xml:lang="zh">分类</value>
     </property>
     <property key="FacilityCompanyName">
         <value xml:lang="de">SCIPIO - Einrichtungen Verwaltung</value>
@@ -190,6 +192,7 @@
     </property>
     <property key="FacilityGroupFirst">
         <value xml:lang="en">Group First</value>
+        <value xml:lang="zh">分组首批</value>
     </property>
     <property key="FacilityGroupName">
         <value xml:lang="en">Group Name</value>
@@ -202,6 +205,7 @@
     <property key="FacilityInv">
         <value xml:lang="en">INV</value>
         <value xml:lang="nl">VOOR</value>
+        <value xml:lang="zh">库存</value>
     </property>
     <property key="FacilityReturnHeaderTypeNotSupported">
         <value xml:lang="de">${returnHeader.returnHeaderTypeId} wird nicht unterstützt</value>
@@ -8408,7 +8412,9 @@
         <value xml:lang="zh-TW">歡迎使用圖片管理</value>
     </property>
     <property key="InventoryFacilityIdRequired">
-        <value xml:lang="en">"Inventory Warehouse Id Required"</value>
+        <value xml:lang="de">"Lager Id benötigt"</value>
+        <value xml:lang="en">"Inventory Facility Id Required"</value>
+        <value xml:lang="zh">必须有库存场所标识</value>
     </property>
     <property key="MetaDescription">
         <value xml:lang="en">Meta Description</value>
@@ -10334,6 +10340,7 @@
     <property key="PageTitleEditWebAnalyticsConfig">
         <value xml:lang="de">Web Analytik Konfiguration</value>
         <value xml:lang="en">Edit Web Analytics Configuration</value>
+        <value xml:lang="fr">Modification de la configuration des Web Analytics</value>
         <value xml:lang="it">Aggiorna configurazione analisi Web</value>
         <value xml:lang="ja">Web分析設定を編集</value>
         <value xml:lang="vi">Chỉnh sửa cấu hình web phân tích dữ liệu</value>
@@ -10369,6 +10376,7 @@
     </property>
     <property key="PageTitleFacilityGeoLocation">
         <value xml:lang="en">Warehouse Geo Location</value>
+        <value xml:lang="fr">Géolocalisation de lieux de stockage</value>
         <value xml:lang="ja">拠点位置情報</value>
         <value xml:lang="vi">Ví trí địa lý Chi nhánh / Cơ sở</value>
         <value xml:lang="zh">场所地理位置</value>
@@ -10377,6 +10385,7 @@
     <property key="PageTitleFindCategory">
         <value xml:lang="de">Kategoriesuche</value>
         <value xml:lang="en">Find Category</value>
+        <value xml:lang="fr">Recherche de catégories</value>
         <value xml:lang="ja">カテゴリを検索</value>
         <value xml:lang="th">ค้นหาหมวดหมู่</value>
         <value xml:lang="vi">Tìm Phân loại Quản lý</value>
@@ -10386,6 +10395,7 @@
     <property key="PageTitleFindCatalog">
         <value xml:lang="de">Katalogsuche</value>
         <value xml:lang="en">Find Catalog</value>
+        <value xml:lang="fr">Recherche de catalogues</value>
         <value xml:lang="ja">カタログを検索</value>
         <value xml:lang="vi">Tìm Phân loại Trình diễn</value>
         <value xml:lang="zh">查找目录</value>
@@ -10513,6 +10523,7 @@
     <property key="PageTitleFindProduct">
         <value xml:lang="de">Produktsuche</value>
         <value xml:lang="en">Find Product</value>
+        <value xml:lang="fr">Recherche d'articles</value>
         <value xml:lang="it">Ricerca prodotti</value>
         <value xml:lang="ja">製品を検索</value>
         <value xml:lang="vi">Tìm sản phẩm</value>
@@ -10836,6 +10847,7 @@
     </property>
     <property key="PageTitleLookupCostComponentCalc">
         <value xml:lang="en">Lookup Cost Component Calculation</value>
+        <value xml:lang="zh">查找成本组成计算</value>
     </property>
     <property key="PageTitleLookupFacility">
         <value xml:lang="de">Einrichtung nachschlagen</value>
@@ -12777,7 +12789,8 @@
     <property key="ProductAnyGoodIdentification">
         <value xml:lang="en">Any good identification</value>
         <value xml:lang="fr">Tous Identifiants</value>
-        <value xml:lang="zh-TW">&gt;Any good identification</value>
+        <value xml:lang="zh">任一商品标识</value>
+        <value xml:lang="zh-TW">Any good identification</value>
     </property>
     <property key="ProductAnyFacility">
         <value xml:lang="de">Beliebige Einrichtung</value>
@@ -15003,9 +15016,11 @@
     </property>
     <property key="ProductCostComponentCalcId">
         <value xml:lang="en">Cost Component Calc Id</value>
+        <value xml:lang="zh">成本组成计算标识</value>
     </property>
     <property key="ProductCostGlAccountTypeId">
         <value xml:lang="en">Cost Gl Account Type Id</value>
+        <value xml:lang="zh">成本总账账户类型标识</value>
         <value xml:lang="zh-TW">Cost Gl Account Type Id</value>
     </property>
     <property key="ProductCostPrice">
@@ -18010,6 +18025,7 @@
     <property key="ProductFromDateSellThrough">
         <value xml:lang="de">Ab Verkaufsdatum</value>
         <value xml:lang="en">From Date Sell Through</value>
+        <value xml:lang="zh">开始日期的销售任务</value>
         <value xml:lang="zh-TW">From Date Sell Through</value>
     </property>
     <property key="ProductFromGeo">
@@ -18282,6 +18298,7 @@
     </property>
     <property key="ProductGracePeriodUomId">
         <value xml:lang="en">Grace Period UOM Id</value>
+        <value xml:lang="zh">免息期度量单位标识</value>
         <value xml:lang="zh-TW">Grace Period UOM Id</value>
     </property>
     <property key="ProductGrams">
@@ -22686,6 +22703,7 @@
     </property>
     <property key="ProductOffsettingGlAccountTypeId">
         <value xml:lang="en">Off Setting GL Account Type Id</value>
+        <value xml:lang="zh">抵扣总账账户类型标识</value>
         <value xml:lang="zh-TW">Off Setting GL Account Type Id</value>
     </property>
     <property key="ProductOneInventoryFacility">
@@ -30162,6 +30180,7 @@
         <value xml:lang="de">Bis Verkaufsdatum</value>
         <value xml:lang="en">Through Date Sell Through</value>
         <value xml:lang="zh-TW">Through Date Sell Through</value>
+        <value xml:lang="zh">结束日期的销售任务</value>
     </property>
     <property key="ProductThruDateTimePrice">
         <value xml:lang="de">Bis Datum/Zeit, Preis</value>
@@ -31743,52 +31762,64 @@
     <property key="ProductVirtVarSection">
         <value xml:lang="en">Virtuals and Variants</value>
         <value xml:lang="nl">Sectie 1: Virtuelen en varianten</value>
+        <value xml:lang="zh">虚拟和可变</value>
     </property>
     <property key="ProductDatesSection">
         <value xml:lang="en">Dates</value>
         <value xml:lang="nl">Sectie 2: Data</value>
+        <value xml:lang="zh">日期</value>
     </property>
     <property key="ProductInventorySection">
         <value xml:lang="en">Inventory</value>
         <value xml:lang="nl">Sectie 3: Voorraad</value>
+        <value xml:lang="zh">库存</value>
     </property>
     <property key="ProductMeasuresSection">
         <value xml:lang="en">Measures</value>
         <value xml:lang="nl">Sectie 4: Maten</value>
+        <value xml:lang="zh">度量</value>
     </property>
     <property key="ProductShippingSection">
         <value xml:lang="en">Shipping</value>
         <value xml:lang="nl">Sectie 5: Zending</value>
+        <value xml:lang="zh">运输</value>
     </property>
     <property key="ProductCatFacSection">
         <value xml:lang="en">Prim. Category and Warehouse</value>
         <value xml:lang="nl">Sectie 6: Category en faciliteit</value>
+        <value xml:lang="zh">主要分类和场所</value>
     </property>
     <property key="ProductAmountSection">
         <value xml:lang="en">Amounts</value>
         <value xml:lang="nl">Sectie 7: Bedragen</value>
+        <value xml:lang="zh">数量</value>
     </property>
     <property key="ProductRatingsSetion">
         <value xml:lang="en">Ratings</value>
         <value xml:lang="nl">Sectie 8: Waarderingen</value>
+        <value xml:lang="zh">评分</value>
     </property>
     <property key="ProductMiscellaneousSection">
         <value xml:lang="en">Miscellaneous</value>
         <value xml:lang="nl">Sectie 9: Diversen</value>
+        <value xml:lang="zh">杂项</value>
     </property>
     
     
     <property key="LotUsageReport">
         <value xml:lang="en">Lot Usage Report</value>
         <value xml:lang="nl">Batch rapport</value>
+        <value xml:lang="zh">批次用途报表</value>
     </property>
     <property key="Manufacturer">
         <value xml:lang="en">Manufacturer</value>
         <value xml:lang="nl">Producent</value>
+        <value xml:lang="zh">制造商</value>
     </property>
     <property key="ManufacturerRef">
         <value xml:lang="en">Lot Ref.</value>
         <value xml:lang="nl">Batch ref.</value>
+        <value xml:lang="zh">批次参考</value>
     </property>
     <!-- SCIPIO: new. TODO: localize -->
     <property key="ProductSettings">

@@ -106,6 +106,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     <field-type name="firebird" loader="fieldfile" location="fieldtypefirebird.xml"/>
     <field-type name="mssql" loader="fieldfile" location="fieldtypemssql.xml"/>
     <field-type name="advantage" loader="fieldfile" location="fieldtypeadvantage.xml"/>
+    <field-type name="mariadb" loader="fieldfile" location="fieldtypemariadb.xml"/>
     
     <!--
     For DAO/JDBC Helper: Tries:
@@ -828,6 +829,39 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-uri="jdbc:extendedsystems:advantage://localhost:6262;catalog=c:\\advantage\\OFBIZ.ADD;TableType=adt"
                 jdbc-username="ADSSYS"
                 jdbc-password="adssys"
+                isolation-level="ReadCommitted"
+                pool-minsize="2"
+                pool-maxsize="100"
+                time-between-eviction-runs-millis="600000"/>
+    </datasource>
+    
+    <!-- SCIPIO: 2018-06-05: Added MariaDB support -->
+    <!-- List of table-types (storage engine): https://mariadb.com/kb/en/library/choosing-the-right-storage-engine/ -->
+    <datasource name="localmariadb"
+            helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
+            field-type-name="mariadb"
+            check-on-start="true"
+            add-missing-on-start="true"
+            check-pks-on-start="false"
+            use-foreign-keys="true"
+            join-style="ansi-no-parenthesis"
+            alias-view-columns="false"
+            drop-fk-use-foreign-key-keyword="true"
+            table-type="InnoDB"
+            character-set="utf8mb4"
+            collate="utf8mb4_general_ci"> <!-- Default character set is latin1_swedish_ci but throws errors with seed data -->
+        <read-data reader-name="tenant"/>
+        <read-data reader-name="seed"/>
+        <read-data reader-name="seed-initial"/>
+        <read-data reader-name="demo"/>
+        <read-data reader-name="ext"/>
+        <read-data reader-name="ext-test"/>
+        <read-data reader-name="ext-demo"/>
+        <inline-jdbc
+                jdbc-driver="org.mariadb.jdbc.Driver"
+                jdbc-uri="jdbc:mariadb://127.0.0.1/scipio?autoReconnect=true"
+                jdbc-username="scipio"
+                jdbc-password="scipio"
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
                 pool-maxsize="100"

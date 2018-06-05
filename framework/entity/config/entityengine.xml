@@ -271,7 +271,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     
     <!-- SCIPIO: 2018-06-05: Removed Axion DB support -->
 
-    <!-- SCIPIO: 2018-06-05: Removed Axion DB support -->
+    <!-- SCIPIO: 2018-06-05: Removed Daffodil DB support -->
 
     <datasource name="localmysql"
             helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
@@ -284,8 +284,8 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             alias-view-columns="false"
             drop-fk-use-foreign-key-keyword="true"
             table-type="InnoDB"
-            character-set="latin1"
-            collate="latin1_general_cs">
+            character-set="utf8mb4"
+            collate="utf8mb4_col"><!-- SCIPIO: Set to UTF8 for compatibility with UTF8 datasets -->
         <read-data reader-name="tenant"/>
         <read-data reader-name="seed"/>
         <read-data reader-name="seed-initial"/>

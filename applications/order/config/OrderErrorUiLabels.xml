@@ -3006,14 +3006,14 @@
         <value xml:lang="zh-TW">檢查退款支付金額時出現問題</value>
     </property>
     <property key="OrderProblemsWithGetPartyAcctgPreferences">
-        <value xml:lang="ar">مشاكل في إحضار PartyAcctgPreference. </value>
-        <value xml:lang="de">Problem beim Lesen der Konteneinstellungen des Nutzers. </value>
-        <value xml:lang="en">Problems with getting PartyAcctgPreference. </value>
+        <value xml:lang="ar">مشاكل في إحضار PartyAcctgPreference.</value>
+        <value xml:lang="de">Problem beim Lesen der Konteneinstellungen des Nutzers.</value>
+        <value xml:lang="en">Problems with getting PartyAcctgPreference.</value>
         <value xml:lang="es">Hay problemas al obtener preferencias de contabilidad de participante.</value>
         <value xml:lang="fr">Problème à l'obtention des préférences comptabilité de l'acteur</value>
         <value xml:lang="it">Problema nell'ottenere PartyAcctgPreference.</value>
         <value xml:lang="ja">取引先アカウント設定の取得中にエラー</value>
-        <value xml:lang="pt-BR">Problemas ao obter PartyAcctgPreference. </value>
+        <value xml:lang="pt-BR">Problemas ao obter PartyAcctgPreference.</value>
         <value xml:lang="vi">Lỗi xảy ra với thông tin tham chiếu tài khoản đơn vị (PartyAcctgPreference).</value>
         <value xml:lang="zh">获取会员优先使用的账户时出现问题</value>
         <value xml:lang="zh-TW">獲取會員優先使用的賬戶時出現問題</value>
@@ -5539,10 +5539,6 @@
         <value xml:lang="zh">退货的修改不能大于给付的金额。</value>
         <value xml:lang="zh-TW">退貨的修改不能大于給付的金額。</value>
     </property>
-    <property key="checkevents.payment_cannot_be_greater_than_order"><!-- SCIPIO: TODO: Localize -->
-        <value xml:lang="de">Die Zahlung insgesamt nicht größer sein als der Auftragssumme.</value>
-        <value xml:lang="en">Payment total cannot be greater than the order total.</value>
-    </property>
     <property key="checkhelper.could_not_create_order_invoking_service">
         <value xml:lang="ar">خطأ: لا يمكن خلق أمر البيع\الشراء (problem invoking the service: ${service})</value>
         <value xml:lang="de">FEHLER: Auftrag konnte nicht erstellt werden (Problem beim Aufruf des Service: ${service})</value>
@@ -6150,9 +6146,8 @@
         <value xml:lang="zh">没有找到固定资产，固定资产标识：${fixedAssetId}</value>
         <value xml:lang="zh-TW">沒有找到固定資產，固定資產ID：${fixedAssetId}</value>
     </property>
-    <property key="item.maximum_number_of_person_renting"> 
-        <!-- SCIPIO: formatting changed -->
-        <value xml:lang="ar">الحد الأقصى لعدد الأشخاص لتأجير هذا الغرض هو ${reservMaxPersons} ولكن العدد المطلوب: ${reservPersons} !</value>
+    <property key="item.maximum_number_of_person_renting"><!-- SCIPIO: modified: formatting changed -->
+        <value xml:lang="ar">الحد الأقصى لعدد الأشخاص لتأجير هذا الغرض هو ${reservMaxPersons} ولكن العدد المطلوب ${reservPersons} !</value>
         <value xml:lang="de">Die maximale Anzahl Personen für dieses Objekt beträgt ${reservMaxPersons}, Sie haben aber ${reservPersons} verlangt!</value>
         <value xml:lang="en">The maximum number of persons renting this object is ${reservMaxPersons} however you have requested ${reservPersons}!</value>
         <value xml:lang="es">El número máximo de personas para reservar este objeto es ${reservMaxPersons}. ¡No obstante ha solicitado ${reverPersons}!</value>
@@ -6704,7 +6699,11 @@
         <value xml:lang="vi">Bạn không thể thêm sản phẩm ảo ('Virtual' product) tại đây, bạn hãy chọn trong các hàng hóa liên quan (related variants).</value>
         <value xml:lang="zh">在这里你不能添加一个虚拟产品，请选择一个相关的变型。</value>
     </property>
-    <!-- SCIPIO: TODO: Localize -->
+    <!-- SCIPIO: NEW LABELS -->
+    <property key="checkevents.payment_cannot_be_greater_than_order">
+        <value xml:lang="de">Die Zahlung insgesamt nicht größer sein als der Auftragssumme.</value>
+        <value xml:lang="en">Payment total cannot be greater than the order total.</value>
+    </property>
     <property key="OrderUnexpectedErrorHelp">
         <value xml:lang="de">Unerwarteter Fehler. Bitte versuchen Sie es später noch einmal oder kontaktieren Sie uns um Hilfe.</value>
         <value xml:lang="en">Unexpected error. Please try again later or contact us for help.</value>

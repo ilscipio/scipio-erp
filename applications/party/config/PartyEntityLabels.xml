@@ -578,7 +578,7 @@
     </property>
     <property key="ContactMechPurposeType.description.FAX_SHIPPING">
         <value xml:lang="cs">Faxové číslo pro doručení</value>
-        <value xml:lang="de">Liefer Faxnumer</value>
+        <value xml:lang="de">Liefer Faxnummer</value>
         <value xml:lang="en">Shipping Destination Fax Number</value>
         <value xml:lang="fr">Numéro de télécopie du service expédition</value>
         <value xml:lang="ja">発送先FAX番号</value>
@@ -987,7 +987,7 @@
     </property>
     <property key="ContactMechPurposeType.description.SHIPPING_LOCATION">
         <value xml:lang="cs">Dodací adresa</value>
-        <value xml:lang="de">Versandresse</value>
+        <value xml:lang="de">Versandadresse</value>
         <value xml:lang="en">Shipping Destination Address</value>
         <value xml:lang="es">Dirección de envíos</value>
         <value xml:lang="fr">Adresse de livraison</value>
@@ -1546,13 +1546,6 @@
         <value xml:lang="vi">Thông tin chuyển hàng của nhà bán hàng</value>
         <value xml:lang="zh">厂家送货信息</value>
         <value xml:lang="zh-TW">賣家送貨資訊</value>
-    </property>
-    <property key="PartyContentType.description.RESUME"><!-- SCIPIO: TODO: Localize -->
-        <value xml:lang="de">Lebenslauf</value>
-        <value xml:lang="en">Resume</value>
-        <value xml:lang="fr">Curriculum vitae</value>
-        <value xml:lang="it">Curriculum vitae</value>
-        <value xml:lang="pt-BR">Currículo</value>
     </property>
     <property key="PartyRelationshipType.partyRelationshipName.ACCOUNT">
         <value xml:lang="cs">Účet</value>
@@ -4550,5 +4543,13 @@
         <value xml:lang="vi">Ngưỡng</value>
         <value xml:lang="zh">阈值</value>
         <value xml:lang="zh-TW">門檻值</value>
+    </property>
+    <!-- SCIPIO: NEW LABELS -->
+    <property key="PartyContentType.description.RESUME"><!-- SCIPIO: new -->
+        <value xml:lang="de">Lebenslauf</value>
+        <value xml:lang="en">Resume</value>
+        <value xml:lang="fr">Curriculum vitae</value>
+        <value xml:lang="it">Curriculum vitae</value>
+        <value xml:lang="pt-BR">Currículo</value>
     </property>
 </resource>

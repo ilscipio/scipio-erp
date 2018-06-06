@@ -381,7 +381,7 @@
         <value xml:lang="zh">你没有执行这个操作的权限，需要UTIL_CACHE_EDIT</value>
         <value xml:lang="zh-TW">你沒有執行這個操作的權限,需要UTIL_CACHE_EDIT</value>
     </property>
-    <!-- SCIPIO -->
+    <!-- SCIPIO: NEW LABELS -->
     <property key="utilCache.cacheNotFound">
         <value xml:lang="en">Cache not found with name: ${name}</value>
         <value xml:lang="fr">Aucun cache trouvé ayant comme nom ${name}</value>

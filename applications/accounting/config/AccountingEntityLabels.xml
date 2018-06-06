@@ -5537,7 +5537,7 @@
     <property key="TaxAuthorityRateType.description.INCOME_TAX">
         <value xml:lang="ar">ضريبة الدخل</value>
         <value xml:lang="cs">Daň z příjmu</value>
-        <value xml:lang="de">Einkommenssteuer</value>
+        <value xml:lang="de">Einkommensteuer</value>
         <value xml:lang="en">Income Tax</value>
         <value xml:lang="fr">Impôt sur le revenu</value>
         <value xml:lang="hi-IN">आयकर</value>

@@ -67,11 +67,6 @@
         <value xml:lang="zh">网站分析类型</value>
         <value xml:lang="zh-TW">網站分析型態</value>
     </property>
-    <!-- SCIPIO: TODO: translate -->
-    <property key="CatalogWebAnalyticsType">
-        <value xml:lang="de">Web Analytik Type</value>
-        <value xml:lang="en">Web Analytics Type</value>
-    </property>
     <property key="CreateNewProductFeatureType">
         <value xml:lang="de">Neuen Merkmaltyp erstellen</value>
         <value xml:lang="en">Create New Product Feature Type</value>
@@ -124,19 +119,19 @@
         <value xml:lang="ru">SCIPIO - Управление объектами</value>
         <value xml:lang="th">SCIPIO - การจัดการคลังสินค้า</value>
         <value xml:lang="vi">SCIPIO - Quản trị Chi nhánh / Cơ sở</value>
-        <value xml:lang="zh">SCIPIO -：场所管理程序</value>
-        <value xml:lang="zh-TW">SCIPIO -場所管理程式</value>
+        <value xml:lang="zh">SCIPIO - 场所管理程序</value>
+        <value xml:lang="zh-TW">SCIPIO - 場所管理程式</value>
     </property>
     <property key="FacilityCompanySubtitle">
-        <value xml:lang="de">Teil der SCIPIO Familie von Open Source Software</value>
-        <value xml:lang="en">Part of the SCIPIO Family of Open Source Software</value>
-        <value xml:lang="fr">Un module de la famille SCIPIO, logiciel libre de gestion d'entreprise.</value>
-        <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO</value>
-        <value xml:lang="ja">Part of the SCIPIO Family of Open Source Software</value>
-        <value xml:lang="nl">Deel van de SCIPIO familie van open source software</value>
+        <value xml:lang="de">Teil der SCIPIO ERP Familie von Open Source Software</value>
+        <value xml:lang="en">Part of the SCIPIO ERP Family of Open Source Software</value>
+        <value xml:lang="fr">Un module de la famille SCIPIO ERP, logiciel libre de gestion d'entreprise.</value>
+        <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO ERP</value>
+        <value xml:lang="ja">Part of the SCIPIO ERP Family of Open Source Software</value>
+        <value xml:lang="nl">Deel van de SCIPIO ERP familie van open source software</value>
         <value xml:lang="vi">Một phần của Đại gia đình phần mềm mã mở dành cho kinh doanh</value>
-        <value xml:lang="zh">开源软件SCIPIO -的组成部分</value>
-        <value xml:lang="zh-TW">開源軟體SCIPIO -的組成部分</value>
+        <value xml:lang="zh">开源软件SCIPIO ERP的组成部分</value>
+        <value xml:lang="zh-TW">開源軟體SCIPIO ERP的組成部分</value>
     </property>
     <property key="FacilityEstimatedShippingCharges">
         <value xml:lang="de">Voraussichtliche Versandkosten</value>
@@ -13805,10 +13800,6 @@
         <value xml:lang="zh">销量最大商品：</value>
         <value xml:lang="zh-TW">最佳銷售產品於</value>
     </property>
-    <property key="ProductBestSellingProducts">
-        <value xml:lang="de">Meist verkaufte Produkte</value>
-        <value xml:lang="en">Best Selling Products</value>
-    </property>
     <property key="ProductBillingWeightUom">
         <value xml:lang="de">Verrechnung Gewicht Einheit</value>
         <value xml:lang="en">Billing Weight &amp; UOM</value>
@@ -14203,8 +14194,8 @@
         <value xml:lang="ru">SCIPIO - Управление каталогами</value>
         <value xml:lang="th">SCIPIO - การจัดการหมวดหมู่</value>
         <value xml:lang="vi">SCIPIO - Quản trị Phân loại Trình diễn</value>
-        <value xml:lang="zh">SCIPIO -：目录管理程序</value>
-        <value xml:lang="zh-TW">SCIPIO -型錄管理程式</value>
+        <value xml:lang="zh">SCIPIO - 目录管理程序</value>
+        <value xml:lang="zh-TW">SCIPIO - 型錄管理程式</value>
     </property>
     <property key="ProductCatalogDetailList">
         <value xml:lang="de">Katalog Detailliste</value>
@@ -14914,29 +14905,29 @@
     <property key="ProductCompanySubtitle">
     <!--value xml:lang="ar">جزء من عائلة أوفبيز للبرمجيات الحرة</value-->
         <value xml:lang="ar">جزء من عائلة أوفبيز للتطبيقات الحرة للتسيير</value>
-        <value xml:lang="de">Teil der SCIPIO Familie von Open Source Software</value>
-        <value xml:lang="en">Part of the SCIPIO Family of Open Source Software</value>
+        <value xml:lang="de">Teil der SCIPIO ERP Familie von Open Source Software</value>
+        <value xml:lang="en">Part of the SCIPIO ERP Family of Open Source Software</value>
     <!--value xml:lang="es">Parte de la familia "Open for Bussiness" de Software Libre</value-->
-        <value xml:lang="es">Parte de la familia de software SCIPIO de código abierto</value>
-        <value xml:lang="fr">Un module de la famille SCIPIO, logiciel libre de gestion d'entreprise.</value>
-        <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO</value>
-    <!--value xml:lang="nl">Onderdeel van de SCIPIO'-suite</value-->
-        <value xml:lang="ja">Part of the SCIPIO Family of Open Source Software</value>
-        <value xml:lang="nl">Deel van de SCIPIO-suite van Open Source Software</value>
-        <value xml:lang="pt-BR">Parte da família SCIPIO de software de fonte aberta</value>
+        <value xml:lang="es">Parte de la familia de software SCIPIO ERP de código abierto</value>
+        <value xml:lang="fr">Un module de la famille SCIPIO ERP, logiciel libre de gestion d'entreprise.</value>
+        <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO ERP</value>
+    <!--value xml:lang="nl">Onderdeel van de SCIPIO ERP'-suite</value-->
+        <value xml:lang="ja">Part of the SCIPIO ERP Family of Open Source Software</value>
+        <value xml:lang="nl">Deel van de SCIPIO ERP-suite van Open Source Software</value>
+        <value xml:lang="pt-BR">Parte da família SCIPIO ERP de software de fonte aberta</value>
     <!--value xml:lang="pt-PT">Parte do Software de Fonte Aberta para Grupos Abertos Para o Negócio</value-->
-        <value xml:lang="pt-PT">Parte da família SCIPIO de software de fonte aberta</value>
-    <!--value xml:lang="ro">Parte accesibila pentru Business Family of Open Source Software</valuevalue xml:lang="ro">Parte din SCIPIO Family of Open Source Software</value-->
+        <value xml:lang="pt-PT">Parte da família SCIPIO ERP de software de fonte aberta</value>
+    <!--value xml:lang="ro">Parte accesibila pentru Business Family of Open Source Software</valuevalue xml:lang="ro">Parte din SCIPIO ERP Family of Open Source Software</value-->
         <value xml:lang="ro">Partea de Deschidere Pentru Afaceri Familiale din Open Source Software</value>
-    <!--value xml:lang="ru">Часть семейства ПО SCIPIO</valuevalue xml:lang="ru">Часть семейства "SCIPIO Family" программных продуктов Open Source </value-->
-        <value xml:lang="ru">Входит в состав семейства SCIPIO</value>
+    <!--value xml:lang="ru">Часть семейства ПО SCIPIO ERP</valuevalue xml:lang="ru">Часть семейства "SCIPIO ERP Family" программных продуктов Open Source </value-->
+        <value xml:lang="ru">Входит в состав семейства SCIPIO ERP</value>
     <!--value xml:lang="th">เป็นส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value-->
         <value xml:lang="th">ส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value>
-        <value xml:lang="vi">Thành viên của Gia đình mã nguồn mở SCIPIO</value>
-    <!--value xml:lang="zh">开源软件SCIPIO的组成部分</valuevalue xml:lang="zh">开源软件SCIPIO的组成部分</value-->
-        <value xml:lang="zh">开源软件SCIPIO家族的一部分</value>
-        <value xml:lang="zh-CN">SCIPIO一部分</value>
-        <value xml:lang="zh-TW">開源軟體SCIPIO家族的一部分</value>
+        <value xml:lang="vi">Thành viên của Gia đình mã nguồn mở SCIPIO ERP</value>
+    <!--value xml:lang="zh">开源软件SCIPIO ERP的组成部分</valuevalue xml:lang="zh">开源软件SCIPIO ERP的组成部分</value-->
+        <value xml:lang="zh">开源软件SCIPIO ERP家族的一部分</value>
+        <value xml:lang="zh-CN">SCIPIO ERP一部分</value>
+        <value xml:lang="zh-TW">開源軟體SCIPIO ERP家族的一部分</value>
     </property>
     <property key="ProductCompareAtPrice">
         <value xml:lang="cs">Porovnat cenu</value>
@@ -16432,8 +16423,7 @@
         <value xml:lang="zh">为其它文件中的屏幕使用类似于</value>
         <value xml:lang="zh-TW">為其他檔中的畫面使用類似於</value>
     </property>
-    <property key="ProductDetailSubScreenTooltip">
-        <!-- SCIPIO: Now points to shop -->
+    <property key="ProductDetailSubScreenTooltip"><!-- SCIPIO: modified: Now points to shop -->
         <value xml:lang="de">Besipiel: component://shop/widget/CatalogScreens.xml#categorydetail</value>
         <value xml:lang="en">example: component://shop/widget/CatalogScreens.xml#categorydetail</value>
         <value xml:lang="it">esempio: component://shop/widget/CatalogScreens.xml#categorydetail</value>
@@ -18946,18 +18936,6 @@
         <value xml:lang="zh">HTML搜索参数</value>
         <value xml:lang="zh-TW">HTML搜尋參數</value>
     </property>
-    <property key="ProductSearchParameters">
-        <value xml:lang="de">Suchparameter</value>
-        <value xml:lang="en">Search Parameters</value>
-        <value xml:lang="es">Parámetros de búsqueda</value>
-        <value xml:lang="fr">Paramètres de recherche</value>
-        <value xml:lang="it">Parametri di Ricerca</value>
-        <value xml:lang="ja">検索パラメータ</value>
-        <value xml:lang="th">ค้นหาพารามิเตอร์</value>
-        <value xml:lang="vi">Tham số tìm kiếm</value>
-        <value xml:lang="zh">搜索参数</value>
-        <value xml:lang="zh-TW">搜尋參數</value>
-    </property>
     <property key="ProductIdCode">
         <value xml:lang="de">ID Code</value>
         <value xml:lang="en">ID Code</value>
@@ -19290,7 +19268,7 @@
         <value xml:lang="zh">包含在促销中</value>
         <value xml:lang="zh-TW">包含在促銷中</value>
     </property>
-    <property key="ProductIncludeSubCategories">
+    <property key="ProductIncludeSubCategories"><!-- SCIPIO: modified: no question marks -->
         <value xml:lang="de">Enthält Unterkategorien</value>
         <value xml:lang="en">Include sub-categories</value>
         <value xml:lang="es">Incluír sub-categorías</value>
@@ -26038,10 +26016,6 @@
         <value xml:lang="zh">促销代码</value>
         <value xml:lang="zh-TW">促銷代碼</value>
     </property>
-    <property key="ProductPromotionCodes"><!-- SCIPIO: TODO: Localize -->
-        <value xml:lang="de">Aktionscodes</value>
-        <value xml:lang="en">Promotion Codes</value>
-    </property>
     <property key="ProductPromotionImported">
         <value xml:lang="de">Nur importierte</value>
         <value xml:lang="en">Imported Only</value>
@@ -29376,9 +29350,6 @@
         <value xml:lang="zh">货运长度</value>
         <value xml:lang="zh-TW">貨運長度</value>
     </property>
-    <property key="ProductShippingDiameter">
-        <value xml:lang="en">Shipping Diameter</value>
-    </property>
     <property key="ProductShippingDimensionsAndWeights">
         <value xml:lang="de">Lieferung Dimensionen und Gewicht</value>
         <value xml:lang="en">Shipping Dimensions and Weights</value>
@@ -31182,9 +31153,6 @@
         <value xml:lang="zh">未知; 请指定类型</value>
         <value xml:lang="zh-TW">未知; 請指定類型</value>
     </property>
-    <property key="ProductQuantityUom">
-        <value xml:lang="en">Quantity Uom</value>
-    </property>
     <property key="ProductUomId">
         <value xml:lang="de">Maßeinheit Id</value>
         <value xml:lang="en">Uom Id</value>
@@ -32377,7 +32345,7 @@
         <value xml:lang="nl">Batch ref.</value>
         <value xml:lang="zh">批次参考</value>
     </property>
-    <!-- SCIPIO: new. TODO: localize -->
+    <!-- SCIPIO: NEW LABELS -->
     <property key="ProductSettings">
         <value xml:lang="de">Produkteinstellungen</value>
         <value xml:lang="en">Product Settings</value>
@@ -32413,7 +32381,6 @@
     <property key="ProductReceiveInventoryItems">
         <value xml:lang="en">Receive Inventory</value>
     </property>
-    <!-- SCIPIO: TODO: Localize -->
     <property key="ProductRooms">
         <value xml:lang="de">Zimmer</value>
         <value xml:lang="en">Rooms</value>
@@ -32437,8 +32404,7 @@
         <value xml:lang="en">Price History</value>
         <value xml:lang="fr">Historique des prix</value>
     </property>
-    <!-- SCIPIO: this is a temporary workaround for some labels. It does not work well in all languages. -->
-    <property key="ProductProductQualifiedLabel">
+    <property key="ProductProductQualifiedLabel"><!-- SCIPIO: temporary workaround for some labels. Doesn't work well in all langs. -->
         <value xml:lang="de">Produkt ${qualifiedLabel}</value>
         <value xml:lang="en">Product ${qualifiedLabel} </value>
         <value xml:lang="fr">${qualifiedLabel} de l'article</value>
@@ -32640,7 +32606,6 @@
         <value xml:lang="fr">Prélèvement</value>
         <value xml:lang="it">Prelievo</value>
     </property>
-    <!-- SCIPIO: TODO: localize -->
     <property key="ProductRelevance">
         <value xml:lang="de">Relevanz</value>
         <value xml:lang="en">Relevance</value>
@@ -32918,5 +32883,32 @@
     </property>
     <property key="ProductRecentProductsAdded">
         <value xml:lang="en">New Products</value>
+    </property>
+    <property key="CatalogWebAnalyticsType">
+        <value xml:lang="de">Web Analytik Type</value>
+        <value xml:lang="en">Web Analytics Type</value>
+    </property>
+    <property key="ProductBestSellingProducts">
+        <value xml:lang="de">Meist verkaufte Produkte</value>
+        <value xml:lang="en">Best Selling Products</value>
+    </property>
+    <property key="ProductSearchParameters">
+        <value xml:lang="de">Suchparameter</value>
+        <value xml:lang="en">Search Parameters</value>
+        <value xml:lang="es">Parámetros de búsqueda</value>
+        <value xml:lang="fr">Paramètres de recherche</value>
+        <value xml:lang="it">Parametri di Ricerca</value>
+        <value xml:lang="ja">検索パラメータ</value>
+        <value xml:lang="th">ค้นหาพารามิเตอร์</value>
+        <value xml:lang="vi">Tham số tìm kiếm</value>
+        <value xml:lang="zh">搜索参数</value>
+        <value xml:lang="zh-TW">搜尋參數</value>
+    </property>
+    <property key="ProductPromotionCodes"><!-- SCIPIO: new -->
+        <value xml:lang="de">Aktionscodes</value>
+        <value xml:lang="en">Promotion Codes</value>
+    </property>
+    <property key="ProductShippingDiameter">
+        <value xml:lang="en">Shipping Diameter</value>
     </property>
 </resource>

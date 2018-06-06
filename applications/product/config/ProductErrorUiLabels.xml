@@ -1381,7 +1381,7 @@
         <value xml:lang="zh">缺少必须的变型产品标识， 请为新的变型产品输入一个标识。</value>
         <value xml:lang="zh-TW">缺少必須的變型產品識別, 請為新的變型產品輸入一個識別.</value>
     </property>
-    <!-- SCIPIO: TODO: localize -->
+    <!-- SCIPIO: NEW LABELS -->
     <property key="productevents.productstore_already_exists_for_id">
         <value xml:lang="de">Der Produktspeicher existiert bereits mit ID: ${productStoreId}</value>
         <value xml:lang="en">Product store already exists with ID: ${productStoreId}</value>

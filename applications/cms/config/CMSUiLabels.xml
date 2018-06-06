@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="CMSApplication">
         <value xml:lang="en">CMS</value>
         <value xml:lang="zh">CMS</value>
@@ -10,10 +10,10 @@
         <value xml:lang="zh-TW">SCIPIO - CMS</value>
     </property>
     <property key="CMSCompanySubtitle">
-        <value xml:lang="en">Part of the SCIPIO Family of Open Source Software</value>
-        <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO</value>
-        <value xml:lang="zh">开源软件SCIPIO -的组成部分</value>
-        <value xml:lang="zh-TW">開源軟體SCIPIO -的組成部分</value>
+        <value xml:lang="en">Part of the SCIPIO ERP Family of Open Source Software</value>
+        <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO ERP</value>
+        <value xml:lang="zh">开源软件SCIPIO ERP的组成部分</value>
+        <value xml:lang="zh-TW">開源軟體SCIPIO ERP的組成部分</value>
     </property>
     <property key="CMSViewPermissionError">
         <value xml:lang="en">You are not allowed to view this page.</value>
@@ -150,8 +150,8 @@
         <value xml:lang="de">Alle Seiten</value>
     </property>
     <property key="CmsCreatePage">
-        <value xml:lang="en">New Page</value>
-        <value xml:lang="de">Neue Seite</value>
+        <value xml:lang="en">Create Page</value>
+        <value xml:lang="de">Seite Erstellen</value>
     </property>
     <property key="CmsCopyPage">
         <value xml:lang="en">Copy Page</value>
@@ -160,10 +160,6 @@
     <property key="CmsEditPage">
         <value xml:lang="en">Edit Page</value>
         <value xml:lang="de">Seite Editieren</value>
-    </property>
-    <property key="CmsCreatePage">
-        <value xml:lang="en">Create Page</value>
-        <value xml:lang="de">Seite Erstellen</value>
     </property>
     <property key="CmsSaveAndPublish">
         <value xml:lang="en">Save &amp; Publish</value>
@@ -487,7 +483,6 @@
         <value xml:lang="de"></value>
     </property>
     <property key="CmsExpandLang.description.FTL">
-        <!-- SCIPIO: NOTE: the "no double quotes" part is specifically a current UI limitation -->
         <value xml:lang="en">Freemarker w/bracket syntax, no double quotes</value>
         <value xml:lang="de">Freemarker mit Klammer-Syntax, Keine doppelten zitate</value>
     </property>

@@ -3036,21 +3036,21 @@
         <value xml:lang="zh-TW">你可以在這裡增加其他逗號分隔的電子郵件位址,這些電子郵件位址僅用於當前訂單</value>
     </property>
     <property key="OrderCompanyName">
-        <value xml:lang="de">SCIPIO ERP - Auftragsverwaltung</value>
-        <value xml:lang="en">SCIPIO ERP - Order Manager</value>
-        <value xml:lang="es">SCIPIO ERP - Gestión de pedidos</value>
-        <value xml:lang="fr">SCIPIO ERP - : Gestion commerciale</value>
-        <value xml:lang="it">SCIPIO ERP - Gestione ordini</value>
-        <value xml:lang="ja">SCIPIO ERP - 注文管理</value>
-        <value xml:lang="nl">SCIPIO ERP - Order Manager</value>
-        <value xml:lang="pt-BR">SCIPIO ERP - Gestão de Pedidos</value>
-        <value xml:lang="ro">SCIPIO ERP - Gestiune Comanda </value>
-        <value xml:lang="ru">SCIPIO ERP - Управление заказами</value>
-        <value xml:lang="th">SCIPIO ERP - การจัดการรายการสั่งซื้อสินค้าสินค้า</value>
-        <value xml:lang="vi">SCIPIO ERP - Quản lý đặt hàng</value>
-        <value xml:lang="zh">SCIPIO ERP - 订单管理</value>
-        <value xml:lang="zh-CN">SCIPIO ERP - 订单管理</value>
-        <value xml:lang="zh-TW">SCIPIO ERP - 訂單管理</value>
+        <value xml:lang="de">SCIPIO - Auftragsverwaltung</value>
+        <value xml:lang="en">SCIPIO - Order Manager</value>
+        <value xml:lang="es">SCIPIO - Gestión de pedidos</value>
+        <value xml:lang="fr">SCIPIO - Gestion commerciale</value>
+        <value xml:lang="it">SCIPIO - Gestione ordini</value>
+        <value xml:lang="ja">SCIPIO - 注文管理</value>
+        <value xml:lang="nl">SCIPIO - Order Manager</value>
+        <value xml:lang="pt-BR">SCIPIO - Gestão de Pedidos</value>
+        <value xml:lang="ro">SCIPIO - Gestiune Comanda </value>
+        <value xml:lang="ru">SCIPIO - Управление заказами</value>
+        <value xml:lang="th">SCIPIO - การจัดการรายการสั่งซื้อสินค้าสินค้า</value>
+        <value xml:lang="vi">SCIPIO - Quản lý đặt hàng</value>
+        <value xml:lang="zh">SCIPIO - 订单管理</value>
+        <value xml:lang="zh-CN">SCIPIO - 订单管理</value>
+        <value xml:lang="zh-TW">SCIPIO - 訂單管理</value>
     </property>
     <property key="OrderCompanySubtitle">
         <value xml:lang="ar">جزء من عائلة أوفبيز للتطبيقات الحرة للتسيير</value>
@@ -3061,15 +3061,15 @@
         <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO ERP</value>
         <value xml:lang="ja">Part of the SCIPIO ERP Family of Open Source Software</value>
         <value xml:lang="nl">Deel van de SCIPIO ERP-suite van Open Source Software</value>
-        <value xml:lang="pt-BR">Parte da família SCIPIO ERP - de software de fonte aberta</value>
-        <value xml:lang="pt-PT">Parte da família SCIPIO ERP - de software de fonte aberta</value>
+        <value xml:lang="pt-BR">Parte da família SCIPIO ERP de software de fonte aberta</value>
+        <value xml:lang="pt-PT">Parte da família SCIPIO ERP de software de fonte aberta</value>
         <value xml:lang="ro">Partea de Deschidere Pentru Afaceri Familiale din Open Source Software</value>
         <value xml:lang="ru">Входит в состав семейства SCIPIO ERP</value>
         <value xml:lang="th">ส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value>
         <value xml:lang="vi">Part of the SCIPIO ERP Family of Open Source Software</value>
-        <value xml:lang="zh">开源软件SCIPIO ERP -家族的一部分</value>
-        <value xml:lang="zh-CN">SCIPIO ERP -的一部分</value>
-        <value xml:lang="zh-TW">開源軟體SCIPIO ERP -家族的一部分</value>
+        <value xml:lang="zh">开源软件SCIPIO ERP家族的一部分</value>
+        <value xml:lang="zh-CN">SCIPIO ERP的一部分</value>
+        <value xml:lang="zh-TW">開源軟體SCIPIO ERP家族的一部分</value>
     </property>
     <property key="OrderCompleteOrder">
         <value xml:lang="ar">إكمال أمر البيع\الشراء</value>
@@ -8987,10 +8987,6 @@
         <value xml:lang="zh">收到订单日期</value>
         <value xml:lang="zh-TW">已接收訂單於</value>
     </property>
-    <property key="OrderOrdersReceivedFrom">
-        <value xml:lang="de">Bestellungen erhalten ab</value>
-        <value xml:lang="en">Orders Received From</value>
-    </property>
     <property key="OrderOrderReturn">
         <value xml:lang="ar">استرجاع</value>
         <value xml:lang="de">Retoure</value>
@@ -10216,23 +10212,6 @@
         <value xml:lang="zh">促销/优惠券代码</value>
         <value xml:lang="zh-CN">促销优惠代码</value>
         <value xml:lang="zh-TW">促銷/優惠券代碼</value>
-    </property>
-    <property key="OrderPromotionCouponCodes_spaced">
-        <value xml:lang="de">Aktion / Coupon Codes</value>
-        <value xml:lang="en">Promotion / Coupon Codes</value>
-        <value xml:lang="es">Códigos Promoción/Cupón</value>
-        <value xml:lang="fr">Promotion / Codes de coupons</value>
-        <value xml:lang="it">Promozione / Codici Tagliando</value>
-        <value xml:lang="ja">プロモーション / クーポンコード</value>
-        <value xml:lang="nl">Promo- / couponcodes</value>
-        <value xml:lang="pt-BR">Promoção / código de cupom</value>
-        <value xml:lang="ro">Promovare / Coduri Cupoane</value>
-        <value xml:lang="ru">Коды по акциям/купонам</value>
-        <value xml:lang="th">โปรโมชัน / รหัสคูปอง</value>
-        <value xml:lang="vi">Mã khuyến mại / coupon</value>
-        <value xml:lang="zh">促销 / 优惠券代码</value>
-        <value xml:lang="zh-CN">促销优惠代码</value>
-        <value xml:lang="zh-TW">促銷 / 優惠券代碼</value>
     </property>
     <property key="OrderPromotionDetails">
         <value xml:lang="ar">تفاصيل الترويج</value>
@@ -14629,14 +14608,6 @@
         <value xml:lang="zh">单位数量</value>
         <value xml:lang="zh-TW">單位數量</value>
     </property>
-    <!-- SCIPIO: TODO: translations -->
-    <property key="OrderUnits">
-        <value xml:lang="de">Einheiten</value>
-        <value xml:lang="en">Units</value>
-        <value xml:lang="es">Unidades</value>
-        <value xml:lang="fr">Unités</value>
-        <value xml:lang="it">Unità</value>
-    </property>
     <property key="OrderUnplanned">
         <value xml:lang="ar">غير مخطط</value>
         <value xml:lang="de">Nicht geplant</value>
@@ -16034,17 +16005,20 @@
         <value xml:lang="zh">租赁</value>
         <value xml:lang="zh-TW">租賃</value>
     </property>
+    <!-- SCIPIO: NEW LABELS -->
+    <property key="OrderOrdersReceivedFrom">
+        <value xml:lang="de">Bestellungen erhalten ab</value>
+        <value xml:lang="en">Orders Received From</value>
+    </property>
     <property key="OrderIncludeCountry">
         <value xml:lang="de">Länderverfügbarkeit</value>
         <value xml:lang="en">Include Country</value>
         <value xml:lang="fr">Pays inclus</value>
     </property>
-    <!-- SCIPIO: TODO: translations -->
     <property key="OrderOrderInfo">
         <value xml:lang="de">Bestell-Info</value>
         <value xml:lang="en">Order Info</value>
     </property>
-    <!-- SCIPIO: TODO: Localize -->
     <property key="OrderNoShipMethodAvailable">
         <value xml:lang="de">Keine Versandmethoden verfügbar.</value>
         <value xml:lang="en">No shipping methods available.</value>
@@ -16080,8 +16054,7 @@
         <value xml:lang="de">Im Konto speichern</value>
         <value xml:lang="en">Save to account</value>
     </property>
-    <!-- SCIPIO: TODO: OrderPaymentDesc* descriptions should be made part of entities (?), but this is more direct for time being
-        DO NOT REUSE these for now. -->
+    <!-- SCIPIO: TODO: OrderPaymentDesc* descriptions should be made part of entities (?), but simpler for time being. DO NOT REUSE these for now. -->
     <property key="OrderPaymentDescOffline">
         <value xml:lang="de">Bezahlen mit Mail-In-Scheck oder per Überweisung.</value>
         <value xml:lang="en">Pay using mail-in check or money order.</value>
@@ -16106,10 +16079,6 @@
         <value xml:lang="de">Bestellung bestätigen</value>
         <value xml:lang="en">Confirm Order</value>
     </property>
-    <property key="OrderConfirmOrder">
-        <value xml:lang="de">Bestellung bestätigen</value>
-        <value xml:lang="en">Confirm Order</value>
-    </property>
     <property key="OrderCart">
         <value xml:lang="de">Warenkorb</value>
         <value xml:lang="en">Cart</value>
@@ -16125,5 +16094,29 @@
     <property key="OrderNetSales">
         <value xml:lang="de">Nettoumsatz</value>
         <value xml:lang="en">Net Sales</value>
+    </property>
+    <property key="OrderUnits"><!-- SCIPIO: new -->
+        <value xml:lang="de">Einheiten</value>
+        <value xml:lang="en">Units</value>
+        <value xml:lang="es">Unidades</value>
+        <value xml:lang="fr">Unités</value>
+        <value xml:lang="it">Unità</value>
+    </property>
+    <property key="OrderPromotionCouponCodes_spaced"><!-- SCIPIO: new -->
+        <value xml:lang="de">Aktion / Coupon Codes</value>
+        <value xml:lang="en">Promotion / Coupon Codes</value>
+        <value xml:lang="es">Códigos Promoción/Cupón</value>
+        <value xml:lang="fr">Promotion / Codes de coupons</value>
+        <value xml:lang="it">Promozione / Codici Tagliando</value>
+        <value xml:lang="ja">プロモーション / クーポンコード</value>
+        <value xml:lang="nl">Promo- / couponcodes</value>
+        <value xml:lang="pt-BR">Promoção / código de cupom</value>
+        <value xml:lang="ro">Promovare / Coduri Cupoane</value>
+        <value xml:lang="ru">Коды по акциям/купонам</value>
+        <value xml:lang="th">โปรโมชัน / รหัสคูปอง</value>
+        <value xml:lang="vi">Mã khuyến mại / coupon</value>
+        <value xml:lang="zh">促销 / 优惠券代码</value>
+        <value xml:lang="zh-CN">促销优惠代码</value>
+        <value xml:lang="zh-TW">促銷 / 優惠券代碼</value>
     </property>
 </resource>

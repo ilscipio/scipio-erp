@@ -847,7 +847,7 @@
         <value xml:lang="zh-TW">人造物品資訊</value>
     </property>
     <property key="WebtoolsArtifactInfoTimeToLoad">
-        <value xml:lang="de">(Das Laden könnte etwas dauern!)</value>
+        <value xml:lang="de">(Das Laden könnte etwas dauern)</value>
         <value xml:lang="en">(may take some time to load)</value>
         <value xml:lang="fr">(cela peut prendre un certain temps à charger)</value>
         <value xml:lang="vi">(đợi chút thời gian)</value>
@@ -1071,18 +1071,6 @@
         <value xml:lang="zh">检查全部</value>
         <value xml:lang="zh-TW">檢查全部</value>
     </property>
-    <property key="WebtoolsCheckAllPlain"><!-- SCIPIO: need one without the "(not views)" -->
-        <value xml:lang="de">Alle auswählen</value>
-        <value xml:lang="en">Check All</value>
-        <value xml:lang="fr">Tout sélectionner</value>
-        <value xml:lang="it">Seleziona tutto</value>
-        <value xml:lang="ja">すべてチェック</value>
-        <value xml:lang="pt">Selecionar todos</value>
-        <value xml:lang="th">ตรวจสอบทั้งหมด</value>
-        <value xml:lang="vi">Chọn tất cả</value>
-        <value xml:lang="zh">检查全部</value>
-        <value xml:lang="zh-TW">檢查全部</value>
-    </property>
     <property key="WebtoolsCheckDataOnly">
         <value xml:lang="de">Nur Datencheck (keine Änderungen in der Datenbank)</value>
         <value xml:lang="en">Check Data Only (nothing changed in database)</value>
@@ -1148,45 +1136,45 @@
         <value xml:lang="zh-TW">清除這個快取</value>
     </property>
     <property key="WebtoolsCompanyName">
-        <value xml:lang="de">SCIPIO - Web Tools</value>
+        <value xml:lang="de">SCIPIO - Admin</value>
         <value xml:lang="en">SCIPIO - Admin</value>
-        <value xml:lang="es">SCIPIO - Herramientas Web</value>
-        <value xml:lang="fr">SCIPIO - outils web</value>
-        <value xml:lang="it">SCIPIO - Strumenti web</value>
-        <value xml:lang="ja">SCIPIO - Webツール</value>
-        <value xml:lang="pt">SCIPIO - Web Tools</value>
-        <value xml:lang="ro">SCIPIO - Instrumente Web</value>
-        <value xml:lang="th">SCIPIO - เครื่องมือจัดการเว็บไซต์</value>
-        <value xml:lang="vi">SCIPIO - Trung tâm Quản trị</value>
-        <value xml:lang="zh">SCIPIO - Web工具</value>
-        <value xml:lang="zh-TW">SCIPIO - Web工具</value>
+        <value xml:lang="es">SCIPIO - Admin</value>
+        <value xml:lang="fr">SCIPIO - Admin</value>
+        <value xml:lang="it">SCIPIO - Admin</value>
+        <value xml:lang="ja">SCIPIO - Admin</value>
+        <value xml:lang="pt">SCIPIO - Admin</value>
+        <value xml:lang="ro">SCIPIO - Admin</value>
+        <value xml:lang="th">SCIPIO - Admin</value>
+        <value xml:lang="vi">SCIPIO - Admin</value>
+        <value xml:lang="zh">SCIPIO - Admin</value>
+        <value xml:lang="zh-TW">SCIPIO - Admin</value>
     </property>
     <property key="WebtoolsCompanySubtitle">
     <!--value xml:lang="ar">جزء من عائلة أوفبيز للبرمجيات الحرة</value-->
         <value xml:lang="ar">جزء من عائلة أوفبيز للتطبيقات الحرة للتسيير</value>
-        <value xml:lang="de">Teil der SCIPIO Familie von Open Source Software</value>
-        <value xml:lang="en">Part of the SCIPIO Family of Open Source Software</value>
+        <value xml:lang="de">Teil der SCIPIO ERP Familie von Open Source Software</value>
+        <value xml:lang="en">Part of the SCIPIO ERP Family of Open Source Software</value>
     <!--value xml:lang="es">Parte de la familia "Open for Bussiness" de Software Libre</value-->
-        <value xml:lang="es">Parte de la familia de software SCIPIO de código abierto</value>
-        <value xml:lang="fr">Un module de la famille SCIPIO, logiciel libre de gestion d'entreprise.</value>
-        <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO</value>
-    <!--value xml:lang="nl">Onderdeel van de SCIPIO'-suite</value-->
-        <value xml:lang="ja">Part of the SCIPIO Family of Open Source Software</value>
-        <value xml:lang="nl">Deel van de SCIPIO-suite van Open Source Software</value>
-        <value xml:lang="pt-BR">Parte da família SCIPIO - de software de fonte aberta</value>
+        <value xml:lang="es">Parte de la familia de software SCIPIO ERP de código abierto</value>
+        <value xml:lang="fr">Un module de la famille SCIPIO ERP, logiciel libre de gestion d'entreprise.</value>
+        <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO ERP</value>
+    <!--value xml:lang="nl">Onderdeel van de SCIPIO ERP'-suite</value-->
+        <value xml:lang="ja">Part of the SCIPIO ERP Family of Open Source Software</value>
+        <value xml:lang="nl">Deel van de SCIPIO ERP-suite van Open Source Software</value>
+        <value xml:lang="pt-BR">Parte da família SCIPIO ERP - de software de fonte aberta</value>
     <!--value xml:lang="pt-PT">Parte do Software de Fonte Aberta para Grupos Abertos Para o Negócio</value-->
-        <value xml:lang="pt-PT">Parte da família SCIPIO - de software de fonte aberta</value>
+        <value xml:lang="pt-PT">Parte da família SCIPIO ERP - de software de fonte aberta</value>
     <!--value xml:lang="ro">Parte accesibila pentru Business Family of Open Source Software</valuevalue xml:lang="ro">Parte din Open for Business Family of Open Source Software</value-->
         <value xml:lang="ro">Partea de Deschidere Pentru Afaceri Familiale din Open Source Software</value>
-    <!--value xml:lang="ru">Часть семейства ПО SCIPIO</valuevalue xml:lang="ru">Часть семейства "SCIPIO Family" программных продуктов Open Source </value-->
-        <value xml:lang="ru">Входит в состав семейства SCIPIO</value>
+    <!--value xml:lang="ru">Часть семейства ПО SCIPIO ERP</valuevalue xml:lang="ru">Часть семейства "SCIPIO ERP Family" программных продуктов Open Source </value-->
+        <value xml:lang="ru">Входит в состав семейства SCIPIO ERP</value>
     <!--value xml:lang="th">เป็นส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value-->
         <value xml:lang="th">ส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value>
-    <!--value xml:lang="zh">开源软件SCIPIO -的组成部分</valuevalue xml:lang="zh">开源软件SCIPIO -的组成部分</value-->
-        <value xml:lang="vi">Thành phần của Gia đình mã nguồn mở SCIPIO -</value>
-        <value xml:lang="zh">开源软件SCIPIO -家族的一部分</value>
-        <value xml:lang="zh-CN">SCIPIO -的一部分</value>
-        <value xml:lang="zh-TW">開源軟體SCIPIO -家族的一部分</value>
+    <!--value xml:lang="zh">开源软件SCIPIO ERP的组成部分</valuevalue xml:lang="zh">开源软件SCIPIO ERP的组成部分</value-->
+        <value xml:lang="vi">Thành phần của Gia đình mã nguồn mở SCIPIO ERP</value>
+        <value xml:lang="zh">开源软件SCIPIO ERP家族的一部分</value>
+        <value xml:lang="zh-CN">SCIPIO ERP的一部分</value>
+        <value xml:lang="zh-TW">開源軟體SCIPIO ERP家族的一部分</value>
     </property>
     <property key="WebtoolsCompareType">
         <value xml:lang="de">Typ vergleichen</value>
@@ -2347,7 +2335,7 @@
     <property key="WebtoolsForSomethingInteresting">
         <value xml:lang="de">Um etwas Interessantes zu sehen sollten Sie sich anmelden; versuchen Sie: admin, Passwort: scipio</value>
         <value xml:lang="en">For something interesting make sure you are logged in, try username: admin, password: scipio</value>
-        <value xml:lang="fr">Pour quelque chose d'intéressant assurez-vous que vous avez ouvert une session. Essayez avec l'identifiant de connexion : admin, et le mot de passe : scipio</value>
+        <value xml:lang="fr">Pour quelque chose d'intéressant assurez-vous que vous avez ouvert une session. Essayez avec l'identifiant de connexion: admin, et le mot de passe: scipio</value>
         <value xml:lang="it">Per accedere all'applicazione devi essere autenticato, prova con Nome utente:admin, Password:scipio</value>
         <value xml:lang="ja">興味を感じたことを確実なものにするため、Username;Admin;Password scipio でログインしてください</value>
         <value xml:lang="pt">Para algo interessante conecte-se, use usuÃ¡rio: admin, senha: scipio</value>
@@ -2412,7 +2400,7 @@
     <property key="WebtoolsGeneralArtifactInfoTools">
         <value xml:lang="de">Allgemeine Info</value>
         <value xml:lang="en">General Artifact Info Tools</value>
-        <value xml:lang="fr">Outils généraux pour les informations sur les éléments de SCIPIO</value>
+        <value xml:lang="fr">Outils généraux pour les informations sur les artefacts</value>
         <value xml:lang="it">Strumento per informazioni generali su artifatti</value>
         <value xml:lang="ja">成果物情報ツール全般</value>
         <value xml:lang="pt">Ferramentas de InformaÃ§Ãµes Gerais do Artefato</value>
@@ -5905,15 +5893,6 @@
         <value xml:lang="zh">本页面用于从数据库导出数据 导出的文档会有一个"&lt;entity-engine-xml&gt;"的根标签在为这个应用配置的代表中，会对每个实体有一个文件。</value>
         <value xml:lang="zh-TW">本頁面用於從資料庫匯出資料 匯出的檔會有一個"&lt;entity-engine-xml&gt;"的根標簽在為這個應用配置的代表中,會對每個資料實體有一個檔.&lt;/entity-engine-xml&gt;</value>
     </property>
-    <property key="WebtoolsXMLExportSingleInfo"><!-- SCIPIO: TODO: Localize -->
-        <value xml:lang="de">Hier Seite können Daten aus der Datenbank exportiert werden. Die exportierten Dokumente werden in einem XML-root-tag "&lt;entity-engine-xml&gt;" enthalten sein.</value>
-        <value xml:lang="en">This page can be used to export data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</value>
-        <value xml:lang="fr">Cette page peut être utilisée pour exporter des données depuis la base. Les documents exportés auront une balise de racine de "&lt;entity-engine-xml&gt;".</value>
-        <value xml:lang="it">Questa pagina può essere usata per esportare i dati dal database. I documenti esportati avranno un root tag "&lt;entity-engine-xml&gt;".</value>
-        <value xml:lang="ja">このページでデータベースからデータをエクスポートすることができます。エクスポートするドキュメントには"&lt;entity-engine-xml&gt;"ルートタグがあります。</value>
-        <value xml:lang="pt">Esta pÃ¡gina pode ser utilizado para exportar dados do banco de dados. Os documentos de exportaÃ§Ã£o terÃ£o uma tag raiz de " &lt;entity-engine-xml&gt;".</value>
-        <value xml:lang="ro">Aceasta pagina poate fi folosita pentru exportarea datelor din  database. Documentele exportate vor avea un root tag "&lt;entity-engine-xml&gt;".</value>
-    </property>
     <property key="WebtoolsXMLImportInfo">
         <value xml:lang="de">Hier können zuvor exportierte Entitäten XML Dateien wieder in die Datenbank importiert werden. Diese Dokumente haben eine XML-root-tag "&lt;entity-engine-xml&gt;".</value>
         <value xml:lang="en">This page can be used to import exported Entity Engine XML documents. These documents all have a root tag of "&lt;entity-engine-xml&gt;".</value>
@@ -5939,7 +5918,7 @@
         <value xml:lang="zh">创建一个实体 ${entityName} ：输入值，然后点击新建.</value>
         <value xml:lang="zh-TW">新建一個資料實體 ${entityName} :輸入值,然後點擊新建.</value>
     </property>
-    <!-- SCIPIO: TODO: Localize -->
+    <!-- SCIPIO: NEW LABELS -->
     <property key="WebtoolsEntityUtilityServices">
         <value xml:lang="de">Entity Utility Services</value>
         <value xml:lang="en">Entity Utility Services</value>
@@ -5948,7 +5927,6 @@
         <value xml:lang="de">Utility Services</value>
         <value xml:lang="en">Utility Services</value>
     </property>
-    <!-- SCIPIO: TODO: Localize -->
     <property key="WebtoolsUtilityAndDataGen">
         <value xml:lang="de">Dienstprogramm und Datengenerierung </value>
         <value xml:lang="en">Utility and Data Generation</value>
@@ -6025,7 +6003,7 @@
         <value xml:lang="zh">数据导入</value>
         <value xml:lang="zh-TW">資料匯入</value>
     </property>
-    <property key="WebtoolsUploadXmlFile"><!-- SCIPIO: TODO: localize -->
+    <property key="WebtoolsUploadXmlFile">
         <value xml:lang="en">Upload XML File</value>
         <value xml:lang="de">XML-Datei hochladen</value>
         <value xml:lang="fr">Télécharger fichier XML</value>
@@ -6034,10 +6012,10 @@
         <value xml:lang="en">Test Label</value>
         <value xml:lang="de">Testetikett</value>
     </property>
-    <property key="WebtoolsTestLabel_en"><!-- SCIPIO: DO NOT LOCALIZE THIS, for testing -->
+    <property key="WebtoolsTestLabel_en"><!-- SCIPIO: DO NOT LOCALIZE; testing only -->
         <value xml:lang="en">Test Label</value>
     </property>
-    <property key="WebtoolsTestLabel_de"><!-- SCIPIO: DO NOT LOCALIZE THIS, for testing -->
+    <property key="WebtoolsTestLabel_de"><!-- SCIPIO: DO NOT LOCALIZE; testing only -->
         <value xml:lang="de">Testetikett</value>
     </property>
     <property key="WebtoolsLeaveEmptyToRunJobImmediately">
@@ -6094,5 +6072,26 @@
     <property key="WebtoolsStatsSystemMemory">
         <value xml:lang="de">System Speicher</value>
         <value xml:lang="en">System Memory</value>
+    </property>
+    <property key="WebtoolsCheckAllPlain">
+        <value xml:lang="de">Alle auswählen</value>
+        <value xml:lang="en">Check All</value>
+        <value xml:lang="fr">Tout sélectionner</value>
+        <value xml:lang="it">Seleziona tutto</value>
+        <value xml:lang="ja">すべてチェック</value>
+        <value xml:lang="pt">Selecionar todos</value>
+        <value xml:lang="th">ตรวจสอบทั้งหมด</value>
+        <value xml:lang="vi">Chọn tất cả</value>
+        <value xml:lang="zh">检查全部</value>
+        <value xml:lang="zh-TW">檢查全部</value>
+    </property>
+    <property key="WebtoolsXMLExportSingleInfo">
+        <value xml:lang="de">Hier Seite können Daten aus der Datenbank exportiert werden. Die exportierten Dokumente werden in einem XML-root-tag "&lt;entity-engine-xml&gt;" enthalten sein.</value>
+        <value xml:lang="en">This page can be used to export data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</value>
+        <value xml:lang="fr">Cette page peut être utilisée pour exporter des données depuis la base. Les documents exportés auront une balise de racine de "&lt;entity-engine-xml&gt;".</value>
+        <value xml:lang="it">Questa pagina può essere usata per esportare i dati dal database. I documenti esportati avranno un root tag "&lt;entity-engine-xml&gt;".</value>
+        <value xml:lang="ja">このページでデータベースからデータをエクスポートすることができます。エクスポートするドキュメントには"&lt;entity-engine-xml&gt;"ルートタグがあります。</value>
+        <value xml:lang="pt">Esta pÃ¡gina pode ser utilizado para exportar dados do banco de dados. Os documentos de exportaÃ§Ã£o terÃ£o uma tag raiz de " &lt;entity-engine-xml&gt;".</value>
+        <value xml:lang="ro">Aceasta pagina poate fi folosita pentru exportarea datelor din  database. Documentele exportate vor avea un root tag "&lt;entity-engine-xml&gt;".</value>
     </property>
 </resource>

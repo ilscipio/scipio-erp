@@ -1894,18 +1894,6 @@
         <value xml:lang="zh">已指派的任务</value>
         <value xml:lang="zh-TW">已指派的任務</value>
     </property>
-    <property key="WorkEffortCompletedTasks">
-        <value xml:lang="de">Erledigte Aufgaben</value>
-        <value xml:lang="en">Completed Tasks</value>
-    </property>
-    <property key="WorkEffortAssignedActivities">
-        <value xml:lang="de">Zugewiesene Aktivitäten</value>
-        <value xml:lang="en">Assigned Activities</value>
-    </property>
-    <property key="WorkEffortCompletedActivities">
-        <value xml:lang="de">Erledigte Aktivitäten</value>
-        <value xml:lang="en">Completed Activities</value>
-    </property>
     <property key="WorkEffortAssoc">
         <value xml:lang="en">WorkEffort Association</value>
         <value xml:lang="fr">Association de la tâche</value>
@@ -2206,13 +2194,6 @@
         <value xml:lang="zh">浏览日历即将到来的事件</value>
         <value xml:lang="zh-TW">檢視日曆即將到來的事件</value>
     </property>
-    <property key="WorkEffortUpComingEvents"><!-- SCIPIO: TOOD: localize -->
-        <value xml:lang="de">Kommende Veranstaltungen</value>
-        <value xml:lang="en">Up-Coming Events</value>
-        <value xml:lang="es">Eventos próximos</value>
-        <value xml:lang="fr">Évènements à venir</value>
-        <value xml:lang="nl">Up-Coming Events</value>
-    </property>
     <property key="WorkEffortCalendarWeekView">
         <value xml:lang="de">Kalender Wochenansicht</value>
         <value xml:lang="en">Calendar Week View</value>
@@ -2309,29 +2290,29 @@
     <property key="WorkEffortCompanySubtitle">
     <!--value xml:lang="ar">جزء من عائلة أوفبيز للبرمجيات الحرة</value-->
         <value xml:lang="ar">جزء من عائلة أوفبيز للتطبيقات الحرة للتسيير</value>
-        <value xml:lang="de">Teil der SCIPIO Familie von Open Source Software</value>
-        <value xml:lang="en">Part of the SCIPIO Family of Open Source Software</value>
+        <value xml:lang="de">Teil der SCIPIO ERP Familie von Open Source Software</value>
+        <value xml:lang="en">Part of the SCIPIO ERP Family of Open Source Software</value>
     <!--value xml:lang="es">Parte de la familia "Open for Bussiness" de Software Libre</value-->
-        <value xml:lang="es">Parte de la familia de software SCIPIO de código abierto</value>
-        <value xml:lang="fr">Un module de la famille SCIPIO, logiciel libre de gestion d'entreprise.</value>
-        <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO</value>
-    <!--value xml:lang="nl">Onderdeel van de SCIPIO'-suite</value-->
-        <value xml:lang="ja">Part of the SCIPIO Family of Open Source Software</value>
-        <value xml:lang="nl">Deel van de SCIPIO-suite van Open Source Software</value>
-        <value xml:lang="pt-BR">Parte da família SCIPIO - de software de fonte aberta</value>
+        <value xml:lang="es">Parte de la familia de software SCIPIO ERP de código abierto</value>
+        <value xml:lang="fr">Un module de la famille SCIPIO ERP, logiciel libre de gestion d'entreprise.</value>
+        <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO ERP</value>
+    <!--value xml:lang="nl">Onderdeel van de SCIPIO ERP'-suite</value-->
+        <value xml:lang="ja">Part of the SCIPIO ERP Family of Open Source Software</value>
+        <value xml:lang="nl">Deel van de SCIPIO ERP-suite van Open Source Software</value>
+        <value xml:lang="pt-BR">Parte da família SCIPIO ERP de software de fonte aberta</value>
     <!--value xml:lang="pt-PT">Parte do Software de Fonte Aberta para Grupos Abertos Para o Negócio</value-->
-        <value xml:lang="pt-PT">Parte da família SCIPIO - de software de fonte aberta</value>
+        <value xml:lang="pt-PT">Parte da família SCIPIO ERP de software de fonte aberta</value>
     <!--value xml:lang="ro">Parte accesibila pentru Business Family of Open Source Software</valuevalue xml:lang="ro">Parte din Open for Business Family of Open Source Software</value-->
         <value xml:lang="ro">Partea de Deschidere Pentru Afaceri Familiale din Open Source Software</value>
-    <!--value xml:lang="ru">Часть семейства ПО SCIPIO</valuevalue xml:lang="ru">Часть семейства "SCIPIO Family" программных продуктов Open Source </value-->
-        <value xml:lang="ru">Входит в состав семейства SCIPIO</value>
+    <!--value xml:lang="ru">Часть семейства ПО SCIPIO ERP</valuevalue xml:lang="ru">Часть семейства "SCIPIO ERP Family" программных продуктов Open Source </value-->
+        <value xml:lang="ru">Входит в состав семейства SCIPIO ERP</value>
     <!--value xml:lang="th">เป็นส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value-->
         <value xml:lang="th">ส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value>
-    <!--value xml:lang="zh">开源软件SCIPIO -的组成部分</valuevalue xml:lang="zh">开源软件SCIPIO -的组成部分</value-->
-        <value xml:lang="vi">Part of the SCIPIO Family of Open Source Software</value>
-        <value xml:lang="zh">开源软件SCIPIO -家族的一部分</value>
-        <value xml:lang="zh-CN">SCIPIO -的一部分</value>
-        <value xml:lang="zh-TW">開源軟體SCIPIO -家族的一部分</value>
+    <!--value xml:lang="zh">开源软件SCIPIO ERP的组成部分</valuevalue xml:lang="zh">开源软件SCIPIO ERP的组成部分</value-->
+        <value xml:lang="vi">Part of the SCIPIO ERP Family of Open Source Software</value>
+        <value xml:lang="zh">开源软件SCIPIO ERP家族的一部分</value>
+        <value xml:lang="zh-CN">SCIPIO ERP的一部分</value>
+        <value xml:lang="zh-TW">開源軟體SCIPIO ERP家族的一部分</value>
     </property>
     <property key="WorkEffortCompletionDate">
         <value xml:lang="de">Enddatum</value>
@@ -3236,11 +3217,6 @@
         <value xml:lang="zh">最大事件编号</value>
         <value xml:lang="zh-TW">最大事件編號</value>
     </property>
-    <property key="WorkEffortMaxEvents"><!-- SCIPIO: TODO: Localize -->
-        <value xml:lang="de">Max Veranstaltungen</value>
-        <value xml:lang="en">Max Events</value>
-        <value xml:lang="it">Max eventi</value>
-    </property>
     <property key="WorkEffortMaxNumberOfPersons">
         <value xml:lang="en">Max # of Persons</value>
         <value xml:lang="it">Max numero di persone</value>
@@ -3248,11 +3224,6 @@
         <value xml:lang="vi">Số tối đa của nhân sự</value>
         <value xml:lang="zh">最大人数</value>
         <value xml:lang="zh-TW">最大人數</value>
-    </property>
-    <property key="WorkEffortMaxPersons"><!-- SCIPIO: TODO: Localize -->
-        <value xml:lang="de">Max Personen</value>
-        <value xml:lang="en">Max Persons</value>
-        <value xml:lang="it">Max persone</value>
     </property>
     <property key="WorkEffortMonthView">
         <value xml:lang="de">Monatsansicht</value>
@@ -5408,7 +5379,14 @@
         <value xml:lang="zh">把工作流行动指派给用户角色</value>
         <value xml:lang="zh-TW">把工作流程行動指派給使用者角色</value>
     </property>
-    <!-- SCIPIO: TODO: localize -->
+    <!-- SCIPIO: NEW LABELS -->
+    <property key="WorkEffortUpComingEvents">
+        <value xml:lang="de">Kommende Veranstaltungen</value>
+        <value xml:lang="en">Up-Coming Events</value>
+        <value xml:lang="es">Eventos próximos</value>
+        <value xml:lang="fr">Évènements à venir</value>
+        <value xml:lang="nl">Up-Coming Events</value>
+    </property>
     <property key="WorkEffortDeliverable">
         <value xml:lang="en">Deliverable</value>
     </property>
@@ -5417,5 +5395,27 @@
     </property>
     <property key="WorkEfforts">
         <value xml:lang="en">Work Efforts</value>
+    </property>
+    <property key="WorkEffortCompletedTasks">
+        <value xml:lang="de">Erledigte Aufgaben</value>
+        <value xml:lang="en">Completed Tasks</value>
+    </property>
+    <property key="WorkEffortAssignedActivities">
+        <value xml:lang="de">Zugewiesene Aktivitäten</value>
+        <value xml:lang="en">Assigned Activities</value>
+    </property>
+    <property key="WorkEffortCompletedActivities">
+        <value xml:lang="de">Erledigte Aktivitäten</value>
+        <value xml:lang="en">Completed Activities</value>
+    </property>
+    <property key="WorkEffortMaxEvents">
+        <value xml:lang="de">Max Veranstaltungen</value>
+        <value xml:lang="en">Max Events</value>
+        <value xml:lang="it">Max eventi</value>
+    </property>
+    <property key="WorkEffortMaxPersons">
+        <value xml:lang="de">Max Personen</value>
+        <value xml:lang="en">Max Persons</value>
+        <value xml:lang="it">Max persone</value>
     </property>
 </resource>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
-SCIPIO: UI Labels new to Shop application
-ALL NEW SHOP LABELS SHOULD GO HERE 
+  SCIPIO: UI Labels new to Shop component
+  All new Shop labels should go here.
 -->
-<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="ShopShop">
         <value xml:lang="en">Shop</value>
         <value xml:lang="de">Shop</value>
@@ -45,18 +45,13 @@ ALL NEW SHOP LABELS SHOULD GO HERE
         <value xml:lang="zh-CN">你没有权限查看此页</value>
         <value xml:lang="zh-TW">你無權檢視這個頁面.</value>
     </property>     
-    <!-- SCIPIO: TODO: Localize -->
     <property key="ShopSaveGoBackExplanation">
-        <value xml:lang="de">Wenn Sie mit Ihren Änderungen zufrieden sind, klicken Sie unten auf "Speichern".
-             Danach klicken Sie auf "Zurück", um zur vorherigen Ziel zurückzukehren.</value>
-        <value xml:lang="en">When you are satisfied with your changes, click "Save" below. 
-            Afterward, click "Go Back" to return to your previous destination.</value>
+        <value xml:lang="de">Wenn Sie mit Ihren Änderungen zufrieden sind, klicken Sie unten auf "Speichern". Danach klicken Sie auf "Zurück", um zur vorherigen Ziel zurückzukehren.</value>
+        <value xml:lang="en">When you are satisfied with your changes, click "Save" below. Afterward, click "Go Back" to return to your previous destination.</value>
     </property>   
     <property key="ShopEditingShipAddressShipCostChange">
-        <value xml:lang="de">Sie bearbeiten ein Postanschrift derzeit verwendeten Versand zu berechnen. Ändern
-             kann diese Adresse Versandkosten ändern.</value>
-        <value xml:lang="en">You are editing a postal address currently being used to calculate shipping. Changing
-            this address may change shipping costs.</value>
+        <value xml:lang="de">Sie bearbeiten ein Postanschrift derzeit verwendeten Versand zu berechnen. Ändern kann diese Adresse Versandkosten ändern.</value>
+        <value xml:lang="en">You are editing a postal address currently being used to calculate shipping. Changing this address may change shipping costs.</value>
     </property>   
     <property key="ShopDownloadsHereOnceOrderCompleted">
         <value xml:lang="de">Downloads für Bestellungen in Erwartung der Zahlung oder Genehmigung, werden hier angezeigt, sobald der Auftrag abgeschlossen ist.</value>
@@ -66,8 +61,6 @@ ALL NEW SHOP LABELS SHOULD GO HERE
         <value xml:lang="de">Downloads verfügbar sein, sobald der Auftrag abgeschlossen ist.</value>
         <value xml:lang="en">Downloads will be available once the order is completed.</value>
     </property>
-    
-    <!-- SCIPIO: Subscriptions -->
     <property key="ShopAuthorizeSubscription">
         <value xml:lang="de">Abonnement berechtigen</value>
         <value xml:lang="en">Authorize subscription</value>

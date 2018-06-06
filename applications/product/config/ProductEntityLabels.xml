@@ -4198,8 +4198,7 @@
         <value xml:lang="zh">这个这个目录所代表的公司的名称。</value>
         <value xml:lang="zh-TW">這個這個型錄所代表的公司的名稱.</value>
     </property>
-    <property key="FieldDescription.ProductStore.title">
-        <!-- SCIPIO: now points to shop -->
+    <property key="FieldDescription.ProductStore.title"><!-- SCIPIO: modified: now points to shop -->
         <value xml:lang="de">Dieser Eintrag wird im Kopfbereich des shop angezeigt.</value>
         <value xml:lang="en">This value gets displayed in the header section of the shop.</value>
         <value xml:lang="fr">Cette valeur s'affiche dans la section d'en-tête du magasin de commerce électronique (shop).</value>
@@ -4208,8 +4207,7 @@
         <value xml:lang="zh">这个值会显示在电子商务店铺的页眉部分。</value>
         <value xml:lang="zh-TW">這個值會顯示在電子商務店鋪的頁眉部分.</value>
     </property>
-    <property key="FieldDescription.ProductStore.subtitle">
-        <!-- SCIPIO: now points to shop -->
+    <property key="FieldDescription.ProductStore.subtitle"><!-- SCIPIO: modified: now points to shop -->
         <value xml:lang="de">Dieser Eintrag wird im Kopfbereich des shop angezeigt.</value>
         <value xml:lang="en">This value gets displayed in the header section of the shop.</value>
         <value xml:lang="fr">Cette valeur s'affiche dans la section d'en-tête du magasin de commerce électronique (shop).</value>
@@ -4499,7 +4497,7 @@
     <property key="FieldDescription.ProductStore.headerDeclinedStatus">
         <value xml:lang="de">Dies ist die Statusnachricht die Ihre Kunden sehen sollen, wenn ihre Bestellung abgelehnt wurde. Basierend auf den standardmässig definierten Statuscodes in SCIPIO.</value>
         <value xml:lang="en">This is the message you want your customers to see when their order is declined. Based on the standard defined status codes in SCIPIO.</value>
-        <value xml:lang="fr">Message d'état à afficher au client lorsque la commande est refusée. Basé sur les codes statut standards définis dans SCIPIO</value>
+        <value xml:lang="fr">Message d'état à afficher au client lorsque la commande est refusée. Basé sur les codes statut standards définis dans SCIPIO.</value>
         <value xml:lang="ja">注文が否認された時に顧客に見せたいメッセージを指定します。SCIPIOで標準定義されたステータスコードに基づきます。</value>
         <value xml:lang="vi">Tin nhắn mà bạn muốn khách hàng của bạn nhìn thấy khi đặt hàng của họ bị từ chối. Dựa trên các mã trạng thái quy định tiêu chuẩn mở cho doanh nghiệp.</value>
         <value xml:lang="zh">当客户的订单被拒绝时，这是你想要他们看到的信息。基于SCIPIO中定义的标准状态代码。</value>

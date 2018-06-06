@@ -5155,7 +5155,7 @@
         <value xml:lang="en">Thank You for contacting us.</value>
         <value xml:lang="zh">感谢您与我们联系！</value>
     </property>
-    <!-- SCIPIO -->
+    <!-- SCIPIO: NEW LABELS -->
     <property key="EcommerceShippingOptions">
         <value xml:lang="de">Versand</value>
         <value xml:lang="en">Shipping</value>

@@ -225,18 +225,6 @@
         <value xml:lang="zh">账户对账</value>
         <value xml:lang="zh-TW">帳目調節</value>
     </property>
-    <property key="AccountingAcctTransEntryRecon">
-        <value xml:lang="en">Account Transaction Entry Reconciliations</value>
-        <value xml:lang="de">Abgleich von Transaktionen</value>
-    </property>
-     <property key="AccountingAcctGlRecon">
-        <value xml:lang="en">Account GL Reconciliations</value>
-        <value xml:lang="de">Kontenabstimmung</value>
-    </property>
-    <property key="AccountingTransactionHeader">
-        <value xml:lang="en">Transaction Header</value>
-        <value xml:lang="de">Allgemeine Transaktions-Info</value>
-    </property>
     <property key="AccountingAcctRecons">
         <value xml:lang="ar">تسويات الحساب</value>
         <value xml:lang="de">Kontenabstimmungen</value>
@@ -369,19 +357,6 @@
         <value xml:lang="zh">添加分类总账账户</value>
         <value xml:lang="zh-TW">增加總帳科目分類</value>
     </property>
-    <!-- SCIPIO -->
-    <property key="AccountingCustomTimePeriod">
-        <value xml:lang="de">Individuelle Zeiträume</value>
-        <value xml:lang="en">Custom Time Period</value>
-    </property>
-    <property key="AccountingUpdateTimePeriod">
-        <value xml:lang="de">Zeitraum ändern</value>
-        <value xml:lang="en">Time Period - Update</value>
-    </property>
-    <property key="AccountingSetTimePeriod">
-        <value xml:lang="de">Zeitraum setzen</value>
-        <value xml:lang="en">Time Period - Set</value>
-    </property>
     <property key="AccountingAddCustomTimePeriod">
         <value xml:lang="ar">إضافة فترة زمنية مفصلة</value>
         <value xml:lang="de">Individueller Zeitraum hinzufügen</value>
@@ -396,12 +371,6 @@
         <value xml:lang="vi">Thêm thời điểm tùy chỉnh</value>
         <value xml:lang="zh">添加定制时间段</value>
         <value xml:lang="zh-TW">增加客製時間段</value>
-    </property>
-    <property key="AccountingEditCustomTimePeriod">        
-        <value xml:lang="en">Edit Custom Time Period</value>
-    </property>
-    <property key="AccountingNewCustomTimePeriod">        
-        <value xml:lang="en">New Custom Time Period</value>
     </property>
     <property key="AccountingAddFinAccountReconciliations">
         <value xml:lang="ar">إضافة تسوية حساب للحساب المالي: ${finAccount.finAccountName} [$(finAccountOd)]</value>
@@ -1197,7 +1166,6 @@
         <value xml:lang="zh-TW">應付帳款首頁</value>
     </property>
     <property key="AccountingApCompanyName">
-        <value xml:lang="ar">أوفبيز: مدير ذمم دائنة</value>
         <value xml:lang="de">SCIPIO - Kreditorenbuchhaltung</value>
         <value xml:lang="en">SCIPIO - AP Manager</value>
         <value xml:lang="fr">SCIPIO - gestion des comptes fourn.</value>
@@ -1530,7 +1498,6 @@
         <value xml:lang="zh-TW">應收帳款首頁</value>
     </property>
     <property key="AccountingArCompanyName">
-        <value xml:lang="ar">أوفبيز: مدير الذمم المدينة</value>
         <value xml:lang="de">SCIPIO - Debitorenbuchhaltung</value>
         <value xml:lang="en">SCIPIO - AR Manager</value>
         <value xml:lang="fr">SCIPIO - gestion des comptes clients</value>
@@ -2967,38 +2934,6 @@
         <value xml:lang="zh">账目表：</value>
         <value xml:lang="zh-TW">會計科目表</value>
     </property>
-    <property key="AccountingAccountsReceivable">
-        <value xml:lang="de">Forderungen</value>
-        <value xml:lang="en">Accounts Receivable</value>
-        <value xml:lang="fr">Comptes clients</value>
-        <value xml:lang="hi-IN">प्राप्य लेखा</value>
-        <value xml:lang="it">Conto crediti</value>
-        <value xml:lang="ja">売掛金</value>
-        <value xml:lang="nl">Debiteuren</value>
-        <value xml:lang="pt">Contas a Receber</value>
-        <value xml:lang="ro">Credite pe termen scurt</value>
-        <value xml:lang="ru">Счет дебиторов</value>
-        <value xml:lang="th">ลูกหนี้การค้า</value>
-        <value xml:lang="vi">Tài khoản Phải Trả</value>
-        <value xml:lang="zh">应收账款</value>
-        <value xml:lang="zh-TW">應收帳款</value>
-    </property>
-    <property key="AccountingAccountsPayable">
-        <value xml:lang="de">Verbindlichkeiten</value>
-        <value xml:lang="en">Accounts Payable</value>
-        <value xml:lang="fr">Comptes fournisseurs</value>
-        <value xml:lang="hi-IN">देय लेखा</value>
-        <value xml:lang="it">Conto debiti</value>
-        <value xml:lang="ja">買掛金</value>
-        <value xml:lang="nl">Crediteuren</value>
-        <value xml:lang="pt">Contas a Pagar</value>
-        <value xml:lang="ro">Conturi Plati</value>
-        <value xml:lang="ru">Счет кредиторов</value>
-        <value xml:lang="th">เจ้าหนี้การค้า</value>
-        <value xml:lang="vi">Tài khoản Phải Nhận</value>
-        <value xml:lang="zh">应付账款</value>
-        <value xml:lang="zh-TW">應付帳款</value>
-    </property>
     <property key="AccountingChartOfAcctsMenu">
         <value xml:lang="ar">شجرة الحسابات</value>
         <value xml:lang="cs">Účtová osnova</value>
@@ -3234,7 +3169,6 @@
         <value xml:lang="zh-TW">公司</value>
     </property>
     <property key="AccountingCompanyName">
-        <value xml:lang="ar">أوفبيز: مسير المحاسبة</value>
         <value xml:lang="de">SCIPIO - Buchhaltung</value>
         <value xml:lang="en">SCIPIO - Accounting Manager</value>
         <value xml:lang="es">SCIPIO - Administrador de cuentas</value>
@@ -3330,22 +3264,22 @@
     </property>
     <property key="AccountingCompanySubtitle">
         <value xml:lang="ar">جزء من عائلة أوفبيز للتطبيقات الحرة للتسيير</value>
-        <value xml:lang="de">Teil der SCIPIO Familie von Open Source Software</value>
-        <value xml:lang="en">Part of the SCIPIO Family of Open Source Software</value>
-        <value xml:lang="es">Parte de la familia de software SCIPIO de código abierto</value>
-        <value xml:lang="fr">Un module de la famille SCIPIO, logiciel libre de gestion d'entreprise.</value>
-        <value xml:lang="hi-IN">Open Source Software के SCIPIO परिवार का हिस्सा</value>
-        <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO</value>
-        <value xml:lang="nl">Deel van de SCIPIO-suite van Open Source Software</value>
-        <value xml:lang="pt-BR">Parte da família SCIPIO - de software livre</value>
-        <value xml:lang="pt-PT">&gt;Parte da família SCIPIO - de software de fonte aberta</value>
+        <value xml:lang="de">Teil der SCIPIO ERP Familie von Open Source Software</value>
+        <value xml:lang="en">Part of the SCIPIO ERP Family of Open Source Software</value>
+        <value xml:lang="es">Parte de la familia de software SCIPIO ERP de código abierto</value>
+        <value xml:lang="fr">Un module de la famille SCIPIO ERP, logiciel libre de gestion d'entreprise.</value>
+        <value xml:lang="hi-IN">Open Source Software के SCIPIO ERP परिवार का हिस्सा</value>
+        <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO ERP</value>
+        <value xml:lang="nl">Deel van de SCIPIO ERP-suite van Open Source Software</value>
+        <value xml:lang="pt-BR">Parte da família SCIPIO ERP de software livre</value>
+        <value xml:lang="pt-PT">&gt;Parte da família SCIPIO ERP de software de fonte aberta</value>
         <value xml:lang="ro">Partea de Deschidere Pentru Afaceri Familiale din Open Source Software</value>
-        <value xml:lang="ru">Входит в состав семейства SCIPIO</value>
+        <value xml:lang="ru">Входит в состав семейства SCIPIO ERP</value>
         <value xml:lang="th">ส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value>
-        <value xml:lang="vi">Thành viên của Gia đình mã nguồn mở SCIPIO -</value>
-        <value xml:lang="zh">开源软件SCIPIO -家族的一部分</value>
-        <value xml:lang="zh-CN">SCIPIO -的一部分</value>
-        <value xml:lang="zh-TW">開源軟體SCIPIO -家族的一部分</value>
+        <value xml:lang="vi">Thành viên của Gia đình mã nguồn mở SCIPIO ERP</value>
+        <value xml:lang="zh">开源软件SCIPIO ERP家族的一部分</value>
+        <value xml:lang="zh-CN">SCIPIO ERP的一部分</value>
+        <value xml:lang="zh-TW">開源軟體SCIPIO ERP家族的一部分</value>
     </property>
     <property key="AccountingComparativeBalanceSheet">
         <value xml:lang="ar">الميزانية العمومية المقارنة</value>
@@ -5019,10 +4953,6 @@
         <value xml:lang="zh">编辑信用卡</value>
         <value xml:lang="zh-TW">修改信用卡</value>
     </property>
-    <property key="AccountingCustomTimePeriods">
-        <value xml:lang="de">Eigener Zeitraum</value>
-        <value xml:lang="en">Custom Time Periods</value>
-    </property>
     <property key="AccountingEditCustomTimePeriods">
         <value xml:lang="ar">تعديل الفترات الزمنية المخصصة</value>
         <value xml:lang="de">Individuelle Zeiträume bearbeiten</value>
@@ -5696,9 +5626,6 @@
         <value xml:lang="vi">Tỷ giá quy đổi ngoại tệ</value>
         <value xml:lang="zh">外汇汇率</value>
         <value xml:lang="zh-TW">外匯匯率</value>
-    </property>
-    <property key="AccountingFinancialInformation">
-        <value xml:lang="en">Financial Information</value>
     </property>
     <property key="AccountingFinAccount">
         <value xml:lang="ar">الحساب المالي</value>
@@ -7500,10 +7427,6 @@
         <value xml:lang="zh">总账账户试算余额</value>
         <value xml:lang="zh-TW">總帳科目試算餘額</value>
     </property>
-    <property key="AccountingBalance">
-        <value xml:lang="de">Saldo</value>
-        <value xml:lang="en">Balance</value>
-    </property>
     <property key="AccountingGlAccountTrialBalanceReport">
         <value xml:lang="ar">تقرير ميزان المراجعة لحساب GL</value>
         <value xml:lang="de">Probebilanz Report (Hauptkonto)</value>
@@ -7566,9 +7489,6 @@
         <value xml:lang="vi">Tài khoản sổ cái</value>
         <value xml:lang="zh">总账账户</value>
         <value xml:lang="zh-TW">總帳科目</value>
-    </property>
-    <property key="AccountingGlJournal">
-        <value xml:lang="en">Journal</value>
     </property>
     <property key="AccountingGlJournals">
         <value xml:lang="ar">دفاتر اليومية</value>
@@ -7677,10 +7597,6 @@
         <value xml:lang="vi">Trường thông tin Ẩn</value>
         <value xml:lang="zh">隐藏域</value>
         <value xml:lang="zh-TW">隱藏欄位</value>
-    </property>
-    <property key="AccountingIncomesExpenses">
-        <value xml:lang="de">Einnahmen &amp; Ausgaben</value>
-        <value xml:lang="en">Income &amp; Expenses</value>
     </property>
     <property key="AccountingIgnoreInvoiceItems">
         <value xml:lang="ar">تجاهل بنود الفاتورة</value>
@@ -8699,18 +8615,6 @@
         <value xml:lang="vi">Hóa đơn Bán</value>
         <value xml:lang="zh">销售发票</value>
         <value xml:lang="zh-TW">銷售發票</value>
-    </property>
-    <property key="AccountingSalesTaxIncluded">
-        <value xml:lang="de">Alle Preise inklusive MwSt.</value>
-        <value xml:lang="en">All prices include Sales Tax</value>
-        <value xml:lang="en-GB">All prices include VAT</value>
-        <value xml:lang="fr">Dont TVA incluse </value>
-        <value xml:lang="it">Tasse di vendita incluse</value>
-        <value xml:lang="ja">消費税込</value>
-        <value xml:lang="pt-BR">Impostos de venda inclusos</value>
-        <value xml:lang="vi">tại nơi Thuế bán được gộp</value>
-        <value xml:lang="zh">已含营业税</value>
-        <value xml:lang="zh-TW">已包含營業稅</value>
     </property>
     <property key="AccountingInvoiceSaveAsTemplate">
         <value xml:lang="ar">حفظ الفاتورة كقالب</value>
@@ -10166,11 +10070,6 @@
         <value xml:lang="zh">没有修改，不更新电子资金转账账户</value>
         <value xml:lang="zh-TW">沒有修改,不更新電子資金轉帳帳戶</value>
     </property>
-    <!-- SCIPIO: TODO: Localize -->
-    <property key="AccountingNoChangesMadeNotUpdatingGiftCard">
-        <value xml:lang="de">Keine Änderungen, Gift Card wurde nicht aktualisiert</value>
-        <value xml:lang="en">No changes made, not updating Gift Card</value>
-    </property>
     <property key="AccountingNoChildPeriodsFound">
         <value xml:lang="ar">لم يتم العثور على فترات متفرعة</value>
         <value xml:lang="de">Keine untergeordneten Zeiträume gefunden</value>
@@ -10802,22 +10701,6 @@
         <value xml:lang="vi">Hạn mức mở</value>
         <value xml:lang="zh">期初余额</value>
         <value xml:lang="zh-TW">期初餘額</value>
-    </property>
-    <property key="AccountingOpeningDebit">
-        <value xml:lang="en">Opening Debit</value>
-        <value xml:lang="de">Eröffnungsstand Soll</value>
-    </property>
-    <property key="AccountingOpeningCredit">
-        <value xml:lang="en">Opening Credit</value>
-        <value xml:lang="de">Eröffnungsstand Haben</value>
-    </property>
-    <property key="AccountingClosingDebit">
-        <value xml:lang="en">Closing Debit</value>
-        <value xml:lang="de">Abschlussstand Soll</value>
-    </property>
-    <property key="AccountingClosingCredit">
-        <value xml:lang="en">Closing Credit</value>
-        <value xml:lang="de">Abschlussstand Haben</value>
     </property>
     <property key="AccountingOpeningCashBalance">
         <value xml:lang="ar">الرصيد النقدي الافتتاحي</value>
@@ -12109,9 +11992,6 @@
         <value xml:lang="zh">支付组一览：</value>
         <value xml:lang="zh-TW">支付群組概觀:</value>
     </property>
-    <property key="AccountingPaymentGroupHeader">
-        <value xml:lang="en">Payment Group Header</value>
-    </property>
     <property key="AccountingPaymentHeader">
         <value xml:lang="ar">رأس الدفعة</value>
         <value xml:lang="de">Zahlungskopf</value>
@@ -12248,11 +12128,6 @@
         <value xml:lang="vi">Phương thức thanh toán</value>
         <value xml:lang="zh">支付方式</value>
         <value xml:lang="zh-TW">支付方式</value>
-    </property>
-    <!-- SCIPIO: TODO: Localize -->
-    <property key="AccountingAdditionalPaymentMethods">
-        <value xml:lang="de">Zusätzliche Zahlungsmethoden</value>
-        <value xml:lang="en">Additional Payment Methods</value>
     </property>
     <property key="AccountingPaymentMethodAssignAccountType">
         <value xml:lang="ar">نوع الحساب المعين لطريقة الدفعة</value>
@@ -13920,10 +13795,6 @@
         <value xml:lang="vi">Nhận thanh toán</value>
         <value xml:lang="zh">接收支付</value>
         <value xml:lang="zh-TW">接收支付</value>
-    </property>
-    <property key="AccountingRecentPayments">
-        <value xml:lang="de">Letzte Zahlungsvorgänge</value>
-        <value xml:lang="en">Recent Payments</value>
     </property>
     <property key="AccountingReconcile">
         <value xml:lang="ar">تسوية</value>
@@ -15653,18 +15524,6 @@
         <value xml:lang="vi">Tổng bán chưa thuế</value>
         <value xml:lang="zh">净销售合计</value>
         <value xml:lang="zh-TW">淨銷售合計</value>
-    </property>
-    <property key="AccountingRevenue">
-        <value xml:lang="de">Umsatz</value>
-        <value xml:lang="en">Revenue</value>
-    </property>
-    <property key="AccountingRevenues">
-        <value xml:lang="de">Umsätze</value>
-        <value xml:lang="en">Revenues</value>
-    </property>
-    <property key="AccountingContraRevenue">
-        <value xml:lang="de">Abschreibungen aus Umsatzerlösen</value>
-        <value xml:lang="en">Contra Revenue</value>
     </property>
     <property key="AccountingTotalNumberOfOrders">
         <value xml:lang="ar">إجمالي أعداد أوامر البيع/الشراء</value>
@@ -18318,7 +18177,7 @@
         <value xml:lang="zh">有效别名</value>
         <value xml:lang="zh-TW">有效別名</value>
     </property>
-    <property key="FormFieldTitle_emailAddressCc"><!-- SCIPIO: clarified with "(Cc)" -->
+    <property key="FormFieldTitle_emailAddressCc"><!-- SCIPIO: modified: clarified with "(Cc)" -->
         <value xml:lang="ar">نسخ عنوان البريد الإلكتروني (Cc)</value>
         <value xml:lang="de">Kopiere Email Adresse (Cc)</value>
         <value xml:lang="en">Copy Email Address (Cc)</value>
@@ -22041,32 +21900,10 @@
         <value xml:lang="zh">添加账单账户角色</value>
         <value xml:lang="zh-TW">增加帳單帳戶角色</value>
     </property>
-    <!-- SCIPIO: New Billing Account labels -->
-    <property key="PageTitleListBillingAccountRoles">
-        <value xml:lang="en">Billing Account Role List</value>
-    </property>
-    <property key="PageTitleAddBillingAccountTerms">
-        <value xml:lang="en">Add Billing Account Term</value>
-    </property>
-    <property key="PageTitleListBillingAccountTerms">
-        <value xml:lang="en">Billing Account Term List</value>
-    </property>
-    <property key="PageTitleAddBillingAccountPayments">
-        <value xml:lang="en">Add Billing Account Payment</value>
-    </property>
-    <property key="PageTitleListBillingAccountPayments">
-        <value xml:lang="en">Billing Account Payment List</value>
-    </property>
-    <property key="PageTitleListBillingAccountOrders">
-        <value xml:lang="en">Billing Account Order List</value>
-    </property>
-    <property key="PageTitleListBillingAccountInvoices">
-        <value xml:lang="en">Billing Account Invoice List</value>
-    </property>
     <property key="PageTitleAddGlAccount">
         <value xml:lang="ar">إضافة حساب GL</value>
         <value xml:lang="cs">Přidat účet do hlavní knihy</value>
-        <value xml:lang="de">Gl Account hinzufügen</value><!-- SCIPIO -->
+        <value xml:lang="de">Gl Account hinzufügen</value>
         <value xml:lang="en">Add Gl Account</value>
         <value xml:lang="es">Agregar Cuenta de LM</value>
         <value xml:lang="fr">Ajouter un compte comptable</value>
@@ -24182,7 +24019,23 @@
         <value xml:lang="zh">交易成功了。</value>
         <value xml:lang="zh-TW">交易成功了.</value>
     </property>
-    <!-- SCIPIO: TODO: Localize -->
+    <!-- SCIPIO: NEW LABELS -->
+    <property key="AccountingCustomTimePeriod">
+        <value xml:lang="de">Individuelle Zeiträume</value>
+        <value xml:lang="en">Custom Time Period</value>
+    </property>
+    <property key="AccountingUpdateTimePeriod">
+        <value xml:lang="de">Zeitraum ändern</value>
+        <value xml:lang="en">Time Period - Update</value>
+    </property>
+    <property key="AccountingSetTimePeriod">
+        <value xml:lang="de">Zeitraum setzen</value>
+        <value xml:lang="en">Time Period - Set</value>
+    </property>
+    <property key="AccountingAdditionalPaymentMethods">
+        <value xml:lang="de">Zusätzliche Zahlungsmethoden</value>
+        <value xml:lang="en">Additional Payment Methods</value>
+    </property>
     <property key="AccountingContracts">
         <value xml:lang="de">Verträge</value>
         <value xml:lang="en">Contracts</value>
@@ -24256,5 +24109,145 @@
     </property>
     <property key="AccountingScipioAccountingStandardsInfo">
         <value xml:lang="en">An accounting standard couldn't be found installed in your system. You can either load the demo data in order to get the US-GAAP standard or check out Scipio's official store for additional accounting standard addons.</value>
+    </property>
+    <property key="PageTitleListBillingAccountRoles">
+        <value xml:lang="en">Billing Account Role List</value>
+    </property>
+    <property key="PageTitleAddBillingAccountTerms">
+        <value xml:lang="en">Add Billing Account Term</value>
+    </property>
+    <property key="PageTitleListBillingAccountTerms">
+        <value xml:lang="en">Billing Account Term List</value>
+    </property>
+    <property key="PageTitleAddBillingAccountPayments">
+        <value xml:lang="en">Add Billing Account Payment</value>
+    </property>
+    <property key="PageTitleListBillingAccountPayments">
+        <value xml:lang="en">Billing Account Payment List</value>
+    </property>
+    <property key="PageTitleListBillingAccountOrders">
+        <value xml:lang="en">Billing Account Order List</value>
+    </property>
+    <property key="PageTitleListBillingAccountInvoices">
+        <value xml:lang="en">Billing Account Invoice List</value>
+    </property>
+    <property key="AccountingAcctTransEntryRecon">
+        <value xml:lang="en">Account Transaction Entry Reconciliations</value>
+        <value xml:lang="de">Abgleich von Transaktionen</value>
+    </property>
+     <property key="AccountingAcctGlRecon">
+        <value xml:lang="en">Account GL Reconciliations</value>
+        <value xml:lang="de">Kontenabstimmung</value>
+    </property>
+    <property key="AccountingTransactionHeader">
+        <value xml:lang="en">Transaction Header</value>
+        <value xml:lang="de">Allgemeine Transaktions-Info</value>
+    </property>
+    <property key="AccountingEditCustomTimePeriod">        
+        <value xml:lang="en">Edit Custom Time Period</value>
+    </property>
+    <property key="AccountingNewCustomTimePeriod">        
+        <value xml:lang="en">New Custom Time Period</value>
+    </property>
+    <property key="AccountingAccountsReceivable">
+        <value xml:lang="de">Forderungen</value>
+        <value xml:lang="en">Accounts Receivable</value>
+        <value xml:lang="fr">Comptes clients</value>
+        <value xml:lang="hi-IN">प्राप्य लेखा</value>
+        <value xml:lang="it">Conto crediti</value>
+        <value xml:lang="ja">売掛金</value>
+        <value xml:lang="nl">Debiteuren</value>
+        <value xml:lang="pt">Contas a Receber</value>
+        <value xml:lang="ro">Credite pe termen scurt</value>
+        <value xml:lang="ru">Счет дебиторов</value>
+        <value xml:lang="th">ลูกหนี้การค้า</value>
+        <value xml:lang="vi">Tài khoản Phải Trả</value>
+        <value xml:lang="zh">应收账款</value>
+        <value xml:lang="zh-TW">應收帳款</value>
+    </property>
+    <property key="AccountingAccountsPayable">
+        <value xml:lang="de">Verbindlichkeiten</value>
+        <value xml:lang="en">Accounts Payable</value>
+        <value xml:lang="fr">Comptes fournisseurs</value>
+        <value xml:lang="hi-IN">देय लेखा</value>
+        <value xml:lang="it">Conto debiti</value>
+        <value xml:lang="ja">買掛金</value>
+        <value xml:lang="nl">Crediteuren</value>
+        <value xml:lang="pt">Contas a Pagar</value>
+        <value xml:lang="ro">Conturi Plati</value>
+        <value xml:lang="ru">Счет кредиторов</value>
+        <value xml:lang="th">เจ้าหนี้การค้า</value>
+        <value xml:lang="vi">Tài khoản Phải Nhận</value>
+        <value xml:lang="zh">应付账款</value>
+        <value xml:lang="zh-TW">應付帳款</value>
+    </property>
+    <property key="AccountingCustomTimePeriods">
+        <value xml:lang="de">Eigener Zeitraum</value>
+        <value xml:lang="en">Custom Time Periods</value>
+    </property>
+    <property key="AccountingFinancialInformation">
+        <value xml:lang="en">Financial Information</value>
+    </property>
+    <property key="AccountingBalance">
+        <value xml:lang="de">Saldo</value>
+        <value xml:lang="en">Balance</value>
+    </property>
+    <property key="AccountingGlJournal">
+        <value xml:lang="en">Journal</value>
+    </property>
+    <property key="AccountingIncomesExpenses">
+        <value xml:lang="de">Einnahmen &amp; Ausgaben</value>
+        <value xml:lang="en">Income &amp; Expenses</value>
+    </property>
+    <property key="AccountingSalesTaxIncluded">
+        <value xml:lang="de">Alle Preise inklusive MwSt.</value>
+        <value xml:lang="en">All prices include Sales Tax</value>
+        <value xml:lang="en-GB">All prices include VAT</value>
+        <value xml:lang="fr">Dont TVA incluse </value>
+        <value xml:lang="it">Tasse di vendita incluse</value>
+        <value xml:lang="ja">消費税込</value>
+        <value xml:lang="pt-BR">Impostos de venda inclusos</value>
+        <value xml:lang="vi">tại nơi Thuế bán được gộp</value>
+        <value xml:lang="zh">已含营业税</value>
+        <value xml:lang="zh-TW">已包含營業稅</value>
+    </property>
+    <property key="AccountingNoChangesMadeNotUpdatingGiftCard">
+        <value xml:lang="de">Keine Änderungen, Gift Card wurde nicht aktualisiert</value>
+        <value xml:lang="en">No changes made, not updating Gift Card</value>
+    </property>
+    <property key="AccountingOpeningDebit">
+        <value xml:lang="en">Opening Debit</value>
+        <value xml:lang="de">Eröffnungsstand Soll</value>
+    </property>
+    <property key="AccountingOpeningCredit">
+        <value xml:lang="en">Opening Credit</value>
+        <value xml:lang="de">Eröffnungsstand Haben</value>
+    </property>
+    <property key="AccountingClosingDebit">
+        <value xml:lang="en">Closing Debit</value>
+        <value xml:lang="de">Abschlussstand Soll</value>
+    </property>
+    <property key="AccountingClosingCredit">
+        <value xml:lang="en">Closing Credit</value>
+        <value xml:lang="de">Abschlussstand Haben</value>
+    </property>
+    <property key="AccountingPaymentGroupHeader">
+        <value xml:lang="en">Payment Group Header</value>
+    </property>
+    <property key="AccountingRecentPayments">
+        <value xml:lang="de">Letzte Zahlungsvorgänge</value>
+        <value xml:lang="en">Recent Payments</value>
+    </property>
+    <property key="AccountingRevenue">
+        <value xml:lang="de">Umsatz</value>
+        <value xml:lang="en">Revenue</value>
+    </property>
+    <property key="AccountingRevenues">
+        <value xml:lang="de">Umsätze</value>
+        <value xml:lang="en">Revenues</value>
+    </property>
+    <property key="AccountingContraRevenue">
+        <value xml:lang="de">Abschreibungen aus Umsatzerlösen</value>
+        <value xml:lang="en">Contra Revenue</value>
     </property>
 </resource>

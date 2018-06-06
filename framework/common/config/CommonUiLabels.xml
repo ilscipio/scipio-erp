@@ -507,10 +507,6 @@
         <value xml:lang="zh">没有找到地址。</value>
         <value xml:lang="zh-TW">位址找不到.</value>
     </property>
-    <property key="CommonAddress">
-        <value xml:lang="de">Adresse</value>
-        <value xml:lang="en">Address</value>
-    </property>
     <property key="CommonAddresses">
         <value xml:lang="ar">عناوين</value>
         <value xml:lang="cs">Adresy</value>
@@ -546,15 +542,6 @@
         <value xml:lang="zh">高级特征</value>
         <value xml:lang="zh-TW">進階特性</value>
     </property>
-    <property key="CommonAdvanced"><!-- SCIPIO: TODO: localize -->
-        <value xml:lang="de">Erweitert</value>
-        <value xml:lang="en">Advanced</value>
-        <value xml:lang="es">Avanzada</value>
-        <value xml:lang="fr">Avancé</value>
-        <value xml:lang="it">Avanzata</value>
-        <value xml:lang="pt-BR">Avançada</value>
-        <value xml:lang="ro">Avansata</value>
-    </property>
     <property key="CommonAdvancedSearch">
         <value xml:lang="ar">بحث متقدم</value>
         <value xml:lang="cs">Pokročilé vyhledávání</value>
@@ -573,10 +560,6 @@
         <value xml:lang="vi">Tìm kiếm nâng cao</value>
         <value xml:lang="zh">高级搜索</value>
         <value xml:lang="zh-TW">進階搜尋</value>
-    </property>
-    <property key="CommonAdvancedSearchFields"><!-- SCIPIO: TODO: localize -->
-        <value xml:lang="de">Erweiterte Suche</value>
-        <value xml:lang="en">Advanced Search</value>
     </property>
     <property key="CommonAll">
         <value xml:lang="ar">الكل</value>
@@ -2980,22 +2963,6 @@
         <value xml:lang="vi">Hiển thị ${lowCount} - ${highCount} của ${total}</value>
         <value xml:lang="zh">显示${lowCount} - ${highCount}，共${total}</value>
         <value xml:lang="zh-TW">顯示${lowCount} - ${highCount},共${total}</value>
-    </property>
-    <property key="CommonDisplayingShort"> <!-- SCIPIO: new -->
-        <value xml:lang="ar">${lowCount} إلى ${highCount} من ${total}</value>
-        <value xml:lang="cs">${lowCount} - ${highCount} z ${total}</value>
-        <value xml:lang="de">${lowCount} - ${highCount} von ${total}</value>
-        <value xml:lang="en">${lowCount} - ${highCount} of ${total}</value>
-        <value xml:lang="es">${lowCount} - ${highCount} de ${total}</value>
-        <value xml:lang="fr">${lowCount} à ${highCount} sur ${total}</value>
-        <value xml:lang="hi-IN">${lowCount} - ${highCount} का ${total} </value>
-        <value xml:lang="it">${lowCount} a ${highCount} su ${total}</value>
-        <value xml:lang="ja">${lowCount} - ${highCount} / ${total}</value>
-        <value xml:lang="pt-BR">${lowCount} - ${highCount} de ${total}</value>
-        <value xml:lang="ru">${lowCount} - ${highCount} of ${total} </value>
-        <value xml:lang="vi">${lowCount} - ${highCount} của ${total}</value>
-        <value xml:lang="zh">${lowCount} - ${highCount}，共${total}</value>
-        <value xml:lang="zh-TW">${lowCount} - ${highCount},共${total}</value>
     </property>
     <property key="CommonDistance">
         <value xml:lang="ar">مسافة</value>
@@ -7170,8 +7137,6 @@
     <property key="CommonNoAccess">
         <value xml:lang="ar">غير مسموح بإستخدام هذه الوظيفة. إتصل بمسؤول النظام إن كنت تعتقد بوجود خطأ في النظام</value>
         <value xml:lang="cs">Funkce není dostupná. Kontaktujte správce, pokud se domníváte, že se jedná o chybu</value>
-        <value xml:lang="de">Sie haben keine Berechtigung für diese Fumktion; falls Sie dies für einen Fehler halten, wenden Sie
-            sich an Ihren Systemadministrator</value>
         <value xml:lang="de">Sie haben keine Berechtigung für diese Fumktion; falls Sie dies für einen Fehler halten, wenden Sie sich an Ihren Systemadministrator</value>
         <value xml:lang="en">No Access to this function, contact your system administrator if you feel this is an error</value>
         <value xml:lang="es">Acceso no autorizado. Póngase en contacto con su administrador de sistemas si piensa que esto es un error.</value>
@@ -7353,8 +7318,6 @@
     <property key="CommonNoPortalPageDataFound">
         <value xml:lang="ar">لا يوجد صفحة للبوابة. قد لا تتوفر لديك الإدخالات الضرورية لإستعراض المعلومة</value>
         <value xml:lang="cs">Nenalezena data pro stránku portálu.</value>
-        <value xml:lang="de">Keine Daten für eine Portalseite gefunden. Sie haben wahrscheinlich nicht die notwendigen Seed oder
-            andere Daten dafür geladen.</value>
         <value xml:lang="de">Keine Daten für eine Portalseite gefunden. Sie haben wahrscheinlich nicht die notwendigen Seed oder andere Daten dafür geladen.</value>
         <value xml:lang="en">No portal page data found. You may not have the necessary seed or other data for it.</value>
         <value xml:lang="es">Datos de la página del portal no encontrados.</value>
@@ -8114,10 +8077,6 @@
         <value xml:lang="zh-CN">订单</value>
         <value xml:lang="zh-TW">訂單</value>
     </property>
-    <property key="CommonOrganisation">
-        <value xml:lang="en">Organisation</value>
-        <value xml:lang="de">Organisation</value>
-    </property>
     <property key="CommonOrganizationLogo">
         <value xml:lang="ar">شعار المنظمة</value>
         <value xml:lang="cs">Logo organizace</value>
@@ -8434,22 +8393,6 @@
         <value xml:lang="en">PDF</value>
         <value xml:lang="hi-IN">पीडीऍफ़(PDF)</value>
         <value xml:lang="zh">PDF</value>
-    </property>
-    <property key="CommonPercentage">
-        <value xml:lang="en">Percentage</value>
-        <value xml:lang="es">Porcentaje</value>
-        <value xml:lang="fr">Pourcentage</value>
-        <value xml:lang="hi-IN">प्रतिशत</value>
-        <value xml:lang="it">Percentuale</value>
-        <value xml:lang="ja">割合(%)</value>
-        <value xml:lang="nl">Percentage</value>
-        <value xml:lang="pt">Porcentagem</value>
-        <value xml:lang="ro">Procent</value>
-        <value xml:lang="ru">Процент</value>
-        <value xml:lang="th">อัตราร้อยละ</value>
-        <value xml:lang="vi">Phần trăm</value>
-        <value xml:lang="zh">百分比</value>
-        <value xml:lang="zh-TW">百分比</value>
     </property>
     <property key="CommonPerform">
         <value xml:lang="ar">إحراء</value>
@@ -10528,20 +10471,6 @@
         <value xml:lang="vi">Thứ tự</value>
         <value xml:lang="zh">序号</value>
         <value xml:lang="zh-CN">序列</value>
-        <value xml:lang="zh-TW">序號</value>
-    </property>
-    <property key="CommonSeqNum">
-        <value xml:lang="de">Seq. Nummer</value>
-        <value xml:lang="en">Seq Num</value>
-        <value xml:lang="es">Nº sec.</value>
-        <value xml:lang="fr">N° de séq.</value>
-        <value xml:lang="it">Num Seq</value>
-        <value xml:lang="ja">連番</value>
-        <value xml:lang="ro">Num Secventa</value>
-        <value xml:lang="ru">Посл. ном.</value>
-        <value xml:lang="th">หมายเลขรายการ</value>
-        <value xml:lang="vi">Số thứ tự</value>
-        <value xml:lang="zh">序号</value>
         <value xml:lang="zh-TW">序號</value>
     </property>
     <property key="CommonSequenceNum">
@@ -15456,7 +15385,7 @@
         <value xml:lang="zh-CN">中文</value>
         <value xml:lang="zh-TW">中文</value>
     </property>
-    <!-- SCIPIO -->
+    <!-- SCIPIO: NEW LABELS -->
     <property key="CommonActions">
         <value xml:lang="de">Aktionen</value>
         <value xml:lang="en">Actions</value>
@@ -15581,8 +15510,7 @@
         <value xml:lang="zh-CN">取消</value>
         <value xml:lang="zh-TW">取消</value>
     </property>
-    <property key="FormFieldTitle_checkAction">
-        <!-- TODO: incomplete -->
+    <property key="FormFieldTitle_checkAction"><!-- TODO: incomplete -->
         <value xml:lang="de">Prüfen</value>
         <value xml:lang="en">Check</value>
     </property>     
@@ -15793,8 +15721,7 @@
         <value xml:lang="zh-CN">所有列表</value>
         <value xml:lang="zh-TW">全部清單</value>
     </property>
-    <property key="FormFieldTitle_makeAction">
-        <!-- TODO: incomplete -->
+    <property key="FormFieldTitle_makeAction"><!-- TODO: incomplete -->
         <value xml:lang="de">Machen</value>
         <value xml:lang="en">Make</value>
     </property>         
@@ -15830,8 +15757,7 @@
         <value xml:lang="zh">粘贴</value>
         <value xml:lang="zh-TW">貼上</value>
     </property>    
-    <property key="FormFieldTitle_postAction">
-        <!-- TODO: incomplete -->
+    <property key="FormFieldTitle_postAction"><!-- TODO: incomplete -->
         <value xml:lang="de">Buchen</value>
         <value xml:lang="en">Post</value>
         <value xml:lang="es">Enviar</value>
@@ -15841,8 +15767,7 @@
         <value xml:lang="ro">Contabilizeaza</value>
         <value xml:lang="ru">Запись</value>
     </property>                 
-    <property key="FormFieldTitle_prepareAction">
-        <!-- TODO: incomplete -->
+    <property key="FormFieldTitle_prepareAction"><!-- TODO: incomplete -->
         <value xml:lang="de">Vorbereiten</value>
         <value xml:lang="en">Prepare</value>
     </property>       
@@ -15962,8 +15887,7 @@
         <value xml:lang="zh-CN">发送</value>
         <value xml:lang="zh-TW">發送</value>
     </property>      
-    <property key="FormFieldTitle_setupAction">
-        <!-- TODO: incomplete -->
+    <property key="FormFieldTitle_setupAction"><!-- TODO: incomplete -->
         <value xml:lang="de">Konfiguration</value>
         <value xml:lang="en">Setup</value>
     </property>
@@ -16010,8 +15934,7 @@
         <value xml:lang="zh-CN">更新</value>
         <value xml:lang="zh-TW">更新</value>
     </property>
-    <property key="FormFieldTitle_verifyAction">
-        <!-- TODO: incomplete -->
+    <property key="FormFieldTitle_verifyAction"><!-- TODO: incomplete -->
         <value xml:lang="de">Überprüfen</value>
         <value xml:lang="en">Verify</value>
         <value xml:lang="fr">Vérifier</value>
@@ -16081,7 +16004,6 @@
         <value xml:lang="zh">${dateLabel} (${dateFormatString})</value>
         <value xml:lang="zh-TW">${dateLabel} (${dateFormatString})</value>
     </property>
-    <!-- SCIPIO: TODO: better localize -->
     <property key="CommonNoRecordFoundSentence">
         <value xml:lang="ar">لم يتم العثور على سجلات</value>
         <value xml:lang="da">Der er ikke fundet nogen registreringer/</value>
@@ -16102,7 +16024,6 @@
         <value xml:lang="zh">没有找到记录</value>
         <value xml:lang="zh-TW">沒有找到記錄</value>
     </property>
-    <!-- SCIPIO: TODO: localize -->
     <property key="CommonMedia">
         <value xml:lang="de">Medien</value>
         <value xml:lang="en">Media</value>
@@ -16411,10 +16332,6 @@
     <property key="CommonDue">
         <value xml:lang="en">Due</value>
     </property>
-    <property key="CommonExtraFields">
-        <value xml:lang="de">Extra (Optionale) Felder</value>
-        <value xml:lang="nl">Extra (Optional) Fields</value>
-    </property>
     <property key="CommonFixedAsset">
         <value xml:lang="en">Fixed Asset</value>
     </property>
@@ -16560,5 +16477,72 @@
     <property key="PageTitleError"> 
         <value xml:lang="de">Error</value>
         <value xml:lang="en">Error</value>
+    </property>
+    <property key="CommonAddress">
+        <value xml:lang="de">Adresse</value>
+        <value xml:lang="en">Address</value>
+    </property>
+    <property key="CommonAdvanced">
+        <value xml:lang="de">Erweitert</value>
+        <value xml:lang="en">Advanced</value>
+        <value xml:lang="es">Avanzada</value>
+        <value xml:lang="fr">Avancé</value>
+        <value xml:lang="it">Avanzata</value>
+        <value xml:lang="pt-BR">Avançada</value>
+        <value xml:lang="ro">Avansata</value>
+    </property>
+    <property key="CommonAdvancedSearchFields">
+        <value xml:lang="de">Erweiterte Suche</value>
+        <value xml:lang="en">Advanced Search</value>
+    </property>
+    <property key="CommonDisplayingShort">
+        <value xml:lang="ar">${lowCount} إلى ${highCount} من ${total}</value>
+        <value xml:lang="cs">${lowCount} - ${highCount} z ${total}</value>
+        <value xml:lang="de">${lowCount} - ${highCount} von ${total}</value>
+        <value xml:lang="en">${lowCount} - ${highCount} of ${total}</value>
+        <value xml:lang="es">${lowCount} - ${highCount} de ${total}</value>
+        <value xml:lang="fr">${lowCount} à ${highCount} sur ${total}</value>
+        <value xml:lang="hi-IN">${lowCount} - ${highCount} का ${total} </value>
+        <value xml:lang="it">${lowCount} a ${highCount} su ${total}</value>
+        <value xml:lang="ja">${lowCount} - ${highCount} / ${total}</value>
+        <value xml:lang="pt-BR">${lowCount} - ${highCount} de ${total}</value>
+        <value xml:lang="ru">${lowCount} - ${highCount} of ${total} </value>
+        <value xml:lang="vi">${lowCount} - ${highCount} của ${total}</value>
+        <value xml:lang="zh">${lowCount} - ${highCount}，共${total}</value>
+        <value xml:lang="zh-TW">${lowCount} - ${highCount},共${total}</value>
+    </property>
+    <property key="CommonOrganisation">
+        <value xml:lang="en">Organisation</value>
+        <value xml:lang="de">Organisation</value>
+    </property>
+    <property key="CommonPercentage"><!-- SCIPIO: new -->
+        <value xml:lang="en">Percentage</value>
+        <value xml:lang="es">Porcentaje</value>
+        <value xml:lang="fr">Pourcentage</value>
+        <value xml:lang="hi-IN">प्रतिशत</value>
+        <value xml:lang="it">Percentuale</value>
+        <value xml:lang="ja">割合(%)</value>
+        <value xml:lang="nl">Percentage</value>
+        <value xml:lang="pt">Porcentagem</value>
+        <value xml:lang="ro">Procent</value>
+        <value xml:lang="ru">Процент</value>
+        <value xml:lang="th">อัตราร้อยละ</value>
+        <value xml:lang="vi">Phần trăm</value>
+        <value xml:lang="zh">百分比</value>
+        <value xml:lang="zh-TW">百分比</value>
+    </property>
+    <property key="CommonSeqNum"><!-- SCIPIO: new -->
+        <value xml:lang="de">Seq. Nummer</value>
+        <value xml:lang="en">Seq Num</value>
+        <value xml:lang="es">Nº sec.</value>
+        <value xml:lang="fr">N° de séq.</value>
+        <value xml:lang="it">Num Seq</value>
+        <value xml:lang="ja">連番</value>
+        <value xml:lang="ro">Num Secventa</value>
+        <value xml:lang="ru">Посл. ном.</value>
+        <value xml:lang="th">หมายเลขรายการ</value>
+        <value xml:lang="vi">Số thứ tự</value>
+        <value xml:lang="zh">序号</value>
+        <value xml:lang="zh-TW">序號</value>
     </property>
 </resource>

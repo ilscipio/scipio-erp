@@ -2059,9 +2059,6 @@
         <value xml:lang="zh">添加会员分区角色</value>
         <value xml:lang="zh-TW">增加團體分區角色</value>
     </property>
-    <property key="PartyTaxAuthPartyAndGeoNotAvailable">
-        <value xml:lang="en">Tax authority is not availble for provided Tax Authority Party and Tax Authority Geo.</value>
-    </property>
     <property key="PageTitleAddPartyTaxAuthInfos">
         <value xml:lang="ar">إضافة معلومات طرف مصلحة الضرائب</value>
         <value xml:lang="de">Informationen zur Steuerbehörde des Nutzers hinzufügen</value>
@@ -3026,9 +3023,6 @@
         <value xml:lang="vi">Tài khoản</value>
         <value xml:lang="zh">账户</value>
         <value xml:lang="zh-TW">帳戶</value>
-    </property>
-    <property key="PartyAccountLocked">
-        <value xml:lang="en">Account Locked</value>
     </property>
     <property key="PartyActive">
         <value xml:lang="ar">فعال</value>
@@ -4671,14 +4665,6 @@
         <value xml:lang="zh">沟通事件标识：没有找到${parameters.commnicationEventId}</value>
         <value xml:lang="zh-TW">通訊事件識別:沒有找到${parameters.commnicationEventId}</value>
     </property>
-    <property key="PartyCommunication">
-        <value xml:lang="de">Kommunikation</value>
-        <value xml:lang="en">Communication</value>
-    </property>
-    <property key="PartyLastCommunication">
-        <value xml:lang="de">Jüngste Ereignisse</value>
-        <value xml:lang="en">Last Communication</value>
-    </property>
     <property key="PartyCommunications">
         <value xml:lang="ar">إتصالات</value>
         <value xml:lang="de">Kommunikation</value>
@@ -4731,21 +4717,20 @@
         <value xml:lang="zh-TW">通訊與</value>
     </property>
     <property key="PartyCompanyName">
-        <value xml:lang="ar">أوفبيز: مدير الطرف</value>
         <value xml:lang="de">SCIPIO - Nutzer Manager</value>
         <value xml:lang="en">SCIPIO - User Manager</value>
         <value xml:lang="es">SCIPIO - Gestión de participantes</value>
-        <value xml:lang="fr">SCIPIO - : Gestionnaire d'acteur</value>
+        <value xml:lang="fr">SCIPIO - Gestionnaire d'acteur</value>
         <value xml:lang="hi-IN">SCIPIO - पार्टी प्रबंधक</value>
         <value xml:lang="it">SCIPIO - Gestione soggetti</value>
         <value xml:lang="ja">SCIPIO - 取引先管理</value>
         <value xml:lang="nl">SCIPIO - Relatie Manager</value>
         <value xml:lang="pt-BR">SCIPIO - Gestão de participantes</value>
-        <value xml:lang="pt-PT">SCIPIO -Grupo de Gestão</value>
+        <value xml:lang="pt-PT">SCIPIO - Grupo de Gestão</value>
         <value xml:lang="ro">SCIPIO - Gestiune Subiecti</value>
         <value xml:lang="ru">SCIPIO - Управление участниками</value>
         <value xml:lang="th">SCIPIO - การจัดการกลุ่มผู้ใช้</value>
-        <value xml:lang="vi">vCloudBusines: Quản lý Tác nhân (Cá nhân/Tổ chức)</value>
+        <value xml:lang="vi">SCIPIO - Quản lý Tác nhân (Cá nhân/Tổ chức)</value>
         <value xml:lang="zh">SCIPIO - 会员管理程序</value>
         <value xml:lang="zh-TW">SCIPIO - 團體管理</value>
     </property>
@@ -4772,30 +4757,30 @@
     <property key="PartyCompanySubtitle">
     <!--value xml:lang="ar">جزء من عائلة أوفبيز للبرمجيات الحرة</value-->
         <value xml:lang="ar">جزء من عائلة أوفبيز للتطبيقات الحرة للتسيير</value>
-        <value xml:lang="de">Teil der SCIPIO Familie von Open Source Software</value>
-        <value xml:lang="en">Part of the SCIPIO Family of Open Source Software</value>
+        <value xml:lang="de">Teil der SCIPIO ERP Familie von Open Source Software</value>
+        <value xml:lang="en">Part of the SCIPIO ERP Family of Open Source Software</value>
     <!--value xml:lang="es">Parte de la familia "Open for Bussiness" de Software Libre</value-->
-        <value xml:lang="es">Parte de la familia de software SCIPIO de código abierto</value>
-        <value xml:lang="fr">Un module de la famille SCIPIO, logiciel libre de gestion d'entreprise.</value>
-        <value xml:lang="hi-IN">Open Source Software के SCIPIO परिवार का हिस्सा</value>
-        <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO</value>
-    <!--value xml:lang="nl">Onderdeel van de SCIPIO'-suite</value-->
-        <value xml:lang="ja">Part of the SCIPIO Family of Open Source Software</value>
-        <value xml:lang="nl">Deel van de SCIPIO-suite van Open Source Software</value>
-        <value xml:lang="pt-BR">Parte da família SCIPIO - de software de fonte aberta</value>
+        <value xml:lang="es">Parte de la familia de software SCIPIO ERP de código abierto</value>
+        <value xml:lang="fr">Un module de la famille SCIPIO ERP, logiciel libre de gestion d'entreprise.</value>
+        <value xml:lang="hi-IN">Open Source Software के SCIPIO ERP परिवार का हिस्सा</value>
+        <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO ERP</value>
+    <!--value xml:lang="nl">Onderdeel van de SCIPIO ERP'-suite</value-->
+        <value xml:lang="ja">Part of the SCIPIO ERP Family of Open Source Software</value>
+        <value xml:lang="nl">Deel van de SCIPIO ERP-suite van Open Source Software</value>
+        <value xml:lang="pt-BR">Parte da família SCIPIO ERP - de software de fonte aberta</value>
     <!--value xml:lang="pt-PT">Parte do Software de Fonte Aberta para Grupos Abertos Para o Negócio</value-->
-        <value xml:lang="pt-PT">Parte da família SCIPIO - de software de fonte aberta</value>
-    <!--value xml:lang="ro">Parte accesibila pentru Business Family of Open Source Software</valuevalue xml:lang="ro">Parte din SCIPIO Family of Open Source Software</value-->
+        <value xml:lang="pt-PT">Parte da família SCIPIO ERP - de software de fonte aberta</value>
+    <!--value xml:lang="ro">Parte accesibila pentru Business Family of Open Source Software</valuevalue xml:lang="ro">Parte din SCIPIO ERP Family of Open Source Software</value-->
         <value xml:lang="ro">Partea de Deschidere Pentru Afaceri Familiale din Open Source Software</value>
-    <!--value xml:lang="ru">Часть семейства ПО SCIPIO</valuevalue xml:lang="ru">Часть семейства "SCIPIO Family" программных продуктов Open Source </value-->
-        <value xml:lang="ru">Входит в состав семейства SCIPIO</value>
+    <!--value xml:lang="ru">Часть семейства ПО SCIPIO ERP</valuevalue xml:lang="ru">Часть семейства "SCIPIO ERP Family" программных продуктов Open Source </value-->
+        <value xml:lang="ru">Входит в состав семейства SCIPIO ERP</value>
     <!--value xml:lang="th">เป็นส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value-->
         <value xml:lang="th">ส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value>
-    <!--value xml:lang="zh">开源软件SCIPIO -的组成部分</valuevalue xml:lang="zh">开源软件SCIPIO -的组成部分</value-->
-        <value xml:lang="vi">Part of the SCIPIO Family of Open Source Software</value>
-        <value xml:lang="zh">开源软件SCIPIO -家族的一部分</value>
-        <value xml:lang="zh-CN">SCIPIO -的一部分</value>
-        <value xml:lang="zh-TW">開源軟體SCIPIO -家族的一部分</value>
+    <!--value xml:lang="zh">开源软件SCIPIO ERP -的组成部分</valuevalue xml:lang="zh">开源软件SCIPIO ERP -的组成部分</value-->
+        <value xml:lang="vi">Part of the SCIPIO ERP Family of Open Source Software</value>
+        <value xml:lang="zh">开源软件SCIPIO ERP -家族的一部分</value>
+        <value xml:lang="zh-CN">SCIPIO ERP -的一部分</value>
+        <value xml:lang="zh-TW">開源軟體SCIPIO ERP -家族的一部分</value>
     </property>
     <property key="PartyContactAllowAddressSolicitation">
         <value xml:lang="ar">السماح بالإلتماس على العنوان</value>
@@ -5492,7 +5477,7 @@
         <value xml:lang="zh">缺少上传文件...</value>
         <value xml:lang="zh-TW">缺少上傳檔...</value>
     </property>
-    <property key="PartyCreateNewBillingAddress"><!-- SCIPIO: TODO: Localize (label content changed, originals in PartyCreateNewBillingAddressCreditCard) -->
+    <property key="PartyCreateNewBillingAddress"><!-- SCIPIO: modified: label content changed, originals in PartyCreateNewBillingAddressCreditCard -->
         <value xml:lang="ar">خلق عنوان فوترة جديد لهذة البطاقة الإئتمانية</value>
         <value xml:lang="cs">Zložte novou fakturační adresu</value>
         <value xml:lang="de">Neue Rechnungsadresse anlegen</value>
@@ -5506,7 +5491,7 @@
         <value xml:lang="pt-PT">Criar nova morada de cobrança para</value>
         <value xml:lang="ro">Creare o noua adresa de facturare</value>
     </property>
-    <property key="PartyCreateNewBillingAddressCreditCard">
+    <property key="PartyCreateNewBillingAddressCreditCard"><!-- SCIPIO: new: originally was PartyCreateNewBillingAddress -->
         <value xml:lang="cs">Zložte novou fakturační adresu pro tuto kreditkartu</value>
         <value xml:lang="de">Legen Sie eine neue Rechnungsadresse für diese Kreditkarte an</value>
         <value xml:lang="en">Create a new billing address for this credit card</value>
@@ -8096,10 +8081,6 @@
         <value xml:lang="vi">Danh sách loại</value>
         <value xml:lang="zh">类型列表</value>
         <value xml:lang="zh-TW">表列類型</value>
-    </property>
-    <property key="PartyLoginFailed">
-        <value xml:lang="de">Anmeldung fehlgeschlagen</value>
-        <value xml:lang="en">Login Failed</value>
     </property>
     <property key="PartyLoggedInUsers">
         <value xml:lang="ar">المستخدمين الداخلين على النظام</value>
@@ -11458,10 +11439,6 @@
         <value xml:lang="zh">相关的公司</value>
         <value xml:lang="zh-TW">相關的公司</value>
     </property>
-    <property key="PartyRegistrations">
-        <value xml:lang="de">Registrierungen</value>
-        <value xml:lang="en">Registrations</value>
-    </property>
     <property key="PartyRelationSecurity">
         <value xml:lang="ar">أمن علاقة الطرف</value>
         <value xml:lang="cs">Vztah partnera k zabezpečení</value>
@@ -11993,10 +11970,6 @@
         <value xml:lang="vi">Các vai trò</value>
         <value xml:lang="zh">角色</value>
         <value xml:lang="zh-TW">角色</value>
-    </property>
-    <property key="PartySecurityAlert">
-        <value xml:lang="de">Jüngste Warnungen</value>
-        <value xml:lang="en">Alerts</value>
     </property>
     <property key="PartySecurityGroup">
         <value xml:lang="ar">المجموعات الأمنية</value>
@@ -12756,9 +12729,6 @@
         <value xml:lang="zh">添加税务信息</value>
         <value xml:lang="zh-TW">增加稅務資訊</value>
     </property>
-    <property key="PartyTaxAuthPartyAndGeoNotAvailable">
-        <value xml:lang="en">Tax authority is not availble for provided Tax Authority Party and Tax Authority Geo.</value>
-    </property>
     <property key="PartyTaxAuthInfos">
         <value xml:lang="ar">معلومات الضريبة</value>
         <value xml:lang="de">Steuerangaben</value>
@@ -13222,14 +13192,6 @@
         <value xml:lang="vi">Loại tác nhân</value>
         <value xml:lang="zh">会员类型标识</value>
         <value xml:lang="zh-TW">團體類型識別</value>
-    </property>
-    <property key="PartyUserActivity">
-        <value xml:lang="de">Benutzeraktivität</value>
-        <value xml:lang="en">User Activity</value>
-    </property>
-    <property key="PartyUserManagement">
-        <value xml:lang="de">Benutzerverwaltung</value>
-        <value xml:lang="en">User Management</value>
     </property>
     <property key="PartyUnableToLocatePurpose">
         <value xml:lang="ar">غير قادر على إيجاد الغرض: لا يمكن الإلغاء</value>
@@ -13995,6 +13957,7 @@
         <value xml:lang="zh">找不到邮政编码</value>
         <value xml:lang="zh-TW">找不到郵遞區號</value>
     </property>
+    <!-- SCIPIO: NEW LABELS -->
     <property key="PartyContentType">
         <value xml:lang="de">Nutzer Inhaltstyp</value>
         <value xml:lang="en">User Content Type</value>
@@ -14030,5 +13993,39 @@
         <value xml:lang="en">Edit User Content</value>
         <value xml:lang="es">Editar contenido de participante</value>
         <value xml:lang="fr">Modifier le contenu de l'utilisateur</value>
+    </property>
+    <property key="PartyTaxAuthPartyAndGeoNotAvailable">
+        <value xml:lang="en">Tax authority is not available for provided Tax Authority Party and Tax Authority Geo.</value>
+    </property>
+    <property key="PartyAccountLocked">
+        <value xml:lang="en">Account Locked</value>
+    </property>
+    <property key="PartyCommunication">
+        <value xml:lang="de">Kommunikation</value>
+        <value xml:lang="en">Communication</value>
+    </property>
+    <property key="PartyLastCommunication">
+        <value xml:lang="de">Jüngste Ereignisse</value>
+        <value xml:lang="en">Last Communication</value>
+    </property>
+    <property key="PartyLoginFailed">
+        <value xml:lang="de">Anmeldung fehlgeschlagen</value>
+        <value xml:lang="en">Login Failed</value>
+    </property>
+    <property key="PartyRegistrations">
+        <value xml:lang="de">Registrierungen</value>
+        <value xml:lang="en">Registrations</value>
+    </property>
+    <property key="PartySecurityAlert">
+        <value xml:lang="de">Jüngste Warnungen</value>
+        <value xml:lang="en">Alerts</value>
+    </property>
+    <property key="PartyUserActivity">
+        <value xml:lang="de">Benutzeraktivität</value>
+        <value xml:lang="en">User Activity</value>
+    </property>
+    <property key="PartyUserManagement">
+        <value xml:lang="de">Benutzerverwaltung</value>
+        <value xml:lang="en">User Management</value>
     </property>
 </resource>

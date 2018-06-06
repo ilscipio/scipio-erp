@@ -898,20 +898,20 @@
         <value xml:lang="zh-TW">檢視待審核</value>
     </property>
     <property key="ContentCompanyName">
-        <value xml:lang="ar">أوفبيز: مسير المحتوى</value>
-        <value xml:lang="da">SCIPIO ERP - CMS</value>
-        <value xml:lang="de">SCIPIO ERP - CMS</value>
-        <value xml:lang="en">SCIPIO ERP - CMS</value>
-        <value xml:lang="es">SCIPIO ERP - CMS</value>
-        <value xml:lang="fr">SCIPIO ERP - CMS</value>
-        <value xml:lang="it">SCIPIO ERP - CMS</value>
-        <value xml:lang="ja">SCIPIO ERP - CMS</value>
-        <value xml:lang="pt">SCIPIO ERP - CMS</value>
-        <value xml:lang="ro">SCIPIO ERP - CMS</value>
-        <value xml:lang="th">SCIPIO ERP - CMS</value>
-        <value xml:lang="vi">SCIPIO ERP - CMS</value>
-        <value xml:lang="zh">SCIPIO ERP - CMS</value>
-        <value xml:lang="zh-TW">SCIPIO ERP - CMS</value>
+        <value xml:lang="ar">SCIPIO - CMS</value>
+        <value xml:lang="da">SCIPIO - CMS</value>
+        <value xml:lang="de">SCIPIO - CMS</value>
+        <value xml:lang="en">SCIPIO - CMS</value>
+        <value xml:lang="es">SCIPIO - CMS</value>
+        <value xml:lang="fr">SCIPIO - CMS</value>
+        <value xml:lang="it">SCIPIO - CMS</value>
+        <value xml:lang="ja">SCIPIO - CMS</value>
+        <value xml:lang="pt">SCIPIO - CMS</value>
+        <value xml:lang="ro">SCIPIO - CMS</value>
+        <value xml:lang="th">SCIPIO - CMS</value>
+        <value xml:lang="vi">SCIPIO - CMS</value>
+        <value xml:lang="zh">SCIPIO - CMS</value>
+        <value xml:lang="zh-TW">SCIPIO - CMS</value>
     </property>
     <property key="ContentCompanySubtitle">
         <value xml:lang="ar">جزء من عائلة أوفبيز للتطبيقات الحرة للتسيير</value>
@@ -923,15 +923,15 @@
         <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO ERP</value>
         <value xml:lang="ja">Part of the SCIPIO ERP Family of Open Source Software</value>
         <value xml:lang="nl">Deel van de SCIPIO ERP-suite van Open Source Software</value>
-        <value xml:lang="pt-BR">Parte da família SCIPIO ERP - de software de código livre</value>
-        <value xml:lang="pt-PT">Parte da família SCIPIO ERP - de software de fonte aberta</value>
+        <value xml:lang="pt-BR">Parte da família SCIPIO ERP de software de código livre</value>
+        <value xml:lang="pt-PT">Parte da família SCIPIO ERP de software de fonte aberta</value>
         <value xml:lang="ro">Partea de Deschidere Pentru Afaceri Familiale din Open Source Software</value>
         <value xml:lang="ru">Входит в состав семейства SCIPIO ERP</value>
         <value xml:lang="th">ส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value>
         <value xml:lang="vi">Part of the SCIPIO ERP Family of Open Source Software</value>
-        <value xml:lang="zh">开源软件SCIPIO ERP -家族的一部分</value>
-        <value xml:lang="zh-CN">SCIPIO ERP -的一部分</value>
-        <value xml:lang="zh-TW">開源軟體SCIPIO ERP -家族的一部分</value>
+        <value xml:lang="zh">开源软件SCIPIO ERP家族的一部分</value>
+        <value xml:lang="zh-CN">SCIPIO ERP的一部分</value>
+        <value xml:lang="zh-TW">開源軟體SCIPIO ERP家族的一部分</value>
     </property>
     <property key="ContentContent">
         <value xml:lang="ar">المحتوى</value>
@@ -7666,7 +7666,7 @@
         <value xml:lang="zh">网站内容</value>
         <value xml:lang="zh-TW">網站內容</value>
     </property>
-    <property key="PageTitleWebSiteSEO"><!-- SCIPIO: changed -->
+    <property key="PageTitleWebSiteSEO"><!-- SCIPIO: modified -->
         <value xml:lang="de">SEO-URLs generieren</value>
         <value xml:lang="en">Generate SEO URLs</value>
         <value xml:lang="ja">SEO URLの生成に失敗しました</value>
@@ -7675,7 +7675,8 @@
         <value xml:lang="zh">生成缺失的搜索引擎优化的网址</value>
         <value xml:lang="zh-TW">產生缺失的搜尋引擎優化的網址</value>
     </property>
-    <property key="PageTitleRemoveWebSiteSEO"><!-- SCIPIO: new -->
+    <!-- SCIPIO: NEW LABELS -->
+    <property key="PageTitleRemoveWebSiteSEO">
         <value xml:lang="de">SEO-URLs entfernen</value>
         <value xml:lang="en">Remove SEO URLs</value>
     </property>

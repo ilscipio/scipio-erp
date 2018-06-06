@@ -179,7 +179,7 @@
         <value xml:lang="zh">宽度缩放因子是null</value>
         <value xml:lang="zh-TW">寬度縮放因數是null</value>
     </property>
-    <!-- SCIPIO: TODO: localize -->
+    <!-- SCIPIO: NEW LABELS -->
     <property key="CommonErrorOccurredContactSupport">
         <value xml:lang="en">An error occurred. Please contact support.</value>
         <value xml:lang="de">Ein Fehler ist aufgetreten. Bitte wenden Sie sich an den Support.</value>
@@ -198,7 +198,6 @@
         <value xml:lang="en">The requested URL ${requestUrl} was not found on this server.</value>
         <value xml:lang="fr">L'URL demandée ${requestUrl} n'a pas été trouvée sur ce serveur.</value>
     </property>
-    
     <property key="CommonUnsupportedFileType">
         <value xml:lang="en">Unsupported file type for selected media type category</value>
         <value xml:lang="de">Nicht unterstützter Dateityp für ausgewählte Medientypen</value>

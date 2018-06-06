@@ -557,7 +557,7 @@ public abstract class RequestLinkUtil {
      */
     public static boolean isForwardedSecure(HttpServletRequest request) {
         String forwardedProto = request.getHeader("X-Forwarded-Proto");
-        return UtilValidate.isNotEmpty(forwardedProto) && "HTTPS".equals(forwardedProto.toUpperCase());
+        return forwardedProto != null && "https".equals(forwardedProto.toLowerCase());
     }
     
     /**

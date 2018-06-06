@@ -292,7 +292,8 @@ public class RequestHandler {
                 }
             }
             // Check if we SHOULD be secure and are not. (SCIPIO: 2017-11-18: factored out dispersed secure checks)
-            if (!RequestLinkUtil.isEffectiveSecure(request) && requestMap.securityHttps) {
+            boolean isSecure = RequestLinkUtil.isEffectiveSecure(request); // SCIPIO: 2018: replace request.isSecure()
+            if (!isSecure && requestMap.securityHttps) {
                 // If the request method was POST then return an error to avoid problems with XSRF where the request may have come from another machine/program and had the same session ID but was not encrypted as it should have been (we used to let it pass to not lose data since it was too late to protect that data anyway)
                 if (request.getMethod().equalsIgnoreCase("POST")) {
                     // we can't redirect with the body parameters, and for better security from XSRF, just return an error message
@@ -338,7 +339,7 @@ public class RequestHandler {
             // if this is a new session and forceHttpSession is true and the request is secure but does not
             // need to be then we need the session cookie to be created via an http response (rather than https)
             // so we'll redirect to an unsecure request
-            } else if (forceHttpSession && request.isSecure() && session.isNew() && !requestMap.securityHttps) {
+            } else if (forceHttpSession && isSecure && session.isNew() && !requestMap.securityHttps) {
                 // SCIPIO: 2017-11-13: Preliminary patch to try to ensure the redirected URL is as close as possible
                 // to the original incoming URL. We must not use getPathInfo because it gets changed across forwards.
                 // TODO: REVIEW: I am NOT sending this through URL encoding for now; the idea is to reflect exactly
@@ -1829,13 +1830,14 @@ public class RequestHandler {
         // 2016-07-14: NOTE: if for some reason webSiteProps was null, we assume enableHttps is true, for security reasons.
         // 2016-07-14: NOTE: if there is no request object (static rendering context), for now
         // we behave as if we had an insecure request, for better security.
-        if ((Boolean.TRUE.equals(secure) && (Boolean.TRUE.equals(fullPath) || request == null || !request.isSecure())) // if secure requested, only case where don't need full path is if already secure
-            || ((webSiteProps == null || webSiteProps.getEnableHttps()) && requestMap != null && requestMap.securityHttps && (request == null || !request.isSecure() || Boolean.TRUE.equals(fullPath))) // upgrade to secure target if we aren't secure or fullPath was requested (never make non-secure fullPath to secure target)
-            || ((webSiteProps == null || webSiteProps.getEnableHttps()) && secure == null && Boolean.TRUE.equals(fullPath) && request != null && request.isSecure())) { // do not downgrade fullPath requests anymore, unless explicitly allowed (by passing secure false, case below)
+        boolean isSecure = RequestLinkUtil.isEffectiveSecure(request); // SCIPIO: 2018: replace request.isSecure()
+        if ((Boolean.TRUE.equals(secure) && (Boolean.TRUE.equals(fullPath) || request == null || !isSecure)) // if secure requested, only case where don't need full path is if already secure
+            || ((webSiteProps == null || webSiteProps.getEnableHttps()) && requestMap != null && requestMap.securityHttps && (request == null || !isSecure || Boolean.TRUE.equals(fullPath))) // upgrade to secure target if we aren't secure or fullPath was requested (never make non-secure fullPath to secure target)
+            || ((webSiteProps == null || webSiteProps.getEnableHttps()) && secure == null && Boolean.TRUE.equals(fullPath) && request != null && isSecure)) { // do not downgrade fullPath requests anymore, unless explicitly allowed (by passing secure false, case below)
             return Boolean.TRUE;
         } else if (Boolean.TRUE.equals(fullPath) // accept all other explicit fullPath requests
-                || (requestMap != null && (Boolean.FALSE.equals(secure) && !requestMap.securityHttps && request != null && request.isSecure())) // allow downgrade from HTTPS to HTTP, but only if secure false explicitly passed and the target requestMap is not HTTPS. Also, removed this check: webSiteProps.getEnableHttps()  
-                || (requestMap == null && (Boolean.FALSE.equals(secure) && request != null && request.isSecure()))) { // 2016-07-14: if there is no target requestMap or unknown, and secure=false was requested, we'll allow building a fullpath insecure link (this is acceptable only because of our widespread change making null the new default everywhere).
+                || (requestMap != null && (Boolean.FALSE.equals(secure) && !requestMap.securityHttps && request != null && isSecure)) // allow downgrade from HTTPS to HTTP, but only if secure false explicitly passed and the target requestMap is not HTTPS. Also, removed this check: webSiteProps.getEnableHttps()  
+                || (requestMap == null && (Boolean.FALSE.equals(secure) && request != null && isSecure))) { // 2016-07-14: if there is no target requestMap or unknown, and secure=false was requested, we'll allow building a fullpath insecure link (this is acceptable only because of our widespread change making null the new default everywhere).
             return Boolean.FALSE;
         } else {
             return null;
@@ -1869,13 +1871,15 @@ public class RequestHandler {
                 isSpider = true;
             }
 
+            boolean isSecure = RequestLinkUtil.isEffectiveSecure(request);
+            
             // if this isn't a secure page, but we made a secure URL, make sure we manually add the jsessionid since the response.encodeURL won't do that
-            if (!request.isSecure() && didFullSecure) {
+            if (!isSecure && didFullSecure) {
                 forceManualJsessionid = true;
             }
 
             // if this is a secure page, but we made a standard URL, make sure we manually add the jsessionid since the response.encodeURL won't do that
-            if (request.isSecure() && didFullStandard) {
+            if (isSecure && didFullStandard) {
                 forceManualJsessionid = true;
             }
 

@@ -16095,14 +16095,14 @@
         <value xml:lang="de">Nettoumsatz</value>
         <value xml:lang="en">Net Sales</value>
     </property>
-    <property key="OrderUnits"><!-- SCIPIO: new -->
+    <property key="OrderUnits">
         <value xml:lang="de">Einheiten</value>
         <value xml:lang="en">Units</value>
         <value xml:lang="es">Unidades</value>
         <value xml:lang="fr">Unités</value>
         <value xml:lang="it">Unità</value>
     </property>
-    <property key="OrderPromotionCouponCodes_spaced"><!-- SCIPIO: new -->
+    <property key="OrderPromotionCouponCodes_spaced">
         <value xml:lang="de">Aktion / Coupon Codes</value>
         <value xml:lang="en">Promotion / Coupon Codes</value>
         <value xml:lang="es">Códigos Promoción/Cupón</value>

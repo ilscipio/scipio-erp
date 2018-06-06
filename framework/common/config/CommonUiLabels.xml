@@ -16515,7 +16515,7 @@
         <value xml:lang="en">Organisation</value>
         <value xml:lang="de">Organisation</value>
     </property>
-    <property key="CommonPercentage"><!-- SCIPIO: new -->
+    <property key="CommonPercentage">
         <value xml:lang="en">Percentage</value>
         <value xml:lang="es">Porcentaje</value>
         <value xml:lang="fr">Pourcentage</value>
@@ -16531,7 +16531,7 @@
         <value xml:lang="zh">百分比</value>
         <value xml:lang="zh-TW">百分比</value>
     </property>
-    <property key="CommonSeqNum"><!-- SCIPIO: new -->
+    <property key="CommonSeqNum">
         <value xml:lang="de">Seq. Nummer</value>
         <value xml:lang="en">Seq Num</value>
         <value xml:lang="es">Nº sec.</value>

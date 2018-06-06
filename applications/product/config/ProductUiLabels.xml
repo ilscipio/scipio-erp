@@ -32904,7 +32904,7 @@
         <value xml:lang="zh">搜索参数</value>
         <value xml:lang="zh-TW">搜尋參數</value>
     </property>
-    <property key="ProductPromotionCodes"><!-- SCIPIO: new -->
+    <property key="ProductPromotionCodes">
         <value xml:lang="de">Aktionscodes</value>
         <value xml:lang="en">Promotion Codes</value>
     </property>

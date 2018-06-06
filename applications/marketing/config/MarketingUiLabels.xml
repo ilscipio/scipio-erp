@@ -3625,11 +3625,11 @@
         <value xml:lang="en">vCard</value>
     </property>
     <!-- SCIPIO: NEW LABELS -->
+    <property key="MarketingAnalytics">
+        <value xml:lang="en">Marketing Analytics</value>
+    </property>
     <property key="MarketingAnalyticsForecast">
         <value xml:lang="en">Forecast Analytics</value>
-    </property>
-    <property key="MarketingAnalyticsSegments">
-        <value xml:lang="en">Segment Analytics</value>
     </property>
     <property key="MarketingAnalyticsLeads">
         <value xml:lang="en">Lead Analytics</value>
@@ -3637,40 +3637,32 @@
     <property key="MarketingAnalyticsSales">
         <value xml:lang="en">Sales Analytics</value>
     </property>
-    <property key="SfaOrderTotalsConvertedExchangeNotice">
-        <value xml:lang="de">${currencyConvertCount} Die Auftragssummen wurden unter Verwendung der zuletzt bekannten Wechselkurse in eine Währung von ${currencyUomId} umgewandelt.</value>
-        <value xml:lang="en">${currencyConvertCount} order totals were converted to ${currencyUomId} currency, using last known exchange rates.</value>
-    </property>
-    <property key="SfaOrderTotalsConvertFail">
-        <value xml:lang="de">${CurrencyFailCount} Auftragssummen fehlgeschlagene Währungsumrechnung in ${currencyUomId}.</value>
-        <value xml:lang="en">${currencyFailCount} order totals failed currency conversion to ${currencyUomId}.</value>
-    </property>
-    <property key="SfaOnlyConvertibleCurrenciesListed">
-        <value xml:lang="de">Es werden nur konvertierbare Währungen aufgelistet.</value>
-        <value xml:lang="en">Only convertible currencies are listed.</value>
-    </property>
-    <property key="SfaCurrencyConvertedUsingLastKnownRates">
-        <value xml:lang="de">Währungen werden unter Verwendung der zuletzt bekannten / aktualisierten Wechselkurse von der Datenbank konvertiert.</value>
-        <value xml:lang="en">Currencies are converted using the last known/updated exchange rates, from database.</value>
-    </property>
-    <property key="MarketingAnalytics">
-        <value xml:lang="en">Marketing Analytics</value>
+    <property key="MarketingAnalyticsSegments">
+        <value xml:lang="en">Segment Analytics</value>
     </property>
     <property key="MarketingCampaigns">
         <value xml:lang="de">Kampagnen</value>
         <value xml:lang="en">Campaigns</value>
     </property>
-    <property key="MarketingCommunicationStatusId">
-        <value xml:lang="en">Communication Status Id</value>
-    </property>
     <property key="MarketingCommunicationRoleStatusId">
         <value xml:lang="en">Communication Role Status Id</value>
     </property>
-    <property key="MarketingServiceCommunicationNotFound">
-        <value xml:lang="en">Could not find communications.</value>
+    <property key="MarketingCommunicationStatusId">
+        <value xml:lang="en">Communication Status Id</value>
     </property>
     <property key="MarketingMarketing">
         <value xml:lang="en">Marketing</value>
+    </property>
+    <property key="MarketingSegmentGroupNoSegmentGroupFound">
+        <value xml:lang="de">Keine Segmente gefunden</value>
+        <value xml:lang="en">No Segments found </value>
+    </property>
+    <property key="MarketingSegments">
+        <value xml:lang="de">Segmente</value>
+        <value xml:lang="en">Segments</value>
+    </property>
+    <property key="MarketingServiceCommunicationNotFound">
+        <value xml:lang="en">Could not find communications.</value>
     </property>
     <property key="SfaAnalytics">
         <value xml:lang="de">Analyse</value>
@@ -3680,6 +3672,22 @@
         <value xml:lang="de">Kalender</value>
         <value xml:lang="en">Calendar</value>
     </property>
+    <property key="SfaCurrencyConvertedUsingLastKnownRates">
+        <value xml:lang="de">Währungen werden unter Verwendung der zuletzt bekannten / aktualisierten Wechselkurse von der Datenbank konvertiert.</value>
+        <value xml:lang="en">Currencies are converted using the last known/updated exchange rates, from database.</value>
+    </property>
+    <property key="SfaOnlyConvertibleCurrenciesListed">
+        <value xml:lang="de">Es werden nur konvertierbare Währungen aufgelistet.</value>
+        <value xml:lang="en">Only convertible currencies are listed.</value>
+    </property>
+    <property key="SfaOrderTotalsConvertedExchangeNotice">
+        <value xml:lang="de">${currencyConvertCount} Die Auftragssummen wurden unter Verwendung der zuletzt bekannten Wechselkurse in eine Währung von ${currencyUomId} umgewandelt.</value>
+        <value xml:lang="en">${currencyConvertCount} order totals were converted to ${currencyUomId} currency, using last known exchange rates.</value>
+    </property>
+    <property key="SfaOrderTotalsConvertFail">
+        <value xml:lang="de">${CurrencyFailCount} Auftragssummen fehlgeschlagene Währungsumrechnung in ${currencyUomId}.</value>
+        <value xml:lang="en">${currencyFailCount} order totals failed currency conversion to ${currencyUomId}.</value>
+    </property>
     <property key="SfaSales">
         <value xml:lang="en">Sales</value>
     </property>
@@ -3688,13 +3696,5 @@
     </property>
     <property key="SfaSettings">
         <value xml:lang="en">Settings</value>
-    </property>
-    <property key="MarketingSegments">
-        <value xml:lang="de">Segmente</value>
-        <value xml:lang="en">Segments</value>
-    </property>
-    <property key="MarketingSegmentGroupNoSegmentGroupFound">
-        <value xml:lang="de">Keine Segmente gefunden</value>
-        <value xml:lang="en">No Segments found </value>
     </property>
 </resource>

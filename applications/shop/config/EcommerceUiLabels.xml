@@ -5156,17 +5156,6 @@
         <value xml:lang="zh">感谢您与我们联系！</value>
     </property>
     <!-- SCIPIO: NEW LABELS -->
-    <property key="EcommerceShippingOptions">
-        <value xml:lang="de">Versand</value>
-        <value xml:lang="en">Shipping</value>
-        <value xml:lang="es">Envío</value>
-        <value xml:lang="fr">Livraison</value>
-        <value xml:lang="hi-IN">शिपिंग</value>
-        <value xml:lang="it">Spedizione</value>
-        <value xml:lang="nl">Verzendopties</value>
-        <value xml:lang="zh">航运</value>
-        <value xml:lang="zh-TW">航運</value>
-    </property>
     <property key="EcommercePaymentOptions">
         <value xml:lang="de">Zahlung</value>
         <value xml:lang="en">Payment</value>
@@ -5177,5 +5166,16 @@
         <value xml:lang="nl">Betaling</value>
         <value xml:lang="zh">付款</value>
         <value xml:lang="zh-TW">付款</value>
+    </property>
+    <property key="EcommerceShippingOptions">
+        <value xml:lang="de">Versand</value>
+        <value xml:lang="en">Shipping</value>
+        <value xml:lang="es">Envío</value>
+        <value xml:lang="fr">Livraison</value>
+        <value xml:lang="hi-IN">शिपिंग</value>
+        <value xml:lang="it">Spedizione</value>
+        <value xml:lang="nl">Verzendopties</value>
+        <value xml:lang="zh">航运</value>
+        <value xml:lang="zh-TW">航運</value>
     </property>
 </resource>

@@ -7676,9 +7676,41 @@
         <value xml:lang="zh-TW">產生缺失的搜尋引擎優化的網址</value>
     </property>
     <!-- SCIPIO: NEW LABELS -->
-    <property key="PageTitleRemoveWebSiteSEO">
-        <value xml:lang="de">SEO-URLs entfernen</value>
-        <value xml:lang="en">Remove SEO URLs</value>
+    <property key="ContentAltStcLocFieldInfo">
+        <value xml:lang="de">Dieser Gebietsschema-Feldeintrag entspricht einem ALTERNATE_LOCALE-Inhaltsdatensatz, der dem Hauptinhaltsdatensatz für diesen Feldtyp (${typeField}: ${typeName}) zugeordnet ist und durch den ersten Gebietsschema-Eintrag oben angegeben wird.</value>
+        <value xml:lang="en">This locale field entry corresponds to an ALTERNATE_LOCALE Content record associated to the main Content record for this field type (${typeField}: ${typeName}), denoted by the first locale field entry above.</value>
+    </property>
+    <property key="ContentGenerateSeoUrlInfo">
+        <value xml:lang="de">Mit Hilfe dieses Service können die URLs für alle Produkt- und Kategorienamen mithilfe der in SeoConfig.xml (/applications/product/config/SeoConfig.xml) angegebenen SEO-Konfiguration neu generiert werden.</value>
+        <value xml:lang="en">This automatically generates alternative URLs from product and category names using the SEO configuration specified in SeoConfig.xml (/applications/product/config/SeoConfig.xml).</value>
+    </property>
+    <property key="ContentGenerateSeoUrlInfoMayChangeUrls">
+        <value xml:lang="de">Hinweis: Dies kann alle Kategorie-/Produkt-URLs im Store ändern (deaktivieren Sie "Bestehende ersetzen", um nur fehlende zu generieren).</value>
+        <value xml:lang="en">Note: This may change all category/product URLs in the store (turn off "Replace Existing" to generate missing only).</value>
+    </property>
+    <property key="ContentGenerateSitemaps">
+        <value xml:lang="de">Sitemaps erstellen</value>
+        <value xml:lang="en">Generate Sitemaps</value>
+    </property>
+    <property key="ContentGenerateSitemapsInfo">
+        <value xml:lang="de">Hinweis: Die Sitemap sollte generiert werden, nachdem die alternativen SEO-URLs generiert wurden. Der Speicherort wird in der Datei sitemaps.properties definiert. Generierte Sitemaps sind nur für Websites gültig, für die SEO-URLs aktiviert sind (siehe SeoConfig.xml).</value>
+        <value xml:lang="en">Note: The sitemap should be generated after the alternative SEO URLs have been generated. They will be generated in the locations specified in the sitemaps.properties configuration files. Generated sitemaps are only valid for websites which have SEO URLs enabled (see SeoConfig.xml).</value>
+    </property>
+    <property key="ContentGenerateType">
+        <value xml:lang="de">Typ generieren</value>
+        <value xml:lang="en">Generate Type</value>
+    </property>
+    <property key="ContentIncludeVariantProducts">
+        <value xml:lang="de">Inklusive Variantenprodukte</value>
+        <value xml:lang="en">Include Variant Products</value>
+    </property>
+    <property key="ContentMainStcLocFieldInfo">
+        <value xml:lang="de">Dieser Gebietsschema-Feldeintrag (der erste) entspricht dem Hauptinhaltsdatensatz für diesen Feldtyp (${typeField}: ${typeName}); Die folgenden Einträge (falls vorhanden) werden durch die Inhaltsverknüpfung contentAssocTypeId ALTERNATE_LOCALE mit dieser verknüpft.</value>
+        <value xml:lang="en">This locale field entry (the first) corresponds to the main Content record for this field type (${typeField}: ${typeName}); the following entries (if any) will be linked to this one by contentAssocTypeId ALTERNATE_LOCALE content association.</value>
+    </property>
+    <property key="ContentNewContent">
+        <value xml:lang="de">Neuer Inhalt</value>
+        <value xml:lang="en">New Content</value>
     </property>
     <property key="ContentNewWebSite">
         <value xml:lang="de">Neue Webseite</value>
@@ -7692,6 +7724,22 @@
         <value xml:lang="vi">Tạo mới trang thông tin</value>
         <value xml:lang="zh">创建新网站</value>
         <value xml:lang="zh-TW">新建網站</value>
+    </property>
+    <property key="ContentRemoveOldLocales">
+        <value xml:lang="de">Alte Sprachumgebungen entfernen</value>
+        <value xml:lang="en">Remove Old Locales</value>
+    </property>
+    <property key="ContentRemoveSeoUrlInfo">
+        <value xml:lang="de">Dadurch werden alternative URLs für die Website entfernt. Wenn während der Generierung Fehler auftreten und keine wichtigen Daten in diesen Datensätzen vorhanden sind, können durch das Entfernen vor der erneuten Generierung Probleme mit alten oder inkompatiblen Daten behoben werden.</value>
+        <value xml:lang="en">This removes alternative URLs for the website. If you experience errors during generation and have no important data in these records, sometimes removing before generating again can solve issues with old or incompatible data.</value>
+    </property>
+    <property key="ContentReplaceExisting">
+        <value xml:lang="de">Bestehende ersetzen</value>
+        <value xml:lang="en">Replace Existing</value>
+    </property>
+    <property key="ContentWebAppUiDeprecated">
+        <value xml:lang="de">Die ältere CMS-Benutzeroberfläche ist veraltet und wird in Scipio ERP nicht unterstützt.</value>
+        <value xml:lang="en">The legacy Content web application user interface is deprecated and unsupported in Scipio ERP.</value>
     </property>
     <property key="ContentWebSiteParties"><!-- FIXME: some language inexact -->
         <value xml:lang="da">Webside parter</value>
@@ -7727,61 +7775,13 @@
         <value xml:lang="fr">SEO du site web</value>
         <value xml:lang="it">SEO Sito Web</value>
     </property>
-    <property key="ContentWebAppUiDeprecated">
-        <value xml:lang="de">Die ältere CMS-Benutzeroberfläche ist veraltet und wird in Scipio ERP nicht unterstützt.</value>
-        <value xml:lang="en">The legacy Content web application user interface is deprecated and unsupported in Scipio ERP.</value>
-    </property>
     <property key="FormFieldTitle_visualThemeSelectorScript">
         <value xml:lang="de">Visual Theme Selector Script</value>
         <value xml:lang="en">Visual Theme Selector Script</value>
         <value xml:lang="fr">Script sélecteur de thème visuel</value>
     </property>
-    <property key="ContentNewContent">
-        <value xml:lang="de">Neuer Inhalt</value>
-        <value xml:lang="en">New Content</value>
-    </property>
-    <property key="ContentGenerateType">
-        <value xml:lang="de">Typ generieren</value>
-        <value xml:lang="en">Generate Type</value>
-    </property>
-    <property key="ContentReplaceExisting">
-        <value xml:lang="de">Bestehende ersetzen</value>
-        <value xml:lang="en">Replace Existing</value>
-    </property>
-    <property key="ContentRemoveOldLocales">
-        <value xml:lang="de">Alte Sprachumgebungen entfernen</value>
-        <value xml:lang="en">Remove Old Locales</value>
-    </property>
-    <property key="ContentIncludeVariantProducts">
-        <value xml:lang="de">Inklusive Variantenprodukte</value>
-        <value xml:lang="en">Include Variant Products</value>
-    </property>
-    <property key="ContentGenerateSitemaps">
-        <value xml:lang="de">Sitemaps erstellen</value>
-        <value xml:lang="en">Generate Sitemaps</value>
-    </property>
-    <property key="ContentGenerateSitemapsInfo">
-        <value xml:lang="de">Hinweis: Die Sitemap sollte generiert werden, nachdem die alternativen SEO-URLs generiert wurden. Der Speicherort wird in der Datei sitemaps.properties definiert. Generierte Sitemaps sind nur für Websites gültig, für die SEO-URLs aktiviert sind (siehe SeoConfig.xml).</value>
-        <value xml:lang="en">Note: The sitemap should be generated after the alternative SEO URLs have been generated. They will be generated in the locations specified in the sitemaps.properties configuration files. Generated sitemaps are only valid for websites which have SEO URLs enabled (see SeoConfig.xml).</value>
-    </property>
-    <property key="ContentGenerateSeoUrlInfo">
-        <value xml:lang="de">Mit Hilfe dieses Service können die URLs für alle Produkt- und Kategorienamen mithilfe der in SeoConfig.xml (/applications/product/config/SeoConfig.xml) angegebenen SEO-Konfiguration neu generiert werden.</value>
-        <value xml:lang="en">This automatically generates alternative URLs from product and category names using the SEO configuration specified in SeoConfig.xml (/applications/product/config/SeoConfig.xml).</value>
-    </property>
-    <property key="ContentRemoveSeoUrlInfo">
-        <value xml:lang="de">Dadurch werden alternative URLs für die Website entfernt. Wenn während der Generierung Fehler auftreten und keine wichtigen Daten in diesen Datensätzen vorhanden sind, können durch das Entfernen vor der erneuten Generierung Probleme mit alten oder inkompatiblen Daten behoben werden.</value>
-        <value xml:lang="en">This removes alternative URLs for the website. If you experience errors during generation and have no important data in these records, sometimes removing before generating again can solve issues with old or incompatible data.</value>
-    </property>
-    <property key="ContentGenerateSeoUrlInfoMayChangeUrls">
-        <value xml:lang="de">Hinweis: Dies kann alle Kategorie-/Produkt-URLs im Store ändern (deaktivieren Sie "Bestehende ersetzen", um nur fehlende zu generieren).</value>
-        <value xml:lang="en">Note: This may change all category/product URLs in the store (turn off "Replace Existing" to generate missing only).</value>
-    </property>
-    <property key="ContentMainStcLocFieldInfo">
-        <value xml:lang="de">Dieser Gebietsschema-Feldeintrag (der erste) entspricht dem Hauptinhaltsdatensatz für diesen Feldtyp (${typeField}: ${typeName}); Die folgenden Einträge (falls vorhanden) werden durch die Inhaltsverknüpfung contentAssocTypeId ALTERNATE_LOCALE mit dieser verknüpft.</value>
-        <value xml:lang="en">This locale field entry (the first) corresponds to the main Content record for this field type (${typeField}: ${typeName}); the following entries (if any) will be linked to this one by contentAssocTypeId ALTERNATE_LOCALE content association.</value>
-    </property>
-    <property key="ContentAltStcLocFieldInfo">
-        <value xml:lang="de">Dieser Gebietsschema-Feldeintrag entspricht einem ALTERNATE_LOCALE-Inhaltsdatensatz, der dem Hauptinhaltsdatensatz für diesen Feldtyp (${typeField}: ${typeName}) zugeordnet ist und durch den ersten Gebietsschema-Eintrag oben angegeben wird.</value>
-        <value xml:lang="en">This locale field entry corresponds to an ALTERNATE_LOCALE Content record associated to the main Content record for this field type (${typeField}: ${typeName}), denoted by the first locale field entry above.</value>
+    <property key="PageTitleRemoveWebSiteSEO">
+        <value xml:lang="de">SEO-URLs entfernen</value>
+        <value xml:lang="en">Remove SEO URLs</value>
     </property>
 </resource>

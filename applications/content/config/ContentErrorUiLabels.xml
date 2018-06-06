@@ -316,12 +316,12 @@
         <value xml:lang="zh">没有提供根目录，请在数据资源对象信息数据项中填写路径</value>
     </property>
     <!-- SCIPIO: NEW LABELS -->
-    <property key="contentservices.localized_field_entry_missing_locale">
-        <value xml:lang="de">Lokalisierter Feldeintrag fehlt Gebietsschema - Textdaten für alternatives Gebietsschema können nicht mit leerem Gebietsschema aktualisiert werden (nur der erste Eintrag darf ein leeres Gebietsschema für den Hauptinhaltsdatensatz haben)</value>
-        <value xml:lang="en">Localized field entry is missing locale - cannot update text data for alternate locale with blank locale (only the first entry is allowed to have empty locale, for the main Content record)</value>
-    </property>
     <property key="contentservices.localized_field_entry_duplicate_locale">
         <value xml:lang="de">Doppeltes Gebietsschema in lokalisierten Feldeinträgen angegeben</value>
         <value xml:lang="en">Duplicate locale specified in localized field entries</value>
+    </property>
+    <property key="contentservices.localized_field_entry_missing_locale">
+        <value xml:lang="de">Lokalisierter Feldeintrag fehlt Gebietsschema - Textdaten für alternatives Gebietsschema können nicht mit leerem Gebietsschema aktualisiert werden (nur der erste Eintrag darf ein leeres Gebietsschema für den Hauptinhaltsdatensatz haben)</value>
+        <value xml:lang="en">Localized field entry is missing locale - cannot update text data for alternate locale with blank locale (only the first entry is allowed to have empty locale, for the main Content record)</value>
     </property>
 </resource>

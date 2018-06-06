@@ -5919,63 +5919,20 @@
         <value xml:lang="zh-TW">新建一個資料實體 ${entityName} :輸入值,然後點擊新建.</value>
     </property>
     <!-- SCIPIO: NEW LABELS -->
-    <property key="WebtoolsEntityUtilityServices">
-        <value xml:lang="de">Entity Utility Services</value>
-        <value xml:lang="en">Entity Utility Services</value>
+    <property key="PageTitleDemoDataGenerator">
+        <value xml:lang="en">Demo Data Generator</value>
     </property>
-    <property key="WebtoolsUtilityServices">
-        <value xml:lang="de">Utility Services</value>
-        <value xml:lang="en">Utility Services</value>
-    </property>
-    <property key="WebtoolsUtilityAndDataGen">
-        <value xml:lang="de">Dienstprogramm und Datengenerierung </value>
-        <value xml:lang="en">Utility and Data Generation</value>
-    </property>
-    <property key="WebtoolsDataGeneratorMaxRecordsInfo">
-        <value xml:lang="en">The default max number of records to be generated can be adjusted in general.properties#data.generator.max.records.</value>
-    </property>
-    <property key="WebtoolsDataGeneratorMaxRecordsCurrentValue">
-        <value xml:lang="en">Currently set to ${maxRecords}</value>
-    </property>
-    <property key="WebtoolsDemoDataGeneratorResults">
-        <value xml:lang="en">Generated data results</value>
-    </property>
-    <property key="WebtoolsDemoDataGeneratorNoRecordsGenerated">
-        <value xml:lang="en">No records could be generated</value>
-    </property>
-    <property key="WebtoolsGeneratedDataStored">
-        <value xml:lang="en">Stored</value>
-    </property>
-    <property key="WebtoolsGeneratedDataFailed">
-        <value xml:lang="en">Failed</value>
-    </property>
-    <property key="WebtoolsSpecifiedEntityValueDoesNotExist">
-        <value xml:lang="de">Der angegebene Entity-Wert nicht vorhanden oder wurde entfernt.</value>
-        <value xml:lang="en">The specified entity value does not exist or has been removed.</value>
-    </property>
-    <property key="WebtoolsSpecifiedEntityValueRemovedSuccess">
-        <value xml:lang="de">Der angegebene Entity-Wert wurde erfolgreich entfernt.</value>
-        <value xml:lang="en">The specified entity value has been successfully removed.</value>
-    </property>
-    <property key="WebtoolsSpecifiedEntityValueRemovedDetail">
-        <value xml:lang="de">HINWEIS: Der ausgewiesene Entitätswert wurde gelöscht und existiert nicht mehr im System.</value>
-        <value xml:lang="en">NOTE: The entity value shown was deleted and no longer exists in the system.</value>
-    </property>
-    <property key="WebtoolsDeveloperDocumentation">
-        <value xml:lang="de">Developer Documentation</value>
-        <value xml:lang="en">Developer Documentation</value>
-    </property>
-    <property key="WebtoolsTemplateApiDocsTitle">
-        <value xml:lang="de">Templating Toolkit Dokumentation</value>
-        <value xml:lang="en">Templating Toolkit Documentation</value>
-    </property>
-    <property key="WebtoolsFieldValueNoStringRepr">
-        <value xml:lang="de">Feldwert kann nicht als String dargestellt werden</value>
-        <value xml:lang="en">Field value can't be represented as string</value>
-    </property>
-    <property key="WebtoolsNoStringRepr">
-        <value xml:lang="de">Keine Stringdarstellung</value>
-        <value xml:lang="en">No string representation</value>
+    <property key="WebtoolsCheckAllPlain">
+        <value xml:lang="de">Alle auswählen</value>
+        <value xml:lang="en">Check All</value>
+        <value xml:lang="fr">Tout sélectionner</value>
+        <value xml:lang="it">Seleziona tutto</value>
+        <value xml:lang="ja">すべてチェック</value>
+        <value xml:lang="pt">Selecionar todos</value>
+        <value xml:lang="th">ตรวจสอบทั้งหมด</value>
+        <value xml:lang="vi">Chọn tất cả</value>
+        <value xml:lang="zh">检查全部</value>
+        <value xml:lang="zh-TW">檢查全部</value>
     </property>
     <property key="WebtoolsDataExport">
         <value xml:lang="de">Daten exportieren</value>
@@ -5990,6 +5947,12 @@
         <value xml:lang="zh">数据导出</value>
         <value xml:lang="zh-TW">資料匯出</value>
     </property>
+    <property key="WebtoolsDataGeneratorMaxRecordsCurrentValue">
+        <value xml:lang="en">Currently set to ${maxRecords}</value>
+    </property>
+    <property key="WebtoolsDataGeneratorMaxRecordsInfo">
+        <value xml:lang="en">The default max number of records to be generated can be adjusted in general.properties#data.generator.max.records.</value>
+    </property>
     <property key="WebtoolsDataImport">
         <value xml:lang="de">Daten importieren</value>
         <value xml:lang="en">Data Import</value>
@@ -6003,51 +5966,57 @@
         <value xml:lang="zh">数据导入</value>
         <value xml:lang="zh-TW">資料匯入</value>
     </property>
-    <property key="WebtoolsUploadXmlFile">
-        <value xml:lang="en">Upload XML File</value>
-        <value xml:lang="de">XML-Datei hochladen</value>
-        <value xml:lang="fr">Télécharger fichier XML</value>
+    <property key="WebtoolsDemoDataGeneratorNoRecordsGenerated">
+        <value xml:lang="en">No records could be generated</value>
     </property>
-    <property key="WebtoolsTestLabel">
-        <value xml:lang="en">Test Label</value>
-        <value xml:lang="de">Testetikett</value>
+    <property key="WebtoolsDemoDataGeneratorProviders">
+        <value xml:lang="en">Data Generator Providers</value>
     </property>
-    <property key="WebtoolsTestLabel_en"><!-- SCIPIO: DO NOT LOCALIZE; testing only -->
-        <value xml:lang="en">Test Label</value>
+    <property key="WebtoolsDemoDataGeneratorResults">
+        <value xml:lang="en">Generated data results</value>
     </property>
-    <property key="WebtoolsTestLabel_de"><!-- SCIPIO: DO NOT LOCALIZE; testing only -->
-        <value xml:lang="de">Testetikett</value>
+    <property key="WebtoolsDemoDataGeneratorServiceList">
+        <value xml:lang="en">Data Generator Services</value>
+    </property>
+    <property key="WebtoolsDeveloperDocumentation">
+        <value xml:lang="de">Developer Documentation</value>
+        <value xml:lang="en">Developer Documentation</value>
+    </property>
+    <property key="WebtoolsEntityUtilityServices">
+        <value xml:lang="de">Entity Utility Services</value>
+        <value xml:lang="en">Entity Utility Services</value>
+    </property>
+    <property key="WebtoolsFieldValueNoStringRepr">
+        <value xml:lang="de">Feldwert kann nicht als String dargestellt werden</value>
+        <value xml:lang="en">Field value can't be represented as string</value>
+    </property>
+    <property key="WebtoolsGeneratedDataFailed">
+        <value xml:lang="en">Failed</value>
+    </property>
+    <property key="WebtoolsGeneratedDataStored">
+        <value xml:lang="en">Stored</value>
     </property>
     <property key="WebtoolsLeaveEmptyToRunJobImmediately">
         <value xml:lang="en">Leave start time field empty to run job immediately (on next job poll)</value>
         <value xml:lang="de">Feld Startzeit leer lassen, um den Job sofort auszuführen (bei der nächsten Jobabfrage)</value>
         <value xml:lang="fr">Laissez le champ Heure de début vide pour exécuter le travail immédiatement (au prochain rafraîchissement)</value>
     </property>
-    <property key="WebtoolsRunServiceAsyncStartedInfo">
-        <value xml:lang="en">The service '${serviceName}' has been started asynchronously and will run in the background. Check server logs for more information.</value>
-        <value xml:lang="de">Der Dienst '${serviceName}' wurde asynchron gestartet und wird im Hintergrund ausgeführt. Überprüfen Sie die Serverprotokolle auf weitere Informationen.</value>
-        <value xml:lang="fr">Le service '${serviceName}' a été démarré de manière asynchrone et veut s'exécuter en arrière-plan. Vérifiez les journaux du serveur pour plus d'informations.</value>
+    <property key="WebtoolsLogs">
+        <value xml:lang="en">Logs</value>
+    </property>
+    <property key="WebtoolsNoStringRepr">
+        <value xml:lang="de">Keine Stringdarstellung</value>
+        <value xml:lang="en">No string representation</value>
     </property>
     <property key="WebtoolsOneTimeExecNotPersisted">
         <value xml:lang="en">One-time execution, not persisted</value>
         <value xml:lang="de">Einmalige Ausführung, nicht beibehalten</value>
         <value xml:lang="fr">Exécution unique, non persistante</value>
     </property>
-    <property key="WebtoolsTemplateTest">
-        <value xml:lang="en">Template Test</value>
-        <value xml:lang="de">Template Test</value>
-    </property>
-    <property key="PageTitleDemoDataGenerator">
-        <value xml:lang="en">Demo Data Generator</value>
-    </property>
-    <property key="WebtoolsDemoDataGeneratorServiceList">
-        <value xml:lang="en">Data Generator Services</value>
-    </property>
-    <property key="WebtoolsDemoDataGeneratorProviders">
-        <value xml:lang="en">Data Generator Providers</value>
-    </property>
-    <property key="WebtoolsLogs">
-        <value xml:lang="en">Logs</value>
+    <property key="WebtoolsRunServiceAsyncStartedInfo">
+        <value xml:lang="en">The service '${serviceName}' has been started asynchronously and will run in the background. Check server logs for more information.</value>
+        <value xml:lang="de">Der Dienst '${serviceName}' wurde asynchron gestartet und wird im Hintergrund ausgeführt. Überprüfen Sie die Serverprotokolle auf weitere Informationen.</value>
+        <value xml:lang="fr">Le service '${serviceName}' a été démarré de manière asynchrone et veut s'exécuter en arrière-plan. Vérifiez les journaux du serveur pour plus d'informations.</value>
     </property>
     <property key="WebtoolsServer">
         <value xml:lang="de">Server</value>
@@ -6065,6 +6034,18 @@
     <property key="WebtoolsSolr">
         <value xml:lang="en">Solr</value>
     </property>
+    <property key="WebtoolsSpecifiedEntityValueDoesNotExist">
+        <value xml:lang="de">Der angegebene Entity-Wert nicht vorhanden oder wurde entfernt.</value>
+        <value xml:lang="en">The specified entity value does not exist or has been removed.</value>
+    </property>
+    <property key="WebtoolsSpecifiedEntityValueRemovedDetail">
+        <value xml:lang="de">HINWEIS: Der ausgewiesene Entitätswert wurde gelöscht und existiert nicht mehr im System.</value>
+        <value xml:lang="en">NOTE: The entity value shown was deleted and no longer exists in the system.</value>
+    </property>
+    <property key="WebtoolsSpecifiedEntityValueRemovedSuccess">
+        <value xml:lang="de">Der angegebene Entity-Wert wurde erfolgreich entfernt.</value>
+        <value xml:lang="en">The specified entity value has been successfully removed.</value>
+    </property>
     <property key="WebtoolsStatsRequestsBy">
         <value xml:lang="de">Zugriffe pro</value>
         <value xml:lang="en">Requests by</value>
@@ -6073,17 +6054,36 @@
         <value xml:lang="de">System Speicher</value>
         <value xml:lang="en">System Memory</value>
     </property>
-    <property key="WebtoolsCheckAllPlain">
-        <value xml:lang="de">Alle auswählen</value>
-        <value xml:lang="en">Check All</value>
-        <value xml:lang="fr">Tout sélectionner</value>
-        <value xml:lang="it">Seleziona tutto</value>
-        <value xml:lang="ja">すべてチェック</value>
-        <value xml:lang="pt">Selecionar todos</value>
-        <value xml:lang="th">ตรวจสอบทั้งหมด</value>
-        <value xml:lang="vi">Chọn tất cả</value>
-        <value xml:lang="zh">检查全部</value>
-        <value xml:lang="zh-TW">檢查全部</value>
+    <property key="WebtoolsTemplateApiDocsTitle">
+        <value xml:lang="de">Templating Toolkit Dokumentation</value>
+        <value xml:lang="en">Templating Toolkit Documentation</value>
+    </property>
+    <property key="WebtoolsTemplateTest">
+        <value xml:lang="en">Template Test</value>
+        <value xml:lang="de">Template Test</value>
+    </property>
+    <property key="WebtoolsTestLabel">
+        <value xml:lang="en">Test Label</value>
+        <value xml:lang="de">Testetikett</value>
+    </property>
+    <property key="WebtoolsTestLabel_de"><!-- SCIPIO: DO NOT LOCALIZE; testing only -->
+        <value xml:lang="de">Testetikett</value>
+    </property>
+    <property key="WebtoolsTestLabel_en"><!-- SCIPIO: DO NOT LOCALIZE; testing only -->
+        <value xml:lang="en">Test Label</value>
+    </property>
+    <property key="WebtoolsUploadXmlFile">
+        <value xml:lang="en">Upload XML File</value>
+        <value xml:lang="de">XML-Datei hochladen</value>
+        <value xml:lang="fr">Télécharger fichier XML</value>
+    </property>
+    <property key="WebtoolsUtilityAndDataGen">
+        <value xml:lang="de">Dienstprogramm und Datengenerierung </value>
+        <value xml:lang="en">Utility and Data Generation</value>
+    </property>
+    <property key="WebtoolsUtilityServices">
+        <value xml:lang="de">Utility Services</value>
+        <value xml:lang="en">Utility Services</value>
     </property>
     <property key="WebtoolsXMLExportSingleInfo">
         <value xml:lang="de">Hier Seite können Daten aus der Datenbank exportiert werden. Die exportierten Dokumente werden in einem XML-root-tag "&lt;entity-engine-xml&gt;" enthalten sein.</value>

@@ -5380,26 +5380,6 @@
         <value xml:lang="zh-TW">把工作流程行動指派給使用者角色</value>
     </property>
     <!-- SCIPIO: NEW LABELS -->
-    <property key="WorkEffortUpComingEvents">
-        <value xml:lang="de">Kommende Veranstaltungen</value>
-        <value xml:lang="en">Up-Coming Events</value>
-        <value xml:lang="es">Eventos próximos</value>
-        <value xml:lang="fr">Évènements à venir</value>
-        <value xml:lang="nl">Up-Coming Events</value>
-    </property>
-    <property key="WorkEffortDeliverable">
-        <value xml:lang="en">Deliverable</value>
-    </property>
-    <property key="WorkEffortDeliverableType">
-        <value xml:lang="en">Deliverable Type</value>
-    </property>
-    <property key="WorkEfforts">
-        <value xml:lang="en">Work Efforts</value>
-    </property>
-    <property key="WorkEffortCompletedTasks">
-        <value xml:lang="de">Erledigte Aufgaben</value>
-        <value xml:lang="en">Completed Tasks</value>
-    </property>
     <property key="WorkEffortAssignedActivities">
         <value xml:lang="de">Zugewiesene Aktivitäten</value>
         <value xml:lang="en">Assigned Activities</value>
@@ -5407,6 +5387,16 @@
     <property key="WorkEffortCompletedActivities">
         <value xml:lang="de">Erledigte Aktivitäten</value>
         <value xml:lang="en">Completed Activities</value>
+    </property>
+    <property key="WorkEffortCompletedTasks">
+        <value xml:lang="de">Erledigte Aufgaben</value>
+        <value xml:lang="en">Completed Tasks</value>
+    </property>
+    <property key="WorkEffortDeliverable">
+        <value xml:lang="en">Deliverable</value>
+    </property>
+    <property key="WorkEffortDeliverableType">
+        <value xml:lang="en">Deliverable Type</value>
     </property>
     <property key="WorkEffortMaxEvents">
         <value xml:lang="de">Max Veranstaltungen</value>
@@ -5417,5 +5407,15 @@
         <value xml:lang="de">Max Personen</value>
         <value xml:lang="en">Max Persons</value>
         <value xml:lang="it">Max persone</value>
+    </property>
+    <property key="WorkEfforts">
+        <value xml:lang="en">Work Efforts</value>
+    </property>
+    <property key="WorkEffortUpComingEvents">
+        <value xml:lang="de">Kommende Veranstaltungen</value>
+        <value xml:lang="en">Up-Coming Events</value>
+        <value xml:lang="es">Eventos próximos</value>
+        <value xml:lang="fr">Évènements à venir</value>
+        <value xml:lang="nl">Up-Coming Events</value>
     </property>
 </resource>

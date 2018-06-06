@@ -1003,12 +1003,12 @@
         <value xml:lang="zh-TW">獲取訂單頭時出錯</value>
     </property>
     <!-- SCIPIO: NEW LABELS -->
-    <property key="AccountingUserGeoInvalidTaxAuthority">
-        <value xml:lang="de">Der angegebene Benutzer- und Geo-Standort ist kein gültiger Tax Authority</value>
-        <value xml:lang="en">The specified user and geo location is not a valid Tax Authority</value>
-    </property>
     <property key="AccountingTaxAuthGlAccountAlreadyExists">
         <value xml:lang="de">Ein GL-Konto (${glAccountId}) existiert bereits für die Steuerbehörde '${taxAuthPartyId}/${taxAuthGeoId}' und die Organisation '${organizationPartyId}'. Höchstens ein GL-Konto kann pro Organisation und Steuerbehörde eingestellt werden.</value>
         <value xml:lang="en">A GL Account (${glAccountId}) already exists for Tax Authority '${taxAuthPartyId}/${taxAuthGeoId}' and Organization '${organizationPartyId}'. At most one GL Account can be set per Organization and Tax Authority.</value>
+    </property>
+    <property key="AccountingUserGeoInvalidTaxAuthority">
+        <value xml:lang="de">Der angegebene Benutzer- und Geo-Standort ist kein gültiger Tax Authority</value>
+        <value xml:lang="en">The specified user and geo location is not a valid Tax Authority</value>
     </property>
 </resource>

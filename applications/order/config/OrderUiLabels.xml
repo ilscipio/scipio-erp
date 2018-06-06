@@ -16006,62 +16006,63 @@
         <value xml:lang="zh-TW">租賃</value>
     </property>
     <!-- SCIPIO: NEW LABELS -->
-    <property key="OrderOrdersReceivedFrom">
-        <value xml:lang="de">Bestellungen erhalten ab</value>
-        <value xml:lang="en">Orders Received From</value>
+    <property key="OrderCart">
+        <value xml:lang="de">Warenkorb</value>
+        <value xml:lang="en">Cart</value>
+    </property>
+    <property key="OrderConfirmOrder">
+        <value xml:lang="de">Bestellung bestätigen</value>
+        <value xml:lang="en">Confirm Order</value>
+    </property>
+    <property key="OrderDownloadableFileTitles">
+        <value xml:lang="de">Herunterladbaren Datei Titel</value>
+        <value xml:lang="en">Downloadable File Titles</value>
+    </property>
+    <property key="OrderGrossSales">
+        <value xml:lang="de">Bruttoumsatz</value>
+        <value xml:lang="en">Gross Sales</value>
     </property>
     <property key="OrderIncludeCountry">
         <value xml:lang="de">Länderverfügbarkeit</value>
         <value xml:lang="en">Include Country</value>
         <value xml:lang="fr">Pays inclus</value>
     </property>
-    <property key="OrderOrderInfo">
-        <value xml:lang="de">Bestell-Info</value>
-        <value xml:lang="en">Order Info</value>
+    <property key="OrderMayNotProceedWithOrder">
+        <value xml:lang="de">Sie können die Bestellung nicht fortzusetzen. Bitte kontaktieren Sie Ihren Systemadministrator.</value>
+        <value xml:lang="en">You may not be able to proceed with this order. Please contact your system administrator.</value>
+    </property>
+    <property key="OrderNetSales">
+        <value xml:lang="de">Nettoumsatz</value>
+        <value xml:lang="en">Net Sales</value>
     </property>
     <property key="OrderNoShipMethodAvailable">
         <value xml:lang="de">Keine Versandmethoden verfügbar.</value>
         <value xml:lang="en">No shipping methods available.</value>
     </property>
-    <property key="OrderMayNotProceedWithOrder">
-        <value xml:lang="de">Sie können die Bestellung nicht fortzusetzen. Bitte kontaktieren Sie Ihren Systemadministrator.</value>
-        <value xml:lang="en">You may not be able to proceed with this order. Please contact your system administrator.</value>
+    <property key="OrderOrderInfo">
+        <value xml:lang="de">Bestell-Info</value>
+        <value xml:lang="en">Order Info</value>
     </property>
-    <property key="OrderShippingMethod">
-        <value xml:lang="de">Versandmethode</value>
-        <value xml:lang="en">Shipping Method</value>
-        <value xml:lang="es">Método de envñio</value>
-        <value xml:lang="fr">Méthode d'expédition</value>
-        <value xml:lang="it">Metodo spedizione</value>
-        <value xml:lang="nl">Verzend methode</value>
-        <value xml:lang="pt-BR">Método de envio</value>
+    <property key="OrderOrderItemCancelled">
+        <value xml:lang="de">Auftragsposition wurde zurückgesetzt.</value>
+        <value xml:lang="en">Order item has been cancelled.</value>
     </property>
-    <property key="OrderDownloadableFileTitles">
-        <value xml:lang="de">Herunterladbaren Datei Titel</value>
-        <value xml:lang="en">Downloadable File Titles</value>
-    </property>
-    <property key="PageTitleAllPromotions">
-        <value xml:lang="de">Aktionen anzeigen</value>
-        <value xml:lang="en">All Promotions</value>
-        <value xml:lang="es">Las promociones</value>
-        <value xml:lang="fr">Toutes les promotions</value>
-        <value xml:lang="it">Tutte le promozioni</value>
-        <value xml:lang="nl">Alle promoties</value>
-        <value xml:lang="pt-BR">Todas as promoções</value>
-        <value xml:lang="ro">Toate Promotiile </value>
-    </property>
-    <property key="OrderSaveToAccount">
-        <value xml:lang="de">Im Konto speichern</value>
-        <value xml:lang="en">Save to account</value>
+    <property key="OrderOrdersReceivedFrom">
+        <value xml:lang="de">Bestellungen erhalten ab</value>
+        <value xml:lang="en">Orders Received From</value>
     </property>
     <!-- SCIPIO: TODO: OrderPaymentDesc* descriptions should be made part of entities (?), but simpler for time being. DO NOT REUSE these for now. -->
-    <property key="OrderPaymentDescOffline">
-        <value xml:lang="de">Bezahlen mit Mail-In-Scheck oder per Überweisung.</value>
-        <value xml:lang="en">Pay using mail-in check or money order.</value>
-    </property>
     <property key="OrderPaymentDescCOD">
         <value xml:lang="de">Zahlung bei Lieferung.</value>
         <value xml:lang="en">Pay upon delivery of your item(s).</value>
+    </property>
+    <property key="OrderPaymentDescIdeal">
+        <value xml:lang="de">Externe iDEAL Zahlung. Sie werden anschließend weitergeleitet, um Ihre Bestellung zu überprüfen.</value>
+        <value xml:lang="en">Pay with iDEAL externally. You will be redirected back to review your order afterward.</value>
+    </property>
+    <property key="OrderPaymentDescOffline">
+        <value xml:lang="de">Bezahlen mit Mail-In-Scheck oder per Überweisung.</value>
+        <value xml:lang="en">Pay using mail-in check or money order.</value>
     </property>
     <property key="OrderPaymentDescPaypal">
         <value xml:lang="de">Externe PayPal Zahlung. Sie werden anschließend weitergeleitet, um Ihre Bestellung zu überprüfen.</value>
@@ -16070,37 +16071,6 @@
     <property key="OrderPaymentDescWorldpay">
         <value xml:lang="de">Externe WorldPay Zahlung. Sie werden anschließend weitergeleitet, um Ihre Bestellung zu überprüfen.</value>
         <value xml:lang="en">Pay with Worldpay externally. You will be redirected back to review your order afterward.</value>
-    </property>
-    <property key="OrderPaymentDescIdeal">
-        <value xml:lang="de">Externe iDEAL Zahlung. Sie werden anschließend weitergeleitet, um Ihre Bestellung zu überprüfen.</value>
-        <value xml:lang="en">Pay with iDEAL externally. You will be redirected back to review your order afterward.</value>
-    </property>
-    <property key="OrderConfirmOrder">
-        <value xml:lang="de">Bestellung bestätigen</value>
-        <value xml:lang="en">Confirm Order</value>
-    </property>
-    <property key="OrderCart">
-        <value xml:lang="de">Warenkorb</value>
-        <value xml:lang="en">Cart</value>
-    </property>
-    <property key="OrderOrderItemCancelled">
-        <value xml:lang="de">Auftragsposition wurde zurückgesetzt.</value>
-        <value xml:lang="en">Order item has been cancelled.</value>
-    </property>
-    <property key="OrderGrossSales">
-        <value xml:lang="de">Bruttoumsatz</value>
-        <value xml:lang="en">Gross Sales</value>
-    </property>
-    <property key="OrderNetSales">
-        <value xml:lang="de">Nettoumsatz</value>
-        <value xml:lang="en">Net Sales</value>
-    </property>
-    <property key="OrderUnits">
-        <value xml:lang="de">Einheiten</value>
-        <value xml:lang="en">Units</value>
-        <value xml:lang="es">Unidades</value>
-        <value xml:lang="fr">Unités</value>
-        <value xml:lang="it">Unità</value>
     </property>
     <property key="OrderPromotionCouponCodes_spaced">
         <value xml:lang="de">Aktion / Coupon Codes</value>
@@ -16118,5 +16088,35 @@
         <value xml:lang="zh">促销 / 优惠券代码</value>
         <value xml:lang="zh-CN">促销优惠代码</value>
         <value xml:lang="zh-TW">促銷 / 優惠券代碼</value>
+    </property>
+    <property key="OrderSaveToAccount">
+        <value xml:lang="de">Im Konto speichern</value>
+        <value xml:lang="en">Save to account</value>
+    </property>
+    <property key="OrderShippingMethod">
+        <value xml:lang="de">Versandmethode</value>
+        <value xml:lang="en">Shipping Method</value>
+        <value xml:lang="es">Método de envñio</value>
+        <value xml:lang="fr">Méthode d'expédition</value>
+        <value xml:lang="it">Metodo spedizione</value>
+        <value xml:lang="nl">Verzend methode</value>
+        <value xml:lang="pt-BR">Método de envio</value>
+    </property>
+    <property key="OrderUnits">
+        <value xml:lang="de">Einheiten</value>
+        <value xml:lang="en">Units</value>
+        <value xml:lang="es">Unidades</value>
+        <value xml:lang="fr">Unités</value>
+        <value xml:lang="it">Unità</value>
+    </property>
+    <property key="PageTitleAllPromotions">
+        <value xml:lang="de">Aktionen anzeigen</value>
+        <value xml:lang="en">All Promotions</value>
+        <value xml:lang="es">Las promociones</value>
+        <value xml:lang="fr">Toutes les promotions</value>
+        <value xml:lang="it">Tutte le promozioni</value>
+        <value xml:lang="nl">Alle promoties</value>
+        <value xml:lang="pt-BR">Todas as promoções</value>
+        <value xml:lang="ro">Toate Promotiile </value>
     </property>
 </resource>

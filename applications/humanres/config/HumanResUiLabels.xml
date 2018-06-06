@@ -3388,40 +3388,16 @@
         <value xml:lang="zh-TW">檢視個人教育訓練</value>
     </property>
     <!-- SCIPIO: NEW LABELS -->
-    <property key="HumanResResourcePlanning">
-        <value xml:lang="de">Ressourcenplanung</value>
-        <value xml:lang="en">Resource Planning</value>
-        <value xml:lang="fr">Planification des ressources</value>
-    </property>
-    <property key="HumanResNewApplicants">
-        <value xml:lang="de">Neue Bewerber</value>
-        <value xml:lang="en">New Applicants</value>
-        <value xml:lang="fr">Nouveaux candidats</value>
-    </property>
-    <property key="HumanResEmployeesApplicants">
-        <value xml:lang="de">Mitarbeiter/Bewerber</value>
-        <value xml:lang="en">Employees/Applicants</value>
-        <value xml:lang="fr">Employés/candidats</value>
-    </property>
-    <property key="HumanResEmployeeApplicant">
-        <value xml:lang="de">Mitarbeiter/Bewerber</value>
-        <value xml:lang="en">Employee/Applicant</value>
-        <value xml:lang="fr">Employé/candidat</value>
-    </property>
-    <property key="HumanResNewEmployeeApplicant">
-        <value xml:lang="de">Neue Mitarbeiter/Bewerber</value>
-        <value xml:lang="en">New Employee/Applicant</value>
-        <value xml:lang="fr">Nouvel employé/candidat</value>
+    <property key="HumanResApplications">
+        <value xml:lang="de">Bewerbungen</value>
+        <value xml:lang="en">Applications</value>
+        <value xml:lang="es">Candidatura</value>
+        <value xml:lang="fr">Candidature</value>
     </property>
     <property key="HumanResCurrentOpenings">
         <value xml:lang="de">Aktuelle Stellenangebote</value>
         <value xml:lang="en">Current Openings</value>
         <value xml:lang="fr">Postes à pourvoir</value>
-    </property>
-    <property key="HumanResPositions">
-        <value xml:lang="de">Positionen</value>
-        <value xml:lang="en">Positions</value>
-        <value xml:lang="fr">Positions</value>
     </property>
     <property key="HumanResEitherPositionOrRequisitionMustBeSpecified">
         <value xml:lang="de">Es muss entweder eine Position oder eine Stellenanforderung angegeben werden (Stellenausschreibungen müssen bereits mit einer Position verknüpft sein).</value>
@@ -3431,6 +3407,26 @@
         <value xml:lang="de">Es muss entweder eine ${position} oder eine ${jobReq} angegeben werden (Stellenausschreibungen müssen bereits mit einer Position verknüpft sein).</value>
         <value xml:lang="en">Either a ${position} or a ${jobReq} must be specified (Job Requisition must already be linked to a Position).</value>
     </property>
+    <property key="HumanResEmployeeApplicant">
+        <value xml:lang="de">Mitarbeiter/Bewerber</value>
+        <value xml:lang="en">Employee/Applicant</value>
+        <value xml:lang="fr">Employé/candidat</value>
+    </property>
+    <property key="HumanResEmployeeApplicantProfile">
+        <value xml:lang="de">Mitarbeiter/Bewerberprofil</value>
+        <value xml:lang="en">Employee/Applicant Profile</value>
+        <value xml:lang="fr">Profil de l'employé/candidat</value>
+    </property>
+    <property key="HumanResEmployeeProfile">
+        <value xml:lang="de">Mitarbeiterprofil</value>
+        <value xml:lang="en">Employee Profile</value>
+        <value xml:lang="fr">Profil de l'employé</value>
+    </property>
+    <property key="HumanResEmployeesApplicants">
+        <value xml:lang="de">Mitarbeiter/Bewerber</value>
+        <value xml:lang="en">Employees/Applicants</value>
+        <value xml:lang="fr">Employés/candidats</value>
+    </property>
     <property key="HumanResEmploymentApplication">
         <value xml:lang="de">Bewerbung</value>
         <value xml:lang="en">Employment Application</value>
@@ -3438,25 +3434,29 @@
         <value xml:lang="it">Candidatura d'impiego</value>
         <value xml:lang="pt-BR">Candidatura ao emprego</value>
     </property>
-    <property key="HumanResEmployeeProfile">
-        <value xml:lang="de">Mitarbeiterprofil</value>
-        <value xml:lang="en">Employee Profile</value>
-        <value xml:lang="fr">Profil de l'employé</value>
+    <property key="HumanResNewApplicants">
+        <value xml:lang="de">Neue Bewerber</value>
+        <value xml:lang="en">New Applicants</value>
+        <value xml:lang="fr">Nouveaux candidats</value>
     </property>
-    <property key="HumanResEmployeeApplicantProfile">
-        <value xml:lang="de">Mitarbeiter/Bewerberprofil</value>
-        <value xml:lang="en">Employee/Applicant Profile</value>
-        <value xml:lang="fr">Profil de l'employé/candidat</value>
+    <property key="HumanResNewEmployeeApplicant">
+        <value xml:lang="de">Neue Mitarbeiter/Bewerber</value>
+        <value xml:lang="en">New Employee/Applicant</value>
+        <value xml:lang="fr">Nouvel employé/candidat</value>
     </property>
     <property key="HumanResPartyContentAndResumes">
         <value xml:lang="de">Inhalt und Lebenslauf</value>
         <value xml:lang="en">Content and Resumes</value>
     </property>
-    <property key="HumanResApplications">
-        <value xml:lang="de">Bewerbungen</value>
-        <value xml:lang="en">Applications</value>
-        <value xml:lang="es">Candidatura</value>
-        <value xml:lang="fr">Candidature</value>
+    <property key="HumanResPositions">
+        <value xml:lang="de">Positionen</value>
+        <value xml:lang="en">Positions</value>
+        <value xml:lang="fr">Positions</value>
+    </property>
+    <property key="HumanResResourcePlanning">
+        <value xml:lang="de">Ressourcenplanung</value>
+        <value xml:lang="en">Resource Planning</value>
+        <value xml:lang="fr">Planification des ressources</value>
     </property>
     <property key="HumanResSkill">
         <value xml:lang="en">Skill</value>

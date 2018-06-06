@@ -32346,103 +32346,9 @@
         <value xml:lang="zh">批次参考</value>
     </property>
     <!-- SCIPIO: NEW LABELS -->
-    <property key="ProductSettings">
-        <value xml:lang="de">Produkteinstellungen</value>
-        <value xml:lang="en">Product Settings</value>
-        <value xml:lang="fr">Paramètres du produit</value>
-    </property>
-    <property key="ImageManagementDoNotResize">
-        <value xml:lang="de">Nicht die Größe</value>
-        <value xml:lang="en">Do not resize</value>
-        <value xml:lang="fr">Ne pas redimensionner</value>
-    </property>
-    <property key="ProductPaymentMethods">
-        <value xml:lang="de">Zahlungsmethoden</value>
-        <value xml:lang="en">Payment Methods</value>
-        <value xml:lang="es">Métodos de pago</value>
-        <value xml:lang="fr">Méthodes de paiement</value>
-        <value xml:lang="it">Metodos di Pagamento</value>
-    </property>
-    <property key="ProductLocationSeqIdTo">
-        <value xml:lang="en">Location Seq Id To</value>
-    </property>
-    <property key="ProductLocationSeqIdFrom">
-        <value xml:lang="en">Location Seq Id From</value>
-    </property>
-    <property key="ProductInventoryTransfers">
-        <value xml:lang="en">Inventory Transfer List</value>
-    </property>
-    <property key="ProductRequestedTransfers">
-        <value xml:lang="en">Requested transfers</value>
-    </property>
-    <property key="ProductPhysicalInventoryList">
-        <value xml:lang="en">Physical Inventory List</value>
-    </property>
-    <property key="ProductReceiveInventoryItems">
-        <value xml:lang="en">Receive Inventory</value>
-    </property>
-    <property key="ProductRooms">
-        <value xml:lang="de">Zimmer</value>
-        <value xml:lang="en">Rooms</value>
-    </property>
-    <property key="ProductProductsSold">
-        <value xml:lang="de">Produkte verkauft</value>
-        <value xml:lang="en">Products Sold</value>
-    </property>
-    <property key="ProductProductOverview">
-        <value xml:lang="de">Produktübersicht</value>
-        <value xml:lang="en">Product Overview</value>
-    </property>
-    <property key="ProductProductStorePromotions">
-        <value xml:lang="de">Shop Aktionen</value>
-        <value xml:lang="en">Store Promotions</value>
-        <value xml:lang="es">Promociones de la tienda de productos</value>
-        <value xml:lang="fr">Promotions du centre de profit</value>
-    </property>
-    <property key="ProductPricesHistory">
-        <value xml:lang="de">Preisentwicklung</value>
-        <value xml:lang="en">Price History</value>
-        <value xml:lang="fr">Historique des prix</value>
-    </property>
-    <property key="ProductProductQualifiedLabel"><!-- SCIPIO: temporary workaround for some labels. Doesn't work well in all langs. -->
-        <value xml:lang="de">Produkt ${qualifiedLabel}</value>
-        <value xml:lang="en">Product ${qualifiedLabel} </value>
-        <value xml:lang="fr">${qualifiedLabel} de l'article</value>
-    </property>
-    <property key="PageTitleEditProductStoreFacilities">
-        <value xml:lang="de">Shop Einrichtungen bearbeiten</value>
-        <value xml:lang="en">Edit Store Warehouses</value>
-    </property>
-    <property key="ProductProductStoreFacilities">
-        <value xml:lang="de">Shop Einrichtungen</value>
-        <value xml:lang="en">Store Warehouses</value>
-    </property>
-    <property key="ProductProductStoreCatalogs">
-        <value xml:lang="de">Shop Produktkataloge</value>
-        <value xml:lang="en">Store Catalogs</value>
-        <value xml:lang="es">Catálogos de una Tienda de Productos</value>
-        <value xml:lang="fr">Catalogues du centre de profit</value>
-    </property>
-    <property key="ProductProductStoreSegments">
-        <value xml:lang="de">Shopsegmente</value>
-        <value xml:lang="en">Store Segments</value>
-        <value xml:lang="es">Segmentos de una Tienda de Productos</value>
-        <value xml:lang="fr">Segments du centre de profit</value>
-    </property>
-    <property key="ProductNewCatalog">
-        <value xml:lang="de">Neuer Katalog</value>
-        <value xml:lang="en">New Catalog</value>
-        <value xml:lang="es">Nuevo Catálogo</value>
-        <value xml:lang="fr">Nouveau catalogue</value>
-        <value xml:lang="it">Nuovo catalogo</value>
-        <value xml:lang="ja">新規カタログを作成</value>
-        <value xml:lang="nl">Nieuwe catalogus</value>
-        <value xml:lang="ro">Nou Catalog</value>
-        <value xml:lang="ru">Новый каталог</value>
-        <value xml:lang="th">สร้างหมวดหมู่ใหม่</value>
-        <value xml:lang="vi">Tạo mới Phân loại Trình diễn</value>
-        <value xml:lang="zh">新建目录</value>
-        <value xml:lang="zh-TW">新建型錄</value>
+    <property key="CatalogWebAnalyticsType">
+        <value xml:lang="de">Web Analytik Type</value>
+        <value xml:lang="en">Web Analytics Type</value>
     </property>
     <property key="CatalogWebSiteWebAnalytics"><!-- FIXME: some language inexact -->
         <value xml:lang="de">Webseite Web Analytik</value>
@@ -32457,6 +32363,47 @@
         <value xml:lang="de">Webseite Web Analytik Konfiguration</value>
         <value xml:lang="en">WebSite Web Analytics Configuration</value>
         <value xml:lang="it">Configurazione analisi Web Sito Web</value>
+    </property>
+    <property key="FacilityIssuance">
+        <value xml:lang="de">Ausgabe</value>
+        <value xml:lang="en">Issuance</value>
+        <value xml:lang="es">Emisión</value>
+        <value xml:lang="fr">Prélèvement</value>
+        <value xml:lang="it">Prelievo</value>
+    </property>
+    <property key="FacilityItemIssuance">
+        <value xml:lang="de">Artikel Ausgabe</value>
+        <value xml:lang="en">Item Issuance</value>
+        <value xml:lang="es">Emisión de ítem</value>
+        <value xml:lang="fr">Prélèvement d'article</value>
+        <value xml:lang="it">Riga Prelievo</value>
+    </property>
+    <property key="FacilityPackageContent">
+        <value xml:lang="en">Shipment Content</value>
+    </property>
+    <property key="FacilityPackageContents">
+        <value xml:lang="en">Shipment Contents</value>
+    </property>
+    <property key="FacilityShipment">
+        <value xml:lang="en">Shipment</value>
+    </property>
+    <property key="FacilityShipmentItems">
+        <value xml:lang="de">Lieferpositionen</value>
+        <value xml:lang="en">Shipment Items</value>
+        <value xml:lang="es">Artículos de Envío</value>
+        <value xml:lang="fr">Expéditions</value>
+    </property>
+    <property key="FacilityShipmentPackages">
+        <value xml:lang="en">Shipment Packages</value>
+    </property>
+    <property key="ImageManagementDoNotResize">
+        <value xml:lang="de">Nicht die Größe</value>
+        <value xml:lang="en">Do not resize</value>
+        <value xml:lang="fr">Ne pas redimensionner</value>
+    </property>
+    <property key="PageTitleEditProductStoreFacilities">
+        <value xml:lang="de">Shop Einrichtungen bearbeiten</value>
+        <value xml:lang="en">Edit Store Warehouses</value>
     </property>
     <property key="PageTitleFindPriceRule"><!-- FIXME: some language inexact -->
         <value xml:lang="de">Suche nach Preisregeln</value>
@@ -32473,77 +32420,209 @@
         <value xml:lang="zh">查找产品价格规则</value>
         <value xml:lang="zh-TW">尋找產品價格規則</value>
     </property>
-    <property key="ProductPriceRule">
-        <value xml:lang="de">Preisregel</value>
-        <value xml:lang="en">Price Rule</value>
-        <value xml:lang="es">Regla de Precios</value>
-        <value xml:lang="fr">Règle de prix</value>
+    <property key="ProductAddCatalog">
+        <value xml:lang="en">Add Catalog</value>
+        <value xml:lang="de">Katalog hinzufügen</value>
+        <value xml:lang="fr">Ajouter un catalogue</value>
     </property>
-    <property key="ProductFindPromotionCode"><!-- FIXME: some language inexact -->
-        <value xml:lang="de">Aktionscode suchen</value>
-        <value xml:lang="en">Find Promotion Code</value>
-        <value xml:lang="es">Buscar Cupón de Promoción</value>
-        <value xml:lang="fr">Recherche de codes de promotion</value>
-        <value xml:lang="it">Ricerca codice promozione</value>
-        <value xml:lang="ja">製品プロモーションコードを検索</value>
-        <value xml:lang="ro">Cauta Cod Promotie Produs</value>
-        <value xml:lang="ru">Найти акционный код продукта</value>
-        <value xml:lang="th">ค้นหารหัสโปรโมชันสินค้า</value>
-        <value xml:lang="vi">Tìm mã khuyến mại sản phẩm</value>
-        <value xml:lang="zh">查找产品促销代码</value>
-        <value xml:lang="zh-TW">尋找產品促銷代碼</value>
+    <property key="ProductAddCategory">
+        <value xml:lang="en">Add Category</value>
+        <value xml:lang="de">Kategorie hinzufügen</value>
+        <value xml:lang="fr">Ajouter une catégorie</value>
     </property>
-    <property key="ProductFindProductPromo"><!-- FIXME: some language inexact -->
-        <value xml:lang="de">Aktion suchen</value>
-        <value xml:lang="en">Find Promotion</value>
-        <value xml:lang="es">Buscar Promociones</value>
-        <value xml:lang="fr">Recherche de promotions</value>
-        <value xml:lang="it">Ricerca Promozioni</value>
-        <value xml:lang="ja">製品プロモーションを検索</value>
-        <value xml:lang="ro">Cauta Promotii Produs</value>
-        <value xml:lang="ru">Найти акции продукта</value>
-        <value xml:lang="th">ค้นหาโปรโมชันสินค้า</value>
-        <value xml:lang="vi">Tìm khuyến mại sản phẩm</value>
-        <value xml:lang="zh">查找产品促销</value>
-        <value xml:lang="zh-TW">尋找產品促銷</value>
+    <property key="ProductAddExistingCatalog">
+        <value xml:lang="en">Add Existing Catalog</value>
+        <value xml:lang="de">Vorhandenen Katalog hinzufügen</value>
+        <value xml:lang="fr">Ajouter un catalogue existant</value>
     </property>
-    <property key="ProductNewPromotion">
-        <value xml:lang="de">Neuer Aktion</value>
-        <value xml:lang="en">New Promotion</value>
-        <value xml:lang="fr">Nouvelle promotion</value>
+    <property key="ProductAddExistingCategory">
+        <value xml:lang="en">Add Existing Category</value>
+        <value xml:lang="de">Vorhandene Kategorie hinzufügen</value>
+        <value xml:lang="fr">Ajouter une catégorie existante</value>
     </property>
-    <property key="ProductPromotionContent">
-        <value xml:lang="de">Aktion Inhalt</value>
-        <value xml:lang="en">Promotion Content</value>
-        <value xml:lang="fr">Contenu de la Promotion</value>
+    <property key="ProductAddExistingContentInCategory">
+        <value xml:lang="en">Add Existing Content</value>
     </property>
-    <property key="ProductPromotionStores">
-        <value xml:lang="de">Aktion-Shops</value>
-        <value xml:lang="en">Promotion Stores</value>
+    <property key="ProductAddExistingProduct">
+        <value xml:lang="de">Bestehendes Produkt hinzufügen</value>
+        <value xml:lang="en">Add Existing Product</value>
+        <value xml:lang="fr">Ajouter un produit existant</value>
     </property>
-    <property key="ProductPromotionRules">
-        <value xml:lang="de">Aktionsregeln</value>
-        <value xml:lang="en">Promotion Rules</value>
+    <property key="ProductAddExistingSubCategory">
+        <value xml:lang="en">Add Existing Sub-Category</value>
+        <value xml:lang="de">Bestehende Unterkategorie hinzufügen</value>
+        <value xml:lang="fr">Ajouter une sous-catégorie existante</value>
     </property>
-    <property key="ProductPromoStoreAddInstructions">
-        <value xml:lang="de">Der folgende Bildschirm fügt eine Förderung zu einem bestimmten Geschäft. Verwenden Sie diese Option, um Aktionen für eine begrenzte Zeit zu entkräften.</value>
-        <value xml:lang="en">The following Screen adds a promotion to a specific store. Use this in order to invalidate promotions for a limited time.</value>
-    </property>    
+    <property key="ProductAddFeatureInBulk">
+        <value xml:lang="de">Massenhinzufügen von Merkmalen</value>
+        <value xml:lang="en">Adding Features in Bulk</value>
+        <value xml:lang="es">Añadir Características en pila</value>
+        <value xml:lang="fr">Ajout en masse de caractériques</value>
+    </property>
+    <property key="ProductAddProductToPack">
+        <value xml:lang="en">Add Product To Package</value>
+    </property>
+    <property key="ProductAddPromoCategory">
+        <value xml:lang="de">Neue Aktionskategorie hinzufügen</value>
+        <value xml:lang="en">Add promotion category</value>
+    </property>
+    <property key="ProductAddPromoProduct">
+        <value xml:lang="de">Neues Aktionsprodukt hinzufügen</value>
+        <value xml:lang="en">Add promotion product</value>
+    </property>
+    <property key="ProductAddSubCategory">
+        <value xml:lang="en">Add Sub-Category</value>
+        <value xml:lang="de">Unterkategorie hinzufügen</value>
+        <value xml:lang="fr">Ajouter une sous-catégorie</value>
+    </property>
     <property key="ProductAttributeShortInstructions">
         <value xml:lang="de">Auf dieser Seite können Sie generische , Low-Level-Produkteigenschaften , ähnlich wie die Erweiterung der Produkteinheit zu erstellen, zu ändern und zu löschen.
              Diese erscheinen nur im Shop und andere Anwendungen, wenn benutzerdefinierte codiert, oder wenn das Attribut bereits nach Namen nach einer bestimmten Anwendungsfunktion erkannt wird.</value>
         <value xml:lang="en">This page allows you to create, modify and delete generic, low-level Product Attributes, similar to extending the Product entity.
             These only appear in shop and other applications when custom coded, or when the attribute is already recognized by name by a certain application function.</value>
     </property>
-    <property key="ProductNewFeature">
-        <value xml:lang="de">Neuer Funktion</value>
-        <value xml:lang="en">New Feature</value>
-        <value xml:lang="fr">Nouvelle caractéristique</value>
+    <property key="ProductBestSellingProducts">
+        <value xml:lang="de">Meist verkaufte Produkte</value>
+        <value xml:lang="en">Best Selling Products</value>
     </property>
-    <property key="ProductFeatureInterActions">
-        <value xml:lang="de">Merkmal Interaktionen</value>
-        <value xml:lang="en">Feature InterActions</value>
-        <value xml:lang="fr">Interactions entre caractéristiques</value>
+    <property key="ProductCatalogAndStoreAssocRemoved">
+        <value xml:lang="en">Catalog and store association successfully removed.</value>
+        <value xml:lang="de">Katalog und Speichervereinigung erfolgreich entfernt.</value>
+        <value xml:lang="fr">L'association de catalogue et de magasin a été supprimée avec succès.</value>
+    </property>
+    <property key="ProductCatalogCategories">
+        <value xml:lang="en">Catalog Categories</value>
+    </property>
+    <property key="ProductCatalogCategoryList">
+        <value xml:lang="en">Catalog Category List</value>
+    </property>
+    <property key="ProductCatalogParties">
+        <value xml:lang="en">Catalog Parties</value>
+    </property>
+    <property key="ProductCatalogPartyList">
+        <value xml:lang="en">Catalog User List</value>
+    </property>
+    <property key="ProductCatalogStoreAssocRemoved">
+        <value xml:lang="en">Catalog association successfully removed from store.</value>
+        <value xml:lang="de">Katalogzuordnung wurde erfolgreich aus dem Speicher entfernt.</value>
+        <value xml:lang="fr">Association catalogue supprimée avec succès du magasin.</value>
+    </property>
+    <property key="ProductCatalogStoreList">
+        <value xml:lang="en">Catalog Store List</value>
+    </property>
+    <property key="ProductCatalogStores">
+        <value xml:lang="en">Catalog Stores</value>
+    </property>
+    <property key="ProductCategoryAssociations">
+        <value xml:lang="en">Category Associations</value>
+    </property>
+    <property key="ProductCategoryAttributeList">
+        <value xml:lang="en">Category Attribute List</value>
+    </property>
+    <property key="ProductCategoryChildCategoryList">
+        <value xml:lang="en">Child Category List</value>
+    </property>
+    <property key="ProductCategoryContentList">
+        <value xml:lang="en">Category Content List</value>
+    </property>
+    <property key="ProductCategoryFeatures">
+        <value xml:lang="en">Category Features</value>
+    </property>
+    <property key="ProductCategoryImage">
+        <value xml:lang="en">Category Image</value>
+    </property>
+    <property key="ProductCategoryImageType">
+        <value xml:lang="en">Category Image Type</value>
+    </property>
+    <property key="ProductCategoryList">
+        <value xml:lang="en">Product Category List</value>
+    </property>
+    <property key="ProductCategoryParentCategoryList">
+        <value xml:lang="en">Parent Category List</value>
+    </property>
+    <property key="ProductCategoryParties">
+        <value xml:lang="en">Category Parties</value>
+    </property>
+    <property key="ProductCategoryProds">
+        <value xml:lang="en">Category Products</value>
+    </property>
+    <property key="ProductCategoryProduct">
+        <value xml:lang="en">Category Product</value>
+    </property>
+    <property key="ProductCategoryProductList">
+        <value xml:lang="en">Category Product List</value>
+    </property>
+    <property key="ProductCategoryRollups">
+        <value xml:lang="en">Category Rollups</value>
+    </property>
+    <property key="ProductConfigItemContent">
+        <value xml:lang="de">Konfigurationsposition Inhalt</value>
+        <value xml:lang="en">Config Item Content</value>
+        <value xml:lang="es">Contenido de ítem de configuración</value>
+        <value xml:lang="fr">Contenu de l'option de configuration</value>
+    </property>
+    <property key="ProductConfirmDeleteCatalogPermanentNote">
+        <value xml:lang="en">Note: This operation will fail if the catalog already has important or specialized associations in the system.</value>
+        <value xml:lang="de">Hinweis: Dieser Vorgang schlägt fehl, wenn der Katalog bereits wichtige oder spezialisierte Zuordnungen im System aufweist.</value>
+    </property>
+    <property key="ProductConfirmDeleteCatalogPermanentParam">
+        <value xml:lang="en">You are about to delete ${recordName} permanently, along with several associated records. Do you want to continue?</value>
+        <value xml:lang="de">Sie sind dabei, ${recordName} zusammen mit einigen zugehörigen Datensätzen dauerhaft zu löschen. Möchtest du fortfahren?</value>
+    </property>
+    <property key="ProductConfirmDeleteCategoryPermanentNote">
+        <value xml:lang="en">Note: This operation will fail if the category already has important or specialized associations in the system.</value>
+        <value xml:lang="de">Hinweis: Diese Operation schlägt fehl, wenn die Kategorie bereits wichtige oder spezialisierte Zuordnungen im System hat.</value>
+    </property>
+    <property key="ProductConfirmDeleteCategoryPermanentParam">
+        <value xml:lang="en">You are about to delete ${recordName} permanently, along with several associated records. Do you want to continue?</value>
+        <value xml:lang="de">Sie sind dabei, ${recordName} zusammen mit einigen zugehörigen Datensätzen dauerhaft zu löschen. Möchtest du fortfahren?</value>
+    </property>
+    <property key="ProductConfirmDeleteProductPermanentNote">
+        <value xml:lang="en">Note: This operation will fail if the product already has important or specialized associations in the system, such as placed orders or subscriptions.</value>
+        <value xml:lang="de">Hinweis: Dieser Vorgang schlägt fehl, wenn das Produkt bereits wichtige oder spezialisierte Verknüpfungen im System hat, z. B. aufgegebene Bestellungen oder Abonnements.</value>
+    </property>
+    <property key="ProductConfirmDeleteProductPermanentParam">
+        <value xml:lang="en">You are about to delete ${recordName} permanently, along with several associated records. Do you want to continue?</value>
+        <value xml:lang="de">Sie sind dabei, ${recordName} zusammen mit einigen zugehörigen Datensätzen dauerhaft zu löschen. Möchtest du fortfahren?</value>
+    </property>
+    <property key="ProductCopyCategoryProductsToCategory">
+        <value xml:lang="en">Copy Category Products to Another Category</value>
+    </property>
+    <property key="ProductDeleteAssociatedChildProducts">
+        <value xml:lang="en">Delete associated child Products (variants, etc.)</value>
+        <value xml:lang="de">Löschen Sie zugehörige untergeordnete Produkte (Varianten usw.)</value>
+    </property>
+    <property key="ProductDeleteAssociatedContentRecords">
+        <value xml:lang="en">Delete associated content records</value>
+        <value xml:lang="de">Zugehörige Inhaltsdatensätze löschen</value>
+    </property>
+    <property key="ProductDeleteCatalog">
+        <value xml:lang="en">Delete Catalog</value>
+        <value xml:lang="de">Katalog löschen</value>
+        <value xml:lang="fr">Supprimer le catalogue</value>
+    </property>
+    <property key="ProductDeleteCategory">
+        <value xml:lang="en">Delete Category</value>
+        <value xml:lang="de">Kategorie löschen</value>
+        <value xml:lang="fr">Supprimer la catégorie</value>
+    </property>
+    <property key="ProductDeleteDangerousWarning">
+        <value xml:lang="en">Warning: This irreversibly deletes several records and may be DANGEROUS, depending on your specific usage of the entity schema. It is usually safe for building a new catalog from scratch and undoing errors. If unsure, please consult documentation before using (services 'deleteXxxAndRelatedVersatile').</value>
+        <value xml:lang="de">Warnung: Dies löscht unwiderruflich mehrere Datensätze und ist abhängig von Ihrer spezifischen Verwendung des Entitätsschemas GEFÄHRLICH. Es ist normalerweise sicher, einen neuen Katalog von Grund auf neu zu erstellen und Fehler rückgängig zu machen. Wenn Sie sich nicht sicher sind, konsultieren Sie bitte die Dokumentation vor der Verwendung (Dienste 'deleteXxxAndRelatedVersatile').</value>
+    </property>
+    <property key="ProductDeleteProduct">
+        <value xml:lang="en">Delete Product</value>
+        <value xml:lang="de">Produkt löschen</value>
+        <value xml:lang="fr">Supprimer le produit</value>
+    </property>
+    <property key="ProductDuplicateCategory">
+        <value xml:lang="en">Duplicate Category</value>
+    </property>
+    <property key="ProductExpireAllCategoryProducts">
+        <value xml:lang="en">Expire All Category Products</value>
+    </property>
+    <property key="ProductFacilityContactMech">
+        <value xml:lang="en">Contact Information</value>
     </property>
     <property key="ProductFeatureCategories">
         <value xml:lang="de">Merkmal Kategorien</value>
@@ -32561,143 +32640,57 @@
         <value xml:lang="es">Grupos de características</value>
         <value xml:lang="fr">Groupes de caractériques</value>
     </property>
-    <property key="ProductAddFeatureInBulk">
-        <value xml:lang="de">Massenhinzufügen von Merkmalen</value>
-        <value xml:lang="en">Adding Features in Bulk</value>
-        <value xml:lang="es">Añadir Características en pila</value>
-        <value xml:lang="fr">Ajout en masse de caractériques</value>
-    </property>
     <property key="ProductFeatureInterAction">
         <value xml:lang="de">Merkmalsinteraktion</value>
         <value xml:lang="en">Feature InterAction</value>
         <value xml:lang="fr">Interaction entre caractéristiques</value>
         <value xml:lang="it">Interazione tra caratteristiche</value>
     </property>
-    <property key="ProductConfigItemContent">
-        <value xml:lang="de">Konfigurationsposition Inhalt</value>
-        <value xml:lang="en">Config Item Content</value>
-        <value xml:lang="es">Contenido de ítem de configuración</value>
-        <value xml:lang="fr">Contenu de l'option de configuration</value>
+    <property key="ProductFeatureInterActions">
+        <value xml:lang="de">Merkmal Interaktionen</value>
+        <value xml:lang="en">Feature InterActions</value>
+        <value xml:lang="fr">Interactions entre caractéristiques</value>
     </property>
-    <property key="ProductNewConfigItem">
-        <value xml:lang="de">Neuen Konfigurationsposition</value>
-        <value xml:lang="en">New Config Item</value>
-        <value xml:lang="es">Nuevo Configuración</value>
-        <value xml:lang="fr">Nouvel element de configuration</value>
-        <value xml:lang="it">Nuovo elemento di configurazione</value>
+    <property key="ProductFieldNonLocalizedSeeContentPageForLocalizedFields">
+        <value xml:lang="en">Note: This field is non-localized - see the Content screen to set the localized field.</value>
+        <value xml:lang="de">Hinweis: Dieses Feld ist nicht lokalisiert - siehe den Bildschirm Inhalt, um das lokalisierte Feld festzulegen.</value>
     </property>
-    <property key="FacilityShipmentItems">
-        <value xml:lang="de">Lieferpositionen</value>
-        <value xml:lang="en">Shipment Items</value>
-        <value xml:lang="es">Artículos de Envío</value>
-        <value xml:lang="fr">Expéditions</value>
+    <property key="ProductFindProductPromo"><!-- FIXME: some language inexact -->
+        <value xml:lang="de">Aktion suchen</value>
+        <value xml:lang="en">Find Promotion</value>
+        <value xml:lang="es">Buscar Promociones</value>
+        <value xml:lang="fr">Recherche de promotions</value>
+        <value xml:lang="it">Ricerca Promozioni</value>
+        <value xml:lang="ja">製品プロモーションを検索</value>
+        <value xml:lang="ro">Cauta Promotii Produs</value>
+        <value xml:lang="ru">Найти акции продукта</value>
+        <value xml:lang="th">ค้นหาโปรโมชันสินค้า</value>
+        <value xml:lang="vi">Tìm khuyến mại sản phẩm</value>
+        <value xml:lang="zh">查找产品促销</value>
+        <value xml:lang="zh-TW">尋找產品促銷</value>
     </property>
-    <property key="FacilityItemIssuance">
-        <value xml:lang="de">Artikel Ausgabe</value>
-        <value xml:lang="en">Item Issuance</value>
-        <value xml:lang="es">Emisión de ítem</value>
-        <value xml:lang="fr">Prélèvement d'article</value>
-        <value xml:lang="it">Riga Prelievo</value>
+    <property key="ProductFindPromotionCode"><!-- FIXME: some language inexact -->
+        <value xml:lang="de">Aktionscode suchen</value>
+        <value xml:lang="en">Find Promotion Code</value>
+        <value xml:lang="es">Buscar Cupón de Promoción</value>
+        <value xml:lang="fr">Recherche de codes de promotion</value>
+        <value xml:lang="it">Ricerca codice promozione</value>
+        <value xml:lang="ja">製品プロモーションコードを検索</value>
+        <value xml:lang="ro">Cauta Cod Promotie Produs</value>
+        <value xml:lang="ru">Найти акционный код продукта</value>
+        <value xml:lang="th">ค้นหารหัสโปรโมชันสินค้า</value>
+        <value xml:lang="vi">Tìm mã khuyến mại sản phẩm</value>
+        <value xml:lang="zh">查找产品促销代码</value>
+        <value xml:lang="zh-TW">尋找產品促銷代碼</value>
     </property>
-    <property key="FacilityIssuance">
-        <value xml:lang="de">Ausgabe</value>
-        <value xml:lang="en">Issuance</value>
-        <value xml:lang="es">Emisión</value>
-        <value xml:lang="fr">Prélèvement</value>
-        <value xml:lang="it">Prelievo</value>
+    <property key="ProductInventoryTransfers">
+        <value xml:lang="en">Inventory Transfer List</value>
     </property>
-    <property key="ProductRelevance">
-        <value xml:lang="de">Relevanz</value>
-        <value xml:lang="en">Relevance</value>
-        <value xml:lang="es">Relevancia</value>
-        <value xml:lang="fr">Pertinence</value>
-        <value xml:lang="it">Rilevanza</value>
-        <value xml:lang="nl">Relevantie</value>
-        <value xml:lang="ro">Relevare</value>
+    <property key="ProductLocationSeqIdFrom">
+        <value xml:lang="en">Location Seq Id From</value>
     </property>
-    <property key="ProductMaxProductsPerCategory">
-        <value xml:lang="en">Max products per category</value>
-        <value xml:lang="de">Max Produkte pro Kategorie</value>
-    </property>
-    <property key="ProductCatalogAndStoreAssocRemoved">
-        <value xml:lang="en">Catalog and store association successfully removed.</value>
-        <value xml:lang="de">Katalog und Speichervereinigung erfolgreich entfernt.</value>
-        <value xml:lang="fr">L'association de catalogue et de magasin a été supprimée avec succès.</value>
-    </property>
-    <property key="ProductCatalogStoreAssocRemoved">
-        <value xml:lang="en">Catalog association successfully removed from store.</value>
-        <value xml:lang="de">Katalogzuordnung wurde erfolgreich aus dem Speicher entfernt.</value>
-        <value xml:lang="fr">Association catalogue supprimée avec succès du magasin.</value>
-    </property>
-    <property key="ProductNewSubCategory">
-        <value xml:lang="en">New Sub-Category</value>
-        <value xml:lang="de">Neue Unterkategorie</value>
-        <value xml:lang="fr">Nouvelle sous-catégorie</value>
-    </property>
-    <property key="ProductAddExistingCatalog">
-        <value xml:lang="en">Add Existing Catalog</value>
-        <value xml:lang="de">Vorhandenen Katalog hinzufügen</value>
-        <value xml:lang="fr">Ajouter un catalogue existant</value>
-    </property>
-    <property key="ProductAddExistingCategory">
-        <value xml:lang="en">Add Existing Category</value>
-        <value xml:lang="de">Vorhandene Kategorie hinzufügen</value>
-        <value xml:lang="fr">Ajouter une catégorie existante</value>
-    </property>
-    <property key="ProductAddExistingSubCategory">
-        <value xml:lang="en">Add Existing Sub-Category</value>
-        <value xml:lang="de">Bestehende Unterkategorie hinzufügen</value>
-        <value xml:lang="fr">Ajouter une sous-catégorie existante</value>
-    </property>
-    <property key="ProductAddExistingProduct">
-        <value xml:lang="de">Bestehendes Produkt hinzufügen</value>
-        <value xml:lang="en">Add Existing Product</value>
-        <value xml:lang="fr">Ajouter un produit existant</value>
-    </property>
-    <property key="ProductAddCatalog">
-        <value xml:lang="en">Add Catalog</value>
-        <value xml:lang="de">Katalog hinzufügen</value>
-        <value xml:lang="fr">Ajouter un catalogue</value>
-    </property>
-    <property key="ProductAddCategory">
-        <value xml:lang="en">Add Category</value>
-        <value xml:lang="de">Kategorie hinzufügen</value>
-        <value xml:lang="fr">Ajouter une catégorie</value>
-    </property>
-    <property key="ProductAddSubCategory">
-        <value xml:lang="en">Add Sub-Category</value>
-        <value xml:lang="de">Unterkategorie hinzufügen</value>
-        <value xml:lang="fr">Ajouter une sous-catégorie</value>
-    </property>
-    <property key="ProductDeleteCatalog">
-        <value xml:lang="en">Delete Catalog</value>
-        <value xml:lang="de">Katalog löschen</value>
-        <value xml:lang="fr">Supprimer le catalogue</value>
-    </property>
-    <property key="ProductDeleteCategory">
-        <value xml:lang="en">Delete Category</value>
-        <value xml:lang="de">Kategorie löschen</value>
-        <value xml:lang="fr">Supprimer la catégorie</value>
-    </property>
-    <property key="ProductDeleteProduct">
-        <value xml:lang="en">Delete Product</value>
-        <value xml:lang="de">Produkt löschen</value>
-        <value xml:lang="fr">Supprimer le produit</value>
-    </property>
-    <property key="ProductRemoveFromStore">
-        <value xml:lang="en">Remove from Store</value>
-        <value xml:lang="de">Aus dem Geschäft entfernen</value>
-        <value xml:lang="fr">Supprimer du magasin</value>
-    </property>
-    <property key="ProductRemoveFromCatalog">
-        <value xml:lang="en">Remove from Catalog</value>
-        <value xml:lang="de">Aus Katalog entfernen</value>
-        <value xml:lang="fr">Supprimer du catalogue</value>
-    </property>
-    <property key="ProductRemoveFromCategory">
-        <value xml:lang="en">Remove from Category</value>
-        <value xml:lang="de">Aus der Kategorie entfernen</value>
-        <value xml:lang="fr">Supprimer de la catégorie</value>
+    <property key="ProductLocationSeqIdTo">
+        <value xml:lang="en">Location Seq Id To</value>
     </property>
     <property key="ProductManageCatalog">
         <value xml:lang="en">Manage Catalog</value>
@@ -32714,57 +32707,73 @@
         <value xml:lang="de">Produkt verwalten</value>
         <value xml:lang="fr">Gérer le produit</value>
     </property>
-    <property key="ProductConfirmDeleteCatalogPermanentParam">
-        <value xml:lang="en">You are about to delete ${recordName} permanently, along with several associated records. Do you want to continue?</value>
-        <value xml:lang="de">Sie sind dabei, ${recordName} zusammen mit einigen zugehörigen Datensätzen dauerhaft zu löschen. Möchtest du fortfahren?</value>
+    <property key="ProductMaxProductsPerCategory">
+        <value xml:lang="en">Max products per category</value>
+        <value xml:lang="de">Max Produkte pro Kategorie</value>
     </property>
-    <property key="ProductConfirmDeleteCatalogPermanentNote">
-        <value xml:lang="en">Note: This operation will fail if the catalog already has important or specialized associations in the system.</value>
-        <value xml:lang="de">Hinweis: Dieser Vorgang schlägt fehl, wenn der Katalog bereits wichtige oder spezialisierte Zuordnungen im System aufweist.</value>
+    <property key="ProductNewCatalog">
+        <value xml:lang="de">Neuer Katalog</value>
+        <value xml:lang="en">New Catalog</value>
+        <value xml:lang="es">Nuevo Catálogo</value>
+        <value xml:lang="fr">Nouveau catalogue</value>
+        <value xml:lang="it">Nuovo catalogo</value>
+        <value xml:lang="ja">新規カタログを作成</value>
+        <value xml:lang="nl">Nieuwe catalogus</value>
+        <value xml:lang="ro">Nou Catalog</value>
+        <value xml:lang="ru">Новый каталог</value>
+        <value xml:lang="th">สร้างหมวดหมู่ใหม่</value>
+        <value xml:lang="vi">Tạo mới Phân loại Trình diễn</value>
+        <value xml:lang="zh">新建目录</value>
+        <value xml:lang="zh-TW">新建型錄</value>
     </property>
-    <property key="ProductConfirmDeleteCategoryPermanentParam">
-        <value xml:lang="en">You are about to delete ${recordName} permanently, along with several associated records. Do you want to continue?</value>
-        <value xml:lang="de">Sie sind dabei, ${recordName} zusammen mit einigen zugehörigen Datensätzen dauerhaft zu löschen. Möchtest du fortfahren?</value>
+    <property key="ProductNewConfigItem">
+        <value xml:lang="de">Neuen Konfigurationsposition</value>
+        <value xml:lang="en">New Config Item</value>
+        <value xml:lang="es">Nuevo Configuración</value>
+        <value xml:lang="fr">Nouvel element de configuration</value>
+        <value xml:lang="it">Nuovo elemento di configurazione</value>
     </property>
-    <property key="ProductConfirmDeleteCategoryPermanentNote">
-        <value xml:lang="en">Note: This operation will fail if the category already has important or specialized associations in the system.</value>
-        <value xml:lang="de">Hinweis: Diese Operation schlägt fehl, wenn die Kategorie bereits wichtige oder spezialisierte Zuordnungen im System hat.</value>
+    <property key="ProductNewFeature">
+        <value xml:lang="de">Neuer Funktion</value>
+        <value xml:lang="en">New Feature</value>
+        <value xml:lang="fr">Nouvelle caractéristique</value>
     </property>
-    <property key="ProductConfirmDeleteProductPermanentParam">
-        <value xml:lang="en">You are about to delete ${recordName} permanently, along with several associated records. Do you want to continue?</value>
-        <value xml:lang="de">Sie sind dabei, ${recordName} zusammen mit einigen zugehörigen Datensätzen dauerhaft zu löschen. Möchtest du fortfahren?</value>
+    <property key="ProductNewInventoryTransfer">
+        <value xml:lang="en">New Inventory Transfer</value>
     </property>
-    <property key="ProductConfirmDeleteProductPermanentNote">
-        <value xml:lang="en">Note: This operation will fail if the product already has important or specialized associations in the system, such as placed orders or subscriptions.</value>
-        <value xml:lang="de">Hinweis: Dieser Vorgang schlägt fehl, wenn das Produkt bereits wichtige oder spezialisierte Verknüpfungen im System hat, z. B. aufgegebene Bestellungen oder Abonnements.</value>
+    <property key="ProductNewPromotion">
+        <value xml:lang="de">Neuer Aktion</value>
+        <value xml:lang="en">New Promotion</value>
+        <value xml:lang="fr">Nouvelle promotion</value>
     </property>
-    <property key="ProductDeleteAssociatedContentRecords">
-        <value xml:lang="en">Delete associated content records</value>
-        <value xml:lang="de">Zugehörige Inhaltsdatensätze löschen</value>
+    <property key="ProductNewSubCategory">
+        <value xml:lang="en">New Sub-Category</value>
+        <value xml:lang="de">Neue Unterkategorie</value>
+        <value xml:lang="fr">Nouvelle sous-catégorie</value>
     </property>
-    <property key="ProductDeleteAssociatedChildProducts">
-        <value xml:lang="en">Delete associated child Products (variants, etc.)</value>
-        <value xml:lang="de">Löschen Sie zugehörige untergeordnete Produkte (Varianten usw.)</value>
+    <property key="ProductPaymentMethods">
+        <value xml:lang="de">Zahlungsmethoden</value>
+        <value xml:lang="en">Payment Methods</value>
+        <value xml:lang="es">Métodos de pago</value>
+        <value xml:lang="fr">Méthodes de paiement</value>
+        <value xml:lang="it">Metodos di Pagamento</value>
     </property>
-    <property key="ProductFieldNonLocalizedSeeContentPageForLocalizedFields">
-        <value xml:lang="en">Note: This field is non-localized - see the Content screen to set the localized field.</value>
-        <value xml:lang="de">Hinweis: Dieses Feld ist nicht lokalisiert - siehe den Bildschirm Inhalt, um das lokalisierte Feld festzulegen.</value>
+    <property key="ProductPhysicalInventoryList">
+        <value xml:lang="en">Physical Inventory List</value>
     </property>
-    <property key="ProductDeleteDangerousWarning">
-        <value xml:lang="en">Warning: This irreversibly deletes several records and may be DANGEROUS, depending on your specific usage of the entity schema. It is usually safe for building a new catalog from scratch and undoing errors. If unsure, please consult documentation before using (services 'deleteXxxAndRelatedVersatile').</value>
-        <value xml:lang="de">Warnung: Dies löscht unwiderruflich mehrere Datensätze und ist abhängig von Ihrer spezifischen Verwendung des Entitätsschemas GEFÄHRLICH. Es ist normalerweise sicher, einen neuen Katalog von Grund auf neu zu erstellen und Fehler rückgängig zu machen. Wenn Sie sich nicht sicher sind, konsultieren Sie bitte die Dokumentation vor der Verwendung (Dienste 'deleteXxxAndRelatedVersatile').</value>
+    <property key="ProductPriceRule">
+        <value xml:lang="de">Preisregel</value>
+        <value xml:lang="en">Price Rule</value>
+        <value xml:lang="es">Regla de Precios</value>
+        <value xml:lang="fr">Règle de prix</value>
     </property>
-    <property key="FacilityShipmentPackages">
-        <value xml:lang="en">Shipment Packages</value>
+    <property key="ProductPricesHistory">
+        <value xml:lang="de">Preisentwicklung</value>
+        <value xml:lang="en">Price History</value>
+        <value xml:lang="fr">Historique des prix</value>
     </property>
-    <property key="FacilityPackageContent">
-        <value xml:lang="en">Shipment Content</value>
-    </property>
-    <property key="FacilityPackageContents">
-        <value xml:lang="en">Shipment Contents</value>
-    </property>
-    <property key="FacilityShipment">
-        <value xml:lang="en">Shipment</value>
+    <property key="ProductProductCategories">
+        <value xml:lang="en">Product Categories</value>
     </property>
     <property key="ProductProductFeatures">
         <value xml:lang="de">Produktmerkmale</value>
@@ -32774,103 +32783,40 @@
         <value xml:lang="it">Caratteristiche prodotto</value>
         <value xml:lang="ro">Caracteristici Produs</value>
     </property>
-    <property key="ProductAddPromoCategory">
-        <value xml:lang="de">Neue Aktionskategorie hinzufügen</value>
-        <value xml:lang="en">Add promotion category</value>
+    <property key="ProductProductOverview">
+        <value xml:lang="de">Produktübersicht</value>
+        <value xml:lang="en">Product Overview</value>
     </property>
-    <property key="ProductAddPromoProduct">
-        <value xml:lang="de">Neues Aktionsprodukt hinzufügen</value>
-        <value xml:lang="en">Add promotion product</value>
+    <property key="ProductProductQualifiedLabel"><!-- SCIPIO: temporary workaround for some labels. Doesn't work well in all langs. -->
+        <value xml:lang="de">Produkt ${qualifiedLabel}</value>
+        <value xml:lang="en">Product ${qualifiedLabel} </value>
+        <value xml:lang="fr">${qualifiedLabel} de l'article</value>
     </property>
-    <property key="ProductCategoryAssociations">
-        <value xml:lang="en">Category Associations</value>
+    <property key="ProductProductsSold">
+        <value xml:lang="de">Produkte verkauft</value>
+        <value xml:lang="en">Products Sold</value>
     </property>
-    <property key="ProductCategoryImage">
-        <value xml:lang="en">Category Image</value>
+    <property key="ProductProductStoreCatalogs">
+        <value xml:lang="de">Shop Produktkataloge</value>
+        <value xml:lang="en">Store Catalogs</value>
+        <value xml:lang="es">Catálogos de una Tienda de Productos</value>
+        <value xml:lang="fr">Catalogues du centre de profit</value>
     </property>
-    <property key="ProductCategoryImageType">
-        <value xml:lang="en">Category Image Type</value>
+    <property key="ProductProductStoreFacilities">
+        <value xml:lang="de">Shop Einrichtungen</value>
+        <value xml:lang="en">Store Warehouses</value>
     </property>
-    <property key="ProductCatalogCategories">
-        <value xml:lang="en">Catalog Categories</value>
+    <property key="ProductProductStorePromotions">
+        <value xml:lang="de">Shop Aktionen</value>
+        <value xml:lang="en">Store Promotions</value>
+        <value xml:lang="es">Promociones de la tienda de productos</value>
+        <value xml:lang="fr">Promotions du centre de profit</value>
     </property>
-    <property key="ProductCatalogCategoryList">
-        <value xml:lang="en">Catalog Category List</value>
-    </property>
-    <property key="ProductCatalogParties">
-        <value xml:lang="en">Catalog Parties</value>
-    </property>
-    <property key="ProductCatalogPartyList">
-        <value xml:lang="en">Catalog User List</value>
-    </property>
-    <property key="ProductCatalogStores">
-        <value xml:lang="en">Catalog Stores</value>
-    </property>
-    <property key="ProductCatalogStoreList">
-        <value xml:lang="en">Catalog Store List</value>
-    </property>
-    <property key="ProductSelectProductCategoryContentTypeId">
-        <value xml:lang="en">Select Content Type</value>
-    </property>
-    <property key="ProductAddExistingContentInCategory">
-        <value xml:lang="en">Add Existing Content</value>
-    </property>
-    <property key="ProductCategoryProductList">
-        <value xml:lang="en">Category Product List</value>
-    </property>
-    <property key="ProductCategoryProduct">
-        <value xml:lang="en">Category Product</value>
-    </property>
-    <property key="ProductCopyCategoryProductsToCategory">
-        <value xml:lang="en">Copy Category Products to Another Category</value>
-    </property>
-    <property key="ProductExpireAllCategoryProducts">
-        <value xml:lang="en">Expire All Category Products</value>
-    </property>
-    <property key="ProductRemoveExpiredCategoryProducts">
-        <value xml:lang="en">Remove Expired Category Products</value>
-    </property>
-    <property key="ProductProductCategories">
-        <value xml:lang="en">Product Categories</value>
-    </property>
-    <property key="ProductCategoryList">
-        <value xml:lang="en">Product Category List</value>
-    </property>
-    <property key="ProductCategoryAttributeList">
-        <value xml:lang="en">Category Attribute List</value>
-    </property>
-    <property key="ProductCategoryContentList">
-        <value xml:lang="en">Category Content List</value>
-    </property>
-    <property key="ProductCategoryFeatures">
-        <value xml:lang="en">Category Features</value>
-    </property>
-    <property key="ProductCategoryParties">
-        <value xml:lang="en">Category Parties</value>
-    </property>
-    <property key="ProductCategoryProds">
-        <value xml:lang="en">Category Products</value>
-    </property>
-    <property key="ProductCategoryRollups">
-        <value xml:lang="en">Category Rollups</value>
-    </property>
-    <property key="ProductDuplicateCategory">
-        <value xml:lang="en">Duplicate Category</value>
-    </property>
-    <property key="ProductCategoryParentCategoryList">
-        <value xml:lang="en">Parent Category List</value>
-    </property>
-    <property key="ProductCategoryChildCategoryList">
-        <value xml:lang="en">Child Category List</value>
-    </property>
-    <property key="ProductNewInventoryTransfer">
-        <value xml:lang="en">New Inventory Transfer</value>
-    </property>
-    <property key="ProductFacilityContactMech">
-        <value xml:lang="en">Contact Information</value>
-    </property>
-    <property key="ProductAddProductToPack">
-        <value xml:lang="en">Add Product To Package</value>
+    <property key="ProductProductStoreSegments">
+        <value xml:lang="de">Shopsegmente</value>
+        <value xml:lang="en">Store Segments</value>
+        <value xml:lang="es">Segmentos de una Tienda de Productos</value>
+        <value xml:lang="fr">Segments du centre de profit</value>
     </property>
     <property key="ProductPromo">
         <value xml:lang="en">Promo</value>
@@ -32881,16 +32827,66 @@
     <property key="ProductPromoRule">
         <value xml:lang="en">Rule</value>
     </property>
+    <property key="ProductPromoStoreAddInstructions">
+        <value xml:lang="de">Der folgende Bildschirm fügt eine Förderung zu einem bestimmten Geschäft. Verwenden Sie diese Option, um Aktionen für eine begrenzte Zeit zu entkräften.</value>
+        <value xml:lang="en">The following Screen adds a promotion to a specific store. Use this in order to invalidate promotions for a limited time.</value>
+    </property>    
+    <property key="ProductPromotionCodes">
+        <value xml:lang="de">Aktionscodes</value>
+        <value xml:lang="en">Promotion Codes</value>
+    </property>
+    <property key="ProductPromotionContent">
+        <value xml:lang="de">Aktion Inhalt</value>
+        <value xml:lang="en">Promotion Content</value>
+        <value xml:lang="fr">Contenu de la Promotion</value>
+    </property>
+    <property key="ProductPromotionRules">
+        <value xml:lang="de">Aktionsregeln</value>
+        <value xml:lang="en">Promotion Rules</value>
+    </property>
+    <property key="ProductPromotionStores">
+        <value xml:lang="de">Aktion-Shops</value>
+        <value xml:lang="en">Promotion Stores</value>
+    </property>
+    <property key="ProductReceiveInventoryItems">
+        <value xml:lang="en">Receive Inventory</value>
+    </property>
     <property key="ProductRecentProductsAdded">
         <value xml:lang="en">New Products</value>
     </property>
-    <property key="CatalogWebAnalyticsType">
-        <value xml:lang="de">Web Analytik Type</value>
-        <value xml:lang="en">Web Analytics Type</value>
+    <property key="ProductRelevance">
+        <value xml:lang="de">Relevanz</value>
+        <value xml:lang="en">Relevance</value>
+        <value xml:lang="es">Relevancia</value>
+        <value xml:lang="fr">Pertinence</value>
+        <value xml:lang="it">Rilevanza</value>
+        <value xml:lang="nl">Relevantie</value>
+        <value xml:lang="ro">Relevare</value>
     </property>
-    <property key="ProductBestSellingProducts">
-        <value xml:lang="de">Meist verkaufte Produkte</value>
-        <value xml:lang="en">Best Selling Products</value>
+    <property key="ProductRemoveExpiredCategoryProducts">
+        <value xml:lang="en">Remove Expired Category Products</value>
+    </property>
+    <property key="ProductRemoveFromCatalog">
+        <value xml:lang="en">Remove from Catalog</value>
+        <value xml:lang="de">Aus Katalog entfernen</value>
+        <value xml:lang="fr">Supprimer du catalogue</value>
+    </property>
+    <property key="ProductRemoveFromCategory">
+        <value xml:lang="en">Remove from Category</value>
+        <value xml:lang="de">Aus der Kategorie entfernen</value>
+        <value xml:lang="fr">Supprimer de la catégorie</value>
+    </property>
+    <property key="ProductRemoveFromStore">
+        <value xml:lang="en">Remove from Store</value>
+        <value xml:lang="de">Aus dem Geschäft entfernen</value>
+        <value xml:lang="fr">Supprimer du magasin</value>
+    </property>
+    <property key="ProductRequestedTransfers">
+        <value xml:lang="en">Requested transfers</value>
+    </property>
+    <property key="ProductRooms">
+        <value xml:lang="de">Zimmer</value>
+        <value xml:lang="en">Rooms</value>
     </property>
     <property key="ProductSearchParameters">
         <value xml:lang="de">Suchparameter</value>
@@ -32904,9 +32900,13 @@
         <value xml:lang="zh">搜索参数</value>
         <value xml:lang="zh-TW">搜尋參數</value>
     </property>
-    <property key="ProductPromotionCodes">
-        <value xml:lang="de">Aktionscodes</value>
-        <value xml:lang="en">Promotion Codes</value>
+    <property key="ProductSelectProductCategoryContentTypeId">
+        <value xml:lang="en">Select Content Type</value>
+    </property>
+    <property key="ProductSettings">
+        <value xml:lang="de">Produkteinstellungen</value>
+        <value xml:lang="en">Product Settings</value>
+        <value xml:lang="fr">Paramètres du produit</value>
     </property>
     <property key="ProductShippingDiameter">
         <value xml:lang="en">Shipping Diameter</value>

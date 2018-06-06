@@ -24020,134 +24020,21 @@
         <value xml:lang="zh-TW">交易成功了.</value>
     </property>
     <!-- SCIPIO: NEW LABELS -->
-    <property key="AccountingCustomTimePeriod">
-        <value xml:lang="de">Individuelle Zeiträume</value>
-        <value xml:lang="en">Custom Time Period</value>
-    </property>
-    <property key="AccountingUpdateTimePeriod">
-        <value xml:lang="de">Zeitraum ändern</value>
-        <value xml:lang="en">Time Period - Update</value>
-    </property>
-    <property key="AccountingSetTimePeriod">
-        <value xml:lang="de">Zeitraum setzen</value>
-        <value xml:lang="en">Time Period - Set</value>
-    </property>
-    <property key="AccountingAdditionalPaymentMethods">
-        <value xml:lang="de">Zusätzliche Zahlungsmethoden</value>
-        <value xml:lang="en">Additional Payment Methods</value>
-    </property>
-    <property key="AccountingContracts">
-        <value xml:lang="de">Verträge</value>
-        <value xml:lang="en">Contracts</value>
-    </property>
-    <property key="AccountingControlling">
-        <value xml:lang="de">Controlling</value>
-        <value xml:lang="en">Controlling</value>
-    </property>
-    <property key="AccountingMaintenanceJobs">
-        <value xml:lang="de">Wartung Jobs</value>
-        <value xml:lang="en">Maintenance Jobs</value>
-    </property>
-    <property key="AccountingVendors">
-        <value xml:lang="de">Verkäufer</value>
-        <value xml:lang="en">Vendors</value>
-        <value xml:lang="fr">Vendeurs</value>
-    </property>
-    <property key="AccountingUserOrgNotSpecified">
-        <value xml:lang="de">Benutzer/Organisation nicht angegeben</value>
-        <value xml:lang="en">User/Organization not specified</value>
-    </property>
-    <property key="AccountingBudget">
-        <value xml:lang="de">Budget</value>
-        <value xml:lang="en">Budget</value>
-        <value xml:lang="fr">Budgétaire</value>
-        <value xml:lang="hi-IN">बजट</value>
-        <value xml:lang="it">Bilancio Preventivo</value>
-        <value xml:lang="ja">予算</value>
-        <value xml:lang="nl">Budget</value>
-        <value xml:lang="pt">Orçamento</value>
-        <value xml:lang="ro">Bilant Preventiv</value>
-        <value xml:lang="ru">Бюджет</value>
-        <value xml:lang="th">งบประมาณ</value>
-        <value xml:lang="vi">Ngân sách</value>
-        <value xml:lang="zh">预算</value>
-        <value xml:lang="zh-TW">預算</value>
-    </property>
-    <property key="AccountingPaymentNotFound">
-        <value xml:lang="de">Bezahlung ${paymentId} nicht gefunden...</value>
-        <value xml:lang="en">Payment ${paymentId} not found...</value>
-    </property>
-    <property key="AccountingCreditors">
-        <value xml:lang="de">Kreditoren</value>
-        <value xml:lang="en">Creditors</value>
-    </property>
-    <property key="AccountingCreditor">
-        <value xml:lang="de">Kreditor</value>
-        <value xml:lang="en">Creditor</value>
-    </property>
-    <property key="AccountingDebtors">
-        <value xml:lang="de">Debitoren</value>
-        <value xml:lang="en">Debtors</value>
-    </property>
-    <property key="AccountingDebtor">
-        <value xml:lang="de">Debitor</value>
-        <value xml:lang="en">Debtor</value>
-    </property>
-    <property key="PageTitleNewTaxAuthorityPartyInfo">
-        <value xml:lang="de">Neue Informationen der Steuerbehörde</value>
-        <value xml:lang="en">New Tax Authority Party Info</value>
-        <value xml:lang="es">Editar Info de Grupo de Autoridad Fiscal</value>
-        <value xml:lang="fr">Ajouter informations d'une administration fiscale</value>
-    </property>
-    <property key="AccountingGlAccountNotFound">
-        <value xml:lang="de">Gl Account ${glAccountId} nicht gefunden</value>
-        <value xml:lang="en">Gl Account ${glAccountId} not found</value>
-    </property>
-    <property key="AccountingNoteInvoiceMissingStatusRecords">
-        <value xml:lang="de">Die Rechnung ${invoiceId} hat keine InvoiceStatus-Aufzeichnungen; Dies ist in der Regel auf Samen oder Demo-Daten nicht nach dem formalen Rechnungserstellungsprozess (createInvoice-Service).</value>
-        <value xml:lang="en">Invoice ${invoiceId} has no InvoiceStatus records; this is usually due to seed or demo data not following the formal invoice creation process (createInvoice service).</value>
-    </property>
-    <property key="AccountingScipioAccountingStandardsInfo">
-        <value xml:lang="en">An accounting standard couldn't be found installed in your system. You can either load the demo data in order to get the US-GAAP standard or check out Scipio's official store for additional accounting standard addons.</value>
-    </property>
-    <property key="PageTitleListBillingAccountRoles">
-        <value xml:lang="en">Billing Account Role List</value>
-    </property>
-    <property key="PageTitleAddBillingAccountTerms">
-        <value xml:lang="en">Add Billing Account Term</value>
-    </property>
-    <property key="PageTitleListBillingAccountTerms">
-        <value xml:lang="en">Billing Account Term List</value>
-    </property>
-    <property key="PageTitleAddBillingAccountPayments">
-        <value xml:lang="en">Add Billing Account Payment</value>
-    </property>
-    <property key="PageTitleListBillingAccountPayments">
-        <value xml:lang="en">Billing Account Payment List</value>
-    </property>
-    <property key="PageTitleListBillingAccountOrders">
-        <value xml:lang="en">Billing Account Order List</value>
-    </property>
-    <property key="PageTitleListBillingAccountInvoices">
-        <value xml:lang="en">Billing Account Invoice List</value>
-    </property>
-    <property key="AccountingAcctTransEntryRecon">
-        <value xml:lang="en">Account Transaction Entry Reconciliations</value>
-        <value xml:lang="de">Abgleich von Transaktionen</value>
-    </property>
-     <property key="AccountingAcctGlRecon">
-        <value xml:lang="en">Account GL Reconciliations</value>
-        <value xml:lang="de">Kontenabstimmung</value>
-    </property>
-    <property key="AccountingTransactionHeader">
-        <value xml:lang="en">Transaction Header</value>
-        <value xml:lang="de">Allgemeine Transaktions-Info</value>
-    </property>
-    <property key="AccountingEditCustomTimePeriod">        
-        <value xml:lang="en">Edit Custom Time Period</value>
-    </property>
-    <property key="AccountingNewCustomTimePeriod">        
-        <value xml:lang="en">New Custom Time Period</value>
+    <property key="AccountingAccountsPayable">
+        <value xml:lang="de">Verbindlichkeiten</value>
+        <value xml:lang="en">Accounts Payable</value>
+        <value xml:lang="fr">Comptes fournisseurs</value>
+        <value xml:lang="hi-IN">देय लेखा</value>
+        <value xml:lang="it">Conto debiti</value>
+        <value xml:lang="ja">買掛金</value>
+        <value xml:lang="nl">Crediteuren</value>
+        <value xml:lang="pt">Contas a Pagar</value>
+        <value xml:lang="ro">Conturi Plati</value>
+        <value xml:lang="ru">Счет кредиторов</value>
+        <value xml:lang="th">เจ้าหนี้การค้า</value>
+        <value xml:lang="vi">Tài khoản Phải Nhận</value>
+        <value xml:lang="zh">应付账款</value>
+        <value xml:lang="zh-TW">應付帳款</value>
     </property>
     <property key="AccountingAccountsReceivable">
         <value xml:lang="de">Forderungen</value>
@@ -24165,32 +24052,91 @@
         <value xml:lang="zh">应收账款</value>
         <value xml:lang="zh-TW">應收帳款</value>
     </property>
-    <property key="AccountingAccountsPayable">
-        <value xml:lang="de">Verbindlichkeiten</value>
-        <value xml:lang="en">Accounts Payable</value>
-        <value xml:lang="fr">Comptes fournisseurs</value>
-        <value xml:lang="hi-IN">देय लेखा</value>
-        <value xml:lang="it">Conto debiti</value>
-        <value xml:lang="ja">買掛金</value>
-        <value xml:lang="nl">Crediteuren</value>
-        <value xml:lang="pt">Contas a Pagar</value>
-        <value xml:lang="ro">Conturi Plati</value>
-        <value xml:lang="ru">Счет кредиторов</value>
-        <value xml:lang="th">เจ้าหนี้การค้า</value>
-        <value xml:lang="vi">Tài khoản Phải Nhận</value>
-        <value xml:lang="zh">应付账款</value>
-        <value xml:lang="zh-TW">應付帳款</value>
+     <property key="AccountingAcctGlRecon">
+        <value xml:lang="en">Account GL Reconciliations</value>
+        <value xml:lang="de">Kontenabstimmung</value>
+    </property>
+    <property key="AccountingAcctTransEntryRecon">
+        <value xml:lang="en">Account Transaction Entry Reconciliations</value>
+        <value xml:lang="de">Abgleich von Transaktionen</value>
+    </property>
+    <property key="AccountingAdditionalPaymentMethods">
+        <value xml:lang="de">Zusätzliche Zahlungsmethoden</value>
+        <value xml:lang="en">Additional Payment Methods</value>
+    </property>
+    <property key="AccountingBalance">
+        <value xml:lang="de">Saldo</value>
+        <value xml:lang="en">Balance</value>
+    </property>
+    <property key="AccountingBudget">
+        <value xml:lang="de">Budget</value>
+        <value xml:lang="en">Budget</value>
+        <value xml:lang="fr">Budgétaire</value>
+        <value xml:lang="hi-IN">बजट</value>
+        <value xml:lang="it">Bilancio Preventivo</value>
+        <value xml:lang="ja">予算</value>
+        <value xml:lang="nl">Budget</value>
+        <value xml:lang="pt">Orçamento</value>
+        <value xml:lang="ro">Bilant Preventiv</value>
+        <value xml:lang="ru">Бюджет</value>
+        <value xml:lang="th">งบประมาณ</value>
+        <value xml:lang="vi">Ngân sách</value>
+        <value xml:lang="zh">预算</value>
+        <value xml:lang="zh-TW">預算</value>
+    </property>
+    <property key="AccountingClosingCredit">
+        <value xml:lang="en">Closing Credit</value>
+        <value xml:lang="de">Abschlussstand Haben</value>
+    </property>
+    <property key="AccountingClosingDebit">
+        <value xml:lang="en">Closing Debit</value>
+        <value xml:lang="de">Abschlussstand Soll</value>
+    </property>
+    <property key="AccountingContracts">
+        <value xml:lang="de">Verträge</value>
+        <value xml:lang="en">Contracts</value>
+    </property>
+    <property key="AccountingContraRevenue">
+        <value xml:lang="de">Abschreibungen aus Umsatzerlösen</value>
+        <value xml:lang="en">Contra Revenue</value>
+    </property>
+    <property key="AccountingControlling">
+        <value xml:lang="de">Controlling</value>
+        <value xml:lang="en">Controlling</value>
+    </property>
+    <property key="AccountingCreditor">
+        <value xml:lang="de">Kreditor</value>
+        <value xml:lang="en">Creditor</value>
+    </property>
+    <property key="AccountingCreditors">
+        <value xml:lang="de">Kreditoren</value>
+        <value xml:lang="en">Creditors</value>
+    </property>
+    <property key="AccountingCustomTimePeriod">
+        <value xml:lang="de">Individuelle Zeiträume</value>
+        <value xml:lang="en">Custom Time Period</value>
     </property>
     <property key="AccountingCustomTimePeriods">
         <value xml:lang="de">Eigener Zeitraum</value>
         <value xml:lang="en">Custom Time Periods</value>
     </property>
+    <property key="AccountingDebtor">
+        <value xml:lang="de">Debitor</value>
+        <value xml:lang="en">Debtor</value>
+    </property>
+    <property key="AccountingDebtors">
+        <value xml:lang="de">Debitoren</value>
+        <value xml:lang="en">Debtors</value>
+    </property>
+    <property key="AccountingEditCustomTimePeriod">        
+        <value xml:lang="en">Edit Custom Time Period</value>
+    </property>
     <property key="AccountingFinancialInformation">
         <value xml:lang="en">Financial Information</value>
     </property>
-    <property key="AccountingBalance">
-        <value xml:lang="de">Saldo</value>
-        <value xml:lang="en">Balance</value>
+    <property key="AccountingGlAccountNotFound">
+        <value xml:lang="de">Gl Account ${glAccountId} nicht gefunden</value>
+        <value xml:lang="en">Gl Account ${glAccountId} not found</value>
     </property>
     <property key="AccountingGlJournal">
         <value xml:lang="en">Journal</value>
@@ -24199,40 +24145,35 @@
         <value xml:lang="de">Einnahmen &amp; Ausgaben</value>
         <value xml:lang="en">Income &amp; Expenses</value>
     </property>
-    <property key="AccountingSalesTaxIncluded">
-        <value xml:lang="de">Alle Preise inklusive MwSt.</value>
-        <value xml:lang="en">All prices include Sales Tax</value>
-        <value xml:lang="en-GB">All prices include VAT</value>
-        <value xml:lang="fr">Dont TVA incluse </value>
-        <value xml:lang="it">Tasse di vendita incluse</value>
-        <value xml:lang="ja">消費税込</value>
-        <value xml:lang="pt-BR">Impostos de venda inclusos</value>
-        <value xml:lang="vi">tại nơi Thuế bán được gộp</value>
-        <value xml:lang="zh">已含营业税</value>
-        <value xml:lang="zh-TW">已包含營業稅</value>
+    <property key="AccountingMaintenanceJobs">
+        <value xml:lang="de">Wartung Jobs</value>
+        <value xml:lang="en">Maintenance Jobs</value>
+    </property>
+    <property key="AccountingNewCustomTimePeriod">        
+        <value xml:lang="en">New Custom Time Period</value>
     </property>
     <property key="AccountingNoChangesMadeNotUpdatingGiftCard">
         <value xml:lang="de">Keine Änderungen, Gift Card wurde nicht aktualisiert</value>
         <value xml:lang="en">No changes made, not updating Gift Card</value>
     </property>
-    <property key="AccountingOpeningDebit">
-        <value xml:lang="en">Opening Debit</value>
-        <value xml:lang="de">Eröffnungsstand Soll</value>
+    <property key="AccountingNoteInvoiceMissingStatusRecords">
+        <value xml:lang="de">Die Rechnung ${invoiceId} hat keine InvoiceStatus-Aufzeichnungen; Dies ist in der Regel auf Samen oder Demo-Daten nicht nach dem formalen Rechnungserstellungsprozess (createInvoice-Service).</value>
+        <value xml:lang="en">Invoice ${invoiceId} has no InvoiceStatus records; this is usually due to seed or demo data not following the formal invoice creation process (createInvoice service).</value>
     </property>
     <property key="AccountingOpeningCredit">
         <value xml:lang="en">Opening Credit</value>
         <value xml:lang="de">Eröffnungsstand Haben</value>
     </property>
-    <property key="AccountingClosingDebit">
-        <value xml:lang="en">Closing Debit</value>
-        <value xml:lang="de">Abschlussstand Soll</value>
-    </property>
-    <property key="AccountingClosingCredit">
-        <value xml:lang="en">Closing Credit</value>
-        <value xml:lang="de">Abschlussstand Haben</value>
+    <property key="AccountingOpeningDebit">
+        <value xml:lang="en">Opening Debit</value>
+        <value xml:lang="de">Eröffnungsstand Soll</value>
     </property>
     <property key="AccountingPaymentGroupHeader">
         <value xml:lang="en">Payment Group Header</value>
+    </property>
+    <property key="AccountingPaymentNotFound">
+        <value xml:lang="de">Bezahlung ${paymentId} nicht gefunden...</value>
+        <value xml:lang="en">Payment ${paymentId} not found...</value>
     </property>
     <property key="AccountingRecentPayments">
         <value xml:lang="de">Letzte Zahlungsvorgänge</value>
@@ -24246,8 +24187,67 @@
         <value xml:lang="de">Umsätze</value>
         <value xml:lang="en">Revenues</value>
     </property>
-    <property key="AccountingContraRevenue">
-        <value xml:lang="de">Abschreibungen aus Umsatzerlösen</value>
-        <value xml:lang="en">Contra Revenue</value>
+    <property key="AccountingSalesTaxIncluded">
+        <value xml:lang="de">Alle Preise inklusive MwSt.</value>
+        <value xml:lang="en">All prices include Sales Tax</value>
+        <value xml:lang="en-GB">All prices include VAT</value>
+        <value xml:lang="fr">Dont TVA incluse </value>
+        <value xml:lang="it">Tasse di vendita incluse</value>
+        <value xml:lang="ja">消費税込</value>
+        <value xml:lang="pt-BR">Impostos de venda inclusos</value>
+        <value xml:lang="vi">tại nơi Thuế bán được gộp</value>
+        <value xml:lang="zh">已含营业税</value>
+        <value xml:lang="zh-TW">已包含營業稅</value>
+    </property>
+    <property key="AccountingScipioAccountingStandardsInfo">
+        <value xml:lang="en">An accounting standard couldn't be found installed in your system. You can either load the demo data in order to get the US-GAAP standard or check out Scipio's official store for additional accounting standard addons.</value>
+    </property>
+    <property key="AccountingSetTimePeriod">
+        <value xml:lang="de">Zeitraum setzen</value>
+        <value xml:lang="en">Time Period - Set</value>
+    </property>
+    <property key="AccountingTransactionHeader">
+        <value xml:lang="en">Transaction Header</value>
+        <value xml:lang="de">Allgemeine Transaktions-Info</value>
+    </property>
+    <property key="AccountingUpdateTimePeriod">
+        <value xml:lang="de">Zeitraum ändern</value>
+        <value xml:lang="en">Time Period - Update</value>
+    </property>
+    <property key="AccountingUserOrgNotSpecified">
+        <value xml:lang="de">Benutzer/Organisation nicht angegeben</value>
+        <value xml:lang="en">User/Organization not specified</value>
+    </property>
+    <property key="AccountingVendors">
+        <value xml:lang="de">Verkäufer</value>
+        <value xml:lang="en">Vendors</value>
+        <value xml:lang="fr">Vendeurs</value>
+    </property>
+    <property key="PageTitleAddBillingAccountPayments">
+        <value xml:lang="en">Add Billing Account Payment</value>
+    </property>
+    <property key="PageTitleAddBillingAccountTerms">
+        <value xml:lang="en">Add Billing Account Term</value>
+    </property>
+    <property key="PageTitleListBillingAccountInvoices">
+        <value xml:lang="en">Billing Account Invoice List</value>
+    </property>
+    <property key="PageTitleListBillingAccountOrders">
+        <value xml:lang="en">Billing Account Order List</value>
+    </property>
+    <property key="PageTitleListBillingAccountPayments">
+        <value xml:lang="en">Billing Account Payment List</value>
+    </property>
+    <property key="PageTitleListBillingAccountRoles">
+        <value xml:lang="en">Billing Account Role List</value>
+    </property>
+    <property key="PageTitleListBillingAccountTerms">
+        <value xml:lang="en">Billing Account Term List</value>
+    </property>
+    <property key="PageTitleNewTaxAuthorityPartyInfo">
+        <value xml:lang="de">Neue Informationen der Steuerbehörde</value>
+        <value xml:lang="en">New Tax Authority Party Info</value>
+        <value xml:lang="es">Editar Info de Grupo de Autoridad Fiscal</value>
+        <value xml:lang="fr">Ajouter informations d'une administration fiscale</value>
     </property>
 </resource>

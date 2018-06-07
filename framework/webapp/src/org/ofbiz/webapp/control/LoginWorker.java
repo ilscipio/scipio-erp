@@ -586,9 +586,14 @@ public class LoginWorker {
             }
 
             // check on JavaScriptEnabled
-            String javaScriptEnabled = "N";
-            if ("Y".equals(request.getParameter("JavaScriptEnabled"))) {
-                javaScriptEnabled = "Y";
+            // SCIPIO: 2018-06-07: javascript should be assumed enabled by default in Scipio, unless not detected
+            //String javaScriptEnabled = "N";
+            //if ("Y".equals(request.getParameter("JavaScriptEnabled"))) {
+            //    javaScriptEnabled = "Y";
+            //}
+            String javaScriptEnabled = "Y";
+            if ("N".equals(request.getParameter("JavaScriptEnabled"))) {
+                javaScriptEnabled = "N";
             }
             try {
                 result = dispatcher.runSync("setUserPreference", UtilMisc.toMap("userPrefTypeId", "javaScriptEnabled", "userPrefGroupTypeId", "GLOBAL_PREFERENCES", "userPrefValue", javaScriptEnabled, "userLogin", userLogin));

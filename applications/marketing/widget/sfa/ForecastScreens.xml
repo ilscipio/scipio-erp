@@ -24,6 +24,7 @@ under the License.
     <screen name="CommonSalesForecastDecorator">
         <section>
             <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/SalesMenus.xml#Sales" />
                 <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="Forecast"/>
             </actions>
             <widgets>
@@ -48,6 +49,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleFindSalesForecast"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/SalesMenus.xml#Sales" />
                 <set field="activeSubMenuItem" value="Forecast"/>
             </actions>
             <widgets>

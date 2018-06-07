@@ -113,8 +113,8 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     <#if required> required="required"</#if><#t/>
   /><#t/>
   <#if ajaxUrl?has_content>
-    <#local defaultMinLength = getPropertyValue("widget.properties", "widget.autocompleter.defaultMinLength")!2>
-    <#local defaultDelay = getPropertyValue("widget.properties", "widget.autocompleter.defaultDelay")!300>
+    <#local defaultMinLength = getPropertyValue("widget", "widget.autocompleter.defaultMinLength")!2>
+    <#local defaultDelay = getPropertyValue("widget", "widget.autocompleter.defaultDelay")!300>
     <@script>ajaxAutoCompleter('${escapeFullUrl(ajaxUrl, 'js')}', false, ${defaultMinLength}, ${defaultDelay});</@script><#lt/>
   </#if>
 </#macro>
@@ -747,7 +747,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     <#local ajaxUrl = rawString(id) + "," + rawString(ajaxUrl) + ",ajaxLookup=Y" />
   </#if>
   <#if (!showDescription?has_content)>
-    <#local showDescriptionProp = getPropertyValue("widget.properties", "widget.lookup.showDescription")!"N">
+    <#local showDescriptionProp = getPropertyValue("widget", "widget.lookup.showDescription")!"N">
     <#if "Y" == showDescriptionProp>
       <#local showDescription = "true" />
     <#else>
@@ -765,7 +765,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   </#if>
   <span class="field-lookup">
     <#if size?has_content && size=="0">
-      <input type="hidden" <#if name?has_content> name="${escapeVal(name, 'html')}"/></#if>
+      <input type="hidden"<#if name?has_content> name="${escapeVal(name, 'html')}"/></#if>
     <#else>
       <input type="text"<@fieldElemAttribStr attribs=attribs /><@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${escapeVal(name, 'html')}"</#if><#if value?has_content> value="${escapeVal(value, 'html')}"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#rt/>
         <#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#t/>
@@ -775,7 +775,6 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         <#if required> required="required"</#if><#t/>
         /></#if><#t/>
     <#if presentation?has_content && descriptionFieldName?has_content && presentation == "window">
-      <#-- FIXME: dangerous form lookups -->
       <a href="javascript:call_fieldlookup3(document['${escapeVal(formName, 'js-html')}']['${escapeVal(name, 'js-html')}'], <#rt/>
           document['${escapeVal(formName, 'js-html')}']['${escapeVal(descriptionFieldName, 'js-html')}'], '${escapeVal(fieldFormName, 'js-html')}', '${escapeVal(presentation, 'js-html')}'<#t/>
       <#if targetParameterIter?has_content>
@@ -794,8 +793,8 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
       );"></a><#rt/>
     <#else>
       <#if ajaxEnabled>
-        <#local defaultMinLength = getPropertyValue("widget.properties", "widget.autocompleter.defaultMinLength")!2>
-        <#local defaultDelay = getPropertyValue("widget.properties", "widget.autocompleter.defaultDelay")!300>
+        <#local defaultMinLength = getPropertyValue("widget", "widget.autocompleter.defaultMinLength")!2>
+        <#local defaultDelay = getPropertyValue("widget", "widget.autocompleter.defaultDelay")!300>
         <#local ajaxUrl = ajaxUrl + "&amp;_LAST_VIEW_NAME_=" + lastViewName />
         <#if !ajaxUrl?contains("searchValueFieldName=")>
           <#if descriptionFieldName?has_content && showDescription == "true">
@@ -804,8 +803,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
             <#local ajaxUrl = ajaxUrl + "&amp;searchValueFieldName=" + name />
           </#if>
         </#if>
-      </#if>
-      <@script>
+        <@script>
         jQuery(document).ready(function(){
           var options = {
             requestUrl : "${escapeVal(fieldFormName, 'js')}",
@@ -840,7 +838,8 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
           };
           new Lookup(options).init();
         });
-      </@script>
+        </@script>
+      </#if>
     </#if>
     <#if readonly?has_content && readonly>
       <a id="${escapeVal(id, 'html')}_clear" 
@@ -855,8 +854,8 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     </#if>
   </span>
   <#if ajaxEnabled && (presentation?has_content && presentation == "window")>
-    <#local defaultMinLength = getPropertyValue("widget.properties", "widget.autocompleter.defaultMinLength")!2>
-    <#local defaultDelay = getPropertyValue("widget.properties", "widget.autocompleter.defaultDelay")!300>
+    <#local defaultMinLength = getPropertyValue("widget", "widget.autocompleter.defaultMinLength")!2>
+    <#local defaultDelay = getPropertyValue("widget", "widget.autocompleter.defaultDelay")!300>
     <#if ajaxUrl?index_of("_LAST_VIEW_NAME_") < 0>
       <#local ajaxUrl = ajaxUrl + "&amp;_LAST_VIEW_NAME_=" + lastViewName />
     </#if>

@@ -271,10 +271,16 @@ under the License.
     <request-map uri="createEventWorkEffortAndPartyAssign"><!-- SCIPIO -->
         <security https="true" auth="true"/>
         <event type="service" invoke="createWorkEffortAndPartyAssign"/>
-        <response name="success" type="view" value="Events"/>
+        <response name="success" type="view" value="EditEvent"/>
         <response name="error" type="view" value="EditEvent"/>
     </request-map>
     <request-map uri="updateEventWorkEffort"><!-- SCIPIO -->
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateWorkEffort"/>
+        <response name="success" type="view" value="EditEvent"/>
+        <response name="error" type="view" value="EditEvent"/>
+    </request-map>
+    <request-map uri="updateEventWorkEffortReturn"><!-- SCIPIO -->
         <security https="true" auth="true"/>
         <event type="service" invoke="updateWorkEffort"/>
         <response name="success" type="view" value="Events"/>

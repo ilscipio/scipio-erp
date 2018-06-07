@@ -57,13 +57,13 @@ under the License.
         </field>
         <!-- SCIPIO -->
         <field name="cancel" title="${uiLabelMap.CommonCancel}" widget-style="${styles.link_run_sys} ${styles.action_cancel}">
-            <hyperlink target="updateEventWorkEffort" description="${uiLabelMap.CommonCancel}" link-type="hidden-form">
+            <hyperlink target="updateEventWorkEffortReturn" description="${uiLabelMap.CommonCancel}" link-type="hidden-form">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="currentStatusId" value="CAL_CANCELLED"/>
             </hyperlink>
         </field>
         <field name="complete" title="${uiLabelMap.SfaComplete}" widget-style="${styles.link_run_sys} ${styles.action_complete}">
-            <hyperlink target="updateEventWorkEffort" description="${uiLabelMap.SfaComplete}" link-type="hidden-form"><!-- SCIPIO: replaced target="updateWorkEffort" -->
+            <hyperlink target="updateEventWorkEffortReturn" description="${uiLabelMap.SfaComplete}" link-type="hidden-form"><!-- SCIPIO: replaced target="updateWorkEffort" -->
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="currentStatusId" value="CAL_COMPLETED"/>
             </hyperlink>
@@ -165,11 +165,11 @@ under the License.
     </form>
     
     <!-- SCIPIO -->
-    <form name="cancelEventHidden" type="single" target="updateEventWorkEffort" id="${cancelEventFormId}">
+    <form name="cancelEventHidden" type="single" target="updateEventWorkEffortReturn" id="${cancelEventFormId}">
         <field name="workEffortId"><hidden value="${parameters.workEffortId}"/></field>
         <field name="currentStatusId"><hidden value="CAL_CANCELLED"/></field>
     </form>
-    <form name="completeEventHidden" type="single" target="updateEventWorkEffort" id="${completeEventFormId}">
+    <form name="completeEventHidden" type="single" target="updateEventWorkEffortReturn" id="${completeEventFormId}">
         <field name="workEffortId"><hidden value="${parameters.workEffortId}"/></field>
         <field name="currentStatusId"><hidden value="CAL_COMPLETED"/></field>
     </form>

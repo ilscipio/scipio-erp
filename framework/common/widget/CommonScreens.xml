@@ -1240,7 +1240,7 @@ under the License.
                     <widgets>
                         <screenlet padded="false">
                             <label style="heading" text="${uiLabelMap.CommonSearchResults}"/>
-                            <container id="search-results">
+                            <container id="search-results" style="search-results">
                                 <decorator-section-include name="search-results"/>
                             </container>
                         </screenlet>

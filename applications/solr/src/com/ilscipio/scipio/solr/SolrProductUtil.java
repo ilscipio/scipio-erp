@@ -493,10 +493,11 @@ public abstract class SolrProductUtil {
             
             List<GenericValue> productStores;
             if (catalogs.isEmpty()) {
+                // TODO: REVIEW: we can't have this as a warning because many small component product currently won't associate to any store this way
                 if (productCategoryIds.isEmpty()) {
-                    Debug.logWarning("Solr: No categories found for productId '" + productId + "'; can't retrieve product store", module);
+                    Debug.logInfo("Solr: No categories found for productId '" + productId + "'; can't retrieve product store", module);
                 } else {
-                    Debug.logWarning("Solr: No catalogs found for productId '" + productId + "'; can't retrieve product store", module);
+                    Debug.logInfo("Solr: No catalogs found for productId '" + productId + "'; can't retrieve product store", module);
                 }
                 productStores = new ArrayList<>();
             } else {

@@ -437,58 +437,21 @@ public abstract class SolrProductUtil {
             // solrProductAttributes service interface and in the future may replace it entirely.
             Map<String, Object> fields = getGenSolrDocFieldsMap(dispatchContext);
             
+            // 2017-09: if variant, must also get virtual's categories
             List<GenericValue> productVariantAssocs = ProductWorker.getVariantVirtualAssocs(product, useCache);
             
             // 2017-09: do EARLY cat lookup so that we can find out a ProductStore
-            List<GenericValue> categories = EntityQuery.use(delegator).from("ProductCategoryMember").where("productId", productId)
-                    .filterByDate().cache(useCache).queryList();
             Set<String> productCategoryIds = new LinkedHashSet<>();
-            SolrCategoryUtil.addAllStringFieldList(productCategoryIds, categories, "productCategoryId");
-            
-            // 2017-09: if variant, must also get virtual's categories
-            if (UtilValidate.isNotEmpty(productVariantAssocs)) {
-                for(GenericValue productVariantAssoc : productVariantAssocs) {
-                    String virtualProductId = productVariantAssoc.getString("productId");
-                    List<GenericValue> virtualCategories = EntityQuery.use(delegator).from("ProductCategoryMember")
-                            .where("productId", virtualProductId).filterByDate().cache(useCache).queryList();
-                    SolrCategoryUtil.addAllStringFieldList(productCategoryIds, virtualCategories, "productCategoryId");
-                }
-            }
-            
+            getProductCategoryIds(productCategoryIds, dctx, productId, productVariantAssocs, useCache);
+
             // Trying to set a correctand trail
             Collection<String> trails = new LinkedHashSet<String>();
-            for (String productCategoryId : productCategoryIds) {
-                List<List<String>> trailElements = SolrCategoryUtil.getCategoryTrail(productCategoryId, dctx, useCache);
-                for (List<String> trailElement : trailElements) {
-                    StringBuilder catMember = new StringBuilder();
-                    int i = 0;
-                    for(String trailString : trailElement) {
-                        if (catMember.length() > 0){
-                            catMember.append("/");
-                            i++;
-                        }
-                        catMember.append(trailString);
-                        String cm = i +"/"+ catMember.toString();
-                        trails.add(cm);
-                    }
-                }
-            }
+            getCategoryTrails(trails, dctx, productCategoryIds, useCache);
             dispatchContext.put("category", new ArrayList<>(trails));
 
             // Get the catalogs that have associated the categories
             Collection<String> catalogs = new LinkedHashSet<>();
-            Map<String, List<String>> categoryIdCatalogIdMap = new HashMap<>(); // 2017-09: local cache; multiple lookups for same
-            for (String trail : trails) {
-                String productCategoryId = (trail.split("/").length > 0) ? trail.split("/")[1] : trail;
-                List<String> catalogMembers = categoryIdCatalogIdMap.get(productCategoryId); 
-                if (catalogMembers == null) {          
-                    catalogMembers = SolrCategoryUtil.getCatalogIdsByCategoryId(delegator, productCategoryId, useCache);
-                    categoryIdCatalogIdMap.put(productCategoryId, catalogMembers);
-                }
-                for (String catalogMember : catalogMembers) {
-                    catalogs.add(catalogMember);
-                }
-            }
+            getCatalogIdsFromCategoryTrails(catalogs, dctx, trails, useCache);
             dispatchContext.put("catalog", new ArrayList<>(catalogs));
             
             List<GenericValue> productStores;
@@ -632,7 +595,57 @@ public abstract class SolrProductUtil {
         }
         return dispatchContext;
     }
-    
+
+    protected static void getProductCategoryIds(Collection<String> productCategoryIds, DispatchContext dctx, String productId, Collection<GenericValue> productVariantAssocs, 
+            boolean useCache) throws GenericEntityException {
+        List<GenericValue> categories = EntityQuery.use(dctx.getDelegator()).from("ProductCategoryMember").where("productId", productId)
+                .filterByDate().cache(useCache).queryList();
+        SolrCategoryUtil.addAllStringFieldList(productCategoryIds, categories, "productCategoryId");
+
+        if (UtilValidate.isNotEmpty(productVariantAssocs)) {
+            for(GenericValue productVariantAssoc : productVariantAssocs) {
+                String virtualProductId = productVariantAssoc.getString("productId");
+                List<GenericValue> virtualCategories = EntityQuery.use(dctx.getDelegator()).from("ProductCategoryMember")
+                        .where("productId", virtualProductId).filterByDate().cache(useCache).queryList();
+                SolrCategoryUtil.addAllStringFieldList(productCategoryIds, virtualCategories, "productCategoryId");
+            }
+        }
+    }
+
+    protected static void getCategoryTrails(Collection<String> trails, DispatchContext dctx, Collection<String> productCategoryIds, boolean useCache) {
+        for (String productCategoryId : productCategoryIds) {
+            List<List<String>> trailElements = SolrCategoryUtil.getCategoryTrail(productCategoryId, dctx, useCache);
+            for (List<String> trailElement : trailElements) {
+                StringBuilder catMember = new StringBuilder();
+                int i = 0;
+                for(String trailString : trailElement) {
+                    if (catMember.length() > 0){
+                        catMember.append("/");
+                        i++;
+                    }
+                    catMember.append(trailString);
+                    String cm = i +"/"+ catMember.toString();
+                    trails.add(cm);
+                }
+            }
+        }
+    }
+
+    protected static void getCatalogIdsFromCategoryTrails(Collection<String> catalogIds, DispatchContext dctx, Collection<String> trails, boolean useCache) {
+        Map<String, List<String>> categoryIdCatalogIdMap = new HashMap<>(); // 2017-09: local cache; multiple lookups for same
+        for (String trail : trails) {
+            String productCategoryId = (trail.split("/").length > 0) ? trail.split("/")[1] : trail;
+            List<String> catalogMembers = categoryIdCatalogIdMap.get(productCategoryId); 
+            if (catalogMembers == null) {          
+                catalogMembers = SolrCategoryUtil.getCatalogIdsByCategoryId(dctx.getDelegator(), productCategoryId, useCache);
+                categoryIdCatalogIdMap.put(productCategoryId, catalogMembers);
+            }
+            for (String catalogMember : catalogMembers) {
+                catalogIds.add(catalogMember);
+            }
+        }
+    }
+
     /**
      * Gets or creates and stores the unabstracted "fields" map for addToSolrIndex.
      */

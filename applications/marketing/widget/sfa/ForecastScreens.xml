@@ -31,7 +31,7 @@ under the License.
                 <decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}">                 
                     <decorator-section name="body">
                         <section>
-                            <condition><not><if-empty field="salesForecastId"/></not></condition>
+                            <!--<condition><not><if-empty field="salesForecastId"/></not></condition>-->
                             <widgets>
                                 <include-menu name="SalesForecastTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
                             </widgets>
@@ -58,7 +58,8 @@ under the License.
                         <container>
                             <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                 <decorator-section name="menu-bar">
-                                    <container style="button-bar"><link target="EditSalesForecast" text="${uiLabelMap.SfaNewSalesForecast}" style="${styles.link_nav} ${styles.action_add}"/></container>
+                                    <!--<container style="button-bar"><link target="EditSalesForecast" text="${uiLabelMap.SfaNewSalesForecast}" style="${styles.link_nav} ${styles.action_add}"/></container>-->
+                                    <include-menu name="SalesForecastTabBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
                                 </decorator-section>
                                 <decorator-section name="search-options">
                                     <include-form name="FindSalesForecast" location="component://marketing/widget/sfa/forms/ForecastForms.xml"/>
@@ -77,23 +78,24 @@ under the License.
     <screen name="EditSalesForecast">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditSalesForecast"/>
-                <set field="activeSubMenuItem" value="EditSalesForecast"/>
+                <!--<set field="activeSubMenuItem" value="EditSalesForecast"/>-->
                 <set field="salesForecastId" from-field="parameters.salesForecastId"/>
                 <entity-one entity-name="SalesForecast" value-field="salesForecast"/>
+                <set field="titleProperty" value="${groovy: context.salesForecast ? 'PageTitleEditSalesForecast' : 'SfaNewSalesForecast'}"/>
+                <set field="isNewSalesForecast" type="Boolean" value="${groovy: context.salesForecast ? false : true}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSalesForecastDecorator">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.SfaEditSalesForecast}">
-                            <section>
+                        <screenlet><!-- title="${uiLabelMap.SfaEditSalesForecast}" -->
+                            <!--<section>
                                 <condition><not><if-empty field="salesForecastId"/></not></condition>
-                                    <widgets>
-                                        <container style="button-bar">
-                                            <link target="EditSalesForecast" text="${uiLabelMap.SfaNewSalesForecast}" style="${styles.link_nav} ${styles.action_add}"/>
-                                        </container>
+                                <widgets>
+                                    <container style="button-bar">
+                                        <link target="EditSalesForecast" text="${uiLabelMap.SfaNewSalesForecast}" style="${styles.link_nav} ${styles.action_add}"/>
+                                    </container>
                                 </widgets>
-                            </section>
+                            </section>-->
                             <include-form name="EditSalesForecast" location="component://marketing/widget/sfa/forms/ForecastForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -106,8 +108,9 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditSalesForecastDetail"/>
-                <set field="activeSubMenuItem" value="EditSalesForecastDetail"/>
+                <!--<set field="activeSubMenuItem" value="EditSalesForecastDetail"/>-->
                 <set field="salesForecastId" from-field="parameters.salesForecastId"/>
+                <entity-one entity-name="SalesForecast" value-field="salesForecast"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSalesForecastDecorator">

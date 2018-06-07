@@ -111,7 +111,10 @@
         <field name="showOutOfStockProducts">
             <drop-down allow-empty="false"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
         </field>
-        <field name="showDiscontinuedProducts" position="2"><!-- SCIPIO: new -->
+        <field name="useVariantStockCalc" position="2"><!-- SCIPIO: new -->
+            <drop-down allow-empty="true" no-current-selected-key="Y"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+        </field>
+        <field name="showDiscontinuedProducts" position="1"><!-- SCIPIO: new -->
             <drop-down allow-empty="true" no-current-selected-key="Y"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
         </field>
         <field name="requirementMethodEnumId" position="2">
@@ -341,6 +344,7 @@
                 <sort-field name="balanceResOnOrderCreation"/>
                 <sort-field name="managedByLot"/>
                 <sort-field name="showOutOfStockProducts"/>
+                <sort-field name="useVariantStockCalc"/><!-- SCIPIO: new -->
                 <sort-field name="showDiscontinuedProducts"/><!-- SCIPIO: new -->
             </field-group>
             <field-group title="${uiLabelMap.CommonShoppingCart}" collapsible="true" initially-collapsed="true">

@@ -1420,19 +1420,16 @@ nextProd:
 
     /**
      * SCIPIO: Returns a last inventory count (based on ProductFacility.lastInventoryCount) of the product
-     * for each specified product store, as a map of productStoreId to inventory counts; also returns
-     * total for all facilities as "_total_" key.
+     * for each specified product store, as a map of productStoreId to inventory counts; can also return
+     * total for all facilities as "_total_" key. 
+     * This method calculates for the specific productId only and does NOT honor ProductStore.useVariantStockCalc.
      * <p>
      * Based on {@link #filterOutOfStockProducts}.
      * <p>
-     * NOTE: there may still be a case for using service getProductInventoryAvailable
-     * instead of ProductFacility.lastInventoryCount... but ProductFacility.lastInventoryCount is more common
-     * for shop code and faster.
-     * <p>
      * Added 2018-05-29.
      */
-    public static Map<String, BigDecimal> getProductStockPerProductStore(Delegator delegator, LocalDispatcher dispatcher,
-            GenericValue product, Collection<GenericValue> productStores, Timestamp moment, boolean useCache) throws GeneralException {
+    public static Map<String, BigDecimal> getIndividualProductStockPerProductStore(Delegator delegator, LocalDispatcher dispatcher,
+            GenericValue product, Collection<GenericValue> productStores, boolean useTotal, Timestamp moment, boolean useCache) throws GeneralException {
         Map<String, BigDecimal> countMap = new HashMap<>();
         
         String productId = product.getString("productId");
@@ -1475,6 +1472,36 @@ nextProd:
             countMap.put(productStoreId, storeInventory);
         }
         
+        if (useTotal) {
+            BigDecimal totalInventory = getTotalIndividualProductStock(delegator, dispatcher, product, 
+                    moment, useCache, productId, isMarketingPackage, productFacilities);
+            countMap.put("_total_", totalInventory);
+        }
+        
+        return countMap;
+    }
+    
+    /**
+     * SCIPIO: Returns a last inventory count (based on ProductFacility.lastInventoryCount) of the product
+     * for each for all stores/facilities. 
+     * This method calculates for the specific productId only and does NOT honor ProductStore.useVariantStockCalc.
+     * <p>
+     * Based on {@link #filterOutOfStockProducts}.
+     * <p>
+     * Added 2018-06-06.
+     */
+    public static BigDecimal getTotalIndividualProductStock(Delegator delegator, LocalDispatcher dispatcher,
+            GenericValue product, Timestamp moment, boolean useCache) throws GeneralException {
+        String productId = product.getString("productId");
+        boolean isMarketingPackage = EntityTypeUtil.hasParentType(delegator, "ProductType", "productTypeId", product.getString("productTypeId"), "parentTypeId", "MARKETING_PKG");
+        List<GenericValue> productFacilities = EntityQuery.use(delegator).from("ProductFacility")
+                .where("productId", productId).cache(useCache).queryList();
+        return getTotalIndividualProductStock(delegator, dispatcher, product, moment, useCache, 
+                productId, isMarketingPackage, productFacilities);
+    }
+    
+    private static BigDecimal getTotalIndividualProductStock(Delegator delegator, LocalDispatcher dispatcher,
+            GenericValue product, Timestamp moment, boolean useCache, String productId, boolean isMarketingPackage, List<GenericValue> productFacilities) throws GeneralException {
         BigDecimal totalInventory = BigDecimal.ZERO;
         if (Boolean.TRUE.equals(isMarketingPackage)) {
             Map<String, Object> resultOutput = dispatcher.runSync("getMktgPackagesAvailable", 
@@ -1494,9 +1521,101 @@ nextProd:
                 }
             }
         }
-        countMap.put("_total_", totalInventory);
+        return totalInventory;
+    }
+    
+    /**
+     * SCIPIO: Returns a last inventory count (based on ProductFacility.lastInventoryCount) of the product
+     * for each specified product store, as a map of productStoreId to inventory counts; can also return
+     * total for all facilities as "_total_" key. 
+     * This method can calculate stock for virtual products from variants and honors ProductStore.useVariantStockCalc.
+     * <p>
+     * Based on {@link #filterOutOfStockProducts} but with additional support for variant inventory calculation.
+     * <p>
+     * NOTE: The useVariantStockCalcForTotal is used when useTotal true and determines if the total should use
+     * the variant-based total calc or not - this is ambiguous because useVariantStockCalc is per-product store. 
+     * <p>
+     * Added 2018-06-06.
+     */
+    public static Map<String, BigDecimal> getProductStockPerProductStore(Delegator delegator, LocalDispatcher dispatcher,
+            GenericValue product, Collection<GenericValue> productStores, boolean useTotal, boolean useVariantStockCalcForTotal,
+            Timestamp moment, boolean useCache) throws GeneralException {
+        if (!Boolean.TRUE.equals(product.getBoolean("isVirtual"))) {
+            // non-virtual product - calculate individual stock
+            return getIndividualProductStockPerProductStore(delegator, dispatcher, product, productStores, useTotal, moment, useCache);
+        }
         
+        // virtual product - for each store, check useVariantStockCalc setting and split them up
+        List<GenericValue> variantStockStores = new ArrayList<>();
+        List<GenericValue> indivStockStores = new ArrayList<>();
+        // sort stores by useVariantStockCalc flag
+        for(GenericValue productStore : productStores) {
+            if (Boolean.TRUE.equals(productStore.getBoolean("useVariantStockCalc"))) {
+                variantStockStores.add(productStore);
+            } else {
+                indivStockStores.add(productStore);
+            }
+        }
+        
+        Map<String, BigDecimal> countMap = new HashMap<>();
+        
+        BigDecimal totalInventory = BigDecimal.ZERO;
+        if (variantStockStores.size() > 0) {
+            List<GenericValue> variantProducts = getVariantProductsForStockCalc(delegator, dispatcher, product, moment, useCache);
+            if (variantProducts.size() > 0) {
+                for (GenericValue variantProduct : variantProducts) {
+                    Map<String, BigDecimal> variantStoreInventories = ProductWorker.getIndividualProductStockPerProductStore(delegator, dispatcher,
+                            variantProduct, variantStockStores, (useTotal && useVariantStockCalcForTotal), moment, useCache);
+                    for (Map.Entry<String, BigDecimal> entry : variantStoreInventories.entrySet()) {
+                        if ("_total_".equals(entry.getKey())) {
+                            totalInventory = totalInventory.add(entry.getValue());
+                        } else {
+                            BigDecimal storeInventory = countMap.get(entry.getKey());
+                            if (storeInventory == null) storeInventory = BigDecimal.ZERO;
+                            countMap.put(entry.getKey(), storeInventory.add(entry.getValue()));                            
+                        }
+                    }
+                }
+            } else {
+                for(GenericValue productStore : variantStockStores) {
+                    countMap.put(productStore.getString("productStoreId"), BigDecimal.ZERO);
+                }
+            }
+        } 
+        if (useTotal && useVariantStockCalcForTotal) {
+            countMap.put("_total_", totalInventory);
+        }
+        
+        if (indivStockStores.size() > 0) {
+            Map<String, BigDecimal> indivStoreInventories = ProductWorker.getIndividualProductStockPerProductStore(delegator, dispatcher,
+                    product, indivStockStores, (useTotal && !useVariantStockCalcForTotal), moment, useCache);
+            countMap.putAll(indivStoreInventories); // already includes _total_, if was requested
+        } else {
+            if (useTotal && !useVariantStockCalcForTotal) {
+                totalInventory = ProductWorker.getTotalIndividualProductStock(delegator, dispatcher, product, moment, useCache);
+                countMap.put("_total_", totalInventory);
+            }
+        }
+ 
         return countMap;
+    }
+
+    /**
+     * SCIPIO: Returns the variant products of a virtual product whose stock may be summed when
+     * useVariantStockCalc is honored.
+     * <p>
+     * Added 2018-06-06. 
+     */
+    public static List<GenericValue> getVariantProductsForStockCalc(Delegator delegator, LocalDispatcher dispatcher,
+            GenericValue product, Timestamp moment, boolean useCache) throws GeneralException {
+        List<GenericValue> variantProductAssocs = EntityQuery.use(delegator).from("ProductAssoc")
+                .where("productId", product.getString("productId"), "productAssocTypeId", "PRODUCT_VARIANT").orderBy("-fromDate")
+                .cache(useCache).filterByDate(moment).queryList();
+        List<GenericValue> variantProducts = new ArrayList<>(variantProductAssocs.size());
+        for (GenericValue assoc : variantProductAssocs) {
+            variantProducts.add(assoc.getRelatedOne("AssocProduct", useCache));
+        }
+        return variantProducts;
     }
 
     /**

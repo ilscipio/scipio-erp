@@ -453,9 +453,6 @@ public abstract class SolrProductUtil {
                             .where("productId", virtualProductId).filterByDate().cache(useCache).queryList();
                     SolrCategoryUtil.addAllStringFieldList(productCategoryIds, virtualCategories, "productCategoryId");
                 }
-            }            
-            if (UtilValidate.isEmpty(productCategoryIds)) {
-                Debug.logInfo("productCategoryIds empty for productId:" + productId + ". Can't retrieve product store", module);
             }
             
             // Trying to set a correctand trail
@@ -494,8 +491,18 @@ public abstract class SolrProductUtil {
             }
             dispatchContext.put("catalog", new ArrayList<>(catalogs));
             
-            List<GenericValue> productStores = SolrCategoryUtil.getProductStoresFromCatalogIds(delegator, catalogs, useCache);
-            dispatchContext.put("productStore", SolrCategoryUtil.getStringFieldList(productStores, "productStoreId"));
+            List<GenericValue> productStores;
+            if (catalogs.isEmpty()) {
+                if (productCategoryIds.isEmpty()) {
+                    Debug.logWarning("Solr: No categories found for productId '" + productId + "'; can't retrieve product store", module);
+                } else {
+                    Debug.logWarning("Solr: No catalogs found for productId '" + productId + "'; can't retrieve product store", module);
+                }
+                productStores = new ArrayList<>();
+            } else {
+                productStores = SolrCategoryUtil.getProductStoresFromCatalogIds(delegator, catalogs, useCache);
+                dispatchContext.put("productStore", SolrCategoryUtil.getStringFieldList(productStores, "productStoreId"));
+            }
             
             // MAIN STORE SELECTION AND LOCALE LOOKUP
             // NOTE: we skip the isContentReference warning if there's both a forced locale and forced currency.
@@ -557,35 +564,11 @@ public abstract class SolrProductUtil {
                 inStock = availableToPromiseTotal.toBigInteger().toString();
             }
             */
-            Map<String, BigDecimal> virtualProductStoreInventories = UtilMisc.newMap();
-            boolean useVariantStockCalc = (UtilValidate.isNotEmpty(productStore) && "Y".equals(productStore.getString("useVariantStockCalc")));
-            if (useVariantStockCalc && "Y".equals(product.getString("isVirtual"))) {
-                List<GenericValue> variantProductAssocs = EntityQuery.use(delegator).from("ProductAssoc")
-                        .where("productId", productId, "productAssocTypeId", "PRODUCT_VARIANT").orderBy("-fromDate").cache(useCache).filterByDate().queryList();                
-                for (GenericValue variantProduct : variantProductAssocs) {
-                    Map<String, BigDecimal> productStoreInventories = ProductWorker.getProductStockPerProductStore(delegator, dispatcher,
-                            variantProduct.getRelatedOne("AssocProduct", true), productStores, nowTimestamp, useCache);
-                    for (Map.Entry<String, BigDecimal> entry : productStoreInventories.entrySet()) {
-                        if ("_total_".equals(entry.getKey())) {
-                            BigDecimal total = BigDecimal.ZERO;
-                            if (virtualProductStoreInventories.containsKey("_total_")) {                                
-                                total = virtualProductStoreInventories.get("_total_");
-                            }
-                            virtualProductStoreInventories.put("_total_", total.add(entry.getValue()));
-                        } else {
-                            BigDecimal fieldTotal = BigDecimal.ZERO;
-                            if (virtualProductStoreInventories.containsKey(entry.getKey())) {                                
-                                fieldTotal = virtualProductStoreInventories.get(entry.getKey());
-                            }
-                            virtualProductStoreInventories.put(entry.getKey(), fieldTotal.add(entry.getValue()));                            
-                        }
-                    }
-                }
-            }
-            Map<String, BigDecimal> productStoreInventories = virtualProductStoreInventories;
-            if (UtilValidate.isEmpty(productStoreInventories)) {
-                productStoreInventories = ProductWorker.getProductStockPerProductStore(delegator, dispatcher, product, productStores, nowTimestamp, useCache);
-            }
+            final boolean useTotal = true;
+            // WARN: here the total (inStock) behavior for variants is determined by the first store found only!
+            final boolean useVariantStockCalcForTotal = (productStore != null && Boolean.TRUE.equals(productStore.getBoolean("useVariantStockCalc")));
+            Map<String, BigDecimal> productStoreInventories = ProductWorker.getProductStockPerProductStore(delegator, dispatcher, product, 
+                    productStores, useTotal, useVariantStockCalcForTotal, nowTimestamp, useCache);
             for (Map.Entry<String, BigDecimal> entry : productStoreInventories.entrySet()) {
                 if ("_total_".equals(entry.getKey())) {
                     dispatchContext.put("inStock", entry.getValue().toBigInteger().intValue());

@@ -230,7 +230,10 @@ under the License.
     
     <menu name="EventSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           menu-container-style="+${styles.menu_buttonstyle_alt2} ${styles.menu_noclear}">
-        <menu-item name="NewEvent" title="${uiLabelMap.CommonCreateNew}" widget-style="+${styles.action_nav} ${styles.action_add}"><link target="EditEvent"/></menu-item>
+        <menu-item name="NewEvent" title="${uiLabelMap.CommonCreateNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition><not><if-true field="isNewEvent"/></not></condition>
+            <link target="EditEvent"/>
+        </menu-item>
     </menu>
     
     <menu name="LeadTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">

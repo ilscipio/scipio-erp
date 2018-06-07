@@ -209,5 +209,8 @@
     <property key="SetupAccountingDatevImportCSV">
         <value xml:lang="en">Upload Datev CSV to import</value>
     </property>
+    <property key="SetupAccountingImportDefaultGLStandard">
+        <value xml:lang="en">Import default GL Standard</value>
+    </property>
     
 </resource>

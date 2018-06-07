@@ -19,7 +19,7 @@
 -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
+    xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/simple-methods.xsd">
 
     <!-- SCIPIO: New Setup Component Events
         NOTE: the original ofbizsetup methods are found (and still referenced) in:
@@ -767,6 +767,13 @@
     
     <simple-method method-name="importGlAccounts" short-description="Import GL Accounts from xls" login-required="true">
     	<!-- TODO -->
+    </simple-method>
+    
+    <simple-method method-name="importDefaultGL" short-description="Import default GL Accounts" login-required="true">
+        <!-- TODO -->
+        <request-to-field field="predefinedGLAccountId" request-name="importPredefinedGL" />
+        <log level="always" message="predefinedGLAccountId =======> ${predefinedGLAccountId}" />
+        
     </simple-method>
 
 </simple-methods>

@@ -138,6 +138,12 @@
     </request-map>
     
         <!-- GlAccounts -->
+    <request-map uri="importDefaultGL">
+        <security https="true" auth="true"/>      
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="importDefaultGL"/>  
+        <response name="success" type="view" value="SetupAccounting"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
     <request-map uri="setupAddGlAccount">
         <security https="true" auth="true"/>        
         <response name="success" type="view" value="SetupAccounting"/>

@@ -23,6 +23,7 @@ under the License.
     <screen name="main">
         <section>
             <actions>
+                <set field="titleProperty" value="SfaEvents"/>
                 <set field="activeSubMenuItem" value="Events"/>
                 <entity-and entity-name="WorkEffortAndPartyAssign" list="myTasks" filter-by-date="true">
                     <field-map field-name="partyId" from-field="userLogin.partyId"/>
@@ -56,14 +57,23 @@ under the License.
     <screen name="EditEvent">
         <section>
             <actions>
+                <set field="titleProperty" value="WorkEffortAddCalendarEvent"/>
                 <set field="activeSubMenuItem" value="Events"/>
                 <entity-one entity-name="WorkEffort" value-field="workEffort"/>
+                <set field="isNewEvent" type="Boolean" value="${groovy: context.workEffort ? false : true}"/>
+                
+                <set field="createCalEventUrl" from-field="createCalEventUrl" default-value="createEventWorkEffortAndPartyAssign" />
+                <set field="updateCalEventUrl" from-field="updateCalEventUrl" default-value="updateEventWorkEffort" />
+                <set field="cancelEventFormId" value="cancelEventForm"/>
+                <set field="completeEventFormId" value="completeEventForm"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonEventDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.WorkEffortAddCalendarEvent}">
+                        <screenlet>
                             <include-form name="EditEvent" location="component://marketing/widget/sfa/forms/EventForms.xml"/>
+                            <include-form name="cancelEventHidden" location="component://marketing/widget/sfa/forms/EventForms.xml"/>
+                            <include-form name="completeEventHidden" location="component://marketing/widget/sfa/forms/EventForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

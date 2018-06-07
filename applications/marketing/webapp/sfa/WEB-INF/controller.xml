@@ -271,7 +271,7 @@ under the License.
 
     <!-- SCIPIO: New root entries -->
     <request-map uri="MyCommunicationEvents"><security https="true" auth="true"/><response name="success" type="view" value="MyCommunicationEvents"/></request-map>
-    <request-map uri="FindAccounts"><security https="true" auth="true"/><response name="success" type="view" value="FindAccounts"/></request-map>
+    <!-- already defined above: <request-map uri="FindAccounts"><security https="true" auth="true"/><response name="success" type="view" value="FindAccounts"/></request-map>-->
     <request-map uri="Analytics"><security https="true" auth="true"/><response name="success" type="view" value="Analytics"/></request-map>    
     <request-map uri="FindMarketingCampaign"><security https="true" auth="true"/><response name="success" type="view" value="FindMarketingCampaign"/></request-map>
     <request-map uri="Calendar"><security https="true" auth="true"/><response name="success" type="view" value="Calendar"/></request-map>    

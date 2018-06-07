@@ -69,16 +69,19 @@ context.acctgTransEntryTypes = acctgTransEntryTypes;
  * Scipio store urls - Accounting addons
  */
 Properties generalProps = UtilProperties.getProperties("general");
+List<String> scipioAcctgStandardDefaults = [];
 Map<String, String> scipioAcctgStandardAddons = [:];
 for (String key in generalProps.stringPropertyNames()) {
     if (key.startsWith("scipio.store.addon.accounting")) {
         scipioAcctgStandardAddons.put(key.substring(key.lastIndexOf(".") + 1, key.length()), UtilProperties.getPropertyValue("general", "scipio.store.base.url") + generalProps.get(key));
+    } else if (key.startsWith("scipio.accounting.defaults")) {
+        for (defaultGL in generalProps.get(key).split(",")) {
+            scipioAcctgStandardDefaults.add(defaultGL.trim());
+        }
     }
 }
 context.scipioAcctgStandardAddons = scipioAcctgStandardAddons; 
-for (String key in scipioAcctgStandardAddons.keySet()) {
-    Debug.log("[" + key + "]: " + scipioAcctgStandardAddons.get(key));
-}
+context.scipioAcctgStandardDefaults = scipioAcctgStandardDefaults;
 
 
 /*

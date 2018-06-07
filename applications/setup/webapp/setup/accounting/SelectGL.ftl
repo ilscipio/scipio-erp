@@ -62,7 +62,7 @@
 	        </@field>
 	        <@menu type="button" id="setupAccounting-selectGL-submit-buttons" class="+setupAccounting-selectGL-submit-buttons">
 	          <@menuitem type="link" contentId="setupAccounting-selectGL-submit" href="javascript:void(0);" text=uiLabelMap.CommonSelect class="+${styles.action_run_session!} ${styles.action_update!}"/>
-	          <@menuitem type="link" contentId="setupAccounting-selectGL-submit-continue" href="javascript:void(0);" text=uiLabelMap.SetupSelectAndContinue class="+${styles.action_run_session!} ${styles.action_continue!}"/>
+	          <@menuitem type="link" contentId="setupAccounting-selectGL-submit-continue" href="javascript:void(0);" text=uiLabelMap.SetupSelectAndContinue class="+${styles.action_run_session!} ${styles.action_continue!} pull-right"/>
 	          <li class="${styles.action_run_session!} ${styles.action_modify!} setupAccounting-preferences">
 		          <@modal id="acctg-preferences" label=uiLabelMap.AccountingPreference linkClass="tiny button">    
 		    		<@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditAcctgPreferences"/>
@@ -90,6 +90,18 @@
   			</#list>
   		</ul>
   	</@alert>
+  	<@form method="post" action=makeOfbizUrl("importDefaultGL") id="setupAccounting-importDefaultGL-form">
+	  	<@field type="generic" label=uiLabelMap.SetupAccountingImportDefaultGLStandard >
+		  	<@field type="select" name="importPredefinedGL" inline=true>
+		  		<#list scipioAcctgStandardDefaults as predefinedGL>
+		  			<option value="${predefinedGL!}">${predefinedGL!}</option>
+		  		</#list>
+		  	</@field>
+		  	<@menu type="button" id="setupAccounting-importDefaultGL-submit-buttons" class="+setupAccounting-importDefaultGL-submit-buttons">
+		    	<@menuitem type="submit" contentId="setupAccounting-importDefaultGL-submit" href="javascript:void(0);" text=uiLabelMap.CommonImport class="+${styles.action_run_session!} ${styles.action_update!}"/>
+		    </@menu>      
+	  	</@field>
+  	</@form>
   </#if>
   
   <#-- 

@@ -720,6 +720,8 @@ function set_duration_value(value) {
     closeLookup();
 }
 // function passing selected value to calling window
+/*
+// function passing selected value to calling window
 function set_value(value) {
     if (GLOBAL_LOOKUP_REF.getReference(ACTIVATED_LOOKUP)) {
         obj_caller.target = GLOBAL_LOOKUP_REF.getReference(ACTIVATED_LOOKUP).target;
@@ -731,7 +733,7 @@ function set_value(value) {
     write_value(value, target);
 
     closeLookup();
-}
+}*/
 // function passing selected value to calling window
 function set_values(value, value2) {
     if (GLOBAL_LOOKUP_REF.getReference(ACTIVATED_LOOKUP)) {

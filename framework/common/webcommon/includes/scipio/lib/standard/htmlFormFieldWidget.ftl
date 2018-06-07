@@ -763,104 +763,159 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
       });
     </@script>
   </#if>
-  <span class="field-lookup">
+  <div class="field-lookup">
     <#if size?has_content && size=="0">
       <input type="hidden"<#if name?has_content> name="${escapeVal(name, 'html')}"/></#if>
     <#else>
-      <input type="text"<@fieldElemAttribStr attribs=attribs /><@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${escapeVal(name, 'html')}"</#if><#if value?has_content> value="${escapeVal(value, 'html')}"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#rt/>
-        <#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#t/>
-        <#if readonly?has_content && readonly> readonly="readonly"</#if><#if events?has_content><@commonElemEventAttribStr events=events /></#if><#t/>
-        <#if autocomplete?has_content> autocomplete="off"</#if><#t/>
-        <#if title?has_content> title="${escapeVal(title, 'html')}"</#if><#t/>
-        <#if required> required="required"</#if><#t/>
-        /></#if><#t/>
-    <#if presentation?has_content && descriptionFieldName?has_content && presentation == "window">
-      <a href="javascript:call_fieldlookup3(document['${escapeVal(formName, 'js-html')}']['${escapeVal(name, 'js-html')}'], <#rt/>
-          document['${escapeVal(formName, 'js-html')}']['${escapeVal(descriptionFieldName, 'js-html')}'], '${escapeVal(fieldFormName, 'js-html')}', '${escapeVal(presentation, 'js-html')}'<#t/>
-      <#if targetParameterIter?has_content>
-        <#list targetParameterIter as item>
-          ,document['${escapeVal(formName, 'js-html')}']['${escapeVal(item, 'js-html')}'].value <#t/>
-        </#list>
-      </#if>
-      );"></a><#rt/>
-    <#elseif presentation?has_content && presentation == "window">
-      <a href="javascript:call_fieldlookup2(document['${escapeVal(formName, 'js-html')}']['${escapeVal(name, 'js-html')}'], '${escapeVal(fieldFormName, 'js-html')}', '${escapeVal(presentation, 'js-html')}'<#rt/>
-      <#if targetParameterIter?has_content>
-        <#list targetParameterIter as item>
-          ,document['${escapeVal(formName, 'js-html')}']['${escapeVal(item, 'js-html')}'].value<#t/>
-        </#list>
-      </#if>
-      );"></a><#rt/>
-    <#else>
-      <#if ajaxEnabled>
+    <div class="${styles.grid_row!} ${styles.collapse!} lookup">
+        <div class="${styles.grid_small!}11 ${styles.grid_postfix_container} ${styles.grid_cell!}">
+          <input type="text"<@fieldElemAttribStr attribs=attribs /><@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${escapeVal(name, 'html')}"</#if><#if value?has_content> value="${escapeVal(value, 'html')}"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#rt/>
+            <#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#t/>
+            <#if readonly?has_content && readonly> readonly="readonly"</#if><#if events?has_content><@commonElemEventAttribStr events=events /></#if><#t/>
+            <#if autocomplete?has_content> autocomplete="off"</#if><#t/>
+            <#if title?has_content> title="${escapeVal(title, 'html')}"</#if><#t/>
+            <#if required> required="required"</#if><#t/>
+            /></#if><#t/>
+            <#if presentation?has_content && descriptionFieldName?has_content && presentation == "window">
+              <a href="javascript:call_fieldlookup3(document['${escapeVal(formName, 'js-html')}']['${escapeVal(name, 'js-html')}'], <#rt/>
+                  document['${escapeVal(formName, 'js-html')}']['${escapeVal(descriptionFieldName, 'js-html')}'], '${escapeVal(fieldFormName, 'js-html')}', '${escapeVal(presentation, 'js-html')}'<#t/>
+              <#if targetParameterIter?has_content>
+                <#list targetParameterIter as item>
+                  ,document['${escapeVal(formName, 'js-html')}']['${escapeVal(item, 'js-html')}'].value <#t/>
+                </#list>
+              </#if>
+              );"></a><#rt/>
+            <#elseif presentation?has_content && presentation == "window">
+              <a href="javascript:call_fieldlookup2(document['${escapeVal(formName, 'js-html')}']['${escapeVal(name, 'js-html')}'], '${escapeVal(fieldFormName, 'js-html')}', '${escapeVal(presentation, 'js-html')}'<#rt/>
+              <#if targetParameterIter?has_content>
+                <#list targetParameterIter as item>
+                  ,document['${escapeVal(formName, 'js-html')}']['${escapeVal(item, 'js-html')}'].value<#t/>
+                </#list>
+              </#if>
+              );"></a><#rt/>
+            <#else>
+              
+                <#local defaultMinLength = getPropertyValue("widget", "widget.autocompleter.defaultMinLength")!2>
+                <#local defaultDelay = getPropertyValue("widget", "widget.autocompleter.defaultDelay")!300>
+                <#local ajaxUrl = ajaxUrl + "&amp;_LAST_VIEW_NAME_=" + lastViewName />
+                <#if !ajaxUrl?contains("searchValueFieldName=")>
+                  <#if descriptionFieldName?has_content && showDescription == "true">
+                    <#local ajaxUrl = ajaxUrl + "&amp;searchValueFieldName=" + descriptionFieldName />
+                  <#else>
+                    <#local ajaxUrl = ajaxUrl + "&amp;searchValueFieldName=" + name />
+                  </#if>
+                </#if>
+                <#-- 
+                <@script>
+                jQuery(document).ready(function(){
+                  var options = {
+                    requestUrl : "${escapeVal(fieldFormName, 'js')}",
+                    inputFieldId : "${escapeVal(id, 'js')}",
+                    dialogTarget : document['${escapeVal(formName, 'js')}']['${escapeVal(name, 'js')}'],
+                    dialogOptionalTarget : <#if descriptionFieldName?has_content>document['${escapeVal(formName, 'js')}']['${escapeVal(descriptionFieldName, 'js')}']<#else>null</#if>,
+                    formName : "${escapeVal(formName, 'js')}",
+                    lookupId: '${escapeVal(id, 'html')}',
+                    width : "${width}",
+                    height : "${height}",
+                    position : "${escapeVal(position, 'js')}",
+                    modal : "true",
+                    ajaxUrl : <#if ajaxEnabled>"${escapeFullUrl(ajaxUrl, 'js')}"<#else>""</#if>,
+                    showDescription : <#if ajaxEnabled>"${showDescription}"<#else>false</#if>,
+                    presentation : "${escapeVal(presentation, 'js')}",
+                    defaultMinLength : "${defaultMinLength}",
+                    defaultDelay : "${defaultDelay}",
+                    args :
+                        <#if targetParameterIter?has_content>
+                          <#local isFirst = true>
+                          [<#t/>
+                          <#list targetParameterIter as item>
+                            <#if isFirst>
+                              document['${escapeVal(formName, 'js')}']['${escapeVal(item, 'js')}']<#t/>
+                              <#local isFirst = false>
+                            <#else>
+                              ,document['${escapeVal(formName, 'js')}']['${escapeVal(item, 'js')}']<#t/>
+                            </#if>
+                          </#list>
+                          ]<#t/>
+                        <#else>[]
+                        </#if>
+                  };
+                  new Lookup(options).init();
+                });
+                </@script> -->
+                </div>
+                <div class="${styles.grid_small!}1 ${styles.grid_cell!}">
+                <span class="${styles.postfix!}">
+                    <@modal id=escapeVal(id, 'html') icon="fa fa-search" href=makeOfbizUrl(escapeVal(fieldFormName, 'js'))>
+                        
+                    </@modal>
+                </span>
+                <@script>
+                    function modifyPagination(id) {
+                            // disabling pagination for now
+                            $('#modal_'+id+' #search-results .nav-pager').remove();
+                        }
+                
+                    function modalCaptureForm(id,presentation){
+                          $('#modal_'+id).submit(function(e){
+                            e.preventDefault();
+                            var formEl = $('#modal_'+id+' form:first');
+                            var data = formEl.serialize();
+                            data = data + '&presentation='+presentation;
+
+                            jQuery.ajax({
+                                url: formEl.attr('action'),
+                                type: 'POST',
+                                data : data,
+                                beforeSend : function(jqXHR, settings) {
+                                },
+                                success : function(result) {
+                                    if (result.search(/loginform/) != -1) {
+                                        window.location.href = window.location.href;
+                                        return;
+                                    }
+                                    jQuery('#modal_' + id).html(result);
+                                    modalCaptureForm(id,presentation);
+                                    modifyPagination(id);
+                                }
+                            });
+                            return false;
+                        });
+        
+                    }
+                    
+                    function set_value(value) {
+                        var target = $('#${escapeVal(id, 'html')}');
+                        target.val(value);
+                    }
+                    $(function() {
+                        modalCaptureForm('${escapeVal(id, 'html')}','${escapeVal(presentation, 'js')}');
+                    });
+                </@script>
+              </#if>
+            
+            <#if readonly?has_content && readonly>
+              <a id="${escapeVal(id, 'html')}_clear" 
+                style="background:none;margin-left:5px;margin-right:15px;" 
+                class="clearField" 
+                href="javascript:void(0);" 
+                onclick="javascript:document['${escapeVal(formName, 'js-html')}']['${escapeVal(name, 'js-html')}'].value='';
+                  jQuery('#' + jQuery('#${escapeVal(id, 'js-html')}_clear').next().attr('id').replace('_button','') + '_${escapeVal(id, 'js-html')}_lookupDescription').html('');
+                  <#if descriptionFieldName?has_content>document['${escapeVal(formName, 'js-html')}']['${escapeVal(descriptionFieldName, 'js-html')}'].value='';</#if>">
+                  <#if clearText?has_content>${escapeVal(clearText, 'htmlmarkup')}<#else>${escapeVal(uiLabelMap.CommonClear, 'htmlmarkup')}</#if>
+              </a>
+            </#if>
+            </div>
+        </div>
+      </div>
+      <#if (presentation?has_content && presentation == "window")>
         <#local defaultMinLength = getPropertyValue("widget", "widget.autocompleter.defaultMinLength")!2>
         <#local defaultDelay = getPropertyValue("widget", "widget.autocompleter.defaultDelay")!300>
-        <#local ajaxUrl = ajaxUrl + "&amp;_LAST_VIEW_NAME_=" + lastViewName />
-        <#if !ajaxUrl?contains("searchValueFieldName=")>
-          <#if descriptionFieldName?has_content && showDescription == "true">
-            <#local ajaxUrl = ajaxUrl + "&amp;searchValueFieldName=" + descriptionFieldName />
-          <#else>
-            <#local ajaxUrl = ajaxUrl + "&amp;searchValueFieldName=" + name />
-          </#if>
+        <#if ajaxUrl?index_of("_LAST_VIEW_NAME_") < 0>
+          <#local ajaxUrl = ajaxUrl + "&amp;_LAST_VIEW_NAME_=" + lastViewName />
         </#if>
-        <@script>
-        jQuery(document).ready(function(){
-          var options = {
-            requestUrl : "${escapeVal(fieldFormName, 'js')}",
-            inputFieldId : "${escapeVal(id, 'js')}",
-            dialogTarget : document['${escapeVal(formName, 'js')}']['${escapeVal(name, 'js')}'],
-            dialogOptionalTarget : <#if descriptionFieldName?has_content>document['${escapeVal(formName, 'js')}']['${escapeVal(descriptionFieldName, 'js')}']<#else>null</#if>,
-            formName : "${escapeVal(formName, 'js')}",
-            width : "${width}",
-            height : "${height}",
-            position : "${escapeVal(position, 'js')}",
-            modal : "${escapeVal(fadeBackground, 'js')}",
-            ajaxUrl : <#if ajaxEnabled>"${escapeFullUrl(ajaxUrl, 'js')}"<#else>""</#if>,
-            showDescription : <#if ajaxEnabled>"${showDescription}"<#else>false</#if>,
-            presentation : "${escapeVal(presentation, 'js')}",
-            defaultMinLength : "${defaultMinLength}",
-            defaultDelay : "${defaultDelay}",
-            args :
-                <#if targetParameterIter?has_content>
-                  <#local isFirst = true>
-                  [<#t/>
-                  <#list targetParameterIter as item>
-                    <#if isFirst>
-                      document['${escapeVal(formName, 'js')}']['${escapeVal(item, 'js')}']<#t/>
-                      <#local isFirst = false>
-                    <#else>
-                      ,document['${escapeVal(formName, 'js')}']['${escapeVal(item, 'js')}']<#t/>
-                    </#if>
-                  </#list>
-                  ]<#t/>
-                <#else>[]
-                </#if>
-          };
-          new Lookup(options).init();
-        });
-        </@script>
+        <@script>ajaxAutoCompleter('${escapeFullUrl(ajaxUrl, 'js')}', ${showDescription}, ${defaultMinLength}, ${defaultDelay});</@script><#t/>
       </#if>
-    </#if>
-    <#if readonly?has_content && readonly>
-      <a id="${escapeVal(id, 'html')}_clear" 
-        style="background:none;margin-left:5px;margin-right:15px;" 
-        class="clearField" 
-        href="javascript:void(0);" 
-        onclick="javascript:document['${escapeVal(formName, 'js-html')}']['${escapeVal(name, 'js-html')}'].value='';
-          jQuery('#' + jQuery('#${escapeVal(id, 'js-html')}_clear').next().attr('id').replace('_button','') + '_${escapeVal(id, 'js-html')}_lookupDescription').html('');
-          <#if descriptionFieldName?has_content>document['${escapeVal(formName, 'js-html')}']['${escapeVal(descriptionFieldName, 'js-html')}'].value='';</#if>">
-          <#if clearText?has_content>${escapeVal(clearText, 'htmlmarkup')}<#else>${escapeVal(uiLabelMap.CommonClear, 'htmlmarkup')}</#if>
-      </a>
-    </#if>
-  </span>
-  <#if ajaxEnabled && (presentation?has_content && presentation == "window")>
-    <#local defaultMinLength = getPropertyValue("widget", "widget.autocompleter.defaultMinLength")!2>
-    <#local defaultDelay = getPropertyValue("widget", "widget.autocompleter.defaultDelay")!300>
-    <#if ajaxUrl?index_of("_LAST_VIEW_NAME_") < 0>
-      <#local ajaxUrl = ajaxUrl + "&amp;_LAST_VIEW_NAME_=" + lastViewName />
-    </#if>
-    <@script>ajaxAutoCompleter('${escapeFullUrl(ajaxUrl, 'js')}', ${showDescription}, ${defaultMinLength}, ${defaultDelay});</@script><#t/>
-  </#if>
 </#macro>
 
 <#-- migrated from @renderCheckField (a.k.a. @renderCheckBox) form widget macro -->

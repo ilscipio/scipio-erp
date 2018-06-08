@@ -134,7 +134,7 @@
         <!--<dependency org="xpp3" name="xpp3" rev="1.1.4c" conf="base,sources"/> xstream dep: now fetched via xpp3-core + xmlpull transitive deps -->
         <dependency org="org.owasp.esapi" name="esapi" rev="2.1.0.1" conf="base,sources"/>
         <dependency org="org.owasp.antisamy" name="antisamy" rev="1.5.7" conf="base,sources"/><!-- esapi dependency -->
-        <dependency org="com.googlecode.owasp-java-html-sanitizer" name="owasp-java-html-sanitizer" rev="r239" conf="base,sources"/>
+        <dependency org="com.googlecode.owasp-java-html-sanitizer" name="owasp-java-html-sanitizer" rev="20180219.1" conf="base,sources"/>
         <dependency org="com.fasterxml.jackson.core" name="jackson-annotations" rev="2.9.5" conf="base,sources"/>
         <dependency org="com.fasterxml.jackson.core" name="jackson-core" rev="2.9.5" conf="base,sources"/>
         <dependency org="com.fasterxml.jackson.core" name="jackson-databind" rev="2.9.5" conf="base,sources"/>
@@ -142,8 +142,8 @@
         <dependency org="joda-time" name="joda-time" rev="2.9.9" conf="base,sources" />
         <dependency org="org.apache.avalon.framework" name="avalon-framework-impl" rev="4.3.1" conf="base,sources"/>
         <dependency org="org.apache.avalon.framework" name="avalon-framework-api" rev="4.3.1" conf="base,sources"/>
-        <dependency org="org.apache.tika" name="tika-core" rev="1.17" conf="base,sources"/>
-        <dependency org="org.apache.tika" name="tika-parsers" rev="1.17" transitive="false" conf="base,sources"/><!-- NOTE: intentional transitive="false"; too many deps -->
+        <dependency org="org.apache.tika" name="tika-core" rev="1.18" conf="base,sources"/>
+        <dependency org="org.apache.tika" name="tika-parsers" rev="1.18" transitive="false" conf="base,sources"/><!-- NOTE: intentional transitive="false"; too many deps -->
         <dependency org="com.googlecode.juniversalchardet" name="juniversalchardet" rev="1.0.3" conf="base,sources"/>
         <dependency org="com.googlecode.concurrentlinkedhashmap" name="concurrentlinkedhashmap-lru" rev="1.4.2" conf="base,sources"/>
         <dependency org="org.hamcrest" name="hamcrest-all" rev="1.3" conf="base,sources"/>
@@ -264,10 +264,10 @@
         <dependency org="org.apache.geronimo.components" name="geronimo-transaction" rev="3.1.4" conf="base,sources"/>
 
         <!-- service component (framework/service/ivy.xml) -->
-        <dependency org="org.apache.axis2" name="axis2-adb" rev="1.7.7" conf="base,sources"/>
-        <dependency org="org.apache.axis2" name="axis2-kernel" rev="1.7.7" conf="base,sources"/>
-        <dependency org="org.apache.axis2" name="axis2-transport-http" rev="1.7.7" conf="base,sources"/>
-        <dependency org="org.apache.axis2" name="axis2-transport-local" rev="1.7.7" conf="base,sources"/>
+        <dependency org="org.apache.axis2" name="axis2-adb" rev="1.7.8" conf="base,sources"/>
+        <dependency org="org.apache.axis2" name="axis2-kernel" rev="1.7.8" conf="base,sources"/>
+        <dependency org="org.apache.axis2" name="axis2-transport-http" rev="1.7.8" conf="base,sources"/>
+        <dependency org="org.apache.axis2" name="axis2-transport-local" rev="1.7.8" conf="base,sources"/>
         <dependency org="org.apache.ws.commons.axiom" name="axiom-api" rev="1.2.20" conf="base,sources"/>
         <dependency org="org.apache.ws.commons.axiom" name="axiom-impl" rev="1.2.20" conf="base,sources"/>
         <dependency org="org.apache.ws.xmlschema" name="xmlschema-core" rev="2.2.3" conf="base,sources"/>

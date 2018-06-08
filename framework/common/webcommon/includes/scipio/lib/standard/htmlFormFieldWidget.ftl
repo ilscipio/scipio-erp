@@ -805,7 +805,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
                     <#local ajaxUrl = ajaxUrl + "&amp;searchValueFieldName=" + name />
                   </#if>
                 </#if>
-                <#-- 
+
                 <@script>
                 jQuery(document).ready(function(){
                   var options = {
@@ -817,7 +817,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
                     lookupId: '${escapeVal(id, 'html')}',
                     width : "${width}",
                     height : "${height}",
-                    position : "${escapeVal(position, 'js')}",
+                    position : "topright",
                     modal : "true",
                     ajaxUrl : <#if ajaxEnabled>"${escapeFullUrl(ajaxUrl, 'js')}"<#else>""</#if>,
                     showDescription : <#if ajaxEnabled>"${showDescription}"<#else>false</#if>,
@@ -842,56 +842,13 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
                   };
                   new Lookup(options).init();
                 });
-                </@script> -->
+                </@script>
                 </div>
                 <div class="${styles.grid_small!}1 ${styles.grid_cell!}">
                 <span class="${styles.postfix!}">
-                    <@modal id=escapeVal(id, 'html') icon="fa fa-search" href=makeOfbizUrl(escapeVal(fieldFormName, 'js'))>
-                        
-                    </@modal>
+                    <a href="javascript:void(0);" id="${escapeVal(id, 'html')}_button"><i class="fa fa-search"></i></a>
                 </span>
-                <@script>
-                    function modifyPagination(id) {
-                            // disabling pagination for now
-                            $('#modal_'+id+' #search-results .nav-pager').remove();
-                        }
                 
-                    function modalCaptureForm(id,presentation){
-                          $('#modal_'+id).submit(function(e){
-                            e.preventDefault();
-                            var formEl = $('#modal_'+id+' form:first');
-                            var data = formEl.serialize();
-                            data = data + '&presentation='+presentation;
-
-                            jQuery.ajax({
-                                url: formEl.attr('action'),
-                                type: 'POST',
-                                data : data,
-                                beforeSend : function(jqXHR, settings) {
-                                },
-                                success : function(result) {
-                                    if (result.search(/loginform/) != -1) {
-                                        window.location.href = window.location.href;
-                                        return;
-                                    }
-                                    jQuery('#modal_' + id).html(result);
-                                    modalCaptureForm(id,presentation);
-                                    modifyPagination(id);
-                                }
-                            });
-                            return false;
-                        });
-        
-                    }
-                    
-                    function set_value(value) {
-                        var target = $('#${escapeVal(id, 'html')}');
-                        target.val(value);
-                    }
-                    $(function() {
-                        modalCaptureForm('${escapeVal(id, 'html')}','${escapeVal(presentation, 'js')}');
-                    });
-                </@script>
               </#if>
             
             <#if readonly?has_content && readonly>

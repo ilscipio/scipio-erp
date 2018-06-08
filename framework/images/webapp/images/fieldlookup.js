@@ -181,10 +181,11 @@ var Lookup = function(options) {
         inputFieldId : options.inputFieldId || "",
         dialogTarget : options.dialogTarget || "",
         dialogOptionalTarget : options.dialogOptionalTarget || "",
+        lookupId: options.lookupId || GLOBAL_LOOKUP_REF.createNextKey(),
         formName : options.formName || "",
         width : options.width || "640",
         height : options.height || "500",
-        position : options.position || "topleft",
+        position : options.position || "",
         modal : options.modal || "true",
         ajaxUrl : options.ajaxUrl || "",
         showDescription : options.showDescription || "",
@@ -195,7 +196,7 @@ var Lookup = function(options) {
     }
 
     function _init() {
-        _lookupId = GLOBAL_LOOKUP_REF.createNextKey();
+        _lookupId = options.lookupId;
         _modifyContainer();
         _createAjaxAutoComplete();
 
@@ -231,11 +232,11 @@ var Lookup = function(options) {
         _inputBox.id = _newInputBoxId;
         var parent = _inputBox.parentNode;
 
+        /*
         var link = document.createElement('A');
         link.href = "javascript:void(0);";
         link.id = _lookupId + "_button";
-
-        parent.appendChild(link);
+        parent.appendChild(link);*/
 
         var hiddenDiv = document.createElement("DIV");
         hiddenDiv.id = _lookupId;
@@ -720,8 +721,6 @@ function set_duration_value(value) {
     closeLookup();
 }
 // function passing selected value to calling window
-/*
-// function passing selected value to calling window
 function set_value(value) {
     if (GLOBAL_LOOKUP_REF.getReference(ACTIVATED_LOOKUP)) {
         obj_caller.target = GLOBAL_LOOKUP_REF.getReference(ACTIVATED_LOOKUP).target;
@@ -733,7 +732,7 @@ function set_value(value) {
     write_value(value, target);
 
     closeLookup();
-}*/
+}
 // function passing selected value to calling window
 function set_values(value, value2) {
     if (GLOBAL_LOOKUP_REF.getReference(ACTIVATED_LOOKUP)) {

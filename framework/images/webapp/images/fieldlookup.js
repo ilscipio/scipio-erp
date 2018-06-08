@@ -264,7 +264,12 @@ var Lookup = function(options) {
             autoOpen : false,
             height : parseInt(options.height),
             width : parseInt(options.width),
-            position : positioning,
+            // position : positioning,
+            position :  {
+                my: "center middle",
+                at: "center middle",
+                of: window
+            },
             draggable : true,
             resizeable : true,
             open : _dialogOpen,

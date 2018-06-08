@@ -38,13 +38,11 @@
         </@field>
         <#-- SCIPIO: FIXME: I'm not sure we should allow to change the orderId while editing... -->
         <#if shipment?has_content>
-            <#if shipment.primaryOrderId?has_content>
             <@field type="display" name="primaryOrderId" label=uiLabelMap.ProductPrimaryOrderId value=(shipment.primaryOrderId!)>
                 <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${shipment.primaryOrderId}</@ofbizInterWebappUrl>">${shipment.primaryOrderId}</a>
             </@field>
         <#else>
             <@field type="lookup" name="primaryOrderId" label=uiLabelMap.ProductPrimaryOrderId formName="EditShipment" id="primaryOrderId" fieldFormName="LookupOrderHeader" />
-            </#if>
         </#if>
 
         <#if shipment?has_content && (shipment.primaryReturnId?has_content || shipment.statusId == "")>

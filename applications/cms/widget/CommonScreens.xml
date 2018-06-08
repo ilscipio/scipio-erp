@@ -186,6 +186,8 @@
                 they are a mix of CmsScriptTemplate.ScriptLang names, which are in part
                 from widget-common.xsd and the ofbiz script engine names, while others are brand new (e.g., screen-actions is new to scipio) -->
             <script lang="groovy"><![CDATA[
+                import org.ofbiz.base.util.*;
+            
                 ctx = globalContext;
                 
                 // Script languages which can currently be executed from stored bodies
@@ -211,6 +213,8 @@
                     "none" : "text",
                     "default" : "text" // default is for anything that doesn't map into the above
                 ];
+                
+                ctx.indentWithTabs = UtilProperties.getPropertyAsBoolean("cms", "cms.editor.indentWithTabs", false);
             ]]></script>
             
         </actions>

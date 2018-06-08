@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">    
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">    
     <property key="CmsErrorDuringExport">
         <value xml:lang="en">Error during data export (output mode: ${outputMode}): ${errMsg}</value>
         <value xml:lang="de">Fehler beim Datenexport (Ausgabemodus: ${outputMode}): ${errMsg}</value>

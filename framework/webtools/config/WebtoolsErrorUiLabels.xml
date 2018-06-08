@@ -18,7 +18,7 @@
     specific language governing permissions and limitations
     under the License.
 -->
-<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="foundgenericWebEvent.conversion_failed">
         <value xml:lang="en">conversion failed</value>
         <value xml:lang="fr">La conversion a échoué. "${fval}" est erroné</value>
@@ -381,7 +381,8 @@
         <value xml:lang="zh">你没有执行这个操作的权限，需要UTIL_CACHE_EDIT</value>
         <value xml:lang="zh-TW">你沒有執行這個操作的權限,需要UTIL_CACHE_EDIT</value>
     </property>
-    <property key="utilCache.cacheNotFound"><!-- SCIPIO -->
+    <!-- SCIPIO: NEW LABELS -->
+    <property key="utilCache.cacheNotFound">
         <value xml:lang="en">Cache not found with name: ${name}</value>
         <value xml:lang="fr">Aucun cache trouvé ayant comme nom ${name}</value>
         <value xml:lang="it">Cache non trovata con nome: ${name}</value>

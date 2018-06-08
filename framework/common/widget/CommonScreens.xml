@@ -620,8 +620,7 @@ under the License.
                 <not><if-compare operator="equals" value="Y" field="parameters.ajaxLookup"/></not>
             </condition>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
+
                 <section>
                     <actions>
                         <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
@@ -689,8 +688,7 @@ under the License.
                         </section>
                     </widgets>
                 </section>
-                    </decorator-section>
-                </decorator-screen>
+
             </widgets>
             <fail-widgets>
                 <section>
@@ -1242,7 +1240,7 @@ under the License.
                     <widgets>
                         <screenlet padded="false">
                             <label style="heading" text="${uiLabelMap.CommonSearchResults}"/>
-                            <container id="search-results">
+                            <container id="search-results" style="search-results">
                                 <decorator-section-include name="search-results"/>
                             </container>
                         </screenlet>

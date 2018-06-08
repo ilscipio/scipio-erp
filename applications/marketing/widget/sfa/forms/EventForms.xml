@@ -28,12 +28,25 @@ under the License.
             <entity-one entity-name="PartyNameView" value-field="assignByPartyName">
                 <field-map field-name="partyId" from-field="assignedByUserLogin.partyId"/>
             </entity-one>
+            <!-- SCIPIO: get yyyy-MM -->
+            <script lang="groovy"><![CDATA[
+                startDate = context.estimatedStartDate ?: context.actualStartDate ?: null;
+                if (startDate) {
+                    context.targetPeriodStart = org.ofbiz.base.util.UtilDateTime.toDateString(startDate, "yyyy-MM");
+                } else {
+                    context.targetPeriodStart = '';
+                }
+            ]]></script>
         </row-actions>
         <field name="workEffortTypeId"><hidden/></field>
         <field name="deleteAction"><hidden/></field>
         <field name="currentStatusId"><hidden/></field>
         <field name="workEffortId" title="${uiLabelMap.WorkEffortWorkEffortId}" widget-style="${styles.link_nav_info_idname}">
+            <!-- SCIPIO - separate button for this below instead
             <hyperlink also-hidden="false" description="${workEffortName} [${workEffortId}]" target="/workeffort/control/WorkEffortSummary" target-type="inter-app">
+                <parameter param-name="workEffortId"/>
+            </hyperlink>-->
+            <hyperlink also-hidden="false" description="${workEffortName} [${workEffortId}]" target="EditEvent">
                 <parameter param-name="workEffortId"/>
             </hyperlink>
         </field>
@@ -42,21 +55,49 @@ under the License.
                 <parameter param-name="partyId" from-field="assignByPartyName.partyId"/>
             </hyperlink>
         </field>
+        <!-- SCIPIO -->
+        <field name="cancel" title="${uiLabelMap.CommonCancel}" widget-style="${styles.link_run_sys} ${styles.action_cancel}">
+            <hyperlink target="updateEventWorkEffortReturn" description="${uiLabelMap.CommonCancel}" link-type="hidden-form">
+                <parameter param-name="workEffortId"/>
+                <parameter param-name="currentStatusId" value="CAL_CANCELLED"/>
+            </hyperlink>
+        </field>
         <field name="complete" title="${uiLabelMap.SfaComplete}" widget-style="${styles.link_run_sys} ${styles.action_complete}">
-            <hyperlink target="updateWorkEffort" description="${uiLabelMap.SfaComplete}">
+            <hyperlink target="updateEventWorkEffortReturn" description="${uiLabelMap.SfaComplete}" link-type="hidden-form"><!-- SCIPIO: replaced target="updateWorkEffort" -->
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="currentStatusId" value="CAL_COMPLETED"/>
             </hyperlink>
         </field>
+        <field name="viewCalendarAction" title="${uiLabelMap.CommonCalendar}" widget-style="${styles.link_nav} ${styles.action_view}"><!-- SCIPIO -->
+            <hyperlink also-hidden="false" description="${uiLabelMap.CommonCalendar}" target="Calendar">
+                <parameter param-name="period" value="month"/>
+                <parameter param-name="startDate" from-field="targetPeriodStart"/>
+            </hyperlink>
+        </field>
+        <field name="viewDetailedAction" title="${uiLabelMap.WorkEffortWorkEffort}" widget-style="${styles.link_nav} ${styles.action_view}"><!-- SCIPIO -->
+            <hyperlink also-hidden="false" description="${uiLabelMap.WorkEffortWorkEffort}" target="/workeffort/control/WorkEffortSummary" target-type="inter-app">
+                <parameter param-name="workEffortId"/>
+            </hyperlink>
+        </field>
     </form>
     <form name="TasksAssignedByMe" list-name="tasksAssignedByMe" extends="MyTasks">
+        <row-actions>
+            <!-- SCIPIO -->
+            <entity-one entity-name="PartyNameView" value-field="toPartyName">
+                <field-map field-name="partyId" from-field="partyId"/>
+            </entity-one>
+        </row-actions>
         <field name="assignedByUserLoginId"><hidden/></field>
         <field name="partyId" title="${uiLabelMap.FormFieldTitle_toPartyId}">
+            <!-- SCIPIO
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}">
                 <sub-hyperlink description="[${partyId}]" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_nav_info_id}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
-            </display-entity>
+            </display-entity>-->
+            <hyperlink target="/partymgr/control/viewprofile" description="${toPartyName.firstName} ${toPartyName.middleName} ${toPartyName.lastName} ${toPartyName.groupName} [${toPartyName.partyId}]" target-type="inter-app">
+                <parameter param-name="partyId" from-field="toPartyName.partyId"/>
+            </hyperlink>
         </field>
         <sort-order>
             <sort-field name="workEffortId"/>
@@ -68,6 +109,7 @@ under the License.
             <sort-field name="actualStartDate"/>
             <sort-field name="actualCompletionDate"/>
             <sort-field name="partyId"/>
+            <sort-field name="cancel"/>
             <sort-field name="complete"/>
         </sort-order>
     </form>
@@ -94,6 +136,10 @@ under the License.
         <field name="estimatedStartDate"><date-time input-method="time-dropdown" default-value="${nowTimestamp}"/></field>
         <field name="estimatedCompletionDate"><date-time input-method="time-dropdown" default-value="${nowTimestamp}"/></field>
         <field name="partyId" title="${uiLabelMap.FormFieldTitle_toPartyId}"><lookup target-form-name="LookupPartyName" default-value="${userLogin.partyId}"/></field>
+        <!-- SCIPIO: new -->
+        <field name="completeAction" combine-previous="true" widget-style="${styles.link_run_sys} ${styles.action_complete}" use-when="workEffort!=null">
+            <hyperlink target-type="plain" target="javascript:document.getElementById('${completeEventFormId}').submit();" description="${uiLabelMap.SfaComplete}"/>
+        </field>
         <sort-order>
             <sort-field name="workEffortId"/>
             <sort-field name="partyId"/>
@@ -113,6 +159,18 @@ under the License.
             <sort-field name="partyId"/>
             <sort-field name="addAction"/>
             <sort-field name="updateAction"/>
+            <sort-field name="cancelAction"/><!-- SCIPIO -->
+            <sort-field name="completeAction"/><!-- SCIPIO -->
         </sort-order>
+    </form>
+    
+    <!-- SCIPIO -->
+    <form name="cancelEventHidden" type="single" target="updateEventWorkEffortReturn" id="${cancelEventFormId}">
+        <field name="workEffortId"><hidden value="${parameters.workEffortId}"/></field>
+        <field name="currentStatusId"><hidden value="CAL_CANCELLED"/></field>
+    </form>
+    <form name="completeEventHidden" type="single" target="updateEventWorkEffortReturn" id="${completeEventFormId}">
+        <field name="workEffortId"><hidden value="${parameters.workEffortId}"/></field>
+        <field name="currentStatusId"><hidden value="CAL_COMPLETED"/></field>
     </form>
 </forms>

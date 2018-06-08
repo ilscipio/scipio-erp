@@ -137,6 +137,12 @@ public class DataEvents {
             Map<String, ? extends Object> permSvcCtx = UtilMisc.toMap("userLogin", userLogin, "locale", locale, "mainAction", "VIEW", "contentId", contentId);
             Map<String, Object> permSvcResp;
             try {
+                // SCIPIO: 2018-06: if service requires auth, print shorter error here otherwise floods log like crazy
+                if (userLogin == null && dispatcher.getDispatchContext().getModelService(permissionService).auth) {
+                    Debug.logError("User login missing and required for data serve by: " + permissionService, module);
+                    request.setAttribute("_ERROR_MESSAGE_", "User authorization is required to access content");
+                    return "error";
+                }
                 permSvcResp = dispatcher.runSync(permissionService, permSvcCtx);
             } catch (GenericServiceException e) {
                 Debug.logError(e, module);

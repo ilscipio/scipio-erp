@@ -873,7 +873,7 @@ under the License.
                                                     matchBrackets: true,
                                                     mode: "groovy",
                                                     indentUnit: 4,
-                                                    indentWithTabs: false,
+                                                    indentWithTabs: ${indentWithTabs?string},
                                                     foldGutter: true,
                                                     gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
                                                     extraKeys: {"Ctrl-Space": "autocomplete"}
@@ -886,7 +886,7 @@ under the License.
                                                     matchBrackets: true,
                                                     mode: "freemarker",
                                                     indentUnit: 4,
-                                                    indentWithTabs: false,
+                                                    indentWithTabs: ${indentWithTabs?string},
                                                     foldGutter: true,
                                                     gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
                                                     extraKeys: {"Ctrl-Space": "autocomplete"}

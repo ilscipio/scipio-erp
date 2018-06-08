@@ -18,7 +18,7 @@
     specific language governing permissions and limitations
     under the License.
 -->
-<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="HelpNotFound">
         <value xml:lang="da">Hjælp emne ikke fundet</value>
         <value xml:lang="de">Hilfe Thema nicht gefunden.</value>
@@ -38,13 +38,13 @@
         <value xml:lang="de">SCIPIO Hilfe</value>
         <value xml:lang="en">SCIPIO Help</value>
         <value xml:lang="es">Ayuda de SCIPIO</value>
-        <value xml:lang="fr">Aide SCIPIO - (SCIPIO)</value>
+        <value xml:lang="fr">Aide SCIPIO</value>
         <value xml:lang="it">Aiuto</value>
-        <value xml:lang="ja">SCIPIO -ヘルプ</value>
-        <value xml:lang="pt-BR">Ajuda do SCIPIO -</value>
+        <value xml:lang="ja">SCIPIOヘルプ</value>
+        <value xml:lang="pt-BR">Ajuda do SCIPIO</value>
         <value xml:lang="ru">Открыть для бизнес-помощи</value>
-        <value xml:lang="vi">Trợ giúp từ SCIPIO -</value>
-        <value xml:lang="zh">SCIPIO -帮助</value>
-        <value xml:lang="zh-TW">SCIPIO -說明</value>
+        <value xml:lang="vi">Trợ giúp từ SCIPIO</value>
+        <value xml:lang="zh">SCIPIO帮助</value>
+        <value xml:lang="zh-TW">SCIPIO說明</value>
     </property>
 </resource>

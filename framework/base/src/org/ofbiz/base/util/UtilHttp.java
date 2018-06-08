@@ -1342,7 +1342,9 @@ public class UtilHttp {
         if (javaScriptEnabled != null) {
             return javaScriptEnabled.booleanValue();
         }
-        return false;
+        // SCIPIO: 2018-06-07: javascript should be assumed enabled by default in Scipio, unless detected as off
+        //return false;
+        return true;
     }
 
     /** Returns the number or rows submitted by a multi form.

@@ -20,7 +20,7 @@
     <#--<@field type="hidden" name="setupContinue" value="N"/> not needed yet-->
 	<@row>
 	    <@cell medium=9 large=9>
-	        <@section title=uiLabelMap.SetupAccountingJournals>	
+	        <@section title=uiLabelMap.AccountingGlJournals>	
 	        	<@table>
 	        		<@tr>
 	        			<#list glJournals as glJournal>

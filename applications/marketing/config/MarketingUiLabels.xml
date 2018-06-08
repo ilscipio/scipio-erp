@@ -18,14 +18,14 @@
     specific language governing permissions and limitations
     under the License.
 -->
-<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="FormFieldTitle_actualCost">
         <value xml:lang="de">Ist-Kosten</value>
         <value xml:lang="en">Actual Cost</value>
         <value xml:lang="fr">Coût réel</value>
         <value xml:lang="it">Costo attuale</value>
         <value xml:lang="ja">実績原価</value>
-        <value xml:lang="nl">Werkelijke kosten</value>
+        <value xml:lang="nl">Kosten werkelijk</value>
         <value xml:lang="pt-BR">Custo real</value>
         <value xml:lang="ro">Cost Actual</value>
         <value xml:lang="th">ราคาจริง</value>
@@ -39,6 +39,7 @@
         <value xml:lang="fr">Montant dans le meilleur cas </value>
         <value xml:lang="it">Importo migliore caso</value>
         <value xml:lang="ja">ベストケース金額</value>
+        <value xml:lang="nl">Bedrag best case</value>
         <value xml:lang="pt-BR">Montante de melhor caso</value>
         <value xml:lang="vi">Lợi nhuận tốt nhất</value>
         <value xml:lang="zh">最佳案例金额</value>
@@ -50,6 +51,7 @@
         <value xml:lang="fr">Coût budgetisé</value>
         <value xml:lang="it">Costo a budget</value>
         <value xml:lang="ja">予算原価</value>
+        <value xml:lang="nl">Kosten budget</value>
         <value xml:lang="pt-BR">Custo previsto no orçamento</value>
         <value xml:lang="ro">Cost la Buget</value>
         <value xml:lang="th">งบประมาณ</value>
@@ -63,6 +65,7 @@
         <value xml:lang="fr">Note du changement</value>
         <value xml:lang="it">Nota per variazione</value>
         <value xml:lang="ja">変更記録</value>
+        <value xml:lang="nl">Notitie verandering</value>
         <value xml:lang="pt-BR">Comunicação de mudança</value>
         <value xml:lang="vi">Cập nhật Ghi chú</value>
         <value xml:lang="zh">变更说明</value>
@@ -74,6 +77,7 @@
         <value xml:lang="fr">Montant fermé</value>
         <value xml:lang="it">Importo chiuso</value>
         <value xml:lang="ja">期末金額</value>
+        <value xml:lang="nl">Bedrag afgesloten</value>
         <value xml:lang="pt-BR">Montante fechado</value>
         <value xml:lang="vi">Giá trị đã Kết thúc</value>
         <value xml:lang="zh">已结束的金额</value>
@@ -85,6 +89,7 @@
         <value xml:lang="fr">Prospects convertis</value>
         <value xml:lang="it">Leads convertiti</value>
         <value xml:lang="ja">変換済リード</value>
+        <value xml:lang="nl">Geconverteerde leads</value>
         <value xml:lang="pt-BR">Leads concretizados</value>
         <value xml:lang="vi">Các đầu mối được chuyển đổi</value>
         <value xml:lang="zh">转化了的线索</value>
@@ -96,6 +101,7 @@
         <value xml:lang="fr">Réf. de requête de client</value>
         <value xml:lang="it">Numero richiesta cliente</value>
         <value xml:lang="ja">顧客リクエストID</value>
+        <value xml:lang="nl">Klantverzoek ID</value>
         <value xml:lang="pt-BR">Id de requisição de cliente</value>
         <value xml:lang="ro">Numar Cerere Subiect</value>
         <value xml:lang="th">รหัสคำร้องของลูกค้า</value>
@@ -109,6 +115,7 @@
         <value xml:lang="fr">Pourcentage de réponse estimé</value>
         <value xml:lang="it">Percentuale di risposta stimata</value>
         <value xml:lang="ja">期待レスポンス割合(%)</value>
+        <value xml:lang="nl">Verwacht response perc.</value>
         <value xml:lang="pt-BR">Porcentagem esperada de respostas</value>
         <value xml:lang="vi">Phần trăm phản hồi mong đợi</value>
         <value xml:lang="zh">期望响应百分比</value>
@@ -120,6 +127,7 @@
         <value xml:lang="fr">Revenu estimé</value>
         <value xml:lang="it">Ricavo stimato</value>
         <value xml:lang="ja">期待利益</value>
+        <value xml:lang="nl">Verwachte opbrengsten</value>
         <value xml:lang="pt-BR">Renda esperada</value>
         <value xml:lang="vi">Lợi nhuận kỳ vọng</value>
         <value xml:lang="zh">期望收入</value>
@@ -131,6 +139,7 @@
         <value xml:lang="fr">Montant estimé</value>
         <value xml:lang="it">Importo previsto</value>
         <value xml:lang="ja">予測金額</value>
+        <value xml:lang="nl">Bedrag forecast</value>
         <value xml:lang="pt-BR">Montante previsto</value>
         <value xml:lang="vi">Giá trị dự báo</value>
         <value xml:lang="zh">预测金额</value>
@@ -142,6 +151,7 @@
         <value xml:lang="fr">Réf. d'acteur interne</value>
         <value xml:lang="it">Soggetto interno</value>
         <value xml:lang="ja">内部取引先ID</value>
+        <value xml:lang="nl">Interne partij ID</value>
         <value xml:lang="pt-BR">ID de participante interno</value>
         <value xml:lang="vi">Tác nhân nội bộ</value>
         <value xml:lang="zh">内部会员标识</value>
@@ -153,6 +163,7 @@
         <value xml:lang="fr">N° envoyé</value>
         <value xml:lang="it">Num. invio</value>
         <value xml:lang="ja">送信済数量</value>
+        <value xml:lang="nl">Aantal verzonden</value>
         <value xml:lang="pt-BR">Número de envio</value>
         <value xml:lang="vi">Số lượng đã gửi</value>
         <value xml:lang="zh">已发送数量</value>
@@ -164,6 +175,7 @@
         <value xml:lang="fr">Réf. de vente parente estimée</value>
         <value xml:lang="it">Previsione di vendita padre</value>
         <value xml:lang="ja">上位(親)の販売予測ID</value>
+        <value xml:lang="nl">Ouder forecast ID</value>
         <value xml:lang="pt-BR">ID da previsão superior de vendas</value>
         <value xml:lang="vi">Dự báo  bán hàng cấp quản lý trên</value>
         <value xml:lang="zh">上级销售预测标识</value>
@@ -175,6 +187,7 @@
         <value xml:lang="fr">Pourcentage de quota fermé</value>
         <value xml:lang="it">Quota di percentuale chiusa</value>
         <value xml:lang="ja">クローズ済割当割合(%)</value>
+        <value xml:lang="nl">Perc. quota afgesloten</value>
         <value xml:lang="pt-BR">Porcentagem da cota fechada</value>
         <value xml:lang="vi">Phần trăm Báo giá đã Đóng</value>
         <value xml:lang="zh">已完成指标的百分比</value>
@@ -186,6 +199,7 @@
         <value xml:lang="fr">Pourcentage de quota estimé</value>
         <value xml:lang="it">Quota percentuale della previsione di vendita</value>
         <value xml:lang="ja">予測割当割合(%)</value>
+        <value xml:lang="nl">Perc. quota forecast</value>
         <value xml:lang="pt-BR">Previsão da porcentage de cota</value>
         <value xml:lang="vi">Phần trăm Báo giá đang Dự báo</value>
         <value xml:lang="zh">预测指标的百分比</value>
@@ -197,6 +211,7 @@
         <value xml:lang="fr">Montant transitoire</value>
         <value xml:lang="it">Importo di passaggio</value>
         <value xml:lang="ja">パイプライン金額</value>
+        <value xml:lang="nl">Bedrag pijplijn</value>
         <value xml:lang="pt-BR">Montnate de fluxo</value>
         <value xml:lang="vi">Giá trị giới thiệu (Pipeline)</value>
         <value xml:lang="zh">渠道金额</value>
@@ -208,6 +223,7 @@
         <value xml:lang="fr">Réf. de catalogue</value>
         <value xml:lang="it">Catalogo prodotti</value>
         <value xml:lang="ja">製品カタログID</value>
+        <value xml:lang="nl">Catalogus ID</value>
         <value xml:lang="pt-BR">ID de Catálogo do Produto</value>
         <value xml:lang="ro">Catalog Produse</value>
         <value xml:lang="th">รหัสหมวดหมู่สินค้า</value>
@@ -221,6 +237,7 @@
         <value xml:lang="fr">Montant de quota</value>
         <value xml:lang="it">Importo quota</value>
         <value xml:lang="ja">割当金額</value>
+        <value xml:lang="nl">Bedrag quota</value>
         <value xml:lang="pt-BR">Montante da Cota</value>
         <value xml:lang="vi">Giá trị Báo giá</value>
         <value xml:lang="zh">指标金额</value>
@@ -232,6 +249,7 @@
         <value xml:lang="fr">Réf. de détail de vente estimée</value>
         <value xml:lang="it">Dettaglio previsione di vendita</value>
         <value xml:lang="ja">販売予測詳細ID</value>
+        <value xml:lang="nl">Forecast detail ID</value>
         <value xml:lang="pt-BR">ID de detalhes da previsão de vendas</value>
         <value xml:lang="vi">Dự báo  bán hàng chi tiết</value>
         <value xml:lang="zh">销售预测细节标识</value>
@@ -243,26 +261,11 @@
         <value xml:lang="fr">Réf. de vente estimée</value>
         <value xml:lang="it">Previsione di vendita</value>
         <value xml:lang="ja">販売予測ID</value>
+        <value xml:lang="nl">Forecast ID</value>
         <value xml:lang="pt-BR">ID de previsão de vendas</value>
         <value xml:lang="vi">Id Dự báo  bán hàng</value>
         <value xml:lang="zh">销售预测标识</value>
         <value xml:lang="zh-TW">銷售預測識別</value>
-    </property>
-    <property key="MarketingAnalytics">
-        <value xml:lang="en">Marketing Analytics</value>
-    </property>
-    <!-- SCIPIO ERP: Commented out for now -->
-<!--     <property key="MarketingAnalyticsForecast">
-        <value xml:lang="en">Forecast Analytics</value>
-    </property>
-    <property key="MarketingAnalyticsSegments">
-        <value xml:lang="en">Segment Analytics</value>
-    </property>
-    <property key="MarketingAnalyticsLeads">
-        <value xml:lang="en">Lead Analytics</value>
-    </property> -->
-    <property key="MarketingAnalyticsSales">
-        <value xml:lang="en">Sales Analytics</value>
     </property>
     <property key="MarketingCampaign">
         <value xml:lang="de">Marketing Kampagne</value>
@@ -271,17 +274,13 @@
         <value xml:lang="fr">Campagne marketing</value>
         <value xml:lang="it">Campagna di vendita</value>
         <value xml:lang="ja">キャンペーン</value>
-        <value xml:lang="nl">Marketing campagne</value>
+        <value xml:lang="nl">Campagne</value>
         <value xml:lang="pt-BR">Campanha de Marketing</value>
         <value xml:lang="ro">Campania Vanzare</value>
         <value xml:lang="th">การวางแผนทางการตลาด</value>
         <value xml:lang="vi">Chiến dịch tiếp thị</value>
         <value xml:lang="zh">市场攻势</value>
         <value xml:lang="zh-TW">行銷活動</value>
-    </property>
-    <property key="MarketingCampaigns">
-        <value xml:lang="de">Kampagnen</value>
-        <value xml:lang="en">Campaigns</value>
     </property>
     <property key="MarketingCampaignCreate">
         <value xml:lang="de">Marketing Kampagne erstellen</value>
@@ -290,7 +289,7 @@
         <value xml:lang="fr">Nouvelle campagne marketing</value>
         <value xml:lang="it">Nuova campagna di vendita</value>
         <value xml:lang="ja">キャンペーンを作成</value>
-        <value xml:lang="nl">Nieuwe Marketing Campagne</value>
+        <value xml:lang="nl">Nieuwe campagne</value>
         <value xml:lang="pt-BR">Criar Campanha de Marketing</value>
         <value xml:lang="ro">Creare Campanie Vanzare</value>
         <value xml:lang="th">สร้างการวางแผนทางการตลาด</value>
@@ -299,13 +298,13 @@
         <value xml:lang="zh-TW">新建行銷活動</value>
     </property>
     <property key="MarketingCampaignId">
-        <value xml:lang="de">Kampagnen ID</value>
+        <value xml:lang="de">Marketing Kampagne ID</value>
         <value xml:lang="en">Marketing Campaign Id</value>
         <value xml:lang="es">Campaña</value>
         <value xml:lang="fr">Réf. de campagne marketing</value>
         <value xml:lang="it">Codice campagna di vendita</value>
         <value xml:lang="ja">キャンペーンID</value>
-        <value xml:lang="nl">ID Campagne</value>
+        <value xml:lang="nl">Campagne ID</value>
         <value xml:lang="pt-BR">ID de Campanha de Marketing</value>
         <value xml:lang="ro">Cod Campanie Vanzare</value>
         <value xml:lang="th">รหัสการวางแผนทางการตลาด</value>
@@ -348,7 +347,7 @@
         <value xml:lang="fr">Rapport des campagnes de marketing</value>
         <value xml:lang="it">Report campagne di vendita</value>
         <value xml:lang="ja">キャンペーンレポート</value>
-        <value xml:lang="nl">Campaigne Rapport</value>
+        <value xml:lang="nl">Campagne rapport</value>
         <value xml:lang="pt-BR">Relatório de campanha de marketing</value>
         <value xml:lang="ro">Tiparire Campanie de Vanzare</value>
         <value xml:lang="th">รายงานการวางแผนทางการตลาด</value>
@@ -363,7 +362,7 @@
         <value xml:lang="fr">Créer le rôle de la campagne marketing</value>
         <value xml:lang="it">Nuovo ruolo campagna di vendita</value>
         <value xml:lang="ja">キャンペーンロールを作成</value>
-        <value xml:lang="nl">Nieuwe Campagne Rol</value>
+        <value xml:lang="nl">Nieuwe campagne-rol</value>
         <value xml:lang="pt-BR">Criar papel de campanha de marketig</value>
         <value xml:lang="ro">Creare Rol Campanie Vanzare</value>
         <value xml:lang="th">สร้างสถานะการวางแผนทางการตลาด</value>
@@ -378,7 +377,7 @@
         <value xml:lang="fr">Résumé de la campagne</value>
         <value xml:lang="it">Sommario della campagna</value>
         <value xml:lang="ja">キャンペーンサマリ</value>
-        <value xml:lang="nl">Samenvatting Campagne</value>
+        <value xml:lang="nl">Samenvatting campagne</value>
         <value xml:lang="pt-BR">Descrição da campanha</value>
         <value xml:lang="ro">Sumar Campanie</value>
         <value xml:lang="th">สรุปโครงการ</value>
@@ -387,19 +386,19 @@
         <value xml:lang="zh-TW">活動摘要</value>
     </property>
     <property key="MarketingCompanyName">
-        <value xml:lang="de">SCIPIO ERP - Vermarktungsmanager</value>
-        <value xml:lang="en">SCIPIO ERP - Marketing Manager</value>
-        <value xml:lang="es">SCIPIO ERP - Gestión de Marketing</value>
-        <value xml:lang="fr">SCIPIO ERP - Gestion du Marketing</value>
-        <value xml:lang="it">SCIPIO ERP - Gestione vendite</value>
-        <value xml:lang="ja">SCIPIO ERP - マーケティング管理</value>
-        <value xml:lang="nl">SCIPIO ERP - Marketing Manager</value>
-        <value xml:lang="pt-BR">SCIPIO ERP - Gerente de Marketing</value>
-        <value xml:lang="ro">SCIPIO ERP - Gestione Vendite</value>
-        <value xml:lang="th">SCIPIO ERP - การจัดการทางการตลาด</value>
-        <value xml:lang="vi">SCIPIO ERP - Quản trị Tiếp thị</value>
-        <value xml:lang="zh">SCIPIO ERP - 市场宣传管理</value>
-        <value xml:lang="zh-TW">SCIPIO ERP - 行銷管理</value>
+        <value xml:lang="de">SCIPIO - Vermarktungsmanager</value>
+        <value xml:lang="en">SCIPIO - Marketing Manager</value>
+        <value xml:lang="es">SCIPIO - Gestión de Marketing</value>
+        <value xml:lang="fr">SCIPIO - Gestion du Marketing</value>
+        <value xml:lang="it">SCIPIO - Gestione vendite</value>
+        <value xml:lang="ja">SCIPIO - マーケティング管理</value>
+        <value xml:lang="nl">SCIPIO - Marketing Manager</value>
+        <value xml:lang="pt-BR">SCIPIO - Gerente de Marketing</value>
+        <value xml:lang="ro">SCIPIO - Gestione Vendite</value>
+        <value xml:lang="th">SCIPIO - การจัดการทางการตลาด</value>
+        <value xml:lang="vi">SCIPIO - Quản trị Tiếp thị</value>
+        <value xml:lang="zh">SCIPIO - 市场宣传管理</value>
+        <value xml:lang="zh-TW">SCIPIO - 行銷管理</value>
     </property>
     <property key="MarketingCompanySubtitle">
         <value xml:lang="ar">جزء من عائلة أوفبيز للتطبيقات الحرة للتسيير</value>
@@ -410,15 +409,15 @@
         <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO ERP</value>
         <value xml:lang="ja">Part of the SCIPIO ERP Family of Open Source Software</value>
         <value xml:lang="nl">Deel van de SCIPIO ERP-suite van Open Source Software</value>
-        <value xml:lang="pt-BR">Parte da família SCIPIO ERP - de software de código livre</value>
-        <value xml:lang="pt-PT">Parte da família SCIPIO ERP - de software de fonte aberta</value>
+        <value xml:lang="pt-BR">Parte da família SCIPIO ERP de software de código livre</value>
+        <value xml:lang="pt-PT">Parte da família SCIPIO ERP de software de fonte aberta</value>
         <value xml:lang="ro">Partea de Deschidere Pentru Afaceri Familiale din Open Source Software</value>
         <value xml:lang="ru">Входит в состав семейства SCIPIO ERP</value>
         <value xml:lang="th">ส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value>
-        <value xml:lang="vi">Thành phần của Gia đình mã nguồn mở SCIPIO ERP -</value>
-        <value xml:lang="zh">开源软件SCIPIO ERP -家族的一部分</value>
-        <value xml:lang="zh-CN">SCIPIO ERP -的一部分</value>
-        <value xml:lang="zh-TW">開源軟體SCIPIO ERP -家族的一部分</value>
+        <value xml:lang="vi">Thành phần của Gia đình mã nguồn mở SCIPIO ERP</value>
+        <value xml:lang="zh">开源软件SCIPIO ERP家族的一部分</value>
+        <value xml:lang="zh-CN">SCIPIO ERP的一部分</value>
+        <value xml:lang="zh-TW">開源軟體SCIPIO ERP家族的一部分</value>
     </property>
     <property key="MarketingContactList">
         <value xml:lang="de">Kontaktliste</value>
@@ -464,12 +463,6 @@
         <value xml:lang="vi">Mã sự kiện truyền thông</value>
         <value xml:lang="zh">沟通事件标识</value>
         <value xml:lang="zh-TW">通訊事件識別</value>
-    </property>
-    <property key="MarketingCommunicationStatusId">
-        <value xml:lang="en">Communication Status Id</value>
-    </property>
-    <property key="MarketingCommunicationRoleStatusId">
-        <value xml:lang="en">Communication Role Status Id</value>
     </property>
     <property key="MarketingContactListCommEventTypeId">
         <value xml:lang="de">Kommunikationsereignis-Art</value>
@@ -625,9 +618,6 @@
         <value xml:lang="vi">Không tìm thấy danh sách email [${contactListId}].</value>
         <value xml:lang="zh">无法找到电子邮件列表 [${contactListId}]。</value>
         <value xml:lang="zh-TW">無法找到電子郵件清單 [${contactListId}].</value>
-    </property>
-    <property key="MarketingServiceCommunicationNotFound">
-        <value xml:lang="en">Could not find communications.</value>
     </property>
     <property key="MarketingContactListOptInVerifyCode">
         <value xml:lang="de">zusätzlicher Bestätigungscode</value>
@@ -872,6 +862,7 @@
         <value xml:lang="fr">Rapport du statut des courriels</value>
         <value xml:lang="it">Report stato e-mail</value>
         <value xml:lang="ja">Eメールステータスレポート</value>
+        <value xml:lang="nl">Rapport email status</value>
         <value xml:lang="pt-BR">Relatório de estado de e-mail</value>
         <value xml:lang="vi">Báo cáo tình trạng thư điện tử</value>
         <value xml:lang="zh">电子邮件状态报表</value>
@@ -883,6 +874,7 @@
         <value xml:lang="fr">Rechercher les comptes de ventes</value>
         <value xml:lang="it">Ricerca utenze CRM</value>
         <value xml:lang="ja">CRMアカウントを検索</value>
+        <value xml:lang="nl">Zoeken/vinden accounts</value>
         <value xml:lang="pt-BR">Encontrar contas da equipe de vendas</value>
         <value xml:lang="th">ค้นหา Account</value>
         <value xml:lang="vi">Tìm kiếm tài khoản bán hàng</value>
@@ -894,6 +886,7 @@
         <value xml:lang="en">Find CRM Contacts</value>
         <value xml:lang="fr">Rechercher des contacts</value>
         <value xml:lang="ja">CRM連絡を検索</value>
+        <value xml:lang="nl">Zoeken/vinden contacten</value>
         <value xml:lang="pt-BR">Encontrar contatos da equipe de vendas</value>
         <value xml:lang="th">ค้นหา Contact</value>
         <value xml:lang="vi">Tìm kiếm Liên hệ</value>
@@ -905,6 +898,7 @@
         <value xml:lang="en">Find Leads</value>
         <value xml:lang="fr">Rechercher des prospects</value>
         <value xml:lang="ja">CRMリードを検索</value>
+        <value xml:lang="nl">Zoeken/vinden leads</value>
         <value xml:lang="pt-BR">Buscar Leads da equipe de vendas</value>
         <value xml:lang="th">ค้นหา Lead</value>
         <value xml:lang="vi">Tìm Đầu mối</value>
@@ -927,7 +921,7 @@
         <value xml:lang="zh-TW">首頁</value>
     </property>
     <property key="MarketingManager">
-        <value xml:lang="de">Marketing Manager</value>
+        <value xml:lang="de">SFA-Anwendung</value>
         <value xml:lang="en">Marketing Manager</value>
         <value xml:lang="es">Gestión de Marketing</value>
         <value xml:lang="fr">Application de gestion marketing</value>
@@ -967,26 +961,6 @@
         <value xml:lang="vi">Chào mừng bạn đến với Ứng dụng quản trị Tiếp thị !</value>
         <value xml:lang="zh">欢迎使用市场管理程序！</value>
         <value xml:lang="zh-TW">歡迎使用行銷管理程式！</value>
-    </property>
-    <property key="MarketingMarketing">
-        <value xml:lang="en">Marketing</value>
-    </property>
-    <property key="SfaAnalytics">
-        <value xml:lang="de">Analyse</value>
-        <value xml:lang="en">Analytics</value>
-    </property>
-    <property key="SfaCalendar">
-        <value xml:lang="de">Kalender</value>
-        <value xml:lang="en">Calendar</value>
-    </property>
-    <property key="SfaSales">
-        <value xml:lang="en">Sales</value>
-    </property>
-    <property key="SfaServices">
-        <value xml:lang="en">Services</value>
-    </property>
-    <property key="SfaSettings">
-        <value xml:lang="en">Settings</value>
     </property>
     <property key="MarketingNoOfEmployees">
         <value xml:lang="de">Anzahl Angestellte</value>
@@ -1077,16 +1051,13 @@
         <value xml:lang="fr">Segment</value>
         <value xml:lang="it">Segmento</value>
         <value xml:lang="ja">セグメント</value>
+        <value xml:lang="nl">Segment</value>
         <value xml:lang="pt-BR">Segmento</value>
         <value xml:lang="ro">Segment</value>
         <value xml:lang="th">กลุ่ม</value>
         <value xml:lang="vi">Phân đoạn</value>
         <value xml:lang="zh">分区</value>
         <value xml:lang="zh-TW">分區</value>
-    </property>
-    <property key="MarketingSegments">
-        <value xml:lang="de">Segmente</value>
-        <value xml:lang="en">Segments</value>
     </property>
     <property key="MarketingSegmentGroupClassCreate">
         <value xml:lang="de">Neue Klassifizierung für Segmentgruppe erstellen</value>
@@ -1179,10 +1150,6 @@
         <value xml:lang="vi">Lỗi quyền xem Nhóm phân đoạn</value>
         <value xml:lang="zh">分区组浏览权限出错</value>
         <value xml:lang="zh-TW">分區群組檢視權限出錯</value>
-    </property>
-    <property key="MarketingSegmentGroupNoSegmentGroupFound">
-        <value xml:lang="de">Keine Segmente gefunden</value>
-        <value xml:lang="en">No Segments found </value>
     </property>
     <property key="MarketingSegmentGroupNoSegmentGroupFoundWithId">
         <value xml:lang="de">Keine Segmentgruppe gefunden mit ID:</value>
@@ -2931,16 +2898,16 @@
         <value xml:lang="zh-TW">關閉日期</value>
     </property>
     <property key="SfaCompanyName">
-        <value xml:lang="de">SCIPIO ERP - CRM</value>
-        <value xml:lang="en">SCIPIO ERP - CRM</value>
-        <value xml:lang="es">Gestor de fuerzas de ventas</value>
-        <value xml:lang="fr">SCIPIO ERP - gestion des ventes</value>
-        <value xml:lang="it">SCIPIO ERP - Gestione forze di vendita</value>
-        <value xml:lang="ja">SCIPIO ERP - 営業支援(SFA)管理</value>
-        <value xml:lang="pt-BR">SCIPIO ERP - gestor da equipe de vendas</value>
-        <value xml:lang="vi">SCIPIO ERP - Quản trị Chiến dịch tiếp thị</value>
-        <value xml:lang="zh">SCIPIO ERP - 销售管理程序</value>
-        <value xml:lang="zh-TW">SCIPIO ERP - 營業支援(SFA)管理</value>
+        <value xml:lang="de">SCIPIO - CRM</value>
+        <value xml:lang="en">SCIPIO - CRM</value>
+        <value xml:lang="es">SCIPIO - Gestor de fuerzas de ventas</value>
+        <value xml:lang="fr">SCIPIO - gestion des ventes</value>
+        <value xml:lang="it">SCIPIO - Gestione forze di vendita</value>
+        <value xml:lang="ja">SCIPIO - 営業支援(SFA)管理</value>
+        <value xml:lang="pt-BR">SCIPIO - gestor da equipe de vendas</value>
+        <value xml:lang="vi">SCIPIO - Quản trị Chiến dịch tiếp thị</value>
+        <value xml:lang="zh">SCIPIO - 销售管理程序</value>
+        <value xml:lang="zh-TW">SCIPIO - 營業支援(SFA)管理</value>
     </property>
     <property key="SfaCompetitors">
         <value xml:lang="de">Wettbewerber &amp; Partner </value>
@@ -3657,6 +3624,62 @@
     <property key="SfaVCard">
         <value xml:lang="en">vCard</value>
     </property>
+    <!-- SCIPIO: NEW LABELS -->
+    <property key="MarketingAnalytics">
+        <value xml:lang="en">Marketing Analytics</value>
+    </property>
+    <property key="MarketingAnalyticsForecast">
+        <value xml:lang="en">Forecast Analytics</value>
+    </property>
+    <property key="MarketingAnalyticsLeads">
+        <value xml:lang="en">Lead Analytics</value>
+    </property>
+    <property key="MarketingAnalyticsSales">
+        <value xml:lang="en">Sales Analytics</value>
+    </property>
+    <property key="MarketingAnalyticsSegments">
+        <value xml:lang="en">Segment Analytics</value>
+    </property>
+    <property key="MarketingCampaigns">
+        <value xml:lang="de">Kampagnen</value>
+        <value xml:lang="en">Campaigns</value>
+    </property>
+    <property key="MarketingCommunicationRoleStatusId">
+        <value xml:lang="en">Communication Role Status Id</value>
+    </property>
+    <property key="MarketingCommunicationStatusId">
+        <value xml:lang="en">Communication Status Id</value>
+    </property>
+    <property key="MarketingMarketing">
+        <value xml:lang="en">Marketing</value>
+    </property>
+    <property key="MarketingSegmentGroupNoSegmentGroupFound">
+        <value xml:lang="de">Keine Segmente gefunden</value>
+        <value xml:lang="en">No Segments found </value>
+    </property>
+    <property key="MarketingSegments">
+        <value xml:lang="de">Segmente</value>
+        <value xml:lang="en">Segments</value>
+    </property>
+    <property key="MarketingServiceCommunicationNotFound">
+        <value xml:lang="en">Could not find communications.</value>
+    </property>
+    <property key="SfaAnalytics">
+        <value xml:lang="de">Analyse</value>
+        <value xml:lang="en">Analytics</value>
+    </property>
+    <property key="SfaCalendar">
+        <value xml:lang="de">Kalender</value>
+        <value xml:lang="en">Calendar</value>
+    </property>
+    <property key="SfaCurrencyConvertedUsingLastKnownRates">
+        <value xml:lang="de">Währungen werden unter Verwendung der zuletzt bekannten / aktualisierten Wechselkurse von der Datenbank konvertiert.</value>
+        <value xml:lang="en">Currencies are converted using the last known/updated exchange rates, from database.</value>
+    </property>
+    <property key="SfaOnlyConvertibleCurrenciesListed">
+        <value xml:lang="de">Es werden nur konvertierbare Währungen aufgelistet.</value>
+        <value xml:lang="en">Only convertible currencies are listed.</value>
+    </property>
     <property key="SfaOrderTotalsConvertedExchangeNotice">
         <value xml:lang="de">${currencyConvertCount} Die Auftragssummen wurden unter Verwendung der zuletzt bekannten Wechselkurse in eine Währung von ${currencyUomId} umgewandelt.</value>
         <value xml:lang="en">${currencyConvertCount} order totals were converted to ${currencyUomId} currency, using last known exchange rates.</value>
@@ -3665,12 +3688,13 @@
         <value xml:lang="de">${CurrencyFailCount} Auftragssummen fehlgeschlagene Währungsumrechnung in ${currencyUomId}.</value>
         <value xml:lang="en">${currencyFailCount} order totals failed currency conversion to ${currencyUomId}.</value>
     </property>
-    <property key="SfaOnlyConvertibleCurrenciesListed">
-        <value xml:lang="de">Es werden nur konvertierbare Währungen aufgelistet.</value>
-        <value xml:lang="en">Only convertible currencies are listed.</value>
+    <property key="SfaSales">
+        <value xml:lang="en">Sales</value>
     </property>
-    <property key="SfaCurrencyConvertedUsingLastKnownRates">
-        <value xml:lang="de">Währungen werden unter Verwendung der zuletzt bekannten / aktualisierten Wechselkurse von der Datenbank konvertiert.</value>
-        <value xml:lang="en">Currencies are converted using the last known/updated exchange rates, from database.</value>
+    <property key="SfaServices">
+        <value xml:lang="en">Services</value>
+    </property>
+    <property key="SfaSettings">
+        <value xml:lang="en">Settings</value>
     </property>
 </resource>

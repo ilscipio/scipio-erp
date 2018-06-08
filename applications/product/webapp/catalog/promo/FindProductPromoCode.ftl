@@ -98,4 +98,7 @@ under the License.
 -->
     <@menuContent menuArgs={"type":"section"} />
 
+  <#-- TODO: label does not exist
     <@alert type="info">${uiLabelMap.ProductPromoCodeAddInstructions}</@alert>
+  -->
+  

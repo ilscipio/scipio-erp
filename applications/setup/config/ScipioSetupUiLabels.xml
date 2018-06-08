@@ -18,7 +18,7 @@
     specific language governing permissions and limitations
     under the License.
 -->
-<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <!-- SCIPIO: NOTE: This file contains labels for the new setup component only; does not include the shared/legacy Setup* labels; see
           component://commonext/config/SetupUiLabels.xml 
         for the shared/legacy labels (which other applications, client projects and maintenance strategies may already depend on).
@@ -103,11 +103,6 @@
         <value xml:lang="de">Bitte wählen Sie eine Organisation aus</value>
         <value xml:lang="fr">Sélectionnez l'organisation pour l'installation</value>
     </property>
-    <property key="SetupSelectOrganizationForSetup">
-        <value xml:lang="en">Select Organization for Setup</value>
-        <value xml:lang="de">Wählen Sie Organisation für Setup</value>
-        <value xml:lang="fr">Sélectionnez l'organisation pour l'installation</value>
-    </property>
     <property key="SetupMultipleWebSitesForProductStore">
         <value xml:lang="en">Multiple WebSite records are associated to this ProductStore; this configuration cannot be fully managed using the setup wizard. Please follow the links below for advanced editing options.</value>
         <value xml:lang="de">Mehrere WebSite-Datensätze sind diesem ProductStore zugeordnet. Diese Konfiguration kann nicht mit dem Setup-Assistenten vollständig verwaltet werden. Bitte folgen Sie den unten stehenden Links für erweiterte Bearbeitungsoptionen.</value>
@@ -171,15 +166,7 @@
     </property>
     <property key="SetupAccountingPreferencesCurrencies">
     	<value xml:lang="en">Currencies</value>
-    </property>
-    <property key="SetupAccountingPreferencesInvoices">
-    	<value xml:lang="en">Invoices</value>
-    </property>
-    <property key="SetupAccountingPreferencesOrders">
-    	<value xml:lang="en">Orders</value>
-    </property>
-    <property key="SetupAccountingPreferencesQuotes">
-    	<value xml:lang="en">Quotes</value>
+        <value xml:lang="en">Währungen</value>
     </property>
     <property key="SetupAccountingCreateNewTimePeriod">
     	<value xml:lang="en">Create new time period</value>
@@ -221,6 +208,9 @@
     </property>
     <property key="SetupAccountingDatevImportCSV">
         <value xml:lang="en">Upload Datev CSV to import</value>
+    </property>
+    <property key="SetupAccountingImportDefaultGLStandard">
+        <value xml:lang="en">Import default GL Standard</value>
     </property>
     
 </resource>

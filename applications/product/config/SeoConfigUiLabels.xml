@@ -18,7 +18,7 @@
     specific language governing permissions and limitations
     under the License.
 -->
-<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <!-- WARNING: Some operations may require a value-to-lang 1-to-1 mapping,
         so for these to work, each language should have a different value. -->
     <property key="SeoConfigPathNameProduct">

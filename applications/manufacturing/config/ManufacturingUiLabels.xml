@@ -18,7 +18,11 @@
     specific language governing permissions and limitations
     under the License.
 -->
-<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
+    <property key="AddParty">
+        <value xml:lang="en">Add Party</value>
+        <value xml:lang="zh">添加会员</value>
+    </property>
     <property key="FormFieldTitle_allocatedCost">
         <value xml:lang="de">Verrechnete Kosten</value>
         <value xml:lang="en">Allocated Cost</value>
@@ -1323,45 +1327,45 @@
         <value xml:lang="zh-TW">評論</value>
     </property>
     <property key="ManufacturingCompanyName">
-        <value xml:lang="de">SCIPIO ERP - Produktionsverwaltung</value>
-        <value xml:lang="en">SCIPIO ERP - Manufacturing Manager</value>
-        <value xml:lang="es">SCIPIO ERP - Gestor de producción</value>
-        <value xml:lang="fr">SCIPIO ERP - Gestion de production</value>
-        <value xml:lang="it">SCIPIO ERP - Gestione della produzione</value>
-        <value xml:lang="ja">SCIPIO ERP - 生産管理</value>
-        <value xml:lang="pt-BR">SCIPIO ERP - Gestão de produção</value>
-        <value xml:lang="ro">SCIPIO ERP - Gestiune Productie</value>
-        <value xml:lang="th">SCIPIO ERP - การจัดการการผลิต</value>
-        <value xml:lang="vi">SCIPIO ERP - Quản trị sản xuất</value>
-        <value xml:lang="zh">SCIPIO ERP - 生产管理</value>
-        <value xml:lang="zh-TW">SCIPIO ERP - 生產管理</value>
+        <value xml:lang="de">SCIPIO - Produktionsverwaltung</value>
+        <value xml:lang="en">SCIPIO - Manufacturing Manager</value>
+        <value xml:lang="es">SCIPIO - Gestor de producción</value>
+        <value xml:lang="fr">SCIPIO - Gestion de production</value>
+        <value xml:lang="it">SCIPIO - Gestione della produzione</value>
+        <value xml:lang="ja">SCIPIO - 生産管理</value>
+        <value xml:lang="pt-BR">SCIPIO - Gestão de produção</value>
+        <value xml:lang="ro">SCIPIO - Gestiune Productie</value>
+        <value xml:lang="th">SCIPIO - การจัดการการผลิต</value>
+        <value xml:lang="vi">SCIPIO - Quản trị sản xuất</value>
+        <value xml:lang="zh">SCIPIO - 生产管理</value>
+        <value xml:lang="zh-TW">SCIPIO - 生產管理</value>
     </property>
     <property key="ManufacturingCompanySubtitle">
     <!--value xml:lang="ar">جزء من عائلة أوفبيز للبرمجيات الحرة</value-->
         <value xml:lang="ar">جزء من عائلة أوفبيز للتطبيقات الحرة للتسيير</value>
         <value xml:lang="de">Teil der SCIPIO ERP Familie von Open Source Software</value>
         <value xml:lang="en">Part of the SCIPIO ERP Family of Open Source Software</value>
-    <!--value xml:lang="es">Parte de la familia "Open for Bussiness" de Software Libre</value-->
+    <!--value xml:lang="es">Parte de la familia SCIPIO ERP de Software Libre</value-->
         <value xml:lang="es">Parte de la familia de software SCIPIO ERP de código abierto</value>
         <value xml:lang="fr">Un module de la famille SCIPIO ERP, logiciel libre de gestion d'entreprise.</value>
         <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO ERP</value>
     <!--value xml:lang="nl">Onderdeel van de SCIPIO ERP'-suite</value-->
         <value xml:lang="ja">Part of the SCIPIO ERP Family of Open Source Software</value>
         <value xml:lang="nl">Deel van de SCIPIO ERP-suite van Open Source Software</value>
-        <value xml:lang="pt-BR">Parte da família SCIPIO ERP - de software de código livre</value>
+        <value xml:lang="pt-BR">Parte da família SCIPIO ERP de software de código livre</value>
     <!--value xml:lang="pt-PT">Parte do Software de Fonte Aberta para Grupos Abertos Para o Negócio</value-->
-        <value xml:lang="pt-PT">Parte da família SCIPIO ERP - de software de fonte aberta</value>
+        <value xml:lang="pt-PT">Parte da família SCIPIO ERP de software de fonte aberta</value>
     <!--value xml:lang="ro">Parte accesibila pentru Business Family of Open Source Software / Parte din Open for Business Family of Open Source Software</value-->
         <value xml:lang="ro">Partea de Deschidere Pentru Afaceri Familiale din Open Source Software</value>
     <!--value xml:lang="ru">Часть семейства ПО SCIPIO ERP / Часть семейства "SCIPIO ERP Family" программных продуктов Open Source </value-->
         <value xml:lang="ru">Входит в состав семейства SCIPIO ERP</value>
     <!--value xml:lang="th">เป็นส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value-->
         <value xml:lang="th">ส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value>
-    <!--value xml:lang="zh">开源软件SCIPIO ERP -的组成部分 / 开源软件SCIPIO ERP -的组成部分</value-->
+    <!--value xml:lang="zh">开源软件SCIPIO ERP的组成部分 / 开源软件SCIPIO ERP的组成部分</value-->
         <value xml:lang="vi">Part of the SCIPIO ERP Family of Open Source Software</value>
-        <value xml:lang="zh">开源软件SCIPIO ERP -家族的一部分</value>
-        <value xml:lang="zh-CN">SCIPIO ERP -的一部分</value>
-        <value xml:lang="zh-TW">開源軟體SCIPIO ERP -家族的一部分</value>
+        <value xml:lang="zh">开源软件SCIPIO ERP家族的一部分</value>
+        <value xml:lang="zh-CN">SCIPIO ERP的一部分</value>
+        <value xml:lang="zh-TW">開源軟體SCIPIO ERP家族的一部分</value>
     </property>
     <property key="ManufacturingCompleteProductionRunTask">
         <value xml:lang="de">Abgeschlosen</value>
@@ -1497,6 +1501,7 @@
     </property>
     <property key="ManufacturingCreateDependentProductionRuns">
         <value xml:lang="en">Create Dependent Production Runs</value>
+        <value xml:lang="fr">Créer des ordres de fabrications dépendant</value>
         <value xml:lang="it">Crea ordini di produzione dipendenti</value>
         <value xml:lang="ja">従属生産実行の作成</value>
         <value xml:lang="vi">Thêm các 'Chế tác lô hàng' phụ thuộc</value>
@@ -2373,6 +2378,7 @@
     <property key="ManufacturingLinkProductionRun">
         <value xml:lang="en">Link to Production Run</value>
         <value xml:lang="nl">Aan productierun koppelen</value>
+        <value xml:lang="zh">链接到生产运行</value>
     </property>
     <property key="ManufacturingListCalendarWeek">
         <value xml:lang="de">Kalenderwochen anzeigen</value>
@@ -3586,6 +3592,7 @@
         <value xml:lang="es">El formato usado para indicar la Tiempo estimado unitario no es correcto</value>
         <value xml:lang="fr">Le champ Temps de production estimé de l'ordre de fabrication n'est pas formatté correctement</value>
         <value xml:lang="it">Ordine di Produzione campo Tempo stimato esecuzione non è formattato correttamente</value>
+        <value xml:lang="zh">生产运行预计单位运行时间数据项格式不正确</value>
     </property>
     <property key="ManufacturingProductionRunEstimatedSetupMillisNotCorrect">
         <value xml:lang="de">Geschätzte Rüstzeit für Produktionsauftrag ist falsch formatiert</value>
@@ -3593,6 +3600,7 @@
         <value xml:lang="es">El formato usado para indicar la Tiempo estimado de preparación no es correcto</value>
         <value xml:lang="fr">Le champ Temps d'installation estimé de l'ordre de fabrication n'est pas formatté correctement</value>
         <value xml:lang="it">Ordine di Produzione campo Tempo stimato configur non è formattato correttamente</value>
+        <value xml:lang="zh">生产运行预计建立时间数据项格式不正确</value>
     </property>
     <property key="ManufacturingProductionRunCosts">
         <value xml:lang="de">Produktionsauftrags-Kosten</value>
@@ -3785,6 +3793,11 @@
         <value xml:lang="zh">生产运行更新失败，请查看日志了解详细信息</value>
         <value xml:lang="zh-TW">生產運行更新失敗,請檢視日誌瞭解詳細資訊</value>
     </property>
+    <property key="ManufacturingProductionRunParties">
+        <value xml:lang="en">Parties</value>
+        <value xml:lang="nl">Partijen</value>
+        <value xml:lang="zh">会员</value>
+    </property>
     <property key="ManufacturingProductionRunPrintDocuments">
         <value xml:lang="de">Dokumente für Produktionsauftrage drucken</value>
         <value xml:lang="en">Production Run Print Documents</value>
@@ -3882,6 +3895,7 @@
         <value xml:lang="es">El formato usado para indicar la Reservar para cuántas personas no es correcto</value>
         <value xml:lang="fr">Le champ Personnes réservées de l'ordre de fabrication n'est pas formatté correctement</value>
         <value xml:lang="it">Ordine di Produzione campo Persone Riserva non è formattato correttamente</value>
+        <value xml:lang="zh">生产运行预留人员数据项格式不正确</value>
     </property>
     <property key="ManufacturingProductionRunStartDateMissing">
         <value xml:lang="de">Start-Datum für Produktionsauftrag fehlt</value>
@@ -5144,6 +5158,7 @@
     <property key="ManufacturingUsedCapacity">
         <value xml:lang="en">Manufacturing Used Capacity</value>
         <value xml:lang="fr">Capacité de fabrication utilisée</value>
+        <value xml:lang="zh">正在制造中的产能占用</value>
     </property>
     <property key="ManufacturingViewPermissionError">
         <value xml:lang="de">Sie haben keine Berechtigung um diese Seite anzuzeigen. ("MANUFACTURING_VIEWW oder WMANUFACTURING_ADMINW wird benötigt)</value>
@@ -5635,21 +5650,19 @@
         <value xml:lang="zh">查找规程</value>
         <value xml:lang="zh-TW">尋找規程</value>
     </property>
-    <!-- SCIPIO: renamed from "Find - Edit Routing Task" to "Find Routing Task"
-        FIXME: other languages -->
-    <property key="PageTitleFindRoutingTask">
+    <property key="PageTitleFindRoutingTask"><!-- SCIPIO: modified: renamed from "Find - Edit Routing Task" to "Find Routing Task" (FIXME: other languages) -->
         <value xml:lang="de">Arbeitsgang suchen</value>
         <value xml:lang="en">Find Routing Task</value>
         <value xml:lang="es">Buscar tarea</value>
         <value xml:lang="fr">Modification des opérations de gamme</value>
-        <value xml:lang="it">Ricerca - Aggiorna Operazione</value>
+        <value xml:lang="it">Aggiorna Operazione</value>
         <value xml:lang="ja">経路制御タスクを検索 - 編集</value>
         <value xml:lang="pt-BR">Buscar tarefa de rota</value>
         <value xml:lang="ro">Cauta Operatie</value>
         <value xml:lang="th">ค้นหา - แก้ไข งาน</value>
-        <value xml:lang="vi">Tìm - Cập nhật Tác vụ - Đầu việc</value>
-        <value xml:lang="zh">查找 - 编辑规程任务</value>
-        <value xml:lang="zh-TW">尋找 - 編輯規程任務</value>
+        <value xml:lang="vi">Cập nhật Tác vụ - Đầu việc</value>
+        <value xml:lang="zh">编辑规程任务</value>
+        <value xml:lang="zh-TW">編輯規程任務</value>
     </property>
     <property key="PageTitleListCalendarWeek">
         <value xml:lang="de">Wochen auflisten</value>
@@ -5748,18 +5761,20 @@
         <value xml:lang="zh">查找虚拟产品</value>
         <value xml:lang="zh-TW">尋找虛擬產品</value>
     </property>
-    <property key="PageTitleProductionRunLink"><!-- SCIPIO: fixed casing and langs -->
+    <property key="PageTitleProductionRunLink"><!-- SCIPIO: modified: fixed casing and langs -->
         <value xml:lang="de">Link Produktionslauf</value>
         <value xml:lang="en">Link Production Run</value>
         <value xml:lang="nl">Productierun koppelen</value>
+        <value xml:lang="zh">链接到生产运行</value>
         <value xml:lang="zh-TW">連結生產運行</value>
     </property>
-    <property key="ManufacturingProductionRunContent"><!-- SCIPIO: added missing label -->
-        <value xml:lang="de">Produktionslauf Inhalt</value>
-        <value xml:lang="en">Production Run Content</value>
-    </property>
+    <!-- SCIPIO: NEW LABELS -->
     <property key="ManufacturingNoShipmentPlansInstructions">
         <value xml:lang="de">Siehe auch Lagersendungen, um Sendungspläne zu bearbeiten.</value>
         <value xml:lang="en">See Warehouse shipments to edit shipment plans.</value>
+    </property>
+    <property key="ManufacturingProductionRunContent">
+        <value xml:lang="de">Produktionslauf Inhalt</value>
+        <value xml:lang="en">Production Run Content</value>
     </property>
 </resource>

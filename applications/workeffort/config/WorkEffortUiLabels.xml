@@ -18,7 +18,7 @@
     specific language governing permissions and limitations
     under the License.
 -->
-<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="FormFieldTitle_accommodationMapId">
         <value xml:lang="en">Accommodation Map Id</value>
         <value xml:lang="fr">Réf. de plan de logement</value>
@@ -1894,18 +1894,6 @@
         <value xml:lang="zh">已指派的任务</value>
         <value xml:lang="zh-TW">已指派的任務</value>
     </property>
-    <property key="WorkEffortCompletedTasks">
-        <value xml:lang="de">Erledigte Aufgaben</value>
-        <value xml:lang="en">Completed Tasks</value>
-    </property>
-    <property key="WorkEffortAssignedActivities">
-        <value xml:lang="de">Zugewiesene Aktivitäten</value>
-        <value xml:lang="en">Assigned Activities</value>
-    </property>
-    <property key="WorkEffortCompletedActivities">
-        <value xml:lang="de">Erledigte Aktivitäten</value>
-        <value xml:lang="en">Completed Activities</value>
-    </property>
     <property key="WorkEffortAssoc">
         <value xml:lang="en">WorkEffort Association</value>
         <value xml:lang="fr">Association de la tâche</value>
@@ -2206,14 +2194,6 @@
         <value xml:lang="zh">浏览日历即将到来的事件</value>
         <value xml:lang="zh-TW">檢視日曆即將到來的事件</value>
     </property>
-    <!-- SCIPIO: TOOD: localize -->
-    <property key="WorkEffortUpComingEvents">
-        <value xml:lang="de">Kommende Veranstaltungen</value>
-        <value xml:lang="en">Up-Coming Events</value>
-        <value xml:lang="es">Eventos próximos</value>
-        <value xml:lang="fr">Évènements à venir</value>
-        <value xml:lang="nl">Up-Coming Events</value>
-    </property>
     <property key="WorkEffortCalendarWeekView">
         <value xml:lang="de">Kalender Wochenansicht</value>
         <value xml:lang="en">Calendar Week View</value>
@@ -2231,8 +2211,8 @@
     </property>
     <property key="WorkEffortCancelCalendarEvent">
         <value xml:lang="de">Kalenderereignis annullieren</value>
-        <value xml:lang="en">Cancel calendar event</value>
-        <value xml:lang="fr">Annuler l'évènement</value>
+        <value xml:lang="en">Cancel a calendar event</value>
+        <value xml:lang="fr">Annuler un évènement</value>
         <value xml:lang="it">Annulla evento calendario</value>
         <value xml:lang="ja">カレンダイベントを取消</value>
         <value xml:lang="vi">Hủy bỏ sự kiện lịch</value>
@@ -2310,29 +2290,29 @@
     <property key="WorkEffortCompanySubtitle">
     <!--value xml:lang="ar">جزء من عائلة أوفبيز للبرمجيات الحرة</value-->
         <value xml:lang="ar">جزء من عائلة أوفبيز للتطبيقات الحرة للتسيير</value>
-        <value xml:lang="de">Teil der SCIPIO Familie von Open Source Software</value>
-        <value xml:lang="en">Part of the SCIPIO Family of Open Source Software</value>
+        <value xml:lang="de">Teil der SCIPIO ERP Familie von Open Source Software</value>
+        <value xml:lang="en">Part of the SCIPIO ERP Family of Open Source Software</value>
     <!--value xml:lang="es">Parte de la familia "Open for Bussiness" de Software Libre</value-->
-        <value xml:lang="es">Parte de la familia de software SCIPIO de código abierto</value>
-        <value xml:lang="fr">Un module de la famille SCIPIO, logiciel libre de gestion d'entreprise.</value>
-        <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO</value>
-    <!--value xml:lang="nl">Onderdeel van de SCIPIO'-suite</value-->
-        <value xml:lang="ja">Part of the SCIPIO Family of Open Source Software</value>
-        <value xml:lang="nl">Deel van de SCIPIO-suite van Open Source Software</value>
-        <value xml:lang="pt-BR">Parte da família SCIPIO - de software de fonte aberta</value>
+        <value xml:lang="es">Parte de la familia de software SCIPIO ERP de código abierto</value>
+        <value xml:lang="fr">Un module de la famille SCIPIO ERP, logiciel libre de gestion d'entreprise.</value>
+        <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO ERP</value>
+    <!--value xml:lang="nl">Onderdeel van de SCIPIO ERP'-suite</value-->
+        <value xml:lang="ja">Part of the SCIPIO ERP Family of Open Source Software</value>
+        <value xml:lang="nl">Deel van de SCIPIO ERP-suite van Open Source Software</value>
+        <value xml:lang="pt-BR">Parte da família SCIPIO ERP de software de fonte aberta</value>
     <!--value xml:lang="pt-PT">Parte do Software de Fonte Aberta para Grupos Abertos Para o Negócio</value-->
-        <value xml:lang="pt-PT">Parte da família SCIPIO - de software de fonte aberta</value>
+        <value xml:lang="pt-PT">Parte da família SCIPIO ERP de software de fonte aberta</value>
     <!--value xml:lang="ro">Parte accesibila pentru Business Family of Open Source Software</valuevalue xml:lang="ro">Parte din Open for Business Family of Open Source Software</value-->
         <value xml:lang="ro">Partea de Deschidere Pentru Afaceri Familiale din Open Source Software</value>
-    <!--value xml:lang="ru">Часть семейства ПО SCIPIO</valuevalue xml:lang="ru">Часть семейства "SCIPIO Family" программных продуктов Open Source </value-->
-        <value xml:lang="ru">Входит в состав семейства SCIPIO</value>
+    <!--value xml:lang="ru">Часть семейства ПО SCIPIO ERP</valuevalue xml:lang="ru">Часть семейства "SCIPIO ERP Family" программных продуктов Open Source </value-->
+        <value xml:lang="ru">Входит в состав семейства SCIPIO ERP</value>
     <!--value xml:lang="th">เป็นส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value-->
         <value xml:lang="th">ส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value>
-    <!--value xml:lang="zh">开源软件SCIPIO -的组成部分</valuevalue xml:lang="zh">开源软件SCIPIO -的组成部分</value-->
-        <value xml:lang="vi">Part of the SCIPIO Family of Open Source Software</value>
-        <value xml:lang="zh">开源软件SCIPIO -家族的一部分</value>
-        <value xml:lang="zh-CN">SCIPIO -的一部分</value>
-        <value xml:lang="zh-TW">開源軟體SCIPIO -家族的一部分</value>
+    <!--value xml:lang="zh">开源软件SCIPIO ERP的组成部分</valuevalue xml:lang="zh">开源软件SCIPIO ERP的组成部分</value-->
+        <value xml:lang="vi">Part of the SCIPIO ERP Family of Open Source Software</value>
+        <value xml:lang="zh">开源软件SCIPIO ERP家族的一部分</value>
+        <value xml:lang="zh-CN">SCIPIO ERP的一部分</value>
+        <value xml:lang="zh-TW">開源軟體SCIPIO ERP家族的一部分</value>
     </property>
     <property key="WorkEffortCompletionDate">
         <value xml:lang="de">Enddatum</value>
@@ -2505,12 +2485,6 @@
         <value xml:lang="vi">Lỗi phân quyền: để thực thi ${resourceDescription} bạn cần có quyền WORKEFFORTMGR_DELETE hoặc WORKEFFORTMGR_ADMIN</value>
         <value xml:lang="zh">安全错误：要运行这个操作你必须具有 ${resourceDescription} WORKEFFORTMGR_DELETE 或 WORKEFFORTMGR_ADMIN 权限</value>
         <value xml:lang="zh-TW">安全錯誤:要執行這個操作你必須具有 ${resourceDescription} WORKEFFORTMGR_DELETE 或 WORKEFFORTMGR_ADMIN 權限</value>
-    </property>
-    <property key="WorkEffortDeliverable">
-        <value xml:lang="en">Deliverable</value>
-    </property>
-    <property key="WorkEffortDeliverableType">
-        <value xml:lang="en">Deliverable Type</value>
     </property>
     <property key="WorkEffortDuplicateWorkEffort">
         <value xml:lang="de">Dupliziere Arbeitseinsatz</value>
@@ -2998,20 +2972,21 @@
         <value xml:lang="zh-TW">資訊</value>
     </property>
     <property key="WorkEffortInterestingSure">
-        <value xml:lang="en">For something interesting make sure, you are logged in try : Username;Admin;Password SCIPIO -</value>
-        <value xml:lang="es">Para ingresar, Nombre de usuario: admin, contraseña: SCIPIO -</value>
-        <value xml:lang="fr">Pour que quelque chose d'intéressant, essayez de vous connecter. Identifiant de connexion : admin / Mot de passe : SCIPIO -</value>
-        <value xml:lang="it">Assicurati di essere autenticato, prova: Nome Utente;Admin; Password SCIPIO -</value>
-        <value xml:lang="ja">興味を感じたことを確実なものにするため、Username;Admin;Password SCIPIO - でログインしてください</value>
-        <value xml:lang="nl">For something interesting make sure, you are logged in try : Username;Admin;Password SCIPIO -</value>
-        <value xml:lang="ro">In orice caz tu trebuie sa fii sigur ca te-ai logat, incearca: Nume Utilizator;Admin;Password SCIPIO -</value>
-        <value xml:lang="ru">Проверьте : Username;Admin;Password SCIPIO -</value>
-        <value xml:lang="th">สำหรับการสนใจบางสิ่งทำให้มั่นใจ, คุณพยายามลอกอินเข้าสู่ระบบ : ชื่อผู้เข้าใช้;Admin;รหัสผ่าน SCIPIO -</value>
-        <value xml:lang="vi">Ban có thể đăng nhập thử với tài khoản : Username;Admin;Password SCIPIO -</value>
-        <value xml:lang="zh">如果你对某些内容感兴趣，你需要登录系统，可以尝试用户名：admin;密码：SCIPIO -</value>
-        <value xml:lang="zh-TW">如果你對某些內容感興趣, 你需要登入系統, 可以嘗試使用者名: admin; 密碼: SCIPIO -</value>
+        <value xml:lang="en">For something interesting make sure, you are logged in try : Username;Admin;Password scipio</value>
+        <value xml:lang="es">Para ingresar, Nombre de usuario: admin, contraseña: scipio</value>
+        <value xml:lang="fr">Pour que quelque chose d'intéressant, essayez de vous connecter. Identifiant de connexion : admin / Mot de passe : scipio</value>
+        <value xml:lang="it">Assicurati di essere autenticato, prova: Nome Utente;Admin; Password scipio</value>
+        <value xml:lang="ja">興味を感じたことを確実なものにするため、Username;Admin;Password scipio でログインしてください</value>
+        <value xml:lang="nl">For something interesting make sure, you are logged in try : Username;Admin;Password scipio</value>
+        <value xml:lang="ro">In orice caz tu trebuie sa fii sigur ca te-ai logat, incearca: Nume Utilizator;Admin;Password scipio</value>
+        <value xml:lang="ru">Проверьте : Username;Admin;Password scipio</value>
+        <value xml:lang="th">สำหรับการสนใจบางสิ่งทำให้มั่นใจ, คุณพยายามลอกอินเข้าสู่ระบบ : ชื่อผู้เข้าใช้;Admin;รหัสผ่าน scipio</value>
+        <value xml:lang="vi">Ban có thể đăng nhập thử với tài khoản : Username;Admin;Password scipio</value>
+        <value xml:lang="zh">如果你对某些内容感兴趣，你需要登录系统，可以尝试用户名：admin;密码：scipio</value>
+        <value xml:lang="zh-TW">如果你對某些內容感興趣, 你需要登入系統, 可以嘗試使用者名: admin; 密碼: scipio</value>
     </property>
     <property key="WorkEffortInternalNote">
+        <value xml:lang="ar">ملاحظة داخلية</value>
         <value xml:lang="de">interne Notiz</value>
         <value xml:lang="en">Internal Note</value>
         <value xml:lang="fr">Note interne</value>
@@ -3242,12 +3217,6 @@
         <value xml:lang="zh">最大事件编号</value>
         <value xml:lang="zh-TW">最大事件編號</value>
     </property>
-    <!-- SCIPIO: TODO: Localize -->
-    <property key="WorkEffortMaxEvents">
-        <value xml:lang="de">Max Veranstaltungen</value>
-        <value xml:lang="en">Max Events</value>
-        <value xml:lang="it">Max eventi</value>
-    </property>
     <property key="WorkEffortMaxNumberOfPersons">
         <value xml:lang="en">Max # of Persons</value>
         <value xml:lang="it">Max numero di persone</value>
@@ -3255,12 +3224,6 @@
         <value xml:lang="vi">Số tối đa của nhân sự</value>
         <value xml:lang="zh">最大人数</value>
         <value xml:lang="zh-TW">最大人數</value>
-    </property>
-    <!-- SCIPIO: TODO: Localize -->
-    <property key="WorkEffortMaxPersons">
-        <value xml:lang="de">Max Personen</value>
-        <value xml:lang="en">Max Persons</value>
-        <value xml:lang="it">Max persone</value>
     </property>
     <property key="WorkEffortMonthView">
         <value xml:lang="de">Monatsansicht</value>
@@ -4106,6 +4069,7 @@
         <value xml:lang="it">2</value>
     </property>
     <property key="WorkEffortPrivatePublic">
+        <value xml:lang="ar">خاصة/عامة</value>
         <value xml:lang="de">Privat/Öffentlich</value>
         <value xml:lang="en">Private/Public</value>
         <value xml:lang="fr">Public/Privé</value>
@@ -4635,9 +4599,6 @@
         <value xml:lang="zh">修订</value>
         <value xml:lang="zh-TW">修訂</value>
     </property>
-    <property key="WorkEfforts">
-        <value xml:lang="en">Work Efforts</value>
-    </property>
     <property key="WorkEffortSearchWorkEfforts">
         <value xml:lang="de">Suche Arbeitseinsätze</value>
         <value xml:lang="en">Search WorkEfforts</value>
@@ -4778,6 +4739,7 @@
         <value xml:lang="zh-TW">狀態</value>
     </property>
     <property key="WorkEffortStatusChangeNotValid">
+        <value xml:lang="ar">إن تحويل الحالة من ${lookedUpValue.currentStatusId} الى ${parameters.currentStatusId} هو تحويل غير مسموح به</value>
         <value xml:lang="en">The status change from ${lookedUpValue.currentStatusId} to ${parameters.currentStatusId} is not a valid change</value>
         <value xml:lang="it">Il cambio di stato da ${lookedUpValue.currentStatusId} a ${parameters.currentStatusId} non è consentito</value>
         <value xml:lang="ja">ステータス ${lookedUpValue.currentStatusId} から ${parameters.currentStatusId} へ変更は正しくありません。</value>
@@ -5416,5 +5378,44 @@
         <value xml:lang="vi">Hành động Lượng giá nguồn lực đã gán cho Vai trò</value>
         <value xml:lang="zh">把工作流行动指派给用户角色</value>
         <value xml:lang="zh-TW">把工作流程行動指派給使用者角色</value>
+    </property>
+    <!-- SCIPIO: NEW LABELS -->
+    <property key="WorkEffortAssignedActivities">
+        <value xml:lang="de">Zugewiesene Aktivitäten</value>
+        <value xml:lang="en">Assigned Activities</value>
+    </property>
+    <property key="WorkEffortCompletedActivities">
+        <value xml:lang="de">Erledigte Aktivitäten</value>
+        <value xml:lang="en">Completed Activities</value>
+    </property>
+    <property key="WorkEffortCompletedTasks">
+        <value xml:lang="de">Erledigte Aufgaben</value>
+        <value xml:lang="en">Completed Tasks</value>
+    </property>
+    <property key="WorkEffortDeliverable">
+        <value xml:lang="en">Deliverable</value>
+    </property>
+    <property key="WorkEffortDeliverableType">
+        <value xml:lang="en">Deliverable Type</value>
+    </property>
+    <property key="WorkEffortMaxEvents">
+        <value xml:lang="de">Max Veranstaltungen</value>
+        <value xml:lang="en">Max Events</value>
+        <value xml:lang="it">Max eventi</value>
+    </property>
+    <property key="WorkEffortMaxPersons">
+        <value xml:lang="de">Max Personen</value>
+        <value xml:lang="en">Max Persons</value>
+        <value xml:lang="it">Max persone</value>
+    </property>
+    <property key="WorkEfforts">
+        <value xml:lang="en">Work Efforts</value>
+    </property>
+    <property key="WorkEffortUpComingEvents">
+        <value xml:lang="de">Kommende Veranstaltungen</value>
+        <value xml:lang="en">Up-Coming Events</value>
+        <value xml:lang="es">Eventos próximos</value>
+        <value xml:lang="fr">Évènements à venir</value>
+        <value xml:lang="nl">Up-Coming Events</value>
     </property>
 </resource>

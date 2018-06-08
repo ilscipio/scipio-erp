@@ -18,7 +18,7 @@
     specific language governing permissions and limitations
     under the License.
 -->
-<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="AssetMaintApplication">
         <value xml:lang="de">Instandhaltung</value>
         <value xml:lang="en">Asset Maintenance Application</value>
@@ -33,13 +33,13 @@
     <property key="AssetMaintCompanyName">
         <value xml:lang="de">SCIPIO - Instandhaltung</value>
         <value xml:lang="en">SCIPIO - Asset Maintenance</value>
-        <value xml:lang="fr">SCIPIO - : maintenance des biens</value>
+        <value xml:lang="fr">SCIPIO - maintenance des biens</value>
         <value xml:lang="it">SCIPIO - Manutenzione cespiti</value>
         <value xml:lang="ja">SCIPIO - 資産管理</value>
         <value xml:lang="th">SCIPIO - การบำรุงรักษา</value>
         <value xml:lang="vi">SCIPIO - Quản lý tài sản</value>
-        <value xml:lang="zh">SCIPIO -：资产维护</value>
-        <value xml:lang="zh-TW">SCIPIO -資產維護</value>
+        <value xml:lang="zh">SCIPIO - 资产维护</value>
+        <value xml:lang="zh-TW">SCIPIO - 資產維護</value>
     </property>
     <property key="AssetMaintCompanySubtitle">
         <value xml:lang="en">Maintenance Department</value>

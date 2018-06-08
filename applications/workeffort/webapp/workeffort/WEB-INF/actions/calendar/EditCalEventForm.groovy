@@ -53,7 +53,7 @@ if (workEffort?.currentStatusId) {
     cond = EntityCondition.makeCondition(cond, EntityOperator.OR, 
         EntityCondition.makeCondition("statusId", workEffort.currentStatusId));
     
-    Debug.logError("TEST: " + cond, module);
+    //Debug.logError("TEST: " + cond, module);
     statusItemList = from("StatusItem").where(cond).orderBy("sequenceId").cache().queryList();
 } else {
     statusItemList = from("StatusItem").where(statusTypeCond).orderBy("sequenceId").cache().queryList();

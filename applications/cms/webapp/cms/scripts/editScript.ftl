@@ -125,7 +125,7 @@ NOTES: 2016-12:
                 matchBrackets: true,
                 mode: "${escapeVal(editorLangMode, 'js')}",
                 indentUnit: 4,
-                indentWithTabs: true,
+                indentWithTabs: ${indentWithTabs?string},
                 foldGutter: true,
                 gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
                 extraKeys: {"Ctrl-Space": "autocomplete"}

@@ -4004,6 +4004,7 @@ under the License.
         (and potentially other settings) is considered the default for its member content records (product/category content, etc.).
         This is used in multi-store setting by Solr to determine which defaultLocaleString should be used for fields and content that have no localeString and associated to multiple stores.</description></field>
       <field name="showDiscontinuedProducts" type="indicator"><description>SCIPIO: Default Y. If N, products that have reached their salesDiscontinuationDate will not be shown.</description></field>
+      <field name="useVariantStockCalc" type="indicator"><description>SCIPIO: Default N. If Y, the calculation for showOutOfStockProducts in store for virtual products will include their variants.</description></field>
     </extend-entity>
     <entity entity-name="ProductStoreCatalog"
             package-name="org.ofbiz.product.store"

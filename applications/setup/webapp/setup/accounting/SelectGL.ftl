@@ -6,11 +6,17 @@
     display:inline-block;
   }
   .setupAccounting-selectGL-select {
+    max-width: 30%!important;
+    width: 30%!important;
     margin-right:0.5em;
   }
   .setupAccounting-selectGL-select, .setupAccounting-selectGL-submit-buttons {
     vertical-align:top; <#-- firefox align issue hack -->
   }
+  .setupAccounting-preferences {
+  	clear: right;
+  }
+  
 </style>
 
 <@script>
@@ -45,7 +51,7 @@
     
     <#if accountingGLs?has_content>
 	    <@field type="generic" label=uiLabelMap.SetupAccountingSelectStandardForSetup>
-	       <@field type="select" name="topGlAccountId" id="setupAccounting-selectGL-select" class="+setupAccounting-selectGL-select" inline=true style="display:inline-block;">
+	       <@field type="select" name="topGlAccountId" id="setupAccounting-selectGL-select" class="+setupAccounting-selectGL-select" inline=true>
 	       		<#-- This will be enabled in the future -->
 	            <#-- <option value="">[${uiLabelMap.SetupAccountingCreateNewStandard}]</option> -->
 	            <option value=""<#if accountingGLs?has_content> selected="selected"</#if>>--</option>            
@@ -56,7 +62,12 @@
 	        </@field>
 	        <@menu type="button" id="setupAccounting-selectGL-submit-buttons" class="+setupAccounting-selectGL-submit-buttons">
 	          <@menuitem type="link" contentId="setupAccounting-selectGL-submit" href="javascript:void(0);" text=uiLabelMap.CommonSelect class="+${styles.action_run_session!} ${styles.action_update!}"/>
-	          <@menuitem type="link" contentId="setupAccounting-selectGL-submit-continue" href="javascript:void(0);" text=uiLabelMap.SetupSelectAndContinue class="+${styles.action_run_session!} ${styles.action_continue!}"/>
+	          <@menuitem type="link" contentId="setupAccounting-selectGL-submit-continue" href="javascript:void(0);" text=uiLabelMap.SetupSelectAndContinue class="+${styles.action_run_session!} ${styles.action_continue!} pull-right"/>
+	          <li class="${styles.action_run_session!} ${styles.action_modify!} setupAccounting-preferences">
+		          <@modal id="acctg-preferences" label=uiLabelMap.AccountingPreference linkClass="tiny button">    
+		    		<@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditAcctgPreferences"/>
+				  </@modal>
+			  </li>	          
 	        </@menu>
 	    </@field>   
     </#if>     
@@ -71,7 +82,7 @@
   </@form>
   
   <#if !accountingGLs?has_content>
-  	<@alert type="info">
+  	<@alert type="warning">
   		${uiLabelMap.AccountingScipioAccountingStandardsInfo}
   		<ul>  		
   			<#list scipioAcctgStandardAddons.keySet() as addon>
@@ -79,6 +90,18 @@
   			</#list>
   		</ul>
   	</@alert>
+  	<@form method="post" action=makeOfbizUrl("importDefaultGL") id="setupAccounting-importDefaultGL-form">
+	  	<@field type="generic" label=uiLabelMap.SetupAccountingImportDefaultGLStandard >
+		  	<@field type="select" name="importPredefinedGL" inline=true>
+		  		<#list scipioAcctgStandardDefaults as predefinedGL>
+		  			<option value="${predefinedGL!}">${predefinedGL!}</option>
+		  		</#list>
+		  	</@field>
+		  	<@menu type="button" id="setupAccounting-importDefaultGL-submit-buttons" class="+setupAccounting-importDefaultGL-submit-buttons">
+		    	<@menuitem type="submit" contentId="setupAccounting-importDefaultGL-submit" href="javascript:void(0);" text=uiLabelMap.CommonImport class="+${styles.action_run_session!} ${styles.action_update!}"/>
+		    </@menu>      
+	  	</@field>
+  	</@form>
   </#if>
   
   <#-- 

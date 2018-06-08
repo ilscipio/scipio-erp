@@ -47,6 +47,7 @@ import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.webapp.control.RequestLinkUtil;
 import org.ofbiz.webapp.stats.VisitHandler;
 import org.ofbiz.webapp.webdav.PropFindHelper;
 import org.ofbiz.webapp.webdav.ResponseHelper;
@@ -246,7 +247,7 @@ public class ICalWorker {
     }
 
     protected static boolean isValidRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        if (!request.isSecure()) {
+        if (!RequestLinkUtil.isEffectiveSecure(request)) { // SCIPIO: 2018: replace request.isSecure()
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
             return false;
         }

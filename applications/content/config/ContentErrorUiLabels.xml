@@ -18,7 +18,7 @@
     specific language governing permissions and limitations
     under the License.
 -->
-<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="contentevents.error_getting_content_list">
         <value xml:lang="en">Error getting the content list to index: ${gee}.</value>
         <value xml:lang="ja">コンテンツリストの取得時にエラー。索引: ${gee}.</value>
@@ -313,13 +313,15 @@
     <property key="uploadContentAndImage.noRootDirProvided">
         <value xml:lang="en">No root dir provided, please fill path in the data resource objectInfo field</value>
         <value xml:lang="fr">Aucun répertoire racine fourni. Veuillez indiquer le chemin dans le champ objectInfo de la ressource de donnée</value>
+        <value xml:lang="zh">没有提供根目录，请在数据资源对象信息数据项中填写路径</value>
+    </property>
+    <!-- SCIPIO: NEW LABELS -->
+    <property key="contentservices.localized_field_entry_duplicate_locale">
+        <value xml:lang="de">Doppeltes Gebietsschema in lokalisierten Feldeinträgen angegeben</value>
+        <value xml:lang="en">Duplicate locale specified in localized field entries</value>
     </property>
     <property key="contentservices.localized_field_entry_missing_locale">
-        <value xml:lang="en">Localized field entry is missing locale - cannot update text data for alternate locale with blank locale (only the first entry is allowed to have empty locale, for the main Content record)</value>
         <value xml:lang="de">Lokalisierter Feldeintrag fehlt Gebietsschema - Textdaten für alternatives Gebietsschema können nicht mit leerem Gebietsschema aktualisiert werden (nur der erste Eintrag darf ein leeres Gebietsschema für den Hauptinhaltsdatensatz haben)</value>
-    </property>
-    <property key="contentservices.localized_field_entry_duplicate_locale">
-        <value xml:lang="en">Duplicate locale specified in localized field entries</value>
-        <value xml:lang="de">Doppeltes Gebietsschema in lokalisierten Feldeinträgen angegeben</value>
+        <value xml:lang="en">Localized field entry is missing locale - cannot update text data for alternate locale with blank locale (only the first entry is allowed to have empty locale, for the main Content record)</value>
     </property>
 </resource>

@@ -72,6 +72,12 @@ public class LocalCmsPageRenderInvoker extends RenderInvoker {
         RenderExceptionMode exMode = cmsPageContext.isPreview() ? RenderExceptionMode.DEBUG : 
             CmsRenderUtil.getLiveExceptionMode(request.getServletContext());
         request.setAttribute(UtilRender.RENDER_EXCEPTION_MODE_VAR, exMode);
+        if (cmsPageContext.isPreview()) {
+            // set RequestHandler.makeLink log level to something less drastic,
+            // because missing controller request URIs are regular occurrence
+            // on /website and /backendsite
+            request.setAttribute("_SCP_LINK_ERROR_LEVEL_", Debug.WARNING);
+        }
         
         cmsPage.getRenderer().processAndRender(writer, cmsPageContext, cmsPageVersionId);
         writer.flush();

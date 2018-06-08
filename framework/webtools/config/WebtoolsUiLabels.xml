@@ -18,7 +18,7 @@
     specific language governing permissions and limitations
     under the License.
 -->
-<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="ConnectionPoolStatus">
         <value xml:lang="en">Connection Pool Status</value>
         <value xml:lang="fr">État du pool de connexions</value>
@@ -433,9 +433,13 @@
         <value xml:lang="es">Admin</value>
         <value xml:lang="fr">Admin</value>
         <value xml:lang="it">Admin</value>
-    </property>
-    <property key="PageTitleDemoDataGenerator">
-        <value xml:lang="en">Demo Data Generator</value>
+        <value xml:lang="ja">Admin</value>
+        <value xml:lang="pt">Admin</value>
+        <value xml:lang="ro">Admin</value>
+        <value xml:lang="th">Admin</value>
+        <value xml:lang="vi">Admin</value>
+        <value xml:lang="zh">Admin</value>
+        <value xml:lang="zh-TW">Admin</value>
     </property>
     <property key="PageTitleEditUtilCache">
         <value xml:lang="de">Util Cache bearbeiten</value>
@@ -644,6 +648,7 @@
     </property>
     <property key="PageTitleProgramExport">
         <value xml:lang="en">Programmable Export</value>
+        <value xml:lang="zh">可编程导出</value>
     </property>
     <property key="PageTitleRunService">
         <value xml:lang="de">Dienst starten</value>
@@ -831,21 +836,22 @@
         <value xml:lang="zh-TW">全部</value>
     </property>
     <property key="WebtoolsArtifactInfo">
-        <value xml:lang="de">SCIPIO - Elemente-Info</value>
+        <value xml:lang="de">SCIPIO Elemente-Info</value>
         <value xml:lang="en">Artifact Info</value>
-        <value xml:lang="fr">Information sur les éléments d'SCIPIO -</value>
+        <value xml:lang="fr">Information sur les éléments de SCIPIO</value>
         <value xml:lang="it">Informazioni sugli artefatti</value>
-        <value xml:lang="ja">SCIPIO -要素情報</value>
+        <value xml:lang="ja">SCIPIO 要素情報</value>
         <value xml:lang="pt">Info do Artefato</value>
         <value xml:lang="vi">Thông tin Nhân tạo</value>
         <value xml:lang="zh">人工程序信息</value>
         <value xml:lang="zh-TW">人造物品資訊</value>
     </property>
     <property key="WebtoolsArtifactInfoTimeToLoad">
-        <value xml:lang="de">(Das Laden könnte etwas dauern!)</value>
+        <value xml:lang="de">(Das Laden könnte etwas dauern)</value>
         <value xml:lang="en">(may take some time to load)</value>
         <value xml:lang="fr">(cela peut prendre un certain temps à charger)</value>
         <value xml:lang="vi">(đợi chút thời gian)</value>
+        <value xml:lang="zh">(可能会花些时间载入)</value>
     </property>
     <property key="WebtoolsAsync">
         <value xml:lang="de">Asynchron</value>
@@ -983,11 +989,11 @@
         <value xml:lang="zh-TW">取消任務</value>
     </property>
     <property key="WebtoolsCannotViewArtifactInfoPages">
-        <value xml:lang="de">Für den Zugriff zu den SCIPIO - Elementinfo-Seiten wird die ARTIFACT_INFO_VIEW Berechtigung benötigt.</value>
+        <value xml:lang="de">Für den Zugriff zu den SCIPIO Elementinfo-Seiten wird die ARTIFACT_INFO_VIEW Berechtigung benötigt.</value>
         <value xml:lang="en">Cannot view Artifact Info pages without ARTIFACT_INFO_VIEW permission.</value>
-        <value xml:lang="fr">Impossible de voir les pages sur les info à propos des éléments d'SCIPIO - sans l'autorisation ARTIFACT_INFO_VIEW.</value>
+        <value xml:lang="fr">Impossible de voir les pages sur les info à propos des éléments de SCIPIO sans l'autorisation ARTIFACT_INFO_VIEW.</value>
         <value xml:lang="it">Non è possibile visualizzare le pagine senza avere il permesso ARTIFACT_INFO_VIEW.</value>
-        <value xml:lang="ja">SCIPIO -要素情報ページの表示は、ARTIFACT_INFO_VIEW 権限が必要です</value>
+        <value xml:lang="ja">SCIPIO 要素情報ページの表示は、ARTIFACT_INFO_VIEW 権限が必要です</value>
         <value xml:lang="pt">NÃ£o Ã© possÃ­vel visualizar pÃ¡ginas de InformaÃ§Ãµes de Artefato sem autorizaÃ§Ã£o ARTIFACT_INFO_VIEW.</value>
         <value xml:lang="vi">Bạn không thể xem Artifact nếu khống có quyền ARTIFACT_INFO_VIEW</value>
         <value xml:lang="zh">没有ARTIFACT_INFO_VIEW权限，无法浏览人工程序页面。</value>
@@ -1065,18 +1071,6 @@
         <value xml:lang="zh">检查全部</value>
         <value xml:lang="zh-TW">檢查全部</value>
     </property>
-    <property key="WebtoolsCheckAllPlain"><!-- SCIPIO: need one without the "(not views)" -->
-        <value xml:lang="de">Alle auswählen</value>
-        <value xml:lang="en">Check All</value>
-        <value xml:lang="fr">Tout sélectionner</value>
-        <value xml:lang="it">Seleziona tutto</value>
-        <value xml:lang="ja">すべてチェック</value>
-        <value xml:lang="pt">Selecionar todos</value>
-        <value xml:lang="th">ตรวจสอบทั้งหมด</value>
-        <value xml:lang="vi">Chọn tất cả</value>
-        <value xml:lang="zh">检查全部</value>
-        <value xml:lang="zh-TW">檢查全部</value>
-    </property>
     <property key="WebtoolsCheckDataOnly">
         <value xml:lang="de">Nur Datencheck (keine Änderungen in der Datenbank)</value>
         <value xml:lang="en">Check Data Only (nothing changed in database)</value>
@@ -1142,45 +1136,45 @@
         <value xml:lang="zh-TW">清除這個快取</value>
     </property>
     <property key="WebtoolsCompanyName">
-        <value xml:lang="de">SCIPIO - Web Tools</value>
+        <value xml:lang="de">SCIPIO - Admin</value>
         <value xml:lang="en">SCIPIO - Admin</value>
-        <value xml:lang="es">SCIPIO - Herramientas Web</value>
-        <value xml:lang="fr">SCIPIO - outils web</value>
-        <value xml:lang="it">SCIPIO - Strumenti web</value>
-        <value xml:lang="ja">SCIPIO - Webツール</value>
-        <value xml:lang="pt">SCIPIO - Web Tools</value>
-        <value xml:lang="ro">SCIPIO - Instrumente Web</value>
-        <value xml:lang="th">SCIPIO - เครื่องมือจัดการเว็บไซต์</value>
-        <value xml:lang="vi">SCIPIO - Trung tâm Quản trị</value>
-        <value xml:lang="zh">SCIPIO - Web工具</value>
-        <value xml:lang="zh-TW">SCIPIO - Web工具</value>
+        <value xml:lang="es">SCIPIO - Admin</value>
+        <value xml:lang="fr">SCIPIO - Admin</value>
+        <value xml:lang="it">SCIPIO - Admin</value>
+        <value xml:lang="ja">SCIPIO - Admin</value>
+        <value xml:lang="pt">SCIPIO - Admin</value>
+        <value xml:lang="ro">SCIPIO - Admin</value>
+        <value xml:lang="th">SCIPIO - Admin</value>
+        <value xml:lang="vi">SCIPIO - Admin</value>
+        <value xml:lang="zh">SCIPIO - Admin</value>
+        <value xml:lang="zh-TW">SCIPIO - Admin</value>
     </property>
     <property key="WebtoolsCompanySubtitle">
     <!--value xml:lang="ar">جزء من عائلة أوفبيز للبرمجيات الحرة</value-->
         <value xml:lang="ar">جزء من عائلة أوفبيز للتطبيقات الحرة للتسيير</value>
-        <value xml:lang="de">Teil der SCIPIO Familie von Open Source Software</value>
-        <value xml:lang="en">Part of the SCIPIO Family of Open Source Software</value>
+        <value xml:lang="de">Teil der SCIPIO ERP Familie von Open Source Software</value>
+        <value xml:lang="en">Part of the SCIPIO ERP Family of Open Source Software</value>
     <!--value xml:lang="es">Parte de la familia "Open for Bussiness" de Software Libre</value-->
-        <value xml:lang="es">Parte de la familia de software SCIPIO de código abierto</value>
-        <value xml:lang="fr">Un module de la famille SCIPIO, logiciel libre de gestion d'entreprise.</value>
-        <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO</value>
-    <!--value xml:lang="nl">Onderdeel van de SCIPIO'-suite</value-->
-        <value xml:lang="ja">Part of the SCIPIO Family of Open Source Software</value>
-        <value xml:lang="nl">Deel van de SCIPIO-suite van Open Source Software</value>
-        <value xml:lang="pt-BR">Parte da família SCIPIO - de software de fonte aberta</value>
+        <value xml:lang="es">Parte de la familia de software SCIPIO ERP de código abierto</value>
+        <value xml:lang="fr">Un module de la famille SCIPIO ERP, logiciel libre de gestion d'entreprise.</value>
+        <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO ERP</value>
+    <!--value xml:lang="nl">Onderdeel van de SCIPIO ERP'-suite</value-->
+        <value xml:lang="ja">Part of the SCIPIO ERP Family of Open Source Software</value>
+        <value xml:lang="nl">Deel van de SCIPIO ERP-suite van Open Source Software</value>
+        <value xml:lang="pt-BR">Parte da família SCIPIO ERP - de software de fonte aberta</value>
     <!--value xml:lang="pt-PT">Parte do Software de Fonte Aberta para Grupos Abertos Para o Negócio</value-->
-        <value xml:lang="pt-PT">Parte da família SCIPIO - de software de fonte aberta</value>
+        <value xml:lang="pt-PT">Parte da família SCIPIO ERP - de software de fonte aberta</value>
     <!--value xml:lang="ro">Parte accesibila pentru Business Family of Open Source Software</valuevalue xml:lang="ro">Parte din Open for Business Family of Open Source Software</value-->
         <value xml:lang="ro">Partea de Deschidere Pentru Afaceri Familiale din Open Source Software</value>
-    <!--value xml:lang="ru">Часть семейства ПО SCIPIO</valuevalue xml:lang="ru">Часть семейства "SCIPIO Family" программных продуктов Open Source </value-->
-        <value xml:lang="ru">Входит в состав семейства SCIPIO</value>
+    <!--value xml:lang="ru">Часть семейства ПО SCIPIO ERP</valuevalue xml:lang="ru">Часть семейства "SCIPIO ERP Family" программных продуктов Open Source </value-->
+        <value xml:lang="ru">Входит в состав семейства SCIPIO ERP</value>
     <!--value xml:lang="th">เป็นส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value-->
         <value xml:lang="th">ส่วนหนึ่งของธุรกิจแบบครอบครัวที่เป็นซอฟต์แวร์โอเพนซอส</value>
-    <!--value xml:lang="zh">开源软件SCIPIO -的组成部分</valuevalue xml:lang="zh">开源软件SCIPIO -的组成部分</value-->
-        <value xml:lang="vi">Thành phần của Gia đình mã nguồn mở SCIPIO -</value>
-        <value xml:lang="zh">开源软件SCIPIO -家族的一部分</value>
-        <value xml:lang="zh-CN">SCIPIO -的一部分</value>
-        <value xml:lang="zh-TW">開源軟體SCIPIO -家族的一部分</value>
+    <!--value xml:lang="zh">开源软件SCIPIO ERP的组成部分</valuevalue xml:lang="zh">开源软件SCIPIO ERP的组成部分</value-->
+        <value xml:lang="vi">Thành phần của Gia đình mã nguồn mở SCIPIO ERP</value>
+        <value xml:lang="zh">开源软件SCIPIO ERP家族的一部分</value>
+        <value xml:lang="zh-CN">SCIPIO ERP的一部分</value>
+        <value xml:lang="zh-TW">開源軟體SCIPIO ERP家族的一部分</value>
     </property>
     <property key="WebtoolsCompareType">
         <value xml:lang="de">Typ vergleichen</value>
@@ -1291,6 +1285,10 @@
         <value xml:lang="vi">Cấu hình</value>
         <value xml:lang="zh">配置</value>
         <value xml:lang="zh-TW">配置</value>
+    </property>
+    <property key="WebtoolsConfirmDelete">
+        <value xml:lang="en">Are you sure you want to delete?</value>
+        <value xml:lang="fr">Êtes-vous sûr de vouloir supprimer l'élément ?</value>
     </property>
     <property key="WebtoolsCount">
         <value xml:lang="de">Anzahl</value>
@@ -1577,13 +1575,6 @@
         <value xml:lang="en">Definition Location</value>
         <value xml:lang="zh">定义位置</value>
         <value xml:lang="zh-TW">定義位置</value>
-    </property>
-    <!-- SCIPIO: TODO: Localize -->
-    <property key="WebtoolsDemoDataGeneratorServiceList">
-        <value xml:lang="en">Data Generator Services</value>
-    </property>
-    <property key="WebtoolsDemoDataGeneratorProviders">
-        <value xml:lang="en">Data Generator Providers</value>
     </property>
     <property key="WebtoolsDeleteFiles">
         <value xml:lang="de">Dateien nachher löschen?</value>
@@ -2344,7 +2335,7 @@
     <property key="WebtoolsForSomethingInteresting">
         <value xml:lang="de">Um etwas Interessantes zu sehen sollten Sie sich anmelden; versuchen Sie: admin, Passwort: scipio</value>
         <value xml:lang="en">For something interesting make sure you are logged in, try username: admin, password: scipio</value>
-        <value xml:lang="fr">Pour quelque chose d'intéressant assurez-vous que vous avez ouvert une session. Essayez avec l'identifiant de connexion : admin, et le mot de passe : scipio</value>
+        <value xml:lang="fr">Pour quelque chose d'intéressant assurez-vous que vous avez ouvert une session. Essayez avec l'identifiant de connexion: admin, et le mot de passe: scipio</value>
         <value xml:lang="it">Per accedere all'applicazione devi essere autenticato, prova con Nome utente:admin, Password:scipio</value>
         <value xml:lang="ja">興味を感じたことを確実なものにするため、Username;Admin;Password scipio でログインしてください</value>
         <value xml:lang="pt">Para algo interessante conecte-se, use usuÃ¡rio: admin, senha: scipio</value>
@@ -2409,7 +2400,7 @@
     <property key="WebtoolsGeneralArtifactInfoTools">
         <value xml:lang="de">Allgemeine Info</value>
         <value xml:lang="en">General Artifact Info Tools</value>
-        <value xml:lang="fr">Outils généraux pour les informations sur les éléments d'SCIPIO -</value>
+        <value xml:lang="fr">Outils généraux pour les informations sur les artefacts</value>
         <value xml:lang="it">Strumento per informazioni generali su artifatti</value>
         <value xml:lang="ja">成果物情報ツール全般</value>
         <value xml:lang="pt">Ferramentas de InformaÃ§Ãµes Gerais do Artefato</value>
@@ -2427,6 +2418,10 @@
         <value xml:lang="vi">Tiến trình Java chung</value>
         <value xml:lang="zh">通用Java线程</value>
         <value xml:lang="zh-TW">通用JAVA執行緒</value>
+    </property>
+    <property key="WebtoolsGeoAssocList">
+        <value xml:lang="en">List GeoAssoc</value>
+        <value xml:lang="fr">Lister les relations de zone géographique</value>
     </property>
     <property key="WebtoolsGeoCreateNew">
         <value xml:lang="de">Zone erstellen/bearbeiten</value>
@@ -2481,6 +2476,10 @@
         <value xml:lang="vi">Tại liên kết giữa các Địa lý</value>
         <value xml:lang="zh">链接地理（把它们关联到一个地理位置）</value>
         <value xml:lang="zh-TW">連結地理(把它們結合到一個地理位置)</value>
+    </property>
+    <property key="WebtoolsGeoPoints">
+        <value xml:lang="en">GEO Points</value>
+        <value xml:lang="zh">地理点</value>
     </property>
     <property key="WebtoolsGeosSelect">
         <value xml:lang="de">Zu verknüpfende Zone wählen</value>
@@ -2953,7 +2952,7 @@
         <value xml:lang="zh-TW">解決重複標簽後清除快取</value>
     </property>
     <property key="WebtoolsLabelManagerComponentName">
-        <value xml:lang="de">SCIPIO - Komponente</value>
+        <value xml:lang="de">Komponente</value>
         <value xml:lang="en">Component Name</value>
         <value xml:lang="fr">Nom de composant</value>
         <value xml:lang="it">Nome componente</value>
@@ -3376,9 +3375,6 @@
         <value xml:lang="zh">日志记录</value>
         <value xml:lang="zh-TW">日誌記錄</value>
     </property>
-    <property key="WebtoolsLogs">
-        <value xml:lang="en">Logs</value>
-    </property>
     <property key="WebtoolsMainPage">
         <value xml:lang="de">Startseite</value>
         <value xml:lang="en">Main Page</value>
@@ -3788,17 +3784,17 @@
         <value xml:lang="zh-TW">沒有出現</value>
     </property>
     <property key="WebtoolsNoteAntRunInstall">
-        <value xml:lang="de">HINWEIS: Sofern Sie das Installationsskript zum Daten lagen noch nicht haben laufen lassen, geben Sie bitte im SCIPIO -_HOME Verzeichnis "ant load-demo" oder "java -jar SCIPIO -.jar load-data" ein.</value>
-        <value xml:lang="en">NOTE: If you have not already run the installation data loading script, from the SCIPIO - home directory run "ant load-demo" or "java -jar SCIPIO -.jar load-data"</value>
-        <value xml:lang="fr">NOTE: Si vous n'avez pas déjà exécuté le script de chargement des données d'installation : à partir du répertoire racine d'SCIPIO -, exécutez "ant load-demo" ou "java -jar SCIPIO -.jar load-data"</value>
-        <value xml:lang="it">NOTA: Se non hai ancora eseguito lo script di installazione di caricamento dei dati, esegui dalla home directory di SCIPIO - "ant load-demo" o "java -jar SCIPIO -.jar load-data"</value>
-        <value xml:lang="ja">注意: データをロードするインストールスクリプトをまだ実行していない場合、SCIPIO -ホームディレクトリで"ant load-demo"または"java -jar SCIPIO -.jar load-data"を実行してください</value>
-        <value xml:lang="pt">NOTA: Se vocÃª ainda nÃ£o executou o script de carregamento e instalaÃ§Ã£o de dados, a partir do diretÃ³rio home do SCIPIO - executar "ant load-demo" ou "SCIPIO -.jar java-jar-install"</value>
-        <value xml:lang="ro">NOTA: Daca inca nu ai executat script_ul de instalare incarcare date, executa de la home directory SCIPIO - "ant load-demo" sau "java -jar SCIPIO -.jar load-data"</value>
-        <value xml:lang="th">หมายเหตุ: ถ้าคุณไม่ได้ทำการดำเนินงานติดตั้ง data loading script จาก SCIPIO - home directory ให้ใช้คำสั่ง "ant load-demo" หรือ "java -jar SCIPIO -.jar load-data"</value>
-        <value xml:lang="vi">Ghi chú: nếu bạn đã chạy quá trình tải dữ liệu, từ thư mục gốc của SCIPIO - bạn hãy chạy "ant load-demo" hoặc "java -jar SCIPIO -.jar load-data"</value>
-        <value xml:lang="zh">注意：如果你还没有运行安装数据载入脚本，那么你可以在SCIPIO -目录下运行"ant load-demo"或"java -jar SCIPIO -.jar load-data"</value>
-        <value xml:lang="zh-TW">注意:如果你還沒有執行安裝資料載入腳本,那麼你可以在SCIPIO -目錄下執行"ant load-demo"或"java -jar SCIPIO -.jar load-data"</value>
+        <value xml:lang="de">HINWEIS: Sofern Sie das Installationsskript zum Daten lagen noch nicht haben laufen lassen, geben Sie bitte im SCIPIO Verzeichnis "ant load-demo" oder "java -jar ofbiz.jar load-data" ein.</value>
+        <value xml:lang="en">NOTE: If you have not already run the installation data loading script, from the SCIPIO home directory run "ant load-demo" or "java -jar ofbiz.jar load-data"</value>
+        <value xml:lang="fr">NOTE: Si vous n'avez pas déjà exécuté le script de chargement des données d'installation : à partir du répertoire racine de SCIPIO, exécutez "ant load-demo" ou "java -jar ofbiz.jar load-data"</value>
+        <value xml:lang="it">NOTA: Se non hai ancora eseguito lo script di installazione di caricamento dei dati, esegui dalla home directory di SCIPIO "ant load-demo" o "java -jar ofbiz.jar load-data"</value>
+        <value xml:lang="ja">注意: データをロードするインストールスクリプトをまだ実行していない場合、SCIPIO ホームディレクトリで"ant load-demo"または"java -jar ofbiz.jar load-data"を実行してください</value>
+        <value xml:lang="pt">NOTA: Se vocÃª ainda nÃ£o executou o script de carregamento e instalaÃ§Ã£o de dados, a partir do diretÃ³rio home do SCIPIO executar "ant load-demo" ou "ofbiz.jar java-jar-install"</value>
+        <value xml:lang="ro">NOTA: Daca inca nu ai executat script_ul de instalare incarcare date, executa de la home directory SCIPIO "ant load-demo" sau "java -jar ofbiz.jar load-data"</value>
+        <value xml:lang="th">หมายเหตุ: ถ้าคุณไม่ได้ทำการดำเนินงานติดตั้ง data loading script จาก SCIPIO home directory ให้ใช้คำสั่ง "ant load-demo" หรือ "java -jar ofbiz.jar load-data"</value>
+        <value xml:lang="vi">Ghi chú: nếu bạn đã chạy quá trình tải dữ liệu, từ thư mục gốc của SCIPIO bạn hãy chạy "ant load-demo" hoặc "java -jar ofbiz.jar load-data"</value>
+        <value xml:lang="zh">注意：如果你还没有运行安装数据载入脚本，那么你可以在SCIPIO目录下运行"ant load-demo"或"java -jar ofbiz.jar load-data"</value>
+        <value xml:lang="zh-TW">注意:如果你還沒有執行安裝資料載入腳本,那麼你可以在SCIPIO目錄下執行"ant load-demo"或"java -jar ofbiz.jar load-data"</value>
     </property>
     <property key="WebtoolsNoteForeighKeysMayAlsoBeCreated">
         <value xml:lang="de">HINWEIS: Fremdschlüssel können mit der Datenbank-Check/-Update Funktion ebenfalls generiert werden, sofern die check-fks-on-start und andere Optionen auf der Datensource entsprechend gesetzt sind.</value>
@@ -4677,19 +4673,6 @@
         <value xml:lang="zh">服务器击中统计工具</value>
         <value xml:lang="zh-TW">伺服器拜訪統計工具</value>
     </property>
-    <property key="WebtoolsServer">
-        <value xml:lang="de">Server</value>
-        <value xml:lang="en">Server</value>
-        <value xml:lang="fr">Server</value>
-        <value xml:lang="it">Server</value>
-        <value xml:lang="ja">Server</value>
-        <value xml:lang="pt">Server</value>
-        <value xml:lang="ro">Server</value>
-        <value xml:lang="th">Server</value>
-        <value xml:lang="vi">Server</value>
-        <value xml:lang="zh">Server</value>
-        <value xml:lang="zh-TW">Server</value>
-    </property>
     <property key="WebtoolsService">
         <value xml:lang="de">Dienst</value>
         <value xml:lang="en">Service</value>
@@ -4941,9 +4924,6 @@
         <value xml:lang="vi">Thực thể 1</value>
         <value xml:lang="zh">指定的实体</value>
         <value xml:lang="zh-TW">指定的資料實體</value>
-    </property>
-    <property key="WebtoolsSolr">
-        <value xml:lang="en">Solr</value>
     </property>
     <property key="WebtoolsSpecifiedEntity2">
         <value xml:lang="de">Entität 2</value>
@@ -5211,10 +5191,6 @@
         <value xml:lang="zh">刷新页面</value>
         <value xml:lang="zh-TW">刷新頁面</value>
     </property>
-    <property key="WebtoolsStatsRequestsBy">
-        <value xml:lang="de">Zugriffe pro</value>
-        <value xml:lang="en">Requests by</value>
-    </property>
     <property key="WebtoolsStatsRequestId">
         <value xml:lang="de">Anfrage ID</value>
         <value xml:lang="en">Request ID</value>
@@ -5239,7 +5215,6 @@
         <value xml:lang="zh">请求统计</value>
         <value xml:lang="zh-TW">請求統計</value>
     </property>
-  
     <property key="WebtoolsStatsSinceServerStart">
         <value xml:lang="de">Serverstatistik (seit Start)</value>
         <value xml:lang="en">Stats Since Server Start</value>
@@ -5300,10 +5275,6 @@
         <value xml:lang="vi">Xem thống kê</value>
         <value xml:lang="zh">浏览统计</value>
         <value xml:lang="zh-TW">檢視統計</value>
-    </property>
-    <property key="WebtoolsStatsSystemMemory">
-        <value xml:lang="de">System Speicher</value>
-        <value xml:lang="en">System Memory</value>
     </property>
     <property key="WebtoolsStatusInvalid">
         <value xml:lang="de">Ungültiger Status</value>
@@ -5741,6 +5712,16 @@
         <value xml:lang="zh">冗长级别会细颗粒地指出应用程序进行情况的信息，适于调试程序。</value>
         <value xml:lang="zh-TW">冗長級別會細顆粒地指出應用程式進行情況的資訊,適于偵錯程式.</value>
     </property>
+    <property key="WebtoolsViewAsPdfTheHtmlLayoutDemo">
+        <value xml:lang="en">View as Pdf the html layout : testing macro template ftl and global render (but not forcing the screen coherence)</value>
+        <value xml:lang="fr">Voir en Pdf la disposition html : permet de tester les modèles de macro ftl et le rendu global (mais pas forcement la cohérence d'écran)</value>
+        <value xml:lang="zh">按PDF浏览网页版式：测试宏模版FTL和全局渲染程序(但是不强制页面一致)</value>
+    </property>
+    <property key="WebtoolsViewAsTextTheHtmlLayoutDemo">
+        <value xml:lang="en">View as text (xml, csv and text) the html layout : testing macro template ftl and global render (but not forcing the screen coherence)</value>
+        <value xml:lang="fr">Voir en text (xml, csv, text) la disposition html : permet de tester les modèles de macro ftl et le rendu global (mais pas forcement la cohérence d'écran)</value>
+        <value xml:lang="zh">按文本(XML，逗号分隔格式和文本)浏览网页版式：测试宏模版FTL和全局渲染程序(但是不强制页面一致)</value>
+    </property>
     <property key="WebtoolsViewComponents">
         <value xml:lang="de">Komponenten ansehen</value>
         <value xml:lang="en">View Components</value>
@@ -5784,7 +5765,7 @@
         <value xml:lang="zh-TW">檢視度量</value>
     </property>
     <property key="WebtoolsViewPermissionError">
-        <value xml:lang="de">Sie haben keine Berechtigung um diesen Bereich anzusehen (Sie benötigen OFBTOOLS_VIEW oder SCIPIO -TOOLS_ADMIN Berechtigung)</value>
+        <value xml:lang="de">Sie haben keine Berechtigung um diesen Bereich anzusehen (Sie benötigen OFBTOOLS_VIEW oder OFBIZTOOLS_ADMIN Berechtigung)</value>
         <value xml:lang="en">You do not have permission to view this page. ("OFBTOOLS_VIEW" or "OFBTOOLS_ADMIN" needed)</value>
         <value xml:lang="fr">Vous n'avez pas l'autorisation de voir cette page ("OFBTOOLS_VIEW" ou "OFBTOOLS_ADMIN" nécessaire)</value>
         <value xml:lang="it">Non sei autorizzato a vedere questa pagina. (Necessario permesso "OFBTOOLS_VIEW" o "OFBTOOLS_ADMIN")</value>
@@ -5912,15 +5893,6 @@
         <value xml:lang="zh">本页面用于从数据库导出数据 导出的文档会有一个"&lt;entity-engine-xml&gt;"的根标签在为这个应用配置的代表中，会对每个实体有一个文件。</value>
         <value xml:lang="zh-TW">本頁面用於從資料庫匯出資料 匯出的檔會有一個"&lt;entity-engine-xml&gt;"的根標簽在為這個應用配置的代表中,會對每個資料實體有一個檔.&lt;/entity-engine-xml&gt;</value>
     </property>
-    <property key="WebtoolsXMLExportSingleInfo"><!-- SCIPIO: TODO: Localize -->
-        <value xml:lang="de">Hier Seite können Daten aus der Datenbank exportiert werden. Die exportierten Dokumente werden in einem XML-root-tag "&lt;entity-engine-xml&gt;" enthalten sein.</value>
-        <value xml:lang="en">This page can be used to export data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</value>
-        <value xml:lang="fr">Cette page peut être utilisée pour exporter des données depuis la base. Les documents exportés auront une balise de racine de "&lt;entity-engine-xml&gt;".</value>
-        <value xml:lang="it">Questa pagina può essere usata per esportare i dati dal database. I documenti esportati avranno un root tag "&lt;entity-engine-xml&gt;".</value>
-        <value xml:lang="ja">このページでデータベースからデータをエクスポートすることができます。エクスポートするドキュメントには"&lt;entity-engine-xml&gt;"ルートタグがあります。</value>
-        <value xml:lang="pt">Esta pÃ¡gina pode ser utilizado para exportar dados do banco de dados. Os documentos de exportaÃ§Ã£o terÃ£o uma tag raiz de " &lt;entity-engine-xml&gt;".</value>
-        <value xml:lang="ro">Aceasta pagina poate fi folosita pentru exportarea datelor din  database. Documentele exportate vor avea un root tag "&lt;entity-engine-xml&gt;".</value>
-    </property>
     <property key="WebtoolsXMLImportInfo">
         <value xml:lang="de">Hier können zuvor exportierte Entitäten XML Dateien wieder in die Datenbank importiert werden. Diese Dokumente haben eine XML-root-tag "&lt;entity-engine-xml&gt;".</value>
         <value xml:lang="en">This page can be used to import exported Entity Engine XML documents. These documents all have a root tag of "&lt;entity-engine-xml&gt;".</value>
@@ -5946,65 +5918,21 @@
         <value xml:lang="zh">创建一个实体 ${entityName} ：输入值，然后点击新建.</value>
         <value xml:lang="zh-TW">新建一個資料實體 ${entityName} :輸入值,然後點擊新建.</value>
     </property>
-    <!-- SCIPIO: TODO: Localize -->
-    <property key="WebtoolsEntityUtilityServices">
-        <value xml:lang="de">Entity Utility Services</value>
-        <value xml:lang="en">Entity Utility Services</value>
+    <!-- SCIPIO: NEW LABELS -->
+    <property key="PageTitleDemoDataGenerator">
+        <value xml:lang="en">Demo Data Generator</value>
     </property>
-    <property key="WebtoolsUtilityServices">
-        <value xml:lang="de">Utility Services</value>
-        <value xml:lang="en">Utility Services</value>
-    </property>
-    <!-- SCIPIO: TODO: Localize -->
-    <property key="WebtoolsUtilityAndDataGen">
-        <value xml:lang="de">Dienstprogramm und Datengenerierung </value>
-        <value xml:lang="en">Utility and Data Generation</value>
-    </property>
-    <property key="WebtoolsDataGeneratorMaxRecordsInfo">
-        <value xml:lang="en">The default max number of records to be generated can be adjusted in general.properties#data.generator.max.records.</value>
-    </property>
-    <property key="WebtoolsDataGeneratorMaxRecordsCurrentValue">
-        <value xml:lang="en">Currently set to ${maxRecords}</value>
-    </property>
-    <property key="WebtoolsDemoDataGeneratorResults">
-        <value xml:lang="en">Generated data results</value>
-    </property>
-    <property key="WebtoolsDemoDataGeneratorNoRecordsGenerated">
-        <value xml:lang="en">No records could be generated</value>
-    </property>
-    <property key="WebtoolsGeneratedDataStored">
-        <value xml:lang="en">Stored</value>
-    </property>
-    <property key="WebtoolsGeneratedDataFailed">
-        <value xml:lang="en">Failed</value>
-    </property>
-    <property key="WebtoolsSpecifiedEntityValueDoesNotExist">
-        <value xml:lang="de">Der angegebene Entity-Wert nicht vorhanden oder wurde entfernt.</value>
-        <value xml:lang="en">The specified entity value does not exist or has been removed.</value>
-    </property>
-    <property key="WebtoolsSpecifiedEntityValueRemovedSuccess">
-        <value xml:lang="de">Der angegebene Entity-Wert wurde erfolgreich entfernt.</value>
-        <value xml:lang="en">The specified entity value has been successfully removed.</value>
-    </property>
-    <property key="WebtoolsSpecifiedEntityValueRemovedDetail">
-        <value xml:lang="de">HINWEIS: Der ausgewiesene Entitätswert wurde gelöscht und existiert nicht mehr im System.</value>
-        <value xml:lang="en">NOTE: The entity value shown was deleted and no longer exists in the system.</value>
-    </property>
-    <property key="WebtoolsDeveloperDocumentation">
-        <value xml:lang="de">Developer Documentation</value>
-        <value xml:lang="en">Developer Documentation</value>
-    </property>
-    <property key="WebtoolsTemplateApiDocsTitle">
-        <value xml:lang="de">Templating Toolkit Dokumentation</value>
-        <value xml:lang="en">Templating Toolkit Documentation</value>
-    </property>
-    <property key="WebtoolsFieldValueNoStringRepr">
-        <value xml:lang="de">Feldwert kann nicht als String dargestellt werden</value>
-        <value xml:lang="en">Field value can't be represented as string</value>
-    </property>
-    <property key="WebtoolsNoStringRepr">
-        <value xml:lang="de">Keine Stringdarstellung</value>
-        <value xml:lang="en">No string representation</value>
+    <property key="WebtoolsCheckAllPlain">
+        <value xml:lang="de">Alle auswählen</value>
+        <value xml:lang="en">Check All</value>
+        <value xml:lang="fr">Tout sélectionner</value>
+        <value xml:lang="it">Seleziona tutto</value>
+        <value xml:lang="ja">すべてチェック</value>
+        <value xml:lang="pt">Selecionar todos</value>
+        <value xml:lang="th">ตรวจสอบทั้งหมด</value>
+        <value xml:lang="vi">Chọn tất cả</value>
+        <value xml:lang="zh">检查全部</value>
+        <value xml:lang="zh-TW">檢查全部</value>
     </property>
     <property key="WebtoolsDataExport">
         <value xml:lang="de">Daten exportieren</value>
@@ -6019,6 +5947,12 @@
         <value xml:lang="zh">数据导出</value>
         <value xml:lang="zh-TW">資料匯出</value>
     </property>
+    <property key="WebtoolsDataGeneratorMaxRecordsCurrentValue">
+        <value xml:lang="en">Currently set to ${maxRecords}</value>
+    </property>
+    <property key="WebtoolsDataGeneratorMaxRecordsInfo">
+        <value xml:lang="en">The default max number of records to be generated can be adjusted in general.properties#data.generator.max.records.</value>
+    </property>
     <property key="WebtoolsDataImport">
         <value xml:lang="de">Daten importieren</value>
         <value xml:lang="en">Data Import</value>
@@ -6032,38 +5966,132 @@
         <value xml:lang="zh">数据导入</value>
         <value xml:lang="zh-TW">資料匯入</value>
     </property>
-    <property key="WebtoolsUploadXmlFile"><!-- SCIPIO: TODO: localize -->
-        <value xml:lang="en">Upload XML File</value>
-        <value xml:lang="de">XML-Datei hochladen</value>
-        <value xml:lang="fr">Télécharger fichier XML</value>
+    <property key="WebtoolsDemoDataGeneratorNoRecordsGenerated">
+        <value xml:lang="en">No records could be generated</value>
     </property>
-    <property key="WebtoolsTestLabel">
-        <value xml:lang="en">Test Label</value>
-        <value xml:lang="de">Testetikett</value>
+    <property key="WebtoolsDemoDataGeneratorProviders">
+        <value xml:lang="en">Data Generator Providers</value>
     </property>
-    <property key="WebtoolsTestLabel_en"><!-- SCIPIO: DO NOT LOCALIZE THIS, for testing -->
-        <value xml:lang="en">Test Label</value>
+    <property key="WebtoolsDemoDataGeneratorResults">
+        <value xml:lang="en">Generated data results</value>
     </property>
-    <property key="WebtoolsTestLabel_de"><!-- SCIPIO: DO NOT LOCALIZE THIS, for testing -->
-        <value xml:lang="de">Testetikett</value>
+    <property key="WebtoolsDemoDataGeneratorServiceList">
+        <value xml:lang="en">Data Generator Services</value>
+    </property>
+    <property key="WebtoolsDeveloperDocumentation">
+        <value xml:lang="de">Developer Documentation</value>
+        <value xml:lang="en">Developer Documentation</value>
+    </property>
+    <property key="WebtoolsEntityUtilityServices">
+        <value xml:lang="de">Entity Utility Services</value>
+        <value xml:lang="en">Entity Utility Services</value>
+    </property>
+    <property key="WebtoolsFieldValueNoStringRepr">
+        <value xml:lang="de">Feldwert kann nicht als String dargestellt werden</value>
+        <value xml:lang="en">Field value can't be represented as string</value>
+    </property>
+    <property key="WebtoolsGeneratedDataFailed">
+        <value xml:lang="en">Failed</value>
+    </property>
+    <property key="WebtoolsGeneratedDataStored">
+        <value xml:lang="en">Stored</value>
     </property>
     <property key="WebtoolsLeaveEmptyToRunJobImmediately">
         <value xml:lang="en">Leave start time field empty to run job immediately (on next job poll)</value>
         <value xml:lang="de">Feld Startzeit leer lassen, um den Job sofort auszuführen (bei der nächsten Jobabfrage)</value>
         <value xml:lang="fr">Laissez le champ Heure de début vide pour exécuter le travail immédiatement (au prochain rafraîchissement)</value>
     </property>
-    <property key="WebtoolsRunServiceAsyncStartedInfo">
-        <value xml:lang="en">The service '${serviceName}' has been started asynchronously and will run in the background. Check server logs for more information.</value>
-        <value xml:lang="de">Der Dienst '${serviceName}' wurde asynchron gestartet und wird im Hintergrund ausgeführt. Überprüfen Sie die Serverprotokolle auf weitere Informationen.</value>
-        <value xml:lang="fr">Le service '${serviceName}' a été démarré de manière asynchrone et veut s'exécuter en arrière-plan. Vérifiez les journaux du serveur pour plus d'informations.</value>
+    <property key="WebtoolsLogs">
+        <value xml:lang="en">Logs</value>
+    </property>
+    <property key="WebtoolsNoStringRepr">
+        <value xml:lang="de">Keine Stringdarstellung</value>
+        <value xml:lang="en">No string representation</value>
     </property>
     <property key="WebtoolsOneTimeExecNotPersisted">
         <value xml:lang="en">One-time execution, not persisted</value>
         <value xml:lang="de">Einmalige Ausführung, nicht beibehalten</value>
         <value xml:lang="fr">Exécution unique, non persistante</value>
     </property>
+    <property key="WebtoolsRunServiceAsyncStartedInfo">
+        <value xml:lang="en">The service '${serviceName}' has been started asynchronously and will run in the background. Check server logs for more information.</value>
+        <value xml:lang="de">Der Dienst '${serviceName}' wurde asynchron gestartet und wird im Hintergrund ausgeführt. Überprüfen Sie die Serverprotokolle auf weitere Informationen.</value>
+        <value xml:lang="fr">Le service '${serviceName}' a été démarré de manière asynchrone et veut s'exécuter en arrière-plan. Vérifiez les journaux du serveur pour plus d'informations.</value>
+    </property>
+    <property key="WebtoolsServer">
+        <value xml:lang="de">Server</value>
+        <value xml:lang="en">Server</value>
+        <value xml:lang="fr">Server</value>
+        <value xml:lang="it">Server</value>
+        <value xml:lang="ja">Server</value>
+        <value xml:lang="pt">Server</value>
+        <value xml:lang="ro">Server</value>
+        <value xml:lang="th">Server</value>
+        <value xml:lang="vi">Server</value>
+        <value xml:lang="zh">Server</value>
+        <value xml:lang="zh-TW">Server</value>
+    </property>
+    <property key="WebtoolsSolr">
+        <value xml:lang="en">Solr</value>
+    </property>
+    <property key="WebtoolsSpecifiedEntityValueDoesNotExist">
+        <value xml:lang="de">Der angegebene Entity-Wert nicht vorhanden oder wurde entfernt.</value>
+        <value xml:lang="en">The specified entity value does not exist or has been removed.</value>
+    </property>
+    <property key="WebtoolsSpecifiedEntityValueRemovedDetail">
+        <value xml:lang="de">HINWEIS: Der ausgewiesene Entitätswert wurde gelöscht und existiert nicht mehr im System.</value>
+        <value xml:lang="en">NOTE: The entity value shown was deleted and no longer exists in the system.</value>
+    </property>
+    <property key="WebtoolsSpecifiedEntityValueRemovedSuccess">
+        <value xml:lang="de">Der angegebene Entity-Wert wurde erfolgreich entfernt.</value>
+        <value xml:lang="en">The specified entity value has been successfully removed.</value>
+    </property>
+    <property key="WebtoolsStatsRequestsBy">
+        <value xml:lang="de">Zugriffe pro</value>
+        <value xml:lang="en">Requests by</value>
+    </property>
+    <property key="WebtoolsStatsSystemMemory">
+        <value xml:lang="de">System Speicher</value>
+        <value xml:lang="en">System Memory</value>
+    </property>
+    <property key="WebtoolsTemplateApiDocsTitle">
+        <value xml:lang="de">Templating Toolkit Dokumentation</value>
+        <value xml:lang="en">Templating Toolkit Documentation</value>
+    </property>
     <property key="WebtoolsTemplateTest">
         <value xml:lang="en">Template Test</value>
         <value xml:lang="de">Template Test</value>
+    </property>
+    <property key="WebtoolsTestLabel">
+        <value xml:lang="en">Test Label</value>
+        <value xml:lang="de">Testetikett</value>
+    </property>
+    <property key="WebtoolsTestLabel_de"><!-- SCIPIO: DO NOT LOCALIZE; testing only -->
+        <value xml:lang="de">Testetikett</value>
+    </property>
+    <property key="WebtoolsTestLabel_en"><!-- SCIPIO: DO NOT LOCALIZE; testing only -->
+        <value xml:lang="en">Test Label</value>
+    </property>
+    <property key="WebtoolsUploadXmlFile">
+        <value xml:lang="en">Upload XML File</value>
+        <value xml:lang="de">XML-Datei hochladen</value>
+        <value xml:lang="fr">Télécharger fichier XML</value>
+    </property>
+    <property key="WebtoolsUtilityAndDataGen">
+        <value xml:lang="de">Dienstprogramm und Datengenerierung </value>
+        <value xml:lang="en">Utility and Data Generation</value>
+    </property>
+    <property key="WebtoolsUtilityServices">
+        <value xml:lang="de">Utility Services</value>
+        <value xml:lang="en">Utility Services</value>
+    </property>
+    <property key="WebtoolsXMLExportSingleInfo">
+        <value xml:lang="de">Hier Seite können Daten aus der Datenbank exportiert werden. Die exportierten Dokumente werden in einem XML-root-tag "&lt;entity-engine-xml&gt;" enthalten sein.</value>
+        <value xml:lang="en">This page can be used to export data from the database. The exported documents will have a root tag of "&lt;entity-engine-xml&gt;".</value>
+        <value xml:lang="fr">Cette page peut être utilisée pour exporter des données depuis la base. Les documents exportés auront une balise de racine de "&lt;entity-engine-xml&gt;".</value>
+        <value xml:lang="it">Questa pagina può essere usata per esportare i dati dal database. I documenti esportati avranno un root tag "&lt;entity-engine-xml&gt;".</value>
+        <value xml:lang="ja">このページでデータベースからデータをエクスポートすることができます。エクスポートするドキュメントには"&lt;entity-engine-xml&gt;"ルートタグがあります。</value>
+        <value xml:lang="pt">Esta pÃ¡gina pode ser utilizado para exportar dados do banco de dados. Os documentos de exportaÃ§Ã£o terÃ£o uma tag raiz de " &lt;entity-engine-xml&gt;".</value>
+        <value xml:lang="ro">Aceasta pagina poate fi folosita pentru exportarea datelor din  database. Documentele exportate vor avea un root tag "&lt;entity-engine-xml&gt;".</value>
     </property>
 </resource>

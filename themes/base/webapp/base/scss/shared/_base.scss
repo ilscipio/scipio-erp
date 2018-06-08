@@ -644,3 +644,72 @@ ul.side-nav.ect-action-menu li.disabled, ul.side-nav.ect-action-menu a.disabled 
 .ect-dialogmsg-recordname {
     font-style:italic;
 }
+
+/*jquery ui*/
+.ui-dialog {
+	overflow: hidden;
+	position: absolute;
+	top: 0;
+	left: 0;
+	padding: .2em;
+	outline: 0;
+}
+
+/* Component containers
+----------------------------------*/
+.ui-widget {
+    z-index: 1000;
+    border: 1px solid $gainsboro;
+}
+.ui-dialog-titlebar {
+position:relative;
+height:24px;
+}
+
+.ui-button-text {display:none;}
+
+.ui-dialog-titlebar-close {
+    padding: 0px;
+    visibility: hidden;
+    position:absolute;
+    right:2px;
+    top:0px;
+    
+}
+
+.ui-dialog-titlebar-close:after {
+  content:'X'; 
+  visibility: visible;
+  display: block;
+  padding: 5px;
+  padding-top:2px;
+  margin-left:2px;
+  color: $oil;
+  font-weight:bold;
+  font-size:1.1em;
+  margin-top: -20px;
+}
+
+
+.ui-widget .ui-widget {
+	font-size: 1em;
+}
+.ui-widget input,
+.ui-widget select,
+.ui-widget textarea,
+.ui-widget button {
+	font-size: 0.9em;
+}
+.ui-widget-content {
+    //border: 1px solid $gainsboro;
+    background: #ffffff;
+    overflow:auto;
+}
+.ui-widget-content a {
+}
+.ui-widget-header {
+    background: #f5f5f5;
+
+}
+.ui-widget-header a {
+}

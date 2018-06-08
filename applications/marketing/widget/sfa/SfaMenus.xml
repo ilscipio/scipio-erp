@@ -219,6 +219,10 @@ under the License.
             </link>
         </menu-item>
     </menu>
+
+    <menu name="EventSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-elements menu-name="EventTabBar" recursive="includes-only" />
+    </menu>
     
     <menu name="EventTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="find" title="${uiLabelMap.CommonFind}"><link target="Events"/></menu-item>
@@ -226,9 +230,35 @@ under the License.
     
     <menu name="EventSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           menu-container-style="+${styles.menu_buttonstyle_alt2} ${styles.menu_noclear}">
-        <menu-item name="NewEvent" title="${uiLabelMap.CommonCreateNew}" widget-style="+${styles.action_nav} ${styles.action_add}"><link target="EditEvent"/></menu-item>
+        <actions>
+            <!-- SCIPIO: get yyyy-MM -->
+            <script lang="groovy"><![CDATA[
+                startDate = context.workEffort?.estimatedStartDate ?: context.workEffort?.actualStartDate ?: null;
+                if (startDate) {
+                    context.targetPeriodStart = org.ofbiz.base.util.UtilDateTime.toDateString(startDate, "yyyy-MM");
+                } else {
+                    context.targetPeriodStart = '';
+                }
+            ]]></script>
+        </actions>
+        <menu-item name="NewEvent" title="${uiLabelMap.CommonCreateNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition><not><if-true field="isNewEvent"/></not></condition>
+            <link target="EditEvent"/>
+        </menu-item>
+        <menu-item name="ViewCalendar" title="${uiLabelMap.CommonCalendar}">
+            <condition><not><if-empty field="workEffort"/></not></condition>
+            <link target="Calendar">
+                <parameter param-name="period" value="month"/>
+                <parameter param-name="startDate" from-field="targetPeriodStart"/>
+            </link>
+        </menu-item>
+        <menu-item name="ViewWorkEffort" title="${uiLabelMap.WorkEffortWorkEffort}">
+            <condition><not><if-empty field="workEffort"/></not></condition>
+            <link target="/workeffort/control/WorkEffortSummary" url-mode="inter-app" >
+                <parameter param-name="workEffortId" from-field="workEffort.workEffortId"/>
+            </link>
+        </menu-item>
     </menu>
-    
     <menu name="LeadTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="find" title="${uiLabelMap.CommonFind}"><link target="FindLeads"/></menu-item>
         <menu-item name="profile" title="${uiLabelMap.PartyProfile}">
@@ -429,12 +459,18 @@ under the License.
     </menu>
     
     <menu name="SalesForecastTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="NewSalesForecast" title="${uiLabelMap.SfaNewSalesForecast}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition><not><if-true field="isNewSalesForecast"/></not></condition>
+            <link target="EditSalesForecast"/>
+        </menu-item>
         <menu-item name="EditSalesForecast" title="${uiLabelMap.SfaSalesForecast}">
+            <condition><not><if-empty field="salesForecast"/></not></condition>
             <link target="EditSalesForecast">
                 <parameter param-name="salesForecastId" from-field="parameters.salesForecastId"/>
             </link>
         </menu-item>
         <menu-item name="EditSalesForecastDetail" title="${uiLabelMap.ProductPickingDetail}">
+            <condition><not><if-empty field="salesForecast"/></not></condition>
             <link target="EditSalesForecastDetail">
                 <parameter param-name="salesForecastId" from-field="parameters.salesForecastId"/>
             </link>

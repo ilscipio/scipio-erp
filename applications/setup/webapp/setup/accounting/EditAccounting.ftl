@@ -31,22 +31,18 @@ under the License.
 <#assign params = paramMaps.values>
 <#assign fixedParams = paramMaps.fixedValues>
 
-
-
-
 <@script>
-	$(document).ready(function () {
-		
+	$(document).ready(function () {		
 		if (typeof Foundation !== "undefined") { 
 			$('ul.tabs').on('toggled', customToggleTab);
 			tabs = $('li:first-child a[data-toggle="tab"]').foundation();			
-			customToggleTab(null, tabs[0]);
+			customToggleTab(null, tabs[0]);					
 		} else if (typeof  $.fn.tooltip.Constructor.VERSION!== "undefined") { 
 			$('a[data-toggle="tab"]').on('shown.bs.tab', customToggleTab);			
-			customToggleTab($('li:first-child a[data-toggle="tab"]').tab()[0]); 
+			customToggleTab($('li:first-child a[data-toggle="tab"]').tab()[0]);
 		} else {
 			console.log("Bootstrap or Foundation cannot be found");			 
-		}
+		}		
 	});
 	
 	function customToggleTab (e, t) {
@@ -89,12 +85,12 @@ under the License.
 	  	console.log("setupControlMenu cannot be found");
 	  }
 	}
-	
-	
 </@script>
 
+
+
 <@tabs id="accountingTabs">
-	<@tab id="preferencesTab" title="Preferences"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditAcctgPreferences"/></@tab>
+	<#-- <@tab id="preferencesTab" title="Preferences"></@tab> -->
 	<@tab id="glAccountsTab" title="Configure GL Accounts">
 		<@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditGLAccountTree" />
 	</@tab>

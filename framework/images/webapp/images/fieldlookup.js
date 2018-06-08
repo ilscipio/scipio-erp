@@ -704,7 +704,7 @@ catch (err) {
 
 function setSourceColor(src) {
     if (src && src != null) {
-        src.css("background-color", "yellow");
+        //src.css("background-color", "yellow");
     }
 }
 // function passing selected value to calling window, using only in the

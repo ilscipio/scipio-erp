@@ -264,6 +264,7 @@ var Lookup = function(options) {
             autoOpen : false,
             height : parseInt(options.height),
             width : parseInt(options.width),
+            closeText: "x",
             // position : positioning,
             position :  {
                 my: "center middle",

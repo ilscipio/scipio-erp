@@ -666,29 +666,25 @@ position:relative;
 height:24px;
 }
 
-.ui-button-text {display:none;}
-
 .ui-dialog-titlebar-close {
-    padding: 0px;
-    visibility: hidden;
-    position:absolute;
-    right:2px;
-    top:0px;
-    
+  padding: 5px;
+  padding-top:0px;
+  margin-right:2px;
+  color: $oil !important;
+  font-weight:bold !important;
+  font-size:1.1em !important;
+  border:none;
+  background:none !important;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  float: right;
+  &:hover{
+    background:none;
+    color: $gainsboro !important;
+  }
 }
 
-.ui-dialog-titlebar-close:after {
-  content:'X'; 
-  visibility: visible;
-  display: block;
-  padding: 5px;
-  padding-top:2px;
-  margin-left:2px;
-  color: $oil;
-  font-weight:bold;
-  font-size:1.1em;
-  margin-top: -20px;
-}
 
 
 .ui-widget .ui-widget {

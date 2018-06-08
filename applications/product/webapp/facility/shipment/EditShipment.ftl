@@ -39,7 +39,9 @@
         <#-- SCIPIO: FIXME: I'm not sure we should allow to change the orderId while editing... -->
         <#if shipment?has_content>
             <@field type="display" name="primaryOrderId" label=uiLabelMap.ProductPrimaryOrderId value=(shipment.primaryOrderId!)>
+              <#if shipment.primaryOrderId?has_content><#-- SCIPIO: 2018-06-08: don't crash if not set -->
                 <a href="<@ofbizInterWebappUrl>/ordermgr/control/orderview?orderId=${shipment.primaryOrderId}</@ofbizInterWebappUrl>">${shipment.primaryOrderId}</a>
+              </#if>
             </@field>
         <#else>
             <@field type="lookup" name="primaryOrderId" label=uiLabelMap.ProductPrimaryOrderId formName="EditShipment" id="primaryOrderId" fieldFormName="LookupOrderHeader" />

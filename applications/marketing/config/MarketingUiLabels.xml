@@ -298,8 +298,8 @@
         <value xml:lang="zh-TW">新建行銷活動</value>
     </property>
     <property key="MarketingCampaignId">
-        <value xml:lang="de">Marketing Kampagne ID</value>
-        <value xml:lang="en">Marketing Campaign Id</value>
+        <value xml:lang="de">Kampagne ID</value>
+        <value xml:lang="en">Campaign Id</value>
         <value xml:lang="es">Campaña</value>
         <value xml:lang="fr">Réf. de campagne marketing</value>
         <value xml:lang="it">Codice campagna di vendita</value>
@@ -921,7 +921,7 @@
         <value xml:lang="zh-TW">首頁</value>
     </property>
     <property key="MarketingManager">
-        <value xml:lang="de">SFA-Anwendung</value>
+        <value xml:lang="de">CRM-Anwendung</value>
         <value xml:lang="en">Marketing Manager</value>
         <value xml:lang="es">Gestión de Marketing</value>
         <value xml:lang="fr">Application de gestion marketing</value>

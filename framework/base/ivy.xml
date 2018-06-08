@@ -264,10 +264,10 @@
         <dependency org="org.apache.geronimo.components" name="geronimo-transaction" rev="3.1.4" conf="base,sources"/>
 
         <!-- service component (framework/service/ivy.xml) -->
-        <dependency org="org.apache.axis2" name="axis2-adb" rev="1.7.7" conf="base,sources"/>
-        <dependency org="org.apache.axis2" name="axis2-kernel" rev="1.7.7" conf="base,sources"/>
-        <dependency org="org.apache.axis2" name="axis2-transport-http" rev="1.7.7" conf="base,sources"/>
-        <dependency org="org.apache.axis2" name="axis2-transport-local" rev="1.7.7" conf="base,sources"/>
+        <dependency org="org.apache.axis2" name="axis2-adb" rev="1.7.8" conf="base,sources"/>
+        <dependency org="org.apache.axis2" name="axis2-kernel" rev="1.7.8" conf="base,sources"/>
+        <dependency org="org.apache.axis2" name="axis2-transport-http" rev="1.7.8" conf="base,sources"/>
+        <dependency org="org.apache.axis2" name="axis2-transport-local" rev="1.7.8" conf="base,sources"/>
         <dependency org="org.apache.ws.commons.axiom" name="axiom-api" rev="1.2.20" conf="base,sources"/>
         <dependency org="org.apache.ws.commons.axiom" name="axiom-impl" rev="1.2.20" conf="base,sources"/>
         <dependency org="org.apache.ws.xmlschema" name="xmlschema-core" rev="2.2.3" conf="base,sources"/>

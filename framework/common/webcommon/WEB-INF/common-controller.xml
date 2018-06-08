@@ -98,14 +98,18 @@ under the License.
     <request-map uri="setSessionLocale">
         <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.common.CommonEvents" invoke="setSessionLocale"/>
-        <response name="success" type="view-last" value="main"/>
+        <!-- SCIPIO: 2018-06-08: TODO: REVIEW: too many issues from view-last for now
+        <response name="success" type="view-last" value="main"/>-->
+        <response name="success" type="request" value="main"/>
         <response name="error" type="request" value="main"/>
     </request-map>
     <request-map uri="ListTimezones"><security https="true" auth="false"/><response name="success" type="view" value="ListTimezones" save-last-view="true"/></request-map>
     <request-map uri="setSessionTimeZone">
         <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.common.CommonEvents" invoke="setSessionTimeZone"/>
-        <response name="success" type="view-last" value="main"/>
+        <!-- SCIPIO: 2018-06-08: TODO: REVIEW: too many issues from view-last for now
+        <response name="success" type="view-last" value="main"/>-->
+        <response name="success" type="request" value="main"/>
         <response name="error" type="request" value="main"/>
     </request-map>
 
@@ -113,7 +117,9 @@ under the License.
     <request-map uri="setUserPreference">
         <security https="true" auth="true"/>
         <event type="service" invoke="setUserPreference"/>
-        <response name="success" type="view-last" value="main"/>
+        <!-- SCIPIO: 2018-06-08: TODO: REVIEW: too many issues from view-last for now
+        <response name="success" type="view-last" value="main"/>-->
+        <response name="success" type="request" value="main"/>
         <response name="error" type="request" value="main"/>
     </request-map>
 

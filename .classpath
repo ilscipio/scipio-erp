@@ -94,8 +94,8 @@
 	<classpathentry kind="lib" path="framework/base/lib/spring-core-5.0.4.RELEASE.jar" sourcepath="framework/base/libsrc/spring-core-5.0.4.RELEASE-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/spring-test-5.0.4.RELEASE.jar" sourcepath="framework/base/libsrc/spring-test-5.0.4.RELEASE-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/thumbnailator-0.4.8.jar" sourcepath="framework/base/libsrc/thumbnailator-0.4.8-sources.jar"/>
-	<classpathentry kind="lib" path="framework/base/lib/tika-core-1.17.jar" sourcepath="framework/base/libsrc/tika-core-1.17-sources.jar"/>
-	<classpathentry kind="lib" path="framework/base/lib/tika-parsers-1.17.jar" sourcepath="framework/base/libsrc/tika-parsers-1.17-sources.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/tika-core-1.18.jar" sourcepath="framework/base/libsrc/tika-core-1.18-sources.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/tika-parsers-1.18.jar" sourcepath="framework/base/libsrc/tika-parsers-1.18-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/tomcat-api-8.5.31.jar" sourcepath="framework/base/libsrc/tomcat-api-8.5.31-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/tomcat-catalina-8.5.31.jar" sourcepath="framework/base/libsrc/tomcat-catalina-8.5.31-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/tomcat-catalina-ha-8.5.31.jar" sourcepath="framework/base/libsrc/tomcat-catalina-ha-8.5.31-sources.jar"/>

@@ -81,7 +81,7 @@
 	<classpathentry kind="lib" path="framework/base/lib/neethi-3.0.3.jar" sourcepath="framework/base/libsrc/neethi-3.0.3-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/nekohtml-1.9.22.jar" sourcepath="framework/base/libsrc/nekohtml-1.9.22-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/oro-2.0.8.jar" sourcepath="framework/base/libsrc/oro-2.0.8-sources.jar"/>
-	<classpathentry kind="lib" path="framework/base/lib/owasp-java-html-sanitizer-r239.jar" sourcepath="framework/base/libsrc/owasp-java-html-sanitizer-r239-sources.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/owasp-java-html-sanitizer-20180219.1.jar" sourcepath="framework/base/libsrc/owasp-java-html-sanitizer-20180219.1-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/pdfbox-2.0.8.jar" sourcepath="framework/base/libsrc/pdfbox-2.0.8-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/pim-0.1.jar" sourcepath="framework/base/libsrc/pim-0.1-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/poi-3.17.jar" sourcepath="framework/base/libsrc/poi-3.17-sources.jar"/>

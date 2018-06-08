@@ -6583,8 +6583,8 @@
     </property>
     <property key="PartyEmailsFromUnknownOrigin">
         <value xml:lang="ar">رسائل بريد إلكتروني من مصدر مجهول</value>
-        <value xml:lang="de">E-Mail von unbekannter Herkunft</value>
-        <value xml:lang="en">Emails from UN-known origin</value>
+        <value xml:lang="de">E-Mail unbekannter Herkunft</value>
+        <value xml:lang="en">Emails from unknown origin</value>
         <value xml:lang="fr">Mél issu d'une origine inconnue</value>
         <value xml:lang="hi-IN">अज्ञात मूल से ईमेल</value>
         <value xml:lang="it">Emails da origini conosciuta</value>

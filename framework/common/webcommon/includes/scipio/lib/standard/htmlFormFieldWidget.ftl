@@ -708,7 +708,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   "events":{}, "readonly":false, "autocomplete":"", "descriptionFieldName":"", "targetParameterIter":"", "imgSrc":"", "ajaxUrl":"", 
   "ajaxEnabled":"", "presentation":"layer", "width":"", "height":"", "position":"", "fadeBackground":"true", 
   "clearText":"", "showDescription":"", "initiallyCollapsed":"", "lastViewName":"main", "title":"", "fieldTitleBlank":false, 
-  "inlineLabel":false, "tooltip":"", "required":false, "attribs":{}, "passArgs":{}
+  "inlineLabel":false, "inlinePostfix":false, "tooltip":"", "required":false, "attribs":{}, "passArgs":{}
 }>
 <#macro field_lookup_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_lookup_widget_defaultArgs)>
@@ -725,7 +725,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     maxlength=maxlength id=id events=events readonly=readonly autocomplete=autocomplete descriptionFieldName=descriptionFieldName 
     targetParameterIter=targetParameterIter imgSrc=imgSrc ajaxUrl=ajaxUrl ajaxEnabled=ajaxEnabled presentation=presentation width=width 
     height=height position=position fadeBackground=fadeBackground clearText=clearText showDescription=showDescription initiallyCollapsed=initiallyCollapsed 
-    lastViewName=lastViewName title=title fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel tooltip=tooltip required=required attribs=toSimpleMap(attribs) origArgs=origArgs passArgs=passArgs><#nested></@field_lookup_markup_widget>
+    lastViewName=lastViewName title=title fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel inlinePostfix=inlinePostfix tooltip=tooltip required=required attribs=toSimpleMap(attribs) origArgs=origArgs passArgs=passArgs><#nested></@field_lookup_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
@@ -733,7 +733,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     maxlength="" id="" events={} readonly=false autocomplete="" descriptionFieldName="" 
     targetParameterIter="" imgSrc="" ajaxUrl="" ajaxEnabled=false presentation="layer" width="" 
     height="" position="" fadeBackground="true" clearText="" showDescription="" initiallyCollapsed="" 
-    lastViewName="main" title="" fieldTitleBlank=false inlineLabel=false tooltip="" required=false attribs={} origArgs={} passArgs={} catchArgs...>
+    lastViewName="main" title="" fieldTitleBlank=false inlineLabel=false inlinePostfix=false tooltip="" required=false attribs={} origArgs={} passArgs={} catchArgs...>
   <#--<#if Static["org.ofbiz.widget.model.ModelWidget"].widgetBoundaryCommentsEnabled(context)>
   </#if>-->
   <#local class = addClassArg(class, styles.field_lookup_default!"")>
@@ -768,7 +768,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
       <input type="hidden"<#if name?has_content> name="${escapeVal(name, 'html')}"/></#if>
     <#else>
     <div class="${styles.grid_row!} ${styles.collapse!} lookup">
-        <div class="${styles.grid_small!}11 ${styles.grid_postfix_container} ${styles.grid_cell!}">
+        <div class="${styles.grid_small!}<#if !inlinePostfix>11<#else>12</#if><#if inlinePostfix> ${styles.grid_postfix_container}</#if> ${styles.grid_cell!}">
           <input type="text"<@fieldElemAttribStr attribs=attribs /><@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${escapeVal(name, 'html')}"</#if><#if value?has_content> value="${escapeVal(value, 'html')}"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#rt/>
             <#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#t/>
             <#if readonly?has_content && readonly> readonly="readonly"</#if><#if events?has_content><@commonElemEventAttribStr events=events /></#if><#t/>
@@ -843,8 +843,8 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
                   new Lookup(options).init();
                 });
                 </@script>
-                </div>
-                <div class="${styles.grid_small!}1 ${styles.grid_cell!}">
+                <#if !inlinePostfix></div></#if>
+                <#if !inlinePostfix><div class="${styles.grid_small!}1 ${styles.grid_cell!}"></#if>
                 <span class="${styles.postfix!}">
                     <a href="javascript:void(0);" id="${escapeVal(id, 'html')}_button"><i class="fa fa-search"></i></a>
                 </span>

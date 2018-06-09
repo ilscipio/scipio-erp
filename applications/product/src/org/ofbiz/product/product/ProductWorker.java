@@ -1848,6 +1848,18 @@ nextProd:
                         BigDecimal lastInventoryCount = productFacility.getBigDecimal("lastInventoryCount");
                         if (lastInventoryCount != null) {
                             storeInventory = storeInventory.add(lastInventoryCount);
+                        } else {
+                            Map<String, Object> resultOutput = dispatcher.runSync("getInventoryAvailableByFacility", 
+                                    UtilMisc.toMap("productId", productId, "facilityId", facilityId));
+                            if (!ServiceUtil.isSuccess(resultOutput)) {
+                                Debug.logWarning("Error getting available available inventory by facility.", module);
+                            } 
+                            BigDecimal availableInventory = (BigDecimal) resultOutput.get("availableToPromiseTotal");
+                            if (availableInventory != null && availableInventory.longValue() > 0) {
+                                storeInventory = storeInventory.add(availableInventory);
+                                productFacility.put("lastInventoryCount", availableInventory.longValue());
+                                productFacility.store();
+                            }
                         }
                     }
                 }

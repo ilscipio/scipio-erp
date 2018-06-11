@@ -2,15 +2,15 @@
 
 <#-- FIXME?: either move or find better solution, but @cell works badly here, need float or inline-block -->
 <style type="text/css">
-  .setupAccounting-selectGL-select, .setupAccounting-selectGL-submit-buttons {
+  .setupAccounting-selectGL-select, .setupAccounting-importDefaultGL-select, .setupAccounting-selectGL-submit-buttons, .setupAccounting-importDefaultGL-submit-buttons {
     display:inline-block;
   }
-  .setupAccounting-selectGL-select {
+  .setupAccounting-selectGL-select, .setupAccounting-importDefaultGL-select {
     max-width: 30%!important;
     width: 30%!important;
     margin-right:0.5em;
   }
-  .setupAccounting-selectGL-select, .setupAccounting-selectGL-submit-buttons {
+  .setupAccounting-selectGL-select, .setupAccounting-importDefaultGL-select, .setupAccounting-selectGL-submit-buttons, .setupAccounting-importDefaultGL-submit-buttons {
     vertical-align:top; <#-- firefox align issue hack -->
   }
   .setupAccounting-preferences {
@@ -62,14 +62,9 @@
 	        </@field>
 	        <@menu type="button" id="setupAccounting-selectGL-submit-buttons" class="+setupAccounting-selectGL-submit-buttons">
 	          <@menuitem type="link" contentId="setupAccounting-selectGL-submit" href="javascript:void(0);" text=uiLabelMap.CommonSelect class="+${styles.action_run_session!} ${styles.action_update!}"/>
-	          <@menuitem type="link" contentId="setupAccounting-selectGL-submit-continue" href="javascript:void(0);" text=uiLabelMap.SetupSelectAndContinue class="+${styles.action_run_session!} ${styles.action_continue!} pull-right"/>
-	          <li class="${styles.action_run_session!} ${styles.action_modify!} setupAccounting-preferences">
-		          <@modal id="acctg-preferences" label=uiLabelMap.AccountingPreference linkClass="tiny button">    
-		    		<@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditAcctgPreferences"/>
-				  </@modal>
-			  </li>	          
+	          <@menuitem type="link" contentId="setupAccounting-selectGL-submit-continue" href="javascript:void(0);" text=uiLabelMap.SetupSelectAndContinue class="+${styles.action_run_session!} ${styles.action_continue!} pull-right"/>	          	          
 	        </@menu>
-	    </@field>   
+	    </@field>
     </#if>     
   </@form>
   
@@ -91,8 +86,9 @@
   		</ul>
   	</@alert>
   	<@form method="post" action=makeOfbizUrl("importDefaultGL") id="setupAccounting-importDefaultGL-form">
+  		<@defaultWizardFormFields exclude=["topGlAccountId"]/>
 	  	<@field type="generic" label=uiLabelMap.SetupAccountingImportDefaultGLStandard >
-		  	<@field type="select" name="importPredefinedGL" inline=true>
+		  	<@field type="select" name="importPredefinedGL" id="setupAccounting-importDefaultGL-select" class="+setupAccounting-importDefaultGL-select" inline=true>
 		  		<#list scipioAcctgStandardDefaults as predefinedGL>
 		  			<option value="${predefinedGL!}">${predefinedGL!}</option>
 		  		</#list>

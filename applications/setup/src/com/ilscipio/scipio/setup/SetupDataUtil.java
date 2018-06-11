@@ -12,6 +12,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
@@ -22,6 +23,7 @@ import org.ofbiz.entity.model.ModelKeyMap;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ServiceUtil;
 
 import com.ilscipio.scipio.accounting.external.BaseOperationStats;
 import com.ilscipio.scipio.accounting.external.BaseOperationStats.Stat;
@@ -260,6 +262,7 @@ public abstract class SetupDataUtil {
         Map<String, Object> result = UtilMisc.toMap("completed", false, "coreCompleted", false);
 
         boolean isNewOrFailedCreate = isUnspecificRecordRequest(params, "GlAccount");
+        boolean isImportPredefinedGL = params.containsKey("importPredefinedGL");
 
         String orgPartyId = (String) params.get("orgPartyId");
         String topGlAccountId = (String) params.get("topGlAccountId");
@@ -285,6 +288,25 @@ public abstract class SetupDataUtil {
         GenericValue glAccountOrganization = null;
 
         if (UtilValidate.isNotEmpty(orgPartyId) && !isNewOrFailedCreate) {
+            if (isImportPredefinedGL) {
+                String importPredefinedGL = (String) params.get("importPredefinedGL");
+                String defaultGLUrl = UtilProperties.getPropertyValue("general", "scipio.accounting.defaultGL." + importPredefinedGL);
+                Map<String, Object>  entityImportCtx = UtilMisc.newMap();
+                GenericValue systemUserLogin = delegator.findOne("UserLogin", true, UtilMisc.toMap("userLoginId", "system"));
+                entityImportCtx.put("isUrl", "Y");
+                entityImportCtx.put("filename", defaultGLUrl);  
+                entityImportCtx.put("userLogin", systemUserLogin);
+                Map<String, Object> defaultGLImportResult = dispatcher.runSync("entityImport", entityImportCtx, 0, true);
+                if (ServiceUtil.isSuccess(defaultGLImportResult)) {
+                    // FIXME: Let's assume everything went OK, although
+                    // it's hard to tell since entityImport doesn't return an
+                    // explicit field stating so.
+                    topGlAccountId = importPredefinedGL;
+                } else {
+                    Debug.logError("Error importing default GL [" + importPredefinedGL + "]", module);
+                }
+            }
+            
             GenericValue topGlAccount = delegator.findOne("GlAccount", true, UtilMisc.toMap("glAccountId", topGlAccountId));
             if (UtilValidate.isNotEmpty(topGlAccountId)) {
                 if (topGlAccount == null) {

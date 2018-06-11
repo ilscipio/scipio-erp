@@ -87,15 +87,20 @@ under the License.
 	}
 </@script>
 
-
+<#if !topGlAccountId?has_content>
+	<#assign disabledTab>+${styles.hidden!""}</#assign>
+</#if>
+${Static["org.ofbiz.base.util.Debug"].log("disabledTab =====> " + disabledTab!)}
 
 <@tabs id="accountingTabs">
-	<#-- <@tab id="preferencesTab" title="Preferences"></@tab> -->
-	<@tab id="glAccountsTab" title="Configure GL Accounts">
+	<@tab id="preferencesTab" title="Preferences">
+		<@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditAcctgPreferences"/>
+	</@tab>
+	<@tab id="glAccountsTab" title="Configure GL Accounts" class=disabledTab!>
 		<@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditGLAccountTree" />
 	</@tab>
-	<@tab id="fiscalPeriodsTab" title="Configure Fiscal Periods"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditFiscalPeriods"/></@tab>
-	<@tab id="accountingTransactionsTab" title="Configure Accounting Transactions"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditAccountingTransactions"/></@tab>
-	<@tab id="journalTab" title="Configure Journal"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditJournals"/></@tab>
+	<@tab id="fiscalPeriodsTab" title="Configure Fiscal Periods" class=disabledTab!><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditFiscalPeriods"/></@tab>
+	<@tab id="accountingTransactionsTab" title="Configure Accounting Transactions" class=disabledTab!><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditAccountingTransactions"/></@tab>
+	<@tab id="journalTab" title="Configure Journal" class=disabledTab!><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditJournals"/></@tab>
 </@tabs>     
 

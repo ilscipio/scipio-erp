@@ -221,7 +221,7 @@ Creates a single step - to be used with {{{<@nav type="steps" />}}}.
     <#if showLink>
       <a href="${escapeFullUrl(href, 'html')}">
     </#if>
-    <#if icon?has_content><i class="<#if completed>${styles.nav_step_completed!}<#else>${escapeVal(icon, 'html')}</#if>"></i></#if>
+    <#if icon?has_content><i class="<#if completed>${styles.nav_step_completed!} ${styles.nav_step_icon_completed!}<#else>${escapeVal(icon, 'html')}</#if>"></i></#if>
     <#nested>
     <#if showLink>
       </a>

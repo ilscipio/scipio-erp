@@ -452,6 +452,13 @@ public class UtilCodec {
     public static String decode(String lang, String value) {
         return getDecoder(lang).decode(value);
     }
+    
+    /**
+     * SCIPIO: Quick sanitizing method.
+     */
+    public static String sanitize(String lang, String value) {
+        return getEncoder(lang).sanitize(value);
+    }
 
     public static String canonicalize(String value) throws IntrusionException {
         return canonicalize(value, false, false);

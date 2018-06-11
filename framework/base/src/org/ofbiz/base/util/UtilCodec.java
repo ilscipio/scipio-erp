@@ -100,6 +100,12 @@ public class UtilCodec {
     public static interface SimpleEncoder {
         public String encode(String original);
         public String sanitize(String outString); // Only really useful with HTML, else simply calls encode() method 
+        
+        /**
+         * SCIPIO: Returns the language of this encoder.
+         * Added 2018-06-11 (backported from Scipio's own ContentLangUtil.ContentSanitizer, which will be killed).
+         */
+        public String getLang();
     }
 
     public static interface SimpleDecoder {
@@ -135,6 +141,10 @@ public class UtilCodec {
                 .allowWithoutAttributes("html", "body", "div", "span", "table", "td")
                 .allowAttributes("width").onElements("table")
                 .toFactory();
+        @Override
+        public String getLang() { // SCIPIO
+            return "html";
+        }
     }
 
     public static class XmlEncoder implements SimpleEncoder {
@@ -148,6 +158,10 @@ public class UtilCodec {
         }
         public String sanitize(String original) {
             return encode(original);
+        }
+        @Override
+        public String getLang() { // SCIPIO
+            return "xml";
         }
     }
 
@@ -173,6 +187,10 @@ public class UtilCodec {
                 return null;
             }
         }
+        @Override
+        public String getLang() { // SCIPIO
+            return "url";
+        }
     }
 
     public static class StringEncoder implements SimpleEncoder {
@@ -184,6 +202,10 @@ public class UtilCodec {
         }
         public String sanitize(String original) {
             return encode(original);
+        }
+        @Override
+        public String getLang() { // SCIPIO
+            return "string";
         }
     }
 
@@ -199,6 +221,10 @@ public class UtilCodec {
         @Override
         public String sanitize(String original) {
             return encode(original);
+        }
+        @Override
+        public String getLang() { // SCIPIO
+            return "cssid";
         }
     }
     
@@ -217,6 +243,10 @@ public class UtilCodec {
         public String sanitize(String original) {
             return encode(original);
         }
+        @Override
+        public String getLang() { // SCIPIO
+            return "cssstr";
+        }
     }
     
     /**
@@ -230,6 +260,10 @@ public class UtilCodec {
         @Override
         public String sanitize(String original) {
             return encode(original);
+        }
+        @Override
+        public String getLang() { // SCIPIO
+            return "jsstr";
         }
     }
     
@@ -245,6 +279,10 @@ public class UtilCodec {
         public String sanitize(String original) {
             return encode(original);
         }
+        @Override
+        public String getLang() { // SCIPIO
+            return "jsonstr";
+        }
     }
     
     /**
@@ -258,6 +296,10 @@ public class UtilCodec {
         public String sanitize(String original) {
             return original;
         }
+        @Override
+        public String getLang() { // SCIPIO
+            return "raw";
+        }
     }
     
     
@@ -266,17 +308,17 @@ public class UtilCodec {
     private static final Map<String, SimpleEncoder> encoderMap;
     static {
         Map<String, SimpleEncoder> map = new HashMap<>();
-        map.put("raw", rawEncoder); // SCIPIO: Raw/none encoder that returns the original string as-is. Useful as workaround and to simplify code.
-        map.put("url", urlCodec);
-        map.put("xml", xmlEncoder);
-        map.put("html", htmlEncoder);
-        map.put("css", cssStringEncoder);
-        map.put("cssstr", cssStringEncoder);
-        map.put("cssid", cssIdEncoder);
-        map.put("jsstr", jsStringEncoder);
-        map.put("jsonstr", jsonStringEncoder);
-        map.put("string", stringEncoder);
-        map.put("raw", rawEncoder);
+        map.put(rawEncoder.getLang(), rawEncoder); // SCIPIO: Raw/none encoder that returns the original string as-is. Useful as workaround and to simplify code.
+        map.put(urlCodec.getLang(), urlCodec);
+        map.put(xmlEncoder.getLang(), xmlEncoder);
+        map.put(htmlEncoder.getLang(), htmlEncoder);
+        map.put(cssStringEncoder.getLang(), cssStringEncoder);
+        map.put("css", cssStringEncoder); // ALIAS - discourage use?
+        map.put(cssIdEncoder.getLang(), cssIdEncoder);
+        map.put(jsStringEncoder.getLang(), jsStringEncoder);
+        map.put(jsonStringEncoder.getLang(), jsonStringEncoder);
+        map.put(stringEncoder.getLang(), stringEncoder);
+        map.put(rawEncoder.getLang(), rawEncoder);
         encoderMap = map;
     }
     

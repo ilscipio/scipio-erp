@@ -597,6 +597,10 @@
         <value xml:lang="en">Output</value>
         <value xml:lang="de">Ausgabe</value>
     </property>
+    <property key="CmsRawOutput">
+        <value xml:lang="en">Raw Output</value>
+        <value xml:lang="de">Rohausgabe</value>
+    </property>
     <property key="CmsClickHereToGetData">
         <value xml:lang="en">Click Here to Get Data (or save to file)</value>
         <value xml:lang="de">Klicken Sie hier, um Daten zu erhalten (oder in Datei speichern)</value>

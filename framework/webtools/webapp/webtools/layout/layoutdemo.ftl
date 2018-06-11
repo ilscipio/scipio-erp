@@ -2001,7 +2001,7 @@
       </ul>
   </@section>
   <@section title="Filtered/validating/partial escaping">
-      <#assign testMarkup>This is <span class="somespanclass">"test"</span> <em class="someclass">markup</em>!</#assign>
+      <#assign testMarkup>This is <span class="escapespantestclass">"test"</span> <em class="someclass">markup</em>! Here is a script <@script>$(document).load(function(){$('.escapespantestclass').addClass('${styles.color_red!}');});</@script>, have fun!</#assign>
       <#assign testMarkup = rewrapString(testMarkup)><#-- make sure the rawString works -->
       <ul>
         <li>htmlmarkup allow none: ${escapeVal(testMarkup, 'htmlmarkup', {'allow':'none'})}</li>

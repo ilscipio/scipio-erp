@@ -1,51 +1,13 @@
 package org.ofbiz.content.content;
 
 import org.ofbiz.base.util.UtilCodec;
+import org.ofbiz.base.util.UtilCodec.SimpleEncoder;
 
 /**
  * SCIPIO: ContentWrapper language handling encoder, to help implement {@link ContentWrapper}
  * method implementations.
  */
 public class ContentLangUtil {
-    
-    private static final RawContentSanitizer rawContentSanitizer = new RawContentSanitizer();
-    private static final UrlContentSanitizer urlContentSanitizer = new UrlContentSanitizer();
-
-    public static interface ContentSanitizer extends UtilCodec.SimpleEncoder {
-        String getLang();
-    }
-    
-    public static class RawContentSanitizer implements ContentSanitizer {
-        @Override
-        public String getLang() {
-            return "raw";
-        }
-        @Override
-        public String encode(String original) {
-            return UtilCodec.getRawEncoder().encode(original);
-        }
-        @Override
-        public String sanitize(String original) {
-            return UtilCodec.getRawEncoder().sanitize(original);
-        }
-    }
-    
-    public static class UrlContentSanitizer implements ContentSanitizer {
-        @Override
-        public String getLang() {
-            return "url";
-        }
-        @Override
-        public String encode(String original) {
-            // TODO?: Here we would URL-encode the parameters (ONLY)
-            return UtilCodec.getRawEncoder().encode(original);
-        }
-        @Override
-        public String sanitize(String original) {
-            // TODO?: Here we would URL-encode the parameters (ONLY)
-            return UtilCodec.getRawEncoder().encode(original);
-        }
-    }
     
     /**
      * SCIPIO: Returns a content early sanitizer for the given language.
@@ -62,19 +24,19 @@ public class ContentLangUtil {
      * method in a freemarker template or across the data prep boundary (since it no longer returns a StringWrapper) 
      * during freemarker/screen rendering.
      */
-    public static ContentSanitizer getContentWrapperSanitizer(String lang) {
+    public static SimpleEncoder getContentWrapperSanitizer(String lang) {
         if ("url".equals(lang)) {
-            return urlContentSanitizer;
+            return UtilCodec.getUrlEncoder();
         } else {
-            return rawContentSanitizer;
+            return UtilCodec.getRawEncoder();
         }
     }
     
-    public static ContentSanitizer getEarlySanitizer(String lang) {
+    public static SimpleEncoder getEarlySanitizer(String lang) {
         if ("url".equals(lang)) {
-            return urlContentSanitizer;
+            return UtilCodec.getUrlEncoder();
         } else {
-            return rawContentSanitizer;
+            return UtilCodec.getRawEncoder();
         }
     }
 }

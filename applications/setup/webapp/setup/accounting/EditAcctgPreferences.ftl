@@ -143,7 +143,6 @@
 	    		<@field type="display" name="quoteIdPrefix" value=(acctgPreferences.quoteIdPrefix!) label=uiLabelMap.FormFieldTitle_quoteIdPrefix />
 		    	<@field type="display" name="lastQuoteNumber" value=(acctgPreferences.lastQuoteNumber!) label=uiLabelMap.FormFieldTitle_lastQuoteNumber />
 	    	</#if>        			
-	    </@section>	    
-	    <@field type="submit" name="acctgPreferencesActionSubmit" label=uiLabelMap.CommonUpdate />
+	    </@section>
 	</@form>
 </@section>		

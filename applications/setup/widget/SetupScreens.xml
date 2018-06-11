@@ -604,10 +604,10 @@
                                     <include-screen name="SelectGL"/>
                                 </screenlet>
                                 <section>
-                                    <condition>
-                                        <!-- don't show tree until at least one topGlAccountId created -->
+                                   <!--  <condition>
+                                        don't show tree until at least one topGlAccountId created
                                         <not><if-empty field="topGlAccountId"/></not>
-                                    </condition>
+                                    </condition> -->
                                     <widgets> 
                                     	<screenlet>                                            
                                             <platform-specific>

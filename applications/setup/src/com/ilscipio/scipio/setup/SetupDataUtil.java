@@ -298,10 +298,9 @@ public abstract class SetupDataUtil {
                 entityImportCtx.put("userLogin", systemUserLogin);
                 Map<String, Object> defaultGLImportResult = dispatcher.runSync("entityImport", entityImportCtx, 0, true);
                 if (ServiceUtil.isSuccess(defaultGLImportResult)) {
-                    List<String> messages = (List<String>) defaultGLImportResult.get("messages"); 
-                    for (String message : messages) {
-                        Debug.log("import message =====>  " + message);
-                    }
+                    // FIXME: Let's assume everything went OK, although
+                    // it's hard to tell since entityImport doesn't return an
+                    // explicit field stating so.
                     topGlAccountId = importPredefinedGL;
                 } else {
                     Debug.logError("Error importing default GL [" + importPredefinedGL + "]", module);

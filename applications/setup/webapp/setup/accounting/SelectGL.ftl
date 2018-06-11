@@ -68,14 +68,10 @@
 	        </@menu>
 	    </@field>
 	    </@cell>
-	    <@cell columns="2">  
-	    <@menu type="button" id="setupAccounting-selectGL-submit-buttons" class="+setupAccounting-selectGL-submit-buttons" >
-        	<li class="${styles.action_run_session!} ${styles.action_modify!} setupAccounting-preferences">
-	          <@modal id="acctg-preferences" label=uiLabelMap.AccountingPreference linkClass="${styles.tiny!} ${styles.button!}">    
-	    		<@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditAcctgPreferences"/>
-			  </@modal>
-		  	</li>
-		</@menu>
+	    <@cell columns="2">
+          <@modal id="acctg-preferences" label=uiLabelMap.AccountingPreference linkClass="${styles.button_default!}">    
+    		<@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditAcctgPreferences"/>
+		  </@modal>
 		</@cell>
 		</@row>
     </#if>     

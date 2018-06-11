@@ -50,6 +50,8 @@
     <#--<@field type="hidden" name="setupContinue" value="N"/> not needed yet-->
     
     <#if accountingGLs?has_content>
+    	<@row>
+    	<@cell columns="10">
 	    <@field type="generic" label=uiLabelMap.SetupAccountingSelectStandardForSetup>
 	       <@field type="select" name="topGlAccountId" id="setupAccounting-selectGL-select" class="+setupAccounting-selectGL-select" inline=true>
 	       		<#-- This will be enabled in the future -->
@@ -62,14 +64,20 @@
 	        </@field>
 	        <@menu type="button" id="setupAccounting-selectGL-submit-buttons" class="+setupAccounting-selectGL-submit-buttons">
 	          <@menuitem type="link" contentId="setupAccounting-selectGL-submit" href="javascript:void(0);" text=uiLabelMap.CommonSelect class="+${styles.action_run_session!} ${styles.action_update!}"/>
-	          <@menuitem type="link" contentId="setupAccounting-selectGL-submit-continue" href="javascript:void(0);" text=uiLabelMap.SetupSelectAndContinue class="+${styles.action_run_session!} ${styles.action_continue!} pull-right"/>
-	          <li class="${styles.action_run_session!} ${styles.action_modify!} setupAccounting-preferences pull-right">
-		          <@modal id="acctg-preferences" label=uiLabelMap.AccountingPreference linkClass="tiny button">    
-		    		<@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditAcctgPreferences"/>
-				  </@modal>
-			  </li>	          
+	          <@menuitem type="link" contentId="setupAccounting-selectGL-submit-continue" href="javascript:void(0);" text=uiLabelMap.SetupSelectAndContinue class="+${styles.action_run_session!} ${styles.action_continue!} pull-right"/>	          	          
 	        </@menu>
-	    </@field>   
+	    </@field>
+	    </@cell>
+	    <@cell columns="2">  
+	    <@menu type="button" id="setupAccounting-selectGL-submit-buttons" class="+setupAccounting-selectGL-submit-buttons" >
+        	<li class="${styles.action_run_session!} ${styles.action_modify!} setupAccounting-preferences">
+	          <@modal id="acctg-preferences" label=uiLabelMap.AccountingPreference linkClass="${styles.tiny!} ${styles.button!}">    
+	    		<@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditAcctgPreferences"/>
+			  </@modal>
+		  	</li>
+		</@menu>
+		</@cell>
+		</@row>
     </#if>     
   </@form>
   

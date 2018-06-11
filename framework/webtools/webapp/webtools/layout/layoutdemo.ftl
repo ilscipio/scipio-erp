@@ -9,6 +9,10 @@
   </@commonMsg>
 </#if>
 
+<#macro outMrkp markup><#rt/>
+${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]]</b></em><#t/>
+</#macro>
+
 <#--<@nav type="magellan">
     <@mli arrival="breadcrumbs"><a href="#breadcrumbs">Breadcrumbs</a></@mli>
     <@mli arrival="grid"><a href="#grid">Grid</a></@mli>
@@ -2004,11 +2008,11 @@
       <#assign testMarkup>This is <span class="escapespantestclass">"test"</span> <em class="someclass">markup</em>! Here is a script <@script>$(document).load(function(){$('.escapespantestclass').addClass('${styles.color_red!}');});</@script>, have fun!</#assign>
       <#assign testMarkup = rewrapString(testMarkup)><#-- make sure the rawString works -->
       <ul>
-        <li>htmlmarkup allow none: ${escapeVal(testMarkup, 'htmlmarkup', {'allow':'none'})}</li>
-        <li>htmlmarkup allow external: ${escapeVal(testMarkup, 'htmlmarkup', {'allow':'external'})}</li>
-        <li>htmlmarkup allow internal: ${escapeVal(testMarkup, 'htmlmarkup', {'allow':'internal'})}</li>
-        <li>htmlmarkup allow any-valid: ${escapeVal(testMarkup, 'htmlmarkup', {'allow':'any-valid'})}</li>
-        <li>htmlmarkup allow any: ${escapeVal(testMarkup, 'htmlmarkup', {'allow':'any'})}</li>
+        <li>htmlmarkup allow none: <@outMrkp escapeVal(testMarkup, 'htmlmarkup', {'allow':'none'})/></li>
+        <li>htmlmarkup allow external: <@outMrkp escapeVal(testMarkup, 'htmlmarkup', {'allow':'external'})/></li>
+        <li>htmlmarkup allow internal (script is removed): <@outMrkp escapeVal(testMarkup, 'htmlmarkup', {'allow':'internal'})/></li>
+        <li>htmlmarkup allow any-valid: <@outMrkp escapeVal(testMarkup, 'htmlmarkup', {'allow':'any-valid'})/></li>
+        <li>htmlmarkup allow any: <@outMrkp escapeVal(testMarkup, 'htmlmarkup', {'allow':'any'})/></li>
       </ul>
   </@section>
   <@section title="objectAsScript">

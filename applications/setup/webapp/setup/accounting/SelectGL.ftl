@@ -50,8 +50,6 @@
     <#--<@field type="hidden" name="setupContinue" value="N"/> not needed yet-->
     
     <#if accountingGLs?has_content>
-    	<@row>
-    	<@cell columns="10">
 	    <@field type="generic" label=uiLabelMap.SetupAccountingSelectStandardForSetup>
 	       <@field type="select" name="topGlAccountId" id="setupAccounting-selectGL-select" class="+setupAccounting-selectGL-select" inline=true>
 	       		<#-- This will be enabled in the future -->
@@ -67,13 +65,6 @@
 	          <@menuitem type="link" contentId="setupAccounting-selectGL-submit-continue" href="javascript:void(0);" text=uiLabelMap.SetupSelectAndContinue class="+${styles.action_run_session!} ${styles.action_continue!} pull-right"/>	          	          
 	        </@menu>
 	    </@field>
-	    </@cell>
-	    <@cell columns="2">
-          <@modal id="acctg-preferences" label=uiLabelMap.AccountingPreference linkClass="${styles.button_default!}">    
-    		<@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditAcctgPreferences"/>
-		  </@modal>
-		</@cell>
-		</@row>
     </#if>     
   </@form>
   

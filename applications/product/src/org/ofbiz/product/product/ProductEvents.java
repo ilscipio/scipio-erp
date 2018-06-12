@@ -911,6 +911,7 @@ public class ProductEvents {
         if (productStore != null) {
             String currencyStr = null;
             String localeStr = null;
+            String timeZoneStr = null;
 
             HttpSession session = request.getSession();
             GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
@@ -919,6 +920,8 @@ public class ProductEvents {
                 currencyStr = userLogin.getString("lastCurrencyUom");
                 // user login locale
                 localeStr = userLogin.getString("lastLocale");
+                // user login timezone
+                timeZoneStr = userLogin.getString("lastTimeZone");
             }
 
             // if currency is not set, the store's default currency is used
@@ -931,9 +934,14 @@ public class ProductEvents {
                 localeStr = productStore.getString("defaultLocaleString");
             }
 
+            // if timezone is not set, the store's default timezone is used
+            if (timeZoneStr == null && productStore.get("defaultTimeZoneString") != null) {
+                timeZoneStr = productStore.getString("defaultTimeZoneString");
+            }
+
             UtilHttp.setCurrencyUom(session, currencyStr);
             UtilHttp.setLocale(request, localeStr);
-
+            UtilHttp.setTimeZone(request, timeZoneStr);
         }
         return "success";
     }

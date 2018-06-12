@@ -916,8 +916,12 @@ under the License.
                                           <#-- FREEMARKER OUTPUT -->
                                           <#if execTemplate>
                                             <@section title=uiLabelMap.CmsOutput>
-                                              <#assign templateBody = rawString(templateBody!"")?interpret>
-                                              <@templateBody/>
+                                              <#assign tmplBodyCode = rawString(templateBody!"")?interpret>
+                                              <#assign tmplBodyOut><@tmplBodyCode/></#assign>
+                                              ${tmplBodyOut}
+                                            </@section>
+                                            <@section title=uiLabelMap.CmsRawOutput>
+                                              ${tmplBodyOut?html}
                                             </@section>
                                           </#if>
                                         ]]></html-template></html></platform-specific>

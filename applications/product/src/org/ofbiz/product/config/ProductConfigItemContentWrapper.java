@@ -39,7 +39,6 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.content.content.CommonContentWrapper;
 import org.ofbiz.content.content.ContentLangUtil;
-import org.ofbiz.content.content.ContentLangUtil.ContentSanitizer;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.content.content.ContentWrapper;
 import org.ofbiz.entity.Delegator;
@@ -119,7 +118,7 @@ public class ProductConfigItemContentWrapper extends CommonContentWrapper {
      * SCIPIO: Gets content as text, with option to bypass wrapper cache.
      */
     public static String getProductConfigItemContentAsText(GenericValue productConfigItem, String confItemContentTypeId, Locale locale, String mimeTypeId, Delegator delegator, LocalDispatcher dispatcher, boolean useCache, String encoderType) {
-        ContentSanitizer encoder = ContentLangUtil.getContentWrapperSanitizer(encoderType);
+        UtilCodec.SimpleEncoder encoder = ContentLangUtil.getContentWrapperSanitizer(encoderType);
         String candidateFieldName = ModelUtil.dbNameToVarName(confItemContentTypeId);
         String cacheKey = (useCache) ? confItemContentTypeId + SEPARATOR + locale + SEPARATOR + mimeTypeId + SEPARATOR + productConfigItem.get("configItemId") + SEPARATOR + encoder.getLang() + SEPARATOR + delegator : null;
         try {
@@ -136,7 +135,7 @@ public class ProductConfigItemContentWrapper extends CommonContentWrapper {
                 outString = productConfigItem.getModelEntity().isField(candidateFieldName) ? productConfigItem.getString(candidateFieldName): "";
                 outString = outString == null? "" : outString;
             }
-            outString = encoder.encode(outString);
+            outString = encoder.sanitize(outString);
             if (useCache && configItemContentCache != null) {
                 configItemContentCache.put(cacheKey, outString);
             }
@@ -144,11 +143,11 @@ public class ProductConfigItemContentWrapper extends CommonContentWrapper {
         } catch (GeneralException e) {
             Debug.logError(e, "Error rendering ProdConfItemContent, inserting empty String", module);
             String candidateOut = productConfigItem.getModelEntity().isField(candidateFieldName) ? productConfigItem.getString(candidateFieldName): "";
-            return candidateOut == null? "" : encoder.encode(candidateOut);
+            return candidateOut == null? "" : encoder.sanitize(candidateOut);
         } catch (IOException e) {
             Debug.logError(e, "Error rendering ProdConfItemContent, inserting empty String", module);
             String candidateOut = productConfigItem.getModelEntity().isField(candidateFieldName) ? productConfigItem.getString(candidateFieldName): "";
-            return candidateOut == null? "" : encoder.encode(candidateOut);
+            return candidateOut == null? "" : encoder.sanitize(candidateOut);
         }
     }
 

@@ -323,7 +323,7 @@
               <#-- onePageCheckout-->
               <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="addform">
                 <input type="hidden" name="goToOnePageCheckout" value="true" />
-                    <#assign urlFile = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(product, "URL_FILE", request,"html") />                    
+                    <#assign urlFile = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(product, "URL_FILE", request,"raw") />                    
                     <#assign inStock = true />
                     
                     <#-- SCIPIO: TODO: We currently have no client-side check for incompatible (FEATURE_IACTN_INCOMP) and dependent features.
@@ -572,7 +572,7 @@
                 <#list imageKeys as key>
                     <#assign swatchProduct = imageMap.get(key) />
                     <#if swatchProduct?has_content && (indexer < maxIndex)>
-                        <#assign imageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(swatchProduct, "SMALL_IMAGE_URL", request,"html")! />
+                        <#assign imageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(swatchProduct, "SMALL_IMAGE_URL", request,"url")! />
                         <#if !imageUrl?string?has_content>
                             <#assign imageUrl = productContentWrapper.get("SMALL_IMAGE_URL","url")! />
                         </#if>

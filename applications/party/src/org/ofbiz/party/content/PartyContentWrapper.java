@@ -42,7 +42,6 @@ import org.ofbiz.content.content.CommonContentWrapper;
 import org.ofbiz.content.content.ContentLangUtil;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.content.content.ContentWrapper;
-import org.ofbiz.content.content.ContentLangUtil.ContentSanitizer;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.model.ModelEntity;
@@ -140,7 +139,7 @@ public class PartyContentWrapper extends CommonContentWrapper {
             return null;
         }
         
-        ContentSanitizer encoder = ContentLangUtil.getContentWrapperSanitizer(encoderType);
+        UtilCodec.SimpleEncoder encoder = ContentLangUtil.getContentWrapperSanitizer(encoderType);
         String candidateFieldName = ModelUtil.dbNameToVarName(partyContentTypeId);
         String cacheKey = null;
         if (useCache) { // SCIPIO: don't build cache key if disabled
@@ -169,19 +168,19 @@ public class PartyContentWrapper extends CommonContentWrapper {
                 outString = party.getModelEntity().isField(candidateFieldName) ? party.getString(candidateFieldName): "";
                 outString = outString == null? "" : outString;
             }
-            outString = encoder.encode(outString);
-            if (useCache && partyContentCache != null) { // SCIPIO: CHANGED: useCache=false now prevents storage (stock code only prevented read)
+            outString = encoder.sanitize(outString);
+            if (useCache && partyContentCache != null) {
                 partyContentCache.put(cacheKey, outString);
             }
             return outString;
         } catch (GeneralException e) {
             Debug.logError(e, "Error rendering PartyContent, inserting empty String", module);
             String candidateOut = party.getModelEntity().isField(candidateFieldName) ? party.getString(candidateFieldName): "";
-            return candidateOut == null? "" : encoder.encode(candidateOut);
+            return candidateOut == null? "" : encoder.sanitize(candidateOut);
         } catch (IOException e) {
             Debug.logError(e, "Error rendering PartyContent, inserting empty String", module);
             String candidateOut = party.getModelEntity().isField(candidateFieldName) ? party.getString(candidateFieldName): "";
-            return candidateOut == null? "" : encoder.encode(candidateOut);
+            return candidateOut == null? "" : encoder.sanitize(candidateOut);
         }
     }
 

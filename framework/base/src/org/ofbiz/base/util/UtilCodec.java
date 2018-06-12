@@ -18,12 +18,6 @@
  *******************************************************************************/
 package org.ofbiz.base.util;
 
-import org.owasp.esapi.codecs.CSSCodec;
-import org.owasp.esapi.codecs.Codec;
-import org.owasp.esapi.codecs.HTMLEntityCodec;
-import org.owasp.esapi.codecs.PercentCodec;
-import org.owasp.esapi.codecs.XMLEntityCodec;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -38,33 +32,45 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.ofbiz.base.util.codec.EncoderResolver;
+import org.ofbiz.base.util.codec.HtmlEncoderPolicies;
+import org.owasp.esapi.codecs.CSSCodec;
+import org.owasp.esapi.codecs.Codec;
+import org.owasp.esapi.codecs.HTMLEntityCodec;
+import org.owasp.esapi.codecs.PercentCodec;
+import org.owasp.esapi.codecs.XMLEntityCodec;
+import org.owasp.html.HtmlPolicyBuilder;
+import org.owasp.html.PolicyFactory;
+import org.owasp.html.Sanitizers;
+
 public class UtilCodec {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    private static final HtmlEncoder htmlEncoder = new HtmlEncoder();
-    private static final XmlEncoder xmlEncoder = new XmlEncoder();
-    private static final StringEncoder stringEncoder = new StringEncoder();
+    private static final Map<String, SimpleEncoder> policyEncoders = EncoderResolver.resolveFromProperties("owasp", "sanitizer.policy."); // SCIPIO: added 2018-06-11
+    private static final HtmlEncoder htmlEncoder = getDefaultEncoder(new HtmlEncoder()); // SCIPIO: modified 2018-06-11: default override
+    private static final XmlEncoder xmlEncoder = getDefaultEncoder(new XmlEncoder());
+    private static final StringEncoder stringEncoder = getDefaultEncoder(new StringEncoder());
     /**
      * SCIPIO: Css identifier encoder (new).
      */
-    private static final CssIdEncoder cssIdEncoder = new CssIdEncoder();
+    private static final CssIdEncoder cssIdEncoder = getDefaultEncoder(new CssIdEncoder());
     /**
      * SCIPIO: Css string encoder (new).
      */
-    private static final CssStringEncoder cssStringEncoder = new CssStringEncoder();
+    private static final CssStringEncoder cssStringEncoder = getDefaultEncoder(new CssStringEncoder());
     /**
      * SCIPIO: Javascript encoder for string literals (new).
      */
-    private static final JsStringEncoder jsStringEncoder = new JsStringEncoder();
+    private static final JsStringEncoder jsStringEncoder = getDefaultEncoder(new JsStringEncoder());
     /**
      * SCIPIO: JSON encoder for string literals (new).
      */
-    private static final JsonStringEncoder jsonStringEncoder = new JsonStringEncoder();
+    private static final JsonStringEncoder jsonStringEncoder = getDefaultEncoder(new JsonStringEncoder());
     /**
      * SCIPIO: Raw/none encoder that returns the original string as-is. Useful as workaround.
      */
-    private static final RawEncoder rawEncoder = new RawEncoder();
+    private static final RawEncoder rawEncoder = getDefaultEncoder(new RawEncoder());
     
-    private static final UrlCodec urlCodec = new UrlCodec();
+    private static final UrlCodec urlCodec = new UrlCodec(); // SCIPIO: FIXME: this needs to be split between encode and decode...
     private static final List<Codec> codecs;
     static {
         List<Codec> tmpCodecs = new ArrayList<Codec>();
@@ -87,6 +93,7 @@ public class UtilCodec {
             "url"
     })));
 
+    @SuppressWarnings("serial")
     public static class IntrusionException extends GeneralRuntimeException {
         public IntrusionException(String message) {
             super(message);
@@ -95,6 +102,13 @@ public class UtilCodec {
 
     public static interface SimpleEncoder {
         public String encode(String original);
+        public String sanitize(String outString); // Only really useful with HTML, else simply calls encode() method 
+        
+        /**
+         * SCIPIO: Returns the language of this encoder.
+         * Added 2018-06-11 (backported from Scipio's own ContentLangUtil.ContentSanitizer, which will be killed).
+         */
+        public String getLang();
     }
 
     public static interface SimpleDecoder {
@@ -110,6 +124,67 @@ public class UtilCodec {
             }
             return htmlCodec.encode(IMMUNE_HTML, original);
         }
+        public String sanitize(String original) {
+            if (original == null) {
+                return null;
+            }
+            PolicyFactory sanitizer = Sanitizers.FORMATTING.and(Sanitizers.BLOCKS).and(Sanitizers.IMAGES).and(Sanitizers.LINKS).and(Sanitizers.STYLES);
+            if (UtilProperties.getPropertyAsBoolean("owasp", "sanitizer.permissive.policy", false)) {
+                sanitizer = sanitizer.and(PERMISSIVE_POLICY);
+            }
+            return sanitizer.sanitize(original);
+        }
+        @Override
+        public String getLang() { // SCIPIO
+            return "html";
+        }
+
+        // Given as an example based on rendering cmssite as it was before using the sanitizer.
+        // To use the PERMISSIVE_POLICY set sanitizer.permissive.policy to true.
+        // Note that I was unable to render </html> and </body>. I guess because <html> and <body> are not sanitized in 1st place (else the sanitizer makes some damages I found)
+        // You might even want to adapt the PERMISSIVE_POLICY to your needs... Be sure to check https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet before...
+        // And https://github.com/OWASP/java-html-sanitizer/blob/master/docs/getting_started.md for examples.
+        // If you want another example: https://android.googlesource.com/platform/packages/apps/UnifiedEmail/+/ec0fa48/src/com/android/mail/utils/HtmlSanitizer.java
+        public static final PolicyFactory PERMISSIVE_POLICY = new HtmlPolicyBuilder()
+                .allowWithoutAttributes("html", "body")
+                .allowAttributes("id", "class").globally()
+                .allowElements("div", "center", "span", "table", "td")
+                .allowWithoutAttributes("html", "body", "div", "span", "table", "td")
+                .allowAttributes("width").onElements("table")
+                .toFactory();
+    }
+
+    /**
+     * SCIPIO: HtmlEncoder variant that uses a policy compiled at load-time and better performance.
+     * Added 2018-06-11.
+     * @see org.ofbiz.base.util.codec.HtmlEncoderPolicies
+     */
+    public static abstract class OwaspHtmlEncoder extends HtmlEncoder {
+        public static final boolean PERMISSIVE = UtilProperties.getPropertyAsBoolean("owasp", "sanitizer.permissive.policy", false);
+        public abstract PolicyFactory getSanitizationPolicy();
+        @Override
+        public String sanitize(String original) {
+            if (original == null) {
+                return null;
+            }
+            return getSanitizationPolicy().sanitize(original);
+        }
+    }
+
+    /**
+     * SCIPIO: HtmlEncoder variant that uses a policy compiled at load-time and better performance.
+     * Added 2018-06-11.
+     * @see org.ofbiz.base.util.codec.HtmlEncoderPolicies
+     */
+    public static class FixedOwaspHtmlEncoder extends OwaspHtmlEncoder {
+        private final PolicyFactory sanitizationPolicy;
+        public FixedOwaspHtmlEncoder(PolicyFactory sanitizationPolicy) {
+            this.sanitizationPolicy = sanitizationPolicy;
+        }
+        @Override
+        public PolicyFactory getSanitizationPolicy() {
+            return sanitizationPolicy;
+        }
     }
 
     public static class XmlEncoder implements SimpleEncoder {
@@ -120,6 +195,13 @@ public class UtilCodec {
                 return null;
             }
             return xmlCodec.encode(IMMUNE_XML, original);
+        }
+        public String sanitize(String original) {
+            return encode(original);
+        }
+        @Override
+        public String getLang() { // SCIPIO
+            return "xml";
         }
     }
 
@@ -132,15 +214,22 @@ public class UtilCodec {
                 return null;
             }
         }
+        public String sanitize(String original) {
+            return encode(original);
+        }
 
         public String decode(String original) {
             try {
-                String canonical = canonicalize(original);
-                return URLDecoder.decode(canonical, "UTF-8");
+                //canonicalize(original); // SCIPIO: fixed by upstream, I commented out useless call
+                return URLDecoder.decode(original, "UTF-8");
             } catch (UnsupportedEncodingException ee) {
                 Debug.logError(ee, module);
                 return null;
             }
+        }
+        @Override
+        public String getLang() { // SCIPIO
+            return "url";
         }
     }
 
@@ -150,6 +239,13 @@ public class UtilCodec {
                 original = original.replace("\"", "\\\"");
             }
             return original;
+        }
+        public String sanitize(String original) {
+            return encode(original);
+        }
+        @Override
+        public String getLang() { // SCIPIO
+            return "string";
         }
     }
 
@@ -161,6 +257,14 @@ public class UtilCodec {
         private CSSCodec cssCodec = new CSSCodec();
         public String encode(String original) {
             return (original != null) ? cssCodec.encode(IMMUNE_CSS, original) : null;
+        }
+        @Override
+        public String sanitize(String original) {
+            return encode(original);
+        }
+        @Override
+        public String getLang() { // SCIPIO
+            return "cssid";
         }
     }
     
@@ -175,6 +279,14 @@ public class UtilCodec {
         public String encode(String original) {
             return (original != null) ? cssCodec.encode(IMMUNE_CSS, original) : null;
         }
+        @Override
+        public String sanitize(String original) {
+            return encode(original);
+        }
+        @Override
+        public String getLang() { // SCIPIO
+            return "cssstr";
+        }
     }
     
     /**
@@ -184,6 +296,14 @@ public class UtilCodec {
         public String encode(String original) {
             return (original != null) ? 
                     freemarker.template.utility.StringUtil.javaScriptStringEnc(original) : null;
+        }
+        @Override
+        public String sanitize(String original) {
+            return encode(original);
+        }
+        @Override
+        public String getLang() { // SCIPIO
+            return "jsstr";
         }
     }
     
@@ -195,6 +315,14 @@ public class UtilCodec {
             return (original != null) ? 
                     freemarker.template.utility.StringUtil.jsonStringEnc(original) : null;
         }
+        @Override
+        public String sanitize(String original) {
+            return encode(original);
+        }
+        @Override
+        public String getLang() { // SCIPIO
+            return "jsonstr";
+        }
     }
     
     /**
@@ -204,6 +332,14 @@ public class UtilCodec {
         public String encode(String original) {
             return original;
         }
+        @Override
+        public String sanitize(String original) {
+            return original;
+        }
+        @Override
+        public String getLang() { // SCIPIO
+            return "raw";
+        }
     }
     
     
@@ -212,18 +348,46 @@ public class UtilCodec {
     private static final Map<String, SimpleEncoder> encoderMap;
     static {
         Map<String, SimpleEncoder> map = new HashMap<>();
-        map.put("raw", rawEncoder); // SCIPIO: Raw/none encoder that returns the original string as-is. Useful as workaround and to simplify code.
-        map.put("url", urlCodec);
-        map.put("xml", xmlEncoder);
-        map.put("html", htmlEncoder);
-        map.put("css", cssStringEncoder);
-        map.put("cssstr", cssStringEncoder);
-        map.put("cssid", cssIdEncoder);
-        map.put("jsstr", jsStringEncoder);
-        map.put("jsonstr", jsonStringEncoder);
-        map.put("string", stringEncoder);
-        map.put("raw", rawEncoder);
+
+        // SCIPIO: 2018-06-11: dump the html specific profile encoders into here
+        map.putAll(policyEncoders);
+        
+        map.put(rawEncoder.getLang(), rawEncoder); // SCIPIO: Raw/none encoder that returns the original string as-is. Useful as workaround and to simplify code.
+        map.put(urlCodec.getLang(), urlCodec);
+        map.put(xmlEncoder.getLang(), xmlEncoder);
+        map.put(htmlEncoder.getLang(), htmlEncoder);
+        map.put(cssStringEncoder.getLang(), cssStringEncoder);
+        map.put("css", cssStringEncoder); // ALIAS - discourage use?
+        map.put(cssIdEncoder.getLang(), cssIdEncoder);
+        map.put(jsStringEncoder.getLang(), jsStringEncoder);
+        map.put(jsonStringEncoder.getLang(), jsonStringEncoder);
+        map.put(stringEncoder.getLang(), stringEncoder);
+        map.put(rawEncoder.getLang(), rawEncoder);
+
+        StringBuilder sb = new StringBuilder("Registered script language encoders/sanitizers:");
+        List<String> sortedNames = new ArrayList<>(map.keySet());
+        Collections.sort(sortedNames);
+        for(String name : sortedNames) {
+            sb.append("\n  ");
+            sb.append(name);
+            sb.append(" -> ");
+            sb.append(map.get(name).getClass().getName());
+        }
+        Debug.logInfo(sb.toString(), module);
+        
         encoderMap = map;
+    }
+    
+    @SuppressWarnings("unchecked")
+    private static <T extends SimpleEncoder> T getDefaultEncoder(T defaultEncoder) { // SCIPIO
+        T encoder = null;
+        try {
+            encoder = (T) policyEncoders.get(defaultEncoder.getLang() + "-default");
+        } catch(ClassCastException e) {
+            Debug.logError(e, "Unexpected script language encoder class for type '" 
+                    + defaultEncoder.getLang() + "-default; verify property configuration", module);
+        }
+        return (encoder != null) ? encoder : defaultEncoder;
     }
     
     public static SimpleEncoder getEncoder(String type) {
@@ -241,12 +405,12 @@ public class UtilCodec {
     }
     
     /**
-     * SCIPIO: Returns html encoder (quick method).
+     * SCIPIO: Returns default html encoder (quick method).
      */
     public static SimpleEncoder getHtmlEncoder() {
         return htmlEncoder;
     }
-    
+
     /**
      * SCIPIO: Returns xml encoder (quick method).
      */
@@ -355,6 +519,13 @@ public class UtilCodec {
      */
     public static String decode(String lang, String value) {
         return getDecoder(lang).decode(value);
+    }
+    
+    /**
+     * SCIPIO: Quick sanitizing method.
+     */
+    public static String sanitize(String lang, String value) {
+        return getEncoder(lang).sanitize(value);
     }
 
     public static String canonicalize(String value) throws IntrusionException {

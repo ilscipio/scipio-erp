@@ -4,6 +4,7 @@ import org.ofbiz.base.start.Config;
 import org.ofbiz.base.start.ExtendedStartupLoader;
 import org.ofbiz.base.start.StartupException;
 import org.ofbiz.base.util.ScriptUtil;
+import org.ofbiz.base.util.UtilCodec;
 
 public class ScipioFinishStartupCoreEvents implements ExtendedStartupLoader {
 
@@ -14,6 +15,7 @@ public class ScipioFinishStartupCoreEvents implements ExtendedStartupLoader {
     @Override
     public void start() throws StartupException {
         initScriptEngine();
+        initCodecs();
     }
 
     @Override
@@ -30,5 +32,9 @@ public class ScipioFinishStartupCoreEvents implements ExtendedStartupLoader {
      */
     protected void initScriptEngine() throws StartupException {
         ScriptUtil.getScriptEngineManager();
+    }
+    
+    protected void initCodecs() throws StartupException {
+        UtilCodec.getEncoder("html-default");
     }
 }

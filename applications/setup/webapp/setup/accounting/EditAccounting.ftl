@@ -46,6 +46,7 @@ under the License.
 	});
 	
 	function customToggleTab (e, t) {
+	  var tabsDisabled=${(!topGlAccountId?has_content)?string};      		
 	  if (typeof setupControlMenu != "undefined") {
 		  var tabId = null;
 		  if ($(t).length) { // foundation 5.5.3		  	
@@ -63,20 +64,39 @@ under the License.
 		  }
 		  var tabIdToFormId = {
 		    "preferencesTab": {
-		        "formId": "setupAccounting-preferences-form"
+		        "formId": "setupAccounting-preferences-form",
+		        "disabled": false
 		    },
 		    "glAccountsTab": {
-		    	"formId": ""
+		    	"formId": "",
+		    	"disabled": tabsDisabled 
 		    },
 		    "fiscalPeriodsTab": {
-		    	"formId": ""
+		    	"formId": "",
+		    	"disabled": tabsDisabled
 		    },
 		    "accountingTransactionsTab": {
-		    	"formId": ""
+		    	"formId": "",
+		    	"disabled": tabsDisabled
 		    },
 		    "journalTab": {
-		    	"formId": "setupAccounting-selectJournalEntry-form"
+		    	"formId": "setupAccounting-selectJournalEntry-form",
+		    	"disabled": tabsDisabled
 		    }
+		  }
+		  for (tId in tabIdToFormId) {
+			  if (tabIdToFormId[tId].disabled) {
+			  	if ($(t).length) { // foundation 5.5.3
+			  		$(t.context).removeAttr('data-toggle');
+			  	} else if ($(e).length) { // bootstrap 4
+			  		if ($('[hash="#' + tId + '"]').is('[data-toggle]')) {
+			  			$(e).removeAttr('data-toggle');
+			  		} else if ($(e.currentTarget).is('[data-toggle]')) {
+			  			$(e.currentTarget).removeAttr('data-toggle');
+			  		}
+			  		console.log("element hash ===> " + e.hash);
+			  	}
+			  }
 		  }
 		  formId = tabIdToFormId[tabId].formId;
 		  setupControlMenu.setSubmitFormId(formId);
@@ -87,20 +107,15 @@ under the License.
 	}
 </@script>
 
-<#if !topGlAccountId?has_content>
-	<#assign disabledTab>+${styles.hidden!""}</#assign>
-</#if>
-${Static["org.ofbiz.base.util.Debug"].log("disabledTab =====> " + disabledTab!)}
-
 <@tabs id="accountingTabs">
 	<@tab id="preferencesTab" title="Preferences">
 		<@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditAcctgPreferences"/>
 	</@tab>
-	<@tab id="glAccountsTab" title="Configure GL Accounts" class=disabledTab!>
+	<@tab id="glAccountsTab" title="Configure GL Accounts">
 		<@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditGLAccountTree" />
 	</@tab>
-	<@tab id="fiscalPeriodsTab" title="Configure Fiscal Periods" class=disabledTab!><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditFiscalPeriods"/></@tab>
-	<@tab id="accountingTransactionsTab" title="Configure Accounting Transactions" class=disabledTab!><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditAccountingTransactions"/></@tab>
-	<@tab id="journalTab" title="Configure Journal" class=disabledTab!><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditJournals"/></@tab>
+	<@tab id="fiscalPeriodsTab" title="Configure Fiscal Periods"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditFiscalPeriods"/></@tab>
+	<@tab id="accountingTransactionsTab" title="Configure Accounting Transactions"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditAccountingTransactions"/></@tab>
+	<@tab id="journalTab" title="Configure Journal"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditJournals"/></@tab>
 </@tabs>     
 

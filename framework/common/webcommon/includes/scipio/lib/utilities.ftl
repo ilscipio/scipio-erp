@@ -2945,9 +2945,11 @@ NOTE: Validation and allowed code filters are not fully implemented (TODO), but 
                                     and assuming coming from completely untrusted sources (public)
                                     NOTE: 2016-10-20: NOT IMPLEMENTED. Currently does same as {{{none}}}.
                                   * {{{internal}}}: allow HTML from trusted sources (employees)
-                                    NOTE: 2016-10-20: NOT IMPLEMENTED. Currently does same as {{{any}}}.
+                                    2018-06-11: This now sanitizes using a professional HTML sanitizer.
+                                    See {{{org.ofbiz.base.util.UtilCodec.HtmlEncoder.sanitize(String)}}} for implementation.
                                   * {{{any-valid}}}: any HTML allowed, as long as it is well-formed
-                                    NOTE: 2016-10-20: NOT IMPLEMENTED. Currently does same as {{{any}}}.
+                                    NOTE: 2018-06-11: STILL NOT IMPLEMENTED. Currently does same as {{{any}}}.
+                                    The current professional sanitizer may be too aggressive for this level.
                                   * {{{any}}}: escaping disabled/bypassed, for debugging purposes
 
   * Related *
@@ -2991,7 +2993,7 @@ NOTE: Validation and allowed code filters are not fully implemented (TODO), but 
             <#return value><#-- TODO: NOT IMPLEMENTED (validation library required) -->
             <#break>
           <#case "internal">
-            <#return value><#-- TODO: NOT IMPLEMENTED (validation library required) -->
+            <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].sanitize("html", value))><#-- TODO: NOT IMPLEMENTED (validation library required) -->
             <#break>
           <#case "external">
             <#return value?html><#-- TODO: NOT IMPLEMENTED (validation library required) -->

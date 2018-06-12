@@ -44,9 +44,9 @@ if (!orderHeader && orderId) {
     orderHeader = from("OrderHeader").where("orderId", orderId).queryOne();
     try {
         if (parameters.facilityId) {
-            response.setHeader("Content-Disposition","attachment; filename=\"PickSheet" + orderId + ".pdf" + "\";");
+            UtilHttp.setContentDisposition(response, "PickSheet" + orderId + ".pdf");
         } else {
-            response.setHeader("Content-Disposition","attachment; filename=\"" + orderId + ".pdf" + "\";");
+            UtilHttp.setContentDisposition(response, orderId + ".pdf");
         }
     } catch (MissingPropertyException e) {
         // This hack for OFBIZ-6792 to avoid "groovy.lang.MissingPropertyException: No such property: response for class: CompanyHeader" when response does not exist (in sendOrderConfirmation service)
@@ -59,10 +59,10 @@ if (!orderHeader && orderId) {
 if (!invoice && invoiceId)    {
     invoice = from("Invoice").where("invoiceId", invoiceId).queryOne();
     try {
-        response.setHeader("Content-Disposition","attachment; filename=\"" + invoiceId + ".pdf" + "\";");
+        UtilHttp.setContentDisposition(response, invoiceId + ".pdf");
     } catch (MissingPropertyException e) {
         // This hack for OFBIZ-6792 to avoid "groovy.lang.MissingPropertyException: No such property: response for class: CompanyHeader" when response does not exist (in sendOrderConfirmation service)
-    }
+    } 
 }
 
 if (!returnHeader && returnId) {

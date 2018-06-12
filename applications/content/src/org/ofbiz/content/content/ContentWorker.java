@@ -35,6 +35,7 @@ import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -53,7 +54,6 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
-import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.minilang.MiniLangException;
 import org.ofbiz.minilang.SimpleMapProcessor;
 import org.ofbiz.service.DispatchContext;
@@ -61,8 +61,6 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
-import org.owasp.html.PolicyFactory;
-import org.owasp.html.Sanitizers;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -75,6 +73,7 @@ import freemarker.ext.dom.NodeModel;
 public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInterface {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    static final UtilCodec.SimpleEncoder encoder = UtilCodec.getEncoder("html");
 
     public ContentWorker() { }
 
@@ -382,8 +381,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
         String rendered = writer.toString();
         // According to https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet#XSS_Prevention_Rules_Summary
         // Normally head should be protected by X-XSS-Protection Response Header by default
-        if (EntityUtilProperties.propertyValueEqualsIgnoreCase("content.properties", "content.sanitize", "true", delegator) 
-                && (rendered.contains("<script>")
+        if ((rendered.contains("<script>")
                 || rendered.contains("<!--")
                 || rendered.contains("<div")
                 || rendered.contains("<style>")
@@ -392,8 +390,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
                 || rendered.contains("<input")
                 || rendered.contains("<iframe")
                 || rendered.contains("<a"))) {
-            PolicyFactory sanitizer = Sanitizers.FORMATTING.and(Sanitizers.BLOCKS).and(Sanitizers.IMAGES).and(Sanitizers.LINKS).and(Sanitizers.STYLES);
-            rendered = sanitizer.sanitize(rendered);
+            rendered = encoder.sanitize(rendered);
         }
         return rendered; 
     }

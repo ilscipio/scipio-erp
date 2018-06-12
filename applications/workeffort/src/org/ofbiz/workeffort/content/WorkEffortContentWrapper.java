@@ -40,7 +40,6 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.content.content.CommonContentWrapper;
 import org.ofbiz.content.content.ContentLangUtil;
-import org.ofbiz.content.content.ContentLangUtil.ContentSanitizer;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.content.content.ContentWrapper;
 import org.ofbiz.entity.Delegator;
@@ -222,7 +221,7 @@ public class WorkEffortContentWrapper extends CommonContentWrapper {
             return null;
         }
 
-        ContentSanitizer encoder = ContentLangUtil.getContentWrapperSanitizer(encoderType);
+        UtilCodec.SimpleEncoder encoder = ContentLangUtil.getContentWrapperSanitizer(encoderType);
         String candidateFieldName = ModelUtil.dbNameToVarName(workEffortContentTypeId);
         String cacheKey = null;
         if (useCache) { // SCIPIO: don't build cache key if disabled
@@ -250,19 +249,19 @@ public class WorkEffortContentWrapper extends CommonContentWrapper {
                 outString = workEffort.getModelEntity().isField(candidateFieldName) ? workEffort.getString(candidateFieldName): "";
                 outString = outString == null? "" : outString;
             }
-            outString = encoder.encode(outString);
-            if (useCache && workEffortContentCache != null) { // SCIPIO: CHANGED: useCache=false now prevents storage (stock code only prevented read)
+            outString = encoder.sanitize(outString);
+            if (useCache && workEffortContentCache != null) {
                 workEffortContentCache.put(cacheKey, outString);
             }
             return outString;
         } catch (GeneralException e) {
             Debug.logError(e, "Error rendering WorkEffortContent, inserting empty String", module);
             String candidateOut = workEffort.getModelEntity().isField(candidateFieldName) ? workEffort.getString(candidateFieldName): "";
-            return candidateOut == null? "" : encoder.encode(candidateOut);
+            return candidateOut == null? "" : encoder.sanitize(candidateOut);
         } catch (IOException e) {
             Debug.logError(e, "Error rendering WorkEffortContent, inserting empty String", module);
             String candidateOut = workEffort.getModelEntity().isField(candidateFieldName) ? workEffort.getString(candidateFieldName): "";
-            return candidateOut == null? "" : encoder.encode(candidateOut);
+            return candidateOut == null? "" : encoder.sanitize(candidateOut);
         }
     }
 

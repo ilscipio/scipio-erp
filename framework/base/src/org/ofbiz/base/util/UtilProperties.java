@@ -1286,22 +1286,32 @@ public class UtilProperties implements Serializable {
      * SCIPIO: Extracts properties having the given prefix and keyed by an ID as the next name part between dots.
      * Added 2017-11.
      */
-    public static void extractPropertiesWithPrefixAndId(Map<String, Map<String, Object>> out, Properties properties, String prefix) {
+    public static <T> void extractPropertiesWithPrefixAndId(Map<String, Map<String, T>> out, Properties properties, String prefix) {
+        extractPropertiesWithPrefixAndId(out, (Map<?, ?>) properties, prefix);
+    }
+    
+    /**
+     * SCIPIO: Extracts properties having the given prefix and keyed by an ID as the next name part between dots.
+     * Added 2017-11.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> void extractPropertiesWithPrefixAndId(Map<String, Map<String, T>> out, Map<?, ?> properties, String prefix) {
         if (prefix == null) prefix = "";
-        for(String name : properties.stringPropertyNames()) {
+        for(Map.Entry<?, ?> entry : properties.entrySet()) {
+            String name = (String) entry.getKey();
             if (name.startsWith(prefix)) {
                 String rest = name.substring(prefix.length());
                 int nextDotIndex = rest.indexOf('.');
                 if (nextDotIndex > 0 && nextDotIndex < (rest.length() - 1)) {
                     String id = rest.substring(0, nextDotIndex);
                     String subName = rest.substring(nextDotIndex + 1);
-                    String value = properties.getProperty(name);
-                    Map<String, Object> subMap = out.get(id);
+                    String value = (String) entry.getValue();
+                    Map<String, T> subMap = out.get(id);
                     if (subMap == null) {
                         subMap = new HashMap<>();
                         out.put(id, subMap);
                     }
-                    subMap.put(subName, value);
+                    subMap.put(subName, (T) value);
                 }
             }
         }

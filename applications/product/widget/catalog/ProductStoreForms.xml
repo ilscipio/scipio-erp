@@ -23,7 +23,6 @@
     <form name="EditProductStore" type="single" target="updateProductStore" title="" default-map-name="productStore"
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="productStore==null" target="createProductStore"/>
-
         <auto-fields-service service-name="updateProductStore" map-name=""/>
         
         <field use-when="productStore!=null" name="productStoreId"><display/></field>
@@ -330,6 +329,7 @@
                 <sort-field name="isDemoStore"/>
                 <sort-field name="defaultLocaleString"/>
                 <sort-field name="defaultCurrencyUomId"/>
+                <sort-field name="defaultTimeZoneString"/>
                 <sort-field name="isContentReference"/><!-- SCIPIO: new -->
             </field-group>
             <field-group title="${uiLabelMap.CommonInventory}" collapsible="true">

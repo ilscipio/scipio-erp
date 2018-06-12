@@ -1,10 +1,5 @@
 package org.ofbiz.webapp.content;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -24,7 +19,7 @@ public abstract class ContentRequestWorker {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     // SCIPIO: FIXME: this is for strict=false mode, and it's a wreck of a workaround
-    private static final String htmlEscapedFrontSlash = UtilCodec.encode("html", "/");
+    private static final String htmlEscapedFrontSlash = UtilCodec.encode("/", "html");
     private static final String jsEscapedFrontSlash = "\\/";
     
     public static final String ORIGINAL_SIZETYPE = "original";

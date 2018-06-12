@@ -520,22 +520,24 @@ public class UtilCodec {
     
     /**
      * SCIPIO: Quick encoding method.
+     * <p>
+     * NOTE: 2018-06-12: parameters order fixed (will crash clearly if use wrong one).
      */
-    public static String encode(String lang, String value) {
+    public static String encode(String value, String lang) {
         return getEncoder(lang).encode(value);
     }
     
     /**
      * SCIPIO: Quick decoding method.
      */
-    public static String decode(String lang, String value) {
+    public static String decode(String value, String lang) {
         return getDecoder(lang).decode(value);
     }
     
     /**
      * SCIPIO: Quick sanitizing method.
      */
-    public static String sanitize(String lang, String value) {
+    public static String sanitize(String value, String lang) {
         return getEncoder(lang).sanitize(value);
     }
 

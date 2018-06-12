@@ -50,6 +50,6 @@ public class SanitizeMarkupMethod implements TemplateMethodModelEx {
         String value = LangFtlUtil.toRawJavaString((TemplateModel) args.get(0), env);
         String langPolicy = LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) args.get(1)));
         
-        return new SimpleScalar(UtilCodec.sanitize(langPolicy, value));
+        return new SimpleScalar(UtilCodec.sanitize(value, langPolicy));
     }
 }

@@ -16,7 +16,7 @@
 <#-- WARN: DUPLICATION -->
 <#function escapeVal value lang opts={}>
   <#if lang?contains("style")><#-- DEPRECATED: TODO: remove (slow) -->
-    <#local lang = lang?replace("style", "cssstr")>
+    <#local lang = lang?replace("style", "css")>
   </#if>
   <#local resolved = Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].resolveScriptForLang(value, lang)!false>
   <#if resolved?is_boolean>
@@ -78,17 +78,17 @@
       <#break>
     <#case "css">
       <#-- FIXME: too aggressive
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("cssstr", value))> -->
+      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode(value, "cssstr"))> -->
       <#return value>
       <#break>
     <#case "css-html">
       <#-- FIXME: too aggressive
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("cssstr", value))?html>-->
+      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode(value, "cssstr"))?html>-->
       <#return value?html>
       <#break>
     <#case "html-css">
       <#-- FIXME: too aggressive
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("cssstr", value?html))>-->
+      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode(value?html, "cssstr"))>-->
       <#return value?html>
       <#break>
     <#case "raw">
@@ -101,7 +101,7 @@
 <#-- WARN: DUPLICATION -->
 <#function escapeFullUrl value lang opts={}>
   <#if lang?contains("style")><#-- DEPRECATED: TODO: remove (slow) -->
-    <#local lang = lang?replace("style", "cssstr")>
+    <#local lang = lang?replace("style", "css")>
   </#if>
   <#local resolved = Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].resolveScriptForLang(value, lang)!false>
   <#if resolved?is_boolean>
@@ -147,17 +147,17 @@
       <#break>
     <#case "css">
       <#-- FIXME: too aggressive
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("cssstr", value))> -->
+      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode(value, "cssstr"))> -->
       <#return value>
       <#break>
     <#case "css-html">
       <#-- FIXME: too aggressive
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("cssstr", value))?html>-->
+      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode(value, "cssstr"))?html>-->
       <#return value?html>
       <#break>
     <#case "html-css">
       <#-- FIXME: too aggressive
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("cssstr", value?html))>-->
+      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode(value?html, "cssstr"))>-->
       <#return value?html>
       <#break>
     <#case "raw">

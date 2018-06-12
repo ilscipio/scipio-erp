@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ofbiz.base.util.codec.EncoderResolver;
-import org.ofbiz.base.util.codec.HtmlEncoderPolicies;
+import org.ofbiz.base.util.codec.HtmlSanitizerPolicies;
 import org.owasp.esapi.codecs.CSSCodec;
 import org.owasp.esapi.codecs.Codec;
 import org.owasp.esapi.codecs.HTMLEntityCodec;
@@ -45,7 +45,7 @@ import org.owasp.html.Sanitizers;
 
 public class UtilCodec {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    private static final Map<String, SimpleEncoder> policyEncoders = EncoderResolver.resolveFromProperties("owasp", "sanitizer.policy."); // SCIPIO: added 2018-06-11
+    private static Map<String, SimpleEncoder> policyEncoders = EncoderResolver.resolveFromProperties("utilcodec", "sanitizer.policy."); // SCIPIO: added 2018-06-11
     private static final HtmlEncoder htmlEncoder = getDefaultEncoder(new HtmlEncoder()); // SCIPIO: modified 2018-06-11: default override
     private static final XmlEncoder xmlEncoder = getDefaultEncoder(new XmlEncoder());
     private static final StringEncoder stringEncoder = getDefaultEncoder(new StringEncoder());
@@ -155,9 +155,21 @@ public class UtilCodec {
     }
 
     /**
+     * SCIPIO: The original Html encoder which did no sanitization.
+     * (Yes, this is backward, due to upstream, sorry).
+     * Added 2018-06-11.
+     */
+    public static class EscapeHtmlEncoder extends HtmlEncoder {
+        @Override
+        public String sanitize(String original) {
+            return this.encode(original);
+        }
+    }
+
+    /**
      * SCIPIO: HtmlEncoder variant that uses a policy compiled at load-time and better performance.
      * Added 2018-06-11.
-     * @see org.ofbiz.base.util.codec.HtmlEncoderPolicies
+     * @see org.ofbiz.base.util.codec.HtmlSanitizerPolicies
      */
     public static abstract class OwaspHtmlEncoder extends HtmlEncoder {
         public static final boolean PERMISSIVE = UtilProperties.getPropertyAsBoolean("owasp", "sanitizer.permissive.policy", false);
@@ -174,7 +186,7 @@ public class UtilCodec {
     /**
      * SCIPIO: HtmlEncoder variant that uses a policy compiled at load-time and better performance.
      * Added 2018-06-11.
-     * @see org.ofbiz.base.util.codec.HtmlEncoderPolicies
+     * @see org.ofbiz.base.util.codec.HtmlSanitizerPolicies
      */
     public static class FixedOwaspHtmlEncoder extends OwaspHtmlEncoder {
         private final PolicyFactory sanitizationPolicy;

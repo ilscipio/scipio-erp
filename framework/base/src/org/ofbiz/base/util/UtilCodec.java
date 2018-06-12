@@ -138,13 +138,17 @@ public class UtilCodec {
         public String getLang() { // SCIPIO
             return "html";
         }
+
         // Given as an example based on rendering cmssite as it was before using the sanitizer.
-        // To use the PERMISSIVE_POLICY set sanitizer.permissive.policy to true. 
-        // Note that I was unable to render </html> and </body>. I guess because are <html> and <body> are not sanitized in 1st place (else the sanitizer makes some damages I found)
+        // To use the PERMISSIVE_POLICY set sanitizer.permissive.policy to true.
+        // Note that I was unable to render </html> and </body>. I guess because <html> and <body> are not sanitized in 1st place (else the sanitizer makes some damages I found)
         // You might even want to adapt the PERMISSIVE_POLICY to your needs... Be sure to check https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet before...
+        // And https://github.com/OWASP/java-html-sanitizer/blob/master/docs/getting_started.md for examples.
+        // If you want another example: https://android.googlesource.com/platform/packages/apps/UnifiedEmail/+/ec0fa48/src/com/android/mail/utils/HtmlSanitizer.java
         public static final PolicyFactory PERMISSIVE_POLICY = new HtmlPolicyBuilder()
+                .allowWithoutAttributes("html", "body")
                 .allowAttributes("id", "class").globally()
-                .allowElements("html", "body", "div", "center", "span", "table", "td")
+                .allowElements("div", "center", "span", "table", "td")
                 .allowWithoutAttributes("html", "body", "div", "span", "table", "td")
                 .allowAttributes("width").onElements("table")
                 .toFactory();

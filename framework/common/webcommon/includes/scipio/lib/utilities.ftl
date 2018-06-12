@@ -2933,32 +2933,37 @@ NOTE: Validation and allowed code filters are not fully implemented (TODO), but 
                                 are not recognized (and ''may'' be errors if due to double-escaping errors).
                                 If false, the function ''may'' attempt heuristics to prevent double-escaping issues (not always desirable),
                                 mainly to mitigate screen auto-escaping and early escaping.
-                              * {{{allow}}} {{{((string)|any|none|...|, default: none)}}} Allowed code exceptions (validation filter)
+                              * {{{allow}}} {{{((string)|any|none|...|, default: none)}}} Markup sanitization control (allowed code)
+                                2018-06-12: This is now based on #sanitizeMarkup. Most of these now directly map to names of sanitization
+                                    policies in utilcodec.properties, albeit the language prefix differs.
+                                    Custom policies may be coded there (java factories).
                                 By default, no code exceptions are allowed ("none"), and regular aggressive escaping is applied.
                                 At the other extreme ({{{any}}}), escaping may be disabled entirely.
                                 In between, each language may support filtering levels or profiles to restrict allowed code. 
                                 The possible values depend on the language.
                                 Recognized {{{allow}}} filters:
-                                * {{{htmlmarkup}}}: {{{(any|none|any-valid|internal|external, default: none)}}}
+                                * {{{htmlmarkup}}}: {{{(default: none)}}}
                                   * {{{none}}}: no HTML elements or code allowed, regular escaping applied (default behavior)
+                                  * {{{perm}}}: uses the "html-perm" permissive sanitizer (see utilcodec.properties)
+                                  * {{{strict}}}: uses the "html-strict" strict sanitizer (see utilcodec.properties)
+                                  * {{{anyvalid}}}: any HTML allowed, as long as it is well-formed
+                                    NOTE: 2018-06-11: STILL NOT IMPLEMENTED: currently does same as {{{any}}}.
+                                    Does not provide any security (even once implemented).
+                                  * {{{any}}}: escaping disabled/bypassed, for debugging purposes
                                   * {{{external}}}: allow only very basic HTML elements that are always safe to use, even from
                                     and assuming coming from completely untrusted sources (public)
-                                    NOTE: 2016-10-20: NOT IMPLEMENTED. Currently does same as {{{none}}}.
+                                    2018-06-11: This now uses the "html-strict" sanitizer by default (see utilcodec.properties)
                                   * {{{internal}}}: allow HTML from trusted sources (employees)
-                                    2018-06-11: This now sanitizes using a professional HTML sanitizer.
-                                    See {{{org.ofbiz.base.util.UtilCodec.HtmlEncoder.sanitize(String)}}} for implementation.
-                                  * {{{any-valid}}}: any HTML allowed, as long as it is well-formed
-                                    NOTE: 2018-06-11: STILL NOT IMPLEMENTED. Currently does same as {{{any}}}.
-                                    The current professional sanitizer may be too aggressive for this level.
-                                  * {{{any}}}: escaping disabled/bypassed, for debugging purposes
+                                    2018-06-11: This now uses the "html-perm" permissive sanitizer by default (see utilcodec.properties)
 
   * Related *
     #rawString
     #wrapAsRaw
     #escapeFullUrl
+    #sanitizeMarkup
     
   * History *
-    Modified for 1.14.4 (added {{{css}}}, {{{cssid}}}, removed the old {{{style}}} synonym)
+    Modified for 1.14.4 (added {{{css}}}, {{{cssid}}}, removed the old {{{style}}} synonym, opts.allow implementation)
     Added for 1.14.2, previously known as {{{escapePart}}}.
 -->
 <#function escapeVal value lang opts={}>
@@ -2984,25 +2989,8 @@ NOTE: Validation and allowed code filters are not fully implemented (TODO), but 
       <#break>
     <#case "htmlmarkup">
       <#if opts.allow?has_content>
-        <#-- TODO: implement external, internal, any-valid -->
-        <#switch opts.allow>
-          <#case "any">
-            <#return value>
-            <#break>
-          <#case "any-valid">
-            <#return value><#-- TODO: NOT IMPLEMENTED (validation library required) -->
-            <#break>
-          <#case "internal">
-            <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].sanitize("html", value))><#-- TODO: NOT IMPLEMENTED (validation library required) -->
-            <#break>
-          <#case "external">
-            <#return value?html><#-- TODO: NOT IMPLEMENTED (validation library required) -->
-            <#break>
-          <#case "none">
-          <#default>
-            <#return value?html>
-            <#break>
-        </#switch>
+        <#-- NOTE: if the encoder is not found, this simply crashes, which is good - error must be clear! -->
+        <#return sanitizeMarkup(value, "html-"+opts.allow)>
       <#else>
         <#return value?html>
       </#if>
@@ -3021,22 +3009,22 @@ NOTE: Validation and allowed code filters are not fully implemented (TODO), but 
       <#return value?url("UTF-8")><#-- FIXME: lang should not be hardcoded, ofbiz config issue -->
       <#break>
     <#case "css">
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("cssstr", value))>
+      <#return utilCodecEncode(value, "cssstr")>
       <#break>
     <#case "css-html">
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("cssstr", value))?html>
+      <#return utilCodecEncode(value, "cssstr")?html>
       <#break>
     <#case "html-css">
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("cssstr", value?html))>
+      <#return utilCodecEncode(value?html, "cssstr")>
       <#break>
     <#case "cssid">
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("cssid", value))>
+      <#return utilCodecEncode(value, "cssid")>
       <#break>
     <#case "cssid-html">
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("cssid", value))?html>
+      <#return utilCodecEncode(value, "cssid")?html>
       <#break>
     <#case "html-cssid">
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("cssid", value?html))>
+      <#return utilCodecEncode(value?html, "cssid")>
       <#break>
     <#case "raw">
     <#default>
@@ -3044,29 +3032,6 @@ NOTE: Validation and allowed code filters are not fully implemented (TODO), but 
       <#break>
   </#switch>
 </#function>
-
-<#-- alternative super-simple implementation, TODO: review if worth its own alias
-<#function escapeHtmlMarkup value allow="">
-    <#switch rawString(allow)>
-      <#case "any">
-        <#return value>
-        <#break>
-      <#case "any-valid">
-        <#return value>
-        <#break>
-      <#case "internal">
-        <#return value>
-        <#break>
-      <#case "external">
-        <#return value?html>
-        <#break>
-      <#case "none">
-      <#default>
-        <#return value?html>
-        <#break>
-    </#switch>
-</#function>
--->
 
 <#-- 
 *************
@@ -3106,7 +3071,7 @@ DEPRECATED: This was never properly defined or implemented and no longer meaning
   </#if>
   <#-- FIXME -->
   <#-- NOTE: Currently we support almost the same types as Ofbiz, so no need for a switch -->
-  <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode(lang, value))>
+  <#return utilCodecEncode(value, lang)>
 </#function>
 
 <#-- 
@@ -3210,13 +3175,13 @@ For more information about escaping in general, see >>>standard/htmlTemplate.ftl
       <#return value?xml>
       <#break>
     <#case "css">
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("cssstr", value))>
+      <#return utilCodecEncode(value, "cssstr")>
       <#break>
     <#case "css-html">
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("cssstr", value))?html>
+      <#return utilCodecEncode(value, "cssstr")?html>
       <#break>
     <#case "html-css">
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("cssstr", value?html))>
+      <#return utilCodecEncode(value?html, "cssstr")>
       <#break>
     <#case "raw">
     <#default>
@@ -3300,6 +3265,43 @@ improved for Scipio.
   </#if>
   <#return value>
 </#function>
+
+<#-- 
+*************
+* sanitizeMarkup
+************
+Sanitizes a value containing markup in a language such as HTML, using
+deep validation where possible.
+
+Sanitization policies are defined system-wide in utilcodec.properties, and custom
+ones may be added by adding new Java factories.
+
+NOTE: Contrary to #escapeVal, here the language names should not be suffixed with "*markup".
+    For "html", use "html-[policy]", NOT "htmlmarkup-*".
+                                    
+WARN: This method is expensive to use at run-time, and should not be used
+    in performance-critical areas; for that, the *ContentWrapper classes
+    offer a cache around sanitized content.
+
+  * Parameters *
+    value                   = The string or string-like value to escape
+                              2016-09-29: This now automatically coerces non-strings to string, for convenience.
+    langPolicy              = The full language and sanitizer policy to use, usually in the form: lang-policy
+                                e.g., html-strict, html-default, etc. (do NOT use "htmlmarkup" here; for #escapeVal only)
+                              The possible values are defined in utilcodec.properties and printed in system log at startup.
+                              See #escapeVal {{{opts.allow}}} parameter for description of some of the policy names.
+                              In addition, the following special 
+
+  * Related *
+    #escapeVal
+
+  * History *
+    Added for 1.14.4.
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function sanitizeMarkup value langPolicy>
+</#function>
+-->
 
 <#-- 
 *************************************

@@ -78,17 +78,17 @@
       <#break>
     <#case "css">
       <#-- FIXME: too aggressive
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("css", value))> -->
+      <#return utilCodecEncode(value, "cssstr"))> -->
       <#return value>
       <#break>
     <#case "css-html">
       <#-- FIXME: too aggressive
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("css", value))?html>-->
+      <#return utilCodecEncode(value, "cssstr"))?html>-->
       <#return value?html>
       <#break>
     <#case "html-css">
       <#-- FIXME: too aggressive
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("css", value?html))>-->
+      <#return utilCodecEncode(value?html, "cssstr"))>-->
       <#return value?html>
       <#break>
     <#case "raw">
@@ -147,17 +147,17 @@
       <#break>
     <#case "css">
       <#-- FIXME: too aggressive
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("css", value))> -->
+      <#return utilCodecEncode(value, "cssstr"))> -->
       <#return value>
       <#break>
     <#case "css-html">
       <#-- FIXME: too aggressive
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("css", value))?html>-->
+      <#return utilCodecEncode(value, "cssstr"))?html>-->
       <#return value?html>
       <#break>
     <#case "html-css">
       <#-- FIXME: too aggressive
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("css", value?html))>-->
+      <#return utilCodecEncode(value?html, "cssstr"))>-->
       <#return value?html>
       <#break>
     <#case "raw">

@@ -2585,12 +2585,24 @@ under the License.
         <input addproperty="component-name" message="Theme name (lowercase): (e.g. my-theme) [Mandatory]"/>
         <input addproperty="component-resource-name" message="Theme resource name (CamelCase): (e.g. My-Theme) [Mandatory]"/>
         <input addproperty="webapp-name" message="Webapp name (lowercase): (e.g. mytheme) [Mandatory]"/>
-
+        <input addproperty="theme-id" message="Theme Id (uppercase): (e.g. MYTHEME) [Mandatory]"/>
+        <input addproperty="is-backend" message="Is backoffice theme? (N for ecommerce theme): [default: Y]" defaultvalue="Y" validargs="Y,N,y,n"/>
+        <if>
+            <equals arg1="${is-backend}" arg2="Y" casesensitive="false"/>
+            <then>
+                <property name="theme-type" value="BACKOFFICE"/>
+            </then>
+            <else>
+                <property name="theme-type" value="ECOMMERCE"/>
+            </else>
+        </if>
         <echo>The following theme component will be created:
               Name: ${component-name}
               Resource Name: ${component-resource-name}
               Webapp Name: ${webapp-name}
               Folder: ${basedir}/themes/${component-name}
+              ThemeId: ${theme-id}
+              Theme-Type: ${theme-type} (is backoffice theme: ${is-backend})
         </echo>
         <input addproperty="confirm-component-creation" message="Confirm: " defaultvalue="N" validargs="Y,N,y,n"/>
         <fail message="Component creation cancelled by the user.">
@@ -2613,11 +2625,19 @@ under the License.
                 <equals arg1="${webapp-name}" arg2="" casesensitive="false" trim="yes"/>
             </condition>
         </fail>
+        <fail message="Theme Id name is mandatory">
+            <condition>
+                <equals arg1="${theme-id}" arg2="" casesensitive="false" trim="yes"/>
+            </condition>
+        </fail>
         
         <filterset id="replacePlaceholders">
             <filter token="component-name" value="${component-name}"/>
             <filter token="component-resource-name" value="${component-resource-name}"/>
             <filter token="webapp-name" value="${webapp-name}"/>
+            <filter token="theme-id" value="${theme-id}"/>
+            <filter token="is-backend" value="${is-backend}"/>
+            <filter token="theme-type" value="${theme-type}"/>
         </filterset>
         <mkdir dir="${basedir}/themes/${component-name}"/>
         <copy file="${basedir}/framework/resources/templates/theme/.gitignore-component" tofile="${basedir}/themes/${component-name}/.gitignore"/>
@@ -2636,7 +2656,7 @@ under the License.
         <copy file="${basedir}/framework/resources/templates/theme/README.md" tofile="${basedir}/themes/${component-name}/README.md" encoding="utf-8">
             <filterset refid="replacePlaceholders"/>
         </copy>
-        <copy file="${basedir}/framework/resources/templates/theme/ThemeData.xml" tofile="${basedir}/themes/${component-name}/data/${component-resource-name}DemoData.xml" encoding="utf-8">
+        <copy file="${basedir}/framework/resources/templates/theme/ThemeData.xml" tofile="${basedir}/themes/${component-name}/data/${component-resource-name}ThemeData.xml" encoding="utf-8">
             <filterset refid="replacePlaceholders"/>
         </copy>
         <copy file="${basedir}/framework/resources/templates/theme/web.xml" tofile="${basedir}/themes/${component-name}/webapp/${webapp-name}/WEB-INF/web.xml" encoding="utf-8">

@@ -1,5 +1,5 @@
 /**
- * Master HTML templating variables include, Foundation Metro theme/framework.
+ * Master HTML templating variables include for @component-resource-name@ theme.
  *
  * Overrides the default SCIPIO styles located in
  * htmlVariables.groovy - ofbiz_foundation/framework/common/webcommon/includes/scipio/lib/standard/

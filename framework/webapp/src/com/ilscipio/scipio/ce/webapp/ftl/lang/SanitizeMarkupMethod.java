@@ -20,21 +20,20 @@ package com.ilscipio.scipio.ce.webapp.ftl.lang;
 
 import java.util.List;
 
-import com.ilscipio.scipio.ce.webapp.ftl.CommonFtlUtil;
+import org.ofbiz.base.util.UtilCodec;
+import org.ofbiz.base.util.template.FreeMarkerWorker;
 
 import freemarker.core.Environment;
-import freemarker.template.ObjectWrapper;
-import freemarker.template.TemplateHashModel;
+import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
 
 /**
- * SCIPIO: CopyObjectMethod - Helper method to clone (shallow copy) a map or list.
+ * SCIPIO: SanitizeMarkupMethod - Wrapper around UtilCodec.sanitize.
  */
 public class SanitizeMarkupMethod implements TemplateMethodModelEx {
-
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /*
@@ -43,39 +42,14 @@ public class SanitizeMarkupMethod implements TemplateMethodModelEx {
     @SuppressWarnings("unchecked")
     @Override
     public Object exec(List args) throws TemplateModelException {
-        if (args == null || args.size() < 1 || args.size() > 3) {
-            throw new TemplateModelException("Invalid number of arguments (expected: 1-3)");
+        if (args == null || args.size() != 2) {
+            throw new TemplateModelException("Invalid number of arguments (expected: 2)");
         }
-        TemplateModel hashObjModel = (TemplateModel) args.get(0);
-        if (!(hashObjModel instanceof TemplateHashModel)) {
-            throw new TemplateModelException("First argument not an instance of TemplateHashModel");
-        }
-        TemplateHashModel hashModel = (TemplateHashModel) hashObjModel;
+        Environment env = FreeMarkerWorker.getCurrentEnvironment();
 
-        String mode = null;
-        if (args.size() >= 2) {
-            mode = LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) args.get(1)));
-        }
+        String value = LangFtlUtil.toRawJavaString((TemplateModel) args.get(0), env);
+        String langPolicy = LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) args.get(1)));
         
-        TemplateModel keysModel = null;
-        if (args.size() >= 3) {
-            keysModel = (TemplateModel) args.get(2);
-        }
-        
-        Environment env = CommonFtlUtil.getCurrentEnvironment();
-        
-        Boolean include = null;
-        if (mode != null && !mode.isEmpty()) {
-            if (mode.contains("i")) {
-                include = Boolean.TRUE;
-            }
-            else if (mode.contains("e")) {
-                include = Boolean.FALSE;
-            }
-        }
-        ObjectWrapper objectWrapper = LangFtlUtil.getCurrentObjectWrapper(env);
-        return LangFtlUtil.copyMap(hashModel, LangFtlUtil.getAsStringSet(keysModel), include, 
-                LangFtlUtil.TemplateValueTargetType.SIMPLEMODEL, objectWrapper);
+        return new SimpleScalar(UtilCodec.sanitize(langPolicy, value));
     }
-    
 }

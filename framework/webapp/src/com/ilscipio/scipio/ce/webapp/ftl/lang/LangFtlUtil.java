@@ -1493,6 +1493,28 @@ public abstract class LangFtlUtil {
     }
     
     /**
+     * Returns the given model as string, optionally bypassing auto-escaping done by EscapingModels;
+     * if not a string, calles getAsString on it.
+     * <p>
+     * NOTE: this behaves similar to {@link #toRawString}, but returns a String.
+     * They are almost the same.
+     * 
+     * @see org.ofbiz.webapp.ftl.EscapingModel
+     */
+    public static String getAsOrToString(TemplateScalarModel model, boolean nonEscaping) throws TemplateModelException {
+        if (nonEscaping && (model instanceof EscapingModel)) {
+            Object value = ((EscapingModel) model).getWrappedObject();
+            if (value instanceof String || value == null) {
+                return (String) value;
+            } else {
+                return model.getAsString();
+            }
+        } else {
+            return model.getAsString();
+        }
+    }
+
+    /**
      * Standard/"dumb" (re-)wrapping method. will deep-unwrap the value if necessary (if TemplateModel).
      * <p>
      * Failure to unwrap TemplateModel first will throw exception.
@@ -1861,6 +1883,17 @@ public abstract class LangFtlUtil {
         } else {
             return execStringBuiltIn(value, env);
         }
+    }
+    
+    /**
+     * Performs the logical {@link #toRawString(TemplateModel, Environment)} operation on a single value, but returns as String type instead
+     * of template model.
+     */
+    public static String toRawJavaString(TemplateModel value, Environment env) throws TemplateModelException {
+        if (!(value instanceof TemplateScalarModel)) {
+            value = execStringBuiltIn(value, env);
+        }
+        return getAsStringNonEscaping((TemplateScalarModel) value);
     }
     
     /**

@@ -2011,9 +2011,13 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
         <li>htmlmarkup allow none: <@outMrkp escapeVal(testMarkup, 'htmlmarkup', {'allow':'none'})/></li>
         <li>htmlmarkup allow external: <@outMrkp escapeVal(testMarkup, 'htmlmarkup', {'allow':'external'})/></li>
         <li>htmlmarkup allow internal (script is removed): <@outMrkp escapeVal(testMarkup, 'htmlmarkup', {'allow':'internal'})/></li>
-        <li>htmlmarkup allow any-valid: <@outMrkp escapeVal(testMarkup, 'htmlmarkup', {'allow':'any-valid'})/></li>
+        <li>htmlmarkup allow anyvalid: <@outMrkp escapeVal(testMarkup, 'htmlmarkup', {'allow':'anyvalid'})/></li>
         <li>htmlmarkup allow any: <@outMrkp escapeVal(testMarkup, 'htmlmarkup', {'allow':'any'})/></li>
-      </ul>
+        <li>sanitizeMarkup html-none: <@outMrkp sanitizeMarkup(testMarkup, 'html-none')/></li>
+        <li>sanitizeMarkup html-strict: <@outMrkp sanitizeMarkup(testMarkup, 'html-strict')/></li>
+        <li>sanitizeMarkup html-perm: <@outMrkp sanitizeMarkup(testMarkup, 'html-perm')/></li>
+        <li>sanitizeMarkup html-any: <@outMrkp sanitizeMarkup(testMarkup, 'html-any')/></li>
+    </ul>
   </@section>
   <@section title="objectAsScript">
       <ul>

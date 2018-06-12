@@ -360,7 +360,7 @@ public class UtilCodec {
         map.put(stringEncoder.getLang(), stringEncoder);
         map.put(rawEncoder.getLang(), rawEncoder);
 
-        StringBuilder sb = new StringBuilder("Registered script language encoders:");
+        StringBuilder sb = new StringBuilder("Registered script language encoders/sanitizers:");
         List<String> sortedNames = new ArrayList<>(map.keySet());
         Collections.sort(sortedNames);
         for(String name : sortedNames) {

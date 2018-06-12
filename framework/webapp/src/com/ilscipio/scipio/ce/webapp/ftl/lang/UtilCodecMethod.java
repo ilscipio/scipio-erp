@@ -31,9 +31,9 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
 
 /**
- * SCIPIO: SanitizeMarkupMethod - Wrapper around UtilCodec.sanitize.
+ * SCIPIO: UtilCodecMethod - Wrappers around UtilCodec helper methods.
  */
-public class SanitizeMarkupMethod implements TemplateMethodModelEx {
+public abstract class UtilCodecMethod implements TemplateMethodModelEx {
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /*
@@ -48,8 +48,31 @@ public class SanitizeMarkupMethod implements TemplateMethodModelEx {
         Environment env = FreeMarkerWorker.getCurrentEnvironment();
 
         String value = LangFtlUtil.toRawJavaString((TemplateModel) args.get(0), env);
-        String langPolicy = LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) args.get(1)));
-        
-        return new SimpleScalar(UtilCodec.sanitize(value, langPolicy));
+        String lang = LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) args.get(1)));
+
+        return new SimpleScalar(langExec(value, lang));
+    }
+
+    protected abstract String langExec(String value, String lang);
+
+    public static class DecodeMethod extends UtilCodecMethod {
+        @Override
+        protected String langExec(String value, String lang) {
+            return UtilCodec.decode(value, lang);
+        }
+    }
+
+    public static class EncodeMethod extends UtilCodecMethod {
+        @Override
+        protected String langExec(String value, String lang) {
+            return UtilCodec.encode(value, lang);
+        }
+    }
+
+    public static class SanitizeMethod extends UtilCodecMethod {
+        @Override
+        protected String langExec(String value, String lang) {
+            return UtilCodec.sanitize(value, lang);
+        }
     }
 }

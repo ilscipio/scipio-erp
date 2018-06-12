@@ -2990,7 +2990,6 @@ NOTE: Validation and allowed code filters are not fully implemented (TODO), but 
     <#case "htmlmarkup">
       <#if opts.allow?has_content>
         <#-- NOTE: if the encoder is not found, this simply crashes, which is good - error must be clear! -->
-        <#--<#return rawString(Static["org.ofbiz.base.util.UtilCodec"].sanitize(value, "html-"+opts.allow))>-->
         <#return sanitizeMarkup(value, "html-"+opts.allow)>
       <#else>
         <#return value?html>
@@ -3010,22 +3009,22 @@ NOTE: Validation and allowed code filters are not fully implemented (TODO), but 
       <#return value?url("UTF-8")><#-- FIXME: lang should not be hardcoded, ofbiz config issue -->
       <#break>
     <#case "css">
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode(value, "cssstr"))>
+      <#return utilCodecEncode(value, "cssstr")>
       <#break>
     <#case "css-html">
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode(value, "cssstr"))?html>
+      <#return utilCodecEncode(value, "cssstr")?html>
       <#break>
     <#case "html-css">
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode(value?html, "cssstr"))>
+      <#return utilCodecEncode(value?html, "cssstr")>
       <#break>
     <#case "cssid">
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode(value, "cssid"))>
+      <#return utilCodecEncode(value, "cssid")>
       <#break>
     <#case "cssid-html">
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode(value, "cssid"))?html>
+      <#return utilCodecEncode(value, "cssid")?html>
       <#break>
     <#case "html-cssid">
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode(value?html, "cssid"))>
+      <#return utilCodecEncode(value?html, "cssid")>
       <#break>
     <#case "raw">
     <#default>
@@ -3072,7 +3071,7 @@ DEPRECATED: This was never properly defined or implemented and no longer meaning
   </#if>
   <#-- FIXME -->
   <#-- NOTE: Currently we support almost the same types as Ofbiz, so no need for a switch -->
-  <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode(value, lang))>
+  <#return utilCodecEncode(value, lang)>
 </#function>
 
 <#-- 
@@ -3176,13 +3175,13 @@ For more information about escaping in general, see >>>standard/htmlTemplate.ftl
       <#return value?xml>
       <#break>
     <#case "css">
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode(value, "cssstr"))>
+      <#return utilCodecEncode(value, "cssstr")>
       <#break>
     <#case "css-html">
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode(value, "cssstr"))?html>
+      <#return utilCodecEncode(value, "cssstr")?html>
       <#break>
     <#case "html-css">
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode(value?html, "cssstr"))>
+      <#return utilCodecEncode(value?html, "cssstr")>
       <#break>
     <#case "raw">
     <#default>

@@ -2580,6 +2580,101 @@ under the License.
         </echo>
     </target>
 
+    <target name="create-theme"
+            description="Create the layout of a Scipio theme component in the themes folder.">
+        <input addproperty="component-name" message="Component name (lowercase): (e.g. mycomponent) [Mandatory]"/>
+        <input addproperty="component-resource-name" message="Component resource name (CamelCase): (e.g. MyComponent) [Mandatory]"/>
+        <input addproperty="webapp-name" message="Webapp name (lowercase): (e.g. test-theme) [Mandatory]"/>
+
+        <echo>The following theme component will be created:
+              Name: ${component-name}
+              Resource Name: ${component-resource-name}
+              Webapp Name: ${webapp-name}
+              Folder: ${basedir}/themes/${component-name}
+        </echo>
+        <input addproperty="confirm-component-creation" message="Confirm: " defaultvalue="N" validargs="Y,N,y,n"/>
+        <fail message="Component creation cancelled by the user.">
+            <condition>
+                <equals arg1="${confirm-component-creation}" arg2="N" casesensitive="false"/>
+            </condition>
+        </fail>
+        <fail message="Component name is mandatory">
+            <condition>
+                <equals arg1="${component-name}" arg2="" casesensitive="false" trim="yes"/>
+            </condition>
+        </fail>
+        <fail message="Resource name is mandatory">
+            <condition>
+                <equals arg1="${component-resource-name}" arg2="" casesensitive="false" trim="yes"/>
+            </condition>
+        </fail>
+        <fail message="Webapp name is mandatory">
+            <condition>
+                <equals arg1="${webapp-name}" arg2="" casesensitive="false" trim="yes"/>
+            </condition>
+        </fail>
+        
+        <filterset id="replacePlaceholders">
+            <filter token="component-name" value="${component-name}"/>
+            <filter token="component-resource-name" value="${component-resource-name}"/>
+            <filter token="webapp-name" value="${webapp-name}"/>
+        </filterset>
+        <mkdir dir="${basedir}/themes/${component-name}"/>
+        <copy file="${basedir}/framework/resources/templates/theme/.gitignore-component" tofile="${basedir}/themes/${component-name}/.gitignore"/>
+        <mkdir dir="${basedir}/themes/${component-name}/data"/>
+        <mkdir dir="${basedir}/themes/${component-name}/includes"/>
+        <mkdir dir="${basedir}/themes/${component-name}/webapp"/>
+        <mkdir dir="${basedir}/themes/${component-name}/webapp/${webapp-name}"/>
+        <mkdir dir="${basedir}/themes/${component-name}/webapp/${webapp-name}/WEB-INF"/>
+        <copy file="${basedir}/framework/resources/templates/theme/.gitignore-webapp" tofile="${basedir}/themes/${component-name}/webapp/${webapp-name}/.gitignore"/>
+        <copy file="${basedir}/framework/resources/templates/theme/ofbiz-component.xml" tofile="${basedir}/themes/${component-name}/ofbiz-component.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/theme/build.xml" tofile="${basedir}/themes/${component-name}/build.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/theme/README.md" tofile="${basedir}/themes/${component-name}/README.md" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/theme/ThemeData.xml" tofile="${basedir}/themes/${component-name}/data/${component-resource-name}DemoData.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/theme/web.xml" tofile="${basedir}/themes/${component-name}/webapp/${webapp-name}/WEB-INF/web.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/theme/appbar.ftl" tofile="${basedir}/themes/${component-name}/includes/appbar.ftl" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/theme/appbarClose.ftl" tofile="${basedir}/themes/${component-name}/includes/appbarClose.ftl" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/theme/appbarOpen.ftl" tofile="${basedir}/themes/${component-name}/includes/appbarOpen.ftl" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/theme/footer.ftl" tofile="${basedir}/themes/${component-name}/includes/footer.ftl" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/theme/header.ftl" tofile="${basedir}/themes/${component-name}/includes/header.ftl" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/theme/htmlMenuMacroLibrary.ftl" tofile="${basedir}/themes/${component-name}/includes/htmlMenuMacroLibrary.ftl" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/theme/login.ftl" tofile="${basedir}/themes/${component-name}/includes/login.ftl" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/theme/themeStyles.groovy" tofile="${basedir}/themes/${component-name}/includes/themeStyles.groovy" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/theme/themeTemplate.ftl" tofile="${basedir}/themes/${component-name}/includes/themeTemplate.ftl" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+
+        <echo>Theme successfully created in folder ${basedir}/themes/${component-name}.
+            Restart Scipio and reseed with 'ant load-extseed'
+        </echo>
+    </target>
+
     <!-- ================================================================== -->
     <!-- kek helper                                                         -->
     <!-- ================================================================== -->

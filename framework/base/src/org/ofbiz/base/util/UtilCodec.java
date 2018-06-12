@@ -83,7 +83,7 @@ public class UtilCodec {
      * SCIPIO: list of available encoder names.
      */
     private static final Set<String> encoderNames = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(new String[] {
-            "raw", "url", "xml", "html", "css", "cssstr", "cssid", "string"
+            "raw", "url", "xml", "html", "cssstr", "cssid", "string"
     })));
     
     /**
@@ -369,7 +369,6 @@ public class UtilCodec {
         map.put(xmlEncoder.getLang(), xmlEncoder);
         map.put(htmlEncoder.getLang(), htmlEncoder);
         map.put(cssStringEncoder.getLang(), cssStringEncoder);
-        map.put("css", cssStringEncoder); // ALIAS - discourage use?
         map.put(cssIdEncoder.getLang(), cssIdEncoder);
         map.put(jsStringEncoder.getLang(), jsStringEncoder);
         map.put(jsonStringEncoder.getLang(), jsonStringEncoder);

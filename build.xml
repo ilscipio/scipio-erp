@@ -2582,9 +2582,9 @@ under the License.
 
     <target name="create-theme"
             description="Create the layout of a Scipio theme component in the themes folder.">
-        <input addproperty="component-name" message="Component name (lowercase): (e.g. mycomponent) [Mandatory]"/>
-        <input addproperty="component-resource-name" message="Component resource name (CamelCase): (e.g. MyComponent) [Mandatory]"/>
-        <input addproperty="webapp-name" message="Webapp name (lowercase): (e.g. test-theme) [Mandatory]"/>
+        <input addproperty="component-name" message="Theme name (lowercase): (e.g. my-theme) [Mandatory]"/>
+        <input addproperty="component-resource-name" message="Theme resource name (CamelCase): (e.g. My-Theme) [Mandatory]"/>
+        <input addproperty="webapp-name" message="Webapp name (lowercase): (e.g. mytheme) [Mandatory]"/>
 
         <echo>The following theme component will be created:
               Name: ${component-name}

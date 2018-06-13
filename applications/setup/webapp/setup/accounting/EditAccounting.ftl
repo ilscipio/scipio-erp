@@ -60,8 +60,7 @@ under the License.
 		// Check whether tabs should be enabled or disabled based on tab config			 
 	  	for (i = 0; i < tabs.length; i++) {
 		  	if (tabs[i].hash) {
-		  	  tabId = tabs[i].hash.substring(1, tabs[i].hash.length); 	
-		  	  console.log("tabId =======> " + tabId);
+		  	  tabId = tabs[i].hash.substring(1, tabs[i].hash.length);
 			  if (tabSettings[tabId].disabled) {			  	
 			  	$(tabs[i]).bind('click', function(e) {
 			  		e.preventDefault();

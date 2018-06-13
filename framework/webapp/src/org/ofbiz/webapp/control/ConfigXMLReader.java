@@ -45,6 +45,7 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.cache.UtilCache;
@@ -185,7 +186,7 @@ public class ConfigXMLReader {
      */
     public static ControllerConfig readControllerConfig(URL url, boolean optional) throws WebAppConfigurationException {
         try {
-            return new ControllerConfig(url);
+            return ControllerConfigFactory.getFactory().readControllerConfig(url);
         } catch(WebAppConfigurationException e) {
             if (optional && (e.getCause() instanceof java.io.FileNotFoundException)) {
                 if (Debug.infoOn()) {
@@ -225,35 +226,68 @@ public class ConfigXMLReader {
         }
     }
 
+    /**
+     * SCIPIO: Controller config factory - see requestHandler.properties.
+     * 2018-06-13.
+     */
+    public static abstract class ControllerConfigFactory {
+        private static final ControllerConfigFactory defaultFactory = 
+                getFactoryFromProperty("requestHandler", "controller.config.factoryClass");
+        
+        public abstract ControllerConfig readControllerConfig(URL url) throws WebAppConfigurationException;
+
+        public static ControllerConfigFactory getFactory() {
+            return defaultFactory;
+        }
+        
+        @SuppressWarnings("unchecked")
+        public static ControllerConfigFactory getFactoryFromProperty(String resource, String property) {
+            String factoryClassName = UtilProperties.getPropertyValue(resource, property);
+            ControllerConfigFactory factory;
+            try {
+                Class<? extends ControllerConfigFactory> factoryClass = 
+                        (Class<? extends ControllerConfigFactory>) Thread.currentThread().getContextClassLoader().loadClass(factoryClassName);
+                factory = (ControllerConfigFactory) factoryClass.newInstance();
+            } catch (Exception e) {
+                Debug.logError(e, "Could not initialize controller config factory '" + factoryClassName + "': " + e.getMessage(), module);
+                factory = new ControllerConfig.Factory();
+            }
+            Debug.logInfo("Initialized ControllerConfigFactory from properties (" 
+                + resource + "#" + property + "): " + factory.getClass().getName(), module);
+            return factory;
+        }
+    }
+
     public static class ControllerConfig {
         // SCIPIO: special key for cache lookups that return null
         public static final ControllerConfig NULL_CONFIG = new ControllerConfig();
         
         public URL url;
-        private String errorpage;
-        private String protectView;
-        private String owner;
-        private String securityClass;
-        private String defaultRequest;
-        private String statusCode;
+        // SCIPIO: switched all to protected from private (see ResolvedControllerConfig)
+        protected String errorpage;
+        protected String protectView;
+        protected String owner;
+        protected String securityClass;
+        protected String defaultRequest;
+        protected String statusCode;
         // SCIPIO: extended info on includes needed
-        //private List<URL> includes = new ArrayList<URL>();
-        private List<Include> includes = new ArrayList<>();
+        //protected List<URL> includes = new ArrayList<URL>();
+        protected List<Include> includes = new ArrayList<>();
         // SCIPIO: split-up includes
-        private List<Include> includesPreLocal = new ArrayList<>();
-        private List<Include> includesPostLocal = new ArrayList<>();
-        private Map<String, Event> firstVisitEventList = new HashMap<String, Event>();
-        private Map<String, Event> preprocessorEventList = new HashMap<String, Event>();
-        private Map<String, Event> postprocessorEventList = new HashMap<String, Event>();
-        private Map<String, Event> afterLoginEventList = new HashMap<String, Event>();
-        private Map<String, Event> beforeLogoutEventList = new HashMap<String, Event>();
-        private Map<String, String> eventHandlerMap = new HashMap<String, String>();
-        private Map<String, String> viewHandlerMap = new HashMap<String, String>();
-        private Map<String, RequestMap> requestMapMap = new HashMap<String, RequestMap>();
-        private Map<String, ViewMap> viewMapMap = new HashMap<String, ViewMap>();
-        private ViewAsJsonConfig viewAsJsonConfig; // SCIPIO: added 2017-05-15
-        private Boolean allowViewSaveDefault; // SCIPIO: added 2018-06-13
-        private List<NameFilter<Boolean>> allowViewSaveViewNameFilters; // SCIPIO: added 2018-06-13
+        protected List<Include> includesPreLocal = new ArrayList<>();
+        protected List<Include> includesPostLocal = new ArrayList<>();
+        protected Map<String, Event> firstVisitEventList = new HashMap<String, Event>();
+        protected Map<String, Event> preprocessorEventList = new HashMap<String, Event>();
+        protected Map<String, Event> postprocessorEventList = new HashMap<String, Event>();
+        protected Map<String, Event> afterLoginEventList = new HashMap<String, Event>();
+        protected Map<String, Event> beforeLogoutEventList = new HashMap<String, Event>();
+        protected Map<String, String> eventHandlerMap = new HashMap<String, String>();
+        protected Map<String, String> viewHandlerMap = new HashMap<String, String>();
+        protected Map<String, RequestMap> requestMapMap = new HashMap<String, RequestMap>();
+        protected Map<String, ViewMap> viewMapMap = new HashMap<String, ViewMap>();
+        protected ViewAsJsonConfig viewAsJsonConfig; // SCIPIO: added 2017-05-15
+        protected Boolean allowViewSaveDefault; // SCIPIO: added 2018-06-13
+        protected List<NameFilter<Boolean>> allowViewSaveViewNameFilters; // SCIPIO: added 2018-06-13
         
         public ControllerConfig(URL url) throws WebAppConfigurationException {
             this.url = url;
@@ -276,7 +310,14 @@ public class ConfigXMLReader {
         private ControllerConfig() { // SCIPIO: special null config 
             this.url = null;
         }
-        
+
+        public static class Factory extends ControllerConfigFactory { // SCIPIO
+            @Override
+            public ControllerConfig readControllerConfig(URL url) throws WebAppConfigurationException {
+                return new ControllerConfig(url);
+            }
+        }
+
         public boolean isNull() { // SCIPIO: special
             return this.url == null;
         }
@@ -1116,6 +1157,163 @@ public class ConfigXMLReader {
         }
     }
 
+    /**
+     * SCIPIO: Instance of ControllerConfig with all members completely pre-resolved
+     * (prior to storage in cache).
+     * <p>
+     * TODO: In future this will have to be rewritten for thread safety using a ControllerConfig
+     * interface, but cache _may_ save this for now...
+     * <p>
+     * Added 2018-06-13.
+     */
+    public static class ResolvedControllerConfig extends ControllerConfig {
+
+        protected final ViewAsJsonConfig viewAsJsonConfigOrDefault;
+        
+        public ResolvedControllerConfig(URL url) throws WebAppConfigurationException {
+            super(url);
+            
+            this.errorpage = super.getErrorpage();
+            this.protectView = super.getProtectView();
+            this.owner = super.getOwner();
+            this.securityClass = super.getSecurityClass();
+            this.defaultRequest = super.getDefaultRequest();
+            this.statusCode = super.getStatusCode();
+
+            // SCIPIO: split-up includes
+            this.firstVisitEventList = getOptMap(super.getFirstVisitEventList());
+            this.preprocessorEventList = getOptMap(super.getPreprocessorEventList());
+            this.postprocessorEventList = getOptMap(super.getPostprocessorEventList());
+            this.afterLoginEventList = getOptMap(super.getAfterLoginEventList());
+            this.beforeLogoutEventList = getOptMap(super.getBeforeLogoutEventList());
+            this.eventHandlerMap = getOptMap(super.getEventHandlerMap());
+            this.viewHandlerMap = getOptMap(super.getViewHandlerMap());
+            this.requestMapMap = getOptMap(super.getRequestMapMap());
+            this.viewMapMap = getOptMap(super.getViewMapMap());
+            this.viewAsJsonConfig = super.getViewAsJsonConfig(); // SCIPIO: added 2017-05-15
+            this.allowViewSaveDefault = super.getAllowViewSaveDefault(); // SCIPIO: added 2018-06-13
+            this.viewAsJsonConfigOrDefault = super.getViewAsJsonConfigOrDefault();
+            this.allowViewSaveViewNameFilters = getOptList(super.getAllowViewSaveViewNameFilters()); // SCIPIO: added 2018-06-13
+        }
+
+        private static <K, V> Map<K, V> getOptMap(Map<K, V> map) {
+            return new HashMap<>(map); // convert MapContext to much faster HashMap
+        }
+
+        private static <V> List<V> getOptList(List<V> list) {
+            ArrayList<V> arrayList;
+            if (list instanceof ArrayList) {
+                arrayList = (ArrayList<V>) list;
+            } else {
+                arrayList = new ArrayList<>(list);
+            }
+            arrayList.trimToSize();
+            return arrayList;
+        }
+
+        public static class Factory extends ControllerConfigFactory {
+            @Override
+            public ControllerConfig readControllerConfig(URL url) throws WebAppConfigurationException {
+                return new ResolvedControllerConfig(url);
+            }
+        }
+        
+        @Override
+        public Map<String, Event> getAfterLoginEventList() throws WebAppConfigurationException {
+            return afterLoginEventList;
+        }
+
+        @Override
+        public Map<String, Event> getBeforeLogoutEventList() throws WebAppConfigurationException {
+            return beforeLogoutEventList;
+        }
+
+        @Override
+        public String getDefaultRequest() throws WebAppConfigurationException {
+            return defaultRequest;
+        }
+
+        @Override
+        public String getErrorpage() throws WebAppConfigurationException {
+            return errorpage;
+        }
+
+        @Override
+        public Map<String, String> getEventHandlerMap() throws WebAppConfigurationException {
+            return eventHandlerMap;
+        }
+
+        @Override
+        public Map<String, Event> getFirstVisitEventList() throws WebAppConfigurationException {
+            return firstVisitEventList;
+        }
+
+        @Override
+        public String getOwner() throws WebAppConfigurationException {
+            return owner;
+        }
+
+        @Override
+        public Map<String, Event> getPostprocessorEventList() throws WebAppConfigurationException {
+            return postprocessorEventList;
+        }
+
+        @Override
+        public Map<String, Event> getPreprocessorEventList() throws WebAppConfigurationException {
+            return preprocessorEventList;
+        }
+
+        @Override
+        public String getProtectView() throws WebAppConfigurationException {
+            return protectView;
+        }
+
+        @Override
+        public Map<String, RequestMap> getRequestMapMap() throws WebAppConfigurationException {
+            return requestMapMap;
+        }
+
+        @Override
+        public String getSecurityClass() throws WebAppConfigurationException {
+            return securityClass;
+        }
+
+        @Override
+        public String getStatusCode() throws WebAppConfigurationException {
+            return statusCode;
+        }
+
+        @Override
+        public Map<String, String> getViewHandlerMap() throws WebAppConfigurationException {
+            return viewHandlerMap;
+        }
+
+        @Override
+        public Map<String, ViewMap> getViewMapMap() throws WebAppConfigurationException {
+            return viewMapMap;
+        }
+
+        @Override
+        public ViewAsJsonConfig getViewAsJsonConfig() throws WebAppConfigurationException {
+            return viewAsJsonConfig;
+        }
+
+        @Override
+        public ViewAsJsonConfig getViewAsJsonConfigOrDefault() throws WebAppConfigurationException {
+            return viewAsJsonConfigOrDefault;
+        }
+
+        @Override
+        public Boolean getAllowViewSaveDefault() throws WebAppConfigurationException {
+            return allowViewSaveDefault;
+        }
+
+        @Override
+        public List<NameFilter<Boolean>> getAllowViewSaveViewNameFilters() throws WebAppConfigurationException {
+            return allowViewSaveViewNameFilters;
+        }
+    }
+    
     public static class Event {
         public String type;
         public String path;

@@ -1978,7 +1978,17 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
           attribs=attribs passArgs=passArgs><#nested/></@field_option_widget>
         <#break>
       <#case "lookup">
-        <@field_lookup_widget name=name formName=formName fieldFormName=fieldFormName class=class style=style alert="false" value=value 
+        <#-- form widget legacy behavior:
+            String lastViewName = request.getParameter("_LAST_VIEW_NAME_"); // Try to get it from parameters firstly
+            if (UtilValidate.isEmpty(lastViewName)) { // get from session
+                lastViewName = (String) request.getSession().getAttribute("_LAST_VIEW_NAME_");
+            }
+            if (UtilValidate.isEmpty(lastViewName)) {
+                lastViewName = "";
+            }
+        -->
+        <#local lastViewName = request.getParameter("_LAST_VIEW_NAME_")!session.getAttribute("_LAST_VIEW_NAME_")!"">
+        <@field_lookup_widget name=name formName=formName fieldFormName=fieldFormName class=class style=style alert="false" value=value lastViewName=lastViewName
           size=size?string maxlength=maxlength id=id events=events title=title tooltip=tooltip required=required attribs=attribs passArgs=passArgs/>
       <#break>
       <#case "checkbox">

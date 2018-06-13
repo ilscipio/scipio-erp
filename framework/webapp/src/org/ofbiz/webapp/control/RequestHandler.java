@@ -1316,8 +1316,20 @@ public class RequestHandler {
      * Added 2018-06-13.
      */
     static Boolean getAllowViewSaveStatic(String viewName, ConfigXMLReader.RequestResponse requestResponse, 
-            ConfigXMLReader.RequestMap requestMap, ConfigXMLReader.ControllerConfig config) {
-        return requestResponse.getAllowViewSave();
+            ConfigXMLReader.RequestMap requestMap, ConfigXMLReader.ControllerConfig controllerConfig) {
+        if (requestResponse.getAllowViewSave() != null) {
+            return requestResponse.getAllowViewSave();
+        }
+        try {
+            for(ConfigXMLReader.NameFilter<Boolean> viewNameFilter : controllerConfig.getAllowViewSaveViewNameFilters()) {
+                if (viewNameFilter.matches(viewName)) {
+                    return viewNameFilter.getUseValue();
+                }
+            }
+        } catch (WebAppConfigurationException e) {
+            Debug.logError(e, module);
+        }
+        return null;
     }
 
     /**

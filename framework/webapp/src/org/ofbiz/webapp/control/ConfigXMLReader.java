@@ -42,6 +42,7 @@ import org.ofbiz.base.util.Assert;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.FileUtil;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
@@ -236,6 +237,7 @@ public class ConfigXMLReader {
         private Map<String, RequestMap> requestMapMap = new HashMap<String, RequestMap>();
         private Map<String, ViewMap> viewMapMap = new HashMap<String, ViewMap>();
         private ViewAsJsonConfig viewAsJsonConfig; // SCIPIO: added 2017-05-15
+        private List<NameFilter<Boolean>> allowViewSaveViewNameFilters; // SCIPIO: added 2018-06-13
         
         public ControllerConfig(URL url) throws WebAppConfigurationException {
             this.url = url;
@@ -788,7 +790,7 @@ public class ConfigXMLReader {
             }
             return null;
         }
-        
+
         /**
          * SCIPIO: returns view-as-json configuration, corresponding to site-conf.xsd view-as-json element.
          */
@@ -796,7 +798,40 @@ public class ConfigXMLReader {
             ViewAsJsonConfig config = getViewAsJsonConfig();
             return config != null ? config : new ViewAsJsonConfig();
         }
-        
+
+        /**
+         * SCIPIO: returns allowViewSaveViewNameFilters.
+         */
+        public List<NameFilter<Boolean>> getAllowViewSaveViewNameFilters() throws WebAppConfigurationException {
+            List<NameFilter<Boolean>> result = new ArrayList<>();
+            for (Include include : includesPreLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.addAll(controllerConfig.getAllowViewSaveViewNameFilters());
+                    } else if (controllerConfig.allowViewSaveViewNameFilters != null) {
+                        result.addAll(controllerConfig.allowViewSaveViewNameFilters);
+                    }
+                }
+            }
+            if (this.allowViewSaveViewNameFilters != null) {
+                result.addAll(this.allowViewSaveViewNameFilters);
+            }
+            for (Include include : includesPostLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.addAll(controllerConfig.getAllowViewSaveViewNameFilters());
+                    } else if (controllerConfig.allowViewSaveViewNameFilters != null) {
+                        result.addAll(controllerConfig.allowViewSaveViewNameFilters);
+                    }
+                }
+            }
+            return result;
+        }
+
         private void loadGeneralConfig(Element rootElement) {
             this.errorpage = UtilXml.childElementValue(rootElement, "errorpage");
             this.statusCode = UtilXml.childElementValue(rootElement, "status-code");
@@ -872,6 +907,30 @@ public class ConfigXMLReader {
             } else {
                 this.viewAsJsonConfig = null;
             }
+            // SCIPIO: new
+            ArrayList<NameFilter<Boolean>> allowViewSaveViewNameFilters = null;
+            Element commonSettingsElem = UtilXml.firstChildElement(rootElement, "common-settings");
+            if (commonSettingsElem != null) {
+                Element requestMapSettingsElem = UtilXml.firstChildElement(commonSettingsElem, "request-map-settings");
+                if (requestMapSettingsElem != null) {
+                    Element responseSettingsElem = UtilXml.firstChildElement(requestMapSettingsElem, "response-settings");
+                    if (responseSettingsElem != null) {
+                        Element allowViewSaveDefaultElem = UtilXml.firstChildElement(responseSettingsElem, "allow-view-save-default");
+                        if (allowViewSaveDefaultElem != null) {
+                            List<? extends Element> avsdFilterByNameElems = UtilXml.childElementList(allowViewSaveDefaultElem, "name-filter");
+                            allowViewSaveViewNameFilters = new ArrayList<>(avsdFilterByNameElems.size());
+                            for(Element avdsFilterByNameElem : avsdFilterByNameElems) {
+                                if ("view-name".equals(avdsFilterByNameElem.getAttribute("field"))) {
+                                    NameFilter<Boolean> nameFilter = NameFilter.fromElement(avdsFilterByNameElem, Boolean.class);
+                                    allowViewSaveViewNameFilters.add(nameFilter);
+                                }
+                            }
+                            allowViewSaveViewNameFilters.trimToSize();
+                        }
+                    }
+                }
+            }
+            this.allowViewSaveViewNameFilters = allowViewSaveViewNameFilters;
         }
         
         private void loadHandlerMap(Element rootElement) {
@@ -1371,7 +1430,7 @@ public class ConfigXMLReader {
             return noCache;
         }
     }
-    
+
     /**
      * SCIPIO: Implements "view-as-json" element in site-conf.xsd.
      * Added 2017-05-15.
@@ -1409,6 +1468,96 @@ public class ConfigXMLReader {
         public String getJsonRequestUriAlways() throws WebAppConfigurationException {
             if (jsonRequestUri == null) throw new WebAppConfigurationException(new IllegalStateException("Cannot forward view-as-json: missing json-request-uri configuration"));
             return jsonRequestUri;
+        }
+    }
+
+    /**
+     * SCIPIO: Name filter for controller filters.
+     * Added 2018-06-13.
+     */
+    public static abstract class NameFilter<V> {
+        private final V useValue;
+        
+        public NameFilter(V useValue) {
+            this.useValue = useValue;
+        }
+
+        @SuppressWarnings("unchecked")
+        public static <V> NameFilter<V> fromElement(Element element, Class<V> cls) {
+            String useValueStr = element.getAttribute("use-value");
+            V useValue = null;
+            if (UtilValidate.isNotEmpty(useValueStr)) {
+                if (String.class.isAssignableFrom(cls)) {
+                    useValue = (V) useValueStr;
+                } else {
+                    try {
+                        useValue = (V) ObjectType.simpleTypeConvert(useValueStr, cls.getName(), null, null);
+                    } catch (GeneralException e) {
+                        Debug.logError("Could not convert controller name filter result '" 
+                                + useValueStr + "' to type: " + cls.getName(), module);
+                    }
+                }
+            }
+            if (element.getAttribute("prefix").length() > 0) {
+                return new PrefixNameFilter(element.getAttribute("prefix"), useValue);
+            } else if (element.getAttribute("suffix").length() > 0) {
+                return new SuffixNameFilter(element.getAttribute("suffix"), useValue);
+            } else if (element.getAttribute("regex").length() > 0) {
+                return new RegexNameFilter(element.getAttribute("regex"), useValue);
+            } else {
+                return new FalseNameFilter(useValue);
+            }
+        }
+
+        public V getUseValue() {
+            return useValue;
+        }
+        
+        public abstract boolean matches(String fieldValue);
+
+        public static class FalseNameFilter<V> extends NameFilter<V> {
+            public FalseNameFilter(V useValue) {
+                super(useValue);
+            }
+            @Override
+            public boolean matches(String fieldValue) {
+                return false;
+            }
+        }
+        
+        public static class PrefixNameFilter<V> extends NameFilter<V> {
+            private final String prefix;
+            public PrefixNameFilter(String prefix, V useValue) {
+                super(useValue);
+                this.prefix = prefix;
+            }
+            @Override
+            public boolean matches(String fieldValue) {
+                return fieldValue.startsWith(prefix);
+            }
+        }
+        
+        public static class SuffixNameFilter<V> extends NameFilter<V> {
+            private final String suffix;
+            public SuffixNameFilter(String suffix, V useValue) {
+                super(useValue);
+                this.suffix = suffix;
+            }
+            @Override
+            public boolean matches(String fieldValue) {
+                return fieldValue.endsWith(suffix);
+            }
+        }
+        public static class RegexNameFilter<V> extends NameFilter<V> {
+            private final java.util.regex.Pattern pattern;
+            public RegexNameFilter(String regex, V useValue) {
+                super(useValue);
+                this.pattern = java.util.regex.Pattern.compile(regex);
+            }
+            @Override
+            public boolean matches(String fieldValue) {
+                return pattern.matcher(fieldValue).matches();
+            }
         }
     }
 }

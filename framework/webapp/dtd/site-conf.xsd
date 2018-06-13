@@ -35,6 +35,7 @@ under the License.
                 <xs:element minOccurs="0" ref="before-logout"/>
                 <xs:element minOccurs="0" ref="default-request"/>
                 <xs:element minOccurs="0" ref="view-as-json"/><!-- SCIPIO: 2017-05-15: new -->
+                <xs:element minOccurs="0" ref="common-settings"/><!-- SCIPIO: 2018-06-13: new -->
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="request-map"/>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="view-map"/>
             </xs:sequence>
@@ -304,6 +305,130 @@ under the License.
                 <xs:documentation>
                     If set to true, the regular login view will be used when not logged in.
                     If set to false, the special ajaxLogin view will be used when not logged in.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:element name="common-settings">
+        <xs:annotation>
+            <xs:documentation>
+                SCIPIO: Can be used to set some defaults for request, response, view mappings.
+                Added 2018-06-13.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" name="request-map-settings">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="response-settings">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element minOccurs="0" ref="allow-view-save-default"/>
+                                    </xs:sequence>
+                                 </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                     </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.common-settings"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.common-settings">
+    </xs:attributeGroup>
+    <xs:attributeGroup name="attlist.name-filter">
+        <xs:attribute name="value">
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: Common name filtering attributes.
+                    Added 2018-06-13. 
+                </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value=""/>
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:complexType name="name-filter">
+        <xs:attribute name="prefix" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: Use filter if the name starts with this string.
+                    Added 2018-06-13. 
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="suffix" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: Use filter if the name ends with this string.
+                    Added 2018-06-13. 
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="regex" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: Use filter if the name matches this regex (from beginning).
+                    Added 2018-06-13. 
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:element name="allow-view-save-default">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" name="name-filter">
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:extension base="name-filter">
+                                <xs:attribute name="field" use="required">
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:token">
+                                            <xs:enumeration value="view-name"/>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="use-value" use="required">
+                                    <xs:annotation>
+                                        <xs:documentation>
+                                            SCIPIO: If the name matches this filter, sets this value.
+                                            Added 2018-06-13. 
+                                        </xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:token">
+                                            <xs:enumeration value="true"/>
+                                            <xs:enumeration value="false"/>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                            </xs:extension>
+                        </xs:complexContent>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.allow-view-save-default"/>
+         </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.allow-view-save-default">
+        <xs:attribute name="value">
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: Global default for allow-view-save.
+                    Default: true.
+                    Added 2018-06-13. 
                 </xs:documentation>
             </xs:annotation>
             <xs:simpleType>

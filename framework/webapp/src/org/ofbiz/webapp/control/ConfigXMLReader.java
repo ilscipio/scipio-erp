@@ -1310,7 +1310,8 @@ public class ConfigXMLReader {
         public Set<String> excludeParameterSet = null; // SCIPIO: new 2017-04-24
         public String includeMode = "auto"; // SCIPIO: new 2017-04-24
         public Boolean allowViewSave; // SCIPIO: new 2018-06-12: can be set explicit false to prevent recording this view
-        
+        private Type typeEnum; // SCIPIO: new 2018-06-13
+
         public RequestResponse() {
         }
 
@@ -1356,6 +1357,7 @@ public class ConfigXMLReader {
             }
             Boolean allowViewSave = UtilMisc.booleanValue(responseElement.getAttribute("allow-view-save")); // SCIPIO
             this.allowViewSave = allowViewSave;
+            this.typeEnum = Type.fromName(this.type);
         }
 
         // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)
@@ -1406,6 +1408,65 @@ public class ConfigXMLReader {
 
         public Boolean getAllowViewSave() { // SCIPIO
             return allowViewSave;
+        }
+        
+        public Type getTypeEnum() { // SCIPIO
+            return typeEnum;
+        }
+
+        public enum Type { // SCIPIO: 2018-06
+            NONE("none"),
+            VIEW("view"),
+            VIEW_LAST("view-last"),
+            VIEW_LAST_NOPARAM("view-last-noparam"),
+            VIEW_HOME("view-home"),
+            REQUEST("request"),
+            REQUEST_REDIRECT("request-redirect"),
+            REQUEST_REDIRECT_NOPARAM("request-redirect-noparam"),
+            URL("url"),
+            CROSS_REDIRECT("cross-redirect");
+            
+            private static final Map<String, Type> nameMap;
+            static {
+                Map<String, Type> map = new HashMap<>();
+                for(Type type : Type.values()) { map.put(type.getName(), type); }
+                nameMap = map;
+            }
+            
+            private final String name;
+            private final boolean redirectType;
+            private final boolean requestType;
+            private final boolean viewType;
+            
+            private Type(String name) {
+                this.name = name;
+                this.redirectType = name.contains("redirect") || "url".equals(name);
+                this.requestType = "request".equals(name);
+                this.viewType = name.contains("view");
+            }
+            
+            public static Type fromName(String name) {
+                Type type = nameMap.get(name);
+                if (type == null) throw new IllegalArgumentException("unrecognized"
+                        + " controller request response type: " + name);
+                return type;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public boolean isRedirectType() {
+                return redirectType;
+            }
+
+            public boolean isRequestType() {
+                return requestType;
+            }
+
+            public boolean isViewType() {
+                return viewType;
+            }
         }
     }
 

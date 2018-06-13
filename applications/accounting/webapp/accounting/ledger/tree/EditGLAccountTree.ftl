@@ -2,12 +2,6 @@
 
 <#include "component://accounting/webapp/accounting/ledger/tree/treecommon.ftl">
 
-<@script>
-    function setupShowFormActivatedCallback(form, ai) {
-        setupControlMenu.setSubmitFormId(form.prop('id'));
-    };
-</@script>
-
 <#assign egltCallbacks = {
     "showFormActivated": wrapRawScript("setupShowFormActivatedCallback")
 }>

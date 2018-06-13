@@ -134,7 +134,7 @@
     
     <menu name="MenuSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <menu-item name="menus" title="${uiLabelMap.CmsMenus}">
-            <link target="CmsMenus"/>
+            <link target="menus"/>
         </menu-item>
     </menu>
      

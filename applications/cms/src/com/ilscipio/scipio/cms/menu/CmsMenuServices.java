@@ -77,12 +77,12 @@ public abstract class CmsMenuServices {
                         "websiteId", EntityOperator.EQUALS, websiteId);
 
                 values = (List<GenericValue>) delegator
-                        .findList("CmsPageVersion", ec, null,
+                        .findList("CmsMenu", ec, null,
                                 UtilMisc.toList("createdStamp DESC"), efo,
                                 true);
             }else {
                 values = (List<GenericValue>) delegator
-                        .findList("CmsPageVersion", null, null,
+                        .findList("CmsMenu", null, null,
                                 UtilMisc.toList("createdStamp DESC"), efo,
                                 true);
             }

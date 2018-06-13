@@ -18,23 +18,13 @@ import com.ilscipio.scipio.treeMenu.jsTree.JsTreeHelper;
 import com.ilscipio.scipio.cms.webapp.ComponentUtil;
 import com.ilscipio.scipio.cms.control.CmsWebSiteInfo;
 
-final String module = "CmsContentTree.groovy";
+final String module = "CmsMenuTree.groovy";
+// Fetch menus from db
 
-/* Create Content Tree */
-// Fetch controller entries
-// NOTE: 2016: this is now filtered by cmsWebSiteIdSet meaning sites registered with process filter or screen view handler
-
-// DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)=Y
-// This means by default we display /control prefix everywhere so ALL paths
-// are relative to webapp context root, consistently.
-// This is the simplest/best default because it allows the greatest flexibility with
-// the simplest syntax (only a single path needed to express, no matter if page or request,
-// always from webapp context root).
-
-// FIXME?: running addWebSiteSettingsToMap twice before/after for now... oh well...
-webSiteExtraConfigs = [:];
-for(webSiteId in context.cmsWebSiteIdSet) {
-    settingsMap = [:];
-    context.cmsContentTreeUtil.addWebSiteSettingsToMap(settingsMap, webSiteId);
-    webSiteExtraConfigs[webSiteId] = settingsMap;
+menuResult = dispatcher.runSync("cmsGetMenus", ["request":request, "response":response, 
+    "userLogin":context.userLogin, "webSiteId":null, "locale": context.locale]);
+if (ServiceUtil.isSuccess(menuResult)) {
+    context.menus=menuResult.menuJson;
+} else {
+    context.cmsErrorHandler.addContextReadErrorFromServiceResult(context, menuResult);
 }

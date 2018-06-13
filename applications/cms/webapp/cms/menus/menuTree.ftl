@@ -15,7 +15,7 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
     
     var elData= {
                       text        : "string",
-                      icon        : "fa fa-folder",
+                      icon        : "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}page ${styles.icon_prefix!}file-o",
                       li_attr     : {},
                       a_attr      : {},
                       type        : 'test'

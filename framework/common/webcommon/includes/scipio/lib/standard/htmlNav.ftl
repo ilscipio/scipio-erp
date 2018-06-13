@@ -1870,6 +1870,7 @@ DEV NOTE: Currently this does not fully abstract the library used, because diffi
                 </#if>
                 .jstree({
                     "core" : {
+                        "check_callback": true,
                         "data" : ${treeMenuDataJson}
                         <#if treeMenuSettings?has_content>
                            , <@objectAsScript lang="json" object=treeMenuSettings wrap=false />
@@ -1902,6 +1903,7 @@ DEV NOTE: Currently this does not fully abstract the library used, because diffi
                 .jstree({
                     
                     "core" : {
+                        "check_callback": true,
                         <#-- DEV NOTE: TODO: This control should probably be inverted (so that the listing happens here instead of #nested),
                             but it requires inverting a lot more -->
                         "data" : [<#nested>]

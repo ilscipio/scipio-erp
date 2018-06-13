@@ -1208,7 +1208,8 @@ public class ConfigXMLReader {
         public Map<String, String> redirectParameterValueMap = new HashMap<String, String>();
         public Set<String> excludeParameterSet = null; // SCIPIO: new 2017-04-24
         public String includeMode = "auto"; // SCIPIO: new 2017-04-24
-
+        public Boolean allowViewSave; // SCIPIO: new 2018-06-12: can be set explicit false to prevent recording this view
+        
         public RequestResponse() {
         }
 
@@ -1252,6 +1253,8 @@ public class ConfigXMLReader {
             if (excludeParameterSet.size() > 0) {
                 this.excludeParameterSet = Collections.unmodifiableSet(excludeParameterSet);
             }
+            Boolean allowViewSave = UtilMisc.booleanValue(responseElement.getAttribute("allow-view-save")); // SCIPIO
+            this.allowViewSave = allowViewSave;
         }
 
         // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)
@@ -1298,6 +1301,10 @@ public class ConfigXMLReader {
 
         public String getIncludeMode() {
             return includeMode;
+        }
+
+        public Boolean getAllowViewSave() { // SCIPIO
+            return allowViewSave;
         }
     }
 

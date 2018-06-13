@@ -793,6 +793,25 @@ under the License.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attribute name="allow-view-save">
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: If set to false, explicitly prevents saving this view (to session), such that it will
+                    not be known to the "view-last" type responses or any of the other "view-*" responses,
+                    and will not crush the previously saved view. If false, causes the other save-*-view attributes to be ignored.
+                    Default: true
+                    NOTE: This can also be requested by passing "_ALLOW_VIEW_SAVE_=N" as request parameter.
+                    Added 2018-06-13.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value=""/>
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
         <xs:attribute name="save-last-view" default="false">
             <xs:annotation>
                 <xs:documentation>

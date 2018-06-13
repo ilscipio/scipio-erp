@@ -1326,6 +1326,7 @@ public class RequestHandler {
                     return viewNameFilter.getUseValue();
                 }
             }
+            return controllerConfig.getAllowViewSaveDefault();
         } catch (WebAppConfigurationException e) {
             Debug.logError(e, module);
         }

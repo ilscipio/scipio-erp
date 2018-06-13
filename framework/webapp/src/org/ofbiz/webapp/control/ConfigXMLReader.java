@@ -237,6 +237,7 @@ public class ConfigXMLReader {
         private Map<String, RequestMap> requestMapMap = new HashMap<String, RequestMap>();
         private Map<String, ViewMap> viewMapMap = new HashMap<String, ViewMap>();
         private ViewAsJsonConfig viewAsJsonConfig; // SCIPIO: added 2017-05-15
+        private Boolean allowViewSaveDefault; // SCIPIO: added 2018-06-13
         private List<NameFilter<Boolean>> allowViewSaveViewNameFilters; // SCIPIO: added 2018-06-13
         
         public ControllerConfig(URL url) throws WebAppConfigurationException {
@@ -800,6 +801,44 @@ public class ConfigXMLReader {
         }
 
         /**
+         * SCIPIO: returns view-as-json configuration, corresponding to site-conf.xsd view-as-json element.
+         */
+        public Boolean getAllowViewSaveDefault() throws WebAppConfigurationException {
+            for (Include include : includesPostLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    Boolean result;
+                    if (include.recursive) {
+                        result = controllerConfig.getAllowViewSaveDefault();
+                    } else {
+                        result = controllerConfig.allowViewSaveDefault;
+                    }
+                    if (result != null) {
+                        return result;
+                    }
+                }
+            }
+            if (allowViewSaveDefault != null) {
+                return allowViewSaveDefault;
+            }
+            for (Include include : includesPreLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
+                if (controllerConfig != null) {
+                    Boolean result;
+                    if (include.recursive) {
+                        result = controllerConfig.getAllowViewSaveDefault();
+                    } else {
+                        result = controllerConfig.allowViewSaveDefault;
+                    }
+                    if (result != null) {
+                        return result;
+                    }
+                }
+            }
+            return null;
+        }
+
+        /**
          * SCIPIO: returns allowViewSaveViewNameFilters.
          */
         public List<NameFilter<Boolean>> getAllowViewSaveViewNameFilters() throws WebAppConfigurationException {
@@ -908,6 +947,7 @@ public class ConfigXMLReader {
                 this.viewAsJsonConfig = null;
             }
             // SCIPIO: new
+            Boolean allowViewSaveDefault = null;
             ArrayList<NameFilter<Boolean>> allowViewSaveViewNameFilters = null;
             Element commonSettingsElem = UtilXml.firstChildElement(rootElement, "common-settings");
             if (commonSettingsElem != null) {
@@ -917,6 +957,7 @@ public class ConfigXMLReader {
                     if (responseSettingsElem != null) {
                         Element allowViewSaveDefaultElem = UtilXml.firstChildElement(responseSettingsElem, "allow-view-save-default");
                         if (allowViewSaveDefaultElem != null) {
+                            allowViewSaveDefault = UtilMisc.booleanValue(allowViewSaveDefaultElem.getAttribute("value"));
                             List<? extends Element> avsdFilterByNameElems = UtilXml.childElementList(allowViewSaveDefaultElem, "name-filter");
                             allowViewSaveViewNameFilters = new ArrayList<>(avsdFilterByNameElems.size());
                             for(Element avdsFilterByNameElem : avsdFilterByNameElems) {
@@ -930,6 +971,7 @@ public class ConfigXMLReader {
                     }
                 }
             }
+            this.allowViewSaveDefault = allowViewSaveDefault;
             this.allowViewSaveViewNameFilters = allowViewSaveViewNameFilters;
         }
         

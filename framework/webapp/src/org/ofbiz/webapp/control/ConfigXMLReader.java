@@ -1502,8 +1502,8 @@ public class ConfigXMLReader {
                 return new PrefixNameFilter(element.getAttribute("prefix"), useValue);
             } else if (element.getAttribute("suffix").length() > 0) {
                 return new SuffixNameFilter(element.getAttribute("suffix"), useValue);
-            } else if (element.getAttribute("regex").length() > 0) {
-                return new RegexNameFilter(element.getAttribute("regex"), useValue);
+            } else if (element.getAttribute("regexp").length() > 0) {
+                return new RegexNameFilter(element.getAttribute("regexp"), useValue);
             } else {
                 return new FalseNameFilter(useValue);
             }

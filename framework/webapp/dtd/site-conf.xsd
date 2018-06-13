@@ -377,10 +377,10 @@ under the License.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="regex" type="xs:string">
+        <xs:attribute name="regexp" type="xs:string">
             <xs:annotation>
                 <xs:documentation>
-                    SCIPIO: Use filter if the name matches this regex (from beginning).
+                    SCIPIO: Use filter if the name matches this regexp (from beginning).
                     Added 2018-06-13. 
                 </xs:documentation>
             </xs:annotation>

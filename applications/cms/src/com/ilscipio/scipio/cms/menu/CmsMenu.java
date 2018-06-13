@@ -95,6 +95,12 @@ public class CmsMenu extends CmsDataObject {
     void EntityMenuJson(String menuJson) {
         this.entity.setString("menuJson", menuJson);
     }
+
+    @Override
+    public DataObjectWorker<?> getWorkerInst() {
+        // TODO Auto-generated method stub
+        return null;
+    }
     
 
 }

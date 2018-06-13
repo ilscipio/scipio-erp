@@ -10,10 +10,11 @@
         <menu-item name="media" title="${uiLabelMap.CmsMedia}">
             <link target="media"/>
         </menu-item>
-        <menu-item name="importExport" title="${uiLabelMap.WebtoolsImportExport}">
-            <link target="CmsDataExport"/>
         <menu-item name="menus" title="${uiLabelMap.CmsMenus}">
             <link target="menus"/>
+        </menu-item>
+        <menu-item name="importExport" title="${uiLabelMap.WebtoolsImportExport}">
+            <link target="CmsDataExport"/>
         </menu-item>
         <!--<menu-item name="settings" title="${uiLabelMap.CommonSettings}">
             <link target="editSettings"/>

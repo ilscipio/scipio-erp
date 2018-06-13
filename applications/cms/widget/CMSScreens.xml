@@ -409,7 +409,7 @@
                 <decorator-screen name="CommonCMSAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
-                            <html><html-template location="component://cms/webapp/cms/pages/menuTree.ftl"/></html>
+                            <html><html-template location="component://cms/webapp/cms/menus/menuTree.ftl"/></html>
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>

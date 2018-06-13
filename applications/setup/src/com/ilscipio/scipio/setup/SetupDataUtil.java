@@ -337,24 +337,22 @@ public abstract class SetupDataUtil {
                     }
                 }
             }
+            
+            boolean isAcctgPreferencesSet = false;
+            GenericValue partyAcctgPreference = delegator.findOne("PartyAcctgPreference", false, UtilMisc.toMap("partyId", orgPartyId));
+            if (UtilValidate.isNotEmpty(partyAcctgPreference)) {
+                isAcctgPreferencesSet = true;
+                result.put("acctgPreferences", partyAcctgPreference);
+            }
 
             if (topGlAccount != null) {
-                result.put("coreCompleted", true);
-                boolean isAcctgPreferencesSet = false;
+                result.put("coreCompleted", true);                
                 boolean isFiscalPeriodSet = false;
-
                 if (UtilValidate.isEmpty(glAccountOrganization)) {
                     glAccountOrganization = delegator.makeValue("GlAccountOrganization", UtilMisc.toMap("glAccountId", topGlAccountId, "organizationPartyId", orgPartyId,
                             "roleTypeId", "INTERNAL_ORGANIZATIO", "fromDate", UtilDateTime.nowTimestamp()));
                     delegator.create(glAccountOrganization);
-                }
-
-                GenericValue partyAcctgPreference = delegator.findOne("PartyAcctgPreference", false, UtilMisc.toMap("partyId", orgPartyId));
-                if (UtilValidate.isNotEmpty(partyAcctgPreference)) {
-                    isAcctgPreferencesSet = true;
-                    result.put("acctgPreferences", partyAcctgPreference);
-                }
-                
+                }                
                 Timestamp now = UtilDateTime.nowTimestamp();
                 List<EntityCondition> openedCurrentFiscalPeriodsCond = UtilMisc.toList(EntityCondition.makeCondition("isClosed", EntityOperator.NOT_EQUAL, "Y"));                
                 openedCurrentFiscalPeriodsCond.add(EntityCondition.makeCondition(EntityCondition.makeCondition("fromDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, now)));

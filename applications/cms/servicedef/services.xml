@@ -921,4 +921,40 @@
         <attribute name="uriList" type="List" mode="OUT" optional="true"/>
     </service>
 
+    <!-- ========================================================= -->
+    <!-- Menu services -->
+    <!-- ========================================================= -->
+
+    <service name="cmsCreateUpdateMenu" engine="java" location="com.ilscipio.scipio.cms.menu.CmsMenuServices" 
+        invoke="createUpdateMenu" auth="true">
+        <description>Adds a Menu and creates an empty first json map</description>
+        <permission-service service-name="cmsGenericPermission" main-action="CREATE"/>
+        <attribute name="webSiteId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="menuName" type="String" mode="IN" optional="true"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="menuJson" type="String" mode="OUT" optional="false"/>
+    </service>
+
+        <service name="cmsDeleteMenu" engine="java"
+        location="com.ilscipio.scipio.cms.menu.CmsMenuServices" invoke="deleteMenu" auth="true" transaction-timeout="7200">
+        <permission-service service-name="cmsGenericPermission" main-action="DELETE"/>
+        <attribute mode="IN" name="menuId" type="String" optional="false"/>
+    </service>
+
+    <service name="cmsGetMenu" engine="java"
+        location="com.ilscipio.scipio.cms.menu.CmsMenuServices" invoke="getMenu" auth="true">
+        <description>Returns the JSON Object of a single menu</description>
+        <permission-service service-name="cmsGenericPermission" main-action="VIEW"/>
+        <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
+        <attribute name="menuJson" type="String" mode="OUT" optional="false"/>
+    </service>
+
+    <service name="cmsGetMenus" engine="java"
+        location="com.ilscipio.scipio.cms.menu.CmsMenuServices" invoke="getMenus" auth="true">
+        <description>Creates a JSON list of all available Menus.</description>
+        <permission-service service-name="cmsGenericPermission" main-action="VIEW"/>
+        <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
+        <attribute name="menuJson" type="String" mode="OUT" optional="false"/>
+    </service>
+
 </services>

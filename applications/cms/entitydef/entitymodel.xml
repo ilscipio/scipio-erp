@@ -776,6 +776,9 @@
           a_attr      : {}  // attributes for the generated A node
         }
       </description></field>
+      <field name="createdBy" type="id"></field>
+      <field name="lastUpdatedBy" type="id"></field>
+      
       <prim-key field="menuId" />
     </entity>
 

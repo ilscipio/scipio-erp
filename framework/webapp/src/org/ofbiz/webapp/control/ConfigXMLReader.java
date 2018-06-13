@@ -154,11 +154,16 @@ public class ConfigXMLReader {
     public static ControllerConfig getControllerConfig(URL url) throws WebAppConfigurationException {
         ControllerConfig controllerConfig = controllerCache.get(url);
         if (controllerConfig == null) {
-            controllerConfig = controllerCache.putIfAbsentAndGet(url, new ControllerConfig(url));
+            // SCIPIO: use one single factory method from now on...
+            //controllerConfig = controllerCache.putIfAbsentAndGet(url, new ControllerConfig(url));
+            controllerConfig = readControllerConfig(url, false);
+            controllerConfig = controllerCache.putIfAbsentAndGet(url, 
+                    controllerConfig != null ? controllerConfig : ControllerConfig.NULL_CONFIG); // special null cache key
+            return controllerConfig;
         }
         return controllerConfig.isNull() ? null : controllerConfig; // SCIPIO: check for special null key
     }
-    
+
     /**
      * SCIPIO: version of getControllerConfig that supports optional loading.
      * Added 2017-05-03.
@@ -166,21 +171,31 @@ public class ConfigXMLReader {
     public static ControllerConfig getControllerConfig(URL url, boolean optional) throws WebAppConfigurationException {
         ControllerConfig controllerConfig = controllerCache.get(url);
         if (controllerConfig == null) {
-            try {
-                controllerConfig = new ControllerConfig(url);
-            } catch(WebAppConfigurationException e) {
-                if (optional && (e.getCause() instanceof java.io.FileNotFoundException)) {
-                    if (Debug.infoOn()) {
-                        Debug.logInfo("controller skipped (not found, optional): " + url.toString(), module);
-                    }
-                    controllerConfig = ControllerConfig.NULL_CONFIG; // special cache key
-                } else {
-                    throw e;
-                }
-            }
-            controllerConfig = controllerCache.putIfAbsentAndGet(url, controllerConfig);
+            controllerConfig = readControllerConfig(url, optional);
+            controllerConfig = controllerCache.putIfAbsentAndGet(url, 
+                    controllerConfig != null ? controllerConfig : ControllerConfig.NULL_CONFIG); // special null cache key
+            return controllerConfig;
         }
         return controllerConfig.isNull() ? null : controllerConfig;
+    }
+
+    /**
+     * SCIPIO: version of getControllerConfig that bypasses cache.
+     * Added 2018-06-13.
+     */
+    public static ControllerConfig readControllerConfig(URL url, boolean optional) throws WebAppConfigurationException {
+        try {
+            return new ControllerConfig(url);
+        } catch(WebAppConfigurationException e) {
+            if (optional && (e.getCause() instanceof java.io.FileNotFoundException)) {
+                if (Debug.infoOn()) {
+                    Debug.logInfo("controller skipped (not found, optional): " + url.toString(), module);
+                }
+                return null;
+            } else {
+                throw e;
+            }
+        }
     }
 
     public static URL getControllerConfigURL(ServletContext context) {

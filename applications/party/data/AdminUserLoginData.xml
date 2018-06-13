@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
-    <UserLogin userLoginId="admin" currentPassword="{SHA}4afca3ceb9bb4b053efaf77766b5323163bd2266" requirePasswordChange="Y"/>
+    <UserLogin userLoginId="admin" currentPassword="{SHA}4afca3ceb9bb4b053efaf77766b5323163bd2266" requirePasswordChange="N"/>
     <UserLoginSecurityGroup groupId="SUPER" userLoginId="admin" fromDate="2001-01-01 12:00:00.0"/>
 </entity-engine-xml>

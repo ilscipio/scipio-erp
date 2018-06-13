@@ -31,12 +31,51 @@ under the License.
 <#assign params = paramMaps.values>
 <#assign fixedParams = paramMaps.fixedValues>
 
-<@script>
+<@script>	
+	var tabSettings = {
+	    "preferencesTab": {
+	        "formId": "setupAccounting-preferences-form",
+	        "disabled": false
+	    },
+	    "glAccountsTab": {
+	    	"formId": "",
+	    	"disabled": ${(!topGlAccountId?has_content)?string} 
+	    },
+	    "fiscalPeriodsTab": {
+	    	"formId": "",
+	    	"disabled": ${(!topGlAccountId?has_content)?string}
+	    },
+	    "accountingTransactionsTab": {
+	    	"formId": "",
+	    	"disabled": ${(!topGlAccountId?has_content)?string}
+	    },
+	    "journalTab": {
+	    	"formId": "setupAccounting-selectJournalEntry-form",
+	    	"disabled": ${(!topGlAccountId?has_content)?string}
+	    }
+	  }
+
 	$(document).ready(function () {		
+		tabs = $('a[data-toggle="tab"]');
+		// Check whether tabs should be enabled or disabled based on tab config			 
+	  	for (i = 0; i < tabs.length; i++) {
+		  	if (tabs[i].hash) {
+		  	  tabId = tabs[i].hash.substring(1, tabs[i].hash.length); 	
+		  	  console.log("tabId =======> " + tabId);
+			  if (tabSettings[tabId].disabled) {			  	
+			  	$(tabs[i]).bind('click', function(e) {
+			  		e.preventDefault();
+			        e.stopImmediatePropagation();
+			        e.stopPropagation();
+			        $(tabs[i]).addClass("disabled");
+			  	});
+			  }
+			}
+	  	}
+
 		if (typeof Foundation !== "undefined") { 
-			$('ul.tabs').on('toggled', customToggleTab);
-			tabs = $('li:first-child a[data-toggle="tab"]').foundation();			
-			customToggleTab(null, tabs[0]);					
+			$('ul.tabs').on('toggled', customToggleTab);			
+			customToggleTab(null, tabs[0]);	
 		} else if (typeof  $.fn.tooltip.Constructor.VERSION!== "undefined") { 
 			$('a[data-toggle="tab"]').on('shown.bs.tab', customToggleTab);			
 			customToggleTab($('li:first-child a[data-toggle="tab"]').tab()[0]);
@@ -46,61 +85,26 @@ under the License.
 	});
 	
 	function customToggleTab (e, t) {
-	  var tabsDisabled=${(!topGlAccountId?has_content)?string};      		
+	        		
 	  if (typeof setupControlMenu != "undefined") {
-		  var tabId = null;
+		  var currTabId = null;
 		  if ($(t).length) { // foundation 5.5.3		  	
 		  	if ($(t.context).length) {
-		  		tabId = t.context.hash.substring(1, t.context.hash.length);
+		  		currTabId = t.context.hash.substring(1, t.context.hash.length);
 		  	} else {
-		  		tabId = t.hash.substring(1, t.hash.length);
+		  		currTabId = t.hash.substring(1, t.hash.length);
 		  	}	  	
 		  } else if ($(e).length) { // bootstrap 4
 		  	if ($(e.target).length) {
-		    	tabId = e.target.hash.substring(1, e.target.hash.length);
+		    	currTabId = e.target.hash.substring(1, e.target.hash.length);
 		    } else {
-		    	tabId = e.hash.substring(1, e.hash.length);
+		    	currTabId = e.hash.substring(1, e.hash.length);
 		    }		    
-		  }
-		  var tabIdToFormId = {
-		    "preferencesTab": {
-		        "formId": "setupAccounting-preferences-form",
-		        "disabled": false
-		    },
-		    "glAccountsTab": {
-		    	"formId": "",
-		    	"disabled": tabsDisabled 
-		    },
-		    "fiscalPeriodsTab": {
-		    	"formId": "",
-		    	"disabled": tabsDisabled
-		    },
-		    "accountingTransactionsTab": {
-		    	"formId": "",
-		    	"disabled": tabsDisabled
-		    },
-		    "journalTab": {
-		    	"formId": "setupAccounting-selectJournalEntry-form",
-		    	"disabled": tabsDisabled
-		    }
-		  }
-		  for (tId in tabIdToFormId) {
-			  if (tabIdToFormId[tId].disabled) {
-			  	if ($(t).length) { // foundation 5.5.3
-			  		$(t.context).removeAttr('data-toggle');
-			  	} else if ($(e).length) { // bootstrap 4
-			  		if ($('[hash="#' + tId + '"]').is('[data-toggle]')) {
-			  			$(e).removeAttr('data-toggle');
-			  		} else if ($(e.currentTarget).is('[data-toggle]')) {
-			  			$(e.currentTarget).removeAttr('data-toggle');
-			  		}
-			  		console.log("element hash ===> " + e.hash);
-			  	}
-			  }
-		  }
-		  formId = tabIdToFormId[tabId].formId;
+		  }		  
+		  
+		  // Set the proper form id to submit on tab change
+		  formId = tabSettings[currTabId].formId;
 		  setupControlMenu.setSubmitFormId(formId);
-		  // console.log("formId =======> " + formId);
 	  } else {
 	  	console.log("setupControlMenu cannot be found");
 	  }

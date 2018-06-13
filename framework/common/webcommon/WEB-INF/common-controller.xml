@@ -41,7 +41,20 @@ under the License.
 
     <!-- SCIPIO: view-as-json configuration; created 2017-05-15 -->
     <view-as-json enabled="true" json-request-uri="jsonExplicit" update-session="false" regular-login="true" />
-    
+
+    <!-- SCIPIO: New common settings -->
+    <common-settings>
+        <request-map-settings>
+            <response-settings>
+                <!-- SCIPIO: 2018-06: When the response view-name matches "Lookup*", 
+                    set allow-view-save to false instead of true, to prevent interference with "view-last" responses -->
+                <allow-view-save-default>
+                    <name-filter field="view-name" prefix="Lookup" use-value="false"/>
+                </allow-view-save-default>
+            </response-settings>
+        </request-map-settings>
+    </common-settings>
+
     <!-- Security Mappings -->
     <request-map uri="checkLogin" edit="false">
         <description>Verify a user is logged in.</description>

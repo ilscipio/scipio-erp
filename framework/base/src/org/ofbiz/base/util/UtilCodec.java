@@ -227,12 +227,20 @@ public class UtilCodec {
             }
         }
         public String sanitize(String original) {
-            return encode(original);
+            // SCIPIO: WARNING: 2018-06-23: for us, for now, this will simply return
+            // the original string. This is actively called (through ContentWrapper
+            // encoderType "url" in templates, and affects current output, and creates bad output.
+            // It makes no sense to URL-encode this at all for "sanitization".
+            // A true sanitization would parse the URLs and return nothing if looked dangerous,
+            // but this currently beyond what we can do.
+            // There is no security issue with this currently since our URLs get html/js-escaped.
+            //return encode(original);
+            return original;
         }
 
         public String decode(String original) {
             try {
-                //canonicalize(original); // SCIPIO: fixed by upstream, I commented out useless call
+                original = canonicalize(original); // SCIPIO: fixed by upstream, I commented out useless call
                 return URLDecoder.decode(original, "UTF-8");
             } catch (UnsupportedEncodingException ee) {
                 Debug.logError(ee, module);

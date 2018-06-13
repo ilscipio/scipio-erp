@@ -569,26 +569,12 @@
                 <set field="target" value="setupUpdateGlAccount" />
                 <if>
                     <condition>
-                        <not><if-empty field="topGlAccountId"/></not>                        
+                        <if-empty field="topGlAccountId"/>                        
                     </condition>
                     <then>
-                        <set field="submitFormId" value="EditAccounting"/>
+                        <set field="submitFormId" value="setupAccounting-preferences-form"/>
                     </then>
                 </if>
-                <!-- Commenting this for now; will be enabled once we sort out how to handle an accounting standard creation properly -->                
-                <!--
-                <set field="submitFormId" value="EditAccounting"/>
-                <set field="isCreateForm" type="Boolean" value="${context.topGlAccountId == null}"/> 
-                <if>
-                    <condition><not><if-true field="glSelected"/></not></condition>
-                    <then>
-                        <set field="useDefaultSetupSubmitBar" type="Boolean" value="false"/>                       
-                    </then>
-                    <else>
-                    	<set field="useDefaultSetupSubmitBar" type="Boolean" value="true"/>
-                    </else>
-                </if>
-                 -->
                 <set field="useDefaultSetupSubmitBar" type="Boolean" value="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/accounting/static/ScpEgltCommon.js" global="true"/>
             </actions>

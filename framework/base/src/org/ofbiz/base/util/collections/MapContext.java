@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -270,7 +271,10 @@ public class MapContext<K, V> implements Map<K, V>, LocalizedMap<V> {
      */
     public Set<K> keySet() {
         // walk the stackList and aggregate all keys
-        Set<K> resultSet = new HashSet<K>();
+        // SCIPIO: 2018-06-14: forced to use LinkedHashSet because otherwise cannot preserve
+        // insert order when caller decides to use LinkedHashMap as stack entries.
+        //Set<K> resultSet = new HashSet<K>();
+        Set<K> resultSet = new LinkedHashSet<K>();
         for (Map<K, V> curMap: this.stackList) {
             resultSet.addAll(curMap.keySet());
         }

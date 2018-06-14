@@ -34,7 +34,7 @@
 	    <@field type="hidden" name="partyId" value=orgPartyId! />
 
 	    <@section title=uiLabelMap.SetupAccountingPreferencesTaxes>
-	    	<#if !acctgPreferences?has_content>
+	    	<#if !acctgPreferences?has_content || (acctgPreferences?has_content && acctgTransCount == 0)>
 		        <@field type="select" name="taxFormId" value=(params.taxFormId!) label=uiLabelMap.FormFieldTitle_taxFormId>
 		    		<option value=""></option>
 			    	<#list taxForms as taxForm>
@@ -55,8 +55,13 @@
 	    	</#if>
 	    </@section>
 	   	<@section title=uiLabelMap.SetupAccountingPreferencesFiscalPeriods>
-	   		<#if !acctgPreferences?has_content>
-			    <@field type="generic" label=uiLabelMap.SetupAccountingSelectStartFiscalDayMonth>
+	   		<#if !acctgPreferences?has_content || (acctgPreferences?has_content && acctgTransCount == 0)>
+			    <@field type="generic" label=uiLabelMap.SetupAccountingSelectStartFiscalDayMonth>			        
+			        <@script>
+			        	$(document).ready(function() {
+			        		$('.setupAccounting-preferences-start-month-select option:eq(${params.fiscalYearStartMonth!0})').prop("selected", true);
+			        	});
+			        </@script>
 				    <@field type="select" name="fiscalYearStartMonth" value=(params.fiscalYearStartMonth!) label=uiLabelMap.FormFieldTitle_fiscalYearStartMonth class="+setupAccounting-preferences-start-month-select" inline=true style="display:inline-block;">				    	
 		            	<option value=""></option>  	
 						<option value="1">${uiLabelMap.CommonJanuary}</option>
@@ -80,11 +85,11 @@
 		    </#if>
 	    </@section>
 	    <@section title=uiLabelMap.SetupAccountingPreferencesCurrencies>
-	    	<#if !acctgPreferences?has_content>				    	
+	    	<#if !acctgPreferences?has_content || (acctgPreferences?has_content && acctgTransCount == 0)>				    	
 				<@field type="select" name="baseCurrencyUomId" value=(params.baseCurrencyUomId!) label=uiLabelMap.FormFieldTitle_baseCurrencyUomId>
 		    		<option value=""></option>
 			    	<#list currencyUoms as currencyUom>
-			    		<#assign selected = (rawString(currencyUom.uomId) == rawString(params.baseCurrencyUomId!))>
+			    		<#assign selected = (rawString(params.baseCurrencyUomId!) == rawString(currencyUom.uomId!))>
 			    		<option value="${currencyUom.uomId}"<#if selected> selected="selected"</#if>>${currencyUom.description} - ${currencyUom.abbreviation}</option>
 			    	</#list>
 		    	</@field>
@@ -93,18 +98,18 @@
 	    	</#if>
 	    </@section>
 	    <@section title=uiLabelMap.AccountingInvoices>
-	    	<@field type="select" name="oldInvoiceSequenceEnumId" value=(params.oldInvoiceSequenceEnumId!) label=uiLabelMap.FormFieldTitle_invoiceSequenceEnumId>
+	    	<@field type="select" name="invoiceSeqCustMethId" value=(params.invoiceSeqCustMethId!) label=uiLabelMap.FormFieldTitle_invoiceSequenceEnumId>
 	    		<option value=""></option>
 		    	<#list invoiceCustomMethods as invoiceCustomMethod>
-		    		<#assign selected = (rawString(invoiceCustomMethod.enumId) == rawString(params.oldInvoiceSequenceEnumId!))>
-		    		<option value="${invoiceCustomMethod.enumId}"<#if selected> selected="selected"</#if>>${invoiceCustomMethod.description}</option>
+		    		<#assign selected = (rawString(invoiceCustomMethod.customMethodId) == rawString(params.invoiceSeqCustMethId!))>
+		    		<option value="${invoiceCustomMethod.customMethodId}"<#if selected> selected="selected"</#if>>${invoiceCustomMethod.description}</option>
 		    	</#list>
 	    	</@field>
-	    	<#if !acctgPreferences?has_content>		    					    	
+	    	<#if !acctgPreferences?has_content || (acctgPreferences?has_content && invoiceCount == 0)>		    					    	
 		    	<@field type="input" name="invoiceIdPrefix" value=(params.invoiceIdPrefix!) label=uiLabelMap.FormFieldTitle_invoiceIdPrefix />
 		    	<@field type="input" name="lastInvoiceNumber" value=(params.lastInvoiceNumber!) label=uiLabelMap.FormFieldTitle_lastInvoiceNumber />
-		    	<@field type="datetime" name="lastInvoiceRestartDate" value=(params.lastInvoiceRestartDate!) label=uiLabelMap.FormFieldTitle_lastInvoiceRestartDate />
-		    	<@field type="input" name="useInvoiceIdForReturns" value=(params.useInvoiceIdForReturns!) label=uiLabelMap.FormFieldTitle_useInvoiceIdForReturns />
+		    	<@field type="datetime" name="lastInvoiceRestartDate" value=(params.lastInvoiceRestartDate!) label=uiLabelMap.FormFieldTitle_lastInvoiceRestartDate />		    	
+		    	<@field type="checkbox" name="useInvoiceIdForReturns" label=uiLabelMap.FormFieldTitle_useInvoiceIdForReturns value="Y" checked=("Y" == params.useInvoiceIdForReturns!) />
 	    	<#else>
 	    		<@field type="display" name="invoiceIdPrefix" value=(acctgPreferences.invoiceIdPrefix!) label=uiLabelMap.FormFieldTitle_invoiceIdPrefix />
 		    	<@field type="display" name="lastInvoiceNumber" value=(acctgPreferences.lastInvoiceNumber!) label=uiLabelMap.FormFieldTitle_lastInvoiceNumber />
@@ -113,14 +118,14 @@
 	    	</#if>
 	    </@section>
 	    <@section title=uiLabelMap.AccountingOrders>
-	    	<@field type="select" name="oldOrderSequenceEnumId" value=(params.oldOrderSequenceEnumId!) label=uiLabelMap.FormFieldTitle_orderSequenceEnumId>
+	    	<@field type="select" name="orderSeqCustMethId" value=(params.orderSeqCustMethId!) label=uiLabelMap.FormFieldTitle_orderSequenceEnumId>
 	    		<option value=""></option>
 		    	<#list orderCustomMethods as orderCustomMethod>
-		    		<#assign selected = (rawString(orderCustomMethod.enumId) == rawString(params.oldOrderSequenceEnumId!))>
-		    		<option value="${orderCustomMethod.enumId}"<#if selected> selected="selected"</#if>>${orderCustomMethod.description}</option>
+		    		<#assign selected = (rawString(orderCustomMethod.customMethodId) == rawString(params.orderSeqCustMethId!))>
+		    		<option value="${orderCustomMethod.customMethodId}"<#if selected> selected="selected"</#if>>${orderCustomMethod.description}</option>
 		    	</#list>
 	    	</@field>
-	    	<#if !acctgPreferences?has_content>
+	    	<#if !acctgPreferences?has_content || (acctgPreferences?has_content && orderCount == 0)>
 		        <@field type="text" name="orderIdPrefix" value=(params.orderIdPrefix!) label=uiLabelMap.FormFieldTitle_orderIdPrefix />
 		        <@field type="text" name="lastOrderNumber" value=(params.lastOrderNumber!) label=uiLabelMap.FormFieldTitle_lastOrderNumber />
 	        <#else>
@@ -129,14 +134,14 @@
 	        </#if>
 	    </@section>
 	    <@section title=uiLabelMap.OrderOrderQuotes>
-	    	<@field type="select" name="oldQuoteSequenceEnumId" value=(params.oldQuoteSequenceEnumId!) label=uiLabelMap.FormFieldTitle_quoteSequenceEnumId>
+	    	<@field type="select" name="quoteSeqCustMethId" value=(params.quoteSeqCustMethId!) label=uiLabelMap.FormFieldTitle_quoteSequenceEnumId>
 	    		<option value=""></option>
 		    	<#list quoteCustomMethods as quoteCustomMethod>
-		    		<#assign selected = (rawString(quoteCustomMethod.enumId) == rawString(params.oldQuoteSequenceEnumId!))>
-		    		<option value="${quoteCustomMethod.enumId}"<#if selected> selected="selected"</#if>>${quoteCustomMethod.description}</option>
+		    		<#assign selected = (rawString(quoteCustomMethod.customMethodId) == rawString(params.quoteSeqCustMethId!))>
+		    		<option value="${quoteCustomMethod.customMethodId}"<#if selected> selected="selected"</#if>>${quoteCustomMethod.description}</option>
 		    	</#list>
 	    	</@field>
-	    	<#if !acctgPreferences?has_content>
+	    	<#if !acctgPreferences?has_content || (acctgPreferences?has_content && quoteCount == 0)>
 		    	<@field type="text" name="quoteIdPrefix" value=(params.quoteIdPrefix!) label=uiLabelMap.FormFieldTitle_quoteIdPrefix />
 		    	<@field type="text" name="lastQuoteNumber" value=(params.lastQuoteNumber!) label=uiLabelMap.FormFieldTitle_lastQuoteNumber />
 	    	<#else>

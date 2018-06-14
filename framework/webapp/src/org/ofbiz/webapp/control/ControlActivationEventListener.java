@@ -31,6 +31,7 @@ import org.ofbiz.base.util.UtilProperties;
 public class ControlActivationEventListener implements HttpSessionActivationListener {
     // Debug module name
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    private static final boolean showSessionIdInLog = UtilProperties.propertyValueEqualsIgnoreCase("requestHandler", "show-sessionId-in-log", "Y"); // SCIPIO: made static var for this
 
     public ControlActivationEventListener() {}
 
@@ -45,11 +46,12 @@ public class ControlActivationEventListener implements HttpSessionActivationList
     }
     
     public static String showSessionId(HttpSession session) {
-        boolean showSessionIdInLog = UtilProperties.propertyValueEqualsIgnoreCase("requestHandler", "show-sessionId-in-log", "Y");
         if (showSessionIdInLog) {
             return " sessionId=" + session.getId(); 
         }
-        return " hidden sessionId by default.";
+        // SCIPIO: needlessly verbose
+        //return " hidden sessionId by default.";
+        return " sessionId=[hidden]";
     }
     
 }

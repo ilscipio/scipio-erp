@@ -81,6 +81,7 @@ import org.xml.sax.SAXException;
 public class RequestHandler {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    private static final boolean showSessionIdInLog = UtilProperties.propertyValueEqualsIgnoreCase("requestHandler", "show-sessionId-in-log", "Y"); // SCIPIO: made static var & remove delegator
     private final String defaultStatusCodeString = UtilProperties.getPropertyValue("requestHandler", "status-code", "301");
     private final ViewFactory viewFactory;
     private final EventFactory eventFactory;
@@ -2358,12 +2359,15 @@ public class RequestHandler {
     }
 
     private String showSessionId(HttpServletRequest request) {
-        Delegator delegator = (Delegator) request.getAttribute("delegator");
-        boolean showSessionIdInLog = EntityUtilProperties.propertyValueEqualsIgnoreCase("requestHandler", "show-sessionId-in-log", "Y", delegator);
+        // SCIPIO: avoid expensive lookup just for log line, not worth it
+        //Delegator delegator = (Delegator) request.getAttribute("delegator");
+        //EntityUtilProperties.propertyValueEqualsIgnoreCase("requestHandler", "show-sessionId-in-log", "Y", delegator);
         if (showSessionIdInLog) {
             return " sessionId=" + UtilHttp.getSessionId(request); 
         }
-        return " hidden sessionId by default.";
+        // SCIPIO: needlessly verbose
+        //return " hidden sessionId by default.";
+        return " sessionId=[hidden]";
     }
 
     /**

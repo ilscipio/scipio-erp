@@ -25,9 +25,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -386,4 +388,117 @@ public class MapContext<K, V> implements Map<K, V>, LocalizedMap<V> {
 
     }
 
+    /**
+     * SCIPIO: Alternative to {@link #keySet()} that builds the collection by visiting
+     * the deepest (oldest) map stacks first.
+     * <p>
+     * Partially preserves insert order if the underlying stack maps are insert-order preserving.
+     * <p>
+     * May help preserve order when using LinkedHashMap in stacks.
+     * <p>
+     * Added 2018-06-14.
+     */
+    public Set<K> keySetDeepFirst() {
+        Set<K> resultSet = new LinkedHashSet<K>();
+        ListIterator<Map<K, V>> it = this.stackList.listIterator(this.stackList.size());
+        while(it.hasPrevious()) {
+            Map<K, V> curMap = it.previous();
+            resultSet.addAll(curMap.keySet());
+        }
+        return Collections.unmodifiableSet(resultSet);
+    }
+
+    /**
+     * SCIPIO: Alternative to {@link #values()} that builds the collection by visiting
+     * the deepest (oldest) map stacks first.
+     * <p>
+     * Partially preserves insert order if the underlying stack maps are insert-order preserving.
+     * <p>
+     * May help preserve order when using LinkedHashMap in stacks.
+     * <p>
+     * Added 2018-06-14.
+     */
+    public Collection<V> valuesDeepFirst() {
+        Map<K, V> resultMap = new LinkedHashMap<K, V>();
+        ListIterator<Map<K, V>> it = this.stackList.listIterator(this.stackList.size());
+        while(it.hasPrevious()) {
+            Map<K, V> curMap = it.previous();
+            resultMap.putAll(curMap);
+        }
+        return Collections.unmodifiableCollection(resultMap.values());
+    }
+
+    /**
+     * SCIPIO: Alternative to {@link #entrySet()} that builds the collection by visiting
+     * the deepest (oldest) map stacks first.
+     * <p>
+     * Partially preserves insert order if the underlying stack maps are insert-order preserving.
+     * <p>
+     * May help preserve order when using LinkedHashMap in stacks.
+     * <p>
+     * Added 2018-06-14.
+     */
+    public Set<Map.Entry<K, V>> entrySetDeepFirst() {
+        Map<K, V> resultMap = new LinkedHashMap<K, V>();
+        ListIterator<Map<K, V>> it = this.stackList.listIterator(this.stackList.size());
+        while(it.hasPrevious()) {
+            Map<K, V> curMap = it.previous();
+            resultMap.putAll(curMap);
+        }
+        return Collections.unmodifiableSet(resultMap.entrySet());
+    }
+
+    /**
+     * SCIPIO: Returns a MapContext whose {@link #keySet()}, {@link #values()}, {@link #entrySet()}
+     * methods iterate the oldest (deepest) maps in the stack first.
+     * <p>
+     * Partially preserves insert order if the underlying stack maps are insert-order preserving.
+     * <p>
+     * Useful for when the stacked maps are LinkedHashMaps.
+     * <p>
+     * Added 2018-06-14.
+     */
+    public static <K, V> MapContext<K, V> getIterDeepFirstMapContext() {
+        return new IterDeepFirstMapContext<>();
+    }
+
+    /**
+     * SCIPIO: Returns an adapter around this MapContext
+     * whose {@link #keySet()}, {@link #values()}, {@link #entrySet()} methods
+     * iterate the oldest (deepest) maps in the stack first.
+     * <p>
+     * Partially preserves insert order if the underlying stack maps are insert-order preserving.
+     * <p>
+     * Useful for when the stacked maps are LinkedHashMaps.
+     * <p>
+     * Added 2018-06-14.
+     */
+    public Map<K, V> getIterDeepFirstAdapter() {
+        return new IterDeepFirstAdapter<>(this);
+    }
+
+    protected static class IterDeepFirstAdapter<K, V> implements Map<K, V> {
+        private final MapContext<K, V> mapCtx;
+        protected IterDeepFirstAdapter(MapContext<K, V> mapCtx) { this.mapCtx = mapCtx; }
+        @Override public int size() { return mapCtx.size(); }
+        @Override public boolean isEmpty() { return mapCtx.isEmpty(); }
+        @Override public boolean containsKey(Object key) { return mapCtx.containsKey(key); }
+        @Override public boolean containsValue(Object value) { return mapCtx.containsValue(value); }
+        @Override public V get(Object key) { return mapCtx.get(key); }
+        @Override public V put(K key, V value) { return mapCtx.put(key, value); }
+        @Override public V remove(Object key) { return mapCtx.remove(key); }
+        @Override public void putAll(Map<? extends K, ? extends V> m) { mapCtx.putAll(m); }
+        @Override public void clear() { mapCtx.clear(); }
+        @Override public Set<K> keySet() { return mapCtx.keySetDeepFirst(); } // SPECIAL
+        @Override public Collection<V> values() { return mapCtx.valuesDeepFirst(); } // SPECIAL
+        @Override public Set<Entry<K, V>> entrySet() { return mapCtx.entrySetDeepFirst(); } // SPECIAL
+        @Override public boolean equals(Object o) { return mapCtx.equals(o); }
+        @Override public int hashCode() { return mapCtx.hashCode(); }
+    }
+
+    protected static class IterDeepFirstMapContext<K, V> extends MapContext<K, V> {
+        @Override public Set<K> keySet() { return keySetDeepFirst(); }
+        @Override public Collection<V> values() { return valuesDeepFirst(); }
+        @Override public Set<Entry<K, V>> entrySet() { return entrySetDeepFirst(); }
+    }
 }

@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -276,11 +277,11 @@ public class ConfigXMLReader {
         // SCIPIO: split-up includes
         protected List<Include> includesPreLocal = new ArrayList<>();
         protected List<Include> includesPostLocal = new ArrayList<>();
-        protected Map<String, Event> firstVisitEventList = new HashMap<String, Event>();
-        protected Map<String, Event> preprocessorEventList = new HashMap<String, Event>();
-        protected Map<String, Event> postprocessorEventList = new HashMap<String, Event>();
-        protected Map<String, Event> afterLoginEventList = new HashMap<String, Event>();
-        protected Map<String, Event> beforeLogoutEventList = new HashMap<String, Event>();
+        protected Map<String, Event> firstVisitEventList = new LinkedHashMap<String, Event>(); // SCIPIO: 2018-03-13: should be ordered!
+        protected Map<String, Event> preprocessorEventList = new LinkedHashMap<String, Event>(); // SCIPIO: 2018-03-13: should be ordered!
+        protected Map<String, Event> postprocessorEventList = new LinkedHashMap<String, Event>(); // SCIPIO: 2018-03-13: should be ordered!
+        protected Map<String, Event> afterLoginEventList = new LinkedHashMap<String, Event>(); // SCIPIO: 2018-03-13: should be ordered!
+        protected Map<String, Event> beforeLogoutEventList = new LinkedHashMap<String, Event>(); // SCIPIO: 2018-03-13: should be ordered!
         protected Map<String, String> eventHandlerMap = new HashMap<String, String>();
         protected Map<String, String> viewHandlerMap = new HashMap<String, String>();
         protected Map<String, RequestMap> requestMapMap = new HashMap<String, RequestMap>();
@@ -1181,11 +1182,11 @@ public class ConfigXMLReader {
             this.statusCode = super.getStatusCode();
 
             // SCIPIO: split-up includes
-            this.firstVisitEventList = getOptMap(super.getFirstVisitEventList());
-            this.preprocessorEventList = getOptMap(super.getPreprocessorEventList());
-            this.postprocessorEventList = getOptMap(super.getPostprocessorEventList());
-            this.afterLoginEventList = getOptMap(super.getAfterLoginEventList());
-            this.beforeLogoutEventList = getOptMap(super.getBeforeLogoutEventList());
+            this.firstVisitEventList = getOrderedOptMap(super.getFirstVisitEventList());
+            this.preprocessorEventList = getOrderedOptMap(super.getPreprocessorEventList());
+            this.postprocessorEventList = getOrderedOptMap(super.getPostprocessorEventList());
+            this.afterLoginEventList = getOrderedOptMap(super.getAfterLoginEventList());
+            this.beforeLogoutEventList = getOrderedOptMap(super.getBeforeLogoutEventList());
             this.eventHandlerMap = getOptMap(super.getEventHandlerMap());
             this.viewHandlerMap = getOptMap(super.getViewHandlerMap());
             this.requestMapMap = getOptMap(super.getRequestMapMap());
@@ -1198,6 +1199,11 @@ public class ConfigXMLReader {
 
         private static <K, V> Map<K, V> getOptMap(Map<K, V> map) {
             return new HashMap<>(map); // convert MapContext to much faster HashMap
+        }
+        
+        private static <K, V> Map<K, V> getOrderedOptMap(Map<K, V> map) {
+            // SCIPIO: 2018-06-14: FIXME: the MapContext iteration order will be wrong here...
+            return new LinkedHashMap<>(map); // convert MapContext to much faster HashMap
         }
 
         private static <V> List<V> getOptList(List<V> list) {

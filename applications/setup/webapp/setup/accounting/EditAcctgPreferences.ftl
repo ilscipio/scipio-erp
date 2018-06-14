@@ -93,10 +93,10 @@
 	    	</#if>
 	    </@section>
 	    <@section title=uiLabelMap.AccountingInvoices>
-	    	<@field type="select" name="oldInvoiceSequenceEnumId" value=(params.oldInvoiceSequenceEnumId!) label=uiLabelMap.FormFieldTitle_invoiceSequenceEnumId>
+	    	<@field type="select" name="invoiceSeqCustMethId" value=(params.invoiceSeqCustMethId!) label=uiLabelMap.FormFieldTitle_invoiceSequenceEnumId>
 	    		<option value=""></option>
 		    	<#list invoiceCustomMethods as invoiceCustomMethod>
-		    		<#assign selected = (rawString(invoiceCustomMethod.enumId) == rawString(params.oldInvoiceSequenceEnumId!))>
+		    		<#assign selected = (rawString(invoiceCustomMethod.enumId) == rawString(params.invoiceSeqCustMethId!))>
 		    		<option value="${invoiceCustomMethod.enumId}"<#if selected> selected="selected"</#if>>${invoiceCustomMethod.description}</option>
 		    	</#list>
 	    	</@field>
@@ -113,10 +113,10 @@
 	    	</#if>
 	    </@section>
 	    <@section title=uiLabelMap.AccountingOrders>
-	    	<@field type="select" name="oldOrderSequenceEnumId" value=(params.oldOrderSequenceEnumId!) label=uiLabelMap.FormFieldTitle_orderSequenceEnumId>
+	    	<@field type="select" name="orrderSeqCustMethId" value=(params.orderSeqCustMethId!) label=uiLabelMap.FormFieldTitle_orderSequenceEnumId>
 	    		<option value=""></option>
 		    	<#list orderCustomMethods as orderCustomMethod>
-		    		<#assign selected = (rawString(orderCustomMethod.enumId) == rawString(params.oldOrderSequenceEnumId!))>
+		    		<#assign selected = (rawString(orderCustomMethod.enumId) == rawString(params.orderSeqCustMethId!))>
 		    		<option value="${orderCustomMethod.enumId}"<#if selected> selected="selected"</#if>>${orderCustomMethod.description}</option>
 		    	</#list>
 	    	</@field>
@@ -129,10 +129,10 @@
 	        </#if>
 	    </@section>
 	    <@section title=uiLabelMap.OrderOrderQuotes>
-	    	<@field type="select" name="oldQuoteSequenceEnumId" value=(params.oldQuoteSequenceEnumId!) label=uiLabelMap.FormFieldTitle_quoteSequenceEnumId>
+	    	<@field type="select" name="quoteSeqCustMethId" value=(params.quoteSeqCustMethId!) label=uiLabelMap.FormFieldTitle_quoteSequenceEnumId>
 	    		<option value=""></option>
 		    	<#list quoteCustomMethods as quoteCustomMethod>
-		    		<#assign selected = (rawString(quoteCustomMethod.enumId) == rawString(params.oldQuoteSequenceEnumId!))>
+		    		<#assign selected = (rawString(quoteCustomMethod.enumId) == rawString(params.quoteSeqCustMethId!))>
 		    		<option value="${quoteCustomMethod.enumId}"<#if selected> selected="selected"</#if>>${quoteCustomMethod.description}</option>
 		    	</#list>
 	    	</@field>

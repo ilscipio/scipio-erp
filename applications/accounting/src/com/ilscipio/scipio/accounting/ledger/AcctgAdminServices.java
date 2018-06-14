@@ -71,20 +71,37 @@ public class AcctgAdminServices {
                 // This may have an undesired impact
                 // partyAcctgPreference.set("baseCurrencyUomId",
                 // context.get("baseCurrencyUomId"));
-            } else if (orderCount == 0) {
+            } 
+            if (orderCount == 0) {
                 partyAcctgPreference.set("orderSeqCustMethId", context.get("orderSeqCustMethId"));
                 partyAcctgPreference.set("orderIdPrefix", context.get("orderIdPrefix"));
                 partyAcctgPreference.set("lastOrderNumber", context.get("lastOrderNumber"));
-            } else if (invoiceCount == 0) {
-                partyAcctgPreference.set("invoiceSeqCustMethId", context.get("invoiceSeqCustMethId"));
+            } else {
+                if (context.containsKey("orderSeqCustMethId") && !context.get("orderSeqCustMethId").equals(partyAcctgPreference.get("orderSeqCustMethId"))) {
+                    partyAcctgPreference.set("oldOrderSequenceEnumId", partyAcctgPreference.get("orderSeqCustMethId"));
+                    partyAcctgPreference.set("orderSeqCustMethId", context.get("orderSeqCustMethId"));
+                }
+            }
+            if (invoiceCount == 0) {                
                 partyAcctgPreference.set("invoiceIdPrefix", context.get("invoiceIdPrefix"));
                 partyAcctgPreference.set("lastInvoiceNumber", context.get("lastInvoiceNumber"));
                 partyAcctgPreference.set("lastInvoiceRestartDate", context.get("lastInvoiceRestartDate"));
                 partyAcctgPreference.set("useInvoiceIdForReturns", context.get("useInvoiceIdForReturns"));
-            } else if (quoteCount == 0) {
+            } else {
+                if (context.containsKey("invoiceSeqCustMethId") && !context.get("invoiceSeqCustMethId").equals(partyAcctgPreference.get("invoiceSeqCustMethId"))) {
+                    partyAcctgPreference.set("oldInvoiceSequenceEnumId", partyAcctgPreference.get("invoiceSeqCustMethId"));
+                    partyAcctgPreference.set("invoiceSeqCustMethId", context.get("invoiceSeqCustMethId"));
+                }
+            }
+            if (quoteCount == 0) {
                 partyAcctgPreference.set("quoteSeqCustMethId", context.get("quoteSeqCustMethId"));
                 partyAcctgPreference.set("quoteIdPrefix", context.get("quoteIdPrefix"));
                 partyAcctgPreference.set("lastQuoteNumber", context.get("lastQuoteNumber"));
+            } else {
+                if (context.containsKey("quoteSeqCustMethId") && !context.get("quoteSeqCustMethId").equals(partyAcctgPreference.get("quoteSeqCustMethId"))) {
+                    partyAcctgPreference.set("oldQuoteSequenceEnumId", partyAcctgPreference.get("quoteSeqCustMethId"));
+                    partyAcctgPreference.set("quoteSeqCustMethId", context.get("quoteSeqCustMethId"));
+                }
             }
             partyAcctgPreference.store();
         }

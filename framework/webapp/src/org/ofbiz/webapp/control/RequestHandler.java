@@ -681,22 +681,22 @@ public class RequestHandler {
 
         // SCIPIO: Parse value
         String nextRequestResponseValue = parseResponseValue(request, response, nextRequestResponse.value, requestMap);
+        // SCIPIO: Determine if should prevent view-saving operations
+        boolean allowViewSave = nextRequestResponse.getTypeEnum().isViewType() ?
+                isAllowViewSave(nextRequestResponse.value, request, controllerConfig, requestMap, nextRequestResponse, viewAsJson, viewAsJsonConfig) : false;
         
         if (Debug.verboseOn()) Debug.logVerbose("[Event Response Selected]  type=" + nextRequestResponse.type + ", value=" + nextRequestResponse.value + ", parsed-value=" + nextRequestResponseValue + ", sessionId=" + UtilHttp.getSessionId(request), module);
 
         // ========== Handle the responses - chains/views ==========
 
         // if the request has the save-last-view attribute set, save it now before the view can be rendered or other chain done so that the _LAST* session attributes will represent the previous request
-        if (nextRequestResponse.saveLastView) {
+        if (nextRequestResponse.saveLastView && allowViewSave) { // SCIPIO: don't save for viewAsJson unless enabled
             // Debug.logInfo("======save last view: " + session.getAttribute("_LAST_VIEW_NAME_"));
             String lastViewName = (String) session.getAttribute("_LAST_VIEW_NAME_");
             // Do not save the view if the last view is the same as the current view and saveCurrentView is false
             if (!(!nextRequestResponse.saveCurrentView && "view".equals(nextRequestResponse.type) && nextRequestResponseValue.equals(lastViewName))) {
-                // SCIPIO: don't save for viewAsJson unless enabled
-                if (!viewAsJson || ViewAsJsonUtil.isViewAsJsonUpdateSession(request, viewAsJsonConfig)) {
-                    session.setAttribute("_SAVED_VIEW_NAME_", session.getAttribute("_LAST_VIEW_NAME_"));
-                    session.setAttribute("_SAVED_VIEW_PARAMS_", session.getAttribute("_LAST_VIEW_PARAMS_"));
-                }
+                session.setAttribute("_SAVED_VIEW_NAME_", session.getAttribute("_LAST_VIEW_NAME_"));
+                session.setAttribute("_SAVED_VIEW_PARAMS_", session.getAttribute("_LAST_VIEW_PARAMS_"));
             }
         }
         String saveName = null;
@@ -801,7 +801,7 @@ public class RequestHandler {
                     Debug.logError("Scipio: view name is empty (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: view name is empty (request map URI: " + requestMap.uri + ")");
                 }
-                renderView(viewName, requestMap.securityExternalView, request, response, saveName, controllerConfig, viewAsJsonConfig, viewAsJson);
+                renderView(viewName, requestMap.securityExternalView, request, response, saveName, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave);
             } else if ("view-last".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + " sessionId=" + UtilHttp.getSessionId(request), module);
 
@@ -837,7 +837,7 @@ public class RequestHandler {
                     Debug.logError("Scipio: view-last view name is empty (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: view-last view name is empty (request map URI: " + requestMap.uri + ")");
                 }
-                renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson);
+                renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave);
             } else if ("view-last-noparam".equals(nextRequestResponse.type)) {
                  if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + " sessionId=" + UtilHttp.getSessionId(request), module);
 
@@ -859,7 +859,7 @@ public class RequestHandler {
                      Debug.logError("Scipio: view-last-noparam view name is empty (request map URI: " + requestMap.uri + ")", module);
                      throw new RequestHandlerException("Scipio: view-last-noparam view name is empty (request map URI: " + requestMap.uri + ")");
                  }
-                 renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson);
+                 renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave);
             } else if ("view-home".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + " sessionId=" + UtilHttp.getSessionId(request), module);
 
@@ -882,7 +882,7 @@ public class RequestHandler {
                     Debug.logError("Scipio: view-home view name is empty (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: view-last view name is empty (request map URI: " + requestMap.uri + ")");
                 }
-                renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson);
+                renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave);
             } else if ("none".equals(nextRequestResponse.type)) {
                 // no view to render (meaning the return was processed by the event)
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is handled by the event." + " sessionId=" + UtilHttp.getSessionId(request), module);
@@ -1087,7 +1087,7 @@ public class RequestHandler {
             throw new RequestHandlerException(ise.getMessage(), ise);
         }
     }
-    private void renderView(String view, boolean allowExtView, HttpServletRequest req, HttpServletResponse resp, String saveName, ControllerConfig controllerConfig, ConfigXMLReader.ViewAsJsonConfig viewAsJsonConfig, boolean viewAsJson) throws RequestHandlerException, RequestHandlerExceptionAllowExternalRequests {
+    private void renderView(String view, boolean allowExtView, HttpServletRequest req, HttpServletResponse resp, String saveName, ControllerConfig controllerConfig, ConfigXMLReader.ViewAsJsonConfig viewAsJsonConfig, boolean viewAsJson, boolean allowViewSave) throws RequestHandlerException, RequestHandlerExceptionAllowExternalRequests {
         // SCIPIO: sanity check
         if (view == null || view.isEmpty()) {
             Debug.logError("Scipio: View name is empty", module);
@@ -1123,7 +1123,7 @@ public class RequestHandler {
         // before mapping the view, set a request attribute so we know where we are
         req.setAttribute("_CURRENT_VIEW_", view);
 
-        if (!viewAsJson || ViewAsJsonUtil.isViewAsJsonUpdateSession(req, viewAsJsonConfig)) {
+        if (allowViewSave) {
             // save the view in the session for the last view, plus the parameters Map (can use all parameters as they will never go into a URL, will only stay in the session and extra data will be ignored as we won't go to the original request just the view); note that this is saved after the request/view processing has finished so when those run they will get the value from the previous request
             Map<String, Object> paramMap = UtilHttp.getParameterMap(req, ViewAsJsonUtil.VIEWASJSON_RENDERTARGET_REQPARAM_ALL, false); // SCIPIO: SPECIAL EXCLUDES: these will mess up rendering if they aren't excluded
             // add in the attributes as well so everything needed for the rendering context will be in place if/when we get back to this view
@@ -1131,6 +1131,7 @@ public class RequestHandler {
             Set<String> viewSaveAttrExcl = UtilGenerics.checkSet(req.getAttribute("_SCP_VIEW_SAVE_ATTR_EXCL_"));
             if (viewSaveAttrExcl != null) {
                 viewSaveAttrExcl.add("_SCP_VIEW_SAVE_ATTR_EXCL_");
+                viewSaveAttrExcl.add("_ALLOW_VIEW_SAVE_");
             }
             //paramMap.putAll(UtilHttp.getAttributeMap(req));
             paramMap.putAll(UtilHttp.getAttributeMap(req, viewSaveAttrExcl));
@@ -1300,7 +1301,41 @@ public class RequestHandler {
             throw new ViewHandlerException("View handler does not support extended interface (ViewHandlerExt)");
         }
     }
-    
+
+    /**
+     * SCIPIO: Determines if view saving may happen for this view for this request response.
+     * <p>
+     * Added 2018-06-13.
+     */
+    static boolean isAllowViewSave(String viewName, HttpServletRequest req, 
+            ConfigXMLReader.ControllerConfig controllerConfig, ConfigXMLReader.RequestMap requestMap,
+            ConfigXMLReader.RequestResponse requestResponse, boolean viewAsJson, ConfigXMLReader.ViewAsJsonConfig viewAsJsonConfig) {
+        
+        // Static configuration lookup first
+        Boolean allowViewSave = requestResponse.getAllowViewSave();
+        if (allowViewSave == null) {
+            try {
+                for(ConfigXMLReader.NameFilter<Boolean> viewNameFilter : controllerConfig.getAllowViewSaveViewNameFilters()) {
+                    if (viewNameFilter.matches(viewName)) {
+                        allowViewSave = viewNameFilter.getUseValue();
+                    }
+                }
+                if (allowViewSave == null) {
+                    allowViewSave = controllerConfig.getAllowViewSaveDefault();
+                }
+            } catch (WebAppConfigurationException e) {
+                Debug.logError(e, module);
+            }
+        }
+        if (Boolean.FALSE.equals(allowViewSave)) {
+            return false;
+        }
+        
+        // Dynamic request circumstances lookups
+        return !"N".equals(req.getParameter("_ALLOW_VIEW_SAVE_")) 
+                && (!viewAsJson || ViewAsJsonUtil.isViewAsJsonUpdateSession(req, viewAsJsonConfig));
+    }
+
     /**
      * Returns a URL String that contains only the scheme and host parts. This method
      * should not be used because it ignores settings in the WebSite entity.

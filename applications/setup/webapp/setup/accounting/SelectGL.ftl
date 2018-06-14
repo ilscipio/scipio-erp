@@ -85,9 +85,9 @@
   			</#list>
   		</ul>
   	</@alert>
-  	<@form method="post" action=makeOfbizUrl("importDefaultGL") id="setupAccounting-importDefaultGL-form">
-  		<@defaultWizardFormFields exclude=["topGlAccountId"]/>
-	  	<@field type="generic" label=uiLabelMap.SetupAccountingImportDefaultGLStandard >
+  	<@section title=uiLabelMap.SetupAccountingImportDefaultGLStandard>
+	  	<@form method="post" action=makeOfbizUrl("importDefaultGL") id="setupAccounting-importDefaultGL-form">
+	  		<@defaultWizardFormFields exclude=["topGlAccountId"]/>
 		  	<@field type="select" name="importPredefinedGL" id="setupAccounting-importDefaultGL-select" class="+setupAccounting-importDefaultGL-select" inline=true>
 		  		<#list scipioAcctgStandardDefaults as predefinedGL>
 		  			<option value="${predefinedGL!}">${predefinedGL!}</option>
@@ -95,9 +95,10 @@
 		  	</@field>
 		  	<@menu type="button" id="setupAccounting-importDefaultGL-submit-buttons" class="+setupAccounting-importDefaultGL-submit-buttons">
 		    	<@menuitem type="submit" contentId="setupAccounting-importDefaultGL-submit" href="javascript:void(0);" text=uiLabelMap.CommonImport class="+${styles.action_run_session!} ${styles.action_update!}"/>
-		    </@menu>      
-	  	</@field>
-  	</@form>
+		    </@menu>
+	  	</@form>
+  	</@section>
+  	<hr/>
   </#if>
   
   <#-- 

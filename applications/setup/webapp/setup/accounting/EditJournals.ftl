@@ -1,6 +1,7 @@
 <#-- SCIPIO: SETUP fiscal periods implementation -->
 
 <#include "component://setup/webapp/setup/common/common.ftl">
+<#include "component://accounting/webapp/accounting/ledger/tree/treecommon.ftl">
 
 <#assign defaultParams = {	
 }>

@@ -47,7 +47,7 @@ public class CmsAccessHandler implements HttpSessionListener {
                 @Override
                 public void sessionTokenCreated(HttpSession session, HttpServletRequest request, String attrName,
                         AccessToken token, GenericValue initialValue) {
-                    Debug.logInfo("Cms: Access Token: Generated new CMS access token for session " + session.getId()
+                    Debug.logInfo("Cms: Access Token: Generated new CMS access token for sessionId=" + CmsControlUtil.getSessionIdForLog(session)
                         + " (userLoginId: " + initialValue.getString("userLoginId") + ")", module);
                 }
             });

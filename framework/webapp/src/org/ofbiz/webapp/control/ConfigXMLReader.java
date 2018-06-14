@@ -326,7 +326,7 @@ public class ConfigXMLReader {
         // SCIPIO: all calls below modified for more complex include options (non-recursive include)
         
         public Map<String, Event> getAfterLoginEventList() throws WebAppConfigurationException {
-            MapContext<String, Event> result = MapContext.getMapContext();
+            MapContext<String, Event> result = getMapContextForEventList(); // SCIPIO: factory method
             for (Include include : includesPreLocal) {
                 ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
                 if (controllerConfig != null) {
@@ -354,7 +354,7 @@ public class ConfigXMLReader {
         }
 
         public Map<String, Event> getBeforeLogoutEventList() throws WebAppConfigurationException {
-            MapContext<String, Event> result = MapContext.getMapContext();
+            MapContext<String, Event> result = getMapContextForEventList(); // SCIPIO: factory method
             for (Include include : includesPreLocal) {
                 ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
                 if (controllerConfig != null) {
@@ -488,7 +488,7 @@ public class ConfigXMLReader {
         }
 
         public Map<String, Event> getFirstVisitEventList() throws WebAppConfigurationException {
-            MapContext<String, Event> result = MapContext.getMapContext();
+            MapContext<String, Event> result = getMapContextForEventList(); // SCIPIO: factory method
             for (Include include : includesPreLocal) {
                 ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
                 if (controllerConfig != null) {
@@ -555,7 +555,7 @@ public class ConfigXMLReader {
         }
 
         public Map<String, Event> getPostprocessorEventList() throws WebAppConfigurationException {
-            MapContext<String, Event> result = MapContext.getMapContext();
+            MapContext<String, Event> result = getMapContextForEventList(); // SCIPIO: factory method
             for (Include include : includesPreLocal) {
                 ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
                 if (controllerConfig != null) {
@@ -583,7 +583,7 @@ public class ConfigXMLReader {
         }
 
         public Map<String, Event> getPreprocessorEventList() throws WebAppConfigurationException {
-            MapContext<String, Event> result = MapContext.getMapContext();
+            MapContext<String, Event> result = getMapContextForEventList(); // SCIPIO: factory method
             for (Include include : includesPreLocal) {
                 ControllerConfig controllerConfig = getControllerConfig(include.location, include.optional);
                 if (controllerConfig != null) {
@@ -1096,6 +1096,10 @@ public class ConfigXMLReader {
             return url;
         }
         
+        private <K, V> MapContext<K, V> getMapContextForEventList() { // SCIPIO: refactored into factory method
+            return MapContext.getMapContext();
+        }
+
         /**
          * SCIPIO: Include with support for non-recursive.
          */

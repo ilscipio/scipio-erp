@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -37,7 +38,8 @@ public class AcctgAdminServices {
 
     /**
      * Custom update PartyAcctgPreference only meant to be used during setup.
-     * Allows fields not allowed in the stock service to be safely updated.
+     * Allows fields not allowed in the stock service to be safely updated when
+     * no related data exist in the system
      * 
      * @param dctx
      * @param context
@@ -64,42 +66,62 @@ public class AcctgAdminServices {
             // entities.
             GenericValue partyAcctgPreference = delegator.findOne("PartyAcctgPreference", UtilMisc.toMap("partyId", context.get("partyId")), false);
             if (acctgTransCount == 0) {
-                partyAcctgPreference.set("fiscalYearStartMonth", context.get("fiscalYearStartMonth"));
-                partyAcctgPreference.set("fiscalYearStartDay", context.get("fiscalYearStartDay"));
-                partyAcctgPreference.set("taxFormId", context.get("taxFormId"));
-                partyAcctgPreference.set("cogsMethodId", context.get("cogsMethodId"));
-                // This may have an undesired impact
-                // partyAcctgPreference.set("baseCurrencyUomId",
-                // context.get("baseCurrencyUomId"));
-            } 
+                if (UtilValidate.isNotEmpty(context.get("fiscalYearStartMonth")))
+                    partyAcctgPreference.set("fiscalYearStartMonth", context.get("fiscalYearStartMonth"));
+                if (UtilValidate.isNotEmpty(context.get("fiscalYearStartDay")))
+                    partyAcctgPreference.set("fiscalYearStartDay", context.get("fiscalYearStartDay"));
+                if (UtilValidate.isNotEmpty(context.get("taxFormId")))
+                    partyAcctgPreference.set("taxFormId", context.get("taxFormId"));
+                if (UtilValidate.isNotEmpty(context.get("cogsMethodId")))
+                    partyAcctgPreference.set("cogsMethodId", context.get("cogsMethodId"));
+                if (UtilValidate.isNotEmpty(context.get("baseCurrencyUomId"))) {
+                    partyAcctgPreference.set("baseCurrencyUomId", context.get("baseCurrencyUomId"));
+                }
+            }
             if (orderCount == 0) {
-                partyAcctgPreference.set("orderSeqCustMethId", context.get("orderSeqCustMethId"));
-                partyAcctgPreference.set("orderIdPrefix", context.get("orderIdPrefix"));
-                partyAcctgPreference.set("lastOrderNumber", context.get("lastOrderNumber"));
+                if (UtilValidate.isNotEmpty(context.get("orderSeqCustMethId")))
+                    partyAcctgPreference.set("orderSeqCustMethId", context.get("orderSeqCustMethId"));
+                if (UtilValidate.isNotEmpty(context.get("orderIdPrefix")))
+                    partyAcctgPreference.set("orderIdPrefix", context.get("orderIdPrefix"));
+                if (UtilValidate.isNotEmpty(context.get("lastOrderNumber")))
+                    partyAcctgPreference.set("lastOrderNumber", context.get("lastOrderNumber"));
+                if (UtilValidate.isNotEmpty(context.get("orderSeqCustMethId"))) {
+                    partyAcctgPreference.set("orderSeqCustMethId", context.get("orderSeqCustMethId"));
+                }
             } else {
-                if (context.containsKey("orderSeqCustMethId") && !context.get("orderSeqCustMethId").equals(partyAcctgPreference.get("orderSeqCustMethId"))) {
-                    partyAcctgPreference.set("oldOrderSequenceEnumId", partyAcctgPreference.get("orderSeqCustMethId"));
+                if (UtilValidate.isNotEmpty(context.get("orderSeqCustMethId")) && !context.get("orderSeqCustMethId").equals(partyAcctgPreference.get("orderSeqCustMethId"))) {
                     partyAcctgPreference.set("orderSeqCustMethId", context.get("orderSeqCustMethId"));
                 }
             }
-            if (invoiceCount == 0) {                
-                partyAcctgPreference.set("invoiceIdPrefix", context.get("invoiceIdPrefix"));
-                partyAcctgPreference.set("lastInvoiceNumber", context.get("lastInvoiceNumber"));
-                partyAcctgPreference.set("lastInvoiceRestartDate", context.get("lastInvoiceRestartDate"));
-                partyAcctgPreference.set("useInvoiceIdForReturns", context.get("useInvoiceIdForReturns"));
+            if (invoiceCount == 0) {
+                if (UtilValidate.isNotEmpty(context.get("invoiceIdPrefix")))
+                    partyAcctgPreference.set("invoiceIdPrefix", context.get("invoiceIdPrefix"));
+                if (UtilValidate.isNotEmpty(context.get("lastInvoiceNumber")))
+                    partyAcctgPreference.set("lastInvoiceNumber", context.get("lastInvoiceNumber"));
+                if (UtilValidate.isNotEmpty(context.get("lastInvoiceRestartDate")))
+                    partyAcctgPreference.set("lastInvoiceRestartDate", context.get("lastInvoiceRestartDate"));
+                if (UtilValidate.isNotEmpty(context.get("useInvoiceIdForReturns")))
+                    partyAcctgPreference.set("useInvoiceIdForReturns", context.get("useInvoiceIdForReturns"));
+                if (UtilValidate.isNotEmpty(context.get("invoiceSeqCustMethId"))) {
+                    partyAcctgPreference.set("invoiceSeqCustMethId", context.get("invoiceSeqCustMethId"));
+                }
             } else {
-                if (context.containsKey("invoiceSeqCustMethId") && !context.get("invoiceSeqCustMethId").equals(partyAcctgPreference.get("invoiceSeqCustMethId"))) {
-                    partyAcctgPreference.set("oldInvoiceSequenceEnumId", partyAcctgPreference.get("invoiceSeqCustMethId"));
+                if (UtilValidate.isNotEmpty(context.get("invoiceSeqCustMethId")) && !context.get("invoiceSeqCustMethId").equals(partyAcctgPreference.get("invoiceSeqCustMethId"))) {
                     partyAcctgPreference.set("invoiceSeqCustMethId", context.get("invoiceSeqCustMethId"));
                 }
             }
             if (quoteCount == 0) {
-                partyAcctgPreference.set("quoteSeqCustMethId", context.get("quoteSeqCustMethId"));
-                partyAcctgPreference.set("quoteIdPrefix", context.get("quoteIdPrefix"));
-                partyAcctgPreference.set("lastQuoteNumber", context.get("lastQuoteNumber"));
+                if (UtilValidate.isNotEmpty(context.get("quoteSeqCustMethId")))
+                    partyAcctgPreference.set("quoteSeqCustMethId", context.get("quoteSeqCustMethId"));
+                if (UtilValidate.isNotEmpty(context.get("quoteIdPrefix")))
+                    partyAcctgPreference.set("quoteIdPrefix", context.get("quoteIdPrefix"));
+                if (UtilValidate.isNotEmpty(context.get("lastQuoteNumber")))
+                    partyAcctgPreference.set("lastQuoteNumber", context.get("lastQuoteNumber"));
+                if (UtilValidate.isNotEmpty(context.get("quoteSeqCustMethId"))) {
+                    partyAcctgPreference.set("quoteSeqCustMethId", context.get("quoteSeqCustMethId"));
+                }
             } else {
-                if (context.containsKey("quoteSeqCustMethId") && !context.get("quoteSeqCustMethId").equals(partyAcctgPreference.get("quoteSeqCustMethId"))) {
-                    partyAcctgPreference.set("oldQuoteSequenceEnumId", partyAcctgPreference.get("quoteSeqCustMethId"));
+                if (UtilValidate.isNotEmpty(context.get("quoteSeqCustMethId")) && !context.get("quoteSeqCustMethId").equals(partyAcctgPreference.get("quoteSeqCustMethId"))) {
                     partyAcctgPreference.set("quoteSeqCustMethId", context.get("quoteSeqCustMethId"));
                 }
             }

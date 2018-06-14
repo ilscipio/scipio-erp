@@ -41,11 +41,8 @@ public class CmsMenu extends CmsDataObject {
         super(entity);
     }
     
-    protected CmsMenu(Delegator delegator, Map<String, ?> fields, String websiteId) {
+    protected CmsMenu(Delegator delegator, Map<String, ?> fields) {
         super(delegator, fields);
-        if (!fields.containsKey("websiteId")) {
-            this.entity.put("websiteId", websiteId);
-        }
     }
 
     public String getWebsiteId() {

@@ -486,7 +486,31 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="menus"/>
     </request-map>
-    
+    <request-map uri="getMenu">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cmsGetMenu"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="getMenus">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cmsGetMenus"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="saveMenu">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cmsCreateUpdateMenu"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="deleteMenu">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cmsDeleteMenu"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+
     <!-- Utility Requests -->
     <!-- Special: Tika XML MimeType export. see screen for parameters. -->
     <request-map uri="libmimetypeexport">
@@ -519,7 +543,6 @@
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
-    
     
     <!-- **************** -->
     <!--   VIEW MAPPINGS  -->

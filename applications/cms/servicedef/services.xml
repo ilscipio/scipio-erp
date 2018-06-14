@@ -929,10 +929,11 @@
         invoke="createUpdateMenu" auth="true">
         <description>Adds a Menu and creates an empty first json map</description>
         <permission-service service-name="cmsGenericPermission" main-action="CREATE"/>
-        <attribute name="webSiteId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="menuId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="websiteId" type="String" mode="IN" optional="true"/>
         <attribute name="menuName" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
-        <attribute name="menuJson" type="String" mode="OUT" optional="false"/>
+        <attribute name="menuJson" type="String" mode="INOUT" optional="false"/>
     </service>
 
         <service name="cmsDeleteMenu" engine="java"
@@ -945,7 +946,7 @@
         location="com.ilscipio.scipio.cms.menu.CmsMenuServices" invoke="getMenu" auth="true">
         <description>Returns the JSON Object of a single menu</description>
         <permission-service service-name="cmsGenericPermission" main-action="VIEW"/>
-        <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
+        <attribute name="websiteId" type="String" mode="IN" optional="false"/>
         <attribute name="menuJson" type="String" mode="OUT" optional="false"/>
     </service>
 
@@ -953,7 +954,7 @@
         location="com.ilscipio.scipio.cms.menu.CmsMenuServices" invoke="getMenus" auth="true">
         <description>Creates a JSON list of all available Menus.</description>
         <permission-service service-name="cmsGenericPermission" main-action="VIEW"/>
-        <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
+        <attribute name="websiteId" type="String" mode="IN" optional="true"/>
         <attribute name="menuJson" type="String" mode="OUT" optional="false"/>
     </service>
 

@@ -763,7 +763,7 @@
     <entity entity-name="CmsMenu" package-name="com.ilscipio.scipio.cms.content"
         title="Menu" author="Ilscipio GmbH" version="1.0">
       <field name="menuId" type="id-ne"></field>
-      <field name="webSiteId" type="id-ne"><description>Organizational and editing page default webSiteId</description></field>
+      <field name="websiteId" type="id-ne"></field>
       <field name="menuName" type="name"></field>
       <field name="description" type="very-long"></field>
       <field name="menuJson" type="very-long"><description>A Json formated menu list. Example:

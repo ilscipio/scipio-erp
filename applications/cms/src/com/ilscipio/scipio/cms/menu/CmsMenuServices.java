@@ -87,7 +87,12 @@ public abstract class CmsMenuServices {
                                 true);
             }
             
-            String resultJson = JSON.from(values).toString();
+            List<String> resultValues = new ArrayList<String>();
+            for(GenericValue menu : values){
+                resultValues.add(menu.getString("menuJson"));
+            }
+            
+            String resultJson = JSON.from(resultValues).toString();
             result.put("menuJson", resultJson);
 
         } catch (Exception e) {
@@ -110,29 +115,28 @@ public abstract class CmsMenuServices {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Map<String, Object> result = ServiceUtil.returnSuccess();
+        String menuId = (String) context.get("menuId");
         String websiteId = (String) context.get("websiteId");
         
         try {
             GenericValue userLogin = CmsServiceUtil.getUserLoginOrSystem(dctx, context);
-            String menuId = (String) context.get("menuId");
             // Create empty template
             Map<String, Object> fields = ServiceUtil.setServiceFields(dispatcher, "cmsCreateUpdateMenu", 
                     UtilGenerics.<String, Object> checkMap(context), userLogin, null, null);
             
             CmsMenu menuTmp = null;
             if (UtilValidate.isNotEmpty(menuId)) {
-                GenericValue value = (GenericValue) delegator.findByAnd("CmsMenu", UtilMisc.toMap("menuId", menuId, "websiteId", websiteId), 
-                        null, false);
-                menuTmp = new CmsMenu(value);
                 fields.put("createdBy", userLogin.getString("userLoginId"));
+                menuTmp = new CmsMenu(delegator, fields);
                 menuTmp.update(fields);
             } else {
                 fields.put("lastUpdatedBy", (String) userLogin.get("userLoginId"));
-                menuTmp = new CmsMenu(delegator, fields, websiteId);
+                menuTmp = new CmsMenu(delegator, fields);
             }
             
             menuTmp.store();
             result.put("menuId", menuTmp.getId());
+            result.put("menuJson", menuTmp.getMenuJson());
             
         } catch (Exception e) {
             FormattedError err = errorFmt.format(e, "Error creating or updating menu", context);

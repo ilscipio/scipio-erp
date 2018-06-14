@@ -22,9 +22,9 @@ final String module = "CmsMenuTree.groovy";
 // Fetch menus from db
 
 menuResult = dispatcher.runSync("cmsGetMenus", ["request":request, "response":response, 
-    "userLogin":context.userLogin, "webSiteId":null, "locale": context.locale]);
+    "userLogin":context.userLogin, "locale": context.locale]);
 if (ServiceUtil.isSuccess(menuResult)) {
-    context.menus=menuResult.menuJson;
+    context.cmsMenus=menuResult.menuJson;
 } else {
     context.cmsErrorHandler.addContextReadErrorFromServiceResult(context, menuResult);
 }

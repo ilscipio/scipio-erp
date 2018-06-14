@@ -12,69 +12,86 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
 <#-- Javascript functions -->
 <@script>
     var editorBaseUrl = '<@ofbizUrl escapeAs='js'>menus</@ofbizUrl>';
-    
+    var menuId='';
+    var websiteId = 'cmsSite';
     var elData= {
-                  text        : "/",
-                  icon        : "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}page ${styles.icon_prefix!}file-o",
+                  text        : "New Link",
+                  icon        : "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}page ${styles.icon_prefix!}file-o", <#-- Note: Ideally this should not be stored here. But it simplifies the process for now.-->
                   li_attr     : {},
                   a_attr      : {},
-                  type        : 'link_internal'
-                  
+                  data : {
+                    type        : "link_internal"
+                  }
                 };
-    var rootData= {
-                  text        : "",
-                  icon        : "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}folder",
-                  li_attr     : {},
-                  a_attr      : {},
-                  type        : 'root'                
-                };
-    function newMenuRoot(){ 
-         $('#cms-menu-tree').jstree().create_node('#', rootData, 'last');
-        return false;
-    }
     
-    function cmsAddPartialPathSuffix(path) {
-        if (path) {
-            if (path.endsWith("/")) {
-                path += "...";
-            } else {
-                path += "/...";
-            }
-        } else {
-            path = "/...";
+    function node_create(data,isParent) {
+        var menuTree = $('#cms-menu-tree').jstree(true);
+        var sel;
+        if(isParent){
+            sel = menuTree.create_node('#', data);
+        }else{
+            sel = menuTree.get_selected();
+            if(!sel.length) { return false; }
+            sel = sel[0];
+            sel = menuTree.create_node(sel, data);
         }
-        return path;
-    }
-    
-    function node_create(data) {
-        var ref = $('#cms-menu-tree').jstree(true),
-            sel = ref.get_selected();
-        if(!sel.length) { return false; }
-        sel = sel[0];
-        sel = ref.create_node(sel, data);
+        
         if(sel) {
-            ref.edit(sel);
+            menuTree.edit(sel,null, function(){
+                saveMenu();
+            });
         }
     };
     function node_rename() {
-        var ref = $('#cms-menu-tree').jstree(true),
-            sel = ref.get_selected();
+        var menuTree = $('#cms-menu-tree').jstree(true);
+        var sel = menuTree.get_selected();
         if(!sel.length) { return false; }
         sel = sel[0];
-        ref.edit(sel);
+        menuTree.edit(sel,null, function(){
+            saveMenu();
+        });
     };
     function node_delete() {
-        var ref = $('#cms-menu-tree').jstree(true),
-            sel = ref.get_selected();
+        var menuTree = $('#cms-menu-tree').jstree(true);
+        var sel = menuTree.get_selected();
         if(!sel.length) { return false; }
-        ref.delete_node(sel);
+        menuTree.delete_node(sel,null, function(){
+            saveMenu();
+        });
+    };
+    
+    function refreshMenuData(newData){
+        var menuTree = $('#cms-menu-tree').jstree(true);
+        menuTree.settings.core.data = newData;
+        menuTree.refresh();
+        return false;
+    }
+    
+    function saveMenu() {
+        var v =  $('#cms-menu-tree').jstree(true).get_json('#', {flat:true})
+        var menuJson = JSON.stringify(v);
+        var data = {websiteId:websiteId,menuJson:menuJson};
+        if(menuId){
+            data.menuId=menuId;
+        }
+        $.ajax({
+                  type: "POST",
+                  url: "<@ofbizUrl escapeAs='js'>saveMenu</@ofbizUrl>",
+                  data: data,
+                  cache:false,
+                  async:true,
+                  success: function(data) { 
+                        menuId = data.menuId;
+                      }
+            });
+        return false;
     };
     
     function makeLink($node,action) {
         var retStr="javascript:";
         switch(action) {
             case "create":
-                retStr=retStr.concat("node_create(elData);");
+                retStr=retStr.concat("node_create(elData,false);");
                 break;
             case "open":
                 break;
@@ -84,6 +101,9 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
             case "remove":
                  retStr=retStr.concat("node_delete();");
                 break;    
+            case "createroot":
+                retStr=retStr.concat("node_create(elData,true);");
+                break;       
             default:
         }
         retStr.concat("return false;");
@@ -94,11 +114,20 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
     function updateMenu($node){
         var $el = $("#action_menu");
 
-        var newOptions = {
+        var newOptions;
+        if ($node.data && $node.data.type=='root') {
+            newOptions = {
+              "${escapeVal(uiLabelMap.CommonCreate, 'js')}": makeLink($node,'create'),
+              "${escapeVal(uiLabelMap.CommonRename, 'js')}": makeLink($node,'edit'),
+              "${escapeVal(uiLabelMap.CommonRemove, 'js')}": makeLink($node,'remove')
+            };
+        } else {
+            newOptions = {
               "${escapeVal(uiLabelMap.CommonCreate, 'js')}": makeLink($node,'create'),
               "${escapeVal(uiLabelMap.CommonRename, 'js')}": makeLink($node,'edit'),
               "${escapeVal(uiLabelMap.CommonRemove, 'js')}": makeLink($node,'remove')
             }; 
+        }
             
         $el.empty(); // remove old options
         $.each(newOptions, function(key,value) {
@@ -116,7 +145,6 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
 <#assign treeEvent={'select_node.jstree':'updateMenu(data.node);'}/>
 <#assign menuEventScript>
 function($node) {
-        var tree = $("#cms-menu-tree").jstree(true);
         var labelCreate = "${escapeVal(uiLabelMap.CommonCreate, 'js')}";
         var labelOpen = "${escapeVal(uiLabelMap.CommonOpen, 'js')}";
         var labelOverride = "${escapeVal(uiLabelMap.CmsOverride, 'js')}";
@@ -125,7 +153,7 @@ function($node) {
             "separator_after": false,
             "label": "${escapeVal(uiLabelMap.CommonCreate, 'js')}",
             "action": function (obj) { 
-                node_create(elData);
+                node_create(elData,false);
             }
         };
         var openDef = {
@@ -154,12 +182,14 @@ function($node) {
             }
         };
         
-         return {
+
+        return {
             "Open": openDef,
             "Create": createDef,
             "Rename": renameDef,
             "Remove": removeDef
-        }
+        };
+
     }
 </#assign>
 <#assign pluginSettings={"items": wrapRawScript(menuEventScript)}/>
@@ -171,8 +201,8 @@ function($node) {
            <#-- JSTree displaying all content nodes -->
             <@cell columns=9>
                 <@section title=uiLabelMap.CmsMenu>
-                   <@treemenu type="lib-basic" events=treeEvent plugins=treePlugin id="cms-menu-tree"> 
-                    </@treemenu>
+                   <@treemenu type="lib-basic" events=treeEvent plugins=treePlugin id="cms-menu-tree">
+                   </@treemenu>
                 </@section>
             </@cell>
             
@@ -180,7 +210,7 @@ function($node) {
             <@cell columns=3>
                 <@section title=uiLabelMap.CmsMenu id="action_offset">
                         <ul class="side-nav" id="action_menu">
-                            <@menuitem type="link" href="javascript:newMenuRoot();" text=uiLabelMap.CommonCreate/>
+                            <@menuitem type="link" href="javascript:node_create(elData,true);" text=uiLabelMap.CommonCreate/>
                         </ul>
                 </@section>
                 

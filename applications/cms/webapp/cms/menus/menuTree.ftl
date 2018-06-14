@@ -14,14 +14,22 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
     var editorBaseUrl = '<@ofbizUrl escapeAs='js'>menus</@ofbizUrl>';
     
     var elData= {
-                      text        : "string",
-                      icon        : "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}page ${styles.icon_prefix!}file-o",
-                      li_attr     : {},
-                      a_attr      : {},
-                      type        : 'test'
-                    };
-    function newMenuNode(){ 
-         $('#cms-menu-tree').jstree().create_node('#', elData, 'last');
+                  text        : "/",
+                  icon        : "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}page ${styles.icon_prefix!}file-o",
+                  li_attr     : {},
+                  a_attr      : {},
+                  type        : 'link_internal'
+                  
+                };
+    var rootData= {
+                  text        : "",
+                  icon        : "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}folder",
+                  li_attr     : {},
+                  a_attr      : {},
+                  type        : 'root'                
+                };
+    function newMenuRoot(){ 
+         $('#cms-menu-tree').jstree().create_node('#', rootData, 'last');
         return false;
     }
     
@@ -37,6 +45,69 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
         }
         return path;
     }
+    
+    function node_create(data) {
+        var ref = $('#cms-menu-tree').jstree(true),
+            sel = ref.get_selected();
+        if(!sel.length) { return false; }
+        sel = sel[0];
+        sel = ref.create_node(sel, data);
+        if(sel) {
+            ref.edit(sel);
+        }
+    };
+    function node_rename() {
+        var ref = $('#cms-menu-tree').jstree(true),
+            sel = ref.get_selected();
+        if(!sel.length) { return false; }
+        sel = sel[0];
+        ref.edit(sel);
+    };
+    function node_delete() {
+        var ref = $('#cms-menu-tree').jstree(true),
+            sel = ref.get_selected();
+        if(!sel.length) { return false; }
+        ref.delete_node(sel);
+    };
+    
+    function makeLink($node,action) {
+        var retStr="javascript:";
+        switch(action) {
+            case "create":
+                retStr=retStr.concat("node_create(elData);");
+                break;
+            case "open":
+                break;
+            case "edit":
+                 retStr=retStr.concat("node_rename();");
+                break;
+            case "remove":
+                 retStr=retStr.concat("node_delete();");
+                break;    
+            default:
+        }
+        retStr.concat("return false;");
+        return retStr;
+    }
+    
+    <#-- Function to update the action menu. Will generate new menu items based on selected option -->
+    function updateMenu($node){
+        var $el = $("#action_menu");
+
+        var newOptions = {
+              "${escapeVal(uiLabelMap.CommonCreate, 'js')}": makeLink($node,'create'),
+              "${escapeVal(uiLabelMap.CommonRename, 'js')}": makeLink($node,'edit'),
+              "${escapeVal(uiLabelMap.CommonRemove, 'js')}": makeLink($node,'remove')
+            }; 
+            
+        $el.empty(); // remove old options
+        $.each(newOptions, function(key,value) {
+          var newEl = $('<@compress_single_line><@menuitem type="link" href="" text=""/></@compress_single_line>');
+          var menuAnchor = $(newEl).find('a:last-child');
+          menuAnchor.attr("href",value).text(key);
+          $el.append(newEl);
+        });
+    }
    
 </@script>
 <#-- 2017-10-11: there was a bug in this line PLUS jQuery no longer supports it:
@@ -45,21 +116,22 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
 <#assign treeEvent={'select_node.jstree':'updateMenu(data.node);'}/>
 <#assign menuEventScript>
 function($node) {
+        var tree = $("#cms-menu-tree").jstree(true);
         var labelCreate = "${escapeVal(uiLabelMap.CommonCreate, 'js')}";
         var labelOpen = "${escapeVal(uiLabelMap.CommonOpen, 'js')}";
         var labelOverride = "${escapeVal(uiLabelMap.CmsOverride, 'js')}";
         var createDef = {
             "separator_before": false,
             "separator_after": false,
-            "label": ($node.data.type=='request') ? labelOverride : labelCreate,
+            "label": "${escapeVal(uiLabelMap.CommonCreate, 'js')}",
             "action": function (obj) { 
-                tree.create_node($node.parent, JSON.stringify(elData), 'last');
+                node_create(elData);
             }
         };
         var openDef = {
             "separator_before": false,
             "separator_after": false,
-            "label": labelOpen,
+            "label": "${escapeVal(uiLabelMap.CommonOpen, 'js')}",
             "action":function (obj) {
                 
             }
@@ -70,7 +142,7 @@ function($node) {
             "separator_after": false,
             "label": "${escapeVal(uiLabelMap.CommonRename, 'js')}",
             "action": function (obj) { 
-                tree.jstree('edit', $node);
+               node_rename();
             }
         };                         
         var removeDef = {
@@ -78,7 +150,7 @@ function($node) {
             "separator_after": false,
             "label": "${escapeVal(uiLabelMap.CommonRemove, 'js')}",
             "action": function (obj) { 
-                tree.jstree('delete_node', $node);
+               node_delete();
             }
         };
         
@@ -91,7 +163,7 @@ function($node) {
     }
 </#assign>
 <#assign pluginSettings={"items": wrapRawScript(menuEventScript)}/>
-<#assign treePlugin =[{"name":"contextmenu", "settings":pluginSettings},{"name":"massload"}]/>
+<#assign treePlugin =[{"name":"contextmenu", "settings":pluginSettings},{"name":"massload"},{"name":"dnd"}]/>
 
 <#-- Content -->
 <@section>
@@ -108,7 +180,7 @@ function($node) {
             <@cell columns=3>
                 <@section title=uiLabelMap.CmsMenu id="action_offset">
                         <ul class="side-nav" id="action_menu">
-                            <@menuitem type="link" href="javascript:newMenuNode();" text=uiLabelMap.CommonCreate/>
+                            <@menuitem type="link" href="javascript:newMenuRoot();" text=uiLabelMap.CommonCreate/>
                         </ul>
                 </@section>
                 
@@ -120,26 +192,25 @@ function($node) {
             
             <@script>
                 $(function() {
-                        
-                            var $sidebar   = $("#action_offset"), 
-                                $window    = $(window),
-                                offset     = $sidebar.offset(),
-                                topPadding = 50;
-                            
-                            $window.scroll(function() {
-                                if ( $(window).width() > 1024) {
-                                    if ($window.scrollTop() > offset.top) {
-                                        $sidebar.stop().animate({
-                                            marginTop: $window.scrollTop() - $sidebar.position().top + topPadding
-                                        });
-                                    } else {
-                                        $sidebar.stop().animate({
-                                            marginTop: 0
-                                        });
-                                    }
-                                }
-                            });
+                    var $sidebar   = $("#action_offset"), 
+                        $window    = $(window),
+                        offset     = $sidebar.offset(),
+                        topPadding = 50;
+                    
+                    $window.scroll(function() {
+                        if ( $(window).width() > 1024) {
+                            if ($window.scrollTop() > offset.top) {
+                                $sidebar.stop().animate({
+                                    marginTop: $window.scrollTop() - $sidebar.position().top + topPadding
+                                });
+                            } else {
+                                $sidebar.stop().animate({
+                                    marginTop: 0
+                                });
+                            }
+                        }
                     });
+            });
             </@script>
     </@row>
 </@section>

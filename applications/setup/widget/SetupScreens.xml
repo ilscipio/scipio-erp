@@ -567,14 +567,8 @@
                 <set field="isCreateForm" type="Boolean" value="false"/>      
                    
                 <set field="target" value="setupUpdateGlAccount" />
-                <if>
-                    <condition>
-                        <if-empty field="topGlAccountId"/>                        
-                    </condition>
-                    <then>
-                        <set field="submitFormId" value="setupAccounting-preferences-form"/>
-                    </then>
-                </if>
+                <set field="submitFormId" value="setupAccounting-preferences-form"/>
+                
                 <set field="useDefaultSetupSubmitBar" type="Boolean" value="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/accounting/static/ScpEgltCommon.js" global="true"/>
             </actions>

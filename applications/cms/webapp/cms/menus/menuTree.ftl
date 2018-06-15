@@ -68,6 +68,38 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
     }
     
     <#-- Function to load menu from db -->
+    function addMenu(){
+        var menuName = $('#menuname').val();
+        var data = {menuName:menuName,menuJson:"[]"};
+        $.ajax({
+                  type: "POST",
+                  url: "<@ofbizUrl escapeAs='js'>saveMenu</@ofbizUrl>",
+                  data: data,
+                  cache:false,
+                  async:true,
+                  success: function(data) { 
+                        menuId = data.menuId;
+                        $('#activeMenu').append($('<option>', { 
+                            value: menuId,
+                            text : menuName
+                        }));
+                        $("#activeMenu option[value="+menuId+"]").prop("selected", "selected");
+                        refreshMenuData(JSON.parse(data.menuJson));
+                      }
+            });
+        try {
+                $('#modal_create_menu_dialog').foundation('reveal','close');
+            } catch(err) {
+                try {
+                    $('#modal_create_menu_dialog').modal('hide'); 
+                }
+                catch(err) {
+                    t.dispatchEvent(event);
+                }
+            }
+        return false;
+    
+    }
     function loadMenu(){
         menuId = $('#activeMenu').val();
         var data = {menuId:menuId};
@@ -104,6 +136,33 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
             });
         return false;
     };
+    
+    function deleteMenu() {
+            menuId = $('#activeMenu').val();
+            var data = {menuId:menuId};
+            $.ajax({
+                  type: "POST",
+                  url: "<@ofbizUrl escapeAs='js'>deleteMenu</@ofbizUrl>",
+                  data: data,
+                  cache:false,
+                  async:true,
+                  success: function(data) { 
+                        $("#activeMenu option[value='"+menuId+"']").remove();
+                        loadMenu();
+                      }
+            });
+            try {
+                $('#modal_delete-dialog').foundation('reveal','close');
+            } catch(err) {
+                try {
+                    $('#modal_delete-dialog').modal('hide'); 
+                }
+                catch(err) {
+                    t.dispatchEvent(event);
+                }
+            }
+            
+        }
     
     function makeLink($node,action) {
         var retStr="javascript:";
@@ -155,12 +214,18 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
           $el.append(newEl);
         });
     }
+    <@commonCmsScripts />
     
     <#-- Load after the site has been initialized -->
     $(function() {
         loadMenu();
-    });
-    
+        setupCmsDeleteActionHooks();
+        
+        $("#create_menu_form").submit(function(e){
+            addMenu();
+            return false;
+        });
+    });    
    
 </@script>
 <#assign treeEvent={'select_node.jstree':'updateMenu(data.node);'}/>
@@ -216,24 +281,42 @@ function($node) {
 <#assign pluginSettings={"items": wrapRawScript(menuEventScript)}/>
 <#assign treePlugin =[{"name":"contextmenu", "settings":pluginSettings},{"name":"massload"},{"name":"dnd"}]/>
 
+<@modal id="delete-dialog">
+    <@heading>${uiLabelMap.CommonWarning}</@heading>
+    ${uiLabelMap.CmsConfirmDeleteAction}
+    <div class="modal-footer ${styles.text_right}">
+       <a id="delete-button" class="${styles.button} btn-ok">${uiLabelMap.CommonContinue}</a>
+    </div>
+</@modal>
+
 <#-- Content -->
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-        <@field type="select" name="activeMenu" id="activeMenu" onChange="loadMenu();">
+        <@field type="select" name="activeMenu" id="activeMenu" onChange="loadMenu();" label=uiLabelMap.CmsCurrentMenu>
             <#list cmsMenus as cmsMenu>
                <option value="${cmsMenu.menuId!""}">${cmsMenu.menuName!cmsMenu.menuId!""}</option>
             </#list>
         </@field>
-        <@menuitem type="link" href="javascript:addMenu(); void(0);" class="+${styles.action_run_sys!} ${styles.action_create!}" text=uiLabelMap.CmsWebSiteAddMenu/>
+        <@menuitem type="generic">
+            <@modal id="create_menu_dialog" label=uiLabelMap.CmsWebSiteAddMenu linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_create!}">
+                <@heading>${uiLabelMap.CmsWebSiteAddMenu}</@heading>
+                    <@form id="create_menu_form">
+                        <@field type="input" id="menuname" name="menuName" value="" label=uiLabelMap.CmsMenuName placeholder="menu name" required=true/>
+                        <div class="modal-footer ${styles.text_right}">
+                            <@field type="submit" text=uiLabelMap.CommonAdd class="${styles.link_run_sys!} ${styles.action_add!}" />
+                        </div>
+                    </@form>
+            </@modal>
+        </@menuitem>
         <@menuitem type="link" href="javascript:deleteMenu(); void(0);" class="+${styles.action_run_sys!} ${styles.action_remove!} action_delete" text=uiLabelMap.CommonDelete/>
     </@menu>  
 </#macro>
 
-<@section menuContent=menuContent>
+<@section menuContent=menuContent title=uiLabelMap.CmsMenus>
     <@row>
            <#-- JSTree displaying all content nodes -->
             <@cell columns=9>
-                <@section title=uiLabelMap.CmsMenus>
+                <@section title=uiLabelMap.CmsEditMenu>
                    <@treemenu type="lib-basic" events=treeEvent plugins=treePlugin id="cms-menu-tree">
                    </@treemenu>
                 </@section>

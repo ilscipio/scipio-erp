@@ -162,8 +162,7 @@ public abstract class CmsMenuServices {
             
             CmsMenu menuTmp = null;
             if (UtilValidate.isNotEmpty(menuId)) {
-                GenericValue value = (GenericValue) delegator.findByAnd("CmsMenu", UtilMisc.toMap("menuId", menuId), 
-                        null, false);
+                GenericValue value = delegator.findOne("CmsMenu", false, UtilMisc.toMap("menuId", menuId));
                 menuTmp = new CmsMenu(value);
                 menuTmp.remove();
             }

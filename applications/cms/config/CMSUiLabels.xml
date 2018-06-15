@@ -101,6 +101,14 @@
         <value xml:lang="zh">网站</value>
         <value xml:lang="zh-TW">網站</value>
     </property>
+    <property key="CmsEditMenu">
+        <value xml:lang="da">Menu Editor</value>
+        <value xml:lang="de">Menü Editor</value>
+        <value xml:lang="en">Menu Editor</value>
+        <value xml:lang="es">Editor de menú</value>
+        <value xml:lang="fr">Éditeur de menu</value>
+        <value xml:lang="it">Editor di menu</value>
+    </property>
     <property key="CmsWebSiteAddMenu">
         <value xml:lang="da">Opret menu</value>
         <value xml:lang="de">Menü hinzufügen</value>
@@ -114,12 +122,51 @@
         <value xml:lang="zh">添加菜单</value>
         <value xml:lang="zh-TW">增加選單</value>
     </property>
+    <property key="CmsCurrentMenu">
+        <value xml:lang="da">Nuværende Menu</value>
+        <value xml:lang="de">Aktuelles Menü</value>
+        <value xml:lang="en">Current Menu</value>
+        <value xml:lang="es">Menú actual</value>
+        <value xml:lang="fr">Menu actuel</value>
+        <value xml:lang="it">Menu corrente</value>
+    </property>
+     <property key="CmsLinkInternal">
+        <value xml:lang="da">Internt link</value>
+        <value xml:lang="de">Interner Link</value>
+        <value xml:lang="en">Internal Link</value>
+        <value xml:lang="es">Enlace interno</value>
+        <value xml:lang="fr">Lien interne</value>
+        <value xml:lang="it">Collegamento interno</value>
+    </property>
+     <property key="CmsLinkExternal">
+        <value xml:lang="da">Externt link</value>
+        <value xml:lang="de">Externer Link</value>
+        <value xml:lang="en">External Link</value>
+        <value xml:lang="es">Enlace externo</value>
+        <value xml:lang="fr">Lien externe</value>
+        <value xml:lang="it">Collegamento externo</value>
+    </property>
+    <property key="CmsLinkType">
+        <value xml:lang="en">Link Type</value>
+    </property>
+    <property key="CmsMenuItemLink">
+        <value xml:lang="en">URL</value>
+    </property>
     <property key="CmsMenus">
         <value xml:lang="da">Menuer</value>
         <value xml:lang="de">Menüs</value>
         <value xml:lang="en">Menus</value>
+        <value xml:lang="es">Menú</value>
         <value xml:lang="fr">Menus</value>
         <value xml:lang="it">Menu</value>
+    </property>
+    <property key="CmsMenuName">
+        <value xml:lang="da">Menunavn</value>
+        <value xml:lang="de">Menü Name</value>
+        <value xml:lang="en">Menu Name</value>
+        <value xml:lang="es">Nombre del menú</value>
+        <value xml:lang="fr">Nom du menu</value>
+        <value xml:lang="it">Nome del menu</value>
     </property>
     <property key="CmsStatusPublished">
         <value xml:lang="de">Publiziert</value>

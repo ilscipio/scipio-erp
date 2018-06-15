@@ -3278,7 +3278,12 @@ ones may be added by adding new Java factories.
 
 NOTE: Contrary to #escapeVal, here the language names should not be suffixed with "*markup".
     For "html", use "html-[policy]", NOT "htmlmarkup-*".
-                                    
+
+WARN: "url" lang has no effect in Scipio using this method! It returns the original string.
+    URL escaping should be done on individual url parameters, using #escapeVal, not sanitize.
+    Historically, the "url" lang was misused in stock ofbiz content wrappers, leading to its sanitize
+    method being disabled in Scipio.
+                                              
 WARN: This method is expensive to use at run-time, and should not be used
     in performance-critical areas; for that, the *ContentWrapper classes
     offer a cache around sanitized content.
@@ -3290,7 +3295,7 @@ WARN: This method is expensive to use at run-time, and should not be used
                                 e.g., html-strict, html-default, etc. (do NOT use "htmlmarkup" here; for #escapeVal only)
                               The possible values are defined in utilcodec.properties and printed in system log at startup.
                               See #escapeVal {{{opts.allow}}} parameter for description of some of the policy names.
-                              In addition, the following special 
+                              DO NOT use "url" lang here (see warning above).
 
   * Related *
     #escapeVal

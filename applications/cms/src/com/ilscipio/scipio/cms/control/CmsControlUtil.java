@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
@@ -26,9 +27,9 @@ import com.ilscipio.scipio.cms.webapp.CmsWebappUtil;
 public abstract class CmsControlUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
+    private static final boolean showSessionIdInLog = UtilProperties.propertyValueEqualsIgnoreCase("requestHandler", "show-sessionId-in-log", "Y");
+
     public static final String CMS_NOCACHERESPONSESET_REQATTRNAME = "_CMS_NOCACHERESPONSE_SET_";
-    
     public static final String CMS_NOCACHECMSRENDER_REQATTRNAME = "cmsSetResponseBrowserNoCacheCmsPage";
     
     private CmsControlUtil() {
@@ -170,22 +171,22 @@ public abstract class CmsControlUtil {
     
     public static String getReqLogIdStr(HttpServletRequest request) {
         HttpSession session = (request != null) ? request.getSession(false) : null;
-        return (request != null ? "sessionId: " + (session == null ? "unknown" : session.getId()) + "; " : "") + "threadId: " + Thread.currentThread().getId();
+        return (request != null ? "sessionId: " + (session == null ? "unknown" : CmsControlUtil.getSessionIdForLog(session)) + "; " : "") + "threadId: " + Thread.currentThread().getId();
     }
     
     public static String getReqLogIdDelimStr(HttpServletRequest request) {
         HttpSession session = (request != null) ? request.getSession(false) : null;
-        return (request != null ? "; sessionId: " + (session == null ? "unknown" : session.getId()): "") + "; threadId: " + Thread.currentThread().getId();
+        return (request != null ? "; sessionId: " + (session == null ? "unknown" : CmsControlUtil.getSessionIdForLog(session)): "") + "; threadId: " + Thread.currentThread().getId();
     }
     
     // only use if request is not available
     public static String getReqLogIdStr(HttpSession session) {
-        return "sessionId: " + (session == null ? "unknown" : session.getId()) + "; threadId: " + Thread.currentThread().getId();
+        return "sessionId: " + (session == null ? "unknown" : CmsControlUtil.getSessionIdForLog(session)) + "; threadId: " + Thread.currentThread().getId();
     }
     
     // only use if request is not available
     public static String getReqLogIdDelimStr(HttpSession session) {
-        return "; sessionId: " + (session == null ? "unknown" : session.getId()) + "; threadId: " + Thread.currentThread().getId();
+        return "; sessionId: " + (session == null ? "unknown" : CmsControlUtil.getSessionIdForLog(session)) + "; threadId: " + Thread.currentThread().getId();
     }
 
     /**
@@ -302,5 +303,13 @@ public abstract class CmsControlUtil {
             }
         }
         return delegator;
+    }
+    
+    public static boolean isShowSessionIdInLog() {
+        return showSessionIdInLog;
+    }
+    
+    public static String getSessionIdForLog(HttpSession session) {
+        return showSessionIdInLog ? session.getId() : "[hidden]";
     }
 }

@@ -136,9 +136,14 @@ public class ServiceValidationException extends GenericServiceException {
         if (UtilValidate.isNotEmpty(this.messages)) {
             StringBuilder sb = new StringBuilder();
             if (msg != null) {
-                sb.append(msg).append('\n');
+                // SCIPIO: this is poor; adds unnecessary \n if msg only; and \n should be a String, not a char
+                //sb.append(msg).append('\n');
+                sb.append(msg);
             }
             for (String m: this.messages) {
+                if (sb.length() > 0) {  // SCIPIO: \n between every message, otherwise they get scrunched
+                    sb.append("\n");
+                }
                 sb.append(m);
             }
             msg = sb.toString();

@@ -10,6 +10,9 @@
         <menu-item name="media" title="${uiLabelMap.CmsMedia}">
             <link target="media"/>
         </menu-item>
+        <menu-item name="menus" title="${uiLabelMap.CmsMenus}">
+            <link target="menus"/>
+        </menu-item>
         <menu-item name="importExport" title="${uiLabelMap.WebtoolsImportExport}">
             <link target="CmsDataExport"/>
         </menu-item>
@@ -31,6 +34,9 @@
         </menu-item>
         <menu-item name="media">
             <sub-menu name="Media" include="MediaSideBar"/>
+        </menu-item>
+        <menu-item name="menus">
+            <sub-menu name="Menus" include="MenuSideBar"/>
         </menu-item>
         <menu-item name="importExport">
             <sub-menu name="ImportExport" include="ImportExportSideBar"/>
@@ -124,6 +130,12 @@
         
     <menu name="MediaSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="MediaTabBar" recursive="includes-only" />
+    </menu>
+    
+    <menu name="MenuSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
+        <menu-item name="menus" title="${uiLabelMap.CmsMenus}">
+            <link target="menus"/>
+        </menu-item>
     </menu>
      
     <menu name="ImportExportSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">

@@ -480,13 +480,44 @@
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/> 
     </request-map>
-    
+
+    <!-- Menus -->
+    <request-map uri="menus">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="menus"/>
+    </request-map>
+    <request-map uri="getMenu">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cmsGetMenu"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="getMenus">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cmsGetMenus"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="saveMenu">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cmsCreateUpdateMenu"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="deleteMenu">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cmsDeleteMenu"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+
     <!-- Utility Requests -->
     <!-- Special: Tika XML MimeType export. see screen for parameters. -->
     <request-map uri="libmimetypeexport">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="libMimeTypeExport"/>
     </request-map>
+    
     
     <!-- Data Import/Export -->
     <request-map uri="CmsDataImport"><security https="true" auth="true"/><response name="success" type="view" value="CmsDataImport"/></request-map>
@@ -513,7 +544,6 @@
         <response name="error" type="request" value="json"/>
     </request-map>
     
-    
     <!-- **************** -->
     <!--   VIEW MAPPINGS  -->
     <!-- **************** -->
@@ -532,6 +562,7 @@
     <view-map name="editScript" type="screen" page="component://cms/widget/CMSScreens.xml#editScript"/>
     <view-map name="media" type="screen" page="component://cms/widget/CMSScreens.xml#media"/>
     <view-map name="editMedia" type="screen" page="component://cms/widget/CMSScreens.xml#editMedia"/>
+    <view-map name="menus" type="screen" page="component://cms/widget/CMSScreens.xml#menus"/>
     
     <!-- Utility -->
     <view-map name="libMimeTypeExport" type="screenxml" page="component://cms/widget/CMSScreens.xml#libMimeTypeExport"/>

@@ -73,6 +73,7 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
         if(sel) {
             menuTree.edit(sel,null, function(){
                saveMenu();
+               menuTree.deselect_all();
                menuTree.select_node(sel);
                node_edit();
             });
@@ -111,7 +112,7 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
             node["icon"] = nodeIcons[type];
             close_dialog('modal_edit-menuitem-dialog');
             saveMenu();
-            menuTree.refresh_node(sel);
+            menuTree.redraw_node(sel);
         }
         return false;
     }
@@ -129,9 +130,8 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
         var menuTree = $('#cms-menu-tree').jstree(true);
         var sel = menuTree.get_selected();
         if(!sel.length) { return false; }
-        menuTree.delete_node(sel,null, function(){
-            saveMenu();
-        });
+        menuTree.delete_node(sel);
+        saveMenu();
     };
     
     function refreshMenuData(newData){
@@ -182,7 +182,7 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
     }
     
     function saveMenu() {
-        var v =  $('#cms-menu-tree').jstree(true).get_json('#', {flat:true})
+        var v =  $('#cms-menu-tree').jstree(true).get_json('',{flat:true});
         var menuJson = JSON.stringify(v);
         var data = {websiteId:websiteId,menuJson:menuJson};
         if(menuId){

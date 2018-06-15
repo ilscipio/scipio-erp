@@ -119,6 +119,9 @@ under the License.
                     ]]></script>
                 </else>
             </if>
+            <!-- SCIPIO: NEW: flexible locations for <script> location -->
+            <set field="adminScriptsBaseDir" value="component://webtools/webapp/webtools/WEB-INF/actions" />
+            <script location="${adminScriptsBaseDir}/misc/PrepareLayoutDemo.groovy"/>
         </actions>
     </screen>
 
@@ -215,10 +218,11 @@ under the License.
 
     <screen name="WebtoolsLayoutDemoOfbizWidgetActions">
         <actions><!-- NOTE: In an actions-only screen, should skip the top section and all else - only have actions element. -->
-            <!-- SCIPIO: NEW: flexible locations for <script> location -->
-            <set field="adminScriptsBaseDir" value="component://webtools/webapp/webtools/WEB-INF/actions" />
-            <script location="${adminScriptsBaseDir}/misc/PrepareLayoutDemoWidgetTests.groovy"/>
-            
+            <script lang="groovy"><![CDATA[
+                globalContext.layoutDemoTestVar123 = "Test value 123";
+                context.layoutDemoTestVar123 = "Test value 123";
+                context.commonActionField5 = "This value 5 was set in a dynamically included script. [SUCCESS]";
+            ]]></script>
             <include-screen-actions name="WebtoolsLayoutDemoExtraPoorActions"/>
         </actions>
     </screen>

@@ -36,12 +36,20 @@ context.taxForms = taxForms;
 currencyUoms = EntityQuery.use(delegator).from("Uom").where(["uomTypeId": "CURRENCY_MEASURE"]).orderBy("description").cache().queryList();
 context.currencyUoms = currencyUoms;
 
-invoiceCustomMethods = EntityQuery.use(delegator).from("Enumeration").where(["enumTypeId": "INVOICE_SEQMD"]).orderBy("description").cache().queryList();
+invoiceCustomMethods = EntityQuery.use(delegator).from("CustomMethod").where(["customMethodTypeId": "INVOICE_HOOK"]).orderBy("description").cache().queryList();
 context.invoiceCustomMethods = invoiceCustomMethods;
 
-orderCustomMethods = EntityQuery.use(delegator).from("Enumeration").where(["enumTypeId": "ORDER_SEQMD"]).orderBy("description").cache().queryList();
+orderCustomMethods = EntityQuery.use(delegator).from("CustomMethod").where(["customMethodTypeId": "ORDER_HOOK"]).orderBy("description").cache().queryList();
 context.orderCustomMethods = orderCustomMethods;
 
-quoteCustomMethods = EntityQuery.use(delegator).from("Enumeration").where(["enumTypeId": "QUOTE_SEQMD"]).orderBy("description").cache().queryList();
+quoteCustomMethods = EntityQuery.use(delegator).from("CustomMethod").where(["customMethodTypeId": "QUOTE_HOOK"]).orderBy("description").cache().queryList();
 context.quoteCustomMethods = quoteCustomMethods;
 
+long acctgTransCount = EntityQuery.use(delegator).from("AcctgTrans").queryCount();
+long orderCount = EntityQuery.use(delegator).from("OrderHeader").queryCount();
+long invoiceCount = EntityQuery.use(delegator).from("Invoice").queryCount();
+long quoteCount = EntityQuery.use(delegator).from("Quote").queryCount();
+context.acctgTransCount = acctgTransCount; 
+context.orderCount = orderCount;
+context.invoiceCount = invoiceCount;
+context.quoteCount = quoteCount;

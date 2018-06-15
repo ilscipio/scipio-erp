@@ -3,7 +3,7 @@
 * Master HTML template include, standard Scipio markup
 *
 * A set of HTML templating macros, part of the standard Scipio Templating Toolkit 
-* for Freemarker language (>>>http://freemarker.org/docs<<<) - master include.
+* for Freemarker language (>>>https://freemarker.apache.org/docs/<<<) - master include.
 * Automatically included at all times, unless overridden by properties or themes.
 * Intended to be swappable.
 * Includes all other default Scipio standard markup macros.

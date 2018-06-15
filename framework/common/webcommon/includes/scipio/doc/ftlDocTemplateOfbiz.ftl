@@ -110,10 +110,10 @@
     </#if>
     
     <#if libName == "standard/htmlTemplate">
-      <p><em><#-- Version: -->${getPropertyValue('scipiometainfo', 'scipio.release.desc')!"Scipio ERP"} 
+      <p><em><#-- Version: --><a href="https://www.scipioerp.com/community/developer/" target="_blank">${getPropertyValue('scipiometainfo', 'scipio.release.desc')!"Scipio ERP"} 
         ${getPropertyValue('scipiometainfo', 'scipio.release.version')!"v?"} 
-        (${getPropertyValue('scipiometainfo', 'scipio.release.branch')!("branch ?")}), 
-        Freemarker ${.version!}</em></p>
+        (${getPropertyValue('scipiometainfo', 'scipio.release.branch')!("branch ?")})</a>, 
+        <a href="https://freemarker.apache.org/docs/" target="_blank">Freemarker ${.version!}</a></em></p>
     </#if>
       
     <div class="lib-pagetitledesc">

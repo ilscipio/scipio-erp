@@ -40,10 +40,10 @@ under the License.
                         <platform-specific>
                             <html><html-template><![CDATA[
                                 <#assign scpErpRelDesc = getPropertyValue('scipiometainfo', 'scipio.release.desc')!"Scipio ERP">
-                                <p><em><#-- Version: -->${scpErpRelDesc} 
+                                <p><em><#-- Version: --><a href="https://www.scipioerp.com/community/developer/" target="_blank">${scpErpRelDesc}
                                     ${getPropertyValue('scipiometainfo', 'scipio.release.version')!"v?"} 
-                                    (${getPropertyValue('scipiometainfo', 'scipio.release.branch')!("branch ?")}), 
-                                    Freemarker ${.version!}</em></p>
+                                    (${getPropertyValue('scipiometainfo', 'scipio.release.branch')!("branch ?")})</a>, 
+                                    <a href="https://freemarker.apache.org/docs/" target="_blank">Freemarker ${.version!}</a></em></p>
                                     
                                 <#-- TODO: Localize? -->
                                 <p>This is the local instance hosted version of ${scpErpRelDesc} developer documentation and resources.

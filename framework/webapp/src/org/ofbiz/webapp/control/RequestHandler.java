@@ -1238,6 +1238,26 @@ public class RequestHandler {
            if (Debug.verboseOn()) Debug.logVerbose("Sending no-cache headers for view [" + nextPage + "]", module);
         }
 
+        String xFrameOption = viewMap.xFrameOption;
+        // default to sameorigin
+        if (UtilValidate.isNotEmpty(xFrameOption)) {
+            resp.addHeader("x-frame-options", xFrameOption);
+        } else {
+            resp.addHeader("x-frame-options", "sameorigin");
+        }
+
+        String strictTransportSecurity = viewMap.strictTransportSecurity;
+        // default to "max-age=31536000; includeSubDomains" 31536000 secs = 1 year
+        if (UtilValidate.isNotEmpty(strictTransportSecurity)) {
+            if (!"none".equals(strictTransportSecurity)) {
+                resp.addHeader("strict-transport-security", strictTransportSecurity);
+            }
+        } else {
+            if (EntityUtilProperties.getPropertyAsBoolean("requestHandler", "strict-transport-security", true)) { // FIXME later pass req.getAttribute("delegator") as last argument
+                resp.addHeader("strict-transport-security", "max-age=31536000; includeSubDomains");
+            }
+        }
+
         try {
             if (Debug.verboseOn()) Debug.logVerbose("Rendering view [" + nextPage + "] of type [" + viewMap.type + "]", module);
             ViewHandler vh = viewFactory.getViewHandler(viewMap.type);

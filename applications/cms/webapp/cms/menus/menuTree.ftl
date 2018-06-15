@@ -111,7 +111,7 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
             node["icon"] = nodeIcons[type];
             close_dialog('modal_edit-menuitem-dialog');
             saveMenu();
-            menuTree.refresh_node(node);
+            menuTree.refresh_node(sel);
         }
         return false;
     }

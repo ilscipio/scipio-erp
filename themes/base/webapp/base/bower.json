@@ -9,6 +9,7 @@
     "moment": "~2.11.1",
     "jquery": "~2.1",
     "jquery-ui" :"~1.12",
+    "jstree" :"~3.3.1",
     "slick-carousel": "^1.5.9",
 	"foundation-datepicker": "~1.2",
 	"trumbowyg ": "~2.4",

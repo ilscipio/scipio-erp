@@ -43,11 +43,10 @@ public abstract class CmsMenuServices {
         //LocalDispatcher dispatcher = dctx.getDispatcher();
         Map<String, Object> result = ServiceUtil.returnSuccess();
         String menuId = (String) context.get("menuId");
-        String websiteId = (String) context.get("websiteId");
+        //String websiteId = (String) context.get("websiteId");
         
         try {
-            GenericValue value = (GenericValue) delegator.findByAnd("CmsMenu", UtilMisc.toMap("menuId", menuId, "websiteId", websiteId), 
-                    null, true);
+            GenericValue value = delegator.findOne("CmsMenu", false, UtilMisc.toMap("menuId", menuId));
             result.put("menuJson", value.getString("menuJson"));
 
         } catch (Exception e) {
@@ -87,12 +86,13 @@ public abstract class CmsMenuServices {
                                 true);
             }
             
+            /*
             List<String> resultValues = new ArrayList<String>();
             for(GenericValue menu : values){
                 resultValues.add(menu.getString("menuJson"));
-            }
+            }*/
             
-            String resultJson = JSON.from(resultValues).toString();
+            String resultJson = JSON.from(values).toString();
             result.put("menuJson", resultJson);
 
         } catch (Exception e) {

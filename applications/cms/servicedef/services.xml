@@ -946,7 +946,7 @@
         location="com.ilscipio.scipio.cms.menu.CmsMenuServices" invoke="getMenu" auth="true">
         <description>Returns the JSON Object of a single menu</description>
         <permission-service service-name="cmsGenericPermission" main-action="VIEW"/>
-        <attribute name="websiteId" type="String" mode="IN" optional="false"/>
+        <attribute name="menuId" type="String" mode="IN" optional="false"/>
         <attribute name="menuJson" type="String" mode="OUT" optional="false"/>
     </service>
 

@@ -67,6 +67,24 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
         return false;
     }
     
+    <#-- Function to load menu from db -->
+    function loadMenu(){
+        menuId = $('#activeMenu').val();
+        var data = {menuId:menuId};
+        $.ajax({
+                  type: "POST",
+                  url: "<@ofbizUrl escapeAs='js'>getMenu</@ofbizUrl>",
+                  data: data,
+                  cache:false,
+                  async:true,
+                  success: function(data) { 
+                        refreshMenuData(JSON.parse(data.menuJson));
+                      }
+            });
+        return false;
+    
+    }
+    
     function saveMenu() {
         var v =  $('#cms-menu-tree').jstree(true).get_json('#', {flat:true})
         var menuJson = JSON.stringify(v);
@@ -137,11 +155,14 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
           $el.append(newEl);
         });
     }
+    
+    <#-- Load after the site has been initialized -->
+    $(function() {
+        loadMenu();
+    });
+    
    
 </@script>
-<#-- 2017-10-11: there was a bug in this line PLUS jQuery no longer supports it:
-  'dblclick.jstree':'openPageByNode(data.node);'
--->
 <#assign treeEvent={'select_node.jstree':'updateMenu(data.node);'}/>
 <#assign menuEventScript>
 function($node) {
@@ -196,11 +217,23 @@ function($node) {
 <#assign treePlugin =[{"name":"contextmenu", "settings":pluginSettings},{"name":"massload"},{"name":"dnd"}]/>
 
 <#-- Content -->
-<@section>
+<#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
+        <@field type="select" name="activeMenu" id="activeMenu" onChange="loadMenu();">
+            <#list cmsMenus as cmsMenu>
+               <option value="${cmsMenu.menuId!""}">${cmsMenu.menuName!cmsMenu.menuId!""}</option>
+            </#list>
+        </@field>
+        <@menuitem type="link" href="javascript:addMenu(); void(0);" class="+${styles.action_run_sys!} ${styles.action_create!}" text=uiLabelMap.CmsWebSiteAddMenu/>
+        <@menuitem type="link" href="javascript:deleteMenu(); void(0);" class="+${styles.action_run_sys!} ${styles.action_remove!} action_delete" text=uiLabelMap.CommonDelete/>
+    </@menu>  
+</#macro>
+
+<@section menuContent=menuContent>
     <@row>
            <#-- JSTree displaying all content nodes -->
             <@cell columns=9>
-                <@section title=uiLabelMap.CmsMenu>
+                <@section title=uiLabelMap.CmsMenus>
                    <@treemenu type="lib-basic" events=treeEvent plugins=treePlugin id="cms-menu-tree">
                    </@treemenu>
                 </@section>

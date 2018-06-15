@@ -99,7 +99,7 @@ under the License.
            <#if ((parameters.UNUSEEMAIL!) == "on")>
               <#assign fieldStyle = "display:none;">
             </#if>
-           <@field type="text" name="USERNAME" id="USERNAME" style=fieldStyle value=(params.userLoginId!) onFocus="clickUsername();" onchange="changeEmail();" label=uiLabelMap.CommonUsername required=true postWidgetContent=extraFieldContent />
+           <@field type="text" name="USERNAME" id="USERNAME" style=fieldStyle value=(params.USERNAME!) onFocus="clickUsername();" onchange="changeEmail();" label=uiLabelMap.CommonUsername required=true postWidgetContent=extraFieldContent />
         <#else>
            <@field type="display" value=(userUserLogin.userLoginId!) label=uiLabelMap.CommonUsername />
            <@field type="hidden" name="USERNAME" value=(params.userLoginId!)/>
@@ -147,9 +147,9 @@ under the License.
 	<hr/> 
 	 
     <input type="hidden" name="emailProductStoreId" value="${productStoreId}"/>    
-    <@personalTitleField name="USER_TITLE" label=uiLabelMap.CommonTitle personalTitle=(params.personalTitle!) /> 
-    <@field type="input" name="USER_FIRST_NAME" id="USER_FIRST_NAME" value=(params.firstName!) label=uiLabelMap.PartyFirstName required=true />
-    <@field type="input" name="USER_LAST_NAME" id="USER_LAST_NAME" value=(params.lastName!) label=uiLabelMap.PartyLastName required=true />
+    <@personalTitleField name="USER_TITLE" label=uiLabelMap.CommonTitle personalTitle=(params.personalTitle!params.USER_TITLE!) /> 
+    <@field type="input" name="USER_FIRST_NAME" id="USER_FIRST_NAME" value=(params.firstName!params.USER_FIRST_NAME!) label=uiLabelMap.PartyFirstName required=true />
+    <@field type="input" name="USER_LAST_NAME" id="USER_LAST_NAME" value=(params.lastName!params.USER_LAST_NAME) label=uiLabelMap.PartyLastName required=true />
     
     <hr/>
     

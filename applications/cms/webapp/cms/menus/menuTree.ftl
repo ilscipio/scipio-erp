@@ -73,7 +73,8 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
         if(sel) {
             menuTree.edit(sel,null, function(){
                saveMenu();
-               node_edit(sel);
+               menuTree.select_node(sel);
+               node_edit();
             });
         }
     };
@@ -109,9 +110,9 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
             node["data"]["href"] = href;
             node["icon"] = nodeIcons[type];
             close_dialog('modal_edit-menuitem-dialog');
+            saveMenu();
+            menuTree.refresh_node(node);
         }
-        saveMenu();
-        menuTree.refresh();
         return false;
     }
     
@@ -326,7 +327,7 @@ function($node) {
        var updateDef = {
             "separator_before": true,
             "separator_after": true,
-            "label": "${escapeVal(uiLabelMap.CommonUpdate, 'js')}",
+            "label": "${escapeVal(uiLabelMap.CommonEdit, 'js')}",
             "action": function (obj) { 
                node_edit();
             }
@@ -363,7 +364,7 @@ function($node) {
     </div>
 </@modal>
 <@modal id="edit-menuitem-dialog">
-    <@heading>${uiLabelMap.CmsEditMenuItem}</@heading>
+    <@heading>${uiLabelMap.CommonEdit}</@heading>
     <@form id="edit_menu_item">
         <@field type="select" name="type" id="type" label=uiLabelMap.CmsLinkType>
                <option value="link_internal">${uiLabelMap.CmsLinkInternal}</option>

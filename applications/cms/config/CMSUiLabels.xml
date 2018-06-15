@@ -130,6 +130,28 @@
         <value xml:lang="fr">Menu actuel</value>
         <value xml:lang="it">Menu corrente</value>
     </property>
+     <property key="CmsLinkInternal">
+        <value xml:lang="da">Internt link</value>
+        <value xml:lang="de">Interner Link</value>
+        <value xml:lang="en">Internal Link</value>
+        <value xml:lang="es">Enlace interno</value>
+        <value xml:lang="fr">Lien interne</value>
+        <value xml:lang="it">Collegamento interno</value>
+    </property>
+     <property key="CmsLinkExternal">
+        <value xml:lang="da">Externt link</value>
+        <value xml:lang="de">Externer Link</value>
+        <value xml:lang="en">External Link</value>
+        <value xml:lang="es">Enlace externo</value>
+        <value xml:lang="fr">Lien externe</value>
+        <value xml:lang="it">Collegamento externo</value>
+    </property>
+    <property key="CmsLinkType">
+        <value xml:lang="en">Link Type</value>
+    </property>
+    <property key="CmsMenuItemLink">
+        <value xml:lang="en">URL</value>
+    </property>
     <property key="CmsMenus">
         <value xml:lang="da">Menuer</value>
         <value xml:lang="de">Menüs</value>

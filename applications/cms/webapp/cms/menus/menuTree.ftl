@@ -14,9 +14,13 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
     var editorBaseUrl = '<@ofbizUrl escapeAs='js'>menus</@ofbizUrl>';
     var menuId='';
     var websiteId = 'cmsSite';
+    var nodeIcons = {
+        link_internal : "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}page ${styles.icon_prefix!}file-o",
+        link_external : "${styles.text_color_info} ${styles.icon!} ${styles.icon_prefix!}link"
+    };
     var elData= {
                   text        : "New Link",
-                  icon        : "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}page ${styles.icon_prefix!}file-o", <#-- Note: Ideally this should not be stored here. But it simplifies the process for now.-->
+                  icon        : nodeIcons["link_internal"], <#-- Note: Ideally this should not be stored here. But it simplifies the process for now.-->
                   li_attr     : {},
                   a_attr      : {},
                   data : {
@@ -24,6 +28,36 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
                   }
                 };
     
+    
+    function open_dialog(dialogName){
+        try {
+                $('#'+dialogName).foundation('reveal','open');
+            } catch(err) {
+                try {
+                    $('#'+dialogName).modal('show'); 
+                }
+                catch(err) {
+                    t.dispatchEvent(event);
+                }
+            }
+        return false;
+    }
+    
+    function close_dialog(dialogName){
+        try {
+                $('#'+dialogName).foundation('reveal','close');
+            } catch(err) {
+                try {
+                    $('#'+dialogName).modal('hide'); 
+                }
+                catch(err) {
+                    t.dispatchEvent(event);
+                }
+            }
+        return false;
+    }
+    
+    <#-- Functions to manage menu items -->
     function node_create(data,isParent) {
         var menuTree = $('#cms-menu-tree').jstree(true);
         var sel;
@@ -38,10 +72,49 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
         
         if(sel) {
             menuTree.edit(sel,null, function(){
-                saveMenu();
+               saveMenu();
+               node_edit(sel);
             });
         }
     };
+    
+    function node_edit() {
+        var menuTree = $('#cms-menu-tree').jstree(true);
+        var sel = menuTree.get_selected();
+        if(!sel.length) { return false; }
+        sel = sel[0];
+        var node = menuTree.get_node(sel);
+        $('form#edit_menu_item')[0].reset();
+        if(node && node["data"]){
+            if(node["data"]["type"]){
+                $('form#edit_menu_item #type').val(node["data"]["type"]).prop('selected', true);
+            }
+            if(node["data"]["href"]){
+                $('form#edit_menu_item #href').val(node["data"]["href"]);
+            }
+        }
+        open_dialog('modal_edit-menuitem-dialog');
+    };
+    
+    function node_update(){
+        var menuTree = $('#cms-menu-tree').jstree(true);
+        var href = $('form#edit_menu_item #href').val();
+        var type = $('form#edit_menu_item #type').val();
+        var sel = menuTree.get_selected();
+            if(!sel.length) { return false; }
+            sel = sel[0];
+        var node = menuTree.get_node(sel);
+        if(node) {
+            node["data"]["type"] = type;
+            node["data"]["href"] = href;
+            node["icon"] = nodeIcons[type];
+            close_dialog('modal_edit-menuitem-dialog');
+        }
+        saveMenu();
+        menuTree.refresh();
+        return false;
+    }
+    
     function node_rename() {
         var menuTree = $('#cms-menu-tree').jstree(true);
         var sel = menuTree.get_selected();
@@ -67,7 +140,7 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
         return false;
     }
     
-    <#-- Function to load menu from db -->
+    <#-- Function to manage menus -->
     function addMenu(){
         var menuName = $('#menuname').val();
         var data = {menuName:menuName,menuJson:"[]"};
@@ -83,22 +156,12 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
                             value: menuId,
                             text : menuName
                         }));
-                        $("#activeMenu option[value="+menuId+"]").prop("selected", "selected");
+                        $("#activeMenu").val(menuId).prop('selected', true);
                         refreshMenuData(JSON.parse(data.menuJson));
                       }
             });
-        try {
-                $('#modal_create_menu_dialog').foundation('reveal','close');
-            } catch(err) {
-                try {
-                    $('#modal_create_menu_dialog').modal('hide'); 
-                }
-                catch(err) {
-                    t.dispatchEvent(event);
-                }
-            }
+            close_dialog('modal_create-menu-dialog');
         return false;
-    
     }
     function loadMenu(){
         menuId = $('#activeMenu').val();
@@ -151,17 +214,7 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
                         loadMenu();
                       }
             });
-            try {
-                $('#modal_delete-dialog').foundation('reveal','close');
-            } catch(err) {
-                try {
-                    $('#modal_delete-dialog').modal('hide'); 
-                }
-                catch(err) {
-                    t.dispatchEvent(event);
-                }
-            }
-            
+            close_dialog('modal_delete-dialog');
         }
     
     function makeLink($node,action) {
@@ -177,6 +230,9 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
                 break;
             case "remove":
                  retStr=retStr.concat("node_delete();");
+                break; 
+            case "update":
+                 retStr=retStr.concat("node_edit();");
                 break;    
             case "createroot":
                 retStr=retStr.concat("node_create(elData,true);");
@@ -195,12 +251,14 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
         if ($node.data && $node.data.type=='root') {
             newOptions = {
               "${escapeVal(uiLabelMap.CommonCreate, 'js')}": makeLink($node,'create'),
+              "${escapeVal(uiLabelMap.CommonEdit, 'js')}": makeLink($node,'update'),
               "${escapeVal(uiLabelMap.CommonRename, 'js')}": makeLink($node,'edit'),
               "${escapeVal(uiLabelMap.CommonRemove, 'js')}": makeLink($node,'remove')
             };
         } else {
             newOptions = {
               "${escapeVal(uiLabelMap.CommonCreate, 'js')}": makeLink($node,'create'),
+              "${escapeVal(uiLabelMap.CommonEdit, 'js')}": makeLink($node,'update'),
               "${escapeVal(uiLabelMap.CommonRename, 'js')}": makeLink($node,'edit'),
               "${escapeVal(uiLabelMap.CommonRemove, 'js')}": makeLink($node,'remove')
             }; 
@@ -223,6 +281,11 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
         
         $("#create_menu_form").submit(function(e){
             addMenu();
+            return false;
+        });
+        
+        $("#edit_menu_item").submit(function(e){
+            node_update();
             return false;
         });
     });    
@@ -258,7 +321,17 @@ function($node) {
             "action": function (obj) { 
                node_rename();
             }
-        };                         
+        };  
+        
+       var updateDef = {
+            "separator_before": true,
+            "separator_after": true,
+            "label": "${escapeVal(uiLabelMap.CommonUpdate, 'js')}",
+            "action": function (obj) { 
+               node_edit();
+            }
+        };  
+                               
         var removeDef = {
             "separator_before": false,
             "separator_after": false,
@@ -270,6 +343,7 @@ function($node) {
         
 
         return {
+            "Update": updateDef,
             "Open": openDef,
             "Create": createDef,
             "Rename": renameDef,
@@ -288,6 +362,19 @@ function($node) {
        <a id="delete-button" class="${styles.button} btn-ok">${uiLabelMap.CommonContinue}</a>
     </div>
 </@modal>
+<@modal id="edit-menuitem-dialog">
+    <@heading>${uiLabelMap.CmsEditMenuItem}</@heading>
+    <@form id="edit_menu_item">
+        <@field type="select" name="type" id="type" label=uiLabelMap.CmsLinkType>
+               <option value="link_internal">${uiLabelMap.CmsLinkInternal}</option>
+               <option value="link_external">${uiLabelMap.CmsLinkExternal}</option>
+        </@field>
+        <@field type="input" id="href" name="href" value="" label=uiLabelMap.CmsMenuItemLink placeholder="/main" required=true/>
+        <div class="modal-footer ${styles.text_right}">
+            <@field type="submit" text=uiLabelMap.CommonEdit class="${styles.link_run_sys!} ${styles.action_edit!}" />
+        </div>
+    </@form>
+</@modal>
 
 <#-- Content -->
 <#macro menuContent menuArgs={}>
@@ -298,7 +385,7 @@ function($node) {
             </#list>
         </@field>
         <@menuitem type="generic">
-            <@modal id="create_menu_dialog" label=uiLabelMap.CmsWebSiteAddMenu linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_create!}">
+            <@modal id="create-menu-dialog" label=uiLabelMap.CmsWebSiteAddMenu linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_create!}">
                 <@heading>${uiLabelMap.CmsWebSiteAddMenu}</@heading>
                     <@form id="create_menu_form">
                         <@field type="input" id="menuname" name="menuName" value="" label=uiLabelMap.CmsMenuName placeholder="menu name" required=true/>

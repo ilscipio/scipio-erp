@@ -633,6 +633,12 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="TemplateTest"/>
     </request-map>
+    <request-map uri="sendExamplePushNotifications"><!-- SCIPIO: new -->
+        <security https="true" auth="true"/>
+        <event type="service" invoke="sendExamplePushNotifications"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
     
     <!-- SCIPIO: EntityUtilityServices -->
     <request-map uri="EntityUtilityServices">

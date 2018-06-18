@@ -100,6 +100,7 @@
 	<classpathentry kind="lib" path="framework/base/lib/tomcat-catalina-8.5.31.jar" sourcepath="framework/base/libsrc/tomcat-catalina-8.5.31-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/tomcat-catalina-ha-8.5.31.jar" sourcepath="framework/base/libsrc/tomcat-catalina-ha-8.5.31-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/tomcat-coyote-8.5.31.jar" sourcepath="framework/base/libsrc/tomcat-coyote-8.5.31-sources.jar"/>
+	<classpathentry kind="lib" path="framework/base/lib/tomcat-embed-websocket-8.5.31.jar" sourcepath="framework/base/libsrc/tomcat-embed-websocket-8.5.31-sources.jar"/>   
 	<classpathentry kind="lib" path="framework/base/lib/tomcat-jasper-8.5.31.jar" sourcepath="framework/base/libsrc/tomcat-jasper-8.5.31-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/tomcat-jni-8.5.31.jar" sourcepath="framework/base/libsrc/tomcat-jni-8.5.31-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/tomcat-tribes-8.5.31.jar" sourcepath="framework/base/libsrc/tomcat-tribes-8.5.31-sources.jar"/>

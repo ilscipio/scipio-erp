@@ -1213,6 +1213,37 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
   </#if>
 </@section>
 
+<a id="WebSocketsExample"></a>
+<@section title="WebSockets example">
+  <#if webSocketEnabled>
+    <p>Submit the following form to trigger a server-side callback of the WebSockets
+      example push notification script on this page (<code>ExamplePushNotifications.js</code>).
+      A popup should appear. Anyone else viewing this page will also get a popup.</p>
+    <@script>
+        function submitWebSocketsExampleForm() {
+            var form = $('#websockets-example-form');
+            $.ajax({
+                url: "<@ofbizUrl uri='sendExamplePushNotifications' escapeAs='js'/>",
+                data: {exampleId: $('input[name=exampleId]', form).val(), message: $('input[name=message]', form).val()},
+                async: true,
+                type: "POST",
+                success: function(data) {},
+                error: function(data) { alert("Error sending sendExamplePushNotifications"); }
+            });
+        }
+    </@script>
+    <@form id="websockets-example-form">
+      <@field type="input" label="exampleId" name="exampleId" value="TestExample1"/>
+      <@field type="input" label="message" name="message" value="Hello from WebSockets"/>
+      <a href="javascript:submitWebSocketsExampleForm(); void(0);" 
+        class="${styles.link_run_sys!} ${styles.action_begin!}">Run sendExamplePushNotifications</a>
+    </@form>
+  <#else>
+    WebSockets appears to be disabled. To enable this demo,
+    set <code>webSocket=true</code> in <code>framework/catalina/config/catalina.properties</code>.
+  </#if>
+</@section>
+
 <#if debugMode>
 <a name="AutoValueFormFields"></a>
 <@section title="Auto-Value Form Fields">

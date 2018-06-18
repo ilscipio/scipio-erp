@@ -24,6 +24,7 @@ under the License.
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="depends-on"/>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="resource-loader"/>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="classpath"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="classpath-special"/><!-- SCIPIO: new 2018-06 -->
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="entity-resource"/>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="service-resource"/>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="test-suite"/>
@@ -98,6 +99,37 @@ under the License.
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.classpath">
+        <xs:attribute name="type" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="jar"/>
+                    <xs:enumeration value="dir"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="location" use="required"/>
+    </xs:attributeGroup>
+    <xs:element name="classpath-special">
+        <xs:annotation>
+            <xs:documentation>
+                SCIPIO: Identifies a library to enable for use with a specific purpose, such as WebSockets.
+                NOTE: This does NOT automatically add the specified lib to the Java classpath - it must be
+                covered by another regular classpath element entry.
+                Added 2018-06-18.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.classpath-special"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.classpath-special">
+        <xs:attribute name="purpose" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="websockets"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
         <xs:attribute name="type" use="required">
             <xs:simpleType>
                 <xs:restriction base="xs:token">

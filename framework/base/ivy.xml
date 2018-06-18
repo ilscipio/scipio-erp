@@ -236,6 +236,7 @@
         <dependency org="org.apache.tomcat" name="tomcat-tribes" rev="8.5.31" conf="base,sources"/>
         <dependency org="org.apache.tomcat" name="tomcat-util" rev="8.5.31" conf="base,sources"/>
         <dependency org="org.apache.tomcat" name="tomcat-util-scan" rev="8.5.31" conf="base,sources"/>
+        <dependency org="org.apache.tomcat.embed" name="tomcat-embed-websocket" rev="8.5.31" conf="base,sources"/>
         <!-- gone since 8.5.3+?
         <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli" rev="8.5.31" conf="base,sources"/>
         <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli-adapters" rev="8.5.31" conf="base,sources"/>-->

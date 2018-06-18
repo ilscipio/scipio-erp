@@ -118,10 +118,11 @@ under the License.
 	<@tab id="preferencesTab" title="Preferences">
 		<@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditAcctgPreferences"/>
 	</@tab>
+	<#--
 	<@tab id="glAccountsTab" title="Configure GL Accounts">
 		<@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditGLAccountTree" />
 	</@tab>
-	<@tab id="fiscalPeriodsTab" title="Configure Fiscal Periods"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditFiscalPeriods"/></@tab>
+	<@tab id="fiscalPeriodsTab" title="Configure Fiscal Periods"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditFiscalPeriods"/></@tab>-->
 	<#-- SCIPIO (06/13/2018): Commenting this out for now -->
 	<#-- <@tab id="accountingTransactionsTab" title="Configure Accounting Transactions"><@render type="screen" resource="component://setup/widget/SetupScreens.xml" name="EditAccountingTransactions"/></@tab> -->
 	<#-- SCIPIO (06/14/2018): Commenting this out for now -->

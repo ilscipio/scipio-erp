@@ -570,7 +570,6 @@
                 <set field="submitFormId" value="setupAccounting-preferences-form"/>
                 
                 <set field="useDefaultSetupSubmitBar" type="Boolean" value="true"/>
-                <set field="layoutSettings.javaScripts[]" value="/accounting/static/ScpEgltCommon.js" global="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
@@ -633,7 +632,7 @@
     <screen name="EditGLAccountTree">
         <section>
             <actions>
-                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditGLAccountTree.groovy"/>                
+                <script location="component://accounting/script/com/ilscipio/scipio/accounting/ledger/tree/GetAccountsList.groovy"/>
             </actions>
             <widgets>            
             	<section>
@@ -645,8 +644,10 @@
 		            </condition>
 		            <widgets>
 						<screenlet>
-							<platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditGLAccountTree.ftl"/></html></platform-specific>
-						</screenlet>
+                            <platform-specific>
+                                    <html><html-template location="component://accounting/webapp/accounting/ledger/tree/accountsTree.ftl"/></html>
+                            </platform-specific>						  
+                        </screenlet>
 					</widgets>						
             	</section>
             </widgets>           

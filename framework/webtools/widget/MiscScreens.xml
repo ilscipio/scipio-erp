@@ -187,6 +187,21 @@ under the License.
                     }
                     context.shopInfo = shopInfo;
                 ]]></script>
+
+                <!-- WebSockets example (NOTE: to enable, set webSocket=true in catalina.properties) -->
+                <property-to-field resource="catalina" property="webSocket" field="webSocketEnabled"/>
+                <set field="webSocketEnabled" type="Boolean" from-field="webSocketEnabled" default-value="false"/>
+                <if>
+                    <condition>
+                        <and>
+                            <if-true field="webSocketEnabled"/>
+                            <if-has-permission permission="OFBTOOLS" action="_VIEW"/>
+                        </and>
+                    </condition>
+                    <then>
+                        <set field="layoutSettings.javaScripts[]" value="/webtools/images/ExamplePushNotifications.js" global="true"/>
+                    </then>
+                </if>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">

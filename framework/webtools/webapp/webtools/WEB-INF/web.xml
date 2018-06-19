@@ -111,7 +111,7 @@ under the License.
         <init-param>
             <param-name>allowedPaths</param-name>
             <param-value>
-                /ping.txt:/error:/control:/select:/index.html:/index.jsp:/default.html:/default.jsp:/applet:/includes/maincss.css:/docs
+                /ping.txt:/error:/control:/select:/index.html:/index.jsp:/default.html:/default.jsp:/applet:/includes/maincss.css:/docs:/images:/ws
             </param-value>
         </init-param>
         <init-param>

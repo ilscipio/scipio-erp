@@ -2104,3 +2104,60 @@ Supports nested or flat format for hierarchy.
     <@objectAsScript lang="json" object=attribs rawVal={"children":true} />
   </#if>
 </#macro>
+
+<#-- CMS Menu Macro -->
+<#assign cmsmenu_defaultArgs = {
+  "menuId":"","title":"", "id":"", "class":"", "style":"", "items":true,
+  "passArgs":{}
+}>
+<#macro cmsmenu args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.cmsmenu_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
+  <@cmsmenu_markup menuId=menuId items=items title=title id=id class=class style=style
+    origArgs=origArgs passArgs=passArgs><#nested></@cmsmenu_markup>
+</#macro>
+
+<#-- @cms_menu markup - theme override -->
+<#macro cmsmenu_markup menuId="" items=true title="" id="" class="" style="" 
+    origArgs={} passArgs={} catchArgs...>
+  <#local class = addClassArg(class, styles.cmsmenu_wrap!"")>
+  <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if>>
+    <#if title?has_content><div<@compiledClassAttribStr class=(styles.cmsmenu_head!)/>><@heading class="${styles.cmsmenu_title!}">${escapeVal(title, 'htmlmarkup')}</@heading></div></#if>
+    <div<@compiledClassAttribStr class=(styles.cmsmenu_body!)/>>
+        <#if menuId?has_content>
+            <#local menuJson = Static["com.ilscipio.scipio.cms.menu.CmsMenuUtil"].getMenuJsonById(delegator!,menuId)>
+            <#if menuJson?has_content>
+                <ul>
+                <#list menuJson as item>
+                    <#if item["data"]["path"]?has_content>
+                        <#if item["type"]=="link_external">
+                            <@menuitem type="link" text=item.text!"" href=rawString(item.data.path!"")  target="_blank"></@menuitem>
+                        <#else>
+                            <#if item.data.websiteid?has_content>
+                                <@menuitem type="link" text=item.text!"" href=makeOfbizInterWebappUrl({"controller":false, "secure":true, "webSiteId":rawString(item.data.websiteid!""), "uri":(rawString(item.data.path!""!))})></@menuitem>
+                            <#else>
+                                <@menuitem type="link" text=item.text!"" href=makeOfbizUrl(rawString(item.data.path!""))></@menuitem>
+                            </#if>
+                        </#if>
+                    <#else>
+                        <@menuitem type="generic" text=item.text!""></@menuitem>
+                    </#if>
+                    
+                </#list>
+                </ul>
+            </#if>
+        <#else>
+            <#if items?is_sequence>
+              <ul>
+              <#list items as item>
+                <li>${item.id}</li>
+              </#list>
+              </ul>
+            </#if>
+      </#if>
+        
+    </div>
+    <#nested>
+  </div>
+</#macro>

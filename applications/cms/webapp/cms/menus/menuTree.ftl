@@ -386,7 +386,7 @@ function($node) {
     <@menu args=menuArgs>
         <@field type="select" name="activeMenu" id="activeMenu" onChange="loadMenu();" label=uiLabelMap.CmsCurrentMenu>
             <#list cmsMenus as cmsMenu>
-               <option value="${cmsMenu.menuId!""}">${cmsMenu.menuName!cmsMenu.menuId!""}</option>
+               <option value="${cmsMenu.menuId!""}">${cmsMenu.menuName!cmsMenu.menuId!""} (menuId: ${cmsMenu.menuId!""})</option>
             </#list>
         </@field>
         <@menuitem type="generic">

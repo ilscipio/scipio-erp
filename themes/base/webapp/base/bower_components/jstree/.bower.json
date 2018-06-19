@@ -38,6 +38,6 @@
     "commit": "0097fab41981daf36c234b73b683166daabd5f28"
   },
   "_source": "https://github.com/vakata/jstree.git",
-  "_target": "~3.3.1",
+  "_target": "~3",
   "_originalSource": "jstree"
 }

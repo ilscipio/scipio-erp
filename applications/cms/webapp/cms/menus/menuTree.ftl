@@ -32,22 +32,28 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
 </@modal>
 
 <#-- Javascript functions -->
+<#assign typesConfig={
+            "link_internal": {
+                "icon": "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}page ${styles.icon_prefix!}file-o"
+            },
+            "link_external": {
+                "icon": "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}link"
+            }
+}/>
 <@script>
+    var nodeIcons = {
+        "link_internal" : "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}page ${styles.icon_prefix!}file-o",
+        "link_external" : "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}link"
+    };
     var editorBaseUrl = '<@ofbizUrl escapeAs='js'>menus</@ofbizUrl>';
     var menuId='';
     var websiteId = 'cmsSite';
-    var nodeIcons = {
-        link_internal : "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}page ${styles.icon_prefix!}file-o",
-        pages : "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}page ${styles.icon_prefix!}file-o"
-    };
     var elData= {
                   text        : "New Link",
-                  icon        : nodeIcons["link_internal"], <#-- Note: Ideally this should not be stored here. But it simplifies the process for now.-->
                   li_attr     : {},
                   a_attr      : {},
-                  data : {
-                    type        : "link_internal"
-                  }
+                  type        : "link_internal",
+                  data        : {}
                 };
     
     
@@ -109,11 +115,11 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
         sel = sel[0];
         var node = menuTree.get_node(sel);
         $('form#edit_menu_item')[0].reset();
-        if(node && node["data"]){
-            if(node["data"]["type"]){
-                $('form#edit_menu_item #type').val(node["data"]["type"]).prop('selected', true);
+        if(node){
+            if(node["type"]){
+                $('form#edit_menu_item #type').val(node["type"]).prop('selected', true);
             }
-            if(node["data"]["path"]){
+            if(node["data"] && node["data"]["path"]){
                 $('form#edit_menu_item #path').val(node["data"]["path"]);
             }
         }
@@ -129,12 +135,12 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
             sel = sel[0];
         var node = menuTree.get_node(sel);
         if(node) {
-            node["data"]["type"] = type;
+            node["type"] = type;
             node["data"]["path"] = path;
             node["icon"] = nodeIcons[type];
             close_dialog('modal_edit-menuitem-dialog');
             saveMenu();
-            menuTree.redraw_node(sel);
+            menuTree.redraw(true);
         }
         return false;
     }
@@ -270,22 +276,12 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
     function updateMenu($node){
         var $el = $("#action_menu");
 
-        var newOptions;
-        if ($node.data && $node.data.type=='root') {
-            newOptions = {
-              "${escapeVal(uiLabelMap.CommonCreate, 'js')}": makeLink($node,'create'),
-              "${escapeVal(uiLabelMap.CommonEdit, 'js')}": makeLink($node,'update'),
-              "${escapeVal(uiLabelMap.CommonRename, 'js')}": makeLink($node,'edit'),
-              "${escapeVal(uiLabelMap.CommonRemove, 'js')}": makeLink($node,'remove')
-            };
-        } else {
-            newOptions = {
-              "${escapeVal(uiLabelMap.CommonCreate, 'js')}": makeLink($node,'create'),
-              "${escapeVal(uiLabelMap.CommonEdit, 'js')}": makeLink($node,'update'),
-              "${escapeVal(uiLabelMap.CommonRename, 'js')}": makeLink($node,'edit'),
-              "${escapeVal(uiLabelMap.CommonRemove, 'js')}": makeLink($node,'remove')
-            }; 
-        }
+        var newOptions = {
+          "${escapeVal(uiLabelMap.CommonCreate, 'js')}": makeLink($node,'create'),
+          "${escapeVal(uiLabelMap.CommonEdit, 'js')}": makeLink($node,'update'),
+          "${escapeVal(uiLabelMap.CommonRename, 'js')}": makeLink($node,'edit'),
+          "${escapeVal(uiLabelMap.CommonRemove, 'js')}": makeLink($node,'remove')
+        }; 
             
         $el.empty(); // remove old options
         $.each(newOptions, function(key,value) {
@@ -310,6 +306,12 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
         $("#edit_menu_item").submit(function(e){
             node_update();
             return false;
+        });
+        
+        
+        <#-- Auto-save when menu positions are changed -->                                                        
+        $('#cms-menu-tree').on('move_node.jstree', function (e, data) {
+            saveMenu();
         });
 
     });    
@@ -377,7 +379,7 @@ function($node) {
     }
 </#assign>
 <#assign pluginSettings={"items": wrapRawScript(menuEventScript)}/>
-<#assign treePlugin =[{"name":"contextmenu", "settings":pluginSettings},{"name":"massload"},{"name":"dnd"}]/>
+<#assign treePlugin =[{"name":"contextmenu", "settings":pluginSettings},{"name":"massload"},{"name":"dnd"},{"name":"types","settings": typesConfig}]/>
 
 <#-- Content -->
 <#macro menuContent menuArgs={}>
@@ -420,13 +422,13 @@ function($node) {
                         </ul>
                 </@section>
                 <#--  Page list to enable drag & drop in between menus -->
-                <@section title=uiLabelMap.CmsPages>
-                   <#assign pageTreePlugin =[{"name":"massload"},{"name":"dnd", "settings": {"always_copy":true}}]/>
+                <@section title=uiLabelMap.CommonPages>
+                   <#assign pageTreePlugin =[{"name":"massload"},{"name":"dnd"}]/>
                    <#assign pageTreeCallback>
                     function (operation, node, node_parent, node_position, more) {
-                        if('copy_node'==operation){
-                            node.data.type="link_internal";
-                            saveMenu();
+                        if (preventDelete && operation=="delete_node") { 
+                            preventDelete = false; 
+                            return false; 
                         }
                         
                         return true;
@@ -463,15 +465,26 @@ function($node) {
                             </#if>
                        </#list>
                     </@treemenu>
-                    <@script>
-                        $(function() {
-                            <#-- 
-                            $('#cms-content-tree, #cms-menu-tree').on("copy_node.jstree", function (e, data) { 
-                              data.original.data.type="link_internal";
-                            });-->
+                    <@script>                    
+                        <#-- Function to stop removal of original node if copied over to second tree -->
+                        var preventDelete = false;     
+                        $(function() {   
+                            $('#cms-menu-tree, #cms-content-tree').on('copy_node.jstree', function (e, data) {
+                              if (data.is_multi) {
+                                  console.log(data);
+                                  preventDelete = true;  
+                                  data.original.data.type="link_internal";
+                                  data.node.type="link_internal";
+                                  data.node.data = data.original.data;
+                                  saveMenu();
+                              }
+                              
+                            });
                         });    
                     </@script>
+                    
                 </@section>
+                <@alert type="info">Drag & drop pages into the menu definition.</@alert>
                 
                 <#-- special message for root-aliasing of controller URIs - loaded by JS -->
                 <div id="cms-ctrlrootalias-msgarea" class="cms-ctrlrootalias-msgarea" style="display:none;">

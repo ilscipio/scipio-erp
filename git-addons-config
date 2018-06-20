@@ -1,0 +1,43 @@
+# SCIPIO-ERP git-addons script configuration
+
+# Enterprise addons base folder [INPUT PURCHASED ADDONS BASE ADDRESS HERE]
+# Please set this to the address of the Ilscipio servers provided to you upon addon purchase.
+# This will be an ssh:// address and end with /SCIPIO-ERP/ (please include trailing slash).
+if [ -z "${SCIPIO_ADDONS_URL_EE}" ]; then
+  SCIPIO_ADDONS_URL_EE=""
+fi
+
+# Community addons base folder
+# This is used for addons that are public on github (if not found in previous location).
+# Maintained by Ilscipio (you should not need to change this - maintained in git - simply merge this file).
+if [ -z "${SCIPIO_ADDONS_URL_CE}" ]; then
+  SCIPIO_ADDONS_URL_CE="https://github.com/ilscipio/addons-"
+fi
+
+# Addon definitions and target directories.
+# Maintained by Ilscipio (you should not need to change this - maintained in git - simply merge this file).
+declare -A SCIPIO_ADDON_MAP
+SCIPIO_ADDON_MAP[accountingat]="accountingat addons/accountingat ee std-url"
+SCIPIO_ADDON_MAP[accountingde]="accountingde addons/accountingde ee std-url"
+SCIPIO_ADDON_MAP[accountingde-skr03]="accountingde-skr03 addons/accountingde-skr03 ee std-url"
+SCIPIO_ADDON_MAP[accountinges]="accountinges addons/accountinges ee std-url"
+SCIPIO_ADDON_MAP[angular-shop]="angular-shop addons/angular-shop ce std-url"
+SCIPIO_ADDON_MAP[angular-theme]="angular-theme themes/angular ee std-url"
+SCIPIO_ADDON_MAP[auth-cas-client]="auth-cas-client addons/auth-cas-client ee std-url"
+SCIPIO_ADDON_MAP[auth-cas-server]="auth-cas-server addons/auth-cas-server ee std-url"
+SCIPIO_ADDON_MAP[auth-facebook]="auth-facebook addons/auth-facebook ee std-url"
+SCIPIO_ADDON_MAP[auth-google]="auth-google addons/auth-google ee std-url"
+SCIPIO_ADDON_MAP[auth-linkedin]="auth-linkedin addons/auth-linkedin ee std-url"
+SCIPIO_ADDON_MAP[auth-twitter]="auth-twitter addons/auth-twitter ee std-url"
+SCIPIO_ADDON_MAP[bootstrap-theme]="bootstrap-theme themes/bootstrap ee std-url"
+SCIPIO_ADDON_MAP[camel]="camel addons/camel ee std-url"
+SCIPIO_ADDON_MAP[data-categorytree]="data-categorytree addons/data-categorytree ee std-url"
+SCIPIO_ADDON_MAP[ignite-admin-theme]="ignite-admin-theme themes/ignite-admin ee std-url"
+SCIPIO_ADDON_MAP[ignite-shop-theme]="ignite-shop-theme themes/ignite-shop ee std-url"
+SCIPIO_ADDON_MAP[paypal]="paypal addons/paypal ee std-url"
+SCIPIO_ADDON_MAP[shopde]="shopde addons/shopde ee std-url"
+SCIPIO_ADDON_MAP[vue-theme]="vue-theme themes/vue ee std-url"
+
+# OVERRIDES
+# If you need to override any of the above definitions (for whatever reason, normally not),
+# you may do so below this line.

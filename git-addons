@@ -1,0 +1,515 @@
+#!/usr/bin/env bash
+
+# not portable, oh well
+#BASEDIR=$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)
+BASEDIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+PROJDIR="${BASEDIR}"
+
+print_title() {
+  echo "SCIPIO-ERP addons and themes git (subtree) merging script"
+  echo ""
+}
+
+print_usage() {
+  echo "usage: ./git-addons [action] [addon-name] [options]
+
+actions:
+  help          how this help dialog
+  pull          add or merge (as appropriate) the named addon into working copy
+                using git subtree
+                --all may be specified instead of addon names to update all
+                addons already added to current working copy.
+  remote-reset  force reset the remote for the specified addon(s)
+                --all may be specified instead of addon names to update all
+  list          list currently installed addons
+                --all may be specified to show all recognized addons instead
+    
+options:
+  -v            verbose output
+  --all         for use with pull command
+  -n            dry run (git commands not run)
+
+This script uses the git subtree command to integrate SCIPIO-ERP addons
+into your working copy of ScipioCE/EE (it does NOT work with submodules at this time).
+
+In order to use this script with purchased addons, you must set the variable
+SCIPIO_ADDONS_URL_EE in the accompanying git-addons-config script
+to the base ssh://.../SCIPIO-ERP/ addons location provided when you purchase an addon.
+You must also have an SSH agent loaded with your private key for access
+to the Ilscipio (or other) servers.
+
+The addons' histories will appear as squashed in your working copy.
+This is normal and made required by git subtree.
+
+For more information on git subtree, type 'man git subtree'.
+
+NOTE: This script handles common merge cases. If you have any issues,
+you may occasionally need to consult and use the git subtree command directly.
+
+Requirements:
+* Bash 4 or higher
+* Git 2.0 or higher (with git subtree command)
+
+Examples:
+
+./git-addons pull angular-shop
+./git-addons pull angular-shop ignite-admin-theme
+./git-addons pull --all
+./git-addons list --all
+"
+}
+
+print_usage_cmd_pull() {
+  echo "pull: add or merges the SCIPIO-ERP addon with the given addon-name.
+  
+Alternatively, if --all is provided, pulls all existing addons in the working copy.
+
+If its component directory does not exist, it is added using 'git subtree add' command.
+
+If its component directory already exists, it is pulled using 'git subtree pull' command.
+
+The command internally knows the correct target folder for the SCIPIO-ERP addons.
+"
+}
+
+print_usage_cmd_remote_reset() {
+  echo "remote-reset: Reset remote for the addon
+  
+Supports --all to reset all addon remotes.
+  
+May be needed if you have old repository locations, because the pull command
+will not override existing remotes.
+"
+}
+
+print_addon_line() {
+  get_addon_info "$2"
+  if [ "$1" == "${ADDON_REPOTYPE}" ]; then
+    local INSTSTR=""
+    if is_addon_present "${ADDON_INFO_STR}"; then
+      if is_addon_subtree "${ADDON_INFO_STR}"; then
+        local INSTSTR=" [INSTALLED, subtree]"
+      elif is_addon_submodule "${ADDON_INFO_STR}"; then
+        local INSTSTR=" [PRESENT - WARNING: appears to be a submodule! incompatible with script]"
+      else
+        local INSTSTR=" [PRESENT - WARNING: may not be a subtree; may be incompatible with script]"
+      fi
+    fi
+    echo "${ADDON_NAME} -> ${ADDON_DIR}${INSTSTR}"
+  fi
+}
+
+sort_args() {
+  echo "$@" | xargs -n1 | sort -u | xargs
+}
+
+list_addons_core() {
+  echo -e "\nCommunity addons:"
+  for ADDON; do
+    print_addon_line ce "${SCIPIO_ADDON_MAP[${ADDON}]}"
+  done
+  echo -e "\nEnterprise addons:"
+  for ADDON; do
+    print_addon_line ee "${SCIPIO_ADDON_MAP[${ADDON}]}"
+  done
+}
+
+list_addons() {
+  local ADDONS=$(print_present_addons)
+  echo "Addons installed in your working copy:"
+  if [ -z "${ADDONS}" ]; then
+    echo -e "\n(no subtree-compatible addons detected in working copy)"
+    return
+  fi
+  local ADDONS=$(sort_args "${ADDONS}")
+  list_addons_core ${ADDONS}
+}
+
+list_addons_all() {
+  echo "All known SCIPIO-ERP addons:"
+  local ADDONS=$(sort_args "${!SCIPIO_ADDON_MAP[@]}")
+  list_addons_core ${ADDONS}
+}
+
+list_addons_all_names() {
+  echo "All known SCIPIO-ERP addons:"
+  local ADDONS=$(sort_args "${!SCIPIO_ADDON_MAP[@]}")
+  echo "${ADDONS}"
+}
+
+print_error() {
+  echo -e "ERROR: ""$@"
+}
+
+print_warn() {
+  echo -e "WARNING: ""$@"
+}
+
+print_msg() {
+  echo -e "$@"
+}
+
+print_error_req() {
+  print_error "$@"
+}
+
+print_error_usage() {
+  print_error "$@"
+  echo ""
+  print_usage
+}
+
+callgit() {
+  if [[ "${DRYRUN}" -eq 1 ]]; then
+    echo "dry-run: git $@"
+    true
+  else
+    git "$@"
+  fi
+}
+
+check_min_version() {
+  local BASE=$1
+  local MIN=$2
+  local BASEPARTS=(${BASE//./ })
+  local MINPARTS=(${MIN//./ })
+  if [[ ${#BASEPARTS[@]} -lt 2 ]] || [[ ${#MINPARTS[@]} -lt 2 ]]; then
+    return 2
+  fi
+  if [[ ${BASEPARTS[0]} -lt ${MINPARTS[0]} ]] || [[ ${BASEPARTS[0]} -eq ${MINPARTS[0]} && ${BASEPARTS[1]} -lt ${MINPARTS[1]} ]]; then
+    return 1
+  fi
+  return 0
+}
+
+check_requirements() {
+  if [ -z "${BASH_VERSION}" ]; then
+    print_error_req "Could not detect bash version"
+    return 2
+  fi
+  if ! check_min_version "${BASH_VERSION}" "4.0"; then
+    print_error_req "insufficient bash version - required: 4.0, you: ${BASH_VERSION}"
+    return 2
+  fi
+  local GITVERSION=$(git --version)
+  if [ $? -ne 0 ] || [ -z "${GITVERSION}" ]; then
+    print_error_req "Could not detect git version - is git installed?"
+    return 2
+  fi
+  local GITVERSION=$(echo -n "${GITVERSION}" | grep -o '\s[0-9][0-9.]*$' | grep -o '[0-9.]*')
+  if [ $? -ne 0 ] || [ -z "${GITVERSION}" ] || ! check_min_version "${GITVERSION}" "2.0"; then
+    print_error_req "Insufficient git version - required: 2.0, system: ${GITVERSION}"
+    return 2
+  fi
+  if ! git --help --all | grep -q 'subtree'; then
+    print_error_req "git subtree command does not appear installed - upgrade git?"
+    return 2
+  fi
+  if [ ! -e ".git/config" ]; then
+    print_error_req "This directory does not appear to be a git working copy - this script requires SCIPIO-ERP git repository"
+    return 2
+  fi
+  if [ ! -d "addons" ] || [ ! -d "themes" ]; then
+    print_error_req "Addons or themes subfolder is missing from directory - invalid SCIPIO-ERP working copy"
+    return 2
+  fi
+  if [ ! -f "framework/base/config/scipiometainfo.properties" ]; then
+    print_error_req "Missing file: framework/base/config/scipiometainfo.properties - invalid SCIPIO-ERP working copy"
+    return 2
+  fi
+  if [ -z "${SCIPIO_ADDONS_URL_EE}" ]; then
+    print_warn "The variable SCIPIO_ADDONS_URL_EE is not set. You will only be able to install community addons from Github. \
+If you have purchased an addon from the Scipio store, you must input the base address (ssh://.../SCIPIO-ERP/) provided to you \
+into the git-addons-config file.\n"
+    if [ -z "${SCIPIO_ADDONS_URL_CE}" ]; then
+      print_error_req "Could not read any addons URL from git-addons-config script"
+      return 2
+    fi
+  fi
+  if [ -z "${SCIPIO_BRANCH}" ]; then
+    determine_branch || return
+  fi
+}
+
+determine_branch() {
+  local SCPVER=$(grep '^scipio.release.branch=' "framework/base/config/scipiometainfo.properties" | cut -d= -f2)
+  if [ "${SCPVER}" == "dev" ]; then
+    SCIPIO_BRANCH="master"
+  elif [ "${SCPVER}" == "main" ]; then
+    local SCPVERSPEC=$(grep '^scipio.release.version.general=' "framework/base/config/scipiometainfo.properties" | cut -d= -f2)
+    if [ -z "${SCPVERSPEC}" ]; then
+      print_error_req "Scipio version in framework/base/config/scipiometainfo.properties appears invalid - try updating script?"
+      return 2
+    fi
+    SCIPIO_BRANCH="${SCPVERSPEC}"
+    return 2
+  else
+    print_error_req "Scipio version in framework/base/config/scipiometainfo.properties appears invalid - try updating script?"
+    return 2
+  fi
+}
+
+extract_pos_args() {
+  for ARG; do
+    if [[ "${ARG}" == -* ]]; then
+      return
+    fi
+    echo -n " ${ARG}"
+  done
+}
+
+parse_options() {
+  ACTION="$1"
+  VERBOSE=0
+  HELP=0
+  ALLADDONS=0
+  DRYRUN=0
+  if [ -z "${ACTION}" ]; then
+    print_error_usage "missing action argument"
+    return 2
+  fi
+  
+  if [ "${ACTION}" == "help" ] || [ "${ACTION}" == "-h" ] || [ "${ACTION}" == "--help" ]; then
+    ACTION=help
+    HELP=1
+  elif [ "${ACTION}" == "pull" ]; then
+    TARGETADDONS=$(extract_pos_args "${@:2}")
+  elif [ "${ACTION}" == "remote-reset" ]; then
+    TARGETADDONS=$(extract_pos_args "${@:2}")
+  elif [ "${ACTION}" == "list" ]; then
+    true
+  else
+    print_error_usage "Unrecognized action: ${ACTION}"
+    return 2
+  fi
+  
+  for ARG; do
+    if [ "${ARG}" == "-v" ] || [ "${ARG}" == "--verbose" ]; then
+      VERBOSE=1
+    elif [ "${ARG}" == "-h" ] || [ "${ARG}" == "--help" ]; then
+      HELP=1
+    elif [ "${ARG}" == "-a" ] || [ "${ARG}" == "--all" ]; then
+      ALLADDONS=1
+    elif [ "${ARG}" == "-n" ] || [ "${ARG}" == "--dry-run" ]; then
+      DRYRUN=1
+    elif [[ "${ARG}" == -* ]]; then
+      print_error_usage "Unrecognized option: ${ARG}"
+      return 2
+    fi
+  done
+}
+
+process_action() {
+  if [ "${ACTION}" == "help" ]; then
+    print_usage
+  elif [ "${ACTION}" == "pull" ]; then
+    if [ "${HELP}" -eq 1 ]; then
+      print_usage_cmd_pull
+    else
+      if [ "${ALLADDONS}" -eq 1 ]; then
+        pull_addons_all || return
+      else
+        if [ -z "${TARGETADDONS}" ]; then
+          print_error_usage "missing addon-name or --all arguments"
+          return 2
+        fi
+        check_target_addons ${TARGETADDONS} || return
+        pull_addons ${TARGETADDONS} || return
+      fi
+    fi
+  elif [ "${ACTION}" == "remote-reset" ]; then
+    if [ "${HELP}" -eq 1 ]; then
+      print_usage_cmd_remote_reset
+    else
+      if [ "${ALLADDONS}" -eq 1 ]; then
+        remote_reset_addons_all
+      else
+        if [ -z "${TARGETADDONS}" ]; then
+          print_error_usage "missing addon-name or --all arguments"
+          return 2
+        fi
+        check_target_addons ${TARGETADDONS} || return
+        remote_reset_addons ${TARGETADDONS} || return
+      fi
+    fi
+  elif [ "${ACTION}" == "list" ]; then
+    if [ "${ALLADDONS}" -eq 1 ]; then
+      list_addons_all || return
+    else
+      list_addons || return
+    fi
+  fi
+}
+
+process_main() {
+  print_title
+  check_requirements || exit $?
+  parse_options "$@" || exit $?
+  process_action || exit $?
+}
+
+check_target_addons() {
+  for ADDON; do
+    local ADDONINFO="${SCIPIO_ADDON_MAP[${ADDON}]}"
+    if [ -z "${ADDONINFO}" ]; then
+      print_error "Unrecognized addon: ${ADDON} (use list --all to see available)\n"
+      list_addons_all_names
+      return 2
+    fi
+  done
+  return 0
+}
+
+get_present_addons() {
+  ADDONS=$(print_present_addons)
+  if [ -z "${ADDONS}" ]; then
+    print_msg "No addons detected in working copy; please install some addons before using --all"
+    return 2
+  fi
+  #print_msg "Addons auto-detected in working copy (--all):\n${ADDONS}"
+}
+
+print_present_addons() {
+  local ADDONS=$(sort_args "${!SCIPIO_ADDON_MAP[@]}")
+  local ADDONS_STR=""
+  for ADDON in ${ADDONS}; do
+    if is_addon_present ${SCIPIO_ADDON_MAP[${ADDON}]}; then
+      ADDONS_STR="${ADDONS_STR} ${ADDON}"
+    fi
+  done
+  echo -n ${ADDONS_STR}
+}
+
+is_addon_present() {
+  get_addon_info "$1"
+  if [ ! -z "${ADDON_DIR}" ] && [ -d "${ADDON_DIR}" ]; then
+    true
+  else
+    false
+  fi
+}
+
+is_addon_subtree() {
+  get_addon_info "$1"
+  # TODO: is_addon_subtree_in_log.
+  if [ ! -z "${ADDON_DIR}" ] && [ -d "${ADDON_DIR}" ] && [ ! -e "${ADDON_DIR}/.git" ]; then
+    true
+  else
+    false
+  fi
+}
+
+is_addon_subtree_in_log() {
+  # TODO: very difficult
+  #git log | grep git-subtree-dir | tr -d ' ' | cut -d ":" -f2 | sort | uniq
+  true
+}
+
+is_addon_submodule() {
+  get_addon_info "$1"
+  if [ ! -z "${ADDON_DIR}" ] && [ -d "${ADDON_DIR}" ] && [ -e "${ADDON_DIR}/.git" ]; then
+    true
+  else
+    false
+  fi
+}
+
+pull_addons() {
+  print_msg "Target addons: $@"
+  for ADDON; do
+    pull_addon "${SCIPIO_ADDON_MAP[${ADDON}]}" || return
+  done
+}
+
+pull_addons_all() {
+  get_present_addons || return
+  print_msg "Target addons: ${ADDONS}"
+  for ADDON in ${ADDONS}; do
+    pull_addon "${SCIPIO_ADDON_MAP[${ADDON}]}" || return
+  done
+}
+
+pull_addon() {
+  get_addon_info "$1"
+  ensure_addon_remote "$1" || return
+  
+  if is_addon_present "$1"; then
+    if ! is_addon_subtree "$1"; then
+      print_warn "Addon ${ADDON_NAME} -> ${ADDON_DIR} does not appear to be a subtree! Cannot be pulled using this script; skipping..."
+      return 0
+    fi
+    print_msg "\nRunning 'git subtree pull' for existing subtree addon ${ADDON_NAME} -> ${ADDON_DIR} (branch: ${SCIPIO_BRANCH})..."
+    callgit subtree pull --squash "--prefix=${ADDON_DIR}" "${ADDON_NAME}" "${SCIPIO_BRANCH}" || { echo "Pull failed. Please verify, resolve conflicts and re-run script."; return 1; }
+  else
+    print_msg "\nRunning 'git subtree add' for new subtree addon ${ADDON_NAME} -> ${ADDON_DIR} (branch: ${SCIPIO_BRANCH})..."
+    callgit subtree add --squash "--prefix=${ADDON_DIR}" "${ADDON_NAME}" "${SCIPIO_BRANCH}" || { echo "Add failed. Please verify, resolve conflicts and re-run script."; return 1; }
+  fi
+}
+
+print_addon_repo_url() {
+  get_addon_info "$1"
+  if [ "${ADDON_URLTYPE}" == "std-url" ]; then
+    local REPOURLVAR="SCIPIO_ADDONS_URL_${ADDON_REPOTYPE^^}"
+    local REPOBASEURL=${!REPOURLVAR}
+    if [ ! -z "${REPOBASEURL}" ]; then
+      echo -n "${REPOBASEURL}${ADDON_NAME}.git"
+    fi
+  else
+    # here have actual override URL
+    echo -n "${ADDON_URLTYPE}"
+  fi
+}
+
+remote_reset_addons() {
+  print_msg "Target addons: $@\n"
+  for ADDON; do
+    remote_reset_addon "${SCIPIO_ADDON_MAP[${ADDON}]}" || return
+  done
+}
+
+remote_reset_addons_all() {
+  get_present_addons || return
+  print_msg "Target addons: ${ADDONS}\n"
+  for ADDON in ${ADDONS}; do
+    remote_reset_addon "${SCIPIO_ADDON_MAP[${ADDON}]}" || return
+  done
+}
+
+ensure_addon_remote() {
+  get_addon_info "$1"
+  if git remote | grep -q '^'"${ADDON_NAME}"'$'; then
+    return 0
+  fi
+  remote_reset_addon "$1"
+}
+
+remote_reset_addon() {
+  get_addon_info "$1"
+  local ADDON_URL=$(print_addon_repo_url "$1")
+  if git remote | grep -q '^'"${ADDON_NAME}"'$'; then
+    git remote remove "${ADDON_NAME}"
+  fi
+  echo "Adding remote for addon ${ADDON_NAME}: ${ADDON_URL}"
+  if [ -z "${ADDON_URL}" ]; then
+    print_error "Cannot determine a repository URL for addon. Did you set SCIPIO_ADDONS_URL_EE in git-addons-config?"
+    return 1
+  fi
+  git remote add "${ADDON_NAME}" "${ADDON_URL}" || { print_error "Could not add remote for addon ${ADDON_NAME}"; return 1; }
+}
+
+get_addon_info() {
+  ADDON_INFO_STR="$1"
+  ADDON_INFO=( ${ADDON_INFO_STR} )
+  if [ ${#ADDON_INFO[@]} -eq 1 ]; then
+    # got name only
+    ADDON_INFO_STR="${SCIPIO_ADDON_MAP[$1]}"
+    ADDON_INFO=( ${ADDON_INFO_STR} )
+  fi
+  ADDON_NAME="${ADDON_INFO[0]}"
+  ADDON_DIR="${ADDON_INFO[1]}"
+  ADDON_REPOTYPE="${ADDON_INFO[2]}"
+  ADDON_URLTYPE="${ADDON_INFO[3]}"
+}
+
+source "./git-addons-config" || { print_error_req "git-addons-config script file is missing"; exit 2; }
+process_main "$@" || exit $?

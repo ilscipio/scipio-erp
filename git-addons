@@ -229,6 +229,9 @@ check_requirements() {
     print_error_req "Insufficient git version - required: 2.0, system: ${GITVERSION}"
     return 2
   fi
+  if ! check_min_version "${GITVERSION}" "2.7"; then
+    print_warn "You are running git ${GITVERSION}; this script has not been tested with git version less than 2.7"
+  fi
   if ! git --help --all | grep -q 'subtree'; then
     print_error_req "git subtree command does not appear installed - upgrade git?"
     return 2

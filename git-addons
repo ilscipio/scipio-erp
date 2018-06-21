@@ -32,6 +32,7 @@ options:
   -a, --all           for use with pull command
   -n, --dry-run       dry run (git commands not run)
   -e, --no-msg-edit   sets GIT_MERGE_AUTOEDIT=no, so no git prompts for merge messages (unless problems)
+  -h, --help          general help, or help about specific command
 
 This script uses the git subtree command to integrate SCIPIO-ERP addons
 into your working copy of ScipioCE/EE (it does NOT work with submodules at this time).
@@ -537,7 +538,7 @@ pull_addon() {
     ensure_addon_remote || return
 
     print_msg "Running 'git subtree pull' for existing subtree addon ${ADDON_NAME} -> ${ADDON_DIR} (branch: ${ADDON_BRANCH})..."
-    callgit subtree pull --squash "--prefix=${ADDON_DIR}" "${ADDON_NAME}" "${ADDON_BRANCH}" || { echo "Pull failed. Please verify, resolve conflicts and re-run script."; return 1; }
+    callgit subtree pull --squash "--prefix=${ADDON_DIR}" "${ADDON_NAME}" "${ADDON_BRANCH}" || { echo "Pull failed. Please verify, resolve conflicts and re-run script. [If due to conflicts, try these commands: 'git mergetool'; afterward, 'git merge --continue']"; return 1; }
   else
     ensure_addon_remote || return
 

@@ -8,35 +8,43 @@ if [ -z "${SCIPIO_ADDONS_URL_EE}" ]; then
 fi
 
 # Community addons base folder
-# This is used for addons that are public on github (if not found in previous location).
-# Maintained by Ilscipio (you should not need to change this - maintained in git - simply merge this file).
+# This is used for addons that are public on Github.
+# Maintained by Ilscipio [DO NOT MODIFY]
 if [ -z "${SCIPIO_ADDONS_URL_CE}" ]; then
   SCIPIO_ADDONS_URL_CE="https://github.com/ilscipio/addons-"
 fi
 
 # Addon definitions and target directories.
-# Maintained by Ilscipio (you should not need to change this - maintained in git - simply merge this file).
+# Maintained by Ilscipio [DO NOT MODIFY - if you need custom definitions, override these further below (to avoid merge conflicts)]
 declare -A SCIPIO_ADDON_MAP
-SCIPIO_ADDON_MAP[accountingat]="accountingat addons/accountingat ee std-url"
-SCIPIO_ADDON_MAP[accountingde]="accountingde addons/accountingde ee std-url"
-SCIPIO_ADDON_MAP[accountingde-skr03]="accountingde-skr03 addons/accountingde-skr03 ee std-url"
-SCIPIO_ADDON_MAP[accountinges]="accountinges addons/accountinges ee std-url"
-SCIPIO_ADDON_MAP[angular-shop]="angular-shop addons/angular-shop ce std-url"
-SCIPIO_ADDON_MAP[angular-theme]="angular-theme themes/angular ee std-url"
-SCIPIO_ADDON_MAP[auth-cas-client]="auth-cas-client addons/auth-cas-client ee std-url"
-SCIPIO_ADDON_MAP[auth-cas-server]="auth-cas-server addons/auth-cas-server ee std-url"
-SCIPIO_ADDON_MAP[auth-facebook]="auth-facebook addons/auth-facebook ee std-url"
-SCIPIO_ADDON_MAP[auth-google]="auth-google addons/auth-google ee std-url"
-SCIPIO_ADDON_MAP[auth-linkedin]="auth-linkedin addons/auth-linkedin ee std-url"
-SCIPIO_ADDON_MAP[auth-twitter]="auth-twitter addons/auth-twitter ee std-url"
-SCIPIO_ADDON_MAP[bootstrap-theme]="bootstrap-theme themes/bootstrap ee std-url"
-SCIPIO_ADDON_MAP[camel]="camel addons/camel ee std-url"
-SCIPIO_ADDON_MAP[data-categorytree]="data-categorytree addons/data-categorytree ee std-url"
-SCIPIO_ADDON_MAP[ignite-admin-theme]="ignite-admin-theme themes/ignite-admin ee std-url"
-SCIPIO_ADDON_MAP[ignite-shop-theme]="ignite-shop-theme themes/ignite-shop ee std-url"
-SCIPIO_ADDON_MAP[paypal]="paypal addons/paypal ee std-url"
-SCIPIO_ADDON_MAP[shopde]="shopde addons/shopde ee std-url"
-SCIPIO_ADDON_MAP[vue-theme]="vue-theme themes/vue ee std-url"
+# FORMAT:
+# SCIPIO_ADDON_MAP[addon-name]="[addon-name] [addon-directory] [ce|ee] [addon-repo-name-or-full-url] [branch-prefix]"
+# * addon-name - name of the addon specified on the command line (must be same as array key)
+# * addon-directory - filesystem target component directory for the addon
+# * [ce|ee] - distribution type, community or enterprise (used to select the correct SCIPIO_ADDONS_URL_* base url)
+# * addon-repo-name-or-full-url - addon repo name or absolute url, with or without .git extension
+# * branch-prefix - prefix of the branch, omitting the trailing /[master|1.14|...]; use '/' for no prefix
+
+SCIPIO_ADDON_MAP[accountingat]="accountingat addons/accountingat ee accountingat /"
+SCIPIO_ADDON_MAP[accountingde]="accountingde addons/accountingde ee accountingde /"
+SCIPIO_ADDON_MAP[accountingde-skr03]="accountingde-skr03 addons/accountingde-skr03 ee accountingde-skr03 /"
+SCIPIO_ADDON_MAP[accountinges]="accountinges addons/accountinges ee accountinges /"
+SCIPIO_ADDON_MAP[angular-shop]="angular-shop addons/angular-shop ce angular-shop /"
+SCIPIO_ADDON_MAP[angular-theme]="angular-theme themes/angular ee angular-theme /"
+SCIPIO_ADDON_MAP[auth-cas-client]="auth-cas-client addons/auth-cas-client ee auth-cas-client /"
+SCIPIO_ADDON_MAP[auth-cas-server]="auth-cas-server addons/auth-cas-server ee auth-cas-server /"
+SCIPIO_ADDON_MAP[auth-facebook]="auth-facebook addons/auth-facebook ee auth-facebook /"
+SCIPIO_ADDON_MAP[auth-google]="auth-google addons/auth-google ee auth-google /"
+SCIPIO_ADDON_MAP[auth-linkedin]="auth-linkedin addons/auth-linkedin ee auth-linkedin /"
+SCIPIO_ADDON_MAP[auth-twitter]="auth-twitter addons/auth-twitter ee auth-twitter /"
+SCIPIO_ADDON_MAP[bootstrap-theme]="bootstrap-theme themes/bootstrap ee bootstrap-theme /"
+SCIPIO_ADDON_MAP[camel]="camel addons/camel ee camel /"
+SCIPIO_ADDON_MAP[data-categorytree]="data-categorytree addons/data-categorytree ee data-categorytree /"
+SCIPIO_ADDON_MAP[ignite-admin-theme]="ignite-admin-theme themes/ignite-admin ee ignite-admin-theme /"
+SCIPIO_ADDON_MAP[ignite-shop-theme]="ignite-shop-theme themes/ignite-shop ee ignite-shop-theme /"
+SCIPIO_ADDON_MAP[paypal]="paypal addons/paypal ee paypal /"
+SCIPIO_ADDON_MAP[shopde]="shopde addons/shopde ee shopde /"
+SCIPIO_ADDON_MAP[vue-theme]="vue-theme themes/vue ee vue-theme /"
 
 # OVERRIDES
 # If you need to override any of the above definitions (for whatever reason, normally not),

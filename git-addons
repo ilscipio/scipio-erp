@@ -421,7 +421,7 @@ get_valid_addons() {
   done
   ADDONS=$(echo ${ADDONS})
   if [ -z "${ADDONS}" ]; then
-    print_msg "No valid addons detected in working copy; please install some addons before using --all"
+    print_msg "No valid addons detected in working copy; please install some addons before using --all (pull [addon-name])"
     return 2
   fi
   #print_msg "Addons auto-detected in working copy (--all):\n${ADDONS}"
@@ -456,8 +456,9 @@ find_latest_squash() {
     sq=
     main=
     sub=
+    # SCIPIO: removed: missing from older git versions: --no-show-signature 
     git log --grep="^git-subtree-dir: $dir/*\$" \
-        --no-show-signature --pretty=format:'START %H%n%s%n%n%b%nEND%n' HEAD |
+        --pretty=format:'START %H%n%s%n%n%b%nEND%n' HEAD |
     while read a b junk
     do
         debug "$a $b $junk"
@@ -538,7 +539,7 @@ pull_addon() {
     ensure_addon_remote || return
 
     print_msg "Running 'git subtree pull' for existing subtree addon ${ADDON_NAME} -> ${ADDON_DIR} (branch: ${ADDON_BRANCH})..."
-    callgit subtree pull --squash "--prefix=${ADDON_DIR}" "${ADDON_NAME}" "${ADDON_BRANCH}" || { echo "Pull failed. Please verify, resolve conflicts and re-run script. [If due to conflicts, try these commands: 'git mergetool'; afterward, 'git merge --continue']"; return 1; }
+    callgit subtree pull --squash "--prefix=${ADDON_DIR}" "${ADDON_NAME}" "${ADDON_BRANCH}" || { echo "Pull failed. Please verify, resolve conflicts and re-run script. [If due to conflicts, try these commands: 'git mergetool'; afterward, 'git merge --continue'; or to abort, 'git reset --hard']"; return 1; }
   else
     ensure_addon_remote || return
 

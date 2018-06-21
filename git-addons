@@ -380,9 +380,9 @@ process_action() {
 
 process_main() {
   print_title
-  check_requirements || exit $?
-  parse_options "$@" || exit $?
-  process_action || exit $?
+  check_requirements || return $?
+  parse_options "$@" || return $?
+  process_action || return $?
 }
 
 check_target_addons() {

@@ -273,7 +273,6 @@ determine_scipio_branch() {
       return 2
     fi
     SCIPIO_BRANCH="${SCPVERSPEC}"
-    return 2
   else
     print_error_req "Scipio version in framework/base/config/scipiometainfo.properties appears invalid - try updating script?"
     return 2

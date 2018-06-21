@@ -45,7 +45,7 @@ to the Ilscipio (or other) servers.
 The addons' histories will appear as squashed in your working copy.
 This is normal and made required by git subtree.
 
-For more information on git subtree, type 'man git subtree'.
+For more information on git subtree, type 'git subtree --help'.
 
 NOTE: This script handles common merge cases. If you have any issues,
 you may occasionally need to consult and use the git subtree command directly.
@@ -223,7 +223,7 @@ check_requirements() {
     print_error_req "Could not detect git version - is git installed?"
     return 2
   fi
-  local GITVERSION=$(echo -n "${GITVERSION}" | grep -o '\s[0-9][0-9.]*$' | grep -o '[0-9.]*')
+  local GITVERSION=$(echo -n "${GITVERSION}" | sed -r -n 's/^git\s\s*version\s\s*(.*)$/\1/p')
   if [ $? -ne 0 ] || [ -z "${GITVERSION}" ] || ! check_min_version "${GITVERSION}" "2.0"; then
     print_error_req "Insufficient git version - required: 2.0, system: ${GITVERSION}"
     return 2
@@ -403,7 +403,7 @@ get_present_addons() {
   done
   ADDONS=$(echo ${ADDONS})
   if [ -z "${ADDONS}" ]; then
-    print_msg "No addons detected in working copy; please install some addons before using --all"
+    print_msg "No addons detected in working copy; please install some addons before using --all (pull [addon-name])"
     return 2
   fi
   #print_msg "Addons auto-detected in working copy (--all):\n${ADDONS}"

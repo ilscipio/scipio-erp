@@ -20,6 +20,7 @@
     <entity-resource type="data" reader-name="demo" loader="main" location="data/CmsSecurityGroupDemoData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/CmsWebsiteDemoData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/CmsDemoData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/CmsMenuDemoData.xml"/>
 
     <!-- entity resources: model(s), eca(s), group, and data definitions -->
     <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel.xml"/>

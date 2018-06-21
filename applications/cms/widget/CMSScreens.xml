@@ -404,6 +404,8 @@
                 <set field="layoutSettings.VT_STYLESHEET[+0]" value="/base-theme/bower_components/jstree/dist/themes/default/style.css" global="true"/>
                 <set field="layoutSettings.VT_FTPR_JAVASCRIPT[+0]" value="/base-theme/bower_components/jstree/dist/jstree.min.js" global="true"/>
                 <script location="component://cms/script/com/ilscipio/scipio/cms/editor/CmsMenuTree.groovy"/>
+                <script location="component://cms/script/com/ilscipio/scipio/cms/editor/CmsContentTree.groovy"/>
+
             </actions>
             <widgets>
                 <decorator-screen name="CommonCMSAppDecorator" location="${parameters.mainDecoratorLocation}">

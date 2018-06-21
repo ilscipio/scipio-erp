@@ -9,23 +9,51 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
     always from webapp context root).
 -->
 
+<#-- Pre-configured Modals -->
+<@modal id="delete-dialog">
+    <@heading>${uiLabelMap.CommonWarning}</@heading>
+    ${uiLabelMap.CmsConfirmDeleteAction}
+    <div class="modal-footer ${styles.text_right}">
+       <a id="delete-button" class="${styles.button} btn-ok">${uiLabelMap.CommonContinue}</a>
+    </div>
+</@modal>
+<@modal id="edit-menuitem-dialog">
+    <@heading>${uiLabelMap.CommonEdit}</@heading>
+    <@form id="edit_menu_item">
+        <@field type="select" name="type" id="type" label=uiLabelMap.CmsLinkType>
+               <option value="link_internal">${uiLabelMap.CmsLinkInternal}</option>
+               <option value="link_external">${uiLabelMap.CmsLinkExternal}</option>
+        </@field>
+        <@field type="input" id="path" name="path" value="" label=uiLabelMap.CmsMenuItemLink placeholder="/main" required=true/>
+        <div class="modal-footer ${styles.text_right}">
+            <@field type="submit" text=uiLabelMap.CommonEdit class="${styles.link_run_sys!} ${styles.action_edit!}" />
+        </div>
+    </@form>
+</@modal>
+
 <#-- Javascript functions -->
+<#assign typesConfig={
+            "link_internal": {
+                "icon": "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}page ${styles.icon_prefix!}file-o"
+            },
+            "link_external": {
+                "icon": "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}link"
+            }
+}/>
 <@script>
+    var nodeIcons = {
+        "link_internal" : "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}page ${styles.icon_prefix!}file-o",
+        "link_external" : "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}link"
+    };
     var editorBaseUrl = '<@ofbizUrl escapeAs='js'>menus</@ofbizUrl>';
     var menuId='';
     var websiteId = 'cmsSite';
-    var nodeIcons = {
-        link_internal : "${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}page ${styles.icon_prefix!}file-o",
-        link_external : "${styles.text_color_info} ${styles.icon!} ${styles.icon_prefix!}link"
-    };
     var elData= {
                   text        : "New Link",
-                  icon        : nodeIcons["link_internal"], <#-- Note: Ideally this should not be stored here. But it simplifies the process for now.-->
                   li_attr     : {},
                   a_attr      : {},
-                  data : {
-                    type        : "link_internal"
-                  }
+                  type        : "link_internal",
+                  data        : {}
                 };
     
     
@@ -87,12 +115,12 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
         sel = sel[0];
         var node = menuTree.get_node(sel);
         $('form#edit_menu_item')[0].reset();
-        if(node && node["data"]){
-            if(node["data"]["type"]){
-                $('form#edit_menu_item #type').val(node["data"]["type"]).prop('selected', true);
+        if(node){
+            if(node["type"]){
+                $('form#edit_menu_item #type').val(node["type"]).prop('selected', true);
             }
-            if(node["data"]["href"]){
-                $('form#edit_menu_item #href').val(node["data"]["href"]);
+            if(node["data"] && node["data"]["path"]){
+                $('form#edit_menu_item #path').val(node["data"]["path"]);
             }
         }
         open_dialog('modal_edit-menuitem-dialog');
@@ -100,19 +128,19 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
     
     function node_update(){
         var menuTree = $('#cms-menu-tree').jstree(true);
-        var href = $('form#edit_menu_item #href').val();
+        var path = $('form#edit_menu_item #path').val();
         var type = $('form#edit_menu_item #type').val();
         var sel = menuTree.get_selected();
             if(!sel.length) { return false; }
             sel = sel[0];
         var node = menuTree.get_node(sel);
         if(node) {
-            node["data"]["type"] = type;
-            node["data"]["href"] = href;
+            node["type"] = type;
+            node["data"]["path"] = path;
             node["icon"] = nodeIcons[type];
             close_dialog('modal_edit-menuitem-dialog');
             saveMenu();
-            menuTree.redraw_node(sel);
+            menuTree.redraw(true);
         }
         return false;
     }
@@ -248,22 +276,12 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
     function updateMenu($node){
         var $el = $("#action_menu");
 
-        var newOptions;
-        if ($node.data && $node.data.type=='root') {
-            newOptions = {
-              "${escapeVal(uiLabelMap.CommonCreate, 'js')}": makeLink($node,'create'),
-              "${escapeVal(uiLabelMap.CommonEdit, 'js')}": makeLink($node,'update'),
-              "${escapeVal(uiLabelMap.CommonRename, 'js')}": makeLink($node,'edit'),
-              "${escapeVal(uiLabelMap.CommonRemove, 'js')}": makeLink($node,'remove')
-            };
-        } else {
-            newOptions = {
-              "${escapeVal(uiLabelMap.CommonCreate, 'js')}": makeLink($node,'create'),
-              "${escapeVal(uiLabelMap.CommonEdit, 'js')}": makeLink($node,'update'),
-              "${escapeVal(uiLabelMap.CommonRename, 'js')}": makeLink($node,'edit'),
-              "${escapeVal(uiLabelMap.CommonRemove, 'js')}": makeLink($node,'remove')
-            }; 
-        }
+        var newOptions = {
+          "${escapeVal(uiLabelMap.CommonCreate, 'js')}": makeLink($node,'create'),
+          "${escapeVal(uiLabelMap.CommonEdit, 'js')}": makeLink($node,'update'),
+          "${escapeVal(uiLabelMap.CommonRename, 'js')}": makeLink($node,'edit'),
+          "${escapeVal(uiLabelMap.CommonRemove, 'js')}": makeLink($node,'remove')
+        }; 
             
         $el.empty(); // remove old options
         $.each(newOptions, function(key,value) {
@@ -289,6 +307,13 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
             node_update();
             return false;
         });
+        
+        
+        <#-- Auto-save when menu positions are changed -->                                                        
+        $('#cms-menu-tree').on('move_node.jstree', function (e, data) {
+            saveMenu();
+        });
+
     });    
    
 </@script>
@@ -354,35 +379,14 @@ function($node) {
     }
 </#assign>
 <#assign pluginSettings={"items": wrapRawScript(menuEventScript)}/>
-<#assign treePlugin =[{"name":"contextmenu", "settings":pluginSettings},{"name":"massload"},{"name":"dnd"}]/>
-
-<@modal id="delete-dialog">
-    <@heading>${uiLabelMap.CommonWarning}</@heading>
-    ${uiLabelMap.CmsConfirmDeleteAction}
-    <div class="modal-footer ${styles.text_right}">
-       <a id="delete-button" class="${styles.button} btn-ok">${uiLabelMap.CommonContinue}</a>
-    </div>
-</@modal>
-<@modal id="edit-menuitem-dialog">
-    <@heading>${uiLabelMap.CommonEdit}</@heading>
-    <@form id="edit_menu_item">
-        <@field type="select" name="type" id="type" label=uiLabelMap.CmsLinkType>
-               <option value="link_internal">${uiLabelMap.CmsLinkInternal}</option>
-               <option value="link_external">${uiLabelMap.CmsLinkExternal}</option>
-        </@field>
-        <@field type="input" id="href" name="href" value="" label=uiLabelMap.CmsMenuItemLink placeholder="/main" required=true/>
-        <div class="modal-footer ${styles.text_right}">
-            <@field type="submit" text=uiLabelMap.CommonEdit class="${styles.link_run_sys!} ${styles.action_edit!}" />
-        </div>
-    </@form>
-</@modal>
+<#assign treePlugin =[{"name":"contextmenu", "settings":pluginSettings},{"name":"massload"},{"name":"dnd"},{"name":"types","settings": typesConfig}]/>
 
 <#-- Content -->
 <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
         <@field type="select" name="activeMenu" id="activeMenu" onChange="loadMenu();" label=uiLabelMap.CmsCurrentMenu>
             <#list cmsMenus as cmsMenu>
-               <option value="${cmsMenu.menuId!""}">${cmsMenu.menuName!cmsMenu.menuId!""}</option>
+               <option value="${cmsMenu.menuId!""}">${cmsMenu.menuName!cmsMenu.menuId!""} (menuId: ${cmsMenu.menuId!""})</option>
             </#list>
         </@field>
         <@menuitem type="generic">
@@ -417,6 +421,70 @@ function($node) {
                             <@menuitem type="link" href="javascript:node_create(elData,true);" text=uiLabelMap.CommonCreate/>
                         </ul>
                 </@section>
+                <#--  Page list to enable drag & drop in between menus -->
+                <@section title=uiLabelMap.CommonPages>
+                   <#assign pageTreePlugin =[{"name":"massload"},{"name":"dnd"}]/>
+                   <#assign pageTreeCallback>
+                    function (operation, node, node_parent, node_position, more) {
+                        if (preventDelete && operation=="delete_node") { 
+                            preventDelete = false; 
+                            return false; 
+                        }
+                        
+                        return true;
+                    }
+                   </#assign>
+                   <#assign pageTreeSettings = {
+                            "multiple": false, <#-- TODO: in future could implement partial multiple operations (remove/move/copy) -->
+                            "check_callback": wrapRawScript(pageTreeCallback)}/>
+                   <@treemenu type="lib-basic" id="cms-content-tree" plugins=pageTreePlugin settings=pageTreeSettings> 
+                        <#list requestMaps.keySet() as key>
+                            <#if key?has_content && key!="noWebSiteId">
+                                <#assign currWebsite= requestMaps[key]/>
+                                <#assign treeWebsiteDisabled = false/>
+                                <#if currWebsite.enabled?has_content && currWebsite.enabled=="false">
+                                    <#assign treeWebsiteDisabled = true/>
+                                </#if>
+                                <#-- Add website -->
+                                <@treeitem text=key state={"disabled": treeWebsiteDisabled} id=(currWebsite.id!key) parent=(currWebsite.parent!"#") 
+                                    attribs={"data":{"type":"website","websiteid":currWebsite.webSiteId!"", 
+                                        "editorRequestPathPrefix":currWebsite.editorRequestPathPrefix!"", "primaryPathFromContextRootDefault":currWebsite.primaryPathFromContextRootDefault!""}} 
+                                    icon="${styles.text_color_secondary} ${styles.icon!} ${styles.icon_prefix!}folder"/>
+                                <#if currWebsite.pages?has_content>
+                                    <#-- Add requests and pages -->
+                                    <#list currWebsite.pages?sort_by("text") as item>
+                                        <#if ((item.data.type)!"")=="page">                                            
+                                            <@treeitem attribs=item a_attr=itemPath icon="${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}page ${styles.icon_prefix!}file-o"/>
+                                        <#elseif ((item.data.type)!"")=="request">
+                                            <@treeitem attribs=item a_attr=itemPath   icon="${styles.text_color_info} ${styles.icon!} ${styles.icon_prefix!}link"/>
+                                        <#else>
+                                            <@treeitem attribs=item a_attr=itemPath/>
+                                        </#if>
+                                    </#list>
+                                </#if>
+                            </#if>
+                       </#list>
+                    </@treemenu>
+                    <@script>                    
+                        <#-- Function to stop removal of original node if copied over to second tree -->
+                        var preventDelete = false;     
+                        $(function() {   
+                            $('#cms-menu-tree, #cms-content-tree').on('copy_node.jstree', function (e, data) {
+                              if (data.is_multi) {
+                                  console.log(data);
+                                  preventDelete = true;  
+                                  data.original.data.type="link_internal";
+                                  data.node.type="link_internal";
+                                  data.node.data = data.original.data;
+                                  saveMenu();
+                              }
+                              
+                            });
+                        });    
+                    </@script>
+                    
+                </@section>
+                <@alert type="info">Drag & drop pages into the menu definition.</@alert>
                 
                 <#-- special message for root-aliasing of controller URIs - loaded by JS -->
                 <div id="cms-ctrlrootalias-msgarea" class="cms-ctrlrootalias-msgarea" style="display:none;">

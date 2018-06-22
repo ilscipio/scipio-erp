@@ -127,7 +127,7 @@ list_addons_core() {
 }
 
 list_addons() {
-  local ADDONS=$(print_present_addons)
+  get_present_addons
   echo "Addons installed in your working copy:"
   if [ -z "${ADDONS}" ]; then
     echo -e "\n(no subtree-compatible addons detected in working copy)"
@@ -618,7 +618,7 @@ get_addon_info() {
     fi
   fi
   if [[ "${ADDON_URL}" != *".git" ]]; then
-    ADDON_URL="${ADDON_URL}.git"
+    ADDON_URL="${ADDON_URL}${SCIPIO_ADDONS_URL_SUFFIX}.git"
   fi
   ADDON_BRANCHPREFIX="${ADDON_INFO[4]}"
   ADDON_BRANCHPREFIX=${ADDON_BRANCHPREFIX%"/"}

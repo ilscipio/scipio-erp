@@ -15,6 +15,11 @@ if [ -z "${SCIPIO_ADDONS_URL_CE}" ]; then
   SCIPIO_ADDONS_URL_CE="https://github.com/ilscipio/addons-"
 fi
 
+# Suffix added just before ".git" to all repo URLs
+if [ -z "${SCIPIO_ADDONS_URL_SUFFIX}" ]; then
+  SCIPIO_ADDONS_URL_SUFFIX=""
+fi
+
 # Addon definitions and target directories.
 # Maintained by Ilscipio [DO NOT MODIFY - if you need custom definitions, override these further below (to avoid merge conflicts)]
 declare -A SCIPIO_ADDON_MAP

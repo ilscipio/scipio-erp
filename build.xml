@@ -2091,7 +2091,10 @@ under the License.
     <target name="lib-clean-deployed" description="Cleans out the library deployment folders (but not library/ivy caches)">
         <!-- when doing "full" clean-deployed, by default also clean out libsrc, because makes no sense
             to keep sources for libs whose versions we might be trying to change -->
-        <property name="lib.update.sources" value="true"/>
+        <property name="lib.clean.sources" value="true"/>
+        <!-- not setting this one anymore, using lib.clean.sources; as long as
+            get-lib-resolve-confs is not needed by a clean target (unlikely), this should be ok
+        <property name="lib.update.sources" value="true"/>-->
         <antcall target="framework-lib-clean"/>
         <antcall target="themes-lib-clean"/>
         <antcall target="applications-lib-clean"/>

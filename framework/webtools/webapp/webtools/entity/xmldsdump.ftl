@@ -69,7 +69,7 @@ under the License.
                             </@td>
                             
                             <@td>
-                                ${record.createdStamp?date!}
+                                ${record.createdStamp?string.short!}
                             </@td>
                             
                             <@td>

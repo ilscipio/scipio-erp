@@ -130,6 +130,12 @@ list_addons_core() {
   for ADDON; do
     print_addon_line ee "${SCIPIO_ADDON_MAP[${ADDON}]}"
   done
+  if [ ! -z "${SCIPIO_ADDONS_URL_DEV}" ]; then
+    echo -e "\nDev addons:"
+    for ADDON; do
+      print_addon_line dev "${SCIPIO_ADDON_MAP[${ADDON}]}"
+    done
+  fi
 }
 
 list_addons() {

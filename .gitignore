@@ -41,4 +41,5 @@
 desktop.ini
 .svn/
 /build.local.properties
+/git-addons-config-local
 /.settings

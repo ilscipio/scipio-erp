@@ -1,4 +1,8 @@
 # SCIPIO-ERP git-addons script configuration
+#
+# NOTE: This file is intended to be committed to version control (git), for shared project config.
+# If you need machine/developer-specific config, you can create a file named "git-addons-config-local"
+# beside this one and put your definitions there instead.
 
 # Enterprise addons base folder [INPUT PURCHASED ADDONS BASE SSH ADDRESS HERE]
 # Please set this to the address of the Ilscipio servers provided to you upon addon purchase.

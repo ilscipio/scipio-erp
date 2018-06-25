@@ -6,6 +6,7 @@
 #BASEDIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 #PROJDIR="${BASEDIR}"
 #cd "${PROJDIR}"
+TOPDIR=$(pwd)
 
 print_title() {
   echo "SCIPIO-ERP addons and themes git (subtree) merging script"
@@ -14,7 +15,7 @@ print_title() {
 
 print_usage() {
   echo "----------
-usage: ./git-addons [action] [addon-name] [options]
+usage: ./git-addons [action] [addon-names...] [options]
 
 actions:
   help                how this help dialog
@@ -36,6 +37,9 @@ options:
 
 This script uses the git subtree command to integrate SCIPIO-ERP addons
 into your working copy of ScipioCE/EE (it does NOT work with submodules at this time).
+
+Configuration can be done in the accompanying git-addons-config file, or optionally
+creating a git-addons-config-local file (ignored by git).
 
 In order to use this script with purchased addons, you must set the variable
 SCIPIO_ADDONS_URL_EE in the accompanying git-addons-config script
@@ -99,10 +103,12 @@ print_addon_format() {
   if is_addon_dir_present; then
     if is_addon_subtree; then
       echo "[INSTALLED, subtree]"
+    elif is_addon_submodule_known; then
+      echo "[INSTALLED, submodule]"
     elif is_addon_subtree_basic; then
       echo "[PRESENT - WARNING: git log has no record of this being a git subtree! May be incompatible with script! git subtree likely to fail!]"
     elif is_addon_submodule; then
-      echo "[PRESENT - WARNING: Appears to be a submodule! Incompatible with script!]"
+      echo "[PRESENT - WARNING: Appears to be a submodule of unknown origin! Incompatible with script!]"
     elif is_addon_dir_empty; then
       echo "[PRESENT - WARNING: Empty addon directory! Incompatible with script!]"
     else
@@ -289,11 +295,18 @@ extract_pos_args() {
 }
 
 parse_options() {
+  # Official options
   ACTION="$1"
   VERBOSE=0
   HELP=0
   ALLADDONS=0
   DRYRUN=0
+  
+  # Unofficial/unsupported options
+  REBASE=0
+  REPOTYPE=subtree
+  DOCHECKOUT=0
+  
   if [ -z "${ACTION}" ]; then
     print_error_usage "missing action argument"
     return 2
@@ -328,6 +341,15 @@ parse_options() {
       DRYRUN=1
     elif [ "${ARG}" == "-e" ] || [ "${ARG}" == "--no-msg-edit" ]; then
       export GIT_MERGE_AUTOEDIT=no
+    elif [ "${ARG}" == "--rebase" ]; then
+      REBASE=1
+    elif [ "${ARG}" == "--subtree" ]; then
+      # already the default
+      REPOTYPE=subtree
+    elif [ "${ARG}" == "--submodule" ]; then
+      REPOTYPE=submodule
+    elif [ "${ARG}" == "--checkout" ]; then
+      DOCHECKOUT=1
     elif [[ "${ARG}" == -* ]]; then
       print_error_usage "Unrecognized option: ${ARG}"
       return 2
@@ -406,7 +428,7 @@ get_present_addons() {
   done
   ADDONS=$(echo ${ADDONS})
   if [ -z "${ADDONS}" ]; then
-    print_msg "No addons detected in working copy; please install some addons before using --all (pull [addon-name])"
+    print_msg "No addons detected in working copy; please install some addons before using --all (pull [addon-name]); use 'list --all' for available"
     return 2
   fi
   #print_msg "Addons auto-detected in working copy (--all):\n${ADDONS}"
@@ -423,7 +445,7 @@ get_valid_addons() {
   done
   ADDONS=$(echo ${ADDONS})
   if [ -z "${ADDONS}" ]; then
-    print_msg "No valid addons detected in working copy; please install some addons before using --all (pull [addon-name])"
+    print_msg "No valid addons detected in working copy; please install some addons before using --all (pull [addon-name]); use 'list --all' for available"
     return 2
   fi
   #print_msg "Addons auto-detected in working copy (--all):\n${ADDONS}"
@@ -436,6 +458,18 @@ is_addon_dir_present() {
 
 is_addon_dir_empty() {
   [ ! -z "${ADDON_DIR}" ] && [ -d "${ADDON_DIR}" ] && [ -z "$(ls -A ${ADDON_DIR})" ]
+}
+
+is_addon_submodule() {
+  [ ! -z "${ADDON_DIR}" ] && [ -d "${ADDON_DIR}" ] && [ -e "${ADDON_DIR}/.git" ]
+}
+
+is_addon_submodule_known() {
+  is_addon_submodule && [ "${ADDON_URL}" == $(print_submodule_url_for_dir "${ADDON_DIR}") ]
+}
+
+print_submodule_url_for_dir() {
+  git config --file ".gitmodules" --get "submodule.$1.url"
 }
 
 is_addon_subtree() {
@@ -498,13 +532,17 @@ find_latest_squash() {
 }
 
 is_addon_supported() {
-  is_addon_subtree
+  is_addon_subtree || is_addon_submodule_known
 }
 
 check_addon_supported() {
   if ! is_addon_supported; then
     if is_addon_subtree_basic; then
       print_warn "Addon ${ADDON_NAME} -> ${ADDON_DIR} has no record of being a subtree in its log; git subtree pull may fail (if it does, you may need to remove the directory, re-run this script, and reapply your changes after)"
+    elif is_addon_subtree; then
+      local FMTSTR=$(print_addon_format)
+      print_warn "Skipping ${ADDON_NAME} -> ${ADDON_DIR} - submodule URL does not match any known addon URL; assuming not a Scipio addon.\nDetected as: ${FMTSTR}"
+      return 2
     else
       local FMTSTR=$(print_addon_format)
       print_warn "Skipping ${ADDON_NAME} -> ${ADDON_DIR} - does not appear to be a subtree! Cannot be managed using this script unless removed first.\nDetected as: ${FMTSTR}"
@@ -512,10 +550,6 @@ check_addon_supported() {
     fi
   fi
   return 0
-}
-
-is_addon_submodule() {
-  [ ! -z "${ADDON_DIR}" ] && [ -d "${ADDON_DIR}" ] && [ -e "${ADDON_DIR}/.git" ]
 }
 
 pull_addons() {
@@ -538,15 +572,48 @@ pull_addon() {
   print_subheader "${ADDON_NAME}"
   if is_addon_dir_present; then
     check_addon_supported || return 0
-    ensure_addon_remote || return
+    if is_addon_submodule; then
+      local REBASE_STR=""
+      if [ "${REBASE}" -eq 1 ]; then
+        local REBASE_STR=" --rebase"
+      fi
+      cd "${ADDON_DIR}" || { echo "Could not change into dir: ${ADDON_DIR}"; return 1; }
 
-    print_msg "Running 'git subtree pull' for existing subtree addon ${ADDON_NAME} -> ${ADDON_DIR} (branch: ${ADDON_BRANCH})..."
-    callgit subtree pull --squash "--prefix=${ADDON_DIR}" "${ADDON_NAME}" "${ADDON_BRANCH}" || { echo "Pull failed. Please verify, resolve conflicts and re-run script. [If due to conflicts, try these commands: 'git mergetool'; afterward, 'git merge --continue'; or to abort, 'git reset --hard']"; return 1; }
+      local CURR_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+      if [ "${CURR_BRANCH}" != "${ADDON_BRANCH}" ]; then
+        if [ "${DOCHECKOUT}" -eq 1 ]; then
+          print_warn "The submodule is not checked out on the expected branch (${ADDON_BRANCH}); is currently on: ${CURR_BRANCH} (or detached head). Now checking out ${ADDON_BRANCH}..."
+          git checkout "${ADDON_BRANCH}" || { echo "Could not checkout submodule branch ${ADDON_BRANCH}. Please verify."; return 1; }
+        else
+          print_error "The submodule is not checked out on the expected branch (${ADDON_BRANCH}); is currently on: ${CURR_BRANCH} (or detached head).\nIf you wish to automatically checkout the right branch, pass the --checkout option."
+          return 1
+        fi
+      fi
+      print_msg "Running 'git pull${REBASE_STR}' for existing submodule addon ${ADDON_NAME} -> ${ADDON_DIR} (branch: ${ADDON_BRANCH})..."
+
+      git pull ${REBASE_STR} || { echo "Pull failed. Please verify, resolve conflicts and re-run script."; return 1; }
+      cd "${TOPDIR}" || { echo "Could not switch back to top dir: ${TOPDIR}"; return 1; }
+    else
+      ensure_addon_remote || return
+
+      print_msg "Running 'git subtree pull' for existing subtree addon ${ADDON_NAME} -> ${ADDON_DIR} (branch: ${ADDON_BRANCH})..."
+      callgit subtree pull --squash "--prefix=${ADDON_DIR}" "${ADDON_NAME}" "${ADDON_BRANCH}" || { echo "Pull failed. Please verify, resolve conflicts and re-run script. [If due to conflicts, try these commands: 'git mergetool'; afterward, 'git merge --continue'; or to abort, 'git reset --hard']"; return 1; }
+    fi
   else
-    ensure_addon_remote || return
+    if [ "${REPOTYPE}" == "submodule" ]; then
+      print_msg "Running 'git submodule add' for new submodule addon ${ADDON_NAME} -> ${ADDON_DIR} (branch: ${ADDON_BRANCH})..."
 
-    print_msg "Running 'git subtree add' for new subtree addon ${ADDON_NAME} -> ${ADDON_DIR} (branch: ${ADDON_BRANCH})..."
-    callgit subtree add --squash "--prefix=${ADDON_DIR}" "${ADDON_NAME}" "${ADDON_BRANCH}" || { echo "Add failed. Please verify, resolve conflicts and re-run script."; return 1; }
+      git submodule add -b "${ADDON_BRANCH}" "${ADDON_URL}" "${ADDON_DIR}" || { echo "Submodule add failed. Please verify."; return 1; }
+      cd "${ADDON_DIR}" || { echo "Could not change into dir: ${ADDON_DIR}"; return 1; }
+      git checkout "${ADDON_BRANCH}" || { echo "Could not checkout submodule branch ${ADDON_BRANCH}. Please verify."; return 1; }
+      cd "${TOPDIR}" || { echo "Could not switch back to top dir: ${TOPDIR}"; return 1; }
+      print_msg "NOTICE: You have added a new submodule to your root project (.gitmodules and other git properties modified);\n you will have to commit (and push) the result in your top project manually (see 'git status', or use 'git commit -m \"Added submodule\"')"
+    else
+      ensure_addon_remote || return
+
+      print_msg "Running 'git subtree add' for new subtree addon ${ADDON_NAME} -> ${ADDON_DIR} (branch: ${ADDON_BRANCH})..."
+      callgit subtree add --squash "--prefix=${ADDON_DIR}" "${ADDON_NAME}" "${ADDON_BRANCH}" || { echo "Subtree add failed. Please verify."; return 1; }
+    fi
   fi
 }
 
@@ -626,5 +693,17 @@ get_addon_info() {
   ADDON_BRANCH=${ADDON_BRANCH#"/"}
 }
 
-source "./git-addons-config" || { print_error_req "git-addons-config script file is missing"; exit 2; }
+source "./git-addons-config" || { print_error_req "git-addons-config script file is missing or not sourceable"; exit 2; }
+if [ ! -z "${SCIPIO_ADDONS_CONFIG_EXT}" ] && [ -f "${SCIPIO_ADDONS_CONFIG_EXT}" ]; then
+  source "${SCIPIO_ADDONS_CONFIG_EXT}" || { print_error_req "external '${SCIPIO_ADDONS_CONFIG_EXT}' config script file is not sourceable"; exit 2; }
+fi
+if [ -f "./addons/scipio-dev/git-addons-config-dev" ]; then
+  source "./addons/scipio-dev/git-addons-config-dev" || { print_error_req "addons/scipio-dev/git-addons-config-dev script file is not sourceable"; exit 2; }
+fi
+if [ -f "./git-addons-config-dev" ]; then
+  source "./git-addons-config-dev" || { print_error_req "git-addons-config-dev script file is not sourceable"; exit 2; }
+fi
+if [ -f "./git-addons-config-local" ]; then
+  source "./git-addons-config-local" || { print_error_req "git-addons-config-local script file is not sourceable"; exit 2; }
+fi
 process_main "$@" || exit $?

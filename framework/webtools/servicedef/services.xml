@@ -179,4 +179,24 @@ under the License.
         <description>Returns a list of Maps, containing the contentIds (List of requested paths) and hitcount (number of requests) grouped by year</description>
         <attribute name="requests" type="Map" mode="OUT" optional="true"/>
     </service>
+
+    <service name="getEntityExport" engine="java" location="com.ilscipio.scipio.webtools.WebToolsServices"
+         invoke="getEntityExport" auth="true" use-transaction="false">
+        <description>Generates a ZIP file, comprising of a database dump for selected entities. File is stored in the entity 'EntityExport' for future use.</description>
+        <permission-service service-name="entityMaintPermCheck" main-action="VIEW"/>
+        <attribute name="entityList" type="List" mode="IN" optional="false">
+            <description>List of entity-names</description>
+        </attribute>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="exportId" type="String" mode="OUT" optional="false"/>
+        
+    </service>
+    
+    <service name="deleteEntityExport" engine="entity-auto" default-entity-name="EntityExport" invoke="delete" auth="true">
+        <permission-service service-name="entityMaintPermCheck" main-action="DELETE"/>
+        <attribute name="exportId" mode="IN" type="String" optional="false"/>
+    </service>
+    
 </services>

@@ -29,7 +29,13 @@ outpath = parameters.outpath;
 filename = parameters.filename;
 maxRecStr = parameters.maxrecords;
 entitySyncId = parameters.entitySyncId;
+description = parameters.description;
 passedEntityNames = null;
+isNormalBackup = true;
+if(outpath || filename){
+    isNormalExport = false;
+}
+
 if (parameters.entityName) passedEntityNames = parameters.entityName instanceof Collection ? parameters.entityName as TreeSet : [parameters.entityName] as TreeSet;
 
 // get the max records per file setting and convert to a int
@@ -151,8 +157,6 @@ if (entitySyncId) {
     passedEntityNames = org.ofbiz.entityext.synchronization.EntitySyncContext.getEntitySyncModelNamesToUse(dispatcher, entitySyncId);
 }
 checkAll = "true".equals(parameters.checkAll);
-tobrowser = parameters.tobrowser != null;
-context.tobrowser = tobrowser;
 
 entityFromCond = null;
 entityThruCond = null;
@@ -176,9 +180,12 @@ modelEntities = reader.getEntityCache().values() as TreeSet;
 context.modelEntities = modelEntities;
 
 if (passedEntityNames) {
-    if (tobrowser) {
-        session.setAttribute("xmlrawdump_entitylist", passedEntityNames);
-        session.setAttribute("entityDateCond", entityDateCond);
+    // Scipio: Ofbiz had a toBrowser option here, which is now replaced for by a default function that will create the backup and store in db  
+    if (isNormalBackup) {
+        List<String> entityList = new ArrayList<String>(passedEntityNames);
+        exportFil = dispatcher.runSync("getEntityExport", ["request":request, "response":response,
+            "userLogin":context.userLogin, "entityList":entityList, "fromDate":entityFrom, "thruDate":entityThru,"description":description]);
+        
     } else {
         efo = new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true);
         numberOfEntities = passedEntityNames?.size() ?: 0;

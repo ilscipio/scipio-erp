@@ -40,8 +40,12 @@ under the License.
     <!-- NOTE: Properties may also be defined in macros.xml (e.g. for standalone component task support) -->
     
     <!-- 2017-02-03: New build.local.properties file (ignored by version control), where
-        you may specify some default properties -->
+        you may specify some default properties for local machine/developer only -->
     <property file="build.local.properties"/>
+    
+    <!-- 2018-06-25: New build.properties file (NOT ignored by version control), where
+        you may specific some default shared properties for your project (shared between developers/users) -->
+    <property file="build.properties"/>
     
     <!-- IVY BYPASS: set this to true (or pass -Dlib.update.bypass=true) to prevent 
         automatic lib update check upon build and other target invocations

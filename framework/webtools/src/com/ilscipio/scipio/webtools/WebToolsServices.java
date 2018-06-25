@@ -192,7 +192,7 @@ public class WebToolsServices {
              for(File srcFile : srcFiles){
                  srcFile.delete();
              }
-             outZipFile.delete();
+             // outZipFile.delete();
         }catch(Exception e){
             Debug.logError("Error while generating Entity Export "+e, module);
             result = ServiceUtil.returnError("Error while generating Entity Export");

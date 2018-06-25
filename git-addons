@@ -216,6 +216,22 @@ check_min_version() {
   return 0
 }
 
+process_config() {
+  declare -A SCIPIO_ADDON_DIR_MAP
+  for ADDON in "${!SCIPIO_ADDON_MAP[@]}"; do
+    get_addon_info "${ADDON}"
+    if [ ! -z "${SCIPIO_ADDON_DIR_MAP[${ADDON_DIR}]}" ]; then
+      print_error "Config error (SCIPIO_ADDON_MAP): Illegal duplicate target addon dir detected: ${ADDON_DIR}"
+      return 1
+    fi
+    if [ "${ADDON}" != "${ADDON_NAME}" ]; then
+      print_error "Config error (SCIPIO_ADDON_MAP): Illegal entry detected having array key (${ADDON}) different from name property (${ADDON_NAME}) - must be same."
+      return 1
+    fi
+    SCIPIO_ADDON_DIR_MAP["${ADDON_DIR}"]="${ADDON_INFO_STR}"
+  done
+}
+
 check_requirements() {
   if [ -z "${BASH_VERSION}" ]; then
     print_error_req "Could not detect bash version"
@@ -400,7 +416,8 @@ process_action() {
 }
 
 process_main() {
-  print_title
+  print_title || return $?
+  process_config || return $?
   check_requirements || return $?
   parse_options "$@" || return $?
   process_action || return $?
@@ -607,7 +624,7 @@ pull_addon() {
       cd "${ADDON_DIR}" || { echo "Could not change into dir: ${ADDON_DIR}"; return 1; }
       git checkout "${ADDON_BRANCH}" || { echo "Could not checkout submodule branch ${ADDON_BRANCH}. Please verify."; return 1; }
       cd "${TOPDIR}" || { echo "Could not switch back to top dir: ${TOPDIR}"; return 1; }
-      print_msg "NOTICE: You have added a new submodule to your root project (.gitmodules and other git properties modified);\n you will have to commit (and push) the result in your top project manually (see 'git status', or use 'git commit -m \"Added submodule\"')"
+      print_msg "\nNOTICE: You have added a new submodule to your root project (.gitmodules and other git properties modified); you will have to commit (and push) the result in your top project manually (see 'git status', or use 'git commit -m \"Added submodule\"')"
     else
       ensure_addon_remote || return
 

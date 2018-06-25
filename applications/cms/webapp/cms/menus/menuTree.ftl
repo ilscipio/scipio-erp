@@ -484,7 +484,7 @@ function($node) {
                     </@script>
                     
                 </@section>
-                <@alert type="info">Drag & drop pages into the menu definition.</@alert>
+                <@alert type="info">${uiLabelMap.CmsMenuDragndropInfo}</@alert>
                 
                 <#-- special message for root-aliasing of controller URIs - loaded by JS -->
                 <div id="cms-ctrlrootalias-msgarea" class="cms-ctrlrootalias-msgarea" style="display:none;">

@@ -118,7 +118,7 @@ under the License.
         <antcall target="common-lib-clean" inheritrefs="true"/>
         <remove-lib-files dir="webapp/WEB-INF/lib" excludes-refid="lib.update.manual.files.solr.webapp"/>
         <if>
-            <equals arg1="${lib.update.sources}" arg2="true"/>
+            <equals arg1="${lib.clean.sources}" arg2="true"/>
             <then>
                 <remove-lib-files dir="webapp/WEB-INF/libsrc" excludes-refid="lib.update.manual.src.files"/>
             </then>

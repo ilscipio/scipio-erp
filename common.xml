@@ -552,7 +552,7 @@ under the License.
         <remove-lib-files dir="lib" excludes-refid="lib.update.manual.files"/>
         <if>
             <and>
-                <equals arg1="${lib.update.sources}" arg2="true"/>
+                <equals arg1="${lib.clean.sources}" arg2="true"/>
                 <available file="libsrc" type="dir"/>
             </and>
             <then>

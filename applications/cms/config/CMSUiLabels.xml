@@ -880,4 +880,8 @@
         <value xml:lang="en">If enabled (Y), this page's path may be included as indexed URL in sitemap generation for stores; if disabled (N), this is prevented. If left empty, this defaults to the web.xml cmsMappingsIndexableDefault setting for the webapp.</value>
         <value xml:lang="de">Wenn aktiviert (Y), kann der Pfad dieser Seite als indizierte URL in der Sitemap-Generierung für Stores enthalten sein. Wenn deaktiviert (N), wird dies verhindert. Wenn diese Option leer bleibt, wird standardmäßig die Einstellung web.xml cmsMappingsIndexableDefault für die Webanwendung verwendet.</value>
     </property>
+    <property key="CmsMenuDragndropInfo">
+        <value xml:lang="en">Use drag and drop to add existing pages to the menu.</value>
+        <value xml:lang="de">Mit Drag and Drop können Sie bestehende Seiten dem Menü hinzufügen.</value>
+    </property>
 </resource>

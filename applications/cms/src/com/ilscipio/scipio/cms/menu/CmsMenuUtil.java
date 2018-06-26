@@ -13,6 +13,8 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 /**
  * SCIPIO: CmsMenuUtil
  * <p>

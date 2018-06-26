@@ -2132,29 +2132,52 @@ Uses menu macro and menuitems to render custom menu
                         <#list menuJson as item>
                             <#if item["data"]["path"]?has_content>
                                 <#if item["type"]=="link_external">
-                                    <@menuitem type="link" text=item.text!"" href=rawString(item.data.path!"")  target="_blank"></@menuitem>
+                                    <@menuitem type="link" text=item.text!"" href=rawString(item.data.path!"")  target="_blank">
+                                        <@cmsmenu items=item["children"] type=type/>
+                                    </@menuitem>
                                 <#else>
                                     <#if item.data.websiteid?has_content>
-                                        <@menuitem type="link" text=item.text!"" href=makeOfbizInterWebappUrl({"controller":false, "secure":true, "webSiteId":rawString(item.data.websiteid!""), "uri":(rawString(item.data.path!""!))})></@menuitem>
+                                        <@menuitem type="link" text=item.text!"" href=makeOfbizInterWebappUrl({"controller":false, "secure":true, "webSiteId":rawString(item.data.websiteid!""), "uri":(rawString(item.data.path!""!))})>
+                                            <@cmsmenu items=item["children"] type=type/>
+                                        </@menuitem>
                                     <#else>
-                                        <@menuitem type="link" text=item.text!"" href=makeOfbizUrl(rawString(item.data.path!""))></@menuitem>
+                                        <@menuitem type="link" text=item.text!"" href=makeOfbizUrl(rawString(item.data.path!""))>
+                                            <@cmsmenu items=item["children"] type=type/>
+                                        </@menuitem>
                                     </#if>
                                 </#if>
                             <#else>
                                 <@menuitem type="generic" text=item.text!""></@menuitem>
                             </#if>
-                            
                         </#list>
                     <#nested>
                 </@menu>
             </#if>
         <#else>
             <#if items?is_sequence>
-              <ul>
+              <@menu type=type title=title id=id class=class style=style>
               <#list items as item>
-                <li>${item.id}</li>
+                <#if item["data"]["path"]?has_content>
+                    <#if item["type"]=="link_external">
+                            <@menuitem type="link" text=item.text!"" href=rawString(item.data.path!"")  target="_blank">
+                                <@cmsmenu items=item["children"] type=type/>
+                            </@menuitem>
+                        <#else>
+                            <#if item.data.websiteid?has_content>
+                                <@menuitem type="link" text=item.text!"" href=makeOfbizInterWebappUrl({"controller":false, "secure":true, "webSiteId":rawString(item.data.websiteid!""), "uri":(rawString(item.data.path!""!))})>
+                                    <@cmsmenu items=item["children"] type=type/>
+                                </@menuitem>
+                            <#else>
+                                <@menuitem type="link" text=item.text!"" href=makeOfbizUrl(rawString(item.data.path!""))>
+                                    <@cmsmenu items=item["children"] type=type/>
+                                </@menuitem>
+                            </#if>
+                        </#if>
+                    <#else>
+                        <@menuitem type="generic" text=item.text!""></@menuitem>
+                    </#if>
               </#list>
-              </ul>
+              </@menu>
             </#if>
       </#if>
 </#macro>

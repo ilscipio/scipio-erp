@@ -210,7 +210,7 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
     }
     
     function saveMenu() {
-        var v =  $('#cms-menu-tree').jstree(true).get_json('',{flat:true});
+        var v =  $('#cms-menu-tree').jstree(true).get_json('',{flat:false});
         var menuJson = JSON.stringify(v);
         var data = {websiteId:websiteId,menuJson:menuJson};
         if(menuId){
@@ -471,7 +471,6 @@ function($node) {
                         $(function() {   
                             $('#cms-menu-tree, #cms-content-tree').on('copy_node.jstree', function (e, data) {
                               if (data.is_multi) {
-                                  console.log(data);
                                   preventDelete = true;  
                                   data.original.data.type="link_internal";
                                   data.node.type="link_internal";

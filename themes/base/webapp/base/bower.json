@@ -11,7 +11,7 @@
     "jquery-ui" :"~1.12",
     "jstree" :"~3",
     "slick-carousel": "^1.5.9",
-	"foundation-datepicker": "~1.2",
+	"foundation-datepicker": "~1.5",
 	"trumbowyg ": "~2.4",
 	"codemirror":"~5",
 	"codemirror-mode-freemarker":"liuxiaole/codemirror-mode-freemarker",

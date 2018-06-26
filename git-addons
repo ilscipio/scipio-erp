@@ -18,42 +18,50 @@ print_usage() {
 usage: ./git-addons [action] [addon-names...] [options]
 
 actions:
-  help                how this help dialog
-  pull                add or merge (as appropriate) the named addon into working copy
-                      using git subtree
+  help                Show this help dialog
+  pull                Add or merge (as appropriate) the named addon into working copy
+                      using git subtree.
                       --all may be specified instead of addon names to update all
-                      addons already added to current working copy.
-  remote-reset        force reset the remote for the specified addon(s)
+                      addons already present in your working copy.
+  remote-reset        Force reset the remote for the specified addon(s).
                       --all may be specified instead of addon names to update all
-  list                list currently installed addons
+                      addons already present in your working copy.
+  list                List currently installed addons.
                       --all may be specified to show all recognized addons instead
 
-options:
-  -v, --verbose       verbose output
-  -a, --all           for use with pull command
-  -n, --dry-run       dry run (git commands not run)
-  -e, --no-msg-edit   sets GIT_MERGE_AUTOEDIT=no, so no git prompts for merge messages (unless problems)
-  -h, --help          general help, or help about specific command
+options (must come AFTER the action and addon-names):
+  -a, --all           Apply action to all recognized addons; meaning varies by action.
+  -n, --dry-run       Dry run (git commands that modify working copy are not run)
+  -e, --no-msg-edit   Sets GIT_MERGE_AUTOEDIT=no, so no git prompts for merge messages 
+                      (unless problems).
+  -v, --verbose       Verbose output
+  -h, --help          General help or help about specific command
 
 This script uses the git subtree command to integrate SCIPIO-ERP addons
-into your working copy of ScipioCE/EE (it does NOT work with submodules at this time).
+into your working copy of ScipioCE/EE.
 
-Configuration can be done in the accompanying git-addons-config file, or optionally
-creating a git-addons-config-local file (ignored by git).
+For more information about Scipio addons and examples, visit:
+https://www.scipioerp.com/community/end-user/addons/
+
+Configuration can be done in the accompanying git-addons-config file (and committed), 
+or instead by creating a git-addons-config-local file (ignored by git).
 
 In order to use this script with purchased addons, you must set the variable
-SCIPIO_ADDONS_URL_EE in the accompanying git-addons-config script
+SCIPIO_ADDONS_URL_EE in the accompanying git-addons-config/git-addons-config-local script
 to the base ssh://.../SCIPIO-ERP/ addons location provided when you purchase an addon.
-You must also have an SSH agent loaded with your private key for access
+
+For enterprise addons, you must have an SSH agent loaded with your private key for access
 to the Ilscipio (or other) servers.
 
 The addons' histories will appear as squashed in your working copy.
 This is normal and made required by git subtree.
 
+This script handles common merge cases. If you have any issues,
+you may occasionally need to consult and use the git subtree command directly.
 For more information on git subtree, type 'git subtree --help'.
 
-NOTE: This script handles common merge cases. If you have any issues,
-you may occasionally need to consult and use the git subtree command directly.
+NOTE: There is no official support for git submodules at this time, and using
+submodules is not recommended. subtrees should be used for most client projects.
 
 Requirements:
 * Bash 4 or higher (for Linux/Mac; for Windows, use Git Bash, Cygwin or other emulation)
@@ -62,7 +70,7 @@ Requirements:
 Examples:
 
 ./git-addons pull angular-shop
-./git-addons pull angular-shop ignite-admin-theme
+./git-addons pull angular-shop ignite-admin-theme --dry-run
 ./git-addons pull --all
 ./git-addons list --all
 "
@@ -130,6 +138,12 @@ list_addons_core() {
   for ADDON; do
     print_addon_line ee "${SCIPIO_ADDON_MAP[${ADDON}]}"
   done
+  if [ ! -z "${SCIPIO_ADDONS_URL_DEV}" ]; then
+    echo -e "\nDev addons:"
+    for ADDON; do
+      print_addon_line dev "${SCIPIO_ADDON_MAP[${ADDON}]}"
+    done
+  fi
 }
 
 list_addons() {
@@ -214,6 +228,22 @@ check_min_version() {
     return 1
   fi
   return 0
+}
+
+process_config() {
+  declare -A SCIPIO_ADDON_DIR_MAP
+  for ADDON in "${!SCIPIO_ADDON_MAP[@]}"; do
+    get_addon_info "${ADDON}"
+    if [ ! -z "${SCIPIO_ADDON_DIR_MAP[${ADDON_DIR}]}" ]; then
+      print_error "Config error (SCIPIO_ADDON_MAP): Illegal duplicate target addon dir detected: ${ADDON_DIR}"
+      return 1
+    fi
+    if [ "${ADDON}" != "${ADDON_NAME}" ]; then
+      print_error "Config error (SCIPIO_ADDON_MAP): Illegal entry detected having array key (${ADDON}) different from name property (${ADDON_NAME}) - must be same."
+      return 1
+    fi
+    SCIPIO_ADDON_DIR_MAP["${ADDON_DIR}"]="${ADDON_INFO_STR}"
+  done
 }
 
 check_requirements() {
@@ -400,7 +430,8 @@ process_action() {
 }
 
 process_main() {
-  print_title
+  print_title || return $?
+  process_config || return $?
   check_requirements || return $?
   parse_options "$@" || return $?
   process_action || return $?
@@ -555,7 +586,8 @@ check_addon_supported() {
 pull_addons() {
   print_msg "Target addons: $@"
   for ADDON; do
-    pull_addon "${SCIPIO_ADDON_MAP[${ADDON}]}" || return
+    get_addon_info "${SCIPIO_ADDON_MAP[${ADDON}]}"
+    pull_addon || return
   done
 }
 
@@ -563,12 +595,12 @@ pull_addons_all() {
   get_valid_addons || return
   print_msg "Target addons (auto-detected): ${ADDONS}\nNOTE: If any addons appear to not be detected, use list --all command for more details, or specify them explicitly."
   for ADDON in ${ADDONS}; do
-    pull_addon "${SCIPIO_ADDON_MAP[${ADDON}]}" || return
+    get_addon_info "${SCIPIO_ADDON_MAP[${ADDON}]}"
+    pull_addon || return
   done
 }
 
 pull_addon() {
-  get_addon_info "$1"
   print_subheader "${ADDON_NAME}"
   if is_addon_dir_present; then
     check_addon_supported || return 0
@@ -583,7 +615,7 @@ pull_addon() {
       if [ "${CURR_BRANCH}" != "${ADDON_BRANCH}" ]; then
         if [ "${DOCHECKOUT}" -eq 1 ]; then
           print_warn "The submodule is not checked out on the expected branch (${ADDON_BRANCH}); is currently on: ${CURR_BRANCH} (or detached head). Now checking out ${ADDON_BRANCH}..."
-          git checkout "${ADDON_BRANCH}" || { echo "Could not checkout submodule branch ${ADDON_BRANCH}. Please verify."; return 1; }
+          callgit checkout "${ADDON_BRANCH}" || { echo "Could not checkout submodule branch ${ADDON_BRANCH}. Please verify."; return 1; }
         else
           print_error "The submodule is not checked out on the expected branch (${ADDON_BRANCH}); is currently on: ${CURR_BRANCH} (or detached head).\nIf you wish to automatically checkout the right branch, pass the --checkout option."
           return 1
@@ -591,7 +623,7 @@ pull_addon() {
       fi
       print_msg "Running 'git pull${REBASE_STR}' for existing submodule addon ${ADDON_NAME} -> ${ADDON_DIR} (branch: ${ADDON_BRANCH})..."
 
-      git pull ${REBASE_STR} || { echo "Pull failed. Please verify, resolve conflicts and re-run script."; return 1; }
+      callgit pull ${REBASE_STR} || { echo "Pull failed. Please verify, resolve conflicts and re-run script."; return 1; }
       cd "${TOPDIR}" || { echo "Could not switch back to top dir: ${TOPDIR}"; return 1; }
     else
       ensure_addon_remote || return
@@ -603,11 +635,11 @@ pull_addon() {
     if [ "${REPOTYPE}" == "submodule" ]; then
       print_msg "Running 'git submodule add' for new submodule addon ${ADDON_NAME} -> ${ADDON_DIR} (branch: ${ADDON_BRANCH})..."
 
-      git submodule add -b "${ADDON_BRANCH}" "${ADDON_URL}" "${ADDON_DIR}" || { echo "Submodule add failed. Please verify."; return 1; }
+      callgit submodule add -b "${ADDON_BRANCH}" "${ADDON_URL}" "${ADDON_DIR}" || { echo "Submodule add failed. Please verify."; return 1; }
       cd "${ADDON_DIR}" || { echo "Could not change into dir: ${ADDON_DIR}"; return 1; }
-      git checkout "${ADDON_BRANCH}" || { echo "Could not checkout submodule branch ${ADDON_BRANCH}. Please verify."; return 1; }
+      callgit checkout "${ADDON_BRANCH}" || { echo "Could not checkout submodule branch ${ADDON_BRANCH}. Please verify."; return 1; }
       cd "${TOPDIR}" || { echo "Could not switch back to top dir: ${TOPDIR}"; return 1; }
-      print_msg "NOTICE: You have added a new submodule to your root project (.gitmodules and other git properties modified);\n you will have to commit (and push) the result in your top project manually (see 'git status', or use 'git commit -m \"Added submodule\"')"
+      print_msg "\nNOTICE: You have added a new submodule to your root project (.gitmodules and other git properties modified); you will have to commit (and push) the result in your top project manually (see 'git status', or use 'git commit -m \"Added submodule\"')"
     else
       ensure_addon_remote || return
 
@@ -620,7 +652,8 @@ pull_addon() {
 remote_reset_addons() {
   print_msg "Target addons: $@"
   for ADDON; do
-    remote_reset_addon "${SCIPIO_ADDON_MAP[${ADDON}]}" || return
+    get_addon_info "${SCIPIO_ADDON_MAP[${ADDON}]}"
+    remote_reset_addon || return
   done
 }
 
@@ -628,12 +661,15 @@ remote_reset_addons_all() {
   get_valid_addons || return
   print_msg "Target addons (auto-detected): ${ADDONS}\nNOTE: If any addons appear to not be detected, use list --all command for more details, or specify them explicitly."
   for ADDON in ${ADDONS}; do
-    remote_reset_addon "${SCIPIO_ADDON_MAP[${ADDON}]}" || return
+    get_addon_info "${SCIPIO_ADDON_MAP[${ADDON}]}"
+    # no remotes needed for submodules
+    if ! is_addon_submodule; then
+      remote_reset_addon || return
+    fi
   done
 }
 
 remote_reset_addon() {
-  get_addon_info "$1"
   print_subheader "${ADDON_NAME}"
   check_addon_supported || return 0
   remote_reset_addon_core
@@ -653,9 +689,9 @@ remote_reset_addon_core() {
     return 1
   fi
   if is_remote_exists "${ADDON_NAME}"; then
-    git remote remove "${ADDON_NAME}"
+    callgit remote remove "${ADDON_NAME}"
   fi
-  git remote add "${ADDON_NAME}" "${ADDON_URL}" || { print_error "Could not add remote for addon ${ADDON_NAME}"; return 1; }
+  callgit remote add "${ADDON_NAME}" "${ADDON_URL}" || { print_error "Could not add remote for addon ${ADDON_NAME}"; return 1; }
 }
 
 is_remote_exists() {

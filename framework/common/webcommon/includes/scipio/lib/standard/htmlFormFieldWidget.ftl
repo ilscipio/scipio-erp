@@ -373,12 +373,14 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
       (field_datetime_disptypefmts: friendly; field_datetime_typefmts: internal; custom hash possible) -->
   <#local dateEffDispConvFmt = field_datetime_typefmts[dateDisplayType]!>
 
-  <#local datePickerFmt><#if dateDisplayType == "month">yyyy-mm<#else>yyyy-mm-dd</#if></#local><#-- Display format for fdatepicker (non-moment.js) -->
+  <#local datePickerFmt><#if dateDisplayType == "month">yyyy-mm<#else>yyyy-mm-dd hh:ii</#if></#local><#-- Display format for fdatepicker (non-moment.js) -->
   
   <#local displayInputIdJs = escapeVal(displayInputId, 'js')>
   <#local inputIdJs = escapeVal(inputId, 'js')>
   
   <#local fdatepickerOptions>{format:"${escapeVal(datePickerFmt, 'js')}" <#rt/>
+    <#if dateDisplayType == "timestamp">, minView:"hour",pickTime:true</#if><#t/>
+    <#if dateDisplayType == "time">, startView:"hour" ,minView:"hour",pickTime:true</#if><#t/>
     <#if dateDisplayType == "month">, startView: "year", minView: "year"</#if><#t/>
     , forceParse:false}</#local><#lt/>
   <@script htmlwrap=htmlwrap>

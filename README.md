@@ -91,8 +91,21 @@ c. Click "Visual Theme Resources - Reload All, Now"
 ### Optional Configuration
   http://www.scipioerp.com/community/developer/installation-configuration/configuration/
 
+### Addons
+Community and enterprise SCIPIO ERP addons can be added to your working
+copy and updated using the 'git-addons' Bash script in the project root.
+It requires a Bash 4-compatible terminal (Linux, Mac, Windows Git Bash, Cygwin).
+
+Instructions can be found at:
+
+  https://www.scipioerp.com/community/end-user/addons/
+
+or for brief help and command list, type:
+
+  ./git-addons help
+
 ### Docker
-We also provide Docker images if you would like to try out Scipio with minimal effort. To create a fully functional Scipio ERP instance with some demo data already loaded, you can create a container with the following command:
+We also provide Docker images if you would like to try out Scipio with minimal effort. To create a fully functional SCIPIO ERP instance with some demo data already loaded, you can create a container with the following command:
 
   docker create -p 8080:8080 -p 8443:8443 ilscipio/scipio-erp:demo
   

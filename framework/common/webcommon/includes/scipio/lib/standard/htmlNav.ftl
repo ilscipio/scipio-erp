@@ -646,7 +646,8 @@ The submenu's main class may be set as altnested in global styles.
       <#-- WARN: isNestedMenu check here is flawed, but it's all we need for now -->
       <nav class="${styles.nav_sidenav!""}">
         <#-- FIXME: this "navigation" variable is way too generic name! is it even still valid? -->
-        <#if navigation?has_content><h2>${escapeVal(navigation, 'htmlmarkup')}</h2></#if>
+        <#if navigation?has_content><heading>${escapeVal(navigation, 'htmlmarkup')}</heading></#if>
+        <#if title?has_content><@heading>${escapeVal(title, 'htmlmarkup')}</@heading></#if>
     <#elseif specialType == "button-dropdown">
       <button href="#" data-dropdown="${escapeVal(id, 'html')}" aria-controls="${escapeVal(id, 'html')}" data-toggle="dropdown" aria-expanded="false"<@compiledClassAttribStr class=titleClass />>${escapeVal(title, 'htmlmarkup')}</button><br>
       <#local attribs = attribs + {"data-dropdown-content":"true", "aria-hidden":"true"}>
@@ -2105,47 +2106,47 @@ Supports nested or flat format for hierarchy.
   </#if>
 </#macro>
 
-<#-- CMS Menu Macro -->
+<#-- CMS Menu Macro 
+Uses menu macro and menuitems to render custom menu
+-->
 <#assign cmsmenu_defaultArgs = {
-  "menuId":"","title":"", "id":"", "class":"", "style":"", "items":true,
+  "menuId":"","title":"", "type":"", "id":"", "class":"", "style":"", "items":true,
   "passArgs":{}
 }>
 <#macro cmsmenu args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.cmsmenu_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@cmsmenu_markup menuId=menuId items=items title=title id=id class=class style=style
+  <@cmsmenu_markup menuId=menuId items=items title=title id=id class=class type=type style=style
     origArgs=origArgs passArgs=passArgs><#nested></@cmsmenu_markup>
 </#macro>
 
 <#-- @cms_menu markup - theme override -->
-<#macro cmsmenu_markup menuId="" items=true title="" id="" class="" style="" 
+<#macro cmsmenu_markup menuId="" items=true title="" type="generic" id="" class="" style="" 
     origArgs={} passArgs={} catchArgs...>
   <#local class = addClassArg(class, styles.cmsmenu_wrap!"")>
-  <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if>>
-    <#if title?has_content><div<@compiledClassAttribStr class=(styles.cmsmenu_head!)/>><@heading class="${styles.cmsmenu_title!}">${escapeVal(title, 'htmlmarkup')}</@heading></div></#if>
-    <div<@compiledClassAttribStr class=(styles.cmsmenu_body!)/>>
         <#if menuId?has_content>
             <#local menuJson = Static["com.ilscipio.scipio.cms.menu.CmsMenuUtil"].getMenuJsonById(delegator!,menuId)>
             <#if menuJson?has_content>
-                <ul>
-                <#list menuJson as item>
-                    <#if item["data"]["path"]?has_content>
-                        <#if item["type"]=="link_external">
-                            <@menuitem type="link" text=item.text!"" href=rawString(item.data.path!"")  target="_blank"></@menuitem>
-                        <#else>
-                            <#if item.data.websiteid?has_content>
-                                <@menuitem type="link" text=item.text!"" href=makeOfbizInterWebappUrl({"controller":false, "secure":true, "webSiteId":rawString(item.data.websiteid!""), "uri":(rawString(item.data.path!""!))})></@menuitem>
+                <@menu type=type title=title id=id class=class style=style>
+                        <#list menuJson as item>
+                            <#if item["data"]["path"]?has_content>
+                                <#if item["type"]=="link_external">
+                                    <@menuitem type="link" text=item.text!"" href=rawString(item.data.path!"")  target="_blank"></@menuitem>
+                                <#else>
+                                    <#if item.data.websiteid?has_content>
+                                        <@menuitem type="link" text=item.text!"" href=makeOfbizInterWebappUrl({"controller":false, "secure":true, "webSiteId":rawString(item.data.websiteid!""), "uri":(rawString(item.data.path!""!))})></@menuitem>
+                                    <#else>
+                                        <@menuitem type="link" text=item.text!"" href=makeOfbizUrl(rawString(item.data.path!""))></@menuitem>
+                                    </#if>
+                                </#if>
                             <#else>
-                                <@menuitem type="link" text=item.text!"" href=makeOfbizUrl(rawString(item.data.path!""))></@menuitem>
+                                <@menuitem type="generic" text=item.text!""></@menuitem>
                             </#if>
-                        </#if>
-                    <#else>
-                        <@menuitem type="generic" text=item.text!""></@menuitem>
-                    </#if>
-                    
-                </#list>
-                </ul>
+                            
+                        </#list>
+                    <#nested>
+                </@menu>
             </#if>
         <#else>
             <#if items?is_sequence>
@@ -2156,8 +2157,4 @@ Supports nested or flat format for hierarchy.
               </ul>
             </#if>
       </#if>
-        
-    </div>
-    <#nested>
-  </div>
 </#macro>

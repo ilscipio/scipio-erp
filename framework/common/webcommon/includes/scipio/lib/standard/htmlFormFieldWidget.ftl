@@ -367,7 +367,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <#local useFillDate = true && displayCorrect><#-- if true, the digits that picker can't set are preserved from last value - only works for simple dateDisplayConvFmt (YYYY-MM-DD) -->
   
   <#local dateConvFmt = field_datetime_typefmts[dateType]!><#-- Real date format -->
-  <#local dateDisplayConvFmt><#if dateDisplayType == "month">YYYY-MM<#else>YYYY-MM-DD</#if></#local><#-- Display format for js (moment.js) -->
+  <#local dateDisplayConvFmt><#if dateDisplayType == "month">YYYY-MM<#else>YYYY-MM-DD HH:mm:ss</#if></#local><#-- Display format for js (moment.js) -->
   <#-- base/metro: we must show/override the internal types, because the picker is too limited for anything else, and want full timestamps anyway -->
   <#-- Effective display format for when displayCorrect==true (bypass for picker display format)
       (field_datetime_disptypefmts: friendly; field_datetime_typefmts: internal; custom hash possible) -->
@@ -378,7 +378,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <#local displayInputIdJs = escapeVal(displayInputId, 'js')>
   <#local inputIdJs = escapeVal(inputId, 'js')>
   
-  <#local fdatepickerOptions>{format:"${escapeVal(datePickerFmt, 'js')}" <#rt/>
+  <#local fdatepickerOptions>{todayBtn:true, format:"${escapeVal(datePickerFmt, 'js')}" <#rt/>
     <#if dateDisplayType == "timestamp">, minView:"hour",pickTime:true</#if><#t/>
     <#if dateDisplayType == "time">, startView:"hour" ,minView:"hour",pickTime:true</#if><#t/>
     <#if dateDisplayType == "month">, startView: "year", minView: "year"</#if><#t/>

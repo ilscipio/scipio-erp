@@ -367,22 +367,38 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <#local useFillDate = true && displayCorrect><#-- if true, the digits that picker can't set are preserved from last value - only works for simple dateDisplayConvFmt (YYYY-MM-DD) -->
   
   <#local dateConvFmt = field_datetime_typefmts[dateType]!><#-- Real date format -->
-  <#local dateDisplayConvFmt><#if dateDisplayType == "month">YYYY-MM<#else>YYYY-MM-DD HH:mm:ss.SSS</#if></#local><#-- Display format for js (moment.js) -->
   <#-- base/metro: we must show/override the internal types, because the picker is too limited for anything else, and want full timestamps anyway -->
   <#-- Effective display format for when displayCorrect==true (bypass for picker display format)
       (field_datetime_disptypefmts: friendly; field_datetime_typefmts: internal; custom hash possible) -->
   <#local dateEffDispConvFmt = field_datetime_typefmts[dateDisplayType]!>
 
-  <#local datePickerFmt><#if dateDisplayType == "month">yyyy-mm<#else>yyyy-mm-dd hh:ii:ss.SSS</#if></#local><#-- Display format for fdatepicker (non-moment.js) -->
-  
+  <#switch dateDisplayType>
+    <#case "timestamp">
+      <#local dateDisplayConvFmt = "YYYY-MM-DD HH:mm:ss.SSS">
+      <#local datePickerFmt = "yyyy-mm-dd hh:ii:ss.SSS">
+      <#local fdpExtraOpts>, startView:"year", pickTime:true</#local>
+      <#break>
+    <#case "date">
+      <#local dateDisplayConvFmt = "YYYY-MM-DD">
+      <#local datePickerFmt = "yyyy-mm-dd">
+      <#local fdpExtraOpts>, startView:"month", minView:"month"</#local>
+      <#break>
+    <#case "month">
+      <#local dateDisplayConvFmt = "YYYY-MM">
+      <#local datePickerFmt = "yyyy-mm">
+      <#local fdpExtraOpts>, startView:"year", minView:"year"</#local>
+      <#break>
+    <#case "time">
+      <#local dateDisplayConvFmt = "HH:mm:ss.SSS">
+      <#local datePickerFmt = "hh:ii:ss.SSS">
+      <#local fdpExtraOpts>, startView:"hour", minView:"hour", pickTime:true</#local>
+      <#break>
+  </#switch>
+
   <#local displayInputIdJs = escapeVal(displayInputId, 'js')>
   <#local inputIdJs = escapeVal(inputId, 'js')>
-  
-  <#local fdatepickerOptions>{todayBtn:true, format:"${escapeVal(datePickerFmt, 'js')}" <#rt/>
-    <#if dateDisplayType == "timestamp">, startView: "year", pickTime:true</#if><#t/>
-    <#if dateDisplayType == "time">, startView:"hour" ,minView:"hour",pickTime:true</#if><#t/>
-    <#if dateDisplayType == "month">, startView: "year", minView: "year"</#if><#t/>
-    , forceParse:false}</#local><#lt/>
+
+  <#local fdatepickerOptions>{todayBtn:true, format:"${escapeVal(datePickerFmt, 'js')}"${fdpExtraOpts}, forceParse:false}</#local><#lt/>
   <@script htmlwrap=htmlwrap>
     $(function() {
     

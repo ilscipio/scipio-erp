@@ -316,7 +316,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         <@fieldElemAttribStr attribs=attribs /><#t/>
         <#if events?has_content><@commonElemEventAttribStr events=events /></#if><#t/>
         <#if title?has_content> title="${escapeVal(title, 'html')}"</#if><#t/>
-        <#if value?has_content> value="${escapeVal(value, 'html')?datetime?string["yyyy-MM-dd HH:mm:ss"]}"</#if><#t/>
+        <#if value?has_content> value="${escapeVal(value, 'html')}"</#if><#t/>
         <#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#t/>
         <#if size?has_content> size="${size}"</#if><#t/>
         <#if maxlength?has_content> maxlength="${maxlength}"</#if><#t/>
@@ -367,13 +367,13 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <#local useFillDate = true && displayCorrect><#-- if true, the digits that picker can't set are preserved from last value - only works for simple dateDisplayConvFmt (YYYY-MM-DD) -->
   
   <#local dateConvFmt = field_datetime_typefmts[dateType]!><#-- Real date format -->
-  <#local dateDisplayConvFmt><#if dateDisplayType == "month">YYYY-MM<#else>YYYY-MM-DD HH:mm:ss</#if></#local><#-- Display format for js (moment.js) -->
+  <#local dateDisplayConvFmt><#if dateDisplayType == "month">YYYY-MM<#else>YYYY-MM-DD HH:mm:ss.SSS</#if></#local><#-- Display format for js (moment.js) -->
   <#-- base/metro: we must show/override the internal types, because the picker is too limited for anything else, and want full timestamps anyway -->
   <#-- Effective display format for when displayCorrect==true (bypass for picker display format)
       (field_datetime_disptypefmts: friendly; field_datetime_typefmts: internal; custom hash possible) -->
   <#local dateEffDispConvFmt = field_datetime_typefmts[dateDisplayType]!>
 
-  <#local datePickerFmt><#if dateDisplayType == "month">yyyy-mm<#else>yyyy-mm-dd hh:ii:ss</#if></#local><#-- Display format for fdatepicker (non-moment.js) -->
+  <#local datePickerFmt><#if dateDisplayType == "month">yyyy-mm<#else>yyyy-mm-dd hh:ii:ss.SSS</#if></#local><#-- Display format for fdatepicker (non-moment.js) -->
   
   <#local displayInputIdJs = escapeVal(displayInputId, 'js')>
   <#local inputIdJs = escapeVal(inputId, 'js')>

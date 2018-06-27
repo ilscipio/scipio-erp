@@ -888,7 +888,27 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         if (locale == null) {
             // if statement here to avoid warning messages for Entity ECA service input validation, even though less efficient that doing a straight get
             if (source.containsKey("locale")) {
-                locale = (Locale) source.get("locale");
+                // SCIPIO: 2018-06-27: This should accept a string, so apply simpleTypeConvert (this uses UtilMisc.parseLocale)
+                // NOTE: if includeInternal, the convert is run a second time further below; but if we are taking strings, 
+                // performance is not the concern anyway.
+                //locale = (Locale) source.get("locale");
+                Object value = source.get("locale");
+                if (value instanceof Locale) {
+                    locale = (Locale) value;
+                } else if (value != null) {
+                    try {
+                        locale = (Locale) ObjectType.simpleTypeConvert(value, Locale.class.getName(), null, null, null, true);
+                    } catch (GeneralException e) {
+                        // SCIPIO: NOTE: this message may be duplicated below in some cases when includeInternal==true,
+                        // but we must always warn with special message here because this also affects the other fields
+                        String errMsg = "Type conversion of special field [locale] to type [" + Locale.class.getName() 
+                                + "] failed for value \"" + value + "\" - other fields will use a default locale for conversion: " + e.toString();
+                        Debug.logWarning("[ModelService.makeValid] : " + errMsg, module);
+                        if (errorMessages != null) {
+                            errorMessages.add(errMsg);
+                        }
+                    }
+                }
             }
             if (locale == null) {
                 locale = Locale.getDefault();
@@ -898,7 +918,23 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         if (timeZone == null) {
             // if statement here to avoid warning messages for Entity ECA service input validation, even though less efficient that doing a straight get
             if (source.containsKey("timeZone")) {
-                timeZone = (TimeZone) source.get("timeZone");
+                // SCIPIO: 2018-06-27: This should accept a string, so apply simpleTypeConvert (same as locale above)
+                //timeZone = (TimeZone) source.get("timeZone");
+                Object value = source.get("timeZone");
+                if (value instanceof TimeZone) {
+                    timeZone = (TimeZone) value;
+                } else if (value != null) {
+                    try {
+                        timeZone = (TimeZone) ObjectType.simpleTypeConvert(value, TimeZone.class.getName(), null, null, locale, true);
+                    } catch (GeneralException e) {
+                        String errMsg = "Type conversion of special field [timeZone] to type [" + TimeZone.class.getName() 
+                                + "] failed for value \"" + value + "\" - other fields will use a default TimeZone for conversion: " + e.toString();
+                        Debug.logWarning("[ModelService.makeValid] : " + errMsg, module);
+                        if (errorMessages != null) {
+                            errorMessages.add(errMsg);
+                        }
+                    }
+                }
             }
             if (timeZone == null) {
                 timeZone = TimeZone.getDefault();

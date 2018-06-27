@@ -316,7 +316,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         <@fieldElemAttribStr attribs=attribs /><#t/>
         <#if events?has_content><@commonElemEventAttribStr events=events /></#if><#t/>
         <#if title?has_content> title="${escapeVal(title, 'html')}"</#if><#t/>
-        <#if value?has_content> value="${escapeVal(value, 'html')}"</#if><#t/>
+        <#if value?has_content> value="${escapeVal(value, 'html')?datetime?string["yyyy-MM-dd HH:mm:ss"]}"</#if><#t/>
         <#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#t/>
         <#if size?has_content> size="${size}"</#if><#t/>
         <#if maxlength?has_content> maxlength="${maxlength}"</#if><#t/>
@@ -353,9 +353,9 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 
 <#-- Internal/hidden datetime date formats - should not be changed -->
 <#assign field_datetime_typefmts = {
-    'timestamp': 'YYYY-MM-DD HH:mm:ss.SSS',
+    'timestamp': 'YYYY-MM-DD HH:mm:ss',
     'date': 'YYYY-MM-DD',
-    'time': 'HH:mm:ss.SSS',
+    'time': 'HH:mm:ss',
     'month': 'YYYY-MM'
 }>
 
@@ -373,7 +373,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
       (field_datetime_disptypefmts: friendly; field_datetime_typefmts: internal; custom hash possible) -->
   <#local dateEffDispConvFmt = field_datetime_typefmts[dateDisplayType]!>
 
-  <#local datePickerFmt><#if dateDisplayType == "month">yyyy-mm<#else>yyyy-mm-dd hh:ii</#if></#local><#-- Display format for fdatepicker (non-moment.js) -->
+  <#local datePickerFmt><#if dateDisplayType == "month">yyyy-mm<#else>yyyy-mm-dd hh:ii:ss</#if></#local><#-- Display format for fdatepicker (non-moment.js) -->
   
   <#local displayInputIdJs = escapeVal(displayInputId, 'js')>
   <#local inputIdJs = escapeVal(inputId, 'js')>

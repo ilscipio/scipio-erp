@@ -220,6 +220,13 @@ public abstract class SolrUtil {
     public static boolean isSystemInitialized() {
         return isSolrEnabled() && (Start.getInstance().getCurrentState() == ServerState.RUNNING);
     }
+    
+    /**
+     * Same as {@link #isSystemInitialized()} but assumes solr is enabled.
+     */
+    public static boolean isSystemInitializedAssumeEnabled() {
+        return (Start.getInstance().getCurrentState() == ServerState.RUNNING);
+    }
 
     /**
      * Returns true if the LOCAL Solr webapp has reached initialization.

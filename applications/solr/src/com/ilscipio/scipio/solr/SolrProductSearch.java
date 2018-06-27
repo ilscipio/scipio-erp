@@ -1307,7 +1307,8 @@ public abstract class SolrProductSearch {
                 waitSolrReady = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.index.rebuild.autoRun.waitSolrReady", true);
             }
             
-            Debug.logInfo("Solr: rebuildSolrIndexAuto: Launching index check/rebuild (onlyIfDirty: " + onlyIfDirty + ", ifConfigChange: " + ifConfigChange + ")", module);
+            Debug.logInfo("Solr: rebuildSolrIndexAuto: Launching index check/rebuild (onlyIfDirty: " + onlyIfDirty
+                    + ", ifConfigChange: " + ifConfigChange + ", waitSolrReady: " + waitSolrReady + ")", module);
 
             Map<String, Object> servCtx;
             try {
@@ -1395,32 +1396,36 @@ public abstract class SolrProductSearch {
 
     public static Map<String, Object> checkSolrReady(DispatchContext dctx, Map<String, Object> context) {
         Map<String, Object> result = ServiceUtil.returnSuccess();
-        boolean enabled = SolrUtil.isSolrWebappEnabled();
+        boolean enabled = SolrUtil.isSystemInitialized(); // NOTE: this must NOT use SolrUtil.isSolrLocalWebappPresent() anymore
         result.put("enabled", enabled);
-        try {
-            HttpSolrClient client = (HttpSolrClient) context.get("client");
-            if (client == null) client = SolrUtil.getQueryHttpSolrClient((String) context.get("core"));
-            result.put("ready", SolrUtil.isSolrWebappReady(client));
-        } catch (Exception e) {
-            Debug.logWarning(e, "Solr: checkSolrReady: error trying to check if Solr ready: " + e.getMessage(), module);
-            result = ServiceUtil.returnFailure("Error while checking if Solr ready");
-            result.put("enabled", enabled);
+        if (enabled) {
+            try {
+                HttpSolrClient client = (HttpSolrClient) context.get("client");
+                if (client == null) client = SolrUtil.getQueryHttpSolrClient((String) context.get("core"));
+                result.put("ready", SolrUtil.isSolrWebappReady(client));
+            } catch (Exception e) {
+                Debug.logWarning(e, "Solr: checkSolrReady: error trying to check if Solr ready: " + e.getMessage(), module);
+                result = ServiceUtil.returnFailure("Error while checking if Solr ready");
+                result.put("enabled", enabled);
+                result.put("ready", false);
+                return result;
+            }
+        } else {
             result.put("ready", false);
-            return result;
         }
         return result;
     }
 
     public static Map<String, Object> waitSolrReady(DispatchContext dctx, Map<String, Object> context) {
-        if (!SolrUtil.isSolrWebappEnabled()) {
-            return ServiceUtil.returnFailure("Solr webapp not enabled");
+        if (!SolrUtil.isSolrEnabled()) { // NOTE: this must NOT use SolrUtil.isSolrLocalWebappPresent() anymore
+            return ServiceUtil.returnFailure("Solr not enabled");
         }
         HttpSolrClient client = null;
         try {
             client = (HttpSolrClient) context.get("client");
             if (client == null) client = SolrUtil.getQueryHttpSolrClient((String) context.get("core"));
             
-            if (SolrUtil.isSolrWebappReady(client)) {
+            if (SolrUtil.isSystemInitializedAssumeEnabled() && SolrUtil.isSolrWebappReady(client)) {
                 if (Debug.verboseOn()) Debug.logInfo("Solr: waitSolrReady: Solr is ready, continuing", module);
                 return ServiceUtil.returnSuccess();
             }
@@ -1449,7 +1454,7 @@ public abstract class SolrProductSearch {
             }
             
             try {
-                if (SolrUtil.isSolrWebappReady(client)) {
+                if (SolrUtil.isSystemInitializedAssumeEnabled() && SolrUtil.isSolrWebappReady(client)) {
                     Debug.logInfo("Solr: waitSolrReady: Solr is ready, continuing", module);
                     return ServiceUtil.returnSuccess();
                 }
@@ -1464,8 +1469,8 @@ public abstract class SolrProductSearch {
     }
     
     public static Map<String, Object> reloadSolrSecurityAuthorizations(DispatchContext dctx, Map<String, Object> context) {
-        if (!SolrUtil.isSolrWebappEnabled()) {
-            return ServiceUtil.returnFailure("Solr webapp not enabled");
+        if (!SolrUtil.isSystemInitialized()) { // NOTE: this must NOT use SolrUtil.isSolrLocalWebappPresent() anymore
+            return ServiceUtil.returnFailure("Solr not enabled or system not ready");
         }
         try {
             HttpSolrClient client = SolrUtil.getAdminHttpSolrClientFromUrl(SolrUtil.getSolrWebappUrl());

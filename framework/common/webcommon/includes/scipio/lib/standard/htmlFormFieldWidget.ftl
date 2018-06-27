@@ -358,6 +358,13 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     'time': 'HH:mm:ss.SSS',
     'month': 'YYYY-MM'
 }>
+<#-- Visible/display date formats - may be changed; each theme should keep its own hash -->
+<#assign field_datetime_disptypefmts = {
+    "timestamp": "YYYY-MM-DD HH:mm:ss.SSS",
+    "date": "YYYY-MM-DD",
+    "month": "YYYY-MM",
+    "time": "HH:mm:ss.SSS"
+}>
 
 <#macro field_datetime_markup_script inputId="" inputName="" displayInputId="" displayInputName="" dateType="" 
     dateDisplayType="" htmlwrap=true required=false origArgs={} passArgs={} catchArgs...>
@@ -367,25 +374,36 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <#local useFillDate = true && displayCorrect><#-- if true, the digits that picker can't set are preserved from last value - only works for simple dateDisplayConvFmt (YYYY-MM-DD) -->
   
   <#local dateConvFmt = field_datetime_typefmts[dateType]!><#-- Real date format -->
-  <#local dateDisplayConvFmt><#if dateDisplayType == "month">YYYY-MM<#else>YYYY-MM-DD</#if></#local><#-- Display format for js (moment.js) -->
-  <#-- base/metro: we must show/override the internal types, because the picker is too limited for anything else, and want full timestamps anyway -->
+  <#local dateDisplayConvFmt = field_datetime_disptypefmts[dateDisplayType]!>
   <#-- Effective display format for when displayCorrect==true (bypass for picker display format)
       (field_datetime_disptypefmts: friendly; field_datetime_typefmts: internal; custom hash possible) -->
   <#local dateEffDispConvFmt = field_datetime_typefmts[dateDisplayType]!>
 
-  <#local datePickerFmt><#if dateDisplayType == "month">yyyy-mm<#else>yyyy-mm-dd hh:ii</#if></#local><#-- Display format for fdatepicker (non-moment.js) -->
-  
+  <#switch dateDisplayType>
+    <#case "timestamp">
+      <#local datePickerFmt = "yyyy-mm-dd hh:ii:ss.SSS">
+      <#local fdpExtraOpts>, startView:"month", pickTime:true</#local>
+      <#break>
+    <#case "date">
+      <#local datePickerFmt = "yyyy-mm-dd">
+      <#local fdpExtraOpts>, startView:"month", minView:"month"</#local>
+      <#break>
+    <#case "month">
+      <#local datePickerFmt = "yyyy-mm">
+      <#local fdpExtraOpts>, startView:"year", minView:"year"</#local>
+      <#break>
+    <#case "time">
+      <#local datePickerFmt = "hh:ii:ss.SSS">
+      <#local fdpExtraOpts>, startView:"day", minView:"hour", pickTime:true</#local>
+      <#break>
+  </#switch>
+
   <#local displayInputIdJs = escapeVal(displayInputId, 'js')>
   <#local inputIdJs = escapeVal(inputId, 'js')>
-  
-  <#local fdatepickerOptions>{format:"${escapeVal(datePickerFmt, 'js')}" <#rt/>
-    <#if dateDisplayType == "timestamp">, minView:"hour",pickTime:true</#if><#t/>
-    <#if dateDisplayType == "time">, startView:"hour" ,minView:"hour",pickTime:true</#if><#t/>
-    <#if dateDisplayType == "month">, startView: "year", minView: "year"</#if><#t/>
-    , forceParse:false}</#local><#lt/>
+
+  <#local fdatepickerOptions>{todayBtn:true, format:"${escapeVal(datePickerFmt, 'js')}"${fdpExtraOpts}, forceParse:false}</#local><#lt/>
   <@script htmlwrap=htmlwrap>
     $(function() {
-    
         var sfdh = new ScpFieldDateHelper({ <#-- see selectall.js -->
             displayInputId: "${displayInputIdJs}",
             inputId: "${inputIdJs}",
@@ -400,9 +418,6 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
             sfdh.updateNormDateInputFromI18n(this.value);
         });
         
-      <#if dateType == "time">
-        <#-- do nothing for now; user inputs into box manually and change() should adjust -->
-      <#else>
         var onDatePopup = function(ev) {
             sfdh.saveOldDateFromI18n();
         };
@@ -413,7 +428,6 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         };
         
         $("#${displayInputIdJs}").fdatepicker(${fdatepickerOptions}).on('changeDate', onDateChange).on('show', onDatePopup);
-      </#if>
     });
   </@script>
 </#macro>

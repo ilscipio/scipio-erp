@@ -268,6 +268,17 @@ under the License.
             <actions>
                 <set field="activeSubMenuItem" value="main"/>
                 <set field="titleProperty" value="WorkEffort"/>
+                <set field="eventDetailWidgetName" from-field="eventDetailWidgetName" default-value="eventDetail" />
+                <set field="eventDetailWidgetLocation" from-field="eventDetailWidgetLocation" default-value="component://workeffort/widget/CalendarScreens.xml" />
+                <set field="parameters.period" from-field="parameters.period" default-value="${initialView}"/>
+                <script location="component://workeffort/webapp/workeffort/WEB-INF/actions/calendar/CreateUrlParam.groovy"/>
+                <set field="parentTypeId" from-field="parameters.parentTypeId" default-value="EVENT"/><!-- workeffortTypeId parent to ad events --> 
+                <entity-condition entity-name="TimeEntry" list="currentTimeEntryList">
+                    <condition-list combine="and">
+                        <condition-expr field-name="partyId" from-field="userLogin.partyId"/>
+                        <condition-expr field-name="timesheetId" from-field="currentTimesheet.timesheetId"/>
+                    </condition-list>
+                </entity-condition>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWorkEffortAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -275,6 +286,16 @@ under the License.
                         <platform-specific>
                             <html><html-template location="component://workeffort/webapp/workeffort/main.ftl"/></html>
                         </platform-specific>
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <include-screen name="weekCalendar"  location="component://workeffort/widget/CalendarScreens.xml"/>
+                            </container>
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <screenlet title="${uiLabelMap.WorkEffortMyTimesheets}">
+                                    <include-form name="ListMyTimesheets" location="component://workeffort/widget/TimesheetForms.xml"/>
+                                </screenlet>
+                            </container>
+                        </container>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

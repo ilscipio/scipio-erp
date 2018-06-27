@@ -67,6 +67,19 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="CommonWorkEffortAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-service-permission service-name="workEffortGenericPermission" main-action="VIEW"/>
+                            </condition>
+                            <widgets>
+                                <platform-specific><html><html-template location="component://workeffort/webapp/workeffort/task/mytasks.ftl"/></html></platform-specific>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="h3">${uiLabelMap.WorkEffortViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>

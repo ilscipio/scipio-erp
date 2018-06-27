@@ -20,9 +20,10 @@ under the License.
     <#assign uiLabelMap = requestAttributes.uiLabelMap>
 </#if>
 
+<@alert type="info">${uiLabelMap.WorkEffortApplicationEventsTasksWorkflowActivities}</@alert>
+
 <@section><#-- title=uiLabelMap.WorkEffortWorkEffortManagerMainPage -->
       <#if !userLogin?has_content>
           <p>${uiLabelMap.WorkEffortInterestingSure}.</p>
       </#if>
-      <p>${uiLabelMap.WorkEffortApplicationEventsTasksWorkflowActivities}.</p>
 </@section>

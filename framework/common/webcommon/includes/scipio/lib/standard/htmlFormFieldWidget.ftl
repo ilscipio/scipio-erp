@@ -379,7 +379,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   <#local inputIdJs = escapeVal(inputId, 'js')>
   
   <#local fdatepickerOptions>{todayBtn:true, format:"${escapeVal(datePickerFmt, 'js')}" <#rt/>
-    <#if dateDisplayType == "timestamp">, minView:"hour",pickTime:true</#if><#t/>
+    <#if dateDisplayType == "timestamp">, startView: "year", pickTime:true</#if><#t/>
     <#if dateDisplayType == "time">, startView:"hour" ,minView:"hour",pickTime:true</#if><#t/>
     <#if dateDisplayType == "month">, startView: "year", minView: "year"</#if><#t/>
     , forceParse:false}</#local><#lt/>

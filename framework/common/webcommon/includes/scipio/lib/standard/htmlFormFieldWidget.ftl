@@ -353,9 +353,9 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 
 <#-- Internal/hidden datetime date formats - should not be changed -->
 <#assign field_datetime_typefmts = {
-    'timestamp': 'YYYY-MM-DD HH:mm:ss',
+    'timestamp': 'YYYY-MM-DD HH:mm:ss.SSS',
     'date': 'YYYY-MM-DD',
-    'time': 'HH:mm:ss',
+    'time': 'HH:mm:ss.SSS',
     'month': 'YYYY-MM'
 }>
 

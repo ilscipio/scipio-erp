@@ -376,7 +376,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     <#case "timestamp">
       <#local dateDisplayConvFmt = "YYYY-MM-DD HH:mm:ss.SSS">
       <#local datePickerFmt = "yyyy-mm-dd hh:ii:ss.SSS">
-      <#local fdpExtraOpts>, startView:"year", pickTime:true</#local>
+      <#local fdpExtraOpts>, startView:"month", pickTime:true</#local>
       <#break>
     <#case "date">
       <#local dateDisplayConvFmt = "YYYY-MM-DD">

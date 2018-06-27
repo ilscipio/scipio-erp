@@ -857,19 +857,23 @@ under the License.
                                             
                                             execDefault = (scriptBody == null && templateBody == null);
                                             if (scriptBody == null) {
-                                                scriptBody = "import org.ofbiz.base.util.Debug;" +
+                                                scriptBody = "import org.ofbiz.base.util.*;\n" +
+                                                    "import org.ofbiz.entity.condition.*;\n" +
+                                                    "import org.ofbiz.entity.util.*;\n" +
                                                     "\n" +
-                                                    "\nfinal module = \"TemplateTest.groovy\";" +
+                                                    "final module = \"TemplateTest.groovy\";\n" +
                                                     "\n" +
-                                                    "\nDebug.logInfo(\"Hello from test script\", module);" +
+                                                    "// NOTE: Some screen groovy built-ins are not available from this form (such as the 'from' built-in; must use EntityQuery class here)\n" +
+                                                    "userParty = EntityQuery.use(delegator).from(\"Party\").select(\"partyId\", \"partyTypeId\").where(\"partyId\", context.userLogin?.partyId).queryOne();\n" +
                                                     "\n" +
-                                                    "\ncontext.testVar1 = \"This is a test string value from groovy\";" +
-                                                    "\n";
+                                                    "Debug.logInfo(\"Hello from test script and user party: \" + userParty, module);\n" +
+                                                    "\n" +
+                                                    "context.testVar1 = \"This is a test string value from groovy from user party: \" + userParty;\n";
                                             }
                                             if (templateBody == null) {
                                                 templateBody = "<#assign ftlTestVar1 = testVar1>" +
                                                     "\n" +
-                                                    "\n<p><strong>testVar1:</strong> <em>\${ftlTestVar1}</em>";
+                                                    "\n<p><strong>testVar1:</strong> <em>\${escapeVal(ftlTestVar1, 'htmlmarkup')}</em>";
                                             }
                                             
                                             execTemplate = (execDefault || request.getMethod().toLowerCase() == "post"); // security

@@ -1518,6 +1518,7 @@ public class ConfigXMLReader {
             // rest of code
             //requestResponse.value = null;
             requestResponse.value = "";
+            requestResponse.typeEnum = Type.NONE;// SCIPIO
             return requestResponse;
         }
 

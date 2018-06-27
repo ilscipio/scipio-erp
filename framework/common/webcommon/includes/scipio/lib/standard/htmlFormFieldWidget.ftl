@@ -391,7 +391,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     <#case "time">
       <#local dateDisplayConvFmt = "HH:mm:ss.SSS">
       <#local datePickerFmt = "hh:ii:ss.SSS">
-      <#local fdpExtraOpts>, startView:"hour", minView:"hour", pickTime:true</#local>
+      <#local fdpExtraOpts>, startView:"day", minView:"hour", pickTime:true</#local>
       <#break>
   </#switch>
 
@@ -416,9 +416,6 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
             sfdh.updateNormDateInputFromI18n(this.value);
         });
         
-      <#if dateType == "time">
-        <#-- do nothing for now; user inputs into box manually and change() should adjust -->
-      <#else>
         var onDatePopup = function(ev) {
             sfdh.saveOldDateFromI18n();
         };
@@ -429,7 +426,6 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
         };
         
         $("#${displayInputIdJs}").fdatepicker(${fdatepickerOptions}).on('changeDate', onDateChange).on('show', onDatePopup);
-      </#if>
     });
   </@script>
 </#macro>

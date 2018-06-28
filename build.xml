@@ -2212,6 +2212,11 @@ under the License.
         <property name="lib.entity.jdbc.conf" value="mysql"/>
         <antcall target="download-jdbc-common"/>
     </target>
+    <target name="download-jdbc-mariadb" description="Download MariaDB JDBC driver">
+        <delete verbose="on"><fileset dir="framework/entity/lib/jdbc" includes="mariadb-*.jar"/></delete>
+        <property name="lib.entity.jdbc.conf" value="mariadb"/>
+        <antcall target="download-jdbc-common"/>
+    </target>
     <target name="download-jdbc-postgresql" description="Download PostgreSQL JDBC driver">
         <delete verbose="on"><fileset dir="framework/entity/lib/jdbc" includes="postgresql-*.jar"/></delete>
         <property name="lib.entity.jdbc.conf" value="postgresql"/>
@@ -2229,6 +2234,7 @@ under the License.
         <antcall target="download-jdbc-firebird"/>
         <antcall target="download-jdbc-hsqldb"/>
         <antcall target="download-jdbc-mysql"/>
+        <antcall target="download-jdbc-mariadb"/>
         <antcall target="download-jdbc-postgresql"/>
     </target>
 

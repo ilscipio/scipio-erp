@@ -29,8 +29,8 @@
         <value xml:lang="fr">Toutes les étapes d'installation sont terminées. Installation terminée!</value>
     </property>
     <property key="SetupIncompleteMsgStart">
-        <value xml:lang="en">You have reached the end of Setup. However, some setup steps are incomplete:</value>
-        <value xml:lang="de">Sie haben das Ende des Setups erreicht. Allerdings sind einige Setup-Schritte unvollständig:</value>
+        <value xml:lang="en">You have reached the end of the setup. However, some setup steps are incomplete:</value>
+        <value xml:lang="de">Sie haben das Ende des Setup-Vorgangs erreicht. Allerdings sind einige Setup-Schritte unvollständig:</value>
         <value xml:lang="fr">Vous avez terminé la configuration. Cependant, certaines étapes de configuration sont incomplètes:</value>
     </property>
     <property key="SetupIncompleteMsgEnd">

@@ -22,18 +22,11 @@
 
 ## What is Scipio ERP
 Scipio ERP is an Open Source Business Application Toolkit based on Java 8 and a built-in 
-Tomcat application server. We want to provide standard applications, functions (services) 
-and a well thought-out datamodel, so that you have a working foundation for your own 
-business applications. All database tables, services, screens and applications  can be 
-extended and customized.The application has built-in clustering and caching capabilities,
-making it a great choice for scaling businesses.
+Tomcat application server. We provide standard applications, functions (services) 
+and a well thought-out datamodel, so that you can create modern web applications.
 
-Through a set of freemarker macros (templating toolkit) all UIs are seperated from 
-their rendered HTML. It is easy to create your own theme and swap out all HTML with a few
-simple definitions. The system is compatible with most modern HTML frameworks. 
-
-Scipio ERP is a popular choice for complexe Ecommerce applications, but can also be used for
-any given business process.
+Our templating toolkit simplifies the creation of modern UIs and is compatible with most
+modern HTML frameworks.
 
 [Technologies](https://www.scipioerp.com/products/technologies/)
 

@@ -24128,10 +24128,12 @@
         <value xml:lang="de">Debitoren</value>
         <value xml:lang="en">Debtors</value>
     </property>
-    <property key="AccountingEditCustomTimePeriod">        
+    <property key="AccountingEditCustomTimePeriod">
+        <value xml:lang="de">Eigene Zeitperiode bearbeiten</value>        
         <value xml:lang="en">Edit Custom Time Period</value>
     </property>
     <property key="AccountingFinancialInformation">
+        <value xml:lang="de">Finanzinformationen</value>
         <value xml:lang="en">Financial Information</value>
     </property>
     <property key="AccountingGlAccountNotFound">
@@ -24139,6 +24141,7 @@
         <value xml:lang="en">Gl Account ${glAccountId} not found</value>
     </property>
     <property key="AccountingGlJournal">
+        <value xml:lang="de">Buchungsliste</value>
         <value xml:lang="en">Journal</value>
     </property>
     <property key="AccountingIncomesExpenses">
@@ -24149,7 +24152,8 @@
         <value xml:lang="de">Wartung Jobs</value>
         <value xml:lang="en">Maintenance Jobs</value>
     </property>
-    <property key="AccountingNewCustomTimePeriod">        
+    <property key="AccountingNewCustomTimePeriod">
+        <value xml:lang="en">Neue Zeitperiode</value>        
         <value xml:lang="en">New Custom Time Period</value>
     </property>
     <property key="AccountingNoChangesMadeNotUpdatingGiftCard">
@@ -24200,7 +24204,9 @@
         <value xml:lang="zh-TW">已包含營業稅</value>
     </property>
     <property key="AccountingScipioAccountingStandardsInfo">
-        <value xml:lang="en">An accounting standard couldn't be found installed in your system. You can either load the demo data in order to get the US-GAAP standard or check out Scipio's official store for additional accounting standard addons.</value>
+        <value xml:lang="de">Warnung: Kein Rechnungslegungsstandard wurde installiert. Sie können entweder die Demo-Daten laden, um den US-GAAP-Standard zu erhalten, oder den offiziellen Store von Scipio nach zusätzlichen Rechnungslegungsstandards durchsuchen.</value>
+        <value xml:lang="en">Warning: No accounting standard has been installed. You can either load the demo data in order to get the US-GAAP standard or check out Scipio's official store for additional accounting standards.</value>
+        <value xml:lang="es">Advertencia: no se ha instalado ningún estándar de contabilidad. Puede cargar los datos de demostración para obtener el estándar US-GAAP o consultar la tienda oficial de Scipio para conocer las normas contables adicionales.</value>
     </property>
     <property key="AccountingSetTimePeriod">
         <value xml:lang="de">Zeitraum setzen</value>
@@ -24224,24 +24230,31 @@
         <value xml:lang="fr">Vendeurs</value>
     </property>
     <property key="PageTitleAddBillingAccountPayments">
+        <value xml:lang="de">Zahlungskontokorrentzkonto hinzufügen</value>
         <value xml:lang="en">Add Billing Account Payment</value>
     </property>
     <property key="PageTitleAddBillingAccountTerms">
+        <value xml:lang="de">Rechnungskondition hinzufügen</value>
         <value xml:lang="en">Add Billing Account Term</value>
     </property>
     <property key="PageTitleListBillingAccountInvoices">
+        <value xml:lang="de">Rechnungskonten Rechnungsliste</value>
         <value xml:lang="en">Billing Account Invoice List</value>
     </property>
     <property key="PageTitleListBillingAccountOrders">
+        <value xml:lang="de">Bestellliste für Rechnungskonten</value>
         <value xml:lang="en">Billing Account Order List</value>
     </property>
     <property key="PageTitleListBillingAccountPayments">
+        <value xml:lang="de">Abrechnungsliste für Zahlungskonten</value>
         <value xml:lang="en">Billing Account Payment List</value>
     </property>
     <property key="PageTitleListBillingAccountRoles">
+        <value xml:lang="de">Rollenliste für Abrechnungskonten</value>
         <value xml:lang="en">Billing Account Role List</value>
     </property>
     <property key="PageTitleListBillingAccountTerms">
+        <value xml:lang="de">Liste der Abrechnungskonten</value>
         <value xml:lang="en">Billing Account Term List</value>
     </property>
     <property key="PageTitleNewTaxAuthorityPartyInfo">

@@ -18,27 +18,40 @@
  *******************************************************************************/
 package org.ofbiz.webapp.control;
 
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionActivationListener;
 import javax.servlet.http.HttpSessionEvent;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilProperties;
 
 /**
  * HttpSessionListener that gathers and tracks various information and statistics
  */
 public class ControlActivationEventListener implements HttpSessionActivationListener {
     // Debug module name
-    public static final String module = ControlActivationEventListener.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    private static final boolean showSessionIdInLog = UtilProperties.propertyValueEqualsIgnoreCase("requestHandler", "show-sessionId-in-log", "Y"); // SCIPIO: made static var for this
 
     public ControlActivationEventListener() {}
 
     public void sessionWillPassivate(HttpSessionEvent event) {
         ControlEventListener.countPassivateSession();
-        Debug.logInfo("Passivating session: " + event.getSession().getId(), module);
+        Debug.logInfo("Passivating session: " + showSessionId(event.getSession()), module);
     }
 
     public void sessionDidActivate(HttpSessionEvent event) {
         ControlEventListener.countActivateSession();
-        Debug.logInfo("Activating session: " + event.getSession().getId(), module);
+        Debug.logInfo("Activating session: " + showSessionId(event.getSession()), module);
     }
+    
+    public static String showSessionId(HttpSession session) {
+        if (showSessionIdInLog) {
+            return " sessionId=" + session.getId(); 
+        }
+        // SCIPIO: needlessly verbose
+        //return " hidden sessionId by default.";
+        return " sessionId=[hidden]";
+    }
+    
 }

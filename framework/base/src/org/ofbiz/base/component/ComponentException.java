@@ -42,4 +42,31 @@ public class ComponentException extends GenericConfigException {
     public ComponentException(String str, Throwable nested) {
         super(str, nested);
     }
+    
+    /**
+     * SCIPIO: Exception specifically to indicate a component was not found, so callers can handle.
+     * WARN/FIXME: currently (2017-08-03), not enough code will be using this for it to be reliable everywhere, so 
+     * cannot rely on methods throwing the appropriate subclass at this time.
+     * Added 2017-08-03.
+     */
+    public static class ComponentNotFoundException extends ComponentException {
+
+        protected ComponentNotFoundException() {
+            super();
+        }
+
+        protected ComponentNotFoundException(String str, Throwable nested) {
+            super(str, nested);
+        }
+
+        protected ComponentNotFoundException(String str) {
+            super(str);
+        }
+
+        protected ComponentNotFoundException(Throwable nested) {
+            super(nested);
+        }
+
+    }
+    
 }

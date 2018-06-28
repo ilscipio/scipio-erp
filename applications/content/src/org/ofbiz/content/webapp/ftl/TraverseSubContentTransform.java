@@ -21,12 +21,13 @@ package org.ofbiz.content.webapp.ftl;
 import java.io.IOException;
 import java.io.Writer;
 import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
+import org.ofbiz.base.util.UtilMisc;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -52,7 +53,7 @@ import freemarker.template.TransformControl;
  */
 public class TraverseSubContentTransform implements TemplateTransformModel {
 
-    public static final String module = TraverseSubContentTransform.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String [] saveKeyNames = {"contentId", "subContentId", "mimeType", "subContentDataResourceView", "wrapTemplateId", "templateContentId", "pickWhen", "followWhen", "returnAfterPickWhen", "returnBeforePickWhen", "indent"};
     public static final String [] removeKeyNames = {"templateContentId", "subDataResourceTypeId", "mapKey", "wrappedFTL", "nodeTrail"};
 
@@ -133,9 +134,9 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
         }
 
         final GenericValue subContentDataResourceView = view;
-        final Map<String, Object> traverseContext = FastMap.newInstance();
+        final Map<String, Object> traverseContext = new HashMap<String, Object>();
         traverseContext.put("delegator", delegator);
-        Map<String, Object> whenMap = FastMap.newInstance();
+        Map<String, Object> whenMap = new HashMap<String, Object>();
         whenMap.put("followWhen", templateCtx.get("followWhen"));
         whenMap.put("pickWhen", templateCtx.get("pickWhen"));
         whenMap.put("returnBeforePickWhen", templateCtx.get("returnBeforePickWhen"));
@@ -180,7 +181,7 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
             @Override
             public int onStart() throws TemplateModelException, IOException {
                 //templateContext.put("buf", new StringBuilder());
-                List<Map<String, Object>> nodeTrail = FastList.newInstance();
+                List<Map<String, Object>> nodeTrail = new LinkedList<Map<String, Object>>();
                 traverseContext.put("nodeTrail", nodeTrail);
                 // GenericValue content = null;
 /*
@@ -287,7 +288,7 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
 
             private boolean checkWhen (GenericValue thisContent, String contentAssocTypeId) {
                 boolean isPick = false;
-                Map<String, Object> assocContext = FastMap.newInstance();
+                Map<String, Object> assocContext = new HashMap<String, Object>();
                 if (UtilValidate.isEmpty(contentAssocTypeId)) {
                     contentAssocTypeId = "";
                 }
@@ -309,7 +310,7 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
                 assocContext.put("content", thisContent);
                 List<Object> purposes = ContentWorker.getPurposes(thisContent);
                 assocContext.put("purposes", purposes);
-                List<String> contentTypeAncestry = FastList.newInstance();
+                List<String> contentTypeAncestry = new LinkedList<String>();
                 String contentTypeId = (String)thisContent.get("contentTypeId");
                 try {
                     ContentWorker.getContentTypeAncestry(delegator, contentTypeId, contentTypeAncestry);

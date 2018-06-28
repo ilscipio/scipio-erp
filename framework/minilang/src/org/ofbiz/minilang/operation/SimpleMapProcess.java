@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
  */
 public class SimpleMapProcess {
 
-    public static final String module = SimpleMapProcess.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     String field = "";
     List<SimpleMapOperation> simpleMapOperations = new ArrayList<SimpleMapOperation>();

@@ -37,13 +37,13 @@ import org.ofbiz.widget.renderer.html.HtmlWidgetRenderer;
  */
 public class FoScreenRenderer extends HtmlWidgetRenderer implements ScreenStringRenderer {
 
-    public static final String module = FoScreenRenderer.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public FoScreenRenderer() {}
 
     // This is a util method to get the style from a property file
     public static String getFoStyle(String styleName) {
-        String value = UtilProperties.getPropertyValue("fo-styles.properties", styleName);
+        String value = UtilProperties.getPropertyValue("fo-styles", styleName);
         if (value.equals(styleName)) {
             return "";
         }

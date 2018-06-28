@@ -20,12 +20,11 @@ package org.ofbiz.shipment.weightPackage;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -46,7 +45,7 @@ import org.ofbiz.service.ServiceUtil;
 @SuppressWarnings("serial")
 public class WeightPackageSession implements Serializable {
 
-    public static final String module = WeightPackageSession.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected GenericValue userLogin = null;
     protected String dispatcherName = null;
@@ -85,7 +84,7 @@ public class WeightPackageSession implements Serializable {
         this.picklistBinId = picklistBinId;
         this.userLogin = userLogin;
         this.facilityId = facilityId;
-        this.weightPackageLines = FastList.newInstance();
+        this.weightPackageLines = new LinkedList<WeightPackageSessionLine>();
     }
 
     public WeightPackageSession(LocalDispatcher dispatcher, GenericValue userLogin, String facilityId) {
@@ -216,7 +215,7 @@ public class WeightPackageSession implements Serializable {
     }
 
     public List<WeightPackageSessionLine> getPackedLines(String orderId) {
-        List<WeightPackageSessionLine> packedLines = FastList.newInstance();
+        List<WeightPackageSessionLine> packedLines = new LinkedList<WeightPackageSessionLine>();
         if (UtilValidate.isNotEmpty(orderId)) {
             for (WeightPackageSessionLine packedLine: this.getPackedLines()) {
                if (orderId.equals(packedLine.getOrderId()))
@@ -356,7 +355,7 @@ public class WeightPackageSession implements Serializable {
         List<GenericValue> shipmentRouteSegments = EntityQuery.use(delegator).from("ShipmentRouteSegment").where("shipmentId", shipmentId).queryList();
         if (UtilValidate.isNotEmpty(shipmentRouteSegments)) {
             for (GenericValue shipmentRouteSegment : shipmentRouteSegments) {
-                Map<String, Object> shipmentRouteSegmentMap = FastMap.newInstance();
+                Map<String, Object> shipmentRouteSegmentMap = new HashMap<String, Object>();
                 shipmentRouteSegmentMap.put("shipmentId", shipmentId);
                 shipmentRouteSegmentMap.put("shipmentRouteSegmentId", shipmentRouteSegment.getString("shipmentRouteSegmentId"));
                 shipmentRouteSegmentMap.put("userLogin", userLogin);
@@ -375,7 +374,7 @@ public class WeightPackageSession implements Serializable {
         List<GenericValue> shipmentRouteSegments = this.getDelegator().findByAnd("ShipmentRouteSegment", UtilMisc.toMap("shipmentId", shipmentId), null, false);
         if (UtilValidate.isNotEmpty(shipmentRouteSegments)) {
             for (GenericValue shipmentRouteSegment : shipmentRouteSegments) {
-                Map<String, Object> shipmentRouteSegmentMap = FastMap.newInstance();
+                Map<String, Object> shipmentRouteSegmentMap = new HashMap<String, Object>();
                 shipmentRouteSegmentMap.put("shipmentId", shipmentId);
                 shipmentRouteSegmentMap.put("shipmentRouteSegmentId", shipmentRouteSegment.getString("shipmentRouteSegmentId"));
                 shipmentRouteSegmentMap.put("userLogin", userLogin);
@@ -389,7 +388,7 @@ public class WeightPackageSession implements Serializable {
 
     protected boolean diffInShipCost(BigDecimal actualShippingCost) throws GeneralException {
         BigDecimal estimatedShipCost = this.getEstimatedShipCost();
-        BigDecimal doEstimates = new BigDecimal(UtilProperties.getPropertyValue("shipment.properties", "shipment.default.cost_actual_over_estimated_percent_allowed", "10"));
+        BigDecimal doEstimates = new BigDecimal(UtilProperties.getPropertyValue("shipment", "shipment.default.cost_actual_over_estimated_percent_allowed", "10"));
         BigDecimal diffInShipCostInPerc = ZERO;
         if (estimatedShipCost.compareTo(ZERO) == 0) {
             diffInShipCostInPerc = actualShippingCost;
@@ -407,7 +406,7 @@ public class WeightPackageSession implements Serializable {
         for (WeightPackageSessionLine packedLine : this.getPackedLines(orderId)) {
             String shipmentPackageSeqId = UtilFormatOut.formatPaddedNumber(++shipPackSeqId, 5);
 
-            Map<String, Object> shipmentPackageMap = FastMap.newInstance();
+            Map<String, Object> shipmentPackageMap = new HashMap<String, Object>();
             shipmentPackageMap.put("shipmentId", shipmentId);
             shipmentPackageMap.put("shipmentPackageSeqId", shipmentPackageSeqId);
             shipmentPackageMap.put("weight", packedLine.getPackageWeight());
@@ -419,7 +418,7 @@ public class WeightPackageSession implements Serializable {
             shipmentPackageMap.put("weightUomId", getWeightUomId());
             shipmentPackageMap.put("userLogin", userLogin);
 
-            Map<String, Object> shipmentPackageResult = FastMap.newInstance();
+            Map<String, Object> shipmentPackageResult = new HashMap<String, Object>();
             GenericValue shipmentPackage = this.getDelegator().findOne("ShipmentPackage", UtilMisc.toMap("shipmentId", shipmentId, "shipmentPackageSeqId", shipmentPackageSeqId), false);
             if (UtilValidate.isEmpty(shipmentPackage)) {
                 shipmentPackageResult = this.getDispatcher().runSync("createShipmentPackage", shipmentPackageMap);
@@ -443,7 +442,7 @@ public class WeightPackageSession implements Serializable {
         for (GenericValue orderItem : orderItems) {
             List<GenericValue> orderItemShipGrpInvReserves = orderItem.getRelated("OrderItemShipGrpInvRes", null, null, false);
             if (UtilValidate.isEmpty(orderItemShipGrpInvReserves)) {
-                Map<String, Object> orderItemStatusMap = FastMap.newInstance();
+                Map<String, Object> orderItemStatusMap = new HashMap<String, Object>();
                 orderItemStatusMap.put("orderId", orderId);
                 orderItemStatusMap.put("orderItemSeqId", orderItem.getString("orderItemSeqId"));
                 orderItemStatusMap.put("userLogin", userLogin);
@@ -481,7 +480,7 @@ public class WeightPackageSession implements Serializable {
     }
 
     protected void setShipmentToPacked() throws GeneralException {
-        Map<String, Object> shipmentMap = FastMap.newInstance();
+        Map<String, Object> shipmentMap = new HashMap<String, Object>();
         shipmentMap.put("shipmentId", shipmentId);
         shipmentMap.put("statusId", "SHIPMENT_PACKED");
         shipmentMap.put("userLogin", userLogin);
@@ -501,7 +500,7 @@ public class WeightPackageSession implements Serializable {
         BigDecimal shipmentCostEstimate = ZERO;
         Map<String, Object> shipCostEstimateResult = null;
         try {
-            Map<String, Object> shipCostEstimateMap = FastMap.newInstance();
+            Map<String, Object> shipCostEstimateMap = new HashMap<String, Object>();
             shipCostEstimateMap.put("shippingContactMechId", shippingContactMechId);
             shipCostEstimateMap.put("shipmentMethodTypeId", shipmentMethodTypeId);
             shipCostEstimateMap.put("carrierPartyId", carrierPartyId);

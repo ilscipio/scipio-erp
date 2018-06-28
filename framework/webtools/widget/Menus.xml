@@ -67,10 +67,10 @@ under the License.
             <link target="FindPortalPage"/>
         </menu-item> -->
         <menu-item name="Development" title="${uiLabelMap.CommonDevelopment}">
-            <link target="WebtoolsLayoutDemo" />
+            <link target="LayoutDemo" />
         </menu-item>
-        <menu-item name="solrAdmin" title="${uiLabelMap.WebtoolsSolrAdmin}">
-            <link target="/solr/admin.html" url-mode="plain" target-window="_blank"/>
+        <menu-item name="solr" title="${uiLabelMap.WebtoolsSolr}">
+            <link target="SolrStatus"/>
         </menu-item>
     </menu>
     <!-- 
@@ -119,7 +119,9 @@ under the License.
         <menu-item name="Development">
             <sub-menu name="Development" include="DevelopmentSideBar"/>
         </menu-item>
-        <menu-item name="solrAdmin"/>
+        <menu-item name="solr">
+            <sub-menu name="Solr" include="SolrSideBar"/>
+        </menu-item>
     </menu>
 
     <menu name="configurationTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
@@ -473,13 +475,22 @@ under the License.
     <!-- SCIPIO: New (and all below or redefined) -->
     <menu name="DevelopmentSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <actions>
-            <set field="demoTargetUrl" from-field="demoTargetUrl" default-value="WebtoolsLayoutDemo"/>
+            <set field="demoTargetUrl" from-field="demoTargetUrl" default-value="LayoutDemo"/>
         </actions>
-        <menu-item name="LayoutDemo" title="Layout Demo">
+        <menu-item name="LayoutDemo" title="${uiLabelMap.WebtoolsLayoutDemo}">
             <link target="${demoTargetUrl}">
                 <parameter param-name="debugMode" from-field="parameters.debugMode"/><!-- preserve the mode -->
             </link>
             <sub-menu name="LayoutDemo" include="LayoutDemoSideBar"/>
+        </menu-item>
+        <menu-item name="TemplateTest" title="${uiLabelMap.WebtoolsTemplateTest}">
+            <condition>
+                <and>
+                    <if-has-permission permission="OFBTOOLS" action="_VIEW"/>
+                    <if-has-permission permission="ENTITY_DATA_ADMIN"/><!-- SUPER/FULLADMIN only, for security reasons -->
+                </and>
+            </condition>
+            <link target="TemplateTest"/>
         </menu-item>
         <menu-item name="DeveloperDocIndex" title="${uiLabelMap.WebtoolsDeveloperDocumentation}">
             <link target="DeveloperDocIndex"/>
@@ -623,6 +634,51 @@ under the License.
             <link target="ListDemoDataGeneratorProviders">                
             </link>
         </menu-item> -->
+    </menu>
+
+    <!-- TODO?: REVIEW: perhaps these could be moved to Solr component... doesn't matter much yet -->
+    <menu name="SolrSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="SolrStatus" title="${uiLabelMap.CommonStatus}">
+            <link target="SolrStatus"/>
+        </menu-item>
+        <menu-item name="SolrServices" title="${uiLabelMap['GlResourceType.description.SERVICES']}">
+            <link target="SolrServices"/>
+        </menu-item>
+        <menu-item name="SolrAdmin" title="${uiLabelMap.SolrSolrAdmin}" disabled="${not context.isSolrWebappLocal}">
+            <!-- FIXME?: disabled: cannot link to non-local with absolute link because don't have HTTPS port -->
+            <link target="/solr/index.html" url-mode="plain" target-window="_blank">
+                <parameter param-name="externalLoginKey" from-field="externalLoginKey"/>
+            </link>
+        </menu-item>
+        <menu-item name="SolrDoc" title="Readme">
+            <link target="SolrDoc"/>
+        </menu-item>
+    </menu>
+    
+    <menu name="SolrButtonBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="SolrAdmin" title="${uiLabelMap.SolrSolrAdmin}">
+            <condition><if-true field="isSolrWebappLocal"/></condition><!-- FIXME?: cannot link to non-local with absolute link because don't have HTTPS port -->
+            <link target="/solr/index.html" url-mode="plain" target-window="_blank">
+                <parameter param-name="externalLoginKey" from-field="externalLoginKey"/>
+            </link>
+        </menu-item>
+        <!--<menu-item name="ScipioLog" title="${uiLabelMap.WebtoolsViewLog}">
+            <link target="LogView"/>
+        </menu-item>-->
+        <!-- TODO: Solr-specific log view... currently has issues... -->
+    </menu>
+    
+    <menu name="SolrRebuildIndexSectionBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="rebuildSolrIndexJob" title="${uiLabelMap.WebtoolsScheduleJob}: rebuildSolrIndex">
+            <link target="scheduleJob">
+                <parameter param-name="SERVICE_NAME" value="rebuildSolrIndex"/>
+            </link>
+        </menu-item>
+        <menu-item name="rebuildSolrIndexAutoJob" title="${uiLabelMap.WebtoolsScheduleJob}: rebuildSolrIndexAuto">
+            <link target="scheduleJob">
+                <parameter param-name="SERVICE_NAME" value="rebuildSolrIndexAuto"/>
+            </link>
+        </menu-item>
     </menu>
 
 </menus>

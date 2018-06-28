@@ -44,7 +44,7 @@ import org.w3c.dom.Element;
 @SuppressWarnings("serial")
 public class UspsMockApiServlet extends HttpServlet {
 
-    public static final String module = UspsMockApiServlet.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
 
     public UspsMockApiServlet() {

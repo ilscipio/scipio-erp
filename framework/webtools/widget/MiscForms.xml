@@ -93,7 +93,35 @@ under the License.
     
     <!-- NOTE: we can omit this, it's automatically gotten from name: id="TargetedRenderingTestForm1" -->
     <form name="TargetedRenderingTestForm1" type="single" target="TargetedRenderingTest">
-        <field name="testinput1" title="Input 1"><text /></field>
-        <field name="testinput1" title="Input 2"><text /></field>
+        <field name="testinput1" title="Input 1"><text/></field>
+        <field name="testinput1" title="Input 2"><text/></field>
     </form>
+    
+    <form name="TooltipTestForm1" type="single">
+        <actions>
+            <entity-one entity-name="Party" value-field="party">
+                <field-map field-name="partyId" value="admin"/>
+            </entity-one>
+        </actions>
+        <field name="input1" tooltip="This is a tooltip!"><text/></field>
+        <field name="display1" tooltip="This is a tooltip!"><display/></field>
+        <field name="check1" tooltip="This is a tooltip!"><check/></field>
+        <field name="radio1" tooltip="This is a tooltip!"><radio/></field>
+        <field name="dateTime1" tooltip="This is a tooltip!"><date-time/></field>
+        <field name="displayEntity1" tooltip="This is a tooltip!" map-name="party" entry-name="partyId"><display-entity entity-name="Party" key-field-name="partyId"/></field>
+        <field name="file1" tooltip="This is a tooltip!"><file/></field>
+        <field name="lookup1" tooltip="This is a tooltip!"><lookup target-form-name="LookupGeo"></lookup></field>
+        <field name="password1" tooltip="This is a tooltip!"><password/></field>
+        <field name="rangeFind1" tooltip="This is a tooltip!"><range-find/></field>
+        <field name="dateFind1" tooltip="This is a tooltip!"><date-find/></field>
+        <field name="textFind1" tooltip="This is a tooltip!"><text-find/></field>
+        <field name="dropDown1" tooltip="This is a tooltip!"><drop-down/></field>
+        <field name="reset1" tooltip="This is a tooltip!"><reset/></field>
+        <field name="image1" tooltip="This is a tooltip!"><image value="/images/scipio/scipio-logo-small.png"/></field>
+        <field name="hyperlink1" tooltip="This is a tooltip!"><hyperlink target="LayoutDemo" description="This is a link"/></field>
+        <field name="textarea1" tooltip="This is a tooltip!"><textarea/></field>
+        <field name="submit1" tooltip="This is a tooltip!"><submit/></field>
+        <field name="submit2" tooltip="This is a tooltip!"><submit button-type="text-link"/></field>
+    </form>
+    
 </forms>

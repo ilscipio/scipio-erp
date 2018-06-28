@@ -62,7 +62,7 @@ import org.ofbiz.entity.jdbc.CursorConnection;
  */
 public class TransactionUtil implements Status {
     // Debug module name
-    public static final String module = TransactionUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private static ThreadLocal<List<Transaction>> suspendedTxStack = new ThreadLocal<List<Transaction>>();
     private static ThreadLocal<List<Exception>> suspendedTxLocationStack = new ThreadLocal<List<Exception>>();
@@ -224,7 +224,20 @@ public class TransactionUtil implements Status {
             return true;
         }
     }
-
+    
+    /**
+     * SCIPIO: Returns true if transaction is in place; false if no transaction in place or
+     * if error determining.
+     * Added 2017-12-22.
+     */
+    public static boolean isTransactionInPlaceSafe() {
+        try {
+            return isTransactionInPlace();
+        } catch(Exception e) {
+            Debug.logError("Could not get transaction status: " + e.getMessage(), module);
+            return false;
+        }
+    }
 
     /** Commits the transaction in the current thread IF transactions are available
      *  AND if beganTransaction is true

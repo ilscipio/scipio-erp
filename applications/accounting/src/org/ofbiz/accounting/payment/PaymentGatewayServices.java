@@ -22,15 +22,14 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
 
 import org.ofbiz.accounting.invoice.InvoiceWorker;
 import org.ofbiz.base.util.Debug;
@@ -74,7 +73,7 @@ import com.ibm.icu.util.Calendar;
  */
 public class PaymentGatewayServices {
 
-    public static final String module = PaymentGatewayServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String AUTH_SERVICE_TYPE = "PRDS_PAY_AUTH";
     public static final String REAUTH_SERVICE_TYPE = "PRDS_PAY_REAUTH";
     public static final String RELEASE_SERVICE_TYPE = "PRDS_PAY_RELEASE";
@@ -322,7 +321,7 @@ public class PaymentGatewayServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String orderId = (String) context.get("orderId");
         Locale locale = (Locale) context.get("locale");
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
         boolean reAuth = false;
         if (context.get("reAuth") != null) {
             reAuth = ((Boolean)context.get("reAuth")).booleanValue();
@@ -364,7 +363,7 @@ public class PaymentGatewayServices {
         // loop through and auth each order payment preference
         int finished = 0;
         int hadError = 0;
-        List<String> messages = FastList.newInstance();
+        List<String> messages = new LinkedList<String>();
         for (GenericValue paymentPref : paymentPrefs) {
             if (reAuth && "PAYMENT_AUTHORIZED".equals(paymentPref.getString("statusId"))) {
                 String paymentConfig = null;
@@ -382,7 +381,7 @@ public class PaymentGatewayServices {
                     continue;
                 }
             }
-            Map<String, Object> authContext = FastMap.newInstance();
+            Map<String, Object> authContext = new HashMap<String, Object>();
             authContext.put("orderPaymentPreferenceId", paymentPref.getString("orderPaymentPreferenceId"));
             authContext.put("userLogin", context.get("userLogin"));
 
@@ -475,7 +474,7 @@ public class PaymentGatewayServices {
         }
 
         // make the process context
-        Map<String, Object> processContext = FastMap.newInstance();
+        Map<String, Object> processContext = new HashMap<String, Object>();
 
         // get the visit record to obtain the client's IP address
         GenericValue orderHeader = orh.getOrderHeader();
@@ -759,7 +758,7 @@ public class PaymentGatewayServices {
         }
 
         // iterate over the prefs and release each one
-        List<GenericValue> finished = FastList.newInstance();
+        List<GenericValue> finished = new LinkedList<GenericValue>();
         for (GenericValue pPref : paymentPrefs) {
             Map<String, Object> releaseContext = UtilMisc.toMap("userLogin", userLogin, "orderPaymentPreferenceId", pPref.getString("orderPaymentPreferenceId"));
             Map<String, Object> releaseResult = null;
@@ -816,7 +815,7 @@ public class PaymentGatewayServices {
         pgCredit.set("transactionDate", UtilDateTime.nowTimestamp());
         pgCredit.set("currencyUomId", currencyUomId);
         // create the internal messages
-        List<GenericValue> messageEntities = FastList.newInstance();
+        List<GenericValue> messageEntities = new LinkedList<GenericValue>();
         List<String> messages = UtilGenerics.cast(context.get("internalRespMsgs"));
         if (UtilValidate.isNotEmpty(messages)) {
             for (String message : messages) {
@@ -951,7 +950,7 @@ public class PaymentGatewayServices {
             paymentConfig = "payment.properties";
         }
         GenericValue authTransaction = PaymentGatewayServices.getAuthTransaction(paymentPref);
-        Map<String, Object> releaseContext = FastMap.newInstance();
+        Map<String, Object> releaseContext = new HashMap<String, Object>();
         releaseContext.put("orderPaymentPreference", paymentPref);
         releaseContext.put("releaseAmount", authTransaction.getBigDecimal("amount"));
         releaseContext.put("currency", currency);
@@ -1714,7 +1713,7 @@ public class PaymentGatewayServices {
         }
 
         // prepare the context for the capture service (must follow the ccCaptureInterface
-        Map<String, Object> captureContext = FastMap.newInstance();
+        Map<String, Object> captureContext = new HashMap<String, Object>();
         captureContext.put("userLogin", userLogin);
         captureContext.put("orderPaymentPreference", paymentPref);
         captureContext.put("paymentConfig", paymentConfig);
@@ -1788,7 +1787,7 @@ public class PaymentGatewayServices {
     }
 
     private static void saveError(LocalDispatcher dispatcher, GenericValue userLogin, GenericValue paymentPref, Map<String, Object> result, String serviceType, String transactionCode) {
-        Map<String, Object> serviceContext = FastMap.newInstance();
+        Map<String, Object> serviceContext = new HashMap<String, Object>();
         serviceContext.put("paymentServiceTypeEnumId", serviceType);
         serviceContext.put("orderPaymentPreference", paymentPref);
         serviceContext.put("transCodeEnumId", transactionCode);
@@ -1943,7 +1942,7 @@ public class PaymentGatewayServices {
             if (Boolean.TRUE.equals(context.get("resultBadCardNumber"))) response.set("resultBadCardNumber", "Y");
 
             // create the internal messages
-            List<GenericValue> messageEntities = FastList.newInstance();
+            List<GenericValue> messageEntities = new LinkedList<GenericValue>();
             List<String> messages = UtilGenerics.cast(context.get("internalRespMsgs"));
             if (UtilValidate.isNotEmpty(messages)) {
                 Iterator<String> i = messages.iterator();
@@ -2387,7 +2386,7 @@ public class PaymentGatewayServices {
         // call the service refundPayment
         Map<String, Object> refundResponse = null;
         try {
-            Map<String, Object> serviceContext = FastMap.newInstance();
+            Map<String, Object> serviceContext = new HashMap<String, Object>();
             serviceContext.put("orderPaymentPreference", orderPaymentPreference);
             serviceContext.put("refundAmount", amount);
             serviceContext.put("userLogin", userLogin);
@@ -2440,7 +2439,7 @@ public class PaymentGatewayServices {
             paymentGatewayConfigId = paymentSettings.getString("paymentGatewayConfigId");
 
             if (serviceName != null) {
-                Map<String, Object> serviceContext = FastMap.newInstance();
+                Map<String, Object> serviceContext = new HashMap<String, Object>();
                 serviceContext.put("orderPaymentPreference", paymentPref);
                 serviceContext.put("paymentConfig", paymentConfig);
                 serviceContext.put("paymentGatewayConfigId", paymentGatewayConfigId);
@@ -2449,7 +2448,7 @@ public class PaymentGatewayServices {
                 // get the creditCard/address/email
                 String payToPartyId = null;
                 try {
-                    payToPartyId = getBillingInformation(orh, paymentPref, FastMap.<String, Object>newInstance());
+                    payToPartyId = getBillingInformation(orh, paymentPref, new HashMap<String, Object>());
                 } catch (GenericEntityException e) {
                     Debug.logError(e, "Problems getting billing information", module);
                     return ServiceUtil.returnError(UtilProperties.getMessage(resource, 
@@ -2703,7 +2702,7 @@ public class PaymentGatewayServices {
                     .where(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "PAYMENT_NOT_AUTH"),
                             EntityCondition.makeCondition("processAttempt", EntityOperator.GREATER_THAN, Long.valueOf(0)))
                     .orderBy("orderId").queryIterator();
-            List<String> processList = FastList.newInstance();
+            List<String> processList = new LinkedList<String>();
             if (eli != null) {
                 Debug.logInfo("Processing failed order re-auth(s)", module);
                 GenericValue value = null;
@@ -2753,7 +2752,7 @@ public class PaymentGatewayServices {
                             EntityCondition.makeCondition(ModelEntity.STAMP_FIELD, EntityOperator.LESS_THAN_EQUAL_TO, oneWeekAgo))
                     .orderBy("orderId").queryIterator();
 
-            List<String> processList = FastList.newInstance();
+            List<String> processList = new LinkedList<String>();
             if (eli != null) {
                 Debug.logInfo("Processing failed order re-auth(s)", module);
                 GenericValue value = null;
@@ -3067,7 +3066,7 @@ public class PaymentGatewayServices {
         }
 
         // prepare the order payment preference (facade)
-        GenericValue orderPaymentPref = delegator.makeValue("OrderPaymentPreference", FastMap.newInstance());
+        GenericValue orderPaymentPref = delegator.makeValue("OrderPaymentPreference", new HashMap<String, Object>());
         orderPaymentPref.set("orderPaymentPreferenceId", "_NA_");
         orderPaymentPref.set("orderId", "_NA_");
         orderPaymentPref.set("presentFlag", "N");
@@ -3080,12 +3079,12 @@ public class PaymentGatewayServices {
         // this record is not to be stored, just passed to the service for use
 
         // get the default currency
-        String currency = EntityUtilProperties.getPropertyValue("general.properties", "currency.uom.id.default", "USD", delegator);
+        String currency = EntityUtilProperties.getPropertyValue("general", "currency.uom.id.default", "USD", delegator);
 
         // prepare the auth context
-        Map<String, Object> authContext = FastMap.newInstance();
+        Map<String, Object> authContext = new HashMap<String, Object>();
         authContext.put("orderId", "_NA_");
-        authContext.put("orderItems", FastList.newInstance());
+        authContext.put("orderItems", new LinkedList<GenericValue>());
         authContext.put("orderPaymentPreference", orderPaymentPref);
         authContext.put("creditCard", creditCard);
         authContext.put("billToParty", billToParty);
@@ -3184,7 +3183,7 @@ public class PaymentGatewayServices {
                     "AccountingPaymentTransactionNotYetSupported",    locale));
         }
         // transaction request context
-        Map<String, Object> requestContext = FastMap.newInstance();
+        Map<String, Object> requestContext = new HashMap<String, Object>();
         String paymentService = null;
         String paymentConfig = null;
         String paymentGatewayConfigId = null;
@@ -3245,7 +3244,7 @@ public class PaymentGatewayServices {
             requestContext.put("billToParty", orh.getBillToParty());
             requestContext.put("billToEmail", billToEmail);
             requestContext.put("referenceCode", referenceCode);
-            String currency = EntityUtilProperties.getPropertyValue("general.properties", "currency.uom.id.default", "USD", delegator);
+            String currency = EntityUtilProperties.getPropertyValue("general", "currency.uom.id.default", "USD", delegator);
             requestContext.put("currency", currency);
             requestContext.put("creditAmount", context.get("amount"));
         } else {
@@ -3309,7 +3308,7 @@ public class PaymentGatewayServices {
         String paymentMethodId = (String) context.get("paymentMethodId");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Locale locale = (Locale) context.get("locale");
-        if (Debug.infoOn()) Debug.logInfo("Running verifyCreditCard [ " + paymentMethodId + "] for store: " + productStoreId, module);
+        if (Debug.infoOn()) Debug.logInfo("Running verifyCreditCard [" + paymentMethodId + "] for store: " + productStoreId, module); // SCIPIO: typo fix
 
         GenericValue productStore = null;
         productStore = ProductStoreWorker.getProductStore(productStoreId, delegator);
@@ -3330,7 +3329,7 @@ public class PaymentGatewayServices {
         if (UtilValidate.isNotEmpty(amount)) {
             BigDecimal authAmount = new BigDecimal(amount);
             if (authAmount.compareTo(BigDecimal.ZERO) > 0) {
-                Map<String, Object> ccAuthContext = FastMap.newInstance();
+                Map<String, Object> ccAuthContext = new HashMap<String, Object>();
                 ccAuthContext.put("paymentMethodId", paymentMethodId);
                 ccAuthContext.put("productStoreId", productStoreId);
                 ccAuthContext.put("amount", authAmount);
@@ -3363,7 +3362,7 @@ public class PaymentGatewayServices {
      */
     public static Map<String, Object> testProcessor(DispatchContext dctx, Map<String, ? extends Object> context) {
         Locale locale = (Locale) context.get("locale");
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
         BigDecimal processAmount = (BigDecimal) context.get("processAmount");
 
         if (processAmount != null && processAmount.compareTo(new BigDecimal("100.00")) >= 0)
@@ -3393,7 +3392,7 @@ public class PaymentGatewayServices {
      */
     public static Map<String, Object> testProcessorWithCapture(DispatchContext dctx, Map<String, ? extends Object> context) {
         Locale locale = (Locale) context.get("locale");
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
         BigDecimal processAmount = (BigDecimal) context.get("processAmount");
 
         if (processAmount != null && processAmount.compareTo(new BigDecimal("100.00")) >= 0)
@@ -3456,7 +3455,7 @@ public class PaymentGatewayServices {
      */
     public static Map<String, Object> alwaysApproveProcessor(DispatchContext dctx, Map<String, ? extends Object> context) {
         Locale locale = (Locale) context.get("locale");
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
         Debug.logInfo("Test Processor Approving Credit Card", module);
 
         String refNum = UtilDateTime.nowAsString();
@@ -3474,7 +3473,7 @@ public class PaymentGatewayServices {
 
     public static Map<String, Object> alwaysApproveWithCapture(DispatchContext dctx, Map<String, ? extends Object> context) {
         Locale locale = (Locale) context.get("locale");
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
         String refNum = UtilDateTime.nowAsString();
         Debug.logInfo("Test Processor Approving Credit Card with Capture", module);
 
@@ -3745,7 +3744,7 @@ public class PaymentGatewayServices {
     public static boolean isReplacementOrder(GenericValue orderHeader) {
         boolean replacementOrderFlag = false;
 
-        List<GenericValue> returnItemResponses = FastList.newInstance();
+        List<GenericValue> returnItemResponses = new LinkedList<GenericValue>();
         try {
             returnItemResponses = orderHeader.getRelated("ReplacementReturnItemResponse", null, null, false);
         } catch (GenericEntityException e) {

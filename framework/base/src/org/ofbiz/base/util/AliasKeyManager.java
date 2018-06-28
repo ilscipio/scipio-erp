@@ -30,7 +30,7 @@ import javax.net.ssl.X509KeyManager;
  *
  */
 public class AliasKeyManager implements X509KeyManager {
-    public static final String module = X509KeyManager.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected X509KeyManager keyManager = null;
     protected String alias = null;

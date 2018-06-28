@@ -1,0 +1,173 @@
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+  -->
+
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>SCIPIO: New Content Image Services</description>
+    <vendor>Ilscipio GmbH</vendor>
+
+    <!-- SCIPIO: WARN: some of these services contain security-sensitive parameters
+        and should not be called directly as controller events (assume all except where otherwise noted) -->
+
+    <service name="contentImageFileScaleInAllSizeCore" engine="java"
+            location="org.ofbiz.content.image.ContentImageServices" invoke="contentImageFileScaleInAllSizeCore" auth="false" transaction-timeout="1800">
+        <description>Scales a content/generic image file according to size types in ImageProperties.xml - core implementation (caller specifies locations/filenames); also supports component:// and file:// prefixes</description>
+        <!-- INPUT IMAGE -->
+        <attribute name="imageOrigPath" mode="IN" type="String" optional="true">
+            <description>Full path of original image in filesystem as input (alternative to imageOrigUrl; if neither specified, auto-determines an original filename under imageServerPath)</description>
+        </attribute>
+        <attribute name="imageOrigUrl" mode="IN" type="String" optional="true">
+            <description>URL of image relative to server root of original image in filesystem as input; WARN: 2017-07-04: MUST start with imageUrlPrefix else error; no other mount-points supported (alternative to imageOrigPath; if neither specified, auto-determines an original filename under imageServerPath)</description>
+        </attribute>
+        <attribute name="imageOrigFn" mode="IN" type="String" optional="true">
+            <description>Original filename (no directories) of the image - required only if neither imageOrigPath nor imageOrigUrl specified</description>
+        </attribute>
+        <attribute name="imageOrigFnFmt" mode="IN" type="String" optional="true">
+            <description>Image filename format string for original only, relative to imageServerPath/imageUrlPrefix, no extension; only useful if copyOrig==true or if imageOrigPath/imageOrigUrl are omitted (default: same as imageFnFmt)</description>
+        </attribute>
+        <!-- TODO: support this alternate input
+        <attribute name="imageOrigContentId" mode="IN" type="String" optional="true">
+            <description>Original image contentId as input (alternative to imageOrigPath)</description>
+        </attribute>-->
+
+        <!-- BASE PATHS -->
+        <attribute name="imageServerPath" mode="IN" type="String" optional="true">
+            <description>Full filesystem path of base server image, parameterized with ${tenantId} (default: uses image.server.path / content.properties); also supports component:// and file:// prefixes</description>
+        </attribute>
+        <attribute name="imageUrlPrefix" mode="IN" type="String" optional="true">
+            <description>URL prefix for generated images, parameterized with ${tenantId} (default: uses image.url.prefix / content.properties)</description>
+        </attribute>
+        
+        <!-- GENERATED FILES PARAMETERS -->
+        <attribute name="imageFnFmt" mode="IN" type="String" optional="false">
+            <description>Image filename format string, relative to imageServerPath/imageUrlPrefix, no extension, parameterized with ${sizetype} (or ${type}), required</description>
+        </attribute>
+        <attribute name="imagePathArgs" mode="IN" type="Map" optional="true">
+            <description>Additional args for parameterized paths</description>
+        </attribute>
+        <attribute name="imagePropXmlPath" mode="IN" type="String" optional="true">
+            <description>Path to ImageProperties.xml file containing size types, from ofbiz home root</description>
+        </attribute>
+        <attribute name="sizeTypeList" mode="IN" type="List" optional="true">
+            <description>List of size types to generate and return (default: all types in file)</description>
+        </attribute>
+        <attribute name="copyOrig" mode="IN" type="Boolean" optional="true">
+            <description>If true, also creates copy of the original under the size type "original" (default: false)</description>
+        </attribute>
+        <attribute name="deleteOld" mode="IN" type="Boolean" optional="true">
+            <description>[TODO: NOT IMPLEMENTED] If true, also deletes old files in target directory (default: false)</description>
+        </attribute>
+        
+        <!-- SCALING OPTIONS -->
+        <attribute name="scalingOptions" mode="IN" type="Map" optional="true">
+            <description>Scaling options, notably the entry: scalerName (algorithm or library name)</description>
+        </attribute>
+        
+        <!-- OUTPUT -->
+        <attribute name="imageUrlMap" mode="OUT" type="Map" optional="true">
+            <description>Map of size types to URLs (relative to server root, with imageUrlPrefix); if copyOrig==true, also contains "original"</description>
+        </attribute>
+        <attribute name="bufferedImage" mode="OUT" type="java.awt.image.BufferedImage" optional="true">
+            <description>Original image contents, for reuse</description>
+        </attribute>
+    </service>
+    
+    <service name="contentImageDbScaleInAllSizeCore" engine="java"
+            location="org.ofbiz.content.image.ContentImageServices" invoke="contentImageDbScaleInAllSizeCore" auth="false" transaction-timeout="1800">
+        <description>Scales a content/generic database image according to size types in ImageProperties.xml - core implementation (caller specifies all locations/filenames)</description>    
+        
+        <!-- INPUT IMAGE -->
+        <attribute name="imageOrigContentId" mode="IN" type="String" optional="false">
+            <description>Original image contentId as input (alternative to imageOrigPath)</description>
+        </attribute>
+        <attribute name="imageOrigFn" mode="IN" type="String" optional="true">
+            <description>Original filename (no directories) to use for the original image; by default tries to get this from DataResource.objectInfo
+                NOTE: Only required if the original DataResource.objectInfo did not contain a filename or path to a file (sometimes the case)</description>
+        </attribute>
+        <!-- TODO?
+        <attribute name="imageOrigPath" mode="IN" type="String" optional="true">
+            <description>Full path of original image in filesystem as input (alternative to imageOrigContentId)</description>
+        </attribute>-->
+    
+        <!-- GENERATED RECORD PARAMETERS -->
+        <attribute name="targetFmtExt" mode="IN" type="String" optional="true">
+            <description>Target format name, same as file extension, e.g. png, jpg, ... (default: inferred from original DataResource.mimeTypeId)</description>
+        </attribute>
+        <attribute name="imagePropXmlPath" mode="IN" type="String" optional="true">
+            <description>Path to ImageProperties.xml file containing size types, from ofbiz home root</description>
+        </attribute>
+        <attribute name="sizeTypeList" mode="IN" type="List" optional="true">
+            <description>List of size types to generate and return (default: all types in file)</description>
+        </attribute>
+        <!-- not supporting this here: I think it will always be a negative
+        <attribute name="copyOrig" mode="IN" type="Boolean" optional="true">
+            <description>If true, also creates copy of the original under the size type "original" (default: false)</description>
+        </attribute>-->
+        <attribute name="deleteOld" mode="IN" type="Boolean" optional="true">
+            <description>If true, removes all existing related images before creating new ones (default: false)</description>
+        </attribute>
+        <attribute name="createdDate" mode="IN" type="Timestamp" optional="true">
+            <description>Optional createdDate for Content and DataResource</description>
+        </attribute>
+        
+        <!-- Content/DataResource  -->
+        <attribute name="contentFields" mode="IN" type="Map" optional="true">
+            <description>Fields to use to populate the created Content entities (all sizeTypes)
+                NOTE: entries can be FlexibleStringExpander instances. defaults: 
+                    contentName (default: "${fields.contentName}_${sizetype}")</description>
+        </attribute>
+        <attribute name="dataResourceFields" mode="IN" type="Map" optional="true">
+            <description>Fields to use to populate the created DataResource entities (all sizeTypes)
+                NOTE: entries can be FlexibleStringExpander instances. defaults: 
+                    dataResourceName (default: "${fields.dataResourceName}_${sizetype}"),
+                    objectInfo (default: "${origfn}_${sizetype}.${ext}" NOTE: origfn comes from objectInfo but may be imageOrigFn w/o ext - if passed)</description>
+        </attribute>
+        <attribute name="contentFieldsMap" mode="IN" type="Map" optional="true">
+            <description>Map of fields to use to populate the duplicated original Content entity, if copyOrig true (map key: sizeType)
+                NOTE: entries can be FlexibleStringExpander instances (see contentFields)</description>
+        </attribute>
+        <attribute name="dataResourceFieldsMap" mode="IN" type="Map" optional="true">
+            <description>Map of fields to use to populate the duplicated original DataResource entity, if copyOrig true (map key: sizeType)
+                NOTE: entries can be FlexibleStringExpander instances (see dataResourceFields)</description>
+        </attribute>
+        <attribute name="fileSizeDataResAttrName" mode="IN" type="String" optional="true">
+            <description>If specified, will add a DataResourceAttribute with this name containing the total filesize</description>
+        </attribute>
+        
+        <!-- ContentAssoc -->
+        <attribute name="contentAssocTypeId" mode="IN" type="String" optional="true">
+            <description>Content assoc type, with support for flexible expressions (default: "IMGSZ_${sizetype}")
+                NOTE: the entire string is automatically uppercased</description>
+        </attribute>
+    
+        <!-- SCALING OPTIONS -->
+        <attribute name="scalingOptions" mode="IN" type="Map" optional="true">
+            <description>Scaling options, notably the entry: scalerName (algorithm or library name)</description>
+        </attribute>
+    
+        <!-- OUTPUT -->
+        <attribute name="imageContentIdMap" mode="OUT" type="Map" optional="true">
+            <description>Map of size types to image record contentIds</description>
+        </attribute>
+        <attribute name="bufferedImage" mode="OUT" type="java.awt.image.BufferedImage" optional="true">
+            <description>Original image contents, for reuse</description>
+        </attribute>
+    </service>
+
+</services>

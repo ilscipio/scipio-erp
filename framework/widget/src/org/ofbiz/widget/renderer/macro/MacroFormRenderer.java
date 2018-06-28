@@ -108,7 +108,7 @@ import freemarker.template.TemplateModelException;
  */
 public final class MacroFormRenderer implements FormStringRenderer {
 
-    public static final String module = MacroFormRenderer.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private final Template macroLibrary;
     private final WeakHashMap<Appendable, Environment> environments = new WeakHashMap<Appendable, Environment>();
     //private final UtilCodec.SimpleEncoder internalEncoder; // SCIPIO: better off without this
@@ -278,7 +278,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(modelFormField.shouldBeRed(context)));
         if (ajaxEnabled) {
             String url = inPlaceEditor.getUrl(context);
-            // SCIPIO: FIXME?: the javascript string values should probably be escaped for javascript syntax
+            // SCIPIO: js encoder
+            UtilCodec.SimpleEncoder jsEnc = UtilCodec.getJsStringEncoder();
             String extraParameter = "{";
             Map<String, Object> fieldMap = inPlaceEditor.getFieldMap(context);
             if (fieldMap != null) {
@@ -288,7 +289,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
                 while (fieldIterator.hasNext()) {
                     count++;
                     Entry<String, Object> field = fieldIterator.next();
-                    extraParameter += field.getKey() + ":'" + (String) field.getValue() + "'";
+                    // SCIPIO: added JS escaping and value toString() call here
+                    extraParameter += jsEnc.encode(field.getKey()) 
+                            + ":'" + jsEnc.encode(field.getValue() != null ? field.getValue().toString() : null) + "'";
                     if (count < fieldSet.size()) {
                         extraParameter += ',';
                     }
@@ -302,38 +305,38 @@ public final class MacroFormRenderer implements FormStringRenderer {
             StringWriter inPlaceEditorParams = new StringWriter();
             inPlaceEditorParams.append("{name: '");
             if (UtilValidate.isNotEmpty(inPlaceEditor.getParamName())) {
-                inPlaceEditorParams.append(inPlaceEditor.getParamName());
+                inPlaceEditorParams.append(jsEnc.encode(inPlaceEditor.getParamName()));
             } else {
-                inPlaceEditorParams.append(modelFormField.getFieldName());
+                inPlaceEditorParams.append(jsEnc.encode(modelFormField.getFieldName()));
             }
             inPlaceEditorParams.append("'");
             inPlaceEditorParams.append(", method: 'POST'");
             inPlaceEditorParams.append(", submitdata: " + extraParameter);
             inPlaceEditorParams.append(", type: 'textarea'");
             inPlaceEditorParams.append(", select: 'true'");
-            inPlaceEditorParams.append(", onreset: function(){jQuery('#cc_" + idName + "').css('background-color', 'transparent');}");
+            inPlaceEditorParams.append(", onreset: function(){jQuery('#cc_" + jsEnc.encode(idName) + "').css('background-color', 'transparent');}");
             if (UtilValidate.isNotEmpty(inPlaceEditor.getCancelText())) {
-                inPlaceEditorParams.append(", cancel: '" + inPlaceEditor.getCancelText() + "'");
+                inPlaceEditorParams.append(", cancel: '" + jsEnc.encode(inPlaceEditor.getCancelText()) + "'");
             } else {
                 inPlaceEditorParams.append(", cancel: 'Cancel'");
             }
             if (UtilValidate.isNotEmpty(inPlaceEditor.getClickToEditText())) {
-                inPlaceEditorParams.append(", tooltip: '" + inPlaceEditor.getClickToEditText() + "'");
+                inPlaceEditorParams.append(", tooltip: '" + jsEnc.encode(inPlaceEditor.getClickToEditText()) + "'");
             }
             if (UtilValidate.isNotEmpty(inPlaceEditor.getFormClassName())) {
-                inPlaceEditorParams.append(", cssclass: '" + inPlaceEditor.getFormClassName() + "'");
+                inPlaceEditorParams.append(", cssclass: '" + jsEnc.encode(inPlaceEditor.getFormClassName()) + "'");
             } else {
                 inPlaceEditorParams.append(", cssclass: 'inplaceeditor-form'");
             }
             if (UtilValidate.isNotEmpty(inPlaceEditor.getLoadingText())) {
-                inPlaceEditorParams.append(", indicator: '" + inPlaceEditor.getLoadingText() + "'");
+                inPlaceEditorParams.append(", indicator: '" + jsEnc.encode(inPlaceEditor.getLoadingText()) + "'");
             }
             if (UtilValidate.isNotEmpty(inPlaceEditor.getOkControl())) {
                 inPlaceEditorParams.append(", submit: ");
                 if (!"false".equals(inPlaceEditor.getOkControl())) {
                     inPlaceEditorParams.append("'");
                 }
-                inPlaceEditorParams.append(inPlaceEditor.getOkControl());
+                inPlaceEditorParams.append(jsEnc.encode(inPlaceEditor.getOkControl()));
                 if (!"false".equals(inPlaceEditor.getOkControl())) {
                     inPlaceEditorParams.append("'");
                 }
@@ -371,7 +374,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         makeHyperlinkByType(writer, hyperlinkField.getLinkType(), modelFormField.getWidgetStyle(context), hyperlinkField.getUrlMode(), hyperlinkField.getTarget(context), 
                 hyperlinkField.getParameterMap(context, modelFormField.getEntityName(), modelFormField.getServiceName()), hyperlinkField.getDescription(context), hyperlinkField.getTargetWindow(context),
                 hyperlinkField.getConfirmation(context), modelFormField, this.request, this.response, context);
-        this.appendTooltip(writer, context, modelFormField);
+        this.appendTooltip(writer, context, modelFormField); // SCIPIO: FIXME: this should be set as tooltip/title on the hyperlink, not separate...
         this.request.removeAttribute("image");
         this.request.removeAttribute("descriptionSize");
     }
@@ -528,10 +531,11 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(" maxlength=");
         sr.append(ftlFmt.makeStringLiteral(maxlength));
         appendRequiredFieldParam(sr, context, modelFormField);
+        appendTooltipParam(sr, context, modelFormField); // SCIPIO
         sr.append(" />");
         executeMacro(writer, sr.toString());
         this.addAsterisks(writer, context, modelFormField);
-        this.appendTooltip(writer, context, modelFormField);
+        //this.appendTooltip(writer, context, modelFormField); // SCIPIO
     }
 
     public void renderDateTimeField(Appendable writer, Map<String, Object> context, DateTimeField dateTimeField) throws IOException {
@@ -788,10 +792,13 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(" mask=");
         sr.append(ftlFmt.makeStringLiteral(formattedMask));
         appendRequiredFieldParam(sr, context, modelFormField);
+        // SCIPIO: 2018-02-16: properly pass tooltip as parameter
+        appendTooltipParam(sr, context, modelFormField); // SCIPIO
         sr.append(" />");
         executeMacro(writer, sr.toString());
         this.addAsterisks(writer, context, modelFormField);
-        this.appendTooltip(writer, context, modelFormField);
+        // SCIPIO: 2018-02-16: now passed as parameter just above this
+        //this.appendTooltip(writer, context, modelFormField);
     }
 
     public void renderDropDownField(Appendable writer, Map<String, Object> context, DropDownField dropDownField) throws IOException {
@@ -917,6 +924,13 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
         options.append("]");
         String noCurrentSelectedKey = dropDownField.getNoCurrentSelectedKey(context);
+        
+        // SCIPIO: 2018-05-28: Added new conditions for use of noCurrentSelectedKey (defaultValue).
+        // See ModelFormField#isExplicitEntry for conditions.
+        if (dropDownField.getAllowEmpty() && UtilValidate.isEmpty(currentValue) && modelFormField.isExplicitEntry(context)) {
+            noCurrentSelectedKey = "";
+        }
+        
         String otherValue = "", fieldName = "";
         // Adapted from work by Yucca Korpela
         // http://www.cs.tut.fi/~jkorpela/forms/combo.html
@@ -1013,13 +1027,14 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(" fullSearch=");
         sr.append(ftlFmt.makeStringLiteral(fullSearch));
         appendRequiredFieldParam(sr, context, modelFormField);
+        appendTooltipParam(sr, context, modelFormField); // SCIPIO
         sr.append(" />");
         executeMacro(writer, sr.toString());
         ModelFormField.SubHyperlink subHyperlink = dropDownField.getSubHyperlink();
         if (subHyperlink != null && subHyperlink.shouldUse(context)) {
             makeHyperlinkString(writer, subHyperlink, context);
         }
-        this.appendTooltip(writer, context, modelFormField);
+        //this.appendTooltip(writer, context, modelFormField); // SCIPIO
     }
 
     public void renderCheckField(Appendable writer, Map<String, Object> context, CheckField checkField) throws IOException {
@@ -1071,6 +1086,13 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String key = checkField.getKey(context);
         String altKey = checkField.getAltKey(context);
         String noCurrentSelectedKey = checkField.getNoCurrentSelectedKey(context);
+        
+        // SCIPIO: 2018-05-28: Added new conditions for use of noCurrentSelectedKey (defaultValue).
+        // See ModelFormField#isExplicitEntry for conditions.
+        if (UtilValidate.isEmpty(currentValue) && modelFormField.isExplicitEntry(context)) {
+            noCurrentSelectedKey = "";
+        }
+        
         Boolean useHidden = checkField.getUseHidden(context);
         StringWriter sr = new StringWriter();
         sr.append("<@renderCheckField ");
@@ -1108,9 +1130,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(" useHidden=");
         sr.append(ftlFmt.makeTernaryBooleanLiteral(useHidden));
         appendRequiredFieldParam(sr, context, modelFormField);
+        appendTooltipParam(sr, context, modelFormField); // SCIPIO
         sr.append(" />");
         executeMacro(writer, sr.toString());
-        this.appendTooltip(writer, context, modelFormField);
+        //this.appendTooltip(writer, context, modelFormField); // SCIPIO
     }
 
     public void renderRadioField(Appendable writer, Map<String, Object> context, RadioField radioField) throws IOException {
@@ -1131,6 +1154,13 @@ public final class MacroFormRenderer implements FormStringRenderer {
             }
         }
         String noCurrentSelectedKey = radioField.getNoCurrentSelectedKey(context);
+        
+        // SCIPIO: 2018-05-28: Added new conditions for use of noCurrentSelectedKey (defaultValue).
+        // See ModelFormField#isExplicitEntry for conditions.
+        if (UtilValidate.isEmpty(currentValue) && modelFormField.isExplicitEntry(context)) {
+            noCurrentSelectedKey = "";
+        }
+        
         items.append("[");
         for (ModelFormField.OptionValue optionValue : allOptionValues) {
             if (items.length() > 1) {
@@ -1168,9 +1198,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(" action=");
         sr.append(ftlFmt.makeStringLiteral(action));
         appendRequiredFieldParam(sr, context, modelFormField);
+        appendTooltipParam(sr, context, modelFormField); // SCIPIO
         sr.append(" />");
         executeMacro(writer, sr.toString());
-        this.appendTooltip(writer, context, modelFormField);
+        //this.appendTooltip(writer, context, modelFormField); // SCIPIO
     }
 
     public void renderSubmitField(Appendable writer, Map<String, Object> context, SubmitField submitField) throws IOException {
@@ -1243,10 +1274,11 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(" ajaxUrl=");
         sr.append(ftlFmt.makeStringLiteral(ajaxEnabled ? ajaxUrl : null));
         sr.append(" id=");
-        sr.append(ftlFmt.makeStringLiteral(id));      
+        sr.append(ftlFmt.makeStringLiteral(id));
+        appendTooltipParam(sr, context, modelFormField); // SCIPIO
         sr.append(" />");
         executeMacro(writer, sr.toString());
-        this.appendTooltip(writer, context, modelFormField);
+        //this.appendTooltip(writer, context, modelFormField); // SCIPIO
     }
 
     public void renderResetField(Appendable writer, Map<String, Object> context, ResetField resetField) throws IOException {
@@ -1272,9 +1304,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(name));
         sr.append(" title=");
         sr.append(ftlFmt.makeStringLiteral(title));
+        appendTooltipParam(sr, context, modelFormField); // SCIPIO
         sr.append(" />");
         executeMacro(writer, sr.toString());
-        this.appendTooltip(writer, context, modelFormField);
+        //this.appendTooltip(writer, context, modelFormField); // SCIPIO
     }
 
     public void renderHiddenField(Appendable writer, Map<String, Object> context, HiddenField hiddenField) throws IOException {
@@ -1366,7 +1399,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             sr.append("<@renderFieldTitle ");
             sr.append(" style=");
             sr.append(ftlFmt.makeStringLiteral(style));
-            String displayHelpText = UtilProperties.getPropertyValue("widget.properties", "widget.form.displayhelpText");
+            String displayHelpText = UtilProperties.getPropertyValue("widget", "widget.form.displayhelpText");
             if ("Y".equals(displayHelpText)) {
                 Delegator delegator = WidgetWorker.getDelegator(context);
                 Locale locale = (Locale) context.get("locale");
@@ -2012,9 +2045,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(" hideOptions=");
         sr.append(Boolean.toString(hideOptions));
         appendRequiredFieldParam(sr, context, modelFormField);
+        appendTooltipParam(sr, context, modelFormField); // SCIPIO
         sr.append(" />");
         executeMacro(writer, sr.toString());
-        this.appendTooltip(writer, context, modelFormField);
+        //this.appendTooltip(writer, context, modelFormField); // SCIPIO
     }
 
     public void renderRangeFindField(Appendable writer, Map<String, Object> context, RangeFindField rangeFindField) throws IOException {
@@ -2092,9 +2126,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(" defaultOptionThru=");
         sr.append(ftlFmt.makeStringLiteral(defaultOptionThru));
         appendRequiredFieldParam(sr, context, modelFormField);
+        appendTooltipParam(sr, context, modelFormField); // SCIPIO
         sr.append(" />");
         executeMacro(writer, sr.toString());
-        this.appendTooltip(writer, context, modelFormField);
+        //this.appendTooltip(writer, context, modelFormField); // SCIPIO
     }
 
     public void renderDateFindField(Appendable writer, Map<String, Object> context, DateFindField dateFindField) throws IOException {
@@ -2232,9 +2267,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(" opIsEmpty=");
         sr.append(ftlFmt.makeStringLiteral(opIsEmpty));
         appendRequiredFieldParam(sr, context, modelFormField);
+        appendTooltipParam(sr, context, modelFormField); // SCIPIO
         sr.append(" />");
         executeMacro(writer, sr.toString());
-        this.appendTooltip(writer, context, modelFormField);
+        //this.appendTooltip(writer, context, modelFormField); // SCIPIO
     }
 
     public void renderLookupField(Appendable writer, Map<String, Object> context, LookupField lookupField) throws IOException {
@@ -2747,10 +2783,11 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(" autocomplete=");
         sr.append(ftlFmt.makeStringLiteral(autocomplete));
         appendRequiredFieldParam(sr, context, modelFormField);
+        appendTooltipParam(sr, context, modelFormField); // SCIPIO
         sr.append(" />");
         executeMacro(writer, sr.toString());
         this.makeHyperlinkString(writer, textField.getSubHyperlink(), context);
-        this.appendTooltip(writer, context, modelFormField);
+        //this.appendTooltip(writer, context, modelFormField); // SCIPIO
     }
 
     public void renderPasswordField(Appendable writer, Map<String, Object> context, PasswordField passwordField) throws IOException {
@@ -2805,11 +2842,12 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(" autocomplete=");
         sr.append(ftlFmt.makeStringLiteral(autocomplete));
         appendRequiredFieldParam(sr, context, modelFormField);
+        appendTooltipParam(sr, context, modelFormField); // SCIPIO
         sr.append(" />");
         executeMacro(writer, sr.toString());
         this.addAsterisks(writer, context, modelFormField);
         this.makeHyperlinkString(writer, passwordField.getSubHyperlink(), context);
-        this.appendTooltip(writer, context, modelFormField);
+        //this.appendTooltip(writer, context, modelFormField); // SCIPIO
     }
 
     public void renderImageField(Appendable writer, Map<String, Object> context, ImageField imageField) throws IOException {
@@ -2851,10 +2889,11 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(ftlFmt.makeStringLiteral(event == null ? "" : event));
         sr.append(" action=");
         sr.append(ftlFmt.makeStringLiteral(action == null ? "" : action));
+        appendTooltipParam(sr, context, modelFormField); // SCIPIO
         sr.append(" />");
         executeMacro(writer, sr.toString());
         this.makeHyperlinkString(writer, imageField.getSubHyperlink(), context);
-        this.appendTooltip(writer, context, modelFormField);
+        //this.appendTooltip(writer, context, modelFormField);
     }
 
     public void renderFieldGroupOpen(Appendable writer, Map<String, Object> context, ModelForm.FieldGroup fieldGroup) throws IOException {

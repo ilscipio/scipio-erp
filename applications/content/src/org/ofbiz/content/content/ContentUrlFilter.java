@@ -39,10 +39,15 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.webapp.control.ContextFilter;
+import org.ofbiz.webapp.control.RequestHandler;
 
 public class ContentUrlFilter extends ContextFilter {
-    public final static String module = ContentUrlFilter.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
+    /**
+     * @deprecated SCIPIO: 2017: this was unhardcoded; use {@link org.ofbiz.webapp.control.RequestHandler#getControlServletPath(HttpServletRequest)}.
+     */
+    @Deprecated
     public static final String CONTROL_MOUNT_POINT = "control";
     protected static String defaultLocaleString = null;
     protected static String redirectUrl = null;
@@ -52,7 +57,7 @@ public class ContentUrlFilter extends ContextFilter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)  throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
-        Delegator delegator = (Delegator) httpRequest.getSession().getServletContext().getAttribute("delegator");
+        Delegator delegator = (Delegator) httpRequest.getServletContext().getAttribute("delegator"); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
         
         //Get ServletContext
         ServletContext servletContext = config.getServletContext();
@@ -85,7 +90,7 @@ public class ContentUrlFilter extends ContextFilter {
             }
             if (UtilValidate.isNotEmpty(urlContentId)) {
                 StringBuilder urlBuilder = new StringBuilder();
-                urlBuilder.append("/" + CONTROL_MOUNT_POINT);
+                urlBuilder.append(RequestHandler.getControlServletPath(request)); // SCIPIO
                 urlBuilder.append("/" + config.getInitParameter("viewRequest") + "?contentId=" + urlContentId);
 
                 ContextFilter.setAttributesFromRequestBody(request);
@@ -160,11 +165,11 @@ public class ContentUrlFilter extends ContextFilter {
             return null;
         }
         StringBuilder urlBuilder = new StringBuilder();
-        urlBuilder.append(request.getSession().getServletContext().getContextPath());
+        urlBuilder.append(request.getServletContext().getContextPath()); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
         if (urlBuilder.length() == 0 || urlBuilder.charAt(urlBuilder.length() - 1) != '/') {
             urlBuilder.append("/");
         }
-        urlBuilder.append(CONTROL_MOUNT_POINT);
+        urlBuilder.append(RequestHandler.getControlServletPath(request)); // SCIPIO
         
         if (UtilValidate.isNotEmpty(viewContent)) {
             urlBuilder.append("/" + viewContent);

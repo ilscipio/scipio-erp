@@ -24,7 +24,7 @@ import org.ofbiz.base.util.Debug;
  * PortalPageWorker Class
  */
 public class WidgetPortalPageWorker {
-    public static final String module = WidgetPortalPageWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static PortalPageWorkerInterface portalPageWorker = null;
     static {
         try {

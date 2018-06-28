@@ -22,6 +22,9 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
     <!-- SCIPIO: Factored out framework-level core definitions into common-store-controller, analogous to common-controller for backend -->
     <include location="component://common/webcommon/WEB-INF/common-store-controller.xml"/>
+    <!-- 2016: new common cms client controller -->
+    <include location="component://cms/webcommon/WEB-INF/cms-client-controller.xml"/>
+    
     <description>SCIPIO Shop Controller Configuration File</description>
 
     <!-- Events run from here for the first hit in a visit -->
@@ -931,7 +934,7 @@ under the License.
     <request-map uri="createProductReview">
         <security https="false" auth="true"/>
         <event type="service" invoke="createProductReview"/>
-        <response name="success" type="view" value="product"/>
+        <response name="success" type="view-last" value="product"/>
         <response name="error" type="view" value="productReview"/>
     </request-map>
 
@@ -1912,7 +1915,7 @@ under the License.
     <view-map name="quickAnonEftInfo" type="screen" page="component://shop/widget/OrderScreens.xml#quickAnonEftInfo"/>
 
     <!-- Customer Info Views -->
-    <view-map name="survey" type="screen" page="component://shop/widget/CustomerScreens.xml#survey"/>
+    <view-map name="survey" type="screen" page="component://shop/widget/CustomerScreens.xml#customersurvey"/>
     <view-map name="newcustomer" type="screen" page="component://shop/widget/CustomerScreens.xml#newcustomer"/>
 
     <view-map name="viewprofile" type="screen" page="component://shop/widget/CustomerScreens.xml#viewprofile"/>

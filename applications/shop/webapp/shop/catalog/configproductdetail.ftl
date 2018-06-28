@@ -219,7 +219,7 @@ ${virtualJavaScript!}
                 <#if "Y" == (renderSingleChoiceWithRadioButtons!"")>
                     <#-- This is the radio button implementation -->
                     <#if !question.isMandatory()>
-                      <div><@field type="radio" name=counter?string value="checked" checked=(!question.isSelected()) label="No option" />
+                      <div><@field type="radio" name=counter?string value="" checked=(!question.isSelected()) label="No option" />
                     </#if>
                     <#assign optionCounter = 0>
                     <#list options as option>
@@ -280,9 +280,12 @@ ${virtualJavaScript!}
                           <#else>
                             <#assign shownPrice = option.price>
                           </#if>
+                          <#-- SCIPIO: 2018-02-13: this stock ofbiz code appears to break the counter values and result in
+                              wrong selections sent to server for totalPrice calc; cannot find any reason for doing this
                           <#if option.isSelected()>
                             <#assign optionCounter = optionCounter + 1>
                           </#if>
+                          -->
                           <option value="${optionCounter}"<#if option.isSelected()> selected="selected"</#if>>
                             ${option.description}&nbsp;
                             <#if (shownPrice > 0)>+<@ofbizCurrency amount=shownPrice isoCode=price.currencyUsed/>&nbsp;</#if>
@@ -644,66 +647,16 @@ ${virtualJavaScript!}
     </#if>
 </@section>
 
-  <#-- SCIPIO: Not for now
-  <#- Product Reviews ->
-  <@tr>
-    <@td colspan="2">
-      <div>${uiLabelMap.OrderCustomerReviews}:</div>
-      <#if averageRating?? && (averageRating > 0) && numRatings?? && (numRatings > 1)>
-          <div>${uiLabelMap.OrderAverageRating}: ${averageRating} <#if numRatings??>(${uiLabelMap.CommonFrom} ${numRatings} ${uiLabelMap.OrderRatings})</#if></div>
-      </#if>
-    </@td>
-  </@tr>
-  <@tr><@td colspan="2"><hr class="sepbar"/></@td></@tr>
-  <#if productReviews?has_content>
-    <#list productReviews as productReview>
-      <#assign postedUserLogin = productReview.getRelatedOne("UserLogin", false)>
-      <#assign postedPerson = postedUserLogin.getRelatedOne("Person", false)!>
-      <@tr>
-        <@td colspan="2">
-          <@table type="generic"> <#- orig: border="0" cellpadding="0" cellspacing="0" ->
-            <@tr>
-              <@td>${uiLabelMap.CommonBy}: <#if (productReview.postedAnonymous!("N")) == "Y">${uiLabelMap.OrderAnonymous}<#else>${postedPerson.firstName} ${postedPerson.lastName}</#if>
-              </@td>
-              <@td>${uiLabelMap.CommonOn}: ${productReview.postedDateTime!}
-              </@td>
-              <@td>${uiLabelMap.OrderRanking}: ${productReview.productRating!?string}
-              </@td>
-            </@tr>
-            <@tr>
-              <@td colspan="3">&nbsp;
-              </@td>
-            </@tr>
-            <@tr>
-              <@td colspan="3">${productReview.productReview!}
-              </@td>
-            </@tr>
-
-          </@table>
-        </@td>
-      </@tr>
-    </#list>
-    <@tr>
-      <@td colspan="2">
-        <a href="<@ofbizUrl>reviewProduct?category_id=${categoryId!}&amp;product_id=${product.productId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductReviewThisProduct}!</a>
-      </@td>
-    </@tr>
-  <#else>
-    <@tr>
-      <@td colspan="2">${uiLabelMap.ProductProductNotReviewedYet}.
-      </@td>
-    </@tr>
-    <@tr>
-      <@td colspan="2">
-        <a href="<@ofbizUrl>reviewProduct?category_id=${categoryId!}&amp;product_id=${product.productId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductBeTheFirstToReviewThisProduct}</a>
-      </@td>
-    </@tr>
-  </#if>
-  -->
-
-
 <@section>
     <@commonAssociatedProducts productValue=product commonFeatureResultIds=(commonFeatureResultIds!)/>
 </@section>
+
+<@section>
+  <#-- SCIPIO: Not for now  -->
+  <#-- Product Reviews -->
+  <@render resource="component://shop/widget/CatalogScreens.xml#inlineproductreview" reqAttribs={"productId": product.productId!"", "categoryId": requestParameters.category_id!""} />
+  <#-- <a href="<@ofbizUrl>reviewProduct?category_id=${categoryId!}&amp;product_id=${product.productId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductReviewThisProduct}!</a> -->
+</@section>
+
 
 </div>

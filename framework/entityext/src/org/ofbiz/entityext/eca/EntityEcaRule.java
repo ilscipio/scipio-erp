@@ -41,7 +41,7 @@ import org.w3c.dom.Element;
 @SuppressWarnings("serial")
 public final class EntityEcaRule implements java.io.Serializable {
 
-    public static final String module = EntityEcaRule.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final String entityName;
     private final String operationName;

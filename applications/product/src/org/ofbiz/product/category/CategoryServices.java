@@ -19,6 +19,9 @@
 package org.ofbiz.product.category;
 
 import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -28,11 +31,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.PropertyMessage;
+import org.ofbiz.base.util.PropertyMessageExUtil;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.content.content.LocalizedContentWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -45,23 +51,16 @@ import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.service.DispatchContext;
-import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
-
-import com.ilscipio.scipio.treeMenu.TreeDataItem;
-import com.ilscipio.scipio.treeMenu.jsTree.JsTreeDataItem;
-import com.ilscipio.scipio.treeMenu.jsTree.JsTreeDataItem.JsTreeDataItemState;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
 
 /**
  * CategoryServices - Category Services
  */
 public class CategoryServices {
 
-    public static final String module = CategoryServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resourceError = "ProductErrorUiLabels";
 
     public static Map<String, Object> getCategoryMembers(DispatchContext dctx, Map<String, ? extends Object> context) {
@@ -103,7 +102,7 @@ public class CategoryServices {
 
         List<String> orderByFields = UtilGenerics.checkList(context.get("orderByFields"));
         if (orderByFields == null)
-            orderByFields = FastList.newInstance();
+            orderByFields = new LinkedList<String>();
         String entityName = getCategoryFindEntityName(delegator, orderByFields, introductionDateLimit, releaseDateLimit);
 
         GenericValue productCategory;
@@ -120,7 +119,7 @@ public class CategoryServices {
         if (activeOnly) {
             productCategoryMembers = EntityUtil.filterByDate(productCategoryMembers, true);
         }
-        List<EntityCondition> filterConditions = FastList.newInstance();
+        List<EntityCondition> filterConditions = new LinkedList<EntityCondition>();
         if (introductionDateLimit != null) {
             EntityCondition condition = EntityCondition.makeCondition(EntityCondition.makeCondition("introductionDate", EntityOperator.EQUALS, null),
                     EntityOperator.OR, EntityCondition.makeCondition("introductionDate", EntityOperator.LESS_THAN_EQUAL_TO, introductionDateLimit));
@@ -234,7 +233,7 @@ public class CategoryServices {
 
         List<String> orderByFields = UtilGenerics.checkList(context.get("orderByFields"));
         if (orderByFields == null)
-            orderByFields = FastList.newInstance();
+            orderByFields = new LinkedList<String>();
         String entityName = getCategoryFindEntityName(delegator, orderByFields, introductionDateLimit, releaseDateLimit);
 
         String prodCatalogId = (String) context.get("prodCatalogId");
@@ -308,7 +307,7 @@ public class CategoryServices {
                     if (activeOnly) {
                         productCategoryMembers = EntityUtil.filterByDate(productCategoryMembers, true);
                     }
-                    List<EntityCondition> filterConditions = FastList.newInstance();
+                    List<EntityCondition> filterConditions = new LinkedList<EntityCondition>();
                     if (introductionDateLimit != null) {
                         EntityCondition condition = EntityCondition.makeCondition(
                                 EntityCondition.makeCondition("introductionDate", EntityOperator.EQUALS, null), EntityOperator.OR,
@@ -356,7 +355,7 @@ public class CategoryServices {
                         highIndex = listSize;
                     }
                 } else {
-                    List<EntityCondition> mainCondList = FastList.newInstance();
+                    List<EntityCondition> mainCondList = new LinkedList<EntityCondition>();
                     mainCondList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, productCategory.getString("productCategoryId")));
                     if (activeOnly) {
                         mainCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimestamp));
@@ -383,7 +382,7 @@ public class CategoryServices {
                     if (limitView) {
                         if (viewProductCategoryId != null) {
                             // do manual checking to filter view allow
-                            productCategoryMembers = FastList.newInstance();
+                            productCategoryMembers = new LinkedList<GenericValue>();
                             GenericValue nextValue;
                             int chunkSize = 0;
                             listSize = 0;
@@ -425,7 +424,7 @@ public class CategoryServices {
                     }
                     // null safety
                     if (productCategoryMembers == null) {
-                        productCategoryMembers = FastList.newInstance();
+                        productCategoryMembers = new LinkedList<GenericValue>();
                     }
 
                     if (highIndex > listSize) {
@@ -440,7 +439,7 @@ public class CategoryServices {
             }
         }
 
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
         result.put("viewIndex", Integer.valueOf(viewIndex));
         result.put("viewSize", Integer.valueOf(viewSize));
         result.put("lowIndex", Integer.valueOf(lowIndex));
@@ -452,168 +451,131 @@ public class CategoryServices {
             result.put("productCategoryMembers", productCategoryMembers);
         return result;
     }
-
-    // Please note : the structure of map in this function is according to the
-    // JSON data map of the jsTree
-    @SuppressWarnings("unchecked")
-    @Deprecated
+    
     /**
-     * SCIPIO: Use the new buildCatalogJsTree service instead which is compliant with jsTree latest version. 
-     * If an event is wanted though, use TODO: Implement the required events so they can be used to populate a jsTree via ajax too.
+     * @deprecated SCIPIO: To be removed in future (TODO) - use 
+     * {@link com.ilscipio.scipio.product.category.CategoryEvents#getChildCategoryTree(HttpServletRequest, HttpServletResponse)}
+     * or buildCategoryTree service instead.
      */
+    @Deprecated
     public static String getChildCategoryTree(HttpServletRequest request, HttpServletResponse response) {
-        Delegator delegator = (Delegator) request.getAttribute("delegator");
-        String productCategoryId = request.getParameter("productCategoryId");
-        String isCatalog = request.getParameter("isCatalog");
-        String isCategoryType = request.getParameter("isCategoryType");
-        String onclickFunction = request.getParameter("onclickFunction");
-        String additionParam = request.getParameter("additionParam");
-        String hrefString = request.getParameter("hrefString");
-        String hrefString2 = request.getParameter("hrefString2");
-        String entityName = null;
-        String primaryKeyName = null;
-
-        if (isCatalog.equals("true")) {
-            entityName = "ProdCatalog";
-            primaryKeyName = "prodCatalogId";
-        } else {
-            entityName = "ProductCategory";
-            primaryKeyName = "productCategoryId";
-        }
-
-        List categoryList = FastList.newInstance();
-        List<GenericValue> childOfCats;
-        List<String> sortList = org.ofbiz.base.util.UtilMisc.toList("sequenceNum", "title");
-
-        try {
-            GenericValue category = EntityQuery.use(delegator).from(entityName).where(primaryKeyName, productCategoryId).queryOne();
-            if (UtilValidate.isNotEmpty(category)) {
-                if (isCatalog.equals("true") && isCategoryType.equals("false")) {
-                    CategoryWorker.getRelatedCategories(request, "ChildCatalogList", CatalogWorker.getCatalogTopCategoryId(request, productCategoryId), true);
-                    childOfCats = EntityUtil.filterByDate((List<GenericValue>) request.getAttribute("ChildCatalogList"));
-
-                } else if (isCatalog.equals("false") && isCategoryType.equals("false")) {
-                    childOfCats = EntityQuery.use(delegator).from("ProductCategoryRollupAndChild").where("parentProductCategoryId", productCategoryId)
-                            .filterByDate().queryList();
-                } else {
-                    childOfCats = EntityQuery.use(delegator).from("ProdCatalogCategory").where("prodCatalogId", productCategoryId).filterByDate().queryList();
-                }
-                if (UtilValidate.isNotEmpty(childOfCats)) {
-
-                    for (GenericValue childOfCat : childOfCats) {
-
-                        Object catId = null;
-                        String catNameField = null;
-
-                        catId = childOfCat.get("productCategoryId");
-                        catNameField = "CATEGORY_NAME";
-
-                        Map josonMap = FastMap.newInstance();
-                        List<GenericValue> childList = null;
-
-                        // Get the child list of chosen category
-                        childList = EntityQuery.use(delegator).from("ProductCategoryRollup").where("parentProductCategoryId", catId).filterByDate().queryList();
-
-                        // Get the chosen category information for the
-                        // categoryContentWrapper
-                        GenericValue cate = EntityQuery.use(delegator).from("ProductCategory").where("productCategoryId", catId).queryOne();
-
-                        // If chosen category's child exists, then put the arrow
-                        // before category icon
-                        if (UtilValidate.isNotEmpty(childList)) {
-                            josonMap.put("state", "closed");
-                        }
-                        Map dataMap = FastMap.newInstance();
-                        Map dataAttrMap = FastMap.newInstance();
-                        CategoryContentWrapper categoryContentWrapper = new CategoryContentWrapper(cate, request);
-
-                        String title = null;
-                        // SCIPIO: Do NOT HTML-escape this here
-                        if (UtilValidate.isNotEmpty(categoryContentWrapper.get(catNameField))) {
-                            title = new StringBuffer(categoryContentWrapper.get(catNameField)).append(" [").append(catId).append("]")
-                                    .toString();
-                            dataMap.put("title", title);
-                        } else {
-                            title = catId.toString();
-                            dataMap.put("title", catId);
-                        }
-                        dataAttrMap.put("onClick", onclickFunction + "('" + catId + additionParam + "')");
-
-                        String hrefStr = hrefString + catId;
-                        if (UtilValidate.isNotEmpty(hrefString2)) {
-                            hrefStr = hrefStr + hrefString2;
-                        }
-                        dataAttrMap.put("href", hrefStr);
-
-                        dataMap.put("attr", dataAttrMap);
-                        josonMap.put("data", dataMap);
-                        Map attrMap = FastMap.newInstance();
-                        attrMap.put("id", catId);
-                        attrMap.put("isCatalog", false);
-                        attrMap.put("rel", "CATEGORY");
-                        josonMap.put("attr", attrMap);
-                        josonMap.put("sequenceNum", childOfCat.get("sequenceNum"));
-                        josonMap.put("title", title);
-
-                        categoryList.add(josonMap);
-                    }
-                    List<Map<Object, Object>> sortedCategoryList = UtilMisc.sortMaps(categoryList, sortList);
-                    request.setAttribute("treeData", sortedCategoryList);
-                }
-            }
-        } catch (GenericEntityException e) {
-            e.printStackTrace();
-            return "error";
-        }
-        return "success";
+        return com.ilscipio.scipio.product.category.CategoryEvents.getChildCategoryTree(request, response);
     }
-
-    @SuppressWarnings("unchecked")
-    public static Map<String, Object> buildCatalogTree(DispatchContext dctx, Map<String, ? extends Object> context) {
+    
+    /**
+     * SCIPIO: getProductCategoryContentLocalizedSimpleTextViews.
+     * Added 2017-10-27.
+     */
+    public static Map<String, Object> getProductCategoryContentLocalizedSimpleTextViews(DispatchContext dctx, Map<String, ?> context) {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
-        String library = (String) context.get("library");
-        String mode = (String) context.get("mode");
-        String prodCatalogId = (String) context.get("prodCatalogId");
-        Map<String, Object> result = ServiceUtil.returnSuccess();
-
-        List<TreeDataItem> resultList = FastList.newInstance();
-        if (mode.equals("full")) {
-            try {
-                GenericValue catalog = EntityQuery.use(delegator).from("ProdCatalog").where("prodCatalogId", prodCatalogId).queryOne();
-                List<GenericValue> prodCatalogCategories = EntityQuery.use(delegator).from("ProdCatalogCategory").where("prodCatalogId", prodCatalogId)
-                        .filterByDate().queryList();
-                if (UtilValidate.isNotEmpty(prodCatalogCategories)) {
-
-                    JsTreeDataItem dataItem = null;
-                    if (library.equals("jsTree")) {
-                        resultList.addAll(CategoryWorker.getTreeCategories(delegator, dispatcher, locale, prodCatalogCategories, library, prodCatalogId));
-                        dataItem = new JsTreeDataItem(prodCatalogId, catalog.getString("catalogName"), "jstree-folder", new JsTreeDataItemState(false, false),
-                                null);
-                        dataItem.setType("catalog");
-                    }
-
-                    if (UtilValidate.isNotEmpty(dataItem))
-                        resultList.add(dataItem);
+        
+        String productCategoryId = (String) context.get("productCategoryId");
+        Collection<String> prodCatContentTypeIdList = UtilGenerics.checkCollection(context.get("prodCatContentTypeIdList"));
+        boolean filterByDate = !Boolean.FALSE.equals(context.get("filterByDate"));
+        boolean useCache = Boolean.TRUE.equals(context.get("useCache"));
+        
+        Map<String, List<GenericValue>> viewsByType = null; 
+        try {
+            viewsByType = CategoryWorker.getProductCategoryContentLocalizedSimpleTextViews(delegator, dispatcher, 
+                    productCategoryId, prodCatContentTypeIdList, filterByDate ? UtilDateTime.nowTimestamp() : null, useCache);
+            Map<String, Object> result = ServiceUtil.returnSuccess();
+            postprocessProductCategoryContentLocalizedSimpleTextContentAssocViews(dctx, context, viewsByType, result);
+            return result;
+        } catch (Exception e) {
+            PropertyMessage msgIntro = PropertyMessage.makeWithVars("ProductErrorUiLabels", 
+                    "productservices.error_reading_ProductCategoryContent_simple_texts_for_alternate_locale_for_category",
+                    "productCategoryId", productCategoryId);
+            Debug.logError(e, PropertyMessageExUtil.makeLogMessage(msgIntro, e), module);
+            return ServiceUtil.returnFailure(msgIntro, e, locale);
+        }
+    }
+    
+    public static void postprocessProductCategoryContentLocalizedSimpleTextContentAssocViews(DispatchContext dctx, Map<String, ?> context, 
+            Map<String, List<GenericValue>> viewsByType, Map<String, Object> result) {
+        if (!Boolean.FALSE.equals(context.get("getViewsByType"))) {
+            result.put("viewsByType", viewsByType);
+        }
+        if (Boolean.TRUE.equals(context.get("getViewsByTypeAndLocale"))) {
+            result.put("viewsByTypeAndLocale", LocalizedContentWorker.splitContentLocalizedSimpleTextContentAssocViewsByLocale(viewsByType));
+        }
+        if (Boolean.TRUE.equals(context.get("getTextByTypeAndLocale"))) {
+            result.put("textByTypeAndLocale", LocalizedContentWorker.extractContentLocalizedSimpleTextDataByLocale(viewsByType));
+        }
+    }
+    
+    /**
+     * SCIPIO: replaceProductCategoryContentLocalizedSimpleTexts.
+     * Added 2017-12-06.
+     */
+    public static Map<String, Object> replaceProductCategoryContentLocalizedSimpleTexts(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Locale locale = (Locale) context.get("locale");
+        String productCategoryId = (String) context.get("productCategoryId");
+        
+        try {
+            GenericValue productCategory = delegator.findOne("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId), false);
+            if (productCategory == null) {
+                throw new IllegalArgumentException(UtilProperties.getMessage("ProductUiLabels", "ProductCategoryNotFoundForCategoryID", locale) + ": " + productCategoryId);
+            }
+            
+            Map<String, Object> contentFieldsUnparsed = UtilGenerics.checkMap(context.get("contentFields"));
+            Map<String, List<Map<String, Object>>> contentFields = LocalizedContentWorker.parseLocalizedSimpleTextContentFieldParams(contentFieldsUnparsed, null, true);
+        
+            for(Map.Entry<String, List<Map<String, Object>>> entry : contentFields.entrySet()) {
+                String prodCatContentTypeId = entry.getKey();
+                List<Map<String, Object>> entries = entry.getValue();
+            
+                List<GenericValue> productCategoryContentList = EntityQuery.use(delegator).from("ProductCategoryContent")
+                        .where("productCategoryId", productCategoryId, "prodCatContentTypeId", prodCatContentTypeId).filterByDate()
+                        .orderBy("-fromDate").queryList();
+                GenericValue productCategoryContent = EntityUtil.getFirst(productCategoryContentList);
+                if (productCategoryContentList.size() > 1) {
+                    Debug.logWarning("replaceProductCategoryContentLocalizedSimpleTexts: Multiple active ProductCategoryContent found for prodCatContentTypeId '"
+                            + prodCatContentTypeId + "' for category '" + productCategoryId + "'; updating only latest (contentId: '" + productCategoryContent.getString("contentId") + "')", module);
+                }
+                
+                String mainContentId = null;
+                if (productCategoryContent != null) {
+                    mainContentId = productCategoryContent.getString("contentId");
                 }
 
-            } catch (GenericEntityException e) {
-                return ServiceUtil.returnError(e.getMessage());
-            } catch (GenericServiceException e) {
-                return ServiceUtil.returnError(e.getMessage());
+                Map<String, Object> servCtx = dctx.makeValidContext("replaceContentLocalizedSimpleTexts", ModelService.IN_PARAM, context);
+                servCtx.put("mainContentId", mainContentId);
+                servCtx.put("entries", entries);
+                Map<String, Object> servResult = dispatcher.runSync("replaceContentLocalizedSimpleTexts", servCtx);
+                if (!ServiceUtil.isSuccess(servResult)) {
+                    return ServiceUtil.returnError(getReplStcAltLocErrorPrefix(context, locale) + ": " + ServiceUtil.getErrorMessage(servResult));
+                }
+                if (mainContentId == null && servResult.get("mainContentId") != null) {
+                    // must create a new ProductContent record
+                    mainContentId = (String) servResult.get("mainContentId");
+                    
+                    productCategoryContent = delegator.makeValue("ProductCategoryContent");
+                    productCategoryContent.put("productCategoryId", productCategoryId);
+                    productCategoryContent.put("contentId", mainContentId);
+                    productCategoryContent.put("prodCatContentTypeId", prodCatContentTypeId);
+                    productCategoryContent.put("fromDate", UtilDateTime.nowTimestamp());
+                    productCategoryContent = delegator.create(productCategoryContent);
+                } else if (servResult.get("mainContentId") != null && Boolean.TRUE.equals(servResult.get("allContentEmpty"))) {
+                    mainContentId = (String) servResult.get("mainContentId");
+                    if (Boolean.TRUE.equals(context.get("mainContentDelete"))) {
+                        delegator.removeByAnd("ProductCategoryContent", UtilMisc.toMap("contentId", mainContentId));
+                        LocalizedContentWorker.removeContentAndRelated(delegator, dispatcher, context, mainContentId);
+                    }
+                }
             }
-        } else if (mode.equals("category")) {
-            /**
-             * TODO: Complete for other modes
-             * */
-        } else if (mode.equals("product")) {
-            /**
-             * TODO: Complete for other modes
-             * */
+            return ServiceUtil.returnSuccess();
+        } catch(Exception e) {
+            Debug.logError(e, getReplStcAltLocErrorPrefix(context, Locale.ENGLISH) + ": " + e.getMessage(), module);
+            return ServiceUtil.returnError(getReplStcAltLocErrorPrefix(context, locale) + ": " + e.getMessage());
         }
-
-        result.put("treeList", resultList);
-        return result;
     }
+    private static String getReplStcAltLocErrorPrefix(Map<String, ?> context, Locale locale) {
+        return UtilProperties.getMessage("ProductErrorUiLabels", "productservices.error_updating_ProductCategoryContent_simple_texts_for_alternate_locale_for_category", 
+                context, locale);
+    }
+    
 }

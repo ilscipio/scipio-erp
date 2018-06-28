@@ -42,7 +42,7 @@ import org.xml.sax.SAXException;
  *
  */
 public class FormWidgetArtifactInfo extends ArtifactInfoBase {
-    public static final String module = FormWidgetArtifactInfo.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected ModelForm modelForm;
 

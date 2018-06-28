@@ -26,6 +26,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -54,42 +55,25 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
-import javolution.util.FastMap;
-import net.wimpi.pim.Pim;
 import net.wimpi.pim.Pim;
 import net.wimpi.pim.contact.basicimpl.AddressImpl;
-import net.wimpi.pim.contact.basicimpl.AddressImpl;
-import net.wimpi.pim.contact.basicimpl.EmailAddressImpl;
 import net.wimpi.pim.contact.basicimpl.EmailAddressImpl;
 import net.wimpi.pim.contact.basicimpl.PhoneNumberImpl;
-import net.wimpi.pim.contact.basicimpl.PhoneNumberImpl;
-import net.wimpi.pim.contact.io.ContactMarshaller;
 import net.wimpi.pim.contact.io.ContactMarshaller;
 import net.wimpi.pim.contact.io.ContactUnmarshaller;
-import net.wimpi.pim.contact.io.ContactUnmarshaller;
-import net.wimpi.pim.contact.model.Address;
 import net.wimpi.pim.contact.model.Address;
 import net.wimpi.pim.contact.model.Communications;
-import net.wimpi.pim.contact.model.Communications;
-import net.wimpi.pim.contact.model.Contact;
 import net.wimpi.pim.contact.model.Contact;
 import net.wimpi.pim.contact.model.EmailAddress;
-import net.wimpi.pim.contact.model.EmailAddress;
-import net.wimpi.pim.contact.model.Organization;
 import net.wimpi.pim.contact.model.Organization;
 import net.wimpi.pim.contact.model.OrganizationalIdentity;
-import net.wimpi.pim.contact.model.OrganizationalIdentity;
-import net.wimpi.pim.contact.model.PersonalIdentity;
 import net.wimpi.pim.contact.model.PersonalIdentity;
 import net.wimpi.pim.contact.model.PhoneNumber;
-import net.wimpi.pim.contact.model.PhoneNumber;
 import net.wimpi.pim.factory.ContactIOFactory;
-import net.wimpi.pim.factory.ContactIOFactory;
-import net.wimpi.pim.factory.ContactModelFactory;
 import net.wimpi.pim.factory.ContactModelFactory;
 
 public class VCard {
-    public static final String module = VCard.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resourceError = "MarketingUiLabels";
 
     public static Map<String, Object> importVCard(DispatchContext dctx, Map<String, ? extends Object> context) {
@@ -105,7 +89,7 @@ public class VCard {
         InputStream in = new ByteArrayInputStream(inputByteArray);
         String partyType = (String) context.get("partyType");
         Boolean isGroup =  "PartyGroup".equals(partyType); // By default we import a Person.
-        Map<String, Object> serviceCtx = FastMap.newInstance();
+        Map<String, Object> serviceCtx = new HashMap<String, Object>();
 
         try {
             ContactIOFactory ciof = Pim.getContactIOFactory();
@@ -324,7 +308,7 @@ public class VCard {
             }
             ContactIOFactory ciof = Pim.getContactIOFactory();
             ContactMarshaller marshaller = ciof.createContactMarshaller();
-            String saveToDirectory = EntityUtilProperties.getPropertyValue("sfa.properties", "save.outgoing.directory", "", delegator);
+            String saveToDirectory = EntityUtilProperties.getPropertyValue("sfa", "save.outgoing.directory", "", delegator);
             if (UtilValidate.isEmpty(saveToDirectory)) {
                 saveToDirectory = System.getProperty("ofbiz.home");
             }

@@ -18,6 +18,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+<!-- SCIPIO: NOTE: 2017-07-04: If this file is removed, the product images 
+    will use the file under content component config instead. -->
 <!-- 
     # The uploaded image is scaled in each size tye , you can descrease or increase size types ; size type name doesn't have to contain space
     # Just one configured dimension on two is allowed to restrict just one image dimension, whatever its proportions 
@@ -51,7 +53,7 @@ under the License.
         <dimension name="height" value="240"/>
         <dimension name="width" value="320"/>
     </size>
-     <size name="640x480">
+    <size name="640x480">
         <dimension name="height" value="480"/>
         <dimension name="width" value="640"/>
     </size>
@@ -67,7 +69,7 @@ under the License.
         <dimension name="height" value="1024"/>
         <dimension name="width" value="1280"/>
     </size>
-     <size name="1600x1200">
+    <size name="1600x1200">
         <dimension name="height" value="1200"/>
         <dimension name="width" value="1600"/>
     </size>

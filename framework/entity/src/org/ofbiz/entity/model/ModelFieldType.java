@@ -32,7 +32,7 @@ import org.w3c.dom.Element;
 @SuppressWarnings("serial")
 public class ModelFieldType implements Serializable {
 
-    public static final String module = ModelFieldType.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /** The type of the Field */
     protected String type = null;

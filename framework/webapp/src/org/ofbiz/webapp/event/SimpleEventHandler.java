@@ -40,7 +40,7 @@ import org.ofbiz.webapp.control.ConfigXMLReader.RequestMap;
  */
 public class SimpleEventHandler implements EventHandler {
 
-    public static final String module = SimpleEventHandler.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     /** Contains the property file name for translation of error messages. */
     public static final String err_resource = "WebappUiLabels";
 

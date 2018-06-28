@@ -34,7 +34,7 @@ import org.w3c.dom.Element;
 @SuppressWarnings("serial")
 public class ByAndFinder extends ListFinder {
 
-    public static final String module = ByAndFinder.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected Map<FlexibleMapAccessor<Object>, Object> fieldMap;
 

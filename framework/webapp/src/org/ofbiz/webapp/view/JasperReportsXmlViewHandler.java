@@ -46,7 +46,7 @@ import org.ofbiz.entity.Delegator;
  */
 public class JasperReportsXmlViewHandler extends AbstractViewHandler {
 
-    public static final String module = JasperReportsXmlViewHandler.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected ServletContext context;
 

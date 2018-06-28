@@ -38,7 +38,7 @@ import org.w3c.dom.Element;
  */
 @SuppressWarnings("serial")
 public final class EntityEcaAction implements java.io.Serializable {
-    public static final String module = EntityEcaAction.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final String serviceName;
     private final String serviceMode;

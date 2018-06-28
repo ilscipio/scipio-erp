@@ -74,8 +74,9 @@ under the License.
     <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/foundation/js/foundation/foundation.offcanvas.js" sequenceId="13"/>
     <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/foundation-datepicker/js/foundation-datepicker.js" sequenceId="14"/>
     <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/datatables/datatables.min.js" sequenceId="15"/>
-    <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/js/app.js" sequenceId="16"/>
-    <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/foundation-shop-theme/js/shariff/shariff.min.js" sequenceId="17"/> <!-- Heise Shariff-->
+    <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/moment/min/moment.min.js" sequenceId="16"/>
+    <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/js/app.js" sequenceId="17"/>
+    <VisualThemeResource visualThemeId="FOUNDATION_SHOP" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/foundation-shop-theme/js/shariff/shariff.min.js" sequenceId="18"/> <!-- Heise Shariff-->
 
 
     <!-- ADD-ONS -->

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>Scipio Webapp Engine Services</description>
+    <vendor>Ilscipio</vendor>
+    <version>1.0</version>
+    
+    <!-- SCIPIO: NOTE: 2018-02: This file was added for Scipio; did not exist in stock ofbiz -->
+
+    <service name="expireOldVisits" engine="java"
+            location="org.ofbiz.webapp.WebAppServices" invoke="expireOldVisits" auth="true" use-transaction="false" semaphore="wait">
+        <description>SCIPIO: Expires all Visits with fromDate older than a certain cutoff date by setting their thruDate (added 2018-02-15)</description>
+        <required-permissions join-type="AND">
+            <check-permission permission="SERVICE_INVOKE_ANY"/>
+        </required-permissions>
+        <attribute name="daysOld" mode="IN" type="Integer" optional="true">
+            <description>Age of Visits to consider expired, substracted from current time.
+                Default: value of serverstats.properties#stats.expire.visit.daysOld</description>
+        </attribute>
+        <attribute name="olderThan" mode="IN" type="Timestamp" optional="true">
+            <description>Specific value to use as date cutoff, instead of daysOld.</description>
+        </attribute>
+        <attribute name="singleDbOp" mode="IN" type="Boolean" optional="true" default-value="true">
+            <description>If true, try to run all expires in a single database statement;
+                if false, process row-by-row. Default: true (NOTE: service-specific default)</description>
+        </attribute>
+        <attribute name="dryRun" mode="IN" type="Boolean" optional="true" default-value="false">
+            <description>If true, don't perform actual updates.</description>
+        </attribute>
+    </service>
+    
+    <service name="purgeOldVisits" engine="java"
+            location="org.ofbiz.webapp.WebAppServices" invoke="purgeOldVisits" auth="true" use-transaction="false" semaphore="wait">
+        <description>SCIPIO: Deletes all Visits with fromDate older than a certain cutoff date (added 2018-02-15)</description>
+        <required-permissions join-type="AND">
+            <check-permission permission="SERVICE_INVOKE_ANY"/>
+        </required-permissions>
+        <attribute name="daysOld" mode="IN" type="Integer" optional="true">
+            <description>Age of Visits to consider removable, substracted from current time.
+                Default: value of serverstats.properties#stats.purge.visit.daysOld</description>
+        </attribute>
+        <attribute name="olderThan" mode="IN" type="Timestamp" optional="true">
+            <description>Specific value to use as date cutoff, instead of daysOld.</description>
+        </attribute>
+        <attribute name="singleDbOp" mode="IN" type="Boolean" optional="true" default-value="false">
+            <description>If true, try to run all purges in a single database statement (WARN: failure likely for this service);
+                if false, process row-by-row. Default: false (NOTE: service-specific default)</description>
+        </attribute>
+        <attribute name="dryRun" mode="IN" type="Boolean" optional="true" default-value="false">
+            <description>If true, don't perform actual updates.</description>
+        </attribute>
+    </service>
+
+</services>

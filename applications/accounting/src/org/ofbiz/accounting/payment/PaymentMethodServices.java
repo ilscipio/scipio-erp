@@ -19,12 +19,11 @@
 package org.ofbiz.accounting.payment;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
@@ -49,7 +48,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class PaymentMethodServices {
 
-    public final static String module = PaymentMethodServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public final static String resource = "AccountingUiLabels";
     // SCIPIO: Fix wrong error resource!
     //public static final String resourceError = "AccountingUiLabels";
@@ -63,7 +62,7 @@ public class PaymentMethodServices {
      * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> deletePaymentMethod(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -113,7 +112,7 @@ public class PaymentMethodServices {
     }
 
     public static Map<String, Object> makeExpireDate(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
         String expMonth = (String) context.get("expMonth");
         String expYear = (String) context.get("expYear");
 
@@ -134,7 +133,7 @@ public class PaymentMethodServices {
      * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> createCreditCard(DispatchContext ctx, Map<String, Object> context) {
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -147,7 +146,7 @@ public class PaymentMethodServices {
         if (result.size() > 0) return result;
 
         // do some more complicated/critical validation...
-        List<String> messages = FastList.newInstance();
+        List<String> messages = new LinkedList<String>();
 
         // first remove all spaces from the credit card number
         context.put("cardNumber", StringUtil.removeSpaces((String) context.get("cardNumber")));
@@ -168,7 +167,7 @@ public class PaymentMethodServices {
             return ServiceUtil.returnError(messages);
         }
 
-        List<GenericValue> toBeStored = FastList.newInstance();
+        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
         GenericValue newPm = delegator.makeValue("PaymentMethod");
 
         toBeStored.add(newPm);
@@ -213,24 +212,8 @@ public class PaymentMethodServices {
             // add a PartyContactMechPurpose of BILLING_LOCATION if necessary
             String contactMechPurposeTypeId = "BILLING_LOCATION";
 
-            GenericValue tempVal = null;
-
-            try {
-                List<GenericValue> allPCWPs = EntityQuery.use(delegator).from("PartyContactWithPurpose")
-                        .where("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId).queryList();
-                allPCWPs = EntityUtil.filterByDate(allPCWPs, now, "contactFromDate", "contactThruDate", true);
-                allPCWPs = EntityUtil.filterByDate(allPCWPs, now, "purposeFromDate", "purposeThruDate", true);
-                tempVal = EntityUtil.getFirst(allPCWPs);
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage(), module);
-                tempVal = null;
-            }
-
-            if (tempVal == null) {
-                // no value found, create a new one
-                newPartyContactMechPurpose = delegator.makeValue("PartyContactMechPurpose",
-                        UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", now));
-            }
+            // SCIPIO: 2017-10-10: refactored 
+            newPartyContactMechPurpose = checkMakePartyContactMechPurpose(delegator, partyId, contactMechId, contactMechPurposeTypeId, now);
         }
 
         if (newPartyContactMechPurpose != null) toBeStored.add(newPartyContactMechPurpose);
@@ -256,7 +239,7 @@ public class PaymentMethodServices {
      * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> updateCreditCard(DispatchContext ctx, Map<String, Object> context) {
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -268,7 +251,7 @@ public class PaymentMethodServices {
 
         if (result.size() > 0) return result;
 
-        List<GenericValue> toBeStored = FastList.newInstance();
+        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
         boolean isModified = false;
 
         GenericValue paymentMethod = null;
@@ -297,7 +280,7 @@ public class PaymentMethodServices {
         }
 
         // do some more complicated/critical validation...
-        List<String> messages = FastList.newInstance();
+        List<String> messages = new LinkedList<String>();
 
         // first remove all spaces from the credit card number
         String updatedCardNumber = StringUtil.removeSpaces((String) context.get("cardNumber"));
@@ -388,25 +371,8 @@ public class PaymentMethodServices {
             // add a PartyContactMechPurpose of BILLING_LOCATION if necessary
             String contactMechPurposeTypeId = "BILLING_LOCATION";
 
-            GenericValue tempVal = null;
-
-            try {
-                List<GenericValue> allPCWPs = EntityQuery.use(delegator).from("PartyContactWithPurpose")
-                        .where("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId).queryList();
-                allPCWPs = EntityUtil.filterByDate(allPCWPs, now, "contactFromDate", "contactThruDate", true);
-                allPCWPs = EntityUtil.filterByDate(allPCWPs, now, "purposeFromDate", "purposeThruDate", true);
-
-                tempVal = EntityUtil.getFirst(allPCWPs);
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage(), module);
-                tempVal = null;
-            }
-
-            if (tempVal == null) {
-                // no value found, create a new one
-                newPartyContactMechPurpose = delegator.makeValue("PartyContactMechPurpose",
-                        UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", now));
-            }
+            // SCIPIO: 2017-10-10: refactored 
+            newPartyContactMechPurpose = checkMakePartyContactMechPurpose(delegator, partyId, contactMechId, contactMechPurposeTypeId, now);
         }
 
         if (isModified) {
@@ -486,7 +452,7 @@ public class PaymentMethodServices {
     }
 
     public static Map<String, Object> createGiftCard(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -499,7 +465,7 @@ public class PaymentMethodServices {
         if (result.size() > 0)
             return result;
 
-        List<GenericValue> toBeStored = FastList.newInstance();
+        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
         GenericValue newPm = delegator.makeValue("PaymentMethod");
         toBeStored.add(newPm);
         GenericValue newGc = delegator.makeValue("GiftCard");
@@ -543,7 +509,7 @@ public class PaymentMethodServices {
     }
 
     public static Map<String, Object> updateGiftCard(DispatchContext ctx, Map<String, Object> context) {
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -556,7 +522,7 @@ public class PaymentMethodServices {
         if (result.size() > 0)
             return result;
 
-        List<GenericValue> toBeStored = FastList.newInstance();
+        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
         boolean isModified = false;
 
         GenericValue paymentMethod = null;
@@ -677,7 +643,7 @@ public class PaymentMethodServices {
      * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> createEftAccount(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -689,7 +655,7 @@ public class PaymentMethodServices {
 
         if (result.size() > 0) return result;
 
-        List<GenericValue> toBeStored = FastList.newInstance();
+        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
         GenericValue newPm = delegator.makeValue("PaymentMethod");
 
         toBeStored.add(newPm);
@@ -736,25 +702,8 @@ public class PaymentMethodServices {
             // add a PartyContactMechPurpose of BILLING_LOCATION if necessary
             String contactMechPurposeTypeId = "BILLING_LOCATION";
 
-            GenericValue tempVal = null;
-            try {
-                List<GenericValue> allPCWPs = EntityQuery.use(delegator).from("PartyContactWithPurpose")
-                        .where("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId).queryList();
-                allPCWPs = EntityUtil.filterByDate(allPCWPs, now, "contactFromDate", "contactThruDate", true);
-                allPCWPs = EntityUtil.filterByDate(allPCWPs, now, "purposeFromDate", "purposeThruDate", true);
-
-                tempVal = EntityUtil.getFirst(allPCWPs);
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage(), module);
-                tempVal = null;
-            }
-
-            if (tempVal == null) {
-                // no value found, create a new one
-                newPartyContactMechPurpose = delegator.makeValue("PartyContactMechPurpose",
-                    UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, 
-                            "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", now));
-            }
+            // SCIPIO: 2017-10-10: refactored 
+            newPartyContactMechPurpose = checkMakePartyContactMechPurpose(delegator, partyId, contactMechId, contactMechPurposeTypeId, now);
         }
 
         if (newPartyContactMechPurpose != null)
@@ -782,7 +731,7 @@ public class PaymentMethodServices {
      * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> updateEftAccount(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -794,7 +743,7 @@ public class PaymentMethodServices {
 
         if (result.size() > 0) return result;
 
-        List<GenericValue> toBeStored = FastList.newInstance();
+        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
         boolean isModified = false;
 
         GenericValue paymentMethod = null;
@@ -863,26 +812,9 @@ public class PaymentMethodServices {
         if (UtilValidate.isNotEmpty(contactMechId)) {
             // add a PartyContactMechPurpose of BILLING_LOCATION if necessary
             String contactMechPurposeTypeId = "BILLING_LOCATION";
-
-            GenericValue tempVal = null;
-
-            try {
-                List<GenericValue> allPCWPs = EntityQuery.use(delegator).from("PartyContactWithPurpose")
-                        .where("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId).queryList();
-                allPCWPs = EntityUtil.filterByDate(allPCWPs, now, "contactFromDate", "contactThruDate", true);
-                allPCWPs = EntityUtil.filterByDate(allPCWPs, now, "purposeFromDate", "purposeThruDate", true);
-                tempVal = EntityUtil.getFirst(allPCWPs);
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage(), module);
-                tempVal = null;
-            }
-
-            if (tempVal == null) {
-                // no value found, create a new one
-                newPartyContactMechPurpose = delegator.makeValue("PartyContactMechPurpose",
-                        UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, 
-                                "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", now));
-            }
+            
+            // SCIPIO: 2017-10-10: refactored 
+            newPartyContactMechPurpose = checkMakePartyContactMechPurpose(delegator, partyId, contactMechId, contactMechPurposeTypeId, now);
         }
 
         if (isModified) {
@@ -916,5 +848,69 @@ public class PaymentMethodServices {
         result.put("oldPaymentMethodId", paymentMethodId);
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
+    }
+    
+    /**
+     * SCIPIO: If a PartyContactMechPurpose for given party/contactMechId/purpose does not already exist, 
+     * makes and returns a non-committed GenericValue for one.
+     * <p>
+     * Code factored out from 4 updateXxx methods above.
+     * <p>
+     * 2017-10-10: PARTIAL FIX: This method has been PARTIALLY fixed (where noted below) to prevent creation of duplicate
+     * PartyContactMechPurpose records in the case where no PartyContactMech exists (TODO: REVIEW: even this
+     * fix is less than ideal, but trying to avoid any large changes until further review). 
+     * However this does NOT resolve the following issues...
+     * <p>
+     * FIXME?: REVIEW: SKETCHY BEHAVIOR: This method (from the original ofbiz code, 2017-10-10) actually
+     * creates new PartyContactMechPurpose records for ContactMechs that do not yet have any
+     * PartyContactMech records. This can happen because these methods are called by updatePaymentPostalAddress
+     * which is triggered by a SECA on updatePostalAddress, which is called within updatePartyPostalAddress
+     * BEFORE the updatePartyContactMech call is invoked. We receive the "new" contactMechId, not the old one,
+     * which has no PartyContactMech yet.
+     * <p>
+     * This is not trivial to address because existing code may have been relying on this behavior to guarantee
+     * BILLING_ADDRESS is added to the contactMechId through the SECA. So we cannot simply prevent creation
+     * if no PartyContactMech record exists or risk breaking code, even though having standalone 
+     * PartyContactMechPurpose seems wrong.
+     * Is unclear whether the "old" contactMechId could be used instead (technically it could work, but
+     * modifying the old's purposes might be considered wrong).
+     * <p>
+     * Added 2017-10-10.
+     */
+    private static GenericValue checkMakePartyContactMechPurpose(Delegator delegator, String partyId, String contactMechId, String contactMechPurposeTypeId, Timestamp now) {
+        GenericValue tempVal = null;
+
+        try {
+            List<GenericValue> allPCWPs = EntityQuery.use(delegator).from("PartyContactWithPurpose")
+                    .where("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId).queryList();
+            allPCWPs = EntityUtil.filterByDate(allPCWPs, now, "contactFromDate", "contactThruDate", true);
+            allPCWPs = EntityUtil.filterByDate(allPCWPs, now, "purposeFromDate", "purposeThruDate", true);
+            tempVal = EntityUtil.getFirst(allPCWPs);
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e.getMessage(), module);
+            tempVal = null;
+        }
+
+        if (tempVal == null) {
+            try {
+                // SCIPIO: 2017-10-10: NEW QUERY: we must first verify that there is not already a PartyContactMechPurpose.
+                // The query above does NOT catch this. TODO: REVIEW: this adds more overhead, not ideal.
+                List<GenericValue> allPCMPs = EntityQuery.use(delegator).from("PartyContactMechPurpose")
+                        .where("partyId", partyId, "contactMechId", contactMechId, "contactMechPurposeTypeId", contactMechPurposeTypeId).queryList();
+                allPCMPs = EntityUtil.filterByDate(allPCMPs, now);
+                tempVal = EntityUtil.getFirst(allPCMPs);
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e.getMessage(), module);
+                tempVal = null;
+            }
+            
+            if (tempVal == null) {
+                // no value found, create a new one
+                return delegator.makeValue("PartyContactMechPurpose",
+                        UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId, 
+                                "contactMechPurposeTypeId", contactMechPurposeTypeId, "fromDate", now));
+            }
+        }
+        return null;
     }
 }

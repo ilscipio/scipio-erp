@@ -23,7 +23,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 
 public class EntityObjectCache extends AbstractEntityConditionCache<String, Object> {
 
-    public static final String module = EntityObjectCache.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public EntityObjectCache(String delegatorName) {
         super(delegatorName, "object-list");

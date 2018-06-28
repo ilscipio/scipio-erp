@@ -36,7 +36,7 @@ import org.ofbiz.entity.model.ModelEntity;
 
 public abstract class AbstractEntityConditionCache<K, V> extends AbstractCache<EntityCondition, ConcurrentMap<K, V>> {
 
-    public static final String module = AbstractEntityConditionCache.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected AbstractEntityConditionCache(String delegatorName, String id) {
         super(delegatorName, id);

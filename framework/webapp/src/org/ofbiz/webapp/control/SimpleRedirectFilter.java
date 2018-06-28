@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class SimpleRedirectFilter implements Filter {
 
-    public static final String module = SimpleRedirectFilter.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected FilterConfig config = null;
     

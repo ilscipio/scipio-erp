@@ -1,0 +1,23 @@
+{
+"authentication":{
+   "blockUnknown": true,
+   "class":"solr.BasicAuthPlugin",
+   "credentials":{"admin":"IV0EHq1OnNrj6gvRCwvFwTrZ1+z1oBbnQdiVC3otuq0= Ndd7LKvVBAaZIF0QAVi1ekCfAJXr1GGfLtRUXhgrF8c=",
+      "solradmin":"IV0EHq1OnNrj6gvRCwvFwTrZ1+z1oBbnQdiVC3otuq0= Ndd7LKvVBAaZIF0QAVi1ekCfAJXr1GGfLtRUXhgrF8c=",
+      "solrquery":"IV0EHq1OnNrj6gvRCwvFwTrZ1+z1oBbnQdiVC3otuq0= Ndd7LKvVBAaZIF0QAVi1ekCfAJXr1GGfLtRUXhgrF8c=",
+      "solrupdate":"IV0EHq1OnNrj6gvRCwvFwTrZ1+z1oBbnQdiVC3otuq0= Ndd7LKvVBAaZIF0QAVi1ekCfAJXr1GGfLtRUXhgrF8c="}
+},
+"authorization":{
+   "class":"solr.RuleBasedAuthorizationPlugin",
+   "permissions":[{"name":"read","role":"*"},
+      {"name":"schema-read","role":"*"},
+      {"name":"config-read","role":"*"},
+      {"name":"collection-admin-read","role":"*"},
+      {"name":"metrics-read","role":"*"},
+      {"name":"core-admin-read","role":"*"},
+      {"path":"/admin/ping","collection":null,"role":"*"},
+      {"name":"update","role":["update","admin"]},
+      {"name":"security-edit","role":"admin"},
+      {"name":"all","role":"admin"}],
+   "user-role":{"solradmin":"admin","admin":"admin","solrupdate":"update","solrquery":"query"}
+}}

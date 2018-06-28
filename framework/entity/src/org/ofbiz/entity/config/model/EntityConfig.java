@@ -42,7 +42,7 @@ import org.w3c.dom.Element;
 public final class EntityConfig {
     public static final String ENTITY_ENGINE_XML_FILENAME = "entityengine.xml";
 
-    private static final String module = EntityConfig.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private static final EntityConfig instance = createNewInstance();
     private final List<ResourceLoader> resourceLoaderList; // <resource-loader>
@@ -359,7 +359,7 @@ public final class EntityConfig {
             throw new GenericEntityConfException("No jdbc-password or jdbc-password-lookup specified for inline-jdbc element, line: " + inlineJdbcElement.getLineNumber());
         }
         String key = "jdbc-password.".concat(jdbcPasswordLookup);
-        jdbcPassword = UtilProperties.getPropertyValue("passwords.properties", key);
+        jdbcPassword = UtilProperties.getPropertyValue("passwords", key);
         if (jdbcPassword.isEmpty()) {
             throw new GenericEntityConfException("'" + key + "' property not found in passwords.properties file for inline-jdbc element, line: " + inlineJdbcElement.getLineNumber());
         }

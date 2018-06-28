@@ -1,0 +1,22 @@
+{
+"authentication":{
+   "blockUnknown": true,
+   "class":"com.ilscipio.scipio.solr.plugin.security.ScipioUserLoginAuthPlugin",
+   "cacheLogins":["solrquery","solrupdate"],
+   "cachedLoginExpiry":3600000
+},
+"authorization":{
+   "class":"com.ilscipio.scipio.solr.plugin.security.ScipioRuleBasedAuthorizationPlugin",
+   "permissions":[{"name":"read","role":"*"},
+      {"name":"schema-read","role":"*"},
+      {"name":"config-read","role":"*"},
+      {"name":"collection-admin-read","role":"*"},
+      {"name":"metrics-read","role":"*"},
+      {"name":"core-admin-read","role":"*"},
+      {"path":"/admin/ping","collection":null,"role":"*"},
+      {"name":"update","role":["update","admin"]},
+      {"name":"security-edit","role":"admin"},
+      {"name":"all","role":"admin"}],
+   "user-role":{},
+   "scipioPermSolrRoles":{"SOLRADM_ADMIN":"admin", "SOLRADM_UPDATE":"update", "SOLRADM_VIEW":"query"}
+}}

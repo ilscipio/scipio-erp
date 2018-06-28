@@ -39,7 +39,7 @@ import org.ofbiz.service.ServiceUtil;
 
 public class ServiceEngineTestServices {
 
-    public static final String module = ServiceEngineTestServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ServiceErrorUiLabels";
 
     public static Map<String, Object> testServiceDeadLockRetry(DispatchContext dctx, Map<String, ? extends Object> context) {

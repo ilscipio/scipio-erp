@@ -13,7 +13,13 @@ storeLastProductStoreId = session.getAttribute("storeLastProductStoreId");
 context.storeLastProductStoreId = storeLastProductStoreId;
  
 if (!parameters.productStoreId && !context.productStoreId && !globalContext.productStoreId) {
-    productStoreId = session.getAttribute("storeLastProductStoreId"); 
+    productStoreId = session.getAttribute("storeLastProductStoreId");
+    
+    // 2017-11: fallback support
+    if (!productStoreId) {
+        productStoreId = context.getStoreLastProductStore?.defaultProductStoreId;
+    }
+    
     parameters.productStoreId = productStoreId;
     if (useGlobal) {
         globalContext.productStoreId = productStoreId;

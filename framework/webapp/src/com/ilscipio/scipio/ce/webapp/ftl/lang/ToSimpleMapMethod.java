@@ -33,7 +33,7 @@ import freemarker.template.TemplateModelException;
  */
 public class ToSimpleMapMethod implements TemplateMethodModelEx {
 
-    public static final String module = ToSimpleMapMethod.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)

@@ -44,7 +44,7 @@ import org.w3c.dom.Node;
 public class SaveLabelsToXmlFile {
 
     private static final String resource = "WebtoolsUiLabels";
-    private static final String module = SaveLabelsToXmlFile.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static Map<String, Object> saveLabelsToXmlFile(DispatchContext dctx, Map<String, ? extends Object> context) {
         Locale locale = (Locale) context.get("locale");

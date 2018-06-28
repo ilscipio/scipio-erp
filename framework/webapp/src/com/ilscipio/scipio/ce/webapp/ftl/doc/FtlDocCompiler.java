@@ -267,8 +267,8 @@ public class FtlDocCompiler {
             throw new IllegalArgumentException("Base source folder '" + this.srcFolderPathFile + "' is not a directory");
         }
         
-        this.libFilenames = new ArrayList<String>(libFilenames.size());
-        this.libFiles = new ArrayList<File>(libFilenames.size());
+        this.libFilenames = new ArrayList<>(libFilenames.size());
+        this.libFiles = new ArrayList<>(libFilenames.size());
         for(String filename : libFilenames) {
             String validFn = validateFilename(filename);
             if (!validFn.endsWith(inFileExtension)) {

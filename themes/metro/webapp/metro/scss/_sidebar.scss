@@ -137,12 +137,11 @@ $sidebar-width: 200px;
       }
     }
     
-    &.scipio-nav-actions-menu-item{
-        //background-color: rgba($white-smoke,0.2);
+    &.scipio-nav-actions-menu-item {
         background-color: rgba($white-smoke,0.12);
-        //margin-bottom:2px;             
+      
         a {
-            //color: $jet;
+            color: $white;
             border-left-color: $jet;
         }
    }
@@ -200,7 +199,13 @@ $sidebar-width: 200px;
 .inner-wrap {
 }
 
-.fixed {margin-left:$sidebar-width;}
+.fixed {
+    @if $text-direction == ltr {
+        margin-left: $sidebar-width;
+    } @else {
+        margin-right: $sidebar-width;
+    }
+}
 
 .tab-bar {
     h1 { 
@@ -220,6 +225,8 @@ $sidebar-width: 200px;
 
 #content-main-section {
     padding-top:50px;
+    
+    
 }
 
 #content-main-body{
@@ -235,17 +242,31 @@ $sidebar-width: 200px;
   .side-bar {
     @include side-nav-nested;
     
-    background-color: $side-bar-bg;    
-    left: 0px;
-    top: 0px;
-    bottom: 0;
-    position: fixed;
-    width: $sidebar-width;
-    overflow-x: hidden;
+    background-color: $side-bar-bg;
+    
+    @if $text-direction == ltr {
+        left: 0px;
+        right:auto;
+        top: 0px;
+        bottom: 0;
+        position: fixed;
+        width: $sidebar-width;
+        overflow-x: hidden;
+    } @else {
+        left:auto;
+        right: 0px;
+        top: 0px;
+        bottom: 0;
+        position: fixed;
+        width: $sidebar-width;
+        overflow-x: hidden;
+    
+    }
+    
     
     .name{
          a {color: $white}
-        .logo-text {display:inline-block; width:100px;word-break: break-all;}
+        .logo-text {display:inline-block; width:100px;word-break: break-word;}
         img{
             width: 55px;
             height: 55px;
@@ -263,8 +284,17 @@ $sidebar-width: 200px;
   .top-bar {
       background:$topbar-bg-color;
       border-bottom: 1px solid #D9DEE4;
-      margin-left: $sidebar-width;
-      padding-left:10px;
+      
+      
+      @if $text-direction == ltr {
+        margin-left: $sidebar-width;
+        margin-right:auto;
+        padding-left:10px;
+      } @else {
+        margin-left: auto;
+        margin-right: $sidebar-width;
+        padding-right:10px;
+      }
       
       img{
         width: 55px;
@@ -298,7 +328,15 @@ $sidebar-width: 200px;
   
   #content-main-section {
     width:auto;
-    margin-left: $sidebar-width;
+    
+    @if $text-direction == ltr {
+        margin-left: $sidebar-width;
+        margin-right: auto;
+    } @else {
+        margin-right: $sidebar-width;
+         margin-left: auto;
+    }
+    
   }
   
   .page-noauth {
@@ -330,30 +368,35 @@ $sidebar-width: 200px;
         */
     }
     
-    li a:not(.button) {
-        //color: $white;
+    li {
+        a:not(.button) {
+            //color: $white;
+        }
+
+        
+        &.heading {
+          background: $side-nav-heading-color;      
+          color: $white;
+        
+         text-transform: $side-nav-heading-text-transform;
+          font: {
+            size: $side-nav-heading-font-size;
+            weight: $side-nav-heading-font-weight;
+          }
+          //border-left: 5px solid  $primary-color;
+          border-bottom: none;
+          border-top: 1px solid scale-color($primary-color, $lightness: 14%);
+          display: block;
+          padding:0px;
+          padding-left: 0.4rem;
+          margin-top:1rem;
+          
+            &:first-child {
+                margin-top:0px;
+            }
+        }
     }
     
-    li.heading {
-      background: $side-nav-heading-color;      
-      color: $white;
-    
-     text-transform: $side-nav-heading-text-transform;
-      font: {
-        size: $side-nav-heading-font-size;
-        weight: $side-nav-heading-font-weight;
-      }
-      //border-left: 5px solid  $primary-color;
-      border-bottom: none;
-      border-top: 1px solid scale-color($primary-color, $lightness: 14%);
-      display: block;
-      padding:0px;
-      padding-left: 0.4rem;
-      margin-top:1rem;
-      
-      &:first-child {
-        margin-top:0px;
-      }
-    }
+     
 }
 

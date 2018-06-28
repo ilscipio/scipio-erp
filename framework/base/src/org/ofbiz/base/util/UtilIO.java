@@ -36,7 +36,7 @@ import org.apache.commons.io.IOUtils;
 
 public final class UtilIO {
     public static final Charset UTF8 = Charset.forName("UTF-8");
-    public static final String module = UtilIO.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /** Copy an InputStream to an OutputStream, optionally closing either
      *  the input or the output.

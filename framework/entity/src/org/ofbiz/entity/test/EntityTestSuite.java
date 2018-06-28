@@ -71,7 +71,7 @@ import org.ofbiz.entity.util.SequenceUtil;
 
 public class EntityTestSuite extends EntityTestCase {
 
-    public static final String module = EntityTestSuite.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     /*
      * This sets how many values to insert when trying to create a large number of values.  10,000 causes HSQL to crash but is ok
      * with Derby.  Going up to 100,000 causes problems all around because Java List seems to be capped at about 65,000 values.
@@ -1040,13 +1040,15 @@ public class EntityTestSuite extends EntityTestCase {
      * Tests EntitySaxReader, verification loading data with tag create, create-update, create-replace, delete 
      */
     public void testEntitySaxReaderCreation() throws Exception {
-        String xmlContentLoad = 
+        String xmlContentLoad =
+                "<entity-engine-xml>" +
                 "<TestingType testingTypeId=\"JUNIT-TEST\" description=\"junit test\"/>" +
                 "<create>" +
                 "    <TestingType testingTypeId=\"JUNIT-TEST2\" description=\"junit test\"/>" +
                 "    <Testing testingId=\"T1\" testingTypeId=\"JUNIT-TEST\" testingName=\"First test\" testingSize=\"10\" testingDate=\"2010-01-01 00:00:00\"/>" +
                 "</create>" +
-                "<Testing testingId=\"T2\" testingTypeId=\"JUNIT-TEST2\" testingName=\"Second test\" testingSize=\"20\" testingDate=\"2010-02-01 00:00:00\"/>";
+                "<Testing testingId=\"T2\" testingTypeId=\"JUNIT-TEST2\" testingName=\"Second test\" testingSize=\"20\" testingDate=\"2010-02-01 00:00:00\"/>" +
+                "</entity-engine-xml>";
         EntitySaxReader reader = new EntitySaxReader(delegator);
         long numberLoaded = reader.parse(xmlContentLoad);
         assertEquals("Create Entity loaded ", 4, numberLoaded);
@@ -1067,8 +1069,10 @@ public class EntityTestSuite extends EntityTestCase {
 
     public void testEntitySaxReaderCreateSkip() throws Exception {
         String xmlContentLoad =
+                "<entity-engine-xml>" +
                 "<TestingType testingTypeId=\"reader-create-skip\" description=\"reader create skip\"/>" +
-                "<Testing testingId=\"reader-create-skip\" testingTypeId=\"reader-create-skip\" testingName=\"reader create skip\" testingSize=\"10\" testingDate=\"2010-01-01 00:00:00\"/>";
+                "<Testing testingId=\"reader-create-skip\" testingTypeId=\"reader-create-skip\" testingName=\"reader create skip\" testingSize=\"10\" testingDate=\"2010-01-01 00:00:00\"/>" +
+                "</entity-engine-xml>";
         EntitySaxReader reader = new EntitySaxReader(delegator);
         long numberLoaded = reader.parse(xmlContentLoad);
         xmlContentLoad =
@@ -1088,13 +1092,15 @@ public class EntityTestSuite extends EntityTestCase {
 
     public void testEntitySaxReaderUpdate() throws Exception {
         String xmlContentLoad =
+                "<entity-engine-xml>" +
                 "<TestingType testingTypeId=\"create-update\" description=\"create update\"/>" +
                 "<TestingType testingTypeId=\"create-updated\" description=\"create update updated\"/>" +
                 "<Testing testingId=\"create-update-T3\" testingTypeId=\"create-update\" testingName=\"Test 3\" testingSize=\"10\" testingDate=\"2010-01-01 00:00:00\"/>" +
                 "<create-update>" +
                 "    <Testing testingId=\"create-update-T1\" testingTypeId=\"create-update\" testingName=\"First test update\" testingSize=\"20\" testingDate=\"2010-01-01 00:00:00\"/>" +
                 "    <Testing testingId=\"create-update-T3\" testingTypeId=\"create-updated\" testingName=\"Third test\" testingSize=\"30\" testingDate=\"2010-03-01 00:00:00\"/>" +
-                "</create-update>";
+                "</create-update>" +
+                "</entity-engine-xml>";
         EntitySaxReader reader = new EntitySaxReader(delegator);
         long numberLoaded = reader.parse(xmlContentLoad);
         assertEquals("Update Entity loaded ", 5, numberLoaded);
@@ -1115,12 +1121,14 @@ public class EntityTestSuite extends EntityTestCase {
 
     public void testEntitySaxReaderReplace() throws Exception {
         String xmlContentLoad =
+                "<entity-engine-xml>" +
                 "<TestingType testingTypeId=\"create-replace\" description=\"reader create skip\"/>" +
                 "<Testing testingTypeId=\"create-replace\" testingId=\"create-replace-T1\" testingName=\"First test\" testingSize=\"10\" testingDate=\"2010-01-01 00:00:00\"/>" +
                 "<create-replace>" +
                 "    <Testing testingTypeId=\"create-replace\" testingId=\"create-replace-T1\" testingName=\"First test replace\" />" +
                 "</create-replace>" +
-                "<Testing testingTypeId=\"create-replace\" testingId=\"create-replace-T2\" testingName=\"Second test update\" testingSize=\"20\" testingDate=\"2010-02-01 00:00:00\"/>";
+                "<Testing testingTypeId=\"create-replace\" testingId=\"create-replace-T2\" testingName=\"Second test update\" testingSize=\"20\" testingDate=\"2010-02-01 00:00:00\"/>" +
+                "</entity-engine-xml>";
         EntitySaxReader reader = new EntitySaxReader(delegator);
         long numberLoaded = reader.parse(xmlContentLoad);
         assertEquals("Replace Entity loaded ", 4, numberLoaded);

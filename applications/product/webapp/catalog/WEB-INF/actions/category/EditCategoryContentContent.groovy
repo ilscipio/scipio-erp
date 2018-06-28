@@ -24,7 +24,8 @@ import org.ofbiz.entity.util.*
 uiLabelMap = UtilProperties.getResourceBundleMap("ProductUiLabels", locale);
 
 // Show update form
-if (UtilValidate.isEmpty(requestAttributes.contentId) && (parameters.contentId && parameters.productCategoryId && parameters.prodCatContentTypeId && parameters.fromDate)) {
+// SCIPIO: invalid for groovy: requestAttributes.contentId
+if (!request.getAttribute("contentId") && (parameters.contentId && parameters.productCategoryId && parameters.prodCatContentTypeId && parameters.fromDate)) {
     fromDate = UtilDateTime.stringToTimeStamp(parameters.fromDate, "yyyy-MM-dd HH:mm:ss.S", timeZone, locale)    
     prodCatContentTypeId = parameters.prodCatContentTypeId;
     productCategoryContent = from("ProductCategoryContent").
@@ -58,11 +59,12 @@ if (UtilValidate.isEmpty(requestAttributes.contentId) && (parameters.contentId &
         
         content = productCategoryContent.getRelatedOne("Content", false);
         context.content = content;
+        context.contentId = content?.contentId; // SCIPIO: needed for some forms
         context.textDataMap = delegator.findOne("ElectronicText", ["dataResourceId" : content.dataResourceId], false);
         context.prodCatContentTypeId = prodCatContentTypeId;
     }
     // Show create form
-} else if (UtilValidate.isEmpty(requestAttributes.contentId)) {    
+} else if (!request.getAttribute("contentId")) { // SCIPIO: invalid for groovy: requestAttributes.contentId 
     prodCatContentTypeId = parameters.prodCatContentTypeId;
     context.contentFormName = "EditCategoryContentSimpleText";
     context.contentFormAction = "createSimpleTextContentForCategory";

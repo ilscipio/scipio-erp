@@ -28,7 +28,7 @@ import freemarker.template.TemplateModelException;
  */
 public class InterpretStdLocMethod extends InterpretStdMethod {
 
-    public static final String module = InterpretStdLocMethod.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     @SuppressWarnings("unchecked")
     @Override

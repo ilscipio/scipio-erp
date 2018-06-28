@@ -47,7 +47,7 @@ import org.xml.sax.SAXException;
 @SuppressWarnings("serial")
 public class ScreenFactory extends WidgetFactory {
 
-    public static final String module = ScreenFactory.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // SCIPIO: NOTE: 2016-10-30: instead of Map<String, ModelScreen>, we now have a dedicated ModelScreens model.
     // it maintains backward-compat by implementing Map, so all old code should still work.

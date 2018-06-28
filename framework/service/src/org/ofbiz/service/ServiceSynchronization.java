@@ -1,7 +1,10 @@
 package org.ofbiz.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -23,9 +26,11 @@ import org.ofbiz.entity.transaction.TransactionUtil;
  * LocalDispatcher's addCommitService and addRollbackService methods
  * or by using the service ECA event attribute values global-commit,
  * global-rollback or global-commit-post-run
- *
+ * <p>
+ * SCIPIO: 2017-12-20: This now implements ServiceSyncRegistrations so it can return info
+ * about the registered services.
  */
-public class ServiceSynchronization implements Synchronization {
+public class ServiceSynchronization implements Synchronization, ServiceSyncRegistrations { // SCIPIO: added ServiceSyncRegistrations
 
     public static final String MODULE = ServiceSynchronization.class.getName();
 
@@ -80,7 +85,7 @@ public class ServiceSynchronization implements Synchronization {
 
     }
 
-    static class ServiceExecution {
+    static class ServiceExecution implements ServiceSyncRegistration { // SCIPIO: added ServiceRegistration
         protected DispatchContext dctx = null;
         protected String serviceName;
         protected String runAsUser = null;
@@ -161,6 +166,163 @@ public class ServiceSynchronization implements Synchronization {
                 thread.start();
             }
         }
+
+        @Override
+        public String getServiceName() { // SCIPIO
+            return serviceName;
+        }
+
+        @Override
+        public boolean isCommit() { // SCIPIO
+            return !rollback;
+        }
+
+        @Override
+        public boolean isRollback() { // SCIPIO
+            return rollback;
+        }
+
+        @Override
+        public Map<String, ?> getContext() { // SCIPIO
+            return context;
+        }
+
+        @Override
+        public boolean isAsync() { // SCIPIO
+            return async;
+        }
+
+        @Override
+        public boolean isPersist() { // SCIPIO
+            return persist;
+        }
+    }
+
+    @Override
+    public Collection<ServiceSyncRegistration> getAllRegistrations() { // SCIPIO
+        return Collections.<ServiceSyncRegistration>unmodifiableList(services);
+    }
+
+    @Override
+    public Collection<ServiceSyncRegistration> getRegistrationsForService(String serviceName) { // SCIPIO
+        List<ServiceSyncRegistration> regs = new ArrayList<>();
+        for(ServiceSyncRegistration reg : services) {
+            if (serviceName.equals(reg.getServiceName())) {
+                regs.add(reg);
+            }
+        }
+        return regs;
+    }
+
+    @Override
+    public Collection<ServiceSyncRegistration> getCommitRegistrationsForService(String serviceName) { // SCIPIO
+        List<ServiceSyncRegistration> regs = new ArrayList<>();
+        for(ServiceSyncRegistration reg : services) {
+            if (reg.isCommit() && serviceName.equals(reg.getServiceName())) {
+                regs.add(reg);
+            }
+        }
+        return regs;
+    }
+
+    @Override
+    public Collection<ServiceSyncRegistration> getRollbackRegistrationsForService(String serviceName) { // SCIPIO
+        List<ServiceSyncRegistration> regs = new ArrayList<>();
+        for(ServiceSyncRegistration reg : services) {
+            if (reg.isRollback() && serviceName.equals(reg.getServiceName())) {
+                regs.add(reg);
+            }
+        }
+        return regs;
+    }
+
+    @Override
+    public ServiceSyncRegistration getFirstRegistrationForService(String serviceName) { // SCIPIO
+        for(ServiceSyncRegistration reg : services) {
+            if (serviceName.equals(reg.getServiceName())) {
+                return reg;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public ServiceSyncRegistration getFirstCommitRegistrationForService(String serviceName) { // SCIPIO
+        for(ServiceSyncRegistration reg : services) {
+            if (reg.isCommit() && serviceName.equals(reg.getServiceName())) {
+                return reg;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public ServiceSyncRegistration getFirstRollbackRegistrationForService(String serviceName) { // SCIPIO
+        for(ServiceSyncRegistration reg : services) {
+            if (reg.isRollback() && serviceName.equals(reg.getServiceName())) {
+                return reg;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void addCommitService(DispatchContext dctx, String serviceName, String runAsUser,
+            Map<String, ? extends Object> context, boolean async, boolean persist) throws GenericServiceException { // SCIPIO
+        services.add(new ServiceExecution(dctx, serviceName, runAsUser, context, async, persist, false));
+    }
+
+    @Override
+    public void addRollbackService(DispatchContext dctx, String serviceName, String runAsUser,
+            Map<String, ? extends Object> context, boolean async, boolean persist) throws GenericServiceException { // SCIPIO
+        services.add(new ServiceExecution(dctx, serviceName, runAsUser, context, async, persist, true));
+    }
+
+    @Override
+    public boolean removeService(ServiceSyncRegistration serviceRegistration) throws GenericServiceException { // SCIPIO
+        return services.remove(serviceRegistration);
+    }
+
+    @Override
+    public int removeService(String serviceName) throws GenericServiceException { // SCIPIO
+        Iterator<ServiceExecution> it = services.iterator();
+        int removed = 0;
+        while(it.hasNext()) {
+            ServiceExecution reg = it.next();
+            if (serviceName.equals(reg.getServiceName())) {
+                it.remove();
+                removed++;
+            }
+        }
+        return removed;
+    }
+
+    @Override
+    public int removeCommitService(String serviceName) throws GenericServiceException { // SCIPIO
+        Iterator<ServiceExecution> it = services.iterator();
+        int removed = 0;
+        while(it.hasNext()) {
+            ServiceExecution reg = it.next();
+            if (reg.isCommit() && serviceName.equals(reg.getServiceName())) {
+                it.remove();
+                removed++;
+            }
+        }
+        return removed;
+    }
+
+    @Override
+    public int removeRollbackService(String serviceName) throws GenericServiceException { // SCIPIO
+        Iterator<ServiceExecution> it = services.iterator();
+        int removed = 0;
+        while(it.hasNext()) {
+            ServiceExecution reg = it.next();
+            if (reg.isRollback() && serviceName.equals(reg.getServiceName())) {
+                it.remove();
+                removed++;
+            }
+        }
+        return removed;
     }
 
 }

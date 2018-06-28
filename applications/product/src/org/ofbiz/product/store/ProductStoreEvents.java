@@ -18,14 +18,13 @@
  *******************************************************************************/
 package org.ofbiz.product.store;
 
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
 
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
@@ -38,7 +37,7 @@ import org.ofbiz.entity.util.EntityUtil;
 
 public class ProductStoreEvents {
 
-    public static final String module = ProductStoreWorker.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // Please note : the structure of map in this function is according to the JSON data map of the jsTree
     @SuppressWarnings("unchecked")
@@ -47,9 +46,9 @@ public class ProductStoreEvents {
         String parentGroupId = request.getParameter("parentGroupId");
         String onclickFunction = request.getParameter("onclickFunction");
 
-        List productStoreGroupList = FastList.newInstance();
+        List productStoreGroupList = new LinkedList<Object>();
         List<GenericValue> children;
-        List<String> sortList = org.ofbiz.base.util.UtilMisc.toList("sequenceNum");
+        List<String> sortList = UtilMisc.toList("sequenceNum");
 
         try {
             GenericValue productStoreGroup = EntityQuery.use(delegator).from("ProductStoreGroup").where("productStoreGroupId", parentGroupId).cache(true).queryOne();
@@ -58,7 +57,7 @@ public class ProductStoreEvents {
                 if (UtilValidate.isNotEmpty(children)) {
                     for (GenericValue child : children ) {
                         String productStoreGroupId = child.getString("productStoreGroupId");
-                        Map josonMap = FastMap.newInstance();
+                        Map josonMap = new HashMap<String, Object>();
                         List<GenericValue> childList = null;
                         // Get the child list of chosen category
                         childList = EntityQuery.use(delegator).from("ProductStoreGroupRollupAndChild").where("parentGroupId", productStoreGroupId).cache(true).filterByDate().queryList();
@@ -66,8 +65,8 @@ public class ProductStoreEvents {
                         if (UtilValidate.isNotEmpty(childList)) {
                             josonMap.put("state", "closed");
                         }
-                        Map dataMap = FastMap.newInstance();
-                        Map dataAttrMap = FastMap.newInstance();
+                        Map dataMap = new HashMap<String, Object>();
+                        Map dataAttrMap = new HashMap<String, Object>();
 
                         dataAttrMap.put("onClick", onclickFunction + "('" + productStoreGroupId + "')");
                         String hrefStr = "EditProductStoreGroupAndAssoc"; 
@@ -76,7 +75,7 @@ public class ProductStoreEvents {
                         dataMap.put("attr", dataAttrMap);
                         dataMap.put("title", child.get("productStoreGroupName") + " [" + child.get("productStoreGroupId") + "]");
                         josonMap.put("data", dataMap);
-                        Map attrMap = FastMap.newInstance();
+                        Map attrMap = new HashMap<String, Object>();
                         attrMap.put("parentGroupId", productStoreGroupId);
                         josonMap.put("attr",attrMap);
                         josonMap.put("sequenceNum",child.get("sequenceNum"));

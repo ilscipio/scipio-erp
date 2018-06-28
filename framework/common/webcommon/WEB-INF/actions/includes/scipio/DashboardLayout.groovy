@@ -1,4 +1,3 @@
-import javolution.util.FastList
 
 import org.ofbiz.base.util.Debug
 import org.ofbiz.base.util.UtilProperties

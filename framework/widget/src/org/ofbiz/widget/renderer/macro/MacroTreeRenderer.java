@@ -56,7 +56,7 @@ import freemarker.template.TemplateException;
  */
 public class MacroTreeRenderer implements TreeStringRenderer {
 
-    public static final String module = MacroTreeRenderer.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private Template macroLibrary;
     
     // SCIPIO: new
@@ -189,7 +189,9 @@ public class MacroTreeRenderer implements TreeStringRenderer {
             if (ModelWidget.widgetBoundaryCommentsEnabled(context)) {
                 renderBeginningBoundaryComment(writer, "Tree Widget", node.getModelTree());
             }
-            style = "basic-tree";
+            // SCIPIO: 2018-05: need something unique to identify this type of tree
+            //style = "basic-tree";
+            style = "basic-tree scp-tree-widget";
         }
  
         StringWriter sr = new StringWriter();
@@ -226,7 +228,9 @@ public class MacroTreeRenderer implements TreeStringRenderer {
                 if (node.showPeers(depth, context)) {
                     context.put("processChildren", Boolean.FALSE);
                     //expandCollapseLink.setText("&nbsp;+&nbsp;");
-                    currentNodeTrailPiped = StringUtil.join(currentNodeTrail, "|");
+                    // SCIPIO: 2018-05: This character must be url-escaped otherwise newer Tomcat will crash
+                    //currentNodeTrailPiped = StringUtil.join(currentNodeTrail, "|");
+                    currentNodeTrailPiped = StringUtil.join(currentNodeTrail, "%7C");
                     StringBuilder target = new StringBuilder(node.getModelTree().getExpandCollapseRequest(context));
                     String trailName = node.getModelTree().getTrailName(context);
                     if (target.indexOf("?") < 0) {
@@ -241,7 +245,9 @@ public class MacroTreeRenderer implements TreeStringRenderer {
                 context.put("processChildren", Boolean.TRUE);
                 //expandCollapseLink.setText("&nbsp;-&nbsp;");
                 String lastContentId = currentNodeTrail.remove(currentNodeTrail.size() - 1);
-                currentNodeTrailPiped = StringUtil.join(currentNodeTrail, "|");
+                // SCIPIO: 2018-05: This character must be url-escaped otherwise newer Tomcat will crash
+                //currentNodeTrailPiped = StringUtil.join(currentNodeTrail, "|");
+                currentNodeTrailPiped = StringUtil.join(currentNodeTrail, "%7C");
                 if (currentNodeTrailPiped == null) {
                     currentNodeTrailPiped = "";
                 }

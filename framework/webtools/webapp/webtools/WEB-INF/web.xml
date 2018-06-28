@@ -111,7 +111,7 @@ under the License.
         <init-param>
             <param-name>allowedPaths</param-name>
             <param-value>
-                /ping.txt:/error:/control:/select:/index.html:/index.jsp:/default.html:/default.jsp:/applet:/includes/maincss.css:/docs
+                /ping.txt:/error:/control:/select:/index.html:/index.jsp:/default.html:/default.jsp:/applet:/includes/maincss.css:/docs:/images:/ws:/export
             </param-value>
         </init-param>
         <init-param>
@@ -152,6 +152,19 @@ under the License.
     <servlet-mapping>
         <servlet-name>ControlServlet</servlet-name>
         <url-pattern>/control/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ExportServlet</servlet-name>
+        <display-name>ExportServlet</display-name>
+        <description>File Export Servlet</description>
+        <servlet-class>com.ilscipio.scipio.webtools.ExportServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ExportServlet</servlet-name>
+        <url-pattern>/export/*</url-pattern>
     </servlet-mapping>
     
     <!-- SCIPIO: Templating API documentation forwarding page -->

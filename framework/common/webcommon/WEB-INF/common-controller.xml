@@ -23,7 +23,7 @@ under the License.
     <include location="component://common/webcommon/WEB-INF/handlers-controller.xml"/>
     <description>Common ControlServlet Configuration File</description>
 
-    <errorpage>/control/error</errorpage> <!-- /error/error.jsp -->
+    <errorpage>${_CONTROL_SERVPATH_}/error</errorpage> <!-- /error/error.jsp -->
 
     <preprocessor>
         <!-- Events to run on every request before security (chains exempt) -->
@@ -41,7 +41,20 @@ under the License.
 
     <!-- SCIPIO: view-as-json configuration; created 2017-05-15 -->
     <view-as-json enabled="true" json-request-uri="jsonExplicit" update-session="false" regular-login="true" />
-    
+
+    <!-- SCIPIO: New common settings -->
+    <common-settings>
+        <request-map-settings>
+            <response-settings>
+                <!-- SCIPIO: 2018-06: When the response view-name matches "Lookup*", 
+                    set allow-view-save to false instead of true, to prevent interference with "view-last" responses -->
+                <allow-view-save-default>
+                    <name-filter field="view-name" prefix="Lookup" use-value="false"/>
+                </allow-view-save-default>
+            </response-settings>
+        </request-map-settings>
+    </common-settings>
+
     <!-- Security Mappings -->
     <request-map uri="checkLogin" edit="false">
         <description>Verify a user is logged in.</description>
@@ -62,6 +75,7 @@ under the License.
         <event type="java" path="org.ofbiz.webapp.control.LoginWorker" invoke="login"/>
         <response name="success" type="view" value="main"/>
         <response name="requirePasswordChange" type="view" value="requirePasswordChange"/>
+         <response name="loggedIn" type="view-last" value="main" />
         <response name="error" type="view" value="login"/>
     </request-map>
     <request-map uri="error">
@@ -70,7 +84,7 @@ under the License.
     <request-map uri="logout">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.webapp.control.LoginWorker" invoke="logout"/>
-        <response name="success" type="view" value="login"/>
+        <response name="success" type="request-redirect" value="checkLogin"/>
         <response name="error" type="view" value="main"/>
     </request-map>
     <request-map uri="forgotPassword">
@@ -93,7 +107,7 @@ under the License.
     </request-map>
 
     <!-- Common Mappings used for locales and timezones -->
-    <request-map uri="ListLocales"><security https="true" auth="true"/><response name="success" type="view" value="ListLocales" save-last-view="true"/></request-map>
+    <request-map uri="ListLocales"><security https="true" auth="false"/><response name="success" type="view" value="ListLocales" save-last-view="true"/></request-map>
     <request-map uri="setSessionLocale">
         <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.common.CommonEvents" invoke="setSessionLocale"/>
@@ -301,6 +315,13 @@ under the License.
         <response name="error" type="request" value="json"/>
     </request-map>
     
+    <request-map uri="qrcode">
+        <security auth="true" https="false" />
+        <event type="java" path="org.ofbiz.common.qrcode.QRCodeEvents" invoke="serveQRCodeImage"/>
+        <response name="success" type="none" />
+        <response name="error" type="none" />
+    </request-map>
+
     <!--========================== AJAX events =====================-->
 
     <!-- View Mappings -->

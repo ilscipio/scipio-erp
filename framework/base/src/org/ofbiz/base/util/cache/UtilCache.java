@@ -67,7 +67,7 @@ import com.googlecode.concurrentlinkedhashmap.EvictionListener;
 @SuppressWarnings("serial")
 public class UtilCache<K, V> implements Serializable, EvictionListener<Object, CacheLine<V>> {
 
-    public static final String module = UtilCache.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /** A static Map to keep track of all of the UtilCache instances. */
     private static final ConcurrentHashMap<String, UtilCache<?, ?>> utilCacheTable = new ConcurrentHashMap<String, UtilCache<?, ?>>();
@@ -78,6 +78,9 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
     /** The name of the UtilCache instance, is also the key for the instance in utilCacheTable. */
     private final String name;
 
+    /** SCIPIO: If false, the cache will never store value on put, and always return null on get (added 2018-03). Can be set false using "enabled" cache property. */
+    private boolean enabled = true;
+    
     /** A count of the number of cache hits */
     protected AtomicLong hitCount = new AtomicLong(0);
 
@@ -241,6 +244,11 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
             if (value != null) {
                 fileStore = value;
             }
+            // SCIPIO: 2018-03: flag to disable cache without code changes needed
+            value = getPropertyParam(res, propNames, "enabled");
+            if (value != null) {
+                enabled = !"false".equals(value);
+            }
         }
     }
 
@@ -379,6 +387,7 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
     }
 
     V putInternal(K key, V value, long expireTimeNanos) {
+        if (!enabled) return null; // SCIPIO: 2018-03: no-op
         Object nulledKey = fromKey(key);
         CacheLine<V> oldCacheLine = memoryTable.put(nulledKey, createCacheLine(key, value, expireTimeNanos));
         V oldValue = oldCacheLine == null ? null : cancel(oldCacheLine);
@@ -403,6 +412,7 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
     }
 
     V putIfAbsentInternal(K key, V value, long expireTimeNanos) {
+        if (!enabled) return null; // SCIPIO: 2018-03: no-op
         Object nulledKey = fromKey(key);
         V oldValue;
         if (fileTable != null) {
@@ -442,6 +452,7 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
      * @return The value of the element specified by the key
      */
     public V get(Object key) {
+        if (!enabled) return null; // SCIPIO: 2018-03: no-op
         boolean countGet = true;
         Object nulledKey = fromKey(key);
         CacheLine<V> line = memoryTable.get(nulledKey);
@@ -677,6 +688,24 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
      */
     public String getName() {
         return this.name;
+    }
+
+    /**
+     * SCIPIO: Returns whether cache is enabled or set to bypass get/put ops.
+     * Added 2018-03.
+     * @return true if enabled, false if not.
+     */
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    /**
+     * SCIPIO: Set whether cache is enabled or set to bypass get/put ops.
+     * Added 2018-03.
+     * @return true if enabled, false if not.
+     */
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     /** Returns the number of successful hits on the cache

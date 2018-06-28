@@ -52,7 +52,7 @@ import org.w3c.dom.NodeList;
 public class NodeELResolver extends ELResolver {
     private final XPath xpath;
     private final UtilCache<String, XPathExpression> exprCache = UtilCache.createUtilCache("nodeElResolver.ExpressionCache");
-    private static final String module = NodeELResolver.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * Creates a new read-only NodeELResolver.

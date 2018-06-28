@@ -20,13 +20,12 @@ package org.ofbiz.content.webapp.ftl;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-
-import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -50,7 +49,7 @@ import freemarker.template.TemplateTransformModel;
  */
 public class EditRenderSubContentCacheTransform implements TemplateTransformModel {
 
-    public static final String module = EditRenderSubContentCacheTransform.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String [] saveKeyNames = {"contentId", "subContentId", "subDataResourceTypeId", "mimeTypeId", "whenMap", "locale",  "wrapTemplateId", "encloseWrapText", "nullThruDatesOnly"};
 
     /**
@@ -127,7 +126,7 @@ public class EditRenderSubContentCacheTransform implements TemplateTransformMode
         templateCtx.put("dataResourceId", dataResourceId);
         templateCtx.put("subContentIdSub", subContentIdSub);
         templateCtx.put("subDataResourceTypeId", subDataResourceTypeId);
-        final Map<String, Object> savedValues = FastMap.newInstance();
+        final Map<String, Object> savedValues = new HashMap<String, Object>();
         FreeMarkerWorker.saveContextValues(templateCtx, saveKeyNames, savedValues);
 
         return new Writer(out) {

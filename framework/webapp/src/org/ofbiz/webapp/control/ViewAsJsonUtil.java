@@ -26,7 +26,7 @@ import org.ofbiz.webapp.renderer.RenderTargetUtil;
  */
 public abstract class ViewAsJsonUtil {
 
-    public static final String module = ViewAsJsonUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     /**
      * Name of the request parameter/attribute checked for true/false for viewAsJson on/off

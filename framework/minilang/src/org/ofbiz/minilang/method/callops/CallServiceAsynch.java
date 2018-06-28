@@ -42,7 +42,7 @@ import org.w3c.dom.Element;
  */
 public final class CallServiceAsynch extends MethodOperation {
 
-    public static final String module = CallServiceAsynch.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final boolean includeUserLogin;
     private final FlexibleMapAccessor<Map<String, Object>> inMapFma;

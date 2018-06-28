@@ -28,6 +28,8 @@ import org.ofbiz.webapp.website.WebSiteWorker;
  */
 public class VisualThemeWorker {
 
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
     private static final UtilCache<String, String> libLocationExprCache = UtilCache.createUtilCache("renderer.visualtheme.resources.liblocation");
     private static final Map<String, Object> emptyContext = Collections.unmodifiableMap(new HashMap<String, Object>());
     
@@ -47,7 +49,7 @@ public class VisualThemeWorker {
             try {
                 themeResources = VisualThemeWorker.loadVisualThemeResources(context);
             } catch (GenericServiceException e) {
-                Debug.logError(e, "Could not load visual theme resources", ScreenRenderer.module);
+                Debug.logError(e, "Could not load visual theme resources", module);
             }
     
             context.put("rendererVisualThemeResources", themeResources);
@@ -149,7 +151,7 @@ public class VisualThemeWorker {
             Map<String, Object> result = dispatcher.runSync("getUserPreferenceGroup", UtilMisc.toMap("userLogin", null, "userPrefGroupTypeId", "GLOBAL_PREFERENCES"));
             userPreferences = UtilGenerics.cast(result.get("userPrefMap"));
         } catch (GenericServiceException e) {
-            Debug.logError(e, "Error while getting user preferences: ", ScreenRenderer.module);
+            Debug.logError(e, "Error while getting user preferences: ", module);
         }
         
         return getVisualThemeResourcesFromUserPrefs(context, userPreferences);

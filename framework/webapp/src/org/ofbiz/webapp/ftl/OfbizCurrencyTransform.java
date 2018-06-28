@@ -49,7 +49,7 @@ import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
  */
 public class OfbizCurrencyTransform implements TemplateTransformModel {
 
-    public static final String module = OfbizCurrencyTransform.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     @SuppressWarnings("unchecked")
     private static String getArg(Map args, String key) {
@@ -157,9 +157,9 @@ public class OfbizCurrencyTransform implements TemplateTransformModel {
             Delegator delegator = (Delegator) request.getAttribute("delegator");
             // Get rounding from SystemProperty
             if (UtilValidate.isNotEmpty(delegator)) {
-                scaleEnabled = EntityUtilProperties.getPropertyValue("general.properties", "currency.scale.enabled", "N", delegator);
+                scaleEnabled = EntityUtilProperties.getPropertyValue("general", "currency.scale.enabled", "N", delegator);
                 if (UtilValidate.isEmpty(roundingNumber)) {
-                    String roundingString = EntityUtilProperties.getPropertyValue("general.properties", "currency.rounding.default", "10", delegator);
+                    String roundingString = EntityUtilProperties.getPropertyValue("general", "currency.rounding.default", "10", delegator);
                     if (UtilValidate.isInteger(roundingString)) roundingNumber = Integer.parseInt(roundingString);
                 }
             }

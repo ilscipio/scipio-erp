@@ -22,15 +22,14 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ImagingOpException;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-import javolution.util.FastMap;
-
-import org.jdom.JDOMException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -46,10 +45,17 @@ import org.ofbiz.service.ServiceUtil;
  * ScaleImage Class
  * <p>
  * Scale the original image into 4 different size Types (small, medium, large, detail)
+ * <p>
+ * SCIPIO: 2017-07-04: DEV NOTE: WARN: There will unfortunately be some more duplication
+ * of the code here to the class {@link org.ofbiz.content.image.ContentImageServices}.
+ * Maintenance fixes may need to be applied in double to that class.
+ * <p>
+ * SCIPIO: WARN: In addition to the scale methods below, in stock ofbiz a third method existed
+ * and was apparently copy pasted from these: {@link org.ofbiz.product.imagemanagement.ImageManagementServices#scaleImageMangementInAllSize}.
  */
 public class ScaleImage {
 
-    public static final String module = ScaleImage.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ProductErrorUiLabels";
     /* public so that other code can easily use the imageUrlMap returned by scaleImageInAllSize */
     public static final List<String> sizeTypeList = UtilMisc.toList("small", "medium", "large", "detail");
@@ -59,9 +65,12 @@ public class ScaleImage {
     }
 
     /**
-     * scaleImageInAllSize
+     * scaleImageInAllSize.
      * <p>
      * Scale the original image into all different size Types (small, medium, large, detail)
+     * <p>
+     * SCIPIO: 2017-07-04: This now looks for ImageProperties.xml under the product component; if not found,
+     * falls back on the one in content component.
      *
      * @param   context                     Context
      * @param   filenameToUse               Filename of future image files
@@ -74,23 +83,23 @@ public class ScaleImage {
      * @throws  JDOMException               Errors occur in parsing
      */
     public static Map<String, Object> scaleImageInAllSize(Map<String, ? extends Object> context, String filenameToUse, String viewType, String viewNumber)
-        throws IllegalArgumentException, ImagingOpException, IOException, JDOMException {
+        throws IllegalArgumentException, ImagingOpException, IOException {
 
         /* VARIABLES */
         Locale locale = (Locale) context.get("locale");
         
         int index;
-        Map<String, Map<String, String>> imgPropertyMap = FastMap.newInstance();
+        Map<String, Map<String, String>> imgPropertyMap = new HashMap<String, Map<String, String>>();
         BufferedImage bufImg, bufNewImg;
         double imgHeight, imgWidth;
-        Map<String, String> imgUrlMap = FastMap.newInstance();
-        Map<String, Object> resultXMLMap = FastMap.newInstance();
-        Map<String, Object> resultBufImgMap = FastMap.newInstance();
-        Map<String, Object> resultScaleImgMap = FastMap.newInstance();
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, String> imgUrlMap = new HashMap<String, String>();
+        Map<String, Object> resultXMLMap = new LinkedHashMap<String, Object>();
+        Map<String, Object> resultBufImgMap = new HashMap<String, Object>();
+        Map<String, Object> resultScaleImgMap = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<String, Object>();
 
         /* ImageProperties.xml */
-        String imgPropertyFullPath = System.getProperty("ofbiz.home") + "/applications/product/config/ImageProperties.xml";
+        String imgPropertyFullPath = ProductImageWorker.getProductImagePropertiesFullPath(); // SCIPIO
         resultXMLMap.putAll(ImageTransform.getXMLValue(imgPropertyFullPath, locale));
         if (resultXMLMap.containsKey("responseMessage") && resultXMLMap.get("responseMessage").equals("success")) {
             imgPropertyMap.putAll(UtilGenerics.<Map<String, Map<String, String>>>cast(resultXMLMap.get("xml")));
@@ -107,7 +116,7 @@ public class ScaleImage {
         String imgExtension = filenameToUse.substring(index + 1);
         // paths
         
-        Map<String, Object>imageContext = FastMap.newInstance();
+        Map<String, Object>imageContext = new HashMap<String, Object>();
         imageContext.putAll(context);
         imageContext.put("tenantId",((Delegator)context.get("delegator")).getDelegatorTenantId());
         String imageServerPath = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.server.path", (Delegator)context.get("delegator")), imageContext);
@@ -247,8 +256,16 @@ public class ScaleImage {
         }
     }
 
+    /**
+     * scaleImageManageInAllSize.
+     * <p>
+     * SCIPIO: 2017-07-04: This now looks for ImageProperties.xml under the product component; if not found,
+     * falls back on the one in content component.
+     * <p>
+     * SCIPIO: NOTE: No code in ofbiz appears to be using this method. It is yet unknown why it is here.
+     */
     public static Map<String, Object> scaleImageManageInAllSize(Map<String, ? extends Object> context, String filenameToUse, String viewType, String viewNumber , String imageType)
-        throws IllegalArgumentException, ImagingOpException, IOException, JDOMException {
+        throws IllegalArgumentException, ImagingOpException, IOException {
 
         /* VARIABLES */
         Locale locale = (Locale) context.get("locale");
@@ -260,17 +277,17 @@ public class ScaleImage {
         }
         
         int index;
-        Map<String, Map<String, String>> imgPropertyMap = FastMap.newInstance();
+        Map<String, Map<String, String>> imgPropertyMap = new HashMap<String, Map<String, String>>();
         BufferedImage bufImg, bufNewImg;
         double imgHeight, imgWidth;
-        Map<String, String> imgUrlMap = FastMap.newInstance();
-        Map<String, Object> resultXMLMap = FastMap.newInstance();
-        Map<String, Object> resultBufImgMap = FastMap.newInstance();
-        Map<String, Object> resultScaleImgMap = FastMap.newInstance();
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, String> imgUrlMap = new HashMap<String, String>();
+        Map<String, Object> resultXMLMap = new LinkedHashMap<String, Object>();
+        Map<String, Object> resultBufImgMap = new HashMap<String, Object>();
+        Map<String, Object> resultScaleImgMap = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<String, Object>();
 
         /* ImageProperties.xml */
-        String imgPropertyFullPath = System.getProperty("ofbiz.home") + "/applications/product/config/ImageProperties.xml";
+        String imgPropertyFullPath = ProductImageWorker.getProductImagePropertiesFullPath(); // SCIPIO
         resultXMLMap.putAll(ImageTransform.getXMLValue(imgPropertyFullPath, locale));
         if (resultXMLMap.containsKey("responseMessage") && resultXMLMap.get("responseMessage").equals("success")) {
             imgPropertyMap.putAll(UtilGenerics.<Map<String, Map<String, String>>>cast(resultXMLMap.get("xml")));
@@ -287,7 +304,7 @@ public class ScaleImage {
         String imgName = filenameToUse.substring(0, index - 1);
         String imgExtension = filenameToUse.substring(index + 1);
         // paths
-        Map<String, Object>imageContext = FastMap.newInstance();
+        Map<String, Object>imageContext = new HashMap<String, Object>();
         imageContext.putAll(context);
         imageContext.put("tenantId",((Delegator)context.get("delegator")).getDelegatorTenantId());
         String mainFilenameFormat = EntityUtilProperties.getPropertyValue("catalog", "image.filename.format", (Delegator) context.get("delegator"));

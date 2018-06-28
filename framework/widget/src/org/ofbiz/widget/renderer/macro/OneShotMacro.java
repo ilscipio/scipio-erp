@@ -29,7 +29,7 @@ import org.ofbiz.base.util.template.FtlScriptFormatter;
  */
 class OneShotMacro {
 
-    public static final String module = OneShotMacro.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     private final boolean enabled;
     private State state;

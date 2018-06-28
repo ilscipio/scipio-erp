@@ -31,7 +31,7 @@ import java.util.TimeZone;
  */
 public class UtilFormatOut {
 
-    public static final String module = UtilFormatOut.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static String safeToString(Object obj) {
         if (obj != null) {
@@ -43,7 +43,7 @@ public class UtilFormatOut {
 
     // ------------------- price format handlers -------------------
     // FIXME: This is not thread-safe! DecimalFormat is not synchronized.
-    static DecimalFormat priceDecimalFormat = new DecimalFormat(UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "#,##0.00"));
+    static DecimalFormat priceDecimalFormat = new DecimalFormat(UtilProperties.getPropertyValue("general", "currency.decimal.format", "#,##0.00"));
 
     /** Formats a Double representing a price into a string
      * @param price The price Double to be formatted

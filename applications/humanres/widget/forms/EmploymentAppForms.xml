@@ -38,10 +38,12 @@ under the License.
             <set field="applicationId" from-field="applicationId"/>
         </row-actions>
         <alt-target use-when="insideEmployee==null" target="updateEmploymentApp"/>
-        <auto-fields-service default-field-type="hidden" service-name="updateEmploymentApp"/>
+        <!-- SCIPIO: counterproductive - forces display order
+        <auto-fields-service default-field-type="hidden" service-name="updateEmploymentApp"/>-->
+        <field name="approverPartyId"><hidden/></field>
         <field name="applicationId" title="${uiLabelMap.HumanResApplicationId}">
             <!-- SCIPIO: full page link -->
-            <hyperlink target="EditEmploymentApp" description="${applicationId}" also-hidden="true">
+            <hyperlink target="ViewEmploymentApp" description="${applicationId}" also-hidden="true">
                 <parameter param-name="applicationId"/>
             </hyperlink>
         </field>
@@ -63,7 +65,13 @@ under the License.
             </drop-down>
         </field>
         <field name="partyId"><hidden/></field>
-        <field name="applyingPartyId" title="${uiLabelMap.FormFieldTitle_applyingPartyId}"><lookup target-form-name="LookupPartyName"/></field>
+        <!-- SCIPIO: NOTE: because hyperlinks are sent to the right by the form renderer for multi forms like this, use-when cannot be used here.
+        <field name="applyingPartyId" title="${uiLabelMap.FormFieldTitle_applyingPartyId}" use-when="applyingPartyId==null"><lookup target-form-name="LookupPartyName"/></field> -->
+        <field name="applyingPartyId" title="${uiLabelMap.FormFieldTitle_applyingPartyId}"><!-- use-when="applyingPartyId!=null" -->
+            <hyperlink target="EmployeeProfile" target-type="intra-app" description="${applyingPartyId}" also-hidden="true" style="${styles.link_nav_info_id}">
+                <parameter param-name="partyId" from-field="applyingPartyId"/>
+            </hyperlink>
+        </field>
         <field name="referredByPartyId" title="${uiLabelMap.FormFieldTitle_referredByPartyId}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="applicationDate" title="${uiLabelMap.FormFieldTitle_applicationDate}"><date-time/></field>
         <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_run_sys} ${styles.action_remove}">
@@ -82,10 +90,13 @@ under the License.
         <actions>
             <set field="referredByPartyId" from-field="parameters.partyId"/>
         </actions>
-        <auto-fields-entity entity-name="EmploymentApp" default-field-type="find"/>
+        <!-- SCIPIO: counter-productive
+        <auto-fields-entity entity-name="EmploymentApp" default-field-type="find"/>-->
+        <field name="approverPartyId"><hidden/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="emplPositionId"><lookup target-form-name="LookupEmplPosition"/></field>
         <field name="applicationId"><lookup target-form-name="LookupEmploymentApp"/></field>
+        <field name="emplPositionId"><lookup target-form-name="LookupEmplPosition"/></field>
+        <field name="jobRequisitionId"><lookup target-form-name="LookupJobRequisition"/></field><!-- SCIPIO: show -->
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down allow-empty="true" current-description="">
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
@@ -94,6 +105,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
+        <field name="applyingPartyId"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="referredByPartyId" use-when="referredByPartyId==null"><lookup target-form-name="LookupPartyName"/></field>
         <field name="employmentAppSourceTypeId">
             <drop-down allow-empty="true" current-description="">
                 <entity-options description="${description}" key-field-name="employmentAppSourceTypeId" entity-name="EmploymentAppSourceType">
@@ -101,13 +114,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="applyingPartyId"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="referredByPartyId" use-when="referredByPartyId==null">
-            <lookup target-form-name="LookupPartyName"/>
-        </field>
-        <field name="referredByPartyId" use-when="referredByPartyId!=null"><hidden/></field>
-        <field name="approverPartyId"><hidden/></field>
-        <field name="jobRequisitionId"><lookup target-form-name="LookupJobRequisition"/></field><!-- SCIPIO: show -->
+        <field name="applicationDate" title="${uiLabelMap.FormFieldTitle_applicationDate}"><date-find/></field>
         <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="AddEmploymentApp" type="single" target="createEmploymentApp" default-entity-name="EmploymentApp" 
@@ -116,14 +123,14 @@ under the License.
             <set field="insideEmployee" from-field="parameters.insideEmployee"/>
         </actions>
         <alt-target use-when="insideEmployee != null" target="createEmploymentAppExt"/>
-        <!-- SCIPIO: I think this auto- may be necessary even if hidden for some field initializations? 
-            prevents us from reordering fields -->
-        <auto-fields-service service-name="createEmploymentApp" default-field-type="hidden"/>
+        <!-- SCIPIO: counter-productive - forces display order
+        <auto-fields-service service-name="createEmploymentApp" default-field-type="hidden"/>-->
+        <field name="approverPartyId"><hidden/></field>
         <field name="partyId"><hidden value="${referredByPartyId}" /></field>
         <field name="applicationId" tooltip="${uiLabelMap.CommonLeaveEmptyAutoValue}"><text/></field><!-- SCIPIO: this should auto-generated if absent: required-field="true" --><!-- SCIPIO: don't look this up, makes no sense: <lookup target-form-name="LookupEmploymentApp"/> -->
-        <field name="emplPositionId" tooltip="${uiLabelMap.HumanResEitherPositionOrRequisitionMustBeSpecified}"><lookup target-form-name="LookupEmplPosition"/></field>
+        <field name="emplPositionId" tooltip="${uiLabelMap.HumanResEitherPositionOrRequisitionMustBeSpecified}" title="${uiLabelMap.FormFieldTitle_emplPositionId} **"><lookup target-form-name="LookupEmplPosition"/></field>
         <!-- SCIPIO: you should be able to specify job req instead of position -->
-        <field name="jobRequisitionId" tooltip="${uiLabelMap.HumanResEitherPositionOrRequisitionMustBeSpecified}"><lookup target-form-name="LookupJobRequisition"/></field>
+        <field name="jobRequisitionId" tooltip="${uiLabelMap.HumanResEitherPositionOrRequisitionMustBeSpecified}" title="${uiLabelMap.FormFieldTitle_jobRequisitionId} **"><lookup target-form-name="LookupJobRequisition"/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}" required-field="true"><!-- SCIPIO: required to avoid errors -->
             <drop-down current-description=""><!-- SCIPIO: don't allow empty, to avoid confusion: allow-empty="true"  -->
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
@@ -153,14 +160,14 @@ under the License.
             <set field="insideEmployee" from-field="parameters.insideEmployee"/>
         </actions>
         <alt-target use-when="insideEmployee != null" target="updateEmploymentAppExtSingle"/>
-        <!-- SCIPIO: I think this auto- may be necessary even if hidden for some field initializations? 
-            prevents us from reordering fields -->
-        <auto-fields-service service-name="updateEmploymentApp" default-field-type="hidden"/>
+        <!-- SCIPIO: counter-productive - forces display order
+        <auto-fields-service service-name="updateEmploymentApp" default-field-type="hidden"/>-->
+        <field name="approverPartyId"><hidden/></field>
         <field name="partyId"><hidden value="${referredByPartyId}" /></field>
         <field name="applicationId"><display/></field>
-        <field name="emplPositionId" tooltip="${uiLabelMap.HumanResEitherPositionOrRequisitionMustBeSpecified}"><lookup target-form-name="LookupEmplPosition"/></field>
+        <field name="emplPositionId" tooltip="${uiLabelMap.HumanResEitherPositionOrRequisitionMustBeSpecified}" title="${uiLabelMap.FormFieldTitle_emplPositionId} **"><lookup target-form-name="LookupEmplPosition"/></field>
         <!-- SCIPIO: you should be able to specify job req instead of position -->
-        <field name="jobRequisitionId" tooltip="${uiLabelMap.HumanResEitherPositionOrRequisitionMustBeSpecified}"><lookup target-form-name="LookupJobRequisition"/></field>
+        <field name="jobRequisitionId" tooltip="${uiLabelMap.HumanResEitherPositionOrRequisitionMustBeSpecified}" title="${uiLabelMap.FormFieldTitle_jobRequisitionId} **"><lookup target-form-name="LookupJobRequisition"/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}" required-field="true"><!-- SCIPIO: required to avoid errors -->
             <drop-down current-description=""><!-- SCIPIO: don't allow empty, to avoid confusion: allow-empty="true"  -->
                 <entity-options description="${description}" key-field-name="statusId" entity-name="StatusItem">
@@ -169,9 +176,21 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="applyingPartyId" required-field="true"><lookup target-form-name="LookupPartyName"/></field><!-- SCIPIO: required to avoid errors, somewhat nonsensical to leave empty -->
-        <field name="referredByPartyId" use-when="employmentApp==null"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="referredByPartyId" use-when="employmentApp!=null"><hidden/></field>
+        <field name="applyingPartyId" required-field="true" use-when="employmentApp==null"><lookup target-form-name="LookupPartyName"/></field><!-- SCIPIO: required to avoid errors, somewhat nonsensical to leave empty -->
+        <field name="applyingPartyId" required-field="true" use-when="employmentApp!=null"><!-- SCIPIO: link to party -->
+            <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}" key-field-name="partyId" also-hidden="true">
+                <sub-hyperlink target="EmployeeProfile" target-type="intra-app" description="${employmentApp.applyingPartyId}" link-style="${styles.link_nav_info_id}">
+                    <parameter param-name="partyId" from-field="employmentApp.applyingPartyId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="referredByPartyId">
+            <lookup target-form-name="LookupPartyName">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${employmentApp.referredByPartyId}" link-style="${styles.link_nav_info_id}">
+                    <parameter param-name="partyId" from-field="employmentApp.referredByPartyId"/>
+                </sub-hyperlink>
+            </lookup>
+        </field>
         <field name="employmentAppSourceTypeId">
             <drop-down allow-empty="true" current-description="">
                 <entity-options description="${description}" key-field-name="employmentAppSourceTypeId" entity-name="EmploymentAppSourceType">
@@ -184,11 +203,44 @@ under the License.
     </form>
     
     <!-- SCIPIO: new quick view form -->
-    <form name="ViewEmploymentApp" type="single" default-entity-name="EmploymentApp" 
+    <form name="ViewEmploymentApp" type="single" default-entity-name="EmploymentApp" default-map-name="employmentApp"
         header-row-style="header-row">
         <actions>
             <set field="insideEmployee" from-field="parameters.insideEmployee"/>
         </actions>
-        <auto-fields-entity entity-name="EmploymentApp" default-field-type="display" map-name="employmentApp"/>
+        <!-- SCIPIO: counter-productive - forces display order
+        <auto-fields-entity entity-name="EmploymentApp" default-field-type="display" map-name="employmentApp"/>-->
+        <field name="applicationId"><display/></field>
+        <field name="emplPositionId" use-when="emplPositionId!=null">
+            <hyperlink target="emplPositionView" description="${employmentApp.emplPositionId}">
+                <parameter param-name="emplPositionId" from-field="employmentApp.emplPositionId"/>
+            </hyperlink>
+        </field>
+        <field name="jobRequisitionId" use-when="jobRequisitionId!=null">
+            <hyperlink target="EditJobRequisition" description="${employmentApp.jobRequisitionId}">
+                <parameter param-name="jobRequisitionId" from-field="employmentApp.jobRequisitionId"/>
+            </hyperlink>
+        </field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}">
+            <display-entity entity-name="StatusItem" description="${description}"/>
+        </field>
+        <field name="applyingPartyId">
+            <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}" key-field-name="partyId">
+                <sub-hyperlink target="EmployeeProfile" target-type="intra-app" description="${employmentApp.applyingPartyId}" link-style="${styles.link_nav_info_id}">
+                    <parameter param-name="partyId" from-field="employmentApp.applyingPartyId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="referredByPartyId">
+            <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}" key-field-name="partyId">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${employmentApp.referredByPartyId}" link-style="${styles.link_nav_info_id}">
+                    <parameter param-name="partyId" from-field="employmentApp.referredByPartyId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="employmentAppSourceTypeId">
+            <display-entity entity-name="EmploymentAppSourceType" description="${description}"/>
+        </field>
+        <field name="applicationDate"><display type="date-time" default-value="${nowTimestamp}"/></field>
     </form>
 </forms>

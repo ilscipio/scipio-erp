@@ -32,7 +32,7 @@ import com.sun.star.io.NotConnectedException;
 
 public class OpenOfficeByteArrayOutputStream extends ByteArrayOutputStream implements XOutputStream {
 
-    public static final String module = OpenOfficeByteArrayOutputStream.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public OpenOfficeByteArrayOutputStream() {
         super();

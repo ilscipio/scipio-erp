@@ -27,8 +27,6 @@ import org.ofbiz.party.contact.*;
 import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.store.*;
 
-import javolution.util.FastList
-import javolution.util.FastMap
 
 
 orderId = parameters.orderId;
@@ -130,9 +128,9 @@ if (orderHeader) {
     context.orderContainsSubscriptionItemsOnly = orderReadHelper.orderContainsSubscriptionItemsOnly();    
     
     if (context.subscriptions && context.validPaymentMethodTypeForSubscriptions) {
-        Map<GenericValue, List<GenericValue>> orderSubscriptionAdjustments = FastMap.newInstance();
+        Map<GenericValue, List<GenericValue>> orderSubscriptionAdjustments = [:];
         for (GenericValue subscription : context.subscriptionItems.keySet()) {
-            List<GenericValue> subscriptionAdjustments = FastList.newInstance();
+            List<GenericValue> subscriptionAdjustments = [];
             orderItemRemoved = orderItems.remove(subscription);
             for (GenericValue orderAdjustment : orderAdjustments) {
                 Debug.log("Adjustment orderItemSeqId ===> " + orderAdjustment.getString("orderItemSeqId") + "   Order item orderItemSeqId ===> " + subscription.getString("orderItemSeqId"));
@@ -241,8 +239,8 @@ if (orderHeader) {
 
     /*
      * SCIPIO: There is a stock ofbiz bug here, should be fixed if necessary
-     * context.productStore = productStore;
-    context.isDemoStore = isDemoStore;*/
+     * context.productStore = productStore;*/
+    context.isDemoStore = isDemoStore;
 
     context.orderShipmentInfoSummaryList = orderShipmentInfoSummaryList;
     context.customerPoNumberSet = customerPoNumberSet;

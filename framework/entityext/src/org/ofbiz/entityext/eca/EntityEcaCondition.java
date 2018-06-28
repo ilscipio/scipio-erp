@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
 @SuppressWarnings("serial")
 public final class EntityEcaCondition implements java.io.Serializable {
 
-    public static final String module = EntityEcaCondition.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final String lhsValueName, rhsValueName;
     private final String operator;

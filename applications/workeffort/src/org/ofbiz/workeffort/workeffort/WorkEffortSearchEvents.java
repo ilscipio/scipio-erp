@@ -19,14 +19,14 @@
 package org.ofbiz.workeffort.workeffort;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import javolution.util.FastMap;
-
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -39,7 +39,7 @@ import org.ofbiz.workeffort.workeffort.WorkEffortSearchSession.WorkEffortSearchO
 
 public class WorkEffortSearchEvents {
 
-    public static final String module = WorkEffortSearchEvents.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static Map<String, Object> getWorkEffortSearchResult(HttpServletRequest request, Delegator delegator) {
 
@@ -103,7 +103,7 @@ public class WorkEffortSearchEvents {
         String searchSortOrderString = WorkEffortSearchSession.searchGetSortOrderString(false, request);
 
         // ========== populate the result Map
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
 
         result.put("workEffortIds", workEffortIds);
         result.put("viewIndex", Integer.valueOf(viewIndex));

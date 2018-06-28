@@ -34,5 +34,8 @@ under the License.
     <entity-resource type="group" reader-name="main" loader="main" location="entitydef/entitygroup.xml"/>
     -->
 
+    <!-- SCIPIO: 2018-02: new -->
+    <service-resource type="model" loader="main" location="servicedef/services.xml"/>
+
 <!--<test-suite loader="main" location="testdef/webapptests.xml"/>-->
 </ofbiz-component>

@@ -57,7 +57,7 @@ import org.w3c.dom.Node;
  */
 public final class MiniLangUtil {
 
-    public static final String module = MiniLangUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final Set<String> SCRIPT_PREFIXES;
 
@@ -122,7 +122,7 @@ public final class MiniLangUtil {
      * auto-correct version changes
      */
     public static boolean autoCorrectOn() {
-        return "true".equals(UtilProperties.getPropertyValue("minilang.properties", "autocorrect"));
+        return "true".equals(UtilProperties.getPropertyValue("minilang", "autocorrect"));
     }
 
     /**

@@ -20,6 +20,8 @@ package org.ofbiz.product.product;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -27,9 +29,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
@@ -53,7 +52,7 @@ import org.ofbiz.product.product.ProductSearch.ResultSortOrder;
  */
 public class ProductSearchEvents {
 
-    public static final String module = ProductSearchEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ProductErrorUiLabels";
     public static final int DEFAULT_TX_TIMEOUT = 600;
 
@@ -396,7 +395,7 @@ public class ProductSearchEvents {
     public static String searchExportProductList(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         String errMsg = null;
-        List<Map<String, Object>> productExportList = FastList.newInstance();
+        List<Map<String, Object>> productExportList = new LinkedList<Map<String, Object>>();
 
         try {
             boolean beganTransaction = TransactionUtil.begin(DEFAULT_TX_TIMEOUT);
@@ -410,7 +409,7 @@ public class ProductSearchEvents {
 
                 GenericValue searchResultView = null;
                 while ((searchResultView = eli.next()) != null) {
-                    Map<String, Object> productMap = FastMap.newInstance();
+                    Map<String, Object> productMap = new HashMap<String, Object>();
                     String productId = searchResultView.getString("mainProductId");
                     productMap.put("productId", productId);
 

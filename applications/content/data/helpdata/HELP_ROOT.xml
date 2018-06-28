@@ -21,7 +21,7 @@
     version="5.0" xmlns:xl="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude"
     xsi:schemaLocation="http://docbook.org/ns/docbook ../../../content/dtd/docbook.xsd"
     xmlns="http://docbook.org/ns/docbook">
-    <title>Welcome to the Apache OFBiz help system</title>
+    <title>Welcome to the Scipio ERP end-user documentation</title>
     <section>
         <para>If you arrived at this page without selecting the index,
             then a specific help page was not yet available</para>

@@ -55,7 +55,7 @@ import org.w3c.dom.Element;
  */
 @SuppressWarnings("serial")
 public abstract class ListFinder extends Finder {
-    public static final String module = ListFinder.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected String label;
 

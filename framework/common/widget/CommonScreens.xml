@@ -620,8 +620,7 @@ under the License.
                 <not><if-compare operator="equals" value="Y" field="parameters.ajaxLookup"/></not>
             </condition>
             <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">
+
                 <section>
                     <actions>
                         <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
@@ -689,8 +688,7 @@ under the License.
                         </section>
                     </widgets>
                 </section>
-                    </decorator-section>
-                </decorator-screen>
+
             </widgets>
             <fail-widgets>
                 <section>
@@ -970,6 +968,21 @@ under the License.
                 <set field="titleProperty" value="PageTitleError" />
                 <set field="noTitle" value="true" global="true" /><!-- Hack to remove the header element -->
                 <set field="isErrorPage" type="Boolean" value="true" />
+                
+                <!-- SCIPIO: this is for when 404 in web.xml sent by ContextFilter -->
+                <script lang="groovy"><![CDATA[
+                    filterRequestUriError = request.getAttribute("filterRequestUriError");
+                    if (filterRequestUriError) {
+                        errMsg = org.ofbiz.base.util.UtilProperties.getMessage("CommonErrorUiLabels", "CommonServerRequestUrlNotFound",
+                            [requestUrl:filterRequestUriError], context.locale);
+                        errorMessageList = context.errorMessageList;
+                        if (errorMessageList == null) {
+                            errorMessageList = [];
+                            context.errorMessageList = errorMessageList;
+                        }
+                        errorMessageList.add(errMsg);
+                    }
+                ]]></script>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -1227,7 +1240,7 @@ under the License.
                     <widgets>
                         <screenlet padded="false">
                             <label style="heading" text="${uiLabelMap.CommonSearchResults}"/>
-                            <container id="search-results">
+                            <container id="search-results" style="search-results">
                                 <decorator-section-include name="search-results"/>
                             </container>
                         </screenlet>

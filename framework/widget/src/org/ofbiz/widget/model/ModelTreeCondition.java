@@ -29,7 +29,7 @@ import org.w3c.dom.Element;
  */
 @SuppressWarnings("serial")
 public class ModelTreeCondition implements Serializable {
-    public static final String module = ModelTreeCondition.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private final ModelCondition condition;
 
     public ModelTreeCondition(ModelTree modelTree, Element conditionElement) {

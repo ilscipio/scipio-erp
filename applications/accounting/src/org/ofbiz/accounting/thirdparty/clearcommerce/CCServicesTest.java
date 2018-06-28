@@ -33,7 +33,7 @@ import org.ofbiz.service.testtools.OFBizTestCase;
 
 public class CCServicesTest extends OFBizTestCase {
 
-    public static final String module = CCServicesTest.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // test data
     protected GenericValue emailAddr = null;

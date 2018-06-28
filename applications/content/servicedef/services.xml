@@ -1051,8 +1051,8 @@
         <attribute name="statusId" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
         <attribute name="templateDataResourceId" type="String" mode="IN" optional="true"/>
-        <attribute name="articleData" type="String" mode="IN" optional="true" allow-html="any"/>
-        <attribute name="summaryData" type="String" mode="IN" optional="true" allow-html="any"/>
+        <attribute name="articleData" type="String" mode="IN" optional="true" allow-html="none"/>
+        <attribute name="summaryData" type="String" mode="IN" optional="true" allow-html="none"/>
     </service>
     <service name="updateBlogEntry" engine="simple" auth="true"
         location="component://content/script/org/ofbiz/content/blog/BlogServices.xml" invoke="updateBlogEntry">
@@ -1064,8 +1064,8 @@
         <attribute name="statusId" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
         <attribute name="templateDataResourceId" type="String" mode="IN" optional="true"/>
-        <attribute name="articleData" type="String" mode="IN" optional="true" allow-html="any"/>
-        <attribute name="summaryData" type="String" mode="IN" optional="true" allow-html="any"/>
+        <attribute name="articleData" type="String" mode="IN" optional="true" allow-html="none"/>
+        <attribute name="summaryData" type="String" mode="IN" optional="true" allow-html="none"/>
     </service>
     <service name="getBlogEntry" engine="simple" auth="true"
         location="component://content/script/org/ofbiz/content/blog/BlogServices.xml" invoke="getBlogEntry">
@@ -1184,5 +1184,82 @@
         <description>Create Content Alternative URL</description>
         <attribute name="contentId" mode="IN" type="String" optional="true"></attribute>
         <attribute name="contentCreated" mode="OUT" type="String" optional="true"></attribute>
+    </service>
+    
+    <!-- SCIPIO: 2017-12-06: MOVED here from component://product/servicedef/services.xml (DEV NOTE: exception; did not belong there at all) -->
+    <service name="createSimpleTextContentForAlternateLocale" engine="simple" location="component://content/script/org/ofbiz/content/content/LocalizedContentServices.xml" invoke="createSimpleTextContentForAlternateLocale">
+        <auto-attributes mode="IN" entity-name="Content" optional="true"/>
+        <attribute name="mainContentId" type="String" mode="IN" optional="false"/>
+        <attribute name="text" type="String" mode="IN" optional="false" allow-html="any"/>
+        <override name="localeString" optional="false"/>
+        <override name="contentId" mode="INOUT"/>
+    </service>
+    <service name="updateSimpleTextContentForAlternateLocale" engine="simple" location="component://content/script/org/ofbiz/content/content/LocalizedContentServices.xml" invoke="updateSimpleTextContentForAlternateLocale">
+        <description>SCIPIO: Updates ALTERNATE_LOCALE simple text content by contentId (added 2017-10-26)</description>
+        <auto-attributes mode="IN" entity-name="Content" include="pk" optional="false"/>
+        <auto-attributes mode="IN" entity-name="Content" include="nonpk" optional="true"/>
+        <attribute name="mainContentId" type="String" mode="IN" optional="false"/>
+        <attribute name="text" type="String" mode="IN" optional="false" allow-html="any"/>
+        <override name="localeString" optional="false"/>
+    </service>
+    <service name="deleteSimpleTextContentForAlternateLocale" engine="simple" location="component://content/script/org/ofbiz/content/content/LocalizedContentServices.xml" invoke="deleteSimpleTextContentForAlternateLocale">
+        <description>SCIPIO: Deletes ALTERNATE_LOCALE simple text content by contentId (added 2017-10-26)</description>
+        <auto-attributes mode="IN" entity-name="Content" include="pk" optional="false"/>
+        <attribute name="mainContentId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="createUpdateSimpleTextContentForAlternateLocale" engine="simple" location="component://content/script/org/ofbiz/content/content/LocalizedContentServices.xml" invoke="createUpdateSimpleTextContentForAlternateLocale">
+        <description>SCIPIO: WARN: UNTESTED: Intelligently creates or updates simple text content for alternate locale
+            - supports either explicit contentId or relying on localeString to find record to update (added 2017-10-26)</description>
+        <auto-attributes mode="IN" entity-name="Content" optional="true"/>
+        <attribute name="mainContentId" type="String" mode="IN" optional="false"/>
+        <attribute name="text" type="String" mode="IN" optional="false" allow-html="any"/>
+        <override name="localeString" optional="false"/>
+        <override name="contentId" mode="INOUT"/>
+    </service>
+    
+    <service name="replaceContentLocalizedSimpleTexts" engine="java" location="org.ofbiz.content.content.LocalizedContentServices" invoke="replaceContentLocalizedSimpleTexts">
+        <description>SCIPIO: Intelligently creates, updates and deletes simple text contents for alternate locale
+            NOTE: This service will create and update the Main Content record as needed, but it cannot delete the main Content record (see allContentEmpty flag).</description>
+        <attribute name="mainContentId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="entries" type="List" mode="IN" optional="true">
+            <description>Lists of maps, each map supporting the keys: localeString, textData, and optional contentId.
+                If strictContent is false, when contentId is omitted, an associated alt locale content having the matching localeString is located and updated,
+                unless; if true, then entries with no contentId are assumed to be new records. 
+                The first entry of each list is assumed to be the main content record.</description>
+        </attribute>
+        <!-- TODO?: if needed; always false for now (ignores contentIds)
+        <attribute name="strictContent" type="boolean" mode="IN" optional="true" default-value="false">
+            <description>If true, contentFields entries having no contentId are assumed to be new records; 
+                if false (default) they are matched by localeString and created, updated or removed as needed.</description>
+        </attribute>-->
+        <attribute name="allContentEmpty" type="Boolean" mode="OUT" optional="true">
+            <description>If the replacements result in a single empty main Content record,
+                this will be set to true, indicating that the caller may delete main Content and associations
+                if desired (this service cannot delete the associations to the main Content record)</description>
+        </attribute>
+    </service>
+    
+    <!-- SCIPIO: DEV NOTE: This is the target of the @stcLocField macro code.
+        See org.ofbiz.content.content.LocalizedContentWorker for helper methods. -->
+    <service name="replaceEntityContentLocalizedSimpleTextsInterface" engine="interface">
+        <description>SCIPIO: Interface for simple text content for alternate locale intelligent create/update/delete services linked to a major entity (ProductContent, ProductCategoryContent, etc.)</description>
+        <attribute name="contentFields" type="Map" mode="IN" optional="true" string-map-prefix="contentFields_">
+            <description>Map of content type IDs to lists of maps, each map supporting the keys: localeString, textData, and optional contentId.
+                If strictContent is false, when contentId is omitted, an associated alt locale content having the matching localeString is located and updated; 
+                if true, then entries with no contentId are assumed to be new records. 
+                The first entry of each list is assumed to be the main content record (for ProductContent assoc).
+                The list-of-maps may also be represented by special strings to allow submit over request parameters, following
+                the implementation provided by org.ofbiz.content.content.LocalizedContentWorker#parseLocalizedSimpleTextContentFieldParams</description>
+        </attribute>
+        <!-- TODO?: if needed; always false for now (ignores contentIds)
+        <attribute name="strictContent" type="boolean" mode="IN" optional="true" default-value="false">
+            <description>If true, contentFields entries having no contentId are assumed to be new records; 
+                if false (default) they are matched by localeString and created, updated or removed as needed.</description>
+        </attribute>-->
+        <attribute name="mainContentDelete" type="Boolean" mode="IN" optional="true" default-value="true">
+            <description>If true (default), if no text content is passed at all, the main content record may be deleted.
+                NOTE: This will only delete the main record if its alt locale records also contain
+                    no text; otherwise it is essential even if empty because the alt texts are linked to it.</description>
+        </attribute>
     </service>
 </services>

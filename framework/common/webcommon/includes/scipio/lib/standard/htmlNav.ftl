@@ -221,7 +221,7 @@ Creates a single step - to be used with {{{<@nav type="steps" />}}}.
     <#if showLink>
       <a href="${escapeFullUrl(href, 'html')}">
     </#if>
-    <#if icon?has_content><i class="<#if completed>${styles.nav_step_completed!}<#else>${escapeVal(icon, 'html')}</#if>"></i></#if>
+    <#if icon?has_content><i class="<#if completed>${styles.nav_step_completed!} ${styles.nav_step_icon_completed!}<#else>${escapeVal(icon, 'html')}</#if>"></i></#if>
     <#nested>
     <#if showLink>
       </a>
@@ -646,9 +646,9 @@ The submenu's main class may be set as altnested in global styles.
       <#-- WARN: isNestedMenu check here is flawed, but it's all we need for now -->
       <nav class="${styles.nav_sidenav!""}">
         <#-- FIXME: this "navigation" variable is way too generic name! is it even still valid? -->
-        <#if navigation?has_content><h2>${escapeVal(navigation, 'htmlmarkup')}</h2></#if>
+        <#if navigation?has_content><heading>${escapeVal(navigation, 'htmlmarkup')}</heading></#if>
     <#elseif specialType == "button-dropdown">
-      <button href="#" data-dropdown="${escapeVal(id, 'html')}" aria-controls="${escapeVal(id, 'html')}" data-toggle="dropdown"aria-expanded="false"<@compiledClassAttribStr class=titleClass />>${escapeVal(title, 'htmlmarkup')}</button><br>
+      <button href="#" data-dropdown="${escapeVal(id, 'html')}" aria-controls="${escapeVal(id, 'html')}" data-toggle="dropdown" aria-expanded="false"<@compiledClassAttribStr class=titleClass />>${escapeVal(title, 'htmlmarkup')}</button><br>
       <#local attribs = attribs + {"data-dropdown-content":"true", "aria-hidden":"true"}>
     </#if>
     <#if htmlwrap?has_content><${htmlwrap}<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>></#if>
@@ -1064,6 +1064,14 @@ functionality.
                               NOTE: Does not affect paramStr - caller must handle.
    paramDelim               = (default: "&amp;") Param delimiter. Some screens need "/".
                               NOTE: Does not affect paramStr - caller must handle.
+   pagLabels                = ((map)) Map of label names to labels
+                              These can be set in themes also in a styles.pagination_labels hash, where
+                              they support #getTextLabelFromExpr syntax (NOTE: the macro pagLabels arg
+                              does not support that syntax, not needed there).
+                              Supported keys: first, previous, page, next, last, viewSize, on, off
+                              
+  * History *
+    Enhanced for 1.14.4 (added pagLabels).
 -->
 <#assign paginate_defaultArgs = {
   "mode":"single", "type":"default", "layout":"default", "noResultsMode":"default", "enabled":true, "url":"", "class":"", 
@@ -1074,7 +1082,7 @@ functionality.
   "viewIndexString":"", "viewSizeString":"", "paginateToggleString":"", 
   "paramDelim":"", "paramPrefix":"",
   "previousViewSize":"", "paginateOffViewSize":"",
-  "passArgs":{}
+  "pagLabels":{}, "passArgs":{}
 }>
 <#macro paginate args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.paginate_defaultArgs)>
@@ -1089,16 +1097,16 @@ functionality.
 
     <#-- these errors apparently happen a lot, enforce here cause screens never catch, guarantee other checks work -->
     <#if (!viewSize?is_number)>
-      <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewSize was not a number type: " + viewSize!, "htmlUtilitiesPaginate")!>
+      <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewSize was not a number type: " + viewSize, "htmlUtilitiesPaginate")!>
       <#local viewSize = viewSize?number>
     </#if>
     <#local viewSize = viewSize?floor>
     <#if (viewSize <= 0)>
-      <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewSize was a positive number: " + viewSize!, "htmlUtilitiesPaginate")!>
+      <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewSize was not a positive number: " + viewSize, "htmlUtilitiesPaginate")!>
       <#local viewSize = 1>
     </#if>  
     <#if (!viewIndex?is_number)>
-      <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewIndex was not a number type: " + viewIndex!, "htmlUtilitiesPaginate")!>
+      <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewIndex was not a number type: " + viewIndex, "htmlUtilitiesPaginate")!>
       <#local viewIndex = viewIndex?number>
     </#if>
     <#local viewIndex = viewIndex?floor>
@@ -1228,14 +1236,31 @@ functionality.
       <#local paginateOffUrl=commonUrl+"${viewSizeString}=${paginateOffViewSize}${paramDelim}${viewIndexString}=${viewIndexFirst}${paramDelim}${paginateToggleString}=${paginateToggleOffValue}"+urlSuffix/>
     </#if>
     
+    <#-- optimization to avoid too much overhead during request -->
+    <#local stPagLabels = getRequestVar("scpStylesPagLabels")!false>
+    <#if stPagLabels?is_boolean>
+      <#local stPgL = styles.pagination_labels!>
+      <#local stPagLabels = {
+        "first":getTextLabelFromExpr(stPgL.first!""),
+        "previous":getTextLabelFromExpr(stPgL.previous!""),
+        "page":getTextLabelFromExpr(stPgL.page!""),
+        "next":getTextLabelFromExpr(stPgL.next!""),
+        "last":getTextLabelFromExpr(stPgL.last!""),
+        "viewSize":getTextLabelFromExpr(stPgL.viewSize!""),
+        "on":getTextLabelFromExpr(stPgL.on!""),
+        "off":getTextLabelFromExpr(stPgL.off!"")
+      }>
+      <#local dummy = setRequestVar("scpStylesPagLabels", stPagLabels)>
+    </#if>
+    <#local pagLabels = stPagLabels + toSimpleMap(pagLabels)>
     <#-- NOTE: javaScriptEnabled is a context var -->
     <#-- DEV NOTE: make sure all @paginate_core calls same (DO NOT use #local capture; risks duplicate IDs) -->
     <#if mode == "single">
-      <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex lowIndex=lowIndex highIndex=highIndex realHighIndex=realHighIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel="" paginatePreviousClass="${styles.pagination_item_previous!}" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel="" pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl showCount=showCount alwaysShowCount=alwaysShowCount countMsg=countMsg lowCountMsg="" paginateNextClass="${styles.pagination_item_next!}" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel="" paginateLastClass="${styles.pagination_item_last!}" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel="" paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst enabled=enabled paginateToggle=paginateToggle paginateOn=paginateOn ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass="" paginateOnLabel="" ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass="" paginateOffLabel="" noResultsMode=noResultsMode viewSizeSelection=viewSizeSelection layout=layout position=position passArgs=passArgs/>
+      <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex lowIndex=lowIndex highIndex=highIndex realHighIndex=realHighIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=(pagLabels.first!) paginatePreviousClass=(styles.pagination_item_previous!) ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=(pagLabels.previous!) pageLabel=(pagLabels.page!) ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl showCount=showCount alwaysShowCount=alwaysShowCount countMsg=countMsg lowCountMsg="" paginateNextClass=(styles.pagination_item_next!) ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=(pagLabels.next!) paginateLastClass=(styles.pagination_item_last!) ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=(pagLabels.last!) paginateViewSizeLabel=(pagLabels.viewSize!) forcePost=forcePost viewIndexFirst=viewIndexFirst enabled=enabled paginateToggle=paginateToggle paginateOn=paginateOn ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass=(styles.pagination_toggleon!) paginateOnLabel=(pagLabels.on!) ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass=(styles.pagination_toggleoff!) paginateOffLabel=(pagLabels.off!) noResultsMode=noResultsMode viewSizeSelection=viewSizeSelection layout=layout position=position passArgs=passArgs/>
     <#else>
-      <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex lowIndex=lowIndex highIndex=highIndex realHighIndex=realHighIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel="" paginatePreviousClass="${styles.pagination_item_previous!}" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel="" pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl showCount=showCount alwaysShowCount=alwaysShowCount countMsg=countMsg lowCountMsg="" paginateNextClass="${styles.pagination_item_next!}" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel="" paginateLastClass="${styles.pagination_item_last!}" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel="" paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst enabled=enabled paginateToggle=paginateToggle paginateOn=paginateOn ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass="" paginateOnLabel="" ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass="" paginateOffLabel="" noResultsMode=noResultsMode viewSizeSelection=viewSizeSelection layout=layout position="top" passArgs=passArgs/>
+      <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex lowIndex=lowIndex highIndex=highIndex realHighIndex=realHighIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=(pagLabels.first!) paginatePreviousClass=(styles.pagination_item_previous!) ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=(pagLabels.previous!) pageLabel=(pagLabels.page!) ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl showCount=showCount alwaysShowCount=alwaysShowCount countMsg=countMsg lowCountMsg="" paginateNextClass=(styles.pagination_item_next!) ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=(pagLabels.next!) paginateLastClass=(styles.pagination_item_last!) ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=(pagLabels.last!) paginateViewSizeLabel=(pagLabels.viewSize!) forcePost=forcePost viewIndexFirst=viewIndexFirst enabled=enabled paginateToggle=paginateToggle paginateOn=paginateOn ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass=(styles.pagination_toggleon!) paginateOnLabel=(pagLabels.on!) ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass=(styles.pagination_toggleoff!) paginateOffLabel=(pagLabels.off!) noResultsMode=noResultsMode viewSizeSelection=viewSizeSelection layout=layout position="top" passArgs=passArgs/>
         <#nested>
-      <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex lowIndex=lowIndex highIndex=highIndex realHighIndex=realHighIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel="" paginatePreviousClass="${styles.pagination_item_previous!}" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel="" pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl showCount=showCount alwaysShowCount=alwaysShowCount countMsg=countMsg lowCountMsg="" paginateNextClass="${styles.pagination_item_next!}" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel="" paginateLastClass="${styles.pagination_item_last!}" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel="" paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst enabled=enabled paginateToggle=paginateToggle paginateOn=paginateOn ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass="" paginateOnLabel="" ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass="" paginateOffLabel="" noResultsMode=noResultsMode viewSizeSelection=viewSizeSelection layout=layout position="bottom" passArgs=passArgs/>
+      <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex lowIndex=lowIndex highIndex=highIndex realHighIndex=realHighIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=(pagLabels.first!) paginatePreviousClass=(styles.pagination_item_previous!) ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=(pagLabels.previous!) pageLabel=(pagLabels.page!) ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl showCount=showCount alwaysShowCount=alwaysShowCount countMsg=countMsg lowCountMsg="" paginateNextClass=(styles.pagination_item_next!) ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=(pagLabels.next!) paginateLastClass=(styles.pagination_item_last!) ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=(pagLabels.last!) paginateViewSizeLabel=(pagLabels.viewSize!) forcePost=forcePost viewIndexFirst=viewIndexFirst enabled=enabled paginateToggle=paginateToggle paginateOn=paginateOn ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass=(styles.pagination_toggleon!) paginateOnLabel=(pagLabels.on!) ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass=(styles.pagination_toggleoff!) paginateOffLabel=(pagLabels.off!) noResultsMode=noResultsMode viewSizeSelection=viewSizeSelection layout=layout position="bottom" passArgs=passArgs/>
     </#if>
   </#if>
 </#macro>
@@ -1845,6 +1870,7 @@ DEV NOTE: Currently this does not fully abstract the library used, because diffi
                 </#if>
                 .jstree({
                     "core" : {
+                        "check_callback": true,
                         "data" : ${treeMenuDataJson}
                         <#if treeMenuSettings?has_content>
                            , <@objectAsScript lang="json" object=treeMenuSettings wrap=false />
@@ -1877,6 +1903,7 @@ DEV NOTE: Currently this does not fully abstract the library used, because diffi
                 .jstree({
                     
                     "core" : {
+                        "check_callback": true,
                         <#-- DEV NOTE: TODO: This control should probably be inverted (so that the listing happens here instead of #nested),
                             but it requires inverting a lot more -->
                         "data" : [<#nested>]
@@ -2076,4 +2103,119 @@ Supports nested or flat format for hierarchy.
     </#if>
     <@objectAsScript lang="json" object=attribs rawVal={"children":true} />
   </#if>
+</#macro>
+
+<#-- 
+*************
+* CmsMenu
+************
+CmsMenu macro, used to draw menus created with the cms menu interface. Uses menu macro to mimick original html. If menu has not been created
+with the CMS component, use menu macro instead.
+
+[[[<img src="http://www.scipioerp.com/files/2016/05/menu.png" alt=""/>]]]
+
+It may be used in combination with cms menus:
+  <@cmsmenu type="sidebar" menuId="9000" .../>
+  
+    
+  * Parameters *
+    menuId                  = MenuId (as displayed inside of cms menu screen)
+    type                    = (generic|section|section-inline|main|sidebar|tab|subtab|button|..., default: generic) The menu type
+                              For nested menus, this will inherit the type of the parent. Passed along inside of cmsmenu macro
+                              General:
+                              * {{{generic}}}: any content, but specific type should be preferred.
+    class                   = ((css-class), default: -based on menu type-) CSS classes for menu
+                              Supports prefixes (see #compileClassArg for more info):
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)  
+                              defaults are based on:
+                                styles["menu_" + type?replace("-","_")], or if missing from hash, falls back to
+                                styles["menu_default"]
+                              NOTE: for this macro, the inline "class" args is now logically combined with the "class"
+                                  arg from the "args" map using the logic in combineClassArgs function, with
+                                  inline having priority.
+    id                      = ID
+    style                   = Legacy menu HTML style attribute (for <ul> element)
+    attribs                 = ((maps)) Other menu attributes (for <ul> element)
+    items                   = ((list)) List of maps, where each hash contains arguments representing a menu item. Uses
+                              Objects generated by CMS Menu generator.
+    title                   = Menu title (abstract)
+                              This has a generic/abstract meaning and semantics meaning use will depend on
+                              the specific menu type and implementation.
+                              Currently mostly needed for {{{button-dropdown}}}.
+                                  
+  * History *
+    Added for 1.14.4.       
+-->
+<#assign cmsmenu_defaultArgs = {
+  "menuId":"","title":"", "type":"", "id":"", "class":"", "style":"", "items":true,
+  "passArgs":{}
+}>
+<#macro cmsmenu args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.cmsmenu_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
+  <@cmsmenu_markup menuId=menuId items=items title=title id=id class=class type=type style=style
+    origArgs=origArgs passArgs=passArgs><#nested></@cmsmenu_markup>
+</#macro>
+
+<#-- @cms_menu markup - theme override -->
+<#macro cmsmenu_markup menuId="" items=true title="" type="generic" id="" class="" style="" 
+    origArgs={} passArgs={} catchArgs...>
+  <#local class = addClassArg(class, styles.cmsmenu_wrap!"")>
+        <#if menuId?has_content>
+            <#local menuJson = Static["com.ilscipio.scipio.cms.menu.CmsMenuUtil"].getMenuJsonById(delegator!,menuId)>
+            <#if menuJson?has_content>
+                <@menu type=type title=title id=id class=class style=style>
+                        <#list menuJson as item>
+                            <#if item["data"]["path"]?has_content>
+                                <#if item["type"]=="link_external">
+                                    <@menuitem type="link" text=item.text!"" href=rawString(item.data.path!"")  target="_blank">
+                                        <@cmsmenu items=item["children"] type=type/>
+                                    </@menuitem>
+                                <#else>
+                                    <#if item.data.websiteid?has_content>
+                                        <@menuitem type="link" text=item.text!"" href=makeOfbizInterWebappUrl({"controller":false, "secure":true, "webSiteId":rawString(item.data.websiteid!""), "uri":(rawString(item.data.path!""!))})>
+                                            <@cmsmenu items=item["children"] type=type/>
+                                        </@menuitem>
+                                    <#else>
+                                        <@menuitem type="link" text=item.text!"" href=makeOfbizUrl(rawString(item.data.path!""))>
+                                            <@cmsmenu items=item["children"] type=type/>
+                                        </@menuitem>
+                                    </#if>
+                                </#if>
+                            <#else>
+                                <@menuitem type="generic" text=item.text!""></@menuitem>
+                            </#if>
+                        </#list>
+                    <#nested>
+                </@menu>
+            </#if>
+        <#else>
+            <#if items?is_sequence>
+              <@menu type=type title=title id=id class=class style=style>
+              <#list items as item>
+                <#if item["data"]["path"]?has_content>
+                    <#if item["type"]=="link_external">
+                            <@menuitem type="link" text=item.text!"" href=rawString(item.data.path!"")  target="_blank">
+                                <@cmsmenu items=item["children"] type=type/>
+                            </@menuitem>
+                        <#else>
+                            <#if item.data.websiteid?has_content>
+                                <@menuitem type="link" text=item.text!"" href=makeOfbizInterWebappUrl({"controller":false, "secure":true, "webSiteId":rawString(item.data.websiteid!""), "uri":(rawString(item.data.path!""!))})>
+                                    <@cmsmenu items=item["children"] type=type/>
+                                </@menuitem>
+                            <#else>
+                                <@menuitem type="link" text=item.text!"" href=makeOfbizUrl(rawString(item.data.path!""))>
+                                    <@cmsmenu items=item["children"] type=type/>
+                                </@menuitem>
+                            </#if>
+                        </#if>
+                    <#else>
+                        <@menuitem type="generic" text=item.text!""></@menuitem>
+                    </#if>
+              </#list>
+              </@menu>
+            </#if>
+      </#if>
 </#macro>

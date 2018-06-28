@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  */
 public class TestListContainer implements Container {
 
-    public static final String module = TestListContainer.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private String name;
     private String outputLocation;

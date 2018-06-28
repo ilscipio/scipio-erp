@@ -20,7 +20,15 @@ package com.ilscipio.scipio.common;
 
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.*;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -45,7 +53,7 @@ import org.ofbiz.service.ServiceContainer;
  */
 public class FileListener {
 
-    public static final String module = FileListener.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final ThreadGroup FILE_LISTENER_THREAD_GROUP = new ThreadGroup("WatchServices");
     private static final Delegator delegator = DelegatorFactory.getDelegator("default");
     private static final LocalDispatcher dispatcher = ServiceContainer.getLocalDispatcher(delegator.getDelegatorName(), delegator);

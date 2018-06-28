@@ -39,7 +39,7 @@ import org.ofbiz.entity.Delegator;
  */
 public class JmsQueueListener extends AbstractJmsListener {
 
-    public static final String module = JmsQueueListener.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private QueueConnection con = null;
     private QueueSession session = null;

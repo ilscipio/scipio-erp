@@ -28,6 +28,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtilProperties;
+import org.ofbiz.webapp.control.RequestLinkUtil;
 
 /**
  * Web site properties.
@@ -117,14 +118,16 @@ public final class WebSiteProperties {
         httpPort = adjustPort(delegator, httpPort);
         httpsPort = adjustPort(delegator, httpsPort);      
         
+        boolean isSecure = RequestLinkUtil.isEffectiveSecure(request); // SCIPIO: 2018: replace request.isSecure()
+        
         // SCIPIO: this may override the url.properties settings, though not the WebSite settings
-        if ((requestOverridesStaticHttpPort || httpPort.isEmpty()) && !request.isSecure()) {
+        if ((requestOverridesStaticHttpPort || httpPort.isEmpty()) && !isSecure) {
             httpPort = String.valueOf(request.getServerPort());
         }
         if (requestOverridesStaticHttpHost || httpHost.isEmpty()) {
             httpHost = request.getServerName();
         }
-        if ((requestOverridesStaticHttpsPort || httpsPort.isEmpty()) && request.isSecure()) {
+        if ((requestOverridesStaticHttpsPort || httpsPort.isEmpty()) && isSecure) {
             httpsPort = String.valueOf(request.getServerPort());
         }
         if (requestOverridesStaticHttpsHost || httpsHost.isEmpty()) {
@@ -247,11 +250,11 @@ public final class WebSiteProperties {
     private final boolean enableHttps;
 
     private WebSiteProperties(Delegator delegator) {
-        this.httpPort = EntityUtilProperties.getPropertyValue("url.properties", "port.http", delegator);
-        this.httpHost = EntityUtilProperties.getPropertyValue("url.properties", "force.http.host", delegator);
-        this.httpsPort = EntityUtilProperties.getPropertyValue("url.properties", "port.https", delegator);
-        this.httpsHost = EntityUtilProperties.getPropertyValue("url.properties", "force.https.host", delegator);
-        this.enableHttps = EntityUtilProperties.propertyValueEqualsIgnoreCase("url.properties", "port.https.enabled", "Y", delegator);
+        this.httpPort = EntityUtilProperties.getPropertyValue("url", "port.http", delegator);
+        this.httpHost = EntityUtilProperties.getPropertyValue("url", "force.http.host", delegator);
+        this.httpsPort = EntityUtilProperties.getPropertyValue("url", "port.https", delegator);
+        this.httpsHost = EntityUtilProperties.getPropertyValue("url", "force.https.host", delegator);
+        this.enableHttps = EntityUtilProperties.propertyValueEqualsIgnoreCase("url", "port.https.enabled", "Y", delegator);
     }
 
     private WebSiteProperties(String httpPort, String httpHost, String httpsPort, String httpsHost, boolean enableHttps) {

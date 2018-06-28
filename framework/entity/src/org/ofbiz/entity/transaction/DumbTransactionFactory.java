@@ -44,7 +44,7 @@ import org.ofbiz.entity.jdbc.ConnectionFactoryLoader;
  */
 public class DumbTransactionFactory implements TransactionFactory {
 
-    public static final String module = DumbTransactionFactory.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public TransactionManager getTransactionManager() {
         return new TransactionManager() {

@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
  */
 public final class EntityOne extends EntityOperation {
 
-    public static final String module = EntityOne.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final PrimaryKeyFinder finder;
 

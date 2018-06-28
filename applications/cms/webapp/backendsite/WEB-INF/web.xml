@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app>
+    <display-name>SCIPIO ERP - Preview Backend Site Component</display-name>
+    <description>Preview CMS Component of the Scipio ERP Project - used as a simple container for an empty backend site</description>
+
+    <context-param>
+        <param-name>webSiteId</param-name>
+        <param-value>cmsBackendSite</param-value>
+        <description>A unique ID used to look up the WebSite entity
+        </description>
+    </context-param>
+    <context-param>
+        <param-name>localDispatcherName</param-name>
+        <param-value>cms-site</param-value>
+        <description>A unique name used to identify/recognize the local
+            dispatcher for the Service Engine</description>
+    </context-param>
+    <context-param>
+        <param-name>entityDelegatorName</param-name>
+        <param-value>default</param-value>
+        <description>The Name of the Entity Delegator to use, defined in
+            entityengine.xml</description>
+    </context-param>
+    <context-param>
+        <param-name>mainDecoratorLocation</param-name>
+        <param-value>component://cms/widget/website/CommonScreens.xml</param-value>
+        <description>The location of the main-decorator screen to use for this
+            webapp; referred to as a context variable in screen def XML files.
+        </description>
+    </context-param>
+    <context-param>
+        <param-name>applicationMenuName</param-name>
+        <param-value>MainAppBar</param-value>
+        <description>The main application menu name</description>
+    </context-param>
+    <context-param>
+        <param-name>applicationMenuLocation</param-name>
+        <param-value>component://cms/widget/website/WebsiteMenus.xml</param-value>
+        <description>The main application menu location</description>
+    </context-param>
+    <context-param>
+        <param-name>widgetVerbose</param-name>
+        <param-value>true</param-value>
+        <description>Enable widget boundary comments. See
+            org.ofbiz.widget.ModelWidget.widgetBoundaryCommentsEnabled().
+        </description>
+    </context-param>
+    <context-param>
+        <param-name>compressHTML</param-name>
+        <param-value>false</param-value>
+        <description>Remove unnecessary whitespace from HTML output.
+        </description>
+    </context-param>
+
+    <!-- SCIPIO: CMS parameters -->
+    <context-param>
+        <description>If true, Cms always sets browser no-cache response for all CMS page renders through its view handler (default: false)</description>
+        <param-name>cmsSetResponseBrowserNoCacheCmsPage</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <description>If true, Cms always sets browser no-cache response for all non-CMS screen renders that go through its view handler,
+            whether Cms targets, fallbacks or pass-throughs (default: false)</description>
+        <param-name>cmsSetResponseBrowserNoCacheScreen</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <description>If true, the Cms filter always sets browser no-cache response for all webapp requests, whether Cms-related or not,
+            through view handler or not; provided mainly as convenience for development purposes (default: false)</description>
+        <param-name>cmsSetResponseBrowserNoCache</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <description>If true, any controller view rendered through the Cms screen view handler that does not resolve to a CMS page
+            through any mapping will result in a default CMS page being rendered (cmsDefaultCmsPageReqPath); if false, any such controller view will instead 
+            trigger rendering of its associated Ofbiz screen as defined in the controller, using the regular Ofbiz screen view handler (default: false)</description>
+        <param-name>cmsUseDefaultCmsPage</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <description>Page ID of the CMS page to use as default CMS page when cmsUseDefaultCmsPage is true (default: none; 
+            must be specified if cmsUseDefaultCmsPage true)</description>
+        <param-name>cmsDefaultCmsPageId</param-name>
+        <param-value></param-value>
+    </context-param>
+    <context-param><!-- 2016: new -->
+        <description>Whether to allow CMS preview mode on this webapp (default: false). 
+            Preview mode is identified by the request parameter "cmsPreviewMode", which
+            (as of 2018-05-06) holds a generated access token.
+            NOTE: On production webapps that require tight security, this should be set to false.</description>
+        <param-name>cmsAllowPreviewMode</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param><!-- 2018: new -->
+        <description>Whether the live/preview links to this webapp should use externalLoginKey (default: false). 
+            In other words, whether it should be accessed using the CMS UI user login or not.
+            This should usually only be true if this is a backend webapp or a dedicated preview webapp.</description>
+        <param-name>cmsUseLinkExtLoginKey</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param><!-- 2018: new -->
+        <description>If true, live links (in addition to preview links) require an access token (default: false).
+            This is mainly for implementing preview webapps.</description>
+        <param-name>cmsRequireLiveAccessToken</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param><!-- 2016: new -->
+        <description>Boolean (true/false) value used to control whether primary paths for this webapp
+            are from context root by default or not (default: global from cms.properties, or true)</description>
+        <param-name>cmsPrimaryPathFromContextRootDefault</param-name>
+        <param-value></param-value>
+    </context-param>
+    <context-param><!-- 2016: new -->
+        <description>If set to true, the value of cmsPrimaryPathFromContextRootDefault (above) is applied
+            to entities before they are stored, such that each newly-created 
+            page's primary mapping gets "hardcoded" with sourceFromContextRoot=Y/N, instead of leaving
+            the default marker (sourceFromContextRoot=D) and consulting the website default in realtime. (default: true)
+            TODO: REVIEW: still unclear which should be the default for Scipio</description>
+        <param-name>cmsApplyPrimaryPathFromContextRootDefaultAtStorage</param-name>
+        <param-value></param-value>
+    </context-param>
+    <context-param>
+        <description>Default (control) servlet path for any situation where one is implied (default: the ControlServlet mapping is used)</description>
+        <param-name>cmsDefaultServletPath</param-name>
+        <param-value></param-value>
+    </context-param>
+    <context-param>
+        <description>Default source (control) servlet path for any mappings that do not specify it and are set to match against one (default: value of cmsDefaultServletPath or the ControlServlet mapping)</description>
+        <param-name>cmsDefaultSourceServletPath</param-name>
+        <param-value></param-value>
+    </context-param>
+    <context-param>
+        <description>Default forward (control) servlet path for any mappings that do not specify it and are set to forward with one (default: value of cmsDefaultServletPath or the ControlServlet mapping)</description>
+        <param-name>cmsDefaultForwardServletPath</param-name>
+        <param-value></param-value>
+    </context-param>
+    <context-param>
+        <description>Default target (control) servlet path for any mappings that do not specify it (default: value of cmsDefaultServletPath or the ControlServlet mapping)</description>
+        <param-name>cmsDefaultTargetServletPath</param-name>
+        <param-value></param-value> 
+    </context-param>
+    <context-param><!-- 2016: new -->
+        <description>Default request servlet path, mainly used in backend (default: value of cmsDefaultServletPath or the ControlServlet mapping)
+            This can be overridden here (rather than rely on ControlServlet lookup) in case the webapp uses a custom filter to map around the regular control path</description>
+        <param-name>cmsRequestServletPath</param-name>
+        <param-value></param-value> 
+    </context-param>
+    <context-param>
+        <description>If true, process mapping forwards where mappings do not specify a forwardPath will use
+            defaultForwardServletPath context-param instead of the mapping's targetServletPath (default: false)</description>
+        <param-name>cmsAlwaysUseDefaultForwardServletPath</param-name>
+        <param-value>false</param-value>
+    </context-param>  
+    <context-param>
+        <description>If true, process mappings source path matches that are only partial will append
+            the trailing portion of the URI that did not match to the forwarded path; does not 
+            include or affect parameters (default: true)</description>
+        <param-name>cmsDefaultForwardExtraPathInfo</param-name>
+        <param-value>true</param-value>
+    </context-param>    
+    <context-param>
+        <description>If true, by default (for any mappings where not explicitly specified) process mapping source
+            paths match from context root; otherwise by default the default source servlet path is prepended to the
+            source path and the result is matched (default: true)</description>
+        <param-name>cmsDefaultSourceFromContextRoot</param-name>
+        <param-value>true</param-value>
+    </context-param>    
+    <context-param>
+        <description>If true, by default (for any mappings where not explicitly specified) process mappings forward paths
+            will be used as-is when forwarding, i.e. from context root; otherwise by default the default forward servlet
+            path is prepended to the forward path prior to the forward. Note this has no effect on process mappings
+            that fall back on target(Servlet)Path as default, i.e. when forwardPath empty (default: true)</description>
+        <param-name>cmsDefaultForwardFromContextRoot</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <description>When true, provides a hint to CMS to indicate that the controller URIs under the (non-root)
+            ControlServlet path (usually /control) are being aliases/forwarded/rewritten to also appear
+            as root requests to the webapp context. Currently (2017-11) this is mainly used as a UI hint.
+            If the value is left empty, CMS will try to figure it out on its own from ContextFilter forwardRootControllerUris init-param.
+            NOTE: The actual implementation of this aliasing may be done using ContextFilter forwardRootControllerUris init-param
+                combined with urlrewrite.xml outbound-rules (see Scipio Shop web.xml/urlrewrite.xml). (default: false)</description>
+        <param-name>cmsControlRootAlias</param-name>
+        <param-value></param-value>
+    </context-param>
+    <context-param>
+        <description>If true, process mappings (pages) by default may be indexed in sitemap generation.
+            If false, only indexed if CmsProcessMapping.indexable explicit set to Y.</description>
+        <param-name>cmsMappingsIndexableDefault</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
+    <!-- simple filter to redirect top address to /control/main -->
+    <filter>
+        <display-name>SimpleRedirectFilter</display-name>
+        <filter-name>SimpleRedirectFilter</filter-name>
+        <filter-class>org.ofbiz.webapp.control.SimpleRedirectFilter</filter-class>
+        <init-param>
+            <param-name>matchPattern</param-name>
+            <param-value>^/backendsite/?([?;#].*)?$</param-value>
+        </init-param>
+        <init-param>
+            <description>If true, matches full path with query string (WARN: currently not URL-decoded); 
+                if false, matches only context path</description>
+            <param-name>matchFullPath</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>replacement</param-name>
+            <param-value>/backendsite/control/main$1</param-value>
+        </init-param>
+        <init-param>
+            <param-name>usePermanentRedirect</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+
+    <!-- SCIPIO: CMS Process filter -->
+    <filter>
+        <display-name>CmsProcessFilter</display-name>
+        <filter-name>CmsProcessFilter</filter-name>
+        <filter-class>com.ilscipio.scipio.cms.control.CmsProcessFilter</filter-class>         
+    </filter>  
+    <filter>
+        <filter-name>ContextFilter</filter-name>
+        <display-name>ContextFilter</display-name>
+        <filter-class>org.ofbiz.webapp.control.ContextFilter</filter-class>
+        <init-param>
+            <param-name>disableContextSecurity</param-name>
+            <param-value>N</param-value>
+        </init-param>
+        <init-param>
+            <param-name>allowedPaths</param-name>
+            <param-value>/error:/control:/select:/index.html:/index.jsp:/default.html:/default.jsp:/images:/data
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>errorCode</param-name>
+            <param-value>403</param-value>
+        </init-param>
+        <init-param>
+            <param-name>redirectPath</param-name>
+            <param-value>/control/pagenotfound</param-value>
+        </init-param>
+    </filter>
+    
+    <filter-mapping>
+        <filter-name>SimpleRedirectFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <!-- SCIPIO: CMS Process filter mapping -->
+    <filter-mapping>
+        <filter-name>CmsProcessFilter</filter-name>
+        <url-pattern>/*</url-pattern>   
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher><!-- NOTE: FORWARD is required -->
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>ContextFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <!-- SCIPIO: Need dispatchers -->
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
+
+    <listener>
+        <listener-class>org.ofbiz.webapp.control.ControlEventListener
+        </listener-class>
+    </listener>
+    <listener>
+        <listener-class>org.ofbiz.webapp.control.LoginEventListener
+        </listener-class>
+    </listener>
+    <!-- NOTE: not all app servers support mounting implementations of the HttpSessionActivationListener 
+        interface -->
+    <!-- <listener><listener-class>org.ofbiz.webapp.control.ControlActivationEventListener</listener-class></listener> -->
+
+    <servlet>
+        <servlet-name>ControlServlet</servlet-name>
+        <display-name>ControlServlet</display-name>
+        <description>Main Control Servlet</description>
+        <servlet-class>org.ofbiz.webapp.control.ControlServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>ControlServlet</servlet-name>
+        <url-pattern>/control/*</url-pattern>
+    </servlet-mapping>
+
+    <session-config>
+        <session-timeout>60</session-timeout><!-- in minutes -->
+    </session-config>
+
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>index.html</welcome-file>
+        <welcome-file>index.htm</welcome-file>
+    </welcome-file-list>
+</web-app>

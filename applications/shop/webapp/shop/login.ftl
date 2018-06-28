@@ -88,7 +88,7 @@ under the License.
                          <@row>
                              <@cell class="+${styles.text_left!}" columns=9>
                                 <small>
-                                    <@modal id="modal_login_forgotpassword" label=uiLabelMap.CommonForgotYourPassword class="${styles.medium!}">
+                                    <@modal id="modal_login_forgotpassword" label=uiLabelMap.CommonForgotYourPassword linkClass="${styles.medium!}">
                                         <@row>
                                             <@cell class="large-centered ">
                                                 <@section title=uiLabelMap.CommonPassword>
@@ -157,6 +157,37 @@ under the License.
 
     </@cell>
 </@row>
+<#-- SOCIAL PLugins - requires Facebook, Google or Twitter Authentication Addon -->
+<#if getPropertyMsg("shop.properties","facebook.enabled") == "Y" 
+    || getPropertyMsg("shop.properties","google.enabled") == "Y" 
+    || getPropertyMsg("shop.properties","twitter.enabled") == "Y"
+    || getPropertyMsg("shop.properties","linkedin.enabled") == "Y">
+<@section>
+<@row>
+    <@cell columns=6>
+            
+            <@heading>${uiLabelMap.CommonOrLoginWith}</@heading>
+            <#-- Facebook Login (Requires Facebook Authentication Addon)-->
+            <#if getPropertyMsg("shop.properties","facebook.enabled") == "Y">
+                <#include "component://auth-facebook/webapp/facebook/fb-common.ftl"/>
+                <@fbButton/>
+            </#if>
+            <#if getPropertyMsg("shop.properties","google.enabled") == "Y">
+                <#include "component://auth-google/webapp/google/google-common.ftl"/>
+                <@googleButton/>
+            </#if>
+            <#if getPropertyMsg("shop.properties","twitter.enabled") == "Y">
+                <#include "component://auth-twitter/webapp/twitter/twitter-common.ftl"/>
+                <@twitterButton/>
+            </#if>
+            <#if getPropertyMsg("shop.properties","linkedin.enabled") == "Y">
+                <#include "component://auth-linkedin/webapp/linkedin/linkedin-common.ftl"/>
+                <@linkedinButton/>
+            </#if>
+         </@cell>
+    </@row>
+</@section>
+</#if>
 <#--  
 <@section title=uiLabelMap.CommonForgotYourPassword>
   <form method="post" action="<@ofbizUrl>forgotpassword</@ofbizUrl>" class="horizontal">

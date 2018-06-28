@@ -1300,8 +1300,9 @@ under the License.
 
     <request-map uri="createCustRequestContent">
         <security auth="true" https="true"/>
-        <event path="component://order/script/org/ofbiz/order/request/CustRequestEvents.xml" type="simple"  invoke="createCustRequestContent"/>
-        <response name="success" type="request-redirect" value="EditCustRequestContent"><redirect-parameter name="custRequestId"/></response>
+        <!-- SCIPIO 14-02-2018: Replaces original event component://order/script/org/ofbiz/order/request/CustRequestEvents.xml#createCustRequestContent -->        
+        <event type="service" invoke="CustRequestUploadContentFile"/>
+        <response name="success" type="view" value="EditCustRequestContent"/>
         <response name="error" type="view" value="EditCustRequestContent"/>
     </request-map>
 
@@ -1373,6 +1374,12 @@ under the License.
         <event type="service" path="" invoke="copyCustRequestItem"/>
         <response name="success" type="view" value="EditRequestItem"/>
         <response name="error" type="view" value="EditRequestItem"/>
+    </request-map>
+    <request-map uri="removerequestitem">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeCustRequestItem"/>
+        <response name="success" type="view" value="RequestItems"/>
+        <response name="error" type="view" value="RequestItems"/>
     </request-map>
 
     <request-map uri="requestitemnotes"><security https="true" auth="true"/><response name="success" type="view" value="RequestItemNotes"/></request-map>

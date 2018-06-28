@@ -44,7 +44,7 @@ import org.w3c.dom.Element;
  */
 public final class FindByAnd extends EntityOperation {
 
-    public static final String module = FindByAnd.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final FlexibleStringExpander entityNameFse;
     private final FlexibleMapAccessor<Collection<String>> fieldsToSelectListFma;
@@ -90,7 +90,7 @@ public final class FindByAnd extends EntityOperation {
                                                                   .from(entityName)
                                                                   .where(whereCond)
                                                                   .orderBy(orderByNames)
-                                                                  .queryList());
+                                                                  .queryIterator());
             } else {
                 listFma.put(methodContext.getEnvMap(), EntityQuery.use(delegator)
                                                                   .select(UtilMisc.toSet(fieldsToSelectListFma.get(methodContext.getEnvMap())))

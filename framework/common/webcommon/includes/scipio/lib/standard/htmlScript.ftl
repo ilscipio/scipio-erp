@@ -42,20 +42,23 @@ IMPL NOTE: Beware of whitespace.
   <#if locale??>
     <#local docLangAttr = locale.toString()?replace("_", "-")>
   </#if>
-  <#local langDir = "ltr">
-  <#if docLangAttr?? && "ar.iw"?contains(docLangAttr?substring(0, 2))>
-    <#local langDir = "rtl">
+  <#if Static["java.awt.ComponentOrientation"].getOrientation(locale).isLeftToRight()>
+    <#local langDir = "ltr"/>
+    <#else>
+    <#local langDir = "rtl"/>
   </#if>
   <#if !docLangAttr?has_content>
     <#local docLangAttr = "en">
   </#if>
+  <#assign dummy = setGlobalContextField("langDir", langDir)>
+  <#assign dummy = setGlobalContextField("docLangAttr", docLangAttr)>
   <@htmlHeadOpen_markup includeDocType=includeDocType docLangAttr=docLangAttr langDir=langDir origArgs=origArgs passArgs=passArgs/><#t>
 </#macro>
 
 <#-- @htmlHeadOpen main markup - theme override -->
 <#macro htmlHeadOpen_markup includeDocType=false docLangAttr="" langDir="" origArgs={} passArgs={} catchArgs...>
 <!--[if IE 9]><html class="lt-ie10"<#if docLangAttr?has_content> lang="${escapeVal(docLangAttr, 'html')}"</#if><#if langDir?has_content> dir="${escapeVal(langDir, 'html')}"</#if>><![endif]-->
-<html class="no-js"<#if docLangAttr?has_content> lang="${escapeVal(docLangAttr, 'html')}"</#if><#if langDir?has_content> dir="${escapeVal(langDir, 'html')}"</#if>>
+<html class="no-js"<#if docLangAttr?has_content> lang="${escapeVal(docLangAttr, 'html')}"</#if><#if langDir?has_content> dir="${escapeVal(langDir, 'html')}"<#local dummy = setRequestVar("langDir", args)></#if>>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

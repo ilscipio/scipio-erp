@@ -18,15 +18,17 @@
  *******************************************************************************/
 package org.ofbiz.product.catalog;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import javolution.util.FastList;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
@@ -37,6 +39,8 @@ import org.ofbiz.webapp.website.WebSiteWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.category.CategoryWorker;
@@ -47,7 +51,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  */
 public class CatalogWorker {
 
-    public static final String module = CatalogWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private CatalogWorker () {}
 
@@ -69,7 +73,7 @@ public class CatalogWorker {
     }
 
     public static List<String> getAllCatalogIds(ServletRequest request) {
-        List<String> catalogIds = FastList.newInstance();
+        List<String> catalogIds = new LinkedList<String>();
         List<GenericValue> catalogs = null;
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         try {
@@ -154,8 +158,10 @@ public class CatalogWorker {
      * request parameter or session attribute named CURRENT_CATALOG_ID.  Failing that, it will
      * get the first catalog from the database as specified in getCatalogIdsAvailable().
      * If this behavior is undesired, give the user a selectable list of catalogs.
+     * <p>
+     * SCIPIO: 2017-08-15: now supports reading CURRENT_CATALOG_ID without storing back to session (save boolean).
      */
-    public static String getCurrentCatalogId(ServletRequest request) {
+    public static String getCurrentCatalogId(ServletRequest request, boolean save, boolean saveTrail) {
         HttpSession session = ((HttpServletRequest) request).getSession();
         Map<String, Object> requestParameters = UtilHttp.getParameterMap((HttpServletRequest) request);
         String prodCatalogId = null;
@@ -174,15 +180,54 @@ public class CatalogWorker {
             if (UtilValidate.isNotEmpty(catalogIds)) prodCatalogId = catalogIds.get(0);
         }
 
-        if (!fromSession) {
+        if (save && !fromSession) {
             if (Debug.verboseOn()) Debug.logVerbose("[CatalogWorker.getCurrentCatalogId] Setting new catalog name: " + prodCatalogId, module);
             session.setAttribute("CURRENT_CATALOG_ID", prodCatalogId);
-            // SCIPIO: 2016-13-22: Do NOT override the trail if it was already set earlier in request, 
-            // otherwise may lose work done by servlets and filters
-            //CategoryWorker.setTrail(request, FastList.<String>newInstance());
-            CategoryWorker.setTrailIfFirstInRequest(request, FastList.<String>newInstance());
+            if (saveTrail) {
+                // SCIPIO: 2016-13-22: Do NOT override the trail if it was already set earlier in request, 
+                // otherwise may lose work done by servlets and filters
+                //CategoryWorker.setTrail(request, UtilMisc.<String>newList());
+                CategoryWorker.setTrailIfFirstInRequest(request, new LinkedList<String>());
+            }
         }
         return prodCatalogId;
+    }
+    
+    /**
+     * Retrieves the current prodCatalogId.  First it will attempt to find it from a special
+     * request parameter or session attribute named CURRENT_CATALOG_ID.  Failing that, it will
+     * get the first catalog from the database as specified in getCatalogIdsAvailable().
+     * If this behavior is undesired, give the user a selectable list of catalogs.
+     * SCIPIO: This variant can optionally skip all saving to session.
+     * Added 2017-08-15.
+     */
+    public static String getCurrentCatalogId(ServletRequest request, boolean save) {
+        return getCurrentCatalogId(request, save, save);
+    }
+    
+    /**
+     * Retrieves the current prodCatalogId.  First it will attempt to find it from a special
+     * request parameter or session attribute named CURRENT_CATALOG_ID.  Failing that, it will
+     * get the first catalog from the database as specified in getCatalogIdsAvailable().
+     * If this behavior is undesired, give the user a selectable list of catalogs.
+     * <p>
+     * SCIPIO: NOTE: 2017-08-15: this is the original; now delegates.
+     */
+    public static String getCurrentCatalogId(ServletRequest request) {
+        return getCurrentCatalogId(request, true, true);
+    }
+    
+    /**
+     * Retrieves the current prodCatalogId.  First it will attempt to find it from a special
+     * request parameter or session attribute named CURRENT_CATALOG_ID.  Failing that, it will
+     * get the first catalog from the database as specified in getCatalogIdsAvailable().
+     * If this behavior is undesired, give the user a selectable list of catalogs.
+     * SCIPIO: This variant only reads and does not store the catalogId (or anything else) 
+     * back in session; intended for special purposes.
+     * Added 2017-08-15.
+     */
+    public static String getCurrentCatalogIdReadOnly(ServletRequest request) {
+        return getCurrentCatalogId(request, false, false);
     }
 
     public static List<String> getCatalogIdsAvailable(ServletRequest request) {
@@ -198,8 +243,8 @@ public class CatalogWorker {
     }
 
     public static List<String> getCatalogIdsAvailable(List<GenericValue> partyCatalogs, List<GenericValue> storeCatalogs) {
-        List<String> categoryIds = FastList.newInstance();
-        List<GenericValue> allCatalogLinks = FastList.newInstance();
+        List<String> categoryIds = new LinkedList<String>();
+        List<GenericValue> allCatalogLinks = new LinkedList<GenericValue>();
         if (partyCatalogs != null) allCatalogLinks.addAll(partyCatalogs);
         if (storeCatalogs != null) allCatalogLinks.addAll(storeCatalogs);
 
@@ -274,6 +319,24 @@ public class CatalogWorker {
         if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
 
         List<GenericValue> prodCatalogCategories = getProdCatalogCategories(request, prodCatalogId, "PCCT_BROWSE_ROOT");
+
+        if (UtilValidate.isNotEmpty(prodCatalogCategories)) {
+            GenericValue prodCatalogCategory = EntityUtil.getFirst(prodCatalogCategories);
+
+            return prodCatalogCategory.getString("productCategoryId");
+        } else {
+            return null;
+        }
+    }
+    
+    /**
+     * SCIPIO: new overload that works with delegator instead of request.
+     * Added 2017-11-09.
+     */
+    public static String getCatalogTopCategoryId(Delegator delegator, String prodCatalogId) {
+        if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
+
+        List<GenericValue> prodCatalogCategories = getProdCatalogCategories(delegator, prodCatalogId, "PCCT_BROWSE_ROOT");
 
         if (UtilValidate.isNotEmpty(prodCatalogCategories)) {
             GenericValue prodCatalogCategory = EntityUtil.getFirst(prodCatalogCategories);
@@ -390,7 +453,7 @@ public class CatalogWorker {
     public static Collection<String> getCatalogQuickaddCategories(ServletRequest request, String prodCatalogId) {
         if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
 
-        Collection<String> categoryIds = FastList.newInstance();
+        Collection<String> categoryIds = new LinkedList<String>();
 
         Collection<GenericValue> prodCatalogCategories = getProdCatalogCategories(request, prodCatalogId, "PCCT_QUICK_ADD");
 
@@ -455,5 +518,29 @@ public class CatalogWorker {
         } else {
             return null;
         }
+    }
+    
+    /**
+     * SCIPIO: Imported from SolrCategoryUtil.
+     * Added 2017-11-09.
+     */
+    public static List<GenericValue> getProductStoresFromCatalogIds(Delegator delegator, Collection<String> catalogIds, boolean useCache) {
+        List<GenericValue> stores = new ArrayList<>();
+        Set<String> storeIds = new HashSet<>();
+        for(String catalogId : catalogIds) {
+            try {
+                List<GenericValue> productStoreCatalogs = EntityQuery.use(delegator).from("ProductStoreCatalog").where("prodCatalogId", catalogId)
+                        .filterByDate().cache(useCache).queryList();
+                for(GenericValue productStoreCatalog : productStoreCatalogs) {
+                    if (!storeIds.contains(productStoreCatalog.getString("productStoreId"))) {
+                        stores.add(productStoreCatalog.getRelatedOne("ProductStore", useCache));
+                        storeIds.add(productStoreCatalog.getString("productStoreId"));
+                    }
+                }
+            } catch(Exception e) {
+                Debug.logError(e, "Solr: Error looking up ProductStore for catalogId: " + catalogId, module);
+            }
+        }
+        return stores;
     }
 }

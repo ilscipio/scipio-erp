@@ -1,5 +1,7 @@
 package com.ilscipio.scipio.shop.category;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -15,12 +17,9 @@ import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.product.category.CategoryContentWrapper;
 import org.ofbiz.service.LocalDispatcher;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 public class CategoryHelper {
 
-    public static final String module = CategoryHelper.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     protected final HttpServletRequest request;
     protected final Delegator delegator;
@@ -54,7 +53,7 @@ public class CategoryHelper {
     
     @SuppressWarnings("unchecked")
     public List<Map<String, Object>> makeCategoryInfos(List<Object> categoryIdsOrItems) {
-        List<Map<String, Object>> res = FastList.newInstance();
+        List<Map<String, Object>> res = new ArrayList<>(categoryIdsOrItems.size());
         for(Object item : categoryIdsOrItems) {
             if (item != null) {
                 if (item instanceof String) {
@@ -78,7 +77,7 @@ public class CategoryHelper {
     }
     
     public Map<String, Object> makeCategoryInfo(String categoryId, Map<String, Object> item) {
-        Map<String, Object> info = FastMap.newInstance();
+        Map<String, Object> info = new HashMap<>();
         info.put("item", item);
         info.put("productCategoryId", categoryId);
 
@@ -90,9 +89,9 @@ public class CategoryHelper {
                 productCategory = EntityQuery.use(delegator).from("ProductCategory").where("productCategoryId", categoryId).cache().queryOne();
                 if (productCategory != null) {
                     String categoryName = CategoryContentWrapper.getProductCategoryContentAsText(productCategory, "CATEGORY_NAME", locale, dispatcher, "raw");
-                    info.put("categoryName", categoryName);
+                    info.put("categoryName", UtilValidate.isNotEmpty(categoryName) ? categoryName : null);
                     String description = CategoryContentWrapper.getProductCategoryContentAsText(productCategory, "DESCRIPTION", locale, dispatcher, "raw");
-                    info.put("description", description);
+                    info.put("description", UtilValidate.isNotEmpty(description) ? description : null);
     
                     if (UtilValidate.isNotEmpty(categoryName)) {
                         info.put("displayName", categoryName);

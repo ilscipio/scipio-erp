@@ -32,7 +32,9 @@ import java.io.RandomAccessFile;
 import java.io.Writer;
 import java.nio.ByteBuffer;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -40,6 +42,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.ThreadLocalRandom;
 
 import javax.mail.internet.MimeMessage;
 
@@ -54,8 +57,11 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
@@ -70,7 +76,7 @@ import org.ofbiz.service.mail.MimeMessageWrapper;
  */
 public class CommonServices {
 
-    public final static String module = CommonServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "CommonUiLabels";
 
     /**
@@ -313,6 +319,22 @@ public class CommonServices {
         Delegator delegator = dctx.getDelegator();
         int count = ((Integer) context.get("count")).intValue();
 
+        // SCIPIO: 2018-02-15: patch to add random userLoginId/partyId combo
+        Integer randomUserCount = (Integer) context.get("randomUserCount");
+        List<GenericValue> userLoginList = Collections.emptyList();
+        if (randomUserCount != null && randomUserCount > 0) {
+            EntityFindOptions efo = new EntityFindOptions();
+            efo.setMaxRows(randomUserCount);
+            EntityCondition cond = EntityCondition.makeCondition("partyId", EntityOperator.NOT_EQUAL, null);
+            try {
+                userLoginList = delegator.findList("UserLogin", cond, UtilMisc.toSet("userLoginId", "partyId"), 
+                        null, efo, false);
+                userLoginList = new ArrayList<>(userLoginList);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Could not get UserLogins for dummy visit creation", module);
+            }
+        }
+        
         for (int i = 0; i < count; i++) {
             GenericValue v = delegator.makeValue("Visit");
             String seqId = delegator.getNextSeqId("Visit");
@@ -331,6 +353,13 @@ public class CommonServices {
             v.set("clientHostName", "localhost");
             v.set("fromDate", UtilDateTime.nowTimestamp());
 
+            if (userLoginList.size() > 0) { // SCIPIO
+                int ui = ThreadLocalRandom.current().nextInt(0, userLoginList.size());
+                GenericValue randUserLogin = userLoginList.get(ui);
+                v.set("userLoginId", randUserLogin.get("userLoginId"));
+                v.set("partyId", randUserLogin.get("partyId"));
+            }
+            
             try {
                 delegator.create(v);
             } catch (GenericEntityException e) {

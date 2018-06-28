@@ -21,18 +21,19 @@ package org.ofbiz.party.contact;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletRequest;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Assert;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -48,7 +49,7 @@ import org.ofbiz.entity.util.EntityUtilProperties;
  */
 public class ContactMechWorker {
 
-    public static final String module = ContactMechWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private ContactMechWorker() {}
 
@@ -57,14 +58,14 @@ public class ContactMechWorker {
     }
 
     public static List<Map<String, Object>> getPartyContactMechValueMaps(Delegator delegator, String partyId, boolean showOld, String contactMechTypeId) {
-        List<Map<String, Object>> partyContactMechValueMaps = FastList.newInstance();
+        List<Map<String, Object>> partyContactMechValueMaps = new LinkedList<Map<String, Object>>();
 
         List<GenericValue> allPartyContactMechs = null;
 
         try {
             List<GenericValue> tempCol = EntityQuery.use(delegator).from("PartyContactMech").where("partyId", partyId).queryList();
             if (contactMechTypeId != null) {
-                List<GenericValue> tempColTemp = FastList.newInstance();
+                List<GenericValue> tempColTemp = new LinkedList<GenericValue>();
                 for (GenericValue partyContactMech: tempCol) {
                     GenericValue contactMech = delegator.getRelatedOne("ContactMech", partyContactMech, false);
                     if (contactMech != null && contactMechTypeId.equals(contactMech.getString("contactMechTypeId"))) {
@@ -91,7 +92,7 @@ public class ContactMechWorker {
                 Debug.logWarning(e, module);
             }
             if (contactMech != null) {
-                Map<String, Object> partyContactMechValueMap = FastMap.newInstance();
+                Map<String, Object> partyContactMechValueMap = new HashMap<String, Object>();
 
                 partyContactMechValueMaps.add(partyContactMechValueMap);
                 partyContactMechValueMap.put("contactMech", contactMech);
@@ -128,14 +129,14 @@ public class ContactMechWorker {
     }
 
     public static List<Map<String, Object>> getFacilityContactMechValueMaps(Delegator delegator, String facilityId, boolean showOld, String contactMechTypeId) {
-        List<Map<String, Object>> facilityContactMechValueMaps = FastList.newInstance();
+        List<Map<String, Object>> facilityContactMechValueMaps = new LinkedList<Map<String, Object>>();
 
         List<GenericValue> allFacilityContactMechs = null;
 
         try {
             List<GenericValue> tempCol = EntityQuery.use(delegator).from("FacilityContactMech").where("facilityId", facilityId).queryList();
             if (contactMechTypeId != null) {
-                List<GenericValue> tempColTemp = FastList.newInstance();
+                List<GenericValue> tempColTemp = new LinkedList<GenericValue>();
                 for (GenericValue partyContactMech: tempCol) {
                     GenericValue contactMech = delegator.getRelatedOne("ContactMech", partyContactMech, false);
                     if (contactMech != null && contactMechTypeId.equals(contactMech.getString("contactMechTypeId"))) {
@@ -162,7 +163,7 @@ public class ContactMechWorker {
                 Debug.logWarning(e, module);
             }
             if (contactMech != null) {
-                Map<String, Object> facilityContactMechValueMap = FastMap.newInstance();
+                Map<String, Object> facilityContactMechValueMap = new HashMap<String, Object>();
 
                 facilityContactMechValueMaps.add(facilityContactMechValueMap);
                 facilityContactMechValueMap.put("contactMech", contactMech);
@@ -200,7 +201,7 @@ public class ContactMechWorker {
 
 
     public static List<Map<String, GenericValue>> getOrderContactMechValueMaps(Delegator delegator, String orderId) {
-        List<Map<String, GenericValue>> orderContactMechValueMaps = FastList.newInstance();
+        List<Map<String, GenericValue>> orderContactMechValueMaps = new LinkedList<Map<String, GenericValue>>();
 
         List<GenericValue> allOrderContactMechs = null;
 
@@ -224,7 +225,7 @@ public class ContactMechWorker {
                 Debug.logWarning(e, module);
             }
             if (contactMech != null) {
-                Map<String, GenericValue> orderContactMechValueMap = FastMap.newInstance();
+                Map<String, GenericValue> orderContactMechValueMap = new HashMap<String, GenericValue>();
 
                 orderContactMechValueMaps.add(orderContactMechValueMap);
                 orderContactMechValueMap.put("contactMech", contactMech);
@@ -260,7 +261,7 @@ public class ContactMechWorker {
     }
 
     public static Collection<Map<String, GenericValue>> getWorkEffortContactMechValueMaps(Delegator delegator, String workEffortId) {
-        Collection<Map<String, GenericValue>> workEffortContactMechValueMaps = FastList.newInstance();
+        Collection<Map<String, GenericValue>> workEffortContactMechValueMaps = new LinkedList<Map<String, GenericValue>>();
 
         List<GenericValue> allWorkEffortContactMechs = null;
 
@@ -284,7 +285,7 @@ public class ContactMechWorker {
                 Debug.logWarning(e, module);
             }
             if (contactMech != null) {
-                Map<String, GenericValue> workEffortContactMechValueMap = FastMap.newInstance();
+                Map<String, GenericValue> workEffortContactMechValueMap = new HashMap<String, GenericValue>();
 
                 workEffortContactMechValueMaps.add(workEffortContactMechValueMap);
                 workEffortContactMechValueMap.put("contactMech", contactMech);
@@ -391,7 +392,7 @@ public class ContactMechWorker {
                 Debug.logWarning(e, module);
             }
 
-            Collection<GenericValue> purposeTypes = FastList.newInstance();
+            Collection<GenericValue> purposeTypes = new LinkedList<GenericValue>();
             Iterator<GenericValue> typePurposes = null;
 
             try {
@@ -484,18 +485,20 @@ public class ContactMechWorker {
     }
 
     /** Returns the first valid FacilityContactMech found based on the given facilityId and a prioritized list of purposes
+     * SCIPIO: 2017-12-19: added useCache flag and overload.
      * @param delegator the delegator
      * @param facilityId the facility id
      * @param purposeTypes a List of ContactMechPurposeType ids which will be checked one at a time until a valid contact mech is found
+     * @param useCache whether to use entity cache (SCIPIO)
      * @return returns the first valid FacilityContactMech found based on the given facilityId and a prioritized list of purposes
      */
-    public static GenericValue getFacilityContactMechByPurpose(Delegator delegator, String facilityId, List<String> purposeTypes) {
+    public static GenericValue getFacilityContactMechByPurpose(Delegator delegator, String facilityId, List<String> purposeTypes, boolean useCache) {
         if (UtilValidate.isEmpty(facilityId)) return null;
         if (UtilValidate.isEmpty(purposeTypes)) return null;
 
         for (String purposeType: purposeTypes) {
             List<GenericValue> facilityContactMechPurposes = null;
-            List<EntityCondition> conditionList = FastList.newInstance();
+            List<EntityCondition> conditionList = new LinkedList<EntityCondition>();
             conditionList.add(EntityCondition.makeCondition("facilityId", facilityId));
             conditionList.add(EntityCondition.makeCondition("contactMechPurposeTypeId", purposeType));
             EntityCondition entityCondition = EntityCondition.makeCondition(conditionList);
@@ -503,7 +506,7 @@ public class ContactMechWorker {
                 facilityContactMechPurposes = EntityQuery.use(delegator).from("FacilityContactMechPurpose")
                         .where(entityCondition)
                         .orderBy("-fromDate")
-                        .cache(true)
+                        .cache(useCache)
                         .filterByDate()
                         .queryList();
             } catch (GenericEntityException e) {
@@ -513,7 +516,7 @@ public class ContactMechWorker {
             for (GenericValue facilityContactMechPurpose: facilityContactMechPurposes) {
                 String contactMechId = facilityContactMechPurpose.getString("contactMechId");
                 List<GenericValue> facilityContactMechs = null;
-                conditionList = FastList.newInstance();
+                conditionList = new LinkedList<EntityCondition>();
                 conditionList.add(EntityCondition.makeCondition("facilityId", facilityId));
                 conditionList.add(EntityCondition.makeCondition("contactMechId", contactMechId));
                 entityCondition = EntityCondition.makeCondition(conditionList);
@@ -521,7 +524,7 @@ public class ContactMechWorker {
                     facilityContactMechs = EntityQuery.use(delegator).from("FacilityContactMech")
                             .where(entityCondition)
                             .orderBy("-fromDate")
-                            .cache(true)
+                            .cache(useCache)
                             .filterByDate()
                             .queryList();
                 } catch (GenericEntityException e) {
@@ -535,7 +538,91 @@ public class ContactMechWorker {
         }
         return null;
     }
+    
+    /** Returns the first valid FacilityContactMech found based on the given facilityId and a prioritized list of purposes, using entity cache.
+     * SCIPIO: 2017-12-19: now delegating with useCache=true.
+     * @param delegator the delegator
+     * @param facilityId the facility id
+     * @param purposeTypes a List of ContactMechPurposeType ids which will be checked one at a time until a valid contact mech is found
+     * @return returns the first valid FacilityContactMech found based on the given facilityId and a prioritized list of purposes
+     */
+    public static GenericValue getFacilityContactMechByPurpose(Delegator delegator, String facilityId, List<String> purposeTypes) {
+        return getFacilityContactMechByPurpose(delegator, facilityId, purposeTypes, true);
+    }
+    
+    /**
+     * SCIPIO: Finds the latest FacilityContactMech for each given purpose or for all purposes if not specified.
+     * Added 2018-02-01.
+     * @throws GenericEntityException 
+     */
+    public static Map<String, GenericValue> getFacilityContactMechsByPurpose(Delegator delegator, String facilityId, Collection<String> purposeTypes, boolean useCache) throws GenericEntityException {
+        if (UtilValidate.isEmpty(facilityId)) return null;
 
+        java.sql.Timestamp moment = UtilDateTime.nowTimestamp();
+        
+        // Simply lookup all active FacilityContactMechPurpose and filter after, will tend to be faster this way
+        List<GenericValue> facilityContactMechPurposes = EntityQuery.use(delegator).from("FacilityContactMechPurpose")
+                .where("facilityId", facilityId)
+                .orderBy("-fromDate")
+                .cache(useCache)
+                .filterByDate(moment)
+                .queryList();
+        
+        Map<String, GenericValue> results = new HashMap<>();
+        for(GenericValue facilityContactMechPurpose: facilityContactMechPurposes) {
+            String contactMechPurposeTypeId = facilityContactMechPurpose.getString("contactMechPurposeTypeId");
+            if (UtilValidate.isNotEmpty(purposeTypes) && !purposeTypes.contains(contactMechPurposeTypeId)) {
+                continue;
+            }
+            if (results.containsKey(contactMechPurposeTypeId)) {
+                //Debug.logWarning("Facility '" + facilityId + "' has two or more active contact mechs with same purpose: " + contactMechPurposeTypeId, module);
+                continue;
+            }
+            
+            String contactMechId = facilityContactMechPurpose.getString("contactMechId");
+            // NOTE: this appears redundant, but must validate fromDate/thruDate on this too
+            GenericValue facilityContactMech = EntityQuery.use(delegator).from("FacilityContactMech")
+                    .where("facilityId", facilityId, "contactMechId", contactMechId)
+                    .orderBy("-fromDate")
+                    .cache(useCache)
+                    .filterByDate(moment)
+                    .queryFirst();
+            if (facilityContactMech != null) {
+                results.put(contactMechPurposeTypeId, facilityContactMech);
+            }
+        }
+        return results;
+    }
+    
+    /**
+     * SCIPIO: Finds the latest Facility PostalAddress for each given purpose or for all purposes if not specified.
+     * NOTE: This uses some optimizations, so not guaranteed to check the full validity of each record (common operations).
+     * Added 2018-02-01.
+     * @throws GenericEntityException 
+     */
+    public static Map<String, GenericValue> getFacilityPostalAddressesByPurpose(Delegator delegator, String facilityId, Collection<String> purposeTypes, boolean useCache) throws GenericEntityException {
+        if (UtilValidate.isEmpty(facilityId)) return null;
+        Map<String, GenericValue> results = getFacilityContactMechsByPurpose(delegator, facilityId, purposeTypes, useCache);
+        Collection<String> keysToRemove = null;
+        for(Map.Entry<String, GenericValue> entry : results.entrySet()) {
+            String contactMechId = entry.getValue().getString("contactMechId");
+            GenericValue postalAddress = delegator.findOne("PostalAddress", UtilMisc.toMap("contactMechId", contactMechId), useCache);
+            // NOTE: we skip POSTAL_ADDRESS contactMechTypeId check; usually redundant here
+            if (postalAddress != null) {
+                entry.setValue(postalAddress);
+            } else {
+                if (keysToRemove == null) keysToRemove = new ArrayList<>();
+                keysToRemove.add(entry.getKey());
+            }
+        }
+        if (keysToRemove != null) {
+            for(String purposeType : keysToRemove) {
+                results.remove(purposeType);
+            }
+        }
+        return results;
+    }
+    
     public static void getFacilityContactMechAndRelated(ServletRequest request, String facilityId, Map<String, Object> target) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
 
@@ -616,7 +703,7 @@ public class ContactMechWorker {
                 Debug.logWarning(e, module);
             }
 
-            Collection<GenericValue> purposeTypes = FastList.newInstance();
+            Collection<GenericValue> purposeTypes = new LinkedList<GenericValue>();
             Iterator<GenericValue> typePurposes = null;
 
             try {
@@ -710,7 +797,7 @@ public class ContactMechWorker {
 
     public static List<Map<String, Object>> getPartyPostalAddresses(ServletRequest request, String partyId, String curContactMechId) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        List<Map<String, Object>> postalAddressInfos = FastList.newInstance();
+        List<Map<String, Object>> postalAddressInfos = new LinkedList<Map<String, Object>>();
 
         List<GenericValue> allPartyContactMechs = null;
 
@@ -731,7 +818,7 @@ public class ContactMechWorker {
                 Debug.logWarning(e, module);
             }
             if (contactMech != null && "POSTAL_ADDRESS".equals(contactMech.getString("contactMechTypeId")) && !contactMech.getString("contactMechId").equals(curContactMechId)) {
-                Map<String, Object> postalAddressInfo = FastMap.newInstance();
+                Map<String, Object> postalAddressInfo = new HashMap<String, Object>();
 
                 postalAddressInfos.add(postalAddressInfo);
                 postalAddressInfo.put("contactMech", contactMech);
@@ -758,7 +845,7 @@ public class ContactMechWorker {
 
     public static Map<String, Object> getCurrentPostalAddress(ServletRequest request, String partyId, String curContactMechId) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        Map<String, Object> results = FastMap.newInstance();
+        Map<String, Object> results = new HashMap<String, Object>();
 
         if (curContactMechId != null) {
             List<GenericValue> partyContactMechs = null;
@@ -821,7 +908,7 @@ public class ContactMechWorker {
         String addr2 = postalAddress.getString("address2");
 
         // get the matching string from general.properties
-        String matcher = EntityUtilProperties.getPropertyValue("general.properties", "usps.address.match", postalAddress.getDelegator());
+        String matcher = EntityUtilProperties.getPropertyValue("general", "usps.address.match", postalAddress.getDelegator());
         if (UtilValidate.isNotEmpty(matcher)) {
             if (addr1 != null && addr1.toLowerCase().matches(matcher)) {
                 return true;
@@ -869,7 +956,7 @@ public class ContactMechWorker {
 
         // get all company addresses
         Delegator delegator = postalAddress.getDelegator();
-        List<GenericValue> postalAddresses = FastList.newInstance();
+        List<GenericValue> postalAddresses = new LinkedList<GenericValue>();
         try {
             List<GenericValue> partyContactMechs = EntityQuery.use(delegator).from("PartyContactMech")
                     .where("partyId", companyPartyId)

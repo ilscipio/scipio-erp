@@ -43,6 +43,8 @@ under the License.
                                     <include-form name="MemoryInfo" location="component://webtools/widget/CacheForms.xml"/>
                                 </screenlet>
                                 <screenlet>
+                                    <!-- SCIPIO: small form to filter caches by name -->
+                                    <include-form name="FindCache" location="component://webtools/widget/CacheForms.xml"/>
                                     <include-form name="ListCache" location="component://webtools/widget/CacheForms.xml"/>
                                 </screenlet>
                             </widgets>

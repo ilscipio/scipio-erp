@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
 @SuppressWarnings("serial")
 public abstract class ModelWidget implements Serializable {
 
-    public static final String module = ModelWidget.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     /**
      * The parameter name used to control widget boundary comments. Currently
      * set to "widgetVerbose".

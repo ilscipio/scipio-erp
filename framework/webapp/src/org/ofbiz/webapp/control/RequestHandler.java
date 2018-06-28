@@ -22,7 +22,6 @@ import static org.ofbiz.base.util.UtilGenerics.checkMap;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.MalformedURLException;
@@ -33,8 +32,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletContext;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -52,6 +53,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilObject;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -78,8 +80,9 @@ import org.xml.sax.SAXException;
  */
 public class RequestHandler {
 
-    public static final String module = RequestHandler.class.getName();
-    private final String defaultStatusCodeString = UtilProperties.getPropertyValue("requestHandler.properties", "status-code", "301");
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    private static final boolean showSessionIdInLog = UtilProperties.propertyValueEqualsIgnoreCase("requestHandler", "show-sessionId-in-log", "Y"); // SCIPIO: made static var & remove delegator
+    private final String defaultStatusCodeString = UtilProperties.getPropertyValue("requestHandler", "status-code", "301");
     private final ViewFactory viewFactory;
     private final EventFactory eventFactory;
     private final URL controllerConfigURL;
@@ -154,7 +157,7 @@ public class RequestHandler {
             GenericValue userLogin, Delegator delegator) throws RequestHandlerException, RequestHandlerExceptionAllowExternalRequests {
 
         final boolean throwRequestHandlerExceptionOnMissingLocalRequest = EntityUtilProperties.propertyValueEqualsIgnoreCase(
-                "requestHandler.properties", "throwRequestHandlerExceptionOnMissingLocalRequest", "Y", delegator);
+                "requestHandler", "throwRequestHandlerExceptionOnMissingLocalRequest", "Y", delegator);
         long startTime = System.currentTimeMillis();
         HttpSession session = request.getSession();
 
@@ -265,7 +268,7 @@ public class RequestHandler {
                 // not using _POST_CHAIN_VIEW_ because it shouldn't be set unless the event execution is successful
                 request.setAttribute("_CURRENT_CHAIN_VIEW_", overrideViewUri);
             }
-            if (Debug.infoOn()) Debug.logInfo("[RequestHandler]: Chain in place: requestUri=" + chainRequestUri + " overrideViewUri=" + overrideViewUri + " sessionId=" + UtilHttp.getSessionId(request), module);
+            if (Debug.infoOn()) Debug.logInfo("[RequestHandler]: Chain in place: requestUri=" + chainRequestUri + " overrideViewUri=" + overrideViewUri + showSessionId(request), module);
         } else {
             // Check if X509 is required and we are not secure; throw exception
             if (!request.isSecure() && requestMap.securityCert) {
@@ -289,10 +292,9 @@ public class RequestHandler {
                     requestMap = requestMapMap.get(defaultRequest);
                 }
             }
-            // Check if we SHOULD be secure and are not.
-            String forwardedProto = request.getHeader("X-Forwarded-Proto");
-            boolean isForwardedSecure = UtilValidate.isNotEmpty(forwardedProto) && "HTTPS".equals(forwardedProto.toUpperCase());
-            if ((!request.isSecure() && !isForwardedSecure) && requestMap.securityHttps) {
+            // Check if we SHOULD be secure and are not. (SCIPIO: 2017-11-18: factored out dispersed secure checks)
+            boolean isSecure = RequestLinkUtil.isEffectiveSecure(request); // SCIPIO: 2018: replace request.isSecure()
+            if (!isSecure && requestMap.securityHttps) {
                 // If the request method was POST then return an error to avoid problems with XSRF where the request may have come from another machine/program and had the same session ID but was not encrypted as it should have been (we used to let it pass to not lose data since it was too late to protect that data anyway)
                 if (request.getMethod().equalsIgnoreCase("POST")) {
                     // we can't redirect with the body parameters, and for better security from XSRF, just return an error message
@@ -312,7 +314,7 @@ public class RequestHandler {
                         }
                     }
                     if (enableHttps == null) {
-                        enableHttps = EntityUtilProperties.propertyValueEqualsIgnoreCase("url.properties", "port.https.enabled", "Y", delegator);
+                        enableHttps = EntityUtilProperties.propertyValueEqualsIgnoreCase("url", "port.https.enabled", "Y", delegator);
                     }
 
                     if (Boolean.FALSE.equals(enableHttps)) {
@@ -338,15 +340,20 @@ public class RequestHandler {
             // if this is a new session and forceHttpSession is true and the request is secure but does not
             // need to be then we need the session cookie to be created via an http response (rather than https)
             // so we'll redirect to an unsecure request
-            } else if (forceHttpSession && request.isSecure() && session.isNew() && !requestMap.securityHttps) {
-                StringBuilder urlBuf = new StringBuilder();
-                urlBuf.append(request.getPathInfo());
-                if (request.getQueryString() != null) {
-                    urlBuf.append("?").append(request.getQueryString());
-                }
-                // SCIPIO: Call proper method for this
-                //String newUrl = RequestHandler.makeUrl(request, response, urlBuf.toString(), true, false, false);
-                String newUrl = RequestHandler.makeUrlFull(request, response, urlBuf.toString());
+            } else if (forceHttpSession && isSecure && session.isNew() && !requestMap.securityHttps) {
+                // SCIPIO: 2017-11-13: Preliminary patch to try to ensure the redirected URL is as close as possible
+                // to the original incoming URL. We must not use getPathInfo because it gets changed across forwards.
+                // TODO: REVIEW: I am NOT sending this through URL encoding for now; the idea is to reflect exactly
+                // the original URL, so it's very unlikely we want this to be filtered in any way.
+                String newUrl = RequestLinkUtil.rebuildOriginalRequestURL(request, response, false, true);
+//                StringBuilder urlBuf = new StringBuilder();
+//                urlBuf.append(request.getPathInfo());
+//                if (request.getQueryString() != null) {
+//                    urlBuf.append("?").append(request.getQueryString());
+//                }
+//                // SCIPIO: Call proper method for this
+//                //String newUrl = RequestHandler.makeUrl(request, response, urlBuf.toString(), true, false, false);
+//                String newUrl = RequestHandler.makeUrlFull(request, response, urlBuf.toString());
                 if (newUrl.toUpperCase().startsWith("HTTP")) {
                     callRedirect(newUrl, response, request, statusCodeString);
                     return;
@@ -390,7 +397,7 @@ public class RequestHandler {
             // If its the first visit run the first visit events.
             if (this.trackVisit(request) && session.getAttribute("_FIRST_VISIT_EVENTS_") == null) {
                 if (Debug.infoOn())
-                    Debug.logInfo("This is the first request in this visit." + " sessionId=" + UtilHttp.getSessionId(request), module);
+                    Debug.logInfo("This is the first request in this visit." + showSessionId(request), module);
                 session.setAttribute("_FIRST_VISIT_EVENTS_", "complete");
                 try {
                     for (ConfigXMLReader.Event event: controllerConfig.getFirstVisitEventList().values()) {
@@ -433,7 +440,7 @@ public class RequestHandler {
                                     if (protectView != null) {
                                         overrideViewUri = protectView;
                                     } else {
-                                        overrideViewUri = EntityUtilProperties.getPropertyValue("security.properties", "default.error.response.view", delegator);
+                                        overrideViewUri = EntityUtilProperties.getPropertyValue("security", "default.error.response.view", delegator);
                                         overrideViewUri = overrideViewUri.replace("view:", "");
                                         if ("none:".equals(overrideViewUri)) {
                                             interruptRequest = true;
@@ -455,11 +462,11 @@ public class RequestHandler {
         // Pre-Processor/First-Visit event(s) can interrupt the flow by returning null.
         // Warning: this could cause problems if more then one event attempts to return a response.
         if (interruptRequest) {
-            if (Debug.infoOn()) Debug.logInfo("[Pre-Processor Interrupted Request, not running: [" + requestMap.uri + "], sessionId=" + UtilHttp.getSessionId(request), module);
+            if (Debug.infoOn()) Debug.logInfo("[Pre-Processor Interrupted Request, not running: [" + requestMap.uri + "]. " + showSessionId(request), module);
             return;
         }
 
-        if (Debug.verboseOn()) Debug.logVerbose("[Processing Request]: " + requestMap.uri + " sessionId=" + UtilHttp.getSessionId(request), module);
+        if (Debug.verboseOn()) Debug.logVerbose("[Processing Request]: " + requestMap.uri + showSessionId(request), module);
         request.setAttribute("thisRequestUri", requestMap.uri); // store the actual request URI
 
         // SCIPIO
@@ -476,7 +483,7 @@ public class RequestHandler {
         if (requestMap.securityAuth) {
             // Invoke the security handler
             // catch exceptions and throw RequestHandlerException if failed.
-            if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler]: AuthRequired. Running security check. sessionId=" + UtilHttp.getSessionId(request), module);
+            if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler]: AuthRequired. Running security check. " + showSessionId(request), module);
             ConfigXMLReader.Event checkLoginEvent = requestMapMap.get("checkLogin").event;
             String checkLoginReturnString = null;
 
@@ -581,7 +588,7 @@ public class RequestHandler {
         }
         if (eventReturnBasedRequestResponse != null) {
             //String eventReturnBasedResponse = requestResponse.value;
-            if (Debug.verboseOn()) Debug.logVerbose("[Response Qualified]: " + eventReturnBasedRequestResponse.name + ", " + eventReturnBasedRequestResponse.type + ":" + eventReturnBasedRequestResponse.value + " sessionId=" + UtilHttp.getSessionId(request), module);
+            if (Debug.verboseOn()) Debug.logVerbose("[Response Qualified]: " + eventReturnBasedRequestResponse.name + ", " + eventReturnBasedRequestResponse.type + ":" + eventReturnBasedRequestResponse.value + showSessionId(request), module);
 
             // If error, then display more error messages:
             if ("error".equals(eventReturnBasedRequestResponse.name)) {
@@ -627,7 +634,7 @@ public class RequestHandler {
             }
         }
 
-        if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler]: previousRequest - " + previousRequest + " (" + loginPass + ")" + " sessionId=" + UtilHttp.getSessionId(request), module);
+        if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler]: previousRequest - " + previousRequest + " (" + loginPass + ")" + showSessionId(request), module);
 
         // if previous request exists, and a login just succeeded, do that now.
         if (previousRequest != null && loginPass != null && loginPass.equalsIgnoreCase("TRUE")) {
@@ -636,7 +643,7 @@ public class RequestHandler {
             if ("logout".equals(previousRequest) || "/logout".equals(previousRequest) || "login".equals(previousRequest) || "/login".equals(previousRequest) || "checkLogin".equals(previousRequest) || "/checkLogin".equals(previousRequest) || "/checkLogin/login".equals(previousRequest)) {
                 Debug.logWarning("Found special _PREVIOUS_REQUEST_ of [" + previousRequest + "], setting to null to avoid problems, not running request again", module);
             } else {
-                if (Debug.infoOn()) Debug.logInfo("[Doing Previous Request]: " + previousRequest + " sessionId=" + UtilHttp.getSessionId(request), module);
+                if (Debug.infoOn()) Debug.logInfo("[Doing Previous Request]: " + previousRequest + showSessionId(request), module);
 
                 // note that the previous form parameters are not setup (only the URL ones here), they will be found in the session later and handled when the old request redirect comes back
                 Map<String, Object> previousParamMap = UtilGenerics.checkMap(request.getSession().getAttribute("_PREVIOUS_PARAM_MAP_URL_"), String.class, Object.class);
@@ -675,22 +682,22 @@ public class RequestHandler {
 
         // SCIPIO: Parse value
         String nextRequestResponseValue = parseResponseValue(request, response, nextRequestResponse.value, requestMap);
-        
-        if (Debug.verboseOn()) Debug.logVerbose("[Event Response Selected]  type=" + nextRequestResponse.type + ", value=" + nextRequestResponse.value + ", parsed-value=" + nextRequestResponseValue + ", sessionId=" + UtilHttp.getSessionId(request), module);
+        // SCIPIO: Determine if should prevent view-saving operations
+        boolean allowViewSave = nextRequestResponse.getTypeEnum().isViewType() ?
+                isAllowViewSave(nextRequestResponse.value, request, controllerConfig, requestMap, nextRequestResponse, viewAsJson, viewAsJsonConfig) : false;
+
+        if (Debug.verboseOn()) Debug.logVerbose("[Event Response Selected]  type=" + nextRequestResponse.type + ", value=" + nextRequestResponse.value + ". " + showSessionId(request), module);
 
         // ========== Handle the responses - chains/views ==========
 
         // if the request has the save-last-view attribute set, save it now before the view can be rendered or other chain done so that the _LAST* session attributes will represent the previous request
-        if (nextRequestResponse.saveLastView) {
+        if (nextRequestResponse.saveLastView && allowViewSave) { // SCIPIO: don't save for viewAsJson unless enabled
             // Debug.logInfo("======save last view: " + session.getAttribute("_LAST_VIEW_NAME_"));
             String lastViewName = (String) session.getAttribute("_LAST_VIEW_NAME_");
             // Do not save the view if the last view is the same as the current view and saveCurrentView is false
             if (!(!nextRequestResponse.saveCurrentView && "view".equals(nextRequestResponse.type) && nextRequestResponseValue.equals(lastViewName))) {
-                // SCIPIO: don't save for viewAsJson unless enabled
-                if (!viewAsJson || ViewAsJsonUtil.isViewAsJsonUpdateSession(request, viewAsJsonConfig)) {
-                    session.setAttribute("_SAVED_VIEW_NAME_", session.getAttribute("_LAST_VIEW_NAME_"));
-                    session.setAttribute("_SAVED_VIEW_PARAMS_", session.getAttribute("_LAST_VIEW_PARAMS_"));
-                }
+                session.setAttribute("_SAVED_VIEW_NAME_", session.getAttribute("_LAST_VIEW_NAME_"));
+                session.setAttribute("_SAVED_VIEW_PARAMS_", session.getAttribute("_LAST_VIEW_PARAMS_"));
             }
         }
         String saveName = null;
@@ -699,7 +706,7 @@ public class RequestHandler {
 
         if ("request".equals(nextRequestResponse.type)) {
             // chained request
-            Debug.logInfo("[RequestHandler.doRequest]: Response is a chained request." + " sessionId=" + UtilHttp.getSessionId(request), module);
+            Debug.logInfo("[RequestHandler.doRequest]: Response is a chained request." + showSessionId(request), module);
             doRequest(request, response, nextRequestResponseValue, userLogin, delegator);
         } else {
             // ======== handle views ========
@@ -726,7 +733,7 @@ public class RequestHandler {
                 statusCodeString = responseStatusCode;            
             
             if ("url".equals(nextRequestResponse.type)) {
-                if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a URL redirect." + " sessionId=" + UtilHttp.getSessionId(request), module);
+                if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a URL redirect." + showSessionId(request), module);
                 // SCIPIO: Sanity check
                 if (nextRequestResponseValue == null || nextRequestResponseValue.isEmpty()) {
                     Debug.logError("Scipio: Redirect URL is empty (request map URI: " + requestMap.uri + ")", module);
@@ -736,7 +743,7 @@ public class RequestHandler {
                 callRedirect(nextRequestResponseValue, response, request, statusCodeString);
             } else if ("cross-redirect".equals(nextRequestResponse.type)) {
                 // check for a cross-application redirect
-                if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Cross-Application redirect." + " sessionId=" + UtilHttp.getSessionId(request), module);
+                if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Cross-Application redirect." + showSessionId(request), module);
                 // SCIPIO: Sanity check
                 if (nextRequestResponseValue == null || nextRequestResponseValue.isEmpty()) {
                     Debug.logError("Scipio: Cross-redirect URL is empty (request map URI: " + requestMap.uri + ")", module);
@@ -755,7 +762,7 @@ public class RequestHandler {
                 }
                 callRedirect(targetUrl, response, request, statusCodeString);
             } else if ("request-redirect".equals(nextRequestResponse.type)) {
-                if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect." + " sessionId=" + UtilHttp.getSessionId(request), module);
+                if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect." + showSessionId(request), module);
                 // SCIPIO: Sanity check
                 if (nextRequestResponseValue == null || nextRequestResponseValue.isEmpty()) {
                     Debug.logError("Scipio: Request-redirect URI is empty (request map URI: " + requestMap.uri + ")", module);
@@ -771,7 +778,7 @@ public class RequestHandler {
                 }
                 callRedirect(targetUrl, response, request, statusCodeString);
             } else if ("request-redirect-noparam".equals(nextRequestResponse.type)) {
-                if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect with no parameters." + " sessionId=" + UtilHttp.getSessionId(request), module);
+                if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a Request redirect with no parameters." + showSessionId(request), module);
                 // SCIPIO: Sanity check
                 if (nextRequestResponseValue == null || nextRequestResponseValue.isEmpty()) {
                     Debug.logError("Scipio: Request-redirect-noparam URI is empty (request map URI: " + requestMap.uri + ")", module);
@@ -787,7 +794,8 @@ public class RequestHandler {
                 }
                 callRedirect(targetUrl, response, request, statusCodeString);
             } else if ("view".equals(nextRequestResponse.type)) {
-                if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + " sessionId=" + UtilHttp.getSessionId(request), module);
+                if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + showSessionId(request), module);
+
                 // check for an override view, only used if "success" = eventReturn
                 String viewName = (UtilValidate.isNotEmpty(overrideViewUri) && (eventReturn == null || "success".equals(eventReturn))) ? overrideViewUri : nextRequestResponseValue;
                 // SCIPIO: Sanity check
@@ -795,9 +803,9 @@ public class RequestHandler {
                     Debug.logError("Scipio: view name is empty (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: view name is empty (request map URI: " + requestMap.uri + ")");
                 }
-                renderView(viewName, requestMap.securityExternalView, request, response, saveName, controllerConfig, viewAsJsonConfig, viewAsJson);
+                renderView(viewName, requestMap.securityExternalView, request, response, saveName, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave);
             } else if ("view-last".equals(nextRequestResponse.type)) {
-                if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + " sessionId=" + UtilHttp.getSessionId(request), module);
+                if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + showSessionId(request), module);
 
                 // check for an override view, only used if "success" = eventReturn
                 String viewName = (UtilValidate.isNotEmpty(overrideViewUri) && (eventReturn == null || "success".equals(eventReturn))) ? overrideViewUri : nextRequestResponseValue;
@@ -831,9 +839,9 @@ public class RequestHandler {
                     Debug.logError("Scipio: view-last view name is empty (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: view-last view name is empty (request map URI: " + requestMap.uri + ")");
                 }
-                renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson);
+                renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave);
             } else if ("view-last-noparam".equals(nextRequestResponse.type)) {
-                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + " sessionId=" + UtilHttp.getSessionId(request), module);
+                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + showSessionId(request), module);
 
                  // check for an override view, only used if "success" = eventReturn
                  String viewName = (UtilValidate.isNotEmpty(overrideViewUri) && (eventReturn == null || "success".equals(eventReturn))) ? overrideViewUri : nextRequestResponseValue;
@@ -853,9 +861,9 @@ public class RequestHandler {
                      Debug.logError("Scipio: view-last-noparam view name is empty (request map URI: " + requestMap.uri + ")", module);
                      throw new RequestHandlerException("Scipio: view-last-noparam view name is empty (request map URI: " + requestMap.uri + ")");
                  }
-                 renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson);
+                 renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave);
             } else if ("view-home".equals(nextRequestResponse.type)) {
-                if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + " sessionId=" + UtilHttp.getSessionId(request), module);
+                if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + showSessionId(request), module);
 
                 // check for an override view, only used if "success" = eventReturn
                 String viewName = (UtilValidate.isNotEmpty(overrideViewUri) && (eventReturn == null || "success".equals(eventReturn))) ? overrideViewUri : nextRequestResponseValue;
@@ -876,10 +884,10 @@ public class RequestHandler {
                     Debug.logError("Scipio: view-home view name is empty (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: view-last view name is empty (request map URI: " + requestMap.uri + ")");
                 }
-                renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson);
+                renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave);
             } else if ("none".equals(nextRequestResponse.type)) {
                 // no view to render (meaning the return was processed by the event)
-                if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is handled by the event." + " sessionId=" + UtilHttp.getSessionId(request), module);
+                if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is handled by the event." + showSessionId(request), module);
             }
         }
         if (originalRequestMap.metrics != null) {
@@ -965,6 +973,11 @@ public class RequestHandler {
         String errorpage = null;
         try {
             errorpage = getControllerConfig().getErrorpage();
+            // SCIPIO: 2017-11-14: now supports flexible expressions contains ServletContext attributes
+            Map<String, Object> exprCtx = new HashMap<>();
+            exprCtx.putAll(UtilHttp.getServletContextMap(request));
+            exprCtx.putAll(UtilHttp.getAttributeMap(request));
+            errorpage = FlexibleStringExpander.expandString(errorpage, exprCtx);
         } catch (WebAppConfigurationException e) {
             Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
         }
@@ -1037,7 +1050,7 @@ public class RequestHandler {
     private void callRedirect(String url, HttpServletResponse resp, HttpServletRequest req, String statusCodeString) throws RequestHandlerException {
         // SCIPIO: Uncomment this to force remove jsessionId from controller redirects...
         //RequestUtil.removeJsessionId(url);
-        if (Debug.infoOn()) Debug.logInfo("Sending redirect to: [" + url + "], sessionId=" + UtilHttp.getSessionId(req), module);
+        if (Debug.infoOn()) Debug.logInfo("Sending redirect to: [" + url + "]. " + showSessionId(req), module);
         // SCIPIO: sanity check
         if (url == null || url.isEmpty()) {
             Debug.logError("Scipio: Redirect URL is empty", module);
@@ -1076,7 +1089,7 @@ public class RequestHandler {
             throw new RequestHandlerException(ise.getMessage(), ise);
         }
     }
-    private void renderView(String view, boolean allowExtView, HttpServletRequest req, HttpServletResponse resp, String saveName, ControllerConfig controllerConfig, ConfigXMLReader.ViewAsJsonConfig viewAsJsonConfig, boolean viewAsJson) throws RequestHandlerException, RequestHandlerExceptionAllowExternalRequests {
+    private void renderView(String view, boolean allowExtView, HttpServletRequest req, HttpServletResponse resp, String saveName, ControllerConfig controllerConfig, ConfigXMLReader.ViewAsJsonConfig viewAsJsonConfig, boolean viewAsJson, boolean allowViewSave) throws RequestHandlerException, RequestHandlerExceptionAllowExternalRequests {
         // SCIPIO: sanity check
         if (view == null || view.isEmpty()) {
             Debug.logError("Scipio: View name is empty", module);
@@ -1101,22 +1114,29 @@ public class RequestHandler {
             servletName = servletName.substring(1);
         }
 
-        if (Debug.infoOn()) Debug.logInfo("Rendering View [" + view + "], sessionId=" + UtilHttp.getSessionId(req), module);
+        if (Debug.infoOn()) Debug.logInfo("Rendering View [" + view + "]. " + showSessionId(req), module);
         if (view.startsWith(servletName + "/")) {
             view = view.substring(servletName.length() + 1);
             if (Debug.infoOn()) Debug.logInfo("a manual control servlet request was received, removing control servlet path resulting in: view=" + view, module);
         }
 
-        if (Debug.verboseOn()) Debug.logVerbose("[Getting View Map]: " + view + " sessionId=" + UtilHttp.getSessionId(req), module);
+        if (Debug.verboseOn()) Debug.logVerbose("[Getting View Map]: " + view + showSessionId(req), module);
 
         // before mapping the view, set a request attribute so we know where we are
         req.setAttribute("_CURRENT_VIEW_", view);
 
-        if (!viewAsJson || ViewAsJsonUtil.isViewAsJsonUpdateSession(req, viewAsJsonConfig)) {
+        if (allowViewSave) {
             // save the view in the session for the last view, plus the parameters Map (can use all parameters as they will never go into a URL, will only stay in the session and extra data will be ignored as we won't go to the original request just the view); note that this is saved after the request/view processing has finished so when those run they will get the value from the previous request
             Map<String, Object> paramMap = UtilHttp.getParameterMap(req, ViewAsJsonUtil.VIEWASJSON_RENDERTARGET_REQPARAM_ALL, false); // SCIPIO: SPECIAL EXCLUDES: these will mess up rendering if they aren't excluded
             // add in the attributes as well so everything needed for the rendering context will be in place if/when we get back to this view
-            paramMap.putAll(UtilHttp.getAttributeMap(req));
+            // SCIPIO: 2017-10-04: NEW VIEW-SAVE ATTRIBUTE EXCLUDES - these can be set by event to prevent cached and volatile results from going into session
+            Set<String> viewSaveAttrExcl = UtilGenerics.checkSet(req.getAttribute("_SCP_VIEW_SAVE_ATTR_EXCL_"));
+            if (viewSaveAttrExcl != null) {
+                viewSaveAttrExcl.add("_SCP_VIEW_SAVE_ATTR_EXCL_");
+                viewSaveAttrExcl.add("_ALLOW_VIEW_SAVE_");
+            }
+            //paramMap.putAll(UtilHttp.getAttributeMap(req));
+            paramMap.putAll(UtilHttp.getAttributeMap(req, viewSaveAttrExcl));
             UtilMisc.makeMapSerializable(paramMap);
             if (paramMap.containsKey("_LAST_VIEW_NAME_")) { // Used by lookups to keep the real view (request)
                 req.getSession().setAttribute("_LAST_VIEW_NAME_", paramMap.get("_LAST_VIEW_NAME_"));
@@ -1164,7 +1184,7 @@ public class RequestHandler {
             nextPage = viewMap.page;
         }
 
-        if (Debug.verboseOn()) Debug.logVerbose("[Mapped To]: " + nextPage + " sessionId=" + UtilHttp.getSessionId(req), module);
+        if (Debug.verboseOn()) Debug.logVerbose("[Mapped To]: " + nextPage + showSessionId(req), module);
 
         long viewStartTime = System.currentTimeMillis();
 
@@ -1217,6 +1237,38 @@ public class RequestHandler {
            UtilHttp.setResponseBrowserProxyNoCache(resp);
            if (Debug.verboseOn()) Debug.logVerbose("Sending no-cache headers for view [" + nextPage + "]", module);
         }
+
+        String xFrameOption = viewMap.xFrameOption;
+        // default to sameorigin
+        if (UtilValidate.isNotEmpty(xFrameOption)) {
+            resp.addHeader("x-frame-options", xFrameOption);
+        } else {
+            resp.addHeader("x-frame-options", "sameorigin");
+        }
+
+        String strictTransportSecurity = viewMap.strictTransportSecurity;
+        // default to "max-age=31536000; includeSubDomains" 31536000 secs = 1 year
+        if (UtilValidate.isNotEmpty(strictTransportSecurity)) {
+            if (!"none".equals(strictTransportSecurity)) {
+                resp.addHeader("strict-transport-security", strictTransportSecurity);
+            }
+        } else {
+            if (EntityUtilProperties.getPropertyAsBoolean("requestHandler", "strict-transport-security", true)) { // FIXME later pass req.getAttribute("delegator") as last argument
+                resp.addHeader("strict-transport-security", "max-age=31536000; includeSubDomains");
+            }
+        }
+
+        //The only x-content-type-options defined value, "nosniff", prevents Internet Explorer from MIME-sniffing a response away from the declared content-type. 
+        // This also applies to Google Chrome, when downloading extensions.
+        resp.addHeader("x-content-type-options", "nosniff"); 
+
+        // This header enables the Cross-site scripting (XSS) filter built into most recent web browsers. 
+        // It's usually enabled by default anyway, so the role of this header is to re-enable the filter for this particular website if it was disabled by the user. 
+        // This header is supported in IE 8+, and in Chrome (not sure which versions). The anti-XSS filter was added in Chrome 4. Its unknown if that version honored this header.
+        // FireFox has still an open bug entry and "offers" only the noscript plugin
+        // https://wiki.mozilla.org/Security/Features/XSS_Filter 
+        // https://bugzilla.mozilla.org/show_bug.cgi?id=528661
+        resp.addHeader("X-XSS-Protection","1; mode=block"); 
 
         try {
             if (Debug.verboseOn()) Debug.logVerbose("Rendering view [" + nextPage + "] of type [" + viewMap.type + "]", module);
@@ -1283,7 +1335,41 @@ public class RequestHandler {
             throw new ViewHandlerException("View handler does not support extended interface (ViewHandlerExt)");
         }
     }
-    
+
+    /**
+     * SCIPIO: Determines if view saving may happen for this view for this request response.
+     * <p>
+     * Added 2018-06-13.
+     */
+    static boolean isAllowViewSave(String viewName, HttpServletRequest req, 
+            ConfigXMLReader.ControllerConfig controllerConfig, ConfigXMLReader.RequestMap requestMap,
+            ConfigXMLReader.RequestResponse requestResponse, boolean viewAsJson, ConfigXMLReader.ViewAsJsonConfig viewAsJsonConfig) {
+        
+        // Static configuration lookup first
+        Boolean allowViewSave = requestResponse.getAllowViewSave();
+        if (allowViewSave == null) {
+            try {
+                for(ConfigXMLReader.NameFilter<Boolean> viewNameFilter : controllerConfig.getAllowViewSaveViewNameFilters()) {
+                    if (viewNameFilter.matches(viewName)) {
+                        allowViewSave = viewNameFilter.getUseValue();
+                    }
+                }
+                if (allowViewSave == null) {
+                    allowViewSave = controllerConfig.getAllowViewSaveDefault();
+                }
+            } catch (WebAppConfigurationException e) {
+                Debug.logError(e, module);
+            }
+        }
+        if (Boolean.FALSE.equals(allowViewSave)) {
+            return false;
+        }
+        
+        // Dynamic request circumstances lookups
+        return !"N".equals(req.getParameter("_ALLOW_VIEW_SAVE_")) 
+                && (!viewAsJson || ViewAsJsonUtil.isViewAsJsonUpdateSession(req, viewAsJsonConfig));
+    }
+
     /**
      * Returns a URL String that contains only the scheme and host parts. This method
      * should not be used because it ignores settings in the WebSite entity.
@@ -1295,11 +1381,11 @@ public class RequestHandler {
     @Deprecated
     public static String getDefaultServerRootUrl(HttpServletRequest request, boolean secure) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        String httpsPort = EntityUtilProperties.getPropertyValue("url.properties", "port.https", "443", delegator);
-        String httpsServer = EntityUtilProperties.getPropertyValue("url.properties", "force.https.host", delegator);
-        String httpPort = EntityUtilProperties.getPropertyValue("url.properties", "port.http", "80", delegator);
-        String httpServer = EntityUtilProperties.getPropertyValue("url.properties", "force.http.host", delegator);
-        boolean useHttps = EntityUtilProperties.propertyValueEqualsIgnoreCase("url.properties", "port.https.enabled", "Y", delegator);
+        String httpsPort = EntityUtilProperties.getPropertyValue("url", "port.https", "443", delegator);
+        String httpsServer = EntityUtilProperties.getPropertyValue("url", "force.https.host", delegator);
+        String httpPort = EntityUtilProperties.getPropertyValue("url", "port.http", "80", delegator);
+        String httpServer = EntityUtilProperties.getPropertyValue("url", "force.http.host", delegator);
+        boolean useHttps = EntityUtilProperties.propertyValueEqualsIgnoreCase("url", "port.https.enabled", "Y", delegator);
 
         if (Start.getInstance().getConfig().portOffset != 0) {
             // SCIPIO: ensure has value
@@ -1441,12 +1527,15 @@ public class RequestHandler {
      * Builds links with added query string.
      * <p>
      * SCIPIO: Modified overload to allow boolean flags.
+     * SCIPIO: Modified to include query string in makeLink call.
      */
     public String makeLinkWithQueryString(HttpServletRequest request, HttpServletResponse response, String url, Boolean fullPath, Boolean secure, Boolean encode, 
             ConfigXMLReader.RequestResponse requestResponse) {
-        String initialLink = this.makeLink(request, response, url, fullPath, secure, encode);
-        String queryString = this.makeQueryString(request, requestResponse);
-        return initialLink + queryString;
+        // SCIPIO: 2017-11-21: include the query string inside the makeLink call
+        //String initialLink = this.makeLink(request, response, url, fullPath, secure, encode);
+        //String queryString = this.makeQueryString(request, requestResponse);
+        //return initialLink + queryString;
+        return this.makeLink(request, response, url + this.makeQueryString(request, requestResponse), fullPath, secure, encode);
     }
     
     /**
@@ -1656,7 +1745,8 @@ public class RequestHandler {
             // There is virtually no case where this is not a coding error we want to catch, and if we don't show an error,
             // then we can't use this as a security check. Likely also to make some template errors clearer.
             if (requestMap == null) {
-                Debug.logError("Scipio: Cannot build link: could not locate the expected request '" + requestUri + "' in controller config", module);
+                Debug.log(getMakeLinkErrorLogLevel(request), null, "Scipio: Cannot build link: could not locate the expected request '" 
+                        + requestUri + "' in controller config", module);
                 return null; 
             }
         }
@@ -1780,6 +1870,11 @@ public class RequestHandler {
 
         return encodedUrl;
     }
+    
+    private static int getMakeLinkErrorLogLevel(HttpServletRequest request) {
+        Integer level = (Integer) request.getAttribute("_SCP_LINK_ERROR_LEVEL_");
+        return (level != null) ? level : Debug.ERROR;
+    }
 
     /**
      * SCIPIO: Factored-out makeLink code.
@@ -1804,13 +1899,14 @@ public class RequestHandler {
         // 2016-07-14: NOTE: if for some reason webSiteProps was null, we assume enableHttps is true, for security reasons.
         // 2016-07-14: NOTE: if there is no request object (static rendering context), for now
         // we behave as if we had an insecure request, for better security.
-        if ((Boolean.TRUE.equals(secure) && (Boolean.TRUE.equals(fullPath) || request == null || !request.isSecure())) // if secure requested, only case where don't need full path is if already secure
-            || ((webSiteProps == null || webSiteProps.getEnableHttps()) && requestMap != null && requestMap.securityHttps && (request == null || !request.isSecure() || Boolean.TRUE.equals(fullPath))) // upgrade to secure target if we aren't secure or fullPath was requested (never make non-secure fullPath to secure target)
-            || ((webSiteProps == null || webSiteProps.getEnableHttps()) && secure == null && Boolean.TRUE.equals(fullPath) && request != null && request.isSecure())) { // do not downgrade fullPath requests anymore, unless explicitly allowed (by passing secure false, case below)
+        boolean isSecure = RequestLinkUtil.isEffectiveSecure(request); // SCIPIO: 2018: replace request.isSecure()
+        if ((Boolean.TRUE.equals(secure) && (Boolean.TRUE.equals(fullPath) || request == null || !isSecure)) // if secure requested, only case where don't need full path is if already secure
+            || ((webSiteProps == null || webSiteProps.getEnableHttps()) && requestMap != null && requestMap.securityHttps && (request == null || !isSecure || Boolean.TRUE.equals(fullPath))) // upgrade to secure target if we aren't secure or fullPath was requested (never make non-secure fullPath to secure target)
+            || ((webSiteProps == null || webSiteProps.getEnableHttps()) && secure == null && Boolean.TRUE.equals(fullPath) && request != null && isSecure)) { // do not downgrade fullPath requests anymore, unless explicitly allowed (by passing secure false, case below)
             return Boolean.TRUE;
         } else if (Boolean.TRUE.equals(fullPath) // accept all other explicit fullPath requests
-                || (requestMap != null && (Boolean.FALSE.equals(secure) && !requestMap.securityHttps && request != null && request.isSecure())) // allow downgrade from HTTPS to HTTP, but only if secure false explicitly passed and the target requestMap is not HTTPS. Also, removed this check: webSiteProps.getEnableHttps()  
-                || (requestMap == null && (Boolean.FALSE.equals(secure) && request != null && request.isSecure()))) { // 2016-07-14: if there is no target requestMap or unknown, and secure=false was requested, we'll allow building a fullpath insecure link (this is acceptable only because of our widespread change making null the new default everywhere).
+                || (requestMap != null && (Boolean.FALSE.equals(secure) && !requestMap.securityHttps && request != null && isSecure)) // allow downgrade from HTTPS to HTTP, but only if secure false explicitly passed and the target requestMap is not HTTPS. Also, removed this check: webSiteProps.getEnableHttps()  
+                || (requestMap == null && (Boolean.FALSE.equals(secure) && request != null && isSecure))) { // 2016-07-14: if there is no target requestMap or unknown, and secure=false was requested, we'll allow building a fullpath insecure link (this is acceptable only because of our widespread change making null the new default everywhere).
             return Boolean.FALSE;
         } else {
             return null;
@@ -1844,13 +1940,15 @@ public class RequestHandler {
                 isSpider = true;
             }
 
+            boolean isSecure = RequestLinkUtil.isEffectiveSecure(request);
+            
             // if this isn't a secure page, but we made a secure URL, make sure we manually add the jsessionid since the response.encodeURL won't do that
-            if (!request.isSecure() && didFullSecure) {
+            if (!isSecure && didFullSecure) {
                 forceManualJsessionid = true;
             }
 
             // if this is a secure page, but we made a standard URL, make sure we manually add the jsessionid since the response.encodeURL won't do that
-            if (request.isSecure() && didFullStandard) {
+            if (isSecure && didFullStandard) {
                 forceManualJsessionid = true;
             }
 
@@ -2111,7 +2209,7 @@ public class RequestHandler {
         if (controller == null) {
             // in some cases we need to infer this...
             if (absPath) {
-                controlPath = WebAppUtil.getControlServletPathSafeSlash(webappInfo);
+                controlPath = WebAppUtil.getControlServletPathSafe(webappInfo);
                 controller = (controlPath != null && url.startsWith(controlPath));
                 absControlPathChecked = true;
             }
@@ -2123,7 +2221,7 @@ public class RequestHandler {
         }
         if (controller && controlPath == null) {
             // In some cases need to get controlPath AND this provides a sanity check
-            controlPath = WebAppUtil.getControlServletPathSafeSlash(webappInfo);
+            controlPath = WebAppUtil.getControlServletPathSafe(webappInfo);
             if (controlPath == null) {
                 Debug.logError("Scipio: In makeLinkAuto, trying to make a controller "
                         + "link for a webapp that has no valid controller (" + webappInfo.getName() + ")", module);
@@ -2291,7 +2389,19 @@ public class RequestHandler {
             return false;
         }
     }
-    
+
+    private String showSessionId(HttpServletRequest request) {
+        // SCIPIO: avoid expensive lookup just for log line, not worth it
+        //Delegator delegator = (Delegator) request.getAttribute("delegator");
+        //EntityUtilProperties.propertyValueEqualsIgnoreCase("requestHandler", "show-sessionId-in-log", "Y", delegator);
+        if (showSessionIdInLog) {
+            return " sessionId=" + UtilHttp.getSessionId(request); 
+        }
+        // SCIPIO: needlessly verbose
+        //return " hidden sessionId by default.";
+        return " sessionId=[hidden]";
+    }
+
     /**
      * SCIPIO: Utility method that can be used for security checks to check if controller of current webapp
      * has the specified URI and allows direct/public access.
@@ -2334,5 +2444,49 @@ public class RequestHandler {
      */
     public String getCharset() {
         return charset;
+    }
+    
+    /**
+     * SCIPIO: Returns the servlet path for the controller or empty string if it's the catch-all path ("/").
+     * (same rules as {@link HttpServletRequest#getServletPath()}).
+     * NOTE: Unlike ofbiz's _CONTROL_PATH_ request attribute, this is accessible to early filters,
+     * because it's determined during servlet initialization.
+     * Added 2017-11-14.
+     */
+    public static String getControlServletPath(ServletRequest request) {
+        return getControlServletPath(request.getServletContext());
+    }
+    
+    /**
+     * SCIPIO: Returns the servlet path for the controller or empty string if it's the catch-all path ("/").
+     * (same rules as {@link HttpServletRequest#getServletPath()}).
+     * NOTE: Unlike ofbiz's _CONTROL_PATH_ request attribute, this is accessible to early filters,
+     * because it's determined during servlet initialization - HOWEVER, it may not accessible
+     * from filter/servlet initialization!
+     * NOTE: If request is available, always call the {@link #getControlServletPath(ServletRequest)} overload instead!
+     * Added 2017-11-14.
+     */
+    public static String getControlServletPath(ServletContext servletContext) {
+        return (String) servletContext.getAttribute("_CONTROL_SERVPATH_");
+    }
+    
+    /**
+     * SCIPIO: Returns the servlet mapping for the controller.
+     * NOTE: Unlike ofbiz's _CONTROL_PATH_ request attribute, this is accessible to early filters,
+     * because it's determined during servlet initialization.
+     * Added 2017-11-14.
+     */
+    public static String getControlServletMapping(ServletRequest request) {
+        return getControlServletMapping(request.getServletContext());
+    }
+    
+    /**
+     * SCIPIO: Returns the servlet mapping for the controller.
+     * NOTE: Unlike ofbiz's _CONTROL_PATH_ request attribute, this is accessible to early filters,
+     * because it's determined during servlet initialization.
+     * Added 2017-11-14.
+     */
+    public static String getControlServletMapping(ServletContext servletContext) {
+        return (String) servletContext.getAttribute("_CONTROL_MAPPING_");
     }
 }

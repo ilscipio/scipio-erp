@@ -27,13 +27,10 @@ under the License.
 
     <property name="desc" value="Order Component"/>
     <property name="name" value="ofbiz-order"/>
-    <property name="ofbiz.home.dir" value="../.."/>
 
     <path id="local.class.path">
         <!--<fileset dir="${lib.dir}" includes="*.jar"/>-->
         <fileset dir="../../framework/base/lib" includes="*.jar"/>
-        <fileset dir="../../framework/base/lib/commons" includes="*.jar"/>
-        <fileset dir="../../framework/base/lib/j2eespecs" includes="*.jar"/>
         <fileset dir="../../framework/base/build/lib" includes="*.jar"/>
         <fileset dir="../../framework/entity/lib" includes="*.jar"/>
         <fileset dir="../../framework/entity/build/lib" includes="*.jar"/>
@@ -56,11 +53,11 @@ under the License.
     <!-- Compilation of the source files                                                                                                                         -->
     <!-- ================================================================== -->
 
-    <target name="classes" depends="prepare,check-init-lib-update"><!-- SCIPIO: added per-component lib update check -->
-        <javac17>
+    <target name="classes" depends="prepare,check-lib-update"><!-- SCIPIO: added per-component lib update check -->
+        <javac18>
             <!-- exclude the payment processor packages; comment if you have libs -->
             <exclude name="org/ofbiz/order/thirdparty/taxware/**"/>
-        </javac17>
+        </javac18>
     </target>
 
     <target name="jar" depends="classes">

@@ -21,7 +21,8 @@ under the License.
     <menu name="CatalogAppBar" title="${uiLabelMap.ProductCatalog}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="catalogs" title="${uiLabelMap.ProductCatalogs}"><link target="FindCatalog"/></menu-item>
         <menu-item name="categories" title="${uiLabelMap.ProductCategories}"><link target="FindCategory"/></menu-item>
-        <menu-item name="products" title="${uiLabelMap.ProductProducts}"><link target="FindProduct"/></menu-item>               
+        <menu-item name="products" title="${uiLabelMap.ProductProducts}"><link target="FindProduct"/></menu-item>    
+        <menu-item name="productReviews" title="${uiLabelMap.ProductReviews}"><link target="FindReviews"/></menu-item>           
         <menu-item name="store" title="${uiLabelMap.ProductStores}"><link target="FindProductStore"/></menu-item>
         <menu-item name="pricerules" title="${uiLabelMap.ProductPrices}"><link target="FindProductPriceRules"/></menu-item>
         <menu-item name="promos" title="${uiLabelMap.ProductPromotions}"><link target="FindProductPromo"/></menu-item>
@@ -42,7 +43,7 @@ under the License.
         </menu-item>
         <menu-item name="products">
             <sub-menu name="Product" include="ProductSideBar"/>
-        </menu-item>               
+        </menu-item>            
         <menu-item name="store">
             <sub-menu name="ProductStore" include="ProductStoreSideBar"/>
         </menu-item>
@@ -240,6 +241,9 @@ under the License.
     </menu>
 
     <menu name="CategorySubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <actions>
+            <property-to-field resource="catalog" property="shop.default.link.category.prefix" field="categoryPageUrl"/>
+        </actions>
         <menu-item name="EditCategory" title="${uiLabelMap.ProductNewCategory}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <not><if-compare field="isCreateCategory" operator="equals" type="Boolean" value="true"/></not>
@@ -273,16 +277,25 @@ under the License.
         </menu-item>
         <menu-item name="ProductCategoryPage" title="${uiLabelMap.ProductCategoryPage}" widget-style="+website">
             <condition>
-                <not><if-empty field="productCategory"/></not>
+                <and>
+                    <not><if-empty field="productCategory"/></not>
+                    <not><if-empty field="categoryPageUrl"/></not>
+                </and>
             </condition>
             <!-- SCIPIO: Now points to shop -->
-            <link target="/shop/control/category" url-mode="plain" target-window="_blank">
-                <parameter param-name="category_id" from-field="productCategoryId"/>
-            </link>
+            <link target="${categoryPageUrl}${productCategory.productCategoryId}" url-mode="plain" target-window="_blank"/>
         </menu-item>
     </menu>
     
-    <menu name="CategoryContentSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">      
+    <menu name="CategoryContentSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="NewContentInCategory" title="${uiLabelMap.ContentNewContent}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <not><if-empty field="productCategory"/></not>
+            </condition>
+            <link target="EditCategoryContent">
+                <parameter param-name="productCategoryId"/>
+            </link>
+        </menu-item>   
         <menu-item name="AddExistingContentInCategory" title="${uiLabelMap.ProductAddExistingContentInCategory}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <not><if-empty field="productCategory"/></not>
@@ -684,13 +697,12 @@ under the License.
             FIXME?: bigger issue is the feature screens in the sub-menu have no relation to Product and don't pass around a productId,
             so there's a disconnect. BUT as long as those screens are accesible then they must show in the
             sidebar somewhere, and this is the workaround. -->
-        <menu-item name="EditProductFeatures" title="${uiLabelMap.ProductFeatures}" disabled="${not currentMenuRenderState.itemState.conditionResult}">
+        <menu-item name="EditProductFeatures" title="${uiLabelMap.ProductFeatures}" disabled="${(empty context.productId) and (not currentMenuRenderState.itemState.conditionResult)}">
             <condition>
-                <or>
-                    <not>
-                        <if-empty field="parameters.productId"/>
-                    </not>
-                </or>
+                <not>
+                    <!--<if-empty field="parameters.productId"/>-->
+                    <if-empty field="productId"/>
+                </not>
             </condition>
             <link target="EditProductFeatures">
                 <parameter param-name="productId"/>
@@ -798,7 +810,7 @@ under the License.
             </link>
         </menu-item>
         <!-- SCIPIO: NOTE: the disabled is here due to same reasons as EditProductFeatures, see EditProductFeatures -->
-        <menu-item name="EditProductConfigs" title="${uiLabelMap.ProductConfigs}" disabled="${not currentMenuRenderState.itemState.conditionResult}">
+        <menu-item name="EditProductConfigs" title="${uiLabelMap.ProductConfigs}" disabled="${(empty context.productId) and (not currentMenuRenderState.itemState.conditionResult)}">
             <condition>
                 <and>
                     <or>
@@ -806,7 +818,8 @@ under the License.
                         <if-compare field="product.productTypeId" operator="equals" value="AGGREGATED_SERVICE"/>
                     </or>
                     <not>
-                        <if-empty field="parameters.productId"/>
+                        <!--<if-empty field="parameters.productId"/>-->
+                        <if-empty field="productId"/>
                     </not>
                 </and>
             </condition>
@@ -856,10 +869,44 @@ under the License.
         <menu-item name="EditProductConfigs">
             <!-- SCIPIO: NOTE: see comments on EditProductFeatures in ProductTabBar -->
             <sub-menu name="ConfigItem" include="ConfigItemSideBar"/>
-        </menu-item>
+        </menu-item>  
+    </menu>
+    
+    <!-- SCIPIO: small tab bar needed for content (may be removed in future) -->
+    <menu name="ProductContentSectionSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="NewProductContent" title="${uiLabelMap.ContentNewContent}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <not><if-empty field="product.productId"/></not>
+            </condition>
+            <link target="EditProductContent">
+                <parameter param-name="productId" from-field="product.productId"/>
+            </link>
+        </menu-item>   
     </menu>
 
     <!-- SCIPIO: ProductSubTabBar Deprecated - replaced by component://product/webapp/catalog/menu/ProductSubTabBar.ftl --> 
+
+    <menu name="ProductReviewTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="FindReviews" title="${uiLabelMap.ProductReviews}">
+            <link target="FindReviews">
+                <parameter param-name="productId" from-field="product.productId"/>
+            </link>
+        </menu-item>
+        <menu-item name="updateProductReview" title="${uiLabelMap.ProductConfigOptions}">
+            <condition>
+                <not>
+                    <if-empty field="parameters.productId"/>
+                </not>
+            </condition>
+            <link target="updateProductReview">
+                <parameter param-name="productId" from-field="product.productId"/>
+            </link>
+        </menu-item>
+    </menu>
+    
+    <menu name="ProductReviewSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-elements menu-name="ProductReviewTabBar" recursive="includes-only" />
+    </menu>
 
     <menu name="ConfigItemTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="EditProductConfigItem" title="${uiLabelMap.ProductConfigItem}">

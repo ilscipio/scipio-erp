@@ -22,14 +22,13 @@ package org.ofbiz.product.config;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
-import javolution.util.FastSet;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
@@ -50,7 +49,7 @@ import org.ofbiz.service.ServiceContainer;
 @SuppressWarnings("serial")
 public class ProductConfigWrapper implements Serializable {
 
-    public static final String module = ProductConfigWrapper.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected transient LocalDispatcher dispatcher;
     protected String dispatcherName;
@@ -68,6 +67,15 @@ public class ProductConfigWrapper implements Serializable {
     protected String configId = null; // Id of persisted ProductConfigWrapper
     protected List<ConfigItem> questions = null; // ProductConfigs
 
+    /**
+     * SCIPIO: If the product had an original list price, this will be non-null.
+     * This will be null if the product does not have an explicit list price.
+     * Required because the listPrice member above is always initialized to ZERO, 
+     * so it can't be used to check this.
+     * Added 2017-08-22.
+     */
+    protected BigDecimal originalListPrice = null; 
+    
     /** Creates a new instance of ProductConfigWrapper */
     public ProductConfigWrapper() {
     }
@@ -81,7 +89,7 @@ public class ProductConfigWrapper implements Serializable {
         listPrice = pcw.listPrice;
         basePrice = pcw.basePrice;
         defaultPrice = pcw.defaultPrice;
-        questions = FastList.newInstance();
+        questions = new LinkedList<ConfigItem>();
         delegator = pcw.getDelegator();
         delegatorName = delegator.getDelegatorName();
         dispatcher = pcw.getDispatcher();
@@ -117,16 +125,17 @@ public class ProductConfigWrapper implements Serializable {
         Map<String, Object> priceMap = dispatcher.runSync("calculateProductPrice", priceContext);
         BigDecimal originalListPrice = (BigDecimal) priceMap.get("listPrice");
         BigDecimal price = (BigDecimal) priceMap.get("price");
+        this.originalListPrice = originalListPrice; // SCIPIO: new
         if (originalListPrice != null) {
             listPrice = originalListPrice;
         }
         if (price != null) {
             basePrice = price;
         }
-        questions = FastList.newInstance();
+        questions = new LinkedList<ConfigItem>();
         if ("AGGREGATED".equals(product.getString("productTypeId")) || "AGGREGATED_SERVICE".equals(product.getString("productTypeId"))) {
             List<GenericValue> questionsValues = EntityQuery.use(delegator).from("ProductConfig").where("productId", productId).orderBy("sequenceNum").filterByDate().queryList();
-            Set<String> itemIds = FastSet.newInstance();
+            Set<String> itemIds = new HashSet<String>();
             for (GenericValue questionsValue: questionsValues) {
                 ConfigItem oneQuestion = new ConfigItem(questionsValue);
                 oneQuestion.setContent(locale, "text/html"); // TODO: mime-type shouldn't be hardcoded
@@ -187,6 +196,24 @@ public class ProductConfigWrapper implements Serializable {
                     co.setSelected(false);
                     co.setComments(null);
                 }
+            }
+        }
+    }
+    
+    /**
+     * SCIPIO: Resets all selections including standard items and comments,
+     * virtual component options, or otherwise any selections that may be set
+     * by {@link ProductConfigWorker#fillProductConfigWrapper} (no validation).
+     * Should correspond to the initial state of a newly-constructed ProductConfigWrapper
+     * using {@link #init}.
+     */
+    public void resetConfigFull() {
+        for (ConfigItem ci: questions) {
+            List<ConfigOption> options = ci.getOptions();
+            for (ConfigOption co: options) {
+                co.setSelected(false);
+                co.setComments(null);
+                co.componentOptions = null;
             }
         }
     }
@@ -286,7 +313,7 @@ public class ProductConfigWrapper implements Serializable {
         GenericValue oneComponent = components.get(component);
         if (theOption.isVirtualComponent(oneComponent)) {
             if (theOption.componentOptions == null) {
-                theOption.componentOptions = FastMap.newInstance();
+                theOption.componentOptions = new HashMap<String, String>();
             }
             theOption.componentOptions.put(oneComponent.getString("productId"), componentOption);
 
@@ -297,7 +324,7 @@ public class ProductConfigWrapper implements Serializable {
     }
 
     public List<ConfigOption> getSelectedOptions() {
-        List<ConfigOption> selectedOptions = FastList.newInstance();
+        List<ConfigOption> selectedOptions = new LinkedList<ConfigOption>();
         for (ConfigItem ci: questions) {
             if (ci.isStandard()) {
                 selectedOptions.addAll(ci.getOptions());
@@ -313,7 +340,7 @@ public class ProductConfigWrapper implements Serializable {
     }
 
     public List<ConfigOption> getDefaultOptions() {
-        List<ConfigOption> defaultOptions = FastList.newInstance();
+        List<ConfigOption> defaultOptions = new LinkedList<ConfigOption>();
         for (ConfigItem ci: questions) {
             ConfigOption co = ci.getDefault();
             if (co != null) {
@@ -352,6 +379,25 @@ public class ProductConfigWrapper implements Serializable {
 
     public BigDecimal getDefaultPrice() {
         return defaultPrice;
+    }
+    
+    /**
+     * SCIPIO: Returns the original list price for the product from initialization.
+     * If the product had no list price, this will be null.
+     * Added 2017-08-22.
+     */
+    public BigDecimal getOriginalListPrice() {
+        return originalListPrice;
+    }
+    
+    /**
+     * SCIPIO: Returns true if the product had a list price on initialization.
+     * NOTE: this is sometimes needed as extra check because {@link #getTotalListPrice} always
+     * returns a number (zero) even when there was no original list price.
+     * Added 2017-08-22.
+     */
+    public boolean hasOriginalListPrice() {
+        return originalListPrice != null;
     }
 
     public boolean isCompleted() {
@@ -398,13 +444,13 @@ public class ProductConfigWrapper implements Serializable {
         public ConfigItem(GenericValue questionAssoc) throws Exception {
             configItemAssoc = questionAssoc;
             configItem = configItemAssoc.getRelatedOne("ConfigItemProductConfigItem", false);
-            options = FastList.newInstance();
+            options = new LinkedList<ConfigOption>();
         }
 
         public ConfigItem(ConfigItem ci) {
             configItem = GenericValue.create(ci.configItem);
             configItemAssoc = GenericValue.create(ci.configItemAssoc);
-            options = FastList.newInstance();
+            options = new LinkedList<ConfigOption>();
             for (ConfigOption co: ci.options) {
                 options.add(new ConfigOption(co));
             }
@@ -609,7 +655,7 @@ public class ProductConfigWrapper implements Serializable {
 
         public ConfigOption(ConfigOption co) {
             configOption = GenericValue.create(co.configOption);
-            componentList = FastList.newInstance();
+            componentList = new LinkedList<GenericValue>();
             for (GenericValue component: co.componentList) {
                 componentList.add(GenericValue.create(component));
             }
@@ -627,7 +673,7 @@ public class ProductConfigWrapper implements Serializable {
                 BigDecimal listPrice = BigDecimal.ZERO;
                 BigDecimal price = BigDecimal.ZERO;
                 GenericValue oneComponentProduct = oneComponent.getRelatedOne("ProductProduct", false);
-                String variantProductId = componentOptions.get(oneComponent.getString("productId"));
+                String variantProductId = (componentOptions != null) ? componentOptions.get(oneComponent.getString("productId")) : null; // SCIPIO: added null check
 
                 if (UtilValidate.isNotEmpty(variantProductId)) {
                     oneComponentProduct = EntityQuery.use(delegator).from("Product").where("productId", variantProductId).queryOne();

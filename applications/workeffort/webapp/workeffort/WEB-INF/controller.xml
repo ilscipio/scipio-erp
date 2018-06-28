@@ -50,7 +50,9 @@ under the License.
         <response name="error" type="view" value="error"/>
     </request-map>
 
-    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="mytasks"/></request-map>
+    <!-- SCIPIO: use main as dashboard for this
+    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="mytasks"/></request-map>-->
+    <request-map uri="main"><security https="true" auth="true"/><response name="success" type="view" value="main"/></request-map>
 
     <request-map uri="requestlist"><security https="true" auth="true"/><response name="success" type="view" value="RequestList"/></request-map>
 
@@ -94,6 +96,15 @@ under the License.
         <security https="true" auth="true"/>
         <event type="service" invoke="updateWorkEffortAssoc"/>
         <response name="success" type="view" value="EditWorkEffortAssoc"/>
+        <response name="error" type="view" value="EditWorkEffortAssoc"/>
+    </request-map>
+    <request-map uri="removeWorkEffortAssoc"><!-- SCIPIO: added 2018-05-02: missing from stock ofbiz -->
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeWorkEffortAssoc"/>
+        <response name="success" type="request-redirect" value="ChildWorkEfforts">
+            <redirect-parameter name="workEffortId" from="workEffortIdFrom"/>
+            <redirect-parameter name="trail" from="workEffortIdFrom"/>
+        </response>
         <response name="error" type="view" value="EditWorkEffortAssoc"/>
     </request-map>
     <request-map uri="createWorkEffortAndAssoc">

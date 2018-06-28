@@ -60,7 +60,7 @@ import org.w3c.dom.Element;
  */
 public class EntityPermissionChecker {
 
-    public static final String module = EntityPermissionChecker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected FlexibleStringExpander entityIdExdr;
     protected FlexibleStringExpander entityNameExdr;
@@ -257,7 +257,7 @@ public class EntityPermissionChecker {
 
         // Get all the condition operations that could apply, rather than having to go thru
         // entire table each time.
-        //List condList = FastList.newInstance();
+        //List condList = new LinkedList();
         //Iterator iterType = targetOperationList.iterator();
         //while (iterType.hasNext()) {
         //    String op = (String)iterType.next();

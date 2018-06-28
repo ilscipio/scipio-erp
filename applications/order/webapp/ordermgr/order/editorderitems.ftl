@@ -109,8 +109,10 @@ under the License.
                                       <input type="text" size="20" name="idm_${orderItem.orderItemSeqId}" value="${orderItem.itemDescription!}"/>
                                       </#if>
                                   </div>
-                                  <#if productId??>
+                                  
                                   <#-- SCIPIO: these are duplicates from far right column
+                                      WARN: if uncomment this, please unhardcode the links - see getPropertyValue below
+                                  <#if productId??>
                                   <div>
                                       <a href="<@ofbizInterWebappUrl>/catalog/control/ViewProduct?productId=${productId}${rawString(externalKeyParam)}</@ofbizInterWebappUrl>" class="${styles.link_nav!}" target="_blank">${uiLabelMap.ProductCatalog}</a>
                                       <#- SCIPIO: Now points to shop ->
@@ -119,8 +121,8 @@ under the License.
                                       <a href="<@ofbizUrl>viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL</@ofbizUrl>" target="_orderImage" class="${styles.action_run_sys!} ${styles.action_view!}">${uiLabelMap.OrderViewImage}</a>
                                       </#if>
                                   </div>
-                                  -->
                                   </#if>
+                                  -->
                               </@td>
 
                               <#-- now show status details per line item -->
@@ -256,7 +258,7 @@ under the License.
                                             <@menuitem type="link" href=makeOfbizInterWebappUrl("/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}") text=uiLabelMap.ContentDownload target="_blank" class="+${styles.action_run_sys!} ${styles.action_export!}" />
                                           </#list>
                                           -->
-                                          <@modal id="${orderId}_${orderItem.orderItemSeqId}_downloads" label=uiLabelMap.ContentDownload class="${styles.link_nav!} ${styles.action_export!}">
+                                          <@modal id="${orderId}_${orderItem.orderItemSeqId}_downloads" label=uiLabelMap.ContentDownload linkClass="${styles.link_nav!} ${styles.action_export!}">
                                               <@heading relLevel=+1>${getLabel("EcommerceDownloadsAvailableTitle", "EcommerceUiLabels")}</@heading>
                                               <ol>
                                               <#list downloadContents as downloadContent>
@@ -268,7 +270,10 @@ under the License.
                                         </#if>
                                         <@menuitem type="link" href=makeOfbizInterWebappUrl("/catalog/control/ViewProduct?productId=${productId}${rawString(externalKeyParam)}") text=uiLabelMap.ProductCatalog target="_blank" class="+${styles.action_nav!} ${styles.action_update!}" />
                                         <#-- SCIPIO: Now points to shop -->
-                                        <@menuitem type="link" href=makeOfbizInterWebappUrl("/shop/control/product?product_id=${productId}") text=getLabel("Shop", "ShopUiLabels") target="_blank" class="+${styles.action_nav!} ${styles.action_view!}"/>
+                                        <#assign productPageUrl = getPropertyValue("catalog", "shop.default.link.product.prefix")!>
+                                        <#if productPageUrl?has_content>
+                                          <@menuitem type="link" href=makeOfbizInterWebappUrl(productPageUrl+(productId!)) text=getLabel("Shop", "ShopUiLabels") target="_blank" class="+${styles.action_nav!} ${styles.action_view!}"/>
+                                        </#if>
                                         <#if orderItemContentWrapper.get("IMAGE_URL", "url")?has_content>
                                             <@menuitem type="link" href=makeOfbizUrl("viewimage?orderId=${orderId}&orderItemSeqId=${orderItem.orderItemSeqId}&orderContentTypeId=IMAGE_URL") text=uiLabelMap.OrderViewImage target="_orderImage" class="+${styles.action_run_sys!} ${styles.action_view!}" />
                                         </#if>

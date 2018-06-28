@@ -48,7 +48,7 @@ import freemarker.template.TemplateTransformModel;
  */
 public class EditRenderSubContentTransform implements TemplateTransformModel {
 
-    public static final String module = EditRenderSubContentTransform.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * @deprecated use FreeMarkerWorker.getWrappedObject()
@@ -184,7 +184,7 @@ public class EditRenderSubContentTransform implements TemplateTransformModel {
                 if (editTemplate != null && editTemplate.equalsIgnoreCase("true")) {
                     if (UtilValidate.isNotEmpty(wrapTemplateId)) {
                         templateContext.put("wrappedFTL", wrappedFTL);
-                        //ServletContext servletContext = (ServletContext)request.getSession().getServletContext();
+                        //ServletContext servletContext = (ServletContext)request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
                         //String rootDir = servletContext.getRealPath("/");
                         templateContext.put("webSiteId", webSiteId);
                         templateContext.put("https", https);

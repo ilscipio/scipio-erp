@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <!-- Solr Admin Application security -->
+    <SecurityPermission description="View operations in the Solr Admin Application." permissionId="SOLRADM_VIEW"/>
+    <SecurityPermission description="Create operations in the Solr Admin Application." permissionId="SOLRADM_CREATE"/>
+    <SecurityPermission description="Update operations in the Solr Admin Application." permissionId="SOLRADM_UPDATE"/>
+    <SecurityPermission description="Delete operations in the Solr Admin Application." permissionId="SOLRADM_DELETE"/>
+    <SecurityPermission description="ALL operations in the Solr Admin Application." permissionId="SOLRADM_ADMIN"/>
+    
+    <!-- add admin to SUPER permission group -->
+    <SecurityGroupPermission groupId="SUPER" permissionId="SOLRADM_ADMIN"/>
+</entity-engine-xml>

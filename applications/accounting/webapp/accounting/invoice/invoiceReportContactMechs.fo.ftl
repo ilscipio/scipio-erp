@@ -17,9 +17,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#escape x as x?xml>
-<fo:block content-width="85mm" font-size="10pt" margin-top="45mm">
+<fo:block content-width="85mm" font-size="10pt" margin-top="45mm" padding-right="20mm">
     <fo:block-container height="5mm" font-size="6pt">
-        <fo:block>
+        <fo:block wrap-option="wrap">
             <#-- Return Address -->
             ${companyName}
         </fo:block>
@@ -27,20 +27,21 @@ under the License.
     <fo:block>
     <#if billingAddress?has_content>
         <#assign billToPartyNameResult = dispatcher.runSync("getPartyNameForDate", {"partyId":billToParty.partyId, "compareDate":invoice.invoiceDate, "userLogin":userLogin})/>
-        <fo:block>${billToPartyNameResult.fullName?default(billingAddress.toName)?default("Billing Name Not Found")}</fo:block>
+        <fo:block wrap-option="wrap">${billToPartyNameResult.fullName?default(billingAddress.toName)?default("Billing Name Not Found")}</fo:block>
         <#if billingAddress.attnName??>
-            <fo:block>${billingAddress.attnName}</fo:block>
+            <fo:block wrap-option="wrap">${billingAddress.attnName}</fo:block>
         </#if>
-            <fo:block>${billingAddress.address1!}</fo:block>
+            <fo:block wrap-option="wrap">${billingAddress.address1!}</fo:block>
         <#if billingAddress.address2??>
-            <fo:block>${billingAddress.address2}</fo:block>
+            <fo:block wrap-option="wrap">${billingAddress.address2}</fo:block>
         </#if>
-        <fo:block>${billingAddress.city!} ${billingAddress.stateProvinceGeoId!} ${billingAddress.postalCode!}</fo:block>
+        <fo:block wrap-option="wrap">${billingAddress.city!} ${billingAddress.stateProvinceGeoId!} ${billingAddress.postalCode!}</fo:block>
         <#if billToPartyTaxId?has_content>
-            <fo:block>${uiLabelMap.PartyTaxId}: ${billToPartyTaxId}</fo:block>
+            <fo:block wrap-option="wrap">${uiLabelMap.PartyTaxId}: ${billToPartyTaxId}</fo:block>
         </#if>
     <#else>
-        <fo:block>${uiLabelMap.AccountingNoGenBilAddressFound} ${billToParty.partyId}</fo:block>
+        <fo:block wrap-option="wrap">${uiLabelMap.AccountingNoGenBilAddressFound}</fo:block>
+        <fo:block wrap-option="wrap">${billToParty.partyId}</fo:block>
     </#if>
     </fo:block>
 </fo:block>

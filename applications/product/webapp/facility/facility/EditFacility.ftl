@@ -50,7 +50,7 @@ under the License.
                <#if (facility.defaultWeightUomId?has_content) && (uom.uomId == facility.defaultWeightUomId)>
                selected="selected"
                </#if>
-             >${uom.get("description",locale)?default(uom.uomId)}</option>
+             >${uom.get("description",locale)?default(uom.uomId)} (${uom.abbreviation!})</option>
           </#list>
   </@field>
   <@field type="select" label=uiLabelMap.ProductFacilityDefaultInventoryItemType name="defaultInventoryItemTypeId">
@@ -71,7 +71,7 @@ under the License.
                <#if (facility.facilitySizeUomId?has_content) && (uom.uomId == facility.facilitySizeUomId)>
                selected="selected"
                </#if>
-             >${uom.get("description",locale)?default(uom.uomId)}</option>
+             >${uom.get("description",locale)?default(uom.uomId)} (${uom.abbreviation!})</option>
           </#list>
   </@field>  
   <@field type="input" label=uiLabelMap.ProductProductDescription name="description" value=(facility.description!) size="60" maxlength="250" />

@@ -554,7 +554,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                  
               </@td>
               <@td colspan="3">
-                   <@modal label=uiLabelMap.AccountingNewPayment id="modal_addPaymentMethodToOrder" class="${styles.link_nav!} ${styles.action_add!}">
+                   <@modal label=uiLabelMap.AccountingNewPayment id="modal_addPaymentMethodToOrder" linkClass="${styles.link_nav!} ${styles.action_add!}">
                        <form name="addPaymentMethodToOrder" method="post" action="<@ofbizUrl>addPaymentMethodToOrder</@ofbizUrl>">
                            <input type="hidden" name="orderId" value="${orderId!}"/>
                              <@row>

@@ -36,7 +36,7 @@ NOTE: This template does not support globals as-is (#global)
     <#if !description?has_content>
       <#local description = productName>
     </#if>
-    <#local longDescription = (.node.@longDescription[0])!"">
+    <#local longDescription = (.node.@longDescription[0])!.node.longDescription!"">
     <#if !longDescription?has_content>
       <#local longDescription = description>
     </#if>
@@ -108,6 +108,73 @@ NOTE: This template does not support globals as-is (#global)
         inventoryItemId="${inventoryItemId}" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="${productId}" ownerPartyId="Company" currencyUomId="USD" unitCost="3.0"/>
     <InventoryItemDetail inventoryItemId="${inventoryItemId}" inventoryItemDetailSeqId="0001" effectiveDate="2001-05-13 12:00:00.0" availableToPromiseDiff="${inventoryQuantity}" quantityOnHandDiff="${inventoryQuantity}" accountingQuantityDiff="${inventoryQuantity}"/>
     
+    <#-- Product child nodes, for image and others. Added 2017-07-07. -->
+    <#if .node?children?has_content>
+        <#recurse .node>
+    </#if>
+</#macro>
+
+<#-- image element, child of product. Can create auto-resized images. Added 2017-07-07. -->
+<#macro image>
+    <#-- Scale images -->
+    <#local productId = .node?parent.@productId[0]?string/>
+    <#local imageUrl = (.node.@imageUrl[0])?string/>
+    <#local imageNr = ((.node.@imageNr[0])!"0")?string?number?int/>
+    <#local copyOrig = ((.node.@copyOrig[0])!"false")?string?boolean/><#-- TODO: REVIEW: not clear if want this true or false by default, lots of implications, could affect macro usage (if false) -->
+    <#-- not really needed
+    <#local fileType = imageUrl?keep_after_last(".")/>
+    <#local filenameToUse = "IMG_"+productId+"_"+imageNr+"."+fileType/> -->
+    <#local locale = Static["org.apache.commons.lang.LocaleUtils"].toLocale("en_US")>
+    <#local localeStr = locale>
+    <#assign paramMap={
+            "locale" : locale,
+            "productId": productId,
+            "imageOrigUrl":imageUrl,
+            "copyOrig":copyOrig
+        }/>
+    
+    <#-- printed by service
+    <#local dummy = Static["org.ofbiz.base.util.Debug"].logInfo("CUSTOM PRODUCT IMAGE: " + productId + " " + imageUrl + " [" + imageNr + "]", "deproduct.ftl")!>-->
+    
+    <#-- Update Product -->
+    <#if (imageNr <= 0)>
+        <#--
+        <#assign scaledImage = Static["org.ofbiz.product.image.ScaleImage"].scaleImageInAllSize(paramMap, filenameToUse, "main", imageNr?string)!>-->
+        <#assign scaledImage = dispatcher.runSync("productImageFileScaleInAllSize", paramMap + {"viewType":"main"})!>
+        <#local originalImageUrl = (scaledImage.imageUrlMap.original)!imageUrl>
+        <#-- Original Image -->
+        <Product productId="${productId}" originalImageUrl="${originalImageUrl}"<#rt/>
+        <#-- Additional Images -->
+        <#if scaledImage.imageUrlMap?has_content && scaledImage.productSizeTypeList?has_content><#t/>
+            <#assign imageMap = scaledImage.imageUrlMap><#t/>
+            <#list scaledImage.productSizeTypeList as sizeType><#if imageMap[sizeType]?has_content> ${sizeType}ImageUrl="${imageMap[sizeType]}"</#if></#list><#t/>
+        </#if><#t/>
+        /><#lt/>
+    <#else>
+        <#--
+        <#assign scaledImage = Static["org.ofbiz.product.image.ScaleImage"].scaleImageInAllSize(paramMap, filenameToUse, "additional", imageNr?string)! -->
+        <#assign scaledImage = dispatcher.runSync("productImageFileScaleInAllSize", paramMap + {"viewType":"additional", "viewNumber":imageNr})!>
+        <#local originalImageUrl = (scaledImage.imageUrlMap.original)!imageUrl>
+        <#-- Original Image -->
+        <#assign imgDataResId>${productId}_ALT_${imageNr}</#assign>
+        <#assign imgDataResDesc>${productId} Additional Image ${imageNr}</#assign>
+        <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="${imgDataResId}" dataResourceName="${imgDataResDesc}" isPublic="Y"/>
+        <ElectronicText dataResourceId="${imgDataResId}" textData="${imageMap["detail"]!""}"/><#-- FIXME: this should be the original not detail -->
+        <Content contentId="${imgDataResId}" contentTypeId="DOCUMENT" dataResourceId="${imgDataResId}" contentName="${imgDataResDesc}"/>
+        <ProductContent productId="${productId}" contentId="${imgDataResId}" productContentTypeId="ADDITIONAL_IMAGE_${imageNr}" fromDate="2001-05-13 12:00:00.0"/>
+        <#-- Additional Images -->
+        <#if scaledImage.imageUrlMap?has_content && scaledImage.productSizeTypeList?has_content>
+          <#assign imageMap = scaledImage.imageUrlMap>
+          <#list scaledImage.productSizeTypeList as sizeType>
+            <#assign imgDataResId>${productId}_ALT_${imageNr}_${sizeType?upper_case}</#assign><#-- WARN: > 20 chars -->
+            <#assign imgDataResDesc>${productId} Additional Image ${imageNr} ${sizeType}</#assign>
+            <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="${imgDataResId}" dataResourceName="${imgDataResDesc}" isPublic="Y"/>
+            <ElectronicText dataResourceId="${imgDataResId}" textData="${imageMap[sizeType]!}"/>
+            <Content contentId="${imgDataResId}" contentTypeId="DOCUMENT" dataResourceId="${imgDataResId}" contentName="${imgDataResDesc}"/>
+            <ProductContent productId="${productId}" contentId="${imgDataResId}" productContentTypeId="XTRA_IMG_${imageNr}_${sizeType?upper_case}" fromDate="2001-05-13 12:00:00.0"/>
+          </#list>
+        </#if>
+    </#if>
 </#macro>
 
 <#macro @element>

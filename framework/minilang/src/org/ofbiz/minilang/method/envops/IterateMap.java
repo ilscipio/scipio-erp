@@ -42,7 +42,7 @@ import org.w3c.dom.Element;
  */
 public final class IterateMap extends MethodOperation {
 
-    public static final String module = IterateMap.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final FlexibleMapAccessor<Object> keyFma;
     private final FlexibleMapAccessor<Map<? extends Object, ? extends Object>> mapFma;

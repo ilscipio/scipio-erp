@@ -23,7 +23,7 @@ import org.w3c.dom.Element;
 @SuppressWarnings("serial")
 public class ModelScreens implements Map<String, ModelScreen>, Serializable {
 
-    public static final String module = ModelScreens.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     /**
      * SCIPIO: Default name of the common screens file indicated to contain centralized reusable

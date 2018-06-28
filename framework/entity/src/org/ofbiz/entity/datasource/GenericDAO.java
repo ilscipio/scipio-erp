@@ -69,7 +69,7 @@ import org.ofbiz.entity.util.EntityQuery;
  */
 public class GenericDAO {
 
-    public static final String module = GenericDAO.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private static final ConcurrentHashMap<String, GenericDAO> genericDAOs = new ConcurrentHashMap<String, GenericDAO>();
     private static final ThreadGroup GENERIC_DAO_THREAD_GROUP = new ThreadGroup("GenericDAO");

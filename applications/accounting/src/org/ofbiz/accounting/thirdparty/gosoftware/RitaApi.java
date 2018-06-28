@@ -19,20 +19,20 @@
 package org.ofbiz.accounting.thirdparty.gosoftware;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.Map;
-
-import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.HttpClient;
 import org.ofbiz.base.util.HttpClientException;
 import org.ofbiz.base.util.ObjectType;
+import org.ofbiz.base.util.UtilMisc;
 
 
 public class RitaApi {
 
-    public static final String module = RitaApi.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String xschema = "x-schema:..\\dtd\\stnd.xdr";
     public static final String rootElement = "XML_FILE";
     public static final String reqElement = "XML_REQUEST";
@@ -99,13 +99,13 @@ public class RitaApi {
     protected int mode = 0;
 
     public RitaApi(Map<String, String> document) {
-        this.document = FastMap.newInstance();
+        this.document = new LinkedHashMap<String, String>();
         this.document.putAll(document);
         this.mode = MODE_OUT;
     }
 
     public RitaApi() {
-        this.document = FastMap.newInstance();
+        this.document = new LinkedHashMap<String, String>();
         this.mode = MODE_IN;
     }
 
@@ -226,7 +226,7 @@ public class RitaApi {
             br.close();
             */
 
-            Map<String, String> docMap = FastMap.newInstance();
+            Map<String, String> docMap = new LinkedHashMap<String, String>();
             String resp = null;
             try {
                 resp = http.post(stream);

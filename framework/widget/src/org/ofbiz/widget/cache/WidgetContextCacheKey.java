@@ -30,7 +30,7 @@ import org.ofbiz.base.util.UtilMisc;
 
 public final class WidgetContextCacheKey {
 
-    public static final String module = WidgetContextCacheKey.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private static Set<String> fieldNamesToSkip = createFieldNamesToSkip();
 

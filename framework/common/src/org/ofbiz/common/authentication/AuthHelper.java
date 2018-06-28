@@ -37,7 +37,7 @@ import org.ofbiz.service.LocalDispatcher;
  */
 public class AuthHelper {
 
-    private static final String module = AuthHelper.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     protected static List<Authenticator> authenticators = new ArrayList<Authenticator>();
     protected static boolean authenticatorsLoaded = false;
 

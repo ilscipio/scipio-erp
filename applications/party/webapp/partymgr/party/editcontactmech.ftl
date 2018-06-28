@@ -77,15 +77,17 @@ under the License.
                       <#if partyContactMechPurpose.thruDate?has_content>(${uiLabelMap.CommonExpire}: ${partyContactMechPurpose.thruDate.toString()}</#if>
                     </@td>
                     <@td class="button-col">
-                      <form name="deletePartyContactMechPurpose_${partyContactMechPurpose.contactMechPurposeTypeId}" method="post" action="<@ofbizUrl>deletePartyContactMechPurpose</@ofbizUrl>" >
+                      <#-- SCIPIO: 2017-10-10: formerly this was: name="deletePartyContactMechPurpose_${partyContactMechPurpose.contactMechPurposeTypeId}"
+                          but some states may cause duplicate purpose records, and then can't delete them, so must use index instead -->
+                      <form name="deletePartyContactMechPurpose_${partyContactMechPurpose_index}" method="post" action="<@ofbizUrl>deletePartyContactMechPurpose</@ofbizUrl>" >
                          <input type="hidden" name="partyId" value="${partyId}" />
                          <input type="hidden" name="contactMechId" value="${contactMechId}" />
                          <input type="hidden" name="contactMechPurposeTypeId" value="${partyContactMechPurpose.contactMechPurposeTypeId}" />
                          <input type="hidden" name="fromDate" value="${partyContactMechPurpose.fromDate.toString()}" />
                          <input type="hidden" name="DONE_PAGE" value="${donePage?replace("=","%3d")}" />
                          <input type="hidden" name="useValues" value="true" />
-                         <a href="javascript:document.deletePartyContactMechPurpose_${partyContactMechPurpose.contactMechPurposeTypeId}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a> 
-                       </form>
+                         <a href="javascript:document.deletePartyContactMechPurpose_${partyContactMechPurpose_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a> 
+                      </form>
                     </@td>
                   </@tr>
                 </#list>

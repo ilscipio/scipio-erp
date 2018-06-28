@@ -439,7 +439,7 @@ under the License.
         <!-- <field name="USER_ORDER_EMAIL" title="Order Emails (comma separated)" ><text size="60" maxlength="250"/></field> -->
         <field use-when="displayPassword==true" name="USERNAME" title="${uiLabelMap.CommonUsername}" required-field="true"><text size="30" maxlength="250"/></field>
         <field use-when="displayPassword==true" name="PASSWORD" title="${uiLabelMap.CommonPassword}" required-field="true"><password size="15" maxlength="250"/></field>
-        <field use-when="displayPassword==true" name="CONFIRM_PASSWORD" title="${uiLabelMap.CommonPassword}" tooltip="* ${uiLabelMap.CommonConfirm}" required-field="true"><password size="15" maxlength="250"/></field>
+        <field use-when="displayPassword==true" name="CONFIRM_PASSWORD" title="${uiLabelMap.PartyRepeatPassword}" required-field="true"><password size="15" maxlength="250"/></field><!-- SCIPIO: changed label -->
         <field use-when="displayPassword!=true" name="USERNAME" title="${uiLabelMap.CommonUsername}" tooltip="* ${uiLabelMap.PartyTemporaryPassword}" required-field="true"><text size="30" maxlength="250"/></field>
         <!--<field name="RequiredNote" title=" "><display description="${uiLabelMap.PartyRequiredNote}" also-hidden="false"/></field> -->
 
@@ -564,24 +564,28 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="mimeTypeId" >
-            <drop-down allow-empty="false">
+        <field name="dataResourceName" title="${uiLabelMap.CommonUpload}"><file/></field>
+        <field name="description"><!-- SCIPIO: 2018: no-brainer... -->
+            <textarea/>
+        </field>
+        <field name="mimeTypeId" tooltip="${uiLabelMap.CommonLeaveEmptyToAutoDetermine}"><!-- SCIPIO: tooltip -->
+            <drop-down allow-empty="true"><!-- SCIPIO: should allow empty (auto-determine) -->
                 <entity-options description="${description}" entity-name="MimeType"/>
             </drop-down>
         </field>
-        <field name="dataResourceName" title="${uiLabelMap.CommonUpload}"><file/></field>
         <field name="dataCategoryId" use-when="dataResource==null">
-            <drop-down allow-empty="false">
+            <drop-down allow-empty="true"><!-- SCIPIO: 2018: must allow empty, not always set... -->
                 <entity-options description="${categoryName}" entity-name="DataCategory"/>
             </drop-down>
         </field>
-        <field name="dataCategoryId" use-when="dataResource!=null">
-            <drop-down allow-empty="false">
+        <field name="dataCategoryId" use-when="dataResource!=null" map-name="dataResource"><!-- SCIPIO: fixed missing map-name, fixes preselect -->
+            <drop-down allow-empty="true"><!-- SCIPIO: 2018: must allow empty, not always set... -->
+                <!-- SCIPIO: no need for this, just let it select in list...
                 <entity-options description="${categoryName}" entity-name="DataCategory">
                     <entity-constraint name="dataCategoryId" value="${dataResource.dataCategoryId}"/>
                     <entity-order-by field-name="categoryName"/>
-                </entity-options>
-               <entity-options description="${categoryName}" entity-name="DataCategory"/>
+                </entity-options>-->
+                <entity-options description="${categoryName}" entity-name="DataCategory"/>
             </drop-down>
         </field>
         <field name="isPublic" title="${uiLabelMap.PartyIsPublic}" map-name="dataResource">
@@ -590,8 +594,14 @@ under the License.
                 <option key="Y" description="${uiLabelMap.CommonYes}"/>
             </drop-down>
         </field>
-        <field name="createAction" use-when="content==null" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
-        <field name="updateAction" use-when="content!=null" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <!-- SCIPIO: Extra fields: it may be necessary for user to be able to see extra fields
+            like fromDate/thruDate here which are too verbose for the ListPartyContents.
+            there is ambiguity about the filter-by-date logic, so we must show thruDate somewhere. -->
+        <field name="fromDate" use-when="partyContent!=null" map-name="partyContent"><display type="date-time" also-hidden="false"/></field>
+        <field name="thruDate" use-when="partyContent!=null" map-name="partyContent"><display type="date-time" also-hidden="false"/></field>
+        <field name="lastModifiedDate" use-when="content!=null"><display type="date-time" also-hidden="false"/></field>
+        <field name="createAction" title="${uiLabelMap.CommonAdd}" use-when="content==null" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" use-when="content!=null" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListPartyContents" type="list" separate-columns="false"
@@ -613,20 +623,41 @@ under the License.
             </display-entity>
         </field>
         <field name="partyContentTypeId"><display-entity entity-name="PartyContentType"/></field>
-        <field name="description"><display/></field>
+        <field name="contentTypeId"><display-entity entity-name="ContentType"></display-entity></field><!-- SCIPIO: moved types together -->
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"></display-entity></field>
+        <field name="description"><display/></field>
         <field name="localeString"><display-entity entity-name="CountryCode" key-field-name="countryCode" description="${countryName}${countryCode}"></display-entity></field>
-        <field name="contentTypeId"><display-entity entity-name="ContentType"></display-entity></field>
         <field name="mimeTypeId"><display-entity entity-name="MimeType"></display-entity></field>
         <field name="dataResourceId" title="${uiLabelMap.FormFieldTitle_dataResourceName}" use-when="dataResourceId==null"><display/> </field>
         <field name="dataResourceId" title="${uiLabelMap.FormFieldTitle_dataResourceName}" use-when="dataResourceId!=null">
             <display-entity entity-name="DataResource" description="${dataResourceName}"/>
+        </field>
+        <field name="fromDate"><display type="date-time"/></field>
+        <!--<field name="thruDate"><display type="date-time"/></field> SCIPIO: TODO: REVIEW: EditPartyContents does not honor filter-by-date -->
+        <field name="lastModifiedDate"><display type="date-time"/></field><!-- SCIPIO: important info -->
+        <field name="viewAction" title=" " widget-style="${styles.link_nav} ${styles.action_view}">
+            <!-- SCIPIO: NOTE: 2018-04-10: see ContentList.ftl for issues with target -->
+            <hyperlink also-hidden="false" description="${uiLabelMap.CommonView}" target="stream">
+                <parameter param-name="contentId" from-field="contentId"/>
+            </hyperlink>
         </field>
         <field name="editAction" title=" " widget-style="${styles.link_nav} ${styles.action_update}">
            <hyperlink also-hidden="false" description="${uiLabelMap.CommonEdit}" target="EditPartyContents">
                 <parameter param-name="contentId"/>
                 <parameter param-name="partyId"/>
                 <parameter param-name="dataResourceId"/>
+                <parameter param-name="partyContentTypeId"/><!-- SCIPIO: added -->
+                <parameter param-name="fromDate"/><!-- SCIPIO: added -->
+            </hyperlink>
+        </field>
+        <!-- SCIPIO: TODO: WARN: this only removes the association, not the content itself! -->
+        <field name="deleteAction" title=" " widget-style="${styles.link_nav} ${styles.action_remove}">
+           <hyperlink also-hidden="false" description="${uiLabelMap.CommonRemove}" target="removePartyContent">
+                <parameter param-name="contentId"/>
+                <parameter param-name="partyId"/>
+                <parameter param-name="dataResourceId"/>
+                <parameter param-name="partyContentTypeId"/>
+                <parameter param-name="fromDate"/>
             </hyperlink>
         </field>
     </form>

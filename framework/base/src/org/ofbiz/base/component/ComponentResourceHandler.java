@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
 @SuppressWarnings("serial")
 public class ComponentResourceHandler implements ResourceHandler {
 
-    public static final String module = ComponentResourceHandler.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     protected String componentName;
     protected String loaderName;
     protected String location;

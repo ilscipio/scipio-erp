@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
  */
 public class MakeInString {
 
-    public static final String module = MakeInString.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     String fieldName;
     List<MakeInStringOperation> operations = new ArrayList<MakeInStringOperation>();

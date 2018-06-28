@@ -643,7 +643,32 @@ under the License.
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createSimpleTextContentForAlternateLocale"/>
         <response name="success" type="view" value="EditCategoryContent"/>
-        <response name="error" type="view" value="EditCategoryContentContent"/>
+        <response name="error" type="view" value="EditCategoryContent"/><!-- SCIPIO: this is not a full page (anymore?): EditCategoryContentContent -->
+    </request-map>
+    <request-map uri="updateSimpleTextContentForAlternateLocaleInCategory"><!-- SCIPIO: new request -->
+        <security https="true" auth="true"/>
+        <event type="service-multi" path="" invoke="updateSimpleTextContentForAlternateLocale"/>
+        <response name="success" type="view" value="EditCategoryContent"/>
+        <response name="error" type="view" value="EditCategoryContent"/>
+    </request-map>
+    <request-map uri="deleteSimpleTextContentForAlternateLocaleInCategory"><!-- SCIPIO: new request -->
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteSimpleTextContentForAlternateLocale"/>
+        <response name="success" type="view" value="EditCategoryContent"/>
+        <response name="error" type="view" value="EditCategoryContent"/>
+    </request-map>
+
+    <request-map uri="updateProductCategoryContentStcLocFields"><!-- SCIPIO: new request -->
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="replaceProductCategoryContentLocalizedSimpleTexts"/>
+        <response name="success" type="view" value="EditCategoryContent"/>
+        <response name="error" type="view" value="EditCategoryContent"/>
+    </request-map>
+    <request-map uri="updateProductContentStcLocFields"><!-- SCIPIO: new request -->
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="replaceProductContentLocalizedSimpleTexts"/>
+        <response name="success" type="view" value="EditProductContent"/>
+        <response name="error" type="view" value="EditProductContent"/>
     </request-map>
 
     <!-- ================ Product Content Assoc Requests ================= -->
@@ -730,7 +755,19 @@ under the License.
     <request-map uri="createSimpleTextContentForAlternateLocale">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createSimpleTextContentForAlternateLocale"/>
-        <response name="success" type="view" value="EditProductContent"/>
+        <response name="success" type="view" value="EditProductContentContent"/><!-- SCIPIO: after update, return to same screen otherwise can't see result value="EditProductContent" -->
+        <response name="error" type="view" value="EditProductContentContent"/>
+    </request-map>
+    <request-map uri="updateSimpleTextContentForAlternateLocale"><!-- SCIPIO: new request -->
+        <security https="true" auth="true"/>
+        <event type="service-multi" path="" invoke="updateSimpleTextContentForAlternateLocale"/>
+        <response name="success" type="view" value="EditProductContentContent"/>
+        <response name="error" type="view" value="EditProductContentContent"/>
+    </request-map>
+    <request-map uri="deleteSimpleTextContentForAlternateLocale"><!-- SCIPIO: new request -->
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteSimpleTextContentForAlternateLocale"/>
+        <response name="success" type="view" value="EditProductContentContent"/>
         <response name="error" type="view" value="EditProductContentContent"/>
     </request-map>
     <request-map uri="addAdditionalImageContentForProduct">
@@ -3051,7 +3088,7 @@ under the License.
 
     <request-map uri="getChild">
         <security auth="false" https="true"/>
-        <event type="java" path="org.ofbiz.product.category.CategoryServices" invoke="getChildCategoryTree"/>
+        <event type="java" path="com.ilscipio.scipio.product.category.CategoryEvents" invoke="getChildCategoryTree"/>
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
@@ -3092,8 +3129,38 @@ under the License.
         <response name="error" type="view" value="ViewProductGroupOrder"/>
     </request-map>
     
+    <!-- ================ SCIPIO: new requests ================= -->
+    
+    <!-- catalog ajax requests -->
+    <request-map uri="getProductCategoryContentLocalizedSimpleTextViews">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="getProductCategoryContentLocalizedSimpleTextViews"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="getProductContentLocalizedSimpleTextViews">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="getProductContentLocalizedSimpleTextViews"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    
+    <!-- catalog tree ajax requests -->
+    <request-map uri="getProductCategoryExtendedData">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="getProductCategoryExtendedDataVersatile"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="getProductExtendedData">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="getProductExtendedDataVersatile"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    
     <!-- ================ Product Tag Requests ================= -->
-     <!-- SCIPIO: Remove
+    <!-- SCIPIO: Removed
     <request-map uri="EditProductTag">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditProductTag"/>

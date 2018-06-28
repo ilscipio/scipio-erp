@@ -15,7 +15,7 @@ import org.ofbiz.base.util.UtilGenerics;
  */
 public class SimpleMapProcessorProcessor implements MapProcessor {
 
-    public static final String module = SimpleMapProcessorProcessor.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     protected final String xmlResource;
     protected final String name;

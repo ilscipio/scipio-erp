@@ -38,7 +38,7 @@ import org.ofbiz.webapp.control.ConfigXMLReader.RequestMap;
  */
 public class JavaEventHandler implements EventHandler {
 
-    public static final String module = JavaEventHandler.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private Map<String, Class<?>> eventClassMap = new HashMap<String, Class<?>>();
 

@@ -98,17 +98,15 @@ access. For a detailed description see the core/docs/entityconfig.html file.
 
     <field-type name="hsql" loader="fieldfile" location="fieldtypehsql.xml"/>
     <field-type name="derby" loader="fieldfile" location="fieldtypederby.xml"/>
-    <field-type name="daffodil" loader="fieldfile" location="fieldtypedaffodil.xml"/>
-    <field-type name="axion" loader="fieldfile" location="fieldtypeaxion.xml"/>
     <field-type name="mysql" loader="fieldfile" location="fieldtypemysql.xml"/>
     <field-type name="postgres" loader="fieldfile" location="fieldtypepostgres.xml"/>
     <field-type name="postnew" loader="fieldfile" location="fieldtypepostnew.xml"/>
     <field-type name="oracle" loader="fieldfile" location="fieldtypeoracle.xml"/>
     <field-type name="sapdb" loader="fieldfile" location="fieldtypesapdb.xml"/>
-    <field-type name="sybase" loader="fieldfile" location="fieldtypesybase.xml"/>
     <field-type name="firebird" loader="fieldfile" location="fieldtypefirebird.xml"/>
     <field-type name="mssql" loader="fieldfile" location="fieldtypemssql.xml"/>
     <field-type name="advantage" loader="fieldfile" location="fieldtypeadvantage.xml"/>
+    <field-type name="mariadb" loader="fieldfile" location="fieldtypemariadb.xml"/>
     
     <!--
     For DAO/JDBC Helper: Tries:
@@ -149,7 +147,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-password="ofbiz"
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
-                pool-maxsize="250"
+                pool-maxsize="100"
                 time-between-eviction-runs-millis="600000"/>
         <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/HsqlDataSource" isolation-level="ReadUncommitted"/> -->
         <!-- <jndi-jdbc jndi-server-name="default" jndi-name="comp/env/jdbc/xa/localhsql" isolation-level="ReadUncommitted"/> --> <!-- Orion Style JNDI name -->
@@ -182,7 +180,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-password-lookup="derby-ofbiz"
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
-                pool-maxsize="250"
+                pool-maxsize="100"
                 test-on-borrow="true"
                 pool-jdbc-test-stmt="values 1"
                 soft-min-evictable-idle-time-millis="600000"
@@ -208,7 +206,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             jdbc-password-lookup="derby-ofbizodbc"
             isolation-level="ReadCommitted"
             pool-minsize="2"
-            pool-maxsize="250"
+            pool-maxsize="100"
                 time-between-eviction-runs-millis="600000"/>
         <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/DerbyDataSource" isolation-level="ReadCommitted"/> -->
     </datasource>
@@ -237,7 +235,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-password-lookup="derby-ofbizolap"
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
-                pool-maxsize="250"
+                pool-maxsize="100"
                 time-between-eviction-runs-millis="600000"/>
         <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/DerbyDataSource" isolation-level="ReadCommitted"/> -->
     </datasource>
@@ -266,60 +264,14 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             jdbc-password-lookup="derby-ofbiztenant"
             isolation-level="ReadCommitted"
             pool-minsize="2"
-            pool-maxsize="250"
+            pool-maxsize="100"
             time-between-eviction-runs-millis="600000"/>
         <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/DerbyDataSource" isolation-level="ReadCommitted"/> -->
     </datasource>
     
-    <datasource name="localdaffodil"
-            helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
-            field-type-name="daffodil"
-            check-on-start="true"
-            add-missing-on-start="true">
-        <read-data reader-name="tenant"/>
-        <read-data reader-name="seed"/>
-        <read-data reader-name="seed-initial"/>
-        <read-data reader-name="demo"/>
-        <read-data reader-name="ext"/>
-        <read-data reader-name="ext-test"/>
-        <read-data reader-name="ext-demo"/>
-        <!-- this setup is for the embedded version of Daffodil, with in.co.daffodil.db.jdbc.DaffodilDBDriver -->
-        <!-- note that Daffodil can also run in a network mode with the driver class: in.co.daffodil.db.rmi.RmiDaffodilDBDriver and URI: jdbc:daffodilDB://<hostname>:<port>/ofbiz;create=true -->
-        <inline-jdbc
-                jdbc-driver="in.co.daffodil.db.jdbc.DaffodilDBDriver"
-                jdbc-uri="jdbc:daffodilDB_embedded:ofbiz;create=true"
-                jdbc-username="ofbiz"
-                jdbc-password="ofbiz"
-                isolation-level="ReadCommitted"
-                pool-minsize="2"
-                pool-maxsize="250"
-                time-between-eviction-runs-millis="600000"/>
-        <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/DaffodilDataSource" isolation-level="ReadCommitted"/> -->
-    </datasource>
+    <!-- SCIPIO: 2018-06-05: Removed Axion DB support -->
 
-    <datasource name="localaxion"
-            helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
-            field-type-name="axion"
-            check-on-start="true"
-            add-missing-on-start="true"
-            use-pk-constraint-names="false">
-        <read-data reader-name="tenant"/>
-        <read-data reader-name="seed"/>
-        <read-data reader-name="seed-initial"/>
-        <read-data reader-name="demo"/>
-        <read-data reader-name="ext"/>
-        <read-data reader-name="ext-test"/>
-        <read-data reader-name="ext-demo"/>
-        <inline-jdbc
-                jdbc-driver="org.axiondb.jdbc.AxionDriver"
-                jdbc-uri="jdbc:axiondb:ofbiz:data/axion/ofbiz"
-                jdbc-username="ofbiz"
-                jdbc-password="ofbiz"
-                isolation-level="ReadCommitted"
-                pool-minsize="2"
-                pool-maxsize="250"
-                time-between-eviction-runs-millis="600000"/>
-    </datasource>
+    <!-- SCIPIO: 2018-06-05: Removed Daffodil DB support -->
 
     <datasource name="localmysql"
             helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
@@ -332,8 +284,8 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             alias-view-columns="false"
             drop-fk-use-foreign-key-keyword="true"
             table-type="InnoDB"
-            character-set="latin1"
-            collate="latin1_general_cs">
+            character-set="utf8mb4"
+            collate="utf8mb4_col"><!-- SCIPIO: Set to UTF8 for compatibility with UTF8 datasets -->
         <read-data reader-name="tenant"/>
         <read-data reader-name="seed"/>
         <read-data reader-name="seed-initial"/>
@@ -348,7 +300,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-password="ofbiz"
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
-                pool-maxsize="250"
+                pool-maxsize="100"
                 time-between-eviction-runs-millis="600000"/><!-- Please note that at least one person has experienced a problem with this value with MySQL
                 and had to set it to -1 in order to avoid this issue.
                 For more look at http://markmail.org/thread/5sivpykv7xkl66px and http://commons.apache.org/dbcp/configuration.html-->
@@ -381,7 +333,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-password="ofbiz"
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
-                pool-maxsize="250"
+                pool-maxsize="100"
                 time-between-eviction-runs-millis="600000"/><!-- Please note that at least one person has experienced a problem with this value with MySQL
                 and had to set it to -1 in order to avoid this issue.
                 For more look at http://markmail.org/thread/5sivpykv7xkl66px and http://commons.apache.org/dbcp/configuration.html-->
@@ -414,7 +366,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-password="ofbiz"
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
-                pool-maxsize="250"
+                pool-maxsize="100"
                 time-between-eviction-runs-millis="600000"/><!-- Please note that at least one person has experienced a problem with this value with MySQL
                 and had to set it to -1 in order to avoid this issue.
                 For more look at http://markmail.org/thread/5sivpykv7xkl66px and http://commons.apache.org/dbcp/configuration.html-->
@@ -442,7 +394,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-password="ofbiz"
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
-                pool-maxsize="250"
+                pool-maxsize="100"
                 time-between-eviction-runs-millis="600000"/>
         <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/MySqlDataSource" isolation-level="Serializable"/> -->
     </datasource>
@@ -475,7 +427,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-password="ofbiz"
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
-                pool-maxsize="250"
+                pool-maxsize="100"
                 time-between-eviction-runs-millis="600000"/><!-- Be warned that at this date (2009-09-20) the max_connections parameters in postgresql.conf
                 is set by default to 100 by the initdb process see http://www.postgresql.org/docs/8.4/static/runtime-config-connection.html#GUC-MAX-CONNECTIONS-->
 
@@ -513,7 +465,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-password="ofbiz"
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
-                pool-maxsize="250"
+                pool-maxsize="100"
                 time-between-eviction-runs-millis="600000"/><!-- Be warned that at this date (2009-09-20) the max_connections parameters in postgresql.conf
                     is set by default to 100 by the initdb process see http://www.postgresql.org/docs/8.4/static/runtime-config-connection.html#GUC-MAX-CONNECTIONS-->
         
@@ -550,7 +502,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-password="ofbiz"
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
-                pool-maxsize="250"
+                pool-maxsize="100"
                 time-between-eviction-runs-millis="600000"/><!-- Be warned that at this date (2009-09-20) the max_connections parameters in postgresql.conf
                     is set by default to 100 by the initdb process see http://www.postgresql.org/docs/8.4/static/runtime-config-connection.html#GUC-MAX-CONNECTIONS-->
         
@@ -594,7 +546,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-password="ofbiz"
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
-                pool-maxsize="250"
+                pool-maxsize="100"
                 time-between-eviction-runs-millis="600000"/><!-- Be warned that at this date (2009-09-20) the max_connections parameters in postgresql.conf
                 is set by default to 100 by the initdb process see http://www.postgresql.org/docs/8.4/static/runtime-config-connection.html#GUC-MAX-CONNECTIONS-->
 
@@ -631,7 +583,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-password="ofbiz"
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
-                pool-maxsize="250"
+                pool-maxsize="100"
                 time-between-eviction-runs-millis="600000"/><!-- Be warned that at this date (2009-09-20) the max_connections parameters in postgresql.conf
                     is set by default to 100 by the initdb process see http://www.postgresql.org/docs/8.4/static/runtime-config-connection.html#GUC-MAX-CONNECTIONS-->
         
@@ -668,7 +620,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-password="ofbiz"
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
-                pool-maxsize="250"
+                pool-maxsize="100"
                 time-between-eviction-runs-millis="600000"/><!-- Be warned that at this date (2009-09-20) the max_connections parameters in postgresql.conf
                     is set by default to 100 by the initdb process see http://www.postgresql.org/docs/8.4/static/runtime-config-connection.html#GUC-MAX-CONNECTIONS-->
         
@@ -702,7 +654,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-username="ofbiz"
                 jdbc-password="ofbiz"
                 pool-minsize="2"
-                pool-maxsize="250"
+                pool-maxsize="100"
                 time-between-eviction-runs-millis="600000"/>
     </datasource>
     <datasource name="localoracledd"
@@ -720,35 +672,11 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-username="ofbiz"
                 jdbc-password="ofbiz"
                 pool-minsize="2"
-                pool-maxsize="250"
+                pool-maxsize="100"
                 time-between-eviction-runs-millis="600000"/>
     </datasource>
 
-    <datasource name="localsybase"
-            helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
-            field-type-name="sybase"
-            schema-name="dbo"
-            check-on-start="true"
-            add-missing-on-start="true"
-            use-fk-initially-deferred="false"
-            join-style="ansi">
-        <read-data reader-name="tenant"/>
-        <read-data reader-name="seed"/>
-        <read-data reader-name="seed-initial"/>
-        <read-data reader-name="demo"/>
-        <read-data reader-name="ext"/>
-        <read-data reader-name="ext-test"/>
-        <read-data reader-name="ext-demo"/>
-        <inline-jdbc
-                jdbc-driver="com.sybase.jdbc2.jdbc.SybDriver"
-                jdbc-uri="jdbc:sybase:Tds:10.1.1.10:11222/ofbiz?DYNAMIC_PREPARE=true"
-                jdbc-username="ofbiz"
-                jdbc-password="ofbiz1"
-                isolation-level="ReadCommitted"
-                pool-minsize="2"
-                pool-maxsize="250"
-                time-between-eviction-runs-millis="600000"/>
-    </datasource>
+    <!-- SCIPIO: 2018-06-05: Removed Sybase DB support -->
 
     <datasource name="localsapdb"
             helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
@@ -772,7 +700,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-password="ofbiz"
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
-                pool-maxsize="250"
+                pool-maxsize="100"
                 time-between-eviction-runs-millis="600000"/>
         <!-- <jndi-jdbc jndi-server-name="default" jndi-name="comp/env/jdbc/xa/localsapdb" isolation-level="ReadCommitted"/> --> <!-- Orion Style JNDI name -->
         <!-- <jndi-jdbc jndi-server-name="localweblogic" jndi-name="SapDBDataSource"/> --> <!-- Weblogic Style JNDI name -->
@@ -802,7 +730,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-password="masterkey"
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
-                pool-maxsize="250"
+                pool-maxsize="100"
                 time-between-eviction-runs-millis="600000"/>
         <!-- Sample remote URI: jdbc-uri="jdbc:firebirdsql://localhost:3050//opt/interbase/data/ofbiz.gdb" -->
         <!-- <jndi-jdbc jndi-server-name="default" jndi-name="comp/env/jdbc/xa/localfirebird" isolation-level="ReadCommitted"/> --> <!-- Orion Style JNDI name -->
@@ -847,7 +775,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-password="ofbiz"
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
-                pool-maxsize="250"
+                pool-maxsize="100"
                 time-between-eviction-runs-millis="600000"/>
         <!-- <jndi-jdbc jndi-server-name="default" jndi-name="comp/env/jdbc/xa/localmssql" isolation-level="ReadCommitted"/> --> <!-- Orion Style JNDI name -->
     </datasource>
@@ -873,7 +801,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-password="ofbiz"
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
-                pool-maxsize="250"
+                pool-maxsize="100"
                 time-between-eviction-runs-millis="600000"/>
         <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/OracleDataSource" isolation-level="Serializable"/> -->
     </datasource>
@@ -903,7 +831,40 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-password="adssys"
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
-                pool-maxsize="250"
+                pool-maxsize="100"
+                time-between-eviction-runs-millis="600000"/>
+    </datasource>
+    
+    <!-- SCIPIO: 2018-06-05: Added MariaDB support -->
+    <!-- List of table-types (storage engine): https://mariadb.com/kb/en/library/choosing-the-right-storage-engine/ -->
+    <datasource name="localmariadb"
+            helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
+            field-type-name="mariadb"
+            check-on-start="true"
+            add-missing-on-start="true"
+            check-pks-on-start="false"
+            use-foreign-keys="true"
+            join-style="ansi-no-parenthesis"
+            alias-view-columns="false"
+            drop-fk-use-foreign-key-keyword="true"
+            table-type="InnoDB"
+            character-set="utf8mb4"
+            collate="utf8mb4_general_ci"> <!-- Default character set is latin1_swedish_ci but throws errors with seed data -->
+        <read-data reader-name="tenant"/>
+        <read-data reader-name="seed"/>
+        <read-data reader-name="seed-initial"/>
+        <read-data reader-name="demo"/>
+        <read-data reader-name="ext"/>
+        <read-data reader-name="ext-test"/>
+        <read-data reader-name="ext-demo"/>
+        <inline-jdbc
+                jdbc-driver="org.mariadb.jdbc.Driver"
+                jdbc-uri="jdbc:mariadb://127.0.0.1/scipio?autoReconnect=true"
+                jdbc-username="scipio"
+                jdbc-password="scipio"
+                isolation-level="ReadCommitted"
+                pool-minsize="2"
+                pool-maxsize="100"
                 time-between-eviction-runs-millis="600000"/>
     </datasource>
 </entity-config>

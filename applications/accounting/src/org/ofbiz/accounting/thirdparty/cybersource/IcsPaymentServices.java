@@ -24,8 +24,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
-import javolution.util.FastMap;
-
 import org.ofbiz.accounting.payment.PaymentGatewayServices;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.SSLUtil;
@@ -52,7 +50,7 @@ import com.cybersource.ws.client.FaultException;
  */
 public class IcsPaymentServices {
 
-    public static final String module = IcsPaymentServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
     private static int rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
     public final static String resource = "AccountingUiLabels";
@@ -304,7 +302,7 @@ public class IcsPaymentServices {
         // make the request map
         String capture = getPaymentGatewayConfigValue(delegator, paymentGatewayConfigId, "autoBill", configString, "payment.cybersource.autoBill", "false");
         String orderId = (String) context.get("orderId");
-        Map<String, Object> request = FastMap.newInstance();
+        Map<String, Object> request = new HashMap<String, Object>();
         request.put("ccAuthService_run", "true");              // run auth service
         request.put("ccCaptureService_run", capture);          // run capture service (i.e. sale)
         request.put("merchantReferenceCode", orderId);         // set the order ref number
@@ -325,7 +323,7 @@ public class IcsPaymentServices {
         }
         String merchantDesc = getPaymentGatewayConfigValue(delegator, paymentGatewayConfigId, "merchantDescr", configString, "payment.cybersource.merchantDescr", null);
         String merchantCont = getPaymentGatewayConfigValue(delegator, paymentGatewayConfigId, "merchantContact", configString, "payment.cybersource.merchantContact", null);
-        Map<String, Object> request = FastMap.newInstance();
+        Map<String, Object> request = new HashMap<String, Object>();
         request.put("ccCaptureService_run", "true");
         request.put("ccCaptureService_authRequestID", authTransaction.getString("referenceNum"));
         request.put("item_0_unitPrice", getAmountString(context, "captureAmount"));
@@ -345,7 +343,7 @@ public class IcsPaymentServices {
     }
 
     private static Map<String, Object> buildReleaseRequest(Map<String, ? extends Object> context, GenericValue authTransaction) {
-        Map<String, Object> request = FastMap.newInstance();
+        Map<String, Object> request = new HashMap<String, Object>();
         GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
         String currency = (String) context.get("currency");
         request.put("ccAuthReversalService_run", "true");
@@ -366,7 +364,7 @@ public class IcsPaymentServices {
         String currency = (String) context.get("currency");
         String merchantDesc = getPaymentGatewayConfigValue(delegator, paymentGatewayConfigId, "merchantDescr", configString, "payment.cybersource.merchantDescr", null);
         String merchantCont = getPaymentGatewayConfigValue(delegator, paymentGatewayConfigId, "merchantContact", configString, "payment.cybersource.merchantContact", null);
-        Map<String, Object> request = FastMap.newInstance();
+        Map<String, Object> request = new HashMap<String, Object>();
         request.put("ccCreditService_run", "true");
         request.put("ccCreditService_captureRequestID", authTransaction.getString("referenceNum"));
         request.put("item_0_unitPrice", getAmountString(context, "refundAmount"));
@@ -383,7 +381,7 @@ public class IcsPaymentServices {
 
     private static Map<String, Object> buildCreditRequest(Map<String, ? extends Object> context) {
         String refCode = (String) context.get("referenceCode");
-        Map<String, Object> request = FastMap.newInstance();
+        Map<String, Object> request = new HashMap<String, Object>();
         request.put("ccCreditService_run", "true");            // run credit service
         request.put("merchantReferenceCode", refCode);         // set the ref number could be order id
         appendFullBillingInfo(request, context);               // add in all address info
@@ -537,7 +535,7 @@ public class IcsPaymentServices {
 
     private static void processAuthResult(Map<String, Object> reply, Map<String, Object> result, Delegator delegator) {
         String decision = getDecision(reply);
-        String checkModeStatus = EntityUtilProperties.getPropertyValue("payment.properties", "payment.cybersource.ignoreStatus", delegator);
+        String checkModeStatus = EntityUtilProperties.getPropertyValue("payment", "payment.cybersource.ignoreStatus", delegator);
         if ("ACCEPT".equalsIgnoreCase(decision)) {
             result.put("authCode", reply.get("ccAuthReply_authorizationCode"));
             result.put("authResult", Boolean.TRUE);

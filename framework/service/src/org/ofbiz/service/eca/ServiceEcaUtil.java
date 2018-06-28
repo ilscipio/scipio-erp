@@ -48,7 +48,7 @@ import org.w3c.dom.Element;
  */
 public class ServiceEcaUtil {
 
-    public static final String module = ServiceEcaUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // using a cache is dangerous here because if someone clears it the ECAs won't run: public static UtilCache ecaCache = new UtilCache("service.ServiceECAs", 0, 0, false);
     public static Map<String, Map<String, List<ServiceEcaRule>>> ecaCache = new ConcurrentHashMap<String, Map<String, List<ServiceEcaRule>>>();

@@ -40,6 +40,7 @@ import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericEntity;
@@ -48,6 +49,7 @@ import org.ofbiz.security.Security;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.calendar.RecurrenceRule;
 import org.ofbiz.webapp.control.ConfigXMLReader.Event;
 import org.ofbiz.webapp.control.RequestHandler;
@@ -57,7 +59,7 @@ import org.ofbiz.webapp.control.RequestHandler;
  */
 public class CoreEvents {
 
-    public static final String module = CoreEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String err_resource = "WebappUiLabels";
 
     /**
@@ -322,6 +324,15 @@ public class CoreEvents {
         try {
             if (null!=request.getParameter("_RUN_SYNC_") && request.getParameter("_RUN_SYNC_").equals("Y")) {
                 syncServiceResult = dispatcher.runSync(serviceName, serviceContext);
+            } else if (null!=request.getParameter("_RUN_SYNC_") && request.getParameter("_RUN_SYNC_").startsWith("ASYNC")) {
+                // SCIPIO: 2018-02-16: new ability to run async services without need to go through Job Manager (starts quicker)
+                // NOTE: Default for persist is False, because Job Manager is more intuitive in those cases
+                // NOTE: semantically strange "ASYNC" value for parameter named "_RUN_SYNC_" - cannot use "N" 
+                // because in legacy code it would imply to use job scheduler.
+                dispatcher.runAsync(serviceName, serviceContext, request.getParameter("_RUN_SYNC_").endsWith("_PERSIST"));
+                String asyncMsg = UtilProperties.getMessage("WebtoolsUiLabels", "WebtoolsRunServiceAsyncStartedInfo", 
+                        UtilMisc.toMap("serviceName", serviceName), locale);
+                syncServiceResult = ServiceUtil.returnSuccess(asyncMsg);
             } else {
                 // SCIPIO: now pass eventId
                 dispatcher.schedule(jobName, poolName, serviceName, serviceContext, startTime, frequency, interval, count, endTime, maxRetry, eventId);

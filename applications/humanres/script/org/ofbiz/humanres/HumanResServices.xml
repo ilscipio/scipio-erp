@@ -110,6 +110,10 @@
             <call-service service-name="createPartyRelationship" in-map-name="partyRelationshipCtx"/>
         </if-not-empty>
         <field-to-result field="partyId"/>
+        
+        <!-- SCIPIO: 2018-04-10: need another message because "telecom number created" alone appears too strange
+            FIXME: try to prevent the telecom number message, failed so far... -->
+        <property-to-field resource="PartyUiLabels" property="PartyUserCreated" field="successMessageList[]"/>
     </simple-method>
 
     <simple-method method-name="updateEmplPositionTypeRate" short-description="Update/create EmplPositionTypeRate">
@@ -154,7 +158,8 @@
         <create-value value-field="newEntity"/>
         <check-errors/>
         <property-to-field resource="HumanResUiLabels" property="HumanResLeaveCreationSuccess" field="successMessage"/>
-        <field-to-result field="responseMessage" result-name="successMessage"/>
+        <!-- SCIPIO: 2018-03-01: this unnecessary and inappropriate use of reserved field name
+        <field-to-result field="responseMessage" result-name="successMessage"/>-->
     </simple-method>
 
     <simple-method method-name="getCurrentPartyEmploymentData" short-description="Get all current employment information for a certain partyId">

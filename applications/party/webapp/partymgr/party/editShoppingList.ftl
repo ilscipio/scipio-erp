@@ -17,13 +17,12 @@ specific language governing permissions and limitations
 under the License.
 -->
 
+<form id="createEmptyShoppingList" action="<@ofbizUrl>createEmptyShoppingList</@ofbizUrl>" method="post">
+  <input type="hidden" name="partyId" value="${partyId!}" />
+</form>
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href="javascript:document.getElementById('createEmptyShoppingList').submit();" text=uiLabelMap.CommonNew class="+${styles.action_run_sys!} ${styles.action_add!}">
-      <form id="createEmptyShoppingList" action="<@ofbizUrl>createEmptyShoppingList</@ofbizUrl>" method="post">
-        <input type="hidden" name="partyId" value="${partyId!}" />
-      </form>
-    </@menuitem>
+    <@menuitem type="link" href="javascript:document.getElementById('createEmptyShoppingList').submit();" text=uiLabelMap.CommonNew class="+${styles.action_run_sys!} ${styles.action_add!}"/>
   </@menu>
 </#macro>
 <@section menuContent=menuContent><#--  title=uiLabelMap.PartyShoppingLists -->

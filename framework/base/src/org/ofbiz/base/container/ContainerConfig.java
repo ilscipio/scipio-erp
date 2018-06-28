@@ -44,7 +44,7 @@ import org.xml.sax.SAXException;
  */
 public class ContainerConfig {
 
-    public static final String module = ContainerConfig.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     @LockedBy("ContainerConfig.class")
     private static Map<String, Container> containers = new LinkedHashMap<String, Container>();

@@ -425,6 +425,9 @@ under the License.
                 <set field="entityFrom" from-field="parameters.entityFrom" type="Timestamp"/>
                 <set field="entityThru" from-field="parameters.entityThru" type="Timestamp"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/entity/XmlDsDump.groovy"/>
+                <entity-and list="exportList" entity-name="EntityExport" >
+                    <order-by field-name="-createdStamp"/>
+                </entity-and>
             </actions>
             <widgets>
                 <decorator-screen name="CommonImportExportDecorator" location="${parameters.mainDecoratorLocation}">

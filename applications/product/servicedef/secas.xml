@@ -143,4 +143,18 @@ under the License.
     <eca service="createProductStoreGroupRollup" event="commit">
         <action service="checkProductStoreGroupRollup" mode="sync"/>
     </eca>
+    
+    <!-- SCIPIO: 2017: Automatic SEO alt URL generation -->
+    
+    <!-- TODO: 
+    
+    <eca service="createProduct" event="commit">
+        <action service="generateProductAlternativeUrlsCore" mode="sync"/>
+    </eca>
+    <eca service="updateProduct" event="commit">
+        <action service="generateProductAlternativeUrlsCore" mode="sync"/>
+    </eca>
+    
+    -->
+    
 </service-eca>

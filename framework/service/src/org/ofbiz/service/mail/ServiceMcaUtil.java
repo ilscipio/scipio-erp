@@ -35,7 +35,7 @@ import org.w3c.dom.Element;
 
 public class ServiceMcaUtil {
 
-    public static final String module = ServiceMcaUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final UtilCache<String, ServiceMcaRule> mcaCache = UtilCache.createUtilCache("service.ServiceMCAs", 0, 0, false);
 
     public static void reloadConfig() {

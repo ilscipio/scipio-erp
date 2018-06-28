@@ -45,7 +45,7 @@ import org.ofbiz.service.DispatchContext;
  */
 public class LdapAuthenticationServices {
 
-    public static final String module = LdapAuthenticationServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static boolean userLogin(DispatchContext ctx, Map<String, ?> context) {
         Debug.logVerbose("Starting LDAP authentication", module);
@@ -95,7 +95,7 @@ public class LdapAuthenticationServices {
         }
         // Synchronize user's OFBiz password with user's LDAP password
         if (userLogin != null) {
-            boolean useEncryption = "true".equals(EntityUtilProperties.getPropertyValue("security.properties", "password.encrypt", delegator));
+            boolean useEncryption = "true".equals(EntityUtilProperties.getPropertyValue("security", "password.encrypt", delegator));
             String currentPassword = userLogin.getString("currentPassword");
             boolean samePassword;
             if (useEncryption) {

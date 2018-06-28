@@ -26,16 +26,15 @@ import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
 
 import javax.xml.transform.TransformerException;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.ofbiz.base.util.Base64;
@@ -74,11 +73,11 @@ import org.w3c.dom.Element;
  */
 public class UspsServices {
 
-    public final static String module = UspsServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public final static String resourceError = "ProductUiLabels";
     public final static String shipmentPropertiesFile = "shipment.properties";
 
-    private static List<String> domesticCountries = FastList.newInstance();
+    private static List<String> domesticCountries = new LinkedList<String>();
     // Countries treated as domestic for rate enquiries
     static {
         domesticCountries.add("USA");
@@ -498,7 +497,7 @@ public class UspsServices {
 
         List<? extends Element> detailElementList = UtilXml.childElementList(trackInfoElement, "TrackDetail");
         if (UtilValidate.isNotEmpty(detailElementList)) {
-            List<String> trackingDetailList = FastList.newInstance();
+            List<String> trackingDetailList = new LinkedList<String>();
             for (Element detailElement: detailElementList) {
                 trackingDetailList.add(UtilXml.elementValue(detailElement));
             }
@@ -1097,7 +1096,7 @@ public class UspsServices {
                 }
                 if (!"WT_lb".equals(weightUomId)) {
                     // attempt a conversion to pounds
-                    Map<String, Object> result = FastMap.newInstance();
+                    Map<String, Object> result = new HashMap<String, Object>();
                     try {
                         result = dispatcher.runSync("convertUom", UtilMisc.<String, Object>toMap("uomId", weightUomId, "uomIdTo", "WT_lb", "originalValue", weight));
                     } catch (GenericServiceException ex) {

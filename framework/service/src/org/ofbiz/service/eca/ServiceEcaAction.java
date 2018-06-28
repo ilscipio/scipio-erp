@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
 @SuppressWarnings("serial")
 public class ServiceEcaAction implements java.io.Serializable {
 
-    public static final String module = ServiceEcaAction.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected String eventName = null;
     protected String serviceName = null;

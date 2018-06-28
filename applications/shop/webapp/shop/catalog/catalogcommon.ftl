@@ -108,11 +108,9 @@
             ${uiLabelMap.CommonDepth}: ${product.productDepth!} ${((depthUom.abbreviation)?default(product.depthUomId))!}
         </p>
     </#if>
-
     <#if daysToShip??>
         <p id="product-specs-days-to-ship">${uiLabelMap.ProductUsuallyShipsIn} ${daysToShip} ${uiLabelMap.CommonDays}!</p>
     </#if>
-
     <#if disFeatureList?? && (0 < disFeatureList.size())>                
         <#list disFeatureList as currentFeature>
             <#assign disFeatureType = currentFeature.getRelatedOneCache("ProductFeatureType") />
@@ -121,7 +119,6 @@
             </p>
         </#list>
     </#if>
-
     <#-- SCIPIO: Debugging info
     <@heading relLevel=+1>Debugging Info</@heading>
     <p style="font-size:0.7em;">Product ID: ${product.productId}</p>
@@ -216,4 +213,94 @@
     <@associatedProducts assocProducts=obsolenscenseProducts beforeName="" showName="Y" afterName=" ${rawLabel('ProductObsolescense')}" formNamePrefix="obce" targetRequestName="" />
 </#macro>
 
+<#-- Makes options for insert within <@field type="select">. Used by keywordsearch & advancedsearch. WARN: uses context fields. -->
+<#macro productSortOrderSelectOptions sortOrder sortAscending showAdv="" showAdvDef=false extraArgs...>
+    <#if !showAdv?is_boolean>
+      <#local showAdv = showAdvFields!showAdvDef><#-- CONTEXT field -->
+    </#if>
+    <#local sortOrder = rawString(sortOrder)>
+    <#-- SCIPIO: NOTE: removed the high-to-low checkbox in favor of dedicated options, because the box
+        is not used in all sorting methods and it takes space -->
+    <option value="SortKeywordRelevancy"<#if sortOrder == "SortKeywordRelevancy"> selected="selected"</#if>><#if showAdv>${uiLabelMap.ProductKeywordRelevancy}<#else>${uiLabelMap.ProductRelevance}</#if></option>
+    <option value="SortProductField:productName"<#if sortOrder == "SortProductField:productName"> selected="selected"</#if>>${uiLabelMap.ProductProductName}</option>
+  <#-- TODO/FIXME: 2017-08-18: search can't currently honor this; should be fixed in future...
+    <option value="SortProductField:totalQuantityOrdered">${uiLabelMap.ProductPopularityByOrders}</option>
+    <option value="SortProductField:totalTimesViewed">${uiLabelMap.ProductPopularityByViews}</option>
+    <option value="SortProductField:averageCustomerRating">${uiLabelMap.ProductCustomerRating}</option>
+  -->
+    <#-- NOTE: shorter label if showAdvFields==false -->
+  <#if showAdv>
+    <option value="SortProductPrice:LIST_PRICE#ASC"<#if sortOrder == "SortProductPrice:LIST_PRICE" && sortAscending> selected="selected"</#if>><#if showAdv>${uiLabelMap.ProductListPrice}<#else>${uiLabelMap.ProductPrice}</#if>: ${uiLabelMap.EcommerceLowToHigh}</option>
+    <option value="SortProductPrice:LIST_PRICE#DESC"<#if sortOrder == "SortProductPrice:LIST_PRICE" && !sortAscending> selected="selected"</#if>><#if showAdv>${uiLabelMap.ProductListPrice}<#else>${uiLabelMap.ProductPrice}</#if>: ${uiLabelMap.EcommerceHighToLow}</option>
+  </#if>
+    <option value="SortProductPrice:DEFAULT_PRICE#ASC"<#if sortOrder == "SortProductPrice:DEFAULT_PRICE" && sortAscending> selected="selected"</#if>><#if showAdv>${uiLabelMap.ProductDefaultPrice}<#else>${uiLabelMap.ProductPrice}</#if>: ${uiLabelMap.EcommerceLowToHigh}</option>
+    <option value="SortProductPrice:DEFAULT_PRICE#DESC"<#if sortOrder == "SortProductPrice:DEFAULT_PRICE" && !sortAscending> selected="selected"</#if>><#if showAdv>${uiLabelMap.ProductDefaultPrice}<#else>${uiLabelMap.ProductPrice}</#if>: ${uiLabelMap.EcommerceHighToLow}</option>
+  <#-- TODO/FIXME: 2017-08-18: search can't currently honor this; should be fixed in future...
+    <#if productFeatureTypes?? && productFeatureTypes?has_content>
+      <#list productFeatureTypes as productFeatureType>
+        <option value="SortProductFeature:${productFeatureType.productFeatureTypeId}">${productFeatureType.description!productFeatureType.productFeatureTypeId}</option>
+      </#list>
+    </#if>
+  -->
+</#macro>
+<#macro productSortOrderSelectScript id formId submitForm=true extraArgs...>
+    <@script>
+        jQuery(document).ready(function() {
+            var endsWith = function(str, suffix) {
+                return str.indexOf(suffix, str.length - suffix.length) !== -1;
+            };
+            var sortOrderChange = function(elem, submit) {
+                elem = jQuery(elem);
+                var sortOrder = elem.val();
+                var asc = true;
+                if (endsWith(sortOrder, "#ASC")) {
+                    sortOrder = sortOrder.substring(0, sortOrder.length-4);
+                } else if (endsWith(sortOrder, "#DESC")) {
+                    sortOrder = sortOrder.substring(0, sortOrder.length-5);
+                    asc = false;
+                }
+                var formElem = jQuery('#${escapeVal(formId, 'js')}');
+                jQuery('input[name=sortOrder]', formElem).val(sortOrder);
+                jQuery('input[name=sortAscending]', formElem).val(asc ? "Y" : "N");
+              <#if submitForm>
+                if (submit) {
+                    formElem.submit();
+                }
+              </#if>
+            };
+            var sortOrderElem = jQuery('#${escapeVal(id, 'js')}');
+            sortOrderChange(sortOrderElem, false);
+            sortOrderElem.change(function() { sortOrderChange(this, true); });
+        });
+    </@script>
+</#macro>
 
+<#function getProductCategoryDisplayName cat>
+    <#if isObjectType("string", cat)>
+      <#local cat = delegator.findOne("ProductCategory", {"productCategoryId":cat}, true)!>
+      <#if !cat?has_content>
+        <#return cat>
+      </#if>
+    </#if>
+    <#local catName = Static["org.ofbiz.product.category.CategoryContentWrapper"].getProductCategoryContentAsText(cat, "CATEGORY_NAME", locale, dispatcher, "raw")!>
+    <#if !catName?has_content>
+        <#local catName = Static["org.ofbiz.product.category.CategoryContentWrapper"].getProductCategoryContentAsText(cat, "DESCRIPTION", locale, dispatcher, "raw")!>
+        <#if !catName?has_content>
+           <#local catName = cat.productCategoryId!>
+        </#if>
+    </#if>
+    <#return catName>
+</#function>
+
+<#macro ratingAsStars rating>
+    <#if rating?round &gt; 0>
+        <#list 1..rating?round as star>
+            <i class="${styles.icon} ${styles.icon_prefix}star"></i>
+        </#list>
+    </#if>
+    <#if (5-rating)?round &gt; 0>
+    <#list 1..((5-rating)?round) as star>
+        <i class="${styles.icon} ${styles.icon_prefix}star-o"></i>
+    </#list>
+    </#if>
+</#macro>

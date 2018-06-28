@@ -45,6 +45,8 @@ import org.ofbiz.widget.model.ModelFormField.TextareaField;
  */
 public interface ModelFieldVisitor {
 
+    void visit(ModelFormField field) throws Exception ; // SCIPIO: added 2018-03-02
+    
     void visit(CheckField checkField) throws Exception ;
 
     void visit(ContainerField containerField) throws Exception ;

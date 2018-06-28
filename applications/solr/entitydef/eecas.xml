@@ -24,31 +24,58 @@ xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entity-eca.xsd">
     <!-- 
         Sorl Product indexing stock/example ECAs
         If enabled, these ECAs enable automatic per-product solr reindexing upon
-        various common Ofbiz Product operations. To enable the invoked service(s) globally, see
+        various common Scipio Product operations. To enable the invoked service(s) globally, see
         the solrconfig.properties option solr.eca.enabled.
         See documentation for issues regarding implementation and context-specific issues
         (such as data loading/install).
+        SEE ALSO SERVICES ECAs IN servicedef/secas.xml
     -->
-    
+
     <eca entity="Product" operation="create-store" event="return">
-        <action service="addToSolr" mode="sync" value-attr="instance"/>
+        <action service="registerUpdateToSolr" mode="sync" value-attr="instance"/>
+    </eca>
+    <eca entity="Product" operation="remove" event="return">
+        <action service="registerUpdateToSolr" mode="sync" value-attr="instance"/>
     </eca>
     <eca entity="ProductCategoryMember" operation="create-store-remove" event="return">
-        <action service="addToSolr" mode="sync" value-attr="instance"/>
+        <action service="registerUpdateToSolr" mode="sync" value-attr="instance"/>
     </eca>
     <eca entity="ProductPrice" operation="create-store-remove" event="return">
         <condition operator="equals" field-name="productPriceTypeId" value="LIST_PRICE"/>
-        <action service="addToSolr" mode="sync" value-attr="instance"/>
+        <action service="registerUpdateToSolr" mode="sync" value-attr="instance"/>
     </eca>
     <eca entity="ProductPrice" operation="create-store-remove" event="return">
         <condition operator="equals" field-name="productPriceTypeId" value="DEFAULT_PRICE"/>
-        <action service="addToSolr" mode="sync" value-attr="instance"/>
+        <action service="registerUpdateToSolr" mode="sync" value-attr="instance"/>
     </eca>
     <eca entity="ProductPrice" operation="create-store-remove" event="return">
         <condition operator="equals" field-name="productPriceTypeId" value="DEFAULT_PRICE"/>
-        <action service="addToSolr" mode="sync" value-attr="instance"/>
+        <action service="registerUpdateToSolr" mode="sync" value-attr="instance"/>
+    </eca>
+    <!-- NOTE: ONLY keywords with statusId==KW_APPROVED are solr-indexed; both KW_TAG and KW_KEYWORD types are indexed.
+            ONLY non-empty statusId triggers this eca.
+            For performance reasons, we can only index keywords with status APPROVED because
+            this is the only fast way to exclude the ofbiz-auto-indexed keywords;
+            we do this even for TAG (not ofbiz-auto-indexed) because otherwise it becomes too inconsistent and hard to understand. -->
+    <eca entity="ProductKeyword" operation="create-store-remove" event="return">
+        <condition operator="is-not-empty" field-name="statusId"/>
+        <action service="registerUpdateToSolr" mode="sync" value-attr="instance"/>
+    </eca>
+    <!-- 2017-09: intercept new/removed ProductContent records
+        FIXME: this doesn't catch in-place DataResource/ElectronicText updates; difficult -->
+    <eca entity="ProductContent" operation="create-store-remove" event="return">
+        <action service="registerUpdateToSolr" mode="sync" value-attr="instance"/>
+    </eca>
+    <!-- 2017-09: inStock flag in solr schema is updated via getProductInventoryAvailable service 
+        WARN: this ECA could be performance-heavy in production -->
+    <eca entity="InventoryItem" operation="create-store" event="return">
+        <condition operator="is-not-empty" field-name="productId"/>
+        <action service="registerUpdateToSolr" mode="sync" value-attr="instance"/>
+    </eca>
+    <eca entity="ProductFacility" operation="create-store-remove" event="return">
+        <action service="registerUpdateToSolr" mode="sync" value-attr="instance"/>
     </eca>
     
-    <!-- (Insert any needed additional ECAs here) -->
+    <!-- (Insert any additional needed ECAs here) -->
     
 </entity-eca>

@@ -29,8 +29,6 @@ import org.ofbiz.party.party.PartyWorker;
 import java.sql.Date;
 import java.sql.Timestamp;
 
-import javolution.util.FastList;
-
 uiLabelMap = UtilProperties.getResourceBundleMap("AccountingUiLabels", locale);
 
 if (!thruDate) {
@@ -87,7 +85,7 @@ Map liabilityOpeningBalances = [:];
 Map currentLiabilityOpeningBalances = [:];
 Map equityOpeningBalances = [:];
 if (lastClosedTimePeriod) {
-    List timePeriodAndExprs = FastList.newInstance();
+    List timePeriodAndExprs = [];
     timePeriodAndExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.IN, partyIds));
     timePeriodAndExprs.add(EntityCondition.makeCondition("glAccountClassId", EntityOperator.IN, assetAccountClassIds));
     timePeriodAndExprs.add(EntityCondition.makeCondition("endingBalance", EntityOperator.NOT_EQUAL, BigDecimal.ZERO));
@@ -97,7 +95,7 @@ if (lastClosedTimePeriod) {
         Map accountMap = UtilMisc.toMap("glAccountId", lastTimePeriodHistory.glAccountId, "accountCode", lastTimePeriodHistory.accountCode, "accountName", lastTimePeriodHistory.accountName, "balance", lastTimePeriodHistory.getBigDecimal("endingBalance"), "D", lastTimePeriodHistory.getBigDecimal("postedDebits"), "C", lastTimePeriodHistory.getBigDecimal("postedCredits"));
         assetOpeningBalances.put(lastTimePeriodHistory.glAccountId, accountMap);
     }
-    timePeriodAndExprs = FastList.newInstance();
+    timePeriodAndExprs = [];
     timePeriodAndExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.IN, partyIds));
     timePeriodAndExprs.add(EntityCondition.makeCondition("glAccountClassId", EntityOperator.IN, contraAssetAccountClassIds));
     timePeriodAndExprs.add(EntityCondition.makeCondition("endingBalance", EntityOperator.NOT_EQUAL, BigDecimal.ZERO));
@@ -107,7 +105,7 @@ if (lastClosedTimePeriod) {
         Map accountMap = UtilMisc.toMap("glAccountId", lastTimePeriodHistory.glAccountId, "accountCode", lastTimePeriodHistory.accountCode, "accountName", lastTimePeriodHistory.accountName, "balance", lastTimePeriodHistory.getBigDecimal("endingBalance"), "D", lastTimePeriodHistory.getBigDecimal("postedDebits"), "C", lastTimePeriodHistory.getBigDecimal("postedCredits"));
         contraAssetOpeningBalances.put(lastTimePeriodHistory.glAccountId, accountMap);
     }
-    timePeriodAndExprs = FastList.newInstance();
+    timePeriodAndExprs = [];
     timePeriodAndExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.IN, partyIds));
     timePeriodAndExprs.add(EntityCondition.makeCondition("glAccountClassId", EntityOperator.IN, liabilityAccountClassIds));
     timePeriodAndExprs.add(EntityCondition.makeCondition("endingBalance", EntityOperator.NOT_EQUAL, BigDecimal.ZERO));
@@ -117,7 +115,7 @@ if (lastClosedTimePeriod) {
         Map accountMap = UtilMisc.toMap("glAccountId", lastTimePeriodHistory.glAccountId, "accountCode", lastTimePeriodHistory.accountCode, "accountName", lastTimePeriodHistory.accountName, "balance", lastTimePeriodHistory.getBigDecimal("endingBalance"), "D", lastTimePeriodHistory.getBigDecimal("postedDebits"), "C", lastTimePeriodHistory.getBigDecimal("postedCredits"));
         liabilityOpeningBalances.put(lastTimePeriodHistory.glAccountId, accountMap);
     }
-    timePeriodAndExprs = FastList.newInstance();
+    timePeriodAndExprs = [];
     timePeriodAndExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.IN, partyIds));
     timePeriodAndExprs.add(EntityCondition.makeCondition("glAccountClassId", EntityOperator.IN, equityAccountClassIds));
     timePeriodAndExprs.add(EntityCondition.makeCondition("endingBalance", EntityOperator.NOT_EQUAL, BigDecimal.ZERO));
@@ -127,7 +125,7 @@ if (lastClosedTimePeriod) {
         Map accountMap = UtilMisc.toMap("glAccountId", lastTimePeriodHistory.glAccountId, "accountCode", lastTimePeriodHistory.accountCode, "accountName", lastTimePeriodHistory.accountName, "balance", lastTimePeriodHistory.getBigDecimal("endingBalance"), "D", lastTimePeriodHistory.getBigDecimal("postedDebits"), "C", lastTimePeriodHistory.getBigDecimal("postedCredits"));
         equityOpeningBalances.put(lastTimePeriodHistory.glAccountId, accountMap);
     }
-    timePeriodAndExprs = FastList.newInstance();
+    timePeriodAndExprs = [];
     timePeriodAndExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.IN, partyIds));
     timePeriodAndExprs.add(EntityCondition.makeCondition("glAccountClassId", EntityOperator.IN, currentAssetAccountClassIds));
     timePeriodAndExprs.add(EntityCondition.makeCondition("endingBalance", EntityOperator.NOT_EQUAL, BigDecimal.ZERO));
@@ -137,7 +135,7 @@ if (lastClosedTimePeriod) {
         Map accountMap = UtilMisc.toMap("glAccountId", lastTimePeriodHistory.glAccountId, "accountCode", lastTimePeriodHistory.accountCode, "accountName", lastTimePeriodHistory.accountName, "balance", lastTimePeriodHistory.getBigDecimal("endingBalance"), "D", lastTimePeriodHistory.getBigDecimal("postedDebits"), "C", lastTimePeriodHistory.getBigDecimal("postedCredits"));
         currentAssetOpeningBalances.put(lastTimePeriodHistory.glAccountId, accountMap);
     }
-    timePeriodAndExprs = FastList.newInstance();
+    timePeriodAndExprs = [];
     timePeriodAndExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.IN, partyIds));
     timePeriodAndExprs.add(EntityCondition.makeCondition("glAccountClassId", EntityOperator.IN, longtermAssetAccountClassIds));
     timePeriodAndExprs.add(EntityCondition.makeCondition("endingBalance", EntityOperator.NOT_EQUAL, BigDecimal.ZERO));
@@ -147,7 +145,7 @@ if (lastClosedTimePeriod) {
         Map accountMap = UtilMisc.toMap("glAccountId", lastTimePeriodHistory.glAccountId, "accountCode", lastTimePeriodHistory.accountCode, "accountName", lastTimePeriodHistory.accountName, "balance", lastTimePeriodHistory.getBigDecimal("endingBalance"), "D", lastTimePeriodHistory.getBigDecimal("postedDebits"), "C", lastTimePeriodHistory.getBigDecimal("postedCredits"));
         longtermAssetOpeningBalances.put(lastTimePeriodHistory.glAccountId, accountMap);
     }
-    timePeriodAndExprs = FastList.newInstance();
+    timePeriodAndExprs = [];
     timePeriodAndExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.IN, partyIds));
     timePeriodAndExprs.add(EntityCondition.makeCondition("glAccountClassId", EntityOperator.IN, currentLiabilityAccountClassIds));
     timePeriodAndExprs.add(EntityCondition.makeCondition("endingBalance", EntityOperator.NOT_EQUAL, BigDecimal.ZERO));
@@ -161,7 +159,7 @@ if (lastClosedTimePeriod) {
 
 List balanceTotalList = [];
 
-List mainAndExprs = FastList.newInstance();
+List mainAndExprs = [];
 mainAndExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.IN, partyIds));
 mainAndExprs.add(EntityCondition.makeCondition("isPosted", EntityOperator.EQUALS, "Y"));
 mainAndExprs.add(EntityCondition.makeCondition("glFiscalTypeId", EntityOperator.EQUALS, glFiscalTypeId));
@@ -174,7 +172,7 @@ mainAndExprs.add(EntityCondition.makeCondition("transactionDate", EntityOperator
 accountBalanceList = [];
 transactionTotals = [];
 balanceTotal = BigDecimal.ZERO;
-List assetAndExprs = FastList.newInstance(mainAndExprs);
+List assetAndExprs = new ArrayList(mainAndExprs);
 assetAndExprs.add(EntityCondition.makeCondition("glAccountClassId", EntityOperator.IN, assetAccountClassIds));
 transactionTotals = select("glAccountId", "accountName", "accountCode", "debitCreditFlag", "amount").from("AcctgTransEntrySums").where(assetAndExprs).orderBy("glAccountId").queryList();
 transactionTotalsMap = [:];
@@ -210,7 +208,7 @@ context.assetBalanceTotal = balanceTotal;
 accountBalanceList = [];
 transactionTotals = [];
 balanceTotal = BigDecimal.ZERO;
-List currentAssetAndExprs = FastList.newInstance(mainAndExprs);
+List currentAssetAndExprs = new ArrayList(mainAndExprs);
 currentAssetAndExprs.add(EntityCondition.makeCondition("glAccountClassId", EntityOperator.IN, currentAssetAccountClassIds));
 transactionTotals = select("glAccountId", "accountName", "accountCode", "debitCreditFlag", "amount").from("AcctgTransEntrySums").where(currentAssetAndExprs).orderBy("glAccountId").queryList();
 transactionTotalsMap = [:];
@@ -245,7 +243,7 @@ balanceTotalList.add(UtilMisc.toMap("totalName", "AccountingCurrentAssets", "bal
 accountBalanceList = [];
 transactionTotals = [];
 balanceTotal = BigDecimal.ZERO;
-List longtermAssetAndExprs = FastList.newInstance(mainAndExprs);
+List longtermAssetAndExprs = new ArrayList(mainAndExprs);
 longtermAssetAndExprs.add(EntityCondition.makeCondition("glAccountClassId", EntityOperator.IN, longtermAssetAccountClassIds));
 transactionTotals = select("glAccountId", "accountName", "accountCode", "debitCreditFlag", "amount").from("AcctgTransEntrySums").where(longtermAssetAndExprs).orderBy("glAccountId").queryList();
 transactionTotalsMap = [:];
@@ -280,7 +278,7 @@ balanceTotalList.add(UtilMisc.toMap("totalName", "AccountingLongTermAssets", "ba
 accountBalanceList = [];
 transactionTotals = [];
 balanceTotal = BigDecimal.ZERO;
-List contraAssetAndExprs = FastList.newInstance(mainAndExprs);
+List contraAssetAndExprs = new ArrayList(mainAndExprs);
 contraAssetAndExprs.add(EntityCondition.makeCondition("glAccountClassId", EntityOperator.IN, contraAssetAccountClassIds));
 transactionTotals = select("glAccountId", "accountName", "accountCode", "debitCreditFlag", "amount").from("AcctgTransEntrySums").where(contraAssetAndExprs).orderBy("glAccountId").queryList();
 
@@ -321,7 +319,7 @@ balanceTotalList.add(UtilMisc.toMap("totalName", "AccountingTotalAssets", "balan
 accountBalanceList = [];
 transactionTotals = [];
 balanceTotal = BigDecimal.ZERO;
-List liabilityAndExprs = FastList.newInstance(mainAndExprs);
+List liabilityAndExprs = new ArrayList(mainAndExprs);
 liabilityAndExprs.add(EntityCondition.makeCondition("glAccountClassId", EntityOperator.IN, liabilityAccountClassIds));
 transactionTotals = select("glAccountId", "accountName", "accountCode", "debitCreditFlag", "amount").from("AcctgTransEntrySums").where(liabilityAndExprs).orderBy("glAccountId").queryList();
 transactionTotalsMap = [:];
@@ -357,7 +355,7 @@ context.liabilityBalanceTotal = balanceTotal;
 accountBalanceList = [];
 transactionTotals = [];
 balanceTotal = BigDecimal.ZERO;
-List currentLiabilityAndExprs = FastList.newInstance(mainAndExprs);
+List currentLiabilityAndExprs = new ArrayList(mainAndExprs);
 currentLiabilityAndExprs.add(EntityCondition.makeCondition("glAccountClassId", EntityOperator.IN, currentLiabilityAccountClassIds));
 transactionTotals = select("glAccountId", "accountName", "accountCode", "debitCreditFlag", "amount").from("AcctgTransEntrySums").where(currentLiabilityAndExprs).orderBy("glAccountId").queryList();
 transactionTotalsMap = [:];
@@ -392,7 +390,7 @@ balanceTotalList.add(UtilMisc.toMap("totalName", "AccountingCurrentLiabilities",
 accountBalanceList = [];
 transactionTotals = [];
 balanceTotal = BigDecimal.ZERO;
-List equityAndExprs = FastList.newInstance(mainAndExprs);
+List equityAndExprs = new ArrayList(mainAndExprs);
 equityAndExprs.add(EntityCondition.makeCondition("glAccountClassId", EntityOperator.IN, equityAccountClassIds));
 transactionTotals = select("glAccountId", "accountName", "accountCode", "debitCreditFlag", "amount").from("AcctgTransEntrySums").where(equityAndExprs).orderBy("glAccountId").queryList();
 transactionTotalsMap = [:];

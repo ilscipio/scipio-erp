@@ -20,10 +20,9 @@
 package org.ofbiz.party.party;
 
 import java.sql.Timestamp;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import javolution.util.FastList;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
@@ -41,7 +40,7 @@ import org.ofbiz.entity.util.EntityQuery;
  */
 public class PartyRelationshipHelper {
 
-    public static final String module = PartyRelationshipHelper.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /** Return A List of the active Party Relationships (ie with valid from and thru dates)
      *@param delegator needed Delegator
@@ -56,7 +55,7 @@ public class PartyRelationshipHelper {
         String partyRelationshipTypeId = (String) partyRelationshipValues.get("partyRelationshipTypeId") ;
         Timestamp fromDate = UtilDateTime.nowTimestamp();
 
-        List<EntityCondition> condList = FastList.newInstance();
+        List<EntityCondition> condList = new LinkedList<EntityCondition>();
         condList.add(EntityCondition.makeCondition("partyIdFrom", partyIdFrom));
         condList.add(EntityCondition.makeCondition("partyIdTo", partyIdTo));
         condList.add(EntityCondition.makeCondition("roleTypeIdFrom", roleTypeIdFrom));

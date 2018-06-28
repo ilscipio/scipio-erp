@@ -51,7 +51,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class DataEvents {
 
-    public static final String module = DataEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String err_resource = "ContentErrorUiLabels";
 
     public static String uploadImage(HttpServletRequest request, HttpServletResponse response) {
@@ -78,7 +78,7 @@ public class DataEvents {
         }
 
         // get the permission service required for streaming data; default is always the genericContentPermission
-        String permissionService = EntityUtilProperties.getPropertyValue("content.properties", "stream.permission.service", "genericContentPermission", delegator);
+        String permissionService = EntityUtilProperties.getPropertyValue("content", "stream.permission.service", "genericContentPermission", delegator);
 
         // get the content record
         GenericValue content;
@@ -137,6 +137,12 @@ public class DataEvents {
             Map<String, ? extends Object> permSvcCtx = UtilMisc.toMap("userLogin", userLogin, "locale", locale, "mainAction", "VIEW", "contentId", contentId);
             Map<String, Object> permSvcResp;
             try {
+                // SCIPIO: 2018-06: if service requires auth, print shorter error here otherwise floods log like crazy
+                if (userLogin == null && dispatcher.getDispatchContext().getModelService(permissionService).auth) {
+                    Debug.logError("User login missing and required for data serve by: " + permissionService, module);
+                    request.setAttribute("_ERROR_MESSAGE_", "User authorization is required to access content");
+                    return "error";
+                }
                 permSvcResp = dispatcher.runSync(permissionService, permSvcCtx);
             } catch (GenericServiceException e) {
                 Debug.logError(e, module);
@@ -285,7 +291,9 @@ public class DataEvents {
             }
             OutputStream os = response.getOutputStream();
             Map<String, Object> resourceData = DataResourceWorker.getDataResourceStream(dataResource, "", application.getInitParameter("webSiteId"), UtilHttp.getLocale(request), application.getRealPath("/"), false);
-            os.write(IOUtils.toByteArray((ByteArrayInputStream)resourceData.get("stream")));
+            // SCIPIO: 2017-08-01: the cast is unnecessary and will break some cases
+            //os.write(IOUtils.toByteArray((ByteArrayInputStream)resourceData.get("stream")));
+            os.write(IOUtils.toByteArray((InputStream)resourceData.get("stream")));
             os.flush();
         } catch (GenericEntityException e) {
             String errMsg = "Error downloading digital product content: " + e.toString();

@@ -37,7 +37,7 @@ import org.ofbiz.service.LocalDispatcher;
  */
 public class BOMHelper {
 
-    public static final String module = BOMHelper.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /** Creates a new instance of BOMHelper */
     public BOMHelper() {

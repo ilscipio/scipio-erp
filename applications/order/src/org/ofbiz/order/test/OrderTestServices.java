@@ -19,12 +19,11 @@
 package org.ofbiz.order.test;
 
 import java.math.BigDecimal;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
-
-import javolution.util.FastList;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
@@ -48,7 +47,7 @@ import org.ofbiz.service.ServiceUtil;
 
 public class OrderTestServices {
 
-    public static final String module = OrderTestServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static Map<String, Object> createTestSalesOrders(DispatchContext dctx, Map<String, ? extends Object> context) {
         LocalDispatcher dispatcher = dctx.getDispatcher();
@@ -85,7 +84,7 @@ public class OrderTestServices {
             salesChannel = "WEB_SALES_CHANNEL";
         }
 
-        List<String> productsList = FastList.newInstance();
+        List<String> productsList = new LinkedList<String>();
         try {
             if (UtilValidate.isNotEmpty(productId)) {
                 productsList.add(productId);

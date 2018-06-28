@@ -28,6 +28,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
+import org.apache.commons.lang3.ClassUtils;
 import org.ofbiz.base.conversion.ConversionException;
 import org.ofbiz.base.conversion.Converter;
 import org.ofbiz.base.conversion.Converters;
@@ -42,7 +43,7 @@ import org.w3c.dom.Node;
  */
 public class ObjectType {
 
-    public static final String module = ObjectType.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final Object NULL = new NullObject();
 
@@ -255,7 +256,10 @@ public class ObjectType {
      */
     public static boolean interfaceOf(Class<?> objectClass, Class<?> interfaceClass) {
         while (objectClass != null) {
-            Class<?>[] ifaces = objectClass.getInterfaces();
+            // SCIPIO (03/26/2018): objectClass.getInterfaces() only returned the interfaces directly implemented by the given objectClass.
+            // That was wrong because it didn't look for interfaces implemented in parent classes or implemented within those explicit 
+            // implemented interfaces.
+            List<Class<?>> ifaces = ClassUtils.getAllInterfaces(objectClass);
 
             for (Class<?> iface: ifaces) {
                 if (iface == interfaceClass) return true;

@@ -57,6 +57,10 @@ under the License.
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/bower_components/datatables/datatables.min.css" sequenceId="05"/>
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_STYLESHEET" resourceValue="//fonts.googleapis.com/css?family=Open+Sans:400,600,300" sequenceId="07"/>
     
+    <!-- Right-to-Left support -->
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_RTL_STYLESHEET" resourceValue="/metro-theme/rtl/metro.css" sequenceId="1"/>
+    
+    
     
     <!-- Scripts -->
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/modernizr/modernizr.js" sequenceId="02"/>
@@ -72,6 +76,7 @@ under the License.
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/foundation/js/foundation/foundation.offcanvas.js" sequenceId="13"/>
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/foundation-datepicker/js/foundation-datepicker.js" sequenceId="14"/>
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/datatables/datatables.min.js" sequenceId="15"/>
-    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/js/app.js" sequenceId="16"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/moment/min/moment.min.js" sequenceId="16"/>
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/js/app.js" sequenceId="17"/>
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/metro-theme/js/scipio_boxes.js" sequenceId="20"/>
 </entity-engine-xml>

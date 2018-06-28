@@ -21,11 +21,14 @@ package org.ofbiz.product.category;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -46,29 +49,29 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
-import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.service.DispatchContext;
-import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
-
-import com.ilscipio.scipio.treeMenu.TreeDataItem;
-import com.ilscipio.scipio.treeMenu.jsTree.JsTreeDataItem;
-import com.ilscipio.scipio.treeMenu.jsTree.JsTreeDataItem.JsTreeDataItemState;
-
-import javolution.util.FastList;
 
 /**
  * CategoryWorker - Worker class to reduce code in JSPs.
  */
 public class CategoryWorker {
 
-    public static final String module = CategoryWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private CategoryWorker() {
     }
 
+    /**
+     * Gets catalog top category.
+     * <p>
+     * SCIPIO: NOTE (2017-08-15): This stock method relies entirely on the session attribute and request parameter
+     * <code>CATALOG_TOP_CATEGORY</code>; in stock ofbiz, it was intended to be used in backend.
+     * For store implementations, the method that you most likely want 
+     * is {@link org.ofbiz.product.catalog.CatalogWorker#getCatalogTopCategoryId}.
+     */
     public static String getCatalogTopCategory(ServletRequest request, String defaultTopCategory) {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         Map<String, Object> requestParameters = UtilHttp.getParameterMap(httpRequest);
@@ -99,7 +102,7 @@ public class CategoryWorker {
 
     public static void getCategoriesWithNoParent(ServletRequest request, String attributeName) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        Collection<GenericValue> results = FastList.newInstance();
+        Collection<GenericValue> results = new LinkedList<GenericValue>();
 
         try {
             Collection<GenericValue> allCategories = EntityQuery.use(delegator).from("ProductCategory").queryList();
@@ -159,7 +162,7 @@ public class CategoryWorker {
 
     public static List<GenericValue> getRelatedCategoriesRet(Delegator delegator, String attributeName, String parentId, boolean limitView,
             boolean excludeEmpty, boolean recursive) {
-        List<GenericValue> categories = FastList.newInstance();
+        List<GenericValue> categories = new LinkedList<GenericValue>();
 
         if (Debug.verboseOn())
             Debug.logVerbose("[CategoryWorker.getRelatedCategories] ParentID: " + parentId, module);
@@ -261,12 +264,12 @@ public class CategoryWorker {
     }
 
     private static EntityCondition buildCountCondition(String fieldName, String fieldValue) {
-        List<EntityCondition> orCondList = FastList.newInstance();
+        List<EntityCondition> orCondList = new LinkedList<EntityCondition>();
         orCondList.add(EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, UtilDateTime.nowTimestamp()));
         orCondList.add(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null));
         EntityCondition orCond = EntityCondition.makeCondition(orCondList, EntityOperator.OR);
 
-        List<EntityCondition> andCondList = FastList.newInstance();
+        List<EntityCondition> andCondList = new LinkedList<EntityCondition>();
         andCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN, UtilDateTime.nowTimestamp()));
         andCondList.add(EntityCondition.makeCondition(fieldName, EntityOperator.EQUALS, fieldValue));
         andCondList.add(orCond);
@@ -298,7 +301,7 @@ public class CategoryWorker {
     }
 
     public static List<String> adjustTrail(List<String> origTrail, String currentCategoryId, String previousCategoryId) {
-        List<String> trail = FastList.newInstance();
+        List<String> trail = new LinkedList<String>();
         if (origTrail != null) {
             trail.addAll(origTrail);
         }
@@ -498,7 +501,7 @@ public class CategoryWorker {
 
     public static List<GenericValue> filterProductsInCategory(Delegator delegator, List<GenericValue> valueObjects, String productCategoryId,
             String productIdFieldName) throws GenericEntityException {
-        List<GenericValue> newList = FastList.newInstance();
+        List<GenericValue> newList = new LinkedList<GenericValue>();
 
         if (productCategoryId == null)
             return newList;
@@ -558,17 +561,16 @@ public class CategoryWorker {
         String productCategoryId = (String) context.get("productCategoryId");
         Map<String, Object> results = ServiceUtil.returnSuccess();
         Delegator delegator = dctx.getDelegator();
-        List<String> trailElements = FastList.newInstance();
+        List<String> trailElements = new LinkedList<String>();
         trailElements.add(productCategoryId);
         String parentProductCategoryId = productCategoryId;
         while (UtilValidate.isNotEmpty(parentProductCategoryId)) {
             // find product category rollup
             try {
-                List<EntityCondition> rolllupConds = FastList.newInstance();
+                List<EntityCondition> rolllupConds = new LinkedList<EntityCondition>();
                 rolllupConds.add(EntityCondition.makeCondition("productCategoryId", parentProductCategoryId));
-                rolllupConds.add(EntityUtil.getFilterByDateExpr());
                 List<GenericValue> productCategoryRollups = EntityQuery.use(delegator).from("ProductCategoryRollup").where(rolllupConds).orderBy("sequenceNum")
-                        .cache(true).queryList();
+                        .filterByDate().cache(true).queryList();
                 if (UtilValidate.isNotEmpty(productCategoryRollups)) {
                     // add only categories that belong to the top category to
                     // trail
@@ -597,117 +599,16 @@ public class CategoryWorker {
     }
 
     /**
-     * SCIPIO: Retrieves categories based on either a list of
-     * ProductCategoryRollup or ProdCatalogCategory and returns a list of
-     * TreeDataItem representing categories
-     * 
-     * @param delegator
-     * @param dispatcher
-     * @param productCategories
-     * @return
-     * @throws GenericEntityException
-     * @throws GenericServiceException
-     */
-    public static List<? extends TreeDataItem> getTreeCategories(Delegator delegator, LocalDispatcher dispatcher, Locale locale,
-            List<GenericValue> productCategories, String library, String parentId) throws GenericEntityException, GenericServiceException {
-        List<TreeDataItem> treeDataItemList = FastList.newInstance();
-        for (GenericValue productCategory : productCategories) {
-            GenericValue category = null;
-            if (productCategory.getModelEntity().getEntityName().equals("ProductCategoryRollup")) {
-                category = productCategory.getRelatedOne("CurrentProductCategory", true);
-            } else if (productCategory.getModelEntity().getEntityName().equals("ProdCatalogCategory")) {
-                category = productCategory.getRelatedOne("ProductCategory", true);
-            }
-            if (UtilValidate.isNotEmpty(category)) {
-                List<GenericValue> childProductCategoryRollups = EntityQuery.use(delegator).from("ProductCategoryRollup")
-                        .where("parentProductCategoryId", category.getString("productCategoryId")).orderBy("sequenceNum").cache(true).queryList();
-                if (UtilValidate.isNotEmpty(childProductCategoryRollups))
-                    treeDataItemList.addAll(
-                            getTreeCategories(delegator, dispatcher, locale, childProductCategoryRollups, library, category.getString("productCategoryId")));
-
-                Map<String, Object> productCategoryMembers = dispatcher.runSync("getProductCategoryMembers",
-                        UtilMisc.toMap("categoryId", productCategory.getString("productCategoryId")));
-                if (UtilValidate.isNotEmpty(productCategoryMembers) && UtilValidate.isNotEmpty(productCategoryMembers.get("categoryMembers"))) {
-                    treeDataItemList.addAll(getTreeProducts(dispatcher, locale, UtilGenerics.<GenericValue>checkList(productCategoryMembers.get("categoryMembers")), library,
-                            productCategory.getString("productCategoryId")));
-                }
-
-                String categoryId = category.getString("productCategoryId");
-                
-                String categoryName = null;
-                CategoryContentWrapper wrapper = new CategoryContentWrapper(dispatcher, category, locale, null);
-                categoryName = wrapper.get("CATEGORY_NAME");
-                if (UtilValidate.isEmpty(categoryName)) {
-                    // 2016-03-22: Some categories don't have a name but have description
-                    categoryName = wrapper.get("DESCRIPTION");
-                    if (UtilValidate.isEmpty(categoryName)) {
-                        categoryName = category.getString("productCategoryId");
-                    }
-                }
-
-                if (library.equals("jsTree")) {
-                    JsTreeDataItem dataItem = null;
-                    dataItem = new JsTreeDataItem(categoryId, categoryName + " [" + categoryId + "]", "jstree-folder", new JsTreeDataItemState(false, false),
-                            parentId);
-                    dataItem.setType("category");
-                    if (UtilValidate.isNotEmpty(dataItem))
-                        treeDataItemList.add(dataItem);
-                }
-            }
-        }
-        return treeDataItemList;
-    }
-
-    /**
-     * SCIPIO: Retrieves products members for a given category and returns a list
-     * of JsTreeDataItem representing products
-     * 
-     * @param delegator
-     * @param dispatcher
-     * @param productCategories
-     * @return
-     * @throws GenericEntityException
-     * @throws GenericServiceException
-     */
-    public static List<? extends TreeDataItem> getTreeProducts(LocalDispatcher dispatcher, Locale locale, List<GenericValue> productCategoryMembers,
-            String library, String parentId) throws GenericEntityException {
-        List<TreeDataItem> products = FastList.newInstance();
-        if (UtilValidate.isNotEmpty(productCategoryMembers)) {
-            for (GenericValue productCategoryMember : productCategoryMembers) {
-                GenericValue product = productCategoryMember.getRelatedOne("Product", true);
-
-                String productId = product.getString("productId");
-                String productName = product.getString("productName");
-                if (UtilValidate.isEmpty(productName)) {
-                    productName = productId;
-                    ProductContentWrapper wrapper = new ProductContentWrapper(dispatcher, product, locale, null);
-                    if (UtilValidate.isNotEmpty(wrapper.get("PRODUCT_NAME")))
-                        productName = wrapper.get("PRODUCT_NAME");
-                }
-
-                if (library.equals("jsTree")) {
-                    JsTreeDataItem dataItem = new JsTreeDataItem(productId, productName + " [" + productId + "]", "jstree-file",
-                            new JsTreeDataItemState(false, false), parentId);
-                    dataItem.setType("product");
-                    products.add(dataItem);
-                }
-            }
-        }
-        return products;
-    }
-    
-    /**
      * SCIPIO: Returns true only if the category ID is child of the given parent category ID.
      * <p>
      * NOTE: is caching
      */
     public static boolean isCategoryChildOf(Delegator delegator, LocalDispatcher dispatcher, String parentProductCategoryId, String productCategoryId) {
         try {
-            List<EntityCondition> rolllupConds = FastList.newInstance();
+            List<EntityCondition> rolllupConds = new LinkedList<EntityCondition>();
             rolllupConds.add(EntityCondition.makeCondition("parentProductCategoryId", parentProductCategoryId));
             rolllupConds.add(EntityCondition.makeCondition("productCategoryId", productCategoryId));
-            rolllupConds.add(EntityUtil.getFilterByDateExpr());
-            Collection<GenericValue> rollups = EntityQuery.use(delegator).from("ProductCategoryRollup").where(rolllupConds).cache().queryList();
+            Collection<GenericValue> rollups = EntityQuery.use(delegator).from("ProductCategoryRollup").where(rolllupConds).filterByDate().cache().queryList();
             return !rollups.isEmpty();
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
@@ -735,10 +636,9 @@ public class CategoryWorker {
             return false;
         }
         try {
-            List<EntityCondition> rolllupConds = FastList.newInstance();
+            List<EntityCondition> rolllupConds = new LinkedList<EntityCondition>();
             rolllupConds.add(EntityCondition.makeCondition("productCategoryId", productCategoryId));
-            rolllupConds.add(EntityUtil.getFilterByDateExpr());
-            Collection<GenericValue> rollups = EntityQuery.use(delegator).from("ProductCategoryRollup").where(rolllupConds).cache().queryList();
+            Collection<GenericValue> rollups = EntityQuery.use(delegator).from("ProductCategoryRollup").where(rolllupConds).filterByDate().cache().queryList();
             return rollups.isEmpty();
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
@@ -766,11 +666,11 @@ public class CategoryWorker {
             return false;
         }
         try {
-            List<EntityCondition> conds = FastList.newInstance();
+            List<EntityCondition> conds = new LinkedList<EntityCondition>();
             conds.add(EntityCondition.makeCondition("productCategoryId", productCategoryId));
             conds.add(EntityCondition.makeCondition("productId", productId));
-            conds.add(EntityUtil.getFilterByDateExpr());
-            List<GenericValue> productCategoryMembers = EntityQuery.use(delegator).select("productCategoryId").from("ProductCategoryMember").where(conds).cache(true).queryList();
+            List<GenericValue> productCategoryMembers = EntityQuery.use(delegator).select("productCategoryId").from("ProductCategoryMember")
+                    .where(conds).filterByDate().cache(true).queryList();
             return !productCategoryMembers.isEmpty();
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
@@ -901,5 +801,117 @@ public class CategoryWorker {
         return getCategoryForProductFromTrail(request, productId, CategoryWorker.getTrail(request));
     }
     
+    /**
+     * SCIPIO: For each simple-text-compatible prodCatContentTypeId, returns a list of complex record views,
+     * where the first entry is ProductCategoryContentAndElectronicText and the following entries (if any)
+     * are ContentAssocToElectronicText views.
+     * <p>
+     * NOTE: If there are multiple ProductCategoryContent for same cat/type, this fetches the lastest only (logs warning).
+     * System or user is expected to prevent this.
+     * <p>
+     * filterByDate must be set to a value in order to filter by date.
+     * Added 2017-10-27.
+     */
+    public static Map<String, List<GenericValue>> getProductCategoryContentLocalizedSimpleTextViews(Delegator delegator, LocalDispatcher dispatcher,
+            String productCategoryId, Collection<String> prodCatContentTypeIdList, java.sql.Timestamp filterByDate, boolean useCache) throws GenericEntityException {
+        Map<String, List<GenericValue>> fieldMap = new HashMap<>();
+        
+        List<EntityCondition> typeIdCondList = new ArrayList<>(prodCatContentTypeIdList.size());
+        if (prodCatContentTypeIdList != null) {
+            for(String prodCatContentTypeId : prodCatContentTypeIdList) {
+                typeIdCondList.add(EntityCondition.makeCondition("prodCatContentTypeId", prodCatContentTypeId));
+            }
+        }
+        List<EntityCondition> condList = new ArrayList<>();
+        condList.add(EntityCondition.makeCondition("productCategoryId", productCategoryId));
+        if (typeIdCondList.size() > 0) {
+            condList.add(EntityCondition.makeCondition(typeIdCondList, EntityOperator.OR));
+        }
+        condList.add(EntityCondition.makeCondition("drDataResourceTypeId", "ELECTRONIC_TEXT"));
+        
+        EntityQuery query = EntityQuery.use(delegator).from("ProductCategoryContentAndElectronicText")
+                .where(condList).orderBy("-fromDate").cache(useCache);
+        if (filterByDate != null) {
+            query = query.filterByDate(filterByDate);
+        }
+        List<GenericValue> prodCatContentList = query.queryList();
+        for(GenericValue prodCatContent : prodCatContentList) {
+            String prodCatContentTypeId = prodCatContent.getString("prodCatContentTypeId");
+            if (fieldMap.containsKey(prodCatContentTypeId)) {
+                Debug.logWarning("getProductCategoryContentLocalizedSimpleTextViews: multiple ProductCategoryContentAndElectronicText"
+                        + " records found for prodCatContentTypeId '" + prodCatContentTypeId + "' for productCategoryId '" + productCategoryId + "'; "
+                        + " returning first found only (this may cause unexpected texts to appear)", module);
+                continue;
+            }
+            String contentIdStart = prodCatContent.getString("contentId");
+            
+            condList = new ArrayList<>();
+            condList.add(EntityCondition.makeCondition("contentIdStart", contentIdStart));
+            condList.add(EntityCondition.makeCondition("contentAssocTypeId", "ALTERNATE_LOCALE"));
+            condList.add(EntityCondition.makeCondition("drDataResourceTypeId", "ELECTRONIC_TEXT"));
+            query = EntityQuery.use(delegator).from("ContentAssocToElectronicText")
+                    .where(condList).orderBy("-fromDate").cache(useCache);
+            if (filterByDate != null) {
+                query = query.filterByDate(filterByDate);
+            }
+            List<GenericValue> contentAssocList = query.queryList();
+            List<GenericValue> valueList = new ArrayList<>(contentAssocList.size() + 1);
+            valueList.add(prodCatContent);
+            valueList.addAll(contentAssocList);
+            fieldMap.put(prodCatContentTypeId, valueList);
+        }
+        
+        return fieldMap;
+    }
+
     
+    /**
+     * SCIPIO: Returns all rollups for a category.
+     * Imported from SolrCategoryUtil, 2017-11-09.
+     */
+    public static List<List<String>> getCategoryRollupTrails(Delegator delegator, String productCategoryId, boolean useCache) {
+        List<List<String>> trailElements = new ArrayList<>();
+        try {
+            // NOTE: Can't filter on sequenceNum because it only makes sense if querying by parentProductCategoryId
+            List<GenericValue> productCategoryRollups = EntityQuery.use(delegator).from("ProductCategoryRollup")
+                    .where("productCategoryId", productCategoryId).orderBy("-fromDate").filterByDate().cache(useCache).queryList();
+            if (UtilValidate.isNotEmpty(productCategoryRollups)) {
+                // For each parent cat, get its trails recursively and add our own
+                for (GenericValue productCategoryRollup : productCategoryRollups) {
+                    String parentProductCategoryId = productCategoryRollup.getString("parentProductCategoryId");
+                    List<List<String>> parentTrails = getCategoryRollupTrails(delegator, parentProductCategoryId, useCache);
+                    for (List<String> trail : parentTrails) {
+                        // WARN: modifying the parent trail in-place for speed
+                        trail.add(productCategoryId);
+                        trailElements.add(trail);
+                    }
+                }
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Cannot generate trail from product category '" + productCategoryId + "'", module);
+        }
+        if (trailElements.isEmpty()) {
+            List<String> trailElement = new ArrayList<>();
+            trailElement.add(productCategoryId);
+            trailElements.add(trailElement);
+        }
+        return trailElements;
+    }
+    
+    /**
+     * SCIPIO: Returns all rollups for a category that have the given top categories.
+     * TODO: REVIEW: maybe this can be optimized with a smarter algorithm?
+     * Added 2017-11-09.
+     */
+    public static List<List<String>> getCategoryRollupTrails(Delegator delegator, String productCategoryId, Set<String> topCategoryIds, boolean useCache) {
+        List<List<String>> trails = getCategoryRollupTrails(delegator, productCategoryId, useCache);
+        if (topCategoryIds == null) return trails;
+        List<List<String>> filtered = new ArrayList<>(trails.size());
+        for(List<String> trail : trails) {
+            if (!trail.isEmpty() && topCategoryIds.contains(trail.get(0))) {
+                filtered.add(trail);
+            }
+        }
+        return filtered;
+    }
 }

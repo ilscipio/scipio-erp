@@ -41,7 +41,7 @@ import org.w3c.dom.Element;
  */
 public final class Loop extends MethodOperation {
 
-    public static final String module = Loop.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final FlexibleStringExpander countFse;
     private final FlexibleMapAccessor<Integer> fieldFma;

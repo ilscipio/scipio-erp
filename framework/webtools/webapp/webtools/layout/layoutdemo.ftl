@@ -9,6 +9,10 @@
   </@commonMsg>
 </#if>
 
+<#macro outMrkp markup><#rt/>
+${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]]</b></em><#t/>
+</#macro>
+
 <#--<@nav type="magellan">
     <@mli arrival="breadcrumbs"><a href="#breadcrumbs">Breadcrumbs</a></@mli>
     <@mli arrival="grid"><a href="#grid">Grid</a></@mli>
@@ -105,7 +109,7 @@
 
 <@section title="Image container">
     <@row>
-        <@cell columns=4><@img src="https://placehold.it/240x800" type="cover" link="#" height="100px" width="100%" />Cover</@cell>
+        <@cell columns=4><@img src="https://placehold.it/240x800" id="test" type="cover" link="#" height="100px" width="100%" />Cover</@cell>
         <@cell columns=4><@img src="https://placehold.it/240x800" type="contain" link="#" height="100px" width="100%" />Contain</@cell>
         <@cell columns=4><@img src="https://placehold.it/240x800" type="none" link="#" height="100px" width="100%" />Automatically adjusted</@cell>
     </@row>    
@@ -510,7 +514,7 @@
   <#if debugMode>
   <#assign menuItems = [
     {"type":"link", "text":"Menu Tab 2", "disabled":true},
-    {"type":"link", "text":"Menu Tab 1", "href":"ofbizUrl://WebtoolsLayoutDemo"},
+    {"type":"link", "text":"Menu Tab 1", "href":"ofbizUrl://LayoutDemo"},
     {"type":"link", "text":"Menu Tab 4", "contentClass":"+${styles.button_color_green}", "onClick":"javascript:alert('Clicked menu item!');"},
     {"type":"text", "text":"Menu Tab 3 (text entry)", "nestedContent":"<!-- hidden nested menu item comment -->"},
     {"type":"submit", "text":"Menu Tab 5 (submit)", "disabled":true, "class":"+mymenuitemclass", "contentClass":"+mymenuitemcontentclass"},
@@ -554,14 +558,14 @@
 <@section title="Tabs">
     <@row>
         <@cell columns="6">
-            <@tabs type="vertical" title="Horizontal">
+            <@tabs type="vertical" title="Vertical">
                 <@tab title="Tab 1">Logic is the beginning of wisdom, not the end.</@tab>
                 <@tab title="Tab 2">"Do not grieve, Admiral. It was logical. The needs of the many outweigh 'The needs of the few.'", Spock grimaces, nods. "Or the one"</@tab>
                 <@tab title="Tab 3">Do you know the old Klingon proverb that revenge is a dish best served cold? It is very cold - in space</@tab>
             </@tabs>
         </@cell>
         <@cell columns="6">
-            <@tabs type="horizontal" title="Vertical">
+            <@tabs type="horizontal" title="Horizontal">
                 <@tab title="Tab 1">Logic is the beginning of wisdom, not the end.</@tab>
                 <@tab title="Tab 2">"Do not grieve, Admiral. It was logical. The needs of the many outweigh 'The needs of the few.'", Spock grimaces, nods. "Or the one"</@tab>
                 <@tab title="Tab 3">Do you know the old Klingon proverb that revenge is a dish best served cold? It is very cold - in space</@tab>
@@ -625,6 +629,12 @@
       <@field type="display">Display value</@field>
       <@field type="input" name="input3" label="Input 3" />
       <@field type="input" name="input3nolabel" />
+      <@field type="email" name="input3a" label="Input 3a - Email"/>
+      <@field type="password" name="input3b" label="Input 3b - Password"/>
+      <@field type="number" name="input3c" label="Input 3c - Number" value="4"/>
+      <@field type="file" name="input3d" label="Input 3d - File"/>
+      <@field type="url" name="input3e" label="Input 3e - Url"/>
+      <@field type="color" name="input3f" label="Input 3f - Color"/>
 
       <@field type="lookup" name="lookup1" label="Lookup 1 (Geo)" formName="form1" fieldFormName="LookupGeo" tooltip="Lookup geos!"/>
       <#macro custLabelAreaTest args={}>
@@ -635,8 +645,9 @@
 
       <@field type="datetime" label="Date 1 (timestamp)" name="date1" value="" size="25" maxlength="30" dateType="date-time" />
       <@field type="datetime" label="Date 2 (short date)" name="date2" value="" size="25" maxlength="30" dateType="date" />
-      <@field type="datetime" label="Date 3 (time only)" name="date3" value="" size="25" maxlength="30" dateType="time" />
-      <@field type="datetime" label="Date 4 (timestamp internal, displayed as short date)" name="date4" value="" size="25" maxlength="30" dateType="date-time" dateDisplayType="date"/>
+      <@field type="datetime" label="Date 3 (month)" name="date3" value="" size="25" maxlength="30" dateType="month" />
+      <@field type="datetime" label="Date 4 (time only)" name="date4" value="" size="25" maxlength="30" dateType="time" />
+      <@field type="datetime" label="Date 5 (timestamp internal, displayed as short date)" name="date5" value="" size="25" maxlength="30" dateType="date-time" dateDisplayType="date"/>
 
       <@field type="datefind" label="Date Find 1 (timestamp)" name="datefind1" value="" size="25" maxlength="30" dateType="date-time" />
       <@field type="datefind" label="Date Find 2 (short date)" name="datefind2" value="" size="25" maxlength="30" dateType="date" />
@@ -1121,12 +1132,123 @@
     </@form>
   </@section>
   </#if>
+  
+  <#if debugMode>
+  <@section title="@field custom attributes (attribs={})">
+    <@form name="form-attribs">
+      <#assign fieldAttribs = {"my-attrib-1":"test-value-1", "myattrib2":"testvalue2"}>
+      <@field type="input" name="input1" label="Input" attribs=fieldAttribs/>
+      <@field type="display" name="input2" label="Display" attribs=fieldAttribs>Test</@field>
+      <@field type="textarea" name="input3" label="Textarea" attribs=fieldAttribs/>
+      <@field type="datetime" name="input4" label="Datetime" attribs=fieldAttribs/>
+      <@field type="select" name="input5" label="Select" attribs=fieldAttribs items=[
+        {"key":"val1", "description":"option1", "attribs":fieldAttribs}]>
+        <@field type="option" value="sdfsdf" attribs=fieldAttribs/>
+      </@field>
+      <@field type="checkbox" name="input6a" label="Checkbox" attribs=fieldAttribs/>
+      <#-- NOTE: here the fieldAttribs are blended with the item-specific attribs -->
+      <@field type="checkbox" name="input6b" label="Checkbox" attribs=fieldAttribs items=[
+        {"value":"val1", "description":"option1", "attribs":{"my-extra-3":"value-3"}},
+        {"value":"val2", "description":"option2", "attribs":{"my-extra-4":"value-4"}}]/>
+      <@field type="radio" name="input7a" label="Radio" attribs=fieldAttribs/>
+      <#-- NOTE: here the fieldAttribs are blended with the item-specific attribs -->
+      <@field type="radio" name="input7b" label="Radio" attribs=fieldAttribs items=[
+        {"value":"val1", "description":"option1", "attribs":{"my-extra-3":"value-3"}},
+        {"value":"val2", "description":"option2", "attribs":{"my-extra-4":"value-4"}}]/>
+      <@field type="submit" name="input8a" label="Submit" attribs=fieldAttribs/>
+      <@field type="submit" submitType="link" name="input8b" label="Submit" attribs=fieldAttribs/>
+      <@field type="submit" submitType="image" name="input8c" label="Submit" attribs=fieldAttribs/>
+      <@field type="reset" name="input9" label="Reset" attribs=fieldAttribs/>
+      <@field type="hidden" name="input10" attribs=fieldAttribs/>
+      <@field type="textfind" name="input11" label="Textfind" attribs=fieldAttribs/>
+      <@field type="datefind" name="input12" label="Datefind" attribs=fieldAttribs/>
+      <@field type="rangefind" name="input13" label="Rangefind" attribs=fieldAttribs/>
+      <@field type="lookup" name="input14" label="Lookup" attribs=fieldAttribs fieldFormName="LookupGeo"/>
+      <@field type="file" name="input15" label="File" attribs=fieldAttribs/>
+      <@field type="password" name="input16" label="Password" attribs=fieldAttribs/>
+      <@field type="color" name="input17" label="Color" attribs=fieldAttribs/>
+    </@form>
+  </@section>
+  
+  <@section title="tooltips">
+    <@section title="@field tooltips">
+      <@form name="form-tooltips">
+        <#assign fieldTooltip = "This is a tooltip!">
+        <@field type="input" name="input1" label="Input" tooltip=fieldTooltip/>
+        <@field type="display" name="input2" label="Display" tooltip=fieldTooltip>Test</@field>
+        <@field type="textarea" name="input3" label="Textarea" tooltip=fieldTooltip/>
+        <@field type="datetime" name="input4" label="Datetime" tooltip=fieldTooltip/>
+        <@field type="select" name="input5" label="Select" tooltip=fieldTooltip items=[
+          {"key":"val1", "description":"option1", "attribs":fieldAttribs}]>
+          <@field type="option" value="sdfsdf" tooltip=fieldTooltip/>
+        </@field>
+        <@field type="checkbox" name="input6a" label="Checkbox" tooltip=fieldTooltip/>
+        <#-- NOTE: here the fieldAttribs are blended with the item-specific attribs -->
+        <@field type="checkbox" name="input6b" label="Checkbox" tooltip=fieldTooltip items=[
+          {"value":"val1", "description":"option1", "attribs":{"my-extra-3":"value-3"}},
+          {"value":"val2", "description":"option2", "attribs":{"my-extra-4":"value-4"}}]/>
+        <@field type="radio" name="input7a" label="Radio" tooltip=fieldTooltip/>
+        <#-- NOTE: here the fieldAttribs are blended with the item-specific attribs -->
+        <@field type="radio" name="input7b" label="Radio" tooltip=fieldTooltip items=[
+          {"value":"val1", "description":"option1", "attribs":{"my-extra-3":"value-3"}},
+          {"value":"val2", "description":"option2", "attribs":{"my-extra-4":"value-4"}}]/>
+        <@field type="submit" name="input8a" label="Submit" tooltip=fieldTooltip/>
+        <@field type="submit" submitType="link" name="input8b" label="Submit" tooltip=fieldTooltip/>
+        <@field type="submit" submitType="image" name="input8c" label="Submit" tooltip=fieldTooltip/>
+        <@field type="reset" name="input9" label="Reset" tooltip=fieldTooltip/>
+        <@field type="hidden" name="input10" tooltip=fieldTooltip/>
+        <@field type="textfind" name="input11" label="Textfind" tooltip=fieldTooltip/>
+        <@field type="datefind" name="input12" label="Datefind" tooltip=fieldTooltip/>
+        <@field type="rangefind" name="input13" label="Rangefind" tooltip=fieldTooltip/>
+        <@field type="lookup" name="input14" label="Lookup" tooltip=fieldTooltip fieldFormName="LookupGeo"/>
+        <@field type="file" name="input15" label="File" tooltip=fieldTooltip/>
+        <@field type="password" name="input16" label="Password" tooltip=fieldTooltip/>
+        <@field type="color" name="input17" label="Color" tooltip=fieldTooltip/>
+      </@form>
+    </@section>
+    
+    <@section title="Form widget tooltips">
+      <@render type="form" resource="component://webtools/widget/MiscForms.xml#TooltipTestForm1"/>
+    </@section>
+  </@section>
+  </#if>
+</@section>
+
+<a id="WebSocketsExample"></a>
+<@section title="WebSockets example">
+  <#if webSocketEnabled>
+    <p>Submit the following form to trigger a server-side callback of the WebSockets
+      example push notification script on this page (<code>ExamplePushNotifications.js</code>).
+      A popup should appear. Anyone else viewing this page will also get a popup.</p>
+    <@script>
+        function submitWebSocketsExampleForm() {
+            var form = $('#websockets-example-form');
+            $.ajax({
+                url: "<@ofbizUrl uri='sendExamplePushNotifications' escapeAs='js'/>",
+                data: {exampleId: $('input[name=exampleId]', form).val(), message: $('input[name=message]', form).val()},
+                async: true,
+                type: "POST",
+                success: function(data) {},
+                error: function(data) { alert("Error sending sendExamplePushNotifications"); }
+            });
+        }
+    </@script>
+    <@form id="websockets-example-form">
+      <@field type="input" label="exampleId" name="exampleId" value="TestExample1"/>
+      <@field type="input" label="message" name="message" value="Hello from WebSockets"/>
+      <a href="javascript:submitWebSocketsExampleForm(); void(0);" 
+        class="${styles.link_run_sys!} ${styles.action_begin!}">Run sendExamplePushNotifications</a>
+    </@form>
+  <#else>
+    WebSockets appears to be disabled. To enable this demo,
+    set <code>webSocket=true</code> in <code>framework/catalina/config/catalina.properties</code>.
+  </#if>
 </@section>
 
 <#if debugMode>
 <a name="AutoValueFormFields"></a>
 <@section title="Auto-Value Form Fields">
-  <#assign autoformAction><@ofbizUrl>WebtoolsLayoutDemo<#if debugMode>?debugMode=true</#if></@ofbizUrl></#assign>
+  <#assign autoformAction><@ofbizUrl>LayoutDemo<#if debugMode>?debugMode=true</#if></@ofbizUrl></#assign>
   <#macro simulateErrorField>
     <#-- NOTE: this field is for demo usage only, bypasses auto-value -->
     <@field type="checkbox" autoValue=false name="simulateError" label="Simulate Error" value="Y" checked=((parameters.simulateError!"") == "Y") />
@@ -1730,6 +1852,14 @@
 </@section>
 
 <@section title="URL generation">
+  <#assign shopWebSiteId = rawString(shopInfo.webSiteId!)>
+  <#assign shopMountPoint = rawString(shopInfo.mountPoint!)>
+  <#if shopMountPoint == "/">
+    <#assign shopMainUri = "/control/main">
+  <#else>
+    <#assign shopMainUri = shopMountPoint + "/control/main">
+  </#if>
+
   <@section title="Current webapp/context info">
     <ul>
       <li>
@@ -1740,52 +1870,56 @@
     </ul>
   </@section>
   
+<#if shopWebSiteId?has_content>
   <@section title="Standard navigation URLs">
     <ul>
-      <li><@ofbizUrl uri="WebtoolsLayoutDemo?param1=val1&param2=val2" escapeAs='html'/> <em>(html post-escaping - <strong>strongly preferred</strong> to pre-escaping)</em></li>
-      <li><@ofbizUrl uri="WebtoolsLayoutDemo?param1=val1&amp;param2=val2" /> <em>(html pre-escaping - legacy ofbiz mode - escaping done by caller before passing to macro)</em></li>
-      <li><@ofbizUrl>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li>${makeOfbizUrl("WebtoolsLayoutDemo?param1=val1&amp;param2=val2")}</li>
-      <li><@ofbizUrl fullPath=true>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li><@ofbizUrl fullPath="true">WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li><@ofbizUrl secure=true>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li><@ofbizUrl secure="true">WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li><@ofbizUrl secure=false>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li><@ofbizUrl secure="false">WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li><@ofbizUrl fullPath=true secure=true>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li><@ofbizUrl fullPath=true secure="true">WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li><@ofbizUrl fullPath=true secure=false>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li><@ofbizUrl fullPath=true secure="false">WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li><@ofbizUrl fullPath=true encode=false>WebtoolsLayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
-      <li><@ofbizUrl uri="main" webSiteId="ScipioWebStore"/></li>
-      <li><@ofbizWebappUrl uri="/control/WebtoolsLayoutDemo?param1=val1&amp;param2=val2" /></li>
-      <li><@ofbizInterWebappUrl uri="/shop/control/main" /></li>
-      <li><@ofbizInterWebappUrl uri="/shop/control/main" fullPath=true/></li>
+      <li><@ofbizUrl uri="LayoutDemo?param1=val1&param2=val2" escapeAs='html'/> <em>(html post-escaping - <strong>strongly preferred</strong> to pre-escaping)</em></li>
+      <li><@ofbizUrl uri="LayoutDemo?param1=val1&amp;param2=val2" /> <em>(html pre-escaping - legacy ofbiz mode - escaping done by caller before passing to macro)</em></li>
+      <li><@ofbizUrl>LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li>${makeOfbizUrl("LayoutDemo?param1=val1&amp;param2=val2")}</li>
+      <li><@ofbizUrl fullPath=true>LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl fullPath="true">LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl secure=true>LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl secure="true">LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl secure=false>LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl secure="false">LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl fullPath=true secure=true>LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl fullPath=true secure="true">LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl fullPath=true secure=false>LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl fullPath=true secure="false">LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl fullPath=true encode=false>LayoutDemo?param1=val1&amp;param2=val2</@ofbizUrl></li>
+      <li><@ofbizUrl uri="main" webSiteId=shopWebSiteId/></li>
+      <li><@ofbizWebappUrl uri="/control/LayoutDemo?param1=val1&amp;param2=val2" /></li>
+      
+      <li><@ofbizInterWebappUrl uri=shopMainUri /></li>
+      <li><@ofbizInterWebappUrl uri=shopMainUri fullPath=true/></li>
       <#-- Explicitly allow downgrading to HTTP -->
-      <li><@ofbizInterWebappUrl uri="/shop/control/main" secure=false/></li>
+      <li><@ofbizInterWebappUrl uri=shopMainUri secure=false/></li>
       <#-- Explicitly allow downgrading to HTTP -->
-      <li><@ofbizInterWebappUrl uri="/shop/control/main" fullPath=true secure=false/></li>
-      <li><@ofbizInterWebappUrl uri="main" webSiteId="ScipioWebStore" /></li>
-      <li>${makeOfbizInterWebappUrl("/shop/control/main")}</li>
-      <li>${makeOfbizInterWebappUrl("main", "ScipioWebStore")}</li>
-      <li>${makeOfbizInterWebappUrl({"uri":"main", "webSiteId":"ScipioWebStore", "extLoginKey": true})}</li>
-      <li>${makeOfbizInterWebappUrl({"uri":"main?param1=val1&amp;param2=val2", "webSiteId":"ScipioWebStore", "extLoginKey": true})}</li>
+      <li><@ofbizInterWebappUrl uri=shopMainUri fullPath=true secure=false/></li>
+      <li><@ofbizInterWebappUrl uri="main" webSiteId=shopWebSiteId /></li>
+      <li>${makeOfbizInterWebappUrl(shopMainUri)}</li>
+    
+      <li>${makeOfbizInterWebappUrl("main", shopWebSiteId)}</li>
+      <li>${makeOfbizInterWebappUrl({"uri":"main", "webSiteId":shopWebSiteId, "extLoginKey": true})}</li>
+      <li>${makeOfbizInterWebappUrl({"uri":"main?param1=val1&amp;param2=val2", "webSiteId":shopWebSiteId, "extLoginKey": true})}</li>
     </ul>
   </@section>
   
   <@section title="Non-standard navigation URLs">
     <p><em>NOTE: These are not invalid, but needlessly obscure; for testing.</em></p>
     <ul>
-      <li><@ofbizInterWebappUrl uri="/shop/control/main" webSiteId="ScipioWebStore" absPath=true /></li>
-      <li><@ofbizInterWebappUrl uri="/shop/control/main" controller=true /></li>
-      <li><@ofbizInterWebappUrl uri="/shop/control/main" controller=false /></li>
+      <li><@ofbizInterWebappUrl uri=shopMainUri webSiteId=shopWebSiteId absPath=true /></li>
+      <li><@ofbizInterWebappUrl uri=shopMainUri controller=true /></li>
+      <li><@ofbizInterWebappUrl uri=shopMainUri controller=false /></li>
       <#-- NOTE: if controller false, can't detect some cases of fullPath requirements -->
-      <li><@ofbizInterWebappUrl uri="/shop/control/main" controller=false fullPath=true/></li>
+      <li><@ofbizInterWebappUrl uri=shopMainUri controller=false fullPath=true/></li>
       <#-- Allow downgrade -->
-      <li><@ofbizInterWebappUrl uri="/shop/control/main" controller=false fullPath=true secure=false/></li>
-      <li><@ofbizInterWebappUrl uri="/shop/control/main" controller=false secure=true/></li>
-      <li><@ofbizInterWebappUrl uri="/control/main" webSiteId="ScipioWebStore" controller=false /></li>
-      <li><@ofbizInterWebappUrl uri="main" webSiteId="ScipioWebStore" controller=true /></li>
+      <li><@ofbizInterWebappUrl uri=shopMainUri controller=false fullPath=true secure=false/></li>
+      <li><@ofbizInterWebappUrl uri=shopMainUri controller=false secure=true/></li>
+      
+      <li><@ofbizInterWebappUrl uri="/control/main" webSiteId=shopWebSiteId controller=false /></li>
+      <li><@ofbizInterWebappUrl uri="main" webSiteId=shopWebSiteId controller=true /></li>
       <li><@ofbizUrl absPath=true interWebapp=false controller=true uri="/admin/control/main" /></li>
       <li><@ofbizUrl absPath=true interWebapp=true controller=true uri="/admin/control/main" /></li>
       <li><@ofbizUrl absPath=true interWebapp=false controller=false uri="/admin/control/main" /></li>
@@ -1796,39 +1930,39 @@
   <@section title="Inter-webapp catalog URLs">
     <p><em>NOTE: These should only reference a webapp configured to handle these in its web.xml file.</em></p>
     <ul>
-      <li><@ofbizCatalogUrl webSiteId="ScipioWebStore" productId="PH-1000" /></li>
-      <li><@ofbizCatalogUrl prefix="/shop" productId="PH-1000" /></li>
-      <li><@ofbizCatalogAltUrl webSiteId="ScipioWebStore" productId="PH-1000" /></li>
-      <li><@ofbizCatalogAltUrl prefix="/shop" productId="PH-1000" /></li>
-      <li><@ofbizCatalogUrl webSiteId="ScipioWebStore" productId="PH-1000" fullPath=true/></li>
-      <li><@ofbizCatalogUrl prefix="/shop" productId="PH-1000" fullPath=true/></li>
-      <li><@ofbizCatalogAltUrl webSiteId="ScipioWebStore" productId="PH-1000" fullPath=true /></li>
-      <li><@ofbizCatalogAltUrl prefix="/shop" productId="PH-1000" fullPath=true /></li>
-      <li><@ofbizCatalogUrl webSiteId="ScipioWebStore" productId="PH-1000" fullPath=true secure=true/></li>
-      <li><@ofbizCatalogUrl prefix="/shop" productId="PH-1000" fullPath=true secure=true/></li>
-      <li><@ofbizCatalogAltUrl webSiteId="ScipioWebStore" productId="PH-1000" fullPath=true secure=true params="?test1=val1&test2=val2"?html/></li>
-      <li><@ofbizCatalogAltUrl prefix="/shop" productId="PH-1000" fullPath=true secure=true params="test1=val1&test2=val2"?html /></li>
-      <li><@ofbizCatalogUrl webSiteId="ScipioWebStore" productId="PH-1000" secure=false/></li>
-      <li><@ofbizCatalogUrl prefix="/shop" productId="PH-1000" secure=false/></li>
-      <li><@ofbizCatalogAltUrl webSiteId="ScipioWebStore" productId="PH-1000" secure=false /></li>
-      <li><@ofbizCatalogAltUrl prefix="/shop" productId="PH-1000" secure=false /></li>
+      <li><@ofbizCatalogUrl webSiteId=shopWebSiteId productId="PH-1000" /></li>
+      <li><@ofbizCatalogUrl prefix=shopMountPoint productId="PH-1000" /></li>
+      <li><@ofbizCatalogAltUrl webSiteId=shopWebSiteId productId="PH-1000" /></li>
+      <li><@ofbizCatalogAltUrl prefix=shopMountPoint productId="PH-1000" /></li>
+      <li><@ofbizCatalogUrl webSiteId=shopWebSiteId productId="PH-1000" fullPath=true/></li>
+      <li><@ofbizCatalogUrl prefix=shopMountPoint productId="PH-1000" fullPath=true/></li>
+      <li><@ofbizCatalogAltUrl webSiteId=shopWebSiteId productId="PH-1000" fullPath=true /></li>
+      <li><@ofbizCatalogAltUrl prefix=shopMountPoint productId="PH-1000" fullPath=true /></li>
+      <li><@ofbizCatalogUrl webSiteId=shopWebSiteId productId="PH-1000" fullPath=true secure=true/></li>
+      <li><@ofbizCatalogUrl prefix=shopMountPoint productId="PH-1000" fullPath=true secure=true/></li>
+      <li><@ofbizCatalogAltUrl webSiteId=shopWebSiteId productId="PH-1000" fullPath=true secure=true params="?test1=val1&test2=val2"?html/></li>
+      <li><@ofbizCatalogAltUrl prefix=shopMountPoint productId="PH-1000" fullPath=true secure=true params="test1=val1&test2=val2"?html /></li>
+      <li><@ofbizCatalogUrl webSiteId=shopWebSiteId productId="PH-1000" secure=false/></li>
+      <li><@ofbizCatalogUrl prefix=shopMountPoint productId="PH-1000" secure=false/></li>
+      <li><@ofbizCatalogAltUrl webSiteId=shopWebSiteId productId="PH-1000" secure=false /></li>
+      <li><@ofbizCatalogAltUrl prefix=shopMountPoint productId="PH-1000" secure=false /></li>
     
-      <li><@ofbizCatalogUrl webSiteId="ScipioWebStore" currentCategoryId="EL-PHN-101" /></li>
-      <li><@ofbizCatalogUrl prefix="/shop" currentCategoryId="EL-PHN-101" /></li>
-      <li><@ofbizCatalogAltUrl webSiteId="ScipioWebStore" productCategoryId="EL-PHN-101" /></li>
-      <li><@ofbizCatalogAltUrl prefix="/shop" productCategoryId="EL-PHN-101" /></li>
-      <li><@ofbizCatalogUrl webSiteId="ScipioWebStore" currentCategoryId="EL-PHN-101" fullPath=true/></li>
-      <li><@ofbizCatalogUrl prefix="/shop" currentCategoryId="EL-PHN-101" fullPath=true/></li>
-      <li><@ofbizCatalogAltUrl webSiteId="ScipioWebStore" productCategoryId="EL-PHN-101" fullPath=true /></li>
-      <li><@ofbizCatalogAltUrl prefix="/shop" productCategoryId="EL-PHN-101" fullPath=true /></li>
-      <li><@ofbizCatalogUrl webSiteId="ScipioWebStore" currentCategoryId="EL-PHN-101" fullPath=true secure=true/></li>
-      <li><@ofbizCatalogUrl prefix="/shop" currentCategoryId="EL-PHN-101" fullPath=true secure=true/></li>
-      <li><@ofbizCatalogAltUrl webSiteId="ScipioWebStore" productCategoryId="EL-PHN-101" fullPath=true secure=true /></li>
-      <li><@ofbizCatalogAltUrl prefix="/shop" productCategoryId="EL-PHN-101" fullPath=true secure=true /></li>
-      <li><@ofbizCatalogUrl webSiteId="ScipioWebStore" currentCategoryId="EL-PHN-101" fullPath=true secure=false/></li>
-      <li><@ofbizCatalogUrl prefix="/shop" currentCategoryId="EL-PHN-101" fullPath=true secure=false/></li>
-      <li><@ofbizCatalogAltUrl webSiteId="ScipioWebStore" productCategoryId="EL-PHN-101" fullPath=true secure=false params="test1=val1&test2=val2"?html/></li>
-      <li><@ofbizCatalogAltUrl prefix="/shop" productCategoryId="EL-PHN-101" fullPath=true secure=false /></li>
+      <li><@ofbizCatalogUrl webSiteId=shopWebSiteId currentCategoryId="EL-PHN-101" /></li>
+      <li><@ofbizCatalogUrl prefix=shopMountPoint currentCategoryId="EL-PHN-101" /></li>
+      <li><@ofbizCatalogAltUrl webSiteId=shopWebSiteId productCategoryId="EL-PHN-101" /></li>
+      <li><@ofbizCatalogAltUrl prefix=shopMountPoint productCategoryId="EL-PHN-101" /></li>
+      <li><@ofbizCatalogUrl webSiteId=shopWebSiteId currentCategoryId="EL-PHN-101" fullPath=true/></li>
+      <li><@ofbizCatalogUrl prefix=shopMountPoint currentCategoryId="EL-PHN-101" fullPath=true/></li>
+      <li><@ofbizCatalogAltUrl webSiteId=shopWebSiteId productCategoryId="EL-PHN-101" fullPath=true /></li>
+      <li><@ofbizCatalogAltUrl prefix=shopMountPoint productCategoryId="EL-PHN-101" fullPath=true /></li>
+      <li><@ofbizCatalogUrl webSiteId=shopWebSiteId currentCategoryId="EL-PHN-101" fullPath=true secure=true/></li>
+      <li><@ofbizCatalogUrl prefix=shopMountPoint currentCategoryId="EL-PHN-101" fullPath=true secure=true/></li>
+      <li><@ofbizCatalogAltUrl webSiteId=shopWebSiteId productCategoryId="EL-PHN-101" fullPath=true secure=true /></li>
+      <li><@ofbizCatalogAltUrl prefix=shopMountPoint productCategoryId="EL-PHN-101" fullPath=true secure=true /></li>
+      <li><@ofbizCatalogUrl webSiteId=shopWebSiteId currentCategoryId="EL-PHN-101" fullPath=true secure=false/></li>
+      <li><@ofbizCatalogUrl prefix=shopMountPoint currentCategoryId="EL-PHN-101" fullPath=true secure=false/></li>
+      <li><@ofbizCatalogAltUrl webSiteId=shopWebSiteId productCategoryId="EL-PHN-101" fullPath=true secure=false params="test1=val1&test2=val2"?html/></li>
+      <li><@ofbizCatalogAltUrl prefix=shopMountPoint productCategoryId="EL-PHN-101" fullPath=true secure=false /></li>
     </ul>
   </@section>
   
@@ -1867,7 +2001,18 @@
         ${escapeVal(urlContent, 'html')} <em>(<strong>USAGE ERROR - DANGEROUS:</strong> js pre-escaping - unsafe string passed to ctxPrefix - should produce log warning that JS string possibly unsafe)</em>
       </li>
     </ul>
+    <p>Variant filename (only) tests:</p>
+    <ul>
+      <li><@ofbizContentUrl uri="/image/some-thing/test.jpg" variant="detail"/> (append)</li>
+      <li><@ofbizContentUrl uri="/image/some-thing/test-original.jpg" variant="detail"/> (should replace original)</li>
+      <li><@ofbizContentUrl uri="/image/some-thing/original.jpg" variant="detail"/> (should replace original)</li>
+      <li><@ofbizContentUrl uri=rewrapString("/image/some-thing/original.jpg") variant="detail"/> (should replace original) (non-strict, tries to work even if html-escaped)</li>
+      <li><@ofbizContentUrl uri=rewrapString("/image/some-thing/original.jpg") variant="-detail"/> (force-append)</li>
+    </ul>
   </@section>
+<#else>
+  <p>WARNING: No WebSite in system available to use for link tests</p>
+</#if>
   
   <@section title="Misc URL tests">
     <ul>
@@ -1892,15 +2037,19 @@
       </ul>
   </@section>
   <@section title="Filtered/validating/partial escaping">
-      <#assign testMarkup>This is <span class="somespanclass">"test"</span> <em class="someclass">markup</em>!</#assign>
+      <#assign testMarkup>This is <span class="escapespantestclass">"test"</span> <em class="someclass">markup</em>! Here is a script <@script>$(document).load(function(){$('.escapespantestclass').addClass('${styles.color_red!}');});</@script>, have fun!</#assign>
       <#assign testMarkup = rewrapString(testMarkup)><#-- make sure the rawString works -->
       <ul>
-        <li>htmlmarkup allow none: ${escapeVal(testMarkup, 'htmlmarkup', {'allow':'none'})}</li>
-        <li>htmlmarkup allow external: ${escapeVal(testMarkup, 'htmlmarkup', {'allow':'external'})}</li>
-        <li>htmlmarkup allow internal: ${escapeVal(testMarkup, 'htmlmarkup', {'allow':'internal'})}</li>
-        <li>htmlmarkup allow any-valid: ${escapeVal(testMarkup, 'htmlmarkup', {'allow':'any-valid'})}</li>
-        <li>htmlmarkup allow any: ${escapeVal(testMarkup, 'htmlmarkup', {'allow':'any'})}</li>
-      </ul>
+        <li>htmlmarkup allow none: <@outMrkp escapeVal(testMarkup, 'htmlmarkup', {'allow':'none'})/></li>
+        <li>htmlmarkup allow external: <@outMrkp escapeVal(testMarkup, 'htmlmarkup', {'allow':'external'})/></li>
+        <li>htmlmarkup allow internal (script is removed): <@outMrkp escapeVal(testMarkup, 'htmlmarkup', {'allow':'internal'})/></li>
+        <li>htmlmarkup allow anyvalid: <@outMrkp escapeVal(testMarkup, 'htmlmarkup', {'allow':'anyvalid'})/></li>
+        <li>htmlmarkup allow any: <@outMrkp escapeVal(testMarkup, 'htmlmarkup', {'allow':'any'})/></li>
+        <li>sanitizeMarkup html-none: <@outMrkp sanitizeMarkup(testMarkup, 'html-none')/></li>
+        <li>sanitizeMarkup html-strict: <@outMrkp sanitizeMarkup(testMarkup, 'html-strict')/></li>
+        <li>sanitizeMarkup html-perm: <@outMrkp sanitizeMarkup(testMarkup, 'html-perm')/></li>
+        <li>sanitizeMarkup html-any: <@outMrkp sanitizeMarkup(testMarkup, 'html-any')/></li>
+    </ul>
   </@section>
   <@section title="objectAsScript">
       <ul>
@@ -1909,6 +2058,24 @@
             "map key 2, with \"apostrophe\", escaped" : wrapRawScript("map value with \"apostrophe\" and no enclosing quotes (invalid js), escape bypass")
         }/></li>
       </ul>
+  </@section>
+  <@section title="escapeVal escaping">
+    <@section title="css escaping">
+      <style>
+        #demo-css-escaping-container {
+            width: 200px;
+            height: 200px;
+            background-image: url("${escapeFullUrl(makeOfbizContentUrl("/images/scipio/scipio-logo-small.png?test1=value1&test2=value2;somethingelse%34"), "css")}"); 
+        }
+        #demo-css-escaping-container:after {
+            content: "${escapeVal("/images/scipio/scipio-logo-small.png?test1=value1&test2=value2;somethingelse%34", "css")}"
+        }
+      </style>
+      <div id="demo-css-escaping-container">
+      </div>
+      <div style="width: 200px; height: 200px; background-image: url('${escapeFullUrl(makeOfbizContentUrl("/images/scipio/scipio-logo-small.png?test1=value1&test2=value2;somethingelse%34"), "css-html")}');">
+      </div>
+    </@section>
   </@section>
   <@section title="Screen html auto-escaping bypass (rawString)">
       <p><em>The current renderer implementation automatically html-escapes strings as soon as they
@@ -1995,6 +2162,13 @@
             </ul>     
         </li>
       </ul>
+  </@section>
+  <@section title="Message/description escaping (escapeMsg, escapeEventMsg)">
+    <ul>
+      <li>${escapeMsg("this is a\nmessage with line\nbreaks and special chars <><>''", 'htmlmarkup')}</li>
+      <li>${escapeMsg("this is a\nmessage with line\nbreaks ignored and special chars <><>''", 'htmlmarkup', {"interpret":false})}</li>
+      <li>${escapeEventMsg(rewrapString("this is an event\nmessage with line\nbreaks and special chars <><>''"), 'htmlmarkup')}</li>
+    </ul>
   </@section>
 </@section>
 

@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -46,8 +47,6 @@ import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.PrintServiceAttributeSet;
 import javax.print.attribute.standard.PrinterName;
 import javax.xml.transform.stream.StreamSource;
-
-import javolution.util.FastMap;
 
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.MimeConstants;
@@ -74,7 +73,7 @@ import org.ofbiz.widget.renderer.macro.MacroScreenRenderer;
  */
 public class OutputServices {
 
-    public final static String module = OutputServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected static final FoFormRenderer foFormRenderer = new FoFormRenderer();
     public static final String resource = "ContentUiLabels";
@@ -87,7 +86,7 @@ public class OutputServices {
         String printerContentType = (String) serviceContext.remove("printerContentType");
 
         if (UtilValidate.isEmpty(screenContext)) {
-            screenContext = FastMap.newInstance();
+            screenContext = new HashMap<String, Object>();
         }
         screenContext.put("locale", locale);
         if (UtilValidate.isEmpty(contentType)) {
@@ -203,7 +202,7 @@ public class OutputServices {
         String fileName = (String) serviceContext.remove("fileName");
 
         if (UtilValidate.isEmpty(screenContext)) {
-            screenContext = FastMap.newInstance();
+            screenContext = new HashMap<String, Object>();
         }
         screenContext.put("locale", locale);
         if (UtilValidate.isEmpty(contentType)) {
@@ -245,7 +244,7 @@ public class OutputServices {
                 fileName += ".txt";
             }
             if (UtilValidate.isEmpty(filePath)) {
-                filePath = EntityUtilProperties.getPropertyValue("content.properties", "content.output.path", "/output", delegator);
+                filePath = EntityUtilProperties.getPropertyValue("content", "content.output.path", "/output", delegator);
             }
             File file = new File(filePath, fileName);
 

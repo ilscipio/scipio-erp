@@ -91,7 +91,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
      * 
      */
 
-    public static final String module = ModelForm.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String DEFAULT_FORM_RESULT_LIST_NAME = "defaultFormResultList";
     /** Pagination settings and defaults. */
     public static int DEFAULT_PAGE_SIZE = 10;
@@ -247,7 +247,7 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
             if (parentModel != null) {
                 defaultViewSizeInt = parentModel.defaultViewSize;
             } else {
-                defaultViewSizeInt = UtilProperties.getPropertyAsInteger("widget.properties", "widget.form.defaultViewSize",
+                defaultViewSizeInt = UtilProperties.getPropertyAsInteger("widget", "widget.form.defaultViewSize",
                         defaultViewSizeInt);
             }
         } else {
@@ -1766,10 +1766,14 @@ public abstract class ModelForm extends ModelWidget implements ModelWidget.IdAtt
         return this.type;
     }
 
+    public boolean isManyType() { // SCIPIO: abstraction
+        return "list".equals(getType()) || "multi".equals(getType());
+    }
+
     public boolean getUseRowSubmit() {
         return this.useRowSubmit;
     }
-    
+
     // SCIPIO: helper check for clarity
     public boolean getUseMasterSubmitField() {
         return this.useRowSubmit || "multi".equals(getType());

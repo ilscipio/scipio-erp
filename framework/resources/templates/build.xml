@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="OFBiz - @component-resource-name@ Component" default="jar" basedir=".">
+<project name="SCIPIO ERP - @component-resource-name@ Component" default="jar" basedir=".">
     <import file="../../common.xml"/>
 
     <!-- ================================================================== -->
@@ -11,16 +11,18 @@
     <property name="desc" value="@component-resource-name@ Component"/>
     <property name="name" value="@component-name@"/>
     <property name="component-name" value="@component-name@"/>
-    <property name="ofbiz.home.dir" value="../.."/>
     <property name="src.dir" value="src"/>
     <property name="dtd.dir" value="dtd"/>
     <property name="lib.dir" value="lib"/>
     <property name="build.dir" value="build"/>
 
+    <filelist dir="." id="component.build.dependencies">
+        <!-- Placeholder -->
+    </filelist>
+    
     <path id="local.class.path">
         <fileset dir="${lib.dir}" includes="*.jar"/>
         <fileset dir="../../framework/base/lib" includes="*.jar"/>
-        <fileset dir="../../framework/base/lib/j2eespecs" includes="*.jar"/>
         <fileset dir="../../framework/base/build/lib" includes="*.jar"/>
         <fileset dir="../../framework/entity/lib" includes="*.jar"/>
         <fileset dir="../../framework/entity/build/lib" includes="*.jar"/>
@@ -34,7 +36,7 @@
     </path>
 
     <!-- ================================================================= -->
-    <!-- Targets to create  patch files                                    -->
+    <!-- Targets to create patch files                                    -->
     <!-- ================================================================= -->
 
     <target name="create-ofbiz-patches" description="Creates patches for root, framework, application and specialpurpose components">

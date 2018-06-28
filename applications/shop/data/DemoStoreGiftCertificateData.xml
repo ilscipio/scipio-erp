@@ -21,9 +21,12 @@ under the License.
 <entity-engine-xml>
 
     <!-- Note: if you set require pin code to N, then you can set validate GC FinAcct to Y -->
+    <!-- SCIPIO: TODO: SURVEYS: 2017-11-18: these need more retesting, right now now they are only in the way
     <ProductStoreFinActSetting productStoreId="ScipioShop" finAccountTypeId="GIFTCERT_ACCOUNT" requirePinCode="N" validateGCFinAcct="Y"
-        purchaseSurveyId="1000" purchSurveySendTo="recipientEmail" purchSurveyCopyMe="copyMe" accountCodeLength="12" pinCodeLength="4" accountValidDays="365" authValidDays="30"/>
-
+        purchaseSurveyId="1000" purchSurveySendTo="recipientEmail" purchSurveyCopyMe="copyMe" accountCodeLength="12" pinCodeLength="4" accountValidDays="365" authValidDays="30"/>-->
+    <ProductStoreFinActSetting productStoreId="ScipioShop" finAccountTypeId="GIFTCERT_ACCOUNT" requirePinCode="N" validateGCFinAcct="Y"
+        accountCodeLength="12" pinCodeLength="4" accountValidDays="365" authValidDays="30"/>
+    
     <!-- service for purchasing gift certificate configured as a Content and to be associated with products -->
     <Content contentId="GC_PURCHASE" customMethodId="GIFT_PURCH_OFBIZ"/>
 

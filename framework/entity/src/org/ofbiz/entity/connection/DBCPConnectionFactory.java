@@ -53,7 +53,7 @@ import org.ofbiz.entity.transaction.TransactionUtil;
  */
 public class DBCPConnectionFactory implements ConnectionFactory {
 
-    public static final String module = DBCPConnectionFactory.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     // ManagedDataSource is useful to debug the usage of connections in the pool (must be verbose)
     // In case you don't want to be disturbed in the log (focusing on something else), it's still easy to comment out the line from DebugManagedDataSource
     protected static final ConcurrentHashMap<String, DebugManagedDataSource> dsCache = new ConcurrentHashMap<String, DebugManagedDataSource>();

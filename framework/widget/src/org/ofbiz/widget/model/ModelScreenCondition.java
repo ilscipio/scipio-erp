@@ -54,7 +54,7 @@ public final class ModelScreenCondition implements Serializable {
      * 
      */
 
-    public static final String module = ModelScreenCondition.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final ModelConditionFactory SCREEN_CONDITION_FACTORY = new ScreenConditionFactory();
 
     public static class IfEmptySection extends AbstractModelCondition {

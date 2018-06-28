@@ -23,15 +23,13 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
-import javolution.util.FastSet;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
@@ -54,11 +52,14 @@ import org.ofbiz.service.ServiceUtil;
 
 /**
  * Tax Authority tax calculation and other misc services
+ * <p>
+ * SCIPIO: 2017-12-19: ALL methods and services updated to support a useCache flag.
+ * NOTE: this flag is NOT added to stock invocations that were not previously caching;
+ * it will only allow turning off caching on calls that were previously forcing caching.
  */
-
 public class TaxAuthorityServices {
 
-    public static final String module = TaxAuthorityServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final BigDecimal ZERO_BASE = BigDecimal.ZERO;
     public static final BigDecimal ONE_BASE = BigDecimal.ONE;
     public static final BigDecimal PERCENT_SCALE = new BigDecimal("100.000");
@@ -85,21 +86,24 @@ public class TaxAuthorityServices {
         BigDecimal priceWithTax = basePrice;
         if (shippingPrice != null) priceWithTax = priceWithTax.add(shippingPrice);
 
+        // SCIPIO: 2017-12-19: service now supports useCache=false (stock default is true), important for ECAs
+        boolean useCache = !Boolean.FALSE.equals(context.get("useCache"));
+        
         try {
-            GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache().queryOne();
-            GenericValue productStore = EntityQuery.use(delegator).from("ProductStore").where("productStoreId", productStoreId).cache().queryOne();
+            GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache(useCache).queryOne();
+            GenericValue productStore = EntityQuery.use(delegator).from("ProductStore").where("productStoreId", productStoreId).cache(useCache).queryOne();
             if (productStore == null) {
                 throw new IllegalArgumentException("Could not find ProductStore with ID [" + productStoreId + "] for tax calculation");
             }
 
             if ("Y".equals(productStore.getString("showPricesWithVatTax"))) {
-                Set<GenericValue> taxAuthoritySet = FastSet.newInstance();
+                Set<GenericValue> taxAuthoritySet = new HashSet<GenericValue>();
                 if (productStore.get("vatTaxAuthPartyId") == null) {
                     List<GenericValue> taxAuthorityRawList = EntityQuery.use(delegator).from("TaxAuthority")
-                            .where("taxAuthGeoId", productStore.get("vatTaxAuthGeoId")).cache().queryList();
+                            .where("taxAuthGeoId", productStore.get("vatTaxAuthGeoId")).cache(useCache).queryList();
                     taxAuthoritySet.addAll(taxAuthorityRawList);
                 } else {
-                    GenericValue taxAuthority = EntityQuery.use(delegator).from("TaxAuthority").where("taxAuthGeoId", productStore.get("vatTaxAuthGeoId"), "taxAuthPartyId", productStore.get("vatTaxAuthPartyId")).cache().queryOne();
+                    GenericValue taxAuthority = EntityQuery.use(delegator).from("TaxAuthority").where("taxAuthGeoId", productStore.get("vatTaxAuthGeoId"), "taxAuthPartyId", productStore.get("vatTaxAuthPartyId")).cache(useCache).queryOne();
                     taxAuthoritySet.add(taxAuthority);
                 }
 
@@ -107,7 +111,7 @@ public class TaxAuthorityServices {
                     throw new IllegalArgumentException("Could not find any Tax Authories for store with ID [" + productStoreId + "] for tax calculation; the store settings may need to be corrected.");
                 }
 
-                List<GenericValue> taxAdustmentList = getTaxAdjustments(delegator, product, productStore, null, billToPartyId, taxAuthoritySet, basePrice, quantity, amount, shippingPrice, ZERO_BASE);
+                List<GenericValue> taxAdustmentList = getTaxAdjustments(delegator, product, productStore, null, billToPartyId, taxAuthoritySet, basePrice, quantity, amount, shippingPrice, ZERO_BASE, useCache);
                 if (taxAdustmentList.size() == 0) {
                     // this is something that happens every so often for different products and such, so don't blow up on it...
                     Debug.logWarning("Could not find any Tax Authories Rate Rules for store with ID [" + productStoreId + "], productId [" + productId + "], basePrice [" + basePrice + "], amount [" + amount + "], for tax calculation; the store settings may need to be corrected.", module);
@@ -155,6 +159,10 @@ public class TaxAuthorityServices {
         BigDecimal orderPromotionsAmount = (BigDecimal) context.get("orderPromotionsAmount");
         GenericValue shippingAddress = (GenericValue) context.get("shippingAddress");
         Locale locale = (Locale) context.get("locale");
+        
+        // SCIPIO: 2017-12-19: service now supports useCache=false (stock default is true), important for ECAs
+        boolean useCache = !Boolean.FALSE.equals(context.get("useCache"));
+        
         GenericValue productStore = null;
         GenericValue facility = null;
         try {
@@ -172,11 +180,11 @@ public class TaxAuthorityServices {
         if (productStore == null && payToPartyId == null) {
             throw new IllegalArgumentException("Could not find payToPartyId [" + payToPartyId + "] or ProductStore [" + productStoreId + "] for tax calculation");
         }
-        
+
         if (shippingAddress == null && facility != null) {
             // if there is no shippingAddress and there is a facility it means it is a face-to-face sale so get facility's address
             try {
-                GenericValue facilityContactMech = ContactMechWorker.getFacilityContactMechByPurpose(delegator, facilityId, UtilMisc.toList("SHIP_ORIG_LOCATION", "PRIMARY_LOCATION"));
+                GenericValue facilityContactMech = ContactMechWorker.getFacilityContactMechByPurpose(delegator, facilityId, UtilMisc.toList("SHIP_ORIG_LOCATION", "PRIMARY_LOCATION"), useCache);
                 if (facilityContactMech != null) {
                     shippingAddress = EntityQuery.use(delegator).from("PostalAddress").where("contactMechId", facilityContactMech.get("contactMechId")).queryOne();
                 }
@@ -195,17 +203,17 @@ public class TaxAuthorityServices {
         }
 
         // without knowing the TaxAuthority parties, just find all TaxAuthories for the set of IDs...
-        Set<GenericValue> taxAuthoritySet = FastSet.newInstance();
+        Set<GenericValue> taxAuthoritySet = new HashSet<GenericValue>();
         try {
-            getTaxAuthorities(delegator, shippingAddress, taxAuthoritySet);
+            getTaxAuthorities(delegator, shippingAddress, taxAuthoritySet, useCache);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Data error getting tax settings: " + e.toString(), module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "AccountingTaxSettingError", UtilMisc.toMap("errorString", e.toString()), locale));
         }
 
         // Setup the return lists.
-        List<GenericValue> orderAdjustments = FastList.newInstance();
-        List<List<GenericValue>> itemAdjustments = FastList.newInstance();
+        List<GenericValue> orderAdjustments = new LinkedList<GenericValue>();
+        List<List<GenericValue>> itemAdjustments = new LinkedList<List<GenericValue>>();
 
         // Loop through the products; get the taxCategory; and lookup each in the cache.
         for (int i = 0; i < itemProductList.size(); i++) {
@@ -216,22 +224,22 @@ public class TaxAuthorityServices {
             BigDecimal shippingAmount = itemShippingList != null ? itemShippingList.get(i) : null;
             List<GenericValue> taxList = null;
             if (shippingAddress != null) {
-                taxList = getTaxAdjustments(delegator, product, productStore, payToPartyId, billToPartyId, taxAuthoritySet, itemPrice, itemQuantity, itemAmount, shippingAmount, ZERO_BASE);
+                taxList = getTaxAdjustments(delegator, product, productStore, payToPartyId, billToPartyId, taxAuthoritySet, itemPrice, itemQuantity, itemAmount, shippingAmount, ZERO_BASE, useCache);
             }
             // this is an add and not an addAll because we want a List of Lists of GenericValues, one List of Adjustments per item
             itemAdjustments.add(taxList);
         }
         if (orderShippingAmount != null && orderShippingAmount.compareTo(BigDecimal.ZERO) > 0) {
-            List<GenericValue> taxList = getTaxAdjustments(delegator, null, productStore, payToPartyId, billToPartyId, taxAuthoritySet, ZERO_BASE, ZERO_BASE, ZERO_BASE, orderShippingAmount, ZERO_BASE);
+            List<GenericValue> taxList = getTaxAdjustments(delegator, null, productStore, payToPartyId, billToPartyId, taxAuthoritySet, ZERO_BASE, ZERO_BASE, ZERO_BASE, orderShippingAmount, ZERO_BASE, useCache);
             // if there is no rate for shipping use "majority" rule, i.e. most used rate for order
             if (UtilValidate.isEmpty(taxList)) {
                 //taxList = getShippingTaxAdjustment(itemAdjustments);
-                taxList = getShippingTaxAdjustment(delegator, itemAdjustments, orderShippingAmount, productStore, billToPartyId);
+                taxList = getShippingTaxAdjustment(delegator, itemAdjustments, orderShippingAmount, productStore, billToPartyId, useCache);
             }
             orderAdjustments.addAll(taxList);
         }
         if (orderPromotionsAmount != null && orderPromotionsAmount.compareTo(BigDecimal.ZERO) != 0) {
-            List<GenericValue> taxList = getTaxAdjustments(delegator, null, productStore, payToPartyId, billToPartyId, taxAuthoritySet, ZERO_BASE, ZERO_BASE, ZERO_BASE, ZERO_BASE, orderPromotionsAmount);
+            List<GenericValue> taxList = getTaxAdjustments(delegator, null, productStore, payToPartyId, billToPartyId, taxAuthoritySet, ZERO_BASE, ZERO_BASE, ZERO_BASE, ZERO_BASE, orderPromotionsAmount, useCache);
             orderAdjustments.addAll(taxList);
         }
 
@@ -242,8 +250,14 @@ public class TaxAuthorityServices {
         return result;
     }
 
+    @SuppressWarnings("unused")
     private static void getTaxAuthorities(Delegator delegator, GenericValue shippingAddress, Set<GenericValue> taxAuthoritySet) throws GenericEntityException {
-        Map<String, String> geoIdByTypeMap = FastMap.newInstance();
+        getTaxAuthorities(delegator, shippingAddress, taxAuthoritySet, true);
+    }
+    
+    // SCIPIO: 2017-12-19: added useCache flag
+    private static void getTaxAuthorities(Delegator delegator, GenericValue shippingAddress, Set<GenericValue> taxAuthoritySet, boolean useCache) throws GenericEntityException {
+        Map<String, String> geoIdByTypeMap = new HashMap<String, String>();
         if (shippingAddress != null) {
             if (UtilValidate.isNotEmpty(shippingAddress.getString("countryGeoId"))) {
                 geoIdByTypeMap.put("COUNTRY", shippingAddress.getString("countryGeoId"));
@@ -268,17 +282,27 @@ public class TaxAuthorityServices {
         //Debug.logInfo("Tax calc geoIdByTypeMap after expand:" + geoIdByTypeMap, module);
 
         List<GenericValue> taxAuthorityRawList = EntityQuery.use(delegator)
-                .from("TaxAuthority").where(EntityCondition.makeCondition("taxAuthGeoId", EntityOperator.IN, geoIdByTypeMap.values())).cache().queryList();
+                .from("TaxAuthority").where(EntityCondition.makeCondition("taxAuthGeoId", EntityOperator.IN, geoIdByTypeMap.values())).cache(useCache).queryList();
         taxAuthoritySet.addAll(taxAuthorityRawList);
         //Debug.logInfo("Tax calc taxAuthoritySet after expand:" + taxAuthoritySet, module);
     }
 
+    @SuppressWarnings("unused")
     private static List<GenericValue> getTaxAdjustments(Delegator delegator, GenericValue product, GenericValue productStore,
             String payToPartyId, String billToPartyId, Set<GenericValue> taxAuthoritySet,
             BigDecimal itemPrice, BigDecimal itemQuantity, BigDecimal itemAmount,
             BigDecimal shippingAmount, BigDecimal orderPromotionsAmount) {
+        return getTaxAdjustments(delegator, product, productStore, payToPartyId, billToPartyId, taxAuthoritySet, itemPrice, 
+                itemQuantity, itemAmount, shippingAmount, orderPromotionsAmount, true);
+    }
+    
+    // SCIPIO: 2017-12-19: added useCache flag
+    private static List<GenericValue> getTaxAdjustments(Delegator delegator, GenericValue product, GenericValue productStore,
+            String payToPartyId, String billToPartyId, Set<GenericValue> taxAuthoritySet,
+            BigDecimal itemPrice, BigDecimal itemQuantity, BigDecimal itemAmount,
+            BigDecimal shippingAmount, BigDecimal orderPromotionsAmount, boolean useCache) {
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
-        List<GenericValue> adjustments = FastList.newInstance();
+        List<GenericValue> adjustments = new LinkedList<GenericValue>();
 
         if (payToPartyId == null) {
             if (productStore != null) {
@@ -298,7 +322,7 @@ public class TaxAuthorityServices {
         }
 
         // build the TaxAuthority expressions (taxAuthGeoId, taxAuthPartyId)
-        List<EntityCondition> taxAuthCondOrList = FastList.newInstance();
+        List<EntityCondition> taxAuthCondOrList = new LinkedList<EntityCondition>();
         // start with the _NA_ TaxAuthority...
         taxAuthCondOrList.add(EntityCondition.makeCondition(
                 EntityCondition.makeCondition("taxAuthPartyId", EntityOperator.EQUALS, "_NA_"),
@@ -322,9 +346,9 @@ public class TaxAuthorityServices {
                 // question: get all categories, or just a special type? for now let's do all categories...
                 String virtualProductId = null;
                 if ("Y".equals(product.getString("isVariant"))) {
-                    virtualProductId = ProductWorker.getVariantVirtualId(product);
+                    virtualProductId = ProductWorker.getVariantVirtualId(product, useCache);
                 }
-                Set<String> productCategoryIdSet = FastSet.newInstance();
+                Set<String> productCategoryIdSet = new HashSet<String>();
                 EntityCondition productIdCond = null;
                 if (virtualProductId != null) {
                     productIdCond = EntityCondition.makeCondition(
@@ -337,7 +361,7 @@ public class TaxAuthorityServices {
                 }
                 List<GenericValue> pcmList = EntityQuery.use(delegator).select("productCategoryId", "fromDate", "thruDate")
                         .from("ProductCategoryMember")
-                        .where(productIdCond).cache().filterByDate().queryList();
+                        .where(productIdCond).cache(useCache).filterByDate().queryList();
                 for (GenericValue pcm : pcmList) {
                     productCategoryIdSet.add(pcm.getString("productCategoryId"));
                 }
@@ -388,6 +412,7 @@ public class TaxAuthorityServices {
             EntityCondition mainCondition = EntityCondition.makeCondition(mainExprs, EntityOperator.AND);
 
             // finally ready... do the rate query
+            // SCIPIO: 2017-12-19: not adding useCache here because no cache() call in original code (same below)
             List<GenericValue> lookupList = EntityQuery.use(delegator).from("TaxAuthorityRateProduct")
                     .where(mainCondition).orderBy("minItemPrice", "minPurchase", "fromDate").filterByDate().queryList();
 
@@ -440,10 +465,10 @@ public class TaxAuthorityServices {
                                     "taxAuthPartyId", taxAuthPartyId, "taxAuthGeoId", taxAuthGeoId,
                                     "productPricePurposeId", "PURCHASE")
                             .orderBy("-fromDate").filterByDate().queryFirst();
-                    
-                    
+
+
                     if (productPrice == null) {
-                        GenericValue virtualProduct = ProductWorker.getParentProduct(product.getString("productId"), delegator);
+                        GenericValue virtualProduct = ProductWorker.getParentProduct(product.getString("productId"), delegator, useCache);
                         if (virtualProduct != null) {
                             productPrice = EntityQuery.use(delegator).from("ProductPrice")
                                     .where("productId", virtualProduct.get("productId"),
@@ -464,14 +489,17 @@ public class TaxAuthorityServices {
 
                     // the amount will be different because we want to figure out how much of the price was tax, and not how much tax needs to be added
                     // the formula is: taxAmount = priceWithTax - (priceWithTax/(1+taxPercentage/100))
-                    BigDecimal taxAmountIncluded = itemAmount.subtract(itemAmount.divide(BigDecimal.ONE.add(taxRate.divide(PERCENT_SCALE, 4, BigDecimal.ROUND_HALF_UP)), 3, BigDecimal.ROUND_HALF_UP));
+                    BigDecimal taxAmountIncluded = itemAmount.subtract(itemAmount.divide(
+                            BigDecimal.ONE.add(
+                                    taxRate.divide(PERCENT_SCALE, salestaxFinalDecimals, BigDecimal.ROUND_HALF_UP)),
+                            salestaxFinalDecimals, BigDecimal.ROUND_HALF_UP));
                     taxAdjValue.set("amountAlreadyIncluded", taxAmountIncluded);
                     taxAdjValue.set("amount", BigDecimal.ZERO);
                 } else {
                     taxAdjValue.set("orderAdjustmentTypeId", "SALES_TAX");
                     taxAdjValue.set("amount", taxAmount);
                 }
-                
+
                 taxAdjValue.set("sourcePercentage", taxRate);
                 taxAdjValue.set("taxAuthorityRateSeqId", taxAuthorityRateProduct.getString("taxAuthorityRateSeqId"));
                 // the primary Geo should be the main jurisdiction that the tax is for, and the secondary would just be to define a parent or wrapping jurisdiction of the primary
@@ -485,16 +513,16 @@ public class TaxAuthorityServices {
                 if (UtilValidate.isNotEmpty(billToPartyId) && UtilValidate.isNotEmpty(taxAuthGeoId)) {
                     // see if partyId is a member of any groups, if so honor their tax exemptions
                     // look for PartyRelationship with partyRelationshipTypeId=GROUP_ROLLUP, the partyIdTo is the group member, so the partyIdFrom is the groupPartyId
-                    Set<String> billToPartyIdSet = FastSet.newInstance();
+                    Set<String> billToPartyIdSet = new HashSet<String>();
                     billToPartyIdSet.add(billToPartyId);
                     List<GenericValue> partyRelationshipList = EntityQuery.use(delegator).from("PartyRelationship")
                             .where("partyIdTo", billToPartyId, "partyRelationshipTypeId", "GROUP_ROLLUP")
-                            .cache().filterByDate().queryList();
+                            .cache(useCache).filterByDate().queryList();
 
                     for (GenericValue partyRelationship : partyRelationshipList) {
                         billToPartyIdSet.add(partyRelationship.getString("partyIdFrom"));
                     }
-                    handlePartyTaxExempt(taxAdjValue, billToPartyIdSet, taxAuthGeoId, taxAuthPartyId, taxAmount, nowTimestamp, delegator);
+                    handlePartyTaxExempt(taxAdjValue, billToPartyIdSet, taxAuthGeoId, taxAuthPartyId, taxAmount, nowTimestamp, delegator, useCache);
                 } else {
                     Debug.logInfo("NOTE: A tax calculation was done without a billToPartyId or taxAuthGeoId, so no tax exemptions or tax IDs considered; billToPartyId=[" + billToPartyId + "] taxAuthGeoId=[" + taxAuthGeoId + "]", module);
                 }
@@ -511,7 +539,7 @@ public class TaxAuthorityServices {
                     //Debug.logInfo("=================== priceWithTax=" + priceWithTax, module);
                     //Debug.logInfo("=================== enteredTotalPriceWithTax=" + enteredTotalPriceWithTax, module);
                     //Debug.logInfo("=================== calcedTotalPriceWithTax=" + calcedTotalPriceWithTax, module);
-                    
+
                     // tax is not already in price so we want to add it in, but this is a VAT situation so adjust to make it as accurate as possible
 
                     // for VAT taxes if the calculated total item price plus calculated taxes is different from what would be
@@ -519,10 +547,10 @@ public class TaxAuthorityServices {
                     // an adjustment that corrects for the difference, and this correction will be effectively subtracted from the
                     // price and not from the tax (the tax is meant to be calculated based on Tax Authority rules and so should
                     // not be shorted)
-                    
+
                     // TODO (don't think this is needed, but just to keep it in mind): get this to work with multiple VAT tax authorities instead of just one (right now will get incorrect totals if there are multiple taxes included in the price)
                     // TODO add constraint to ProductPrice lookup by any productStoreGroupId associated with the current productStore
-                    
+
                     BigDecimal enteredTotalPriceWithTax = priceWithTax.multiply(itemQuantity);
                     BigDecimal calcedTotalPriceWithTax = (baseSubtotal).add(baseTaxAmount);
                     if (!enteredTotalPriceWithTax.equals(calcedTotalPriceWithTax)) {
@@ -531,7 +559,7 @@ public class TaxAuthorityServices {
                         // so, subtract the calculated amount from the entered amount (ie: correction = entered - calculated)
                         BigDecimal correctionAmount = enteredTotalPriceWithTax.subtract(calcedTotalPriceWithTax);
                         //Debug.logInfo("=================== correctionAmount=" + correctionAmount, module);
-                        
+
                         GenericValue correctionAdjValue = delegator.makeValue("OrderAdjustment");
                         correctionAdjValue.set("taxAuthorityRateSeqId", taxAuthorityRateProduct.getString("taxAuthorityRateSeqId"));
                         correctionAdjValue.set("amount", correctionAmount);
@@ -549,13 +577,14 @@ public class TaxAuthorityServices {
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problems looking up tax rates", module);
-            return FastList.newInstance();
+            return new LinkedList<GenericValue>();
         }
 
         return adjustments;
     }
 
-    private static void handlePartyTaxExempt(GenericValue adjValue, Set<String> billToPartyIdSet, String taxAuthGeoId, String taxAuthPartyId, BigDecimal taxAmount, Timestamp nowTimestamp, Delegator delegator) throws GenericEntityException {
+    // SCIPIO: 2017-12-19: added useCache flag
+    private static void handlePartyTaxExempt(GenericValue adjValue, Set<String> billToPartyIdSet, String taxAuthGeoId, String taxAuthPartyId, BigDecimal taxAmount, Timestamp nowTimestamp, Delegator delegator, boolean useCache) throws GenericEntityException {
         Debug.logInfo("Checking for tax exemption : " + taxAuthGeoId + " / " + taxAuthPartyId, module);
         List<EntityCondition> ptiConditionList = UtilMisc.<EntityCondition>toList(
                 EntityCondition.makeCondition("partyId", EntityOperator.IN, billToPartyIdSet),
@@ -590,13 +619,19 @@ public class TaxAuthorityServices {
                     .orderBy("-fromDate").filterByDate().queryFirst();
             // Debug.logInfo("Parent assoc to " + taxAuthGeoId + " : " + taxAuthorityAssoc, module);
             if (taxAuthorityAssoc != null) {
-                handlePartyTaxExempt(adjValue, billToPartyIdSet, taxAuthorityAssoc.getString("taxAuthGeoId"), taxAuthorityAssoc.getString("taxAuthPartyId"), taxAmount, nowTimestamp, delegator);
+                handlePartyTaxExempt(adjValue, billToPartyIdSet, taxAuthorityAssoc.getString("taxAuthGeoId"), taxAuthorityAssoc.getString("taxAuthPartyId"), taxAmount, nowTimestamp, delegator, useCache);
             }
         }
     }
 
     private static List<GenericValue> getShippingTaxAdjustment(Delegator delegator, List<List<GenericValue>> itemsAdjustments,
             BigDecimal orderShippingAmount, GenericValue productStore, String billToPartyId) {
+        return getShippingTaxAdjustment(delegator, itemsAdjustments, orderShippingAmount, productStore, billToPartyId, true);
+    }
+    
+    // SCIPIO: 2017-12-19: added useCache flag
+    private static List<GenericValue> getShippingTaxAdjustment(Delegator delegator, List<List<GenericValue>> itemsAdjustments,
+            BigDecimal orderShippingAmount, GenericValue productStore, String billToPartyId, boolean useCache) {
         List<GenericValue> adjustments = new ArrayList<GenericValue>();
         // sum each rate
         Map<String, BigDecimal> summedRates = new HashMap<String, BigDecimal>();
@@ -621,7 +656,10 @@ public class TaxAuthorityServices {
             }
         }
         Debug.logInfo("summedRates: " + summedRates, module);
-        BigDecimal maxTaxSum = Collections.max(summedRates.values());
+        BigDecimal maxTaxSum = BigDecimal.ZERO;
+        if(!summedRates.isEmpty()){
+            maxTaxSum = Collections.max(summedRates.values());
+        }
         Debug.logInfo("maxTaxSum: " + maxTaxSum, module);
         String taxAuthorityRateSeqId = null;
         //Set<T> keys = new HashSet<T>();
@@ -637,66 +675,69 @@ public class TaxAuthorityServices {
             GenericValue taxAuthorityRateProduct = EntityQuery.use(delegator).from("TaxAuthorityRateProduct")
             .where("taxAuthorityRateSeqId", taxAuthorityRateSeqId).queryOne();
             Debug.logInfo("taxAuthorityRateProduct for shipping: " + taxAuthorityRateProduct, module);
-            
+
             // Create Tax Adjustment
-            BigDecimal taxRate = taxAuthorityRateProduct.get("taxPercentage") != null ? taxAuthorityRateProduct.getBigDecimal("taxPercentage") : ZERO_BASE;
-            // taxRate is in percentage, so needs to be divided by 100
+            if(taxAuthorityRateProduct!=null){
+                BigDecimal taxRate = taxAuthorityRateProduct.get("taxPercentage") != null ? taxAuthorityRateProduct.getBigDecimal("taxPercentage") : ZERO_BASE;                
             
-            BigDecimal taxAmount = (orderShippingAmount.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
-
-            String taxAuthGeoId = taxAuthorityRateProduct.getString("taxAuthGeoId");
-            String taxAuthPartyId = taxAuthorityRateProduct.getString("taxAuthPartyId");
-
-            GenericValue taxAdjValue = delegator.makeValue("OrderAdjustment");
-
-            if ("Y".equals(productStore.getString("showPricesWithVatTax"))) {
-                // tax is in the price already, so we want the adjustment to be a VAT_TAX adjustment to be subtracted instead of a SALES_TAX adjustment to be added
-                taxAdjValue.set("orderAdjustmentTypeId", "VAT_TAX");
-
-                // the amount will be different because we want to figure out how much of the price was tax, and not how much tax needs to be added
-                // the formula is: taxAmount = priceWithTax - (priceWithTax/(1+taxPercentage/100))
-                BigDecimal taxAmountIncluded = orderShippingAmount.subtract(orderShippingAmount.divide(BigDecimal.ONE.add(taxRate.divide(PERCENT_SCALE, 4, BigDecimal.ROUND_HALF_UP)), 3, BigDecimal.ROUND_HALF_UP));
-                taxAdjValue.set("amountAlreadyIncluded", taxAmountIncluded);
-                taxAdjValue.set("amount", BigDecimal.ZERO);
-            } else {
-                taxAdjValue.set("orderAdjustmentTypeId", "SALES_TAX");
-                taxAdjValue.set("amount", taxAmount);
-            }
-            
-            taxAdjValue.set("sourcePercentage", taxRate);
-            taxAdjValue.set("taxAuthorityRateSeqId", taxAuthorityRateProduct.getString("taxAuthorityRateSeqId"));
-            // the primary Geo should be the main jurisdiction that the tax is for, and the secondary would just be to define a parent or wrapping jurisdiction of the primary
-            taxAdjValue.set("primaryGeoId", taxAuthGeoId);
-            taxAdjValue.set("comments", taxAuthorityRateProduct.getString("description"));
-            if (taxAuthPartyId != null) taxAdjValue.set("taxAuthPartyId", taxAuthPartyId);
-            if (taxAuthGeoId != null) taxAdjValue.set("taxAuthGeoId", taxAuthGeoId);
-
-            // check to see if this party has a tax ID for this, and if the party is tax exempt in the primary (most-local) jurisdiction
-            if (UtilValidate.isNotEmpty(billToPartyId) && UtilValidate.isNotEmpty(taxAuthGeoId)) {
-                // see if partyId is a member of any groups, if so honor their tax exemptions
-                // look for PartyRelationship with partyRelationshipTypeId=GROUP_ROLLUP, the partyIdTo is the group member, so the partyIdFrom is the groupPartyId
-                Set<String> billToPartyIdSet = FastSet.newInstance();
-                billToPartyIdSet.add(billToPartyId);
-                List<GenericValue> partyRelationshipList = EntityQuery.use(delegator).from("PartyRelationship")
-                        .where("partyIdTo", billToPartyId, "partyRelationshipTypeId", "GROUP_ROLLUP")
-                        .cache().filterByDate().queryList();
-
-                for (GenericValue partyRelationship : partyRelationshipList) {
-                    billToPartyIdSet.add(partyRelationship.getString("partyIdFrom"));
+                // taxRate is in percentage, so needs to be divided by 100
+    
+                BigDecimal taxAmount = (orderShippingAmount.multiply(taxRate)).divide(PERCENT_SCALE, salestaxCalcDecimals, salestaxRounding);
+    
+                String taxAuthGeoId = taxAuthorityRateProduct.getString("taxAuthGeoId");
+                String taxAuthPartyId = taxAuthorityRateProduct.getString("taxAuthPartyId");
+    
+                GenericValue taxAdjValue = delegator.makeValue("OrderAdjustment");
+    
+                if ("Y".equals(productStore.getString("showPricesWithVatTax"))) {
+                    // tax is in the price already, so we want the adjustment to be a VAT_TAX adjustment to be subtracted instead of a SALES_TAX adjustment to be added
+                    taxAdjValue.set("orderAdjustmentTypeId", "VAT_TAX");
+    
+                    // the amount will be different because we want to figure out how much of the price was tax, and not how much tax needs to be added
+                    // the formula is: taxAmount = priceWithTax - (priceWithTax/(1+taxPercentage/100))
+                    BigDecimal taxAmountIncluded = orderShippingAmount.subtract(orderShippingAmount.divide(BigDecimal.ONE.add(taxRate.divide(PERCENT_SCALE, 4, BigDecimal.ROUND_HALF_UP)), 3, BigDecimal.ROUND_HALF_UP));
+                    taxAdjValue.set("amountAlreadyIncluded", taxAmountIncluded);
+                    taxAdjValue.set("amount", BigDecimal.ZERO);
+                } else {
+                    taxAdjValue.set("orderAdjustmentTypeId", "SALES_TAX");
+                    taxAdjValue.set("amount", taxAmount);
                 }
-                handlePartyTaxExempt(taxAdjValue, billToPartyIdSet, taxAuthGeoId, taxAuthPartyId, taxAmount, UtilDateTime.nowTimestamp(), delegator);
-            } else {
-                Debug.logInfo("NOTE: A tax calculation was done without a billToPartyId or taxAuthGeoId, so no tax exemptions or tax IDs considered; billToPartyId=[" + billToPartyId + "] taxAuthGeoId=[" + taxAuthGeoId + "]", module);
+    
+                taxAdjValue.set("sourcePercentage", taxRate);
+                taxAdjValue.set("taxAuthorityRateSeqId", taxAuthorityRateProduct.getString("taxAuthorityRateSeqId"));
+                // the primary Geo should be the main jurisdiction that the tax is for, and the secondary would just be to define a parent or wrapping jurisdiction of the primary
+                taxAdjValue.set("primaryGeoId", taxAuthGeoId);
+                taxAdjValue.set("comments", taxAuthorityRateProduct.getString("description"));
+                if (taxAuthPartyId != null) taxAdjValue.set("taxAuthPartyId", taxAuthPartyId);
+                if (taxAuthGeoId != null) taxAdjValue.set("taxAuthGeoId", taxAuthGeoId);
+    
+                // check to see if this party has a tax ID for this, and if the party is tax exempt in the primary (most-local) jurisdiction
+                if (UtilValidate.isNotEmpty(billToPartyId) && UtilValidate.isNotEmpty(taxAuthGeoId)) {
+                    // see if partyId is a member of any groups, if so honor their tax exemptions
+                    // look for PartyRelationship with partyRelationshipTypeId=GROUP_ROLLUP, the partyIdTo is the group member, so the partyIdFrom is the groupPartyId
+                    Set<String> billToPartyIdSet = new HashSet<String>();
+                    billToPartyIdSet.add(billToPartyId);
+                    List<GenericValue> partyRelationshipList = EntityQuery.use(delegator).from("PartyRelationship")
+                            .where("partyIdTo", billToPartyId, "partyRelationshipTypeId", "GROUP_ROLLUP")
+                            .cache(useCache).filterByDate().queryList();
+    
+                    for (GenericValue partyRelationship : partyRelationshipList) {
+                        billToPartyIdSet.add(partyRelationship.getString("partyIdFrom"));
+                    }
+                    handlePartyTaxExempt(taxAdjValue, billToPartyIdSet, taxAuthGeoId, taxAuthPartyId, taxAmount, UtilDateTime.nowTimestamp(), delegator, useCache);
+                } else {
+                    Debug.logInfo("NOTE: A tax calculation was done without a billToPartyId or taxAuthGeoId, so no tax exemptions or tax IDs considered; billToPartyId=[" + billToPartyId + "] taxAuthGeoId=[" + taxAuthGeoId + "]", module);
+                }
+                Debug.logInfo("Shipping Tax Adjustment: " + taxAdjValue, module);
+    
+                adjustments.add(taxAdjValue);
+            }else{
+                Debug.logWarning("No TaxAuthority found. Skipping tax calculation for shipping rates",module);
             }
-            Debug.logInfo("Shipping Tax Adjustment: " + taxAdjValue, module);
-
-            adjustments.add(taxAdjValue);
-            
         } catch (GenericEntityException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Debug.logError("Error while calculating shipping tax: "+e, module);
         }
-        
+
         return adjustments;
     }
 

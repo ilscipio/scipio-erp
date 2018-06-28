@@ -1028,4 +1028,341 @@ under the License.
         <store-value value-field="productReview"/>
         <field-to-result field="productReview.productReviewId" result-name="productReviewId"/>
     </simple-method>
+    
+    <!-- ================================================================ -->
+    <!-- SCIPIO: NEW Versatile Services (with stock-like functionality) -->
+    <!-- ================================================================ -->
+    
+    <simple-method method-name="createProductAndCatAssocVersatile">
+        <set-service-fields service-name="createProduct" to-map="createRecordCtx" map="parameters"/>
+        <call-service service-name="createProduct" in-map-name="createRecordCtx">
+            <result-to-field result-name="productId" field="parameters.productId"/>
+            <result-to-result result-name="productId"/>
+        </call-service>
+        
+        <set-service-fields service-name="addProductToCategory" to-map="createAssocCtx" map="parameters"/>
+        <call-service service-name="addProductToCategory" in-map-name="createAssocCtx">
+            <result-to-result result-name="productCategoryId"/>
+            <result-to-result result-name="fromDate"/>
+        </call-service>
+        
+        <if-compare field="parameters.updateLocalizedTexts" type="Boolean" operator="equals" value="true">
+            <set-service-fields service-name="replaceProductContentLocalizedSimpleTexts" to-map="updateLocTextCtx" map="parameters"/>
+            <call-service service-name="replaceProductContentLocalizedSimpleTexts" in-map-name="updateLocTextCtx"/>
+        </if-compare>
+    </simple-method>
+    
+    <simple-method method-name="updateProductAndCatAssocVersatile">
+        <set-service-fields service-name="updateProduct" to-map="updateRecordCtx" map="parameters"/>
+        <call-service service-name="updateProduct" in-map-name="updateRecordCtx"/>
+        
+        <set-service-fields service-name="updateProductToCategory" to-map="updateAssocCtx" map="parameters"/>
+        <call-service service-name="updateProductToCategory" in-map-name="updateAssocCtx"/>
+        
+        <if-compare field="parameters.updateLocalizedTexts" type="Boolean" operator="equals" value="true">
+            <set-service-fields service-name="replaceProductContentLocalizedSimpleTexts" to-map="updateLocTextCtx" map="parameters"/>
+            <call-service service-name="replaceProductContentLocalizedSimpleTexts" in-map-name="updateLocTextCtx"/>
+        </if-compare>
+    </simple-method>
+    
+    <simple-method method-name="deleteProductCatAssocVersatile">
+        <if-compare field="parameters.deleteAssocMode" operator="equals" value="expire">
+            <!-- FIXME?: check if already expired?? -->
+            <set-service-fields service-name="updateProductToCategory" to-map="updateCtx" map="parameters"/>
+            <now-timestamp field="updateCtx.thruDate"/>
+            <call-service service-name="updateProductToCategory" in-map-name="updateCtx"/>
+            <else>
+                <set-service-fields service-name="removeProductFromCategory" to-map="removeCtx" map="parameters"/>
+                <call-service service-name="removeProductFromCategory" in-map-name="removeCtx"/>
+            </else>
+        </if-compare>
+    </simple-method>
+    
+    <simple-method method-name="deleteProductAndRelatedVersatile">
+        <set field="callingMethodName" value="deleteProductAndRelatedVersatile"/>
+        <set field="checkAction" value="DELETE"/>
+        <call-simple-method method-name="checkProductRelatedPermission"/>
+        <check-errors/>
+        
+        <entity-one entity-name="Product" value-field="product"/>
+        <if-empty field="product">
+            <property-to-field resource="ProductUiLabels" property="ProductProductNotFound" field="errMsgStr" />
+            <add-error><fail-message message="${errMsgStr}: ${parameters.productId}"/></add-error>
+            <check-errors/>
+        </if-empty>
+        
+        <set field="prodIdMap.productId" from-field="parameters.productId"/>
+        
+        <!-- 
+            !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            SCIPIO: 2017-10-31: WARN: This service is WIP and may be dangerous - currently best-effort only
+            !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        -->
+        
+        <!-- remove "to"/"child" associated products recursively + associations -->
+        <set field="assocProdFilterByDate" set-if-null="true" value=""/>
+        <if-compare field="parameters.deleteAssocProductRecursive" operator="equals" value="all">
+            <set field="assocProdFilterByDate" value="false"/>
+            <else>
+                <if-compare field="parameters.deleteAssocProductRecursive" operator="equals" value="active">
+                    <set field="assocProdFilterByDate" value="true"/>
+                </if-compare>
+            </else>
+        </if-compare>
+        <if-not-empty field="assocProdFilterByDate">
+            <entity-condition entity-name="ProductAssoc" list="assocProductRecList" filter-by-date="${assocProdFilterByDate}">
+                <condition-list combine="and">
+                    <condition-expr field-name="productId" from-field="prodIdMap.productId"/>
+                    <condition-list combine="or">
+                        <!-- TODO: these should be configurable as a service list parameter... -->
+                        <condition-expr field-name="productAssocTypeId" value="PRODUCT_COMPONENT"/>
+                        <condition-expr field-name="productAssocTypeId" value="PRODUCT_VARIANT"/>
+                        <condition-expr field-name="productAssocTypeId" value="PRODUCT_CONF"/>
+                    </condition-list>
+                </condition-list>
+            </entity-condition>
+            <iterate entry="productAssoc" list="productAssocList">
+                <set field="productAssocRemoveCtx" set-if-null="true" value=""/>
+                <set-service-fields service-name="deleteProductAndRelatedVersatile" to-map="productAssocRemoveCtx" map="parameters"/>
+                <set field="productAssocRemoveCtx.productId" from-field="productAssoc.productId"/>
+                <call-service service-name="deleteProductAndRelatedVersatile" in-map-name="productAssocRemoveCtx"/>
+            </iterate>
+        </if-not-empty>
+
+        <!-- remove all "to"/"child" assoc -->
+        <remove-by-and entity-name="ProductAssoc" map="prodIdMap"/>
+        
+        <!-- remove "from"/"parent" assoc to this product -->
+        <set field="prodIdToMap.productIdTo" from-field="parameters.productId"/>
+        <remove-by-and entity-name="ProductAssoc" map="prodIdToMap"/>
+
+        <remove-by-and entity-name="ProductAttribute" map="prodIdMap"/>
+        <remove-by-and entity-name="ProductKeyword" map="prodIdMap"/>
+        <remove-by-and entity-name="ProductRole" map="prodIdMap"/>
+        <remove-by-and entity-name="ProductCalculatedInfo" map="prodIdMap"/>
+        <remove-by-and entity-name="ProductGeo" map="prodIdMap"/>
+        <remove-by-and entity-name="ProductPriceChange" map="prodIdMap"/>
+        <remove-by-and entity-name="ProductPrice" map="prodIdMap"/>
+        
+        <remove-by-and entity-name="ProductConfig" map="prodIdMap"/>
+        <remove-by-and entity-name="ProductConfigProduct" map="prodIdMap"/>
+        <remove-by-and entity-name="ProductConfigStats" map="prodIdMap"/>
+        <remove-by-and entity-name="ConfigOptionProductOption" map="prodIdMap"/>
+        
+        <remove-by-and entity-name="GoodIdentification" map="prodIdMap"/>
+        
+        <!-- According to Ofbiz schema, it is illegal to remove this, so...
+        <entity-and entity-name="InventoryItem" list="inventoryItemList">
+            <field-map field-name="productId" from-field="prodIdMap.productId"/>
+        </entity-and>
+        <iterate list="inventoryItemList" entry="inventoryItem">
+            <remove-related relation-name="InventoryItemDetail" value-field="inventoryItem"/>
+            <remove-value value-field="inventoryItem"/>
+        </iterate>
+        <remove-by-and entity-name="InventoryItemTempRes" map="prodIdMap"/>
+        -->
+         
+        <remove-by-and entity-name="ProductPaymentMethodType" map="prodIdMap"/>
+
+        <!-- TODO: REVIEW: 
+            FixedAsset -> instanceOfProductId
+            FixedAssetProduct
+            InvoiceItem
+            ProductAverageCost
+            
+            ProductManufacturingRule
+            MrpEvent
+            
+            SalesForecastDetail
+            
+            // NOT deleting these - destroy order history!
+            OrderItem
+            OrderSummaryEntry
+            ProductOrderItem
+            QuoteItem
+            CustRequestItem
+            Requirement
+            ReturnItem
+            CartAbandonedLine
+            ShoppingListItem
+            
+            Agreement
+            AgreementProductAppl
+            CommunicationEventProduct
+            PartyNeed
+            
+            ShipmentReceipt
+            ShipmentItem
+            ShipmentPackageContent
+            
+            CostComponent
+            ProductCostComponentCalc
+            ProductFacility
+            ProductFacilityLocation
+            ProductFeatureAppl
+            ProductFeatureApplAttr
+
+            ProductGlAccount
+            ProductKeyword
+            ProductMeter
+            ProductMaint
+            ProductReview
+            VendorProduct
+            ProductPromoProduct
+            ProductStoreSurveyAppl
+            ProductSubscriptionResource
+            Subscription
+            ReorderGuideline
+            SupplierProduct
+            ProductGroupOrder
+            
+            WorkEffortGoodStandard
+        -->
+
+        <set field="assocContentFilterByDate" set-if-null="true" value=""/>
+        <if-compare field="parameters.deleteContentRecursive" operator="equals" value="all">
+            <set field="assocContentFilterByDate" value="false"/>
+            <else>
+                <if-compare field="parameters.deleteContentRecursive" operator="equals" value="active">
+                    <set field="assocContentFilterByDate" value="true"/>
+                </if-compare>
+            </else>
+        </if-compare>
+        <if-not-empty field="assocContentFilterByDate">
+            <entity-condition entity-name="ProductContent" list="recursiveContentList" filter-by-date="${assocContentFilterByDate}">
+                <condition-list combine="and">
+                    <condition-expr field-name="productId" from-field="prodIdMap.productId"/>
+                    <!-- TODO: which types to filter?
+                    <condition-list combine="or">
+                        <!- - TODO: these should be configurable as a service list parameter... - ->
+                    </condition-list>
+                     -->
+                </condition-list>
+            </entity-condition>
+            <iterate entry="productContent" list="recursiveContentList">
+                <set field="contentRemoveCtx" set-if-null="true" value=""/>
+                <set field="contentRemoveCtx.contentId" from-field="productContent.contentId"/>
+                <set field="contentRemoveCtx.recursiveTarget" from-field="parameters.deleteContentRecursive"/>
+                <remove-value value-field="productContent"/>
+                <check-errors/>
+                <call-service service-name="removeContentAndRelatedRecursiveTo" in-map-name="contentRemoveCtx"/>
+            </iterate>
+        </if-not-empty>
+        <remove-by-and entity-name="ProductContent" map="prodIdMap"/>
+
+        <if-compare field="parameters.deleteParentAssocSelect" operator="equals" value="expired">
+            <entity-and entity-name="ProductCategoryMember" list="values" filter-by-date="true">
+                <field-map field-name="productId" from-field="prodIdMap.productId"/>
+            </entity-and>
+            <remove-list list="values"/>
+        </if-compare>
+        <if-compare field="parameters.deleteParentAssocSelect" operator="equals" value="all">
+            <remove-by-and entity-name="ProductCategoryMember" map="prodIdMap"/>
+        </if-compare>
+        
+        <if-compare field="parameters.deleteChildrenSelect" operator="equals" value="recursive">
+            <!-- TODO?: This will be very destructive... remove related:
+                Product
+            -->
+        </if-compare>
+        
+        <if-compare field="parameters.deleteChildAssocSelect" operator="equals" value="expired">
+            <!-- TODO -->
+        </if-compare>
+        <if-compare field="parameters.deleteChildAssocSelect" operator="equals" value="all">
+            <!-- TODO -->
+        </if-compare>
+
+        <!-- TODO: REVIEW: all these may be destructive -->
+        <if-compare field="parameters.deleteSpecialAssocSelect" operator="equals" value="expired">
+            <!-- TODO -->
+        </if-compare>
+        <if-compare field="parameters.deleteSpecialAssocSelect" operator="equals" value="all">
+            <!-- TODO -->
+        </if-compare>
+
+        <!-- we wrote this so we know what it does
+        <set-service-fields service-name="deleteProduct" to-map="deleteRecordCtx" map="parameters"/>
+        <call-service service-name="deleteProduct" in-map-name="deleteRecordCtx"/>-->
+        <remove-value value-field="product"/>
+    </simple-method>
+    
+    <simple-method method-name="deleteProductAndCatAssocVersatile">
+        <set-service-fields service-name="deleteProductCatAssocVersatile" to-map="deleteAssocCtx" map="parameters"/>
+        <call-service service-name="deleteProductCatAssocVersatile" in-map-name="deleteAssocCtx"/>
+        
+        <if-compare field="parameters.deleteRecordAndRelated" operator="not-equals" type="Boolean" value="false">
+            <set-service-fields service-name="deleteProductAndRelatedVersatile" to-map="deleteRecordCtx" map="parameters"/>
+            <call-service service-name="deleteProductAndRelatedVersatile" in-map-name="deleteRecordCtx"/>
+        </if-compare>
+    </simple-method>
+
+    <simple-method method-name="addProductCatAssocVersatile">
+        <!-- check if ProductCategoryMember already exists (ignoring fromDate) -->
+        <entity-and entity-name="ProductCategoryMember" list="assocList" filter-by-date="true">
+            <field-map field-name="productCategoryId" from-field="parameters.productCategoryId"/>
+            <field-map field-name="productId" from-field="parameters.productId"/>
+        </entity-and>
+        <if-not-empty field="assocList">
+            <add-error><fail-property resource="ProductErrorUiLabels" property="productservices.could_not_create_product_category_assoc_association_exists"/></add-error>
+            <check-errors/>
+        </if-not-empty>
+        
+        <set-service-fields service-name="addProductToCategory" to-map="createAssocCtx" map="parameters"/>
+        <call-service service-name="addProductToCategory" in-map-name="createAssocCtx">
+            <result-to-result result-name="productCategoryId"/>
+            <result-to-result result-name="productId"/>
+            <result-to-result result-name="fromDate"/>
+        </call-service>
+    </simple-method>
+
+    <simple-method method-name="copyProductCatAssocVersatile">
+        <set field="addAssocCtx.productId" from-field="parameters.productId"/>
+        <set field="addAssocCtx.fromDate" from-field="parameters.to_fromDate"/>
+        <set field="addAssocCtx.sequenceNum" from-field="parameters.to_sequenceNum"/>
+        <set field="addAssocCtx.productCategoryId" from-field="parameters.to_productCategoryId"/>
+        <call-service service-name="addProductCatAssocVersatile" in-map-name="addAssocCtx">
+            <result-to-field result-name="productId" field="resultFields.productId"/>
+            <result-to-field result-name="fromDate" field="resultFields.fromDate"/>
+            <result-to-field result-name="sequenceNum" field="resultFields.sequenceNum"/>
+            <result-to-field result-name="productCategoryId" field="resultFields.productCategoryId"/>
+        </call-service>
+
+        <field-to-result result-name="productId" field="resultFields.productId"/>
+        <if-compare field="parameters.returnAssocFields" operator="equals" type="Boolean" value="true">
+            <field-to-result result-name="fromDate" field="resultFields.fromDate"/>
+            <field-to-result result-name="sequenceNum" field="resultFields.sequenceNum"/>
+            <field-to-result result-name="productCategoryId" field="resultFields.productCategoryId"/>
+        </if-compare>
+        <field-to-result result-name="to_productId" field="resultFields.productId"/>
+        <field-to-result result-name="to_fromDate" field="resultFields.fromDate"/>
+        <field-to-result result-name="to_sequenceNum" field="resultFields.sequenceNum"/>
+        <field-to-result result-name="to_productCategoryId" field="resultFields.productCategoryId"/>
+    </simple-method>
+    
+    <simple-method method-name="moveProductCatAssocVersatile">
+        <set-service-fields service-name="deleteProductCatAssocVersatile" to-map="deleteAssocCtx" map="parameters"/>
+        <call-service service-name="deleteProductCatAssocVersatile" in-map-name="deleteAssocCtx"/>
+            
+        <!-- move is simply delete + copy for us -->
+        <call-simple-method method-name="copyProductCatAssocVersatile"/>
+        <check-errors/>
+    </simple-method>
+    
+    <simple-method method-name="getProductExtendedDataVersatile">
+        <entity-one entity-name="Product" value-field="product"/>
+        <field-to-result field="product"/>
+        <if-empty field="product">
+            <property-to-field resource="ProductUiLabels" property="ProductProductNotFound" field="errMsgStr" />
+            <add-error><fail-message message="${errMsgStr}: ${parameters.productId}"/></add-error>
+            <check-errors/>
+        </if-empty>
+        
+        <set-service-fields service-name="getProductContentLocalizedSimpleTextViews" to-map="locTextCtx" map="parameters"/>
+        <call-service service-name="getProductContentLocalizedSimpleTextViews" in-map-name="locTextCtx">
+            <result-to-result result-name="viewsByType"/>
+            <result-to-result result-name="viewsByTypeAndLocale"/>
+            <result-to-result result-name="textByTypeAndLocale"/>
+        </call-service>
+    </simple-method>
 </simple-methods>

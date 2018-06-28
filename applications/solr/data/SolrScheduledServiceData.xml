@@ -22,7 +22,10 @@ under the License.
 
     <!-- Run-at-startup auto index rebuild job
         This uses solrconfig.properties to enable/disable, but can be removed manually if needed. -->
+    <!-- NOTE: 2017-08-30: Together with recent job engine patch, this is now configured so that an error at startup will trigger
+        retries during the execution, IN ADDITION TO the recurrence that is created for the next startup (previously, no retries were done).
+        To disable the retry attempts, simply set maxRetry="0" here. -->
     <JobSandbox jobId="SOLR_REBUILD_INIT" jobName="SOLR index rebuild run-at-startup job" runTime="2000-01-01 00:00:00.000" 
-        eventId="SCH_EVENT_STARTUP" serviceName="rebuildSolrIndexAuto" poolId="pool" runAsUser="system" tempExprId="SECOND_EVERY" maxRecurrenceCount="-1"/>
+        eventId="SCH_EVENT_STARTUP" serviceName="rebuildSolrIndexAuto" poolId="pool" runAsUser="system" tempExprId="SECOND_EVERY" maxRecurrenceCount="-1" maxRetry="-1"/>
     
 </entity-engine-xml>

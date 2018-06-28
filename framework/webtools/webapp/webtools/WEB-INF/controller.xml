@@ -619,11 +619,25 @@ under the License.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="WebtoolsLayoutDemo"/>
     </request-map>
+    <request-map uri="LayoutDemo"><!-- SCIPIO: cleaner URL -->
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="WebtoolsLayoutDemo"/>
+    </request-map>
     <request-map uri="TargetedRenderingTest">
         <security https="true" auth="true"/>
         <event type="java" invoke="testEvent" path="com.ilscipio.scipio.webtools.TargetedRenderingTestEvents" />
         <response name="success" type="view" value="TargetedRenderingTest"/>
         <response name="error" type="view" value="TargetedRenderingTest"/>
+    </request-map>
+    <request-map uri="TemplateTest"><!-- SCIPIO: new -->
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="TemplateTest"/>
+    </request-map>
+    <request-map uri="sendExamplePushNotifications"><!-- SCIPIO: new -->
+        <security https="true" auth="true"/>
+        <event type="service" invoke="sendExamplePushNotifications"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
     </request-map>
     
     <!-- SCIPIO: EntityUtilityServices -->
@@ -661,6 +675,34 @@ under the License.
     <request-map uri="ViewTemplateApiDocPage">
         <security https="true" auth="false"/>
         <response name="success" type="view" value="TemplateApiDocPage"/>
+    </request-map>
+    
+    <!-- SCIPIO: Solr -->
+    <request-map uri="SolrStatus">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="SolrStatus"/>
+    </request-map>
+    <request-map uri="SolrServices">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="SolrServices"/>
+    </request-map>
+    <request-map uri="SolrDoc">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="SolrDoc"/>
+    </request-map>
+    <request-map uri="runSolrService">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.webapp.event.CoreEvents" invoke="scheduleService"/>
+        <response name="success" type="view" value="SolrServices"/>
+        <response name="sync_success" type="view" value="SolrServices"/>
+        <response name="error" type="view" value="SolrServices"/>      
+    </request-map>
+    <request-map uri="runSolrServiceForStatus">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.webapp.event.CoreEvents" invoke="scheduleService"/>
+        <response name="success" type="view" value="SolrStatus"/>
+        <response name="sync_success" type="view" value="SolrStatus"/>
+        <response name="error" type="view" value="SolrStatus"/>      
     </request-map>
 
     <!-- end of request mappings -->
@@ -764,7 +806,8 @@ under the License.
     
     <view-map name="WebtoolsLayoutDemo" page="component://webtools/widget/MiscScreens.xml#WebtoolsLayoutDemo" type="screen"/>
     <view-map name="TargetedRenderingTest" page="component://webtools/widget/MiscScreens.xml#TargetedRenderingTest" type="screen"/>
-    
+    <view-map name="TemplateTest" page="component://webtools/widget/MiscScreens.xml#TemplateTest" type="screen"/>
+
     <view-map name="EntityUtilityServices" type="screen" page="component://webtools/widget/EntityScreens.xml#EntityUtilityServices"/>
     <!-- SCIPIO: Demo data generator -->    
     <view-map name="ListDemoDataGeneratorServices" type="screen" page="component://webtools/widget/DemoDataGeneratorScreens.xml#ListDemoDataGeneratorServices"/>
@@ -775,6 +818,11 @@ under the License.
     <!-- SCIPIO: Developer docs -->
     <view-map name="DeveloperDocIndex" type="screen" page="component://webtools/widget/DocScreens.xml#DeveloperDocIndex"/>
     <view-map name="TemplateApiDocPage" type="screen" page="component://webtools/widget/DocScreens.xml#TemplateApiDocPage"/>
+
+    <!-- SCIPIO: Solr -->
+    <view-map name="SolrStatus" type="screen" page="component://webtools/widget/SolrScreens.xml#SolrStatus"/>
+    <view-map name="SolrServices" type="screen" page="component://webtools/widget/SolrScreens.xml#SolrServices"/>
+    <view-map name="SolrDoc" type="screen" page="component://webtools/widget/SolrScreens.xml#SolrDoc"/>
 
     <!-- end of view mappings -->
 </site-conf>

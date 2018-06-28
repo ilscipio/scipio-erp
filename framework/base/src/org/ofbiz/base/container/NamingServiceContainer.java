@@ -35,7 +35,7 @@ import org.ofbiz.base.util.RMIExtendedSocketFactory;
 
 public class NamingServiceContainer implements Container {
 
-    public static final String module = NamingServiceContainer.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected String configFileLocation = null;
     protected boolean isRunning = false;

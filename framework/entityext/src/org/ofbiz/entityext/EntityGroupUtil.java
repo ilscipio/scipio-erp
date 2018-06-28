@@ -37,7 +37,7 @@ import org.ofbiz.entity.util.EntityQuery;
  */
 public class EntityGroupUtil {
 
-    public static final String module = EntityGroupUtil.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static Set<String> getEntityNamesByGroup(String entityGroupId, Delegator delegator, boolean requireStampFields) throws GenericEntityException {
         Set<String> entityNames = new HashSet<String>();

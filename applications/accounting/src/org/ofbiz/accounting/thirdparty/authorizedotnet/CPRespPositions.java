@@ -19,14 +19,13 @@
 
 package org.ofbiz.accounting.thirdparty.authorizedotnet;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
-
-import javolution.util.FastMap;
 
 public class CPRespPositions extends AuthorizeResponse.RespPositions {
     
     // Card-Present v1.0 response positions
-    private static Map<String, Integer> positions = FastMap.newInstance();
+    private static Map<String, Integer> positions = new LinkedHashMap<>();
     static {
         positions.put(AuthorizeResponse.RESPONSE_CODE, 2);
         positions.put(AuthorizeResponse.REASON_CODE, 3);

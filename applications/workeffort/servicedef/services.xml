@@ -333,9 +333,9 @@ under the License.
             for linking routing with its routingTasks
         </description>
         <permission-service service-name="workEffortGenericPermission" main-action="UPDATE"/>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/><!-- SCIPIO: 2018-05-02: added mode="INOUT" to read back fromDate -->
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
-        <override name="fromDate" optional="true"/>
+        <override name="fromDate" optional="true" mode="INOUT"/>
     </service>
     <service name="updateWorkEffortAssoc" default-entity-name="WorkEffortAssoc" engine="simple"
             location="component://workeffort/script/org/ofbiz/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="updateWorkEffortAssoc">

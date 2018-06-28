@@ -27,15 +27,11 @@ under the License.
 
     <property name="desc" value="Entity Component"/>
     <property name="name" value="ofbiz-entity"/>
-    <property name="ofbiz.home.dir" value="../.."/>
 
     <path id="local.class.path">
         <fileset dir="${lib.dir}" includes="*.jar"/>
         <fileset dir="${lib.dir}/jdbc" includes="*.jar"/>
         <fileset dir="../base/lib" includes="*.jar"/>
-        <fileset dir="../base/lib/commons" includes="*.jar"/>
-        <fileset dir="../base/lib/j2eespecs" includes="*.jar"/>
-        <fileset dir="../base/lib/scripting" includes="*.jar"/>
         <fileset dir="../base/build/lib" includes="*.jar"/>
     </path>
 
@@ -52,32 +48,58 @@ under the License.
         </test-jar>
     </target>
 
+    <!-- SCIPIO: ivy confs to resolve (defaults to "*", meaning all) 
+        This should include all the confs manually handled in do-lib-update task override below,
+        or otherwise all ivy.xml configurations that are not optional. -->
+    <!-- 
+        You can override the default driver - that gets updated in lib/jdbc/ automatically - using: 
+          ./ant build -Dlib.entity.jdbc.conf.default=mysql
+        or by setting the property in the main build or elsewhere. It must be an ivy.xml conf.
+        For a one-time update you can use lib.entity.jdbc.conf.update instead.
+        NOTE: If you added an extra (or unsupported) driver to ivy.xml and its jar filename does not start with the
+            ivy config name, you will have to override lib.entity.jdbc.conf.update.filepat to "[something]-*.jar"
+    -->
+    <property name="lib.entity.jdbc.conf.default" value="derby"/><!-- should be a single conf -->
+    <property name="lib.entity.jdbc.conf.update" value="${lib.entity.jdbc.conf.default}"/>
+    <property name="lib.entity.jdbc.conf.all" value="jdbc,${lib.entity.jdbc.conf.update}" />
+    <property name="lib.resolve.build.confs" value="${lib.entity.jdbc.conf.all}"/>
+    
     <target name="do-lib-update" description="Downloads all jars">
-        <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="base">
-        </ivy:retrieve>
-        <ivy:retrieve pattern="lib/jdbc/unused/${lib.update.filename.pattern.ivy}" conf="jdbc">
-            <firstmatchmapper>
-                <!-- Move drivers to old locations (TODO?: remove? standardize?) -->
-                <regexpmapper from="^(.*/)?jaybird-jdk1(\d)-([^/]+)\.jar$$" to="\1firebird/1.\2/jaybird-\3_jre\2.jar" handledirsep="true"/>              
-                <regexpmapper from="^(.*/)?hsqldb-([^/]+)\.jar$$" to="\1hsql/hsqldb.jar" handledirsep="true"/>
-                <regexpmapper from="^(.*/)?mysql-connector-java-([^/]+)\.jar$$" to="\1mysql/mysql-connector-java-\2-bin.jar" handledirsep="true"/>
-                <regexpmapper from="^(.*/)?(postgresql-[^/]+\.jre7\.jar)$$" to="\1postgresql/1.7/\2" handledirsep="true"/>
-                <regexpmapper from="^(.*/)?(postgresql-[^/]+\.jar)$$" to="\1postgresql/1.8/\2" handledirsep="true"/>
-                <regexpmapper from="^(.*/)?(derby-[^/]+\.jar)$$" to="\1derby/\2" handledirsep="true"/>
-                <identitymapper/>
-            </firstmatchmapper>
-        </ivy:retrieve>
-        <!-- if there are no JDBC drivers directly under lib/jdbc/, copy derby there by default -->
+        <echo message="Configured default JDBC driver (lib.entity.jdbc.conf.default): ${lib.entity.jdbc.conf.default}" level="info"/>
+        <echo message="Target JDBC driver for update (lib.entity.jdbc.conf.update): ${lib.entity.jdbc.conf.update}" level="info"/>
         <if>
-            <resourcecount count="0" when="eq">
-                <fileset dir="lib/jdbc" includes="*.jar"/>
-            </resourcecount>
+            <contains string="${lib.resolve.build.confs}" substring="jdbc"/>
             <then>
-                <copy todir="lib/jdbc">
-                    <fileset dir="lib/jdbc/unused/derby">
-                        <include name="derby-*.jar"/>
-                    </fileset>
-                </copy>
+                <ivy:retrieve pattern="lib/jdbc/unused/${lib.update.filename.pattern.ivy}" conf="jdbc">
+                    <!-- 2018-06-28: this will no longer be useful
+                    <firstmatchmapper>
+                        <!- - Move drivers to old locations (TODO?: remove? standardize?) - ->
+                        <regexpmapper from="^(.*/)?(jaybird-[^/]+\.jar)$" to="\1firebird/1.8/\2" handledirsep="true"/>              
+                        <regexpmapper from="^(.*/)?(hsqldb-[^/]+\.jar)$" to="\1hsql/\2" handledirsep="true"/>
+                        <regexpmapper from="^(.*/)?(mysql-[^/]+\.jar)$" to="\1mysql/\2" handledirsep="true"/>
+                        <regexpmapper from="^(.*/)?(mariadb-[^/]+\.jar)$" to="\1mariadb/\2" handledirsep="true"/>
+                        <regexpmapper from="^(.*/)?(postgresql-[^/]+\.jar)$" to="\1postgresql/1.8/\2" handledirsep="true"/>
+                        <regexpmapper from="^(.*/)?(derby-[^/]+\.jar)$" to="\1derby/\2" handledirsep="true"/>
+                        <identitymapper/>
+                    </firstmatchmapper>-->
+                </ivy:retrieve>
+            </then>
+        </if>
+        <if>
+            <not><equals arg1="${lib.entity.jdbc.conf.update}" arg2="none"/></not>
+            <then>
+                <!-- NOTE: user may override this lib.entity.jdbc.conf.update.filepat property if added a non-supported jdbc driver
+                    and its jar name is different from config name -->
+                <property name="lib.entity.jdbc.conf.update.filepat" value="${lib.entity.jdbc.conf.update}-*.jar"/>
+                <if>
+                    <not><equals arg1="${lib.entity.jdbc.conf.update.filepat}" arg2=""/></not>
+                    <then>
+                        <delete>
+                            <fileset dir="lib/jdbc"><include name="${lib.entity.jdbc.conf.update.filepat}"/></fileset>
+                        </delete>
+                    </then>
+                </if>
+                <ivy:retrieve pattern="lib/jdbc/${lib.update.filename.pattern.ivy}" conf="${lib.entity.jdbc.conf.update}"/>
             </then>
         </if>
     </target>

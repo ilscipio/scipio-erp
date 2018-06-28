@@ -26,7 +26,7 @@ import org.ofbiz.base.start.StartupLoader;
 
 public class SplashLoader implements StartupLoader, Runnable {
 
-    public static final String module = SplashLoader.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static SplashScreen screen = null;
     private Config config = null;
 

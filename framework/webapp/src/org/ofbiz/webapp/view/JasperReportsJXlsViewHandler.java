@@ -49,7 +49,7 @@ import org.ofbiz.entity.Delegator;
  */
 public class JasperReportsJXlsViewHandler extends AbstractViewHandler {
 
-    public static final String module = JasperReportsJXlsViewHandler.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected ServletContext context;
     public static UtilCache jasperReportsCompiledCache = UtilCache.createUtilCache("webapp.JasperReportsCompiled");

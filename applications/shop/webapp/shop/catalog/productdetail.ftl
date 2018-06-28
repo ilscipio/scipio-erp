@@ -283,7 +283,7 @@
                     <span id="product-price_old"><del><@ofbizCurrency amount=oldPrice isoCode=price.currencyUsed /></del></span>
                 </#if>
                  
-                <#if (!product.isVirtual?has_content || (product.isVirtual?has_content && product.isVirtual!?upper_case == "Y"))>
+                <#if ((product.isVirtual?has_content && product.isVirtual!?upper_case == "Y"))>
                     <span id="product-price"><strong>${uiLabelMap.OrderChooseVariations}...</strong></span>
                 <#elseif currentPrice?has_content>
                     <span id="product-price"><strong><@ofbizCurrency amount=currentPrice isoCode=price.currencyUsed /></strong></span>
@@ -323,7 +323,7 @@
               <#-- onePageCheckout-->
               <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="addform">
                 <input type="hidden" name="goToOnePageCheckout" value="true" />
-                    <#assign urlFile = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(product, "URL_FILE", request,"html") />                    
+                    <#assign urlFile = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(product, "URL_FILE", request,"raw") />                    
                     <#assign inStock = true />
                     
                     <#-- SCIPIO: TODO: We currently have no client-side check for incompatible (FEATURE_IACTN_INCOMP) and dependent features.
@@ -542,12 +542,12 @@
     
     <#if productDetailLongDescContentString?has_content || productDetailProductAttribContentString?has_content>
         <@tabs>
-            <#if productDetailLongDescContentString?has_content>
+            <#if productDetailLongDescContentString?trim?has_content>
                 <@tab title=uiLabelMap.CommonOverview>
                     ${productDetailLongDescContentString}
                 </@tab>
             </#if>
-            <#if productDetailProductAttribContentString?has_content>
+            <#if productDetailProductAttribContentString?trim?has_content>
                 <@tab title=uiLabelMap.CommonSpecifications>
                     ${productDetailProductAttribContentString}
                 </@tab>
@@ -556,6 +556,7 @@
     </#if>
     
 </@section>
+
 <@section>
         <#-- Prefill first select box (virtual products only)
         <div id="product-virtual-swatch">            
@@ -571,7 +572,7 @@
                 <#list imageKeys as key>
                     <#assign swatchProduct = imageMap.get(key) />
                     <#if swatchProduct?has_content && (indexer < maxIndex)>
-                        <#assign imageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(swatchProduct, "SMALL_IMAGE_URL", request,"html")! />
+                        <#assign imageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(swatchProduct, "SMALL_IMAGE_URL", request,"url")! />
                         <#if !imageUrl?string?has_content>
                             <#assign imageUrl = productContentWrapper.get("SMALL_IMAGE_URL","url")! />
                         </#if>
@@ -611,6 +612,12 @@
     </ul>
   </#if>
 </#macro>-->
+
+<@section>
+  <#-- Product Reviews -->
+  <@render resource="component://shop/widget/CatalogScreens.xml#inlineproductreview" reqAttribs={"productId": product.productId!"", "categoryId": requestParameters.category_id!"","productReviews":productReviews!,"numRatings":numRatings!,"averageRating":averageRating!} />
+  <#-- <a href="<@ofbizUrl>reviewProduct?category_id=${categoryId!}&amp;product_id=${product.productId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductReviewThisProduct}!</a> -->
+</@section>
 
 </div>
 

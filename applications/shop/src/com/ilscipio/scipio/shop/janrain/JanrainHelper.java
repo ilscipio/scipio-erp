@@ -41,11 +41,8 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
@@ -64,10 +61,10 @@ import org.xml.sax.SAXException;
  */
 public class JanrainHelper {
 
-    public static final String module = JanrainHelper.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     // SCIPIO: now points to shop
-    private static String apiKey = UtilProperties.getPropertyValue("shop.properties", "janrain.apiKey");
-    private static String baseUrl = UtilProperties.getPropertyValue("shop.properties", "janrain.baseUrl");
+    private static String apiKey = UtilProperties.getPropertyValue("shop", "janrain.apiKey");
+    private static String baseUrl = UtilProperties.getPropertyValue("shop", "janrain.baseUrl");
     public JanrainHelper(String apiKey, String baseUrl) {
         while (baseUrl.endsWith("/"))
             baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
@@ -220,7 +217,7 @@ public class JanrainHelper {
                 return "error";
             }
             
-            Map<String, String> result = FastMap.newInstance();
+            Map<String, String> result = new HashMap<String, String>();
             result.put("displayName", displayName);
             result.put("email", email);
             result.put("identifier", identifier);

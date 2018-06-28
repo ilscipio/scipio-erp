@@ -47,8 +47,8 @@ under the License.
         location="webapp/workeffort"
         base-permission="OFBTOOLS,WORKEFFORTMGR"
         mount-point="/workeffort"
-        app-bar-display="false"
-        menu-name="secondary"/>
+        app-bar-display="true"
+        menu-name="main"/>
 
      <webapp name="ical"
         title="iCalendar"

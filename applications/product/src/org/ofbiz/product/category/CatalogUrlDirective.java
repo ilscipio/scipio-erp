@@ -81,7 +81,7 @@ import freemarker.template.utility.DeepUnwrap;
  */
 public class CatalogUrlDirective implements TemplateDirectiveModel {
 
-    public final static String module = CatalogUrlDirective.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     @Override
     public void execute(Environment env, Map args, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateException, IOException {

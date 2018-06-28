@@ -1,4 +1,3 @@
-import javolution.util.FastList
 
 import org.ofbiz.base.util.UtilDateTime
 import org.ofbiz.base.util.UtilMisc
@@ -19,7 +18,7 @@ if (iCount <= 0)
 fromDateTimestamp = UtilDateTime.getTimeStampFromIntervalScope(iScope, iCount);
 dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, fromDateTimestamp, context.locale, context.timeZone);
 
-List exprsList = FastList.newInstance();
+List exprsList = [];
 exprsList.add(EntityCondition.makeCondition("enabled", EntityOperator.EQUALS, "N"));
 exprsList.add(EntityCondition.makeCondition("successfulLogin", EntityOperator.EQUALS, 'N'));
 

@@ -53,7 +53,7 @@ import org.w3c.dom.Document;
 @SuppressWarnings("serial")
 public class DispatchContext implements Serializable {
 
-    public static final String module = DispatchContext.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private static final UtilCache<String, Map<String, ModelService>> modelServiceMapByModel = UtilCache.createUtilCache("service.ModelServiceMapByModel", 0, 0, false);
 

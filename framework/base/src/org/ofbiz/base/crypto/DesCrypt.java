@@ -21,11 +21,11 @@ package org.ofbiz.base.crypto;
 import java.security.NoSuchAlgorithmException;
 import java.security.InvalidKeyException;
 import java.security.InvalidAlgorithmParameterException;
+import java.security.Key;
 import java.security.spec.InvalidKeySpecException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.BadPaddingException;
-import javax.crypto.SecretKey;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKeyFactory;
@@ -37,19 +37,23 @@ import org.ofbiz.base.util.GeneralException;
 /**
  * Utility class for doing DESded (3DES) Two-Way Encryption
  *
+ * @deprecated SCIPIO: 2018-04: DES is no longer considered secure
+ * and should not be used as main cipher in any code; some code may
+ * still remain where it is used as pure fallback only, to read back old records.
  */
+@Deprecated
 public class DesCrypt {
 
-    public static final String module = DesCrypt.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    public static SecretKey generateKey() throws NoSuchAlgorithmException {
+    public static Key generateKey() throws NoSuchAlgorithmException {
         KeyGenerator keyGen = KeyGenerator.getInstance("DESede");
 
         // generate the DES3 key
         return keyGen.generateKey();
     }
 
-    public static byte[] encrypt(SecretKey key, byte[] bytes) throws GeneralException {
+    public static byte[] encrypt(Key key, byte[] bytes) throws GeneralException {
         Cipher cipher = DesCrypt.getCipher(key, Cipher.ENCRYPT_MODE);
         byte[] encBytes = null;
         try {
@@ -64,7 +68,7 @@ public class DesCrypt {
         return encBytes;
     }
 
-    public static byte[] decrypt(SecretKey key, byte[] bytes) throws GeneralException {
+    public static byte[] decrypt(Key key, byte[] bytes) throws GeneralException {
         Cipher cipher = DesCrypt.getCipher(key, Cipher.DECRYPT_MODE);
         byte[] decBytes = null;
         try {
@@ -79,7 +83,7 @@ public class DesCrypt {
         return decBytes;
     }
 
-    public static SecretKey getDesKey(byte[] rawKey) throws GeneralException {
+    public static Key getDesKey(byte[] rawKey) throws GeneralException {
         SecretKeyFactory skf = null;
         try {
             skf = SecretKeyFactory.getInstance("DESede");
@@ -97,7 +101,7 @@ public class DesCrypt {
             }
 
             // create the SecretKey Object
-            SecretKey key = null;
+            Key key = null;
             try {
                 key = skf.generateSecret(desedeSpec1);
             } catch (InvalidKeySpecException e) {
@@ -110,7 +114,7 @@ public class DesCrypt {
     }
 
     // return a cipher for a key - DESede/CBC/PKCS5Padding IV = 0
-    protected static Cipher getCipher(SecretKey key, int mode) throws GeneralException {
+    protected static Cipher getCipher(Key key, int mode) throws GeneralException {
         byte[] zeros = { 0, 0, 0, 0, 0, 0, 0, 0 };
         IvParameterSpec iv = new IvParameterSpec(zeros);
 

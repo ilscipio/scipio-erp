@@ -51,7 +51,7 @@ import org.ofbiz.entity.model.ModelField;
  */
 public class EntityUtil {
 
-    public static final String module = EntityUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static <V> Map<String, V> makeFields(V... args) {
         Map<String, V> fields = new HashMap<String, V>();
@@ -547,7 +547,7 @@ public class EntityUtil {
      * property in <code>general.properties</code> to "Y".</p>
      */
     public static boolean isMultiTenantEnabled() {
-        return "Y".equalsIgnoreCase(UtilProperties.getPropertyValue("general.properties", "multitenant"));
+        return "Y".equalsIgnoreCase(UtilProperties.getPropertyValue("general", "multitenant"));
     }
     
     

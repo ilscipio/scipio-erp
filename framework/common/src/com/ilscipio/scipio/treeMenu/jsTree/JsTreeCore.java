@@ -9,8 +9,8 @@ import org.ofbiz.base.util.UtilValidate;
  * @author jsoto
  *
  */
+@SuppressWarnings("serial")
 public class JsTreeCore extends HashMap<String, Object> {
-    private static final long serialVersionUID = 2371673939917629690L;
 
     public JsTreeCore(boolean multiple, HashMap<String, String> strings, Integer animation) {
         setMultiple(multiple);

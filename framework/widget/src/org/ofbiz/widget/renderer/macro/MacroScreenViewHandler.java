@@ -57,7 +57,7 @@ import freemarker.template.utility.StandardCompress;
 
 public class MacroScreenViewHandler extends AbstractViewHandler implements ViewHandlerExt {
 
-    public static final String module = MacroScreenViewHandler.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected ServletContext servletContext = null;
 

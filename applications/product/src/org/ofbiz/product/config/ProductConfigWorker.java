@@ -22,17 +22,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Enumeration;
+import java.util.LinkedList;
 
 import javax.servlet.http.HttpServletRequest;
-
-import javolution.util.FastList;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -44,14 +43,13 @@ import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.website.WebSiteWorker;
-import org.ofbiz.base.util.cache.UtilCache;
 
 /**
  * Product Config Worker class to reduce code in templates.
  */
 public class ProductConfigWorker {
 
-    public static final String module = ProductConfigWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ProductUiLabels";
     public static final String SEPARATOR = "::";    // cache key separator
 
@@ -67,7 +65,8 @@ public class ProductConfigWorker {
             /* caching: there is one cache created, "product.config"  Each product's config wrapper is cached with a key of
              * productId::catalogId::webSiteId::currencyUomId, or whatever the SEPARATOR is defined above to be.
              */
-            String cacheKey = productId + SEPARATOR + productStoreId + SEPARATOR + catalogId + SEPARATOR + webSiteId + SEPARATOR + currencyUomId;
+            Delegator delegator = (Delegator) request.getAttribute("delegator");
+            String cacheKey = productId + SEPARATOR + productStoreId + SEPARATOR + catalogId + SEPARATOR + webSiteId + SEPARATOR + currencyUomId + SEPARATOR + delegator;
             configWrapper = productConfigCache.get(cacheKey);
             if (configWrapper == null) {
                 configWrapper = new ProductConfigWrapper((Delegator)request.getAttribute("delegator"),
@@ -87,7 +86,28 @@ public class ProductConfigWorker {
         return configWrapper;
     }
 
+    /**
+     * Fills the product content wrapper from request.
+     * <p>
+     * SCIPIO: 2018-03-09: patched to support reset operation - true by default - 
+     * prevents browser checkbox no-submission problems.
+     */
     public static void fillProductConfigWrapper(ProductConfigWrapper configWrapper, HttpServletRequest request) {
+        fillProductConfigWrapper(configWrapper, request, true);
+    }
+    
+    /**
+     * Fills the product content wrapper from request.
+     * <p>
+     * SCIPIO: 2018-03-09: Patched to support reset operation - 
+     * prevents browser checkbox no-submission problems.
+     * WARN: false is flawed without reset - is only for access to legacy behavior or if you already reset/unnecessary.
+     * TODO: 2018-03-09: Does not support un-setting for multiple choice/checkbox items (no checkbox selected),
+     * meaning full reset all options is always required, meaning does not support partial items filling, only sets all or none.
+     */
+    public static void fillProductConfigWrapper(ProductConfigWrapper configWrapper, HttpServletRequest request, boolean resetConfig) {
+        if (resetConfig) configWrapper.resetConfigFull();
+        
         int numOfQuestions = configWrapper.getQuestions().size();
         for (int k = 0; k < numOfQuestions; k++) {
             String[] opts = request.getParameterValues(Integer.toString(k));
@@ -112,6 +132,9 @@ public class ProductConfigWorker {
                 continue;
             }
             for (String opt: opts) {
+                // SCIPIO: 2018-02-13: option may have empty value ("No option"); this is normal; don't log warning (NumberFormatException)
+                if (UtilValidate.isEmpty(opt)) continue;
+                
                 int cnt = -1;
                 try {
                     cnt = Integer.parseInt(opt);
@@ -143,7 +166,7 @@ public class ProductConfigWorker {
                                     if (ProductWorker.isVirtual((Delegator)request.getAttribute("delegator"), selectedProductId)) {
                                         if ("VV_FEATURETREE".equals(ProductWorker.getProductVirtualVariantMethod((Delegator)request.getAttribute("delegator"), selectedProductId))) {
                                             // get the selected features
-                                            List<String> selectedFeatures = FastList.newInstance();
+                                            List<String> selectedFeatures = new LinkedList<String>();
                                             Enumeration<String> paramNames = UtilGenerics.cast(request.getParameterNames());
                                             while (paramNames.hasMoreElements()) {
                                                 String paramName = paramNames.nextElement();
@@ -190,12 +213,12 @@ public class ProductConfigWorker {
         if (configWrapper == null || (!configWrapper.isCompleted()))  return;
         String configId = null;
         List<ConfigItem> questions = configWrapper.getQuestions();
-        List<GenericValue> configsToCheck = FastList.newInstance();
+        List<GenericValue> configsToCheck = new LinkedList<GenericValue>();
         int selectedOptionSize = 0;
         for (ConfigItem ci: questions) {
             String configItemId = null;
             Long sequenceNum = null;
-            List<ProductConfigWrapper.ConfigOption> selectedOptions = FastList.newInstance();
+            List<ProductConfigWrapper.ConfigOption> selectedOptions = new LinkedList<ProductConfigWrapper.ConfigOption>();
             List<ConfigOption> options = ci.getOptions();
             if (ci.isStandard()) {
                 selectedOptions.addAll(options);
@@ -244,7 +267,7 @@ public class ProductConfigWorker {
                             for (ConfigItem ci: questions) {
                                 String configItemId = null;
                                 Long sequenceNum = null;
-                                List<ProductConfigWrapper.ConfigOption> selectedOptions = FastList.newInstance();
+                                List<ProductConfigWrapper.ConfigOption> selectedOptions = new LinkedList<ProductConfigWrapper.ConfigOption>();
                                 List<ConfigOption> options = ci.getOptions();
                                 if (ci.isStandard()) {
                                     selectedOptions.addAll(options);
@@ -310,7 +333,7 @@ public class ProductConfigWorker {
         for (ConfigItem ci: questions) {
             String configItemId = null;
             Long sequenceNum = null;
-            List<ProductConfigWrapper.ConfigOption> selectedOptions = FastList.newInstance();
+            List<ProductConfigWrapper.ConfigOption> selectedOptions = new LinkedList<ProductConfigWrapper.ConfigOption>();
             List<ConfigOption> options = ci.getOptions();
            if (ci.isStandard()) {
                 selectedOptions.addAll(options);
@@ -332,7 +355,7 @@ public class ProductConfigWorker {
                 sequenceNum = ci.getConfigItemAssoc().getLong("sequenceNum");
                 for (ConfigOption oneOption: selectedOptions) {
                     Map<String, String>  componentOptions = oneOption.componentOptions;
-                    List<GenericValue> toBeStored = FastList.newInstance();
+                    List<GenericValue> toBeStored = new LinkedList<GenericValue>();
                     String configOptionId = oneOption.configOption.getString("configOptionId");
                     String description = oneOption.getComments();
                     GenericValue productConfigConfig = delegator.makeValue("ProductConfigConfig");

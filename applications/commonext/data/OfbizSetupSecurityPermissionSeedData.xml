@@ -18,8 +18,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 <entity-engine-xml>
-    <SecurityPermission description="ALL OFBiz Setup operations." permissionId="SETUP_ADMIN"/>
-    <SecurityPermission description="OFBiz Setup View permission." permissionId="SETUP_VIEW"/>
+    <!-- SCIPIO: NOTE: 2017-08-08: some renames inlined here, because the SETUP name/prefix is reused for the new setup application -->
+    <SecurityPermission description="ALL Scipio Setup operations." permissionId="SETUP_ADMIN"/>
+    <SecurityPermission description="Scipio Setup View permission." permissionId="SETUP_VIEW"/>
 
     <SecurityGroupPermission groupId="SUPER" permissionId="SETUP_ADMIN"/>
 </entity-engine-xml>

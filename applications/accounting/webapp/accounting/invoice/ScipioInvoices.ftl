@@ -19,7 +19,7 @@
             <@td><a href="<@ofbizUrl>invoiceOverview?invoiceId=${item.invoiceId}</@ofbizUrl>">${item.invoiceId!}</a></@td>
             <@td>${itemType.get("description",locale)!}</@td>
             <#-- <@td>${item.partyIdFrom}</@td> -->
-            <@td><@formattedDateTime date=item.dueDate /></@td>
+            <@td><#if item.dueDate?has_content><@formattedDateTime date=item.dueDate /></#if></@td>
             <@td><@ofbizCurrency isoCode=item.currencyUomId amount=total!0/></@td>              
             <@td><strong><@ofbizCurrency isoCode=item.currencyUomId amount=outstandingAmount!0/></strong></@td>
         </@tr>

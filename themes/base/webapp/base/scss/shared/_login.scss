@@ -1,3 +1,33 @@
+// Social Colors
+$facebook: #3b5998;
+$twitter: #00aced;
+$linkedin: #4875b4;
+$google-plus: #d34836;
+$flickr: #ff0084;
+$tumblr: #32506d;
+$xing: #026466;
+$github: #4183c4;
+$html5: #e34f26;
+$openid: #f78c40;
+$stack-overflow: #fe7a15;
+$youtube: #b00;
+$css3: #0170ba;
+$dribbble: #ea4c89;
+$google-plus: #bb4b39;
+$instagram: #517fa4;
+$pinterest: #cb2027;
+$vk: #45668e;
+$yahoo: #400191;
+$behance: #1769ff;
+$dropbox: #007ee5;
+$reddit: #ff4500;
+$spotify: #7ab800;
+$vine: #00bf8f;
+$foursquare: #1073af;
+$vimeo: #aad450;
+
+
+/*Login Box*/
 .login-box {
   margin: 200px 0;
   padding:0px;
@@ -26,4 +56,408 @@
 
 @media (max-width:610px) {
     .login-box  {position:static; width:100%;margin-left:0;padding:10px;margin-top:50px;}
+}
+
+/*
+Social Media buttons
+*/
+.facebook,
+.twitter,
+.linkedin,
+.flickr,
+.tumblr,
+.xing,
+.github,
+.html5,
+.openid,
+.stack-overflow,
+.youtube,
+.css3,
+.dribbble,
+.google-plus,
+.instagram,
+.pinterest,
+.vk,
+.yahoo,
+.behance,
+.dropbox,
+.reddit,
+.spotify,
+.vine,
+.foursquare,
+.vimeo {
+  position: relative;
+  overflow: hidden;
+  color: #fff !important;
+  text-align: center;
+
+  &::before {
+    @include split-button;
+    font-family: 'FontAwesome';
+    font-style: normal;
+    font-weight: normal;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  &:hover {
+    color: #fff;
+  }
+
+  &.icon {
+
+    span {
+      display: none;
+    }
+  }
+
+  &.text {
+    &::before {
+      display: none;
+    }
+
+    span {
+      margin-left: 0 !important;
+    }
+  }
+  
+  @include button-size($padding:$button-med);
+
+  &.button-lrg {
+    @include button-size($padding:$button-lrg);
+  }
+
+  &.button-sml {
+    @include button-size($padding:$button-sml);
+  }
+  
+  &.button-tny {
+    @include button-size($padding:$button-tny);
+  }
+
+}
+
+.facebook {
+  $color: $facebook;
+
+  background: $color;
+  &::before {
+    content: "\f09a";
+    }
+
+  &:hover {
+    background: darken($color, 5%);
+  }
+}
+
+.twitter {
+  $color: $twitter;
+
+  background: $color;
+  &::before {
+    content: "\f099";
+    }
+
+  &:hover {
+    background: darken($color, 5%);
+  }
+}
+
+.linkedin {
+  $color: $linkedin;
+
+  background: $color;
+  &::before {
+    content: "\f0e1";
+    }
+
+  &:hover {
+    background: darken($color, 5%);
+  }
+}
+
+.flickr {
+  $color: $flickr;
+
+  background: $color;
+  &::before {
+    content: "\f16e";
+    }
+
+  &:hover {
+    background: darken($color, 5%);
+  }
+}
+
+.tumblr {
+  $color: $tumblr;
+
+  background: $color;
+  &::before {
+    content: "\f173";
+    }
+
+  &:hover {
+    background: darken($color, 5%);
+  }
+}
+
+.xing {
+  $color: $xing;
+
+  background: $color;
+  &::before {
+    content: "\f168";
+    }
+
+  &:hover {
+    background: darken($color, 5%);
+  }
+}
+
+.github {
+  $color: $github;
+
+  background: $color;
+  &::before {
+    content: "\f09b";
+    }
+
+  &:hover {
+    background: darken($color, 5%);
+  }
+}
+
+.html5 {
+  $color: $html5;
+
+  background: $color;
+  &::before {
+    content: "\f13b";
+    }
+
+  &:hover {
+    background: darken($color, 5%);
+  }
+}
+
+.openid {
+  $color: $openid;
+
+  background: $color;
+  &::before {
+    content: "\f19b";
+    }
+
+  &:hover {
+    background: darken($color, 5%);
+  }
+}
+
+.stack-overflow {
+  $color: $stack-overflow;
+
+  background: $color;
+  &::before {
+    content: "\f16c";
+    }
+
+  &:hover {
+    background: darken($color, 5%);
+  }
+}
+
+.css3 {
+  $color: $css3;
+
+  background: $color;
+  &::before {
+    content: "\f13c";
+    }
+
+  &:hover {
+    background: darken($color, 5%);
+  }
+}
+
+.youtube {
+  $color: $youtube;
+
+  background: $color;
+  &::before {
+    content: "\f167";
+    }
+
+  &:hover {
+    background: darken($color, 5%);
+  }
+}
+
+.dribbble {
+  $color: $dribbble;
+
+  background: $color;
+  &::before {
+    content: "\f17d";
+    }
+
+  &:hover {
+    background: darken($color, 5%);
+  }
+}
+
+.google-plus {
+  $color: $google-plus;
+
+  background: $color;
+  &::before {
+    content: "\f0d5";
+    }
+
+  &:hover {
+    background: darken($color, 5%);
+  }
+}
+
+.instagram {
+  $color: $instagram;
+
+  background: $color;
+  &::before {
+    content: "\f16d";
+    }
+
+  &:hover {
+    background: darken($color, 5%);
+  }
+}
+
+.pinterest {
+  $color: $pinterest;
+
+  background: $color;
+  &::before {
+    content: "\f0d2";
+    }
+
+  &:hover {
+    background: darken($color, 5%);
+  }
+}
+
+.vk {
+  $color: $vk;
+
+  background: $color;
+  &::before {
+    content: "\f189";
+    }
+
+  &:hover {
+    background: darken($color, 5%);
+  }
+}
+
+.yahoo {
+  $color: $yahoo;
+
+  background: $color;
+  &::before {
+    content: "\f19e";
+    }
+
+  &:hover {
+    background: darken($color, 5%);
+  }
+}
+
+.behance {
+  $color: $behance;
+
+  background: $color;
+  &::before {
+    content: "\f1b4";
+    }
+
+  &:hover {
+    background: darken($color, 5%);
+  }
+}
+
+.dropbox {
+  $color: $dropbox;
+
+  background: $color;
+  &::before {
+    content: "\f16b";
+    }
+
+  &:hover {
+    background: darken($color, 5%);
+  }
+}
+
+.reddit {
+  $color: $reddit;
+
+  background: $color;
+  &::before {
+    content: "\f1a1";
+    }
+
+  &:hover {
+    background: darken($color, 5%);
+  }
+}
+
+.spotify {
+  $color: $spotify;
+
+  background: $color;
+  &::before {
+    content: "\f1bc";
+    }
+
+  &:hover {
+    background: darken($color, 5%);
+  }
+}
+
+.vine {
+  $color: $vine;
+
+  background: $color;
+  &::before {
+    content: "\f1ca";
+    }
+
+  &:hover {
+    background: darken($color, 5%);
+  }
+}
+
+.foursquare {
+  $color: $foursquare;
+
+  background: $color;
+  &::before {
+    content: "\f180";
+    }
+
+  &:hover {
+    background: darken($color, 5%);
+  }
+}
+
+.vimeo {
+  $color: $vimeo;
+
+  background: $color;
+  &::before {
+    content: "\f194";
+    }
+
+  &:hover {
+    background: darken($color, 5%);
+  }
 }

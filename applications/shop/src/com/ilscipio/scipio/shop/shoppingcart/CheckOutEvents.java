@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public abstract class CheckOutEvents extends org.ofbiz.order.shoppingcart.CheckOutEvents {
 
-    public static final String module = CheckOutEvents.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     protected CheckOutEvents() {
     }

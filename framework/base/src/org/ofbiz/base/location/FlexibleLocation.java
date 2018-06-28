@@ -18,15 +18,15 @@
  *******************************************************************************/
 package org.ofbiz.base.location;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Map.Entry;
+import java.util.Properties;
 
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilValidate;
@@ -35,10 +35,9 @@ import org.ofbiz.base.util.UtilValidate;
  * A special location resolver that uses Strings like URLs, but with more options.
  *
  */
-
 public final class FlexibleLocation {
 
-    public static final String module = FlexibleLocation.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final Map<String, LocationResolver> locationResolvers;
 
     static {
@@ -53,7 +52,11 @@ public final class FlexibleLocation {
         resolverMap.put("ofbizhome", new OFBizHomeLocationResolver());
         resolverMap.put("component", new ComponentLocationResolver());
         try {
-            Properties properties = UtilProperties.getProperties("locationresolvers.properties");
+            /* Note that the file must be placed in framework/base/config -
+             * because this class may be initialized before all components
+             * are loaded.
+             */
+            Properties properties = UtilProperties.createProperties("locationresolvers.properties");
             if (properties != null) {
                 ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
                 for (Entry<Object, Object> entry : properties.entrySet()) {
@@ -64,7 +67,7 @@ public final class FlexibleLocation {
                 }
             }
         } catch (Throwable e) {
-            Debug.logWarning(e, "Error while loading resolvers from locationresolvers.properties: ", module);
+            System.out.println("Exception thrown while loading locationresolvers.properties: " + e);
         }
         locationResolvers = Collections.unmodifiableMap(resolverMap);
     }
@@ -213,6 +216,44 @@ public final class FlexibleLocation {
      */
     public static URL resolveLocationAsUrlOrFilename(String location) throws MalformedURLException {
         return isUrlLocation(location) ? resolveLocation(location) : UtilURL.fromFilename(location);
+    }
+    
+    /**
+     * SCIPIO: Resolves the url parameter interpreting it as a filesystem location ("file://", "component://"
+     * and any other that resolves to the local filesystem) and returns its absolute file path.
+     * Added 2017-07-14.
+     * @throws MalformedURLException if the url is malformed, of unknown type or contains an invalid file path format
+     * @throws IllegalArgumentException if the url does not map to a local filesystem location
+     */
+    public static String resolveFileUrlAsPath(String url) throws MalformedURLException, IllegalArgumentException {
+        URL urlInst;
+        try {
+            urlInst = FlexibleLocation.resolveLocation(url); // here "component://" gets turned into "file://" (example)
+        } catch(MalformedURLException e) {
+            throw new MalformedURLException("The specified url '" + url + "' is invalid: " + e.getMessage());
+        }
+        if ("file".equalsIgnoreCase(urlInst.getProtocol())) {
+            try {
+                return new File(urlInst.toURI()).getPath();
+            } catch (Exception e) { // URISyntaxException (toURI) + IllegalArgumentException (File)
+                throw new MalformedURLException("The specified local filesystem url '" + url
+                        + "' could not be converted to a file path: " + e.getMessage()
+                        + " (" + e.getClass().getName() + ")");
+            }
+        } else throw new IllegalArgumentException("The specified url '" + url
+                + "' does not designate or resolve to a local filesystem location (file://, component://, ...)");
+    }
+    
+    /**
+     * SCIPIO: If the given value parameter is a url, resolves the value parameter as url 
+     * interpreting it as a filesystem location ("file://", "component://" and any other that resolves 
+     * to the local filesystem) and returns its absolute file path; if not a url, returns the default value.
+     * Added 2017-07-14.
+     * @throws MalformedURLException if the url is malformed, of unknown type or contains an invalid file path format
+     * @throws IllegalArgumentException if the url does not map to a local filesystem location
+     */
+    public static String resolveFileUrlAsPathIfUrl(String value, String defaultValue) throws MalformedURLException, IllegalArgumentException {
+        return FlexibleLocation.isUrlLocation(value) ? resolveFileUrlAsPath(value) : defaultValue;
     }
     
     private FlexibleLocation() {}

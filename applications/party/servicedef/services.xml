@@ -981,6 +981,15 @@ under the License.
         <description>Remove a PartyContent record</description>
         <auto-attributes mode="IN" include="pk" optional="false"/>
     </service>
+    
+    <service name="removePartyContentAndRelated" engine="group" auth="true"><!-- SCIPIO: added 2018-04-16 -->
+        <description>Remove a PartyContent record and the Content record itself (SCIPIO)
+            WARN: Does not delete files stored in the filesystem!</description>
+        <group>
+            <invoke name="removePartyContent"/>
+            <invoke name="removeContentAndRelated"/>
+        </group>
+    </service>
 
     <service name="createPartyTextContent" engine="group" transaction-timeout="300" auth="true">
         <description>Creates a Text Document DataResource and Content Records</description>
@@ -1350,6 +1359,21 @@ under the License.
         <description>Import an party with related main role, company and contact info in csv format, will ignore parties already entered</description>
         <permission-service service-name="partyGroupPermissionCheck" main-action="CREATE"/>
         <attribute mode="IN" name="uploadedFile" type="java.nio.ByteBuffer" optional="true" />
+    </service>
+    
+    <!-- Login and Party Services - used by Social Logins -->
+    <service name="createPartyLoginAndSecurityGroups" engine="java" location="com.ilscipio.scipio.party.PartyServices" invoke="createPartyLoginAndSecurityGroups" auth="true">
+        <description>Service to create a person, a UserLogin and add standard security groups to the new user</description>
+        <implements service="createPersonAndUserLogin"/>
+        <implements service="addUserLoginToSecurityGroup"/>
+    </service>
+    
+    <service name="findUserLogin"  engine="java" location="com.ilscipio.scipio.party.PartyServices" invoke="findUserLogin" auth="true">
+        <description>Service to check, if a UserLogin exists for a given userLoginId</description>  
+        <attribute name="userLoginId" mode="IN" type="String" optional="false"/>
+        <attribute name="responseMessage" mode="OUT" type="String" optional="false"/>
+        <attribute name="exists" mode="OUT" type="Boolean" optional="false"/>
+        <attribute name="userLogin" mode="OUT" type="String" optional="true"/>
     </service>
 
 </services>

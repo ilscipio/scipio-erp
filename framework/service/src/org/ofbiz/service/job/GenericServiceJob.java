@@ -34,7 +34,7 @@ import org.ofbiz.service.ServiceUtil;
 @SuppressWarnings("serial")
 public class GenericServiceJob extends AbstractJob implements Serializable {
 
-    public static final String module = GenericServiceJob.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected final transient GenericRequester requester;
     protected final transient DispatchContext dctx;

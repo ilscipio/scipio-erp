@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+    
+    http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/widget-form.xsd">
+
+    <!-- SCIPIO: NOTE: 2017-08-09: These form definitions were created to simply extend the originals from ofbizsetup for now;
+        they can be duplicated individually if/once they significantly change/diverge. -->
+    <!-- FIXME?: the parameters orgPartyId and orgProductStoreId are hardcoded in these forms for now, must be hidden values -->
+
+    <form name="EditOrganization" extends="NewOrganization" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml"
+        target="${target}" id="NewOrganization">
+        
+        <field name="partyId" use-when="party==null"><text/></field>
+        <field name="partyId" use-when="party!=null"><hidden value="${partyId}"/></field>
+           
+        <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
+        <field name="orgPartyId" use-when="${not empty context.orgPartyId}"><hidden value="${orgPartyId}"/></field>
+        <field name="orgProductStoreId"><hidden value="${productStoreId}"/></field>
+    </form>
+    
+    <form name="ViewOrganization" extends="ViewOrganization" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">
+    </form>
+    
+    <form name="EditUser" extends="NewCustomer" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml"
+        target="${target}" >        
+    </form>
+    
+    <form name="EditCustomer" extends="EditCustomer" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">
+        <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
+        <field name="orgPartyId"><hidden value="${orgPartyId}"/></field>
+        <field name="orgProductStoreId"><hidden value="${productStoreId}"/></field>
+    </form>
+    
+    <form name="EditFacility" extends="EditFacility" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml"
+        target="${target}">
+        <alt-target use-when="facility==null" target="${target}"/>
+        
+        <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
+        <field name="orgPartyId"><hidden value="${orgPartyId}"/></field>
+        <field name="orgProductStoreId"><hidden value="${productStoreId}"/></field>
+    </form>
+    
+    <form name="EditProductStore" extends="EditProductStore" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml"
+        target="${target}">
+        <alt-target use-when="productStore==null" target="${target}"/>
+        
+        <!-- TODO: populate the inventoryFacilityId field here to satisfy the service -->
+        
+        <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
+        <field name="orgPartyId"><hidden value="${orgPartyId}"/></field>
+        <field name="orgProductStoreId" use-when="${not empty context.productStoreId}"><hidden value="${productStoreId}"/></field>
+    </form>
+
+    <form name="EditWebSite" extends="EditWebSite" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml"
+        target="${target}">
+        <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
+        <field name="orgPartyId"><hidden value="${orgPartyId}"/></field>
+        <field name="orgProductStoreId"><hidden value="${productStoreId}"/></field>
+    </form>
+    
+    <form name="EditProdCatalog" extends="EditProdCatalog" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml"
+        target="${target}">
+        <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
+        <field name="orgPartyId"><hidden value="${orgPartyId}"/></field>
+        <field name="orgProductStoreId"><hidden value="${productStoreId}"/></field>
+    </form>
+    
+    <form name="EditProductCategory" extends="EditProductCategory" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">
+        <alt-target use-when="productCategory==null" target="createProductCategory"/>
+        
+        <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
+        <field name="orgPartyId"><hidden value="${orgPartyId}"/></field>
+        <field name="orgProductStoreId"><hidden value="${productStoreId}"/></field>
+    </form>  
+    
+    <form name="EditProduct" extends="EditProduct" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">
+        <field name="scpSubmitSetupStep"><hidden value="${setupStep}"/></field>
+        <field name="orgPartyId"><hidden value="${orgPartyId}"/></field>
+        <field name="orgProductStoreId"><hidden value="${productStoreId}"/></field>
+    </form>
+    
+    <form name="ListProduct" extends="ListProduct" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">
+    </form>
+    
+    <form name="ListOrganizations" extends="ListOrganizations" extends-resource="component://commonext/widget/ofbizsetup/SetupForms.xml">
+    </form>
+</forms>

@@ -27,7 +27,7 @@ import freemarker.template.TemplateModelException;
  */
 public abstract class TemplateSource {
 
-    private static final long configTmplCacheExpireTime = UtilProperties.getPropertyAsLong("cache.properties", "template.ftl.general.expireTime", 0);
+    private static final long configTmplCacheExpireTime = UtilProperties.getPropertyAsLong("cache", "template.ftl.general.expireTime", 0);
     
     /**
      * SUPER-cache for all configurations.

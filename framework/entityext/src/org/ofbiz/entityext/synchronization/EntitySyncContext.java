@@ -63,7 +63,7 @@ import org.xml.sax.SAXException;
  */
 public class EntitySyncContext {
 
-    public static final String module = EntitySyncContext.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // set default split to 10 seconds, ie try not to get too much data moving over at once
     public static final long defaultSyncSplitMillis = 10000;

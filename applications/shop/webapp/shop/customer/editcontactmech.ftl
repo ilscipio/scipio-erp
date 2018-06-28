@@ -93,12 +93,14 @@ under the License.
                     <#if partyContactMechPurpose.thruDate??>(${uiLabelMap.CommonExpires}:${partyContactMechPurpose.thruDate.toString()})</#if>
                   </@td>
                   <@td>
-                      <form name="deletePartyContactMechPurpose_${partyContactMechPurpose.contactMechPurposeTypeId}" method="post" action="<@ofbizUrl>deletePartyContactMechPurpose?DONE_PAGE=${donePage}</@ofbizUrl>">
+                      <#-- SCIPIO: 2017-10-10: formerly this was: name="deletePartyContactMechPurpose_${partyContactMechPurpose.contactMechPurposeTypeId}"
+                          but some states may cause duplicate purpose records, and then can't delete them, so must use index instead -->
+                      <form name="deletePartyContactMechPurpose_${partyContactMechPurpose_index}" method="post" action="<@ofbizUrl>deletePartyContactMechPurpose?DONE_PAGE=${donePage}</@ofbizUrl>">
                           <input type="hidden" name="contactMechId" value="${contactMechId}"/>
                           <input type="hidden" name="contactMechPurposeTypeId" value="${partyContactMechPurpose.contactMechPurposeTypeId}"/>
                           <input type="hidden" name="fromDate" value="${partyContactMechPurpose.fromDate}"/>
                           <input type="hidden" name="useValues" value="true"/>
-                          <@field type="submit" submitType="link" href="javascript:document.deletePartyContactMechPurpose_${partyContactMechPurpose.contactMechPurposeTypeId}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}" text=uiLabelMap.CommonDelete /></a>
+                          <@field type="submit" submitType="link" href="javascript:document.deletePartyContactMechPurpose_${partyContactMechPurpose_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}" text=uiLabelMap.CommonDelete /></a>
                       </form> 
                   </@td>
                 </@tr>

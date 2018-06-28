@@ -65,8 +65,8 @@ under the License.
     </#if>
 
     <fo:table table-layout="fixed" width="100%" space-before="20mm">
-    <fo:table-column column-width="20mm"/>
-    <fo:table-column column-width="85mm"/>
+    <fo:table-column column-width="50mm"/>
+    <fo:table-column column-width="55mm"/>
     <fo:table-column column-width="15mm"/>
     <fo:table-column column-width="25mm"/>
     <fo:table-column column-width="25mm"/>
@@ -86,7 +86,7 @@ under the License.
           <fo:block font-weight="bold" text-align="right">${uiLabelMap.AccountingUnitPrice}</fo:block>
         </fo:table-cell>
         <fo:table-cell>
-          <fo:block font-weight="bold" text-align="right">${uiLabelMap.CommonAmount}</fo:block>
+          <fo:block font-weight="bold" text-align="right"></fo:block>
         </fo:table-cell>
       </fo:table-row>
     </fo:table-header>

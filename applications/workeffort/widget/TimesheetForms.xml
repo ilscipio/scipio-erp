@@ -27,11 +27,14 @@ under the License.
                 <order-by field-name="-fromDate"/>
             </entity-and>
         </actions>
-        <auto-fields-entity entity-name="Timesheet"/>
+        <auto-fields-entity entity-name="Timesheet" default-field-type="display"/><!-- SCIPIO: switched to display type, this form has no update service -->
         <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="${styles.link_nav_info_id}">
             <hyperlink description="${timesheetId}" target="EditTimesheet" also-hidden="false">
                 <parameter param-name="timesheetId"/>
             </hyperlink>
+        </field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><!-- SCIPIO: added (missing in stock) -->
+            <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}" />
         </field>
         <field name="partyId"><hidden/></field>
         <field name="clientPartyId"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName} [${partyId}]"/></field>
@@ -70,7 +73,7 @@ under the License.
         <auto-fields-entity entity-name="Timesheet" default-field-type="find"/>
 
         <field name="partyId" title="${uiLabelMap.PartyParty}"><lookup target-form-name="LookupPartyName"/></field>
-
+        
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
@@ -90,7 +93,16 @@ under the License.
                 <parameter param-name="timesheetId"/>
             </hyperlink>
         </field>
-        <field name="partyId" title="${uiLabelMap.PartyParty}"><display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName} [${partyId}]"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><!-- SCIPIO: added (missing in stock) -->
+            <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}" />
+        </field>
+        <field name="partyId" title="${uiLabelMap.PartyParty}">
+            <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="${styles.link_nav_info_id}"><!-- SCIPIO: added missing link -->
+                    <parameter param-name="partyId" from-field="partyId"/>
+                </sub-hyperlink>
+            </display-entity>
+        </field>
     </form>
 
     <form name="EditTimesheet" default-map-name="timesheet" target="updateTimesheet" title="" type="single"

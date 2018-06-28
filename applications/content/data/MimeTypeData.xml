@@ -32,6 +32,9 @@ under the License.
     <CharacterSet characterSetId="UTF-8" description="Unicode 8 bit"/>
     <CharacterSet characterSetId="UTF-16" description="Unicode 16 bit"/>
 
+    <!-- SCIPIO: NOTE: 2017-08-02: The file MimeTypeTikaData.xml is loaded before this one,
+        separately, for maintenance reasons; the definitions here are more refined and will override them. -->
+
     <!-- application mime types -->
     <MimeType mimeTypeId="application/octet-stream" description="Arbitrary Binary Data"/>
     <MimeType mimeTypeId="application/pkcs7-signature" description="PKCS7 Signature"/>
@@ -48,12 +51,23 @@ under the License.
     <MimeType mimeTypeId="application/vnd.ofbiz.survey.response" description="Survey Response"/>
     <MimeType mimeTypeId="application/vnd.ms-powerpoint" description="Microsoft PowerPoint"/>
     <MimeType mimeTypeId="application/vnd.ms-excel" description="Microsoft Excel"/>
+    <!-- Scipio: Added these new MIME types -->
+    <MimeType mimeTypeId="application/vnd.openxmlformats-officedocument.spreadsheetml.template" description="Office Open - OOXML - Spreadsheet Template" />
+    <MimeType mimeTypeId="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" description="Office Open - OOXML - Spreadsheet" />
+    <MimeType mimeTypeId="application/vnd.openxmlformats-officedocument.wordprocessingml.document" description="Office Open - OOXML - Document" />
+    <MimeType mimeTypeId="application/vnd.openxmlformats-officedocument.wordprocessingml.template" description="Office Open - OOXML - Document Template" />
+    <MimeType mimeTypeId="application/vnd.openxmlformats-officedocument.presentationml.presentation" description="Office Open - OOXML - Presentation" />
 
     <!-- audio mime types -->
     <MimeType mimeTypeId="audio/basic" description="Basic Audio"/>
     <MimeType mimeTypeId="audio/mpeg" description="MPEG Audio"/>
+    <MimeType mimeTypeId="audio/mp3" description="MPEG Audio"/>
     <MimeType mimeTypeId="audio/x-ms-wax" description="WAX Audio"/>
     <MimeType mimeTypeId="audio/x-ms-wma" description="WMA Audio"/>
+    <!-- Scipio: Added these new MIME types -->
+    <MimeType mimeTypeId="audio/x-wav" description="WAV Audio"/>
+    <MimeType mimeTypeId="audio/ogg" description="OGG Audio"/>
+    <MimeType mimeTypeId="audio/mp4" description="MP4 Audio"/>
 
     <!-- image mime types -->
     <MimeType mimeTypeId="image/jpeg" description="JPEG/JPG Image"/>
@@ -61,6 +75,9 @@ under the License.
     <MimeType mimeTypeId="image/gif" description="GIF Image"/>
     <MimeType mimeTypeId="image/tiff" description="TIFF Image"/>
     <MimeType mimeTypeId="image/png" description="PNG Image"/>
+    <!-- Scipio: Added this new MIME type -->
+    <MimeType mimeTypeId="image/vnd.microsoft.icon" description="ICO Image"/>
+    <MimeType mimeTypeId="image/vnd.adobe.photoshop" description="Photoshop Image"/>
 
     <!-- message mime types -->
     <MimeType mimeTypeId="message/external-body" description="External Body Message"/>
@@ -98,7 +115,10 @@ under the License.
     <MimeType mimeTypeId="text/x-vcard" description="electronic business card"/>
 
     <!-- video mime types -->
-    <MimeType mimeTypeId="video/avi" description="AVI Video"/>
+    <!-- Scipio: Is this valid? -->
+    <!-- <MimeType mimeTypeId="video/avi" description="AVI Video"/> -->
+    <!-- Scipio: Replaced by this which seems to be right one -->
+    <MimeType mimeTypeId="video/x-msvideo" description="AVI Video"/>
     <MimeType mimeTypeId="video/mpeg" description="MPEG/MPG Video"/>
     <MimeType mimeTypeId="video/mp4" description="MPEG-4 (H.264) Video"/>
     <MimeType mimeTypeId="video/quicktime" description="Quicktime Video"/>
@@ -108,10 +128,15 @@ under the License.
     <MimeType mimeTypeId="video/x-ms-wm" description="WM Video"/>
     <MimeType mimeTypeId="video/x-ms-wmv" description="WMV Video"/>
     <MimeType mimeTypeId="video/x-ms-wmx" description="WMX Video"/>
+    <!-- Scipio: Added this new MIME type -->
+    <MimeType mimeTypeId="video/ogg" description="OGG Video"/>
+    <MimeType mimeTypeId="video/webm" description="WebM Video"/>
+    <MimeType mimeTypeId="video/3gpp" description="3GPP Video"/>
+    <MimeType mimeTypeId="video/x-matroska" description="Matroska Video"/>
 
     <FileExtension fileExtensionId="asf" mimeTypeId="video/x-ms-asf"/>
     <FileExtension fileExtensionId="asx" mimeTypeId="video/x-ms-asf"/>
-    <FileExtension fileExtensionId="avi" mimeTypeId="video/avi"/>
+    <FileExtension fileExtensionId="avi" mimeTypeId="video/x-msvideo"/>
     <FileExtension fileExtensionId="css" mimeTypeId="text/css"/>
     <FileExtension fileExtensionId="flv" mimeTypeId="video/x-flv"/>
     <FileExtension fileExtensionId="jpg" mimeTypeId="image/jpeg"/>
@@ -143,7 +168,27 @@ under the License.
     <FileExtension fileExtensionId="wmx" mimeTypeId="video/x-ms-wmx"/>
     <FileExtension fileExtensionId="zip" mimeTypeId="application/zip"/>
     <FileExtension fileExtensionId="vcf" mimeTypeId="text/x-vcard"/>
-
+    <!-- Scipio: New FileExtension -->
+    <FileExtension fileExtensionId="ico" mimeTypeId="image/vnd.microsoft.icon"/>
+    <FileExtension fileExtensionId="wav" mimeTypeId="audio/x-wav"/>
+    <FileExtension fileExtensionId="ogg" mimeTypeId="audio/ogg"/>
+    <FileExtension fileExtensionId="oga" mimeTypeId="audio/ogg"/>
+    <FileExtension fileExtensionId="m4a" mimeTypeId="audio/mp4"/>
+    <FileExtension fileExtensionId="mp3" mimeTypeId="audio/mp3"/>
+    <FileExtension fileExtensionId="ogv" mimeTypeId="video/ogg"/>
+    <FileExtension fileExtensionId="webm" mimeTypeId="video/webm"/>
+    <FileExtension fileExtensionId="3gg" mimeTypeId="video/3gpp"/>
+    <FileExtension fileExtensionId="3gp" mimeTypeId="video/3gpp"/>
+    <FileExtension fileExtensionId="3g2" mimeTypeId="video/3gpp"/>
+    <FileExtension fileExtensionId="xls" mimeTypeId="application/vnd.ms-excel"/>
+    <FileExtension fileExtensionId="ppt" mimeTypeId="application/vnd.ms-powerpoint"/>
+    <FileExtension fileExtensionId="docx" mimeTypeId="application/vnd.openxmlformats-officedocument.wordprocessingml.document"/>
+    <FileExtension fileExtensionId="dotx" mimeTypeId="application/vnd.openxmlformats-officedocument.wordprocessingml.template"/>
+    <FileExtension fileExtensionId="pptx" mimeTypeId="application/vnd.openxmlformats-officedocument.presentationml.presentation"/>
+    <FileExtension fileExtensionId="xlsx" mimeTypeId="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+    <FileExtension fileExtensionId="mkv" mimeTypeId="video/x-matroska"/>
+    <FileExtension fileExtensionId="psd" mimeTypeId="image/vnd.adobe.photoshop"/>
+    
     <!-- Registered MIME Types:
     MEDIA TYPES
 

@@ -92,5 +92,11 @@ under the License.
         </field>
         <field name="useFileSystemStore" title="${uiLabelMap.WebtoolsUseFileStore}"><display/></field>
         <field name="submitAction" title="${uiLabelMap.CommonApply}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
-    </form>    
+    </form>
+    
+    <!-- SCIPIO: small form to filter caches by name -->
+    <form name="FindCache" type="single" target="FindUtilCache" method="get">
+        <field name="cacheName" title="${uiLabelMap.WebtoolsCacheName}"><text-find/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}"><submit/></field>
+    </form>
 </forms>

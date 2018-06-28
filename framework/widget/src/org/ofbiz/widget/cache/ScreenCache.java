@@ -22,7 +22,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.cache.UtilCache;
 
 public class ScreenCache extends AbstractCache {
-    public static final String module = ScreenCache.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public ScreenCache() {
         super("screen");

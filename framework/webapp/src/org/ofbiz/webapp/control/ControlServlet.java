@@ -31,11 +31,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.bsf.BSFManager;
+import org.apache.tomcat.util.descriptor.web.ServletDef;
+import org.apache.tomcat.util.descriptor.web.WebXml;
+import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilRender;
 import org.ofbiz.base.util.UtilTimer;
 import org.ofbiz.base.util.UtilValidate;
@@ -51,6 +52,7 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.renderer.RenderTargetUtil;
 import org.ofbiz.webapp.stats.ServerHitBin;
 import org.ofbiz.webapp.stats.VisitHandler;
+import org.ofbiz.entity.util.EntityClassLoader;
 
 import freemarker.ext.servlet.ServletContextHashModel;
 
@@ -60,7 +62,7 @@ import freemarker.ext.servlet.ServletContextHashModel;
 @SuppressWarnings("serial")
 public class ControlServlet extends HttpServlet {
 
-    public static final String module = ControlServlet.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public ControlServlet() {
         super();
@@ -82,6 +84,16 @@ public class ControlServlet extends HttpServlet {
         configureBsf();
         // initialize the request handler
         getRequestHandler();
+        
+        // SCIPIO: 2017-11-14: new _CONTROL_MAPPING_ and _CONTROL_SERVPATH_ servlet attributes; setting
+        // these here allows them to be available from early filters (instead of hardcoding there).
+        String servletMapping = ServletUtil.getBaseServletMapping(config.getServletContext(), config.getServletName());
+        String servletPath = "/".equals(servletMapping) ? "" : servletMapping;
+        config.getServletContext().setAttribute("_CONTROL_MAPPING", servletMapping);
+        config.getServletContext().setAttribute("_CONTROL_SERVPATH_", servletPath);
+        if (servletPath == null) {
+            Debug.logError("Scipio: ERROR: Control servlet with name '" +  config.getServletName() + "' has no servlet mapping! Cannot set _CONTROL_SERVPATH_! Please fix web.xml or app will crash!", module);
+        }
     }
 
     /**
@@ -164,6 +176,10 @@ public class ControlServlet extends HttpServlet {
             request.setAttribute("delegator", delegator);
             // always put this in the session too so that session events can use the delegator
             session.setAttribute("delegatorName", delegator.getDelegatorName());
+            /* Uncomment this to enable the EntityClassLoader
+            ClassLoader loader = EntityClassLoader.getInstance(delegator.getDelegatorName(), Thread.currentThread().getContextClassLoader());
+            Thread.currentThread().setContextClassLoader(loader);
+            */
         }
 
         LocalDispatcher dispatcher = (LocalDispatcher) session.getAttribute("dispatcher");
@@ -220,7 +236,7 @@ public class ControlServlet extends HttpServlet {
                 if (Debug.verboseOn()) Debug.logVerbose(throwable, module);
             } else {
                 Debug.logError(throwable, "Error in request handler: ", module);
-                request.setAttribute("_ERROR_MESSAGE_", RequestUtil.getEncodedSecureErrorMessage(request, throwable));
+                request.setAttribute("_ERROR_MESSAGE_", RequestUtil.getSecureErrorMessage(request, throwable)); // SCIPIO: 2018-02-26: removed hard HTML escaping here, now handled by error.ftl/other (at point-of-use)
                 errorPage = requestHandler.getDefaultErrorPage(request);
             }
          } catch (RequestHandlerExceptionAllowExternalRequests e) {
@@ -228,7 +244,7 @@ public class ControlServlet extends HttpServlet {
               Debug.logInfo("Going to external page: " + request.getPathInfo(), module);
         } catch (Exception e) {
             Debug.logError(e, "Error in request handler: ", module);
-            request.setAttribute("_ERROR_MESSAGE_", RequestUtil.getEncodedSecureErrorMessage(request, e));
+            request.setAttribute("_ERROR_MESSAGE_", RequestUtil.getSecureErrorMessage(request, e)); // SCIPIO: 2018-02-26: removed hard HTML escaping here, now handled by error.ftl/other (at point-of-use)
             errorPage = requestHandler.getDefaultErrorPage(request);
         }
 
@@ -258,7 +274,9 @@ public class ControlServlet extends HttpServlet {
                 } catch (Throwable t) {
                     Debug.logWarning("Error while trying to send error page using rd.forward (will try response.getOutputStream or response.getWriter): " + t.toString(), module);
 
-                    String errorMessage = "ERROR rendering error page [" + errorPage + "], but here is the error text: " + request.getAttribute("_ERROR_MESSAGE_");
+                    // SCIPIO: 2018-02-26: we must now HTML-encode the error here (at point-of-use) because no longer done above
+                    String causeMsg = RequestUtil.encodeErrorMessage(request, (String) request.getAttribute("_ERROR_MESSAGE_"));
+                    String errorMessage = "ERROR rendering error page [" + errorPage + "], but here is the error text: " + causeMsg;
                     // SCIPIO: 2017-03-23: ONLY print out the error if we're in DEBUG mode
                     if (UtilRender.getRenderExceptionMode(request) == UtilRender.RenderExceptionMode.DEBUG) {
                         try {
@@ -297,7 +315,9 @@ public class ControlServlet extends HttpServlet {
                     Debug.logError("Could not get RequestDispatcher for errorPage: " + errorPage, module);
                 }
 
-                String errorMessage = "<html><body>ERROR in error page, (infinite loop or error page not found with name [" + errorPage + "]), but here is the text just in case it helps you: " + request.getAttribute("_ERROR_MESSAGE_") + "</body></html>";
+                // SCIPIO: 2018-02-26: we must now HTML-encode the error here (at point-of-use) because no longer done above
+                String causeMsg = RequestUtil.encodeErrorMessage(request, (String) request.getAttribute("_ERROR_MESSAGE_"));
+                String errorMessage = "<html><body>ERROR in error page, (infinite loop or error page not found with name [" + errorPage + "]), but here is the text just in case it helps you: " + causeMsg + "</body></html>";
                 response.getWriter().print(errorMessage);
             }
         }
@@ -413,5 +433,40 @@ public class ControlServlet extends HttpServlet {
             Debug.logVerbose(attName + ":" + servletContext.getAttribute(attName), module);
         }
         Debug.logVerbose("--- End ServletContext Attributes ---", module);
+    }
+    
+    /**
+     * SCIPIO: Locates the ControlServlet servlet definition in the given WebXml, or null
+     * if does not appear to be present.
+     * Best-effort operation.
+     * <p>
+     * Factored out and modified from stock method {@link #getControlServletPath(WebappInfo, boolean)}.
+     * <p>
+     * SCIPIO: 2017-12-05: Adds subclass support, oddly missing from stock ofbiz code.
+     * <p>
+     * Added 2017-12.
+     */
+    public static ServletDef getControlServletDefFromWebXml(WebXml webXml) {
+        ServletDef bestServletDef = null;
+        for (ServletDef servletDef : webXml.getServlets().values()) {
+            String servletClassName = servletDef.getServletClass();
+            // exact name is the original Ofbiz solution, return exact if found
+            if (ControlServlet.class.getName().equals(servletClassName)) {
+                return servletDef;
+            }
+            // we must now also check for class that extends ControlServlet (this will return the last one)
+            if (servletClassName != null) {
+                try {
+                    Class<?> cls = Thread.currentThread().getContextClassLoader().loadClass(servletClassName);
+                    if (ControlServlet.class.isAssignableFrom(cls)) bestServletDef = servletDef;
+                } catch(Exception e) {
+                    // NOTE: 2018-05-11: this should not be a warning because this is a regular occurrence
+                    // for webapps which have servlet classes in libs under WEB-INF/lib
+                    //Debug.logWarning("Could not load or test servlet class (" + servletClassName + "); may be invalid or a classloader issue: " 
+                    //        + e.getMessage(), module);
+                }
+            }
+        }
+        return bestServletDef;
     }
 }

@@ -27,11 +27,15 @@ import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Base64;
@@ -54,66 +58,59 @@ import org.ofbiz.entity.transaction.TransactionUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.xml.sax.ErrorHandler;
+import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 import freemarker.ext.dom.NodeModel;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateHashModel;
-import javolution.text.CharArray;
-import javolution.text.Text;
-import javolution.xml.sax.Attributes;
-import javolution.xml.sax.XMLReaderImpl;
 
 /**
  * SAX XML Parser Content Handler for Entity Engine XML files
  */
-public class EntitySaxReader implements javolution.xml.sax.ContentHandler, ErrorHandler {
-
-    public static final String module = EntitySaxReader.class.getName();
+public class EntitySaxReader extends DefaultHandler {
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final int DEFAULT_TX_TIMEOUT = 7200;
 
     protected org.xml.sax.Locator locator;
-    protected Delegator delegator;
-    protected EntityEcaHandler<?> ecaHandler = null;
-    protected GenericValue currentValue = null;
-    protected CharSequence currentFieldName = null;
-    protected CharSequence currentFieldValue = null;
-    protected long numberRead = 0;
-    protected long numberCreated = 0;
-    protected long numberUpdated = 0;
-    protected long numberReplaced = 0;
-    protected long numberDeleted = 0;
-    protected long numberSkipped = 0;
+    private Delegator delegator;
+    private EntityEcaHandler<?> ecaHandler = null;
+    private GenericValue currentValue = null;
+    private CharSequence currentFieldName = null;
+    private char[] currentFieldValue = null;
+    private long numberRead = 0;
+    private long numberCreated = 0;
+    private long numberUpdated = 0;
+    private long numberReplaced = 0;
+    private long numberDeleted = 0;
+    private long numberSkipped = 0;
 
-    protected int valuesPerWrite = 100;
-    protected int valuesPerMessage = 1000;
-    protected int transactionTimeout = 7200;
-    protected boolean useTryInsertMethod = false;
-    protected boolean maintainTxStamps = false;
-    protected boolean createDummyFks = false;
-    protected boolean checkDataOnly = false;
-    @Deprecated
-    protected boolean doCacheClear = true;
-    protected boolean disableEeca = false;
-    protected enum Action {CREATE, CREATE_UPDATE, CREATE_REPLACE, DELETE}; 
-    protected List<String> actionTags = UtilMisc.toList("create", "create-update", "create-replace", "delete");
-    protected Action currentAction = Action.CREATE_UPDATE;
-    protected List<Object> messageList = null;
+    private int valuesPerWrite = 100;
+    private int valuesPerMessage = 1000;
+    private int transactionTimeout = 7200;
+    private boolean useTryInsertMethod = false;
+    private boolean maintainTxStamps = false;
+    private boolean createDummyFks = false;
+    private boolean checkDataOnly = false;
+    private enum Action {CREATE, CREATE_UPDATE, CREATE_REPLACE, DELETE};
+    private List<String> actionTags = UtilMisc.toList("create", "create-update", "create-replace", "delete");
+    private Action currentAction = Action.CREATE_UPDATE;
+    private List<Object> messageList = null;
 
-    protected List<GenericValue> valuesToWrite = new ArrayList<GenericValue>(valuesPerWrite);
-    protected List<GenericValue> valuesToDelete = new ArrayList<GenericValue>(valuesPerWrite);
+    private List<GenericValue> valuesToWrite = new ArrayList<>(valuesPerWrite);
+    private List<GenericValue> valuesToDelete = new ArrayList<>(valuesPerWrite);
 
-    protected boolean isParseForTemplate = false;
-    protected CharSequence templatePath = null;
-    protected Node rootNodeForTemplate = null;
-    protected Node currentNodeForTemplate = null;
-    protected Document documentForTemplate = null;
-    protected Map<String, Object> placeholderValues = null; //contains map of values for corresponding placeholders (eg. ${key}) in the entity xml data file.
+    private boolean isParseForTemplate = false;
+    private CharSequence templatePath = null;
+    private Node rootNodeForTemplate = null;
+    private Node currentNodeForTemplate = null;
+    private Document documentForTemplate = null;
+    private Map<String, Object> placeholderValues = null; //contains map of values for corresponding placeholders (eg. ${key}) in the entity xml data file.
 
-    protected Set<String> allowedEntityNames = null; // SCIPIO: 2017-06-15: security filter to limit allowed names
+    private Set<String> allowedEntityNames = null; // SCIPIO: 2017-06-15: security filter to limit allowed names
     
     protected EntitySaxReader() {}
 
@@ -125,22 +122,6 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
 
     public EntitySaxReader(Delegator delegator) {
         this(delegator, DEFAULT_TX_TIMEOUT);
-    }
-
-    public int getValuesPerWrite() {
-        return this.valuesPerWrite;
-    }
-
-    public void setValuesPerWrite(int valuesPerWrite) {
-        this.valuesPerWrite = valuesPerWrite;
-    }
-
-    public int getValuesPerMessage() {
-        return this.valuesPerMessage;
-    }
-
-    public void setValuesPerMessage(int valuesPerMessage) {
-        this.valuesPerMessage = valuesPerMessage;
     }
 
     public int getTransactionTimeout() {
@@ -158,24 +139,12 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
         }
     }
 
-    public boolean getMaintainTxStamps() {
-        return this.maintainTxStamps;
-    }
-
     public void setMaintainTxStamps(boolean maintainTxStamps) {
         this.maintainTxStamps = maintainTxStamps;
     }
 
-    public boolean getCreateDummyFks() {
-        return this.createDummyFks;
-    }
-
     public void setCreateDummyFks(boolean createDummyFks) {
         this.createDummyFks = createDummyFks;
-    }
-
-    public boolean getCheckDataOnly() {
-        return this.checkDataOnly;
     }
 
     public void setCheckDataOnly(boolean checkDataOnly) {
@@ -186,20 +155,6 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
         this.placeholderValues = placeholderValues;
     }
 
-    @Deprecated
-    public boolean getDoCacheClear() {
-        return this.doCacheClear;
-    }
-
-    @Deprecated
-    public void setDoCacheClear(boolean doCacheClear) {
-        this.doCacheClear = doCacheClear;
-    }
-
-    public boolean getDisableEeca() {
-        return this.disableEeca;
-    }
-
     public List<Object> getMessageList() {
         if (this.checkDataOnly && this.messageList == null) {
             messageList = new LinkedList<Object>();
@@ -207,12 +162,7 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
         return this.messageList;
     }
 
-    public void setMessageList(List<Object> messageList) {
-        this.messageList = messageList;
-    }
-
     public void setDisableEeca(boolean disableEeca) {
-        this.disableEeca = disableEeca;
         if (disableEeca) {
             if (this.ecaHandler == null) {
                 this.ecaHandler = delegator.getEntityEcaHandler();
@@ -225,12 +175,8 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
         }
     }
 
-    public void setAction(Action action) {
+    private void setAction(Action action) {
         this.currentAction = action;
-    }
-
-    public Action getAction() {
-        return this.currentAction;
     }
 
     /**
@@ -281,35 +227,13 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
         return numberRead;
     }
 
-    public long parse(InputStream is, String docDescription) throws SAXException, java.io.IOException {
-
-        /* NOTE: this method is not used because it doesn't work with various parsers...
-         String orgXmlSaxDriver = System.getProperty("org.xml.sax.driver");
-         if (UtilValidate.isEmpty(orgXmlSaxDriver)) orgXmlSaxDriver = "org.apache.xerces.parsers.SAXParser";
-         XMLReader reader = XMLReaderFactory.createXMLReader(orgXmlSaxDriver);
-         */
-
-        /* This code is for a standard SAXParser and XMLReader like xerces or such; for speed we are using the Javolution reader
-        XMLReader reader = null;
-
+    private long parse(InputStream is, String docDescription) throws SAXException, java.io.IOException {
+        SAXParser parser;
         try {
-            SAXParserFactory parserFactory = SAXParserFactory.newInstance();
-            SAXParser parser = parserFactory.newSAXParser();
-
-            reader = parser.getXMLReader();
-        } catch (javax.xml.parsers.ParserConfigurationException e) {
-            Debug.logError(e, "Failed to get a SAX XML parser", module);
-            throw new IllegalStateException("Failed to get a SAX XML parser");
+            parser = SAXParserFactory.newInstance().newSAXParser();
+        } catch(ParserConfigurationException pce) {
+            throw new SAXException("Unable to create the SAX parser", pce);
         }
-        */
-
-        XMLReaderImpl parser = new XMLReaderImpl();
-
-        parser.setContentHandler(this);
-        parser.setErrorHandler(this);
-        // LocalResolver lr = new UtilXml.LocalResolver(new DefaultHandler());
-        // reader.setEntityResolver(lr);
-
         numberRead = 0;
         try {
             boolean beganTransaction = false;
@@ -318,7 +242,7 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
                 Debug.logImportant("Transaction Timeout set to " + transactionTimeout / 3600 + " hours (" + transactionTimeout + " seconds)", module);
             }
             try {
-                parser.parse(is);
+                parser.parse(is, this);
                 // make sure all of the values to write got written...
                 if (! valuesToWrite.isEmpty()) {
                     writeValues(valuesToWrite);
@@ -347,13 +271,23 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
         return numberRead;
     }
 
-    protected void writeValues(List<GenericValue> valuesToWrite) throws GenericEntityException {
+    private void writeValues(List<GenericValue> valuesToWrite) throws GenericEntityException {
         if (this.checkDataOnly) {
             EntityDataAssert.checkValueList(valuesToWrite, delegator, this.getMessageList());
         } else {
-            delegator.storeAll(valuesToWrite, doCacheClear, createDummyFks);
+            delegator.storeAll(valuesToWrite, new EntityStoreOptions(createDummyFks));
         }
     }
+
+    private void countValue(boolean skip, boolean exist) {
+        if (skip) numberSkipped++;
+        else if (Action.DELETE == currentAction) numberDeleted++;
+        else if (Action.CREATE == currentAction || ! exist) numberCreated++;
+        else if (Action.CREATE_REPLACE == currentAction) numberReplaced++;
+        else numberUpdated++;
+    }
+
+    // ======== ContentHandler interface implementation ========
 
     public void characters(char[] values, int offset, int count) throws org.xml.sax.SAXException {
         if (isParseForTemplate) {
@@ -366,22 +300,22 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
         }
 
         if (currentValue != null && currentFieldName != null) {
-            Text value = Text.valueOf(values, offset, count);
-
-            // Debug.logInfo("characters: value=" + value, module);
+            char[] newChunk = Arrays.copyOfRange(values, offset, offset + count);
             if (currentFieldValue == null) {
-                currentFieldValue = value;
+                // this is the first chunk
+                currentFieldValue = newChunk;
             } else {
-                currentFieldValue = Text.valueOf(currentFieldValue).concat(value);
+                // append the new chunk to currentFieldValue
+                char[] combined = new char[currentFieldValue.length + newChunk.length];
+                System.arraycopy(currentFieldValue, 0, combined, 0, currentFieldValue.length);
+                System.arraycopy(newChunk, 0, combined, currentFieldValue.length, newChunk.length);
+                currentFieldValue = combined;
             }
         }
     }
 
-    public void endDocument() throws org.xml.sax.SAXException {}
-
-    public void endElement(CharArray namespaceURI, CharArray localName, CharArray fullName) throws org.xml.sax.SAXException {
-        if (Debug.verboseOn()) Debug.logVerbose("endElement: localName=" + localName + ", fullName=" + fullName + ", numberRead=" + numberRead, module);
-        String fullNameString = fullName.toString();
+    public void endElement(String namespaceURI, String localName, String fullNameString) throws org.xml.sax.SAXException {
+        if (Debug.verboseOn()) Debug.logVerbose("endElement: localName=" + localName + ", fullName=" + fullNameString + ", numberRead=" + numberRead, module);
         if ("entity-engine-xml".equals(fullNameString)) {
             return;
         }
@@ -401,7 +335,7 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
                     Reader templateReader = new InputStreamReader(templateUrl.openStream());
 
                     StringWriter outWriter = new StringWriter();
-                    Configuration config = new Configuration();
+                    Configuration config = FreeMarkerWorker.newConfiguration();
                     config.setObjectWrapper(FreeMarkerWorker.getDefaultOfbizWrapper());
                     config.setSetting("datetime_format", "yyyy-MM-dd HH:mm:ss.SSS");
 
@@ -412,6 +346,17 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
                     TemplateHashModel staticModels = FreeMarkerWorker.getDefaultOfbizWrapper().getStaticModels();
                     context.put("Static", staticModels);
 
+                    // SCIPIO: 2017-07-07: the following allows use of delegator and dispatcher straight from the FTLs,
+                    // so that the templates have the correct delegator/dispatcher and easier to use
+                    context.put("delegator", delegator);
+                    // SCIPIO: in order to get dispatcher we have to use reflect, to bypass dependencies
+                    try {
+                        java.lang.reflect.Method getDispatcherMethod = Thread.currentThread().getContextClassLoader().loadClass("org.ofbiz.entityext.EntityServiceFactory").getMethod("getLocalDispatcher", Delegator.class);
+                        context.put("dispatcher", getDispatcherMethod.invoke(null, delegator));
+                    } catch(Exception e) {
+                        Debug.logError(e, "Could not get dispatcher for delegator " + delegator.getDelegatorName(), module);
+                    }
+                    
                     context.put("doc", nodeModel);
                     template.process(context, outWriter);
                     String s = outWriter.toString();
@@ -454,14 +399,11 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
                         ModelEntity modelEntity = currentValue.getModelEntity();
                         ModelField modelField = modelEntity.getField(currentFieldName.toString());
                         String type = modelField.getType();
-                        if (type != null && type.equals("blob")) {
-                            byte strData[] = new byte[currentFieldValue.length()];
-                            strData = currentFieldValue.toString().getBytes();
-                            byte binData[] = new byte[currentFieldValue.length()];
-                            binData = Base64.base64Decode(strData);
+                        if (type != null && (type.equals("blob") || type.equals("byte-array") || type.equals("object"))) { // SCIPIO: 2017-07-06: added import byte-array and object as base64; not just blob, otherwise can't handle the other two
+                            byte[] binData = Base64.base64Decode((new String(currentFieldValue)).getBytes());
                             currentValue.setBytes(currentFieldName.toString(), binData);
                         } else {
-                            currentValue.setString(currentFieldName.toString(), currentFieldValue.toString());
+                            currentValue.setString(currentFieldName.toString(), new String(currentFieldValue));
                         }
                     } else {
                         Debug.logWarning("Ignoring invalid field name [" + currentFieldName + "] found for the entity: " + currentValue.getEntityName() + " with value=" + currentFieldValue, module);
@@ -485,7 +427,7 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
                     boolean exist = true;
                     boolean skip = false;
                     //if verbose on, check if entity exist on database for count each action
-                    //It's necessay to check also for specific action CREATE and DELETE to ensure it's ok
+                    //It's necessary to check also for specific action CREATE and DELETE to ensure it's ok
                     if (Action.CREATE == currentAction || Action.DELETE == currentAction || Debug.verboseOn()) {
                         GenericHelper helper = delegator.getEntityHelper(currentValue.getEntityName());
                         if (currentValue.containsPrimaryKey()) {
@@ -520,7 +462,7 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
                             if (Action.DELETE == currentAction) {
                                 valuesToDelete.add(currentValue);
                                 if (valuesToDelete.size() >= valuesPerWrite) {
-                                    delegator.removeAll(valuesToDelete, doCacheClear);
+                                    delegator.removeAll(valuesToDelete);
                                     valuesToDelete.clear();
                                 }
                             } else {
@@ -547,47 +489,17 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
         }
     }
 
-    //Use for detail the loading entities
-    protected void countValue(boolean skip, boolean exist) {
-        if (skip) numberSkipped++;
-        else if (Action.DELETE == currentAction) numberDeleted++;
-        else if (Action.CREATE == currentAction || ! exist) numberCreated++;
-        else if (Action.CREATE_REPLACE == currentAction) numberReplaced++;
-        else numberUpdated++;
-    }
-
-    public void endPrefixMapping(CharArray prefix) throws org.xml.sax.SAXException {}
-
-    public void ignorableWhitespace(char[] values, int offset, int count) throws org.xml.sax.SAXException {
-        // String value = new String(values, offset, count);
-        // Debug.logInfo("ignorableWhitespace: value=" + value, module);
-    }
-
-    public void processingInstruction(CharArray target, CharArray instruction) throws org.xml.sax.SAXException {}
-
     public void setDocumentLocator(org.xml.sax.Locator locator) {
         this.locator = locator;
     }
 
-    public void skippedEntity(CharArray name) throws org.xml.sax.SAXException {}
-
-    public void startDocument() throws org.xml.sax.SAXException {}
-
-    public void startElement(CharArray namepsaceURI, CharArray localName, CharArray fullName, Attributes attributes) throws org.xml.sax.SAXException {
-        if (Debug.verboseOn()) Debug.logVerbose("startElement: localName=" + localName + ", fullName=" + fullName + ", attributes=" + attributes, module);
-        String fullNameString = fullName.toString();
+    public void startElement(String namepsaceURI, String localName, String fullNameString, Attributes attributes) throws org.xml.sax.SAXException {
+        if (Debug.verboseOn()) Debug.logVerbose("startElement: localName=" + localName + ", fullName=" + fullNameString + ", attributes=" + attributes, module);
         if ("entity-engine-xml".equals(fullNameString)) {
             // check the maintain-timestamp flag
             CharSequence maintainTx = attributes.getValue("maintain-timestamps");
             if (maintainTx != null) {
                 this.setMaintainTxStamps("true".equalsIgnoreCase(maintainTx.toString()));
-            }
-
-            // check the do-cache-clear flag
-            @Deprecated
-            CharSequence doCacheClear = attributes.getValue("do-cache-clear");
-            if (doCacheClear != null) {
-                this.setDoCacheClear("true".equalsIgnoreCase(doCacheClear.toString()));
             }
 
             // check the disable-eeca flag
@@ -646,7 +558,7 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
 
         if (currentValue != null) {
             // we have a nested value/CDATA element
-            currentFieldName = fullName;
+            currentFieldName = fullNameString;
         } else {
             String entityName = fullNameString;
 
@@ -719,10 +631,7 @@ public class EntitySaxReader implements javolution.xml.sax.ContentHandler, Error
         }
     }
 
-    //public void startPrefixMapping(String prefix, String uri) throws org.xml.sax.SAXException {}
-    public void startPrefixMapping(CharArray arg0, CharArray arg1) throws SAXException {}
-
-    // ======== ErrorHandler interface implementations ========
+    // ======== ErrorHandler interface implementation ========
 
     public void error(org.xml.sax.SAXParseException exception) throws org.xml.sax.SAXException {
         Debug.logWarning(exception, "Error reading XML on line " + exception.getLineNumber() + ", column " + exception.getColumnNumber(), module);

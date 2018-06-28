@@ -34,7 +34,7 @@ import javax.transaction.xa.XAException;
  */
 public abstract class GenericXaResource extends Thread implements XAResource {
 
-    public static final String module = GenericXaResource.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected Transaction trans = null;
     protected boolean active = false;

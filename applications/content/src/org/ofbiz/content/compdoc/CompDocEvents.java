@@ -21,6 +21,7 @@ package org.ofbiz.content.compdoc;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -29,11 +30,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -53,7 +53,7 @@ import org.ofbiz.webapp.website.WebSiteWorker;
  * CompDocEvents Class
  */
 public class CompDocEvents {
-    public static final String module = CompDocEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      *
@@ -108,7 +108,7 @@ public class CompDocEvents {
                 request.setAttribute(obj.toString(), val);
             }
             // Update ContentRevision and ContentRevisonItem
-            Map<String, Object> contentRevisionMap = FastMap.newInstance();
+            Map<String, Object> contentRevisionMap = new HashMap<String, Object>();
             contentRevisionMap.put("itemContentId", contentId);
             contentRevisionMap.put("contentId", contentId);
             contentRevisionMap.put("userLogin", userLogin);
@@ -142,7 +142,7 @@ public class CompDocEvents {
     public static String genCompDocPdf(HttpServletRequest request, HttpServletResponse response) {
         String responseStr = "success";
         //ByteBuffer byteBuffer = null;
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
         GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
         ServletContext servletContext = session.getServletContext();
         LocalDispatcher dispatcher = (LocalDispatcher)request.getAttribute("dispatcher");
@@ -160,7 +160,7 @@ public class CompDocEvents {
             https = (String) servletContext.getAttribute("https");
         }
 
-        Map<String, Object> mapIn = FastMap.newInstance();
+        Map<String, Object> mapIn = new HashMap<String, Object>();
         mapIn.put("contentId", contentId);
         mapIn.put("locale", locale);
         mapIn.put("rootDir", rootDir);
@@ -231,7 +231,7 @@ public class CompDocEvents {
             https = (String) servletContext.getAttribute("https");
         }
 
-        Map<String, Object> mapIn = FastMap.newInstance();
+        Map<String, Object> mapIn = new HashMap<String, Object>();
         mapIn.put("contentId", contentId);
         mapIn.put("locale", locale);
         mapIn.put("rootDir", rootDir);

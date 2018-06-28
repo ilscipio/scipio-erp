@@ -5,7 +5,7 @@
 * A set of standalone utility functions and macros, largely devoid of markup and 
 * independent from templating macros and styles and with minimal dependencies, 
 * part of standard Scipio Freemarker API.
-* Generally CSS-framework-agnostic. 
+* Generally CSS-framework-agnostic.
 * Intended as platform-agnostic (html, fo, etc.) though some individually are only applicable for specific platforms.
 * Automatically included at all times, for all themes, independently of theme markup override files.
 *
@@ -628,7 +628,7 @@ NOTE: 2016-11-04: The return value behavior for #makeOfbizUrl ''may'' be changed
         extLoginKey=(args.extLoginKey!"") fullPath=(args.fullPath!"") secure=(args.secure!"") encode=(args.encode!"") 
         rawParams=rawParams strict=strict escapeAs=(args.escapeAs!"")/></#local>
   <#else>
-    <#local res><@ofbizUrl uri=args rawParams=true /></#local>
+    <#local res><@ofbizUrl uri=args rawParams=true strict=true/></#local>
   </#if>
   <#return res>
 </#function>
@@ -698,7 +698,7 @@ NOTE: This function is subject to escaping particularities - see its cousin #mak
         rawParams=rawParams strict=strict escapeAs=(args.escapeAs!"")/></#local>
   <#else>
     <#local res><@ofbizUrl uri=args absPath=false interWebapp=false controller=false extLoginKey=false
-        rawParams=true /></#local>
+        rawParams=true strict=true/></#local>
   </#if>
   <#return res>
 </#function>
@@ -773,7 +773,7 @@ NOTE: This function is subject to escaping particularities - see its cousin #mak
         rawParams=rawParams strict=strict escapeAs=(args.escapeAs!"")/></#local>
   <#else>
     <#local res><@ofbizUrl uri=args absPath="" interWebapp=true webSiteId=webSiteId
-        controller="" extLoginKey="" rawParams=true/></#local>
+        controller="" extLoginKey="" rawParams=true strict=true/></#local>
   </#if>
   <#return res>
 </#function>
@@ -798,6 +798,9 @@ NOTE: 2016-10-18: URL decoding: The default behavior of this macro has been '''c
 
 NOTE: This macro is subject to escaping particularities - see its cousin @ofbizUrl for details.
 
+NOTE: 2017-07-04: The {{{variant}}} parameter's usage in filenames has been fixed in Scipio and will be modified again soon;
+    see the parameter's documentation below. 
+
   * Parameters *
     uri                     = (string) URI or path as parameter; alternative to nested
                               WARN: At current time (2016-10-14), this macro version of @ofbizContentUrl does NOT prevent automatic
@@ -811,8 +814,29 @@ NOTE: This macro is subject to escaping particularities - see its cousin @ofbizU
                                   In Scipio, while this behavior is left intact for compatibility with old code, 
                                   you should simply avoid relying on any such check and not consider
                                   "/images/defaultImage.jpg" as a special value, or simply not use it.
-    variant                 = ((string)) variant
-                              (Stock Ofbiz parameter)
+    variant                 = ((string)) Variant image, normally same image with different dimensions
+                              2017-07-04: The variant name is now appended using one of the following 3 filename patterns:
+                              * {{{/file.ext}}} -> {{{/file-${variant}.ext}}} [STOCK]: in most cases the variant is added this way, before extension with dash, EXCEPT when:
+                              * {{{/file-original.ext}}} -> {{{/file-${variant}.ext}}} [NEW]: when the filename ends with the keyword "original" after dash, it is replaced with the variant word, and:
+                              * {{{/original.ext}}} -> {{{/${variant}.ext}}} [NEW]: when the filename part is exactly the keyword "original", it is substituted with the variant word.
+                              The NEW cases have been added so that the macro now supports the stock product image upload configuration (see catalog.properties),
+                              rather than conflicting with it.
+                              SPECIAL PREFIXES: The variant can be prefixed with one of the following characters:
+                              * {{{-}}}: this forces the first STOCK case above, to support filenames that originally were named "original".
+                              * {{{~}}}: TODO: NOT IMPLEMENTED: special operator: if the variant begins with the tilde character (~), a special closest-matching behavior will be enabled... 
+                              (Stock Ofbiz parameter, modified in Scipio)
+    autoVariant             = (min|max|true|false|, default: false) Enable automatic variant selection with the specified selection mode
+                              * {{{true/min}}}: selects the smallest image that is bigger than the dimensions specified by width/height parameters
+                              * {{{max}}}: selects the largest image that is smaller than the dimensions specified by width/height parameters
+                              WARN: Like the {{{variant}}} parameter, in order for this to work properly for an image, the filesystem must contain
+                                  the proper variants for the image that match the explicit or implied variant configuration ({{{variantCfg}}} parameter).
+    width                   = ((int)) Target image width, for autoVariant 
+    height                  = ((int)) Target image height, for autoVariant
+    variantCfg              = Path to a variant configuration file (ImageProperties.xml)
+                              If omitted, this will lookup a default configuration file based on the settings in:
+                                {{{/framework/common/config/imagecommon.properties}}}
+                              The common/default/fallback/reference file is:
+                                {{{/framework/common/config/ImageProperties.xml}}}                              
     ctxPrefix               = ((boolean)|(string), default: false) Contextual path prefix
                               Extra path prefix prepended to the uri, which may replace the central system default prefix if
                               it produces an absolute URL (prefixed with "http:", "https:", or "//").
@@ -848,6 +872,7 @@ NOTE: This macro is subject to escaping particularities - see its cousin @ofbizU
                               (New in Scipio) 
                               
   * History *
+    Enhanced for 1.14.4 (variant parameter enhancement; autoVariant parameters added).
     Enhanced for 1.14.2.
 -->
 <#-- IMPLEMENTED AS TRANSFORM
@@ -890,9 +915,10 @@ NOTE: This function is subject to escaping particularities - see its cousin #mak
     <#-- DEV NOTE: no rawString around ctxPrefix because already done by the macro (exceptionally) -->
     <#local res><@ofbizContentUrl uri=(args.uri!"") variant=(args.variant!"") 
         ctxPrefix=(args.ctxPrefix!false) urlDecode=(args.urlDecode!"") 
+        autoVariant=(args.autoVariant!"") width=(args.width!"") height=(args.height!"") variantCfg=(args.variantCfg!"") 
         strict=strict rawParams=rawParams/></#local>
   <#else>
-    <#local res><@ofbizContentUrl uri=args variant=variant strict=true rawParams=true/></#local>
+    <#local res><@ofbizContentUrl uri=args variant=variant rawParams=true strict=true/></#local>
   </#if>
   <#return res>
 </#function>
@@ -1347,6 +1373,23 @@ Shorthand for {{{rawString(getLabel(...))}}}.
 
 <#-- 
 *************
+* rawLabelNoSubst
+************
+Same as {{{rawLabel}}} except no variable substitution is performed (prevented entirely), 
+so the caller can perform the substitutions instead.
+
+  * Related *
+    #rawLabel
+    
+  * History *
+    Added for 1.14.4.
+-->
+<#function rawLabelNoSubst name resource="">
+  <#return rawString(getLabel(name, resource, false))>
+</#function>
+
+<#-- 
+*************
 * getPropertyValue
 ************
 Gets property or void/null if missing or has no content.
@@ -1511,8 +1554,9 @@ Adds parameters from a hash to a URL param string (no full URL logic).
     paramMap                = ((map), required) Map of keys to values to add
     paramDelim              = (default: "&amp;") Param delimiter
     includeEmpty            = ((boolean), default: true) If true, include empty values; if false, omit empty values
+    urlEncode               = ((boolean), default: false) If true, URL-encode each value.
 -->
-<#function addParamsToStr paramStr paramMap paramDelim="&amp;" includeEmpty=true>
+<#function addParamsToStr paramStr paramMap paramDelim="&amp;" includeEmpty=true urlEncode=false>
   <#local res = paramStr>
   <#local paramMap = toSimpleMap(paramMap)>
   <#list mapKeys(paramMap) as key>
@@ -1520,11 +1564,31 @@ Adds parameters from a hash to a URL param string (no full URL logic).
       <#local res = res + paramDelim>
     </#if>
     <#if includeEmpty || paramMap[key]?has_content>
-      <#local res = res + key + "=" + rawString(paramMap[key]!"")>
+      <#if urlEncode>
+        <#local res = res + key + "=" + rawString(paramMap[key]!"")?url>
+      <#else>
+        <#local res = res + key + "=" + rawString(paramMap[key]!"")>
+      </#if>
     </#if>
   </#list>
   <#return res>
-</#function> 
+</#function>
+
+<#-- 
+*************
+* addParamsToStrUrlEnc
+************
+Adds url-encoded parameters from a hash to a URL param string (no full URL logic).
+                    
+  * Parameters *
+    paramStr                = (required) Param string
+    paramMap                = ((map), required) Map of keys to values to add
+    paramDelim              = (default: "&amp;") Param delimiter
+    includeEmpty            = ((boolean), default: true) If true, include empty values; if false, omit empty values
+-->
+<#function addParamsToStrUrlEnc paramStr paramMap paramDelim="&amp;" includeEmpty=true>
+  <#return addParamsToStr(paramStr, paramMap, paramDelim, includeEmpty, true)>
+</#function>
 
 <#-- 
 *************
@@ -1962,7 +2026,7 @@ Returns the given value, bypassing the screen renderer html auto-escaping, as a 
 This is the same as the Ofbiz-provided function, {{{StringUtil.wrapString}}}, but further simplifies
 the resulting type into a simple Freemarker string.
 
-This can be seen as the reverse operation of #rewrapStringStd.
+This can be seen as the reverse operation of #rewrapString.
 
 NOTE: 2016-09-29: Now tolerates non-strings, which will be coerced to strings using ?string operator.
 
@@ -1980,7 +2044,7 @@ NOTE: 2016-10-20: Now supports multiple parameters, which are each {{{rawString}
                                     rawString(var1) + " " + rawString(var2)
                                   except the former is more efficient.
   * Related *
-    #rewrapStringStd  
+    #rewrapString  
     
   * History *
     Enhanced for 1.14.2.                        
@@ -2786,7 +2850,8 @@ Checks if the value was wrapped using {{{#wrapAsRaw(object, "script")}}}.
 ************
 Escapes an individual value or code "part" for a given language, ignoring and crushing delimiters.
 
-WARN: 2016-10-10: {{{css}}} not currently implemented. '''Do not pass''' input of unsafe origin for CSS to this method at this time!
+NOTE: 2018-05-10: {{{css}}} and {{{cssid}}} are now available: 
+    {{{cssid}}} aggressively escapes any identifier, while {{{css}}} is only for escaping string literals between quotes (like "js" and freemarker's ?js).
 
 Essentially this is a wrapper around #rawString and language encoders. It abstracts the encoder selection.
 It first performs a #rawString call to bypass the screen auto-escaping on the value.
@@ -2845,7 +2910,7 @@ NOTE: Validation and allowed code filters are not fully implemented (TODO), but 
   * Parameters *
     value                   = The string or string-like value to escape
                               2016-09-29: This now automatically coerces non-strings to string, for convenience.
-    lang                    = (js|jsdq|json|html|htmlmarkup|url|xml|css|js-html|html-js|htmlmarkup-js|css-html|html-css|raw) The target language for escaping
+    lang                    = (js|jsdq|json|html|htmlmarkup|url|xml|css|cssid|js-html|html-js|htmlmarkup-js|raw) The target language for escaping
                               These are analogous to the Freemarker built-in counterparts of same names, but
                               with implementation details subject to change.
                               In composed types, the order is meaningful, such that "js-html" performs like {{{?js?html}}}
@@ -2859,8 +2924,8 @@ NOTE: Validation and allowed code filters are not fully implemented (TODO), but 
                                 NOTE: by default this can safely escapes any html, even for attributes; 
                                     but the caller overrides (#wrapAsRaw) can make the value unsafe for insertion in attributes, so
                                     the distinction is important.
-                              WARN: 2016-10-10: {{{css}}} not currently implemented. '''Do not pass''' input of unsafe origin for CSS to this method at this time!
-                              NOTE: The previous language name "style" has been deprecated and will be removed. Use {{{css}}} instead, even if not implemented.
+                              * {{{css}}}: escapes a CSS string, ONLY for placing between quotes
+                              * {{{cssid}}}: escapes any CSS identifier, aggressively
     opts                    = ((map)) Additional options, including language-specific options
                               Members:
                               * {{{strict}}} {{{((boolean), default: false)}}} Whether to escape strictly or allow handling of pre-escaped characters
@@ -2868,35 +2933,40 @@ NOTE: Validation and allowed code filters are not fully implemented (TODO), but 
                                 are not recognized (and ''may'' be errors if due to double-escaping errors).
                                 If false, the function ''may'' attempt heuristics to prevent double-escaping issues (not always desirable),
                                 mainly to mitigate screen auto-escaping and early escaping.
-                              * {{{allow}}} {{{((string)|any|none|...|, default: none)}}} Allowed code exceptions (validation filter)
+                              * {{{allow}}} {{{((string)|any|none|...|, default: none)}}} Markup sanitization control (allowed code)
+                                2018-06-12: This is now based on #sanitizeMarkup. Most of these now directly map to names of sanitization
+                                    policies in utilcodec.properties, albeit the language prefix differs.
+                                    Custom policies may be coded there (java factories).
                                 By default, no code exceptions are allowed ("none"), and regular aggressive escaping is applied.
                                 At the other extreme ({{{any}}}), escaping may be disabled entirely.
                                 In between, each language may support filtering levels or profiles to restrict allowed code. 
                                 The possible values depend on the language.
                                 Recognized {{{allow}}} filters:
-                                * {{{htmlmarkup}}}: {{{(any|none|any-valid|internal|external, default: none)}}}
+                                * {{{htmlmarkup}}}: {{{(default: none)}}}
                                   * {{{none}}}: no HTML elements or code allowed, regular escaping applied (default behavior)
+                                  * {{{perm}}}: uses the "html-perm" permissive sanitizer (see utilcodec.properties)
+                                  * {{{strict}}}: uses the "html-strict" strict sanitizer (see utilcodec.properties)
+                                  * {{{anyvalid}}}: any HTML allowed, as long as it is well-formed
+                                    NOTE: 2018-06-11: STILL NOT IMPLEMENTED: currently does same as {{{any}}}.
+                                    Does not provide any security (even once implemented).
+                                  * {{{any}}}: escaping disabled/bypassed, for debugging purposes
                                   * {{{external}}}: allow only very basic HTML elements that are always safe to use, even from
                                     and assuming coming from completely untrusted sources (public)
-                                    NOTE: 2016-10-20: NOT IMPLEMENTED. Currently does same as {{{none}}}.
+                                    2018-06-11: This now uses the "html-strict" sanitizer by default (see utilcodec.properties)
                                   * {{{internal}}}: allow HTML from trusted sources (employees)
-                                    NOTE: 2016-10-20: NOT IMPLEMENTED. Currently does same as {{{any}}}.
-                                  * {{{any-valid}}}: any HTML allowed, as long as it is well-formed
-                                    NOTE: 2016-10-20: NOT IMPLEMENTED. Currently does same as {{{any}}}.
-                                  * {{{any}}}: escaping disabled/bypassed, for debugging purposes
+                                    2018-06-11: This now uses the "html-perm" permissive sanitizer by default (see utilcodec.properties)
 
   * Related *
     #rawString
     #wrapAsRaw
     #escapeFullUrl
+    #sanitizeMarkup
     
   * History *
+    Modified for 1.14.4 (added {{{css}}}, {{{cssid}}}, removed the old {{{style}}} synonym, opts.allow implementation)
     Added for 1.14.2, previously known as {{{escapePart}}}.
 -->
 <#function escapeVal value lang opts={}>
-  <#if lang?contains("style")><#-- DEPRECATED: TODO: remove (slow) -->
-    <#local lang = lang?replace("style", "css")>
-  </#if>
   <#local resolved = Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].resolveScriptForLang(value, lang)!false>
   <#if resolved?is_boolean>
     <#local value = rawString(value)><#-- performs coercion to string if needed -->
@@ -2919,25 +2989,8 @@ NOTE: Validation and allowed code filters are not fully implemented (TODO), but 
       <#break>
     <#case "htmlmarkup">
       <#if opts.allow?has_content>
-        <#-- TODO: implement external, internal, any-valid -->
-        <#switch opts.allow>
-          <#case "any">
-            <#return value>
-            <#break>
-          <#case "any-valid">
-            <#return value><#-- TODO: NOT IMPLEMENTED (validation library required) -->
-            <#break>
-          <#case "internal">
-            <#return value><#-- TODO: NOT IMPLEMENTED (validation library required) -->
-            <#break>
-          <#case "external">
-            <#return value?html><#-- TODO: NOT IMPLEMENTED (validation library required) -->
-            <#break>
-          <#case "none">
-          <#default>
-            <#return value?html>
-            <#break>
-        </#switch>
+        <#-- NOTE: if the encoder is not found, this simply crashes, which is good - error must be clear! -->
+        <#return sanitizeMarkup(value, "html-"+opts.allow)>
       <#else>
         <#return value?html>
       </#if>
@@ -2956,19 +3009,22 @@ NOTE: Validation and allowed code filters are not fully implemented (TODO), but 
       <#return value?url("UTF-8")><#-- FIXME: lang should not be hardcoded, ofbiz config issue -->
       <#break>
     <#case "css">
-      <#-- FIXME: too aggressive
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("css", value))> -->
-      <#return value>
+      <#return utilCodecEncode(value, "cssstr")>
       <#break>
     <#case "css-html">
-      <#-- FIXME: too aggressive
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("css", value))?html>-->
-      <#return value?html>
+      <#return utilCodecEncode(value, "cssstr")?html>
       <#break>
     <#case "html-css">
-      <#-- FIXME: too aggressive
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("css", value?html))>-->
-      <#return value?html>
+      <#return utilCodecEncode(value?html, "cssstr")>
+      <#break>
+    <#case "cssid">
+      <#return utilCodecEncode(value, "cssid")>
+      <#break>
+    <#case "cssid-html">
+      <#return utilCodecEncode(value, "cssid")?html>
+      <#break>
+    <#case "html-cssid">
+      <#return utilCodecEncode(value?html, "cssid")>
       <#break>
     <#case "raw">
     <#default>
@@ -2976,29 +3032,6 @@ NOTE: Validation and allowed code filters are not fully implemented (TODO), but 
       <#break>
   </#switch>
 </#function>
-
-<#-- alternative super-simple implementation, TODO: review if worth its own alias
-<#function escapeHtmlMarkup value allow="">
-    <#switch rawString(allow)>
-      <#case "any">
-        <#return value>
-        <#break>
-      <#case "any-valid">
-        <#return value>
-        <#break>
-      <#case "internal">
-        <#return value>
-        <#break>
-      <#case "external">
-        <#return value?html>
-        <#break>
-      <#case "none">
-      <#default>
-        <#return value?html>
-        <#break>
-    </#switch>
-</#function>
--->
 
 <#-- 
 *************
@@ -3026,9 +3059,6 @@ DEPRECATED: This was never properly defined or implemented and no longer meaning
     #escapeFullUrl
 -->
 <#function escapeFull value lang opts={}>
-  <#if lang?contains("style")><#-- DEPRECATED: TODO: remove (slow) -->
-    <#local lang = lang?replace("style", "css")>
-  </#if>
   <#local resolved = Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].resolveScriptForLang(value, lang)!false>
   <#if resolved?is_boolean>
     <#local value = rawString(value)><#-- performs coercion to string if needed -->
@@ -3041,7 +3071,7 @@ DEPRECATED: This was never properly defined or implemented and no longer meaning
   </#if>
   <#-- FIXME -->
   <#-- NOTE: Currently we support almost the same types as Ofbiz, so no need for a switch -->
-  <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode(lang, value))>
+  <#return utilCodecEncode(value, lang)>
 </#function>
 
 <#-- 
@@ -3050,7 +3080,7 @@ DEPRECATED: This was never properly defined or implemented and no longer meaning
 ************
 Escapes a complete URL for safe insertion in code of a given language.
 
-WARN: 2016-10-10: {{{css}}} not currently implemented. '''Do not pass''' input of unsafe origin for CSS to this method at this time!
+NOTE: 2018-05-10: {{{css}}} is now available; see #escapeVal for details. It must only be used for values between quotes.
 
 Essentially this is a wrapper around #rawString and language encoders. It abstracts the encoder selection.
 It first performs a #rawString call to bypass the screen auto-escaping on the value.
@@ -3087,8 +3117,6 @@ For more information about escaping in general, see >>>standard/htmlTemplate.ftl
                               * {{{jsdq}}}: special case of js where it is assumed the value
                                 will be contained in double quotes, such that single quotes
                                 don't need to be escaped.
-                              WARN: 2016-10-10: {{{css}}} not currently implemented. '''Do not pass''' input of unsafe origin for CSS to this method at this time!
-                              NOTE: The previous language name "style" has been deprecated and will be removed. Use {{{css}}} instead, even if not implemented.
                               WARN: Inserting URLs into CSS (using {{{url()}}}) is known to be unsafe even with escaping.
     opts                    = ((map)) Additional options, including lang-specific options
                               Members:
@@ -3104,9 +3132,6 @@ For more information about escaping in general, see >>>standard/htmlTemplate.ftl
                                     or to this function or equivalent.
 -->
 <#function escapeFullUrl value lang opts={}>
-  <#if lang?contains("style")><#-- DEPRECATED: TODO: remove (slow) -->
-    <#local lang = lang?replace("style", "css")>
-  </#if>
   <#local resolved = Static["com.ilscipio.scipio.ce.webapp.ftl.template.RawScript"].resolveScriptForLang(value, lang)!false>
   <#if resolved?is_boolean>
     <#local value = rawString(value)><#-- performs coercion to string if needed -->
@@ -3150,19 +3175,13 @@ For more information about escaping in general, see >>>standard/htmlTemplate.ftl
       <#return value?xml>
       <#break>
     <#case "css">
-      <#-- FIXME: too aggressive
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("css", value))> -->
-      <#return value>
+      <#return utilCodecEncode(value, "cssstr")>
       <#break>
     <#case "css-html">
-      <#-- FIXME: too aggressive
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("css", value))?html>-->
-      <#return value?html>
+      <#return utilCodecEncode(value, "cssstr")?html>
       <#break>
     <#case "html-css">
-      <#-- FIXME: too aggressive
-      <#return rawString(Static["org.ofbiz.base.util.UtilCodec"].encode("css", value?html))>-->
-      <#return value?html>
+      <#return utilCodecEncode(value?html, "cssstr")>
       <#break>
     <#case "raw">
     <#default>
@@ -3171,6 +3190,123 @@ For more information about escaping in general, see >>>standard/htmlTemplate.ftl
   </#switch>
 </#function>
 
+<#-- 
+*************
+* escapeMsg
+************
+Escapes a general message or description field, with interpretation support for certain languages.
+
+The current implementation simply performs #escapeVal plus a line-break substitution (by default)
+for lang=="htmlmarkup".
+
+This function is largely a point-of-use compatibility version of stock ofbiz behavior
+often used on description fields, event messages, etc.
+
+NOTE: For event messages, please use #escapeEventMsg instead for specific support.
+
+  * Parameters *
+    value                   = The string or string-like value to escape
+                              See #escapeVal for details.
+    lang                    = (js|jsdq|json|html|htmlmarkup|url|xml|css|js-html|html-js|htmlmarkup-js|raw) The target language for escaping
+                              See #escapeVal for details.
+    opts                    = ((map)) Additional options, including language-specific options
+                              * {{{interpret}}} {{{((boolean), default: true)}}}: if true (default), translates line-breaks
+                                when lang=="htmlmarkup" (but NOT "html")
+                              See #escapeVal for details.
+  * History *
+    Added for 1.14.4 (2018-02-27).
+-->
+<#function escapeMsg value lang opts={}>
+  <#local value = escapeVal(value, lang, opts)>
+  <#if ((opts.interpret!true) == true)>
+    <#if lang == "htmlmarkup">
+      <#-- legacy ofbiz behavior support - needed for service-multi messages and other -->
+      <#local value = value?replace("\n", "<br/>")>
+    </#if>
+  </#if>
+  <#return value>
+</#function>
+
+<#-- 
+*************
+* escapeEventMsg
+************
+Escapes a legacy screen event success or error message string for safe insertion in event/error message templates.
+
+Abstraction around #escapeMsg for event-specific formatting needs. Designed to provide a central 
+consistent escaping and interpreting behavior for the templates that output event error and success messages, 
+notably messages.ftl (framework/common/webcommon/includes/messages.ftl) and error.ftl.
+
+Currently, this attempts to support the legacy ofbiz behavior of line-break translation
+for errorMessage, errorMessageList, eventMessage and eventMessageList when lang=="htmlmarkup".
+Traditionally this was done obscurely in ofbiz by the ScreenRenderer.java class, but that was
+a design error (not point-of-use escaping) and caused several issues, so this is being
+improved for Scipio.
+
+  * Parameters *
+    value                   = The string or string-like value to escape
+                              See #escapeVal for details.
+    lang                    = (js|jsdq|json|html|htmlmarkup|url|xml|css|js-html|html-js|htmlmarkup-js|raw) The target language for escaping
+                              See #escapeVal for details.
+    opts                    = ((map)) Additional options, including language-specific options
+                              * {{{interpret}}} {{{((boolean), default: true)}}}: if true (default), translates line-breaks
+                                when lang=="htmlmarkup" (but NOT "html")
+                              See #escapeVal for details.
+  * History *
+    Added for 1.14.4 (2018-02-27).
+-->
+<#function escapeEventMsg value lang opts={}>
+  <#local value = escapeVal(value, lang, opts)>
+  <#if ((opts.interpret!true) == true)>
+    <#if lang == "htmlmarkup">
+      <#-- legacy ofbiz behavior support - needed for service-multi messages and other -->
+      <#local value = value?replace("\n", "<br/>")>
+    </#if>
+  </#if>
+  <#return value>
+</#function>
+
+<#-- 
+*************
+* sanitizeMarkup
+************
+Sanitizes a value containing markup in a language such as HTML, using
+deep validation where possible.
+
+Sanitization policies are defined system-wide in utilcodec.properties, and custom
+ones may be added by adding new Java factories.
+
+NOTE: Contrary to #escapeVal, here the language names should not be suffixed with "*markup".
+    For "html", use "html-[policy]", NOT "htmlmarkup-*".
+
+WARN: "url" lang has no effect in Scipio using this method! It returns the original string.
+    URL escaping should be done on individual url parameters, using #escapeVal, not sanitize.
+    Historically, the "url" lang was misused in stock ofbiz content wrappers, leading to its sanitize
+    method being disabled in Scipio.
+                                              
+WARN: This method is expensive to use at run-time, and should not be used
+    in performance-critical areas; for that, the *ContentWrapper classes
+    offer a cache around sanitized content.
+
+  * Parameters *
+    value                   = The string or string-like value to escape
+                              2016-09-29: This now automatically coerces non-strings to string, for convenience.
+    langPolicy              = The full language and sanitizer policy to use, usually in the form: lang-policy
+                                e.g., html-strict, html-default, etc. (do NOT use "htmlmarkup" here; for #escapeVal only)
+                              The possible values are defined in utilcodec.properties and printed in system log at startup.
+                              See #escapeVal {{{opts.allow}}} parameter for description of some of the policy names.
+                              DO NOT use "url" lang here (see warning above).
+
+  * Related *
+    #escapeVal
+
+  * History *
+    Added for 1.14.4.
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function sanitizeMarkup value langPolicy>
+</#function>
+-->
 
 <#-- 
 *************************************
@@ -4135,6 +4271,8 @@ TODO: implement as transform.
 <#macro elemAttribStr attribs includeEmpty=false emptyValToken="" noValToken="" exclude=[] 
   attribNamePrefix="" alwaysAddPrefix=true attribNamePrefixStrip="" attribNameSubstitutes={} camelCaseToDashLowerNames=false escapeLang="html">
   <#if isObjectType("map", attribs)>
+    <#-- DEV NOTE: here attribs are auto-unwrapped by Freemarker, but when this is made into transform,
+        the unwrap will have to be coded explicitly -->
     <#t>${rawString(Static["com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil"].makeElemAttribStr(attribs, includeEmpty, 
       emptyValToken, noValToken, exclude, attribNamePrefix, alwaysAddPrefix, attribNamePrefixStrip, attribNameSubstitutes, camelCaseToDashLowerNames, escapeLang))}<#t>
   <#elseif attribs?is_string>

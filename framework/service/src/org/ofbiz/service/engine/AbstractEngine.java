@@ -38,7 +38,7 @@ import org.ofbiz.service.config.model.ServiceLocation;
  */
 public abstract class AbstractEngine implements GenericEngine {
 
-    public static final String module = AbstractEngine.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     protected static final Map<String, String> locationMap = createLocationMap();
 
     protected ServiceDispatcher dispatcher = null;

@@ -44,7 +44,7 @@ import org.ofbiz.entity.model.ModelViewEntity.ModelViewLink;
  *
  */
 public class DynamicViewEntity {
-    public static final String module = DynamicViewEntity.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /** The entity-name of the Entity */
     protected String entityName = "DynamicViewEntity";

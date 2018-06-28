@@ -86,7 +86,7 @@ import org.ofbiz.webapp.stats.VisitHandler;
  */
 public class LoginWorker {
 
-    public final static String module = LoginWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resourceWebapp = "SecurityextUiLabels";
 
     public static final String EXTERNAL_LOGIN_KEY_ATTR = "externalLoginKey";
@@ -380,7 +380,13 @@ public class LoginWorker {
      */
     public static String login(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
-
+        
+        GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
+        
+        if(UtilValidate.isNotEmpty(userLogin)){
+            return "loggedIn";
+        }
+        
         String username = request.getParameter("USERNAME");
         String password = request.getParameter("PASSWORD");
 
@@ -520,7 +526,7 @@ public class LoginWorker {
         }
 
         if (ModelService.RESPOND_SUCCESS.equals(result.get(ModelService.RESPONSE_MESSAGE))) {
-            GenericValue userLogin = (GenericValue) result.get("userLogin");
+            userLogin = (GenericValue) result.get("userLogin");
 
             if (requirePasswordChange) {
                 Map<String, Object> inMap = UtilMisc.<String, Object>toMap("login.username", username, "login.password", password, "locale", UtilHttp.getLocale(request));
@@ -568,9 +574,11 @@ public class LoginWorker {
             // check to see if a password change is required for the user
             Map<String, Object> userLoginSession = checkMap(result.get("userLoginSession"), String.class, Object.class);
             if (userLogin != null && "Y".equals(userLogin.getString("requirePasswordChange"))) {
+            	// SCIPIO: 03/02/2018 added the userLogin as a tmpUserLogin in requestAttributes so we can extend the check in the screens
+            	request.setAttribute("tmpUserLogin", userLogin);
                 return "requirePasswordChange";
             }
-            String autoChangePassword = EntityUtilProperties.getPropertyValue("security.properties", "user.auto.change.password.enable", "false", delegator);
+            String autoChangePassword = EntityUtilProperties.getPropertyValue("security", "user.auto.change.password.enable", "false", delegator);
             if ("true".equalsIgnoreCase(autoChangePassword)) {
                 if ("requirePasswordChange".equals(autoChangePassword(request, response))) {
                     return "requirePasswordChange";
@@ -578,9 +586,14 @@ public class LoginWorker {
             }
 
             // check on JavaScriptEnabled
-            String javaScriptEnabled = "N";
-            if ("Y".equals(request.getParameter("JavaScriptEnabled"))) {
-                javaScriptEnabled = "Y";
+            // SCIPIO: 2018-06-07: javascript should be assumed enabled by default in Scipio, unless not detected
+            //String javaScriptEnabled = "N";
+            //if ("Y".equals(request.getParameter("JavaScriptEnabled"))) {
+            //    javaScriptEnabled = "Y";
+            //}
+            String javaScriptEnabled = "Y";
+            if ("N".equals(request.getParameter("JavaScriptEnabled"))) {
+                javaScriptEnabled = "N";
             }
             try {
                 result = dispatcher.runSync("setUserPreference", UtilMisc.toMap("userPrefTypeId", "javaScriptEnabled", "userPrefGroupTypeId", "GLOBAL_PREFERENCES", "userPrefValue", javaScriptEnabled, "userLogin", userLogin));
@@ -641,7 +654,7 @@ public class LoginWorker {
         request.setAttribute("_LOGIN_PASSED_", "TRUE");
 
         // run the after-login events
-        RequestHandler rh = RequestHandler.getRequestHandler(request.getSession().getServletContext());
+        RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext()); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
         rh.runAfterLoginEvents(request, response);
 
         // make sure the autoUserLogin is set to the same and that the client cookie has the correct userLoginId
@@ -700,7 +713,7 @@ public class LoginWorker {
      */
     public static String logout(HttpServletRequest request, HttpServletResponse response) {
         // run the before-logout events
-        RequestHandler rh = RequestHandler.getRequestHandler(request.getSession().getServletContext());
+        RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext()); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
         rh.runBeforeLogoutEvents(request, response);
 
 
@@ -775,7 +788,7 @@ public class LoginWorker {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         HttpSession session = request.getSession();
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
-        String domain = EntityUtilProperties.getPropertyValue("url.properties", "cookie.domain", delegator);
+        String domain = EntityUtilProperties.getPropertyValue("url", "cookie.domain", delegator);
         if (userLogin != null) {
             Cookie autoLoginCookie = new Cookie(getAutoLoginCookieName(request), userLogin.getString("userLoginId"));
             autoLoginCookie.setMaxAge(60 * 60 * 24 * 365);
@@ -910,7 +923,7 @@ public class LoginWorker {
     // preprocessor method to login a user from a HTTP request header (configured in security.properties)
     public static String checkRequestHeaderLogin(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        String httpHeader = EntityUtilProperties.getPropertyValue("security.properties", "security.login.http.header", null, delegator);
+        String httpHeader = EntityUtilProperties.getPropertyValue("security", "security.login.http.header", null, delegator);
 
         // make sure the header field is set in security.properties; if not, then this is disabled and just return
         if (UtilValidate.isNotEmpty(httpHeader)) {
@@ -958,7 +971,7 @@ public class LoginWorker {
     // preprocessor method to login a user w/ client certificate see security.properties to configure the pattern of CN
     public static String check509CertLogin(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        boolean doCheck = "true".equalsIgnoreCase(EntityUtilProperties.getPropertyValue("security.properties", "security.login.cert.allow", "true", delegator));
+        boolean doCheck = "true".equalsIgnoreCase(EntityUtilProperties.getPropertyValue("security", "security.login.cert.allow", "true", delegator));
         if (doCheck) {
             HttpSession session = request.getSession();
             GenericValue currentUserLogin = (GenericValue) session.getAttribute("userLogin");
@@ -969,7 +982,7 @@ public class LoginWorker {
                 }
             }
 
-            String cnPattern = EntityUtilProperties.getPropertyValue("security.properties", "security.login.cert.pattern", "(.*)", delegator);
+            String cnPattern = EntityUtilProperties.getPropertyValue("security", "security.login.cert.pattern", "(.*)", delegator);
             Pattern pattern = Pattern.compile(cnPattern);
             //Debug.logInfo("CN Pattern: " + cnPattern, module);
 
@@ -1106,8 +1119,18 @@ public class LoginWorker {
         return "success";
     }
 
+    /**
+     * SCIPIO: Checks the given externalLoginKey to see if it matches one in the registry,
+     * and returns the UserLogin associated with the target key if matches, or null.
+     * <p>
+     * Added 2018-05-11.
+     */
+    public static GenericValue checkExternalLoginKeyUserLogin(String externalLoginKey) {
+        return LoginWorker.externalLoginKeys.get(externalLoginKey);
+    }
+
     public static boolean isFlaggedLoggedOut(GenericValue userLogin, Delegator delegator) {
-        if ("true".equalsIgnoreCase(EntityUtilProperties.getPropertyValue("security.properties", "login.disable.global.logout", delegator))) {
+        if ("true".equalsIgnoreCase(EntityUtilProperties.getPropertyValue("security", "login.disable.global.logout", delegator))) {
             return false;
         }
         if (userLogin == null || userLogin.get("userLoginId") == null) {
@@ -1149,19 +1172,30 @@ public class LoginWorker {
         if (security != null) {
             ServletContext context = (ServletContext) request.getAttribute("servletContext");
             String serverId = (String) context.getAttribute("_serverId");
-            // get a context path from the request, if it is empty then assume it is the root mount point
-            String contextPath = request.getContextPath();
-            if (UtilValidate.isEmpty(contextPath)) {
-                contextPath = "/";
-            }
-            ComponentConfig.WebappInfo info = ComponentConfig.getWebAppInfo(serverId, contextPath);
-            if (info != null) {
-                return hasApplicationPermission(info, security, userLogin);
-            } else {
-                Debug.logInfo("No webapp configuration found for : " + serverId + " / " + contextPath, module);
-            }
+            // SCIPIO: delegated to new overload
+            return hasBasePermission(userLogin, request, security, serverId);
         } else {
             Debug.logWarning("Received a null Security object from HttpServletRequest", module);
+        }
+        return true;
+    }
+
+    /**
+     * SCIPIO: hasBasePermission - variant that does not lookup any request attributes.
+     * <p>
+     * Added 2018-05-11.
+     */
+    public static boolean hasBasePermission(GenericValue userLogin, HttpServletRequest request, Security security, String serverId) {
+        // get a context path from the request, if it is empty then assume it is the root mount point
+        String contextPath = request.getContextPath();
+        if (UtilValidate.isEmpty(contextPath)) {
+            contextPath = "/";
+        }
+        ComponentConfig.WebappInfo info = ComponentConfig.getWebAppInfo(serverId, contextPath);
+        if (info != null) {
+            return hasApplicationPermission(info, security, userLogin);
+        } else {
+            Debug.logInfo("No webapp configuration found for : " + serverId + " / " + contextPath, module);
         }
         return true;
     }
@@ -1215,8 +1249,8 @@ public class LoginWorker {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         String userName = request.getParameter("USERNAME");
         Timestamp now = UtilDateTime.nowTimestamp();
-        Integer reqToChangePwdInDays = Integer.valueOf(EntityUtilProperties.getPropertyValue("security.properties", "user.change.password.days", "0", delegator));
-        Integer passwordNoticePeriod = Integer.valueOf(EntityUtilProperties.getPropertyValue("security.properties", "user.change.password.notification.days", "0", delegator));
+        Integer reqToChangePwdInDays = Integer.valueOf(EntityUtilProperties.getPropertyValue("security", "user.change.password.days", "0", delegator));
+        Integer passwordNoticePeriod = Integer.valueOf(EntityUtilProperties.getPropertyValue("security", "user.change.password.notification.days", "0", delegator));
         if (reqToChangePwdInDays > 0) {
             List<GenericValue> passwordHistories = null;
             try {

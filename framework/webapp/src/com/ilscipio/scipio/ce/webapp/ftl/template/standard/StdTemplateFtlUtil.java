@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public abstract class StdTemplateFtlUtil {
 
-    public static final String module = StdTemplateFtlUtil.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     protected StdTemplateFtlUtil() {
     }
@@ -31,7 +31,7 @@ public abstract class StdTemplateFtlUtil {
         // TODO
         throw new UnsupportedOperationException("Not implemented");
         /*
-        Map<String, Object> res = new HashMap<String, Object>();
+        Map<String, Object> res = new HashMap<>();
         res.put("large", 1F);
         res.put("medium", 1F);
         res.put("small", 1F);

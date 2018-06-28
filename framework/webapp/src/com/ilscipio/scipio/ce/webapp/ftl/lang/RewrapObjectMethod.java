@@ -33,7 +33,7 @@ import freemarker.template.TemplateScalarModel;
  */
 public class RewrapObjectMethod implements TemplateMethodModelEx {
 
-    public static final String module = RewrapObjectMethod.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)

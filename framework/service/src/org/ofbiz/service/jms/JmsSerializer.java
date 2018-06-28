@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
  *
  */
 public class JmsSerializer {
-    public static final String module = JmsSerializer.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static Object deserialize(String content, Delegator delegator) throws SerializeException, SAXException, ParserConfigurationException, IOException {
         Document document = UtilXml.readXmlDocument(content, false);

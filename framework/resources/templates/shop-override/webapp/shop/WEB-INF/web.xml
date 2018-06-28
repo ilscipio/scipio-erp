@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0">
+    <display-name>SCIPIO ERP - @component-resource-name@ Component</display-name>
+    <description>@component-resource-name@ Component of the SCIPIO ERP Project</description>
+
+    <context-param>
+        <description>A unique ID used to look up the WebSite entity</description>
+        <param-name>webSiteId</param-name>
+        <param-value>ScipioWebStore</param-value><!-- replacing the /applications/shop original: @component-resource-name@ -->
+    </context-param>
+    <context-param>
+        <description>A unique name used to identify/recognize the local dispatcher for the Service Engine</description>
+        <param-name>localDispatcherName</param-name>
+        <param-value>scipio-shop</param-value><!-- replacing the /applications/shop original: @component-name@ -->
+    </context-param>
+    <context-param>
+        <description>The Name of the Entity Delegator to use, defined in entityengine.xml</description>
+        <param-name>entityDelegatorName</param-name>
+        <param-value>default</param-value>
+    </context-param>
+    <context-param>
+        <description>The location of the main-decorator screen to use for this webapp; referred to as a context variable in screen def XML files.</description>
+        <param-name>mainDecoratorLocation</param-name>
+        <param-value>component://@component-name@/widget/CommonScreens.xml</param-value>
+    </context-param>
+    <context-param>
+        <description>
+            Forces the JSESSIONID cookie to be sent via http rather https, helps prevent lost sessions in web apps that
+            frequently switch between http and https.
+        </description>
+        <param-name>forceHttpSession</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <description>
+            SCIPIO: Enables or disables controller target view overrides (/control/requestname/viewname) in request handler. Default: true (enabled - stock behavior).
+        </description>
+        <param-name>allowOverrideViewUri</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
+    <!-- HTML Compression - enable this in production (disable for debugging)
+    <context-param>
+        <description>Remove unnecessary whitespace from HTML output.</description>
+        <param-name>compressHTML</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    -->
+
+    <!-- SCIPIO: CMS parameters (see website webapp web.xml for descriptions) -->
+    <context-param>
+        <param-name>cmsSetResponseBrowserNoCacheCmsPage</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <param-name>cmsSetResponseBrowserNoCacheScreen</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <param-name>cmsSetResponseBrowserNoCache</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <param-name>cmsAllowPreviewMode</param-name>
+        <!-- NOTE: On production webapps that require tight security, this should be set to false. -->
+        <param-value>true</param-value>
+    </context-param>
+
+    <!-- SCIPIO: UrlRewriteFilter - processes urlrewrite.xml
+        NOTE: 2017-11-01: SimpleRedirectFilter is replaced by UrlRewriteFilter. -->
+    <filter>
+        <filter-name>UrlRewriteFilter</filter-name>
+        <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+        <!-- Uncomment this to make rules editable at runtime
+        <init-param>
+            <param-name>confReloadCheckInterval</param-name>
+            <param-value>0</param-value>
+        </init-param>-->
+        <init-param>
+            <param-name>logLevel</param-name>
+            <param-value>log4j</param-value>
+        </init-param>
+        <init-param>
+            <param-name>statusEnabled</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter>
+        <display-name>SeoCatalogUrlFilter</display-name>
+        <filter-name>SeoCatalogUrlFilter</filter-name>
+        <filter-class>com.ilscipio.scipio.product.seo.SeoCatalogUrlFilter</filter-class>
+        <init-param>
+            <description>If true, enables advanced SEO URL handling+generation following SEO configuration in SeoConfig.xml* (/applications/product/config/SeoConfig.xml),
+                intercepting both old-style (@ofbizCatalogUrl) and alternative URLs (@ofbizCatalogAltUrl) and generating a single format; 
+                if false, delegates to the regular CatalogUrlFilter implementation. 
+                NOTE: 2017-11-26: Now enabled by default in Scipio (master). 
+                NOTE(*): The default Scipio SeoConfig.xml allows handling incoming stock CatalogUrlFilter-generated ALT URLs (*-c, *-p);
+                    meanwhile, by default the old-style (non-alt) CatalogUrlServlet mapping is left in place (see NOTE further below for production servers);
+                    as such, with default settings, seoUrlEnabled true retains compatibility with non-SEO-generated URLs.</description>
+            <param-name>seoUrlEnabled</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <description>If true, attempts to rewrite outbound /control/product and /control/category requests to SEO URLs.
+                In other words, [@ofbizUrl]product?productId=FA-001[/@ofbizUrl] appears as if had written [@ofbizCatalogAltUrl productId="FA-001"/].
+                Notably, this applies to controller redirects that follow a compatible URL generation pattern (only some special cases may not cover).
+                WARN: 2017-11-21: This is currently best-effort; reliability is about on par as the outbound-rules in urlrewrite.xml.</description>
+            <param-name>rewriteOutboundUrls</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <description>The legacy defaultLocaleString parameter from CatalogUrlFilter.
+                NOTE: This is ignored by the filter when seoUrlEnabled true; only used for the legacy
+                    CatalogUrlFilter implementation, when seoUrlEnabled false.</description>
+            <param-name>defaultLocaleString</param-name>
+            <param-value>en_US</param-value>
+        </init-param>
+    </filter>
+    <!-- SCIPIO: 2017-11: The stock CatalogUrlFilter is fully contained in the SeoCatalogUrlFilter implementation.
+        NOTE: Setting seoUrlEnabled false above is practically the same as commenting SeoCatalogUrlFilter and uncommenting this filter.
+    <filter>
+        <display-name>CatalogUrlFilter</display-name>
+        <filter-name>CatalogUrlFilter</filter-name>
+        <filter-class>org.ofbiz.product.category.CatalogUrlFilter</filter-class>
+        <init-param><param-name>defaultLocaleString</param-name><param-value>en_US</param-value></init-param>
+    </filter>-->
+    <filter>
+        <display-name>ContentUrlFilter</display-name>
+        <filter-name>ContentUrlFilter</filter-name>
+        <filter-class>org.ofbiz.content.content.ContentUrlFilter</filter-class>
+        <init-param>
+            <param-name>defaultLocaleString</param-name>
+            <param-value>en_US</param-value>
+        </init-param>
+        <!-- SCIPIO: TODO: REVIEW: This should probably be changed -->
+        <init-param><param-name>viewRequest</param-name><param-value>ViewBlogArticle</param-value></init-param>
+    </filter>
+    <!-- SCIPIO: CMS Process filter -->
+    <filter>
+        <display-name>CmsProcessFilter</display-name>
+        <filter-name>CmsProcessFilter</filter-name>
+        <filter-class>com.ilscipio.scipio.cms.control.CmsProcessFilter</filter-class>         
+    </filter>
+    <filter>
+        <display-name>ContextFilter</display-name>
+        <filter-name>ContextFilter</filter-name>
+        <filter-class>org.ofbiz.webapp.control.ContextFilter</filter-class>
+        <init-param>
+            <param-name>disableContextSecurity</param-name>
+            <param-value>N</param-value>
+        </init-param>
+        <init-param>
+            <param-name>allowedPaths</param-name>
+            <param-value>/error:/control:/products:/select:/index.html:/index.jsp:/robots.txt:/default.html:/default.jsp:/images:/sitemaps:/media</param-value>
+        </init-param>
+        <init-param>
+            <description>SCIPIO: Set this to Y to automatically forward root requests that match controller URIs 
+                to the controller - e.g. "/main" -> "/control/main".
+                NOTE: If enabled you likely want to uncomment the CONTROL-SERVLET-STRIPPING RULES in urlrewrite.xml;
+                    together these emulate having root control URIs, but without changing the ControlServlet mapping (problematic).
+                FIXME: 2017-11: This setting currently cannot auto-detect if a request URI is already in use by a servlet mapping
+                    (unintentionally gives the controller URIs mapping priority) -
+                    WARNING: Avoid having a controller request URI with name matching a servlet mappings below!</description>
+            <param-name>forwardRootControllerUris</param-name>
+            <param-value>N</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>UrlRewriteFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>ERROR</dispatcher><!-- 2018-04: needed for outbound-rules to run on error page -->
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>SeoCatalogUrlFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
+    <!-- SCIPIO: the stock CatalogUrlFilter is now contained in the SeoCatalogUrlFilter - see comments above.
+    <filter-mapping>
+        <filter-name>CatalogUrlFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>-->
+    <filter-mapping>
+        <filter-name>ContentUrlFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
+    <!-- SCIPIO: CMS Process filter mapping -->
+    <filter-mapping>
+        <filter-name>CmsProcessFilter</filter-name>
+        <url-pattern>/*</url-pattern>   
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>ContextFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher><!-- SCIPIO: 2017-11-01: required for previous filter forwards to work  -->
+    </filter-mapping>
+
+    <listener><listener-class>org.ofbiz.webapp.control.ControlEventListener</listener-class></listener>
+    <!-- NOTE: not all app servers support mounting implementations of the HttpSessionActivationListener interface -->
+    <!-- <listener><listener-class>org.ofbiz.webapp.control.ControlActivationEventListener</listener-class></listener> -->
+
+    <!-- this listener will save any abandoned cart info -->
+    <listener><listener-class>org.ofbiz.order.shoppingcart.CartEventListener</listener-class></listener>
+    <!-- this listener will clean up info -->
+    <listener><listener-class>org.ofbiz.webapp.control.LoginEventListener</listener-class></listener>
+
+    <servlet>
+        <display-name>ControlServlet</display-name>
+        <servlet-name>ControlServlet</servlet-name>
+        <description>Main Control Servlet</description>
+        <servlet-class>org.ofbiz.webapp.control.ControlServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <!-- un-comment for Worldpay
+    <servlet>
+        <description>WorldPay Select Handler Service</description>
+        <display-name>SelectHandler</display-name>
+        <servlet-name>select</servlet-name>
+        <servlet-class>com.worldpay.select.merchant.SelectHandler</servlet-class>
+        <load-on-startup>5</load-on-startup>
+    </servlet>
+    -->
+    <servlet>
+        <description>Catalog (Category/Product) URL Servlet</description>
+        <display-name>CatalogUrlServlet</display-name>
+        <servlet-name>CatalogUrlServlet</servlet-name>
+        <servlet-class>org.ofbiz.product.category.CatalogUrlServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <!-- SCIPIO: CMS media servlet -->
+    <servlet>
+        <servlet-name>CmsMediaServlet</servlet-name>
+        <display-name>CmsMediaServlet</display-name>
+        <description>Cms Media Servlet</description>
+        <servlet-class>com.ilscipio.scipio.cms.media.CmsMediaServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>     
+
+    <!-- SCIPIO: NOTE: It is possible to map ControlServlet to root here (/*), but is problematic -
+        alternatively can enable forwardRootControllerUris in ContextFilter above and uncomment the outbound-rules in rewrite.xml. -->
+    <servlet-mapping>
+        <servlet-name>ControlServlet</servlet-name>
+        <url-pattern>/control/*</url-pattern>
+    </servlet-mapping>
+    <!-- un-comment for Worldpay
+    <servlet-mapping>
+        <servlet-name>select</servlet-name>
+        <url-pattern>/select/*</url-pattern>
+    </servlet-mapping>
+    -->
+    <!-- SCIPIO: NOTE: When seoUrlEnabled is enabled and planned for usage in production, 
+        it's recommended to comment this mapping out (and the servlet), but it is not obligatory;
+        it is left here by default only to maintain ability to handle incoming legacy-style non-SEO links. -->
+    <servlet-mapping>
+        <servlet-name>CatalogUrlServlet</servlet-name>
+        <url-pattern>/products/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- SCIPIO: CMS media servlet -->
+    <servlet-mapping>
+        <servlet-name>CmsMediaServlet</servlet-name>
+        <url-pattern>/media/*</url-pattern>
+    </servlet-mapping>
+
+    <session-config>
+        <!-- SCIPIO: Increase shop session timeout to 24 hours. If more frequent logins are desired (as in some shops - for security),
+            they would need to be coded in a less brute way, because by default this method will destroy the cart, which is rarely desired.
+        <session-timeout>60</session-timeout>-->
+        <session-timeout>1440</session-timeout>
+        <cookie-config>
+          <http-only>true</http-only>
+          <!-- SCIPIO: FIXME?: Currently can't enable this, it is causing secure flag even for HTTP requests and
+              causing a new session to be recreated at every non-HTTPS request
+          <secure>true</secure>-->
+        </cookie-config>
+        <tracking-mode>COOKIE</tracking-mode>
+    </session-config>
+
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>index.html</welcome-file>
+        <welcome-file>index.htm</welcome-file>
+    </welcome-file-list>
+
+    <error-page>
+        <error-code>404</error-code>
+        <!-- SCIPIO: try nicer formatted error page
+        <location>/error/404.jsp</location>-->
+        <location>/control/error</location>
+    </error-page>
+</web-app>

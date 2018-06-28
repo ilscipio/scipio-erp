@@ -45,7 +45,7 @@ import org.w3c.dom.Element;
  */
 public final class CreateObject extends MethodOperation {
 
-    public static final String module = CreateObject.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final String className;
     private final Class<?> targetClass;

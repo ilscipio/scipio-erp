@@ -34,7 +34,7 @@ import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
  */
 public class SetContextFieldTransform implements TemplateMethodModelEx {
 
-    public static final String module = SetContextFieldTransform.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)

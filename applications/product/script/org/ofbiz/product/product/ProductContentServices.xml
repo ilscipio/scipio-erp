@@ -107,13 +107,8 @@ under the License.
         <call-service service-name="updateSimpleTextContent" in-map-name="updateSimpleText"/>
     </simple-method>
     <simple-method method-name="createSimpleTextContentForAlternateLocale" short-description="Create Simple Text Content For Alternate Locale">
-        <set-service-fields service-name="createSimpleTextContent" map="parameters" to-map="createSimpleTextMap"/>
-        <call-service service-name="createSimpleTextContent" in-map-name="createSimpleTextMap">
-            <result-to-field result-name="contentId" field="createContentAssocMap.contentIdTo"/>
-        </call-service>
-        <set field="createContentAssocMap.contentId" from-field="parameters.mainContentId"/>
-        <set field="createContentAssocMap.contentAssocTypeId" value="ALTERNATE_LOCALE"/>
-        <call-service service-name="createContentAssoc" in-map-name="createContentAssocMap"/>
+        <!-- SCIPIO: 2017-12-06: MOVED (DEV NOTE: exception!) -->
+        <call-simple-method xml-resource="component://content/script/org/ofbiz/content/content/LocalizedContentServices.xml" method-name="createSimpleTextContentForAlternateLocale"/>
     </simple-method>
 
     <!-- ProductFeatureDataResource -->

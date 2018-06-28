@@ -28,7 +28,7 @@ import freemarker.template.TemplateModelException;
  */
 public class PopRequestStackMethod extends RequestStackMethod {
 
-    public static final String module = PopRequestStackMethod.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)

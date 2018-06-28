@@ -20,7 +20,10 @@ package org.ofbiz.product.product;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,10 +33,6 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
-import javolution.util.FastSet;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.ObjectType;
@@ -66,7 +65,7 @@ import org.ofbiz.webapp.website.WebSiteWorker;
  */
 public class ProductEvents {
 
-    public static final String module = ProductEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ProductErrorUiLabels";
 
     /**
@@ -97,7 +96,7 @@ public class ProductEvents {
 
         EntityCondition condition = null;
         if (!"Y".equals(doAll)) {
-            List<EntityCondition> condList = FastList.newInstance();
+            List<EntityCondition> condList = new LinkedList<EntityCondition>();
             condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("autoCreateKeywords", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("autoCreateKeywords", EntityOperator.NOT_EQUAL, "N")));
             if ("true".equals(EntityUtilProperties.getPropertyValue("prodsearch", "index.ignore.variants", delegator))) {
                 condList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("isVariant", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("isVariant", EntityOperator.NOT_EQUAL, "Y")));
@@ -204,7 +203,7 @@ public class ProductEvents {
      */
     public static String updateProductAssoc(HttpServletRequest request, HttpServletResponse response) {
         String errMsg = "";
-        List<Object> errMsgList = FastList.newInstance();
+        List<Object> errMsgList = new LinkedList<Object>();
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         Security security = (Security) request.getAttribute("security");
 
@@ -397,7 +396,7 @@ public class ProductEvents {
         // just store a new empty list in the session
         HttpSession session = request.getSession();
         if (session != null) {
-            session.setAttribute("lastViewedCategories", FastList.newInstance());
+            session.setAttribute("lastViewedCategories", new LinkedList());
         }
         return "success";
     }
@@ -407,7 +406,7 @@ public class ProductEvents {
         // just store a new empty list in the session
         HttpSession session = request.getSession();
         if (session != null) {
-            session.setAttribute("lastViewedProducts", FastList.newInstance());
+            session.setAttribute("lastViewedProducts", new LinkedList());
         }
         return "success";
     }
@@ -627,7 +626,7 @@ public class ProductEvents {
                             description = null;
                         }
 
-                        Set<String> variantDescRemoveToRemoveOnVirtual = FastSet.newInstance();
+                        Set<String> variantDescRemoveToRemoveOnVirtual = new HashSet<String>();
                         checkUpdateFeatureApplByDescription(variantProductId, variantProduct, description, productFeatureTypeId, productFeatureType, "STANDARD_FEATURE", nowTimestamp, delegator, null, variantDescRemoveToRemoveOnVirtual);
                         checkUpdateFeatureApplByDescription(productId, product, description, productFeatureTypeId, productFeatureType, "SELECTABLE_FEATURE", nowTimestamp, delegator, variantDescRemoveToRemoveOnVirtual, null);
 
@@ -670,7 +669,7 @@ public class ProductEvents {
 
         GenericValue productFeatureAndAppl = null;
 
-        Set<String> descriptionsForThisType = FastSet.newInstance();
+        Set<String> descriptionsForThisType = new HashSet<String>();
         List<GenericValue> productFeatureAndApplList = EntityQuery.use(delegator).from("ProductFeatureAndAppl").where("productId", productId, "productFeatureApplTypeId", productFeatureApplTypeId, "productFeatureTypeId", productFeatureTypeId).filterByDate().queryList();
         if (productFeatureAndApplList.size() > 0) {
             Iterator<GenericValue> productFeatureAndApplIter = productFeatureAndApplList.iterator();
@@ -912,6 +911,7 @@ public class ProductEvents {
         if (productStore != null) {
             String currencyStr = null;
             String localeStr = null;
+            String timeZoneStr = null;
 
             HttpSession session = request.getSession();
             GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
@@ -920,6 +920,8 @@ public class ProductEvents {
                 currencyStr = userLogin.getString("lastCurrencyUom");
                 // user login locale
                 localeStr = userLogin.getString("lastLocale");
+                // user login timezone
+                timeZoneStr = userLogin.getString("lastTimeZone");
             }
 
             // if currency is not set, the store's default currency is used
@@ -932,9 +934,14 @@ public class ProductEvents {
                 localeStr = productStore.getString("defaultLocaleString");
             }
 
+            // if timezone is not set, the store's default timezone is used
+            if (timeZoneStr == null && productStore.get("defaultTimeZoneString") != null) {
+                timeZoneStr = productStore.getString("defaultTimeZoneString");
+            }
+
             UtilHttp.setCurrencyUom(session, currencyStr);
             UtilHttp.setLocale(request, localeStr);
-
+            UtilHttp.setTimeZone(request, timeZoneStr);
         }
         return "success";
     }
@@ -1018,7 +1025,7 @@ public class ProductEvents {
         paramMap.put("locale", UtilHttp.getLocale(request));
         paramMap.put("userLogin", session.getAttribute("userLogin"));
 
-        Map<String, Object> context = FastMap.newInstance();
+        Map<String, Object> context = new HashMap<String, Object>();
         context.put("bodyScreenUri", bodyScreenLocation);
         context.put("bodyParameters", paramMap);
         context.put("sendTo", paramMap.get("sendTo"));
@@ -1058,10 +1065,10 @@ public class ProductEvents {
         Object compareListObj = session.getAttribute("productCompareList");
         List<GenericValue> compareList = null;
         if (compareListObj == null) {
-            compareList = FastList.newInstance();
+            compareList = new LinkedList<GenericValue>();
         } else if (!(compareListObj instanceof List<?>)) {
             Debug.logWarning("Session attribute productCompareList contains something other than the expected product list, overwriting.", module);
-            compareList = FastList.newInstance();
+            compareList = new LinkedList<GenericValue>();
         } else {
             compareList = UtilGenerics.cast(compareListObj);
         }
@@ -1147,7 +1154,7 @@ public class ProductEvents {
 
     public static String clearProductComparisonList(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
-        session.setAttribute("productCompareList", FastList.newInstance());
+        session.setAttribute("productCompareList", new LinkedList());
         String eventMsg = UtilProperties.getMessage("ProductUiLabels", "ProductClearCompareListSuccess", UtilHttp.getLocale(request));
         request.setAttribute("_EVENT_MESSAGE_", eventMsg);
         return "success";
@@ -1179,7 +1186,7 @@ public class ProductEvents {
         String productTags = request.getParameter("productTags");
         String statusId = request.getParameter("statusId");
         if (UtilValidate.isNotEmpty(productId) && UtilValidate.isNotEmpty(productTags)) {
-            List<String> matchList = FastList.newInstance();
+            List<String> matchList = new LinkedList<String>();
             Pattern regex = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
             Matcher regexMatcher = regex.matcher(productTags);
             while (regexMatcher.find()) {

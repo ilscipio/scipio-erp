@@ -50,7 +50,7 @@ import freemarker.template.TemplateTransformModel;
  */
 public class RenderContentTransform implements TemplateTransformModel {
 
-    public static final String module = RenderContentTransform.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     @SuppressWarnings("unchecked")
     public Writer getWriter(final Writer out, Map args) {
@@ -139,7 +139,7 @@ public class RenderContentTransform implements TemplateTransformModel {
                 }
 
                 out.write("<a href=\"");
-                ServletContext servletContext = request.getSession().getServletContext();
+                ServletContext servletContext = request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
                 RequestHandler rh = (RequestHandler) servletContext.getAttribute("_REQUEST_HANDLER_");
                 out.append(rh.makeLink(request, response, "/" + fullRequest, false, false, true));
                 out.write("\">Edit</a>");

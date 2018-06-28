@@ -39,7 +39,7 @@ import org.ofbiz.base.util.UtilValidate;
  */
 public class HashCrypt {
 
-    public static final String module = HashCrypt.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String CRYPT_CHAR_SET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789./";
 
     public static MessageDigest getMessageDigest(String type) {

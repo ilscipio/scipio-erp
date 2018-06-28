@@ -28,10 +28,11 @@ import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.category.CategoryContentWrapper;
 import org.ofbiz.product.category.CategoryWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
-import javolution.util.FastMap;
-import javolution.util.FastList;
+import com.ilscipio.scipio.solr.*;
 
-// SCIPIO: NOTE: This script is responsible for checking whether solr is applicable.
+// SCIPIO: NOTE: This script is responsible for checking whether solr is applicable (if no check, implies the shop assumes solr is always enabled).
+
+final module = "CategoryDetail.groovy";
 
 // SCIPIO: this allows to use the script for local scopes without affecting request
 localVarsOnly = context.localVarsOnly;
@@ -40,12 +41,15 @@ if (localVarsOnly == null) {
 }
 context.remove("localVarsOnly");
 
-try{
+nowTimestamp = context.nowTimestamp ?: UtilDateTime.nowTimestamp();
+productStore = context.productStore ?: ProductStoreWorker.getProductStore(request);
+
+try {
     productCategoryId = context.productCategoryId;
     viewSize = context.viewSize;
     viewIndex = context.viewIndex;
     currIndex = context.currIndex;
-    
+
     if (!localVarsOnly) {
         if (!productCategoryId) {
             productCategoryId = request.getAttribute("productCategoryId");
@@ -63,13 +67,23 @@ try{
     
     context.productCategoryId = productCategoryId;
     currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
-    
+
+    catArgs = context.catArgs ? new HashMap(context.catArgs) : new HashMap();
+    catArgs.queryFilters = catArgs.queryFilters ? new ArrayList(catArgs.queryFilters) : new ArrayList();
+
     // get the product category & members
-    result = dispatcher.runSync("solrProductsSearch",[productCategoryId:productCategoryId,viewSize:viewSize, viewIndex:viewIndex]);
+    result = dispatcher.runSync("solrProductsSearch",
+        [productStore:productStore, productCategoryId:productCategoryId, queryFilters: catArgs.queryFilters, useDefaultFilters:catArgs.useDefaultFilters,
+         filterTimestamp:nowTimestamp, viewSize:viewSize, viewIndex:viewIndex, locale:context.locale, userLogin:context.userLogin, timeZone:context.timeZone],
+        -1, true); // SEPARATE TRANSACTION so error doesn't crash screen
+    if (!ServiceUtil.isSuccess(result)) {
+        throw new Exception("Error in solrProductsSearch: " + ServiceUtil.getErrorMessage(result));
+    }
     
     productCategory = delegator.findOne("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId), true);
     solrProducts = result.results;
     
+    /* SCIPIO: 2018-05-25: this is now done as part of solrProductsSearch by default
     // Prevents out of stock product to be displayed on site
     productStore = ProductStoreWorker.getProductStore(request);
     if(productStore) {
@@ -83,14 +97,15 @@ try{
                     }
                 }
             }
-            context.solrProducts = productsInStock;
-        } else {
-            context.solrProducts = solrProducts;
+            solrProducts = productsInStock;
         }
     }
+    */
+    
+    context.solrProducts = solrProducts;
     
     /*
-    subCatList = FastList.newInstance();
+    subCatList = [];
     if (CategoryWorker.checkTrailItem(request, productCategory.getString("productCategoryId")) || (!UtilValidate.isEmpty(productCategoryId) && productCategoryId == productCategory.productCategoryId))
         subCatList = CategoryWorker.getRelatedCategoriesRet(request, "subCatList", productCategory.getString("productCategoryId"), true);
     
@@ -129,6 +144,6 @@ try{
     parameters.CURR_INDEX = CURR_INDEX;
     */
     
-} catch(Exception e){
-    Debug.logError(""+e, "CategoryDetail.groovy")
+} catch(Exception e) {
+    Debug.logError(e, e.getMessage(), module);
 }

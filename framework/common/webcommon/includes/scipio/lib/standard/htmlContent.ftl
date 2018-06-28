@@ -1034,37 +1034,47 @@ Since this is very foundation specific, this function may be dropped in future i
 
   * Parameters *
     type                   = ((string) price|description|title|button|ribbon, default:-empty-)
+    class                   = ((css-class)) CSS classes 
+                              Supports prefixes (see #compileClassArg for more info):
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
 -->
 <#assign pli_defaultArgs = {
-  "type":"", "passArgs":{}
+   "class":"","type":"", "passArgs":{}
 }>
 <#macro pli args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.pli_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@pli_markup type=type origArgs=origArgs passArgs=passArgs><#nested></@pli_markup>
+  <@pli_markup type=type class=class origArgs=origArgs passArgs=passArgs><#nested></@pli_markup>
 </#macro>
 
 <#-- @pli main markup - theme override -->
-<#macro pli_markup type="" origArgs={} passArgs={} catchArgs...>
+<#macro pli_markup type="" class="" origArgs={} passArgs={} catchArgs...>
   <#switch type>
     <#case "price">
-      <li class="${styles.pricing_price!}"><#nested></li>
+      <#local class = addClassArg(class, styles.pricing_price!)>
+      <li <@compiledClassAttribStr class=class />><#nested></li>
     <#break>
     <#case "ribbon">
-      <li class="${styles.pricing_ribbon!}"><span><#nested></span></li>
+      <#local class = addClassArg(class, styles.pricing_ribbon!)>
+      <li <@compiledClassAttribStr class=class />><span><#nested></span></li>
     <#break>
     <#case "description">
-      <li class="${styles.pricing_description!}"><#nested></li>
+      <#local class = addClassArg(class, styles.pricing_description!)>
+      <li <@compiledClassAttribStr class=class />><#nested></li>
     <#break>
     <#case "title">
-      <li class="${styles.pricing_title!}"><#nested></li>
+      <#local class = addClassArg(class, styles.pricing_title!)>
+      <li <@compiledClassAttribStr class=class />><#nested></li>
     <#break>
     <#case "button">
-      <li class="${styles.pricing_cta!}"><#nested></li>
+      <#local class = addClassArg(class, styles.pricing_cta!)>
+      <li <@compiledClassAttribStr class=class />><#nested></li>
     <#break>        
     <#default>
-      <li class="${styles.pricing_bullet!}"><#nested></li>
+      <#local class = addClassArg(class, styles.pricing_bullet!)>
+      <li <@compiledClassAttribStr class=class />><#nested></li>
     <#break>
   </#switch>
 </#macro>
@@ -1468,6 +1478,7 @@ Creates a slider wrapper.
   <#local sliderIdNum = sliderIdNum + 1 />
   <#local dummy = setRequestVar("scipioSliderIdNum", sliderIdNum)>
   <#local dummy = setRequestVar("scipioSlideIdNum", 0)> <#-- Start counting slides from 0 -->
+  
   <#--<#global sliderId = "slider_${renderSeqNumber!}_${sliderIdNum!}"/>-->
   <#global sliderId = id>  
   <#if !sliderId?has_content>
@@ -1481,6 +1492,8 @@ Creates a slider wrapper.
 <#-- @chart main markup - theme override -->
 <#macro slider_markup title="" id="" sliderIdNum=0 class="" library="" controls=true indicator=true 
         jsOptions="" origArgs={} passArgs={} catchArgs...>
+    <#-- right to left fix -->
+    <#if langDir?has_content && langDir=="rtl"><#local jsOptions="rtl:true,"+jsOptions/></#if>    
     <#if title?has_content><@heading title=title/></#if>
     <#switch library>
         <#case "owl">    
@@ -1632,6 +1645,7 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
                               Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)
+    id                      = Image ID, added to wrapping container
     type                    = (none|fill|cover|contain|scale-down|bg-cover, default: cover) 
                               * {{{fill|cover|contain|scale-down}}}: css3 object-fit
                               * {{{bgcover}}}: css background cover
@@ -1648,7 +1662,7 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
     height                  = (string) container height e.g. "12px" - acts as a max-height  
 -->
 <#assign img_defaultArgs = {
-  "src":"", "type":"cover", "class":"", "width":"", "height":"","link":"", "linkTarget":false, "passArgs":{}
+  "src":"", "id":"","type":"cover", "class":"", "width":"", "height":"","link":"", "linkTarget":false, "passArgs":{}
 }>
 <#macro img args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.img_defaultArgs)>
@@ -1661,17 +1675,16 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
   <#elseif (linkTarget?is_boolean && linkTarget == true) || !linkTarget?has_content>
     <#local linkTarget = styles[stylePrefix + "_linktarget"]!"">
   </#if>
-  <@img_markup class=class src=src type=type width=width height=height link=link linkTarget=linkTarget origArgs=origArgs passArgs=passArgs><#nested></@img_markup>
+  <@img_markup class=class id=id src=src type=type width=width height=height link=link linkTarget=linkTarget origArgs=origArgs passArgs=passArgs><#nested></@img_markup>
 </#macro>
 
 <#-- @img main markup - theme override -->
-<#macro img_markup class="" src="" type="" width="" height="" link=link linkTarget=linkTarget origArgs={} passArgs={} catchArgs...>
+<#macro img_markup class="" id="" src="" type="" width="" height="" link=link linkTarget=linkTarget origArgs={} passArgs={} catchArgs...>
     <#local imgContainer><#if width?has_content>width: ${escapeVal(width, 'css-html')};</#if><#if height?has_content> height: ${escapeVal(height, 'css-html')};</#if></#local>
     <#local nested><#nested></#local>
     <#switch type>
         <#case "bgcover">
             <#local imgStyle>
-                <#-- WARN/FIXME: escapeFullUrl currently doesn't escape style, so this is unsafe! no easy functions for this -->
                 background:url('${escapeFullUrl(src, 'css-html')}') no-repeat center center fixed;        
                 -webkit-background-size: cover;
                 -moz-background-size: cover;
@@ -1683,7 +1696,7 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
                 ${imgContainer}
             </#local>
             <#local class = addClassArg(class, "scipio-image-container")>
-            <div<@compiledClassAttribStr class=class />>
+            <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if>>
                 <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapeVal(linkTarget, 'html')}"</#if>></#if>
                     <div style="${imgStyle}" class="scipio-image"></div>
                 <#if link?has_content></a></#if>
@@ -1693,7 +1706,7 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
         <#default>
             <#local imgStyle><#if imgContainer?has_content>${imgContainer}</#if>object-fit: ${escapeVal(type, 'css-html')};</#local>
             <#local class = addClassArg(class, "scipio-image-container")>
-            <div<@compiledClassAttribStr class=class /> style="${imgContainer}" scipioFit="${escapeVal(type, 'html')}">
+            <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if> style="${imgContainer}" scipioFit="${escapeVal(type, 'html')}">
                 <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapeVal(linkTarget, 'html')}"</#if>></#if>
                     <img src="${escapeFullUrl(src, 'html')}" class="scipio-image" style="${imgStyle}"/>
                 <#if link?has_content></a></#if>

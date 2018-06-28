@@ -23,6 +23,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -91,7 +92,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
             MODEL_SERVICE_FIELD_MAP.put(field.getName(), field);
         }
     }
-    public static final String module = ModelService.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final String XSD = "http://www.w3.org/2001/XMLSchema";
     public static final String TNS = "http://ofbiz.apache.org/service/";
@@ -108,8 +109,25 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     public static final String SUCCESS_MESSAGE = "successMessage";
     public static final String SUCCESS_MESSAGE_LIST = "successMessageList";
 
+    /**
+     * SCIPIO: List of the common system response field keys returnable in service results.
+     * Added 2017-11-28.
+     */
+    public static final List<String> SYS_RESPONSE_FIELDS = UtilMisc.unmodifiableArrayList(
+            RESPONSE_MESSAGE, 
+            ERROR_MESSAGE, ERROR_MESSAGE_LIST, ERROR_MESSAGE_MAP, 
+            SUCCESS_MESSAGE, SUCCESS_MESSAGE_LIST
+    );
+    
     public static final String resource = "ServiceErrorUiLabels";
 
+    // SCIPIO: new 2017-09-13
+    private static final int logParamLevel;
+    static {
+        Integer level = Debug.getLevelFromString(UtilProperties.getPropertyValue("service", "run.logParamLevel"));
+        logParamLevel = (level != null) ? level : Debug.INFO;
+    }
+    
     /** The name of this service */
     public String name;
 
@@ -482,7 +500,13 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                     Object defaultValueObj = param.getDefaultValue();
                     if (defaultValueObj != null && context.get(param.name) == null) {
                         context.put(param.name, defaultValueObj);
-                        Debug.logInfo("Set default value [" + defaultValueObj + "] for parameter [" + param.name + "]", module);
+                        // SCIPIO: 2017-09-13: This message is extremely verbose and counterproductive as info level;
+                        // it makes developers avoid the default-value attribute altogether.
+                        // so, only log if debug flag or verbose are enabled (added conditions). verbose is configurable.
+                        //Debug.logInfo(...);
+                        if (Debug.isOn(logParamLevel) || this.debug) {
+                            Debug.logInfo("Set default value [" + defaultValueObj + "] for parameter [" + param.name + "]", module);
+                        }
                     }
                 }
             }
@@ -864,7 +888,27 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         if (locale == null) {
             // if statement here to avoid warning messages for Entity ECA service input validation, even though less efficient that doing a straight get
             if (source.containsKey("locale")) {
-                locale = (Locale) source.get("locale");
+                // SCIPIO: 2018-06-27: This should accept a string, so apply simpleTypeConvert (this uses UtilMisc.parseLocale)
+                // NOTE: if includeInternal, the convert is run a second time further below; but if we are taking strings, 
+                // performance is not the concern anyway.
+                //locale = (Locale) source.get("locale");
+                Object value = source.get("locale");
+                if (value instanceof Locale) {
+                    locale = (Locale) value;
+                } else if (value != null) {
+                    try {
+                        locale = (Locale) ObjectType.simpleTypeConvert(value, Locale.class.getName(), null, null, null, true);
+                    } catch (GeneralException e) {
+                        // SCIPIO: NOTE: this message may be duplicated below in some cases when includeInternal==true,
+                        // but we must always warn with special message here because this also affects the other fields
+                        String errMsg = "Type conversion of special field [locale] to type [" + Locale.class.getName() 
+                                + "] failed for value \"" + value + "\" - other fields will use a default locale for conversion: " + e.toString();
+                        Debug.logWarning("[ModelService.makeValid] : " + errMsg, module);
+                        if (errorMessages != null) {
+                            errorMessages.add(errMsg);
+                        }
+                    }
+                }
             }
             if (locale == null) {
                 locale = Locale.getDefault();
@@ -874,7 +918,23 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         if (timeZone == null) {
             // if statement here to avoid warning messages for Entity ECA service input validation, even though less efficient that doing a straight get
             if (source.containsKey("timeZone")) {
-                timeZone = (TimeZone) source.get("timeZone");
+                // SCIPIO: 2018-06-27: This should accept a string, so apply simpleTypeConvert (same as locale above)
+                //timeZone = (TimeZone) source.get("timeZone");
+                Object value = source.get("timeZone");
+                if (value instanceof TimeZone) {
+                    timeZone = (TimeZone) value;
+                } else if (value != null) {
+                    try {
+                        timeZone = (TimeZone) ObjectType.simpleTypeConvert(value, TimeZone.class.getName(), null, null, locale, true);
+                    } catch (GeneralException e) {
+                        String errMsg = "Type conversion of special field [timeZone] to type [" + TimeZone.class.getName() 
+                                + "] failed for value \"" + value + "\" - other fields will use a default TimeZone for conversion: " + e.toString();
+                        Debug.logWarning("[ModelService.makeValid] : " + errMsg, module);
+                        if (errorMessages != null) {
+                            errorMessages.add(errMsg);
+                        }
+                    }
+                }
             }
             if (timeZone == null) {
                 timeZone = TimeZone.getDefault();
@@ -1220,7 +1280,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
             builder = factory.newDocumentBuilder();
             document = builder.newDocument();
         } catch (Exception e) {
-            throw new WSDLException("can not create WSDL", module);
+            throw new WSDLException("can not create WSDL", module.toString());
         }
         def.setTypes(this.getTypes(document, def));
 

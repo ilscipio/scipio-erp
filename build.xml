@@ -2197,10 +2197,12 @@ under the License.
         <property name="lib.entity.jdbc.conf" value="derby"/>
         <antcall target="download-jdbc-common"/>
     </target>
-    <target name="download-jdbc-firebird" description="Download Firebird (Jaybird) JDBC driver">
+    <target name="download-jdbc-jaybird" description="Download Firebird (Jaybird) JDBC driver">
         <delete verbose="on"><fileset dir="framework/entity/lib/jdbc" includes="jaybird-*.jar"/></delete>
-        <property name="lib.entity.jdbc.conf" value="firebird"/>
+        <property name="lib.entity.jdbc.conf" value="jaybird"/>
         <antcall target="download-jdbc-common"/>
+    </target>
+    <target name="download-jdbc-firebird" depends="download-jdbc-jaybird" description="Download Firebird (Jaybird) JDBC driver (alias for download-jdbc-jaybird)">
     </target>
     <target name="download-jdbc-hsqldb" description="Download hsqldb JDBC driver">
         <delete verbose="on"><fileset dir="framework/entity/lib/jdbc" includes="hsqldb-*.jar"/></delete>

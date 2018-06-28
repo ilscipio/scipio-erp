@@ -16,9 +16,11 @@
 # SCIPIO ERP - Community Edition
 ![Scipio ERP is a toolkit for the development of modern business applications.](https://www.scipioerp.com/files/2018/06/slider_desk_900.jpg)
 
+* [Website](https://www.scipioerp.com)
 * [Demo](https://www.scipioerp.com/demo/)
 * [Developer Docs](https://www.scipioerp.com/community/developer/installation-configuration/)
 * [User Docs](https://www.scipioerp.com/community/end-user/applications/)
+* [Community](https://forum.scipioerp.com/)
 
 ## What is Scipio ERP
 Scipio ERP is an Open Source Business Application Toolkit based on Java 8 and a built-in 
@@ -130,7 +132,7 @@ b. Visit entity utility services page:
 c. Click "Visual Theme Resources - Reload All, Now"
 
 ### Optional Configuration
-  http://www.scipioerp.com/community/developer/installation-configuration/configuration/
+  https://www.scipioerp.com/community/developer/installation-configuration/configuration/
 
 ### Addons
 Community and enterprise SCIPIO ERP addons can be added to your working

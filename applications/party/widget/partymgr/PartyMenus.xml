@@ -80,12 +80,12 @@
             </link>
         </menu-item>
         
-       
+       <!--
         <menu-item name="linkparty" title="${uiLabelMap.PartyLink}">
             <link target="linkparty">
                 <parameter param-name="partyId"/>
             </link>
-        </menu-item>
+        </menu-item>-->
          
         <menu-item name="EditPartyRelationships" title="${uiLabelMap.PartyRelationships}">
             <link target="EditPartyRelationships">

@@ -13,6 +13,13 @@
 **************************************************************************
 ```
 
+[![GitHub issues](https://img.shields.io/github/issues/ilscipio/scipio-erp.svg)](https://github.com/ilscipio/scipio-erp/issues)
+[![GitHub forks](https://img.shields.io/github/forks/ilscipio/scipio-erp.svg)](https://github.com/ilscipio/scipio-erp/network)
+[![GitHub stars](https://img.shields.io/github/stars/ilscipio/scipio-erp.svg)](https://github.com/ilscipio/scipio-erp/stargazers)
+[![GitHub license](https://img.shields.io/github/license/ilscipio/scipio-erp.svg)](https://github.com/ilscipio/scipio-erp/blob/master/LICENSE)
+[![Twitter](https://img.shields.io/twitter/url/https/github.com/ilscipio/scipio-erp.svg?style=social)](https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2Filscipio%2Fscipio-erp)
+
+
 # SCIPIO ERP - Community Edition
 ![Scipio ERP is a toolkit for the development of modern business applications.](https://www.scipioerp.com/files/2018/05/slider_desk_1200.jpg "Pictured: the modern ECommerce application.")
 

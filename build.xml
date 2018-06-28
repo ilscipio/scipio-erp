@@ -78,6 +78,10 @@ under the License.
         <propertyref name="ofbiz.component.dirs"/>
         <propertyref regex="lib\.update\..*"/>
         <propertyref regex="lib\.clean\..*"/>
+        <propertyref regex="lib\.entity\..*"/><!-- FIXME?: unfortunate exception... should have been lib.scpcfg.entity... too late -->
+        <propertyref regex="lib\.scpcfg\..*"/><!-- for custom lib properties for components; should be named: lib.scpcfg.[componentname].* -->
+        <propertyref regex="comp.scpcfg\..*"/><!-- for component-specific config properties; should be named: comp.scpcfg.[componentname].* -->
+        <propertyref regex="scpcfg\..*"/>
         <propertyref name="ivy.settings.file"/>
         <propertyref name="checkreqs.ran"/>
     </propertyset>

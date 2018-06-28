@@ -35,10 +35,10 @@ modern HTML frameworks.
 ### TL;DR
 * Simplifies the creation of business or ECommerce applications
 * Highly modular, extendable and customizable 
-* Bundles a long list of customizable applications
+* Bundles a long list of working applications
 * Supports most modern HTML frameworks
 * Supports Caching & Clustering
-* Can be rolled out in many languages
+* Can be rolled out internationally
 
 ## What's included
 * Business Applications & functions for

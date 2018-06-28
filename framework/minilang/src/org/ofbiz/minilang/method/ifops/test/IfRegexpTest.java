@@ -29,7 +29,7 @@ import org.ofbiz.service.testtools.OFBizTestCase;
 
 public class IfRegexpTest extends OFBizTestCase {
 
-    private static final String module = IfRegexpTest.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public IfRegexpTest(String name) {
         super(name);

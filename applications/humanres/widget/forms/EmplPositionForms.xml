@@ -39,13 +39,18 @@ under the License.
         </field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}">
             <display-entity description="${firstName} ${middleName} ${lastName} ${groupName}" entity-name="PartyNameView">
-                <sub-hyperlink target="viewprofile" link-style="${styles.link_nav_info_id}" target-type="intra-app" description="${partyId}">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_nav_info_id}" description="${partyId}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" description="${description}"/></field>
         <field name="emplPositionTypeId"><display-entity entity-name="EmplPositionType" description="${description}"/></field>
+        <field name="applyAction" title=" " widget-style="${styles.link_nav} ${styles.action_add}"><!-- SCIPIO -->
+            <hyperlink also-hidden="false" description="${uiLabelMap.HumanResNewEmploymentApp}" target="EditEmploymentApp">
+                <parameter param-name="emplPositionId" from-field="emplPositionId"/>
+            </hyperlink>
+        </field>
     </form>
     <form name="ListEmplPositionsParty" extends="ListEmplPositions" list-name="ListEmplPositions">
         <actions>
@@ -73,7 +78,7 @@ under the License.
         </field>
         <!--<field name="partyId" title="Organization PartyId">
             <display-entity description="${groupName}" entity-name="PartyNameView">
-                <sub-hyperlink target="viewprofile" link-style="${styles.link_nav_info_id}" target-type="inter-app" description="${partyId}">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_nav_info_id}" description="${partyId}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>

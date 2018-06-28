@@ -20,6 +20,7 @@ package org.ofbiz.content.webapp.ftl;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -27,8 +28,6 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -53,7 +52,7 @@ import freemarker.template.TemplateTransformModel;
  */
 public class RenderContentAsText implements TemplateTransformModel {
 
-    public static final String module = RenderContentAsText.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String [] upSaveKeyNames = {"globalNodeTrail"};
     public static final String [] saveKeyNames = {"contentId", "subContentId", "subDataResourceTypeId", "mimeTypeId", "whenMap", "locale",  "wrapTemplateId", "encloseWrapText", "nullThruDatesOnly", "globalNodeTrail"};
 
@@ -61,7 +60,7 @@ public class RenderContentAsText implements TemplateTransformModel {
     public Writer getWriter(final Writer out, Map args) {
         final Environment env = FreeMarkerWorker.getCurrentEnvironment();
         //final Map templateCtx = FreeMarkerWorker.getWrappedObject("context", env);
-        //final Map templateCtx = FastMap.newInstance();
+        //final Map templateCtx = new HashMap<String, Object>();
         final LocalDispatcher dispatcher = FreeMarkerWorker.getWrappedObject("dispatcher", env);
         final Delegator delegator = FreeMarkerWorker.getWrappedObject("delegator", env);
         final HttpServletRequest request = FreeMarkerWorker.getWrappedObject("request", env);
@@ -71,7 +70,7 @@ public class RenderContentAsText implements TemplateTransformModel {
             Debug.logVerbose("in RenderSubContent, contentId(0):" + templateRoot.get("contentId"), module);
         }
         FreeMarkerWorker.getSiteParameters(request, templateRoot);
-        final Map<String, Object> savedValuesUp = FastMap.newInstance();
+        final Map<String, Object> savedValuesUp = new HashMap<String, Object>();
         FreeMarkerWorker.saveContextValues(templateRoot, upSaveKeyNames, savedValuesUp);
         FreeMarkerWorker.overrideWithArgs(templateRoot, args);
         if (Debug.verboseOn()) {
@@ -130,7 +129,7 @@ public class RenderContentAsText implements TemplateTransformModel {
         templateRoot.put("subDataResourceTypeId", subDataResourceTypeId);
         */
 
-        final Map<String, Object> savedValues = FastMap.newInstance();
+        final Map<String, Object> savedValues = new HashMap<String, Object>();
 
         return new Writer(out) {
 
@@ -239,7 +238,7 @@ public class RenderContentAsText implements TemplateTransformModel {
                 }
 
                 out.write("<a href=\"");
-                ServletContext servletContext = request.getSession().getServletContext();
+                ServletContext servletContext = request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
                 RequestHandler rh = (RequestHandler) servletContext.getAttribute("_REQUEST_HANDLER_");
                 out.append(rh.makeLink(request, response, "/" + fullRequest, false, false, true));
                 out.write("\">Edit</a>");

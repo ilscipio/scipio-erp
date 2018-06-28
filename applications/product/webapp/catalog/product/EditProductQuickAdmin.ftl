@@ -53,9 +53,12 @@ function removeSelectable(typeString, productFeatureTypeId, productId) {
 }
 
 function doPublish() {
-    <#-- SCIPIO: Now points to shop -->
-    window.open('<@ofbizInterWebappUrl>/shop/control/product?product_id=${productId!}</@ofbizInterWebappUrl>');
+  <#-- SCIPIO: Now points to shop -->
+  <#assign productPageUrl = getPropertyValue("catalog", "shop.default.link.product.prefix")!>    
+  <#if productPageUrl?has_content>
+    window.open('<@ofbizInterWebappUrl>${productPageUrl}${productId!}</@ofbizInterWebappUrl>');
     document.publish.submit();
+  </#if>
 }
 
 </@script>

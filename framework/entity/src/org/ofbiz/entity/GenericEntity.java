@@ -75,7 +75,7 @@ import org.w3c.dom.Element;
 @SuppressWarnings("serial")
 public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>, Serializable, Comparable<GenericEntity>, Cloneable {
 
-    public static final String module = GenericEntity.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final GenericEntity NULL_ENTITY = new NullGenericEntity();
     public static final NullField NULL_FIELD = new NullField();
 
@@ -1022,6 +1022,22 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
         return aMap;
     }
 
+    /** SCIPIO: Used by clients to specify exactly the fields they are NOT interested in
+     * Added 2017-12-15.
+     * @param excludeKeysofFields the name of the fields the client is NOT interested in
+     * @return java.util.Map
+     */
+    public Map<String, Object> getFieldsExclude(Collection<String> excludeKeysofFields) {
+        Map<String, Object> aMap = new HashMap<String, Object>();
+        if (excludeKeysofFields == null) excludeKeysofFields = Collections.emptySet();
+        for (String aKey: getAllKeys()) {
+            if (!excludeKeysofFields.contains(aKey)) {
+                aMap.put(aKey, this.fields.get(aKey));
+            }
+        }
+        return aMap;
+    }
+    
     /** Used by clients to update particular fields in the entity
      * @param keyValuePairs java.util.Map
      */
@@ -1158,7 +1174,7 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
             String name = modelField.getName();
 
             String type = modelField.getType();
-            if (type != null && type.equals("blob")) {
+            if (type != null && (type.equals("blob") || type.equals("byte-array") || type.equals("object"))) { // SCIPIO: 2017-07-06: added export byte-array and object as base64; not just blob, otherwise invalid output for other two
                 Object obj = get(name);
                 boolean b1 = obj instanceof byte [];
                 if (b1) {

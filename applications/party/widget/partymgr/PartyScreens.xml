@@ -472,23 +472,42 @@ under the License.
                                     <if-true field="hasPcmCreatePermission" />
                                     <if-true field="hasPcmUpdatePermission" />
                                     <if-compare-field field="parameters.partyId" operator="equals" to-field="userLogin.partyId"/>
-                                    <not><if-empty field="mechMap.partyContactMech"/></not>
+                                    <!-- SCIPIO: having this check here makes no sense from security perspective
+                                    <not><if-empty field="mechMap.partyContactMech"/></not>-->
                                 </or>
                             </condition>
                             <widgets>
-                                <platform-specific>
-                                    <html>
-                                        <html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/>
-                                        <html-template location="component://party/webapp/partymgr/party/editcontactmech.ftl"/>
-                                    </html>
-                                </platform-specific>
+                                <section><!-- SCIPIO: separated the partyContactMech record check from the security perm checks  -->
+                                    <condition>
+                                        <or>
+                                            <not><if-empty field="mechMap.partyContactMech"/></not>
+                                            <if-empty field="parameters.contactMechId"/><!-- SCIPIO: explicit check needed for new contact mech creation -->
+                                        </or>
+                                    </condition>
+                                    <widgets>
+                                        <platform-specific>
+                                            <html>
+                                                <html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/>
+                                                <html-template location="component://party/webapp/partymgr/party/editcontactmech.ftl"/>
+                                            </html>
+                                        </platform-specific>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <container style="button-bar">
+                                            <link target="backHome" text="${uiLabelMap.CommonBack}" style="${styles.link_nav_cancel}"/>
+                                        </container>
+                                        <container>
+                                            <label style="common-msg-error">${uiLabelMap.PartyContactInfoNotBelongToPartyOrExpired}</label>
+                                        </container>
+                                    </fail-widgets>
+                                </section>
                             </widgets>
                             <fail-widgets>
                                 <container style="button-bar">
                                     <link target="backHome" text="${uiLabelMap.CommonBack}" style="${styles.link_nav_cancel}"/>
                                 </container>
                                 <container>
-                                    <label>${uiLabelMap.PartyMsgContactNotBelongToYou}</label>
+                                    <label style="common-msg-error-perm">${uiLabelMap.PartyMsgContactNotBelongToYou}</label>
                                 </container>
                             </fail-widgets>
                         </section>
@@ -774,7 +793,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PartyCreateNewProspect"/>
-                <set field="displayPassword" value="Y"/>
+                <set field="displayPassword" value="true" type="Boolean"/>
                 <set field="target" value="createProspect"/>
                 <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>
                 <set field="activeSubMenuItem" value="newprospect"/>
@@ -820,7 +839,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PartyCreateNewEmployee"/>
                 <set field="activeSubMenuItem" value="newemployee"/>
-                <set field="displayPassword" value="Y"/>
+                <set field="displayPassword" value="true" type="Boolean"/>
                 <set field="target" value="createEmployee"/>
                 <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>
             </actions>
@@ -905,18 +924,63 @@ under the License.
         </section>
     </screen>
     -->
-    <!-- Party Content Screen -->
+    <!-- Party Content Screen 
+        SCIPIO: 2018: TODO: REVIEW: this screen does not honor filter-by-date logic on PartyContent -->
     <screen name="EditPartyContents">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleListContent"/>
-                <set field="activeSubMenuItem" value="PartyContents"/>
+                <set field="titleProperty" from-field="titleProperty" default-value="PageTitleListContent"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="PartyContents"/>
                 <set field="partyId" from-field="parameters.partyId"/>
                 <set field="contentId" from-field="parameters.contentId"/>
                 <entity-one entity-name="Content" value-field="content"/>
+                
+                <!-- SCIPIO: 2018: we can't accept a Content here that's not already related to the Party (or assoc was removed) -->
+                <if>
+                    <condition><not><if-empty field="content"/></not></condition>
+                    <then>
+                        <entity-and entity-name="PartyContent" list="partyContentList" filter-by-date="false">
+                            <field-map field-name="partyId"/>
+                            <field-map field-name="contentId"/>
+                        </entity-and>
+                        <if>
+                            <condition><if-empty field="partyContentList"/></condition>
+                            <then>
+                                <set field="content" type="Object" value=""/>
+                            </then>
+                        </if>
+                    </then>
+                </if>
+                
+                <!-- SCIPIO: if editing a record, must look it up here -->
+                <if>
+                    <condition>
+                        <and>
+                            <not><if-empty field="partyId"/></not>
+                            <not><if-empty field="contentId"/></not>
+                            <not><if-empty field="parameters.fromDate"/></not>
+                            <not><if-empty field="parameters.partyContentTypeId"/></not>
+                        </and>
+                    </condition>
+                    <then>
+                        <entity-one entity-name="PartyContent" value-field="partyContent">
+                            <field-map field-name="partyId"/>
+                            <field-map field-name="contentId"/>
+                            <field-map field-name="partyContentTypeId" from-field="parameters.partyContentTypeId"/>
+                            <field-map field-name="fromDate" from-field="parameters.fromDate"/>
+                        </entity-one>
+                    </then>
+                    <else>
+                        <set field="partyContent" type="Object" value=""/>
+                    </else>
+                </if>
+                
+                <!-- TODO: REVIEW: header & title stuff, this is due to CommonPartyDecorator lingering in humanres -->
+                <set field="skipProfileHeader" type="Boolean" value="true"/>
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle}${groovy: context.partyId ? (': ' + context.partyId) : ''}"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonPartyDecorator"  location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonPartyDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet><!-- title="${uiLabelMap.PageTitleListContent}"-->
                             <!-- links to same page
@@ -941,7 +1005,8 @@ under the License.
                                 <set field="progressOptions" value="{}" />
                             </actions>
                             <widgets>
-                                <screenlet title="${uiLabelMap.PageTitleAddPartyContent}">
+                                <screenlet title="${groovy: context.content ? uiLabelMap.PageTitleEditPartyContent : uiLabelMap.PageTitleAddPartyContent}" navigation-menu-name="PartyContentAddEditSubTabBar">
+                                    <include-menu name="PartyContentAddEditSubTabBar" location="component://party/widget/partymgr/PartyMenus.xml"/><!-- SCIPIO: new -->
                                     <include-form name="AddPartyContent" location="component://party/widget/partymgr/PartyForms.xml"/>
                                 </screenlet>
                             </widgets>

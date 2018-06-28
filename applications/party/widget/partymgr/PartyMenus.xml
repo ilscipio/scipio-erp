@@ -80,19 +80,19 @@
             </link>
         </menu-item>
         
-        <!-- 
+       <!--
         <menu-item name="linkparty" title="${uiLabelMap.PartyLink}">
             <link target="linkparty">
                 <parameter param-name="partyId"/>
             </link>
-        </menu-item>
+        </menu-item>-->
          
         <menu-item name="EditPartyRelationships" title="${uiLabelMap.PartyRelationships}">
             <link target="EditPartyRelationships">
                 <parameter param-name="partyId"/>
             </link>
         </menu-item>
-        -->
+        
         <menu-item name="viewvendor" title="${uiLabelMap.PartyVendor}">
             <link target="viewvendor">
                 <parameter param-name="partyId"/>
@@ -880,5 +880,15 @@
     
     <menu name="PartyClassificationSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="PartyClassificationTabBar" recursive="includes-only" />
+    </menu>
+    
+    <!-- SCIPIO: 2018: new -->
+    <menu name="PartyContentAddEditSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="NewPartyContent" title="${uiLabelMap.CommonNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition><not><if-empty field="content"/></not></condition>
+            <link target="EditPartyContents">
+                <parameter param-name="partyId"/>
+            </link>
+        </menu-item>
     </menu>
 </menus>

@@ -30,7 +30,6 @@ import org.ofbiz.base.util.cache.UtilCache;
 import com.ilscipio.scipio.ce.webapp.ftl.CommonFtlUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.lang.OfbizFtlObjectType;
-import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateInvoker;
 import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateInvoker.InvokeOptions;
 import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateInvoker.InvokeOptions.InvokeMode;
@@ -41,7 +40,6 @@ import freemarker.core.Environment;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModel;
@@ -54,7 +52,7 @@ import freemarker.template.TemplateScalarModel;
  */
 public class InterpretStdMethod implements TemplateMethodModelEx {
 
-    public static final String module = InterpretStdMethod.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     @SuppressWarnings("unchecked")
     @Override

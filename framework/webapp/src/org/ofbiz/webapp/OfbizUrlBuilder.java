@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.util.Assert;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -39,10 +40,15 @@ import org.xml.sax.SAXException;
 
 /**
  * OFBiz URL builder.
+ * <p>
+ * SCIPIO: Some noteworthy changes:
+ * <ul>
+ * <li>Controller is now optional (no exceptions for webapps with no controller) (added 2017-11-18).</li>
+ * </ul>
  */
 public final class OfbizUrlBuilder {
 
-    public static final String module = OfbizUrlBuilder.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * Returns an <code>OfbizUrlBuilder</code> instance.
@@ -57,7 +63,7 @@ public final class OfbizUrlBuilder {
         if (builder == null) {
             WebSiteProperties webSiteProps = WebSiteProperties.from(request);
             URL url = ConfigXMLReader.getControllerConfigURL(request.getServletContext());
-            ControllerConfig config = ConfigXMLReader.getControllerConfig(url);
+            ControllerConfig config = (url != null) ? ConfigXMLReader.getControllerConfig(url, true) : null; // SCIPIO: 2017-11-18: controller now fully optional (2 change)
             String servletPath = (String) request.getAttribute("_CONTROL_PATH_");
             String contextPath = request.getContextPath();
             builder = new OfbizUrlBuilder(config, webSiteProps, servletPath, contextPath);
@@ -93,8 +99,8 @@ public final class OfbizUrlBuilder {
                     webSiteProps = WebSiteProperties.from(webSiteValue);
                 }
             }
-            config = ConfigXMLReader.getControllerConfig(webAppInfo);
-            servletPath = WebAppUtil.getControlServletPath(webAppInfo);
+            config = ConfigXMLReader.getControllerConfig(webAppInfo, true); // SCIPIO: 2017-11-18: controller now optional
+            servletPath = WebAppUtil.getControlServletPath(webAppInfo, true); // SCIPIO: 2017-11-18: ControlServlet now optional
             contextPath = webAppInfo.getContextRoot();
         }
         if (webSiteProps == null) {
@@ -125,14 +131,40 @@ public final class OfbizUrlBuilder {
         String contextPath = null;
         if (webAppInfo != null) {
             Assert.notNull("delegator", delegator);
-            config = ConfigXMLReader.getControllerConfig(webAppInfo);
-            servletPath = WebAppUtil.getControlServletPath(webAppInfo);
+            config = ConfigXMLReader.getControllerConfig(webAppInfo, true); // SCIPIO: 2017-11-18: controller now optional
+            servletPath = WebAppUtil.getControlServletPath(webAppInfo, true); // SCIPIO: 2017-11-18: ControlServlet now optional
             contextPath = webAppInfo.getContextRoot();
         }
         if (webSiteProps == null) {
             webSiteProps = WebSiteProperties.defaults(delegator);
         }
         return new OfbizUrlBuilder(config, webSiteProps, servletPath, contextPath);
+    }
+    
+    /**
+     * SCIPIO: Returns an <code>OfbizUrlBuilder</code> instance using the given webSiteId.
+     * Added 2017-11.
+     * 
+     * @param webSiteId Optional - if <code>null</code>, the builder can only build the host part,
+     * and that will be based only on the settings in <code>url.properties</code> (the WebSite
+     * entity will be ignored).
+     * @param delegator
+     * @throws WebAppConfigurationException
+     * @throws IOException
+     * @throws SAXException
+     * @throws GenericEntityException
+     */
+    public static OfbizUrlBuilder fromWebSiteId(String webSiteId, Delegator delegator) throws WebAppConfigurationException, 
+        IOException, SAXException, GenericEntityException, IllegalArgumentException {
+        WebappInfo webAppInfo = null;
+        WebSiteProperties webSiteProps = null;
+        if (webSiteId != null && !webSiteId.isEmpty()) {
+            webAppInfo = WebAppUtil.getWebappInfoFromWebsiteId(webSiteId);
+        }
+        if (webSiteProps == null) {
+            webSiteProps = WebSiteProperties.defaults(delegator);
+        }
+        return from(webAppInfo, webSiteProps, delegator);
     }
 
     private final ControllerConfig config;
@@ -181,14 +213,17 @@ public final class OfbizUrlBuilder {
     public boolean buildHostPart(Appendable buffer, String url, Boolean useSSL, Boolean controller) throws WebAppConfigurationException, IOException {
         // SCIPIO: support Boolean
         useSSL = Boolean.TRUE.equals(useSSL); // default false
-        controller = !Boolean.FALSE.equals(useSSL); // default true
+        controller = !Boolean.FALSE.equals(controller); // default true // SCIPIO: re-fixed 2017-11-17
         
         boolean makeSecure = useSSL;
-        String[] pathElements = url.split("/");
-        String requestMapUri = pathElements[0];
-        int queryIndex = requestMapUri.indexOf("?");
-        if (queryIndex != -1) {
-            requestMapUri = requestMapUri.substring(0, queryIndex);
+        String requestMapUri = null;
+        if (UtilValidate.isNotEmpty(url)) { // SCIPIO: added null check
+            String[] pathElements = url.split("/");
+            requestMapUri = pathElements[0];
+            int queryIndex = requestMapUri.indexOf("?");
+            if (queryIndex != -1) {
+                requestMapUri = requestMapUri.substring(0, queryIndex);
+            }
         }
         RequestMap requestMap = null;
         // SCIPIO: only lookup if controller lookup requested
@@ -248,6 +283,15 @@ public final class OfbizUrlBuilder {
         return buildHostPart(buffer, url, useSSL, true);
     }
 
+    /**
+     * SCIPIO: Builds a partial URL - including the scheme and host, but not the servlet path or resource.
+     * Does NOT consult controller. useSSL false by default.
+     * Added 2017-11-17.
+     */
+    public boolean buildHostPart(Appendable buffer, Boolean useSSL) throws WebAppConfigurationException, IOException {
+        return buildHostPart(buffer, null, useSSL, false);
+    }
+    
     /**
      * Builds a partial URL - including the servlet path and resource, but not the scheme or host.
      * 

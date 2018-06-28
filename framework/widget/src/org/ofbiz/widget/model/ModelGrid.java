@@ -48,7 +48,7 @@ public class ModelGrid extends ModelForm {
      * 
      */
 
-    public static final String module = ModelGrid.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /** XML Constructor */
     public ModelGrid(Element formElement, String formLocation, ModelReader entityModelReader, DispatchContext dispatchContext) {

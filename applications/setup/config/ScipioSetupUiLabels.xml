@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+    
+    http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
+    <!-- SCIPIO: NOTE: This file contains labels for the new setup component only; does not include the shared/legacy Setup* labels; see
+          component://commonext/config/SetupUiLabels.xml 
+        for the shared/legacy labels (which other applications, client projects and maintenance strategies may already depend on).
+        WARN: both files share the same Setup* prefix for label names; beware overriding. (same issue occurred with filename) -->
+    <property key="SetupCompleteMsg">
+        <value xml:lang="en">All setup steps completed. Setup Complete!</value>
+        <value xml:lang="de">Alle Setup-Schritte wurden abgeschlossen. Setup abgeschlossen!</value>
+        <value xml:lang="fr">Toutes les étapes d'installation sont terminées. Installation terminée!</value>
+    </property>
+    <property key="SetupIncompleteMsgStart">
+        <value xml:lang="en">You have reached the end of the setup. However, some setup steps are incomplete:</value>
+        <value xml:lang="de">Sie haben das Ende des Setup-Vorgangs erreicht. Allerdings sind einige Setup-Schritte unvollständig:</value>
+        <value xml:lang="fr">Vous avez terminé la configuration. Cependant, certaines étapes de configuration sont incomplètes:</value>
+    </property>
+    <property key="SetupIncompleteMsgEnd">
+        <value xml:lang="en">Some functionality may be impaired until these steps are completed.</value>
+        <value xml:lang="de">Einige Funktionalitäten können beeinträchtigt werden, wenn diese Schritte nicht abgeschlossen sind.</value>
+        <value xml:lang="fr">Certaines fonctionnalités peuvent être compromises à moins que ces étapes ne soient terminées.</value>
+    </property>
+    <property key="SetupSettingUp">
+        <value xml:lang="en">Setting up</value>
+        <value xml:lang="de">Konfiguration</value>
+        <value xml:lang="fr">Configuration</value>
+    </property>
+    <property key="SetupSetupCompleteFor">
+        <value xml:lang="en">Setup complete for</value>
+        <value xml:lang="de">Setup abgeschlossen für</value>
+        <value xml:lang="fr">Installation achevée pour</value>
+    </property>
+    <property key="SetupSetupEndReachedFor">
+        <value xml:lang="en">Setup end reached for</value>
+        <value xml:lang="de">Setup-Ende erreicht</value>
+        <value xml:lang="fr">Fin de l'installation atteinte pour</value>
+    </property>
+    <property key="SetupSetupWizard">
+        <value xml:lang="en">Setup Wizard</value>
+        <value xml:lang="de">Setup-Assistent</value>
+        <value xml:lang="fr">Assistant de configuration</value>
+    </property>
+    <property key="SetupSkip">
+        <value xml:lang="en">Skip</value>
+        <value xml:lang="de">Überspringen</value>
+        <value xml:lang="fr">Sauter</value>
+    </property>
+    <property key="SetupSaveAndContinue">
+        <value xml:lang="en">Save &amp; Continue</value>
+        <value xml:lang="de">Speichern &amp; Fortsetzen</value>
+        <value xml:lang="fr">Enregistrer et continuer</value>
+    </property>
+    <property key="SetupSelectAndContinue">
+        <value xml:lang="en">Select &amp; Continue</value>
+        <value xml:lang="de">Auswählen und fortfahren</value>
+        <value xml:lang="fr">Sélectionner et continuer</value>
+    </property>
+    <property key="SetupUpdateAddress">
+        <value xml:lang="en">Update Address</value>
+        <value xml:lang="de">Adresse aktualisieren</value>
+        <value xml:lang="fr">Mettre à jour l'adresse</value>
+    </property>
+    <property key="SetupCreateMissingAddressPurposes">
+        <value xml:lang="en">Create missing address purposes</value>
+        <value xml:lang="de">Erstellen Sie fehlende Adresse Zwecke</value>
+        <value xml:lang="fr">Créer des objectifs d'adresse manquants</value>
+    </property>
+    <property key="SetupNoAddressDefinedNotice">
+        <value xml:lang="en">No appropriate address is currently defined (${purposes}).</value>
+        <value xml:lang="de">Derzeit ist keine passende Adresse definiert (${purposes}).</value>
+        <value xml:lang="fr">Aucune adresse appropriée n'est actuellement définie (${purposes}).</value>
+    </property>
+    <property key="SetupSplitAddressPurposesNotice">
+        <value xml:lang="en">This entity appears to have different addresses defined for different purposes (${purposes}). This form may be insufficient to update all of them. You may need to use the manager application instead.</value>
+        <value xml:lang="de">Diese Entität scheint unterschiedliche Adressen zu haben, die für verschiedene Zwecke definiert sind (${purposes}). Dieses Formular kann nicht ausreichen, um alle zu aktualisieren. Möglicherweise müssen Sie stattdessen die Manageranwendung verwenden.</value>
+        <value xml:lang="fr">Cette entité semble avoir des adresses différentes définies à des fins différentes (${purposes}). Ce formulaire peut être insuffisant pour les mettre à jour. Vous devrez peut-être utiliser la demande de gestionnaire.</value>
+    </property>
+    <property key="SetupMissingAddressPurposesNotice">
+        <value xml:lang="en">This entity appears to be missing one or more of the standard address purposes (${purposes}). Note: If you need multiple addresses, you may need to use the manager application instead.</value>
+        <value xml:lang="de">Diese Entität scheint einen oder mehrere der Standardadressen zu fehlen (${purposes}). Hinweis: Wenn Sie mehrere Adressen benötigen, müssen Sie stattdessen die Manageranwendung verwenden.</value>
+        <value xml:lang="fr">Cette entité semble manquer une ou plusieurs des adresses standard (${purposes}). Remarque: si vous avez besoin de plusieurs adresses, vous devrez peut-être utiliser la demande de gestionnaire.</value>
+    </property>
+    <property key="SetupSelectOrganizationForSetup">
+        <value xml:lang="en">Select Organization for Setup</value>
+        <value xml:lang="de">Bitte wählen Sie eine Organisation aus</value>
+        <value xml:lang="fr">Sélectionnez l'organisation pour l'installation</value>
+    </property>
+    <property key="SetupMultipleWebSitesForProductStore">
+        <value xml:lang="en">Multiple WebSite records are associated to this ProductStore; this configuration cannot be fully managed using the setup wizard. Please follow the links below for advanced editing options.</value>
+        <value xml:lang="de">Mehrere WebSite-Datensätze sind diesem ProductStore zugeordnet. Diese Konfiguration kann nicht mit dem Setup-Assistenten vollständig verwaltet werden. Bitte folgen Sie den unten stehenden Links für erweiterte Bearbeitungsoptionen.</value>
+        <value xml:lang="fr">Plusieurs enregistrements WebSite sont associés à ce ProductStore; Cette configuration ne peut pas être entièrement gérée à l'aide de l'assistant d'installation. Veuillez suivre les liens ci-dessous pour les options d'édition avancées.</value>
+    </property>
+    <property key="SetupProductStoreVisualThemeIdInfo">
+        <value xml:lang="en">Note: For legacy schema design reasons, the visualThemeId is usually specified on the ProductStore record rather than the WebSite record.</value>
+        <value xml:lang="de">Anmerkung: Aus Gründen des Legacy-Schemas ist die visualThemeId normalerweise auf dem ProductStore-Datensatz und nicht auf dem WebSite-Datensatz angegeben.</value>
+        <value xml:lang="fr">Remarque: pour les raisons de conception du schéma existant, le visualThemeId est généralement spécifié sur l'enregistrement ProductStore plutôt que sur l'enregistrement WebSite.</value>
+    </property>
+    <property key="SetupSelectAddress">
+        <value xml:lang="en">Select Address</value>
+        <value xml:lang="de">Adresse auswählen</value>
+        <value xml:lang="fr">Sélectionner une adresse</value>
+    </property>
+    <property key="SetupLargeStoreSlowSettingWarning">
+        <value xml:lang="en">Warning: For large stores, omitting this value or setting a large value may cause the page to load and respond very slowly.</value>
+        <value xml:lang="de">Warnung: Bei großen Geschäften kann das Auslassen dieses Werts oder das Festlegen eines großen Werts dazu führen, dass die Seite geladen wird und sehr langsam reagiert.</value>
+        <value xml:lang="fr">Avertissement: Pour les grands magasins, si vous omettez cette valeur ou si vous définissez une valeur élevée, la page peut se charger et répondre très lentement.</value>
+    </property>
+    <property key="SetupProductEditNotice">
+        <value xml:lang="en">Note: This is an abridged Product form for quickly adding products; to edit all possible fields, please use the Catalog application.</value>
+        <value xml:lang="de">Hinweis: Dies ist ein gekürztes Produktformular zum schnellen Hinzufügen von Produkten. Um alle möglichen Felder zu bearbeiten, benutzen Sie bitte die Anwendung Katalog.</value>
+    </property>
+    <property key="SetupSelectUserForSetup">
+        <value xml:lang="en">Select User for Setup</value>
+        <value xml:lang="de">Einen Nutzer einrichten</value>
+    </property>
+    <property key="SetupAccountingCreateNewModule">
+    	<value xml:lang="en">Accounting configuration</value>
+        <value xml:lang="de">Konfiguration der Buchhaltung</value>
+    </property>
+    <property key="SetupUseEmailAddress">
+        <value xml:lang="en">Use email address</value>
+        <value xml:lang="de">Die Email Addresse verwenden</value>
+    </property>
+    <property key="SetupAccountInformation">
+        <value xml:lang="en">Account information</value>
+        <value xml:lang="de">Konto Informationen</value>
+    </property>    
+    <property key="SetupIsRelatedToOrgAs">
+        <value xml:lang="de">Steht in Verbindung zur Firma als</value>
+        <value xml:lang="en">Is related to the company as</value>
+    </property>
+    
+    <property key="SetupAccountingPreferences">
+    	<value xml:lang="en">Accounting Preferences</value>
+        <value xml:lang="de">Buchhaltungspräferenzen</value>
+    </property>
+    <property key="SetupAccountingPreferencesTaxes">
+        <value xml:lang="de">Steuer</value>
+    	<value xml:lang="en">Taxes</value>
+    </property>
+    <property key="SetupAccountingPreferencesFiscalPeriods">
+        <value xml:lang="de">Finanzperiode</value>
+    	<value xml:lang="en">Fiscal Periods</value>
+    </property>
+    <property key="SetupAccountingSelectStartFiscalDayMonth">
+        <value xml:lang="de">Start der Finanzperiode (Monat/Tag)</value>
+    	<value xml:lang="en">Select start fiscal month/day</value>
+    </property>
+    <property key="SetupAccountingPreferencesCurrencies">
+        <value xml:lang="de">Währungen</value>
+    	<value xml:lang="en">Currencies</value>
+    </property>
+    <property key="SetupAccountingCreateNewTimePeriod">
+        <value xml:lang="de">Neuen Zeitraum hinzufügen</value>
+    	<value xml:lang="en">Create new time period</value>
+    </property>
+    <property key="SetupAccountingSelectTimePeriod">
+        <value xml:lang="de">Zeitraum auswählen</value>
+    	<value xml:lang="en">Select time period</value>
+    </property>
+     <property key="SetupAccountingSelectStandardForSetup">
+        <value xml:lang="de">Wählen Sie einen Rechnungslegungsstandard</value>
+        <value xml:lang="en">Select an accounting standard</value>
+    </property>
+    <property key="SetupAccountingCreateNewGL">
+        <value xml:lang="de">Neues Hauptbuch anlegen</value>
+        <value xml:lang="en">Create new General Ledger</value>
+    </property>
+    
+    <property key="SetupAccountingJournalEntries">
+        <value xml:lang="de">Buchungseinträge</value>
+    	<value xml:lang="en">Journal Entries</value>
+    </property>
+    <property key="SetupAccountingTransactionTypes">
+        <value xml:lang="de">Buchungsvorgangsarten</value>
+    	<value xml:lang="en">Accounting Transaction Types</value>
+    </property>
+    <property key="SetupAccountingTransactionEntryTypes">
+        <value xml:lang="de">Buchungstypen</value>
+        <value xml:lang="en">Transaction Entry Types</value>
+    </property>
+    <property key="SetupAddAccountingTransactionType">
+        <value xml:lang="de">Buchungsvorgangsart hinzufügen</value>
+        <value xml:lang="en">Add Transaction Type</value>
+    </property>
+    <property key="SetupAddAccountingTransactionEntryType">
+        <value xml:lang="de">Buchungstyp hinzufügen</value>
+        <value xml:lang="en">Add Transaction Entry Type</value>
+    </property>
+    
+    <property key="SetupAccountingImportDatev">
+        <value xml:lang="de">Datev Import</value>
+        <value xml:lang="en">Import Datev</value>
+    </property>
+    <property key="SetupAccountingImportElster">
+        <value xml:lang="de">Elster Import</value>
+        <value xml:lang="en">Import Elster</value>
+    </property>    
+    <property key="SetupAccountingDatevDataCategory">
+        <value xml:lang="de">Wählen Sie die Datev-Datenkategorie, die Sie importieren möchten</value>
+        <value xml:lang="en">Select Datev data category you wish to import</value>
+    </property>
+    <property key="SetupAccountingDatevImportCSV">
+        <value xml:lang="de">Datev CSV Datei importieren</value>
+        <value xml:lang="en">Upload Datev CSV to import</value>
+    </property>
+    <property key="SetupAccountingImportDefaultGLStandard">
+        <value xml:lang="de">Standard Buchungskonten importieren</value>
+        <value xml:lang="en">Import default GL Standard</value>
+    </property>
+
+    <property key="SetupInfoWarehouse">
+        <value xml:lang="de">Mindestens ein Warenlager muss angelegt werden. Die Adresse kann mit dem Firmensitz identisch sein.</value>
+        <value xml:lang="en">At least one warehouse must be created. The address may be identical to the registered company address.</value>
+    </property>
+    
+</resource>

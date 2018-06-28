@@ -35,7 +35,11 @@ FIXME: Needs parameter to control injection and location of hidden modal content
     label                   = (required) Anchor text
     icon                    = Generates icon inside the link 
                               NOTE: Has to be the full set of classes, e.g. "fa fa-fw fa-info"
-    class                   = ((css-class)) CSS classes or additional classes for anchor
+    class                   = ((css-class)) CSS classes or additional classes for inner modal wrap 
+                              Supports prefixes (see #compileClassArg for more info):
+                              * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
+                              * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)  
+    linkClass               = ((css-class)) CSS classes or additional classes for anchor
                               Supports prefixes (see #compileClassArg for more info):
                               * {{{+}}}: causes the classes to append only, never replace defaults (same logic as empty string "")
                               * {{{=}}}: causes the classes to replace non-essential defaults (same as specifying a class name directly)  
@@ -45,7 +49,7 @@ FIXME: Needs parameter to control injection and location of hidden modal content
                                   but other characters should not be manually escaped (apart from URL parameter encoding).
 -->
 <#assign modal_defaultArgs = {
-  "id":"", "label":"", "href":"", "icon":"", "class":"", "passArgs":{}
+  "id":"", "label":"", "href":"", "icon":"", "class":"","linkClass":"", "passArgs":{}
 }>
 <#macro modal args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.modal_defaultArgs)>
@@ -65,14 +69,15 @@ FIXME: Needs parameter to control injection and location of hidden modal content
   <#local linkHasContent = icon?has_content || label?has_content>
   <#local modalId = "modal_" + id>
   <#local linkId = "modal_link_" + id>
-  <@modal_markup id=id modalId=modalId linkId=linkId label=label href=href class=class icon=icon linkHasContent=linkHasContent origArgs=origArgs passArgs=passArgs><#nested></@modal_markup>
+  <@modal_markup id=id modalId=modalId linkId=linkId label=label href=href class=class linkClass=linkClass icon=icon linkHasContent=linkHasContent origArgs=origArgs passArgs=passArgs><#nested></@modal_markup>
 </#macro>
 
 <#-- @modal main markup - theme override -->
-<#macro modal_markup id="" modalId="" linkId="" label="" href="" class="" icon="" linkHasContent=true origArgs={} passArgs={} catchArgs...>
+<#macro modal_markup id="" modalId="" linkId="" label="" href="" class="" linkClass="" icon="" linkHasContent=true origArgs={} passArgs={} catchArgs...>
+  <#local class = addClassArg(class, styles.modal_wrap!)>
   <a id="${escapeVal(linkId, 'html')}" href="#" data-reveal-id="${escapeVal(modalId, 'html')}"<#if href?has_content> data-reveal-ajax="${escapeFullUrl(href, 'html')}"</#if><#rt/>
-    <#lt/><@compiledClassAttribStr class=class /><#if !linkHasContent> style="display:none;"</#if>><#if icon?has_content><i class="${escapeVal(icon, 'html')}"></i> </#if>${escapeVal(label, 'htmlmarkup')}</a>
-  <div id="${escapeVal(modalId, 'html')}" class="${styles.modal_wrap!}" data-reveal>
+    <#lt/><@compiledClassAttribStr class=linkClass /><#if !linkHasContent> style="display:none;"</#if>><#if icon?has_content><i class="${escapeVal(icon, 'html')}"></i> </#if>${escapeVal(label, 'htmlmarkup')}</a>
+  <div id="${escapeVal(modalId, 'html')}" <@compiledClassAttribStr class=class /> data-reveal>
     <#nested>
     <a class="close-reveal-modal">&#215;</a>
   </div>

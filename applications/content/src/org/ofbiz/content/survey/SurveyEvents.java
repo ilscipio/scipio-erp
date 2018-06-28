@@ -36,7 +36,7 @@ import org.ofbiz.webapp.event.EventHandlerException;
  */
 public class SurveyEvents {
 
-    public static final String module = SurveyEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static String createSurveyResponseAndRestoreParameters(HttpServletRequest request, HttpServletResponse response) {
         // Call createSurveyResponse as an event, easier to setup and ensures parameter security

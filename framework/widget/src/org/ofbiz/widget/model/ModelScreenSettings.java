@@ -20,7 +20,7 @@ import org.w3c.dom.Element;
 @SuppressWarnings("serial")
 public class ModelScreenSettings extends ModelWidget {
 
-    public static final String module = ModelScreenSettings.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final String DEFAULT_SETTINGS_NAME = "default-settings";
 

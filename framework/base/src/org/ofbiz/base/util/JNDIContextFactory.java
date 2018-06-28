@@ -33,7 +33,7 @@ import org.ofbiz.base.util.cache.UtilCache;
  */
 public class JNDIContextFactory {
 
-    public static final String module = JNDIContextFactory.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final UtilCache<String, InitialContext> contexts = UtilCache.createUtilCache("entity.JNDIContexts", 0, 0);
 
     /**

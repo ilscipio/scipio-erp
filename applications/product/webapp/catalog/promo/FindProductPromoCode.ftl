@@ -23,7 +23,7 @@ under the License.
         <@menuitem type="link" href=makeOfbizUrl("FindProductPromoCode") text=uiLabelMap.CommonShowAll class="+${styles.action_nav!} ${styles.action_find!}"/>
 
         <@menuitem type="generic">
-            <@modal id="modal_new_importcodeset_${productPromoId!}" label=uiLabelMap.ProductPromotionUploadSetOfPromotionCodes class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
+            <@modal id="modal_new_importcodeset_${productPromoId!}" label=uiLabelMap.ProductPromotionUploadSetOfPromotionCodes linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                 <@heading>${uiLabelMap.ProductPromotionUploadSetOfPromotionCodes}</@heading>
                  <form method="post" action="<@ofbizUrl>createBulkProductPromoCode</@ofbizUrl>" enctype="multipart/form-data">
                     <input type="hidden" name="productPromoId" value="${productPromoId!}"/>
@@ -49,7 +49,7 @@ under the License.
         </@menuitem>
 
         <@menuitem type="generic">
-            <@modal id="modal_new_promocodes_${productPromoId!}" label=uiLabelMap.ProductPromotionAddSetOfPromotionCodes class="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
+            <@modal id="modal_new_promocodes_${productPromoId!}" label=uiLabelMap.ProductPromotionAddSetOfPromotionCodes linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                 <@heading>${uiLabelMap.ProductPromotionAddSetOfPromotionCodes}</@heading>
                 <form method="post" action="<@ofbizUrl>createProductPromoCodeSet</@ofbizUrl>">
                     <input type="hidden" name="productPromoId" value="${productPromoId!}"/>
@@ -98,4 +98,7 @@ under the License.
 -->
     <@menuContent menuArgs={"type":"section"} />
 
+  <#-- TODO: label does not exist
     <@alert type="info">${uiLabelMap.ProductPromoCodeAddInstructions}</@alert>
+  -->
+  

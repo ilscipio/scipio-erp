@@ -42,7 +42,7 @@ import org.ofbiz.entity.util.EntityQuery;
  */
 public class FinAccountHelper {
 
-     public static final String module = FinAccountHelper.class.getName();
+     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
      /**
       * A word on precision: since we're just adding and subtracting, the interim figures should have one more decimal place of precision than the final numbers.
       */

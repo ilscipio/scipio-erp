@@ -33,6 +33,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityJoinOperator;
 import org.ofbiz.entity.model.DynamicViewEntity;
 
 /**
@@ -46,7 +47,7 @@ import org.ofbiz.entity.model.DynamicViewEntity;
  */
 public class EntityQuery {
 
-    public static final String module = EntityQuery.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private Delegator delegator;
     private String entityName = null;
@@ -180,6 +181,20 @@ public class EntityQuery {
      */
     public <T extends EntityCondition> EntityQuery where(List<T> andConditions) {
         this.whereEntityCondition = EntityCondition.makeCondition(andConditions);
+        return this;
+    }
+
+    /** Set a list of EntityCondition objects to be combined together with given operator as the WHERE clause for the query
+     * 
+     * NOTE: Each successive call to any of the where(...) methods will replace the currently set condition for the query.
+     * <p>
+     * SCIPIO: New, added 2018-05-17.
+     * @param conditions - A list of EntityCondition objects to be combined together as the WHERE clause for the query
+     * @param operation - The join operator
+     * @return this EntityQuery object, to enable chaining
+     */
+    public <T extends EntityCondition> EntityQuery where(List<T> conditions, EntityJoinOperator operator) {
+        this.whereEntityCondition = EntityCondition.makeCondition(conditions, operator);
         return this;
     }
 
@@ -368,6 +383,66 @@ public class EntityQuery {
         return this;
     }
 
+    /** SCIPIO: Specifies whether the query should return only values that are active during the specified moment using from/thruDate fields,
+     * using the specified moment if non-null OR, if null, using the "now" timestamp (current time), 
+     * with explicit boolean toggle.
+     * Added 2017-11-27.
+     * 
+     * @param moment - Timestamp representing the moment in time that the values should be active during
+     * @return this EntityQuery object, to enable chaining
+     */
+    public EntityQuery filterByDate(boolean enable, Timestamp moment) {
+        this.filterByDate = enable;
+        this.filterByDateMoment = (enable) ? moment : null;
+        this.filterByFieldNames = null;
+        return this;
+    }
+
+    /** SCIPIO: Specifies whether the query should return only values that are active during the specified moment using from/thruDate fields,
+     * using the specified moment if non-null OR, if null, using the "now" timestamp (current time), 
+     * with explicit boolean toggle.
+     * Added 2017-11-27.
+     * 
+     * @param moment - Date representing the moment in time that the values should be active during
+     * @return this EntityQuery object, to enable chaining
+     */
+    public EntityQuery filterByDate(boolean enable, Date moment) {
+        return this.filterByDate(enable, new java.sql.Timestamp(moment.getTime()));
+    }
+    
+    /** SCIPIO: Specifies whether the query should return only values that are currently active using the specified from/thru field name pairs,
+     * using the specified moment if non-null OR, if null, using the "now" timestamp (current time), 
+     * with explicit boolean toggle.
+     * Added 2017-11-27.
+     * 
+     * @param fromThruFieldName - String pairs representing the from/thru date field names e.g. "fromDate", "thruDate", "contactFromDate", "contactThruDate"
+     * @return this EntityQuery object, to enable chaining
+     */
+    public EntityQuery filterByDate(boolean enable, String... filterByFieldName) {
+        return this.filterByDate(enable, (Timestamp) null, filterByFieldName);
+    }
+    
+    /** SCIPIO: Specifies whether the query should return only values that are active during the specified moment using the specified from/thru field name pairs,
+     * using the specified moment if non-null OR, if null, using the "now" timestamp (current time), 
+     * with explicit boolean toggle.
+     * Added 2017-11-27.
+     * 
+     * @param moment - Timestamp representing the moment in time that the values should be active during
+     * @param fromThruFieldName - String pairs representing the from/thru date field names e.g. "fromDate", "thruDate", "contactFromDate", "contactThruDate"
+     * @return this EntityQuery object, to enable chaining
+     */
+    public EntityQuery filterByDate(boolean enable, Timestamp moment, String... filterByFieldName) {
+        if (enable) {
+            // SCIPIO: NOTE: this stock method interprets null as "now".
+            this.filterByDate(moment, filterByFieldName);
+        } else {
+            this.filterByDate = false;
+            this.filterByDateMoment = null;
+            this.filterByFieldNames = null;
+        }
+        return this;
+    }
+    
     /** Executes the EntityQuery and returns a list of results
      * 
      * @return Returns a List of GenericValues representing the results of the query

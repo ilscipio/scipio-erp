@@ -21,11 +21,10 @@ package org.ofbiz.product.inventory;
 
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
@@ -40,7 +39,7 @@ import org.ofbiz.entity.util.EntityQuery;
 
 public class InventoryWorker {
 
-    public final static String module = InventoryWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * Finds all outstanding Purchase orders for a productId.  The orders and the items cannot be completed, cancelled, or rejected
@@ -124,7 +123,7 @@ public class InventoryWorker {
         condList.add(EntityCondition.makeCondition("orderItemStatusId", EntityOperator.NOT_EQUAL, "ITEM_CANCELLED"));
         EntityConditionList<EntityCondition> conditions = EntityCondition.makeCondition(condList, EntityOperator.AND);
 
-        Map<String, BigDecimal> results = FastMap.newInstance();
+        Map<String, BigDecimal> results = new HashMap<String, BigDecimal>();
         try {
             List<GenericValue> orderedProducts = EntityQuery.use(delegator).select(fieldsToSelect).from("OrderItemQuantityReportGroupByProduct").where(conditions).queryList();
             for (GenericValue value: orderedProducts) {

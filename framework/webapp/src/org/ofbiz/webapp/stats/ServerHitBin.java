@@ -48,7 +48,7 @@ import com.ibm.icu.util.Calendar;
  */
 public class ServerHitBin {
     // Debug module name
-    public static final String module = ServerHitBin.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final int REQUEST = 1;
     public static final int EVENT = 2;

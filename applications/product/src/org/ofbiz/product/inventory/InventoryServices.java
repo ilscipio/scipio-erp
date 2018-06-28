@@ -22,13 +22,12 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
@@ -60,7 +59,7 @@ import com.ibm.icu.util.Calendar;
  */
 public class InventoryServices {
 
-    public final static String module = InventoryServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ProductUiLabels";
     public static final MathContext generalRounding = new MathContext(10);
 
@@ -421,8 +420,8 @@ public class InventoryServices {
         }
         */
 
-        Map<String, Map<String, Timestamp>> ordersToUpdate = FastMap.newInstance();
-        Map<String, Map<String, Timestamp>> ordersToCancel = FastMap.newInstance();
+        Map<String, Map<String, Timestamp>> ordersToUpdate = new HashMap<String, Map<String, Timestamp>>();
+        Map<String, Map<String, Timestamp>> ordersToCancel = new HashMap<String, Map<String, Timestamp>>();
 
         // find all inventory items w/ a negative ATP
         List<GenericValue> inventoryItems = null;
@@ -529,7 +528,7 @@ public class InventoryServices {
                         Debug.logInfo("We won't ship on time, getting notification info", module);
                         Map<String, Timestamp> notifyItems = ordersToUpdate.get(orderId);
                         if (notifyItems == null) {
-                            notifyItems = FastMap.newInstance();
+                            notifyItems = new HashMap<String, Timestamp>();
                         }
                         notifyItems.put(orderItemSeqId, nextShipDate);
                         ordersToUpdate.put(orderId, notifyItems);
@@ -557,7 +556,7 @@ public class InventoryServices {
                             Debug.logInfo("Flagging the item to auto-cancel", module);
                             Map<String, Timestamp> cancelItems = ordersToCancel.get(orderId);
                             if (cancelItems == null) {
-                                cancelItems = FastMap.newInstance();
+                                cancelItems = new HashMap<String, Timestamp>();
                             }
                             cancelItems.put(orderItemSeqId, farPastPromised);
                             ordersToCancel.put(orderId, cancelItems);
@@ -579,7 +578,7 @@ public class InventoryServices {
         }
 
         // all items to cancel will also be in the notify list so start with that
-        List<String> ordersToNotify = FastList.newInstance();
+        List<String> ordersToNotify = new LinkedList<String>();
         for (Map.Entry<String, Map<String, Timestamp>> entry: ordersToUpdate.entrySet()) {
             String orderId = entry.getKey();
             Map<String, Timestamp> backOrderedItems = entry.getValue();
@@ -595,7 +594,7 @@ public class InventoryServices {
             }
 
             for (GenericValue orderItemShipGroup: orderItemShipGroups) {
-                List<GenericValue> orderItems = FastList.newInstance();
+                List<GenericValue> orderItems = new LinkedList<GenericValue>();
                 List<GenericValue> orderItemShipGroupAssoc = null;
                 try {
                     orderItemShipGroupAssoc = EntityQuery.use(delegator).from("OrderItemShipGroupAssoc").where("shipGroupSeqId", orderItemShipGroup.get("shipGroupSeqId"), "orderId", orderId).queryList();
@@ -626,11 +625,11 @@ public class InventoryServices {
 
                 // if there are none to cancel just create an empty map
                 if (cancelItems == null) {
-                    cancelItems = FastMap.newInstance();
+                    cancelItems = new HashMap<String, Timestamp>();
                 }
 
                 if (orderItems != null) {
-                    List<GenericValue> toBeStored = FastList.newInstance();
+                    List<GenericValue> toBeStored = new LinkedList<GenericValue>();
                     for (GenericValue orderItem: orderItems) {
                         String orderItemSeqId = orderItem.getString("orderItemSeqId");
                         Timestamp shipDate = backOrderedItems.get(orderItemSeqId);
@@ -763,11 +762,11 @@ public class InventoryServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         List<GenericValue> orderItems = UtilGenerics.checkList(context.get("orderItems"));
         String facilityId = (String) context.get("facilityId");
-        Locale locale = (Locale) context.get("");
-        Map<String, BigDecimal> atpMap = FastMap.newInstance();
-        Map<String, BigDecimal> qohMap = FastMap.newInstance();
-        Map<String, BigDecimal> mktgPkgAtpMap = FastMap.newInstance();
-        Map<String, BigDecimal> mktgPkgQohMap = FastMap.newInstance();
+        Locale locale = (Locale) context.get("locale");
+        Map<String, BigDecimal> atpMap = new HashMap<String, BigDecimal>();
+        Map<String, BigDecimal> qohMap = new HashMap<String, BigDecimal>();
+        Map<String, BigDecimal> mktgPkgAtpMap = new HashMap<String, BigDecimal>();
+        Map<String, BigDecimal> mktgPkgQohMap = new HashMap<String, BigDecimal>();
         Map<String, Object> results = ServiceUtil.returnSuccess();
 
         // get a list of all available facilities for looping
@@ -860,8 +859,8 @@ public class InventoryServices {
         BigDecimal minimumStock = (BigDecimal)context.get("minimumStock");
         String statusId = (String)context.get("statusId");
 
-        Map<String, Object> result = FastMap.newInstance();
-        Map<String, Object> resultOutput = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> resultOutput = new HashMap<String, Object>();
 
         Map<String, String> contextInput = UtilMisc.toMap("productId", productId, "facilityId", facilityId, "statusId", statusId);
         GenericValue product = null;

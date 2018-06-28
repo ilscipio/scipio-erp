@@ -39,7 +39,7 @@ import org.ofbiz.entity.transaction.TransactionUtil;
 @Deprecated
 public class ServiceXaWrapper extends GenericXaResource {
 
-    public static final String module = ServiceXaWrapper.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final int TYPE_ROLLBACK = 600;
     public static final int TYPE_COMMIT = 500;
     public static final int MODE_ASYNC = 100;

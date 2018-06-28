@@ -26,12 +26,15 @@ under the License.
     
     <classpath type="dir" location="config" />
     <classpath location="lib/*" type="jar"/>
-    <classpath type="jar" location="webapp/WEB-INF/lib/*"/>
     <classpath type="jar" location="build/lib/*"/>
     <classpath type="dir" location="src/*" />
     
     <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel.xml"/>
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/SolrTypeData.xml"/>
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/SolrSecurityPermissionSeedData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/SolrSecurityGroupDemoData.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/SolrSeedData.xml"/>   
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/SolrUserDemoData.xml"/>   
     <entity-resource type="data" reader-name="seed-initial" loader="main" location="data/SolrScheduledServiceData.xml"/>   
 
     <entity-resource type="eca" reader-name="main" loader="main" location="entitydef/eecas.xml"/>
@@ -43,6 +46,7 @@ under the License.
        title="solr"
        server="default-server"
        location="webapp"
+       base-permission="SOLRADM"
        mount-point="/solr"
        app-bar-display="false"/>
 

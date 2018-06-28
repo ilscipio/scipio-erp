@@ -37,7 +37,7 @@ import org.ofbiz.service.ServiceUtil;
 
 public class EwayServices {
     
-    public static final String module = EwayServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public final static String resource = "AccountingUiLabels";
     
     // eway charge (auth w/ capture)

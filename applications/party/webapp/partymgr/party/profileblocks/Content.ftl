@@ -16,36 +16,56 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-  <@section id="partyContent" title=uiLabelMap.PartyContent>
+  <@section id="partyContent" title=(pcntTitle!uiLabelMap.PartyContent) menuContent=(pcntMenuCnt!"")><#-- SCIPIO: allow title override -->
     
-    <@render resource="component://party/widget/partymgr/ProfileScreens.xml#ContentList" />
+    <@render resource=(pcntCntListLoc!"component://party/widget/partymgr/ProfileScreens.xml#ContentList")/>
       
-    <@section title=uiLabelMap.PartyAttachContent id="partyAttachContent">
-      <form id="uploadPartyContent" method="post" enctype="multipart/form-data" action="<@ofbizUrl>uploadPartyContent</@ofbizUrl>">
+  <#if (pcntNoAttach!false) != true>
+    <@section title=(pcntAttachTitle!uiLabelMap.PartyAttachContent) id="partyAttachContent" menuContent=(pcntAttachMenuCnt!"")>
+      <form id="uploadPartyContent" method="post" enctype="multipart/form-data" action="<@ofbizUrl uri=(pcntUploadUri!"uploadPartyContent") escapeAs='html'/>">
         <input type="hidden" name="dataCategoryId" value="PERSONAL"/>
         <input type="hidden" name="contentTypeId" value="DOCUMENT"/>
         <input type="hidden" name="statusId" value="CTNT_PUBLISHED"/>
         <input type="hidden" name="partyId" value="${partyId}" id="contentPartyId"/>
+        <#-- SCIPIO: extra params -->
+        <#if pcntExtraParams?has_content>
+          <#assign pcntExtraParams = toSimpleMap(pcntExtraParams)>
+          <#list pcntExtraParams?keys as paramName>
+            <input type="hidden" name="${paramName}" value="${escapeVal(pcntExtraParams[rawString(paramName)]!, 'html')}"/>
+          </#list>
+        </#if>
 
         <@field type="file" label=uiLabelMap.PartyAttachFile name="uploadedFile" required=true class="+error" size=25 />
         
+        <#assign pcntDefPartyContentTypeId = rawString(pcntDefPartyContentTypeId!"INTERNAL")> 
+       
+      <#if pcntPartyContentTypeId?has_content>
+        <input type="hidden" name="partyContentTypeId" value="${pcntPartyContentTypeId}"/>
+      <#else>
         <@field type="select" label=uiLabelMap.PartyContentType name="partyContentTypeId" required=true class="+error">
-          <option value="">${uiLabelMap.PartySelectPurpose}</option>
+          <#-- preselect "INTERNAL"
+          <option value="">${uiLabelMap.PartySelectPurpose}</option>-->
           <#list partyContentTypes as partyContentType>
-            <option value="${partyContentType.partyContentTypeId}">${partyContentType.get("description", locale)!(partyContentType.partyContentTypeId)}</option>
-          </#list> 
+            <option value="${partyContentType.partyContentTypeId}"<#if pcntDefPartyContentTypeId==rawString(partyContentType.partyContentTypeId)> selected="selected"</#if>>${partyContentType.get("description", locale)!(partyContentType.partyContentTypeId)}</option>
+          </#list>
         </@field>
+      </#if>
 
+      <#if (pcntAllowPublic!true) == true>
         <@field type="select" label=uiLabelMap.PartyIsPublic name="isPublic">
           <option value="N">${uiLabelMap.CommonNo}</option>
           <option value="Y">${uiLabelMap.CommonYes}</option>
         </@field>
+      <#else>
+        <input type="hidden" name="isPublic" value="N"/>
+      </#if>
        
+        <#-- SCIPIO: 2018-04-10: obscure, impossible to understand what this does here
         <@field type="select" label=uiLabelMap.PartySelectRole name="roleTypeId">
           <#list roles as role>
             <option value="${role.roleTypeId}" <#if role.roleTypeId == "_NA_">selected="selected"</#if>>${role.get("description", locale)!(role.roleTypeId)}</option>
           </#list>
-        </@field>
+        </@field>-->
    
         <#assign progressOptions = {
             "formSel" : "#uploadPartyContent",
@@ -71,5 +91,6 @@ under the License.
         </@field>
       </form>
     </@section>
+  </#if>
     
   </@section>

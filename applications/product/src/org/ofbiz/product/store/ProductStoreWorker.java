@@ -19,17 +19,17 @@
 package org.ofbiz.product.store;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
+import java.util.TimeZone;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
@@ -54,7 +54,7 @@ import org.ofbiz.webapp.website.WebSiteWorker;
  */
 public class ProductStoreWorker {
 
-    public static final String module = ProductStoreWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static GenericValue getProductStore(String productStoreId, Delegator delegator) {
         if (productStoreId == null || delegator == null) {
@@ -110,6 +110,16 @@ public class ProductStoreWorker {
             return null;
         } else {
             return UtilHttp.getLocale(request, request.getSession(), productStore.getString("defaultLocaleString"));
+        }
+    }
+
+    public static TimeZone getStoreTimeZone(HttpServletRequest request) {
+        GenericValue productStore = getProductStore(request);
+        if (UtilValidate.isEmpty(productStore)) {
+            Debug.logError("No product store found in request, cannot set timezone!", module);
+            return null;
+        } else {
+            return UtilHttp.getTimeZone(request, request.getSession(), productStore.getString("defaultTimeZoneString"));
         }
     }
 
@@ -220,7 +230,7 @@ public class ProductStoreWorker {
 
     public static List<GenericValue> getAvailableStoreShippingMethods(Delegator delegator, String productStoreId, GenericValue shippingAddress, List<BigDecimal> itemSizes, Map<String, BigDecimal> featureIdMap, BigDecimal weight, BigDecimal orderTotal) {
         if (featureIdMap == null) {
-            featureIdMap = FastMap.newInstance();
+            featureIdMap = new HashMap<String, BigDecimal>();
         }
         List<GenericValue> shippingMethods = null;
         try {
@@ -462,7 +472,7 @@ public class ProductStoreWorker {
     }
 
     public static List<GenericValue> getSurveys(Delegator delegator, String productStoreId, String groupName, String productId, String surveyApplTypeId, String parentProductId) {
-        List<GenericValue> surveys = FastList.newInstance();
+        List<GenericValue> surveys = new LinkedList<GenericValue>();
         List<GenericValue> storeSurveys = null;
         try {
             storeSurveys = EntityQuery.use(delegator).from("ProductStoreSurveyAppl").where("productStoreId", productStoreId, "surveyApplTypeId", surveyApplTypeId).orderBy("sequenceNum").cache(true).queryList();
@@ -700,7 +710,7 @@ public class ProductStoreWorker {
         }
     }
 
-    protected static Map<String, String> defaultProductStoreEmailScreenLocation = FastMap.newInstance();
+    protected static Map<String, String> defaultProductStoreEmailScreenLocation = new HashMap<String, String>();
 
     static {
         // SCIPIO: now points to shop
@@ -729,5 +739,47 @@ public class ProductStoreWorker {
 
     public static String getDefaultProductStoreEmailScreenLocation(String emailType) {
         return defaultProductStoreEmailScreenLocation.get(emailType);
+    }
+    
+    /**
+     * SCIPIO: Returns the first of the listed product stores that has isContentReference=Y, or null if none.
+     */
+    public static GenericValue getContentReferenceStore(List<GenericValue> productStores) {
+        if (productStores == null) return null;
+        for(GenericValue productStore : productStores) {
+            if (Boolean.TRUE.equals(productStore.getBoolean("isContentReference"))) {
+                return productStore;
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * SCIPIO: Returns the first of the listed product stores that has isContentReference=Y, or the first in list.
+     * Prints warning if no content reference and multiple stores with different defaultLocaleString.
+     */
+    public static GenericValue getContentReferenceStoreOrFirst(List<GenericValue> productStores, String multiWarningInfo) {
+        if (productStores == null || productStores.size() == 0) return null;
+        for(GenericValue productStore : productStores) {
+            if (Boolean.TRUE.equals(productStore.getBoolean("isContentReference"))) {
+                return productStore;
+            }
+        }
+        GenericValue productStore = productStores.get(0);
+        if (productStores.size() > 1 && multiWarningInfo != null) {
+            Debug.logWarning("Multiple stores found for " + multiWarningInfo + ", but none specify isContentReference=\"Y\"" 
+                    + "; defaultLocaleString and other content settings may be ambiguous; selecting first store (" 
+                    + productStore.getString("productStoreId") + ", defaultLocaleString: " + productStore.getString("defaultLocaleString")
+                    + ") as content reference", module);
+        }
+        return productStore;
+    }
+    
+    /**
+     * SCIPIO: Returns the first of the listed product stores that has isContentReference=Y, or the first in list.
+     * Does not show warning if no content reference and multiple stores.
+     */
+    public static GenericValue getContentReferenceStoreOrFirst(List<GenericValue> productStores) {
+        return getContentReferenceStoreOrFirst(productStores, null);
     }
 }

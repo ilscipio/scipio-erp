@@ -47,7 +47,7 @@ import org.ofbiz.service.job.JobManagerException;
  */
 public abstract class GenericAsyncEngine extends AbstractEngine {
 
-    public static final String module = GenericAsyncEngine.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected GenericAsyncEngine(ServiceDispatcher dispatcher) {
         super(dispatcher);

@@ -40,6 +40,7 @@ under the License.
     <SurveyQuestionCategory surveyQuestionCategoryId="2001" description="Mini Cart section questions "/>
     <SurveyQuestionCategory surveyQuestionCategoryId="2101" description="Show Cart functionality questions "/>
     
+    <!-- SCIPIO: TODO: SURVEYS: 2017-11-18: these need more retesting, right now now they are only in the way
     <ProductStoreSurveyAppl productStoreSurveyId="1401" productStoreId="ScipioShop" surveyApplTypeId="TEST_SURVEY" surveyId="1401" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
     <ProductStoreSurveyAppl productStoreSurveyId="1501" productStoreId="ScipioShop" surveyApplTypeId="TEST_SURVEY" surveyId="1501" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
     <ProductStoreSurveyAppl productStoreSurveyId="1601" productStoreId="ScipioShop" surveyApplTypeId="TEST_SURVEY" surveyId="1601" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
@@ -48,6 +49,7 @@ under the License.
     <ProductStoreSurveyAppl productStoreSurveyId="1901" productStoreId="ScipioShop" surveyApplTypeId="TEST_SURVEY" surveyId="1901" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
     <ProductStoreSurveyAppl productStoreSurveyId="2001" productStoreId="ScipioShop" surveyApplTypeId="TEST_SURVEY" surveyId="2001" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
     <ProductStoreSurveyAppl productStoreSurveyId="2101" productStoreId="ScipioShop" surveyApplTypeId="TEST_SURVEY" surveyId="2101" surveyTemplate="/applications/content/template/survey/genericsurvey.ftl"/>
+    -->
     
     <!--CHECKOUT PAGE-->
     <SurveyQuestion surveyQuestionId="1401" surveyQuestionCategoryId="1401" surveyQuestionTypeId="BOOLEAN" description="" question="Does clicking on the checkout link in minicart if the user is anonymous then page is displayed https://localhost:8443/shop/control/checkoutoptions"/>

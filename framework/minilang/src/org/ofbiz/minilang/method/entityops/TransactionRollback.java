@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
  */
 public final class TransactionRollback extends MethodOperation {
 
-    public static final String module = TransactionRollback.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final FlexibleMapAccessor<Boolean> beganTransactionFma;
 

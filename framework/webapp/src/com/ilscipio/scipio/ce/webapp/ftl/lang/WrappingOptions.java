@@ -77,7 +77,7 @@ public class WrappingOptions {
       
         private static final Map<String, RewrapMode> strToModeMap;
         static {
-            Map<String, RewrapMode> modeMap = new HashMap<String, RewrapMode>();
+            Map<String, RewrapMode> modeMap = new HashMap<>();
             for(RewrapMode mode : RewrapMode.values()) {
                 modeMap.put(mode.strVal, mode);
             }

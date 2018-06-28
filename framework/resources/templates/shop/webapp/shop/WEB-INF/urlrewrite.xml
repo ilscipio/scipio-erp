@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 3.2//EN"
+        "http://tuckey.org/res/dtds/urlrewrite3.2.dtd">
+<urlrewrite use-context="true">
+
+    <!-- WEBAPP CONTEXT BLOCKER RULE - ignore all outbound links that do not target our webapp -->
+    <outbound-rule>
+        <from>^(.*)$</from>
+        <set name="urlFilter.outUrlWebapp.outUrl">$1</set>
+        <run class="com.ilscipio.scipio.ce.webapp.filter.UrlFilterHelper" method="verifySameWebappContext" />
+    </outbound-rule>
+    <outbound-rule>
+        <condition type="attribute" name="urlFilter.outUrlWebapp.isSameContext" operator="equal">false</condition>
+        <from>.*</from>
+        <to last="true">-</to>
+    </outbound-rule>
+
+    <!-- CACHE -->
+    <!-- Set the "Cache-Control" HTTP response header for all requests
+    <rule>
+        <from>.*</from>
+        <set type="response-header" name="Cache-Control">max-age=3600, must-revalidate</set>
+    </rule>
+    -->
+
+    <!-- LEGACY ECOMMERCE REDIRECT
+    <rule>
+        <from>^/ecommerce([?;#/].*)?$</from>
+        <to type="permanent-redirect" last="true">$1/shop$2</to>
+    </rule>-->
+
+    <!-- SPECIAL REQUEST ATTRIBUTES FOR REWRITE RULES (scpCtrlServPath, etc.) -->
+    <rule>
+        <from>^.*$</from>
+        <run class="com.ilscipio.scipio.ce.webapp.filter.UrlFilterHelper" method="setCommonReqAttr" />
+    </rule>
+
+    <!-- DEFAULT REQUEST MAPPING RULE - maps default request ("/") to main
+        uncomment this to get rid of /control/main URLs -->
+    <rule>
+        <from>^/[^/]+/?([?;#][^/]*)?$</from>
+        <to last="true">%{attribute:scpCtrlServPath}/main$3</to>
+    </rule>
+    <outbound-rule>
+        <condition type="context-path">^/.+$</condition>
+        <from>^([^/]*//[^/]*)?(/[^/]+?)(?:/control)?/main(?:(?:/|([?;#]))(.*))?$</from>
+        <to>$1$2/$3$4</to>
+    </outbound-rule>
+    <outbound-rule>
+        <condition type="context-path">^$</condition>
+        <from>^([^/]*//[^/]*)?(?:/control)?/main(?:(?:/|([?;#]))(.*))?$</from>
+        <to>$1/$2$3</to>
+    </outbound-rule>
+
+    <!-- CONTROL-SERVLET-STRIPPING RULES 
+        These can be used instead of mapping ControlServlet to root; if you uncomment these,
+        you likely want to set forwardRootControllerUris to Y in ContextFilter init-params in web.xml.
+    <outbound-rule>
+        <from>^([^/]*//[^/]*)?(/[^/]*?)?/control([?;#/].*)?$</from>
+        <to>$1$2$3</to>
+    </outbound-rule>
+    -->
+
+    <!-- MOUNT-POINT-STRIPPING RULES
+        uncomment if you are stripping the webapp mount-point through a front-end proxy or other
+    <outbound-rule>
+        <from>^([^/]*//[^/]*)?/[^/]+?(?:(?:/|([?;#]))(.*))?$</from>
+        <to>$1/$2$3</to>
+    </outbound-rule>
+    -->
+
+</urlrewrite>
+

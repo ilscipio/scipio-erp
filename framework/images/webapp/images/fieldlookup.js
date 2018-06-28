@@ -181,10 +181,11 @@ var Lookup = function(options) {
         inputFieldId : options.inputFieldId || "",
         dialogTarget : options.dialogTarget || "",
         dialogOptionalTarget : options.dialogOptionalTarget || "",
+        lookupId: options.lookupId || GLOBAL_LOOKUP_REF.createNextKey(),
         formName : options.formName || "",
         width : options.width || "640",
         height : options.height || "500",
-        position : options.position || "topleft",
+        position : options.position || "",
         modal : options.modal || "true",
         ajaxUrl : options.ajaxUrl || "",
         showDescription : options.showDescription || "",
@@ -195,7 +196,7 @@ var Lookup = function(options) {
     }
 
     function _init() {
-        _lookupId = GLOBAL_LOOKUP_REF.createNextKey();
+        _lookupId = options.lookupId;
         _modifyContainer();
         _createAjaxAutoComplete();
 
@@ -231,11 +232,11 @@ var Lookup = function(options) {
         _inputBox.id = _newInputBoxId;
         var parent = _inputBox.parentNode;
 
+        /*
         var link = document.createElement('A');
         link.href = "javascript:void(0);";
         link.id = _lookupId + "_button";
-
-        parent.appendChild(link);
+        parent.appendChild(link);*/
 
         var hiddenDiv = document.createElement("DIV");
         hiddenDiv.id = _lookupId;
@@ -263,7 +264,13 @@ var Lookup = function(options) {
             autoOpen : false,
             height : parseInt(options.height),
             width : parseInt(options.width),
-            position : positioning,
+            closeText: "x",
+            // position : positioning,
+            position :  {
+                my: "center middle",
+                at: "center middle",
+                of: window
+            },
             draggable : true,
             resizeable : true,
             open : _dialogOpen,
@@ -703,7 +710,7 @@ catch (err) {
 
 function setSourceColor(src) {
     if (src && src != null) {
-        src.css("background-color", "yellow");
+        //src.css("background-color", "yellow");
     }
 }
 // function passing selected value to calling window, using only in the

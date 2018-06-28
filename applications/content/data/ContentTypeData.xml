@@ -135,6 +135,8 @@ under the License.
     <DataResourceType dataResourceTypeId="IMAGE_OBJECT" description="Image" hasTable="Y" parentTypeId=""/>
     <DataResourceType dataResourceTypeId="OTHER_OBJECT" description="Other" hasTable="Y" parentTypeId=""/>
     <DataResourceType dataResourceTypeId="VIDEO_OBJECT" description="Video" hasTable="Y" parentTypeId=""/>
+    <!-- SCIPIO: 2017-07-31: new type for DocumentDataResource -->
+    <DataResourceType dataResourceTypeId="DOCUMENT_OBJECT" description="Document" hasTable="Y" parentTypeId=""/>
     <DataResourceType dataResourceTypeId="SURVEY" description="Survey" hasTable="N" parentTypeId=""/>
     <DataResourceType dataResourceTypeId="SURVEY_RESPONSE" description="Survey Response" hasTable="N" parentTypeId=""/>
 
@@ -265,4 +267,25 @@ under the License.
     <WebAnalyticsType webAnalyticsTypeId="BING_ANALYTICS" parentTypeId="WEB_ANALYTICS" hasTable="N" description="Bing Analytics"/>
     <WebAnalyticsType webAnalyticsTypeId="BACKEND_ANALYTICS" parentTypeId="WEB_ANALYTICS" hasTable="N" description="Backend Analytics"/>
 
+    <!-- SCIPIO: 2017-07-26: These are ContentAssoc versions of the nearly same XXX_IMAGE_URL ProductContent image definitions; 
+        we must be able to define alternate size images even in the absence of a product.
+        The ID names are based on the names defined in ImageProperties.xml files. -->
+    <!-- NOTE: IMGSZ_THUMBNAIL may not necessarily be used for the same purpose as the IMAGE_THUMBNAIL defined in component://product/data/ProductTypeData.xml (or both must be present to use both?...) -->
+    <ContentAssocType contentAssocTypeId="IMGSZ_THUMBNAIL" description="Image - Thumbnail"/>
+    <ContentAssocType contentAssocTypeId="IMGSZ_SMALL" description="Image - Small"/>
+    <ContentAssocType contentAssocTypeId="IMGSZ_MEDIUM" description="Image - Medium"/>
+    <ContentAssocType contentAssocTypeId="IMGSZ_LARGE" description="Image - Large"/>
+    <ContentAssocType contentAssocTypeId="IMGSZ_DETAIL" description="Image - Detail"/>
+    <ContentAssocType contentAssocTypeId="IMGSZ_ORIGINAL" description="Image - Original"/>
+    <!-- TODO?... (from ImageProperties.xml)
+    <ContentAssocType contentAssocTypeId="IMGSZ_100x75" description="Image - 100x75"/>
+    <ContentAssocType contentAssocTypeId="IMGSZ_150x112" description="Image - 150x112"/>
+    <ContentAssocType contentAssocTypeId="IMGSZ_320x240" description="Image - 320x240"/>
+    <ContentAssocType contentAssocTypeId="IMGSZ_640x480" description="Image - 640x480"/>
+    <ContentAssocType contentAssocTypeId="IMGSZ_800x600" description="Image - 800x600"/>
+    <ContentAssocType contentAssocTypeId="IMGSZ_1024x768" description="Image - 1024x768"/>
+    <ContentAssocType contentAssocTypeId="IMGSZ_1280x1024" description="Image - 1280x1024"/>
+    <ContentAssocType contentAssocTypeId="IMGSZ_1600x1200" description="Image - 1600x1200"/>
+    -->
+    
 </entity-engine-xml>

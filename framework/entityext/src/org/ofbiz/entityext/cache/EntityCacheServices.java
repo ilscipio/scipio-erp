@@ -41,7 +41,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class EntityCacheServices implements DistributedCacheClear {
 
-    public static final String module = EntityCacheServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected Delegator delegator = null;
     protected LocalDispatcher dispatcher = null;

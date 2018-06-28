@@ -23,11 +23,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javolution.util.FastList;
+import org.ofbiz.base.util.UtilMisc;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -45,7 +46,7 @@ import org.ofbiz.service.ServiceUtil;
 
 public class ImportProductServices {
 
-    public static String module = ImportProductServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ProductUiLabels";
     
     /**
@@ -67,7 +68,7 @@ public class ImportProductServices {
         // System.getProperty("user.dir") returns the path upto ofbiz home
         // directory
         String path = System.getProperty("user.dir") + "/spreadsheet";
-        List<File> fileItems = FastList.newInstance();
+        List<File> fileItems = new LinkedList<File>();
 
         if (UtilValidate.isNotEmpty(path)) {
             File importDir = new File(path);
@@ -96,8 +97,8 @@ public class ImportProductServices {
 
         for (File item: fileItems) {
             // read all xls file and create workbook one by one.
-            List<Map<String, Object>> products = FastList.newInstance();
-            List<Map<String, Object>> inventoryItems = FastList.newInstance();
+            List<Map<String, Object>> products = new LinkedList<Map<String, Object>>();
+            List<Map<String, Object>> inventoryItems = new LinkedList<Map<String, Object>>();
             POIFSFileSystem fs = null;
             HSSFWorkbook wb = null;
             try {

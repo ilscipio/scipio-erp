@@ -34,7 +34,7 @@ import org.ofbiz.entity.model.ModelEntity;
  */
 @SuppressWarnings("serial")
 public abstract class EntityConditionListBase<T extends EntityCondition> extends EntityCondition {
-    public static final String module = EntityConditionListBase.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected final List<T> conditionList;
     protected final EntityJoinOperator operator;

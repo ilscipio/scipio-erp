@@ -21,11 +21,10 @@ package org.ofbiz.content;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
@@ -41,7 +40,7 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 
 public class ConvertTree{
-    public static final String module = ConvertTree.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
 /*
 
@@ -109,7 +108,7 @@ In order ta make this service active add the following to the service definition
                         Entity.set("createdTxStamp", UtilDateTime.nowTimestamp());
                         delegator.create(Entity);
 
-                        Map<String, Object> contentAssoc = FastMap.newInstance();
+                        Map<String, Object> contentAssoc = new HashMap<String, Object>();
                         contentAssoc.put("contentId", "HOME_DUCUMENT");
                         contentAssoc.put("contentAssocTypeId", "TREE_CHILD");
                         contentAssoc.put("contentIdTo", "ROOT");
@@ -193,7 +192,7 @@ In order ta make this service active add the following to the service definition
                                                 .queryList();
 
                                         if (contentAssocs.size() == 0) {
-                                            contentAssoc = FastMap.newInstance();
+                                            contentAssoc = new HashMap<String, Object>();
                                             contentAssoc.put("contentId", contentId);
                                             contentAssoc.put("contentAssocTypeId", "TREE_CHILD");
                                             contentAssoc.put("contentIdTo", rootContent);
@@ -223,7 +222,7 @@ In order ta make this service active add the following to the service definition
                                 recordCount++;
                             }
                         }//end line
-                        sucMsg = "Convert Documents Tree Successful.<br/>Total : " + counterLine + " rows";
+                        sucMsg = "Convert Documents Tree Successful.\nTotal : " + counterLine + " rows"; // SCIPIO: 2018-02-27: switched out <br/> for line-break
                     }
                 }
              }
@@ -284,7 +283,7 @@ In order ta make this service active add the following to the service definition
                     contentId = null;
                     if (contentNameMatch == false) {
                         //create DataResource
-                        Map<String,Object> data = FastMap.newInstance();
+                        Map<String,Object> data = new HashMap<String, Object>();
                         data.put("userLogin", userLogin);
                         String dataResourceId = dispatcher.runSync("createDataResource", data).get("dataResourceId").toString();
                         //Debug.logInfo("==dataResourceId" + dataResourceId);
@@ -307,7 +306,7 @@ In order ta make this service active add the following to the service definition
                         delegator.create(Entity);
 
                         //Relation Content
-                        Map<String,Object> contentAssoc = FastMap.newInstance();
+                        Map<String,Object> contentAssoc = new HashMap<String, Object>();
                         contentAssoc.put("contentId", contentId);
                         contentAssoc.put("contentAssocTypeId", "SUB_CONTENT");
                         contentAssoc.put("contentIdTo", rootContent);
@@ -346,7 +345,7 @@ In order ta make this service active add the following to the service definition
                     contentId = null;
                     if (contentNameMatch == false) {
                         //create DataResource
-                        Map<String,Object> data = FastMap.newInstance();
+                        Map<String,Object> data = new HashMap<String, Object>();
                         data.put("userLogin", userLogin);
                         String dataResourceId = dispatcher.runSync("createDataResource",data).get("dataResourceId").toString();
                         //Debug.logInfo("==dataResourceId" + dataResourceId);
@@ -369,7 +368,7 @@ In order ta make this service active add the following to the service definition
                         delegator.create(Entity);
 
                         //create ContentAssoc
-                        Map<String,Object> contentAssoc = FastMap.newInstance();
+                        Map<String,Object> contentAssoc = new HashMap<String, Object>();
                         contentAssoc.put("contentId", contentId);
                         contentAssoc.put("contentAssocTypeId", "SUB_CONTENT");
                         contentAssoc.put("contentIdTo", rootContent);

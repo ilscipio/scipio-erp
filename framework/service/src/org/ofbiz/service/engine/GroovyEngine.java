@@ -46,7 +46,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public final class GroovyEngine extends GenericAsyncEngine {
 
-    public static final String module = GroovyEngine.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     protected static final Object[] EMPTY_ARGS = {};
     private static final Set<String> protectedKeys = createProtectedKeys();
 

@@ -67,7 +67,7 @@ import org.ofbiz.webapp.control.RequestHandler;
  */
 public class CommonEvents {
 
-    public static final String module = CommonEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private static final String[] ignoreAttrs = new String[] { // Attributes removed for security reason; _ERROR_MESSAGE_ is kept
         "javax.servlet.request.key_size",
@@ -414,15 +414,15 @@ public class CommonEvents {
         try {
             Delegator delegator = (Delegator) request.getAttribute("delegator");
             final String captchaSizeConfigName = StringUtils.defaultIfEmpty(request.getParameter("captchaSize"), "default");
-            final String captchaSizeConfig = EntityUtilProperties.getPropertyValue("captcha.properties", "captcha." + captchaSizeConfigName, delegator);
+            final String captchaSizeConfig = EntityUtilProperties.getPropertyValue("captcha", "captcha." + captchaSizeConfigName, delegator);
             final String[] captchaSizeConfigs = captchaSizeConfig.split("\\|");
             final String captchaCodeId = StringUtils.defaultIfEmpty(request.getParameter("captchaCodeId"), ""); // this is used to uniquely identify in the user session the attribute where the captcha code for the last captcha for the form is stored
 
             final int fontSize = Integer.parseInt(captchaSizeConfigs[0]);
             final int height = Integer.parseInt(captchaSizeConfigs[1]);
             final int width = Integer.parseInt(captchaSizeConfigs[2]);
-            final int charsToPrint = UtilProperties.getPropertyAsInteger("captcha.properties", "captcha.code_length", 6);
-            final char[] availableChars = EntityUtilProperties.getPropertyValue("captcha.properties", "captcha.characters", delegator).toCharArray();
+            final int charsToPrint = UtilProperties.getPropertyAsInteger("captcha", "captcha.code_length", 6);
+            final char[] availableChars = EntityUtilProperties.getPropertyValue("captcha", "captcha.characters", delegator).toCharArray();
 
             //It is possible to pass the font size, image width and height with the request as well
             Color backgroundColor = Color.gray;

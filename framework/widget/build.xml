@@ -27,14 +27,10 @@ under the License.
 
     <property name="desc" value="Widget Component"/>
     <property name="name" value="ofbiz-widget"/>
-    <property name="ofbiz.home.dir" value="../.."/>
 
     <path id="local.class.path">
         <!-- <fileset dir="${lib.dir}" includes="*.jar"/> -->
         <fileset dir="../base/lib" includes="*.jar"/>
-        <fileset dir="../base/lib/commons" includes="*.jar"/>
-        <fileset dir="../base/lib/j2eespecs" includes="*.jar"/>
-        <fileset dir="../base/lib/scripting" includes="*.jar"/>
         <fileset dir="../base/build/lib" includes="*.jar"/>
         <fileset dir="../entity/build/lib" includes="*.jar"/>
         <fileset dir="../security/build/lib" includes="*.jar"/>

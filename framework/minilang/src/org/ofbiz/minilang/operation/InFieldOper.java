@@ -32,7 +32,7 @@ import org.w3c.dom.Element;
  */
 public class InFieldOper extends MakeInStringOperation {
 
-    public static final String module = InFieldOper.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     String fieldName;
 

@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
  */
 public final class CreateValue extends MethodOperation {
 
-    public static final String module = CreateValue.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final boolean createOrStore;
     @Deprecated

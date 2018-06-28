@@ -18,12 +18,11 @@ under the License.
 **/
 package org.ofbiz.assetmaint;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
@@ -44,7 +43,7 @@ import org.ofbiz.service.ServiceUtil;
 
 public class FixedAssetMaintServices {
 
-    public static final String module = FixedAssetMaintServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "AssetMaintUiLabels";
 
     public static Map<String, Object> addPartFixedAssetMaint(DispatchContext ctx, Map<String, Object> context) {
@@ -96,7 +95,7 @@ public class FixedAssetMaintServices {
                 } else {
                     issueQuantity = new Double(requestedQty);
                 }
-                Map<String, Object> itemIssuanceCtx = FastMap.newInstance();
+                Map<String, Object> itemIssuanceCtx = new HashMap<String, Object>();
                 itemIssuanceCtx.put("userLogin", userLogin);
                 itemIssuanceCtx.put("inventoryItemId", inventoryItemId);
                 itemIssuanceCtx.put("fixedAssetId", fixedAssetId);

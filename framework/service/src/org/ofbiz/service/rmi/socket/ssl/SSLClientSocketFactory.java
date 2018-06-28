@@ -36,7 +36,7 @@ import org.ofbiz.base.config.GenericConfigException;
 @SuppressWarnings("serial")
 public class SSLClientSocketFactory implements RMIClientSocketFactory, Serializable {
 
-    public static final String module = SSLClientSocketFactory.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public Socket createSocket(String host, int port) throws IOException {
         try {

@@ -21,11 +21,10 @@ package org.ofbiz.order.shoppinglist;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -65,7 +64,7 @@ import com.ibm.icu.util.Calendar;
  */
 public class ShoppingListServices {
 
-    public static final String module = ShoppingListServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource_error = "OrderErrorUiLabels";
 
     public static Map<String, Object> setShoppingListRecurrence(DispatchContext dctx, Map<String, ? extends Object> context) {
@@ -355,7 +354,7 @@ public class ShoppingListServices {
                 GenericValue paymentPref = EntityUtil.getFirst(orh.getPaymentPreferences());
                 GenericValue shipGroup = EntityUtil.getFirst(orh.getOrderItemShipGroups());
 
-                Map<String, Object> slCtx = FastMap.newInstance();
+                Map<String, Object> slCtx = new HashMap<String, Object>();
                 slCtx.put("shipmentMethodTypeId", shipGroup.get("shipmentMethodTypeId"));
                 slCtx.put("carrierRoleTypeId", shipGroup.get("carrierRoleTypeId"));
                 slCtx.put("carrierPartyId", shipGroup.get("carrierPartyId"));
@@ -551,7 +550,7 @@ public class ShoppingListServices {
      * @return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> updateShoppingListQuantitiesFromOrder(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         String orderId = (String) context.get("orderId");
         try {
@@ -589,7 +588,7 @@ public class ShoppingListServices {
         } catch (GenericEntityException e) {
             Debug.logError(e.getMessage(), module);
         }
-        String maxDaysStr = EntityUtilProperties.getPropertyValue("order.properties", "autosave.max.age", "30", delegator);
+        String maxDaysStr = EntityUtilProperties.getPropertyValue("order", "autosave.max.age", "30", delegator);
         int maxDays = 0;
         try {
             maxDays = Integer.parseInt(maxDaysStr);

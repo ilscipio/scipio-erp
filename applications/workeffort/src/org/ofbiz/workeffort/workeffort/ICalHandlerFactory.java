@@ -20,6 +20,7 @@
 package org.ofbiz.workeffort.workeffort;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -27,9 +28,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.webapp.webdav.RequestHandler;
 import org.ofbiz.webapp.webdav.RequestHandlerFactory;
 
@@ -38,14 +38,14 @@ import org.ofbiz.webapp.webdav.RequestHandlerFactory;
  */
 public class ICalHandlerFactory implements RequestHandlerFactory {
 
-    public static final String module = ICalHandlerFactory.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected final Map<String, RequestHandler> handlerMap;
     protected final RequestHandler invalidMethodHandler = new InvalidMethodHandler();
     protected final RequestHandler doNothingHandler = new DoNothingHandler();
 
     public ICalHandlerFactory() {
-        this.handlerMap = FastMap.newInstance();
+        this.handlerMap = new HashMap<String, RequestHandler>();
         this.handlerMap.put("COPY", doNothingHandler);
         this.handlerMap.put("DELETE", doNothingHandler);
         this.handlerMap.put("GET", new GetHandler());

@@ -58,7 +58,7 @@ import com.sun.star.uno.XComponentContext;
  * OpenOfficeServices Class
  */
 public class OpenOfficeServices {
-    public static final String module = OpenOfficeServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * Use OpenOffice to convert documents between types

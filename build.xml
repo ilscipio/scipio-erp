@@ -20,27 +20,34 @@ under the License.
 
 <project name="Scipio Main Build" default="build" basedir="."
     xmlns:ivy="antlib:org.apache.ivy.ant"
-    xmlns:sonar="antlib:org.sonar.ant:sonar">
-
-    <!-- SCIPIO: NOTE: 2017-02-02: the framework/base/lib libraries are not automatically
-        on the classpath (this is now enforced). Any needed libraries must be specified
-        explicitly, including for the <junit/> task. -->
+    xmlns:sonar="antlib:org.sonar.ant:sonar"
+    xmlns:if="ant:if"
+    xmlns:unless="ant:unless">
     
-    <taskdef uri="antlib:org.apache.ivy.ant" resource="org/apache/ivy/ant/antlib.xml">
-        <classpath>
-            <pathelement location="framework/base/lib/ivy-2.4.0.jar"/>
-        </classpath>
-    </taskdef>
-
+    <!-- 
+        SCIPIO MAIN BUILD
+        
+        NOTES:
+        * macros.xml (legacy name) contains all early defs (including ofbiz.homedir), 
+          defined for both main build invocations and component build subfolder ant invocations
+        * The framework/base/lib libraries are not automatically on the classpath; this is now (2017-02-02) 
+          enforced; needed libs must be specified explicitly (<taskdef>), including for the <junit/> task.
+    -->
+    
     <import file="macros.xml"/>
     
     <!-- ================================================================== -->
     <!-- SCIPIO: early-inclusion, new, original properties and tasks        -->
     <!-- ================================================================== -->
-
+    <!-- NOTE: Properties may also be defined in macros.xml (e.g. for standalone component task support) -->
+    
     <!-- 2017-02-03: New build.local.properties file (ignored by version control), where
-        you may specify some default properties -->
+        you may specify some default properties for local machine/developer only -->
     <property file="build.local.properties"/>
+    
+    <!-- 2018-06-25: New build.properties file (NOT ignored by version control), where
+        you may specific some default shared properties for your project (shared between developers/users) -->
+    <property file="build.properties"/>
     
     <!-- IVY BYPASS: set this to true (or pass -Dlib.update.bypass=true) to prevent 
         automatic lib update check upon build and other target invocations
@@ -50,17 +57,17 @@ under the License.
         or "component" (runs per-component, before each component) -->
     <property name="lib.update.hook.mode" value="component"/>
     
-    <property name="framework.dir" value="framework" />
-    <property name="applications.dir" value="applications" />
-    <property name="specialpurpose.dir" value="specialpurpose" />
-    <property name="themes.dir" value="themes" />
-    <property name="addons.dir" value="addons" />
-    <property name="hotdeploy.dir" value="hot-deploy" />
+    <property name="framework.dir" value="framework"/>
+    <property name="applications.dir" value="applications"/>
+    <property name="specialpurpose.dir" value="specialpurpose"/>
+    <property name="themes.dir" value="themes"/>
+    <property name="addons.dir" value="addons"/>
+    <property name="hotdeploy.dir" value="hot-deploy"/>
     
     <!-- Top-level component directories, in their generally-expect build and load order 
         NOTE: 2017-01-31: build order is for now rectified to framework->themes->... in order for the build order
             to be consistent with the component load order (as defined in stock ofbiz) -->
-    <property name="ofbiz.component.dirs" value="framework,themes,applications,specialpurpose,addons,hot-deploy" />
+    <property name="ofbiz.component.dirs" value="framework,themes,applications,specialpurpose,addons,hot-deploy"/>
     
     <property file="${framework.dir}/base/config/scipiometainfo.properties" />
     
@@ -71,6 +78,12 @@ under the License.
         <propertyref name="ofbiz.component.dirs"/>
         <propertyref regex="lib\.update\..*"/>
         <propertyref regex="lib\.clean\..*"/>
+        <propertyref regex="lib\.entity\..*"/><!-- FIXME?: unfortunate exception... should have been lib.scpcfg.entity... too late -->
+        <propertyref regex="lib\.scpcfg\..*"/><!-- for custom lib properties for components; should be named: lib.scpcfg.[componentname].* -->
+        <propertyref regex="comp.scpcfg\..*"/><!-- for component-specific config properties; should be named: comp.scpcfg.[componentname].* -->
+        <propertyref regex="scpcfg\..*"/>
+        <propertyref name="ivy.settings.file"/>
+        <propertyref name="checkreqs.ran"/>
     </propertyset>
     
     <!-- Dynamic early main build.xml additions. Allows any component or addon to include
@@ -126,9 +139,25 @@ under the License.
     <property name="memory.initial.param" value="-Xms128M"/>
     <property name="memory.max.param" value="-Xmx3512M"/>
     <property name="memory.maxpermsize.param" value="-XX:MaxPermSize=1024M"/>
+    
     <!-- SCIPIO: New properties -->
-    <property name="solr.home" value="applications/solr/"/>
-
+    
+    <!-- Solr properties -->
+    <property name="solr.home" value="applications/solr"/>
+    <property name="solr.log.dir" value="runtime/logs/solr"/><!-- added 2017-09-08 -->
+    <!-- Solr instance locking - see solrconfig.xml for details -->
+    <!-- 2017-09-12: FIXME?: Ideally we should use "native", but issues have been encountered with write.lock;
+        as workaround, use file-less "single" instance lock - there should no issues because running
+        two ofbiz instances always fails before webapps load, due to ports-in-use. -->
+    <!--<property name="solr.lock.type" value="native"/>-->
+    <property name="solr.lock.type" value="single"/>
+    <!-- Passing -Dscipio.solr.reindex.startup.force=true or uncommenting forces rebuildSolrIndex(Auto) on startup; 
+        see also "[set|start|...]-reindex-solr" helper tasks. -->
+    <!--<property name="scipio.solr.reindex.startup.force" value="true"/>-->
+    <!-- Backward-compat for old property name -->
+    <!-- If set to "true", prevents editing Solr config through Solr webapp's config API -->
+    <property name="solr.disable.configEdit" value=""/><!-- added 2017-10-12 -->
+    
     <import file="framework/build.xml" optional="false"/>
     <available file="applications/build.xml" property="applications.present"/>
     <import file="applications/build.xml" optional="true"/>
@@ -148,6 +177,7 @@ under the License.
         <mkdir dir="runtime/output"/>
         <mkdir dir="runtime/logs"/>
         <mkdir dir="runtime/logs/test-results"/>
+        <mkdir dir="runtime/logs/solr"/><!-- SCIPIO: for solr.log.dir, added 2017-09-08 -->
         <mkdir dir="runtime/data"/>
         <mkdir dir="runtime/data/derby"/>
 
@@ -161,18 +191,18 @@ under the License.
         <copy file="runtime/data/derby.properties" todir="runtime/data/derby"/>
     </target>
     
-    <target name="ivy-init"><!-- SCIPIO: 2017-01-30: new -->
-        <!-- (nothing to do for now; taskdef already defined) -->
-    </target>
-    
     <target name="sonar-init" depends="ivy-init">
-        <taskdef uri="antlib:org.sonar.ant:sonar" resource="org/sonar/ant/antlib.xml">
-            <classpath>
-                <pathelement location="framework/base/lib/sonar-ant-task-1.3.jar" />
-            </classpath>
-        </taskdef>
+        <path id="sonar-ant-tasks.class.path">
+          <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="sonar-ant-task-*.jar"/>
+        </path>
+        <taskdef uri="antlib:org.sonar.ant:sonar" resource="org/sonar/ant/antlib.xml" classpathref="sonar-ant-tasks.class.path"/>
     </target>
 
+    <!-- SCIPIO: solr flagging -->
+    <target name="set-reindex-solr">
+        <property name="scipio.solr.reindex.startup.force" value="true"/>
+    </target>
+    
     <!-- ================================================================== -->
     <!-- Removes all created files and directories                          -->
     <!-- ================================================================== -->
@@ -184,7 +214,7 @@ under the License.
     </target>
 
     <target name="clean-all"
-          description="Clean all DB, Catalina and caches data, logs, and runtime subdirectories and all specific files like .rej, .orig">
+          description="Clean DB (Derby), Catalina and caches data, logs, and runtime subdirectories and all specific files like .rej, .orig (NOTE: does NOT clear external DBs: postgres/mysql/etc.)">
 
         <!-- SCIPIO: hooks -->
         <invokehook target="pre-clean-all" />
@@ -195,7 +225,7 @@ under the License.
             <equals arg1="${lib.clean.deployed}" arg2="true"/>-->
             <not><equals arg1="${lib.clean.deployed}" arg2="false"/></not>
             <then>
-                <antcall target="init-lib-clean-deployed" inheritrefs="true"/>
+                <antcall target="lib-clean-deployed" inheritrefs="true"/>
             </then>
         </if>
         <antcall target="clean-data"/>
@@ -211,6 +241,7 @@ under the License.
             all supported JDBC drivers but only the legacy ofbiz download targets (TODO: clarify the legacy download targets)
         <antcall target="clean-downloads"/>-->
         <antcall target="clean-uploads"/>
+        <antcall target="clean-analysis"/><!-- SCIPIO: 2018-04-24: new -->
         <antcall target="clean"/>
         
         <!-- SCIPIO: hooks -->
@@ -219,7 +250,7 @@ under the License.
     </target>
 
     <target name="clean-downloads"
-          description="Clean all downloaded files (NOTE: to avoid removing JDBC drivers, use init-lib-clean instead)">
+          description="Clean all downloaded files (NOTE: to avoid removing JDBC drivers, use lib-clean instead)">
         
         <!-- SCIPIO: hooks -->
         <invokehook target="pre-clean-downloads" />
@@ -237,7 +268,7 @@ under the License.
         <if><!-- SCIPIO: NOTE: 2017-02-03: new -->
             <not><equals arg1="${lib.clean.deployed}" arg2="false"/></not>
             <then>
-                <antcall target="init-lib-clean-deployed" inheritrefs="true"/>
+                <antcall target="lib-clean-deployed" inheritrefs="true"/>
             </then>
         </if>
         
@@ -246,7 +277,7 @@ under the License.
         
     </target>
     <target name="clean-data"
-          description="Clean all DB data (Derby) under runtime/data">
+          description="Clean DB (Derby) data under runtime/data (NOTE: does NOT clear external DBs: postgres/mysql/etc.)">
         
         <!-- SCIPIO: hooks -->
         <invokehook target="pre-clean-data" />
@@ -360,7 +391,7 @@ under the License.
     </target>
 
     <target name="clean-search-indexes"
-        description="Remove search indexes (e.g. Lucene indexes) created under runtime/indexes">
+        description="Remove (Solr) search indexes/data created under runtime/indexes and anywhere else">
         
         <!-- SCIPIO: hooks -->
         <invokehook target="pre-clean-search-indexes" />
@@ -370,6 +401,13 @@ under the License.
                 <exclude name="README"/>
             </fileset>
         </delete>
+        
+        <!-- SCIPIO: the Solr data is now actually stored under applications/solr -->
+        <externalsubant target="clean-local-solr-indexes">
+            <fileset dir="${basedir}/applications/solr">
+                <include name="build.xml" />
+            </fileset>
+        </externalsubant>
         
         <!-- SCIPIO: hooks -->
         <invokehook target="post-clean-search-indexes" />
@@ -388,6 +426,20 @@ under the License.
         
         <!-- SCIPIO: hooks -->
         <invokehook target="post-clean-uploads" />
+        
+    </target>
+    
+    <target name="clean-analysis" description="Remove code analysis results (Scipio)">
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="pre-clean-analysis" />
+        
+        <delete includeemptydirs="true">
+            <fileset dir="./runtime/analysis" includes="**/*" erroronmissingdir="false" />
+        </delete>
+        
+        <!-- SCIPIO: hooks -->
+        <invokehook target="post-clean-analysis" />
         
     </target>
     
@@ -714,12 +766,21 @@ under the License.
         
     </target>
     
+    <!-- SCIPIO: new 2018-03-23 -->
+    <target name="build-withlibsrc" description="build plus download ivy lib JAR sources (implied -Dlib.update.sources=true)">
+        <property name="build.lib.update.sources" value="true"/>
+        <antcall target="build"/>
+    </target>
+    
     <!-- ================================================================== -->
     <!-- Build Components                                                   -->
     <!-- ================================================================== -->
     
-    <target name="build" depends="ofbiz-init,build-scipio-build-tools,check-init-lib-update">
+    <target name="build" depends="ofbiz-init,build-scipio-build-tools,check-lib-update">
         <echo message="[build] ========== Start Building (Compile) =========="/>
+        
+        <!-- SCIPIO: special property to only target build command with lib.update.sources -->
+        <property name="lib.update.sources" value="${build.lib.update.sources}" if:set="build.lib.update.sources"/>
         
         <!-- SCIPIO: hooks -->
         <invokehook target="pre-build" />
@@ -835,9 +896,6 @@ under the License.
 
         <path id="local.class.path">
           <fileset dir="${ofbiz.home.dir}/framework/base/lib" includes="*.jar"/>
-          <fileset dir="${ofbiz.home.dir}/framework/base/lib/commons" includes="*.jar"/>
-          <fileset dir="${ofbiz.home.dir}/framework/base/lib/j2eespecs" includes="*.jar"/>
-          <fileset dir="${ofbiz.home.dir}/framework/base/lib/scripting" includes="*.jar"/>
           <fileset dir="${ofbiz.home.dir}/framework/catalina/lib" includes="*.jar"/>
           <fileset dir="${ofbiz.home.dir}/framework/entity/lib" includes="*.jar"/>
           <fileset dir="${ofbiz.home.dir}/framework/geronimo/lib" includes="*.jar"/>
@@ -1026,6 +1084,66 @@ under the License.
     <!-- Start and Stop OFBiz                                                        -->
     <!-- ================================================================== -->
 
+    <!-- SCIPIO: ofbiz.jar exec macro - generic, factors out jvmargs common to ALL start tasks (added 2017-09-08, for solr) 
+        TODO?: is not as versatile or friendly as it could be; didn't want to refactor all the task xml at this time -->
+    <macrodef name="exec-scipio-jar">
+        <attribute name="fork" default="true"/>
+        <attribute name="spawn" default=""/>
+        <attribute name="resultproperty" default=""/>
+        <attribute name="secure" default="false"/>
+        <element name="args" optional="true" implicit="true"/>
+        <sequential>
+            <if><!-- SCIPIO: 2018-05-08: backward compat for old scripts -->
+                <isset property="scipio.solr.reindex.auto.force"/>
+                <then>
+                    <property name="scipio.solr.reindex.startup.force" value="${scipio.solr.reindex.auto.force}"/>   
+                </then>
+            </if>
+            <if><!-- FIXME: get rid of this copy-paste with ant 1.9.3... -->
+                <equals arg1="@{secure}" arg2="true"/>
+                <then>
+                    <java jar="ofbiz.jar" fork="@{fork}" spawn="@{spawn}" resultproperty="@{resultproperty}">
+                        <jvmarg value="${memory.initial.param}"/>
+                        <jvmarg value="${memory.max.param}"/>
+                        <!-- SCIPIO: NOTE: Ofbiz omitted this for secure targets:
+                        <jvmarg value="${memory.maxpermsize.param}"/>-->
+                        <jvmarg value="-javaagent:${ofbiz.home.dir}/tools/security/notsoserial/notsoserial-1.0-SNAPSHOT.jar"/>
+                        <jvmarg value="-Dnotsoserial.whitelist=${ofbiz.home.dir}/tools/security/notsoserial/empty.txt"/>
+                        <jvmarg value="-Dnotsoserial.dryrun=${ofbiz.home.dir}/tools/security/notsoserial/is-deserialized.txt"/>
+                        <jvmarg value="-Dnotsoserial.trace=${ofbiz.home.dir}/tools/security/notsoserial/deserialize-trace.txt"/>
+                        <!-- SCIPIO: solr home -->
+                        <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+                        <jvmarg value="-Dsolr.log.dir=${solr.log.dir}"/>
+                        <jvmarg value="-Dsolr.lock.type=${solr.lock.type}"/>
+                        <jvmarg value="-Ddisable.configEdit=${solr.disable.configEdit}"/>
+                        <jvmarg value="-Dscipio.solr.reindex.startup.force=${scipio.solr.reindex.startup.force}"/>
+                        <syspropertyset>
+                            <propertyref prefix="scipio."/>
+                        </syspropertyset>
+                        <args/>
+                    </java>
+                </then>
+                <else>
+                    <java jar="ofbiz.jar" fork="@{fork}" spawn="@{spawn}" resultproperty="@{resultproperty}">
+                        <jvmarg value="${memory.initial.param}"/>
+                        <jvmarg value="${memory.max.param}"/>
+                        <jvmarg value="${memory.maxpermsize.param}"/>
+                        <!-- SCIPIO: solr home -->
+                        <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+                        <jvmarg value="-Dsolr.log.dir=${solr.log.dir}"/>
+                        <jvmarg value="-Dsolr.lock.type=${solr.lock.type}"/>
+                        <jvmarg value="-Ddisable.configEdit=${solr.disable.configEdit}"/>
+                        <jvmarg value="-Dscipio.solr.reindex.startup.force=${scipio.solr.reindex.startup.force}"/>
+                        <syspropertyset>
+                            <propertyref prefix="scipio."/>
+                        </syspropertyset>
+                        <args/>
+                    </java>
+                </else>
+            </if>
+        </sequential>
+    </macrodef>
+    
     <target name="start"
             description="Start OFBiz (use -Dportoffset=portNumber to shift all ports with the portNumber value)">
         <!-- SCIPIO: -->
@@ -1033,145 +1151,92 @@ under the License.
         <condition property="spawn" else="false" >
             <isset property="scipio.start.spawn"/>
         </condition>
-        <java jar="ofbiz.jar" fork="true" spawn="${spawn}">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr home -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar spawn="${spawn}">
             <arg value="start"/>
             <arg value="-portoffset=${portoffset}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="start-secure"
             description="Same than start but pre-loading the notsoserial Java agent (from tools/security/notsoserial) to protect OFBiz from the Java deserialization vulnerability">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="-javaagent:${ofbiz.home.dir}/tools/security/notsoserial/notsoserial-1.0-SNAPSHOT.jar"/>
-            <jvmarg value="-Dnotsoserial.whitelist=${ofbiz.home.dir}/tools/security/notsoserial/empty.txt"/>
-            <jvmarg value="-Dnotsoserial.dryrun=${ofbiz.home.dir}/tools/security/notsoserial/is-deserialized.txt"/>
-            <jvmarg value="-Dnotsoserial.trace=${ofbiz.home.dir}/tools/security/notsoserial/deserialize-trace.txt"/>
-            <!-- SCIPIO: solr home -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar secure="true">
             <arg value="start"/>
             <arg value="-portoffset=${portoffset}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="start-batch"
             description="Start OFBiz as a separate process. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
-        <java jar="ofbiz.jar" fork="true" spawn="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar spawn="true">
             <arg value="start-batch"/>
             <arg value="-portoffset=${portoffset}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="start-batch-secure"
         description="Same than start-batch but pre-loading the notsoserial Java agent (from tools/security/notsoserial) to protect OFBiz from the Java deserialization vulnerability">
-        <java jar="ofbiz.jar" fork="true" spawn="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="-javaagent:${ofbiz.home.dir}/tools/security/notsoserial/notsoserial-1.0-SNAPSHOT.jar"/>
-            <jvmarg value="-Dnotsoserial.whitelist=${ofbiz.home.dir}/tools/security/notsoserial/empty.txt"/>
-            <jvmarg value="-Dnotsoserial.dryrun=${ofbiz.home.dir}/tools/security/notsoserial/is-deserialized.txt"/>
-            <jvmarg value="-Dnotsoserial.trace=${ofbiz.home.dir}/tools/security/notsoserial/deserialize-trace.txt"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar spawn="true" secure="true">
             <arg value="start-batch"/>
             <arg value="-portoffset=${portoffset}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="start-debug"
             description="Start OFBiz in debugging mode. It uses the 8091 port by default. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
+        <exec-scipio-jar>
             <jvmarg value="-Xnoagent"/>
             <jvmarg value="-Djava.compiler=NONE"/>
             <jvmarg value="-Xdebug"/>
             <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8091"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
             <arg value="start-debug"/>
             <arg value="-portoffset=${portoffset}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="start-pos"
             description="Start OFBiz POS (Point of sale). Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="pos"/>
             <arg value="-portoffset=${portoffset}"/><!-- Not sure this makes sense and is useful at all -->
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="start-pos-secure"
         description="Same than start-pos but pre-loading the notsoserial Java agent (from tools/security/notsoserial) to protect OFBiz from the Java deserialization vulnerability">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="-javaagent:${ofbiz.home.dir}/tools/security/notsoserial/notsoserial-1.0-SNAPSHOT.jar"/>
-            <jvmarg value="-Dnotsoserial.whitelist=${ofbiz.home.dir}/tools/security/notsoserial/empty.txt"/>
-            <jvmarg value="-Dnotsoserial.dryrun=${ofbiz.home.dir}/tools/security/notsoserial/is-deserialized.txt"/>
-            <jvmarg value="-Dnotsoserial.trace=${ofbiz.home.dir}/tools/security/notsoserial/deserialize-trace.txt"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar secure="true">
             <arg value="pos"/>
             <arg value="-portoffset=${portoffset}"/><!-- Not sure this makes sense and is useful at all -->
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="start-both"
             description="Start OFBiz in both Web and POS (Point of sale) modes. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="both"/>
             <arg value="-portoffset=${portoffset}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="start-both-secure"
         description="Same than start-both but pre-loading the notsoserial Java agent (from tools/security/notsoserial) to protect OFBiz from the Java deserialization vulnerability">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="-javaagent:${ofbiz.home.dir}/tools/security/notsoserial/notsoserial-1.0-SNAPSHOT.jar"/>
-            <jvmarg value="-Dnotsoserial.whitelist=${ofbiz.home.dir}/tools/security/notsoserial/empty.txt"/>
-            <jvmarg value="-Dnotsoserial.dryrun=${ofbiz.home.dir}/tools/security/notsoserial/is-deserialized.txt"/>
-            <jvmarg value="-Dnotsoserial.trace=${ofbiz.home.dir}/tools/security/notsoserial/deserialize-trace.txt"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar secure="true">
             <arg value="both"/>
             <arg value="-portoffset=${portoffset}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="stop"
             description="Stop OFBiz. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
-        <java jar="ofbiz.jar" fork="true">
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="-shutdown"/>
             <arg value="-portoffset=${portoffset}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="status"
             description="Display status of OFBiz. Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
-        <java jar="ofbiz.jar" fork="true">
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="-status"/>
             <arg value="-portoffset=${portoffset}"/>
-        </java>
+        </exec-scipio-jar>
+    </target>
+    
+    <!-- SCIPIO: start targets with solr control -->
+    <target name="start-reindex-solr" depends="set-reindex-solr,start"
+                description="Start Scipio and force Solr to reindex on startup">
+    </target>
+    <target name="start-debug-reindex-solr" depends="set-reindex-solr,start-debug"
+                description="Start Scipio in debug mode and force Solr to reindex on startup">
     </target>
 
     <!-- ================================================================== -->
@@ -1181,105 +1246,60 @@ under the License.
     <target name="load-demo" depends="build"
             description="Load all data; meant for generic OFBiz development, testing, demonstration, etc purposes">
         <property name="currentTarget" value="load"/>
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="load-data"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="load-demo-multitenant" depends="build"
             description="Load all data needed for the multi-tenancy demonstration. Caution: this creates three databases, with each one loaded with all demo data.">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="load-data"/>
-        </java>
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        </exec-scipio-jar>
+        <exec-scipio-jar>
             <arg value="load-data"/>
             <arg value="delegator=default#DEMO1"/>
-        </java>
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        </exec-scipio-jar>
+        <exec-scipio-jar>
             <arg value="load-data"/>
             <arg value="delegator=default#DEMO2"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="load-seed" depends="build"
             description="Load ONLY the seed data (not seed-initial, demo, ext* or anything else); meant for use after an update of the code to reload the seed data as it is generally maintained along with the code and needs to be in sync for operation">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="load-data"/>
             <arg value="readers=seed"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="load-extseed" depends="build"
             description="Load seed, seed-initial and ext data; meant for manual/generic testing, development, or going into production with a derived system based on stock OFBiz where the ext data basically replaces the demo data">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="load-data"/>
             <arg value="readers=seed,seed-initial,ext"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="load-exttest" depends="build"
             description="Load seed, seed-initial, ext and ext-test data; meant for automated testing with a derived system based on stock OFBiz">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="load-data"/>
             <arg value="readers=seed,seed-initial,ext,ext-test"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="load-readers" depends="build"
             description='Load data using the command line argument data-readers that takes a comma separated list of readers (seed, seed-initial, demo, ext, ext-test, ext-demo). On Windows XP (at least) you need top wrap the parameters in double-quotes. For instance: ant load-readers "-Ddata-readers=seed,seed-initial,ext"'>
-        <java jar="ofbiz.jar" fork="true" >
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar >
             <arg value="load-data"/>
             <arg value="readers=${data-readers}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="load-file" depends="build"
             description="Load data using the command line argument 'data-file' to load data from a given file using the 'default' delegator or a delegator specified in the command line argument 'delegator'">
         <property name="delegator" value="default" />
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="load-data"/>
             <arg value="delegator=${delegator}"/>
             <arg value="file=${data-file}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <!-- =================================
           target: load-tenant
@@ -1288,15 +1308,10 @@ under the License.
             description="Load data using tenantId, syntax eg: ant load-tenant -DtenantId=DEMO1 (needs multitenant=Y in general.properties)">
     </target>
     <target name="check-tenant-id">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="load-data"/>
             <arg value="readers=tenant"/>
-        </java>
+        </exec-scipio-jar>
         <condition property="hasTenant">
             <and>
                 <length string="${tenantId}" trim="true" when="greater" length="0"/>
@@ -1331,27 +1346,17 @@ under the License.
         </condition>
     </target>
     <target name="load-tenant-all" depends="check-tenant-reader" if="noReader">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="load-data"/>
             <arg value="delegator=default#${tenantId}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="load-tenant-reader" depends="check-tenant-reader" if="hasReader">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="load-data"/>
             <arg value="delegator=default#${tenantId}"/>
             <arg value="readers=${data-readers}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <!-- load-tenant-component -->
     <target name="load-tenant-component" if="hasTenantComponent" depends="check-tenant-id">
@@ -1369,29 +1374,19 @@ under the License.
         </condition>
     </target>
     <target name="load-tenant-component-all" depends="load-tenant-component" if="noComponentReader">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="load-data"/>
             <arg value="delegator=default#${tenantId}"/>
             <arg value="component=${component}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="load-tenant-component-reader" depends="load-tenant-component" if="hasComponentReader">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="load-data"/>
             <arg value="delegator=default#${tenantId}"/>
             <arg value="readers=${data-readers}"/>
             <arg value="component=${component}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <!-- =================================
           target: load-all-tenants
@@ -1401,15 +1396,10 @@ under the License.
     </target>
     <target name="check-tenants-reader">
         <property name="delegator" value="all-tenants"/>
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="load-data"/>
             <arg value="readers=tenant"/>
-        </java>
+        </exec-scipio-jar>
         <condition property="hasReader">
             <and>
                 <length string="${data-readers}" trim="true" when="greater" length="0"/>
@@ -1424,27 +1414,17 @@ under the License.
         </condition>
     </target>
     <target name="load-tenants-all" depends="check-tenants-reader" if="noReader">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="load-data"/>
             <arg value="delegator=${delegator}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="load-tenants-reader" depends="check-tenants-reader" if="hasReader">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="load-data"/>
             <arg value="readers=${data-readers}"/>
             <arg value="delegator=${delegator}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <!-- =================================
           target: create-tenant
@@ -1459,28 +1439,27 @@ under the License.
         sub-target of create-tenant, can't used alone => no description, to not clutter "ant -p" -->
     <target name="get-tenant-data">
         <input addproperty="tenantId" message="Enter Id for the tenant: "/>
-        <input addproperty="tenantName" message="Enter name for tenant: "/>
+        <!-- SCIPIO: improved defaults and messages -->
+        <input addproperty="tenantName" message="Enter name for tenant: " defaultvalue="${tenantId}"/>
         <input addproperty="domainName" message="Enter domain name for tenant (Optional): "/>
-        <input addproperty="data-readers" message="Enter data to install.
-        Choices are e.g. seed,seed-initial,ext,demo.
-        Multipe datasets must be separated with a comma: "/>
-        <input addproperty="db-Platform" message="Select your default database platform, D = Derby,M = MySQL, O = Oracle, P = PostgreSQL"
-            validargs="D,M,O,P"/>
+        <input addproperty="data-readers" message="Enter data to install. Choices are e.g.: seed,seed-initial,ext,demo (default: same as load-demo). Multipe datasets must be separated with a comma: "/>
+        <input addproperty="db-Platform" message="Select your default database platform, D = Derby, M = MySQL, O = Oracle, P = PostgreSQL"
+            validargs="D,M,O,P,d,m,o,p"/>
         <echo message="Please make sure that the driver of the platform is installed and that the databases have been created (in function of the entityengine.xml datasource-names)"/>
         <input addproperty="db-IP" message="Enter IP address of the database server (you may add a port number)"/>
         <input addproperty="db-User" message="Enter userID of database user: "/>
         <input addproperty="db-Password" message="Enter password of database user: "/>
         <condition property="isDerby">
-            <equals arg1="${db-Platform}" arg2="D"/>
+            <equals arg1="${db-Platform}" arg2="D" casesensitive="no"/><!-- SCIPIO: accept lowercase -->
         </condition>
         <condition property="isMySQL">
-            <equals arg1="${db-Platform}" arg2="M"/>
+            <equals arg1="${db-Platform}" arg2="M" casesensitive="no"/>
         </condition>
         <condition property="isOracle">
-            <equals arg1="${db-Platform}" arg2="O"/>
+            <equals arg1="${db-Platform}" arg2="O" casesensitive="no"/>
         </condition>
         <condition property="isPostgreSQL">
-            <equals arg1="${db-Platform}" arg2="P"/>
+            <equals arg1="${db-Platform}" arg2="P" casesensitive="no"/>
         </condition>
         <antcall target="tenant-data-entry"/>
     </target>
@@ -1674,16 +1653,11 @@ under the License.
         <echo message="Delegator = default#${tenantId}"/>
         <echo message="Data-readers = ${data-readers}"/>
         <echo>------------------------------------</echo>
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="load-data"/>
             <arg value="readers=${data-readers}"/>
             <arg value="delegator=default#${tenantId}"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="load-admin-user-login"
             description="Create a user login with admin privileges and a temporary password equal to 'scipio'; after a successful login the user will be prompted for a new password. Example command for the userLogin 'admin': ./ant load-admin-user-login -DuserLoginId=admin">
@@ -1713,16 +1687,11 @@ under the License.
         <echo>= OFBiz / Scipio integration tests. Please be aware, that =</echo>
         <echo>= the tests are based on OFBiz_14 and not always reliable.=</echo>
         <echo>===========================================================</echo>
-        <java jar="ofbiz.jar" fork="true" resultproperty="test.result">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar resultproperty="test.result">
             <arg value="test"/>
             <arg value="-portoffset=${portoffset}"/>
             <env key="LC_ALL" value="C"/>
-        </java>
+        </exec-scipio-jar>
         <mkdir dir="runtime/logs/test-results/html"/>
         <junitreport todir="runtime/logs/test-results">
             <fileset dir="runtime/logs/test-results/">
@@ -1747,33 +1716,23 @@ under the License.
         <available file="runtime/test-list-build.xml" property="_separated-tests-already-setup"/>
     </target>
     <target name="_setup-separated-test-run" depends="_check-separated-tests-already-setup" unless="_separated-tests-already-setup">
-        <java jar="ofbiz.jar" fork="true">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar>
             <arg value="testlist"/>
             <arg file="runtime/test-list-build.xml"/>
             <arg value="-ant"/>
             <env key="LC_ALL" value="C"/>
-        </java>
+        </exec-scipio-jar>
     </target>
     <target name="run-test"
           description="Run a single test, syntax eg: ant run-test -Dtest.component=service -Dtest.case=service-soap-tests">
         <fail unless="test.component">test.component is a required parameter: -Dtest.component=componentname</fail>
         <fail unless="test.case">test.case is a required parameter: -Dtest.case=testcasename</fail>
-        <java jar="ofbiz.jar" fork="true" resultproperty="test.result">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar resultproperty="test.result">
             <arg value="test"/>
             <arg value="-component=${test.component}"/>
             <arg value="-case=${test.case}"/>
             <env key="LC_ALL" value="C"/>
-        </java>
+        </exec-scipio-jar>
         <delete dir="runtime/logs/test-results/${test.component}-${test.case}"/>
         <mkdir dir="runtime/logs/test-results/${test.component}-${test.case}"/>
         <move todir="runtime/logs/test-results/${test.component}-${test.case}">
@@ -1791,21 +1750,16 @@ under the License.
             description="Run a single test in debug mode, syntax eg: ant run-test-debug -Dtest.component=service -Dtest.case=service-soap-tests">
       <fail unless="test.component">test.component is a required parameter: -Dtest.component=componentname</fail>
       <fail unless="test.case">test.case is a required parameter: -Dtest.case=testcasename</fail>
-      <java jar="ofbiz.jar" fork="true" resultproperty="test.result">
-        <jvmarg value="${memory.initial.param}"/>
-        <jvmarg value="${memory.max.param}"/>
-        <jvmarg value="${memory.maxpermsize.param}"/>
+      <exec-scipio-jar resultproperty="test.result">
         <jvmarg value="-Xnoagent"/>
         <jvmarg value="-Djava.compiler=NONE"/>
         <jvmarg value="-Xdebug"/>
         <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8091"/>
-        <!-- SCIPIO: solr path -->
-        <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
         <arg value="test"/>
         <arg value="-component=${test.component}"/>
         <arg value="-case=${test.case}"/>
         <env key="LC_ALL" value="C"/>
-      </java>
+      </exec-scipio-jar>
       <delete dir="runtime/logs/test-results/${test.component}-${test.case}"/>
       <mkdir dir="runtime/logs/test-results/${test.component}-${test.case}"/>
       <move todir="runtime/logs/test-results/${test.component}-${test.case}">
@@ -1823,17 +1777,12 @@ under the License.
             description="Run a single test suite, syntax eg: ant run-test-suite -Dtest.component=mycomponent -Dtest.suiteName=mytests">
         <fail unless="test.component">test.component is a required parameter: -Dtest.component=componentname</fail>
         <fail unless="test.suiteName">test.suiteName is a required parameter: -Dtest.suiteName=testsuitename</fail>
-        <java jar="ofbiz.jar" fork="true" resultproperty="test.result">
-            <jvmarg value="${memory.initial.param}"/>
-            <jvmarg value="${memory.max.param}"/>
-            <jvmarg value="${memory.maxpermsize.param}"/>
-            <!-- SCIPIO: solr path -->
-            <jvmarg value="-Dsolr.solr.home=${solr.home}"/>
+        <exec-scipio-jar resultproperty="test.result">
             <arg value="test"/>
             <arg value="-component=${test.component}"/>
             <arg value="-suitename=${test.suiteName}"/>
             <env key="LC_ALL" value="C"/>
-        </java>
+        </exec-scipio-jar>
         <fail message="Test run was unsuccessful">
             <condition>
                 <not>
@@ -1852,16 +1801,7 @@ under the License.
             description="Generate a HTML code coverage report with cobertura, can be found in runtime/logs/cobertura-report">
         <delete dir="runtime/logs/cobertura-report"/>
         <mkdir dir="runtime/logs/cobertura-report"/>
-        <taskdef resource="tasks.properties">
-            <classpath>
-                <fileset dir="framework/base/lib">
-                    <include name="cobertura-1.9.4.1.jar" />
-                    <include name="log4j-1.2.17.jar" />
-                    <include name="scripting/asm*.jar" />
-                    <include name="scripting/jakarta-oro-2.0.8.jar" />
-                </fileset>
-            </classpath>
-        </taskdef>
+        <taskdef resource="tasks.properties" classpathref="cobertura.class.path"/>
         <cobertura-merge datafile="runtime/logs/cobertura.dat">
             <fileset dir="runtime/logs">
                 <include name="cobertura-base.dat"/>
@@ -1881,16 +1821,7 @@ under the License.
             description="Generate a XML file from the cobertura report, this will be used by sonar">
         <delete dir="runtime/logs/cobertura-report"/>
         <mkdir dir="runtime/logs/cobertura-report"/>
-        <taskdef resource="tasks.properties">
-            <classpath>
-                <fileset dir="framework/base/lib">
-                    <include name="cobertura-1.9.4.1.jar" />
-                    <include name="log4j-1.2.17.jar" />
-                    <include name="scripting/asm*.jar" />
-                    <include name="scripting/jakarta-oro-2.0.8.jar" />
-                </fileset>
-            </classpath>
-        </taskdef>
+        <taskdef resource="tasks.properties" classpathref="cobertura.class.path"/>
         <cobertura-merge datafile="runtime/logs/cobertura.dat">
             <fileset dir="runtime/logs">
                 <include name="cobertura-base.dat"/>
@@ -1905,13 +1836,18 @@ under the License.
         </cobertura-report>
     </target>
 
-    <target name="sonar" depends="download-sonar-ant-task, sonar-init"
+    <target name="sonar" depends="download-sonar-ant-task,sonar-init"
             description="Sonar code analysis. You need a Sonar instance running to use it. More info on http://www.sonarsource.org/">
+        <!-- SCIPIO: now git
         <exec executable="svn" dir="." output="runtime/svninfo_tmp.xml">
             <arg value="info"/>
-            <arg value="--xml"/>
+            <arg value="- -xml"/>
         </exec>
-        <xmlproperty file="runtime/svninfo_tmp.xml"/>
+        <xmlproperty file="runtime/svninfo_tmp.xml"/>-->
+        <exec executable="git" outputproperty="git.info.revision">
+            <arg value="rev-parse"/>
+            <arg value="HEAD"/>
+        </exec>
 
         <property name="sonar.sources" value="specialpurpose/appserver/src, framework/base/src, framework/bi/src,
             framework/catalina/src, framework/common/src, framework/datafile/src, framework/entity/src, framework/entityext/src,
@@ -1929,12 +1865,16 @@ under the License.
             applications/securityext/src/org/ofbiz/securityext/test" />
 
         <!-- list of optional Sonar properties -->
-        <property name="sonar.projectName" value="Apache OFBiz" />
-        <sonar:sonar key="org.apache:ofbiz" version="${info.entry.commit(revision)}" xmlns:sonar="antlib:org.sonar.ant:sonar"/>
+        <property name="sonar.projectName" value="SCIPIO ERP" />
+        <!-- SCIPIO: this was for old sonar-ant-task
+        <sonar:sonar key="org.apache:ofbiz" version="${info.entry.commit(revision)}" xmlns:sonar="antlib:org.sonar.ant:sonar"/>-->
+        <property name="sonar.projectKey" value="com.ilscipio:scipio" />
+        <property name="sonar.projectVersion" value="${git.info.revision}" />
+        <sonar:sonar xmlns:sonar="antlib:org.sonar.ant:sonar"/>
         <property name="sonar.dynamicAnalysis" value="reuseReports" />
         <property name="sonar.cobertura.reportPath" value="runtime/logs/cobertura-report/coverage.xml"/>
-        <property name="sonar.java.source" value="1.7" />
-        <property name="sonar.java.target" value="1.7" />
+        <property name="sonar.java.source" value="1.8" />
+        <property name="sonar.java.target" value="1.8" />
         <!-- default for jdbc url: jdbc:mysql://localhost:3306/sonar?useUnicode=true&amp;characterEncoding=utf8-->
         <property name="sonar.jdbc.url" value="${sonar.jdbc.url}"/>
         <property name="sonar.jdbc.driverClassName" value="com.mysql.jdbc.Driver" />
@@ -1962,7 +1902,7 @@ under the License.
     
     <!-- SCIPIO: 2017-01-30: New ivy download targets -->
     
-    <target name="init-lib-update" depends="ivy-init" description="Initial libraries and dependencies download, global">
+    <target name="lib-update" depends="ivy-init" description="Initial libraries and dependencies download, global">
         <stopwatch name="lib.update.stopwatch" action="start"/>
         <!--
         <tstamp>
@@ -1986,8 +1926,22 @@ under the License.
         -->
         <stopwatch name="lib.update.stopwatch" action="total"/>
     </target>
+    <target name="lib-update-force" description="Initial libraries and dependencies download, global - forced (even if no change)">
+        <property name="lib.update.force" value="true"/>
+        <antcall target="lib-update" inheritrefs="true"/>
+    </target>
     
-    <target name="check-init-lib-update" description="Initial libraries and dependencies download, global, if enabled only">
+    <target name="lib-update-withlibsrc" description="Initial libraries and dependencies AND source JARs download, global">
+        <property name="lib.update.sources" value="true"/>
+        <antcall target="lib-update" inheritrefs="true"/>
+    </target>
+    <target name="lib-update-withlibsrc-force" description="Initial libraries and dependencies AND source JARs download, global - forced (even if no change)">
+        <property name="lib.update.force" value="true"/>
+        <property name="lib.update.sources" value="true"/>
+        <antcall target="lib-update" inheritrefs="true"/>
+    </target>
+    
+    <target name="check-lib-update" description="Initial libraries and dependencies download, global, if enabled only">
         <!-- Removed - not really useful (see below): depends="get-lib-update-status" -->
         <if>
             <not><equals arg1="${lib.update.hook.mode}" arg2="global"/></not>
@@ -2007,12 +1961,12 @@ under the License.
                 </or>
                 <then>
                     <echo message="Lib updates check forced - starting..."/>
-                    <antcall target="init-lib-update"/>
+                    <antcall target="lib-update"/>
                 </then>
             </elseif>
             <else>
                 <echo message="Lib updates check starting..."/>
-                <antcall target="init-lib-update"/>
+                <antcall target="lib-update"/>
                 <!-- Removed - turns out this check is useless to deal with changes or anything after 
                     the initial download... too simplistic
                 <if>
@@ -2026,13 +1980,13 @@ under the License.
                             <else>
                                 <echo level="error" message="Lib download: SANITY CHECK FAILED: missing major libraries despite last run status marked success!"/>
                                 <echo message="Lib download required (sanity check failed) - starting..."/>
-                                <antcall target="init-lib-update"/>
+                                <antcall target="lib-update"/>
                             </else>
                         </if>
                     </then>
                     <else>
                         <echo message="Lib download required (last download status unknown or non-success) - starting..."/>
-                        <antcall target="init-lib-update"/>
+                        <antcall target="lib-update"/>
                     </else>
                 </if>-->
             </else>
@@ -2070,49 +2024,51 @@ under the License.
     -->
 
     <target name="framework-lib-update">
-        <iterate target="init-lib-update" filelist="framework-builds"/>
+        <iterate target="lib-update" filelist="framework-builds"/>
     </target>
 
     <target name="applications-lib-update" if="${applications.present}">
-        <iterate target="init-lib-update" filelist="application-builds"/>
+        <iterate target="lib-update" filelist="application-builds"/>
     </target>
 
     <target name="specialpurpose-lib-update" if="${specialpurpose.present}">
-        <iterate target="init-lib-update" filelist="specialpurpose-builds"/>
+        <iterate target="lib-update" filelist="specialpurpose-builds"/>
     </target>
     
     <target name="addons-lib-update">
-        <addonsant target="init-lib-update"/>
+        <addonsant target="lib-update"/>
     </target>
     
     <target name="hotdeploy-lib-update">
-        <hotdeployant target="init-lib-update"/>
+        <hotdeployant target="lib-update"/>
     </target>
     
     <target name="themes-lib-update">
-        <dep-subant dir="${basedir}/themes" target="init-lib-update"/>
+        <dep-subant dir="${basedir}/themes" target="lib-update"/>
     </target>
     
-    <target name="init-lib-clean" depends="ivy-init" description="Libraries and dependencies clean - by default, cleans ivy resolution cache (but not repository/download cache) and removes deployed JARs">
+    <target name="lib-clean" depends="ivy-init" description="Libraries and dependencies clean - by default, cleans ivy resolution cache (but not repository/download cache) and removes deployed JARs [same as clean-ivy-deployed]">
         <stopwatch name="lib.clean.stopwatch" action="start"/>
 
         <if>
             <not><equals arg1="${lib.clean.cache}" arg2="false"/></not>
             <then>
-                <antcall target="init-lib-clean-cache" inheritrefs="true"/>
+                <antcall target="lib-clean-cache" inheritrefs="true"/>
             </then>
         </if>
         <if>
             <not><equals arg1="${lib.clean.deployed}" arg2="false"/></not>
             <then>
-                <antcall target="init-lib-clean-deployed" inheritrefs="true"/>
+                <antcall target="lib-clean-deployed" inheritrefs="true"/>
             </then>
         </if>
 
         <stopwatch name="lib.clean.stopwatch" action="total"/>
     </target>
+    <target name="clean-ivy-deployed" depends="lib-clean" description="Libraries and dependencies clean - by default, cleans ivy resolution cache (but not repository/download cache) and removes deployed JARs [alias for lib-clean]">
+    </target>
     
-    <target name="clean-ivy" description="Cleans Ivy resolution cache (but not repository/download cache, unless lib.clean.cache.repo=true) [alias for init-lib-clean-cache]">
+    <target name="clean-ivy" depends="ivy-init" description="Cleans Ivy resolution cache (but not repository/download cache, unless lib.clean.cache.repo=true) [alias for lib-clean-cache]">
         <!-- SCIPIO: NOTE: 2017-02-03: the cache is split between repository and resolution cache.
             99% of the time, emptying the repository cache is a giant waste of time, so don't do it
             by default. -->
@@ -2126,17 +2082,23 @@ under the License.
             </else>
         </if>
     </target>
-    <target name="init-lib-clean-cache" depends="clean-ivy" description="Cleans Ivy resolution cache (but not repository/download cache, unless lib.clean.cache.repo=true) [alias for clean-ivy]">
+    <target name="lib-clean-cache" depends="clean-ivy" description="Cleans Ivy resolution cache (but not repository/download cache, unless lib.clean.cache.repo=true) [same as clean-ivy]">
     </target>
     
-    <target name="clean-ivy-full" description="Cleans Ivy resolution and repository/download caches (forces lib re-download, may affect other projects) [alias for init-lib-clean-cache-full]">
+    <target name="clean-ivy-full" depends="ivy-init" description="Cleans Ivy resolution and repository/download caches (forces lib re-download, may affect other projects) [alias for lib-clean-cache-full]">
         <!-- SCIPIO: NOTE: because the repository cache uses the default ivy user cache, this may affect other projects -->
         <ivy:cleancache/>
     </target>
-    <target name="init-lib-clean-cache-full" depends="clean-ivy-full" description="Cleans Ivy resolution and repository/download caches (forces lib re-download, may affect other projects) [alias for clean-ivy-full]">
+    <target name="lib-clean-cache-full" depends="clean-ivy-full" description="Cleans Ivy resolution and repository/download caches (forces lib re-download, may affect other projects) [same as clean-ivy-full]">
     </target>
     
-    <target name="init-lib-clean-deployed" description="Cleans out the library deployment folders (but not library/ivy caches)">
+    <target name="lib-clean-deployed" description="Cleans out the library deployment folders (but not library/ivy caches)">
+        <!-- when doing "full" clean-deployed, by default also clean out libsrc, because makes no sense
+            to keep sources for libs whose versions we might be trying to change -->
+        <property name="lib.clean.sources" value="true"/>
+        <!-- not setting this one anymore, using lib.clean.sources; as long as
+            get-lib-resolve-confs is not needed by a clean target (unlikely), this should be ok
+        <property name="lib.update.sources" value="true"/>-->
         <antcall target="framework-lib-clean"/>
         <antcall target="themes-lib-clean"/>
         <antcall target="applications-lib-clean"/>
@@ -2146,68 +2108,140 @@ under the License.
     </target>
     
     <target name="framework-lib-clean">
-        <iterate target="init-lib-clean" filelist="framework-builds"/>
+        <iterate target="lib-clean" filelist="framework-builds"/>
     </target>
 
     <target name="applications-lib-clean" if="${applications.present}">
-        <iterate target="init-lib-clean" filelist="application-builds"/>
+        <iterate target="lib-clean" filelist="application-builds"/>
     </target>
 
     <target name="specialpurpose-lib-clean" if="${specialpurpose.present}">
-        <iterate target="init-lib-clean" filelist="specialpurpose-builds"/>
+        <iterate target="lib-clean" filelist="specialpurpose-builds"/>
     </target>
     
     <target name="addons-lib-clean">
-        <addonsant target="init-lib-clean"/>
+        <addonsant target="lib-clean"/>
     </target>
     
     <target name="hotdeploy-lib-clean">
-        <hotdeployant target="init-lib-clean"/>
+        <hotdeployant target="lib-clean"/>
     </target>
     
     <target name="themes-lib-clean">
-        <dep-subant dir="${basedir}/themes" target="init-lib-clean"/>
+        <dep-subant dir="${basedir}/themes" target="lib-clean"/>
     </target>
     
+    <target name="lib-dep-tree" description="Shows library dependency trees for all components with an ivyfile">
+        <iterate target="lib-dep-tree" filelist="framework-builds"/>
+        <iterate target="lib-dep-tree" filelist="application-builds"/>
+        <iterate target="lib-dep-tree" filelist="specialpurpose-builds"/>
+        <addonsant target="lib-dep-tree"/>
+        <hotdeployant target="lib-dep-tree"/>
+        <dep-subant dir="${basedir}/themes" target="lib-dep-tree"/>
+    </target>
+    
+    <target name="lib-dep-report" description="Generate library dependency HTML reports">
+        <iterate target="lib-dep-report" filelist="framework-builds"/>
+        <iterate target="lib-dep-report" filelist="application-builds"/>
+        <iterate target="lib-dep-report" filelist="specialpurpose-builds"/>
+        <addonsant target="lib-dep-report"/>
+        <hotdeployant target="lib-dep-report"/>
+        <dep-subant dir="${basedir}/themes" target="lib-dep-report"/>
+    </target>
+    
+    <target name="lib-clean-dep-report" description="Cleans out runtime/analysis/lib-dep-report">
+        <delete includeemptydirs="true" verbose="on">
+            <fileset dir="./runtime/analysis/lib-dep-report" includes="**" erroronmissingdir="false" />
+        </delete>
+    </target>
+    
+    <target name="lib-dep-checkupdates" description="Check for library dependency updates">
+        <iterate target="lib-dep-checkupdates" filelist="framework-builds"/>
+        <iterate target="lib-dep-checkupdates" filelist="application-builds"/>
+        <iterate target="lib-dep-checkupdates" filelist="specialpurpose-builds"/>
+        <addonsant target="lib-dep-checkupdates"/>
+        <hotdeployant target="lib-dep-checkupdates"/>
+        <dep-subant dir="${basedir}/themes" target="lib-dep-checkupdates"/>
+    </target>
 
-    <target name="download-activemq" description="Download activemq for DCC (Distributed Cache Clearing">
-        <ivy:retrieve pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="activemq"/>
+    <target name="download-activemq" depends="ivy-init" description="Download activemq for DCC (Distributed Cache Clearing">
+        <delete verbose="on"><fileset dir="framework/base/lib" includes="activemq-*.jar"/></delete>
+        <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="activemq"/>
         <echo> </echo>
         <echo>======================================================</echo>
         <echo>Please check that this version is appropriate for you!</echo>
     </target>
 
-    <target name="download-cobertura" description="Download cobertura related files">
-        <ivy:retrieve pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="cobertura"/>
+    <target name="download-cobertura" depends="ivy-init" description="Download cobertura related files">
+        <delete verbose="on"><fileset dir="framework/base/lib" includes="cobertura-*.jar"/></delete>
+        <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="cobertura"/>
     </target>
 
-    <target name="download-PG-JDBC" description="Download postgres jdbc driver">
-        <!-- SCIPIO: get proper version for jvm -->
-        <if>
-            <equals arg1="${ant.java.version}" arg2="1.7"/>
-            <then>
-                <echo message="Java 1.7 detected, fetching postgres JRE7 JDBC driver"/>
-                <ivy:retrieve pattern="framework/entity/lib/jdbc/[artifact]-[revision].[ext]" conf="postgresjre7"/>
-            </then>
-            <else>
-                <echo message="Java 1.8+ detected, fetching postgres JRE8+ JDBC driver"/>
-                <ivy:retrieve pattern="framework/entity/lib/jdbc/[artifact]-[revision].[ext]" conf="postgres"/>
-            </else>
-        </if>
+    <target name="download-PG-JDBC" depends="download-jdbc-postgresql" description="Download postgres jdbc driver (legacy alias for download-jdbc-postgresql)">
+    </target>
+
+    <target name="download-sonar-ant-task" depends="ivy-init" description="Download sonar related files">
+        <delete verbose="on"><fileset dir="framework/base/lib" includes="sonar-ant-task-*.jar"/></delete>
+        <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="sonar-ant-task"/>
+    </target>
+
+    <target name="download-mySQL-JDBC" depends="download-jdbc-mysql" description="Download mySQL jdbc driver (legacy alias for download-jdbc-mysql)">
+    </target>
+    
+    <!-- SCIPIO: new JDBC targets with consistent naming and common operation (where possible) -->
+    <target name="download-jdbc-common" depends="ivy-init" description="Download postgres jdbc driver (alias for download-PG-JDBC)">
+        <ivy:retrieve file="${ofbiz.home.dir}/framework/entity/ivy.xml" pattern="framework/entity/lib/jdbc/[artifact]-[revision].[ext]" conf="${lib.entity.jdbc.conf}"/>
         <echo> </echo>
         <echo>======================================================</echo>
         <echo>Please check that this version is appropriate for you!</echo>
     </target>
 
-    <target name="download-sonar-ant-task" description="Download sonar related files">
-        <ivy:retrieve pattern="framework/base/lib/[artifact]-[revision].[ext]" conf="sonar-ant-task"/>
+    <target name="download-jdbc-derby" description="Download Derby JDBC driver">
+        <delete verbose="on"><fileset dir="framework/entity/lib/jdbc" includes="derby-*.jar"/></delete>
+        <property name="lib.entity.jdbc.conf" value="derby"/>
+        <antcall target="download-jdbc-common"/>
+    </target>
+    <target name="download-jdbc-jaybird" description="Download Firebird (Jaybird) JDBC driver">
+        <delete verbose="on"><fileset dir="framework/entity/lib/jdbc" includes="jaybird-*.jar"/></delete>
+        <property name="lib.entity.jdbc.conf" value="jaybird"/>
+        <antcall target="download-jdbc-common"/>
+    </target>
+    <target name="download-jdbc-firebird" depends="download-jdbc-jaybird" description="Download Firebird (Jaybird) JDBC driver (alias for download-jdbc-jaybird)">
+    </target>
+    <target name="download-jdbc-hsqldb" description="Download hsqldb JDBC driver">
+        <delete verbose="on"><fileset dir="framework/entity/lib/jdbc" includes="hsqldb-*.jar"/></delete>
+        <property name="lib.entity.jdbc.conf" value="hsqldb"/>
+        <antcall target="download-jdbc-common"/>
+    </target>
+    <target name="download-jdbc-mysql" description="Download mySQL JDBC driver">
+        <delete verbose="on"><fileset dir="framework/entity/lib/jdbc" includes="mysql-*.jar"/></delete>
+        <property name="lib.entity.jdbc.conf" value="mysql"/>
+        <antcall target="download-jdbc-common"/>
+    </target>
+    <target name="download-jdbc-mariadb" description="Download MariaDB JDBC driver">
+        <delete verbose="on"><fileset dir="framework/entity/lib/jdbc" includes="mariadb-*.jar"/></delete>
+        <property name="lib.entity.jdbc.conf" value="mariadb"/>
+        <antcall target="download-jdbc-common"/>
+    </target>
+    <target name="download-jdbc-postgresql" description="Download PostgreSQL JDBC driver">
+        <delete verbose="on"><fileset dir="framework/entity/lib/jdbc" includes="postgresql-*.jar"/></delete>
+        <property name="lib.entity.jdbc.conf" value="postgresql"/>
+        <antcall target="download-jdbc-common"/>
     </target>
 
-    <target name="download-mySQL-JDBC" description="Download mySQL jdbc driver">
-        <ivy:retrieve pattern="framework/entity/lib/jdbc/[artifact]-[revision].[ext]" conf="mysql"/>
-        <echo> </echo>
-        <echo>======================================================</echo>
-        <echo>Please check that this version is appropriate for you!</echo>
+    <target name="download-util-all" description="Utility target to download all utilities (except JDBC)">
+        <antcall target="download-activemq"/>
+        <antcall target="download-cobertura"/>
+        <antcall target="download-sonar-ant-task"/>
+    </target>
+
+    <target name="download-jdbc-all" description="Utility target to download all JDBC drivers, for testing purposes">
+        <antcall target="download-jdbc-derby"/>
+        <antcall target="download-jdbc-firebird"/>
+        <antcall target="download-jdbc-hsqldb"/>
+        <antcall target="download-jdbc-mysql"/>
+        <antcall target="download-jdbc-mariadb"/>
+        <antcall target="download-jdbc-postgresql"/>
     </target>
 
     <!-- ================================================================== -->
@@ -2215,11 +2249,13 @@ under the License.
     <!-- ================================================================== -->
 
     <target name="create-component"
-            description="Create the layout of an OFBiz component in the hot-deploy folder.">
-        <input addproperty="component-name" message="Component name: (e.g. mycomponent) [Mandatory]"/>
-        <input addproperty="component-resource-name" message="Component resource name: (e.g. MyComponent) [Mandatory]"/>
-        <input addproperty="webapp-name" message="Webapp name: (e.g. mycomponent) [Mandatory]"/>
-        <input addproperty="base-permission" message="Base permission: (e.g. MYCOMPONENT) [Mandatory]"/>
+            description="Create the layout of a Scipio component in the hot-deploy folder.">
+        <input addproperty="component-name" message="Component name (lowercase): (e.g. mycomponent) [Mandatory]"/>
+        <input addproperty="component-resource-name" message="Component resource name (CamelCase): (e.g. MyComponent) [Mandatory]"/>
+        <input addproperty="webapp-name" message="Webapp name (lowercase): (e.g. mycomponent) [Mandatory]"/>
+        <input addproperty="base-permission" message="Base permission (UPPERCASE): (e.g. MYCOMPONENT) [Mandatory]"/>
+        <input addproperty="component-package" message="Organization (package/group): (e.g. org.mycompany.myprojects) [default: com.ilscipio.scipio.ce.external]" defaultvalue="com.ilscipio.scipio.ce.external"/>
+
         <echo>The following hot-deploy component will be created:
               Name: ${component-name}
               Resource Name: ${component-resource-name}
@@ -2253,38 +2289,57 @@ under the License.
                 <equals arg1="${base-permission}" arg2="" casesensitive="false" trim="yes"/>
             </condition>
         </fail>
+        <fail message="Organization is mandatory">
+            <condition>
+                <equals arg1="${component-package}" arg2="" casesensitive="false" trim="yes"/>
+            </condition>
+        </fail>
         <filterset id="replacePlaceholders">
             <filter token="component-name" value="${component-name}"/>
             <filter token="component-resource-name" value="${component-resource-name}"/>
             <filter token="base-permission" value="${base-permission}"/>
             <filter token="webapp-name" value="${webapp-name}"/>
+            <filter token="component-package" value="${component-package}"/>
         </filterset>
         <mkdir dir="${basedir}/hot-deploy/${component-name}"/>
+        <copy file="${basedir}/framework/resources/templates/.gitignore-component" tofile="${basedir}/hot-deploy/${component-name}/.gitignore"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/config"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/data"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/data/helpdata"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/dtd"/>
+        <copy file="${basedir}/framework/resources/templates/.gitignore-empty" tofile="${basedir}/hot-deploy/${component-name}/dtd/.gitignore"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/documents"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/entitydef"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/lib"/>
+        <copy file="${basedir}/framework/resources/templates/.gitignore-lib" tofile="${basedir}/hot-deploy/${component-name}/lib/.gitignore"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/patches"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/patches/test"/>
+        <copy file="${basedir}/framework/resources/templates/.gitignore-empty" tofile="${basedir}/hot-deploy/${component-name}/patches/test/.gitignore"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/patches/qa"/>
+        <copy file="${basedir}/framework/resources/templates/.gitignore-empty" tofile="${basedir}/hot-deploy/${component-name}/patches/qa/.gitignore"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/patches/production"/>
+        <copy file="${basedir}/framework/resources/templates/.gitignore-empty" tofile="${basedir}/hot-deploy/${component-name}/patches/production/.gitignore"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/script"/>
+        <copy file="${basedir}/framework/resources/templates/.gitignore-empty" tofile="${basedir}/hot-deploy/${component-name}/script/.gitignore"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/servicedef"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/src"/>
+        <copy file="${basedir}/framework/resources/templates/.gitignore-empty" tofile="${basedir}/hot-deploy/${component-name}/src/.gitignore"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/testdef"/>
+        <copy file="${basedir}/framework/resources/templates/.gitignore-empty" tofile="${basedir}/hot-deploy/${component-name}/testdef/.gitignore"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/webapp"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/error"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/WEB-INF"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/WEB-INF/actions"/>
+        <copy file="${basedir}/framework/resources/templates/.gitignore-empty" tofile="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/WEB-INF/actions/.gitignore"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/widget/"/>
         <copy file="${basedir}/framework/resources/templates/ofbiz-component.xml" tofile="${basedir}/hot-deploy/${component-name}/ofbiz-component.xml" encoding="utf-8">
             <filterset refid="replacePlaceholders"/>
         </copy>
         <copy file="${basedir}/framework/resources/templates/build.xml" tofile="${basedir}/hot-deploy/${component-name}/build.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/ivy.xml" tofile="${basedir}/hot-deploy/${component-name}/ivy.xml" encoding="utf-8">
             <filterset refid="replacePlaceholders"/>
         </copy>
         <copy file="${basedir}/framework/resources/templates/TypeData.xml" tofile="${basedir}/hot-deploy/${component-name}/data/${component-resource-name}TypeData.xml" encoding="utf-8">
@@ -2343,7 +2398,324 @@ under the License.
             <filterset refid="replacePlaceholders"/>
         </copy>
         <echo>Component successfully created in folder ${basedir}/hot-deploy/${component-name}.
-            Restart OFBiz and then visit the URL: https://localhost:8443/${webapp-name}
+            Restart Scipio and then visit the URL: https://localhost:8443/${webapp-name}
+        </echo>
+    </target>
+    
+    <!-- SCIPIO: new -->
+    <target name="create-component-shop-override"
+            description="Create the layout of a Scipio shop webapp override component in the hot-deploy folder. (SCIPIO)">
+        <input addproperty="component-name" message="Component name (lowercase): (e.g. mycomponent) [Mandatory]"/>
+        <input addproperty="component-resource-name" message="Component resource name (CamelCase): (e.g. MyComponent) [Mandatory]"/>
+        <input addproperty="webapp-name" message="Webapp name (lowercase): (e.g. mycomponent) [default: ${component-name}]" defaultvalue="${component-name}"/>
+        <!--<input addproperty="base-permission" message="Base permission (uppercase): (e.g. MYCOMPONENT) [default: SHOP]" defaultvalue="SHOP"/>-->
+        <property name="base-permission" value="SHOP"/>
+        <input addproperty="component-package" message="Organization (package/group): (e.g. org.mycompany.myprojects) [default: com.ilscipio.scipio.ce.external]" defaultvalue="com.ilscipio.scipio.ce.external"/>
+
+        <!-- TODO? more options -->
+        <echo>The following hot-deploy component will be created:
+              Name: ${component-name}
+              Resource Name: ${component-resource-name}
+              Webapp Name: ${webapp-name}
+              Base permission: ${base-permission}
+              Folder: ${basedir}/hot-deploy/${component-name}
+            
+              The webapp will automatically override the one defined in /applications/shop/ofbiz-component.xml, and it will have:
+              webSiteId: ScipioWebStore
+              mount-point: /shop
+              demo data: inherited from /applications/shop/data/
+            
+              NOTE: If you have modified /applications/shop directly in the filesystem, some of those changes may be carried over here.
+        </echo>
+        <input addproperty="confirm-component-creation" message="Confirm: " defaultvalue="N" validargs="Y,N,y,n"/>
+        <fail message="Component creation cancelled by the user.">
+            <condition>
+                <equals arg1="${confirm-component-creation}" arg2="N" casesensitive="false"/>
+            </condition>
+        </fail>
+        <fail message="Component name is mandatory">
+            <condition>
+                <equals arg1="${component-name}" arg2="" casesensitive="false" trim="yes"/>
+            </condition>
+        </fail>
+        <fail message="Resource name is mandatory">
+            <condition>
+                <equals arg1="${component-resource-name}" arg2="" casesensitive="false" trim="yes"/>
+            </condition>
+        </fail>
+        <fail message="Webapp name is mandatory">
+            <condition>
+                <equals arg1="${webapp-name}" arg2="" casesensitive="false" trim="yes"/>
+            </condition>
+        </fail>
+        <fail message="Base permission is mandatory">
+            <condition>
+                <equals arg1="${base-permission}" arg2="" casesensitive="false" trim="yes"/>
+            </condition>
+        </fail>
+        <fail message="Organization is mandatory">
+            <condition>
+                <equals arg1="${component-package}" arg2="" casesensitive="false" trim="yes"/>
+            </condition>
+        </fail>
+        <filterset id="replacePlaceholders">
+            <filter token="component-name" value="${component-name}"/>
+            <filter token="component-resource-name" value="${component-resource-name}"/>
+            <filter token="base-permission" value="${base-permission}"/>
+            <filter token="webapp-name" value="${webapp-name}"/>
+            <filter token="component-package" value="${component-package}"/>
+        </filterset>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}"/>
+        <copy file="${basedir}/framework/resources/templates/.gitignore-component" tofile="${basedir}/hot-deploy/${component-name}/.gitignore"/>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/config"/>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/data"/>
+        <!--<mkdir dir="${basedir}/hot-deploy/${component-name}/data/helpdata"/>-->
+        <!--<mkdir dir="${basedir}/hot-deploy/${component-name}/dtd"/>-->
+        <!--<mkdir dir="${basedir}/hot-deploy/${component-name}/documents"/>-->
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/entitydef"/>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/lib"/>
+        <copy file="${basedir}/framework/resources/templates/.gitignore-lib" tofile="${basedir}/hot-deploy/${component-name}/lib/.gitignore"/>
+        <!--<mkdir dir="${basedir}/hot-deploy/${component-name}/patches"/>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/patches/test"/>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/patches/qa"/>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/patches/production"/>-->
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/script"/>
+        <copy file="${basedir}/framework/resources/templates/.gitignore-empty" tofile="${basedir}/hot-deploy/${component-name}/script/.gitignore"/>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/servicedef"/>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/src"/>
+        <copy file="${basedir}/framework/resources/templates/.gitignore-empty" tofile="${basedir}/hot-deploy/${component-name}/src/.gitignore"/>
+        <!--<mkdir dir="${basedir}/hot-deploy/${component-name}/testdef"/>-->
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/templates"/>
+        <copy file="${basedir}/framework/resources/templates/.gitignore-empty" tofile="${basedir}/hot-deploy/${component-name}/templates/.gitignore"/>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/webapp"/>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}"/>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/error"/>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/images"/>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/WEB-INF"/>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/WEB-INF/actions"/>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/widget/"/>
+        <copy file="${basedir}/framework/resources/templates/shop-override/ofbiz-component.xml" tofile="${basedir}/hot-deploy/${component-name}/ofbiz-component.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/shop/build.xml" tofile="${basedir}/hot-deploy/${component-name}/build.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/ivy.xml" tofile="${basedir}/hot-deploy/${component-name}/ivy.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <!--<copy file="${basedir}/framework/resources/templates/TypeData.xml" tofile="${basedir}/hot-deploy/${component-name}/data/${component-resource-name}TypeData.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>-->
+        <!--<copy file="${basedir}/framework/resources/templates/SecurityPermissionSeedData.xml" tofile="${basedir}/hot-deploy/${component-name}/data/${component-resource-name}SecurityPermissionSeedData.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>-->
+        <!--<copy file="${basedir}/framework/resources/templates/SecurityGroupDemoData.xml" tofile="${basedir}/hot-deploy/${component-name}/data/${component-resource-name}SecurityGroupDemoData.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>-->
+        <!--<copy file="${basedir}/framework/resources/templates/DemoData.xml" tofile="${basedir}/hot-deploy/${component-name}/data/${component-resource-name}DemoData.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>-->
+        <!--<copy file="${basedir}/framework/resources/templates/HELP.xml" tofile="${basedir}/hot-deploy/${component-name}/data/helpdata/HELP_${component-resource-name}.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>-->
+        <copy file="${basedir}/framework/resources/templates/shop-override/data/CatalogData.xml" tofile="${basedir}/hot-deploy/${component-name}/data/${component-resource-name}CatalogData.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/shop-override/data/DemoData.xml" tofile="${basedir}/hot-deploy/${component-name}/data/${component-resource-name}DemoData.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/shop-override/data/ProductData.xml" tofile="${basedir}/hot-deploy/${component-name}/data/${component-resource-name}ProductData.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/shop-override/data/SecurityGroupDemoData.xml" tofile="${basedir}/hot-deploy/${component-name}/data/${component-resource-name}SecurityGroupDemoData.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/shop-override/data/SecurityPermissionSeedData.xml" tofile="${basedir}/hot-deploy/${component-name}/data/${component-resource-name}SecurityPermissionSeedData.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/shop-override/data/ShippingData.xml" tofile="${basedir}/hot-deploy/${component-name}/data/${component-resource-name}ShippingData.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/shop-override/data/StoreData.xml" tofile="${basedir}/hot-deploy/${component-name}/data/${component-resource-name}StoreData.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/shop-override/data/TaxAuthorityData.xml" tofile="${basedir}/hot-deploy/${component-name}/data/${component-resource-name}TaxAuthorityData.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <!--<copy file="${basedir}/framework/resources/templates/document.xml" tofile="${basedir}/hot-deploy/${component-name}/documents/${component-resource-name}.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>-->
+        <copy file="${basedir}/framework/resources/templates/entitymodel.xml" tofile="${basedir}/hot-deploy/${component-name}/entitydef/entitymodel.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/services.xml" tofile="${basedir}/hot-deploy/${component-name}/servicedef/services.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <!--<copy file="${basedir}/framework/resources/templates/Tests.xml" tofile="${basedir}/hot-deploy/${component-name}/testdef/${component-resource-name}Tests.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>-->
+        <copy file="${basedir}/framework/resources/templates/UiLabels.xml" tofile="${basedir}/hot-deploy/${component-name}/config/${component-resource-name}UiLabels.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <!--<copy file="${basedir}/framework/resources/templates/index.jsp" tofile="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/index.jsp" encoding="iso-8859-1">
+            <filterset refid="replacePlaceholders"/>
+        </copy>-->
+        <!-- SCIPIO: gone
+        <copy file="${basedir}/framework/resources/templates/error.jsp" tofile="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/error/error.jsp" encoding="iso-8859-1">
+            <filterset refid="replacePlaceholders"/>
+        </copy>-->
+        <copy file="${basedir}/framework/resources/templates/shop-override/webapp/shop/WEB-INF/controller.xml" tofile="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/WEB-INF/controller.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/shop-override/webapp/shop/WEB-INF/web.xml" tofile="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/WEB-INF/web.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/shop/webapp/shop/WEB-INF/urlrewrite.xml" tofile="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/WEB-INF/urlrewrite.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/shop/webapp/shop/WEB-INF/actions/ShopSetup.groovy" tofile="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/WEB-INF/actions/ShopSetup.groovy" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/shop-override/widget/CommonScreens.xml" tofile="${basedir}/hot-deploy/${component-name}/widget/CommonScreens.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <!--<copy file="${basedir}/framework/resources/templates/Screens.xml" tofile="${basedir}/hot-deploy/${component-name}/widget/${component-resource-name}Screens.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>-->
+        <!--<copy file="${basedir}/framework/resources/templates/Menus.xml" tofile="${basedir}/hot-deploy/${component-name}/widget/${component-resource-name}Menus.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>-->
+        <!--<copy file="${basedir}/framework/resources/templates/Forms.xml" tofile="${basedir}/hot-deploy/${component-name}/widget/${component-resource-name}Forms.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>-->
+        <!-- /applications/shop file copies
+            FIXME?: we currently are forced to duplicate the following shop files some of which is not desirable, 
+                because no mechanism to extend them... -->
+        <copy todir="${basedir}/hot-deploy/${component-name}/webapp/${webapp-name}/">
+            <fileset dir="${basedir}/applications/shop/webapp/shop/">
+                <include name="images/**"/>
+                <include name="error/404.jsp"/>
+                <include name="index.jsp"/>
+                <include name="robots.txt"/>
+            </fileset>
+        </copy>
+        <echo>Component successfully created in folder ${basedir}/hot-deploy/${component-name}.
+            Restart Scipio and then visit the URL: https://localhost:8443/shop
+        </echo>
+    </target>
+
+    <target name="create-theme"
+            description="Create the layout of a Scipio theme component in the themes folder.">
+        <input addproperty="component-name" message="Theme name (lowercase): (e.g. my-theme) [Mandatory]"/>
+        <input addproperty="component-resource-name" message="Theme resource name (CamelCase): (e.g. MyTheme) [Mandatory]"/>
+        <input addproperty="webapp-name" message="Webapp name (lowercase): (e.g. mytheme) [Mandatory]"/>
+        <input addproperty="theme-id" message="Theme Id (uppercase): (e.g. MYTHEME) [Mandatory]"/>
+        <input addproperty="is-backend" message="Is backoffice theme? (N for ecommerce theme): [default: Y]" defaultvalue="Y" validargs="Y,N,y,n"/>
+        <if>
+            <equals arg1="${is-backend}" arg2="Y" casesensitive="false"/>
+            <then>
+                <property name="theme-type" value="BACKOFFICE"/>
+            </then>
+            <else>
+                <property name="theme-type" value="ECOMMERCE"/>
+            </else>
+        </if>
+        <echo>The following theme component will be created:
+              Name: ${component-name}
+              Resource Name: ${component-resource-name}
+              Webapp Name: ${webapp-name}
+              Folder: ${basedir}/themes/${component-name}
+              ThemeId: ${theme-id}
+              Theme-Type: ${theme-type} (is backoffice theme: ${is-backend})
+        </echo>
+        <input addproperty="confirm-component-creation" message="Confirm: " defaultvalue="N" validargs="Y,N,y,n"/>
+        <fail message="Component creation cancelled by the user.">
+            <condition>
+                <equals arg1="${confirm-component-creation}" arg2="N" casesensitive="false"/>
+            </condition>
+        </fail>
+        <fail message="Component name is mandatory">
+            <condition>
+                <equals arg1="${component-name}" arg2="" casesensitive="false" trim="yes"/>
+            </condition>
+        </fail>
+        <fail message="Resource name is mandatory">
+            <condition>
+                <equals arg1="${component-resource-name}" arg2="" casesensitive="false" trim="yes"/>
+            </condition>
+        </fail>
+        <fail message="Webapp name is mandatory">
+            <condition>
+                <equals arg1="${webapp-name}" arg2="" casesensitive="false" trim="yes"/>
+            </condition>
+        </fail>
+        <fail message="Theme Id name is mandatory">
+            <condition>
+                <equals arg1="${theme-id}" arg2="" casesensitive="false" trim="yes"/>
+            </condition>
+        </fail>
+        
+        <filterset id="replacePlaceholders">
+            <filter token="component-name" value="${component-name}"/>
+            <filter token="component-resource-name" value="${component-resource-name}"/>
+            <filter token="webapp-name" value="${webapp-name}"/>
+            <filter token="theme-id" value="${theme-id}"/>
+            <filter token="is-backend" value="${is-backend}"/>
+            <filter token="theme-type" value="${theme-type}"/>
+        </filterset>
+        <mkdir dir="${basedir}/themes/${component-name}"/>
+        <copy file="${basedir}/framework/resources/templates/theme/.gitignore-component" tofile="${basedir}/themes/${component-name}/.gitignore"/>
+        <mkdir dir="${basedir}/themes/${component-name}/data"/>
+        <mkdir dir="${basedir}/themes/${component-name}/includes"/>
+        <mkdir dir="${basedir}/themes/${component-name}/webapp"/>
+        <mkdir dir="${basedir}/themes/${component-name}/webapp/${webapp-name}"/>
+        <mkdir dir="${basedir}/themes/${component-name}/webapp/${webapp-name}/WEB-INF"/>
+        <copy file="${basedir}/framework/resources/templates/theme/.gitignore-webapp" tofile="${basedir}/themes/${component-name}/webapp/${webapp-name}/.gitignore"/>
+        <copy file="${basedir}/framework/resources/templates/theme/ofbiz-component.xml" tofile="${basedir}/themes/${component-name}/ofbiz-component.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/theme/build.xml" tofile="${basedir}/themes/${component-name}/build.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/theme/README.md" tofile="${basedir}/themes/${component-name}/README.md" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/theme/ThemeData.xml" tofile="${basedir}/themes/${component-name}/data/${component-resource-name}ThemeData.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/theme/web.xml" tofile="${basedir}/themes/${component-name}/webapp/${webapp-name}/WEB-INF/web.xml" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/theme/appbar.ftl" tofile="${basedir}/themes/${component-name}/includes/appbar.ftl" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/theme/appbarClose.ftl" tofile="${basedir}/themes/${component-name}/includes/appbarClose.ftl" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/theme/appbarOpen.ftl" tofile="${basedir}/themes/${component-name}/includes/appbarOpen.ftl" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/theme/footer.ftl" tofile="${basedir}/themes/${component-name}/includes/footer.ftl" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/theme/header.ftl" tofile="${basedir}/themes/${component-name}/includes/header.ftl" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/theme/htmlMenuMacroLibrary.ftl" tofile="${basedir}/themes/${component-name}/includes/htmlMenuMacroLibrary.ftl" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/theme/login.ftl" tofile="${basedir}/themes/${component-name}/includes/login.ftl" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/theme/themeStyles.groovy" tofile="${basedir}/themes/${component-name}/includes/themeStyles.groovy" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+        <copy file="${basedir}/framework/resources/templates/theme/themeTemplate.ftl" tofile="${basedir}/themes/${component-name}/includes/themeTemplate.ftl" encoding="utf-8">
+            <filterset refid="replacePlaceholders"/>
+        </copy>
+
+        <echo>Theme successfully created in folder ${basedir}/themes/${component-name}.
+            Restart Scipio and reseed with 'ant load-extseed'
         </echo>
     </target>
 
@@ -2353,12 +2725,14 @@ under the License.
 
     <target name="gen-kek"
             description="Generate a new key-encrypting-key for use in entityengine.xml">
-        <java classname="org.ofbiz.base.crypto.Main" fork="false">
+        <path id="gen-kek.class.path">
+          <fileset dir="${ofbiz.home.dir}/framework/base/build/lib/" includes="ofbiz-base.jar"/>
+          <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="commons-codec-*.jar"/>
+          <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="shiro-core-*.jar"/>
+          <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="slf4j-api-*.jar"/>
+        </path>
+        <java classname="org.ofbiz.base.crypto.Main" fork="false" classpathref="gen-kek.class.path">
             <arg value="-kek"/>
-            <classpath>
-                <path location="framework/base/build/lib/ofbiz-base.jar"/>
-                <path location="framework/base/lib/commons/commons-codec-1.10.jar"/>
-            </classpath>
         </java>
     </target>
 

@@ -31,10 +31,12 @@ SET ANT_LIB=%BASE_LIB%\ant
 REM SCIPIO: NOTE: 2017-02-02: launcher is now under ant subfolder
 FOR %%G IN (%ANT_LIB%\ant-*-ant-launcher.jar) DO SET LAUNCHER_JAR=%%G
 REM ECHO %LAUNCHER_JAR%
+REM FIXME: 2018-03-26: oro: adding libs outside base/lib/ant for ivy from within builds does not work without this
+FOR %%G IN (%BASE_LIB%\oro-*.jar) DO SET ORO_LIB=%%G
 IF [%LAUNCHER_JAR%] == [] (
   ECHO "Couldn't find ant-launcher.jar"
 ) ELSE (      
-  ECHO %JAVA% -jar "%LAUNCHER_JAR%" -lib "%ANT_LIB%" %1 %2 %3 %4 %5 %6
-  %JAVA% -jar "%LAUNCHER_JAR%" -lib "%ANT_LIB%" %1 %2 %3 %4 %5 %6
+  ECHO %JAVA% -jar "%LAUNCHER_JAR%" -lib "%ANT_LIB%" -lib "%ORO_LIB%" %1 %2 %3 %4 %5 %6
+  %JAVA% -jar "%LAUNCHER_JAR%" -lib "%ANT_LIB%" -lib "%ORO_LIB%" %1 %2 %3 %4 %5 %6
 )
 

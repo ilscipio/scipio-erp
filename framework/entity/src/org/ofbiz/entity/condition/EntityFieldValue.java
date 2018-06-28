@@ -41,7 +41,7 @@ import org.ofbiz.entity.model.ModelViewEntity.ModelAlias;
 @SuppressWarnings("serial")
 public class EntityFieldValue extends EntityConditionValue {
 
-    public static final String module = EntityFieldValue.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected String fieldName = null;
     protected String entityAlias = null;

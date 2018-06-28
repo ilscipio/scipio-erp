@@ -59,12 +59,12 @@ import freemarker.template.TemplateException;
  */
 public class CmsEvents {
 
-    public static final String module = CmsEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static String cms(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        ServletContext servletContext = request.getSession().getServletContext();
+        ServletContext servletContext = request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
         HttpSession session = request.getSession();
 
         String webSiteId = (String) session.getAttribute("webSiteId");

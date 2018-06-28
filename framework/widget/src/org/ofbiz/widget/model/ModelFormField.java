@@ -98,7 +98,7 @@ public class ModelFormField implements Serializable {
      * 
      */
 
-    public static final String module = ModelFormField.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static ModelFormField from(ModelFormFieldBuilder builder) {
         return new ModelFormField(builder);
@@ -370,6 +370,77 @@ public class ModelFormField implements Serializable {
             returnValue = WidgetWorker.getEarlyEncoder(context).encode(returnValue); // SCIPIO: simplified
         }
         return returnValue;
+    }
+
+    /**
+     * SCIPIO: Determines if the entry is explicitly set, derived from {@link #getEntry(Map, String, boolean)}
+     * but with special support for empty values.
+     * <p>
+     * Heuristic for empty values:
+     * <ul>
+     * <li>If list or multi form, always return true.
+     * <li>If single form:
+     *   <ul>
+     *     <li>If service error, we assume error in a form submit, return true.
+     *     <li>If from request parameters (but no error), returns true only if empty string.
+     *     <li>If from an existing record (Map or GenericValue), returns true if either null or empty string.
+     *     <li>If from context, returns true only if empty string.
+     *   </ul>
+     * </ul> 
+     * <p>
+     * Added 2018-05-28.
+     */
+    public boolean isExplicitEntry(Map<String, ? extends Object> context) {
+        Boolean isError = (Boolean) context.get("isError");
+        Boolean useRequestParameters = (Boolean) context.get("useRequestParameters");
+
+        if (this.getModelForm().isManyType()) {
+            return true;
+        }
+        
+        if (Boolean.TRUE.equals(isError) && !Boolean.FALSE.equals(useRequestParameters)) {
+            return true;
+        } else if (Boolean.TRUE.equals(useRequestParameters)) {
+            Map<String, Object> parameters = UtilGenerics.checkMap(context.get("parameters"), String.class, Object.class);
+            String parameterName = this.getParameterName(context);
+            if (parameters != null && parameters.get(parameterName) != null) {
+                Object parameterValue = parameters.get(parameterName);
+                if (parameterValue != null) {
+                    return true;
+                }
+            }
+        } else {
+            Map<String, ? extends Object> dataMap = this.getMap(context);
+            if (dataMap != null) {
+                // map present means there is already some kind of record (usually a GenericValue)
+                return true;
+            }
+            dataMap = context;
+
+            Object retVal = null;
+            if (UtilValidate.isNotEmpty(this.entryAcsr)) {
+                retVal = this.entryAcsr.get(dataMap);
+            } else {
+                if (dataMap.containsKey(this.name)) {
+                    retVal = dataMap.get(this.name);
+                }
+            }
+
+            // this is a special case to fill in fields during a create by default from parameters passed in
+            if (retVal == null && !Boolean.FALSE.equals(useRequestParameters)) {
+                Map<String, ? extends Object> parameters = UtilGenerics.checkMap(context.get("parameters"));
+                if (parameters != null) {
+                    if (UtilValidate.isNotEmpty(this.entryAcsr))
+                        retVal = this.entryAcsr.get(parameters);
+                    else
+                        retVal = parameters.get(this.name);
+                }
+            }
+            if (retVal != null) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public String getEntry(Map<String, ? extends Object> context, String defaultValue) {
@@ -920,7 +991,20 @@ public class ModelFormField implements Serializable {
             throw new IllegalArgumentException(errMsg);
         }
     }
-
+    
+    @Override
+    public String toString() { // SCIPIO: added 2018-03-02 (debugging help)
+        StringBuilder sb = new StringBuilder();
+        ModelFieldVisitor visitor = new XmlWidgetFieldVisitor(sb);
+        try {
+            visitor.visit(this);
+        } catch (Exception e) {
+            Debug.logWarning(e, "Exception thrown in XmlWidgetFieldVisitor: ", module);
+        }
+        return sb.toString();
+    }
+    
+    
     /**
      * Models the &lt;auto-complete&gt; element.
      * 

@@ -87,7 +87,7 @@
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="facility==null" target="CreateFacility"/>
 
-        <field use-when="facility!=null" name="facilityId" tooltip="${uiLabelMap.ProductNotModificationRecreatingProductStore}"><display/></field>
+        <field use-when="facility!=null" name="facilityId" tooltip="${uiLabelMap.ProductNotModificationRecrationFacility}"><display/></field><!-- SCIPIO: fixed label 2017-09-25 -->
         <field use-when="facility==null" name="facilityId" required-field="true"><text default-value="${partyId}"/></field>
 
         <field name="facilityName" title="${uiLabelMap.ProductName}" required-field="true"><text size="30" maxlength="60"/></field>
@@ -189,7 +189,7 @@
 
     <form name="EditWebSite" extends="EditWebSite" extends-resource="component://content/widget/website/WebSiteForms.xml">
         <actions><set field="webSiteId" from-field="webSite.webSiteId"/></actions>
-        <field use-when="webSite==null&amp;&amp;webSiteId==null" name="webSiteId" required-field="true"><text default-value="WebStore"/></field>
+        <field use-when="webSite==null&amp;&amp;webSiteId==null" name="webSiteId" required-field="true"><text default-value="ScipioWebStore"/></field><!-- SCIPIO: new default value -->
         <field name="siteName" required-field="true"><text size="30" maxlength="60"/></field>
         <field name="visualThemeSetId"><hidden value="ECOMMERCE"/></field>
         <field name="partyId"><hidden value="${partyId}"/></field>

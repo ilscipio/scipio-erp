@@ -20,7 +20,7 @@ package org.ofbiz.widget.cache;
 
 public class GenericWidgetOutput {
 
-    public static final String module = GenericWidgetOutput.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected String output;
 

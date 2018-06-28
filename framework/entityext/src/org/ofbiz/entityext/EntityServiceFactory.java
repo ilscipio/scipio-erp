@@ -28,7 +28,7 @@ import org.ofbiz.service.ServiceContainer;
  */
 public class EntityServiceFactory {
 
-    public static final String module = EntityServiceFactory.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static LocalDispatcher getLocalDispatcher(Delegator delegator) {
         LocalDispatcher dispatcher = ServiceContainer.getLocalDispatcher("entity-" + delegator.getDelegatorName(), delegator);

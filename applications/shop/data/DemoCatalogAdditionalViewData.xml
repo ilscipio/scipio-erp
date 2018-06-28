@@ -44,8 +44,8 @@ under the License.
     <DataResource dataResourceId="CAM-2644-Add4" dataResourceTypeId="IMAGE_OBJECT" dataTemplateTypeId="NONE" dataResourceName="web_browser5.png" objectInfo="/images/products/CAM-2644/web_browser5.png" isPublic="N"/>
     <Content contentId="CAM-2644-Add4-CTNT" contentTypeId="DOCUMENT" contentName="web_browser5.png" dataResourceId="CAM-2644-Add4" statusId="IM_APPROVED"/>
     <ProductContent productId="CAM-2644" contentId="CAM-2644-Add4-CTNT" productContentTypeId="IMAGE" fromDate="2001-05-13 12:00:00.0"/>
-    <DataResource dataResourceId="CAM-2644-Add1-T" dataResourceTypeId="IMAGE_OBJECT" dataTemplateTypeId="NONE" dataResourceName="web_browser5.png" objectInfo="/images/products/CAM-2644/web_browser5.png" isPublic="Y"/>
-    <Content contentId="CAM-2644-Add4-CTNT-T" contentTypeId="DOCUMENT" contentName="web_browser5.png" dataResourceId="CAM-2644-Add1-T" statusId="CTNT_IN_PROGRESS"/>
+    <DataResource dataResourceId="CAM-2644-Add4-T" dataResourceTypeId="IMAGE_OBJECT" dataTemplateTypeId="NONE" dataResourceName="web_browser5.png" objectInfo="/images/products/CAM-2644/web_browser5.png" isPublic="Y"/>
+    <Content contentId="CAM-2644-Add4-CTNT-T" contentTypeId="DOCUMENT" contentName="web_browser5.png" dataResourceId="CAM-2644-Add4-T" statusId="CTNT_IN_PROGRESS"/>
     <ContentAssoc contentId="CAM-2644-Add4-CTNT" contentIdTo="CAM-2644-Add4-CTNT-T" contentAssocTypeId="IMAGE_THUMBNAIL" fromDate="2001-05-13 12:00:00.0"/>
 
     <DataResource dataResourceId="KB-5569-Add1" dataResourceTypeId="IMAGE_OBJECT" dataTemplateTypeId="NONE" dataResourceName="macbook-606763.jpg"  objectInfo="/images/products/shop/gallery/02/tech/macbook-606763/large.jpg" isPublic="Y"/>

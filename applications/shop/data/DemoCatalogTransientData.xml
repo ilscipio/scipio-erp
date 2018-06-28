@@ -33,28 +33,6 @@ under the License.
     <ProductCategoryRollup productCategoryId="BEST-SELL-1" parentProductCategoryId="CATALOG1_BEST_SELL" sequenceNum="01" fromDate="2010-01-01 12:00:00.0"/>
     <ProductCategoryRollup productCategoryId="BEST-SELL-2" parentProductCategoryId="CATALOG1_BEST_SELL" sequenceNum="02" fromDate="2010-01-01 12:00:00.0"/>
 
-    <!-- Alternative URLs -->
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="BEST-SELL-1-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRBEST-SELL-1-ALTEN" localeString="en_US"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="BEST-SELL-2-ALT" localeString="en"/>
-    <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="DRBEST-SELL-2-ALTEN" localeString="en_US"/>
-  
-    <ElectronicText dataResourceId="BEST-SELL-1-ALT" textData="best-sell-1"/>
-    <ElectronicText dataResourceId="DRBEST-SELL-1-ALTEN" textData="best-sell-1"/>
-    <ElectronicText dataResourceId="BEST-SELL-2-ALT" textData="best-sell-2"/>
-    <ElectronicText dataResourceId="DRBEST-SELL-2-ALTEN" textData="best-sell-2"/>
-  
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="BEST-SELL-1-ALT" dataResourceId="BEST-SELL-1-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CBEST-SELL-1-ALTEN" dataResourceId="DRBEST-SELL-2-ALTEN"/>
-    <Content contentTypeId="DOCUMENT" localeString="en" contentId="BEST-SELL-2-ALT" dataResourceId="BEST-SELL-2-ALT"/>
-    <Content contentTypeId="DOCUMENT" localeString="en_US" contentId="CBEST-SELL-2-ALTEN" dataResourceId="DRBEST-SELL-2-ALTEN"/>
-    
-    <ContentAssoc contentId="BEST-SELL-1-ALT" contentIdTo="CBEST-SELL-1-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-    <ContentAssoc contentId="BEST-SELL-2-ALT" contentIdTo="CBEST-SELL-2-ALTEN" contentAssocTypeId="ALTERNATE_LOCALE" fromDate="2011-04-26 12:00:00.0"/>
-  
-    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="BEST-SELL-1" contentId="BEST-SELL-1-ALT" fromDate="2001-05-13 12:00:00.0"/>
-    <ProductCategoryContent prodCatContentTypeId="ALTERNATIVE_URL" productCategoryId="BEST-SELL-2" contentId="BEST-SELL-2-ALT" fromDate="2001-05-13 12:00:00.0"/>
-
 
     <!-- CATEGORIES (members), best-selling -->
     

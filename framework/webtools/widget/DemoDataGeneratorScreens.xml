@@ -45,8 +45,9 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleDemoDataGenerator"/>
                 <set field="activeSubMenuItem" value="ListDemoDataGeneratorServices"/>
-                <property-to-field resource="general" property="data.generator.max.records" field="maxRecords" default="50" />
+                <property-to-field resource="demosuite" property="demosuite.test.data.max.records" field="maxRecords" default="50" />
                 <set field="maxRecords" type="Integer" from-field="maxRecords"/>
+                <script location="component://webtools/script/com/ilscipio/demoDataGenerator/RunDemoDataGenerator.groovy"/>
                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/service/ScheduleJob.groovy"/>
                 <property-map resource="WebtoolsUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="infoMessage" value="${uiLabelMap.WebtoolsDataGeneratorMaxRecordsInfo} ${uiLabelMap.WebtoolsDataGeneratorMaxRecordsCurrentValue}" type="PlainString"/>

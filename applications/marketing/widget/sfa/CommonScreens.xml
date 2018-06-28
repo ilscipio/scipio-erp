@@ -57,6 +57,7 @@ under the License.
                 <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="MarketingUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="SecurityUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="layoutSettings.javaScripts[]" value="/partymgr/static/partymgr.js" global="true"/>
                 <!-- <set field="layoutSettings.javaScripts[]" value="/base-theme/bower_components/fullcalendar/dist/fullcalendar.min.js" global="true"/> -->
                 <set field="layoutSettings.styleSheets[]" value="/partymgr/static/partymgr.css" global="true"/>                
@@ -442,21 +443,26 @@ under the License.
                                         <not><if-empty field="accountDescription"/></not>
                                     </condition>
                                     <widgets>
-                                        <container style="profile-left">
-                                            <include-screen name="Party" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                            <include-screen name="partyRelContacts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                            <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                        </container>
-                                        <container style="profile-right">
-                                            <include-screen name="FinAccounts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                            <include-screen name="Attributes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                            <include-screen name="PaymentMethods" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                            <include-screen name="LeadPartyDataSource" location="component://marketing/widget/sfa/LeadScreens.xml"/>
-                                        </container>
-                                        <container style="profile-bottom">
-                                            <include-screen name="PartySalesOpportunities" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                            <include-screen name="Notes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                            <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                        <container style="${styles.grid_row}">
+                                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                                <include-screen name="Party" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                <include-screen name="partyRelContacts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                
+                                                <!-- SCIPIO: moved this to left, used to be in right, out of place -->
+                                                <include-screen name="Attributes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                
+                                                <!-- SCIPIO: moved these to left, used to be in "profile-bottom" -->
+                                                <include-screen name="PartySalesOpportunities" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                <include-screen name="Notes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                            </container>
+                                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                                <!-- SCIPIO: NOTE: these are very long when they show, so they pretty much have to stay on the right - see viewprofile?roleTypeId=ACCOUNT&partyId=Company -->
+                                                <include-screen name="FinAccounts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                <include-screen name="PaymentMethods" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                <include-screen name="LeadPartyDataSource" location="component://marketing/widget/sfa/LeadScreens.xml"/>
+                                            </container>
                                         </container>
                                     </widgets>
                                 </section>
@@ -470,48 +476,50 @@ under the License.
                                         </and>
                                     </condition>
                                     <widgets>
-                                        <container style="profile-left">
-                                            <section>
-                                                <actions>
-                                                    <set field="parameters.partyId" from-field="partyId"/>
-                                                </actions>
-                                                <widgets>
-                                                    <include-screen name="Party" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                                </widgets>
-                                            </section>
-                                            <section>
-                                                <condition>
-                                                    <not><if-empty field="partyGroupId"/></not>
-                                                </condition>
-                                                <actions>
-                                                    <set field="parameters.partyId" from-field="partyGroupId"/>
-                                                </actions>
-                                                <widgets>
-                                                    <include-screen name="Party" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                                    <include-screen name="partyRelContacts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                                </widgets>
-                                            </section>
-                                            <section>
-                                                <actions>
-                                                    <set field="parameters.partyId" from-field="partyId"/>
-                                                </actions>
-                                                <widgets>
-                                                    <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                                    <include-screen name="LeadPartyDataSource" location="component://marketing/widget/sfa/LeadScreens.xml"/>
-                                                </widgets>
-                                            </section>
-                                        </container>
-                                        <container style="profile-right">
-                                            <section>
-                                                <actions>
-                                                    <set field="parameters.partyId" from-field="partyId"/>
-                                                </actions>
-                                                <widgets>
-                                                    <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                                    <include-screen name="Notes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                                    <include-screen name="PartySalesOpportunities" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                                </widgets>
-                                            </section>
+                                        <container style="${styles.grid_row}">
+                                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                                <section>
+                                                    <actions>
+                                                        <set field="parameters.partyId" from-field="partyId"/>
+                                                    </actions>
+                                                    <widgets>
+                                                        <include-screen name="Party" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                    </widgets>
+                                                </section>
+                                                <section>
+                                                    <condition>
+                                                        <not><if-empty field="partyGroupId"/></not>
+                                                    </condition>
+                                                    <actions>
+                                                        <set field="parameters.partyId" from-field="partyGroupId"/>
+                                                    </actions>
+                                                    <widgets>
+                                                        <include-screen name="Party" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                        <include-screen name="partyRelContacts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                    </widgets>
+                                                </section>
+                                                <section>
+                                                    <actions>
+                                                        <set field="parameters.partyId" from-field="partyId"/>
+                                                    </actions>
+                                                    <widgets>
+                                                        <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                        <include-screen name="LeadPartyDataSource" location="component://marketing/widget/sfa/LeadScreens.xml"/>
+                                                    </widgets>
+                                                </section>
+                                            </container>
+                                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                                <section>
+                                                    <actions>
+                                                        <set field="parameters.partyId" from-field="partyId"/>
+                                                    </actions>
+                                                    <widgets>
+                                                        <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                        <include-screen name="Notes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                        <include-screen name="PartySalesOpportunities" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                    </widgets>
+                                                </section>
+                                            </container>
                                         </container>
                                     </widgets>
                                 </section>
@@ -520,18 +528,20 @@ under the License.
                                         <not><if-empty field="contactDescription"/></not>
                                     </condition>
                                     <widgets>
-                                        <container style="profile-left">
-                                            <include-screen name="Party" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                            <include-screen name="partyRelAccounts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                            <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                        </container>
-                                        <container style="profile-right">
-                                            <include-screen name="UserLogin" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                            <include-screen name="Attributes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                            <include-screen name="Visits" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                            <include-screen name="Subscriptions" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                            <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
-                                            <include-screen name="Notes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                        <container style="${styles.grid_row}">
+                                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                                <include-screen name="Party" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                <include-screen name="partyRelAccounts" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                <include-screen name="Contact" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                            </container>
+                                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                                <include-screen name="UserLogin" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                <include-screen name="Attributes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                <include-screen name="Visits" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                <include-screen name="Subscriptions" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                <include-screen name="Content" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                                <include-screen name="Notes" location="component://party/widget/partymgr/ProfileScreens.xml"/>
+                                            </container>
                                         </container>
                                     </widgets>
                                 </section>
@@ -677,7 +687,7 @@ under the License.
     <screen name="CommonEventDecorator">
         <section>
             <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/sfa/SfaMenus.xml#Event" />
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://marketing/widget/SalesMenus.xml#Sales" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonSfaAppDecorator" location="${parameters.mainDecoratorLocation}">

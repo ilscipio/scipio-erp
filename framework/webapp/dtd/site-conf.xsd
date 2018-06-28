@@ -35,6 +35,7 @@ under the License.
                 <xs:element minOccurs="0" ref="before-logout"/>
                 <xs:element minOccurs="0" ref="default-request"/>
                 <xs:element minOccurs="0" ref="view-as-json"/><!-- SCIPIO: 2017-05-15: new -->
+                <xs:element minOccurs="0" ref="common-settings"/><!-- SCIPIO: 2018-06-13: new -->
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="request-map"/>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="view-map"/>
             </xs:sequence>
@@ -102,7 +103,15 @@ under the License.
     </xs:attributeGroup>
     <xs:element name="description" type="xs:string"/>
     <xs:element name="owner" type="xs:string"/>
-    <xs:element name="errorpage" type="xs:string"/>
+    <xs:element name="errorpage" type="xs:string">
+        <xs:annotation>
+            <xs:documentation>
+                URI to forward when error occurs.
+                SCIPIO: 2017-11-14: This now supports flexible expressions (${}) and the
+                request attributes and servlet context attributes are now available to reference here.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
     <xs:element name="status-code" type="xs:string">
         <xs:annotation>
             <xs:documentation>
@@ -296,6 +305,130 @@ under the License.
                 <xs:documentation>
                     If set to true, the regular login view will be used when not logged in.
                     If set to false, the special ajaxLogin view will be used when not logged in.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:element name="common-settings">
+        <xs:annotation>
+            <xs:documentation>
+                SCIPIO: Can be used to set some defaults for request, response, view mappings.
+                Added 2018-06-13.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" name="request-map-settings">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="response-settings">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element minOccurs="0" ref="allow-view-save-default"/>
+                                    </xs:sequence>
+                                 </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                     </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.common-settings"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.common-settings">
+    </xs:attributeGroup>
+    <xs:attributeGroup name="attlist.name-filter">
+        <xs:attribute name="value">
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: Common name filtering attributes.
+                    Added 2018-06-13. 
+                </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value=""/>
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:complexType name="name-filter">
+        <xs:attribute name="prefix" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: Use filter if the name starts with this string.
+                    Added 2018-06-13. 
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="suffix" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: Use filter if the name ends with this string.
+                    Added 2018-06-13. 
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="regexp" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: Use filter if the name matches this regexp (from beginning).
+                    Added 2018-06-13. 
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:element name="allow-view-save-default">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" name="name-filter">
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:extension base="name-filter">
+                                <xs:attribute name="field" use="required">
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:token">
+                                            <xs:enumeration value="view-name"/>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="use-value" use="required">
+                                    <xs:annotation>
+                                        <xs:documentation>
+                                            SCIPIO: If the name matches this filter, sets this value.
+                                            Added 2018-06-13. 
+                                        </xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:token">
+                                            <xs:enumeration value="true"/>
+                                            <xs:enumeration value="false"/>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                            </xs:extension>
+                        </xs:complexContent>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.allow-view-save-default"/>
+         </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.allow-view-save-default">
+        <xs:attribute name="value">
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: Global default for allow-view-save.
+                    Default: true.
+                    Added 2018-06-13. 
                 </xs:documentation>
             </xs:annotation>
             <xs:simpleType>
@@ -785,6 +918,25 @@ under the License.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attribute name="allow-view-save">
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: If set to false, explicitly prevents saving this view (to session), such that it will
+                    not be known to the "view-last" type responses or any of the other "view-*" responses,
+                    and will not crush the previously saved view. If false, causes the other save-*-view attributes to be ignored.
+                    Default: true
+                    NOTE: This can also be requested by passing "_ALLOW_VIEW_SAVE_=N" as request parameter.
+                    Added 2018-06-13.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value=""/>
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
         <xs:attribute name="save-last-view" default="false">
             <xs:annotation>
                 <xs:documentation>
@@ -1005,6 +1157,39 @@ under the License.
                     <xs:enumeration value="false"/>
                 </xs:restriction>
             </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="x-frame-option" default="sameorigin">
+            <xs:annotation>
+                <xs:documentation>
+                    Provides clickjacking protection by instructing browsers that this page should not be placed within a frame. 
+                    Possible values are: 
+                    deny - no rendering within a frame, 
+                    sameorigin - no rendering if origin mismatch, and 
+                    allow-from: - allow rendering if framing page is within the specified URI domain. 
+                    Allow from is supported by IE and Firefox, but not Chrome or Safari. 
+                    It will also interfere with In Page Google Analytics since it requires your page to be framed by Google.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="deny"/>
+                    <xs:enumeration value="sameorigin"/>
+                    <xs:enumeration value="allow-from"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="strict-transport-security">
+            <xs:annotation>
+                <xs:documentation>
+                    HTTP Strict-Transport-Security (HSTS) enforces secure (HTTP over SSL/TLS) connections to the server. 
+                    This reduces impact of bugs in web applications leaking session data through cookies and external links and defends against Man-in-the-middle attacks. 
+                    HSTS also disables the ability for users to ignore SSL negotiation warnings.
+                    If the security of the connection cannot be ensured (e.g. the server's TLS certificate is not trusted), 
+                    it shows an error message and do not allow the user to access the web application.
+                    As recommended by OWASP, by default "max-age=31536000; includeSubDomains" is used except if the server is localhost or 127.0.0.1.
+                    If the strict-transport-security is "none" then it will not be used. 
+                </xs:documentation>
+            </xs:annotation>
         </xs:attribute>
     </xs:attributeGroup>
 </xs:schema>

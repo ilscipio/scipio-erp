@@ -45,4 +45,8 @@ SCIPIO: Local order template common defs
     </@row>
 </#macro>
 
+<#assign taxCalcScale = Static["org.ofbiz.order.shoppingcart.ShoppingCart"].taxCalcScale>
+<#assign taxFinalScale = Static["org.ofbiz.order.shoppingcart.ShoppingCart"].taxFinalScale>
+<#assign taxRounding = Static["org.ofbiz.order.shoppingcart.ShoppingCart"].taxRounding>
+
 

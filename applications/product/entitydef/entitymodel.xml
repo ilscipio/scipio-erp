@@ -304,6 +304,71 @@ under the License.
         <key-map field-name="contentId" rel-field-name="contentIdStart"/>
       </relation>
     </view-entity>
+    <!-- SCIPIO: 2017-10-27: new entity that covers 4 entities, most useful for simple text content values e.g. ALTERNATE_TEXT -->
+    <view-entity entity-name="ProductCategoryContentAndElectronicText"
+                package-name="org.ofbiz.product.category"
+                title="ProductCategoryContent and ElectronicText Required View">
+      <member-entity entity-alias="PCC" entity-name="ProductCategoryContent"/>
+      <member-entity entity-alias="CO" entity-name="Content"/>
+      <member-entity entity-alias="DR" entity-name="DataResource"/>
+      <member-entity entity-alias="EL" entity-name="ElectronicText"/>
+      <alias-all entity-alias="PCC"/>
+      <alias-all entity-alias="CO"/>
+      <alias-all entity-alias="DR" prefix="dr"/>
+      <alias-all entity-alias="EL"/>
+      <view-link entity-alias="PCC" rel-entity-alias="CO">
+        <key-map field-name="contentId"/>
+      </view-link>
+      <view-link entity-alias="CO" rel-entity-alias="DR" rel-optional="false">
+        <key-map field-name="dataResourceId"/>
+      </view-link>
+      <view-link entity-alias="CO" rel-entity-alias="EL" rel-optional="false">
+        <key-map field-name="dataResourceId"/>
+      </view-link>
+    </view-entity>
+    <!-- SCIPIO: 2017-11-08: same as ProductCategoryContentAndElectronicText but skips DataResource for performance -->
+    <view-entity entity-name="ProductCategoryContentAndElecTextShort"
+                package-name="org.ofbiz.product.category"
+                title="ProductCategoryContent and ElectronicText Required Short View">
+      <member-entity entity-alias="PCC" entity-name="ProductCategoryContent"/>
+      <member-entity entity-alias="CO" entity-name="Content"/>
+      <member-entity entity-alias="EL" entity-name="ElectronicText"/>
+      <alias-all entity-alias="PCC"/>
+      <alias-all entity-alias="CO"/>
+      <alias-all entity-alias="EL"/>
+      <view-link entity-alias="PCC" rel-entity-alias="CO">
+        <key-map field-name="contentId"/>
+      </view-link>
+      <view-link entity-alias="CO" rel-entity-alias="EL" rel-optional="false">
+        <key-map field-name="dataResourceId"/>
+      </view-link>
+    </view-entity>
+    <!-- SCIPIO: 2017-11-08: new partially optimized entity that goes from ProductCategoryContent to ContentAssoc to ElectronicText, skipping some intermediates -->
+    <view-entity entity-name="ProductCategoryContentAssocAndElecTextShort"
+                package-name="org.ofbiz.product.category"
+                title="ProductCategoryContent and ContentAssoc and ElectronicText Required Short View">
+      <member-entity entity-alias="PCC" entity-name="ProductCategoryContent"/>
+      <member-entity entity-alias="CA" entity-name="ContentAssoc"/>
+      <member-entity entity-alias="TOCO" entity-name="Content"/>
+      <member-entity entity-alias="EL" entity-name="ElectronicText"/>
+      <alias-all entity-alias="PCC">
+        <exclude field="contentId"/>
+      </alias-all>
+      <alias-all entity-alias="CA" prefix="ca"/>
+      <alias-all entity-alias="TOCO"/>
+      <alias-all entity-alias="EL"/>
+      <alias entity-alias="CA" name="contentIdStart" field="contentId"/>
+      <alias entity-alias="CA" name="contentAssocTypeId" field="contentAssocTypeId"/>
+      <view-link entity-alias="PCC" rel-entity-alias="CA">
+        <key-map field-name="contentId"/>
+      </view-link>
+      <view-link entity-alias="CA" rel-entity-alias="TOCO">
+        <key-map field-name="contentIdTo" rel-field-name="contentId"/>
+      </view-link>
+      <view-link entity-alias="TOCO" rel-entity-alias="EL" rel-optional="false">
+        <key-map field-name="dataResourceId"/>
+      </view-link>
+    </view-entity>
     <entity entity-name="ProductCategoryContentType"
             package-name="org.ofbiz.product.category"
             default-resource-name="ProductEntityLabels"
@@ -1141,6 +1206,34 @@ under the License.
             <key-map field-name="contactMechId"/>
         </relation>
     </entity>
+    <!-- SCIPIO: 2018-02-01: Joins Facility's PostalAddress and FacilityContactMechPurposes -->
+    <view-entity entity-name="FacilityPostalAddressAndPurpose"
+        package-name="org.ofbiz.product.facility"
+        title="FacilityContactMech And ContactMech And PostalAddress And FacilityContactMechPurpose">
+        <member-entity entity-alias="FTCT" entity-name="FacilityContactMech"/>
+        <member-entity entity-alias="FTCTP" entity-name="FacilityContactMechPurpose"/>
+        <member-entity entity-alias="CT" entity-name="ContactMech"/>
+        <member-entity entity-alias="PTA" entity-name="PostalAddress"/>
+        <alias-all entity-alias="FTCT"/>
+        <alias-all entity-alias="CT"/>
+        <alias-all entity-alias="PTA"/>
+        <alias-all entity-alias="FTCTP">
+            <exclude field="fromDate"/>
+            <exclude field="thruDate"/>
+        </alias-all>
+        <alias entity-alias="FTCTP" name="puFromDate" field="fromDate"/>
+        <alias entity-alias="FTCTP" name="puThruDate" field="thruDate"/>
+        <view-link entity-alias="FTCT" rel-entity-alias="FTCTP">
+          <key-map field-name="facilityId"/>
+          <key-map field-name="contactMechId"/>
+        </view-link>
+        <view-link entity-alias="FTCT" rel-entity-alias="CT">
+          <key-map field-name="contactMechId"/>
+        </view-link>
+        <view-link entity-alias="CT" rel-entity-alias="PTA">
+          <key-map field-name="contactMechId"/>
+        </view-link>
+    </view-entity>
     <entity entity-name="FacilityGroup" package-name="org.ofbiz.product.facility" title="Facility Group Entity">
         <field name="facilityGroupId" type="id-ne"></field>
         <field name="facilityGroupTypeId" type="id"></field>
@@ -3018,6 +3111,71 @@ under the License.
         <key-map field-name="contentId" rel-field-name="contentIdStart"/>
       </relation>
     </view-entity>
+    <!-- SCIPIO: 2017-10-27: new entity that covers 4 entities, most useful for simple text content values e.g. ALTERNATE_TEXT -->
+    <view-entity entity-name="ProductContentAndElectronicText"
+                package-name="org.ofbiz.product.product"
+                title="ProductContent And ElectronicText Required View">
+      <member-entity entity-alias="PC" entity-name="ProductContent"/>
+      <member-entity entity-alias="CO" entity-name="Content"/>
+      <member-entity entity-alias="DR" entity-name="DataResource"/>
+      <member-entity entity-alias="EL" entity-name="ElectronicText"/>
+      <alias-all entity-alias="PC"/>
+      <alias-all entity-alias="CO"/>
+      <alias-all entity-alias="DR" prefix="dr"/>
+      <alias-all entity-alias="EL"/>
+      <view-link entity-alias="PC" rel-entity-alias="CO">
+        <key-map field-name="contentId"/>
+      </view-link>
+      <view-link entity-alias="CO" rel-entity-alias="DR" rel-optional="false">
+        <key-map field-name="dataResourceId"/>
+      </view-link>
+      <view-link entity-alias="CO" rel-entity-alias="EL" rel-optional="false">
+        <key-map field-name="dataResourceId"/>
+      </view-link>
+    </view-entity>
+    <!-- 2017-11-08: same as ProductContentAndElectronicText but skips some entities where possible -->
+    <view-entity entity-name="ProductContentAndElecTextShort"
+                package-name="org.ofbiz.product.product"
+                title="ProductContent And ElectronicText Required Short View">
+      <member-entity entity-alias="PC" entity-name="ProductContent"/>
+      <member-entity entity-alias="CO" entity-name="Content"/>
+      <member-entity entity-alias="EL" entity-name="ElectronicText"/>
+      <alias-all entity-alias="PC"/>
+      <alias-all entity-alias="CO"/>
+      <alias-all entity-alias="EL"/>
+      <view-link entity-alias="PC" rel-entity-alias="CO">
+        <key-map field-name="contentId"/>
+      </view-link>
+      <view-link entity-alias="CO" rel-entity-alias="EL" rel-optional="false">
+        <key-map field-name="dataResourceId"/>
+      </view-link>
+    </view-entity>
+    <!-- SCIPIO: 2017-11-08: new partially optimized entity that goes from ProductContent to ContentAssoc to ElectronicText, skipping some intermediates -->
+    <view-entity entity-name="ProductContentAssocAndElecTextShort"
+                package-name="org.ofbiz.product.product"
+                title="ProductContent And ContentAssoc And ElectronicText Required Short View">
+      <member-entity entity-alias="PC" entity-name="ProductContent"/>
+      <member-entity entity-alias="CA" entity-name="ContentAssoc"/>
+      <member-entity entity-alias="TOCO" entity-name="Content"/>
+      <member-entity entity-alias="EL" entity-name="ElectronicText"/>
+      <alias-all entity-alias="PC">
+        <exclude field="contentId"/>
+      </alias-all>
+      <alias-all entity-alias="CA" prefix="ca"/>
+      <alias-all entity-alias="TOCO"/>
+      <alias-all entity-alias="EL"/>
+      <alias entity-alias="CA" name="contentIdStart" field="contentId"/>
+      <alias entity-alias="CA" name="contentAssocTypeId" field="contentAssocTypeId"/>
+      <view-link entity-alias="PC" rel-entity-alias="CA">
+        <key-map field-name="contentId"/>
+      </view-link>
+      <view-link entity-alias="CA" rel-entity-alias="TOCO">
+        <key-map field-name="contentIdTo" rel-field-name="contentId"/>
+      </view-link>
+      <view-link entity-alias="TOCO" rel-entity-alias="EL" rel-optional="false">
+        <key-map field-name="dataResourceId"/>
+      </view-link>
+    </view-entity>
     <entity entity-name="ProductContentType"
             package-name="org.ofbiz.product.product"
             default-resource-name="ProductEntityLabels"
@@ -3728,6 +3886,7 @@ under the License.
       <field name="orderNumberPrefix" type="id-long"></field>
       <field name="defaultLocaleString" type="very-short"></field>
       <field name="defaultCurrencyUomId" type="id"></field>
+      <field name="defaultTimeZoneString" type="id-long"></field>
       <field name="defaultSalesChannelEnumId" type="id"></field>
       <field name="allowPassword" type="indicator"></field>
       <field name="defaultPassword" type="long-varchar"></field>
@@ -3781,7 +3940,7 @@ under the License.
       <field name="splitPayPrefPerShpGrp" type="indicator"><description>Default N. If Y then before the order is stored the OrderPaymentPreference record will be split, one for each OrderItemShipGroup.</description></field>
       <field name="managedByLot" type="indicator"><description>If Y, the preparator can choose the InventoryItem by this lotId when he makes the picklist.</description></field>
       <field name="showOutOfStockProducts" type="indicator"><description>Default Y. If N then out of stock products will not be displayed on site</description></field>
-      <field name="orderDecimalQuantity" type="indicator"><description>use to indicate if decimal quantity can be ordered for this producStore. Default value is Y</description></field>
+      <field name="orderDecimalQuantity" type="indicator"><description>use to indicate if decimal quantity can be ordered for this productStore. Default value is Y</description></field>
         
         <!-- old fields, deprecated -->
         <field name="oldStyleSheet" col-name="STYLE_SHEET" type="url"></field>
@@ -3842,6 +4001,11 @@ under the License.
     <!-- SCIPIO: New fields for ProductStore -->
     <extend-entity entity-name="ProductStore">
       <field name="reqPayMethForFreeOrders" type="indicator"><description>SCIPIO: Default Y. If set to N, orders with total zero may go through without payment method selected.</description></field>
+      <field name="isContentReference" type="indicator"><description>SCIPIO: Default N. If set to Y, this store's defaultLocaleString 
+        (and potentially other settings) is considered the default for its member content records (product/category content, etc.).
+        This is used in multi-store setting by Solr to determine which defaultLocaleString should be used for fields and content that have no localeString and associated to multiple stores.</description></field>
+      <field name="showDiscontinuedProducts" type="indicator"><description>SCIPIO: Default Y. If N, products that have reached their salesDiscontinuationDate will not be shown.</description></field>
+      <field name="useVariantStockCalc" type="indicator"><description>SCIPIO: Default N. If Y, the calculation for showOutOfStockProducts in store for virtual products will include their variants.</description></field>
     </extend-entity>
     <entity entity-name="ProductStoreCatalog"
             package-name="org.ofbiz.product.store"

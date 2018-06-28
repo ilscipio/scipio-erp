@@ -1021,7 +1021,7 @@ function showErrorAlertLoadUiLabel(errBoxTitleResource, errBoxTitleLabel, uiReso
             }
         });
     } else {
-      alert(labels[uiResource][0]);
+        alert(labels[uiResource][0]);
     }
 }
 
@@ -1039,7 +1039,7 @@ function showErrorAlert(errBoxTitle, errMessage) {
     // Scipio: FIXME: The code below this is currently not working, so just show an alert box for time being
     alert(errMessage);
     return;
-
+    /*
     
     var errMsgBox = jQuery("#contentarea").after(jQuery("<div id='errorAlertBox'>" + errMessage + "</div>"));
 
@@ -1055,6 +1055,7 @@ function showErrorAlert(errBoxTitle, errMessage) {
             }
         });
     }
+    */
 }
 
 /**
@@ -1122,13 +1123,260 @@ function submitPaginationPostForm(obj, url) {
 }
 
 /**
- * Scipio: Transforms a partial date into a normalized date-time/timestamp value (yyyy-MM-dd HH:mm:ss.SSS), optionally
- * completing the unspecified parts with a filler date.
- * It will also truncate.
- * NOTE: Normalized means the value can be submitted by form to service and entity update code.
- * TODO?: this is currently somewhat hardcoded; should follow sys timestamp format and/or use Date js class?
- * TODO: this currently only supports date as YYYY-mm-DD or prefix of a full timestamp value. should support more.
- * TODO: more robust and user-friendly date handling
+ * SCIPIO: Helper for date fields, each field new instance.
+ * Manages a hidden "real" date input from a display "I18n" date input, the latter of which
+ * is managed by a datepicker (sometimes not).
+ * Date formats are in moment.js format (e.g. YYYY-MM-DD HH:mm:ss.SSS).
+ */
+function ScpFieldDateHelper(options) {
+    var sfdh = this;
+    var opts = options ? $.extend({}, options) : {};
+
+    //opts.displayInputId = options.displayInputId;
+    //opts.inputId = options.inputId;
+    opts.displayCorrect = (options.displayCorrect === true); // mostly for fdatepicker
+    opts.useFillDate = (options.useFillDate === true); // mostly for fdatepicker; should be false if displayCorrect false
+    opts.clearDispOnError = (options.clearDispOnError === true); // (default: false) if true and parse error, display input is cleared (hidden always cleared)
+    //opts.dateFmt = options.dateFmt; // the internal format, e.g. full timestamp
+    //opts.dateDisplayFmt = options.dateDisplayFmt; // the format implemented by the datepicker, e.g. YYYY-MM-DD 
+    opts.dateEffDispFmt = options.dateEffDispFmt || options.dateDisplayFmt; // the format written by displayCorrect feature, e.g. full timestamp minus ss.SSS
+    this.codes = options.codes || {};
+    if (!this.codes.invalid) this.codes.invalid = "Invalid";
+    
+    this.opts = opts; // for subclasses
+    this.oldDate = '';
+
+    // inFmts is array of date format strings passed as moment(date, format) to read
+    // from display field and avoid the moment(date) call - see dateCommonToNorm and dateToFmt.
+    // by default we'll set the internal and display formats for the field, should
+    // 'just work' in most cases.
+    if (typeof opts.inFmts === 'undefined') {
+        opts.inFmts = [opts.dateFmt];
+        if (opts.dateEffDispFmt !== opts.dateFmt) opts.inFmts.push(opts.dateEffDispFmt);
+        if (opts.dateDisplayFmt !== opts.dateFmt && opts.dateDisplayFmt !== opts.dateEffDispFmt) opts.inFmts.push(opts.dateDisplayFmt);
+    }
+    if (typeof opts.inNormFmts === 'undefined') opts.inNormFmts = opts.dateFmt;
+    if (typeof opts.inI18nFmts === 'undefined') opts.inI18nFmts = opts.inFmts;
+
+    // CORE HELPERS
+    
+    this.isDate = function(obj) {
+        return moment.isMoment(obj);
+    };
+    
+    /**
+     * Converts date to format fmt.
+     * NOTE: srcFmt should not be omitted - if omitted, 
+     * the non-cross-platform-compapatible moment(date) call is done instead,
+     * which is recommended against - see moment.js docs.
+     */
+    this.dateToFmt = function(fmt, date, srcFmt) {
+        if (fmt) {
+            var mDate = sfdh.parseDate(date, srcFmt);
+            //alert('parsing: [date: ' + date + '] [fmt: ' + srcFmt + '] [res: ' + mDate + '] [valid: ' + mDate.isValid() + ']');
+            if (mDate.isValid()) return mDate.format(fmt);
+        }
+        return null;
+    };
+    this.parseDateOrNull = function(date, srcFmt) {
+        var mDate = sfdh.parseDate(date, srcFmt);
+        if (mDate.isValid()) return mDate;
+        else return null;
+    };
+    this.parseDate = function(date, srcFmt) {
+        if (sfdh.isDate(date)) return date;
+        else if (srcFmt) return moment(date, srcFmt);
+        else return moment(date); // non-cross-browser-compatible
+    };
+    
+    /**
+     * Fills the date by the trailing digits of fillDate, if the formats are compatible.
+     * This is a BASIC fill only, such that the fmt must be substring of fillFmt.
+     * If not doable, returns null.
+     * If present, fillDate is assumed to be valid and match fillFmt (usually comes from internal pre-converted).
+     * TODO: this could be done with more complex support for differing formats of fmt and fillFmt, but very complex.
+     */
+    this.fillDateFmt = function(fmt, date, fillFmt, fillDate) {
+        // FIXME?: if date is already moment, we could be losing info here by using fmt instead of fillFmt...
+        // but using fillFmt would prevent this from running entirely...
+        if (sfdh.isDate(date) && fmt) date = date.format(fmt);
+        if (sfdh.isDate(fillDate) && fillFmt) fillDate = fillDate.format(fillFmt);
+        if (fmt && fillFmt && fillDate && (fillDate.length > date.length) && (fillFmt.lastIndexOf(fmt, 0) === 0)) {
+            // guard against user input, whereas fillDate assumed to be valid (internal)
+            var targetFmt = (date.length >= fillFmt.length) ? fillFmt : fillFmt.substring(0, date.length);
+            var mDate = moment(date, targetFmt); // strict
+            if (mDate.isValid()) {
+                date = mDate.format(targetFmt); // make sure
+                if (fillDate.length > date.length) {
+                    return date + fillDate.substr(date.length);
+                }
+            }
+        }
+        return null;
+    };
+    
+    
+    // COMMON FIELD EVENT HANDLERS - can be overridden
+    
+    /**
+     * Parse any date format associated with this field to a Moment.
+     * If already a moment returns as-is. May return null.
+     */
+    this.dateCommonParse = function(date, srcFmt) {
+        return sfdh.parseDateOrNull(date, srcFmt || opts.inFmts);
+    };
+    
+    /**
+     * Converts date (string or moment) to normalized internal/hidden format (e.g. timestamp). May return null.
+     */
+    this.dateCommonToNorm = function(date, srcFmt) {
+        return sfdh.dateToFmt(opts.dateFmt, date, srcFmt || opts.inFmts);
+    };
+    /**
+     * Converts date (string or moment) to display field format. May return null.
+     */
+    this.dateCommonToI18n = function(date, srcFmt) {
+        return sfdh.dateToFmt(opts.dateDisplayFmt, date, srcFmt || opts.inFmts);
+    };
+    /**
+     * Converts date (string or moment) to effective display field format (used by displayCorrect). May return null.
+     */
+    this.dateCommonToEffI18n = function(date, srcFmt) {
+        return sfdh.dateToFmt(opts.dateEffDispFmt, date, srcFmt || opts.inFmts);
+    };
+    
+    /**
+     * Needed for pickers/dates that don't have "old date" variables around;
+     * can trigger this on popup/show.
+     */
+    this.saveOldDateFromI18n = function() {
+        sfdh.oldDate = sfdh.dateCommonToNorm(jQuery('#'+opts.displayInputId).val(), opts.inI18nFmts) || '';
+    };
+
+    this.saveOldDateFromNorm = function() {
+        sfdh.oldDate = jQuery('#'+opts.inputId).val() || ''; // already in right format
+    };
+    
+    this.getNormDateInst = function() {
+        return sfdh.dateCommonToNorm(jQuery('#'+opts.inputId).val(), opts.inNormFmts);
+    };
+    
+    this.getNormDateRaw = function() {
+        return jQuery('#'+opts.inputId).val();
+    };
+    
+    this.getI18nDateRaw = function() {
+        return jQuery('#'+opts.displayInputId).val();
+    };
+    
+    /**
+     * Default date-filling behavior, or returns date as-is.
+     * Tries to extend a dateDisplayFmt date using a bigger dateEffDispFmt fillDate.
+     * NOTE: dates may be moment or string.
+     */
+    this.doFillDate = function(date, fillDate) {
+        var resDate = sfdh.fillDateFmt(opts.dateDisplayFmt, date, opts.dateEffDispFmt, fillDate);
+        if (resDate != null) {
+            resDate = sfdh.dateCommonParse(resDate, opts.dateEffDispFmt);
+            if (resDate != null) return resDate;
+        } 
+        return date;
+    };
+    
+    /**
+     * Updates the hidden input.
+     * Should be called on displayInputId change event, if possible.
+     * 
+     * NOTE: null/undefined date is current treated as error/NaN. Pass empty string for empty value.
+     * However if you want to pass explicit error, you should pass a NaN moment instead, due to future changes.
+     * NOTE: Invalid dates and parsing (NaN from moment.js) is handled by setting a dummy "Invalid" value for the hidden input.
+     * This is currently the only reliable way to signal to server that something went wrong; can't put empty because 
+     * would be interpreted as success or missing value instead (much more confusing); and we don't have access to
+     * the original date string from here in all cases (which could cause less predictable behavior) and
+     * in cases where there is conversion between hidden and display inputs it makes no sense to set the 
+     * original value (risk of further mishandling on server-side).
+     * TODO?: could try to detect some cases where safe to send the orig value after convert fail, 
+     * but more effort than worth...
+     */
+    this.updateNormDateInput = function(date, srcFmt) {
+        var outDate = (date) ? sfdh.dateCommonToNorm(date, srcFmt) : date;
+        if (outDate == null) outDate = sfdh.codes.invalid;
+        jQuery('#'+opts.inputId).val(outDate || '');
+    };
+    
+    this.updateNormDateInputFromI18n = function(date) {
+        sfdh.updateNormDateInput(date, opts.inI18nFmts);
+    };
+    
+    /**
+     * Updates the display input.
+     * Normally should only be called if displayCorrect is on.
+     */
+    this.updateI18nDateInput = function(date, srcFmt) {
+        if (date) date = sfdh.dateCommonToEffI18n(date, srcFmt);
+        if (date != null || opts.clearDispOnError) { // empty string always sets val, but null only does if clearDispOnError
+            jQuery('#'+opts.displayInputId).val(date || '');
+        }
+    };
+    
+    /**
+     * MAIN CHANGE/UPDATE CALLBACK, may update both or either hidden and display inputs.
+     * args: date (moment or string), srcFmt, oldDate (always in dateFmt or moment), 
+     * skipNormUp, useFillDate.
+     * NOTE: null/undefined date are interpreted as error (same as invalid moment); boolean or empty string represent empty value.
+     * However if you want to pass explicit error, you should pass a NaN moment instead, due to future changes.
+     * If srcFmt is different than opts.inI18nFmts or opts.dateDisplayFmt, then useFillDate should be forced to false
+     * because it only works with date in opts.dateDisplayFmt (and its result is in opts.dateEffDispFmt).
+     */
+    this.updateAllDateInputs = function(args) {
+        if (!args) args = {};
+        var date = args.date;
+        if (typeof date === 'boolean') date = '';
+        
+        var normDate = date;
+        if (date) {
+            var srcFmt = args.srcFmt || opts.inI18nFmts;
+            
+            // NOTE: fill date is limited and assumes opts.dateDisplayFmt as source format - pass false if doesn't match
+            if (args.useFillDate !== false && opts.useFillDate) { // mostly for fdatepicker, should only be enabled if displayCorrect
+                var oldDate = args.oldDate;
+                if (oldDate && oldDate !== true) {
+                    if ($.type(oldDate) === 'string') {
+                        // old date is in dateFmt, but we need it in dateEffDispFmt fmt
+                        oldDate = sfdh.dateCommonToEffI18n(oldDate, opts.inNormFmts);
+                    }
+                    date = sfdh.doFillDate(date, oldDate);
+                }
+            }
+            
+            normDate = sfdh.dateCommonParse(date, srcFmt);
+            // NOTE: if normDate null, will be handled by calls below
+        }
+        
+        var skipNormUp = args.skipNormUp;
+        if (typeof skipNormUp === 'function') skipNormUp = skipNormUp(normDate);
+        if (skipNormUp !== true) {
+            // 2018-03: do this immediate by default, 
+            // because change events on displayInputId elem not guaranteed
+            sfdh.updateNormDateInput(normDate, null);
+        }
+        
+        if (opts.displayCorrect) {
+            sfdh.updateI18nDateInput(normDate, null);
+        }
+    };
+    
+    /**
+     * Gets date and oldDate from default implementation pattern.
+     */
+    this.getDefUpAllInputArgs = function() {
+        return {date: sfdh.getI18nDateRaw(), oldDate:sfdh.oldDate};
+    };
+    
+}
+
+/**
+ * @deprecated 2018-03: replaced by ScpFieldDateHelper, do not use anymore
  */
 function convertToDateTimeNorm(date, fillerDate) {
     date = date.trim();
@@ -1155,17 +1403,10 @@ function convertToDateTimeNorm(date, fillerDate) {
            result = date + zeroPat.substr(date.length);
        }
     }
-    // Don't do this in case want to accept higher precision
-    //// TRUNCATE to ensure correctness
-    //if (result.length > zeroPat.length) {
-    //    result = result.substring(0, zeroPat.length);
-    //}
     return result;
 }
-
 /**
- * Scipio: Transforms or truncates a date into normalize simple date format (yyyy-MM-dd).
- * TODO: more robust and user-friendly date handling
+ * @deprecated 2018-03: replaced by ScpFieldDateHelper, do not use anymore
  */
 function convertToDateNorm(date, fillerDate) {
     date = date.trim();
@@ -1197,10 +1438,8 @@ function convertToDateNorm(date, fillerDate) {
     }
     return result;
 }
-
 /**
- * Scipio: Transforms or truncates a time into normalized time (HH:mm:ss.SSS).
- * TODO: more robust and user-friendly date handling
+ * @deprecated 2018-03: replaced by ScpFieldDateHelper, do not use anymore
  */
 function convertToTimeNorm(time, fillerTime) {
     time = time.trim();
@@ -1209,40 +1448,12 @@ function convertToTimeNorm(time, fillerTime) {
     }
     var zeroPat = "00:00:00.000";
     var result;
-    // Treat the "h" separator as a ":" for user friendliness
-    // NOTE: it only replaces the first occurrence, but that's what we want anyway
     time = time.replace("h", ":");
     result = time;
-    /* FIXME: DON'T do any of this for now, because it doesn't handle differences in numbers of digits
-    if (fillerTime && fillerTime.match(/^\d\d:$/)) {
-       if (time.length >= fillerTime.length) {
-           result = time;
-       }
-       else {
-           result = time + fillerTime.substr(time.length);
-       }
-    }
-    else {
-       if (time.length >= zeroPat.length) {
-           result = time;
-       }
-       else {
-           // append zeroes
-           result = time + zeroPat.substr(time.length);
-       }
-    }
-    */
-    // Don't do this in case want to accept higher precision
-    //// TRUNCATE to ensure correctness
-    //if (result.length > zeroPat.length) {
-    //    result = result.substring(0, zeroPat.length);
-    //}
     return result;
 }
-
 /**
- * Scipio: Transforms or truncates a date into normalize simple month format (yyyy-MM).
- * TODO: more robust and user-friendly date handling
+ * @deprecated 2018-03: replaced by ScpFieldDateHelper, do not use anymore
  */
 function convertToMonthNorm(date, fillerDate) {
     date = date.trim();
@@ -1268,9 +1479,477 @@ function convertToMonthNorm(date, fillerDate) {
            result = date + zeroPat.substr(date.length);
        }
     }
-    // TRUNCATE to ensure correctness
     if (result.length > zeroPat.length) {
         result = result.substring(0, zeroPat.length);
     }
     return result;
 }
+/**
+ * @deprecated 2018-03: replaced by ScpFieldDateHelper, do not use anymore
+ */
+function convertToDateTypeNorm(dateType, date, fillerDate) {
+    if (dateType == "timestamp") {
+        return convertToDateTimeNorm(date, fillerDate);
+    } else if (dateType == "date") {
+        return convertToDateNorm(date, fillerDate);
+    } else if (dateType == "time") {
+        return convertToTimeNorm(date, fillerDate);
+    } else if (dateType == "month") {
+        return convertToMonthNorm(date, fillerDate);
+    } else {
+        return date;
+    }
+}
+/**
+ * @deprecated 2018-03: replaced by ScpFieldDateHelper, do not use anymore
+ */
+function convertFieldDateDisplayToNorm(dateType, date) {
+    if (dateType == "timestamp") {
+        return moment(date).format('YYYY-MM-DD HH:mm:ss.SSS');
+    } else if (dateType == "date") {
+        return moment(date).format('YYYY-MM-DD');
+    } else if (dateType == "time") {
+        return moment(date).format('HH:mm:ss.SSS');
+    } else if (dateType == "month") {
+        return moment(date).format('YYYY-MM');
+    } else {
+        return date;
+    }
+}
+/**
+ * @deprecated 2018-03: replaced by ScpFieldDateHelper, do not use anymore
+ */
+function convertFieldDateNormToDisplay(format, date) {
+    return date;
+}
+
+/**
+ * Scipio upload progress handler. Instance represents one upload form.
+ */
+function ScipioUploadProgress(options) {
+    if (!options) {
+        options = {};
+    }
+
+    this.uploading = false; // can check this from caller as well
+
+    ScipioUploadProgress.instCount = ScipioUploadProgress.instCount + 1;
+    this.instNum = ScipioUploadProgress.instCount;
+    this.uploadCount = 0;
+
+    // All options that end in -Id specify a unique html/css ID.
+    // All options that end in -Sel specify a full jQuery element selector (e.g., "form[name=myform]")
+
+    this.formSel = options.formSel; // required, should exist in doc
+    this.progBarId = options.progBarId; // optional, but if used should exist in doc
+    this.progMeterId = options.progMeterId; // optional, has default (based on progBarId and @progress ftl macro)
+    this.progTextBoxId = options.progTextBoxId; // optional, but if used should exist in doc
+    this.progTextElemId = options.progTextElemId; // optional, has default (based on progTextBoxId), should NOT already exist in doc
+
+    this.msgContainerId = options.msgContainerId; // optional, only required if no parent specified; for error messages
+    this.msgContainerParentSel = options.msgContainerParentSel; // optional, default the form's parent element; designates an element as parent for a message container; if msgContainerId elem already exists on page, won't use
+    this.msgContainerInsertMode = options.msgContainerInsertMode; // optional, default "prepend"; for parent; either "prepend" or "append" (to parent)
+
+    this.iframeParentSel = options.iframeParentSel; // optional, default is html body, if specified should exist in doc; will contain hidden iframe(s) to internally hold file upload html page result
+    this.expectedResultContainerSel = options.expectedResultContainerSel; // required; id of an elem to test existence in upload page result; was originally same as resultContentContainerSel
+
+    this.successResultContainerSel = options.successResultContainerSel; // optional; success message within the iframe content to display.
+    this.successResultAddWrapper = options.successResultAddWrapper; // optional, default false; if true, successResultContainerSel contents will be wrapped like other messages; else it must supply its own; does not apply to ajax and other notifications (always get wrapper, needed)
+
+    this.errorResultContainerSel = options.errorResultContainerSel; // required; if this elem in upload page result exists, treat it as error and use its content as error message (required to help against forever-uploading bug)
+                                                                    // 2016-11-02: if the elem has a "has-scipio-errormsg" html attribute (true/false string value) it is consulted to check if should consider errors present
+    this.errorResultAddWrapper = options.errorResultAddWrapper; // optional, default false; if true, errorResultContainerSel contents will be wrapped like other errors; else it must supply its own; does not apply to ajax and other errors (always get wrapper, needed)
+
+    this.resultContentReplace = options.resultContentReplace; // boolean, default false; if true replace some content in this page with content from upload page result (iframe)
+    this.contentContainerSel = options.contentContainerSel; // required if resultContentReplace true, id of content on current page to be replaced
+    this.resultContentContainerSel = options.resultContentContainerSel; // required if resultContentReplace true, id of content on upload page result
+
+    this.successRedirectUrl = options.successRedirectUrl; // optional; if specified, will redirect to this URL on upload success
+    this.successSubmitFormSel = options.successSubmitFormSel; // optional; same as successRedirectUrl but submits a form instead
+    this.successReloadWindow = options.successReloadWindow; // optional; same as successRedirectUrl but reloads current page instead (WARN: should usually avoid in Ofbiz screens as causes navigation issues)
+    //this.successReplaceWindow = options.successReplaceWindow; // not implemented/possible; optional, default false; if true, upon success will replace this window with contents of iframe
+
+    this.preventDoubleUpload = options.preventDoubleUpload; // optional, default true; not sure why would turn this off
+
+    this.initOnce = false;
+
+    if (!this.progMeterId) {
+        if (this.progBarId) {
+            this.progMeterId = this.progBarId + "_meter";
+        }
+    }
+    if (!this.progTextElemId) {
+        if (this.progTextBoxId) {
+            this.progTextElemId = this.progTextBoxId + "_msg";
+        }
+    }
+
+    if (!this.msgContainerId) {
+        this.msgContainerId = "scipio_progupl_content_messages_" + this.instNum;
+    }
+    if (!this.msgContainerInsertMode) {
+        this.msgContainerInsertMode = "prepend";
+    }
+
+    this.iframeBaseId = "scipio_progupl_target_upload_" + this.instNum;
+    if (typeof this.successResultAddWrapper !== 'boolean') {
+        this.successResultAddWrapper = false;
+    }
+
+    if (typeof this.errorResultAddWrapper !== 'boolean') {
+        this.errorResultAddWrapper = false;
+    }
+
+    if (typeof this.resultContentReplace !== 'boolean') {
+        this.resultContentReplace = false;
+    }
+
+    if (typeof this.successReloadWindow !== 'boolean') {
+        this.successReloadWindow = false;
+    }
+    if (typeof this.successReplaceWindow !== 'boolean') {
+        this.successReplaceWindow = false;
+    }
+
+    if (typeof this.preventDoubleUpload !== 'boolean') {
+        this.preventDoubleUpload = true;
+    }
+
+    this.uiLabelMap = null;
+
+    /* Public functions */
+
+    this.reset = function() {
+        if (!this.preventDoubleUpload || !this.uploading) {
+            this.delayedInit();
+            this.resetProgress();
+            return true;
+        }
+        return false;
+    };
+
+    this.initUpload = function() {
+        if (!this.preventDoubleUpload || !this.uploading) {
+            this.delayedInit();
+            this.uploading = true;
+            // upload status for a specific upload attempt
+            var uploadInfo = {
+                finished : false,
+                iframeCreated : false,
+                iframeLoaded : false,
+                iframeId : this.iframeBaseId + "_" + (this.uploadCount+1)
+            };
+            this.resetInitContainers(uploadInfo);
+            this.beginProgressStatus(uploadInfo);
+            this.uploadCount = this.uploadCount + 1;
+            return true;
+        }
+        return false;
+    };
+
+
+    /* Private functions */
+
+    this.delayedInit = function() {
+        ScipioUploadProgress.loadUiLabels();
+        if (this.uiLabelMap == null) {
+            this.uiLabelMap = ScipioUploadProgress.uiLabelMap;
+        }
+    };
+
+    this.setProgressValue = function(percent) {
+        if (this.progMeterId) {
+            jQuery("#"+this.progMeterId).css({"width": percent + "%"});
+
+            if (typeof jQuery("#"+this.progMeterId).attr("aria-valuenow") !== 'undefined') {
+                jQuery("#"+this.progMeterId).attr("aria-valuenow", percent.toString());
+            }
+        }
+        if (this.progTextElemId) {
+            jQuery("#"+this.progTextElemId).html(this.uiLabelMap.CommonUpload + "... (" + percent + "%)");
+        }
+    };
+
+    this.setProgressState = function(classStr) {
+        var stateStyles = [scipioStyles.progress_state_info, scipioStyles.progress_state_success, scipioStyles.progress_state_alert].join(" ");
+        if (this.progBarId) {
+            jQuery("#"+this.progBarId).removeClass(stateStyles).addClass(classStr);
+        }
+        if (this.progTextElemId) {
+            jQuery("#"+this.progTextElemId).removeClass(stateStyles).addClass(classStr);
+        }
+    };
+
+    this.setProgressText = function(msg) {
+        if (this.progTextElemId) {
+            jQuery("#"+this.progTextElemId).html(msg);
+        }
+    };
+
+    this.resetProgress = function() {
+        this.setProgressValue(0);
+        this.setProgressState(scipioStyles.color_info)
+    };
+
+    this.showError = function(errdata, errorWrapper) {
+        if (typeof errorWrapper !== 'boolean') {
+            errorWrapper = true;
+        }
+        if (this.msgContainerId) {
+            if (errorWrapper) {
+                jQuery("#"+this.msgContainerId).html('<div data-alert class="' + scipioStyles.alert_wrap + ' ' + scipioStyles.alert_prefix_type + 'alert">' + errdata + "</div>");
+            } else {
+                jQuery("#"+this.msgContainerId).html(errdata);
+            }
+        }
+        this.setProgressState(scipioStyles.color_alert);
+        this.setProgressText(this.uiLabelMap.CommonError);
+    };
+
+    this.resetInitContainers = function(uploadInfo) {
+        this.resetProgress();
+        if (this.progBarId) {
+            jQuery("#"+this.progBarId).removeClass(scipioStyles.hidden);
+        }
+
+        var infodiv = jQuery("#"+this.msgContainerId);
+        if (infodiv.length < 1) {
+            var infodivbox = jQuery('<div class="' + scipioStyles.grid_row + '"><div class="' + scipioStyles.grid_large + '12 ' + scipioStyles.grid_cell + '" id="' + this.msgContainerId + '"></div></div>');
+
+            var infodivparent = null;
+            if (this.msgContainerParentSel) {
+                infodivparent = jQuery(this.msgContainerParentSel);
+            } else {
+                infodivparent = this.getFormElem().parent();
+            }
+
+            if (this.msgContainerInsertMode == "append") {
+                infodivbox.appendTo(infodivparent);
+            } else {
+                infodivbox.prependTo(infodivparent);
+            }
+        }
+        jQuery("#"+this.msgContainerId).empty();
+
+        // SCIPIO: we always create a new iframe for safety, but leaving guard code in case change
+        var targetFrame = jQuery("#"+uploadInfo.iframeId);
+        if (targetFrame.length < 1) {
+            var iframeParent;
+            if (this.iframeParentSel) {
+                iframeParent = jQuery(this.iframeParentSel);
+            } else {
+                iframeParent = jQuery("body").first();
+            }
+            iframeParent.append('<iframe id="' + uploadInfo.iframeId + '" name="' + uploadInfo.iframeId + '" style="display: none" src=""> </iframe>');
+            uploadInfo.iframeCreated = true;
+        }
+
+        jQuery("#"+uploadInfo.iframeId).off('load');
+        jQuery("#"+uploadInfo.iframeId).empty();
+        jQuery("#"+uploadInfo.iframeId).on('load', jQuery.proxy(this.checkIframeAsyncLoad, this, uploadInfo));
+
+        this.getFormElem().attr("target", uploadInfo.iframeId);
+
+        if (this.progTextElemId) {
+            var labelField = jQuery("#"+this.progTextElemId);
+            if (labelField.length) {
+                labelField.remove();
+            }
+        }
+        this.initOnce = true;
+    };
+
+    this.getFormElem = function() {
+        return jQuery(this.formSel);
+    };
+
+    this.processUploadComplete = function(uploadInfo, successMessage, successWrapper) {
+        var error = false;
+        if (this.resultContentReplace) {
+            var iframeContent = jQuery("#"+uploadInfo.iframeId).contents().find(this.resultContentContainerSel);
+
+            if (iframeContent.length > 0) {
+                // update content - copy the Data from the iFrame content container
+                // to the page content container
+                var contentContainer = jQuery(this.contentContainerSel);
+                if (contentContainer.length > 0) {
+                    if (this.msgContainerId && successMessage) {
+                        if (successWrapper) {
+                            jQuery("#"+this.msgContainerId).html('<div data-alert class="' + scipioStyles.alert_wrap + ' ' + scipioStyles.alert_prefix_type + 'info">' + successMessage + "</div>");
+                        } else {
+                            jQuery("#"+this.msgContainerId).html(successMessage);
+                        }
+                    }
+                    contentContainer.html(iframeContent.html());
+                } else {
+                    // don't show error; no chance it reflects on upload success
+                }
+            } else {
+                // something's missing, probably dev error but can't be sure
+                error = true;
+                this.showError(this.uiLabelMap.CommonUnexpectedError);
+            }
+        }
+
+        if (!error) {
+            this.setProgressValue(100);
+            this.setProgressState(scipioStyles.color_success);
+            this.setProgressText(this.uiLabelMap.CommonCompleted);
+        }
+
+        var iframeDocHtml = null;
+        if (!error) {
+            if (this.successReplaceWindow) {
+                iframeDocHtml = jQuery("#"+uploadInfo.iframeId).contents().find("html").html();
+                //var iframe = jQuery("#"+uploadInfo.iframeId)[0];
+                //var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+            }
+        }
+
+        this.cleanup(uploadInfo);
+
+        if (!error) {
+            if (this.successRedirectUrl) {
+                window.location.href = this.successRedirectUrl;
+            } else if (this.successSubmitFormSel) {
+                jQuery(this.successSubmitFormSel).submit();
+            } else if (this.successReplaceWindow) {
+                var newDoc = document.open("text/html");
+                newDoc.write(iframeDocHtml);
+                newDoc.close();
+            } else if (this.successReloadWindow) {
+                window.location.reload(true);
+            }
+        }
+        return;
+    };
+
+    this.processError = function(uploadInfo, errdata, errorWrapper) {
+        this.showError(errdata, errorWrapper);
+        this.cleanup(uploadInfo);
+    };
+
+    this.cleanup = function(uploadInfo) {
+        if (uploadInfo.iframeCreated) {
+            // remove iFrame
+            jQuery("#"+uploadInfo.iframeId).remove();
+        }
+        this.uploading = false;
+    };
+
+    this.checkIframeAsyncLoad = function(uploadInfo) {
+        // this version called by jquery... for now, just flag and let timer code handle
+        // this helps prevent "forever uploading" bug
+        uploadInfo.iframeLoaded = true;
+    };
+
+    this.checkIframeStatus = function(uploadInfo) {
+        var iframeContent = null;
+        var iframeErrorContent = null;
+        var iframeSuccessContent = null;
+        // if the new content isn't created wait a few ms and call the
+        // method again
+        var prog = this;
+        jQuery.fjTimer({
+            interval: 500,
+            repeat: true,
+            tick: function(counter, timerId) {
+                // note: errorResultContainerSel and expectedResultContainerSel must be chosen carefully
+                // note: explicitly not checking uploadInfo.iframeLoaded for these two, for now...
+                if (prog.errorResultContainerSel && !uploadInfo.finished) {
+                    iframeErrorContent = jQuery("#"+uploadInfo.iframeId).contents().find(prog.errorResultContainerSel);
+                    if (iframeErrorContent.length > 0) {
+                        // 2016-11-02: check for custom has-scipio-errormsg attribute
+                        var flagAttr = jQuery(iframeErrorContent).attr("has-scipio-errormsg");
+                        if (!flagAttr || flagAttr == "true") {
+                            uploadInfo.finished = true;
+                            timerId.stop();
+                            prog.processError(uploadInfo, iframeErrorContent.html(), prog.errorResultAddWrapper);
+                        }
+                    }
+                }
+
+                if (!uploadInfo.finished) {
+                    var iframeCnts = jQuery("#"+uploadInfo.iframeId).contents();
+                    iframeContent = iframeCnts.find(prog.expectedResultContainerSel);
+                    if (prog.successResultContainerSel) {
+                        iframeSuccessContent = iframeCnts.find(prog.successResultContainerSel);
+                    }
+                    if (iframeContent.length > 0) {
+                        uploadInfo.finished = true;
+                        timerId.stop();
+                        prog.processUploadComplete(uploadInfo,
+                                iframeSuccessContent ? iframeSuccessContent.html() : null,
+                                prog.successResultAddWrapper);
+                    }
+                }
+
+                if (!uploadInfo.finished && uploadInfo.iframeLoaded) {
+                    // problem: iframe loaded but we got nothing... usually a coding error but can't be sure
+                    uploadInfo.finished = true;
+                    timerId.stop();
+                    prog.processError(uploadInfo, prog.uiLabelMap.CommonUnexpectedError);
+                }
+            }
+        });
+        return;
+    };
+
+    this.beginProgressStatus = function(uploadInfo) {
+        if (this.progTextBoxId && this.progTextElemId) {
+            jQuery("#"+this.progTextBoxId).append('<span id="' + this.progTextElemId + '" class="label">' + this.uiLabelMap.CommonUpload + '...</span>');
+        }
+        var i = 0;
+        var prog = this;
+        jQuery.fjTimer({
+            interval: 1000,
+            repeat: true,
+            tick: function(counter, timerId) {
+                var timerId = timerId;
+                jQuery.ajax({
+                    url: getOfbizUrl('getFileUploadProgressStatus'),
+                    dataType: 'json',
+                    success: function(data) {
+                        if (data._ERROR_MESSAGE_LIST_ != undefined) {
+                            uploadInfo.finished = true;
+                            timerId.stop();
+                            prog.processError(uploadInfo, data._ERROR_MESSAGE_LIST_);
+                        } else if (data._ERROR_MESSAGE_ != undefined) {
+                            uploadInfo.finished = true;
+                            timerId.stop();
+                            prog.processError(uploadInfo, data._ERROR_MESSAGE_);
+                        } else {
+                            var readPercent = data.readPercent;
+                            prog.setProgressValue(readPercent);
+                            if (readPercent > 99) {
+                                // stop the fjTimer
+                                timerId.stop();
+                                prog.setProgressText(prog.uiLabelMap.CommonSave + "...");
+                                // call the upload complete method to do final stuff
+                                prog.checkIframeStatus(uploadInfo);
+                            }
+                        }
+                    },
+                    error: function(data) {
+                        uploadInfo.finished = true;
+                        timerId.stop();
+                        prog.processError(uploadInfo, prog.uiLabelMap.CommonServerCommunicationError);
+                    }
+                });
+            }
+        });
+    };
+}
+
+ScipioUploadProgress.instCount = 0;
+ScipioUploadProgress.uiLabelMap = null;
+ScipioUploadProgress.loadUiLabels = function() {
+    if (ScipioUploadProgress.uiLabelMap == null) {
+        var labelObject = {
+                "CommonUiLabels" : ["CommonUpload", "CommonSave", "CommonCompleted", "CommonError", "CommonServerCommunicationError", "CommonUnexpectedError"]
+            };
+        ScipioUploadProgress.uiLabelMap = getJSONuiLabelMap(labelObject);
+    }
+};
+
+

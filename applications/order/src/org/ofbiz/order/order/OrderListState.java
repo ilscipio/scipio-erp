@@ -20,7 +20,9 @@ package org.ofbiz.order.order;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -42,8 +44,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityQuery;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
+import org.ofbiz.base.util.UtilMisc;
 
 /**
  * Session object for keeping track of the list of orders. The state of the list
@@ -59,7 +60,7 @@ import javolution.util.FastMap;
 @SuppressWarnings("serial")
 public class OrderListState implements Serializable {
 
-    public static final String module = OrderListState.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String SESSION_KEY = "__ORDER_LIST_STATUS__";
     public static final String VIEW_SIZE_PARAM = "viewSize";
     public static final String VIEW_INDEX_PARAM = "viewIndex";
@@ -78,7 +79,7 @@ public class OrderListState implements Serializable {
     protected static final Map<String, String> parameterToFilterId;
 
     static {
-        Map<String, String> map = FastMap.newInstance();
+        Map<String, String> map = new HashMap<String, String>();
         map.put("viewcompleted", "ORDER_COMPLETED");
         map.put("viewcancelled", "ORDER_CANCELLED");
         map.put("viewrejected", "ORDER_REJECTED");
@@ -89,12 +90,12 @@ public class OrderListState implements Serializable {
         map.put("viewhold", "ORDER_HOLD");
         parameterToOrderStatusId = map;
 
-        map = FastMap.newInstance();
+        map = new HashMap<String, String>();
         map.put("view_SALES_ORDER", "SALES_ORDER");
         map.put("view_PURCHASE_ORDER", "PURCHASE_ORDER");
         parameterToOrderTypeId = map;
 
-        map = FastMap.newInstance();
+        map = new HashMap<String, String>();
         map.put("filterInventoryProblems", "filterInventoryProblems");
         map.put("filterAuthProblems", "filterAuthProblems");
         map.put("filterPartiallyReceivedPOs", "filterPartiallyReceivedPOs");
@@ -114,9 +115,9 @@ public class OrderListState implements Serializable {
         // viewSize = 10;
         viewSize = UtilProperties.getPropertyAsInteger("order.properties", "order.paginate.defaultViewSize", 10);
         viewIndex = 0;
-        orderStatusState = FastMap.newInstance();
-        orderTypeState = FastMap.newInstance();
-        orderFilterState = FastMap.newInstance();
+        orderStatusState = new HashMap<String, String>();
+        orderTypeState = new HashMap<String, String>();
+        orderFilterState = new HashMap<String, String>();
 
         // defaults (TODO: configuration)
         orderStatusState.put("viewcreated", "Y");
@@ -269,14 +270,14 @@ public class OrderListState implements Serializable {
         Delegator delegator = (Delegator) context.get("delegator");
         TimeZone timeZone = (TimeZone) context.get("timeZone");
         Locale locale = (Locale) context.get("locale");
-        List<EntityCondition> allConditions = FastList.newInstance();
+        List<EntityCondition> allConditions = new LinkedList<EntityCondition>();
 
         if (facilityId != null) {
             allConditions.add(EntityCondition.makeCondition("originFacilityId", EntityOperator.EQUALS, facilityId));
         }
 
         if (fromDate != null) {
-            List<EntityCondition> andExprs = FastList.newInstance();
+            List<EntityCondition> andExprs = new LinkedList<EntityCondition>();
             if (intervalPeriod != null) {                
                 TimeInterval intervalDates = UtilDateTime.getPeriodInterval(intervalPeriod, fromDate, locale, timeZone);
                 context.put("intervalDates", intervalDates);
@@ -289,13 +290,13 @@ public class OrderListState implements Serializable {
             allConditions.add(EntityCondition.makeCondition(andExprs, EntityOperator.AND));
         }
 
-        List<EntityCondition> statusConditions = FastList.newInstance();
+        List<EntityCondition> statusConditions = new LinkedList<EntityCondition>();
         for (String status : orderStatusState.keySet()) {
             if (!hasStatus(status))
                 continue;
             statusConditions.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, parameterToOrderStatusId.get(status)));
         }
-        List<EntityCondition> typeConditions = FastList.newInstance();
+        List<EntityCondition> typeConditions = new LinkedList<EntityCondition>();
         for (String type : orderTypeState.keySet()) {
             if (!hasType(type))
                 continue;

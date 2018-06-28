@@ -77,7 +77,7 @@ import org.xml.sax.SAXException;
 @Deprecated
 public class HtmlScreenRenderer extends HtmlWidgetRenderer implements ScreenStringRenderer {
 
-    public static final String module = HtmlScreenRenderer.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     protected int elementId = 999;
 
     public HtmlScreenRenderer() {}

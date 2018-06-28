@@ -382,6 +382,12 @@ under the License.
                         Used when the simple method is invoked as an event, it is ignored otherwise.
                         
                         Optional. Attribute type: constant.
+                        
+                        SCIPIO: NOTE: 2018-03-01: The field denoted by this name is now ignored by default whenever the event
+                        returns an error or error messages. This can be bypassed (only) by using field-to-result
+                        with result-name="_event_message_". Previously (stock ofbiz), this was not fully handled by
+                        the minilang interpreter and confusing success messages (often through call-service's default-message) would be
+                        returned alongside error messages due to the assumptions made by the specific implementations.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
@@ -393,6 +399,12 @@ under the License.
                         Used when the simple method is invoked as an event, it is ignored otherwise.
                         
                         Optional. Attribute type: constant.
+                        
+                        SCIPIO: NOTE: 2018-03-01: The field denoted by this name is now ignored by default whenever the event
+                        returns an error or error messages. This can be bypassed (only) by using field-to-result
+                        with result-name="_event_message_list_". Previously (stock ofbiz), this was not fully handled by
+                        the minilang interpreter and confusing success messages (often through call-service's default-message) would be
+                        returned alongside error messages due to the assumptions made by the specific implementations.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
@@ -448,6 +460,12 @@ under the License.
                         Used when the simple method is invoked as a service, it is ignored otherwise.
                         
                         Optional. Attribute type: constant.
+                        
+                        SCIPIO: NOTE: 2018-03-01: The field denoted by this name is now ignored by default whenever the service
+                        returns an error or error messages. This can be bypassed (only) by using: field-to-result
+                        with result-name="successMessage". Previously (stock ofbiz), this was not fully handled by
+                        the minilang interpreter and confusing success messages (often through call-service's default-message) would be
+                        returned alongside error messages due to the assumptions made by the specific implementations.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
@@ -459,6 +477,12 @@ under the License.
                         Used when the simple method is invoked as a service, it is ignored otherwise.
                         
                         Optional. Attribute type: constant.
+                        
+                        SCIPIO: NOTE: 2018-03-01: The field denoted by this name is now ignored by default whenever the service
+                        returns an error or error messages. This can be bypassed (only) by using field-to-result
+                        with result-name="successMessageList". Previously (stock ofbiz), this was not fully handled by
+                        the minilang interpreter and confusing success messages (often through call-service's default-message) would be
+                        returned alongside error messages due to the assumptions made by the specific implementations.
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>

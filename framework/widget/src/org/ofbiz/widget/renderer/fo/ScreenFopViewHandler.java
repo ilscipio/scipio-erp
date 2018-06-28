@@ -55,7 +55,7 @@ import org.ofbiz.widget.renderer.macro.MacroScreenRenderer;
  * This handler will use JPublish to generate the XSL-FO
  */
 public class ScreenFopViewHandler extends AbstractViewHandler {
-    public static final String module = ScreenFopViewHandler.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     protected static final String DEFAULT_ERROR_TEMPLATE = "component://common/widget/CommonScreens.xml#FoError";
 
     protected ServletContext servletContext = null;

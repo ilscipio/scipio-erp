@@ -1,3 +1,5 @@
+<#include "component://shop/webapp/shop/order/subscriptioncommon.ftl">
+
 <@section title=uiLabelMap.ShopOrderSubscriptionItems menuContent=menuContent>
   <@table type="data-complex" class="+order-detail-items">
     <@thead>
@@ -12,7 +14,7 @@
         <@th width="10%">${uiLabelMap.EcommerceUnitPrice}</@th>
       <#else>
         <@th width="45%">${uiLabelMap.OrderProduct}</@th>
-        <@th width="25%" colspan="3">${uiLabelMap.EcommerceSubscriptionDetails}</@th>        
+        <@th width="25%" colspan="3">${uiLabelMap.ShopSubscriptionDetails}</@th>        
         <@th width="15%">${uiLabelMap.CommonQuantity}</@th><#--${uiLabelMap.OrderQtyOrdered}-->
         <@th width="10%">${uiLabelMap.EcommerceUnitPrice}</@th>
       </#if>
@@ -90,21 +92,6 @@
           </@modal>-->
         </#macro>
         <#assign mayCancelItem = false>
-        <#macro subscriptionLinkContent productSubscriptionResource index>
-          <#local subscriptionResource = productSubscriptionResource.getRelatedOne("SubscriptionResource", true)>          
-          <@modal id="row_orderitem_subscription_${index}_${orderItem.orderItemSeqId}" label="[${rawString(subscriptionResource.description)}]">
-            <@section title="${rawString(subscriptionResource.description)}: ${rawString(orderItem.itemDescription!)}">
-                Max Time: ${productSubscriptionResource.get("maxLifeTime")!} ${productSubscriptionResource.get("maxLifeTimeUomId")!} <br/>
-                Available Time: ${productSubscriptionResource.availableTime!} ${productSubscriptionResource.availableTime!} <br/>
-                Use Count Limit: ${productSubscriptionResource.useCountLimit!} <br/>
-                Use Time: ${productSubscriptionResource.useTime!} ${productSubscriptionResource.useTimeUomId!} <br/>
-                Automatic Extend: ${productSubscriptionResource.automaticExtend!} <br/>
-                Cancel Automatic Extended Time: ${productSubscriptionResource.canclAutmExtTime!} ${productSubscriptionResource.canclAutmExtTimeUomId!} <br/>
-                Period On Expiry: ${productSubscriptionResource.gracePeriodOnExpiry!} ${productSubscriptionResource.gracePeriodOnExpiryUomId!} <br/>               
-            </@section>
-          </@modal>
-        </#macro>
-        
         <#if maySelect>
           <#assign pickedQty = localOrderReadHelper.getItemPickedQuantityBd(orderItem)>
           <#assign mayCancelItem = (orderHeader.statusId != "ORDER_SENT" && orderItem.statusId != "ITEM_COMPLETED" && orderItem.statusId != "ITEM_CANCELLED" && pickedQty == 0)>
@@ -199,7 +186,7 @@
                 <ul>
                 <#list producSubscriptionResources as productSubscriptionResource>                    
                     <li>
-                        <@subscriptionLinkContent productSubscriptionResource productSubscriptionResource_index/>
+                        <@subscriptionLinkContent productSubscriptionResource {} orderItem productSubscriptionResource_index/>
                     </li>
                 </#list>
                 </ul>
@@ -252,7 +239,7 @@
                     <@field type="submit" submitType="link" href="javascript:document.addCommonToCartForm.action='${makeOfbizUrl('authorizeBillingAgreement')?js_string}';document.addCommonToCartForm.authorizeItem_${orderItem.orderItemSeqId}.value='Y';document.addCommonToCartForm.submit();" 
                     class="${styles.link_run_sys!} ${styles.action_terminate!}" text="${uiLabelMap.ShopAuthorizeSubscription}" />
                 <#elseif orderItem.statusId == "ITEM_COMPLETED">
-                    <@field type="submit" submitType="link" href="javascript:document.addCommonToCartForm.action='${makeOfbizUrl('cancelBillingAgreement')?js_string}';document.addCommonToCartForm.cancelItem_${orderItem.orderItemSeqId}.value='Y';document.addCommonToCartForm.submit();" 
+                    <@field type="submit" submitType="link" href="javascript:document.addCommonToCartForm.action='${makeOfbizUrl('cancelBillingAgreementPayPalRest')?js_string}';document.addCommonToCartForm.cancelItem_${orderItem.orderItemSeqId}.value='Y';document.addCommonToCartForm.submit();" 
                     class="${styles.link_run_sys!} ${styles.action_terminate!}" text="${uiLabelMap.ShopCancelSubscription}" />
                 </#if>
             </@td>
@@ -332,7 +319,7 @@
             </#if>
             <#if orderItemAdjustment.orderAdjustmentTypeId == "VAT_TAX"> <#-- European VAT support (VAT included) -->
                 <#if orderItemAdjustment.amountAlreadyIncluded?has_content && !orderItemAdjustment.exemptAmount?has_content><#-- TODO: Check for missing label. -->
-                  : <@ofbizCurrency amount=orderItemAdjustment.amountAlreadyIncluded isoCode=currencyUomId/>
+                  : <@ofbizCurrency amount=orderItemAdjustment.amountAlreadyIncluded.setScale(taxFinalScale, taxRounding) isoCode=currencyUomId/>
                 </#if>
             </#if>
           </@td>

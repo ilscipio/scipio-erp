@@ -27,11 +27,9 @@ under the License.
 
     <property name="desc" value="Entity Extensions Component"/>
     <property name="name" value="ofbiz-entityext"/>
-    <property name="ofbiz.home.dir" value="../.."/>
 
     <path id="local.class.path">
         <fileset dir="../base/lib" includes="*.jar"/>
-        <fileset dir="../base/lib/j2eespecs" includes="*.jar"/>
         <fileset dir="../base/build/lib" includes="*.jar"/>
         <fileset dir="../entity/lib" includes="*.jar"/>
         <fileset dir="../entity/build/lib" includes="*.jar"/>

@@ -47,7 +47,7 @@ import org.ofbiz.service.config.model.ThreadPool;
  */
 public final class JobPoller implements ServiceConfigListener {
 
-    public static final String module = JobPoller.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final AtomicInteger created = new AtomicInteger();
     private static final ConcurrentHashMap<String, JobManager> jobManagers = new ConcurrentHashMap<String, JobManager>();
     private static final ThreadPoolExecutor executor = createThreadPoolExecutor();

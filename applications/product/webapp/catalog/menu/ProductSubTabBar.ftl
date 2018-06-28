@@ -37,7 +37,10 @@ under the License.
             </#if>                        
         </#if>        
         <#if product?has_content>
-          <@menuitem type="link" href=makeOfbizInterWebappUrl("/shop/control/product?product_id=${productId!}") text=uiLabelMap.ProductProductPage class="+${styles.action_nav!} ${styles.action_view!}" />
+          <#assign productPageUrl = getPropertyValue("catalog", "shop.default.link.product.prefix")!>
+          <#if productPageUrl?has_content>
+            <@menuitem type="link" href=makeOfbizInterWebappUrl(productPageUrl+(productId!)) text=uiLabelMap.ProductProductPage class="+${styles.action_nav!} ${styles.action_view!}" />
+          </#if>
           <@menuitem type="link" href=makeOfbizUrl("ProductBarCode.pdf?productId=${productId!}") text=uiLabelMap.ProductBarcode target="_blank" class="+${styles.action_nav!} ${styles.action_export!}" />
         </#if>
         <#--

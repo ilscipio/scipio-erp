@@ -54,7 +54,7 @@ import freemarker.template.TemplateScalarModel;
  */
 public class TemplateInvoker {
 
-    public static final String module = TemplateInvoker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     protected final TemplateSource templateSource;
     protected final InvokeOptions invokeOptions;

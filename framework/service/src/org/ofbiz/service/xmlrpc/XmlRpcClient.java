@@ -32,7 +32,7 @@ import java.security.KeyStore;
  */
 public class XmlRpcClient extends org.apache.xmlrpc.client.XmlRpcClient {
 
-    public static final String module = XmlRpcClient.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected String keyStoreComponent;
     protected String keyStoreName;

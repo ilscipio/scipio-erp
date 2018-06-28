@@ -47,7 +47,7 @@ import org.w3c.dom.Element;
  */
 public final class CallSimpleMethod extends MethodOperation {
 
-    public static final String module = CallSimpleMethod.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final String methodName;
     private final String xmlResource;

@@ -107,7 +107,8 @@ under the License.
     <service name="createProductStoreCatalog" default-entity-name="ProductStoreCatalog" engine="entity-auto" invoke="create" auth="true">
         <description>Create ProductStoreCatalog</description>
         <permission-service service-name="productStoreGenericPermission" main-action="CREATE"/>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <!-- SCIPIO: 2017-10-18: changed pk from IN to INOUT, required because entity-auto engine automatically fill in for empty fromDate, in which case must read output to get PK -->
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <override name="fromDate" optional="true"/>
     </service>

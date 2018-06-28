@@ -51,6 +51,16 @@ under the License.
         <permission-service service-name="basicGeneralLedgerPermissionCheck" main-action="DELETE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
+    
+    <!-- SCIPIO: New service to get a GlAccount and its associations -->
+    <service name="getGlAccountAndAssocs" default-entity-name="GlAccount" engine="java" 
+                location="com.ilscipio.scipio.accounting.ledger.GeneralLedgerServices" invoke="getGlAccountAndAssocs" auth="true">
+        <description>SCIPIO: Gets a GlAccount and its associations</description>
+        <permission-service service-name="basicGeneralLedgerPermissionCheck" main-action="VIEW"/>
+        <attribute name="glAccountId" mode="IN" type="String" optional="false"/>
+        <attribute name="useCache" mode="IN" type="Boolean" optional="true" default-value="false"/>
+        <attribute name="glAccount" mode="OUT" type="Map" optional="false"/>        
+    </service>
 
     <service name="createGlAccountOrganization" default-entity-name="GlAccountOrganization" engine="simple"
             location="component://accounting/script/org/ofbiz/accounting/ledger/GeneralLedgerServices.xml" invoke="createGlAccountOrganization" auth="true">
@@ -681,4 +691,52 @@ under the License.
         <attribute name="glAccountId" mode="IN" type="String"/>
         <attribute name="amountPercentageMap" type="Map" string-map-prefix="amp_" mode="IN" optional="true"/>
     </service>
+    
+    <!-- ======================================== -->
+    <!-- SCIPIO: New Services (novel functionality) -->
+    <!-- ======================================== -->
+    
+    <!-- SCIPIO: New service to build glAccount tree-like structure according to the library being passed (currently jsTree supported only) -->
+    <service name="buildGlAccountTree" engine="java" default-entity-name="GlAccount" location="com.ilscipio.scipio.accounting.ledger.GeneralLedgerServices" invoke="buildGlAccountTree">
+        <description>Builds a tree containing glAccounts using a given glAccountId as starting point</description>
+        <auto-attributes mode="IN" include="pk" optional="false" />        
+        <attribute name="library" mode="IN" type="String" optional="true" default-value="jsTree" />
+        <attribute name="mode" mode="IN" type="String" optional="true" default-value="full" />
+        <attribute name="state" mode="IN" type="Map" optional="true">
+            <description>Map of state attributes for top node: opened, selected, disabled. (added 2017-10-11)</description>
+        </attribute>
+        <attribute name="includeGlAccountData" mode="IN" type="Boolean" optional="true" default-value="false"/>
+        <attribute name="includeEmptyTop" mode="IN" type="Boolean" optional="true" default-value="false">
+            <description>If false (default), empty glAccount or top node is omitted</description>
+        </attribute>        
+        <attribute name="treeList" mode="OUT" type="List" optional="false" />
+    </service>
+    
+    
+    <!-- SCIPIO: New service to build customTimePeriod tree-like structure according to the library being passed (currently jsTree supported only) -->
+    <service name="buildCustomPeriodTree" engine="java" default-entity-name="CustomTimePeriod" location="com.ilscipio.scipio.accounting.period.PeriodServices" invoke="buildCustomPeriodTree">
+        <description>Builds a tree containing customTimePeriods using a given customTimePeriodId as starting point</description>
+        <auto-attributes mode="IN" include="pk" optional="false" />        
+        <attribute name="library" mode="IN" type="String" optional="true" default-value="jsTree" />
+        <attribute name="mode" mode="IN" type="String" optional="true" default-value="full" />
+        <attribute name="state" mode="IN" type="Map" optional="true">
+            <description>Map of state attributes for top node: opened, selected, disabled. (added 2017-10-11)</description>
+        </attribute>
+        <attribute name="includeTimePeriodData" mode="IN" type="Boolean" optional="true" default-value="false"/>
+        <attribute name="includeEmptyTop" mode="IN" type="Boolean" optional="true" default-value="false">
+            <description>If false (default), empty customTimePeriod or top node is omitted</description>
+        </attribute>        
+        <attribute name="treeList" mode="OUT" type="List" optional="false" />
+    </service>
+    
+    <!-- SCIPIO: New service to get a customTimePeriod -->
+    <service name="getTimePeriod" default-entity-name="CustomPeriodTime" engine="java" 
+                location="com.ilscipio.scipio.accounting.period.PeriodServices" invoke="getTimePeriod" auth="true">
+        <description>SCIPIO: Gets a TimePeriod</description>
+        <permission-service service-name="basicGeneralLedgerPermissionCheck" main-action="VIEW"/>
+        <attribute name="customTimePeriodId" mode="IN" type="String" optional="false"/>
+        <attribute name="useCache" mode="IN" type="Boolean" optional="true" default-value="false"/>
+        <attribute name="timePeriod" mode="OUT" type="Map" optional="false"/>        
+    </service>
+    
 </services>

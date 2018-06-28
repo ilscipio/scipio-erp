@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
 
 public class PcChargeApi {
 
-    public static final String module = PcChargeApi.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String xschema = "x-schema:..\\dtd\\stnd.xdr";
     public static final String rootElement = "XML_FILE";
     public static final String reqElement = "XML_REQUEST";

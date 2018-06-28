@@ -46,7 +46,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class FtpServices {
 
-    public final static String module = FtpServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "CommonUiLabels";
 
     public static Map<String, Object> putFile(DispatchContext dctx, Map<String, ?> context) {

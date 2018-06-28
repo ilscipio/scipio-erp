@@ -434,6 +434,7 @@ under the License.
         <attribute name="text" type="String" mode="IN" optional="true" allow-html="any"/>
     </service>
 
+    <!-- SCIPIO: 2017-12-06: MOVED to component://content/servicedef/services.xml (did not belong here even remotely)
     <service name="createSimpleTextContentForAlternateLocale" engine="simple" location="component://product/script/org/ofbiz/product/product/ProductContentServices.xml" invoke="createSimpleTextContentForAlternateLocale">
         <auto-attributes mode="IN" entity-name="Content" optional="true"/>
         <attribute name="mainContentId" type="String" mode="IN" optional="false"/>
@@ -441,6 +442,7 @@ under the License.
         <override name="localeString" optional="false"/>
         <override name="contentId" mode="INOUT"/>
     </service>
+    -->
 
     <service name="addAdditionalViewForProduct" default-entity-name="ProductContent" engine="java"
         location="org.ofbiz.product.product.ProductServices" invoke="addAdditionalViewForProduct" auth="true">
@@ -635,7 +637,8 @@ under the License.
     <service name="addProductCategoryToProdCatalog" default-entity-name="ProdCatalogCategory" engine="entity-auto" invoke="create" auth="true">
         <description>Add ProductCategory To ProdCatalog</description>
         <permission-service service-name="catalogPermissionCheck" main-action="CREATE"/>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <!-- SCIPIO: 2017-10-18: changed pk from IN to INOUT, required because entity-auto engine automatically fill in for empty fromDate, in which case must read output to get PK -->
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <override name="fromDate" optional="true"/>
     </service>
@@ -688,6 +691,15 @@ under the License.
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <override name="productCategoryTypeId" optional="false"/>
     </service>
+    <!-- SCIPIO: new (2017-10-20)
+        NOTE: category deletion appears frowned upon in stock ofbiz, or perhaps they
+        are meant to be expired. However, when building a site, it is common to redesign categories,
+        so deletion is sometimes appropriate (and in that case, expiring is not appropriate). -->
+    <service name="deleteProductCategory" default-entity-name="ProductCategory" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="deleteProductCategory" auth="true">
+        <description>SCIPIO: Delete a ProductCategory record (if no associations or members)</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
 
     <service name="duplicateProductCategory" engine="simple"
                 location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="duplicateProductCategory" auth="true">
@@ -708,7 +720,8 @@ under the License.
                 location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="addProductToCategory" auth="true">
         <description>Add Product To Category</description>
         <permission-service service-name="checkCategoryPermissionWithViewPurchaseAllow" main-action="CREATE"/>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <!-- SCIPIO: 2017-10-25: changed PK from IN to INOUT -->
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
 
@@ -721,13 +734,15 @@ under the License.
         </auto-attributes>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <attribute name="categories" type="Object" mode="IN" optional="false"/>
-        <override name="fromDate" optional="true"/>
+        <!-- SCIPIO: 2017-10-25: fromDate from IN to INOUT so caller can retrieve correct PK -->
+        <override name="fromDate" optional="true" mode="INOUT"/>
     </service>
     <service name="addProductToCategory" default-entity-name="ProductCategoryMember" engine="simple"
                 location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="addProductToCategory" auth="true">
         <description>Add Product To Category</description>
         <permission-service service-name="checkCategoryPermissionWithViewPurchaseAllow" main-action="CREATE"/>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <!-- SCIPIO: 2017-10-25: changed PK from IN to INOUT so caller can retrieve full PK when fromDate empty -->
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <override name="fromDate" optional="true"/>
     </service>
@@ -826,9 +841,10 @@ under the License.
     <service name="safeAddProductCategoryToCategory" engine="simple"
                 location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="addProductCategoryToCategory" auth="true">
         <description>Safe Add ProductCategory To Category (requires fromDate)</description>
-        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
-        <attribute name="parentProductCategoryId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <!-- SCIPIO: 2017-10-18: changed PK fields to INOUT -->
+        <attribute name="productCategoryId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="parentProductCategoryId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="INOUT" optional="false"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
     </service>
@@ -836,9 +852,10 @@ under the License.
     <service name="addProductCategoryToCategory" engine="simple"
                 location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="addProductCategoryToCategory" auth="true">
         <description>Add ProductCategory To Category</description>
-        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
-        <attribute name="parentProductCategoryId" type="String" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <!-- SCIPIO: 2017-10-18: changed PK fields to INOUT, otherwise can't get PK back due to optional fromDate -->
+        <attribute name="productCategoryId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="parentProductCategoryId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="INOUT" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
     </service>
@@ -847,7 +864,8 @@ under the License.
         <description>Add ProductCategory To Categories</description>
         <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
         <attribute name="categories" type="Object" mode="IN" optional="false"/>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <!-- SCIPIO: 2017-10-18: changed fromDate to INOUT, otherwise can't get exact PK back out -->
+        <attribute name="fromDate" type="Timestamp" mode="INOUT" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
     </service>
@@ -1718,14 +1736,803 @@ under the License.
         <description>Check ProductGroupOrder Expired</description>
         <attribute name="groupOrderId" mode="IN" type="String" optional="false"/>
     </service>
+
+    <!-- ======================================== -->
+    <!-- SCIPIO: New Services (stock-like) -->
+    <!-- ======================================== -->
+
+    <service name="createProdCatalogAndStoreAssoc" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="createProdCatalogAndStoreAssoc" auth="true">
+        <description>SCIPIO: Create a ProdCatalog and ProductStoreCatalog association</description>
+        <implements service="createProdCatalog"/>
+        <implements service="createProductStoreCatalog"/>
+    </service>
+    
+    <service name="updateProdCatalogAndStoreAssoc" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="updateProdCatalogAndStoreAssoc" auth="true">
+        <description>SCIPIO: Update a ProdCatalog and ProductStoreCatalog association</description>
+        <implements service="updateProdCatalog"/>
+        <implements service="updateProductStoreCatalog"/>
+    </service>
+
+    <service name="deleteProdCatalogAndStoreAssoc" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="deleteProdCatalogAndStoreAssoc" auth="true">
+        <description>SCIPIO: Delete a ProdCatalog and ProductStoreCatalog association</description>
+        <implements service="deleteProdCatalog"/>
+        <implements service="deleteProductStoreCatalog"/>
+    </service>
+    
+    <service name="createProductCategoryAndCatalogAssoc" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="createProductCategoryAndCatalogAssoc" auth="true">
+        <description>SCIPIO: Create a ProductCategory and its top association to catalog</description>
+        <implements service="createProductCategory"/>
+        <implements service="addProductCategoryToProdCatalog"/>
+    </service>
+    
+    <service name="updateProductCategoryAndCatalogAssoc" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="updateProductCategoryAndCatalogAssoc" auth="true">
+        <description>SCIPIO: Update a ProductCategory and its top association to catalog</description>
+        <implements service="updateProductCategory"/>
+        <implements service="updateProductCategoryToProdCatalog"/>
+    </service>
+
+    <service name="createProductCategoryAndCategoryAssoc" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="createProductCategoryAndCategoryAssoc" auth="true">
+        <description>SCIPIO: Create a ProductCategory and add as child of another category</description>
+        <implements service="createProductCategory"/>
+        <implements service="addProductCategoryToCategory"/>
+    </service>
+    
+    <service name="updateProductCategoryAndCategoryAssoc" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="updateProductCategoryAndCategoryAssoc" auth="true">
+        <description>SCIPIO: Update a ProductCategory and its association to another category (as child)</description>
+        <implements service="updateProductCategory"/>
+        <implements service="updateProductCategoryToCategory"/>
+        <override name="productCategoryId" mode="IN"/><!-- SCIPIO: for some reason this is INOUT in the ofbiz interface, not needed... -->
+    </service>
+    
+    <service name="getProductCategoryContentLocalizedSimpleTextViews" engine="java"
+                location="org.ofbiz.product.category.CategoryServices" invoke="getProductCategoryContentLocalizedSimpleTextViews" auth="true">
+        <description>SCIPIO: For each simple-text-compatible prodCatContentTypeId, returns a list of complex record views, 
+            where the first entry is ProductCategoryContentAndElectronicText and the following entries (if any) are ContentAssocToElectronicText views.</description>
+        <permission-service service-name="productGenericPermission" main-action="VIEW"/>
+        <attribute name="productCategoryId" mode="IN" type="String" optional="false"/>
+        <attribute name="prodCatContentTypeIdList" mode="IN" type="List" optional="false"/>
+        <attribute name="filterByDate" mode="IN" type="Boolean" optional="true" default-value="true"/>
+        <attribute name="useCache" mode="IN" type="Boolean" optional="true" default-value="false"/>
+        <attribute name="getViewsByType" mode="IN" type="Boolean" optional="true" default-value="true"/>
+        <attribute name="getViewsByTypeAndLocale" mode="IN" type="Boolean" optional="true" default-value="false"/>
+        <attribute name="getTextByTypeAndLocale" mode="IN" type="Boolean" optional="true" default-value="false"/>
+        <attribute name="viewsByType" mode="OUT" type="Map" optional="true"/>
+        <attribute name="viewsByTypeAndLocale" mode="OUT" type="Map" optional="true"/>
+        <attribute name="textByTypeAndLocale" mode="OUT" type="Map" optional="true"/>
+    </service>
+    
+    <service name="getProductContentLocalizedSimpleTextViews" engine="java"
+                location="org.ofbiz.product.product.ProductServices" invoke="getProductContentLocalizedSimpleTextViews" auth="true">
+        <description>SCIPIO: For each simple-text-compatible productContentTypeIdList, returns a list of complex record views, 
+            where the first entry is ProductContentAndElectronicText and the following entries (if any) are ContentAssocToElectronicText views.</description>
+        <permission-service service-name="productGenericPermission" main-action="VIEW"/>
+        <attribute name="productId" mode="IN" type="String" optional="false"/>
+        <attribute name="productContentTypeIdList" mode="IN" type="List" optional="false"/>
+        <attribute name="filterByDate" mode="IN" type="Boolean" optional="true" default-value="true"/>
+        <attribute name="useCache" mode="IN" type="Boolean" optional="true" default-value="false"/>
+        <attribute name="getViewsByType" mode="IN" type="Boolean" optional="true" default-value="true"/>
+        <attribute name="getViewsByTypeAndLocale" mode="IN" type="Boolean" optional="true" default-value="false"/>
+        <attribute name="getTextByTypeAndLocale" mode="IN" type="Boolean" optional="true" default-value="false"/>
+        <attribute name="viewsByType" mode="OUT" type="Map" optional="true"/>
+        <attribute name="viewsByTypeAndLocale" mode="OUT" type="Map" optional="true"/>
+        <attribute name="textByTypeAndLocale" mode="OUT" type="Map" optional="true"/>
+    </service>
+    
+    <service name="replaceProductCategoryContentLocalizedSimpleTexts" engine="java" location="org.ofbiz.product.category.CategoryServices" invoke="replaceProductCategoryContentLocalizedSimpleTexts">
+        <description>SCIPIO: Intelligently creates, updates and deletes ProductCategoryContent ALTERNATE_LOCALE simple text contents (wrapper around replaceContentLocalizedSimpleTexts)</description>
+        <implements service="replaceEntityContentLocalizedSimpleTextsInterface"/>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+    </service>
+    
+    <service name="replaceProductContentLocalizedSimpleTexts" engine="java" location="org.ofbiz.product.product.ProductServices" invoke="replaceProductContentLocalizedSimpleTexts">
+        <description>SCIPIO: Intelligently creates, updates and deletes ProductContent ALTERNATE_LOCALE simple text contents (wrapper around replaceContentLocalizedSimpleTexts)</description>
+        <implements service="replaceEntityContentLocalizedSimpleTextsInterface"/>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+    </service>
+
+    <!-- ======================================== -->
+    <!-- SCIPIO: New Versatile Services (stock-like) -->
+    <!-- ======================================== -->
+    <!-- These versatile service eliminates need for copy-pasting controller defs and events - 
+        form params control behavior if this is set in an event. Originally designed for catalog tree. 
+        NOTE: The ProductCategory services all check whether catalog or category assoc change is needed
+            by check if parentProductCategoryId is empty or non-empty, respectively. -->
+
+    <!-- CATALOG -->
+    
+    <service name="createProdCatalogAndStoreAssocVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/catalog/CatalogServices.xml" invoke="createProdCatalogAndStoreAssocVersatile" auth="true">
+        <description>SCIPIO: Create a ProdCatalog and ProductStoreCatalog association (versatile)</description>
+        <implements service="createProdCatalogAndStoreAssoc"/>
+    </service>
+    
+    <service name="updateProdCatalogAndStoreAssocVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/catalog/CatalogServices.xml" invoke="updateProdCatalogAndStoreAssocVersatile" auth="true">
+        <description>SCIPIO: Update a ProdCatalog and ProductStoreCatalog association (versatile)</description>
+        <implements service="updateProdCatalogAndStoreAssoc"/>
+    </service>
+    
+    <service name="deleteProdCatalogStoreAssocVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/catalog/CatalogServices.xml" invoke="deleteProdCatalogStoreAssocVersatile" auth="true">
+        <description>SCIPIO: Delete a ProductStoreCatalog association(s) (versatile)</description>
+        <implements service="deleteProductStoreCatalog"/>
+        <attribute name="deleteAssocMode" mode="IN" type="String" optional="true" default-value="remove">
+            <description>(remove|expire, default: remove)</description>
+        </attribute>
+    </service>
+    
+    <service name="deleteProdCatalogAndRelatedVersatile" default-entity-name="ProdCatalog" engine="simple"
+                location="component://product/script/org/ofbiz/product/catalog/CatalogServices.xml" invoke="deleteProdCatalogAndRelatedVersatile" auth="true">
+        <description>SCIPIO: Delete a ProdCatalog record and various related records [WARN: may be dangerous - best-effort] (versatile)</description>
+        <permission-service service-name="catalogPermissionCheck" main-action="DELETE"/><!-- no delegated check, needs explicit -->
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <attribute name="deleteParentAssocSelect" mode="IN" type="String" optional="true" default-value="all">
+            <description>(none|expired|all, default: expired) Controls whether deletes all (default)
+                or only expired ProductStoreCatalog records to this category's parents</description>
+        </attribute>
+        <attribute name="deleteChildAssocSelect" mode="IN" type="String" optional="true" default-value="expired">
+            <description>(none|expired|all, default: expired) If "expired" (default), removes children assoc records
+                such as ProdCatalogCategory that are expired; 
+                if "all", removes all such records even if destructive.
+                WARN: "all" mode may leave products/categories as orphans!</description>
+        </attribute>
+        <attribute name="deleteSpecialAssocSelect" mode="IN" type="String" optional="true" default-value="none">
+            <description>(none|expired|all, default: expired) Special-purpose association deletion mode
+                WARN: may currently be destructive (TODO: REVIEW) - "expired" is safe but only if no expired records are still needed.</description>
+        </attribute>
+        <!-- TODO: not implemented
+        <attribute name="deleteChildrenSelect" mode="IN" type="String" optional="true" default-value="none">
+            <description>(none|recursive) Delete the child categories and products of this category (most destructive)</description>
+        </attribute>-->
+    </service>
+    
+    <service name="deleteProdCatalogAndStoreAssocVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/catalog/CatalogServices.xml" invoke="deleteProdCatalogAndStoreAssocVersatile" auth="true">
+        <description>SCIPIO: Delete a ProdCatalog AND/OR ProductStoreCatalog association(s) (versatile)</description>
+        <implements service="deleteProdCatalogStoreAssocVersatile"/>
+        <attribute name="deleteRecordAndRelated" mode="IN" type="Boolean" optional="true" default-value="true">
+            <description>If true, attempts to delete ProdCatalog; if false only deletes store association</description>
+        </attribute>
+    </service>
+    
+    <service name="addProdCatalogStoreAssocVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/catalog/CatalogServices.xml" invoke="addProdCatalogStoreAssocVersatile" auth="true">
+        <description>SCIPIO: Adds a ProductStoreCatalog association, first checking to make sure doesn't already exist (versatile)</description>
+        <implements service="createProductStoreCatalog"/>
+    </service>
+
+    <!-- CATEGORY -->
+    
+    <service name="createProductCategoryAndCatAssocVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="createProductCategoryAndCatAssocVersatile" auth="true">
+        <description>SCIPIO: Create a ProductCategory and add as a top catalog category (if parentProductCategoryId is empty) 
+            or as child of another category (if parentProductCategoryId is set) (versatile)</description>
+        <implements service="createProductCategory"/>
+        <implements service="addProductCategoryToProdCatalog"/>
+        <implements service="addProductCategoryToCategory"/>
+        <implements service="replaceProductCategoryContentLocalizedSimpleTexts"/>
+        <attribute name="updateLocalizedTexts" mode="IN" type="Boolean" optional="true" default-value="false"/>
+        <!-- make all PK optional because it's one-interface-or-the-other (and fromDate auto-populated) -->
+        <override name="productCategoryId" optional="true"/>
+        <override name="fromDate" optional="true"/>
+        <override name="prodCatalogId" optional="true"/><!-- addProductCategoryToProdCatalog -->
+        <override name="prodCatalogCategoryTypeId" optional="true"/><!-- addProductCategoryToProdCatalog -->
+        <override name="parentProductCategoryId" optional="true"/><!-- addProductCategoryToCategory -->
+    </service>
+    
+    <service name="updateProductCategoryAndCatAssocVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="updateProductCategoryAndCatAssocVersatile" auth="true">
+        <description>SCIPIO: Update a ProductCategory and its top association to catalog (if parentProductCategoryId is empty) or 
+            its association to another category (if parentProductCategoryId is set) (versatile)</description>
+        <implements service="updateProductCategory"/>
+        <implements service="updateProductCategoryToProdCatalog"/>
+        <implements service="updateProductCategoryToCategory"/>
+        <implements service="replaceProductCategoryContentLocalizedSimpleTexts"/>
+        <attribute name="updateLocalizedTexts" mode="IN" type="Boolean" optional="true" default-value="false"/>
+        <override name="productCategoryId" mode="IN"/><!-- WORKAROUND: for some reason this is INOUT in the ofbiz interface, not needed... -->
+        <override name="fromDate" optional="false"/>
+        <!-- make PART of PK optional because it's one-interface-or-the-other -->
+        <override name="prodCatalogId" optional="true"/><!-- addProductCategoryToProdCatalog -->
+        <override name="prodCatalogCategoryTypeId" optional="true"/><!-- addProductCategoryToProdCatalog -->
+        <override name="parentProductCategoryId" optional="true"/><!-- addProductCategoryToCategory -->
+    </service>
+    
+    <service name="deleteProductCategoryCatAssocVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="deleteProductCategoryCatAssocVersatile" auth="true">
+        <description>SCIPIO: Delete a ProductCategory catalog (if parentProductCategoryId empty) or 
+            category (if parentProductCategoryId set) association (versatile)</description>
+        <auto-attributes entity-name="ProductCategory" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="ProdCatalogCategory" include="pk" mode="IN" optional="true"/>
+        <auto-attributes entity-name="ProductCategoryRollup" include="pk" mode="IN" optional="true"/>
+        <attribute name="deleteAssocMode" mode="IN" type="String" optional="true" default-value="remove">
+            <description>(remove|expire, default: remove)</description>
+        </attribute>
+        <override name="productCategoryId" optional="false"/>
+    </service>
+    
+    <!-- SCIPIO: new (2017-10-20)
+        This attempts to delete a ProductCategory and related records.
+        By default it only removes related records of low importance and relatively "safe" to remove
+        such as ProductCategoryAttribute, ProductCategoryContent and expired ProdCatalogCategory/ProductCategoryRollup/ProductCategoryMember records.
+        See service attributes for more destructive options.
+        TODO: 2017-10-20: partial functionality only -->
+    <service name="deleteProductCategoryAndRelatedVersatile" default-entity-name="ProductCategory" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="deleteProductCategoryAndRelatedVersatile" auth="true">
+        <description>SCIPIO: Delete a ProductCategory record and various related records [WARN: may be dangerous - best-effort] (versatile)</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <attribute name="deleteParentAssocSelect" mode="IN" type="String" optional="true" default-value="all">
+            <description>(none|expired|all, default: expired) Controls whether deletes all (default)
+                or only expired ProductCategoryRollup and ProdCatalogCategory records to this category's parents</description>
+        </attribute>
+        <attribute name="deleteChildAssocSelect" mode="IN" type="String" optional="true" default-value="expired">
+            <description>(none|expired|all, default: expired) If "expired" (default), removes children assoc records
+                such as ProductCategoryMember and ProductCategoryRollup that are expired; 
+                if "all", removes all such records even if destructive.
+                WARN: "all" mode may leave products/categories as orphans!</description>
+        </attribute>
+        <attribute name="deleteContentRecursive" mode="IN" type="String" optional="true" default-value="all">
+            <description>(none|active|all, default: all) Controls whether and which Content records are deleted
+                recursively. If none, only the associations are deleted. "active" means non-expired.
+                WARN: This function only makes sense if the Content records were meant to be product-specific
+                    and not standalone; if standalone content is linked to the product then this may cause collateral damage!</description>
+        </attribute>
+        <attribute name="deleteSpecialAssocSelect" mode="IN" type="String" optional="true" default-value="none">
+            <description>(none|expired|all, default: expired) Special-purpose association deletion mode,
+                e.g. TaxAuthorityRateProduct and TaxAuthorityCategory
+                WARN: may currently be destructive (TODO: REVIEW) - "expired" is safe but only if no expired records are still needed.</description>
+        </attribute>
+        <!-- TODO: not implemented
+        <attribute name="deleteChildrenSelect" mode="IN" type="String" optional="true" default-value="none">
+            <description>(none|recursive) Delete the child categories and products of this category (most destructive)</description>
+        </attribute>-->
+    </service>
+    
+    <service name="deleteProductCategoryAndCatAssocVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="deleteProductCategoryAndCatAssocVersatile" auth="true">
+        <description>SCIPIO: Delete a ProductCategory record (if no members) AND/OR a catalog/category association 
+            based on wether parentProductCategoryId set (versatile)</description>
+        <implements service="deleteProductCategoryCatAssocVersatile"/>
+        <implements service="deleteProductCategoryAndRelatedVersatile"/>
+        <attribute name="deleteRecordAndRelated" mode="IN" type="Boolean" optional="true" default-value="true">
+            <description>If true, attempts to delete ProductCategory (using deleteProductCategoryAndRelatedVersatile); if false only deletes catalog or category association</description>
+        </attribute>
+    </service>
+    
+    <service name="addProductCategoryCatAssocVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="addProductCategoryCatAssocVersatile" auth="true">
+        <description>SCIPIO: Adds a category to catalog or category, attempting to prevent multiple associations (versatile)</description>
+        <auto-attributes entity-name="ProductCategory" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="ProdCatalogCategory" include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes entity-name="ProdCatalogCategory" include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes entity-name="ProductCategoryRollup" include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes entity-name="ProductCategoryRollup" include="nonpk" mode="IN" optional="true"/>
+        <override name="productCategoryId" optional="false"/>
+        <override name="fromDate" optional="true" mode="INOUT"/><!-- may be empty on input -->
+    </service>
+    
+    <service name="copyProductCategoryCatAssocVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="copyProductCategoryCatAssocVersatile" auth="true">
+        <description>SCIPIO: Copies a ProductCategory assoc by creating a new assoc (catalog or category assoc), basically a special wrapper around addProductCategoryCatAssocVersatile (versatile)</description>
+        <!-- source category and assoc -->
+        <auto-attributes entity-name="ProductCategory" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="ProdCatalogCategory" include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes entity-name="ProdCatalogCategory" include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes entity-name="ProductCategoryRollup" include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes entity-name="ProductCategoryRollup" include="nonpk" mode="IN" optional="true"/>
+        <!-- service behavior -->
+        <attribute name="returnAssocFields" mode="IN" type="String" optional="true" default-value="false">
+            <description>If true, the assoc fields for the new assoc will be outputted back to the
+                prefix-less fields in addition to the "to_"-prefixed ones (i.e., fromDate will
+                be output in both "fromDate" and "to_fromDate").
+                If false, the new assoc fields are output only to the "to_"-prefixed fields.
+                This can be used in events for switching the target easily after the update.</description>
+        </attribute>
+        <!-- target catalog or category  -->
+        <!-- common -->
+        <attribute name="to_fromDate" mode="INOUT" type="Timestamp" optional="true"/><!-- may be left empty -->
+        <attribute name="to_sequenceNum" mode="INOUT" type="Long" optional="true"/>
+        <!-- ProdCatalogCategory -->
+        <attribute name="to_prodCatalogId" mode="INOUT" type="String" optional="true"/>
+        <attribute name="to_prodCatalogCategoryTypeId" mode="INOUT" type="String" optional="true"/>
+        <!-- ProductCategoryRollup -->
+        <attribute name="to_parentProductCategoryId" mode="INOUT" type="String" optional="true"/>
+        <attribute name="to_productCategoryId" mode="OUT" type="String" optional="true"/>
+        <override name="productCategoryId" optional="false"/>      
+    </service>
+    
+    <service name="moveProductCategoryCatAssocVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="moveProductCategoryCatAssocVersatile" auth="true">
+        <description>SCIPIO: Moves a ProductCategory assoc by creating a new assoc (catalog or category assoc) and removing or expiring the original (versatile)</description>
+        <implements service="copyProductCategoryCatAssocVersatile"/>
+        <attribute name="deleteAssocMode" mode="IN" type="String" optional="true" default-value="remove">
+            <description>(remove|expire, default: remove)</description>
+        </attribute>     
+    </service>
+    
+    <service name="getProductCategoryExtendedDataVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="getProductCategoryExtendedDataVersatile" auth="true">
+        <description>SCIPIO: Gets extended ProductCategory data (originally written for catalog tree edit form) (versatile)</description>
+        <implements service="getProductCategoryContentLocalizedSimpleTextViews"/>
+        <attribute name="productCategory" mode="OUT" type="GenericValue" optional="false"/>
+    </service>
+    
+    <!-- PRODUCT -->
+    
+    <service name="createProductAndCatAssocVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/product/ProductServices.xml" invoke="createProductAndCatAssocVersatile" auth="true">
+        <description>SCIPIO: Create a Product and add to category (specialized variant of createProductInCategory) (versatile)</description>
+        <implements service="createProduct"/>
+        <implements service="addProductToCategory"/>
+        <implements service="replaceProductContentLocalizedSimpleTexts"/>
+        <attribute name="updateLocalizedTexts" mode="IN" type="Boolean" optional="true" default-value="false"/>
+    </service>
+    
+    <service name="updateProductAndCatAssocVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/product/ProductServices.xml" invoke="updateProductAndCatAssocVersatile" auth="true">
+        <description>SCIPIO: Update a Product and category assoc (versatile)</description>
+        <implements service="updateProduct"/>
+        <implements service="updateProductToCategory"/>
+        <implements service="replaceProductContentLocalizedSimpleTexts"/>
+        <attribute name="updateLocalizedTexts" mode="IN" type="Boolean" optional="true" default-value="false"/>
+    </service>
+    
+    <service name="deleteProductCatAssocVersatile" default-entity-name="Product" engine="simple"
+                location="component://product/script/org/ofbiz/product/product/ProductServices.xml" invoke="deleteProductCatAssocVersatile" auth="true">
+        <description>SCIPIO: Delete a Product and category assoc (versatile)</description>
+        <implements service="removeProductFromCategory"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <attribute name="deleteAssocMode" mode="IN" type="String" optional="true" default-value="remove">
+            <description>(remove|expire, default: remove)</description>
+        </attribute>
+    </service>
+    
+    <!-- SCIPIO: new (2017-10-20)
+        This attempts to delete a Product and related records.
+        By default it only removes related records of low importance and relatively "safe" to remove
+        such as ProductAttribute, ProductContent and expired ProductCategoryMember records.
+        See service attributes for more destructive options.
+        TODO: 2017-10-20: partial functionality only -->
+    <service name="deleteProductAndRelatedVersatile" default-entity-name="Product" engine="simple"
+                location="component://product/script/org/ofbiz/product/product/ProductServices.xml" invoke="deleteProductAndRelatedVersatile" auth="true">
+        <description>SCIPIO: Delete a Product record and various related records [WARN: may be dangerous - best-effort] (versatile)</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <attribute name="deleteParentAssocSelect" mode="IN" type="String" optional="true" default-value="all">
+            <description>(none|expired|all, default: expired) Controls whether deletes all (default)
+                or only expired ProductCategoryMember records to this category's parents</description>
+        </attribute>
+        <attribute name="deleteChildAssocSelect" mode="IN" type="String" optional="true" default-value="expired">
+            <description>(none|expired|all, default: expired) If "expired" (default), removes children assoc records
+                that are expired; if "all", removes all such records even if destructive.
+                WARN: "all" mode may leave products/categories as orphans!</description>
+        </attribute>
+        <attribute name="deleteContentRecursive" mode="IN" type="String" optional="true" default-value="all">
+            <description>(none|active|all, default: all) Controls whether and which Content records are deleted
+                recursively. If none, only the associations are deleted. "active" means non-expired.
+                WARN: This function only makes sense if the Content records were meant to be product-specific
+                    and not standalone; if standalone content is linked to the product then this may cause collateral damage!</description>
+        </attribute>
+        <attribute name="deleteAssocProductRecursive" mode="IN" type="String" optional="true" default-value="all">
+            <description>(none|active|all, default: all) Controls whether and which associated "to"/"child" Products are deleted
+                recursively. If none, only the associations are deleted. "active" means non-expired.
+                WARN: Risk of collateral damage</description>
+        </attribute>
+        <attribute name="deleteSpecialAssocSelect" mode="IN" type="String" optional="true" default-value="none">
+            <description>(none|expired|all, default: expired) Special-purpose association deletion mode
+                WARN: may currently be destructive (TODO: REVIEW) - "expired" is safe but only if no expired records are still needed.</description>
+        </attribute>
+    </service>
+    
+    <service name="deleteProductAndCatAssocVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/product/ProductServices.xml" invoke="deleteProductAndCatAssocVersatile" auth="true">
+        <description>SCIPIO: Delete a Product record (if no members) and category assoc (versatile)</description>
+        <implements service="deleteProductCatAssocVersatile"/>
+        <implements service="deleteProductAndRelatedVersatile"/>
+        <attribute name="deleteRecordAndRelated" mode="IN" type="Boolean" optional="true" default-value="true">
+            <description>If true, attempts to delete Product (using deleteProductAndRelatedVersatile); if false only deletes catalog or category association</description>
+        </attribute>
+    </service>
+    
+    <service name="addProductCatAssocVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/product/ProductServices.xml" invoke="addProductCatAssocVersatile" auth="true">
+        <description>SCIPIO: Adds a category to category, attempting to prevent multiple associations (versatile)</description>
+        <auto-attributes entity-name="Product" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="ProductCategoryMember" include="pk" mode="INOUT" optional="false"/>
+        <auto-attributes entity-name="ProductCategoryMember" include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" optional="true" mode="INOUT"/><!-- may be empty on input -->
+    </service>
+    
+    <service name="copyProductCatAssocVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/product/ProductServices.xml" invoke="copyProductCatAssocVersatile" auth="true">
+        <description>SCIPIO: Copies a Product assoc by creating a new assoc, basically a special wrapper around addProductCatAssocVersatile (versatile)</description>
+        <!-- source category and assoc -->
+        <auto-attributes entity-name="Product" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="ProductCategoryMember" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="ProductCategoryMember" include="pk" mode="OUT" optional="true"/>
+        <!-- service behavior -->
+        <attribute name="returnAssocFields" mode="IN" type="String" optional="true" default-value="false">
+            <description>If true, the assoc fields for the new assoc will be outputted back to the
+                prefix-less fields in addition to the "to_"-prefixed ones (i.e., fromDate will
+                be output in both "fromDate" and "to_fromDate").
+                If false, the new assoc fields are output only to the "to_"-prefixed fields.
+                This can be used in events for switching the target easily after the update.</description>
+        </attribute>
+        <!-- target -->
+        <attribute name="to_productCategoryId" mode="INOUT" type="String" optional="false"/>
+        <attribute name="to_fromDate" mode="INOUT" type="Timestamp" optional="false"/><!-- may be left empty -->
+        <attribute name="to_sequenceNum" mode="INOUT" type="Long" optional="false"/>
+        <attribute name="to_productId" mode="OUT" type="String" optional="false"/>
+        <override name="productId" optional="false"/>      
+    </service>
+    
+    <service name="moveProductCatAssocVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/product/ProductServices.xml" invoke="moveProductCatAssocVersatile" auth="true">
+        <description>SCIPIO: Moves a Product assoc by creating a new assoc and removing or expiring the original (versatile)</description>
+        <implements service="copyProductCatAssocVersatile"/>
+        <attribute name="deleteAssocMode" mode="IN" type="String" optional="true" default-value="remove">
+            <description>(remove|expire, default: remove)</description>
+        </attribute>     
+    </service>
+    
+    <service name="getProductExtendedDataVersatile" engine="simple"
+                location="component://product/script/org/ofbiz/product/product/ProductServices.xml" invoke="getProductExtendedDataVersatile" auth="true">
+        <description>SCIPIO: Gets extended Product data (originally written for catalog tree edit form) (versatile)</description>
+        <implements service="getProductContentLocalizedSimpleTextViews"/>
+        <attribute name="product" mode="OUT" type="GenericValue" optional="false"/>
+    </service>
+    
+    <!-- ======================================== -->
+    <!-- SCIPIO: New Services (novel functionality) -->
+    <!-- ======================================== -->
     
     <!-- SCIPIO: New service to build catalog/category/product tree-like structure according to the library being passed (currently jsTree supported only) -->
-    <service name="buildCatalogTree" engine="java" default-entity-name="ProdCatalog" location="org.ofbiz.product.category.CategoryServices" invoke="buildCatalogTree">
-        <description>Builds a tree containing catalogs, categories and products using catalogs as starting point</description>
+    <service name="buildCatalogTree" engine="java" default-entity-name="ProdCatalog" location="com.ilscipio.scipio.product.category.CategoryServices" invoke="buildCatalogTree">
+        <description>SCIPIO: Builds a tree containing catalogs, categories and products using catalogs as starting point</description>
         <auto-attributes mode="IN" include="pk" optional="false" />
         <attribute name="library" mode="IN" type="String" optional="true" default-value="jsTree" />
         <attribute name="mode" mode="IN" type="String" optional="true" default-value="full" />
+        <attribute name="state" mode="IN" type="Map" optional="true">
+            <description>Map of state attributes for top node: opened, selected, disabled. (added 2017-10-11)</description>
+        </attribute>
+        <attribute name="categoryStates" mode="IN" type="Map" optional="true">
+            <description>Map of categoryIds to maps of state attributes (added 2017-10-11).
+                WARN: can't specify specific path for many-parents</description>
+        </attribute>
+        <attribute name="useCategoryCache" mode="IN" type="Boolean" optional="true"/>
+        <attribute name="useProductCache" mode="IN" type="Boolean" optional="true"/>
+        <attribute name="includeEntityData" mode="IN" type="Map" optional="true">
+            <description>Map of names to entity-like field names to include in each tree item as "[name]Entity" entries (e.g. "productEntity").
+                Available names: prodCatalog, productStoreCatalog, productCategory, productCategoryRollup, prodCatalogCategory, product, productCategoryMember
+                Map values may be:
+                * Boolean or boolean as String - true means include all fields, false none
+                * Collection of field names to include
+                * Map of options. Supported keys:
+                  * use - boolean, whether to use
+                  * inclFields - Collection of field names to include
+                  * exclFields - Collection of field names to exclude
+            </description>
+        </attribute>
+        <attribute name="includeAllEntityData" mode="IN" type="Boolean" optional="true" default-value="false">
+            <description>If true, simply includes all available entity data; includeEntityData can still be set to specialize selection.</description>
+        </attribute>
+        <attribute name="maxProductsPerCat" mode="IN" type="Integer" optional="true"/><!-- default: no limit (same as -1) -->
+        <attribute name="includeEmptyTop" mode="IN" type="Boolean" optional="true" default-value="false">
+            <description>If false (default), empty catalog or top node is omitted</description>
+        </attribute>
+        <attribute name="productStoreCatalog" mode="IN" type="GenericValue" optional="true"/>
+        <attribute name="categoryEntityOutMap" mode="INOUT" type="Map" optional="true">
+            <description>Map of categoryIds to ProductCategory GenericValues; if non-null, 
+                all categories found are added to this map (needed to avoid performing expensive traversal twice)</description>
+        </attribute>
         <attribute name="treeList" mode="OUT" type="List" optional="false" />
     </service>
+    
+    <!-- SCIPIO: Service to discontinue a product 
+        NOTE: This is redundant if solr ECAs are enabled and should not be used in that case. -->    
+    <service name="discontinueProduct" engine="java" auth="true"
+        location="com.ilscipio.scipio.product.product.ProductServices" invoke="setProductToSalesDiscontinued">
+        <description>SCIPIO: Discontinues (manually disables) a product and updates solr.</description>
+        <attribute name="productId" mode="IN" type="String" />
+    </service>
 
+    <service name="generateProductAlternativeUrlsCore" engine="java" auth="true"
+        location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="generateProductAlternativeUrls">
+        <description>SCIPIO: Re-generates alternative urls for product based on the ruleset outlined in SeoConfig.xml [core only - no perm check]</description>
+        <!-- WARN: DO NOT EXPOSE AS EVENT - no perm check -->
+        <!--<permission-service service-name="productGenericPermission" main-action="UPDATE"/>-->
+        <!-- can pass either productId or product instance or GenericPk -->
+        <attribute name="productId" mode="IN" type="String" optional="true"/>
+        <attribute name="product" mode="IN" type="GenericEntity" optional="true"/>
+        <attribute name="doChildProducts" mode="IN" type="Boolean" optional="true" default-value="false">
+            <description>If true and virtual, also updates the variants (NOTE: parent and children done in the same transaction)</description>
+        </attribute>
+        <attribute name="includeVariant" mode="IN" type="Boolean" optional="true" default-value="true">
+            <description>Does NOT apply self, only consulted if doChildProducts true (need mostly for consistency with callers)</description>
+        </attribute>
+        <attribute name="skipProductIds" mode="IN" type="Collection" optional="true"/>
+        <attribute name="replaceExisting" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="removeOldLocales" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="genFixedIds" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>Generate fixed IDs with pattern "${idTrim}-ALT${localeStrUp}" (idTrim is id trimmed so total length under 20), mainly for demo data generation - high risk of failure if set to true in any other case</description>
+        </attribute>
+        <attribute name="fixedIdPat" type="String" mode="IN" optional="true"/>
+        <attribute name="mainContentId" mode="OUT" type="String" optional="true"/>
+        <attribute name="numUpdated" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="numSkipped" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="numError" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="visitedProductIds" mode="OUT" type="Set" optional="true"/>
+    </service>
+    <service name="generateProductAlternativeUrls" engine="java" auth="true"
+        location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="generateProductAlternativeUrls">
+        <description>SCIPIO: Re-generates alternative urls for product based on the ruleset outlined in SeoConfig.xml
+            WARN/TODO?: this service does not run for variant or other child products</description>
+        <permission-service service-name="productGenericPermission" main-action="UPDATE"/>
+        <implements service="generateProductAlternativeUrlsCore"/>
+    </service>
+    <service name="generateProductCategoryAlternativeUrlsCore" engine="java" auth="true"
+        location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="generateProductCategoryAlternativeUrls">
+        <description>SCIPIO: Re-generates alternative urls for category based on the ruleset outlined in SeoConfig.xml [core only - no perm check]</description>
+        <!-- WARN: DO NOT EXPOSE AS EVENT - no perm check -->
+        <!--<permission-service service-name="productGenericPermission" main-action="UPDATE"/>-->
+        <!-- can pass either productCategoryId or productCategory instance or GenericPk -->
+        <attribute name="productCategoryId" mode="IN" type="String" optional="true"/>
+        <attribute name="productCategory" mode="IN" type="GenericEntity" optional="true"/>
+        <attribute name="replaceExisting" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="removeOldLocales" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="genFixedIds" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>Generate fixed IDs with pattern "${idTrim}-ALT${localeStrUp}" (idTrim is id trimmed so total length under 20), mainly for demo data generation - high risk of failure if set to true in any other case</description>
+        </attribute>
+        <attribute name="fixedIdPat" type="String" mode="IN" optional="true"/>
+        <attribute name="mainContentId" mode="OUT" type="String" optional="true"/>
+        <attribute name="categoryUpdated" mode="OUT" type="Boolean" optional="true"/>
+    </service>
+    <service name="generateProductCategoryAlternativeUrls" engine="java" auth="true"
+        location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="generateProductCategoryAlternativeUrls">
+        <description>SCIPIO: Re-generates alternative urls for category based on the ruleset outlined in SeoConfig.xml</description>
+        <permission-service service-name="productGenericPermission" main-action="UPDATE"/>
+        <implements service="generateProductCategoryAlternativeUrlsCore"/>
+    </service>
+    <!-- TODO?: future, no replacement for stock yet
+    <service name="generateContentAlternativeUrls" engine="java" auth="true"
+        location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="generateAlternativeProductUrls">
+        <description>SCIPIO: Generates alternative urls for single conent based on the ruleset outlined in SeoConfig.xml</description>
+        <permission-service service-name="productGenericPermission" main-action="UPDATE"/>
+        <attribute name="contentId" mode="IN" type="String" optional="false"/>
+        <attribute name="replaceExisting" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="removeOldLocales" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="mainContentId" mode="OUT" type="String" optional="true"/>
+    </service>
+    -->
+    <service name="websiteAlternativeUrlsCatalogInterface" engine="interface">
+        <attribute name="webSiteId" type="String" mode="IN" optional="true">
+            <description>May pass webSiteId OR productStoreId</description>
+        </attribute>
+        <attribute name="productStoreId" type="String" mode="IN" optional="true">
+            <description>May pass webSiteId OR productStoreId</description>
+        </attribute>
+        <attribute name="prodCatalogId" type="String" mode="IN" optional="true">
+            <description>Limits to a specific catalog</description>
+        </attribute>
+        <attribute name="prodCatalogIdList" type="List" mode="IN" optional="true">
+            <description>Limits to specific catalogs</description>
+        </attribute>
+    </service>
+    <service name="generateWebsiteAlternativeUrls" engine="java" auth="true"
+        location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="generateWebsiteAlternativeUrls" transaction-timeout="72000">
+        <description>SCIPIO: Re-generates alternative urls for store/website based on ruleset outlined in SeoConfig.xml - replaces old generateMissingSeoUrlForWebsite service
+            FIXME?: this can include variant products, but does not yet recognize other ProductAssoc types</description>
+        <permission-service service-name="productGenericPermission" main-action="UPDATE"/>
+        <implements service="websiteAlternativeUrlsCatalogInterface"/>
+        <attribute name="typeGenerate" type="List" mode="IN" optional="true" default-value="[all]">
+            <description>Currently supports: product, category, all.</description>
+        </attribute>
+        <attribute name="replaceExisting" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="removeOldLocales" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="includeVariant" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="preventDuplicates" type="Boolean" mode="IN" optional="true" default-value="true">
+            <description>Tries to prevent regenerating the same URLs for the same categories and products more than one</description>
+        </attribute>
+        <attribute name="useCache" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>May be slightly faster iterating if true, but not recommended</description>
+        </attribute>
+        <attribute name="genFixedIds" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>Generate fixed IDs with pattern "${id}-ALT", mainly for demo data generation - high risk of failure if set to true in any other case</description>
+        </attribute>
+        <attribute name="prodFixedIdPat" type="String" mode="IN" optional="true"/>
+        <attribute name="catFixedIdPat" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="generateAllAlternativeUrls" engine="java" auth="true"
+        location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="generateAllAlternativeUrls" transaction-timeout="72000">
+        <description>SCIPIO: Re-generates alternative urls for ALL stores/websites based on ruleset outlined in SeoConfig.xml</description>
+        <permission-service service-name="productGenericPermission" main-action="UPDATE"/>
+        <attribute name="typeGenerate" type="List" mode="IN" optional="true" default-value="[all]">
+            <description>Currently supports: product, category, all.</description>
+        </attribute>
+        <attribute name="replaceExisting" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="removeOldLocales" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="includeVariant" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="useCache" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>May be slightly faster iterating if true, but not recommended</description>
+        </attribute>
+        <attribute name="genFixedIds" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>Generate fixed IDs with pattern "${id}-ALT", mainly for demo data generation - high risk of failure if set to true in any other case</description>
+        </attribute>
+        <attribute name="prodFixedIdPat" type="String" mode="IN" optional="true"/>
+        <attribute name="catFixedIdPat" type="String" mode="IN" optional="true"/>
+    </service>
+    
+    <!-- WARN: DO NOT EXPOSE AS EVENT - no perm check -->
+    <service name="removeProductAlternativeUrlsCore" engine="java" auth="true"
+        location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="removeProductAlternativeUrls">
+        <description>SCIPIO: Removes alternative urls for product [core only - no perm check]</description>
+        <!--<permission-service service-name="productGenericPermission" main-action="UPDATE"/>-->
+        <!-- can pass either productId or product instance or GenericPk -->
+        <attribute name="productId" mode="IN" type="String" optional="true"/>
+        <attribute name="product" mode="IN" type="GenericEntity" optional="true"/>
+        <attribute name="doChildProducts" mode="IN" type="Boolean" optional="true" default-value="false">
+            <description>If true and virtual, also updates the variants (NOTE: parent and children done in the same transaction)</description>
+        </attribute>
+        <attribute name="includeVariant" mode="IN" type="Boolean" optional="true" default-value="true">
+            <description>Does NOT apply self, only consulted if doChildProducts true (need mostly for consistency with callers)</description>
+        </attribute>
+        <attribute name="skipProductIds" mode="IN" type="Collection" optional="true"/>
+        <attribute name="numUpdated" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="numSkipped" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="numError" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="visitedProductIds" mode="OUT" type="Set" optional="true"/>
+    </service>
+    <service name="removeProductAlternativeUrls" engine="java" auth="true"
+        location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="removeProductAlternativeUrls">
+        <description>SCIPIO: Removes alternative urls for product</description>
+        <permission-service service-name="productGenericPermission" main-action="UPDATE"/>
+        <implements service="removeProductAlternativeUrlsCore"/>
+    </service>
+    <!-- WARN: DO NOT EXPOSE AS EVENT - no perm check -->
+    <service name="removeProductCategoryAlternativeUrlsCore" engine="java" auth="true"
+        location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="removeProductCategoryAlternativeUrls">
+        <description>SCIPIO: Remove alternative urls for category [core only - no perm check]</description>
+        <!--<permission-service service-name="productGenericPermission" main-action="UPDATE"/>-->
+        <!-- can pass either productCategoryId or productCategory instance or GenericPk -->
+        <attribute name="productCategoryId" mode="IN" type="String" optional="true"/>
+        <attribute name="productCategory" mode="IN" type="GenericEntity" optional="true"/>
+        <attribute name="categoryUpdated" mode="OUT" type="Boolean" optional="true"/>
+    </service>
+    <service name="removeProductCategoryAlternativeUrls" engine="java" auth="true"
+        location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="removeProductCategoryAlternativeUrls">
+        <description>SCIPIO: Remove alternative urls for category</description>
+        <permission-service service-name="productGenericPermission" main-action="UPDATE"/>
+        <implements service="removeProductCategoryAlternativeUrlsCore"/>
+    </service>
+    
+    <service name="removeWebsiteAlternativeUrls" engine="java" auth="true"
+        location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="removeWebsiteAlternativeUrls" transaction-timeout="72000">
+        <description>SCIPIO: Removes alternative URLs for the website
+            FIXME?: this can include variant products, but does not yet recognize other ProductAssoc types</description>
+        <permission-service service-name="productGenericPermission" main-action="UPDATE"/>
+        <implements service="websiteAlternativeUrlsCatalogInterface"/>
+        <attribute name="targetTypes" type="List" mode="IN" optional="true" default-value="[all]">
+            <description>Currently supports: product, category, all.</description>
+        </attribute>
+        <attribute name="includeVariant" type="Boolean" mode="IN" optional="true" default-value="true"/>
+    </service>
+    <service name="removeAllAlternativeUrls" engine="java" auth="true"
+        location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="removeAllAlternativeUrls" transaction-timeout="72000">
+        <description>SCIPIO: Removes alternative urls from all products and categories</description>
+        <permission-service service-name="productGenericPermission" main-action="UPDATE"/>
+        <attribute name="targetTypes" type="List" mode="IN" optional="true" default-value="[all]">
+            <description>Currently supports: product, category, all.</description>
+        </attribute>
+        <attribute name="includeVariant" type="Boolean" mode="IN" optional="true" default-value="true"/>
+    </service>
+    
+    <service name="generateWebsiteAlternativeUrlSitemapFiles" engine="java" 
+        location="com.ilscipio.scipio.product.seo.sitemap.SitemapServices" invoke="generateWebsiteAlternativeUrlSitemapFiles" 
+        transaction-timeout="72000">
+        <description>Creates sitemaps in filesystem using product/category alternative URLs, for WebSite, using configurations from sitemaps.properties</description>
+        <permission-service service-name="productGenericPermission" main-action="UPDATE"/>
+        <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
+        <attribute name="useCache" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>May be slightly faster iterating if true, but not recommended</description>
+        </attribute>
+    </service>
+    <service name="generateAllAlternativeUrlSitemapFiles" engine="java" 
+        location="com.ilscipio.scipio.product.seo.sitemap.SitemapServices" invoke="generateAllAlternativeUrlSitemapFiles" 
+        transaction-timeout="72000">
+        <description>Creates sitemaps in filesystem using product/category alternative URLs, for all WebSites that have it enabled, using configurations from sitemaps.properties</description>
+        <permission-service service-name="productGenericPermission" main-action="UPDATE"/>
+        <attribute name="useCache" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>May be slightly faster iterating if true, but not recommended</description>
+        </attribute>
+    </service>
+
+    <service name="exportAlternativeUrlsEntityXmlOptionsInterface" engine="interface">
+        <description>Traversal options for alt URL entity XML services</description>
+        <attribute name="typeExport" type="List" mode="IN" optional="true" default-value="[all]">
+            <description>Currently supports: product, category, all.</description>
+        </attribute>
+        <attribute name="includeVariant" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="preventDuplicates" type="Boolean" mode="IN" optional="true" default-value="true">
+            <description>Tries to prevent regenerating the same URLs for the same categories and products more than one</description>
+        </attribute>
+        <attribute name="useCache" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>May be slightly faster iterating if true, but not recommended</description>
+        </attribute>
+        <attribute name="linePrefix" type="String" mode="IN" optional="true">
+            <description>String prefix for each line, typically an indent</description>
+        </attribute>
+        <attribute name="recordGrouping" type="String" mode="IN" optional="true">
+            <description>Supported values: NONE/MAJOR_OBJECT (default), ENTITY_TYPE</description>
+        </attribute>
+    </service>
+    <service name="exportAlternativeUrlsEntityXmlWriterInterface" engine="interface">
+        <description>Output options for alt URL entity XML services</description>
+        <attribute name="asString" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>If true, will return result as a string in outString in addition
+                to outputting to the passed outWriter if any was passed (if none, also returns a new StringWriter)</description>
+        </attribute>
+        <attribute name="outFlush" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="outWriter" type="java.io.Writer" mode="INOUT" optional="true">
+            <description>Writer to output the formatted XML records to</description>
+        </attribute>
+        <attribute name="outString" type="String" mode="OUT" optional="true" allow-html="any">
+            <description>If this is set to "Y" or "true" on input and the outWriter is either
+                not set or a StringWriter, this will contain the output as a string upon success.</description>
+        </attribute>
+    </service>
+    <service name="exportWebsiteAlternativeUrlsEntityXml" engine="java" auth="true"
+        location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="exportWebsiteAlternativeUrlsEntityXml" transaction-timeout="72000">
+        <description>Exports alternative urls for given website to entity XML data out writer</description>
+        <permission-service service-name="productGenericPermission" main-action="VIEW"/>
+        <implements service="exportAlternativeUrlsEntityXmlOptionsInterface"/>
+        <implements service="exportAlternativeUrlsEntityXmlWriterInterface"/>
+        <implements service="websiteAlternativeUrlsCatalogInterface"/>
+    </service>
+    <service name="exportAllAlternativeUrlsEntityXml" engine="java" 
+        location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="exportAllAlternativeUrlsEntityXml" 
+        transaction-timeout="72000">
+        <description>Export all alternative URLs into a single output to entity XML data out writer</description>
+        <permission-service service-name="productGenericPermission" main-action="VIEW"/>
+        <implements service="exportAlternativeUrlsEntityXmlOptionsInterface"/>
+        <implements service="exportAlternativeUrlsEntityXmlWriterInterface"/>
+    </service>
+    <service name="exportWebsiteAlternativeUrlsEntityXmlFile" engine="java" 
+        location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="exportWebsiteAlternativeUrlsEntityXmlFile" 
+        transaction-timeout="72000">
+        <description>Exports alternative urls for given website or all websites to entity XML data file</description>
+        <permission-service service-name="productGenericPermission" main-action="VIEW"/>
+        <implements service="exportAlternativeUrlsEntityXmlOptionsInterface"/>
+        <implements service="websiteAlternativeUrlsCatalogInterface"/>
+        <attribute name="outFile" type="String" mode="IN" optional="false">
+            <description>Should begin with component://</description>
+        </attribute>
+        <attribute name="templateType" type="String" mode="IN" optional="false">
+            <description>Supported: comment-delimited (TODO: ftl)</description>
+        </attribute>
+        <attribute name="dataBeginMarker" type="String" mode="IN" optional="true" allow-html="any">
+            <description>All file contents before this marker is copied from the template to the outFile</description>
+        </attribute>
+        <attribute name="templateFile" type="String" mode="IN" optional="true">
+            <description>Should begin with component://</description>
+        </attribute>
+    </service>
+    <service name="exportAlternativeUrlsEntityXmlFileFromConfig" engine="java" 
+        location="com.ilscipio.scipio.product.seo.SeoCatalogServices" invoke="exportAlternativeUrlsEntityXmlFileFromConfig" 
+        transaction-timeout="72000">
+        <description>Exports alternative urls for given website or all websites to entity XML data file,
+            from config in seo-urls.properties files</description>
+        <permission-service service-name="productGenericPermission" main-action="VIEW"/>
+        <attribute name="configName" type="String" mode="IN" optional="true">
+            <description>Name of config in seo-urls.properties, in format: seourl.datafile.[configName].[params]</description>
+        </attribute>
+        <attribute name="configNameList" type="List" mode="IN" optional="true">
+            <description>List of config names in seo-urls.properties, in format: seourl.datafile.[configName].[params]</description>
+        </attribute>
+    </service>
+    
 </services>

@@ -79,7 +79,7 @@ under the License.
                                         <#-- SCIPIO: order by ProductContent.sequenceNum -->
                                         <#assign downloadContents = delegator.findByAnd("OrderItemAndProductContentInfo", {"orderId" : orderId, "orderItemSeqId" : orderItem.orderItemSeqId, "productContentTypeId" : "DIGITAL_DOWNLOAD", "statusId" : "ITEM_COMPLETED"}, ["sequenceNum ASC"], true)/>
                                         <#if downloadContents?has_content>
-                                           <@modal id="${orderId}_${orderItem.orderItemSeqId}_downloads" label=uiLabelMap.ContentDownload class="${styles.link_nav!} ${styles.action_export!}">
+                                           <@modal id="${orderId}_${orderItem.orderItemSeqId}_downloads" label=uiLabelMap.ContentDownload linkClass="${styles.link_nav!} ${styles.action_export!}">
                                               <@heading relLevel=+1>${getLabel("EcommerceDownloadsAvailableTitle", "EcommerceUiLabels")}</@heading>
                                               <ol>
                                               <#list downloadContents as downloadContent>

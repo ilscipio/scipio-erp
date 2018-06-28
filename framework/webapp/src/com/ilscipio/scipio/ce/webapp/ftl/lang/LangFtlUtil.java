@@ -67,7 +67,7 @@ import freemarker.template.utility.RichObjectWrapper;
  */
 public abstract class LangFtlUtil {
 
-    public static final String module = LangFtlUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     // NOTE: there's no _real_ need to synchronize on these. if two templates are built for one builtin its not big deal.
     private static final Map<String, Template> builtInCalls = new ConcurrentHashMap<>();
@@ -721,7 +721,7 @@ public abstract class LangFtlUtil {
 
     public static Map<String, Object> copyMapToRawMap(Map<String, Object> map, Set<String> inExKeys, Boolean include) throws TemplateModelException {
         if (include == Boolean.TRUE) {
-            Map<String, Object> res = new HashMap<String, Object>(map.size());
+            Map<String, Object> res = new HashMap<>(map.size());
             if (inExKeys == null) {
                 inExKeys = new HashSet<String>();
             }
@@ -734,10 +734,10 @@ public abstract class LangFtlUtil {
             return res;
         }
         else if (include == null || inExKeys == null || inExKeys.isEmpty()) {
-            return new HashMap<String, Object>(map);        
+            return new HashMap<>(map);        
         }
         else {
-            Map<String, Object> res = new HashMap<String, Object>(map.size());
+            Map<String, Object> res = new HashMap<>(map.size());
             for(Map.Entry<String, Object> entry : map.entrySet()) {
                 String key = entry.getKey();
                 if (!inExKeys.contains(key)) {
@@ -772,20 +772,20 @@ public abstract class LangFtlUtil {
         if (object instanceof Collection) {
             Collection<Object> collection = UtilGenerics.<Collection<Object>>cast(object);
             if (targetType == TemplateValueTargetType.PRESERVE || targetType == TemplateValueTargetType.RAW) {
-                return new ArrayList<Object>(collection);
+                return new ArrayList<>(collection);
             }
             else if (targetType == TemplateValueTargetType.MODEL || targetType == TemplateValueTargetType.SIMPLEMODEL) {
                 return new SimpleSequence(collection, objectWrapper);
             }
             else if (targetType == TemplateValueTargetType.COMPLEXMODEL) {
                 // no choice but to use user-supplied object wrapper
-                return wrap(new ArrayList<Object>(collection), objectWrapper);
+                return wrap(new ArrayList<>(collection), objectWrapper);
             }
         }
         else {
             Iterable<Object> iterable = UtilGenerics.<Iterable<Object>>cast(object);
             if (targetType == TemplateValueTargetType.PRESERVE || targetType == TemplateValueTargetType.RAW) {
-                List<Object> res = new ArrayList<Object>();
+                List<Object> res = new ArrayList<>();
                 for(Object val : iterable) {
                     res.add(val);
                 }
@@ -799,7 +799,7 @@ public abstract class LangFtlUtil {
                 return res;
             }
             else if (targetType == TemplateValueTargetType.COMPLEXMODEL) {
-                List<Object> res = new ArrayList<Object>();
+                List<Object> res = new ArrayList<>();
                 for(Object val : iterable) {
                     res.add(val);
                 }
@@ -825,7 +825,7 @@ public abstract class LangFtlUtil {
         if (object instanceof TemplateCollectionModel) { // TODO: isObjectType
             TemplateCollectionModel collectionModel = (TemplateCollectionModel) object;
             if (targetType == TemplateValueTargetType.RAW) {
-                List<Object> res = new ArrayList<Object>();
+                List<Object> res = new ArrayList<>();
                 TemplateModelIterator it = collectionModel.iterator();
                 while(it.hasNext()) {
                     res.add(it.next());
@@ -844,7 +844,7 @@ public abstract class LangFtlUtil {
                 return res;
             }
             else if (targetType == TemplateValueTargetType.COMPLEXMODEL) {
-                List<Object> res = new ArrayList<Object>();
+                List<Object> res = new ArrayList<>();
                 TemplateModelIterator it = collectionModel.iterator();
                 while(it.hasNext()) {
                     res.add(it.next());
@@ -855,7 +855,7 @@ public abstract class LangFtlUtil {
         else if (object instanceof TemplateSequenceModel) { // TODO: isObjectType
             TemplateSequenceModel seqModel = (TemplateSequenceModel) object;
             if (targetType == TemplateValueTargetType.RAW) {
-                List<Object> res = new ArrayList<Object>();
+                List<Object> res = new ArrayList<>();
                 for(int i=0; i < seqModel.size(); i++) {
                     res.add(seqModel.get(i));
                 }
@@ -869,7 +869,7 @@ public abstract class LangFtlUtil {
                 return res;
             }
             else if (targetType == TemplateValueTargetType.COMPLEXMODEL) {
-                List<Object> res = new ArrayList<Object>();
+                List<Object> res = new ArrayList<>();
                 for(int i=0; i < seqModel.size(); i++) {
                     res.add(seqModel.get(i));
                 }
@@ -882,19 +882,19 @@ public abstract class LangFtlUtil {
             if (wrappedObj instanceof Collection) {
                 Collection<Object> collection = UtilGenerics.<Collection<Object>>cast(object);
                 if (targetType == TemplateValueTargetType.RAW) {
-                    return new ArrayList<Object>(collection);
+                    return new ArrayList<>(collection);
                 }
                 else if (targetType == TemplateValueTargetType.MODEL || targetType == TemplateValueTargetType.SIMPLEMODEL) {
                     return new SimpleSequence(collection, objectWrapper);
                 }
                 else if (targetType == TemplateValueTargetType.PRESERVE || targetType == TemplateValueTargetType.COMPLEXMODEL) {
-                    return wrap(new ArrayList<Object>(collection), objectWrapper);
+                    return wrap(new ArrayList<>(collection), objectWrapper);
                 }
             }
             else if (wrappedObj instanceof Iterable) {
                 Iterable<Object> iterable = UtilGenerics.<Iterable<Object>>cast(object);
                 if (targetType == TemplateValueTargetType.RAW) {
-                    List<Object> res = new ArrayList<Object>();
+                    List<Object> res = new ArrayList<>();
                     for(Object val : iterable) {
                         res.add(val);
                     }
@@ -908,7 +908,7 @@ public abstract class LangFtlUtil {
                     return res;
                 }
                 else if (targetType == TemplateValueTargetType.PRESERVE || targetType == TemplateValueTargetType.COMPLEXMODEL) {
-                    List<Object> res = new ArrayList<Object>();
+                    List<Object> res = new ArrayList<>();
                     for(Object val : iterable) {
                         res.add(val);
                     }
@@ -1465,6 +1465,9 @@ public abstract class LangFtlUtil {
     
     /**
      * Returns the given model as string, bypassing auto-escaping done by EscapingModels.
+     * <p>
+     * WARN (TODO?: REVIEW?): this can crash when model is CollectionModel or MapModel, childs of TemplateScalarModel.
+     * we let it crash because non-strict typing may be dangerous and hide errors...
      * 
      * @see org.ofbiz.webapp.ftl.EscapingModel
      */
@@ -1489,6 +1492,28 @@ public abstract class LangFtlUtil {
         }
     }
     
+    /**
+     * Returns the given model as string, optionally bypassing auto-escaping done by EscapingModels;
+     * if not a string, calles getAsString on it.
+     * <p>
+     * NOTE: this behaves similar to {@link #toRawString}, but returns a String.
+     * They are almost the same.
+     * 
+     * @see org.ofbiz.webapp.ftl.EscapingModel
+     */
+    public static String getAsOrToString(TemplateScalarModel model, boolean nonEscaping) throws TemplateModelException {
+        if (nonEscaping && (model instanceof EscapingModel)) {
+            Object value = ((EscapingModel) model).getWrappedObject();
+            if (value instanceof String || value == null) {
+                return (String) value;
+            } else {
+                return model.getAsString();
+            }
+        } else {
+            return model.getAsString();
+        }
+    }
+
     /**
      * Standard/"dumb" (re-)wrapping method. will deep-unwrap the value if necessary (if TemplateModel).
      * <p>
@@ -1858,6 +1883,17 @@ public abstract class LangFtlUtil {
         } else {
             return execStringBuiltIn(value, env);
         }
+    }
+    
+    /**
+     * Performs the logical {@link #toRawString(TemplateModel, Environment)} operation on a single value, but returns as String type instead
+     * of template model.
+     */
+    public static String toRawJavaString(TemplateModel value, Environment env) throws TemplateModelException {
+        if (!(value instanceof TemplateScalarModel)) {
+            value = execStringBuiltIn(value, env);
+        }
+        return getAsStringNonEscaping((TemplateScalarModel) value);
     }
     
     /**

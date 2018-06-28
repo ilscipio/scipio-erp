@@ -34,7 +34,7 @@ import org.ofbiz.service.job.JobManager;
  * A container for the service engine. 
  */
 public class ServiceContainer implements Container {
-    private static final String module = ServiceContainer.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final ConcurrentHashMap<String, LocalDispatcher> dispatcherCache = new ConcurrentHashMap<String, LocalDispatcher>();
     private static LocalDispatcherFactory dispatcherFactory;
 

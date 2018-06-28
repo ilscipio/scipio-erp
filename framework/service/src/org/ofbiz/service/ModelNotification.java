@@ -38,7 +38,7 @@ import org.ofbiz.service.config.model.Notify;
  */
 public class ModelNotification {
 
-    public static final String module = ModelNotification.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public String notificationGroupName;
     public String notificationEvent;

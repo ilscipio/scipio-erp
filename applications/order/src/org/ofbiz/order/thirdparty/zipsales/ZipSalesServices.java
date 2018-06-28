@@ -23,11 +23,10 @@ import java.net.URL;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import javolution.util.FastList;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -56,7 +55,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class ZipSalesServices {
 
-    public static final String module = ZipSalesServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String dataFile = "org/ofbiz/order/thirdparty/zipsales/ZipSalesTaxTables.xml";
     public static final String flatTable = "FlatTaxTable";
     public static final String ruleTable = "FreightRuleTable";
@@ -226,11 +225,11 @@ public class ZipSalesServices {
         String city = shippingAddress.getString("city");
 
         // setup the return lists.
-        List<GenericValue> orderAdjustments = FastList.newInstance();
-        List<List<GenericValue>> itemAdjustments = FastList.newInstance();
+        List<GenericValue> orderAdjustments = new LinkedList<GenericValue>();
+        List<List<GenericValue>> itemAdjustments = new LinkedList<List<GenericValue>>();
 
         // check for a valid state/province geo
-        String validStates = EntityUtilProperties.getPropertyValue("zipsales.properties", "zipsales.valid.states", delegator);
+        String validStates = EntityUtilProperties.getPropertyValue("zipsales", "zipsales.valid.states", delegator);
         if (UtilValidate.isNotEmpty(validStates)) {
             List<String> stateSplit = StringUtil.split(validStates, "|");
             if (!stateSplit.contains(stateProvince)) {
@@ -264,7 +263,7 @@ public class ZipSalesServices {
     }
 
     private static List<GenericValue>getItemTaxList(Delegator delegator, GenericValue item, String zipCode, String city, BigDecimal itemAmount, BigDecimal shippingAmount, boolean isUseTax) throws GeneralException {
-        List<GenericValue> adjustments = FastList.newInstance();
+        List<GenericValue> adjustments = new LinkedList<GenericValue>();
 
         // check the item for tax status
         if (item != null && item.get("taxable") != null && "N".equals(item.getString("taxable"))) {

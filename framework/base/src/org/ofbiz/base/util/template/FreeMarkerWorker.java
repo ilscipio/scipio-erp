@@ -85,9 +85,9 @@ import freemarker.template.utility.DeepUnwrap;
  */
 public class FreeMarkerWorker {
 
-    public static final String module = FreeMarkerWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    public static final Version version = Configuration.VERSION_2_3_25;
+    public static final Version version = Configuration.VERSION_2_3_28;
 
     // use soft references for this so that things from Content records don't kill all of our memory, or maybe not for performance reasons... hmmm, leave to config file...
     private static final UtilCache<String, Template> cachedTemplates = UtilCache.createUtilCache("template.ftl.general", 0, 0, false);
@@ -154,8 +154,12 @@ public class FreeMarkerWorker {
         return defaultSimpleTypeCopyingWrapper;
     }
 
+    public static Configuration newConfiguration() {
+        return new Configuration(version);
+    }
+
     public static Configuration makeConfiguration(BeansWrapper wrapper) {
-        Configuration newConfig = new Configuration(version);
+        Configuration newConfig = newConfiguration();
 
         newConfig.setObjectWrapper(wrapper);
         TemplateHashModel staticModels = wrapper.getStaticModels();
@@ -192,7 +196,7 @@ public class FreeMarkerWorker {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         Enumeration<URL> resources;
         try {
-            resources = loader.getResources("freemarkerTransforms.properties");
+            resources = loader.getResources("freemarkerTransforms.properties"); 
         } catch (IOException e) {
             Debug.logError(e, "Could not load list of freemarkerTransforms.properties", module);
             throw UtilMisc.initCause(new InternalError(e.getMessage()), e);
@@ -757,7 +761,7 @@ public class FreeMarkerWorker {
         if (ctx == null) {
             throw new IllegalArgumentException("Error in getSiteParameters, context/ctx cannot be null");
         }
-        ServletContext servletContext = request.getSession().getServletContext();
+        ServletContext servletContext = request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
         String rootDir = (String)ctx.get("rootDir");
         String webSiteId = (String)ctx.get("webSiteId");
         String https = (String)ctx.get("https");
@@ -850,9 +854,11 @@ public class FreeMarkerWorker {
     public static class OFBizTemplateExceptionHandler implements TemplateExceptionHandler {
         public void handleTemplateException(TemplateException te, Environment env, Writer out) throws TemplateException {
             // SCIPIO: 2017-03-23: new switch, split up code
-            UtilRender.RenderExceptionMode exMode = getRenderExceptionMode(env);
+            UtilRender.RenderExceptionMode exMode = getRenderExceptionMode(te, env);
             if (exMode == UtilRender.RenderExceptionMode.DEBUG) {
                 handleTemplateExceptionDebug(te, env, out);
+            } else if (exMode == UtilRender.RenderExceptionMode.BLANK) {
+                handleTemplateExceptionBlank(te, env, out);
             } else {
                 handleTemplateExceptionRethrow(te, env, out);
             }
@@ -877,6 +883,10 @@ public class FreeMarkerWorker {
             } catch (IOException e) {
                 Debug.logError(e, module);
             }
+        }
+        
+        protected void handleTemplateExceptionBlank(TemplateException te, Environment env, Writer out) throws TemplateException {
+            ; // do nothing, should already be logged by Freemarker
         }
     }
 
@@ -962,5 +972,16 @@ public class FreeMarkerWorker {
             }
         }
         return UtilRender.getGlobalRenderExceptionMode();
+    }
+    
+    /**
+     * SCIPIO: Gets the render exception mode from the exception, environment or more generic variables (best-effort).
+     * NOTE: the exception causes are consulted, but only the FIRST that implements RenderExceptionModeHolder is
+     * consulted (so the wrapping exception controls whether to recurse further down or not).
+     */
+    public static UtilRender.RenderExceptionMode getRenderExceptionMode(Throwable t, Environment env) {
+        UtilRender.RenderExceptionMode res = UtilRender.getRenderExceptionMode(t);
+        if (res != null) return res;
+        return getRenderExceptionMode(env);
     }
 }

@@ -16,7 +16,7 @@ import org.ofbiz.base.util.string.FlexibleStringExpander;
  */
 public abstract class ScreenFallback {
 
-    public static final String module = ScreenFallback.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     private static final ScreenFallbackSettings defaultFallbackSettings = new SimpleScreenFallbackSettings("", "", null);
     

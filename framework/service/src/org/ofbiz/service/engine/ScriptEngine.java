@@ -52,7 +52,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public final class ScriptEngine extends GenericAsyncEngine {
 
-    public static final String module = ScriptEngine.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final Set<String> protectedKeys = createProtectedKeys();
 
     private static Set<String> createProtectedKeys() {

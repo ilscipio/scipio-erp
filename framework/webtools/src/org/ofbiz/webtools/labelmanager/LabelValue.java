@@ -20,7 +20,7 @@ package org.ofbiz.webtools.labelmanager;
 
 public class LabelValue {
 
-    public static final String module = LabelValue.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected String labelValue = "";
     protected String labelComment = "";

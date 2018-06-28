@@ -27,16 +27,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
-import org.jdom.JDOMException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
@@ -45,12 +44,16 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.common.image.ImageTransform;
+import org.ofbiz.common.image.ImageType;
+import org.ofbiz.common.image.ImageUtil;
+import org.ofbiz.common.image.scaler.ImageScalers;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.util.EntityUtilProperties;
+import org.ofbiz.product.image.ProductImageWorker;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -61,15 +64,15 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class ImageManagementServices {
     
-    public static final String module = ImageManagementServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ProductErrorUiLabels";
     private static int imageCount = 0;
     private static String imagePath;
     
     public static Map<String, Object> addMultipleuploadForProduct(DispatchContext dctx, Map<String, ? extends Object> context)
-    throws IOException, JDOMException {
+    throws IOException {
         
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -101,10 +104,10 @@ public class ImageManagementServices {
                 sizeType = imageResize;
             }
             
-            Map<String, Object> contentCtx = FastMap.newInstance();
+            Map<String, Object> contentCtx = new HashMap<String, Object>();
             contentCtx.put("contentTypeId", "DOCUMENT");
             contentCtx.put("userLogin", userLogin);
-            Map<String, Object> contentResult = FastMap.newInstance();
+            Map<String, Object> contentResult = new HashMap<String, Object>();
             try {
                 contentResult = dispatcher.runSync("createContent", contentCtx);
             } catch (GenericServiceException e) {
@@ -131,7 +134,7 @@ public class ImageManagementServices {
                 fileContentType = "image/png";
             }
             
-            List<GenericValue> fileExtension = FastList.newInstance();
+            List<GenericValue> fileExtension = new LinkedList<GenericValue>();
             try {
                 fileExtension = EntityQuery.use(delegator).from("FileExtension").where("mimeTypeId", fileContentType).queryList();
             } catch (GenericEntityException e) {
@@ -201,15 +204,11 @@ public class ImageManagementServices {
                             "ProductImageViewUnableWriteBinaryData", UtilMisc.toMap("fileName", fileOriginal.getAbsolutePath()), locale));
                 }
                 
-                Map<String, Object> resultResize = FastMap.newInstance();
+                Map<String, Object> resultResize = new HashMap<String, Object>();
                 try {
                     resultResize.putAll(ImageManagementServices.scaleImageMangementInAllSize(context, imageName, sizeType, productId));
                 } catch (IOException e) {
                     String errMsg = "Scale additional image in all different sizes is impossible : " + e.toString();
-                    Debug.logError(e, errMsg, module);
-                    return ServiceUtil.returnError(errMsg);
-                } catch (JDOMException e) {
-                    String errMsg = "Errors occur in parsing ImageProperties.xml : " + e.toString();
                     Debug.logError(e, errMsg, module);
                     return ServiceUtil.returnError(errMsg);
                 }
@@ -225,7 +224,7 @@ public class ImageManagementServices {
             createContentAndDataResource(dctx, userLogin, imageName, imageUrl, contentId, fileContentType);
             createContentAndDataResource(dctx, userLogin, filenameToUseThumb, imageUrlThumb, contentIdThumb, fileContentType);
             
-            Map<String, Object> createContentAssocMap = FastMap.newInstance();
+            Map<String, Object> createContentAssocMap = new HashMap<String, Object>();
             createContentAssocMap.put("contentAssocTypeId", "IMAGE_THUMBNAIL");
             createContentAssocMap.put("contentId", contentId);
             createContentAssocMap.put("contentIdTo", contentIdThumb);
@@ -238,7 +237,7 @@ public class ImageManagementServices {
                 return ServiceUtil.returnError(e.getMessage());
             }
             
-            Map<String, Object> productContentCtx = FastMap.newInstance();
+            Map<String, Object> productContentCtx = new HashMap<String, Object>();
             productContentCtx.put("productId", productId);
             productContentCtx.put("productContentTypeId", productContentTypeId);
             productContentCtx.put("fromDate", UtilDateTime.nowTimestamp());
@@ -252,7 +251,7 @@ public class ImageManagementServices {
                 return ServiceUtil.returnError(e.getMessage());
             }
             
-            Map<String, Object> contentApprovalCtx = FastMap.newInstance();
+            Map<String, Object> contentApprovalCtx = new HashMap<String, Object>();
             contentApprovalCtx.put("contentId", contentId);
             contentApprovalCtx.put("userLogin", userLogin);
             try {
@@ -264,7 +263,7 @@ public class ImageManagementServices {
             
             String autoApproveImage = EntityUtilProperties.getPropertyValue("catalog", "image.management.autoApproveImage", delegator);
             if (autoApproveImage.equals("Y")) {
-                Map<String, Object> autoApproveCtx = FastMap.newInstance();
+                Map<String, Object> autoApproveCtx = new HashMap<String, Object>();
                 autoApproveCtx.put("contentId", contentId);
                 autoApproveCtx.put("userLogin", userLogin);
                 autoApproveCtx.put("checkStatusId", "IM_APPROVED");
@@ -297,8 +296,17 @@ public class ImageManagementServices {
         return ServiceUtil.returnSuccess();
     }
     
+    /**
+     * Scaling method.
+     * <p>
+     * SCIPIO: 2017-07-04: This now looks for ImageProperties.xml under the product component; if not found,
+     * falls back on the one in content component.
+     * <p>
+     * SCIPIO: NOTE: 2017-07-04: This appears to have been a modified copy-paste of the methods in
+     * {@link org.ofbiz.product.image.ScaleImage#scaleImageManageInAllSize}.
+     */
     public static Map<String, Object> scaleImageMangementInAllSize(Map<String, ? extends Object> context, String filenameToUse, String resizeType, String productId)
-        throws IllegalArgumentException, ImagingOpException, IOException, JDOMException {
+        throws IllegalArgumentException, ImagingOpException, IOException {
         
         /* VARIABLES */
         Locale locale = (Locale) context.get("locale");
@@ -310,17 +318,17 @@ public class ImageManagementServices {
         }
         
         int index;
-        Map<String, Map<String, String>> imgPropertyMap = FastMap.newInstance();
+        Map<String, Map<String, String>> imgPropertyMap = new HashMap<String, Map<String, String>>();
         BufferedImage bufImg, bufNewImg;
         double imgHeight, imgWidth;
-        Map<String, String> imgUrlMap = FastMap.newInstance();
-        Map<String, Object> resultXMLMap = FastMap.newInstance();
-        Map<String, Object> resultBufImgMap = FastMap.newInstance();
-        Map<String, Object> resultScaleImgMap = FastMap.newInstance();
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, String> imgUrlMap = new HashMap<String, String>();
+        Map<String, Object> resultXMLMap = new LinkedHashMap<String, Object>();
+        Map<String, Object> resultBufImgMap = new HashMap<String, Object>();
+        Map<String, Object> resultScaleImgMap = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<String, Object>();
         
         /* ImageProperties.xml */
-        String imgPropertyFullPath = System.getProperty("ofbiz.home") + "/applications/product/config/ImageProperties.xml";
+        String imgPropertyFullPath = ProductImageWorker.getProductImagePropertiesFullPath(); // SCIPIO
         resultXMLMap.putAll(ImageTransform.getXMLValue(imgPropertyFullPath, locale));
         if (resultXMLMap.containsKey("responseMessage") && resultXMLMap.get("responseMessage").equals("success")) {
             imgPropertyMap.putAll(UtilGenerics.<Map<String, Map<String, String>>>cast(resultXMLMap.get("xml")));
@@ -416,11 +424,11 @@ public class ImageManagementServices {
     }
    
     public static Map<String, Object> createContentAndDataResource(DispatchContext dctx, GenericValue userLogin, String filenameToUse, String imageUrl, String contentId, String fileContentType){
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
         
-        Map<String, Object> dataResourceCtx = FastMap.newInstance();
+        Map<String, Object> dataResourceCtx = new HashMap<String, Object>();
         
         dataResourceCtx.put("objectInfo", imageUrl);
         dataResourceCtx.put("dataResourceName", filenameToUse);
@@ -429,7 +437,7 @@ public class ImageManagementServices {
         dataResourceCtx.put("mimeTypeId", fileContentType);
         dataResourceCtx.put("isPublic", "Y");
         
-        Map<String, Object> dataResourceResult = FastMap.newInstance();
+        Map<String, Object> dataResourceResult = new HashMap<String, Object>();
         try {
             dataResourceResult = dispatcher.runSync("createDataResource", dataResourceCtx);
         } catch (GenericServiceException e) {
@@ -441,7 +449,7 @@ public class ImageManagementServices {
         result.put("dataResourceFrameId", dataResourceId);
         result.put("dataResourceId", dataResourceId);
         
-        Map<String, Object> contentUp = FastMap.newInstance();
+        Map<String, Object> contentUp = new HashMap<String, Object>();
         contentUp.put("contentId", contentId);
         contentUp.put("dataResourceId", dataResourceResult.get("dataResourceId"));
         contentUp.put("contentName", filenameToUse);
@@ -484,7 +492,7 @@ public class ImageManagementServices {
     }
     
     public static Map<String, Object> createContentThumbnail(DispatchContext dctx, Map<String, ? extends Object> context, GenericValue userLogin, ByteBuffer imageData, String productId, String imageName){
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
         Locale locale = (Locale) context.get("locale");
@@ -494,10 +502,10 @@ public class ImageManagementServices {
         String nameOfThumb = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.management.nameofthumbnail", delegator), context);
         
         // Create content for thumbnail
-        Map<String, Object> contentThumb = FastMap.newInstance();
+        Map<String, Object> contentThumb = new HashMap<String, Object>();
         contentThumb.put("contentTypeId", "DOCUMENT");
         contentThumb.put("userLogin", userLogin);
-        Map<String, Object> contentThumbResult = FastMap.newInstance();
+        Map<String, Object> contentThumbResult = new HashMap<String, Object>();
         try {
             contentThumbResult = dispatcher.runSync("createContent", contentThumb);
         } catch (GenericServiceException e) {
@@ -523,7 +531,7 @@ public class ImageManagementServices {
             fileContentType = "image/png";
         }
         
-        List<GenericValue> fileExtensionThumb = FastList.newInstance();
+        List<GenericValue> fileExtensionThumb = new LinkedList<GenericValue>();
         try {
             fileExtensionThumb = delegator.findByAnd("FileExtension", UtilMisc.toMap("mimeTypeId", fileContentType), null, false);
         } catch (GenericEntityException e) {
@@ -544,7 +552,7 @@ public class ImageManagementServices {
             fileContentType = "image/png";
         }
         
-        List<GenericValue> fileExtensionThumb = FastList.newInstance();
+        List<GenericValue> fileExtensionThumb = new LinkedList<GenericValue>();
         try {
             fileExtensionThumb = EntityQuery.use(delegator).from("FileExtension").where("mimeTypeId", fileContentType).queryList();
         } catch (GenericEntityException e) {
@@ -576,15 +584,11 @@ public class ImageManagementServices {
                     UtilMisc.toMap("fileName", fileOriginalThumb.getAbsolutePath()), locale));
         }
         
-        Map<String, Object> resultResizeThumb = FastMap.newInstance();
+        Map<String, Object> resultResizeThumb = new HashMap<String, Object>();
         try {
             resultResizeThumb.putAll(ImageManagementServices.scaleImageMangementInAllSize(context, filenameToUseThumb, "thumbnail", productId));
         } catch (IOException e) {
             String errMsg = "Scale additional image in all different sizes is impossible : " + e.toString();
-            Debug.logError(e, errMsg, module);
-            return ServiceUtil.returnError(errMsg);
-        } catch (JDOMException e) {
-            String errMsg = "Errors occur in parsing ImageProperties.xml : " + e.toString();
             Debug.logError(e, errMsg, module);
             return ServiceUtil.returnError(errMsg);
         }
@@ -596,7 +600,7 @@ public class ImageManagementServices {
         /* VARIABLES */
         BufferedImage bufNewImg;
         double defaultHeight, defaultWidth, scaleFactor;
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
         
         /* DIMENSIONS from ImageProperties */
         defaultHeight = 100;
@@ -619,18 +623,27 @@ public class ImageManagementServices {
             }
         }
         
-        int bufImgType;
-        if (BufferedImage.TYPE_CUSTOM == bufImg.getType()) {
-            // apply a type for image majority
-            bufImgType = BufferedImage.TYPE_INT_ARGB_PRE;
-        } else {
-            bufImgType = bufImg.getType();
-        }
+        // SCIPIO: obsolete
+//        int bufImgType;
+//        if (BufferedImage.TYPE_CUSTOM == bufImg.getType()) {
+//            // apply a type for image majority
+//            bufImgType = BufferedImage.TYPE_INT_ARGB_PRE;
+//        } else {
+//            bufImgType = bufImg.getType();
+//        }
         
         // scale original image with new size
-        Image newImg = bufImg.getScaledInstance((int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), Image.SCALE_SMOOTH);
+        // SCIPIO: 2017-07-12: new configurable scaling; scalerName may be an algorithm name (abstracted) or some other name (3rd-party lib name or other).
+        //bufNewImg = bufImg.getScaledInstance((int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), Image.SCALE_SMOOTH);
+        try {
+            Map<String, Object> scalingOptions = ImageUtil.addImageOpOptionIfNotSet(ImageUtil.makeOptions(), "targettype", ImageType.PRESERVE_IF_LOSSLESS); // NOTE: stock ofbiz behavior appeared to try to preserve
+            bufNewImg = ImageScalers.getScalerOrDefault(scalingOptions).scaleImage(bufImg, (int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), scalingOptions);
+        } catch(IOException e) {
+            throw new IllegalArgumentException("Error scaling image: " + e.getMessage(), e);
+        }
         
-        bufNewImg = ImageTransform.toBufferedImage(newImg, bufImgType);
+        // SCIPIO: handled by ImageType.PRESERVE
+        //bufNewImg = ImageTransform.toBufferedImage(newImg, bufImgType);
         
         result.put("bufferedImage", bufNewImg);
         result.put("scaleFactor", scaleFactor);
@@ -655,7 +668,7 @@ public class ImageManagementServices {
         /* VARIABLES */
         BufferedImage bufNewImg;
         double defaultHeight, defaultWidth, scaleFactor;
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
         
         /* DIMENSIONS from ImageProperties */
         defaultHeight = resizeHeight;
@@ -678,18 +691,27 @@ public class ImageManagementServices {
             }
         }
         
-        int bufImgType;
-        if (BufferedImage.TYPE_CUSTOM == bufImg.getType()) {
-            // apply a type for image majority
-            bufImgType = BufferedImage.TYPE_INT_ARGB_PRE;
-        } else {
-            bufImgType = bufImg.getType();
-        }
+        // SCIPIO: obsolete
+//        int bufImgType;
+//        if (BufferedImage.TYPE_CUSTOM == bufImg.getType()) {
+//            // apply a type for image majority
+//            bufImgType = BufferedImage.TYPE_INT_ARGB_PRE;
+//        } else {
+//            bufImgType = bufImg.getType();
+//        }
         
         // scale original image with new size
-        Image newImg = bufImg.getScaledInstance((int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), Image.SCALE_SMOOTH);
+        // SCIPIO: 2017-07-11: new configurable scaling; scalerName may be an algorithm name (abstracted) or some other name (3rd-party lib name or other).
+        // Image newImg = bufImg.getScaledInstance((int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), Image.SCALE_SMOOTH);
+        try {
+            Map<String, Object> scalingOptions = ImageUtil.addImageOpOptionIfNotSet(ImageUtil.makeOptions(), "targettype", ImageType.PRESERVE_IF_LOSSLESS); // NOTE: stock ofbiz behavior appeared to try to preserve
+            bufNewImg = ImageScalers.getScalerOrDefault(scalingOptions).scaleImage(bufImg, (int) (imgWidth * scaleFactor), (int) (imgHeight * scaleFactor), scalingOptions);
+        } catch(IOException e) {
+            throw new IllegalArgumentException("Error scaling image: " + e.getMessage(), e);
+        }
         
-        bufNewImg = ImageTransform.toBufferedImage(newImg, bufImgType);
+        // SCIPIO: handled by ImageType.PRESERVE
+        //bufNewImg = ImageTransform.toBufferedImage(newImg, bufImgType);
         
         result.put("bufferedImage", bufNewImg);
         result.put("scaleFactor", scaleFactor);
@@ -725,10 +747,10 @@ public class ImageManagementServices {
                 Map<String, Object> resultResize = ImageManagementServices.resizeImage(bufImg, imgHeight, imgWidth, resizeHeight, resizeWidth);
                 ImageIO.write((RenderedImage) resultResize.get("bufferedImage"), mimeType, new File(imageServerPath + "/" + productId + "/" + filenameToUse));
                 
-                Map<String, Object> contentThumb = FastMap.newInstance();
+                Map<String, Object> contentThumb = new HashMap<String, Object>();
                 contentThumb.put("contentTypeId", "DOCUMENT");
                 contentThumb.put("userLogin", userLogin);
-                Map<String, Object> contentThumbResult = FastMap.newInstance();
+                Map<String, Object> contentThumbResult = new HashMap<String, Object>();
                 try {
                     contentThumbResult = dispatcher.runSync("createContent", contentThumb);
                 } catch (GenericServiceException e) {
@@ -740,7 +762,7 @@ public class ImageManagementServices {
                 String imageUrlThumb = imageServerUrl + "/" + productId + "/" + filenameToUse;
                 ImageManagementServices.createContentAndDataResource(dctx, userLogin, filenameToUse, imageUrlThumb, contentIdThumb, "image/jpeg");
                 
-                Map<String, Object> createContentAssocMap = FastMap.newInstance();
+                Map<String, Object> createContentAssocMap = new HashMap<String, Object>();
                 createContentAssocMap.put("contentAssocTypeId", "IMAGE_THUMBNAIL");
                 createContentAssocMap.put("contentId", contentId);
                 createContentAssocMap.put("contentIdTo", contentIdThumb);
@@ -811,7 +833,7 @@ public class ImageManagementServices {
                 File file = new File(imageServerPath + "/" + productId + "/" + dataResourceName);
                 file.delete();
                 
-                Map<String, Object> contentUp = FastMap.newInstance();
+                Map<String, Object> contentUp = new HashMap<String, Object>();
                 contentUp.put("contentId", contentId);
                 contentUp.put("contentName", filenameToUse);
                 contentUp.put("userLogin", userLogin);
@@ -838,7 +860,7 @@ public class ImageManagementServices {
                     }
                     
                     if (dataResource != null) {
-                        Map<String, Object> dataResourceCtx = FastMap.newInstance();
+                        Map<String, Object> dataResourceCtx = new HashMap<String, Object>();
                         dataResourceCtx.put("dataResourceId", dataResource.getString("dataResourceId"));
                         dataResourceCtx.put("objectInfo", imageUrl);
                         dataResourceCtx.put("dataResourceName", filenameToUse);
@@ -870,7 +892,7 @@ public class ImageManagementServices {
                         File fileAssoc = new File(imageServerPath + "/" + productId + "/" + drDataResourceNameAssoc);
                         fileAssoc.delete();
                         
-                        Map<String, Object> contentAssocMap = FastMap.newInstance();
+                        Map<String, Object> contentAssocMap = new HashMap<String, Object>();
                         contentAssocMap.put("contentId", contentAssoc.get("contentIdTo"));
                         contentAssocMap.put("contentName", filenameToUseAssoc);
                         contentAssocMap.put("userLogin", userLogin);
@@ -897,7 +919,7 @@ public class ImageManagementServices {
                             }
                             
                             if (dataResourceAssocUp != null) {
-                                Map<String, Object> dataResourceAssocMap = FastMap.newInstance();
+                                Map<String, Object> dataResourceAssocMap = new HashMap<String, Object>();
                                 dataResourceAssocMap.put("dataResourceId", dataResourceAssocUp.getString("dataResourceId"));
                                 dataResourceAssocMap.put("objectInfo", imageUrlAssoc);
                                 dataResourceAssocMap.put("dataResourceName", filenameToUseAssoc);

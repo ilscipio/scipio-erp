@@ -37,7 +37,7 @@ import org.ofbiz.entity.util.EntityUtilProperties;
 
 public class CrossSubdomainSessionValve extends ValveBase {
 
-    public static final String module = CrossSubdomainSessionValve.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public CrossSubdomainSessionValve() {
         super();

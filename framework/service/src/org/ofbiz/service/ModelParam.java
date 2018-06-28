@@ -38,7 +38,7 @@ import org.ofbiz.base.util.UtilValidate;
 @SuppressWarnings("serial")
 public class ModelParam implements Serializable {
 
-    public static final String module = ModelParam.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /** Parameter name */
     public String name;

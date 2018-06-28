@@ -23,13 +23,12 @@ import java.security.SecureRandom;
 import java.sql.Timestamp;
 import com.ibm.icu.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Locale;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
 
 import org.ofbiz.base.crypto.HashCrypt;
 import org.ofbiz.base.util.Debug;
@@ -57,7 +56,7 @@ import org.ofbiz.service.GenericServiceException;
  */
 public class ContactMechServices {
 
-    public static final String module = ContactMechServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "PartyUiLabels";
     public static final String resourceError = "PartyErrorUiLabels";
 
@@ -69,13 +68,13 @@ public class ContactMechServices {
      *@return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> createContactMech(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Locale locale = (Locale) context.get("locale");
         Timestamp now = UtilDateTime.nowTimestamp();
-        List<GenericValue> toBeStored = FastList.newInstance();
+        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_PCM_CREATE");
 
@@ -132,13 +131,13 @@ public class ContactMechServices {
      *@return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> updateContactMech(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Locale locale = (Locale) context.get("locale");
         Timestamp now = UtilDateTime.nowTimestamp();
-        List<GenericValue> toBeStored = FastList.newInstance();
+        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
         boolean isModified = false;
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_PCM_UPDATE");
@@ -158,35 +157,43 @@ public class ContactMechServices {
         GenericValue contactMech = null;
         GenericValue partyContactMech = null;
 
+        // SCIPIO: 2017-10-09: contact mech queries rewritten so filter-by-date is checked manually to support better error message for expiry
         try {
             contactMech = EntityQuery.use(delegator).from("ContactMech").where("contactMechId", contactMechId).queryOne();
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage(), module);
             contactMech = null;
         }
-
-        if (!partyId.equals("_NA_")) {
-            // try to find a PartyContactMech with a valid date range
-            try {
-                partyContactMech = EntityQuery.use(delegator).from("PartyContactMech")
-                        .where("partyId", partyId, "contactMechId", contactMechId)
-                        .orderBy("fromDate")
-                        .filterByDate()
-                        .queryFirst();
-                if (partyContactMech == null) {
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
-                            "contactmechservices.cannot_update_specified_contact_info_not_corresponds", locale));
-                } else {
-                    toBeStored.add(partyContactMech);
-                }
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage(), module);
-                contactMech = null;
-            }
-        }
         if (contactMech == null) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "contactmechservices.could_not_find_specified_contact_info_read", locale));
+        }
+        
+        if (!partyId.equals("_NA_")) {
+            // try to find a PartyContactMech with a valid date range
+            try {
+                List<GenericValue> partyContactMechList = EntityQuery.use(delegator).from("PartyContactMech")
+                        .where("partyId", partyId, "contactMechId", contactMechId)
+                        .orderBy("fromDate")
+                        .filterByDate() // SCIPIO: manual
+                        .queryList();
+                if (UtilValidate.isEmpty(partyContactMechList)) {
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                            "contactmechservices.cannot_update_specified_contact_info_not_corresponds", locale));
+                }
+                partyContactMechList = EntityUtil.filterByDate(partyContactMechList);
+                partyContactMech = EntityUtil.getFirst(partyContactMechList);
+                if (partyContactMech == null) {
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                            "contactmechservices.cannot_update_specified_contact_info_expired", locale));
+                }
+                toBeStored.add(partyContactMech);
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e.getMessage(), module);
+                contactMech = null;
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "contactmechservices.could_not_find_specified_contact_info_read", locale));
+            }
         }
 
         String contactMechTypeId = contactMech.getString("contactMechTypeId");
@@ -266,7 +273,7 @@ public class ContactMechServices {
      *@return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> deleteContactMech(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -324,13 +331,13 @@ public class ContactMechServices {
      *@return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> createPostalAddress(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Locale locale = (Locale) context.get("locale");
         Timestamp now = UtilDateTime.nowTimestamp();
-        List<GenericValue> toBeStored = FastList.newInstance();
+        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_PCM_CREATE");
         
@@ -396,13 +403,13 @@ public class ContactMechServices {
      *@return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> updatePostalAddress(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Locale locale = (Locale) context.get("locale");
         Timestamp now = UtilDateTime.nowTimestamp();
-        List<GenericValue> toBeStored = FastList.newInstance();
+        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
         boolean isModified = false;
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_PCM_UPDATE");
@@ -423,36 +430,45 @@ public class ContactMechServices {
         GenericValue contactMech = null;
         GenericValue partyContactMech = null;
 
+        // SCIPIO: 2017-10-09: contact mech queries rewritten so filter-by-date is checked manually to support better error message for expiry
         try {
             contactMech = EntityQuery.use(delegator).from("ContactMech").where("contactMechId", contactMechId).queryOne();
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage(), module);
             contactMech = null;
         }
-
-        if (!partyId.equals("_NA_")) {
-            // try to find a PartyContactMech with a valid date range
-            try {
-                partyContactMech = EntityQuery.use(delegator).from("PartyContactMech")
-                        .where("partyId", partyId, "contactMechId", contactMechId)
-                        .orderBy("fromDate")
-                        .filterByDate()
-                        .queryFirst();
-                if (partyContactMech == null) {
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
-                            "contactmechservices.cannot_update_specified_contact_info_not_corresponds", locale));
-                } else {
-                    toBeStored.add(partyContactMech);
-                }
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e.getMessage(), module);
-                contactMech = null;
-            }
-        }
         if (contactMech == null) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "contactmechservices.could_not_find_specified_contact_info_read", locale));
         }
+        
+        if (!partyId.equals("_NA_")) {
+            // try to find a PartyContactMech with a valid date range
+            try {
+                List<GenericValue> partyContactMechList = EntityQuery.use(delegator).from("PartyContactMech")
+                        .where("partyId", partyId, "contactMechId", contactMechId)
+                        .orderBy("fromDate")
+                        // .filterByDate() // SCIPIO: manual
+                        .queryList();
+                if (UtilValidate.isEmpty(partyContactMechList)) {
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                            "contactmechservices.cannot_update_specified_contact_info_not_corresponds", locale));
+                }
+                partyContactMechList = EntityUtil.filterByDate(partyContactMechList);
+                partyContactMech = EntityUtil.getFirst(partyContactMechList);
+                if (partyContactMech == null) {
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                            "contactmechservices.cannot_update_specified_contact_info_expired", locale));
+                }
+                toBeStored.add(partyContactMech);
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e.getMessage(), module);
+                contactMech = null;
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "contactmechservices.could_not_find_specified_contact_info_read", locale));
+            }
+        }
+
 
         // never change a contact mech, just create a new one with the changes
         GenericValue newContactMech = GenericValue.create(contactMech);
@@ -564,13 +580,13 @@ public class ContactMechServices {
      *@return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> createTelecomNumber(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Locale locale = (Locale) context.get("locale");
         Timestamp now = UtilDateTime.nowTimestamp();
-        List<GenericValue> toBeStored = FastList.newInstance();
+        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_PCM_CREATE");
         
@@ -618,13 +634,13 @@ public class ContactMechServices {
      *@return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> updateTelecomNumber(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Locale locale = (Locale) context.get("locale");
         Timestamp now = UtilDateTime.nowTimestamp();
-        List<GenericValue> toBeStored = FastList.newInstance();
+        List<GenericValue> toBeStored = new LinkedList<GenericValue>();
         boolean isModified = false;
 
         String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_PCM_UPDATE");
@@ -644,27 +660,37 @@ public class ContactMechServices {
         GenericValue contactMech = null;
         GenericValue partyContactMech = null;
 
+        // SCIPIO: 2017-10-09: contact mech queries rewritten so filter-by-date is checked manually to support better error message for expiry
         try {
             contactMech = EntityQuery.use(delegator).from("ContactMech").where("contactMechId", contactMechId).queryOne();
+            if (contactMech == null) {
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "contactmechservices.could_not_find_specified_contact_info_read", locale));
+            }
             // try to find a PartyContactMech with a valid date range
-            partyContactMech = EntityQuery.use(delegator).from("PartyContactMech")
+            List<GenericValue> partyContactMechList = EntityQuery.use(delegator).from("PartyContactMech")
                     .where("partyId", partyId, "contactMechId", contactMechId)
                     .orderBy("fromDate")
-                    .filterByDate()
-                    .queryFirst();
+                    //.filterByDate() // SCIPIO: manual
+                    .queryList();
+            if (UtilValidate.isEmpty(partyContactMechList)) {
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "contactmechservices.cannot_update_specified_contact_info_not_corresponds", locale));
+            }
+            partyContactMechList = EntityUtil.filterByDate(partyContactMechList);
+            partyContactMech = EntityUtil.getFirst(partyContactMechList);
+            if (partyContactMech == null) {
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "contactmechservices.cannot_update_specified_contact_info_expired", locale));
+            }
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage(), module);
             contactMech = null;
             partyContactMech = null;
-        }
-        if (contactMech == null) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "contactmechservices.could_not_find_specified_contact_info_read", locale));
         }
-        if (partyContactMech == null) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
-                    "contactmechservices.cannot_update_specified_contact_info_not_corresponds", locale));
-        }
+
         toBeStored.add(partyContactMech);
 
         // never change a contact mech, just create a new one with the changes
@@ -799,7 +825,7 @@ public class ContactMechServices {
      */
     public static Map<String, Object> createPartyContactMechPurpose(DispatchContext ctx, Map<String, ? extends Object> context) {
         //Debug.logInfo(new Exception(), "In createPartyContactMechPurpose context: " + context, module);
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -861,7 +887,7 @@ public class ContactMechServices {
 
     public static Map<String, Object> deletePartyContactMechPurposeIfExists(DispatchContext ctx, Map<String, ? extends Object> context) {
         //Debug.logInfo(new Exception(), "In createPartyContactMechPurpose context: " + context, module);
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -917,7 +943,7 @@ public class ContactMechServices {
      *@return Map with the result of the service, the output parameters
      */
     public static Map<String, Object> deletePartyContactMechPurpose(DispatchContext ctx, Map<String, ? extends Object> context) {
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");

@@ -19,15 +19,15 @@
 package org.ofbiz.humanres;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -37,7 +37,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
 
 public class HumanResEvents {
-    public static final String module = HumanResEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resourceError = "ProductErrorUiLabels";
     
     // Please note : the structure of map in this function is according to the JSON data map of the jsTree
@@ -82,10 +82,10 @@ public class HumanResEvents {
                             title = memGroupCtx.getString("groupName");
                         }
                         
-                        Map josonMap = FastMap.newInstance();
-                        Map dataMap = FastMap.newInstance();
-                        Map dataAttrMap = FastMap.newInstance();
-                        Map attrMap = FastMap.newInstance();
+                        Map josonMap = new HashMap<String, Object>();
+                        Map dataMap = new HashMap<String, Object>();
+                        Map dataAttrMap = new HashMap<String, Object>();
+                        Map attrMap = new HashMap<String, Object>();
                         
                         dataAttrMap.put("onClick", onclickFunction + "('" + memberId + additionParam + "')");
                         
@@ -124,10 +124,10 @@ public class HumanResEvents {
                         String catNameField = null;
                         String title = null;
                         
-                        Map josonMap = FastMap.newInstance();
-                        Map dataMap = FastMap.newInstance();
-                        Map dataAttrMap = FastMap.newInstance();
-                        Map attrMap = FastMap.newInstance();
+                        Map josonMap = new HashMap<String, Object>();
+                        Map dataMap = new HashMap<String, Object>();
+                        Map dataAttrMap = new HashMap<String, Object>();
+                        Map attrMap = new HashMap<String, Object>();
                         
                         catId = childOfCom.get("partyIdTo");
                         
@@ -198,10 +198,10 @@ public class HumanResEvents {
 
                 if (UtilValidate.isNotEmpty(isEmpls)) {
                     for (GenericValue childOfEmpl : isEmpls ) {
-                        Map emplMap = FastMap.newInstance();
-                        Map emplAttrMap = FastMap.newInstance();
-                        Map empldataMap = FastMap.newInstance();
-                        Map emplDataAttrMap = FastMap.newInstance();
+                        Map emplMap = new HashMap<String, Object>();
+                        Map emplAttrMap = new HashMap<String, Object>();
+                        Map empldataMap = new HashMap<String, Object>();
+                        Map emplDataAttrMap = new HashMap<String, Object>();
                         
                         String emplId = (String) childOfEmpl.get("emplPositionId");
                         String typeId = (String) childOfEmpl.get("emplPositionTypeId");

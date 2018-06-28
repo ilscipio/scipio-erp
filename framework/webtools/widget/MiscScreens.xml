@@ -49,8 +49,67 @@ under the License.
                 <condition><if-true field="parameters.debugMode"/></condition><!-- NOTE: if-true succeeds with either proper Boolean or string of boolean, "true" -->
                 <then>
                     <script lang="groovy"><![CDATA[
-                        import org.ofbiz.base.util.Debug;
-                        Debug.logInfo("Running layout demo in debug mode", "LayoutDemoActions.groovy");
+                        import org.ofbiz.base.util.*;
+                        
+                        Debug.logInfo("\n\n"
+                            + "******************************************************\n"
+                            + "Running layout demo in Debug mode\n"
+                            + "******************************************************\n"
+                            + "Note: This screen intentionally causes some log warnings and errors for testing purposes.\n"
+                            + "See component://webtools/widget/MiscScreens.xml#WebtoolsLayoutDemo and related resources for details.\n"
+                            , "LayoutDemoActions.groovy");
+                        
+                        Debug.logInfo("Testing GeneralException messages...", "LayoutDemoActions.groovy");
+                        try {
+                            throw new GeneralException();
+                        } catch(GeneralException e) {
+                            Debug.logInfo("GeneralException getMessage(): " + e.getMessage(), "LayoutDemoActions.groovy");
+                        }
+                        try {
+                            throw new GeneralException("Main exception detail message");
+                        } catch(GeneralException e) {
+                            Debug.logInfo("GeneralException getMessage(): " + e.getMessage(), "LayoutDemoActions.groovy");
+                        }
+                        try {
+                            throw new GeneralException("Main exception detail message").setPropertyMessage(PropertyMessage.makeFromStatic("Main exception detail property message"));
+                        } catch(GeneralException e) {
+                            Debug.logInfo("GeneralException getMessage(): " + e.getMessage(), "LayoutDemoActions.groovy");
+                        }
+                        try {
+                            throw new GeneralException(new IllegalArgumentException("a nested exception")).setPropertyMessage(PropertyMessage.makeFromStatic("Main exception detail property message"));
+                        } catch(GeneralException e) {
+                            Debug.logInfo("GeneralException getMessage(): " + e.getMessage(), "LayoutDemoActions.groovy");
+                        }
+                        try {
+                            msgs = [];
+                            msgs.add(PropertyMessage.make("WebtoolsUiLabels", "WebtoolsTestLabel"));
+                            msgs.add("Static string message 1, non-localized");
+                            msgs.add(PropertyMessage.make("WebtoolsUiLabels", "WebtoolsTestLabel_en"));
+                            msgs.add("Static string message 2, non-localized");
+                            msgs.add(PropertyMessage.make("WebtoolsUiLabels", "WebtoolsTestLabel_de"));
+                            throw new GeneralException("Main exception detail message", msgs).setPropertyMessage(PropertyMessage.makeFromStatic("Main exception detail property message"));
+                        } catch(GeneralException e) {
+                            Debug.logInfo("GeneralException getMessage(): " + e.getMessage(), "LayoutDemoActions.groovy");
+                            Debug.logInfo("GeneralException messages (default prop locale): " + e.getMessageList().toString(), "LayoutDemoActions.groovy");
+                            Debug.logInfo("GeneralException messages (default log locale): " + PropertyMessage.getLogMessages(e.getPropertyMessageList()).toString(), "LayoutDemoActions.groovy");
+                            Debug.logInfo("GeneralException messages (german): " + e.getMessageList(Locale.GERMAN).toString(), "LayoutDemoActions.groovy");
+                            Debug.logInfo("GeneralException messages (german 2): " + PropertyMessage.getMessages(e.getPropertyMessageList(), Locale.GERMAN).toString(), "LayoutDemoActions.groovy");
+                        }
+                        try {
+                            msgs = [];
+                            msgs.add(PropertyMessage.make("WebtoolsUiLabels", "WebtoolsTestLabel"));
+                            msgs.add("Static string message 1, non-localized");
+                            msgs.add(PropertyMessage.make("WebtoolsUiLabels", "WebtoolsTestLabel_en"));
+                            msgs.add("Static string message 2, non-localized");
+                            msgs.add(PropertyMessage.make("WebtoolsUiLabels", "WebtoolsTestLabel_de"));
+                            throw new GeneralException("Main exception detail message", msgs, new IllegalArgumentException("a nested exception"));
+                        } catch(GeneralException e) {
+                            Debug.logInfo("GeneralException getMessage(): " + e.getMessage(), "LayoutDemoActions.groovy");
+                            Debug.logInfo("GeneralException messages (default prop locale): " + e.getMessageList().toString(), "LayoutDemoActions.groovy");
+                            Debug.logInfo("GeneralException messages (default log locale): " + PropertyMessage.getLogMessages(e.getPropertyMessageList()).toString(), "LayoutDemoActions.groovy");
+                            Debug.logInfo("GeneralException messages (german): " + e.getMessageList(Locale.GERMAN).toString(), "LayoutDemoActions.groovy");
+                            Debug.logInfo("GeneralException messages (german 2): " + PropertyMessage.getMessages(e.getPropertyMessageList(), Locale.GERMAN).toString(), "LayoutDemoActions.groovy");
+                        }
                     ]]></script>
                 </then>
                 <else>
@@ -60,6 +119,9 @@ under the License.
                     ]]></script>
                 </else>
             </if>
+            <!-- SCIPIO: NEW: flexible locations for <script> location -->
+            <set field="adminScriptsBaseDir" value="component://webtools/webapp/webtools/WEB-INF/actions" />
+            <script location="${adminScriptsBaseDir}/misc/PrepareLayoutDemo.groovy"/>
         </actions>
     </screen>
 
@@ -81,7 +143,7 @@ under the License.
                 <set field="demoText" value="${uiLabelMap.WebtoolsLayoutDemoText}" global="true"/>
                 <set field="errorMessage" from-field="demoText" global="true"/>
                 <set field="eventMessage" from-field="demoText" global="true"/>
-                <set field="demoTargetUrl" value="WebtoolsLayoutDemo"/>
+                <set field="demoTargetUrl" value="LayoutDemo"/>
                 <set field="demoParam1" value="one"/>
                 <set field="demoParam2" value="two"/>
                 <set field="demoParam3" value="three"/>
@@ -101,6 +163,45 @@ under the License.
                 <set field="complexCharString" value="&amp; &lt; &gt; ' &quot; [] () ü ö ä Ä Ü Ö ß"/>
                 <set field="demoScreenContentUri" value="/admin/images/does_not_exist.jpg?param1=value1&amp;param2=value2"/><!-- NOTE: the &amp; only bypasses this xml, not html -->
                 <set field="contentPathPrefix" value="https://ilscipio.com/images"/>
+                
+                <script lang="groovy"><![CDATA[
+                    import org.ofbiz.base.util.*;
+                    import org.ofbiz.entity.condition.*;
+                    import org.ofbiz.entity.util.*;
+                    shopInfo = [:];
+                    try {
+                        def shopWebSite = EntityQuery.use(delegator).from("WebSite").where("webSiteId", "ScipioWebStore").cache().queryOne();
+                        if (!shopWebSite) {
+                            // FIXME: missing logic to find most-appropriate default website in this case
+                            shopWebSite = EntityQuery.use(delegator).from("WebSite")
+                                .where(EntityCondition.makeCondition("productStoreId", EntityOperator.NOT_EQUAL, null)).cache().queryFirst();
+                        }
+                        Debug.logInfo("Using website for shop tests: " + (shopWebSite ? shopWebSite.webSiteId : "[missing]"), "InlineDemoScript.groovy");
+                        
+                        if (shopWebSite) {
+                            shopInfo.webSiteId = shopWebSite.webSiteId;
+                            shopInfo.mountPoint = org.ofbiz.webapp.WebAppUtil.getWebappInfoFromWebsiteId(shopWebSite.webSiteId).getContextRoot();
+                        }
+                    } catch(Exception e) {
+                        Debug.logError(e, "Cannot get WebSite for shop tests", "InlineDemoScript.groovy");
+                    }
+                    context.shopInfo = shopInfo;
+                ]]></script>
+
+                <!-- WebSockets example (NOTE: to enable, set webSocket=true in catalina.properties) -->
+                <property-to-field resource="catalina" property="webSocket" field="webSocketEnabled"/>
+                <set field="webSocketEnabled" type="Boolean" from-field="webSocketEnabled" default-value="false"/>
+                <if>
+                    <condition>
+                        <and>
+                            <if-true field="webSocketEnabled"/>
+                            <if-has-permission permission="OFBTOOLS" action="_VIEW"/>
+                        </and>
+                    </condition>
+                    <then>
+                        <set field="layoutSettings.javaScripts[]" value="/webtools/images/ExamplePushNotifications.js" global="true"/>
+                    </then>
+                </if>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -132,10 +233,11 @@ under the License.
 
     <screen name="WebtoolsLayoutDemoOfbizWidgetActions">
         <actions><!-- NOTE: In an actions-only screen, should skip the top section and all else - only have actions element. -->
-            <!-- SCIPIO: NEW: flexible locations for <script> location -->
-            <set field="adminScriptsBaseDir" value="component://webtools/webapp/webtools/WEB-INF/actions" />
-            <script location="${adminScriptsBaseDir}/misc/PrepareLayoutDemoWidgetTests.groovy"/>
-            
+            <script lang="groovy"><![CDATA[
+                globalContext.layoutDemoTestVar123 = "Test value 123";
+                context.layoutDemoTestVar123 = "Test value 123";
+                context.commonActionField5 = "This value 5 was set in a dynamically included script. [SUCCESS]";
+            ]]></script>
             <include-screen-actions name="WebtoolsLayoutDemoExtraPoorActions"/>
         </actions>
     </screen>
@@ -567,6 +669,7 @@ under the License.
                                         <set field="resField2" value="else block"/>
                                     </else>
                                 </if>
+                                <!-- the errors pollute the log; don't need to test this every time
                                 <set field="testField1" value="other"/>
                                 <if>
                                     <condition><if-true field="testField1"/></condition>
@@ -578,7 +681,7 @@ under the License.
                                     <else>
                                         <set field="resField3" value="else block"/>
                                     </else>
-                                </if>
+                                </if>-->
                                 <set field="testField1" value="other"/>
                                 <if>
                                     <condition><if-true value="${testField1 == 'other'}"/></condition>
@@ -720,6 +823,140 @@ under the License.
                         </screenlet>
                     </widgets>
                 </section>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="TemplateTest">
+        <section>
+            <actions>
+                <property-map resource="CMSUiLabels" map-name="uiLabelMap" global="true"/>                
+                <set field="titleProperty" value="WebtoolsTemplateTest"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="Development" />
+                <set field="activeSubMenuItem" value="TemplateTest"/>
+                <include-screen-actions name="CodeEditorCommonIncludes" location="component://cms/widget/CommonScreens.xml"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <and>
+                                    <if-has-permission permission="OFBTOOLS" action="_VIEW"/>
+                                    <if-has-permission permission="ENTITY_DATA_ADMIN"/><!-- SUPER/FULLADMIN only, for security reasons -->
+                                </and>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <actions>
+                                        <script lang="groovy"><![CDATA[
+                                            import org.ofbiz.base.util.*;
+                                            
+                                            scriptBody = parameters.scriptBody as String;
+                                            templateBody = parameters.templateBody as String;
+                                            
+                                            execDefault = (scriptBody == null && templateBody == null);
+                                            if (scriptBody == null) {
+                                                scriptBody = "import org.ofbiz.base.util.*;\n" +
+                                                    "import org.ofbiz.entity.condition.*;\n" +
+                                                    "import org.ofbiz.entity.util.*;\n" +
+                                                    "\n" +
+                                                    "final module = \"TemplateTest.groovy\";\n" +
+                                                    "\n" +
+                                                    "// NOTE: Some screen groovy built-ins are not available from this form (such as the 'from' built-in; must use EntityQuery class here)\n" +
+                                                    "userParty = EntityQuery.use(delegator).from(\"Party\").select(\"partyId\", \"partyTypeId\").where(\"partyId\", context.userLogin?.partyId).queryOne();\n" +
+                                                    "\n" +
+                                                    "Debug.logInfo(\"Hello from test script and user party: \" + userParty, module);\n" +
+                                                    "\n" +
+                                                    "context.testVar1 = \"This is a test string value from groovy from user party: \" + userParty;\n";
+                                            }
+                                            if (templateBody == null) {
+                                                templateBody = "<#assign ftlTestVar1 = testVar1>" +
+                                                    "\n" +
+                                                    "\n<p><strong>testVar1:</strong> <em>\${escapeVal(ftlTestVar1, 'htmlmarkup')}</em>";
+                                            }
+                                            
+                                            execTemplate = (execDefault || request.getMethod().toLowerCase() == "post"); // security
+                                            if (execTemplate && scriptBody) {
+                                                GroovyUtil.eval(scriptBody, context);
+                                            }
+                                            
+                                            context.scriptBody = scriptBody;
+                                            context.templateBody = templateBody;
+                                            context.execDefault = execDefault;
+                                            context.execTemplate = execTemplate;
+                                        ]]></script>
+                                    </actions>
+                                    <widgets>
+                                        <platform-specific><html><html-template><![CDATA[
+                                          <@script>
+                                            $(document).ready(function() {
+                                                CodeMirror.fromTextArea($('textarea#scriptBody')[0], {
+                                                    lineNumbers: true,
+                                                    matchBrackets: true,
+                                                    mode: "groovy",
+                                                    indentUnit: 4,
+                                                    indentWithTabs: ${indentWithTabs?string},
+                                                    foldGutter: true,
+                                                    gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+                                                    extraKeys: {"Ctrl-Space": "autocomplete"}
+                                                    }).on('change', function(cMirror){
+                                                        $('textarea#scriptBody')[0].value = cMirror.getValue();
+                                                    }
+                                                );
+                                                CodeMirror.fromTextArea($('textarea#templateBody')[0], {
+                                                    lineNumbers: true,
+                                                    matchBrackets: true,
+                                                    mode: "freemarker",
+                                                    indentUnit: 4,
+                                                    indentWithTabs: ${indentWithTabs?string},
+                                                    foldGutter: true,
+                                                    gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+                                                    extraKeys: {"Ctrl-Space": "autocomplete"}
+                                                    }).on('change', function(cMirror){
+                                                        $('textarea#templateBody')[0].value = cMirror.getValue();
+                                                    }
+                                                );
+                                            });
+                                          </@script>
+                                          <@section class="+cms-edit-elem cms-edit-template">
+                                            <@form method="post" id="editorForm" action=makeOfbizUrl("TemplateTest")>
+                                               <@section class="+editorContent">
+                                                  <@fields type="default-compact">
+                                                    <@field label=(rawLabel('CmsScriptBody')+" (Groovy)") type="textarea" class="+editor" 
+                                                        name="scriptBody" id="scriptBody" value=(scriptBody!"") rows=30/>
+                                                    <@field label=(rawLabel('CmsTemplateBody')+" (Freemarker)") type="textarea" class="+editor" 
+                                                        name="templateBody" id="templateBody" value=(templateBody!"") rows=30/>
+                                                  </@fields>
+                                                  <style type="text/css">
+                                                    .CodeMirror-hints {font-size:1em;}
+                                                  </style>
+                                               </@section>
+                                               <@field type="submit"/>
+                                            </@form>
+                                          </@section>
+                                           
+                                          <#-- FREEMARKER OUTPUT -->
+                                          <#if execTemplate>
+                                            <@section title=uiLabelMap.CmsOutput>
+                                              <#assign tmplBodyCode = rawString(templateBody!"")?interpret>
+                                              <#assign tmplBodyOut><@tmplBodyCode/></#assign>
+                                              ${tmplBodyOut}
+                                            </@section>
+                                            <@section title=uiLabelMap.CmsRawOutput>
+                                              ${tmplBodyOut?html}
+                                            </@section>
+                                          </#if>
+                                        ]]></html-template></html></platform-specific>
+                                    </widgets>
+                                </section>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>

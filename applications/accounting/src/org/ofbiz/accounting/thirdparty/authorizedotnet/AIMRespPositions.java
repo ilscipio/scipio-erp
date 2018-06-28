@@ -19,14 +19,13 @@
 
 package org.ofbiz.accounting.thirdparty.authorizedotnet;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
-
-import javolution.util.FastMap;
 
 public class AIMRespPositions extends AuthorizeResponse.RespPositions {
 
     // AIM v3.1 response positions
-    private static Map<String, Integer> positions = FastMap.newInstance();
+    private static Map<String, Integer> positions = new LinkedHashMap<>();
     static {
         positions.put(AuthorizeResponse.RESPONSE_CODE, 1);
         positions.put(AuthorizeResponse.REASON_CODE, 3);

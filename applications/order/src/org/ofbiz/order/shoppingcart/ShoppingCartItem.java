@@ -33,9 +33,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
@@ -77,7 +74,7 @@ import org.ofbiz.service.ServiceUtil;
 @SuppressWarnings("serial")
 public class ShoppingCartItem implements java.io.Serializable {
 
-    public static String module = ShoppingCartItem.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "OrderUiLabels";
     public static final String resource_error = "OrderErrorUiLabels";
     public static String[] attributeNames = { "shoppingListId", "shoppingListItemSeqId", "surveyResponses",
@@ -143,9 +140,9 @@ public class ShoppingCartItem implements java.io.Serializable {
     private Timestamp estimatedShipDate = null;
     private Timestamp cancelBackOrderDate = null;
 
-    private Map<String, String> contactMechIdsMap = FastMap.newInstance();
+    private Map<String, String> contactMechIdsMap = new HashMap<String, String>();
     private List<GenericValue> orderItemPriceInfos = null;
-    private List<GenericValue> itemAdjustments = FastList.newInstance();
+    private List<GenericValue> itemAdjustments = new LinkedList<GenericValue>();
     private boolean isPromo = false;
     private BigDecimal promoQuantityUsed = BigDecimal.ZERO;
     private Map<GenericPK, BigDecimal> quantityUsedPerPromoCandidate = new HashMap<GenericPK, BigDecimal>();
@@ -681,7 +678,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.orderItemAssocTypeId = item.getOrderItemAssocTypeId();
         this.setStatusId(item.getStatusId());
         if (UtilValidate.isEmpty(item.getOrderItemAttributes())) {
-            this.orderItemAttributes =  FastMap.<String, String>newInstance();
+            this.orderItemAttributes = new HashMap<String, String>();
             this.orderItemAttributes.putAll(item.getOrderItemAttributes());
         }
         this.attributes = item.getAttributes() == null ? new HashMap<String, Object>() : new HashMap<String, Object>(item.getAttributes());
@@ -702,7 +699,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.additionalProductFeatureAndAppls = item.getAdditionalProductFeatureAndAppls() == null ?
                 null : new HashMap<String, GenericValue>(item.getAdditionalProductFeatureAndAppls());
         if (item.getAlternativeOptionProductIds() != null) {
-            List<String> tempAlternativeOptionProductIds = FastList.newInstance();
+            List<String> tempAlternativeOptionProductIds = new LinkedList<String>();
             tempAlternativeOptionProductIds.addAll(item.getAlternativeOptionProductIds());
             this.setAlternativeOptionProductIds(tempAlternativeOptionProductIds);
         }
@@ -1136,7 +1133,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         // set basePrice using the calculateProductPrice service
         if (_product != null && isModifiedPrice == false) {
             try {
-                Map<String, Object> priceContext = FastMap.newInstance();
+                Map<String, Object> priceContext = new HashMap<String, Object>();
 
                 String partyId = cart.getPartyId();
                 if (partyId != null) {
@@ -1193,7 +1190,7 @@ public class ShoppingCartItem implements java.io.Serializable {
                             }
                         }
                     }
-                    if ("true".equals(EntityUtilProperties.getPropertyValue("catalog.properties", "convertProductPriceCurrency", delegator))){
+                    if ("true".equals(EntityUtilProperties.getPropertyValue("catalog", "convertProductPriceCurrency", delegator))){
                         priceContext.put("currencyUomIdTo", cart.getCurrency());
                     } else {
                         priceContext.put("currencyUomId", cart.getCurrency());
@@ -1274,7 +1271,7 @@ public class ShoppingCartItem implements java.io.Serializable {
                     }
 
                     // no try to do a recurring price calculation; not all products have recurring prices so may be null
-                    Map<String, Object> recurringPriceContext = FastMap.newInstance();
+                    Map<String, Object> recurringPriceContext = new HashMap<String, Object>();
                     recurringPriceContext.putAll(priceContext);
                     recurringPriceContext.put("productPricePurposeId", "RECURRING_CHARGE");
                     Map<String, Object> recurringPriceResult = dispatcher.runSync("calculateProductPrice", recurringPriceContext);
@@ -1949,7 +1946,7 @@ public class ShoppingCartItem implements java.io.Serializable {
 
 
     public Map<String, Object> getItemProductInfo() {
-        Map<String, Object> itemInfo = FastMap.newInstance();
+        Map<String, Object> itemInfo = new HashMap<String, Object>();
         itemInfo.put("productId", this.getProductId());
         itemInfo.put("weight", this.getWeight());
         itemInfo.put("weightUomId", this.getProduct().getString("weightUomId"));
@@ -2189,7 +2186,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     }
 
     public Map<String, BigDecimal> getFeatureIdQtyMap(BigDecimal quantity) {
-        Map<String, BigDecimal> featureMap = FastMap.newInstance();
+        Map<String, BigDecimal> featureMap = new HashMap<String, BigDecimal>();
         GenericValue product = this.getProduct();
         if (product != null) {
             List<GenericValue> featureAppls = null;
@@ -2255,7 +2252,7 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     /** Creates an OrderItemAttribute entry. */
     public void setOrderItemAttribute(String name, String value) {
-        if (orderItemAttributes == null) orderItemAttributes = FastMap.newInstance();
+        if (orderItemAttributes == null) orderItemAttributes = new HashMap<String, String>();
         this.orderItemAttributes.put(name, value);
     }
 
@@ -2266,7 +2263,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     }
 
     public Map<String, String> getOrderItemAttributes() {
-        Map<String, String> attrs = FastMap.newInstance();
+        Map<String, String> attrs = new HashMap<String, String>();
         if (orderItemAttributes != null) {
             attrs.putAll(orderItemAttributes);
         }
@@ -2510,7 +2507,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             return ProductWorker.getOptionalProductFeatures(getDelegator(), this.productId);
         } else {
             // non-product items do not have features
-            return FastMap.newInstance();
+            return new HashMap<String, List<GenericValue>>();
         }
     }
 

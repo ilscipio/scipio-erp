@@ -41,7 +41,7 @@ import org.xml.sax.SAXException;
  */
 public class CdyneServices {
 
-    public final static String module = CdyneServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "CommonUiLabels";
     public final static String licenseKey = UtilProperties.getPropertyValue("cdyne", "LicenseKey", "0");
 

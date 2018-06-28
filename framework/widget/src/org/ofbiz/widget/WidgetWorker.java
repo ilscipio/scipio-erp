@@ -51,7 +51,7 @@ import org.ofbiz.widget.model.ModelFormField;
 
 public final class WidgetWorker {
 
-    public static final String module = WidgetWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private WidgetWorker () {}
 
@@ -67,7 +67,7 @@ public final class WidgetWorker {
 
         if ("intra-app".equals(targetType)) {
             if (request != null && response != null) {
-                ServletContext servletContext = request.getSession().getServletContext();
+                ServletContext servletContext = request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
                 RequestHandler rh = (RequestHandler) servletContext.getAttribute("_REQUEST_HANDLER_");
                 externalWriter.append(rh.makeLink(request, response, localRequestName, fullPath, secure, encode)); // SCIPIO: doesn't need slash, only makes less clear errors:  "/" + localRequestName
             } else if (prefix != null) {
@@ -116,7 +116,7 @@ public final class WidgetWorker {
                 // SCIPIO: We want to make sure this goes through encodeURL, and we now also want to send this
                 // through makeLinkAuto so it can produce smarter inter-webapp links.
                 // TODO? widgets currently don't support specifying target webSiteId, so absPath always true
-                ServletContext servletContext = request.getSession().getServletContext();
+                ServletContext servletContext = request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
                 RequestHandler rh = (RequestHandler) servletContext.getAttribute("_REQUEST_HANDLER_");
                 externalWriter.append(rh.makeLinkAuto(request, response, tempWriter.toString(), true, true, null, null, fullPath, secure, encode));
             } else {
@@ -248,7 +248,7 @@ public final class WidgetWorker {
             }
             if (UtilValidate.isNotEmpty(confirmation)){
                 writer.append(" onclick=\"return confirm('");
-                writer.append(confirmation);
+                writer.append(UtilCodec.getJsStringEncoder().encode(confirmation)); // SCIPIO: js encode
                 writer.append("')\"");
             }
             writer.append('>');
@@ -274,9 +274,9 @@ public final class WidgetWorker {
                 writer.append("\"");
             }
 
-            writer.append(" href=\"javascript:document.");
-            writer.append(makeLinkHiddenFormName(context, modelFormField));
-            writer.append(".submit()\"");
+            writer.append(" href=\"javascript:document['");
+            writer.append(UtilCodec.getJsStringEncoder().encode(makeLinkHiddenFormName(context, modelFormField))); // SCIPIO: JS escaping
+            writer.append("'].submit()\"");
 
             if (UtilValidate.isNotEmpty(modelFormField.getEvent()) && UtilValidate.isNotEmpty(modelFormField.getAction(context))) {
                 writer.append(" ");
@@ -288,7 +288,7 @@ public final class WidgetWorker {
 
             if (UtilValidate.isNotEmpty(confirmation)){
                 writer.append(" onclick=\"return confirm('");
-                writer.append(confirmation);
+                writer.append(UtilCodec.getJsStringEncoder().encode(confirmation)); // SCIPIO: JS escaping
                 writer.append("')\"");
             }
 
@@ -340,6 +340,7 @@ public final class WidgetWorker {
     
     /**
      * SCIPIO: Creates JS script to populate the target hidden form with the corresponding fields of the row being selected (only when use-submit-row is true)
+     * @deprecated Do not use; INSECURE; integrate into Freemarker macros instead
      */
     @Deprecated
     private static void makeJSForRowSubmit(Appendable writer, Map<String, Object> context, ModelForm modelForm, String hiddenFormName) throws IOException {    
@@ -392,6 +393,7 @@ public final class WidgetWorker {
    
     /**
      * SCIPIO: Creates JS script to populate the target hidden form with the corresponding fields of the row that triggered the submission (only when use-submit-row is false)
+     * @deprecated Do not use; INSECURE; integrate into Freemarker macros instead
      */
     @Deprecated
     private static void makeJSForInlineSubmit(Appendable writer, Map<String, Object> context, ModelForm modelForm, String hiddenFormName) throws IOException {        
@@ -419,6 +421,7 @@ public final class WidgetWorker {
     
     /**
      * SCIPIO: Creates a form that gets populated with the corresponding fields of the row being submitted and then submits it.
+     * @deprecated Do not use; INSECURE; integrate into Freemarker macros instead
      */
     @Deprecated
     public static void makeHiddenFormSubmitForm(Appendable writer, String target, String targetType, String targetWindow, Map<String, String> parameterMap,
@@ -513,7 +516,7 @@ public final class WidgetWorker {
         if ("auto".equals(linkType)) {
             if ("intra-app".equals(targetType)) {
                 String requestUri = (target.indexOf('?') > -1) ? target.substring(0, target.indexOf('?')) : target;
-                ServletContext servletContext = request.getSession().getServletContext();
+                ServletContext servletContext = request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
                 RequestHandler rh = (RequestHandler) servletContext.getAttribute("_REQUEST_HANDLER_");
                 ConfigXMLReader.RequestMap requestMap = null;
                 try {

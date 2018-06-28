@@ -1,0 +1,575 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
+    <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
+    
+    <description>Scipio CMS Webapp Configuration File</description>
+
+    <!-- Events to run on every request before security (chains exempt) -->
+    <!--
+    <preprocessor>
+    </preprocessor>
+    -->
+    <!-- Events to run on every request after all other processing (chains exempt) -->
+    <!--
+    <postprocessor>
+    </postprocessor>
+    -->
+
+    <after-login>
+        <!-- New login CMS access token handling: creates a new base access token in session -->
+        <event name="createCmsAccessToken" type="java" path="com.ilscipio.scipio.cms.control.CmsAccessHandler" invoke="createSessionAccessToken"/>
+    </after-login>
+
+    <!-- **************** -->
+    <!-- REQUEST MAPPINGS -->
+    <!-- **************** -->
+    
+    <!-- NOTES:
+        * Cannot use "view-last" response type here in general because it is session-based and interfered with the 
+          "parameters" map, breaking screens such as editPage (so the save-xxx-view are removed too as precaution)
+     -->
+    
+    <!-- General -->    
+    <request-map uri="main">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="main"/>
+    </request-map>
+    
+    <request-map uri="pagenotfound">
+        <security https="false" auth="false"/>
+        <response name="success" type="view" value="pagenotfound"/>
+    </request-map>
+   
+    <!-- Pages -->
+    <request-map uri="pages">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="pages"/>
+    </request-map>
+    
+    <request-map uri="editPage">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editPage" /><!-- save-current-view="true" -->
+    </request-map>
+    
+    <request-map uri="createPage">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsCreatePage"/>
+        <response name="success" type="view" value="editPage" />
+        <response name="error" type="view" value="editPage" />
+    </request-map>
+    
+    <request-map uri="copyPage">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsCopyPage" />
+        <response name="success" type="request-redirect" value="editPage">
+            <redirect-parameter name="pageId"/>
+            <redirect-parameter name="webSiteId"/>
+        </response>
+        <response name="error" type="view" value="editPage" />
+    </request-map>
+    
+    <request-map uri="addScriptToPage">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="cmsUpdatePageScript"/>
+        <response name="success" type="view" value="editPage" />
+        <response name="error" type="view" value="editPage" />
+    </request-map>
+    
+    <request-map uri="updatePageScript">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="cmsUpdatePageScript"/>
+        <response name="success" type="view" value="editPage" />
+        <response name="error" type="view" value="editPage" />
+    </request-map>
+    
+    <request-map uri="deleteScriptAndPageAssoc">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="cmsDeleteScriptAndPageAssoc"/>
+        <response name="success" type="view" value="editPage" />
+        <response name="error" type="view" value="editPage" />
+    </request-map>
+    
+    <!-- Pages - AJAX -->
+    <request-map uri="getPages">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsGetPages" />
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/> 
+    </request-map>
+    <request-map uri="getCmsWebSites">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsGetCmsWebSites" />
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/> 
+    </request-map>
+    
+    <request-map uri="updatePageInfo">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsUpdatePageInfo" />
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/> 
+    </request-map>
+    
+    <request-map uri="addPageVersion">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsAddPageVersion" />
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/> 
+    </request-map>
+    
+    <request-map uri="activatePageVersion">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="cmsActivatePageVersion"/>
+        <response name="success" type="request" value="json" />
+        <response name="error" type="request" value="json" />
+    </request-map>
+    
+    <request-map uri="addRemovePageViewMappings">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="cmsAddRemovePageViewMappings"/>
+        <response name="success" type="request" value="json" />
+        <response name="error" type="request" value="json" />
+    </request-map>
+    
+    <request-map uri="deletePage">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsDeletePage" />
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/> 
+    </request-map>
+    
+    <!-- Page Templates -->
+    <request-map uri="templates">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="templates"/>
+    </request-map>
+    
+    <request-map uri="createTemplate">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsCreatePageTemplate"/>
+        <response name="success" type="view" value="editTemplate"/>
+        <response name="error" type="view" value="editTemplate"/>
+    </request-map>
+    
+    <request-map uri="copyTemplate">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsCopyPageTemplate"/>
+        <response name="success" type="request-redirect" value="editTemplate">
+            <redirect-parameter name="pageTemplateId"/>
+        </response>
+        <response name="error" type="view" value="editTemplate"/>
+    </request-map>
+    
+    <request-map uri="editTemplate">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editTemplate" /><!-- save-current-view="true" -->
+    </request-map>
+    
+    <request-map uri="addAttributeToTemplate">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="cmsCreateUpdateAttribute"/>
+        <response name="success" type="view" value="editTemplate" />
+        <response name="error" type="view" value="editTemplate" />
+    </request-map>
+    
+    <request-map uri="updateTemplateAttribute">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="cmsCreateUpdateAttribute"/>
+        <response name="success" type="view" value="editTemplate" />
+        <response name="error" type="view" value="editTemplate" />
+    </request-map>
+    
+    <request-map uri="deleteAttributeFromTemplate">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="cmsDeleteAttribute"/>
+        <response name="success" type="view" value="editTemplate" />
+        <response name="error" type="view" value="editTemplate" />
+    </request-map>
+    
+    <request-map uri="addScriptToTemplate">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="cmsUpdatePageTemplateScript"/>
+        <response name="success" type="view" value="editTemplate" />
+        <response name="error" type="view" value="editTemplate" />
+    </request-map>
+    
+    <request-map uri="updateTemplateScript">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="cmsUpdatePageTemplateScript"/>
+        <response name="success" type="view" value="editTemplate" />
+        <response name="error" type="view" value="editTemplate" />
+    </request-map>
+    
+    <request-map uri="deleteScriptAndPageTemplateAssoc">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="cmsDeleteScriptAndPageTemplateAssoc"/>
+        <response name="success" type="view" value="editTemplate" />
+        <response name="error" type="view" value="editTemplate" />
+    </request-map>
+    
+    <request-map uri="addAssetToTemplate">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="cmsCreateUpdateAssetAssoc"/>
+        <response name="success" type="view" value="editTemplate" />
+        <response name="error" type="view" value="editTemplate" />
+    </request-map>
+    
+    <request-map uri="updateTemplateAsset">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="cmsCreateUpdateAssetAssoc"/>
+        <response name="success" type="view" value="editTemplate" />
+        <response name="error" type="view" value="editTemplate" />
+    </request-map>
+    
+    <request-map uri="deleteAssetFromTemplate">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="cmsDeleteAssetAssoc"/>
+        <response name="success" type="view" value="editTemplate" />
+        <response name="error" type="view" value="editTemplate" />
+    </request-map>   
+    
+    <!-- Page Templates - AJAX -->
+    <request-map uri="updateTemplateInfo">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsUpdatePageTemplateInfo" />
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/> 
+    </request-map>
+    
+    <request-map uri="addTemplateVersion">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsAddPageTemplateVersion" />
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/> 
+    </request-map>
+    
+    <request-map uri="activateTemplateVersion">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="cmsActivatePageTemplateVersion"/>
+        <response name="success" type="request" value="json" />
+        <response name="error" type="request" value="json" />
+    </request-map>
+    
+    <request-map uri="deleteTemplate">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsDeletePageTemplate" />
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/> 
+    </request-map>
+    
+    <!-- Asset Templates -->
+    <request-map uri="assets">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="assets"/>
+    </request-map>
+    
+    <request-map uri="editAsset">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editAsset" /><!-- save-current-view="true" -->
+    </request-map>
+    
+    <request-map uri="createUpdateAsset">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsCreateUpdateAsset"/>
+        <response name="success" type="view" value="editAsset" />
+        <response name="error" type="view" value="editAsset" />
+    </request-map>
+    
+    <request-map uri="copyAsset">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsCopyAsset"/>
+        <response name="success" type="request-redirect" value="editAsset">
+            <redirect-parameter name="assetTemplateId"/>
+        </response>
+        <response name="error" type="view" value="editAsset" />
+    </request-map>
+
+    <request-map uri="addAttributeToAsset">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="cmsCreateUpdateAttribute"/>
+        <response name="success" type="view" value="editAsset" />
+        <response name="error" type="view" value="editAsset" />
+    </request-map>
+    
+    <request-map uri="updateAssetAttribute">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="cmsCreateUpdateAttribute"/>
+        <response name="success" type="view" value="editAsset" />
+        <response name="error" type="view" value="editAsset" />
+    </request-map>
+    
+    <request-map uri="deleteAttributeFromAsset">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="cmsDeleteAttribute"/>
+        <response name="success" type="view" value="editAsset" />
+        <response name="error" type="view" value="editAsset" />
+    </request-map>
+    
+    <request-map uri="addScriptToAsset">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="cmsUpdateAssetTemplateScript"/>
+        <response name="success" type="view" value="editAsset" />
+        <response name="error" type="view" value="editAsset" />
+    </request-map>
+    
+    <request-map uri="updateAssetScript">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="cmsUpdateAssetTemplateScript"/>
+        <response name="success" type="view" value="editAsset" />
+        <response name="error" type="view" value="editAsset" />
+    </request-map>
+    
+    <request-map uri="deleteScriptAndAssetTemplateAssoc">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="cmsDeleteScriptAndAssetTemplateAssoc"/>
+        <response name="success" type="view" value="editAsset" />
+        <response name="error" type="view" value="editAsset" />
+    </request-map>
+    
+    <!-- Asset Templates - AJAX -->
+    <request-map uri="getAssetTypes">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsGetAssetTemplateTypes" />
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/> 
+    </request-map>
+    
+    <request-map uri="getAssets">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsGetAssetTemplates" />
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/> 
+    </request-map>
+    
+    <request-map uri="getAssetAttributes">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsGetAssetTemplateAttributes" />
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/> 
+    </request-map>
+    
+    <request-map uri="updateAssetInfo">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsUpdateAssetTemplateInfo" />
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/> 
+    </request-map>
+    
+    <request-map uri="deleteAsset">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsDeleteAssetTemplate" />
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/> 
+    </request-map>
+
+    <!-- Script Templates -->
+    <request-map uri="scripts">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="scripts"/>
+    </request-map>
+    
+    <request-map uri="editScript">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editScript" /><!-- save-current-view="true" -->
+    </request-map>
+    
+    <request-map uri="createUpdateScript">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsCreateUpdateScriptTemplate"/>
+        <response name="success" type="view" value="editScript" />
+        <response name="error" type="view" value="editScript" />
+    </request-map>
+    
+    <request-map uri="copyScript">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsCopyTemplate"/>
+        <response name="success" type="request-redirect" value="editScript">
+            <redirect-parameter name="scriptTemplateId"/>
+        </response>
+        <response name="error" type="view" value="editScript" />
+    </request-map>
+    
+    <!-- Script Templates - AJAX -->
+    <request-map uri="updateScriptInfo">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsUpdateScriptTemplateInfo" />
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/> 
+    </request-map>
+    
+    <request-map uri="deleteScript">
+        <security auth="true" https="true"/>
+        <event type="service" invoke="cmsDeleteScriptTemplate"/>
+        <response name="success" type="request" value="json" />
+        <response name="error" type="request" value="json" />
+    </request-map>
+
+    <!-- Media -->
+    <request-map uri="media">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="media"/>
+    </request-map>
+ 
+    <request-map uri="editMedia">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editMedia" /><!-- save-current-view="true" -->
+    </request-map>
+    
+    <request-map uri="createMedia">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsUploadMediaFile"/>
+        <response name="success" type="view" value="editMedia"/>
+        <response name="error" type="view" value="editMedia"/>
+    </request-map>
+    
+    <request-map uri="updateMedia">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsUpdateMediaFile"/>
+        <response name="success" type="request-redirect" value="editMedia">
+            <redirect-parameter name="contentId"/>
+        </response>
+        <response name="error" type="view" value="editMedia"/>
+    </request-map>
+    
+    <request-map uri="deleteMedia">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsDeleteMediaFile"/>
+        <response name="success" type="request-redirect-noparam" value="media"/>
+        <response name="error" type="view" value="editMedia"/>
+    </request-map>
+    
+    <request-map uri="rebuildAllMediaVariants">
+        <security https="true" auth="true"/>
+        <!-- this service takes way too long, so it must be run async -->
+        <event type="service" invoke="cmsRebuildMediaVariants" path="async"/>
+        <response name="success" type="request-redirect-noparam" value="media"/>
+        <response name="error" type="view" value="media"/>
+    </request-map>
+    
+    <request-map uri="rebuildMediaVariants">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsRebuildMediaVariants"/>
+        <response name="success" type="request-redirect" value="editMedia">
+            <redirect-parameter name="contentId"/>
+        </response>
+        <response name="error" type="view" value="editMedia"/>
+    </request-map>
+    
+    <request-map uri="removeAllMediaVariants">
+        <security https="true" auth="true"/>
+        <!-- this service takes way too long, so it must be run async -->
+        <event type="service" invoke="cmsRemoveMediaVariants" path="async"/>
+        <response name="success" type="request-redirect-noparam" value="media"/>
+        <response name="error" type="view" value="media"/>
+    </request-map>
+    
+    <request-map uri="removeMediaVariants">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsRemoveMediaVariants"/>
+        <response name="success" type="request-redirect" value="editMedia">
+            <redirect-parameter name="contentId"/>
+        </response>
+        <response name="error" type="view" value="editMedia"/>
+    </request-map>
+    
+    <!-- Media - AJAX -->
+    <request-map uri="getMediaFiles">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="cmsGetMediaFiles" />
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/> 
+    </request-map>
+
+    <!-- Menus -->
+    <request-map uri="menus">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="menus"/>
+    </request-map>
+    <request-map uri="getMenu">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cmsGetMenu"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="getMenus">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cmsGetMenus"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="saveMenu">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cmsCreateUpdateMenu"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="deleteMenu">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cmsDeleteMenu"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+
+    <!-- Utility Requests -->
+    <!-- Special: Tika XML MimeType export. see screen for parameters. -->
+    <request-map uri="libmimetypeexport">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="libMimeTypeExport"/>
+    </request-map>
+    
+    
+    <!-- Data Import/Export -->
+    <request-map uri="CmsDataImport"><security https="true" auth="true"/><response name="success" type="view" value="CmsDataImport"/></request-map>
+    <request-map uri="importCmsData">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cmsImportXmlData"/>
+        <response name="success" type="view" value="CmsDataImport"/>
+        <response name="error" type="view" value="CmsDataImport"/>
+    </request-map>
+    <request-map uri="CmsDataExport">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CmsDataExport"/>
+    </request-map>
+    <request-map uri="CmsDataExportRaw.xml">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="CmsDataExportRaw"/>
+    </request-map>
+    
+    <!-- Data Import/Export - AJAX -->
+    <request-map uri="exportCmsDataAsXmlJson">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cmsExportDataAsXmlInline"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    
+    <!-- **************** -->
+    <!--   VIEW MAPPINGS  -->
+    <!-- **************** -->
+    <!-- Generic -->
+    <view-map name="main" type="screen" page="component://cms/widget/CMSScreens.xml#main"/>
+    <view-map name="pagenotfound" type="screen" page="component://cms/widget/CommonScreens.xml#404"/>
+    
+    <!-- CMS Elements -->
+    <view-map name="pages" type="screen" page="component://cms/widget/CMSScreens.xml#pages"/>
+    <view-map name="editPage" type="screen" page="component://cms/widget/CMSScreens.xml#editPage"/>
+    <view-map name="templates" type="screen" page="component://cms/widget/CMSScreens.xml#templates"/>
+    <view-map name="editTemplate" type="screen" page="component://cms/widget/CMSScreens.xml#editTemplate"/>
+    <view-map name="assets" type="screen" page="component://cms/widget/CMSScreens.xml#assets"/>
+    <view-map name="editAsset" type="screen" page="component://cms/widget/CMSScreens.xml#editAsset"/>
+    <view-map name="scripts" type="screen" page="component://cms/widget/CMSScreens.xml#scripts"/>
+    <view-map name="editScript" type="screen" page="component://cms/widget/CMSScreens.xml#editScript"/>
+    <view-map name="media" type="screen" page="component://cms/widget/CMSScreens.xml#media"/>
+    <view-map name="editMedia" type="screen" page="component://cms/widget/CMSScreens.xml#editMedia"/>
+    <view-map name="menus" type="screen" page="component://cms/widget/CMSScreens.xml#menus"/>
+    
+    <!-- Utility -->
+    <view-map name="libMimeTypeExport" type="screenxml" page="component://cms/widget/CMSScreens.xml#libMimeTypeExport"/>
+    
+    <!-- Data Import/Export -->
+    <view-map name="CmsDataImport" type="screen" page="component://cms/widget/CMSScreens.xml#CmsDataImport"/>
+    <view-map name="CmsDataExport" type="screen" page="component://cms/widget/CMSScreens.xml#CmsDataExport"/>
+    <view-map name="CmsDataExportRaw" page="/importexport/CmsDataExportRaw.jsp"/>
+    
+</site-conf>

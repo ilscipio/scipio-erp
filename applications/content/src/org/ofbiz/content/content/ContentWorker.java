@@ -24,22 +24,22 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.content.ContentManagementWorker;
@@ -54,7 +54,6 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
-import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.minilang.MiniLangException;
 import org.ofbiz.minilang.SimpleMapProcessor;
 import org.ofbiz.service.DispatchContext;
@@ -62,8 +61,6 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
-import org.owasp.html.PolicyFactory;
-import org.owasp.html.Sanitizers;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -75,7 +72,8 @@ import freemarker.ext.dom.NodeModel;
  */
 public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInterface {
 
-    public static final String module = ContentWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    static final UtilCodec.SimpleEncoder encoder = UtilCodec.getEncoder("html");
 
     public ContentWorker() { }
 
@@ -118,7 +116,21 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
     // -------------------------------------
     // Content rendering methods
     // -------------------------------------
-    public static GenericValue findContentForRendering(Delegator delegator, String contentId, Locale locale, String partyId, String roleTypeId, boolean cache) throws GeneralException, IOException {
+    
+    /**
+     * Finds best content for rendering for the given locale.
+     * <p>
+     * SCIPIO: Added useFallbackLocale flag, deepCache flag.
+     * See {@link #findAlternateLocaleContent(Delegator, GenericValue, Locale, Boolean, boolean)} for
+     * description of useFallbackLocale flag.
+     * SCIPIO: 2017-11-24: TENTATIVE HONOR CACHE FLAG FIX: now honored in all queries, not just the first
+     * Content entity lookup.
+     * @param useFallbackLocale see {@link #findAlternateLocaleContent} for details
+     * @param cache whether to cache the basic entity lookups
+     * @param deepCache whether to cache the complex association lookups (NOTE: in stock ofbiz, this was always true)
+     *        currently, if null, defaults to TRUE, and NOT the value of cache flag (TODO: REVIEW)
+     */
+    public static GenericValue findContentForRendering(Delegator delegator, String contentId, Locale locale, String partyId, String roleTypeId, Boolean useFallbackLocale, boolean cache, Boolean deepCache) throws GeneralException, IOException {
         if (UtilValidate.isEmpty(contentId)) {
             Debug.logError("No content ID found.", module);
             return null;
@@ -127,7 +139,12 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
         if (content == null) {
             throw new GeneralException("No content found for content ID [" + contentId + "]");
         }
-
+        
+        // SCIPIO: TODO: REVIEW: changing this to value of cache has too large implications at current time;
+        // stock behavior was to use deepCache=true always; this could have led to bad calling code in turn...
+        //if (deepCache == null) deepCache = cache;
+        if (deepCache == null) deepCache = Boolean.TRUE; 
+        
         // if the content is a PUBLISH_POINT and the data resource is not defined; get the related content
         if ("WEB_SITE_PUB_PT".equals(content.get("contentTypeId")) && content.get("dataResourceId") == null) {
             GenericValue relContent = EntityQuery.use(delegator)
@@ -137,7 +154,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
                             "caContentAssocTypeId", "PUBLISH_LINK")
                     .orderBy("caFromDate")
                     .filterByDate("caFromDate", "caThruDate")
-                    .cache().queryFirst();
+                    .cache(deepCache).queryFirst(); // SCIPIO: honor cache flag
 
             if (relContent != null) {
                 content = relContent;
@@ -155,7 +172,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
 
             thisLocaleString = (thisLocaleString != null) ? thisLocaleString : "";
             if (targetLocaleString != null && !targetLocaleString.equalsIgnoreCase(thisLocaleString)) {
-                GenericValue altContent = ContentWorker.findAlternateLocaleContent(delegator, content, locale);
+                GenericValue altContent = ContentWorker.findAlternateLocaleContent(delegator, content, locale, useFallbackLocale, deepCache); // SCIPIO: useFallbackLocale, cache flag propagate
                 if (altContent != null) {
                     content = altContent;
                 }
@@ -166,17 +183,17 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
         if (partyId != null && roleTypeId != null) {
             List<GenericValue> alternateViews = null;
             try {
-                alternateViews = content.getRelated("ContentAssocDataResourceViewTo", UtilMisc.toMap("caContentAssocTypeId", "ALTERNATE_ROLE"), UtilMisc.toList("-caFromDate"), true);
+                alternateViews = content.getRelated("ContentAssocDataResourceViewTo", UtilMisc.toMap("caContentAssocTypeId", "ALTERNATE_ROLE"), UtilMisc.toList("-caFromDate"), deepCache); // SCIPIO: honor cache flag
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Error finding alternate content: " + e.toString(), module);
             }
 
-            alternateViews = EntityUtil.filterByDate(alternateViews, UtilDateTime.nowTimestamp(), "caFromDate", "caThruDate", true);
+            alternateViews = EntityUtil.filterByDate(alternateViews, UtilDateTime.nowTimestamp(), "caFromDate", "caThruDate", deepCache); // SCIPIO: honor cache flag
             for (GenericValue thisView : alternateViews) {
-                GenericValue altContentRole = EntityUtil.getFirst(EntityUtil.filterByDate(thisView.getRelated("ContentRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", roleTypeId), null, true)));
+                GenericValue altContentRole = EntityUtil.getFirst(EntityUtil.filterByDate(thisView.getRelated("ContentRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", roleTypeId), null, deepCache))); // SCIPIO: honor cache flag
                 GenericValue altContent = null;
                 if (UtilValidate.isNotEmpty(altContentRole)) {
-                    altContent = altContentRole.getRelatedOne("Content", true);
+                    altContent = altContentRole.getRelatedOne("Content", deepCache); // SCIPIO: honor cache flag
                     if (altContent != null) {
                         content = altContent;
                     }
@@ -186,8 +203,25 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
         return content;
     }
 
+    /**
+     * Finds best content for rendering for the given locale.
+     * <p>
+     * SCIPIO: useFallbackLocale null (default from {@link #findAlternateLocaleContent}).
+     * TODO: REVIEW: For stock ofbiz compatibility, this currently always passes deepCache=true.
+     * All original Ofbiz client code was written with this caching always enabled, so
+     * it is too drastic to simply change all code to honor original cache flag alone.
+     */
+    public static GenericValue findContentForRendering(Delegator delegator, String contentId, Locale locale, String partyId, String roleTypeId, boolean cache) throws GeneralException, IOException {
+        return findContentForRendering(delegator, contentId, locale, partyId, roleTypeId, null, cache, null);
+    }
+    
+    /**
+     * Renders context as text (core).
+     * <p>
+     * SCIPIO: 2017-11-24: Modified for deepCache and useFallbackLocale (see {@link #findContentForRendering}).
+     */
     public static void renderContentAsText(LocalDispatcher dispatcher, Delegator delegator, GenericValue content, Appendable out,
-            Map<String,Object>templateContext, Locale locale, String mimeTypeId, boolean cache, List<GenericValue> webAnalytics) throws GeneralException, IOException {
+            Map<String,Object>templateContext, Locale locale, String mimeTypeId, Boolean useFallbackLocale, boolean cache, Boolean deepCache, List<GenericValue> webAnalytics) throws GeneralException, IOException {
         // if the content has a service attached run the service
 
         String serviceName = content.getString("serviceName"); //Kept for backward compatibility
@@ -223,7 +257,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
         String contentId = content.getString("contentId");
 
         if (templateContext == null) {
-            templateContext = FastMap.newInstance();
+            templateContext = new HashMap<String, Object>();
         }
 
         // create the content facade
@@ -257,7 +291,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
             facade.setIsDecorated(true);
             templateContext.put("decoratedContent", facade); // decorated content
             templateContext.put("thisContent", decFacade); // decorator content
-            ContentWorker.renderContentAsText(dispatcher, delegator, contentDecoratorId, out, templateContext, locale, mimeTypeId, null, null, cache);
+            ContentWorker.renderContentAsText(dispatcher, delegator, contentDecoratorId, out, templateContext, locale, mimeTypeId, null, null, useFallbackLocale, cache, deepCache); // SCIPIO: new flags
         } else {
             // get the data resource info
             String templateDataResourceId = content.getString("templateDataResourceId");
@@ -334,6 +368,12 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
         }
     }
 
+    public static void renderContentAsText(LocalDispatcher dispatcher, Delegator delegator, GenericValue content, Appendable out,
+            Map<String,Object>templateContext, Locale locale, String mimeTypeId, boolean cache, List<GenericValue> webAnalytics) throws GeneralException, IOException {
+        // SCIPIO: now delegating
+        renderContentAsText(dispatcher, delegator, content, out, templateContext, locale, mimeTypeId, null, cache, null, webAnalytics);
+    }
+    
     public static String renderContentAsText(LocalDispatcher dispatcher, Delegator delegator, String contentId, Map<String, Object> templateContext,
             Locale locale, String mimeTypeId, boolean cache) throws GeneralException, IOException {
         Writer writer = new StringWriter();
@@ -341,8 +381,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
         String rendered = writer.toString();
         // According to https://www.owasp.org/index.php/XSS_%28Cross_Site_Scripting%29_Prevention_Cheat_Sheet#XSS_Prevention_Rules_Summary
         // Normally head should be protected by X-XSS-Protection Response Header by default
-        if (EntityUtilProperties.propertyValueEqualsIgnoreCase("content.properties", "content.sanitize", "true", delegator) 
-                && (rendered.contains("<script>")
+        if ((rendered.contains("<script>")
                 || rendered.contains("<!--")
                 || rendered.contains("<div")
                 || rendered.contains("<style>")
@@ -351,8 +390,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
                 || rendered.contains("<input")
                 || rendered.contains("<iframe")
                 || rendered.contains("<a"))) {
-            PolicyFactory sanitizer = Sanitizers.FORMATTING.and(Sanitizers.BLOCKS).and(Sanitizers.IMAGES).and(Sanitizers.LINKS).and(Sanitizers.STYLES);
-            rendered = sanitizer.sanitize(rendered);
+            rendered = encoder.sanitize(rendered);
         }
         return rendered; 
     }
@@ -368,6 +406,19 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
             Map<String, Object> templateContext, Locale locale, String mimeTypeId, String partyId, String roleTypeId, boolean cache) throws GeneralException, IOException {
         GenericValue content = ContentWorker.findContentForRendering(delegator, contentId, locale, partyId, roleTypeId, cache);
         ContentWorker.renderContentAsText(dispatcher, delegator, content, out, templateContext, locale, mimeTypeId, cache, null);
+    }
+    
+    /**
+     * Renders content as text.
+     * <p>
+     * SCIPIO: 2017-11-24: new overload with support for explicit deepCache flag and useFallbackLocale.
+     * See {@link #findAlternateLocaleContent} and other overloads for details.
+     * The other methods were all written with implicit deepCache=true even when cache=false was passed.
+     */
+    public static void renderContentAsText(LocalDispatcher dispatcher, Delegator delegator, String contentId, Appendable out,
+            Map<String, Object> templateContext, Locale locale, String mimeTypeId, String partyId, String roleTypeId, Boolean useFallbackLocale, boolean cache, Boolean deepCache) throws GeneralException, IOException {
+        GenericValue content = ContentWorker.findContentForRendering(delegator, contentId, locale, partyId, roleTypeId, useFallbackLocale, cache, deepCache);
+        ContentWorker.renderContentAsText(dispatcher, delegator, content, out, templateContext, locale, mimeTypeId, useFallbackLocale, cache, deepCache, null);
     }
 
     public static String renderSubContentAsText(LocalDispatcher dispatcher, Delegator delegator, String contentId, String mapKey, Map<String, Object> templateContext,
@@ -400,10 +451,23 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
         }
     }
 
-    public static GenericValue findAlternateLocaleContent(Delegator delegator, GenericValue view, Locale locale) {
-        GenericValue contentAssocDataResourceViewFrom = view;
+    /**
+     * Finds alternate locale content (as ContentAssocDataResourceViewTo) for the given content, or returns the passed content view if none.
+     * <p>
+     * SCIPIO: Modified for cache=true and OPTIONAL useFallbackLocale flag, and currently uses PARTIAL ofbiz 16 patch to make sure the original
+     * view's locale is included in the checks.
+     * TODO: REVIEW: unlike ofbiz 16, useFallbackLocale (fallback on properties fallback locale) is currently left DISABLED BY DEFAULT, 
+     * because changing this here could drastically affect existing code (such as solr) and not clear even
+     * wanted in most cases.
+     * WARN: If you need to guarantee a specific behavior, simply pass explicit true or false to useFallbackLocale.
+     * @param useFallbackLocale if TRUE, prefer properties fallback locale over passed view as fallback;
+     *                          if FALSE, don't check properties fallback locale;
+     *                          if null, currently same as FALSE (WARN: could change in future)
+     */
+    public static GenericValue findAlternateLocaleContent(Delegator delegator, GenericValue view, Locale locale, Boolean useFallbackLocale, boolean cache) { // SCIPIO: 2017-11-24: added cache
+        GenericValue contentAssocDataResourceViewFrom = null;
         if (locale == null) {
-            return contentAssocDataResourceViewFrom;
+            return view;
         }
 
         String localeStr = locale.toString();
@@ -411,13 +475,18 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
 
         List<GenericValue> alternateViews = null;
         try {
-            alternateViews = view.getRelated("ContentAssocDataResourceViewTo", UtilMisc.toMap("caContentAssocTypeId", "ALTERNATE_LOCALE"), UtilMisc.toList("-caFromDate"), true);
+            alternateViews = view.getRelated("ContentAssocDataResourceViewTo", UtilMisc.toMap("caContentAssocTypeId", "ALTERNATE_LOCALE"), UtilMisc.toList("-caFromDate"), cache);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error finding alternate locale content: " + e.toString(), module);
-            return contentAssocDataResourceViewFrom;
+            return view;
         }
 
-        alternateViews = EntityUtil.filterByDate(alternateViews, UtilDateTime.nowTimestamp(), "caFromDate", "caThruDate", true);
+        alternateViews = EntityUtil.filterByDate(alternateViews, UtilDateTime.nowTimestamp(), "caFromDate", "caThruDate", cache);
+        // also check the given view for a matching locale
+        // SCIPIO: NOTE: 2017-11-24: This .add was part of patch OFBIZ-9445 / r1800854 / https://svn.apache.org/repos/asf/ofbiz/branches/release16.11
+        // and it fixes the original concern I had with this method - not checking the source view first's localeString - so this part is good.
+        alternateViews.add(0, view);
+
         for (GenericValue thisView : alternateViews) {
             String currentLocaleString = thisView.getString("localeString");
             if (UtilValidate.isEmpty(currentLocaleString)) {
@@ -456,9 +525,33 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
             }
         }
 
+        if (contentAssocDataResourceViewFrom == null) {
+            // SCIPIO: NOTE: 2017-11-24: The fallback locale support was part of patch OFBIZ-9445 / r1800854 / https://svn.apache.org/repos/asf/ofbiz/branches/release16.11
+            // TODO: REVIEW: Unlike ofbiz 16, I am leaving fallback locale fallback usage DISABLED BY DEFAULT,
+            // because nothing else in ContentWorker ever uses the property fallback locale and possible impacts.
+            if (Boolean.TRUE.equals(useFallbackLocale)) {
+                // no content matching the given locale found.
+                Locale fallbackLocale = UtilProperties.getFallbackLocale();
+                contentAssocDataResourceViewFrom = locale.equals(fallbackLocale) ? view
+                        // only search for a content with the fallbackLocale if it is different to the given locale
+                        : findAlternateLocaleContent(delegator, view, fallbackLocale, useFallbackLocale, cache);
+            } else {
+                contentAssocDataResourceViewFrom = view;
+            }
+        }
+
         return contentAssocDataResourceViewFrom;
     }
 
+    /**
+     * Finds alternate locale content (as ContentAssocDataResourceViewTo) for the given content, or returns the passed content view if none.
+     * Uses cache=true by default.
+     * SCIPIO: NOTE: cache=true was the stock default (good).
+     */
+    public static GenericValue findAlternateLocaleContent(Delegator delegator, GenericValue view, Locale locale) {
+        return findAlternateLocaleContent(delegator, view, locale, null, true);
+    }
+    
     public static void traverse(Delegator delegator, GenericValue content, Timestamp fromDate, Timestamp thruDate, Map<String, Object> whenMap, int depthIdx, Map<String, Object> masterNode, String contentAssocTypeId, List<GenericValue> pickList, String direction) {
         //String startContentAssocTypeId = null;
         String contentTypeId = null;
@@ -470,27 +563,27 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
             contentId = (String) content.get("contentId");
             contentTypeId = (String) content.get("contentTypeId");
             List<GenericValue> topicList = content.getRelated("ToContentAssoc", UtilMisc.toMap("contentAssocTypeId", "TOPIC"), null, false);
-            List<String> topics = FastList.newInstance();
+            List<String> topics = new LinkedList<String>();
             for (int i = 0; i < topicList.size(); i++) {
                 GenericValue assoc = topicList.get(i);
                 topics.add(assoc.getString("contentId"));
             }
             List<GenericValue> keywordList = content.getRelated("ToContentAssoc", UtilMisc.toMap("contentAssocTypeId", "KEYWORD"), null, false);
-            List<String> keywords = FastList.newInstance();
+            List<String> keywords = new LinkedList<String>();
             for (int i = 0; i < keywordList.size(); i++) {
                 GenericValue assoc = keywordList.get(i);
                 keywords.add(assoc.getString("contentId"));
             }
             List<GenericValue> purposeValueList = content.getRelated("ContentPurpose", null, null, true);
-            List<String> purposes = FastList.newInstance();
+            List<String> purposes = new LinkedList<String>();
             for (int i = 0; i < purposeValueList.size(); i++) {
                 GenericValue purposeValue = purposeValueList.get(i);
                 purposes.add(purposeValue.getString("contentPurposeTypeId"));
             }
-            List<String> contentTypeAncestry = FastList.newInstance();
+            List<String> contentTypeAncestry = new LinkedList<String>();
             getContentTypeAncestry(delegator, contentTypeId, contentTypeAncestry);
 
-            Map<String, Object> context = FastMap.newInstance();
+            Map<String, Object> context = new HashMap<String, Object>();
             context.put("content", content);
             context.put("contentAssocTypeId", contentAssocTypeId);
             //context.put("related", related);
@@ -502,13 +595,13 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
             boolean isReturnBefore = checkReturnWhen(context, (String) whenMap.get("returnBeforePickWhen"));
             Map<String, Object> thisNode = null;
             if (isPick || !isReturnBefore) {
-                thisNode = FastMap.newInstance();
+                thisNode = new HashMap<String, Object>();
                 thisNode.put("contentId", contentId);
                 thisNode.put("contentTypeId", contentTypeId);
                 thisNode.put("contentAssocTypeId", contentAssocTypeId);
                 List<Map<String, Object>> kids = UtilGenerics.checkList(masterNode.get("kids"));
                 if (kids == null) {
-                    kids = FastList.newInstance();
+                    kids = new LinkedList<Map<String, Object>>();
                     masterNode.put("kids", kids);
                 }
                 kids.add(thisNode);
@@ -519,9 +612,9 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
             }
             boolean isReturnAfter = checkReturnWhen(context, (String) whenMap.get("returnAfterPickWhen"));
             if (!isReturnAfter) {
-                List<String> assocTypes = FastList.newInstance();
+                List<String> assocTypes = new LinkedList<String>();
                 List<GenericValue> relatedAssocs = getContentAssocsWithId(delegator, contentId, fromDate, thruDate, direction, assocTypes);
-                Map<String, Object> assocContext = FastMap.newInstance();
+                Map<String, Object> assocContext = new HashMap<String, Object>();
                 assocContext.put("related", relatedAssocs);
                 for (GenericValue assocValue : relatedAssocs) {
                     contentAssocTypeId = (String) assocValue.get("contentAssocTypeId");
@@ -549,7 +642,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
                 }
             }
         } catch (GenericEntityException e) {
-            Debug.logError("Entity Error:" + e.getMessage(), null);
+            Debug.logError("Entity Error:" + e.getMessage(), module);
         }
     }
 
@@ -642,7 +735,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
     }
 
     public static List<Object> getPurposes(GenericValue content) {
-        List<Object> purposes = FastList.newInstance();
+        List<Object> purposes = new LinkedList<Object>();
         try {
             List<GenericValue> purposeValueList = content.getRelated("ContentPurpose", null, null, true);
             for (int i = 0; i < purposeValueList.size(); i++) {
@@ -650,13 +743,13 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
                 purposes.add(purposeValue.get("contentPurposeTypeId"));
             }
         } catch (GenericEntityException e) {
-            Debug.logError("Entity Error:" + e.getMessage(), null);
+            Debug.logError("Entity Error:" + e.getMessage(), module);
         }
         return purposes;
     }
 
     public static List<Object> getSections(GenericValue content) {
-        List<Object> sections = FastList.newInstance();
+        List<Object> sections = new LinkedList<Object>();
         try {
             List<GenericValue> sectionValueList = content.getRelated("FromContentAssoc", null, null, true);
             for (int i = 0; i < sectionValueList.size(); i++) {
@@ -667,13 +760,13 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
                 }
             }
         } catch (GenericEntityException e) {
-            Debug.logError("Entity Error:" + e.getMessage(), null);
+            Debug.logError("Entity Error:" + e.getMessage(), module);
         }
         return sections;
     }
 
     public static List<Object> getTopics(GenericValue content) {
-        List<Object> topics = FastList.newInstance();
+        List<Object> topics = new LinkedList<Object>();
         try {
             List<GenericValue> topicValueList = content.getRelated("FromContentAssoc", null, null, true);
             for (int i = 0; i < topicValueList.size(); i++) {
@@ -683,7 +776,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
                     topics.add(topicValue.get("contentIdTo"));
             }
         } catch (GenericEntityException e) {
-            Debug.logError("Entity Error:" + e.getMessage(), null);
+            Debug.logError("Entity Error:" + e.getMessage(), module);
         }
         return topics;
     }
@@ -697,7 +790,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
         String parentContentId = (String) parentContent.get("contentId");
         //if (Debug.infoOn()) Debug.logInfo("traverse, contentAssocTypeId:" + contentAssocTypeId,null);
         Map<String, Object> whenMap = UtilGenerics.checkMap(ctx.get("whenMap"));
-        List<Map<String, Object>> kids = FastList.newInstance();
+        List<Map<String, Object>> kids = new LinkedList<Map<String, Object>>();
         currentNode.put("kids", kids);
         String direction = (String) ctx.get("direction");
         if (UtilValidate.isEmpty(direction)) {
@@ -751,7 +844,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
                 Boolean isWhenObj = (Boolean) BshUtil.eval(newWhen, context);
                 isWhen = isWhenObj.booleanValue();
             } catch (EvalError e) {
-                Debug.logError("Error in evaluating :" + whenStr + " : " + e.getMessage(), null);
+                Debug.logError("Error in evaluating :" + whenStr + " : " + e.getMessage(), module);
                 throw new RuntimeException(e.getMessage());
             }
         }
@@ -768,7 +861,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
                 Boolean isWhenObj = (Boolean) BshUtil.eval(newWhen, context);
                 isWhen = isWhenObj.booleanValue();
             } catch (EvalError e) {
-                Debug.logError("Error in evaluating :" + whenStr + " : " + e.getMessage(), null);
+                Debug.logError("Error in evaluating :" + whenStr + " : " + e.getMessage(), module);
                 throw new RuntimeException(e.getMessage());
             }
         }
@@ -785,7 +878,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
             Debug.logInfo("assocList:" + assocList.size() + " contentId:" + currentContent.getString("contentId"), "");
         }
 
-        List<GenericValue> contentList = FastList.newInstance();
+        List<GenericValue> contentList = new LinkedList<GenericValue>();
         String contentIdName = "contentId";
         if (linkDir != null && linkDir.equalsIgnoreCase("TO")) {
             contentIdName = contentIdName.concat("To");
@@ -812,8 +905,8 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
     }
 
     public static List<GenericValue> getAssociatedContentView(GenericValue currentContent, String linkDir, List<String> assocTypes, List<String> contentTypes, String fromDate, String thruDate) throws GenericEntityException {
-        List<GenericValue> contentList = FastList.newInstance();
-        List<EntityExpr> exprListAnd = FastList.newInstance();
+        List<GenericValue> contentList = new LinkedList<GenericValue>();
+        List<EntityExpr> exprListAnd = new LinkedList<EntityExpr>();
 
         String origContentId = (String) currentContent.get("contentId");
         String contentIdName = "contentId";
@@ -865,7 +958,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
 
     @SuppressWarnings("unchecked")
     public static List<GenericValue> getContentAssocsWithId(Delegator delegator, String contentId, Timestamp fromDate, Timestamp thruDate, String direction, List<String> assocTypes) throws GenericEntityException {
-        List exprList = FastList.newInstance();
+        List exprList = new LinkedList();
         EntityExpr joinExpr = null;
         EntityExpr expr = null;
         if (direction != null && direction.equalsIgnoreCase("From")) {
@@ -882,7 +975,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
             exprList.add(fromExpr);
         }
         if (thruDate != null) {
-            List<EntityExpr> thruList = FastList.newInstance();
+            List<EntityExpr> thruList = new LinkedList<EntityExpr>();
             //thruDate = UtilDateTime.getDayStart(thruDate, daysLater);
 
             EntityExpr thruExpr = EntityCondition.makeCondition("thruDate", EntityOperator.LESS_THAN, thruDate);
@@ -892,7 +985,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
             EntityConditionList<EntityExpr> thruExprList = EntityCondition.makeCondition(thruList, EntityOperator.OR);
             exprList.add(thruExprList);
         } else if (fromDate != null) {
-            List<EntityExpr> thruList = FastList.newInstance();
+            List<EntityExpr> thruList = new LinkedList<EntityExpr>();
 
             EntityExpr thruExpr = EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, fromDate);
             thruList.add(thruExpr);
@@ -988,8 +1081,8 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
     }
 
     public static List<Map<String, Object>> getContentAncestryNodeTrail(Delegator delegator, String contentId, String contentAssocTypeId, String direction) throws GenericEntityException {
-         List<GenericValue> contentAncestorList = FastList.newInstance();
-         List<Map<String, Object>> nodeTrail = FastList.newInstance();
+         List<GenericValue> contentAncestorList = new LinkedList<GenericValue>();
+         List<Map<String, Object>> nodeTrail = new LinkedList<Map<String, Object>>();
          getContentAncestry(delegator, contentId, contentAssocTypeId, direction, contentAncestorList);
          for (GenericValue value : contentAncestorList) {
              Map<String, Object> thisNode = ContentWorker.makeNode(value);
@@ -999,7 +1092,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
     }
 
     public static String getContentAncestryNodeTrailCsv(Delegator delegator, String contentId, String contentAssocTypeId, String direction) throws GenericEntityException {
-         List<GenericValue> contentAncestorList = FastList.newInstance();
+         List<GenericValue> contentAncestorList = new LinkedList<GenericValue>();
          getContentAncestry(delegator, contentId, contentAssocTypeId, direction, contentAncestorList);
          String csv = StringUtil.join(contentAncestorList, ",");
          return csv;
@@ -1052,13 +1145,13 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
     }
 
     public static Map<String, Object> callContentPermissionCheckResult(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> context) {
-        Map<String, Object> permResults = FastMap.newInstance();
+        Map<String, Object> permResults = new HashMap<String, Object>();
         String skipPermissionCheck = (String) context.get("skipPermissionCheck");
 
         if (UtilValidate.isEmpty(skipPermissionCheck) 
                 || (!"true".equalsIgnoreCase(skipPermissionCheck) && !"granted".equalsIgnoreCase(skipPermissionCheck))) {
             GenericValue userLogin = (GenericValue) context.get("userLogin");
-            Map<String, Object> serviceInMap = FastMap.newInstance();
+            Map<String, Object> serviceInMap = new HashMap<String, Object>();
             serviceInMap.put("userLogin", userLogin);
             serviceInMap.put("targetOperationList", context.get("targetOperationList"));
             serviceInMap.put("contentPurposeList", context.get("contentPurposeList"));
@@ -1162,7 +1255,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
         if (UtilValidate.isNotEmpty(trail)) {
             passedGlobalNodeTrail = UtilGenerics.checkList(UtilMisc.makeListWritable(trail));
         } else {
-            passedGlobalNodeTrail = FastList.newInstance();
+            passedGlobalNodeTrail = new LinkedList<Map<String, Object>>();
         }
         //if (Debug.infoOn()) Debug.logInfo("in getCurrentContent, passedGlobalNodeTrail(3):" + passedGlobalNodeTrail , module);
         int sz = passedGlobalNodeTrail.size();
@@ -1227,7 +1320,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
     }
 
     public static Map<String, Object> buildPickContext(Delegator delegator, String contentAssocTypeId, String assocContentId, String direction, GenericValue thisContent) throws GenericEntityException {
-        Map<String, Object> ctx = FastMap.newInstance();
+        Map<String, Object> ctx = new HashMap<String, Object>();
         ctx.put("contentAssocTypeId", contentAssocTypeId);
         ctx.put("contentId", assocContentId);
         // This needs to be the opposite
@@ -1241,7 +1334,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
         ctx.put("content", thisContent);
         List<Object> purposes = getPurposes(thisContent);
         ctx.put("purposes", purposes);
-        List<String> contentTypeAncestry = FastList.newInstance();
+        List<String> contentTypeAncestry = new LinkedList<String>();
         String contentTypeId = thisContent.getString("contentTypeId");
         getContentTypeAncestry(delegator, contentTypeId, contentTypeAncestry);
         ctx.put("typeAncestry", contentTypeAncestry);
@@ -1254,14 +1347,14 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
     }
 
     public static void checkConditions(Delegator delegator, Map<String, Object> trailNode, Map<String, Object> contentAssoc, Map<String, Object> whenMap) {
-        Map<String, Object> context = FastMap.newInstance();
+        Map<String, Object> context = new HashMap<String, Object>();
         GenericValue content = (GenericValue)trailNode.get("value");
         // String contentId = (String)trailNode.get("contentId");
         if (contentAssoc == null && content != null && (content.getEntityName().indexOf("Assoc") >= 0)) {
             contentAssoc = delegator.makeValue("ContentAssoc");
             try {
                 // TODO: locale needs to be gotten correctly
-                SimpleMapProcessor.runSimpleMapProcessor("component://content/script/org/ofbiz/content/ContentManagementMapProcessors.xml", "contentAssocIn", content, contentAssoc, FastList.newInstance(), Locale.getDefault());
+                SimpleMapProcessor.runSimpleMapProcessor("component://content/script/org/ofbiz/content/ContentManagementMapProcessors.xml", "contentAssocIn", content, contentAssoc, new LinkedList<Object>(), Locale.getDefault());
                 context.put("contentAssocTypeId", contentAssoc.get("contentAssocTypeId"));
                 context.put("contentAssocPredicateId", contentAssoc.get("contentAssocPredicateId"));
                 context.put("mapKey", contentAssoc.get("mapKey"));
@@ -1282,7 +1375,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
         List<Object> topics = getTopics(content);
         context.put("topics", topics);
         String contentTypeId = (String)content.get("contentTypeId");
-        List<String> contentTypeAncestry = FastList.newInstance();
+        List<String> contentTypeAncestry = new LinkedList<String>();
         try {
             getContentTypeAncestry(delegator, contentTypeId, contentTypeAncestry);
         } catch (GenericEntityException e) {
@@ -1316,12 +1409,12 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
         if (UtilValidate.isNotEmpty(targetOperationString)) {
             List<String> opsFromString = StringUtil.split(targetOperationString, "|");
             if (UtilValidate.isEmpty(targetOperationList)) {
-                targetOperationList = FastList.newInstance();
+                targetOperationList = new LinkedList<String>();
             }
             targetOperationList.addAll(opsFromString);
         }
         if (UtilValidate.isEmpty(targetOperationList)) {
-            targetOperationList = FastList.newInstance();
+            targetOperationList = new LinkedList<String>();
             if (UtilValidate.isEmpty(md)) {
                 md ="_CREATE";
             }
@@ -1348,12 +1441,12 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
         if (UtilValidate.isNotEmpty(contentPurposeString)) {
             List<String> purposesFromString = StringUtil.split(contentPurposeString, "|");
             if (UtilValidate.isEmpty(contentPurposeList)) {
-                contentPurposeList = FastList.newInstance();
+                contentPurposeList = new LinkedList<String>();
             }
             contentPurposeList.addAll(purposesFromString);
         }
         if (UtilValidate.isEmpty(contentPurposeList)) {
-            contentPurposeList = FastList.newInstance();
+            contentPurposeList = new LinkedList<String>();
         }
         if (Debug.infoOn()) {
             Debug.logInfo("in prepContentPurposeList, contentPurposeList(0):" + contentPurposeList, "");
@@ -1376,7 +1469,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
     }
 
     public static List<GenericValue> getContentAssocViewList(Delegator delegator, String contentIdTo, String contentId, String contentAssocTypeId, String statusId, String privilegeEnumId) throws GenericEntityException {
-        List<EntityExpr> exprListAnd = FastList.newInstance();
+        List<EntityExpr> exprListAnd = new LinkedList<EntityExpr>();
 
         if (UtilValidate.isNotEmpty(contentIdTo)) {
             EntityExpr expr = EntityCondition.makeCondition("caContentIdTo", EntityOperator.EQUALS, contentIdTo);
@@ -1425,7 +1518,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
             return thisNode;
         }
 
-        thisNode = FastMap.newInstance();
+        thisNode = new HashMap<String, Object>();
         thisNode.put("value", thisContent);
         String contentId = (String)thisContent.get("contentId");
         thisNode.put("contentId", contentId);
@@ -1461,7 +1554,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
     }
 
     public static List<List<String>> csvToList(String csv, Delegator delegator) {
-        List<List<String>> outList = FastList.newInstance();
+        List<List<String>> outList = new LinkedList<List<String>>();
         List<String> contentIdList = StringUtil.split(csv, ",");
         GenericValue content = null;
         String contentName = null;
@@ -1471,10 +1564,10 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
                 content = EntityQuery.use(delegator).from("Content").where("contentId", contentId).cache().queryOne();
             } catch (GenericEntityException e) {
                 Debug.logError(e.getMessage(), module);
-                return FastList.newInstance();
+                return new LinkedList<List<String>>();
             }
             contentName = (String)content.get("contentName");
-            values = FastList.newInstance();
+            values = new LinkedList<String>();
             values.add(contentId);
             values.add(contentName);
             outList.add(values);
@@ -1483,7 +1576,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
     }
 
     public static List<GenericValue> csvToContentList(String csv, Delegator delegator) {
-        List<GenericValue> trail = FastList.newInstance();
+        List<GenericValue> trail = new LinkedList<GenericValue>();
         if (csv == null) {
             return trail;
         }
@@ -1494,7 +1587,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
                 content = EntityQuery.use(delegator).from("Content").where("contentId", contentId).cache().queryOne();
             } catch (GenericEntityException e) {
                 Debug.logError(e.getMessage(), module);
-                return FastList.newInstance();
+                return new LinkedList<GenericValue>();
             }
             trail.add(content);
         }
@@ -1502,7 +1595,7 @@ public class ContentWorker implements org.ofbiz.widget.content.ContentWorkerInte
     }
 
     public static List<Map<String, Object>> csvToTrail(String csv, Delegator delegator) {
-        List<Map<String, Object>> trail = FastList.newInstance();
+        List<Map<String, Object>> trail = new LinkedList<Map<String, Object>>();
         if (csv == null) {
             return trail;
         }

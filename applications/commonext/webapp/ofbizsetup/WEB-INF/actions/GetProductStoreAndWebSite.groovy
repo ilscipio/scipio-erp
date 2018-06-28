@@ -27,7 +27,8 @@ if(productStore){
 context.productStoreId = productStoreId;
 context.productStore = productStore;
 
-if("website".equals(context.activeSubMenuItemTop)){
+queryAll = context.gpsawQueryWebSite == true; // SCIPIO: 2017-09-22: workaround for a workaround...
+if(queryAll || "website".equals(context.activeSubMenuItemTop)){
     if(productStoreId != null){
         webSite = EntityUtil.getFirst(delegator.findByAnd("WebSite", [productStoreId: productStoreId], null, false));
         context.showScreen = "origin";

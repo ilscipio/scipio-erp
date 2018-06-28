@@ -24,12 +24,11 @@ import java.io.StringReader;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.ofbiz.base.util.Debug;
@@ -55,7 +54,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 public class PromoServices {
 
-    public final static String module = PromoServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ProductUiLabels";
     protected final static char[] smartChars = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y',
             'Z', '2', '3', '4', '5', '6', '7', '8', '9' };
@@ -131,7 +130,7 @@ public class PromoServices {
         Locale locale = (Locale) context.get("locale");
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 
-        List<EntityCondition> condList = FastList.newInstance();
+        List<EntityCondition> condList = new LinkedList<EntityCondition>();
         if (UtilValidate.isEmpty(productStoreId)) {
             condList.add(EntityCondition.makeCondition("productStoreId", EntityOperator.EQUALS, productStoreId));
         }
@@ -184,7 +183,7 @@ public class PromoServices {
 
         // read the bytes into a reader
         BufferedReader reader = new BufferedReader(new StringReader(file));
-        List<Object> errors = FastList.newInstance();
+        List<Object> errors = new LinkedList<Object>();
         int lines = 0;
         String line;
 
@@ -195,7 +194,7 @@ public class PromoServices {
                 if (line.length() > 0 && !line.startsWith("#")) {
                     if (line.length() > 0 && line.length() <= 20) {
                         // valid promo code
-                        Map<String, Object> inContext = FastMap.newInstance();
+                        Map<String, Object> inContext = new HashMap<String, Object>();
                         inContext.putAll(invokeCtx);
                         inContext.put("productPromoCodeId", line);
                         Map<String, Object> result = dispatcher.runSync("createProductPromoCode", inContext);
@@ -250,7 +249,7 @@ public class PromoServices {
        
       // read the bytes into a reader
         BufferedReader reader = new BufferedReader(new StringReader(new String(wrapper)));
-        List<Object> errors = FastList.newInstance();
+        List<Object> errors = new LinkedList<Object>();
         int lines = 0;
         String line;
 

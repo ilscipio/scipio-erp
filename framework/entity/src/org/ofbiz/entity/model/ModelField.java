@@ -37,7 +37,7 @@ import org.w3c.dom.Element;
 @ThreadSafe
 @SuppressWarnings("serial")
 public final class ModelField extends ModelChild {
-    public static final String module = ModelField.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public enum EncryptMethod {
         FALSE {

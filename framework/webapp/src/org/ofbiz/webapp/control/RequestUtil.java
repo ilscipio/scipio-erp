@@ -15,7 +15,7 @@ import org.ofbiz.base.util.UtilValidate;
  */
 public abstract class RequestUtil {
 
-    public static final String module = RequestUtil.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     // TODO: unhardcode
     private static final String GENERICERRMSG_EN_FALLBACK = "An error occurred. Please contact support.";
@@ -23,6 +23,12 @@ public abstract class RequestUtil {
     protected RequestUtil() {
     }
     
+    /**
+     * @deprecated 2018-02-26: This should now be done by Freemarker files or 
+     * whatever output method is used, unless the error is going directly out to browser (bypassing renderer);
+     * in such cases, you may still use {@link #encodeErrorMessage}.
+     */
+    @Deprecated
     public static String getEncodedSecureErrorMessage(HttpServletRequest request, Throwable t) {
         return encodeErrorMessage(request, getSecureErrorMessage(request, t.toString()));
     }
@@ -43,6 +49,12 @@ public abstract class RequestUtil {
         }
     }
     
+    /**
+     * HTML-encodes the given message.
+     * <p>
+     * NOTE: 2018-02-26: This should now be done by Freemarker files or whatever output method is used in almost all cases;
+     * this method is only for direct HTML output to browser (bypassing renderer).
+     */
     public static String encodeErrorMessage(HttpServletRequest request, String msg) {
         // FIXME: this is stock ofbiz behavior, originally from ControlServlet: hardcoding as html
         // is not appropriate for JSON and possibly other cases...

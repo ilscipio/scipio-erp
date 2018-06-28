@@ -11,7 +11,6 @@
     <property name="desc" value="SCIPIO ERP DemoSuite Component"/>
     <property name="name" value="ofbiz-demosuite"/>
     <property name="component-name" value="demosuite"/>
-    <property name="ofbiz.home.dir" value="../.."/>
     <property name="src.dir" value="src"/>
     <property name="dtd.dir" value="dtd"/>
     <property name="lib.dir" value="lib"/>
@@ -20,7 +19,6 @@
     <path id="local.class.path">
         <fileset dir="${lib.dir}" includes="*.jar"/>
         <fileset dir="../../framework/base/lib" includes="*.jar"/>
-        <fileset dir="../../framework/base/lib/j2eespecs" includes="*.jar"/>
         <fileset dir="../../framework/base/build/lib" includes="*.jar"/>
         <fileset dir="../../framework/entity/lib" includes="*.jar"/>
         <fileset dir="../../framework/entity/build/lib" includes="*.jar"/>

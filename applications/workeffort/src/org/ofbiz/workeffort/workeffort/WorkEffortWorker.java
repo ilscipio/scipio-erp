@@ -19,11 +19,12 @@
 
 package org.ofbiz.workeffort.workeffort;
 
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import javolution.util.FastList;
-import javolution.util.FastSet;
+import org.ofbiz.base.util.UtilMisc;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
@@ -36,7 +37,7 @@ import org.ofbiz.entity.util.EntityQuery;
 /** WorkEffortWorker - Work Effort worker class. */
 public class WorkEffortWorker {
 
-    public static final String module = WorkEffortWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static List<GenericValue> getLowestLevelWorkEfforts(Delegator delegator, String workEffortId, String workEffortAssocTypeId) {
         return getLowestLevelWorkEfforts(delegator, workEffortId, workEffortAssocTypeId, "workEffortIdFrom", "workEffortIdTo");
@@ -50,13 +51,13 @@ public class WorkEffortWorker {
             right = "workEffortIdTo";
         }
 
-        List<GenericValue> workEfforts = FastList.newInstance();
+        List<GenericValue> workEfforts = new LinkedList<GenericValue>();
         try {
             List<GenericValue> childWEAssocsLevelFirst = EntityQuery.use(delegator).from("WorkEffortAssoc").where(left, workEffortId, "workEffortAssocTypeId", workEffortAssocTypeId).cache(true).queryList();
             for (GenericValue childWEAssocLevelFirst : childWEAssocsLevelFirst) {
                 List<GenericValue> childWEAssocsLevelNext = EntityQuery.use(delegator).from("WorkEffortAssoc").where(left, childWEAssocLevelFirst.get(right), "workEffortAssocTypeId", workEffortAssocTypeId).cache(true).queryList();
                 while (UtilValidate.isNotEmpty(childWEAssocsLevelNext)) {
-                    List<GenericValue> tempWorkEffortList = FastList.newInstance();
+                    List<GenericValue> tempWorkEffortList = new LinkedList<GenericValue>();
                     for (GenericValue childWEAssocLevelNext : childWEAssocsLevelNext) {
                         List<GenericValue> childWEAssocsLevelNth = EntityQuery.use(delegator).from("WorkEffortAssoc").where(left, childWEAssocLevelNext.get(right), "workEffortAssocTypeId", workEffortAssocTypeId).cache(true).queryList();
                         if (UtilValidate.isNotEmpty(childWEAssocsLevelNth)) {
@@ -75,8 +76,8 @@ public class WorkEffortWorker {
     }
 
     public static List<GenericValue> removeDuplicateWorkEfforts(List<GenericValue> workEfforts) {
-        Set<String> keys = FastSet.newInstance();
-        Set<GenericValue> exclusions = FastSet.newInstance();
+        Set<String> keys = new HashSet<String>();
+        Set<GenericValue> exclusions = new HashSet<GenericValue>();
         for (GenericValue workEffort : workEfforts) {
             String workEffortId = workEffort.getString("workEffortId");
             if (keys.contains(workEffortId)) {

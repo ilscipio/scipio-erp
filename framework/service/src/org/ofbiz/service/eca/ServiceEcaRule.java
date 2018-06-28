@@ -38,7 +38,7 @@ import org.w3c.dom.Element;
 @SuppressWarnings("serial")
 public final class ServiceEcaRule implements java.io.Serializable {
 
-    public static final String module = ServiceEcaRule.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected final String serviceName;
     protected final String eventName;

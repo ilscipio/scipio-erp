@@ -36,7 +36,7 @@ import org.ofbiz.base.util.cache.UtilCache;
 
 @SuppressWarnings("serial")
 public class UtilCacheTests extends GenericTestCaseBase implements Serializable {
-    public static final String module = UtilCacheTests.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected static abstract class Change<V> {
         protected int count = 1;

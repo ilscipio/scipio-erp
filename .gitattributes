@@ -99,6 +99,7 @@
 *.rb text
 *.rhtml text
 *.rst text
+*.sass text
 *.scala text
 *.schemas text
 *.scss text

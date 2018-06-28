@@ -47,7 +47,7 @@ import org.ofbiz.security.Security;
  */
 public class GenericWebEvent {
 
-    public static final String module = GenericWebEvent.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String err_resource = "WebtoolsErrorUiLabels";
 
     /** An HTTP WebEvent handler that updates a Generic entity

@@ -51,7 +51,7 @@ public class DependencyGraph<T> {
     }
     
     public DependencyGraph(Map<T, List<T>> elementsAndDependencies, boolean strict) {
-        this(new ArrayList<T>(elementsAndDependencies.keySet()), elementsAndDependencies, strict);
+        this(new ArrayList<>(elementsAndDependencies.keySet()), elementsAndDependencies, strict);
     }
     
     public DependencyGraph(Map<T, List<T>> elementsAndDependencies) {
@@ -113,7 +113,7 @@ public class DependencyGraph<T> {
                 }
                 
                 elements.add(element);
-                dependencies.put(element, new ArrayList<String>(edges));
+                dependencies.put(element, new ArrayList<>(edges));
             } else {
                 elements.add(valEntry);
                 // not necessary
@@ -346,7 +346,7 @@ public class DependencyGraph<T> {
             }
             List<String> vals = argsMap.get(name);
             if (vals == null) {
-                argsMap.put(name, val != null ? Arrays.asList(val) : new ArrayList<String>());
+                argsMap.put(name, val != null ? Arrays.asList(val) : new ArrayList<>());
             } else if (val != null) {
                 vals.add(val);
             }
@@ -417,11 +417,11 @@ public class DependencyGraph<T> {
     }
     
     private static <T> String makePreviewStr(Collection<T> coll) {
-        return makePreviewStr(new ArrayList<T>(coll).toString());
+        return makePreviewStr(new ArrayList<>(coll).toString());
     }
     
     private static <K, V> String makePreviewStr(Map<K, V> map) {
-        return makePreviewStr(new LinkedHashMap<K, V>(map).toString());
+        return makePreviewStr(new LinkedHashMap<>(map).toString());
     }
     
     private static String makePreviewStr(String str) {

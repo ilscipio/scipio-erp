@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,13 +12,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 
 import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil.TemplateValueTargetType;
 
 import freemarker.core.Environment;
-import freemarker.ext.beans.BeanModel;
+import freemarker.ext.util.WrapperTemplateModel;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleHash;
 import freemarker.template.SimpleSequence;
@@ -39,7 +41,7 @@ import freemarker.template.TemplateModelException;
  */
 public abstract class ContextFtlUtil {
 
-    public static final String module = ContextFtlUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     /**
      * Global unique names of scipio request variables container maps, or in other words,
@@ -67,12 +69,12 @@ public abstract class ContextFtlUtil {
     }
     
     public static HttpServletRequest getRequest(Environment env) throws TemplateModelException {
-        BeanModel req = (BeanModel) env.getVariable("request");
+        WrapperTemplateModel req = (WrapperTemplateModel) env.getVariable("request");
         return (req != null) ? (HttpServletRequest) req.getWrappedObject() : null;
     }
 
     public static HttpServletResponse getResponse(Environment env) throws TemplateModelException {
-        BeanModel req = (BeanModel) env.getVariable("response");
+        WrapperTemplateModel req = (WrapperTemplateModel) env.getVariable("response");
         return (req != null) ? (HttpServletResponse) req.getWrappedObject() : null;
     }
 
@@ -217,7 +219,7 @@ public abstract class ContextFtlUtil {
         }
         
         public RequestVarMapWrapper() {
-            this.map = new HashMap<String, Object>();
+            this.map = new HashMap<>();
         }
         
         public Map<String, Object> getRawMap() {
@@ -238,7 +240,7 @@ public abstract class ContextFtlUtil {
         }
         
         public RequestVarMapWrapperModel() {
-            this.map = new HashMap<String, Object>();
+            this.map = new HashMap<>();
         }
         
         public Map<String, Object> getRawMap() {
@@ -417,7 +419,7 @@ public abstract class ContextFtlUtil {
             if (stackObj != null) {
                 Debug.logWarning("Overriding " + desc + " var with new stack (name: " + name + ")", module);
             }
-            stack = new ArrayList<Object>(ContextFtlUtil.REQUEST_STACK_INITIAL_CAPACITY);
+            stack = new ArrayList<>(ContextFtlUtil.REQUEST_STACK_INITIAL_CAPACITY);
         }
         
         if (setLast) {
@@ -787,4 +789,25 @@ public abstract class ContextFtlUtil {
         return res;
     }
 
+    /**
+     * Attempts to get the current "user" or "screen" locale normally found in screen context
+     * as the simple "locale" variable.
+     * TODO: REVIEW: this is currently using getGlobalVariable as most likely the fastest that
+     * will avoid problems from macros - unclear if more or less reliable than trying to read
+     * out of "context" map (which not guaranteed present).
+     */
+    public static Locale getContextLocale(Environment env) throws TemplateModelException {
+        WrapperTemplateModel model = (WrapperTemplateModel) env.getGlobalVariable("locale");
+        if (model != null) return (Locale) ((WrapperTemplateModel) model).getWrappedObject();
+        return null;
+    }
+    
+    /**
+     * Gets locale from the HttpServletRequest object in context using UtilHttp.
+     */
+    public static Locale getRequestLocale(Environment env) throws TemplateModelException {
+        HttpServletRequest request = getRequest(env);
+        if (request != null) return UtilHttp.getLocale(request);
+        return null;
+    }
 }

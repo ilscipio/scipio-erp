@@ -27,7 +27,6 @@ under the License.
 
     <property name="desc" value="SCIPIO ERP SOLR Component"/>
     <property name="name" value="ofbiz-solr"/>
-    <property name="ofbiz.home.dir" value="../.."/>
     <property name="src.dir" value="src" />
     <property name="dtd.dir" value="dtd" />
     <property name="lib.dir" value="lib" />
@@ -35,8 +34,8 @@ under the License.
 
     <path id="local.class.path">
         <fileset dir="${lib.dir}" includes="*.jar"/>
+        <fileset dir="../../framework/start/build/lib" includes="*.jar"/>
         <fileset dir="../../framework/base/lib" includes="*.jar"/>
-        <fileset dir="../../framework/base/lib/j2eespecs" includes="*.jar"/>
         <fileset dir="../../framework/base/build/lib" includes="*.jar"/>
         <fileset dir="../../framework/entity/lib" includes="*.jar"/>
         <fileset dir="../../framework/entity/build/lib" includes="*.jar"/>
@@ -45,13 +44,15 @@ under the License.
         <fileset dir="../../framework/service/build/lib" includes="*.jar"/>
         <fileset dir="../../framework/minilang/build/lib" includes="*.jar"/>
         <fileset dir="../../framework/common/build/lib" includes="*.jar"/>
+        <fileset dir="../../framework/webapp/build/lib" includes="*.jar"/>
+        <fileset dir="../../framework/widget/build/lib" includes="*.jar"/><!-- SCIPIO: ofbiz dependency kludge -->
         <fileset dir="../../applications/content/build/lib" includes="*.jar"/>
         <!--<fileset dir="../../applications/party/build/lib" includes="*.jar"/> -->
         <fileset dir="../../applications/product/build/lib" includes="*.jar"/>
         <!-- <fileset dir="../../applications/marketing/build/lib" includes="*.jar"/>
         <fileset dir="../../applications/order/build/lib" includes="*.jar"/>
         <fileset dir="../../applications/accounting/build/lib" includes="*.jar"/>-->
-        <fileset dir="webapp/WEB-INF/lib" includes="*.jar"/>
+        <fileset dir="webapp/WEB-INF/lib" includes="solr-core-*.jar"/><!-- for plugins -->
     </path>
     
     <target name="check-uiloginservice">
@@ -80,29 +81,53 @@ under the License.
         <antcall target="clean-uiloginservice"/>
     </target>
     
+    <target name="jar" depends="classes">
+        <main-jar>
+            <main-pattern>
+                <exclude name="com/ilscipio/scipio/solr/plugin/**"/>
+            </main-pattern>
+        </main-jar>
+        <main-jar jarfile="webapp/WEB-INF/lib/scipio-solr-plugins-1.0.0.jar">
+            <main-pattern>
+                <include name="com/ilscipio/scipio/solr/plugin/**"/>
+            </main-pattern>
+        </main-jar>
+    </target>
+    
+    <property name="lib.resolve.build.confs" value="solr-webapp"/>
+    <property name="lib.resolve.src.confs" value="solr-webapp-sources"/>
+    
+    <selector id="lib.update.manual.files.solr.webapp">
+        <or>
+            <filename name="scipio-*.jar"/>
+        </or>
+    </selector>
+    
     <!-- SCIPIO: Special lib download script for complex base includes -->
     <target name="do-lib-update" description="Downloads all jars (solr component implementation)">
-        <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="application"/>
         <ivy:retrieve pattern="webapp/WEB-INF/lib/${lib.update.filename.pattern.ivy}" conf="solr-webapp"/>
+        <if>
+            <equals arg1="${lib.update.sources}" arg2="true"/>
+            <then>
+                <ivy:retrieve pattern="webapp/WEB-INF/libsrc/${lib.update.filename.pattern.src.ivy}" conf="solr-webapp-sources"/>
+            </then>
+        </if>
     </target>
     
     <target name="do-lib-clean" description="Cleans out (removes) all ivy-handled jars">
         <antcall target="common-lib-clean" inheritrefs="true"/>
         <remove-lib-files dir="webapp/WEB-INF/lib" excludes-refid="lib.update.manual.files.solr.webapp"/>
+        <if>
+            <equals arg1="${lib.clean.sources}" arg2="true"/>
+            <then>
+                <remove-lib-files dir="webapp/WEB-INF/libsrc" excludes-refid="lib.update.manual.src.files"/>
+            </then>
+        </if>
     </target>
     
-    <!-- SCIPIO: Libraries manually committed to repo, excluded from ivy (or emulated) file cleanout/removal
-        NOTE: This should be defined implicitly as an include (treated as exclude as needed)
-    <selector id="lib.update.manual.files">
-        <or>
-            <filename name="xxxx-*.jar"/>
-        </or>
-    </selector>-->
-    <selector id="lib.update.manual.files.solr.webapp">
-        <or>
-            <!-- FIXME: these are not in central -->
-            <filename name="org.restlet*.jar"/>
-        </or>
-    </selector>
-    
+    <target name="clean-local-solr-indexes" description="Cleans out any solr data under applications/solr [but not solr data stored outside this folder]">
+        <delete includeemptydirs="true" verbose="on">
+            <fileset dir="./cores" includes="*/data/**" erroronmissingdir="false"/>
+        </delete>
+    </target>
 </project>

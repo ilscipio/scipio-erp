@@ -20,6 +20,7 @@ package org.ofbiz.content.webapp.ftl;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -28,11 +29,10 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import javolution.util.FastMap;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
@@ -52,7 +52,7 @@ import freemarker.template.TemplateTransformModel;
  */
 public class RenderSubContentCacheTransform implements TemplateTransformModel {
 
-    public static final String module = RenderSubContentCacheTransform.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String [] upSaveKeyNames = {"globalNodeTrail"};
     public static final String [] saveKeyNames = {"contentId", "subContentId", "subDataResourceTypeId", "mimeTypeId", "whenMap", "locale",  "wrapTemplateId", "encloseWrapText", "nullThruDatesOnly", "globalNodeTrail"};
 
@@ -61,7 +61,7 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
         // final StringBuilder buf = new StringBuilder();
         final Environment env = FreeMarkerWorker.getCurrentEnvironment();
         //final Map templateCtx = FreeMarkerWorker.getWrappedObject("context", env);
-        //final Map templateCtx = FastMap.newInstance();
+        //final Map templateCtx = new HashMap<String, Object>();
         final LocalDispatcher dispatcher = FreeMarkerWorker.getWrappedObject("dispatcher", env);
         final Delegator delegator = FreeMarkerWorker.getWrappedObject("delegator", env);
         final HttpServletRequest request = FreeMarkerWorker.getWrappedObject("request", env);
@@ -69,7 +69,7 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
         final Map<String, Object> templateRoot = FreeMarkerWorker.createEnvironmentMap(env);
         //if (Debug.infoOn()) Debug.logInfo("in RenderSubContent, contentId(0):" + templateRoot.get("contentId"), module);
         FreeMarkerWorker.getSiteParameters(request, templateRoot);
-        final Map<String, Object> savedValuesUp = FastMap.newInstance();
+        final Map<String, Object> savedValuesUp = new HashMap<String, Object>();
         FreeMarkerWorker.saveContextValues(templateRoot, upSaveKeyNames, savedValuesUp);
         FreeMarkerWorker.overrideWithArgs(templateRoot, args);
         //if (Debug.infoOn()) Debug.logInfo("in RenderSubContent, contentId(2):" + templateRoot.get("contentId"), module);
@@ -103,7 +103,7 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
         }
         // This order is taken so that the dataResourceType can be overridden in the transform arguments.
         String subDataResourceTypeId = (String)templateRoot.get("subDataResourceTypeId");
-        if (UtilValidate.isEmpty(subDataResourceTypeId)) {
+        if (UtilValidate.isEmpty(subDataResourceTypeId) && view != null ) {
             try {
                 subDataResourceTypeId = (String) view.get("drDataResourceTypeId");
             } catch (Exception e) {
@@ -120,7 +120,7 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
         templateRoot.put("subContentId", subContentIdSub);
         templateRoot.put("subDataResourceTypeId", subDataResourceTypeId);
 
-        //final Map savedValues = FastMap.newInstance();
+        //final Map savedValues = new HashMap<String, Object>();
         //FreeMarkerWorker.saveContextValues(templateCtx, saveKeyNames, savedValues);
 
         return new Writer(out) {
@@ -270,7 +270,7 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
 
                 if (Debug.infoOn()) Debug.logInfo("in Render(2), contentIdTo ." + contentIdTo , module);
                 out.write("<a href=\"");
-                ServletContext servletContext = request.getSession().getServletContext();
+                ServletContext servletContext = request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
                 RequestHandler rh = (RequestHandler) servletContext.getAttribute("_REQUEST_HANDLER_");
                 out.append(rh.makeLink(request, response, "/" + fullRequest, false, false, true));
                 out.write("\">Edit</a>");

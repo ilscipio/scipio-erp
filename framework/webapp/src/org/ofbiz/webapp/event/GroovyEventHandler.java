@@ -47,7 +47,7 @@ import org.ofbiz.webapp.control.ConfigXMLReader.RequestMap;
 
 public class GroovyEventHandler implements EventHandler {
 
-    public static final String module = GroovyEventHandler.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     protected static final Object[] EMPTY_ARGS = {};
     private static final Set<String> protectedKeys = createProtectedKeys();
 

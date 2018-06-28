@@ -25,7 +25,7 @@ import org.ofbiz.base.util.Debug;
 
 public class DebugXaResource extends GenericXaResource {
 
-    public static final String module = DebugXaResource.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public Exception ex = null;
 
     public DebugXaResource(String info) {

@@ -19,14 +19,13 @@
 package org.ofbiz.marketing.tracking;
 
 import java.sql.Timestamp;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import javolution.util.FastList;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
@@ -47,7 +46,7 @@ import org.ofbiz.product.category.CategoryWorker;
  */
 public class TrackingCodeEvents {
 
-    public static final String module = TrackingCodeEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /** If TrackingCode monitoring is desired this event should be added to the list
      * of events that run on every request. This event looks for the parameter
@@ -69,9 +68,8 @@ public class TrackingCodeEvents {
             }
 
             if (trackingCode == null) {
-                Debug.logError("TrackingCode not found for trackingCodeId [" + trackingCodeId + "], ignoring this trackingCodeId.", module);
-                //this return value will be ignored, but we'll designate this as an error anyway
-                return "error";
+                Debug.logInfo("TrackingCode not found for trackingCodeId [" + trackingCodeId + "], ignoring this trackingCodeId.", module);
+                return "success";
             }
 
             return processTrackingCode(trackingCode, request, response, "TKCDSRC_URL_PARAM");
@@ -289,8 +287,8 @@ public class TrackingCodeEvents {
             session.setAttribute("CURRENT_CATALOG_ID", prodCatalogId);
             // SCIPIO: 2016-13-22: Do NOT override the trail if it was already set earlier in request, 
             // otherwise may lose work done by servlets and filters
-            //CategoryWorker.setTrail(request, FastList.<String>newInstance());
-            CategoryWorker.setTrailIfFirstInRequest(request, FastList.<String>newInstance());
+            //CategoryWorker.setTrail(request, UtilMisc.<String>newList());
+            CategoryWorker.setTrailIfFirstInRequest(request, new LinkedList<String>());
         }
 
         // if forward/redirect is needed, do a response.sendRedirect and return null to tell the control servlet to not do any other requests/views
@@ -439,7 +437,7 @@ public class TrackingCodeEvents {
     public static List<GenericValue> makeTrackingCodeOrders(HttpServletRequest request) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         java.sql.Timestamp nowStamp = UtilDateTime.nowTimestamp();
-        List<GenericValue> trackingCodeOrders = FastList.newInstance();
+        List<GenericValue> trackingCodeOrders = new LinkedList<GenericValue>();
 
         Cookie[] cookies = request.getCookies();
         Timestamp affiliateReferredTimeStamp = null;

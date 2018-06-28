@@ -49,7 +49,7 @@ import org.ofbiz.widget.renderer.TreeStringRenderer;
 public class HtmlTreeRenderer extends HtmlWidgetRenderer implements TreeStringRenderer {
 
     ScreenStringRenderer screenStringRenderer = null;
-    public static final String module = HtmlTreeRenderer.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public HtmlTreeRenderer() {}
 

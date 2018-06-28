@@ -35,7 +35,7 @@ import org.ofbiz.webapp.control.ConfigXMLReader;
  */
 public class EventFactory {
 
-    public static final String module = EventFactory.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final Map<String, EventHandler> handlers = new HashMap<String, EventHandler>();
 

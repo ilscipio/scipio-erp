@@ -690,7 +690,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
       <#-- DEV NOTE: I think the image div belongs INSIDE the tile_content container? -->
       <#if image?has_content>
         <#-- WARN/FIXME: style escaping may be incomplete! -->
-        <div class="${escapeVal(imageClass, 'html')}<#if imageBgColorClass?has_content> ${escapeVal(imageBgColorClass, 'html')}</#if>" style="background-image: url(${escapeFullUrl(image, 'css-html')});"></div>
+        <div class="${escapeVal(imageClass, 'html')}<#if imageBgColorClass?has_content> ${escapeVal(imageBgColorClass, 'html')}</#if>" style="background-image: url('${escapeFullUrl(image, 'css-html')}');"></div>
       </#if>
       <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapeVal(linkTarget, 'html')}"</#if>></#if>
       <#if icon?has_content && !icon?starts_with("AdminTileIcon") && !image?has_content><span class="${styles.tile_icon!}"><i class="${escapeVal(icon, 'html')}"></i></span></#if>

@@ -7,19 +7,17 @@ import org.ofbiz.base.util.UtilValidate;
 
 import com.ilscipio.scipio.treeMenu.TreeDataItem;
 
-import javolution.util.FastMap;
-
 /**
  * 
  * @author jsoto
  *
  */
-public class JsTreeDataItem extends HashMap<String, Object>implements TreeDataItem {
-    private static final long serialVersionUID = -660269373973470543L;
+@SuppressWarnings("serial")
+public class JsTreeDataItem extends HashMap<String, Object> implements TreeDataItem {
 
     private String originalId;
 
-    public JsTreeDataItem(String id, String text, String icon, JsTreeDataItemState state, String parent) {
+    public JsTreeDataItem(String id, String originalId, String text, String icon, JsTreeDataItemState state, String parent) {
         if (UtilValidate.isNotEmpty(id))
             put("id", id);
         if (UtilValidate.isNotEmpty(text))
@@ -33,10 +31,14 @@ public class JsTreeDataItem extends HashMap<String, Object>implements TreeDataIt
         else
             put("parent", "#");
 
-        this.originalId = id;
-        Map<String, String> liAttrValues = FastMap.newInstance();
+        this.originalId = originalId;
+        Map<String, String> liAttrValues = new HashMap<>();
         liAttrValues.put("original_id", originalId);
         put("li_attr", liAttrValues);
+    }
+    
+    public JsTreeDataItem(String id, String text, String icon, JsTreeDataItemState state, String parent) {
+        this(id, id, text, icon, state, parent);
     }
 
     @Override
@@ -92,6 +94,12 @@ public class JsTreeDataItem extends HashMap<String, Object>implements TreeDataIt
         public JsTreeDataItemState(boolean opened, boolean selected, boolean disabled) {
             this(opened, selected);
             put("disabled", disabled);
+        }
+        
+        public JsTreeDataItemState(Map<String, Object> stateMap) {
+            put("opened", (Boolean) stateMap.get("opened"));
+            put("selected", (Boolean) stateMap.get("selected"));
+            put("disabled", (Boolean) stateMap.get("disabled"));
         }
 
         public boolean isOpened() {

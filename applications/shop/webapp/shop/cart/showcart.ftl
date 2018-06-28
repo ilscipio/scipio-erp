@@ -63,13 +63,17 @@ function setAlternateGwp(field) {
 
 <#assign fixedAssetExist = shoppingCart.containAnyWorkEffortCartItems() /> <#-- change display format when rental items exist in the shoppingcart -->
 
+<#assign showDetailed = showDetailed!true>
+<#assign showDetailedAdjustments = showDetailedAdjustments!true>
+<#-- SCIPIO: sales tax details to not show because they are especially extremely confusing due to way they combining with promotions -->
+<#assign showDetailedTax = showDetailedTax!false>
 
 <#assign cartHasItems = (shoppingCartSize > 0)>
 <#assign cartEmpty = (!cartHasItems)>
 <#if ((sessionAttributes.lastViewedProducts)?has_content && (sessionAttributes.lastViewedProducts?size > 0))>
-  <#assign continueLink = "product?product_id=" + sessionAttributes.lastViewedProducts.get(0)>
+  <#assign continueLink><@ofbizCatalogAltUrl productCategoryId=requestParameters.category_id!"" productId=(sessionAttributes.lastViewedProducts.get(0)) rawParams=true/></#assign>
 <#else>
-  <#assign continueLink = "main">
+  <#assign continueLink = makeOfbizUrl("main")>
 </#if>
 
 
@@ -254,6 +258,47 @@ function setAlternateGwp(field) {
                         <@td class="${styles.text_right!}"><@ofbizCurrency amount=cartLine.getDisplayItemSubTotal() isoCode=shoppingCart.getCurrency()/></@td>
                         <@td><#if !cartLine.getIsPromo()><@field type="checkbox" widgetOnly=true name="selectedItem" value=(cartLineIndex) onClick="javascript:checkToggle(this,'cartform','selectedItem');" /><#else>&nbsp;</#if></@td>
                     </@tr>
+
+                    <#-- now show adjustment details per line item -->
+			        <#assign itemAdjustments = cartLine.getAdjustments()>
+			        <#if showDetailed && showDetailedAdjustments>
+			          <#list itemAdjustments as orderItemAdjustment>
+			            <#-- SCIPIO: tax adjustments are especially confusing, so have their own option to hide -->
+			            <#if showDetailedTax || !["SALES_TAX"]?seq_contains(orderItemAdjustment.orderAdjustmentTypeId)>
+			            <@tr>
+			              <@td colspan="4">
+			                <#assign adjustmentType = orderItemAdjustment.getRelatedOne("OrderAdjustmentType", true)! />
+			                ${uiLabelMap.EcommerceAdjustment}: ${adjustmentType.get("description",locale)!}
+			                <#if orderItemAdjustment.description?has_content>: ${escapeVal(orderItemAdjustment.get("description",locale), 'htmlmarkup', {"allow":"internal"})}</#if>
+			                <#if orderItemAdjustment.orderAdjustmentTypeId == "SALES_TAX">
+			                  <#if orderItemAdjustment.primaryGeoId?has_content>
+			                    <#assign primaryGeo = orderItemAdjustment.getRelatedOne("PrimaryGeo", true)/>
+			                    <#if primaryGeo.geoName?has_content>
+			                      ${uiLabelMap.OrderJurisdiction}: ${primaryGeo.geoName!primaryGeo.abbreviation!}<#-- [${primaryGeo.abbreviation!}]-->
+			                    </#if>
+			                    <#if orderItemAdjustment.secondaryGeoId?has_content>
+			                      <#assign secondaryGeo = orderItemAdjustment.getRelatedOne("SecondaryGeo", true)/>
+			                      (${uiLabelMap.CommonIn}: ${secondaryGeo.geoName!secondaryGeo.abbreviation!}<#--  [${secondaryGeo.abbreviation!}])-->
+			                    </#if>
+			                  </#if>
+			                  <#if orderItemAdjustment.sourcePercentage??>${uiLabelMap.EcommerceRate}: ${orderItemAdjustment.sourcePercentage}</#if>
+			                  <#if orderItemAdjustment.customerReferenceId?has_content>${uiLabelMap.OrderCustomerTaxId}: ${orderItemAdjustment.customerReferenceId}</#if>
+			                  <#if orderItemAdjustment.exemptAmount??>${uiLabelMap.EcommerceExemptAmount}: ${orderItemAdjustment.exemptAmount}</#if>
+			                </#if>
+			                <#if orderItemAdjustment.orderAdjustmentTypeId == "VAT_TAX"> <#-- European VAT support (VAT included) -->
+			                    <#if orderItemAdjustment.amountAlreadyIncluded?has_content && !orderItemAdjustment.exemptAmount?has_content><#-- TODO: Check for missing label. -->
+			                      : <@ofbizCurrency amount=orderItemAdjustment.amountAlreadyIncluded.setScale(taxFinalScale, taxRounding) isoCode=currencyUomId/>
+			                    </#if>
+			                </#if>
+			              </@td>
+			              <@td class="text-right">
+			              	<@ofbizCurrency amount=cartLine.getOtherAdjustments() isoCode=shoppingCart.getCurrency()/>
+			              </@td>
+			              <@td></@td>
+			            </@tr>
+			            </#if>
+			          </#list>
+			       </#if>
                 </#list>
             <#-- SCIPIO: styling issues: 
             </@tbody>
@@ -322,7 +367,7 @@ function setAlternateGwp(field) {
     <@row>
         <@cell columns=3>
             <@menu type="button">
-                <@menuitem type="link" href=makeOfbizUrl(continueLink) text=uiLabelMap.EcommerceContinueShopping class="+${styles.action_nav!} ${styles.action_cancel!}"/>
+                <@menuitem type="link" href=continueLink text=uiLabelMap.EcommerceContinueShopping class="+${styles.action_nav!} ${styles.action_cancel!}"/>
             </@menu>
         </@cell>
         <@cell columns=9 class="${styles.text_right!}">
@@ -338,7 +383,7 @@ function setAlternateGwp(field) {
     <@row>
         <@cell>
             <@menu type="button">
-                <@menuitem type="link" href=makeOfbizUrl(continueLink) text=uiLabelMap.EcommerceContinueShopping class="+${styles.action_nav!} ${styles.action_cancel!}"/>
+                <@menuitem type="link" href=continueLink text=uiLabelMap.EcommerceContinueShopping class="+${styles.action_nav!} ${styles.action_cancel!}"/>
             </@menu>
         </@cell>
     </@row>

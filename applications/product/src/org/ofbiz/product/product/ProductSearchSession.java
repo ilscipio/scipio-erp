@@ -23,6 +23,11 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -32,10 +37,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
-import javolution.util.FastSet;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
@@ -75,7 +76,7 @@ import org.ofbiz.webapp.stats.VisitHandler;
  */
 public class ProductSearchSession {
 
-    public static final String module = ProductSearchSession.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     @SuppressWarnings("serial")
     public static class ProductSearchOptions implements java.io.Serializable {
@@ -92,7 +93,7 @@ public class ProductSearchSession {
 
         /** Basic copy constructor */
         public ProductSearchOptions(ProductSearchOptions productSearchOptions) {
-            this.constraintList = FastList.newInstance();
+            this.constraintList = new LinkedList<ProductSearchConstraint>();
             if (UtilValidate.isNotEmpty(productSearchOptions.constraintList)) {
                 this.constraintList.addAll(productSearchOptions.constraintList);
             }
@@ -114,11 +115,27 @@ public class ProductSearchSession {
         public static void addConstraint(ProductSearchConstraint productSearchConstraint, HttpSession session) {
             ProductSearchOptions productSearchOptions = getProductSearchOptions(session);
             if (productSearchOptions.constraintList == null) {
-                productSearchOptions.constraintList = FastList.newInstance();
+                productSearchOptions.constraintList = new LinkedList<ProductSearchConstraint>();
             }
             if (!productSearchOptions.constraintList.contains(productSearchConstraint)) {
                 productSearchOptions.constraintList.add(productSearchConstraint);
                 productSearchOptions.changed = true;
+            }
+        }
+        
+        /**
+         * SCIPIO: Removes constraints by class type.
+         * Added 2017-09-14.
+         */
+        public static void removeConstraintsByType(Class<? extends ProductSearchConstraint> constraintCls, HttpSession session) {
+            ProductSearchOptions productSearchOptions = getProductSearchOptions(session);
+            if (productSearchOptions.constraintList == null) {
+                productSearchOptions.constraintList = new LinkedList<ProductSearchConstraint>();
+            }
+            Iterator<ProductSearchConstraint> it = productSearchOptions.constraintList.iterator();
+            while(it.hasNext()) {
+                ProductSearchConstraint constraint = it.next();
+                if (constraintCls.isAssignableFrom(constraint.getClass())) it.remove();
             }
         }
 
@@ -283,7 +300,7 @@ public class ProductSearchSession {
 
         public List<String> searchGetConstraintStrings(boolean detailed, Delegator delegator, Locale locale) {
             List<ProductSearchConstraint> productSearchConstraintList = this.getConstraintList();
-            List<String> constraintStrings = FastList.newInstance();
+            List<String> constraintStrings = new LinkedList<String>();
             if (productSearchConstraintList == null) {
                 return constraintStrings;
             }
@@ -297,6 +314,37 @@ public class ProductSearchSession {
                 }
             }
             return constraintStrings;
+        }
+        
+        /**
+         * SCIPIO: Returns (only) the keyword constraints.
+         * Added 2017-08-24.
+         */
+        public List<KeywordConstraint> getKeywordConstraints() {
+            return getConstraintsByType(KeywordConstraint.class);
+        }
+        
+        /**
+         * SCIPIO: Returns (only) the constraints of the given class.
+         * Added 2017-08-24.
+         */
+        public <T extends ProductSearchConstraint> List<T> getConstraintsByType(Class<T> constraintCls) {
+            return Collections.unmodifiableList(extractConstraints(getConstraintList(), constraintCls));
+        }
+        
+        /**
+         * SCIPIO: Returns (only) the constraints of specified class.
+         * Added 2017-08-24.
+         */
+        @SuppressWarnings("unchecked")
+        protected static <T> List<T> extractConstraints(List<? extends ProductSearchConstraint> contraintList, Class<T> constraintCls) {
+            List<T> kwcList = new ArrayList<>(); 
+            if (contraintList != null) {
+                for(ProductSearchConstraint constraint : contraintList) {
+                    if (constraintCls.isAssignableFrom(constraint.getClass())) kwcList.add((T) constraint);
+                }
+            }
+            return kwcList;
         }
     }
 
@@ -321,7 +369,7 @@ public class ProductSearchSession {
     public static List<ProductSearchOptions> getSearchOptionsHistoryList(HttpSession session) {
         List<ProductSearchOptions> optionsHistoryList = UtilGenerics.checkList(session.getAttribute("_PRODUCT_SEARCH_OPTIONS_HISTORY_"));
         if (optionsHistoryList == null) {
-            optionsHistoryList = FastList.newInstance();
+            optionsHistoryList = new LinkedList<ProductSearchOptions>();
             session.setAttribute("_PRODUCT_SEARCH_OPTIONS_HISTORY_", optionsHistoryList);
         }
         return optionsHistoryList;
@@ -387,7 +435,7 @@ public class ProductSearchSession {
         String productStoreId = ProductStoreWorker.getProductStoreId(request);
         if (productStoreId != null) {
             // get a Set of all keywords in the search, if there are any...
-            Set<String> keywords = FastSet.newInstance();
+            Set<String> keywords = new HashSet<String>();
             List<ProductSearchConstraint> constraintList = ProductSearchOptions.getConstraintList(session);
             if (constraintList != null) {
                 for (ProductSearchConstraint constraint: constraintList) {
@@ -531,6 +579,7 @@ public class ProductSearchSession {
 
         // clear search? by default yes, but if the clearSearch parameter is N then don't
         String clearSearchString = (String) parameters.get("clearSearch");
+        boolean replaceConstraints = false; // SCIPIO: added 2017-09-14
         if (!"N".equals(clearSearchString)) {
             searchClear(session);
             constraintsChanged = true;
@@ -544,6 +593,10 @@ public class ProductSearchSession {
                     Debug.logError(e, "Error removing constraint [" + removeConstraint + "]", module);
                 }
             }
+            
+            // SCIPIO: partial functionality to replace in-place, added 2017-09-14 
+            // TODO: INCOMPLETE: only a few parameters below support this!
+            replaceConstraints = UtilMisc.booleanValueIndicator(parameters.get("replaceConstraints"), false);
         }
 
         String prioritizeCategoryId = null;
@@ -559,11 +612,19 @@ public class ProductSearchSession {
 
         // if there is another category, add a constraint for it
         if (UtilValidate.isNotEmpty(parameters.get("SEARCH_CATEGORY_ID"))) {
-            String searchCategoryId = (String) parameters.get("SEARCH_CATEGORY_ID");
             String searchSubCategories = (String) parameters.get("SEARCH_SUB_CATEGORIES");
             String searchCategoryExc = (String) parameters.get("SEARCH_CATEGORY_EXC");
             Boolean exclude = UtilValidate.isEmpty(searchCategoryExc) ? null : Boolean.valueOf(!"N".equals(searchCategoryExc));
-            searchAddConstraint(new ProductSearch.CategoryConstraint(searchCategoryId, !"N".equals(searchSubCategories), exclude), session);
+            // SCIPIO: 2017-08-25: support multiple values for categoryId (the other options applied to each ID equally)
+            if (parameters.get("SEARCH_CATEGORY_ID") instanceof Collection) {
+                Collection<String> searchCategoryIds = UtilGenerics.checkCollection(parameters.get("SEARCH_CATEGORY_ID"));
+                for(String searchCategoryId : searchCategoryIds) {
+                    searchAddConstraint(new ProductSearch.CategoryConstraint(searchCategoryId, !"N".equals(searchSubCategories), exclude), session);
+                }
+            } else {
+                String searchCategoryId = (String) parameters.get("SEARCH_CATEGORY_ID");
+                searchAddConstraint(new ProductSearch.CategoryConstraint(searchCategoryId, !"N".equals(searchSubCategories), exclude), session);
+            }
             constraintsChanged = true;
         }
 
@@ -606,6 +667,11 @@ public class ProductSearchSession {
 
         // if keywords were specified, add a constraint for them
         if (UtilValidate.isNotEmpty(parameters.get("SEARCH_STRING"))) {
+            // SCIPIO: new: replace constraints in-place, so remove all keyword constraints
+            if (replaceConstraints) {
+                ProductSearchOptions.removeConstraintsByType(ProductSearch.KeywordConstraint.class, session);
+            }
+            
             String keywordString = (String) parameters.get("SEARCH_STRING");
             String searchOperator = (String) parameters.get("SEARCH_OPERATOR");
             // defaults to true/Y, ie anything but N is true/Y
@@ -876,7 +942,7 @@ public class ProductSearchSession {
         //int previousViewSize = 20;
         int previousViewSize = viewSize;
         Map<String, Object> requestParams = UtilHttp.getCombinedMap(request);
-        List<String> keywordTypeIds = FastList.newInstance();
+        List<String> keywordTypeIds = new LinkedList<String>();
         if (requestParams.get("keywordTypeId") instanceof String) {
             keywordTypeIds.add((String) requestParams.get("keywordTypeId"));
         } else if (requestParams.get("keywordTypeId") instanceof List){
@@ -914,7 +980,7 @@ public class ProductSearchSession {
         highIndex = (viewIndex + 1) * viewSize;
 
         // ========== Do the actual search
-        List<String> productIds = FastList.newInstance();
+        List<String> productIds = new LinkedList<String>();
         String visitId = VisitHandler.getVisitId(session);
         List<ProductSearchConstraint> productSearchConstraintList = ProductSearchOptions.getConstraintList(session);
         String noConditionFind = (String) requestParams.get("noConditionFind");
@@ -928,11 +994,11 @@ public class ProductSearchSession {
 
             int addOnTopTotalListSize = 0;
             int addOnTopListSize = 0;
-            List<GenericValue> addOnTopProductCategoryMembers = FastList.newInstance();
+            List<GenericValue> addOnTopProductCategoryMembers = new LinkedList<GenericValue>();
             if (UtilValidate.isNotEmpty(addOnTopProdCategoryId)) {
                 // always include the members of the addOnTopProdCategoryId
                 Timestamp now = UtilDateTime.nowTimestamp();
-                List<EntityCondition> addOnTopProdCondList = FastList.newInstance();
+                List<EntityCondition> addOnTopProdCondList = new LinkedList<EntityCondition>();
                 addOnTopProdCondList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, now)));
                 addOnTopProdCondList.add(EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN, now));
                 addOnTopProdCondList.add(EntityCondition.makeCondition("productCategoryId", EntityOperator.EQUALS, addOnTopProdCategoryId));
@@ -1015,7 +1081,7 @@ public class ProductSearchSession {
         String searchSortOrderString = searchGetSortOrderString(false, request);
 
         // ========== populate the result Map
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
 
         result.put("productIds", productIds);
         result.put("viewIndex", Integer.valueOf(viewIndex));
@@ -1262,7 +1328,7 @@ public class ProductSearchSession {
             return null;
         }
 
-        List<Map<String, String>> featureCountList = FastList.newInstance();
+        List<Map<String, String>> featureCountList = new LinkedList<Map<String, String>>();
         GenericValue searchResult = null;
         while ((searchResult = eli.next()) != null) {
             featureCountList.add(UtilMisc.<String, String>toMap("productFeatureId", (String) searchResult.get("pfacProductFeatureId"), "productFeatureTypeId", (String) searchResult.get("pfcProductFeatureTypeId"), "description", (String) searchResult.get("pfcDescription"), "featureCount", Long.toString((Long) searchResult.get("featureCount"))));
@@ -1311,7 +1377,7 @@ public class ProductSearchSession {
 
         DynamicViewEntity dynamicViewEntity = productSearchContext.dynamicViewEntity;
         List<EntityCondition> entityConditionList = productSearchContext.entityConditionList;
-        List<String> fieldsToSelect = FastList.newInstance();
+        List<String> fieldsToSelect = new LinkedList<String>();
 
         dynamicViewEntity.addMemberEntity("PPC", "ProductPrice");
         dynamicViewEntity.addAlias("PPC", "ppcProductPriceTypeId", "productPriceTypeId", null, null, null, null);
@@ -1377,7 +1443,7 @@ public class ProductSearchSession {
 
         DynamicViewEntity dynamicViewEntity = productSearchContext.dynamicViewEntity;
         List<EntityCondition> entityConditionList = productSearchContext.entityConditionList;
-        List<String> fieldsToSelect = FastList.newInstance();
+        List<String> fieldsToSelect = new LinkedList<String>();
 
         dynamicViewEntity.addMemberEntity("PCMC", "ProductCategoryMember");
         dynamicViewEntity.addAlias("PCMC", "pcmcProductCategoryId", "productCategoryId", null, null, null, null);
@@ -1389,7 +1455,7 @@ public class ProductSearchSession {
         entityConditionList.add(EntityCondition.makeCondition(EntityCondition.makeCondition("pcmcThruDate", EntityOperator.EQUALS, null), EntityOperator.OR, EntityCondition.makeCondition("pcmcThruDate", EntityOperator.GREATER_THAN, productSearchContext.nowTimestamp)));
         entityConditionList.add(EntityCondition.makeCondition("pcmcFromDate", EntityOperator.LESS_THAN, productSearchContext.nowTimestamp));
 
-        Set<String> productCategoryIdSet = FastSet.newInstance();
+        Set<String> productCategoryIdSet = new HashSet<String>();
         ProductSearch.getAllSubCategoryIds(productCategoryId, productCategoryIdSet, delegator, productSearchContext.nowTimestamp);
         entityConditionList.add(EntityCondition.makeCondition("pcmcProductCategoryId", EntityOperator.IN, productCategoryIdSet));
 

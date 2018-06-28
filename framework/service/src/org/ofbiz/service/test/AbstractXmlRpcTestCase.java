@@ -32,7 +32,7 @@ import org.ofbiz.service.xmlrpc.XmlRpcClient;
  */
 public class AbstractXmlRpcTestCase extends TestCase {
 
-    public static final String module = AbstractXmlRpcTestCase.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected String keyStoreComponent;
     protected String keyStoreName;

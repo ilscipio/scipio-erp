@@ -136,7 +136,7 @@ public class CatalinaContainer implements Container {
     public static final String CATALINA_HOSTS_HOME = System.getProperty("ofbiz.home") + "/framework/catalina/hosts";
     public static final String J2EE_SERVER = "Scipio Container 3.1";
     public static final String J2EE_APP = "Scipio";
-    public static final String module = CatalinaContainer.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final ThreadGroup CATALINA_THREAD_GROUP = new ThreadGroup("CatalinaContainer");
 
     // load the JSSE properties (set the trust store)
@@ -560,7 +560,8 @@ public class CatalinaContainer implements Container {
         JarScanner jarScanner = context.getJarScanner();
         if (jarScanner instanceof StandardJarScanner) {
             StandardJarScanner standardJarScanner = (StandardJarScanner) jarScanner;
-            standardJarScanner.setScanClassPath(false);
+            standardJarScanner.setJarScanFilter(new FilterJars());
+            standardJarScanner.setScanClassPath(true);
         }
 
         context.setJ2EEApplication(J2EE_APP);
@@ -603,6 +604,11 @@ public class CatalinaContainer implements Container {
         for (Map.Entry<String, String> entry: initParameters.entrySet()) {
             context.addParameter(entry.getKey(), entry.getValue());
         }
+        
+        // SCIPIO: 2017-09-13: MAJOR FIX: the line below allows web.xml files to accurately specify
+        // their welcome-file-lists; previously they did not work properly because the Tomcat defaults
+        // were getting priority (e.g. index.html was always used if it existed).
+        context.setReplaceWelcomeFiles(true);
 
         return context;
     }

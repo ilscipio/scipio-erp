@@ -40,7 +40,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public final class Start {
 
-    public static final String module = Start.class.getName();
+    private static final String module = Start.class.getName();
     
     /*
      * This class implements a thread-safe state machine. The design is critical
@@ -352,6 +352,34 @@ public final class Start {
         return this.serverState.compareAndSet(ServerState.STARTING, ServerState.RUNNING);
     }
 
+    /**
+     * SCIPIO: Executes post-startup callback on the loaders,
+     * to be triggered as soon as server state switches to running.
+     * <p>
+     * Added 2018-05-23.
+     * 
+     * @return <code>true</code> if all loaders were started.
+     */
+    boolean execOnRunningStartLoaders() {
+        synchronized (this.loaders) {
+            // start the loaders
+            for (StartupLoader loader : this.loaders) {
+                if (this.serverState.get() == ServerState.STOPPING) {
+                    return false;
+                }
+                if (loader instanceof ExtendedStartupLoader) {
+                    try {
+                        ((ExtendedStartupLoader) loader).execOnRunning();
+                    } catch (StartupException e) {
+                        e.printStackTrace();
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
     private String status() throws IOException {
         try {
             return sendSocketCommand(Control.STATUS);
@@ -380,6 +408,15 @@ public final class Start {
         } else {
             // SCIPIO: 2017-03-28: new
             printStartupReadyMessage();
+            
+            // SCIPIO: 2018-05-23: post-startup callbacks
+            if (!execOnRunningStartLoaders()) {
+                if (this.serverState.get() == ServerState.STOPPING) {
+                    return;
+                } else {
+                    throw new Exception("Error during post-startup.");
+                }
+            }
         }
     }
 

@@ -19,7 +19,7 @@ under the License.
 -->
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+        xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/widget-screen.xsd">
     <screen name="FindRequest">
         <section>
             <actions>
@@ -507,6 +507,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleEditRequestContent"/>
                 <set field="activeSubMenuItem" value="custRequestContent"/>
                 <set field="custRequestId" from-field="parameters.custRequestId"/>
+                <set field="contentId" from-field="parameters.contentId"/>
                 <entity-condition entity-name="CustRequestAndContent" list="custRequestAndContents">
                     <condition-list combine="and">
                         <condition-expr field-name="custRequestId" from-field="custRequestId"/>
@@ -518,14 +519,23 @@ under the License.
                     </condition-list>
                     <order-by field-name="fromDate"/>
                 </entity-condition>
+                
+                <entity-condition list="statusItems" entity-name="StatusItem">                    
+                    <condition-expr field-name="statusTypeId" value="CONTENT_STATUS"/>
+                    <order-by field-name="sequenceId"/>
+                </entity-condition>
+                <entity-condition list="contentTypes" entity-name="ContentType"><order-by field-name="description"/></entity-condition>
             </actions>
             <widgets>
                 <decorator-screen name="CommonRequestDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet id="AddCustRequestContentsPanel" title="${uiLabelMap.PageTitleAddContent}" collapsible="true">
-                            <include-form name="AddCustRequestContent" location="component://order/widget/ordermgr/CustRequestForms.xml"/>
-                        </screenlet>
-                        <include-form name="ListCustRequestContent" location="component://order/widget/ordermgr/CustRequestForms.xml"/>
+                        <container id="contentWrapper">
+                            <!-- SCIPIO 02-14-2018: Replaces component://order/widget/ordermgr/CustRequestForms.xml#AddCustRequestContent form widget -->
+                            <platform-specific>
+                                <html><html-template location="component://order/webapp/ordermgr/request/AddCustRequestContent.ftl"/></html>                                                 
+                            </platform-specific>                        
+                            <include-form name="ListCustRequestContent" location="component://order/widget/ordermgr/CustRequestForms.xml"/>
+                        </container>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

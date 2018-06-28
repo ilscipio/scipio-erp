@@ -24,7 +24,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -82,24 +84,20 @@ import org.ofbiz.service.ServiceUtil;
 
 import com.ibm.icu.util.Calendar;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-import javolution.util.FastSet;
-
 /**
  * Order Processing Services
  */
 
 public class OrderServices {
 
-    public static final String module = OrderServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "OrderUiLabels";
     public static final String resource_error = "OrderErrorUiLabels";
     public static final String resourceProduct = "ProductUiLabels";
     public static final String resourceCommon = "CommonUiLabels";
 
-    public static Map<String, String> salesAttributeRoleMap = FastMap.newInstance();
-    public static Map<String, String> purchaseAttributeRoleMap = FastMap.newInstance();
+    public static Map<String, String> salesAttributeRoleMap = new HashMap<String, String>();
+    public static Map<String, String> purchaseAttributeRoleMap = new HashMap<String, String>();
     static {
         salesAttributeRoleMap.put("placingCustomerPartyId", "PLACING_CUSTOMER");
         salesAttributeRoleMap.put("billToCustomerPartyId", "BILL_TO_CUSTOMER");
@@ -266,10 +264,10 @@ public class OrderServices {
         List<GenericValue> orderItemPriceInfo = UtilGenerics.checkList(context.get("orderItemPriceInfos"));
 
         // check inventory and other things for each item
-        List<String> errorMessages = FastList.newInstance();
-        Map<String, BigDecimal> normalizedItemQuantities = FastMap.newInstance();
-        Map<String, String> normalizedItemNames = FastMap.newInstance();
-        Map<String, GenericValue> itemValuesBySeqId = FastMap.newInstance();
+        List<String> errorMessages = new LinkedList<String>();
+        Map<String, BigDecimal> normalizedItemQuantities = new LinkedHashMap<String, BigDecimal>();
+        Map<String, String> normalizedItemNames = new LinkedHashMap<String, String>();
+        Map<String, GenericValue> itemValuesBySeqId = new LinkedHashMap<String, GenericValue>();
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 
         // need to run through the items combining any cases where multiple
@@ -471,7 +469,7 @@ public class OrderServices {
         }
 
         if (UtilValidate.isNotEmpty(orgPartyId)) {
-            Map<String, Object> getNextOrderIdContext = FastMap.newInstance();
+            Map<String, Object> getNextOrderIdContext = new HashMap<String, Object>();
             getNextOrderIdContext.putAll(context);
             getNextOrderIdContext.put("partyId", orgPartyId);
             getNextOrderIdContext.put("userLogin", userLogin);
@@ -908,7 +906,7 @@ public class OrderServices {
         }
 
         // set the order item ship groups
-        List<String> dropShipGroupIds = FastList.newInstance(); // this list
+        List<String> dropShipGroupIds = new LinkedList<String>(); // this list
                                                                 // will contain
                                                                 // the ids of
                                                                 // all the ship
@@ -1187,7 +1185,7 @@ public class OrderServices {
                             }
                         }
 
-                        Map<String, Object> ripCtx = FastMap.newInstance();
+                        Map<String, Object> ripCtx = new HashMap<String, Object>();
                         if (UtilValidate.isNotEmpty(inventoryFacilityId) && UtilValidate.isNotEmpty(productId)
                                 && orderItem.getBigDecimal("quantity").compareTo(BigDecimal.ZERO) > 0) {
                             // do something tricky here: run as the "system"
@@ -2369,7 +2367,7 @@ public class OrderServices {
                             changeComments = itemCommentMap.get(orderItem.getString("orderItemSeqId"));
                         }
 
-                        Map<String, Object> serviceCtx = FastMap.newInstance();
+                        Map<String, Object> serviceCtx = new HashMap<String, Object>();
                         serviceCtx.put("orderId", orderItem.getString("orderId"));
                         serviceCtx.put("orderItemSeqId", orderItem.getString("orderItemSeqId"));
                         serviceCtx.put("cancelQuantity", thisCancelQty);
@@ -2822,7 +2820,7 @@ public class OrderServices {
         }
 
         // prepare the order information
-        Map<String, Object> sendMap = FastMap.newInstance();
+        Map<String, Object> sendMap = new HashMap<String, Object>();
 
         // get the order header and store
         GenericValue orderHeader = null;
@@ -3504,7 +3502,7 @@ public class OrderServices {
             }
 
             // single list with all invoice items
-            List<GenericValue> itemsToInvoice = FastList.newInstance();
+            List<GenericValue> itemsToInvoice = new LinkedList<GenericValue>();
             itemsToInvoice.addAll(nonProductItems);
             itemsToInvoice.addAll(digitalItems);
             if (UtilValidate.isNotEmpty(itemSubscriptions) && validPaymentMethodTypeForSubscriptions) {
@@ -3645,7 +3643,7 @@ public class OrderServices {
                     if (UtilValidate.isEmpty(allProductContent) && ("Y".equals(product.getString("isVariant")))) {
                         GenericValue parentProduct = ProductWorker.getParentProduct(product.getString("productId"), delegator);
                         if (allProductContent == null) {
-                            allProductContent = FastList.newInstance();
+                            allProductContent = new LinkedList<GenericValue>();
                         }
                         if (parentProduct != null) {
                             allProductContent.addAll(parentProduct.getRelated("ProductContent", null, null, false));
@@ -3754,7 +3752,7 @@ public class OrderServices {
         orderItems = orh.getOrderItemsByCondition(EntityCondition.makeCondition("statusId", "ITEM_APPROVED"));
 
         // find any service items
-        List<GenericValue> serviceItems = FastList.newInstance();
+        List<GenericValue> serviceItems = new LinkedList<GenericValue>();
         if (UtilValidate.isNotEmpty(orderItems)) {
             for (GenericValue item : orderItems) {
                 GenericValue product = null;
@@ -3776,7 +3774,7 @@ public class OrderServices {
         if (UtilValidate.isNotEmpty(serviceItems)) {
             // Make sure there is actually something needing invoicing because
             // createInvoiceForOrder doesn't check
-            List<GenericValue> billItems = FastList.newInstance();
+            List<GenericValue> billItems = new LinkedList<GenericValue>();
             for (GenericValue item : serviceItems) {
                 BigDecimal orderQuantity = OrderReadHelper.getOrderItemQuantity(item);
                 BigDecimal invoiceQuantity = OrderReadHelper.getOrderItemInvoicedQuantity(item);
@@ -3802,7 +3800,7 @@ public class OrderServices {
 
             // update the status of service goods to COMPLETED;
             for (GenericValue item : serviceItems) {
-                Map<String, Object> statusCtx = FastMap.newInstance();
+                Map<String, Object> statusCtx = new HashMap<String, Object>();
                 statusCtx.put("orderId", item.getString("orderId"));
                 statusCtx.put("orderItemSeqId", item.getString("orderItemSeqId"));
                 statusCtx.put("statusId", "ITEM_COMPLETED");
@@ -3941,7 +3939,7 @@ public class OrderServices {
             if (itemAttributesMap != null) {
                 // go through the item attributes map once to get a list of key
                 // names
-                Set<String> attributeNames = FastSet.newInstance();
+                Set<String> attributeNames = new HashSet<String>();
                 Set<String> keys = itemAttributesMap.keySet();
                 for (String key : keys) {
                     attributeNames.add(key);
@@ -4140,7 +4138,7 @@ public class OrderServices {
                 if (itemAttributesMap != null) {
                     // go through the item attributes map once to get a list of
                     // key names
-                    Set<String> attributeNames = FastSet.newInstance();
+                    Set<String> attributeNames = new HashSet<String>();
                     Set<String> keys = itemAttributesMap.keySet();
                     for (String key : keys) {
                         String[] attributeInfo = key.split(":");
@@ -4574,8 +4572,8 @@ public class OrderServices {
 
         // get the new orderItems, adjustments, shipping info, payments and
         // order item attributes from the cart
-        List<Map<String, Object>> modifiedItems = FastList.newInstance();
-        List<Map<String, Object>> newItems = FastList.newInstance();
+        List<Map<String, Object>> modifiedItems = new LinkedList<Map<String, Object>>();
+        List<Map<String, Object>> newItems = new LinkedList<Map<String, Object>>();
         List<GenericValue> toStore = new LinkedList<GenericValue>();
         List<GenericValue> toAddList = new ArrayList<GenericValue>();
         toAddList.addAll(cart.makeAllAdjustments());
@@ -4645,7 +4643,7 @@ public class OrderServices {
         toStore.addAll(cart.makeAllOrderPaymentInfos(dispatcher));
         toStore.addAll(cart.makeAllOrderItemAttributes(orderId, ShoppingCart.FILLED_ONLY));
 
-        List<GenericValue> toRemove = FastList.newInstance();
+        List<GenericValue> toRemove = new LinkedList<GenericValue>();
         if (deleteItems) {
             // flag to delete existing order items and adjustments
             try {
@@ -4690,7 +4688,7 @@ public class OrderServices {
         toRemove.addAll(existingPromoUses);
 
         // set the orderId & other information on all new value objects
-        List<String> dropShipGroupIds = FastList.newInstance(); // this list
+        List<String> dropShipGroupIds = new LinkedList<String>(); // this list
                                                                 // will contain
                                                                 // the ids of
                                                                 // all the ship
@@ -4735,7 +4733,7 @@ public class OrderServices {
                 if ("Y".equals(valueObj.getString("isPromo"))) {
                     // Fetching the new promo items and adding it to list so
                     // that we can create OrderStatus record for that items.
-                    Map<String, Object> promoItem = FastMap.newInstance();
+                    Map<String, Object> promoItem = new HashMap<String, Object>();
                     promoItem.put("orderId", valueObj.getString("orderId"));
                     promoItem.put("orderItemSeqId", valueObj.getString("orderItemSeqId"));
                     promoItem.put("quantity", valueObj.getBigDecimal("quantity"));
@@ -4760,7 +4758,7 @@ public class OrderServices {
                     String oldItemComment = oldOrderItem.getString("comments") != null ? oldOrderItem.getString("comments") : "";
 
                     boolean changeFound = false;
-                    Map<String, Object> modifiedItem = FastMap.newInstance();
+                    Map<String, Object> modifiedItem = new HashMap<String, Object>();
                     if (!oldItemDescription.equals(valueObj.getString("itemDescription"))) {
                         modifiedItem.put("itemDescription", oldItemDescription);
                         changeFound = true;
@@ -4800,7 +4798,7 @@ public class OrderServices {
                     // this is a new item appended to the order
                     Map<String, String> itemReasonMap = UtilGenerics.checkMap(changeMap.get("itemReasonMap"));
                     Map<String, String> itemCommentMap = UtilGenerics.checkMap(changeMap.get("itemCommentMap"));
-                    Map<String, Object> appendedItem = FastMap.newInstance();
+                    Map<String, Object> appendedItem = new HashMap<String, Object>();
                     if (UtilValidate.isNotEmpty(itemReasonMap)) {
                         String changeReasonId = itemReasonMap.get("reasonEnumId");
                         appendedItem.put("reasonEnumId", changeReasonId);
@@ -4842,7 +4840,7 @@ public class OrderServices {
         // store the OrderItemChange
         if (UtilValidate.isNotEmpty(modifiedItems)) {
             for (Map<String, Object> modifiendItem : modifiedItems) {
-                Map<String, Object> serviceCtx = FastMap.newInstance();
+                Map<String, Object> serviceCtx = new HashMap<String, Object>();
                 serviceCtx.put("orderId", modifiendItem.get("orderId"));
                 serviceCtx.put("orderItemSeqId", modifiendItem.get("orderItemSeqId"));
                 serviceCtx.put("itemDescription", modifiendItem.get("itemDescription"));
@@ -5126,7 +5124,7 @@ public class OrderServices {
                 return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "OrderOrderNotFound", UtilMisc.toMap("orderId", orderId), locale));
             }
 
-            Map<String, Object> ctx = FastMap.newInstance();
+            Map<String, Object> ctx = new HashMap<String, Object>();
             ctx.put("statusId", statusId);
             ctx.put("orderId", orderId);
             ctx.put("setItemStatus", "Y");
@@ -5166,7 +5164,7 @@ public class OrderServices {
                 return ServiceUtil.returnFailure(UtilProperties.getMessage(resource, "OrderOrderNotFound", UtilMisc.toMap("orderId", orderId), locale));
             }
 
-            Map<String, Object> ctx = FastMap.newInstance();
+            Map<String, Object> ctx = new HashMap<String, Object>();
             ctx.put("statusId", statusId);
             ctx.put("orderId", orderId);
             ctx.put("userLogin", userLogin);
@@ -5193,7 +5191,7 @@ public class OrderServices {
             if (UtilValidate.isEmpty(orderId)) {
                 continue;
             }
-            Map<String, Object> ctx = FastMap.newInstance();
+            Map<String, Object> ctx = new HashMap<String, Object>();
             ctx.put("userLogin", userLogin);
             ctx.put("orderId", orderId);
 
@@ -5217,7 +5215,7 @@ public class OrderServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Locale locale = (Locale) context.get("locale");
         // grouped by facility
-        Map<String, List<String>> facilityOrdersMap = FastMap.newInstance();
+        Map<String, List<String>> facilityOrdersMap = new LinkedHashMap<String, List<String>>();
 
         // make the list per facility
         List<String> orderIds = UtilGenerics.checkList(context.get("orderIdList"));
@@ -5250,7 +5248,7 @@ public class OrderServices {
         for (String facilityId : facilityOrdersMap.keySet()) {
             List<String> orderIdList = facilityOrdersMap.get(facilityId);
 
-            Map<String, Object> ctx = FastMap.newInstance();
+            Map<String, Object> ctx = new HashMap<String, Object>();
             ctx.put("userLogin", userLogin);
             ctx.put("orderIdList", orderIdList);
             ctx.put("facilityId", facilityId);
@@ -5282,7 +5280,7 @@ public class OrderServices {
             if (UtilValidate.isEmpty(orderId)) {
                 continue;
             }
-            Map<String, Object> ctx = FastMap.newInstance();
+            Map<String, Object> ctx = new HashMap<String, Object>();
             ctx.put("userLogin", userLogin);
             ctx.put("screenLocation", screenLocation);
             // ctx.put("contentType", "application/postscript");
@@ -5311,7 +5309,7 @@ public class OrderServices {
             if (UtilValidate.isEmpty(orderId)) {
                 continue;
             }
-            Map<String, Object> ctx = FastMap.newInstance();
+            Map<String, Object> ctx = new HashMap<String, Object>();
             ctx.put("userLogin", userLogin);
             ctx.put("screenLocation", screenLocation);
             // ctx.put("contentType", "application/postscript");
@@ -5337,7 +5335,7 @@ public class OrderServices {
             if (UtilValidate.isEmpty(orderId)) {
                 continue;
             }
-            Map<String, Object> ctx = FastMap.newInstance();
+            Map<String, Object> ctx = new HashMap<String, Object>();
             ctx.put("orderId", orderId);
             ctx.put("userLogin", userLogin);
 
@@ -6746,7 +6744,7 @@ public class OrderServices {
         }
 
         for (String orderId : orderIds) {
-            Map<String, Object> svcIn = FastMap.newInstance();
+            Map<String, Object> svcIn = new HashMap<String, Object>();
             svcIn.put("userLogin", context.get("userLogin"));
             svcIn.put("orderId", orderId);
             try {
@@ -6811,7 +6809,7 @@ public class OrderServices {
                         updateCtx.put("quantity", newQuantity);
                         dispatcher.runSync("updateProductAssoc", updateCtx);
                     } else {
-                        Map<String, Object> createCtx = FastMap.newInstance();
+                        Map<String, Object> createCtx = new HashMap<String, Object>();
                         createCtx.put("userLogin", context.get("userLogin"));
                         createCtx.put("productId", productId);
                         createCtx.put("productIdTo", productIdTo);

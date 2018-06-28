@@ -22,13 +22,12 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
-import javolution.util.FastSet;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
@@ -51,7 +50,7 @@ import org.ofbiz.entity.util.EntityUtilProperties;
  */
 public class InvoiceWorker {
 
-    public static String module = InvoiceWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static BigDecimal ZERO = BigDecimal.ZERO;
     private static int decimals = UtilNumber.getBigDecimalScale("invoice.decimals");
     private static int rounding = UtilNumber.getBigDecimalRoundingMode("invoice.rounding");
@@ -115,7 +114,7 @@ public class InvoiceWorker {
 
     /** Method to get the taxable invoice item types as a List of invoiceItemTypeIds.  These are identified in Enumeration with enumTypeId TAXABLE_INV_ITM_TY. */
     public static List<String> getTaxableInvoiceItemTypeIds(Delegator delegator) throws GenericEntityException {
-        List<String> typeIds = FastList.newInstance();
+        List<String> typeIds = new LinkedList<String>();
         List<GenericValue> invoiceItemTaxTypes = EntityQuery.use(delegator).from("Enumeration").where("enumTypeId", "TAXABLE_INV_ITM_TY")
                 .cache().queryList();
         for (GenericValue invoiceItemTaxType : invoiceItemTaxTypes) {
@@ -587,7 +586,7 @@ public class InvoiceWorker {
     @Deprecated
     public static Map<String, Object> getInvoiceTaxByTaxAuthGeoAndParty(GenericValue invoice) {
         BigDecimal taxGrandTotal = ZERO;
-        List<Map<String, Object>> taxByTaxAuthGeoAndPartyList = FastList.newInstance();
+        List<Map<String, Object>> taxByTaxAuthGeoAndPartyList = new LinkedList<Map<String, Object>>();
         List<GenericValue> invoiceItems = null;
         if (UtilValidate.isNotEmpty(invoice)) {
             try {
@@ -635,7 +634,7 @@ public class InvoiceWorker {
                 }
             }
         }
-        Map<String, Object> result = FastMap.newInstance();
+        Map<String, Object> result = new HashMap<String, Object>();
         result.put("taxByTaxAuthGeoAndPartyList", taxByTaxAuthGeoAndPartyList);
         result.put("taxGrandTotal", taxGrandTotal);
         return result;
@@ -648,7 +647,7 @@ public class InvoiceWorker {
      *         will not account for tax lines that do not contain a taxAuthPartyId
      */
     public static Map<String, Set<String>> getInvoiceTaxAuthPartyAndGeos (GenericValue invoice) {
-        Map<String, Set<String>> result = FastMap.newInstance();
+        Map<String, Set<String>> result = new HashMap<String, Set<String>>();
 
         if (invoice == null)
            throw new IllegalArgumentException("Invoice cannot be null.");
@@ -669,7 +668,7 @@ public class InvoiceWorker {
                 String taxAuthGeoId = invoiceItem.getString("taxAuthGeoId");
                 if (UtilValidate.isNotEmpty(taxAuthPartyId)) {
                     if (!result.containsKey(taxAuthPartyId)) {
-                        Set<String> taxAuthGeos = FastSet.newInstance();
+                        Set<String> taxAuthGeos = new HashSet<String>();
                         taxAuthGeos.add(taxAuthGeoId);
                         result.put(taxAuthPartyId, taxAuthGeos);
                     } else {
@@ -689,7 +688,7 @@ public class InvoiceWorker {
                 String taxAuthGeoId = orderAdjustment.getString("taxAuthGeoId");
                 if (UtilValidate.isNotEmpty(taxAuthPartyId)) {
                     if (!result.containsKey(taxAuthPartyId)) {
-                        Set<String> taxAuthGeos = FastSet.newInstance();
+                        Set<String> taxAuthGeos = new HashSet<String>();
                         taxAuthGeos.add(taxAuthGeoId);
                         result.put(taxAuthPartyId, taxAuthGeos);
                     } else {
@@ -836,7 +835,7 @@ public class InvoiceWorker {
      *         will not account for tax lines that do not contain a taxAuthPartyId)
      */
     public static Map<String, String> getInvoiceTaxRateProducts(GenericValue invoice) {
-        Map<String, String> result = FastMap.newInstance();
+        Map<String, String> result = new HashMap<String, String>();
 
         if (invoice == null)
             throw new IllegalArgumentException("Invoice cannot be null.");
@@ -869,8 +868,8 @@ public class InvoiceWorker {
                                 String organizationPartyId = invoice.getString("partyId");
                                 String taxAuthGeoId = invoiceItem.getString("taxAuthGeoId");
                                 String taxAuthPartyId = invoiceItem.getString("taxAuthPartyId");
-                                GenericValue taxAuthorityGlAccount = delegator.findByPrimaryKeyCache("TaxAuthorityGlAccount", UtilMisc.toMap(
-                                        "organizationPartyId", organizationPartyId, "taxAuthGeoId", taxAuthGeoId, "taxAuthPartyId", taxAuthPartyId));
+                                GenericValue taxAuthorityGlAccount = delegator.findOne("TaxAuthorityGlAccount", UtilMisc.toMap(
+                                        "organizationPartyId", organizationPartyId, "taxAuthGeoId", taxAuthGeoId, "taxAuthPartyId", taxAuthPartyId), true);
                                 if (UtilValidate.isNotEmpty(taxAuthorityGlAccount)) {
                                     taxGlAccountId = taxAuthorityGlAccount.getString("taxGlAccountId");
                                 }
@@ -909,8 +908,8 @@ public class InvoiceWorker {
                             String organizationPartyId = invoice.getString("partyId");
                             String taxAuthGeoId = orderAdjustment.getString("taxAuthGeoId");
                             String taxAuthPartyId = orderAdjustment.getString("taxAuthPartyId");
-                            GenericValue taxAuthorityGlAccount = delegator.findByPrimaryKeyCache("TaxAuthorityGlAccount", UtilMisc.toMap(
-                                    "organizationPartyId", organizationPartyId, "taxAuthGeoId", taxAuthGeoId, "taxAuthPartyId", taxAuthPartyId));
+                            GenericValue taxAuthorityGlAccount = delegator.findOne("TaxAuthorityGlAccount", UtilMisc.toMap(
+                                    "organizationPartyId", organizationPartyId, "taxAuthGeoId", taxAuthGeoId, "taxAuthPartyId", taxAuthPartyId), true);
                             if (UtilValidate.isNotEmpty(taxAuthorityGlAccount)) {
                                 taxGlAccountId = taxAuthorityGlAccount.getString("taxGlAccountId");
                             }
@@ -956,8 +955,8 @@ public class InvoiceWorker {
                     String organizationPartyId = invoice.getString("partyId");
                     String taxAuthGeoId = invoiceItem.getString("taxAuthGeoId");
                     String taxAuthPartyId = invoiceItem.getString("taxAuthPartyId");
-                    GenericValue taxAuthorityGlAccount = delegator.findByPrimaryKeyCache("TaxAuthorityGlAccount", UtilMisc.toMap(
-                            "organizationPartyId", organizationPartyId, "taxAuthGeoId", taxAuthGeoId, "taxAuthPartyId", taxAuthPartyId));
+                    GenericValue taxAuthorityGlAccount = delegator.findOne("TaxAuthorityGlAccount", UtilMisc.toMap(
+                            "organizationPartyId", organizationPartyId, "taxAuthGeoId", taxAuthGeoId, "taxAuthPartyId", taxAuthPartyId), true);
                     if (UtilValidate.isNotEmpty(taxAuthorityGlAccount)) {
                         taxGlAccountId = taxAuthorityGlAccount.getString("taxGlAccountId");
                     }
@@ -992,8 +991,8 @@ public class InvoiceWorker {
                     String organizationPartyId = invoice.getString("partyId");
                     String taxAuthGeoId = orderAdjustment.getString("taxAuthGeoId");
                     String taxAuthPartyId = orderAdjustment.getString("taxAuthPartyId");
-                    GenericValue taxAuthorityGlAccount = invoice.getDelegator().findByPrimaryKeyCache("TaxAuthorityGlAccount", UtilMisc.toMap(
-                            "organizationPartyId", organizationPartyId, "taxAuthGeoId", taxAuthGeoId, "taxAuthPartyId", taxAuthPartyId));
+                    GenericValue taxAuthorityGlAccount = invoice.getDelegator().findOne("TaxAuthorityGlAccount", UtilMisc.toMap(
+                            "organizationPartyId", organizationPartyId, "taxAuthGeoId", taxAuthGeoId, "taxAuthPartyId", taxAuthPartyId), true);
                     if (UtilValidate.isNotEmpty(taxAuthorityGlAccount)) {
                         taxGlAccountId = taxAuthorityGlAccount.getString("taxGlAccountId");
                     }

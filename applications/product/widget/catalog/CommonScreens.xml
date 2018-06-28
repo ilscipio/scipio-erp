@@ -618,6 +618,8 @@ under the License.
                 <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.webSiteId} ${${extraFunctionName}}"/>
 
                 <!-- SCIPIO: session-based browsing aid -->
+                <!-- 2017-11: fallback -->
+                <set field="getStoreLastProductStore.defaultProductStoreId" from-field="webSite.productStoreId"/>
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/GetStoreLastProductStore.groovy"/>
                 <!-- re-save it to prevent wild switching -->
                 <script location="component://product/webapp/catalog/WEB-INF/actions/store/SetStoreLastProductStore.groovy"/>
@@ -872,33 +874,12 @@ under the License.
             <actions>
                 <set field="activeSubMenuItem" value="main"/>
                 <set field="titleProperty" value="ProductCatalogManager"/>
+                <entity-condition list="productStores" entity-name="ProductStore" />
             </actions>
             <widgets>            
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container style="${styles.grid_row}">
-                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                <section>
-                                   <actions>
-                                       <!-- SCIPIO: FIXME: Unhardcode this -->
-                                       <set field="productStoreId" value="ScipioShop" global="true"/>
-                                   </actions>
-                                   <widgets>
-                                       <include-screen name="ScipioStoreCatalogTree"/>   
-                                   </widgets>
-                               </section>
-                            </container>
-                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
-                                <section>
-                                   <actions>
-                                       <set field="productStoreId" value="RentalStore" global="true"/>
-                                   </actions>
-                                   <widgets>
-                                       <include-screen name="ScipioStoreCatalogTree"/>   
-                                   </widgets>
-                               </section>
-                            </container>
-                        </container>
+                        <platform-specific><html><html-template location="component://product/webapp/catalog/catalog/ViewProdCatalogs.ftl"/></html></platform-specific>
                         <container style="${styles.grid_row}">
                             <container style="${styles.grid_large}6 ${styles.grid_cell}">
                                 <include-screen name="ScipioRecentProductsAdded"/>
@@ -930,7 +911,7 @@ under the License.
             <actions>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="TOP" />
-                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="reviews"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="productReviews"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -1119,28 +1100,19 @@ under the License.
         </section>
     </screen>
 
-    
-    <!-- SCIPIO: Widget implementation -->
-    <screen name="ScipioStoreCatalogTree">
+    <!-- SCIPIO: Read-only catalog tree -->
+    <screen name="ScipioViewCatalogTree"><!-- DEPRECATED -->
         <section>
-            <actions>
-               <entity-one value-field="productStore" entity-name="ProductStore"/>
-               <script location="component://product/script/com/ilscipio/product/dashboard/StoreCatalogTree.groovy"/>
-           </actions>
-           <widgets>
-                <section>
-                    <condition>
-                        <not>
-                            <if-empty field="treeMenuData"/>
-                        </not>
-                    </condition>
-                     <widgets>
-                       <screenlet title="${productStore.storeName}">
-                           <platform-specific><html><html-template location="component://product/webapp/catalog/dashboard/storeCatalogTree.ftl"/></html></platform-specific>
-                       </screenlet>     
-                   </widgets>
-                </section>
-           </widgets>
+            <widgets>
+                <include-screen name="ScipioViewCatalogTree" location="component://product/widget/catalog/CatalogScreens.xml"/>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="ScipioStoreCatalogTree"><!-- DEPRECATED -->
+        <section>
+            <widgets>
+                <include-screen name="ScipioViewCatalogTree" location="component://product/widget/catalog/CatalogScreens.xml"/>
+            </widgets>
         </section>
     </screen>
     

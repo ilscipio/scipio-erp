@@ -42,7 +42,7 @@ import bsh.ParseException;
  */
 public final class BshUtil {
 
-    public static final String module = BshUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected static ConcurrentHashMap<ClassLoader, BshClassManager> masterClassManagers = new ConcurrentHashMap<ClassLoader, BshClassManager>();
     private static final UtilCache<String, Interpreter.ParsedScript> parsedScripts = UtilCache.createUtilCache("script.BshLocationParsedCache", 0, 0, false);
@@ -109,7 +109,7 @@ public final class BshUtil {
         //find the "master" BshClassManager for this classpath
         BshClassManager master = BshUtil.masterClassManagers.get(classLoader);
         if (master == null) {
-            master = BshClassManager.createClassManager();
+            master = BshClassManager.createClassManager(null); // SCIPIO: 2018-03-22: beanshell-xxx-scipio: pass null here to avoid extra bsh patches
             master.setClassLoader(classLoader);
             BshUtil.masterClassManagers.putIfAbsent(classLoader, master);
             master = BshUtil.masterClassManagers.get(classLoader);

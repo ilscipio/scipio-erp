@@ -36,7 +36,7 @@ import org.ofbiz.service.ModelService;
  */
 public class WorkEffortPartyAssignmentServices {
 
-    public static final String module = WorkEffortPartyAssignmentServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static void updateWorkflowEngine(GenericValue wepa, GenericValue userLogin, LocalDispatcher dispatcher) {
         // if the WorkEffort is an ACTIVITY, check for accept or complete new status...

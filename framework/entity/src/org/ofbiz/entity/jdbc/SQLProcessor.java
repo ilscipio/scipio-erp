@@ -53,7 +53,7 @@ import org.ofbiz.entity.transaction.TransactionUtil;
 public class SQLProcessor {
 
     /** Module Name Used for debugging */
-    public static final String module = SQLProcessor.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /** Used for testing connections when test is enabled */
     public static List<String> CONNECTION_TEST_LIST = new ArrayList<String>();

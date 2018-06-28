@@ -71,7 +71,7 @@ import org.xml.sax.SAXException;
  */
 @SuppressWarnings("serial")
 public abstract class ModelScreenWidget extends ModelWidget implements ContainsExpr.FlexibleContainsExprAttrWidget {
-    public static final String module = ModelScreenWidget.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final ModelScreen modelScreen;
     /**

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
+    <!-- The controller elements that are common to all OFBiz components
+         can be found in the following xml file. A component can override the
+         elements found in the common-controller.xml file. -->
+    <!-- 2016: FIXME?: using the common-controller for now because RequestHandler crashes without it
+    <include location="component://common/webcommon/WEB-INF/handlers-controller.xml"/>-->
+    <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
+    <!-- 2016: new common cms client controller -->  
+    <include location="component://cms/webcommon/WEB-INF/cms-client-controller.xml"/>     
+
+    <description>Scipio Empty Website Component Configuration File</description>
+    <errorpage>/control/error</errorpage> <!-- /error/error.jsp -->
+    
+    <preprocessor>
+        <!-- Events to run on every request before security (chains exempt) -->
+        <event name="check509CertLogin" type="java" path="org.ofbiz.webapp.control.LoginWorker" invoke="check509CertLogin"/>
+        <event name="checkRequestHeaderLogin" type="java" path="org.ofbiz.webapp.control.LoginWorker" invoke="checkRequestHeaderLogin"/>
+        <event name="checkServletRequestRemoteUserLogin" type="java" path="org.ofbiz.webapp.control.LoginWorker" invoke="checkServletRequestRemoteUserLogin"/>
+        <event name="checkExternalLoginKey" type="java" path="org.ofbiz.webapp.control.LoginWorker" invoke="checkExternalLoginKey"/>
+        <event name="checkProtectedView" type="java" path="org.ofbiz.webapp.control.ProtectViewWorker" invoke="checkProtectedView"/>
+        <event name="extensionConnectLogin" type="java" path="org.ofbiz.webapp.control.LoginWorker" invoke="extensionConnectLogin"/>
+    </preprocessor>
+    <postprocessor>
+        <!-- Events to run on every request after all other processing (chains exempt) -->
+    </postprocessor>
+
+
+    <!-- **************** -->
+    <!-- REQUEST MAPPINGS -->
+    <!-- **************** -->
+    
+    <!-- General -->
+    <request-map uri="error">
+        <security https="false" auth="false"/>
+        <response name="success" type="view" value="pagenotfound"/><!-- FIXME: not really appropriate -->
+    </request-map>
+    <request-map uri="pagenotfound">
+        <security https="false" auth="false"/>
+        <response name="success" type="view" value="pagenotfound"/>
+    </request-map>
+    <request-map uri="main">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="main" />
+    </request-map>
+    
+    <!-- Test requests -->
+    <request-map uri="testRequest1">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="testView1" />
+    </request-map>
+    <request-map uri="testRequest2">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="testView2" />
+    </request-map>
+    <request-map uri="testRequest3">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="testView3" />
+    </request-map>
+    
+    <!-- Dummy shop requests used in header as links, defined here to prevent needless log errors 
+        TODO: review if we might perhaps include a common shop controller instead 
+            (but without all the firstvisit/preprocessor/handler, common-store-controller and other definitions?) -->
+    <request-map uri="showcart">
+        <security https="false" auth="false"/>
+        <response name="success" type="view" value="pagenotfound"/>
+    </request-map>
+    <request-map uri="keywordsearch">
+        <security https="false" auth="false"/>
+        <response name="success" type="view" value="pagenotfound"/>
+    </request-map>
+    <request-map uri="showAllPromotions">
+        <security https="false" auth="false"/>
+        <response name="success" type="view" value="pagenotfound"/>
+    </request-map>
+    <request-map uri="policies">
+        <security https="false" auth="false"/>
+        <response name="success" type="view" value="pagenotfound"/>
+    </request-map>
+    <request-map uri="license">
+        <security https="false" auth="false"/>
+        <response name="success" type="view" value="pagenotfound"/>
+    </request-map>
+    
+    <!-- **************** -->
+    <!--   VIEW MAPPINGS  -->
+    <!-- **************** -->
+    
+    <!-- NOTE: main goes to 404 here, because there is no main. -->
+    <view-map name="main" type="screen" page="component://cms/widget/CommonScreens.xml#404"/>
+    <view-map name="pagenotfound" type="screen" page="component://cms/widget/CommonScreens.xml#404"/>
+    
+    <!-- CMS App view mappings -->
+    <view-map name="editPage" type="screen" page="component://cms/widget/CMSScreens.xml#editPage"/>
+    
+    <!-- test view-maps -->
+    <view-map name="testView1" type="screen" page="component://cms/widget/CommonScreens.xml#404"/>
+    <view-map name="testView2" type="screen" page="component://cms/widget/CommonScreens.xml#404"/>
+    <view-map name="testView3" type="screen" page="component://cms/widget/CommonScreens.xml#404"/>
+
+</site-conf>

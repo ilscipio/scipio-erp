@@ -33,7 +33,7 @@ import org.ofbiz.base.util.UtilGenerics;
 /** A <code>Converter</code> factory and repository. */
 @SourceMonitored
 public class Converters {
-    protected static final String module = Converters.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     protected static final String DELIMITER = "->";
     protected static final ConcurrentHashMap<String, Converter<?, ?>> converterMap = new ConcurrentHashMap<String, Converter<?, ?>>();
     protected static final Set<ConverterCreator> creators = new HashSet<ConverterCreator>();

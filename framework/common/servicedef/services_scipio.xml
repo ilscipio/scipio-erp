@@ -34,7 +34,8 @@ under the License.
     <!-- Scipio services: Common demo data generator interface. 
         Services must implement this interface in order to have the demo data generator using the common in/out attributes and also to be listed in the demoDataGenerator screen.
     -->
-    <service name="demoDataGenerator" engine="interface">
+    <service name="demoDataGenerator" engine="interface">        
+        <attribute name="dataGeneratorProviderId" type="String" mode="IN" optional="true" />        
         <attribute name="num" type="Integer" mode="IN" optional="true" />
         <attribute name="minDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="maxDate" type="Timestamp" mode="IN" optional="true"/>

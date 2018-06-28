@@ -19,6 +19,7 @@
 package org.ofbiz.product.imagemanagement;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -27,8 +28,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import javolution.util.FastList;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
@@ -44,7 +43,7 @@ import org.ofbiz.entity.util.EntityQuery;
 @SuppressWarnings("serial")
 public class ImageUrlServlet extends HttpServlet {
 
-    public static final String module = ImageUrlServlet.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public ImageUrlServlet() {
         super();
@@ -76,7 +75,7 @@ public class ImageUrlServlet extends HttpServlet {
         String pathInfo = request.getPathInfo();
         List<String> pathElements = StringUtil.split(pathInfo, "/");
         
-        List<String> tagElements = FastList.newInstance();
+        List<String> tagElements = new LinkedList<String>();
         for (String pathElement : pathElements) {
             tagElements.addAll(StringUtil.split(pathElement, "-"));
         }

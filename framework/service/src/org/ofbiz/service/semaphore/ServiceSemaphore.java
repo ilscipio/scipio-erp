@@ -40,7 +40,7 @@ public class ServiceSemaphore {
     // TODO: add something to make sure semaphores are cleaned up on failures and when the thread somehow goes away without cleaning it up
     // TODO: write service engine test cases to make sure semaphore both blocking and timing out (use config to set sleep and wait to low values so it times out quickly)
 
-    public static final String module = ServiceSemaphore.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final int SEMAPHORE_MODE_FAIL = 0;
     public static final int SEMAPHORE_MODE_WAIT = 1;
     public static final int SEMAPHORE_MODE_NONE = 2;

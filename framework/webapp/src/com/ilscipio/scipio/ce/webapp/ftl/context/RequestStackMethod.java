@@ -37,7 +37,7 @@ import freemarker.template.TemplateScalarModel;
  */
 public abstract class RequestStackMethod implements TemplateMethodModelEx {
 
-    public static final String module = RequestStackMethod.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     @SuppressWarnings("unchecked")
     protected Object execPush(List args, boolean setLast) throws TemplateModelException {

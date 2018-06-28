@@ -22,7 +22,7 @@
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
     <menu name="HumanResAppBar" title="${uiLabelMap.HumanResManager}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <!-- SCIPIO: simplified -->
-        <menu-item name="Employees" title="${uiLabelMap.HumanResEmployees}"><link target="findEmployees"/></menu-item>
+        <menu-item name="Employees" title="${uiLabelMap.HumanResEmployeesApplicants}"><link target="findEmployees"/></menu-item>
         <!--<menu-item name="Employment" title="${uiLabelMap.HumanResEmployment}"><link target="FindEmployments"/></menu-item>-->
         <menu-item name="EmplPosition" title="${uiLabelMap.HumanResPositions}"><link target="FindEmplPositions"/></menu-item><!-- ${uiLabelMap.HumanResEmployeePosition} -->
         <!--<menu-item name="PerfReview" title="${uiLabelMap.HumanResPerfReview}"><link target="FindPerfReviews"/></menu-item>-->
@@ -30,7 +30,7 @@
         <!--<menu-item name="PartyQual" title="${uiLabelMap.HumanResPartyQualification}"><link target="FindPartyQuals"/></menu-item>-->
         <menu-item name="Recruitment" title="${uiLabelMap.HumanResRecruitment}"><link target="FindJobRequisitions"/></menu-item>        
         <!--<menu-item name="Training" title="${uiLabelMap.HumanResTraining}"><link target="TrainingCalendar"/></menu-item>-->
-        <menu-item name="EmploymentApp" title="${uiLabelMap.AccountingApplications}"><link target="FindEmploymentApps"/></menu-item><!-- ${uiLabelMap.HumanResEmploymentApp} -->
+        <menu-item name="EmploymentApp" title="${uiLabelMap.HumanResApplications}"><link target="FindEmploymentApps"/></menu-item><!-- ${uiLabelMap.HumanResEmploymentApp} -->
         <!--<menu-item name="PartyResume" title="${uiLabelMap.HumanResPartyResume}"><link target="FindPartyResumes"/></menu-item>-->
         <menu-item name="Leave" title="${uiLabelMap.HumanResEmplLeave}"><link target="FindEmplLeaves"/></menu-item>
         <menu-item name="GlobalHRSettings" title="${uiLabelMap.CommonSettings}"><link target="globalHRSettings"/></menu-item><!-- ${uiLabelMap.HumanResGlobalHRSettings} -->
@@ -294,6 +294,11 @@
                 <parameter param-name="partyId"/>
             </link>
         </menu-item> -->
+        <menu-item name="EditEmployeeContent" title="${uiLabelMap.HumanResPartyContentAndResumes}"><!-- SCIPIO: 2018: stand-in for EditEmployeeResumes above -->
+            <link target="EditPartyContents">
+                <parameter param-name="partyId"/>
+            </link>
+        </menu-item>
         <menu-item name="EditEmployeeLeaves" title="${uiLabelMap.HumanResEmplLeave}">
             <link target="EditEmployeeLeaves">
                 <parameter param-name="partyId"/>
@@ -410,6 +415,94 @@
     <menu name="EmplLeaveSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="EmployeeLeave">
         <include-elements menu-name="EmplLeaveTabBar" recursive="includes-only" />
+    </menu>
+    
+    <!-- SCIPIO: new -->
+    <menu name="EmploymentAppGeneralSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="EditEmploymentApp" title="${uiLabelMap.HumanResNewEmploymentApp}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <if-compare field="activeSubMenuItem" operator="not-equals" value="EditEmploymentApp"/>
+            </condition>
+            <link target="EditEmploymentApp"/>
+        </menu-item>
+        <menu-item name="NewEmployee" title="${uiLabelMap.HumanResNewEmployeeApplicant}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="NewEmployee"/>
+        </menu-item>
+    </menu>
+
+    <!-- SCIPIO: new -->
+    <menu name="EmploymentAppEditSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="EditEmploymentApp" title="${uiLabelMap.CommonEdit}">
+            <condition>
+                <if-compare field="activeSubMenuItem" operator="not-equals" value="EditEmploymentApp"/>
+            </condition>
+            <link target="EditEmploymentApp">
+                <parameter param-name="applicationId" from-field="applicationId"/>
+            </link>
+        </menu-item>
+        <menu-item name="ViewEmploymentApp" title="${uiLabelMap.CommonView}">
+            <condition>
+                <if-compare field="activeSubMenuItem" operator="equals" value="EditEmploymentApp"/>
+            </condition>
+            <link target="ViewEmploymentApp">
+                <parameter param-name="applicationId" from-field="applicationId"/>
+            </link>
+        </menu-item>
+        <!--<menu-item name="LookupPartyResume" title="${uiLabelMap.HumanResPartyContentAndResumes}">
+            <link target="EditPartyContents" url-mode="intra-app">
+                <parameter param-name="partyId" from-field="employmentApp.applyingPartyId"/>
+            </link>
+        </menu-item>-->
+    </menu>
+    
+    <!-- SCIPIO: new -->
+    <menu name="ResumeListSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="EditResumes" title="${uiLabelMap.CommonManage}" widget-style="+${styles.action_nav} ${styles.action_update}">
+            <link target="EditPartyContents" url-mode="intra-app">
+                <parameter param-name="partyId" from-field="resumePartyId"/>
+            </link>
+        </menu-item>
+        <!--<menu-item name="AddResume" title="${uiLabelMap.CommonAdd}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="EditPartyContents" url-mode="intra-app">
+                <parameter param-name="partyId" from-field="resumePartyId"/>
+                <parameter param-name="partyContentTypeId" value="RESUME"/>
+            </link>
+        </menu-item>-->
+    </menu>
+    
+    <!-- SCIPIO: new -->
+    <menu name="EmplPositionViewSubTarBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="EditEmploymentApp" title="${uiLabelMap.HumanResNewEmploymentApp}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="EditEmploymentApp">
+                <parameter param-name="emplPositionId" from-field="emplPositionId"/>
+            </link>
+        </menu-item>
+    </menu>
+    
+    <!-- SCIPIO: new -->
+    <menu name="EmployeeProfileSubTarBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="EditEmploymentApp" title="${uiLabelMap.HumanResNewEmploymentApp}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="EditEmploymentApp">
+                <parameter param-name="applyingPartyId" from-field="partyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="HideOld" title="${uiLabelMap.PartyHideOld}" widget-style="+${styles.action_run_sys} ${styles.action_hide}">
+            <condition>
+                <if-true field="showOld"/>
+            </condition>
+            <link target="EmployeeProfile">
+                <parameter param-name="partyId" from-field="party.partyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="ShowOld" title="${uiLabelMap.PartyShowOld}" widget-style="+${styles.action_run_sys} ${styles.action_show}">
+            <condition>
+                <not><if-true field="showOld"/></not>
+            </condition>
+            <link target="EmployeeProfile">
+                <parameter param-name="partyId" from-field="party.partyId"/>
+                <parameter param-name="SHOW_OLD" value="true"/>
+            </link>
+        </menu-item>
     </menu>
     
 </menus>

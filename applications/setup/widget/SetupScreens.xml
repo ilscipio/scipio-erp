@@ -1,0 +1,1091 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+    
+    http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/widget-screen.xsd">
+    
+    <screen name="InitialSetup">
+        <section>
+            <actions>
+                <set field="activeSubMenuItem" value="organization"/>
+                <set field="titleProperty" value="SetupCreateNewOrganization"/>
+                <set field="target" value="createOrganization"/>
+                <set field="previousParams" from-field="_PREVIOUS_PARAMS_" from-scope="user"/>
+                <property-to-field field="defaultCountryGeoId" resource="general" property="country.geo.id.default" default="USA"/>
+                <entity-condition entity-name="PartyRole" list="parties">
+                    <condition-expr field-name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO"/>
+                </entity-condition>
+                <set field="partyId" from-field="parties[0].partyId"/>
+                <set field="parameters.partyId" from-field="parties[0].partyId"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSetupDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-empty field="parties"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <actions>
+                                        <!-- fields for setDependentDropdownValuesJs.ftl, it's a try on generalization, if you need an example with more than one dropdown in a form have a look at EditProductPriceRules screen -->
+                                        <set field="dependentForm" value="NewOrganization"/>
+                                        <set field="paramKey" value="countryGeoId"/>                                        
+                                        <set field="mainId" value="USER_COUNTRY"/>
+                                        <set field="dependentId" value="USER_STATE"/>
+                                        <set field="requestName" value="getAssociatedStateList"/>
+                                        <set field="responseName" value="stateList"/>
+                                        <set field="dependentKeyName" value="geoId"/>
+                                        <set field="descName" value="geoName"/>
+                                        <set field="selectedDependentOption" value="_none_"/>
+                                    </actions>
+                                    <widgets>
+                                        <platform-specific><html><html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/></html></platform-specific>
+                                        <screenlet>
+                                            <include-form name="NewOrganization" location="component://setup/widget/SetupForms.xml"/>
+                                        </screenlet>
+                                    </widgets>
+                                </section>
+                            </widgets>
+                            <fail-widgets>
+                                <include-screen name="viewprofile" location="component://setup/widget/ProfileScreens.xml"/> 
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="EditFacility">
+        <section>
+            <actions>
+                <set field="titleProperty" value="ProductNewFacility"/>
+                <set field="activeSubMenuItem" value="facility"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/FindFacility.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSetupDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-service-permission service-name="facilityGenericPermission" main-action="VIEW"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <not><if-empty field="facility"/></not>
+                                    </condition>
+                                    <widgets>
+                                        <label style="heading" text="${uiLabelMap.ProductEditFacility} ${facility.facilityName} [${facility.facilityId}]"></label>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <label style="heading" text="${uiLabelMap.ProductNewFacility}"></label>
+                                    </fail-widgets>
+                                </section>
+                                <include-form name="EditFacility" location="component://setup/widget/SetupForms.xml"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="EditProductStore">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditProductStore"/>
+                <set field="activeSubMenuItem" value="productstore"/>
+                <set field="labelTitleProperty" value="PageTitleEditProductStore"/>
+                
+                <set field="partyId" from-field="parameters.partyId"/>
+                <entity-one entity-name="PartyGroup" value-field="partyGroup"/>
+                <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
+                <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProductStoreAndWebSite.groovy"/>
+                <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/FindFacility.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSetupDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-compare field="showScreen" operator="equals" value="origin"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition><not><if-empty field="productStoreId"/></not></condition>
+                                    <widgets>
+                                        <label style="heading" text="${uiLabelMap.PageTitleEditProductStore} ${uiLabelMap.CommonFor}: ${productStore.storeName} [${productStoreId}]"/>
+                                    </widgets>
+                                </section>
+                                <screenlet title="${uiLabelMap.SetupEditProductStore}">
+                                    <include-form name="EditProductStore" location="component://setup/widget/SetupForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <section>
+                                    <condition>
+                                        <if-compare field="showScreen" operator="equals" value="message"/>
+                                    </condition>
+                                    <widgets>
+                                        <label style="common-msg-error">${uiLabelMap.SetupPageError}</label>
+                                    </widgets>
+                                </section>
+                            </fail-widgets>
+                        </section>
+                        
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="EditWebSite">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditWebSite"/>
+                <set field="activeSubMenuItem" value="website"/>
+                <set field="labelTitleProperty" value="PageTitleEditWebSite"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProductStoreAndWebSite.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSetupDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-compare field="showScreen" operator="equals" value="origin"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition><not><if-empty field="webSite"/></not></condition>
+                                    <widgets>
+                                        <label style="heading" text="${uiLabelMap.PageTitleEditWebSite} ${uiLabelMap.CommonFor}: ${webSite.siteName} [${webSite.webSiteId}]"/>
+                                    </widgets>
+                                </section>
+                                <section>
+                                    <widgets>
+                                        <screenlet>
+                                            <include-form name="EditWebSite" location="component://setup/widget/SetupForms.xml"/>
+                                        </screenlet>
+                                    </widgets>
+                                </section>
+                            </widgets>
+                            <fail-widgets>
+                                <section>
+                                    <condition>
+                                        <if-compare field="showScreen" operator="equals" value="message"/>
+                                    </condition>
+                                    <widgets>
+                                        <label style="common-msg-error">${uiLabelMap.SetupPageError}</label>
+                                    </widgets>
+                                </section>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- First Product -->
+    <screen name="EditProdCatalog">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditProductCatalog"/>
+                <set field="activeSubMenuItem" value="productcatalog"/>
+                <set field="partyId" from-field="parameters.partyId"/>
+                <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProdCatalog.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFirstProductDecorator">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-compare field="showScreen" operator="equals" value="origin"/>
+                            </condition>
+                            <widgets>
+                                <label style="heading">${uiLabelMap.ProductCatalog} ${uiLabelMap.CommonFor} "${prodCatalog.catalogName}" [${prodCatalogId}]</label>
+                                <screenlet>
+                                    <include-form name="EditProdCatalog" location="component://setup/widget/SetupForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="EditCategory">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditProductCategories"/>
+
+                <set field="activeSubMenuItem" value="productcategory"/>
+                <set field="labelTitleProperty" value="ProductCategory"/>
+
+                <set field="partyId" from-field="parameters.partyId"/>
+                <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProdCatalog.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFirstProductDecorator">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-compare field="showErrorMsg" operator="equals" value="N"/>
+                            </condition>
+                            <widgets>
+                                <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${productCategory.description} [${productCategoryId}]  ${${extraFunctionName}}</label>
+                                <screenlet name="CreateProductCategory" title="${uiLabelMap.PageTitleEditProductCategory}">
+                                    <include-form name="EditProductCategory" location="component://setup/widget/SetupForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error">${uiLabelMap.SetupPageError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="EditProduct">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleEditProduct"/>
+                <set field="activeSubMenuItem" value="product"/>
+                <set field="labelTitleProperty" value="ProductProduct"/>
+                
+                <set field="partyId" from-field="parameters.partyId"/>           
+                <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProdCatalog.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFirstProductDecorator">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-compare field="showErrorMsg" operator="equals" value="N"/>
+                            </condition>
+                            <widgets>
+                                <container>
+                                    <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${product.internalName} [${productId}]  ${${extraFunctionName}}</label>
+                                </container>
+                                <include-form name="EditProduct" location="component://setup/widget/SetupForms.xml"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error">${uiLabelMap.SetupPageError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="CommonFirstProductDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="firstproduct"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSetupDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <or>
+                                    <and>
+                                        <not><if-empty field="showScreen"/></not>
+                                        <if-compare field="showScreen" operator="equals" value="origin"/>
+                                    </and>
+                                    <not><if-empty field="showErrorMsg"/></not>
+                                </or>      
+                            </condition>
+                            <widgets>
+                                <include-menu name="FirstProductTabBar" location="component://setup/widget/Menus.xml"/>
+                            </widgets>
+                        </section>
+                        <decorator-section-include name="body"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="nopartyAcctgPreference">
+        <section>
+            <actions>
+                <set field="titleProperty" value="SetupCreateNewOrganization"/>
+                <set field="activeSubMenuItem" value="init"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSetupAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <label style="errorMessage">${uiLabelMap.SetupEventMessage}</label>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: based on InitialSetup -->
+    <screen name="SetupOrganization">
+        <section>
+            <actions>
+                <set field="setupStep" value="organization"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
+                <set field="organizationData" from-field="setupStepStates[setupStep].stepData"/><!-- result from StepDataUtil.java -->
+
+                <script location="component://setup/webapp/setup/WEB-INF/actions/organization/SetupOrganization.groovy"/>                
+
+                <set field="isCreateForm" type="Boolean" value="${context.party == null}"/>
+                <set field="titleProperty" value="${groovy: !isCreateForm ? 'SetupEditOrganizationInformation' : 'SetupCreateNewOrganization'}" />
+                <set field="target" value="${groovy: !isCreateForm ? 'setupUpdateOrganization' : 'setupCreateOrganization'}" />
+                <set field="submitFormId" value="EditOrganization"/>
+                
+                <if>
+                    <condition><not><if-true field="organizationSelected"/></not></condition>
+                    <then>
+                        <set field="useDefaultSetupSubmitBar" type="Boolean" value="false"/>
+                    </then>
+                </if>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet>
+                                    <include-screen name="SelectOrganization"/>
+                                </screenlet>
+                                <section>
+                                    <condition>
+                                        <if-true field="organizationSelected"/>
+                                    </condition>
+                                    <widgets>
+                                        <screenlet>
+                                            <!--<include-form name="EditOrganization" location="component://setup/widget/SetupForms.xml"/>-->
+                                            <platform-specific>
+                                                <html><html-template location="component://setup/webapp/setup/organization/EditOrganization.ftl"/></html>
+                                            </platform-specific>
+                                        </screenlet>
+                                    </widgets>
+                                </section>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                    <decorator-section name="extra-body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <not><if-empty field="party"/></not>
+                                    </condition>
+                                    <actions>
+                                        <!-- SCIPIO: TODO: REVIEW: restricting the contact info to simple functions only for now,
+                                            remains to be seen if need to restrict further or completely get rid of this part -->
+                                        <set field="partyInfoViewOnly" type="Boolean" value="false"/>
+                                        <set field="partyInfoSimpleFuncOnly" type="Boolean" value="true"/>
+                                        <set field="partyContactInfoUseSection" type="Boolean" value="false"/>
+                                    </actions>
+                                    <widgets>
+                                        <!-- original:
+                                        <include-screen name="viewprofile" location="component://setup/widget/ProfileScreens.xml"/>-->
+                                        <platform-specific>
+                                            <html><html-template location="component://setup/webapp/setup/organization/OrganizationOverview.ftl"/></html>
+                                        </platform-specific> 
+                                    </widgets>
+                                </section>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="SelectOrganization">
+        <section>
+            <actions>
+                <entity-condition entity-name="PartyRole" list="parties">
+                    <condition-expr field-name="roleTypeId" operator="equals" value="INTERNAL_ORGANIZATIO"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://setup/webapp/setup/organization/SelectOrganization.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="SetupUser">
+        <section>
+            <actions>
+                <set field="setupStep" value="user"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
+                <set field="userData" from-field="setupStepStates[setupStep].stepData"/><!-- result from StepDataUtil.java -->
+                <script location="component://setup/webapp/setup/WEB-INF/actions/user/SetupUser.groovy"/>                
+                
+                <set field="isCreateForm" type="Boolean" value="${context.userParty == null}"/>
+                <set field="titleProperty" value="${groovy: !isCreateForm ? 'PartyChangeParty' : 'PartyNewUser'}" />
+                <set field="target" value="${groovy: !isCreateForm ? 'setupUpdateUser' : 'setupCreateUser'}" />
+                <set field="submitFormId" value="EditUser"/>
+                
+                <if>
+                    <condition><not><if-true field="userSelected"/></not></condition>
+                    <then>
+                        <set field="useDefaultSetupSubmitBar" type="Boolean" value="false"/>
+                    </then>
+                </if>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet>
+                                    <include-screen name="SelectUser"/>
+                                </screenlet>
+                                <section>
+                                    <condition>
+                                        <if-true field="userSelected"/>
+                                    </condition>
+                                    <widgets>
+                                        <screenlet>                                            
+                                            <platform-specific>
+                                                <html><html-template location="component://setup/webapp/setup/user/EditUser.ftl"/></html>
+                                            </platform-specific>
+                                        </screenlet>
+                                    </widgets>
+                                </section>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.PartyMgrCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                    <decorator-section name="extra-body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="PARTYMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <not><if-empty field="userParty"/></not>
+                                    </condition>
+                                    <actions>
+                                        <!-- SCIPIO: TODO: REVIEW: restricting the contact info to simple functions only for now,
+                                            remains to be seen if need to restrict further or completely get rid of this part -->
+                                        <set field="partyInfoViewOnly" type="Boolean" value="false"/>
+                                        <set field="partyInfoSimpleFuncOnly" type="Boolean" value="true"/>
+                                        <set field="partyContactInfoUseSection" type="Boolean" value="false"/>
+                                        <set field="parameters.partyId" from-field="userPartyId" />
+                                    </actions>
+                                    <widgets>
+                                        <platform-specific>
+                                            <html><html-template location="component://setup/webapp/setup/user/UserOverview.ftl"/></html>
+                                        </platform-specific> 
+                                    </widgets>
+                                </section>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="SelectUser">
+        <section>
+            <actions>
+                <entity-condition entity-name="PartyRelationship" list="parties" distinct="true" >
+                    <condition-list>
+                        <condition-expr field-name="partyIdFrom" operator="equals" from-field="parameters.orgPartyId"/>  
+                        <condition-expr field-name="roleTypeIdFrom" operator="equals" value="INTERNAL_ORGANIZATIO"/>
+                    </condition-list>
+                    <select-field field-name="partyIdTo"/>                          
+                </entity-condition>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://setup/webapp/setup/user/SelectUser.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="SetupAccounting">
+        <section>
+            <actions>
+                <set field="setupStep" value="accounting"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
+                <set field="accountingData" from-field="setupStepStates[setupStep].stepData"/><!-- result from StepDataUtil.java -->
+                
+                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/SetupAccounting.groovy"/>
+                
+                <set field="setupGlAccountForms.location" value="component://setup/widget/SetupScreens.xml"/>
+                <set field="setupGlAccountForms.name" value="SetupGlAccountForms"/>
+                
+                <set field="setupTimePeriodForms.location" value="component://setup/widget/SetupScreens.xml"/>
+                <set field="setupTimePeriodForms.name" value="SetupTimePeriodForms"/>
+                
+                <set field="isCreateForm" type="Boolean" value="false"/>      
+                   
+                <set field="target" value="setupUpdateGlAccount" />
+                <set field="submitFormId" value="setupAccounting-preferences-form"/>
+                
+                <set field="useDefaultSetupSubmitBar" type="Boolean" value="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="ACCOUNTING" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet>
+                                    <include-screen name="SelectGL"/>
+                                </screenlet>
+                                <section>
+                                   <!--  <condition>
+                                        don't show tree until at least one topGlAccountId created
+                                        <not><if-empty field="topGlAccountId"/></not>
+                                    </condition> -->
+                                    <widgets> 
+                                    	<screenlet>                                            
+                                            <platform-specific>
+                                                <html><html-template location="component://setup/webapp/setup/accounting/EditAccounting.ftl"/></html>
+                                            </platform-specific>
+                                        </screenlet>
+                                    </widgets>                                    
+                                </section>                              
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.AccountingCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="SelectGL">
+        <section>
+            <actions>
+                 <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/SelectGL.groovy" />
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://setup/webapp/setup/accounting/SelectGL.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditAcctgPreferences">
+        <section>
+            <actions>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditAcctgPreferences.groovy"/>                
+            </actions>
+            <widgets>
+				<screenlet>
+					<platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditAcctgPreferences.ftl"/></html></platform-specific>
+				</screenlet>		          
+            </widgets>           
+        </section>
+    </screen>
+    <screen name="EditGLAccountTree">
+        <section>
+            <actions>
+                <script location="component://accounting/script/com/ilscipio/scipio/accounting/ledger/tree/GetAccountsList.groovy"/>
+            </actions>
+            <widgets>            
+            	<section>
+            		 <condition>
+		                <and>
+		                    <not><if-empty field="topGlAccountId"/></not>
+		                    <not><if-empty field="treeMenuData"/></not>
+		                </and>
+		            </condition>
+		            <widgets>
+						<screenlet>
+                            <platform-specific>
+                                    <html><html-template location="component://accounting/webapp/accounting/ledger/tree/accountsTree.ftl"/></html>
+                            </platform-specific>						  
+                        </screenlet>
+					</widgets>						
+            	</section>
+            </widgets>           
+        </section>
+    </screen>
+    <screen name="SetupGlAccountForms">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <!--<include-form name="EditProdCatalog" location="component://setup/widget/SetupForms.xml"/>-->
+                <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditGLAccount.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditFiscalPeriods">
+        <section>
+            <actions>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditFiscalPeriods.groovy"/>                
+            </actions>
+            <widgets>
+            	<platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditFiscalPeriods.ftl"/></html></platform-specific>
+            </widgets>           
+        </section>
+    </screen>
+    <screen name="SetupTimePeriodForms">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditFiscalPeriod.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditJournals">
+        <section>
+            <actions>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditJournals.groovy"/>                
+            </actions>
+            <widgets>
+            	<section>
+		            <widgets>
+						<screenlet>
+							<platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditJournals.ftl"/></html></platform-specific>
+						</screenlet>
+		            </widgets>
+            	</section>
+            </widgets>           
+        </section>
+    </screen>
+    <screen name="EditAccountingTransactions">
+        <section>
+            <actions>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/accounting/EditAccountingTransactions.groovy"/>
+                <!-- <entity-and list="datevDataCategories" entity-name="DatevDataCategory"></entity-and> -->
+            </actions>
+            <widgets>
+            	<section>
+		            <widgets>
+						<screenlet>
+							<platform-specific><html><html-template location="component://setup/webapp/setup/accounting/EditAccountingTransactions.ftl"/></html></platform-specific>
+						</screenlet>
+		            </widgets>
+            	</section>
+            </widgets>           
+        </section>
+    </screen>
+    
+    <screen name="SetupFacility">
+        <section>
+            <actions>
+                <set field="setupStep" value="facility"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
+                <set field="facilityData" from-field="setupStepStates[setupStep].stepData"/><!-- result from StepDataUtil.java -->
+
+                <!-- not appropriate
+                <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/FindFacility.groovy"/>-->
+                <script location="component://setup/webapp/setup/WEB-INF/actions/facility/SetupFacility.groovy"/>
+                
+                <set field="isCreateForm" type="Boolean" value="${context.facility == null}"/>
+                <set field="titleProperty" value="${groovy: !isCreateForm ? 'ProductEditFacility' : 'ProductNewFacility'}" />
+                <set field="target" value="${groovy: !isCreateForm ? 'setupUpdateFacility' : 'setupCreateFacility'}" />
+                <set field="submitFormId" value="EditFacility"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-service-permission service-name="facilityGenericPermission" main-action="CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet>
+                                    <!--<include-form name="EditFacility" location="component://setup/widget/SetupForms.xml"/>-->
+                                    <platform-specific>
+                                        <html><html-template location="component://setup/webapp/setup/facility/EditFacility.ftl"/></html>
+                                    </platform-specific>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.ProductFacilityCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="SetupCatalog">
+        <section>
+            <actions>
+                <set field="setupStep" value="catalog"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
+                <set field="catalogData" from-field="setupStepStates[setupStep].stepData"/><!-- result from StepDataUtil.java -->
+
+                <!-- not appropriate
+                <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProdCatalog.groovy"/>-->
+                <script location="component://setup/webapp/setup/WEB-INF/actions/catalog/SetupCatalog.groovy"/>
+                
+                <script lang="groovy"><![CDATA[
+                    targetRecordAction = context.targetRecordAction;
+                    submitFormIdMap = [
+                        "catalog-new": "NewCatalog",
+                        "catalog-edit": "EditCatalog",
+                        "catalog-add": "AddCatalog",
+                        "category-new": "NewCategory",
+                        "category-edit": "EditCategory",
+                        "category-add": "AddCategory",
+                        "product-new": "NewProduct",
+                        "product-edit": "EditProduct",
+                        "product-add": "AddProduct",
+                    ];
+                    context.submitFormIdMap = submitFormIdMap;
+                    context.titleProperty = (targetRecordAction == "catalog-new" ) ? "ProductNewCatalog" : "ProductEditCatalog"; // forms have their own section title, so not bothering with this
+                    context.submitFormId = submitFormIdMap[targetRecordAction];
+                ]]></script>
+                <set field="newCatalogFormId" value="setupCatalog-newCatalog"/>
+                <set field="newCatalogLinkHref" value="javascript:jQuery('#${newCatalogFormId}').submit();void(0);"/>
+                
+                <set field="setupCatalogForms.location" value="component://setup/widget/SetupScreens.xml"/>
+                <set field="setupCatalogForms.name" value="SetupCatalogForms"/>
+                
+                <set field="layoutSettings.javaScripts[]" value="/content/images/ScpContentCommon.js" global="true"/>
+                <set field="layoutSettings.javaScripts[]" value="/catalog/static/ScpCatalogCommon.js" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="CATALOG" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <!-- don't show tree until at least one catalog created -->
+                                        <not><if-empty field="productStoreCatalogList"/></not>
+                                    </condition>
+                                    <actions>
+                                    </actions>
+                                    <widgets>
+                                        <screenlet>
+                                            <include-screen name="EditCatalogTree"/>
+                                        </screenlet>
+                                    </widgets>
+                                    <fail-widgets>
+                                        <include-screen name="${setupCatalogForms.name}" location="${setupCatalogForms.location}"/>
+                                    </fail-widgets>
+                                </section>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                    <decorator-section name="menu-functions">
+                        <platform-specific>
+                            <html>
+                                <html-template><![CDATA[
+                                  <#include "component://setup/webapp/setup/common/common.ftl">
+                                  <@form method="get" action=makeOfbizUrl("setupCatalog") id=newCatalogFormId>
+                                    <@defaultWizardFormFields exclude=["prodCatalogId"]/>
+                                    <@field type="hidden" name="setupContinue" value="N"/>
+                                    <@field type="hidden" name="newCatalog" value="Y"/>
+                                  </@form>
+                                <#-- now part of catalog tree actions menu (less confusing)
+                                  <@menu type="button">
+                                    <#if !isCreateForm>
+                                      <@menuitem type="link" href=rawString(newCatalogLinkHref) text=uiLabelMap.ProductNewCatalog class="+${styles.action_nav!} ${styles.action_add!}"/>
+                                    </#if>
+                                  </@menu>
+                                -->
+                                ]]></html-template>
+                            </html>
+                        </platform-specific>
+                    </decorator-section>
+                    <!-- redundant
+                    <decorator-section name="extra-body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="CATALOG" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet>
+                                    <include-screen name="ListCatalogs"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                    -->
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="SetupCatalogForms">
+        <section>
+            <actions>
+            </actions>
+            <widgets>
+                <!--<include-form name="EditProdCatalog" location="component://setup/widget/SetupForms.xml"/>-->
+                <platform-specific>
+                    <html><html-template location="component://setup/webapp/setup/catalog/EditProdCatalog.ftl"/></html>
+                </platform-specific>
+                <platform-specific>
+                    <html><html-template location="component://setup/webapp/setup/catalog/EditProductCategory.ftl"/></html>
+                </platform-specific>
+                <platform-specific>
+                    <html><html-template location="component://setup/webapp/setup/catalog/EditProduct.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditCatalogTree">
+        <section>
+            <actions>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/catalog/EditCatalogTree.groovy"/>
+            </actions>
+            <widgets>
+                <section>
+                    <condition>
+                        <and>
+                            <not><if-empty field="productStoreId"/></not>
+                            <not><if-empty field="treeMenuData"/></not>
+                        </and>
+                    </condition>
+                    <widgets>
+                       <screenlet>
+                           <platform-specific><html><html-template location="component://setup/webapp/setup/catalog/EditCatalogTree.ftl"/></html></platform-specific>
+                       </screenlet>     
+                    </widgets>
+                    <fail-widgets>
+                        <include-screen name="${setupCatalogForms.name}" location="${setupCatalogForms.location}"/>
+                    </fail-widgets>
+                </section>
+            </widgets>
+        </section>
+    </screen>
+    <!-- SCIPIO: DEPRECATED -->
+    <screen name="ListCatalogs">
+        <section>
+            <actions>
+                <script lang="groovy"><![CDATA[
+                    productStoreCatalogList = catalogData.productStoreCatalogList;
+                    context.productStoreCatalogList = productStoreCatalogList;
+                ]]></script>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://setup/webapp/setup/catalog/ListCatalogs.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="SetupStore">
+        <section>
+            <actions>
+                <set field="setupStep" value="store"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
+                <set field="storeData" from-field="setupStepStates[setupStep].stepData"/><!-- result from StepDataUtil.java -->
+                <set field="facilityData" from-field="setupStepStates.facility.stepData"/>
+
+                <!-- do not need this - store already loaded by groovy and SetupWorker
+                <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProductStoreAndWebSite.groovy"/>-->
+                <script location="component://setup/webapp/setup/WEB-INF/actions/store/SetupStore.groovy"/>
+                
+                <!-- NOTE: currently storeData==websiteData -->
+                <set field="websiteData" from-field="storeData"/>
+                
+                <script location="component://setup/webapp/setup/WEB-INF/actions/store/SetupWebsite.groovy"/>
+                 
+                <set field="isCreateForm" type="Boolean" value="${context.productStore == null}"/>
+                <set field="titleProperty" value="${groovy: !isCreateForm ? 'PageTitleEditProductStore' : 'ProductNewProductStore'}" />
+                <set field="target" value="${groovy: !isCreateForm ? 'setupUpdateStore' : 'setupCreateStore'}" />
+                <set field="submitFormId" value="EditStore"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="CATALOG" action="_CREATE"/>
+                            </condition>
+                            <actions>
+                                <!-- WORKAROUND: must nullify visualThemeId because there is a name conflict with decorators 
+                                    (we don't use context for it anyway) -->
+                                <script lang="groovy"><![CDATA[
+                                    context.visualThemeId = null;
+                                ]]></script>
+                            </actions>
+                            <widgets>
+                                <screenlet>
+                                    <!--<include-form name="EditProductStore" location="component://setup/widget/SetupForms.xml"/>-->
+                                    <platform-specific>
+                                        <html><html-template location="component://setup/webapp/setup/store/EditProductStore.ftl"/></html>
+                                    </platform-specific>
+                                    <section>
+                                        <condition>
+                                            <and>
+                                                <not><if-empty field="webSiteCount"/></not>
+                                                <if-compare field="webSiteCount" operator="greater" value="1"/>
+                                            </and>
+                                        </condition>
+                                        <widgets>
+                                            <platform-specific>
+                                                <html><html-template location="component://setup/webapp/setup/store/ListWebSites.ftl"/></html>
+                                            </platform-specific>
+                                        </widgets>
+                                    </section>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogCreatePermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <!-- merging into store page
+    <screen name="SetupWebsite">
+        <section>
+            <actions>
+                <set field="setupStep" value="website"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
+                <set field="websiteData" from-field="setupStepStates[setupStep].stepData"/><!- - result from StepDataUtil.java - ->
+
+                <!- - turns out we can skip this and instead get everything from the worker
+                <set field="gpsawQueryWebSite" type="Boolean" value="true"/>
+                <script location="component://commonext/webapp/ofbizsetup/WEB-INF/actions/GetProductStoreAndWebSite.groovy"/>
+                - ->
+                <script location="component://setup/webapp/setup/WEB-INF/actions/store/SetupWebsite.groovy"/>
+                
+                <set field="isCreateForm" type="Boolean" value="${context.webSite == null}"/>
+                <set field="titleProperty" value="${groovy: !isCreateForm ? 'PageTitleEditWebSite' : 'ContentNewWebSite'}" />
+                <set field="target" value="${groovy: !isCreateForm ? 'setupUpdateWebsite' : 'setupCreateWebsite'}" />
+                <set field="submitFormId" value="EditWebsite"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="CONTENTMGR" action="_CREATE"/>
+                            </condition>
+                            <widgets>
+                                <screenlet>
+                                    <!- -<label style="heading" text="${uiLabelMap.PageTitleEditWebSite} ${uiLabelMap.CommonFor}: ${webSite.siteName} [${webSite.webSiteId}]"/>- ->
+                                    <!- -<include-form name="EditWebSite" location="component://setup/widget/SetupForms.xml"/>- ->
+                                    <platform-specific>
+                                        <html><html-template location="component://setup/webapp/setup/website/EditWebsite.ftl"/></html>
+                                    </platform-specific>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <section>
+                                    <actions>
+                                        <set field="resourceDescription" value=""/>
+                                    </actions>
+                                    <widgets>
+                                        <label style="common-msg-error-perm">${uiLabelMap.ContentSecurityCreatePermission}</label>
+                                    </widgets>
+                                </section>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    -->
+    
+    <screen name="SetupFinished">
+        <section>
+            <actions>
+                <set field="setupStep" value="finished"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
+                <script lang="groovy"><![CDATA[
+                    context.incompleteSteps = context.setupWorker?.getIncompleteSteps();
+                ]]></script>
+                <set field="settingUpLabelProp" value="${groovy: context.incompleteSteps ? 'SetupSetupEndReachedFor': 'SetupSetupCompleteFor'}"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://setup/webapp/setup/wizard/setupfinished.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="SetupError">
+        <section>
+            <actions>
+                <set field="setupStep" value="error"/>
+                <script location="component://setup/webapp/setup/WEB-INF/actions/SetupWizardCommonActions.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSetupWizardDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <actions>
+                                <set field="setupErrorMsg" value="${uiLabelMap.SetupErrorOccurredInfo}"/>
+                            </actions>
+                            <widgets>
+                                <include-screen name="SetupErrorMsg" location="component://setup/widget/CommonScreens.xml"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+</screens>

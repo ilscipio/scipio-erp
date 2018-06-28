@@ -42,7 +42,7 @@ import org.xml.sax.SAXException;
  */
 public class ComponentLoaderConfig {
 
-    public static final String module = ComponentLoaderConfig.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String COMPONENT_LOAD_XML_FILENAME = "component-load.xml";
 
     public static final int SINGLE_COMPONENT = 0;

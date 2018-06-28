@@ -91,7 +91,7 @@
         </actions>
         <field name="partyIdFrom" title="${uiLabelMap.HumanResEmploymentPartyIdFrom}"><display></display></field>
         <field name="partyIdTo" title="${uiLabelMap.HumanResEmployeePartyIdTo}" widget-style="${styles.link_nav_info_id}">
-            <hyperlink also-hidden="false" description="${partyIdTo}" target="viewprofile">
+            <hyperlink also-hidden="false" description="${partyIdTo}" target="/partymgr/control/viewprofile" target-type="inter-app">
                 <parameter param-name="partyId" from-field="partyIdTo"/>
             </hyperlink>
         </field>

@@ -54,7 +54,7 @@ import org.w3c.dom.NodeList;
  */
 @SuppressWarnings("serial")
 public class ModelViewEntity extends ModelEntity {
-    public static final String module = ModelViewEntity.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private static final Map<String, String> functionPrefixMap = new HashMap<String, String>();
     private static final Set<String> numericFunctionsSet = new HashSet<String>(); // names of functions that return a numeric type

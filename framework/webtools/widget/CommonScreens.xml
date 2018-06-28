@@ -688,6 +688,39 @@ under the License.
         </section>
     </screen>
     
+    <screen name="CommonSolrDecorator">
+        <section>
+            <actions>
+                <property-map resource="SolrUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="AccountingEntityLabels" map-name="uiLabelMap" global="true"/>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="Solr" />
+                <script lang="groovy"><![CDATA[
+                    globalContext.isSolrWebappLocal = com.ilscipio.scipio.solr.SolrUtil.isSolrWebappLocal(); 
+                ]]></script>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <!-- SCIPIO: TODO: review: it seems like there should be a different perm check here... -->
+                            <!-- do check for WEBTOOLS, _VIEW permission -->
+                            <condition>
+                                <if-has-permission permission="WEBTOOLS" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <include-menu name="SolrButtonBar" location="component://webtools/widget/Menus.xml"/>
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <!-- SCIPIO: Main SideBar Menu (see component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments) 
         This (along with DefMainSideBarMenu) is a generalized pattern meant to support overriding by apps extending this one; 
         inclusions of this widget should be done using parameters.mainDecoratorLocation, mirroring the main-decorator pattern.

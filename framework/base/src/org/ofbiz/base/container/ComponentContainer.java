@@ -48,7 +48,7 @@ import com.ilscipio.scipio.ce.build.util.DependencyGraph;
  */
 public class ComponentContainer implements Container {
 
-    public static final String module = ComponentContainer.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected String configFileLocation = null;
     private String name;
@@ -108,7 +108,7 @@ public class ComponentContainer implements Container {
         List<ComponentConfig> componentList = new ArrayList<>(); // SCIPIO: 2017-01-16: explicit list, for ordering and post-load modification purposes
         if (components != null) {
             for (ComponentLoaderConfig.ComponentDef def: components) {
-                this.loadComponentFromConfig(parentPath, def, true, componentList); // SCIPIO: always considering top-levels explicit (for now)
+                this.loadComponentFromConfig(parentPath, def, true, true, componentList); // SCIPIO: always considering top-levels explicit (for now)
             }
         }
         
@@ -132,8 +132,8 @@ public class ComponentContainer implements Container {
         ComponentConfig.clearStoreComponents(componentList);
     }
 
-    // SCIPIO: augmented with explict componentList and explicitOrder
-    private void loadComponentFromConfig(String parentPath, ComponentLoaderConfig.ComponentDef def, boolean explicitOrder, List<ComponentConfig> componentList) {
+    // SCIPIO: augmented with explicit componentList, explicitOrder, noLoad
+    private void loadComponentFromConfig(String parentPath, ComponentLoaderConfig.ComponentDef def, boolean explicitOrder, boolean doLoad, List<ComponentConfig> componentList) {
         String location;
         if (def.location.startsWith("/")) {
             location = def.location;
@@ -153,16 +153,18 @@ public class ComponentContainer implements Container {
             if (config == null) {
                 Debug.logError("Cannot load component : " + def.name + " @ " + def.location, module);
             } else {
-                this.loadComponent(config);
+                if (doLoad) { // SCIPIO: 2018-06-25: caller can choose to disable and just read defs instead
+                    this.loadComponent(config);
+                }
             }
             // SCIPIO
             componentList.add(config);
         } else if (def.type == ComponentLoaderConfig.COMPONENT_DIRECTORY) {
-            this.loadComponentDirectory(location, explicitOrder, componentList);
+            this.loadComponentDirectory(location, explicitOrder, doLoad, componentList);
         }
     }
 
-    private void loadComponentDirectory(String directoryName, boolean explicitOrder, List<ComponentConfig> componentList) {
+    private void loadComponentDirectory(String directoryName, boolean explicitOrder, boolean doLoad, List<ComponentConfig> componentList) {
         Debug.logInfo("Auto-Loading component directory : [" + directoryName + "]", module);
         File parentPath = FileUtil.getFile(directoryName);
         if (!parentPath.exists() || !parentPath.isDirectory()) {
@@ -176,7 +178,7 @@ public class ComponentContainer implements Container {
                     List<ComponentLoaderConfig.ComponentDef> componentsToLoad = ComponentLoaderConfig.getComponentsFromConfig(configUrl);
                     if (componentsToLoad != null) {
                         for (ComponentLoaderConfig.ComponentDef def: componentsToLoad) {
-                            this.loadComponentFromConfig(parentPath.toString(), def, true, componentList);
+                            this.loadComponentFromConfig(parentPath.toString(), def, true, doLoad, componentList);
                         }
                     }
                 } catch (MalformedURLException e) {
@@ -210,6 +212,28 @@ public class ComponentContainer implements Container {
                                     // SCIPIO: do this below, after ordering
                                     //loadComponent(config);
                                     localComponentList.add(config);
+                                }
+                            } else {
+                                // SCIPIO: 2018-06-25: support special nested component-load.xml with special behavior
+                                // NOTE: SPECIAL: this passes doLoad=false so it just accumulates the components in the localComponentList
+                                // this is a little different than stock behavior of component-load.xml in the other explicit case (above),
+                                // but is necessary for the Scipio-only dependency resolution to work out.
+                                File nestedComponentLoadConfig = FileUtil.getFile(componentLocation + "/component-load.xml");
+                                if (nestedComponentLoadConfig.exists()) {
+                                    URL configUrl = null;
+                                    try {
+                                        configUrl = nestedComponentLoadConfig.toURI().toURL();
+                                        List<ComponentLoaderConfig.ComponentDef> componentsToLoad = ComponentLoaderConfig.getComponentsFromConfig(configUrl);
+                                        if (componentsToLoad != null) {
+                                            for (ComponentLoaderConfig.ComponentDef def: componentsToLoad) {
+                                                this.loadComponentFromConfig(componentLocation.toString(), def, false, false, localComponentList);
+                                            }
+                                        }
+                                    } catch (MalformedURLException e) {
+                                        Debug.logError(e, "Unable to locate URL for component loading file: " + nestedComponentLoadConfig.getAbsolutePath(), module);
+                                    } catch (ComponentException e) {
+                                        Debug.logError(e, "Unable to load components from URL: " + configUrl.toExternalForm(), module);
+                                    }
                                 }
                             }
                         }

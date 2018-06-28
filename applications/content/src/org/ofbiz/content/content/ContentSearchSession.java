@@ -19,6 +19,7 @@
 package org.ofbiz.content.content;
 
 import java.sql.Timestamp;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -26,21 +27,20 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import javolution.util.FastList;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.GenericValue;
 import org.ofbiz.content.content.ContentSearch.ResultSortOrder;
 import org.ofbiz.content.content.ContentSearch.SortKeywordRelevancy;
 import org.ofbiz.content.content.ContentSearch.ContentSearchConstraint;
 
 public class ContentSearchSession {
 
-    public static final String module = ContentSearchSession.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     @SuppressWarnings("serial")
     public static class ContentSearchOptions implements java.io.Serializable {
@@ -69,7 +69,7 @@ public class ContentSearchSession {
         public static void addConstraint(ContentSearchConstraint contentSearchConstraint, HttpSession session) {
             ContentSearchOptions contentSearchOptions = getContentSearchOptions(session);
             if (contentSearchOptions.constraintList == null) {
-                contentSearchOptions.constraintList = FastList.newInstance();
+                contentSearchOptions.constraintList = new LinkedList<ContentSearchConstraint>();
             }
             if (!contentSearchOptions.constraintList.contains(contentSearchConstraint)) {
                 contentSearchOptions.constraintList.add(contentSearchConstraint);
@@ -132,7 +132,7 @@ public class ContentSearchSession {
 
         public List<String> searchGetConstraintStrings(boolean detailed, Delegator delegator, Locale locale) {
             List<ContentSearchConstraint> contentSearchConstraintList = this.getConstraintList();
-            List<String> constraintStrings = FastList.newInstance();
+            List<String> constraintStrings = new LinkedList<String>();
             if (contentSearchConstraintList == null) {
                 return constraintStrings;
             }
@@ -268,7 +268,7 @@ public class ContentSearchSession {
     public static List<ContentSearchOptions> getSearchOptionsHistoryList(HttpSession session) {
         List<ContentSearchOptions> optionsHistoryList = UtilGenerics.checkList(session.getAttribute("_CONTENT_SEARCH_OPTIONS_HISTORY_"));
         if (optionsHistoryList == null) {
-            optionsHistoryList = FastList.newInstance();
+            optionsHistoryList = new LinkedList<ContentSearchOptions>();
             session.setAttribute("_CONTENT_SEARCH_OPTIONS_HISTORY_", optionsHistoryList);
         }
         return optionsHistoryList;

@@ -47,7 +47,7 @@ import org.ofbiz.entity.model.ModelFieldTypeReader;
 public class EntityListIterator implements ListIterator<GenericValue> {
 
     /** Module Name Used for debugging */
-    public static final String module = EntityListIterator.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected SQLProcessor sqlp;
     protected ResultSet resultSet;

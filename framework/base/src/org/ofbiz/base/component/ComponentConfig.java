@@ -54,7 +54,7 @@ import org.w3c.dom.Element;
  */
 public final class ComponentConfig {
 
-    public static final String module = ComponentConfig.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String OFBIZ_COMPONENT_XML_FILENAME = "ofbiz-component.xml";
     /* Note: These Maps are not UtilCache instances because there is no strategy or implementation for reloading components.
      * Also, we are using LinkedHashMap to maintain insertion order - which client code depends on. This means
@@ -282,7 +282,8 @@ public final class ComponentConfig {
             return componentConfig;
         } else {
             // Do we really need to do this?
-            throw new ComponentException("No component found named : " + globalName);
+            // SCIPIO: 2017-08-03: the answer is yes
+            throw new ComponentException.ComponentNotFoundException("No component found named : " + globalName); // SCIPIO: 2017-08-03: better exception
         }
     }
     
@@ -297,7 +298,7 @@ public final class ComponentConfig {
     public static String getFullLocation(String componentName, String resourceLoaderName, String location) throws ComponentException {
         ComponentConfig cc = getComponentConfig(componentName, null);
         if (cc == null) {
-            throw new ComponentException("Could not find component with name: " + componentName);
+            throw new ComponentException.ComponentNotFoundException("Could not find component with name: " + componentName); // SCIPIO: 2017-08-03: better exception
         }
         return cc.getFullLocation(resourceLoaderName, location);
     }
@@ -318,7 +319,7 @@ public final class ComponentConfig {
     public static String getRootLocation(String componentName) throws ComponentException {
         ComponentConfig cc = getComponentConfig(componentName);
         if (cc == null) {
-            throw new ComponentException("Could not find component with name: " + componentName);
+            throw new ComponentException.ComponentNotFoundException("Could not find component with name: " + componentName); // SCIPIO: 2017-08-03: better exception
         }
         return cc.getRootLocation();
     }
@@ -326,7 +327,7 @@ public final class ComponentConfig {
     public static InputStream getStream(String componentName, String resourceLoaderName, String location) throws ComponentException {
         ComponentConfig cc = getComponentConfig(componentName);
         if (cc == null) {
-            throw new ComponentException("Could not find component with name: " + componentName);
+            throw new ComponentException.ComponentNotFoundException("Could not find component with name: " + componentName); // SCIPIO: 2017-08-03: better exception
         }
         return cc.getStream(resourceLoaderName, location);
     }
@@ -334,7 +335,7 @@ public final class ComponentConfig {
     public static URL getURL(String componentName, String resourceLoaderName, String location) throws ComponentException {
         ComponentConfig cc = getComponentConfig(componentName);
         if (cc == null) {
-            throw new ComponentException("Could not find component with name: " + componentName);
+            throw new ComponentException.ComponentNotFoundException("Could not find component with name: " + componentName); // SCIPIO: 2017-08-03: better exception
         }
         return cc.getURL(resourceLoaderName, location);
     }
@@ -357,7 +358,7 @@ public final class ComponentConfig {
     public static boolean isFileResourceLoader(String componentName, String resourceLoaderName) throws ComponentException {
         ComponentConfig cc = getComponentConfig(componentName);
         if (cc == null) {
-            throw new ComponentException("Could not find component with name: " + componentName);
+            throw new ComponentException.ComponentNotFoundException("Could not find component with name: " + componentName); // SCIPIO: 2017-08-03: better exception
         }
         return cc.isFileResourceLoader(resourceLoaderName);
     }
@@ -382,7 +383,8 @@ public final class ComponentConfig {
      * Does not contain duplicates.
      */
     private final List<String> componentDependencies;
-    
+    private final List<ClasspathSpecialInfo> classpathSpecialInfos; // SCIPIO: added 2018-06-18
+
     private ComponentConfig(String globalName, String rootLocation) throws ComponentException {
         if (!rootLocation.endsWith("/")) {
             rootLocation = rootLocation + "/";
@@ -491,6 +493,12 @@ public final class ComponentConfig {
         if (!childElements.isEmpty()) {
             List<WebappInfo> webappInfos = new ArrayList<WebappInfo>(childElements.size());
             for (Element curElement : childElements) {
+                // SCIPIO: 2018-05-22: webapp disable tag for easier toggling webapps
+                if ("false".equals(curElement.getAttribute("enabled"))) {
+                    Debug.logInfo("Webapp '" + curElement.getAttribute("name")
+                        + "' of component '" + componentName + "' is disabled; ignoring definition", module);
+                    continue;
+                }
                 WebappInfo webappInfo = new WebappInfo(this, curElement);
                 webappInfos.add(webappInfo);
             }
@@ -529,6 +537,18 @@ public final class ComponentConfig {
         } else {
             this.componentDependencies = Collections.emptyList();
         }
+        // classpath - classpathInfos
+        childElements = UtilXml.childElementList(ofbizComponentElement, "classpath-special");
+        if (!childElements.isEmpty()) {
+            List<ClasspathSpecialInfo> classpathInfos = new ArrayList<>(childElements.size());
+            for (Element curElement : childElements) {
+                ClasspathSpecialInfo classpathInfo = new ClasspathSpecialInfo(this, curElement);
+                classpathInfos.add(classpathInfo);
+            }
+            this.classpathSpecialInfos = Collections.unmodifiableList(classpathInfos);
+        } else {
+            this.classpathSpecialInfos = Collections.emptyList();
+        }
         if (Debug.verboseOn())
             Debug.logVerbose("Read component config : [" + rootLocation + "]", module);
     }
@@ -563,6 +583,7 @@ public final class ComponentConfig {
         }
         this.containers = other.containers;
         this.componentDependencies = other.componentDependencies;
+        this.classpathSpecialInfos = other.classpathSpecialInfos;
     }
 
     public boolean enabled() {
@@ -691,7 +712,14 @@ public final class ComponentConfig {
     public List<String> getComponentDependencies() {
         return componentDependencies;
     }
-    
+
+    /**
+     * SCIPIO: Returns the special libraries.
+     */
+    public List<ClasspathSpecialInfo> getClasspathSpecialInfos() {
+        return classpathSpecialInfos;
+    }
+
     public boolean isFileResource(ResourceInfo resourceInfo) throws ComponentException {
         return isFileResourceLoader(resourceInfo.loader);
     }
@@ -725,7 +753,53 @@ public final class ComponentConfig {
         }
         return map;
     }
-    
+
+    /**
+     * SCIPIO: Reads special JAR locations for given purpose.
+     * Added 2018-06-18.
+     */
+    public static List<File> readClasspathSpecialJarLocations(String purpose) {
+        List<File> jarLocations = new ArrayList<>();
+        for(ComponentConfig cc : ComponentConfig.getAllComponents()) {
+            String configRoot = cc.getRootLocation();
+            configRoot = configRoot.replace('\\', '/');
+            for(ComponentConfig.ClasspathSpecialInfo info : cc.getClasspathSpecialInfos()) {
+                if (purpose.equals(info.purpose)) {
+                    String type = info.type;
+                    if (type == null || !("jar".equals(type) || "dir".equals(type))) {
+                        continue;
+                    }
+                    String location = info.location.replace('\\', '/');
+                    if (location.startsWith("/")) {
+                        location = location.substring(1);
+                    }
+                    String dirLoc = location;
+                    if (dirLoc.endsWith("/*")) {
+                        // strip off the slash splat
+                        dirLoc = location.substring(0, location.length() - 2);
+                    }
+
+                    String fileNameSeparator = ("\\".equals(File.separator) ? "\\" + File.separator : File.separator);
+                    dirLoc = dirLoc.replaceAll("/+|\\\\+", fileNameSeparator);
+                    File path = new File(configRoot, dirLoc);
+                    if (path.exists()) {
+                        if (path.isDirectory()) {
+                            for (File file: path.listFiles()) {
+                                String fileName = file.getName().toLowerCase();
+                                if (fileName.endsWith(".jar")) {
+                                    jarLocations.add(file);
+                                }
+                            }
+                        } else {
+                            jarLocations.add(path);
+                        }
+                    }
+                }
+            }
+        }
+        return jarLocations;
+    }
+
     /**
      * SCIPIO: Post-processes the global list of loaded components after all
      * <code>ofbiz-component.xml</code> files have been read (hook/callback) (new 2017-01-19).
@@ -792,15 +866,28 @@ public final class ComponentConfig {
      * @see <code>ofbiz-component.xsd</code>
      *
      */
-    public static final class ClasspathInfo {
+    public static class ClasspathInfo { // SCIPIO: removed "final"
         public final ComponentConfig componentConfig;
         public final String type;
         public final String location;
 
-        private ClasspathInfo(ComponentConfig componentConfig, Element element) {
+        ClasspathInfo(ComponentConfig componentConfig, Element element) { // SCIPIO: removed "private"
             this.componentConfig = componentConfig;
             this.type = element.getAttribute("type");
             this.location = element.getAttribute("location");
+        }
+    }
+
+    /**
+     * SCIPIO: An object that models the <code>&lt;classpath-special&gt;</code> element.
+     * 
+     * @see <code>ofbiz-component.xsd</code>
+     */
+    public static class ClasspathSpecialInfo extends ClasspathInfo {
+        public final String purpose;
+        ClasspathSpecialInfo(ComponentConfig componentConfig, Element element) {
+            super(componentConfig, element);
+            this.purpose = element.getAttribute("purpose");
         }
     }
 

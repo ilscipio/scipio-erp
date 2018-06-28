@@ -27,13 +27,13 @@ under the License.
 
     <property name="desc" value="Base API"/>
     <property name="name" value="ofbiz-base"/>
-    <property name="ofbiz.home.dir" value="../.."/>
 
     <path id="local.class.path">
         <fileset dir="${lib.dir}" includes="*.jar"/>
         <fileset dir="${lib.dir}/commons" includes="*.jar"/>
         <fileset dir="${lib.dir}/j2eespecs" includes="*.jar"/>
         <fileset dir="${lib.dir}/scripting" includes="*.jar"/>
+        <fileset dir="${lib.dir}/media" includes="*.jar"/>
         <fileset dir="../start/build/lib" includes="*.jar"/>
     </path>
 
@@ -108,71 +108,70 @@ under the License.
         </test-jar>
     </target>
 
+    <!-- SCIPIO: ivy confs to resolve (defaults to "*", meaning all) 
+        This should include all the confs manually handled in do-lib-update task override below,
+        or otherwise all ivy.xml configurations that are not optional. -->
+    <property name="lib.resolve.build.confs" value="base"/>
+    <property name="lib.resolve.src.confs" value="sources"/>
+    
     <!-- SCIPIO: Special lib download script for complex base includes -->
     <target name="do-lib-update" description="Downloads all jars (base component implementation)">
-        <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="base">
+        <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="${lib.resolve.build.confs}">
             <firstmatchmapper>
-                <!-- Legacy ofbiz filename compatibility support (TODO?: remove?) -->
-                <regexpmapper from="^(.*/)?javax\.mail-([^/]+\.jar)$$" to="\1mail-\2" handledirsep="true"/>
+                <!-- Official Servlet API - 2018-04-13: move the servlet API jars to j2eespecs-ref -->
+                <regexpmapper from="^(.*/)?(javax\.(servlet-api|servlet\.jsp-api|el-api|annotation-api)-[^/]+\.jar)$" to="\1j2eespecs-ref/\2" handledirsep="true"/>
+
+                <!-- Tomcat-provided Servlet API - 2018-04-13: no longer need to do this; we have two different sets of JARs
+                <regexpmapper from="^(.*/)?tomcat-servlet-api-([^/-]+)\.jar$" to="\1javax.servlet-api-3.1.0.jar" handledirsep="true"/>
+                <regexpmapper from="^(.*/)?tomcat-jsp-api-([^/-]+)\.jar$" to="\1javax.servlet.jsp-api-2.3.0.jar" handledirsep="true"/>
+                <regexpmapper from="^(.*/)?tomcat-el-api-([^/-]+)\.jar$" to="\1javax.el-api-3.0.0.jar" handledirsep="true"/>
+                <!- - FIXME?: annotations official version is unclear - ->
+                <regexpmapper from="^(.*/)?tomcat-annotations-api-([^/-]+)\.jar$" to="\1javax.annotation-api-3.0.0.jar" handledirsep="true"/>
+                -->
+
+                <!-- badly named zhing jar -->
+                <regexpmapper from="^(.*/)?core-([0-9.]+\.jar)$" to="\1zxing-core-\2" handledirsep="true"/>
+
                 <identitymapper/>
             </firstmatchmapper>
         </ivy:retrieve>
-        <ivy:retrieve pattern="lib/ant/${lib.update.filename.pattern.ivy}" conf="ant"/>
-        <ivy:retrieve pattern="lib/commons/${lib.update.filename.pattern.ivy}" conf="commons"/>
-        <ivy:retrieve pattern="lib/j2eespecs/${lib.update.filename.pattern.ivy}" conf="j2eespecs">
-            <firstmatchmapper>
-                <!-- Legacy ofbiz filename compatibility support (TODO?: remove?) -->
-                <!-- NOTE: Ofbiz used Tomcat-provided API jars instead of official javax ones, and here we have to make assumptions about corresponding versions (FIXME?) -->
-                <regexpmapper from="^(.*/)?tomcat-servlet-api-([^/-]+)\.jar$$" to="\1servlet-api-3.1.jar" handledirsep="true"/>
-                <regexpmapper from="^(.*/)?tomcat-jsp-api-([^/-]+)\.jar$$" to="\1jsp-api-2.3.jar" handledirsep="true"/>
-                <regexpmapper from="^(.*/)?tomcat-el-api-([^/-]+)\.jar$$" to="\1el-api-3.0.jar" handledirsep="true"/>
-                <regexpmapper from="^(.*/)?tomcat-annotations-api-([^/-]+)\.jar$$" to="\1annotations-api-3.0.jar" handledirsep="true"/>
-                <identitymapper/>
-            </firstmatchmapper>
-        </ivy:retrieve>
-        <ivy:retrieve pattern="lib/scripting/${lib.update.filename.pattern.ivy}" conf="scripting">
-            <firstmatchmapper>
-                <!-- Legacy ofbiz filename compatibility support (TODO?: remove?) -->
-                <regexpmapper from="^(.*/)?oro(-[^/]+\.jar)$$" to="\1jakarta-oro\2" handledirsep="true"/>
-                <identitymapper/>
-            </firstmatchmapper>
-        </ivy:retrieve>
-        <!-- TODO?: these are from the root /ivy.xml...
-        <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="activemq"/>
-        <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="cobertura"/>
-        <ivy:retrieve pattern="lib/${lib.update.filename.pattern.ivy}" conf="sonar-ant-task"/>
-        -->
+        <if>
+            <equals arg1="${lib.update.sources}" arg2="true"/>
+            <then>
+                <ivy:retrieve pattern="libsrc/${lib.update.filename.pattern.src.ivy}" conf="${lib.resolve.src.confs}">
+                    <firstmatchmapper>
+                        <!-- Official Servlet API - 2018-04-13: move the servlet API jars to j2eespecs-ref -->
+                        <regexpmapper from="^(.*/)?(javax\.(servlet-api|servlet\.jsp-api|el-api|annotation-api)-[^/]+\.jar)$" to="\1j2eespecs-ref/\2" handledirsep="true"/>
+
+                        <!-- Tomcat-provided Servlet API - 2018-04-13: no longer need to do this; we have two different sets of JARs
+                        <regexpmapper from="^(.*/)?tomcat-servlet-api-([^/-]+)-sources\.jar$" to="\1javax.servlet-api-3.1.0-sources.jar" handledirsep="true"/>
+                        <regexpmapper from="^(.*/)?tomcat-jsp-api-([^/-]+)-sources\.jar$" to="\1javax.servlet.jsp-api-2.3.0-sources.jar" handledirsep="true"/>
+                        <regexpmapper from="^(.*/)?tomcat-el-api-([^/-]+)-sources\.jar$" to="\1javax.el-api-3.0.0-sources.jar" handledirsep="true"/>
+                        <!- - FIXME?: annotations official version is unclear - ->
+                        <regexpmapper from="^(.*/)?tomcat-annotations-api-([^/-]+)-sources\.jar$" to="\1javax.annotation-api-3.0.0-sources.jar" handledirsep="true"/>-->
+ 
+                        <!-- badly named zhing jar -->
+                        <regexpmapper from="^(.*/)?core-([0-9.]+-sources\.jar)$" to="\1zxing-core-\2" handledirsep="true"/>
+
+                        <identitymapper/>
+                    </firstmatchmapper>
+                </ivy:retrieve>
+            </then>
+        </if>
     </target>
 
     <!-- SCIPIO: Libraries manually committed to repo, excluded from ivy (or emulated) file cleanout/removal
         NOTE: This should be defined implicitly as an include (treated as exclude as needed) -->
     <selector id="lib.update.manual.files">
         <or>
-            <filename name="ant-*.jar"/>
+            <!-- Core build system dependencies (Ant & Ivy) -->
             <filename name="ant/**.jar"/>
-            <filename name="ivy-*.jar"/>
-            <!-- doesn't appear to be in use in mandatory build code anywhere
-            <filename name="scripting/antlr-*.jar"/>-->
-            <filename name="scripting/groovy-*.jar"/><!-- NOTE: groovy is used from ant scripts! -->
+            <filename name="oro-*.jar"/><!-- required by Ivy for matcher="glob", committed in filesystem -->
  
-            <!-- TODO?: these currently get downloaded separately, on-demand; should handle automatically instead? -->
+            <!-- Optional dependencies, retrieved separately - do not delete! -->
             <filename name="sonar-*.jar"/>
             <filename name="cobertura-*.jar"/>
             <filename name="activemq-*.jar"/>
-
-            <!-- FIXME: manually-committed JARs missing from public repos -->
-            <filename name="hamcrest-all-*.jar"/>
-            <filename name="avalon-framework-*.jar"/>
-            <filename name="batik-all-*.jar"/>
-            <filename name="bsh-engine-modified.jar"/>
-            <filename name="clhm-*.jar"/>
-            <filename name="ical4j-*.jar"/>
-            <filename name="jdbm-*.jar"/>
-            <filename name="jpim-*.jar"/>
-            <filename name="resolver-*.jar"/>
-            <filename name="scripting/jython-nooro.jar"/>
-            <filename name="scripting/bsh-*.jar"/>
-            <filename name="serializer-*.jar"/>
         </or>
     </selector>
     

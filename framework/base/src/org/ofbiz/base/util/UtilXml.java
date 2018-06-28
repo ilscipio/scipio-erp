@@ -92,7 +92,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  */
 public class UtilXml {
 
-    public static final String module = UtilXml.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final XStream xstream = createXStream();
 
     private static XStream createXStream() {

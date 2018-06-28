@@ -69,7 +69,7 @@ public abstract class ModelTreeAction extends AbstractModelAction {
      * 
      */
 
-    public static final String module = ModelTreeAction.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static List<ModelAction> readNodeActions(ModelNode modelNode, Element actionsElement) {
         List<? extends Element> actionElementList = UtilXml.childElementList(actionsElement);

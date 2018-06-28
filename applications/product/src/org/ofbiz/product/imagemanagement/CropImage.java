@@ -22,15 +22,14 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-import javolution.util.FastMap;
-
-import org.jdom.JDOMException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
@@ -45,11 +44,11 @@ import org.ofbiz.service.ServiceUtil;
 
 public class CropImage {
 
-    public static final String module = CropImage.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ProductErrorUiLabels";
 
     public static Map<String, Object> imageCrop(DispatchContext dctx, Map<String, ? extends Object> context)
-    throws IOException, JDOMException {
+    throws IOException {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dispatcher.getDelegator();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -63,10 +62,10 @@ public class CropImage {
         String imageH = (String) context.get("imageH");
         
         if (UtilValidate.isNotEmpty(imageName)) {
-            Map<String, Object> contentCtx = FastMap.newInstance();
+            Map<String, Object> contentCtx = new HashMap<String, Object>();
             contentCtx.put("contentTypeId", "DOCUMENT");
             contentCtx.put("userLogin", userLogin);
-            Map<String, Object> contentResult = FastMap.newInstance();
+            Map<String, Object> contentResult = new HashMap<String, Object>();
             try {
                 contentResult = dispatcher.runSync("createContent", contentCtx);
             } catch (GenericServiceException e) {
@@ -74,10 +73,10 @@ public class CropImage {
                 return ServiceUtil.returnError(e.getMessage());
             }
             
-            Map<String, Object> contentThumb = FastMap.newInstance();
+            Map<String, Object> contentThumb = new HashMap<String, Object>();
             contentThumb.put("contentTypeId", "DOCUMENT");
             contentThumb.put("userLogin", userLogin);
-            Map<String, Object> contentThumbResult = FastMap.newInstance();
+            Map<String, Object> contentThumbResult = new HashMap<String, Object>();
             try {
                 contentThumbResult = dispatcher.runSync("createContent", contentThumb);
             } catch (GenericServiceException e) {
@@ -115,7 +114,7 @@ public class CropImage {
             ImageManagementServices.createContentAndDataResource(dctx, userLogin, filenameToUse, imageUrlResource, contentId, "image/jpeg");
             ImageManagementServices.createContentAndDataResource(dctx, userLogin, filenameTouseThumb, imageUrlThumb, contentIdThumb, "image/jpeg");
             
-            Map<String, Object> createContentAssocMap = FastMap.newInstance();
+            Map<String, Object> createContentAssocMap = new HashMap<String, Object>();
             createContentAssocMap.put("contentAssocTypeId", "IMAGE_THUMBNAIL");
             createContentAssocMap.put("contentId", contentId);
             createContentAssocMap.put("contentIdTo", contentIdThumb);
@@ -128,7 +127,7 @@ public class CropImage {
                 return ServiceUtil.returnError(e.getMessage());
             }
             
-            Map<String, Object> productContentCtx = FastMap.newInstance();
+            Map<String, Object> productContentCtx = new HashMap<String, Object>();
             productContentCtx.put("productId", productId);
             productContentCtx.put("productContentTypeId", "IMAGE");
             productContentCtx.put("fromDate", UtilDateTime.nowTimestamp());
@@ -142,7 +141,7 @@ public class CropImage {
                 return ServiceUtil.returnError(e.getMessage());
             }
             
-            Map<String, Object> contentApprovalCtx = FastMap.newInstance();
+            Map<String, Object> contentApprovalCtx = new HashMap<String, Object>();
             contentApprovalCtx.put("contentId", contentId);
             contentApprovalCtx.put("userLogin", userLogin);
             try {

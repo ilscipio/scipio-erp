@@ -40,7 +40,7 @@ import org.ofbiz.service.LocalDispatcher;
  */
 public class ShipmentEvents {
 
-    public static final String module = ShipmentEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static String viewShipmentPackageRouteSegLabelImage(HttpServletRequest request, HttpServletResponse response) {
 

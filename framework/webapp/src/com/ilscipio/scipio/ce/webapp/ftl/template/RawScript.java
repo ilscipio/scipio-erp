@@ -4,13 +4,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.apache.commons.lang.StringUtils;
 
 /**
  * Wrapper for strings that get passed to objectAsScript FTL macro to prevent
@@ -21,7 +17,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public abstract class RawScript {
 
-    private static Map<String, Set<String>> langParts = Collections.unmodifiableMap(new HashMap<String, Set<String>>());
+    private static Map<String, Set<String>> langParts = Collections.emptyMap();
     
     /**
      * Maps target langs to list of langs that can be used in place of it.
@@ -282,7 +278,7 @@ public abstract class RawScript {
             synchronized(RawScript.class) {
                 parts = langParts.get(lang);
                 if (parts == null) {
-                    Map<String, Set<String>> newLangParts = new HashMap<String, Set<String>>(langParts);
+                    Map<String, Set<String>> newLangParts = new HashMap<>(langParts);
                     
                     parts = new LinkedHashSet<String>(Arrays.asList(lang.split("-")));
                     

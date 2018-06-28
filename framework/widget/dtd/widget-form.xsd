@@ -1168,7 +1168,17 @@ under the License.
                     <xs:documentation>SCIPIO: The key to mark as selected when there is no current entry value, or
                         in other words the default value.
                         2017-04-20: This has now been implemented for check field; it behaves as a default value (same 
-                            as defaultValue parameter of @field macro in the Freemarker templating API).</xs:documentation>
+                            as defaultValue parameter of @field macro in the Freemarker templating API).
+                        2018-05-29: This option has been improved for more logical contextual sane behavior (heuristic).
+                            In other words, it now mainly applies to "new" record screens where no errors occurred.
+                            In order to prevent unintentionally modifying fields of existing records and 
+                            after failed form submits, no-current-selected-key no longer applies to:
+                                1) list or multi forms
+                                2) error requests (form submits that trigger an error and form is reloaded from parameters)
+                                3) existing records (when map-name/default-map-name refers to non-null record, even if field is null)
+                                4) when useRequestParameters is forced true and the parameter is non-null
+                                5) when there is no map-name/default-map-name and the context field is non-null
+                    </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:string" name="key">
@@ -1451,7 +1461,17 @@ under the License.
             </xs:attribute>
             <xs:attribute type="xs:string" name="no-current-selected-key">
                 <xs:annotation>
-                    <xs:documentation>The key to mark as selected when there is no current entry value.</xs:documentation>
+                    <xs:documentation>The key to mark as selected when there is no current entry value.
+                        SCIPIO: 2018-05-29: This option has been improved for more logical contextual sane behavior (heuristic).
+                            In other words, it now mainly applies to "new" record screens where no errors occurred.
+                            In order to prevent unintentionally modifying fields of existing records and 
+                            after failed form submits, no-current-selected-key no longer applies to:
+                                1) list or multi forms
+                                2) error requests (form submits that trigger an error and form is reloaded from parameters)
+                                3) existing records (when map-name/default-map-name refers to non-null record, even if field is null)
+                                4) when useRequestParameters is forced true and the parameter is non-null
+                                5) when there is no map-name/default-map-name and the context field is non-null
+                    </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
             <xs:attribute type="xs:integer" name="size" default="1" />
@@ -1732,7 +1752,21 @@ under the License.
                 <xs:element ref="list-options" />
                 <xs:element ref="option" />
             </xs:choice>
-            <xs:attribute type="xs:string" name="no-current-selected-key" />
+            <xs:attribute type="xs:string" name="no-current-selected-key">
+                <xs:annotation>
+                    <xs:documentation>The key to mark as selected when there is no current entry value.
+                        SCIPIO: 2018-05-29: This option has been improved for more logical contextual sane behavior (heuristic).
+                            In other words, it now mainly applies to "new" record screens where no errors occurred.
+                            In order to prevent unintentionally modifying fields of existing records and 
+                            after failed form submits, no-current-selected-key no longer applies to:
+                                1) list or multi forms
+                                2) error requests (form submits that trigger an error and form is reloaded from parameters)
+                                3) existing records (when map-name/default-map-name refers to non-null record, even if field is null)
+                                4) when useRequestParameters is forced true and the parameter is non-null
+                                5) when there is no map-name/default-map-name and the context field is non-null
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="range-find" substitutionGroup="AllFields">

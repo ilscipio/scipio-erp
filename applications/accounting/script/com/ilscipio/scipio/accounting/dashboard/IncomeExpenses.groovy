@@ -1,7 +1,5 @@
 import java.text.SimpleDateFormat
 
-import javolution.util.FastList
-
 import org.apache.xmlrpc.util.HttpUtil
 import org.ofbiz.accounting.util.UtilAccounting
 import org.ofbiz.base.util.*
@@ -28,7 +26,7 @@ Map<Date, Map<String, BigDecimal>> processResults() {
     List incomeAccountClassIds = UtilAccounting.getDescendantGlAccountClassIds(incomeGlAccountClass);    
     GenericValue expenseGlAccountClass = from("GlAccountClass").where("glAccountClassId", "EXPENSE").cache(true).queryOne();
     List expenseAccountClassIds = UtilAccounting.getDescendantGlAccountClassIds(expenseGlAccountClass);
-    List mainAndExprs = FastList.newInstance();
+    List mainAndExprs = [];
     mainAndExprs.add(EntityCondition.makeCondition("organizationPartyId", EntityOperator.IN, partyIds));
     mainAndExprs.add(EntityCondition.makeCondition("isPosted", EntityOperator.EQUALS, "Y"));
     mainAndExprs.add(EntityCondition.makeCondition("glFiscalTypeId", EntityOperator.EQUALS, glFiscalTypeId));
@@ -47,13 +45,13 @@ Map<Date, Map<String, BigDecimal>> processResults() {
     Map<Date, Map<String, BigDecimal>> totalMap = [:];
     for (int i = 0; i <= iCount; i++) {
         Map<String, BigDecimal> auxMap = [:];
-        List transactionDateAndExprs = FastList.newInstance();
+        List transactionDateAndExprs = [];
         transactionDateAndExprs.add(EntityCondition.makeCondition("transactionDate", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntervals.getDateBegin()));
         transactionDateAndExprs.add(EntityCondition.makeCondition("transactionDate", EntityOperator.LESS_THAN, dateIntervals.getDateEnd()));
         
         List balanceTotalList = [];
         // EXPENSE
-        List expenseAndExprs = FastList.newInstance(mainAndExprs);
+        List expenseAndExprs = new ArrayList(mainAndExprs);
         expenseAndExprs.add(EntityCondition.makeCondition("glAccountClassId", EntityOperator.IN, expenseAccountClassIds));
         expenseAndExprs.addAll(transactionDateAndExprs);
     
@@ -71,7 +69,7 @@ Map<Date, Map<String, BigDecimal>> processResults() {
     
     
         // INCOME
-        List incomeAndExprs = FastList.newInstance(mainAndExprs);
+        List incomeAndExprs = new ArrayList(mainAndExprs);
         incomeAndExprs.add(EntityCondition.makeCondition("glAccountClassId", EntityOperator.IN, incomeAccountClassIds));
         //    mainAndExprs.add(EntityCondition.makeCondition("debitCreditFlag", EntityOperator.EQUALS, "C"));
         incomeAndExprs.addAll(transactionDateAndExprs)

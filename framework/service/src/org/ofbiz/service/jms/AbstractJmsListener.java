@@ -40,7 +40,7 @@ import org.ofbiz.service.ServiceContainer;
  */
 public abstract class AbstractJmsListener implements GenericMessageListener, ExceptionListener {
 
-    public static final String module = AbstractJmsListener.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected LocalDispatcher dispatcher;
     protected boolean isConnected = false;

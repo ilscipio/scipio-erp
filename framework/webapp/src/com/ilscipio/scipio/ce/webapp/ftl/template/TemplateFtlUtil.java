@@ -42,7 +42,6 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateModelIterator;
 import freemarker.template.TemplateScalarModel;
 import freemarker.template.TemplateSequenceModel;
-import javolution.util.FastMap;
 
 /**
  * SCIPIO: Theme- and styling-framework-agnostic templating utilities.
@@ -53,7 +52,7 @@ import javolution.util.FastMap;
  */
 public abstract class TemplateFtlUtil {
 
-    public static final String module = TemplateFtlUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     private static final UtilCache<String, Map<String, Object>> headingElemSpecFromStyleStrCache = 
             UtilCache.createUtilCache("com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil.headingElemSpecFromStyleStrCache");
@@ -130,7 +129,7 @@ public abstract class TemplateFtlUtil {
         String titleStyle = styleStr;
         String titleContainerStyle = containerStyleStr;
                 
-        Map<String, String> titleArgs = FastMap.newInstance();
+        Map<String, String> titleArgs = new HashMap<>();
         String titleArgsStr = titleStyle;
         
         String[] titleStyleParts = titleStyle.split(";");
@@ -247,7 +246,7 @@ public abstract class TemplateFtlUtil {
             
         }
         
-        Map<String, Object> res = FastMap.newInstance();
+        Map<String, Object> res = new HashMap<>();
         res.putAll(titleArgs);
         res.put("containerStyleStr", titleContainerStyle); 
         res.put("containerElemType", titleContainerElemType); 
@@ -309,7 +308,7 @@ public abstract class TemplateFtlUtil {
      * where DELIM is specified delimiter (& &amp; , ; etc.)
      */
     public static Map<String, String> splitStrParams(String paramStr, String paramDelim) {
-        Map<String, String> res = FastMap.newInstance();
+        Map<String, String> res = new HashMap<>(); // new LinkedHashMap<>(); // TODO: REVIEW: could be wanted?
         for(String pair : paramStr.split(paramDelim)) {
             String[] parts = pair.split("=", 2);
             if (parts.length >= 2) {
@@ -418,7 +417,7 @@ public abstract class TemplateFtlUtil {
     }
 
     public static Map<String, Object> extractPrefixedStyleNamesWithInt(String styleStr, Map<String, String> prefixMap) {
-        Map<String, Object> res = new HashMap<String, Object>();        
+        Map<String, Object> res = new HashMap<>();        
         Set<String> prefixes = prefixMap.keySet();
         Matcher m = Pattern.compile("(^|\\s)(" + StringUtils.join(prefixes, "|") + ")(\\d+)(?=\\s|$)").matcher(styleStr);
         while (m.find()) {

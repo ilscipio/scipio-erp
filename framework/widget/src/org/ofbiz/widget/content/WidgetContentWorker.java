@@ -24,7 +24,7 @@ import org.ofbiz.base.util.Debug;
  * WidgetContentWorker Class
  */
 public class WidgetContentWorker {
-    public static final String module = WidgetContentWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static ContentWorkerInterface contentWorker = null;
     static {
         try {

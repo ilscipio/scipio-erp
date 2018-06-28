@@ -49,7 +49,7 @@ import freemarker.template.TemplateModelException;
  */
 public abstract class CommonFtlUtil {
 
-    public static final String module = CommonFtlUtil.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     protected CommonFtlUtil() {
     }

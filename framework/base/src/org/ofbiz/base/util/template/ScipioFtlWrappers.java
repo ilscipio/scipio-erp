@@ -42,7 +42,7 @@ import freemarker.template.Version;
  */
 public abstract class ScipioFtlWrappers {
 
-    public static final String module = ScipioFtlWrappers.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     private static final List<CustomFactoryInfo> customWrapperFactoryInfo = Collections.unmodifiableList(readCustomWrapperFactories());
     private static final DefaultScipioObjectWrapperFactory defaultObjectWrapperFactory = new DefaultScipioObjectWrapperFactory();

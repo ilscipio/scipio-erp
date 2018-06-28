@@ -28,7 +28,7 @@ import freemarker.template.TemplateModelException;
  */
 public class GetRequestStackAsListMethod extends RequestStackMethod {
 
-    public static final String module = GetRequestStackAsListMethod.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)

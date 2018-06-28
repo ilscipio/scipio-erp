@@ -31,11 +31,7 @@ under the License.
   <#list optionList as option>
     <#if option.geoId?has_content>
       <#local optVal = option.geoId>
-      <#if optionList.getModelEntity??>
-        <#local optLabel = option.get("geoName", locale)!option.geoId>
-      <#else>
-        <#local optLabel = option.geoName!option.geoId>
-      </#if>
+      <#local optLabel = option.get("geoName", "component://common/config/CommonEntityLabels.xml", locale)!option.geoId>
     <#else>
       <#local optVal = option.value>
       <#local optLabel = option.label!option.value>

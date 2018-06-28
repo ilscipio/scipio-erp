@@ -24,7 +24,7 @@ under the License.
 <#assign ofbizServerName = application.getAttribute("_serverId")!"default-server">
 <#assign contextPath = request.getContextPath()>
 <#if person?has_content>
-  <#assign userName = person.firstName! + " " + person.middleName! + " " + person.lastName!>
+  <#assign userName = (person.firstName!"") + " " + (person.middleName!"") + " " + (person.lastName!"")>
 <#elseif partyGroup?has_content>
   <#assign userName = partyGroup.groupName!>
 <#elseif userHasAccount><#-- NOTE: see common.ftl for userHasAccount setup -->
@@ -200,6 +200,31 @@ under the License.
 </#if>
 <#assign organizationLogoLinkURL = "${layoutSettings.organizationLogoLinkUrl!}">
 <body class="<#if activeApp?has_content>app-${activeApp}</#if><#if parameters._CURRENT_VIEW_?has_content> page-${parameters._CURRENT_VIEW_!}</#if> page-auth">
+<#-- ================================
+            SOCIAL LOGIN 
+     ================================
+-->
+<#-- Facebook Authentication Addon (required)-->
+<#if getPropertyMsg("shop.properties","facebook.enabled")== "Y">
+    <#include "component://auth-facebook/webapp/facebook/fb-common.ftl"/>
+    <@fbInit scope="public_profile,email"/>
+</#if>
+<#-- Google Authentication Addon (required)-->
+<#if getPropertyMsg("shop.properties","google.enabled")== "Y">
+    <#include "component://auth-google/webapp/google/google-common.ftl"/>
+    <@googleInit/>
+</#if>
+<#-- Twitter Authentication Addon (required)-->
+<#if getPropertyMsg("shop.properties","twitter.enabled")== "Y">
+    <#include "component://auth-twitter/webapp/twitter/twitter-common.ftl"/>
+    <@twitterInit/>
+</#if>
+<#-- LinkedIn Authentication Addon (required)-->
+<#if getPropertyMsg("shop.properties","linkedin.enabled")== "Y">
+    <#include "component://auth-linkedin/webapp/linkedin/linkedin-common.ftl"/>
+    <@linkedinInit/>
+</#if>
+<#-- ================================ -->
 <div class="header" id="header">
 </div>
 

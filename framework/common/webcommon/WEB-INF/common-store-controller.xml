@@ -28,9 +28,17 @@ NOTE: This should only contain framework-level definitions, and not business-rel
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
     <include location="component://common/webcommon/WEB-INF/handlers-controller.xml"/>
+    
+    <!-- Social Logins - requires Social Authentication Addons -->
+    <include location="component://auth-facebook/webapp/facebook/WEB-INF/auth-facebook-controller.xml" optional="true" order="pre-local" />
+    <include location="component://auth-google/webapp/google/WEB-INF/auth-google-controller.xml" optional="true" order="pre-local" />
+    <include location="component://auth-twitter/webapp/twitter/WEB-INF/auth-twitter-controller.xml" optional="true" order="pre-local" />
+    <include location="component://auth-linkedin/webapp/linkedin/WEB-INF/auth-linkedin-controller.xml" optional="true" order="pre-local" />
+ 
+    
     <description>SCIPIO: Common Framework-level Store Configuration File</description>
 
-    <errorpage>/control/error</errorpage> <!-- /error/error.jsp -->
+    <errorpage>${_CONTROL_SERVPATH_}/error</errorpage> <!-- /error/error.jsp -->
 
     <firstvisit>
         <event name="autoLoginCheck" type="java" path="org.ofbiz.webapp.control.LoginWorker" invoke="autoLoginCheck"/>
@@ -85,17 +93,17 @@ NOTE: This should only contain framework-level definitions, and not business-rel
             to logout anonymous user in some cases -->
         <security https="true" auth="false"/><!-- auth="true" -->
         <event type="java" path="org.ofbiz.webapp.control.LoginWorker" invoke="logout"/>
-        <response name="success" type="view" value="login"/>
+        <response name="success" type="request-redirect" value="checkLogin"/>
         <response name="error" type="view" value="main"/>
     </request-map>
     <request-map uri="autoLogout">
         <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.webapp.control.LoginWorker" invoke="autoLoginRemove"/>
-        <response name="success" type="request-redirect" value="main"/>
+        <response name="success" type="request-redirect" value="checkLogin"/>
         <response name="error" type="view" value="main"/>
     </request-map>
     
-    <request-map uri="forgotpassword">
+    <request-map uri="forgotPassword">
         <security https="true" auth="false"/>
         <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="forgotPassword"/>
         <response name="success" type="view" value="login"/>
@@ -125,7 +133,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
 
     <!-- Common Mappings used for locales and timezones -->
     <!-- SCIPIO: Not for frotend for now
-    <request-map uri="ListLocales"><security https="true" auth="true"/><response name="success" type="view" value="ListLocales" save-last-view="true"/></request-map>
+    <request-map uri="ListLocales"><security https="true" auth="false"/><response name="success" type="view" value="ListLocales" save-last-view="true"/></request-map>
     -->
     <request-map uri="setSessionLocale">
         <security https="false" auth="false"/>

@@ -42,7 +42,7 @@ import securepay.jxa.api.Txn;
 
 public class SecurePayPaymentServices {
 
-    public static final String module = SecurePayPaymentServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public final static String resource = "AccountingUiLabels";
 
     public static Map<String, Object> doAuth(DispatchContext dctx, Map<String, Object> context) {

@@ -24,7 +24,7 @@ import org.ofbiz.webapp.view.ViewHandlerException;
  */
 public abstract class RenderEvents {
 
-    public static final String module = RenderEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     public static final String RENDER_VIEW_ATTR_PREFIX = "renderView_";
 

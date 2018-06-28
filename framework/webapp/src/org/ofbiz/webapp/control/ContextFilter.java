@@ -22,7 +22,9 @@ import static org.ofbiz.base.util.UtilGenerics.checkMap;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,6 +32,7 @@ import java.util.Set;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -37,6 +40,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.tomcat.util.descriptor.web.FilterDef;
+import org.apache.tomcat.util.descriptor.web.WebXml;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilGenerics;
@@ -48,7 +53,6 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.security.Security;
@@ -64,11 +68,18 @@ import org.ofbiz.webapp.website.WebSiteWorker;
  */
 public class ContextFilter implements Filter {
 
-    public static final String module = ContextFilter.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    private static final String contextFilterClassName = ContextFilter.class.getSimpleName();
     public static final String FORWARDED_FROM_SERVLET = "_FORWARDED_FROM_SERVLET_";
 
     protected FilterConfig config = null;
     protected boolean debug = false;
+    protected Set<String> allowedPaths = null; // SCIPIO: new: prevent parsing at every request
+    protected boolean forwardRootControllerUris = false; // SCIPIO: new
+
+    // default charset used to decode requests body data if no encoding is specified in the request
+    private String defaultCharacterEncoding;
+    private static boolean isMultitenant = EntityUtil.isMultiTenantEnabled(); // SCIPIO: made static
 
     /**
      * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
@@ -76,7 +87,7 @@ public class ContextFilter implements Filter {
     public void init(FilterConfig config) throws ServletException {
         this.config = config;
 
-        // puts all init-parameters in ServletContext attributes for easier parameterization without code changes
+        // puts all init-parameters in ServletContext attributes for easier parametrization without code changes
         this.putAllInitParametersInAttributes();
 
         // set debug
@@ -85,6 +96,10 @@ public class ContextFilter implements Filter {
             debug = Debug.verboseOn();
         }
 
+        defaultCharacterEncoding = config.getServletContext().getInitParameter("charset");
+        if (UtilValidate.isEmpty(defaultCharacterEncoding)) {
+            defaultCharacterEncoding = "UTF-8";
+        }
         // check the serverId
         getServerId();
         // initialize the delegator
@@ -94,8 +109,23 @@ public class ContextFilter implements Filter {
         // initialize the services dispatcher
         getDispatcher(config.getServletContext());
 
+        // check if multi tenant is enabled
+        //isMultitenant = EntityUtil.isMultiTenantEnabled(); // SCIPIO: made static
+
         // this will speed up the initial sessionId generation
         new java.security.SecureRandom().nextLong();
+        
+        // SCIPIO: 2017-11-14: now pre-parsing allowedPath during init
+        String allowedPath = config.getInitParameter("allowedPaths");
+        List<String> allowList = null;
+        if ((allowList = StringUtil.split(allowedPath, ":")) != null) {
+            allowList.add("/");  // No path is allowed.
+            allowList.add("");   // No path is allowed.
+        }
+        this.allowedPaths = (allowList != null) ? new HashSet<>(allowList) : null;
+        
+        // SCIPIO: new
+        this.forwardRootControllerUris = getForwardRootControllerUrisSetting(ServletUtil.getInitParamsMapAdapter(config), false);
     }
 
     /**
@@ -107,6 +137,24 @@ public class ContextFilter implements Filter {
 
         // Debug.logInfo("Running ContextFilter.doFilter", module);
 
+        // SCIPIO: 2017: new special forwarding mode for root controller URI requests
+        // NOTE: this requires that ContextFilter responds to FORWARD dispatcher, otherwise multitenant will not be init
+        // FIXME: 2017-11: This setting currently can't auto-detect if a request URI is already in use by a servlet mapping
+        String controlServletPath = RequestHandler.getControlServletPath(httpRequest);
+        if (forwardRootControllerUris && controlServletPath != null && controlServletPath.length() > 1) {
+            // previous filter may request custom forwards using _SCP_FWDROOTURIS_
+            @SuppressWarnings("unchecked")
+            Set<String> customRootRedirects = (Set<String>) request.getAttribute("_SCP_FWDROOTURIS_");
+            Map<String, ?> reqUris = getControllerRequestUriMap(httpRequest);
+            String servletAndPathInfo = RequestLinkUtil.getServletAndPathInfo(httpRequest);
+            String firstPathElem = RequestLinkUtil.getFirstPathElem(servletAndPathInfo);
+            if (reqUris.containsKey(firstPathElem) || (customRootRedirects != null && customRootRedirects.contains(firstPathElem))) {
+                RequestDispatcher rd = request.getRequestDispatcher(controlServletPath + servletAndPathInfo);
+                rd.forward(request, response);
+                return;
+            }
+        }
+        
         // ----- Servlet Object Setup -----
 
         // set the ServletContext in the request for future use
@@ -135,7 +183,7 @@ public class ContextFilter implements Filter {
             }
             httpRequest.getSession().removeAttribute("_REQ_ATTR_MAP_");
         }
-
+        
         // ----- Context Security -----
         // check if we are disabled
         String disableSecurity = config.getInitParameter("disableContextSecurity");
@@ -155,7 +203,7 @@ public class ContextFilter implements Filter {
                 if (!redirectAllTo.toLowerCase().startsWith("http")) {
                     redirectAllTo = httpRequest.getContextPath() + redirectAllTo;
                 }
-                httpResponse.sendRedirect(redirectAllTo);
+                encodeAndSendRedirectURL(httpResponse, redirectAllTo); // SCIPIO
                 return;
             } else {
                 httpRequest.getSession().removeAttribute("_FORCE_REDIRECT_");
@@ -163,20 +211,29 @@ public class ContextFilter implements Filter {
                 return;
             }
         }
-
+        
         // test to see if we have come through the control servlet already, if not do the processing
         String requestPath = null;
         String contextUri = null;
         if (httpRequest.getAttribute(ContextFilter.FORWARDED_FROM_SERVLET) == null) {
             // Debug.logInfo("In ContextFilter.doFilter, FORWARDED_FROM_SERVLET is NOT set", module);
-            String allowedPath = config.getInitParameter("allowedPaths");
+            //String allowedPath = config.getInitParameter("allowedPaths"); // SCIPIO: see init
             String redirectPath = config.getInitParameter("redirectPath");
             String errorCode = config.getInitParameter("errorCode");
 
-            List<String> allowList = null;
-            if ((allowList = StringUtil.split(allowedPath, ":")) != null) {
-                allowList.add("/");  // No path is allowed.
-                allowList.add("");   // No path is allowed.
+            // SCIPIO: 2017-11: now done in initialization - no reason to do this every request
+//            List<String> allowList = null;
+//            if ((allowList = StringUtil.split(allowedPath, ":")) != null) {
+//                allowList.add("/");  // No path is allowed.
+//                allowList.add("");   // No path is allowed.
+//            }
+            // SCIPIO: 2017-11: allowList should always have been a Set, not a List
+            Set<String> allowList = this.allowedPaths;
+            
+            // SCIPIO: 2017-11: SPECIAL: auto-detect when ControlServlet is mapped to root (controlServletPath empty) and allow its requests
+            Map<String, ?> allowRootList = Collections.emptyMap();
+            if (UtilValidate.isEmpty(httpRequest.getServletPath()) && controlServletPath != null && controlServletPath.isEmpty()) {
+                allowRootList = getControllerRequestUriMap(httpRequest);
             }
 
             if (debug) Debug.logInfo("[Domain]: " + httpRequest.getServerName() + " [Request]: " + httpRequest.getRequestURI(), module);
@@ -223,7 +280,8 @@ public class ContextFilter implements Filter {
 
             // check to make sure the requested url is allowed
             if (allowList != null &&
-                (!allowList.contains(requestPath) && !allowList.contains(requestInfo) && !allowList.contains(httpRequest.getServletPath()))
+                (!allowList.contains(requestPath) && !allowList.contains(requestInfo) && !allowList.contains(httpRequest.getServletPath())) &&
+                (!allowRootList.containsKey(RequestLinkUtil.getFirstPathInfoElem(httpRequest))) // SCIPIO: new 2017-11-14: allow root control requests
                 ) {
                 String filterMessage = "[Filtered request]: " + contextUri;
                 
@@ -237,29 +295,37 @@ public class ContextFilter implements Filter {
                         }
                     }
                     filterMessage = filterMessage + " (" + error + ")";
-                    httpResponse.sendError(error, contextUri);
-                    request.setAttribute("filterRequestUriError", contextUri);
+                    // SCIPIO: 2018-04: here the message will be public-facing, so encode the URI for urlrewriting
+                    //String reasonUri = contextUri;
+                    String reasonUri = UtilValidate.isNotEmpty(contextUri) ? httpResponse.encodeURL(contextUri) : contextUri;
+                    httpResponse.sendError(error, reasonUri);
+                    request.setAttribute("filterRequestUriError", reasonUri);
                 } else {
                     filterMessage = filterMessage + " (" + redirectPath + ")";
                     if (!redirectPath.toLowerCase().startsWith("http")) {
                         redirectPath = httpRequest.getContextPath() + redirectPath;
                     }
-                    httpResponse.sendRedirect(redirectPath);
+                    encodeAndSendRedirectURL(httpResponse, redirectPath); // SCIPIO
                 }
                 Debug.logWarning(filterMessage, module);
                 return;
             }
         }
 
-        // check if multi tenant is enabled
-        boolean useMultitenant = EntityUtil.isMultiTenantEnabled();
-        setCharacterEncoding(request);
+        if (request.getCharacterEncoding() == null) {
+            request.setCharacterEncoding(defaultCharacterEncoding);
+        }
+
         setAttributesFromRequestBody(request);
-        if (useMultitenant) {
+
+        request.setAttribute("delegator", config.getServletContext().getAttribute("delegator"));
+        request.setAttribute("dispatcher", config.getServletContext().getAttribute("dispatcher"));
+        request.setAttribute("security", config.getServletContext().getAttribute("security"));
+
+        if (isMultitenant) {
             // get tenant delegator by domain name
             String serverName = httpRequest.getServerName();
             try {
-                
                 // if tenant was specified, replace delegator with the new per-tenant delegator and set tenantId to session attribute
                 Delegator delegator = getDelegator(config.getServletContext());
 
@@ -275,15 +341,15 @@ public class ContextFilter implements Filter {
                     tenantId = (String) httpRequest.getAttribute("userTenantId");
                 }
                 if(UtilValidate.isEmpty(tenantId)) {
-                    tenantId = (String) httpRequest.getParameter("userTenantId");
+                    tenantId = httpRequest.getParameter("userTenantId");
                 }
                 if (UtilValidate.isNotEmpty(tenantId)) {
                     // if the request path is a root mount then redirect to the initial path
-                    if (UtilValidate.isNotEmpty(requestPath) && requestPath.equals(contextUri)) {
+                    if ("".equals(httpRequest.getContextPath()) && "".equals(httpRequest.getServletPath())) {
                         GenericValue tenant = EntityQuery.use(baseDelegator).from("Tenant").where("tenantId", tenantId).queryOne();
                         String initialPath = tenant.getString("initialPath");
                         if (UtilValidate.isNotEmpty(initialPath) && !"/".equals(initialPath)) {
-                            ((HttpServletResponse)response).sendRedirect(initialPath);
+                            encodeAndSendRedirectURL(httpResponse, initialPath); // SCIPIO
                             return;
                         }
                     }
@@ -306,6 +372,7 @@ public class ContextFilter implements Filter {
                     LocalDispatcher dispatcher = getDispatcher(config.getServletContext());
 
                     // set web context objects
+                    request.setAttribute("delegator", delegator);
                     request.setAttribute("dispatcher", dispatcher);
                     request.setAttribute("security", security);
                     
@@ -345,13 +412,22 @@ public class ContextFilter implements Filter {
     }
 
     public static void setCharacterEncoding(ServletRequest request) throws UnsupportedEncodingException {
-        String charset = request.getServletContext().getInitParameter("charset");
-        if (UtilValidate.isEmpty(charset)) charset = request.getCharacterEncoding();
-        if (UtilValidate.isEmpty(charset)) charset = "UTF-8";
-        if (Debug.verboseOn()) Debug.logVerbose("The character encoding of the request is: [" + request.getCharacterEncoding() + "]. The character encoding we will use for the request is: [" + charset + "]", module);
-
-        if (!"none".equals(charset)) {
-            request.setCharacterEncoding(charset);
+        // SCIPIO: 2018-05-10: this is the old implementation - it did not check if charset was already set
+        // updating this to the new behavior above instead
+//        String charset = request.getServletContext().getInitParameter("charset");
+//        if (UtilValidate.isEmpty(charset)) charset = request.getCharacterEncoding();
+//        if (UtilValidate.isEmpty(charset)) charset = "UTF-8";
+//        if (Debug.verboseOn()) Debug.logVerbose("The character encoding of the request is: [" + request.getCharacterEncoding() + "]. The character encoding we will use for the request is: [" + charset + "]", module);
+//
+//        if (!"none".equals(charset)) {
+//            request.setCharacterEncoding(charset);
+//        }
+        if (request.getCharacterEncoding() == null) {
+            String defaultCharacterEncoding = request.getServletContext().getInitParameter("charset");
+            if (UtilValidate.isEmpty(defaultCharacterEncoding)) {
+                defaultCharacterEncoding = "UTF-8";
+            }
+            request.setCharacterEncoding(defaultCharacterEncoding);
         }
     }
 
@@ -457,5 +533,143 @@ public class ContextFilter implements Filter {
             config.getServletContext().setAttribute("_serverId", serverId);
         }
         return serverId;
+    }
+    
+    /**
+     * SCIPIO: local redirect URL encode method for ContextFilter redirects (only).
+     * TODO: REVIEW: method used
+     * Added 2017-11-03.
+     */
+    protected String encodeRedirectURL(HttpServletResponse response, String url) {
+        // SCIPIO: TODO: REVIEW: It's possible this should be encodeURL + strip jsessionid instead (even if redirect)...
+        return response.encodeRedirectURL(url);
+    }
+    
+    /**
+     * SCIPIO: local redirect URL encode + send redirect for ContextFilter redirects (only).
+     * Added 2017-11-03.
+     * @throws IOException 
+     */
+    protected void encodeAndSendRedirectURL(HttpServletResponse response, String url) throws IOException {
+        response.sendRedirect(encodeRedirectURL(response, url));
+    }
+    
+    protected Map<String, ConfigXMLReader.RequestMap> getControllerRequestUriMap(HttpServletRequest request) throws ServletException {
+        try {
+            RequestHandler rh = RequestHandler.getRequestHandler(request);
+            return rh.getControllerConfig().getRequestMapMap();
+        } catch (Exception e) {
+            Debug.logError(e, "Error reading request names from controller.xml: " + e.getMessage(), module);
+            throw new ServletException(e);
+        }
+    }
+    
+    /**
+     * SCIPIO: Reads the forwardRootControllerUris init-param as Boolean.
+     */
+    public static Boolean getForwardRootControllerUrisSetting(Map<String, ?> initParams, Boolean defaultValue) {
+        return UtilMisc.booleanValueVersatile(initParams.get("forwardRootControllerUris"), defaultValue);
+    }
+    
+    /**
+     * SCIPIO: Reads the forwardRootControllerUris value from ContextFilter init-params from webXml,
+     * trying to find the most appropriate setting.
+     */
+    public static Boolean readForwardRootControllerUrisSetting(WebXml webXml, String logPrefix) {
+        // HEURISTIC: we return the value of the highest-rated ContextFilter that
+        // has forwardRootControllerUris present in its init-params (even if empty)
+        
+        int bestRating = 0;
+        String aliasStr = null;
+        String filterName = null;
+        for(FilterDef filter : webXml.getFilters().values()) {
+            int currentRating = rateContextFilterCandidate(filter);
+            if (currentRating > 0) {
+                Map<String, String> initParams = filter.getParameterMap();
+                if (initParams != null && initParams.containsKey("forwardRootControllerUris")) {
+                    if (currentRating > bestRating) {
+                        bestRating = currentRating;
+                        aliasStr = initParams.get("forwardRootControllerUris");
+                        filterName = filter.getFilterName();
+                    }
+                }
+            }
+        }
+        if (bestRating > 0) {
+            Boolean alias = UtilMisc.booleanValueVersatile(aliasStr);
+            if (alias != null) {
+                if (logPrefix != null) Debug.logInfo(logPrefix+"Found web.xml ContextFilter (filter name '" + filterName + "') init-param forwardRootControllerUris boolean value: " + alias, module);
+                return alias;
+            } else {
+                if (UtilValidate.isNotEmpty(aliasStr)) {
+                    if (logPrefix != null) Debug.logError(logPrefix+"web.xml ContextFilter (filter name '" + filterName + "') init-param forwardRootControllerUris has invalid boolean value: " + aliasStr, module);
+                } else {
+                    if (logPrefix != null) Debug.logInfo(logPrefix+"Found web.xml ContextFilter (filter name '" + filterName + "') init-param forwardRootControllerUris, was empty; returning as unset", module);
+                    return null;
+                }
+            }
+        } else {
+            if (logPrefix != null) Debug.logInfo(logPrefix+"web.xml ContextFilter init-param forwardRootControllerUris setting not found", module);
+        }
+        return null;
+    }
+ 
+    /**
+     * SCIPIO: Verifies if the setting returned by {@link #readForwardRootControllerUrisSetting} is
+     * sane for the given controlServletMapping (also works for controlServletPath).
+     */
+    public static Boolean verifyForwardRootControllerUrisSetting(Boolean hasContextFilterFlag, String controlServletMapping, String logPrefix) {
+        if (hasContextFilterFlag != null) {
+            if (hasContextFilterFlag) {
+                if (controlServletMapping != null && controlServletMapping.startsWith("/") && controlServletMapping.length() > 1) {
+                    // aliasing is enabled and controlPath is not the root, so pass
+                    if (logPrefix != null) Debug.logInfo(logPrefix+"web.xml appears to have ContextFilter init-param forwardRootControllerUris enabled"
+                            + " and a non-root control servlet mapping (" + controlServletMapping 
+                            + "); now treating website as having enabled root aliasing/forwarding/rewriting of controller URIs", module);
+                    return true;
+                } else {
+                    if (logPrefix != null) Debug.logWarning(logPrefix+"web.xml invalid configuration: ContextFilter init-param forwardRootControllerUris is enabled"
+                            + ", but control servlet mapping (" + controlServletMapping 
+                            + ") appears it may be mapped to root - invalid configuration", module);
+                }
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Heuristic for finding the most probable real ContextFilter.
+     * NOTE: This is a problem because OFbiz frustratingly made a bunch of other classes
+     * extend ContextFilter, and even scipio is forced to compound the problem as a result
+     * of lack of good base classes.
+     * @return a value between 0-5, 5 being best candidate
+     */
+    public static int rateContextFilterCandidate(FilterDef filter) {
+        String filterClass = filter.getFilterClass();
+        if (filterClass == null || filterClass.isEmpty()) return 0;
+        
+        // NOTE: this exact-class check is what stock code does for some other classes, so we have to follow suit
+        if (ContextFilter.class.getName().equals(filterClass)) return 5;
+        
+        try {
+            Class<?> filterCls = Thread.currentThread().getContextClassLoader().loadClass(filterClass);
+            if (!ContextFilter.class.isAssignableFrom(filterCls)) return 0;
+        } catch(Exception e) {
+            Debug.logWarning("Could not load or test filter class (" + filterClass + "); may be invalid or a classloader issue: " 
+                    + e.getMessage(), module);
+            return 0;
+        }
+        
+        String filterName = filter.getFilterName();
+        
+        if (contextFilterClassName.equals(filterName)) return 4;
+        
+        if (filterName != null && filterName.contains(contextFilterClassName)) {
+            if (filterClass.contains(contextFilterClassName)) return 3;
+        } else {
+            if (filterClass.contains(contextFilterClassName)) return 2;
+        }
+        // 1: at least is subclass, but lowest because stock Ofbiz overextended ContextFilter everywhere
+        return 1;
     }
 }

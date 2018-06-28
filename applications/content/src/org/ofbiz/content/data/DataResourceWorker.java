@@ -32,6 +32,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.ByteBuffer;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -41,9 +43,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
@@ -93,7 +92,7 @@ import freemarker.template.TemplateException;
  */
 public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourceWorkerInterface {
 
-    public static final String module = DataResourceWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String err_resource = "ContentErrorUiLabels";
 
     /**
@@ -120,11 +119,11 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
                 .where("parentCategoryId", parentCategoryId)
                 .cache().queryList();
         categoryNode.put("count", Integer.valueOf(categoryValues.size()));
-        List<Map<String, Object>> subCategoryIds = FastList.newInstance();
+        List<Map<String, Object>> subCategoryIds = new LinkedList<Map<String, Object>>();
         for (GenericValue category : categoryValues) {
             String id = (String) category.get("dataCategoryId");
             String categoryName = (String) category.get("categoryName");
-            Map<String, Object> newNode = FastMap.newInstance();
+            Map<String, Object> newNode = new HashMap<String, Object>();
             newNode.put("id", id);
             newNode.put("name", categoryName);
             errorMsg = getDataCategoryMap(delegator, depth + 1, newNode, categoryTypeIds, getAll);
@@ -172,7 +171,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
         String spc = "";
         for (int i = 0; i < depth; i++)
             spc += "&nbsp;&nbsp;";
-        Map<String, Object> map = FastMap.newInstance();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("dataCategoryId", id);
         map.put("categoryName", spc + nm);
         if (id != null && !id.equals("ROOT") && !id.equals("")) {
@@ -221,7 +220,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
         FileItem fi = null;
         FileItem imageFi = null;
         String imageFileName = null;
-        Map<String, Object> passedParams = FastMap.newInstance();
+        Map<String, Object> passedParams = new HashMap<String, Object>();
         HttpSession session = request.getSession();
         GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
         passedParams.put("userLogin", userLogin);
@@ -297,14 +296,14 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
      */
     public static Map<String, Object> callDataResourcePermissionCheckResult(Delegator delegator, LocalDispatcher dispatcher, Map<String, Object> context) {
 
-        Map<String, Object> permResults = FastMap.newInstance();
+        Map<String, Object> permResults = new HashMap<String, Object>();
         String skipPermissionCheck = (String) context.get("skipPermissionCheck");
             if (Debug.infoOn()) Debug.logInfo("in callDataResourcePermissionCheckResult, skipPermissionCheck:" + skipPermissionCheck,"");
 
         if (UtilValidate.isEmpty(skipPermissionCheck) 
                 || (!"true".equalsIgnoreCase(skipPermissionCheck) && !"granted".equalsIgnoreCase(skipPermissionCheck))) {
             GenericValue userLogin = (GenericValue) context.get("userLogin");
-            Map<String, Object> serviceInMap = FastMap.newInstance();
+            Map<String, Object> serviceInMap = new HashMap<String, Object>();
             serviceInMap.put("userLogin", userLogin);
             serviceInMap.put("targetOperationList", context.get("targetOperationList"));
             serviceInMap.put("contentPurposeList", context.get("contentPurposeList"));
@@ -398,7 +397,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
     }
 
     public static String buildRequestPrefix(Delegator delegator, Locale locale, String webSiteId, String https) {
-        Map<String, Object> prefixValues = FastMap.newInstance();
+        Map<String, Object> prefixValues = new HashMap<String, Object>();
         String prefix;
 
         NotificationServices.setBaseUrl(delegator, webSiteId, prefixValues);
@@ -479,8 +478,8 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
     }
 
     public static String getDataResourceContentUploadPath(boolean absolute) {
-        String initialPath = UtilProperties.getPropertyValue("content.properties", "content.upload.path.prefix");
-        double maxFiles = UtilProperties.getPropertyNumber("content.properties", "content.upload.max.files");
+        String initialPath = UtilProperties.getPropertyValue("content", "content.upload.path.prefix");
+        double maxFiles = UtilProperties.getPropertyNumber("content", "content.upload.max.files");
         if (maxFiles < 1) {
             maxFiles = 250;
         }
@@ -489,8 +488,8 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
     }
 
     public static String getDataResourceContentUploadPath(Delegator delegator, boolean absolute) {
-        String initialPath = EntityUtilProperties.getPropertyValue("content.properties", "content.upload.path.prefix", delegator);
-        double maxFiles = UtilProperties.getPropertyNumber("content.properties", "content.upload.max.files");
+        String initialPath = EntityUtilProperties.getPropertyValue("content", "content.upload.path.prefix", delegator);
+        double maxFiles = UtilProperties.getPropertyNumber("content", "content.upload.max.files");
         if (maxFiles < 1) {
             maxFiles = 250;
         }
@@ -619,7 +618,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
             throw new GeneralException("Cannot lookup data resource with for a null dataResourceId");
         }
         if (templateContext == null) {
-            templateContext = FastMap.newInstance();
+            templateContext = new HashMap<String, Object>();
         }
         if (UtilValidate.isEmpty(targetMimeTypeId)) {
             targetMimeTypeId = "text/html";
@@ -716,7 +715,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
                     // prepare the map for preRenderedContent
                     String textData = (String) context.get("textData");
                     if (UtilValidate.isNotEmpty(textData)) {
-                        Map<String, Object> prc = FastMap.newInstance();
+                        Map<String, Object> prc = new HashMap<String, Object>();
                         String mapKey = (String) context.get("mapKey");
                         if (mapKey != null) {
                             prc.put(mapKey, mapKey);
@@ -779,7 +778,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
             Delegator delegator, Appendable out, boolean cache) throws IOException, GeneralException {
         Map<String, Object> context = UtilGenerics.checkMap(templateContext.get("context"));
         if (context == null) {
-            context = FastMap.newInstance();
+            context = new HashMap<String, Object>();
         }
         String webSiteId = (String) templateContext.get("webSiteId");
         if (UtilValidate.isEmpty(webSiteId)) {
@@ -893,7 +892,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
 
             if (mimeTypeTemplate != null && mimeTypeTemplate.get("templateLocation") != null) {
                 // prepare the context
-                Map<String, Object> mimeContext = FastMap.newInstance();
+                Map<String, Object> mimeContext = new HashMap<String, Object>();
                 mimeContext.putAll(context);
                 mimeContext.put("dataResource", dataResource);
                 mimeContext.put("textData", textData);
@@ -973,6 +972,9 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
 
     /**
      * getDataResourceStream - gets an InputStream and Content-Length of a DataResource
+     * <p>
+     * SCIPIO: 2017-08-01: This now returns an extra byte[] streamBytes for optimization purposes - ONLY
+     * in cases where it one is involved.
      *
      * @param dataResource
      * @param https
@@ -1010,7 +1012,7 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
             }
 
             byte[] bytes = text.getBytes();
-            return UtilMisc.toMap("stream", new ByteArrayInputStream(bytes), "length", Long.valueOf(bytes.length));
+            return UtilMisc.toMap("stream", new ByteArrayInputStream(bytes), "length", Long.valueOf(bytes.length), "streamBytes", bytes); // SCIPIO: 2017-08-01: added streamBytes
 
         // object (binary) data
         } else if (dataResourceTypeId.endsWith("_OBJECT")) {
@@ -1032,6 +1034,11 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
                 if (valObj != null) {
                     bytes = valObj.getBytes("audioData");
                 }
+            } else if ("DOCUMENT_OBJECT".equals(dataResourceTypeId)) { // SCIPIO: 2017-08-01: new DocumentDataResource type
+                valObj = EntityQuery.use(delegator).from("DocumentDataResource").where("dataResourceId", dataResourceId).cache(cache).queryOne();
+                if (valObj != null) {
+                    bytes = valObj.getBytes("documentData");
+                }
             } else if ("OTHER_OBJECT".equals(dataResourceTypeId)) {
                 valObj = EntityQuery.use(delegator).from("OtherDataResource").where("dataResourceId", dataResourceId).cache(cache).queryOne();
                 if (valObj != null) {
@@ -1041,14 +1048,15 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
                 throw new GeneralException("Unsupported OBJECT type [" + dataResourceTypeId + "]; cannot stream");
             }
 
-            return UtilMisc.toMap("stream", new ByteArrayInputStream(bytes), "length", Long.valueOf(bytes.length));
+            return UtilMisc.toMap("stream", new ByteArrayInputStream(bytes), "length", Long.valueOf(bytes.length), "streamBytes", bytes); // SCIPIO: 2017-08-01: added streamBytes
 
         // file data
         } else if (dataResourceTypeId.endsWith("_FILE") || dataResourceTypeId.endsWith("_FILE_BIN")) {
             String objectInfo = dataResource.getString("objectInfo");
             if (UtilValidate.isNotEmpty(objectInfo)) {
                 File file = DataResourceWorker.getContentFile(dataResourceTypeId, objectInfo, contextRoot);
-                return UtilMisc.toMap("stream", new ByteArrayInputStream(FileUtils.readFileToByteArray(file)), "length", Long.valueOf(file.length()));
+                byte[] bytes = FileUtils.readFileToByteArray(file); // SCIPIO: 2017-08-01: factored out here
+                return UtilMisc.toMap("stream", new ByteArrayInputStream(bytes), "length", Long.valueOf(file.length()), "streamBytes", bytes); // SCIPIO: 2017-08-01: added streamBytes
             } else {
                 throw new GeneralException("No objectInfo found for FILE type [" + dataResourceTypeId + "]; cannot stream");
             }
@@ -1094,5 +1102,14 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
     public void renderDataResourceAsTextExt(Delegator delegator, String dataResourceId, Appendable out, Map<String, Object> templateContext,
             Locale locale, String targetMimeTypeId, boolean cache) throws GeneralException, IOException {
         renderDataResourceAsText(delegator, dataResourceId, out, templateContext, locale, targetMimeTypeId, cache);
+    }
+    
+    /**
+     * SCIPIO: Gets ImageDataResource, VideoDataResource, etc. media resource for the DataResource value,
+     * or null if none.
+     */
+    public static GenericValue getMediaDataResourceFromDataResource(GenericValue dataResource, boolean useCache) throws GenericEntityException {
+        if (dataResource == null) return null;
+        return SpecDataResEntityInfo.getMediaDataResourceFromDataResourceStatic(dataResource, useCache);
     }
 }

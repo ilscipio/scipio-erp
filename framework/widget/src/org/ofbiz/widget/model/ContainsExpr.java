@@ -42,7 +42,7 @@ import org.w3c.dom.Element;
  */
 @SuppressWarnings("serial")
 public class ContainsExpr implements Serializable {
-    public static final String module = ContainsExpr.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private static final UtilCache<String, ContainsExpr> cache = UtilCache.createUtilCache("widget.screen.containsexpr");
     

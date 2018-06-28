@@ -50,7 +50,7 @@ import org.xml.sax.SAXException;
  */
 public class HtmlMenuWrapper {
 
-    public static final String module = HtmlMenuWrapper.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected String resourceName;
     protected String menuName;

@@ -34,7 +34,7 @@ import java.util.Stack;
 
 public class RecordIterator {
 
-    public static final String module = RecordIterator.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected BufferedReader br;
     protected ModelDataFile modelDataFile;

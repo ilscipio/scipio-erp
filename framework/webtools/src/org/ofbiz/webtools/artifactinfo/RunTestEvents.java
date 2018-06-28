@@ -29,7 +29,7 @@ import org.ofbiz.testtools.*;
  */
 public class RunTestEvents {
 
-    public static final String module = RunTestEvents.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static String runTest(HttpServletRequest request, HttpServletResponse response) throws ContainerException {
         

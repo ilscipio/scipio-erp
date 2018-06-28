@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
-SCIPIO: UI Labels new to Shop application
-ALL NEW SHOP LABELS SHOULD GO HERE 
+  SCIPIO: UI Labels new to Shop component
+  All new Shop labels should go here.
 -->
-<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="ShopShop">
         <value xml:lang="en">Shop</value>
         <value xml:lang="de">Shop</value>
@@ -15,18 +15,18 @@ ALL NEW SHOP LABELS SHOULD GO HERE
         <value xml:lang="en">Thank you for your order!</value>
         <value xml:lang="es">Grácias por su compra!</value>
         <value xml:lang="fr">Merci pour votre commande !</value>
-        <value xml:lang="hi_IN">आर्डर के लिए धन्यवाद !</value>
+        <value xml:lang="hi-IN">आर्डर के लिए धन्यवाद !</value>
         <value xml:lang="it">Grazie per il tuo ordine!</value>
         <value xml:lang="ja">ご注文ありがとうございます</value>
         <value xml:lang="nl">We danken u voor uw bestelling!</value>
-        <value xml:lang="pt_BR">Muito Obrigado por seu pedido</value>
-        <value xml:lang="pt_PT">Gratos pela sua encomenda!</value>
+        <value xml:lang="pt-BR">Muito Obrigado por seu pedido</value>
+        <value xml:lang="pt-PT">Gratos pela sua encomenda!</value>
         <value xml:lang="ro">Multumim pentru comanda ta!</value>
         <value xml:lang="ru">спасибо за ваш заказ!</value>
         <value xml:lang="th">ขอบคุณสำหรับการทำรายการสั่งซื้อสินค้า!</value>
         <value xml:lang="vi">Đơn đặt hàng toàn bộ như sau. </value>
         <value xml:lang="zh">谢谢你的惠顾！</value>
-        <value xml:lang="zh_TW">謝謝你的惠顧！</value>
+        <value xml:lang="zh-TW">謝謝你的惠顧！</value>
     </property>
     <property key="ShopViewPermissionError">
         <value xml:lang="de">Sie haben keine Leseberechtigung für diese Seite.</value>
@@ -36,27 +36,22 @@ ALL NEW SHOP LABELS SHOULD GO HERE
         <value xml:lang="it">Non sei autorizzato a vedere questa pagina.</value>
         <value xml:lang="ja">このページを表示する権限がありません。</value>
         <value xml:lang="nl">U heeft geen toegang tot deze pagina.</value>
-        <value xml:lang="pt_BR">Você não tem permissão para visualizar essa página.</value>
+        <value xml:lang="pt-BR">Você não tem permissão para visualizar essa página.</value>
         <value xml:lang="ro">Nu esti autorizat sa vezi aceasta pagina.</value>
         <value xml:lang="ru">У вас нет прав для просмотра этой страницы.</value>
         <value xml:lang="th">คุณไม่ได้รับการนุญาตให้ดูหน้านี้</value>
         <value xml:lang="vi">Bạn không có thẩm quyền để xem trang này.</value>
         <value xml:lang="zh">你无权浏览这个页面。</value>
-        <value xml:lang="zh_CN">你没有权限查看此页</value>
-        <value xml:lang="zh_TW">你無權檢視這個頁面.</value>
+        <value xml:lang="zh-CN">你没有权限查看此页</value>
+        <value xml:lang="zh-TW">你無權檢視這個頁面.</value>
     </property>     
-    <!-- SCIPIO: TODO: Localize -->
     <property key="ShopSaveGoBackExplanation">
-        <value xml:lang="de">Wenn Sie mit Ihren Änderungen zufrieden sind, klicken Sie unten auf "Speichern".
-             Danach klicken Sie auf "Zurück", um zur vorherigen Ziel zurückzukehren.</value>
-        <value xml:lang="en">When you are satisfied with your changes, click "Save" below. 
-            Afterward, click "Go Back" to return to your previous destination.</value>
+        <value xml:lang="de">Wenn Sie mit Ihren Änderungen zufrieden sind, klicken Sie unten auf "Speichern". Danach klicken Sie auf "Zurück", um zur vorherigen Ziel zurückzukehren.</value>
+        <value xml:lang="en">When you are satisfied with your changes, click "Save" below. Afterward, click "Go Back" to return to your previous destination.</value>
     </property>   
     <property key="ShopEditingShipAddressShipCostChange">
-        <value xml:lang="de">Sie bearbeiten ein Postanschrift derzeit verwendeten Versand zu berechnen. Ändern
-             kann diese Adresse Versandkosten ändern.</value>
-        <value xml:lang="en">You are editing a postal address currently being used to calculate shipping. Changing
-            this address may change shipping costs.</value>
+        <value xml:lang="de">Sie bearbeiten ein Postanschrift derzeit verwendeten Versand zu berechnen. Ändern kann diese Adresse Versandkosten ändern.</value>
+        <value xml:lang="en">You are editing a postal address currently being used to calculate shipping. Changing this address may change shipping costs.</value>
     </property>   
     <property key="ShopDownloadsHereOnceOrderCompleted">
         <value xml:lang="de">Downloads für Bestellungen in Erwartung der Zahlung oder Genehmigung, werden hier angezeigt, sobald der Auftrag abgeschlossen ist.</value>
@@ -66,8 +61,6 @@ ALL NEW SHOP LABELS SHOULD GO HERE
         <value xml:lang="de">Downloads verfügbar sein, sobald der Auftrag abgeschlossen ist.</value>
         <value xml:lang="en">Downloads will be available once the order is completed.</value>
     </property>
-    
-    <!-- SCIPIO: Subscriptions -->
     <property key="ShopAuthorizeSubscription">
         <value xml:lang="de">Abonnement berechtigen</value>
         <value xml:lang="en">Authorize subscription</value>
@@ -79,5 +72,14 @@ ALL NEW SHOP LABELS SHOULD GO HERE
     <property key="ShopOrderSubscriptionItems">
         <value xml:lang="de">Abonnements</value>
         <value xml:lang="en">Subscriptions</value>
+    </property>
+    <property key="ShopSubscriptionDetails">
+        <value xml:lang="de">Abonnementdetails</value>
+        <value xml:lang="en">Subscription Details</value>
+    </property>
+    <property key="ShopDidYouMean">
+        <value xml:lang="de">Hast du gemeint</value>
+        <value xml:lang="en">Did you mean</value>
+        <value xml:lang="fr">Vouliez-vous dire</value>
     </property>
 </resource>

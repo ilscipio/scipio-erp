@@ -100,6 +100,11 @@ under the License.
                 ${uiLabelMap.CommonFollowingErrorsOccurred}:
             </fo:block>
             <fo:block space-after="0.2in" color="red">
+                <#-- SCIPIO: FIXME: In principle should should be something like:
+                      escapeEventMsg(errorMessage!, 'fomarkup')
+                    but fomarkup doesn't exist yet and needs further validation. 
+                    In meantime we will let the screen auto-escaping handle this...
+                    NOTE: there is no special line-break handling. -->
                 ${errorMessage!}
             </fo:block>
             <fo:block id="theEnd"/>

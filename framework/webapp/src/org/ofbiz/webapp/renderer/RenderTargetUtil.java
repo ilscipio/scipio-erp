@@ -23,7 +23,7 @@ import org.ofbiz.webapp.renderer.RenderWriter.SwitchRenderWriter;
  */
 public abstract class RenderTargetUtil {
 
-    public static final String module = RenderTargetUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     public static final String RENDERTARGETEXPR_REQPARAM = "scpRenderTargetExpr";
     public static final String ERRORRENDERTARGETEXPR_REQPARAM = "scpErrorRenderTargetExpr";

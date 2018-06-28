@@ -35,7 +35,7 @@ import freemarker.template.TemplateScalarModel;
  */
 public class CopyMapMethod implements TemplateMethodModelEx {
 
-    public static final String module = CopyMapMethod.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)

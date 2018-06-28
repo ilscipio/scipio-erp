@@ -24,7 +24,7 @@ import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 
 public final class ReferenceCleaner {
-    public static final String module = ReferenceCleaner.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private static final class CleanerThread extends Thread {
         private boolean keepRunning = true;

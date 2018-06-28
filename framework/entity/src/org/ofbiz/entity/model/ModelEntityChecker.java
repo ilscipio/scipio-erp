@@ -38,7 +38,7 @@ import org.ofbiz.entity.GenericEntityException;
  */
 public class ModelEntityChecker {
 
-    public static final String module = ModelEntityChecker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static void checkEntities(Delegator delegator, List<String> warningList) throws GenericEntityException {
         ModelReader reader = delegator.getModelReader();

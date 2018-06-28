@@ -86,7 +86,7 @@ import freemarker.template.TemplateException;
 @Deprecated
 public class HtmlFormRenderer extends HtmlWidgetRenderer implements FormStringRenderer {
 
-    public static final String module = HtmlFormRenderer.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected HttpServletRequest request;
     protected HttpServletResponse response;
@@ -1094,7 +1094,7 @@ public class HtmlFormRenderer extends HtmlWidgetRenderer implements FormStringRe
 
         if (UtilValidate.isNotEmpty(titleText)) {
             // copied from MacroFormRenderer renderFieldTitle
-            String displayHelpText = UtilProperties.getPropertyValue("widget.properties", "widget.form.displayhelpText");
+            String displayHelpText = UtilProperties.getPropertyValue("widget", "widget.form.displayhelpText");
             String helpText = null;
             if ("Y".equals(displayHelpText)) {
                 Delegator delegator = WidgetWorker.getDelegator(context);

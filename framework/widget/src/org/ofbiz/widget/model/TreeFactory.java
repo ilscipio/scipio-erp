@@ -44,7 +44,7 @@ import org.xml.sax.SAXException;
 @SuppressWarnings("serial")
 public class TreeFactory extends WidgetFactory {
 
-    public static final String module = TreeFactory.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final UtilCache<String, Map<String, ModelTree>> treeLocationCache = UtilCache.createUtilCache("widget.tree.locationResource", 0, 0, false);
 

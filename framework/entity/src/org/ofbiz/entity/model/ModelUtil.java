@@ -28,7 +28,7 @@ import org.ofbiz.base.util.StringUtil;
  */
 public class ModelUtil {
 
-    public static final String module = ModelUtil.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * Changes the first letter of the passed String to upper case.

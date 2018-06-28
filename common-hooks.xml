@@ -33,6 +33,8 @@
     <target name="post-clean-search-indexes"></target>
     <target name="pre-clean-uploads"></target>
     <target name="post-clean-uploads"></target>
+    <target name="pre-clean-analysis"></target>
+    <target name="post-clean-analysis"></target>
     <target name="pre-tests"></target>
     <target name="post-tests"></target>
     <target name="pre-clean"></target>

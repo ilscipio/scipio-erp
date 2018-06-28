@@ -47,7 +47,7 @@ import org.w3c.dom.Element;
 @SuppressWarnings("serial")
 public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry {
 
-    public static final String module = ModelScreen.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final Set<String> validScreenElementTagNames = Collections.unmodifiableSet(
             UtilMisc.toSet("screen")); // SCIPIO: new, for future use

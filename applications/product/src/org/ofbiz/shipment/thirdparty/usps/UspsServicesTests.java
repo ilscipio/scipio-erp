@@ -19,10 +19,9 @@
 
 package org.ofbiz.shipment.thirdparty.usps;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
@@ -37,7 +36,7 @@ import org.ofbiz.service.testtools.OFBizTestCase;
  */
 public class UspsServicesTests extends OFBizTestCase {
 
-    public static String module = UspsServicesTests.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public UspsServicesTests(String name) {
         super(name);
@@ -54,7 +53,7 @@ public class UspsServicesTests extends OFBizTestCase {
     public void testUspsTrackConfirm() throws Exception {
 
         // run the service
-        Map<String, Object> result = dispatcher.runSync("uspsTrackConfirm", UtilMisc.toMap("trackingId", "EJ958083578US", "shipmentGatewayConfigId", "USPS_CONFIG", "configProps", "shipment.properties"));
+        Map<String, Object> result = dispatcher.runSync("uspsTrackConfirm", UtilMisc.toMap("trackingId", "EJ958083578US", "shipmentGatewayConfigId", "USPS_CONFIG", "configProps", "shipment"));
 
         // verify the results
         String responseMessage = (String) result.get(ModelService.RESPONSE_MESSAGE);
@@ -87,7 +86,7 @@ public class UspsServicesTests extends OFBizTestCase {
         // run the service
         Map<String, String> paramInp = UtilMisc.toMap("address1", "6406 Ivy Lane", "city", "Greenbelt", "state", "MD");
         paramInp.put("shipmentGatewayConfigId", "USPS_CONFIG");
-        paramInp.put("configProps", "shipment.properties");
+        paramInp.put("configProps", "shipment");
         Map<String, Object> result = dispatcher.runSync("uspsAddressValidation", paramInp);
 
         // verify the results
@@ -119,7 +118,7 @@ public class UspsServicesTests extends OFBizTestCase {
     public void testUspsCityStateLookup() throws Exception {
 
         // run the service
-        Map<String, Object> result = dispatcher.runSync("uspsCityStateLookup", UtilMisc.toMap("zip5", "90210", "shipmentGatewayConfigId", "USPS_CONFIG", "configProps", "shipment.properties"));
+        Map<String, Object> result = dispatcher.runSync("uspsCityStateLookup", UtilMisc.toMap("zip5", "90210", "shipmentGatewayConfigId", "USPS_CONFIG", "configProps", "shipment"));
         
         // verify the results
         String responseMessage = (String) result.get(ModelService.RESPONSE_MESSAGE);
@@ -138,7 +137,7 @@ public class UspsServicesTests extends OFBizTestCase {
     public void testUspsPriorityMailStandard() throws Exception {
 
         // run the service
-        Map<String, Object> result = dispatcher.runSync("uspsPriorityMailStandard", UtilMisc.toMap("originZip", "4", "destinationZip", "4", "shipmentGatewayConfigId", "USPS_CONFIG", "configProps", "shipment.properties"));
+        Map<String, Object> result = dispatcher.runSync("uspsPriorityMailStandard", UtilMisc.toMap("originZip", "4", "destinationZip", "4", "shipmentGatewayConfigId", "USPS_CONFIG", "configProps", "shipment"));
 
         // verify the results
         String responseMessage = (String) result.get(ModelService.RESPONSE_MESSAGE);
@@ -153,7 +152,7 @@ public class UspsServicesTests extends OFBizTestCase {
     public void testUspsPackageServicesStandard() throws Exception {
 
         // run the service
-        Map<String, Object> result = dispatcher.runSync("uspsPackageServicesStandard", UtilMisc.toMap("originZip", "4", "destinationZip", "4", "shipmentGatewayConfigId", "USPS_CONFIG", "configProps", "shipment.properties"));
+        Map<String, Object> result = dispatcher.runSync("uspsPackageServicesStandard", UtilMisc.toMap("originZip", "4", "destinationZip", "4", "shipmentGatewayConfigId", "USPS_CONFIG", "configProps", "shipment"));
 
         // verify the results
         String responseMessage = (String) result.get(ModelService.RESPONSE_MESSAGE);
@@ -168,7 +167,7 @@ public class UspsServicesTests extends OFBizTestCase {
     public void testUspsDomesticRate() throws Exception {
 
         // prepare the context
-        Map<String, Object> context = FastMap.newInstance();
+        Map<String, Object> context = new HashMap<String, Object>();
 
         context.put("service", "Priority");
         context.put("originZip", "20770");
@@ -179,7 +178,7 @@ public class UspsServicesTests extends OFBizTestCase {
         context.put("size", "Regular");
         context.put("machinable", "False");
         context.put("shipmentGatewayConfigId", "USPS_CONFIG");
-        context.put("configProps", "shipment.properties");
+        context.put("configProps", "shipment");
 
         // run the service
         Map<String, Object> result = dispatcher.runSync("uspsDomesticRate", context);

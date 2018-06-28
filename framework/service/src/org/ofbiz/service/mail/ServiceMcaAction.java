@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
 @SuppressWarnings("serial")
 public class ServiceMcaAction implements java.io.Serializable {
 
-    public static final String module = ServiceMcaAction.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected String serviceName = null;
     protected String serviceMode = null;

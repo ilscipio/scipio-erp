@@ -38,7 +38,7 @@ import org.ofbiz.base.util.Debug;
  */
 public abstract class GenericAbstractDispatcher implements LocalDispatcher {
 
-    public static final String module = GenericAbstractDispatcher.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected DispatchContext ctx = null;
     protected ServiceDispatcher dispatcher = null;
@@ -141,6 +141,11 @@ public abstract class GenericAbstractDispatcher implements LocalDispatcher {
 
     public void addCommitService(String serviceName, boolean persist, Object... context) throws GenericServiceException {
         addCommitService(serviceName, ServiceUtil.makeContext(context), persist);
+    }
+    
+    @Override
+    public ServiceSyncRegistrations getServiceSyncRegistrations() throws GenericServiceException { // SCIPIO
+        return ServiceSynchronization.getInstance();
     }
 
     /**

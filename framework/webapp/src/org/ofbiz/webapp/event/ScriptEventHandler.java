@@ -57,7 +57,7 @@ import org.ofbiz.webapp.control.ConfigXMLReader.RequestMap;
  */
 public final class ScriptEventHandler implements EventHandler {
 
-    public static final String module = ScriptEventHandler.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final Set<String> protectedKeys = createProtectedKeys();
 
     private static Set<String> createProtectedKeys() {

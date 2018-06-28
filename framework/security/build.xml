@@ -27,12 +27,10 @@ under the License.
 
     <property name="desc" value="Security Component"/>
     <property name="name" value="ofbiz-security"/>
-    <property name="ofbiz.home.dir" value="../.."/>
 
     <path id="local.class.path">
         <!--<fileset dir="${lib.dir}" includes="*.jar"/>-->
         <fileset dir="../base/lib" includes="*.jar"/>
-        <fileset dir="../base/lib/j2eespecs" includes="*.jar"/>
         <fileset dir="../base/build/lib" includes="*.jar"/>
         <fileset dir="../entity/lib" includes="*.jar"/>
         <fileset dir="../entity/build/lib" includes="*.jar"/>

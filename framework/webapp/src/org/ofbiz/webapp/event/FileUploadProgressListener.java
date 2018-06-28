@@ -28,7 +28,7 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public class FileUploadProgressListener implements ProgressListener, Serializable {
 
-    public static final String module = FileUploadProgressListener.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected long contentLength = -1;
     protected long bytesRead = -1;

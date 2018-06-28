@@ -19,12 +19,12 @@
 package org.ofbiz.shipment.packing;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Map;
-
-import javolution.util.FastMap;
 
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilFormatOut;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.Delegator;
@@ -35,7 +35,7 @@ import org.ofbiz.service.ServiceUtil;
 @SuppressWarnings("serial")
 public class PackingSessionLine implements java.io.Serializable {
 
-    public final String module = PackingSessionLine.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected String orderId = null;
     protected String orderItemSeqId = null;
@@ -182,7 +182,7 @@ public class PackingSessionLine implements java.io.Serializable {
             quantity = this.getQuantity();
         }
 
-        Map<String, Object> issueMap = FastMap.newInstance();
+        Map<String, Object> issueMap = new HashMap<String, Object>();
         issueMap.put("shipmentId", shipmentId);
         issueMap.put("orderId", this.getOrderId());
         issueMap.put("orderItemSeqId", this.getOrderItemSeqId());
@@ -207,7 +207,7 @@ public class PackingSessionLine implements java.io.Serializable {
             // find the pick list item
             Debug.logInfo("Looking up picklist item for bin ID #" + picklistBinId, module);
             Delegator delegator = dispatcher.getDelegator();
-            Map<String, Object> itemLookup = FastMap.newInstance();
+            Map<String, Object> itemLookup = new HashMap<String, Object>();
             itemLookup.put("picklistBinId", picklistBinId);
             itemLookup.put("orderId", this.getOrderId());
             itemLookup.put("orderItemSeqId", this.getOrderItemSeqId());
@@ -244,7 +244,7 @@ public class PackingSessionLine implements java.io.Serializable {
         // assign item to package
         String shipmentPackageSeqId = UtilFormatOut.formatPaddedNumber(this.getPackageSeq(), 5);
 
-        Map<String, Object> packageMap = FastMap.newInstance();
+        Map<String, Object> packageMap = new HashMap<String, Object>();
         packageMap.put("shipmentId", shipmentId);
         packageMap.put("shipmentItemSeqId", this.getShipmentItemSeqId());
         packageMap.put("quantity", this.getQuantity());

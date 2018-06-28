@@ -1,12 +1,10 @@
-import javolution.util.FastList
-import javolution.util.FastMap
 
 import org.ofbiz.base.util.Debug
 import org.ofbiz.base.util.UtilMisc
 import org.ofbiz.entity.util.EntityUtil
 
 service = context.workEffortService;
-List workEffortList = FastList.newInstance();
+List workEffortList = [];
 if (service == "getWorkEffortAssignedTasks" || service == "getWorkEffortCompletedTasks") {     
     workEffortMap = dispatcher.runSync(service, UtilMisc.toMap("createdPeriod", context.createdPeriod, "userLogin", context.userLogin));    
     workEffortList = workEffortMap.get("tasks");
@@ -15,9 +13,9 @@ if (service == "getWorkEffortAssignedTasks" || service == "getWorkEffortComplete
     workEffortList = workEffortMap.get("activities");    
 }
 
-result = FastList.newInstance();
+result = [];
 workEffortList.each { workEffortPartyAssignment ->
-    Map workEffort = FastMap.newInstance();
+    Map workEffort = [:];
     workEffort.put("workEffortId", workEffortPartyAssignment.workEffortId);
     workEffort.put("createdDate", workEffortPartyAssignment.createdDate);
     workEffort.put("partyId", workEffortPartyAssignment.partyId);

@@ -29,7 +29,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 
 public class Cache {
 
-    public static final String module = Cache.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected EntityCache entityCache;
     protected EntityListCache entityListCache;

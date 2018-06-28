@@ -43,14 +43,14 @@ import org.ofbiz.base.util.cache.UtilCache;
  */
 public class GroovyUtil {
 
-    public static final String module = GroovyUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private static final UtilCache<String, Class<?>> parsedScripts = UtilCache.createUtilCache("script.GroovyLocationParsedCache", 0, 0, false);
 
     private static final GroovyClassLoader groovyScriptClassLoader;
     static {
         GroovyClassLoader groovyClassLoader = null;
-        String scriptBaseClass = UtilProperties.getPropertyValue("groovy.properties", "scriptBaseClass");
+        String scriptBaseClass = UtilProperties.getPropertyValue("groovy", "scriptBaseClass");
         if (!scriptBaseClass.isEmpty()) {
             CompilerConfiguration conf = new CompilerConfiguration();
             conf.setScriptBaseClass(scriptBaseClass);

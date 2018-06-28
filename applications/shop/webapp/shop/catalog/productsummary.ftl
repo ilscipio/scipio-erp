@@ -56,22 +56,16 @@
     </#assign>
 
     <#assign productPrice>
-        <#if solrProduct??>                   
-            <#if solrProduct.listPrice??>
-                <@ofbizCurrency amount=solrProduct.listPrice />          
-            <#elseif solrProduct.defaultPrice??>                    
-                <@ofbizCurrency amount=solrProduct.defaultPrice />
-            </#if>
-        <#elseif product??>
+        <#if product??>
             <#if totalPrice??>
-                <@ofbizCurrency amount=totalPrice isoCode=totalPrice.currencyUsed/>
+                <@ofbizCurrency amount=totalPrice isoCode=price.currencyUsed/>
             <#else>
                 <#if ((price.price!0) > 0) && ((product.requireAmount!"N") == "N")>
                     <@ofbizCurrency amount=price.price isoCode=price.currencyUsed/>
                 <#else>
                     <@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/>
                 </#if>
-                <#if price.listPrice?? && price.price?? && price.price?double < price.listPrice?double>
+                <#if price.listPrice?? && price.price?? && (price.price?double < price.listPrice?double)>
                     <#assign priceSaved = price.listPrice?double - price.price?double>
                     <#assign percentSaved = (priceSaved?double / price.listPrice?double) * 100>
                     <#--<@ofbizCurrency amount=priceSaved isoCode=price.currencyUsed/>--> 
@@ -85,7 +79,18 @@
                     </#list>
                 </#if>
             </#if>
-
+        <#-- FIXME: PRICE CANNOT WORK PROPERLY WITHOUT CURRENCY UOM (STORED + TARGET)!
+            don't even try to display until this is resolved, because wrong value is more confusing
+            than no value
+        <#elseif solrProduct??>
+            
+             
+            <#if solrProduct.listPrice??>
+                <@ofbizCurrency amount=solrProduct.listPrice />          
+            <#elseif solrProduct.defaultPrice??>                    
+                <@ofbizCurrency amount=solrProduct.defaultPrice />
+            </#if>
+        -->
         </#if>
     </#assign>
 
@@ -93,6 +98,9 @@
         <#if price.isSale?? && price.isSale><@pli type="ribbon">${uiLabelMap.OrderOnSale}!</@pli></#if>
         <@pli>
            ${productImage}
+        </@pli>
+        <@pli class="+${styles.text_center}">
+            <@ratingAsStars rating=averageRating!0 />
         </@pli>
         <#if productDescription?has_content>
         <@pli type="description">

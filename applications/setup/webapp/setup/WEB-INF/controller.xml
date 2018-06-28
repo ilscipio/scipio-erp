@@ -1,0 +1,529 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+    
+    http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+
+<site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
+    <!--
+    <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
+    <include location="component://commonext/webapp/WEB-INF/controller.xml"/>
+    <include location="component://party/webapp/partymgr/WEB-INF/controller.xml"/>-->
+    <include location="component://commonext/webapp/ofbizsetup/WEB-INF/controller.xml"/>
+    <description>SCIPIO ERP Setup component controller</description>
+    
+    <!-- SCIPIO: NOTE: setup events will keep pointing to the original script locations (ofbizsetup, commonext) unless they
+        diverge significantly, because they contain significant code that should not be moved. -->
+    
+    <!-- Home requests -->
+    
+    <request-map uri="main">
+        <security https="true" auth="true"/>
+        <response name="success" type="request" value="setupWizardStart"/><!-- save-home-view="true" -->
+    </request-map>
+    <request-map uri="initialsetup">
+        <security https="true" auth="true"/>
+        <response name="success" type="request" value="setupWizardStart"/><!-- save-home-view="true" -->
+    </request-map>
+
+    <!-- Modified requests -->
+    
+    <!-- SCIPIO: WARN: these suffer from session reliance and session issues (needs view-home set properly everywhere) -->
+    <request-map uri="editcontactmech">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editcontactmech" save-current-view="true"/>
+    </request-map>
+    <request-map uri="createContactMech">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyContactMech"/>
+        <response name="success" type="view" value="editcontactmech"/>
+        <response name="error" type="view" value="editcontactmech"/>
+    </request-map>
+    <request-map uri="updateContactMech">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updatePartyContactMech"/>
+        <response name="success" type="view" value="editcontactmech"/>
+        <response name="error" type="view" value="editcontactmech"/>
+    </request-map>
+    <request-map uri="deleteContactMech">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deletePartyContactMech"/>
+        <response name="success" type="view-home" value="editcontactmech"/>
+        <response name="error" type="view-home" value="editcontactmech"/>
+    </request-map>
+    <request-map uri="createPostalAddress">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyPostalAddress"/>
+        <response name="success" type="view" value="editcontactmech"/>
+        <response name="error" type="view" value="editcontactmech"/>
+    </request-map>
+
+    <!-- NEW Setup Steps requests -->
+    
+    <request-map uri="setupWizard">
+        <security https="true" auth="true"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+    </request-map>
+    <request-map uri="setupWizardStart"><!-- always goes back to start of wizard (as long as don't mess it up with parameters) -->
+        <security https="true" auth="true"/>
+        <response name="success" type="request" value="setupOrganization"/>
+    </request-map>
+    
+    <!-- DEV NOTE: To simplify the code, the setupUpdate[Step] server-side events below do not perform a step
+        validity check before committing (though theoretically should). This check is already done in the screens 
+        and since security is not an issue here it will practically never cause an issue. -->
+    <!-- DEV WARN: for setupCreate/UpdateXxx, only simple-method events get a transaction by default;
+        do not substitute these with java/groovy events without implementing transaction! (TODO: patches for this) -->
+    <!-- Organization step -->
+    <request-map uri="setupOrganization">
+        <security https="true" auth="true"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
+        <response name="success" type="view" value="SetupOrganization" save-home-view="true"/><!-- save-home-view is needed in case EditContactMech is accessed -->
+        <response name="error" type="view" value="SetupError"/>
+    </request-map>
+    <request-map uri="setupCreateOrganization">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://commonext/script/org/ofbiz/setup/SetupEvents.xml" invoke="createOrganization"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupOrganization"/>
+    </request-map>
+    <request-map uri="setupUpdateOrganization">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="updateOrganization"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupOrganization"/>
+    </request-map>
+    
+    <!-- User step -->
+    <request-map uri="setupUser">
+        <security https="true" auth="true"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
+        <response name="success" type="view" value="SetupUser"/>
+        <response name="error" type="view" value="SetupError"/>
+    </request-map>
+    <request-map uri="setupCreateUser">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="createUser"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupUser"/>
+    </request-map>
+    <request-map uri="setupUpdateUser">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="updateUser"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupUser"/>
+    </request-map>
+    
+    <!-- Accounting step -->
+    <request-map uri="setupAccounting">
+        <security https="true" auth="true"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
+        <response name="success" type="view" value="SetupAccounting"/>
+        <response name="error" type="view" value="SetupError"/>
+    </request-map>
+    
+        <!-- GlAccounts -->
+    <request-map uri="importDefaultGL">
+        <security https="true" auth="true"/>      
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="importDefaultGL"/>  
+        <response name="success" type="view" value="SetupAccounting"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
+    <request-map uri="setupAddGlAccount">
+        <security https="true" auth="true"/>        
+        <response name="success" type="view" value="SetupAccounting"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
+    <request-map uri="setupEditGlAccount">
+        <security https="true" auth="true"/>
+        <!-- TODO -->
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
+    <request-map uri="setupCreateGlAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createGlAccount"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
+    <request-map uri="setupUpdateGlAccount">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateGlAccount"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
+    <request-map uri="setupDeleteGlAccount">
+        <security https="true" auth="true"/>
+        <!-- TODO -->
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
+    <request-map uri="setupAssignGlAccount">
+        <security https="true" auth="true"/>
+        <!-- TODO -->
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
+    <request-map uri="setupImportGlAccounts">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="importGlAccounts"/>
+        <response name="success" type="view" value="SetupAccounting"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
+    
+        <!-- Time Periods -->
+    <request-map uri="setupCreateTimePeriod">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createCustomTimePeriod"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
+    <request-map uri="setupUpdateTimePeriod">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateCustomTimePeriod"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
+    <request-map uri="setupDeleteTimePeriod">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteCustomTimePeriod"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
+
+        <!-- Preferences -->
+    <request-map uri="setupCreateAccountingPreferences">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createPartyAcctgPreference"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
+    <request-map uri="setupUpdateAccountingPreferences">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="setupUpdatePartyAcctgPreference"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>   
+    
+        <!-- Accounting transactions --> 
+    <request-map uri="setupExportDatevDataCategory">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://accounting/script/com/ilscipio/scipio/accounting/datev/DatevEvents.xml" invoke="exportDatevDataCategory"/>
+        <response name="success" type="view" value="SetupAccounting"/>
+        <response name="error" type="request" value="setupAccounting"/>
+    </request-map>
+    
+    <!-- Facility step -->
+    <request-map uri="setupFacility">
+        <security https="true" auth="true"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
+        <response name="success" type="view" value="SetupFacility"/>
+        <response name="error" type="view" value="SetupError"/>
+    </request-map>
+    <request-map uri="setupCreateFacility">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://commonext/script/org/ofbiz/setup/SetupEvents.xml" invoke="createFacilityAndContactMech"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupFacility"/>
+    </request-map>
+    <request-map uri="setupUpdateFacility">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="updateFacilityAndContactMech"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupFacility"/>
+    </request-map>
+    
+    <!-- Catalog step -->
+    <request-map uri="setupCatalog">
+        <security https="true" auth="true"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
+        <response name="success" type="view" value="SetupCatalog"/>
+        <response name="error" type="view" value="SetupError"/>
+    </request-map>
+    <request-map uri="setupCreateCatalog">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createProdCatalogAndStoreAssocVersatile"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupCatalog"/>
+    </request-map>
+    <request-map uri="setupUpdateCatalog">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateProdCatalogAndStoreAssocVersatile"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupCatalog"/>
+    </request-map>
+    <request-map uri="setupDeleteCatalog">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteProdCatalogAndStoreAssocVersatile"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupCatalog"/>
+    </request-map>
+    <request-map uri="setupAddCatalog">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="addProdCatalogStoreAssocVersatile"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupCatalog"/>
+    </request-map>
+    <request-map uri="setupCreateCategory">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createProductCategoryAndCatAssocVersatile"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupCatalog"/>
+    </request-map>
+    <request-map uri="setupUpdateCategory">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateProductCategoryAndCatAssocVersatile"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupCatalog"/>
+    </request-map>
+    <request-map uri="setupDeleteCategory">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteProductCategoryAndCatAssocVersatile"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupCatalog"/>
+    </request-map>
+    <request-map uri="setupAddCategory">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="addProductCategoryCatAssocVersatile"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupCatalog"/>
+    </request-map>
+    <request-map uri="setupCopyCategory">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="copyProductCategoryCatAssocVersatile"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupCatalog"/>
+    </request-map>
+    <request-map uri="setupMoveCategory">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="moveProductCategoryCatAssocVersatile"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupCatalog"/>
+    </request-map>
+    <request-map uri="setupCreateProduct">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createProductAndCatAssocVersatile"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupCatalog"/>
+    </request-map>
+    <request-map uri="setupUpdateProduct">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateProductAndCatAssocVersatile"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupCatalog"/>
+    </request-map>
+    <request-map uri="setupDeleteProduct">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteProductAndCatAssocVersatile"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupCatalog"/>
+    </request-map>
+    <request-map uri="setupAddProduct">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="addProductCatAssocVersatile"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupCatalog"/>
+    </request-map>
+    <request-map uri="setupCopyProduct">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="copyProductCatAssocVersatile"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupCatalog"/>
+    </request-map>
+    <request-map uri="setupMoveProduct">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="moveProductCatAssocVersatile"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupCatalog"/>
+    </request-map>
+    
+    <!-- Store step -->
+    <request-map uri="setupStore">
+        <security https="true" auth="true"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
+        <response name="success" type="view" value="SetupStore"/>
+        <response name="error" type="view" value="SetupError"/>
+    </request-map>
+    <request-map uri="setupCreateStore">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="createProductStoreWithDefaultSettingAndWebSite"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupStore"/>
+    </request-map>
+    <request-map uri="setupUpdateStore">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="updateProductStoreAndWebSite"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupStore"/>
+    </request-map>
+    <!-- merged into store step
+    <request-map uri="setupWebsite">
+        <security https="true" auth="true"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
+        <response name="success" type="view" value="SetupWebsite"/>
+        <response name="error" type="view" value="SetupError"/>
+    </request-map>
+    <request-map uri="setupCreateWebsite">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://setup/script/com/ilscipio/scipio/setup/SetupEvents.xml" invoke="createWebSite"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupWebsite"/>
+    </request-map>
+    <request-map uri="setupUpdateWebsite">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateWebSite"/>
+        <response name="success" type="request" value="nextSetupStep"/>
+        <response name="error" type="request" value="setupWebsite"/>
+    </request-map>
+    -->
+    <request-map uri="setupFinished">
+        <security https="true" auth="true"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="setEffectiveSetupStep"/>
+        <response name="success" type="view" value="SetupFinished"/>
+        <response name="error" type="view" value="SetupError"/>
+    </request-map>
+
+    <request-map uri="nextSetupStep">
+        <security direct-request="false"/>
+        <event type="java" path="com.ilscipio.scipio.setup.SetupEvents" invoke="getNextSetupStep"/>
+        <response name="success" type="view" value="SetupError"/><!-- NOTE: invalid result uses this -->
+        <response name="finished" type="view" value="SetupFinished"/>
+        
+        <response name="organization" type="view" value="SetupOrganization" save-home-view="true"/>
+        <response name="user" type="view" value="SetupUser"/>
+        <response name="accounting" type="view" value="SetupAccounting"/>
+        <response name="facility" type="view" value="SetupFacility"/>
+        <response name="catalog" type="view" value="SetupCatalog"/>
+        <response name="store" type="view" value="SetupStore"/>
+        <response name="website" type="view" value="SetupWebsite"/>
+        
+        <response name="error" type="view" value="SetupError"/>
+    </request-map>
+
+    <!-- ================ Ajax Requests ================= -->
+    
+    <!-- catalog ajax requests -->
+    <request-map uri="getProductCategoryContentLocalizedSimpleTextViews">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="getProductCategoryContentLocalizedSimpleTextViews"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="getProductContentLocalizedSimpleTextViews">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="getProductContentLocalizedSimpleTextViews"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    
+    <!-- catalog tree ajax requests -->
+    <request-map uri="getProductCategoryExtendedData">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="getProductCategoryExtendedDataVersatile"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="getProductExtendedData">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="getProductExtendedDataVersatile"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    
+    <!-- accounting tree ajax requests -->
+    <request-map uri="getGlAccountExtendedData">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="getGlAccountAndAssocs"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    
+    <request-map uri="getTimePeriodExtendedData">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="getTimePeriod"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    
+    <!-- accounting datev CSV import requests -->
+    <request-map uri="setupImportDatevDataCategory">
+        <security https="true" auth="true"/>
+        <event type="simple" path="component://accounting/script/com/ilscipio/scipio/accounting/datev/DatevEvents.xml" invoke="importDatevDataCategory"/>
+        <response name="success" type="view" value="DatevImportResult"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+
+    <!-- ================ Lookup Requests ================= -->
+    <request-map uri="LookupContent"><security auth="true" https="true"/><response name="success" type="view" value="LookupContent"/></request-map>
+    <request-map uri="LookupPartyName"><security auth="true" https="true"/><response name="success" type="view" value="LookupPartyName"/></request-map>
+    <request-map uri="LookupProduct"><security auth="true" https="true"/><response name="success" type="view" value="LookupProduct"/></request-map>
+    <request-map uri="LookupSupplierProduct"><security auth="true" https="true"/><response name="success" type="view" value="LookupSupplierProduct"/></request-map>
+    <request-map uri="LookupVariantProduct"><security auth="true" https="true"/><response name="success" type="view" value="LookupVariantProduct"/></request-map>
+    <request-map uri="LookupVirtualProduct"><security auth="true" https="true"/><response name="success" type="view" value="LookupVirtualProduct"/></request-map>
+    <request-map uri="LookupProductCategory"><security auth="true" https="true"/><response name="success" type="view" value="LookupProductCategory"/></request-map>
+    <request-map uri="LookupProductFeature"><security auth="true" https="true"/><response name="success" type="view" value="LookupProductFeature"/></request-map>
+    <request-map uri="LookupProductStore"><security auth="true" https="true"/><response name="success" type="view" value="LookupProductStore"/></request-map>
+
+    <!-- end of request mappings -->
+    
+    <!-- View Mappings -->
+    <view-map name="initialsetup" type="screen" page="component://setup/widget/SetupScreens.xml#InitialSetup"/>
+    <view-map name="showMessage" type="screen" page="component://setup/widget/SetupScreens.xml#nopartyAcctgPreference"/>
+    
+    <view-map name="ViewFacility" type="screen" page="component://setup/widget/SetupScreens.xml#ViewFacility"/>
+    <view-map name="EditFacility" type="screen" page="component://setup/widget/SetupScreens.xml#EditFacility"/>
+    
+    <view-map name="FindProductStore" type="screen" page="component://setup/widget/SetupScreens.xml#FindProductStore"/>
+    <view-map name="EditProductStore" type="screen" page="component://setup/widget/SetupScreens.xml#EditProductStore"/>
+
+    <view-map name="EntityExportAll" type="screen" page="component://setup/widget/CommonScreens.xml#EntityExportAll"/>
+
+    <view-map name="FindWebSite" page="component://setup/widget/SetupScreens.xml#FindWebSite" type="screen"/>
+    <view-map name="EditWebSite" page="component://setup/widget/SetupScreens.xml#EditWebSite" type="screen"/>
+    
+    <view-map name="firstcustomer" type="screen" page="component://setup/widget/ProfileScreens.xml#FirstCustomer"/>
+    <view-map name="firstproduct" type="screen" page="component://setup/widget/SetupScreens.xml#EditProdCatalog"/>
+    <view-map name="EditCategory" type="screen" page="component://setup/widget/SetupScreens.xml#EditCategory"/>
+    <view-map name="EditProduct" type="screen" page="component://setup/widget/SetupScreens.xml#EditProduct"/>
+    
+    <!-- SCIPIO: new setup step definitions (NOTE: the screens themselves will perform the reuse/includes, as needed) -->
+    <view-map name="SetupOrganization" type="screen" page="component://setup/widget/SetupScreens.xml#SetupOrganization"/>
+    <view-map name="SetupUser" type="screen" page="component://setup/widget/SetupScreens.xml#SetupUser"/>
+    <view-map name="SetupAccounting" type="screen" page="component://setup/widget/SetupScreens.xml#SetupAccounting"/>
+    <view-map name="SetupFacility" type="screen" page="component://setup/widget/SetupScreens.xml#SetupFacility"/>
+    <view-map name="SetupCatalog" type="screen" page="component://setup/widget/SetupScreens.xml#SetupCatalog"/>
+    <view-map name="SetupStore" type="screen" page="component://setup/widget/SetupScreens.xml#SetupStore"/>
+    <view-map name="SetupWebsite" type="screen" page="component://setup/widget/SetupScreens.xml#SetupWebsite"/>
+    <view-map name="SetupFinished" type="screen" page="component://setup/widget/SetupScreens.xml#SetupFinished"/>
+    <view-map name="SetupError" type="screen" page="component://setup/widget/SetupScreens.xml#SetupError"/>
+
+    <!-- Lookup request mappings -->
+    <view-map name="LookupContent" page="component://content/widget/content/ContentScreens.xml#LookupContent" type="screen"/>
+    <view-map name="LookupPartyName" type="screen" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName"/>
+    <view-map name="LookupProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct"/>
+    <view-map name="LookupSupplierProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupSupplierProduct"/>
+    <view-map name="LookupVariantProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupVariantProduct"/>
+    <view-map name="LookupVirtualProduct" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupVirtualProduct"/>
+    <view-map name="LookupProductCategory" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProductCategory"/>
+    <view-map name="LookupProductFeature" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature"/>
+    <view-map name="LookupProductStore" type="screen" page="component://product/widget/catalog/LookupScreens.xml#LookupProductStore"/>
+    
+    <!-- DATEV / ELSTER -->
+    <view-map name="DatevImportResult" type="screen" page="component://accounting/widget/external/ExternalAccountingScreens.xml#DatevImportResult"/>
+
+</site-conf>

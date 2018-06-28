@@ -131,8 +131,11 @@ under the License.
         <set field="newEntity.createdBy" from-field="userLogin.userLoginId"/>
 
         <create-value value-field="newEntity"/>
+        <!-- SCIPIO: 2018-03-01: "responseMessage" is a reserved field name!
         <set field="responseMessage" value="Return Request #${newEntity.returnId} was created successfully."/>
-        <field-to-result field="responseMessage" result-name="successMessage"/>
+        <field-to-result field="responseMessage" result-name="successMessage"/>-->
+        <set field="successMsg" value="Return Request #${newEntity.returnId} was created successfully."/>
+        <field-to-result field="successMsg" result-name="successMessage"/>
     </simple-method>
     <simple-method method-name="updateReturnHeader" short-description="Update a ReturnHeader">
         <check-permission permission="ORDERMGR" action="_UPDATE"><fail-property resource="OrderErrorUiLabels" property="OrderSecurityErrorToRunUpdateReturnHeader"/></check-permission>
@@ -508,8 +511,11 @@ under the License.
         <sequenced-id sequence-name="ReturnAdjustment" field="newEntity.returnAdjustmentId"/>
         <field-to-result field="newEntity.returnAdjustmentId" result-name="returnAdjustmentId"/>
         <create-value value-field="newEntity"/>
+        <!-- SCIPIO: 2018-03-01: "responseMessage" is a reserved field name!
         <set field="responseMessage" value="Return Adjustment #${newEntity.returnAdjustmentId} was created successfully."/>
-        <field-to-result field="responseMessage" result-name="successMessage"/>
+        <field-to-result field="responseMessage" result-name="successMessage"/>-->
+        <set field="successMsg" value="Return Adjustment #${newEntity.returnAdjustmentId} was created successfully."/>
+        <field-to-result field="successMsg" result-name="successMessage"/>
     </simple-method>
     <simple-method method-name="removeReturnAdjustment" short-description="Remove Return Adjustment">
         <check-permission permission="ORDERMGR" action="_DELETE">

@@ -34,7 +34,7 @@ import org.ofbiz.entity.config.model.Datasource;
 import org.ofbiz.entity.model.ModelEntity;
 
 public class EntityConditionBuilder extends BuilderSupport {
-    public static final String module = EntityConditionBuilder.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private static class ConditionHolder extends EntityCondition {
         protected EntityCondition condition;

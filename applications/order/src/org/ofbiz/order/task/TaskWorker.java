@@ -30,7 +30,7 @@ import org.ofbiz.entity.GenericValue;
  */
 public class TaskWorker {
 
-    public static final String module = TaskWorker.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static String getCustomerName(GenericValue orderTaskList) {
         String lastName = orderTaskList.getString("customerLastName");

@@ -34,7 +34,7 @@ import org.w3c.dom.Element;
 @SuppressWarnings("serial")
 public final class MainResourceHandler implements ResourceHandler {
 
-    public static final String module = MainResourceHandler.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     protected final String xmlFilename;
     protected final String loaderName;
     protected final String location;

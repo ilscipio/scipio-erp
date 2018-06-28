@@ -57,7 +57,7 @@
     -->
     <init-param>
       <param-name>excludePatterns</param-name>
-      <param-value>/css/.+,/js/.+,/img/.+,/tpl/.+</param-value>
+      <param-value>/libs/.+,/css/.+,/js/.+,/img/.+,/tpl/.+</param-value>
     </init-param>
   </filter>
 
@@ -119,10 +119,10 @@
     </init-param>
   </servlet>
 
-  <!-- Custom Ofbiz solr addition: OfbizSolrInfoServlet -->
+  <!-- Custom Ofbiz solr addition: ScipioSolrInfoServlet -->
   <servlet>
-    <servlet-name>OfbizSolrInfoServlet</servlet-name>
-    <servlet-class>com.ilscipio.solr.OfbizSolrInfoServlet</servlet-class>
+    <servlet-name>ScipioSolrInfoServlet</servlet-name>
+    <servlet-class>com.ilscipio.scipio.solr.ScipioSolrInfoServlet</servlet-class>
     <!-- Note: load-on-startup with value 0 is essential for this servlet -->
     <load-on-startup>0</load-on-startup>
   </servlet> 
@@ -150,7 +150,7 @@
 
   <servlet-mapping>
     <servlet-name>LoadAdminUI</servlet-name>
-    <url-pattern>/admin.html</url-pattern>
+    <url-pattern>/old.html</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
@@ -170,7 +170,32 @@
   </mime-mapping>
 
   <welcome-file-list>
-    <welcome-file>admin.html</welcome-file>
+    <!-- SCIPIO: FIXME: 2017-09-13: This does not work, because Solr LoadAdminUiServlet expects the servlet container
+        (or something) to automatically append the welcome file path to the context, 
+        e.g. for /solr/ request to be translated to /solr/index.html for it (through HttpServletRequest.getRequestURI());
+        but Tomcat 8 does NOT append the welcome-file path in this case (different from Jetty?) and
+        SolrDispatchFilter doesn't seem to be doing anything either.
+        As a workaround, we simply do a redirect from /solr/ to /solr/index.html using a custom jsp.
+    <welcome-file>index.html</welcome-file>-->
+    <welcome-file>redirect-index.jsp</welcome-file>
   </welcome-file-list>
 
+  <!-- Get rid of error message -->
+  <!-- SCIPIO: FIXME: 2017-09-07: this stock solr code is causing 403 for regular access - servlet container compat issue?
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>Disable TRACE</web-resource-name>
+      <url-pattern>/</url-pattern>
+      <http-method>TRACE</http-method>
+    </web-resource-collection>
+    <auth-constraint/>
+  </security-constraint>
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>Enable everything but TRACE</web-resource-name>
+      <url-pattern>/</url-pattern>
+      <http-method-omission>TRACE</http-method-omission>
+    </web-resource-collection>
+  </security-constraint>
+  -->
 </web-app>

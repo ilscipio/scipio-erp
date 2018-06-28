@@ -926,6 +926,9 @@ under the License.
                 <set field="productId" from-field="parameters.productId"/>
                 <entity-one entity-name="Product" value-field="product"/>
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/EditProductContent.groovy"/>
+                
+                <!-- SCIPIO: required for localized fields -->
+                <set field="layoutSettings.javaScripts[]" value="/content/images/ScpContentCommon.js" global="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.mainDecoratorLocation}">
@@ -944,6 +947,9 @@ under the License.
                                 <html><html-template location="component://product/webapp/catalog/product/EditProductContent.ftl"/></html>
                             </platform-specific>
                         </screenlet>
+                        <screenlet title="${uiLabelMap.CommonUpdateLocalizedFields}"><!-- SCIPIO: added 2017-12 -->
+                            <include-screen name="EditProductStcLocFields"/>
+                        </screenlet>
                         <screenlet title="${uiLabelMap.ProductAddAdditionalImages}">
                             <platform-specific>
                                 <html><html-template location="component://product/webapp/catalog/product/AddAdditionalImages.ftl"/></html>
@@ -958,6 +964,14 @@ under the License.
     <screen name="EditProductContentContent">
         <section>
             <actions>
+                <!-- SCIPIO: 2017-10-26: simple content form submits mainContentId instead of contentId;
+                    if don't recognize it, form browsing unpredictable -->
+                <script lang="groovy"><![CDATA[
+                    if (parameters.mainContentId) {
+                        parameters.contentId = parameters.mainContentId;
+                    }
+                ]]></script>
+            
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="titleProperty" value="PageTitleEditProductContent"/>
                 <set field="activeSubMenuItem" value="EditProductContent"/>
@@ -972,21 +986,51 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditProductContent}">
+                        <screenlet title="${uiLabelMap.PageTitleEditProductContent}" navigation-menu-name="ProductContentSectionSubTabBar">
+                            <include-menu name="ProductContentSectionSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/><!-- SCIPIO: screen gets confusing without a new button -->
                             <include-form name="${contentFormName}" location="component://product/widget/catalog/ProductForms.xml"/>
                         </screenlet>
-                        <screenlet title="${uiLabelMap.PageTitleListAssociatedContentInfos}">
-                            <include-form name="ListAssociatedContentInfos" location="component://product/widget/catalog/ProductForms.xml"/>
-                        </screenlet>
-                        <screenlet title="${uiLabelMap.PageTitleCreateSimpleTextContentForAlternateLocale}">
-                            <include-form name="CreateSimpleTextContentForAlternateLocale" location="component://product/widget/catalog/ProductForms.xml"/>
-                        </screenlet>
+                        <!-- SCIPIO: this fails if the main content not yet created -->
+                        <section>
+                            <condition><not><if-empty field="content.contentId"/></not></condition>
+                            <widgets>
+                                <include-screen name="EditAltLocaleSimpleTextContent"/>
+                                <!--<screenlet title="${uiLabelMap.PageTitleCreateSimpleTextContentForAlternateLocale}">
+                                    <include-form name="CreateSimpleTextContentForAlternateLocale" location="component://product/widget/catalog/ProductForms.xml"/>
+                                </screenlet>-->
+                                
+                                <!-- SCIPIO: TODO: REVIEW: this form was removed in EditCategoryContent (?), but nobody removed it here,
+                                    so am leaving it because the new AltLocale list below does not cover all possible assoc... -->
+                                <screenlet title="${uiLabelMap.PageTitleListAssociatedContentInfos} (${uiLabelMap.CommonAll})">
+                                    <include-form name="ListAssociatedContentInfos" location="component://product/widget/catalog/ProductForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
-    
+    <!-- SCIPIO: 2017-10-26: new widget to directly list and edit the alternate locale content, because ListAssociatedContentInfos form does badly -->
+    <screen name="EditAltLocaleSimpleTextContent">
+        <section>
+            <condition>
+                <and>
+                    <not><if-empty field="productContent"/></not>
+                    <not><if-empty field="productId"/></not>
+                    <not><if-empty field="contentId"/></not>
+                    <not><if-empty field="content.contentId"/></not>
+                </and>
+            </condition>
+            <widgets>
+                <screenlet title="${uiLabelMap.PageTitleCreateSimpleTextContentForAlternateLocale}">
+                    <include-form name="ListSimpleTextContentForAlternateLocale" location="component://product/widget/catalog/ProductForms.xml"/>
+                    <include-form name="CreateSimpleTextContentForAlternateLocale" location="component://product/widget/catalog/ProductForms.xml"/>
+                </screenlet>
+            </widgets>
+        </section>
+    </screen>
+
     <screen name="EditProductAttributes">
         <section>
             <actions>
@@ -1793,6 +1837,26 @@ under the License.
                    </widgets>
                 </section>
            </widgets>
+        </section>
+    </screen>
+    
+    <!-- SCIPIO: New easy-to-use form for product simple text content localized fields -->
+    <screen name="EditProductStcLocFields">
+        <section>
+            <condition>
+                <and>
+                    <not><if-empty field="product"/></not>
+                </and>
+            </condition>
+            <actions>
+                <set field="productId" from-field="product.productId"/>
+                <script location="component://product/webapp/catalog/WEB-INF/actions/product/GetProductStcLocFields.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://product/webapp/catalog/product/EditProductStcLocFields.ftl"/></html>
+                </platform-specific>
+            </widgets>
         </section>
     </screen>
 </screens>

@@ -74,7 +74,7 @@ public abstract class AbstractModelCondition implements Serializable, ModelCondi
      * 
      */
 
-    public static final String module = AbstractModelCondition.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final ModelConditionFactory DEFAULT_CONDITION_FACTORY = new DefaultConditionFactory();
 
     /**

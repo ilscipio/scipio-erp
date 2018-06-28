@@ -22,11 +22,10 @@ package org.ofbiz.accounting.thirdparty.sagepay;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import javolution.util.FastMap;
 
 import org.ofbiz.accounting.payment.PaymentGatewayServices;
 import org.ofbiz.base.util.Debug;
@@ -46,14 +45,14 @@ import org.ofbiz.service.ServiceUtil;
 
 public class SagePayPaymentServices {
 
-    public static final String module = SagePayPaymentServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public final static String resource = "AccountingUiLabels";
 
     private static Map<String, String> buildCustomerBillingInfo(Map<String, Object> context) {
         Debug.logInfo("SagePay - Entered buildCustomerBillingInfo", module);
         Debug.logInfo("SagePay buildCustomerBillingInfo context : " + context, module);
 
-        Map<String, String> billingInfo = FastMap.newInstance();
+        Map<String, String> billingInfo = new HashMap<String, String>();
 
         String orderId = null;
         BigDecimal processAmount = null;

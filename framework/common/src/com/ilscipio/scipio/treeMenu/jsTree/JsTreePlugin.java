@@ -9,8 +9,8 @@ import java.util.List;
  * @author jsoto
  *
  */
+@SuppressWarnings("serial")
 public abstract class JsTreePlugin extends HashMap<String, Object> {
-    private static final long serialVersionUID = 4248393333916299308L;
 
     public static JsTreePlugin newInstance(String type) {
         switch (type) {

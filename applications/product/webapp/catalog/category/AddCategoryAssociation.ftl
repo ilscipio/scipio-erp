@@ -11,10 +11,10 @@
             <input type="hidden" name="originalProductCategoryId" value="${originalProductCategoryId!}" />
             <@row>
                 <@cell columns=12>
-                    <#if productCategoryAssociationMode == "parent">
+                    <#if productCategoryAssociationMode == "child">
                         <input type="hidden" name="parentProductCategoryId" value="${originalProductCategoryId!}" />
                         <@field type="lookup" id="productCategoryId" name="productCategoryId" label=uiLabelMap.ProductCategory required=true formName=addCatFormName fieldFormName="LookupProductCategory" />
-                    <#elseif productCategoryAssociationMode == "child">
+                    <#elseif productCategoryAssociationMode == "parent">
                         <input type="hidden" name="productCategoryId" value="${originalProductCategoryId!}" />
                         <@field type="lookup" id="parentProductCategoryId" name="parentProductCategoryId" label=uiLabelMap.ProductCategory required=true formName=addCatFormName fieldFormName="LookupProductCategory" />
                     </#if>

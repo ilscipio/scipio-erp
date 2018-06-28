@@ -30,16 +30,16 @@ import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.control.ConfigXMLReader.Event;
 import org.ofbiz.webapp.control.ConfigXMLReader.RequestMap;
 
-import com.sun.syndication.feed.WireFeed;
-import com.sun.syndication.io.FeedException;
-import com.sun.syndication.io.WireFeedOutput;
+import com.rometools.rome.feed.WireFeed;
+import com.rometools.rome.io.FeedException;
+import com.rometools.rome.io.WireFeedOutput;
 
 /**
  * RomeEventHandler
  */
 public class RomeEventHandler implements EventHandler {
 
-    public static final String module = RomeEventHandler.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String mime = "application/xml; charset=UTF-8";
     public static final String defaultFeedType = "rss_2.0";
 
@@ -57,7 +57,7 @@ public class RomeEventHandler implements EventHandler {
      * @see org.ofbiz.webapp.event.EventHandler#invoke(ConfigXMLReader.Event, ConfigXMLReader.RequestMap, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
     public String invoke(Event event, RequestMap requestMap, HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
-        RequestHandler handler = (RequestHandler) request.getSession().getServletContext().getAttribute("_REQUEST_HANDLER_");
+        RequestHandler handler = (RequestHandler) request.getServletContext().getAttribute("_REQUEST_HANDLER_"); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
         if (handler == null) {
             throw new EventHandlerException("No request handler found in servlet context!");
         }

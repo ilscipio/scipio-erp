@@ -21,6 +21,7 @@ package org.ofbiz.order.order;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -47,14 +48,12 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
 import java.math.BigDecimal;
 
-import javolution.util.FastMap;
-
 /**
  * Order Events
  */
 public class OrderEvents {
 
-    public static final String module = OrderEvents.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static String downloadDigitalProduct(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
@@ -115,7 +114,7 @@ public class OrderEvents {
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         Locale locale = UtilHttp.getLocale(request);
 
-        Map<String, Object> resultMap = FastMap.newInstance();
+        Map<String, Object> resultMap = new HashMap<String, Object>();
         String  orderId = request.getParameter("orderId");
         String[] selectedItems = request.getParameterValues("selectedItem");
         
@@ -127,7 +126,7 @@ public class OrderEvents {
                 String orderItemSeqId = orderItemSeqIdAndOrderItemShipGrpId[0];
                 String shipGroupSeqId = orderItemSeqIdAndOrderItemShipGrpId[1];
                         BigDecimal cancelQuantity = new BigDecimal(request.getParameter("iqm_"+orderItemSeqId+":"+shipGroupSeqId));
-                        Map<String, Object> contextMap = FastMap.newInstance();
+                        Map<String, Object> contextMap = new HashMap<String, Object>();
                         contextMap.put("orderId", orderId);
                         contextMap.put("orderItemSeqId", orderItemSeqId);
                         contextMap.put("shipGroupSeqId", shipGroupSeqId);

@@ -57,7 +57,7 @@ import org.w3c.dom.Element;
  */
 public class EntityFinderUtil {
 
-    public static final String module = EntityFinderUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static Map<FlexibleMapAccessor<Object>, Object> makeFieldMap(Element element) {
         Map<FlexibleMapAccessor<Object>, Object> fieldMap = null;

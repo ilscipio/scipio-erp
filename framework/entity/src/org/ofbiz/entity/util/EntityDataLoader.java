@@ -53,7 +53,7 @@ import org.w3c.dom.Element;
  */
 public class EntityDataLoader {
 
-    public static final String module = EntityDataLoader.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static String getPathsString(String helperName) {
         StringBuilder pathBuffer = new StringBuilder();
@@ -210,7 +210,7 @@ public class EntityDataLoader {
         for (ReadData readerInfo :  datasourceInfo.getReadDataList()) {
             String readerName = readerInfo.getReaderName();
             // ignore the "tenant" reader if the multitenant property is "N"
-            if ("tenant".equals(readerName) && "N".equals(UtilProperties.getPropertyValue("general.properties", "multitenant"))) {
+            if ("tenant".equals(readerName) && "N".equals(UtilProperties.getPropertyValue("general", "multitenant"))) {
                 continue;
             }
             

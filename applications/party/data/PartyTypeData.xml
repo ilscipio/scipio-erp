@@ -137,6 +137,9 @@ under the License.
     <PartyContentType description="User Defined Content"  parentTypeId="" partyContentTypeId="USERDEF"/>
     <PartyContentType description="Logo Image URL"  parentTypeId="" partyContentTypeId="LGOIMGURL"/>
     <PartyContentType description="Vendor Shipping Info"  parentTypeId="" partyContentTypeId="VNDSHPINF"/>
+    
+    <!-- SCIPIO: specific internal content types -->
+    <PartyContentType description="Resume" parentTypeId="INTERNAL" partyContentTypeId="RESUME"/><!-- SCIPIO: 2018: simpler alternative to PartyResume entity -->
 
     <EnumerationType description="Employment Status" enumTypeId="EMPLOY_STTS" hasTable="N" parentTypeId=""/>
     <Enumeration description="Full-time Employed" enumCode="FULLTIME" enumId="EMPS_FULLTIME" sequenceId="01" enumTypeId="EMPLOY_STTS"/>

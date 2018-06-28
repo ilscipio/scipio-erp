@@ -150,7 +150,7 @@
     <Party partyId="DEU_BZSt" partyTypeId="PARTY_GROUP" preferredCurrencyUomId="EUR" statusId="PARTY_ENABLED" createdDate="2009-01-01 00:00:00.000"/>
     <PartyGroup partyId="DEU_BZSt" groupName="Bundeszentralamt für Steuern"/>
     <PartyRole partyId="DEU_BZSt" roleTypeId="TAX_AUTHORITY"/>
-    <TaxAuthority taxAuthPartyId="DEU_BZSt" includeTaxInPrice="N" requireTaxIdForExemption="Y" taxAuthGeoId="DEU" taxIdFormatPattern="^(DE-?)?{0,1}[0-9]{9}$"/>
+    <TaxAuthority taxAuthPartyId="DEU_BZSt" includeTaxInPrice="N" requireTaxIdForExemption="Y" taxAuthGeoId="DEU" taxIdFormatPattern="^(DE-?)? ?[0-9]{9}$"/>
     
     <Party partyId="DNK_SKAT" partyTypeId="PARTY_GROUP" preferredCurrencyUomId="DKK" statusId="PARTY_ENABLED" createdDate="2009-01-01 00:00:00.000"/>
     <PartyGroup partyId="DNK_SKAT" groupName="SKAT"/>

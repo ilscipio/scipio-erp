@@ -79,10 +79,16 @@ under the License.
         <make-value entity-name="PartyContactMech" value-field="partyContactMechMap"/>
         <set-pk-fields value-field="partyContactMechMap" map="parameters"/>
         <find-by-and entity-name="PartyContactMech" list="partyContactMechs" map="partyContactMechMap"/>
+        <!-- SCIPIO: 2017-10-09: the message returned by this service was highly inaccurate; now we separate wrong user record from expired -->
+        <if-empty field="partyContactMechs">
+            <add-error><fail-property resource="PartyUiLabels" property="PartyCannotUpdateContactBecauseNotWithSpecifiedParty"/></add-error>
+        </if-empty>
+        <check-errors/>
         <filter-list-by-date list="partyContactMechs" to-list="validPartyContactMechs"/>
         <first-from-list entry="partyContactMech" list="validPartyContactMechs"/>
         <if-empty field="partyContactMech">
-            <add-error><fail-property resource="PartyUiLabels" property="PartyCannotUpdateContactBecauseNotWithSpecifiedParty"/></add-error>
+            <!-- SCIPIO: new message with info for expired contact edit attempts -->
+            <add-error><fail-property resource="PartyErrorUiLabels" property="contactmechservices.cannot_update_specified_contact_info_expired"/></add-error>
         </if-empty>
         <check-errors/>
 

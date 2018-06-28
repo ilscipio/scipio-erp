@@ -61,7 +61,7 @@ import com.ibm.icu.util.Calendar;
 @SuppressWarnings("serial")
 public class PersistedServiceJob extends GenericServiceJob {
 
-    public static final String module = PersistedServiceJob.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final transient Delegator delegator;
     private long nextRecurrence = -1;
@@ -212,7 +212,19 @@ public class PersistedServiceJob extends GenericServiceJob {
             nextRecurrence = next;
             
             // SCIPIO: Transfer the special new eventId field
-            newJob.set("eventId", jobValue.getString("eventId"));
+            // 2017-08-30: copy eventId (e.g. SCH_EVENT_STARTUP) ONLY if this is 
+            // a regular recurrence and not a failure retry.
+            String eventId = jobValue.getString("eventId");
+            newJob.set("eventId", isRetryOnFailure ? null : eventId);
+            if (isRetryOnFailure && UtilValidate.isNotEmpty(eventId)) {
+                // SCIPIO: 2017-09-11: if this is a retry for event-specific job,
+                // do not create any recurrences for the retry other than the retries themselves;
+                // otherwise, a successful retry may trigger inappropriate recurrences (at times other than the eventId)
+                newJob.put("maxRecurrenceCount", 0L);
+                newJob.put("currentRecurrenceCount", null);
+                newJob.put("recurrenceInfoId", null);
+                newJob.put("tempExprId", null);
+            }
             
             delegator.createSetNextSeqId(newJob);
             if (Debug.verboseOn()) Debug.logVerbose("Created next job entry: " + newJob, module);
@@ -245,7 +257,17 @@ public class PersistedServiceJob extends GenericServiceJob {
     protected void failed(Throwable t) throws InvalidJobException {
         super.failed(t);
         // if the job has not been re-scheduled; we need to re-schedule and run again
-        if (nextRecurrence == -1) {
+        
+        // SCIPIO: 2017-08-30: SPECIAL CASE: for special events (SCH_EVENT_STARTUP), we need to schedule a retry even
+        // if there is already a recurrence, because the recurrence will have been setup for the specific event (SCH_EVENT_STARTUP) only;
+        // if we don't make this exception, startup jobs can't easily be configured to do retries within the current execution.
+        // (to prevent this, set maxRetry=0)
+        // TODO: REVIEW: unclear if this exception should apply only to all event types (current case - 2017-08-30),
+        // a subset of possible event types, or only SCH_EVENT_STARTUP ("SCH_EVENT_STARTUP".equals(nextRecurrenceEventId)); 
+        // but because the retries are not given an event (see createRecurrence), it's at least consistent to have roughly same condition here,
+        // and this would probably make sense for other event types...
+        //if (nextRecurrence == -1) {
+        if (nextRecurrence == -1 || UtilValidate.isNotEmpty(jobValue.getString("eventId"))) {
             if (this.canRetry()) {
                 // create a recurrence
                 Calendar cal = Calendar.getInstance();
@@ -260,7 +282,7 @@ public class PersistedServiceJob extends GenericServiceJob {
                 } catch (GenericEntityException e) {
                     Debug.logError(e, "Unable to re-schedule job [" + getJobId() + "]: ", module);
                 }
-                Debug.logInfo("Persisted Job [" + getJobId() + "] Failed. Re-Scheduling : " + next, module);
+                if (Debug.infoOn()) Debug.logInfo("Persisted Job [" + getJobId() + "] Failed. Re-Scheduling: " + new Date(next) + " (" + next + ")", module); // SCIPIO: 2017-09-11: improved message
             } else {
                 Debug.logWarning("Persisted Job [" + getJobId() + "] Failed. Max Retry Hit, not re-scheduling", module);
             }

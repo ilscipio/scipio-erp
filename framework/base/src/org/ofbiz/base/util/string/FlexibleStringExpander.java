@@ -52,7 +52,7 @@ import org.ofbiz.base.util.cache.UtilCache;
 @SuppressWarnings("serial")
 public abstract class FlexibleStringExpander implements Serializable, IsEmpty {
 
-    public static final String module = FlexibleStringExpander.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String openBracket = "${";
     public static final String closeBracket = "}";
     protected static final UtilCache<Key, FlexibleStringExpander> exprCache = UtilCache.createUtilCache("flexibleStringExpander.ExpressionCache");

@@ -33,6 +33,8 @@ import javax.transaction.Transaction;
 
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.PropertyMessage;
+import org.ofbiz.base.util.PropertyMessageExUtil;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -58,7 +60,7 @@ import com.ibm.icu.util.Calendar;
  */
 public class ServiceUtil {
 
-    public static final String module = ServiceUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ServiceErrorUiLabels";
 
     /** A little short-cut method to check to see if a service returned an error */
@@ -101,6 +103,11 @@ public class ServiceUtil {
 
     public static Map<String, Object> returnFailure(String errorMessage) {
         return returnProblem(ModelService.RESPOND_FAIL, errorMessage, null, null, null);
+    }
+    
+    /** Returns fail service message. SCIPIO: added missing service overload, 2017-11-01. */
+    public static Map<String, Object> returnFailure(String errorMessage, List<? extends Object> errorMessageList) {
+        return returnProblem(ModelService.RESPOND_FAIL, errorMessage, errorMessageList, null, null);
     }
 
     public static Map<String, Object> returnFailure(List<? extends Object> errorMessageList) {
@@ -180,6 +187,54 @@ public class ServiceUtil {
         if (code != null) result.put(ModelService.RESPONSE_MESSAGE, code);
         if (message != null) result.put(ModelService.SUCCESS_MESSAGE, message);
         return result;
+    }
+    
+    /** SCIPIO: Creates a service error result map from the given exception using the given localizable intro message
+     * combined with a suffix message taken from either a localizable property message via {@link org.ofbiz.base.util.PropertyMessageEx#getPropertyMessage()} 
+     * stored in the exception if it implements PropertyMessageEx or the exception detail message if any other exception type, 
+     * in addition to any message lists stored in the exception via {@link org.ofbiz.base.util.PropertyMessageEx#getPropertyMessageList()}.
+     * In other words this abstracts and automated the service result building from exception messages.
+     * Added 2017-12-07.
+     */
+    public static Map<String, Object> returnError(PropertyMessage messageIntro, Throwable t, Locale locale) {
+        return returnError(PropertyMessageExUtil.makeServiceMessage(messageIntro, t, locale), 
+                PropertyMessageExUtil.getExceptionMessageList(t, locale));
+    }
+    
+    /** SCIPIO: Creates a service error result map from the given exception using the given static intro message
+     * combined with a suffix message taken from either a localizable property message via {@link org.ofbiz.base.util.PropertyMessageEx#getPropertyMessage()} 
+     * stored in the exception if it implements PropertyMessageEx or the exception detail message if any other exception type, 
+     * in addition to any message lists stored in the exception via {@link org.ofbiz.base.util.PropertyMessageEx#getPropertyMessageList()}.
+     * In other words this abstracts and automated the service result building from exception messages.
+     * Added 2017-12-07.
+     */
+    public static Map<String, Object> returnError(String messageIntro, Throwable t, Locale locale) {
+        return returnError(PropertyMessageExUtil.makeServiceMessage(messageIntro, t, locale), 
+                PropertyMessageExUtil.getExceptionMessageList(t, locale));
+    }
+    
+    /** SCIPIO: Creates a service error result map from the given exception using the given localizable intro message
+     * combined with a suffix message taken from either a localizable property message via {@link org.ofbiz.base.util.PropertyMessageEx#getPropertyMessage()} 
+     * stored in the exception if it implements PropertyMessageEx or the exception detail message if any other exception type, 
+     * in addition to any message lists stored in the exception via {@link org.ofbiz.base.util.PropertyMessageEx#getPropertyMessageList()}.
+     * In other words this abstracts and automated the service result building from exception messages.
+     * Added 2017-12-07.
+     */
+    public static Map<String, Object> returnFailure(PropertyMessage messageIntro, Throwable t, Locale locale) {
+        return returnFailure(PropertyMessageExUtil.makeServiceMessage(messageIntro, t, locale), 
+                PropertyMessageExUtil.getExceptionMessageList(t, locale));
+    }
+    
+    /** SCIPIO: Creates a service error result map from the given exception using the given localizable intro message
+     * combined with a suffix message taken from either a localizable property message via {@link org.ofbiz.base.util.PropertyMessageEx#getPropertyMessage()} 
+     * stored in the exception if it implements PropertyMessageEx or the exception detail message if any other exception type, 
+     * in addition to any message lists stored in the exception via {@link org.ofbiz.base.util.PropertyMessageEx#getPropertyMessageList()}.
+     * In other words this abstracts and automated the service result building from exception messages.
+     * Added 2017-12-07.
+     */
+    public static Map<String, Object> returnFailure(String messageIntro, Throwable t, Locale locale) {
+        return returnFailure(PropertyMessageExUtil.makeServiceMessage(messageIntro, t, locale), 
+                PropertyMessageExUtil.getExceptionMessageList(t, locale));
     }
 
     /** A small routine used all over to improve code efficiency, get the partyId and does a security check
@@ -331,6 +386,31 @@ public class ServiceUtil {
         }
     }
 
+    /**
+     * SCIPIO: Gets concatenated success message from single message and message list.
+     * Analogous to {@link #getErrorMessage(Map)}, success message version.
+     * Added 2017-11-28.
+     */
+    public static String getSuccessMessage(Map<String, ? extends Object> result) {
+        StringBuilder successMessage = new StringBuilder();
+
+        if (result.get(ModelService.SUCCESS_MESSAGE) != null) successMessage.append((String) result.get(ModelService.SUCCESS_MESSAGE));
+
+        if (result.get(ModelService.SUCCESS_MESSAGE_LIST) != null) {
+            List<? extends Object> errors = UtilGenerics.checkList(result.get(ModelService.SUCCESS_MESSAGE_LIST));
+            for (Object message: errors) {
+                // NOTE: this MUST use toString and not cast to String because it may be a MessageString object
+                String curMessage = message.toString();
+                if (successMessage.length() > 0) {
+                    successMessage.append(", ");
+                }
+                successMessage.append(curMessage);
+            }
+        }
+
+        return successMessage.toString();
+    }
+    
     public static String makeSuccessMessage(Map<String, ? extends Object> result, String msgPrefix, String msgSuffix, String successPrefix, String successSuffix) {
         if (result == null) {
             return "";
@@ -358,6 +438,38 @@ public class ServiceUtil {
         }
     }
 
+    /**
+     * SCIPIO: Concatenation of {@link #getErrorMessage(Map)} followed by {@link #getSuccessMessage(Map)}.
+     * Intentionally avoids checking responseMessage.
+     * Added 2017-11-28.
+     */
+    public static String getErrorAndSuccessMessage(Map<String, ? extends Object> result, String joinStr, String errorPrefix, String successPrefix) {
+        StringBuilder fullMessage = new StringBuilder();
+        
+        String errorMessage = getErrorMessage(result);
+        if (errorMessage.length() > 0) {
+            if (errorPrefix != null) fullMessage.append(errorPrefix);
+            fullMessage.append(errorMessage);
+        }
+        
+        String successMessage = getSuccessMessage(result);
+        if (successMessage.length() > 0) {
+            if (fullMessage.length() > 0) fullMessage.append((joinStr != null) ? joinStr : "; ");
+            if (successPrefix != null) fullMessage.append(successPrefix);
+            fullMessage.append(successMessage);
+        }
+        
+        return fullMessage.toString();
+    }
+    
+    /**
+     * SCIPIO: Concatenation of {@link #getErrorMessage(Map)} followed by {@link #getSuccessMessage(Map)}.
+     * Intentionally does not check responseMessage.
+     * Added 2017-11-28.
+     */
+    public static String getErrorAndSuccessMessage(Map<String, ? extends Object> result) {
+        return getErrorAndSuccessMessage(result, "; ", null, null);
+    }
     
     /**
      * SCIPIO: The default message prefix. 
@@ -778,6 +890,23 @@ public class ServiceUtil {
             outMap.put("userLogin", userLogin);
         }
 
+        return outMap;
+    }
+    
+    /**
+     * SCIPIO: Returns a new map containing only the common system service response fields from the
+     * given service results.
+     * This can be used to copy a success/failure/error message but excluding all the service-specific return values.
+     * In other words, returning this from a service can never trigger an out parameter service validation exception.
+     * Added 2017-11-28.
+     */
+    public static Map<String, Object> getSysResponseFields(Map<String, ?> results) {
+        Map<String, Object> outMap = new HashMap<>();
+        for(String name : ModelService.SYS_RESPONSE_FIELDS) {
+            if (results.containsKey(name)) {
+                outMap.put(name, results.get(name));
+            }
+        }
         return outMap;
     }
 }

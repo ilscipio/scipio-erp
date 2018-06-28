@@ -39,7 +39,7 @@ import org.ofbiz.service.ServiceUtil;
 
 public class GlEvents {
 
-public static final String module = GlEvents.class.getName();
+private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 public static String createReconcileAccount(HttpServletRequest request, HttpServletResponse response) {
     LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
     final Delegator delegator = (Delegator)request.getAttribute("delegator");

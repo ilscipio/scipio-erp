@@ -1,40 +1,18 @@
 package com.ilscipio.scipio.common;
 
-import static org.ofbiz.base.util.UtilGenerics.checkList;
-import static org.ofbiz.base.util.UtilGenerics.checkMap;
-
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.RandomAccessFile;
 import java.io.StringWriter;
-import java.io.Writer;
-import java.nio.ByteBuffer;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 
-import javax.mail.internet.MimeMessage;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.component.ComponentConfig;
-import org.ofbiz.base.metrics.Metrics;
-import org.ofbiz.base.metrics.MetricsFactory;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.UtilCodec;
-import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
@@ -43,20 +21,12 @@ import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.common.email.NotificationServices;
 import org.ofbiz.entity.Delegator;
-import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.model.ModelEntity;
-import org.ofbiz.entity.transaction.TransactionUtil;
-import org.ofbiz.entity.util.EntityDataLoader;
-import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.DispatchContext;
-import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
-import org.ofbiz.service.ServiceSynchronization;
 import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.service.mail.MimeMessageWrapper;
 import org.ofbiz.widget.model.ModelScreen;
 import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
@@ -64,14 +34,13 @@ import org.ofbiz.widget.renderer.macro.MacroScreenRenderer;
 import org.xml.sax.SAXException;
 
 import freemarker.template.TemplateException;
-import javolution.util.FastMap;
 
 /**
  * SCIPIO: Common Services
  */
 public class CommonServices {
 
-    public final static String module = CommonServices.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "CommonUiLabels";
 
     /**
@@ -91,7 +60,7 @@ public class CommonServices {
             // TODO: unhardcode locations into properties
             {
                 final String filename = "component://common/data/CommonVisualThemeTypeData.xml"; // TODO: Unhardcode
-                List<String> messages = new ArrayList<String>();
+                List<String> messages = new ArrayList<>();
                 Map<String, Object> servCtx = dctx.makeValidContext("entityImport", ModelService.IN_PARAM, context);
                 servCtx.put("filename", filename);
                 servCtx.put("isUrl", "Y");
@@ -107,7 +76,7 @@ public class CommonServices {
             delegator.clearCacheLine("Enumeration");
             delegator.clearCacheLine("VisualThemeSet");
             
-            List<String> visualThemeIds = new ArrayList<String>();
+            List<String> visualThemeIds = new ArrayList<>();
             if (singleVisualThemeId != null) {
                 GenericValue visualTheme = delegator.findOne("VisualTheme", false, UtilMisc.toMap("visualThemeId", singleVisualThemeId));
                 if (visualTheme != null) {
@@ -134,7 +103,7 @@ public class CommonServices {
                             UtilMisc.toMap("visualThemeId", visualThemeId, "resourceTypeEnumId", "VT_THEME_DATA_RES"),
                             UtilMisc.toList("sequenceId"), false);
                     
-                    List<String> themeFileLocations = new ArrayList<String>();
+                    List<String> themeFileLocations = new ArrayList<>();
                     if (themeFileValues != null) {
                         for(GenericValue themeFileValue : themeFileValues) {
                             String themeFileLocation = themeFileValue.getString("resourceValue");
@@ -150,7 +119,7 @@ public class CommonServices {
                         //delegator.removeByAnd("VisualTheme", UtilMisc.toMap("visualThemeId", visualThemeId));
                         
                         for(String themeFileLocation : themeFileLocations) {
-                            List<String> messages = new ArrayList<String>();
+                            List<String> messages = new ArrayList<>();
                             Map<String, Object> servCtx = dctx.makeValidContext("entityImport", ModelService.IN_PARAM, context);
                             servCtx.put("filename", themeFileLocation);
                             servCtx.put("isUrl", "Y");

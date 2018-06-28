@@ -27,7 +27,7 @@ import org.ofbiz.base.util.Debug;
  */
 public class JustLoadComponentsContainer implements Container {
 
-    public static final String module = JustLoadComponentsContainer.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private String name;
 

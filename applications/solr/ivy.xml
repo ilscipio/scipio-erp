@@ -1,90 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-(C) Copyright 2015 Somonar B.V.
-
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
-
-     http://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
-
- -->
-
 <ivy-module version="2.0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
     <info module="solr" organisation="com.ilscipio.scipio.ce"/>
-    <configurations>
-        <!-- configurations for initial download/build -->
-        <conf name="application" description="download all jars required for build"/>
+    <configurations defaultconfmapping="solr-webapp-sources->sources;%->default">
         <conf name="solr-webapp" description="download solr webapp jars required for build"/>
+        <conf name="solr-webapp-sources" description="download solr webapp source jars"/>
     </configurations>
-    
     <dependencies>
-        <!-- dependencies for initial/build downloads -->
-        <!-- re init -->
-        <dependency org="org.apache.solr" name="solr-solrj" rev="5.5.0" transitive="false" conf="application->default"/>
-        
-        <dependency org="org.antlr" name="antlr4-runtime" rev="4.5.1-1" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.ow2.asm" name="asm" rev="5.0.4" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.ow2.asm" name="asm-commons" rev="5.0.4" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="commons-cli" name="commons-cli" rev="1.2" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="commons-codec" name="commons-codec" rev="1.10" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="commons-collections" name="commons-collections" rev="3.2.2" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="commons-configuration" name="commons-configuration" rev="1.6" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.apache.commons" name="commons-exec" rev="1.3" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="commons-fileupload" name="commons-fileupload" rev="1.2.1" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="commons-io" name="commons-io" rev="2.4" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="commons-lang" name="commons-lang" rev="2.6" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="com.googlecode.concurrentlinkedhashmap" name="concurrentlinkedhashmap-lru" rev="1.2" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="dom4j" name="dom4j" rev="1.6.1" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="com.google.guava" name="guava" rev="14.0.1" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.apache.hadoop" name="hadoop-annotations" rev="2.6.0" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.apache.hadoop" name="hadoop-auth" rev="2.6.0" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.apache.hadoop" name="hadoop-common" rev="2.6.0" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.apache.hadoop" name="hadoop-hdfs" rev="2.6.0" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="com.carrotsearch" name="hppc" rev="0.7.1" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.htrace" name="htrace-core" rev="3.0.4" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.apache.httpcomponents" name="httpclient" rev="4.4.1" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.apache.httpcomponents" name="httpcore" rev="4.4.1" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.apache.httpcomponents" name="httpmime" rev="4.4.1" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="com.fasterxml.jackson.core" name="jackson-core" rev="2.5.4" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="com.fasterxml.jackson.dataformat" name="jackson-dataformat-smile" rev="2.5.4" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="joda-time" name="joda-time" rev="2.2" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.apache.lucene" name="lucene-analyzers-common" rev="5.5.0" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.apache.lucene" name="lucene-analyzers-kuromoji" rev="5.5.0" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.apache.lucene" name="lucene-analyzers-phonetic" rev="5.5.0" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.apache.lucene" name="lucene-backward-codecs" rev="5.5.0" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.apache.lucene" name="lucene-codecs" rev="5.5.0" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.apache.lucene" name="lucene-core" rev="5.5.0" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.apache.lucene" name="lucene-expressions" rev="5.5.0" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.apache.lucene" name="lucene-grouping" rev="5.5.0" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.apache.lucene" name="lucene-highlighter" rev="5.5.0" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.apache.lucene" name="lucene-join" rev="5.5.0" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.apache.lucene" name="lucene-memory" rev="5.5.0" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.apache.lucene" name="lucene-misc" rev="5.5.0" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.apache.lucene" name="lucene-queries" rev="5.5.0" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.apache.lucene" name="lucene-queryparser" rev="5.5.0" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.apache.lucene" name="lucene-sandbox" rev="5.5.0" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.apache.lucene" name="lucene-spatial" rev="5.5.0" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.apache.lucene" name="lucene-suggest" rev="5.5.0" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.noggit" name="noggit" rev="0.6" transitive="false" conf="solr-webapp->default"/>
-        <!-- FIXME: these are not in central
-        <dependency org="org.restlet.jee" name="org.restlet" rev="2.3.0" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.restlet.jee" name="org.restlet.ext.servlet" rev="2.3.0" transitive="false" conf="solr-webapp->default"/>-->
-        <dependency org="com.google.protobuf" name="protobuf-java" rev="2.5.0" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.apache.solr" name="solr-core" rev="5.5.0" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.apache.solr" name="solr-solrj" rev="5.5.0" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="com.spatial4j" name="spatial4j" rev="0.5" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.codehaus.woodstox" name="stax2-api" rev="3.1.4" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="com.tdunning" name="t-digest" rev="3.1" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.codehaus.woodstox" name="woodstox-core-asl" rev="4.4.1" transitive="false" conf="solr-webapp->default"/>
-        <dependency org="org.apache.zookeeper" name="zookeeper" rev="3.4.6" transitive="false" conf="solr-webapp->default"/>
+        <!-- NOTICE: 2018-03-19: All applications/*/lib root dir ivy dependencies are now defined in:
+              framework/base/ivy.xml -->
+
+        <!-- solr-webapp dependencies (see build.xml for jar location handling) -->
+        <dependency org="org.antlr" name="antlr4-runtime" rev="4.5.1-1" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.ow2.asm" name="asm" rev="5.1" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.ow2.asm" name="asm-commons" rev="5.1" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.calcite.avatica" name="avatica-core" rev="1.9.0" transitive="false" conf="solr-webapp"/>
+        <dependency org="com.github.ben-manes.caffeine" name="caffeine" rev="2.4.0" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.calcite" name="calcite-core" rev="1.11.0" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.calcite" name="calcite-linq4j" rev="1.11.0" transitive="false" conf="solr-webapp"/>
+        <dependency org="commons-cli" name="commons-cli" rev="1.2" transitive="false" conf="solr-webapp"/>
+        <dependency org="commons-codec" name="commons-codec" rev="1.10" transitive="false" conf="solr-webapp"/>
+        <dependency org="commons-collections" name="commons-collections" rev="3.2.2" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.codehaus.janino" name="commons-compiler" rev="2.7.6" transitive="false" conf="solr-webapp"/>
+        <dependency org="commons-configuration" name="commons-configuration" rev="1.6" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.commons" name="commons-exec" rev="1.3" transitive="false" conf="solr-webapp"/>
+        <!-- SECURITY: fileupload manual upgrade for CVE-2016-1000031 
+        <dependency org="commons-fileupload" name="commons-fileupload" rev="1.3.2" transitive="false" conf="solr-webapp"/>-->
+        <dependency org="commons-fileupload" name="commons-fileupload" rev="1.3.3" transitive="false" conf="solr-webapp"/>
+        <dependency org="commons-io" name="commons-io" rev="2.5" transitive="false" conf="solr-webapp"/>
+        <dependency org="commons-lang" name="commons-lang" rev="2.6" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.commons" name="commons-math3" rev="3.4.1" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.curator" name="curator-client" rev="2.8.0" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.curator" name="curator-framework" rev="2.8.0" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.curator" name="curator-recipes" rev="2.8.0" transitive="false" conf="solr-webapp"/>
+        <dependency org="dom4j" name="dom4j" rev="1.6.1" transitive="false" conf="solr-webapp"/>
+        <dependency org="net.hydromatic" name="eigenbase-properties" rev="1.1.5" transitive="false" conf="solr-webapp"/>
+        <dependency org="com.google.guava" name="guava" rev="14.0.1" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.hadoop" name="hadoop-annotations" rev="2.7.4" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.hadoop" name="hadoop-auth" rev="2.7.4" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.hadoop" name="hadoop-common" rev="2.7.4" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.hadoop" name="hadoop-hdfs" rev="2.7.4" transitive="false" conf="solr-webapp"/>
+        <dependency org="com.carrotsearch" name="hppc" rev="0.7.1" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.htrace" name="htrace-core" rev="3.2.0-incubating" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.httpcomponents" name="httpclient" rev="4.4.1" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.httpcomponents" name="httpcore" rev="4.4.1" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.httpcomponents" name="httpmime" rev="4.4.1" transitive="false" conf="solr-webapp"/>
+        <!-- SECURITY: jackson manual upgrade for CVE-2017-15095/CVE-2017-17485/CVE-2017-7525/CVE-2018-5968/CVE-2018-7489
+        <dependency org="com.fasterxml.jackson.core" name="jackson-annotations" rev="2.5.4" transitive="false" conf="solr-webapp"/>
+        <dependency org="com.fasterxml.jackson.core" name="jackson-core" rev="2.5.4" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.codehaus.jackson" name="jackson-core-asl" rev="1.9.13" transitive="false" conf="solr-webapp"/>
+        <dependency org="com.fasterxml.jackson.core" name="jackson-databind" rev="2.5.4" transitive="false" conf="solr-webapp"/>
+        <dependency org="com.fasterxml.jackson.dataformat" name="jackson-dataformat-smile" rev="2.5.4" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.codehaus.jackson" name="jackson-mapper-asl" rev="1.9.13" transitive="false" conf="solr-webapp"/>-->
+        <dependency org="com.fasterxml.jackson.core" name="jackson-annotations" rev="2.9.5" transitive="false" conf="solr-webapp"/>
+        <dependency org="com.fasterxml.jackson.core" name="jackson-core" rev="2.9.5" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.codehaus.jackson" name="jackson-core-asl" rev="1.9.13" transitive="false" conf="solr-webapp"/>
+        <dependency org="com.fasterxml.jackson.core" name="jackson-databind" rev="2.9.5" transitive="false" conf="solr-webapp"/>
+        <dependency org="com.fasterxml.jackson.dataformat" name="jackson-dataformat-smile" rev="2.9.5" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.codehaus.jackson" name="jackson-mapper-asl" rev="1.9.13" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.codehaus.janino" name="janino" rev="2.7.6" transitive="false" conf="solr-webapp"/>
+        <dependency org="joda-time" name="joda-time" rev="2.2" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.lucene" name="lucene-analyzers-common" rev="6.6.3" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.lucene" name="lucene-analyzers-kuromoji" rev="6.6.3" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.lucene" name="lucene-analyzers-phonetic" rev="6.6.3" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.lucene" name="lucene-backward-codecs" rev="6.6.3" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.lucene" name="lucene-classification" rev="6.6.3" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.lucene" name="lucene-codecs" rev="6.6.3" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.lucene" name="lucene-core" rev="6.6.3" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.lucene" name="lucene-expressions" rev="6.6.3" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.lucene" name="lucene-grouping" rev="6.6.3" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.lucene" name="lucene-highlighter" rev="6.6.3" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.lucene" name="lucene-join" rev="6.6.3" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.lucene" name="lucene-memory" rev="6.6.3" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.lucene" name="lucene-misc" rev="6.6.3" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.lucene" name="lucene-queries" rev="6.6.3" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.lucene" name="lucene-queryparser" rev="6.6.3" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.lucene" name="lucene-sandbox" rev="6.6.3" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.lucene" name="lucene-spatial-extras" rev="6.6.3" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.lucene" name="lucene-suggest" rev="6.6.3" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.noggit" name="noggit" rev="0.6" transitive="false" conf="solr-webapp"/>
+        <!-- FIXME?: restlet is not available in central - currently committed to ivy-local repo instead -->
+        <dependency org="org.restlet.jee" name="org.restlet" rev="2.3.0" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.restlet.jee" name="org.restlet.ext.servlet" rev="2.3.0" transitive="false" conf="solr-webapp"/>
+        <dependency org="com.google.protobuf" name="protobuf-java" rev="3.1.0" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.solr" name="solr-core" rev="6.6.3" transitive="false" conf="solr-webapp,solr-webapp-sources"/>
+        <dependency org="org.apache.solr" name="solr-solrj" rev="6.6.3" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.locationtech.spatial4j" name="spatial4j" rev="0.6" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.codehaus.woodstox" name="stax2-api" rev="3.1.4" transitive="false" conf="solr-webapp"/>
+        <dependency org="com.tdunning" name="t-digest" rev="3.1" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.codehaus.woodstox" name="woodstox-core-asl" rev="4.4.1" transitive="false" conf="solr-webapp"/>
+        <dependency org="org.apache.zookeeper" name="zookeeper" rev="3.4.10" transitive="false" conf="solr-webapp"/>
     </dependencies>
 </ivy-module>

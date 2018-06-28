@@ -19,11 +19,10 @@
 package org.ofbiz.shipment.weightPackage;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import javolution.util.FastMap;
 
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilMisc;
@@ -151,9 +150,9 @@ public class WeightPackageServices {
         weightPackageSession.setEstimatedShipCost(estimatedShippingCost);
         weightPackageSession.setActualShipCost(newEstimatedShippingCost);
 
-        Map<String, Object> response = FastMap.newInstance();
+        Map<String, Object> response = new HashMap<String, Object>();
         try {
-            String getActualShippingQuoteFromUps = EntityUtilProperties.getPropertyValue("shipment.properties", "shipment.ups.shipping", "N", delegator);
+            String getActualShippingQuoteFromUps = EntityUtilProperties.getPropertyValue("shipment", "shipment.ups.shipping", "N", delegator);
             String result = weightPackageSession.complete(orderId, locale, getActualShippingQuoteFromUps);
             if ("showWarningForm".equals(result)) {
                 response.put("showWarningForm", true);
@@ -176,9 +175,9 @@ public class WeightPackageServices {
         String shipmentId = (String) context.get("shipmentId");
         String orderId = (String) context.get("orderId");
 
-        Map<String, Object> response = FastMap.newInstance();
+        Map<String, Object> response = new HashMap<String, Object>();
         try {
-            String getActualShippingQuoteFromUps = EntityUtilProperties.getPropertyValue("shipment.properties", "shipment.ups.shipping", "N", delegator);
+            String getActualShippingQuoteFromUps = EntityUtilProperties.getPropertyValue("shipment", "shipment.ups.shipping", "N", delegator);
             if (weightPackageSession.completeShipment(orderId, getActualShippingQuoteFromUps)) {
                 response.put("shipmentId", shipmentId);
             } else {
@@ -197,7 +196,7 @@ public class WeightPackageServices {
 
         String orderId = (String) context.get("orderId");
 
-        String getActualShippingQuoteFromUps = EntityUtilProperties.getPropertyValue("shipment.properties", "shipment.ups.shipping", "N", delegator);
+        String getActualShippingQuoteFromUps = EntityUtilProperties.getPropertyValue("shipment", "shipment.ups.shipping", "N", delegator);
         try {
             weightPackageSession.savePackagesInfo(orderId, getActualShippingQuoteFromUps);
         } catch (GeneralException e) {

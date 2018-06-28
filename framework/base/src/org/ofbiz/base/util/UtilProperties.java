@@ -19,7 +19,6 @@
 package org.ofbiz.base.util;
 
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -32,6 +31,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Iterator;
@@ -44,6 +44,8 @@ import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.cache.UtilCache;
@@ -66,19 +68,14 @@ import org.w3c.dom.Element;
 @SuppressWarnings("serial")
 public class UtilProperties implements Serializable {
 
-    public static final String module = UtilProperties.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    /** An instance of the generic cache for storing the non-locale-specific properties.
-     *  Each Properties instance is keyed by the resource String.
-     */
-    private static final UtilCache<String, Properties> resourceCache = UtilCache.createUtilCache("properties.UtilPropertiesResourceCache");
-
-    /** An instance of the generic cache for storing the non-locale-specific properties.
-     *  Each Properties instance is keyed by the file's URL.
+    /**
+     * A cache for storing Properties instances. Each Properties instance is keyed by its URL.
      */
     private static final UtilCache<String, Properties> urlCache = UtilCache.createUtilCache("properties.UtilPropertiesUrlCache");
 
-    protected static Set<String> propertiesNotFound = new HashSet<String>();
+    private static final Set<String> propertiesNotFound = new HashSet<String>();
 
     /** Compares the specified property to the compareString, returns true if they are the same, false otherwise
      * @param resource The name of the resource - if the properties file is 'webevent.properties', the resource name is 'webevent'
@@ -151,15 +148,18 @@ public class UtilProperties implements Serializable {
     private static Number getPropertyNumber(String resource, String name, Number defaultNumber, String type) {
         String str = getPropertyValue(resource, name);
         if (UtilValidate.isEmpty(str)) {
-            Debug.logWarning("Error converting String \"" + str + "\" to " + type + "; using defaultNumber " + defaultNumber + ".", module);
+            // SCIPIO: 2017-07-15: should not be a warning nor error 
+            //Debug.logWarning("Error converting String \"" + str + "\" to " + type + "; using defaultNumber " + defaultNumber + ".", module);
+            Debug.logInfo("Property [" + resource + "/" + name + "] empty; using defaultNumber " + defaultNumber + ".", module);
             return defaultNumber;
-        } else
+        } else {
             try {
                 return (Number)(ObjectType.simpleTypeConvert(str, type, null, null));
             } catch (GeneralException e) {
                 Debug.logWarning("Error converting String \"" + str + "\" to " + type + "; using defaultNumber " + defaultNumber + ".", module);
             }
             return defaultNumber;
+        }
     }
 
     /**
@@ -167,7 +167,7 @@ public class UtilProperties implements Serializable {
      * If the specified property name or properties file is not found, the defaultValue is returned.
      * @param resource The name of the resource - if the properties file is 'webevent.properties', the resource name is 'webevent'
      * @param name The name of the property in the properties file
-     * @param defaultValue Optional: The Value to return if the property is not found or not the correct format.
+     * @param defaultValue Optional: The Value to return if the property is not found or not the correct format. [SCIPIO: 2017-08-29: now boxed type]
      * @return A Boolean-Object of the property; or if not found the defaultValue
      */
     public static Boolean getPropertyAsBoolean(String resource, String name, boolean defaultValue) {
@@ -176,7 +176,22 @@ public class UtilProperties implements Serializable {
         else if ("false".equalsIgnoreCase(str)) return Boolean.FALSE;
         else return defaultValue;
     }
-
+    
+    /**
+     * Returns a Boolean-Object of the specified property name from the specified resource/properties file. [SCIPIO: 2017-08-29: boxed-type overload]
+     * If the specified property name or properties file is not found, the defaultValue is returned.
+     * @param resource The name of the resource - if the properties file is 'webevent.properties', the resource name is 'webevent'
+     * @param name The name of the property in the properties file
+     * @param defaultValue Optional: The Value to return if the property is not found or not the correct format. [SCIPIO: 2017-08-29: now boxed type]
+     * @return A Boolean-Object of the property; or if not found the defaultValue
+     */
+    public static Boolean getPropertyAsBoolean(String resource, String name, Boolean defaultValue) {
+        String str = getPropertyValue(resource, name);
+        if ("true".equalsIgnoreCase(str)) return Boolean.TRUE;
+        else if ("false".equalsIgnoreCase(str)) return Boolean.FALSE;
+        else return defaultValue;
+    }
+    
     /**
      * Returns an Integer-Object of the specified property name from the specified resource/properties file.
      * If the specified property name or properties file is not found, the defaultNumber is returned.
@@ -186,6 +201,18 @@ public class UtilProperties implements Serializable {
      * @return An Integer-Object of the property; or if not found the defaultNumber
      */
     public static Integer getPropertyAsInteger(String resource, String name, int defaultNumber) {
+        return (Integer)getPropertyNumber(resource, name, defaultNumber, "Integer");
+    }
+    
+    /**
+     * Returns an Integer-Object of the specified property name from the specified resource/properties file. [SCIPIO: 2017-08-29: boxed-type overload]
+     * If the specified property name or properties file is not found, the defaultNumber is returned.
+     * @param resource The name of the resource - if the properties file is 'webevent.properties', the resource name is 'webevent'
+     * @param name The name of the property in the properties file
+     * @param defaultNumber Optional: The Value to return if the property is not found. [SCIPIO: 2017-08-29: now boxed type]
+     * @return An Integer-Object of the property; or if not found the defaultNumber
+     */
+    public static Integer getPropertyAsInteger(String resource, String name, Integer defaultNumber) {
         return (Integer)getPropertyNumber(resource, name, defaultNumber, "Integer");
     }
 
@@ -200,6 +227,18 @@ public class UtilProperties implements Serializable {
     public static Long getPropertyAsLong(String resource, String name, long defaultNumber) {
         return (Long)getPropertyNumber(resource, name, defaultNumber, "Long");
     }
+    
+    /**
+     * Returns a Long-Object of the specified property name from the specified resource/properties file. [SCIPIO: 2017-08-29: boxed-type overload]
+     * If the specified property name or properties file is not found, the defaultNumber is returned.
+     * @param resource The name of the resource - if the properties file is 'webevent.properties', the resource name is 'webevent'
+     * @param name The name of the property in the properties file
+     * @param defaultNumber Optional: The Value to return if the property is not found. [SCIPIO: 2017-08-29: now boxed type]
+     * @return A Long-Object of the property; or if not found the defaultNumber
+     */
+    public static Long getPropertyAsLong(String resource, String name, Long defaultNumber) {
+        return (Long)getPropertyNumber(resource, name, defaultNumber, "Long");
+    }
 
     /**
      * Returns a Float-Object of the specified property name from the specified resource/properties file.
@@ -212,6 +251,18 @@ public class UtilProperties implements Serializable {
     public static Float getPropertyAsFloat(String resource, String name, float defaultNumber) {
         return (Float)getPropertyNumber(resource, name, defaultNumber, "Float");
     }
+    
+    /**
+     * Returns a Float-Object of the specified property name from the specified resource/properties file. [SCIPIO: 2017-08-29: boxed-type overload]
+     * If the specified property name or properties file is not found, the defaultNumber is returned.
+     * @param resource The name of the resource - if the properties file is 'webevent.properties', the resource name is 'webevent'
+     * @param name The name of the property in the properties file
+     * @param defaultNumber Optional: The Value to return if the property is not found. [SCIPIO: 2017-08-29: now boxed type]
+     * @return A Long-Object of the property; or if not found the defaultNumber
+     */
+    public static Float getPropertyAsFloat(String resource, String name, Float defaultNumber) {
+        return (Float)getPropertyNumber(resource, name, defaultNumber, "Float");
+    }
 
     /**
      * Returns a Double-Object of the specified property name from the specified resource/properties file.
@@ -222,6 +273,18 @@ public class UtilProperties implements Serializable {
      * @return A Double-Object of the property; or if not found the defaultNumber
      */
     public static Double getPropertyAsDouble(String resource, String name, double defaultNumber) {
+        return (Double)getPropertyNumber(resource, name, defaultNumber, "Double");
+    }
+    
+    /**
+     * Returns a Double-Object of the specified property name from the specified resource/properties file. [SCIPIO: 2017-08-29: boxed-type overload]
+     * If the specified property name or properties file is not found, the defaultNumber is returned.
+     * @param resource The name of the resource - if the properties file is 'webevent.properties', the resource name is 'webevent'
+     * @param name The name of the property in the properties file
+     * @param defaultNumber Optional: The Value to return if the property is not found. [SCIPIO: 2017-08-29: now boxed type]
+     * @return A Double-Object of the property; or if not found the defaultNumber
+     */
+    public static Double getPropertyAsDouble(String resource, String name, Double defaultNumber) {
         return (Double)getPropertyNumber(resource, name, defaultNumber, "Double");
     }
 
@@ -239,7 +302,7 @@ public class UtilProperties implements Serializable {
         try {
             result = new BigInteger(strValue);
         } catch (NumberFormatException nfe) {
-            Debug.logWarning("Couldnt convert String \"" + strValue + "\" to BigInteger; using defaultNumber " + defaultNumber.toString() + ".", module);
+            Debug.logWarning("Couldn't convert String \"" + strValue + "\" to BigInteger; using defaultNumber " + defaultNumber.toString() + ".", module);
         }
         return result;
     }
@@ -258,7 +321,7 @@ public class UtilProperties implements Serializable {
         try {
             result = new BigDecimal(strValue);
         } catch (NumberFormatException nfe) {
-            Debug.logWarning("Couldnt convert String \"" + strValue + "\" to BigDecimal; using defaultNumber " + defaultNumber.toString() + ".", module);
+            Debug.logWarning("Couldn't convert String \"" + strValue + "\" to BigDecimal; using defaultNumber " + defaultNumber.toString() + ".", module);
         }
         return result;
     }
@@ -287,6 +350,54 @@ public class UtilProperties implements Serializable {
         return value == null ? "" : value.trim();
     }
 
+    /** SCIPIO: Returns the value of the specified property name from the specified resource/properties file,
+     * or null if it is absent or empty.
+     * Added 2018-04-27.
+     * @param resource The name of the resource - can be a file, class, or URL
+     * @param name The name of the property in the properties file
+     * @return The value of the property in the properties file
+     */
+    public static String getPropertyValueOrNull(String resource, String name) {
+        String value = getPropertyValue(resource, name);
+        return value.isEmpty() ? null : value;
+    }
+
+    /**
+     * Returns a new <code>Properties</code> instance created from <code>fileName</code>.
+     * <p>This method is intended for low-level framework classes that need to read
+     * properties files before OFBiz has been fully initialized.</p>
+     * 
+     * @param fileName The full name of the properties file ("foo.properties")
+     * @return A new <code>Properties</code> instance created from <code>fileName</code>, or
+     * <code>null</code> if the file was not found
+     * @throws IllegalArgumentException if <code>fileName</code> is empty
+     * @throws IllegalStateException if there was a problem reading the file
+     */
+    public static Properties createProperties(String fileName) {
+        Assert.notEmpty("fileName", fileName);
+        InputStream inStream = null;
+        try {
+            URL url = Thread.currentThread().getContextClassLoader().getResource(fileName);
+            if (url == null) {
+                return null;
+            }
+            inStream = url.openStream();
+            Properties properties = new Properties();
+            properties.load(inStream);
+            return properties;
+        } catch (Exception e) {
+            throw new IllegalStateException("Exception thrown while reading " + fileName + ": " + e);
+        } finally {
+            if (inStream != null) {
+                try {
+                    inStream.close();
+                } catch (IOException e) {
+                    System.out.println("Exception thrown while closing InputStream: " + e);
+                }
+            }
+        }
+    }
+
     /** Returns the specified resource/properties file
      * @param resource The name of the resource - can be a file, class, or URL
      * @return The properties file
@@ -295,30 +406,8 @@ public class UtilProperties implements Serializable {
         if (resource == null || resource.length() <= 0) {
             return null;
         }
-        String cacheKey = resource.replace(".properties", "");
-        Properties properties = resourceCache.get(cacheKey);
-        if (properties == null) {
-            try {
-                URL url = UtilURL.fromResource(resource);
-
-                if (url == null)
-                    return null;
-                String fileName = url.getFile();
-                File file = new File(fileName);
-                if (file.isDirectory()) {
-                    Debug.logError(fileName + " is (also?) a directory! No properties assigned.", module);
-                    return null;
-                }
-                properties = resourceCache.putIfAbsentAndGet(cacheKey, getProperties(url));
-            } catch (MissingResourceException e) {
-                Debug.logInfo(e, module);
-            }
-        }
-        if (properties == null) {
-            Debug.logInfo("[UtilProperties.getProperties] could not find resource: " + resource, module);
-            return null;
-        }
-        return properties;
+        URL url = resolvePropertiesUrl(resource, null);
+        return getProperties(url);
     }
 
     /** Returns the specified resource/properties file
@@ -329,12 +418,12 @@ public class UtilProperties implements Serializable {
         if (url == null) {
             return null;
         }
-        Properties properties = urlCache.get(url.toString());
+        String cacheKey = url.toString();
+        Properties properties = urlCache.get(cacheKey);
         if (properties == null) {
             try {
-                properties = new Properties();
-                properties.load(url.openStream());
-                urlCache.put(url.toString(), properties);
+                properties = new ExtendedProperties(url, null);
+                urlCache.put(cacheKey, properties);
             } catch (Exception e) {
                 Debug.logInfo(e, module);
             }
@@ -955,31 +1044,53 @@ public class UtilProperties implements Serializable {
         if (propertiesNotFound.contains(resourceName)) {
             return null;
         }
+        boolean containsProtocol = resource.contains(":");
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
         URL url = null;
         try {
             // Check for complete URL first
             if (resource.endsWith(".xml") || resource.endsWith(".properties")) {
-                url = FlexibleLocation.resolveLocation(resource);
+                if (containsProtocol) {
+                    url = FlexibleLocation.resolveLocation(resource, loader);
+                } else {
+                    url = UtilURL.fromResource(resource, loader);
+                }
                 if (url != null) {
                     return url;
                 }
             }
             // Check for *.properties file
-            url = FlexibleLocation.resolveLocation(resourceName + ".properties");
+            if (containsProtocol) {
+                url = FlexibleLocation.resolveLocation(resourceName + ".properties", loader);
+            } else {
+                url = UtilURL.fromResource(resourceName + ".properties", loader);
+            }
             if (url != null) {
                 return url;
             }
             // Check for Java XML properties file
-            url = FlexibleLocation.resolveLocation(resourceName + ".xml");
+            if (containsProtocol) {
+                url = FlexibleLocation.resolveLocation(resourceName + ".xml", loader);
+            } else {
+                url = UtilURL.fromResource(resourceName + ".xml", loader);
+            }
             if (url != null) {
                 return url;
             }
             // Check for Custom XML properties file
-            url = FlexibleLocation.resolveLocation(resource + ".xml");
+            if (containsProtocol) {
+                url = FlexibleLocation.resolveLocation(resource + ".xml", loader);
+            } else {
+                url = UtilURL.fromResource(resource + ".xml", loader);
+            }
             if (url != null) {
                 return url;
             }
-            url = FlexibleLocation.resolveLocation(resourceName);
+            if (containsProtocol) {
+                url = FlexibleLocation.resolveLocation(resource, loader);
+            } else {
+                url = UtilURL.fromResource(resource, loader);
+            }
             if (url != null) {
                 return url;
             }
@@ -1007,7 +1118,7 @@ public class UtilProperties implements Serializable {
      * &nbsp;&nbsp;...<br />
      * &nbsp;&lt;/property&gt;<br />
      * &nbsp;...<br />
-     * &lt;/resource&gt;<br /><br /></code> where <em>"locale 1", "locale 2"</em> are valid Locale strings.
+     * &lt;/resource&gt;<br /><br /></code> where <em>"locale 1", "locale 2"</em> are valid xml:lang values..
      * </p>
      *
      * @param in XML file InputStream
@@ -1021,11 +1132,10 @@ public class UtilProperties implements Serializable {
         }
         Document doc = null;
         try {
-            // set validation true when we have a DTD for the custom XML format
-            doc = UtilXml.readXmlDocument(in, false, "XML Properties file");
+            doc = UtilXml.readXmlDocument(in, true, "XML Properties file");
             in.close();
         } catch (Exception e) {
-            Debug.logWarning(e, "XML Locale file for locale " + locale + " could not be loaded.", module);
+            Debug.logWarning(e, "XML file for locale " + locale + " could not be loaded.", module);
             in.close();
             return null;
         }
@@ -1073,7 +1183,542 @@ public class UtilProperties implements Serializable {
         }
         return properties;
     }
+    
+    /**
+     * SCIPIO: Returns all property names in the given Properties that start with given prefix
+     * and end with given suffix, with option to forbid dots in between.
+     * Added 2017-07-10.
+     */
+    public static Set<String> getPropertyNamesWithPrefixSuffix(Properties properties, String prefix, String suffix, boolean allowDots, boolean returnPrefix, boolean returnSuffix) {
+        Set<String> names = new HashSet<>();
+        int suffixLength = (suffix == null ? 0 : suffix.length());
+        for(String name : properties.stringPropertyNames()) {
+            if ((prefix == null || name.startsWith(prefix)) && (suffix == null || name.endsWith(suffix))) {
+                String middle = name.substring(prefix.length(), name.length() - suffixLength);
+                if (allowDots || !middle.contains(".")) {
+                    names.add((returnPrefix ? prefix : "") + middle + (returnSuffix ? suffix : ""));
+                }
+            }
+        }
+        return names;
+    }
 
+    /**
+     * SCIPIO: Puts all property name/value pairs in the given Properties that start with given prefix
+     * and end with given suffix, with option to forbid dots in between, to the given out map.
+     * Added 2017-07-10.
+     */
+    public static void putPropertiesWithPrefixSuffix(Map<String, ? super String> out, Properties properties, String prefix, String suffix, boolean allowDots, boolean returnPrefix, boolean returnSuffix) {
+        int suffixLength = (suffix == null ? 0 : suffix.length());
+        for(String name : properties.stringPropertyNames()) {
+            if ((prefix == null || name.startsWith(prefix)) && (suffix == null || name.endsWith(suffix))) {
+                String middle = name.substring(prefix.length(), name.length() - suffixLength);
+                if (allowDots || !middle.contains(".")) {
+                    String value = properties.getProperty(name);
+                    if (value != null) value = value.trim();
+                    out.put((returnPrefix ? prefix : "") + middle + (returnSuffix ? suffix : ""), value);
+                }
+            }
+        }
+    }
+    
+    /**
+     * SCIPIO: Puts all property name/value pairs in the given Properties that start with given prefix
+     * with option to forbid dots in names, to the given out map.
+     * Added 2017-07-10.
+     */
+    public static void putPropertiesWithPrefix(Map<String, ? super String> out, Properties properties, String prefix, boolean allowDots, boolean returnPrefix) {
+        for(String name : properties.stringPropertyNames()) {
+            if ((prefix == null || name.startsWith(prefix))) {
+                String middle = name.substring(prefix.length(), name.length());
+                if (allowDots || !middle.contains(".")) {
+                    String value = properties.getProperty(name);
+                    if (value != null) value = value.trim();
+                    out.put((returnPrefix ? prefix : "") + middle, value);
+                }
+            }
+        }
+    }
+    
+    /**
+     * SCIPIO: Puts all property name/value pairs in the given Properties that start with given prefix,
+     * stripping the prefix and allowing dots in names, to the given out map.
+     * Added 2017-07-10.
+     */
+    public static void putPropertiesWithPrefix(Map<String, ? super String> out, Properties properties, String prefix) {
+        putPropertiesWithPrefix(out, properties, prefix, true, false);
+    }
+    
+    /**
+     * SCIPIO: Gets all property name/value pairs in the given Properties that start with given prefix
+     * and end with given suffix, with option to forbid dots in between, in an unordered map.
+     * Added 2018-04-27.
+     */
+    public static Map<String, String> getPropertiesWithPrefixSuffix(Properties properties, String prefix, String suffix, boolean allowDots, boolean returnPrefix, boolean returnSuffix) {
+        Map<String, String> out = new HashMap<>();
+        putPropertiesWithPrefixSuffix(out, properties, prefix, suffix, allowDots, returnPrefix, returnSuffix);
+        return out;
+    }
+    
+    /**
+     * SCIPIO: Gets all property name/value pairs in the given Properties that start with given prefix
+     * with option to forbid dots in name, in an unordered map.
+     * Added 2018-04-27.
+     */
+    public static Map<String, String> getPropertiesWithPrefix(Properties properties, String prefix, boolean allowDots, boolean returnPrefix) {
+        Map<String, String> out = new HashMap<>();
+        putPropertiesWithPrefix(out, properties, prefix, allowDots, returnPrefix);
+        return out;
+    }
+    
+    /**
+     * SCIPIO: Gets all property name/value pairs in the given Properties that start with given prefix,
+     * stripping the prefix and allowing dots in names, in an unordered map.
+     * Added 2018-04-27.
+     */
+    public static Map<String, String> getPropertiesWithPrefix(Properties properties, String prefix) {
+        Map<String, String> out = new HashMap<>();
+        putPropertiesWithPrefix(out, properties, prefix, true, false);
+        return out;
+    }
+    
+    /**
+     * SCIPIO: Extracts properties having the given prefix and keyed by an ID as the next name part between dots.
+     * Added 2017-11.
+     */
+    public static <T> void extractPropertiesWithPrefixAndId(Map<String, Map<String, T>> out, Properties properties, String prefix) {
+        extractPropertiesWithPrefixAndId(out, (Map<?, ?>) properties, prefix);
+    }
+    
+    /**
+     * SCIPIO: Extracts properties having the given prefix and keyed by an ID as the next name part between dots.
+     * Added 2017-11.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> void extractPropertiesWithPrefixAndId(Map<String, Map<String, T>> out, Map<?, ?> properties, String prefix) {
+        if (prefix == null) prefix = "";
+        for(Map.Entry<?, ?> entry : properties.entrySet()) {
+            String name = (String) entry.getKey();
+            if (name.startsWith(prefix)) {
+                String rest = name.substring(prefix.length());
+                int nextDotIndex = rest.indexOf('.');
+                if (nextDotIndex > 0 && nextDotIndex < (rest.length() - 1)) {
+                    String id = rest.substring(0, nextDotIndex);
+                    String subName = rest.substring(nextDotIndex + 1);
+                    String value = (String) entry.getValue();
+                    Map<String, T> subMap = out.get(id);
+                    if (subMap == null) {
+                        subMap = new HashMap<>();
+                        out.put(id, subMap);
+                    }
+                    subMap.put(subName, (T) value);
+                }
+            }
+        }
+    }
+
+    /**
+     * SCIPIO: Puts all property name/value pairs in the given Properties that match the given regexp,
+     * with option to return names from the first numbered regexp group.
+     * Added 2018-08-23.
+     */
+    public static void putPropertiesMatching(Map<String, ? super String> out, Properties properties, Pattern nameRegexp, boolean returnFirstGroup) {
+        for(String name : properties.stringPropertyNames()) {
+            Matcher m = nameRegexp.matcher(name);
+            if (m.matches()) {
+                String value = properties.getProperty(name);
+                if (value != null) value = value.trim();
+                out.put(returnFirstGroup ? m.group(1) : name, value);
+            }
+        }
+    }
+
+    /**
+     * SCIPIO: Puts all property name/value pairs in the given Properties that match the given regexp.
+     * The names are unchanged.
+     * Added 2018-08-23.
+     */
+    public static void putPropertiesMatching(Map<String, ? super String> out, Properties properties, Pattern nameRegexp) {
+        putPropertiesMatching(out, properties, nameRegexp, false);
+    }
+
+    /**
+     * SCIPIO: Gets all property name/value pairs in the given Properties that match the given regexp,
+     * with option to return names from the first numbered regexp group.
+     * Added 2018-08-23.
+     */
+    public static Map<String, String> getPropertiesMatching(Properties properties, Pattern nameRegexp, boolean returnFirstGroup) {
+        Map<String, String> out = new HashMap<>();
+        putPropertiesMatching(out, properties, nameRegexp, returnFirstGroup);
+        return out;
+    }
+
+    /**
+     * SCIPIO: Gets all property name/value pairs in the given Properties that match the given regexp.
+     * The names are unchanged.
+     * Added 2018-08-23.
+     */
+    public static Map<String, String>  getPropertiesMatching(Properties properties, Pattern nameRegexp) {
+        Map<String, String> out = new HashMap<>();
+        putPropertiesMatching(out, properties, nameRegexp, false);
+        return out;
+    }
+
+    /**
+     * SCIPIO: Cleans the given string value, following {@link #getPropertyValue} logic.
+     * Added 2018-04-27.
+     */
+    public static String cleanValue(String value) {
+        return value == null ? "" : value.trim();
+    }
+    
+    /**
+     * SCIPIO: Returns the value or null.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static String valueOrNull(String value) {
+        return (value == null || value.isEmpty()) ? null : value;
+    }
+    
+    /**
+     * SCIPIO: Converts the given string value to a number type, following {@link #getPropertyNumber} logic.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    @SuppressWarnings("unchecked")
+    public static <N extends Number> N asNumber(Class<N> type, String value, N defaultNumber) {
+        if (UtilValidate.isEmpty(value)) {
+            return defaultNumber;
+        } else {
+            try {
+                return (N)(ObjectType.simpleTypeConvert(value, type.getSimpleName(), null, null));
+            } catch (GeneralException e) {
+                Debug.logWarning("Error converting String \"" + value + "\" to " + type + "; using defaultNumber " + defaultNumber + ".", module);
+            }
+            return defaultNumber;
+        }
+    }
+    
+    /**
+     * SCIPIO: Converts the given string value to a number type, following {@link #getPropertyNumber} logic.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static <N extends Number> N asNumber(Class<N> type, String value) {
+        return asNumber(type, value, null);
+    }
+    
+    /**
+     * SCIPIO: Converts the given value to a number type, following {@link #getPropertyNumber} logic.
+     * NOTE: If string, this assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    @SuppressWarnings("unchecked")
+    public static <N extends Number> N asNumber(Class<N> type, Object value, N defaultNumber) {
+        if (value == null) return defaultNumber;
+        else if (type.isAssignableFrom(value.getClass())) return (N) value;
+        else return asNumber(type, (String) value, defaultNumber);
+    }
+    
+    /**
+     * SCIPIO: Converts the given value to a number type, following {@link #getPropertyNumber} logic.
+     * NOTE: If string, this assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    @SuppressWarnings("unchecked")
+    public static <N extends Number> N asNumber(Class<N> type, Object value) {
+        if (value == null || type.isAssignableFrom(value.getClass())) return (N) value;
+        else return asNumber(type, (String) value, null);
+    }
+    
+    /**
+     * SCIPIO: Converts the given string value to a Boolean type, following {@link #getPropertyAsBoolean} logic.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Boolean asBoolean(String value, Boolean defaultValue) {
+        if ("true".equalsIgnoreCase(value)) return Boolean.TRUE;
+        else if ("false".equalsIgnoreCase(value)) return Boolean.FALSE;
+        else return defaultValue;
+    }
+    
+    /**
+     * SCIPIO: Converts the given string value to a Boolean type, following {@link #getPropertyAsBoolean} logic.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Boolean asBoolean(String value) {
+        return asBoolean(value, null);
+    }
+    
+    /**
+     * SCIPIO: Converts the given value to a Boolean type, following {@link #getPropertyAsBoolean} logic.
+     * NOTE: If string, this assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Boolean asBoolean(Object value, Boolean defaultValue) {
+        if (value == null) return defaultValue;
+        else if (value instanceof Boolean) return (Boolean) value;
+        else return asBoolean((String) value, defaultValue);
+    }
+    
+    /**
+     * SCIPIO: Converts the given value to a Boolean type, following {@link #getPropertyAsBoolean} logic.
+     * NOTE: If string, this assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Boolean asBoolean(Object value) {
+        if (value == null || value instanceof Boolean) return (Boolean) value;
+        else return asBoolean((String) value);
+    }
+    
+    /**
+     * SCIPIO: Converts the given string value to a Integer type, following {@link #getPropertyAsInteger} logic.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Integer asInteger(String value, Integer defaultValue) {
+        return asNumber(Integer.class, value, defaultValue);
+    }
+    
+    /**
+     * SCIPIO: Converts the given string value to a Integer type, following {@link #getPropertyAsInteger} logic.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Integer asInteger(String value) {
+        return asInteger(value, null);
+    }
+
+    /**
+     * SCIPIO: Converts the given value to a Integer type, following {@link #getPropertyAsInteger} logic.
+     * NOTE: If string, this assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Integer asInteger(Object value, Integer defaultValue) {
+        if (value == null) return defaultValue;
+        else if (value instanceof Integer) return (Integer) value;
+        else return asInteger((String) value, defaultValue);
+    }
+    
+    /**
+     * SCIPIO: Converts the given value to a Integer type, following {@link #getPropertyAsInteger} logic.
+     * NOTE: If string, this assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Integer asInteger(Object value) {
+        if (value == null || value instanceof Integer) return (Integer) value;
+        else return asInteger((String) value, null);
+    }
+    
+    /**
+     * SCIPIO: Converts the given string value to a Long type, following {@link #getPropertyAsLong} logic.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Long asLong(String value, Long defaultValue) {
+        return asNumber(Long.class, value, defaultValue);
+    }
+    
+    /**
+     * SCIPIO: Converts the given string value to a Long type, following {@link #getPropertyAsLong} logic.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Long asLong(String value) {
+        return asLong(value, null);
+    }
+
+    /**
+     * SCIPIO: Converts the given value to a Long type, following {@link #getPropertyAsLong} logic.
+     * NOTE: If string, this assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Long asLong(Object value, Long defaultValue) {
+        if (value == null) return defaultValue;
+        else if (value instanceof Long) return (Long) value;
+        else return asLong((String) value, defaultValue);
+    }
+    
+    /**
+     * SCIPIO: Converts the given value to a Long type, following {@link #getPropertyAsLong} logic.
+     * NOTE: If string, this assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Long asLong(Object value) {
+        if (value == null || value instanceof Long) return (Long) value;
+        else return asLong((String) value, null);
+    }
+    
+    /**
+     * SCIPIO: Converts the given string value to a Float type, following {@link #getPropertyAsFloat} logic.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Float asFloat(String value, Float defaultValue) {
+        return asNumber(Float.class, value, defaultValue);
+    }
+    
+    /**
+     * SCIPIO: Converts the given string value to a Float type, following {@link #getPropertyAsFloat} logic.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Float asFloat(String value) {
+        return asFloat(value, null);
+    }
+
+    /**
+     * SCIPIO: Converts the given value to a Float type, following {@link #getPropertyAsFloat} logic.
+     * NOTE: If string, this assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Float asFloat(Object value, Float defaultValue) {
+        if (value == null) return defaultValue;
+        else if (value instanceof Float) return (Float) value;
+        else return asFloat((String) value, defaultValue);
+    }
+    
+    /**
+     * SCIPIO: Converts the given value to a Float type, following {@link #getPropertyAsFloat} logic.
+     * NOTE: If string, this assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Float asFloat(Object value) {
+        if (value == null || value instanceof Float) return (Float) value;
+        else return asFloat((String) value, null);
+    }
+    
+    /**
+     * SCIPIO: Converts the given string value to a Double type, following {@link #getPropertyAsDouble} logic.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Double asDouble(String value, Double defaultValue) {
+        return asNumber(Double.class, value, defaultValue);
+    }
+    
+    /**
+     * SCIPIO: Converts the given string value to a Double type, following {@link #getPropertyAsDouble} logic.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Double asDouble(String value) {
+        return asDouble(value, null);
+    }
+
+    /**
+     * SCIPIO: Converts the given value to a Double type, following {@link #getPropertyAsDouble} logic.
+     * NOTE: If string, this assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Double asDouble(Object value, Double defaultValue) {
+        if (value == null) return defaultValue;
+        else if (value instanceof Double) return (Double) value;
+        else return asDouble((String) value, defaultValue);
+    }
+    
+    /**
+     * SCIPIO: Converts the given value to a Double type, following {@link #getPropertyAsDouble} logic.
+     * NOTE: If string, this assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static Double asDouble(Object value) {
+        if (value == null || value instanceof Double) return (Double) value;
+        else return asDouble((String) value, null);
+    }
+    
+    /**
+     * SCIPIO: Converts the given string value to a BigInteger type, following {@link #getPropertyAsBigInteger} logic.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static BigInteger asBigInteger(String value, BigInteger defaultValue) {
+        BigInteger result = defaultValue;
+        try {
+            result = new BigInteger(value);
+        } catch (NumberFormatException nfe) {
+            Debug.logWarning("Couldn't convert String \"" + value + "\" to BigInteger; using defaultNumber " + defaultValue.toString() + ".", module);
+        }
+        return result;
+    }
+    
+    /**
+     * SCIPIO: Converts the given string value to a BigInteger type, following {@link #getPropertyAsBigInteger} logic.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static BigInteger asBigInteger(String value) {
+        return asBigInteger(value, null);
+    }
+
+    /**
+     * SCIPIO: Converts the given value to a BigInteger type, following {@link #getPropertyAsBigInteger} logic.
+     * NOTE: If string, this assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static BigInteger asBigInteger(Object value, BigInteger defaultValue) {
+        if (value == null) return defaultValue;
+        else if (value instanceof BigInteger) return (BigInteger) value;
+        else return asBigInteger((String) value, defaultValue);
+    }
+    
+    /**
+     * SCIPIO: Converts the given value to a BigInteger type, following {@link #getPropertyAsBigInteger} logic.
+     * NOTE: If string, this assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static BigInteger asBigInteger(Object value) {
+        if (value == null || value instanceof BigInteger) return (BigInteger) value;
+        else return asBigInteger((String) value, null);
+    }
+    
+    /**
+     * SCIPIO: Converts the given string value to a BigDecimal type, following {@link #getPropertyAsBigDecimal} logic.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static BigDecimal asBigDecimal(String value, BigDecimal defaultValue) {
+        BigDecimal result = defaultValue;
+        try {
+            result = new BigDecimal(value);
+        } catch (NumberFormatException nfe) {
+            Debug.logWarning("Couldn't convert String \"" + value + "\" to BigDecimal; using defaultNumber " + defaultValue.toString() + ".", module);
+        }
+        return result;
+    }
+    
+    /**
+     * SCIPIO: Converts the given string value to a BigDecimal type, following {@link #getPropertyAsBigDecimal} logic.
+     * NOTE: This assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static BigDecimal asBigDecimal(String value) {
+        return asBigDecimal(value, null);
+    }
+
+    /**
+     * SCIPIO: Converts the given value to a BigDecimal type, following {@link #getPropertyAsBigDecimal} logic.
+     * NOTE: If string, this assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static BigDecimal asBigDecimal(Object value, BigDecimal defaultValue) {
+        if (value == null) return defaultValue;
+        else if (value instanceof BigDecimal) return (BigDecimal) value;
+        else return asBigDecimal((String) value, defaultValue);
+    }
+    
+    /**
+     * SCIPIO: Converts the given value to a BigDecimal type, following {@link #getPropertyAsBigDecimal} logic.
+     * NOTE: If string, this assumes the string is already trimmed.
+     * Added 2018-04-27.
+     */
+    public static BigDecimal asBigDecimal(Object value) {
+        if (value == null || value instanceof BigDecimal) return (BigDecimal) value;
+        else return asBigDecimal((String) value, null);
+    }
+    
     /** Custom ResourceBundle class. This class extends ResourceBundle
      * to add custom bundle caching code and support for the OFBiz custom XML
      * properties file format.
@@ -1101,13 +1746,12 @@ public class UtilProperties implements Serializable {
             String resourceName = createResourceName(resource, locale, true);
             UtilResourceBundle bundle = bundleCache.get(resourceName);
             if (bundle == null) {
-                synchronized (bundleCache) {
                     double startTime = System.currentTimeMillis();
                     List<Locale> candidateLocales = (List<Locale>) getCandidateLocales(locale);
                     UtilResourceBundle parentBundle = null;
                     int numProperties = 0;
                     while (candidateLocales.size() > 0) {
-                        Locale candidateLocale = candidateLocales.remove(candidateLocales.size() -1);
+                    Locale candidateLocale = candidateLocales.remove(candidateLocales.size() - 1);
                         // ResourceBundles are connected together as a singly-linked list
                         String lookupName = createResourceName(resource, candidateLocale, true);
                         UtilResourceBundle lookupBundle = bundleCache.get(lookupName);
@@ -1117,7 +1761,7 @@ public class UtilProperties implements Serializable {
                                 // The last bundle we found becomes the parent of the new bundle
                                 parentBundle = bundle;
                                 bundle = new UtilResourceBundle(newProps, candidateLocale, parentBundle);
-                                bundleCache.put(lookupName, bundle);
+                            bundleCache.putIfAbsent(lookupName, bundle);
                                 numProperties = newProps.size();
                             }
                         } else {
@@ -1133,10 +1777,10 @@ public class UtilProperties implements Serializable {
                     }
                     double totalTime = System.currentTimeMillis() - startTime;
                     if (Debug.infoOn()) {
-                        Debug.logInfo("ResourceBundle " + resource + " (" + locale + ") created in " + totalTime/1000.0 + "s with " + numProperties + " properties", module);
-                    }
-                    bundleCache.put(resourceName, bundle);
+                    Debug.logInfo("ResourceBundle " + resource + " (" + locale + ") created in " + totalTime / 1000.0 + "s with "
+                            + numProperties + " properties", module);
                 }
+                bundleCache.putIfAbsent(resourceName, bundle);
             }
             return bundle;
         }
@@ -1187,18 +1831,27 @@ public class UtilProperties implements Serializable {
             super(defaults);
         }
         public ExtendedProperties(URL url, Locale locale) throws IOException, InvalidPropertiesFormatException {
-            InputStream in = new BufferedInputStream(url.openStream());
+            InputStream in = null;
+            try {
+                in = new BufferedInputStream(url.openStream());
             if (url.getFile().endsWith(".xml")) {
                 xmlToProperties(in, locale, this);
             } else {
                 load(in);
             }
+            } finally {
+                if (in != null) {
             in.close();
+        }
+            }
         }
         @Override
         public void loadFromXML(InputStream in) throws IOException, InvalidPropertiesFormatException {
+            try {
             xmlToProperties(in, null, this);
+            } finally {
             in.close();
         }
+    }
     }
 }

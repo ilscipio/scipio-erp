@@ -29,7 +29,7 @@ import org.ofbiz.base.util.cache.UtilCache;
  */
 public class PatternFactory {
 
-    public static final String module = PatternFactory.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final UtilCache<String, Pattern> compiledPerl5Patterns = UtilCache.createUtilCache("regularExpression.compiledPerl5Patterns", false);
 
     /**

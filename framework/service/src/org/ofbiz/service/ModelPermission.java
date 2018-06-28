@@ -34,7 +34,7 @@ import org.ofbiz.security.Security;
 @SuppressWarnings("serial")
 public class ModelPermission implements Serializable {
 
-    public static final String module = ModelPermission.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final int PERMISSION = 1;
     public static final int ENTITY_PERMISSION = 2;

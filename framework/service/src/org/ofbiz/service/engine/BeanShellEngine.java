@@ -36,6 +36,8 @@ import org.ofbiz.service.ServiceUtil;
  */
 public final class BeanShellEngine extends GenericAsyncEngine {
 
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
     public BeanShellEngine(ServiceDispatcher dispatcher) {
         super(dispatcher);
     }

@@ -17,10 +17,10 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#escape x as x?xml>
-<fo:block content-width="85mm" font-size="10pt">
+<fo:block content-width="auto" font-size="10pt">
     <fo:table table-layout="fixed" width="100%">
-        <fo:table-column column-width="30mm"/>
-        <fo:table-column column-width="55mm"/>
+        <fo:table-column column-width="20mm"/>
+        <fo:table-column/>
         <fo:table-body>
         <fo:table-row>
           <fo:table-cell><fo:block>${uiLabelMap.AccountingInvoiceDateAbbr}:</fo:block></fo:table-cell>

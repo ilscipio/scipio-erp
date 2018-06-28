@@ -20,25 +20,75 @@ under the License.
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
 
     <menu name="TimesheetTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          default-menu-item-name="Timesheet">
+        ><!-- default-menu-item-name="Timesheet" -->
         <menu-item name="Timesheet" title="${uiLabelMap.WorkEffortTimesheet}">
+            <condition><not><if-empty field="timesheetId"/></not></condition><!-- SCIPIO: condition here instead of decorator -->
             <link target="EditTimesheet">
                 <parameter param-name="timesheetId"/>
             </link>
         </menu-item>
         <menu-item name="TimesheetRoles" title="${uiLabelMap.PartyParties}">
+            <condition><not><if-empty field="timesheetId"/></not></condition>
             <link target="EditTimesheetRoles">
                 <parameter param-name="timesheetId"/>
             </link>
         </menu-item>
         <menu-item name="TimesheetEntries" title="${uiLabelMap.CommonEntries}">
+            <condition><not><if-empty field="timesheetId"/></not></condition>
             <link target="EditTimesheetEntries">
                 <parameter param-name="timesheetId"/>
             </link>
         </menu-item>
+        <menu-item name="MyTimesheets" title="${uiLabelMap.WorkEffortMyTimesheets}" widget-style="+${styles.action_nav} ${styles.action_view}">
+            <link target="MyTimesheets">
+                <parameter param-name="partyId" from-field="userLogin.partyId"/>
+            </link>
+        </menu-item>
     </menu>
-    <menu name="TimesheetSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          default-menu-item-name="Timesheet">
+    <menu name="TimesheetSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="TimesheetTabBar" recursive="includes-only" />
+        <menu-item-alias name="FindTimesheet" for="PARENT-WITHSUB"/><!-- show submenu for MyTimesheets: for="PARENT-NOSUB" -->
+        <menu-item-alias name="NewTimesheet" for="PARENT-WITHSUB"/>
+    </menu>
+    
+    <!-- SCIPIO: new -->
+    <menu name="TimesheetSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="EditTimesheet" title="${uiLabelMap.WorkEffortTimesheetCreate}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <condition>
+                <or>
+                    <not><if-empty field="timesheet"/></not>
+                    <not><if-true field="isEditTimesheet"/></not>
+                </or>
+            </condition>
+            <link target="EditTimesheet">
+                <parameter param-name="partyId" from-field="userLogin.partyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="MyTimesheets" title="${uiLabelMap.WorkEffortMyTimesheets}" widget-style="+${styles.action_nav} ${styles.action_view}">
+            <condition><if-compare field="activeSubMenuItem" operator="not-equals" value="MyTimesheets"/></condition>
+            <link target="MyTimesheets">
+                <parameter param-name="partyId" from-field="userLogin.partyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="createTimesheetForThisWeek" title="${uiLabelMap.PageTitleCreateWeekTimesheet}" widget-style="+${styles.action_run_sys} ${styles.action_add}">
+            <condition><if-compare field="activeSubMenuItem" operator="equals" value="MyTimesheets"/></condition>
+            <link target="createTimesheetForThisWeek" >
+                <parameter param-name="partyId" from-field="userLogin.partyId"/>
+            </link>
+        </menu-item>
+    </menu>
+    
+    <!-- SCIPIO: new -->
+    <menu name="MyCurrentTimesheetSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="MyTimesheets" title="${uiLabelMap.WorkEffortTimesheetQuickTimeEntry}" widget-style="+${styles.action_nav} ${styles.action_view}">
+            <link target="MyTimesheets">
+                <parameter param-name="showQuickEntry" from-field="currentTimesheet.timesheetId"/>
+            </link>
+        </menu-item>
+        <menu-item name="EditTimesheetEntries" title="${uiLabelMap.WorkEffortTimesheetTimeEntries}" widget-style="+${styles.action_nav} ${styles.action_view}">
+            <link target="EditTimesheetEntries">
+                <parameter param-name="timesheetId" from-field="currentTimesheet.timesheetId"/>
+            </link>
+        </menu-item>
     </menu>
 </menus>

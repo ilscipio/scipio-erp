@@ -57,7 +57,7 @@ import org.ofbiz.service.ServiceContainer;
 
 public class JavaMailContainer implements Container {
 
-    public static final String module = JavaMailContainer.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String INBOX = "INBOX";
 
     protected Delegator delegator = null;

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+    
+    http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+
+<menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
+    
+    <menu name="SetupAppBar" title="${uiLabelMap.SetupApp}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <!-- SCIPIO: not wanted?
+        <menu-item name="main" title="${uiLabelMap.SetupInitialSetup}" sort-mode="off">
+            <!- - SCIPIO: link to wizard with no parameters for now so goes to create new org
+            <link target="initialsetup"/>- ->
+            <link target="setupWizardNew" link-type="anchor"/>
+        </menu-item>-->
+        <menu-item name="wizard" title="${uiLabelMap.SetupSetupWizard} (WIP)" sort-mode="off">
+            <!-- TODO: REVIEW: for now linking this to the "current" step (instead of starting over),
+                    but could want setupWizardNew here instead... -->
+            <link target="setupWizard" link-type="anchor">
+                <parameter-map from-field="setupStepStates.finished.stepParams"/>
+            </link>
+        </menu-item>
+        <menu-item name="export" title="${uiLabelMap.PageTitleEntityExportAll}">
+            <link target="EntityExportAll"/>
+        </menu-item>
+    </menu>
+    <menu name="SetupAppSideBar" title="${uiLabelMap.SetupApp}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        always-expand-selected-or-ancestor="true">
+        <include-elements menu-name="SetupAppBar" recursive="full" />
+        <menu-item name="wizard">
+            <sub-menu name="SetupSteps" include="SetupStepsSideBar"/>
+        </menu-item>
+    </menu>
+    
+    <menu name="SetupTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="organization" title="${uiLabelMap.SetupOrganization}">
+            <condition>
+                <not><if-empty field="partyId"/></not>
+            </condition>
+            <link target="initialsetup"/>
+        </menu-item>
+        <menu-item name="facility" title="${uiLabelMap.SetupFacility}">
+            <condition>
+                <not><if-empty field="partyId"/></not>
+            </condition>
+            <link target="EditFacility">
+                <parameter param-name="partyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="productstore" title="${uiLabelMap.SetupProductStore}">
+            <condition>
+                <not><if-empty field="partyId"/></not>
+            </condition>
+            <link target="EditProductStore">
+                <parameter param-name="partyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="website" title="${uiLabelMap.SetupWebSite}">
+            <condition>
+                <not><if-empty field="partyId"/></not>
+            </condition>
+            <link target="EditWebSite">
+                <parameter param-name="partyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="firstcustomer" title="${uiLabelMap.SetupFirstCustomer}">
+            <condition>
+                <not><if-empty field="partyId"/></not>
+            </condition>
+            <link target="firstcustomer"/>
+        </menu-item>
+        <menu-item name="firstproduct" title="${uiLabelMap.SetupFirstProduct}">
+            <condition>
+                <not><if-empty field="partyId"/></not>
+            </condition>
+            <link target="firstproduct">
+                <parameter param-name="partyId"/>
+            </link>
+        </menu-item>
+    </menu>
+    
+    <menu name="SetupSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-elements menu-name="SetupTabBar" recursive="includes-only" />
+    </menu>
+    
+    <menu name="FirstProductTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="productcatalog">
+        <menu-item name="productcatalog" title="${uiLabelMap.SetupProductCatalog}">
+            <link target="firstproduct">
+                <parameter param-name="partyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="productcategory" title="${uiLabelMap.ProductCategory}">
+            <link target="EditCategory">
+                <parameter param-name="partyId"/>
+            </link>
+        </menu-item>
+        <menu-item name="product" title="${uiLabelMap.ProductProduct}">
+            <link target="EditProduct">
+                <parameter param-name="partyId"/>
+            </link>
+        </menu-item>
+    </menu>
+    
+    <menu name="personUpdate">
+        <menu-item name="update" title="${uiLabelMap.CommonUpdate}">
+            <link target="editperson">
+                <parameter param-name="customerPartyId" from-field="customerPartyId"/>
+                <parameter param-name="organizationPartyId" from-field="organizationPartyId"/>
+            </link>
+        </menu-item>
+    </menu>
+    
+    <menu name="groupUpdate">
+        <menu-item name="update" title="${uiLabelMap.CommonUpdate}">
+            <link target="editpartygroup">
+                <parameter param-name="partyId" from-field="organizationPartyId"/>
+            </link>
+        </menu-item>
+    </menu>
+    
+    <!-- SCIPIO: menu entries for wizard -->
+    <menu name="SetupStepsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        items-sort-mode="off">
+        <actions>
+            <script lang="groovy"><![CDATA[
+                stepStyles = [:];
+                for(stepState in context.setupStepStates?.values()) {
+                    def styles = "";
+                    // TODO?: translate via styles hash (may not matter much)
+                    styles += (stepState?.completed) ? "menustep-complete" : "menustep-incomplete";
+                    stepStyles[stepState.name] = styles;
+                }
+                context.stepStyles = stepStyles;
+            ]]></script>
+        </actions>
+        <menu-item-alias name="finished" for="PARENT-WITHSUB"/>
+        <menu-item-alias name="error" for="PARENT-WITHSUB"/>
+        <menu-item name="organization" title="${uiLabelMap[setupStepTitlePropMap['organization']]}" disabled="${context.setupStepDisabledMap.organization == true}" widget-style="+${context.stepStyles.organization}">
+            <link target="setupOrganization" link-type="anchor">
+                <parameter-map from-field="setupStepStates.organization.stepParams"/>
+            </link>
+        </menu-item>
+        <menu-item name="accounting" title="${uiLabelMap[setupStepTitlePropMap['accounting']]}" disabled="${context.setupStepDisabledMap.accounting == true}" widget-style="+${context.stepStyles.accounting}">
+            <link target="setupAccounting" link-type="anchor">
+                <parameter-map from-field="setupStepStates.accounting.stepParams"/>
+            </link>
+        </menu-item>
+        <menu-item name="facility" title="${uiLabelMap[setupStepTitlePropMap['facility']]}" disabled="${context.setupStepDisabledMap.facility == true}" widget-style="+${context.stepStyles.facility}">
+            <link target="setupFacility" link-type="anchor">
+                <parameter-map from-field="setupStepStates.facility.stepParams"/>
+            </link>
+        </menu-item>
+        <menu-item name="store" title="${uiLabelMap[setupStepTitlePropMap['store']]}" disabled="${context.setupStepDisabledMap.store == true}" widget-style="+${context.stepStyles.store}">
+            <link target="setupStore" link-type="anchor">
+                <parameter-map from-field="setupStepStates.store.stepParams"/>
+            </link>
+        </menu-item>
+        <menu-item name="catalog" title="${uiLabelMap[setupStepTitlePropMap['catalog']]}" disabled="${context.setupStepDisabledMap.catalog == true}" widget-style="+${context.stepStyles.catalog}">
+            <link target="setupCatalog" link-type="anchor">
+                <parameter-map from-field="setupStepStates.catalog.stepParams"/>
+            </link>
+        </menu-item>
+        <menu-item name="user" title="${uiLabelMap[setupStepTitlePropMap['user']]}" disabled="${context.setupStepDisabledMap.user == true}" widget-style="+${context.stepStyles.user}">
+            <link target="setupUser" link-type="anchor">
+                <parameter-map from-field="setupStepStates.user.stepParams"/>
+            </link>
+        </menu-item>
+        <!-- 
+        <menu-item name="website" title="${uiLabelMap[setupStepTitlePropMap['website']]}" disabled="${context.setupStepDisabledMap.website == true}" widget-style="+${context.stepStyles.website}">
+            <link target="setupWebsite" link-type="anchor">
+                <parameter-map from-field="setupStepStates.website.stepParams"/>
+            </link>
+        </menu-item>
+        -->
+    </menu>
+</menus>

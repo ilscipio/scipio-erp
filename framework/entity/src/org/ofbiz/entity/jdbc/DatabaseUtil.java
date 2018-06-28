@@ -68,7 +68,7 @@ import org.ofbiz.entity.transaction.TransactionUtil;
  */
 public class DatabaseUtil {
 
-    public static final String module = DatabaseUtil.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // OFBiz Connections
     protected ModelFieldTypeReader modelFieldTypeReader = null;
@@ -1593,8 +1593,12 @@ public class DatabaseUtil {
         }
 
         protected int updateData(Collection<String> messages) {
-            if (messages != null && UtilValidate.isNotEmpty(this.messages)) {
-                messages.addAll(messages);
+            // SCIPIO: there were 2 errors here; only 1 was fixed by ofbiz 16
+            //if (messages != null && UtilValidate.isNotEmpty(this.messages)) {
+            //    messages.addAll(messages);
+            //}
+            if (UtilValidate.isNotEmpty(messages)) {
+                this.messages.addAll(messages);
             }
             return count;
         }

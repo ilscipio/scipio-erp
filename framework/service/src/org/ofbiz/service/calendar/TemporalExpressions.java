@@ -34,7 +34,7 @@ import org.ofbiz.base.util.Debug;
  */
 @SuppressWarnings("serial")
 public class TemporalExpressions implements Serializable {
-    public static final String module = TemporalExpressions.class.getName();
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final TemporalExpression NullExpression = new Null();
     // Expressions are evaluated from smallest unit of time to largest.
     // When unit of time is the same, then they are evaluated from

@@ -1,4 +1,3 @@
-import javolution.util.FastList
 
 import org.ofbiz.base.util.Debug
 import org.ofbiz.base.util.UtilDateTime
@@ -14,7 +13,7 @@ iCount = UtilDateTime.getIntervalDefaultCount(iScope);
 fromDateTimestamp = UtilDateTime.getTimeStampFromIntervalScope(iScope, iCount);
 dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, fromDateTimestamp, context.locale, context.timeZone);
 
-List introductionDateAndExprs = FastList.newInstance();
+List introductionDateAndExprs = [];
 introductionDateAndExprs.add(EntityCondition.makeCondition("introductionDate", EntityOperator.GREATER_THAN_EQUAL_TO, dateIntervals.getDateBegin()));
 introductionDateAndExprs.add(EntityCondition.makeCondition("introductionDate", EntityOperator.LESS_THAN, dateIntervals.getDateEnd()));
 

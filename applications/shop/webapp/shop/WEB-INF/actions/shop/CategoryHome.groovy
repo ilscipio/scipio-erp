@@ -3,20 +3,20 @@
  */
 
 import org.ofbiz.base.util.*;
+import org.ofbiz.service.*;
 import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.category.CategoryContentWrapper;
 import org.ofbiz.product.category.CategoryWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.content.content.ContentWorker;
-import javolution.util.FastMap;
-import javolution.util.FastList;
 
-// SCIPIO: NOTE: This script is responsible for checking whether solr is applicable.
+// SCIPIO: NOTE: This script is responsible for checking whether solr is applicable (if no check, implies the shop assumes solr is always enabled).
 
+final module = "CategoryHome.groovy";
 
 private void getCatalogCategoriesByType(productCategoryId, title, id) {
     if (productCategoryId != null) {
-        productCategoryMap = FastMap.newInstance();
+        productCategoryMap = [:];
         // get the product category & members
         andMap = [productCategoryId : productCategoryId,
                 viewIndexString : viewIndex,
@@ -30,16 +30,20 @@ private void getCatalogCategoriesByType(productCategoryId, title, id) {
         } else {
                 andMap.put("orderByFields", ["sequenceNum", "productId"]);
         }
-        catResult = dispatcher.runSync("getProductCategoryAndLimitedMembers", andMap);
+        catResult = dispatcher.runSync("getProductCategoryAndLimitedMembers", andMap,
+            -1, true); // SEPARATE TRANSACTION so error doesn't crash screen
+        if (!ServiceUtil.isSuccess(catResult)) {
+            Debug.logError("Error in getProductCategoryAndLimitedMembers: " + ServiceUtil.getErrorMessage(catResult), "CategoryHome.groovy");
+            return;
+        }
 
         productCategory = catResult.productCategory;
         productCategoryMembers = catResult.productCategoryMembers;
 
-
         // Prevents out of stock product to be displayed on site
         productStore = ProductStoreWorker.getProductStore(request);
         if(productStore) {
-            productCategoryMembersList = FastList.newInstance();
+            productCategoryMembersList = [];
             if("N".equals(productStore.showOutOfStockProducts)) {
                 productsInStock = [];
                 productCategoryMembers.each { productCategoryMember ->
@@ -69,7 +73,7 @@ private void getCatalogCategoriesByType(productCategoryId, title, id) {
         productCategoryMap.put("title", uiLabelMap.get(title));
         productCategoryMap.put("id", id);
         
-        productCategoriesMap.put(productCategoryId,productCategoryMap);
+        productCategoriesMap.put(productCategoryId, productCategoryMap);
     }
 
 }
@@ -96,12 +100,16 @@ limitView = request.getAttribute("limitView") ?: true;
 context.limitView = limitView;
 
 // get the products form the best-selling and promotions categories
-productCategoriesMap = FastMap.newInstance();
-getCatalogCategoriesByType(mostDownloadedCategory, "SyracusCategoryHomeMostDownloadedTitle", "most-downloaded");
-getCatalogCategoriesByType(whatsNewCategory, "SyracusCategoryHomeLastestBooksTitle", "whats-new");
+productCategoriesMap = [:];
+try {
+    getCatalogCategoriesByType(mostDownloadedCategory, "SyracusCategoryHomeMostDownloadedTitle", "most-downloaded");
+    getCatalogCategoriesByType(whatsNewCategory, "SyracusCategoryHomeLastestBooksTitle", "whats-new");
+} catch(Exception e) {
+    Debug.logError(e, "Error getting catalog categories by type: " + e.getMessage(), module);
+}
 
 // get the most-popular related categories
-mostPopularCates = FastList.newInstance();
+mostPopularCates = [];
 childCategoryList = CategoryWorker.getRelatedCategoriesRet(request, "childCategoryList", mostPopularCategory, true);
 if (childCategoryList.size() > 0) {
     mostPopularCates.add(childCategoryList);

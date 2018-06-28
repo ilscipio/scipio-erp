@@ -20,9 +20,8 @@
 package org.ofbiz.accounting.util;
 
 import java.math.BigDecimal;
+import java.util.LinkedList;
 import java.util.List;
-
-import javolution.util.FastList;
 
 import org.ofbiz.accounting.AccountingException;
 import org.ofbiz.base.util.Debug;
@@ -38,7 +37,7 @@ import org.ofbiz.entity.util.EntityQuery;
 
 public class UtilAccounting {
 
-    public static String module = UtilAccounting.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * Get the GL Account for a product or the default account type based on input. This replaces the simple-method service
@@ -97,7 +96,7 @@ public class UtilAccounting {
     }
 
     public static List<String> getDescendantGlAccountClassIds(GenericValue glAccountClass) throws GenericEntityException {
-        List<String> glAccountClassIds = FastList.newInstance();
+        List<String> glAccountClassIds = new LinkedList<String>();
         getGlAccountClassChildren(glAccountClass, glAccountClassIds);
         return glAccountClassIds;
     }

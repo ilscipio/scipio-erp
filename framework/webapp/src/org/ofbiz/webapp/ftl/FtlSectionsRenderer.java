@@ -45,7 +45,7 @@ import freemarker.template.TemplateTransformModel;
  */
 public class FtlSectionsRenderer implements BasicSectionsRenderer, Map<String, Object> {
 
-    public static final String module = FtlSectionsRenderer.class.getName();
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     private final RenderContextFetcher contextFetcher;
     private final Map<String, Object> sectionMap;

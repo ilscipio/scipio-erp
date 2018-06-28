@@ -69,14 +69,21 @@ under the License.
 
         <!-- Find old value -->
 
-        <entity-and entity-name="FacilityContactMech" list="facilityContactMechs" filter-by-date="true">
+        <entity-and entity-name="FacilityContactMech" list="facilityContactMechs"><!-- filter-by-date="true" -->
             <field-map field-name="facilityId" from-field="parameters.facilityId"/>
             <field-map field-name="contactMechId" from-field="parameters.contactMechId"/>
         </entity-and>
-        <first-from-list entry="facilityContactMech" list="facilityContactMechs"/>
+        <!-- SCIPIO: 2017-10-09: the message returned by this service was highly inaccurate; now we separate wrong user record from expired -->
+        <if-empty field="facilityContactMechs">
+            <add-error><fail-property resource="PartyUiLabels" property="PartyCannotUpdateContactBecauseNotWithSpecifiedParty"/></add-error>
+        </if-empty>
+        <check-errors/>
+        <filter-list-by-date list="facilityContactMechs" to-list="validFacilityContactMechs"/>
+        <first-from-list entry="facilityContactMech" list="validFacilityContactMechs"/>
         <if-empty field="facilityContactMech">
+            <!-- SCIPIO: new message with info for expired contact edit attempts -->
             <add-error>
-                <fail-property resource="PartyUiLabels" property="PartyCannotUpdateContactBecauseNotWithSpecifiedParty"/>
+                <fail-property resource="PartyErrorUiLabels" property="contactmechservices.cannot_update_specified_contact_info_expired"/>
             </add-error>
         </if-empty>
         <check-errors/>
@@ -108,6 +115,9 @@ under the License.
 
         <if-compare-field to-field="newFacilityContactMech.contactMechId" field="parameters.contactMechId" operator="not-equals">
             <get-related value-field="facilityContactMech" relation-name="FacilityContactMechPurpose" list="facilityContactMechPurposes"/>
+            <!-- SCIPIO: 2017-10-10: MAJOR BUGFIX: the following filter-list-by-date line is missing in stock ofbiz,
+                results in expired purposes being carried over and extreme confusion (replicated from PartyContactMechServices.xml#updatePartyContactMech) -->
+            <filter-list-by-date list="facilityContactMechPurposes"/>
             <iterate entry="facilityContactMechPurposeOld" list="facilityContactMechPurposes">
                 <clone-value value-field="facilityContactMechPurposeOld" new-value-field="facilityContactMechPurpose"/>
 

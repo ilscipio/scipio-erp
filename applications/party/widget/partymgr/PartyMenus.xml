@@ -80,7 +80,7 @@
             </link>
         </menu-item>
         
-        <!-- 
+       
         <menu-item name="linkparty" title="${uiLabelMap.PartyLink}">
             <link target="linkparty">
                 <parameter param-name="partyId"/>
@@ -92,7 +92,7 @@
                 <parameter param-name="partyId"/>
             </link>
         </menu-item>
-        -->
+        
         <menu-item name="viewvendor" title="${uiLabelMap.PartyVendor}">
             <link target="viewvendor">
                 <parameter param-name="partyId"/>

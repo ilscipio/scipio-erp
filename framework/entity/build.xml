@@ -56,6 +56,8 @@ under the License.
           ./ant build -Dlib.entity.jdbc.conf.default=mysql
         or by setting the property in the main build or elsewhere. It must be an ivy.xml conf.
         For a one-time update you can use lib.entity.jdbc.conf.update instead.
+        NOTE: If you added an extra (or unsupported) driver to ivy.xml and its jar filename does not start with the
+            ivy config name, you will have to override lib.entity.jdbc.conf.update.filepat to "[something]-*.jar"
     -->
     <property name="lib.entity.jdbc.conf.default" value="derby"/><!-- should be a single conf -->
     <property name="lib.entity.jdbc.conf.update" value="${lib.entity.jdbc.conf.default}"/>
@@ -63,30 +65,32 @@ under the License.
     <property name="lib.resolve.build.confs" value="${lib.entity.jdbc.conf.all}"/>
     
     <target name="do-lib-update" description="Downloads all jars">
+        <echo message="Configured default JDBC driver (lib.entity.jdbc.conf.default): ${lib.entity.jdbc.conf.default}" level="info"/>
+        <echo message="Target JDBC driver for update (lib.entity.jdbc.conf.update): ${lib.entity.jdbc.conf.update}" level="info"/>
         <if>
             <contains string="${lib.resolve.build.confs}" substring="jdbc"/>
             <then>
                 <ivy:retrieve pattern="lib/jdbc/unused/${lib.update.filename.pattern.ivy}" conf="jdbc">
+                    <!-- 2018-06-28: this will no longer be useful
                     <firstmatchmapper>
-                        <!-- Move drivers to old locations (TODO?: remove? standardize?) -->
+                        <!- - Move drivers to old locations (TODO?: remove? standardize?) - ->
                         <regexpmapper from="^(.*/)?(jaybird-[^/]+\.jar)$" to="\1firebird/1.8/\2" handledirsep="true"/>              
                         <regexpmapper from="^(.*/)?(hsqldb-[^/]+\.jar)$" to="\1hsql/\2" handledirsep="true"/>
                         <regexpmapper from="^(.*/)?(mysql-[^/]+\.jar)$" to="\1mysql/\2" handledirsep="true"/>
+                        <regexpmapper from="^(.*/)?(mariadb-[^/]+\.jar)$" to="\1mariadb/\2" handledirsep="true"/>
                         <regexpmapper from="^(.*/)?(postgresql-[^/]+\.jar)$" to="\1postgresql/1.8/\2" handledirsep="true"/>
                         <regexpmapper from="^(.*/)?(derby-[^/]+\.jar)$" to="\1derby/\2" handledirsep="true"/>
                         <identitymapper/>
-                    </firstmatchmapper>
+                    </firstmatchmapper>-->
                 </ivy:retrieve>
             </then>
         </if>
         <if>
             <not><equals arg1="${lib.entity.jdbc.conf.update}" arg2="none"/></not>
             <then>
-                <if>
-                    <equals arg1="${lib.entity.jdbc.conf.update}" arg2="firebird"/>
-                    <then><property name="lib.entity.jdbc.conf.update.filepat" value="jaybird-*.jar"/></then>
-                    <else><property name="lib.entity.jdbc.conf.update.filepat" value="${lib.entity.jdbc.conf.update}-*.jar"/></else>
-                </if>
+                <!-- NOTE: user may override this lib.entity.jdbc.conf.update.filepat property if added a non-supported jdbc driver
+                    and its jar name is different from config name -->
+                <property name="lib.entity.jdbc.conf.update.filepat" value="${lib.entity.jdbc.conf.update}-*.jar"/>
                 <if>
                     <not><equals arg1="${lib.entity.jdbc.conf.update.filepat}" arg2=""/></not>
                     <then>

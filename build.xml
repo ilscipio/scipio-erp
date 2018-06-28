@@ -78,6 +78,10 @@ under the License.
         <propertyref name="ofbiz.component.dirs"/>
         <propertyref regex="lib\.update\..*"/>
         <propertyref regex="lib\.clean\..*"/>
+        <propertyref regex="lib\.entity\..*"/><!-- FIXME?: unfortunate exception... should have been lib.scpcfg.entity... too late -->
+        <propertyref regex="lib\.scpcfg\..*"/><!-- for custom lib properties for components; should be named: lib.scpcfg.[componentname].* -->
+        <propertyref regex="comp.scpcfg\..*"/><!-- for component-specific config properties; should be named: comp.scpcfg.[componentname].* -->
+        <propertyref regex="scpcfg\..*"/>
         <propertyref name="ivy.settings.file"/>
         <propertyref name="checkreqs.ran"/>
     </propertyset>
@@ -2197,10 +2201,12 @@ under the License.
         <property name="lib.entity.jdbc.conf" value="derby"/>
         <antcall target="download-jdbc-common"/>
     </target>
-    <target name="download-jdbc-firebird" description="Download Firebird (Jaybird) JDBC driver">
+    <target name="download-jdbc-jaybird" description="Download Firebird (Jaybird) JDBC driver">
         <delete verbose="on"><fileset dir="framework/entity/lib/jdbc" includes="jaybird-*.jar"/></delete>
-        <property name="lib.entity.jdbc.conf" value="firebird"/>
+        <property name="lib.entity.jdbc.conf" value="jaybird"/>
         <antcall target="download-jdbc-common"/>
+    </target>
+    <target name="download-jdbc-firebird" depends="download-jdbc-jaybird" description="Download Firebird (Jaybird) JDBC driver (alias for download-jdbc-jaybird)">
     </target>
     <target name="download-jdbc-hsqldb" description="Download hsqldb JDBC driver">
         <delete verbose="on"><fileset dir="framework/entity/lib/jdbc" includes="hsqldb-*.jar"/></delete>
@@ -2210,6 +2216,11 @@ under the License.
     <target name="download-jdbc-mysql" description="Download mySQL JDBC driver">
         <delete verbose="on"><fileset dir="framework/entity/lib/jdbc" includes="mysql-*.jar"/></delete>
         <property name="lib.entity.jdbc.conf" value="mysql"/>
+        <antcall target="download-jdbc-common"/>
+    </target>
+    <target name="download-jdbc-mariadb" description="Download MariaDB JDBC driver">
+        <delete verbose="on"><fileset dir="framework/entity/lib/jdbc" includes="mariadb-*.jar"/></delete>
+        <property name="lib.entity.jdbc.conf" value="mariadb"/>
         <antcall target="download-jdbc-common"/>
     </target>
     <target name="download-jdbc-postgresql" description="Download PostgreSQL JDBC driver">
@@ -2229,6 +2240,7 @@ under the License.
         <antcall target="download-jdbc-firebird"/>
         <antcall target="download-jdbc-hsqldb"/>
         <antcall target="download-jdbc-mysql"/>
+        <antcall target="download-jdbc-mariadb"/>
         <antcall target="download-jdbc-postgresql"/>
     </target>
 

@@ -42,17 +42,17 @@ modern HTML frameworks.
 
 ## What's included
 * Business Applications & functions for
- * Accounting
- * Asset Maintenance
- * Catalog Management
- * Content Management
- * Customer Relationship Management
- * Ecommerce
- * Human Resource Management
- * Order Management
- * User Management
- * Warehouse Management
- * Work Effort (Time tracking)
+  * Accounting
+  * Asset Maintenance
+  * Catalog Management
+  * Content Management
+  * Customer Relationship Management
+  * Ecommerce
+  * Human Resource Management
+  * Order Management
+  * User Management
+  * Warehouse Management
+  * Work Effort (Time tracking)
 * A templating toolkit (freemarker macros) to simplify UI creation
 * A multi-language, multi-national, multi-store Ecommerce application
 * A flexible datamodel
@@ -71,27 +71,27 @@ modern HTML frameworks.
 ### Recommended Development Tools
 * GIT Client
 * Eclipse Java IDE
- * m2eclipse
- * Groovy-eclipse
- * Freemarker IDE editor (select from JBooss tools plugin)
+  * m2eclipse
+  * Groovy-eclipse
+  * Freemarker IDE editor (select from JBooss tools plugin)
 
 ### Prerequisites
 In order to install SCIPIO ERP, the following prerequisites must be installed:
 * Java 1.8 (or greater) SDK
- * Download and Install
- * Set JAVA_HOME Path
- * Validate Settings
+  * Download and Install
+  * Set JAVA_HOME Path
+  * Validate Settings
 * Install Apache Ant
- * Download and Install
+  * Download and Install
 
 ### Download
 The standard way to get SCIPIO ERP to is to checkout the scipioce-1.14 branch, which
 provides you with the latest version of the 1.14.x line with latest important updates:
 
 1. Open your command line and run:
- * git clone https://github.com/ilscipio/scipio-erp.git
- * cd scipio-erp
- * git checkout scipioce-1.14
+  * git clone https://github.com/ilscipio/scipio-erp.git
+  * cd scipio-erp
+  * git checkout scipioce-1.14
 
 You may also use the master branch (simply omit step c.), the main development branch, 
 for access to latest features and changes, but it is subject to compatibility-breaking 
@@ -102,14 +102,14 @@ will assist). For some projects, master may be the recommended branch to use.
 In order to install, the following steps must be taken:
 
 1. Open your command line, go to the extracted folder and run:
- * Linux ./install.sh
- * OS X: ./install.sh
- * Windows: install.bat
+  * Linux ./install.sh
+  * OS X: ./install.sh
+  * Windows: install.bat
 
 2. From the same command line run:
- * Linux ./start.sh
- * OS X: bash ./start.sh
- * Windows: start.bat
+  * Linux ./start.sh
+  * OS X: bash ./start.sh
+  * Windows: start.bat
 
 3. To access the application visit the SCIPIO ERP Dashboard:
   https://localhost:8443/admin
@@ -118,7 +118,7 @@ In order to install, the following steps must be taken:
   Username: admin
   Password: scipio
 
-                    **Congratulations, you have installed SCIPIO ERP!**
+                     **Congratulations, you have installed SCIPIO ERP!**
 
 ### Updates
 1. Retrieve latest code updates from git:
@@ -223,9 +223,9 @@ of The Apache Software Foundation.
    The following provides more details on the included cryptographic
    software:
 
-   * Various classes in Scipio, including DesCrypt, HashCrypt, and
+    * Various classes in Scipio, including DesCrypt, HashCrypt, and
      BlowFishCrypt use libraries from the Sun Java JDK API including
      java.security.* and javax.crypto.* (the JCE, Java Cryptography
      Extensions API)
-   * Other classes such as HttpClient and various related ones use
+    * Other classes such as HttpClient and various related ones use
      the JSSE (Java Secure Sockets Extension) API

@@ -114,8 +114,9 @@ under the License.
     </#if>
     
     
-    <@field type="generic" label=uiLabelMap.PartyRoleType>
+    <@field type="generic" label=uiLabelMap.PartyRelationships>
         <@fields args={"type":"default-nolabelarea", "ignoreParentField":true}>
+            <@field type="display" value=getLabel('PartyPartyCurrentInTheRoleOf') />
             <@field type="select" name="roleTypeId" id="roleTypeId">
                 <option value="" selected="selected">--</option>
                 <#list userPartyRoles as partyRole>

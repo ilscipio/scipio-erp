@@ -29,8 +29,8 @@
         <value xml:lang="fr">Toutes les étapes d'installation sont terminées. Installation terminée!</value>
     </property>
     <property key="SetupIncompleteMsgStart">
-        <value xml:lang="en">You have reached the end of Setup. However, some setup steps are incomplete:</value>
-        <value xml:lang="de">Sie haben das Ende des Setups erreicht. Allerdings sind einige Setup-Schritte unvollständig:</value>
+        <value xml:lang="en">You have reached the end of the setup. However, some setup steps are incomplete:</value>
+        <value xml:lang="de">Sie haben das Ende des Setup-Vorgangs erreicht. Allerdings sind einige Setup-Schritte unvollständig:</value>
         <value xml:lang="fr">Vous avez terminé la configuration. Cependant, certaines étapes de configuration sont incomplètes:</value>
     </property>
     <property key="SetupIncompleteMsgEnd">
@@ -144,8 +144,8 @@
         <value xml:lang="de">Konto Informationen</value>
     </property>    
     <property key="SetupIsRelatedToOrgAs">
-        <value xml:lang="en">Is related to ${orgPartyId} as</value>
-        <value xml:lang="de">Steht in Verbindung zu ${orgPartyId} als</value>
+        <value xml:lang="de">Steht in Verbindung zur Firma als</value>
+        <value xml:lang="en">Is related to the company as</value>
     </property>
     
     <property key="SetupAccountingPreferences">
@@ -153,64 +153,83 @@
         <value xml:lang="de">Buchhaltungspräferenzen</value>
     </property>
     <property key="SetupAccountingPreferencesTaxes">
-    	<value xml:lang="en">Taxes</value>
         <value xml:lang="de">Steuer</value>
+    	<value xml:lang="en">Taxes</value>
     </property>
     <property key="SetupAccountingPreferencesFiscalPeriods">
-    	<value xml:lang="en">Fiscal Periods</value>
         <value xml:lang="de">Finanzperiode</value>
+    	<value xml:lang="en">Fiscal Periods</value>
     </property>
     <property key="SetupAccountingSelectStartFiscalDayMonth">
-    	<value xml:lang="en">Select start fiscal month/day</value>
         <value xml:lang="de">Start der Finanzperiode (Monat/Tag)</value>
+    	<value xml:lang="en">Select start fiscal month/day</value>
     </property>
     <property key="SetupAccountingPreferencesCurrencies">
+        <value xml:lang="de">Währungen</value>
     	<value xml:lang="en">Currencies</value>
-        <value xml:lang="en">Währungen</value>
     </property>
     <property key="SetupAccountingCreateNewTimePeriod">
+        <value xml:lang="de">Neuen Zeitraum hinzufügen</value>
     	<value xml:lang="en">Create new time period</value>
     </property>
     <property key="SetupAccountingSelectTimePeriod">
+        <value xml:lang="de">Zeitraum auswählen</value>
     	<value xml:lang="en">Select time period</value>
     </property>
      <property key="SetupAccountingSelectStandardForSetup">
-        <value xml:lang="en">Select accounting standard for setup</value>
+        <value xml:lang="de">Wählen Sie einen Rechnungslegungsstandard</value>
+        <value xml:lang="en">Select an accounting standard</value>
     </property>
     <property key="SetupAccountingCreateNewGL">
+        <value xml:lang="de">Neues Hauptbuch anlegen</value>
         <value xml:lang="en">Create new General Ledger</value>
     </property>
     
     <property key="SetupAccountingJournalEntries">
+        <value xml:lang="de">Buchungseinträge</value>
     	<value xml:lang="en">Journal Entries</value>
     </property>
     <property key="SetupAccountingTransactionTypes">
+        <value xml:lang="de">Buchungsvorgangsarten</value>
     	<value xml:lang="en">Accounting Transaction Types</value>
     </property>
     <property key="SetupAccountingTransactionEntryTypes">
-        <value xml:lang="en">Accounting Transaction Entry Types</value>
+        <value xml:lang="de">Buchungstypen</value>
+        <value xml:lang="en">Transaction Entry Types</value>
     </property>
     <property key="SetupAddAccountingTransactionType">
+        <value xml:lang="de">Buchungsvorgangsart hinzufügen</value>
         <value xml:lang="en">Add Transaction Type</value>
     </property>
     <property key="SetupAddAccountingTransactionEntryType">
+        <value xml:lang="de">Buchungstyp hinzufügen</value>
         <value xml:lang="en">Add Transaction Entry Type</value>
     </property>
     
     <property key="SetupAccountingImportDatev">
+        <value xml:lang="de">Datev Import</value>
         <value xml:lang="en">Import Datev</value>
     </property>
     <property key="SetupAccountingImportElster">
+        <value xml:lang="de">Elster Import</value>
         <value xml:lang="en">Import Elster</value>
     </property>    
     <property key="SetupAccountingDatevDataCategory">
+        <value xml:lang="de">Wählen Sie die Datev-Datenkategorie, die Sie importieren möchten</value>
         <value xml:lang="en">Select Datev data category you wish to import</value>
     </property>
     <property key="SetupAccountingDatevImportCSV">
+        <value xml:lang="de">Datev CSV Datei importieren</value>
         <value xml:lang="en">Upload Datev CSV to import</value>
     </property>
     <property key="SetupAccountingImportDefaultGLStandard">
+        <value xml:lang="de">Standard Buchungskonten importieren</value>
         <value xml:lang="en">Import default GL Standard</value>
+    </property>
+
+    <property key="SetupInfoWarehouse">
+        <value xml:lang="de">Mindestens ein Warenlager muss angelegt werden. Die Adresse kann mit dem Firmensitz identisch sein.</value>
+        <value xml:lang="en">At least one warehouse must be created. The address may be identical to the registered company address.</value>
     </property>
     
 </resource>

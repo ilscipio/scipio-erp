@@ -14,6 +14,49 @@
 ```
 
 # SCIPIO ERP - Community Edition
+![Scipio ERP is a toolkit for the development of modern business applications.](https://www.scipioerp.com/files/2018/06/slider_desk_900.jpg)
+
+* [Website](https://www.scipioerp.com)
+* [Demo](https://www.scipioerp.com/demo/)
+* [Developer Docs](https://www.scipioerp.com/community/developer/installation-configuration/)
+* [User Docs](https://www.scipioerp.com/community/end-user/applications/)
+* [Community](https://forum.scipioerp.com/)
+
+## What is Scipio ERP
+Scipio ERP is an Open Source Business Application Toolkit based on Java 8 and a built-in 
+Tomcat application server. We provide standard applications, functions (services) 
+and a well thought-out datamodel, so that you can create modern web applications.
+
+Our templating toolkit simplifies the creation of modern UIs and is compatible with most
+modern HTML frameworks.
+
+[Technologies](https://www.scipioerp.com/products/technologies/)
+
+### TL;DR
+* Simplifies the creation of business or ECommerce applications
+* Highly modular, extendable and customizable 
+* Bundles a long list of working applications
+* Supports most modern HTML frameworks
+* Supports Caching & Clustering
+* Can be rolled out internationally
+
+## What's included
+* Business Applications & functions for
+ * Accounting
+ * Asset Maintenance
+ * Catalog Management
+ * Content Management
+ * Customer Relationship Management
+ * Ecommerce
+ * Human Resource Management
+ * Order Management
+ * User Management
+ * Warehouse Management
+ * Work Effort (Time tracking)
+* A templating toolkit (freemarker macros) to simplify UI creation
+* A multi-language, multi-national, multi-store Ecommerce application
+* A flexible datamodel
+* Support of various third-party APIs (payment, shipping, apache camel, etc.)
 
 ## Installation
 ### System Requirements
@@ -46,9 +89,9 @@ The standard way to get SCIPIO ERP to is to checkout the scipioce-1.14 branch, w
 provides you with the latest version of the 1.14.x line with latest important updates:
 
 1. Open your command line and run:
-a. git clone https://github.com/ilscipio/scipio-erp.git
-b. cd scipio-erp
-c. git checkout scipioce-1.14
+ * git clone https://github.com/ilscipio/scipio-erp.git
+ * cd scipio-erp
+ * git checkout scipioce-1.14
 
 You may also use the master branch (simply omit step c.), the main development branch, 
 for access to latest features and changes, but it is subject to compatibility-breaking 
@@ -59,14 +102,14 @@ will assist). For some projects, master may be the recommended branch to use.
 In order to install, the following steps must be taken:
 
 1. Open your command line, go to the extracted folder and run:
- a. Linux ./install.sh
- b. OS X: ./install.sh
- c. Windows: install.bat
+ * Linux ./install.sh
+ * OS X: ./install.sh
+ * Windows: install.bat
 
 2. From the same command line run:
- a. Linux ./start.sh
- b. OS X: bash ./start.sh
- c. Windows: start.bat
+ * Linux ./start.sh
+ * OS X: bash ./start.sh
+ * Windows: start.bat
 
 3. To access the application visit the SCIPIO ERP Dashboard:
   https://localhost:8443/admin
@@ -89,7 +132,7 @@ b. Visit entity utility services page:
 c. Click "Visual Theme Resources - Reload All, Now"
 
 ### Optional Configuration
-  http://www.scipioerp.com/community/developer/installation-configuration/configuration/
+  https://www.scipioerp.com/community/developer/installation-configuration/configuration/
 
 ### Addons
 Community and enterprise SCIPIO ERP addons can be added to your working

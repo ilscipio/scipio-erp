@@ -15,11 +15,10 @@
 <#assign params = paramMaps.values>
 <#assign fixedParams = paramMaps.fixedValues>
 
-<style type="text/css"><#-- FIXME -->
-    .setup-addresslist { }
-    .setup-addressentry { display:inline-block; width:20em; }
-</style>
+<@alert type="info">${uiLabelMap.SetupInfoWarehouse}</@alert>
 
+
+<@section>
     <@form id=submitFormId action=makeOfbizUrl(target) method="post" validate=setupFormValidate>
         <@defaultWizardFormFields exclude=["facilityId"]/>
         <@field type="hidden" name="isCreateFacility" value=(facility??)?string("N","Y")/>
@@ -34,7 +33,7 @@
         <@field type="input" name="facilityId" label=uiLabelMap.FormFieldTitle_facilityId value=(params.facilityId!)/>
       </#if>
 
-        <@field type="input" name="facilityName" value=(params.facilityName!) label=uiLabelMap.ProductName required=true size="30" maxlength="60"/>
+        <@field type="input" name="facilityName" value=(params.facilityName!"${uiLabelMap.FacilityFacility} 1") label=uiLabelMap.ProductName required=true size="30" maxlength="60"/>
         <@field type="input" name="description" value=(params.description!) label=uiLabelMap.SetupFacilityDescription size="60" maxlength="250"/>
         <@field type="input" name="defaultDaysToShip" value=(params.defaultDaysToShip!) label=uiLabelMap.ProductDefaultDaysToShip size="10" maxlength="20"/>
         <@field type="select" name="defaultWeightUomId" value=(params.defaultWeightUomId!) label=uiLabelMap.ProductFacilityDefaultWeightUnit size="10" maxlength="20">
@@ -164,3 +163,4 @@
           </div>
         </@field>
     </@form>
+</@section>

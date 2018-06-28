@@ -5610,7 +5610,7 @@
     <property key="FormFieldTitle_siteName">
         <value xml:lang="ar">إسم الموقع</value>
         <value xml:lang="da">Side navn</value>
-        <value xml:lang="de">Webseite Namen</value>
+        <value xml:lang="de">Webseitenname</value>
         <value xml:lang="en">Site Name</value>
         <value xml:lang="es">Nombre del sitio</value>
         <value xml:lang="fr">Nom de site</value>

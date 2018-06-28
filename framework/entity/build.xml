@@ -65,6 +65,8 @@ under the License.
     <property name="lib.resolve.build.confs" value="${lib.entity.jdbc.conf.all}"/>
     
     <target name="do-lib-update" description="Downloads all jars">
+        <echo message="Configured default JDBC driver (lib.entity.jdbc.conf.default): ${lib.entity.jdbc.conf.default}" level="info"/>
+        <echo message="Target JDBC driver for update (lib.entity.jdbc.conf.update): ${lib.entity.jdbc.conf.update}" level="info"/>
         <if>
             <contains string="${lib.resolve.build.confs}" substring="jdbc"/>
             <then>

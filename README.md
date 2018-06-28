@@ -14,7 +14,7 @@
 ```
 
 # SCIPIO ERP - Community Edition
-![Scipio ERP is a toolkit for the development of modern business applications.](https://www.scipioerp.com/files/2018/05/slider_desk_1200.jpg "Pictured: the modern ECommerce application.")
+![Scipio ERP is a toolkit for the development of modern business applications.](https://www.scipioerp.com/files/2018/05/variousapplications.png "Pictured: the modern ECommerce application.")
 
 * [Demo](https://www.scipioerp.com/demo/)
 * [Developer Docs](https://www.scipioerp.com/community/developer/installation-configuration/)

@@ -16,9 +16,9 @@
 # SCIPIO ERP - Community Edition
 ![Scipio ERP is a toolkit for the development of modern business applications.](https://www.scipioerp.com/files/2018/05/slider_desk_1200.jpg "Pictured: the modern ECommerce application.")
 
-Demo:           [https://www.scipioerp.com/demo/](https://www.scipioerp.com/demo/)
-Developer Docs: [https://www.scipioerp.com/community/developer/installation-configuration/](https://www.scipioerp.com/community/developer/)
-User Docs:      [https://www.scipioerp.com/community/end-user/applications/](https://www.scipioerp.com/community/end-user/applications/)
+* [Demo](https://www.scipioerp.com/demo/)
+* [Developer Docs](https://www.scipioerp.com/community/developer/installation-configuration/)
+* [User Docs](https://www.scipioerp.com/community/end-user/applications/)
 
 ## What is Scipio ERP
 Scipio ERP is an Open Source Business Application Toolkit based on Java 8 and a built-in 
@@ -35,7 +35,7 @@ simple definitions. The system is compatible with most modern HTML frameworks.
 Scipio ERP is a popular choice for complexe Ecommerce applications, but can also be used for
 any given business process.
 
-Technologies: [https://www.scipioerp.com/products/technologies/](https://www.scipioerp.com/products/technologies/)
+[Technologies](https://www.scipioerp.com/products/technologies/)
 
 ### TL;DR
 * Simplifies the creation of business or ECommerce applications

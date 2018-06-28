@@ -52,6 +52,7 @@ any given business process.
  * Catalog Management
  * Content Management
  * Customer Relationship Management
+ * Ecommerce
  * Human Resource Management
  * Order Management
  * User Management
@@ -59,6 +60,8 @@ any given business process.
  * Work Effort (Time tracking)
 * A templating toolkit (freemarker macros) to simplify UI creation
 * A multi-language, multi-national, multi-store Ecommerce application
+* A flexible datamodel
+* Support of various third-party APIs (payment, shipping, apache camel, etc.)
 
 ## Installation
 ### System Requirements

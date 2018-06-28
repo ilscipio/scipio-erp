@@ -17954,7 +17954,7 @@
     </property>
     <property key="FormFieldTitle_dateThru">
         <value xml:lang="ar">حتى تاريخ</value>
-        <value xml:lang="de">bis Datum</value>
+        <value xml:lang="de">Gültig bis</value>
         <value xml:lang="en">Date Through</value>
         <value xml:lang="es">hasta fecha</value>
         <value xml:lang="fr">Jusque (date)</value>
@@ -17972,7 +17972,7 @@
     </property>
     <property key="FormFieldTitle_datefrom">
         <value xml:lang="ar">من تاريخ</value>
-        <value xml:lang="de">von Datum</value>
+        <value xml:lang="de">Gültig ab</value>
         <value xml:lang="en">Date From</value>
         <value xml:lang="es">Fecha de origen</value>
         <value xml:lang="fr">De (date)</value>

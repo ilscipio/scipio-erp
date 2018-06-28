@@ -81,7 +81,7 @@
       </#if>
       
       <#if formActionType != "add">
-        <@field type="input" name="catalogName" value=(params.catalogName!) label=uiLabelMap.FormFieldTitle_prodCatalogName required=true class="+ect-inputfield"/><#-- depends on DB: size="30" maxlength="60" -->
+        <@field type="input" name="catalogName" value=(params.catalogName!"${uiLabelMap.ProductCatalog} 1") label=uiLabelMap.FormFieldTitle_prodCatalogName required=true class="+ect-inputfield"/><#-- depends on DB: size="30" maxlength="60" -->
 
         <@field type="hidden" name="useQuickAdd" value=(params.useQuickAdd!)/>
         <@field type="hidden" name="styleSheet" value=(params.styleSheet!) class="+ect-inputfield"/>

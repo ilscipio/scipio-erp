@@ -94,9 +94,9 @@ The standard way to get SCIPIO ERP to is to checkout the scipioce-1.14 branch, w
 provides you with the latest version of the 1.14.x line with latest important updates:
 
 1. Open your command line and run:
-a. git clone https://github.com/ilscipio/scipio-erp.git
-b. cd scipio-erp
-c. git checkout scipioce-1.14
+ * git clone https://github.com/ilscipio/scipio-erp.git
+ * cd scipio-erp
+ * git checkout scipioce-1.14
 
 You may also use the master branch (simply omit step c.), the main development branch, 
 for access to latest features and changes, but it is subject to compatibility-breaking 
@@ -107,14 +107,14 @@ will assist). For some projects, master may be the recommended branch to use.
 In order to install, the following steps must be taken:
 
 1. Open your command line, go to the extracted folder and run:
- a. Linux ./install.sh
- b. OS X: ./install.sh
- c. Windows: install.bat
+ * Linux ./install.sh
+ * OS X: ./install.sh
+ * Windows: install.bat
 
 2. From the same command line run:
- a. Linux ./start.sh
- b. OS X: bash ./start.sh
- c. Windows: start.bat
+ * Linux ./start.sh
+ * OS X: bash ./start.sh
+ * Windows: start.bat
 
 3. To access the application visit the SCIPIO ERP Dashboard:
   https://localhost:8443/admin

@@ -1,1 +1,5 @@
 /derby-*.jar
+# SCIPIO: For backward-compatibility with older projects, only derby is under ignore by default.
+# If you use the build.properties/build.local.properties (recommended) to specify your needed JDBC driver(s),
+# you may uncomment the following line to keep git working copy clean:
+#/*.jar

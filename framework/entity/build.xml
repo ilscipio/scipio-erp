@@ -18,7 +18,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<project name="OFBiz - Entity" default="jar" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="OFBiz - Entity" default="jar" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant"
+    xmlns:props="antlib:org.apache.ant.props">
     <import file="../../common.xml"/>
 
     <!-- ================================================================== -->
@@ -107,18 +108,21 @@ under the License.
     </target>
 
     <target name="do-lib-update-entity-jdbc-current">
-        <for list="${lib.entity.jdbc.conf.update}" delimiter="," param="entity.conf.name">
+        <for list="${lib.entity.jdbc.conf.update}" delimiter="," param="entity.conf.name.param">
             <sequential>
+                <var name="entity.conf.name" value="@{entity.conf.name.param}"/>
                 <if>
                     <not><equals arg1="entity.conf.name" arg2="none"/></not>
                     <then>
+                        <var name="entity.conf.filepat" unset="true"/><!-- ant-contrib kludge for lack of <varcopy/> -->
                         <if>
-                            <isset property="lib.entity.jdbc.conf.update.filepat.map.@{entity.conf.name}"/>
-                            <then><var name="entity.conf.filepat" value="lib.entity.jdbc.conf.update.filepat.map.@{entity.conf.name}"/></then>
-                            <else><var name="entity.conf.filepat" value="entity.conf.name-*.jar"/></else>
+                            <isset property="lib.entity.jdbc.conf.filepat.map.${entity.conf.name}"/>
+                            <then><propertycopy name="entity.conf.filepat" from="lib.entity.jdbc.conf.filepat.map.${entity.conf.name}"/></then>
+                            <else><property name="entity.conf.filepat" value="${entity.conf.name}-*.jar"/></else>
                         </if>
-                        <delete><fileset dir="lib/jdbc"><include name="@{entity.conf.filepat}"/></fileset></delete>
-                        <ivy:retrieve pattern="lib/jdbc/${lib.update.filename.pattern.ivy}" conf="@{entity.conf.name}"/>
+                        <echo message="entity.conf.filepat: ${entity.conf.filepat}" level="verbose"/>
+                        <delete><fileset dir="lib/jdbc"><include name="${entity.conf.filepat}"/></fileset></delete>
+                        <ivy:retrieve pattern="lib/jdbc/${lib.update.filename.pattern.ivy}" conf="${entity.conf.name}"/>
                     </then>
                 </if>
             </sequential>

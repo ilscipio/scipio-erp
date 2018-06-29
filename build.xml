@@ -2213,6 +2213,11 @@ under the License.
         <property name="lib.entity.jdbc.conf" value="hsqldb"/>
         <antcall target="download-jdbc-common"/>
     </target>
+    <target name="download-jdbc-mssql" description="Download MSSQL JDBC driver">
+        <delete verbose="on"><fileset dir="framework/entity/lib/jdbc" includes="mssql-*.jar"/></delete>
+        <property name="lib.entity.jdbc.conf" value="mssql"/>
+        <antcall target="download-jdbc-common"/>
+    </target>
     <target name="download-jdbc-mysql" description="Download mySQL JDBC driver">
         <delete verbose="on"><fileset dir="framework/entity/lib/jdbc" includes="mysql-*.jar"/></delete>
         <property name="lib.entity.jdbc.conf" value="mysql"/>

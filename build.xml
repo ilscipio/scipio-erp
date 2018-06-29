@@ -2237,7 +2237,7 @@ under the License.
 
     <target name="download-jdbc-all" description="Utility target to download all JDBC drivers, for testing purposes">
         <antcall target="download-jdbc-derby"/>
-        <antcall target="download-jdbc-firebird"/>
+        <antcall target="download-jdbc-jaybird"/>
         <antcall target="download-jdbc-hsqldb"/>
         <antcall target="download-jdbc-mysql"/>
         <antcall target="download-jdbc-mariadb"/>

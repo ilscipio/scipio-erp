@@ -59,14 +59,33 @@ under the License.
         NOTE: If you added an extra (or unsupported) driver to ivy.xml and its jar filename does not start with the
             ivy config name, you will have to override lib.entity.jdbc.conf.update.filepat to "[something]-*.jar"
     -->
-    <property name="lib.entity.jdbc.conf.default" value="derby"/><!-- should be a single conf -->
-    <property name="lib.entity.jdbc.conf.update" value="${lib.entity.jdbc.conf.default}"/>
-    <property name="lib.entity.jdbc.conf.all" value="jdbc,${lib.entity.jdbc.conf.update}" />
+    <property name="lib.entity.jdbc.conf.default" value="derby"/>
+    <property name="lib.entity.jdbc.conf.update" value="${lib.entity.jdbc.conf.default}"/><!-- may be multiple, comma-separated -->
+    <property name="lib.entity.jdbc.conf.all" value="jdbc,${lib.entity.jdbc.conf.update}"/>
     <property name="lib.resolve.build.confs" value="${lib.entity.jdbc.conf.all}"/>
-    
+
+    <!-- Special file pattern mapping: lib.entity.jdbc.conf.filepat.map.[conf-name]
+        If lib.entity.jdbc.conf.filepat.map.[conf-name] does not exist for conf-name, defaults to: [conf-name-*]-*.jar -->
+    <property name="lib.entity.jdbc.conf.filepat.map.firebird" value="jaybird-*.jar"/>
+    <property name="lib.entity.jdbc.conf.filepat.map.hsql" value="hsqldb-*.jar"/>
+
     <target name="do-lib-update" description="Downloads all jars">
+        <antcall target="do-lib-update-entity-general"/>
+        <antcall target="do-lib-update-entity-jdbc"/>
+    </target>
+
+    <target name="do-lib-update-entity-general">
+        <!-- NOTE: does nothing yet, but may in future... -->
+    </target>
+
+    <target name="do-lib-update-entity-jdbc">
         <echo message="Configured default JDBC driver (lib.entity.jdbc.conf.default): ${lib.entity.jdbc.conf.default}" level="info"/>
         <echo message="Target JDBC driver for update (lib.entity.jdbc.conf.update): ${lib.entity.jdbc.conf.update}" level="info"/>
+        <antcall target="do-lib-update-entity-jdbc-unused"/>
+        <antcall target="do-lib-update-entity-jdbc-current"/>
+    </target>
+
+    <target name="do-lib-update-entity-jdbc-unused">
         <if>
             <contains string="${lib.resolve.build.confs}" substring="jdbc"/>
             <then>
@@ -85,25 +104,27 @@ under the License.
                 </ivy:retrieve>
             </then>
         </if>
-        <if>
-            <not><equals arg1="${lib.entity.jdbc.conf.update}" arg2="none"/></not>
-            <then>
-                <!-- NOTE: user may override this lib.entity.jdbc.conf.update.filepat property if added a non-supported jdbc driver
-                    and its jar name is different from config name -->
-                <property name="lib.entity.jdbc.conf.update.filepat" value="${lib.entity.jdbc.conf.update}-*.jar"/>
+    </target>
+
+    <target name="do-lib-update-entity-jdbc-current">
+        <for list="${lib.entity.jdbc.conf.update}" delimiter="," param="entity.conf.name">
+            <sequential>
                 <if>
-                    <not><equals arg1="${lib.entity.jdbc.conf.update.filepat}" arg2=""/></not>
+                    <not><equals arg1="entity.conf.name" arg2="none"/></not>
                     <then>
-                        <delete>
-                            <fileset dir="lib/jdbc"><include name="${lib.entity.jdbc.conf.update.filepat}"/></fileset>
-                        </delete>
+                        <if>
+                            <isset property="lib.entity.jdbc.conf.update.filepat.map.@{entity.conf.name}"/>
+                            <then><var name="entity.conf.filepat" value="lib.entity.jdbc.conf.update.filepat.map.@{entity.conf.name}"/></then>
+                            <else><var name="entity.conf.filepat" value="entity.conf.name-*.jar"/></else>
+                        </if>
+                        <delete><fileset dir="lib/jdbc"><include name="@{entity.conf.filepat}"/></fileset></delete>
+                        <ivy:retrieve pattern="lib/jdbc/${lib.update.filename.pattern.ivy}" conf="@{entity.conf.name}"/>
                     </then>
                 </if>
-                <ivy:retrieve pattern="lib/jdbc/${lib.update.filename.pattern.ivy}" conf="${lib.entity.jdbc.conf.update}"/>
-            </then>
-        </if>
+            </sequential>
+        </for>
     </target>
-    
+
     <!-- SCIPIO: Libraries manually committed to repo, excluded from ivy (or emulated) file cleanout/removal
         NOTE: This should be defined implicitly as an include (treated as exclude as needed) -->
     <selector id="lib.update.manual.files">
@@ -112,5 +133,5 @@ under the License.
             <filename name="jdbc/*.jar"/>
         </or>
     </selector>
-    
+
 </project>

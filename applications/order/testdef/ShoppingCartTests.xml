@@ -22,9 +22,10 @@ under the License.
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/test-suite.xsd">
 
+    <!--  SCIPIO: TODO: REVIEW
     <test-case case-name="shoppingCart-test">
         <simple-method-test location="component://order/script/org/ofbiz/order/test/ShoppingCartTests.xml" name="testCreateShoppingCart"/>
-    </test-case>
+    </test-case>-->
     
     <test-case case-name="productRentalOrder-test">
         <simple-method-test location="component://order/script/org/ofbiz/order/test/ShoppingCartTests.xml" name="testCreateOrderRentalProduct"/>
@@ -41,7 +42,8 @@ under the License.
         <simple-method-test location="component://order/script/org/ofbiz/order/test/ShoppingCartTests.xml" name="testCreateOrderConfigurableServiceProduct"/>
     </test-case>
 
+    <!--  SCIPIO: TODO: REVIEW
     <test-case case-name="testOrderMoveItemBetweenShipGoups">
         <simple-method-test location="component://order/script/org/ofbiz/order/test/ShoppingCartTests.xml" name="testOrderMoveItemBetweenShipGoups"/>
-    </test-case>
+    </test-case>-->
 </test-suite>

@@ -168,16 +168,6 @@ Scipio ERP is a fork of the Apache OFBiz project.
 For more details about OFBiz please visit the OFBiz Documentation page:
 
   http://ofbiz.apache.org/documentation.html
-
-In this page you will find links to useful guides such as:
-* "Demo and Test Setup Guide"
-* "Basic Production Setup Guide"
-* "A Beginners Development Guide"
-
-If you would like to get in touch with the OFBiz community of users and
-developers, the following page will help to get started:
-
-  http://ofbiz.apache.org/community.html
   
 ## License
 The source code that makes up The SCIPIO ERP Community Edition

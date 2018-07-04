@@ -168,7 +168,7 @@
                 libs (javolution, xml-apis) and was not shipped with ofbiz 14/15 - ->
             <exclude module="jtidy"/>
         </dependency>-->
-        
+
         <!-- commons jars -->
         <!-- NOTE: these should generally be updated together (some deps between them and historical compat issues) -->
         <dependency org="commons-beanutils" name="commons-beanutils" rev="1.9.3" conf="base,commons,sources"/>

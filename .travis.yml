@@ -1,6 +1,15 @@
+env:
+  global:
+    -  secure: "tWhMbCO7RMkJiDPufQJuIFjyK+fie3cCso5IRtRar/xs3aTZ8vcJIkoIpvYFH9teBjq3ly6Gtn89zbJFxj0Ccu6V36Lc8kAEe3dHbvsKMyeMfoEJ1KxkQwm1cNgGYbIF0W8I+P6sk9LO2xbkzwAvuzboi541XD0kj43gmawy0VWYEHDw0cMc7IcLkrMmKBDkv+fGfdbv5DCrqZnpw/dxhgKW0a8mQNOEhCTK2IQC+P/0UcVk/fzGtduICrVN3uLWKAssDKU2b40p54gNXkTai40HSc/1uE8zQUpjf5/9FcFZgfoXvIU3mWLsPK3Om2/YooA+uOCrRcDecn54B50cOIsIrZCtPMv6Lp+xaFrt4vKdWUYFk1P/Cl/zoAbirMtErfMkCdc5IoQJK9IYC7iy73ouYjnMKv/Tc3aBSiJ9wO6qCg3moZhAr6mJFfUYhgKdAdxAXqqbW4MLb31dSAtkyizAOchFt38G1clbMvTf3vo0y4V6v/6dUaPFCVyIYhslBkJpXjuIXwFjW8uE9fagOMa046ZhwVgK1UMEpueN3ykBZdTupUJa2N2H0Ttg2zbQxcQ5ge/BhKtsCxyWdBhnwPglm+WLlcu8qyaO5GjgK0dK8iU4Yi/ZVNzL2Q36oaPhhB2TDSVVIxVvEYUB4rhcdPd5F7NDvDbP8tH7VOvssNk="
 language: java
 jdk:
   - oraclejdk8
   - openjdk8
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build  
 script: 
   - ./ant load-demo run-tests-with-cobertura
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT

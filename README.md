@@ -12,6 +12,7 @@
 
 **************************************************************************
 ```
+[![Discourse topics](https://img.shields.io/discourse/https/forum.scipioerp.com/topics.svg)](https://forum.scipioerp.com) [![Read the Docs](https://img.shields.io/readthedocs/pip.svg)](https://www.scipioerp.com/community/developer/installation-configuration/)
 
 # SCIPIO ERP - Community Edition
 ![Scipio ERP is a toolkit for the development of modern business applications.](https://www.scipioerp.com/files/2018/06/slider_desk_900.jpg)

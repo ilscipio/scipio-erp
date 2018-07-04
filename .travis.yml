@@ -10,7 +10,7 @@ before_script:
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build  
 script: 
-  - travis_wait 30 ./ant load-demo run-tests-with-cobertura
+  - travis_wait 30 ./ant load-demo run-tests-with-cobertura >> runtime/logs/console.travis.log
 after_script:
   - ./cc-test-reporter format-coverage -d -t corbertura /home/travis/build/ilscipio/scipio-erp/runtime/logs/test-results/TESTS-TestSuites.xml
   - ./cc-test-reporter upload-coverage -d

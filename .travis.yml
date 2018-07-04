@@ -12,4 +12,6 @@ before_script:
 script: 
   - travis_wait 30 ./ant load-demo run-tests-with-cobertura
 after_script:
+  - ./cc-test-reporter format-coverage -d -t corbertura /home/travis/build/ilscipio/scipio-erp/runtime/logs/test-results/TESTS-TestSuites.xml
+  - ./cc-test-reporter upload-coverage -d
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT

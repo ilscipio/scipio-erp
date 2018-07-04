@@ -24,8 +24,8 @@
 * [Community](https://forum.scipioerp.com/)
 
 ## What is Scipio ERP
-Scipio ERP is an Open Source Business Application Toolkit based on Java 8 and a built-in 
-Tomcat application server. We provide standard applications, functions (services) 
+Scipio ERP is an Open Source Business Application Toolkit based on Java 8 and a built-in
+Tomcat application server. We provide standard applications, functions (services)
 and a well thought-out datamodel, so that you can create modern web applications.
 
 Our templating toolkit simplifies the creation of modern UIs and is compatible with most
@@ -35,7 +35,7 @@ modern HTML frameworks.
 
 ### TL;DR
 * Simplifies the creation of business or ECommerce applications
-* Highly modular, extendable and customizable 
+* Highly modular, extendable and customizable
 * Bundles a long list of working applications
 * Supports most modern HTML frameworks
 * Supports Caching & Clustering
@@ -94,8 +94,8 @@ provides you with the latest version of the 1.14.x line with latest important up
   * cd scipio-erp
   * git checkout scipioce-1.14
 
-You may also use the master branch (simply omit step c.), the main development branch, 
-for access to latest features and changes, but it is subject to compatibility-breaking 
+You may also use the master branch (simply omit step c.), the main development branch,
+for access to latest features and changes, but it is subject to compatibility-breaking
 changes without notice (unless you have a supported client project, in which case we
 will assist). For some projects, master may be the recommended branch to use.
 
@@ -152,7 +152,7 @@ or for brief help and command list, type:
 We also provide Docker images if you would like to try out Scipio with minimal effort. To create a fully functional SCIPIO ERP instance with some demo data already loaded, you can create a container with the following command:
 
   docker create -p 8080:8080 -p 8443:8443 ilscipio/scipio-erp:demo
-  
+
 
 ## Support
 For detailed information and changes about the SCIPIO ERP suite, visit the official website at:
@@ -169,7 +169,7 @@ Scipio ERP is a fork of the Apache OFBiz project.
 For more details about OFBiz please visit the OFBiz Documentation page:
 
   http://ofbiz.apache.org/documentation.html
-  
+
 ## License
 The source code that makes up The SCIPIO ERP Community Edition
 (hereinafter referred to as "SCIPIO ERP") and the majority of the

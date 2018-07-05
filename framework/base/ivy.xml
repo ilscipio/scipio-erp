@@ -104,7 +104,7 @@
         <dependency org="org.apache.xmlgraphics" name="fop" rev="2.2" conf="base,sources"/>
         <dependency org="org.apache.httpcomponents" name="httpclient" rev="4.5.5" conf="base,sources"/>
         <dependency org="org.apache.httpcomponents" name="httpclient-cache" rev="4.5.5" conf="base,sources"/>
-        <dependency org="org.apache.httpcomponents" name="httpcore" rev="4.4.9" conf="base,sources"/>
+        <dependency org="org.apache.httpcomponents" name="httpcore" rev="4.4.10" conf="base,sources"/>
         <dependency org="org.apache.httpcomponents" name="httpmime" rev="4.5.5" conf="base,sources"/>
         <dependency org="net.sourceforge.nekohtml" name="nekohtml" rev="1.9.22" conf="base,sources"/>
         <dependency org="com.ibm.icu" name="icu4j" rev="61.1" conf="base,sources"/>
@@ -227,19 +227,19 @@
 
         <!-- catalina component (framework/catalina/ivy.xml) -->
         <!-- catalina: tomcat -->
-        <dependency org="org.apache.tomcat" name="tomcat-api" rev="8.5.31" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-catalina" rev="8.5.31" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-catalina-ha" rev="8.5.31" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-coyote" rev="8.5.31" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-jasper" rev="8.5.31" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-jni" rev="8.5.31" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-tribes" rev="8.5.31" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-util" rev="8.5.31" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-util-scan" rev="8.5.31" conf="base,sources"/>
-        <dependency org="org.apache.tomcat.embed" name="tomcat-embed-websocket" rev="8.5.31" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-api" rev="8.5.32" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-catalina" rev="8.5.32" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-catalina-ha" rev="8.5.32" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-coyote" rev="8.5.32" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-jasper" rev="8.5.32" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-jni" rev="8.5.32" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-tribes" rev="8.5.32" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-util" rev="8.5.32" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-util-scan" rev="8.5.32" conf="base,sources"/>
+        <dependency org="org.apache.tomcat.embed" name="tomcat-embed-websocket" rev="8.5.32" conf="base,sources"/>
         <!-- gone since 8.5.3+?
-        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli" rev="8.5.31" conf="base,sources"/>
-        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli-adapters" rev="8.5.31" conf="base,sources"/>-->
+        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli" rev="8.5.32" conf="base,sources"/>
+        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli-adapters" rev="8.5.32" conf="base,sources"/>-->
         <!-- let the jasper compile dep give us the version it wants (NOTE: its version numbers are unrelated to org.eclipse.jdt.core.compiler! very confusing!)
         <dependency org="org.eclipse.jdt" name="ecj" rev="xxx" conf="base,sources"/>-->
 
@@ -249,10 +249,10 @@
             But for sources, the tomcat files have unusable documentation, so we use the official java API files instead;
             so we put the official servlet API jars in j2eespecs-ref dir (see build/base.xml for the renaming).
             NOTE: the tomcat-provided jar are renamed in base/build.xml so they match the API ones in name (TODO: REVIEW: still necessary?) -->
-        <dependency org="org.apache.tomcat" name="tomcat-servlet-api" rev="8.5.31" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-jsp-api" rev="8.5.31" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-el-api" rev="8.5.31" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-annotations-api" rev="8.5.31" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-servlet-api" rev="8.5.32" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-jsp-api" rev="8.5.32" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-el-api" rev="8.5.32" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-annotations-api" rev="8.5.32" conf="base,sources"/>
         <dependency org="javax.servlet" name="javax.servlet-api" rev="3.1.0" conf="base,j2eespecs,sources"/>
         <dependency org="javax.servlet.jsp" name="javax.servlet.jsp-api" rev="2.3.0" conf="base,j2eespecs,sources"/>
         <dependency org="javax.el" name="javax.el-api" rev="3.0.0" conf="base,j2eespecs,sources"/>

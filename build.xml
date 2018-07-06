@@ -1719,9 +1719,17 @@ under the License.
             <arg value="-portoffset=${portoffset}"/>
             <env key="LC_ALL" value="C"/>
         </exec-scipio-jar>
-        <iterate target="tests-cobertura" filelist="application-builds"/>
+        <antcall target="run-tests-cobertura-only"/>
     </target>
-    
+
+    <target name="run-tests-cobertura-only">
+        <iterate target="tests-cobertura" filelist="framework-builds"/>
+        <iterate target="tests-cobertura" filelist="application-builds"/>
+        <iterate target="tests-cobertura" filelist="specialpurpose-builds"/>
+        <addonsant target="tests-cobertura"/>
+        <hotdeployant target="tests-cobertura"/>
+    </target>
+
     <target name="_check-separated-tests-already-setup">
         <available file="runtime/test-list-build.xml" property="_separated-tests-already-setup"/>
     </target>

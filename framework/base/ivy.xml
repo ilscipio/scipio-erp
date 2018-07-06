@@ -373,18 +373,22 @@
         <!-- common ext dependencies -->
         <!-- NOTE: these may be part of "base" purely in order to simplify build, because many targets
             assume things from the main project "build" task; see base/build.xml for the relocations -->
-        <dependency org="asm" name="asm" rev="3.2" conf="base,ant-ext"/><!-- used by cobertura, possibly junit TODO?: update this if updating cobertura -->
-        <dependency org="asm" name="asm-tree" rev="3.2" conf="base,ant-ext"/><!-- used by cobertura, possibly junit TODO?: update this if updating cobertura -->
+        <!-- 2018-07-06: removed: appears only cobertura needs this (junit dep was an error?), so will leave it under ant-opt/cobertura
+        <dependency org="asm" name="asm" rev="3.2" conf="base,ant-ext"/>
+        <dependency org="asm" name="asm-tree" rev="3.2" conf="base,ant-ext"/>
+        -->
 
         <!-- deps for main build.xml ant task: download-activemq -->
         <dependency org="org.apache.activemq" name="activemq-all" rev="5.15.4" conf="activemq"/>
 
         <!-- deps for main build.xml ant task: download-cobertura -->
-        <dependency org="net.sourceforge.cobertura" name="cobertura" rev="1.9.4.1" conf="cobertura">
-            <exclude module="log4j"/>
+        <dependency org="net.sourceforge.cobertura" name="cobertura" rev="2.1.1" conf="cobertura">
+            <!-- NOTE: see root macros.xml cobertura.class.path for these inclusions -->
             <exclude module="ant"/>
-            <exclude module="asm"/>
-            <exclude module="asm-tree"/>
+            <exclude module="ant-junit"/>
+            <exclude module="junit"/>
+            <exclude module="log4j"/>
+            <exclude module="slf4j-api"/>
             <exclude module="oro"/>
         </dependency>
 

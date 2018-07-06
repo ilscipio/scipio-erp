@@ -388,7 +388,7 @@
             <exclude module="ant-junit"/>
             <exclude module="junit"/>
             <exclude module="log4j"/>
-            <exclude module="slf4j-api"/>
+            <!--<exclude module="slf4j-api"/> version compatibility issues -->
             <exclude module="oro"/>
         </dependency>
 

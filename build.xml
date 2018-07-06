@@ -1719,10 +1719,10 @@ under the License.
             <arg value="-portoffset=${portoffset}"/>
             <env key="LC_ALL" value="C"/>
         </exec-scipio-jar>
-        <antcall target="run-tests-cobertura-only"/>
+        <antcall target="run-cobertura-analysis"/>
     </target>
 
-    <target name="run-tests-cobertura-only">
+    <target name="run-cobertura-analysis">
         <iterate target="tests-cobertura" filelist="framework-builds"/>
         <iterate target="tests-cobertura" filelist="application-builds"/>
         <iterate target="tests-cobertura" filelist="specialpurpose-builds"/>

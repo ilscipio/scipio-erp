@@ -59,6 +59,9 @@
             NOTE: These must NOT be included in the framework/base/build.xml resolution and update overrides.
         -->
 
+        <!-- shared external ant deps -->
+        <conf name="ant-ext" description="download common external Ant scripting jars"/>
+
         <!-- deps for main build.xml ant task: download-activemq -->
         <conf name="activemq" description="download the ActiveMQ jars"/>
 
@@ -200,8 +203,6 @@
 
         <!-- scripting jars -->
         <!--<dependency org="antlr" name="antlr" rev="2.7.6" conf="base,scripting,sources"/> unused in code and version quite old -->
-        <dependency org="asm" name="asm" rev="3.2" conf="base,scripting,sources"/><!-- used by cobertura, possibly junit TODO?: update this if updating cobertura -->
-        <dependency org="asm" name="asm-tree" rev="3.2" conf="base,scripting,sources"/><!-- used by cobertura, possibly junit TODO?: update this if updating cobertura -->
         <dependency org="bsf" name="bsf" rev="2.4.0" conf="base,scripting,sources"/><!-- NOTE: 2.x is different API than 3.x; keeping latest 2.x; see ant-apache-bsf deps -->
         <dependency org="org.codehaus.groovy" name="groovy-all" rev="2.4.15" conf="base,scripting,groovy,sources"/>
         <!-- Jakarta ORO is provided in filesystem due to ivy dependency, and excluded below NOTE: Jakarta ORO is a closed project
@@ -368,6 +369,12 @@
             These are special dependencies for stock Scipio code and ant tasks which are only fetched
             on user request and/or by special ant tasks, e.g. the "download-xxx" tasks in the main Scipio build.xml.
         -->
+
+        <!-- common ext dependencies -->
+        <!-- NOTE: these may be part of "base" purely in order to simplify build, because many targets
+            assume things from the main project "build" task; see base/build.xml for the relocations -->
+        <dependency org="asm" name="asm" rev="3.2" conf="base,ant-ext"/><!-- used by cobertura, possibly junit TODO?: update this if updating cobertura -->
+        <dependency org="asm" name="asm-tree" rev="3.2" conf="base,ant-ext"/><!-- used by cobertura, possibly junit TODO?: update this if updating cobertura -->
 
         <!-- deps for main build.xml ant task: download-activemq -->
         <dependency org="org.apache.activemq" name="activemq-all" rev="5.15.4" conf="activemq"/>

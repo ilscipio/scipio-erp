@@ -132,6 +132,9 @@ under the License.
                 <!-- badly named zhing jar -->
                 <regexpmapper from="^(.*/)?core-([0-9.]+\.jar)$" to="\1zxing-core-\2" handledirsep="true"/>
 
+                <!-- ant-ext libs that are also part of base conf, for compatibility reasons -->
+                <regexpmapper from="^(.*/)?((asm|asm-tree)-([0-9.]+\.jar))$" to="\1ant-ext/\2" handledirsep="true"/>
+                
                 <identitymapper/>
             </firstmatchmapper>
         </ivy:retrieve>
@@ -169,8 +172,7 @@ under the License.
             <filename name="oro-*.jar"/><!-- required by Ivy for matcher="glob", committed in filesystem -->
  
             <!-- Optional dependencies, retrieved separately - do not delete! -->
-            <filename name="sonar-*.jar"/>
-            <filename name="cobertura-*.jar"/>
+            <filename name="ant-opt/**/*.jar"/>
             <filename name="activemq-*.jar"/>
         </or>
     </selector>

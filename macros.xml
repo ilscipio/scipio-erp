@@ -144,20 +144,22 @@ From command line, Scipio build should be invoked using the provided ant launch 
         <fileset dir="${ofbiz.home.dir}/framework/base/lib/ant/" includes="ant-apache-bsf-*.jar"/>
         <!-- scripting (previously under base/lib/scripting) -->
         <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="antlr-*.jar"/>
-        <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="asm-*.jar"/>
+        <!-- SCIPIO: 2018-07-06: junit should not need this
+        <fileset dir="${ofbiz.home.dir}/framework/base/lib/ant-ext" includes="asm-*.jar"/>-->
         <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="bsf-*.jar"/>
         <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="bsh-*.jar"/>
         <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="groovy-all-*.jar"/>
-        <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="jython-*.jar"/>
+        <!-- SCIPIO: removed
+        <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="jython-*.jar"/>-->
         <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="oro-*.jar"/>
         <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="hamcrest-*.jar"/><!-- SCIPIO: 2018-03-27: hamcrest-core dep for junit -->
     </path>
 
     <!-- cobertura -->
     <path id="cobertura.class.path">
-        <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="cobertura-*.jar"/>
+        <fileset dir="${ofbiz.home.dir}/framework/base/lib/ant-opt/cobertura" includes="*.jar"/>
+        <fileset dir="${ofbiz.home.dir}/framework/base/lib/ant-ext" includes="asm-*.jar"/>
         <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="log4j-*.jar"/>
-        <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="asm-*.jar"/>
         <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="oro-*.jar"/>
     </path>
 

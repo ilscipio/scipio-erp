@@ -1709,8 +1709,19 @@ under the License.
     </target>
     
 
-    <target name="run-tests-with-cobertura" depends="download-cobertura, run-tests"
-        description="Download Cobertura and perform code coverage (same as run-tests). You will need a valid Internet connection to download cobertura"/>
+    <target name="run-tests-with-cobertura" depends="download-cobertura"
+        description="Download Cobertura and perform code coverage (same as run-tests). You will need a valid Internet connection to download cobertura">
+        <echo>============================================================</echo>
+        <echo>= Scipio Cobertura integration tests. Please be aware, that =</echo>
+        <echo>= the tests are based on OFBiz_14 and not always reliable.  =</echo>
+        <echo>=============================================================</echo>
+        <exec-scipio-jar resultproperty="test.result">
+            <arg value="test"/>
+            <arg value="-portoffset=${portoffset}"/>
+            <env key="LC_ALL" value="C"/>
+        </exec-scipio-jar>
+        <iterate target="tests-cobertura" filelist="application-builds"/>
+    </target>
     
     <target name="_check-separated-tests-already-setup">
         <available file="runtime/test-list-build.xml" property="_separated-tests-already-setup"/>
@@ -1797,7 +1808,7 @@ under the License.
         <ant antfile="runtime/test-list-build.xml" target="all-tests"/>
     </target>
 
-    <target name="cobertura-report"
+    <target name="cobertura-report" depends="run-tests-with-cobertura"
             description="Generate a HTML code coverage report with cobertura, can be found in runtime/logs/cobertura-report">
         <delete dir="runtime/logs/cobertura-report"/>
         <mkdir dir="runtime/logs/cobertura-report"/>
@@ -1817,7 +1828,7 @@ under the License.
         </cobertura-report>
     </target>
 
-    <target name="cobertura-report-xml" depends="_setup-separated-test-run"
+    <target name="cobertura-report-xml" depends="run-tests-with-cobertura"
             description="Generate a XML file from the cobertura report, this will be used by sonar">
         <delete dir="runtime/logs/cobertura-report"/>
         <mkdir dir="runtime/logs/cobertura-report"/>

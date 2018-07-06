@@ -1837,7 +1837,10 @@ under the License.
     </target>
 
     <target name="sonar" depends="download-sonar-ant-task,sonar-init"
-            description="Sonar code analysis. You need a Sonar instance running to use it. More info on http://www.sonarsource.org/">
+            description="Sonar code analysis. You need a Sonar instance running to use it. More info on http://www.sonarsource.org/
+            Available Parameters: sonar.organization, sonar.host.url, sonar.login
+            For external sonar server (sonarcloud), use ./ant sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=... -Dsonar.login=...
+            ">
         <!-- SCIPIO: now git
         <exec executable="svn" dir="." output="runtime/svninfo_tmp.xml">
             <arg value="info"/>
@@ -1849,20 +1852,20 @@ under the License.
             <arg value="HEAD"/>
         </exec>
 
-        <property name="sonar.sources" value="specialpurpose/appserver/src, framework/base/src, framework/bi/src,
+        <property name="sonar.sources" value="framework/base/src,
             framework/catalina/src, framework/common/src, framework/datafile/src, framework/entity/src, framework/entityext/src,
-            framework/geronimo/src, framework/jetty/src,
-            framework/minilang/src, framework/security/src, framework/service/src, framework/start/src,
+            framework/geronimo/src, framework/minilang/src, framework/security/src, framework/service/src, framework/start/src,
             framework/testtools/src, framework/webapp/src, framework/webtools/src, framework/widget/src,
-            applications/accounting/src, applications/commonext/src, applications/content/src, applications/humanres/src,
+            applications/accounting/src, applications/content/src, applications/humanres/src,
             applications/manufacturing/src, applications/marketing/src, applications/order/src, applications/party/src,
             applications/product/src, applications/securityext/src, applications/workeffort/src, specialpurpose/assetmaint/src"
             />
         <property name="sonar.tests" value="framework/base/src/org/ofbiz/base/test, framework/entity/src/org/ofbiz/entity/test,
-            framework/service/src/org/ofbiz/service/test,
-            applications/accounting/src/org/ofbiz/accounting/test, applications/content/src/org/ofbiz/content/test,
-            applications/product/src/org/ofbiz/product/test, applications/product/src/org/ofbiz/shipment/test,
-            applications/securityext/src/org/ofbiz/securityext/test" />
+            framework/service/src/org/ofbiz/service/test, applications/accounting/src/org/ofbiz/accounting/test,
+            applications/product/src/org/ofbiz/product/test, applications/product/src/org/ofbiz/shipment/test" />
+        
+        <property name="sonar.exclusions" value="**/*test*/**" />
+        <property name="sonar.java.binaries" value="**/classes" />        
 
         <!-- list of optional Sonar properties -->
         <property name="sonar.projectName" value="SCIPIO ERP" />
@@ -1870,19 +1873,30 @@ under the License.
         <sonar:sonar key="org.apache:ofbiz" version="${info.entry.commit(revision)}" xmlns:sonar="antlib:org.sonar.ant:sonar"/>-->
         <property name="sonar.projectKey" value="com.ilscipio:scipio" />
         <property name="sonar.projectVersion" value="${git.info.revision}" />
-        <sonar:sonar xmlns:sonar="antlib:org.sonar.ant:sonar"/>
         <property name="sonar.dynamicAnalysis" value="reuseReports" />
         <property name="sonar.cobertura.reportPath" value="runtime/logs/cobertura-report/coverage.xml"/>
         <property name="sonar.java.source" value="1.8" />
         <property name="sonar.java.target" value="1.8" />
-        <!-- default for jdbc url: jdbc:mysql://localhost:3306/sonar?useUnicode=true&amp;characterEncoding=utf8-->
-        <property name="sonar.jdbc.url" value="${sonar.jdbc.url}"/>
-        <property name="sonar.jdbc.driverClassName" value="com.mysql.jdbc.Driver" />
-        <property name="sonar.jdbc.username" value="${sonar.jdbc.username}" />
-        <property name="sonar.jdbc.password" value="${sonar.jdbc.password}" />
-
-        <!-- SERVER ON A REMOTE HOST -->
         <property name="sonar.host.url" value="${sonar.host.url}" />
+        
+        <if>
+            <isset property="sonar.login"/>
+            <then>
+                <echo level="verbose" message="Connecting to external sonar server"/>
+                <property name="sonar.organization" value="${sonar.organization}"/>
+                <property name="sonar.host.url" value="${sonar.host.url}" default="https://sonarcloud.io"/>
+                <property name="sonar.login" value="${sonar.login}" />
+            </then>
+            <else>
+                <echo level="verbose" message="Connecting to internal sonar server"/>
+                <!-- default for jdbc url: jdbc:mysql://localhost:3306/sonar?useUnicode=true&amp;characterEncoding=utf8-->
+                <property name="sonar.jdbc.url" value="${sonar.jdbc.url}"/>
+                <property name="sonar.jdbc.driverClassName" value="com.mysql.jdbc.Driver" />
+                <property name="sonar.jdbc.username" value="${sonar.jdbc.username}" />
+                <property name="sonar.jdbc.password" value="${sonar.jdbc.password}" />
+            </else>
+        </if>
+        <sonar:sonar xmlns:sonar="antlib:org.sonar.ant:sonar"/>        
     </target>
 
     <target name="full-sonar">

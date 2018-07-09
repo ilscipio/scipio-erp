@@ -141,7 +141,7 @@ public class RenderContentTransform implements TemplateTransformModel {
                 out.write("<a href=\"");
                 ServletContext servletContext = request.getServletContext(); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
                 RequestHandler rh = (RequestHandler) servletContext.getAttribute("_REQUEST_HANDLER_");
-                out.append(rh.makeLink(request, response, "/" + fullRequest, false, false, true));
+                out.append(rh.makeLink(request, response, "/" + fullRequest, false, null, true)); // SCIPIO: 2018-07-09: changed secure to null
                 out.write("\">Edit</a>");
                 out.write("</div>");
             }

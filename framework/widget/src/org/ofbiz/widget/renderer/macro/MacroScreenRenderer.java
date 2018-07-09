@@ -620,7 +620,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
                 editRequest += "contentId=" + expandedContentId;
                 ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
                 RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
-                urlString = rh.makeLink(request, response, editRequest, false, false, false);
+                urlString = rh.makeLink(request, response, editRequest, false, null, true); // SCIPIO: 2018-07-09: changed secure to null, encode to true
             }
 
             Map<String, Object> parameters = new HashMap<String, Object>();
@@ -643,7 +643,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         if (request != null && response != null) {
             ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
             RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
-            fullUrlString = rh.makeLink(request, response, urlString, true, false, false);
+            fullUrlString = rh.makeLink(request, response, urlString, true, null, true); // SCIPIO: 2018-07-09: changed secure to null, encode to true
         }
 
         Map<String, Object> parameters = new HashMap<String, Object>();
@@ -741,7 +741,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
                  }
                  ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
                  RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
-                 urlString = rh.makeLink(request, response, editRequest, false, false, false);
+                 urlString = rh.makeLink(request, response, editRequest, false, null, true); // SCIPIO: 2018-07-09: changed secure to null, encode to true
              }
          }
 

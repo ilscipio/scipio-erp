@@ -465,12 +465,12 @@ public class ProductSearchSession {
                             RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
                             if ("KOTT_PRODCAT".equals(targetTypeEnumId)) {
                                 String requestName = "/category/~category_id=" + target;
-                                target = rh.makeLink(request, response, requestName, false, false, false);
+                                target = rh.makeLink(request, response, requestName, false, null, true); // SCIPIO: 2018-07-09: changed secure to null, encode to true
                             } else if ("KOTT_PRODUCT".equals(targetTypeEnumId)) {
                                 String requestName = "/product/~product_id=" + target;
-                                target = rh.makeLink(request, response, requestName, false, false, false);
+                                target = rh.makeLink(request, response, requestName, false, null, true); // SCIPIO: 2018-07-09: changed secure to null, encode to true
                             } else if ("KOTT_OFBURL".equals(targetTypeEnumId)) {
-                                target = rh.makeLink(request, response, target, false, false, false);
+                                target = rh.makeLink(request, response, target, false, null, true); // SCIPIO: 2018-07-09: changed secure to null, encode to true
                             } else if ("KOTT_AURL".equals(targetTypeEnumId)) {
                                 // do nothing, is absolute URL
                             } else {

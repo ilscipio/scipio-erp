@@ -269,7 +269,7 @@ public class ContentMapFacade implements Map<Object, Object> {
                         Debug.logError(e, module);
                     }
                 }
-                String contextLink = rh.makeLink(request, response, contentUri, true, false, true);
+                String contextLink = rh.makeLink(request, response, contentUri, true, null, true); // SCIPIO: 2018-07-09: changed secure to null
                 // Debug.logInfo("Made link to content with ID [" + this.contentId + "]: " + contextLink, module);
                 return contextLink;
             } else {

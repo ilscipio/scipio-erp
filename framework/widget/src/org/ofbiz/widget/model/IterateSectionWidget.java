@@ -324,7 +324,7 @@ public class IterateSectionWidget extends ModelScreenWidget {
             linkText.append("VIEW_SIZE_"+ paginatorNumber + "=").append(viewSize).append("&amp;VIEW_INDEX_" + paginatorNumber + "=").append(viewIndex - 1).append("\"");
 
             // make the link
-            writer.append(rh.makeLink(request, response, linkText.toString(), false, false, false));
+            writer.append(rh.makeLink(request, response, linkText.toString(), false, null, true)); // SCIPIO: 2018-07-09: changed secure to null, encode to true
             String previous = UtilProperties.getMessage("CommonUiLabels", "CommonPrevious", (Locale) context.get("locale"));
             writer.append(" class=\"buttontext\">[").append(previous).append("]</a>\n");
 
@@ -345,7 +345,7 @@ public class IterateSectionWidget extends ModelScreenWidget {
             linkText.append("VIEW_SIZE_" + paginatorNumber + "=").append(viewSize).append("&amp;VIEW_INDEX_" + paginatorNumber + "=").append(viewIndex + 1).append("\"");
 
             // make the link
-            writer.append(rh.makeLink(request, response, linkText.toString(), false, false, false));
+            writer.append(rh.makeLink(request, response, linkText.toString(), false, null, true)); // SCIPIO: 2018-07-09: changed secure to null, encode to true
             String next = UtilProperties.getMessage("CommonUiLabels", "CommonNext", (Locale) context.get("locale"));
             writer.append(" class=\"buttontext\">[").append(next).append("]</a>\n");
 

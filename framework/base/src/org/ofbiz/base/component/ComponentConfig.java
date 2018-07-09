@@ -34,8 +34,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.ofbiz.base.container.ContainerConfig;
-import org.ofbiz.base.container.ContainerException;
 import org.ofbiz.base.container.ContainerConfig.Container;
+import org.ofbiz.base.container.ContainerException;
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Assert;
 import org.ofbiz.base.util.Debug;
@@ -1113,7 +1113,6 @@ public final class ComponentConfig {
         public final String location;
         public final String[] basePermission;
         public final String position;
-        public final boolean sessionCookieAccepted;
         public final boolean privileged;
         // CatalinaContainer modifies this field.
         private volatile boolean appBarDisplay;
@@ -1156,7 +1155,6 @@ public final class ComponentConfig {
             }
             this.location = element.getAttribute("location");
             this.appBarDisplay = !"false".equals(element.getAttribute("app-bar-display"));
-            this.sessionCookieAccepted = !"false".equals(element.getAttribute("session-cookie-accepted"));
             this.privileged = !"false".equals(element.getAttribute("privileged"));
             this.accessPermission = element.getAttribute("access-permission");
             String basePermStr = element.getAttribute("base-permission");
@@ -1223,7 +1221,6 @@ public final class ComponentConfig {
             this.location = other.location;
             this.basePermission = other.basePermission;
             this.position = other.position;
-            this.sessionCookieAccepted = other.sessionCookieAccepted;
             this.privileged = other.privileged;
             this.appBarDisplay = other.appBarDisplay;
             this.accessPermission = other.accessPermission;
@@ -1270,10 +1267,6 @@ public final class ComponentConfig {
             return virtualHosts;
         }
 
-        public boolean isSessionCookieAccepted() {
-            return sessionCookieAccepted;
-        }
-        
         public String getOverrideMode() { // SCIPIO: new
             return overrideMode;
         }

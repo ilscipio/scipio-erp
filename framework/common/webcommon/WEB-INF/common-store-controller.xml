@@ -61,6 +61,8 @@ NOTE: This should only contain framework-level definitions, and not business-rel
         <!-- Events to run on every request after all other processing (chains exempt) -->
     </postprocessor>
 
+    <!-- SCIPIO: NOTE: 2018-07-09: Most requests changed to https true (now the framework default when unspecified) -->
+
     <!-- Security Request Mappings -->
     <request-map uri="checkLogin" edit="false">
         <description>Verify a user is logged in.</description>
@@ -123,7 +125,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
     
     <!-- SCIPIO: Do NOT allow this for frontend stores for now 
     <request-map uri="view">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/><!- - SCIPIO: 2018-07-09: set https true - ->
         <response name="success" type="request" value="main"/>
     </request-map>
     <request-map uri="views">
@@ -137,7 +139,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
     <request-map uri="ListLocales"><security https="true" auth="false"/><response name="success" type="view" value="ListLocales" save-last-view="true"/></request-map>
     -->
     <request-map uri="setSessionLocale">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/><!-- SCIPIO: 2018-07-09: set https true -->
         <event type="java" path="org.ofbiz.common.CommonEvents" invoke="setSessionLocale"/>
         <response name="success" type="view-last" value="main"/>     
         <response name="error" type="view" value="main"/>
@@ -191,7 +193,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
     -->
 
     <request-map uri="main">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/><!-- SCIPIO: 2018-07-09: set https true -->
         <response name="success" type="view" value="main"/>
     </request-map>
 
@@ -234,7 +236,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
     </request-map>
 
     <request-map uri="showHelpPublic">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/><!- - SCIPIO: 2018-07-09: set https true - ->
         <response name="success" type="view" value="showHelp"/>
     </request-map>
 
@@ -247,7 +249,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
     <!-- Common captcha image request, the captcha code is stored in the session using _CAPTCHA_CODE_ as the key -->
     <!-- SCIPIO: Not for frontend stores for now
     <request-map uri="captcha.jpg">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/><!- - SCIPIO: 2018-07-09: set https true - ->
         <event type="java" path="org.ofbiz.common.CommonEvents" invoke="getCaptcha"/>
         <response name="success" type="none"/>
     </request-map>

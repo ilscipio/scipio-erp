@@ -662,6 +662,7 @@ under the License.
     </request-map>
 
     <request-map uri="setDesiredAlternateGwpProductId">
+        <security https="true" auth="true"/><!-- SCIPIO: 2018-07-09: added security elem -->
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="setDesiredAlternateGwpProductId"/>
         <response name="success" type="view" value="showcart"/>
         <response name="error" type="view" value="showcart"/>

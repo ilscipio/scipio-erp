@@ -1143,6 +1143,7 @@ under the License.
     </request-map>
     <!-- note: this is an insecure version of above for purposes of rendering via fop, which cannot access over https -->
     <request-map uri="viewShipmentLabel">
+        <security https="false" auth="false"/><!-- SCIPIO: 2018-07-09: added security elem -->
         <event type="java" path="org.ofbiz.shipment.shipment.ShipmentEvents" invoke="viewShipmentPackageRouteSegLabelImage"/>
         <response name="success" type="none" value=""/>
         <response name="error" type="view" value="EditShipmentRouteSegments"/>

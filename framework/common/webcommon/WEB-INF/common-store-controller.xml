@@ -86,6 +86,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
         <response name="error" type="view" value="login"/>
     </request-map>
     <request-map uri="error">
+        <security https="true" auth="false"/><!-- SCIPIO: 2018-07-09: added security elem -->
         <response name="success" type="view" value="error"/>
     </request-map>
     <request-map uri="logout">
@@ -196,10 +197,12 @@ NOTE: This should only contain framework-level definitions, and not business-rel
 
     <!-- SCIPIO: Not for frontend stores for now
     <request-map uri="viewBlocked">
+        <security https="true" auth="false"/><!- - SCIPIO: 2018-07-09: added security elem - ->
         <response name="success" type="view" value="viewBlocked"/>
     </request-map>
 
     <request-map uri="LookupTimeDuration">
+        <security https="true" auth="false"/><!- - SCIPIO: 2018-07-09: added security elem - ->
         <response name="success" type="view" value="LookupTimeDuration"/>
     </request-map>
     -->

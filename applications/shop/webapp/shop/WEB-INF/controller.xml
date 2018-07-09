@@ -1812,11 +1812,13 @@ under the License.
         <response name="success" type="view" value="productCategoryList" save-current-view="true"/>
     </request-map>
     <request-map uri="fromSetSessionLocale">
+        <security https="true" auth="false"/><!-- SCIPIO: 2018-07-09: added security elem -->
         <event type="simple" path="component://shop/script/com/ilscipio/scipio/shop/customer/CustomerEvents.xml" invoke="fromSetSessionLocale"/>
         <response name="success" type="view-last" value="main"/>
         <response name="error" type="view" value="main"/>
     </request-map>
     <request-map uri="stream">
+        <security https="false" auth="false"/><!-- SCIPIO: 2018-07-09: added security elem -->
         <event type="java" path="org.ofbiz.content.data.DataEvents" invoke="serveObjectData"/>
         <response name="success" type="none"/>
         <response name="error" type="view" value="error"/>

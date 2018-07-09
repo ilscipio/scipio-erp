@@ -173,6 +173,10 @@ From command line, Scipio build should be invoked using the provided ant launch 
         <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="junit-*.jar"/>
         <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="log4j-*.jar"/>
     </path>
+    
+    <path id="jacoco.agent.class.path">
+        <fileset dir="${ofbiz.home.dir}/framework/base/lib/ant-opt/jacoco" includes="*agent*.jar"/>
+    </path>
 
     <!-- ================================================================== -->
     <!-- Common build macros/presets -->

@@ -1744,17 +1744,29 @@ under the License.
                 <path refid="jacoco.class.path" />
             </classpath>
         </taskdef>
-        <!-- 
-        <exec-scipio-jar resultproperty="test.result">
-            <arg value="test"/>
-            <arg value="-portoffset=${portoffset}"/>
-            <env key="LC_ALL" value="C"/>
-        </exec-scipio-jar>-->
-        <antcall target="run-jacoco-analysis"/>
         <delete dir="runtime/logs/jacoco-report"/>
         <mkdir dir="runtime/logs/jacoco-report"/>
+        <pathconvert property="jacocoAgent" refid="jacoco.agent.class.path" />
+        
+        <jacoco:agent property="agentvmparam" destfile="runtime/logs/jacoco-report/scipio-base.exec" includes="*" output="file" dumponexit="true" />
+        <echo>Starting Scipio Server with Agent${agentvmparam}</echo>
+        <parallel>
+            <exec-scipio-jar resultproperty="test.result">
+                <arg value="test"/>
+                <!-- <jvmarg value="-Xnoagent"/>
+                <jvmarg value="-Djava.compiler=NONE"/>
+                <jvmarg value="-Xdebug"/>
+                <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8091"/>-->
+                <jvmarg value="${agentvmparam}" />
+                <env key="LC_ALL" value="C"/>
+            </exec-scipio-jar>
+            <sequential>
+          </sequential>
+        </parallel>
+        <antcall target="run-jacoco-analysis"/>
         <jacoco:merge destfile="runtime/logs/jacoco-report/jacoco.exec">
             <fileset dir="." includes="**/**/build/jacoco-result/*.exec"/>
+            <fileset dir="." includes="runtime/logs/jacoco-report/scipio-base.exec"/>
         </jacoco:merge>
     </target>
 

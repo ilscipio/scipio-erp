@@ -1710,7 +1710,10 @@ under the License.
 
     <target name="run-tests-with-cobertura" depends="download-cobertura"
         description="Download Cobertura and perform code coverage (same as run-tests). You will need a valid Internet connection to download cobertura">
-        <echo>============================================================</echo>
+        <echo>=============================================================</echo>
+        <echo>=                                                           =</echo>
+        <echo>=     ** DEPRECATED: Please use Jacoco Tests instead. **    =</echo>
+        <echo>=                                                           =</echo>
         <echo>= Scipio Cobertura integration tests. Please be aware, that =</echo>
         <echo>= the tests are based on OFBiz_14 and not always reliable.  =</echo>
         <echo>=============================================================</echo>
@@ -1728,6 +1731,88 @@ under the License.
         <iterate target="tests-cobertura" filelist="specialpurpose-builds"/>
         <addonsant target="tests-cobertura"/>
         <hotdeployant target="tests-cobertura"/>
+    </target>
+    
+    <target name="run-tests-with-jacoco" xmlns:jacoco="antlib:org.jacoco.ant"
+        description="Download JaCoCo and perform code coverage (same as run-tests). You will need a valid Internet connection to download JaCoCo">
+        <echo>============================================================</echo>
+        <echo>= Scipio JaCoCo integration tests. Please be aware, that    =</echo>
+        <echo>= the tests are based on OFBiz_14 and not always reliable.  =</echo>
+        <echo>=============================================================</echo>
+        <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+            <classpath>
+                <path refid="jacoco.class.path" />
+            </classpath>
+        </taskdef>
+        <exec-scipio-jar resultproperty="test.result">
+            <arg value="test"/>
+            <arg value="-portoffset=${portoffset}"/>
+            <env key="LC_ALL" value="C"/>
+        </exec-scipio-jar>
+        <antcall target="run-jacoco-analysis"/>
+        <delete dir="runtime/logs/jacoco-report"/>
+        <mkdir dir="runtime/logs/jacoco-report"/>
+        <jacoco:merge destfile="runtime/logs/jacoco-report/jacoco.exec">
+            <fileset dir="." includes="**/**/build/jacoco-result/*.exec"/>
+        </jacoco:merge>
+    </target>
+
+    <target name="run-jacoco-analysis">
+        <iterate target="tests-jacoco" filelist="framework-builds"/>
+        <iterate target="tests-jacoco" filelist="application-builds"/>
+        <iterate target="tests-jacoco" filelist="specialpurpose-builds"/>
+        <addonsant target="tests-jacoco"/>
+        <hotdeployant target="tests-jacoco"/>
+    </target>
+    
+    <target name="jacoco-report" xmlns:jacoco="antlib:org.jacoco.ant"
+            description="Generate a HTML code coverage report with JaCoCo can be found in runtime/logs/jacoco-report">
+            
+        <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+            <classpath>
+                <path refid="jacoco.class.path" />
+            </classpath>
+        </taskdef>
+        
+        <delete dir="runtime/logs/jacoco-report/html"/>
+        <mkdir dir="runtime/logs/jacoco-report/html"/>
+        <delete dir="runtime/logs/jacoco-report/xml"/>
+        <mkdir dir="runtime/logs/jacoco-report/xml"/>
+        <delete dir="runtime/logs/jacoco-report/csv"/>
+        <mkdir dir="runtime/logs/jacoco-report/csv"/>
+        
+        <jacoco:report>           
+            <executiondata>
+                <file file="runtime/logs/jacoco-report/jacoco.exec"/>
+            </executiondata>
+                                
+            <structure name="Scipio Jacoco - Report">
+                <classfiles>
+                    <multirootfileset>
+                      <basedir file="framework"/>
+                      <basedir file="applications"/>
+                      <basedir file="hot-deploy"/>
+                      <basedir file="addons"/>
+                      <basedir file="specialpurpose"/>
+                      <include name="**/build/classes"/>
+                    </multirootfileset>
+                </classfiles>
+                <sourcefiles encoding="UTF-8">
+                    <multirootfileset>
+                      <basedir file="framework"/>
+                      <basedir file="applications"/>
+                      <basedir file="hot-deploy"/>
+                      <basedir file="addons"/>
+                      <basedir file="specialpurpose"/>
+                      <include name="/**/src"/>
+                    </multirootfileset>
+                </sourcefiles>
+            </structure>
+
+            <html destdir="runtime/logs/jacoco-report/html" />
+            <csv destfile="runtime/logs/jacoco-report/csv/report.csv" />
+            <xml destfile="runtime/logs/jacoco-report/xml/report.xml" />             
+        </jacoco:report>
     </target>
 
     <target name="_check-separated-tests-already-setup">
@@ -2212,6 +2297,11 @@ under the License.
     <target name="download-cobertura" depends="ivy-init,download-ant-ext" description="Download cobertura related files">
         <delete verbose="on"><fileset dir="framework/base/lib/ant-opt/cobertura" includes="*.jar"/></delete>
         <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/ant-opt/cobertura/[artifact]-[revision].[ext]" conf="cobertura"/>
+    </target>
+    
+    <target name="download-jacoco" depends="ivy-init,download-ant-ext" description="Download JaCoCo related files">
+        <delete verbose="on"><fileset dir="framework/base/lib/ant-opt/jacoco" includes="*.jar"/></delete>
+        <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/ant-opt/jacoco/[artifact]-[revision].[ext]" conf="jacoco"/>
     </target>
 
     <target name="download-PG-JDBC" depends="download-jdbc-postgresql" description="Download postgres jdbc driver (legacy alias for download-jdbc-postgresql)">

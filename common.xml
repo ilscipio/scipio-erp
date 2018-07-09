@@ -156,6 +156,33 @@ under the License.
         </cobertura-report>
     </target>
 
+    <target name="tests-jacoco" depends="jar" xmlns:jacoco="antlib:org.jacoco.ant">
+        <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+            <classpath>
+                <path refid="jacoco.class.path" />
+            </classpath>
+        </taskdef>
+        <sequential>
+            <delete dir="${build.dir}/jacoco-result" />
+            <mkdir dir="${build.dir}/jacoco-result" />
+            <jacoco:coverage destfile="${build.dir}/jacoco-result/${name}.exec">    
+                <junit printsummary="true" haltonfailure="false" fork="yes" forkmode="once">
+                    <classpath>
+                        <path refid="junit.class.path" />
+                        <path refid="test.class.path" />
+                        <pathelement location="@{build.jar}" />
+                        <pathelement location="@{build-test.jar}" />
+                    </classpath>
+                    <sysproperty key="ofbiz.home" value="${ofbiz.home.dir}" />
+                    <formatter type="xml" />
+                    <batchtest>
+                        <filelist refid="test.classes" />
+                    </batchtest>
+                </junit>
+            </jacoco:coverage>
+        </sequential>
+    </target>
+
     <target name="all" depends="jar,docs" />
 
     <!-- ================================================================== -->

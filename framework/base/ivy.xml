@@ -67,6 +67,9 @@
 
         <!-- deps for main build.xml ant task: download-cobertura -->
         <conf name="cobertura" description="download cobertura (GPL2.0) http://cobertura.sourceforge.net/"/>
+        
+        <!-- deps for main build.xml ant task: download-jacoco -->
+        <conf name="jacoco" description="download JaCoCo (APL 2.0) https://www.jacoco.org"/>
 
         <!-- deps for main build.xml ant task: download-sonar-ant-task -->
         <conf name="sonar-ant-task" description="download the ant sonar task (need sonar)
@@ -390,6 +393,11 @@
             <exclude module="log4j"/>
             <!--<exclude module="slf4j-api"/> version compatibility issues -->
             <exclude module="oro"/>
+        </dependency>
+        
+        <!-- deps for main build.xml ant task: download-jacoco  -->
+        <dependency org="org.jacoco" name="org.jacoco.ant" rev="0.8.1" conf="jacoco">
+            <exclude module="log4j"/>
         </dependency>
 
         <!-- deps for main build.xml ant task: download-sonar-ant-task -->

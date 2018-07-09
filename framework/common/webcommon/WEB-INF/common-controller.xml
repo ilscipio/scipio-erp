@@ -55,6 +55,8 @@ under the License.
         </request-map-settings>
     </common-settings>
 
+    <!-- SCIPIO: NOTE: 2018-07-09: Most requests changed to https true (now the framework default when unspecified) -->
+
     <!-- Security Mappings -->
     <request-map uri="checkLogin" edit="false">
         <description>Verify a user is logged in.</description>
@@ -99,7 +101,7 @@ under the License.
         <response name="success" type="view" value="requirePasswordChange"/>
     </request-map>
     <request-map uri="view">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/><!-- SCIPIO: 2018-07-09: set https true -->
         <response name="success" type="request" value="main"/>
     </request-map>
     <request-map uri="views">
@@ -232,7 +234,7 @@ under the License.
     </request-map>
 
     <request-map uri="showHelpPublic">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/><!-- SCIPIO: 2018-07-09: set https true -->
         <response name="success" type="view" value="showHelp"/>
     </request-map>
 
@@ -243,7 +245,7 @@ under the License.
 
     <!-- Common captcha image request, the captcha code is stored in the session using _CAPTCHA_CODE_ as the key -->
     <request-map uri="captcha.jpg">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/><!-- SCIPIO: 2018-07-09: set https true -->
         <event type="java" path="org.ofbiz.common.CommonEvents" invoke="getCaptcha"/>
         <response name="success" type="none"/>
     </request-map>
@@ -320,7 +322,7 @@ under the License.
     </request-map>
     
     <request-map uri="qrcode">
-        <security auth="true" https="false" />
+        <security auth="true" https="true" /><!-- SCIPIO: 2018-07-09: set https true -->
         <event type="java" path="org.ofbiz.common.qrcode.QRCodeEvents" invoke="serveQRCodeImage"/>
         <response name="success" type="none" />
         <response name="error" type="none" />

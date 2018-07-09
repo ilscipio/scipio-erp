@@ -931,7 +931,7 @@ under the License.
    <!-- ================ SimpleContent Requests ================= -->
 
     <request-map uri="ViewSimpleContent">
-        <security auth="false" https="false"/>
+        <security auth="false" https="true"/><!-- SCIPIO: 2018-07-09: set https true -->
         <response name="success" type="view" value="ViewSimpleContent"/>
     </request-map>
 
@@ -1225,7 +1225,7 @@ under the License.
 
     <!--  external communication event; mark as read using 1px image request -->
     <request-map uri="ceimages" track-serverhit="false" track-visit="false">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/><!-- SCIPIO: 2018-07-09: set https true -->
         <event type="java" path="org.ofbiz.party.communication.CommunicationEventServices" invoke="markCommunicationAsRead"/>
         <response name="success" type="none"/>
     </request-map>

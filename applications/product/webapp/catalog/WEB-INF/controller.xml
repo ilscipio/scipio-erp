@@ -2886,7 +2886,7 @@ under the License.
         </response>
     </request-map>
     <request-map uri="viewImage">
-        <security https="false" auth="false"/>
+        <security https="true" auth="true"/><!- - SCIPIO: 2018-07-09: set https and auth true - ->
         <response name="success" type="view" value="viewImage"/>
         <response name="error" type="view" value="viewImage"/>
     </request-map>

@@ -42,7 +42,7 @@ under the License.
 
     <!-- Request Mappings -->
     <request-map uri="view">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/><!-- SCIPIO: 2018-07-09: set https true -->
         <response name="success" type="request" value="main"/>
     </request-map>
 

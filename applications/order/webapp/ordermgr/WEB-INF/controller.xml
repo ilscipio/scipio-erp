@@ -46,7 +46,7 @@ under the License.
 
     <!-- Request Mappings -->
     <request-map uri="view">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/><!-- SCIPIO: 2018-07-09: set https true -->
         <response name="success" type="request" value="main"/>
     </request-map>
 
@@ -710,7 +710,7 @@ under the License.
     </request-map>
 
     <request-map uri="addCategoryDefaults">
-        <security https="false" auth="false"/>
+        <security https="true" auth="true"/><!-- SCIPIO: 2018-07-09: set https and auth -->
         <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="addCategoryDefaults"/>
         <response name="success" type="view" value="showcart"/>
         <response name="error" type="view" value="showcart"/>
@@ -1748,7 +1748,7 @@ under the License.
     </request-map>
 
     <request-map uri="crosssell">
-        <security https="false" auth="false"/>
+        <security https="true" auth="true"/><!-- SCIPIO: 2018-07-09: set https and auth true -->
         <response name="success" type="view" value="product"/>
     </request-map>
 

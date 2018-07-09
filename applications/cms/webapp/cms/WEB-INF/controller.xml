@@ -37,7 +37,7 @@
     </request-map>
     
     <request-map uri="pagenotfound">
-        <security https="false" auth="false"/>
+        <security https="true" auth="true"/>
         <response name="success" type="view" value="pagenotfound"/>
     </request-map>
    

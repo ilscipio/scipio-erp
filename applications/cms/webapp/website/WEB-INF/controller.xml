@@ -33,11 +33,11 @@
     
     <!-- General -->
     <request-map uri="error">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="pagenotfound"/><!-- FIXME: not really appropriate -->
     </request-map>
     <request-map uri="pagenotfound">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="pagenotfound"/>
     </request-map>
     <request-map uri="main">
@@ -63,23 +63,23 @@
         TODO: review if we might perhaps include a common shop controller instead 
             (but without all the firstvisit/preprocessor/handler, common-store-controller and other definitions?) -->
     <request-map uri="showcart">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="pagenotfound"/>
     </request-map>
     <request-map uri="keywordsearch">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="pagenotfound"/>
     </request-map>
     <request-map uri="showAllPromotions">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="pagenotfound"/>
     </request-map>
     <request-map uri="policies">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="pagenotfound"/>
     </request-map>
     <request-map uri="license">
-        <security https="false" auth="false"/>
+        <security https="true" auth="false"/>
         <response name="success" type="view" value="pagenotfound"/>
     </request-map>
     

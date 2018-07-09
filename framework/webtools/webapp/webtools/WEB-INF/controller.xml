@@ -149,11 +149,11 @@ under the License.
     </request-map>
 
     <request-map uri="ModelWriter">
-        <security https="false" auth="true"/>
+        <security https="true" auth="true"/><!-- SCIPIO: 2018-07-09: set https true -->
         <response name="success" type="view" value="ModelWriter"/>
     </request-map>
     <request-map uri="ModelGroupWriter">
-        <security https="false" auth="true"/>
+        <security https="true" auth="true"/><!-- SCIPIO: 2018-07-09: set https true -->
         <response name="success" type="view" value="ModelGroupWriter"/>
     </request-map>
 

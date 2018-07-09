@@ -149,7 +149,7 @@ under the License.
         <response name="error" type="view" value="ViewResponse"/>
     </request-map>
     <request-map uri="updateBlogResponse">
-        <security https="false" auth="true"/>
+        <security https="true" auth="true"/><!-- SCIPIO: 2018-07-09: set https true -->
         <event type="service" invoke="updateTextContent"/>
         <response name="success" type="view" value="ViewResponse"/>
         <response name="error" type="view" value="ViewResponse"/>
@@ -1722,7 +1722,7 @@ under the License.
     <!-- ================ SimpleContent Requests ================= -->
 
     <request-map uri="ViewSimpleContent">
-        <security auth="false" https="false"/>
+        <security auth="false" https="true"/><!-- SCIPIO: 2018-07-09: set https true -->
         <response name="success" type="view" value="ViewSimpleContent"/>
     </request-map>
 

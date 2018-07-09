@@ -6,7 +6,7 @@ jdk:
   - oraclejdk8
   - openjdk8
 install:
-  - ./ant load-demo >> runtime/logs/console.travis.log
+  - ./ant download-jacoco load-demo >> runtime/logs/console.travis.log
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter

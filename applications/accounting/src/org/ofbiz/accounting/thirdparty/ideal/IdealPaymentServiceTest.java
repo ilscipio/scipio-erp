@@ -56,7 +56,7 @@ public class IdealPaymentServiceTest extends OFBizTestCase{
         issuerId = "0151";
         orderDiscription = "Test Order Description";
         // SCIPIO: default now points to shop
-        merchantReturnURL = "http://localhost:8080/shop";
+        merchantReturnURL = "https://localhost:8443/shop";
     }
     
     public void testDirectoryRequest() throws Exception{

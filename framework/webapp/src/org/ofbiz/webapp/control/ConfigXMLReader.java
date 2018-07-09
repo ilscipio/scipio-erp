@@ -44,6 +44,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.FileUtil;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
+import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
@@ -1411,7 +1412,7 @@ public class ConfigXMLReader {
         public boolean trackServerHit = true;
         public String description;
         public Event event;
-        public boolean securityHttps = false;
+        public boolean securityHttps = true;
         public boolean securityAuth = false;
         public boolean securityCert = false;
         public boolean securityExternalView = true;
@@ -1428,7 +1429,17 @@ public class ConfigXMLReader {
             // Check for security
             Element securityElement = UtilXml.firstChildElement(requestMapElement, "security");
             if (securityElement != null) {
+                if (!UtilProperties.propertyValueEqualsIgnoreCase("url", "no.http", "Y")) {
                 this.securityHttps = "true".equals(securityElement.getAttribute("https"));
+                } else {
+                    String httpRequestMapList = UtilProperties.getPropertyValue("url", "http.request-map.list");
+                    if (UtilValidate.isNotEmpty(httpRequestMapList)) {
+                        List<String> reqList = StringUtil.split(httpRequestMapList, ",");
+                        if (reqList.contains(this.uri)) {
+                            this.securityHttps = "true".equals(securityElement.getAttribute("https"));
+                        }
+                    }
+                }
                 this.securityAuth = "true".equals(securityElement.getAttribute("auth"));
                 this.securityCert = "true".equals(securityElement.getAttribute("cert"));
                 this.securityExternalView = !"false".equals(securityElement.getAttribute("external-view"));

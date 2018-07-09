@@ -1744,11 +1744,12 @@ under the License.
                 <path refid="jacoco.class.path" />
             </classpath>
         </taskdef>
+        <!-- 
         <exec-scipio-jar resultproperty="test.result">
             <arg value="test"/>
             <arg value="-portoffset=${portoffset}"/>
             <env key="LC_ALL" value="C"/>
-        </exec-scipio-jar>
+        </exec-scipio-jar>-->
         <antcall target="run-jacoco-analysis"/>
         <delete dir="runtime/logs/jacoco-report"/>
         <mkdir dir="runtime/logs/jacoco-report"/>
@@ -1765,7 +1766,7 @@ under the License.
         <hotdeployant target="tests-jacoco"/>
     </target>
     
-    <target name="jacoco-report" xmlns:jacoco="antlib:org.jacoco.ant"
+    <target name="jacoco-report" xmlns:jacoco="antlib:org.jacoco.ant"  depends="run-tests-with-jacoco"
             description="Generate a HTML code coverage report with JaCoCo can be found in runtime/logs/jacoco-report">
             
         <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">

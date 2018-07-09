@@ -305,14 +305,30 @@ public final class OfbizUrlBuilder {
             throw new IllegalStateException("Servlet path is unknown");
         }
         buffer.append(servletPath);
-        // SCIPIO: added check to make sure servletPath doesn't already end with "/"
-        // FIXME: we should really check buffer instead of servletPath, but we can't because Appendable...
-        if (!servletPath.endsWith("/") && !url.startsWith("/")) {
-            buffer.append("/");
-        }
-        buffer.append(url);
+        appendPathPart(buffer, url); // SCIPIO
     }
-    
+
+    /**
+     * SCIPIO: Adds a path and a url to the buffer, handling slash (/).
+     * WARN: This assumes the buffer is a StringBuilder, StringWriter, or other whose toString()
+     * returns the url, and not some other type of Writer.
+     * Added 2018-07-09. 
+     */
+    private static void appendPathPart(Appendable buffer, String part) throws IOException {
+        if (buffer.toString().endsWith("/")) {
+            if (part.startsWith("/")) {
+                buffer.append(part.substring(1));
+            } else {
+                buffer.append(part);
+            }
+        } else {
+            if (!part.startsWith("/")) {
+                buffer.append("/");
+            }
+            buffer.append(part);
+        }
+    }
+
     /**
      * SCIPIO: Builds a partial URL - including the context path, but not the scheme or host or servlet.
      * 
@@ -326,12 +342,7 @@ public final class OfbizUrlBuilder {
             throw new IllegalStateException("Context path is unknown");
         }
         buffer.append(contextPath);
-        // SCIPIO: added check to make sure contextPath doesn't already end with "/"
-        // FIXME: we should really check buffer instead of contextPath, but we can't because Appendable...
-        if (!contextPath.endsWith("/") && !url.startsWith("/")) {
-            buffer.append("/");
-        }
-        buffer.append(url);
+        appendPathPart(buffer, url); // SCIPIO
     }    
     
     

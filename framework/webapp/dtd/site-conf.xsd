@@ -527,7 +527,7 @@ under the License.
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.security">
-        <xs:attribute name="https" default="false">
+        <xs:attribute name="https" default="true"><!-- SCIPIO: 2018-07-09: default is now true -->
             <xs:simpleType>
                 <xs:restriction base="xs:token">
                     <xs:enumeration value="true">

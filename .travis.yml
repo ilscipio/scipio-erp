@@ -5,12 +5,14 @@ language: java
 jdk:
   - oraclejdk8
   - openjdk8
+install:
+  - ./ant load-demo >> runtime/logs/console.travis.log
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build  
 script: 
-  - travis_wait 30 ./ant load-demo jacoco-report >> runtime/logs/console.travis.log
+  - ./ant jacoco-report
 after_script:
   - ./cc-test-reporter format-coverage /home/travis/build/ilscipio/scipio-erp/runtime/logs/jacoco-report/xml/report.xml -d -t jacoco
   - ./cc-test-reporter upload-coverage -d

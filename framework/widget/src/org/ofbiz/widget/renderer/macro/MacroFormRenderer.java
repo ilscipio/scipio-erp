@@ -2454,18 +2454,6 @@ public final class MacroFormRenderer implements FormStringRenderer {
         //this.appendTooltip(writer, context, modelFormField); // SCIPIO: covered above
     }
 
-    protected String appendExternalLoginKey(String target) {
-        String result = target;
-        String sessionId = ";jsessionid=" + request.getSession().getId();
-        int questionIndex = target.indexOf("?");
-        if (questionIndex == -1) {
-            result += sessionId;
-        } else {
-            result = result.replace("?", sessionId + "?");
-        }
-        return result;
-    }
-
     // SCIPIO: new param: position
     public void renderNextPrev(Appendable writer, Map<String, Object> context, ModelForm modelForm, String position) throws IOException {
         boolean ajaxEnabled = false;

@@ -88,7 +88,6 @@ public class RequestHandler {
     private final URL controllerConfigURL;
     private final boolean trackServerHit;
     private final boolean trackVisit;
-    private final boolean cookies;
     private final String charset;
     
     /**
@@ -127,7 +126,6 @@ public class RequestHandler {
 
         this.trackServerHit = !"false".equalsIgnoreCase(context.getInitParameter("track-serverhit"));
         this.trackVisit = !"false".equalsIgnoreCase(context.getInitParameter("track-visit"));
-        this.cookies = !"false".equalsIgnoreCase(context.getInitParameter("cookies"));
         this.charset = context.getInitParameter("charset");
         
         // SCIPIO: New (currently true by default)
@@ -633,10 +631,6 @@ public class RequestHandler {
                 // SCIPIO: Always make full link early
                 //callRedirect(makeLink(request, response, redirectTarget), response, request, statusCodeString);
                 callRedirect(makeLinkFull(request, response, redirectTarget), response, request, statusCodeString);
-
-                // the old/uglier way: doRequest(request, response, previousRequest, userLogin, delegator);
-
-                // this is needed as the request handled will be taking care of the view, etc
                 return;
             }
         }
@@ -1903,50 +1897,19 @@ public class RequestHandler {
             if (response != null) {
                 // SCIPIO: We want to run inter-webapp links through URL encoding for outbound-rules and things,
                 // but we should never add a jsessionId.
-                encodedUrl = RequestLinkUtil.encodeURLNoJsessionId(newURL.toString(), response);
+                // SCIPIO: 2018-07-09: we shouldn't need this special call anymore because all webapps
+                // should be configured for COOKIE jsessionId only already (if not, considered security weakness).
+                //encodedUrl = RequestLinkUtil.encodeURLNoJsessionId(newURL.toString(), response);
+                encodedUrl = response.encodeURL(newURL.toString());
             } else {
                 encodedUrl = newURL.toString();    
             }
         } else {
             // SCIPIO: stock case
-            boolean forceManualJsessionid = !cookies;
-            boolean isSpider = false;
-
-            // if the current request comes from a spider, we will not add the jsessionid to the link
-            if (UtilHttp.checkURLforSpiders(request)) {
-                isSpider = true;
-            }
-
-            boolean isSecure = RequestLinkUtil.isEffectiveSecure(request);
-            
-            // if this isn't a secure page, but we made a secure URL, make sure we manually add the jsessionid since the response.encodeURL won't do that
-            if (!isSecure && didFullSecure) {
-                forceManualJsessionid = true;
-            }
-
-            // if this is a secure page, but we made a standard URL, make sure we manually add the jsessionid since the response.encodeURL won't do that
-            if (isSecure && didFullStandard) {
-                forceManualJsessionid = true;
-            }
-
-            if (response != null && !forceManualJsessionid && !isSpider) {
+            if (response != null) {
                 encodedUrl = response.encodeURL(newURL.toString());
             } else {
-                if (!isSpider) {
-                    String sessionId = ";jsessionid=" + request.getSession().getId();
-                    // this should be inserted just after the "?" for the parameters, if there is one, or at the end of the string
-                    int questionIndex = newURL.indexOf("?");
-                    if (questionIndex == -1) {
-                        newURL.append(sessionId);
-                    } else {
-                        newURL.insert(questionIndex, sessionId);
-                    }
-                }
-                if (response != null) {
-                    encodedUrl = response.encodeURL(newURL.toString());
-                } else {
-                    encodedUrl = newURL.toString();
-                }
+                encodedUrl = newURL.toString();
             }
         }
         return encodedUrl;
@@ -2017,53 +1980,10 @@ public class RequestHandler {
 
         String encodedUrl;
         if (encode) {
-            boolean forceManualJsessionid = !cookies;
-            boolean isSpider = false;
-
-            // if the current request comes from a spider, we will not add the jsessionid to the link
-            if (UtilHttp.checkURLforSpiders(request)) {
-                isSpider = true;
-            }
-
-            // if this isn't a secure page, but we made a secure URL, make sure we manually add the jsessionid since the response.encodeURL won't do that
-            if (!request.isSecure() && didFullSecure) {
-                forceManualJsessionid = true;
-            }
-
-            // if this is a secure page, but we made a standard URL, make sure we manually add the jsessionid since the response.encodeURL won't do that
-            if (request.isSecure() && didFullStandard) {
-                forceManualJsessionid = true;
-            }
-
-            if (response != null && !forceManualJsessionid && !isSpider) {
-                encodedUrl = response.encodeURL(newURL.toString());
-            } else {
-                if (!isSpider) {
-                    String sessionId = ";jsessionid=" + request.getSession().getId();
-                    // this should be inserted just after the "?" for the parameters, if there is one, or at the end of the string
-                    int questionIndex = newURL.indexOf("?");
-                    if (questionIndex == -1) {
-                        newURL.append(sessionId);
-                    } else {
-                        newURL.insert(questionIndex, sessionId);
-                    }
-                }
-                if (response != null) {
                     encodedUrl = response.encodeURL(newURL.toString());
                 } else {
                     encodedUrl = newURL.toString();
                 }
-            }
-        } else {
-            encodedUrl = newURL.toString();
-        }
-        //if (encodedUrl.indexOf("null") > 0) {
-            //Debug.logError("in makeLink, controlPath:" + controlPath + " url:" + url, "");
-            //throw new RuntimeException("in makeLink, controlPath:" + controlPath + " url:" + url);
-        //}
-
-        //Debug.logInfo("Making URL, encode=" + encode + " for URL: " + newURL + "\n encodedUrl: " + encodedUrl, module);
-
         return encodedUrl;
         */
     }
@@ -2413,7 +2333,7 @@ public class RequestHandler {
      * SCIPIO: Necessary accessor method for external code.
      */
     public boolean isUseCookies() {
-        return cookies;
+        return true; // 2018-07-09: now always true (assumed)
     }
     
     /**

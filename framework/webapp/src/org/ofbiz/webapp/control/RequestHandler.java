@@ -86,7 +86,6 @@ public class RequestHandler {
     private final ViewFactory viewFactory;
     private final EventFactory eventFactory;
     private final URL controllerConfigURL;
-    private final boolean forceHttpSession;
     private final boolean trackServerHit;
     private final boolean trackVisit;
     private final boolean cookies;
@@ -126,7 +125,6 @@ public class RequestHandler {
         this.viewFactory = new ViewFactory(context, this.controllerConfigURL);
         this.eventFactory = new EventFactory(context, this.controllerConfigURL);
 
-        this.forceHttpSession = "true".equalsIgnoreCase(context.getInitParameter("forceHttpSession"));
         this.trackServerHit = !"false".equalsIgnoreCase(context.getInitParameter("track-serverhit"));
         this.trackVisit = !"false".equalsIgnoreCase(context.getInitParameter("track-visit"));
         this.cookies = !"false".equalsIgnoreCase(context.getInitParameter("cookies"));
@@ -336,27 +334,6 @@ public class RequestHandler {
                         callRedirect(newUrl, response, request, statusCodeString);
                         return;
                     }
-                }
-            // if this is a new session and forceHttpSession is true and the request is secure but does not
-            // need to be then we need the session cookie to be created via an http response (rather than https)
-            // so we'll redirect to an unsecure request
-            } else if (forceHttpSession && isSecure && session.isNew() && !requestMap.securityHttps) {
-                // SCIPIO: 2017-11-13: Preliminary patch to try to ensure the redirected URL is as close as possible
-                // to the original incoming URL. We must not use getPathInfo because it gets changed across forwards.
-                // TODO: REVIEW: I am NOT sending this through URL encoding for now; the idea is to reflect exactly
-                // the original URL, so it's very unlikely we want this to be filtered in any way.
-                String newUrl = RequestLinkUtil.rebuildOriginalRequestURL(request, response, false, true);
-//                StringBuilder urlBuf = new StringBuilder();
-//                urlBuf.append(request.getPathInfo());
-//                if (request.getQueryString() != null) {
-//                    urlBuf.append("?").append(request.getQueryString());
-//                }
-//                // SCIPIO: Call proper method for this
-//                //String newUrl = RequestHandler.makeUrl(request, response, urlBuf.toString(), true, false, false);
-//                String newUrl = RequestHandler.makeUrlFull(request, response, urlBuf.toString());
-                if (newUrl.toUpperCase().startsWith("HTTP")) {
-                    callRedirect(newUrl, response, request, statusCodeString);
-                    return;
                 }
             }
 

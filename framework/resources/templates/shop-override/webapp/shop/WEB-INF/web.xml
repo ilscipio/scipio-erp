@@ -272,9 +272,7 @@
         <session-timeout>1440</session-timeout>
         <cookie-config>
           <http-only>true</http-only>
-          <!-- SCIPIO: FIXME?: Currently can't enable this, it is causing secure flag even for HTTP requests and
-              causing a new session to be recreated at every non-HTTPS request
-          <secure>true</secure>-->
+          <secure>true</secure>
         </cookie-config>
         <tracking-mode>COOKIE</tracking-mode>
     </session-config>

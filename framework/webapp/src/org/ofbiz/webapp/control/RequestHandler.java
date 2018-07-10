@@ -1043,6 +1043,9 @@ public class RequestHandler {
                 reqAttrMap.put(name, obj);
             }
         }
+        // SCIPIO: 2018-07-10: Do not include multiPartMap, to prevent storing uploaded files in session;
+        // NOTE: This is a heuristic based on most common usage of multiPartMap - may be tweaked in future. 
+        reqAttrMap.remove("multiPartMap");
         if (reqAttrMap.size() > 0) {
             reqAttrMap.remove("_REQUEST_HANDLER_");  // RequestHandler is not serializable and must be removed first.  See http://issues.apache.org/jira/browse/OFBIZ-750
             byte[] reqAttrMapBytes = UtilObject.getBytes(reqAttrMap);

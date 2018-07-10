@@ -75,7 +75,7 @@
     <servlet-mapping><servlet-name>ControlServlet</servlet-name><url-pattern>/control/*</url-pattern></servlet-mapping>
 
     <session-config>
-        <session-timeout>60</session-timeout><!-- in minutes -->
+        <session-timeout>60</session-timeout> <!-- in minutes -->
         <cookie-config>
             <http-only>true</http-only>
             <secure>true</secure>

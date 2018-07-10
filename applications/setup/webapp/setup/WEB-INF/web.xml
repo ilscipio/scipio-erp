@@ -88,7 +88,7 @@
     </servlet-mapping>
     
     <session-config>
-        <session-timeout>60</session-timeout><!-- in minutes -->
+        <session-timeout>60</session-timeout> <!-- in minutes -->
         <cookie-config>
             <http-only>true</http-only>
             <secure>true</secure>

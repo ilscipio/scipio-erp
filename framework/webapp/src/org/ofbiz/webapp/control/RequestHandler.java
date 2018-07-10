@@ -380,7 +380,7 @@ public class RequestHandler {
                             String returnString = this.runEvent(request, response, event, null, "firstvisit");
                             if (returnString == null || "none".equalsIgnoreCase(returnString)) {
                                 interruptRequest = true;
-                            } else if (!returnString.equalsIgnoreCase("success")) {
+                            } else if (!"success".equalsIgnoreCase(returnString)) {
                                 throw new EventHandlerException("First-Visit event did not return 'success'.");
                             }
                         } catch (EventHandlerException e) {
@@ -400,7 +400,7 @@ public class RequestHandler {
                         String returnString = this.runEvent(request, response, event, null, "preprocessor");
                         if (returnString == null || "none".equalsIgnoreCase(returnString)) {
                             interruptRequest = true;
-                        } else if (!returnString.equalsIgnoreCase("success")) {
+                        } else if (!"success".equalsIgnoreCase(returnString)) {
                             if (!returnString.contains(":_protect_:")) {
                                 throw new EventHandlerException("Pre-Processor event [" + event.invoke + "] did not return 'success'.");
                             } else { // protect the view normally rendered and redirect to error response view
@@ -557,7 +557,7 @@ public class RequestHandler {
             eventReturnBasedRequestResponse = null;
         } else {
             eventReturnBasedRequestResponse = requestMap.requestResponseMap.get(eventReturn);
-            if (eventReturnBasedRequestResponse == null && eventReturn.equals("none")) {
+            if (eventReturnBasedRequestResponse == null && "none".equals(eventReturn)) {
                 eventReturnBasedRequestResponse = ConfigXMLReader.emptyNoneRequestResponse;
             }
         }
@@ -591,9 +591,7 @@ public class RequestHandler {
 
         // restore previous redirected request's attribute, so redirected page can display previous request's error msg etc.
         String preReqAttStr = (String) request.getSession().getAttribute("_REQ_ATTR_MAP_");
-        Map<String, Object> previousRequestAttrMap = null;
         if (preReqAttStr != null) {
-            previousRequestAttrMap = new HashMap<String, Object>();
             request.getSession().removeAttribute("_REQ_ATTR_MAP_");
             byte[] reqAttrMapBytes = StringUtil.fromHexString(preReqAttStr);
             Map<String, Object> preRequestMap = checkMap(UtilObject.getObject(reqAttrMapBytes), String.class, Object.class);
@@ -603,7 +601,6 @@ public class RequestHandler {
                     if ("_ERROR_MESSAGE_LIST_".equals(key) || "_ERROR_MESSAGE_MAP_".equals(key) || "_ERROR_MESSAGE_".equals(key) ||
                             "_EVENT_MESSAGE_LIST_".equals(key) || "_EVENT_MESSAGE_".equals(key)) {
                         request.setAttribute(key, entry.getValue());
-                        previousRequestAttrMap.put(key, entry.getValue());
                    }
                 }
             }
@@ -612,7 +609,7 @@ public class RequestHandler {
         if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler]: previousRequest - " + previousRequest + " (" + loginPass + ")" + showSessionId(request), module);
 
         // if previous request exists, and a login just succeeded, do that now.
-        if (previousRequest != null && loginPass != null && loginPass.equalsIgnoreCase("TRUE")) {
+        if (previousRequest != null && loginPass != null && "TRUE".equalsIgnoreCase(loginPass)) {
             request.getSession().removeAttribute("_PREVIOUS_REQUEST_");
             // special case to avoid login/logout looping: if request was "logout" before the login, change to null for default success view; do the same for "login" to avoid going back to the same page
             if ("logout".equals(previousRequest) || "/logout".equals(previousRequest) || "login".equals(previousRequest) || "/login".equals(previousRequest) || "checkLogin".equals(previousRequest) || "/checkLogin".equals(previousRequest) || "/checkLogin/login".equals(previousRequest)) {
@@ -687,7 +684,7 @@ public class RequestHandler {
                 for (ConfigXMLReader.Event event: controllerConfig.getPostprocessorEventList().values()) {
                     try {
                         String returnString = this.runEvent(request, response, event, requestMap, "postprocessor");
-                        if (returnString != null && !returnString.equalsIgnoreCase("success")) {
+                        if (returnString != null && !"success".equalsIgnoreCase(returnString)) {
                             throw new EventHandlerException("Post-Processor event did not return 'success'.");
                         }
                     } catch (EventHandlerException e) {
@@ -1082,7 +1079,6 @@ public class RequestHandler {
         // if the view name starts with the control servlet name and a /, then it was an
         // attempt to override the default view with a call back into the control servlet,
         // so just get the target view name and use that
-        
         String servletName = req.getServletPath();
         if (servletName.startsWith("/")) {
             servletName = servletName.substring(1);

@@ -1213,7 +1213,9 @@ public class RequestHandler {
         String xFrameOption = viewMap.xFrameOption;
         // default to sameorigin
         if (UtilValidate.isNotEmpty(xFrameOption)) {
+            if(!"none".equals(xFrameOption)) {
             resp.addHeader("x-frame-options", xFrameOption);
+            }
         } else {
             resp.addHeader("x-frame-options", "sameorigin");
         }

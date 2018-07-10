@@ -1208,6 +1208,8 @@ public class RequestHandler {
            if (Debug.verboseOn()) Debug.logVerbose("Sending no-cache headers for view [" + nextPage + "]", module);
         }
 
+        // Security headers vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+        // See https://cwiki.apache.org/confluence/display/OFBIZ/How+to+Secure+HTTP+Headers
         String xFrameOption = viewMap.xFrameOption;
         // default to sameorigin
         if (UtilValidate.isNotEmpty(xFrameOption)) {
@@ -1239,6 +1241,18 @@ public class RequestHandler {
         // https://wiki.mozilla.org/Security/Features/XSS_Filter 
         // https://bugzilla.mozilla.org/show_bug.cgi?id=528661
         resp.addHeader("X-XSS-Protection","1; mode=block"); 
+
+        resp.setHeader("Referrer-Policy", "no-referrer-when-downgrade"); // This is the default (in Firefox at least)
+        
+        //resp.setHeader("Content-Security-Policy", "default-src 'self'");
+        //resp.setHeader("Content-Security-Policy-Report-Only", "default-src 'self'; report-uri webtools/control/ContentSecurityPolicyReporter");
+        // SCIPIO: 2018-07-10: the following line is commented BY US (but not the two above);
+        // this is inappropriate for production and is missing configuration.
+        //resp.setHeader("Content-Security-Policy-Report-Only", "default-src 'self'");
+        
+        // TODO in custom project. Public-Key-Pins-Report-Only is interesting but can't be used OOTB because of demos (the letsencrypt certificate is renewed every 3 months)
+        
+        // Security headers ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
         try {
             if (Debug.verboseOn()) Debug.logVerbose("Rendering view [" + nextPage + "] of type [" + viewMap.type + "]", module);

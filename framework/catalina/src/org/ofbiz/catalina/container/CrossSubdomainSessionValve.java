@@ -101,6 +101,8 @@ public class CrossSubdomainSessionValve extends ValveBase {
                 newCookie.setComment(cookie.getComment());
             }
             newCookie.setSecure(cookie.getSecure());
+            // SCIPIO: 2018-07-10: http-only flag
+            newCookie.setHttpOnly(cookie.isHttpOnly());
 
             // if the response has already been committed, our replacement strategy will have no effect
             if (response.isCommitted()) {

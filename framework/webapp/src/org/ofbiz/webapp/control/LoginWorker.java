@@ -381,6 +381,11 @@ public class LoginWorker {
     public static String login(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
         
+        // Prevent session fixation by making Tomcat generate a new jsessionId (ultimately put in cookie). 
+        if (!session.isNew()) {  // Only do when really signing in. 
+            request.changeSessionId();
+        }
+        
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
         
         if(UtilValidate.isNotEmpty(userLogin)){

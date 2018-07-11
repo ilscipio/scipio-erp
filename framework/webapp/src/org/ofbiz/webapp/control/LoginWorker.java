@@ -862,8 +862,18 @@ public class LoginWorker {
         GenericValue userLogin = (GenericValue) session.getAttribute("autoUserLogin");
 
         // remove the cookie
+        // SCIPIO: 2018-07-11: There could be issues with autoUserLogin not being proper in session
+        // due to complexity of events and sync, so do a manual check for the cookie in the request headers in addition to session
+        //if (userLogin != null) {
+        //    Cookie autoLoginCookie = new Cookie(getAutoLoginCookieName(request), userLogin.getString("userLoginId"));
+        String autoLoginUserId;
         if (userLogin != null) {
-            Cookie autoLoginCookie = new Cookie(getAutoLoginCookieName(request), userLogin.getString("userLoginId"));
+            autoLoginUserId = userLogin.getString("userLoginId");
+        } else {
+            autoLoginUserId = getAutoUserLoginId(request);
+        }
+        if (autoLoginUserId != null) {
+            Cookie autoLoginCookie = new Cookie(getAutoLoginCookieName(request), autoLoginUserId);
             autoLoginCookie.setMaxAge(0);
             autoLoginCookie.setPath("/");
             response.addCookie(autoLoginCookie);

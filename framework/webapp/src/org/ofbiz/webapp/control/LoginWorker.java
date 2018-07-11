@@ -784,12 +784,36 @@ public class LoginWorker {
         // DON'T save the cart, causes too many problems: if (shoppingCart != null) session.setAttribute("shoppingCart", new WebShoppingCart(shoppingCart, session));
     }
 
+    /**
+     * SCIPIO: Uses the web.xml context-param (or servlet context attribute) 
+     * "autoUserLoginOn" to determine if should set and consult autoUserLogin.
+     * <p>
+     * Default: true
+     * <p>
+     * Added 2018-07-11.
+     */
+    protected static boolean isAutoUserLoginEnabled(ServletContext servletContext) {
+        return UtilMisc.booleanValue(servletContext.getAttribute("autoUserLoginOn"), true);
+    }
+
+    /**
+     * SCIPIO: Uses the web.xml context-param (or servlet context attribute) 
+     * "autoUserLoginOn" to determine if should set and consult autoUserLogin.
+     * <p>
+     * Default: true
+     * <p>
+     * Added 2018-07-11.
+     */
+    public static boolean isAutoUserLoginEnabled(HttpServletRequest request) {
+        return isAutoUserLoginEnabled(request.getServletContext());
+    }
+
     public static String autoLoginSet(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         HttpSession session = request.getSession();
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         String domain = EntityUtilProperties.getPropertyValue("url", "cookie.domain", delegator);
-        if (userLogin != null) {
+        if (isAutoUserLoginEnabled(request) && userLogin != null) { // SCIPIO: 2018-07-11: only set if enabled for webapp
             Cookie autoLoginCookie = new Cookie(getAutoLoginCookieName(request), userLogin.getString("userLoginId"));
             autoLoginCookie.setMaxAge(60 * 60 * 24 * 365);
             autoLoginCookie.setDomain(domain);
@@ -826,7 +850,10 @@ public class LoginWorker {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         HttpSession session = request.getSession();
 
-        return autoLoginCheck(delegator, session, getAutoUserLoginId(request));
+        if (isAutoUserLoginEnabled(request)) { // SCIPIO: 2018-07-11: ignore if autoUserLogin is off
+            return autoLoginCheck(delegator, session, getAutoUserLoginId(request));
+        }
+        return "success";
     }
 
     private static String autoLoginCheck(Delegator delegator, HttpSession session, String autoUserLoginId) {

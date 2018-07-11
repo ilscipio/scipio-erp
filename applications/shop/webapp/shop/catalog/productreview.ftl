@@ -78,11 +78,11 @@ under the License.
                   <input type="hidden" name="categoryId" value="${categoryId!requestParameters.category_id!""}" />
                   
                   <#assign ratingItems = [
-                    {"value":"1.0", "description":"1"}
-                    {"value":"2.0", "description":"2"}
-                    {"value":"3.0", "description":"3"}
-                    {"value":"4.0", "description":"4"}
-                    {"value":"5.0", "description":"5"}
+                    {"value":"1", "description":"1"}
+                    {"value":"2", "description":"2"}
+                    {"value":"3", "description":"3"}
+                    {"value":"4", "description":"4"}
+                    {"value":"5", "description":"5"}
                   ]>
                   <@field type="radio" name="productRating" label=uiLabelMap.EcommerceRating items=ratingItems currentValue="3.0"/>
                   <@field type="checkbox" name="postedAnonymous" label=uiLabelMap.EcommercePostAnonymous value="Y" currentValue="N" defaultValue="N"/>

@@ -1046,7 +1046,8 @@ under the License.
 
     <simple-method method-name="setShippingOption" short-description="Set shipping method" login-required="false">
         <call-bsh><![CDATA[
-            shippingMethod = parameters.get("shipMethod");
+            String shippingMethod = parameters.get("shipMethod");
+            String carrierPartyId = "";
             if(shippingMethod != null) {
                 shipmentMethodTypeId = shippingMethod.substring(0, shippingMethod.indexOf("@"));
                 if (shippingMethod.indexOf(":") != -1) {

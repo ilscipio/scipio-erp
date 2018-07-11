@@ -126,11 +126,18 @@ under the License.
         </@section>
             <@script>
               jQuery(document).ready(function() {
+                <#-- SCIPIO: 2018-07-11: this is flawed, and the above might not even be using autoUserLogin at all...
                 <#if autoUserLogin?has_content>
                   document.loginform.PASSWORD.focus();
                 <#else>
                   document.loginform.USERNAME.focus();
-                </#if>
+                </#if>-->
+                  var loginform = document.loginform;
+                  if ($('input[name=USERNAME]', loginform).val()) {
+                      loginform.PASSWORD.focus();
+                  } else {
+                      loginform.USERNAME.focus();
+                  }
               });
             </@script>
     </@cell>

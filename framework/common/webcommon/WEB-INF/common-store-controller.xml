@@ -92,9 +92,9 @@ NOTE: This should only contain framework-level definitions, and not business-rel
         <response name="success" type="view" value="error"/>
     </request-map>
     <request-map uri="logout">
-        <!-- SCIPIO: CHANGED TO AUTH FALSE because request handler doesn't recognize need
-            to logout anonymous user in some cases -->
-        <security https="true" auth="false"/><!-- auth="true" -->
+        <security https="true" auth="false"/><!-- SCIPIO: now auth false to prevent needless errors from double logouts, etc. -->
+        <!-- SCIPIO: NOTE: invoke="logout" does NOT clear autoLoginUser or its cookies; if you want 
+            this request to also clear autoLoginUser, override this with invoke="autoLoginRemove" in your controller -->
         <event type="java" path="org.ofbiz.webapp.control.LoginWorker" invoke="logout"/>
         <response name="success" type="request-redirect" value="checkLogin"/>
         <response name="error" type="view" value="main"/>

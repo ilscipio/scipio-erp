@@ -1069,7 +1069,19 @@ public class UtilMisc {
         }
         return res;
     }
-    
+
+    /**
+     * SCIPIO: Returns the first non-null value, or null if none.
+     * <p>
+     * Added 2018-07-12.
+     */
+    public static <T> T firstNonNull(T... values) {
+        for(T value : values) {
+            if (value != null) return value;
+        }
+        return null;
+    }
+
     /**
      * SCIPIO: Returns Boolean.TRUE if value is Boolean.TRUE or "true", or
      * Boolean.FALSE if value is Boolean.FALSE or "false", or null if

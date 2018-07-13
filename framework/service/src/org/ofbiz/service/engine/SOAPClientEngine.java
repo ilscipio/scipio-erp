@@ -49,6 +49,7 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelParam;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceDispatcher;
+import org.ofbiz.service.soap.SOAPClientConnectConfig;
 
 /**
  * Generic Service SOAP Interface
@@ -98,6 +99,7 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
             ConfigurationContext configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(axis2RepoLocation, axis2XmlFileLocation);
             client = new ServiceClient(configContext, null);
             Options options = new Options();
+            configureSOAPHttpClient(client, options); // SCIPIO: new 2018-07-11
             EndpointReference endPoint = new EndpointReference(this.getLocation(modelService));
             options.setTo(endPoint);
             client.setOptions(options);
@@ -186,6 +188,7 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
             ConfigurationContext configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(axis2RepoLocation, axis2XmlFileLocation);
             client = new ServiceClient(configContext, null);
             Options options = new Options();
+            configureSOAPHttpClient(client, options); // SCIPIO: new 2018-07-11
             EndpointReference endPoint = new EndpointReference(remoteLocation);
             options.setTo(endPoint);
             client.setOptions(options);
@@ -241,5 +244,15 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
             else Debug.logError(e, module);
         }
         return results;
+    }
+
+    /**
+     * SCIPIO: Configures custom HttpClient4 client and/or connection manager with HTTPS for SOAP (currently axis2 ~1.7.8),
+     * based on service.properties soap.connect.* and soap.cert.validation.* configuration.
+     * <p>
+     * Added 2018-07-11.
+     */
+    public static void configureSOAPHttpClient(ServiceClient client, Options options) {
+        SOAPClientConnectConfig.getDefaultInstance().configureSOAPHttpClient(client, options);
     }
 }

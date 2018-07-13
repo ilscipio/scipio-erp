@@ -39,7 +39,6 @@ import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.context.ConfigurationContextFactory;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilValidate;
@@ -50,6 +49,7 @@ import org.ofbiz.service.ModelParam;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceDispatcher;
 import org.ofbiz.service.soap.SOAPClientConnectConfig;
+import org.ofbiz.service.soap.SOAPContextHandler;
 
 /**
  * Generic Service SOAP Interface
@@ -90,13 +90,9 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
 
         ServiceClient client = null;
         QName serviceName = null;
-        String axis2Repo = "/framework/service/config/axis2";
-        String axis2RepoLocation = System.getProperty("ofbiz.home") + axis2Repo;
-        String axis2XmlFile = "/framework/service/config/axis2/conf/axis2.xml";
-        String axis2XmlFileLocation = System.getProperty("ofbiz.home") + axis2XmlFile;
 
         try {
-            ConfigurationContext configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(axis2RepoLocation, axis2XmlFileLocation);
+            ConfigurationContext configContext = SOAPContextHandler.getDefaultHandler().getConfigurationContext(); // SCIPIO
             client = new ServiceClient(configContext, null);
             Options options = new Options();
             configureSOAPHttpClient(client, options); // SCIPIO: new 2018-07-11
@@ -154,7 +150,7 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
         }
         return results;
     }
-    
+
     /**
      * SCIPIO: Uses the LOCAL definition of a service to invoke a SOAP service on a remote
      * Scipio instance. It is ASSUMED both servers are of same or compatible versions.
@@ -169,8 +165,9 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
      * <p>
      * Added 2018-03-15.
      */
-    public static Map<String, Object> invokeRemoteMirrorService(LocalDispatcher dispatcher, ModelService modelService, 
-            String remoteService, String remoteLocation, String remoteNamespace, Map<String, Object> context, Set<String> alwaysAllowParams, boolean alwaysThrowEx) throws Exception {
+    public static Map<String, Object> invokeRemoteMirrorService(LocalDispatcher dispatcher, ModelService modelService,
+            String remoteService, String remoteLocation, String remoteNamespace, Map<String, Object> context, Set<String> alwaysAllowParams, 
+            boolean alwaysThrowEx, SOAPContextHandler configContextHandler) throws Exception {
         if (remoteService == null) remoteService = modelService.name;
         if (alwaysAllowParams == null) alwaysAllowParams = Collections.emptySet();
         Delegator delegator = dispatcher.getDelegator();
@@ -179,13 +176,10 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
 
         ServiceClient client = null;
         QName serviceName = null;
-        String axis2Repo = "/framework/service/config/axis2";
-        String axis2RepoLocation = System.getProperty("ofbiz.home") + axis2Repo;
-        String axis2XmlFile = "/framework/service/config/axis2/conf/axis2.xml";
-        String axis2XmlFileLocation = System.getProperty("ofbiz.home") + axis2XmlFile;
 
         try {
-            ConfigurationContext configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(axis2RepoLocation, axis2XmlFileLocation);
+            if (configContextHandler == null) configContextHandler = SOAPContextHandler.getDefaultHandler(); // SCIPIO
+            ConfigurationContext configContext = configContextHandler.getConfigurationContext();
             client = new ServiceClient(configContext, null);
             Options options = new Options();
             configureSOAPHttpClient(client, options); // SCIPIO: new 2018-07-11
@@ -246,8 +240,13 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
         return results;
     }
 
+    public static Map<String, Object> invokeRemoteMirrorService(LocalDispatcher dispatcher, ModelService modelService,
+            String remoteService, String remoteLocation, String remoteNamespace, Map<String, Object> context, Set<String> alwaysAllowParams, boolean alwaysThrowEx) throws Exception {
+        return invokeRemoteMirrorService(dispatcher, modelService, remoteService, remoteLocation, remoteNamespace, context, alwaysAllowParams, alwaysThrowEx, null);
+    }
+
     /**
-     * SCIPIO: Configures custom HttpClient4 client and/or connection manager with HTTPS for SOAP (currently axis2 ~1.7.8),
+     * SCIPIO: Configures custom HttpClient4 client with HTTPS for SOAP (currently axis2 ~1.7.8),
      * based on service.properties soap.connect.* and soap.cert.validation.* configuration.
      * <p>
      * Added 2018-07-11.

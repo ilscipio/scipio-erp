@@ -234,6 +234,20 @@ public class UtilProperties implements Serializable {
     }
 
     /**
+     * SCIPIO: Returns an Integer-Object of the specified property name from the specified resource/properties file. [SCIPIO: 2017-08-29: boxed-type overload]
+     * If the specified property name or properties file is not found, the defaultNumber is returned.
+     * If value is not between the given minValue and maxValue (where null means unbounded), the defaultValue is returned.
+     * Added 2017-07-12.
+     * @param resource The name of the resource - if the properties file is 'webevent.properties', the resource name is 'webevent'
+     * @param name The name of the property in the properties file
+     * @param defaultNumber Optional: The Value to return if the property is not found. [SCIPIO: 2017-08-29: now boxed type]
+     * @return An Integer-Object of the property; or if not found the defaultNumber
+     */
+    public static Integer getPropertyAsIntegerInRange(String resource, String name, Integer minValue, Integer maxValue, Integer defaultNumber) {
+        return UtilNumber.getInRange((Integer)getPropertyNumber(resource, name, defaultNumber, "Integer"), minValue, maxValue, defaultNumber);
+    }
+
+    /**
      * Returns a Long-Object of the specified property name from the specified resource/properties file.
      * If the specified property name or properties file is not found, the defaultNumber is returned.
      * @param resource The name of the resource - if the properties file is 'webevent.properties', the resource name is 'webevent'
@@ -244,7 +258,21 @@ public class UtilProperties implements Serializable {
     public static Long getPropertyAsLong(String resource, String name, long defaultNumber) {
         return (Long)getPropertyNumber(resource, name, defaultNumber, "Long");
     }
-    
+
+    /**
+     * SCIPIO: Returns a Long-Object of the specified property name from the specified resource/properties file. [SCIPIO: 2017-08-29: boxed-type overload]
+     * If the specified property name or properties file is not found, the defaultNumber is returned.
+     * If value is not between the given minValue and maxValue (where null means unbounded), the defaultValue is returned.
+     * Added 2017-07-12.
+     * @param resource The name of the resource - if the properties file is 'webevent.properties', the resource name is 'webevent'
+     * @param name The name of the property in the properties file
+     * @param defaultNumber Optional: The Value to return if the property is not found. [SCIPIO: 2017-08-29: now boxed type]
+     * @return A Long-Object of the property; or if not found the defaultNumber
+     */
+    public static Long getPropertyAsLongInRange(String resource, String name, Long minValue, Long maxValue, Long defaultNumber) {
+        return UtilNumber.getInRange((Long)getPropertyNumber(resource, name, defaultNumber, "Long"), minValue, maxValue, defaultNumber);
+    }
+
     /**
      * Returns a Long-Object of the specified property name from the specified resource/properties file. [SCIPIO: 2017-08-29: boxed-type overload]
      * If the specified property name or properties file is not found, the defaultNumber is returned.

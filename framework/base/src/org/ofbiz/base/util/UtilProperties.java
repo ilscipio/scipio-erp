@@ -119,6 +119,23 @@ public class UtilProperties implements Serializable {
             return value;
     }
 
+    /** SCIPIO: Returns the value of the specified property name from the specified resource/properties file.
+     * If the specified property name or properties file is not found, the defaultValue is returned.
+     * Added 2018-07-12.
+     * @param resource The name of the resource - if the properties file is 'webevent.properties', the resource name is 'webevent'
+     * @param name The name of the property in the properties file
+     * @param defaultValue The value to return if the property is not found
+     * @return The value of the property in the properties file, or if not found then the defaultValue
+     */
+    public static String getPropertyValue(Properties properties, String name, String defaultValue) {
+        String value = getPropertyValue(properties, name);
+
+        if (UtilValidate.isEmpty(value))
+            return defaultValue;
+        else
+            return value;
+    }
+
     public static double getPropertyNumber(String resource, String name, double defaultValue) {
         String str = getPropertyValue(resource, name);
         if (str == null) {
@@ -350,6 +367,29 @@ public class UtilProperties implements Serializable {
         return value == null ? "" : value.trim();
     }
 
+    /** SCIPIO: Returns the value of the specified property name from the specified resource/properties file
+     * Added 2018-07-12.
+     * @param resource The name of the resource - can be a file, class, or URL
+     * @param name The name of the property in the properties file
+     * @return The value of the property in the properties file
+     */
+    public static String getPropertyValue(Properties properties, String name) {
+        if (name == null || name.length() <= 0) return "";
+
+        if (properties == null) {
+            return "";
+        }
+
+        String value = null;
+
+        try {
+            value = properties.getProperty(name);
+        } catch (Exception e) {
+            Debug.logInfo(e, module);
+        }
+        return value == null ? "" : value.trim();
+    }
+
     /** SCIPIO: Returns the value of the specified property name from the specified resource/properties file,
      * or null if it is absent or empty.
      * Added 2018-04-27.
@@ -359,6 +399,18 @@ public class UtilProperties implements Serializable {
      */
     public static String getPropertyValueOrNull(String resource, String name) {
         String value = getPropertyValue(resource, name);
+        return value.isEmpty() ? null : value;
+    }
+
+    /** SCIPIO: Returns the value of the specified property name from the specified resource/properties file,
+     * or null if it is absent or empty.
+     * Added 2018-07-12.
+     * @param resource The name of the resource - can be a file, class, or URL
+     * @param name The name of the property in the properties file
+     * @return The value of the property in the properties file
+     */
+    public static String getPropertyValueOrNull(Properties properties, String name) {
+        String value = getPropertyValue(properties, name);
         return value.isEmpty() ? null : value;
     }
 

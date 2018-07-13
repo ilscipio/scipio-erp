@@ -131,6 +131,37 @@ public class KeyStoreUtil {
         return ks;
     }
 
+    /**
+     * SCIPIO: Gets the system truststore defined in the
+     * javax.net.ssl.trustStore property (and no other location);
+     * if not set or does not point to valid file, returns null.
+     * <p>
+     * Added 2018-07-12.
+     */
+    public static KeyStore getSystemTrustStorePropIfSet() throws IOException, GeneralSecurityException {
+        String fileName = System.getProperty("javax.net.ssl.trustStore");
+        String password = System.getProperty("javax.net.ssl.trustStorePassword");
+        if (password == null) {
+            password = "changeit";
+        }
+
+        File keyFile = null;
+        if (fileName != null) {
+            keyFile = FileUtil.getFile(fileName);
+            if (keyFile.exists() && keyFile.canRead()) {
+                KeyStore ks = KeyStore.getInstance("jks");
+                InputStream in = new FileInputStream(keyFile);
+                try {
+                    ks.load(in, password.toCharArray());
+                } finally {
+                    in.close();
+                }
+                return ks;
+            }
+        }
+        return null;
+    }
+
     public static X509Certificate readCertificate(byte[] certChain) throws CertificateException {
         CertificateFactory cf = CertificateFactory.getInstance("X.509");
         ByteArrayInputStream bais = new ByteArrayInputStream(certChain);

@@ -20,6 +20,7 @@
 package org.ofbiz.base.util;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -260,5 +261,41 @@ public class UtilNumber {
      */
     public static BigDecimal safeAdd(BigDecimal left, BigDecimal right) {
         return right != null ? left.add(right) : left;
+    }
+
+    /**
+     * SCIPIO: Check if value is in given range, both inclusive, with null for minValue/maxValue meaning no boundary.
+     * Null value always gives false.
+     * Added 2018-08-12.
+     */
+    public static <N extends Number & Comparable<N>> boolean isInRange(N value, N minValue, N maxValue) {
+        return (value != null) && (minValue == null || value.compareTo(minValue) >= 0) && (maxValue == null || value.compareTo(maxValue) <= 0);
+    }
+
+    /**
+     * SCIPIO: Check if value is in given range, both exclusive, with null for minValue/maxValue meaning no boundary.
+     * Null value always gives false.
+     * Added 2018-08-12.
+     */
+    public static <N extends Number & Comparable<N>> boolean isInRangeExcl(N value, N minValue, N maxValue) {
+        return (value != null) && (minValue == null || value.compareTo(minValue) > 0) && (maxValue == null || value.compareTo(maxValue) < 0);
+    }
+
+    /**
+     * SCIPIO: Check if value is in given range, both inclusive,, with null meaning no boundary in that direction,
+     * and return default if not. Also handles null value and treats as needing default.
+     * Added 2018-08-12.
+     */
+    public static <N extends Number & Comparable<N>> N getInRange(N value, N minValue, N maxValue, N defaultValue) {
+        return (value != null && isInRange(value, minValue, maxValue)) ? value : defaultValue;
+    }
+
+    /**
+     * SCIPIO: Check if value is in given range, both inclusive,, with null meaning no boundary in that direction,
+     * and return default if not. Also handles null value and treats as needing default.
+     * Added 2018-08-12.
+     */
+    public static <N extends Number & Comparable<N>> N getInRangeExcl(N value, N minValue, N maxValue, N defaultValue) {
+        return (value != null && isInRangeExcl(value, minValue, maxValue)) ? value : defaultValue;
     }
 }

@@ -133,6 +133,29 @@ public class SSLUtil {
         return new TrustManager[] { tm };
     }
 
+    /**
+     * SCIPIO: Returns the component keystores in a trust manager (keystore elements in ofbiz-component.xml);
+     * same as {@link #getTrustManagers()} but without the system keystore.
+     * <p>
+     * Added 2018-07-12.
+     */
+    public static TrustManager[] getComponentTrustManagers() throws IOException, GeneralSecurityException, GenericConfigException {
+        MultiTrustManager tm = new MultiTrustManager();
+
+        for (ComponentConfig.KeystoreInfo ksi: ComponentConfig.getAllKeystoreInfos()) {
+            if (ksi.isTrustStore()) {
+                KeyStore ks = ksi.getKeyStore();
+                if (ks != null) {
+                    tm.add(ks);
+                } else {
+                    throw new IOException("Unable to load keystore: " + ksi.createResourceHandler().getFullLocation());
+                }
+            }
+        }
+
+        return new TrustManager[] { tm };
+    }
+
     public static TrustManager[] getTrustAnyManagers() {
         return new TrustManager[] { new TrustAnyManager() };
     }

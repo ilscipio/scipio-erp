@@ -273,6 +273,9 @@
         <dependency org="org.apache.axis2" name="axis2-kernel" rev="1.7.8" conf="base,sources"/>
         <dependency org="org.apache.axis2" name="axis2-transport-http" rev="1.7.8" conf="base,sources"/>
         <dependency org="org.apache.axis2" name="axis2-transport-local" rev="1.7.8" conf="base,sources"/>
+        <!-- TODO?: axis2 warns about this being missing in log, but it pulls in too many dependencies and impact 
+            on other libraries is unknown, so revisit this later if we have a real functional use for this module.
+        <dependency org="org.apache.axis2" name="axis2-jaxws" rev="1.7.8" conf="base,sources"/>-->
         <dependency org="org.apache.ws.commons.axiom" name="axiom-api" rev="1.2.20" conf="base,sources"/>
         <dependency org="org.apache.ws.commons.axiom" name="axiom-impl" rev="1.2.20" conf="base,sources"/>
         <dependency org="org.apache.ws.xmlschema" name="xmlschema-core" rev="2.2.3" conf="base,sources"/>

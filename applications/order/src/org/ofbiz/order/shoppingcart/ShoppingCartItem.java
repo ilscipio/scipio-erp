@@ -1208,6 +1208,14 @@ public class ShoppingCartItem implements java.io.Serializable {
                         priceContext.put("surveyResponseId", surveyResponses.get(0));
                     }
 
+                    // SCIPIO: 2018-07-16: include the order item attributes, for the custom price service (read back map in case client code already modified this too)
+                    Map<String, Object> customAttributes = UtilGenerics.checkMap(priceContext.get("customAttributes"));
+                    if (customAttributes == null) {
+                        customAttributes = new HashMap<>();
+                        priceContext.put("customAttributes", customAttributes);
+                    }
+                    customAttributes.put("orderItemAttributes", getOrderItemAttributes());
+
                     Map<String, Object> priceResult = dispatcher.runSync("calculateProductPrice", priceContext);
                     if (ServiceUtil.isError(priceResult)) {
                         throw new CartItemModifyException("There was an error while calculating the price: " + ServiceUtil.getErrorMessage(priceResult));

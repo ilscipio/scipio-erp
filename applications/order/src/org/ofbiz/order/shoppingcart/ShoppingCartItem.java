@@ -677,7 +677,9 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.associatedOrderItemSeqId = item.getAssociatedOrderItemSeqId();
         this.orderItemAssocTypeId = item.getOrderItemAssocTypeId();
         this.setStatusId(item.getStatusId());
-        if (UtilValidate.isEmpty(item.getOrderItemAttributes())) {
+        // SCIPIO: 2018-07-17: ofbiz bug
+        //if (UtilValidate.isEmpty(item.getOrderItemAttributes())) {
+        if (UtilValidate.isNotEmpty(item.getOrderItemAttributes())) {
             this.orderItemAttributes = new HashMap<String, String>();
             this.orderItemAttributes.putAll(item.getOrderItemAttributes());
         }

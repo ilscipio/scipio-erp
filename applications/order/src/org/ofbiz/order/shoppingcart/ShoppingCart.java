@@ -596,7 +596,8 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             //GenericValue productSupplier = null;
             supplierProduct = getSupplierProduct(productId, quantity, dispatcher);
             if (supplierProduct != null || "_NA_".equals(this.getPartyId())) {
-                 item = ShoppingCartItem.makePurchaseOrderItem(Integer.valueOf(0), productId, selectedAmount, quantity, features, attributes, prodCatalogId, configWrapper, itemType, itemGroup, dispatcher, this, supplierProduct, shipBeforeDate, shipAfterDate, cancelBackOrderDate);
+                 item = ShoppingCartItem.makePurchaseOrderItem(Integer.valueOf(0), productId, selectedAmount, quantity, features, attributes, prodCatalogId, configWrapper, itemType, itemGroup, dispatcher, this, supplierProduct, shipBeforeDate, shipAfterDate, cancelBackOrderDate,
+                         new ShoppingCartItem.ExtraPurchaseOrderInitArgs(orderItemAttributes)); // SCIPIO: 2018-07-17: orderItemAttributes here for early assignment in item
             } else {
                 throw new CartItemModifyException("SupplierProduct not found");
             }
@@ -612,14 +613,18 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             item = ShoppingCartItem.makeItem(Integer.valueOf(0), productId, selectedAmount, quantity, null,
                     reservStart, reservLength, reservPersons, accommodationMapId, accommodationSpotId, shipBeforeDate, shipAfterDate,
                     features, attributes, prodCatalogId, configWrapper, itemType, itemGroup, dispatcher,
-                    this, Boolean.TRUE, Boolean.TRUE, parentProductId, Boolean.FALSE, Boolean.FALSE);
+                    this, Boolean.TRUE, Boolean.TRUE, parentProductId, Boolean.FALSE, Boolean.FALSE,
+                    new ShoppingCartItem.ExtraInitArgs(orderItemAttributes)); // SCIPIO: 2018-07-17: orderItemAttributes here for early assignment in item
         }
+        /* SCIPIO: 2018-07-17: This code is now in ShoppingCartItem.setOrderItemAttributes
+         * and is called by the makeItem and makePurchaseItem methods, earlier in the item creation
         // add order item attributes
         if (UtilValidate.isNotEmpty(orderItemAttributes)) {
             for (Entry<String, String> entry : orderItemAttributes.entrySet()) {
                 item.setOrderItemAttribute(entry.getKey(), entry.getValue());
             }
         }
+        */
 
         return this.addItem(0, item);
 

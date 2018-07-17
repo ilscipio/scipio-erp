@@ -154,8 +154,43 @@ public class ShoppingCartItem implements java.io.Serializable {
     private List<GenericValue> featuresForSupplier = new LinkedList<GenericValue>();
 
     /**
+     * SCIPIO: A parameter structure to help manage new options to the extremely 
+     * overloaded factory methods below.
+     * <p>
+     * DEV NOTE: Add arguments to this instead of making more insane overloads.
+     * Added 2018-07-17.
+     */
+    public static class ExtraPurchaseOrderInitArgs {
+        public static final ExtraPurchaseOrderInitArgs DEFAULT = new ExtraPurchaseOrderInitArgs();
+        
+        /**
+         * If set, initializes the orderItemAttributes in the item early in creation
+         * to give better access to code during construction.
+         */
+        private Map<String, String> orderItemAttributes;
+
+        public ExtraPurchaseOrderInitArgs(Map<String, String> orderItemAttributes) {
+            this.orderItemAttributes = orderItemAttributes;
+        }
+
+        public ExtraPurchaseOrderInitArgs() {
+        }
+
+        public Map<String, String> getOrderItemAttributes() {
+            return orderItemAttributes;
+        }
+
+        public ExtraPurchaseOrderInitArgs setOrderItemAttributes(Map<String, String> orderItemAttributes) {
+            this.orderItemAttributes = orderItemAttributes;
+            return this;
+        }
+    }
+    
+    /**
      * Makes a ShoppingCartItem for a purchase order item and adds it to the cart.
      * NOTE: This method will get the product entity and check to make sure it can be purchased.
+     * <p>
+     * SCIPIO: 2018-07-17: Now accepts {@link ExtraPurchaseOrderInitArgs} and initializes orderItemAttributes early.
      *
      * @param cartLocation The location to place this item; null will place at the end
      * @param productId The primary key of the product being added
@@ -170,12 +205,13 @@ public class ShoppingCartItem implements java.io.Serializable {
      * @param shipBeforeDate Request that the shipment be made before this date
      * @param shipAfterDate Request that the shipment be made after this date
      * @param cancelBackOrderDate The date which if crossed causes order cancellation
+     * @param extraItemArgs see {@link ExtraPurchaseOrderInitArgs}
      * @return a new ShoppingCartItem object
      * @throws CartItemModifyException
      */
     public static ShoppingCartItem makePurchaseOrderItem(Integer cartLocation, String productId, BigDecimal selectedAmount, BigDecimal quantity,
             Map<String, GenericValue> additionalProductFeatureAndAppls, Map<String, Object> attributes, String prodCatalogId, ProductConfigWrapper configWrapper, String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup,
-            LocalDispatcher dispatcher, ShoppingCart cart, GenericValue supplierProduct, Timestamp shipBeforeDate, Timestamp shipAfterDate, Timestamp cancelBackOrderDate)
+            LocalDispatcher dispatcher, ShoppingCart cart, GenericValue supplierProduct, Timestamp shipBeforeDate, Timestamp shipAfterDate, Timestamp cancelBackOrderDate, ExtraPurchaseOrderInitArgs extraInitArgs)
                 throws CartItemModifyException, ItemNotFoundException {
         Delegator delegator = cart.getDelegator();
         GenericValue product = null;
@@ -195,6 +231,9 @@ public class ShoppingCartItem implements java.io.Serializable {
             throw new ItemNotFoundException(excMsg);
         }
         ShoppingCartItem newItem = new ShoppingCartItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, cart.getLocale(), itemType, itemGroup, null);
+
+        // SCIPIO: 2018-07-17: now setting orderItemAttributes as early as possible
+        newItem.setOrderItemAttributes(extraInitArgs != null ? extraInitArgs.getOrderItemAttributes() : null);
 
         // check to see if product is virtual
         if ("Y".equals(product.getString("isVirtual"))) {
@@ -260,6 +299,48 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     }
 
+    // SCIPIO: 2018-07-17: legacy overload, without ExtraInitArgs
+    public static ShoppingCartItem makePurchaseOrderItem(Integer cartLocation, String productId, BigDecimal selectedAmount, BigDecimal quantity,
+            Map<String, GenericValue> additionalProductFeatureAndAppls, Map<String, Object> attributes, String prodCatalogId, ProductConfigWrapper configWrapper, String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup,
+            LocalDispatcher dispatcher, ShoppingCart cart, GenericValue supplierProduct, Timestamp shipBeforeDate, Timestamp shipAfterDate, Timestamp cancelBackOrderDate)
+                throws CartItemModifyException, ItemNotFoundException {
+        return makePurchaseOrderItem(cartLocation, productId, selectedAmount, quantity, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, itemType, itemGroup, dispatcher, cart, supplierProduct, 
+                shipBeforeDate, shipAfterDate, cancelBackOrderDate, null);
+    }
+
+    /**
+     * SCIPIO: A parameter structure to help manage new options to the extremely 
+     * overloaded factory methods below.
+     * <p>
+     * DEV NOTE: Add arguments to this instead of making more insane overloads.
+     * Added 2018-07-17.
+     */
+    public static class ExtraInitArgs {
+        public static final ExtraInitArgs DEFAULT = new ExtraInitArgs();
+        
+        /**
+         * If set, initializes the orderItemAttributes in the item early in creation
+         * to give better access to code during construction.
+         */
+        private Map<String, String> orderItemAttributes;
+
+        public ExtraInitArgs(Map<String, String> orderItemAttributes) {
+            this.orderItemAttributes = orderItemAttributes;
+        }
+
+        public ExtraInitArgs() {
+        }
+
+        public Map<String, String> getOrderItemAttributes() {
+            return orderItemAttributes;
+        }
+
+        public ExtraInitArgs setOrderItemAttributes(Map<String, String> orderItemAttributes) {
+            this.orderItemAttributes = orderItemAttributes;
+            return this;
+        }
+    }
+
     /**
      * Makes a ShoppingCartItem and adds it to the cart.
      * NOTE: This method will get the product entity and check to make sure it can be purchased.
@@ -304,13 +385,17 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     /**
      * Makes a ShoppingCartItem and adds it to the cart.
+     * <p>
+     * SCIPIO: 2018-07-17: Now accepts {@link ExtraInitArgs} and initializes orderItemAttributes early.
+     * 
      * @param accommodationMapId Optional. reservations add into workeffort
      * @param accommodationSpotId Optional. reservations add into workeffort
      */
     public static ShoppingCartItem makeItem(Integer cartLocation, String productId, BigDecimal selectedAmount, BigDecimal quantity, BigDecimal unitPrice,
             Timestamp reservStart, BigDecimal reservLength, BigDecimal reservPersons,String accommodationMapId,String accommodationSpotId, Timestamp shipBeforeDate, Timestamp shipAfterDate,
             Map<String, GenericValue> additionalProductFeatureAndAppls, Map<String, Object> attributes, String prodCatalogId, ProductConfigWrapper configWrapper,
-            String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup, LocalDispatcher dispatcher, ShoppingCart cart, Boolean triggerExternalOpsBool, Boolean triggerPriceRulesBool, String parentProductId, Boolean skipInventoryChecks, Boolean skipProductChecks)
+            String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup, LocalDispatcher dispatcher, ShoppingCart cart, Boolean triggerExternalOpsBool, Boolean triggerPriceRulesBool, String parentProductId, Boolean skipInventoryChecks, Boolean skipProductChecks,
+            ExtraInitArgs extraInitArgs)
             throws CartItemModifyException, ItemNotFoundException {
         Delegator delegator = cart.getDelegator();
         GenericValue product = findProduct(delegator, skipProductChecks.booleanValue(), prodCatalogId, productId, cart.getLocale());
@@ -328,7 +413,18 @@ public class ShoppingCartItem implements java.io.Serializable {
         return makeItem(cartLocation, product, selectedAmount, quantity, unitPrice,
                 reservStart, reservLength, reservPersons, accommodationMapId, accommodationSpotId, shipBeforeDate, shipAfterDate,
                 additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper,
-                itemType, itemGroup, dispatcher, cart, triggerExternalOpsBool, triggerPriceRulesBool, parentProduct, skipInventoryChecks, skipProductChecks);
+                itemType, itemGroup, dispatcher, cart, triggerExternalOpsBool, triggerPriceRulesBool, parentProduct, skipInventoryChecks, skipProductChecks,
+                extraInitArgs); // SCIPIO: 2018-07-17: extraInitArgs
+    }
+
+    // SCIPIO: 2018-07-17: legacy overload, without ExtraInitArgs
+    public static ShoppingCartItem makeItem(Integer cartLocation, String productId, BigDecimal selectedAmount, BigDecimal quantity, BigDecimal unitPrice,
+            Timestamp reservStart, BigDecimal reservLength, BigDecimal reservPersons,String accommodationMapId,String accommodationSpotId, Timestamp shipBeforeDate, Timestamp shipAfterDate,
+            Map<String, GenericValue> additionalProductFeatureAndAppls, Map<String, Object> attributes, String prodCatalogId, ProductConfigWrapper configWrapper,
+            String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup, LocalDispatcher dispatcher, ShoppingCart cart, Boolean triggerExternalOpsBool, Boolean triggerPriceRulesBool, String parentProductId, Boolean skipInventoryChecks, Boolean skipProductChecks)
+            throws CartItemModifyException, ItemNotFoundException {
+        return makeItem(cartLocation, productId, selectedAmount, quantity, unitPrice, reservStart, reservLength, reservPersons, accommodationMapId, accommodationSpotId, shipBeforeDate, shipAfterDate, additionalProductFeatureAndAppls, attributes, prodCatalogId, 
+                configWrapper, itemType, itemGroup, dispatcher, cart, triggerExternalOpsBool, triggerPriceRulesBool, parentProductId, skipInventoryChecks, skipProductChecks, null);
     }
 
     /**
@@ -370,11 +466,15 @@ public class ShoppingCartItem implements java.io.Serializable {
                quantity,unitPrice,reservStart,reservLength,reservPersons,
                null,null,shipBeforeDate,shipAfterDate,additionalProductFeatureAndAppls,attributes,
                prodCatalogId,configWrapper,itemType,itemGroup,dispatcher,cart,
-               triggerExternalOpsBool,triggerPriceRulesBool,parentProduct,skipInventoryChecks,skipProductChecks);
+               triggerExternalOpsBool,triggerPriceRulesBool,parentProduct,skipInventoryChecks,skipProductChecks, 
+               null); // SCIPIO: 2018-07-17: point to new overload
     }
 
     /**
      * Makes a ShoppingCartItem and adds it to the cart.
+     * <p>
+     * SCIPIO: 2018-07-17: Now accepts {@link ExtraInitArgs} and initializes orderItemAttributes early.
+     * 
      * @param accommodationMapId Optional. reservations add into workeffort
      * @param accommodationSpotId Optional. reservations add into workeffort
     */
@@ -383,9 +483,13 @@ public class ShoppingCartItem implements java.io.Serializable {
             String accommodationMapId,String accommodationSpotId,
             Timestamp shipBeforeDate, Timestamp shipAfterDate, Map<String, GenericValue> additionalProductFeatureAndAppls, Map<String, Object> attributes,
             String prodCatalogId, ProductConfigWrapper configWrapper, String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup, LocalDispatcher dispatcher,
-            ShoppingCart cart, Boolean triggerExternalOpsBool, Boolean triggerPriceRulesBool, GenericValue parentProduct, Boolean skipInventoryChecks, Boolean skipProductChecks) throws CartItemModifyException {
+            ShoppingCart cart, Boolean triggerExternalOpsBool, Boolean triggerPriceRulesBool, GenericValue parentProduct, Boolean skipInventoryChecks, Boolean skipProductChecks,
+            ExtraInitArgs extraInitArgs) throws CartItemModifyException {
 
         ShoppingCartItem newItem = new ShoppingCartItem(product, additionalProductFeatureAndAppls, attributes, prodCatalogId, configWrapper, cart.getLocale(), itemType, itemGroup, parentProduct);
+
+        // SCIPIO: 2018-07-17: now setting orderItemAttributes as early as possible
+        newItem.setOrderItemAttributes(extraInitArgs != null ? extraInitArgs.getOrderItemAttributes() : null);
         
         selectedAmount = selectedAmount == null ? BigDecimal.ZERO : selectedAmount;
         unitPrice = unitPrice == null ? BigDecimal.ZERO : unitPrice;
@@ -496,6 +600,18 @@ public class ShoppingCartItem implements java.io.Serializable {
         }
 
         return newItem;
+    }
+
+    // SCIPIO: 2018-07-17: legacy overload, without ExtraInitArgs
+    public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, BigDecimal selectedAmount,
+            BigDecimal quantity, BigDecimal unitPrice, Timestamp reservStart, BigDecimal reservLength, BigDecimal reservPersons,
+            String accommodationMapId,String accommodationSpotId,
+            Timestamp shipBeforeDate, Timestamp shipAfterDate, Map<String, GenericValue> additionalProductFeatureAndAppls, Map<String, Object> attributes,
+            String prodCatalogId, ProductConfigWrapper configWrapper, String itemType, ShoppingCart.ShoppingCartItemGroup itemGroup, LocalDispatcher dispatcher,
+            ShoppingCart cart, Boolean triggerExternalOpsBool, Boolean triggerPriceRulesBool, GenericValue parentProduct, Boolean skipInventoryChecks, Boolean skipProductChecks) throws CartItemModifyException {
+        return makeItem(cartLocation, product, selectedAmount, quantity, unitPrice, reservStart, reservLength, reservPersons, accommodationMapId, accommodationSpotId, shipBeforeDate, shipAfterDate, additionalProductFeatureAndAppls, 
+                attributes, prodCatalogId, configWrapper, itemType, itemGroup, dispatcher, cart, triggerExternalOpsBool, triggerPriceRulesBool, parentProduct, skipInventoryChecks, skipProductChecks,
+                null);
     }
 
     public static GenericValue findProduct(Delegator delegator, boolean skipProductChecks, String prodCatalogId, String productId, Locale locale) throws CartItemModifyException, ItemNotFoundException {
@@ -2264,6 +2380,20 @@ public class ShoppingCartItem implements java.io.Serializable {
     public void setOrderItemAttribute(String name, String value) {
         if (orderItemAttributes == null) orderItemAttributes = new HashMap<String, String>();
         this.orderItemAttributes.put(name, value);
+    }
+
+    /** 
+     * SCIPIO: Creates an OrderItemAttribute entry for each one in the given map.
+     * Code originally from ShoppingCart.addOrIncreaseItem.
+     * Added 2018-07-17.
+     */
+    public void setOrderItemAttributes(Map<String, String> orderItemAttributes) {
+        // add order item attributes
+        if (UtilValidate.isNotEmpty(orderItemAttributes)) {
+            for (Map.Entry<String, String> entry : orderItemAttributes.entrySet()) {
+                this.setOrderItemAttribute(entry.getKey(), entry.getValue());
+            }
+        }
     }
 
     /** Return an OrderItemAttribute. */

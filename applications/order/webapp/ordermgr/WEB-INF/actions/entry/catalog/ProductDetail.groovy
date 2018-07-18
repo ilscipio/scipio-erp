@@ -81,6 +81,7 @@ cart = ShoppingCartEvents.getCartObject(request);
 currencyUomId = null;
 if (cart) currencyUomId = cart.getCurrency();
 if (!currencyUomId) currencyUomId = EntityUtilProperties.getPropertyValue("general", "currency.uom.id.default", "USD", delegator);
+context.currencyUomId = currencyUomId; // SCIPIO: 2018-07-18: make available to ftl
 
 // get the shopping lists for the user (if logged in)
 if (userLogin) {

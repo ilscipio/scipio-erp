@@ -75,6 +75,15 @@ public class UtilProperties implements Serializable {
      */
     private static final UtilCache<String, Properties> urlCache = UtilCache.createUtilCache("properties.UtilPropertiesUrlCache");
 
+    /**
+     * SCIPIO: A lightweight cache for storing Properties instances. Each Properties instance is keyed by its resource name.
+     * Mainly intended for *.properties files (not localized resource bundles). This is a lightweight second-layer cache
+     * around the instances already stored in {@link #urlCache}, so as to not duplicate the Properties instances. 
+     * Improves access for the many individual property lookups.
+     * Added 2018-07-18.
+     */
+    private static final UtilCache<String, Properties> propResourceCache = UtilCache.createUtilCache("properties.UtilPropertiesPropResourceCache");
+
     // SCIPIO: 2018-07-18: HashSet is not thread-safe! Use an immutable collection copy pattern instead. 
     // NOTE: Here even omitting volatile because this does not appear to be critical or one-time information (mainly performance?).
     //private static final Set<String> propertiesNotFound = new HashSet<String>();
@@ -489,8 +498,19 @@ public class UtilProperties implements Serializable {
         if (resource == null || resource.length() <= 0) {
             return null;
         }
-        URL url = resolvePropertiesUrl(resource, null);
-        return getProperties(url);
+        // SCIPIO: 2018-07-18: Now uses an extra lightweight cache around the URL cache.
+        // The two-layer caching ensures reuse of the Properties instances.
+        //URL url = resolvePropertiesUrl(resource, null);
+        //return getProperties(url);
+        Properties properties = propResourceCache.get(resource);
+        if (properties == null) {
+            URL url = resolvePropertiesUrl(resource, null);
+            properties = getProperties(url);
+            if (properties != null) {
+                propResourceCache.put(resource, properties);
+            }
+        }
+        return properties;
     }
 
     /** Returns the specified resource/properties file

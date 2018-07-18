@@ -30,6 +30,12 @@
         <param-name>allowOverrideViewUri</param-name>
         <param-value>true</param-value>
     </context-param>
+    <context-param>
+        <description>SCIPIO: Name of a *.properties file on classpath from which to read search settings (shop.search.*), notably for KeywordSearch.groovy.
+            Default: shop (added 2018-07-18)</description>
+        <param-name>shopSearchCfgRes</param-name>
+        <param-value></param-value>
+    </context-param>
 
     <!-- HTML Compression - enable this in production (disable for debugging)
     <context-param>

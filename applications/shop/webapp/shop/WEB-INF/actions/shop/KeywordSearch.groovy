@@ -63,7 +63,7 @@ boolean DEBUG = Debug.verboseOn();
 
 // NOTE: 2017-08-28: All params should be passed in kwsArgs map
 kwsArgs = context.kwsArgs ? new HashMap(context.kwsArgs) : new HashMap();
-cfgPropRes = kwsArgs.cfgPropRes ?: "shop"; // shop.properties
+cfgPropRes = kwsArgs.cfgPropRes ?: application.getAttribute("shopSearchCfgRes") ?: "shop"; // shop.properties
 cfgPropPrefix = kwsArgs.cfgPropPrefix != null ? kwsArgs.cfgPropPrefix : "shop.";
 userSearchCfg = SolrProductUtil.readUserProductSearchConfig(delegator, cfgPropRes, cfgPropPrefix+"search.solr.", kwsArgs);
 

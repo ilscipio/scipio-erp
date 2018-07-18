@@ -187,12 +187,14 @@ if (product) {
         priceContext.agreementId = cart.getAgreementId();
         priceContext.partyId = cart.getPartyId();  // IMPORTANT: must put this in, or price will be calculated for the CSR instead of the customer
         priceMap = runService('calculateProductPrice', priceContext);
+        priceMap.currencyUomId = cart.getCurrency(); // SCIPIO: 2018-07-18: put the currency in this map so it is unambiguous
         context.priceMap = priceMap;
     } else {
         // purchase order: run the "calculatePurchasePrice" service
         priceContext = [product : product, currencyUomId : cart.getCurrency(),
                 partyId : cart.getPartyId(), userLogin : userLogin];
         priceMap = runService('calculatePurchasePrice', priceContext);
+        priceMap.currencyUomId = cart.getCurrency(); // SCIPIO: 2018-07-18: put the currency in this map so it is unambiguous
         context.priceMap = priceMap;
     }
 

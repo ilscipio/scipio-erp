@@ -75,7 +75,10 @@ public class UtilProperties implements Serializable {
      */
     private static final UtilCache<String, Properties> urlCache = UtilCache.createUtilCache("properties.UtilPropertiesUrlCache");
 
-    private static final Set<String> propertiesNotFound = new HashSet<String>();
+    // SCIPIO: 2018-07-18: HashSet is not thread-safe! Use an immutable collection copy pattern instead. 
+    // NOTE: Here even omitting volatile because this does not appear to be critical or one-time information (mainly performance?).
+    //private static final Set<String> propertiesNotFound = new HashSet<String>();
+    private static Set<String> propertiesNotFound = Collections.emptySet();
 
     /** Compares the specified property to the compareString, returns true if they are the same, false otherwise
      * @param resource The name of the resource - if the properties file is 'webevent.properties', the resource name is 'webevent'
@@ -1179,7 +1182,13 @@ public class UtilProperties implements Serializable {
         }
         if (propertiesNotFound.size() <= 300) {
             // Sanity check - list could get quite large
-            propertiesNotFound.add(resourceName);
+            // SCIPIO: 2018-07-18: HashSet is not thread-safe, so can't do this.
+            // However, also want to avoid locking globally on this, so use an immutable collection copy. 
+            // Even omitting volatile since this does not appear critical to record.
+            //propertiesNotFound.add(resourceName);
+            Set<String> newPropertiesNotFound = new HashSet<>(propertiesNotFound);
+            newPropertiesNotFound.add(resourceName);
+            propertiesNotFound = Collections.unmodifiableSet(newPropertiesNotFound);
         }
         return null;
     }

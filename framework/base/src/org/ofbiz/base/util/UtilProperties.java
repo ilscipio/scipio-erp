@@ -29,6 +29,7 @@ import java.math.BigInteger;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -47,6 +48,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.collections.ResourceBundleMapWrapper;
@@ -84,6 +86,11 @@ public class UtilProperties implements Serializable {
      */
     private static final UtilCache<String, Properties> propResourceCache = UtilCache.createUtilCache("properties.UtilPropertiesPropResourceCache");
 
+    /**
+     * SCIPIO: A read-only empty properties instance.
+     */
+    private static final Properties emptyProperties = new ExtendedProperties();
+    
     // SCIPIO: 2018-07-18: HashSet is not thread-safe! Use an immutable collection copy pattern instead. 
     // NOTE: Here even omitting volatile because this does not appear to be critical or one-time information (mainly performance?).
     //private static final Set<String> propertiesNotFound = new HashSet<String>();
@@ -491,6 +498,16 @@ public class UtilProperties implements Serializable {
     }
 
     /** Returns the specified resource/properties file
+     * <p>
+     * SCIPIO: MERGED PROPERTIES (2018-07-18):
+     * This method now supports merged properties 
+     * by combining several resource names in the resource string.
+     * Format: "+resource1+resource2+resource3"
+     * In other words, a starting "+" indicates merged properties mode,
+     * and the rest of the string is resource names separated by "+".
+     * This is equivalent to calling {@code getMergedProperties("resource1", "resource2", "resource3")}.
+     * The merged properties are cached and the result must not be modified.
+     * 
      * @param resource The name of the resource - can be a file, class, or URL
      * @return The properties file
      */
@@ -504,13 +521,128 @@ public class UtilProperties implements Serializable {
         //return getProperties(url);
         Properties properties = propResourceCache.get(resource);
         if (properties == null) {
-            URL url = resolvePropertiesUrl(resource, null);
-            properties = getProperties(url);
+            if (resource.charAt(0) == '+') {
+                // SCIPIO: 2018-07-18: MERGED PROPERTIES
+                String[] mergeResources = StringUtils.split(resource.substring(1), '+');
+                properties = getMergedPropertiesFromUrlCache(mergeResources);
+            } else {
+                URL url = resolvePropertiesUrl(resource, null);
+                properties = getProperties(url);
+            }
             if (properties != null) {
                 propResourceCache.put(resource, properties);
             }
         }
         return properties;
+    }
+
+    /**
+     * SCIPIO: Returns an immutable empty Properties instance, which can
+     * be used to avoid null checks in code constructs. WARN: Must not be modified!
+     * Added 2018-07-18.
+     */
+    public static Properties getEmptyProperties() {
+        return emptyProperties;
+    }
+
+    /**
+     * SCIPIO: Returns a Properties instance composed of the given resources merged together.
+     * The entries in the last resource override the previous ones.
+     * <p>
+     * NOTE: Like {@link #getProperties(String)}, the resulting properties are cached and
+     * should not be modified.
+     * <p>
+     * If one or more of the resources are missing, they are skipped. If all of them
+     * are missing, returns null.
+     * <p>
+     * Added 2018-07-18. 
+     */
+    public static Properties getMergedProperties(String... resources) {
+        String propResourceCacheKey = "+" + StringUtils.join(resources, "+");
+        Properties properties = propResourceCache.get(propResourceCacheKey);
+        if (properties == null) {
+            properties = getMergedPropertiesFromUrlCache(resources);
+            if (properties != null) {
+                propResourceCache.put(propResourceCacheKey, properties);
+            }
+        }
+        return properties;
+    }
+
+    /**
+     * SCIPIO: Returns a Properties instance composed of the given resources merged together.
+     * The entries in the last resource override the previous ones.
+     * <p>
+     * NOTE: Like {@link #getProperties(String)}, the resulting properties are cached and
+     * should not be modified.
+     * <p>
+     * If one or more of the resources are missing, they are skipped. If all of them
+     * are missing, returns null.
+     * <p>
+     * Added 2018-07-18. 
+     */
+    public static Properties getMergedProperties(Collection<String> resources) {
+        return getMergedProperties(resources.toArray(new String[resources.size()]));
+    }
+
+    private static Properties getMergedPropertiesFromUrlCache(String[] resources) {
+        if (resources.length == 0) {
+            throw new IllegalArgumentException("No resources specified for merged properties");
+        }
+
+        // Make cache key for urlCache, which is "+url1+url2+url3"
+        StringBuilder urlCacheKeySb = new StringBuilder();
+        URL[] urlList = new URL[resources.length];
+        for(int i = 0; i < resources.length; i++) {
+            URL url = resolvePropertiesUrl(resources[i], null);
+            urlList[i] = url;
+            if (url != null) {
+                urlCacheKeySb.append('+');
+                urlCacheKeySb.append(url.toString());
+            }
+        }
+        String urlCacheKey = urlCacheKeySb.toString();
+
+        Properties mergedProperties = (urlCacheKey.length() > 0) ? urlCache.get(urlCacheKey) : null;
+        if (mergedProperties == null) {
+            // DEV NOTE: This log message is only printed if the string resources map
+            // to a different set of URLs after filtering for normalization and missing ones, 
+            // so less than you might expect; clear the cache using admin UI for testing properly.
+            StringBuilder log = new StringBuilder("Merged properties: Resources: [");
+            for(int i = 0; i < resources.length; i++) {
+                log.append("[");
+                log.append(resources[i]);
+                URL url = urlList[i];
+                if (url != null) {
+                    Properties properties = getProperties(url);
+                    if (properties != null) {
+                        if (mergedProperties == null) { // for now: require at least one valid Properties
+                            mergedProperties = new ExtendedProperties();
+                        }
+                        mergedProperties.putAll(properties);
+                        log.append("->merged] + ");
+                    } else {
+                        log.append("->not merged (file not loaded)] + ");
+                    }
+                } else {
+                    log.append("->not merged (url not resolved)] + ");
+                }
+            }
+            if (log.length() > 0) log.setLength(log.length() - " + ".length());
+            log.append("]");
+            if (mergedProperties != null) {
+                urlCache.put(urlCacheKey, mergedProperties);
+            } else {
+                log.append(" (no resources could be loaded)");
+            }
+            if (Debug.verboseOn()) {
+                log.append("; resolved URLs: [");
+                log.append(urlCacheKey);
+                log.append("]");
+            }
+            Debug.logInfo(log.toString(), module);
+        }
+        return mergedProperties;
     }
 
     /** Returns the specified resource/properties file

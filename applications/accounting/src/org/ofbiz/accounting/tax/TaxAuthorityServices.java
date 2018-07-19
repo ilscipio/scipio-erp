@@ -111,10 +111,17 @@ public class TaxAuthorityServices {
                     throw new IllegalArgumentException("Could not find any Tax Authories for store with ID [" + productStoreId + "] for tax calculation; the store settings may need to be corrected.");
                 }
 
-                List<GenericValue> taxAdustmentList = getTaxAdjustments(delegator, product, productStore, null, billToPartyId, taxAuthoritySet, basePrice, quantity, amount, shippingPrice, ZERO_BASE, useCache);
+                TaxAdjustmentsResult taxAdjustmentResult = getTaxAdjustmentsDetailed(delegator, product, productStore, null, billToPartyId, taxAuthoritySet, basePrice, quantity, amount, shippingPrice, ZERO_BASE, useCache); // SCIPIO: result
+                List<GenericValue> taxAdustmentList = taxAdjustmentResult.getAdjustments();
                 if (taxAdustmentList.size() == 0) {
                     // this is something that happens every so often for different products and such, so don't blow up on it...
-                    Debug.logWarning("Could not find any Tax Authories Rate Rules for store with ID [" + productStoreId + "], productId [" + productId + "], basePrice [" + basePrice + "], amount [" + amount + "], for tax calculation; the store settings may need to be corrected.", module);
+                    // SCIPIO: 2018-07-18: don't make a warning if only zero taxable because
+                    // getTaxAdjustments aborts early in that case but is a valid case.
+                    if (taxAdjustmentResult.isAllZeroTaxableRateProducts()) {
+                        Debug.logInfo("Scipio: No Tax Authories Rate Rules to apply for store with ID [" + productStoreId + "], productId [" + productId + "], basePrice [" + basePrice + "], amount [" + amount + "], for tax calculation, because taxable prices are zero", module);
+                    } else {
+                        Debug.logWarning("Could not find any Tax Authories Rate Rules for store with ID [" + productStoreId + "], productId [" + productId + "], basePrice [" + basePrice + "], amount [" + amount + "], for tax calculation; the store settings may need to be corrected.", module);
+                    }
                 }
 
                 // add up amounts from adjustments (amount OR exemptAmount, sourcePercentage)
@@ -292,17 +299,53 @@ public class TaxAuthorityServices {
             String payToPartyId, String billToPartyId, Set<GenericValue> taxAuthoritySet,
             BigDecimal itemPrice, BigDecimal itemQuantity, BigDecimal itemAmount,
             BigDecimal shippingAmount, BigDecimal orderPromotionsAmount) {
-        return getTaxAdjustments(delegator, product, productStore, payToPartyId, billToPartyId, taxAuthoritySet, itemPrice, 
-                itemQuantity, itemAmount, shippingAmount, orderPromotionsAmount, true);
+        return getTaxAdjustmentsDetailed(delegator, product, productStore, payToPartyId, billToPartyId, taxAuthoritySet, itemPrice, 
+                itemQuantity, itemAmount, shippingAmount, orderPromotionsAmount, true).getAdjustments();
     }
-    
-    // SCIPIO: 2017-12-19: added useCache flag
+
+    // SCIPIO: 2017-12-19: added overload due to statusResult
     private static List<GenericValue> getTaxAdjustments(Delegator delegator, GenericValue product, GenericValue productStore,
             String payToPartyId, String billToPartyId, Set<GenericValue> taxAuthoritySet,
             BigDecimal itemPrice, BigDecimal itemQuantity, BigDecimal itemAmount,
             BigDecimal shippingAmount, BigDecimal orderPromotionsAmount, boolean useCache) {
+        return getTaxAdjustmentsDetailed(delegator, product, productStore, payToPartyId, billToPartyId, taxAuthoritySet, itemPrice, itemQuantity, itemAmount, shippingAmount, orderPromotionsAmount, useCache).getAdjustments();
+    }
+
+    /**
+     * SCIPIO: 2018-07-18
+     */
+    private static class TaxAdjustmentsResult {
+        List<GenericValue> adjustments = new ArrayList<>();
+        int origTotalRateProducts = 0;
+        int zeroTaxableRateProducts = 0;
+        boolean error;
+        Throwable exception;
+
+        TaxAdjustmentsResult() { this.adjustments = new LinkedList<>(); }
+        TaxAdjustmentsResult(Throwable t) { this.exception = exception; this.error = true; }
+        void resetRateProducts(List<GenericValue> rateProducts) {
+            origTotalRateProducts = rateProducts.size();
+            zeroTaxableRateProducts = 0;
+        }
+        
+        public List<GenericValue> getAdjustments() { return adjustments; }
+        public boolean isAllZeroTaxableRateProducts() {
+            return (zeroTaxableRateProducts > 0) && (zeroTaxableRateProducts == origTotalRateProducts);
+        }
+        public int getOrigTotalRateProducts() { return origTotalRateProducts; }
+        public int getZeroTaxableRateProducts() { return zeroTaxableRateProducts; }
+        public boolean isError() { return error; }
+        public Throwable getException() { return exception; }
+    }
+
+    // SCIPIO: 2017-12-19: added useCache flag and reimplemented result
+    private static TaxAdjustmentsResult getTaxAdjustmentsDetailed(Delegator delegator, GenericValue product, GenericValue productStore,
+            String payToPartyId, String billToPartyId, Set<GenericValue> taxAuthoritySet,
+            BigDecimal itemPrice, BigDecimal itemQuantity, BigDecimal itemAmount,
+            BigDecimal shippingAmount, BigDecimal orderPromotionsAmount, boolean useCache) {
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
-        List<GenericValue> adjustments = new LinkedList<GenericValue>();
+        TaxAdjustmentsResult result = new TaxAdjustmentsResult(); // SCIPIO
+        List<GenericValue> adjustments = result.adjustments;
 
         if (payToPartyId == null) {
             if (productStore != null) {
@@ -416,9 +459,10 @@ public class TaxAuthorityServices {
             List<GenericValue> lookupList = EntityQuery.use(delegator).from("TaxAuthorityRateProduct")
                     .where(mainCondition).orderBy("minItemPrice", "minPurchase", "fromDate").filterByDate().queryList();
 
+            result.resetRateProducts(lookupList); // SCIPIO
             if (lookupList.size() == 0) {
                 Debug.logWarning("In TaxAuthority Product Rate no records were found for condition:" + mainCondition.toString(), module);
-                return adjustments;
+                return result; //return adjustments; // SCIPIO
             }
 
             // find the right entry(s) based on purchase amount
@@ -438,6 +482,7 @@ public class TaxAuthorityServices {
 
                 if (taxable.compareTo(BigDecimal.ZERO) == 0) {
                     // this should make it less confusing if the taxable flag on the product is not Y/true, and there is no shipping and such
+                    result.zeroTaxableRateProducts++; // SCIPIO
                     continue;
                 }
 
@@ -577,10 +622,10 @@ public class TaxAuthorityServices {
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problems looking up tax rates", module);
-            return new LinkedList<GenericValue>();
+            return new TaxAdjustmentsResult(e); //return new LinkedList<GenericValue>(); // SCIPIO
         }
 
-        return adjustments;
+        return result; //return adjustments; // SCIPIO
     }
 
     // SCIPIO: 2017-12-19: added useCache flag

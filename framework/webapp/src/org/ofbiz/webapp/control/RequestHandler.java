@@ -319,15 +319,24 @@ public class RequestHandler {
                         throw new RequestHandlerException(errMsg);
                     }
                 } else {
-                    StringBuilder urlBuf = new StringBuilder();
-                    urlBuf.append(request.getPathInfo());
-                    if (request.getQueryString() != null) {
-                        urlBuf.append("?").append(request.getQueryString());
+                    String newUrl;
+                    if (SecureUrlRedirFmt.VALUE.isIncoming()) {
+                        // SCIPIO: 2018-07-18: new http-to-https redirect url format option
+                        newUrl = RequestLinkUtil.rebuildOriginalRequestURL(request, response, true, SecureUrlRedirFmt.VALUE.isStaticHost(), true, true);
+                        newUrl = response.encodeURL(newUrl); // for URL rewriting, etc.
+                    } else {
+                        StringBuilder urlBuf = new StringBuilder();
+                        urlBuf.append(request.getPathInfo());
+                        if (request.getQueryString() != null) {
+                            urlBuf.append("?").append(request.getQueryString());
+                        }
+                        // SCIPIO: Always make full URL for redirect so uses host from entities
+                        //String newUrl = RequestHandler.makeUrl(request, response, urlBuf.toString());
+                        newUrl = RequestHandler.makeUrlFull(request, response, urlBuf.toString());
                     }
-                    // SCIPIO: Always make full URL for redirect so uses host from entities
-                    //String newUrl = RequestHandler.makeUrl(request, response, urlBuf.toString());
-                    String newUrl = RequestHandler.makeUrlFull(request, response, urlBuf.toString());
-                    if (newUrl.toUpperCase().startsWith("HTTPS")) {
+                    // SCIPIO: this is poor
+                    //if (newUrl.toUpperCase().startsWith("HTTPS")) {
+                    if (RequestLinkUtil.isUrlProtocol(newUrl, "https")) {
                         // if we are supposed to be secure, redirect secure.
                         callRedirect(newUrl, response, request, statusCodeString);
                         return;
@@ -2400,5 +2409,26 @@ public class RequestHandler {
      */
     public static String getControlServletMapping(ServletContext servletContext) {
         return (String) servletContext.getAttribute("_CONTROL_MAPPING_");
+    }
+
+    /**
+     * SCIPIO: Controls URL format for http-to-https redirects.
+     * Added 2018-07-18.
+     */
+    private enum SecureUrlRedirFmt {
+        INCOMING_URL,
+        INCOMING_URL_STATICHOST,
+        OFBIZ_URL;
+        
+        public static final SecureUrlRedirFmt VALUE;
+        static {
+            switch(UtilProperties.getPropertyValue("requestHandler", "secure-redirect-url-format", "ofbiz-url")) {
+            case "incoming-url": VALUE = INCOMING_URL; break;
+            case "incoming-url-statichost": VALUE = INCOMING_URL_STATICHOST; break;
+            default: VALUE = OFBIZ_URL;   
+            }
+        }
+        public boolean isIncoming() { return this != OFBIZ_URL; }
+        public boolean isStaticHost() { return this == INCOMING_URL_STATICHOST; }
     }
 }

@@ -31,6 +31,11 @@ public abstract class RequestLinkUtil {
     
     private static final Pattern jsessionIdPat = Pattern.compile("((;jsessionid=)([^\\?#]*))");
     
+    public static final String HTTP_PROTO_COLON = "http:";
+    public static final String HTTP_PROTO_COLONSLASH = "http://";
+    public static final String HTTPS_PROTO_COLON = "https:";
+    public static final String HTTPS_PROTO_COLONSLASH = "https://";
+
     protected RequestLinkUtil() {
     }
     
@@ -466,27 +471,41 @@ public abstract class RequestLinkUtil {
     }
     
     /**
-     * Attemps to rebuild the URL that was requested by the client, before any forwards, but with support
-     * for specifying the protocol and port.
-     * This is a custom coded version of {@link #getFullOriginalURL}.
+     * Best-effort rebuilds the incoming URL that was requested by the client, before any forwards, but with support
+     * for specifying a different protocol and port.
+     * <p>
+     * Implementation derived from {@link org.apache.catalina.connector.Request#getRequestURL()}.
+     * 
+     * @param request
+     * @param response
+     * @param secure true: use https; false: use http; null: use same as original request url
+     * @param staticHost true: use host from url.properties/WebSite; false/null: use host from request.getServerName
+     * @param useQueryString
+     * @param handleErrors if true, swallow errors and use best available; if false, throw IllegalStateException
+     * @throws IllegalStateException if handleErrors false and any entity or parsing error
      */
-    public static String rebuildOriginalRequestURL(HttpServletRequest request, HttpServletResponse response, Boolean secure, boolean includeQueryString) {
+    public static String rebuildOriginalRequestURL(HttpServletRequest request, HttpServletResponse response,
+            Boolean secure, Boolean staticHost, boolean useQueryString, boolean handleErrors) throws IllegalStateException {
         // NOTE: derived from Tomcat 8 implementation of getRequestURL
         StringBuffer url = new StringBuffer();
+        WebSiteProperties props = null;
         String scheme; 
         int port;
         if (secure != null) {
             scheme = secure ? "https" : "http";
             port = -1;
             try {
-                WebSiteProperties props = WebSiteProperties.from(request);
+                props = WebSiteProperties.from(request);
                 String portStr = secure ? props.getHttpsPort() : props.getHttpPort();
                 if (portStr != null && !portStr.isEmpty()) {
                     port = Integer.parseInt(portStr);
                 }
-            } catch (Exception e) { // SCIPIO: just catch everything: GenericEntityException
-                // If the entity engine is throwing exceptions, then there is no point in continuing.
-                Debug.logError(e, "rebuildOriginalRequestURL: Exception thrown while getting web site properties http/https port: " + e.getMessage(), module);
+            } catch (Exception e) {
+                if (handleErrors) {
+                    Debug.logError(e, "rebuildOriginalRequestURL: Error getting web site properties for http/https port: " + e.getMessage(), module);
+                } else {
+                    throw new IllegalStateException("Error getting web site properties for http/https port: " + e.getMessage(), e);
+                }
             }
             if (port < 0) {
                 port = secure ? 443 : 80;
@@ -498,13 +517,34 @@ public abstract class RequestLinkUtil {
         if (port < 0) {
             port = 80;
         }
-        url.append(scheme);
-        url.append("://");
-        url.append(request.getServerName());
+        url.append(scheme).append("://");
+        String host;
+        if (Boolean.TRUE.equals(staticHost)) {
+            if (props == null) {
+                try {
+                    props = WebSiteProperties.from(request);
+                } catch (Exception e) {
+                    if (handleErrors) {
+                        Debug.logError(e, "rebuildOriginalRequestURL: Error getting web site properties for host name"
+                                + " (using request.getServerName() instead): " + e.getMessage(), module);
+                    } else {
+                        throw new IllegalStateException("Error getting web site properties for host name: " + e.getMessage(), e);
+                    }
+                }
+            }
+            if (props != null) {
+                host = scheme.equals("https") ? props.getHttpsHost() : props.getHttpHost();
+                if (host == null || host.isEmpty()) host = request.getServerName();
+            } else {
+                host = request.getServerName();
+            }
+        } else {
+            host = request.getServerName();
+        }
+        url.append(host);
         if ((scheme.equals("http") && (port != 80))
             || (scheme.equals("https") && (port != 443))) {
-            url.append(':');
-            url.append(port);
+            url.append(':').append(port);
         }
         
         String requestURI = (String) request.getAttribute(RequestDispatcher.FORWARD_REQUEST_URI);
@@ -514,10 +554,15 @@ public abstract class RequestLinkUtil {
             queryString = request.getQueryString();
         }
         url.append(requestURI);
-        if (includeQueryString && queryString != null) {
+        if (useQueryString && queryString != null) {
             url.append("?").append(queryString);
         }
         return url.toString();
+    }
+    
+    public static String rebuildOriginalRequestURL(HttpServletRequest request, HttpServletResponse response,
+            Boolean secure, boolean useQueryString) {
+        return rebuildOriginalRequestURL(request, response, secure, null, useQueryString, true);
     }
     
     public static String getServletAndPathInfo(HttpServletRequest request) {
@@ -570,5 +615,17 @@ public abstract class RequestLinkUtil {
      */
     public static boolean isEffectiveSecure(HttpServletRequest request) {
         return request.isSecure() || isForwardedSecure(request);
+    }
+
+    /**
+     * Checks if the given URL starts with specified protocol, fast.
+     * @param url the url
+     * @param protocol the protocol, lowercase (must be)
+     */
+    public static boolean isUrlProtocol(final String url, final String protocol) {
+        final int protocolLength = protocol.length();
+        if (url.length() < (protocolLength + 1)) return false;
+        if (url.charAt(protocolLength) != ':') return false;
+        return protocol.equalsIgnoreCase(url.substring(0, protocolLength)); // substring+equal avoid iterating whole url
     }
 }

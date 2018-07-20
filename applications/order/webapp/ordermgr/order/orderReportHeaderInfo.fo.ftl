@@ -79,7 +79,8 @@ under the License.
                         <fo:block>
                             <#if shipGroups.size() gt 1>${shipGroup.shipGroupSeqId} - </#if>
                             <#if (shipGroup.shipmentMethodTypeId)??>
-                                ${(shipGroup.getRelatedOne("ShipmentMethodType", false).get("description", locale))?default(shipGroup.shipmentMethodTypeId)}
+                                <#assign shipMethodType = shipGroup.getRelatedOne("ShipmentMethodType", false)/>
+                                <#if shipGroup.carrierPartyId?has_content>${shipGroup.carrierPartyId!""} - </#if>${(shipMethodType.get("description", locale))?default(shipGroup.shipmentMethodTypeId)}
                             </#if>
                             <#if (shipGroup.shipAfterDate)?? || (shipGroup.shipByDate)??>
                                 <#if (shipGroup.shipAfterDate)??> - ${uiLabelMap.OrderShipAfterDate}: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(shipGroup.shipAfterDate)}</#if><#if (shipGroup.shipByDate)??> - ${uiLabelMap.OrderShipBeforeDate}: ${Static["org.ofbiz.base.util.UtilDateTime"].toDateString(shipGroup.shipByDate)}</#if>

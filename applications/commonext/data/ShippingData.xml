@@ -44,7 +44,7 @@
     <ShipmentMethodType description="Next Afternoon" shipmentMethodTypeId="NEXT_PM"/>
     <ShipmentMethodType description="Same Day" shipmentMethodTypeId="SAME_DAY"/>
     <ShipmentMethodType description="Guaranteed Next Day" shipmentMethodTypeId="NEXT_DAY"/>
-    <ShipmentMethodType description="Air" shipmentMethodTypeId="AIR"/>
+    <ShipmentMethodType description="Airmail" shipmentMethodTypeId="AIR"/>
     <ShipmentMethodType description="Third Day" shipmentMethodTypeId="THIRD_DAY"/>
     <ShipmentMethodType description="International Express" shipmentMethodTypeId="INT_EXPRESS"/>
 

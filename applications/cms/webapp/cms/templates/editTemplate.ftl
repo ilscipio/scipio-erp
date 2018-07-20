@@ -81,7 +81,16 @@
                     indentWithTabs: ${indentWithTabs?string},
                     foldGutter: true,
                     gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-                    extraKeys: {"Ctrl-Space": "autocomplete"}
+                    extraKeys: {
+                     Tab: function(cm) {
+                        var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
+                        cm.replaceSelection(spaces);
+                      },
+                      "Shift-Tab": function (cm) {
+                        cm.indentSelection("subtract");
+                      },
+                      "Ctrl-Space": "autocomplete"
+                    },
                     }).on('change', function(cMirror){
                         $('textarea#templateBody')[0].value = cMirror.getValue();
                         setTemplateSource('Body');

@@ -30109,7 +30109,7 @@
     </property>
     <property key="ProductSubscriptionCommEvent">
         <value xml:lang="de">Abonnement Kommunikationsereignis</value>
-        <value xml:lang="en">k Communication Event</value>
+        <value xml:lang="en">Communication Event</value>
         <value xml:lang="es">Evento de comunicación de suscripción</value>
         <value xml:lang="fr">Evènement de communication d'abonnement</value>
         <value xml:lang="it">Evento comunicazioni abbonamento</value>

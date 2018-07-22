@@ -944,7 +944,9 @@ under the License.
                         <entity-one entity-name="Subscription" value-field="subscription"/>
                     </then>
                 </if>
-                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="Subscription"/>
+                
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="Subscriptions"/>
+                <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="Subscriptions"/>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
                 <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />

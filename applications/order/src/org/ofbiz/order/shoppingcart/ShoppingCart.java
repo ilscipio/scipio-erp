@@ -1592,7 +1592,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
 
     /** Creates a CartPaymentInfo object */
     public CartPaymentInfo makePaymentInfo(String id, String refNum, BigDecimal amount) {
-        CartPaymentInfo inf = new CartPaymentInfo(this.getPartyId());
+        CartPaymentInfo inf = new CartPaymentInfo(this.getPartyId()); // SCIPIO: 2018-07-19: billing address default: partyId
         inf.refNum[0] = refNum;
         inf.amount = amount;
         inf.origAmount = amount;    // SCIPIO: Save the original amount, that was specified upon creation
@@ -1608,7 +1608,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
 
     /** Creates a CartPaymentInfo object with a possible authCode (may be null) */
     public CartPaymentInfo makePaymentInfo(String id, String refNum, String authCode, BigDecimal amount) {
-        CartPaymentInfo inf = new CartPaymentInfo(this.getPartyId());
+        CartPaymentInfo inf = new CartPaymentInfo(this.getPartyId()); // SCIPIO: 2018-07-19: billing address default: partyId
         inf.refNum[0] = refNum;
         inf.refNum[1] = authCode;
         inf.amount = amount;
@@ -4956,7 +4956,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         public String postalCode = null;
         public String[] refNum = new String[2];
         public String track2 = null;
-        public String partyId = null;
+        public String partyId = null; // SCIPIO: 2018-07-19: billing address default: partyId
         public BigDecimal amount = null;
         public boolean singleUse = false;
         public boolean isPresent = false;
@@ -4967,7 +4967,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         /**
          * SCIPIO: Default constructor
          */
-        public CartPaymentInfo(String partyId) {
+        public CartPaymentInfo(String partyId) { // SCIPIO: 2018-07-19: billing address default: partyId
             super();
             this.partyId = partyId;
         }
@@ -4994,21 +4994,24 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             return null;
         }
         
-        public GenericValue getBillingAddressFromParty(Delegator delegator){
+        public GenericValue getBillingAddressFromParty(Delegator delegator) {  // SCIPIO: 2018-07-19: billing address default
             GenericValue postalAddress = null;
-            try{
-                GenericValue partyContactMechPurpose = EntityQuery.use(delegator).from("PartyContactMechPurpose").where("partyId", partyId,"contactMechPurposeTypeId","BILLING_LOCATION").orderBy("-fromDate").queryFirst();
-                if(UtilValidate.isEmpty(partyContactMechPurpose)){
-                    partyContactMechPurpose = EntityQuery.use(delegator).from("PartyContactMechPurpose").where("partyId", partyId,"contactMechPurposeTypeId","GENERAL_LOCATION").orderBy("-fromDate").queryFirst();
+            try {
+                GenericValue partyContactMechPurpose = EntityQuery.use(delegator).from("PartyContactMechPurpose")
+                        .where("partyId", partyId, "contactMechPurposeTypeId", "BILLING_LOCATION").orderBy("-fromDate").filterByDate().queryFirst();
+                if (UtilValidate.isEmpty(partyContactMechPurpose)) {
+                    partyContactMechPurpose = EntityQuery.use(delegator).from("PartyContactMechPurpose")
+                            .where("partyId", partyId, "contactMechPurposeTypeId", "GENERAL_LOCATION").orderBy("-fromDate").filterByDate().queryFirst();
                 }
-                if(UtilValidate.isEmpty(partyContactMechPurpose)){
-                    partyContactMechPurpose = EntityQuery.use(delegator).from("PartyContactMechPurpose").where("partyId", partyId,"contactMechPurposeTypeId","SHIPPING_LOCATION").orderBy("-fromDate").queryFirst();
+                if (UtilValidate.isEmpty(partyContactMechPurpose)) {
+                    partyContactMechPurpose = EntityQuery.use(delegator).from("PartyContactMechPurpose")
+                            .where("partyId", partyId, "contactMechPurposeTypeId", "SHIPPING_LOCATION").orderBy("-fromDate").filterByDate().queryFirst();
                 }
-                if(UtilValidate.isNotEmpty(partyContactMechPurpose)){
-                    postalAddress = partyContactMechPurpose.getRelatedOne("PostalAddress",false);
+                if (UtilValidate.isNotEmpty(partyContactMechPurpose)) {
+                    postalAddress = partyContactMechPurpose.getRelatedOne("PostalAddress", false);
                 }
-            }catch (GenericEntityException e) {
-                    Debug.logError(e, module);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
             }
             return postalAddress;
         }
@@ -5034,7 +5037,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
                         pmObj = EntityQuery.use(delegator).from("BillingAccount").where("paymentMethodId", paymentMethodId).queryOne();
                     } else if ("EXT_PAYPAL".equals(paymentMethodTypeId)) {
                         pmObj = EntityQuery.use(delegator).from("PayPalPaymentMethod").where("paymentMethodId", paymentMethodId).queryOne();
-                    }else{
+                    } else { // SCIPIO: 2018-07-19: billing address default
                         pmObj = getBillingAddressFromParty(delegator);
                     }               
                     if (pmObj != null) {
@@ -5045,8 +5048,8 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
                 } catch (GenericEntityException e) {
                     Debug.logError(e, module);
                 }
-            }else{
-                postalAddress  = getBillingAddressFromParty(delegator);
+            } else { // SCIPIO: 2018-07-19: billing address default
+                postalAddress = getBillingAddressFromParty(delegator);
             }
 
             return postalAddress;

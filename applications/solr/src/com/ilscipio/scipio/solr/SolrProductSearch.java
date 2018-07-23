@@ -142,6 +142,7 @@ public abstract class SolrProductSearch {
         boolean indexed = false;
         Boolean webappInitPassed = null;
         boolean skippedDueToWebappInit = false;
+        Boolean includeAssoc = (Boolean) context.get("includeAssoc");
         
         if (manual || SolrUtil.isSolrEcaEnabled()) {
             webappInitPassed = SolrUtil.isSolrEcaWebappInitCheckPassed();
@@ -153,20 +154,24 @@ public abstract class SolrProductSearch {
                 Map<String, Object> productInst = (Map<String, Object>) context.get("instance");
                 if (productInst != null) productId = (String) productInst.get("productId");
                 else productId = (String) context.get("productId");
-                if (productId == null) return ServiceUtil.returnError("missing product instance or productId");
-
+                @SuppressWarnings("unchecked")
+                Map<String, Map<String, Object>> productIds = (Map<String, Map<String, Object>>) context.get("productIds");
+                
                 if (immediate) {
-                    result = updateToSolrCore(dctx, context, forceAdd, productId, productInst);
+                    if (productId == null && productIds == null) return ServiceUtil.returnError("missing product instance, productId or productIds map");
+                    result = updateToSolrCore(dctx, context, forceAdd, productId, productInst, includeAssoc, productIds);
                     if (ServiceUtil.isSuccess(result)) indexed = true;
                 } else {
                     if (TransactionUtil.isTransactionInPlaceSafe()) {
+                        if (productId == null) return ServiceUtil.returnError("missing product instance or productId");
                         result = registerUpdateToSolrForTxCore(dctx, context, forceAdd, productId, productInst);
                         if (ServiceUtil.isSuccess(result)) indexed = true; // NOTE: not really indexed; this is just to skip the mark-dirty below
                     } else {
                         final String reason = "No transaction in place";
                         if ("update".equals(context.get("noTransMode"))) {
+                            if (productId == null && productIds == null) return ServiceUtil.returnError("missing product instance, productId or productIds map");
                             Debug.logInfo("Solr: registerUpdateToSolr: " + reason + "; running immediate index update", module);
-                            result = updateToSolrCore(dctx, context, forceAdd, productId, productInst);
+                            result = updateToSolrCore(dctx, context, forceAdd, productId, productInst, includeAssoc, productIds);
                             if (ServiceUtil.isSuccess(result)) indexed = true;
                         } else { // "mark-dirty"
                             result = ServiceUtil.returnSuccess();
@@ -200,9 +205,25 @@ public abstract class SolrProductSearch {
         return result;
     }
     
-    private static Map<String, Object> updateToSolrCore(DispatchContext dctx, Map<String, Object> context, Boolean forceAdd, String productId, Map<String, Object> productInst) {
-        Map<String, Object> result;
-        
+    /**
+     * Multi-product core update.
+     * <p>
+     * WARN: this edits the products map in-place. We're assuming this isn't an issue...
+     * Added 2018-07-23.
+     */
+    private static Map<String, Object> updateToSolrCore(DispatchContext dctx, Map<String, Object> context, Boolean forceAdd, String productId, Map<String, Object> productInst,
+            Boolean includeAssoc, Map<String, Map<String, Object>> products) {
+        // WARN: this edits the products map in-place. We're assuming this isn't an issue...
+        if (products == null) products = new HashMap<>();
+        products.put(productId, UtilMisc.toMap("forceAdd", forceAdd, "instance", productInst, "includeAssoc", includeAssoc));
+        return updateToSolrCore(dctx, context, products);
+    }
+    
+    /**
+     * Multi-product core update.
+     * Added 2018-07-19.
+     */
+    private static Map<String, Object> updateToSolrCore(DispatchContext dctx, Map<String, Object> context, Map<String, Map<String, Object>> products) {
         // SPECIAL: 2018-01-03: do not update to Solr if the current transaction marked as rollback,
         // because the rollbacked data may be (even likely to be) product data that we don't want in index
         // FIXME?: this cannot handle transaction rollbacks triggered after us! Some client diligence still needed for that...
@@ -215,7 +236,55 @@ public abstract class SolrProductSearch {
             Debug.logError("Solr: updateToSolr: Failed to check transaction status; aborting solr index update: " + e.getMessage(), module);
             return ServiceUtil.returnError("Failed to check transaction status; aborting solr index update");
         }
+
+        List<String> errorMessageList = new ArrayList<>();
+        
+        for(Map.Entry<String, Map<String, Object>> entry : products.entrySet()) {
+            String productId = entry.getKey();
+            Map<String, Object> props = entry.getValue();
+            Map<String, Object> productInst = UtilGenerics.checkMap(props.get("instance"));
+            Boolean forceAdd = updateToSolrActionMap.get(props.get("action"));
+            boolean includeAssoc = Boolean.TRUE.equals(props.get("includeAssoc"));
+
+            // TODO: includeAssoc logic
             
+            Map<String, Object> updateSingleResult = updateToSolrCoreSingleProduct(dctx, context, forceAdd, productId, productInst);
+            if (!ServiceUtil.isSuccess(updateSingleResult)) {
+                errorMessageList.add(ServiceUtil.getErrorMessage(updateSingleResult));
+            }
+        }
+        
+        Map<String, Object> result = (errorMessageList.size() > 0) ? 
+                ServiceUtil.returnError(errorMessageList) : 
+                ServiceUtil.returnSuccess();
+
+        return result;
+    }
+    
+    /**
+     * Single product core update.
+     * @deprecated migrated to {@link #updateToSolrCore(DispatchContext, Map, Map)}
+     */
+    @Deprecated
+    private static Map<String, Object> updateToSolrCore(DispatchContext dctx, Map<String, Object> context, Boolean forceAdd, String productId, Map<String, Object> productInst) {
+        // SPECIAL: 2018-01-03: do not update to Solr if the current transaction marked as rollback,
+        // because the rollbacked data may be (even likely to be) product data that we don't want in index
+        // FIXME?: this cannot handle transaction rollbacks triggered after us! Some client diligence still needed for that...
+        try {
+            if (TransactionUtil.isTransactionInPlace() && TransactionUtil.getStatus() == TransactionUtil.STATUS_MARKED_ROLLBACK) {
+                Debug.logWarning("Solr: updateToSolr: Current transaction is marked for rollback; aborting solr index update", module);
+                return ServiceUtil.returnFailure("Current transaction is marked for rollback; aborting solr index update");
+            }
+        } catch (Exception e) {
+            Debug.logError("Solr: updateToSolr: Failed to check transaction status; aborting solr index update: " + e.getMessage(), module);
+            return ServiceUtil.returnError("Failed to check transaction status; aborting solr index update");
+        }
+        
+        return updateToSolrCoreSingleProduct(dctx, context, forceAdd, productId, productInst);
+    }
+
+    private static Map<String, Object> updateToSolrCoreSingleProduct(DispatchContext dctx, Map<String, Object> context, Boolean forceAdd, String productId, Map<String, Object> productInst) {
+        Map<String, Object> result;
         if (Boolean.FALSE.equals(forceAdd)) {
             result = removeFromSolrCore(dctx, context, productId);
         } else {

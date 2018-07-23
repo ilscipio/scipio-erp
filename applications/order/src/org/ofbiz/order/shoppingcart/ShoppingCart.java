@@ -1592,7 +1592,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
 
     /** Creates a CartPaymentInfo object */
     public CartPaymentInfo makePaymentInfo(String id, String refNum, BigDecimal amount) {
-        CartPaymentInfo inf = new CartPaymentInfo();
+        CartPaymentInfo inf = new CartPaymentInfo(this.getPartyId());
         inf.refNum[0] = refNum;
         inf.amount = amount;
         inf.origAmount = amount;    // SCIPIO: Save the original amount, that was specified upon creation
@@ -1608,7 +1608,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
 
     /** Creates a CartPaymentInfo object with a possible authCode (may be null) */
     public CartPaymentInfo makePaymentInfo(String id, String refNum, String authCode, BigDecimal amount) {
-        CartPaymentInfo inf = new CartPaymentInfo();
+        CartPaymentInfo inf = new CartPaymentInfo(this.getPartyId());
         inf.refNum[0] = refNum;
         inf.refNum[1] = authCode;
         inf.amount = amount;
@@ -4956,6 +4956,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         public String postalCode = null;
         public String[] refNum = new String[2];
         public String track2 = null;
+        public String partyId = null;
         public BigDecimal amount = null;
         public boolean singleUse = false;
         public boolean isPresent = false;
@@ -4966,8 +4967,9 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         /**
          * SCIPIO: Default constructor
          */
-        public CartPaymentInfo() {
+        public CartPaymentInfo(String partyId) {
             super();
+            this.partyId = partyId;
         }
         
         public GenericValue getValueObject(Delegator delegator) {
@@ -4991,6 +4993,25 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
 
             return null;
         }
+        
+        public GenericValue getBillingAddressFromParty(Delegator delegator){
+            GenericValue postalAddress = null;
+            try{
+                GenericValue partyContactMechPurpose = EntityQuery.use(delegator).from("PartyContactMechPurpose").where("partyId", partyId,"contactMechPurposeTypeId","BILLING_LOCATION").orderBy("-fromDate").queryFirst();
+                if(UtilValidate.isEmpty(partyContactMechPurpose)){
+                    partyContactMechPurpose = EntityQuery.use(delegator).from("PartyContactMechPurpose").where("partyId", partyId,"contactMechPurposeTypeId","GENERAL_LOCATION").orderBy("-fromDate").queryFirst();
+                }
+                if(UtilValidate.isEmpty(partyContactMechPurpose)){
+                    partyContactMechPurpose = EntityQuery.use(delegator).from("PartyContactMechPurpose").where("partyId", partyId,"contactMechPurposeTypeId","SHIPPING_LOCATION").orderBy("-fromDate").queryFirst();
+                }
+                if(UtilValidate.isNotEmpty(partyContactMechPurpose)){
+                    postalAddress = partyContactMechPurpose.getRelatedOne("PostalAddress",false);
+                }
+            }catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+            }
+            return postalAddress;
+        }
 
         public GenericValue getBillingAddress(Delegator delegator) {
             GenericValue valueObj = this.getValueObject(delegator);
@@ -4999,7 +5020,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             if ("PaymentMethod".equals(valueObj.getEntityName())) {
                 String paymentMethodTypeId = valueObj.getString("paymentMethodTypeId");
                 String paymentMethodId = valueObj.getString("paymentMethodId");
-
+                
                 // billing account, credit card, gift card, eft account all have postal address
                 try {
                     GenericValue pmObj = null;
@@ -5013,7 +5034,9 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
                         pmObj = EntityQuery.use(delegator).from("BillingAccount").where("paymentMethodId", paymentMethodId).queryOne();
                     } else if ("EXT_PAYPAL".equals(paymentMethodTypeId)) {
                         pmObj = EntityQuery.use(delegator).from("PayPalPaymentMethod").where("paymentMethodId", paymentMethodId).queryOne();
-                    }
+                    }else{
+                        pmObj = getBillingAddressFromParty(delegator);
+                    }               
                     if (pmObj != null) {
                         postalAddress = pmObj.getRelatedOne("PostalAddress", false);
                     } else {
@@ -5022,6 +5045,8 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
                 } catch (GenericEntityException e) {
                     Debug.logError(e, module);
                 }
+            }else{
+                postalAddress  = getBillingAddressFromParty(delegator);
             }
 
             return postalAddress;

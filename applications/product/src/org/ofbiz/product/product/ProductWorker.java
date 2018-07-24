@@ -1601,7 +1601,7 @@ nextProd:
     }
 
     /**
-     * SCIPIO: Returns the variant products of a virtual product.
+     * SCIPIO: Returns the variant products of a virtual product, first-level only.
      * The returned instances are specifically Product instances.
      * <p>
      * Added 2018-07-24. 
@@ -1614,6 +1614,29 @@ nextProd:
         List<GenericValue> variantProducts = new ArrayList<>(variantProductAssocs.size());
         for (GenericValue assoc : variantProductAssocs) {
             variantProducts.add(assoc.getRelatedOne("AssocProduct", useCache));
+        }
+        return variantProducts;
+    }
+
+    /**
+     * SCIPIO: Returns the variant products of a virtual product, deep, results depth-first.
+     * <p>
+     * Added 2018-07-24. 
+     */
+    public static List<GenericValue> getVariantProductsDeepDfs(Delegator delegator, LocalDispatcher dispatcher,
+            GenericValue product, List<String> orderBy, Timestamp moment, boolean useCache) throws GeneralException {
+        List<GenericValue> variantProductAssocs = EntityQuery.use(delegator).from("ProductAssoc")
+                .where("productId", product.getString("productId"), "productAssocTypeId", "PRODUCT_VARIANT").orderBy(orderBy)
+                .cache(useCache).filterByDate(moment).queryList();
+        List<GenericValue> variantProducts = new ArrayList<>();
+        for (GenericValue assoc : variantProductAssocs) {
+            GenericValue variantProduct = assoc.getRelatedOne("AssocProduct", useCache);
+            variantProducts.add(variantProduct);
+            if (Boolean.TRUE.equals(product.getBoolean("isVirtual"))) {
+                List<GenericValue> subVariantProducts = getVariantProductsDeepDfs(delegator, dispatcher, 
+                        variantProduct, orderBy, moment, useCache);
+                variantProducts.addAll(subVariantProducts);
+            }
         }
         return variantProducts;
     }

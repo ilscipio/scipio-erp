@@ -1601,6 +1601,24 @@ nextProd:
     }
 
     /**
+     * SCIPIO: Returns the variant products of a virtual product.
+     * The returned instances are specifically Product instances.
+     * <p>
+     * Added 2018-07-24. 
+     */
+    public static List<GenericValue> getVariantProducts(Delegator delegator, LocalDispatcher dispatcher,
+            GenericValue product, List<String> orderBy, Timestamp moment, boolean useCache) throws GeneralException {
+        List<GenericValue> variantProductAssocs = EntityQuery.use(delegator).from("ProductAssoc")
+                .where("productId", product.getString("productId"), "productAssocTypeId", "PRODUCT_VARIANT").orderBy(orderBy)
+                .cache(useCache).filterByDate(moment).queryList();
+        List<GenericValue> variantProducts = new ArrayList<>(variantProductAssocs.size());
+        for (GenericValue assoc : variantProductAssocs) {
+            variantProducts.add(assoc.getRelatedOne("AssocProduct", useCache));
+        }
+        return variantProducts;
+    }
+
+    /**
      * SCIPIO: Returns the variant products of a virtual product whose stock may be summed when
      * useVariantStockCalc is honored.
      * <p>

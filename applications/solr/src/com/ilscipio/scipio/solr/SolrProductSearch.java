@@ -393,6 +393,12 @@ public abstract class SolrProductSearch {
      * <p>
      * NOTE: the checking loop below may not currently handle all possible cases imaginable, 
      * but should cover the ones we're using.
+     * <p>
+     * UPDATE: 2018-07-24: We now use a single update service call with a map of productIds,
+     * to minimize overhead.
+     * WARN: DEV NOTE: This now edits the update service productIds context map in-place
+     * in the already-registered service; this is not "proper" but there is no known current case
+     * where it should cause an issue and it removes more overhead.
      */
     private static Map<String, Object> registerUpdateToSolrForTxCore(DispatchContext dctx, Map<String, Object> context, Boolean forceAdd, String productId, Map<String, Object> productInst) {
         String updateSrv = (String) context.get("updateSrv");
@@ -401,42 +407,44 @@ public abstract class SolrProductSearch {
             LocalDispatcher dispatcher = dctx.getDispatcher();
             ServiceSyncRegistrations regs = dispatcher.getServiceSyncRegistrations();
 
-            List<ServiceSyncRegistration> unregList = null;
-            for(ServiceSyncRegistration reg : regs.getCommitRegistrationsForService(updateSrv)) {
-                Map<String, ?> regServCtx = reg.getContext();
-                if (productId.equals(regServCtx.get("productId"))) {
-                    Boolean regServAction = updateToSolrActionMap.get(regServCtx.get("action"));
-                    if (regServAction == null) {
-                        // already registered
-                        return ServiceUtil.returnSuccess(updateSrv + " already registered to run at transaction global-commit for productId '" + productId + ")");
-                    } else {
-                        if (regServAction == forceAdd) {
-                            // already registered
-                            return ServiceUtil.returnSuccess(updateSrv + " already registered to run at transaction global-commit for productId '" + productId + ")");
-                        } else {
-                            // we will have to unregister
-                            if (unregList == null) unregList = new ArrayList<>();
-                            unregList.add(reg);
-                        }
-                    }
-                }
-            }
-            if (unregList != null) {
-                for(ServiceSyncRegistration reg : unregList) {
-                    regs.removeService(reg);
-                }
-            }
-            
-            // register the service
-            Map<String, Object> servCtx = dctx.makeValidContext(updateSrv, ModelService.IN_PARAM, context);
+            Map<String, Object> productProps = dctx.getModelService("updateToSolrSingleInterface")
+                    .makeValid(context, ModelService.IN_PARAM, false, null);
             // IMPORTANT: DO NOT PASS AN INSTANCE; use productId to force updateToSolr to re-query the Product
-            // after transaction committed
-            servCtx.remove("instance");
-            servCtx.put("productId", productId);
-            servCtx.put("action", getUpdateToSolrAction(forceAdd));
-            regs.addCommitService(dctx, updateSrv, null, servCtx, false, false);
+            // after transaction committed (by the time updateSrv is called, this instance may be invalid)
+            productProps.remove("instance");
+            productProps.put("action", getUpdateToSolrAction(forceAdd));
             
-            return ServiceUtil.returnSuccess("Registered " + updateSrv + " to run at transaction global-commit for productId '" + productId + ")");
+            Collection<ServiceSyncRegistration> updateSrvRegs = regs.getCommitRegistrationsForService(updateSrv);
+            if (updateSrvRegs.size() >= 1) {
+                if (updateSrvRegs.size() >= 2) {
+                    Debug.logError("Solr: registerUpdateToSolr: Found more than one transaction commit registration"
+                            + " for update service '" + updateSrv + "'; should not happen! (coding or ECA config error)", module);
+                }
+                ServiceSyncRegistration reg = updateSrvRegs.iterator().next();
+                
+                // WARN: editing existing registration's service context in-place
+                @SuppressWarnings("unchecked")
+                Map<String, Map<String, Object>> productIds = (Map<String, Map<String, Object>>) reg.getContext().get("productIds");
+                productIds.remove(productId); // this is a LinkedHashMap, so remove existing first so we keep the "real" order
+                productIds.put(productId, productProps);
+                
+                return ServiceUtil.returnSuccess("Updated transaction global-commit registration for " + updateSrv + " to include productId '" + productId + ")");
+            } else {
+                // register the service
+                Map<String, Object> servCtx = new HashMap<>();
+                // NOTE: this ditches the "manual" boolean (updateToSolrControlInterface), because can't support it here with only one updateSrv call
+                servCtx.put("locale", context.get("locale"));
+                servCtx.put("userLogin", context.get("userLogin"));
+                servCtx.put("timeZone", context.get("timeZone"));
+                
+                // IMPORTANT: LinkedHashMap keeps order of changes across transaction
+                Map<String, Map<String, Object>> productIds = new LinkedHashMap<>();
+                productIds.put(productId, productProps);
+                servCtx.put("productIds", productIds);
+
+                regs.addCommitService(dctx, updateSrv, null, servCtx, false, false);
+                return ServiceUtil.returnSuccess("Registered " + updateSrv + " to run at transaction global-commit for productId '" + productId + ")");
+            }
         } catch (Exception e) {
             final String errMsg = "Could not register " + updateSrv + " to run at transaction global-commit for product '" + productId + "'";
             Debug.logError(e, "Solr: registerUpdateToSolr: " + productId, module);

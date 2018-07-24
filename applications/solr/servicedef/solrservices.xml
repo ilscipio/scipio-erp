@@ -158,14 +158,14 @@ under the License.
             <description>Supported values: add (same as addToSolr), remove (same as removeFromSolr), 
                 auto (default - this either adds or removes based on whether or not the productId still exists in the database)</description>
         </attribute>
-        <attribute mode="IN" name="includeAssoc" optional="true" type="Boolean" default-value="false">
-            <description>TODO: NOT IMPLEMENTED: If true, also update the products associated to this one, primarily virtual/variants (added 2018-07-19)</description>
+        <attribute mode="IN" name="updateVariants" optional="true" type="Boolean" default-value="false">
+            <description>TODO: NOT IMPLEMENTED: If true, also update the variant products associated to this one (added 2018-07-19)</description>
         </attribute>
     </service>
     <service name="updateToSolrMultiInterface" engine="interface">
         <attribute mode="IN" name="productIds" optional="true" type="Map">
             <description>TODO: NOT IMPLEMENTED: IDs of individual Products to update, for multi-support (added 2018-07-19)
-                Each productId maps to a map of properties: action, includeAssoc (default: false)</description>
+                Each productId maps to a map of properties: action, updateVariants (default: false)</description>
         </attribute>
     </service>
     <service name="updateToSolrControlInterface" engine="interface">

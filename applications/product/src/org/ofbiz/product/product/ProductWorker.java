@@ -1601,6 +1601,61 @@ nextProd:
     }
 
     /**
+     * SCIPIO: Returns the virtual products of a variant product, first-level only.
+     * The returned instances are specifically Product instances.
+     * <p>
+     * NOTE: Normally, orderBy is set to "-fromDate" and only the first product is consulted;
+     * this method is a generalization.
+     * <p>
+     * Added 2018-07-24. 
+     */
+    public static List<GenericValue> getVirtualProducts(Delegator delegator, LocalDispatcher dispatcher,
+            GenericValue product, List<String> orderBy, Integer maxResults, Timestamp moment, boolean useCache) throws GeneralException {
+        List<GenericValue> variantProductAssocs = EntityQuery.use(delegator).from("ProductAssoc")
+                .where("productIdTo", product.getString("productId"), "productAssocTypeId", "PRODUCT_VARIANT").orderBy(orderBy)
+                .cache(useCache).filterByDate(moment).queryList();
+        List<GenericValue> variantProducts = new ArrayList<>(variantProductAssocs.size());
+        int i = 0;
+        for (GenericValue assoc : variantProductAssocs) {
+            variantProducts.add(assoc.getRelatedOne("MainProduct", useCache));
+            i++;
+            if (maxResults != null && i >= maxResults) break;
+        }
+        return variantProducts;
+    }
+
+    /**
+     * SCIPIO: Returns the virtual products of a variant product, deep, results depth-first.
+     * The returned instances are specifically Product instances.
+     * <p>
+     * NOTE: Normally, orderBy is set to "-fromDate" and only the first product is returned
+     * on each level; this method is a generalization.
+     * This method accepts a maxPerLevel to implement this.
+     * <p>
+     * Added 2018-07-24. 
+     */
+    public static List<GenericValue> getVirtualProductsDeepDfs(Delegator delegator, LocalDispatcher dispatcher,
+            GenericValue product, List<String> orderBy, Integer maxPerLevel, Timestamp moment, boolean useCache) throws GeneralException {
+        List<GenericValue> variantProductAssocs = EntityQuery.use(delegator).from("ProductAssoc")
+                .where("productIdTo", product.getString("productId"), "productAssocTypeId", "PRODUCT_VARIANT").orderBy(orderBy)
+                .cache(useCache).filterByDate(moment).queryList();
+        List<GenericValue> variantProducts = new ArrayList<>();
+        int i = 0;
+        for (GenericValue assoc : variantProductAssocs) {
+            GenericValue variantProduct = assoc.getRelatedOne("MainProduct", useCache);
+            variantProducts.add(variantProduct);
+            if (Boolean.TRUE.equals(product.getBoolean("isVariant"))) {
+                List<GenericValue> subVariantProducts = getVirtualProductsDeepDfs(delegator, dispatcher, 
+                        variantProduct, orderBy, maxPerLevel, moment, useCache);
+                variantProducts.addAll(subVariantProducts);
+            }
+            i++;
+            if (maxPerLevel != null && i >= maxPerLevel) break;
+        }
+        return variantProducts;
+    }
+
+    /**
      * SCIPIO: Returns the variant products of a virtual product, first-level only.
      * The returned instances are specifically Product instances.
      * <p>
@@ -1620,6 +1675,7 @@ nextProd:
 
     /**
      * SCIPIO: Returns the variant products of a virtual product, deep, results depth-first.
+     * The returned instances are specifically Product instances.
      * <p>
      * Added 2018-07-24. 
      */

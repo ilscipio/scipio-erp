@@ -77,9 +77,11 @@ xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entity-eca.xsd">
         WARN: this ECA could be performance-heavy in production -->
     <eca entity="InventoryItem" operation="create-store" event="return">
         <condition operator="is-not-empty" field-name="productId"/>
+        <set field-name="updateVirtual" value="true"/>
         <action service="registerUpdateToSolr" mode="sync" value-attr="instance"/>
     </eca>
     <eca entity="ProductFacility" operation="create-store-remove" event="return">
+        <set field-name="updateVirtual" value="true"/>
         <action service="registerUpdateToSolr" mode="sync" value-attr="instance"/>
     </eca>
     

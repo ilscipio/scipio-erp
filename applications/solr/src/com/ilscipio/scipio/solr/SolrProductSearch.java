@@ -43,6 +43,7 @@ import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceSyncRegistrations;
@@ -145,7 +146,6 @@ public abstract class SolrProductSearch {
         boolean indexed = false;
         Boolean webappInitPassed = null;
         boolean skippedDueToWebappInit = false;
-        Boolean updateVariants = (Boolean) context.get("updateVariants");
         
         if (manual || SolrUtil.isSolrEcaEnabled()) {
             webappInitPassed = SolrUtil.isSolrEcaWebappInitCheckPassed();
@@ -162,7 +162,7 @@ public abstract class SolrProductSearch {
                 
                 if (immediate) {
                     if (productId == null && productIds == null) return ServiceUtil.returnError("missing product instance, productId or productIds map");
-                    result = updateToSolrCore(dctx, context, forceAdd, productId, productInst, updateVariants, productIds);
+                    result = updateToSolrCore(dctx, context, forceAdd, productId, productInst, productIds);
                     if (ServiceUtil.isSuccess(result)) indexed = true;
                 } else {
                     if (TransactionUtil.isTransactionInPlaceSafe()) {
@@ -174,7 +174,7 @@ public abstract class SolrProductSearch {
                         if ("update".equals(context.get("noTransMode"))) {
                             if (productId == null && productIds == null) return ServiceUtil.returnError("missing product instance, productId or productIds map");
                             Debug.logInfo("Solr: registerUpdateToSolr: " + reason + "; running immediate index update", module);
-                            result = updateToSolrCore(dctx, context, forceAdd, productId, productInst, updateVariants, productIds);
+                            result = updateToSolrCore(dctx, context, forceAdd, productId, productInst, productIds);
                             if (ServiceUtil.isSuccess(result)) indexed = true;
                         } else { // "mark-dirty"
                             result = ServiceUtil.returnSuccess();
@@ -215,11 +215,21 @@ public abstract class SolrProductSearch {
      * Added 2018-07-23.
      */
     private static Map<String, Object> updateToSolrCore(DispatchContext dctx, Map<String, Object> context, Boolean forceAdd, String productId, Map<String, Object> productInst,
-            Boolean updateVariants, Map<String, Map<String, Object>> products) {
+            Map<String, Map<String, Object>> products) {
         // WARN: this edits the products map in-place. We're assuming this isn't an issue...
         if (productId != null) {
             if (products == null) products = new HashMap<>(); // SPECIAL: here no need for LinkedHashMap, but other cases should be LinkedHashMap
-            products.put(productId, UtilMisc.toMap("forceAdd", forceAdd, "instance", productInst, "updateVariants", updateVariants));
+            Map<String, Object> productProps;
+            try {
+                productProps = dctx.getModelService("updateToSolrSingleInterface")
+                        .makeValid(context, ModelService.IN_PARAM, false, null);
+            } catch (GenericServiceException e) {
+                Debug.logError(e, "Solr: updateToSolr: Error parsing service parameters for updateToSolrSingleInterface: " + e.getMessage() , module);
+                return ServiceUtil.returnError(e.getMessage());
+            }
+            productProps.put("instance", productInst);
+            productProps.put("action", getUpdateToSolrAction(forceAdd));
+            products.put(productId, productProps);
         }
         return updateToSolrCore(dctx, context, products);
     }
@@ -255,18 +265,21 @@ public abstract class SolrProductSearch {
             Map<String, Object> props = entry.getValue();
             Map<String, Object> productInst = UtilGenerics.checkMap(props.get("instance"));
             Boolean forceAdd = updateToSolrActionMap.get(props.get("action"));
-            boolean updateVariants = Boolean.TRUE.equals(props.get("updateVariants"));
+            boolean updateVariantsDeep = Boolean.TRUE.equals(props.get("updateVariantsDeep"));
+            boolean updateVariants = updateVariantsDeep || Boolean.TRUE.equals(props.get("updateVariants"));
+            boolean updateVirtualDeep = Boolean.TRUE.equals(props.get("updateVirtualDeep"));
+            boolean updateVirtual = updateVirtualDeep || Boolean.TRUE.equals(props.get("updateVirtual"));
 
-            if (updateVariants) {
-                expandedProducts.put(productId, props);
+            expandedProducts.put(productId, props);
+            if (updateVariants || updateVirtual) {
                 if (Boolean.FALSE.equals(forceAdd)) {
                     // Here the Product will already have been removed so we can't determine its
                     // variants; but that's ok because it makes no sense for virtual to have been
                     // removed without its variants removed, which should have come through an ECA
                     // either in the same transaction or another before it.
                     if (Debug.verboseOn()) {
-                        Debug.logVerbose("Solr: updateToSolr: Ignoring updateVariants request for (forced) removal of product '" 
-                                + productId + "'; the variants should already be scheduled for removal (logically)", module); 
+                        Debug.logVerbose("Solr: updateToSolr: Ignoring updateVariants/updateVirtual request for (forced) removal of product '" 
+                                + productId + "'; the variants should already be scheduled for removal (logically) through another mechanism", module); 
                     }
                 } else {
                     GenericValue product;
@@ -290,25 +303,24 @@ public abstract class SolrProductSearch {
                     }
                     if (product == null) {
                         if (Debug.verboseOn()) {
-                            Debug.logVerbose("Solr: updateToSolr: Ignoring updateVariants request for (forced) removal of product '" 
-                                    + productId + "'; the variants should already be scheduled for removal (logically)", module); 
+                            Debug.logVerbose("Solr: updateToSolr: Ignoring updateVariants/updateVirtual request for (forced) removal of product '" 
+                                    + productId + "'; the variants should already be scheduled for removal (logically) through another mechanism", module); 
                         }
                     } else {
-                        if (Boolean.TRUE.equals(product.getBoolean("isVirtual"))) {
+                        if (updateVariants && Boolean.TRUE.equals(product.getBoolean("isVirtual"))) {
                             if (Debug.verboseOn()) {
                                 Debug.logVerbose("Solr: updateToSolr: Product '" + productId + "' is virtual for add operation"
                                         + " and updateVariants true; looking up variants for update", module); 
                             }
                             List<GenericValue> variantProducts;
                             try {
-                                // TODO: REVIEW: typical Content operations on variant only look back one level of virtual,
-                                // so right now appears no need to do this "deep"; in other words the variant itself needs
-                                // its own dedicated call through updateToSolr to reflect a change in itself;
-                                // but there could be exceptions... if such found, simply uncomment this one instead:
-                                //variantProducts = ProductWorker.getVariantProductsDeepDfs(dctx.getDelegator(), dctx.getDispatcher(), 
-                                //        product, null, null, false);
-                                variantProducts = ProductWorker.getVariantProducts(dctx.getDelegator(), dctx.getDispatcher(), 
+                                if (updateVariantsDeep) {
+                                    variantProducts = ProductWorker.getVariantProductsDeepDfs(dctx.getDelegator(), dctx.getDispatcher(), 
+                                            product, null, null, false);
+                                } else {
+                                    variantProducts = ProductWorker.getVariantProducts(dctx.getDelegator(), dctx.getDispatcher(), 
                                         product, null, null, false);
+                                }
                             } catch (GeneralException e) {
                                 Debug.logError(e, "Solr: updateToSolr: Could not lookup product variants for '" 
                                         + productId + "' for updateVariants: " + e.getMessage(), module);
@@ -319,17 +331,54 @@ public abstract class SolrProductSearch {
                                 // chronological last update request in transaction has priority
                                 Map<String, Object> variantProps = new HashMap<>();
                                 variantProps.put("instance", variantProduct);
-                                variantProps.put("forceAdd", forceAdd);
+                                variantProps.put("forceAdd", forceAdd); // no need: getUpdateToSolrAction(forceAdd)
                                 String variantProductId = variantProduct.getString("productId");
                                 // re-add the key to LinkedHashMap keep a readable order in log
                                 expandedProducts.remove(variantProductId);
                                 expandedProducts.put(variantProductId, variantProps);
                             }
                         }
+                        
+                        if (updateVirtual && Boolean.TRUE.equals(product.getBoolean("isVariant"))) {
+                            if (Debug.verboseOn()) {
+                                Debug.logVerbose("Solr: updateToSolr: Product '" + productId + "' is variant for add operation"
+                                        + " and updateVirtual true; looking up virtual for update", module); 
+                            }
+                            
+                            List<GenericValue> virtualProducts;
+                            try {
+                                // TODO: REVIEW: in most stock code these would be "-fromDate" and maxPerLevel=1,
+                                // but I see no good reason to limit it...
+                                final List<String> orderBy = null;
+                                final Integer maxPerLevel = null;
+                                if (updateVirtualDeep) {
+                                    virtualProducts = ProductWorker.getVirtualProductsDeepDfs(dctx.getDelegator(), dctx.getDispatcher(), 
+                                            product, orderBy, maxPerLevel, null, false);
+                                } else {
+                                    virtualProducts = ProductWorker.getVirtualProducts(dctx.getDelegator(), dctx.getDispatcher(), 
+                                            product, orderBy, maxPerLevel, null, false);
+                                }
+                            } catch(Exception e) {
+                                Debug.logError(e, "Solr: updateToSolr: Could not lookup virtual product for variant product '" + productId + "'", module);
+                                return ServiceUtil.returnError("Could not lookup virtual product for variant product '" + productId + "'");
+                            }
+                            if (virtualProducts.isEmpty()) {
+                                Debug.logWarning("Solr: updateToSolr: Product '" 
+                                        + productId + "' is variant but found no parent product (either the association is being removed, or data error)", module);
+                            } else {
+                                for(GenericValue virtualProduct : virtualProducts) {
+                                    Map<String, Object> variantProps = new HashMap<>();
+                                    variantProps.put("instance", virtualProduct);
+                                    variantProps.put("forceAdd", forceAdd); // no need: getUpdateToSolrAction(forceAdd)
+                                    String virtualProductId = virtualProduct.getString("productId");
+                                    // re-add the key to LinkedHashMap keep a readable order in log
+                                    expandedProducts.remove(virtualProductId);
+                                    expandedProducts.put(virtualProductId, variantProps);
+                                }
+                            }
+                        }
                     }
                 }
-            } else {
-                expandedProducts.put(productId, props);
             }
         }
 
@@ -337,7 +386,8 @@ public abstract class SolrProductSearch {
             String productId = entry.getKey();
             Map<String, Object> props = entry.getValue();
             Map<String, Object> productInst = UtilGenerics.checkMap(props.get("instance"));
-            Boolean forceAdd = updateToSolrActionMap.get(props.get("action"));
+            Object actionObj = props.get("action");
+            Boolean forceAdd = (actionObj instanceof Boolean) ? (Boolean) actionObj : updateToSolrActionMap.get(actionObj);
             
             Map<String, Object> updateSingleResult = updateToSolrCore(dctx, context, forceAdd, productId, productInst);
             if (!ServiceUtil.isSuccess(updateSingleResult)) {

@@ -53,6 +53,7 @@ SCIPIO_ADDON_MAP[data-categorytree]="data-categorytree addons/data-categorytree 
 SCIPIO_ADDON_MAP[ignite-admin-theme]="ignite-admin-theme themes/ignite-admin ee ignite-admin-theme /"
 SCIPIO_ADDON_MAP[ignite-shop-theme]="ignite-shop-theme themes/ignite-shop ee ignite-shop-theme /"
 SCIPIO_ADDON_MAP[paypal]="paypal addons/paypal ee paypal /"
+SCIPIO_ADDON_MAP[projectmgr]="projectmgr addons/projectmgr ee projectmgr /"
 SCIPIO_ADDON_MAP[shopde]="shopde addons/shopde ee shopde /"
 SCIPIO_ADDON_MAP[vue-theme]="vue-theme themes/vue ee vue-theme /"
 

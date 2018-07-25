@@ -18,15 +18,15 @@
 # under the License.
 #####################################################################
 #
-# ofbiz        This shell script takes care of starting and stopping
-#              the OFBiz subsystem. This version is for Ubuntu systems
+# scipio        This shell script takes care of starting and stopping
+#              the Scipio ERP subsystem. This version is for Ubuntu systems
 #
 # chkconfig: - 80 10
-# description: OFBiz server
+# description: Scipio ERP
 
-# the userlogin the script should run under and is the home dirname, in this case /home/ofbiz/ofbiz
-OFBIZUSER="ofbiz"
-OFBIZDIR="ofbiz"
+# the userlogin the script should run under and is the home dirname, in this case /home/scipio/scipio
+SCIPIOUSER="scipio"
+SCIPIODIR="scipio"
 
 #============== no need to change anything below this line =======================
 
@@ -37,60 +37,60 @@ start() {
 #        mount /dev/sdg /data
     fi
     running
-    if [ "$OFBIZ_PROCS" = "" ]; then
-        echo "Ofbiz is already running..."
+    if [ "$SCIPIO_PROCS" = "" ]; then
+        echo "Scipio ERP is already running..."
         return 0
     fi
-    if [ "$USER" = "$OFBIZUSER" ]; then
-        echo "starting standard /home/$OFBIZUSER/$OFBIZDIR/startofbiz.sh"
-        cd /home/$OFBIZUSER/$OFBIZDIR
-        ./startofbiz.sh
+    if [ "$USER" = "$SCIPIOUSER" ]; then
+        echo "starting standard /home/$SCIPIOUSER/$SCIPIODIR/start.sh"
+        cd /home/$SCIPIOUSER/$SCIPIODIR
+        ./start.sh
         if [ $? = 0 ]; then 
             echo "start success"
         else
-            echo "starting ofbiz user: $OFBIZUSER in dir: $OFBIZDIR failed return code: $?"
+            echo "starting Scipio ERP user: $SCIPIOUSER in dir: $SCIPIODIR failed return code: $?"
         fi
         return 0
     fi
 }
 
 stop() {
-    if [ "$USER" = "$OFBIZUSER" ]; then
-        echo "stopping standard /home/$OFBIZUSER/$OFBIZDIR/stopofbiz.sh"
-        cd /home/$OFBIZUSER/$OFBIZDIR
+    if [ "$USER" = "$SCIPIOUSER" ]; then
+        echo "stopping standard /home/$SCIPIOUSER/$SCIPIODIR/stop.sh"
+        cd /home/$SCIPIOUSER/$SCIPIODIR
 	    MAXCOUNT=10
         COUNTER=0
         until [ $COUNTER -gt $MAXCOUNT ]; do
              COUNTER=$((COUNTER+1))
              echo "Attempt number: $COUNTER"
 
-            ./stopofbiz.sh
+            ./stop.sh
             if [ $? = 1 ]; then
                 echo "stop success" 
                 return 0
             fi
             sleep 3
         done
-        echo "stopping ofbiz from user: $OFBIZUSER failed after $MAXCOUNT attemps"
+        echo "stopping Scipio ERP from user: $SCIPIOUSER failed after $MAXCOUNT attemps"
         return 1
     fi
 }
 
-#check for user, if wrong try to change to 'OFBIZUSER' and re-execute.
+#check for user, if wrong try to change to 'SCIPIOUSER' and re-execute.
 checkUser() {
-    if [ "$USER" != "$OFBIZUSER" ]; then
+    if [ "$USER" != "$SCIPIOUSER" ]; then
         if [ "$USER" = "" ]; then
-            exec su - $OFBIZUSER -c "$0 $1 "
+            exec su - $SCIPIOUSER -c "$0 $1 "
 	    else
-	        exec sudo -u $OFBIZUSER $0 $1 
+	        exec sudo -u $SCIPIOUSER $0 $1 
 	    fi
         exit $?
     fi
 }
 
-# OFBiz processes running
+# Scipio ERP processes running
 running() {
-    OFBIZ_PROCS=`/bin/ps h -o pid,args -C java -u $OFBIZUSER | /bin/grep -e "-jar ofbiz.jar" | /bin/egrep -o "^[[:space:]]*[[:digit:]]*"`
+    SCIPIO_PROCS=`/bin/ps h -o pid,args -C java -u $SCIPIOUSER | /bin/grep -e "-jar ofbiz.jar" | /bin/egrep -o "^[[:space:]]*[[:digit:]]*"`
 }
 
 #========= main program ===============
@@ -108,11 +108,11 @@ case "$1" in
     ;;
     "status")
         running
-        if [ "$OFBIZ_PROCS" = "" ]; then
-            echo "OFBiz for user: $OFBIZUSER in dir: $OFBIZDIR is stopped"
+        if [ "$SCIPIO_PROCS" = "" ]; then
+            echo "Scipio ERP for user: $SCIPIOUSER in dir: $SCIPIODIR is stopped"
             exit 1
         else
-            echo "OFBiz for user: $OFBIZUSER in dir: $OFBIZDIR is running"
+            echo "Scipio ERP for user: $SCIPIOUSER in dir: $SCIPIODIR is running"
             exit 0
         fi
     ;;

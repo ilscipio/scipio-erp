@@ -160,14 +160,14 @@ public abstract class SolrProductSearch {
                 if (productInst != null) productId = (String) productInst.get("productId");
                 else productId = (String) context.get("productId");
                 @SuppressWarnings("unchecked")
-                Map<String, Map<String, Object>> productIds = (Map<String, Map<String, Object>>) context.get("productIds");
+                Map<String, Map<String, Object>> productIdMap = (Map<String, Map<String, Object>>) context.get("productIdMap");
                 
                 if (immediate) {
-                    if (productId == null && productIds == null) {
-                        Debug.logError("Solr: updateToSolr: Missing product instance, productId or productIds map", module);
-                        return ServiceUtil.returnError("Missing product instance, productId or productIds map");
+                    if (productId == null && productIdMap == null) {
+                        Debug.logError("Solr: updateToSolr: Missing product instance, productId or productIdMap", module);
+                        return ServiceUtil.returnError("Missing product instance, productId or productIdMap");
                     }
-                    result = updateToSolrCore(dctx, context, forceAdd, productId, productInst, productIds);
+                    result = updateToSolrCore(dctx, context, forceAdd, productId, productInst, productIdMap);
                     if (ServiceUtil.isSuccess(result)) indexed = true;
                 } else {
                     if (TransactionUtil.isTransactionInPlaceSafe()) {
@@ -182,12 +182,12 @@ public abstract class SolrProductSearch {
                     } else {
                         final String reason = "No transaction in place";
                         if ("update".equals(context.get("noTransMode"))) {
-                            if (productId == null && productIds == null) {
-                                Debug.logError("Solr: updateToSolr: Missing product instance, productId or productIds map", module);
-                                return ServiceUtil.returnError("Missing product instance, productId or productIds map");
+                            if (productId == null && productIdMap == null) {
+                                Debug.logError("Solr: updateToSolr: Missing product instance, productId or productIdMap", module);
+                                return ServiceUtil.returnError("Missing product instance, productId or productIdMap");
                             }
                             Debug.logInfo("Solr: registerUpdateToSolr: " + reason + "; running immediate index update", module);
-                            result = updateToSolrCore(dctx, context, forceAdd, productId, productInst, productIds);
+                            result = updateToSolrCore(dctx, context, forceAdd, productId, productInst, productIdMap);
                             if (ServiceUtil.isSuccess(result)) indexed = true;
                         } else { // "mark-dirty"
                             result = ServiceUtil.returnSuccess();
@@ -477,9 +477,9 @@ public abstract class SolrProductSearch {
      * NOTE: the checking loop below may not currently handle all possible cases imaginable, 
      * but should cover the ones we're using.
      * <p>
-     * UPDATE: 2018-07-24: We now use a single update service call with a map of productIds,
+     * UPDATE: 2018-07-24: We now use a single update service call with a map of productIdMap,
      * to minimize overhead.
-     * WARN: DEV NOTE: This now edits the update service productIds context map in-place
+     * WARN: DEV NOTE: This now edits the update service productIdMap context map in-place
      * in the already-registered service; this is not "proper" but there is no known current case
      * where it should cause an issue and it removes more overhead.
      * <p>
@@ -510,9 +510,9 @@ public abstract class SolrProductSearch {
                 
                 // WARN: editing existing registration's service context in-place
                 @SuppressWarnings("unchecked")
-                Map<String, Map<String, Object>> productIds = (Map<String, Map<String, Object>>) reg.getContext().get("productIds");
-                productIds.remove(productId); // this is a LinkedHashMap, so remove existing first so we keep the "real" order
-                productIds.put(productId, productProps);
+                Map<String, Map<String, Object>> productIdMap = (Map<String, Map<String, Object>>) reg.getContext().get("productIdMap");
+                productIdMap.remove(productId); // this is a LinkedHashMap, so remove existing first so we keep the "real" order
+                productIdMap.put(productId, productProps);
                 
                 return ServiceUtil.returnSuccess("Updated transaction global-commit registration for " + updateSrv + " to include productId '" + productId + ")");
             } else {
@@ -524,9 +524,9 @@ public abstract class SolrProductSearch {
                 servCtx.put("timeZone", context.get("timeZone"));
                 
                 // IMPORTANT: LinkedHashMap keeps order of changes across transaction
-                Map<String, Map<String, Object>> productIds = new LinkedHashMap<>();
-                productIds.put(productId, productProps);
-                servCtx.put("productIds", productIds);
+                Map<String, Map<String, Object>> productIdMap = new LinkedHashMap<>();
+                productIdMap.put(productId, productProps);
+                servCtx.put("productIdMap", productIdMap);
 
                 regs.addCommitService(dctx, updateSrv, null, servCtx, false, false);
                 return ServiceUtil.returnSuccess("Registered " + updateSrv + " to run at transaction global-commit for productId '" + productId + ")");

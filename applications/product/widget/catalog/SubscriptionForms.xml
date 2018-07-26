@@ -188,6 +188,7 @@ under the License.
         <alt-target use-when="subscription==null" target="createSubscription"/>
         <auto-fields-service service-name="updateSubscription"/>
 
+        <field use-when="subscription!=null" name="isCreate"><hidden value="true"/></field><!-- SCIPIO -->
         <field use-when="subscription!=null" name="subscriptionId" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
         <field use-when="subscription==null&amp;&amp;subscriptionId==null" name="subscriptionId"><ignored/></field>
         <field use-when="subscription==null&amp;&amp;subscriptionId!=null" name="subscriptionId"><display description="${uiLabelMap.CommonCannotBeFound}: [${subscriptionId}]" also-hidden="false"/></field>

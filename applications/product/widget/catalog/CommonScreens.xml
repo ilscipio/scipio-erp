@@ -156,15 +156,25 @@ under the License.
                 <if>
                     <condition>
                         <and>
-                            <if-empty field="prodCatalog"/>
+                            <not><if-true field="isCreateProdCatalog"/></not>
                             <not><if-false field="isSpecificCatalog"/></not>
                         </and>
                     </condition>
                     <then>
-                        <!-- FIXME? globals not good... -->
-                        <set field="prodCatalogId" from-field="parameters.prodCatalogId" global="true"/>
-                        <entity-one entity-name="ProdCatalog" value-field="prodCatalog" />
-                    </then>
+                        <if>
+                            <condition><if-empty field="prodCatalog"/></condition>
+                            <then>
+                                <!-- FIXME?: global="true" not good... -->
+                                <set field="prodCatalogId" from-field="parameters.prodCatalogId" global="true"/>
+                                <entity-one entity-name="ProdCatalog" value-field="prodCatalog" />
+                            </then>
+                            <else>
+                                <!-- forces consistency --><!-- FIXME?: global="true" not good... -->
+                                <set field="prodCatalogId" from-field="prodCatalog.prodCatalogId" global="true"/>
+                            </else>
+                        </if>
+                        <set field="titleElemName" from-field="titleElemName" default-value="${prodCatalogId}"/>
+                   </then>
                 </if>
                 <if>
                     <condition><not><if-empty field="prodCatalog"/></not></condition>
@@ -180,7 +190,6 @@ under the License.
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
                 <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="titleElemName" from-field="titleElemName" default-value="${groovy: (context.isSpecificCatalog == false) ? '' : parameters.prodCatalogId}"/>
                 <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${titleElemName} ${${extraFunctionName}}"/>
             </actions>
             <widgets>
@@ -212,13 +221,22 @@ under the License.
                 <if>
                     <condition>
                         <and>
-                            <if-empty field="productCategory"/>
+                            <not><if-true field="isCreateCategory"/></not>
                             <not><if-false field="isSpecificCategory"/></not>
                         </and>
                     </condition>
                     <then>
-                        <set field="productCategoryId" from-field="parameters.productCategoryId"/>
-                        <entity-one entity-name="ProductCategory" value-field="productCategory"/>
+                        <if>
+                            <condition><if-empty field="productCategory"/></condition>
+                            <then>
+                                <set field="productCategoryId" from-field="parameters.productCategoryId"/>
+                                <entity-one entity-name="ProductCategory" value-field="productCategory"/>
+                            </then>
+                            <else>
+                                <set field="productCategoryId" from-field="productCategory.productCategoryId"/>
+                            </else>
+                        </if>
+                        <set field="titleElemName" from-field="titleElemName" default-value="${productCategoryId}"/>
                     </then>
                 </if>
                 <if>
@@ -235,7 +253,6 @@ under the License.
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
                 <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="titleElemName" from-field="titleElemName" default-value="${groovy: (context.isSpecificCategory == false) ? '' : parameters.productCategoryId}"/>
                 <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${titleElemName} ${${extraFunctionName}}"/>
             </actions>
             <widgets>
@@ -269,13 +286,20 @@ under the License.
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 
-                <!-- SCIPIO: FIXME: these global="true" will create problems... -->
                 <if>
-                    <condition><not><if-false field="isSpecificProduct"/></not></condition>
+                    <condition>
+                        <and>
+                            <not><if-true field="isCreateProduct"/></not>
+                            <not><if-false field="isSpecificProduct"/></not>
+                        </and>
+                    </condition>
                     <then>
+                        <!-- SCIPIO: FIXME: these global="true" will create problems... -->
                         <set field="productId" from-field="parameters.productId" global="true"/>
                         <entity-one entity-name="Product" value-field="product"/>
                         <set field="product" from-field="product" global="true"/>
+                        
+                        <set field="titleElemName" from-field="titleElemName" default-value="${productId}"/>
                     </then>
                 </if>
                 <if>
@@ -297,7 +321,6 @@ under the License.
                 <set field="prefixedQualifiedLabel" value="${uiLabelMap.ProductProductQualifiedLabel}"/><!-- this label references ${qualifiedLabel} -->
                 <set field="titleFormatPrefix" value="${groovy: (context.labelTitlePropertyFull == true || !context.labelTitleProperty) ? context.qualifiedLabel : context.prefixedQualifiedLabel}"/>
                 <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="titleElemName" from-field="titleElemName" default-value="${groovy: (context.isSpecificProduct == false) ? '' : parameters.productId}"/>
                 <set field="titleFormat" from-field="titleFormat" default-value="${titleFormatPrefix} ${titleElemName} ${${extraFunctionName}}"/>
                 
                 <!-- SCIPIO: session-based browsing aid -->
@@ -491,17 +514,32 @@ under the License.
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
 
-                <!-- SCIPIO: NOTE: This is workaround for screens that forget to set context var from parameters, so menus can work.
-                    Do NOT set these global. -->
                 <if>
-                    <condition><if-empty field="productStore"/></condition>
+                    <condition>
+                        <and>
+                            <not><if-true field="isCreateProductStore"/></not>
+                            <not><if-false field="isSpecificProductStore"/></not>
+                        </and>
+                    </condition>
                     <then>
-                        <set field="productStoreId" from-field="productStoreId" default-value="${parameters.productStoreId}"/>
-                        <entity-one entity-name="ProductStore" value-field="productStore" auto-field-map="false"> 
-                            <field-map field-name="productStoreId" from-field="productStoreId"/>
-                        </entity-one>
+                        <!-- SCIPIO: NOTE: This is workaround for screens that forget to set context var from parameters, so menus can work.
+                            Do NOT set these global. -->
+                        <if>
+                            <condition><if-empty field="productStore"/></condition>
+                            <then>
+                                <set field="productStoreId" from-field="productStoreId" default-value="${parameters.productStoreId}"/>
+                                <entity-one entity-name="ProductStore" value-field="productStore" auto-field-map="false"> 
+                                    <field-map field-name="productStoreId" from-field="productStoreId"/>
+                                </entity-one>
+                            </then>
+                            <else>
+                                <set field="productStoreId" from-field="productStore.productStoreId"/>
+                            </else>
+                        </if>
+                        <set field="titleElemName" from-field="titleElemName" default-value="${productStoreId}"/>
                     </then>
                 </if>
+                
                 <if>
                     <condition><not><if-empty field="productStore"/></not></condition>
                     <then>
@@ -515,7 +553,7 @@ under the License.
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
                 <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${productStoreId} ${${extraFunctionName}}"/>
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${titleElemName} ${${extraFunctionName}}"/>
                 
                 <!-- SCIPIO: session-based browsing aid
                     NOTE: this is generally placed because some fallbacks don't have an accessible points -->
@@ -624,16 +662,26 @@ under the License.
                     Do NOT set this global. -->
                 <set field="productStoreId" from-field="productStoreId" default-value="${parameters.productStoreId}"/>
                 <if>
-                    <condition><if-empty field="webSite"/></condition>
+                    <condition><not><if-true field="isCreateWebSite"/></not></condition>
                     <then>
-                        <set field="webSiteId" from-field="webSiteId" default-value="${parameters.webSiteId}"/>
-                        <entity-one entity-name="WebSite" value-field="webSite"/>
+                        <if>
+                            <condition><if-empty field="webSite"/></condition>
+                            <then>
+                                <set field="webSiteId" from-field="webSiteId" default-value="${parameters.webSiteId}"/>
+                                <entity-one entity-name="WebSite" value-field="webSite"/>
+                            </then>
+                            <else>
+                                <set field="webSiteId" from-field="webSite.webSiteId"/>
+                            </else>
+                        </if>
+                        <set field="titleElemName" from-field="titleElemName" default-value="${webSiteId}"/>
                     </then>
                 </if>
+                
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://content/widget/content/ContentMenus.xml#WebSite" />
                 
                 <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.webSiteId} ${${extraFunctionName}}"/>
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${titleElemName} ${${extraFunctionName}}"/>
 
                 <!-- SCIPIO: session-based browsing aid -->
                 <!-- 2017-11: fallback -->
@@ -958,22 +1006,29 @@ under the License.
                 <if>
                     <condition>
                         <and>
-                            <if-empty field="subscription"/>
+                            <not><if-true field="isCreateSubscription"/></not>
                             <not><if-false field="isSpecificSubscription"/></not>
                         </and>
                     </condition>
                     <then>
-                        <set field="subscriptionId" from-field="parameters.subscriptionId"/>
-                        <entity-one entity-name="Subscription" value-field="subscription"/>
+                        <if>
+                            <condition><if-empty field="subscription"/></condition>
+                            <then>
+                                <set field="subscriptionId" from-field="parameters.subscriptionId"/>
+                                <entity-one entity-name="Subscription" value-field="subscription"/>
+                            </then>
+                            <else>
+                                <set field="subscriptionId" from-field="subscription.subscriptionId"/>
+                            </else>
+                        </if>
+                        <set field="titleElemName" from-field="titleElemName" default-value="${subscriptionId}"/>
                     </then>
                 </if>
-                
                 <set field="activeSubMenu" from-field="activeSubMenu" default-value="Subscriptions"/>
                 <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="Subscriptions"/>
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
                 <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="titleElemName" from-field="titleElemName" default-value="${groovy: (context.isSpecificSubscription == false) ? '' : parameters.subscriptionId}"/>
                 <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${titleElemName} ${${extraFunctionName}}"/>
                 <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
                     <if-service-permission service-name="subscriptionPermissionCheck" main-action="VIEW"/>

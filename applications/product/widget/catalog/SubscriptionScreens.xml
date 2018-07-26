@@ -68,6 +68,7 @@ under the License.
                 <set field="activeSubMenuItem" value="EditSubscription"/>
                 <set field="subscriptionId" from-field="parameters.subscriptionId"/>
                 <entity-one entity-name="Subscription" value-field="subscription"/>
+                <set field="isCreateSubscription" type="Boolean" value="${groovy: !(context.subscription || (parameters.subscriptionId &amp;&amp; parameters.isCreate != 'true'))}"/>
             </actions>
             <widgets>
                 <section>

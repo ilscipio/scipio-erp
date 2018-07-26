@@ -27,6 +27,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleEditProductStoreList"/>
                 <set field="activeSubMenuItem" value="EditProductStoreList"/>
                 <set field="labelTitleProperty" value="ProductProductStoreList"/>
+                <set field="isSpecificProductStore" type="Boolean" value="false"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">

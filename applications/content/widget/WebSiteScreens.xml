@@ -49,7 +49,8 @@ under the License.
                 <set field="activeSubMenuItem" value="EditWebSite"/>
                 <set field="webSiteId" from-field="parameters.webSiteId"/>
                 <entity-one entity-name="WebSite" value-field="webSite"/>
-                <set field="labelTitleProperty" value="${groovy: (context.webSite || (parameters.webSiteId &amp;&amp; parameters.isCreate != 'true')) ? 'ContentWebSite' : 'ContentNewWebSite' }"/>
+                <set field="isCreateWebSite" type="Boolean" value="${groovy: !(context.webSite || (parameters.webSiteId &amp;&amp; parameters.isCreate != 'true'))}"/>
+                <set field="labelTitleProperty" value="${groovy: isCreateWebSite ? 'ContentNewWebSite' : 'ContentWebSite'}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonWebSiteDecorator" location="${parameters.mainDecoratorLocation}">

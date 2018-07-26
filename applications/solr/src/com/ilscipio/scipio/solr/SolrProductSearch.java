@@ -92,8 +92,8 @@ public abstract class SolrProductSearch {
                 result = ServiceUtil.returnSuccess();
             }
         } catch (Exception e) {
-            Debug.logError(e, "Solr: addToSolr: " + e.getMessage(), module);
-            result = ServiceUtil.returnError(e.toString());
+            Debug.logError(e, "Solr: addToSolr: Error adding product '" + productId + "' to solr index: " + e.getMessage(), module);
+            result = ServiceUtil.returnError("Error adding product '" + productId + "' to solr index: " + e.toString());
         }
         return result;
     }
@@ -112,8 +112,8 @@ public abstract class SolrProductSearch {
             client.commit();
             result = ServiceUtil.returnSuccess();
         } catch (Exception e) {
-            Debug.logError(e, "Solr: removeFromSolr: " + e.getMessage(), module);
-            result = ServiceUtil.returnError(e.toString());
+            Debug.logError(e, "Solr: removeFromSolr: Error removing product '" + productId + "' from solr index: " + e.getMessage(), module);
+            result = ServiceUtil.returnError("Error removing product '" + productId + "' from solr index: " + e.toString());
         }
         return result;
     }
@@ -136,7 +136,7 @@ public abstract class SolrProductSearch {
     /**
      * Core implementation for the updateToSolr, addToSolr, removeFromSolr, and registerUpdateToSolr services.
      * <p>
-     * Upon error, unless instructed otherwise, this marks the Solr data as dirty.
+     * Upon error, unless instructed otherwise (manual flag or config), this marks the Solr data as dirty.
      */
     private static Map<String, Object> updateToSolrCommon(DispatchContext dctx, Map<String, Object> context, Boolean forceAdd, boolean immediate) {
         Map<String, Object> result;
@@ -161,18 +161,29 @@ public abstract class SolrProductSearch {
                 Map<String, Map<String, Object>> productIds = (Map<String, Map<String, Object>>) context.get("productIds");
                 
                 if (immediate) {
-                    if (productId == null && productIds == null) return ServiceUtil.returnError("missing product instance, productId or productIds map");
+                    if (productId == null && productIds == null) {
+                        Debug.logError("Solr: updateToSolr: Missing product instance, productId or productIds map", module);
+                        return ServiceUtil.returnError("Missing product instance, productId or productIds map");
+                    }
                     result = updateToSolrCore(dctx, context, forceAdd, productId, productInst, productIds);
                     if (ServiceUtil.isSuccess(result)) indexed = true;
                 } else {
                     if (TransactionUtil.isTransactionInPlaceSafe()) {
-                        if (productId == null) return ServiceUtil.returnError("missing product instance or productId");
+                        if (productId == null) {
+                            Debug.logError("Solr: registerUpdateToSolr: Missing product instance or productId", module);
+                            // DEV NOTE: This *should* be okay to return error, without interfering with running transaction,
+                            // because default ECA flags are: rollback-on-error="false" abort-on-error="false"
+                            return ServiceUtil.returnError("Missing product instance or productId");
+                        }
                         result = registerUpdateToSolrForTxCore(dctx, context, forceAdd, productId, productInst);
                         if (ServiceUtil.isSuccess(result)) indexed = true; // NOTE: not really indexed; this is just to skip the mark-dirty below
                     } else {
                         final String reason = "No transaction in place";
                         if ("update".equals(context.get("noTransMode"))) {
-                            if (productId == null && productIds == null) return ServiceUtil.returnError("missing product instance, productId or productIds map");
+                            if (productId == null && productIds == null) {
+                                Debug.logError("Solr: updateToSolr: Missing product instance, productId or productIds map", module);
+                                return ServiceUtil.returnError("Missing product instance, productId or productIds map");
+                            }
                             Debug.logInfo("Solr: registerUpdateToSolr: " + reason + "; running immediate index update", module);
                             result = updateToSolrCore(dctx, context, forceAdd, productId, productInst, productIds);
                             if (ServiceUtil.isSuccess(result)) indexed = true;
@@ -213,6 +224,9 @@ public abstract class SolrProductSearch {
      * <p>
      * WARN: this edits the products map in-place. We're assuming this isn't an issue...
      * Added 2018-07-23.
+     * <p>
+     * DEV NOTE: 2018-07-26: For updateToSolr(Core), the global commit hook ignores the returned error message
+     * from this, so logError statements are essential.
      */
     private static Map<String, Object> updateToSolrCore(DispatchContext dctx, Map<String, Object> context, Boolean forceAdd, String productId, Map<String, Object> productInst,
             Map<String, Map<String, Object>> products) {
@@ -221,11 +235,10 @@ public abstract class SolrProductSearch {
             if (products == null) products = new HashMap<>(); // SPECIAL: here no need for LinkedHashMap, but other cases should be LinkedHashMap
             Map<String, Object> productProps;
             try {
-                productProps = dctx.getModelService("updateToSolrSingleInterface")
-                        .makeValid(context, ModelService.IN_PARAM, false, null);
+                productProps = dctx.getModelService("updateToSolrSingleInterface").makeValid(context, ModelService.IN_PARAM, false, null);
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Solr: updateToSolr: Error parsing service parameters for updateToSolrSingleInterface: " + e.getMessage() , module);
-                return ServiceUtil.returnError(e.getMessage());
+                return ServiceUtil.returnError("Error parsing service parameters for updateToSolrSingleInterface: " + e.toString());
             }
             productProps.put("instance", productInst);
             productProps.put("action", getUpdateToSolrAction(forceAdd));
@@ -237,6 +250,9 @@ public abstract class SolrProductSearch {
     /**
      * Multi-product core update.
      * Added 2018-07-19.
+     * <p>
+     * DEV NOTE: 2018-07-26: For updateToSolr(Core), the global commit hook ignores the returned error message
+     * from this, so logError statements are essential.
      */
     private static Map<String, Object> updateToSolrCore(DispatchContext dctx, Map<String, Object> context, Map<String, Map<String, Object>> products) {
         // SPECIAL: 2018-01-03: do not update to Solr if the current transaction marked as rollback,
@@ -248,12 +264,10 @@ public abstract class SolrProductSearch {
                 return ServiceUtil.returnFailure("Current transaction is marked for rollback; aborting solr index update");
             }
         } catch (Exception e) {
-            Debug.logError("Solr: updateToSolr: Failed to check transaction status; aborting solr index update: " + e.getMessage(), module);
-            return ServiceUtil.returnError("Failed to check transaction status; aborting solr index update");
+            Debug.logError("Solr: updateToSolr: Failed to check transaction status; aborting solr index update: " + e.toString(), module);
+            return ServiceUtil.returnError("Failed to check transaction status; aborting solr index update: " + e.toString());
         }
 
-        List<String> errorMessageList = new ArrayList<>();
-        
         // pre-process for variants
         // NOTE: products should be a LinkedHashMap;
         // expandedProducts doesn't need to be LinkedHashMap, but do it anyway
@@ -279,7 +293,7 @@ public abstract class SolrProductSearch {
                     // either in the same transaction or another before it.
                     if (Debug.verboseOn()) {
                         Debug.logVerbose("Solr: updateToSolr: Ignoring updateVariants/updateVirtual request for (forced) removal of product '" 
-                                + productId + "'; the variants should already be scheduled for removal (logically) through another mechanism", module); 
+                                + productId + "' (the variants/virtual should be scheduled for removal through separate invocation)", module); 
                     }
                 } else {
                     GenericValue product;
@@ -290,7 +304,7 @@ public abstract class SolrProductSearch {
                             product = dctx.getDelegator().findOne("Product", UtilMisc.toMap("productId", productId), false);
                         } catch (Exception e) {
                             Debug.logError(e, "Solr: updateToSolr: Could not lookup product '" + productId + "': " + e.getMessage(), module);
-                            return ServiceUtil.returnError(e.toString());
+                            return ServiceUtil.returnError("Could not lookup product '" + productId + "': " + e.toString());
                         }
                         if (Boolean.TRUE.equals(forceAdd) && product == null) {
                             return ServiceUtil.returnError("Product not found for productId: " + productId);
@@ -304,7 +318,7 @@ public abstract class SolrProductSearch {
                     if (product == null) {
                         if (Debug.verboseOn()) {
                             Debug.logVerbose("Solr: updateToSolr: Ignoring updateVariants/updateVirtual request for (forced) removal of product '" 
-                                    + productId + "'; the variants should already be scheduled for removal (logically) through another mechanism", module); 
+                                    + productId + "' (the variants/virtual should be scheduled for removal through separate invocation)", module); 
                         }
                     } else {
                         if (updateVariants && Boolean.TRUE.equals(product.getBoolean("isVirtual"))) {
@@ -324,7 +338,8 @@ public abstract class SolrProductSearch {
                             } catch (GeneralException e) {
                                 Debug.logError(e, "Solr: updateToSolr: Could not lookup product variants for '" 
                                         + productId + "' for updateVariants: " + e.getMessage(), module);
-                                return ServiceUtil.returnError(e.toString());
+                                return ServiceUtil.returnError("Could not lookup product variants for '"
+                                        + productId + "' for updateVariants: " + e.toString());
                             }
                             for(GenericValue variantProduct : variantProducts) {
                                 // NOTE: we crush any prior entry for same product; 
@@ -348,7 +363,7 @@ public abstract class SolrProductSearch {
                             List<GenericValue> virtualProducts;
                             try {
                                 // TODO: REVIEW: in most stock code these would be "-fromDate" and maxPerLevel=1,
-                                // but I see no good reason to limit it...
+                                // but I see no good reason to limit it here (needless ordering)...
                                 final List<String> orderBy = null;
                                 final Integer maxPerLevel = null;
                                 if (updateVirtualDeep) {
@@ -359,29 +374,35 @@ public abstract class SolrProductSearch {
                                             product, orderBy, maxPerLevel, null, false);
                                 }
                             } catch(Exception e) {
-                                Debug.logError(e, "Solr: updateToSolr: Could not lookup virtual product for variant product '" + productId + "'", module);
-                                return ServiceUtil.returnError("Could not lookup virtual product for variant product '" + productId + "'");
+                                Debug.logError(e, "Solr: updateToSolr: Could not lookup virtual product for variant product '" 
+                                        + productId + "': " + e.getMessage(), module);
+                                return ServiceUtil.returnError("Could not lookup virtual product for variant product '" 
+                                        + productId + "': " + e.toString());
                             }
-                            if (virtualProducts.isEmpty()) {
-                                Debug.logWarning("Solr: updateToSolr: Product '" 
-                                        + productId + "' is variant but found no parent product (either the association is being removed, or data error)", module);
-                            } else {
-                                for(GenericValue virtualProduct : virtualProducts) {
-                                    Map<String, Object> variantProps = new HashMap<>();
-                                    variantProps.put("instance", virtualProduct);
-                                    variantProps.put("forceAdd", forceAdd); // no need: getUpdateToSolrAction(forceAdd)
-                                    String virtualProductId = virtualProduct.getString("productId");
-                                    // re-add the key to LinkedHashMap keep a readable order in log
-                                    expandedProducts.remove(virtualProductId);
-                                    expandedProducts.put(virtualProductId, variantProps);
-                                }
+                            // This can be a valid state for ALTERNATIVE_PACKAGE products
+                            //if (virtualProducts.isEmpty()) {
+                            //    Debug.logWarning("Solr: updateToSolr: Product '" 
+                            //            + productId + "' is variant but found no parent product (either the association is being"
+                            //            + " removed, or data error)", module);
+                            //} else {
+                            for(GenericValue virtualProduct : virtualProducts) {
+                                Map<String, Object> variantProps = new HashMap<>();
+                                variantProps.put("instance", virtualProduct);
+                                variantProps.put("forceAdd", forceAdd); // no need: getUpdateToSolrAction(forceAdd)
+                                String virtualProductId = virtualProduct.getString("productId");
+                                // re-add the key to LinkedHashMap keep a readable order in log
+                                expandedProducts.remove(virtualProductId);
+                                expandedProducts.put(virtualProductId, variantProps);
                             }
+                            //}
                         }
                     }
                 }
             }
         }
-
+        
+        Map<String, String> productIndexErrorMsgs = new HashMap<>();
+        
         for(Map.Entry<String, Map<String, Object>> entry : expandedProducts.entrySet()) {
             String productId = entry.getKey();
             Map<String, Object> props = entry.getValue();
@@ -389,20 +410,28 @@ public abstract class SolrProductSearch {
             Object actionObj = props.get("action");
             Boolean forceAdd = (actionObj instanceof Boolean) ? (Boolean) actionObj : updateToSolrActionMap.get(actionObj);
             
-            Map<String, Object> updateSingleResult = updateToSolrCore(dctx, context, forceAdd, productId, productInst);
+            Map<String, Object> updateSingleResult = updateToSolrCoreSingleImpl(dctx, context, forceAdd, productId, productInst);
             if (!ServiceUtil.isSuccess(updateSingleResult)) {
-                errorMessageList.add(ServiceUtil.getErrorMessage(updateSingleResult));
+                productIndexErrorMsgs.put(productId, ServiceUtil.getErrorMessage(updateSingleResult));
             }
         }
 
-        Map<String, Object> result = (errorMessageList.size() > 0) ? 
-                ServiceUtil.returnError(errorMessageList) : 
-                ServiceUtil.returnSuccess();
-
-        return result;
+        if (productIndexErrorMsgs.size() == 0) {
+            return ServiceUtil.returnSuccess();
+        } else {
+            List<String> errorMsgs = new ArrayList<>();
+            for(Map.Entry<String, String> entry : productIndexErrorMsgs.entrySet()) {
+                errorMsgs.add("Error updating index for product '" + entry.getKey() + "': " + entry.getValue());
+            }
+            Map<String, Object> result = ServiceUtil.returnError(errorMsgs);
+            // DEV NOTE: this log statement is _probably_ redundant, but do it just in case
+            Debug.logError("Solr: registerUpdateToSolr: Error(s) indexing product(s): " + errorMsgs, module);
+            return result;
+        }
     }
 
-    private static Map<String, Object> updateToSolrCore(DispatchContext dctx, Map<String, Object> context, Boolean forceAdd, String productId, Map<String, Object> productInst) {
+    private static Map<String, Object> updateToSolrCoreSingleImpl(DispatchContext dctx, Map<String, Object> context, Boolean forceAdd,
+            String productId, Map<String, Object> productInst) {
         Map<String, Object> result;
         if (Boolean.FALSE.equals(forceAdd)) {
             result = removeFromSolrCore(dctx, context, productId);
@@ -417,12 +446,13 @@ public abstract class SolrProductSearch {
                     product = dctx.getDelegator().findOne("Product", UtilMisc.toMap("productId", productId), false);
                 } catch (Exception e) {
                     Debug.logError(e, "Solr: updateToSolr: Could not lookup product '" + productId + "': " + e.getMessage(), module);
-                    return ServiceUtil.returnError(e.toString());
+                    return ServiceUtil.returnError("Could not lookup product '" + productId + "': " + e.toString());
                 }
             }
             if (Boolean.TRUE.equals(forceAdd)) {
                 if (product == null) {
-                    return ServiceUtil.returnError("Product not found for productId: " + productId);
+                    Debug.logError("Solr: updateToSolr: Explicit add action requested, but product not found for productId: " + productId, module);
+                    return ServiceUtil.returnError("Explicit add action requested, but product not found for productId: " + productId);
                 }
                 result = addToSolrCore(dctx, context, product, productId);
             } else {
@@ -449,6 +479,9 @@ public abstract class SolrProductSearch {
      * WARN: DEV NOTE: This now edits the update service productIds context map in-place
      * in the already-registered service; this is not "proper" but there is no known current case
      * where it should cause an issue and it removes more overhead.
+     * <p>
+     * DEV NOTE: This *should* be okay to return error, without interfering with running transaction,
+     * because default ECA flags are: rollback-on-error="false" abort-on-error="false"
      */
     private static Map<String, Object> registerUpdateToSolrForTxCore(DispatchContext dctx, Map<String, Object> context, Boolean forceAdd, String productId, Map<String, Object> productInst) {
         String updateSrv = (String) context.get("updateSrv");
@@ -497,8 +530,8 @@ public abstract class SolrProductSearch {
             }
         } catch (Exception e) {
             final String errMsg = "Could not register " + updateSrv + " to run at transaction global-commit for product '" + productId + "'";
-            Debug.logError(e, "Solr: registerUpdateToSolr: " + productId, module);
-            return ServiceUtil.returnError(errMsg);
+            Debug.logError(e, "Solr: registerUpdateToSolr: " + errMsg, module);
+            return ServiceUtil.returnError(errMsg + ": " + e.toString());
         }
     }
 
@@ -518,7 +551,6 @@ public abstract class SolrProductSearch {
             Debug.logInfo("Solr: Indexing product '" + productId + "'", module);
 
             client = SolrUtil.getUpdateHttpSolrClient((String) context.get("core"));
-            // Debug.log(server.ping().toString());
 
             // Construct Documents
             SolrInputDocument doc1 = SolrProductUtil.generateSolrProductDocument(dctx.getDelegator(), dctx.getDispatcher(), context, useCache);

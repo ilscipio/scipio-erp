@@ -255,6 +255,11 @@ public abstract class SolrProductSearch {
      * <p>
      * DEV NOTE: 2018-07-26: For updateToSolr(Core), the global commit hook ignores the returned error message
      * from this, so logError statements are essential.
+     * <p>
+     * TODO: the virtual/variant lookup results here could be refactored, split up and passed to addToSolrCore to optimize
+     * to prevent double lookups (to prevent the ProductWorker.getVariantVirtualAssocs and ProductWorker.getParentProductId calls
+     * in SolrProductUtil.getProductContent); but currently this risks new bugs because the formats/methods used differ and
+     * even depend on options passed.
      */
     private static Map<String, Object> updateToSolrCore(DispatchContext dctx, Map<String, Object> context, Map<String, Map<String, Object>> products) {
         // SPECIAL: 2018-01-03: do not update to Solr if the current transaction marked as rollback,

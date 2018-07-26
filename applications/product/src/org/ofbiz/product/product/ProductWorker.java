@@ -1644,7 +1644,7 @@ nextProd:
         for (GenericValue assoc : variantProductAssocs) {
             GenericValue variantProduct = assoc.getRelatedOne("MainProduct", useCache);
             variantProducts.add(variantProduct);
-            if (Boolean.TRUE.equals(product.getBoolean("isVariant"))) {
+            if (Boolean.TRUE.equals(variantProduct.getBoolean("isVariant"))) {
                 List<GenericValue> subVariantProducts = getVirtualProductsDeepDfs(delegator, dispatcher, 
                         variantProduct, orderBy, maxPerLevel, moment, useCache);
                 variantProducts.addAll(subVariantProducts);
@@ -1688,7 +1688,7 @@ nextProd:
         for (GenericValue assoc : variantProductAssocs) {
             GenericValue variantProduct = assoc.getRelatedOne("AssocProduct", useCache);
             variantProducts.add(variantProduct);
-            if (Boolean.TRUE.equals(product.getBoolean("isVirtual"))) {
+            if (Boolean.TRUE.equals(variantProduct.getBoolean("isVirtual"))) {
                 List<GenericValue> subVariantProducts = getVariantProductsDeepDfs(delegator, dispatcher, 
                         variantProduct, orderBy, moment, useCache);
                 variantProducts.addAll(subVariantProducts);

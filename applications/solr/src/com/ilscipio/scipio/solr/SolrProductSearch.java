@@ -3,6 +3,7 @@ package com.ilscipio.scipio.solr;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.MalformedURLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -31,6 +32,7 @@ import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.common.params.CommonParams;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
@@ -321,6 +323,7 @@ public abstract class SolrProductSearch {
                                     + productId + "' (the variants/virtual should be scheduled for removal through separate invocation)", module); 
                         }
                     } else {
+                        Timestamp moment = UtilDateTime.nowTimestamp();
                         if (updateVariants && Boolean.TRUE.equals(product.getBoolean("isVirtual"))) {
                             if (Debug.verboseOn()) {
                                 Debug.logVerbose("Solr: updateToSolr: Product '" + productId + "' is virtual for add operation"
@@ -330,10 +333,10 @@ public abstract class SolrProductSearch {
                             try {
                                 if (updateVariantsDeep) {
                                     variantProducts = ProductWorker.getVariantProductsDeepDfs(dctx.getDelegator(), dctx.getDispatcher(), 
-                                            product, null, null, false);
+                                            product, null, moment, false);
                                 } else {
                                     variantProducts = ProductWorker.getVariantProducts(dctx.getDelegator(), dctx.getDispatcher(), 
-                                        product, null, null, false);
+                                        product, null, moment, false);
                                 }
                             } catch (GeneralException e) {
                                 Debug.logError(e, "Solr: updateToSolr: Could not lookup product variants for '" 
@@ -368,10 +371,10 @@ public abstract class SolrProductSearch {
                                 final Integer maxPerLevel = null;
                                 if (updateVirtualDeep) {
                                     virtualProducts = ProductWorker.getVirtualProductsDeepDfs(dctx.getDelegator(), dctx.getDispatcher(), 
-                                            product, orderBy, maxPerLevel, null, false);
+                                            product, orderBy, maxPerLevel, moment, false);
                                 } else {
                                     virtualProducts = ProductWorker.getVirtualProducts(dctx.getDelegator(), dctx.getDispatcher(), 
-                                            product, orderBy, maxPerLevel, null, false);
+                                            product, orderBy, maxPerLevel, moment, false);
                                 }
                             } catch(Exception e) {
                                 Debug.logError(e, "Solr: updateToSolr: Could not lookup virtual product for variant product '" 

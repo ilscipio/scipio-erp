@@ -1636,23 +1636,23 @@ nextProd:
      */
     public static List<GenericValue> getVirtualProductsDeepDfs(Delegator delegator, LocalDispatcher dispatcher,
             GenericValue product, List<String> orderBy, Integer maxPerLevel, Timestamp moment, boolean useCache) throws GeneralException {
-        List<GenericValue> variantProductAssocs = EntityQuery.use(delegator).from("ProductAssoc")
+        List<GenericValue> virtualProductAssocs = EntityQuery.use(delegator).from("ProductAssoc")
                 .where("productIdTo", product.getString("productId"), "productAssocTypeId", "PRODUCT_VARIANT").orderBy(orderBy)
                 .cache(useCache).filterByDate(moment).queryList();
-        List<GenericValue> variantProducts = new ArrayList<>();
+        List<GenericValue> virtualProducts = new ArrayList<>();
         int i = 0;
-        for (GenericValue assoc : variantProductAssocs) {
-            GenericValue variantProduct = assoc.getRelatedOne("MainProduct", useCache);
-            variantProducts.add(variantProduct);
-            if (Boolean.TRUE.equals(variantProduct.getBoolean("isVariant"))) {
+        for (GenericValue assoc : virtualProductAssocs) {
+            GenericValue virtualProduct = assoc.getRelatedOne("MainProduct", useCache);
+            virtualProducts.add(virtualProduct);
+            if (Boolean.TRUE.equals(virtualProduct.getBoolean("isVariant"))) {
                 List<GenericValue> subVariantProducts = getVirtualProductsDeepDfs(delegator, dispatcher, 
-                        variantProduct, orderBy, maxPerLevel, moment, useCache);
-                variantProducts.addAll(subVariantProducts);
+                        virtualProduct, orderBy, maxPerLevel, moment, useCache);
+                virtualProducts.addAll(subVariantProducts);
             }
             i++;
             if (maxPerLevel != null && i >= maxPerLevel) break;
         }
-        return variantProducts;
+        return virtualProducts;
     }
 
     /**

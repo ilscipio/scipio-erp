@@ -92,7 +92,7 @@ under the License.
     <menu name="CatalogSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="EditProductCatalog" title="${uiLabelMap.ProductNewProdCatalog}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
-                <not><if-compare field="isCreateProdCatalog" operator="equals" type="Boolean" value="true"/></not>
+                <not><if-true field="isCreateProdCatalog"/></not>
             </condition>
             <link target="EditProdCatalog"/>
         </menu-item>

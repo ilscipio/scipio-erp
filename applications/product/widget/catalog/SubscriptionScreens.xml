@@ -31,6 +31,7 @@ under the License.
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap"/>
                 <set field="titleProperty" value="PageTitleFindSubscription"/>
                 <set field="activeSubMenuItem" value="Subscription"/>
+                <set field="isSpecificSubscription" type="Boolean" value="false"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonSubscriptionDecorator" location="${parameters.mainDecoratorLocation}">            

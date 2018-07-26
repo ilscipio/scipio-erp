@@ -26,6 +26,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleFindCategory"/>
                 <set field="activeSubMenuItem" value="FindCategory"/>
                 <set field="labelTitleProperty" value="PageTitleFindCategory"/><!-- ProductCategory -->
+                <set field="isSpecificCategory" type="Boolean" value="false"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCategoryDecorator" location="${parameters.mainDecoratorLocation}">

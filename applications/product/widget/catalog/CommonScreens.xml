@@ -154,7 +154,12 @@ under the License.
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <if>
-                    <condition><if-empty field="prodCatalog"/></condition>
+                    <condition>
+                        <and>
+                            <if-empty field="prodCatalog"/>
+                            <not><if-false field="isSpecificCatalog"/></not>
+                        </and>
+                    </condition>
                     <then>
                         <!-- FIXME? globals not good... -->
                         <set field="prodCatalogId" from-field="parameters.prodCatalogId" global="true"/>
@@ -175,7 +180,8 @@ under the License.
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
                 <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.prodCatalogId} ${${extraFunctionName}}"/>
+                <set field="titleElemName" from-field="titleElemName" default-value="${groovy: (context.isSpecificCatalog == false) ? '' : parameters.prodCatalogId}"/>
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${titleElemName} ${${extraFunctionName}}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -183,8 +189,8 @@ under the License.
                         <section>
                             <condition>
                                 <or>
-                                    <not><if-empty field="prodCatalog"/></not>
-                                    <if-compare field="activeSubMenuItem" operator="not-equals" value="ProductCatalog"/>
+                                    <!--<not><if-empty field="prodCatalog"/></not> - doesn't really do anything -->
+                                    <not><if-true field="isCreateProdCatalog"/></not>
                                 </or>
                             </condition>
                             <widgets>
@@ -204,7 +210,12 @@ under the License.
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <if>
-                    <condition><if-empty field="productCategory"/></condition>
+                    <condition>
+                        <and>
+                            <if-empty field="productCategory"/>
+                            <not><if-false field="isSpecificCategory"/></not>
+                        </and>
+                    </condition>
                     <then>
                         <set field="productCategoryId" from-field="parameters.productCategoryId"/>
                         <entity-one entity-name="ProductCategory" value-field="productCategory"/>
@@ -224,7 +235,8 @@ under the License.
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
                 <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.productCategoryId} ${${extraFunctionName}}"/>
+                <set field="titleElemName" from-field="titleElemName" default-value="${groovy: (context.isSpecificCategory == false) ? '' : parameters.productCategoryId}"/>
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${titleElemName} ${${extraFunctionName}}"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -258,9 +270,14 @@ under the License.
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 
                 <!-- SCIPIO: FIXME: these global="true" will create problems... -->
-                <set field="productId" from-field="parameters.productId" global="true"/>
-                <entity-one entity-name="Product" value-field="product"/>
-                <set field="product" from-field="product" global="true"/>
+                <if>
+                    <condition><not><if-false field="isSpecificProduct"/></not></condition>
+                    <then>
+                        <set field="productId" from-field="parameters.productId" global="true"/>
+                        <entity-one entity-name="Product" value-field="product"/>
+                        <set field="product" from-field="product" global="true"/>
+                    </then>
+                </if>
                 <if>
                     <condition>
                         <not><if-empty field="product"/></not>
@@ -280,7 +297,8 @@ under the License.
                 <set field="prefixedQualifiedLabel" value="${uiLabelMap.ProductProductQualifiedLabel}"/><!-- this label references ${qualifiedLabel} -->
                 <set field="titleFormatPrefix" value="${groovy: (context.labelTitlePropertyFull == true || !context.labelTitleProperty) ? context.qualifiedLabel : context.prefixedQualifiedLabel}"/>
                 <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="titleFormat" from-field="titleFormat" default-value="${titleFormatPrefix} ${parameters.productId} ${${extraFunctionName}}"/>
+                <set field="titleElemName" from-field="titleElemName" default-value="${groovy: (context.isSpecificProduct == false) ? '' : parameters.productId}"/>
+                <set field="titleFormat" from-field="titleFormat" default-value="${titleFormatPrefix} ${titleElemName} ${${extraFunctionName}}"/>
                 
                 <!-- SCIPIO: session-based browsing aid -->
                 <script location="component://product/webapp/catalog/WEB-INF/actions/product/SetProductLastProduct.groovy"/>
@@ -290,9 +308,9 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <or><!-- TODO: review this condition -->
-                                    <not><if-empty field="product"/></not>
-                                    <if-compare field="activeSubMenuItem" operator="not-equals" value="EditProduct"/>
+                                <or>
+                                    <!--<not><if-empty field="product"/></not> - doesn't really do anything -->
+                                    <not><if-true field="isCreateProduct"/></not>
                                 </or>
                             </condition>
                             <widgets>
@@ -938,7 +956,12 @@ under the License.
         <section>
             <actions>
                 <if>
-                    <condition><if-empty field="subscription"/></condition>
+                    <condition>
+                        <and>
+                            <if-empty field="subscription"/>
+                            <not><if-false field="isSpecificSubscription"/></not>
+                        </and>
+                    </condition>
                     <then>
                         <set field="subscriptionId" from-field="parameters.subscriptionId"/>
                         <entity-one entity-name="Subscription" value-field="subscription"/>
@@ -950,7 +973,8 @@ under the License.
                 <set field="showMainExtendedBar" type="Boolean" value="true" />
                 
                 <set field="titleProperty" from-field="labelTitleProperty" default-value="${titleProperty}" />
-                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${parameters.subscriptionId} ${${extraFunctionName}}"/>
+                <set field="titleElemName" from-field="titleElemName" default-value="${groovy: (context.isSpecificSubscription == false) ? '' : parameters.subscriptionId}"/>
+                <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle} ${titleElemName} ${${extraFunctionName}}"/>
                 <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
                     <if-service-permission service-name="subscriptionPermissionCheck" main-action="VIEW"/>
                 </condition-to-field>

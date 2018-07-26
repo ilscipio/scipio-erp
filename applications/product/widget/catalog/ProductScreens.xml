@@ -31,6 +31,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleFindProduct"/>
                 <set field="labelTitleProperty" value="PageTitleFindProduct"/>
                 <set field="labelTitlePropertyFull" type="Boolean" value="true"/>
+                <set field="isSpecificProduct" type="Boolean" value="false"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.mainDecoratorLocation}">
@@ -65,7 +66,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleEditProduct"/>
                 <set field="activeSubMenuItem" value="EditProduct"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
-                <!-- FIXME: SHOULD NOT BE GLOBAL! but haas to be to not clash with decorator global lookups! -->
+                <!-- FIXME: SHOULD NOT BE GLOBAL! but has to be to not clash with decorator global lookups! -->
                 <set field="productId" from-field="parameters.productId" global="true"/>
                 <entity-one entity-name="Product" value-field="lookupProduct"/>
                 <set field="product" from-field="lookupProduct" global="true"/>

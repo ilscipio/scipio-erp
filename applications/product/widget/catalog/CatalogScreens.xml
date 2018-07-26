@@ -27,6 +27,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleFindCatalog"/>
                 <set field="activeSubMenuItem" value="FindCatalog"/><!-- SCIPIO: NOTE: this gets ignored, but leave for reference -->
                 <set field="labelTitleProperty" value="PageTitleFindCatalog"/><!-- ProductCatalog -->
+                <set field="isSpecificCatalog" type="Boolean" value="false"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonCatalogDecorator" location="${parameters.mainDecoratorLocation}">

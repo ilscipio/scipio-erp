@@ -45,7 +45,7 @@ public class EntityUtilProperties implements Serializable {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
-    protected static String getSystemPropertyValue(String resource, String name, Delegator delegator) {
+    public static String getSystemPropertyValue(String resource, String name, Delegator delegator) { // SCIPIO: 2018-07-26: made public
         if (resource == null || resource.length() <= 0) {
             return null;
         }

@@ -25,6 +25,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entity.util.EntityUtilProperties;
 
 import com.ilscipio.scipio.solr.util.ScipioHttpSolrClient;
 
@@ -205,8 +206,9 @@ public abstract class SolrUtil {
         return solrEnabled;
     }
     
-    public static boolean isSolrEcaEnabled() {
-        return solrEcaEnabled;
+    public static boolean isSolrEcaEnabled(Delegator delegator) {
+        String strValue = EntityUtilProperties.getSystemPropertyValue(solrConfigName, "solr.eca.enabled", delegator);
+        return UtilProperties.asBoolean(strValue, solrEcaEnabled);
     }
     
     /**

@@ -149,7 +149,7 @@ public abstract class SolrProductSearch {
         Boolean webappInitPassed = null;
         boolean skippedDueToWebappInit = false;
         
-        if (manual || SolrUtil.isSolrEcaEnabled()) {
+        if (manual || SolrUtil.isSolrEcaEnabled(dctx.getDelegator())) {
             webappInitPassed = SolrUtil.isSolrEcaWebappInitCheckPassed();
             if (webappInitPassed) {
                 String productId;

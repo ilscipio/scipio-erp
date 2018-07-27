@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ofbiz.base.util.UtilDateTime;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.testtools.OFBizTestCase;

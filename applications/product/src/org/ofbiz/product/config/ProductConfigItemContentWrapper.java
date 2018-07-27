@@ -34,7 +34,6 @@ import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.StringUtil.StringWrapper;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.content.content.CommonContentWrapper;
@@ -47,7 +46,6 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelUtil;
 import org.ofbiz.entity.util.EntityQuery;
-import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceContainer;
 

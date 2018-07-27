@@ -30,7 +30,6 @@ import javax.servlet.http.HttpSession;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.webapp.stats.VisitHandler;
 import org.ofbiz.webapp.website.WebSiteWorker;

@@ -30,7 +30,6 @@ import org.apache.catalina.valves.ValveBase;
 import org.apache.tomcat.util.buf.MessageBytes;
 import org.apache.tomcat.util.http.MimeHeaders;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.util.EntityUtilProperties;

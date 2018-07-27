@@ -211,7 +211,7 @@ public abstract class SolrUtil {
     }
     
     public static String getSolrEcaEnabledSystemProperty(Delegator delegator) {
-        return EntityUtilProperties.getSystemPropertyValue(solrConfigName, "solr.eca.enabled", delegator);
+        return EntityUtilProperties.getSystemPropertyValueOrNull(solrConfigName, "solr.eca.enabled", delegator);
     }
     
     /**

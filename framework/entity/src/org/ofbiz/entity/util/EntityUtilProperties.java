@@ -24,7 +24,9 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.InvalidPropertiesFormatException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -33,63 +35,102 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.ResourceBundleMapWrapper;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.DelegatorFactory;
+import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 
 @SuppressWarnings("serial")
-public class EntityUtilProperties implements Serializable {
+public final class EntityUtilProperties implements Serializable {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
-    public static String getSystemPropertyValue(String resource, String name, Delegator delegator) { // SCIPIO: 2018-07-26: made public
-        if (resource == null || resource.length() <= 0) {
-            return null;
+
+    private EntityUtilProperties () {}
+
+    /**
+     * SCIPIO: Returns the value for the given SystemProperty, or null if missing.
+     * If the SystemProperty exists, the result even if no value is an empty string;
+     * if it does not exist, the result is null.
+     * Added 2018-07-27.
+     */
+    public static String getSystemPropertyValueOrNull(String resource, String name, Delegator delegator) {
+        Map<String, String> propMap = getSystemPropertyValue(resource, name, delegator);
+        return "Y".equals(propMap.get("isExistInDb")) ? propMap.get("value") : null;
+    }
+
+    private static Map<String, String> getSystemPropertyValue(String resource, String name, Delegator delegator) {
+        Map<String, String> results = new HashMap<>();
+        results.put("isExistInDb", "N");
+        results.put("value", "");
+
+        if (UtilValidate.isEmpty(resource) || UtilValidate.isEmpty(name)) {
+            return results;
         }
-        if (name == null || name.length() <= 0) return null;
-        
         resource = resource.replace(".properties", "");
-        
-        // find system property
         try {
             GenericValue systemProperty = EntityQuery.use(delegator)
-                                                     .from("SystemProperty")
-                                                     .where("systemResourceId", resource, "systemPropertyId", name)
-                                                     .cache()
-                                                     .queryOne();
+                    .from("SystemProperty")
+                    .where("systemResourceId", resource, "systemPropertyId", name)
+                    .cache()
+                    .queryOne();
             if (systemProperty != null) {
-                String systemPropertyValue = systemProperty.getString("systemPropertyValue");
-                if (UtilValidate.isNotEmpty(systemPropertyValue)) {
-                    return systemPropertyValue;
-                }
+                //property exists in database
+                results.put("isExistInDb", "Y");
+                results.put("value", (systemProperty.getString("systemPropertyValue") != null) ? systemProperty.getString("systemPropertyValue") : "");
             }
-        } catch (Exception e) {
-            Debug.logWarning("Could not get a system property for " + name + " : " + e.getMessage(), module);
+        } catch (GenericEntityException e) {
+            Debug.logError("Could not get a system property for " + name + " : " + e.getMessage(), module);
         }
-        return null;
+        return results;
     }
-    
+
     public static boolean propertyValueEquals(String resource, String name, String compareString) {
         return UtilProperties.propertyValueEquals(resource, name, compareString);
     }
 
     public static boolean propertyValueEqualsIgnoreCase(String resource, String name, String compareString, Delegator delegator) {
-        String value = getSystemPropertyValue(resource, name, delegator);
-        if (UtilValidate.isNotEmpty(value)) {
-            return value.trim().equalsIgnoreCase(compareString);
+        Map<String, String> propMap = getSystemPropertyValue(resource, name, delegator);
+        if ("Y".equals(propMap.get("isExistInDb"))) {
+            compareString = (compareString == null) ? "" : compareString;
+            return propMap.get("value").equalsIgnoreCase(compareString);
         } else {
             return UtilProperties.propertyValueEqualsIgnoreCase(resource, name, compareString);
         }
     }
 
     public static String getPropertyValue(String resource, String name, String defaultValue, Delegator delegator) {
-        String value = getSystemPropertyValue(resource, name, delegator);
-        if (UtilValidate.isEmpty(value)) {
-            value = UtilProperties.getPropertyValue(resource, name, defaultValue);
+        Map<String, String> propMap = getSystemPropertyValue(resource, name, delegator);
+        if ("Y".equals(propMap.get("isExistInDb"))) {
+            String s = propMap.get("value");
+            return (UtilValidate.isEmpty(s)) ? defaultValue : s;
+        } else {
+            return UtilProperties.getPropertyValue(resource, name, defaultValue);
         }
-        return value;
+    }
+    
+    public static String getPropertyValueFromDelegatorName(String resource, String name, String defaultValue, String delegatorName) {
+        Delegator delegator = DelegatorFactory.getDelegator(delegatorName);
+        if (delegator == null) { // This should not happen, but in case...
+            Debug.logError("Could not get a delegator. Using the 'default' delegator", module);
+            // this will be the common case for now as the delegator isn't available where we want to do this
+            // we'll cheat a little here and assume the default delegator
+            delegator = DelegatorFactory.getDelegator("default");
+            Debug.logError("Could not get a delegator. Using the 'default' delegator", module);
+            if (delegator == null) {
+                Debug.logError("Could not get a system property for " + name + ". Reason: the delegator is null", module);
+            }
+        }
+        Map<String, String> propMap = getSystemPropertyValue(resource, name, delegator);
+        if ("Y".equals(propMap.get("isExistInDb"))) {
+            String s = propMap.get("value");
+            return (UtilValidate.isEmpty(s)) ? defaultValue : s;
+        } else {
+            return UtilProperties.getPropertyValue(resource, name, defaultValue);
+        }
     }
 
     public static double getPropertyNumber(String resource, String name, double defaultValue) {
@@ -129,11 +170,32 @@ public class EntityUtilProperties implements Serializable {
     }
 
     public static String getPropertyValue(String resource, String name, Delegator delegator) {
-        String value = getSystemPropertyValue(resource, name, delegator);
-        if (UtilValidate.isEmpty(value)) {
-            value = UtilProperties.getPropertyValue(resource, name);
+        Map<String, String> propMap = getSystemPropertyValue(resource, name, delegator);
+        if ("Y".equals(propMap.get("isExistInDb"))) {
+            return propMap.get("value");
+        } else {
+            return UtilProperties.getPropertyValue(resource, name);
         }
-        return value;
+    }
+
+    public static String getPropertyValueFromDelegatorName(String resource, String name, String delegatorName) {
+        Delegator delegator = DelegatorFactory.getDelegator(delegatorName);
+        if (delegator == null) { // This should not happen, but in case...
+            Debug.logError("Could not get a delegator. Using the 'default' delegator", module);
+            // this will be the common case for now as the delegator isn't available where we want to do this
+            // we'll cheat a little here and assume the default delegator
+            delegator = DelegatorFactory.getDelegator("default");
+            Debug.logError("Could not get a delegator. Using the 'default' delegator", module);
+            if (delegator == null) {
+                Debug.logError("Could not get a system property for " + name + ". Reason: the delegator is null", module);
+            }
+        }
+        Map<String, String> propMap = getSystemPropertyValue(resource, name, delegator);
+        if ("Y".equals(propMap.get("isExistInDb"))) {
+            return propMap.get("value");
+        } else {
+            return UtilProperties.getPropertyValue(resource, name);
+        }
     }
 
     public static Properties getProperties(String resource) {
@@ -144,10 +206,32 @@ public class EntityUtilProperties implements Serializable {
         return UtilProperties.getProperties(url);
     }
 
+    public static Properties getProperties(Delegator delegator, String resourceName) {
+        Properties properties = UtilProperties.getProperties(resourceName);
+        List<GenericValue> gvList;
+        try {
+            gvList = EntityQuery.use(delegator)
+                    .from("SystemProperty")
+                    .where("systemResourceId", resourceName)
+                    .queryList();
+            if (UtilValidate.isNotEmpty(gvList)) {
+                for (Iterator<GenericValue> i = gvList.iterator(); i.hasNext();) {
+                    GenericValue gv = i.next();
+                    if (UtilValidate.isNotEmpty(gv.getString("systemPropertyValue"))) {
+                        properties.setProperty(gv.getString("systemPropertyId"), gv.getString("systemPropertyValue"));
+                    }
+                }
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e.getMessage(), module);
+        }
+        return properties;
+    }
+
     public static boolean propertyValueEquals(URL url, String name, String compareString) {
         return UtilProperties.propertyValueEquals(url, name, compareString);
     }
-    
+
     public static boolean propertyValueEqualsIgnoreCase(URL url, String name, String compareString) {
         return UtilProperties.propertyValueEqualsIgnoreCase(url, name, compareString);
     }
@@ -180,12 +264,34 @@ public class EntityUtilProperties implements Serializable {
           UtilProperties.setPropertyValueInMemory(resource, name, value);
       }
 
-    public static String getMessage(String resource, String name, Locale locale, Delegator delegator) {
-        String value = getSystemPropertyValue(resource, name, delegator);
-        if (UtilValidate.isEmpty(value)) {
-            value = UtilProperties.getMessage(resource, name, locale);
+    public static String setPropertyValue(Delegator delegator, String resourceName, String name, String value) {
+        GenericValue gv = null;
+        String prevValue = null;
+        try {
+            gv = EntityQuery.use(delegator)
+                    .from("SystemProperty")
+                    .where("systemResourceId", resourceName, "systemPropertyId", name)
+                    .queryOne();
+            if (gv != null) {
+                prevValue = gv.getString("systemPropertyValue");
+                gv.set("systemPropertyValue", value);
+            } else {
+                gv = delegator.makeValue("SystemProperty", UtilMisc.toMap("systemResourceId", resourceName, "systemPropertyId", name, "systemPropertyValue", value, "description", null));
+            }
+            gv.store();
+        } catch (GenericEntityException e) {
+            Debug.logError(String.format("tenantId=%s, exception=%s, message=%s", delegator.getDelegatorTenantId(), e.getClass().getName(), e.getMessage()), module);
         }
-        return value;
+        return prevValue;
+    }
+
+    public static String getMessage(String resource, String name, Locale locale, Delegator delegator) {
+        Map<String, String> propMap = getSystemPropertyValue(resource, name, delegator);
+        if ("Y".equals(propMap.get("isExistInDb"))) {
+            return propMap.get("value");
+        } else {
+            return UtilProperties.getMessage(resource, name, locale);
+        }
     }
 
     public static String getMessage(String resource, String name, Object[] arguments, Locale locale) {

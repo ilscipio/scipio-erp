@@ -711,6 +711,18 @@ under the License.
         <response name="sync_success" type="view" value="SolrStatus"/>
         <response name="error" type="view" value="SolrStatus"/>      
     </request-map>
+    <request-map uri="setSolrSystemProperty">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="setSolrSystemProperty"/>
+        <response name="success" type="view" value="SolrStatus"/>
+        <response name="error" type="view" value="SolrStatus"/>      
+    </request-map>
+    <request-map uri="removeSolrSystemProperty">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeSolrSystemProperty"/>
+        <response name="success" type="view" value="SolrStatus"/>
+        <response name="error" type="view" value="SolrStatus"/>      
+    </request-map>
 
     <!-- end of request mappings -->
 

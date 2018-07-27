@@ -39,10 +39,12 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
@@ -1724,6 +1726,47 @@ public abstract class SolrProductSearch {
         } catch (Exception e) {
             Debug.logError("Solr: reloadSolrSecurityAuthorizations: error: " + e.getMessage(), module);
             return ServiceUtil.returnError("Error reloading Solr security authorizations");
+        }
+    }
+
+    public static Map<String, Object> setSolrSystemProperty(DispatchContext dctx, Map<String, Object> context) {
+        Object value = context.get("value");
+        boolean removeIfEmpty = Boolean.TRUE.equals(context.get("removeIfEmpty"));
+        if (removeIfEmpty && (value == null || value.toString().isEmpty())) {
+            return removeSolrSystemProperty(dctx, context);
+        }
+        String property = (String) context.get("property");
+        try {
+            GenericValue sysProp = EntityQuery.use(dctx.getDelegator()).from("SystemProperty")
+                .where("systemResourceId", SolrUtil.solrConfigName, "systemPropertyId", property)
+                .queryOne();
+            if (sysProp == null) {
+                sysProp = dctx.getDelegator().makeValue("SystemProperty");
+                sysProp.put("systemResourceId", SolrUtil.solrConfigName);
+                sysProp.put("systemPropertyId", property);
+            }
+            sysProp.put("systemPropertyValue", (value != null) ? value.toString() : null);
+            dctx.getDelegator().createOrStore(sysProp);
+            return ServiceUtil.returnSuccess();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Solr: Error setting SystemProperty " + property, module);
+            return ServiceUtil.returnError("Error setting SystemProperty " + property + ": " + e.getMessage());
+        }
+    }
+
+    public static Map<String, Object> removeSolrSystemProperty(DispatchContext dctx, Map<String, Object> context) {
+        String property = (String) context.get("property");
+        try {
+            GenericValue sysProp = EntityQuery.use(dctx.getDelegator()).from("SystemProperty")
+                .where("systemResourceId", SolrUtil.solrConfigName, "systemPropertyId", property)
+                .queryOne();
+            if (sysProp != null) {
+                sysProp.remove();
+            }
+            return ServiceUtil.returnSuccess();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Solr: Error removing SystemProperty " + property, module);
+            return ServiceUtil.returnError("Error removing SystemProperty " + property + ": " + e.getMessage());
         }
     }
 }

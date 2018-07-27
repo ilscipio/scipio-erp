@@ -207,8 +207,11 @@ public abstract class SolrUtil {
     }
     
     public static boolean isSolrEcaEnabled(Delegator delegator) {
-        String strValue = EntityUtilProperties.getSystemPropertyValue(solrConfigName, "solr.eca.enabled", delegator);
-        return UtilProperties.asBoolean(strValue, solrEcaEnabled);
+        return UtilProperties.asBoolean(getSolrEcaEnabledSystemProperty(delegator), solrEcaEnabled);
+    }
+    
+    public static String getSolrEcaEnabledSystemProperty(Delegator delegator) {
+        return EntityUtilProperties.getSystemPropertyValue(solrConfigName, "solr.eca.enabled", delegator);
     }
     
     /**

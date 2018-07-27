@@ -124,7 +124,27 @@
           <@tr>
             <@td><#if configEntry.label??>${getLabel(configEntry.label)}<#else>${configEntry.title!configEntry.name!}</#if>
               <#if configEntry.propName??> <em>(${configEntry.propName})</em></#if></@td>
-            <@td>${configEntry.value!}</@td>
+          <#if (configEntry.specialType!)=="eca-toggle">
+            <@td>
+            <form action="<@ofbizUrl uri="setSolrSystemProperty"/>" method="post">
+              <input type="hidden" name="property" value="solr.eca.enabled"/>
+              <input type="hidden" name="removeIfEmpty" value="true"/>
+            <@fields type="default-compact">
+              <@field type="select" name="value" inline=true>
+              <#if configEntry.dbValue?? && configEntry.dbValue != "true" && configEntry.dbValue != "false">
+                <option value="" selected="selected">[invalid] (DB)</option>
+              </#if>
+                <option value=""<#if !configEntry.dbValue?has_content> selected="selected"</#if>>${configEntry.value!?string} (solrconfig.properties)</option>
+                <option value="true"<#if (configEntry.dbValue!) == "true"> selected="selected"</#if>>true (DB)</option>
+                <option value="false"<#if (configEntry.dbValue!) == "false"> selected="selected"</#if>>false (DB)</option>
+              </@field>
+              <@field type="submit" inline=true/>
+            </@fields>
+            </form>
+            </@td>
+          <#else>
+            <@td>${configEntry.value!?string}</@td>
+          </#if>
           </@tr>
         </#list>
       </@tbody>

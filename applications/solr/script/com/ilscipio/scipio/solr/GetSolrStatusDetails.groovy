@@ -63,7 +63,8 @@ addConfigEntry([name:"solr.config.version.effective", title:"Solr Config Version
 addConfigProp("solr.core.default", "Default core");
 addConfigEntry([name:"Solr instance URL", value:SolrUtil.makeSolrWebappUrl()]);
 addConfigEntry([name:"Default core URL", value:SolrUtil.makeSolrDefaultCoreUrl()]);
-addConfigProp("solr.eca.enabled", "Solr ECAs enabled");
+addConfigEntry([name:"Solr ECAs enabled", value:SolrUtil.isSolrEcaEnabled(delegator), 
+    dbValue:SolrUtil.getSolrEcaEnabledSystemProperty(delegator), specialType:"eca-toggle"]);
 
 context.solrConfigs = solrConfigs;
 

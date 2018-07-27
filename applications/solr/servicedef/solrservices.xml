@@ -77,6 +77,24 @@ under the License.
     </service>
 
     <!-- ========================================================= -->
+    <!-- Config -->
+    <!-- ========================================================= -->
+
+    <service name="setSolrSystemProperty" engine="java" location="com.ilscipio.scipio.solr.SolrProductSearch"
+        invoke="setSolrSystemProperty" auth="true">
+        <permission-service service-name="solrGenericPermission" main-action="ADMIN"/>
+        <attribute mode="IN" name="property" optional="false" type="String"/>
+        <attribute mode="IN" name="value" optional="true" type="String"/>
+        <attribute mode="IN" name="removeIfEmpty" optional="true" type="Boolean" default-value="false"/>
+    </service>
+
+    <service name="removeSolrSystemProperty" engine="java" location="com.ilscipio.scipio.solr.SolrProductSearch"
+        invoke="removeSolrSystemProperty" auth="true">
+        <permission-service service-name="solrGenericPermission" main-action="ADMIN"/>
+        <attribute mode="IN" name="property" optional="false" type="String"/>
+    </service>
+
+    <!-- ========================================================= -->
     <!-- Security -->
     <!-- ========================================================= -->
     

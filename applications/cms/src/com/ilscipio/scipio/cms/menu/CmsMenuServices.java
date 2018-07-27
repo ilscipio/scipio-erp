@@ -1,7 +1,5 @@
 package com.ilscipio.scipio.cms.menu;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -23,7 +21,6 @@ import org.ofbiz.service.ServiceUtil;
 import com.ilscipio.scipio.cms.CmsServiceUtil;
 import com.ilscipio.scipio.cms.ServiceErrorFormatter;
 import com.ilscipio.scipio.cms.ServiceErrorFormatter.FormattedError;
-import com.ilscipio.scipio.cms.template.CmsAssetTemplate;
 
 public abstract class CmsMenuServices {
 

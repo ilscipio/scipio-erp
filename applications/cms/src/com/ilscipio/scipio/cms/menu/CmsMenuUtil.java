@@ -2,18 +2,14 @@ package com.ilscipio.scipio.cms.menu;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.ofbiz.base.lang.JSON;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-
-import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * SCIPIO: CmsMenuUtil

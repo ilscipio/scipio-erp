@@ -1,32 +1,12 @@
 package com.ilscipio.scipio.cms.menu;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import org.ofbiz.base.lang.JSON;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
-import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.condition.EntityCondition;
-import org.ofbiz.entity.condition.EntityOperator;
-import org.ofbiz.entity.util.EntityFindOptions;
 
-import com.ilscipio.scipio.ce.util.Optional;
-import com.ilscipio.scipio.cms.CmsException;
-import com.ilscipio.scipio.cms.CmsUtil;
-import com.ilscipio.scipio.cms.data.CmsDataException;
 import com.ilscipio.scipio.cms.data.CmsDataObject;
-import com.ilscipio.scipio.cms.data.CmsDataObjectVersion;
-import com.ilscipio.scipio.cms.template.CmsComplexTemplate;
-import com.ilscipio.scipio.cms.template.CmsTemplate;
-import com.ilscipio.scipio.cms.template.CmsTemplate.TemplateBodySource;
-import com.ilscipio.scipio.cms.template.CmsTemplateVersion;
 
 /**
  * CMS Menu Object

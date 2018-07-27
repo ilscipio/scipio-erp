@@ -845,6 +845,14 @@ under the License.
         <field name="systemPropertyId" type="id-long-ne"></field>
         <field name="systemPropertyValue" type="value"></field>
         <field name="description" type="description"></field>
+        <field name="useEmpty" type="indicator">
+            <description>SCIPIO: Y means that empty systemPropertyValue is significant; N means empty systemPropertyValue 
+                is not significant and the system should fallback on other source (e.g., *.properties file). Default: N (added 2018-07-27)
+                NOTE: 2018-07-27: Scipio default for this differs from stock Ofbiz 16+ (which logically uses Y default);
+                    this is because in Scipio it is recognized that the SystemProperty entries and descriptions
+                    are useful and should not have to be deleted in order to trigger fallback on properties files.
+                    However, the code that updates SystemProperty must be aware of useEmpty logic.</description>
+        </field>
         <prim-key field="systemResourceId"/>
         <prim-key field="systemPropertyId"/>
     </entity>

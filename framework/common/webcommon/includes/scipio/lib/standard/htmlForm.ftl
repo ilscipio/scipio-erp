@@ -2201,7 +2201,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   <#local rowClass = addClassArg(rowClass, "form-field-entry " + fieldEntryTypeClass)>
   <@row class=compileClassArg(rowClass) collapse=collapse!false norows=(norows || !container) id=containerId style=containerStyle>
     <#if labelType == "vertical">
-      <@cell>
+      <@cell nocells=(nocells || !container)>
         <#if labelArea && labelPosition == "top" || labelArea && labelPosition == "left">
           <@row collapse=collapse norows=(norows || !container)>
             <#if inverted>

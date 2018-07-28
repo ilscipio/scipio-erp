@@ -98,6 +98,50 @@ public class PathUtil {
         return removeStartDelim(removeTrailDelim(path));
     }
     
+    public static void ensureStartDelim(StringBuilder path) {
+        if (path.length() == 0) path.append('/');
+        else {
+            if (path.charAt(0) != '/') {
+                path.insert(0, '/');
+            }
+        }
+    }
+    
+    public static void removeStartDelim(StringBuilder path) {
+        if (path.length() > 0) {
+            if (path.charAt(0) == '/') {
+                path.deleteCharAt(0);
+            }
+        }
+    }
+    
+    public static void ensureTrailDelim(StringBuilder path) {
+        if (path.length() == 0) path.append('/');
+        else {
+            if (path.charAt(path.length() - 1) != '/') {
+                path.append('/');
+            }
+        }
+    }
+    
+    public static void removeTrailDelim(StringBuilder path) {
+        if (path.length() > 0) {
+            if (path.charAt(path.length() - 1) == '/') {
+                path.setLength(path.length() - 1);
+            }
+        }
+    }
+    
+    public static void ensureStartAndNoTrailDelim(StringBuilder path) {
+        ensureStartDelim(path);
+        removeTrailDelim(path);
+    }
+    
+    public static void ensureNoDelims(StringBuilder path) {
+        removeStartDelim(path);
+        removeTrailDelim(path);
+    }
+    
     
     /**
      * Transforms an absolute file path in the local file system into

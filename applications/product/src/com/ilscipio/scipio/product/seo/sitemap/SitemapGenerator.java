@@ -29,6 +29,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.webapp.OfbizUrlBuilder;
 import org.ofbiz.webapp.WebAppUtil;
 import org.xml.sax.SAXException;
 
@@ -57,10 +58,13 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     protected final List<Locale> locales;
     protected final String webSiteId;
     protected final String baseUrl;
+    protected final String sitemapWebappPathPrefix;
     protected final String sitemapContextPath;
+    protected final String webappPathPrefix;
     protected final String contextPath;
     protected final SitemapConfig config;
     protected final SeoCatalogUrlWorker urlWorker;
+    protected final OfbizUrlBuilder ofbizUrlBuilder;
     
     protected UrlRewriteConf urlRewriteConf;
     protected final WebappInfo webappInfo;
@@ -79,18 +83,22 @@ public class SitemapGenerator extends SeoCatalogTraverser {
 
     protected final Map<String, ?> servCtxOpts;
 
-    protected SitemapGenerator(Delegator delegator, LocalDispatcher dispatcher, List<Locale> locales, String webSiteId, GenericValue webSite, GenericValue productStore, String baseUrl, String sitemapContextPath, String contextPath, SitemapConfig config,
-            SeoCatalogUrlWorker urlWorker, UrlRewriteConf urlRewriteConf, SitemapTraversalConfig travConfig, Map<String, ?> servCtxOpts) throws GeneralException, IOException, URISyntaxException, SAXException {
+    protected SitemapGenerator(Delegator delegator, LocalDispatcher dispatcher, List<Locale> locales, String webSiteId, GenericValue webSite, GenericValue productStore, String baseUrl, String sitemapWebappPathPrefix, String sitemapContextPath, 
+            String webappPathPrefix, String contextPath, SitemapConfig config,
+            SeoCatalogUrlWorker urlWorker, OfbizUrlBuilder ofbizUrlBuilder, UrlRewriteConf urlRewriteConf, SitemapTraversalConfig travConfig, Map<String, ?> servCtxOpts) throws GeneralException, IOException, URISyntaxException, SAXException {
         super(delegator, dispatcher, travConfig);
         this.locales = locales;
         this.webSiteId = webSiteId;
         this.webSite = webSite;
         this.productStore = productStore;
         this.baseUrl = baseUrl;
+        this.sitemapWebappPathPrefix = sitemapWebappPathPrefix;
         this.sitemapContextPath = sitemapContextPath;
+        this.webappPathPrefix = webappPathPrefix;
         this.contextPath = contextPath;
         this.config = config;
         this.urlWorker = urlWorker;
+        this.ofbizUrlBuilder = ofbizUrlBuilder;
         this.urlRewriteConf = urlRewriteConf;
         this.webappInfo = WebAppUtil.getWebappInfoFromWebsiteId(webSiteId);
         this.fullSitemapDir = config.getSitemapDirUrlLocation(webappInfo.getLocation());
@@ -118,9 +126,18 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     public static SitemapGenerator getWorkerForWebsite(Delegator delegator, LocalDispatcher dispatcher, GenericValue webSite, GenericValue productStore, SitemapConfig config, Map<String, ?> servCtxOpts, boolean useCache) throws GeneralException, IOException, URISyntaxException, SAXException {
         String webSiteId = webSite.getString("webSiteId");
         if (config == null) throw new IOException("no valid sitemap config for website '" + webSiteId + "'");
+        OfbizUrlBuilder ofbizUrlBuilder = OfbizUrlBuilder.fromWebSiteId(webSiteId, delegator);
+        String sitemapWebappPathPrefix = config.getSitemapWebappPathPrefix();
+        if (sitemapWebappPathPrefix == null) {
+            sitemapWebappPathPrefix = config.getDefaultWebappPathPrefix(ofbizUrlBuilder);
+        }
         String sitemapContextPath = config.getSitemapContextPath();
         if (sitemapContextPath == null) {
             sitemapContextPath = config.getDefaultContextPath(delegator);
+        }
+        String webappPathPrefix = config.getWebappPathPrefix();
+        if (webappPathPrefix == null) {
+            webappPathPrefix = config.getDefaultWebappPathPrefix(ofbizUrlBuilder);
         }
         String contextPath = config.getContextPath();
         if (contextPath == null) {
@@ -128,7 +145,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         }
         String baseUrl = config.getBaseUrl();
         if (baseUrl == null) {
-            baseUrl = config.getDefaultBaseUrl(delegator, config.isBaseUrlSecure());
+            baseUrl = config.getDefaultBaseUrl(ofbizUrlBuilder, config.isBaseUrlSecure());
         }
         UrlRewriteConf urlRewriteConf = null;
         if (config.getUrlConfPath() != null) {
@@ -139,8 +156,9 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         return new SitemapGenerator(delegator, dispatcher, 
                 config.getLocalesOrDefault(webSite, productStore), 
                 webSiteId, webSite, productStore,
-                baseUrl, sitemapContextPath, contextPath, config,
+                baseUrl, sitemapWebappPathPrefix, sitemapContextPath, webappPathPrefix, contextPath, config,
                 SeoCatalogUrlWorker.getInstance(delegator, webSiteId),
+                ofbizUrlBuilder,
                 urlRewriteConf,
                 travConfig,
                 servCtxOpts);
@@ -234,8 +252,16 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         return ((SitemapTraversalState) state).trailNames;
     }
     
+    protected String getSitemapWebappPathPrefix() {
+        return sitemapWebappPathPrefix;
+    }
+
     protected String getSitemapContextPath() {
         return sitemapContextPath;
+    }
+
+    protected String getWebappPathPrefix() {
+        return webappPathPrefix;
     }
     
     protected String getContextPath() {
@@ -418,7 +444,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
             List<String> trail = trailNames.get(locale);
 
             String url = urlWorker.makeCategoryUrlPath(getDelegator(), getDispatcher(), locale, productCategory, trail, getContextPath(), isUseCache()).toString();
-            url = SitemapConfig.concatPaths(getBaseUrl(), applyUrlRewriteRules(url));
+            url = postprocessElementLink(url);
             
             if (Debug.verboseOn()) Debug.logVerbose(getLogMsgPrefix()+"Processing category url: " + url, module);
             
@@ -446,7 +472,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
             List<String> trail = trailNames.get(locale);
             
             String url = urlWorker.makeProductUrlPath(getDelegator(), getDispatcher(), locale, product, trail, getContextPath(), isUseCache()).toString();
-            url = postprocessUrl(url);
+            url = postprocessElementLink(url);
 
             if (Debug.verboseOn()) Debug.logVerbose(getLogMsgPrefix()+"Processing product url: " + url, module);
 
@@ -467,10 +493,10 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     protected void buildSitemapCmsPageLink(String uri, Locale locale) {
         try {
             uri = PathUtil.concatPaths(getContextPath(), uri);
-            String url = postprocessUrl(uri);
+            String url = postprocessElementLink(uri);
             
             if (Debug.verboseOn()) Debug.logVerbose(getLogMsgPrefix()+"Processing CMS page url: " + url, module);
-
+            
             WebSitemapUrl libUrl = buildSitemapLibUrl(url, null);
             getContentElemHandler().addUrl(libUrl);
             
@@ -643,7 +669,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     }
     
     public String getSitemapFileLink(String filename) {
-        return SitemapConfig.concatPaths(getBaseUrl(), getSitemapContextPath(), config.getSitemapDirPath(), filename);
+        return postprocessSiteMapFileLink(SitemapConfig.concatPaths(getSitemapContextPath(), config.getSitemapDirPath(), filename));
     }
     
     public String getSitemapIndexFileLink() {
@@ -663,8 +689,18 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     /**
      * Applies URL rewrite rules and appends baseUrl, as applicable.
      */
-    protected String postprocessUrl(String url) {
-        return SitemapConfig.concatPaths(getBaseUrl(), applyUrlRewriteRules(url));
+    protected String postprocessLink(String webappPathPrefix, String url) {
+        // 2018-07-27: we should apply the rules on the whole URL to properly emulate the @ofbizUrl, even if it's slower
+        //return SitemapConfig.concatPaths(getBaseUrl(), webappPathPrefix, applyUrlRewriteRules(url));
+        return applyUrlRewriteRules(SitemapConfig.concatPaths(getBaseUrl(), webappPathPrefix, url));
+    }
+    
+    protected String postprocessElementLink(String url) {
+        return postprocessLink(getWebappPathPrefix(), url);
+    }
+    
+    protected String postprocessSiteMapFileLink(String url) {
+        return postprocessLink(getSitemapWebappPathPrefix(), url);
     }
     
     @Override

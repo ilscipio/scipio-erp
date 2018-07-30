@@ -31,6 +31,7 @@ import org.ofbiz.webapp.WebAppUtil;
 import org.ofbiz.webapp.control.WebAppConfigurationException;
 import org.xml.sax.SAXException;
 
+import com.ilscipio.scipio.ce.util.PathUtil;
 import com.redfin.sitemapgenerator.W3CDateFormat;
 
 @SuppressWarnings("serial")
@@ -64,8 +65,10 @@ public class SitemapConfig implements Serializable {
     private final String urlConfPath;
     private final String baseUrl;
     private final boolean baseUrlSecure;
+    private final String sitemapWebappPathPrefix;
     private final String sitemapContextPath;
     private final String sitemapDirPath;
+    private final String webappPathPrefix;
     private final String contextPath;
     private final String sitemapDir;
     private final String sitemapExtension;
@@ -102,8 +105,10 @@ public class SitemapConfig implements Serializable {
         if ("none".equalsIgnoreCase(baseUrl)) baseUrl = "";
         this.baseUrl = baseUrl;
         this.baseUrlSecure = asBoolean(map.get("baseUrlSecure"), true);
+        this.sitemapWebappPathPrefix = asNormString(map.get("sitemapWebappPathPrefix"));
         this.sitemapContextPath = asNormString(map.get("sitemapContextPath"));
         this.sitemapDirPath = asNormString(map.get("sitemapDirPath"));
+        this.webappPathPrefix = asNormString(map.get("webappPathPrefix"));
         this.contextPath = asNormString(map.get("contextPath"));
         this.sitemapDir = asNormString(map.get("sitemapDir"));
         this.sitemapExtension = asNormString(map.get("sitemapExtension"));
@@ -248,12 +253,20 @@ public class SitemapConfig implements Serializable {
         return baseUrlSecure;
     }
 
+    public String getSitemapWebappPathPrefix() {
+        return sitemapWebappPathPrefix;
+    }
+
     public String getSitemapContextPath() {
         return sitemapContextPath;
     }
 
     public String getSitemapDirPath() {
         return sitemapDirPath;
+    }
+
+    public String getWebappPathPrefix() {
+        return webappPathPrefix;
     }
     
     public String getContextPath() {
@@ -383,14 +396,23 @@ public class SitemapConfig implements Serializable {
             else return Paths.get(result).toUri().toString();
         }
     }
+
+    /**
+     * Abstraction method, for Sitemap use only.
+     */
+    public String getDefaultBaseUrl(OfbizUrlBuilder urlBuilder, boolean secure) throws GenericEntityException, WebAppConfigurationException, IOException, SAXException {
+        StringBuilder sb = new StringBuilder();
+        urlBuilder.buildHostPart(sb, secure);
+        return sb.toString();
+    }
     
     /**
      * Abstraction method, for Sitemap use only.
      */
-    public String getDefaultBaseUrl(Delegator delegator, boolean secure) throws GenericEntityException, WebAppConfigurationException, IOException, SAXException {
-        OfbizUrlBuilder urlBuilder = OfbizUrlBuilder.fromWebSiteId(webSiteId, delegator);
+    public String getDefaultWebappPathPrefix(OfbizUrlBuilder urlBuilder) throws GenericEntityException, WebAppConfigurationException, IOException, SAXException {
         StringBuilder sb = new StringBuilder();
-        urlBuilder.buildHostPart(sb, secure);
+        urlBuilder.buildPathPartWithWebappPrefix(sb, "");
+        PathUtil.removeTrailDelim(sb);
         return sb.toString();
     }
     

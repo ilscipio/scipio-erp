@@ -653,6 +653,18 @@ public class UtilHttp {
         return getLocale(null, session, null);
     }
 
+    /**
+     * SCIPIO: Get the Locale object from a session variable; if not found use the browser's default;
+     * if the session does not exist, does NOT create it (unlike {@link #getLocale(HttpServletRequest)}).
+     * Added 2018-07-30.
+     * @param request HttpServletRequest object to use for lookup
+     * @return Locale The current Locale to use
+     */
+    public static Locale getLocaleExistingSession(HttpServletRequest request) {
+        if (request == null) return Locale.getDefault();
+        return getLocale(request, request.getSession(false), null);
+    }
+
     public static void setLocale(HttpServletRequest request, String localeString) {
         setLocale(request.getSession(), UtilMisc.parseLocale(localeString));
     }

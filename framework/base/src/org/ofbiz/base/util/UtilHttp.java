@@ -608,7 +608,7 @@ public class UtilHttp {
         Object localeObject = session != null ? session.getAttribute("locale") : null;
 
         // next see if the userLogin has a value
-        if (localeObject == null) {
+        if (localeObject == null && session != null) { // SCIPIO: 2018-07-30: added null session check
             Map<?, ?> userLogin = (Map<?, ?>) session.getAttribute("userLogin");
             if (userLogin == null) {
                 userLogin = (Map<?,?>) session.getAttribute("autoUserLogin");

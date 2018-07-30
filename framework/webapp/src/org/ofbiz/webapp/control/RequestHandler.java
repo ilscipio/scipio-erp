@@ -322,7 +322,8 @@ public class RequestHandler {
                     String newUrl;
                     if (SecureUrlRedirFmt.VALUE.isIncoming()) {
                         // SCIPIO: 2018-07-18: new http-to-https redirect url format option
-                        newUrl = RequestLinkUtil.rebuildOriginalRequestURL(request, response, true, SecureUrlRedirFmt.VALUE.isStaticHost(), true, true);
+                        newUrl = RequestLinkUtil.rebuildOriginalRequestURL(request, response, UtilHttp.getLocaleExistingSession(request),
+                                true, SecureUrlRedirFmt.VALUE.isStaticHost(), true, true, true);
                         newUrl = response.encodeURL(newUrl); // for URL rewriting, etc.
                     } else {
                         StringBuilder urlBuf = new StringBuilder();
@@ -1831,6 +1832,10 @@ public class RequestHandler {
                 return null;
             }
         } else {
+            // SCIPIO: 2018-07-27: new path prefix (included in builder.buildPathPart above)
+            // TODO: REVIEW: should go through builder for this? let's avoid the needless init for now...
+            newURL.append(webSiteProps.getWebappPathPrefix());
+
             if (controller) { 
                 // SCIPIO: This is the original stock case: intra-webapp, controller link
                 // create the path to the control servlet

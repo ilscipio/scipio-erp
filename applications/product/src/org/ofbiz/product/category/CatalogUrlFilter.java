@@ -1101,7 +1101,7 @@ public class CatalogUrlFilter extends ContextFilter {
         
                 url = appendLinkParams(url, params);
                 
-                return RequestLinkUtil.buildLinkHostPartAndEncode(request, response, url, fullPath, secure, encode);
+                return RequestLinkUtil.buildLinkHostPartAndEncode(request, response, locale, url, fullPath, secure, encode, true);
             }
         }
         
@@ -1132,7 +1132,7 @@ public class CatalogUrlFilter extends ContextFilter {
             
             url = appendLinkParams(url, params);
             
-            return RequestLinkUtil.buildLinkHostPartAndEncode(delegator, webSiteId, url, fullPath, secure, encode, request, response);
+            return RequestLinkUtil.buildLinkHostPartAndEncode(delegator, locale, webSiteId, url, fullPath, secure, encode, true, request, response);
         }
         
         /**

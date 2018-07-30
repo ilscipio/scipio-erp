@@ -160,6 +160,7 @@ public final class OfbizUrlBuilder {
         WebSiteProperties webSiteProps = null;
         if (webSiteId != null && !webSiteId.isEmpty()) {
             webAppInfo = WebAppUtil.getWebappInfoFromWebsiteId(webSiteId);
+            webSiteProps = WebSiteProperties.from(delegator, webSiteId);
         }
         if (webSiteProps == null) {
             webSiteProps = WebSiteProperties.defaults(delegator);
@@ -304,6 +305,7 @@ public final class OfbizUrlBuilder {
         if (servletPath == null) {
             throw new IllegalStateException("Servlet path is unknown");
         }
+        buffer.append(getWebappPathPrefix()); // SCIPIO: 2018-07-27
         buffer.append(servletPath);
         appendPathPart(buffer, url); // SCIPIO
     }
@@ -315,6 +317,7 @@ public final class OfbizUrlBuilder {
      * Added 2018-07-09. 
      */
     private static void appendPathPart(Appendable buffer, String part) throws IOException {
+        if (part == null) part = ""; // 2018-07-27: ensures legacy method behavior
         if (buffer.toString().endsWith("/")) {
             if (part.startsWith("/")) {
                 buffer.append(part.substring(1));
@@ -341,13 +344,30 @@ public final class OfbizUrlBuilder {
         if (contextPath == null) {
             throw new IllegalStateException("Context path is unknown");
         }
+        buffer.append(getWebappPathPrefix()); // SCIPIO: 2018-07-27
         buffer.append(contextPath);
         appendPathPart(buffer, url); // SCIPIO
-    }    
-    
-    
+    }
+
     /**
-     * SCIPIO: Get serlvet path.
+     * SCIPIO: Builds a partial URL - including the webapp path prefix, but not the context path.
+     * 
+     * @param buffer
+     * @param url
+     * @throws WebAppConfigurationException
+     * @throws IOException
+     */
+    public void buildPathPartWithWebappPrefix(Appendable buffer, String url) throws WebAppConfigurationException, IOException {
+        buffer.append(getWebappPathPrefix()); // SCIPIO: 2018-07-27
+        appendPathPart(buffer, url); // SCIPIO
+    }
+
+    /**
+     * SCIPIO: Get servlet path.
+     * <p>
+     * NOTE: 2018-07-27: does not include the general webapp path prefix ({@link #getWebappPathPrefix()}).
+     * <p>
+     * WARN: Not guaranteed to end with slash or not.
      */
     public String getServletPath() throws WebAppConfigurationException, IOException {
         return servletPath;
@@ -355,8 +375,20 @@ public final class OfbizUrlBuilder {
     
     /**
      * SCIPIO: Get context path.
+     * <p>
+     * NOTE: 2018-07-27: does not include the general webapp path prefix ({@link #getWebappPathPrefix()}).
+     * <p>
+     * WARN: Not guaranteed to end with slash or not.
      */
     public String getContextPath() throws WebAppConfigurationException, IOException {
         return contextPath;
+    }
+
+    /**
+     * SCIPIO: Get the webapp path prefix (comes from WebSiteProperties webappPathPrefix).
+     * Added 2018-07-27.
+     */
+    public String getWebappPathPrefix() throws WebAppConfigurationException, IOException {
+        return webSiteProps.getWebappPathPrefix();
     }
 }

@@ -2,6 +2,7 @@ package org.ofbiz.webapp.control;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,6 +22,8 @@ import org.ofbiz.webapp.OfbizUrlBuilder;
 import org.ofbiz.webapp.WebAppUtil;
 import org.ofbiz.webapp.website.WebSiteProperties;
 import org.xml.sax.SAXException;
+
+import com.ilscipio.scipio.ce.util.PathUtil;
 
 /**
  * SCIPIO: Request link utilities.
@@ -145,53 +148,7 @@ public abstract class RequestLinkUtil {
             sb.append(val.toString());
         }
     }
-    
-    public static String doLinkURLEncode(HttpServletRequest request, HttpServletResponse response, StringBuilder newURL, boolean interWebapp,
-            boolean didFullStandard, boolean didFullSecure) {
-        RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext());
-        return rh.doLinkURLEncode(request, response, newURL, interWebapp, didFullStandard, didFullSecure);
-    }
-    
-    /**
-     * SCIPIO: Helper method, originally derived from catalog URL links, but needed repeatedly.
-     */
-    public static String buildLinkHostPartAndEncode(HttpServletRequest request, HttpServletResponse response, String url,
-            Boolean fullPath, Boolean secure, Boolean encode) throws WebAppConfigurationException, IOException {
-        
-        boolean didFullStandard = false;
-        boolean didFullSecure = false;
-        StringBuilder newURL = new StringBuilder();
-        
-        Boolean secureFullPathFlag = checkFullSecureOrStandard(request, response, false, fullPath, secure);
-        if (secureFullPathFlag != null) {
-            if (secureFullPathFlag) {
-                didFullSecure = true;
-            } else {
-                didFullStandard = true;
-            }
-            
-            OfbizUrlBuilder builder;
-            try {
-                builder = OfbizUrlBuilder.from(request);
-            } catch (GenericEntityException e) {
-                throw new IOException(e);
-            } 
 
-            builder.buildHostPart(newURL, url, secureFullPathFlag);
-        }
-        newURL.append(url);
-        
-        String res;
-        if (!Boolean.FALSE.equals(encode)) {
-            RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext());
-            res = rh.doLinkURLEncode(request, response, newURL, false, didFullStandard, didFullSecure);
-        } else {
-            res = newURL.toString();
-        }
-        
-        return res;
-    }
-    
     public static Boolean checkFullSecureOrStandard(HttpServletRequest request, HttpServletResponse response, 
             Boolean interWebapp, Boolean fullPath, Boolean secure) {
         WebSiteProperties webSiteProps;
@@ -221,7 +178,7 @@ public abstract class RequestLinkUtil {
         }
         */
     }
-    
+
     public static Boolean checkFullSecureOrStandard(Delegator delegator, String webSiteId,
             Boolean interWebapp, Boolean fullPath, Boolean secure, HttpServletRequest request, HttpServletResponse response) {
         WebSiteProperties webSiteProps = null;
@@ -235,9 +192,73 @@ public abstract class RequestLinkUtil {
         }
         return checkFullSecureOrStandard(delegator, webSiteProps, interWebapp, fullPath, secure, request, response);
     }
+
+    public static String doLinkURLEncode(HttpServletRequest request, HttpServletResponse response, StringBuilder newURL, boolean interWebapp,
+            boolean didFullStandard, boolean didFullSecure) {
+        RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext());
+        return rh.doLinkURLEncode(request, response, newURL, interWebapp, didFullStandard, didFullSecure);
+    }
+
+    /**
+     * SCIPIO: Helper method, originally derived from catalog URL links, but needed repeatedly.
+     */
+    public static String buildLinkHostPartAndEncode(HttpServletRequest request, HttpServletResponse response, Locale locale, String url,
+            Boolean fullPath, Boolean secure, Boolean encode, boolean includeWebappPathPrefix) throws WebAppConfigurationException, IOException {
+        
+        boolean didFullStandard = false;
+        boolean didFullSecure = false;
+        StringBuilder newURL = new StringBuilder();
+        
+        Boolean secureFullPathFlag = checkFullSecureOrStandard(request, response, false, fullPath, secure);
+        
+        OfbizUrlBuilder builder = null;
+        if (secureFullPathFlag != null) {
+            if (secureFullPathFlag) {
+                didFullSecure = true;
+            } else {
+                didFullStandard = true;
+            }
+            try {
+                builder = OfbizUrlBuilder.from(request);
+            } catch (GenericEntityException e) {
+                throw new IOException(e);
+            }
+            builder.buildHostPart(newURL, url, secureFullPathFlag);
+        }
+        
+        if (includeWebappPathPrefix) {
+            if (builder == null) {
+                try {
+                    builder = OfbizUrlBuilder.from(request);
+                } catch (GenericEntityException e) {
+                    throw new IOException(e);
+                }
+            }
+            // 2018-07-27: must use webapp path prefix
+            builder.buildPathPartWithWebappPrefix(newURL, url);
+        } else {
+            newURL.append(url);
+        }
+        
+        String res;
+        if (!Boolean.FALSE.equals(encode)) {
+            RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext());
+            res = rh.doLinkURLEncode(request, response, newURL, false, didFullStandard, didFullSecure);
+        } else {
+            res = newURL.toString();
+        }
+        
+        return res;
+    }
+
+    @Deprecated
+    public static String buildLinkHostPartAndEncode(HttpServletRequest request, HttpServletResponse response, String url,
+            Boolean fullPath, Boolean secure, Boolean encode) throws WebAppConfigurationException, IOException {
+        return buildLinkHostPartAndEncode(request, response, null, url, fullPath, secure, encode, false);
+    }
     
-    public static String buildLinkHostPartAndEncode(Delegator delegator, String webSiteId, String url,
-            Boolean fullPath, Boolean secure, Boolean encode,
+    public static String buildLinkHostPartAndEncode(Delegator delegator, Locale locale, String webSiteId, String url,
+            Boolean fullPath, Boolean secure, Boolean encode, boolean includeWebappPathPrefix, 
             HttpServletRequest request, HttpServletResponse response) throws WebAppConfigurationException, IOException {
 
         boolean didFullStandard = false;
@@ -246,42 +267,25 @@ public abstract class RequestLinkUtil {
         
         // NOTE: this is always treated as inter-webapp, because we don't know our webapp
         Boolean secureFullPathFlag = checkFullSecureOrStandard(delegator, webSiteId, true, fullPath, secure, request, response);
+        
+        OfbizUrlBuilder builder = null; 
         if (secureFullPathFlag != null) {
+            builder = getBlhpOfbizUrlBuilder(delegator, webSiteId, locale);
             if (secureFullPathFlag) {
                 didFullSecure = true;
             } else {
                 didFullStandard = true;
             }
-            
-            OfbizUrlBuilder builder;
-            if (UtilValidate.isNotEmpty(webSiteId)) {
-                WebappInfo webAppInfo;
-                try {
-                    webAppInfo = WebAppUtil.getWebappInfoFromWebsiteId(webSiteId);
-                } catch (SAXException e) {
-                    throw new IOException(e);
-                }
-                
-                try {
-                    builder = OfbizUrlBuilder.from(webAppInfo, delegator);
-                } catch (SAXException e) {
-                    throw new IOException(e);
-                } catch (GenericEntityException e) {
-                    throw new IOException(e);
-                }
-            } else {
-                try {
-                    // this will make a builder that uses default system web site properties
-                    builder = OfbizUrlBuilder.from(null, null, delegator);
-                } catch (SAXException e) {
-                    throw new IOException(e);
-                } catch (GenericEntityException e) {
-                    throw new IOException(e);
-                }
-            }
             builder.buildHostPart(newURL, url, Boolean.TRUE.equals(secureFullPathFlag));
         }
-        newURL.append(url);
+
+        if (includeWebappPathPrefix) {
+            if (builder == null) builder = getBlhpOfbizUrlBuilder(delegator, webSiteId, locale);
+            // 2018-07-27: must use webapp path prefix
+            builder.buildPathPartWithWebappPrefix(newURL, url);
+        } else {
+            newURL.append(url);
+        }
         
         if (request != null && response != null) {
             String res;
@@ -298,6 +302,43 @@ public abstract class RequestLinkUtil {
         }
     }
     
+    private static OfbizUrlBuilder getBlhpOfbizUrlBuilder(Delegator delegator, String webSiteId, Locale locale) throws IOException, WebAppConfigurationException {
+        OfbizUrlBuilder builder;
+        if (UtilValidate.isNotEmpty(webSiteId)) {
+            WebappInfo webAppInfo;
+            try {
+                webAppInfo = WebAppUtil.getWebappInfoFromWebsiteId(webSiteId);
+            } catch (SAXException e) {
+                throw new IOException(e);
+            }
+            
+            try {
+                builder = OfbizUrlBuilder.from(webAppInfo, delegator);
+            } catch (SAXException e) {
+                throw new IOException(e);
+            } catch (GenericEntityException e) {
+                throw new IOException(e);
+            }
+        } else {
+            try {
+                // this will make a builder that uses default system web site properties
+                builder = OfbizUrlBuilder.from(null, null, delegator);
+            } catch (SAXException e) {
+                throw new IOException(e);
+            } catch (GenericEntityException e) {
+                throw new IOException(e);
+            }
+        }
+        return builder;
+    }
+
+    @Deprecated
+    public static String buildLinkHostPartAndEncode(Delegator delegator, String webSiteId, String url,
+            Boolean fullPath, Boolean secure, Boolean encode,
+            HttpServletRequest request, HttpServletResponse response) throws WebAppConfigurationException, IOException {
+        return buildLinkHostPartAndEncode(delegator, null, webSiteId, url, fullPath, secure, encode, false, request, response);
+    }
+    
     /**
      * SCIPIO: Rudimentarily builds host part of link, from request, as requested secure or not (or using current if null).
      * This overload uses the CURRENT WebSite in request to determine the host, unless explicit is passed, in which case that one is used.
@@ -308,7 +349,7 @@ public abstract class RequestLinkUtil {
      * @param webSiteId optional explicit target webSiteId
      * @param secure if explicit true or false, creates https or http link, respectively; otherwise auto-determines from request ("current")
      */
-    public static String buildLinkHostPart(HttpServletRequest request, String webSiteId, Boolean secure) throws WebAppConfigurationException, IOException {
+    public static String buildLinkHostPart(HttpServletRequest request, Locale locale, String webSiteId, Boolean secure, boolean includeWebappPathPrefix) throws WebAppConfigurationException, IOException {
         StringBuilder newURL = new StringBuilder();
         OfbizUrlBuilder builder;
         if (UtilValidate.isNotEmpty(webSiteId)) {
@@ -322,6 +363,10 @@ public abstract class RequestLinkUtil {
         }
         if (secure == null) secure = RequestLinkUtil.isEffectiveSecure(request);
         builder.buildHostPart(newURL, secure);
+        if (includeWebappPathPrefix) {
+            builder.buildPathPartWithWebappPrefix(newURL, "");
+            PathUtil.removeTrailDelim(newURL);
+        }
         return newURL.toString();
     }
     
@@ -340,19 +385,29 @@ public abstract class RequestLinkUtil {
             throw new IOException(e);
         }
     }
+
+    @Deprecated
+    public static String buildLinkHostPart(HttpServletRequest request, String webSiteId, Boolean secure) throws WebAppConfigurationException, IOException {
+        return buildLinkHostPart(request, null, webSiteId, secure, false);
+    }
     
     /**
      * SCIPIO: Rudimentarily builds host part of link, from request, as requested secure or not (no automatic logic). 
-     * Same as {@link #buildLinkHostPart(HttpServletRequest, String, Boolean)} but throws no exceptions and returns null instead.
+     * Same as {@link #buildLinkHostPart(HttpServletRequest, Locale, String, Boolean, boolean)} but throws no exceptions and returns null instead.
      * Added 2017-11-18.
      */
-    public static String buildLinkHostPartSafe(HttpServletRequest request, String webSiteId, Boolean secure) {
+    public static String buildLinkHostPartSafe(HttpServletRequest request, Locale locale, String webSiteId, Boolean secure, boolean includeWebappPathPrefix) {
         try {
-            return buildLinkHostPart(request, webSiteId, secure);
+            return buildLinkHostPart(request, locale, webSiteId, secure, includeWebappPathPrefix);
         } catch (Exception e) {
             Debug.logError(e, "Error building link host part: " + e.getMessage(), module);
             return null; // null may allow default value operators to work in other langs
         }
+    }
+
+    @Deprecated
+    public static String buildLinkHostPartSafe(HttpServletRequest request, String webSiteId, Boolean secure) {
+        return buildLinkHostPartSafe(request, null, webSiteId, secure, false);
     }
     
     /**
@@ -365,7 +420,7 @@ public abstract class RequestLinkUtil {
      * @param webSiteId optional explicit target webSiteId
      * @param secure if explicit true or false, creates https or http link, respectively; if null, uses a configured or common default
      */
-    public static String buildLinkHostPart(Delegator delegator, String webSiteId, Boolean secure) throws WebAppConfigurationException, IOException {
+    public static String buildLinkHostPart(Delegator delegator, Locale locale, String webSiteId, Boolean secure, boolean includeWebappPathPrefix) throws WebAppConfigurationException, IOException {
         StringBuilder newURL = new StringBuilder();
         OfbizUrlBuilder builder;
         if (UtilValidate.isNotEmpty(webSiteId)) {
@@ -381,7 +436,16 @@ public abstract class RequestLinkUtil {
             }
         }
         builder.buildHostPart(newURL, secure);
+        if (includeWebappPathPrefix) {
+            builder.buildPathPartWithWebappPrefix(newURL, "");
+            PathUtil.removeTrailDelim(newURL);
+        }
         return newURL.toString();
+    }
+
+    @Deprecated
+    public static String buildLinkHostPart(Delegator delegator, String webSiteId, Boolean secure) throws WebAppConfigurationException, IOException {
+        return buildLinkHostPart(delegator, null, webSiteId, secure, false);
     }
     
     /**
@@ -389,13 +453,18 @@ public abstract class RequestLinkUtil {
      * Same as {@link #buildLinkHostPart(Delegator, String, Boolean)} but throws no exceptions and returns null instead.
      * Added 2017-11-18.
      */
-    public static String buildLinkHostPartSafe(Delegator delegator, String webSiteId, Boolean secure) {
+    public static String buildLinkHostPartSafe(Delegator delegator, Locale locale, String webSiteId, Boolean secure, boolean includeWebappPathPrefix) {
         try {
-            return buildLinkHostPart(delegator, webSiteId, secure);
+            return buildLinkHostPart(delegator, locale, webSiteId, secure, includeWebappPathPrefix);
         } catch (Exception e) {
             Debug.logError(e, "Error building link host part: " + e.getMessage(), module);
             return null; // null may allow default value operators to work in other langs
         }
+    }
+
+    @Deprecated
+    public static String buildLinkHostPartSafe(Delegator delegator, String webSiteId, Boolean secure) {
+        return buildLinkHostPartSafe(delegator, null, webSiteId, secure, false);
     }
     
     public static String getWebSiteContextPath(Delegator delegator, String webSiteId) throws WebAppConfigurationException, IOException {
@@ -480,12 +549,13 @@ public abstract class RequestLinkUtil {
      * @param response
      * @param secure true: use https; false: use http; null: use same as original request url
      * @param staticHost true: use host from url.properties/WebSite; false/null: use host from request.getServerName
+     * @param includeWebappPathPrefix true: include webapp path prefix from WebSite or url.properties configuration 
      * @param useQueryString
      * @param handleErrors if true, swallow errors and use best available; if false, throw IllegalStateException
      * @throws IllegalStateException if handleErrors false and any entity or parsing error
      */
-    public static String rebuildOriginalRequestURL(HttpServletRequest request, HttpServletResponse response,
-            Boolean secure, Boolean staticHost, boolean useQueryString, boolean handleErrors) throws IllegalStateException {
+    public static String rebuildOriginalRequestURL(HttpServletRequest request, HttpServletResponse response, Locale locale,
+            Boolean secure, Boolean staticHost, boolean includeWebappPathPrefix, boolean useQueryString, boolean handleErrors) throws IllegalStateException {
         // NOTE: derived from Tomcat 8 implementation of getRequestURL
         StringBuffer url = new StringBuffer();
         WebSiteProperties props = null;
@@ -553,6 +623,23 @@ public abstract class RequestLinkUtil {
             requestURI = request.getRequestURI();
             queryString = request.getQueryString();
         }
+        if (includeWebappPathPrefix) {
+            if (props == null) {
+                try {
+                    props = WebSiteProperties.from(request);
+                } catch (Exception e) {
+                    if (handleErrors) {
+                        Debug.logError(e, "rebuildOriginalRequestURL: Error getting web site properties for host name"
+                                + " (using request.getServerName() instead): " + e.getMessage(), module);
+                    } else {
+                        throw new IllegalStateException("Error getting web site properties for host name: " + e.getMessage(), e);
+                    }
+                }
+            }
+            if (props != null) {
+                url.append(props.getWebappPathPrefix()); // 2017-07-24: we must append this, it is assumed not to be included already
+            }
+        }
         url.append(requestURI);
         if (useQueryString && queryString != null) {
             url.append("?").append(queryString);
@@ -560,9 +647,10 @@ public abstract class RequestLinkUtil {
         return url.toString();
     }
     
+    @Deprecated
     public static String rebuildOriginalRequestURL(HttpServletRequest request, HttpServletResponse response,
             Boolean secure, boolean useQueryString) {
-        return rebuildOriginalRequestURL(request, response, secure, null, useQueryString, true);
+        return rebuildOriginalRequestURL(request, response, null, secure, null, true, useQueryString, true);
     }
     
     public static String getServletAndPathInfo(HttpServletRequest request) {
@@ -627,5 +715,25 @@ public abstract class RequestLinkUtil {
         if (url.length() < (protocolLength + 1)) return false;
         if (url.charAt(protocolLength) != ':') return false;
         return protocol.equalsIgnoreCase(url.substring(0, protocolLength)); // substring+equal avoid iterating whole url
+    }
+
+    public static String getWebappPathPrefix(HttpServletRequest request, String webSiteId) {
+        try {
+            WebSiteProperties webSiteProps;
+            if (webSiteId != null && !webSiteId.isEmpty()) {
+                webSiteProps = WebSiteProperties.from(request, webSiteId);
+            }
+            else {
+                webSiteProps = WebSiteProperties.from(request);
+            }
+            return webSiteProps.getWebappPathPrefix();
+        } catch(Exception e) {
+            Debug.logError(e, "Exception thrown while getting web site properties: ", module);
+            return "";
+        }
+    }
+    
+    public static String getWebappPathPrefix(HttpServletRequest request) {
+        return getWebappPathPrefix(request, null);
     }
 }

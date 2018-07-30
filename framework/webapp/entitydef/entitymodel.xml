@@ -243,6 +243,10 @@ under the License.
         <description>SCIPIO: Specific visual theme ID override; may be used to override the product store 
             visualThemeId when set (and WebSite is available)</description>
       </field>
+      <field name="webappPathPrefix" type="url">
+        <description>SCIPIO: URL path prefix appended between the domain/port and the webapp context path in generated links,
+            for webapp and navigation links (@ofbizUrl); must start with slash but end with no slash. (added 2018-07-27)</description>
+      </field>
       <prim-key field="webSiteId"/>
       <relation type="one" fk-name="WEB_SITE_THEME_SET" rel-entity-name="VisualThemeSet">
         <key-map field-name="visualThemeSetId"/>

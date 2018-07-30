@@ -58,6 +58,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
+        <field name="webappPathPrefix" tooltip="${uiLabelMap.ContentWebSiteWebappPathPrefixDesc}"><text/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="ListWebSites" target="" title="" type="list" list-name="webSites" paginate-target="FindWebSite" paginate="true"

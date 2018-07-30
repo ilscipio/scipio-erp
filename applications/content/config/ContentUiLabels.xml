@@ -7780,6 +7780,16 @@
         <value xml:lang="en">Visual Theme Selector Script</value>
         <value xml:lang="fr">Script sélecteur de thème visuel</value>
     </property>
+    <property key="FormFieldTitle_webappPathPrefix">
+        <value xml:lang="de">Webapp-Pfadpräfix</value>
+        <value xml:lang="en">Webapp Path Prefix</value>
+        <value xml:lang="fr">Préfixe de chemin du Webapp</value>
+    </property>
+    <property key="ContentWebSiteWebappPathPrefixDesc">
+        <value xml:lang="de">Zusätzliches URL-Pfadpräfix, angehängt zwischen der Domäne / Port und dem Webapp-Kontextpfad in generierten Links, für Webapp- und Navigationslinks (@ofbizUrl); muss mit Schrägstrich beginnen, aber ohne Schrägstrich enden. Hauptsächlich für Frontend Load Balancer Mappings gedacht.</value>
+        <value xml:lang="en">Extra URL path prefix appended between the domain/port and the webapp context path in generated links, for webapp and navigation links (@ofbizUrl); must start with slash but end with no slash. Mainly intended for frontend load balancer mappings.</value>
+        <value xml:lang="fr">Ajout d'un préfixe de chemin d'URL supplémentaire entre le domaine / port et le chemin de contexte webapp dans les liens générés, pour les liens Webapp et de navigation (@ofbizUrl); doit commencer par une barre oblique mais se terminer par une barre oblique Principalement destiné aux mappages d'équilibreurs de charge frontaux.</value>
+    </property>
     <property key="PageTitleRemoveWebSiteSEO">
         <value xml:lang="de">SEO-URLs entfernen</value>
         <value xml:lang="en">Remove SEO URLs</value>

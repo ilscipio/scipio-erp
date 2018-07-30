@@ -353,6 +353,7 @@
             <@field type="input" name="standardContentPrefix" label=uiLabelMap.FormFieldTitle_standardContentPrefix value=(params.standardContentPrefix!)/>
             <@field type="input" name="secureContentPrefix" label=uiLabelMap.FormFieldTitle_secureContentPrefix value=(params.secureContentPrefix!)/>
             <@field type="input" name="cookieDomain" label=uiLabelMap.FormFieldTitle_cookieDomain value=(params.cookieDomain!)/>
+            <@field type="input" name="webappPathPrefix" label=uiLabelMap.FormFieldTitle_webappPathPrefix value=(params.webappPathPrefix!) tooltip=uiLabelMap.ContentWebSiteWebappPathPrefixDesc/>
           </@fieldset>
             
             <#--<@field type="hidden" name="productStoreId" value=(params.productStoreId!)/> // already set above -->

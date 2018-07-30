@@ -78,6 +78,7 @@ public final class WebSiteProperties {
         boolean requestOverridesStaticHttpHost = requestOverridesStatic;
         boolean requestOverridesStaticHttpsPort = requestOverridesStatic;
         boolean requestOverridesStaticHttpsHost = requestOverridesStatic;
+        boolean requestOverridesStaticWebappPathPrefix = requestOverridesStatic;
         
         WebSiteProperties defaults = new WebSiteProperties(delegator);
         
@@ -86,7 +87,10 @@ public final class WebSiteProperties {
         String httpsPort = defaults.getHttpsPort();
         String httpsHost = defaults.getHttpsHost();
         boolean enableHttps = defaults.getEnableHttps();
-        
+        // SCIPIO: new
+        String webappPathPrefix = defaults.getWebappPathPrefix();
+        String webappPathPrefixHeader = defaults.getWebappPathPrefixHeader();
+
         if (delegator != null) {
             if (webSiteId != null) {
                 GenericValue webSiteValue = EntityQuery.use(delegator).from("WebSite").where("webSiteId", webSiteId).cache().queryOne();
@@ -109,6 +113,12 @@ public final class WebSiteProperties {
                     }
                     if (webSiteValue.get("enableHttps") != null) {
                         enableHttps = webSiteValue.getBoolean("enableHttps");
+                    }
+
+                    // SCIPIO: new
+                    if (webSiteValue.get("webappPathPrefix") != null) {
+                        webappPathPrefix = webSiteValue.getString("webappPathPrefix");
+                        requestOverridesStaticWebappPathPrefix = false;
                     }
                 }
             }
@@ -134,7 +144,13 @@ public final class WebSiteProperties {
             httpsHost = request.getServerName();
         }
 
-        return new WebSiteProperties(httpPort, httpHost, httpsPort, httpsHost, enableHttps);
+        if ((requestOverridesStaticWebappPathPrefix || webappPathPrefix.isEmpty()) && !webappPathPrefixHeader.isEmpty()) {
+            webappPathPrefix = request.getHeader(webappPathPrefixHeader);
+            if (webappPathPrefix == null) webappPathPrefix = "";
+        }
+        webappPathPrefix = normalizeWebappPathPrefix(webappPathPrefix);
+
+        return new WebSiteProperties(httpPort, httpHost, httpsPort, httpsHost, enableHttps, webappPathPrefix, webappPathPrefixHeader);
     }
     
     /**
@@ -179,8 +195,12 @@ public final class WebSiteProperties {
         if (adjustHttpsPort) {
             httpsPort = adjustPort(webSiteValue.getDelegator(), httpsPort);
         }
-        
-        return new WebSiteProperties(httpPort, httpHost, httpsPort, httpsHost, enableHttps);
+
+        // SCIPIO: new
+        String webappPathPrefix = (webSiteValue.get("webappPathPrefix") != null) ? normalizeWebappPathPrefix(webSiteValue.getString("webappPathPrefix")) : defaults.getWebappPathPrefix();
+        String webappPathPrefixHeader = defaults.getWebappPathPrefixHeader();
+
+        return new WebSiteProperties(httpPort, httpHost, httpsPort, httpsHost, enableHttps, webappPathPrefix, webappPathPrefixHeader);
     }
     
     /**
@@ -222,8 +242,12 @@ public final class WebSiteProperties {
         // SCIPIO: factored out
         httpPort = adjustPort(webSiteValue.getDelegator(), httpPort);
         httpsPort = adjustPort(webSiteValue.getDelegator(), httpsPort);            
-        
-        return new WebSiteProperties(httpPort, httpHost, httpsPort, httpsHost, enableHttps);
+
+        // SCIPIO: new
+        String webappPathPrefix = (webSiteValue.get("webappPathPrefix") != null) ? normalizeWebappPathPrefix(webSiteValue.getString("webappPathPrefix")) : defaults.getWebappPathPrefix();
+        String webappPathPrefixHeader = defaults.getWebappPathPrefixHeader();
+
+        return new WebSiteProperties(httpPort, httpHost, httpsPort, httpsHost, enableHttps, webappPathPrefix, webappPathPrefixHeader);
     }
     
     /**
@@ -249,20 +273,30 @@ public final class WebSiteProperties {
     private final String httpsHost;
     private final boolean enableHttps;
 
+    private final String webappPathPrefix; // SCIPIO: added 2018-07-27
+    private final String webappPathPrefixHeader; // SCIPIO: added 2018-07-27
+
     private WebSiteProperties(Delegator delegator) {
         this.httpPort = EntityUtilProperties.getPropertyValue("url", "port.http", delegator);
         this.httpHost = EntityUtilProperties.getPropertyValue("url", "force.http.host", delegator);
         this.httpsPort = EntityUtilProperties.getPropertyValue("url", "port.https", delegator);
         this.httpsHost = EntityUtilProperties.getPropertyValue("url", "force.https.host", delegator);
         this.enableHttps = EntityUtilProperties.propertyValueEqualsIgnoreCase("url", "port.https.enabled", "Y", delegator);
+
+        this.webappPathPrefix = normalizeWebappPathPrefix(EntityUtilProperties.getPropertyValue("url", "webapp.url.path.prefix", delegator)); // SCIPIO
+        this.webappPathPrefixHeader = EntityUtilProperties.getPropertyValue("url", "webapp.url.path.prefix.httpHeader", delegator); // SCIPIO
     }
 
-    private WebSiteProperties(String httpPort, String httpHost, String httpsPort, String httpsHost, boolean enableHttps) {
+    private WebSiteProperties(String httpPort, String httpHost, String httpsPort, String httpsHost, boolean enableHttps,
+            String webappPathPrefix, String webappPathPrefixHeader) { // SCIPIO: new fields
         this.httpPort = httpPort;
         this.httpHost = httpHost;
         this.httpsPort = httpsPort;
         this.httpsHost = httpsHost;
         this.enableHttps = enableHttps;
+
+        this.webappPathPrefix = webappPathPrefix;
+        this.webappPathPrefixHeader = webappPathPrefixHeader;
     }
 
     /**
@@ -300,6 +334,21 @@ public final class WebSiteProperties {
         return enableHttps;
     }
 
+    /**
+     * SCIPIO: Returns the webapp/navigation URL path prefix.
+     */
+    public String getWebappPathPrefix() {
+        return webappPathPrefix;
+    }
+
+    /**
+     * SCIPIO: Returns the webapp/navigation URL path prefix HTTP header name.
+     * TODO: REVIEW: protected for now; probably no reason for any other class to use.
+     */
+    protected String getWebappPathPrefixHeader() {
+        return webappPathPrefixHeader;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("{httpPort=");
@@ -307,7 +356,12 @@ public final class WebSiteProperties {
         sb.append("httpHost=").append(httpHost).append(", ");
         sb.append("httpsPort=").append(httpsPort).append(", ");
         sb.append("httpsHost=").append(httpsHost).append(", ");
-        sb.append("enableHttps=").append(enableHttps).append("}");
+        // SCIPIO
+        //sb.append("enableHttps=").append(enableHttps).append("}");
+        sb.append("enableHttps=").append(enableHttps).append(", ");
+        sb.append("webappPathPrefix=").append(webappPathPrefix).append(", ");
+        sb.append("webappPathPrefixHeader=").append(webappPathPrefixHeader);
+        sb.append("}");
         return sb.toString();
     }
     
@@ -333,7 +387,9 @@ public final class WebSiteProperties {
                sameFields(this.httpPort, o.httpPort) &&
                sameFields(this.httpsHost, o.httpsHost) &&
                sameFields(this.httpsPort, o.httpsPort) &&
-               (this.enableHttps == o.enableHttps);
+               (this.enableHttps == o.enableHttps) &&
+               sameFields(this.webappPathPrefix, o.webappPathPrefix) &&
+               sameFields(this.webappPathPrefixHeader, o.webappPathPrefixHeader);
     }
     
     /**
@@ -362,7 +418,9 @@ public final class WebSiteProperties {
                sameFields(this.httpPort, o.httpPort, "80") &&
                sameFields(this.httpsHost, o.httpsHost, "localhost") &&
                sameFields(this.httpsPort, o.httpsPort, "443") &&
-               (this.enableHttps == o.enableHttps);
+               (this.enableHttps == o.enableHttps) &&
+               sameFields(this.webappPathPrefix, o.webappPathPrefix) &&
+               sameFields(this.webappPathPrefixHeader, o.webappPathPrefixHeader);
     }
     
     private static boolean sameFields(String first, String second) {
@@ -407,5 +465,12 @@ public final class WebSiteProperties {
         } else {
             return port;
         }
+    }
+    
+    private static String normalizeWebappPathPrefix(String path) { // SCIPIO: 2018-07-27
+        if ("/".equals(path)) return "";
+        // nobody will do this
+        //else if (path.endsWith("/")) return path.substring(0, path.length() - 1);
+        else return path;
     }
 }

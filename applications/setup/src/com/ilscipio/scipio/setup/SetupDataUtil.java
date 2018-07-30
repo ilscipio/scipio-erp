@@ -318,7 +318,6 @@ public abstract class SetupDataUtil {
                     topGlAccount = glAccountAndOrganizationFiltered.getRelatedOne("GlAccount", false);
                     topGlAccountId = glAccountAndOrganizationFiltered.getString("glAccountId");
                 }
-                Debug.logError("Setup: GL account '" + topGlAccountId + "' not found; ignoring", module);
             }
 
             if (UtilValidate.isNotEmpty(glAccountAndOrganizations)) {

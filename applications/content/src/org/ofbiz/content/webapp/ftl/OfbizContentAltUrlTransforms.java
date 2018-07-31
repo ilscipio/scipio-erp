@@ -21,6 +21,7 @@ package org.ofbiz.content.webapp.ftl;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.content.content.ContentUrlFilter;
+import org.ofbiz.webapp.control.WebAppConfigurationException;
 import org.ofbiz.webapp.ftl.OfbizContentTransform;
 import org.ofbiz.webapp.ftl.OfbizUrlTransform;
 
@@ -84,6 +86,11 @@ public class OfbizContentAltUrlTransforms implements TemplateTransformModel {
                         boolean strictDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we want strict handling
                         final Boolean strict = TransformUtil.getBooleanArg(args, "strict", strictDefault); // SCIPIO: new
                         
+                        Boolean fullPath = TransformUtil.getBooleanArg(args, "fullPath"); // SCIPIO: changed from boolean to Boolean
+                        Boolean secure = TransformUtil.getBooleanArg(args, "secure"); // SCIPIO: changed from boolean to Boolean
+                        Boolean encode = TransformUtil.getBooleanArg(args, "encode"); // SCIPIO: new flag
+                        Object urlParams = TransformUtil.getStringArg(args, "params", rawParams); // SCIPIO: new; TODO: support map (but needs special handling to respect rawParams)
+
                         String contentId = TransformUtil.getStringArg(args, "contentId", rawParams);
                         String viewContent = TransformUtil.getStringArg(args, "viewContent", rawParams);
                         Boolean urlDecode = TransformUtil.getBooleanArg(args, "urlDecode");
@@ -94,11 +101,16 @@ public class OfbizContentAltUrlTransforms implements TemplateTransformModel {
                         }
                         String url = "";
                         if (UtilValidate.isNotEmpty(contentId)) {
-                            url = ContentUrlFilter.makeContentAltUrl(request, response, contentId, viewContent, urlDecode);
+                            Locale locale = TransformUtil.getOfbizLocaleArgOrContextOrRequest(args, "locale", env); // SCIPIO
+                            // SCIPIO: replaced
+                            //url = ContentUrlFilter.makeContentAltUrl(request, response, contentId, viewContent, urlDecode);
+                            url = ContentUrlFilter.makeContentAltLink(request, response, locale, contentId, viewContent, urlDecode, urlParams, fullPath, secure, encode);
                         }
                         out.write(TransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));
                     }
                 } catch (TemplateModelException e) {
+                    throw new IOException(e.getMessage());
+                } catch (WebAppConfigurationException e) { // SCIPIO
                     throw new IOException(e.getMessage());
                 }
             }

@@ -130,8 +130,17 @@
             <param-name>defaultLocaleString</param-name>
             <param-value>en_US</param-value>
         </init-param>
-        <!-- SCIPIO: TODO: REVIEW: This should probably be changed -->
-        <init-param><param-name>viewRequest</param-name><param-value>ViewBlogArticle</param-value></init-param>
+        <init-param>
+            <param-name>viewRequest</param-name>
+            <param-value>ViewBlogArticle</param-value><!-- SCIPIO: TODO: REVIEW: This should probably be changed -->
+        </init-param>
+        <init-param>
+            <description>SCIPIO: The URL suffix appended to content alt URLs (default: "-content") (added 2018-07-31)
+                NOTE: In Scipio, this suffix no longer should be hardcoded into the alt URL DataResource.drObjectInfo
+                    field of the ALTERNATIVE_URL record; it is automatically appended by the URL generation code.</description>
+            <param-name>urlSuffix</param-name>
+            <param-value></param-value>
+        </init-param>
     </filter>
     <!-- SCIPIO: CMS Process filter -->
     <filter>

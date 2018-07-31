@@ -956,6 +956,10 @@ Builds an Ofbiz content/resource Alt URL, from a URL stored in the database by c
 
 STOCK OFBIZ UTILITY. It may be modified with enhanced capabilities for Scipio.
 
+NOTE: 2018-07-31: The ALT URLs come from DataResource.drObjectInfo of ALTERNATIVE_URL content records.
+    Unlike stock ofbiz, in Scipio, the drObjectInfo field should NOT contain the content url suffix
+    (default "-content"), which can now be specified in web.xml ContentUrlFilter config (urlSuffix).
+
 NOTE: 2016-10-18: URL decoding: The default behavior of this macro has been '''changed''' from 
     stock Ofbiz. By default this macro NO LONGER url-decodes the URL retrieved by contentId. The stock
     Ofbiz behavior was presumably originally written to URL-decode whole URLs that had been stored
@@ -987,8 +991,13 @@ NOTE: This macro is subject to escaping particularities - see its cousin @ofbizU
                               NOTE: 2016-10-19: Currently this parameter is ''not'' passed to #escapeFullUrl (when {{{escapeAs}}} is set), because the
                                   pre-escaped ampersand {{{&amp;}}} is too ubiquitous in existing code.
                               See @ofbizUrl for description.
+    fullPath                = See @ofbizUrl
+    secure                  = See @ofbizUrl
+    encode                  = See @ofbizUrl
+    params                  = Extra query parameters, as a string.
                               
   * History *
+    Fixed and new params for 1.14.5.
     Enhanced for 1.14.2.
 -->
 <#-- IMPLEMENTED AS TRANSFORM

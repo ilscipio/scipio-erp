@@ -28,14 +28,12 @@ import java.util.regex.Pattern;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
-import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
@@ -43,10 +41,10 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.common.UrlServletHelper;
 import org.ofbiz.entity.Delegator;
-import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.category.CatalogUrlFilter;
 import org.ofbiz.product.category.CategoryWorker;
+import org.ofbiz.webapp.WebAppUtil;
 import org.ofbiz.webapp.control.ContextFilter;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.control.RequestLinkUtil;
@@ -111,13 +109,12 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
 
         if (seoUrlEnabled) {
             
+            Delegator delegator = WebAppUtil.getDelegatorFilterSafe(request);
+
             if (SeoConfig.DEBUG_FORCERELOAD) { // force reload the worker and config
-                Delegator delegator = getDelegatorForControl(request, request.getServletContext());
                 urlWorker = SeoCatalogUrlWorker.createInstanceDeep(delegator, config.getServletContext().getInitParameter("webSiteId"));
             }
-            
-            Delegator delegator = getDelegatorForControl(request, request.getServletContext());
-            
+
             // TODO: REVIEW: it's possible some of the "always-run" calls below (such as prepareRequestAlways)
             // should actually run again even after forward...
             if (!Boolean.TRUE.equals(request.getAttribute(FORWARDED_ATTR))) {
@@ -283,6 +280,7 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
         return true;
     }
 
+    @SuppressWarnings("unused")
     private String rebuildCatalogLink(HttpServletRequest request, Delegator delegator, SeoCatalogUrlInfo urlInfo) {
         Locale locale = UtilHttp.getLocale(request);
         return urlWorker.makeCatalogLink(delegator, urlInfo, locale);
@@ -344,58 +342,6 @@ public class SeoCatalogUrlFilter extends CatalogUrlFilter { // extends ContextFi
                 super.sendRedirect(location);
             }
         }
-    }
-
-    /**
-     * Special delegator lookup for filters which may run early in a chain; in this case,
-     * request.getAttribute("delegator") may return nothing because
-     * ControlFilter/ControlServlet/LoginWorker not yet run.
-     * <p>
-     * FIXME?: This may be one request late for tenant delegator switches.
-     * <p>
-     * DEV NOTE: this is copied from CMS. TODO: move to a common util
-     *
-     * @param request
-     * @param servletContext
-     */
-    protected static Delegator getDelegatorForControl(HttpServletRequest request, ServletContext servletContext) {
-        Delegator delegator = null;
-
-        // Check request attribs
-        delegator = (Delegator) request.getAttribute("delegator");
-        if (delegator != null) {
-            return delegator;
-        }
-
-        // Check session attribs (mainly for tenant delegator) - but don't create session if none yet!
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            String delegatorName = (String) session.getAttribute("delegatorName");
-            if (UtilValidate.isNotEmpty(delegatorName)) {
-                delegator = DelegatorFactory.getDelegator(delegatorName);
-                if (delegator != null) {
-                    return delegator;
-                } else {
-                    Debug.logWarning("SCIPIO: SEO: ERROR: could not get session delegator for control/filter; " +
-                            "delegator factory returned null for session delegatorName \"" +
-                            delegatorName + "\"; defaulting to servlet or default delegator", module);
-                }
-            }
-        }
-
-        // Check servlet context
-        delegator = (Delegator) servletContext.getAttribute("delegator");
-        if (delegator != null) {
-            return delegator;
-        }
-
-        // Last resort: default delegator
-        delegator = DelegatorFactory.getDelegator("default");
-
-        if (delegator == null) {
-            Debug.logError("SCIPIO: SEO: ERROR: could not get any delegator for control/filter!", module);
-        }
-        return delegator;
     }
 
     /**

@@ -49,6 +49,22 @@ public final class WebSiteProperties {
     }
 
     /**
+     * SCIPIO: Returns a <code>WebSiteProperties</code> instance initialized to the settings found
+     * in the <code>url.properties</code> file, with request scope caching.
+     * Added 2018-07-31.
+     */
+    public static WebSiteProperties defaults(HttpServletRequest request) {
+        Assert.notNull("request", request);
+        WebSiteProperties webSiteProps = (WebSiteProperties) request.getAttribute("_DEF_WEBSITE_PROPS_");
+        if (webSiteProps == null) {
+            Delegator delegator = (Delegator) request.getAttribute("delegator");
+            webSiteProps = new WebSiteProperties(delegator);
+            request.setAttribute("_DEF_WEBSITE_PROPS_", webSiteProps);
+        }
+        return webSiteProps;
+    }
+
+    /**
      * Returns a <code>WebSiteProperties</code> instance initialized to the settings found
      * in the application's WebSite entity value. If the application does not have a
      * WebSite entity value then the instance is initialized to the settings found

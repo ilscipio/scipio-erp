@@ -34,10 +34,17 @@ public class WebSiteWorker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+    /**
+     * Gets the webSiteId for the current webapp, from the web.xml configuration.
+     * <p>
+     * SCIPIO: 2018-07-31: This is now safe to use from early filters.
+     */
     public static String getWebSiteId(ServletRequest request) {
-        ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
-
-        if (application == null) return null;
+        // SCIPIO: 2018-07-31: Since servlet API 3.0 we have better way that works even for early filters...
+        //ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
+        //
+        //if (application == null) return null;
+        ServletContext application = request.getServletContext();
         return application.getInitParameter("webSiteId");
     }
 

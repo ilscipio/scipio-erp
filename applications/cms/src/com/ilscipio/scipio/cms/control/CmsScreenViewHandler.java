@@ -22,6 +22,7 @@ import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.webapp.control.RequestUtil;
 import org.ofbiz.webapp.view.ViewHandlerException;
 import org.ofbiz.webapp.view.ViewHandlerExt;
+import org.ofbiz.webapp.website.WebSiteWorker;
 import org.ofbiz.widget.renderer.macro.MacroScreenViewHandler;
 import org.xml.sax.SAXException;
 
@@ -57,9 +58,7 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
 
     public static final Set<Integer> passOnHttpStatusesFromCms = Collections.unmodifiableSet(new HashSet<Integer>(Arrays.asList(
             new Integer[] { HttpServletResponse.SC_NOT_FOUND })));
-    
-    // (Keep our own var; don't depend on super implementation)
-    protected ServletContext servletContext = null;
+
     protected RenderInvoker renderInvoker = null;
     
     protected CmsWebSiteConfig webSiteConfig = CmsWebSiteConfig.getDefault();
@@ -87,7 +86,7 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
         
         String path = request.getPathInfo(); // DEV NOTE: do not rely on this
         
-        String webSiteId = CmsControlUtil.getWebSiteIdForControl(request, servletContext);
+        String webSiteId = WebSiteWorker.getWebSiteId(request);
         CmsPage cmsPage = null;
         CmsCallType renderMode;
         CmsView cmsView = CmsView.findByName(delegator, name, webSiteId, true);

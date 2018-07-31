@@ -22,8 +22,10 @@ import javax.servlet.http.HttpServletResponseWrapper;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.webapp.WebAppUtil;
 import org.ofbiz.webapp.control.ContextFilter;
 import org.ofbiz.webapp.control.RequestHandler;
+import org.ofbiz.webapp.website.WebSiteWorker;
 
 import com.ilscipio.scipio.ce.util.PathUtil;
 import com.ilscipio.scipio.cms.CmsUtil;
@@ -92,29 +94,18 @@ public class CmsProcessFilter implements Filter {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    //private FilterConfig config = null;
-    private ServletContext servletContext;
     private CmsWebSiteConfig webSiteConfig = CmsWebSiteConfig.getDefault();
     
-    /* Dev note: To disable the process rewriting, set the two following booleans to false: */
+    // DEV NOTE: To disable the process rewriting, set the two following booleans to false:
     private boolean forwardSourcePathParam = true;
     private boolean urlRewriteSourcePath = true;
     private boolean denyExternalRewriteSourcePathRequests = true;
-    
-    // finally removed
-//    // 2016: legacy lookup enabled for now, copied from old CmsControlServlet
-//    private final boolean legacyPageLookup = false; // TODO: disable/remove
-//    // NOTE: 2016: we now have multiple possible targets (cmsPageXxx); use plain no auth for now for legacy cases
-//    protected static String cmsDefaultForwardPath = "/control/cmsPagePlainNoAuth";
-    
+
     @Override
     public void init(FilterConfig config) throws ServletException {
-        //this.config = config;
-        this.servletContext = config.getServletContext();
-
         // hasControllerHint false because process filter being present doesn't really guarantee a controller is there
-        CmsWebSiteInfo webSiteInfo = CmsWebSiteInfo.registerCmsWebSite(this.servletContext, false);
-        this.webSiteConfig = CmsWebSiteInfo.getWebSiteConfigOrDefaults(webSiteInfo, servletContext);
+        CmsWebSiteInfo webSiteInfo = CmsWebSiteInfo.registerCmsWebSite(config.getServletContext(), false);
+        this.webSiteConfig = CmsWebSiteInfo.getWebSiteConfigOrDefaults(webSiteInfo, config.getServletContext());
     }
 
     @Override
@@ -201,8 +192,8 @@ public class CmsProcessFilter implements Filter {
         
         // WARN/FIXME?: The delegator lookup will be one request out of sync for tenant delegator switches
         // when the process filter run before ofbiz's ContextFilter.
-        Delegator delegator = CmsControlUtil.getDelegatorForControl(request, servletContext);
-        String webSiteId = CmsControlUtil.getWebSiteIdForControl(request, servletContext);
+        Delegator delegator = WebAppUtil.getDelegatorFilterSafe(request);
+        String webSiteId = WebSiteWorker.getWebSiteId(request);
         // 2016: check render mode
         CmsCallType renderMode = CmsControlUtil.getRenderModeParam(request, webSiteConfig);
         

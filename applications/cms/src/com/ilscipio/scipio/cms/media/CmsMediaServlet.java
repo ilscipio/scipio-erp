@@ -21,15 +21,14 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.common.image.ImageVariantConfig;
 import org.ofbiz.content.data.DataResourceWorker;
 import org.ofbiz.entity.Delegator;
-import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ServiceDispatcher;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.webapp.WebAppUtil;
 
 import com.ilscipio.scipio.cms.CmsUtil;
 
@@ -82,8 +81,8 @@ public class CmsMediaServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // SPECIAL: getDelegator/getDispatcher methods required so tenant db doesn't break (or breaks less)
-        Delegator delegator = getDelegator(request);
-        LocalDispatcher dispatcher = getDispatcher(request);
+        Delegator delegator = WebAppUtil.getDelegatorFilterSafe(request);
+        LocalDispatcher dispatcher = WebAppUtil.getDispatcherFilterSafe(request, delegator);
         Locale locale = UtilHttp.getLocale(request);
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
         
@@ -299,40 +298,5 @@ public class CmsMediaServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal error"); // WARN: DO NOT send details, for security reasons
             return;
         }
-    }
-
-    /**
-     * @see javax.servlet.http.HttpServlet#destroy()
-     */
-    @Override
-    public void destroy() {
-        super.destroy();
-    }
-
-    /**
-     * SPECIAL: needed to not break tenant dbs.
-     */
-    private Delegator getDelegator(HttpServletRequest request) {
-        Delegator delegator = (Delegator) request.getAttribute("delegator");
-        if (delegator != null) return delegator;
-        delegator = (Delegator) request.getSession().getAttribute("delegator");
-        if (delegator != null) return delegator;
-        delegator = (Delegator) request.getServletContext().getAttribute("delegator");
-        if (delegator != null) return delegator;
-        return DelegatorFactory.getDelegator("default");
-    }
-    
-    /**
-     * SPECIAL: needed to not break tenant dbs.
-     */
-    private LocalDispatcher getDispatcher(HttpServletRequest request) {
-        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        if (dispatcher != null) return dispatcher;
-        dispatcher = (LocalDispatcher) request.getSession().getAttribute("dispatcher");
-        if (dispatcher != null) return dispatcher;
-        dispatcher = (LocalDispatcher) request.getServletContext().getAttribute("dispatcher");
-        if (dispatcher != null) return dispatcher;
-        Delegator delegator = getDelegator(request);
-        return ServiceDispatcher.getLocalDispatcher(delegator.getDelegatorName(), delegator);
     }
 }

@@ -392,23 +392,9 @@ public final class WebSiteProperties {
      */
     @Override
     public boolean equals(Object other) {
-        if (this == other) {
-            return true;
-        }
-        else if (other == null) {
-            return false;
-        }
-        else if (!(other instanceof WebSiteProperties)) {
-            return false;
-        }
-        WebSiteProperties o = (WebSiteProperties) other;
-        return sameFields(this.httpHost, o.httpHost) &&
-               sameFields(this.httpPort, o.httpPort) &&
-               sameFields(this.httpsHost, o.httpsHost) &&
-               sameFields(this.httpsPort, o.httpsPort) &&
-               (this.enableHttps == o.enableHttps) &&
-               sameFields(this.webappPathPrefix, o.webappPathPrefix) &&
-               sameFields(this.webappPathPrefixHeader, o.webappPathPrefixHeader);
+        return equalsProtoHostPort(other) &&
+               sameFields(this.webappPathPrefix, ((WebSiteProperties) other).webappPathPrefix) &&
+               sameFields(this.webappPathPrefixHeader, ((WebSiteProperties) other).webappPathPrefixHeader);
     }
     
     /**
@@ -423,13 +409,48 @@ public final class WebSiteProperties {
      * @see java.lang.Object#equals(java.lang.Object)
      */
     public boolean equalsWithHardDefaults(Object other) {
+        return equalsProtoHostPortWithHardDefaults(other) &&
+               sameFields(this.webappPathPrefix, ((WebSiteProperties) other).webappPathPrefix) &&
+               sameFields(this.webappPathPrefixHeader, ((WebSiteProperties) other).webappPathPrefixHeader);
+    }
+
+    /**
+     * SCIPIO: Returns true if and only if all host-related fields in this object match 
+     * the ones in the other WebSiteProperties.
+     */
+    public boolean equalsProtoHostPort(Object other) {
         if (this == other) {
             return true;
-        }
-        else if (other == null) {
+        } else if (other == null) {
+            return false;
+        } else if (!(other instanceof WebSiteProperties)) {
             return false;
         }
-        else if (!(other instanceof WebSiteProperties)) {
+        WebSiteProperties o = (WebSiteProperties) other;
+        return sameFields(this.httpHost, o.httpHost) &&
+               sameFields(this.httpPort, o.httpPort) &&
+               sameFields(this.httpsHost, o.httpsHost) &&
+               sameFields(this.httpsPort, o.httpsPort) &&
+               (this.enableHttps == o.enableHttps);
+    }
+
+    /**
+     * SCIPIO: Returns true if and only if all host-related fields in this object match 
+     * the ones in the other WebSiteProperties. Fields which are missing, 
+     * such as hosts or ports, are substituted with hardcoded Ofbiz defaults when 
+     * performing the comparison.
+     * <p>
+     * Currently, the hard defaults are "localhost" for host fields, "80" for httpPort
+     * and "443" for httpsPort. 
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    public boolean equalsProtoHostPortWithHardDefaults(Object other) {
+        if (this == other) {
+            return true;
+        } else if (other == null) {
+            return false;
+        } else if (!(other instanceof WebSiteProperties)) {
             return false;
         }
         WebSiteProperties o = (WebSiteProperties) other;
@@ -437,17 +458,14 @@ public final class WebSiteProperties {
                sameFields(this.httpPort, o.httpPort, "80") &&
                sameFields(this.httpsHost, o.httpsHost, "localhost") &&
                sameFields(this.httpsPort, o.httpsPort, "443") &&
-               (this.enableHttps == o.enableHttps) &&
-               sameFields(this.webappPathPrefix, o.webappPathPrefix) &&
-               sameFields(this.webappPathPrefixHeader, o.webappPathPrefixHeader);
+               (this.enableHttps == o.enableHttps);
     }
     
     private static boolean sameFields(String first, String second) {
         // SCIPIO: treat null and empty the same, just to be safe
         if (first != null && !first.isEmpty()) {
             return first.equals(second);
-        }
-        else {
+        } else {
             return (second == null || second.isEmpty());
         }
     }

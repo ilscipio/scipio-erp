@@ -2010,6 +2010,21 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
       <li><@ofbizContentUrl uri=rewrapString("/image/some-thing/original.jpg") variant="-detail"/> (force-append)</li>
     </ul>
   </@section>
+  
+  <@section title="Content Alt URLs (@ofbizContentAltUrl)">
+      <#macro ofbizContentAltUrlTests altUrlCntId>
+        <#if delegator.findOne("Content", {"contentId":altUrlCntId}, false)?has_content>
+        <ul>
+          <li><@ofbizContentAltUrl contentId=altUrlCntId/></li>
+          <li><@ofbizContentAltUrl contentId=altUrlCntId params="extraParam1=val1&extraParams2=val2"/></li>
+          <li><@ofbizContentAltUrl contentId=altUrlCntId fullPath=true/></li>
+          <li><@ofbizContentAltUrl contentId=altUrlCntId secure=true/></li>
+        </ul>
+        </#if>
+      </#macro>
+      <@ofbizContentAltUrlTests "TESTCNT1000"/>
+      <@ofbizContentAltUrlTests "TESTCNT1001"/>
+  </@section>
 <#else>
   <p>WARNING: No WebSite in system available to use for link tests</p>
 </#if>

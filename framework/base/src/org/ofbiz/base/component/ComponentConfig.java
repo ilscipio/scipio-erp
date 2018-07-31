@@ -524,11 +524,11 @@ public final class ComponentConfig {
             for (Element curElement : childElements) {
                 String depName = curElement.getAttribute("component-name");
                 if (depName.equals(this.componentName)) {
-                    Debug.logWarning("SCIPIO: component '" + this.componentName + "' has dependency on itself", module);
+                    Debug.logWarning("Scipio: component '" + this.componentName + "' has dependency on itself", module);
                     continue;
                 }
                 if (componentDependencies.contains(depName)) {
-                    Debug.logWarning("SCIPIO: component '" + this.componentName + "' has duplicate dependency on component '" + depName + "'", module);
+                    Debug.logWarning("Scipio: component '" + this.componentName + "' has duplicate dependency on component '" + depName + "'", module);
                     continue;
                 }
                 componentDependencies.add(depName);

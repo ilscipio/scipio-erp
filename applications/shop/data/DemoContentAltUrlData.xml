@@ -21,23 +21,49 @@ under the License.
     
     <!-- Demo Content Alternative Url -->
     <!-- The content alternative url come from the contentName in the Content entity.-->
+    <!-- SCIPIO: NOTE: 2018-07-31: Unlike in stock ofbiz, in Scipio, the content URLs should NOT 
+        to hardcode the "-content" suffix into DataResource.drObjectInfo; this was completely inconsistent
+        with catalog alt URLs. This way, the -content suffix can be customized in web.xml
+        as "urlSuffix" config option to the ContentUrlFilter. -->
     
     <!-- SCIPIO: Currently all these are links to blogs, which is unneeded functionality; 
         NOTE: Leave these here as examples of how to make alternative URLs (or provide new ones)
-    <DataResource dataResourceId="DRS_CNT_URL005" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_IN_PROGRESS" objectInfo="/Cute-Kid-BLG10000-content" localeString="en_US"/>
+    <DataResource dataResourceId="DRS_CNT_URL005" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_IN_PROGRESS" objectInfo="/Cute-Kid-BLG10000" localeString="en_US"/>
     <ElectronicText dataResourceId="DRS_CNT_URL005" textData="Cute Kid"/>
     <Content contentId="CNT_ALTURL_005" contentTypeId="DOCUMENT" dataResourceId="DRS_CNT_URL005" statusId="CTNT_IN_PROGRESS" localeString="en_US"/>
     <ContentAssoc contentId="BLG10000" contentIdTo="CNT_ALTURL_005" contentAssocTypeId="ALTERNATIVE_URL" fromDate="2011-06-23 01:01:01"></ContentAssoc>
     
-    <DataResource dataResourceId="DRS_CNT_URL006" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_IN_PROGRESS" objectInfo="/Next-Linus-BLG10010-content" localeString="en_US"/>
+    <DataResource dataResourceId="DRS_CNT_URL006" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_IN_PROGRESS" objectInfo="/Next-Linus-BLG10010" localeString="en_US"/>
     <ElectronicText dataResourceId="DRS_CNT_URL006" textData="Next Linus"/>
     <Content contentId="CNT_ALTURL_006" contentTypeId="DOCUMENT" dataResourceId="DRS_CNT_URL006" statusId="CTNT_IN_PROGRESS" localeString="en_US"/>
     <ContentAssoc contentId="BLG10010" contentIdTo="CNT_ALTURL_006" contentAssocTypeId="ALTERNATIVE_URL" fromDate="2011-06-23 01:01:01"></ContentAssoc>
     
-    <DataResource dataResourceId="DRS_CNT_URL007" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_IN_PROGRESS" objectInfo="/2008-Elections-BLG10007-content" localeString="en_US"/>
+    <DataResource dataResourceId="DRS_CNT_URL007" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_IN_PROGRESS" objectInfo="/2008-Elections-BLG10007" localeString="en_US"/>
     <ElectronicText dataResourceId="DRS_CNT_URL007" textData="2008 Elections"/>
     <Content contentId="CNT_ALTURL_007" contentTypeId="DOCUMENT" dataResourceId="DRS_CNT_URL007" statusId="CTNT_IN_PROGRESS" localeString="en_US"/>
     <ContentAssoc contentId="BLG10007" contentIdTo="CNT_ALTURL_007" contentAssocTypeId="ALTERNATIVE_URL" fromDate="2011-06-23 01:01:01"></ContentAssoc>
     -->
+ 
+    <!-- SCIPIO: Demo content for @ofbizContentAltUrl -->
+
+    <!-- Test content with alt URL -->
+    <DataResource dataResourceId="TESTCNT1000" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_IN_PROGRESS"/>
+    <ElectronicText dataResourceId="TESTCNT1000" textData="Test Content 1000"/>
+    <Content contentId="TESTCNT1000" contentTypeId="DOCUMENT" dataResourceId="TESTCNT1000" statusId="CTNT_IN_PROGRESS"/>
+    
+    <DataResource dataResourceId="TESTCNT1000-URLEN" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_IN_PROGRESS" objectInfo="/test-content-1000" localeString="en"/>
+    <ElectronicText dataResourceId="TESTCNT1000-URLEN" textData="Test Content 1000 Alt Url En"/>
+    <Content contentId="TESTCNT1000-URLEN" contentTypeId="DOCUMENT" dataResourceId="TESTCNT1000-URLEN" statusId="CTNT_IN_PROGRESS" localeString="en"/>
+    <ContentAssoc contentId="TESTCNT1000" contentIdTo="TESTCNT1000-URLEN" contentAssocTypeId="ALTERNATIVE_URL" fromDate="2011-06-23 01:01:01"/>
+
+    <DataResource dataResourceId="TESTCNT1000-URLDE" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_IN_PROGRESS" objectInfo="/testinhalt-1000" localeString="de"/>
+    <ElectronicText dataResourceId="TESTCNT1000-URLDE" textData="Test Content 1000 Alt Url De"/>
+    <Content contentId="TESTCNT1000-URLDE" contentTypeId="DOCUMENT" dataResourceId="TESTCNT1000-URLDE" statusId="CTNT_IN_PROGRESS" localeString="de"/>
+    <ContentAssoc contentId="TESTCNT1000" contentIdTo="TESTCNT1000-URLDE" contentAssocTypeId="ALTERNATIVE_URL" fromDate="2011-06-23 01:01:01"/>
+
+    <!-- Test content with no alt URL -->
+    <DataResource dataResourceId="TESTCNT1001" dataResourceTypeId="ELECTRONIC_TEXT" statusId="CTNT_IN_PROGRESS"/>
+    <ElectronicText dataResourceId="TESTCNT1001" textData="Test Content 1001"/>
+    <Content contentId="TESTCNT1001" contentTypeId="DOCUMENT" dataResourceId="TESTCNT1001" statusId="CTNT_IN_PROGRESS"/>
  
 </entity-engine-xml>

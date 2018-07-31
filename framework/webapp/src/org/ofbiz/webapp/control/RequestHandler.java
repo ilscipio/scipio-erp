@@ -1679,13 +1679,15 @@ public class RequestHandler {
                     String webSiteId = WebAppUtil.getWebSiteId(webappInfo);
                     if (webSiteId != null && !webSiteId.isEmpty()) {
                         webSiteProps = WebSiteProperties.from(request, webSiteId);
+                    } else {
+                        // 2018-07-31: this is an error; use defaults for these
+                        //webSiteProps = WebSiteProperties.from(request);
+                        webSiteProps = WebSiteProperties.defaults(request);
                     }
-                    else {
-                        webSiteProps = WebSiteProperties.from(request);
-                    }
-                }
-                else {
-                    webSiteProps = WebSiteProperties.from(request);
+                } else {
+                    // 2018-07-31: this is an error; use defaults for these
+                    //webSiteProps = WebSiteProperties.from(request);
+                    webSiteProps = WebSiteProperties.defaults(request);
                 }
             } catch (Exception e) { // SCIPIO: just catch everything: GenericEntityException
                 // If the entity engine is throwing exceptions, then there is no point in continuing.
@@ -1725,8 +1727,7 @@ public class RequestHandler {
                             Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
                             return null;
                         }
-                    }
-                    else {
+                    } else {
                         // SCIPIO: stock case
                         requestMap = getControllerConfig().getRequestMapMap().get(requestUri);
                     }
@@ -1818,8 +1819,7 @@ public class RequestHandler {
             try {
                 if (controller) {
                     builder.buildPathPart(newURL, url);
-                }
-                else {
+                } else {
                     builder.buildPathPartWithContextRoot(newURL, url);
                 }
             } catch (WebAppConfigurationException e) {

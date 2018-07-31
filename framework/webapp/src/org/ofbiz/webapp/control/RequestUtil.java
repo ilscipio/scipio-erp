@@ -2,25 +2,20 @@ package org.ofbiz.webapp.control;
 
 import java.util.Locale;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilRender;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.entity.Delegator;
-import org.ofbiz.entity.DelegatorFactory;
 
 /**
  * SCIPIO: Request utilities.
  */
 public abstract class RequestUtil {
 
-    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     // TODO: unhardcode
     private static final String GENERICERRMSG_EN_FALLBACK = "An error occurred. Please contact support.";
@@ -100,90 +95,5 @@ public abstract class RequestUtil {
     
     public static String getGenericErrorMessage() {
         return getGenericErrorMessage(Locale.ENGLISH);
-    }
-
-    /**
-     * Obtains the delegator from current request in a read-only (does not create session
-     * or populate any attributes), best-effort fashion.
-     * <p>
-     * WARN: TODO: REVIEW: For tenant delegators, this may be one request late
-     * in returning the tenant delegator, during the tenant login; implications unclear.
-     * DEV NOTE: If this is fixed in the future, it may need to do redundant tenant
-     * delegator preparation.
-     * <p>
-     * DEV NOTE: This must stay in sync with logic from {@link ContextFilter}.
-     * <p>
-     * Added 2018-07-31.
-     */
-    public static Delegator getDelegatorReadOnly(HttpServletRequest request) {
-        Delegator delegator = (Delegator) request.getAttribute("delegator");
-        if (delegator != null) {
-            return delegator;
-        }
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            delegator = (Delegator) session.getAttribute("delegator");
-            if (delegator != null) {
-                return delegator;
-            }
-            String delegatorName = (String) session.getAttribute("delegatorName");
-            if (delegatorName != null) {
-                delegator = DelegatorFactory.getDelegator(delegatorName);
-                if (delegator != null) {
-                    return delegator;
-                } else {
-                    Debug.logError("ERROR: delegator factory returned null for delegatorName \"" 
-                            + delegatorName + "\" from session attributes", module);
-                }
-            }
-        }
-        return getDelegatorReadOnly(request.getServletContext());
-    }
-
-    public static Delegator getDelegatorReadOnly(ServletContext servletContext) {
-        Delegator delegator = (Delegator) servletContext.getAttribute("delegator");
-        if (delegator != null) {
-            return delegator;
-        }
-        String delegatorName = servletContext.getInitParameter("entityDelegatorName");
-        if (delegatorName == null || delegatorName.length() <= 0) {
-            delegatorName = "default";
-        }
-        delegator = DelegatorFactory.getDelegator(delegatorName);
-        if (delegator != null) {
-            return delegator;
-        } else {
-            Debug.logError("ERROR: delegator factory returned null for delegatorName \"" 
-                    + delegatorName + "\" from servlet context", module);
-        }
-        if (!"default".equals(delegatorName)) {
-            delegator = DelegatorFactory.getDelegator("default");
-            if (delegator != null) {
-                return delegator;
-            } else {
-                Debug.logError("ERROR: delegator factory returned null for delegatorName \"" 
-                        + "default\" from servlet context", module);
-            }
-        }
-        return delegator;
-    }
-
-    /**
-     * Obtains the delegator from current request in a read-only (does not create session
-     * or populate any attributes), best-effort fashion, suitable for calls from early filters.
-     * <p>
-     * WARN: TODO: REVIEW: For tenant delegators, this may be one request late
-     * in returning the tenant delegator, during the tenant login; implications unclear.
-     * DEV NOTE: If this is fixed in the future, it may need to do redundant tenant
-     * delegator preparation.
-     * <p>
-     * Added 2018-07-31.
-     */
-    public static Delegator getDelegatorFilterSafe(HttpServletRequest request) {
-        return getDelegatorReadOnly(request);
-    }
-
-    public static Delegator getDelegatorFilterSafe(ServletContext servletContext) {
-        return getDelegatorReadOnly(servletContext);
     }
 }

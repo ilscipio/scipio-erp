@@ -29,7 +29,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.tomcat.util.digester.Digester;
 import org.apache.tomcat.util.descriptor.DigesterFactory;
@@ -43,6 +45,9 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilXml.LocalErrorHandler;
 import org.ofbiz.base.util.UtilXml.LocalResolver;
 import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.DelegatorFactory;
+import org.ofbiz.webapp.control.ContextFilter;
 import org.ofbiz.webapp.control.ControlServlet;
 import org.ofbiz.webapp.control.ServletUtil;
 import org.xml.sax.ErrorHandler;
@@ -468,6 +473,82 @@ public final class WebAppUtil {
             return Collections.<String, String> emptyMap();
         }
     }
-    
+
+    /**
+     * SCIPIO: Obtains the delegator from current request in a read-only (does not create session
+     * or populate any attributes), best-effort fashion.
+     * <p>
+     * WARN: TODO: REVIEW: For tenant delegators, this may be one request late
+     * in returning the tenant delegator, during the tenant login; implications unclear.
+     * DEV NOTE: If this is fixed in the future, it may need to do redundant tenant
+     * delegator preparation.
+     * <p>
+     * Added 2018-07-31.
+     */
+    public static Delegator getDelegatorReadOnly(HttpServletRequest request) {
+        Delegator delegator = (Delegator) request.getAttribute("delegator");
+        if (delegator != null) {
+            return delegator;
+        }
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            delegator = (Delegator) session.getAttribute("delegator");
+            if (delegator != null) {
+                return delegator;
+            }
+            String delegatorName = (String) session.getAttribute("delegatorName");
+            if (delegatorName != null) {
+                delegator = DelegatorFactory.getDelegator(delegatorName);
+                if (delegator != null) {
+                    return delegator;
+                } else {
+                    Debug.logError("ERROR: delegator factory returned null for delegatorName \"" 
+                            + delegatorName + "\" from session attributes", module);
+                }
+            }
+        }
+        ServletContext servletContext = request.getServletContext();
+        delegator = (Delegator) servletContext.getAttribute("delegator");
+        if (delegator != null) {
+            return delegator;
+        }
+        String delegatorName = servletContext.getInitParameter("entityDelegatorName");
+        if (delegatorName == null || delegatorName.length() <= 0) {
+            delegatorName = "default";
+        }
+        delegator = DelegatorFactory.getDelegator(delegatorName);
+        if (delegator != null) {
+            return delegator;
+        } else {
+            Debug.logError("ERROR: delegator factory returned null for delegatorName \"" 
+                    + delegatorName + "\" from servlet context", module);
+        }
+        if (!"default".equals(delegatorName)) {
+            delegator = DelegatorFactory.getDelegator("default");
+            if (delegator != null) {
+                return delegator;
+            } else {
+                Debug.logError("ERROR: delegator factory returned null for delegatorName \"" 
+                        + "default\" from servlet context", module);
+            }
+        }
+        return delegator;
+    }
+
+    /**
+     * SCIPIO: Obtains the delegator from current request in a read-only (does not create session
+     * or populate any attributes), best-effort fashion, safe for calling from early filters.
+     * <p>
+     * WARN: TODO: REVIEW: For tenant delegators, this may be one request late
+     * in returning the tenant delegator, during the tenant login; implications unclear.
+     * DEV NOTE: If this is fixed in the future, it may need to do redundant tenant
+     * delegator preparation.
+     * <p>
+     * Added 2018-07-31.
+     */
+    public static Delegator getDelegatorFilterSafe(HttpServletRequest request) {
+        return getDelegatorReadOnly(request);
+    }
+
     private WebAppUtil() {}
 }

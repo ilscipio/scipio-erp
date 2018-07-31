@@ -47,6 +47,8 @@ import org.ofbiz.base.util.UtilXml.LocalResolver;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
+import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ServiceContainer;
 import org.ofbiz.webapp.control.ContextFilter;
 import org.ofbiz.webapp.control.ControlServlet;
 import org.ofbiz.webapp.control.ServletUtil;
@@ -490,7 +492,7 @@ public final class WebAppUtil {
         if (delegator != null) {
             return delegator;
         }
-        HttpSession session = request.getSession(false);
+        HttpSession session = request.getSession(false); // do not create session
         if (session != null) {
             delegator = (Delegator) session.getAttribute("delegator");
             if (delegator != null) {
@@ -507,30 +509,12 @@ public final class WebAppUtil {
                 }
             }
         }
-        ServletContext servletContext = request.getServletContext();
-        delegator = (Delegator) servletContext.getAttribute("delegator");
-        if (delegator != null) {
-            return delegator;
-        }
-        String delegatorName = servletContext.getInitParameter("entityDelegatorName");
-        if (delegatorName == null || delegatorName.length() <= 0) {
-            delegatorName = "default";
-        }
-        delegator = DelegatorFactory.getDelegator(delegatorName);
-        if (delegator != null) {
-            return delegator;
-        } else {
-            Debug.logError("ERROR: delegator factory returned null for delegatorName \"" 
-                    + delegatorName + "\" from servlet context", module);
-        }
-        if (!"default".equals(delegatorName)) {
-            delegator = DelegatorFactory.getDelegator("default");
-            if (delegator != null) {
-                return delegator;
-            } else {
-                Debug.logError("ERROR: delegator factory returned null for delegatorName \"" 
-                        + "default\" from servlet context", module);
-            }
+        delegator = (Delegator) request.getServletContext().getAttribute("delegator");
+        if (delegator == null) {
+            // NOTE: this means the web.xml is not properly configured, because servlet context
+            // delegator should have been made available by ContextFilter.init.
+            Debug.logError("ERROR: delegator not found in servlet context; please make sure the webapp's"
+                    + " web.xml file is properly configured to load ContextFilter and specify entityDelegatorName", module); 
         }
         return delegator;
     }
@@ -548,6 +532,44 @@ public final class WebAppUtil {
      */
     public static Delegator getDelegatorFilterSafe(HttpServletRequest request) {
         return getDelegatorReadOnly(request);
+    }
+
+    /**
+     * SCIPIO: Obtains the dispatcher from current request in a read-only (does not create session
+     * or populate any attributes), best-effort fashion.
+     * <p>
+     * Added 2018-07-31.
+     */
+    public static LocalDispatcher getDispatcherReadOnly(HttpServletRequest request, Delegator delegator) {
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        if (dispatcher != null) {
+            return dispatcher;
+        }
+        HttpSession session = request.getSession(false); // do not create session
+        if (session != null) {
+            dispatcher = (LocalDispatcher) session.getAttribute("dispatcher");
+            if (dispatcher != null) {
+                return dispatcher;
+            }
+        }
+        dispatcher = (LocalDispatcher) request.getServletContext().getAttribute("dispatcher");
+        if (delegator == null) {
+            // NOTE: this means the web.xml is not properly configured, because servlet context
+            // dispatcher should have been made available by ContextFilter.init.
+            Debug.logError("ERROR: dispatcher not found in servlet context; please make sure the webapp's"
+                    + " web.xml file is properly configured to load ContextFilter and specify localDispatcherName", module); 
+        }
+        return dispatcher;
+    }
+
+    /**
+     * SCIPIO: Obtains the dispatcher from current request in a read-only (does not create session
+     * or populate any attributes), best-effort fashion, safe for calling from early filters.
+     * <p>
+     * Added 2018-07-31.
+     */
+    public static LocalDispatcher getDispatcherFilterSafe(HttpServletRequest request, Delegator delegator) {
+        return getDispatcherReadOnly(request, delegator);
     }
 
     private WebAppUtil() {}

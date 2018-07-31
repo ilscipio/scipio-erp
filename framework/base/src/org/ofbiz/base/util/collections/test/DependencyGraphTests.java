@@ -39,7 +39,7 @@ public class DependencyGraphTests extends GenericTestCaseBase {
             in.put("testcomp8", Arrays.asList("testcomp6"));
             depGraph = new DependencyGraph<>(in);
             resolved = depGraph.getResolvedDependenciesDfs();
-            System.out.println("SCIPIO: Dependency graph test 1:"
+            System.out.println("Scipio: Dependency graph test 1:"
                     + "\nOriginal order: " + new ArrayList<String>(in.keySet()).toString()
                     + "\nResolved order: " + resolved.toString());
             
@@ -54,7 +54,7 @@ public class DependencyGraphTests extends GenericTestCaseBase {
             in.put("testcomp8", Arrays.asList("testcomp6", "testcomp4"));
             depGraph = new DependencyGraph<>(in);
             resolved = depGraph.getResolvedDependenciesDfs();
-            System.out.println("SCIPIO: Dependency graph test 2: order should be unchanged: "
+            System.out.println("Scipio: Dependency graph test 2: order should be unchanged: "
                     + "\nOriginal order: " + new ArrayList<String>(in.keySet()).toString()
                     + "\nResolved order: " + resolved.toString());
             
@@ -70,15 +70,15 @@ public class DependencyGraphTests extends GenericTestCaseBase {
             depGraph = new DependencyGraph<>(in);
             try {
                 resolved = depGraph.getResolvedDependenciesDfs();
-                System.err.println("ERROR: SCIPIO: Dependency graph test 3: ERROR: failed to detect circular dependency: "
+                System.err.println("ERROR: Scipio: Dependency graph test 3: ERROR: failed to detect circular dependency: "
                     + "\nOriginal order: " + new ArrayList<String>(in.keySet()).toString()
                     + "\nResolved order: " + resolved.toString());
             } catch(IllegalStateException e) {
-                System.out.println("SCIPIO: Dependency graph test 3: the following error message should be a circular"
+                System.out.println("Scipio: Dependency graph test 3: the following error message should be a circular"
                         + " dependency error: " + e.getMessage());
             }
         } catch (Exception e) {
-            System.err.println("ERROR: SCIPIO: Unexpected dependency graph test error: " + e.getMessage());
+            System.err.println("ERROR: Scipio: Unexpected dependency graph test error: " + e.getMessage());
         }
     }
     

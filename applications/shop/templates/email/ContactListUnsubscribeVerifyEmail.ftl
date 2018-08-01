@@ -25,7 +25,7 @@ under the License.
 <p>We have received a request for unsubscription to the ${contactList.contactListName} contact list.</p>
 <p>To complete your unsubscription click the on the following link:</p>
 
-<#assign verifyUrl = baseEcommerceSecureUrl+'contactListOptOut?contactListId='+contactListParty.contactListId+'&amp;communicationEventId='+communicationEventId!+'&amp;partyId='+contactListParty.partyId+'&amp;fromDate='+contactListParty.fromDate+'&amp;statusId=CLPT_UNSUBSCRIBED&amp;optInVerifyCode='+contactListPartyStatus.optInVerifyCode>
+<#assign verifyUrl = baseEcommerceSecureUrl+'/'+'contactListOptOut?contactListId='+contactListParty.contactListId+'&amp;communicationEventId='+communicationEventId!+'&amp;partyId='+contactListParty.partyId+'&amp;fromDate='+contactListParty.fromDate+'&amp;statusId=CLPT_UNSUBSCRIBED&amp;optInVerifyCode='+contactListPartyStatus.optInVerifyCode>
 <#if (contactListParty.preferredContactMechId)??>
     <#assign verifyUrl= verifyUrl+"&amp;preferredContactMechId="+contactListParty.preferredContactMechId>
 </#if>

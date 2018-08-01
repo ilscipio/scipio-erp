@@ -19,7 +19,7 @@ under the License.
 <div>
     ${content}
 </div>
-<#assign verifyUrl = baseEcommerceSecureUrl + "updateContactListPartyNoUserLogin" />
+<#assign verifyUrl = baseEcommerceSecureUrl+'/'+"updateContactListPartyNoUserLogin" />
 <form method="post" action="${verifyUrl}">
     <fieldset>
         <label>E-mail: ${emailAddress}</label>

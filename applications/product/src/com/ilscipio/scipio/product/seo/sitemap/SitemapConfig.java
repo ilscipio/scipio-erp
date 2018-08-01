@@ -411,7 +411,7 @@ public class SitemapConfig implements Serializable {
      */
     public String getDefaultWebappPathPrefix(OfbizUrlBuilder urlBuilder) throws GenericEntityException, WebAppConfigurationException, IOException, SAXException {
         StringBuilder sb = new StringBuilder();
-        urlBuilder.buildPathPartWithWebappPrefix(sb, "");
+        urlBuilder.buildPathPartWithWebappPathPrefix(sb, "");
         PathUtil.removeTrailDelim(sb);
         return sb.toString();
     }

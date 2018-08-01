@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.util.Assert;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -196,7 +195,27 @@ public final class OfbizUrlBuilder {
         buildPathPart(buffer, url);
         return makeSecure;
     }
-    
+
+    /**
+     * SCIPIO: Builds a full URL - including scheme, host, context root and resource (custom servlet).
+     * Added 2018-08-01.
+     */
+    public boolean buildFullUrlWithContextRoot(Appendable buffer, String url, boolean useSSL) throws WebAppConfigurationException, IOException {
+        boolean makeSecure = buildHostPart(buffer, url, useSSL);
+        buildPathPartWithContextRoot(buffer, url);
+        return makeSecure;
+    }
+
+    /**
+     * SCIPIO: Builds a full URL - including scheme, host, webapp path prefix and resource (custom context root).
+     * Added 2018-08-01.
+     */
+    public boolean buildFullUrlWithWebappPathPrefix(Appendable buffer, String url, boolean useSSL) throws WebAppConfigurationException, IOException {
+        boolean makeSecure = buildHostPart(buffer, url, useSSL);
+        buildPathPartWithWebappPathPrefix(buffer, url);
+        return makeSecure;
+    }
+
     /**
      * Builds a partial URL - including the scheme and host, but not the servlet path or resource.
      * <p>
@@ -295,7 +314,9 @@ public final class OfbizUrlBuilder {
     
     /**
      * Builds a partial URL - including the servlet path and resource, but not the scheme or host.
-     * 
+     * <p>
+     * SCIPIO: 2018-08-01: If url is null, this only appends up to the servlet path, with no trailing slash.
+     * If url is empty string, does the same but appends trailing slash.
      * @param buffer
      * @param url
      * @throws WebAppConfigurationException
@@ -305,11 +326,32 @@ public final class OfbizUrlBuilder {
         if (servletPath == null) {
             throw new IllegalStateException("Servlet path is unknown");
         }
-        buffer.append(getWebappPathPrefix()); // SCIPIO: 2018-07-27
-        buffer.append(servletPath);
-        appendPathPart(buffer, url); // SCIPIO
+        buffer.append(webSiteProps.getWebappPathPrefix()); // SCIPIO: 2018-07-27
+        if (url != null) {
+            buffer.append(servletPath);
+            appendPathPart(buffer, url); // SCIPIO
+        } else {
+            buffer.append(servletPath.endsWith("/") ? servletPath.substring(0, servletPath.length() - 1) : servletPath);
+        }
     }
 
+    /**
+     * SCIPIO: Builds path part up to servlet path.
+     * Alias for {@link #buildPathPart(Appendable, String)}.
+     * Added 2018-08-01.
+     */
+    public void buildPathPartWithServletPath(Appendable buffer, String url) throws WebAppConfigurationException, IOException {
+        buildPathPart(buffer, url);
+    }
+
+    /**
+     * SCIPIO: Builds path part up to servlet path, with no trailing slash.
+     * Added 2018-08-01.
+     */
+    public void buildPathPartWithServletPath(Appendable buffer) throws WebAppConfigurationException, IOException {
+        buildPathPart(buffer, null);
+    }
+    
     /**
      * SCIPIO: Adds a path and a url to the buffer, handling slash (/).
      * WARN: This assumes the buffer is a StringBuilder, StringWriter, or other whose toString()
@@ -317,7 +359,6 @@ public final class OfbizUrlBuilder {
      * Added 2018-07-09. 
      */
     private static void appendPathPart(Appendable buffer, String part) throws IOException {
-        if (part == null) part = ""; // 2018-07-27: ensures legacy method behavior
         if (buffer.toString().endsWith("/")) {
             if (part.startsWith("/")) {
                 buffer.append(part.substring(1));
@@ -334,7 +375,9 @@ public final class OfbizUrlBuilder {
 
     /**
      * SCIPIO: Builds a partial URL - including the context path, but not the scheme or host or servlet.
-     * 
+     * <p>
+     * 2018-08-01: If url is null, this only appends up to the context root, with no trailing slash.
+     * If url is empty string, does the same but appends trailing slash.
      * @param buffer
      * @param url
      * @throws WebAppConfigurationException
@@ -344,44 +387,66 @@ public final class OfbizUrlBuilder {
         if (contextPath == null) {
             throw new IllegalStateException("Context path is unknown");
         }
-        buffer.append(getWebappPathPrefix()); // SCIPIO: 2018-07-27
-        buffer.append(contextPath);
-        appendPathPart(buffer, url); // SCIPIO
+        buffer.append(webSiteProps.getWebappPathPrefix()); // SCIPIO: 2018-07-27
+        if (url != null) {
+            buffer.append(contextPath);
+            appendPathPart(buffer, url);
+        } else {
+            buffer.append(contextPath.endsWith("/") ? contextPath.substring(0, contextPath.length() - 1) : contextPath);
+        }
+    }
+
+    /**
+     * SCIPIO: Builds path part up to webapp context root, with no trailing slash.
+     * Added 2018-08-01.
+     */
+    public void buildPathPartWithContextRoot(Appendable buffer) throws WebAppConfigurationException, IOException {
+        buildPathPartWithContextRoot(buffer, null);
     }
 
     /**
      * SCIPIO: Builds a partial URL - including the webapp path prefix, but not the context path.
-     * 
+     * <p>
+     * 2018-08-01: If url is null, this only appends up to the webapp path prefix, with no trailing slash.
+     * If url is empty string, does the same but appends trailing slash.
      * @param buffer
      * @param url
      * @throws WebAppConfigurationException
      * @throws IOException
      */
-    public void buildPathPartWithWebappPrefix(Appendable buffer, String url) throws WebAppConfigurationException, IOException {
-        buffer.append(getWebappPathPrefix()); // SCIPIO: 2018-07-27
-        appendPathPart(buffer, url); // SCIPIO
+    public void buildPathPartWithWebappPathPrefix(Appendable buffer, String url) throws WebAppConfigurationException, IOException {
+        buffer.append(webSiteProps.getWebappPathPrefix()); // SCIPIO: 2018-07-27
+        if (url != null) {
+            appendPathPart(buffer, url); // SCIPIO
+        }
     }
 
     /**
-     * SCIPIO: Get servlet path.
-     * <p>
-     * NOTE: 2018-07-27: does not include the general webapp path prefix ({@link #getWebappPathPrefix()}).
-     * <p>
-     * WARN: Not guaranteed to end with slash or not.
+     * SCIPIO: Builds path part up to webapp path prefix, with no trailing slash.
+     * Added 2018-08-01.
      */
-    public String getServletPath() throws WebAppConfigurationException, IOException {
-        return servletPath;
+    public void buildPathPartWithWebappPathPrefix(Appendable buffer) throws WebAppConfigurationException, IOException {
+        buildPathPartWithWebappPathPrefix(buffer, null);
+    }
+
+    /**
+     * SCIPIO: Get servlet path including the webapp context path, but NOT
+     * including the webappPathPrefix ({@link #getWebappPathPrefix()});
+     * <p>
+     * NOTE: 2018-08-01: Excludes terminating slash.
+     */
+    public String getContextAndServletPath() throws WebAppConfigurationException, IOException {
+        return servletPath.endsWith("/") ? servletPath.substring(0, servletPath.length() - 1) : servletPath;
     }
     
     /**
-     * SCIPIO: Get context path.
+     * SCIPIO: Get webapp context path, but NOT
+     * including the webappPathPrefix ({@link #getWebappPathPrefix()});
      * <p>
-     * NOTE: 2018-07-27: does not include the general webapp path prefix ({@link #getWebappPathPrefix()}).
-     * <p>
-     * WARN: Not guaranteed to end with slash or not.
+     * NOTE: 2018-08-01: Excludes terminating slash.
      */
     public String getContextPath() throws WebAppConfigurationException, IOException {
-        return contextPath;
+        return contextPath.endsWith("/") ? contextPath.substring(0, contextPath.length() - 1) : contextPath;
     }
 
     /**

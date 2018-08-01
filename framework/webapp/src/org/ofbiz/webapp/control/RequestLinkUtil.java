@@ -235,7 +235,7 @@ public abstract class RequestLinkUtil {
                 }
             }
             // 2018-07-27: must use webapp path prefix
-            builder.buildPathPartWithWebappPrefix(newURL, url);
+            builder.buildPathPartWithWebappPathPrefix(newURL, url);
         } else {
             newURL.append(url);
         }
@@ -282,7 +282,7 @@ public abstract class RequestLinkUtil {
         if (includeWebappPathPrefix) {
             if (builder == null) builder = getBlhpOfbizUrlBuilder(delegator, webSiteId, locale);
             // 2018-07-27: must use webapp path prefix
-            builder.buildPathPartWithWebappPrefix(newURL, url);
+            builder.buildPathPartWithWebappPathPrefix(newURL, url);
         } else {
             newURL.append(url);
         }
@@ -364,7 +364,7 @@ public abstract class RequestLinkUtil {
         if (secure == null) secure = RequestLinkUtil.isEffectiveSecure(request);
         builder.buildHostPart(newURL, secure);
         if (includeWebappPathPrefix) {
-            builder.buildPathPartWithWebappPrefix(newURL, "");
+            builder.buildPathPartWithWebappPathPrefix(newURL, "");
             PathUtil.removeTrailDelim(newURL);
         }
         return newURL.toString();
@@ -437,7 +437,7 @@ public abstract class RequestLinkUtil {
         }
         builder.buildHostPart(newURL, secure);
         if (includeWebappPathPrefix) {
-            builder.buildPathPartWithWebappPrefix(newURL, "");
+            builder.buildPathPartWithWebappPathPrefix(newURL, "");
             PathUtil.removeTrailDelim(newURL);
         }
         return newURL.toString();

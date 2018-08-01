@@ -175,6 +175,11 @@ public final class OfbizUrlBuilder {
     private OfbizUrlBuilder(ControllerConfig config, WebSiteProperties webSiteProps, String servletPath, String contextPath) {
         this.config = config;
         this.webSiteProps = webSiteProps;
+        // SCIPIO: 2018-08-01: this comes in with a trailing slash half the time, strip it here
+        // because it complicates everything else for no reason...
+        if (servletPath != null && servletPath.endsWith("/")) {
+            servletPath = servletPath.substring(0, servletPath.length() - 1);
+        }
         this.servletPath = servletPath;
         this.contextPath = contextPath;
     }
@@ -436,7 +441,7 @@ public final class OfbizUrlBuilder {
      * NOTE: 2018-08-01: Excludes terminating slash.
      */
     public String getContextAndServletPath() throws WebAppConfigurationException, IOException {
-        return servletPath.endsWith("/") ? servletPath.substring(0, servletPath.length() - 1) : servletPath;
+        return servletPath;
     }
     
     /**
@@ -446,7 +451,7 @@ public final class OfbizUrlBuilder {
      * NOTE: 2018-08-01: Excludes terminating slash.
      */
     public String getContextPath() throws WebAppConfigurationException, IOException {
-        return contextPath.endsWith("/") ? contextPath.substring(0, contextPath.length() - 1) : contextPath;
+        return contextPath;
     }
 
     /**

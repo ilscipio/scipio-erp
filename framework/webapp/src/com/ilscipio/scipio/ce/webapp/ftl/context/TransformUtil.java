@@ -3,6 +3,8 @@ package com.ilscipio.scipio.ce.webapp.ftl.context;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
@@ -325,6 +327,31 @@ public abstract class TransformUtil {
     
     public static TemplateModel getModel(Map<?, ?> args, String key) {
         return (TemplateModel) args.get(key);
+    }
+
+    /**
+     * Tries to determine the fullPath Boolean value to use when generating the link,
+     * and whether it should be forced or not, based on the rendering context.
+     * <p>
+     * This basically amounts to detecting if it's an e-mail render AND not part of
+     * some special nested template that does not contain an HttpServletRequest.
+     * <p>
+     * NOTE: The absence of request does NOT guarantee that this should generate fullPath links;
+     * some special widgets during normal webapp rendering may something use custom-built context
+     * (e.g. surveys), although this should be avoided as much as possible.
+     */
+    public static Boolean determineFullPathForUrl(Boolean fullPathArg, HttpServletRequest request, Environment env) throws TemplateModelException {
+        if (request != null || Boolean.TRUE.equals(fullPathArg)) {
+            return fullPathArg;
+        }
+
+        // TODO: REVIEW: heuristic: if baseUrl is set, it must be an e-mail context... 
+        // (this heuristic is currently also used elsewhere, so keep consistent until a clearer solution is found)
+        if (env.getVariable("baseUrl") != null) {
+            return Boolean.TRUE;
+        }
+
+        return fullPathArg;
     }
 
     /**

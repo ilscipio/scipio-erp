@@ -7,6 +7,7 @@ jdk:
   - openjdk8
 install:
   - ./ant download-jacoco load-demo >> runtime/logs/console.travis.log
+  - export JACOCO_SOURCE_PATH="applications/accounting/src applications/cms/src applications/content/src applications/humanres/src applications/manufacturing/src applications/marketing/src applications/order/src applications/party/src applications/product/src applications/securityext/src applications/setup/src applications/shop/src applications/solr/src applications/workeffort/src framework/base/src framework/catalina/src framework/common/src framework/datafile/src framework/entity/src framework/entityext/src framework/geronimo/src framework/minilang/src framework/security/src framework/service/src framework/start/src framework/testtools/src framework/webapp/src framework/webtools/src framework/widget/src specialpurpose/assetmaint/src specialpurpose/demosuite/src"
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter

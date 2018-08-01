@@ -31,7 +31,7 @@ under the License.
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="title" value="${uiLabelMap.PageTitleOrderConfirmationNotice}"/>
-                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/shop"/>
+                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseWebappPath}"/>
                 <set field="title" value="Order"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/OrderView.groovy"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/CompanyHeader.groovy"/>
@@ -81,7 +81,7 @@ under the License.
                 <property-map resource="PartyUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="title" value="${uiLabelMap.PageTitleOrderConfirmationNotice}"/>
-                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/shop"/>
+                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseWebappPath}"/>
                 <set field="allowAnonymousView" value="Y"/>  <!-- this field will instruction OrderStatus.groovy to allow an anonymous order to be viewed by anybody, so the email confirmation screen will work -->
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderStatus.groovy"/>
             </actions>
@@ -106,7 +106,7 @@ under the License.
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="title" value="${uiLabelMap.PageTitleOrderCompleteNotice}"/>
-                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/shop/control"/>
+                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseWebappPath}/control"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderStatus.groovy"/>
             </actions>
             <widgets>
@@ -125,7 +125,7 @@ under the License.
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="title" value="${uiLabelMap.PageTitleOrderBackorderNotice}"/>
-                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/shop/control"/>
+                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseWebappPath}/control"/>
                 <set field="allowAnonymousView" value="Y"/>  <!-- this field will instruction OrderStatus.groovy to allow an anonymous order to be viewed by anybody, so the email confirmation screen will work -->
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderStatus.groovy"/>
             </actions>
@@ -145,7 +145,7 @@ under the License.
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="title" value="${uiLabelMap.PageTitleOrderChangeNotice}"/>
-                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/shop/control"/>
+                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseWebappPath}/control"/>
                 <set field="allowAnonymousView" value="Y"/>  <!-- this field will instruction OrderStatus.groovy to allow an anonymous order to be viewed by anybody, so the email confirmation screen will work -->
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderStatus.groovy"/>
             </actions>
@@ -166,7 +166,7 @@ under the License.
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="title" value="${uiLabelMap.PageTitleOrderPaymentRetryNotice}"/>
-                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/shop/control"/>
+                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseWebappPath}/control"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderStatus.groovy"/>
             </actions>
             <widgets>
@@ -186,7 +186,7 @@ under the License.
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
                 <set field="title" value="${uiLabelMap.PageTitleShipmentCompleteNotice}"/>
-                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/shop/control"/>
+                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseWebappPath}/control"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/order/ShipmentStatus.groovy"/>
             </actions>
             <widgets>

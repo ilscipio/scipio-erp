@@ -25,8 +25,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="EcommerceSubscriptionVerifyEmail"/>
-                <!--<set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/shop/control/"/>-->
-                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseLocation}/control"/>
+                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseWebappPath}/control"/>
                 <entity-one entity-name="PartyNameView" value-field="partyName" auto-field-map="false">
                     <field-map field-name="partyId" from-field="contactListParty.partyId"/>
                 </entity-one>
@@ -80,8 +79,7 @@ under the License.
             <actions>
                 <entity-one entity-name="ContactList" value-field="contactList"/>
                 <entity-one entity-name="PartyNameView" value-field="partyName"/>
-                <!--<set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/shop/control/"/>-->
-                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseLocation}/control"/>
+                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseWebappPath}/control"/>
             </actions>
             <widgets>
                 <decorator-screen name="ScipioEmailDecorator" location="component://common/widget/CommonScreens.xml">
@@ -98,8 +96,7 @@ under the License.
             <actions>
                 <entity-one entity-name="ContactList" value-field="contactList"/>
                 <entity-one entity-name="PartyNameView" value-field="partyName"/>
-                <!--<set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/shop/control/"/>-->
-                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseLocation}/control"/>
+                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseWebappPath}/control"/>
             </actions>
             <widgets>
                 <decorator-screen name="ScipioEmailDecorator" location="component://common/widget/CommonScreens.xml">
@@ -116,8 +113,7 @@ under the License.
             <actions>
                 <entity-one entity-name="ContactList" value-field="contactList"/>
                 <entity-one entity-name="PartyNameView" value-field="partyName"/>
-                <!--<set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/shop/control/"/>-->
-                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseLocation}/control"/>
+                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseWebappPath}/control"/>
             </actions>
             <widgets>
                 <decorator-screen name="ScipioEmailDecorator" location="component://common/widget/CommonScreens.xml">
@@ -134,8 +130,7 @@ under the License.
             <actions>
                 <entity-one entity-name="ContactList" value-field="contactList"/>
                 <entity-one entity-name="PartyNameView" value-field="partyName"/>
-                <!--<set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/shop/control/"/>-->
-                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseLocation}/control"/>
+                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseWebappPath}/control"/>
             </actions>
             <widgets>
                 <decorator-screen name="ScipioEmailDecorator" location="component://common/widget/CommonScreens.xml">

@@ -25,7 +25,7 @@ under the License.
         <section>
             <actions>
                 <!-- <set field="title" value="Order Confirmation Notice"/> -->
-                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/shop/control"/>
+                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseWebappPath}/control"/>
                 <property-map resource="ShopUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>                
                 <!-- <script location="component://shop/webapp/shop/WEB-INF/actions/order/OrderStatus.groovy"/> -->
@@ -42,7 +42,7 @@ under the License.
     <screen name="ReturnCancel">
         <section>
             <actions>
-                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/shop/control"/>
+                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseWebappPath}/control"/>
                 <property-map resource="ShopUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
@@ -58,7 +58,7 @@ under the License.
     <screen name="ReturnComplete">
         <section>
             <actions>
-                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}/shop/control"/>
+                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseWebappPath}/control"/>
                 <property-map resource="ShopUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>

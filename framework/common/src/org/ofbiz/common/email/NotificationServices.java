@@ -245,8 +245,14 @@ public class NotificationServices {
      * <code>ResourceBundle</code> java approach so that both classes
      * and static files may be invoked.
      * <p>
-     * SCIPIO: 2015-10-16: This now also puts the website ID in context as "baseWebSiteId".
-     *
+     * SCIPIO: This now also puts the following extra fields in the context:
+     * <ul>
+     * <li>baseWebSiteId (2015-10-16): the webSiteId, with extra prefix to prevent conflicts
+     * <li>baseWebappPath (2018-08-01): the combination of webappPathPrefix+contextRoot for 
+     *                                  the given website (this is simply the context root if
+     *                                  webappPathPrefix is not explicitly configured)
+     * </ul>
+     * 
      * @param context   The context to check and, if necessary, set the
      * <code>baseUrl</code>.
      */
@@ -265,11 +271,16 @@ public class NotificationServices {
                 newURL = new StringBuilder();
                 builder.buildHostPart(newURL, "", true);
                 context.put("baseSecureUrl", newURL.toString());
+
+                // SCIPIO: 2018-08-01: store baseWebappPath, which is webappPathPrefix + contextPath
+                newURL = new StringBuilder();
+                builder.buildPathPartWithContextRoot(newURL);
+                context.put("baseWebappPath", newURL.toString());
             } catch (Exception e) {
                 Debug.logWarning(e, "Exception thrown while adding baseUrl to context: ", module);
             }
         }
-        
+
         // SCIPIO: use this method to also store a baseWebSiteId in the context, so template has knowledge
         if (!context.containsKey("baseWebSiteId")) {
             context.put("baseWebSiteId", webSiteId);

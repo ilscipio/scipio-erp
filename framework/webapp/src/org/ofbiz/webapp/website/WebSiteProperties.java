@@ -18,6 +18,8 @@
  *******************************************************************************/
 package org.ofbiz.webapp.website;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.lang.ThreadSafe;
@@ -46,6 +48,21 @@ public final class WebSiteProperties {
      */
     public static WebSiteProperties defaults(Delegator delegator) {
         return new WebSiteProperties(delegator);
+    }
+
+    /**
+     * SCIPIO: Returns a <code>WebSiteProperties</code> instance initialized to the settings found
+     * in the <code>url.properties</code> file, with caching in the given map.
+     * Added 2018-07-31.
+     */
+    public static WebSiteProperties defaults(Delegator delegator, Map<String, WebSiteProperties> cache) {
+        if (cache == null) return defaults(delegator);
+        WebSiteProperties webSiteProps = cache.get("_defaults_");
+        if (webSiteProps == null) {
+            webSiteProps = new WebSiteProperties(delegator);
+            cache.put("_defaults_", webSiteProps);
+        }
+        return webSiteProps;
     }
 
     /**
@@ -284,7 +301,24 @@ public final class WebSiteProperties {
         } else {
             throw new GenericEntityException("Scipio: Could not find WebSite for webSiteId '" + webSiteId + "'");
         }
-    }    
+    }
+    
+    /**
+     * SCIPIO: Returns a <code>WebSiteProperties</code> instance initialized to the settings found
+     * in the WebSite entity value for the given webSiteId, using the given cache.
+     * 
+     * @param delegator
+     * @param webSiteId
+     */
+    public static WebSiteProperties from(Delegator delegator, String webSiteId, Map<String, WebSiteProperties> cache) throws GenericEntityException {
+        if (cache == null) return from(delegator, webSiteId);
+        WebSiteProperties webSiteProps = cache.get(webSiteId);
+        if (webSiteProps == null) {
+            webSiteProps = from(delegator, webSiteId);
+            cache.put(webSiteId, webSiteProps);
+        }
+        return webSiteProps;
+    }
 
     private final String httpPort;
     private final String httpHost;

@@ -244,6 +244,8 @@ public class NotificationServices {
      * such as the <code>baseUrl</code>, perhaps using the standard
      * <code>ResourceBundle</code> java approach so that both classes
      * and static files may be invoked.
+     * <p>
+     * SCIPIO: 2015-10-16: This now also puts the website ID in context as "baseWebSiteId".
      *
      * @param context   The context to check and, if necessary, set the
      * <code>baseUrl</code>.

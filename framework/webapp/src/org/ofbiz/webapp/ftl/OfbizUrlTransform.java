@@ -106,8 +106,13 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                     }
                     
                     Environment env = FreeMarkerWorker.getCurrentEnvironment();
+                    HttpServletRequest request = FreeMarkerWorker.unwrap(env.getVariable("request"));
                     // Handle prefix.
-                    String prefixString = TransformUtil.getStringArg(args, "urlPrefix", "");
+                    String prefixString = TransformUtil.getStringNonEscapingArg(args, "urlPrefix", "");
+                    if (prefixString.isEmpty() && request == null) {
+                        // for emails only: check for urlPrefix in the environment
+                        prefixString = TransformUtil.getStringNonEscapingArg(env.getVariable("urlPrefix"), "");
+                    }
                     if (!prefixString.isEmpty()) {
                         String bufString = buf.toString();
                         boolean prefixSlash = prefixString.endsWith("/");
@@ -120,7 +125,6 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                         out.write(prefixString + bufString);
                         return;
                     }
-                    HttpServletRequest request = FreeMarkerWorker.unwrap(env.getVariable("request"));
                     /* SCIPIO: This part is limited and incomplete. Instead, delegate to our improved makeLink* method(s).
                     // Handle web site ID.
                     if (!webSiteId.isEmpty()) {

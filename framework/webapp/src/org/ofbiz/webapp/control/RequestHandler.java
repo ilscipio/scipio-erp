@@ -2054,46 +2054,46 @@ public class RequestHandler {
     }
 
     /**
-     * SCIPIO: Factored-out makeLink code.
+     * SCIPIO: Determines whether the link should be fullpath secure/https, fullpath plain/http, 
+     * or absolute from server root (factored-out makeLink code).
      * <p>
-     * Returns null if no full required. Returns true if secure fullpath required. Returns false if standard fullpath required.
+     * 2018-08-02: Conditions rewritten to match new HTTPS-high priority policy.
+     * <p>
+     * NOTES AND CHANGES (2018-08-02):
+     * <ul>
+     * <li>Plain http fullpath: The only case where it is possible to generate a plain fullpath http link is
+     *     if explicit <code>secure=false</code> are passed AND the request is not pointing
+     *     to a controller request map that has <code>https="true"</code>.
+     *     In all other cases, fullpath links always produce secure https links.
+     *     NOTE: <code>secure=false</code> is now ignored if explicit <code>fullpath=false</code>
+     *     is received, because this is highly likely to reflect a deprecated old-style use of the ofbizUrl
+     *     interface rather than a request to produce an insecure link.
+     * <li>We never automatically downgrade from https to http, only upgrade. Downgrade requires explicit <code>secure=false</code>.
+     * <li>The WebSiteProperties.getEnableHttps flag is now ignored. All webapps are assumed to support HTTPS.
+     * </ul>
+     * <p>
+     * @return null if no full required, true if secure fullpath required, false if standard fullpath required.
      */
-    protected static Boolean checkFullSecureOrStandard(HttpServletRequest request, boolean isCurrentSecure, WebSiteProperties webSiteProps, ConfigXMLReader.RequestMap requestMap, 
+    protected static Boolean checkFullSecureOrStandard(HttpServletRequest request, Boolean isCurrentSecure, WebSiteProperties webSiteProps, ConfigXMLReader.RequestMap requestMap, 
             Boolean interWebapp, Boolean fullPath, Boolean secure) {
-        // SCIPIO: These conditions have been change: if fullPath and target URI is secure, make secure URL instead of insecure.
-        // We will NEVER build insecure URLs to requests marked secure.
-        // This way, there is less control, but fullPath becomes easier and safer to use.
-        // 2016-04-06: WE DO NOT DOWNGRADE CONNECTIONS WITH didFullStandard UNLESS EXPLICITLY REQUESTED
-        // 2016-04-06: secure flag no longer forces a fullPath link, but we can only omit the full path in cases where we are already secure
-        //if (secure || (webSiteProps.getEnableHttps() && requestMap.securityHttps && !request.isSecure())) {
-        //    didFullSecure = true;
-        //} else if (fullPath || (webSiteProps.getEnableHttps() && !requestMap.securityHttps && request.isSecure())) {
-        //    didFullStandard = true;
-        //}
-        if (interWebapp == null) {
-            interWebapp = Boolean.FALSE;
-        }
-        // 2016-07-14: NOTE: if for some reason webSiteProps was null, we assume enableHttps is true, for security reasons.
-        // 2016-07-14: NOTE: if there is no request object (static rendering context), for now
-        // we behave as if we had an insecure request, for better security.
-        if ((Boolean.TRUE.equals(secure) && (Boolean.TRUE.equals(fullPath) || request == null || !isCurrentSecure)) // if secure requested, only case where don't need full path is if already secure
-            || ((webSiteProps == null || webSiteProps.getEnableHttps()) && requestMap != null && requestMap.securityHttps && (request == null || !isCurrentSecure || Boolean.TRUE.equals(fullPath))) // upgrade to secure target if we aren't secure or fullPath was requested (never make non-secure fullPath to secure target)
-            || ((webSiteProps == null || webSiteProps.getEnableHttps()) && secure == null && Boolean.TRUE.equals(fullPath) && request != null && isCurrentSecure)) { // do not downgrade fullPath requests anymore, unless explicitly allowed (by passing secure false, case below)
-            return Boolean.TRUE;
-        } else if (Boolean.TRUE.equals(fullPath) // accept all other explicit fullPath requests
-                || (requestMap != null && (Boolean.FALSE.equals(secure) && !requestMap.securityHttps && request != null && isCurrentSecure)) // allow downgrade from HTTPS to HTTP, but only if secure false explicitly passed and the target requestMap is not HTTPS. Also, removed this check: webSiteProps.getEnableHttps()  
-                || (requestMap == null && (Boolean.FALSE.equals(secure) && request != null && isCurrentSecure))) { // 2016-07-14: if there is no target requestMap or unknown, and secure=false was requested, we'll allow building a fullpath insecure link (this is acceptable only because of our widespread change making null the new default everywhere).
-            return Boolean.FALSE;
+        // The only case we can produce plain http link is if secure=false requested and the target request map is not marked https=true.
+        // NOTE: 2018-08-02: We now ignore secure=false if also have explicit fullPath=false (see method description)
+        if ((Boolean.FALSE.equals(secure) && (requestMap == null || !requestMap.securityHttps)) &&
+                (Boolean.TRUE.equals(fullPath) || (fullPath == null && Boolean.TRUE.equals(isCurrentSecure)))) {
+            return Boolean.FALSE; // http://
+        } else if (Boolean.TRUE.equals(fullPath) // all other fullPath=true requests produce https
+                || (!Boolean.TRUE.equals(isCurrentSecure) && (Boolean.TRUE.equals(secure) || (requestMap != null && requestMap.securityHttps)))) { // automatic upgrade to https
+            return Boolean.TRUE; // https://
         } else {
-            return null;
+            return null; // absolute /path from server root (same protocol)
         }
     }
 
     protected static Boolean checkFullSecureOrStandard(HttpServletRequest request, WebSiteProperties webSiteProps, ConfigXMLReader.RequestMap requestMap, 
             Boolean interWebapp, Boolean fullPath, Boolean secure) {
-        return checkFullSecureOrStandard(request, (request != null) ? RequestLinkUtil.isEffectiveSecure(request) : false, webSiteProps, requestMap, interWebapp, fullPath, secure);
+        return checkFullSecureOrStandard(request, (request != null) ? RequestLinkUtil.isEffectiveSecure(request) : null, webSiteProps, requestMap, interWebapp, fullPath, secure);
     }
-    
+
     /**
      * SCIPIO: Factored-out makeLink code, that we must expose so other link-building code may reuse.
      * <p>

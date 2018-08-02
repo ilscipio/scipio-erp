@@ -195,8 +195,12 @@ public abstract class RequestLinkUtil {
 
     public static String doLinkURLEncode(HttpServletRequest request, HttpServletResponse response, StringBuilder newURL, boolean interWebapp,
             boolean didFullStandard, boolean didFullSecure) {
-        RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext());
-        return rh.doLinkURLEncode(request, response, newURL, interWebapp, didFullStandard, didFullSecure);
+        return RequestHandler.doLinkURLEncode(request, response, newURL, interWebapp, didFullStandard, didFullSecure);
+    }
+    
+    public static String doLinkURLEncode(Delegator delegator, Locale locale, WebappInfo encodingWebappInfo, StringBuilder newURL, boolean interWebapp,
+            boolean didFullStandard, boolean didFullSecure) {
+        return RequestHandler.doLinkURLEncode(delegator, locale, encodingWebappInfo, newURL, interWebapp, didFullStandard, didFullSecure);
     }
 
     /**
@@ -242,8 +246,7 @@ public abstract class RequestLinkUtil {
         
         String res;
         if (!Boolean.FALSE.equals(encode)) {
-            RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext());
-            res = rh.doLinkURLEncode(request, response, newURL, false, didFullStandard, didFullSecure);
+            res = RequestHandler.doLinkURLEncode(request, response, newURL, false, didFullStandard, didFullSecure);
         } else {
             res = newURL.toString();
         }
@@ -258,7 +261,7 @@ public abstract class RequestLinkUtil {
     }
     
     public static String buildLinkHostPartAndEncode(Delegator delegator, Locale locale, String webSiteId, String url,
-            Boolean fullPath, Boolean secure, Boolean encode, boolean includeWebappPathPrefix, 
+            Boolean fullPath, Boolean secure, Boolean encode, boolean includeWebappPathPrefix, //String currentWebSiteId, // not necessary yet...
             HttpServletRequest request, HttpServletResponse response) throws WebAppConfigurationException, IOException {
 
         boolean didFullStandard = false;
@@ -290,15 +293,25 @@ public abstract class RequestLinkUtil {
         if (request != null && response != null) {
             String res;
             if (!Boolean.FALSE.equals(encode)) {
-                RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext());
-                res = rh.doLinkURLEncode(request, response, newURL, true, didFullStandard, didFullSecure);
+                res = RequestHandler.doLinkURLEncode(request, response, newURL, true, didFullStandard, didFullSecure);
             } else {
                 res = newURL.toString();
             }
-            
             return res;
         } else {
-            return newURL.toString();
+            String res;
+            if (!Boolean.FALSE.equals(encode)) {
+                WebappInfo encodingWebAppInfo;
+                try {
+                    encodingWebAppInfo = WebAppUtil.getWebappInfoFromWebsiteId(webSiteId); // currentWebSiteId
+                } catch (SAXException e) {
+                    throw new IOException(e);
+                }
+                res = RequestHandler.doLinkURLEncode(delegator, locale, encodingWebAppInfo, newURL, true, didFullStandard, didFullSecure);
+            } else {
+                res = newURL.toString();
+            }
+            return res;
         }
     }
     
@@ -482,8 +495,7 @@ public abstract class RequestLinkUtil {
      * Builds link using RequestHandler.makeLinkAuto logic, convenience wrapper.
      */
     public static String makeLinkAuto(ServletContext servletContext, HttpServletRequest request, HttpServletResponse response, String uri) {
-        RequestHandler rh = RequestHandler.getRequestHandler(servletContext);
-        return rh.makeLinkAuto(request, response, uri, null, null, null, null, null, null, null);
+        return RequestHandler.makeLinkAuto(request, response, uri, null, null, null, null, null, null, null);
     }
 
     /**
@@ -491,8 +503,7 @@ public abstract class RequestLinkUtil {
      */
     public static String makeLinkAuto(ServletContext servletContext, HttpServletRequest request, HttpServletResponse response, 
             String uri, Boolean fullPath, Boolean secure, Boolean encode) {
-        RequestHandler rh = RequestHandler.getRequestHandler(servletContext);
-        return rh.makeLinkAuto(request, response, uri, null, null, null, null, fullPath, secure, encode);
+        return RequestHandler.makeLinkAuto(request, response, uri, null, null, null, null, fullPath, secure, encode);
     }
     
     /**
@@ -500,16 +511,14 @@ public abstract class RequestLinkUtil {
      */
     public static String makeLinkAuto(ServletContext servletContext, HttpServletRequest request, HttpServletResponse response, 
             String uri, Boolean absPath, Boolean interWebapp, String webSiteId, Boolean controller, Boolean fullPath, Boolean secure, Boolean encode) {
-        RequestHandler rh = RequestHandler.getRequestHandler(servletContext);
-        return rh.makeLinkAuto(request, response, uri, absPath, interWebapp, webSiteId, controller, fullPath, secure, encode);
+        return RequestHandler.makeLinkAuto(request, response, uri, absPath, interWebapp, webSiteId, controller, fullPath, secure, encode);
     }
     
     /**
      * Builds link using RequestHandler.makeLinkAuto logic, convenience wrapper.
      */
     public static String makeLinkAuto(HttpServletRequest request, HttpServletResponse response, String uri) {
-        RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext());
-        return rh.makeLinkAuto(request, response, uri, null, null, null, null, null, null, null);
+        return RequestHandler.makeLinkAuto(request, response, uri, null, null, null, null, null, null, null);
     }
 
     /**
@@ -517,8 +526,7 @@ public abstract class RequestLinkUtil {
      */
     public static String makeLinkAuto(HttpServletRequest request, HttpServletResponse response, 
             String uri, Boolean fullPath, Boolean secure, Boolean encode) {
-        RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext());
-        return rh.makeLinkAuto(request, response, uri, null, null, null, null, fullPath, secure, encode);
+        return RequestHandler.makeLinkAuto(request, response, uri, null, null, null, null, fullPath, secure, encode);
     }
     
     /**
@@ -526,8 +534,7 @@ public abstract class RequestLinkUtil {
      */
     public static String makeLinkAuto(HttpServletRequest request, HttpServletResponse response, 
             String uri, Boolean absPath, Boolean interWebapp, String webSiteId, Boolean controller, Boolean fullPath, Boolean secure, Boolean encode) {
-        RequestHandler rh = RequestHandler.getRequestHandler(request.getServletContext());
-        return rh.makeLinkAuto(request, response, uri, absPath, interWebapp, webSiteId, controller, fullPath, secure, encode);
+        return RequestHandler.makeLinkAuto(request, response, uri, absPath, interWebapp, webSiteId, controller, fullPath, secure, encode);
     }
     
     /**

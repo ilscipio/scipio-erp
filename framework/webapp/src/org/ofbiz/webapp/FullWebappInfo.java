@@ -241,6 +241,14 @@ public class FullWebappInfo {
                ((obj instanceof FullWebappInfo) && this.getContextPath().equals(((FullWebappInfo) obj).getContextPath()));
     }
     
+    public boolean equalsProtoHostPort(FullWebappInfo other) {
+        return this.getWebSiteProperties().equalsProtoHostPort(other.getWebSiteProperties());
+    }
+
+    public boolean equalsProtoHostPortWithHardDefaults(FullWebappInfo other) {
+        return this.getWebSiteProperties().equalsProtoHostPortWithHardDefaults(other.getWebSiteProperties());
+    }
+    
     /* 
      * ******************************************************
      * ExtWebappInfo-delegated methods

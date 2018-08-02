@@ -24,7 +24,7 @@ under the License.
 <body class="ecbody">
     <form name="tellafriend" action="<@ofbizUrl>emailFriend</@ofbizUrl>" method="post">
         <#if (requestParameters.productId)?? || (requestParameters.productId)??>
-            <input type="hidden" name="pageUrl" value="<@ofbizCatalogAltUrl fullPath="true" secure="false" productCategoryId=requestParameters.categoryId!"" productId=requestParameters.productId!""/>" />
+            <input type="hidden" name="pageUrl" value="<@ofbizCatalogAltUrl fullPath=true productCategoryId=requestParameters.categoryId!"" productId=requestParameters.productId!""/>" />
         <#else>
             <#assign cancel = "Y">
         </#if>

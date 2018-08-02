@@ -20,32 +20,26 @@ package org.ofbiz.webapp.ftl;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.net.URLEncoder;
+import java.util.Locale;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.entity.Delegator;
-import org.ofbiz.webapp.OfbizUrlBuilder;
-import org.ofbiz.webapp.WebAppUtil;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.control.RequestLinkUtil;
+import org.ofbiz.webapp.renderer.RenderEnvType;
 
+import com.ilscipio.scipio.ce.webapp.ftl.context.ContextFtlUtil;
+import com.ilscipio.scipio.ce.webapp.ftl.context.UrlTransformUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.context.TransformUtil;
-import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
-import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil;
 
 import freemarker.core.Environment;
-import freemarker.template.SimpleScalar;
-import freemarker.template.TemplateBooleanModel;
 import freemarker.template.TemplateModelException;
-import freemarker.template.TemplateScalarModel;
 import freemarker.template.TemplateTransformModel;
 
 /**
@@ -78,11 +72,7 @@ public class OfbizUrlTransform implements TemplateTransformModel {
         final boolean rawParams = TransformUtil.getBooleanArg(args, "rawParams", rawParamsDefault); // SCIPIO: new
         boolean strictDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we want strict handling
         final boolean strict = TransformUtil.getBooleanArg(args, "strict", strictDefault); // SCIPIO: new
-        
-        final Boolean fullPath = TransformUtil.getBooleanArg(args, "fullPath"); // SCIPIO: modified to remove default; leave centralized
-        final Boolean secure = TransformUtil.getBooleanArg(args, "secure"); // SCIPIO: modified to remove default; leave centralized
-        final Boolean encode = TransformUtil.getBooleanArg(args, "encode"); // SCIPIO: modified to remove default; leave centralized
-        final String webSiteId = TransformUtil.getStringArg(args, "webSiteId", rawParams);
+
         // SCIPIO: We now support a "uri" arg as alternative to #nested
         final String uriArg = TransformUtil.getStringArg(args, "uri", rawParams);
         // SCIPIO: more new parameters
@@ -107,86 +97,71 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                     
                     Environment env = FreeMarkerWorker.getCurrentEnvironment();
                     HttpServletRequest request = FreeMarkerWorker.unwrap(env.getVariable("request"));
-                    // Handle prefix.
-                    String prefixString = TransformUtil.getStringNonEscapingArg(args, "urlPrefix", "");
-                    if (prefixString.isEmpty() && request == null) {
-                        // for emails only: check for urlPrefix in the environment
-                        prefixString = TransformUtil.getStringNonEscapingArg(env.getVariable("urlPrefix"), "");
+                    HttpServletResponse response = FreeMarkerWorker.unwrap(env.getVariable("response"));
+                    RenderEnvType renderEnvType = ContextFtlUtil.getRenderEnvType(env, request);
+                    
+                    final Boolean fullPath = UrlTransformUtil.determineFullPath(TransformUtil.getBooleanArg(args, "fullPath"), renderEnvType, env);
+                    final Boolean secure = TransformUtil.getBooleanArg(args, "secure"); // SCIPIO: modified to remove default; leave centralized
+                    final Boolean encode = TransformUtil.getBooleanArg(args, "encode"); // SCIPIO: modified to remove default; leave centralized
+                    final String webSiteId = UrlTransformUtil.determineWebSiteId(TransformUtil.getStringArg(args, "webSiteId", rawParams), renderEnvType, env);
+
+                    Boolean interWebappEff = interWebapp;
+                    if (interWebappEff == null) {
+                        if (type == null || type.isEmpty()) {
+                            ; // leave it to method
+                        }
+                        else if ("intra-webapp".equals(type)) {
+                            interWebappEff = false;
+                        }
+                        else if ("inter-webapp".equals(type)) {
+                            interWebappEff = true;
+                        }
                     }
-                    if (!prefixString.isEmpty()) {
-                        String bufString = buf.toString();
-                        boolean prefixSlash = prefixString.endsWith("/");
-                        boolean bufSlash = bufString.startsWith("/");
-                        if (prefixSlash && bufSlash) {
-                            bufString = bufString.substring(1);
-                        } else if (!prefixSlash && !bufSlash) {
-                            bufString = "/" + bufString;
-                        }
-                        out.write(prefixString + bufString);
-                        return;
-                    }
-                    /* SCIPIO: This part is limited and incomplete. Instead, delegate to our improved makeLink* method(s).
-                    // Handle web site ID.
-                    if (!webSiteId.isEmpty()) {
-                        Delegator delegator = FreeMarkerWorker.unwrap(env.getVariable("delegator"));
-                        if (request != null && delegator == null) {
-                            delegator = (Delegator) request.getAttribute("delegator");
-                        }
-                        if (delegator == null) {
-                            throw new IllegalStateException("Delegator not found");
-                        }
-                        WebappInfo webAppInfo = WebAppUtil.getWebappInfoFromWebsiteId(webSiteId);
-                        StringBuilder newUrlBuff = new StringBuilder(250);
-                        OfbizUrlBuilder builder = OfbizUrlBuilder.from(webAppInfo, delegator);
-                        builder.buildFullUrl(newUrlBuff, buf.toString(), secure);
-                        String newUrl = newUrlBuff.toString();
-                        if (encode) {
-                            // SCIPIO: This was invalid! This is not what the "encode" boolean is supposed to mean!
-                            // It means pass through response.encodeURL.
-                            //newUrl = URLEncoder.encode(newUrl, "UTF-8");
-                            HttpServletResponse response = FreeMarkerWorker.unwrap(env.getVariable("response"));
-                            if (response != null) {
-                                newUrl = response.encodeURL(newUrl);
-                            }
-                        }
-                        out.write(newUrl);
-                        return;
-                    }
-                    */
+                    
+                    String requestUrl = buf.toString();
                     if (request != null) {
-                        ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
-                        HttpServletResponse response = FreeMarkerWorker.unwrap(env.getVariable("response"));
-                        String requestUrl = buf.toString();
                         // SCIPIO: If requested, add external login key
                         if (extLoginKey) {
                             requestUrl = RequestLinkUtil.checkAddExternalLoginKey(requestUrl, request, paramDelim);
                         }
-                        RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
                         // SCIPIO: Now use more advanced method
+                        //RequestHandler rh = (RequestHandler) request.getServletContext().getAttribute("_REQUEST_HANDLER_"); // SCIPIO: reworked
                         //out.write(rh.makeLink(request, response, requestUrl, fullPath, secure, encode));
-                        Boolean interWebappEff = interWebapp;
-                        if (interWebappEff == null) {
-                            if (type == null || type.isEmpty()) {
-                                ; // leave it to method
-                            }
-                            else if ("intra-webapp".equals(type)) {
-                                interWebappEff = false;
-                            }
-                            else if ("inter-webapp".equals(type)) {
-                                interWebappEff = true;
-                            }
-                        }
-                        String link = rh.makeLinkAuto(request, response, requestUrl, absPath, interWebappEff, webSiteId, controller, fullPath, secure, encode);
+                        String link = RequestHandler.makeLinkAuto(request, response, requestUrl, absPath, interWebappEff, webSiteId, controller, fullPath, secure, encode);
                         if (link != null) {
-                            out.write(TransformUtil.escapeGeneratedUrl(link, escapeAs, strict, env));
-                        }
-                        else {
+                            out.write(UrlTransformUtil.escapeGeneratedUrl(link, escapeAs, strict, env));
+                        } else {
                             // SCIPIO: If link is null, it means there was an error building link; write nothing, so that
                             // it's possible for templates to catch this case if they need to.
                             //out.write(requestUrl);
                         }
+                    } else if (webSiteId != null) {
+                        Delegator delegator = FreeMarkerWorker.getWrappedObject("delegator", env);
+                        Locale locale = TransformUtil.getOfbizLocaleArgOrContextOrRequest(args, "locale", env);
+                        String link = RequestHandler.makeLinkAuto(delegator, locale, webSiteId, requestUrl, absPath, interWebappEff, controller, 
+                                fullPath, secure, encode, ContextFtlUtil.getWebSitePropertiesCache(env, request), request, response);
+                        if (link != null) {
+                            out.write(UrlTransformUtil.escapeGeneratedUrl(link, escapeAs, strict, env));
+                        }
                     } else {
-                        out.write(TransformUtil.escapeGeneratedUrl(buf.toString(), escapeAs, strict, env));
+                        // Handle prefix.
+                        String prefixString = TransformUtil.getStringNonEscapingArg(args, "urlPrefix", "");
+                        if (prefixString.isEmpty() && request == null) {
+                            // for emails only: check for urlPrefix in the environment
+                            prefixString = TransformUtil.getStringNonEscapingArg(env.getVariable("urlPrefix"), "");
+                        }
+                        if (!prefixString.isEmpty()) {
+                            String bufString = buf.toString();
+                            boolean prefixSlash = prefixString.endsWith("/");
+                            boolean bufSlash = bufString.startsWith("/");
+                            if (prefixSlash && bufSlash) {
+                                bufString = bufString.substring(1);
+                            } else if (!prefixSlash && !bufSlash) {
+                                bufString = "/" + bufString;
+                            }
+                            out.write(prefixString + bufString);
+                            return;
+                        }
                     }
                 } catch (Exception e) {
                     Debug.logWarning(e, "Exception thrown while running ofbizUrl transform", module);

@@ -14,6 +14,8 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
+import org.ofbiz.webapp.renderer.RenderEnvType;
+import org.ofbiz.webapp.website.WebSiteProperties;
 
 import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil.TemplateValueTargetType;
@@ -809,5 +811,38 @@ public abstract class ContextFtlUtil {
         HttpServletRequest request = getRequest(env);
         if (request != null) return UtilHttp.getLocale(request);
         return null;
+    }
+
+    /**
+     * Determines the render context type.
+     * <p>
+     * FIXME?: null request does not guarantee non-webapp context, because some specialized utilities
+     * render templates using small makeshift contexts (e.g. surveys).
+     * Need more reliable way to determine...
+     */
+    public static RenderEnvType getRenderEnvType(Environment env, Object request) throws TemplateModelException {
+        // TODO: REVIEW: heuristic: if baseUrl is set, it must be an e-mail context... 
+        // (this heuristic is currently also used elsewhere, so keep consistent until a clearer solution is found)
+        return (request == null && env.getVariable("baseUrl") != null) ? RenderEnvType.EMAIL : RenderEnvType.WEBAPP;
+    }
+
+    /**
+     * Determines if the render is being done through a non-webapp context.
+     * <p>
+     * NOTE: null request does not guarantee non-webapp context, because some specialized utilities
+     * render templates using small makeshift contexts (e.g. surveys).
+     */
+    public static RenderEnvType getRenderEnvType(Environment env) throws TemplateModelException {
+        return getRenderEnvType(env, env.getVariable("request"));
+    }
+
+    public static Map<String, WebSiteProperties> getWebSitePropertiesCache(Environment env, HttpServletRequest request) throws TemplateModelException {
+        @SuppressWarnings("unchecked")
+        Map<String, WebSiteProperties> cache = (Map<String, WebSiteProperties>) getRequestVar("scpWebSitePropsCache", env);
+        if (cache == null) {
+            cache = new HashMap<>();
+            setRequestVar("scpWebSitePropsCache", cache, env);
+        }
+        return cache;
     }
 }

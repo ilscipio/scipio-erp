@@ -18,14 +18,20 @@
  *******************************************************************************/
 package org.ofbiz.webapp.website;
 
+import java.util.Map;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.webapp.renderer.RenderEnvType;
+
+import com.ilscipio.scipio.ce.webapp.ftl.context.TransformUtil;
 
 /**
  * WebSiteWorker - Worker class for web site related functionality
@@ -46,6 +52,29 @@ public class WebSiteWorker {
         //if (application == null) return null;
         ServletContext application = request.getServletContext();
         return application.getInitParameter("webSiteId");
+    }
+
+    /**
+     * SCIPIO: Extracts the webSiteId from the given context according to its render environment type.
+     * <p>
+     * NOTE: Partly based on {@link org.ofbiz.common.email.NotificationServices#setBaseUrl}.
+     * <p>
+     * Added 2018-08-02.
+     */
+    public static String getWebSiteIdFromContext(Map<String, Object> context, RenderEnvType renderEnvType) {
+        if (renderEnvType.isStatic()) { // NOTE: for now we assume email and non-email static should all be similar...
+            String webSiteId = (String) context.get("webSiteId");
+            if (UtilValidate.isEmpty(webSiteId)) {
+                webSiteId = (String) context.get("baseWebSiteId");
+                if (UtilValidate.isNotEmpty(webSiteId)) {
+                    return webSiteId;
+                }
+            }
+        } else if (renderEnvType.isWebapp()) {
+            ServletRequest request = (ServletRequest) context.get("request");
+            if (request != null) return getWebSiteId(request);
+        }
+        return null;
     }
 
     public static GenericValue getWebSite(ServletRequest request) {

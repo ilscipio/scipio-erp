@@ -31,6 +31,7 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.webapp.ExtWebappInfo;
+import org.ofbiz.webapp.FullWebappInfo;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.control.RequestLinkUtil;
 import org.ofbiz.webapp.renderer.RenderEnvType;
@@ -100,11 +101,12 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                     HttpServletRequest request = FreeMarkerWorker.unwrap(env.getVariable("request"));
                     HttpServletResponse response = FreeMarkerWorker.unwrap(env.getVariable("response"));
                     RenderEnvType renderEnvType = ContextFtlUtil.getRenderEnvType(env, request);
+                    FullWebappInfo.Cache webappInfoCache = ContextFtlUtil.getWebappInfoCacheAndCurrent(env, request, renderEnvType);
                     
                     final Boolean fullPath = UrlTransformUtil.determineFullPath(TransformUtil.getBooleanArg(args, "fullPath"), renderEnvType, env);
                     final Boolean secure = TransformUtil.getBooleanArg(args, "secure"); // SCIPIO: modified to remove default; leave centralized
                     final Boolean encode = TransformUtil.getBooleanArg(args, "encode"); // SCIPIO: modified to remove default; leave centralized
-                    final String webSiteId = UrlTransformUtil.determineWebSiteId(TransformUtil.getStringArg(args, "webSiteId", rawParams), renderEnvType, env);
+                    final String webSiteId = UrlTransformUtil.determineWebSiteId(TransformUtil.getStringArg(args, "webSiteId", rawParams), renderEnvType, webappInfoCache.getCurrentWebappInfo(), env);
 
                     Boolean interWebappEff = interWebapp;
                     if (interWebappEff == null) {
@@ -139,9 +141,8 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                     } else if (webSiteId != null) {
                         Delegator delegator = FreeMarkerWorker.getWrappedObject("delegator", env);
                         Locale locale = TransformUtil.getOfbizLocaleArgOrContextOrRequest(args, "locale", env);
-                        ExtWebappInfo currentWebappInfo = ContextFtlUtil.getCurrentWebappInfo(env, request, renderEnvType);
                         String link = RequestHandler.makeLinkAuto(delegator, locale, webSiteId, requestUrl, absPath, interWebappEff, controller, 
-                                fullPath, secure, encode, currentWebappInfo, ContextFtlUtil.getWebSitePropertiesCache(env, request), request, response);
+                                fullPath, secure, encode, webappInfoCache.getCurrentWebappInfo(), webappInfoCache, request, response);
                         if (link != null) {
                             out.write(UrlTransformUtil.escapeGeneratedUrl(link, escapeAs, strict, env));
                         }

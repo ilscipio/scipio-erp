@@ -12,19 +12,14 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
-import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.webapp.FullWebappInfo;
 import org.ofbiz.webapp.OfbizUrlBuilder;
 import org.ofbiz.webapp.WebAppUtil;
 import org.ofbiz.webapp.website.WebSiteProperties;
 import org.xml.sax.SAXException;
-
-import com.ilscipio.scipio.ce.util.PathUtil;
 
 /**
  * SCIPIO: Request link utilities.
@@ -440,14 +435,13 @@ public abstract class RequestLinkUtil {
         return buildLinkHostPartSafe(delegator, null, webSiteId, secure, false);
     }
     
-    public static String getWebSiteContextPath(Delegator delegator, String webSiteId) throws WebAppConfigurationException, IOException {
-        WebappInfo webAppInfo;
+    public static String getWebSiteContextPath(Delegator delegator, String webSiteId) throws IllegalArgumentException {
         try {
-            webAppInfo = WebAppUtil.getWebappInfoFromWebsiteId(webSiteId);
-            
-            return webAppInfo.getContextRoot();
+            return WebAppUtil.getWebappInfoFromWebsiteId(webSiteId).getContextRoot();
         } catch (SAXException e) {
-            throw new IOException(e);
+            throw new IllegalArgumentException(e);
+        } catch (IOException e) {
+            throw new IllegalArgumentException(e);
         }
     }
     

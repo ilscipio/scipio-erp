@@ -1,6 +1,7 @@
 package com.ilscipio.scipio.ce.webapp.ftl.context;
 
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.entity.Delegator;
 import org.ofbiz.webapp.FullWebappInfo;
 import org.ofbiz.webapp.renderer.RenderEnvType;
 
@@ -25,6 +26,9 @@ public abstract class UrlTransformUtil {
     /**
      * Determines what webSiteId arg should be used for link building.
      * <p>
+     * NOTE: This only fishes the webSiteId from context if we're in static render context,
+     * because in webapp context we need to leave the webSiteId arg empty.
+     * <p>
      * @see org.ofbiz.common.email.NotificationServices#setBaseUrl
      */
     public static String determineWebSiteId(String webSiteIdArg, RenderEnvType renderEnvType, FullWebappInfo currentWebappInfo, Environment env) throws TemplateModelException {
@@ -32,6 +36,19 @@ public abstract class UrlTransformUtil {
             webSiteIdArg = currentWebappInfo.getWebSiteId();
         }
         return webSiteIdArg;
+    }
+    
+    /**
+     * Determines what the targetWebappInfo argument should be.
+     * When webapp request, this is left null unless explicit webSiteId specified.
+     * When static render, tries to use current webapp from context.
+     */
+    public static FullWebappInfo determineTargetWebappInfo(Delegator delegator, String webSiteIdArg, String contextPathArg, 
+            RenderEnvType renderEnvType, FullWebappInfo currentWebappInfo, FullWebappInfo.Cache webappInfoCache, Environment env) throws TemplateModelException {
+        if (renderEnvType.isStatic() && UtilValidate.isEmpty(webSiteIdArg) && currentWebappInfo != null) {
+            return currentWebappInfo;
+        }
+        return FullWebappInfo.fromWebSiteIdOrContextPath(delegator, webSiteIdArg, contextPathArg, webappInfoCache);
     }
     
     /**

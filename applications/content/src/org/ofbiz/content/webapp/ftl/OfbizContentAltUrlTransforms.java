@@ -27,22 +27,19 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.content.content.ContentUrlFilter;
+import org.ofbiz.webapp.FullWebappInfo;
 import org.ofbiz.webapp.control.WebAppConfigurationException;
-import org.ofbiz.webapp.ftl.OfbizContentTransform;
-import org.ofbiz.webapp.ftl.OfbizUrlTransform;
+import org.ofbiz.webapp.renderer.RenderEnvType;
 
+import com.ilscipio.scipio.ce.webapp.ftl.context.ContextFtlUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.context.TransformUtil;
-import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil;
+import com.ilscipio.scipio.ce.webapp.ftl.context.UrlTransformUtil;
 
 import freemarker.core.Environment;
-import freemarker.ext.beans.BeanModel;
-import freemarker.ext.beans.NumberModel;
-import freemarker.ext.beans.StringModel;
-import freemarker.template.SimpleNumber;
-import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateTransformModel;
 
@@ -54,7 +51,7 @@ import freemarker.template.TemplateTransformModel;
  * it would have been <code>true</code>).
  */
 public class OfbizContentAltUrlTransforms implements TemplateTransformModel {
-    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
     @Override
     @SuppressWarnings("unchecked")
@@ -77,36 +74,38 @@ public class OfbizContentAltUrlTransforms implements TemplateTransformModel {
             public void close() throws IOException {
                 try {
                     Environment env = FreeMarkerWorker.getCurrentEnvironment();
-                    BeanModel req = (BeanModel) env.getVariable("request");
-                    BeanModel res = (BeanModel) env.getVariable("response");
-                    if (req != null) {
-                        final String escapeAs = TransformUtil.getStringArg(args, "escapeAs"); // SCIPIO: new
-                        boolean rawParamsDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we should get rawParams
-                        boolean rawParams = TransformUtil.getBooleanArg(args, "rawParams", rawParamsDefault); // SCIPIO: new
-                        boolean strictDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we want strict handling
-                        final Boolean strict = TransformUtil.getBooleanArg(args, "strict", strictDefault); // SCIPIO: new
-                        
-                        Boolean fullPath = TransformUtil.getBooleanArg(args, "fullPath"); // SCIPIO: changed from boolean to Boolean
-                        Boolean secure = TransformUtil.getBooleanArg(args, "secure"); // SCIPIO: changed from boolean to Boolean
-                        Boolean encode = TransformUtil.getBooleanArg(args, "encode"); // SCIPIO: new flag
-                        Object urlParams = TransformUtil.getStringArg(args, "params", rawParams); // SCIPIO: new; TODO: support map (but needs special handling to respect rawParams)
+                    HttpServletRequest request = ContextFtlUtil.getRequest(env); // SCIPIO
+                    HttpServletResponse response = ContextFtlUtil.getResponse(env);
+                    RenderEnvType renderEnvType = ContextFtlUtil.getRenderEnvType(env, request);
+                    //FullWebappInfo.Cache webappInfoCache = ContextFtlUtil.getWebappInfoCacheAndCurrent(env, request, renderEnvType);
+                    
+                    final String escapeAs = TransformUtil.getStringArg(args, "escapeAs"); // SCIPIO: new
+                    boolean rawParamsDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we should get rawParams
+                    boolean rawParams = TransformUtil.getBooleanArg(args, "rawParams", rawParamsDefault); // SCIPIO: new
+                    boolean strictDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we want strict handling
+                    final Boolean strict = TransformUtil.getBooleanArg(args, "strict", strictDefault); // SCIPIO: new
+                    
+                    Boolean fullPath = UrlTransformUtil.determineFullPath(TransformUtil.getBooleanArg(args, "fullPath"), renderEnvType, env); // SCIPIO: changed from boolean to Boolean
+                    Boolean secure = TransformUtil.getBooleanArg(args, "secure"); // SCIPIO: changed from boolean to Boolean
+                    Boolean encode = TransformUtil.getBooleanArg(args, "encode"); // SCIPIO: new flag
+                    Object urlParams = TransformUtil.getStringArg(args, "params", rawParams); // SCIPIO: new; TODO: support map (but needs special handling to respect rawParams)
 
-                        String contentId = TransformUtil.getStringArg(args, "contentId", rawParams);
-                        String viewContent = TransformUtil.getStringArg(args, "viewContent", rawParams);
-                        Boolean urlDecode = TransformUtil.getBooleanArg(args, "urlDecode");
-                        HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();
-                        HttpServletResponse response = null;
-                        if (res != null) {
-                            response = (HttpServletResponse) res.getWrappedObject();
-                        }
-                        String url = "";
-                        if (UtilValidate.isNotEmpty(contentId)) {
-                            Locale locale = TransformUtil.getOfbizLocaleArgOrContextOrRequest(args, "locale", env); // SCIPIO
+                    String contentId = TransformUtil.getStringArg(args, "contentId", rawParams);
+                    String viewContent = TransformUtil.getStringArg(args, "viewContent", rawParams);
+                    Boolean urlDecode = TransformUtil.getBooleanArg(args, "urlDecode");
+     
+                    String url = "";
+                    if (UtilValidate.isNotEmpty(contentId)) {
+                        Locale locale = TransformUtil.getOfbizLocaleArgOrContextOrRequest(args, "locale", env); // SCIPIO
+                        if (request != null) {
                             // SCIPIO: replaced
                             //url = ContentUrlFilter.makeContentAltUrl(request, response, contentId, viewContent, urlDecode);
                             url = ContentUrlFilter.makeContentAltLink(request, response, locale, contentId, viewContent, urlDecode, urlParams, fullPath, secure, encode);
+                        } else {
+                            // TODO: when from static context...
+                            Debug.logWarning("@ofbizContentAltUrl transform is not implemented for non-webapp render contexts", module);
                         }
-                        out.write(TransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));
+                        out.write(UrlTransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));
                     }
                 } catch (TemplateModelException e) {
                     throw new IOException(e.getMessage());

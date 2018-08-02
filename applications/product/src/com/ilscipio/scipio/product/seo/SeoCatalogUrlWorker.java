@@ -18,7 +18,6 @@
  *******************************************************************************/
 package com.ilscipio.scipio.product.seo;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -61,6 +60,7 @@ import org.ofbiz.product.category.CategoryWorker;
 import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.webapp.FullWebappInfo;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
 import com.ilscipio.scipio.ce.util.SeoStringUtil;
@@ -218,15 +218,15 @@ public class SeoCatalogUrlWorker implements Serializable {
         public static BuilderFactory getInstance() { return INSTANCE; }
         @Override
         public CatalogUrlBuilder getCatalogUrlBuilder(boolean withRequest, HttpServletRequest request,
-                Delegator delegator, String contextPath, String webSiteId) {
-            if (!SeoConfig.getCommonConfig().isSeoUrlEnabled(contextPath, webSiteId)) return null;
-            return SeoCatalogUrlWorker.getInstance(delegator, webSiteId).getCatalogUrlBuilder();
+                Delegator delegator, FullWebappInfo targetWebappInfo) {
+            if (!SeoConfig.getCommonConfig().isSeoUrlEnabled(targetWebappInfo.getContextPath(), targetWebappInfo.getWebSiteId())) return null;
+            return SeoCatalogUrlWorker.getInstance(delegator, targetWebappInfo.getWebSiteId()).getCatalogUrlBuilder();
         }
         @Override
         public CatalogAltUrlBuilder getCatalogAltUrlBuilder(boolean withRequest, HttpServletRequest request,
-                Delegator delegator, String contextPath, String webSiteId) {
-            if (!SeoConfig.getCommonConfig().isSeoUrlEnabled(contextPath, webSiteId)) return null;
-            return SeoCatalogUrlWorker.getInstance(delegator, webSiteId).getCatalogAltUrlBuilder();
+                Delegator delegator, FullWebappInfo targetWebappInfo) {
+            if (!SeoConfig.getCommonConfig().isSeoUrlEnabled(targetWebappInfo.getContextPath(), targetWebappInfo.getWebSiteId())) return null;
+            return SeoCatalogUrlWorker.getInstance(delegator, targetWebappInfo.getWebSiteId()).getCatalogAltUrlBuilder();
         }
     }
 
@@ -346,7 +346,7 @@ public class SeoCatalogUrlWorker implements Serializable {
     public class SeoCatalogUrlBuilder extends CatalogUrlBuilder implements Serializable {
         @Override
         public String makeCatalogUrl(HttpServletRequest request, Locale locale, String productId, String currentCategoryId,
-                String previousCategoryId) throws IOException {
+                String previousCategoryId) {
             if (UtilValidate.isNotEmpty(productId)) {
                 return makeProductUrl(request, locale, previousCategoryId, currentCategoryId, productId);
             } else {
@@ -356,12 +356,12 @@ public class SeoCatalogUrlWorker implements Serializable {
         }
 
         @Override
-        public String makeCatalogUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String webSiteId, String contextPath, String currentCatalogId, List<String> crumb, String productId,
-                String currentCategoryId, String previousCategoryId) throws IOException {
+        public String makeCatalogUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, FullWebappInfo targetWebappInfo, String currentCatalogId, List<String> crumb, String productId,
+                String currentCategoryId, String previousCategoryId) {
             if (UtilValidate.isNotEmpty(productId)) {
-                return makeProductUrl(delegator, dispatcher, locale, crumb, webSiteId, contextPath, currentCatalogId, previousCategoryId, currentCategoryId, productId);
+                return makeProductUrl(delegator, dispatcher, locale, crumb, targetWebappInfo, currentCatalogId, previousCategoryId, currentCategoryId, productId);
             } else {
-                return makeCategoryUrl(delegator, dispatcher, locale, crumb, webSiteId, contextPath, currentCatalogId, previousCategoryId, currentCategoryId, productId, null, null, null, null);
+                return makeCategoryUrl(delegator, dispatcher, locale, crumb, targetWebappInfo, currentCatalogId, previousCategoryId, currentCategoryId, productId, null, null, null, null);
             }
             //return CatalogUrlBuilder.getDefaultBuilder().makeCatalogUrl(delegator, dispatcher, locale, contextPath, crumb, productId, currentCategoryId, previousCategoryId);
         }
@@ -374,31 +374,31 @@ public class SeoCatalogUrlWorker implements Serializable {
     public class SeoCatalogAltUrlBuilder extends CatalogAltUrlBuilder implements Serializable {
         @Override
         public String makeProductAltUrl(HttpServletRequest request, Locale locale, String previousCategoryId, String productCategoryId,
-                String productId) throws IOException {
+                String productId) {
             return makeProductUrl(request, locale, previousCategoryId, productCategoryId, productId);
             //return CatalogAltUrlBuilder.getDefaultBuilder().makeProductAltUrl(request, locale, previousCategoryId, productCategoryId, productId);
         }
 
         @Override
         public String makeProductAltUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail,
-                String webSiteId, String contextPath, String currentCatalogId, String previousCategoryId, String productCategoryId, String productId) throws IOException {
-            return makeProductUrl(delegator, dispatcher, locale, trail, webSiteId, contextPath, currentCatalogId, previousCategoryId, productCategoryId, productId);
+                FullWebappInfo targetWebappInfo, String currentCatalogId, String previousCategoryId, String productCategoryId, String productId) {
+            return makeProductUrl(delegator, dispatcher, locale, trail, targetWebappInfo, currentCatalogId, previousCategoryId, productCategoryId, productId);
             //return CatalogAltUrlBuilder.getDefaultBuilder().makeProductAltUrl(delegator, dispatcher, locale, trail, contextPath, previousCategoryId, productCategoryId, productId);
         }
 
         @Override
         public String makeCategoryAltUrl(HttpServletRequest request, Locale locale, String previousCategoryId,
                 String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort,
-                String searchString) throws IOException {
+                String searchString) {
             return makeCategoryUrl(request, locale, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
             //return CatalogAltUrlBuilder.getDefaultBuilder().makeCategoryAltUrl(request, locale, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
         }
 
         @Override
         public String makeCategoryAltUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail,
-                String webSiteId, String contextPath, String currentCatalogId, String previousCategoryId, String productCategoryId, String productId,
-                String viewSize, String viewIndex, String viewSort, String searchString) throws IOException {
-            return makeCategoryUrl(delegator, dispatcher, locale, trail, webSiteId, contextPath, currentCatalogId, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
+                FullWebappInfo targetWebappInfo, String currentCatalogId, String previousCategoryId, String productCategoryId, String productId,
+                String viewSize, String viewIndex, String viewSort, String searchString) {
+            return makeCategoryUrl(delegator, dispatcher, locale, trail, targetWebappInfo, currentCatalogId, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
             //return CatalogAltUrlBuilder.getDefaultBuilder().makeCategoryAltUrl(delegator, dispatcher, locale, trail, contextPath, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
         }
     }
@@ -622,14 +622,14 @@ public class SeoCatalogUrlWorker implements Serializable {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         List<String> trail = CategoryWorker.getTrail(request);
         return makeCategoryUrl(delegator, dispatcher, locale, trail, 
-                WebSiteWorker.getWebSiteId(request), request.getContextPath(), CatalogWorker.getCurrentCatalogId(request),
+                FullWebappInfo.fromRequest(request), CatalogWorker.getCurrentCatalogId(request),
                 previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
     }
 
     /**
      * Make category url according to the configurations.
      */
-    public String makeCategoryUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail, String webSiteId, String contextPath, String currentCatalogId, String previousCategoryId, String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort, String searchString) {
+    public String makeCategoryUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail, FullWebappInfo targetWebappInfo, String currentCatalogId, String previousCategoryId, String productCategoryId, String productId, String viewSize, String viewIndex, String viewSort, String searchString) {
         GenericValue productCategory;
         try {
             productCategory = EntityQuery.use(delegator).from("ProductCategory").where("productCategoryId", productCategoryId).cache().queryOne();
@@ -645,11 +645,11 @@ public class SeoCatalogUrlWorker implements Serializable {
         // SCIPIO: refine and append trail
         // NO LONGER NEED ADJUST - in fact it will prevent the valid trail selection after this from working
         //trail = CategoryWorker.adjustTrail(trail, productCategoryId, previousCategoryId);
-        trail = makeFullCategoryUrlTrail(delegator, trail, productCategory, webSiteId, currentCatalogId);
+        trail = makeFullCategoryUrlTrail(delegator, trail, productCategory, targetWebappInfo.getWebSiteId(), currentCatalogId);
         List<String> trailNames = getCategoryUrlTrailNames(delegator, dispatcher, locale, trail, true);
         
         // NOTE: pass null productCategory because already resolved in trailNames
-        StringBuilder urlBuilder = makeCategoryUrlPath(delegator, dispatcher, locale, null, trailNames, contextPath, true);
+        StringBuilder urlBuilder = makeCategoryUrlPath(delegator, dispatcher, locale, null, trailNames, targetWebappInfo.getContextPath(), true);
         
         // append view index
         if (UtilValidate.isNotEmpty(viewIndex)) {
@@ -734,7 +734,7 @@ public class SeoCatalogUrlWorker implements Serializable {
         List<String> trail = CategoryWorker.getTrail(request);
         
         return makeProductUrl(delegator, dispatcher, locale, trail, 
-                WebSiteWorker.getWebSiteId(request), request.getContextPath(), CatalogWorker.getCurrentCatalogId(request),
+                FullWebappInfo.fromRequest(request), CatalogWorker.getCurrentCatalogId(request),
                 previousCategoryId, productCategoryId, productId);
     }
 
@@ -743,7 +743,7 @@ public class SeoCatalogUrlWorker implements Serializable {
      * <p>
      * SCIPIO: Modified for bugfixes and lookup via cache products map (TODO: REVIEW)
      */
-    public String makeProductUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail, String webSiteId, String contextPath, String currentCatalogId, String previousCategoryId, String productCategoryId, String productId) {
+    public String makeProductUrl(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail, FullWebappInfo targetWebappInfo, String currentCatalogId, String previousCategoryId, String productCategoryId, String productId) {
         GenericValue product;
         try {
             product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache().queryOne();
@@ -762,11 +762,11 @@ public class SeoCatalogUrlWorker implements Serializable {
             //if (UtilValidate.isNotEmpty(productCategoryId)) {
             //    trail = CategoryWorker.adjustTrail(trail, productCategoryId, previousCategoryId);
             //}
-            trail = makeFullProductUrlTrail(delegator, trail, product, webSiteId, currentCatalogId);
+            trail = makeFullProductUrlTrail(delegator, trail, product, targetWebappInfo.getWebSiteId(), currentCatalogId);
             trailNames = getCategoryUrlTrailNames(delegator, dispatcher, locale, trail, true);
         }
         
-        StringBuilder urlBuilder = makeProductUrlPath(delegator, dispatcher, locale, product, trailNames, contextPath, true);
+        StringBuilder urlBuilder = makeProductUrlPath(delegator, dispatcher, locale, product, trailNames, targetWebappInfo.getContextPath(), true);
         
         return urlBuilder.toString();
     }

@@ -132,8 +132,16 @@ public abstract class ContextFtlUtil {
         return FreeMarkerWorker.getWrappedObject("delegator", env);
     }
     
+    public static Delegator getDelegator(HttpServletRequest request, Environment env) throws TemplateModelException {
+        return (request != null) ? (Delegator) request.getAttribute("delegator") : FreeMarkerWorker.getWrappedObject("delegator", env);
+    }
+    
     public static LocalDispatcher getDispatcher(Environment env) throws TemplateModelException {
         return FreeMarkerWorker.getWrappedObject("dispatcher", env);
+    }
+    
+    public static LocalDispatcher getDispatcher(HttpServletRequest request, Environment env) throws TemplateModelException {
+        return (request != null) ? (LocalDispatcher) request.getAttribute("dispatcher") : FreeMarkerWorker.getWrappedObject("dispatcher", env);
     }
     
     /**

@@ -107,7 +107,8 @@ public class FullWebappInfo {
             }
             String webSiteId = WebSiteWorker.getWebSiteIdFromContext(context, renderEnvType);
             if (webSiteId != null) {
-                return FullWebappInfo.fromWebSiteId((Delegator) context.get("delegator"), webSiteId, cache);
+                fullWebappInfo = FullWebappInfo.fromWebSiteId((Delegator) context.get("delegator"), webSiteId, cache);
+                if (cache != null) cache.setCurrentWebappInfoOnly(fullWebappInfo); // 
             }
         } else if (renderEnvType.isWebapp()) {
             return fromRequest((HttpServletRequest) context.get("request"), cache);
@@ -131,6 +132,15 @@ public class FullWebappInfo {
         }
     }
 
+    public static FullWebappInfo fromWebSiteIdOrContextPath(Delegator delegator, String webSiteId, String contextPath, Cache cache) throws IllegalArgumentException {
+        if (UtilValidate.isNotEmpty(webSiteId)) {
+            return fromWebSiteId(delegator, webSiteId, cache);
+        } else if (UtilValidate.isNotEmpty(contextPath)) {
+            return fromContextPath(delegator, contextPath, cache);
+        }
+        return null;
+    }
+    
     /*
      * ******************************************************
      * Individual element factory methods
@@ -486,6 +496,10 @@ public class FullWebappInfo {
         public void setCurrentWebappInfo(FullWebappInfo currentWebappInfo) {
             this.currentWebappInfo = currentWebappInfo;
             addWebappInfo(currentWebappInfo);
+        }
+        
+        public void setCurrentWebappInfoOnly(FullWebappInfo currentWebappInfo) {
+            this.currentWebappInfo = currentWebappInfo;
         }
 
         public WebSiteProperties getDefaultWebSiteProperties() {

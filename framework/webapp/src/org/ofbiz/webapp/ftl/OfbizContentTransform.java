@@ -26,21 +26,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.webapp.content.ContentRequestWorker;
-import org.ofbiz.webapp.control.RequestLinkUtil;
-import org.ofbiz.webapp.taglib.ContentUrlTag;
 
 import com.ilscipio.scipio.ce.webapp.ftl.context.ContextFtlUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.context.TransformUtil;
+import com.ilscipio.scipio.ce.webapp.ftl.context.UrlTransformUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
-import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil;
 
 import freemarker.core.Environment;
-import freemarker.ext.beans.BeanModel;
-import freemarker.template.TemplateBooleanModel;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
@@ -96,17 +91,16 @@ public class OfbizContentTransform implements TemplateTransformModel {
             public void close() throws IOException {
                 try {
                     Environment env = FreeMarkerWorker.getCurrentEnvironment();
-                    BeanModel req = (BeanModel)env.getVariable("request");
-                    HttpServletRequest request = req == null ? null : (HttpServletRequest) req.getWrappedObject();
-
-                    // SCIPIO: delegated to our new method
-                    BeanModel resp = (BeanModel) env.getVariable("response");
-                    HttpServletResponse response = (resp == null) ? null : (HttpServletResponse) resp.getWrappedObject();
+                    HttpServletRequest request = ContextFtlUtil.getRequest(env);
+                    HttpServletResponse response = ContextFtlUtil.getResponse(env);
+          
                     String ctxPrefix = getContentPathPrefix(ctxPrefixObj, rawParams, env); // SCIPIO: new
+
+                    // SCIPIO: delegated to our new method    
                     String url = ContentRequestWorker.makeContentLink(request, response, UtilValidate.isNotEmpty(uri) ? uri : buf.toString(), imgSize, null, 
                             ctxPrefix, urlDecode, strict, autoVariant, imgWidth, imgHeight, imgVariantCfg);
-                            
-                    out.write(TransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));
+
+                    out.write(UrlTransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));
                 } catch (TemplateModelException e) {
                     throw new IOException(e.getMessage());
                 }

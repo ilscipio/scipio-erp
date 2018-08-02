@@ -24,6 +24,7 @@ import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.control.RequestLinkUtil;
 
 import com.ilscipio.scipio.ce.webapp.ftl.context.TransformUtil;
+import com.ilscipio.scipio.ce.webapp.ftl.context.UrlTransformUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.lang.OfbizFtlObjectType;
 import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil;
 import com.ilscipio.scipio.cms.CmsException;
@@ -109,6 +110,10 @@ public class PageLinkDirective implements TemplateDirectiveModel, Serializable {
         MapStack<String> context = CmsRenderUtil.getRenderContextAlways(env);
         CmsPageContext pageContext = CmsPageContext.getOrMakeFromContext(context);
 
+        //HttpServletRequest request = pageContext.getRequest();
+        // TODO: REVIEW: may be special for CMS vs other transforms
+        //RenderEnvType renderEnvType = ContextFtlUtil.getRenderEnvType(env, request);
+        
         final String escapeAs = TransformUtil.getStringArg(args, "escapeAs"); // SCIPIO: new
         boolean rawParamsDefault = UtilValidate.isNotEmpty(escapeAs) ? true : false; // SCIPIO: if we're post-escaping, we can assume we should get rawParams
         final boolean rawParams = TransformUtil.getBooleanArg(args, "rawParams", rawParamsDefault); // SCIPIO: new
@@ -135,6 +140,8 @@ public class PageLinkDirective implements TemplateDirectiveModel, Serializable {
             interWebapp = UtilValidate.isNotEmpty(webSiteId);
         }
         
+        // TODO: REVIEW: may be special for CMS vs other transforms
+        //Boolean fullPath = TransformUrlUtil.determineFullPath(TransformUtil.getBooleanArg(args, "fullPath"), renderEnvType, env);
         Boolean fullPath = TransformUtil.getBooleanArg(args, "fullPath");
         Boolean secure = TransformUtil.getBooleanArg(args, "secure");
         Boolean encode = TransformUtil.getBooleanArg(args, "encode");
@@ -150,6 +157,10 @@ public class PageLinkDirective implements TemplateDirectiveModel, Serializable {
         if (UtilValidate.isEmpty(lookupWebSiteId)) {
             lookupWebSiteId = webSiteId;
         }
+        
+        // TODO: REVIEW: may be special for CMS vs other transforms
+        //// for email context
+        //webSiteId = TransformUrlUtil.determineWebSiteId(webSiteId, renderEnvType, env);
         
         String output = null;
         Map<String, Object> lookupFields = new HashMap<>();
@@ -222,7 +233,7 @@ public class PageLinkDirective implements TemplateDirectiveModel, Serializable {
                 // render link
                 output = makeLinkAutoEx(pageContext, page, interWebapp, webSiteId, fullPath, secure, encode, paramStr);
                 if (output != null) {
-                    output = TransformUtil.escapeGeneratedUrl(output, escapeAs, strict, env);
+                    output = UrlTransformUtil.escapeGeneratedUrl(output, escapeAs, strict, env);
                 }
             } catch (Exception e) {
                 handleError(env, e, "Could not build link to CMS page with: " + lookupFields.toString());

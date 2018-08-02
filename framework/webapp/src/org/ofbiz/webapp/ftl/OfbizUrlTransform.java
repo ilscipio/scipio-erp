@@ -102,10 +102,14 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                     HttpServletResponse response = FreeMarkerWorker.unwrap(env.getVariable("response"));
                     RenderEnvType renderEnvType = ContextFtlUtil.getRenderEnvType(env, request);
                     FullWebappInfo.Cache webappInfoCache = ContextFtlUtil.getWebappInfoCacheAndCurrent(env, request, renderEnvType);
-                    
+                    Delegator delegator = ContextFtlUtil.getDelegator(request, env);
+
                     final Boolean fullPath = UrlTransformUtil.determineFullPath(TransformUtil.getBooleanArg(args, "fullPath"), renderEnvType, env);
                     final Boolean secure = TransformUtil.getBooleanArg(args, "secure"); // SCIPIO: modified to remove default; leave centralized
                     final Boolean encode = TransformUtil.getBooleanArg(args, "encode"); // SCIPIO: modified to remove default; leave centralized
+                    // TODO?: this is complicated by makeLinkAuto's auto path to contextPath mapping for this transform...
+                    //FullWebappInfo targetWebappInfo = UrlTransformUtil.determineTargetWebappInfo(delegator, TransformUtil.getStringArg(args, "webSiteId", rawParams), 
+                    //        null, renderEnvType, webappInfoCache.getCurrentWebappInfo(), webappInfoCache, env);
                     final String webSiteId = UrlTransformUtil.determineWebSiteId(TransformUtil.getStringArg(args, "webSiteId", rawParams), renderEnvType, webappInfoCache.getCurrentWebappInfo(), env);
 
                     Boolean interWebappEff = interWebapp;
@@ -139,7 +143,6 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                             //out.write(requestUrl);
                         }
                     } else if (webSiteId != null) {
-                        Delegator delegator = FreeMarkerWorker.getWrappedObject("delegator", env);
                         Locale locale = TransformUtil.getOfbizLocaleArgOrContextOrRequest(args, "locale", env);
                         String link = RequestHandler.makeLinkAuto(delegator, locale, webSiteId, requestUrl, absPath, interWebappEff, controller, 
                                 fullPath, secure, encode, webappInfoCache.getCurrentWebappInfo(), webappInfoCache, request, response);
@@ -147,6 +150,7 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                             out.write(UrlTransformUtil.escapeGeneratedUrl(link, escapeAs, strict, env));
                         }
                     } else {
+                        // DEPRECATED - TODO: REMOVE
                         // Handle prefix.
                         String prefixString = TransformUtil.getStringNonEscapingArg(args, "urlPrefix", "");
                         if (prefixString.isEmpty() && request == null) {

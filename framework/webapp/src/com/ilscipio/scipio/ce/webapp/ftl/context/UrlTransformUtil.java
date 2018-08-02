@@ -1,5 +1,7 @@
 package com.ilscipio.scipio.ce.webapp.ftl.context;
 
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.webapp.FullWebappInfo;
 import org.ofbiz.webapp.renderer.RenderEnvType;
 
 import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil;
@@ -25,12 +27,9 @@ public abstract class UrlTransformUtil {
      * <p>
      * @see org.ofbiz.common.email.NotificationServices#setBaseUrl
      */
-    public static String determineWebSiteId(String webSiteIdArg, RenderEnvType renderEnvType, Environment env) throws TemplateModelException {
-        if (renderEnvType.isStatic() && (webSiteIdArg == null || webSiteIdArg.isEmpty())) {
-            webSiteIdArg = TransformUtil.getStringNonEscapingArg(env.getVariable("webSiteId"));
-            if (webSiteIdArg == null || webSiteIdArg.isEmpty()) {
-                webSiteIdArg = TransformUtil.getStringNonEscapingArg(env.getVariable("baseWebSiteId"));
-            }
+    public static String determineWebSiteId(String webSiteIdArg, RenderEnvType renderEnvType, FullWebappInfo currentWebappInfo, Environment env) throws TemplateModelException {
+        if (renderEnvType.isStatic() && UtilValidate.isEmpty(webSiteIdArg) && currentWebappInfo != null) {
+            webSiteIdArg = currentWebappInfo.getWebSiteId();
         }
         return webSiteIdArg;
     }

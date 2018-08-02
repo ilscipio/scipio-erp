@@ -10,10 +10,15 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
+import org.ofbiz.entity.Delegator;
+import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.webapp.ExtWebappInfo;
+import org.ofbiz.webapp.FullWebappInfo;
 import org.ofbiz.webapp.renderer.RenderEnvType;
 import org.ofbiz.webapp.website.WebSiteProperties;
 
@@ -121,6 +126,14 @@ public abstract class ContextFtlUtil {
             res = getGlobalContext(env);
         }
         return res;
+    }
+
+    public static Delegator getDelegator(Environment env) throws TemplateModelException {
+        return FreeMarkerWorker.getWrappedObject("delegator", env);
+    }
+    
+    public static LocalDispatcher getDispatcher(Environment env) throws TemplateModelException {
+        return FreeMarkerWorker.getWrappedObject("dispatcher", env);
     }
     
     /**
@@ -842,6 +855,31 @@ public abstract class ContextFtlUtil {
         if (cache == null) {
             cache = new HashMap<>();
             setRequestVar("scpWebSitePropsCache", cache, env);
+        }
+        return cache;
+    }
+    
+    /**
+     * Gets the FullWebappInfo cache from request or context and pre-caches the
+     * "current" webapp info, which can be retrieved using
+     * {@link org.ofbiz.webapp.FullWebappInfo.Cache#getCurrentWebappInfo()}.
+     */
+    public static FullWebappInfo.Cache getWebappInfoCacheAndCurrent(Environment env, HttpServletRequest request, RenderEnvType renderEnvType) throws TemplateModelException, IllegalArgumentException {
+        FullWebappInfo.Cache cache;
+        if (request != null) {
+            cache = FullWebappInfo.Cache.fromRequest(request);
+            FullWebappInfo.fromRequest(request, cache);
+        } else {
+            Map<String, Object> context = getContext(env);
+            if (context == null) {
+                // TODO?: don't bother with env.getVariable, this will always be here...
+                Debug.logWarning("getCurrentWebappInfo: 'context' variable not"
+                        + " found in Freemarker environment; cannot determine current website or cache webapp info", module);
+                return FullWebappInfo.Cache.newCache(getDelegator(env));
+            }
+            cache = FullWebappInfo.Cache.fromContext(context, renderEnvType);
+            FullWebappInfo.fromContext(context, renderEnvType, cache);
+            return cache;
         }
         return cache;
     }

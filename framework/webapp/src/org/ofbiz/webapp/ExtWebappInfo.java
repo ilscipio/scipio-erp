@@ -1,6 +1,5 @@
 package org.ofbiz.webapp;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
@@ -8,18 +7,24 @@ import java.util.Map;
 
 import org.apache.tomcat.util.descriptor.web.WebXml;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
+import org.ofbiz.base.lang.ThreadSafe;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.webapp.control.ConfigXMLReader.ControllerConfig;
+import org.ofbiz.webapp.control.ConfigXMLReader;
 import org.ofbiz.webapp.control.ContextFilter;
 
 import com.ilscipio.scipio.ce.util.Optional;
 
 /**
- * SCIPIO: Extended webapp info class, which contains both component WebappInfo
+ * SCIPIO: Extended static webapp info class, which contains both component WebappInfo
  * and WebXml info in a single class linked to the webSiteId in a global cache.
  * Should only be used for webapps that have a defined webSiteId (in web.xml).
  * <p>
  * It will cache several settings to avoid constantly re-traversing the WebXml
  * and preload a bunch of calls from {@link WebAppUtil}.
+ * <p>
+ * This does not contain DB data such as WebSiteProperties, only statically-accessible
+ * files and configuration.
  * <p>
  * NOTE: The first accesses have to be done at late enough times in the loading, because
  * the instances are cached, and it would be bad to cache partially-loaded results.
@@ -29,48 +34,50 @@ import com.ilscipio.scipio.ce.util.Optional;
  * to avoid issues.
  */
 @SuppressWarnings("serial")
+@ThreadSafe
 public class ExtWebappInfo implements Serializable {
-    
+
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    
-    private static final Object webSiteIdCacheLock = new Object();
+
+    private static final Object cacheLock = new Object(); // NOTE: both caches lock together
     private static Map<String, ExtWebappInfo> webSiteIdCache = Collections.emptyMap();
-    
-    // REQUIRED FIELDS (for this instance to exist)
+    private static Map<String, ExtWebappInfo> contextPathCache = Collections.emptyMap();
+
     private final String webSiteId;
+    // REQUIRED FIELDS (for this instance to exist)
     private final WebappInfo webappInfo;
     private final WebXml webXml;
-    
+
     // OPTIONAL FIELDS (instance may be created/cached even if lookup fails for these)
     private final String controlServletPath; // empty string for root
     private final String controlServletMapping; // single slash for root
     private final String fullControlPath; // with context root and trailing slash
-    
+
     private Optional<Boolean> forwardRootControllerUris;
     private Optional<Boolean> forwardRootControllerUrisValid;
-    
+
     /**
      * Main constructor.
      */
-    protected ExtWebappInfo(String webSiteId, WebappInfo webappInfo, WebXml webXml) throws IOException {
+    protected ExtWebappInfo(String webSiteId, WebappInfo webappInfo, WebXml webXml) {
         // sanity check
         if (webappInfo == null) throw new IllegalArgumentException("Missing ofbiz webapp info (WebappInfo) for website ID '" + webSiteId + "' - required to instantiate ExtWebappInfo");
         if (webXml == null) throw new IllegalArgumentException("Missing webapp container info (web.xml) for website ID '" + webSiteId + "' (mount-point '" + webappInfo.getContextRoot() + "')");
-            
+
         this.webSiteId = webSiteId;
         this.webappInfo = webappInfo;
         this.webXml = webXml;
         try {
             this.fullControlPath = WebAppUtil.getControlServletPath(webappInfo, true);
             if (this.fullControlPath == null) {
-                Debug.logWarning(getLogMsgPrefix(webSiteId)+"Cannot find ControlServlet mapping for website"
+                Debug.logWarning(getLogMsgPrefix()+"Cannot find ControlServlet mapping for website"
                         + " (this is an error if the website was meant to have a controller)", module);
             }
-            
+
             this.controlServletMapping = WebAppUtil.getControlServletOnlyPathFromFull(webappInfo, fullControlPath);
             this.controlServletPath = ("/".equals(this.controlServletMapping)) ? "" : this.controlServletMapping;
         } catch (Exception e) {
-            throw new IOException("Could not determine ControlServlet mapping for website ID '" + webSiteId + "': " + e.getMessage(), e);
+            throw new IllegalArgumentException("Could not determine ControlServlet mapping for website ID '" + webSiteId + "': " + e.getMessage(), e);
         }
     }
 
@@ -78,11 +85,12 @@ public class ExtWebappInfo implements Serializable {
      * Clears all the ExtWebSiteInfo global caches.
      */
     public static void clearCaches() {
-        synchronized(webSiteIdCacheLock) { // this only prevents other thread from accidentally restoring the map we just deleted
+        synchronized(cacheLock) { // this only prevents other thread from accidentally restoring the map we just deleted
             webSiteIdCache = Collections.emptyMap();
+            contextPathCache = Collections.emptyMap();
         }
     }
-    
+
     /**
      * Gets from webSiteId, with caching.
      * Cache only allows websites with registered WebappInfo and WebXml.
@@ -90,31 +98,90 @@ public class ExtWebappInfo implements Serializable {
      * {@link #fromWebSiteIdNew(String)}, otherwise there is a risk of caching
      * incomplete instances.
      */
-    public static ExtWebappInfo fromWebSiteId(String webSiteId) throws IOException {
+    public static ExtWebappInfo fromWebSiteId(String webSiteId) throws IllegalArgumentException {
         ExtWebappInfo info = webSiteIdCache.get(webSiteId);
         if (info != null) return info;
-        synchronized(webSiteIdCacheLock) {
+        synchronized(cacheLock) {
             info = webSiteIdCache.get(webSiteId);
             if (info != null) return info;
-            
-            info = fromWebSiteIdNew(webSiteId); 
-            
+
+            info = fromWebSiteIdNew(webSiteId);
+
             // copy cache for synch semantics
             Map<String, ExtWebappInfo> newCache = new HashMap<>(webSiteIdCache);
             newCache.put(webSiteId, info);
-            webSiteIdCache = Collections.unmodifiableMap(webSiteIdCache);
+            webSiteIdCache = Collections.unmodifiableMap(newCache);
+
+            // also put into context root cache to prevent duplicates
+            newCache = new HashMap<>(contextPathCache);
+            newCache.put(info.getContextPath(), info);
+            contextPathCache = Collections.unmodifiableMap(newCache);
         }
         return info;
     }
-    
+
     /**
      * Gets from webSiteId, no caching.
      * NOTE: This is the factory method that should be used during loading.
      * @see #fromWebSiteId(String)
      */
-    public static ExtWebappInfo fromWebSiteIdNew(String webSiteId) throws IOException {
+    public static ExtWebappInfo fromWebSiteIdNew(String webSiteId) throws IllegalArgumentException {
         WebappInfo webappInfo = getWebappInfoAlways(webSiteId);
         WebXml webXml = getWebXmlAlways(webSiteId, webappInfo);
+        return new ExtWebappInfo(webSiteId, webappInfo, webXml);
+    }
+
+    /**
+     * Gets from webSiteId, with caching.
+     * Cache only allows websites with registered WebappInfo and WebXml.
+     * NOTE: If accessing from early loading process, do not call this, instead call
+     * {@link #fromWebSiteIdNew(String)}, otherwise there is a risk of caching
+     * incomplete instances.
+     */
+    public static ExtWebappInfo fromContextPath(String contextPath) throws IllegalArgumentException {
+        ExtWebappInfo info = contextPathCache.get(contextPath);
+        if (info != null) return info;
+        synchronized(cacheLock) {
+            info = contextPathCache.get(contextPath);
+            if (info != null) return info;
+
+            info = fromContextPath(contextPath);
+
+            // copy cache for synch semantics
+            Map<String, ExtWebappInfo> newCache = new HashMap<>(contextPathCache);
+            newCache.put(contextPath, info);
+            contextPathCache = Collections.unmodifiableMap(contextPathCache);
+
+            if (info.getWebSiteId() != null) {
+                newCache = new HashMap<>(webSiteIdCache);
+                newCache.put(info.getWebSiteId(), info);
+                webSiteIdCache = Collections.unmodifiableMap(newCache);
+            }
+        }
+        return info;
+    }
+
+    /**
+     * Gets from webSiteId, no caching.
+     * NOTE: This is the factory method that should be used during loading.
+     * @see #fromWebSiteId(String)
+     */
+    public static ExtWebappInfo fromContextPathNew(String contextPath) throws IllegalArgumentException {
+        WebappInfo webappInfo;
+        try {
+            webappInfo = WebAppUtil.getWebappInfoFromContextPath(contextPath);
+        } catch(IllegalArgumentException e) {
+            throw new IllegalArgumentException(e);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Could not read or find ofbiz webapp info (WebappInfo) for context path '" + contextPath + "': " + e.getMessage(), e);
+        }
+        WebXml webXml = getWebXmlAlways(null, webappInfo);
+        String webSiteId = null;
+        try {
+            webSiteId = WebAppUtil.getWebSiteId(webXml);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Could not get webSiteId for context path '" + contextPath + "': " + e.getMessage(), e);
+        }
         return new ExtWebappInfo(webSiteId, webappInfo, webXml);
     }
 
@@ -125,15 +192,23 @@ public class ExtWebappInfo implements Serializable {
     public WebappInfo getWebappInfo() {
         return webappInfo;
     }
-    
+
     public WebXml getWebXml() {
         return webXml;
     }
-    
-    public String getContextRoot() {
-        return (webappInfo != null) ? webappInfo.getContextRoot() : null;
+
+    public String getContextPath() {
+        return webappInfo.getContextRoot();
     }
-    
+
+    /**
+     * @deprecated use {@link #getContextPath()} instead
+     */
+    @Deprecated
+    public String getContextRoot() {
+        return getContextPath();
+    }
+
     /**
      * The control servlet mapping, or empty string "" if it is the root mapping.
      * No trailing slash.
@@ -155,25 +230,42 @@ public class ExtWebappInfo implements Serializable {
     public String getControlServletMapping() {
         return controlServletMapping;
     }
-    
+
     /**
-     * Returns the control path prefixed with the webapp context root and 
+     * Returns the control path prefixed with the webapp context root and
      * suffixed with trailing slash.
      * <p>
-     * Essentially {@link #getContextRoot()} + {@link #getControlServletMapping()} + "/".
+     * Essentially {@link #getContextPath()} + {@link #getControlServletMapping()} + "/".
      * Includes a trailing slash.
      * <p>
      * NOTE: The trailing slash inconsistency is due to this coming from the stock ofbiz
-     * {@link WebAppUtil#getControlServletPath(WebappInfo)}.
+     * {@link WebAppUtil#getControlServletPath(WebappInfo)} (FIXME?)
      */
     public String getFullControlPath() {
         return fullControlPath;
     }
-    
+
+    /**
+     * Gets controller config or null if none for this webapp.
+     * <p>
+     * NOTE: This is NOT cached, because the ExtWebappInfo caches are static
+     * and they would cause a second-layer caching around the ControllerConfig cache.
+     */
+    public ControllerConfig getControllerConfig() {
+        try {
+            return ConfigXMLReader.getControllerConfig(getWebappInfo(), true);
+        } catch (Exception e) {
+            // Do not throw this because caller would probably not expect it;
+            // he would expect it to be thrown during construction, but can't
+            Debug.logError(e, module);
+            return null;
+        }
+    }
+
     public Map<String, String> getContextParams() {
         return webXml.getContextParams();
     }
-    
+
     /**
      * Returns whether the forwardRootControllerUris ContextFilter settings is
      * on, off, or undetermined (null).
@@ -185,7 +277,7 @@ public class ExtWebappInfo implements Serializable {
             try {
                 setting = ContextFilter.readForwardRootControllerUrisSetting(getWebXml(), getLogMsgPrefix());
             } catch(Exception e) {
-                Debug.logError(e, getLogMsgPrefix()+"Error while trying to determine forwardRootControllerUris ContextFilter setting: " 
+                Debug.logError(e, getLogMsgPrefix()+"Error while trying to determine forwardRootControllerUris ContextFilter setting: "
                         + e.getMessage(), module);
                 setting = null;
             }
@@ -207,7 +299,7 @@ public class ExtWebappInfo implements Serializable {
             try {
                 setting = ContextFilter.verifyForwardRootControllerUrisSetting(getForwardRootControllerUris(), getControlServletMapping(), getLogMsgPrefix());
             } catch(Exception e) {
-                Debug.logError(e, getLogMsgPrefix()+"Error while trying to determine forwardRootControllerUris ContextFilter setting: " 
+                Debug.logError(e, getLogMsgPrefix()+"Error while trying to determine forwardRootControllerUris ContextFilter setting: "
                         + e.getMessage(), module);
                 setting = null;
             }
@@ -216,37 +308,36 @@ public class ExtWebappInfo implements Serializable {
         }
         return forwardRootControllerUrisValid.orElse(null);
     }
-    
-    private static String getLogMsgPrefix(String webSiteId) {
-        return "Website '" + webSiteId + "': ";
-    }
-    
+
     private String getLogMsgPrefix() {
-        return "Website '" + webSiteId + "': ";
+        if (webSiteId != null) {
+            return "Website '" + webSiteId + "': ";
+        } else {
+            return "Webapp '" + getContextPath() + "': ";
+        }
     }
-    
-    
+
     /**
      * Helper wrapper to read WebappInfo reliably.
      */
-    public static WebappInfo getWebappInfoAlways(String webSiteId) throws IOException {
+    public static WebappInfo getWebappInfoAlways(String webSiteId) throws IllegalArgumentException {
         try {
             return WebAppUtil.getWebappInfoFromWebsiteId(webSiteId);
         } catch(IllegalArgumentException e) {
-            throw new IOException(e); // exception message already good
+            throw new IllegalArgumentException(e); // exception message already good
         } catch (Exception e) {
-            throw new IOException("Could not read or find ofbiz webapp info (WebappInfo) for website ID '" + webSiteId + "': " + e.getMessage(), e);
+            throw new IllegalArgumentException("Could not read or find ofbiz webapp info (WebappInfo) for website ID '" + webSiteId + "': " + e.getMessage(), e);
         }
     }
-    
+
     /**
      * Helper wrapper to read WebXml reliably.
      */
-    public static WebXml getWebXmlAlways(String webSiteId, WebappInfo webappInfo) throws IOException {
+    public static WebXml getWebXmlAlways(String webSiteId, WebappInfo webappInfo) throws IllegalArgumentException {
         try {
             return WebAppUtil.getWebXml(webappInfo);
         } catch(Exception e) {
-            throw new IOException("Could not read or find webapp container info (web.xml) for website ID '" + webSiteId 
+            throw new IllegalArgumentException("Could not read or find webapp container info (web.xml) for website ID '" + webSiteId
                         + "' (mount-point '" + webappInfo.getContextRoot() + "'): " + e.getMessage(), e);
         }
     }

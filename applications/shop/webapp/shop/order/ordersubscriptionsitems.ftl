@@ -115,7 +115,7 @@
           <#-- product item -->
           <#assign product = orderItem.getRelatedOne("Product", true)!/> <#-- should always exist because of FK constraint, but just in case -->
           <@td>
-            <#if !printable><a href="<@ofbizCatalogAltUrl fullPath="true" secure="false" productId=orderItem.productId/>" class="${styles.link_nav_info_desc!}" target="_blank"></#if>${orderItem.productId} - ${orderItem.itemDescription!""}<#if !printable></a></#if>
+            <#if !printable><a href="<@ofbizCatalogAltUrl fullPath=true productId=orderItem.productId/>" class="${styles.link_nav_info_desc!}" target="_blank"></#if>${orderItem.productId} - ${orderItem.itemDescription!""}<#if !printable></a></#if>
             <#-- SCIPIO: Link to downloads to consume -->
             <#-- TODO: delegate status tests -->
             <#if !printable && orderHeader?has_content && !["ORDER_REJECTED", "ORDER_CANCELLED"]?seq_contains(orderHeader.statusId!)>

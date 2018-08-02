@@ -8,10 +8,13 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.tomcat.util.descriptor.web.WebXml;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.webapp.control.ConfigXMLReader.ControllerConfig;
+import org.ofbiz.webapp.renderer.RenderEnvType;
 import org.ofbiz.webapp.website.WebSiteProperties;
+import org.ofbiz.webapp.website.WebSiteWorker;
 
 import com.ilscipio.scipio.ce.util.Optional;
 
@@ -42,7 +45,7 @@ public class FullWebappInfo {
     private final Delegator delegator;
     private ExtWebappInfo extWebappInfo;
     private WebSiteProperties webSiteProperties;
-    
+
     private Optional<ControllerConfig> controllerConfig;
     private OfbizUrlBuilder ofbizUrlBuilder;
 
@@ -65,26 +68,75 @@ public class FullWebappInfo {
         this(delegator, extWebappInfo, null);
     }
 
-    /* 
+    /*
      * ******************************************************
-     * Abstracted and cached factory methods
+     * High-level factory methods
      * ******************************************************
      */
-    
+
     public static FullWebappInfo fromRequest(HttpServletRequest request) throws IllegalArgumentException {
         return fromRequest(request, Cache.fromRequest(request));
     }
-    
+
     public static FullWebappInfo fromRequest(HttpServletRequest request, Cache cache) throws IllegalArgumentException {
         if (cache == null) return newFromRequest(request);
-        FullWebappInfo fullWebappInfo = cache.getByContextPath(request.getContextPath());
+        FullWebappInfo fullWebappInfo = cache.getCurrentWebappInfo();
         if (fullWebappInfo == null) {
             fullWebappInfo = newFromRequest(request);
             cache.setCurrentWebappInfo(fullWebappInfo);
         }
         return fullWebappInfo;
     }
-    
+
+    /**
+     * Gets from context. NOTE: this will NOT try to get from "request" in context.
+     * <p>
+     * NOTE: for static render contexts, this only works if there is a webSiteId.
+     * For now only webapp render context can return an instance with no webSiteId.
+     */
+    public static FullWebappInfo fromContext(Map<String, Object> context, RenderEnvType renderEnvType) throws IllegalArgumentException {
+        return fromContext(context, renderEnvType, Cache.fromContext(context, renderEnvType));
+    }
+
+    public static FullWebappInfo fromContext(Map<String, Object> context, RenderEnvType renderEnvType, Cache cache) throws IllegalArgumentException {
+        if (renderEnvType.isStatic()) {
+            FullWebappInfo fullWebappInfo;
+            if (cache != null) {
+                fullWebappInfo = cache.getCurrentWebappInfo();
+                if (fullWebappInfo != null) return fullWebappInfo;
+            }
+            String webSiteId = WebSiteWorker.getWebSiteIdFromContext(context, renderEnvType);
+            if (webSiteId != null) {
+                return FullWebappInfo.fromWebSiteId((Delegator) context.get("delegator"), webSiteId, cache);
+            }
+        } else if (renderEnvType.isWebapp()) {
+            return fromRequest((HttpServletRequest) context.get("request"), cache);
+        }
+        return null;
+    }
+
+    public static FullWebappInfo fromRequestOrContext(HttpServletRequest request, Map<String, Object> context, RenderEnvType renderEnvType) {
+        return (request != null) ? fromRequest(request) : fromContext(context, renderEnvType);
+    }
+
+    public static FullWebappInfo fromWebSiteIdOrRequest(HttpServletRequest request, String webSiteId) throws IllegalArgumentException {
+        return fromWebSiteIdOrRequest(request, webSiteId, Cache.fromRequest(request));
+    }
+
+    public static FullWebappInfo fromWebSiteIdOrRequest(HttpServletRequest request, String webSiteId, Cache cache) throws IllegalArgumentException {
+        if (UtilValidate.isNotEmpty(webSiteId)) {
+            return fromWebSiteId((Delegator) request.getAttribute("delegator"), webSiteId, cache);
+        } else {
+            return fromRequest(request, cache);
+        }
+    }
+
+    /*
+     * ******************************************************
+     * Individual element factory methods
+     * ******************************************************
+     */
+
     public static FullWebappInfo fromExtWebappInfo(Delegator delegator, ExtWebappInfo extWebappInfo, Cache cache) throws IllegalArgumentException {
         if (cache == null) return newFromExtWebappInfo(delegator, extWebappInfo);
         FullWebappInfo fullWebappInfo = cache.getByContextPath(extWebappInfo.getContextPath());
@@ -94,7 +146,7 @@ public class FullWebappInfo {
         }
         return fullWebappInfo;
     }
-    
+
     public static FullWebappInfo fromWebappInfo(Delegator delegator, WebappInfo webappInfo, Cache cache) throws IllegalArgumentException {
         if (cache == null) return newFromWebappInfo(delegator, webappInfo);
         FullWebappInfo fullWebappInfo = cache.getByContextPath(webappInfo.getContextRoot());
@@ -104,7 +156,7 @@ public class FullWebappInfo {
         }
         return fullWebappInfo;
     }
-    
+
     public static FullWebappInfo fromWebSiteId(Delegator delegator, String webSiteId, Cache cache) throws IllegalArgumentException {
         if (cache == null) return newFromWebSiteId(delegator, webSiteId);
         FullWebappInfo fullWebappInfo = cache.getByWebSiteId(webSiteId);
@@ -114,7 +166,7 @@ public class FullWebappInfo {
         }
         return fullWebappInfo;
     }
-    
+
     public static FullWebappInfo fromContextPath(Delegator delegator, String contextPath, Cache cache) throws IllegalArgumentException {
         if (cache == null) return newFromContextPath(delegator, contextPath);
         FullWebappInfo fullWebappInfo = cache.getByContextPath(contextPath);
@@ -125,50 +177,82 @@ public class FullWebappInfo {
         return fullWebappInfo;
     }
 
-    /* 
+    /*
      * ******************************************************
      * New-instance factory methods (avoid in client code)
      * ******************************************************
      */
-    
-    public static FullWebappInfo newFromRequest(HttpServletRequest request) throws IllegalArgumentException {
+
+    protected static FullWebappInfo newFromRequest(HttpServletRequest request) throws IllegalArgumentException {
         try {
             // SPECIAL: in this case we must initialize WebSiteProperties immediately because
             // we can't store the HttpServletRequest object in FullWebappInfo
-            return new FullWebappInfo((Delegator) request.getAttribute("delegator"), 
+            return new FullWebappInfo((Delegator) request.getAttribute("delegator"),
                     ExtWebappInfo.fromContextPath(request.getContextPath()),
                     WebSiteProperties.from(request));
         } catch (GenericEntityException e) {
             throw new IllegalArgumentException(e);
         }
     }
-    
+
     public static FullWebappInfo newFromExtWebappInfo(Delegator delegator, ExtWebappInfo extWebappInfo) throws IllegalArgumentException {
         return new FullWebappInfo(delegator, extWebappInfo);
     }
-    
+
     public static FullWebappInfo newFromWebappInfo(Delegator delegator, WebappInfo webappInfo) throws IllegalArgumentException {
         return new FullWebappInfo(delegator, ExtWebappInfo.fromContextPath(webappInfo.getContextRoot()));
     }
-    
+
     public static FullWebappInfo newFromWebSiteId(Delegator delegator, String webSiteId) throws IllegalArgumentException {
         return new FullWebappInfo(delegator, ExtWebappInfo.fromWebSiteId(webSiteId));
     }
-    
+
     public static FullWebappInfo newFromContextPath(Delegator delegator, String contextPath) throws IllegalArgumentException {
         return new FullWebappInfo(delegator, ExtWebappInfo.fromContextPath(contextPath));
     }
-    
-    /* 
+
+
+    /*
+     * ******************************************************
+     * Other type factory methods (mainly to exploit the cache).
+     * ******************************************************
+     */
+
+    public static OfbizUrlBuilder getOfbizUrlBuilderFromWebSiteIdOrDefaults(Delegator delegator, String webSiteId, Cache cache) throws IllegalArgumentException {
+        if (UtilValidate.isNotEmpty(webSiteId)) {
+            if (cache != null && cache.getByWebSiteId(webSiteId) != null) {
+                return cache.getByWebSiteId(webSiteId).getOfbizUrlBuilder();
+            }
+            try {
+                return OfbizUrlBuilder.fromWebSiteId(webSiteId, delegator);
+            } catch (Exception e) {
+                throw new IllegalStateException(e);
+            }
+        } else {
+            if (cache != null && cache.getDefaultOfbizUrlBuilder() != null) {
+                return cache.getDefaultOfbizUrlBuilder();
+            }
+            OfbizUrlBuilder builder;
+            try {
+                builder = OfbizUrlBuilder.fromServerDefaults(delegator);
+            } catch (Exception e) {
+                throw new IllegalStateException(e);
+            }
+            if (cache != null) cache.setDefaultOfbizUrlBuilder(builder);
+            return builder;
+        }
+    }
+
+    /*
      * ******************************************************
      * Object getters
      * ******************************************************
      */
-    
+
     public ExtWebappInfo getExtWebappInfo() {
         return extWebappInfo;
     }
-    
+
     public WebSiteProperties getWebSiteProperties() {
         WebSiteProperties webSiteProperties = this.webSiteProperties;
         if (webSiteProperties == null) {
@@ -195,7 +279,7 @@ public class FullWebappInfo {
         }
         return webSiteProperties;
     }
-    
+
     /**
      * Returns the ControllerConfig for this webapp or null if it has none.
      */
@@ -207,7 +291,7 @@ public class FullWebappInfo {
         }
         return controllerConfig.orElse(null);
     }
-    
+
     /**
      * Returns a URL builder or throws exception.
      */
@@ -224,7 +308,7 @@ public class FullWebappInfo {
         return ofbizUrlBuilder;
     }
 
-    /* 
+    /*
      * ******************************************************
      * Helpers
      * ******************************************************
@@ -240,7 +324,7 @@ public class FullWebappInfo {
         return (this == obj) ||
                ((obj instanceof FullWebappInfo) && this.getContextPath().equals(((FullWebappInfo) obj).getContextPath()));
     }
-    
+
     public boolean equalsProtoHostPort(FullWebappInfo other) {
         return this.getWebSiteProperties().equalsProtoHostPort(other.getWebSiteProperties());
     }
@@ -248,8 +332,13 @@ public class FullWebappInfo {
     public boolean equalsProtoHostPortWithHardDefaults(FullWebappInfo other) {
         return this.getWebSiteProperties().equalsProtoHostPortWithHardDefaults(other.getWebSiteProperties());
     }
-    
-    /* 
+
+    @Override
+    public String toString() {
+        return "[contextPath=" + getContextPath() + ", webSiteId=" + getWebSiteId() + "]";
+    }
+
+    /*
      * ******************************************************
      * ExtWebappInfo-delegated methods
      * ******************************************************
@@ -335,50 +424,86 @@ public class FullWebappInfo {
         return extWebappInfo.getForwardRootControllerUrisValidated();
     }
 
- 
+
     /**
      * WARN: not thread-safe at current time (meant for request scope only).
      */
     public static class Cache {
         private FullWebappInfo currentWebappInfo;
+        private WebSiteProperties defaultWebSiteProperties;
+        private OfbizUrlBuilder defaultOfbizUrlBuilder;
         private Map<String, FullWebappInfo> webSiteIdCache = new HashMap<>();
         private Map<String, FullWebappInfo> contextPathCache = new HashMap<>();
 
+        protected Cache(Delegator delegator) {
+            //this.delegator = delegator;
+        }
+
+        public static Cache newCache(Delegator delegator) {
+            return new Cache(delegator);
+        }
+        
         public static Cache fromRequest(HttpServletRequest request) {
             Cache cache = (Cache) request.getAttribute("scpFullWebappInfoCache");
             if (cache == null) {
-                cache = new Cache();
+                cache = new Cache((Delegator) request.getAttribute("delegator"));
                 request.setAttribute("scpFullWebappInfoCache", cache);
             }
             return cache;
         }
-        
-        public static Cache fromContext(Map<String, Object> context) {
-            @SuppressWarnings("unchecked")
-            Map<String, Object> srcContext = (Map<String, Object>) context.get("globalContext");
-            if (srcContext == null) srcContext = context; // fallback
-            
-            Cache cache = (Cache) srcContext.get("scpFullWebappInfoCache");
-            if (cache == null) {
-                cache = new Cache();
-                srcContext.put("scpFullWebappInfoCache", cache);
+
+        public static Cache fromContext(Map<String, Object> context, RenderEnvType renderEnvType) {
+            if (renderEnvType.isStatic()) {
+                @SuppressWarnings("unchecked")
+                Map<String, Object> srcContext = (Map<String, Object>) context.get("globalContext");
+                if (srcContext == null) srcContext = context; // fallback
+    
+                Cache cache = (Cache) srcContext.get("scpFullWebappInfoCache");
+                if (cache == null) {
+                    cache = new Cache((Delegator) context.get("delegator"));
+                    srcContext.put("scpFullWebappInfoCache", cache);
+                }
+                return cache;
+            } else if (renderEnvType.isWebapp()) {
+                return fromRequest((HttpServletRequest) context.get("request"));
             }
-            return cache;
+            return null;
         }
-        
-        public static Cache fromRequestOrContext(HttpServletRequest request, Map<String, Object> context) {
-            return (request != null) ? fromRequest(request) : fromContext(context);
+
+        public static Cache fromRequestOrContext(HttpServletRequest request, Map<String, Object> context,
+                RenderEnvType renderEnvType) {
+            return (request != null) ? fromRequest(request) : fromContext(context, renderEnvType);
         }
-        
+
         public FullWebappInfo getCurrentWebappInfo() {
             return currentWebappInfo;
+        }
+        
+        public String getCurrentWebappWebSiteId() {
+            return (currentWebappInfo != null) ? currentWebappInfo.getWebSiteId() : null;
         }
 
         public void setCurrentWebappInfo(FullWebappInfo currentWebappInfo) {
             this.currentWebappInfo = currentWebappInfo;
             addWebappInfo(currentWebappInfo);
         }
-        
+
+        public WebSiteProperties getDefaultWebSiteProperties() {
+            return defaultWebSiteProperties;
+        }
+
+        public void setDefaultWebSiteProperties(WebSiteProperties defaultWebSiteProperties) {
+            this.defaultWebSiteProperties = defaultWebSiteProperties;
+        }
+
+        public OfbizUrlBuilder getDefaultOfbizUrlBuilder() {
+            return defaultOfbizUrlBuilder;
+        }
+
+        public void setDefaultOfbizUrlBuilder(OfbizUrlBuilder defaultOfbizUrlBuilder) {
+            this.defaultOfbizUrlBuilder = defaultOfbizUrlBuilder;
+        }
+
         public void addWebappInfo(FullWebappInfo webappInfo) {
             contextPathCache.put(webappInfo.getContextPath(), webappInfo);
             if (webappInfo.getWebSiteId() != null) {

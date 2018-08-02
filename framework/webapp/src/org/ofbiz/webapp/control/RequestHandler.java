@@ -1822,7 +1822,7 @@ public class RequestHandler {
                 if (controller) {
                     builder.buildPathPart(newURL, url);
                 } else {
-                    builder.buildPathPartWithContextRoot(newURL, url);
+                    builder.buildPathPartWithContextPath(newURL, url);
                 }
             } catch (WebAppConfigurationException e) {
                 // SCIPIO: new case
@@ -2026,7 +2026,7 @@ public class RequestHandler {
             if (controller) {
                 builder.buildPathPart(newURL, url);
             } else {
-                builder.buildPathPartWithContextRoot(newURL, url);
+                builder.buildPathPartWithContextPath(newURL, url);
             }
         } catch (WebAppConfigurationException e) {
             // SCIPIO: new case

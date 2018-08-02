@@ -205,9 +205,9 @@ public final class OfbizUrlBuilder {
      * SCIPIO: Builds a full URL - including scheme, host, context root and resource (custom servlet).
      * Added 2018-08-01.
      */
-    public boolean buildFullUrlWithContextRoot(Appendable buffer, String url, boolean useSSL) throws WebAppConfigurationException, IOException {
+    public boolean buildFullUrlWithContextPath(Appendable buffer, String url, boolean useSSL) throws WebAppConfigurationException, IOException {
         boolean makeSecure = buildHostPart(buffer, url, useSSL);
-        buildPathPartWithContextRoot(buffer, url);
+        buildPathPartWithContextPath(buffer, url);
         return makeSecure;
     }
 
@@ -388,7 +388,7 @@ public final class OfbizUrlBuilder {
      * @throws WebAppConfigurationException
      * @throws IOException
      */
-    public void buildPathPartWithContextRoot(Appendable buffer, String url) throws WebAppConfigurationException, IOException {
+    public void buildPathPartWithContextPath(Appendable buffer, String url) throws WebAppConfigurationException, IOException {
         if (contextPath == null) {
             throw new IllegalStateException("Context path is unknown");
         }
@@ -405,8 +405,8 @@ public final class OfbizUrlBuilder {
      * SCIPIO: Builds path part up to webapp context root, with no trailing slash.
      * Added 2018-08-01.
      */
-    public void buildPathPartWithContextRoot(Appendable buffer) throws WebAppConfigurationException, IOException {
-        buildPathPartWithContextRoot(buffer, null);
+    public void buildPathPartWithContextPath(Appendable buffer) throws WebAppConfigurationException, IOException {
+        buildPathPartWithContextPath(buffer, null);
     }
 
     /**

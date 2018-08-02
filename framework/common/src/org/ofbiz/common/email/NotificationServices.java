@@ -274,7 +274,7 @@ public class NotificationServices {
 
                 // SCIPIO: 2018-08-01: store baseWebappPath, which is webappPathPrefix + contextPath
                 newURL = new StringBuilder();
-                builder.buildPathPartWithContextRoot(newURL);
+                builder.buildPathPartWithContextPath(newURL);
                 context.put("baseWebappPath", newURL.toString());
             } catch (Exception e) {
                 Debug.logWarning(e, "Exception thrown while adding baseUrl to context: ", module);

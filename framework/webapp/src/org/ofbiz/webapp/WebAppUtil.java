@@ -363,6 +363,19 @@ public final class WebAppUtil {
     }
 
     /**
+     * SCIPIO: Returns the web site ID - as configured in the web application's <code>web.xml</code> file,
+     * or <code>null</code> if no web site ID was found.
+     * Added 2018-08-01.
+     * @param webXml
+     * @throws IOException
+     * @throws SAXException
+     */
+    public static String getWebSiteId(WebXml webXml) throws IOException, SAXException {
+        Assert.notNull("webAppInfo", webXml);
+        return webXml.getContextParams().get("webSiteId");
+    }
+
+    /**
      * Returns a <code>WebXml</code> instance that models the web application's <code>web.xml</code> file.
      * 
      * @param webAppInfo

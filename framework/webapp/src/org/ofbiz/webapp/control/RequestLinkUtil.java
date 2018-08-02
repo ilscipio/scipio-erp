@@ -18,6 +18,7 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.webapp.ExtWebappInfo;
 import org.ofbiz.webapp.OfbizUrlBuilder;
 import org.ofbiz.webapp.WebAppUtil;
 import org.ofbiz.webapp.website.WebSiteProperties;
@@ -198,7 +199,7 @@ public abstract class RequestLinkUtil {
         return RequestHandler.doLinkURLEncode(request, response, newURL, interWebapp, didFullStandard, didFullSecure);
     }
     
-    public static String doLinkURLEncode(Delegator delegator, Locale locale, WebappInfo encodingWebappInfo, StringBuilder newURL, boolean interWebapp,
+    public static String doLinkURLEncode(Delegator delegator, Locale locale, ExtWebappInfo encodingWebappInfo, StringBuilder newURL, boolean interWebapp,
             boolean didFullStandard, boolean didFullSecure) {
         return RequestHandler.doLinkURLEncode(delegator, locale, encodingWebappInfo, newURL, interWebapp, didFullStandard, didFullSecure);
     }
@@ -261,7 +262,7 @@ public abstract class RequestLinkUtil {
     }
     
     public static String buildLinkHostPartAndEncode(Delegator delegator, Locale locale, String webSiteId, String url,
-            Boolean fullPath, Boolean secure, Boolean encode, boolean includeWebappPathPrefix, //String currentWebSiteId, // not necessary yet...
+            Boolean fullPath, Boolean secure, Boolean encode, boolean includeWebappPathPrefix, //String currentWebSiteId, // TODO: REVIEW: not necessary yet...
             HttpServletRequest request, HttpServletResponse response) throws WebAppConfigurationException, IOException {
 
         boolean didFullStandard = false;
@@ -301,10 +302,10 @@ public abstract class RequestLinkUtil {
         } else {
             String res;
             if (!Boolean.FALSE.equals(encode)) {
-                WebappInfo encodingWebAppInfo;
+                ExtWebappInfo encodingWebAppInfo;
                 try {
-                    encodingWebAppInfo = WebAppUtil.getWebappInfoFromWebsiteId(webSiteId); // currentWebSiteId
-                } catch (SAXException e) {
+                    encodingWebAppInfo = ExtWebappInfo.fromWebSiteId(webSiteId); // currentWebSiteId
+                } catch (Exception e) {
                     throw new IOException(e);
                 }
                 res = RequestHandler.doLinkURLEncode(delegator, locale, encodingWebAppInfo, newURL, true, didFullStandard, didFullSecure);

@@ -60,6 +60,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.webapp.ExtWebappInfo;
 import org.ofbiz.webapp.OfbizUrlBuilder;
 import org.ofbiz.webapp.WebAppUtil;
 import org.ofbiz.webapp.control.ConfigXMLReader.ControllerConfig;
@@ -1878,7 +1879,7 @@ public class RequestHandler {
      * Added 2018-08-01.
      */
     public static String makeLink(Delegator delegator, Locale locale, String url, Boolean interWebapp, WebappInfo webappInfo, Boolean controller, 
-            Boolean fullPath, Boolean secure, Boolean encode, Map<String, WebSiteProperties> webSitePropsCache, WebappInfo currentWebappInfo, HttpServletRequest request, HttpServletResponse response) {
+            Boolean fullPath, Boolean secure, Boolean encode, ExtWebappInfo currentWebappInfo, Map<String, WebSiteProperties> webSitePropsCache, HttpServletRequest request, HttpServletResponse response) {
         if (interWebapp == null) {
             interWebapp = Boolean.FALSE;
         }
@@ -2124,7 +2125,7 @@ public class RequestHandler {
         return encodedUrl;
     }
     
-    protected static String doLinkURLEncode(Delegator delegator, Locale locale, WebappInfo encodingWebappInfo, StringBuilder newURL, boolean interWebapp,
+    protected static String doLinkURLEncode(Delegator delegator, Locale locale, ExtWebappInfo encodingWebappInfo, StringBuilder newURL, boolean interWebapp,
             boolean didFullStandard, boolean didFullSecure) {
         // TODO!
         return newURL.toString();
@@ -2244,11 +2245,11 @@ public class RequestHandler {
      */
     public static String makeLinkAuto(HttpServletRequest request, HttpServletResponse response, String url, Boolean absPath, Boolean interWebapp, String webSiteId, Boolean controller, 
             Boolean fullPath, Boolean secure, Boolean encode) {
-        return makeLinkAutoCore(true, request, response, url, absPath, interWebapp, webSiteId, controller, fullPath, secure, encode, null, null, null);
+        return makeLinkAutoCore(true, request, response, url, absPath, interWebapp, webSiteId, controller, fullPath, secure, encode, null, null, null, null);
     }
     
     private static String makeLinkAutoCore(boolean requestBased, HttpServletRequest request, HttpServletResponse response, String url, Boolean absPath, Boolean interWebapp, String webSiteId, Boolean controller, 
-            Boolean fullPath, Boolean secure, Boolean encode, Delegator delegator, Locale locale, Map<String, WebSiteProperties> webSitePropsCache) {
+            Boolean fullPath, Boolean secure, Boolean encode, Delegator delegator, Locale locale, ExtWebappInfo currentWebappInfo, Map<String, WebSiteProperties> webSitePropsCache) {
         
         boolean absControlPathChecked = false;
         boolean absContextPathChecked = false;
@@ -2397,7 +2398,7 @@ public class RequestHandler {
             RequestHandler rh = getRequestHandler(request);
             return rh.makeLink(request, response, relUrl, interWebapp, webappInfo, controller, fullPath, secure, encode);
         } else {
-            return makeLink(delegator, locale, relUrl, interWebapp, webappInfo, controller, fullPath, secure, encode, webSitePropsCache, webappInfo, request, response);
+            return makeLink(delegator, locale, relUrl, interWebapp, webappInfo, controller, fullPath, secure, encode, currentWebappInfo, webSitePropsCache, request, response);
         }
     }
     
@@ -2406,8 +2407,8 @@ public class RequestHandler {
      * SCIPIO: makeLinkAuto version that does not require request/response (secondary, for logging/errorlevels only).
      */
     public static String makeLinkAuto(Delegator delegator, Locale locale, String webSiteId, String url, Boolean absPath, Boolean interWebapp, Boolean controller, 
-            Boolean fullPath, Boolean secure, Boolean encode, Map<String, WebSiteProperties> webSitePropsCache, HttpServletRequest request, HttpServletResponse response) {
-        return makeLinkAutoCore(false, request, response, url, absPath, interWebapp, webSiteId, controller, fullPath, secure, encode, delegator, locale, webSitePropsCache);
+            Boolean fullPath, Boolean secure, Boolean encode, ExtWebappInfo currentWebappInfo, Map<String, WebSiteProperties> webSitePropsCache, HttpServletRequest request, HttpServletResponse response) {
+        return makeLinkAutoCore(false, request, response, url, absPath, interWebapp, webSiteId, controller, fullPath, secure, encode, delegator, locale, currentWebappInfo, webSitePropsCache);
     }
 
     /**

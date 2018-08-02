@@ -30,6 +30,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.webapp.ExtWebappInfo;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.control.RequestLinkUtil;
 import org.ofbiz.webapp.renderer.RenderEnvType;
@@ -138,8 +139,9 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                     } else if (webSiteId != null) {
                         Delegator delegator = FreeMarkerWorker.getWrappedObject("delegator", env);
                         Locale locale = TransformUtil.getOfbizLocaleArgOrContextOrRequest(args, "locale", env);
+                        ExtWebappInfo currentWebappInfo = ContextFtlUtil.getCurrentWebappInfo(env, request, renderEnvType);
                         String link = RequestHandler.makeLinkAuto(delegator, locale, webSiteId, requestUrl, absPath, interWebappEff, controller, 
-                                fullPath, secure, encode, ContextFtlUtil.getWebSitePropertiesCache(env, request), request, response);
+                                fullPath, secure, encode, currentWebappInfo, ContextFtlUtil.getWebSitePropertiesCache(env, request), request, response);
                         if (link != null) {
                             out.write(UrlTransformUtil.escapeGeneratedUrl(link, escapeAs, strict, env));
                         }

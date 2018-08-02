@@ -8,6 +8,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 
 import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
+import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil;
 
 import freemarker.core.Environment;
 import freemarker.ext.util.WrapperTemplateModel;
@@ -324,5 +325,13 @@ public abstract class TransformUtil {
     
     public static TemplateModel getModel(Map<?, ?> args, String key) {
         return (TemplateModel) args.get(key);
+    }
+    
+    /**
+     * @deprecated use {@link UrlTransformUtil#escapeGeneratedUrl(String, String, boolean, Environment)}
+     */
+    @Deprecated
+    public static String escapeGeneratedUrl(String value, String lang, boolean strict, Environment env) throws TemplateModelException {
+        return UrlTransformUtil.escapeGeneratedUrl(value, lang, strict, env);
     }
 }

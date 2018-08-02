@@ -215,7 +215,7 @@ public class FullWebappInfo {
         OfbizUrlBuilder ofbizUrlBuilder = this.ofbizUrlBuilder;
         if (ofbizUrlBuilder == null) {
             try {
-                ofbizUrlBuilder = OfbizUrlBuilder.from(getExtWebappInfo(), getWebSiteProperties(), delegator);
+                ofbizUrlBuilder = OfbizUrlBuilder.from(this, delegator);
                 this.ofbizUrlBuilder = ofbizUrlBuilder;
             } catch (Exception e) {
                 throw new IllegalArgumentException(e); // caller isn't expecting null

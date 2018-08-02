@@ -107,7 +107,7 @@ public final class OfbizUrlBuilder {
         }
         return new OfbizUrlBuilder(config, webSiteProps, servletPath, contextPath);
     }
-    
+
     /**
      * SCIPIO: Returns an <code>OfbizUrlBuilder</code> instance. Mixed method that allows
      * using WebSiteProperties different than the WebappInfo instance.
@@ -139,7 +139,96 @@ public final class OfbizUrlBuilder {
         }
         return new OfbizUrlBuilder(config, webSiteProps, servletPath, contextPath);
     }
-    
+
+    /**
+     * SCIPIO: Returns an <code>OfbizUrlBuilder</code> instance. Use this method when you
+     * don't have a <code>HttpServletRequest</code> object - like in scheduled jobs.
+     * <p>
+     * Added 2018-08-02.
+     * 
+     * @param extWebAppInfo Optional - if <code>null</code>, the builder can only build the host part,
+     * and that will be based only on the settings in <code>url.properties</code> (the WebSite
+     * entity will be ignored).
+     * @param delegator
+     * @throws WebAppConfigurationException
+     * @throws IOException
+     * @throws SAXException
+     * @throws GenericEntityException
+     */
+    public static OfbizUrlBuilder from(ExtWebappInfo extWebAppInfo, Delegator delegator) throws WebAppConfigurationException, IOException, SAXException, GenericEntityException {
+        WebSiteProperties webSiteProps = null;
+        ControllerConfig config = null;
+        String servletPath = null;
+        String contextPath = null;
+        if (extWebAppInfo != null) {
+            Assert.notNull("delegator", delegator);
+            String webSiteId = extWebAppInfo.getWebSiteId();
+            if (webSiteId != null) {
+                GenericValue webSiteValue = EntityQuery.use(delegator).from("WebSite").where("webSiteId", webSiteId).cache().queryOne();
+                if (webSiteValue != null) {
+                    webSiteProps = WebSiteProperties.from(webSiteValue);
+                }
+            }
+            config = extWebAppInfo.getControllerConfig();
+            servletPath = extWebAppInfo.getFullControlPath();
+            contextPath = extWebAppInfo.getContextPath();
+        }
+        if (webSiteProps == null) {
+            webSiteProps = WebSiteProperties.defaults(delegator);
+        }
+        return new OfbizUrlBuilder(config, webSiteProps, servletPath, contextPath);
+    }
+
+    /**
+     * SCIPIO: Returns an <code>OfbizUrlBuilder</code> instance. Use this method when you
+     * don't have a <code>HttpServletRequest</code> object - like in scheduled jobs.
+     * <p>
+     * Added 2018-08-02.
+     * 
+     * @param extWebAppInfo Optional - if <code>null</code>, the builder can only build the host part,
+     * and that will be based only on the settings in <code>url.properties</code> (the WebSite
+     * entity will be ignored).
+     * @param delegator
+     * @throws WebAppConfigurationException
+     * @throws IOException
+     * @throws SAXException
+     * @throws GenericEntityException
+     */
+    public static OfbizUrlBuilder from(ExtWebappInfo extWebAppInfo, WebSiteProperties webSiteProps, Delegator delegator) throws WebAppConfigurationException, IOException, SAXException, GenericEntityException {
+        ControllerConfig config = null;
+        String servletPath = null;
+        String contextPath = null;
+        if (extWebAppInfo != null) {
+            Assert.notNull("delegator", delegator);
+            config = extWebAppInfo.getControllerConfig();
+            servletPath = extWebAppInfo.getFullControlPath();
+            contextPath = extWebAppInfo.getContextPath();
+        }
+        if (webSiteProps == null) {
+            webSiteProps = WebSiteProperties.defaults(delegator);
+        }
+        return new OfbizUrlBuilder(config, webSiteProps, servletPath, contextPath);
+    }
+
+    /**
+     * SCIPIO: Returns a new <code>OfbizUrlBuilder</code> instance from the given FullWebappInfo.
+     * Roughly same as {@link FullWebappInfo#getOfbizUrlBuilder()}.
+     * <p>
+     * Added 2018-08-02.
+     * 
+     * @param extWebAppInfo Optional - if <code>null</code>, the builder can only build the host part,
+     * and that will be based only on the settings in <code>url.properties</code> (the WebSite
+     * entity will be ignored).
+     * @param delegator
+     * @throws WebAppConfigurationException
+     * @throws IOException
+     * @throws SAXException
+     * @throws GenericEntityException
+     */
+    public static OfbizUrlBuilder from(FullWebappInfo extWebAppInfo, Delegator delegator) throws WebAppConfigurationException, IOException, SAXException, GenericEntityException {
+        return from(extWebAppInfo.getExtWebappInfo(), extWebAppInfo.getWebSiteProperties(), delegator);
+    }
+
     /**
      * SCIPIO: Returns an <code>OfbizUrlBuilder</code> instance using the given webSiteId.
      * Added 2017-11.
@@ -167,6 +256,27 @@ public final class OfbizUrlBuilder {
         return from(webAppInfo, webSiteProps, delegator);
     }
 
+    /**
+     * SCIPIO: Returns an <code>OfbizUrlBuilder</code> instance from system defaults.
+     * WARN: This type of instance can only build host parts!
+     * <p>
+     * Added 2018-08-02.
+     */
+    public static OfbizUrlBuilder fromServerDefaults(HttpServletRequest request) throws WebAppConfigurationException, IOException, SAXException, GenericEntityException {
+        // TODO: cache in request
+        return fromServerDefaults((Delegator) request.getAttribute("delegator"));
+    }
+
+    /**
+     * SCIPIO: Returns an <code>OfbizUrlBuilder</code> instance from system defaults.
+     * WARN: This type of instance can only build host parts!
+     * <p>
+     * Added 2018-08-02.
+     */
+    public static OfbizUrlBuilder fromServerDefaults(Delegator delegator) throws WebAppConfigurationException, IOException, SAXException, GenericEntityException {
+        return new OfbizUrlBuilder(null, WebSiteProperties.defaults(delegator), null, null);
+    }
+    
     private final ControllerConfig config;
     private final WebSiteProperties webSiteProps;
     private final String servletPath;

@@ -217,7 +217,11 @@ public class ExtWebappInfo implements Serializable {
     public WebXml getWebXml() {
         return webXml;
     }
-
+    
+    public String getWebappName() {
+        return webappInfo.getName();
+    }
+    
     public String getContextPath() {
         return webappInfo.getContextRoot();
     }

@@ -398,6 +398,10 @@ public class FullWebappInfo {
         return extWebappInfo.getWebXml();
     }
 
+    public String getWebappName() {
+        return extWebappInfo.getWebappName();
+    }
+
     /**
      * @return
      * @see org.ofbiz.webapp.ExtWebappInfo#getContextPath()

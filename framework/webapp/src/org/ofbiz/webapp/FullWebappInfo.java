@@ -1,5 +1,6 @@
 package org.ofbiz.webapp;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +16,7 @@ import org.ofbiz.webapp.control.ConfigXMLReader.ControllerConfig;
 import org.ofbiz.webapp.renderer.RenderEnvType;
 import org.ofbiz.webapp.website.WebSiteProperties;
 import org.ofbiz.webapp.website.WebSiteWorker;
+import org.xml.sax.SAXException;
 
 import com.ilscipio.scipio.ce.util.Optional;
 
@@ -139,6 +141,24 @@ public class FullWebappInfo {
             return fromContextPath(delegator, contextPath, cache);
         }
         return null;
+    }
+    
+    /**
+     * SCIPIO: Returns the <code>FullWebappInfo</code> instance that has the same mount-point prefix as
+     * the given path.
+     * <p>
+     * <strong>WARN:</strong> Webapp mounted on root (/*) will usually cause a catch-all here.
+     */
+    public static FullWebappInfo fromPath(Delegator delegator, String path, Cache cache)  throws IllegalArgumentException {
+        WebappInfo webappInfo;
+        try {
+            webappInfo = WebAppUtil.getWebappInfoFromPath(path);
+        } catch (IOException e) {
+            throw new IllegalArgumentException(e);
+        } catch (SAXException e) {
+            throw new IllegalArgumentException(e);
+        }
+        return fromWebappInfo(delegator, webappInfo, cache);
     }
     
     /*

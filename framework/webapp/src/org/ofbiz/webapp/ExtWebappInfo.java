@@ -1,5 +1,6 @@
 package org.ofbiz.webapp;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,6 +13,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.webapp.control.ConfigXMLReader.ControllerConfig;
 import org.ofbiz.webapp.control.ConfigXMLReader;
 import org.ofbiz.webapp.control.ContextFilter;
+import org.xml.sax.SAXException;
 
 import com.ilscipio.scipio.ce.util.Optional;
 
@@ -132,7 +134,7 @@ public class ExtWebappInfo implements Serializable {
     }
 
     /**
-     * Gets from webSiteId, with caching.
+     * Gets from contextPath, with caching.
      * Cache only allows websites with registered WebappInfo and WebXml.
      * NOTE: If accessing from early loading process, do not call this, instead call
      * {@link #fromWebSiteIdNew(String)}, otherwise there is a risk of caching
@@ -145,7 +147,7 @@ public class ExtWebappInfo implements Serializable {
             info = contextPathCache.get(contextPath);
             if (info != null) return info;
 
-            info = fromContextPath(contextPath);
+            info = fromContextPathNew(contextPath);
 
             // copy cache for synch semantics
             Map<String, ExtWebappInfo> newCache = new HashMap<>(contextPathCache);
@@ -159,6 +161,25 @@ public class ExtWebappInfo implements Serializable {
             }
         }
         return info;
+    }
+    
+    /**
+     * Gets from arbitary path, with caching.
+     * Cache only allows websites with registered WebappInfo and WebXml.
+     * NOTE: If accessing from early loading process, do not call this, instead call
+     * {@link #fromWebSiteIdNew(String)}, otherwise there is a risk of caching
+     * incomplete instances.
+     */
+    public static ExtWebappInfo fromPath(String path) throws IllegalArgumentException {
+        WebappInfo webappInfo;
+        try {
+            webappInfo = WebAppUtil.getWebappInfoFromPath(path);
+        } catch (IOException e) {
+            throw new IllegalArgumentException(e);
+        } catch (SAXException e) {
+            throw new IllegalArgumentException(e);
+        }
+        return fromContextPath(webappInfo.getContextRoot());
     }
 
     /**

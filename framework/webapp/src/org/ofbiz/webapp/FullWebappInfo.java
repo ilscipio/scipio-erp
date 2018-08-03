@@ -13,6 +13,7 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.webapp.control.ConfigXMLReader.ControllerConfig;
+import org.ofbiz.webapp.control.WebAppConfigurationException;
 import org.ofbiz.webapp.renderer.RenderEnvType;
 import org.ofbiz.webapp.website.WebSiteProperties;
 import org.ofbiz.webapp.website.WebSiteWorker;
@@ -52,11 +53,11 @@ public class FullWebappInfo {
     private OfbizUrlBuilder ofbizUrlBuilder;
 
     protected FullWebappInfo(Delegator delegator, ExtWebappInfo extWebappInfo, WebSiteProperties webSiteProperties,
-            ControllerConfig controllerConfig, OfbizUrlBuilder ofbizUrlBuilder) {
+            Optional<ControllerConfig> controllerConfig, OfbizUrlBuilder ofbizUrlBuilder) {
         this.delegator = delegator; // can be null if all others are non-null
         this.extWebappInfo = extWebappInfo;
         this.webSiteProperties = webSiteProperties;
-        this.controllerConfig = Optional.ofNullable(controllerConfig);
+        this.controllerConfig = controllerConfig;
         this.ofbizUrlBuilder = ofbizUrlBuilder;
     }
 
@@ -88,6 +89,45 @@ public class FullWebappInfo {
             cache.setCurrentWebappInfo(fullWebappInfo);
         }
         return fullWebappInfo;
+    }
+    
+    /**
+     * Reads webapp info from request, but if the request does not appear set up properly
+     * yet (i.e. by ContextFilter), prevent caching the result, so as to not pollute the rest
+     * of the request with an uncertain state.
+     * <p>
+     * DEV NOTE: WARN: This is dirty to maintain, beware.
+     */
+    public static FullWebappInfo fromRequestFilterSafe(HttpServletRequest request) throws IllegalArgumentException {
+        if (request.getAttribute("delegator") != null) {
+            // request appears set up already (e.g. by ContextFilter)
+            return fromRequest(request);
+        } else {
+            // no delegator, request is not set up
+            request.setAttribute("delegator", WebAppUtil.getDelegatorFilterSafe(request));
+            boolean hadOfbizUrlBuilderAttr = (request.getAttribute("_OFBIZ_URL_BUILDER_") != null);
+            boolean hadWebSitePropsAttr = (request.getAttribute("_WEBSITE_PROPS_") != null);
+            boolean addedControlPathAttr = false;
+            if (request.getAttribute("_CONTROL_PATH_") == null) {
+                // From ControlServlet logic
+                addedControlPathAttr = true;
+                String contextPath = request.getContextPath();
+                if (contextPath == null || "/".equals(contextPath)) {
+                    contextPath = "";
+                }
+                request.setAttribute("_CONTROL_PATH_", contextPath + request.getServletPath());
+            }
+            try {
+                return newFromRequest(request);
+            } finally {
+                // do not let filter state affect rest of request - clear cached objects
+                if (!hadOfbizUrlBuilderAttr) request.removeAttribute("_OFBIZ_URL_BUILDER_");
+                if (!hadWebSitePropsAttr) request.removeAttribute("_WEBSITE_PROPS_");
+                if (addedControlPathAttr) request.removeAttribute("_CONTROL_PATH_");
+                Cache.clearRequestCache(request);
+                request.removeAttribute("delegator");
+            }
+        }
     }
 
     /**
@@ -217,10 +257,15 @@ public class FullWebappInfo {
         try {
             // SPECIAL: in this case we must initialize WebSiteProperties immediately because
             // we can't store the HttpServletRequest object in FullWebappInfo
+            OfbizUrlBuilder ofbizUrlBuilder = OfbizUrlBuilder.from(request);
             return new FullWebappInfo((Delegator) request.getAttribute("delegator"),
                     ExtWebappInfo.fromContextPath(request.getContextPath()),
-                    WebSiteProperties.from(request));
+                    ofbizUrlBuilder.getWebSiteProperties(),
+                    Optional.ofNullable(ofbizUrlBuilder.getControllerConfig()),
+                    ofbizUrlBuilder);
         } catch (GenericEntityException e) {
+            throw new IllegalArgumentException(e);
+        } catch (WebAppConfigurationException e) {
             throw new IllegalArgumentException(e);
         }
     }
@@ -240,7 +285,6 @@ public class FullWebappInfo {
     public static FullWebappInfo newFromContextPath(Delegator delegator, String contextPath) throws IllegalArgumentException {
         return new FullWebappInfo(delegator, ExtWebappInfo.fromContextPath(contextPath));
     }
-
 
     /*
      * ******************************************************
@@ -463,6 +507,9 @@ public class FullWebappInfo {
      * WARN: not thread-safe at current time (meant for request scope only).
      */
     public static class Cache {
+
+        public static final String FIELD_NAME = "scpFWICache";
+
         private FullWebappInfo currentWebappInfo;
         private WebSiteProperties defaultWebSiteProperties;
         private OfbizUrlBuilder defaultOfbizUrlBuilder;
@@ -478,12 +525,16 @@ public class FullWebappInfo {
         }
         
         public static Cache fromRequest(HttpServletRequest request) {
-            Cache cache = (Cache) request.getAttribute("scpFullWebappInfoCache");
+            Cache cache = (Cache) request.getAttribute(FIELD_NAME);
             if (cache == null) {
                 cache = new Cache((Delegator) request.getAttribute("delegator"));
-                request.setAttribute("scpFullWebappInfoCache", cache);
+                request.setAttribute(FIELD_NAME, cache);
             }
             return cache;
+        }
+        
+        public static void clearRequestCache(HttpServletRequest request) {
+            request.removeAttribute(FIELD_NAME);
         }
 
         public static Cache fromContext(Map<String, Object> context, RenderEnvType renderEnvType) {
@@ -492,10 +543,10 @@ public class FullWebappInfo {
                 Map<String, Object> srcContext = (Map<String, Object>) context.get("globalContext");
                 if (srcContext == null) srcContext = context; // fallback
     
-                Cache cache = (Cache) srcContext.get("scpFullWebappInfoCache");
+                Cache cache = (Cache) srcContext.get(FIELD_NAME);
                 if (cache == null) {
                     cache = new Cache((Delegator) context.get("delegator"));
-                    srcContext.put("scpFullWebappInfoCache", cache);
+                    srcContext.put(FIELD_NAME, cache);
                 }
                 return cache;
             } else if (renderEnvType.isWebapp()) {
@@ -504,6 +555,18 @@ public class FullWebappInfo {
             return null;
         }
 
+        public static void clearContextCache(Map<String, Object> context, RenderEnvType renderEnvType) {
+            if (renderEnvType.isStatic()) {
+                @SuppressWarnings("unchecked")
+                Map<String, Object> srcContext = (Map<String, Object>) context.get("globalContext");
+                if (srcContext == null) srcContext = context; // fallback
+    
+                srcContext.remove(FIELD_NAME);
+            } else if (renderEnvType.isWebapp()) {
+                clearRequestCache((HttpServletRequest) context.get("request"));
+            }
+        }
+        
         public static Cache fromRequestOrContext(HttpServletRequest request, Map<String, Object> context,
                 RenderEnvType renderEnvType) {
             return (request != null) ? fromRequest(request) : fromContext(context, renderEnvType);

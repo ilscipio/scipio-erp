@@ -8,7 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.webapp.website.WebSiteProperties;
+import org.ofbiz.webapp.FullWebappInfo;
+import org.ofbiz.webapp.OfbizUrlBuilder;
 
 /**
  * SCIPIO: Helper methods for URL rewriting and filtering.
@@ -26,12 +27,12 @@ public class UrlFilterHelper {
         ServletContext sc = request.getServletContext();
         request.setAttribute("scpCtrlServPath", sc.getAttribute("_CONTROL_SERVPATH_"));
         request.setAttribute("scpCtrlMapping", sc.getAttribute("_CONTROL_MAPPING_"));
-        
-        // cannot do this here, too risk of caching WebSiteProperties in req attribs prematurely 
+
+        // cannot do this here, too risk of caching WebSiteProperties in req attribs prematurely
         // and ruining the request for tenants
         //getSetWebappPathPrefix(request);
     }
-    
+
     /**
      * @deprecated use {@link #setCommonAttr(HttpServletRequest, HttpServletResponse)}.
      */
@@ -39,7 +40,7 @@ public class UrlFilterHelper {
     public void setCommonReqAttr(HttpServletRequest request, HttpServletResponse response) {
         setCommonAttr(request, response);
     }
-    
+
     /**
      * Sets some common request attributes needed by URL rewriting, for outbound rules.
      * NOTE: these should NOT be accessed by most webapps; is workaround for limitations in urlrewritefilter.
@@ -58,28 +59,32 @@ public class UrlFilterHelper {
     public void verifySameWebappContext(HttpServletRequest request, HttpServletResponse response) {
         setCommonOutboundAttr(request, response);
     }
-    
-    protected String getSetWebappPathPrefixForOutboundFilter(HttpServletRequest request) {
-        WebSiteProperties webSiteProperties = WebSiteProperties.fromRequestFilterSafe(request); // 2018-07-31
 
-        // FIXME: should get this through FullWebappInfo or OfbizUrlBuilder instead, but they don't have FilterSafe yet...
-        boolean webappPathPrefixUrlBuild = webSiteProperties.isWebappPathPrefixUrlBuild(request.getServletContext());
-        
-        request.setAttribute("scpWebappPathPrefix", webSiteProperties.getWebappPathPrefix());
-        request.setAttribute("scpWPPInUrl", webappPathPrefixUrlBuild ? "true" : "false");
-        return webappPathPrefixUrlBuild ? webSiteProperties.getWebappPathPrefix() : "";
+    protected String getSetWebappPathPrefixForOutboundFilter(HttpServletRequest request) {
+        try {
+            FullWebappInfo webappInfo = FullWebappInfo.fromRequestFilterSafe(request); // 2018-07-31
+            OfbizUrlBuilder urlInfo = webappInfo.getOfbizUrlBuilder();
+
+            request.setAttribute("scpWebappPathPrefix", urlInfo.getWebappPathPrefix());
+            request.setAttribute("scpWPPInUrl", urlInfo.isWebappPathPrefixUrlBuild() ? "true" : "false");
+
+            return urlInfo.isWebappPathPrefixUrlBuild() ? urlInfo.getWebappPathPrefix() : "";
+        } catch(Exception e) {
+            Debug.logError("UrlFilterHelper: Error while fetching webapp info: " + e.toString(), module);
+            return "";
+        }
     }
 
     public boolean checkWebappContextPathAndSetAttr(HttpServletRequest request, HttpServletResponse response) {
         String outboundUrlStr = (String) request.getAttribute("urlFilter.outUrlWebapp.outUrl");
         String webappPathPrefix = getSetWebappPathPrefixForOutboundFilter(request); // 2018-08-03
-        
+
         boolean sameContextPath = false;
         boolean wppInUrl = false;
         String wppFreeUrl = (outboundUrlStr != null) ? outboundUrlStr : "";
         if (outboundUrlStr != null) {
             String currentContextPath = webappPathPrefix + request.getContextPath();
-            
+
             String urlPath = null;
             Matcher matcher = pathPat.matcher(outboundUrlStr);
             if (matcher.matches()) {
@@ -90,14 +95,14 @@ public class UrlFilterHelper {
                 } else {
                     urlPath = pathMatch;
                 }
- 
+
                 if (urlPath.equals(currentContextPath)) {
                     sameContextPath = true;
                 } else {
                     if (!currentContextPath.endsWith("/")) currentContextPath += "/";
                     sameContextPath = urlPath.startsWith(currentContextPath);
                 }
-                
+
                 if (!webappPathPrefix.isEmpty()) {
                     String middle;
                     if (sameContextPath) {
@@ -120,7 +125,7 @@ public class UrlFilterHelper {
                 }
             }
         }
-        
+
         request.setAttribute("scpUrlOutSameCtx", sameContextPath ? "true" : "false");
         request.setAttribute("urlFilter.outUrlWebapp.isSameContext", sameContextPath ? "true" : "false"); // legacy
         request.setAttribute("scpWPPInUrl", wppInUrl ? "true" : "false");

@@ -20,12 +20,15 @@ package org.ofbiz.webapp.website;
 
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.lang.ThreadSafe;
 import org.ofbiz.base.start.Start;
 import org.ofbiz.base.util.Assert;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -186,7 +189,8 @@ public final class WebSiteProperties {
         }
         webappPathPrefix = normalizeWebappPathPrefix(webappPathPrefix);
 
-        return new WebSiteProperties(httpPort, httpHost, httpsPort, httpsHost, enableHttps, webappPathPrefix, webappPathPrefixHeader);
+        return new WebSiteProperties(httpPort, httpHost, httpsPort, httpsHost, enableHttps,
+                webappPathPrefix, webappPathPrefixHeader);
     }
     
     /**
@@ -236,7 +240,8 @@ public final class WebSiteProperties {
         String webappPathPrefix = (webSiteValue.get("webappPathPrefix") != null) ? normalizeWebappPathPrefix(webSiteValue.getString("webappPathPrefix")) : defaults.getWebappPathPrefix();
         String webappPathPrefixHeader = defaults.getWebappPathPrefixHeader();
 
-        return new WebSiteProperties(httpPort, httpHost, httpsPort, httpsHost, enableHttps, webappPathPrefix, webappPathPrefixHeader);
+        return new WebSiteProperties(httpPort, httpHost, httpsPort, httpsHost, enableHttps, 
+                webappPathPrefix, webappPathPrefixHeader);
     }
     
     /**
@@ -283,7 +288,8 @@ public final class WebSiteProperties {
         String webappPathPrefix = (webSiteValue.get("webappPathPrefix") != null) ? normalizeWebappPathPrefix(webSiteValue.getString("webappPathPrefix")) : defaults.getWebappPathPrefix();
         String webappPathPrefixHeader = defaults.getWebappPathPrefixHeader();
 
-        return new WebSiteProperties(httpPort, httpHost, httpsPort, httpsHost, enableHttps, webappPathPrefix, webappPathPrefixHeader);
+        return new WebSiteProperties(httpPort, httpHost, httpsPort, httpsHost, enableHttps, 
+                webappPathPrefix, webappPathPrefixHeader);
     }
     
     /**
@@ -318,6 +324,45 @@ public final class WebSiteProperties {
             cache.put(webSiteId, webSiteProps);
         }
         return webSiteProps;
+    }
+
+    /**
+     * SCIPIO: A specialized method to lookup WebSiteProperties for the current app,
+     * which never throws exceptions and tries best-effort to get the webappPathPrefix
+     * no matter what.
+     * <p>
+     * Added 2018-08-31.
+     */
+    public static WebSiteProperties fromRequestFilterSafe(HttpServletRequest request) {
+        WebSiteProperties webSiteProps = (WebSiteProperties) request.getAttribute("_WEBSITE_PROPS_");
+        if (webSiteProps != null) return webSiteProps;
+        if (request.getAttribute("delegator") != null) {
+            // If the delegator was set in request attributes,
+            // it means we passed the ContextFilter, so we can call the regular
+            // factory method and let it cache this WebSiteProperties for us;
+            // We do not need to clear "_WEBSITE_PROPS_".
+            try {
+                return from(request);
+            } catch (Exception e) {
+                Debug.logError(e, "Could not get WebSiteProperties from request; treating webappPathPrefix as not set", module);
+                return null;
+            }
+        } else {
+            // If the delegator was not yet set, it means we're being called from
+            // somewhere like a very early filter before ContextFilter;
+            // we must prevent caching the results to avoid influencing the app with our state.
+            request.setAttribute("delegator", WebAppUtil.getDelegatorFilterSafe(request));
+            try {
+                return from(request);
+            } catch (Exception e) {
+                Debug.logError(e, "Could not get WebSiteProperties from request using fallback delegator; treating webappPathPrefix as not set", module);
+                return null;
+            } finally {
+                // Do not let filter state affect rest of request
+                request.removeAttribute("_WEBSITE_PROPS_");
+                request.removeAttribute("delegator");
+            }
+        }
     }
 
     private final String httpPort;
@@ -389,6 +434,8 @@ public final class WebSiteProperties {
 
     /**
      * SCIPIO: Returns the webapp/navigation URL path prefix.
+     * <p>
+     * DEV NOTE: Prefer using {@link org.ofbiz.webapp.OfbizUrlBuilder} methods over calling this.
      */
     public String getWebappPathPrefix() {
         return webappPathPrefix;
@@ -400,6 +447,48 @@ public final class WebSiteProperties {
      */
     protected String getWebappPathPrefixHeader() {
         return webappPathPrefixHeader;
+    }
+
+    private static final boolean defaultWebappPathPrefixUrlBuild = UtilProperties.getPropertyAsBoolean("url",
+            "webapp.url.path.prefix.urlBuild", true); // SCIPIO
+
+    /**
+     * SCIPIO: If true, the webappPathPrefix should be included in URL building
+     * code by default; if false, it is left up to URL rewriting to append it.
+     * <p>
+     * NOTE: 2018-08-03: At current time this setting is stored only in url.properties
+     * and web.xml, NOT the WebSite entity, to reflect its coded nature.
+     * <p>
+     * DEV NOTE: Prefer using {@link org.ofbiz.webapp.OfbizUrlBuilder} methods over calling this.
+     */
+    public boolean isWebappPathPrefixUrlBuild(ServletContext servletContext) {
+        return UtilMisc.booleanValue(servletContext.getAttribute("scpWebappPathPrefixUrlBuild"), defaultWebappPathPrefixUrlBuild);
+    }
+    
+    /**
+     * SCIPIO: If true, the webappPathPrefix should be included in URL building
+     * code by default; if false, it is left up to URL rewriting to append it.
+     * <p>
+     * NOTE: 2018-08-03: At current time this setting is stored only in url.properties
+     * and web.xml, NOT the WebSite entity, to reflect its coded nature.
+     * <p>
+     * DEV NOTE: Prefer using {@link org.ofbiz.webapp.OfbizUrlBuilder} methods over calling this.
+     */
+    public boolean isWebappPathPrefixUrlBuild(Map<String, String> contextParams) {
+        return UtilMisc.booleanValue(contextParams.get("scpWebappPathPrefixUrlBuild"), defaultWebappPathPrefixUrlBuild);
+    }
+    
+    /**
+     * SCIPIO: If true, the webappPathPrefix should be included in URL building
+     * code by default; if false, it is left up to URL rewriting to append it.
+     * <p>
+     * NOTE: 2018-08-03: At current time this setting is stored only in url.properties
+     * and web.xml, NOT the WebSite entity, to reflect its coded nature.
+     * <p>
+     * DEV NOTE: Prefer using {@link org.ofbiz.webapp.OfbizUrlBuilder} methods over calling this.
+     */
+    public boolean isWebappPathPrefixUrlBuildDefault() {
+        return defaultWebappPathPrefixUrlBuild;
     }
 
     @Override
@@ -543,46 +632,5 @@ public final class WebSiteProperties {
         // nobody will do this
         //else if (path.endsWith("/")) return path.substring(0, path.length() - 1);
         else return path;
-    }
-
-    /**
-     * SCIPIO: A specialized method to lookup the webappPathPrefix for the current app,
-     * which never throws exceptions and tries best-effort to get the webappPathPrefix
-     * no matter what.
-     * <p>
-     * Added 2018-08-31.
-     */
-    public static String getWebappPathPrefixFilterSafe(HttpServletRequest request) {
-        WebSiteProperties webSiteProps = (WebSiteProperties) request.getAttribute("_WEBSITE_PROPS_");
-        if (webSiteProps != null) return webSiteProps.getWebappPathPrefix();
-        if (request.getAttribute("delegator") != null) {
-            // If the delegator was set in request attributes,
-            // it means we passed the ContextFilter, so we can call the regular
-            // factory method and let it cache this WebSiteProperties for us;
-            // We do not need to clear "_WEBSITE_PROPS_".
-            try {
-                webSiteProps = from(request);
-                return webSiteProps.getWebappPathPrefix();
-            } catch (Exception e) {
-                Debug.logError(e, "Could not get WebSiteProperties from request; treating webappPathPrefix as not set", module);
-                return null;
-            }
-        } else {
-            // If the delegator was not yet set, it means we're being called from
-            // somewhere like a very early filter before ContextFilter;
-            // we must prevent caching the results to avoid influencing the app with our state.
-            request.setAttribute("delegator", WebAppUtil.getDelegatorFilterSafe(request));
-            try {
-                webSiteProps = from(request);
-                return webSiteProps.getWebappPathPrefix();
-            } catch (Exception e) {
-                Debug.logError(e, "Could not get WebSiteProperties from request using fallback delegator; treating webappPathPrefix as not set", module);
-                return null;
-            } finally {
-                // Do not let filter state affect rest of request
-                request.removeAttribute("_WEBSITE_PROPS_");
-                request.removeAttribute("delegator");
-            }
-        }
     }
 }

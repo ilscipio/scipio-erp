@@ -1804,8 +1804,17 @@ public class RequestHandler {
             }
         } else {
             // SCIPIO: 2018-07-27: new path prefix (included in builder.buildPathPart above)
-            // TODO: REVIEW: should go through builder for this? let's avoid the needless init for now...
-            newURL.append(webSiteProps.getWebappPathPrefix());
+            try {
+                if (builder == null) {
+                    builder = currentWebappInfo.getOfbizUrlBuilder();
+                }
+                builder.buildPathPartWithWebappPathPrefix(newURL);
+            } catch (Exception e) {
+                // SCIPIO: new case
+                Debug.logError("makeLink: Error building url path part for webapp "
+                        + currentWebappInfo + ": " + e.toString(), module);
+                return null;
+            }
 
             if (controller) { 
                 // SCIPIO: This is the original stock case: intra-webapp, controller link
@@ -1832,12 +1841,6 @@ public class RequestHandler {
         } else {
             encodedUrl = newURL.toString();
         }
-        //if (encodedUrl.indexOf("null") > 0) {
-            //Debug.logError("in makeLink, controlPath:" + controlPath + " url:" + url, "");
-            //throw new RuntimeException("in makeLink, controlPath:" + controlPath + " url:" + url);
-        //}
-
-        //Debug.logInfo("Making URL, encode=" + encode + " for URL: " + newURL + "\n encodedUrl: " + encodedUrl, module);
 
         return encodedUrl;
     }

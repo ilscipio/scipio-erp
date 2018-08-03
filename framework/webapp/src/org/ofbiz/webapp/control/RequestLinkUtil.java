@@ -519,6 +519,9 @@ public abstract class RequestLinkUtil {
             Boolean secure, Boolean staticHost, boolean includeWebappPathPrefix, boolean useQueryString, boolean handleErrors) throws IllegalStateException {
         // NOTE: derived from Tomcat 8 implementation of getRequestURL
         StringBuffer url = new StringBuffer();
+        // DEV NOTE: it's better to go through webappInfo now, since
+        // we have easier choice of WebSiteProperties or OfbizUrlBuilder through it
+        FullWebappInfo webappInfo = null;
         WebSiteProperties props = null;
         String scheme; 
         int port;
@@ -526,7 +529,8 @@ public abstract class RequestLinkUtil {
             scheme = secure ? "https" : "http";
             port = -1;
             try {
-                props = WebSiteProperties.from(request);
+                webappInfo = FullWebappInfo.fromRequest(request);
+                props = webappInfo.getWebSiteProperties();
                 String portStr = secure ? props.getHttpsPort() : props.getHttpPort();
                 if (portStr != null && !portStr.isEmpty()) {
                     port = Integer.parseInt(portStr);
@@ -551,9 +555,10 @@ public abstract class RequestLinkUtil {
         url.append(scheme).append("://");
         String host;
         if (Boolean.TRUE.equals(staticHost)) {
-            if (props == null) {
+            if (webappInfo == null) {
                 try {
-                    props = WebSiteProperties.from(request);
+                    webappInfo = FullWebappInfo.fromRequest(request);
+                    props = webappInfo.getWebSiteProperties();
                 } catch (Exception e) {
                     if (handleErrors) {
                         Debug.logError(e, "rebuildOriginalRequestURL: Error getting web site properties for host name"
@@ -585,20 +590,29 @@ public abstract class RequestLinkUtil {
             queryString = request.getQueryString();
         }
         if (includeWebappPathPrefix) {
-            if (props == null) {
-                try {
-                    props = WebSiteProperties.from(request);
-                } catch (Exception e) {
-                    if (handleErrors) {
-                        Debug.logError(e, "rebuildOriginalRequestURL: Error getting web site properties for host name"
-                                + " (using request.getServerName() instead): " + e.getMessage(), module);
-                    } else {
-                        throw new IllegalStateException("Error getting web site properties for host name: " + e.getMessage(), e);
-                    }
+            OfbizUrlBuilder urlBuilder = null;
+            try {
+                if (webappInfo == null) {
+                    webappInfo = FullWebappInfo.fromRequest(request);
+                }
+                urlBuilder = webappInfo.getOfbizUrlBuilder();
+            } catch (Exception e) {
+                if (handleErrors) {
+                    Debug.logError(e, "rebuildOriginalRequestURL: Error getting url builder for webapp " + webappInfo + ": " + e.getMessage(), module);
+                } else {
+                    throw new IllegalStateException("Error getting url builder webapp " + webappInfo + ": " + e.getMessage(), e);
                 }
             }
-            if (props != null) {
-                url.append(props.getWebappPathPrefix()); // 2017-07-24: we must append this, it is assumed not to be included already
+            if (urlBuilder != null) {
+                try {
+                    urlBuilder.buildPathPartWithWebappPathPrefix(url);
+                } catch(Exception e) {
+                    if (handleErrors) {
+                        Debug.logError(e, "rebuildOriginalRequestURL: Error building webappPathPrefix for webapp " + webappInfo + ": " + e.getMessage(), module);
+                    } else {
+                        throw new IllegalStateException("Error building webappPathPrefix for webapp " + webappInfo + ": " + e.getMessage(), e);
+                    }
+                }
             }
         }
         url.append(requestURI);
@@ -676,25 +690,5 @@ public abstract class RequestLinkUtil {
         if (url.length() < (protocolLength + 1)) return false;
         if (url.charAt(protocolLength) != ':') return false;
         return protocol.equalsIgnoreCase(url.substring(0, protocolLength)); // substring+equal avoid iterating whole url
-    }
-
-    public static String getWebappPathPrefix(HttpServletRequest request, String webSiteId) {
-        try {
-            WebSiteProperties webSiteProps;
-            if (webSiteId != null && !webSiteId.isEmpty()) {
-                webSiteProps = WebSiteProperties.from(request, webSiteId);
-            }
-            else {
-                webSiteProps = WebSiteProperties.from(request);
-            }
-            return webSiteProps.getWebappPathPrefix();
-        } catch(Exception e) {
-            Debug.logError(e, "Exception thrown while getting web site properties: ", module);
-            return "";
-        }
-    }
-    
-    public static String getWebappPathPrefix(HttpServletRequest request) {
-        return getWebappPathPrefix(request, null);
     }
 }

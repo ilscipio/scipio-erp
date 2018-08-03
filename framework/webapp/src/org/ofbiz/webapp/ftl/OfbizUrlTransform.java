@@ -110,7 +110,7 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                     // TODO?: this is complicated by makeLinkAuto's auto path to contextPath mapping for this transform...
                     //FullWebappInfo targetWebappInfo = UrlTransformUtil.determineTargetWebappInfo(delegator, TransformUtil.getStringArg(args, "webSiteId", rawParams), 
                     //        null, renderEnvType, webappInfoCache.getCurrentWebappInfo(), webappInfoCache, env);
-                    final String webSiteId = UrlTransformUtil.determineWebSiteId(TransformUtil.getStringArg(args, "webSiteId", rawParams), renderEnvType, webappInfoCache.getCurrentWebappInfo(), env);
+                    final String webSiteId = TransformUtil.getStringArg(args, "webSiteId", rawParams);
 
                     Boolean interWebappEff = interWebapp;
                     if (interWebappEff == null) {
@@ -142,7 +142,7 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                             // it's possible for templates to catch this case if they need to.
                             //out.write(requestUrl);
                         }
-                    } else if (webSiteId != null) {
+                    } else if (webSiteId != null || webappInfoCache.getCurrentWebappWebSiteId() != null) {
                         Locale locale = TransformUtil.getOfbizLocaleArgOrContextOrRequest(args, "locale", env);
                         String link = RequestHandler.makeLinkAuto(delegator, locale, webSiteId, requestUrl, absPath, interWebappEff, controller, 
                                 fullPath, secure, encode, webappInfoCache.getCurrentWebappInfo(), webappInfoCache, request, response);

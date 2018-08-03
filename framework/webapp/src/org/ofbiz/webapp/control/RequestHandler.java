@@ -2277,12 +2277,7 @@ public class RequestHandler {
                     return null;
                 }
             } else {
-                try {
-                    targetWebappInfo = FullWebappInfo.fromWebSiteId(delegator, webSiteId, webappInfoCache);
-                } catch (Exception e) {
-                    Debug.logError("makeLinkAuto: Could not get webapp for webSiteId '" + webSiteId + "': " + e.toString(), module);
-                    return null;
-                }
+                targetWebappInfo = currentWebappInfo;
             }
         }
         String contextPath = targetWebappInfo.getContextPath();

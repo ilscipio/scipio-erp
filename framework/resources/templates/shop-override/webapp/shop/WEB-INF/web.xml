@@ -64,6 +64,15 @@
         <param-value>true</param-value>
     </context-param>
 
+    <!-- SCIPIO: URL settings -->
+    <context-param>
+        <description>SCIPIO: If true, the Scipio webappPathPrefix (extra prefix before contextPath) is
+            appended during link-building code; if false, it is left to urlrewrite.xml (or other) to append.
+            Default: url.properties#webapp.url.path.prefix.urlBuild (added 2018-08-8)</description>
+        <param-name>urlWebappPathPrefixUrlBuild</param-name>
+        <param-value></param-value>
+    </context-param>
+
     <!-- SCIPIO: UrlRewriteFilter - processes urlrewrite.xml
         NOTE: 2017-11-01: SimpleRedirectFilter is replaced by UrlRewriteFilter. -->
     <filter>

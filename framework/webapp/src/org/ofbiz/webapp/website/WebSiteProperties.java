@@ -462,7 +462,7 @@ public final class WebSiteProperties {
      * DEV NOTE: Prefer using {@link org.ofbiz.webapp.OfbizUrlBuilder} methods over calling this.
      */
     public boolean isWebappPathPrefixUrlBuild(ServletContext servletContext) {
-        return UtilMisc.booleanValue(servletContext.getAttribute("scpWebappPathPrefixUrlBuild"), defaultWebappPathPrefixUrlBuild);
+        return UtilMisc.booleanValue(servletContext.getAttribute("urlWebappPathPrefixUrlBuild"), defaultWebappPathPrefixUrlBuild);
     }
     
     /**
@@ -475,7 +475,7 @@ public final class WebSiteProperties {
      * DEV NOTE: Prefer using {@link org.ofbiz.webapp.OfbizUrlBuilder} methods over calling this.
      */
     public boolean isWebappPathPrefixUrlBuild(Map<String, String> contextParams) {
-        return UtilMisc.booleanValue(contextParams.get("scpWebappPathPrefixUrlBuild"), defaultWebappPathPrefixUrlBuild);
+        return UtilMisc.booleanValue(contextParams.get("urlWebappPathPrefixUrlBuild"), defaultWebappPathPrefixUrlBuild);
     }
     
     /**

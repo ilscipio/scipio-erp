@@ -78,7 +78,7 @@ public abstract class ClosestTrailResolver implements Serializable {
     public List<String> findClosestTrail(List<List<String>> trails, List<String> hintTrail, Collection<String> topCategoryIds) {
         List<String> bestTrail = null;
         
-        if (!hintTrail.isEmpty()) {
+        if (hintTrail != null && !hintTrail.isEmpty()) {
             if ("TOP".equals(hintTrail.get(0))) hintTrail = hintTrail.subList(1, hintTrail.size());
             if (!hintTrail.isEmpty()) {
                 int bestScore = -1;

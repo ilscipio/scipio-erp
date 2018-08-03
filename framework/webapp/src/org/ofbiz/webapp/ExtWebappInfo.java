@@ -162,25 +162,6 @@ public class ExtWebappInfo implements Serializable {
         }
         return info;
     }
-    
-    /**
-     * Gets from arbitary path, with caching.
-     * Cache only allows websites with registered WebappInfo and WebXml.
-     * NOTE: If accessing from early loading process, do not call this, instead call
-     * {@link #fromWebSiteIdNew(String)}, otherwise there is a risk of caching
-     * incomplete instances.
-     */
-    public static ExtWebappInfo fromPath(String path) throws IllegalArgumentException {
-        WebappInfo webappInfo;
-        try {
-            webappInfo = WebAppUtil.getWebappInfoFromPath(path);
-        } catch (IOException e) {
-            throw new IllegalArgumentException(e);
-        } catch (SAXException e) {
-            throw new IllegalArgumentException(e);
-        }
-        return fromContextPath(webappInfo.getContextRoot());
-    }
 
     /**
      * Gets from webSiteId, no caching.
@@ -206,6 +187,29 @@ public class ExtWebappInfo implements Serializable {
         return new ExtWebappInfo(webSiteId, webappInfo, webXml);
     }
 
+    /**
+     * Gets from arbitary path, with caching.
+     * Cache only allows websites with registered WebappInfo and WebXml.
+     * NOTE: If accessing from early loading process, do not call this, instead call
+     * {@link #fromWebSiteIdNew(String)}, otherwise there is a risk of caching
+     * incomplete instances.
+     */
+    public static ExtWebappInfo fromPath(String path) throws IllegalArgumentException {
+        WebappInfo webappInfo;
+        try {
+            webappInfo = WebAppUtil.getWebappInfoFromPath(path);
+        } catch (IOException e) {
+            throw new IllegalArgumentException(e);
+        } catch (SAXException e) {
+            throw new IllegalArgumentException(e);
+        }
+        return fromContextPath(webappInfo.getContextRoot());
+    }
+
+    public static ExtWebappInfo fromWebappInfo(WebappInfo webappInfo) throws IllegalArgumentException {
+        return fromContextPath(webappInfo.getContextRoot());
+    }
+    
     public String getWebSiteId() {
         return webSiteId;
     }

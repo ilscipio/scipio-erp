@@ -34,7 +34,6 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtilProperties;
-import org.ofbiz.webapp.WebAppUtil;
 import org.ofbiz.webapp.control.RequestLinkUtil;
 
 /**
@@ -43,7 +42,7 @@ import org.ofbiz.webapp.control.RequestLinkUtil;
 @ThreadSafe
 public final class WebSiteProperties {
 
-    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * Returns a <code>WebSiteProperties</code> instance initialized to the settings found
@@ -324,45 +323,6 @@ public final class WebSiteProperties {
             cache.put(webSiteId, webSiteProps);
         }
         return webSiteProps;
-    }
-
-    /**
-     * SCIPIO: A specialized method to lookup WebSiteProperties for the current app,
-     * which never throws exceptions and tries best-effort to get the webappPathPrefix
-     * no matter what.
-     * <p>
-     * Added 2018-08-31.
-     */
-    public static WebSiteProperties fromRequestFilterSafe(HttpServletRequest request) {
-        WebSiteProperties webSiteProps = (WebSiteProperties) request.getAttribute("_WEBSITE_PROPS_");
-        if (webSiteProps != null) return webSiteProps;
-        if (request.getAttribute("delegator") != null) {
-            // If the delegator was set in request attributes,
-            // it means we passed the ContextFilter, so we can call the regular
-            // factory method and let it cache this WebSiteProperties for us;
-            // We do not need to clear "_WEBSITE_PROPS_".
-            try {
-                return from(request);
-            } catch (Exception e) {
-                Debug.logError(e, "Could not get WebSiteProperties from request; treating webappPathPrefix as not set", module);
-                return null;
-            }
-        } else {
-            // If the delegator was not yet set, it means we're being called from
-            // somewhere like a very early filter before ContextFilter;
-            // we must prevent caching the results to avoid influencing the app with our state.
-            request.setAttribute("delegator", WebAppUtil.getDelegatorFilterSafe(request));
-            try {
-                return from(request);
-            } catch (Exception e) {
-                Debug.logError(e, "Could not get WebSiteProperties from request using fallback delegator; treating webappPathPrefix as not set", module);
-                return null;
-            } finally {
-                // Do not let filter state affect rest of request
-                request.removeAttribute("_WEBSITE_PROPS_");
-                request.removeAttribute("delegator");
-            }
-        }
     }
 
     private final String httpPort;

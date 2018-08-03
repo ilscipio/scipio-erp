@@ -288,7 +288,7 @@ public final class OfbizUrlBuilder {
         WebSiteProperties webSiteProps = WebSiteProperties.defaults(delegator);
         return new OfbizUrlBuilder(null, webSiteProps, null, null, webSiteProps.isWebappPathPrefixUrlBuildDefault());
     }
-    
+
     private final ControllerConfig config;
     private final WebSiteProperties webSiteProps;
     private final String servletPath;
@@ -562,6 +562,22 @@ public final class OfbizUrlBuilder {
      */
     public void buildPathPartWithWebappPathPrefix(Appendable buffer) throws WebAppConfigurationException, IOException {
         buildPathPartWithWebappPathPrefix(buffer, null);
+    }
+
+    /**
+     * SCIPIO: Returns the WebSiteProperties this builder is using.
+     * Added 2018-08-03.
+     */
+    public WebSiteProperties getWebSiteProperties() {
+        return webSiteProps;
+    }
+
+    /**
+     * SCIPIO: Returns the ControllerConfig this builder is using. May be null.
+     * Added 2018-08-03.
+     */
+    public ControllerConfig getControllerConfig() {
+        return config;
     }
 
     /**

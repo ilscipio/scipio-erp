@@ -1653,12 +1653,12 @@ public class RequestHandler {
 
         // SCIPIO: enforce this check for time being
         if (interWebapp && targetWebappInfo == null) {
-            throw new IllegalArgumentException("Scipio: Cannot build inter-webapp URL without target webapp info");
+            throw new IllegalArgumentException("makeLink: Cannot build inter-webapp URL without target webapp info");
         }
         
         // SCIPIO: Sanity check: null/missing URL
         if (url == null || url.isEmpty()) {
-            Debug.logError("Scipio: makeLink received null URL; returning null", module);
+            Debug.logError("makeLink: Received null URL; returning null", module);
             return null;
         }
         
@@ -1672,7 +1672,7 @@ public class RequestHandler {
             requestWebSiteProps = currentWebappInfo.getWebSiteProperties();
         } catch (Exception e) { // SCIPIO: just catch everything: GenericEntityException
             // If the entity engine is throwing exceptions, then there is no point in continuing.
-            Debug.logError(e, "Exception thrown while getting current webapp info: ", module);
+            Debug.logError("makeLink: Error getting current webapp info: " + e.toString(), module);
             return null;
         }
         
@@ -1680,9 +1680,9 @@ public class RequestHandler {
         if (interWebapp) {
             try {
                 webSiteProps = targetWebappInfo.getWebSiteProperties(); 
-            } catch (Exception e) { // SCIPIO: just catch everything: GenericEntityException
-                // If the entity engine is throwing exceptions, then there is no point in continuing.
-                Debug.logError(e, "Exception thrown while getting web site properties: ", module);
+            } catch (Exception e) {
+                Debug.logError("makeLink: Error getting web site properties for webapp "
+                        + targetWebappInfo + ": " + e.toString(), module);
                 return null;
             }
         } else {
@@ -1709,23 +1709,23 @@ public class RequestHandler {
             requestUri = RequestHandler.getRequestUri(url);
             
             if (requestUri != null) {
-                try {
-                    // SCIPIO: Lookup correct controller for webapp
-                    if (interWebapp) {
-                        try {
-                            requestMap = targetWebappInfo.getControllerConfig().getRequestMapMap().get(requestUri);
-                        } catch (Exception e) {
-                            Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
-                            return null;
-                        }
-                    } else {
+                if (interWebapp) {
+                    try {
+                        requestMap = targetWebappInfo.getControllerConfig().getRequestMapMap().get(requestUri);
+                    } catch (Exception e) {
+                        Debug.logError("makeLink: Error parsing controller.xml file for webapp "
+                                + targetWebappInfo + ": " + e.toString(), module);
+                        return null;
+                    }
+                } else {
+                    try {
                         // SCIPIO: stock case
                         requestMap = currentWebappInfo.getControllerConfig().getRequestMapMap().get(requestUri);
+                    } catch (Exception e) {
+                        Debug.logError("makeLink: Error parsing controller.xml file for webapp "
+                                + currentWebappInfo + ": " + e.toString(), module);
+                        return null;
                     }
-                } catch (WebAppConfigurationException e) {
-                    // If we can't read the controller.xml file, then there is no point in continuing.
-                    Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
-                    return null;
                 }
             }
             
@@ -1733,8 +1733,8 @@ public class RequestHandler {
             // There is virtually no case where this is not a coding error we want to catch, and if we don't show an error,
             // then we can't use this as a security check. Likely also to make some template errors clearer.
             if (requestMap == null) {
-                Debug.log(getMakeLinkErrorLogLevel(request, delegator), null, "Scipio: Cannot build link: could not locate the expected request '" 
-                        + requestUri + "' in controller config", module);
+                Debug.log(getMakeLinkErrorLogLevel(request, delegator), null, "makeLink: Cannot build link: could not locate the expected request '" 
+                        + requestUri + "' in controller config for webapp " + (interWebapp ? targetWebappInfo : currentWebappInfo), module);
                 return null; 
             }
         }
@@ -1779,37 +1779,27 @@ public class RequestHandler {
                 builder.buildHostPart(newURL, url, didFullSecure, controller); // SCIPIO: controller flag
             } catch (Exception e) {
                 // If we can't read the controller.xml file, then there is no point in continuing.
-                Debug.logError(e, "Exception thrown while building url for webapp " 
-                        + (interWebapp ? targetWebappInfo : currentWebappInfo), module);
+                Debug.logError("makeLink: Error building url for webapp " 
+                        + (interWebapp ? targetWebappInfo : currentWebappInfo) + ": " + e.toString(), module);
                 return null;
             }
         }
         
         // SCIPIO: build the path part (context root, servlet/controller path)
         if (interWebapp) {
-            if (builder == null) {
-                try {
-                    builder = targetWebappInfo.getOfbizUrlBuilder();
-                } catch (Exception e) {
-                    // SCIPIO: new case
-                    Debug.logError(e, "Scipio: Exception thrown while getting web site properties: ", module);
-                    return null;
-                }
-            }
-
             try {
+                if (builder == null) {
+                    builder = targetWebappInfo.getOfbizUrlBuilder();
+                }
                 if (controller) {
                     builder.buildPathPart(newURL, url);
                 } else {
                     builder.buildPathPartWithContextPath(newURL, url);
                 }
-            } catch (WebAppConfigurationException e) {
+            } catch (Exception e) {
                 // SCIPIO: new case
-                Debug.logError(e, "Scipio: Exception thrown while building url path part: ", module);
-                return null;
-            } catch (IOException e) {
-                // SCIPIO: new case
-                Debug.logError(e, "Scipio: Exception thrown while building url path part: ", module);
+                Debug.logError("makeLink: Error building url path part for webapp "
+                        + targetWebappInfo + ": " + e.toString(), module);
                 return null;
             }
         } else {
@@ -1880,13 +1870,13 @@ public class RequestHandler {
 
         // SCIPIO: enforce this check for time being
         if (targetWebappInfo == null) {
-            throw new IllegalArgumentException("Scipio: Cannot build static URL without webapp info");
+            throw new IllegalArgumentException("makeLink: Cannot build static URL without webapp info");
         }
         boolean interWebapp = !targetWebappInfo.equals(currentWebappInfo);
         
         // SCIPIO: Sanity check: null/missing URL
         if (url == null || url.isEmpty()) {
-            Debug.logError("Scipio: makeLink received null URL; returning null", module);
+            Debug.logError("makeLink: Received null URL; returning null", module);
             return null;
         }
         
@@ -1895,7 +1885,8 @@ public class RequestHandler {
             webSiteProps = targetWebappInfo.getWebSiteProperties();
         } catch (Exception e) { // SCIPIO: just catch everything: GenericEntityException
             // If the entity engine is throwing exceptions, then there is no point in continuing.
-            Debug.logError(e, "Exception thrown while getting web site properties: ", module);
+            Debug.logError("makeLink: Error while getting web site properties for webapp "
+                    + targetWebappInfo + ": " + e.toString(), module);
             return null;
         }
 
@@ -1917,7 +1908,8 @@ public class RequestHandler {
                     requestMap = targetWebappInfo.getControllerConfig().getRequestMapMap().get(requestUri);
                 } catch (Exception e) {
                     // If we can't read the controller.xml file, then there is no point in continuing.
-                    Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
+                    Debug.logError("makeLink: Error while parsing controller.xml file for webapp "
+                            + targetWebappInfo + ": " + e.toString(), module);
                     return null;
                 }
             }
@@ -1926,8 +1918,8 @@ public class RequestHandler {
             // There is virtually no case where this is not a coding error we want to catch, and if we don't show an error,
             // then we can't use this as a security check. Likely also to make some template errors clearer.
             if (requestMap == null) {
-                Debug.log(getMakeLinkErrorLogLevel(request, delegator), null, "Scipio: Cannot build link: could not locate the expected request '" 
-                        + requestUri + "' in controller config", module);
+                Debug.log(getMakeLinkErrorLogLevel(request, delegator), null, "makeLink: Cannot build link: could not locate the expected request '" 
+                        + requestUri + "' in controller config for webapp " + targetWebappInfo, module);
                 return null; 
             }
         }
@@ -1963,7 +1955,8 @@ public class RequestHandler {
             }
         } catch (Exception e) {
             // If the entity engine is throwing exceptions, then there is no point in continuing.
-            Debug.logError(e, "Exception thrown while getting URL builder: " + e.getMessage(), module);
+            Debug.logError("makeLink: Error while getting URL builder for webapp "
+                    + targetWebappInfo + ": " + e.toString(), module);
             return null;
         }
         
@@ -1971,7 +1964,8 @@ public class RequestHandler {
             try {
                 builder.buildHostPart(newURL, url, didFullSecure, controller);
             } catch (Exception e) {
-                Debug.logError(e, "Scipio: Exception thrown while building url host part: ", module);
+                Debug.logError("makeLink: Error while building url host part for webapp "
+                        + targetWebappInfo + ": " + e.toString(), module);
                 return null;
             }
         }
@@ -1984,7 +1978,8 @@ public class RequestHandler {
                 builder.buildPathPartWithContextPath(newURL, url);
             }
         } catch (Exception e) {
-            Debug.logError(e, "Scipio: Exception thrown while building url path part: ", module);
+            Debug.logError("makeLink: Error while building url path part for webapp "
+                    + targetWebappInfo + ": " + e.toString(), module);
             return null;
         }
 
@@ -2259,7 +2254,7 @@ public class RequestHandler {
                 try {
                     targetWebappInfo = FullWebappInfo.fromWebSiteId(delegator, webSiteId, webappInfoCache);
                 } catch (Exception e) {
-                    Debug.logError(e, module);
+                    Debug.logError("makeLinkAuto: Could not get webapp for webSiteId '" + webSiteId + "': " + e.toString(), module);
                     return null;
                 }
             } else {
@@ -2268,7 +2263,7 @@ public class RequestHandler {
                 try {
                     targetWebappInfo = FullWebappInfo.fromPath(delegator, url, webappInfoCache);
                 } catch (Exception e) {
-                    Debug.logError(e, "Scipio: Could not get webapp info from absolute path '" + url + "'", module);
+                    Debug.logError("makeLinkAuto: Could not get webapp from absolute path '" + url + "': " + e.toString(), module);
                     return null;
                 }
                 absContextPathChecked = true; // since we built the webapp info from the URL, this is guaranteed fine
@@ -2278,14 +2273,14 @@ public class RequestHandler {
                 try {
                     targetWebappInfo = FullWebappInfo.fromRequest(request);
                 } catch (Exception e) {
-                    Debug.logError(e, "Scipio: Could not get webapp info from request (url: " + url + ")", module);
+                    Debug.logError("makeLinkAuto: Could not get current webapp info from request: " + e.toString(), module);
                     return null;
                 }
             } else {
                 try {
                     targetWebappInfo = FullWebappInfo.fromWebSiteId(delegator, webSiteId, webappInfoCache);
                 } catch (Exception e) {
-                    Debug.logError(e, module);
+                    Debug.logError("makeLinkAuto: Could not get webapp for webSiteId '" + webSiteId + "': " + e.toString(), module);
                     return null;
                 }
             }
@@ -2313,8 +2308,8 @@ public class RequestHandler {
             // In some cases need to get controlPath AND this provides a sanity check
             controlPath = targetWebappInfo.getFullControlPath();
             if (controlPath == null) {
-                Debug.logError("Scipio: In makeLinkAuto, trying to make a controller "
-                        + "link for a webapp that has no valid controller (" + targetWebappInfo + ")", module);
+                Debug.logError("makeLinkAuto: Trying to make a controller link"
+                        + " for a webapp (" + targetWebappInfo + ") that has no valid controller", module);
                 return null;
             }
         }
@@ -2325,8 +2320,8 @@ public class RequestHandler {
             if (controller) {
                 if (!absControlPathChecked) {
                     if (!url.startsWith(controlPath)) {
-                        Debug.logError("Scipio: In makeLinkAuto, trying to make a controller "
-                                + "link using absolute path url, but prefix does not match (url: " + url + ", control path: " + controlPath + ")", module);
+                        Debug.logError("makeLinkAuto: Trying to make a controller link for webapp " + targetWebappInfo 
+                                + " using absolute path url, but prefix does not match (url: " + url + ", control path: " + controlPath + ")", module);
                         return null;
                     }
                     absControlPathChecked = true;
@@ -2334,8 +2329,8 @@ public class RequestHandler {
             } else {
                 if (!absContextPathChecked) {
                     if (!url.startsWith(contextPath)) {
-                        Debug.logError("Scipio: In makeLinkAuto, trying to make a webapp "
-                                + "link using absolute path url, but context root does not match (url: " + url + ", context path: " + contextPath + ")", module);
+                        Debug.logError("makeLinkAuto: trying to make a webapp link for webapp " + targetWebappInfo
+                                + " using absolute path url, but context root does not match (url: " + url + ", context path: " + contextPath + ")", module);
                         return null;
                     }
                     absContextPathChecked = true;

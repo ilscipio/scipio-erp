@@ -282,7 +282,7 @@ public class ExtWebappInfo implements Serializable {
         } catch (Exception e) {
             // Do not throw this because caller would probably not expect it;
             // he would expect it to be thrown during construction, but can't
-            Debug.logError(e, module);
+            Debug.logError(e, "Error getting controller config for webapp " + this.toString() + "'", module);
             return null;
         }
     }
@@ -342,6 +342,11 @@ public class ExtWebappInfo implements Serializable {
         }
     }
 
+    @Override
+    public String toString() {
+        return "[contextPath=" + getContextPath() + ", webSiteId=" + getWebSiteId() + "]";
+    }
+    
     /**
      * Helper wrapper to read WebappInfo reliably.
      */

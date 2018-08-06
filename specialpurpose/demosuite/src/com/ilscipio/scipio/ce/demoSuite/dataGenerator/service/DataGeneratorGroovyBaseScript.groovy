@@ -1,14 +1,15 @@
 package com.ilscipio.scipio.ce.demoSuite.dataGenerator.service
 
+import java.sql.Timestamp
 import java.util.List
 import java.util.Map
 
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.GenericValue
 import org.ofbiz.service.engine.GroovyBaseScript
-
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.DataGenerator
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataObject
-
-
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.DemoDataHelper
 
 // FIXME?: revisit reuse pattern; in Ofbiz GroovyBaseScript is not meant to be hardcoded
 abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {

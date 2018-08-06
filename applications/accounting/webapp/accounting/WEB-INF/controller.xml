@@ -100,6 +100,11 @@ under the License.
         <response name="success" type="view" value="NewPurchaseInvoice"/>
     </request-map>
     
+    <request-map uri="NewPurchaseInvoice">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="NewPurchaseInvoice"/>
+    </request-map>
+    
      <!-- Check for duplicates
     
     <request-map uri="FindPurchaseInvoices">
@@ -107,10 +112,7 @@ under the License.
         <response name="success" type="view" value="FindPurchaseInvoices"/>
     </request-map>
     
-    <request-map uri="NewPurchaseInvoice">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="NewPurchaseInvoice"/>
-    </request-map>
+
     <request-map uri="processMassCheckRun">
         <security https="true" auth="true"/>
         <event type="service" invoke="createPaymentAndPaymentGroupForInvoices"/>

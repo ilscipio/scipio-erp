@@ -7,7 +7,6 @@
 	<classpathentry kind="lib" path="framework/base/lib/ant/ant-1.10.2-ant-launcher.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/ant/ant-contrib-1.0b3.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/ant/ivy-2.4.0.jar"/>
-	<classpathentry kind="lib" path="framework/base/lib/asm-3.2.jar" sourcepath="framework/base/libsrc/asm-3.2-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/avalon-framework-api-4.3.1.jar" sourcepath="framework/base/libsrc/avalon-framework-api-4.3.1-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/axiom-api-1.2.20.jar" sourcepath="framework/base/libsrc/axiom-api-1.2.20-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/axiom-impl-1.2.20.jar" sourcepath="framework/base/libsrc/axiom-impl-1.2.20-sources.jar"/>
@@ -75,7 +74,6 @@
 	<classpathentry kind="lib" path="framework/base/lib/juel-impl-2.2.7.jar" sourcepath="framework/base/libsrc/juel-impl-2.2.7-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/juel-spi-2.2.7.jar" sourcepath="framework/base/libsrc/juel-spi-2.2.7-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/junit-4.12.jar" sourcepath="framework/base/libsrc/junit-4.12-sources.jar"/>
-	<classpathentry kind="lib" path="framework/base/lib/jython-nooro-0.1.jar" sourcepath="framework/base/libsrc/jython-nooro-0.1-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/log4j-api-2.11.0.jar" sourcepath="framework/base/libsrc/log4j-api-2.11.0-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/mockito-core-2.16.0.jar" sourcepath="framework/base/libsrc/mockito-core-2.16.0-sources.jar"/>
 	<classpathentry kind="lib" path="framework/base/lib/neethi-3.0.3.jar" sourcepath="framework/base/libsrc/neethi-3.0.3-sources.jar"/>

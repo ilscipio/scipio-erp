@@ -7,7 +7,7 @@
     <outbound-rule>
         <from>^(.*)$</from>
         <set name="urlFilter.outUrlWebapp.outUrl">$1</set>
-        <run class="com.ilscipio.scipio.ce.webapp.filter.UrlFilterHelper" method="setCommonOutboundAttr" />
+        <run class="com.ilscipio.scipio.ce.webapp.filter.UrlFilterHelper" method="setCommonAttrOut" />
     </outbound-rule>
     <outbound-rule>
         <condition type="attribute" name="urlFilter.outUrlWebapp.isSameContext" operator="equal">false</condition>
@@ -39,7 +39,7 @@
     <!-- SPECIAL REQUEST ATTRIBUTES FOR REWRITE RULES (scpCtrlServPath, etc.) -->
     <rule>
         <from>^.*$</from>
-        <run class="com.ilscipio.scipio.ce.webapp.filter.UrlFilterHelper" method="setCommonReqAttr" />
+        <run class="com.ilscipio.scipio.ce.webapp.filter.UrlFilterHelper" method="setCommonAttrIn" />
     </rule>
 
     <!-- DEFAULT REQUEST MAPPING RULE - maps default request ("/") to main

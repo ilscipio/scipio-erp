@@ -12,7 +12,7 @@ import org.ofbiz.webapp.FullWebappInfo;
 import org.ofbiz.webapp.OfbizUrlBuilder;
 
 /**
- * SCIPIO: Helper methods for URL rewriting and filtering.
+ * SCIPIO: Helper methods for URL rewriting and filtering (urlrewrite.xml).
  * Added 2017-08-14.
  */
 public class UrlFilterHelper {
@@ -20,44 +20,53 @@ public class UrlFilterHelper {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
-     * Sets some common request attributes needed by URL rewriting, for inbound rules.
-     * NOTE: these should NOT be accessed by most webapps; is workaround for limitations in urlrewritefilter.
+     * Sets some common request attributes needed by URL rewriting, for both inbound and outbound rules.
      */
     public void setCommonAttr(HttpServletRequest request, HttpServletResponse response) {
-        ServletContext sc = request.getServletContext();
-        request.setAttribute("scpCtrlServPath", sc.getAttribute("_CONTROL_SERVPATH_"));
-        request.setAttribute("scpCtrlMapping", sc.getAttribute("_CONTROL_MAPPING_"));
+        if (!Boolean.TRUE.equals(request.getAttribute("scpUrlReCommonSet"))) {
+            ServletContext sc = request.getServletContext();
+            request.setAttribute("scpCtrlServPath", sc.getAttribute("_CONTROL_SERVPATH_"));
+            request.setAttribute("scpCtrlMapping", sc.getAttribute("_CONTROL_MAPPING_"));
 
-        // cannot do this here, too risk of caching WebSiteProperties in req attribs prematurely
-        // and ruining the request for tenants
-        //getSetWebappPathPrefix(request);
+            // cannot do this here, too risk of caching WebSiteProperties in req attribs prematurely
+            // and ruining the request for tenants
+            //getSetWebappPathPrefix(request);
+            
+            request.setAttribute("scpUrlReCommonSet", Boolean.TRUE);
+        }
     }
 
     /**
-     * @deprecated use {@link #setCommonAttr(HttpServletRequest, HttpServletResponse)}.
+     * Sets some common request attributes needed by URL rewriting, for inbound rules only.
+     */
+    public void setCommonAttrIn(HttpServletRequest request, HttpServletResponse response) {
+        setCommonAttr(request, response);
+    }
+    
+    /**
+     * @deprecated use {@link #setCommonAttrIn(HttpServletRequest, HttpServletResponse)}.
      */
     @Deprecated
     public void setCommonReqAttr(HttpServletRequest request, HttpServletResponse response) {
         setCommonAttr(request, response);
     }
-
+  
     /**
-     * Sets some common request attributes needed by URL rewriting, for outbound rules.
-     * NOTE: these should NOT be accessed by most webapps; is workaround for limitations in urlrewritefilter.
+     * Sets some common request attributes needed by URL rewriting, for outbound rules only.
      */
-    public void setCommonOutboundAttr(HttpServletRequest request, HttpServletResponse response) {
-        // TODO: REVIEW: is this re-assign needed here? will probably just waste cpu since
-        // files will already call it manually
-        //setCommonReqAttr(request, response);
+    public void setCommonAttrOut(HttpServletRequest request, HttpServletResponse response) {
+        // NOTE: 2018-08-06: We MUST run setCommonAttr here because in static/email
+        // render context, only the outbound-rules will be executed.
+        setCommonAttr(request, response);
         checkWebappContextPathAndSetAttr(request, response);
     }
 
     /**
-     * @deprecated use {@link #setCommonOutboundReqAttr(HttpServletRequest, HttpServletResponse)}.
+     * @deprecated use {@link #setCommonAttrOut(HttpServletRequest, HttpServletResponse)}.
      */
     @Deprecated
     public void verifySameWebappContext(HttpServletRequest request, HttpServletResponse response) {
-        setCommonOutboundAttr(request, response);
+        setCommonAttrOut(request, response);
     }
 
     protected String getSetWebappPathPrefixForOutboundFilter(HttpServletRequest request) {

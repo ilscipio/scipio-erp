@@ -119,12 +119,12 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
                     String currentCategoryId = TransformUtil.getStringArg(args, "currentCategoryId", rawParams);
                     String previousCategoryId = TransformUtil.getStringArg(args, "previousCategoryId", rawParams);
 
-                    String prefix = TransformUtil.getStringArg(args, "prefix", rawParams);
-                    
                     Object urlParams = TransformUtil.getStringArg(args, "params", rawParams); // SCIPIO: new; TODO: support map (but needs special handling to respect rawParams)
                     
-                    FullWebappInfo targetWebappInfo = UrlTransformUtil.determineTargetWebappInfo(delegator, TransformUtil.getStringArg(args, "webSiteId", rawParams), 
-                            prefix, renderEnvType, webappInfoCache.getCurrentWebappInfo(), webappInfoCache, env);
+                    FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrContextPath(delegator, 
+                            TransformUtil.getStringArg(args, "webSiteId", rawParams), 
+                            TransformUtil.getStringArg(args, "prefix", rawParams),
+                            webappInfoCache);
                     
                     // SCIPIO: 2017-11-06: new Locale arg + context reading for most cases
                     // NOTE: the fallback on request locale is LEGACY BEHAVIOR - not all transforms should necessarily use "OrRequest" here!
@@ -133,22 +133,16 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
                     if (request != null) {
                         // SCIPIO: now delegated to our new reusable method, and also support fullPath and secure flags
                         HttpServletResponse response = ContextFtlUtil.getResponse(env);
-                        
                         String url = CatalogUrlServlet.makeCatalogLink(request, response, locale, productId, currentCategoryId, previousCategoryId, urlParams,
                                 targetWebappInfo, fullPath, secure, encode);
-
-                        // SCIPIO: no null
                         if (url != null) {
                             out.write(UrlTransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));
                         }
-                    } else if (targetWebappInfo != null) {
+                    } else {
                         // SCIPIO: New: Handle non-request cases
                         LocalDispatcher dispatcher = FreeMarkerWorker.getWrappedObject("dispatcher", env);
-                        
-                        String url = CatalogUrlServlet.makeCatalogLink(delegator, dispatcher, locale, productId, currentCategoryId, previousCategoryId, urlParams, 
-                                targetWebappInfo, fullPath, secure, webappInfoCache.getCurrentWebappInfo(), webappInfoCache);
-
-                        // SCIPIO: no null
+                        String url = CatalogUrlServlet.makeCatalogLink(ContextFtlUtil.getContext(env), delegator, dispatcher, locale, productId, currentCategoryId,
+                                previousCategoryId, urlParams, targetWebappInfo, fullPath, secure, encode);
                         if (url != null) {
                             out.write(UrlTransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));
                         }

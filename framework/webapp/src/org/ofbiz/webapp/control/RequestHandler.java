@@ -20,11 +20,9 @@ package org.ofbiz.webapp.control;
 
 import static org.ofbiz.base.util.UtilGenerics.checkMap;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
@@ -61,7 +59,6 @@ import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.webapp.FullWebappInfo;
 import org.ofbiz.webapp.OfbizUrlBuilder;
-import org.ofbiz.webapp.WebAppUtil;
 import org.ofbiz.webapp.control.ConfigXMLReader.ControllerConfig;
 import org.ofbiz.webapp.event.EventFactory;
 import org.ofbiz.webapp.event.EventHandler;
@@ -74,7 +71,6 @@ import org.ofbiz.webapp.view.ViewHandlerException;
 import org.ofbiz.webapp.view.ViewHandlerExt;
 import org.ofbiz.webapp.website.WebSiteProperties;
 import org.ofbiz.webapp.website.WebSiteWorker;
-import org.xml.sax.SAXException;
 
 /**
  * RequestHandler - Request Processor Object
@@ -1672,7 +1668,7 @@ public class RequestHandler {
             requestWebSiteProps = currentWebappInfo.getWebSiteProperties();
         } catch (Exception e) { // SCIPIO: just catch everything: GenericEntityException
             // If the entity engine is throwing exceptions, then there is no point in continuing.
-            Debug.logError("makeLink: Error getting current webapp info: " + e.toString(), module);
+            Debug.logError("makeLink: Error getting current webapp info from request: " + e.toString(), module);
             return null;
         }
         
@@ -1849,8 +1845,13 @@ public class RequestHandler {
             Boolean fullPath, Boolean secure, Boolean encode) {
         FullWebappInfo targetWebappInfo = null;
         if (webappInfo != null) {
-            targetWebappInfo = FullWebappInfo.fromWebappInfo((Delegator) request.getAttribute("delegator"), webappInfo, 
+            try {
+                targetWebappInfo = FullWebappInfo.fromWebappInfo((Delegator) request.getAttribute("delegator"), webappInfo, 
                     FullWebappInfo.Cache.fromRequest(request));
+            } catch (Exception e) {
+                Debug.logError("makeLink: Could not get current webapp info for context path: " + (webappInfo != null ? webappInfo.getContextRoot() : "(missing input)"), module);
+                return null;
+            }
         }
         return makeLink(request, response, url, interWebapp, targetWebappInfo, controller, fullPath, secure, encode);
     }
@@ -1860,7 +1861,7 @@ public class RequestHandler {
      * Added 2018-08-01.
      */
     public static String makeLink(Delegator delegator, Locale locale, String url, FullWebappInfo targetWebappInfo, Boolean controller, 
-            Boolean fullPath, Boolean secure, Boolean encode, FullWebappInfo currentWebappInfo, HttpServletRequest request, HttpServletResponse response) {
+            Boolean fullPath, Boolean secure, Boolean encode, FullWebappInfo currentWebappInfo, Map<String, Object> context) {
         if (controller == null) {
             controller = Boolean.TRUE;
         }
@@ -1873,7 +1874,11 @@ public class RequestHandler {
 
         // SCIPIO: enforce this check for time being
         if (targetWebappInfo == null) {
-            throw new IllegalArgumentException("makeLink: Cannot build static URL without webapp info");
+            targetWebappInfo = currentWebappInfo;
+            if (targetWebappInfo == null) {
+                Debug.logError("makeLink: Cannot build URL: No target webapp specified or current webapp info could be determined from context", module);
+                return null;
+            }
         }
         boolean interWebapp = !targetWebappInfo.equals(currentWebappInfo);
         
@@ -1921,7 +1926,7 @@ public class RequestHandler {
             // There is virtually no case where this is not a coding error we want to catch, and if we don't show an error,
             // then we can't use this as a security check. Likely also to make some template errors clearer.
             if (requestMap == null) {
-                Debug.log(getMakeLinkErrorLogLevel(request, delegator), null, "makeLink: Cannot build link: could not locate the expected request '" 
+                Debug.log(getMakeLinkErrorLogLevel((HttpServletRequest) context.get("request"), delegator), null, "makeLink: Cannot build link: could not locate the expected request '" 
                         + requestUri + "' in controller config for webapp " + targetWebappInfo, module);
                 return null; 
             }
@@ -1941,7 +1946,7 @@ public class RequestHandler {
             //} else if (fullPath || (webSiteProps.getEnableHttps() && !requestMap.securityHttps && request.isSecure())) {
             //    didFullStandard = true;
             //}
-            Boolean secureFullPathFlag = checkFullSecureOrStandard(request, webSiteProps, requestMap, interWebapp, fullPath, secure);
+            Boolean secureFullPathFlag = checkFullSecureOrStandard((HttpServletRequest) context.get("request"), webSiteProps, requestMap, interWebapp, fullPath, secure);
             if (secureFullPathFlag == Boolean.TRUE) {
                 didFullSecure = true;
             } else if (secureFullPathFlag == Boolean.FALSE) {
@@ -1989,13 +1994,26 @@ public class RequestHandler {
         String encodedUrl;
         if (encode) {
             encodedUrl = doLinkURLEncode(delegator, locale, targetWebappInfo, newURL, currentWebappInfo, 
-                        didFullStandard, didFullSecure, request, response);
+                        didFullStandard, didFullSecure, context);
         } else {
             encodedUrl = newURL.toString();
         }
         return encodedUrl;
     }
-    
+
+    public static String makeLink(Map<String, Object> context, Delegator delegator, Locale locale, String url, FullWebappInfo targetWebappInfo, Boolean controller, 
+            Boolean fullPath, Boolean secure, Boolean encode) {
+        FullWebappInfo currentWebappInfo;
+        try {
+            currentWebappInfo = FullWebappInfo.fromContext(context);
+        } catch (Exception e) {
+            Debug.logError("makeLink: Could not get current webapp info from context: " + e.toString(), module);
+            return null;
+        }
+        return makeLink(delegator, locale, url, targetWebappInfo, controller, fullPath, secure, encode, 
+                currentWebappInfo, context);
+    }
+
     private static int getMakeLinkErrorLogLevel(HttpServletRequest request, Delegator delegator) {
         Integer level = (request != null) ? (Integer) request.getAttribute("_SCP_LINK_ERROR_LEVEL_") : null;
         return (level != null) ? level : Debug.ERROR;
@@ -2074,13 +2092,14 @@ public class RequestHandler {
     }
     
     protected static String doLinkURLEncode(Delegator delegator, Locale locale, FullWebappInfo targetWebappInfo, StringBuilder newURL, 
-            FullWebappInfo currentWebappInfo, boolean didFullStandard, boolean didFullSecure, HttpServletRequest request, HttpServletResponse response) {
+            FullWebappInfo currentWebappInfo, boolean didFullStandard, boolean didFullSecure, Map<String, Object> context) {
         //boolean interWebapp = !targetWebappInfo.equals(currentWebappInfo);
         
         // TODO: NOT IMPLEMENTED
         // for now, IF reponse is present (unlikely for this call), encode through the webapp
         // because we have nothing better...
         String encodedUrl;
+        HttpServletResponse response = (HttpServletResponse) context.get("response"); // FIXME: remove this
         if (response != null) {
             encodedUrl = response.encodeURL(newURL.toString());
         } else {
@@ -2091,75 +2110,6 @@ public class RequestHandler {
     
     public String makeLink(HttpServletRequest request, HttpServletResponse response, String url, Boolean fullPath, Boolean secure, Boolean encode) {
         return makeLink(request, response, url, null, (FullWebappInfo) null, null, fullPath, secure, encode);
-        
-        /* SCIPIO: Below is the original implementation of this method (with this signature), for reference only; unmaintained and may become out of date
-        WebSiteProperties webSiteProps = null;
-        try {
-            webSiteProps = WebSiteProperties.from(request);
-        } catch (GenericEntityException e) {
-            // If the entity engine is throwing exceptions, then there is no point in continuing.
-            Debug.logError(e, "Exception thrown while getting web site properties: ", module);
-            return null;
-        }
-        String requestUri = RequestHandler.getRequestUri(url);
-        ConfigXMLReader.RequestMap requestMap = null;
-        if (requestUri != null) {
-            try {
-                requestMap = getControllerConfig().getRequestMapMap().get(requestUri);
-            } catch (WebAppConfigurationException e) {
-                // If we can't read the controller.xml file, then there is no point in continuing.
-                Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
-                return null;
-            }
-        }
-        boolean didFullSecure = false;
-        boolean didFullStandard = false;
-        if (requestMap != null && (webSiteProps.getEnableHttps() || fullPath || secure)) {
-            if (Debug.verboseOn()) Debug.logVerbose("In makeLink requestUri=" + requestUri, module);
-            if (secure || (webSiteProps.getEnableHttps() && requestMap.securityHttps && !request.isSecure())) {
-                didFullSecure = true;
-            } else if (fullPath || (webSiteProps.getEnableHttps() && !requestMap.securityHttps && request.isSecure())) {
-                didFullStandard = true;
-            }
-        }
-        StringBuilder newURL = new StringBuilder(250);
-        if (didFullSecure || didFullStandard) {
-            // Build the scheme and host part
-            try {
-                OfbizUrlBuilder builder = OfbizUrlBuilder.from(request);
-                builder.buildHostPart(newURL, url, didFullSecure);
-            } catch (GenericEntityException e) {
-                // If the entity engine is throwing exceptions, then there is no point in continuing.
-                Debug.logError(e, "Exception thrown while getting web site properties: ", module);
-                return null;
-            } catch (WebAppConfigurationException e) {
-                // If we can't read the controller.xml file, then there is no point in continuing.
-                Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
-                return null;
-            } catch (IOException e) {
-                // If we can't write to StringBuilder, then there is no point in continuing.
-                Debug.logError(e, "Exception thrown while writing to StringBuilder: ", module);
-                return null;
-            }
-        }
-        // create the path to the control servlet
-        String controlPath = (String) request.getAttribute("_CONTROL_PATH_");
-        newURL.append(controlPath);
-
-        // now add the actual passed url, but if it doesn't start with a / add one first
-        if (!url.startsWith("/")) {
-            newURL.append("/");
-        }
-        newURL.append(url);
-
-        String encodedUrl;
-        if (encode) {
-                    encodedUrl = response.encodeURL(newURL.toString());
-                } else {
-                    encodedUrl = newURL.toString();
-                }
-        return encodedUrl;
-        */
     }
     
     /**
@@ -2187,27 +2137,26 @@ public class RequestHandler {
      * <strong>WARN</strong>: Due to technical limitations (notably Java servlet spec), this method may
      * be forced to make inexact assumptions, which is one reason why it is implemented as a distinct method.
      * 
-     * @param request
-     * @param response
-     * @param url
-     * @param absPath
-     * @param interWebapp
-     * @param webSiteId
-     * @param controller
-     * @param fullPath
-     * @param secure
-     * @param encode
-     * @return
-     * 
      * @see #makeLink(HttpServletRequest, HttpServletResponse, String, boolean, WebappInfo, boolean, boolean, boolean, boolean)
      */
     public static String makeLinkAuto(HttpServletRequest request, HttpServletResponse response, String url, Boolean absPath, Boolean interWebapp, String webSiteId, Boolean controller, 
             Boolean fullPath, Boolean secure, Boolean encode) {
-        return makeLinkAutoCore(true, request, response, url, absPath, interWebapp, webSiteId, controller, fullPath, secure, encode, null, null, null, null);
+        return makeLinkAutoCore(true, request, response, null, url, absPath, interWebapp, webSiteId, controller, fullPath, secure, encode, null, null);
     }
-    
-    private static String makeLinkAutoCore(boolean requestBased, HttpServletRequest request, HttpServletResponse response, String url, Boolean absPath, Boolean interWebapp, String webSiteId, Boolean controller, 
-            Boolean fullPath, Boolean secure, Boolean encode, Delegator delegator, Locale locale, FullWebappInfo currentWebappInfo, FullWebappInfo.Cache webappInfoCache) {
+
+    /**
+     * SCIPIO: makeLinkAuto version that takes a render context instead of request/response.
+     * <p>
+     * NOTE: For this overload, request/response are not considered determinant of the method behavior,
+     * and are instead mainly here for logging purposes (e.g. trying to render a static template in static fashion within another unrelated webapp request).
+     */
+    public static String makeLinkAuto(Map<String, Object> context, Delegator delegator, Locale locale, String webSiteId, String url, Boolean absPath, Boolean interWebapp, Boolean controller, 
+            Boolean fullPath, Boolean secure, Boolean encode) {
+        return makeLinkAutoCore(false, null, null, context, url, absPath, interWebapp, webSiteId, controller, fullPath, secure, encode, delegator, locale);
+    }
+
+    private static String makeLinkAutoCore(boolean requestBased, HttpServletRequest request, HttpServletResponse response, Map<String, Object> context, String url, Boolean absPath, Boolean interWebapp, String webSiteId, Boolean controller, 
+            Boolean fullPath, Boolean secure, Boolean encode, Delegator delegator, Locale locale) {
         
         boolean absControlPathChecked = false;
         boolean absContextPathChecked = false;
@@ -2248,10 +2197,22 @@ public class RequestHandler {
         
         // Get target webapp info
         FullWebappInfo targetWebappInfo = null;
+        FullWebappInfo currentWebappInfo = null;
+        if (!requestBased) {
+            try {
+                currentWebappInfo = FullWebappInfo.fromContext(context);
+            } catch (Exception e) {
+                Debug.logError("makeLinkAuto: Could not get current webapp info from context: " + e.toString(), module);
+                return null;
+            }
+        }
+        FullWebappInfo.Cache webappInfoCache;
         if (interWebapp) {
             if (requestBased) {
                 delegator = (Delegator) request.getAttribute("delegator");
                 webappInfoCache = FullWebappInfo.Cache.fromRequest(request);
+            } else {
+                webappInfoCache = FullWebappInfo.Cache.fromContext(context);
             }
             if (webSiteId != null && !webSiteId.isEmpty()) {
                 try {
@@ -2319,7 +2280,7 @@ public class RequestHandler {
                 if (!absControlPathChecked) {
                     if (!url.startsWith(controlPath)) {
                         Debug.logError("makeLinkAuto: Trying to make a controller link for webapp " + targetWebappInfo 
-                                + " using absolute path url, but prefix does not match (url: " + url + ", control path: " + controlPath + ")", module);
+                                + " using absolute path url, but prefix does not match (uri: " + url + ", control path: " + controlPath + ")", module);
                         return null;
                     }
                     absControlPathChecked = true;
@@ -2328,7 +2289,7 @@ public class RequestHandler {
                 if (!absContextPathChecked) {
                     if (!url.startsWith(contextPath)) {
                         Debug.logError("makeLinkAuto: trying to make a webapp link for webapp " + targetWebappInfo
-                                + " using absolute path url, but context root does not match (url: " + url + ", context path: " + contextPath + ")", module);
+                                + " using absolute path url, but context root does not match (uri: " + url + ", context path: " + contextPath + ")", module);
                         return null;
                     }
                     absContextPathChecked = true;
@@ -2341,8 +2302,7 @@ public class RequestHandler {
         if (absPath) {
             if (controller) {
                 relUrl = url.substring(controlPath.length());
-            }
-            else {
+            } else {
                 relUrl = url.substring(contextPath.length());
             }
         } else {
@@ -2352,17 +2312,8 @@ public class RequestHandler {
         if (requestBased) {
             return makeLink(request, response, relUrl, interWebapp, targetWebappInfo, controller, fullPath, secure, encode);
         } else {
-            return makeLink(delegator, locale, relUrl, targetWebappInfo, controller, fullPath, secure, encode, currentWebappInfo, request, response);
+            return makeLink(delegator, locale, relUrl, targetWebappInfo, controller, fullPath, secure, encode, currentWebappInfo, context);
         }
-    }
-    
-    
-    /**
-     * SCIPIO: makeLinkAuto version that does not require request/response (secondary, for logging/errorlevels only).
-     */
-    public static String makeLinkAuto(Delegator delegator, Locale locale, String webSiteId, String url, Boolean absPath, Boolean interWebapp, Boolean controller, 
-            Boolean fullPath, Boolean secure, Boolean encode, FullWebappInfo currentWebappInfo, FullWebappInfo.Cache fullWebappInfoCache, HttpServletRequest request, HttpServletResponse response) {
-        return makeLinkAutoCore(false, request, response, url, absPath, interWebapp, webSiteId, controller, fullPath, secure, encode, delegator, locale, currentWebappInfo, fullWebappInfoCache);
     }
 
     /**

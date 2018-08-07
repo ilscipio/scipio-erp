@@ -125,12 +125,12 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
                     String viewSort = TransformUtil.getStringArg(args, "viewSort", rawParams);
                     String searchString = TransformUtil.getStringArg(args, "searchString", rawParams);
 
-                    String prefix = TransformUtil.getStringArg(args, "prefix", rawParams);
-                    
                     Object urlParams = TransformUtil.getStringArg(args, "params", rawParams); // SCIPIO: new; TODO: support map (but needs special handling to respect rawParams)
 
-                    FullWebappInfo targetWebappInfo = UrlTransformUtil.determineTargetWebappInfo(delegator, TransformUtil.getStringArg(args, "webSiteId", rawParams), 
-                            prefix, renderEnvType, webappInfoCache.getCurrentWebappInfo(), webappInfoCache, env);
+                    FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrContextPath(delegator, 
+                            TransformUtil.getStringArg(args, "webSiteId", rawParams), 
+                            TransformUtil.getStringArg(args, "prefix", rawParams),
+                            webappInfoCache);
 
                     // SCIPIO: 2017-11-06: new Locale arg + context reading for most cases
                     // NOTE: the fallback on request locale is LEGACY BEHAVIOR - not all transforms should necessarily use "OrRequest" here!
@@ -141,25 +141,17 @@ public class OfbizCatalogAltUrlTransform implements TemplateTransformModel {
                         HttpServletResponse response = ContextFtlUtil.getResponse(env);
                         url = CatalogUrlFilter.makeCatalogAltLink(request, response, locale, productCategoryId, productId, previousCategoryId, urlParams, targetWebappInfo, 
                                 fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString);
-
-                        // SCIPIO: no null
-                        if (url != null) {
-                            out.write(UrlTransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));
-                        }
-                    } else if (targetWebappInfo != null) {
-                        LocalDispatcher dispatcher = ContextFtlUtil.getDispatcher(env);
-                        
-                        // SCIPIO: now delegated to our new reusable method
-                        // NOTE: here webSiteId is usually required!
-                        url = CatalogUrlFilter.makeCatalogAltLink(delegator, dispatcher, locale, productCategoryId, productId, previousCategoryId, 
-                                urlParams, targetWebappInfo, fullPath, secure, viewSize, viewIndex, viewSort, searchString, webappInfoCache.getCurrentWebappInfo(), webappInfoCache);
-                        
-                        // SCIPIO: no null
                         if (url != null) {
                             out.write(UrlTransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));
                         }
                     } else {
-                        out.write(UrlTransformUtil.escapeGeneratedUrl(buf.toString(), escapeAs, strict, env));
+                        LocalDispatcher dispatcher = ContextFtlUtil.getDispatcher(env);
+                        // SCIPIO: now delegated to our new reusable method
+                        url = CatalogUrlFilter.makeCatalogAltLink(ContextFtlUtil.getContext(env), delegator, dispatcher, locale, productCategoryId, productId, previousCategoryId, 
+                                urlParams, targetWebappInfo, fullPath, secure, viewSize, viewIndex, viewSort, searchString);
+                        if (url != null) {
+                            out.write(UrlTransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));
+                        }
                     }
                 } catch (TemplateModelException e) {
                     throw new IOException(e.getMessage());

@@ -8,7 +8,6 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 
 import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
-import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil;
 
 import freemarker.core.Environment;
 import freemarker.ext.util.WrapperTemplateModel;

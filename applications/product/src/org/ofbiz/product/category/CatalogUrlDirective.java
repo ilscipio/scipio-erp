@@ -26,7 +26,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.FullWebappInfo;
@@ -81,7 +80,7 @@ public class CatalogUrlDirective implements TemplateDirectiveModel {
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     @Override
-    public void execute(Environment env, Map args, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateException, IOException {
+    public void execute(Environment env, @SuppressWarnings("rawtypes") Map args, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateException, IOException {
         //Map<String, TemplateModel> params = UtilGenerics.checkMap(args);
         // SCIPIO: various changes here
         final String escapeAs = TransformUtil.getStringArg(args, "escapeAs"); // SCIPIO: new
@@ -103,36 +102,30 @@ public class CatalogUrlDirective implements TemplateDirectiveModel {
         Boolean encode = TransformUtil.getBooleanArg(args, "encode");
         Boolean fullPath = UrlTransformUtil.determineFullPath(TransformUtil.getBooleanArg(args, "fullPath"), renderEnvType, env);
 
-        String prefix = TransformUtil.getStringArg(args, "prefix", rawParams);
-        
         Object urlParams = TransformUtil.getStringArg(args, "params", rawParams); // SCIPIO: new; TODO: support map (but needs special handling to respect rawParams)
 
-        FullWebappInfo targetWebappInfo = UrlTransformUtil.determineTargetWebappInfo(delegator, TransformUtil.getStringArg(args, "webSiteId", rawParams), 
-                prefix, renderEnvType, webappInfoCache.getCurrentWebappInfo(), webappInfoCache, env);
-        
+        FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrContextPath(delegator, 
+                TransformUtil.getStringArg(args, "webSiteId", rawParams), 
+                TransformUtil.getStringArg(args, "prefix", rawParams),
+                webappInfoCache);
+
         // SCIPIO: 2018-08-02: get proper locale
         Locale locale = TransformUtil.getOfbizLocaleArgOrContextOrRequest(args, "locale", env);
         
         if (request != null) {
             // SCIPIO: now delegated to our new reusable method, and also support fullPath and secure flags
             HttpServletResponse response = ContextFtlUtil.getResponse(env);
-
             //String url = CatalogUrlServlet.makeCatalogUrl(request, productId, currentCategoryId, previousCategoryId);
             String url = CatalogUrlServlet.makeCatalogLink(request, response, locale, productId, currentCategoryId, previousCategoryId, urlParams,  
                     targetWebappInfo, fullPath, secure, encode);
-
-            // SCIPIO: no null
             if (url != null) {
                 env.getOut().write(UrlTransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));
             }
-        } else if (targetWebappInfo != null) {
+        } else {
             // SCIPIO: New: Handle non-request cases
-            LocalDispatcher dispatcher = FreeMarkerWorker.getWrappedObject("dispatcher", env);
-            
-            String url = CatalogUrlServlet.makeCatalogLink(delegator, dispatcher, locale, productId, currentCategoryId, previousCategoryId, urlParams,
-                    targetWebappInfo, fullPath, secure, webappInfoCache.getCurrentWebappInfo(), webappInfoCache);
-
-            // SCIPIO: no null
+            LocalDispatcher dispatcher = ContextFtlUtil.getDispatcher(env);
+            String url = CatalogUrlServlet.makeCatalogLink(ContextFtlUtil.getContext(env), delegator, dispatcher, locale, productId, 
+                    currentCategoryId, previousCategoryId, urlParams, targetWebappInfo, fullPath, secure, encode);
             if (url != null) {
                 env.getOut().write(UrlTransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));
             }

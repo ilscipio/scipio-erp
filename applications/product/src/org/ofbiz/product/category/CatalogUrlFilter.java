@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.FilterChain;
 import javax.servlet.RequestDispatcher;
@@ -919,7 +920,14 @@ public class CatalogUrlFilter extends ContextFilter {
     public static String makeCatalogAltLink(HttpServletRequest request, HttpServletResponse response, Locale locale, String productCategoryId, String productId,
             String previousCategoryId, Object params, FullWebappInfo targetWebappInfo, Boolean fullPath, Boolean secure, Boolean encode,
             String viewSize, String viewIndex, String viewSort, String searchString) {
-        CatalogAltUrlBuilder builder = CatalogAltUrlBuilder.getBuilder(true, request, null, targetWebappInfo);
+        FullWebappInfo builderWebappInfo;
+        try {
+            builderWebappInfo = (targetWebappInfo != null) ? targetWebappInfo : FullWebappInfo.fromRequest(request);
+        } catch (Exception e) {
+            Debug.logError("makeCatalogAltLink: Could not get current webapp info from request: " + e.toString(), module);
+            return null;
+        }
+        CatalogAltUrlBuilder builder = CatalogAltUrlBuilder.getBuilder((Delegator) request.getAttribute("delegator"), builderWebappInfo);
         return builder.makeCatalogAltLink(request, response, locale, productCategoryId, productId, previousCategoryId, params, targetWebappInfo, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString);
     }
 
@@ -943,12 +951,11 @@ public class CatalogUrlFilter extends ContextFilter {
      * <p>
      * NOTE: if contextPath is omitted (null), it will be determined automatically.
      */
-    public static String makeCatalogAltLink(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String productCategoryId, String productId, 
+    public static String makeCatalogAltLink(Map<String, Object> context, Delegator delegator, LocalDispatcher dispatcher, Locale locale, String productCategoryId, String productId, 
             String previousCategoryId, Object params, FullWebappInfo targetWebappInfo, Boolean fullPath, Boolean secure,
-            String viewSize, String viewIndex, String viewSort, String searchString, 
-            FullWebappInfo currentWebappInfo, FullWebappInfo.Cache webappInfoCache) {
-        return makeCatalogAltLink(delegator, dispatcher, locale, productCategoryId, productId, previousCategoryId, params, targetWebappInfo, fullPath, secure, null, 
-                viewSize, viewIndex, viewSort, searchString, currentWebappInfo, webappInfoCache, null, null);
+            String viewSize, String viewIndex, String viewSort, String searchString) {
+        return makeCatalogAltLink(context, delegator, dispatcher, locale, productCategoryId, productId, previousCategoryId, params, targetWebappInfo, fullPath, secure, null, 
+                viewSize, viewIndex, viewSort, searchString);
     }
     
     /**
@@ -962,14 +969,19 @@ public class CatalogUrlFilter extends ContextFilter {
      * <p>
      * 2017-11: This method will now automatically implement the alternative SEO link building.
      */
-    public static String makeCatalogAltLink(Delegator delegator, LocalDispatcher dispatcher, Locale locale, String productCategoryId, String productId, 
-            String previousCategoryId, Object params, FullWebappInfo targetWebappInfo, 
-            Boolean fullPath, Boolean secure, Boolean encode,
-            String viewSize, String viewIndex, String viewSort, String searchString,
-            FullWebappInfo currentWebappInfo, FullWebappInfo.Cache webappInfoCache, HttpServletRequest request, HttpServletResponse response) {
-        CatalogAltUrlBuilder builder = CatalogAltUrlBuilder.getBuilder(false, request, delegator, targetWebappInfo);
-        return builder.makeCatalogAltLink(delegator, dispatcher, locale, null, productCategoryId, productId, previousCategoryId, params,
-                targetWebappInfo, null, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString, currentWebappInfo, webappInfoCache, request, response);
+    public static String makeCatalogAltLink(Map<String, Object> context, Delegator delegator, LocalDispatcher dispatcher, Locale locale, String productCategoryId, String productId, 
+            String previousCategoryId, Object params, FullWebappInfo targetWebappInfo, Boolean fullPath, Boolean secure, Boolean encode,
+            String viewSize, String viewIndex, String viewSort, String searchString) {
+        FullWebappInfo currentWebappInfo;
+        try {
+            currentWebappInfo = FullWebappInfo.fromContext(context);
+        } catch (Exception e) {
+            Debug.logError("makeCatalogAltLink: Could not get current webapp info from context: " + e.toString(), module);
+            return null;
+        }
+        CatalogAltUrlBuilder builder = CatalogAltUrlBuilder.getBuilder(delegator, (targetWebappInfo != null) ? targetWebappInfo : currentWebappInfo);
+        return builder.makeCatalogAltLink(context, delegator, dispatcher, locale, null, productCategoryId, productId, previousCategoryId, params,
+                targetWebappInfo, null, fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString, currentWebappInfo);
     }
     
     /**
@@ -988,13 +1000,9 @@ public class CatalogUrlFilter extends ContextFilter {
             return OfbizCatalogAltUrlBuilder.getInstance();
         }
 
-        protected static CatalogAltUrlBuilder getBuilder(boolean withRequest, HttpServletRequest request, Delegator delegator, FullWebappInfo targetWebappInfo) {
-            if (withRequest) {
-                if (delegator == null) delegator = (Delegator) request.getAttribute("delegator");
-                if (targetWebappInfo == null) targetWebappInfo = FullWebappInfo.fromRequest(request);
-            }
+        protected static CatalogAltUrlBuilder getBuilder(Delegator delegator, FullWebappInfo targetWebappInfo) {
             for(CatalogAltUrlBuilder.Factory factory : urlBuilderFactories) {
-                CatalogAltUrlBuilder builder = factory.getCatalogAltUrlBuilder(withRequest, request, delegator, targetWebappInfo);
+                CatalogAltUrlBuilder builder = factory.getCatalogAltUrlBuilder(delegator, targetWebappInfo);
                 if (builder != null) return builder;
             }
             return getDefaultBuilder();
@@ -1015,7 +1023,7 @@ public class CatalogUrlFilter extends ContextFilter {
             /**
              * Returns builder or null if not applicable to request.
              */
-            CatalogAltUrlBuilder getCatalogAltUrlBuilder(boolean withRequest, HttpServletRequest request, Delegator delegator, FullWebappInfo targetWebappInfo);
+            CatalogAltUrlBuilder getCatalogAltUrlBuilder(Delegator delegator, FullWebappInfo targetWebappInfo);
         }
         
         // low-level building methods (named after legacy ofbiz methods)
@@ -1036,59 +1044,60 @@ public class CatalogUrlFilter extends ContextFilter {
             //    locale = UtilHttp.getLocale(request);
             //}
             
+            String url;
             if (targetWebappInfo != null) {
                 // SPECIAL CASE: if there is a specific target webapp, we must NOT use the current session stuff,
                 // and build as if we had no request
-                
                 Delegator delegator = (Delegator) request.getAttribute("delegator");
                 LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
                 String currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
-                
-                FullWebappInfo.Cache webappInfoCache = FullWebappInfo.Cache.fromRequest(request);
-                FullWebappInfo currentWebappInfo = FullWebappInfo.fromRequest(request, webappInfoCache);
-                return this.makeCatalogAltLink(delegator, dispatcher, locale, CategoryWorker.getTrail(request), productCategoryId, 
-                        productId, previousCategoryId, params, targetWebappInfo, currentCatalogId, fullPath, secure, encode, 
-                        viewSize, viewIndex, viewSort, searchString, currentWebappInfo, webappInfoCache, request, response);
+
+                if (UtilValidate.isNotEmpty(productId)) {
+                    url = this.makeProductAltUrl(delegator, dispatcher, locale, CategoryWorker.getTrail(request), targetWebappInfo, currentCatalogId, previousCategoryId, productCategoryId, productId);
+                } else {
+                    url = this.makeCategoryAltUrl(delegator, dispatcher, locale, CategoryWorker.getTrail(request), targetWebappInfo, currentCatalogId, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
+                }
             } else {
-                String url;
-                
                 if (UtilValidate.isNotEmpty(productId)) {
                     url = this.makeProductAltUrl(request, locale, previousCategoryId, productCategoryId, productId);
                 } else {
                     url = this.makeCategoryAltUrl(request, locale, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
                 }
-                if (url == null) return null;
-        
-                url = appendLinkParams(url, params);
-                
-                return RequestLinkUtil.buildLinkHostPartAndEncode(request, response, locale, url, fullPath, secure, encode, true);
             }
+            if (url == null) {
+                return null;
+            }
+            url = appendLinkParams(url, params);
+            return RequestLinkUtil.buildLinkHostPartAndEncode(request, response, locale, url, fullPath, secure, encode, true);
         }
         
         /**
          * Common/default high-level makeCatalogAltLink implementation (new Scipio method).
          */
-        public String makeCatalogAltLink(Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail,
+        public String makeCatalogAltLink(Map<String, Object> context, Delegator delegator, LocalDispatcher dispatcher, Locale locale, List<String> trail,
                 String productCategoryId, String productId, String previousCategoryId, Object params, 
                 FullWebappInfo targetWebappInfo, String currentCatalogId, Boolean fullPath, Boolean secure, Boolean encode,
                 String viewSize, String viewIndex, String viewSort, String searchString,
-                FullWebappInfo currentWebappInfo, FullWebappInfo.Cache webappInfoCache, HttpServletRequest request, HttpServletResponse response) {
+                FullWebappInfo currentWebappInfo) {
             if (targetWebappInfo == null) {
-                throw new IllegalArgumentException("missing target webapp (webSiteId or contextPath)");
+                targetWebappInfo = currentWebappInfo;
+                if (targetWebappInfo == null) {
+                    Debug.logError("makeCatalogAltLink: Cannot build link: No target webapp specified and no current webapp could be determined (from context)", module);
+                    return null;
+                }
             }
 
             String url;
-            
             if (UtilValidate.isNotEmpty(productId)) {
                 url = this.makeProductAltUrl(delegator, dispatcher, locale, trail, targetWebappInfo, currentCatalogId, previousCategoryId, productCategoryId, productId);
             } else {
                 url = this.makeCategoryAltUrl(delegator, dispatcher, locale, trail, targetWebappInfo, currentCatalogId, previousCategoryId, productCategoryId, productId, viewSize, viewIndex, viewSort, searchString);
             }
-            if (url == null) return null;
-            
+            if (url == null) {
+                return null;
+            }
             url = appendLinkParams(url, params);
-
-            return RequestLinkUtil.buildLinkHostPartAndEncode(delegator, locale, targetWebappInfo, url, fullPath, secure, encode, true, currentWebappInfo, request, response);
+            return RequestLinkUtil.buildLinkHostPartAndEncode(delegator, locale, targetWebappInfo, url, fullPath, secure, encode, true, currentWebappInfo, context);
         }
         
         /**

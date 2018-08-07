@@ -159,10 +159,10 @@ public abstract class RequestLinkUtil {
     }
     
     public static Boolean checkFullSecureOrStandard(Delegator delegator, WebSiteProperties webSiteProps,
-            Boolean interWebapp, Boolean fullPath, Boolean secure, HttpServletRequest request, HttpServletResponse response) {
+            Boolean interWebapp, Boolean fullPath, Boolean secure, Map<String, Object> context) {
         // what we can do here depends on whether we got a request/response or not
         // checkFullSecureOrStandard should handle the case where request was missing (treats as insecure current request)
-        return RequestHandler.checkFullSecureOrStandard(request, webSiteProps, null, interWebapp, fullPath, secure);
+        return RequestHandler.checkFullSecureOrStandard(null, webSiteProps, null, interWebapp, fullPath, secure);
         
         /* old logic, too simplistic (wrong and insecure compared to new RequestHandler logic)
         if (Boolean.TRUE.equals(secure)) {
@@ -176,7 +176,7 @@ public abstract class RequestLinkUtil {
     }
 
     public static Boolean checkFullSecureOrStandard(Delegator delegator, String webSiteId,
-            Boolean interWebapp, Boolean fullPath, Boolean secure, HttpServletRequest request, HttpServletResponse response) {
+            Boolean interWebapp, Boolean fullPath, Boolean secure, Map<String, Object> context) {
         /* 2018-08-02: the target method does not use this anymore, so don't bother
         WebSiteProperties webSiteProps = null;
         if (webSiteId != null) {
@@ -187,7 +187,7 @@ public abstract class RequestLinkUtil {
                 return true;
             }
         }*/
-        return checkFullSecureOrStandard(delegator, (WebSiteProperties) null, interWebapp, fullPath, secure, request, response);
+        return checkFullSecureOrStandard(delegator, (WebSiteProperties) null, interWebapp, fullPath, secure, context);
     }
     
     public static String doLinkURLEncode(HttpServletRequest request, HttpServletResponse response, StringBuilder newURL, boolean interWebapp,
@@ -196,8 +196,8 @@ public abstract class RequestLinkUtil {
     }
     
     public static String doLinkURLEncode(Delegator delegator, Locale locale, FullWebappInfo targetWebappInfo, StringBuilder newURL, FullWebappInfo currentWebappInfo,
-            boolean didFullStandard, boolean didFullSecure, HttpServletRequest request, HttpServletResponse response) {
-        return RequestHandler.doLinkURLEncode(delegator, locale, targetWebappInfo, newURL, currentWebappInfo, didFullStandard, didFullSecure, request, response);
+            boolean didFullStandard, boolean didFullSecure, Map<String, Object> context) {
+        return RequestHandler.doLinkURLEncode(delegator, locale, targetWebappInfo, newURL, currentWebappInfo, didFullStandard, didFullSecure, context);
     }
 
     /**
@@ -274,7 +274,7 @@ public abstract class RequestLinkUtil {
      */
     public static String buildLinkHostPartAndEncode(Delegator delegator, Locale locale, FullWebappInfo targetWebappInfo, String url,
             Boolean fullPath, Boolean secure, Boolean encode, boolean includeWebappPathPrefix, FullWebappInfo currentWebappInfo,
-            HttpServletRequest request, HttpServletResponse response) {
+            Map<String, Object> context) {
 
         boolean didFullStandard = false;
         boolean didFullSecure = false;     
@@ -282,7 +282,7 @@ public abstract class RequestLinkUtil {
         
         // NOTE: this is always treated as inter-webapp, because we don't know our webapp
         Boolean secureFullPathFlag = checkFullSecureOrStandard(delegator, targetWebappInfo.getWebSiteProperties(), 
-                !targetWebappInfo.equals(currentWebappInfo), fullPath, secure, request, response);
+                !targetWebappInfo.equals(currentWebappInfo), fullPath, secure, context);
         
         if (secureFullPathFlag != null) {
             if (secureFullPathFlag) {
@@ -310,7 +310,7 @@ public abstract class RequestLinkUtil {
         String res;
         if (!Boolean.FALSE.equals(encode)) {
             res = RequestHandler.doLinkURLEncode(delegator, locale, targetWebappInfo, newURL, 
-                    currentWebappInfo, didFullStandard, didFullSecure, request, response);
+                    currentWebappInfo, didFullStandard, didFullSecure, context);
         } else {
             res = newURL.toString();
         }
@@ -319,10 +319,10 @@ public abstract class RequestLinkUtil {
 
     public static String buildLinkHostPartAndEncodeSafe(Delegator delegator, Locale locale, FullWebappInfo targetWebappInfo, String url,
             Boolean fullPath, Boolean secure, Boolean encode, boolean includeWebappPathPrefix, FullWebappInfo currentWebappInfo,
-            HttpServletRequest request, HttpServletResponse response) {
+            Map<String, Object> context) {
         try {
             return buildLinkHostPartAndEncode(delegator, locale, targetWebappInfo, url, fullPath, secure, encode, includeWebappPathPrefix, 
-                    currentWebappInfo, request, response);
+                    currentWebappInfo, context);
         } catch(Exception e) {
             Debug.logError(e, module);
             return null;
@@ -331,10 +331,9 @@ public abstract class RequestLinkUtil {
     
     @Deprecated
     public static String buildLinkHostPartAndEncode(Delegator delegator, String webSiteId, String url,
-            Boolean fullPath, Boolean secure, Boolean encode,
-            HttpServletRequest request, HttpServletResponse response) {
+            Boolean fullPath, Boolean secure, Boolean encode, Map<String, Object> context) {
         FullWebappInfo webappInfo = FullWebappInfo.fromWebSiteId(delegator, webSiteId, null);
-        return buildLinkHostPartAndEncode(delegator, null, webappInfo, url, fullPath, secure, encode, false, webappInfo, request, response);
+        return buildLinkHostPartAndEncode(delegator, null, webappInfo, url, fullPath, secure, encode, false, webappInfo, context);
     }
     
     /**

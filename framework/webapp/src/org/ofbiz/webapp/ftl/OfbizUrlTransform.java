@@ -30,15 +30,14 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.entity.Delegator;
-import org.ofbiz.webapp.ExtWebappInfo;
 import org.ofbiz.webapp.FullWebappInfo;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.control.RequestLinkUtil;
 import org.ofbiz.webapp.renderer.RenderEnvType;
 
 import com.ilscipio.scipio.ce.webapp.ftl.context.ContextFtlUtil;
-import com.ilscipio.scipio.ce.webapp.ftl.context.UrlTransformUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.context.TransformUtil;
+import com.ilscipio.scipio.ce.webapp.ftl.context.UrlTransformUtil;
 
 import freemarker.core.Environment;
 import freemarker.template.TemplateModelException;
@@ -107,9 +106,6 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                     final Boolean fullPath = UrlTransformUtil.determineFullPath(TransformUtil.getBooleanArg(args, "fullPath"), renderEnvType, env);
                     final Boolean secure = TransformUtil.getBooleanArg(args, "secure"); // SCIPIO: modified to remove default; leave centralized
                     final Boolean encode = TransformUtil.getBooleanArg(args, "encode"); // SCIPIO: modified to remove default; leave centralized
-                    // TODO?: this is complicated by makeLinkAuto's auto path to contextPath mapping for this transform...
-                    //FullWebappInfo targetWebappInfo = UrlTransformUtil.determineTargetWebappInfo(delegator, TransformUtil.getStringArg(args, "webSiteId", rawParams), 
-                    //        null, renderEnvType, webappInfoCache.getCurrentWebappInfo(), webappInfoCache, env);
                     final String webSiteId = TransformUtil.getStringArg(args, "webSiteId", rawParams);
 
                     Boolean interWebappEff = interWebapp;
@@ -144,8 +140,8 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                         }
                     } else if (webSiteId != null || webappInfoCache.getCurrentWebappWebSiteId() != null) {
                         Locale locale = TransformUtil.getOfbizLocaleArgOrContextOrRequest(args, "locale", env);
-                        String link = RequestHandler.makeLinkAuto(delegator, locale, webSiteId, requestUrl, absPath, interWebappEff, controller, 
-                                fullPath, secure, encode, webappInfoCache.getCurrentWebappInfo(), webappInfoCache, request, response);
+                        String link = RequestHandler.makeLinkAuto(ContextFtlUtil.getContext(env), delegator, locale, webSiteId, requestUrl, absPath, 
+                                interWebappEff, controller, fullPath, secure, encode);
                         if (link != null) {
                             out.write(UrlTransformUtil.escapeGeneratedUrl(link, escapeAs, strict, env));
                         }

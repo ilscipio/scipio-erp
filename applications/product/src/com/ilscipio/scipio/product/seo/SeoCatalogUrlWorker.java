@@ -61,7 +61,6 @@ import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.webapp.FullWebappInfo;
-import org.ofbiz.webapp.website.WebSiteWorker;
 
 import com.ilscipio.scipio.ce.util.SeoStringUtil;
 import com.ilscipio.scipio.product.category.CatalogAltUrlSanitizer;
@@ -217,14 +216,12 @@ public class SeoCatalogUrlWorker implements Serializable {
 
         public static BuilderFactory getInstance() { return INSTANCE; }
         @Override
-        public CatalogUrlBuilder getCatalogUrlBuilder(boolean withRequest, HttpServletRequest request,
-                Delegator delegator, FullWebappInfo targetWebappInfo) {
+        public CatalogUrlBuilder getCatalogUrlBuilder(Delegator delegator, FullWebappInfo targetWebappInfo) {
             if (!SeoConfig.getCommonConfig().isSeoUrlEnabled(targetWebappInfo.getContextPath(), targetWebappInfo.getWebSiteId())) return null;
             return SeoCatalogUrlWorker.getInstance(delegator, targetWebappInfo.getWebSiteId()).getCatalogUrlBuilder();
         }
         @Override
-        public CatalogAltUrlBuilder getCatalogAltUrlBuilder(boolean withRequest, HttpServletRequest request,
-                Delegator delegator, FullWebappInfo targetWebappInfo) {
+        public CatalogAltUrlBuilder getCatalogAltUrlBuilder(Delegator delegator, FullWebappInfo targetWebappInfo) {
             if (!SeoConfig.getCommonConfig().isSeoUrlEnabled(targetWebappInfo.getContextPath(), targetWebappInfo.getWebSiteId())) return null;
             return SeoCatalogUrlWorker.getInstance(delegator, targetWebappInfo.getWebSiteId()).getCatalogAltUrlBuilder();
         }

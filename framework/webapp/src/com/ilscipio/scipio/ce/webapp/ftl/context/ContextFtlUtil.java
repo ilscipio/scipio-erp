@@ -10,14 +10,12 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.webapp.ExtWebappInfo;
 import org.ofbiz.webapp.FullWebappInfo;
 import org.ofbiz.webapp.renderer.RenderEnvType;
 import org.ofbiz.webapp.website.WebSiteProperties;
@@ -836,15 +834,9 @@ public abstract class ContextFtlUtil {
 
     /**
      * Determines the render context type.
-     * <p>
-     * FIXME?: null request does not guarantee non-webapp context, because some specialized utilities
-     * render templates using small makeshift contexts (e.g. surveys).
-     * Need more reliable way to determine...
      */
-    public static RenderEnvType getRenderEnvType(Environment env, Object request) throws TemplateModelException {
-        // TODO: REVIEW: heuristic: if baseUrl is set, it must be an e-mail context... 
-        // (this heuristic is currently also used elsewhere, so keep consistent until a clearer solution is found)
-        return (request == null && env.getVariable("baseUrl") != null) ? RenderEnvType.EMAIL : RenderEnvType.WEBAPP;
+    public static RenderEnvType getRenderEnvType(Environment env, HttpServletRequest request) throws TemplateModelException {
+        return RenderEnvType.fromRequestOrFtlEnv(request, env);
     }
 
     /**
@@ -854,7 +846,7 @@ public abstract class ContextFtlUtil {
      * render templates using small makeshift contexts (e.g. surveys).
      */
     public static RenderEnvType getRenderEnvType(Environment env) throws TemplateModelException {
-        return getRenderEnvType(env, env.getVariable("request"));
+        return RenderEnvType.fromFtlEnv(env);
     }
 
     public static Map<String, WebSiteProperties> getWebSitePropertiesCache(Environment env, HttpServletRequest request) throws TemplateModelException {

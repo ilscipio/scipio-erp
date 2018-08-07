@@ -1,7 +1,6 @@
 package com.ilscipio.scipio.ce.webapp.ftl.context;
 
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.entity.Delegator;
 import org.ofbiz.webapp.FullWebappInfo;
 import org.ofbiz.webapp.renderer.RenderEnvType;
 
@@ -37,20 +36,7 @@ public abstract class UrlTransformUtil {
         }
         return webSiteIdArg;
     }
-    
-    /**
-     * Determines what the targetWebappInfo argument should be.
-     * When webapp request, this is left null unless explicit webSiteId specified.
-     * When static render, tries to use current webapp from context.
-     */
-    public static FullWebappInfo determineTargetWebappInfo(Delegator delegator, String webSiteIdArg, String contextPathArg, 
-            RenderEnvType renderEnvType, FullWebappInfo currentWebappInfo, FullWebappInfo.Cache webappInfoCache, Environment env) throws TemplateModelException {
-        if (renderEnvType.isStatic() && UtilValidate.isEmpty(webSiteIdArg) && currentWebappInfo != null) {
-            return currentWebappInfo;
-        }
-        return FullWebappInfo.fromWebSiteIdOrContextPath(delegator, webSiteIdArg, contextPathArg, webappInfoCache);
-    }
-    
+
     /**
      * Escapes a URL built by a transform such as ofbizUrl IF a language is specified.
      * <p>

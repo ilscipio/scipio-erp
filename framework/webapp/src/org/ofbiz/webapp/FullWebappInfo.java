@@ -90,7 +90,7 @@ public class FullWebappInfo {
         }
         return fullWebappInfo;
     }
-    
+
     /**
      * Reads webapp info from request, but if the request does not appear set up properly
      * yet (i.e. by ContextFilter), prevent caching the result, so as to not pollute the rest
@@ -140,6 +140,11 @@ public class FullWebappInfo {
         return fromContext(context, renderEnvType, Cache.fromContext(context, renderEnvType));
     }
 
+    public static FullWebappInfo fromContext(Map<String, Object> context) throws IllegalArgumentException {
+        RenderEnvType renderEnvType = RenderEnvType.fromContext(context);
+        return fromContext(context, renderEnvType, Cache.fromContext(context, renderEnvType));
+    }
+
     public static FullWebappInfo fromContext(Map<String, Object> context, RenderEnvType renderEnvType, Cache cache) throws IllegalArgumentException {
         if (renderEnvType.isStatic()) {
             FullWebappInfo fullWebappInfo;
@@ -150,9 +155,9 @@ public class FullWebappInfo {
             String webSiteId = WebSiteWorker.getWebSiteIdFromContext(context, renderEnvType);
             if (webSiteId != null) {
                 fullWebappInfo = FullWebappInfo.fromWebSiteId((Delegator) context.get("delegator"), webSiteId, cache);
-                if (cache != null) cache.setCurrentWebappInfoOnly(fullWebappInfo); // 
+                if (cache != null) cache.setCurrentWebappInfoOnly(fullWebappInfo); //
             }
-        } else if (renderEnvType.isWebapp()) {
+        } else if (renderEnvType.isWebapp()) { // NOTE: it is important to check isWebapp here and not (request != null), because these could disassociate in future
             return fromRequest((HttpServletRequest) context.get("request"), cache);
         }
         return null;
@@ -182,7 +187,7 @@ public class FullWebappInfo {
         }
         return null;
     }
-    
+
     /**
      * SCIPIO: Returns the <code>FullWebappInfo</code> instance that has the same mount-point prefix as
      * the given path.
@@ -200,7 +205,7 @@ public class FullWebappInfo {
         }
         return fromWebappInfo(delegator, webappInfo, cache);
     }
-    
+
     /*
      * ******************************************************
      * Individual element factory methods
@@ -523,7 +528,7 @@ public class FullWebappInfo {
         public static Cache newCache(Delegator delegator) {
             return new Cache(delegator);
         }
-        
+
         public static Cache fromRequest(HttpServletRequest request) {
             Cache cache = (Cache) request.getAttribute(FIELD_NAME);
             if (cache == null) {
@@ -532,7 +537,7 @@ public class FullWebappInfo {
             }
             return cache;
         }
-        
+
         public static void clearRequestCache(HttpServletRequest request) {
             request.removeAttribute(FIELD_NAME);
         }
@@ -542,17 +547,21 @@ public class FullWebappInfo {
                 @SuppressWarnings("unchecked")
                 Map<String, Object> srcContext = (Map<String, Object>) context.get("globalContext");
                 if (srcContext == null) srcContext = context; // fallback
-    
+
                 Cache cache = (Cache) srcContext.get(FIELD_NAME);
                 if (cache == null) {
                     cache = new Cache((Delegator) context.get("delegator"));
                     srcContext.put(FIELD_NAME, cache);
                 }
                 return cache;
-            } else if (renderEnvType.isWebapp()) {
+            } else if (renderEnvType.isWebapp()) { // NOTE: it is important to check isWebapp here and not (request != null), because these could disassociate in future
                 return fromRequest((HttpServletRequest) context.get("request"));
             }
             return null;
+        }
+
+        public static Cache fromContext(Map<String, Object> context) {
+            return fromContext(context, RenderEnvType.fromContext(context)); // TODO?: optimize
         }
 
         public static void clearContextCache(Map<String, Object> context, RenderEnvType renderEnvType) {
@@ -560,13 +569,17 @@ public class FullWebappInfo {
                 @SuppressWarnings("unchecked")
                 Map<String, Object> srcContext = (Map<String, Object>) context.get("globalContext");
                 if (srcContext == null) srcContext = context; // fallback
-    
+
                 srcContext.remove(FIELD_NAME);
             } else if (renderEnvType.isWebapp()) {
                 clearRequestCache((HttpServletRequest) context.get("request"));
             }
         }
-        
+
+        public static void clearContextCache(Map<String, Object> context) {
+            clearContextCache(context, RenderEnvType.fromContext(context)); // TODO?: optimize 
+        }
+
         public static Cache fromRequestOrContext(HttpServletRequest request, Map<String, Object> context,
                 RenderEnvType renderEnvType) {
             return (request != null) ? fromRequest(request) : fromContext(context, renderEnvType);
@@ -575,7 +588,7 @@ public class FullWebappInfo {
         public FullWebappInfo getCurrentWebappInfo() {
             return currentWebappInfo;
         }
-        
+
         public String getCurrentWebappWebSiteId() {
             return (currentWebappInfo != null) ? currentWebappInfo.getWebSiteId() : null;
         }
@@ -584,7 +597,7 @@ public class FullWebappInfo {
             this.currentWebappInfo = currentWebappInfo;
             addWebappInfo(currentWebappInfo);
         }
-        
+
         public void setCurrentWebappInfoOnly(FullWebappInfo currentWebappInfo) {
             this.currentWebappInfo = currentWebappInfo;
         }

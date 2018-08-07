@@ -1,17 +1,21 @@
 package org.ofbiz.webapp;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.tomcat.util.descriptor.web.FilterDef;
 import org.apache.tomcat.util.descriptor.web.WebXml;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.lang.ThreadSafe;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.webapp.control.ConfigXMLReader.ControllerConfig;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.webapp.control.ConfigXMLReader;
+import org.ofbiz.webapp.control.ConfigXMLReader.ControllerConfig;
 import org.ofbiz.webapp.control.ContextFilter;
 import org.xml.sax.SAXException;
 
@@ -41,6 +45,8 @@ public class ExtWebappInfo implements Serializable {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+    public static final String DEFAULT_WEBAPP_URLREWRITE_FILE = "WEB-INF/urlrewrite.xml";
+    
     private static final Object cacheLock = new Object(); // NOTE: both caches lock together
     private static Map<String, ExtWebappInfo> webSiteIdCache = Collections.emptyMap();
     private static Map<String, ExtWebappInfo> contextPathCache = Collections.emptyMap();
@@ -57,6 +63,10 @@ public class ExtWebappInfo implements Serializable {
 
     private Optional<Boolean> forwardRootControllerUris;
     private Optional<Boolean> forwardRootControllerUrisValid;
+    
+    private final String urlRewriteConfPath;
+    private final String urlRewriteFullConfPath;
+    private final String urlRewriteRealConfPath;
 
     /**
      * Main constructor.
@@ -80,6 +90,21 @@ public class ExtWebappInfo implements Serializable {
             this.controlServletPath = ("/".equals(this.controlServletMapping)) ? "" : this.controlServletMapping;
         } catch (Exception e) {
             throw new IllegalArgumentException("Could not determine ControlServlet mapping for website ID '" + webSiteId + "': " + e.getMessage(), e);
+        }
+
+        this.urlRewriteConfPath = getUrlRewriteConfPathFromWebXml(webXml);
+        if (this.urlRewriteConfPath != null) {
+            this.urlRewriteFullConfPath = Paths.get(webappInfo.getLocation(), this.urlRewriteConfPath).toString();
+            if (new File(this.urlRewriteFullConfPath).exists()) {
+                this.urlRewriteRealConfPath = this.urlRewriteFullConfPath;
+            } else {
+                Debug.logWarning("Webapp " + this.toString() + " has UrlRewriterFilter configured"
+                        + ", but no urlrewrite xml file could be found at expected location: " + this.urlRewriteFullConfPath, module);
+                this.urlRewriteRealConfPath = null;
+            }
+        } else {
+            this.urlRewriteFullConfPath = null;
+            this.urlRewriteRealConfPath = null;
         }
     }
 
@@ -338,6 +363,30 @@ public class ExtWebappInfo implements Serializable {
         return forwardRootControllerUrisValid.orElse(null);
     }
 
+    /**
+     * Returns relation location of the urlrewrite file for this webapp, or null if no
+     * UrlRewriteFilter for this webapp or error.
+     */
+    public String getUrlRewriteConfPath() {
+        return urlRewriteConfPath;
+    }
+    
+    /**
+     * Returns full location of the urlrewrite file for this webapp, or null if no
+     * UrlRewriteFilter for this webapp or error. Does not check if file exists.
+     */
+    public String getUrlRewriteFullConfPath() {
+        return urlRewriteFullConfPath;
+    }
+    
+    /**
+     * Returns full file location of the urlrewrite file for this webapp, or null if no
+     * UrlRewriteFilter for this webapp, file does not exist or error.
+     */
+    public String getUrlRewriteRealConfPath() {
+        return urlRewriteRealConfPath;
+    }
+    
     private String getLogMsgPrefix() {
         if (webSiteId != null) {
             return "Website '" + webSiteId + "': ";
@@ -374,5 +423,20 @@ public class ExtWebappInfo implements Serializable {
             throw new IllegalArgumentException("Could not read or find webapp container info (web.xml) for website ID '" + webSiteId
                         + "' (mount-point '" + webappInfo.getContextRoot() + "'): " + e.getMessage(), e);
         }
+    }
+    
+    private static String getUrlRewriteConfPathFromWebXml(WebXml webXml) {
+        for (FilterDef filterDef : webXml.getFilters().values()) {
+            String filterClassName = filterDef.getFilterClass();
+            // exact name is the original Ofbiz solution, return exact if found
+            if (org.tuckey.web.filters.urlrewrite.UrlRewriteFilter.class.getName().equals(filterClassName)) {
+                String confPath = filterDef.getParameterMap().get("confPath");
+                if (UtilValidate.isNotEmpty(confPath)) {
+                    return confPath;
+                }
+                return DEFAULT_WEBAPP_URLREWRITE_FILE;
+            }
+        }
+        return null;
     }
 }

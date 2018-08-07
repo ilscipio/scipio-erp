@@ -507,6 +507,29 @@ public class FullWebappInfo {
         return extWebappInfo.getForwardRootControllerUrisValidated();
     }
 
+    /**
+     * @return
+     * @see org.ofbiz.webapp.ExtWebappInfo#getUrlRewriteConfPath()
+     */
+    public String getUrlRewriteConfPath() {
+        return extWebappInfo.getUrlRewriteConfPath();
+    }
+
+    /**
+     * @return
+     * @see org.ofbiz.webapp.ExtWebappInfo#getUrlRewriteFullConfPath()
+     */
+    public String getUrlRewriteFullConfPath() {
+        return extWebappInfo.getUrlRewriteFullConfPath();
+    }
+
+    /**
+     * @return
+     * @see org.ofbiz.webapp.ExtWebappInfo#getUrlRewriteRealConfPath()
+     */
+    public String getUrlRewriteRealConfPath() {
+        return extWebappInfo.getUrlRewriteRealConfPath();
+    }
 
     /**
      * WARN: not thread-safe at current time (meant for request scope only).

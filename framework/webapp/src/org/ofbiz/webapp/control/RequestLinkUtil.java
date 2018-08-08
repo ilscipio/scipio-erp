@@ -191,8 +191,8 @@ public abstract class RequestLinkUtil {
     }
     
     public static String doLinkURLEncode(HttpServletRequest request, HttpServletResponse response, StringBuilder newURL, boolean interWebapp,
-            boolean didFullStandard, boolean didFullSecure) {
-        return RequestHandler.doLinkURLEncode(request, response, newURL, interWebapp, didFullStandard, didFullSecure);
+            FullWebappInfo targetWebappInfo, boolean didFullStandard, boolean didFullSecure) {
+        return RequestHandler.doLinkURLEncode(request, response, newURL, interWebapp, targetWebappInfo, didFullStandard, didFullSecure);
     }
     
     public static String doLinkURLEncode(Delegator delegator, Locale locale, FullWebappInfo targetWebappInfo, StringBuilder newURL, FullWebappInfo currentWebappInfo,
@@ -241,7 +241,7 @@ public abstract class RequestLinkUtil {
         
         String res;
         if (!Boolean.FALSE.equals(encode)) {
-            res = RequestHandler.doLinkURLEncode(request, response, newURL, false, didFullStandard, didFullSecure);
+            res = RequestHandler.doLinkURLEncode(request, response, newURL, false, targetWebappInfo, didFullStandard, didFullSecure);
         } else {
             res = newURL.toString();
         }

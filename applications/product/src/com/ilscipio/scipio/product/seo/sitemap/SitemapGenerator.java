@@ -29,12 +29,13 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.webapp.FullWebappInfo;
 import org.ofbiz.webapp.OfbizUrlBuilder;
 import org.ofbiz.webapp.WebAppUtil;
 import org.xml.sax.SAXException;
 
 import com.ilscipio.scipio.ce.util.PathUtil;
-import com.ilscipio.scipio.ce.webapp.filter.UrlRewriteConf;
+import com.ilscipio.scipio.ce.webapp.filter.urlrewrite.ScipioUrlRewriter;
 import com.ilscipio.scipio.product.seo.SeoCatalogTraverser;
 import com.ilscipio.scipio.product.seo.SeoCatalogUrlWorker;
 import com.redfin.sitemapgenerator.SitemapIndexGenerator;
@@ -66,7 +67,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     protected final SeoCatalogUrlWorker urlWorker;
     protected final OfbizUrlBuilder ofbizUrlBuilder;
     
-    protected UrlRewriteConf urlRewriteConf;
+    protected ScipioUrlRewriter urlRewriteConf;
     protected final WebappInfo webappInfo;
     
     protected final GenericValue webSite;
@@ -85,7 +86,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
 
     protected SitemapGenerator(Delegator delegator, LocalDispatcher dispatcher, List<Locale> locales, String webSiteId, GenericValue webSite, GenericValue productStore, String baseUrl, String sitemapWebappPathPrefix, String sitemapContextPath, 
             String webappPathPrefix, String contextPath, SitemapConfig config,
-            SeoCatalogUrlWorker urlWorker, OfbizUrlBuilder ofbizUrlBuilder, UrlRewriteConf urlRewriteConf, SitemapTraversalConfig travConfig, Map<String, ?> servCtxOpts) throws GeneralException, IOException, URISyntaxException, SAXException {
+            SeoCatalogUrlWorker urlWorker, OfbizUrlBuilder ofbizUrlBuilder, ScipioUrlRewriter urlRewriteConf, SitemapTraversalConfig travConfig, Map<String, ?> servCtxOpts) throws GeneralException, IOException, URISyntaxException, SAXException {
         super(delegator, dispatcher, travConfig);
         this.locales = locales;
         this.webSiteId = webSiteId;
@@ -147,9 +148,10 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         if (baseUrl == null) {
             baseUrl = config.getDefaultBaseUrl(ofbizUrlBuilder, config.isBaseUrlSecure());
         }
-        UrlRewriteConf urlRewriteConf = null;
+        ScipioUrlRewriter urlRewriteConf = null;
         if (config.getUrlConfPath() != null) {
-            urlRewriteConf = UrlRewriteConf.loadConf(config.getUrlConfPath());
+            urlRewriteConf = ScipioUrlRewriter.getForDefaultContext(FullWebappInfo.fromWebSiteId(delegator, webSiteId, null), 
+                    config.getUrlConfPath());
         }
         
         SitemapTraversalConfig travConfig = (SitemapTraversalConfig) new SitemapTraversalConfig(config).setDoContent(config.isDoContent()).setUseCache(useCache);
@@ -284,7 +286,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
      * Gets cached conf.
      * Avoids reloading the urlrewrite.xml file for every single URL.
      */
-    protected UrlRewriteConf getUrlRewriteConf() {
+    protected ScipioUrlRewriter getUrlRewriteConf() {
         return urlRewriteConf;
     }
     

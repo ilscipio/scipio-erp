@@ -20,6 +20,7 @@ package org.ofbiz.webapp.control;
 
 import static org.ofbiz.base.util.UtilGenerics.checkMap;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
@@ -71,6 +72,9 @@ import org.ofbiz.webapp.view.ViewHandlerException;
 import org.ofbiz.webapp.view.ViewHandlerExt;
 import org.ofbiz.webapp.website.WebSiteProperties;
 import org.ofbiz.webapp.website.WebSiteWorker;
+
+import com.ilscipio.scipio.ce.webapp.filter.UrlFilterHelper;
+import com.ilscipio.scipio.ce.webapp.filter.urlrewrite.ScipioUrlRewriter;
 
 /**
  * RequestHandler - Request Processor Object
@@ -1833,7 +1837,7 @@ public class RequestHandler {
         String encodedUrl;
         if (encode) {
             // SCIPIO: Delegated code
-            encodedUrl = doLinkURLEncode(request, response, newURL, interWebapp, didFullStandard, didFullSecure);
+            encodedUrl = doLinkURLEncode(request, response, newURL, interWebapp, targetWebappInfo, didFullStandard, didFullSecure);
         } else {
             encodedUrl = newURL.toString();
         }
@@ -2066,46 +2070,34 @@ public class RequestHandler {
      * WARN: newURL is modified in-place, and then discarded, so only use the result. 
      */
     protected static String doLinkURLEncode(HttpServletRequest request, HttpServletResponse response, StringBuilder newURL, boolean interWebapp,
-            boolean didFullStandard, boolean didFullSecure) {
+            FullWebappInfo targetWebappInfo, boolean didFullStandard, boolean didFullSecure) {
         String encodedUrl;
-        // SCIPIO: do something different for inter-webapp links
-        if (interWebapp) {
-            if (response != null) {
-                // SCIPIO: We want to run inter-webapp links through URL encoding for outbound-rules and things,
-                // but we should never add a jsessionId.
-                // SCIPIO: 2018-07-09: we shouldn't need this special call anymore because all webapps
-                // should be configured for COOKIE jsessionId only already (if not, considered security weakness).
-                //encodedUrl = RequestLinkUtil.encodeURLNoJsessionId(newURL.toString(), response);
+        if (response != null) {
+            // SCIPIO: 2018-08-07: this should cause urlrewrite.xml to invoke ScipioUrlRewriter for inter-webapp encodes 
+            // (it's not safe for us to do it from here)
+            try {
+                request.setAttribute(UrlFilterHelper.URL_REWRITE_TARGET_WEBAPP, targetWebappInfo);
                 encodedUrl = response.encodeURL(newURL.toString());
-            } else {
-                encodedUrl = newURL.toString();    
+            } finally {
+                request.removeAttribute(UrlFilterHelper.URL_REWRITE_TARGET_WEBAPP);
             }
         } else {
-            // SCIPIO: stock case
-            if (response != null) {
-                encodedUrl = response.encodeURL(newURL.toString());
-            } else {
-                encodedUrl = newURL.toString();
-            }
+            encodedUrl = newURL.toString();
         }
         return encodedUrl;
     }
     
     protected static String doLinkURLEncode(Delegator delegator, Locale locale, FullWebappInfo targetWebappInfo, StringBuilder newURL, 
             FullWebappInfo currentWebappInfo, boolean didFullStandard, boolean didFullSecure, Map<String, Object> context) {
-        //boolean interWebapp = !targetWebappInfo.equals(currentWebappInfo);
-        
-        // TODO: NOT IMPLEMENTED
-        // for now, IF reponse is present (unlikely for this call), encode through the webapp
-        // because we have nothing better...
-        String encodedUrl;
-        HttpServletResponse response = (HttpServletResponse) context.get("response"); // FIXME: remove this
-        if (response != null) {
-            encodedUrl = response.encodeURL(newURL.toString());
-        } else {
-            encodedUrl = newURL.toString();
+        FullWebappInfo webappInfo = (targetWebappInfo != null) ? targetWebappInfo : currentWebappInfo;
+        try {
+            return ScipioUrlRewriter.getForContext(webappInfo, context, true)
+                .processOutboundUrl(newURL.toString());
+        } catch (IOException e) {
+            Debug.logError("doLinkURLEncode: Error URL-encoding (rewriting) link for webapp " + webappInfo 
+                    + ": " + e.toString(), module); 
+            return newURL.toString();
         }
-        return encodedUrl;
     }
     
     public String makeLink(HttpServletRequest request, HttpServletResponse response, String url, Boolean fullPath, Boolean secure, Boolean encode) {

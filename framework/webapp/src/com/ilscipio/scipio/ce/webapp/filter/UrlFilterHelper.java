@@ -11,6 +11,8 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.webapp.FullWebappInfo;
 import org.ofbiz.webapp.OfbizUrlBuilder;
 
+import com.ilscipio.scipio.ce.webapp.filter.urlrewrite.ScipioUrlRewriter;
+
 /**
  * SCIPIO: Helper methods for URL rewriting and filtering (urlrewrite.xml).
  * Added 2017-08-14.
@@ -19,6 +21,17 @@ public class UrlFilterHelper {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+    /**
+     * When rendering from static render contexts (emails, etc.),
+     * name of a request attribute (in the emulated HttpServletRequest)
+     * containing a context map of the static render context.
+     * <p>
+     * NOTE: This attribute is empty during real webapp renders.
+     */
+    public static final String URL_REWRITE_CONTEXT = "scpUrlReCtx";
+    
+    public static final String URL_REWRITE_TARGET_WEBAPP = "scpUrlReTargetWebap";
+    
     /**
      * Sets some common request attributes needed by URL rewriting, for both inbound and outbound rules.
      */
@@ -142,6 +155,24 @@ public class UrlFilterHelper {
         return sameContextPath;
     }
 
+    public void doInterWebappUrlRewrite(HttpServletRequest request, HttpServletResponse response) {
+        String url = (String) request.getAttribute("urlFilter.outUrlWebapp.outUrl");
+        
+        FullWebappInfo targetWebappInfo = (FullWebappInfo) request.getAttribute(URL_REWRITE_TARGET_WEBAPP);
+        if (targetWebappInfo != null) {
+            try {
+                ScipioUrlRewriter rewriter = ScipioUrlRewriter.getForRequest(targetWebappInfo, request, response, true);
+                url = rewriter.processOutboundUrl(url);
+            } catch (Exception e) {
+                Debug.logError("doInterWebappUrlRewrite: Error URL-encoding (rewriting) link for webapp " + targetWebappInfo 
+                        + ": " + e.toString(), module); 
+            }
+        }
+        
+        request.setAttribute("scpUrlReOut", url);
+    }
+    
+    
     // TODO: ideally should optimize the regexp away
     private static final Pattern pathPat = Pattern.compile("^([^/]*//[^/]*)?(/.*?)?([?;#].*)?$");
 

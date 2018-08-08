@@ -9,10 +9,12 @@
         <set name="urlFilter.outUrlWebapp.outUrl">$1</set>
         <run class="com.ilscipio.scipio.ce.webapp.filter.UrlFilterHelper" method="setCommonAttrOut" />
     </outbound-rule>
+    <!-- If the URL points to a different webapp context, try to run the urlrewrite.xml for that webapp (if possible) -->
     <outbound-rule>
         <condition type="attribute" name="urlFilter.outUrlWebapp.isSameContext" operator="equal">false</condition>
         <from>.*</from>
-        <to last="true">-</to>
+        <run class="com.ilscipio.scipio.ce.webapp.filter.UrlFilterHelper" method="doInterWebappUrlRewrite" />
+        <to last="true">%{attribute:scpUrlReOut}</to>
     </outbound-rule>
     <!-- If the URL was written including the webappPathPrefix, strip it here, and re-add it later below -->
     <outbound-rule>
@@ -26,13 +28,6 @@
     <rule>
         <from>.*</from>
         <set type="response-header" name="Cache-Control">max-age=3600, must-revalidate</set>
-    </rule>
-    -->
-
-    <!-- LEGACY ECOMMERCE REDIRECT
-    <rule>
-        <from>^/ecommerce([?;#/].*)?$</from>
-        <to type="permanent-redirect" last="true">/shop$1?%{query-string}</to>
     </rule>
     -->
 

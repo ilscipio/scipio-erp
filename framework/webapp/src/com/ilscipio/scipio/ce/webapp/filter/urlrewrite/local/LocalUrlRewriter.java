@@ -110,7 +110,7 @@ public class LocalUrlRewriter extends ScipioUrlRewriter {
 
         protected LocalUrlRewriter loadForContext(FullWebappInfo webappInfo, String urlConfPath,
                 Map<String, Object> context, Map<String, Object> reqAttribs) throws IOException {
-            Conf conf = UrlConfUtil.getConfFromLocation(urlConfPath);
+            Conf conf = UrlConfUtil.getConfFromLocationOrWebapp(urlConfPath, webappInfo.getExtWebappInfo());
             
             LocalUrlRewriter rewriter = new LocalUrlRewriter(urlConfPath, conf,
                     LocalServletContainer.fromOfbizContext(webappInfo, context, RenderEnvType.fromContext(context), reqAttribs));

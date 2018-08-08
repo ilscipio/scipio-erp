@@ -36,12 +36,10 @@ public abstract class ScipioUrlRewriter {
                 request.setAttribute(Cache.CACHE_FIELD, cache);
             }
         }
-        String urlConfPath = webappInfo.getUrlRewriteRealConfPath();
-        if (urlConfPath == null || urlConfPath.isEmpty()) {
+        if (webappInfo.getUrlRewriteRealConfPath() == null) {
             rewriter = DUMMY;
         } else {
-            urlConfPath = "file://" + urlConfPath;
-            rewriter = getFactory(webappInfo, urlConfPath, request).loadForRequest(webappInfo, urlConfPath, request, response);
+            rewriter = getFactory(webappInfo, null, request).loadForRequest(webappInfo, null, request, response);
         }
         if (useCache) {
             cache.addUrlRewriter(webappInfo, rewriter);
@@ -82,12 +80,10 @@ public abstract class ScipioUrlRewriter {
                 srcCtx.put(Cache.CACHE_FIELD, cache);
             }
         }
-        String urlConfPath = webappInfo.getUrlRewriteRealConfPath();
-        if (urlConfPath == null || urlConfPath.isEmpty()) {
+        if (webappInfo.getUrlRewriteRealConfPath() == null) {
             rewriter = DUMMY;
         } else {
-            urlConfPath = "file://" + urlConfPath;
-            rewriter = getFactory(webappInfo, urlConfPath, context).loadForContext(webappInfo, urlConfPath, context);
+            rewriter = getFactory(webappInfo, null, context).loadForContext(webappInfo, null, context);
         }
         if (useCache) {
             cache.addUrlRewriter(webappInfo, rewriter);

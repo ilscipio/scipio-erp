@@ -13,6 +13,8 @@ import org.apache.tomcat.util.descriptor.web.WebXml;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.lang.ThreadSafe;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.webapp.control.ConfigXMLReader;
 import org.ofbiz.webapp.control.ConfigXMLReader.ControllerConfig;
@@ -64,10 +66,13 @@ public class ExtWebappInfo implements Serializable {
     private Optional<Boolean> forwardRootControllerUris;
     private Optional<Boolean> forwardRootControllerUrisValid;
     
+    private final boolean urlRewriteFilter;
     private final String urlRewriteConfPath;
     private final String urlRewriteFullConfPath;
     private final String urlRewriteRealConfPath;
 
+    private final boolean urlManualInterWebappFilter;
+    
     /**
      * Main constructor.
      */
@@ -105,6 +110,15 @@ public class ExtWebappInfo implements Serializable {
         } else {
             this.urlRewriteFullConfPath = null;
             this.urlRewriteRealConfPath = null;
+        }
+        this.urlRewriteFilter = (this.urlRewriteRealConfPath != null);
+        
+        String urlManualInterWebappFilterStr = getContextParams().get("urlManualInterWebappFilter");
+        if (UtilValidate.isNotEmpty(urlManualInterWebappFilterStr)) {
+            this.urlManualInterWebappFilter = UtilMisc.booleanValueVersatile(urlManualInterWebappFilterStr,
+                    (this.urlRewriteRealConfPath == null));
+        } else {
+            this.urlManualInterWebappFilter = UtilProperties.getPropertyAsBoolean("url", "webapp.url.interwebapp.manualFilter", (this.urlRewriteRealConfPath == null));
         }
     }
 
@@ -363,6 +377,10 @@ public class ExtWebappInfo implements Serializable {
         return forwardRootControllerUrisValid.orElse(null);
     }
 
+    public boolean hasUrlRewriteFilter() {
+        return urlRewriteFilter;
+    }
+    
     /**
      * Returns relation location of the urlrewrite file for this webapp, or null if no
      * UrlRewriteFilter for this webapp or error.
@@ -386,7 +404,11 @@ public class ExtWebappInfo implements Serializable {
     public String getUrlRewriteRealConfPath() {
         return urlRewriteRealConfPath;
     }
-    
+
+    public boolean useUrlManualInterWebappFilter() {
+        return urlManualInterWebappFilter;
+    }
+
     private String getLogMsgPrefix() {
         if (webSiteId != null) {
             return "Website '" + webSiteId + "': ";

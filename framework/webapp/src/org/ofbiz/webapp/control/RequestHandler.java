@@ -1837,7 +1837,7 @@ public class RequestHandler {
         String encodedUrl;
         if (encode) {
             // SCIPIO: Delegated code
-            encodedUrl = doLinkURLEncode(request, response, newURL, interWebapp, targetWebappInfo, didFullStandard, didFullSecure);
+            encodedUrl = doLinkURLEncode(request, response, newURL, interWebapp, targetWebappInfo, currentWebappInfo, didFullStandard, didFullSecure);
         } else {
             encodedUrl = newURL.toString();
         }
@@ -1997,7 +1997,7 @@ public class RequestHandler {
 
         String encodedUrl;
         if (encode) {
-            encodedUrl = doLinkURLEncode(delegator, locale, targetWebappInfo, newURL, currentWebappInfo, 
+            encodedUrl = doLinkURLEncode(delegator, locale, newURL, targetWebappInfo, currentWebappInfo, 
                         didFullStandard, didFullSecure, context);
         } else {
             encodedUrl = newURL.toString();
@@ -2070,7 +2070,7 @@ public class RequestHandler {
      * WARN: newURL is modified in-place, and then discarded, so only use the result. 
      */
     protected static String doLinkURLEncode(HttpServletRequest request, HttpServletResponse response, StringBuilder newURL, boolean interWebapp,
-            FullWebappInfo targetWebappInfo, boolean didFullStandard, boolean didFullSecure) {
+            FullWebappInfo targetWebappInfo, FullWebappInfo currentWebappInfo, boolean didFullStandard, boolean didFullSecure) {
         String encodedUrl;
         if (response != null) {
             // SCIPIO: 2018-08-07: this should cause urlrewrite.xml to invoke ScipioUrlRewriter for inter-webapp encodes 
@@ -2081,13 +2081,44 @@ public class RequestHandler {
             } finally {
                 request.removeAttribute(UrlFilterHelper.URL_REWRITE_TARGET_WEBAPP);
             }
+
+            // SCIPIO: SPECIAL: Since urlrewrite.xml is what normally delegates the inter-webapp rewriting 
+            // (through response.encodeURL above and urlrewrite.xml invokes UrlFilterHelper.doInterWebappUrlRewrite),
+            // if the "current" webapp web.xml doesn't have UrlRewriterFilter, we will
+            // have to emulate by adding an extra rewrite, which will behave as if
+            // the very first filter had been UrlRewriterFilter, which is almost always
+            // where it's chained.
+            // TODO: try to find a more natural and built-in way to handle this...
+            // This could be done using a response wrapper in ContextFilter, but currently
+            // it would make no difference because the only place the target webapp info is set, is just above.
+            // If there is another significant location that response.encodeURL is called for common links,
+            // we will run into problems...
+            if (interWebapp && targetWebappInfo != null) {
+                if (currentWebappInfo == null) {
+                    try {
+                        currentWebappInfo = FullWebappInfo.fromRequest(request);
+                    } catch(Exception e) {
+                        Debug.logError("doLinkURLEncode: Error looking up webapp info from request (inter-webapp"
+                                + " URL-encoding not possible): " + e.toString(), module);
+                    }
+                }
+                if (currentWebappInfo != null && currentWebappInfo.useUrlManualInterWebappFilter()) {
+                    try {
+                        ScipioUrlRewriter rewriter = ScipioUrlRewriter.getForRequest(targetWebappInfo, request, response, true);
+                        encodedUrl = rewriter.processOutboundUrl(encodedUrl);
+                    } catch (Exception e) {
+                        Debug.logError("doLinkURLEncode: Error URL-encoding (rewriting) inter-webapp link for webapp " + targetWebappInfo 
+                                + ": " + e.toString(), module);
+                    }
+                }
+            }
         } else {
             encodedUrl = newURL.toString();
         }
         return encodedUrl;
     }
     
-    protected static String doLinkURLEncode(Delegator delegator, Locale locale, FullWebappInfo targetWebappInfo, StringBuilder newURL, 
+    protected static String doLinkURLEncode(Delegator delegator, Locale locale, StringBuilder newURL, FullWebappInfo targetWebappInfo, 
             FullWebappInfo currentWebappInfo, boolean didFullStandard, boolean didFullSecure, Map<String, Object> context) {
         FullWebappInfo webappInfo = (targetWebappInfo != null) ? targetWebappInfo : currentWebappInfo;
         try {

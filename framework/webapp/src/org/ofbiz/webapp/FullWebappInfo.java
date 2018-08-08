@@ -509,6 +509,14 @@ public class FullWebappInfo {
 
     /**
      * @return
+     * @see org.ofbiz.webapp.ExtWebappInfo#hasUrlRewriteFilter()
+     */
+    public boolean hasUrlRewriteFilter() {
+        return extWebappInfo.hasUrlRewriteFilter();
+    }
+
+    /**
+     * @return
      * @see org.ofbiz.webapp.ExtWebappInfo#getUrlRewriteConfPath()
      */
     public String getUrlRewriteConfPath() {
@@ -529,6 +537,14 @@ public class FullWebappInfo {
      */
     public String getUrlRewriteRealConfPath() {
         return extWebappInfo.getUrlRewriteRealConfPath();
+    }
+
+    /**
+     * @return
+     * @see org.ofbiz.webapp.ExtWebappInfo#useUrlManualInterWebappFilter()
+     */
+    public boolean useUrlManualInterWebappFilter() {
+        return extWebappInfo.useUrlManualInterWebappFilter();
     }
 
     /**

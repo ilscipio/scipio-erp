@@ -88,8 +88,18 @@ under the License.
     <context-param>
         <description>SCIPIO: If true, the Scipio webappPathPrefix (extra prefix before contextPath) is
             appended during link-building code; if false, it is left to urlrewrite.xml (or other) to append.
-            Default: url.properties#webapp.url.path.prefix.urlBuild (added 2018-08-8)</description>
+            Default: url.properties#webapp.url.path.prefix.urlBuild (added 2018-08-08)</description>
         <param-name>urlWebappPathPrefixUrlBuild</param-name>
+        <param-value></param-value>
+    </context-param>
+    <context-param>
+        <description>SCIPIO: If set to "auto" (default), and the webapp does not have a UrlRewriteFilter filter,
+            inter-webapp links will be sent through their target webapp's urlrewrite.xml using a manual
+            filter. Normally, this is delegated through this webapp's urlrewrite.xml file, but it is not
+            available if UrlRewriteFilter is not present in the filter chain. Setting "true" force-enables this, 
+            while "false" force-disables it. The manual filter rewrites the inter-webapp links as if it were the 
+            very first filter (wraps all others). Default: auto (added 2018-08-08)</description>
+        <param-name>urlManualInterWebappFilter</param-name>
         <param-value></param-value>
     </context-param>
 

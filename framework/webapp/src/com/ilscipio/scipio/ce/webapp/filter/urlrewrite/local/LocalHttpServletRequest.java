@@ -349,7 +349,8 @@ public class LocalHttpServletRequest implements HttpServletRequest {
 
     @Override
     public String getRemoteUser() {
-        Debug.logWarning("getRemoteUser called - unsupported - returning null", module);
+        // don't log; called by org.ofbiz.base.util.UtilHttp.setInitialRequestInfo
+        //Debug.logWarning("getRemoteUser called - unsupported - returning null", module);
         return null;
     }
 

@@ -1,4 +1,4 @@
-package com.ilscipio.scipio.ce.webapp.filter;
+package com.ilscipio.scipio.ce.webapp.filter.urlrewrite.reimpl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,15 +15,20 @@ import org.tuckey.web.filters.urlrewrite.Condition;
 import org.tuckey.web.filters.urlrewrite.Conf;
 import org.tuckey.web.filters.urlrewrite.OutboundRule;
 
+import com.ilscipio.scipio.ce.webapp.filter.urlrewrite.ScipioUrlRewriter;
+
 /**
- * Wrapper to help interact with urlrewrite.xml files.
- * Avoids reloading the urlrewrite.xml file for every single URL.
+ * urlrewrite.xml file processor static re-implementation.
+ * Reads urlrewrite.xml and provides its own re-implementation.
+ * <p>
+ * NOTE: 2018-08-06: This implementation is very incomplete and should
+ * probably not be used anywhere anymore.
  * <p>
  * FIXME: processOutboundUrl does not acurately reproduce urlrewritefilter behavior; only some
  * elements of rules are recognized (best-effort) - so any urlrewrite.xml files too complex
  * may produce different results than if processed by urlrewritefilter itself!
  */
-public class UrlRewriteConf {
+public class ReimplUrlRewriter extends ScipioUrlRewriter {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     
@@ -31,7 +36,7 @@ public class UrlRewriteConf {
     protected final Conf conf;
     protected final List<OutboundRule> supportedOutboundRules;
     
-    protected UrlRewriteConf(String urlConfPath, Conf conf) throws IOException {
+    protected ReimplUrlRewriter(String urlConfPath, Conf conf) throws IOException {
         this.urlConfPath = urlConfPath;
         this.conf = conf;
         this.supportedOutboundRules = getSupportedOutboundRules(urlConfPath, conf);
@@ -72,7 +77,7 @@ public class UrlRewriteConf {
         return false;
     }
     
-    public static UrlRewriteConf loadConf(String urlConfPath) throws IOException {
+    public static ReimplUrlRewriter loadConf(String urlConfPath) throws IOException {
         if (Debug.verboseOn()) {
             Debug.logVerbose("urlrewrite: loading " + urlConfPath, module);
         }
@@ -91,7 +96,7 @@ public class UrlRewriteConf {
             } else {
                 Conf conf = new Conf(null, inputStream, urlConfPath, confUrl.toString(), false);
                 
-                return new UrlRewriteConf(urlConfPath, conf);
+                return new ReimplUrlRewriter(urlConfPath, conf);
             }
         } finally {
             try {
@@ -120,6 +125,7 @@ public class UrlRewriteConf {
      * <p>
      * FIXME: this fails on complex rules with conditions
      */
+    @Override
     public String processOutboundUrl(String url) {
         String rewriteUrl = url;
 
@@ -180,5 +186,4 @@ public class UrlRewriteConf {
 
         return rewriteUrl;
     }
-
 }

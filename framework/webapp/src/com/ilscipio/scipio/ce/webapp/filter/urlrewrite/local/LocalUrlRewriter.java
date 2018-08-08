@@ -1,9 +1,6 @@
 package com.ilscipio.scipio.ce.webapp.filter.urlrewrite.local;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -11,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
@@ -23,6 +19,7 @@ import org.tuckey.web.filters.urlrewrite.UrlRewriter;
 
 import com.ilscipio.scipio.ce.webapp.filter.UrlFilterHelper;
 import com.ilscipio.scipio.ce.webapp.filter.urlrewrite.ScipioUrlRewriter;
+import com.ilscipio.scipio.ce.webapp.filter.urlrewrite.UrlConfUtil;
 
 /**
  * SCIPIO: URL rewriter that invokes Tuckey using an emulated
@@ -113,38 +110,14 @@ public class LocalUrlRewriter extends ScipioUrlRewriter {
 
         protected LocalUrlRewriter loadForContext(FullWebappInfo webappInfo, String urlConfPath,
                 Map<String, Object> context, Map<String, Object> reqAttribs) throws IOException {
-            // load config
-            URL confUrl;
-            InputStream inputStream = null;
-            confUrl = FlexibleLocation.resolveLocation(urlConfPath);
-            if (confUrl == null) {
-                throw new IOException("Could not resolve urlrewrite conf path: " + urlConfPath);
-            }
-            try {
-                inputStream = confUrl.openStream();
-                // attempt to retrieve from location other than local WEB-INF
+            Conf conf = UrlConfUtil.getConfFromLocation(urlConfPath);
+            
+            LocalUrlRewriter rewriter = new LocalUrlRewriter(urlConfPath, conf,
+                    LocalServletContainer.fromOfbizContext(webappInfo, context, RenderEnvType.fromContext(context), reqAttribs));
 
-                if (inputStream == null) {
-                    throw new IOException("Unable to find urlrewrite conf file at: " + urlConfPath);
-                } else {
-                    Conf conf = new Conf(null, inputStream, urlConfPath, confUrl.toString(), false);
+            rewriter.getContainer().getRequest().setAttribute(UrlFilterHelper.URL_REWRITE_CONTEXT, context);
 
-                    LocalUrlRewriter rewriter = new LocalUrlRewriter(urlConfPath, conf,
-                            LocalServletContainer.fromOfbizContext(webappInfo, context, RenderEnvType.fromContext(context), reqAttribs));
-
-                    rewriter.getContainer().getRequest().setAttribute(UrlFilterHelper.URL_REWRITE_CONTEXT, context);
-
-                    return rewriter;
-                }
-            } finally {
-                try {
-                    if (inputStream != null) {
-                        inputStream.close();
-                    }
-                } catch (IOException e) {
-                    Debug.logError(e, module);
-                }
-            }
+            return rewriter;
         }
     }
 

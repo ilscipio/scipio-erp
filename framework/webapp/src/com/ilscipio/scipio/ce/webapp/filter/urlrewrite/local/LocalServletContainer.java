@@ -72,7 +72,8 @@ public class LocalServletContainer {
         String servletPath = "";
         try {
             OfbizUrlBuilder urlBuilder = webappInfo.getOfbizUrlBuilder();
-            urlBuilder.buildFullUrl(requestUrl, "main", true);
+            urlBuilder.buildHostPart(requestUrl, "main", true);
+            urlBuilder.buildPathPartNoPathPrefix(requestUrl, "main");
             servletPath = urlBuilder.getContextAndServletPath().substring(urlBuilder.getContextPath().length());
         } catch (Exception e) {
             throw new IllegalStateException("Could not build a dummy URL for webapp " + webappInfo);

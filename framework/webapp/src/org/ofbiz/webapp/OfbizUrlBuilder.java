@@ -466,6 +466,18 @@ public final class OfbizUrlBuilder {
         }
     }
 
+    public void buildPathPartNoPathPrefix(Appendable buffer, String url) throws WebAppConfigurationException, IOException {
+        if (servletPath == null) {
+            throw new IllegalStateException("Servlet path is unknown");
+        }
+        if (url != null) {
+            buffer.append(servletPath);
+            appendPathPart(buffer, url); // SCIPIO
+        } else {
+            buffer.append(servletPath.endsWith("/") ? servletPath.substring(0, servletPath.length() - 1) : servletPath);
+        }
+    }
+
     /**
      * SCIPIO: Builds path part up to servlet path.
      * Alias for {@link #buildPathPart(Appendable, String)}.

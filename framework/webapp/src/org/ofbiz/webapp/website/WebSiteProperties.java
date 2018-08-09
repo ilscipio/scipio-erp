@@ -33,6 +33,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtilProperties;
+import org.ofbiz.webapp.ExtWebappInfo;
 import org.ofbiz.webapp.control.RequestLinkUtil;
 
 /**
@@ -414,6 +415,19 @@ public final class WebSiteProperties {
      */
     public boolean isWebappPathPrefixUrlBuild(Map<String, String> contextParams) {
         return UtilMisc.booleanValue(contextParams.get("urlWebappPathPrefixUrlBuild"), defaultWebappPathPrefixUrlBuild);
+    }
+
+    /**
+     * SCIPIO: If true, the webappPathPrefix should be included in URL building
+     * code by default; if false, it is left up to URL rewriting to append it.
+     * <p>
+     * NOTE: 2018-08-03: At current time this setting is stored only in url.properties
+     * and web.xml, NOT the WebSite entity, to reflect its coded nature.
+     * <p>
+     * DEV NOTE: Prefer using {@link org.ofbiz.webapp.OfbizUrlBuilder} methods over calling this.
+     */
+    public boolean isWebappPathPrefixUrlBuild(ExtWebappInfo webappInfo) {
+        return UtilMisc.booleanValue(webappInfo.getContextParams().get("urlWebappPathPrefixUrlBuild"), defaultWebappPathPrefixUrlBuild);
     }
     
     /**

@@ -73,6 +73,26 @@ public final class OfbizUrlBuilder {
     }
 
     /**
+     * SCIPIO: Returns an <code>OfbizUrlBuilder</code> instance for a specific webapp, but exploiting
+     * current request information - mainly for inter-webapp links.
+     * <p>
+     * NOTE: This is vital so that the WebSiteProperties request overload is called instead of the
+     * delegator one.
+     * 
+     * @param request
+     * @throws GenericEntityException
+     * @throws WebAppConfigurationException
+     */
+    public static OfbizUrlBuilder from(ExtWebappInfo extWebappInfo, HttpServletRequest request) throws GenericEntityException, WebAppConfigurationException {
+        WebSiteProperties webSiteProps = WebSiteProperties.from(request, extWebappInfo.getWebSiteId());
+        ControllerConfig config = extWebappInfo.getControllerConfig();
+        String servletPath = extWebappInfo.getFullControlPath();
+        String contextPath = extWebappInfo.getContextPath();
+        return new OfbizUrlBuilder(config, webSiteProps, servletPath, contextPath,
+                webSiteProps.isWebappPathPrefixUrlBuild(extWebappInfo));
+    }
+    
+    /**
      * Returns an <code>OfbizUrlBuilder</code> instance. Use this method when you
      * don't have a <code>HttpServletRequest</code> object - like in scheduled jobs.
      * 
@@ -132,7 +152,7 @@ public final class OfbizUrlBuilder {
         boolean webappPathPrefixUrlBuild; // SCIPIO: 2018-08-03
         if (webAppInfo != null) {
             ExtWebappInfo extWebappInfo = ExtWebappInfo.fromWebappInfo(webAppInfo); // slightly needless inefficiency... oh well
-            webappPathPrefixUrlBuild = webSiteProps.isWebappPathPrefixUrlBuild(extWebappInfo.getContextParams());
+            webappPathPrefixUrlBuild = webSiteProps.isWebappPathPrefixUrlBuild(extWebappInfo);
         } else {
             webappPathPrefixUrlBuild = webSiteProps.isWebappPathPrefixUrlBuildDefault();
         }
@@ -177,7 +197,7 @@ public final class OfbizUrlBuilder {
         }
         boolean webappPathPrefixUrlBuild;
         if (extWebAppInfo != null) {
-            webappPathPrefixUrlBuild = webSiteProps.isWebappPathPrefixUrlBuild(extWebAppInfo.getContextParams());
+            webappPathPrefixUrlBuild = webSiteProps.isWebappPathPrefixUrlBuild(extWebAppInfo);
         } else {
             webappPathPrefixUrlBuild = webSiteProps.isWebappPathPrefixUrlBuildDefault();
         }
@@ -214,7 +234,7 @@ public final class OfbizUrlBuilder {
         }
         boolean webappPathPrefixUrlBuild;
         if (extWebAppInfo != null) {
-            webappPathPrefixUrlBuild = webSiteProps.isWebappPathPrefixUrlBuild(extWebAppInfo.getContextParams());
+            webappPathPrefixUrlBuild = webSiteProps.isWebappPathPrefixUrlBuild(extWebAppInfo);
         } else {
             webappPathPrefixUrlBuild = webSiteProps.isWebappPathPrefixUrlBuildDefault();
         }

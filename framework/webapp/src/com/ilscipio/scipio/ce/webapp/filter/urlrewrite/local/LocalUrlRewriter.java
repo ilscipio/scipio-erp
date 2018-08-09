@@ -1,15 +1,12 @@
 package com.ilscipio.scipio.ce.webapp.filter.urlrewrite.local;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.webapp.FullWebappInfo;
 import org.ofbiz.webapp.renderer.RenderEnvType;
 import org.tuckey.web.filters.urlrewrite.Conf;
@@ -66,28 +63,13 @@ public class LocalUrlRewriter extends ScipioUrlRewriter {
 
     public static class LocalFactory implements ScipioUrlRewriter.UrlRewriterFactory {
 
-        //private static final Set<String> srcReqAttrToSkip = UtilMisc.unmodifiableHashSet("locale", "delegator",
-        //        "dispatcher", "security", "timeZone", "servletContext", "_CONTEXT_ROOT_", "_SERVER_ROOT_URL_",
-        //        "_CONTROL_PATH_", "_REQUEST_HANDLER_");
-
         @Override
         public LocalUrlRewriter loadForRequest(FullWebappInfo webappInfo, String urlConfPath,
                 HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-            // re-emulate context here, backward - easier than making a ton of overloads
-            Map<String, Object> context = new HashMap<>();
-
-            context.put("locale", UtilHttp.getLocaleExistingSession(request));
-            context.put("delegator", request.getAttribute("delegator"));
-            context.put("dispatcher", request.getAttribute("dispatcher"));
-            context.put("security", request.getAttribute("security"));
-            context.put("timeZone", request.getAttribute("timeZone"));
-            HttpSession session = request.getSession(false);
-            if (session != null) {
-                context.put("userLogin", session.getAttribute("userLogin"));
-            }
-
-            LocalUrlRewriter rewriter = loadForContext(webappInfo, urlConfPath, context, null);
+            Conf conf = UrlConfUtil.getConfFromLocationOrWebapp(urlConfPath, webappInfo.getExtWebappInfo());
+            
+            LocalUrlRewriter rewriter = new LocalUrlRewriter(urlConfPath, conf,
+                    LocalServletContainer.fromRequest(webappInfo, request, response));
 
             // now done at processOutboundUrl call due to circular references: 
             // orig request contains cache of rewriters, rewriters holding orig request reference...
@@ -99,22 +81,14 @@ public class LocalUrlRewriter extends ScipioUrlRewriter {
         @Override
         public LocalUrlRewriter loadForContext(FullWebappInfo webappInfo, String urlConfPath,
                 Map<String, Object> context) throws IOException {
-            LocalUrlRewriter rewriter = loadForContext(webappInfo, urlConfPath, context, null);
-
-            // TODO: REVIEW: potential issue: circular reference: context contains
-            // cache of rewriters, rewriter contains reference to context...
-            // however, then we have to make copy of context and globalContext, which becomes expensive...
-            rewriter.getContainer().getRequest().setAttribute(UrlFilterHelper.SOURCE_CONTEXT, context);
-
-            return rewriter;
-        }
-
-        protected LocalUrlRewriter loadForContext(FullWebappInfo webappInfo, String urlConfPath,
-                Map<String, Object> context, Map<String, Object> reqAttribs) throws IOException {
             Conf conf = UrlConfUtil.getConfFromLocationOrWebapp(urlConfPath, webappInfo.getExtWebappInfo());
             
             LocalUrlRewriter rewriter = new LocalUrlRewriter(urlConfPath, conf,
-                    LocalServletContainer.fromOfbizContext(webappInfo, context, RenderEnvType.fromContext(context), reqAttribs));
+                    LocalServletContainer.fromContext(webappInfo, context, RenderEnvType.fromContext(context)));
+
+            // now done at processOutboundUrl call due to circular references: 
+            // orig context contains cache of rewriters, rewriters holding orig context reference...
+            //rewriter.getContainer().getRequest().setAttribute(UrlFilterHelper.SOURCE_CONTEXT, context);
 
             return rewriter;
         }

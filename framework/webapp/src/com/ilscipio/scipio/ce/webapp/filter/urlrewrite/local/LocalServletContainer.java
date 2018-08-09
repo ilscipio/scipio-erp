@@ -1,11 +1,15 @@
 package com.ilscipio.scipio.ce.webapp.filter.urlrewrite.local;
 
 import java.net.MalformedURLException;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Debug;
@@ -26,12 +30,18 @@ import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.renderer.RenderEnvType;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
+import com.ilscipio.scipio.ce.webapp.filter.UrlFilterHelper;
+
 /**
  * Local implementation of the Servlet API.
  */
 public class LocalServletContainer {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+    //private static final Set<String> srcReqAttrToSkip = UtilMisc.unmodifiableHashSet("locale", "delegator",
+    //        "dispatcher", "security", "timeZone", "servletContext", "_CONTEXT_ROOT_", "_SERVER_ROOT_URL_",
+    //        "_CONTROL_PATH_", "_REQUEST_HANDLER_");
 
     protected FullWebappInfo webappInfo;
 
@@ -59,8 +69,50 @@ public class LocalServletContainer {
         this.response = response;
     }
     
-    public static LocalServletContainer fromOfbizContext(FullWebappInfo webappInfo,
-            Map<String, Object> context, RenderEnvType renderEnvType, Map<String, Object> reqAttribs) {
+    public static LocalServletContainer fromRequest(FullWebappInfo webappInfo,
+            HttpServletRequest request, HttpServletResponse response) {
+        
+        // re-emulate context here, backward - easier than making a ton of overloads
+        Map<String, Object> context = new HashMap<>();
+
+        context.put("locale", UtilHttp.getLocaleExistingSession(request));
+        context.put("delegator", request.getAttribute("delegator"));
+        context.put("dispatcher", request.getAttribute("dispatcher"));
+        context.put("security", request.getAttribute("security"));
+        context.put("timeZone", request.getAttribute("timeZone"));
+        context.put("request", request);
+        context.put("response", response);
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            context.put("userLogin", session.getAttribute("userLogin"));
+        }
+        
+        // TODO: REVIEW: must transfer headers for X-Forwarded-xxx at least...
+        // but the others might not make sense for the target webapp!!
+        Map<String, String[]> headers = new HashMap<>();
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while(headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            Enumeration<String> headerValuesEnu = request.getHeaders(headerName);
+            if (headerValuesEnu.hasMoreElements()) {
+                List<String> headerValues = Collections.list(headerValuesEnu);
+                headers.put(headerName, headerValues.toArray(new String[headerValues.size()]));
+            }
+        }
+        
+        // TODO: REVIEW: parameters? attributes? do they make sense to transfer over?
+        
+        return fromContext(webappInfo, context, RenderEnvType.WEBAPP, null, null, headers);
+    }
+    
+    public static LocalServletContainer fromContext(FullWebappInfo webappInfo,
+            Map<String, Object> context, RenderEnvType renderEnvType) {
+        return fromContext(webappInfo, context, renderEnvType, null, null, null);
+    }
+    
+    public static LocalServletContainer fromContext(FullWebappInfo webappInfo,
+            Map<String, Object> context, RenderEnvType renderEnvType, Map<String, Object> reqAttribs,
+            Map<String, String[]> reqParams, Map<String, String[]> headers) {
         
         Locale locale = (Locale) context.get("locale");
         if (locale == null) {
@@ -81,11 +133,14 @@ public class LocalServletContainer {
         
         LocalServletContainer container;
         try {
-            container = new LocalServletContainer(webappInfo, locale, requestUrl.toString(), servletPath, reqAttribs, null, null);
+            container = new LocalServletContainer(webappInfo, locale, requestUrl.toString(), servletPath, reqAttribs, headers, reqParams);
         } catch (MalformedURLException e) {
             throw new IllegalStateException("Could not build a valid dummy URL for webapp " + webappInfo + ": " + requestUrl);
         }
         container.setupFromOfbizContext(context, renderEnvType);
+        
+        // set this for UrlFilterHelper
+        container.getRequest().setAttribute(UrlFilterHelper.URL_REWRITE_TARGET_WEBAPP, webappInfo);
         
         return container;
     }

@@ -10,13 +10,18 @@ import javax.servlet.http.HttpServletResponse;
 import org.ofbiz.webapp.FullWebappInfo;
 
 import com.ilscipio.scipio.ce.webapp.filter.urlrewrite.local.LocalUrlRewriter;
+import com.ilscipio.scipio.ce.webapp.filter.urlrewrite.reqwrap.WrappedRequestUrlRewriter;
 
 public abstract class ScipioUrlRewriter {
 
     public static final ScipioUrlRewriter DUMMY = new DummyUrlRewriter();
 
-    private static final UrlRewriterFactory defaultFactory = new LocalUrlRewriter.LocalFactory(); // TODO?: unhardcode in future
+    // TODO: REVIEW: 2018-08-08: inter-webapp request factory has been tentatively switched to a wrapper factory
+    // many implications...
     
+    private static final UrlRewriterFactory requestFactory = new WrappedRequestUrlRewriter.WrappedRequestFactory(); // TODO?: unhardcode in future
+    private static final UrlRewriterFactory contextFactory = new LocalUrlRewriter.LocalFactory(); // TODO?: unhardcode in future
+
     protected ScipioUrlRewriter() {
     }
 
@@ -107,12 +112,12 @@ public abstract class ScipioUrlRewriter {
 
     protected static UrlRewriterFactory getFactory(FullWebappInfo webappInfo,
             String urlConfPath, HttpServletRequest request) {
-        return defaultFactory;
+        return requestFactory;
     }
 
     protected static UrlRewriterFactory getFactory(FullWebappInfo webappInfo,
             String urlConfPath, Map<String, Object> context) {
-        return defaultFactory;
+        return contextFactory;
     }
 
     // REMOVED: the caller should make sure to re-pass the context or request he used

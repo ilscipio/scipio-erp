@@ -387,17 +387,17 @@ under the License.
                     <condition-expr field-name="partyIdTo" operator="equals" from-field="userLogin.partyId"/>
                     <order-by field-name="-entryDate"/>
                 </entity-condition>
-            </actions>
-            <widgets>
-                <section>
+                <if><!-- SCIPIO: rewrote condition -->
                     <condition><if-compare field="parameters.showSent" operator="equals" value="true"/></condition>
-                    <actions>
+                    <then>
                         <entity-condition entity-name="CommunicationEvent" list="sentCommunicationEvents">
                             <condition-expr field-name="partyIdFrom" operator="equals" from-field="userLogin.partyId"/>
                             <order-by field-name="-entryDate"/>
                         </entity-condition>
-                    </actions>
-                </section>
+                    </then>
+                </if>
+            </actions>
+            <widgets>
                 <platform-specific><html><html-template location="component://shop/webapp/shop/customer/messagelist.ftl"/></html></platform-specific>
             </widgets>
         </section>

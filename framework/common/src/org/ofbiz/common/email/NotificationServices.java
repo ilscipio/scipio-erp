@@ -266,10 +266,10 @@ public class NotificationServices {
                 }
                 OfbizUrlBuilder builder = OfbizUrlBuilder.from(webAppInfo, delegator);
                 StringBuilder newURL = new StringBuilder();
-                builder.buildHostPart(newURL, "", false);
+                builder.buildHostPart(newURL, "", false, false);
                 context.put("baseUrl", newURL.toString());
                 newURL = new StringBuilder();
-                builder.buildHostPart(newURL, "", true);
+                builder.buildHostPart(newURL, "", true, false);
                 context.put("baseSecureUrl", newURL.toString());
 
                 // SCIPIO: 2018-08-01: store baseWebappPath, which is webappPathPrefix + contextPath

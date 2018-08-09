@@ -230,7 +230,7 @@ public abstract class RequestLinkUtil {
                 didFullStandard = true;
             }
             try {
-                targetWebappInfo.getOfbizUrlBuilder().buildHostPart(newURL, url, secureFullPathFlag);
+                targetWebappInfo.getOfbizUrlBuilder().buildHostPart(newURL, url, secureFullPathFlag, false);
             } catch (Exception e) {
                 throw new IllegalStateException("Error building link host part for webapp: " + targetWebappInfo, e);
             }
@@ -299,7 +299,7 @@ public abstract class RequestLinkUtil {
                 didFullStandard = true;
             }
             try {
-                targetWebappInfo.getOfbizUrlBuilder().buildHostPart(newURL, url, Boolean.TRUE.equals(secureFullPathFlag));
+                targetWebappInfo.getOfbizUrlBuilder().buildHostPart(newURL, url, Boolean.TRUE.equals(secureFullPathFlag), false);
             } catch (Exception e) {
                 throw new IllegalStateException("Error building link host part for webapp: " + targetWebappInfo, e);
             }

@@ -124,9 +124,9 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
                     Locale locale = TransformUtil.getOfbizLocaleArgOrContextOrRequest(args, "locale", env);
 
                     if (request != null) {
-                        FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrContextPathOrNull(request, null, 
-                                TransformUtil.getStringArg(args, "webSiteId", rawParams), 
-                                TransformUtil.getStringArg(args, "prefix", rawParams));
+                        FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrContextPathOrNull(TransformUtil.getStringArg(args, "webSiteId", rawParams), TransformUtil.getStringArg(args, "prefix", rawParams), 
+                                request, 
+                                null);
                         // SCIPIO: now delegated to our new reusable method, and also support fullPath and secure flags
                         HttpServletResponse response = ContextFtlUtil.getResponse(env);
                         String url = CatalogUrlServlet.makeCatalogLink(request, response, locale, productId, currentCategoryId, previousCategoryId, urlParams,
@@ -138,9 +138,9 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
                         Map<String, Object> context = ContextFtlUtil.getContext(env);
                         Delegator delegator = ContextFtlUtil.getDelegator(request, env);
                         LocalDispatcher dispatcher = FreeMarkerWorker.getWrappedObject("dispatcher", env);
-                        FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrContextPathOrNull(null, context, 
-                                TransformUtil.getStringArg(args, "webSiteId", rawParams), 
-                                TransformUtil.getStringArg(args, "prefix", rawParams));
+                        FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrContextPathOrNull(TransformUtil.getStringArg(args, "webSiteId", rawParams), TransformUtil.getStringArg(args, "prefix", rawParams), 
+                                null, 
+                                context);
                         // SCIPIO: New: Handle non-request cases
                         String url = CatalogUrlServlet.makeCatalogLink(context, delegator, dispatcher, locale, productId, currentCategoryId,
                                 previousCategoryId, urlParams, targetWebappInfo, fullPath, secure, encode);

@@ -165,7 +165,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         ScipioUrlRewriter urlRewriter = null;
         if (config.getUrlConfPath() != null) {
             urlRewriter = ScipioUrlRewriter.getForContext(
-                    FullWebappInfo.fromWebapp(delegator, ExtWebappInfo.fromWebSiteId(webSiteId), null), 
+                    FullWebappInfo.fromWebapp(ExtWebappInfo.fromWebSiteId(webSiteId), delegator, null), 
                     config.getUrlConfPath(), urlRewriterCtx);
         }
         

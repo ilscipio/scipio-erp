@@ -1,5 +1,6 @@
 package org.ofbiz.webapp;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.tomcat.util.descriptor.web.WebXml;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -16,6 +16,7 @@ import org.ofbiz.webapp.control.WebAppConfigurationException;
 import org.ofbiz.webapp.renderer.RenderEnvType;
 import org.ofbiz.webapp.website.WebSiteProperties;
 import org.ofbiz.webapp.website.WebSiteWorker;
+import org.xml.sax.SAXException;
 
 import com.ilscipio.scipio.ce.util.Optional;
 
@@ -36,16 +37,21 @@ import com.ilscipio.scipio.ce.util.Optional;
  * <p>
  * All factory methods may throw IllegalArgumentException.
  * <p>
- * DEV NOTE: do not make this serializable, so as to avoid this
+ * NOTE: 2018-08-09: This used to perform lazy initialization, but because of cache
+ * this shouldn't hold a reference to HttpServletRequest (circular), and is not worth
+ * doing it for render context alone (delegator only), so for now all
+ * is initialized during construction. This is subject to change in future.
+ * <p>
+ * DEV NOTE: Do not make this serializable, so as to avoid this
  * getting transferred into session attributes by RequestHandler.
  * <p>
  * Added 2018-08-02.
  */
 public class FullWebappInfo {
 
-    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    private final Delegator delegator;
+    //private final Delegator delegator; // REMOVED lazy initialization - not worth it
     private ExtWebappInfo extWebappInfo;
     private WebSiteProperties webSiteProperties;
 
@@ -54,39 +60,26 @@ public class FullWebappInfo {
 
     protected FullWebappInfo(Delegator delegator, ExtWebappInfo extWebappInfo, WebSiteProperties webSiteProperties,
             Optional<ControllerConfig> controllerConfig, OfbizUrlBuilder ofbizUrlBuilder) {
-        this.delegator = delegator; // can be null if all others are non-null
+        //this.delegator = delegator; // can be null if all others are non-null
         this.extWebappInfo = extWebappInfo;
         this.webSiteProperties = webSiteProperties;
         this.controllerConfig = controllerConfig;
         this.ofbizUrlBuilder = ofbizUrlBuilder;
     }
 
-    protected FullWebappInfo(Delegator delegator, ExtWebappInfo extWebappInfo, WebSiteProperties webSiteProperties) {
-        this.delegator = delegator;
-        this.extWebappInfo = extWebappInfo;
-        this.webSiteProperties = webSiteProperties;
-    }
-
     protected FullWebappInfo(Delegator delegator, ExtWebappInfo extWebappInfo) {
-        this(delegator, extWebappInfo, null);
+        //this.delegator = delegator;
+        this.extWebappInfo = extWebappInfo;
     }
-
-    /*
-     * ******************************************************
-     * Intra-webapp live request factory methods
-     * ******************************************************
-     */
-
-    protected static FullWebappInfo newFromRequest(HttpServletRequest request) throws IllegalArgumentException {
+    
+    protected FullWebappInfo(HttpServletRequest request) {
         try {
             // SPECIAL: in this case we must initialize WebSiteProperties immediately because
             // we can't store the HttpServletRequest object in FullWebappInfo
-            OfbizUrlBuilder ofbizUrlBuilder = OfbizUrlBuilder.from(request);
-            return new FullWebappInfo((Delegator) request.getAttribute("delegator"),
-                    ExtWebappInfo.fromContextPath(request.getContextPath()),
-                    ofbizUrlBuilder.getWebSiteProperties(),
-                    Optional.ofNullable(ofbizUrlBuilder.getControllerConfig()),
-                    ofbizUrlBuilder);
+            this.ofbizUrlBuilder = OfbizUrlBuilder.from(request);
+            this.extWebappInfo = ExtWebappInfo.fromContextPath(request.getContextPath());
+            this.webSiteProperties = this.ofbizUrlBuilder.getWebSiteProperties();
+            this.controllerConfig = Optional.ofNullable(this.ofbizUrlBuilder.getControllerConfig());
         } catch (GenericEntityException e) {
             throw new IllegalArgumentException(e);
         } catch (WebAppConfigurationException e) {
@@ -94,6 +87,50 @@ public class FullWebappInfo {
         }
     }
     
+    protected FullWebappInfo(ExtWebappInfo extWebappInfo, HttpServletRequest request) {
+        try {
+            // SPECIAL: in this case we must initialize WebSiteProperties immediately because
+            // we can't store the HttpServletRequest object in FullWebappInfo
+            this.ofbizUrlBuilder = OfbizUrlBuilder.from(extWebappInfo, request);
+            this.extWebappInfo = extWebappInfo;
+            this.webSiteProperties = this.ofbizUrlBuilder.getWebSiteProperties();
+            this.controllerConfig = Optional.ofNullable(this.ofbizUrlBuilder.getControllerConfig());
+        } catch (GenericEntityException e) {
+            throw new IllegalArgumentException(e);
+        } catch (WebAppConfigurationException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    protected FullWebappInfo(ExtWebappInfo extWebappInfo, Map<String, Object> context) {
+        this(extWebappInfo, (Delegator) context.get("delegator"));
+    }
+    
+    protected FullWebappInfo(ExtWebappInfo extWebappInfo, Delegator delegator) {
+        try {
+            // SPECIAL: in this case we must initialize WebSiteProperties immediately because
+            // we can't store the HttpServletRequest object in FullWebappInfo
+            this.ofbizUrlBuilder = OfbizUrlBuilder.from(extWebappInfo, delegator);
+            this.extWebappInfo = extWebappInfo;
+            this.webSiteProperties = this.ofbizUrlBuilder.getWebSiteProperties();
+            this.controllerConfig = Optional.ofNullable(this.ofbizUrlBuilder.getControllerConfig());
+        } catch (GenericEntityException e) {
+            throw new IllegalArgumentException(e);
+        } catch (WebAppConfigurationException e) {
+            throw new IllegalArgumentException(e);
+        } catch (IOException e) {
+            throw new IllegalArgumentException(e);
+        } catch (SAXException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+    
+    /*
+     * ******************************************************
+     * Intra-webapp live request factory methods
+     * ******************************************************
+     */
+
     /**
      * Gets webapp info for current webapp from request.
      * For intra-webapp links.
@@ -107,10 +144,10 @@ public class FullWebappInfo {
      * For intra-webapp links.
      */
     public static FullWebappInfo fromRequest(HttpServletRequest request, Cache cache) throws IllegalArgumentException {
-        if (cache == null) return newFromRequest(request);
+        if (cache == null) return new FullWebappInfo(request);
         FullWebappInfo fullWebappInfo = cache.getCurrentWebappInfo();
         if (fullWebappInfo == null) {
-            fullWebappInfo = newFromRequest(request);
+            fullWebappInfo = new FullWebappInfo(request);
             cache.setCurrentWebappInfo(fullWebappInfo);
         }
         return fullWebappInfo;
@@ -144,7 +181,7 @@ public class FullWebappInfo {
                 request.setAttribute("_CONTROL_PATH_", contextPath + request.getServletPath());
             }
             try {
-                return newFromRequest(request);
+                return new FullWebappInfo(request);
             } finally {
                 // do not let filter state affect rest of request - clear cached objects
                 if (!hadOfbizUrlBuilderAttr) request.removeAttribute("_OFBIZ_URL_BUILDER_");
@@ -155,51 +192,34 @@ public class FullWebappInfo {
             }
         }
     }
-    
     /*
      * ******************************************************
      * Inter-webapp live request factory methods
      * ******************************************************
      */
 
-    protected static FullWebappInfo newFromWebapp(HttpServletRequest request, ExtWebappInfo extWebappInfo) throws IllegalArgumentException {
-        try {
-            // SPECIAL: in this case we must initialize WebSiteProperties immediately because
-            // we can't store the HttpServletRequest object in FullWebappInfo
-            OfbizUrlBuilder ofbizUrlBuilder = OfbizUrlBuilder.from(extWebappInfo, request);
-            return new FullWebappInfo((Delegator) request.getAttribute("delegator"),
-                    extWebappInfo,
-                    ofbizUrlBuilder.getWebSiteProperties(),
-                    Optional.ofNullable(ofbizUrlBuilder.getControllerConfig()),
-                    ofbizUrlBuilder);
-        } catch (GenericEntityException e) {
-            throw new IllegalArgumentException(e);
-        } catch (WebAppConfigurationException e) {
-            throw new IllegalArgumentException(e);
-        }
-    }
-    
     /**
      * Gets full webapp info, using webapp request for caching and context information.
      * For inter-webapp links.
      */
-    public static FullWebappInfo fromWebapp(HttpServletRequest request, ExtWebappInfo extWebappInfo) throws IllegalArgumentException {
-        return fromWebapp(request, extWebappInfo, Cache.fromRequest(request));
+    public static FullWebappInfo fromWebapp(ExtWebappInfo extWebappInfo, HttpServletRequest request) throws IllegalArgumentException {
+        return fromWebapp(extWebappInfo, request, Cache.fromRequest(request));
     }
-    
+
     /**
      * Gets full webapp info, using webapp request for caching and context information.
      * For inter-webapp links.
      */
-    public static FullWebappInfo fromWebapp(HttpServletRequest request, ExtWebappInfo extWebappInfo, Cache cache) throws IllegalArgumentException {
-        if (cache == null) return newFromWebapp(request, extWebappInfo);
+    public static FullWebappInfo fromWebapp(ExtWebappInfo extWebappInfo, HttpServletRequest request, Cache cache) throws IllegalArgumentException {
+        if (cache == null) return new FullWebappInfo(extWebappInfo, request);
         FullWebappInfo fullWebappInfo = cache.getByContextPath(extWebappInfo.getContextPath());
         if (fullWebappInfo == null) {
-            fullWebappInfo = newFromWebapp(request, extWebappInfo);
+            fullWebappInfo = new FullWebappInfo(extWebappInfo, request);
             cache.addWebappInfo(fullWebappInfo);
         }
         return fullWebappInfo;
     }
+
 
     /*
      * ******************************************************
@@ -246,8 +266,8 @@ public class FullWebappInfo {
             }
             String webSiteId = WebSiteWorker.getWebSiteIdFromContext(context, renderEnvType);
             if (webSiteId != null) {
-                fullWebappInfo = FullWebappInfo.fromWebapp((Delegator) context.get("delegator"), 
-                        ExtWebappInfo.fromWebSiteId(webSiteId), cache);
+                fullWebappInfo = FullWebappInfo.fromWebapp(ExtWebappInfo.fromWebSiteId(webSiteId),
+                        (Delegator) context.get("delegator"), cache);
                 if (cache != null) cache.setCurrentWebappInfoOnly(fullWebappInfo); //
             }
         } else if (renderEnvType.isWebapp()) { // NOTE: it is important to check isWebapp here and not (request != null), because these could disassociate in future
@@ -255,90 +275,90 @@ public class FullWebappInfo {
         }
         return null;
     }
-    
+
     /*
      * ******************************************************
      * Inter-webapp static context factory methods
      * ******************************************************
      */
-    
+
     /**
      * Gets webapp info, using render context for caching and context information.
      * For inter-webapp links.
      */
-    public static FullWebappInfo fromWebapp(Map<String, Object> context, ExtWebappInfo extWebappInfo) throws IllegalArgumentException {
-        return fromWebapp(context, extWebappInfo, Cache.fromContext(context));
+    public static FullWebappInfo fromWebapp(ExtWebappInfo extWebappInfo, Map<String, Object> context) throws IllegalArgumentException {
+        return fromWebapp(extWebappInfo, context, Cache.fromContext(context));
     }
 
     /**
      * Gets webapp info, using render context for caching and context information.
      * For inter-webapp links.
      */
-    public static FullWebappInfo fromWebapp(Map<String, Object> context, ExtWebappInfo extWebappInfo, Cache cache) throws IllegalArgumentException {
-        if (cache == null) return new FullWebappInfo((Delegator) context.get("delegator"), extWebappInfo);
+    public static FullWebappInfo fromWebapp(ExtWebappInfo extWebappInfo, Map<String, Object> context, Cache cache) throws IllegalArgumentException {
+        if (cache == null) return new FullWebappInfo(extWebappInfo, context);
         FullWebappInfo fullWebappInfo = cache.getByContextPath(extWebappInfo.getContextPath());
         if (fullWebappInfo == null) {
-            fullWebappInfo = new FullWebappInfo((Delegator) context.get("delegator"), extWebappInfo);
+            fullWebappInfo = new FullWebappInfo(extWebappInfo, context);
             cache.addWebappInfo(fullWebappInfo);
         }
         return fullWebappInfo;
     }
-    
+
     /**
      * Gets webapp info, without any context information (low-level no-context factory method).
      * For inter-webapp links.
      * <p>
-     * WARN: Prefer ones with context or request instead wherever available.
+     * WARN: Prefer method with context or request wherever available, instead of this one.
      * This method has less information to work with compared to request and context overloads.
      */
-    public static FullWebappInfo fromWebapp(Delegator delegator, ExtWebappInfo extWebappInfo, Cache cache) throws IllegalArgumentException {
-        if (cache == null) return new FullWebappInfo(delegator, extWebappInfo);
+    public static FullWebappInfo fromWebapp(ExtWebappInfo extWebappInfo, Delegator delegator, Cache cache) throws IllegalArgumentException {
+        if (cache == null) return new FullWebappInfo(extWebappInfo, delegator);
         FullWebappInfo fullWebappInfo = cache.getByContextPath(extWebappInfo.getContextPath());
         if (fullWebappInfo == null) {
-            fullWebappInfo = new FullWebappInfo(delegator, extWebappInfo);
+            fullWebappInfo = new FullWebappInfo(extWebappInfo, delegator);
             cache.addWebappInfo(fullWebappInfo);
         }
         return fullWebappInfo;
     }
-
+    
     /*
      * ******************************************************
      * High-level/combination factory methods
      * ******************************************************
      */
-    
+
     /**
      * Gets webapp info, using info/cache from request if available otherwise context (high-level factory method).
      */
-    public static FullWebappInfo fromWebapp(HttpServletRequest request, Map<String, Object> context, ExtWebappInfo extWebappInfo) throws IllegalArgumentException {
+    public static FullWebappInfo fromWebapp(ExtWebappInfo extWebappInfo, HttpServletRequest request, Map<String, Object> context) throws IllegalArgumentException {
         if (request != null) {
-            return fromWebapp(request, extWebappInfo, Cache.fromRequest(request));
+            return fromWebapp(extWebappInfo, request, Cache.fromRequest(request));
         } else {
-            return fromWebapp(context, extWebappInfo, Cache.fromContext(context));
+            return fromWebapp(extWebappInfo, context, Cache.fromContext(context));
         }
     }
-    
+
     /**
      * Gets webapp info for webSiteId or contextPath, otherwise null (high-level factory method).
      * Caches in request if available, otherwise context.
      */
-    public static FullWebappInfo fromWebSiteIdOrContextPathOrNull(HttpServletRequest request, 
-            Map<String, Object> context, String webSiteId, String contextPath) throws IllegalArgumentException {
+    public static FullWebappInfo fromWebSiteIdOrContextPathOrNull(String webSiteId,
+            String contextPath, HttpServletRequest request, Map<String, Object> context) throws IllegalArgumentException {
         if (UtilValidate.isNotEmpty(webSiteId)) {
-            return fromWebapp(request, context, ExtWebappInfo.fromWebSiteId(webSiteId));
+            return fromWebapp(ExtWebappInfo.fromWebSiteId(webSiteId), request, context);
         } else if (UtilValidate.isNotEmpty(contextPath)) {
-            return fromWebapp(request, context, ExtWebappInfo.fromContextPath(contextPath));
+            return fromWebapp(ExtWebappInfo.fromContextPath(contextPath), request, context);
         }
         return null;
     }
-    
+
     /*
      * ******************************************************
      * Other type factory methods (mainly to exploit the cache).
      * ******************************************************
      */
 
-    public static OfbizUrlBuilder getOfbizUrlBuilderFromWebSiteIdOrDefaults(Delegator delegator, String webSiteId, Cache cache) throws IllegalArgumentException {
+    public static OfbizUrlBuilder getOfbizUrlBuilderFromWebSiteIdOrDefaults(String webSiteId, Delegator delegator, Cache cache) throws IllegalArgumentException {
         if (UtilValidate.isNotEmpty(webSiteId)) {
             if (cache != null && cache.getByWebSiteId(webSiteId) != null) {
                 return cache.getByWebSiteId(webSiteId).getOfbizUrlBuilder();
@@ -374,6 +394,7 @@ public class FullWebappInfo {
     }
 
     public WebSiteProperties getWebSiteProperties() {
+        /* REMOVED lazy initialization - not worth it
         WebSiteProperties webSiteProperties = this.webSiteProperties;
         if (webSiteProperties == null) {
             String webSiteId = getWebSiteId();
@@ -398,6 +419,8 @@ public class FullWebappInfo {
             this.webSiteProperties = webSiteProperties;
         }
         return webSiteProperties;
+        */
+        return webSiteProperties;
     }
 
     /**
@@ -416,6 +439,7 @@ public class FullWebappInfo {
      * Returns a URL builder or throws exception.
      */
     public OfbizUrlBuilder getOfbizUrlBuilder() throws IllegalArgumentException {
+        /* REMOVED lazy initialization - not worth it
         OfbizUrlBuilder ofbizUrlBuilder = this.ofbizUrlBuilder;
         if (ofbizUrlBuilder == null) {
             try {
@@ -425,6 +449,8 @@ public class FullWebappInfo {
                 throw new IllegalArgumentException(e); // caller isn't expecting null
             }
         }
+        return ofbizUrlBuilder;
+        */
         return ofbizUrlBuilder;
     }
 
@@ -657,7 +683,7 @@ public class FullWebappInfo {
         }
 
         public static void clearContextCache(Map<String, Object> context) {
-            clearContextCache(context, RenderEnvType.fromContext(context)); // TODO?: optimize 
+            clearContextCache(context, RenderEnvType.fromContext(context)); // TODO?: optimize
         }
 
         public static Cache fromRequestOrContext(HttpServletRequest request, Map<String, Object> context,

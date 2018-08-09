@@ -1851,7 +1851,7 @@ public class RequestHandler {
         FullWebappInfo targetWebappInfo = null;
         if (webappInfo != null) {
             try {
-                targetWebappInfo = FullWebappInfo.fromWebapp(request, ExtWebappInfo.fromWebappInfo(webappInfo));
+                targetWebappInfo = FullWebappInfo.fromWebapp(ExtWebappInfo.fromWebappInfo(webappInfo), request);
             } catch (Exception e) {
                 Debug.logError("makeLink: Could not get current webapp info for context path: " + (webappInfo != null ? webappInfo.getContextRoot() : "(missing input)"), module);
                 return null;
@@ -2235,9 +2235,9 @@ public class RequestHandler {
             if (webSiteId != null && !webSiteId.isEmpty()) {
                 try {
                     if (requestBased) {
-                        targetWebappInfo = FullWebappInfo.fromWebapp(request, ExtWebappInfo.fromWebSiteId(webSiteId));
+                        targetWebappInfo = FullWebappInfo.fromWebapp(ExtWebappInfo.fromWebSiteId(webSiteId), request);
                     } else {
-                        targetWebappInfo = FullWebappInfo.fromWebapp(context, ExtWebappInfo.fromWebSiteId(webSiteId));
+                        targetWebappInfo = FullWebappInfo.fromWebapp(ExtWebappInfo.fromWebSiteId(webSiteId), context);
                     }
                 } catch (Exception e) {
                     Debug.logError("makeLinkAuto: Could not get webapp for webSiteId '" + webSiteId + "': " + e.toString(), module);
@@ -2248,9 +2248,9 @@ public class RequestHandler {
                 // to build the link.
                 try {
                     if (requestBased) {
-                        targetWebappInfo = FullWebappInfo.fromWebapp(request, ExtWebappInfo.fromPath(url));
+                        targetWebappInfo = FullWebappInfo.fromWebapp(ExtWebappInfo.fromPath(url), request);
                     } else {
-                        targetWebappInfo = FullWebappInfo.fromWebapp(context, ExtWebappInfo.fromPath(url));
+                        targetWebappInfo = FullWebappInfo.fromWebapp(ExtWebappInfo.fromPath(url), context);
                     }
                 } catch (Exception e) {
                     Debug.logError("makeLinkAuto: Could not get webapp from absolute path '" + url + "': " + e.toString(), module);

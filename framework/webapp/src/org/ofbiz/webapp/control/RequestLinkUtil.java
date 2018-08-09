@@ -341,7 +341,7 @@ public abstract class RequestLinkUtil {
     @Deprecated
     public static String buildLinkHostPartAndEncode(Delegator delegator, String webSiteId, String url,
             Boolean fullPath, Boolean secure, Boolean encode, Map<String, Object> context) {
-        FullWebappInfo webappInfo = FullWebappInfo.fromWebapp(context, ExtWebappInfo.fromWebSiteId(webSiteId));
+        FullWebappInfo webappInfo = FullWebappInfo.fromWebapp(ExtWebappInfo.fromWebSiteId(webSiteId), context);
         return buildLinkHostPartAndEncode(delegator, null, webappInfo, url, fullPath, secure, encode, false, webappInfo, context);
     }
     
@@ -357,7 +357,7 @@ public abstract class RequestLinkUtil {
      */
     public static String buildLinkHostPart(HttpServletRequest request, Locale locale, String webSiteId, Boolean secure, boolean includeWebappPathPrefix) {
         StringBuilder newURL = new StringBuilder();
-        FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebapp(request, ExtWebappInfo.fromWebSiteId(webSiteId));
+        FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebapp(ExtWebappInfo.fromWebSiteId(webSiteId), request);
         if (secure == null) secure = RequestLinkUtil.isEffectiveSecure(request);
         try {
             targetWebappInfo.getOfbizUrlBuilder().buildHostPart(newURL, secure);
@@ -407,7 +407,7 @@ public abstract class RequestLinkUtil {
     public static String buildLinkHostPart(Delegator delegator, Locale locale, String webSiteId, Boolean secure, 
             boolean includeWebappPathPrefix, FullWebappInfo.Cache webappInfoCache) {
         StringBuilder newURL = new StringBuilder();
-        OfbizUrlBuilder builder = FullWebappInfo.getOfbizUrlBuilderFromWebSiteIdOrDefaults(delegator, webSiteId, webappInfoCache);
+        OfbizUrlBuilder builder = FullWebappInfo.getOfbizUrlBuilderFromWebSiteIdOrDefaults(webSiteId, delegator, webappInfoCache);
         try {
             builder.buildHostPart(newURL, secure);
             if (includeWebappPathPrefix) {

@@ -59,6 +59,13 @@ public class UrlFilterHelper {
     }
 
     /**
+     * Sets some common request attributes needed by URL rewriting, for inbound rules.
+     */
+    public void setCommonAttrIn(HttpServletRequest request, HttpServletResponse response) {
+        setCommonAttr(request, response, null);
+    }
+
+    /**
      * @deprecated use {@link #setCommonAttrIn(HttpServletRequest, HttpServletResponse)}.
      */
     @Deprecated

@@ -259,17 +259,22 @@ public class FullWebappInfo {
      */
     public static FullWebappInfo fromContext(Map<String, Object> context, RenderEnvType renderEnvType, Cache cache) throws IllegalArgumentException {
         if (renderEnvType.isStatic()) {
-            FullWebappInfo fullWebappInfo;
+            FullWebappInfo fullWebappInfo = null;
             if (cache != null) {
                 fullWebappInfo = cache.getCurrentWebappInfo();
-                if (fullWebappInfo != null) return fullWebappInfo;
+                if (fullWebappInfo != null) {
+                    return fullWebappInfo;
+                }
             }
             String webSiteId = WebSiteWorker.getWebSiteIdFromContext(context, renderEnvType);
             if (webSiteId != null) {
                 fullWebappInfo = FullWebappInfo.fromWebapp(ExtWebappInfo.fromWebSiteId(webSiteId),
                         (Delegator) context.get("delegator"), cache);
-                if (cache != null) cache.setCurrentWebappInfoOnly(fullWebappInfo); //
+                if (cache != null) {
+                    cache.setCurrentWebappInfoOnly(fullWebappInfo);
+                }
             }
+            return fullWebappInfo;
         } else if (renderEnvType.isWebapp()) { // NOTE: it is important to check isWebapp here and not (request != null), because these could disassociate in future
             return fromRequest((HttpServletRequest) context.get("request"), cache);
         }

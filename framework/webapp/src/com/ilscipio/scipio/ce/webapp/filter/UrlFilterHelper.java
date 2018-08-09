@@ -28,9 +28,15 @@ public class UrlFilterHelper {
      * <p>
      * NOTE: This attribute is empty during real webapp renders.
      */
-    public static final String URL_REWRITE_CONTEXT = "scpUrlReCtx";
+    public static final String SOURCE_CONTEXT = "scpUrlReSrcCtx";
     
-    public static final String URL_REWRITE_TARGET_WEBAPP = "scpUrlReTargetWebap";
+    /**
+     * When doing inter-webapp URL rewriting, name of a request attribute
+     * containing the original HttpServletRequest of the source webapp.
+     */
+    public static final String SOURCE_REQUEST = "scpUrlReSrcReq";
+    
+    public static final String URL_REWRITE_TARGET_WEBAPP = "scpUrlReTgtWebapp";
     
     /**
      * Sets some common request attributes needed by URL rewriting, for both inbound and outbound rules.
@@ -162,7 +168,7 @@ public class UrlFilterHelper {
         if (targetWebappInfo != null) {
             try {
                 ScipioUrlRewriter rewriter = ScipioUrlRewriter.getForRequest(targetWebappInfo, request, response, true);
-                url = rewriter.processOutboundUrl(url);
+                url = rewriter.processOutboundUrl(url, request, response);
             } catch (Exception e) {
                 Debug.logError("doInterWebappUrlRewrite: Error URL-encoding (rewriting) link for webapp " + targetWebappInfo 
                         + ": " + e.toString(), module); 

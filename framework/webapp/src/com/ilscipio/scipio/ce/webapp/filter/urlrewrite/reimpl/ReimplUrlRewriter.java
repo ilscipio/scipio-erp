@@ -5,8 +5,12 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
@@ -125,8 +129,8 @@ public class ReimplUrlRewriter extends ScipioUrlRewriter {
      * <p>
      * FIXME: this fails on complex rules with conditions
      */
-    @Override
-    public String processOutboundUrl(String url) {
+    //@Override
+    protected String processOutboundUrl(String url) {
         String rewriteUrl = url;
 
         // Taken over from urlrewritefilter
@@ -185,5 +189,15 @@ public class ReimplUrlRewriter extends ScipioUrlRewriter {
         }
 
         return rewriteUrl;
+    }
+
+    @Override
+    public String processOutboundUrl(String url, Map<String, Object> context) {
+        return processOutboundUrl(url);
+    }
+
+    @Override
+    public String processOutboundUrl(String url, HttpServletRequest request, HttpServletResponse response) {
+        return processOutboundUrl(url);
     }
 }

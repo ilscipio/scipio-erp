@@ -2105,7 +2105,7 @@ public class RequestHandler {
                 if (currentWebappInfo != null && currentWebappInfo.useUrlManualInterWebappFilter()) {
                     try {
                         ScipioUrlRewriter rewriter = ScipioUrlRewriter.getForRequest(targetWebappInfo, request, response, true);
-                        encodedUrl = rewriter.processOutboundUrl(encodedUrl);
+                        encodedUrl = rewriter.processOutboundUrl(encodedUrl, request, response);
                     } catch (Exception e) {
                         Debug.logError("doLinkURLEncode: Error URL-encoding (rewriting) inter-webapp link for webapp " + targetWebappInfo 
                                 + ": " + e.toString(), module);
@@ -2123,7 +2123,7 @@ public class RequestHandler {
         FullWebappInfo webappInfo = (targetWebappInfo != null) ? targetWebappInfo : currentWebappInfo;
         try {
             return ScipioUrlRewriter.getForContext(webappInfo, context, true)
-                .processOutboundUrl(newURL.toString());
+                .processOutboundUrl(newURL.toString(), context);
         } catch (IOException e) {
             Debug.logError("doLinkURLEncode: Error URL-encoding (rewriting) link for webapp " + webappInfo 
                     + ": " + e.toString(), module); 

@@ -1,8 +1,8 @@
 package com.ilscipio.scipio.ce.webapp.filter.urlrewrite.local;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,7 +10,6 @@ import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.webapp.FullWebappInfo;
 import org.ofbiz.webapp.renderer.RenderEnvType;
 import org.tuckey.web.filters.urlrewrite.Conf;
@@ -67,25 +66,16 @@ public class LocalUrlRewriter extends ScipioUrlRewriter {
 
     public static class LocalFactory implements ScipioUrlRewriter.UrlRewriterFactory {
 
-        private static final Set<String> srcReqAttrToSkip = UtilMisc.unmodifiableHashSet("locale", "delegator",
-                "dispatcher", "security", "timeZone", "servletContext", "_CONTEXT_ROOT_", "_SERVER_ROOT_URL_",
-                "_CONTROL_PATH_", "_REQUEST_HANDLER_");
+        //private static final Set<String> srcReqAttrToSkip = UtilMisc.unmodifiableHashSet("locale", "delegator",
+        //        "dispatcher", "security", "timeZone", "servletContext", "_CONTEXT_ROOT_", "_SERVER_ROOT_URL_",
+        //        "_CONTROL_PATH_", "_REQUEST_HANDLER_");
 
         @Override
         public LocalUrlRewriter loadForRequest(FullWebappInfo webappInfo, String urlConfPath,
                 HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-            // re-emulate context here, backward, easier than making a ton of overloads
-
-            // TODO: REVIEW: we need to make sure it's possible for client code to define some request
-            // attributes in events and have them propagate down here into the URL encoding calls.
-            // could either try to dump the request attributes in request attributes again,
-            // or put them in context like this...
-            // it's very difficult to figure out which is better or worse, because
-            // the request attributes from the source request might not make any sense
-            // in the request attributes for the target url's request;
-            // for example control path and context path would cause problems
-            Map<String, Object> context = UtilHttp.getAttributeMap(request, srcReqAttrToSkip); //new HashMap<>();
+            // re-emulate context here, backward - easier than making a ton of overloads
+            Map<String, Object> context = new HashMap<>();
 
             context.put("locale", UtilHttp.getLocaleExistingSession(request));
             context.put("delegator", request.getAttribute("delegator"));
@@ -99,13 +89,24 @@ public class LocalUrlRewriter extends ScipioUrlRewriter {
 
             LocalUrlRewriter rewriter = loadForContext(webappInfo, urlConfPath, context, null);
 
+            // now done at processOutboundUrl call due to circular references: 
+            // orig request contains cache of rewriters, rewriters holding orig request reference...
+            //rewriter.getContainer().getRequest().setAttribute(UrlFilterHelper.SOURCE_REQUEST, request);
+
             return rewriter;
         }
 
         @Override
         public LocalUrlRewriter loadForContext(FullWebappInfo webappInfo, String urlConfPath,
                 Map<String, Object> context) throws IOException {
-            return loadForContext(webappInfo, urlConfPath, context, null);
+            LocalUrlRewriter rewriter = loadForContext(webappInfo, urlConfPath, context, null);
+
+            // TODO: REVIEW: potential issue: circular reference: context contains
+            // cache of rewriters, rewriter contains reference to context...
+            // however, then we have to make copy of context and globalContext, which becomes expensive...
+            rewriter.getContainer().getRequest().setAttribute(UrlFilterHelper.SOURCE_CONTEXT, context);
+
+            return rewriter;
         }
 
         protected LocalUrlRewriter loadForContext(FullWebappInfo webappInfo, String urlConfPath,
@@ -115,14 +116,12 @@ public class LocalUrlRewriter extends ScipioUrlRewriter {
             LocalUrlRewriter rewriter = new LocalUrlRewriter(urlConfPath, conf,
                     LocalServletContainer.fromOfbizContext(webappInfo, context, RenderEnvType.fromContext(context), reqAttribs));
 
-            rewriter.getContainer().getRequest().setAttribute(UrlFilterHelper.URL_REWRITE_CONTEXT, context);
-
             return rewriter;
         }
     }
 
-    @Override
-    public String processOutboundUrl(String url) {
+    //@Override
+    protected String processOutboundUrl(String url) {
         if (Debug.verboseOn()) {
             Debug.logVerbose("urlrewrite: processing outbound url for " + url, module);
         }
@@ -132,6 +131,32 @@ public class LocalUrlRewriter extends ScipioUrlRewriter {
             Debug.logError(e, "Error encoding url '"
                     + url + "' using outbound-rules from " + urlConfPath + ": " + e.getMessage(), module);
             return url;
+        }
+    }
+
+    @Override
+    public String processOutboundUrl(String url, Map<String, Object> context) {
+        // TODO: REVIEW: I wish we didn't have to set/unset the context at every process call,
+        // but there is a risk of circular reference causing issues due to the context holding
+        // caching containing our LocalUrlRewriter instance, so we can't keep reference to context safely?...
+        try {
+            getContainer().getRequest().setAttribute(UrlFilterHelper.SOURCE_CONTEXT, context);
+            return processOutboundUrl(url);
+        } finally {
+            getContainer().getRequest().removeAttribute(UrlFilterHelper.SOURCE_CONTEXT);
+        }
+    }
+
+    @Override
+    public String processOutboundUrl(String url, HttpServletRequest request, HttpServletResponse response) {
+        // TODO: REVIEW: I wish we didn't have to set/unset the request at every process call,
+        // but there is a risk of circular reference causing issues due to the request holding
+        // caching containing our LocalUrlRewriter instance, so we can't keep reference to request safely?...
+        try {
+            getContainer().getRequest().setAttribute(UrlFilterHelper.SOURCE_REQUEST, request);
+            return processOutboundUrl(url);
+        } finally {
+            getContainer().getRequest().removeAttribute(UrlFilterHelper.SOURCE_REQUEST);
         }
     }
 }

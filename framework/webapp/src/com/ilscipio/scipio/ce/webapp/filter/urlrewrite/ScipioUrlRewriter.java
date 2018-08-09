@@ -105,22 +105,6 @@ public abstract class ScipioUrlRewriter {
         return getFactory(webappInfo, urlConfPath, context).loadForContext(webappInfo, urlConfPath, context);
     }
 
-
-    /**
-     * Loads URL rewriter for webapp using specified urlrewrite file,
-     * or dummy rewriter if path is null.
-     * The context is used to fetch delegator, dispatcher, and other ofbiz context fields.
-     * The context is NOT modified by this overload.
-     */
-    public static ScipioUrlRewriter getForDefaultContext(FullWebappInfo webappInfo,
-            String urlConfPath) throws IOException {
-        if (urlConfPath == null || urlConfPath.isEmpty()) {
-            return DUMMY;
-        }
-        Map<String, Object> context = new HashMap<>();
-        return getFactory(webappInfo, urlConfPath, context).loadForContext(webappInfo, urlConfPath, context);
-    }
-
     protected static UrlRewriterFactory getFactory(FullWebappInfo webappInfo,
             String urlConfPath, HttpServletRequest request) {
         return defaultFactory;
@@ -131,7 +115,14 @@ public abstract class ScipioUrlRewriter {
         return defaultFactory;
     }
 
-    public abstract String processOutboundUrl(String url);
+    // REMOVED: the caller should make sure to re-pass the context or request he used
+    // to make the instance, otherwise we lose flexibility
+    //public abstract String processOutboundUrl(String url);
+    
+    // NOTE: these overloads are needed because the rewriter instances may be unable
+    // to hold onto references of the original context and request, due to circular references...
+    public abstract String processOutboundUrl(String url, Map<String, Object> context);
+    public abstract String processOutboundUrl(String url, HttpServletRequest request, HttpServletResponse response);
     
     public boolean isPresent() {
         return (this != DUMMY);
@@ -172,8 +163,16 @@ public abstract class ScipioUrlRewriter {
         private DummyUrlRewriter() {
             
         }
+        //@Override
+        //public String processOutboundUrl(String url) {
+        //    return url;
+        //}
         @Override
-        public String processOutboundUrl(String url) {
+        public String processOutboundUrl(String url, Map<String, Object> context) {
+            return url;
+        }
+        @Override
+        public String processOutboundUrl(String url, HttpServletRequest request, HttpServletResponse response) {
             return url;
         }
     }

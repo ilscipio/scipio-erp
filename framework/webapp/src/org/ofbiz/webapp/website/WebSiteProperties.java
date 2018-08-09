@@ -172,6 +172,11 @@ public final class WebSiteProperties {
         }
         webappPathPrefix = normalizeWebappPathPrefix(webappPathPrefix);
 
+        if (webappPathPrefixOnlyIfForward && request.getHeader("X-Forwarded-Proto") == null) {
+            webappPathPrefix = "";
+            webappPathPrefixHeader = "";
+        }
+
         return new WebSiteProperties(httpPort, httpHost, httpsPort, httpsHost, enableHttps,
                 webappPathPrefix, webappPathPrefixHeader);
     }
@@ -222,6 +227,11 @@ public final class WebSiteProperties {
         // SCIPIO: new
         String webappPathPrefix = (webSiteValue.get("webappPathPrefix") != null) ? normalizeWebappPathPrefix(webSiteValue.getString("webappPathPrefix")) : defaults.getWebappPathPrefix();
         String webappPathPrefixHeader = defaults.getWebappPathPrefixHeader();
+
+        if (webappPathPrefixOnlyIfForward && request.getHeader("X-Forwarded-Proto") == null) {
+            webappPathPrefix = "";
+            webappPathPrefixHeader = "";
+        }
 
         return new WebSiteProperties(httpPort, httpHost, httpsPort, httpsHost, enableHttps, 
                 webappPathPrefix, webappPathPrefixHeader);
@@ -300,7 +310,8 @@ public final class WebSiteProperties {
 
     private final String webappPathPrefix; // SCIPIO: added 2018-07-27
     private final String webappPathPrefixHeader; // SCIPIO: added 2018-07-27
-
+    private static final boolean webappPathPrefixOnlyIfForward = UtilProperties.getPropertyAsBoolean("url", "webapp.url.path.prefix.onlyIfForward", false); // SCIPIO: added 2018-07-27
+    
     private WebSiteProperties(Delegator delegator) {
         this.httpPort = EntityUtilProperties.getPropertyValue("url", "port.http", delegator);
         this.httpHost = EntityUtilProperties.getPropertyValue("url", "force.http.host", delegator);

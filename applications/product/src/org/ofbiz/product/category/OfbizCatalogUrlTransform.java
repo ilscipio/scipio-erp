@@ -108,8 +108,6 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
                     Environment env = FreeMarkerWorker.getCurrentEnvironment();
                     HttpServletRequest request = ContextFtlUtil.getRequest(env); // SCIPIO
                     RenderEnvType renderEnvType = ContextFtlUtil.getRenderEnvType(env, request);
-                    FullWebappInfo.Cache webappInfoCache = ContextFtlUtil.getWebappInfoCacheAndCurrent(env, request, renderEnvType);
-                    Delegator delegator = ContextFtlUtil.getDelegator(request, env);
 
                     final Boolean fullPath = UrlTransformUtil.determineFullPath(TransformUtil.getBooleanArg(args, "fullPath"), renderEnvType, env);
                     final Boolean secure = TransformUtil.getBooleanArg(args, "secure");
@@ -121,16 +119,14 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
 
                     Object urlParams = TransformUtil.getStringArg(args, "params", rawParams); // SCIPIO: new; TODO: support map (but needs special handling to respect rawParams)
                     
-                    FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrContextPath(delegator, 
-                            TransformUtil.getStringArg(args, "webSiteId", rawParams), 
-                            TransformUtil.getStringArg(args, "prefix", rawParams),
-                            webappInfoCache);
-                    
                     // SCIPIO: 2017-11-06: new Locale arg + context reading for most cases
                     // NOTE: the fallback on request locale is LEGACY BEHAVIOR - not all transforms should necessarily use "OrRequest" here!
                     Locale locale = TransformUtil.getOfbizLocaleArgOrContextOrRequest(args, "locale", env);
 
                     if (request != null) {
+                        FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrContextPathOrNull(request, null, 
+                                TransformUtil.getStringArg(args, "webSiteId", rawParams), 
+                                TransformUtil.getStringArg(args, "prefix", rawParams));
                         // SCIPIO: now delegated to our new reusable method, and also support fullPath and secure flags
                         HttpServletResponse response = ContextFtlUtil.getResponse(env);
                         String url = CatalogUrlServlet.makeCatalogLink(request, response, locale, productId, currentCategoryId, previousCategoryId, urlParams,
@@ -139,9 +135,14 @@ public class OfbizCatalogUrlTransform implements TemplateTransformModel {
                             out.write(UrlTransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));
                         }
                     } else {
-                        // SCIPIO: New: Handle non-request cases
+                        Map<String, Object> context = ContextFtlUtil.getContext(env);
+                        Delegator delegator = ContextFtlUtil.getDelegator(request, env);
                         LocalDispatcher dispatcher = FreeMarkerWorker.getWrappedObject("dispatcher", env);
-                        String url = CatalogUrlServlet.makeCatalogLink(ContextFtlUtil.getContext(env), delegator, dispatcher, locale, productId, currentCategoryId,
+                        FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrContextPathOrNull(null, context, 
+                                TransformUtil.getStringArg(args, "webSiteId", rawParams), 
+                                TransformUtil.getStringArg(args, "prefix", rawParams));
+                        // SCIPIO: New: Handle non-request cases
+                        String url = CatalogUrlServlet.makeCatalogLink(context, delegator, dispatcher, locale, productId, currentCategoryId,
                                 previousCategoryId, urlParams, targetWebappInfo, fullPath, secure, encode);
                         if (url != null) {
                             out.write(UrlTransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));

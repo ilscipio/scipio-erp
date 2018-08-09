@@ -95,8 +95,6 @@ public class CatalogUrlDirective implements TemplateDirectiveModel {
 
         HttpServletRequest request = ContextFtlUtil.getRequest(env);
         RenderEnvType renderEnvType = ContextFtlUtil.getRenderEnvType(env, request);
-        FullWebappInfo.Cache webappInfoCache = ContextFtlUtil.getWebappInfoCacheAndCurrent(env, request, renderEnvType);
-        Delegator delegator = ContextFtlUtil.getDelegator(request, env);
 
         Boolean secure = TransformUtil.getBooleanArg(args, "secure");
         Boolean encode = TransformUtil.getBooleanArg(args, "encode");
@@ -104,15 +102,13 @@ public class CatalogUrlDirective implements TemplateDirectiveModel {
 
         Object urlParams = TransformUtil.getStringArg(args, "params", rawParams); // SCIPIO: new; TODO: support map (but needs special handling to respect rawParams)
 
-        FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrContextPath(delegator, 
-                TransformUtil.getStringArg(args, "webSiteId", rawParams), 
-                TransformUtil.getStringArg(args, "prefix", rawParams),
-                webappInfoCache);
-
         // SCIPIO: 2018-08-02: get proper locale
         Locale locale = TransformUtil.getOfbizLocaleArgOrContextOrRequest(args, "locale", env);
         
         if (request != null) {
+            FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrContextPathOrNull(request, null, 
+                    TransformUtil.getStringArg(args, "webSiteId", rawParams), 
+                    TransformUtil.getStringArg(args, "prefix", rawParams));
             // SCIPIO: now delegated to our new reusable method, and also support fullPath and secure flags
             HttpServletResponse response = ContextFtlUtil.getResponse(env);
             //String url = CatalogUrlServlet.makeCatalogUrl(request, productId, currentCategoryId, previousCategoryId);
@@ -122,9 +118,14 @@ public class CatalogUrlDirective implements TemplateDirectiveModel {
                 env.getOut().write(UrlTransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));
             }
         } else {
-            // SCIPIO: New: Handle non-request cases
+            Map<String, Object> context = ContextFtlUtil.getContext(env);
+            Delegator delegator = ContextFtlUtil.getDelegator(request, env);
             LocalDispatcher dispatcher = ContextFtlUtil.getDispatcher(env);
-            String url = CatalogUrlServlet.makeCatalogLink(ContextFtlUtil.getContext(env), delegator, dispatcher, locale, productId, 
+            FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrContextPathOrNull(null, context, 
+                    TransformUtil.getStringArg(args, "webSiteId", rawParams), 
+                    TransformUtil.getStringArg(args, "prefix", rawParams));
+            // SCIPIO: New: Handle non-request cases
+            String url = CatalogUrlServlet.makeCatalogLink(context, delegator, dispatcher, locale, productId, 
                     currentCategoryId, previousCategoryId, urlParams, targetWebappInfo, fullPath, secure, encode);
             if (url != null) {
                 env.getOut().write(UrlTransformUtil.escapeGeneratedUrl(url, escapeAs, strict, env));

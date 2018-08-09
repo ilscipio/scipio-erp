@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.webapp.ExtWebappInfo;
 import org.ofbiz.webapp.FullWebappInfo;
 import org.ofbiz.webapp.OfbizUrlBuilder;
 import org.ofbiz.webapp.WebAppUtil;
@@ -340,7 +341,7 @@ public abstract class RequestLinkUtil {
     @Deprecated
     public static String buildLinkHostPartAndEncode(Delegator delegator, String webSiteId, String url,
             Boolean fullPath, Boolean secure, Boolean encode, Map<String, Object> context) {
-        FullWebappInfo webappInfo = FullWebappInfo.fromWebSiteId(delegator, webSiteId, null);
+        FullWebappInfo webappInfo = FullWebappInfo.fromWebapp(context, ExtWebappInfo.fromWebSiteId(webSiteId));
         return buildLinkHostPartAndEncode(delegator, null, webappInfo, url, fullPath, secure, encode, false, webappInfo, context);
     }
     
@@ -356,7 +357,7 @@ public abstract class RequestLinkUtil {
      */
     public static String buildLinkHostPart(HttpServletRequest request, Locale locale, String webSiteId, Boolean secure, boolean includeWebappPathPrefix) {
         StringBuilder newURL = new StringBuilder();
-        FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrRequest(request, webSiteId);
+        FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebapp(request, ExtWebappInfo.fromWebSiteId(webSiteId));
         if (secure == null) secure = RequestLinkUtil.isEffectiveSecure(request);
         try {
             targetWebappInfo.getOfbizUrlBuilder().buildHostPart(newURL, secure);

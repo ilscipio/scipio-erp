@@ -29,6 +29,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.webapp.ExtWebappInfo;
 import org.ofbiz.webapp.FullWebappInfo;
 import org.ofbiz.webapp.OfbizUrlBuilder;
 import org.ofbiz.webapp.WebAppUtil;
@@ -163,7 +164,8 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         urlRewriterCtx.put("webSiteId", webSiteId);
         ScipioUrlRewriter urlRewriter = null;
         if (config.getUrlConfPath() != null) {
-            urlRewriter = ScipioUrlRewriter.getForContext(FullWebappInfo.fromWebSiteId(delegator, webSiteId, null), 
+            urlRewriter = ScipioUrlRewriter.getForContext(
+                    FullWebappInfo.fromWebapp(delegator, ExtWebappInfo.fromWebSiteId(webSiteId), null), 
                     config.getUrlConfPath(), urlRewriterCtx);
         }
         

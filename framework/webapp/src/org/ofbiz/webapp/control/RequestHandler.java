@@ -58,6 +58,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtilProperties;
+import org.ofbiz.webapp.ExtWebappInfo;
 import org.ofbiz.webapp.FullWebappInfo;
 import org.ofbiz.webapp.OfbizUrlBuilder;
 import org.ofbiz.webapp.control.ConfigXMLReader.ControllerConfig;
@@ -1850,8 +1851,7 @@ public class RequestHandler {
         FullWebappInfo targetWebappInfo = null;
         if (webappInfo != null) {
             try {
-                targetWebappInfo = FullWebappInfo.fromWebappInfo((Delegator) request.getAttribute("delegator"), webappInfo, 
-                    FullWebappInfo.Cache.fromRequest(request));
+                targetWebappInfo = FullWebappInfo.fromWebapp(request, ExtWebappInfo.fromWebappInfo(webappInfo));
             } catch (Exception e) {
                 Debug.logError("makeLink: Could not get current webapp info for context path: " + (webappInfo != null ? webappInfo.getContextRoot() : "(missing input)"), module);
                 return null;
@@ -2163,8 +2163,6 @@ public class RequestHandler {
      * <p>
      * <strong>WARN</strong>: Due to technical limitations (notably Java servlet spec), this method may
      * be forced to make inexact assumptions, which is one reason why it is implemented as a distinct method.
-     * 
-     * @see #makeLink(HttpServletRequest, HttpServletResponse, String, boolean, WebappInfo, boolean, boolean, boolean, boolean)
      */
     public static String makeLinkAuto(HttpServletRequest request, HttpServletResponse response, String url, Boolean absPath, Boolean interWebapp, String webSiteId, Boolean controller, 
             Boolean fullPath, Boolean secure, Boolean encode) {
@@ -2233,17 +2231,14 @@ public class RequestHandler {
                 return null;
             }
         }
-        FullWebappInfo.Cache webappInfoCache;
         if (interWebapp) {
-            if (requestBased) {
-                delegator = (Delegator) request.getAttribute("delegator");
-                webappInfoCache = FullWebappInfo.Cache.fromRequest(request);
-            } else {
-                webappInfoCache = FullWebappInfo.Cache.fromContext(context);
-            }
             if (webSiteId != null && !webSiteId.isEmpty()) {
                 try {
-                    targetWebappInfo = FullWebappInfo.fromWebSiteId(delegator, webSiteId, webappInfoCache);
+                    if (requestBased) {
+                        targetWebappInfo = FullWebappInfo.fromWebapp(request, ExtWebappInfo.fromWebSiteId(webSiteId));
+                    } else {
+                        targetWebappInfo = FullWebappInfo.fromWebapp(context, ExtWebappInfo.fromWebSiteId(webSiteId));
+                    }
                 } catch (Exception e) {
                     Debug.logError("makeLinkAuto: Could not get webapp for webSiteId '" + webSiteId + "': " + e.toString(), module);
                     return null;
@@ -2252,7 +2247,11 @@ public class RequestHandler {
                 // We should have an absolute path here. If not, we won't have enough info
                 // to build the link.
                 try {
-                    targetWebappInfo = FullWebappInfo.fromPath(delegator, url, webappInfoCache);
+                    if (requestBased) {
+                        targetWebappInfo = FullWebappInfo.fromWebapp(request, ExtWebappInfo.fromPath(url));
+                    } else {
+                        targetWebappInfo = FullWebappInfo.fromWebapp(context, ExtWebappInfo.fromPath(url));
+                    }
                 } catch (Exception e) {
                     Debug.logError("makeLinkAuto: Could not get webapp from absolute path '" + url + "': " + e.toString(), module);
                     return null;
@@ -2368,8 +2367,6 @@ public class RequestHandler {
      * <p>
      * SCIPIO: This is modified to pass encode <code>true</code> (<code>null</code>) instead of <code>false</code>.
      * This is <string>necessary</strong> to achieve filter hooks.
-     * <strong>WARN</strong>: This may lead to extra jsessionid added in some cases.
-     * See {@link #makeLink(HttpServletRequest, HttpServletResponse, String, boolean, WebappInfo, boolean, boolean, boolean, boolean)} for details.
      */
     public static String makeUrl(HttpServletRequest request, HttpServletResponse response, String url) {
         // SCIPIO: Pass encode = true

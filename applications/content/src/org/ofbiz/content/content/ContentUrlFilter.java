@@ -34,7 +34,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilCodec;
-import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.common.UrlServletHelper;
 import org.ofbiz.entity.Delegator;
@@ -252,7 +251,7 @@ public class ContentUrlFilter extends ContextFilter {
         String url = makeContentAltUrl(request, response, contentId, viewContent, urlDecode);
         if (url == null || url.isEmpty()) return null;
         url = appendLinkParams(url, params);
-        return RequestLinkUtil.buildLinkHostPartAndEncode(request, response, locale, url, fullPath, secure, encode, true);
+        return RequestLinkUtil.buildLinkHostPartAndEncode(request, response, locale, null, url, fullPath, secure, encode, true);
     }
     
     /**

@@ -205,16 +205,24 @@ public abstract class RequestLinkUtil {
      * <p>
      * This method only supports linking within the current webapp and encoding using the current webapp.
      */
-    public static String buildLinkHostPartAndEncode(HttpServletRequest request, HttpServletResponse response, Locale locale, String url,
+    public static String buildLinkHostPartAndEncode(HttpServletRequest request, HttpServletResponse response, Locale locale, FullWebappInfo targetWebappInfo, String url, 
             Boolean fullPath, Boolean secure, Boolean encode, boolean includeWebappPathPrefix) throws IllegalArgumentException {
+
+        FullWebappInfo currentWebappInfo = FullWebappInfo.fromRequest(request);
+        if (targetWebappInfo == null) {
+            targetWebappInfo = currentWebappInfo;
+        } else {
+            // 2018-08-08: force fullPath if server part differs
+            if (!targetWebappInfo.equalsProtoHostPortWithHardDefaults(currentWebappInfo)) {
+                fullPath = true;
+            }
+        }
         
         boolean didFullStandard = false;
         boolean didFullSecure = false;
         StringBuilder newURL = new StringBuilder();
         
         Boolean secureFullPathFlag = checkFullSecureOrStandard(request, response, false, fullPath, secure);
-        
-        FullWebappInfo targetWebappInfo = FullWebappInfo.fromRequest(request);
         if (secureFullPathFlag != null) {
             if (secureFullPathFlag) {
                 didFullSecure = true;
@@ -249,10 +257,10 @@ public abstract class RequestLinkUtil {
         return res;
     }
 
-    public static String buildLinkHostPartAndEncodeSafe(HttpServletRequest request, HttpServletResponse response, Locale locale, String url,
+    public static String buildLinkHostPartAndEncodeSafe(HttpServletRequest request, HttpServletResponse response, Locale locale, FullWebappInfo targetWebappInfo, String url, 
             Boolean fullPath, Boolean secure, Boolean encode, boolean includeWebappPathPrefix) {
         try {
-            return buildLinkHostPartAndEncode(request, response, locale, url, fullPath, secure, encode, includeWebappPathPrefix);
+            return buildLinkHostPartAndEncode(request, response, locale, targetWebappInfo, url, fullPath, secure, encode, includeWebappPathPrefix);
         } catch(Exception e) {
             Debug.logError(e, module);
             return null;
@@ -260,9 +268,9 @@ public abstract class RequestLinkUtil {
     }
     
     @Deprecated
-    public static String buildLinkHostPartAndEncode(HttpServletRequest request, HttpServletResponse response, String url,
+    public static String buildLinkHostPartAndEncode(HttpServletRequest request, HttpServletResponse response, FullWebappInfo targetWebappInfo, String url, 
             Boolean fullPath, Boolean secure, Boolean encode) throws WebAppConfigurationException, IOException {
-        return buildLinkHostPartAndEncode(request, response, null, url, fullPath, secure, encode, false);
+        return buildLinkHostPartAndEncode(request, response, null, targetWebappInfo, url, fullPath, secure, encode, false);
     }
     
     /**

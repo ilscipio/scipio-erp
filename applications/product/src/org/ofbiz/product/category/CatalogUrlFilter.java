@@ -1068,7 +1068,7 @@ public class CatalogUrlFilter extends ContextFilter {
                 return null;
             }
             url = appendLinkParams(url, params);
-            return RequestLinkUtil.buildLinkHostPartAndEncode(request, response, locale, url, fullPath, secure, encode, true);
+            return RequestLinkUtil.buildLinkHostPartAndEncode(request, response, locale, targetWebappInfo, url, fullPath, secure, encode, true);
         }
         
         /**

@@ -365,24 +365,24 @@ public final class OfbizUrlBuilder {
         controller = !Boolean.FALSE.equals(controller); // default true // SCIPIO: re-fixed 2017-11-17
         
         boolean makeSecure = useSSL;
-        String requestMapUri = null;
-        if (UtilValidate.isNotEmpty(url)) { // SCIPIO: added null check
-            String[] pathElements = url.split("/");
-            requestMapUri = pathElements[0];
-            int queryIndex = requestMapUri.indexOf("?");
-            if (queryIndex != -1) {
-                requestMapUri = requestMapUri.substring(0, queryIndex);
-            }
-        }
-        RequestMap requestMap = null;
-        // SCIPIO: only lookup if controller lookup requested
+        // SCIPIO: only lookup in controller if controller lookup requested
         if (controller) {
+            String requestMapUri = null;
+            if (UtilValidate.isNotEmpty(url)) { // SCIPIO: added null check and controller test
+                String[] pathElements = url.split("/");
+                requestMapUri = pathElements[0];
+                int queryIndex = requestMapUri.indexOf("?");
+                if (queryIndex != -1) {
+                    requestMapUri = requestMapUri.substring(0, queryIndex);
+                }
+            }
+            RequestMap requestMap = null;
             if (config != null) {
                 requestMap = config.getRequestMapMap().get(requestMapUri);
             }
-        }
-        if (!makeSecure && requestMap != null) { // if the request has security="true" then use it
-            makeSecure = requestMap.securityHttps;
+            if (!makeSecure && requestMap != null) { // if the request has security="true" then use it
+                makeSecure = requestMap.securityHttps;
+            }
         }
         makeSecure = webSiteProps.getEnableHttps() & makeSecure;
         if (makeSecure) {

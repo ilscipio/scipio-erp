@@ -221,7 +221,7 @@ public class UrlFilterHelper {
         FullWebappInfo targetWebappInfo = (FullWebappInfo) request.getAttribute(URL_REWRITE_TARGET_WEBAPP);
         if (targetWebappInfo != null) {
             try {
-                targetWebappInfo = FullWebappInfo.fromRequest(request);
+                targetWebappInfo = FullWebappInfo.fromRequestFilterSafe(request);
             } catch (Exception e) {
                 Debug.logError(e, "getEffectiveTargetWebapp: Error getting current webapp info: " + e.getMessage(), module);
             }

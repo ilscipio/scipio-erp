@@ -1839,10 +1839,10 @@ public class SeoCatalogUrlWorker implements Serializable {
     private static Map<String, String> extractParamsFromRest(String pathInfo, int index) {
         char nextChar = pathInfo.charAt(index);
         String queryString;
-        String colonString;
+//        String colonString;
         if (nextChar == '?') {
             // FIXME: can't handle colon parameters
-            colonString = null;
+//            colonString = null;
             queryString = pathInfo.substring(index + 1);
 //            int colonIndex = pathInfo.indexOf(';', index + 1);
 //            if (colonIndex >= 0) {
@@ -1862,7 +1862,7 @@ public class SeoCatalogUrlWorker implements Serializable {
             return null;
         }
         Map<String, String> params = extractParamsFromQueryString(queryString);
-        if (colonString != null) params.put("colonString", colonString);
+//        if (colonString != null) params.put("colonString", colonString);
         return params;
     }
     

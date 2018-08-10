@@ -386,7 +386,7 @@ public class PageLinkDirective implements TemplateDirectiveModel, Serializable {
         final boolean controller = false; // TODO?: no way to exploit controller currently, not sure how could...
         
         // 2016: FIXME: this should be calling RequestHandler.makeLinkAutoEx, but no such method exists yet...
-        return RequestHandler.getRequestHandler(context.getServletContext()).makeLinkAuto(context.getRequest(), context.getResponse(),
+        return RequestHandler.makeLinkAuto(context.getRequest(), context.getResponse(),
                 path, absUrl, interWebapp, webSiteId, controller, fullPath, secure, encode);
     }
     

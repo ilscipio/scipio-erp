@@ -117,7 +117,7 @@ public abstract class CmsEntityVisit {
      * that weren't already looked up (subclass should override this behavior to optimize).
      */
     public static abstract class AbstractCmsEntityVisitor implements CmsEntityVisitor {
-        private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+        //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
         
         protected final Delegator delegator;
         protected final CmsEntityInfo cmsEntityInfo; // fast access

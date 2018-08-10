@@ -8,6 +8,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.tomcat.util.descriptor.web.FilterDef;
 import org.apache.tomcat.util.descriptor.web.WebXml;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
@@ -248,7 +250,11 @@ public class ExtWebappInfo implements Serializable {
     public static ExtWebappInfo fromWebappInfo(WebappInfo webappInfo) throws IllegalArgumentException {
         return fromContextPath(webappInfo.getContextRoot());
     }
-    
+
+    public static ExtWebappInfo fromRequest(HttpServletRequest request) throws IllegalArgumentException {
+        return fromContextPath(request.getContextPath());
+    }
+
     public String getWebSiteId() {
         return webSiteId;
     }

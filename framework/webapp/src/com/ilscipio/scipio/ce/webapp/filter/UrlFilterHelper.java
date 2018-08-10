@@ -36,17 +36,38 @@ public class UrlFilterHelper {
      */
     public static final String SOURCE_REQUEST = "scpUrlReSrcReq";
 
-    public static final String URL_REWRITE_TARGET_WEBAPP = "scpUrlReTgtWebapp";
+    /**
+     * For outbound rules, name of request attribute containing the FullWebappInfo
+     * for the webapp to which the urlrewrite.xml file is associated.
+     * <p>
+     * This is NOT (necessarily) the webapp of the url currently being processed.
+     * <p>
+     * This is set through {@link #doInterWebappUrlRewrite} and
+     * {@link com.ilscipio.scipio.ce.webapp.filter.urlrewrite.ScipioUrlRewriter#processOutboundUrl}
+     * and read back by {@link #setCommonAttrOut} when inter-webapp urlrewrite.xml
+     * outbound-rule emulation is triggered, because in those cases the request
+     * may not be usable to determine the webapp to which urlrewrite.xml belongs.
+     */
+    public static final String URLREWRITE_CONF_WEBAPP = "scpUrlReCnfWebapp";
+
+    /**
+     * Name of optionally-present request attribute containing the FullWebappInfo
+     * for the link currently being processed by outbound-rules.
+     * <p>
+     * Currently this is set by {@link org.ofbiz.webapp.control.RequestHandler#doLinkURLEncode}
+     * as optimization (though practically necessary because it is complicated by webappPathPrefix when in URL).
+     */
+    public static final String OUT_URL_WEBAPP = "scpUrlOutWebapp";
 
     /**
      * Sets some common request attributes needed by URL rewriting, for both inbound and outbound rules.
      */
-    public void setCommonAttr(HttpServletRequest request, HttpServletResponse response, FullWebappInfo targetWebappInfo) {
+    public void setCommonAttr(HttpServletRequest request, HttpServletResponse response, FullWebappInfo webappInfo) {
         ServletContext sc = request.getServletContext();
-        if (targetWebappInfo != null) {
+        if (webappInfo != null) {
             // if specific target webapp, we can't optimize, we always have to set these
-            request.setAttribute("scpCtrlServPath", targetWebappInfo.getControlServletPath());
-            request.setAttribute("scpCtrlMapping", targetWebappInfo.getControlServletMapping());
+            request.setAttribute("scpCtrlServPath", webappInfo.getControlServletPath());
+            request.setAttribute("scpCtrlMapping", webappInfo.getControlServletMapping());
         } else {
             if (!Boolean.TRUE.equals(request.getAttribute("scpUrlReCmnSet"))) {
 
@@ -80,16 +101,15 @@ public class UrlFilterHelper {
         // NOTE: 2018-08-06: We MUST run setCommonAttr here because in static/email
         // render context, only the outbound-rules will be executed.
 
-        // IMPORTANT: 2018-08-08: if a target webapp is set, we must use its info instead of
-        // the original webapp in HttpServletRequest - it means this is an inter-webapp URL rewriting attempt
-        // NOTE: This will depend on the implementation of ScipioUrlRewriter used in the end,
-        // but it is never wrong to check this
-        FullWebappInfo targetWebappInfo = (FullWebappInfo) request.getAttribute(URL_REWRITE_TARGET_WEBAPP);
-        setCommonAttr(request, response, targetWebappInfo);
-        checkWebappContextPathAndSetAttr(request, response, targetWebappInfo);
+        // IMPORTANT: 2018-08-08: The webapp for this urlrewrite.xml may actually differ
+        // from the "current" webapp in the request; in that case we have an explicit attribute
+        // to get the real webapp for this urlrewrite.xml file
+        FullWebappInfo webappInfo = (FullWebappInfo) request.getAttribute(URLREWRITE_CONF_WEBAPP);
+        setCommonAttr(request, response, webappInfo);
+        checkTargetWebapp(request, response, webappInfo);
 
-        if (targetWebappInfo != null) {
-            request.setAttribute("scpUrlCtxPath", targetWebappInfo.getContextPath());
+        if (webappInfo != null) {
+            request.setAttribute("scpUrlCtxPath", webappInfo.getContextPath());
         } else {
             request.setAttribute("scpUrlCtxPath", request.getContextPath());
         }
@@ -103,38 +123,53 @@ public class UrlFilterHelper {
         setCommonAttrOut(request, response);
     }
 
-    public boolean checkWebappContextPathAndSetAttr(HttpServletRequest request, HttpServletResponse response, FullWebappInfo targetWebappInfo) {
+    public void checkTargetWebapp(HttpServletRequest request, HttpServletResponse response) {
+        checkTargetWebapp(request, response, (FullWebappInfo) request.getAttribute(URLREWRITE_CONF_WEBAPP));
+    }
+    /**
+     * Checks the current outbound URL against the conf's current webapp to determine if it
+     * should be processed by a different urlrewrite conf. Sets many request attributes.
+     */
+    public boolean checkTargetWebapp(HttpServletRequest request, HttpServletResponse response, FullWebappInfo webappInfo) {
         String outboundUrlStr = (String) request.getAttribute("urlFilter.outUrlWebapp.outUrl");
 
-        String webappPathPrefixRaw = "";
+        // NOTE: outUrlWebappInfo may be null (consider optimization at best)
+        FullWebappInfo outUrlWebappInfo = (FullWebappInfo) request.getAttribute(OUT_URL_WEBAPP);
+
         String webappPathPrefix = "";
+        boolean wppInUrl = false;
+        boolean sameContextPath = false;
+        boolean wppMatched = false;
+        String wppFreeUrl = (outboundUrlStr != null) ? outboundUrlStr : "";
+        String pathMatch = "";
+
         try {
-            FullWebappInfo webappInfo = targetWebappInfo;
             if (webappInfo == null) {
                 webappInfo = FullWebappInfo.fromRequestFilterSafe(request); // 2018-07-31
             }
             OfbizUrlBuilder urlInfo = webappInfo.getOfbizUrlBuilder();
-
-            webappPathPrefixRaw = urlInfo.getWebappPathPrefix();
-            request.setAttribute("scpWebappPathPrefix", webappPathPrefixRaw);
-            request.setAttribute("scpWPPInUrl", urlInfo.isWebappPathPrefixUrlBuild() ? "true" : "false");
-
-            webappPathPrefix = urlInfo.isWebappPathPrefixUrlBuild() ? webappPathPrefixRaw : "";
+            webappPathPrefix = urlInfo.getWebappPathPrefix();
+            wppInUrl = urlInfo.isWebappPathPrefixUrlBuild();
         } catch(Exception e) {
             Debug.logError("UrlFilterHelper: Error while fetching webapp info: " + e.toString(), module);
         }
 
-        boolean sameContextPath = false;
-        boolean wppInUrl = false;
-        String wppFreeUrl = (outboundUrlStr != null) ? outboundUrlStr : "";
-        if (outboundUrlStr != null) {
+        if (outUrlWebappInfo != null && !outUrlWebappInfo.equals(webappInfo)) {
+
+            ; // FAST ABORT: different target webapp (as reported by caller)
+
+        } else if (outboundUrlStr != null) {
+            // TODO?: here we could check for outUrlWebappInfo.equals(webappInfo)
+            // and optimize? for now, appears safer to physically check to make sure the paths match
+            // up, and have to anyway in order to extract the parts.
+            
             String currentContextPath = webappPathPrefix
-                    + (targetWebappInfo != null ? targetWebappInfo.getContextPath() : request.getContextPath());
+                    + (webappInfo != null ? webappInfo.getContextPath() : request.getContextPath());
 
             String urlPath = null;
             Matcher matcher = pathPat.matcher(outboundUrlStr);
             if (matcher.matches()) {
-                String pathMatch = matcher.group(2);
+                pathMatch = matcher.group(2);
                 if (pathMatch == null) pathMatch = "";
                 if (pathMatch.isEmpty()) {
                     urlPath = "/";
@@ -149,16 +184,16 @@ public class UrlFilterHelper {
                     sameContextPath = urlPath.startsWith(currentContextPath);
                 }
 
-                if (!webappPathPrefix.isEmpty()) {
+                if (wppInUrl && !webappPathPrefix.isEmpty()) {
                     String middle;
                     if (sameContextPath) {
                         middle = pathMatch.substring(webappPathPrefix.length());
-                        wppInUrl = true;
+                        wppMatched = true;
                     } else {
                         // could have matching webappPathPrefix but different context, check now...
                         if (urlPath.equals(webappPathPrefix) || urlPath.startsWith(webappPathPrefix + "/")) {
                             middle = pathMatch.substring(webappPathPrefix.length());
-                            wppInUrl = true;
+                            wppMatched = true;
                         } else {
                             middle = pathMatch;
                         }
@@ -173,14 +208,16 @@ public class UrlFilterHelper {
         }
 
         request.setAttribute("scpUrlOutSameCtx", sameContextPath ? "true" : "false");
-        request.setAttribute("urlFilter.outUrlWebapp.isSameContext", sameContextPath ? "true" : "false"); // legacy
-        request.setAttribute("scpWPPInUrl", wppInUrl ? "true" : "false");
-        request.setAttribute("scpWPPFreeUrl", wppFreeUrl);
+        request.setAttribute("urlFilter.outUrlWebapp.isSameContext", sameContextPath ? "true" : "false"); // legacy compatibility
 
+        request.setAttribute("scpWebappPathPrefix", webappPathPrefix);
+        // scpWPPInUrl was ambiguous, scpWPPStrip is sufficient for now
+        //request.setAttribute("scpWPPInUrl", wppInUrl ? "true" : "false");
+        request.setAttribute("scpWPPFreeUrl", wppFreeUrl);
         // high-level control attributes, so we can control the urlrewrite.xml behavior from here
         // and adjust for new features
-        request.setAttribute("scpWPPStrip", wppInUrl ? "true" : "false");
-        request.setAttribute("scpWPPReadd", (webappPathPrefixRaw.length() > 0) ? "true" : "false");
+        request.setAttribute("scpWPPStrip", wppMatched ? "true" : "false");
+        request.setAttribute("scpWPPReadd", (webappPathPrefix.length() > 0) ? "true" : "false");
 
         return sameContextPath;
     }
@@ -188,13 +225,20 @@ public class UrlFilterHelper {
     public void doInterWebappUrlRewrite(HttpServletRequest request, HttpServletResponse response) {
         String url = (String) request.getAttribute("urlFilter.outUrlWebapp.outUrl");
 
-        FullWebappInfo targetWebappInfo = (FullWebappInfo) request.getAttribute(URL_REWRITE_TARGET_WEBAPP);
-        if (targetWebappInfo != null) {
+        FullWebappInfo outUrlWebappInfo = (FullWebappInfo) request.getAttribute(OUT_URL_WEBAPP);
+
+        // TODO?: this is very difficult and inefficient due to webappPathPrefix...
+        //if (outUrlWebappInfo == null) {
+            // BEST-EFFORT: caller gave us no hint, so TRY to determine target webapp
+            //String outboundUrlStr = (String) request.getAttribute("urlFilter.outUrlWebapp.outUrl");
+        //}
+
+        if (outUrlWebappInfo != null) {
             try {
-                ScipioUrlRewriter rewriter = ScipioUrlRewriter.getForRequest(targetWebappInfo, request, response, true);
-                url = rewriter.processOutboundUrl(url, request, response);
+                ScipioUrlRewriter rewriter = ScipioUrlRewriter.getForRequest(outUrlWebappInfo, request, response, true);
+                url = rewriter.processOutboundUrl(url, outUrlWebappInfo, request, response);
             } catch (Exception e) {
-                Debug.logError("doInterWebappUrlRewrite: Error URL-encoding (rewriting) link for webapp " + targetWebappInfo
+                Debug.logError("doInterWebappUrlRewrite: Error URL-encoding (rewriting) link for webapp " + outUrlWebappInfo
                         + ": " + e.toString(), module);
             }
         }
@@ -221,16 +265,19 @@ public class UrlFilterHelper {
     }
 
     /**
-     * Returns the effective target webapp's info for the urlrewrite.xml.
-     * This may be different than the webapp represented by the request.
+     * Returns the effective webapp for the urlrewrite.xml.
+     * NOTE: This may be different than the webapp represented by the request!
+     * <p>
+     * If there is no URLREWRITE_CONF_WEBAPP request attrib, is assumed the current request's webapp
+     * is the webapp for this urlrewrite conf.
      */
-    public static FullWebappInfo getEffectiveTargetWebapp(HttpServletRequest request) {
-        FullWebappInfo targetWebappInfo = (FullWebappInfo) request.getAttribute(URL_REWRITE_TARGET_WEBAPP);
+    public static FullWebappInfo getUrlRewriteConfWebapp(HttpServletRequest request) {
+        FullWebappInfo targetWebappInfo = (FullWebappInfo) request.getAttribute(URLREWRITE_CONF_WEBAPP);
         if (targetWebappInfo != null) {
             try {
                 targetWebappInfo = FullWebappInfo.fromRequestFilterSafe(request);
             } catch (Exception e) {
-                Debug.logError(e, "getEffectiveTargetWebapp: Error getting current webapp info: " + e.getMessage(), module);
+                Debug.logError(e, "getUrlRewriteConfWebapp: Error getting current webapp info: " + e.getMessage(), module);
             }
         }
         return targetWebappInfo;

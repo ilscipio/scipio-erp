@@ -123,11 +123,24 @@ public abstract class ScipioUrlRewriter {
     // REMOVED: the caller should make sure to re-pass the context or request he used
     // to make the instance, otherwise we lose flexibility
     //public abstract String processOutboundUrl(String url);
-    
-    // NOTE: these overloads are needed because the rewriter instances may be unable
-    // to hold onto references of the original context and request, due to circular references...
-    public abstract String processOutboundUrl(String url, Map<String, Object> context);
-    public abstract String processOutboundUrl(String url, HttpServletRequest request, HttpServletResponse response);
+
+    /**
+     * Processes the URL through urlrewrite outbound-rules, derived from a webapp request.
+     * Intended mainly for inter-webapp links.
+     * <p>
+     * urlWebappInfo can be optionally specified as a hint to disambiguate which webapp the link 
+     * was built for.
+     */
+    public abstract String processOutboundUrl(String url, FullWebappInfo urlWebappInfo, HttpServletRequest request, HttpServletResponse response);
+
+    /**
+     * Processes the URL through urlrewrite outbound-rules, derived from a render context.
+     * Intended mainly for emails, sitemap, etc.
+     * <p>
+     * urlWebappInfo can be optionally specified as a hint to disambiguate which webapp the link 
+     * was built for.
+     */
+    public abstract String processOutboundUrl(String url, FullWebappInfo urlWebappInfo, Map<String, Object> context);
     
     public boolean isPresent() {
         return (this != DUMMY);
@@ -173,11 +186,11 @@ public abstract class ScipioUrlRewriter {
         //    return url;
         //}
         @Override
-        public String processOutboundUrl(String url, Map<String, Object> context) {
+        public String processOutboundUrl(String url, FullWebappInfo urlWebappInfo, Map<String, Object> context) {
             return url;
         }
         @Override
-        public String processOutboundUrl(String url, HttpServletRequest request, HttpServletResponse response) {
+        public String processOutboundUrl(String url, FullWebappInfo urlWebappInfo, HttpServletRequest request, HttpServletResponse response) {
             return url;
         }
     }

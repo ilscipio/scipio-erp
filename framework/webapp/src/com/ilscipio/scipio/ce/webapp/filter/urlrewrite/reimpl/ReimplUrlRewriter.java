@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.webapp.FullWebappInfo;
 import org.tuckey.web.filters.urlrewrite.Condition;
 import org.tuckey.web.filters.urlrewrite.Conf;
 import org.tuckey.web.filters.urlrewrite.OutboundRule;
@@ -192,12 +193,12 @@ public class ReimplUrlRewriter extends ScipioUrlRewriter {
     }
 
     @Override
-    public String processOutboundUrl(String url, Map<String, Object> context) {
+    public String processOutboundUrl(String url, FullWebappInfo urlWebappInfo, Map<String, Object> context) {
         return processOutboundUrl(url);
     }
 
     @Override
-    public String processOutboundUrl(String url, HttpServletRequest request, HttpServletResponse response) {
+    public String processOutboundUrl(String url, FullWebappInfo urlWebappInfo, HttpServletRequest request, HttpServletResponse response) {
         return processOutboundUrl(url);
     }
 }

@@ -62,12 +62,12 @@ public class WrappedRequestUrlRewriter extends ScipioUrlRewriter {
     }
 
     @Override
-    public String processOutboundUrl(String url, Map<String, Object> context) {
+    public String processOutboundUrl(String url, FullWebappInfo urlWebappInfo, Map<String, Object> context) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public String processOutboundUrl(String url, HttpServletRequest request, HttpServletResponse response) {
+    public String processOutboundUrl(String url, FullWebappInfo urlWebappInfo, HttpServletRequest request, HttpServletResponse response) {
         if (Debug.verboseOn()) {
             Debug.logVerbose("urlrewrite: processing outbound url for " + url, module);
         }
@@ -75,7 +75,8 @@ public class WrappedRequestUrlRewriter extends ScipioUrlRewriter {
             HttpServletRequest wrappedRequest = new WrappedHttpServletRequest(request);
             
             // NOTE: because attribs are buffered, don't need to unset this in finally block
-            wrappedRequest.setAttribute(UrlFilterHelper.URL_REWRITE_TARGET_WEBAPP, webappInfo);
+            wrappedRequest.setAttribute(UrlFilterHelper.URLREWRITE_CONF_WEBAPP, webappInfo);
+            wrappedRequest.setAttribute(UrlFilterHelper.OUT_URL_WEBAPP, urlWebappInfo);
             
             return new UrlRewriteWrappedResponse(response, 
                     wrappedRequest, 

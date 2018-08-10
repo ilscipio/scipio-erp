@@ -109,28 +109,34 @@ public class LocalUrlRewriter extends ScipioUrlRewriter {
     }
 
     @Override
-    public String processOutboundUrl(String url, Map<String, Object> context) {
+    public String processOutboundUrl(String url, FullWebappInfo urlWebappInfo, Map<String, Object> context) {
         // TODO: REVIEW: I wish we didn't have to set/unset the context at every process call,
         // but there is a risk of circular reference causing issues due to the context holding
         // caching containing our LocalUrlRewriter instance, so we can't keep reference to context safely?...
         try {
             getContainer().getRequest().setAttribute(UrlFilterHelper.SOURCE_CONTEXT, context);
+            getContainer().getRequest().setAttribute(UrlFilterHelper.OUT_URL_WEBAPP, urlWebappInfo);
             return processOutboundUrl(url);
         } finally {
-            getContainer().getRequest().removeAttribute(UrlFilterHelper.SOURCE_CONTEXT);
+            // no need to remove, because will be re-set at every call
+            //getContainer().getRequest().removeAttribute(UrlFilterHelper.SOURCE_CONTEXT);
+            //getContainer().getRequest().removeAttribute(UrlFilterHelper.OUT_URL_WEBAPP);
         }
     }
 
     @Override
-    public String processOutboundUrl(String url, HttpServletRequest request, HttpServletResponse response) {
+    public String processOutboundUrl(String url, FullWebappInfo urlWebappInfo, HttpServletRequest request, HttpServletResponse response) {
         // TODO: REVIEW: I wish we didn't have to set/unset the request at every process call,
         // but there is a risk of circular reference causing issues due to the request holding
         // caching containing our LocalUrlRewriter instance, so we can't keep reference to request safely?...
         try {
             getContainer().getRequest().setAttribute(UrlFilterHelper.SOURCE_REQUEST, request);
+            getContainer().getRequest().setAttribute(UrlFilterHelper.OUT_URL_WEBAPP, urlWebappInfo);
             return processOutboundUrl(url);
         } finally {
-            getContainer().getRequest().removeAttribute(UrlFilterHelper.SOURCE_REQUEST);
+            // no need to remove, because will be re-set at every call
+            //getContainer().getRequest().removeAttribute(UrlFilterHelper.SOURCE_REQUEST);
+            //getContainer().getRequest().removeAttribute(UrlFilterHelper.OUT_URL_WEBAPP);
         }
     }
 }

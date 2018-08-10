@@ -2073,48 +2073,50 @@ public class RequestHandler {
             FullWebappInfo targetWebappInfo, FullWebappInfo currentWebappInfo, boolean didFullStandard, boolean didFullSecure) {
         String encodedUrl;
         if (response != null) {
-            if (interWebapp) {
-                // SCIPIO: 2018-08-07: this should cause urlrewrite.xml to invoke ScipioUrlRewriter for inter-webapp encodes 
-                // (it's not safe for us to do it from here)
-                try {
-                    request.setAttribute(UrlFilterHelper.URL_REWRITE_TARGET_WEBAPP, targetWebappInfo);
-                    encodedUrl = response.encodeURL(newURL.toString());
-                } finally {
-                    request.removeAttribute(UrlFilterHelper.URL_REWRITE_TARGET_WEBAPP);
-                }
-
-                // SCIPIO: SPECIAL: Since urlrewrite.xml is what normally delegates the inter-webapp rewriting 
-                // (through response.encodeURL above and urlrewrite.xml invokes UrlFilterHelper.doInterWebappUrlRewrite),
-                // if the "current" webapp web.xml doesn't have UrlRewriterFilter, we will
-                // have to emulate by adding an extra rewrite, which will behave as if
-                // the very first filter had been UrlRewriterFilter, which is almost always
-                // where it's chained.
-                // TODO: try to find a more natural and built-in way to handle this...
-                // This could be done using a response wrapper in ContextFilter, but currently
-                // it would make no difference because the only place the target webapp info is set, is just above.
-                // If there is another significant location that response.encodeURL is called for common links,
-                // we will run into problems...
-                if (targetWebappInfo != null) {
-                    if (currentWebappInfo == null) {
-                        try {
-                            currentWebappInfo = FullWebappInfo.fromRequest(request);
-                        } catch(Exception e) {
-                            Debug.logError("doLinkURLEncode: Error looking up webapp info from request (inter-webapp"
-                                    + " URL-encoding not possible): " + e.toString(), module);
-                        }
-                    }
-                    if (currentWebappInfo != null && currentWebappInfo.useUrlManualInterWebappFilter()) {
-                        try {
-                            ScipioUrlRewriter rewriter = ScipioUrlRewriter.getForRequest(targetWebappInfo, request, response, true);
-                            encodedUrl = rewriter.processOutboundUrl(encodedUrl, request, response);
-                        } catch (Exception e) {
-                            Debug.logError("doLinkURLEncode: Error URL-encoding (rewriting) inter-webapp link for webapp " + targetWebappInfo 
-                                    + ": " + e.toString(), module);
-                        }
-                    }
-                }
-            } else {
+            try {
+                // SCIPIO: 2018-08-10: OUT_URL_WEBAPP: this is both an optimization and partly necessary,
+                // because here encodeURL may end up triggering UrlFilterHelper.doInterWebappUrlRewrite,
+                // currently relies on it...
+                // WARN: TODO: REVIEW: because this is going through a chain of filters, there is a chance
+                // that the filters could change URL completely to point to something else, making
+                // OUT_URL_WEBAPP invalid! For now we assume this is not the case, otherwise the lookups
+                // in UrlFilterHelper may become prohibitive...
+                request.setAttribute(UrlFilterHelper.OUT_URL_WEBAPP, targetWebappInfo);
                 encodedUrl = response.encodeURL(newURL.toString());
+                if (interWebapp) {
+                    // SCIPIO: SPECIAL: Since urlrewrite.xml is what normally delegates the inter-webapp rewriting 
+                    // (through response.encodeURL above and urlrewrite.xml invokes UrlFilterHelper.doInterWebappUrlRewrite),
+                    // if the "current" webapp web.xml doesn't have UrlRewriterFilter, we will
+                    // have to emulate by adding an extra rewrite, which will behave as if
+                    // the very first filter had been UrlRewriterFilter, which is almost always
+                    // where it's chained.
+                    // TODO: try to find a more natural and built-in way to handle this...
+                    // This could be done using a response wrapper in ContextFilter, but currently
+                    // it would make no difference because the only place the target webapp info is set, is just above.
+                    // If there is another significant location that response.encodeURL is called for common links,
+                    // we will run into problems...
+                    if (targetWebappInfo != null) {
+                        if (currentWebappInfo == null) {
+                            try {
+                                currentWebappInfo = FullWebappInfo.fromRequest(request);
+                            } catch(Exception e) {
+                                Debug.logError("doLinkURLEncode: Error looking up webapp info from request (inter-webapp"
+                                        + " URL-encoding not possible): " + e.toString(), module);
+                            }
+                        }
+                        if (currentWebappInfo != null && currentWebappInfo.useUrlManualInterWebappFilter()) {
+                            try {
+                                ScipioUrlRewriter rewriter = ScipioUrlRewriter.getForRequest(targetWebappInfo, request, response, true);
+                                encodedUrl = rewriter.processOutboundUrl(encodedUrl, targetWebappInfo, request, response);
+                            } catch (Exception e) {
+                                Debug.logError("doLinkURLEncode: Error URL-encoding (rewriting) inter-webapp link for webapp " + targetWebappInfo 
+                                        + ": " + e.toString(), module);
+                            }
+                        }
+                    }
+                }
+            } finally {
+                request.removeAttribute(UrlFilterHelper.OUT_URL_WEBAPP);
             }
         } else {
             encodedUrl = newURL.toString();
@@ -2127,7 +2129,7 @@ public class RequestHandler {
         FullWebappInfo webappInfo = (targetWebappInfo != null) ? targetWebappInfo : currentWebappInfo;
         try {
             return ScipioUrlRewriter.getForContext(webappInfo, context, true)
-                .processOutboundUrl(newURL.toString(), context);
+                .processOutboundUrl(newURL.toString(), targetWebappInfo, context);
         } catch (IOException e) {
             Debug.logError("doLinkURLEncode: Error URL-encoding (rewriting) link for webapp " + webappInfo 
                     + ": " + e.toString(), module); 

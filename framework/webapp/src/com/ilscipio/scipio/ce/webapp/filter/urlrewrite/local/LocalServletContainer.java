@@ -140,7 +140,7 @@ public class LocalServletContainer {
         container.setupFromOfbizContext(context, renderEnvType);
         
         // set this for UrlFilterHelper
-        container.getRequest().setAttribute(UrlFilterHelper.URL_REWRITE_TARGET_WEBAPP, webappInfo);
+        container.getRequest().setAttribute(UrlFilterHelper.URLREWRITE_CONF_WEBAPP, webappInfo);
         
         return container;
     }

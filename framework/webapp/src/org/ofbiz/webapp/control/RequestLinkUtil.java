@@ -39,14 +39,26 @@ public abstract class RequestLinkUtil {
     protected RequestLinkUtil() {
     }
     
+    /**
+     * @deprecated 2018-08: In Scipio, there is never a jsessionId added anymore.
+     */
+    @Deprecated
     public static boolean containsJsessionId(String url) {
         return url.contains(";jsessionid=");
     }
-
+    
+    /**
+     * @deprecated 2018-08: In Scipio, there is never a jsessionId added anymore.
+     */
+    @Deprecated
     public static String removeJsessionId(String url) {
         return jsessionIdPat.matcher(url).replaceFirst(""); 
     }
     
+    /**
+     * @deprecated 2018-08: In Scipio, there is never a jsessionId added anymore.
+     */
+    @Deprecated
     public static String getSessionId(String url) {
         Matcher m = jsessionIdPat.matcher(url);
         boolean found = m.find();
@@ -57,7 +69,11 @@ public abstract class RequestLinkUtil {
             return null;
         }
     }
-    
+
+    /**
+     * @deprecated 2018-08: In Scipio, there is never a jsessionId added anymore.
+     */
+    @Deprecated
     public static String setJsessionId(String url, String sessionId) {
         String jsessionIdStr = ";jsessionid=" + sessionId;
 
@@ -81,6 +97,10 @@ public abstract class RequestLinkUtil {
         }
     }
     
+    /**
+     * @deprecated 2018-08: In Scipio, there is never a jsessionId added anymore.
+     */
+    @Deprecated
     public static String encodeURLNoJsessionId(String url, HttpServletResponse response) {
         return RequestLinkUtil.removeJsessionId(response.encodeURL(url));
     }

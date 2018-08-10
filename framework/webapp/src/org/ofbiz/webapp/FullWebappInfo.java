@@ -3,6 +3,7 @@ package org.ofbiz.webapp;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,8 +18,6 @@ import org.ofbiz.webapp.renderer.RenderEnvType;
 import org.ofbiz.webapp.website.WebSiteProperties;
 import org.ofbiz.webapp.website.WebSiteWorker;
 import org.xml.sax.SAXException;
-
-import com.ilscipio.scipio.ce.util.Optional;
 
 /**
  * SCIPIO: Contextual, "full" information about a webapp, including

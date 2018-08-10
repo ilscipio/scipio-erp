@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,7 +18,6 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 
-import com.ilscipio.scipio.ce.util.Optional;
 import com.ilscipio.scipio.cms.CmsException;
 import com.ilscipio.scipio.cms.CmsUtil;
 import com.ilscipio.scipio.cms.content.CmsPage;

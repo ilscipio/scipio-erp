@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
@@ -14,7 +15,6 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 
-import com.ilscipio.scipio.ce.util.Optional;
 import com.ilscipio.scipio.cms.CmsException;
 import com.ilscipio.scipio.cms.data.CmsDataException;
 import com.ilscipio.scipio.cms.data.CmsVersionedDataObject;

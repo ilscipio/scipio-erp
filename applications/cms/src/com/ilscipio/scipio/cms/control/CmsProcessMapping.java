@@ -10,6 +10,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -28,7 +29,6 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.webapp.control.RequestLinkUtil;
 
-import com.ilscipio.scipio.ce.util.Optional;
 import com.ilscipio.scipio.ce.util.PathUtil;
 import com.ilscipio.scipio.cms.CmsException;
 import com.ilscipio.scipio.cms.CmsUtil;

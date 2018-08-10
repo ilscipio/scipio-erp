@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
@@ -21,7 +22,6 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 
-import com.ilscipio.scipio.ce.util.Optional;
 import com.ilscipio.scipio.cms.CmsException;
 import com.ilscipio.scipio.cms.content.CmsPage;
 import com.ilscipio.scipio.cms.content.CmsPageContent;

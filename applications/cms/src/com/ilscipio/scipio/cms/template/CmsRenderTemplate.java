@@ -33,6 +33,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 
@@ -57,7 +58,6 @@ import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.ofbiz.widget.renderer.macro.MacroScreenRenderer;
 import org.ofbiz.widget.renderer.macro.MacroScreenViewHandler;
 
-import com.ilscipio.scipio.ce.util.Optional;
 import com.ilscipio.scipio.cms.CmsException;
 import com.ilscipio.scipio.cms.content.CmsPage;
 import com.ilscipio.scipio.cms.content.CmsPageContent;

@@ -918,6 +918,9 @@ public final class ComponentConfig {
                     // because technically it should be valid to have same apps on different servers
                     if (lastWebappInfo.getServer().equals(webappInfo.getServer())) {
                         if ("remove-overridden-webapp".equals(lastWebappInfo.getOverrideMode())) {
+                            Debug.logInfo("ofbiz-component: Applying remove-overridden-webapp requested by webapp " + lastWebappInfo.componentConfig.getComponentName()
+                                + "#" + lastWebappInfo.getName() + " and removing previous webapp matching matching server and mount-point (" + lastWebappInfo.mountPoint + "): "
+                                + webappInfo.componentConfig.getComponentName() + "#" + webappInfo.getName(), module);
                             ComponentConfig prevCc = webappInfo.componentConfig;
                             // NOTE: if the CC has multiple webapps, it may already have been updated,
                             // so fetch it out of the map

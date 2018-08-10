@@ -32,8 +32,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
@@ -59,7 +57,6 @@ import org.ofbiz.widget.model.ModelFormField.OptionSource;
 import org.ofbiz.widget.model.ModelFormField.SingleOption;
 import org.ofbiz.widget.renderer.FormStringRenderer;
 import org.ofbiz.widget.renderer.ScreenRenderer;
-import org.ofbiz.widget.renderer.ScreenStringRenderer;
 import org.w3c.dom.Element;
 
 import bsh.EvalError;

@@ -19,7 +19,6 @@
 package org.ofbiz.service.engine;
 
 import static org.ofbiz.base.util.UtilGenerics.cast;
-import groovy.lang.Script;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,6 +39,8 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceDispatcher;
 import org.ofbiz.service.ServiceUtil;
+
+import groovy.lang.Script;
 
 /**
  * Groovy Script Service Engine

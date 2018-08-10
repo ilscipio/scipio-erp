@@ -1,6 +1,5 @@
 package org.ofbiz.widget.model;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
@@ -12,14 +11,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
-import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.widget.model.ModelScreenSettings.AutoIncludeSettings;
 import org.ofbiz.widget.model.ModelScreenSettings.IncludeSettings;
 import org.ofbiz.widget.model.ModelScreenWidget.DecoratorScreen;
@@ -27,7 +22,6 @@ import org.ofbiz.widget.model.ScreenFallback.FlexibleScreenFallbackSettings;
 import org.ofbiz.widget.model.ScreenFallback.SimpleFlexibleScreenFallbackSettings;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
 /**
  * SCIPIO: Model for new "screen-group" element, child of top "screens" element, and

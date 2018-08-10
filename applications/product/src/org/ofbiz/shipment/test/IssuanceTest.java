@@ -26,8 +26,8 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
-import org.ofbiz.shipment.packing.PackingSession;
 import org.ofbiz.service.testtools.OFBizTestCase;
+import org.ofbiz.shipment.packing.PackingSession;
 
 /**
  * Item Issuance Tests

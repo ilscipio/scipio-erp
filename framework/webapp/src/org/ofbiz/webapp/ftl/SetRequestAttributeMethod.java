@@ -19,6 +19,7 @@
 package org.ofbiz.webapp.ftl;
 
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.util.template.FreeMarkerWorker;
@@ -30,7 +31,6 @@ import freemarker.ext.beans.BeanModel;
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModelException;
-import freemarker.template.TemplateNumberModel;
 import freemarker.template.TemplateScalarModel;
 
 /**

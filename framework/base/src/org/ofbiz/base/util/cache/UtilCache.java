@@ -39,9 +39,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-import jdbm.helper.FastIterator;
-import jdbm.htree.HTree;
-
 import org.ofbiz.base.concurrent.ExecutionPool;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.ObjectType;
@@ -52,6 +49,9 @@ import org.ofbiz.base.util.UtilValidate;
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap.Builder;
 import com.googlecode.concurrentlinkedhashmap.EvictionListener;
+
+import jdbm.helper.FastIterator;
+import jdbm.htree.HTree;
 
 /**
  * Generalized caching utility. Provides a number of caching features:

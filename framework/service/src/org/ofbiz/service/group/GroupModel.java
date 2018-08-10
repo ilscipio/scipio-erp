@@ -18,9 +18,10 @@
  *******************************************************************************/
 package org.ofbiz.service.group;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;

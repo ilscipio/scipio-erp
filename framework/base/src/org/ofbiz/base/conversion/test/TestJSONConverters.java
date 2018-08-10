@@ -25,13 +25,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
 import org.ofbiz.base.conversion.Converter;
 import org.ofbiz.base.conversion.ConverterLoader;
 import org.ofbiz.base.conversion.Converters;
 import org.ofbiz.base.conversion.JSONConverters;
 import org.ofbiz.base.lang.JSON;
+
+import junit.framework.TestCase;
 
 public class TestJSONConverters  extends TestCase {
     public TestJSONConverters(String name) {

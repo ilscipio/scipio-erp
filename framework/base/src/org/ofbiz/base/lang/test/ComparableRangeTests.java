@@ -18,13 +18,14 @@
  *******************************************************************************/
 package org.ofbiz.base.lang.test;
 
-import org.ofbiz.base.test.GenericTestCaseBase;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.lessThan;
+
 import org.ofbiz.base.lang.ComparableRange;
 import org.ofbiz.base.lang.SourceMonitored;
+import org.ofbiz.base.test.GenericTestCaseBase;
 import org.ofbiz.base.util.UtilGenerics;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
 
 @SourceMonitored
 public class ComparableRangeTests extends GenericTestCaseBase {

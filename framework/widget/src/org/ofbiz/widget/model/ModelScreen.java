@@ -35,9 +35,9 @@ import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.widget.renderer.WidgetRenderTargetExpr;
 import org.ofbiz.widget.renderer.ScreenRenderException;
 import org.ofbiz.widget.renderer.ScreenStringRenderer;
+import org.ofbiz.widget.renderer.WidgetRenderTargetExpr;
 import org.ofbiz.widget.renderer.WidgetRenderTargetExpr.WidgetRenderTargetState;
 import org.w3c.dom.Element;
 

@@ -22,7 +22,15 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Locale;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
+
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilFormatOut;
+import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.template.FreeMarkerWorker;
+
+import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
 
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
@@ -32,13 +40,6 @@ import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
 import freemarker.template.TemplateTransformModel;
-
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilFormatOut;
-import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.util.template.FreeMarkerWorker;
-
-import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
 
 /**
  * OfbizAmountTransform - Freemarker Transform for content links

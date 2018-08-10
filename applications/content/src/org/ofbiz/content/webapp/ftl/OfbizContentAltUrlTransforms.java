@@ -31,7 +31,6 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.content.content.ContentUrlFilter;
-import org.ofbiz.webapp.FullWebappInfo;
 import org.ofbiz.webapp.control.WebAppConfigurationException;
 import org.ofbiz.webapp.renderer.RenderEnvType;
 

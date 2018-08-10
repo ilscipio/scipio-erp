@@ -33,7 +33,6 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityQuery;
-import org.ofbiz.content.content.ContentKeywordIndex;
 import org.ofbiz.security.Security;
 
 

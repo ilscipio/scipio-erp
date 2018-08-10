@@ -1,9 +1,5 @@
 package org.ofbiz.catalina.container;
 
-import org.ofbiz.base.component.ComponentConfig;
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilProperties;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,6 +9,9 @@ import java.util.Set;
 
 import org.apache.tomcat.JarScanFilter;
 import org.apache.tomcat.JarScanType;
+import org.ofbiz.base.component.ComponentConfig;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilProperties;
 
 final class FilterJars implements JarScanFilter {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());

@@ -29,7 +29,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.webapp.webdav.RequestHandler;
 import org.ofbiz.webapp.webdav.RequestHandlerFactory;
 

@@ -31,8 +31,6 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.webapp.renderer.RenderEnvType;
 
-import com.ilscipio.scipio.ce.webapp.ftl.context.TransformUtil;
-
 /**
  * WebSiteWorker - Worker class for web site related functionality
  */

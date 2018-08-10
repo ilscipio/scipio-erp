@@ -28,11 +28,11 @@ import javax.jms.TopicSubscriber;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.JNDIContextFactory;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.service.GenericServiceException;
 
 /**
  * JmsTopicListener - Topic (Pub/Sub) Message Listener.

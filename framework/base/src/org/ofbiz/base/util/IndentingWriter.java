@@ -18,8 +18,8 @@
  *******************************************************************************/
 package org.ofbiz.base.util;
 
-import java.io.IOException;
 import java.io.FilterWriter;
+import java.io.IOException;
 import java.io.Writer;
 
 import org.ofbiz.base.lang.SourceMonitored;

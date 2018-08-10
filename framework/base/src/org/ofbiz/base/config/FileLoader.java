@@ -18,8 +18,9 @@
  *******************************************************************************/
 package org.ofbiz.base.config;
 
-import java.net.URL;
 import java.io.InputStream;
+import java.net.URL;
+
 import org.ofbiz.base.util.UtilURL;
 
 /**

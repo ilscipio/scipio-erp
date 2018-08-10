@@ -44,8 +44,6 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityQuery;
 
-import org.ofbiz.base.util.UtilMisc;
-
 /**
  * Session object for keeping track of the list of orders. The state of the list
  * is preserved here instead of via url parameters, which can get messy. There

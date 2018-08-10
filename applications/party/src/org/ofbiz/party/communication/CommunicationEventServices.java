@@ -18,8 +18,6 @@
  *******************************************************************************/
 
 package org.ofbiz.party.communication;
-import org.ofbiz.base.util.GeneralException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -47,6 +45,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilHttp;

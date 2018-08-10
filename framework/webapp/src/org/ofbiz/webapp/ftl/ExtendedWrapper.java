@@ -1,22 +1,10 @@
 package org.ofbiz.webapp.ftl;
 
-import java.util.Collection;
-import java.util.Map;
-
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilCodec.SimpleEncoder;
-import org.ofbiz.base.util.template.ScipioFtlWrappers.EscapingModel;
 import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioExtendedObjectWrapper;
-import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioModelFactory;
-import org.ofbiz.base.util.template.ScipioFtlWrappers.ScipioObjectWrapper;
 
 import freemarker.ext.beans.BeansWrapper;
-import freemarker.ext.beans.CollectionModel;
-import freemarker.ext.beans.StringModel;
-import freemarker.ext.util.ModelFactory;
-import freemarker.template.ObjectWrapper;
-import freemarker.template.TemplateModel;
-import freemarker.template.TemplateModelException;
 import freemarker.template.Version;
 
 /**

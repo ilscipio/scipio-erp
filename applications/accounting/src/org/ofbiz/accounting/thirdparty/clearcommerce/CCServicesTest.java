@@ -22,14 +22,14 @@ package org.ofbiz.accounting.thirdparty.clearcommerce;
 import java.math.BigDecimal;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.testtools.OFBizTestCase;
+
+import junit.framework.TestCase;
 
 public class CCServicesTest extends OFBizTestCase {
 

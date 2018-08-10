@@ -22,9 +22,6 @@ import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
-import junit.framework.AssertionFailedError;
-import junit.framework.TestResult;
-
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
@@ -32,6 +29,9 @@ import org.ofbiz.entity.util.EntityDataAssert;
 import org.ofbiz.entity.util.EntitySaxReader;
 import org.ofbiz.service.testtools.OFBizTestCase;
 import org.w3c.dom.Element;
+
+import junit.framework.AssertionFailedError;
+import junit.framework.TestResult;
 
 public class EntityXmlAssertTest extends OFBizTestCase {
 

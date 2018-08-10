@@ -23,8 +23,6 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
-import org.ofbiz.webapp.control.LoginWorker;
-
 /**
  * HttpSessionListener that finalizes login information
  */

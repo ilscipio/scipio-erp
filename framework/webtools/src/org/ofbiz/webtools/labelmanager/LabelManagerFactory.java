@@ -31,8 +31,6 @@ import java.util.TreeSet;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.ofbiz.base.util.UtilMisc;
-
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.component.ComponentConfig.ClasspathInfo;
 import org.ofbiz.base.util.Debug;

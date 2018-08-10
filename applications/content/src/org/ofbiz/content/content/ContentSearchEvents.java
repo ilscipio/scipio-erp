@@ -26,15 +26,14 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.entity.Delegator;
-import org.ofbiz.webapp.stats.VisitHandler;
-import org.ofbiz.content.content.ContentSearch.ResultSortOrder;
 import org.ofbiz.content.content.ContentSearch.ContentSearchConstraint;
 import org.ofbiz.content.content.ContentSearch.ContentSearchContext;
+import org.ofbiz.content.content.ContentSearch.ResultSortOrder;
 import org.ofbiz.content.content.ContentSearchSession.ContentSearchOptions;
+import org.ofbiz.entity.Delegator;
+import org.ofbiz.webapp.stats.VisitHandler;
 
 
 public class ContentSearchEvents {

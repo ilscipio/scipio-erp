@@ -18,9 +18,9 @@
  *******************************************************************************/
 package org.ofbiz.base.config;
 
-import java.net.URL;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.net.URL;
 
 /**
  * Loads resources from a URL

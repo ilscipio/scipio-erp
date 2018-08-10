@@ -19,13 +19,13 @@
 
 package org.ofbiz.entityext.eca;
 
-import org.w3c.dom.Element;
-import org.ofbiz.base.util.UtilValidate;
+import java.util.Map;
+
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.model.ModelUtil;
-
-import java.util.Map;
+import org.w3c.dom.Element;
 
 /**
  * ServiceEcaSetField

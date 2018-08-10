@@ -39,7 +39,6 @@ import org.ofbiz.base.util.PatternFactory;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
-import org.ofbiz.base.util.UtilXml.ElementHelper;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
 import org.ofbiz.base.util.collections.ValueAccessor;
 import org.ofbiz.base.util.string.FlexibleStringExpander;

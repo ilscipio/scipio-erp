@@ -23,9 +23,8 @@ import java.net.URL;
 
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.config.ResourceHandler;
-import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.Debug;
-
+import org.ofbiz.base.util.UtilXml;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

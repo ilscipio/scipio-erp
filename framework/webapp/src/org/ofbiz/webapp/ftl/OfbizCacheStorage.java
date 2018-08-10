@@ -18,9 +18,9 @@
  *******************************************************************************/
 package org.ofbiz.webapp.ftl;
 
-import freemarker.cache.CacheStorage;
-
 import org.ofbiz.base.util.cache.UtilCache;
+
+import freemarker.cache.CacheStorage;
 
 /**
  * A custom cache wrapper for caching FreeMarker templates

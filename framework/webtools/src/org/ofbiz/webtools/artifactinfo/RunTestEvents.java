@@ -20,9 +20,9 @@ package org.ofbiz.webtools.artifactinfo;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.ofbiz.base.container.ContainerException;
 
-import org.ofbiz.testtools.*;
+import org.ofbiz.base.container.ContainerException;
+import org.ofbiz.testtools.TestRunContainer;
 
 /**
  * Event used to run a Junit test

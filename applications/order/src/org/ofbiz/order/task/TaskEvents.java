@@ -18,12 +18,12 @@
  *******************************************************************************/
 package org.ofbiz.order.task;
 
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Locale;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -31,14 +31,14 @@ import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.webapp.control.RequestHandler;
-import org.ofbiz.webapp.control.ConfigXMLReader.Event;
-import org.ofbiz.webapp.event.EventHandler;
-import org.ofbiz.webapp.event.EventHandlerException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.webapp.control.ConfigXMLReader.Event;
+import org.ofbiz.webapp.control.RequestHandler;
+import org.ofbiz.webapp.event.EventHandler;
+import org.ofbiz.webapp.event.EventHandlerException;
 
 /**
  * Order Processing Task Events

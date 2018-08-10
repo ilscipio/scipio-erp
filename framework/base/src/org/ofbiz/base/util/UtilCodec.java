@@ -33,7 +33,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ofbiz.base.util.codec.EncoderResolver;
-import org.ofbiz.base.util.codec.HtmlSanitizerPolicies;
 import org.owasp.esapi.codecs.CSSCodec;
 import org.owasp.esapi.codecs.Codec;
 import org.owasp.esapi.codecs.HTMLEntityCodec;

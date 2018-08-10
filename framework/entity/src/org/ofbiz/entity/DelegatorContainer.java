@@ -27,8 +27,8 @@ import org.ofbiz.base.concurrent.ExecutionPool;
 import org.ofbiz.base.container.Container;
 import org.ofbiz.base.container.ContainerConfig;
 import org.ofbiz.base.container.ContainerException;
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.UtilValidate;
 
 public class DelegatorContainer implements Container {
     private String name;

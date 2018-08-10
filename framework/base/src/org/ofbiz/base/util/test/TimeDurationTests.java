@@ -18,14 +18,14 @@
  *******************************************************************************/
 package org.ofbiz.base.util.test;
 
+import org.ofbiz.base.lang.SourceMonitored;
+import org.ofbiz.base.test.GenericTestCaseBase;
+import org.ofbiz.base.util.TimeDuration;
+
 //import com.ibm.icu.util.Calendar;
 //import com.ibm.icu.util.TimeZone;
 import com.ibm.icu.util.Calendar;
 import com.ibm.icu.util.TimeZone;
-
-import org.ofbiz.base.lang.SourceMonitored;
-import org.ofbiz.base.util.TimeDuration;
-import org.ofbiz.base.test.GenericTestCaseBase;
 
 @SourceMonitored
 public class TimeDurationTests extends GenericTestCaseBase {

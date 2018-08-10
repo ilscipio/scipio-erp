@@ -27,7 +27,6 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.HttpClient;
 import org.ofbiz.base.util.HttpClientException;
 import org.ofbiz.base.util.ObjectType;
-import org.ofbiz.base.util.UtilMisc;
 
 
 public class RitaApi {

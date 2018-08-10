@@ -27,14 +27,12 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import java.security.Key;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.shiro.crypto.AesCipherService;
 import org.apache.shiro.crypto.OperationMode;
+import org.apache.shiro.crypto.hash.DefaultHashService;
 import org.apache.shiro.crypto.hash.HashRequest;
 import org.apache.shiro.crypto.hash.HashService;
-import org.apache.shiro.crypto.hash.DefaultHashService;
 import org.ofbiz.base.crypto.DesCrypt;
 import org.ofbiz.base.crypto.HashCrypt;
 import org.ofbiz.base.util.Debug;

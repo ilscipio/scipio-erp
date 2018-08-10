@@ -18,7 +18,6 @@
  *******************************************************************************/
 package org.ofbiz.product.imagemanagement;
 
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImagingOpException;
 import java.awt.image.RenderedImage;

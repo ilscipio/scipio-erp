@@ -18,8 +18,6 @@
  */
 package org.ofbiz.webapp.event;
 
-import groovy.lang.Script;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -44,6 +42,8 @@ import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.webapp.control.ConfigXMLReader.Event;
 import org.ofbiz.webapp.control.ConfigXMLReader.RequestMap;
+
+import groovy.lang.Script;
 
 public class GroovyEventHandler implements EventHandler {
 

@@ -18,24 +18,24 @@
  *******************************************************************************/
 package org.ofbiz.webtools.print;
 
-import java.util.Map;
-import java.util.Locale;
 import java.io.IOException;
-import java.io.Writer;
 import java.io.StringWriter;
+import java.io.Writer;
+import java.util.Locale;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
-
-import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.DispatchContext;
-import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.widget.renderer.ScreenRenderer;
 import org.ofbiz.widget.renderer.html.HtmlScreenRenderer;
 

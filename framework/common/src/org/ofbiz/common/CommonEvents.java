@@ -41,7 +41,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.ofbiz.base.lang.JSON;
@@ -59,8 +58,8 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.security.Security;
-import org.ofbiz.webapp.control.ViewAsJsonUtil;
 import org.ofbiz.webapp.control.RequestHandler;
+import org.ofbiz.webapp.control.ViewAsJsonUtil;
 
 /**
  * Common Services

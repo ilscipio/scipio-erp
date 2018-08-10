@@ -19,7 +19,6 @@
 package org.ofbiz.widget.renderer.fo;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.List;
 import java.util.Map;
 

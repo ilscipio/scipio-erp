@@ -20,11 +20,11 @@ package org.ofbiz.base.util.cache;
 
 import java.io.IOException;
 
+import org.ofbiz.base.util.UtilObject;
+
 import jdbm.RecordManager;
 import jdbm.helper.ISerializationHandler;
 import jdbm.helper.Serializer;
-
-import org.ofbiz.base.util.UtilObject;
 
 /**
  * JDBC Serializer which uses OFBiz internal serialization

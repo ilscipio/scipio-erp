@@ -21,9 +21,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
 import org.ofbiz.base.util.Assert;
+
+import junit.framework.TestCase;
 
 /**
  * Assert tests {@link org.ofbiz.base.util.Assert}.

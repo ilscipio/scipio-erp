@@ -20,7 +20,6 @@ package org.ofbiz.base.util.codec;
 
 import java.util.Map;
 
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilCodec.HtmlEncoder;
 import org.ofbiz.base.util.UtilCodec.OwaspHtmlEncoder;

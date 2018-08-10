@@ -24,12 +24,7 @@ import java.util.Map;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.collections.ValueAccessor;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
-import org.ofbiz.widget.model.AbstractModelCondition;
 import org.ofbiz.widget.model.AbstractModelCondition.DefaultConditionFactory;
-import org.ofbiz.widget.model.ModelCondition;
-import org.ofbiz.widget.model.ModelConditionFactory;
-import org.ofbiz.widget.model.ModelConditionVisitor;
-import org.ofbiz.widget.model.ModelWidget;
 import org.w3c.dom.Element;
 
 /**

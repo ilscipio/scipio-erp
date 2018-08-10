@@ -22,12 +22,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.ofbiz.base.conversion.BooleanConverters;
 import org.ofbiz.base.conversion.Converter;
 import org.ofbiz.base.conversion.ConverterLoader;
 import org.ofbiz.base.conversion.Converters;
+
+import junit.framework.TestCase;
 
 public class TestBooleanConverters extends TestCase {
 

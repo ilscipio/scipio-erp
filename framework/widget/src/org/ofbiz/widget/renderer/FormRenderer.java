@@ -35,7 +35,6 @@ import java.util.TreeSet;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
-import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.MapStack;
@@ -50,9 +49,6 @@ import org.ofbiz.widget.model.ModelForm;
 import org.ofbiz.widget.model.ModelForm.FieldGroup;
 import org.ofbiz.widget.model.ModelForm.FieldGroupBase;
 import org.ofbiz.widget.model.ModelFormField;
-import org.ofbiz.widget.model.ModelFormField.OptionSource;
-import org.ofbiz.widget.model.ModelFormField.SingleOption;
-import org.ofbiz.widget.model.ModelFormFieldBuilder;
 import org.ofbiz.widget.model.ModelGrid;
 
 /**

@@ -27,7 +27,6 @@ import java.util.TreeSet;
 
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelRelation;

@@ -46,9 +46,9 @@ import org.ofbiz.common.image.ImageType.ImagePixelType;
 import org.ofbiz.common.image.ImageType.ImageTypeInfo;
 import org.ofbiz.common.image.scaler.ImageScaler;
 import org.ofbiz.common.image.scaler.ImageScalers;
-import org.xml.sax.SAXException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 
 

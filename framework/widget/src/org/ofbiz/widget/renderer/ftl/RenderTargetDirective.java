@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.webapp.renderer.RenderWriter;
 import org.ofbiz.widget.model.ftl.ModelFtlWidget;
 import org.ofbiz.widget.renderer.WidgetRenderTargetExpr;
@@ -12,15 +11,12 @@ import org.ofbiz.widget.renderer.WidgetRenderTargetExpr.WidgetRenderTargetState;
 
 import com.ilscipio.scipio.ce.webapp.ftl.context.ContextFtlUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.context.TransformUtil;
-import com.ilscipio.scipio.ce.webapp.ftl.lang.LangFtlUtil;
 
 import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateDirectiveModel;
 import freemarker.template.TemplateException;
-import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateModel;
-import freemarker.template.TemplateScalarModel;
 
 /**
  * <code>@renderTarget</code> implementation.

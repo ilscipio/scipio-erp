@@ -32,11 +32,10 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.entity.Delegator;
-import org.ofbiz.entity.GenericValue;
+import org.ofbiz.content.content.ContentSearch.ContentSearchConstraint;
 import org.ofbiz.content.content.ContentSearch.ResultSortOrder;
 import org.ofbiz.content.content.ContentSearch.SortKeywordRelevancy;
-import org.ofbiz.content.content.ContentSearch.ContentSearchConstraint;
+import org.ofbiz.entity.Delegator;
 
 public class ContentSearchSession {
 

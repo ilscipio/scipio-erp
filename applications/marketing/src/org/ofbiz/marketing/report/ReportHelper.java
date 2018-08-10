@@ -18,10 +18,14 @@
  *******************************************************************************/
 package org.ofbiz.marketing.report;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
-import java.util.*;
 
 /**
  * Marketing Report Helper

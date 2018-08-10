@@ -21,15 +21,15 @@ package org.ofbiz.testtools;
 import java.util.LinkedList;
 import java.util.List;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.config.ResourceHandler;
 import org.ofbiz.base.util.Debug;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 /**
  * Use this class in a JUnit test runner to prepare the TestSuite.

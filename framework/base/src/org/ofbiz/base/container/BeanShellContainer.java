@@ -18,11 +18,11 @@
  *******************************************************************************/
 package org.ofbiz.base.container;
 
-import bsh.Interpreter;
-import bsh.EvalError;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
+
+import bsh.EvalError;
+import bsh.Interpreter;
 
 /**
  * BeanShellContainer - Container implementation for BeanShell

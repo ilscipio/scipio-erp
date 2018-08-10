@@ -18,18 +18,17 @@
  *******************************************************************************/
 package org.ofbiz.accounting.thirdparty.gosoftware;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.DataInputStream;
 import java.net.Socket;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.ofbiz.base.util.UtilXml;
-import org.ofbiz.base.util.ObjectType;
-import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.Debug;
-
+import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.ObjectType;
+import org.ofbiz.base.util.UtilXml;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;

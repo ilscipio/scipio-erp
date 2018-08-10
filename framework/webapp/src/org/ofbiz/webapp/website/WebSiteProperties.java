@@ -18,8 +18,6 @@
  *******************************************************************************/
 package org.ofbiz.webapp.website;
 
-import java.util.Map;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
@@ -38,6 +36,13 @@ import org.ofbiz.webapp.control.RequestLinkUtil;
 
 /**
  * Web site properties.
+ * <p>
+ * SCIPIO: NOTE: 2018-08: This is a LOW-LEVEL class that only encapsulates
+ * a very limited set of storable website information.
+ * It is recommended not to use this class directly anymore but instead to use 
+ * {@link org.ofbiz.webapp.FullWebappInfo} to obtain a {@link org.ofbiz.webapp.OfbizUrlBuilder}.
+ * Future improvements will likely be abstracted by those classes rather than by this one 
+ * (due to its limited scope).
  */
 @ThreadSafe
 public final class WebSiteProperties {
@@ -73,7 +78,7 @@ public final class WebSiteProperties {
      * in the application's WebSite entity value. If the application does not have a
      * WebSite entity value then the instance is initialized to the settings found
      * in the <code>url.properties</code> file.
-     * 
+     *
      * @param request
      * @throws GenericEntityException
      */
@@ -84,17 +89,17 @@ public final class WebSiteProperties {
 
             // SCIPIO: now delegates
             webSiteProps = newFrom(request, WebSiteWorker.getWebSiteId(request));
-            
+
             request.setAttribute("_WEBSITE_PROPS_", webSiteProps);
         }
         return webSiteProps;
     }
-    
+
     private static WebSiteProperties newFrom(HttpServletRequest request, String webSiteId) throws GenericEntityException {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
-        
+
         // SCIPIO: This code section is restructured for optional request overrides and other fixes.
-        
+
         boolean overrideRequestHostPort = "Y".equalsIgnoreCase(EntityUtilProperties.getPropertyValue("url.properties", "override.request.host.port", delegator));
         boolean requestOverridesStatic = !overrideRequestHostPort;
         boolean requestOverridesStaticHttpPort = requestOverridesStatic;
@@ -102,9 +107,9 @@ public final class WebSiteProperties {
         boolean requestOverridesStaticHttpsPort = requestOverridesStatic;
         boolean requestOverridesStaticHttpsHost = requestOverridesStatic;
         boolean requestOverridesStaticWebappPathPrefix = requestOverridesStatic;
-        
+
         WebSiteProperties defaults = new WebSiteProperties(delegator);
-        
+
         String httpPort = defaults.getHttpPort();
         String httpHost = defaults.getHttpHost();
         String httpsPort = defaults.getHttpsPort();
@@ -146,13 +151,13 @@ public final class WebSiteProperties {
                 }
             }
         }
-        
+
         // SCIPIO: NOTE: this has been factored and moved to before the request value lookups.
         httpPort = adjustPort(delegator, httpPort);
-        httpsPort = adjustPort(delegator, httpsPort);      
-        
+        httpsPort = adjustPort(delegator, httpsPort);
+
         boolean isSecure = RequestLinkUtil.isEffectiveSecure(request); // SCIPIO: 2018: replace request.isSecure()
-        
+
         // SCIPIO: this may override the url.properties settings, though not the WebSite settings
         if ((requestOverridesStaticHttpPort || httpPort.isEmpty()) && !isSecure) {
             httpPort = String.valueOf(request.getServerPort());
@@ -181,11 +186,11 @@ public final class WebSiteProperties {
         return new WebSiteProperties(httpPort, httpHost, httpsPort, httpsHost, enableHttps,
                 webappPathPrefix, webappPathPrefixHeader);
     }
-    
+
     /**
      * SCIPIO: Returns web site properties for the given web site; any host or port fields
      * not specified are taken from request instead, as would be returned by {@link #from(HttpServletRequest)}.
-     * 
+     *
      * @param webSiteValue
      */
     public static WebSiteProperties from(HttpServletRequest request, GenericValue webSiteValue) throws GenericEntityException {
@@ -193,9 +198,9 @@ public final class WebSiteProperties {
         if (!"WebSite".equals(webSiteValue.getEntityName())) {
             throw new IllegalArgumentException("webSiteValue is not a WebSite entity value");
         }
-        
+
         WebSiteProperties defaults = from(request);
-                
+
         String httpPort;
         boolean adjustHttpPort;
         if (webSiteValue.get("httpPort") != null) {
@@ -234,14 +239,14 @@ public final class WebSiteProperties {
             webappPathPrefixHeader = "";
         }
 
-        return new WebSiteProperties(httpPort, httpHost, httpsPort, httpsHost, enableHttps, 
+        return new WebSiteProperties(httpPort, httpHost, httpsPort, httpsHost, enableHttps,
                 webappPathPrefix, webappPathPrefixHeader);
     }
-    
+
     /**
      * SCIPIO: Returns web site properties for the given webSiteId, or for any fields missing,
      * the values for the current request (or system defaults).
-     * 
+     *
      * @param webSiteValue
      */
     public static WebSiteProperties from(HttpServletRequest request, String webSiteId) throws GenericEntityException {
@@ -254,12 +259,12 @@ public final class WebSiteProperties {
             throw new GenericEntityException("Scipio: Could not find WebSite for webSiteId '" + webSiteId + "'");
         }
     }
-    
-    
+
+
     /**
      * Returns a <code>WebSiteProperties</code> instance initialized to the settings found
      * in the WebSite entity value.
-     * 
+     *
      * @param webSiteValue
      */
     public static WebSiteProperties from(GenericValue webSiteValue) {
@@ -276,20 +281,20 @@ public final class WebSiteProperties {
 
         // SCIPIO: factored out
         httpPort = adjustPort(webSiteValue.getDelegator(), httpPort);
-        httpsPort = adjustPort(webSiteValue.getDelegator(), httpsPort);            
+        httpsPort = adjustPort(webSiteValue.getDelegator(), httpsPort);
 
         // SCIPIO: new
         String webappPathPrefix = (webSiteValue.get("webappPathPrefix") != null) ? normalizeWebappPathPrefix(webSiteValue.getString("webappPathPrefix")) : defaults.getWebappPathPrefix();
         String webappPathPrefixHeader = defaults.getWebappPathPrefixHeader();
 
-        return new WebSiteProperties(httpPort, httpHost, httpsPort, httpsHost, enableHttps, 
+        return new WebSiteProperties(httpPort, httpHost, httpsPort, httpsHost, enableHttps,
                 webappPathPrefix, webappPathPrefixHeader);
     }
-    
+
     /**
      * SCIPIO: Returns a <code>WebSiteProperties</code> instance initialized to the settings found
      * in the WebSite entity value for the given webSiteId.
-     * 
+     *
      * @param delegator
      * @param webSiteId
      */
@@ -312,7 +317,7 @@ public final class WebSiteProperties {
     private final String webappPathPrefix; // SCIPIO: added 2018-07-27
     private final String webappPathPrefixHeader; // SCIPIO: added 2018-07-27
     private static final boolean webappPathPrefixOnlyIfForward = UtilProperties.getPropertyAsBoolean("url", "webapp.url.path.prefix.onlyIfForward", false); // SCIPIO: added 2018-07-27
-    
+
     private WebSiteProperties(Delegator delegator) {
         this.httpPort = EntityUtilProperties.getPropertyValue("url", "port.http", delegator);
         this.httpHost = EntityUtilProperties.getPropertyValue("url", "force.http.host", delegator);
@@ -403,19 +408,6 @@ public final class WebSiteProperties {
     public boolean isWebappPathPrefixUrlBuild(ServletContext servletContext) {
         return UtilMisc.booleanValue(servletContext.getAttribute("urlWebappPathPrefixUrlBuild"), defaultWebappPathPrefixUrlBuild);
     }
-    
-    /**
-     * SCIPIO: If true, the webappPathPrefix should be included in URL building
-     * code by default; if false, it is left up to URL rewriting to append it.
-     * <p>
-     * NOTE: 2018-08-03: At current time this setting is stored only in url.properties
-     * and web.xml, NOT the WebSite entity, to reflect its coded nature.
-     * <p>
-     * DEV NOTE: Prefer using {@link org.ofbiz.webapp.OfbizUrlBuilder} methods over calling this.
-     */
-    public boolean isWebappPathPrefixUrlBuild(Map<String, String> contextParams) {
-        return UtilMisc.booleanValue(contextParams.get("urlWebappPathPrefixUrlBuild"), defaultWebappPathPrefixUrlBuild);
-    }
 
     /**
      * SCIPIO: If true, the webappPathPrefix should be included in URL building
@@ -429,7 +421,7 @@ public final class WebSiteProperties {
     public boolean isWebappPathPrefixUrlBuild(ExtWebappInfo webappInfo) {
         return UtilMisc.booleanValue(webappInfo.getContextParams().get("urlWebappPathPrefixUrlBuild"), defaultWebappPathPrefixUrlBuild);
     }
-    
+
     /**
      * SCIPIO: If true, the webappPathPrefix should be included in URL building
      * code by default; if false, it is left up to URL rewriting to append it.
@@ -458,11 +450,11 @@ public final class WebSiteProperties {
         sb.append("}");
         return sb.toString();
     }
-    
+
     /**
-     * SCIPIO: Returns true if and only if all fields in this object match 
+     * SCIPIO: Returns true if and only if all fields in this object match
      * the ones in the other WebSiteProperties.
-     * 
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -471,16 +463,16 @@ public final class WebSiteProperties {
                sameFields(this.webappPathPrefix, ((WebSiteProperties) other).webappPathPrefix) &&
                sameFields(this.webappPathPrefixHeader, ((WebSiteProperties) other).webappPathPrefixHeader);
     }
-    
+
     /**
-     * SCIPIO: Returns true if and only if all fields in this object match 
-     * the ones in the other WebSiteProperties. Fields which are missing, 
-     * such as hosts or ports, are substituted with hardcoded Ofbiz defaults when 
+     * SCIPIO: Returns true if and only if all fields in this object match
+     * the ones in the other WebSiteProperties. Fields which are missing,
+     * such as hosts or ports, are substituted with hardcoded Ofbiz defaults when
      * performing the comparison.
      * <p>
      * Currently, the hard defaults are "localhost" for host fields, "80" for httpPort
-     * and "443" for httpsPort. 
-     * 
+     * and "443" for httpsPort.
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     public boolean equalsWithHardDefaults(Object other) {
@@ -490,7 +482,7 @@ public final class WebSiteProperties {
     }
 
     /**
-     * SCIPIO: Returns true if and only if all host-related fields in this object match 
+     * SCIPIO: Returns true if and only if all host-related fields in this object match
      * the ones in the other WebSiteProperties.
      */
     public boolean equalsProtoHostPort(Object other) {
@@ -510,14 +502,14 @@ public final class WebSiteProperties {
     }
 
     /**
-     * SCIPIO: Returns true if and only if all host-related fields in this object match 
-     * the ones in the other WebSiteProperties. Fields which are missing, 
-     * such as hosts or ports, are substituted with hardcoded Ofbiz defaults when 
+     * SCIPIO: Returns true if and only if all host-related fields in this object match
+     * the ones in the other WebSiteProperties. Fields which are missing,
+     * such as hosts or ports, are substituted with hardcoded Ofbiz defaults when
      * performing the comparison.
      * <p>
      * Currently, the hard defaults are "localhost" for host fields, "80" for httpPort
-     * and "443" for httpsPort. 
-     * 
+     * and "443" for httpsPort.
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     public boolean equalsProtoHostPortWithHardDefaults(Object other) {
@@ -535,7 +527,7 @@ public final class WebSiteProperties {
                sameFields(this.httpsPort, o.httpsPort, "443") &&
                (this.enableHttps == o.enableHttps);
     }
-    
+
     private static boolean sameFields(String first, String second) {
         // SCIPIO: treat null and empty the same, just to be safe
         if (first != null && !first.isEmpty()) {
@@ -544,7 +536,7 @@ public final class WebSiteProperties {
             return (second == null || second.isEmpty());
         }
     }
-    
+
     private static boolean sameFields(String first, String second, String defaultVal) {
         if (first == null || first.isEmpty()) {
             first = defaultVal;
@@ -554,7 +546,7 @@ public final class WebSiteProperties {
         }
         return first.equals(second);
     }
-    
+
     /**
      * SCIPIO: Adjusts the given port value (as string) by the port offset configuration value, if applicable.
      */
@@ -567,7 +559,7 @@ public final class WebSiteProperties {
             return port;
         }
     }
-    
+
     /**
      * SCIPIO: Adjusts the given port value by the port offset configuration value, if applicable.
      */
@@ -578,7 +570,7 @@ public final class WebSiteProperties {
             return port;
         }
     }
-    
+
     private static String normalizeWebappPathPrefix(String path) { // SCIPIO: 2018-07-27
         if ("/".equals(path)) return "";
         // nobody will do this

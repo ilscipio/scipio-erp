@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.tomcat.util.descriptor.web.WebXml;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -50,7 +49,7 @@ import com.ilscipio.scipio.ce.util.Optional;
  */
 public class FullWebappInfo {
 
-    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     //private final Delegator delegator; // REMOVED lazy initialization - not worth it
     private ExtWebappInfo extWebappInfo;
@@ -349,10 +348,7 @@ public class FullWebappInfo {
             if (request != null) {
                 return fromWebapp(ExtWebappInfo.fromContextPath(WebAppUtil.getServerId(request), contextPath), request, Cache.fromRequest(request));
             } else {
-                // FIXME: no support for this in ofbiz?
-                Debug.logWarning("fromWebSiteIdOrContextPathOrNull: We have no way of getting a server name/ID"
-                        + " from render context only to go with context path (" + contextPath + "); will assume default-server", module);
-                return fromWebapp(ExtWebappInfo.fromContextPath(contextPath), context, Cache.fromContext(context));
+                return fromWebapp(ExtWebappInfo.fromContextPath(WebAppUtil.getServerId(context), contextPath), context, Cache.fromContext(context));
             }
         }
         return null;

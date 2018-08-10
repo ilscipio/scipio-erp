@@ -593,6 +593,17 @@ public final class WebAppUtil {
     public static String getServerId(ServletContext servletContext) {
         return (String) servletContext.getAttribute("_serverId");
     }
+    
+    /**
+     * SCIPIO: Gets server ID from a render context.
+     * <p>
+     * FIXME: This currently will always returns null!!
+     * Render context (in emails, sitemap) does not set serverId!
+     */
+    public static String getServerId(Map<String, Object> context) {
+        // FIXME: this is a made-up context variable, never set by ofbiz, placeholder...
+        return (String) context.get("_serverId");
+    }
 
     private WebAppUtil() {}
 }

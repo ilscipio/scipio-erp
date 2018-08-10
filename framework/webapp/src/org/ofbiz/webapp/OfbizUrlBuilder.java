@@ -71,8 +71,7 @@ public final class OfbizUrlBuilder {
             ControllerConfig config = (url != null) ? ConfigXMLReader.getControllerConfig(url, true) : null; // SCIPIO: 2017-11-18: controller now fully optional (2 change)
             String servletPath = (String) request.getAttribute("_CONTROL_PATH_");
             String contextPath = request.getContextPath();
-            builder = new OfbizUrlBuilder(config, webSiteProps, servletPath, contextPath,
-                    webSiteProps.isWebappPathPrefixUrlBuild(request.getServletContext())); // SCIPIO
+            builder = new OfbizUrlBuilder(config, webSiteProps, servletPath, contextPath); // SCIPIO
             request.setAttribute("_OFBIZ_URL_BUILDER_", builder);
         }
         return builder;
@@ -86,12 +85,11 @@ public final class OfbizUrlBuilder {
      * delegator one.
      */
     public static OfbizUrlBuilder from(ExtWebappInfo extWebappInfo, HttpServletRequest request) throws GenericEntityException, WebAppConfigurationException {
-        WebSiteProperties webSiteProps = WebSiteProperties.from(extWebappInfo.getWebSiteId(), request);
+        WebSiteProperties webSiteProps = WebSiteProperties.from(extWebappInfo, request);
         ControllerConfig config = extWebappInfo.getControllerConfig();
         String servletPath = extWebappInfo.getFullControlPath();
         String contextPath = extWebappInfo.getContextPath();
-        return new OfbizUrlBuilder(config, webSiteProps, servletPath, contextPath,
-                webSiteProps.isWebappPathPrefixUrlBuild(extWebappInfo));
+        return new OfbizUrlBuilder(config, webSiteProps, servletPath, contextPath);
     }
 
     /**
@@ -151,14 +149,7 @@ public final class OfbizUrlBuilder {
         if (webSiteProps == null) {
             webSiteProps = WebSiteProperties.defaults(delegator);
         }
-        boolean webappPathPrefixUrlBuild; // SCIPIO: 2018-08-03
-        if (webAppInfo != null) {
-            ExtWebappInfo extWebappInfo = ExtWebappInfo.fromWebappInfo(webAppInfo); // slightly needless inefficiency... oh well
-            webappPathPrefixUrlBuild = webSiteProps.isWebappPathPrefixUrlBuild(extWebappInfo);
-        } else {
-            webappPathPrefixUrlBuild = webSiteProps.isWebappPathPrefixUrlBuildDefault();
-        }
-        return new OfbizUrlBuilder(config, webSiteProps, servletPath, contextPath, webappPathPrefixUrlBuild);
+        return new OfbizUrlBuilder(config, webSiteProps, servletPath, contextPath);
     }
 
     /**
@@ -197,13 +188,7 @@ public final class OfbizUrlBuilder {
         if (webSiteProps == null) {
             webSiteProps = WebSiteProperties.defaults(delegator);
         }
-        boolean webappPathPrefixUrlBuild;
-        if (extWebAppInfo != null) {
-            webappPathPrefixUrlBuild = webSiteProps.isWebappPathPrefixUrlBuild(extWebAppInfo);
-        } else {
-            webappPathPrefixUrlBuild = webSiteProps.isWebappPathPrefixUrlBuildDefault();
-        }
-        return new OfbizUrlBuilder(config, webSiteProps, servletPath, contextPath, webappPathPrefixUrlBuild);
+        return new OfbizUrlBuilder(config, webSiteProps, servletPath, contextPath);
     }
 
     /**
@@ -234,13 +219,7 @@ public final class OfbizUrlBuilder {
         if (webSiteProps == null) {
             webSiteProps = WebSiteProperties.defaults(delegator);
         }
-        boolean webappPathPrefixUrlBuild;
-        if (extWebAppInfo != null) {
-            webappPathPrefixUrlBuild = webSiteProps.isWebappPathPrefixUrlBuild(extWebAppInfo);
-        } else {
-            webappPathPrefixUrlBuild = webSiteProps.isWebappPathPrefixUrlBuildDefault();
-        }
-        return new OfbizUrlBuilder(config, webSiteProps, servletPath, contextPath, webappPathPrefixUrlBuild);
+        return new OfbizUrlBuilder(config, webSiteProps, servletPath, contextPath);
     }
 
     /**
@@ -308,16 +287,15 @@ public final class OfbizUrlBuilder {
      */
     public static OfbizUrlBuilder fromServerDefaults(Delegator delegator) throws WebAppConfigurationException, IOException, SAXException, GenericEntityException {
         WebSiteProperties webSiteProps = WebSiteProperties.defaults(delegator);
-        return new OfbizUrlBuilder(null, webSiteProps, null, null, webSiteProps.isWebappPathPrefixUrlBuildDefault());
+        return new OfbizUrlBuilder(null, webSiteProps, null, null);
     }
 
     private final ControllerConfig config;
     private final WebSiteProperties webSiteProps;
     private final String servletPath;
     private final String contextPath;   // SCIPIO: this class should record the context path (webapp mount-point)
-    private final boolean webappPathPrefixUrlBuild; // SCIPIO: 2018-08-03
 
-    private OfbizUrlBuilder(ControllerConfig config, WebSiteProperties webSiteProps, String servletPath, String contextPath, boolean webappPathPrefixUrlBuild) {
+    private OfbizUrlBuilder(ControllerConfig config, WebSiteProperties webSiteProps, String servletPath, String contextPath) {
         this.config = config;
         this.webSiteProps = webSiteProps;
         // SCIPIO: 2018-08-01: this comes in with a trailing slash half the time, strip it here
@@ -327,7 +305,6 @@ public final class OfbizUrlBuilder {
         }
         this.servletPath = servletPath;
         this.contextPath = contextPath;
-        this.webappPathPrefixUrlBuild = webappPathPrefixUrlBuild;
     }
 
     /**
@@ -472,7 +449,7 @@ public final class OfbizUrlBuilder {
         if (servletPath == null) {
             throw new IllegalStateException("Servlet path is unknown");
         }
-        if (webappPathPrefixUrlBuild) {
+        if (webSiteProps.isWebappPathPrefixUrlBuild()) {
             buffer.append(webSiteProps.getWebappPathPrefix()); // SCIPIO: 2018-07-27
         }
         if (uri != null) {
@@ -543,7 +520,7 @@ public final class OfbizUrlBuilder {
         if (contextPath == null) {
             throw new IllegalStateException("Context path is unknown");
         }
-        if (webappPathPrefixUrlBuild) {
+        if (webSiteProps.isWebappPathPrefixUrlBuild()) {
             buffer.append(webSiteProps.getWebappPathPrefix()); // SCIPIO: 2018-07-27
         }
         if (uri != null) {
@@ -573,7 +550,7 @@ public final class OfbizUrlBuilder {
      * If uri is empty string, does the same but appends trailing slash.
      */
     public void buildPathPartWithWebappPathPrefix(Appendable buffer, String uri) throws WebAppConfigurationException, IOException {
-        if (webappPathPrefixUrlBuild) {
+        if (webSiteProps.isWebappPathPrefixUrlBuild()) {
             buffer.append(webSiteProps.getWebappPathPrefix()); // SCIPIO: 2018-07-27
         }
         if (uri != null) {
@@ -643,6 +620,6 @@ public final class OfbizUrlBuilder {
      * in this URL building; otherwise assumed to be done by URL rewriting later.
      */
     public boolean isWebappPathPrefixUrlBuild() {
-        return webappPathPrefixUrlBuild;
+        return webSiteProps.isWebappPathPrefixUrlBuild();
     }
 }

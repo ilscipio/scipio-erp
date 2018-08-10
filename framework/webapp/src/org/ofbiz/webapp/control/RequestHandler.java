@@ -1697,7 +1697,7 @@ public class RequestHandler {
         // TODO? It is possible we could want to always force fullPath for all inter-webapp links.
         // Maybe make a url.properties option and allow force fullPath and force secure.
         if (interWebapp) {
-            if (!webSiteProps.equalsProtoHostPortWithHardDefaults(requestWebSiteProps)) {
+            if (!webSiteProps.equalsServerFieldsWithHardDefaults(requestWebSiteProps)) {
                 fullPath = true;
             }
         }

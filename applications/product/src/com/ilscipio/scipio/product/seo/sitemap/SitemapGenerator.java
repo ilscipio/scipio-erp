@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -32,7 +31,6 @@ import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.webapp.ExtWebappInfo;
 import org.ofbiz.webapp.FullWebappInfo;
 import org.ofbiz.webapp.OfbizUrlBuilder;
-import org.ofbiz.webapp.WebAppUtil;
 import org.xml.sax.SAXException;
 
 import com.ilscipio.scipio.ce.util.PathUtil;
@@ -70,7 +68,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     
     protected ScipioUrlRewriter urlRewriter;
     protected Map<String, Object> urlRewriterCtx;
-    protected final WebappInfo webappInfo;
+    protected final FullWebappInfo webappInfo;
     
     protected final GenericValue webSite;
     protected final GenericValue productStore;
@@ -104,8 +102,8 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         this.ofbizUrlBuilder = ofbizUrlBuilder;
         this.urlRewriter = urlRewriteConf;
         this.urlRewriterCtx = urlRewriterCtx;
-        this.webappInfo = WebAppUtil.getWebappInfoFromWebsiteId(webSiteId);
-        this.fullSitemapDir = config.getSitemapDirUrlLocation(webappInfo.getLocation());
+        this.webappInfo = FullWebappInfo.fromWebapp(ExtWebappInfo.fromWebSiteId(webSiteId), delegator, null);
+        this.fullSitemapDir = config.getSitemapDirUrlLocation(webappInfo.getWebappInfo().getLocation());
         this.servCtxOpts = servCtxOpts;
         getSitemapDirFile(); // test this for exception
         reset();
@@ -698,6 +696,10 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         return getSitemapFileLink(config.getSitemapIndexFile());
     }
 
+    public FullWebappInfo getWebappInfo() {
+        return webappInfo;
+    }
+
     /**
      * Use urlrewritefilter rules to convert urls - emulates urlrewritefilter - just like the original url would be
      * WARN: emulation only - see UrlRewriteConf for issues.
@@ -705,7 +707,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     protected String applyUrlRewriteRules(String url) {
         if (url == null) return "";
         if (getUrlRewriter() == null) return url;
-        return getUrlRewriter().processOutboundUrl(url, getUrlRewriterCtx());
+        return getUrlRewriter().processOutboundUrl(url, getWebappInfo(), getUrlRewriterCtx());
     }
     
     /**

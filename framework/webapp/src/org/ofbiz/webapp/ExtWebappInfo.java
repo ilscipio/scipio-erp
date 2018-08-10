@@ -53,7 +53,7 @@ public class ExtWebappInfo implements Serializable {
     
     private static final Object cacheLock = new Object(); // NOTE: both caches lock together
     private static Map<String, ExtWebappInfo> webSiteIdCache = Collections.emptyMap();
-    private static Map<String, ExtWebappInfo> contextPathCache = Collections.emptyMap();
+    private static Map<String, ExtWebappInfo> serverContextPathCache = Collections.emptyMap();
 
     private final String webSiteId;
     // REQUIRED FIELDS (for this instance to exist)
@@ -130,7 +130,7 @@ public class ExtWebappInfo implements Serializable {
     public static void clearCaches() {
         synchronized(cacheLock) { // this only prevents other thread from accidentally restoring the map we just deleted
             webSiteIdCache = Collections.emptyMap();
-            contextPathCache = Collections.emptyMap();
+            serverContextPathCache = Collections.emptyMap();
         }
     }
 
@@ -156,9 +156,9 @@ public class ExtWebappInfo implements Serializable {
             webSiteIdCache = Collections.unmodifiableMap(newCache);
 
             // also put into context root cache to prevent duplicates
-            newCache = new HashMap<>(contextPathCache);
-            newCache.put(info.getContextPath(), info);
-            contextPathCache = Collections.unmodifiableMap(newCache);
+            newCache = new HashMap<>(serverContextPathCache);
+            newCache.put(info.getServerId() + "::" + info.getContextPath(), info);
+            serverContextPathCache = Collections.unmodifiableMap(newCache);
         }
         return info;
     }
@@ -181,19 +181,20 @@ public class ExtWebappInfo implements Serializable {
      * {@link #fromWebSiteIdNew(String)}, otherwise there is a risk of caching
      * incomplete instances.
      */
-    public static ExtWebappInfo fromContextPath(String contextPath) throws IllegalArgumentException {
-        ExtWebappInfo info = contextPathCache.get(contextPath);
+    public static ExtWebappInfo fromContextPath(String serverName, String contextPath) throws IllegalArgumentException {
+        String cacheKey = (serverName != null ? serverName : "default-server") + "::" + contextPath;
+        ExtWebappInfo info = serverContextPathCache.get(cacheKey);
         if (info != null) return info;
         synchronized(cacheLock) {
-            info = contextPathCache.get(contextPath);
+            info = serverContextPathCache.get(cacheKey);
             if (info != null) return info;
 
-            info = fromContextPathNew(contextPath);
+            info = fromContextPathNew(serverName, contextPath);
 
             // copy cache for synch semantics
-            Map<String, ExtWebappInfo> newCache = new HashMap<>(contextPathCache);
-            newCache.put(contextPath, info);
-            contextPathCache = Collections.unmodifiableMap(contextPathCache);
+            Map<String, ExtWebappInfo> newCache = new HashMap<>(serverContextPathCache);
+            newCache.put(cacheKey, info);
+            serverContextPathCache = Collections.unmodifiableMap(serverContextPathCache);
 
             if (info.getWebSiteId() != null) {
                 newCache = new HashMap<>(webSiteIdCache);
@@ -204,15 +205,20 @@ public class ExtWebappInfo implements Serializable {
         return info;
     }
 
+    @Deprecated
+    public static ExtWebappInfo fromContextPath(String contextPath) throws IllegalArgumentException {
+        return fromContextPath(null, contextPath);
+    }
+    
     /**
      * Gets from webSiteId, no caching.
      * NOTE: This is the factory method that should be used during loading.
      * @see #fromWebSiteId(String)
      */
-    public static ExtWebappInfo fromContextPathNew(String contextPath) throws IllegalArgumentException {
+    public static ExtWebappInfo fromContextPathNew(String serverName, String contextPath) throws IllegalArgumentException {
         WebappInfo webappInfo;
         try {
-            webappInfo = WebAppUtil.getWebappInfoFromContextPath(contextPath);
+            webappInfo = WebAppUtil.getWebappInfoFromContextPath(serverName, contextPath);
         } catch(IllegalArgumentException e) {
             throw new IllegalArgumentException(e);
         } catch (Exception e) {
@@ -229,30 +235,40 @@ public class ExtWebappInfo implements Serializable {
     }
 
     /**
-     * Gets from arbitary path, with caching.
+     * Gets from a URI that starts with a webapp contextPath, with caching.
+     * <p>
      * Cache only allows websites with registered WebappInfo and WebXml.
      * NOTE: If accessing from early loading process, do not call this, instead call
      * {@link #fromWebSiteIdNew(String)}, otherwise there is a risk of caching
      * incomplete instances.
+     * <p>
+     * NOTE: This only works for paths starting from webapp contextPath; 
+     * if it contains extra prefix such as webappPathPrefix, this will throw exception
+     * or return the root webapp (if any mapped to /).
      */
-    public static ExtWebappInfo fromPath(String path) throws IllegalArgumentException {
+    public static ExtWebappInfo fromPath(String serverName, String path, boolean stripQuery) throws IllegalArgumentException {
         WebappInfo webappInfo;
         try {
-            webappInfo = WebAppUtil.getWebappInfoFromPath(path);
+            webappInfo = WebAppUtil.getWebappInfoFromPath(serverName, path, stripQuery);
         } catch (IOException e) {
             throw new IllegalArgumentException(e);
         } catch (SAXException e) {
             throw new IllegalArgumentException(e);
         }
-        return fromContextPath(webappInfo.getContextRoot());
+        return fromContextPath(serverName, webappInfo.getContextRoot());
+    }
+    
+    @Deprecated
+    public static ExtWebappInfo fromPath(String path) throws IllegalArgumentException {
+        return fromPath(null, path, true);
     }
 
     public static ExtWebappInfo fromWebappInfo(WebappInfo webappInfo) throws IllegalArgumentException {
-        return fromContextPath(webappInfo.getContextRoot());
+        return fromContextPath(webappInfo.getServer(), webappInfo.getContextRoot());
     }
 
     public static ExtWebappInfo fromRequest(HttpServletRequest request) throws IllegalArgumentException {
-        return fromContextPath(request.getContextPath());
+        return fromContextPath(WebAppUtil.getServerId(request), request.getContextPath());
     }
 
     public String getWebSiteId() {
@@ -266,7 +282,15 @@ public class ExtWebappInfo implements Serializable {
     public WebXml getWebXml() {
         return webXml;
     }
-    
+
+    public String getServerId() {
+        if (webappInfo.getServer() != null) {
+            return webappInfo.getServer();
+        } else {
+            return getContextParams().get("ofbizServerName");
+        }
+    }
+
     public String getWebappName() {
         return webappInfo.getName();
     }
@@ -437,7 +461,7 @@ public class ExtWebappInfo implements Serializable {
     public String toString() {
         return "[contextPath=" + getContextPath() + ", webSiteId=" + getWebSiteId() + "]";
     }
-    
+
     /**
      * Helper wrapper to read WebappInfo reliably.
      */

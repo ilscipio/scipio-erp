@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.tomcat.util.descriptor.web.WebXml;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -49,7 +50,7 @@ import com.ilscipio.scipio.ce.util.Optional;
  */
 public class FullWebappInfo {
 
-    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     //private final Delegator delegator; // REMOVED lazy initialization - not worth it
     private ExtWebappInfo extWebappInfo;
@@ -77,7 +78,7 @@ public class FullWebappInfo {
             // SPECIAL: in this case we must initialize WebSiteProperties immediately because
             // we can't store the HttpServletRequest object in FullWebappInfo
             this.ofbizUrlBuilder = OfbizUrlBuilder.from(request);
-            this.extWebappInfo = ExtWebappInfo.fromContextPath(request.getContextPath());
+            this.extWebappInfo = ExtWebappInfo.fromRequest(request);
             this.webSiteProperties = this.ofbizUrlBuilder.getWebSiteProperties();
             this.controllerConfig = Optional.ofNullable(this.ofbizUrlBuilder.getControllerConfig());
         } catch (GenericEntityException e) {
@@ -333,26 +334,26 @@ public class FullWebappInfo {
      */
 
     /**
-     * Gets webapp info, using info/cache from request if available otherwise context (high-level factory method).
-     */
-    public static FullWebappInfo fromWebapp(ExtWebappInfo extWebappInfo, HttpServletRequest request, Map<String, Object> context) throws IllegalArgumentException {
-        if (request != null) {
-            return fromWebapp(extWebappInfo, request, Cache.fromRequest(request));
-        } else {
-            return fromWebapp(extWebappInfo, context, Cache.fromContext(context));
-        }
-    }
-
-    /**
      * Gets webapp info for webSiteId or contextPath, otherwise null (high-level factory method).
      * Caches in request if available, otherwise context.
      */
     public static FullWebappInfo fromWebSiteIdOrContextPathOrNull(String webSiteId,
             String contextPath, HttpServletRequest request, Map<String, Object> context) throws IllegalArgumentException {
         if (UtilValidate.isNotEmpty(webSiteId)) {
-            return fromWebapp(ExtWebappInfo.fromWebSiteId(webSiteId), request, context);
+            if (request != null) {
+                return fromWebapp(ExtWebappInfo.fromWebSiteId(webSiteId), request, Cache.fromRequest(request));
+            } else {
+                return fromWebapp(ExtWebappInfo.fromWebSiteId(webSiteId), context, Cache.fromContext(context));
+            }
         } else if (UtilValidate.isNotEmpty(contextPath)) {
-            return fromWebapp(ExtWebappInfo.fromContextPath(contextPath), request, context);
+            if (request != null) {
+                return fromWebapp(ExtWebappInfo.fromContextPath(WebAppUtil.getServerId(request), contextPath), request, Cache.fromRequest(request));
+            } else {
+                // FIXME: no support for this in ofbiz?
+                Debug.logWarning("fromWebSiteIdOrContextPathOrNull: We have no way of getting a server name/ID"
+                        + " from render context only to go with context path (" + contextPath + "); will assume default-server", module);
+                return fromWebapp(ExtWebappInfo.fromContextPath(contextPath), context, Cache.fromContext(context));
+            }
         }
         return null;
     }
@@ -494,6 +495,14 @@ public class FullWebappInfo {
      * ExtWebappInfo-delegated methods
      * ******************************************************
      */
+
+    /**
+     * @return
+     * @see org.ofbiz.webapp.ExtWebappInfo#getServerId()
+     */
+    public String getServerId() {
+        return extWebappInfo.getServerId();
+    }
 
     /**
      * @return

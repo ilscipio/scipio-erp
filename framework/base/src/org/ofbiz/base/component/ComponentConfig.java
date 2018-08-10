@@ -340,7 +340,78 @@ public final class ComponentConfig {
         return cc.getURL(resourceLoaderName, location);
     }
 
+    private static Map<String, Map<String, WebappInfo>> serverContextRootWebappInfoCache;
+    
+    private static Map<String, Map<String, WebappInfo>> getServerContextRootWebappInfoMap() {
+        if (serverContextRootWebappInfoCache != null) {
+            return serverContextRootWebappInfoCache;
+        }
+        Map<String, Map<String, WebappInfo>> map = new HashMap<>();
+        for(WebappInfo webappInfo : getAllWebappResourceInfos()) {
+            Map<String, WebappInfo> contextRootMap = map.get(webappInfo.getServer());
+            if (contextRootMap == null) {
+                contextRootMap = new HashMap<>();
+                map.put(webappInfo.getServer(), contextRootMap);
+            }
+            contextRootMap.put(webappInfo.getContextRoot(), webappInfo);
+        }
+        map = Collections.unmodifiableMap(map);
+        return map;
+    }
+
+    /**
+     * SCIPIO: Gets a resolved map of the effective WebappInfo for each given context root (contextPath).
+     * <p>
+     * NOTE: This must only be called post-loading due to caching - do not call during loading!
+     */
+    public static Map<String, WebappInfo> getWebappInfosByContextRootForServer(String serverName) {
+        return getServerContextRootWebappInfoMap().get(serverName != null ? serverName : "default-server");
+    }
+
+    /**
+     * SCIPIO: Gets a resolved map of the effective WebappInfo for each given context root (contextPath).
+     * <p>
+     * NOTE: This must only be called post-loading due to caching - do not call during loading!
+     */
+    public static Map<String, WebappInfo> getWebappInfosByContextRootForDefaultServer() {
+        return getWebappInfosByContextRootForServer(null);
+    }
+
+    /**
+     * Gets webapp info by server name and context root.
+     * <p>
+     * SCIPIO: 2018-08-08: modified to support a cache.
+     * <p>
+     * NOTE: This must only be called post-loading due to caching - do not call during loading!
+     */
+    public static WebappInfo getWebappInfoByContextRoot(String serverName, String contextRoot) {
+        Map<String, WebappInfo> contextRootMap = getServerContextRootWebappInfoMap().get(serverName);
+        return (contextRootMap != null) ? contextRootMap.get(contextRoot) : null;
+    }
+
+    /**
+     * Gets webapp info for default server by context root.
+     * @deprecated use {@link #getWebappInfoByContextRoot(String, String)} and specify server
+     * <p>
+     * SCIPIO: 2018-08-08: modified to support a cache.
+     * <p>
+     * NOTE: This must only be called post-loading due to caching - do not call during loading!
+     */
+    @Deprecated
+    public static WebappInfo getWebappInfoByContextRoot(String contextRoot) {
+        return getWebappInfoByContextRoot(null, contextRoot);
+    }
+
+    /**
+     * Gets webapp info by server name and context root.
+     * <p>
+     * SCIPIO: 2018-08-08: modified to support a cache.
+     * <p>
+     * NOTE: This must only be called post-loading due to caching - do not call during loading!
+     */
     public static WebappInfo getWebAppInfo(String serverName, String contextRoot) {
+        return getWebappInfoByContextRoot(serverName, contextRoot);
+        /* old stock implementation
         if (serverName == null || contextRoot == null) {
             return null;
         }
@@ -353,6 +424,7 @@ public final class ComponentConfig {
             }
         }
         return info;
+        */
     }
 
     public static boolean isFileResourceLoader(String componentName, String resourceLoaderName) throws ComponentException {
@@ -1265,6 +1337,10 @@ public final class ComponentConfig {
 
         public List<String> getVirtualHosts() {
             return virtualHosts;
+        }
+
+        public String getServer() { // SCIPIO: added 2018-08-10, missing in stock
+            return server;
         }
 
         public String getOverrideMode() { // SCIPIO: new

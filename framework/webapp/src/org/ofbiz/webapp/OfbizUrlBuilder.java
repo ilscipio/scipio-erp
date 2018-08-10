@@ -43,7 +43,13 @@ import org.xml.sax.SAXException;
  * SCIPIO: Some noteworthy changes:
  * <ul>
  * <li>Controller is now optional (no exceptions for webapps with no controller) (added 2017-11-18).</li>
+ * <li>Encompasses the new webappPathPrefix mostly automatically (2018-08)</li>
+ * <li>Many new overloads and fixes</li>
+ * <li>Generalized, can build more different types of links</li>
  * </ul>
+ * DEV NOTE: In general, this class is mostly rewritten by Scipio, so that it can
+ * be used to centralize part of the link-building (but not all; it does not take
+ * care of ofbizUrl links in templates yet; TODO?).
  */
 public final class OfbizUrlBuilder {
 
@@ -51,7 +57,7 @@ public final class OfbizUrlBuilder {
 
     /**
      * Returns an <code>OfbizUrlBuilder</code> instance.
-     * 
+     *
      * @param request
      * @throws GenericEntityException
      * @throws WebAppConfigurationException
@@ -78,10 +84,6 @@ public final class OfbizUrlBuilder {
      * <p>
      * NOTE: This is vital so that the WebSiteProperties request overload is called instead of the
      * delegator one.
-     * 
-     * @param request
-     * @throws GenericEntityException
-     * @throws WebAppConfigurationException
      */
     public static OfbizUrlBuilder from(ExtWebappInfo extWebappInfo, HttpServletRequest request) throws GenericEntityException, WebAppConfigurationException {
         WebSiteProperties webSiteProps = WebSiteProperties.from(request, extWebappInfo.getWebSiteId());
@@ -91,11 +93,11 @@ public final class OfbizUrlBuilder {
         return new OfbizUrlBuilder(config, webSiteProps, servletPath, contextPath,
                 webSiteProps.isWebappPathPrefixUrlBuild(extWebappInfo));
     }
-    
+
     /**
      * Returns an <code>OfbizUrlBuilder</code> instance. Use this method when you
      * don't have a <code>HttpServletRequest</code> object - like in scheduled jobs.
-     * 
+     *
      * @param webAppInfo Optional - if <code>null</code>, the builder can only build the host part,
      * and that will be based only on the settings in <code>url.properties</code> (the WebSite
      * entity will be ignored).
@@ -126,7 +128,7 @@ public final class OfbizUrlBuilder {
      * <p>
      * This is needed because not every webapp has its own webSiteId, which means
      * another source for WebSiteProperties must be used in its place.
-     * 
+     *
      * @param webAppInfo Optional - if <code>null</code>, the builder can only build the host part,
      * and that will be based only on the settings in <code>url.properties</code> (the WebSite
      * entity will be ignored).
@@ -164,7 +166,7 @@ public final class OfbizUrlBuilder {
      * don't have a <code>HttpServletRequest</code> object - like in scheduled jobs.
      * <p>
      * Added 2018-08-02.
-     * 
+     *
      * @param extWebAppInfo Optional - if <code>null</code>, the builder can only build the host part,
      * and that will be based only on the settings in <code>url.properties</code> (the WebSite
      * entity will be ignored).
@@ -209,7 +211,7 @@ public final class OfbizUrlBuilder {
      * don't have a <code>HttpServletRequest</code> object - like in scheduled jobs.
      * <p>
      * Added 2018-08-02.
-     * 
+     *
      * @param extWebAppInfo Optional - if <code>null</code>, the builder can only build the host part,
      * and that will be based only on the settings in <code>url.properties</code> (the WebSite
      * entity will be ignored).
@@ -246,7 +248,7 @@ public final class OfbizUrlBuilder {
      * Roughly same as {@link FullWebappInfo#getOfbizUrlBuilder()}.
      * <p>
      * Added 2018-08-02.
-     * 
+     *
      * @param extWebAppInfo Optional - if <code>null</code>, the builder can only build the host part,
      * and that will be based only on the settings in <code>url.properties</code> (the WebSite
      * entity will be ignored).
@@ -263,7 +265,7 @@ public final class OfbizUrlBuilder {
     /**
      * SCIPIO: Returns an <code>OfbizUrlBuilder</code> instance using the given webSiteId.
      * Added 2017-11.
-     * 
+     *
      * @param webSiteId Optional - if <code>null</code>, the builder can only build the host part,
      * and that will be based only on the settings in <code>url.properties</code> (the WebSite
      * entity will be ignored).
@@ -273,7 +275,7 @@ public final class OfbizUrlBuilder {
      * @throws SAXException
      * @throws GenericEntityException
      */
-    public static OfbizUrlBuilder fromWebSiteId(String webSiteId, Delegator delegator) throws WebAppConfigurationException, 
+    public static OfbizUrlBuilder fromWebSiteId(String webSiteId, Delegator delegator) throws WebAppConfigurationException,
         IOException, SAXException, GenericEntityException, IllegalArgumentException {
         WebappInfo webAppInfo = null;
         WebSiteProperties webSiteProps = null;
@@ -314,7 +316,7 @@ public final class OfbizUrlBuilder {
     private final String servletPath;
     private final String contextPath;   // SCIPIO: this class should record the context path (webapp mount-point)
     private final boolean webappPathPrefixUrlBuild; // SCIPIO: 2018-08-03
-    
+
     private OfbizUrlBuilder(ControllerConfig config, WebSiteProperties webSiteProps, String servletPath, String contextPath, boolean webappPathPrefixUrlBuild) {
         this.config = config;
         this.webSiteProps = webSiteProps;
@@ -330,38 +332,30 @@ public final class OfbizUrlBuilder {
 
     /**
      * Builds a full URL - including scheme, host, servlet path and resource.
-     * 
+     * SCIPIO: NOTE: This builds a link to a controller entry - the uri specifies a controller.xml request URI.
+     *
      * @param buffer
-     * @param url
+     * @param uri
      * @param useSSL Default value to use - will be replaced by request-map setting
      * if one is found.
      * @return <code>true</code> if the URL uses https
      * @throws WebAppConfigurationException
      * @throws IOException
      */
-    public boolean buildFullUrl(Appendable buffer, String url, boolean useSSL) throws WebAppConfigurationException, IOException {
-        boolean makeSecure = buildHostPart(buffer, url, useSSL);
-        buildPathPart(buffer, url);
+    public boolean buildFullUrl(Appendable buffer, String uri, boolean useSSL) throws WebAppConfigurationException, IOException {
+        boolean makeSecure = buildHostPart(buffer, uri, useSSL);
+        buildPathPart(buffer, uri);
         return makeSecure;
     }
 
     /**
-     * SCIPIO: Builds a full URL - including scheme, host, context root and resource (custom servlet).
+     * SCIPIO: Builds a full URL - including scheme, host, context root and resource (custom servlet),
+     * but does NOT consult controller. The uri can point to any servlet.
      * Added 2018-08-01.
      */
-    public boolean buildFullUrlWithContextPath(Appendable buffer, String url, boolean useSSL) throws WebAppConfigurationException, IOException {
-        boolean makeSecure = buildHostPart(buffer, url, useSSL);
-        buildPathPartWithContextPath(buffer, url);
-        return makeSecure;
-    }
-
-    /**
-     * SCIPIO: Builds a full URL - including scheme, host, webapp path prefix and resource (custom context root).
-     * Added 2018-08-01.
-     */
-    public boolean buildFullUrlWithWebappPathPrefix(Appendable buffer, String url, boolean useSSL) throws WebAppConfigurationException, IOException {
-        boolean makeSecure = buildHostPart(buffer, url, useSSL);
-        buildPathPartWithWebappPathPrefix(buffer, url);
+    public boolean buildFullUrlWithContextPath(Appendable buffer, String uri, boolean useSSL) throws WebAppConfigurationException, IOException {
+        boolean makeSecure = buildHostPart(buffer, useSSL);
+        buildPathPartWithContextPath(buffer, uri);
         return makeSecure;
     }
 
@@ -369,9 +363,11 @@ public final class OfbizUrlBuilder {
      * Builds a partial URL - including the scheme and host, but not the servlet path or resource.
      * <p>
      * SCIPIO: Modified to support omitting controller lookup. Also supports Boolean instead of boolean.
-     * 
+     * This does NOT include webappPathPrefix. This can be used mainly to split the host server part and path part building,
+     * for specific implementations.
+     *
      * @param buffer
-     * @param url
+     * @param uri
      * @param useSSL Default value to use - will be replaced by request-map setting
      * if one is found with security=true set.
      * @param controller
@@ -379,17 +375,17 @@ public final class OfbizUrlBuilder {
      * @throws WebAppConfigurationException
      * @throws IOException
      */
-    public boolean buildHostPart(Appendable buffer, String url, Boolean useSSL, Boolean controller) throws WebAppConfigurationException, IOException {
+    public boolean buildHostPart(Appendable buffer, String uri, Boolean useSSL, Boolean controller) throws WebAppConfigurationException, IOException {
         // SCIPIO: support Boolean
         useSSL = Boolean.TRUE.equals(useSSL); // default false
         controller = !Boolean.FALSE.equals(controller); // default true // SCIPIO: re-fixed 2017-11-17
-        
+
         boolean makeSecure = useSSL;
         // SCIPIO: only lookup in controller if controller lookup requested
         if (controller) {
             String requestMapUri = null;
-            if (UtilValidate.isNotEmpty(url)) { // SCIPIO: added null check and controller test
-                String[] pathElements = url.split("/");
+            if (UtilValidate.isNotEmpty(uri)) { // SCIPIO: added null check and controller test
+                String[] pathElements = uri.split("/");
                 requestMapUri = pathElements[0];
                 int queryIndex = requestMapUri.indexOf("?");
                 if (queryIndex != -1) {
@@ -434,22 +430,22 @@ public final class OfbizUrlBuilder {
         }
         return makeSecure;
     }
-    
+
     /**
      * Builds a partial URL - including the scheme and host, but not the servlet path or resource.
      * <p>
-     * SCIPIO: Version that assumes controller is to be used. Also accepts Boolean instead of boolean.
-     * 
+     * SCIPIO: This is the original overload that assumes controller is to be used. Also accepts Boolean instead of boolean.
+     *
      * @param buffer
-     * @param url
+     * @param uri
      * @param useSSL Default value to use - will be replaced by request-map setting
      * if one is found with security=true set.
      * @return <code>true</code> if the URL uses https
      * @throws WebAppConfigurationException
      * @throws IOException
      */
-    public boolean buildHostPart(Appendable buffer, String url, Boolean useSSL) throws WebAppConfigurationException, IOException {
-        return buildHostPart(buffer, url, useSSL, true);
+    public boolean buildHostPart(Appendable buffer, String uri, Boolean useSSL) throws WebAppConfigurationException, IOException {
+        return buildHostPart(buffer, uri, useSSL, true);
     }
 
     /**
@@ -460,39 +456,40 @@ public final class OfbizUrlBuilder {
     public boolean buildHostPart(Appendable buffer, Boolean useSSL) throws WebAppConfigurationException, IOException {
         return buildHostPart(buffer, null, useSSL, false);
     }
-    
+
     /**
      * Builds a partial URL - including the servlet path and resource, but not the scheme or host.
      * <p>
-     * SCIPIO: 2018-08-01: If url is null, this only appends up to the servlet path, with no trailing slash.
-     * If url is empty string, does the same but appends trailing slash.
+     * SCIPIO: 2018-08-01: If uri is null, this only appends up to the servlet path, with no trailing slash.
+     * If uri is empty string, does the same but appends trailing slash.
+     * 
      * @param buffer
-     * @param url
+     * @param uri
      * @throws WebAppConfigurationException
      * @throws IOException
      */
-    public void buildPathPart(Appendable buffer, String url) throws WebAppConfigurationException, IOException {
+    public void buildPathPart(Appendable buffer, String uri) throws WebAppConfigurationException, IOException {
         if (servletPath == null) {
             throw new IllegalStateException("Servlet path is unknown");
         }
         if (webappPathPrefixUrlBuild) {
             buffer.append(webSiteProps.getWebappPathPrefix()); // SCIPIO: 2018-07-27
         }
-        if (url != null) {
+        if (uri != null) {
             buffer.append(servletPath);
-            appendPathPart(buffer, url); // SCIPIO
+            appendPathPart(buffer, uri); // SCIPIO
         } else {
             buffer.append(servletPath.endsWith("/") ? servletPath.substring(0, servletPath.length() - 1) : servletPath);
         }
     }
 
-    public void buildPathPartNoPathPrefix(Appendable buffer, String url) throws WebAppConfigurationException, IOException {
+    public void buildPathPartNoPathPrefix(Appendable buffer, String uri) throws WebAppConfigurationException, IOException {
         if (servletPath == null) {
             throw new IllegalStateException("Servlet path is unknown");
         }
-        if (url != null) {
+        if (uri != null) {
             buffer.append(servletPath);
-            appendPathPart(buffer, url); // SCIPIO
+            appendPathPart(buffer, uri); // SCIPIO
         } else {
             buffer.append(servletPath.endsWith("/") ? servletPath.substring(0, servletPath.length() - 1) : servletPath);
         }
@@ -503,8 +500,8 @@ public final class OfbizUrlBuilder {
      * Alias for {@link #buildPathPart(Appendable, String)}.
      * Added 2018-08-01.
      */
-    public void buildPathPartWithServletPath(Appendable buffer, String url) throws WebAppConfigurationException, IOException {
-        buildPathPart(buffer, url);
+    public void buildPathPartWithServletPath(Appendable buffer, String uri) throws WebAppConfigurationException, IOException {
+        buildPathPart(buffer, uri);
     }
 
     /**
@@ -514,12 +511,12 @@ public final class OfbizUrlBuilder {
     public void buildPathPartWithServletPath(Appendable buffer) throws WebAppConfigurationException, IOException {
         buildPathPart(buffer, null);
     }
-    
+
     /**
-     * SCIPIO: Adds a path and a url to the buffer, handling slash (/).
+     * SCIPIO: Adds a path to the buffer, handling slash (/).
      * WARN: This assumes the buffer is a StringBuilder, StringWriter, or other whose toString()
      * returns the url, and not some other type of Writer.
-     * Added 2018-07-09. 
+     * Added 2018-07-09.
      */
     private static void appendPathPart(Appendable buffer, String part) throws IOException {
         if (buffer.toString().endsWith("/")) {
@@ -539,23 +536,19 @@ public final class OfbizUrlBuilder {
     /**
      * SCIPIO: Builds a partial URL - including the context path, but not the scheme or host or servlet.
      * <p>
-     * 2018-08-01: If url is null, this only appends up to the context root, with no trailing slash.
-     * If url is empty string, does the same but appends trailing slash.
-     * @param buffer
-     * @param url
-     * @throws WebAppConfigurationException
-     * @throws IOException
+     * 2018-08-01: If uri is null, this only appends up to the context root, with no trailing slash.
+     * If uri is empty string, does the same but appends trailing slash.
      */
-    public void buildPathPartWithContextPath(Appendable buffer, String url) throws WebAppConfigurationException, IOException {
+    public void buildPathPartWithContextPath(Appendable buffer, String uri) throws WebAppConfigurationException, IOException {
         if (contextPath == null) {
             throw new IllegalStateException("Context path is unknown");
         }
         if (webappPathPrefixUrlBuild) {
             buffer.append(webSiteProps.getWebappPathPrefix()); // SCIPIO: 2018-07-27
         }
-        if (url != null) {
+        if (uri != null) {
             buffer.append(contextPath);
-            appendPathPart(buffer, url);
+            appendPathPart(buffer, uri);
         } else {
             buffer.append(contextPath.endsWith("/") ? contextPath.substring(0, contextPath.length() - 1) : contextPath);
         }
@@ -572,24 +565,29 @@ public final class OfbizUrlBuilder {
     /**
      * SCIPIO: Builds a partial URL - including the webapp path prefix, but not the context path.
      * <p>
-     * 2018-08-01: If url is null, this only appends up to the webapp path prefix, with no trailing slash.
-     * If url is empty string, does the same but appends trailing slash.
-     * @param buffer
-     * @param url
-     * @throws WebAppConfigurationException
-     * @throws IOException
+     * WARN: This overload should only be used by very specific implementations,
+     * because it usually makes no sense to append the webappPathPrefix with a contextPath
+     * different than the one from the same target webapp.
+     * <p>
+     * 2018-08-01: If uri is null, this only appends up to the webapp path prefix, with no trailing slash.
+     * If uri is empty string, does the same but appends trailing slash.
      */
-    public void buildPathPartWithWebappPathPrefix(Appendable buffer, String url) throws WebAppConfigurationException, IOException {
+    public void buildPathPartWithWebappPathPrefix(Appendable buffer, String uri) throws WebAppConfigurationException, IOException {
         if (webappPathPrefixUrlBuild) {
             buffer.append(webSiteProps.getWebappPathPrefix()); // SCIPIO: 2018-07-27
         }
-        if (url != null) {
-            appendPathPart(buffer, url); // SCIPIO
+        if (uri != null) {
+            appendPathPart(buffer, uri); // SCIPIO
         }
     }
 
     /**
      * SCIPIO: Builds path part up to webapp path prefix, with no trailing slash.
+     * <p>
+     * WARN: This overload should only be used by very specific implementations,
+     * because it usually makes no sense to append the webappPathPrefix with a contextPath
+     * different than the one from the same target webapp.
+     * <p>
      * Added 2018-08-01.
      */
     public void buildPathPartWithWebappPathPrefix(Appendable buffer) throws WebAppConfigurationException, IOException {
@@ -621,7 +619,7 @@ public final class OfbizUrlBuilder {
     public String getContextAndServletPath() {
         return servletPath;
     }
-    
+
     /**
      * SCIPIO: Get webapp context path, but NOT
      * including the webappPathPrefix ({@link #getWebappPathPrefix()});
@@ -633,13 +631,13 @@ public final class OfbizUrlBuilder {
     }
 
     /**
-     * SCIPIO: Get the webapp path prefix (comes from WebSiteProperties webappPathPrefix).
+     * SCIPIO: Get the webapp path prefix (e.g. from WebSiteProperties or other).
      * Added 2018-07-27.
      */
     public String getWebappPathPrefix() {
         return webSiteProps.getWebappPathPrefix();
     }
-    
+
     /**
      * SCIPIO: Determines if the webapp path prefix is supposed to and being included
      * in this URL building; otherwise assumed to be done by URL rewriting later.

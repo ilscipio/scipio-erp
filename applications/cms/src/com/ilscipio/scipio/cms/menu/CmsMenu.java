@@ -2,7 +2,6 @@ package com.ilscipio.scipio.cms.menu;
 
 import java.util.Map;
 
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 
@@ -15,7 +14,7 @@ public class CmsMenu extends CmsDataObject {
     
     private static final long serialVersionUID = -714021324721469544L;
     
-    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());    
+    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());    
     
     protected CmsMenu(GenericValue entity) {
         super(entity);

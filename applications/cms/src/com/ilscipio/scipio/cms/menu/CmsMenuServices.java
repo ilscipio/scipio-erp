@@ -1,7 +1,6 @@
 package com.ilscipio.scipio.cms.menu;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import org.ofbiz.base.lang.JSON;
@@ -113,7 +112,7 @@ public abstract class CmsMenuServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Map<String, Object> result = ServiceUtil.returnSuccess();
         String menuId = (String) context.get("menuId");
-        String websiteId = (String) context.get("websiteId");
+        //String websiteId = (String) context.get("websiteId");
         
         try {
             GenericValue userLogin = CmsServiceUtil.getUserLoginOrSystem(dctx, context);
@@ -148,9 +147,9 @@ public abstract class CmsMenuServices {
      */
     public static Map<String, Object> deleteMenu(DispatchContext dctx, Map<String, ?> context) {
         Delegator delegator = dctx.getDelegator();
-        LocalDispatcher dispatcher = dctx.getDispatcher();
-        Locale locale = (Locale) context.get("locale");
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        //LocalDispatcher dispatcher = dctx.getDispatcher();
+        //Locale locale = (Locale) context.get("locale");
+        //GenericValue userLogin = (GenericValue) context.get("userLogin");
         Map<String, Object> result = ServiceUtil.returnSuccess();
 
         String menuId = (String) context.get("menuId");

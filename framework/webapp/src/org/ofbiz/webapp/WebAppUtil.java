@@ -28,6 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -74,12 +75,7 @@ public final class WebAppUtil {
      */
     private static final Map<String, WebappInfo> webappInfoWebSiteIdCache = new ConcurrentHashMap<String, WebappInfo>();
 
-    /**
-     * SCIPIO: Fast, light homemache cache to optimize WebappInfo lookups by exact context path.
-     */
-    private static final Map<String, WebappInfo> webappInfoContextPathCache = new ConcurrentHashMap<String, WebappInfo>();
-    
-    private static final Pattern contextPathDelimPat = Pattern.compile("[/?;#&]");
+    private static final Pattern urlQueryDelimPat = Pattern.compile("[?;#&]");
     
     /**
      * Returns the control servlet path. The path consists of the web application's mount-point
@@ -267,81 +263,84 @@ public final class WebAppUtil {
      * the given path.
      * <p>
      * <strong>WARN:</strong> Webapp mounted on root (/*) will usually cause a catch-all here.
-     * 
-     * @param webSiteId
-     * @throws IOException
-     * @throws SAXException
+     * <p>
+     * NOTE: This only works for paths starting from webapp contextPath; 
+     * if it contains extra prefix such as webappPathPrefix, this will throw exception
+     * or return the root webapp (if any mapped to /).
      */
-    public static WebappInfo getWebappInfoFromPath(String path) throws IOException, SAXException {
+    public static WebappInfo getWebappInfoFromPath(String serverName, String path, boolean stripQuery) throws IOException, SAXException {
         Assert.notNull("path", path);
-        // Must be absolute
-        if (!path.startsWith("/")) {
+        // Must be absolute (NOTE: empty path is valid, designates root-mounted "/" webapp)
+        if (path.length() > 0 && !path.startsWith("/")) {
             throw new IllegalArgumentException("Scipio: Web app for path '" + path + "' not found (must be absolute path).");
         }
         
-        String contextPath = path;
-        // TODO: version without regexp... 
-        // TODO: version that supports multiple slashes, but too complicated for now
-        Matcher m = contextPathDelimPat.matcher(path.substring(1)); 
-        if (m.find()) {
-            contextPath = "/" + path.substring(1, m.start() + 1);
-        }
-        
-        WebappInfo webappInfo;
-        try {
-            webappInfo = getWebappInfoFromContextPath(contextPath);
-        }
-        catch(IllegalArgumentException e) {
-            try {
-                // If there was no exact match, assume we're covered by the root mount-point
-                webappInfo = getWebappInfoFromContextPath("/");
+        if (stripQuery) {
+            Matcher m = urlQueryDelimPat.matcher(path); 
+            if (m.find()) {
+                path = path.substring(0, m.start());
             }
-            catch(IllegalArgumentException e2) {
-                throw new IllegalArgumentException("Scipio: Web app for path '" + path + "' not found.");
+        }
+        Map<String, WebappInfo> webappInfosByContextPath = ComponentConfig.getWebappInfosByContextRootForServer(serverName);
+        if (webappInfosByContextPath == null) {
+            throw new IllegalArgumentException("Web app for path '" + path + "' not found by context path because server name '"
+                    + serverName + "' is not registered");
+        }
+        while(true) {
+            WebappInfo webappInfo = webappInfosByContextPath.get(path);
+            if (webappInfo != null) {
+                return webappInfo;
             }
+            int i = path.lastIndexOf('/');
+            if (i < 0) {
+                throw new IllegalArgumentException("Web app for path '" + path + "' not found by context path.");
+            }
+            path = path.substring(0, i);
+        }
+    }
+
+    @Deprecated
+    public static WebappInfo getWebappInfoFromPath(String path) throws IOException, SAXException {
+        return getWebappInfoFromPath(null, path, true);
+    }
+
+    /**
+     * SCIPIO: Returns the <code>WebappInfo</code> instance that the given exact context path as mount-point
+     * <p>
+     * <strong>WARN:</strong> Webapp mounted on root (/*) will usually cause a catch-all here.
+     */
+    public static WebappInfo getWebappInfoFromContextPath(String serverName, String contextPath) throws IOException, SAXException {
+        Assert.notNull("contextPath", contextPath);
+        WebappInfo webappInfo = ComponentConfig.getWebappInfoByContextRoot(serverName, contextPath);
+        if (webappInfo == null) {
+            throw new IllegalArgumentException("Web app for context path '" + contextPath + "' not found.");
         }
         return webappInfo;
     }
     
     /**
      * SCIPIO: Returns the <code>WebappInfo</code> instance that the given exact context path as mount-point
+     * @deprecated use {@link #getWebappInfoFromContextPath(String, String)} and specify sever name
      * <p>
      * <strong>WARN:</strong> Webapp mounted on root (/*) will usually cause a catch-all here.
-     * 
-     * @param webSiteId
-     * @throws IOException
-     * @throws SAXException
      */
+    @Deprecated
     public static WebappInfo getWebappInfoFromContextPath(String contextPath) throws IOException, SAXException {
         Assert.notNull("contextPath", contextPath);
-        
-        // SCIPIO: Go through cache first. No need to synchronize, doesn't matter.
-        WebappInfo res = webappInfoContextPathCache.get(contextPath);
-        if (res != null) {
-            return res;
+        WebappInfo webappInfo = ComponentConfig.getWebappInfoByContextRoot(contextPath);
+        if (webappInfo == null) {
+            throw new IllegalArgumentException("Web app for context path '" + contextPath + "' not found.");
         }
-        else {
-            for (WebappInfo webAppInfo : ComponentConfig.getAllWebappResourceInfos()) {
-                if (contextPath.equals(webAppInfo.getContextRoot())) {
-                    webappInfoContextPathCache.put(contextPath, webAppInfo); // SCIPIO: save in cache
-                    return webAppInfo;
-                }
-            }
-        }
-        throw new IllegalArgumentException("Web app for context path '" + contextPath + "' not found.");
+        return webappInfo;
     }
     
     /**
      * SCIPIO: Returns the <code>WebappInfo</code> instance for the current request's webapp.
-     * 
-     * @param webSiteId
-     * @throws IOException
-     * @throws SAXException
      */
     public static WebappInfo getWebappInfoFromRequest(HttpServletRequest request) throws IOException, SAXException {
         Assert.notNull("request", request);
         String contextPath = request.getContextPath();
-        return getWebappInfoFromContextPath(contextPath);
+        return getWebappInfoFromContextPath(getServerId(request), contextPath);
     }    
 
     /**
@@ -579,6 +578,20 @@ public final class WebAppUtil {
      */
     public static LocalDispatcher getDispatcherFilterSafe(HttpServletRequest request, Delegator delegator) {
         return getDispatcherReadOnly(request, delegator);
+    }
+
+    /**
+     * SCIPIO: Gets server ID from request.
+     */
+    public static String getServerId(HttpServletRequest request) {
+        return getServerId(request.getServletContext());
+    }
+
+    /**
+     * SCIPIO: Gets server ID from servlet context.
+     */
+    public static String getServerId(ServletContext servletContext) {
+        return (String) servletContext.getAttribute("_serverId");
     }
 
     private WebAppUtil() {}

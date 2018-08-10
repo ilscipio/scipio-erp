@@ -61,6 +61,7 @@ import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.webapp.ExtWebappInfo;
 import org.ofbiz.webapp.FullWebappInfo;
 import org.ofbiz.webapp.OfbizUrlBuilder;
+import org.ofbiz.webapp.WebAppUtil;
 import org.ofbiz.webapp.control.ConfigXMLReader.ControllerConfig;
 import org.ofbiz.webapp.event.EventFactory;
 import org.ofbiz.webapp.event.EventHandler;
@@ -2250,9 +2251,9 @@ public class RequestHandler {
                 // to build the link.
                 try {
                     if (requestBased) {
-                        targetWebappInfo = FullWebappInfo.fromWebapp(ExtWebappInfo.fromPath(url), request);
+                        targetWebappInfo = FullWebappInfo.fromWebapp(ExtWebappInfo.fromPath(WebAppUtil.getServerId(request), url, true), request);
                     } else {
-                        targetWebappInfo = FullWebappInfo.fromWebapp(ExtWebappInfo.fromPath(url), context);
+                        targetWebappInfo = FullWebappInfo.fromWebapp(ExtWebappInfo.fromPath(WebAppUtil.getServerId(context), url, true), context);
                     }
                 } catch (Exception e) {
                     Debug.logError("makeLinkAuto: Could not get webapp from absolute path '" + url + "': " + e.toString(), module);

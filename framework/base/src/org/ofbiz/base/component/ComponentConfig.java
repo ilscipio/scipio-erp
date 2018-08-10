@@ -914,23 +914,27 @@ public final class ComponentConfig {
                 WebappInfo lastWebappInfo = webappInfoList.get(webappInfoList.size() - 1);
                 // Handle special override-modes for all webapps before the last one
                 for(WebappInfo webappInfo : webappInfoList.subList(0, webappInfoList.size() - 1)) {
-                    if ("remove-overridden-webapp".equals(lastWebappInfo.getOverrideMode())) {
-                        ComponentConfig prevCc = webappInfo.componentConfig;
-                        // NOTE: if the CC has multiple webapps, it may already have been updated,
-                        // so fetch it out of the map
-                        if (modifiedComponentsByName.containsKey(prevCc.getComponentName())) {
-                            prevCc = modifiedComponentsByName.get(prevCc.getComponentName());
-                        }
-                        List<WebappInfo> prevWebappInfoList = prevCc.getWebappInfos();
-                        List<WebappInfo> newWebappInfoList = new ArrayList<>(prevWebappInfoList.size());
-                        // removed this webapp from the list
-                        for(WebappInfo prevWebappInfo : prevWebappInfoList) {
-                            if (prevWebappInfo != webappInfo && !prevWebappInfo.getName().equals(webappInfo.getName())) {
-                                newWebappInfoList.add(prevWebappInfo);
+                    // SCIPIO: 2018-08-10: we should only do these modifications if both are on the same serverId,
+                    // because technically it should be valid to have same apps on different servers
+                    if (lastWebappInfo.getServer().equals(webappInfo.getServer())) {
+                        if ("remove-overridden-webapp".equals(lastWebappInfo.getOverrideMode())) {
+                            ComponentConfig prevCc = webappInfo.componentConfig;
+                            // NOTE: if the CC has multiple webapps, it may already have been updated,
+                            // so fetch it out of the map
+                            if (modifiedComponentsByName.containsKey(prevCc.getComponentName())) {
+                                prevCc = modifiedComponentsByName.get(prevCc.getComponentName());
                             }
+                            List<WebappInfo> prevWebappInfoList = prevCc.getWebappInfos();
+                            List<WebappInfo> newWebappInfoList = new ArrayList<>(prevWebappInfoList.size());
+                            // removed this webapp from the list
+                            for(WebappInfo prevWebappInfo : prevWebappInfoList) {
+                                if (prevWebappInfo != webappInfo && !prevWebappInfo.getName().equals(webappInfo.getName())) {
+                                    newWebappInfoList.add(prevWebappInfo);
+                                }
+                            }
+                            ComponentConfig newCc = new ComponentConfig(prevCc, newWebappInfoList);
+                            modifiedComponentsByName.put(newCc.getComponentName(), newCc);
                         }
-                        ComponentConfig newCc = new ComponentConfig(prevCc, newWebappInfoList);
-                        modifiedComponentsByName.put(newCc.getComponentName(), newCc);
                     }
                 }
             }

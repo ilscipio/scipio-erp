@@ -19,7 +19,6 @@
 package com.ilscipio.scipio.webtools;
 
 import java.io.BufferedWriter;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -34,10 +33,10 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-
 import org.apache.commons.io.IOUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
@@ -67,8 +66,8 @@ public class WebToolsServices {
      * @return String of generated filedownloadlink
      * */
     public static Map<String, Object> getEntityExport(DispatchContext dctx, Map<String, ? extends Object> context) {
-        Map result = ServiceUtil.returnSuccess();
-        List<String> entityNames = (List) context.get("entityList");
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        List<String> entityNames = UtilGenerics.checkList(context.get("entityList"));
         EntityCondition entityFromCond = null;
         EntityCondition entityThruCond = null;
         EntityCondition entityDateCond = null;

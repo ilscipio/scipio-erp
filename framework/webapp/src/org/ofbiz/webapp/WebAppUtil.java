@@ -281,7 +281,7 @@ public final class WebAppUtil {
                 path = path.substring(0, m.start());
             }
         }
-        Map<String, WebappInfo> webappInfosByContextPath = ComponentConfig.getWebappInfosByContextRootForServer(serverName);
+        Map<String, WebappInfo> webappInfosByContextPath = ComponentConfig.getWebappInfosByContextRoot(serverName);
         if (webappInfosByContextPath == null) {
             throw new IllegalArgumentException("Web app for path '" + path + "' not found by context path because server name '"
                     + serverName + "' is not registered");
@@ -327,7 +327,7 @@ public final class WebAppUtil {
     @Deprecated
     public static WebappInfo getWebappInfoFromContextPath(String contextPath) throws IOException, SAXException {
         Assert.notNull("contextPath", contextPath);
-        WebappInfo webappInfo = ComponentConfig.getWebappInfoByContextRoot(contextPath);
+        WebappInfo webappInfo = ComponentConfig.getWebappInfoByContextRoot(null, contextPath);
         if (webappInfo == null) {
             throw new IllegalArgumentException("Web app for context path '" + contextPath + "' not found.");
         }

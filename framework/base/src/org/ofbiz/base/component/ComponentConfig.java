@@ -353,53 +353,73 @@ public final class ComponentConfig {
                 contextRootMap = new HashMap<>();
                 map.put(webappInfo.getServer(), contextRootMap);
             }
+            if (contextRootMap.containsKey(webappInfo.getContextRoot())) {
+               Debug.logWarning("Scipio: There are two webapps registered in system for contextRoot '"
+                        + webappInfo.getContextRoot() + "' for the same server (" + webappInfo.getServer()
+                        + "); ocasionally code can have problems with this (due to varying lookup orders by contextRoot)", module);
+            }
             contextRootMap.put(webappInfo.getContextRoot(), webappInfo);
         }
         map = Collections.unmodifiableMap(map);
+        serverContextRootWebappInfoCache = map;
+        return map;
+    }
+    
+    private static Map<String, WebappInfo> contextRootWebappInfoCache;
+
+    private static Map<String, WebappInfo> getContextRootWebappInfoMap() {
+        if (contextRootWebappInfoCache != null) {
+            return contextRootWebappInfoCache;
+        }
+        Map<String, WebappInfo> map = new HashMap<>();
+        for(WebappInfo webappInfo : getAllWebappResourceInfos()) {
+            if (map.containsKey(webappInfo.getContextRoot())) {
+                WebappInfo otherInfo = map.get(webappInfo.getContextRoot());
+                if (otherInfo.getServer().equals(webappInfo.getServer())) {
+                    Debug.logWarning("Scipio: There are two webapps registered in system for contextRoot '"
+                            + webappInfo.getContextRoot() + "' for the same server (" + webappInfo.getServer()
+                            + "); ocasionally code can have problems with this (due to varying lookup orders by contextRoot)", module);
+                } else {
+                    Debug.logWarning("Scipio: There are two webapps registered in system for contextRoot '"
+                            + webappInfo.getContextRoot() + "' but under different servers; some legacy code"
+                            + " may experience problems under this configuration (even if servers are different)", module);
+                }
+            }
+            map.put(webappInfo.getContextRoot(), webappInfo);
+        }
+        map = Collections.unmodifiableMap(map);
+        contextRootWebappInfoCache = map;
         return map;
     }
 
     /**
-     * SCIPIO: Gets a resolved map of the effective WebappInfo for each given context root (contextPath).
+     * SCIPIO: Gets a resolved map of the effective WebappInfo for each given context root (contextPath),
+     * with optional server filter (usually recommended).
      * <p>
      * NOTE: This must only be called post-loading due to caching - do not call during loading!
      */
-    public static Map<String, WebappInfo> getWebappInfosByContextRootForServer(String serverName) {
-        return getServerContextRootWebappInfoMap().get(serverName != null ? serverName : "default-server");
+    public static Map<String, WebappInfo> getWebappInfosByContextRoot(String serverName) {
+        if (serverName != null) {
+            return getServerContextRootWebappInfoMap().get(serverName);
+        } else {
+            return getContextRootWebappInfoMap();
+        }
     }
 
     /**
-     * SCIPIO: Gets a resolved map of the effective WebappInfo for each given context root (contextPath).
-     * <p>
-     * NOTE: This must only be called post-loading due to caching - do not call during loading!
-     */
-    public static Map<String, WebappInfo> getWebappInfosByContextRootForDefaultServer() {
-        return getWebappInfosByContextRootForServer(null);
-    }
-
-    /**
-     * Gets webapp info by server name and context root.
+     * Gets webapp info by context root, with optional server filter (usually recommended).
      * <p>
      * SCIPIO: 2018-08-08: modified to support a cache.
      * <p>
      * NOTE: This must only be called post-loading due to caching - do not call during loading!
      */
     public static WebappInfo getWebappInfoByContextRoot(String serverName, String contextRoot) {
-        Map<String, WebappInfo> contextRootMap = getServerContextRootWebappInfoMap().get(serverName);
-        return (contextRootMap != null) ? contextRootMap.get(contextRoot) : null;
-    }
-
-    /**
-     * Gets webapp info for default server by context root.
-     * @deprecated use {@link #getWebappInfoByContextRoot(String, String)} and specify server
-     * <p>
-     * SCIPIO: 2018-08-08: modified to support a cache.
-     * <p>
-     * NOTE: This must only be called post-loading due to caching - do not call during loading!
-     */
-    @Deprecated
-    public static WebappInfo getWebappInfoByContextRoot(String contextRoot) {
-        return getWebappInfoByContextRoot(null, contextRoot);
+        if (serverName != null) {
+            Map<String, WebappInfo> contextRootMap = getServerContextRootWebappInfoMap().get(serverName);
+            return (contextRootMap != null) ? contextRootMap.get(contextRoot) : null;
+        } else {
+            return getContextRootWebappInfoMap().get(contextRoot);
+        }
     }
 
     /**

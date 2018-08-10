@@ -37,10 +37,9 @@ import org.ofbiz.webapp.control.RequestLinkUtil;
 /**
  * Web site properties.
  * <p>
- * SCIPIO: NOTE: 2018-08: This is a LOW-LEVEL class that only encapsulates
- * a very limited set of storable website information.
- * It is recommended not to use this class directly anymore but instead to use 
- * {@link org.ofbiz.webapp.FullWebappInfo} to obtain a {@link org.ofbiz.webapp.OfbizUrlBuilder}.
+ * SCIPIO: NOTE: 2018-08: It is recommended not to load this class directly anymore 
+ * but instead to go through {@link org.ofbiz.webapp.FullWebappInfo} and for link-building obtain its
+ * {@link org.ofbiz.webapp.OfbizUrlBuilder}.
  * Future improvements will likely be abstracted by those classes rather than by this one 
  * (due to its limited scope).
  */
@@ -88,14 +87,14 @@ public final class WebSiteProperties {
         if (webSiteProps == null) {
 
             // SCIPIO: now delegates
-            webSiteProps = newFrom(request, WebSiteWorker.getWebSiteId(request));
+            webSiteProps = newFrom(WebSiteWorker.getWebSiteId(request), request);
 
             request.setAttribute("_WEBSITE_PROPS_", webSiteProps);
         }
         return webSiteProps;
     }
 
-    private static WebSiteProperties newFrom(HttpServletRequest request, String webSiteId) throws GenericEntityException {
+    private static WebSiteProperties newFrom(String webSiteId, HttpServletRequest request) throws GenericEntityException {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
 
         // SCIPIO: This code section is restructured for optional request overrides and other fixes.
@@ -193,7 +192,7 @@ public final class WebSiteProperties {
      *
      * @param webSiteValue
      */
-    public static WebSiteProperties from(HttpServletRequest request, GenericValue webSiteValue) throws GenericEntityException {
+    public static WebSiteProperties from(GenericValue webSiteValue, HttpServletRequest request) throws GenericEntityException {
         Assert.notNull("webSiteValue", webSiteValue);
         if (!"WebSite".equals(webSiteValue.getEntityName())) {
             throw new IllegalArgumentException("webSiteValue is not a WebSite entity value");
@@ -246,20 +245,18 @@ public final class WebSiteProperties {
     /**
      * SCIPIO: Returns web site properties for the given webSiteId, or for any fields missing,
      * the values for the current request (or system defaults).
-     *
      * @param webSiteValue
      */
-    public static WebSiteProperties from(HttpServletRequest request, String webSiteId) throws GenericEntityException {
+    public static WebSiteProperties from(String webSiteId, HttpServletRequest request) throws GenericEntityException {
         Assert.notNull("webSiteId", webSiteId);
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         GenericValue webSiteValue = EntityQuery.use(delegator).from("WebSite").where("webSiteId", webSiteId).cache().queryOne();
         if (webSiteValue != null) {
-            return from(request, webSiteValue);
+            return from(webSiteValue, request);
         } else {
             throw new GenericEntityException("Scipio: Could not find WebSite for webSiteId '" + webSiteId + "'");
         }
     }
-
 
     /**
      * Returns a <code>WebSiteProperties</code> instance initialized to the settings found
@@ -294,11 +291,10 @@ public final class WebSiteProperties {
     /**
      * SCIPIO: Returns a <code>WebSiteProperties</code> instance initialized to the settings found
      * in the WebSite entity value for the given webSiteId.
-     *
-     * @param delegator
      * @param webSiteId
+     * @param delegator
      */
-    public static WebSiteProperties from(Delegator delegator, String webSiteId) throws GenericEntityException {
+    public static WebSiteProperties from(String webSiteId, Delegator delegator) throws GenericEntityException {
         Assert.notNull("webSiteId", webSiteId);
         GenericValue webSiteValue = EntityQuery.use(delegator).from("WebSite").where("webSiteId", webSiteId).cache().queryOne();
         if (webSiteValue != null) {

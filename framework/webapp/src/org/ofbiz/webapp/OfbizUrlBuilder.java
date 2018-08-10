@@ -86,7 +86,7 @@ public final class OfbizUrlBuilder {
      * delegator one.
      */
     public static OfbizUrlBuilder from(ExtWebappInfo extWebappInfo, HttpServletRequest request) throws GenericEntityException, WebAppConfigurationException {
-        WebSiteProperties webSiteProps = WebSiteProperties.from(request, extWebappInfo.getWebSiteId());
+        WebSiteProperties webSiteProps = WebSiteProperties.from(extWebappInfo.getWebSiteId(), request);
         ControllerConfig config = extWebappInfo.getControllerConfig();
         String servletPath = extWebappInfo.getFullControlPath();
         String contextPath = extWebappInfo.getContextPath();
@@ -281,7 +281,7 @@ public final class OfbizUrlBuilder {
         WebSiteProperties webSiteProps = null;
         if (webSiteId != null && !webSiteId.isEmpty()) {
             webAppInfo = WebAppUtil.getWebappInfoFromWebsiteId(webSiteId);
-            webSiteProps = WebSiteProperties.from(delegator, webSiteId);
+            webSiteProps = WebSiteProperties.from(webSiteId, delegator);
         }
         if (webSiteProps == null) {
             webSiteProps = WebSiteProperties.defaults(delegator);

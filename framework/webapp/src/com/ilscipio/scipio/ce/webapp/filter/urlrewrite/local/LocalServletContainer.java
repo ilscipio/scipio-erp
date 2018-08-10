@@ -149,6 +149,7 @@ public class LocalServletContainer {
      * APPROXIMATION of ofbiz setup of request, session and servlet context.
      */
     protected void setupFromOfbizContext(Map<String, Object> context, RenderEnvType renderEnvType) {
+        setupServletContextCatalina();
         setupServletContextContextFilter();
         setupRequestContextFilter();
         setupRequestControlServlet();
@@ -172,6 +173,15 @@ public class LocalServletContainer {
         session.setAttribute("userLogin", userLogin);
     }
     
+    protected void setupServletContextCatalina() {
+        String serverId = (String) getServletContext().getAttribute("_serverId");
+        if (serverId == null) {
+            getServletContext().setAttribute("_serverId", getWebappInfo().getServerId());
+        }
+        
+        // TODO?: could be more needed...
+    }
+
     protected void setupServletContextContextFilter() {
         // FIXME massive copy paste for now, due to old ContextFilter code
         

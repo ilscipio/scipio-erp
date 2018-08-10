@@ -8,7 +8,6 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionContext;
 
 import org.ofbiz.base.util.Debug;
 
@@ -64,8 +63,9 @@ public class LocalHttpSession implements HttpSession {
         return 0;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
-    public HttpSessionContext getSessionContext() {
+    public javax.servlet.http.HttpSessionContext getSessionContext() {
         Debug.logWarning("getSessionContext called - deprecated", module);
         return null;
     }

@@ -36,7 +36,7 @@ under the License.
     <!-- ELEMENTS start here -->
     <xs:element name="test-suite">
         <xs:complexType>
-            <xs:choice minOccurs="1" maxOccurs="unbounded">
+            <xs:choice minOccurs="0" maxOccurs="unbounded"><!-- SCIPIO: 2018-08-10: switched minOccurs to 0 to allow empty file -->
                 <xs:element ref="test-case"/>
                 <xs:element ref="test-group"/>
         </xs:choice>

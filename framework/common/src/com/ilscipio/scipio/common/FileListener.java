@@ -127,9 +127,8 @@ public class FileListener {
                 while(key != null) {
                     for (WatchEvent<?> event : key.pollEvents()) {
                         GenericValue userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", "system").queryOne();
-                        final WatchEvent<Path> watchEventPath = (WatchEvent<Path>) event;
-                        final Path filename = watchEventPath.context();
-                        Path dir = (Path)key.watchable();
+                        final Path filename = (Path) event.context();
+                        Path dir = (Path) key.watchable();
                         Path fullPath = dir.resolve(filename); 
                         String fileType = Files.probeContentType(fullPath);
                         if(UtilValidate.isEmpty(fileType))fileType= FilenameUtils.getExtension(fullPath.toString());

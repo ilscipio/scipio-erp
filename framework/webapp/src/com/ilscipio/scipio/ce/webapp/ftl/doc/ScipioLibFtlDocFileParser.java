@@ -263,11 +263,13 @@ public class ScipioLibFtlDocFileParser extends FtlDocFileParser {
     }
     
     protected void amendArgListInfo(Map<String, Object> info) throws ParseException {
+        @SuppressWarnings("unchecked")
         List<String> argList = (List<String>) info.get("argList");
         Map<String, Object> argMap = null;
         if (argList != null) {
             argMap = keyListToObjectMapMap(argList);
         }
+        @SuppressWarnings("unchecked")
         Map<String, Object> paramDescMap = (Map<String, Object>) info.get("paramDescMap");
         
         Map<String, Object> argMapUnaccounted = null;

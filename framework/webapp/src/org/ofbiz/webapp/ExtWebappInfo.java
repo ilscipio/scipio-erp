@@ -271,16 +271,22 @@ public class ExtWebappInfo implements Serializable {
         return webappInfo.getName();
     }
     
+    /**
+     * Gets context path.
+     * If mapped to root, the result is empty string "" 
+     * (same format as {@link javax.servlet.http.HttpServletRequest#getContextPath()}.
+     */
     public String getContextPath() {
         return webappInfo.getContextRoot();
     }
 
     /**
+     * Gets the context root directly from {@link org.ofbiz.base.component.ComponentConfig.WebappInfo#getContextRoot()}.
      * @deprecated use {@link #getContextPath()} instead
      */
     @Deprecated
     public String getContextRoot() {
-        return getContextPath();
+        return webappInfo.getContextRoot();
     }
 
     /**
@@ -413,6 +419,10 @@ public class ExtWebappInfo implements Serializable {
 
     public boolean useUrlManualInterWebappFilter() {
         return urlManualInterWebappFilter;
+    }
+
+    public boolean isRequestWebapp(HttpServletRequest request) {
+        return getContextPath().equals(request.getContextPath());
     }
 
     private String getLogMsgPrefix() {

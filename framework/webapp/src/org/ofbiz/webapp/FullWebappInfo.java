@@ -477,11 +477,11 @@ public class FullWebappInfo {
     }
 
     public boolean equalsProtoHostPort(FullWebappInfo other) {
-        return this.getWebSiteProperties().equalsProtoHostPort(other.getWebSiteProperties());
+        return this.getWebSiteProperties().equalsServerFields(other.getWebSiteProperties());
     }
 
     public boolean equalsProtoHostPortWithHardDefaults(FullWebappInfo other) {
-        return this.getWebSiteProperties().equalsProtoHostPortWithHardDefaults(other.getWebSiteProperties());
+        return this.getWebSiteProperties().equalsServerFieldsWithHardDefaults(other.getWebSiteProperties());
     }
 
     @Override
@@ -529,6 +529,15 @@ public class FullWebappInfo {
      */
     public String getContextPath() {
         return extWebappInfo.getContextPath();
+    }
+
+    /**
+     * @return
+     * @deprecated
+     * @see org.ofbiz.webapp.ExtWebappInfo#getContextRoot()
+     */
+    public String getContextRoot() {
+        return extWebappInfo.getContextRoot();
     }
 
     /**
@@ -617,6 +626,15 @@ public class FullWebappInfo {
      */
     public boolean useUrlManualInterWebappFilter() {
         return extWebappInfo.useUrlManualInterWebappFilter();
+    }
+
+    /**
+     * @param request
+     * @return
+     * @see org.ofbiz.webapp.ExtWebappInfo#isRequestWebapp(javax.servlet.http.HttpServletRequest)
+     */
+    public boolean isRequestWebapp(HttpServletRequest request) {
+        return extWebappInfo.isRequestWebapp(request);
     }
 
     /**

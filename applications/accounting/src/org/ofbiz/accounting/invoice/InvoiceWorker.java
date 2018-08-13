@@ -698,8 +698,7 @@ public class InvoiceWorker {
                 }
             }
         } catch (GenericEntityException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Debug.logError(e, module); // SCIPIO: 2018-08-13: remove printStackTrace
         }
         return result;
     }
@@ -733,8 +732,7 @@ public class InvoiceWorker {
                             , "taxAuthPartyId", taxAuthPartyId, "taxAuthGeoId", taxAuthGeoId)).queryList();
             taxAlreadyIncluded = getTaxAmountIncluded(orderAdjustments);          
         } catch (GenericEntityException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Debug.logError(e, module); // SCIPIO: 2018-08-13: remove printStackTrace
         }
 
        //return getTaxTotalForInvoiceItems(invoiceTaxItems).add(taxAlreadyIncluded);
@@ -921,8 +919,7 @@ public class InvoiceWorker {
                 }
             }
         } catch (GenericEntityException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Debug.logError(e, module); // SCIPIO: 2018-08-13: remove printStackTrace
         }        
         return result;
     }

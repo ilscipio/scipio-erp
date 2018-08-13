@@ -866,22 +866,19 @@ public class InventoryServices {
         try {
             product = EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne();
         } catch (GenericEntityException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Debug.logError(e, module); // SCIPIO: 2018-08-13: remove printStackTrace
         }
         if (EntityTypeUtil.hasParentType(delegator, "ProductType", "productTypeId", product.getString("productTypeId"), "parentTypeId", "MARKETING_PKG")) {
             try {
                 resultOutput = dispatcher.runSync("getMktgPackagesAvailable", contextInput);
             } catch (GenericServiceException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                Debug.logError(e, module); // SCIPIO: 2018-08-13: remove printStackTrace
             }
         } else {
             try {
                 resultOutput = dispatcher.runSync("getInventoryAvailableByFacility", contextInput);
             } catch (GenericServiceException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                Debug.logError(e, module); // SCIPIO: 2018-08-13: remove printStackTrace
             }
         }
         // filter for quantities
@@ -910,8 +907,7 @@ public class InventoryServices {
         try {
             productPrices = EntityQuery.use(delegator).from("ProductPrice").where("productId",productId).orderBy("-fromDate").cache(true).queryList();
         } catch (GenericEntityException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Debug.logError(e, module); // SCIPIO: 2018-08-13: remove printStackTrace
         }
         //change this for product price
         for (GenericValue onePrice: productPrices) {
@@ -977,8 +973,7 @@ public class InventoryServices {
                     EntityOperator.AND);
                 salesUsageIt = EntityQuery.use(delegator).from(salesUsageViewEntity).where(cond).queryIterator();
             } catch (GenericEntityException e2) {
-                // TODO Auto-generated catch block
-                e2.printStackTrace();
+                Debug.logError(e2, module); // SCIPIO: 2018-08-13: remove printStackTrace
             }
 
             // Sum the sales usage quantities found
@@ -996,8 +991,7 @@ public class InventoryServices {
             try {
                 salesUsageIt.close();
             } catch (GenericEntityException e2) {
-                // TODO Auto-generated catch block
-                e2.printStackTrace();
+                Debug.logError(e2, module); // SCIPIO: 2018-08-13: remove printStackTrace
             }
 
             // Make a query against the production usage view entity
@@ -1013,8 +1007,7 @@ public class InventoryServices {
                         EntityOperator.AND);
                 productionUsageIt = EntityQuery.use(delegator).from(productionUsageViewEntity).where(conditions).queryIterator();
             } catch (GenericEntityException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
+                Debug.logError(e1, module); // SCIPIO: 2018-08-13: remove printStackTrace
             }
 
             // Sum the production usage quantities found
@@ -1032,8 +1025,7 @@ public class InventoryServices {
             try {
                 productionUsageIt.close();
             } catch (GenericEntityException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                Debug.logError(e, module); // SCIPIO: 2018-08-13: remove printStackTrace
             }
 
             result.put("usageQuantity", salesUsageQuantity.add(productionUsageQuantity));

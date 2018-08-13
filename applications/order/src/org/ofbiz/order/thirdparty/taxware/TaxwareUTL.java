@@ -124,14 +124,14 @@ public class TaxwareUTL {
             try {
                 fos = new FileOutputStream(outFile);
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                Debug.logError(e, module); // SCIPIO: 2018-08-13: remove printStackTrace
             }
             outHead.writeDataFile(fos);
             outItem.writeDataFile(fos);
             try {
                 fos.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                Debug.logError(e, module); // SCIPIO: 2018-08-13: remove printStackTrace
             }
 
             outItem.writeDataFile("TaxwareTest.in");

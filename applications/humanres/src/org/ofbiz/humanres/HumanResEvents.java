@@ -105,7 +105,7 @@ public class HumanResEvents {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Debug.logError(e, module); // SCIPIO: 2018-08-13: remove printStackTrace
             return "error";
         }
         
@@ -232,7 +232,7 @@ public class HumanResEvents {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Debug.logError(e, module); // SCIPIO: 2018-08-13: remove printStackTrace
             return "error";
         }
         request.setAttribute("hrTree", categoryList);

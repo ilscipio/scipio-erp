@@ -26,6 +26,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -35,7 +36,7 @@ import org.ofbiz.entity.util.EntityQuery;
 
 public class ProductStoreEvents {
 
-    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // Please note : the structure of map in this function is according to the JSON data map of the jsTree
     @SuppressWarnings("unchecked")
@@ -86,7 +87,7 @@ public class ProductStoreEvents {
                 }
             }
         } catch (GenericEntityException e) {
-            e.printStackTrace();
+            Debug.logError(e, module); // SCIPIO: 2018-08-13: remove printStackTrace
             return "error";
         }
         return "success";

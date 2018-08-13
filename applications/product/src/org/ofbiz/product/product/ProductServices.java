@@ -444,7 +444,7 @@ public class ProductServices {
             result.put("product", mainProduct);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (GenericEntityException e) {
-            e.printStackTrace();
+            Debug.logError(e, module); // SCIPIO: 2018-08-13: remove printStackTrace
             Map<String, String> messageMap = UtilMisc.toMap("errMessage", e.getMessage());
             errMsg = UtilProperties.getMessage(resourceError, 
                     "productservices.problems_reading_product_entity", messageMap, locale);

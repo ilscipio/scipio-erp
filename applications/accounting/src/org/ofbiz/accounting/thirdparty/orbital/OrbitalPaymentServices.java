@@ -73,8 +73,7 @@ public class OrbitalPaymentServices {
         try {
             request = new Request(RequestIF.NEW_ORDER_TRANSACTION);
         } catch (InitializationException e) {
-            Debug.logError("Error in request initialization", module);
-            e.printStackTrace();
+            Debug.logError(e, "Error in request initialization", module); // SCIPIO: 2018-08-13: remove printStackTrace
         }
         buildAuthOrAuthCaptureTransaction(context, delegator, props, request, results);
         Map<String, Object> validateResults = validateRequest(context, props, request);
@@ -100,8 +99,7 @@ public class OrbitalPaymentServices {
         try {
             request = new Request(RequestIF.NEW_ORDER_TRANSACTION);
         } catch (InitializationException e) {
-            Debug.logError("Error in request initialization", module);
-            e.printStackTrace();
+            Debug.logError(e, "Error in request initialization", module); // SCIPIO: 2018-08-13: remove printStackTrace
         }
         buildAuthOrAuthCaptureTransaction(context, delegator, props, request, results);
         Map<String, Object> validateResults = validateRequest(context, props, request);
@@ -146,8 +144,7 @@ public class OrbitalPaymentServices {
         try {
             request = new Request(RequestIF.MARK_FOR_CAPTURE_TRANSACTION);
         } catch (InitializationException e) {
-            Debug.logError("Error in request initialization", module);
-            e.printStackTrace();
+            Debug.logError(e, "Error in request initialization", module); // SCIPIO: 2018-08-13: remove printStackTrace
         }
         buildCaptureTransaction(context, delegator, props, request, results);
         Map<String, Object> validateResults = validateRequest(context, props, request);
@@ -191,8 +188,7 @@ public class OrbitalPaymentServices {
         try {
             request = new Request(RequestIF.NEW_ORDER_TRANSACTION);
         } catch (InitializationException e) {
-            Debug.logError("Error in request initialization", module);
-            e.printStackTrace();
+            Debug.logError(e, "Error in request initialization", module); // SCIPIO: 2018-08-13: remove printStackTrace
         }
         buildRefundTransaction(context, props, request, results);
         Map<String, Object> validateResults = validateRequest(context, props, request);
@@ -235,8 +231,7 @@ public class OrbitalPaymentServices {
         try {
             request = new Request(RequestIF.REVERSE_TRANSACTION);
         } catch (InitializationException e) {
-            Debug.logError("Error in request initialization", module);
-            e.printStackTrace();
+            Debug.logError(e, "Error in request initialization", module); // SCIPIO: 2018-08-13: remove printStackTrace
         }
         buildReleaseTransaction(context, delegator, props, request, results);
         Map<String, Object> validateResults = validateRequest(context, props, request);
@@ -279,8 +274,7 @@ public class OrbitalPaymentServices {
             buildConfiguratorContext.putAll(config.getConfigurations());
             config.setConfigurations(buildConfiguratorContext);
         } catch (InitializationException e) {
-            Debug.logError("Orbital Configurator Initialization Error: " + e.getMessage(), module);
-            e.printStackTrace();
+            Debug.logError(e, "Orbital Configurator Initialization Error: " + e.getMessage(), module); // SCIPIO: 2018-08-13: remove printStackTrace
         }
         return buildConfiguratorContext;
     }
@@ -381,7 +375,7 @@ public class OrbitalPaymentServices {
         } catch (FieldNotFoundException fnfe) {
             Debug.logError("Unable to find XML field in template", module);
         } catch (Exception e) {
-            e.printStackTrace();
+            Debug.logError(e, module); // SCIPIO: 2018-08-13: remove printStackTrace
         }
     }
 
@@ -420,7 +414,7 @@ public class OrbitalPaymentServices {
         } catch (FieldNotFoundException fnfe) {
             Debug.logError("Unable to find XML field in template" + fnfe.getMessage(), module);
         } catch (Exception e) {
-            e.printStackTrace();
+            Debug.logError(e, module); // SCIPIO: 2018-08-13: remove printStackTrace
         }
     }
 
@@ -452,7 +446,7 @@ public class OrbitalPaymentServices {
         } catch (FieldNotFoundException fnfe) {
             Debug.logError("Unable to find XML field in template", module);
         } catch (Exception e) {
-            e.printStackTrace();
+            Debug.logError(e, module); // SCIPIO: 2018-08-13: remove printStackTrace
         }
     }
 
@@ -476,7 +470,7 @@ public class OrbitalPaymentServices {
         } catch (FieldNotFoundException fnfe) {
             Debug.logError("Unable to find XML field in template" + fnfe.getMessage(), module);
         } catch (Exception e) {
-            e.printStackTrace();
+            Debug.logError(e, module);; // SCIPIO: 2018-08-13: remove printStackTrace
         }
     }
 
@@ -488,8 +482,7 @@ public class OrbitalPaymentServices {
         try {
             tp = new TransactionProcessor();
         } catch (InitializationException iex) {
-            Debug.logError("TransactionProcessor failed to initialize" + iex.getMessage(), module);
-            iex.printStackTrace();
+            Debug.logError(iex, "TransactionProcessor failed to initialize: " + iex.getMessage(), module); // SCIPIO: 2018-08-13: remove printStackTrace
         }
     }
 
@@ -504,8 +497,7 @@ public class OrbitalPaymentServices {
             }
             processCardResult.put("processCardResponse", response);
         } catch (TransactionException tex) {
-            Debug.logError("TransactionProcessor failed to initialize" + tex.getMessage(), module);
-            tex.printStackTrace();
+            Debug.logError(tex, "TransactionProcessor failed to initialize: " + tex.getMessage(), module); // SCIPIO: 2018-08-13: remove printStackTrace
         }
         processCardResult.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return processCardResult;
@@ -641,8 +633,7 @@ public class OrbitalPaymentServices {
                 shippingRef = "No Tracking Info processed in order";
             }
         } catch (GenericEntityException e) {
-            Debug.logError("Shipping Ref not found returning empty string", module);
-            e.printStackTrace();
+            Debug.logError(e, "Shipping Ref not found returning empty string", module); // SCIPIO: 2018-08-13: remove printStackTrace
         }
         return shippingRef;
     }

@@ -308,7 +308,7 @@ public class SecurePayPaymentServices {
                     .queryFirst();
             referenceNum = paymentGatewayResponse != null ? paymentGatewayResponse.get("referenceNum") : authTransaction.getString("referenceNum");
         } catch (GenericEntityException e) {
-            e.printStackTrace();
+            Debug.logError(nfe, module); // SCIPIO: 2018-08-13: remove printStackTrace
         }
 
         Properties props = buildScProperties(context, delegator);

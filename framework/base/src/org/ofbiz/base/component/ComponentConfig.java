@@ -914,7 +914,7 @@ public final class ComponentConfig {
                 WebappInfo lastWebappInfo = webappInfoList.get(webappInfoList.size() - 1);
                 // Handle special override-modes for all webapps before the last one
                 for(WebappInfo webappInfo : webappInfoList.subList(0, webappInfoList.size() - 1)) {
-                    // SCIPIO: 2018-08-10: we should only do these modifications if both are on the same serverId,
+                    // SCIPIO: 2018-08-13: we should only do these modifications if both are on the same serverId,
                     // because technically it should be valid to have same apps on different servers
                     if (lastWebappInfo.getServer().equals(webappInfo.getServer())) {
                         if ("remove-overridden-webapp".equals(lastWebappInfo.getOverrideMode())) {

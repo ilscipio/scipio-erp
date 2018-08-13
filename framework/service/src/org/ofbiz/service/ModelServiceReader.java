@@ -724,12 +724,12 @@ public class ModelServiceReader implements Serializable {
 
             if (sxe.getException() != null)
                 x = sxe.getException();
-            x.printStackTrace();
+            Debug.logError(x, module); // SCIPIO: 2018-08-13: remove printStackTrace
         } catch (ParserConfigurationException pce) {
             // Parser with specified options can't be built
-            pce.printStackTrace();
+            Debug.logError(pce, module); // SCIPIO: 2018-08-13: remove printStackTrace
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            Debug.logError(ioe, module); // SCIPIO: 2018-08-13: remove printStackTrace
         }
 
         return document;

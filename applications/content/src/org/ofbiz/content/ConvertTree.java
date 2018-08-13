@@ -241,7 +241,7 @@ In order ta make this service active add the following to the service definition
         } catch (GenericEntityException e) {
             errMsg = "GenericEntityException "+ UtilMisc.toMap("errMessage", e.toString());
             Debug.logError(e, errMsg, module);
-            e.printStackTrace();
+            //e.printStackTrace(); // SCIPIO: 2018-08-13: why?
             return ServiceUtil.returnError(errMsg);
         }
     }
@@ -381,12 +381,12 @@ In order ta make this service active add the following to the service definition
         } catch (GenericEntityException e) {
             errMsg = "GenericEntityException "+ UtilMisc.toMap("errMessage", e.toString());
             Debug.logError(e, errMsg, module);
-            e.printStackTrace();
+            //e.printStackTrace(); // SCIPIO: 2018-08-13: why?
             return ServiceUtil.returnError(errMsg);
         } catch (GenericServiceException e) {
             errMsg = "GenericServiceException"+ UtilMisc.toMap("errMessage", e.toString());
             Debug.logError(e, errMsg, module);
-            e.printStackTrace();
+            //e.printStackTrace(); // SCIPIO: 2018-08-13: why?
             return ServiceUtil.returnError(errMsg);
         }
     }

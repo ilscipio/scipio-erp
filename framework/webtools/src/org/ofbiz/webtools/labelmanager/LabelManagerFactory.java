@@ -203,7 +203,7 @@ public class LabelManagerFactory {
                         label = new LabelInfo(key, keyComment, fileName, localeName, localeValue, localeComment);
                         labels.put(key + keySeparator + fileName, label);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Debug.logError(e, module); // SCIPIO: 2018-08-13: remove printStackTrace
                     }
                 } else {
                     label.setLabelKeyComment(keyComment);

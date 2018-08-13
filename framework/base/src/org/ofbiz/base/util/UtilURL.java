@@ -128,7 +128,7 @@ public class UtilURL {
         try {
             if (file.exists()) url = file.toURI().toURL();
         } catch (java.net.MalformedURLException e) {
-            e.printStackTrace();
+            Debug.logError(e, module); // SCIPIO: 2018-08-13: remove printStackTrace
             url = null;
         }
         return url;

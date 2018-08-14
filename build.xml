@@ -1096,6 +1096,7 @@ under the License.
             <if><!-- SCIPIO: 2018-05-08: backward compat for old scripts -->
                 <isset property="scipio.solr.reindex.auto.force"/>
                 <then>
+                    <var name="scipio.solr.reindex.startup.force" unset="true"/>
                     <property name="scipio.solr.reindex.startup.force" value="${scipio.solr.reindex.auto.force}"/>   
                 </then>
             </if>

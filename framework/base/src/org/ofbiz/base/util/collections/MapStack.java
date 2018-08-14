@@ -25,7 +25,8 @@ import org.ofbiz.base.util.Debug;
 
 /**
  * Map Stack
- *
+ * <p>
+ * SCIPIO: 2018-08-10: Modified for better copy construction and construction with initial map.
  */
 public class MapStack<K> extends MapContext<K, Object> {
 
@@ -38,28 +39,48 @@ public class MapStack<K> extends MapContext<K, Object> {
         return newValue;
     }
 
-    @SuppressWarnings("unchecked")
+    //@SuppressWarnings("unchecked")
     public static <K> MapStack<K> create(Map<K, Object> baseMap) {
-        MapStack<K> newValue = new MapStack<K>();
+        // SCIPIO: use constructors
+        //MapStack<K> newValue = new MapStack<K>();
+        MapStack<K> newValue;
         if (baseMap instanceof MapStack) {
-            newValue.stackList.addAll(((MapStack) baseMap).stackList);
+            //newValue.stackList.addAll(((MapStack) baseMap).stackList);
+            newValue = new MapStack<>((MapStack<K>) baseMap);
         } else {
-            newValue.stackList.add(0, baseMap);
+            //newValue.stackList.add(0, baseMap);
+            newValue = new MapStack<>(baseMap);
         }
         return newValue;
     }
 
     /** Does a shallow copy of the internal stack of the passed MapStack; enables simultaneous stacks that share common parent Maps */
     public static <K> MapStack<K> create(MapStack<K> source) {
-        MapStack<K> newValue = new MapStack<K>();
-        newValue.stackList.addAll(source.stackList);
-        return newValue;
+        // SCIPIO: use copy constructor
+        //MapStack<K> newValue = new MapStack<K>();
+        //newValue.stackList.addAll(source.stackList);
+        //return newValue;
+        return new MapStack<>(source);
     }
 
     protected MapStack() {
         super();
     }
 
+    /**
+     * SCIPIO: Shallow copy constructor.
+     */
+    protected MapStack(MapStack<K> source) {
+        super(source);
+    }
+
+    /**
+     * SCIPIO: Initial map constructor.
+     */
+    protected MapStack(Map<K, Object> baseMap) {
+        super(baseMap);
+    }
+    
     /**
      * Creates a MapStack object that has the same Map objects on its stack;
      * meant to be used to enable a

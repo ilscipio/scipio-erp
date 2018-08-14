@@ -39,7 +39,13 @@ import org.ofbiz.base.util.UtilGenerics;
 
 /**
  * Map Stack
- *
+ * <p>
+ * SCIPIO: This class has been modified for:
+ * <ul>
+ * <li>new traversal operations (for partial preservation of key insert order of underlying maps) 
+ * <li>better copy construction and construction with initial map
+ * <li>making the main {@link #stackList} variable private
+ * </ul>
  */
 public class MapContext<K, V> implements Map<K, V>, LocalizedMap<V> {
 
@@ -56,29 +62,53 @@ public class MapContext<K, V> implements Map<K, V>, LocalizedMap<V> {
         return newValue;
     }
 
-    @SuppressWarnings("unchecked")
+    //@SuppressWarnings("unchecked")
     public static <K, V> MapContext<K, V> createMapContext(Map<K, V> baseMap) {
-        MapContext<K, V> newValue = MapContext.getMapContext();
+        // SCIPIO: use constructors
+        //MapContext<K, V> newValue = MapContext.getMapContext();
+        MapContext<K, V> newValue;
         if (baseMap instanceof MapContext) {
-            newValue.stackList.addAll(((MapContext) baseMap).stackList);
+            //newValue.stackList.addAll(((MapContext) baseMap).stackList);
+            newValue = new MapContext<>((MapContext<K, V>) baseMap);
         } else {
-            newValue.stackList.add(0, baseMap);
+            //newValue.stackList.add(0, baseMap);
+            newValue = new MapContext<>(baseMap);
         }
         return newValue;
     }
 
     /** Does a shallow copy of the internal stack of the passed MapContext; enables simultaneous stacks that share common parent Maps */
     public static <K, V> MapContext<K, V> createMapContext(MapContext<K, V> source) {
-        MapContext<K, V> newValue = MapContext.getMapContext();
-        newValue.stackList.addAll(source.stackList);
-        return newValue;
+        // SCIPIO: use copy constructor
+        //MapContext<K, V> newValue = MapContext.getMapContext();
+        //newValue.stackList.addAll(source.stackList);
+        //return newValue;
+        return new MapContext<>(source);
     }
 
     protected MapContext() {
         super();
+        stackList = new LinkedList<Map<K, V>>(); // SCIPIO
+    }
+    
+    /**
+     * SCIPIO: Shallow copy constructor - copies the stackList.
+     */
+    protected MapContext(MapContext<K, V> source) {
+        stackList = new LinkedList<Map<K, V>>(source.stackList);
     }
 
-    protected List<Map<K, V>> stackList = new LinkedList<Map<K, V>>();
+    /**
+     * SCIPIO: Constructor with initial map.
+     */
+    protected MapContext(Map<K, V> baseMap) {
+        stackList = new LinkedList<Map<K, V>>();
+        stackList.add(baseMap);
+    }
+
+    // SCIPIO: 2018-08-10: protected was a bad idea for this - added constructor for subclasses instead
+    //protected List<Map<K, V>> stackList = new LinkedList<Map<K, V>>();
+    private List<Map<K, V>> stackList;
 
     public void reset() {
         stackList = new LinkedList<Map<K, V>>();

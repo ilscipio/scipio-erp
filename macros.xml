@@ -25,6 +25,94 @@ under the License.
         individual component build.xml invocation in some cases. -->
 
     <!-- ================================================================== -->
+    <!-- Generic Ant macros (SCIPIO) -->
+    <!-- ================================================================== -->
+
+    <macrodef name="condition-ext" description="Custom emulation of ant condition task for ant-contrib var assignments, with unset support">
+        <attribute name="var" default=""/>
+        <attribute name="property" default=""/>
+        <attribute name="noneValue" default="__NONE__"/><!-- Ant macrodef workaround -->
+        <attribute name="value" default="@{noneValue}"/>
+        <attribute name="unset" default="false"/>
+        <attribute name="else" default="@{noneValue}"/>
+        <attribute name="else-unset" default="false"/>
+        <element name="if-condition" optional="false" implicit="true"/>
+        <sequential>
+            <if><!-- SCIPIO: 2018-05-08: backward compat for old scripts -->
+                <if-condition/>
+                <then>
+                    <if>
+                        <equals arg1="@{unset}" arg2="true"/>
+                        <then>
+                            <if>
+                                <not><equals arg1="@{var}" arg2=""/></not>
+                                <then>
+                                    <!-- NOTE: must unset first, in case using this to override a property (see ant-contrib docs) -->
+                                    <var name="@{var}" unset="true"/>
+                                </then>
+                                <else>
+                                    <var name="@{property}" unset="true"/>
+                                </else>
+                            </if>
+                        </then>
+                        <elseif>
+                            <not><equals arg1="@{value}" arg2="__NONE__"/></not>
+                            <then>
+                                <if>
+                                    <not><equals arg1="@{var}" arg2=""/></not>
+                                    <then>
+                                        <!-- NOTE: must unset first, in case using this to override a property (see ant-contrib docs) -->
+                                        <var name="@{var}" unset="true"/>
+                                        <var name="@{var}" value="@{value}"/>  
+                                    </then>
+                                    <else>
+                                        <var name="@{property}" unset="true"/>
+                                        <property name="@{property}" value="@{value}"/>  
+                                    </else>
+                                </if>
+                            </then>
+                        </elseif>
+                    </if>
+                </then>
+                <else>
+                    <if>
+                        <equals arg1="@{else-unset}" arg2="true"/>
+                        <then>
+                            <if>
+                                <not><equals arg1="@{var}" arg2=""/></not>
+                                <then>
+                                    <!-- NOTE: must unset first, in case using this to override a property (see ant-contrib docs) -->
+                                    <var name="@{var}" unset="true"/>
+                                </then>
+                                <else>
+                                    <var name="@{property}" unset="true"/>
+                                </else>
+                            </if>
+                        </then>
+                        <elseif>
+                            <not><equals arg1="@{else}" arg2="__NONE__"/></not>
+                            <then>
+                                <if>
+                                    <not><equals arg1="@{var}" arg2=""/></not>
+                                    <then>
+                                        <!-- NOTE: must unset first, in case using this to override a property (see ant-contrib docs) -->
+                                        <var name="@{var}" unset="true"/>
+                                        <var name="@{var}" value="@{else}"/>  
+                                    </then>
+                                    <else>
+                                        <var name="@{property}" unset="true"/>
+                                        <property name="@{property}" value="@{else}"/>  
+                                    </else>
+                                </if>
+                            </then>
+                        </elseif>
+                    </if>
+                </else>
+            </if>
+        </sequential>
+    </macrodef>
+
+    <!-- ================================================================== -->
     <!-- Requirements  -->
     <!-- ================================================================== -->
 

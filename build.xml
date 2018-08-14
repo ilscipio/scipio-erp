@@ -1086,6 +1086,7 @@ under the License.
     <!-- SCIPIO: ofbiz.jar exec macro - generic, factors out jvmargs common to ALL start tasks (added 2017-09-08, for solr) 
         TODO?: is not as versatile or friendly as it could be; didn't want to refactor all the task xml at this time -->
     <macrodef name="exec-scipio-jar">
+        <attribute name="action" default=""/>
         <attribute name="fork" default="true"/>
         <attribute name="spawn" default=""/>
         <attribute name="resultproperty" default=""/>
@@ -1098,6 +1099,18 @@ under the License.
                     <property name="scipio.solr.reindex.startup.force" value="${scipio.solr.reindex.auto.force}"/>   
                 </then>
             </if>
+            <!-- Ant workarounds to enable attributes to work with if:set -->
+            <var name="exec-scipio-jar.action" unset="true"/>
+            <if>
+                <length string="@{action}" when="greater" length="0"/>
+                <then><var name="exec-scipio-jar.action" value="@{action}"/></then>
+            </if>
+            <var name="exec-scipio-jar.component" unset="true"/>
+            <if>
+                <equals arg1="@{action}" arg2="load-data"/>
+                <then><var name="exec-scipio-jar.component" value="${component}" if:set="component"/></then>
+            </if>
+            <!-- Main invocation -->
             <if><!-- FIXME: get rid of this copy-paste with ant 1.9.3... -->
                 <equals arg1="@{secure}" arg2="true"/>
                 <then>
@@ -1119,6 +1132,8 @@ under the License.
                         <syspropertyset>
                             <propertyref prefix="scipio."/>
                         </syspropertyset>
+                        <arg value="${exec-scipio-jar.action}" if:set="exec-scipio-jar.action"/>
+                        <arg value="component=${exec-scipio-jar.component}" if:set="exec-scipio-jar.component"/>
                         <args/>
                     </java>
                 </then>
@@ -1136,6 +1151,8 @@ under the License.
                         <syspropertyset>
                             <propertyref prefix="scipio."/>
                         </syspropertyset>
+                        <arg value="@{action}" if:set="exec-scipio-jar.action"/>
+                        <arg value="component=${component}" if:set="exec-scipio-jar.component"/>
                         <args/>
                     </java>
                 </else>
@@ -1245,57 +1262,46 @@ under the License.
     <target name="load-demo" depends="build"
             description="Load all data; meant for generic OFBiz development, testing, demonstration, etc purposes">
         <property name="currentTarget" value="load"/>
-        <exec-scipio-jar>
-            <arg value="load-data"/>
-        </exec-scipio-jar>
+        <exec-scipio-jar action="load-data"/>
     </target>
     <target name="load-demo-multitenant" depends="build"
             description="Load all data needed for the multi-tenancy demonstration. Caution: this creates three databases, with each one loaded with all demo data.">
-        <exec-scipio-jar>
-            <arg value="load-data"/>
-        </exec-scipio-jar>
-        <exec-scipio-jar>
-            <arg value="load-data"/>
+        <exec-scipio-jar action="load-data"/>
+        <exec-scipio-jar action="load-data">
             <arg value="delegator=default#DEMO1"/>
         </exec-scipio-jar>
-        <exec-scipio-jar>
-            <arg value="load-data"/>
+        <exec-scipio-jar action="load-data">
             <arg value="delegator=default#DEMO2"/>
         </exec-scipio-jar>
     </target>
     <target name="load-seed" depends="build"
             description="Load ONLY the seed data (not seed-initial, demo, ext* or anything else); meant for use after an update of the code to reload the seed data as it is generally maintained along with the code and needs to be in sync for operation">
-        <exec-scipio-jar>
-            <arg value="load-data"/>
+        <exec-scipio-jar action="load-data">
             <arg value="readers=seed"/>
         </exec-scipio-jar>
     </target>
     <target name="load-extseed" depends="build"
             description="Load seed, seed-initial and ext data; meant for manual/generic testing, development, or going into production with a derived system based on stock OFBiz where the ext data basically replaces the demo data">
-        <exec-scipio-jar>
-            <arg value="load-data"/>
+        <exec-scipio-jar action="load-data">
             <arg value="readers=seed,seed-initial,ext"/>
         </exec-scipio-jar>
     </target>
     <target name="load-exttest" depends="build"
             description="Load seed, seed-initial, ext and ext-test data; meant for automated testing with a derived system based on stock OFBiz">
-        <exec-scipio-jar>
-            <arg value="load-data"/>
+        <exec-scipio-jar action="load-data">
             <arg value="readers=seed,seed-initial,ext,ext-test"/>
         </exec-scipio-jar>
     </target>
     <target name="load-readers" depends="build"
             description='Load data using the command line argument data-readers that takes a comma separated list of readers (seed, seed-initial, demo, ext, ext-test, ext-demo). On Windows XP (at least) you need top wrap the parameters in double-quotes. For instance: ant load-readers "-Ddata-readers=seed,seed-initial,ext"'>
-        <exec-scipio-jar >
-            <arg value="load-data"/>
+        <exec-scipio-jar action="load-data">
             <arg value="readers=${data-readers}"/>
         </exec-scipio-jar>
     </target>
     <target name="load-file" depends="build"
             description="Load data using the command line argument 'data-file' to load data from a given file using the 'default' delegator or a delegator specified in the command line argument 'delegator'">
         <property name="delegator" value="default" />
-        <exec-scipio-jar>
-            <arg value="load-data"/>
+        <exec-scipio-jar action="load-data">
             <arg value="delegator=${delegator}"/>
             <arg value="file=${data-file}"/>
         </exec-scipio-jar>
@@ -1307,8 +1313,7 @@ under the License.
             description="Load data using tenantId, syntax eg: ant load-tenant -DtenantId=DEMO1 (needs multitenant=Y in general.properties)">
     </target>
     <target name="check-tenant-id">
-        <exec-scipio-jar>
-            <arg value="load-data"/>
+        <exec-scipio-jar action="load-data">
             <arg value="readers=tenant"/>
         </exec-scipio-jar>
         <condition property="hasTenant">
@@ -1345,14 +1350,12 @@ under the License.
         </condition>
     </target>
     <target name="load-tenant-all" depends="check-tenant-reader" if="noReader">
-        <exec-scipio-jar>
-            <arg value="load-data"/>
+        <exec-scipio-jar action="load-data">
             <arg value="delegator=default#${tenantId}"/>
         </exec-scipio-jar>
     </target>
     <target name="load-tenant-reader" depends="check-tenant-reader" if="hasReader">
-        <exec-scipio-jar>
-            <arg value="load-data"/>
+        <exec-scipio-jar action="load-data">
             <arg value="delegator=default#${tenantId}"/>
             <arg value="readers=${data-readers}"/>
         </exec-scipio-jar>
@@ -1373,15 +1376,13 @@ under the License.
         </condition>
     </target>
     <target name="load-tenant-component-all" depends="load-tenant-component" if="noComponentReader">
-        <exec-scipio-jar>
-            <arg value="load-data"/>
+        <exec-scipio-jar action="load-data">
             <arg value="delegator=default#${tenantId}"/>
             <arg value="component=${component}"/>
         </exec-scipio-jar>
     </target>
     <target name="load-tenant-component-reader" depends="load-tenant-component" if="hasComponentReader">
-        <exec-scipio-jar>
-            <arg value="load-data"/>
+        <exec-scipio-jar action="load-data">
             <arg value="delegator=default#${tenantId}"/>
             <arg value="readers=${data-readers}"/>
             <arg value="component=${component}"/>
@@ -1395,8 +1396,7 @@ under the License.
     </target>
     <target name="check-tenants-reader">
         <property name="delegator" value="all-tenants"/>
-        <exec-scipio-jar>
-            <arg value="load-data"/>
+        <exec-scipio-jar action="load-data">
             <arg value="readers=tenant"/>
         </exec-scipio-jar>
         <condition property="hasReader">
@@ -1413,14 +1413,12 @@ under the License.
         </condition>
     </target>
     <target name="load-tenants-all" depends="check-tenants-reader" if="noReader">
-        <exec-scipio-jar>
-            <arg value="load-data"/>
+        <exec-scipio-jar action="load-data">
             <arg value="delegator=${delegator}"/>
         </exec-scipio-jar>
     </target>
     <target name="load-tenants-reader" depends="check-tenants-reader" if="hasReader">
-        <exec-scipio-jar>
-            <arg value="load-data"/>
+        <exec-scipio-jar action="load-data">
             <arg value="readers=${data-readers}"/>
             <arg value="delegator=${delegator}"/>
         </exec-scipio-jar>
@@ -1652,8 +1650,7 @@ under the License.
         <echo message="Delegator = default#${tenantId}"/>
         <echo message="Data-readers = ${data-readers}"/>
         <echo>------------------------------------</echo>
-        <exec-scipio-jar>
-            <arg value="load-data"/>
+        <exec-scipio-jar action="load-data">
             <arg value="readers=${data-readers}"/>
             <arg value="delegator=default#${tenantId}"/>
         </exec-scipio-jar>

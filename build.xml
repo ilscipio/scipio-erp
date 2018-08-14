@@ -1622,7 +1622,6 @@ under the License.
         <echo message="Please make sure that the driver of the platform is installed and that the databases have been created (Check names just above)"/>
         <echo>------------------------------------</echo>
         <input addproperty="continueYN" message="Continue Y or N" validargs="N,n,Y,y"/>
-
     </target>
     <target name="load-tenant-admin-user-login"
         description="Create the admin login for the tenant with admin privileges, and a temporay password equal to 'scipio'. Password must be changed on first login">
@@ -1704,7 +1703,6 @@ under the License.
             </condition>
         </fail>
     </target>
-    
 
     <target name="run-tests-with-cobertura" depends="download-cobertura"
         description="Download Cobertura and perform code coverage (same as run-tests). You will need a valid Internet connection to download cobertura">
@@ -1730,7 +1728,7 @@ under the License.
         <addonsant target="tests-cobertura"/>
         <hotdeployant target="tests-cobertura"/>
     </target>
-    
+
     <target name="run-tests-with-jacoco" xmlns:jacoco="antlib:org.jacoco.ant"
         description="Download JaCoCo and perform code coverage (same as run-tests). You will need a valid Internet connection to download JaCoCo">
         <echo>============================================================</echo>
@@ -1745,7 +1743,7 @@ under the License.
         <delete dir="runtime/logs/jacoco-report"/>
         <mkdir dir="runtime/logs/jacoco-report"/>
         <pathconvert property="jacocoAgent" refid="jacoco.agent.class.path" />
-        
+
         <jacoco:agent property="agentvmparam" destfile="runtime/logs/jacoco-report/scipio-base.exec" includes="*" output="file" dumponexit="true" />
         <echo>Starting Scipio Server with Agent${agentvmparam}</echo>
         <parallel>
@@ -1775,23 +1773,22 @@ under the License.
         <addonsant target="tests-jacoco"/>
         <hotdeployant target="tests-jacoco"/>
     </target>
-    
+
     <target name="jacoco-report" xmlns:jacoco="antlib:org.jacoco.ant" depends="run-tests-with-jacoco" 
             description="Generate a HTML code coverage report with JaCoCo can be found in runtime/logs/jacoco-report">
-            
         <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
             <classpath>
                 <path refid="jacoco.class.path" />
             </classpath>
         </taskdef>
-        
+
         <delete dir="runtime/logs/jacoco-report/html"/>
         <mkdir dir="runtime/logs/jacoco-report/html"/>
         <delete dir="runtime/logs/jacoco-report/xml"/>
         <mkdir dir="runtime/logs/jacoco-report/xml"/>
         <delete dir="runtime/logs/jacoco-report/csv"/>
         <mkdir dir="runtime/logs/jacoco-report/csv"/>
-        
+
         <jacoco:report>           
             <executiondata>
                 <file file="runtime/logs/jacoco-report/jacoco.exec"/>
@@ -2019,9 +2016,9 @@ under the License.
     <!-- ================================================================== -->
     <!--    Ivy targets, more info at  http://ant.apache.org/ivy/  -->
     <!-- ================================================================== -->
-    
+
     <!-- SCIPIO: 2017-01-30: New ivy download targets -->
-    
+
     <target name="lib-update" depends="ivy-init" description="Initial libraries and dependencies download, global">
         <stopwatch name="lib.update.stopwatch" action="start"/>
         <!--

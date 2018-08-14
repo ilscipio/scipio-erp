@@ -151,7 +151,7 @@ public abstract class SolrUtil {
         if (sb.charAt(sb.length() - 1) == '/') {
             sb.setLength(sb.length() - 1);
         }
-        Debug.logInfo("Solr: Determined internal Solr webapp URL: " + sb.toString(), module);
+        Debug.logInfo("Solr: Determined Solr webapp URL: " + sb.toString(), module);
         return sb.toString();
     }
 

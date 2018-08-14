@@ -21,12 +21,13 @@ package org.ofbiz.base.util;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -57,6 +58,8 @@ public class StringUtil {
         substitutionPatternMap.put("<", Pattern.compile("@lt", Pattern.LITERAL));
         substitutionPatternMap.put(">", Pattern.compile("@gt", Pattern.LITERAL));
     }
+    
+    private static final Pattern listElemDelim = Pattern.compile("\\,\\s"); // SCIPIO
 
     private StringUtil() {
     }
@@ -141,8 +144,8 @@ public class StringUtil {
         if (delim != null) st = new StringTokenizer(str, delim);
         else               st = new StringTokenizer(str);
 
-        if (st != null && st.hasMoreTokens()) {
-            splitList = new LinkedList<String>();
+        if (st.hasMoreTokens()) { // SCIPIO: 2018-10-18: removed silly unnecessary null check: (st != null)
+            splitList = new ArrayList<String>(); // SCIPIO: switched to ArrayList (default capacity is usually good here)
 
             while (st.hasMoreTokens())
                 splitList.add(st.nextToken());
@@ -163,13 +166,16 @@ public class StringUtil {
 
         if (str == null) return splitList;
 
-        if (delim != null) st = Pattern.compile(delim).split(str, limit);
-        else               st = str.split("\\s");
-
+        // SCIPIO: 2018-10-18: switched to String.split because is better optimized for single-char case than Pattern.compile
+        //if (delim != null) st = Pattern.compile(delim).split(str, limit);
+        if (delim != null) st = str.split(delim, limit);
+        else               st = str.split("\\s", limit); // SCIPIO: 2018-10-18: fixed missing limit in this case (stock bug)
 
         if (st != null && st.length > 0) {
-            splitList = new LinkedList<String>();
-            for (int i=0; i < st.length; i++) splitList.add(st[i]);
+            // SCIPIO: NOTE: Can't safely do Arrays.asList from here, because throws exception if tries to add items,
+            // and can't assume a caller won't try (old interface); but assume few callers do that and set capacity tight
+            splitList = new ArrayList<String>(Arrays.asList(st)); // SCIPIO: switched to ArrayList and copy constructor
+            //for (int i=0; i < st.length; i++) splitList.add(st[i]);
         }
 
         return splitList;
@@ -182,7 +188,7 @@ public class StringUtil {
     public static List<String> quoteStrList(List<String> list) {
         List<String> tmpList = list;
 
-        list = new LinkedList<String>();
+        list = new ArrayList<String>(list.size()); // SCIPIO: switched to ArrayList
         for (String str: tmpList) {
             str = "'" + str + "'";
             list.add(str);
@@ -326,7 +332,9 @@ public class StringUtil {
         Map<String, String> newMap = new HashMap<String, String>();
         if (s.startsWith("{") && s.endsWith("}")) {
             s = s.substring(1, s.length() - 1);
-            String[] entries = s.split("\\,\\s");
+            // SCIPIO: Pre-compiled delim Pattern, because more than 2 chars (not optimized by String.split)
+            //String[] entries = s.split("\\,\\s");
+            String[] entries = listElemDelim.split(s);
             for (String entry: entries) {
                 String[] nv = entry.split("\\=");
                 if (nv.length == 2) {
@@ -347,18 +355,23 @@ public class StringUtil {
      * @return new List
      */
     public static List<String> toList(String s) {
-        List<String> newList = new LinkedList<String>();
+        //List<String> newList = new LinkedList<String>(); // SCIPIO: switched to ArrayList (below)
         if (s.startsWith("[") && s.endsWith("]")) {
             s = s.substring(1, s.length() - 1);
-            String[] entries = s.split("\\,\\s");
-            for (String entry: entries) {
-                newList.add(entry);
-            }
+            // SCIPIO: Pre-compiled delim Pattern, because more than 2 chars (not optimized by String.split)
+            //String[] entries = s.split("\\,\\s"); 
+            String[] entries = listElemDelim.split(s);
+            // SCIPIO: NOTE: Can't safely do Arrays.asList from here, because throws exception if tries to add items,
+            // and can't assume a caller won't try (old interface); but assume few callers do that and set capacity tight
+            List<String> newList = new ArrayList<String>(Arrays.asList(entries)); // SCIPIO: switched to ArrayList and copy constructor
+            //for (String entry: entries) {
+            //    newList.add(entry);
+            //}
+            return newList;
         } else {
             throw new IllegalArgumentException("String is not from List.toString()");
         }
-
-        return newList;
+        //return newList; // SCIPIO
     }
 
     /**

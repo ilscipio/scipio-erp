@@ -316,8 +316,7 @@ jQuery(document).ready(function(){
             </@section>
           </#if>
         </#if>
-    <#-- SCIPIO: TODO?: Uncomment if Paypal implemented -->
-    <#if false>
+        
         <#if productStorePaymentMethodTypeIdMap.EXT_PAYPAL??>
           <#if showSelect>
             <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_PAYPAL", "contentId":"content_PAYPAL"})>
@@ -332,9 +331,8 @@ jQuery(document).ready(function(){
             </@section>
           </#if>
         </#if>
-    </#if>
-    <#-- SCIPIO: TODO?: Uncomment if Worldpay implemented -->
-    <#if false>
+    
+    
         <#if productStorePaymentMethodTypeIdMap.EXT_WORLDPAY??>
           <#if showSelect>
             <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_WORLDPAY", "contentId":"content_WORLDPAY"})>
@@ -349,9 +347,7 @@ jQuery(document).ready(function(){
             </@section>
           </#if>
         </#if>
-    </#if>
-    <#-- SCIPIO: TODO?: Uncomment if iDEAL implemented -->
-    <#if false>
+    
         <#if productStorePaymentMethodTypeIdMap.EXT_IDEAL??>
           <#if showSelect>
             <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_IDEAL", "contentId":"content_IDEAL"})>
@@ -373,7 +369,6 @@ jQuery(document).ready(function(){
             </@section>
           </#if>
         </#if>
-    </#if>
 
         <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??>
           <#-- User's credit cards -->

@@ -555,7 +555,7 @@ public class EntityDataLoadContainer implements Container {
                 }
             }
 
-            Debug.logImportant("Creating foreign key indcies...", module);
+            Debug.logImportant("Creating foreign key indices...", module);
             for (String entityName : modelEntityNames) {
                 ModelEntity modelEntity = modelEntities.get(entityName);
                 if (modelEntity != null) {
